@@ -1,0 +1,372 @@
+// ============================================================================
+// Nara - Prisma Schema
+// Provider: SQLite
+// Note: SQLite does not support native enums or array fields.
+//       Enum-like fields use String with comments documenting valid values.
+//       Array fields store JSON-serialized strings.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// School
+// ============================================================================
+/// Core school entity. type uses SchoolType values: "MIDDLE" | "HIGH"
+model School {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  type      String // SchoolType: "MIDDLE" | "HIGH"
+  createdAt DateTime @default(now())
+
+  // Relations
+  students       Student[]
+  exams          Exam[]
+  passages       Passage[]
+  vocabLists     VocabularyList[]
+  teacherPrompts TeacherPrompt[]
+
+  @@map("schools")
+}
+
+// ============================================================================
+// Student
+// ============================================================================
+model Student {
+  id          String   @id @default(cuid())
+  name        String
+  studentCode String   @unique
+  phone       String?
+  grade       Int
+  schoolId    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  school            School             @relation(fields: [schoolId], references: [id])
+  vocabTestResults  VocabTestResult[]
+  wrongVocabAnswers WrongVocabAnswer[]
+  aiConversations   AIConversation[]
+  studyProgress     StudyProgress[]
+
+  @@index([schoolId])
+  @@map("students")
+}
+
+// ============================================================================
+// Admin
+// ============================================================================
+/// role uses AdminRole values: "SUPER_ADMIN" | "TEACHER"
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("TEACHER") // AdminRole: "SUPER_ADMIN" | "TEACHER"
+  createdAt DateTime @default(now())
+
+  @@map("admins")
+}
+
+// ============================================================================
+// Passage
+// ============================================================================
+/// semester uses Semester values: "FIRST" | "SECOND"
+model Passage {
+  id        String   @id @default(cuid())
+  schoolId  String
+  title     String
+  content   String // Full text content
+  source    String?
+  grade     Int
+  semester  String // Semester: "FIRST" | "SECOND"
+  unit      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  school         School           @relation(fields: [schoolId], references: [id])
+  notes          PassageNote[]
+  questions      ExamQuestion[]
+  teacherPrompts TeacherPrompt[]
+  analysis       PassageAnalysis?
+
+  @@index([schoolId])
+  @@index([schoolId, grade, semester])
+  @@map("passages")
+}
+
+// ============================================================================
+// PassageAnalysis (AI-generated analysis cache)
+// ============================================================================
+model PassageAnalysis {
+  id           String   @id @default(cuid())
+  passageId    String   @unique
+  analysisData String   // JSON string of PassageAnalysisData
+  contentHash  String   // MD5 hash of passage.content for change detection
+  version      Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  passage Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  @@map("passage_analyses")
+}
+
+// ============================================================================
+// PassageNote
+// ============================================================================
+/// noteType uses NoteType values: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
+model PassageNote {
+  id             String   @id @default(cuid())
+  passageId      String
+  content        String
+  highlightStart Int?
+  highlightEnd   Int?
+  noteType       String   @default("EMPHASIS") // NoteType: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  passage Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  @@index([passageId])
+  @@map("passage_notes")
+}
+
+// ============================================================================
+// VocabularyList
+// ============================================================================
+/// semester uses Semester values: "FIRST" | "SECOND"
+model VocabularyList {
+  id        String   @id @default(cuid())
+  schoolId  String
+  title     String
+  grade     Int
+  semester  String // Semester: "FIRST" | "SECOND"
+  unit      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  school      School            @relation(fields: [schoolId], references: [id])
+  items       VocabularyItem[]
+  testResults VocabTestResult[]
+
+  @@index([schoolId])
+  @@index([schoolId, grade, semester])
+  @@map("vocabulary_lists")
+}
+
+// ============================================================================
+// VocabularyItem
+// ============================================================================
+model VocabularyItem {
+  id           String   @id @default(cuid())
+  listId       String
+  english      String
+  korean       String
+  partOfSpeech String?
+  exampleEn    String?
+  exampleKr    String?
+  phonetic     String?
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  // Relations
+  list         VocabularyList     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  wrongAnswers WrongVocabAnswer[]
+
+  @@index([listId])
+  @@map("vocabulary_items")
+}
+
+// ============================================================================
+// VocabTestResult
+// ============================================================================
+/// testType uses VocabTestType values: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+model VocabTestResult {
+  id        String   @id @default(cuid())
+  studentId String
+  listId    String
+  testType  String // VocabTestType: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+  score     Int
+  total     Int
+  percent   Float
+  duration  Int? // Duration in seconds
+  takenAt   DateTime @default(now())
+
+  // Relations
+  student Student        @relation(fields: [studentId], references: [id])
+  list    VocabularyList @relation(fields: [listId], references: [id])
+
+  @@index([studentId, takenAt])
+  @@index([listId, takenAt])
+  @@map("vocab_test_results")
+}
+
+// ============================================================================
+// WrongVocabAnswer
+// ============================================================================
+/// testType uses VocabTestType values: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+model WrongVocabAnswer {
+  id           String   @id @default(cuid())
+  studentId    String
+  itemId       String
+  testType     String // VocabTestType: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+  givenAnswer  String
+  count        Int      @default(1)
+  lastMissedAt DateTime @default(now())
+
+  // Relations
+  student Student        @relation(fields: [studentId], references: [id])
+  item    VocabularyItem @relation(fields: [itemId], references: [id])
+
+  @@unique([studentId, itemId, testType])
+  @@index([studentId])
+  @@map("wrong_vocab_answers")
+}
+
+// ============================================================================
+// Exam
+// ============================================================================
+/// semester uses Semester values: "FIRST" | "SECOND"
+/// examType uses ExamType values: "MIDTERM" | "FINAL" | "MOCK"
+model Exam {
+  id        String   @id @default(cuid())
+  schoolId  String
+  grade     Int
+  semester  String // Semester: "FIRST" | "SECOND"
+  examType  String // ExamType: "MIDTERM" | "FINAL" | "MOCK"
+  year      Int
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  school    School         @relation(fields: [schoolId], references: [id])
+  questions ExamQuestion[]
+
+  @@index([schoolId, grade, year])
+  @@map("exams")
+}
+
+// ============================================================================
+// ExamQuestion
+// ============================================================================
+model ExamQuestion {
+  id             String   @id @default(cuid())
+  examId         String
+  questionNumber Int
+  questionText   String
+  questionImage  String?
+  correctAnswer  String
+  points         Int      @default(1)
+  passageId      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  exam            Exam                 @relation(fields: [examId], references: [id], onDelete: Cascade)
+  passage         Passage?             @relation(fields: [passageId], references: [id])
+  explanation     QuestionExplanation?
+  aiConversations AIConversation[]
+
+  @@unique([examId, questionNumber])
+  @@index([examId])
+  @@index([passageId])
+  @@map("exam_questions")
+}
+
+// ============================================================================
+// QuestionExplanation
+// ============================================================================
+model QuestionExplanation {
+  id         String   @id @default(cuid())
+  questionId String   @unique
+  content    String // Rich HTML content
+  keyPoints  String // JSON string of string array, e.g. '["point1","point2"]'
+  difficulty String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("question_explanations")
+}
+
+// ============================================================================
+// TeacherPrompt
+// ============================================================================
+/// promptType uses PromptType values: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
+model TeacherPrompt {
+  id         String   @id @default(cuid())
+  schoolId   String
+  passageId  String?
+  content    String
+  promptType String   @default("GENERAL") // PromptType: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  school  School   @relation(fields: [schoolId], references: [id])
+  passage Passage? @relation(fields: [passageId], references: [id])
+
+  @@index([schoolId])
+  @@index([schoolId, passageId])
+  @@map("teacher_prompts")
+}
+
+// ============================================================================
+// AIConversation
+// ============================================================================
+model AIConversation {
+  id         String   @id @default(cuid())
+  studentId  String
+  questionId String
+  messages   String // JSON string of message array, e.g. '[{"role":"user","content":"..."},...]'
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  student  Student      @relation(fields: [studentId], references: [id])
+  question ExamQuestion @relation(fields: [questionId], references: [id])
+
+  @@unique([studentId, questionId])
+  @@index([studentId])
+  @@index([questionId])
+  @@map("ai_conversations")
+}
+
+// ============================================================================
+// StudyProgress
+// ============================================================================
+model StudyProgress {
+  id               String   @id @default(cuid())
+  studentId        String
+  date             DateTime
+  vocabTests       Int      @default(0)
+  vocabScore       Float    @default(0)
+  questionsViewed  Int      @default(0)
+  aiQuestionsAsked Int      @default(0)
+
+  // Relations
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, date])
+  @@index([studentId])
+  @@map("study_progress")
+}
