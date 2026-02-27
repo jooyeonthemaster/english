@@ -1,9 +1,6 @@
 // ============================================================================
 // Nara - Prisma Schema
-// Provider: SQLite
-// Note: SQLite does not support native enums or array fields.
-//       Enum-like fields use String with comments documenting valid values.
-//       Array fields store JSON-serialized strings.
+// Provider: PostgreSQL (Supabase)
 // ============================================================================
 
 generator client {
@@ -11,8 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ============================================================================
@@ -83,7 +81,7 @@ model Passage {
   id        String   @id @default(cuid())
   schoolId  String
   title     String
-  content   String // Full text content
+  content   String   @db.Text // Full text content
   source    String?
   grade     Int
   semester  String // Semester: "FIRST" | "SECOND"
@@ -110,7 +108,7 @@ model Passage {
 model PassageAnalysis {
   id           String   @id @default(cuid())
   passageId    String   @unique
-  analysisData String   // JSON string of PassageAnalysisData
+  analysisData String   @db.Text // JSON string of PassageAnalysisData
   contentHash  String   // MD5 hash of passage.content for change detection
   version      Int      @default(1)
   createdAt    DateTime @default(now())
@@ -129,7 +127,7 @@ model PassageAnalysis {
 model PassageNote {
   id             String   @id @default(cuid())
   passageId      String
-  content        String
+  content        String   @db.Text
   highlightStart Int?
   highlightEnd   Int?
   noteType       String   @default("EMPHASIS") // NoteType: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
@@ -295,8 +293,8 @@ model ExamQuestion {
 model QuestionExplanation {
   id         String   @id @default(cuid())
   questionId String   @unique
-  content    String // Rich HTML content
-  keyPoints  String // JSON string of string array, e.g. '["point1","point2"]'
+  content    String @db.Text // Rich HTML content
+  keyPoints  String @db.Text // JSON string of string array, e.g. '["point1","point2"]'
   difficulty String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -315,7 +313,7 @@ model TeacherPrompt {
   id         String   @id @default(cuid())
   schoolId   String
   passageId  String?
-  content    String
+  content    String   @db.Text
   promptType String   @default("GENERAL") // PromptType: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
@@ -337,7 +335,7 @@ model AIConversation {
   id         String   @id @default(cuid())
   studentId  String
   questionId String
-  messages   String // JSON string of message array, e.g. '[{"role":"user","content":"..."},...]'
+  messages   String @db.Text // JSON string of message array, e.g. '[{"role":"user","content":"..."},...]'
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
