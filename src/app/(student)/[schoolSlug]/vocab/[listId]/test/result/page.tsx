@@ -33,11 +33,7 @@ export default function VocabTestResultPage() {
   if (total === 0) {
     return (
       <>
-        <TopBarBack
-          title="테스트 결과"
-          showBack
-          onBack={handleGoBack}
-        />
+        <TopBarBack title="테스트 결과" />
         <div className="flex flex-col items-center justify-center gap-4 px-5 py-24">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -86,11 +82,7 @@ export default function VocabTestResultPage() {
 
   return (
     <>
-      <TopBarBack
-        title="테스트 결과"
-        showBack
-        onBack={handleGoBack}
-      />
+      <TopBarBack title="테스트 결과" />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

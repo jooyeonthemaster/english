@@ -168,8 +168,6 @@ export function VocabTestClient({
       <>
         <TopBarBack
           title="단어 테스트"
-          showBack
-          onBack={handleExit}
           rightAction={
             <button
               onClick={handleExit}
@@ -291,11 +289,7 @@ export function VocabTestClient({
   if (state === "complete") {
     return (
       <>
-        <TopBarBack
-          title="테스트 결과"
-          showBack
-          onBack={handleGoBack}
-        />
+        <TopBarBack title="테스트 결과" />
         <TestResultSummary
           score={score}
           total={totalQuestions}
@@ -315,8 +309,6 @@ export function VocabTestClient({
     <>
       <TopBarBack
         title="단어 테스트"
-        showBack
-        onBack={handleExit}
         rightAction={
           <button
             onClick={handleExit}
