@@ -13,7 +13,7 @@ export async function GET(
 
   const { schoolSlug } = await params;
 
-  const school = await prisma.school.findUnique({
+  const school = await prisma.school.findFirst({
     where: { slug: schoolSlug },
   });
 

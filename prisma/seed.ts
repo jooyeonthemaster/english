@@ -24,7 +24,6 @@ const SCHOOLS = [
   { name: "천호중", slug: "cheonho-ms", type: "MIDDLE" },
   { name: "한산중", slug: "hansan-ms", type: "MIDDLE" },
   { name: "한영중", slug: "hanyeong-ms", type: "MIDDLE" },
-
   // 고등학교 (14개)
   { name: "강동고", slug: "gangdong-hs", type: "HIGH" },
   { name: "강일고", slug: "gangil-hs", type: "HIGH" },
@@ -43,215 +42,185 @@ const SCHOOLS = [
 ];
 
 async function main() {
-  console.log("🌱 Seeding database...");
+  console.log("🌱 Seeding NARA ERP database...");
 
-  // Create schools
+  // 1. Create Academy
+  const academy = await prisma.academy.upsert({
+    where: { slug: "darun" },
+    update: {},
+    create: {
+      name: "다른 영어 학원",
+      slug: "darun",
+      phone: "02-1234-5678",
+      address: "서울특별시 강동구",
+      color: "#3B82F6",
+    },
+  });
+  console.log(`✅ Academy created: ${academy.name}`);
+
+  // 2. Create Schools (belong to academy)
   for (const school of SCHOOLS) {
     await prisma.school.upsert({
-      where: { slug: school.slug },
+      where: { academyId_slug: { academyId: academy.id, slug: school.slug } },
       update: {},
-      create: school,
+      create: { ...school, academyId: academy.id },
     });
   }
   console.log(`✅ ${SCHOOLS.length} schools created`);
 
-  // Create admin user
-  const hashedPassword = await bcrypt.hash("admin1234", 10);
-  await prisma.admin.upsert({
-    where: { email: "admin@darun.academy" },
+  // 3. Create Staff — Director
+  const directorPassword = await bcrypt.hash("admin1234", 10);
+  await prisma.staff.upsert({
+    where: { email: "director@darun.academy" },
     update: {},
     create: {
-      email: "admin@darun.academy",
-      password: hashedPassword,
-      name: "관리자",
-      role: "SUPER_ADMIN",
+      academyId: academy.id,
+      email: "director@darun.academy",
+      password: directorPassword,
+      name: "원장님",
+      role: "DIRECTOR",
+      phone: "010-1234-5678",
     },
   });
-  console.log("✅ Admin user created (admin@darun.academy / admin1234)");
+  console.log("✅ Director created (director@darun.academy / admin1234)");
 
-  // Create sample teacher
+  // 4. Create Staff — Teacher
   const teacherPassword = await bcrypt.hash("teacher1234", 10);
-  await prisma.admin.upsert({
+  const teacher = await prisma.staff.upsert({
     where: { email: "teacher@darun.academy" },
     update: {},
     create: {
+      academyId: academy.id,
       email: "teacher@darun.academy",
       password: teacherPassword,
       name: "김선생",
       role: "TEACHER",
+      phone: "010-9876-5432",
     },
   });
-  console.log("✅ Teacher user created (teacher@darun.academy / teacher1234)");
+  console.log("✅ Teacher created (teacher@darun.academy / teacher1234)");
 
-  // Create sample student
-  const gangdongMs = await prisma.school.findUnique({
-    where: { slug: "gangdong-ms" },
+  // 5. Create Classes
+  const classA = await prisma.class.create({
+    data: {
+      academyId: academy.id,
+      name: "중2 A반",
+      teacherId: teacher.id,
+      capacity: 15,
+      fee: 300000,
+      room: "301호",
+      schedule: JSON.stringify([
+        { day: "MON", startTime: "16:00", endTime: "18:00" },
+        { day: "WED", startTime: "16:00", endTime: "18:00" },
+        { day: "FRI", startTime: "16:00", endTime: "18:00" },
+      ]),
+    },
+  });
+  console.log("✅ Class created: 중2 A반");
+
+  // 6. Create Sample Students
+  const gangdongMs = await prisma.school.findFirst({
+    where: { academyId: academy.id, slug: "gangdong-ms" },
   });
 
-  if (gangdongMs) {
-    await prisma.student.upsert({
-      where: { studentCode: "GD2401" },
+  const students = [
+    { name: "홍길동", studentCode: "NAR001", grade: 2 },
+    { name: "김철수", studentCode: "NAR002", grade: 2 },
+    { name: "이영희", studentCode: "NAR003", grade: 2 },
+    { name: "박지민", studentCode: "NAR004", grade: 1 },
+    { name: "최수진", studentCode: "NAR005", grade: 3 },
+  ];
+
+  for (const s of students) {
+    const student = await prisma.student.upsert({
+      where: { studentCode: s.studentCode },
       update: {},
       create: {
-        name: "홍길동",
-        studentCode: "GD2401",
-        grade: 2,
-        schoolId: gangdongMs.id,
+        academyId: academy.id,
+        schoolId: gangdongMs?.id,
+        ...s,
+        status: "ACTIVE",
+        xp: Math.floor(Math.random() * 3000),
+        level: Math.floor(Math.random() * 10) + 1,
+        streak: Math.floor(Math.random() * 15),
       },
     });
-    console.log("✅ Sample student created (홍길동 / GD2401)");
-
-    // Create sample vocabulary list
-    const vocabList = await prisma.vocabularyList.create({
-      data: {
-        schoolId: gangdongMs.id,
-        title: "Lesson 1 핵심 단어",
-        grade: 2,
-        semester: "FIRST",
-        unit: "Lesson 1",
-        items: {
-          create: [
-            { english: "achieve", korean: "달성하다", partOfSpeech: "동사", exampleEn: "She achieved her goal.", exampleKr: "그녀는 목표를 달성했다.", order: 1 },
-            { english: "brilliant", korean: "훌륭한, 빛나는", partOfSpeech: "형용사", exampleEn: "What a brilliant idea!", exampleKr: "정말 훌륭한 아이디어야!", order: 2 },
-            { english: "courage", korean: "용기", partOfSpeech: "명사", exampleEn: "It takes courage to speak up.", exampleKr: "말하려면 용기가 필요하다.", order: 3 },
-            { english: "determine", korean: "결정하다", partOfSpeech: "동사", exampleEn: "He determined to study harder.", exampleKr: "그는 더 열심히 공부하기로 결심했다.", order: 4 },
-            { english: "enthusiasm", korean: "열정", partOfSpeech: "명사", exampleEn: "She showed great enthusiasm.", exampleKr: "그녀는 대단한 열정을 보였다.", order: 5 },
-            { english: "flexible", korean: "유연한", partOfSpeech: "형용사", exampleEn: "Be flexible with your plans.", exampleKr: "계획에 유연하게 대처하세요.", order: 6 },
-            { english: "generate", korean: "생성하다", partOfSpeech: "동사", exampleEn: "The machine generates electricity.", exampleKr: "그 기계는 전기를 생성한다.", order: 7 },
-            { english: "hypothesis", korean: "가설", partOfSpeech: "명사", exampleEn: "We need to test this hypothesis.", exampleKr: "이 가설을 검증해야 한다.", order: 8 },
-            { english: "interpret", korean: "해석하다", partOfSpeech: "동사", exampleEn: "How do you interpret this poem?", exampleKr: "이 시를 어떻게 해석하나요?", order: 9 },
-            { english: "justify", korean: "정당화하다", partOfSpeech: "동사", exampleEn: "Can you justify your answer?", exampleKr: "답을 정당화할 수 있나요?", order: 10 },
-          ],
-        },
-      },
+    // Enroll in class
+    await prisma.classEnrollment.upsert({
+      where: { classId_studentId: { classId: classA.id, studentId: student.id } },
+      update: {},
+      create: { classId: classA.id, studentId: student.id, status: "ENROLLED" },
     });
-    console.log("✅ Sample vocabulary list created (10 words)");
-
-    // Create sample passage
-    const passage = await prisma.passage.create({
-      data: {
-        schoolId: gangdongMs.id,
-        title: "The Power of Small Habits",
-        content: `Many people want to change their lives, but they often try to make big changes all at once. This approach usually fails because it is too difficult to maintain. Instead, research shows that small habits can lead to remarkable results over time.
-
-James Clear, the author of "Atomic Habits," explains that improving by just 1% each day can lead to being 37 times better by the end of a year. The key is to focus on systems rather than goals. A system is a set of daily habits that naturally lead you toward your desired outcome.
-
-For example, if you want to become a better English speaker, don't just set a goal to be fluent. Instead, create a system: read one English article every morning, practice speaking for 10 minutes after lunch, and review new vocabulary before bed. These small, consistent actions will compound over time and produce significant improvements.
-
-The most important thing is to start small and be consistent. Don't try to study English for three hours every day if you can't maintain it. Start with 15 minutes and gradually increase. Remember, it's not about perfection — it's about progress.`,
-        source: "교과서 Lesson 1",
-        grade: 2,
-        semester: "FIRST",
-        unit: "Lesson 1",
-        order: 1,
-        notes: {
-          create: [
-            {
-              content: "이 문장에서 approach는 '접근법'이라는 뜻으로, method와 유사합니다. 시험에서 자주 출제됩니다.",
-              noteType: "VOCAB",
-              order: 1,
-            },
-            {
-              content: "주어(This approach) + 동사(fails) 구조에서 because절이 이유를 설명합니다. 부사절 접속사 because의 활용을 주의하세요.",
-              noteType: "GRAMMAR",
-              order: 2,
-            },
-            {
-              content: "핵심 포인트: 작은 습관의 복리 효과(compound effect)를 이해하는 것이 이 지문의 핵심입니다. 시험에서 주제 파악 문제로 출제될 가능성이 높습니다.",
-              noteType: "EMPHASIS",
-              order: 3,
-            },
-          ],
-        },
-      },
-    });
-    console.log("✅ Sample passage created with 3 notes");
-
-    // Create sample exam
-    const exam = await prisma.exam.create({
-      data: {
-        schoolId: gangdongMs.id,
-        grade: 2,
-        semester: "FIRST",
-        examType: "MIDTERM",
-        year: 2026,
-        title: "2026년 1학기 중간고사",
-        questions: {
-          create: [
-            {
-              questionNumber: 1,
-              questionText: "다음 글의 주제로 가장 적절한 것은?\n\nMany people want to change their lives, but they often try to make big changes all at once. This approach usually fails because it is too difficult to maintain. Instead, research shows that small habits can lead to remarkable results over time.",
-              correctAnswer: "3",
-              points: 3,
-              passageId: passage.id,
-            },
-            {
-              questionNumber: 2,
-              questionText: "다음 빈칸에 들어갈 말로 가장 적절한 것은?\n\nThe key is to focus on _______ rather than goals.",
-              correctAnswer: "2",
-              points: 3,
-              passageId: passage.id,
-            },
-            {
-              questionNumber: 3,
-              questionText: "다음 밑줄 친 'compound'의 의미와 가장 가까운 것은?",
-              correctAnswer: "4",
-              points: 2,
-              passageId: passage.id,
-            },
-          ],
-        },
-      },
-    });
-
-    // Add explanations
-    const questions = await prisma.examQuestion.findMany({
-      where: { examId: exam.id },
-      orderBy: { questionNumber: "asc" },
-    });
-
-    await prisma.questionExplanation.create({
-      data: {
-        questionId: questions[0].id,
-        content: "<p>이 글은 <strong>작은 습관의 힘</strong>에 대해 설명하고 있습니다.</p><p>첫 문장에서 'big changes'를 시도하면 실패한다고 하고, 'small habits'이 놀라운 결과를 가져온다고 합니다.</p><p>따라서 정답은 <strong>③ 작은 습관이 큰 변화를 만든다</strong>입니다.</p>",
-        keyPoints: JSON.stringify(["주제 파악 문제 - 글의 핵심 키워드 파악", "small habits → remarkable results 관계", "첫 문단에 주제가 명시됨"]),
-        difficulty: "medium",
-      },
-    });
-
-    await prisma.questionExplanation.create({
-      data: {
-        questionId: questions[1].id,
-        content: "<p>James Clear는 goals보다 <strong>systems</strong>에 집중해야 한다고 말합니다.</p><p>다음 문장에서 'A system is a set of daily habits'라고 정의하고 있으므로, 빈칸에는 <strong>② systems</strong>가 들어가야 합니다.</p>",
-        keyPoints: JSON.stringify(["빈칸 추론 - 전후 문맥 파악", "rather than으로 대조 관계 파악", "다음 문장이 힌트"]),
-        difficulty: "easy",
-      },
-    });
-
-    await prisma.questionExplanation.create({
-      data: {
-        questionId: questions[2].id,
-        content: "<p>'compound'는 여기서 <strong>'복합되다, 누적되다'</strong>라는 뜻입니다.</p><p>문맥상 '작은 행동들이 시간이 지나면서 <em>누적되어</em> 상당한 개선을 만들어낸다'는 의미입니다.</p><p>따라서 정답은 <strong>④ accumulate (축적되다)</strong>입니다.</p>",
-        keyPoints: JSON.stringify(["어휘 문제 - 문맥 속 의미 파악", "compound의 다의어 주의", "over time과 함께 쓰여 누적 의미"]),
-        difficulty: "medium",
-      },
-    });
-    console.log("✅ Sample exam created with 3 questions and explanations");
-
-    // Create teacher prompt
-    await prisma.teacherPrompt.create({
-      data: {
-        schoolId: gangdongMs.id,
-        passageId: passage.id,
-        content: "이 지문은 Atomic Habits에서 영감을 받은 지문입니다. 학생들에게 1% 개선의 복리 효과를 강조해주세요. 특히 'system vs goal' 개념이 시험에 자주 출제됩니다. compound의 다의어적 성격(화학: 화합물, 일반: 복합의, 여기서: 누적되다)도 반드시 설명해주세요.",
-        promptType: "GENERAL",
-        isActive: true,
-      },
-    });
-    console.log("✅ Sample teacher prompt created");
   }
+  console.log(`✅ ${students.length} students created and enrolled`);
 
-  console.log("\n🎉 Seeding completed!");
+  // 7. Create Parent
+  const parent = await prisma.parent.create({
+    data: {
+      academyId: academy.id,
+      name: "홍부모",
+      phone: "01012345678",
+      relation: "MOTHER",
+      loginToken: "demo-parent-token-12345",
+    },
+  });
+  const hongStudent = await prisma.student.findUnique({ where: { studentCode: "NAR001" } });
+  if (hongStudent) {
+    await prisma.parentStudent.create({
+      data: { parentId: parent.id, studentId: hongStudent.id },
+    });
+  }
+  console.log("✅ Parent created (phone: 01012345678)");
+
+  // 8. Create sample vocabulary list
+  await prisma.vocabularyList.create({
+    data: {
+      academyId: academy.id,
+      title: "Lesson 1 핵심 단어",
+      grade: 2,
+      semester: "FIRST",
+      unit: "Lesson 1",
+      items: {
+        create: [
+          { english: "achieve", korean: "달성하다", partOfSpeech: "동사", exampleEn: "She achieved her goal.", exampleKr: "그녀는 목표를 달성했다.", order: 1 },
+          { english: "brilliant", korean: "훌륭한, 빛나는", partOfSpeech: "형용사", exampleEn: "What a brilliant idea!", exampleKr: "정말 훌륭한 아이디어야!", order: 2 },
+          { english: "courage", korean: "용기", partOfSpeech: "명사", exampleEn: "It takes courage to speak up.", exampleKr: "말하려면 용기가 필요하다.", order: 3 },
+          { english: "determine", korean: "결정하다", partOfSpeech: "동사", exampleEn: "He determined to study harder.", exampleKr: "그는 더 열심히 공부하기로 결심했다.", order: 4 },
+          { english: "enthusiasm", korean: "열정", partOfSpeech: "명사", exampleEn: "She showed great enthusiasm.", exampleKr: "그녀는 대단한 열정을 보였다.", order: 5 },
+          { english: "flexible", korean: "유연한", partOfSpeech: "형용사", exampleEn: "Be flexible with your plans.", exampleKr: "계획에 유연하게 대처하세요.", order: 6 },
+          { english: "generate", korean: "생성하다", partOfSpeech: "동사", exampleEn: "The machine generates electricity.", exampleKr: "그 기계는 전기를 생성한다.", order: 7 },
+          { english: "hypothesis", korean: "가설", partOfSpeech: "명사", exampleEn: "We need to test this hypothesis.", exampleKr: "이 가설을 검증해야 한다.", order: 8 },
+          { english: "interpret", korean: "해석하다", partOfSpeech: "동사", exampleEn: "How do you interpret this poem?", exampleKr: "이 시를 어떻게 해석하나요?", order: 9 },
+          { english: "justify", korean: "정당화하다", partOfSpeech: "동사", exampleEn: "Can you justify your answer?", exampleKr: "답을 정당화할 수 있나요?", order: 10 },
+        ],
+      },
+    },
+  });
+  console.log("✅ Vocabulary list created (10 words)");
+
+  // 9. Create Achievements
+  const achievements = [
+    { name: "7일 연속 출석", description: "7일 연속으로 출석했습니다", icon: "🔥", category: "STREAK", condition: JSON.stringify({ type: "STREAK", value: 7 }), xpReward: 100 },
+    { name: "단어왕", description: "단어 시험 3회 연속 만점", icon: "👑", category: "VOCAB", condition: JSON.stringify({ type: "PERFECT", value: 100, count: 3 }), xpReward: 200 },
+    { name: "문법 마스터", description: "문법 정답률 90% 이상", icon: "📚", category: "GRAMMAR", condition: JSON.stringify({ type: "SCORE", min: 90 }), xpReward: 150 },
+    { name: "급성장", description: "한 달간 점수 20점 이상 상승", icon: "📈", category: "GROWTH", condition: JSON.stringify({ type: "GROWTH", value: 20 }), xpReward: 300 },
+    { name: "올클리어", description: "과제 100% 완료", icon: "✅", category: "ASSIGNMENT", condition: JSON.stringify({ type: "COUNT", value: 100 }), xpReward: 150 },
+    { name: "30일 연속 출석", description: "30일 연속 출석 달성!", icon: "💎", category: "STREAK", condition: JSON.stringify({ type: "STREAK", value: 30 }), xpReward: 500 },
+  ];
+
+  for (const a of achievements) {
+    await prisma.achievement.create({
+      data: { academyId: academy.id, ...a },
+    });
+  }
+  console.log(`✅ ${achievements.length} achievements created`);
+
+  console.log("\n🎉 NARA ERP seeding completed!");
+  console.log("\n📋 Login credentials:");
+  console.log("  원장: director@darun.academy / admin1234");
+  console.log("  강사: teacher@darun.academy / teacher1234");
+  console.log("  학생: NAR001 ~ NAR005");
+  console.log("  학부모: 01012345678");
 }
 
 main()

@@ -15,15 +15,14 @@ function getJwtSecret(): Uint8Array {
 
 export interface StudentTokenPayload extends JWTPayload {
   studentId: string;
-  schoolId: string;
-  schoolSlug: string;
+  academyId: string;
   name: string;
   grade: number;
+  schoolId?: string;
+  xp: number;
+  level: number;
 }
 
-/**
- * Creates a signed JWT for a student session.
- */
 export async function signStudentToken(
   payload: Omit<StudentTokenPayload, "iat" | "exp">
 ): Promise<string> {
@@ -32,14 +31,9 @@ export async function signStudentToken(
     .setIssuedAt()
     .setExpirationTime("30d")
     .sign(getJwtSecret());
-
   return token;
 }
 
-/**
- * Verifies a student JWT and returns the decoded payload.
- * Returns null if the token is invalid or expired.
- */
 export async function verifyStudentToken(
   token: string
 ): Promise<StudentTokenPayload | null> {
@@ -51,43 +45,35 @@ export async function verifyStudentToken(
   }
 }
 
-/**
- * Validates a student by schoolId and studentCode, then sets a session cookie.
- * Returns the student info on success, or throws an error on failure.
- */
 export async function loginStudent(
-  schoolId: string,
+  academyId: string,
   studentCode: string
-): Promise<{
-  studentId: string;
-  schoolId: string;
-  schoolSlug: string;
-  name: string;
-  grade: number;
-}> {
+): Promise<StudentTokenPayload> {
   const student = await prisma.student.findUnique({
     where: { studentCode },
-    include: { school: true },
+    include: { academy: true, school: true },
   });
 
   if (!student) {
     throw new Error("존재하지 않는 학생 코드입니다.");
   }
 
-  if (student.schoolId !== schoolId) {
-    throw new Error("학교 정보가 일치하지 않습니다.");
+  if (student.academyId !== academyId) {
+    throw new Error("학원 정보가 일치하지 않습니다.");
   }
 
-  if (!student.isActive) {
+  if (student.status !== "ACTIVE") {
     throw new Error("비활성화된 계정입니다. 선생님에게 문의하세요.");
   }
 
-  const tokenPayload = {
+  const tokenPayload: Omit<StudentTokenPayload, "iat" | "exp"> = {
     studentId: student.id,
-    schoolId: student.schoolId,
-    schoolSlug: student.school.slug,
+    academyId: student.academyId,
     name: student.name,
     grade: student.grade,
+    schoolId: student.schoolId ?? undefined,
+    xp: student.xp,
+    level: student.level,
   };
 
   const token = await signStudentToken(tokenPayload);
@@ -101,28 +87,25 @@ export async function loginStudent(
     path: "/",
   });
 
-  return tokenPayload;
+  return tokenPayload as StudentTokenPayload;
 }
 
-/**
- * Clears the student session cookie.
- */
 export async function logoutStudent(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
 }
 
-/**
- * Reads the student session from the cookie and verifies it.
- * Returns the student info if valid, or null if not authenticated.
- */
 export async function getStudentSession(): Promise<StudentTokenPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
-
-  if (!token) {
-    return null;
-  }
-
+  if (!token) return null;
   return verifyStudentToken(token);
+}
+
+export async function requireStudentAuth(): Promise<StudentTokenPayload> {
+  const session = await getStudentSession();
+  if (!session) {
+    throw new Error("로그인이 필요합니다.");
+  }
+  return session;
 }

@@ -10,15 +10,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "다른 영어 학원 | 온라인 강의실",
-  description: "강동구 학교별 맞춤형 영어 내신 대비 온라인 학습 플랫폼",
+  title: "NARA | 영어학원 AI ERP",
+  description: "영어학원 통합 관리 플랫폼 — 원생관리, 출결, 수납, AI 문제생성, 성적분석",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -33,10 +32,10 @@ export default function RootLayout({
           rel="stylesheet"
           as="style"
           crossOrigin="anonymous"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
         />
       </head>
-      <body className={`${geistMono.variable} antialiased`}>
+      <body className={`${geistMono.variable} font-sans antialiased`}>
         <Providers>
           {children}
         </Providers>

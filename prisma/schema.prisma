@@ -1,5 +1,5 @@
 // ============================================================================
-// Nara - Prisma Schema
+// NARA - 영어학원 AI ERP Platform
 // Provider: PostgreSQL (Supabase)
 // ============================================================================
 
@@ -14,128 +14,603 @@ datasource db {
 }
 
 // ============================================================================
-// School
+// 1. CORE — Academy, Staff, School, Student, Parent
 // ============================================================================
-/// Core school entity. type uses SchoolType values: "MIDDLE" | "HIGH"
-model School {
+
+/// Academy (학원) — the root tenant entity
+model Academy {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
-  type      String // SchoolType: "MIDDLE" | "HIGH"
-  createdAt DateTime @default(now())
-
-  // Relations
-  students       Student[]
-  exams          Exam[]
-  passages       Passage[]
-  vocabLists     VocabularyList[]
-  teacherPrompts TeacherPrompt[]
-
-  @@map("schools")
-}
-
-// ============================================================================
-// Student
-// ============================================================================
-model Student {
-  id          String   @id @default(cuid())
-  name        String
-  studentCode String   @unique
-  phone       String?
-  grade       Int
-  schoolId    String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-
-  // Relations
-  school            School             @relation(fields: [schoolId], references: [id])
-  vocabTestResults  VocabTestResult[]
-  wrongVocabAnswers WrongVocabAnswer[]
-  aiConversations   AIConversation[]
-  studyProgress     StudyProgress[]
-
-  @@index([schoolId])
-  @@map("students")
-}
-
-// ============================================================================
-// Admin
-// ============================================================================
-/// role uses AdminRole values: "SUPER_ADMIN" | "TEACHER"
-model Admin {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  role      String   @default("TEACHER") // AdminRole: "SUPER_ADMIN" | "TEACHER"
-  createdAt DateTime @default(now())
-
-  @@map("admins")
-}
-
-// ============================================================================
-// Passage
-// ============================================================================
-/// semester uses Semester values: "FIRST" | "SECOND"
-model Passage {
-  id        String   @id @default(cuid())
-  schoolId  String
-  title     String
-  content   String   @db.Text // Full text content
-  source    String?
-  grade     Int
-  semester  String // Semester: "FIRST" | "SECOND"
-  unit      String?
-  order     Int      @default(0)
+  phone     String?
+  address   String?
+  logoUrl   String?
+  color     String?  @default("#3B82F6") // Brand color
+  settings  String?  @db.Text // JSON: business hours, notification prefs, etc.
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  school         School           @relation(fields: [schoolId], references: [id])
-  notes          PassageNote[]
-  questions      ExamQuestion[]
+  staff          Staff[]
+  students       Student[]
+  parents        Parent[]
+  schools        School[]
+  classes        Class[]
+  attendances    Attendance[]
+  invoices       Invoice[]
+  expenses       Expense[]
+  salaries       Salary[]
+  notices        Notice[]
+  calendarEvents CalendarEvent[]
+  consultations  Consultation[]
+  assignments    Assignment[]
+  passages              Passage[]
+  questions             Question[]
+  questionCollections   QuestionCollection[]
+  exams                 Exam[]
+  vocabLists     VocabularyList[]
   teacherPrompts TeacherPrompt[]
-  analysis       PassageAnalysis?
+  textbooks      Textbook[]
+  achievements   Achievement[]
 
+  @@map("academies")
+}
+
+/// Staff — Directors and Teachers
+/// role: "DIRECTOR" | "TEACHER"
+model Staff {
+  id        String   @id @default(cuid())
+  academyId String
+  email     String   @unique
+  password  String
+  name      String
+  phone     String?
+  role      String   @default("TEACHER") // "DIRECTOR" | "TEACHER"
+  avatarUrl String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  academy          Academy           @relation(fields: [academyId], references: [id])
+  classes          Class[]           // Classes taught
+  staffAttendances StaffAttendance[]
+  salaries         Salary[]
+  consultations    Consultation[]
+  messages         Message[]         @relation("SentMessages")
+  receivedMessages Message[]         @relation("ReceivedStaffMessages")
+
+  @@index([academyId])
+  @@map("staff")
+}
+
+/// School — Reference schools that students attend (강동중, 명일여고 etc.)
+/// type: "MIDDLE" | "HIGH" | "ELEMENTARY"
+model School {
+  id        String   @id @default(cuid())
+  academyId String
+  name      String
+  slug      String
+  type      String   // "MIDDLE" | "HIGH" | "ELEMENTARY"
+  publisher String?  // 교과서 출판사
+  createdAt DateTime @default(now())
+
+  // Relations
+  academy  Academy   @relation(fields: [academyId], references: [id])
+  students Student[]
+  passages Passage[]
+  exams    Exam[]
+
+  @@unique([academyId, slug])
+  @@index([academyId])
+  @@map("schools")
+}
+
+/// Student — Academy students
+/// status: "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
+/// gender: "MALE" | "FEMALE" | null
+model Student {
+  id          String    @id @default(cuid())
+  academyId   String
+  name        String
+  studentCode String    @unique // 4-digit login code
+  birthDate   DateTime?
+  gender      String?   // "MALE" | "FEMALE"
+  phone       String?
+  schoolId    String?
+  grade       Int
+  status      String    @default("ACTIVE") // "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
+  enrollDate  DateTime  @default(now())
+  withdrawDate DateTime?
+  pauseDate   DateTime?
+  memo        String?   @db.Text // Special notes (allergies, personality, etc.)
+  avatarUrl   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Gamification
+  xp     Int @default(0)
+  level  Int @default(1)
+  streak Int @default(0)
+
+  // Relations
+  academy            Academy              @relation(fields: [academyId], references: [id])
+  school             School?              @relation(fields: [schoolId], references: [id])
+  parentLinks        ParentStudent[]
+  classEnrollments   ClassEnrollment[]
+  attendances        Attendance[]
+  invoices           Invoice[]
+  consultations      Consultation[]
+  assignmentSubs     AssignmentSubmission[]
+  examSubmissions    ExamSubmission[]
+  vocabTestResults   VocabTestResult[]
+  wrongVocabAnswers  WrongVocabAnswer[]
+  aiConversations    AIConversation[]
+  studyProgress      StudyProgress[]
+  studentAchievements StudentAchievement[]
+  studentAnalytics   StudentAnalytics?
+  parentReports      ParentReport[]
+  wrongAnswerLogs    WrongAnswerLog[]
+
+  @@index([academyId])
   @@index([schoolId])
-  @@index([schoolId, grade, semester])
-  @@map("passages")
+  @@index([academyId, status])
+  @@map("students")
+}
+
+/// Parent — Student guardians
+model Parent {
+  id               String   @id @default(cuid())
+  academyId        String
+  name             String
+  phone            String
+  email            String?
+  relation         String?  // "MOTHER" | "FATHER" | "GUARDIAN" | "OTHER"
+  emergencyContact String?
+  memo             String?  @db.Text
+  loginToken       String?  @unique // For passwordless parent login via link
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  academy        Academy        @relation(fields: [academyId], references: [id])
+  studentLinks   ParentStudent[]
+  parentReports  ParentReport[]
+  messages       Message[]      @relation("ParentMessages")
+
+  @@index([academyId])
+  @@index([phone])
+  @@map("parents")
+}
+
+/// ParentStudent — Many-to-many: Parent ↔ Student (siblings support)
+model ParentStudent {
+  id        String @id @default(cuid())
+  parentId  String
+  studentId String
+
+  parent  Parent  @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([parentId, studentId])
+  @@map("parent_students")
 }
 
 // ============================================================================
-// PassageAnalysis (AI-generated analysis cache)
+// 2. CLASS MANAGEMENT
 // ============================================================================
+
+/// Class — Academy classes (반)
+model Class {
+  id        String   @id @default(cuid())
+  academyId String
+  name      String
+  teacherId String?
+  schedule  String?  @db.Text // JSON: [{ day: "MON", startTime: "14:00", endTime: "16:00" }]
+  capacity  Int      @default(20)
+  fee       Int      @default(0) // Monthly fee in KRW
+  room      String?  // Classroom name/number
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  academy     Academy            @relation(fields: [academyId], references: [id])
+  teacher     Staff?             @relation(fields: [teacherId], references: [id])
+  enrollments ClassEnrollment[]
+  attendances Attendance[]
+  assignments Assignment[]
+  exams       Exam[]
+
+  @@index([academyId])
+  @@index([teacherId])
+  @@map("classes")
+}
+
+/// ClassEnrollment — Student ↔ Class enrollment (supports multiple classes)
+/// status: "ENROLLED" | "WAITLISTED" | "DROPPED"
+model ClassEnrollment {
+  id         String   @id @default(cuid())
+  classId    String
+  studentId  String
+  status     String   @default("ENROLLED") // "ENROLLED" | "WAITLISTED" | "DROPPED"
+  enrolledAt DateTime @default(now())
+  droppedAt  DateTime?
+
+  class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, studentId])
+  @@index([studentId])
+  @@map("class_enrollments")
+}
+
+// ============================================================================
+// 3. ATTENDANCE
+// ============================================================================
+
+/// Attendance — Student attendance records
+/// status: "PRESENT" | "ABSENT" | "LATE" | "EARLY_LEAVE" | "MAKEUP"
+model Attendance {
+  id           String    @id @default(cuid())
+  academyId    String
+  studentId    String
+  classId      String?
+  date         DateTime
+  checkInTime  DateTime?
+  checkOutTime DateTime?
+  status       String    @default("PRESENT") // "PRESENT" | "ABSENT" | "LATE" | "EARLY_LEAVE" | "MAKEUP"
+  note         String?
+  method       String?   // "KIOSK" | "QR" | "MANUAL"
+  createdAt    DateTime  @default(now())
+
+  // Relations
+  academy Academy  @relation(fields: [academyId], references: [id])
+  student Student  @relation(fields: [studentId], references: [id])
+  class   Class?   @relation(fields: [classId], references: [id])
+
+  @@unique([studentId, classId, date])
+  @@index([academyId, date])
+  @@index([studentId, date])
+  @@map("attendances")
+}
+
+/// StaffAttendance — Staff clock-in/out records
+model StaffAttendance {
+  id       String    @id @default(cuid())
+  staffId  String
+  date     DateTime
+  checkIn  DateTime?
+  checkOut DateTime?
+  note     String?
+
+  staff Staff @relation(fields: [staffId], references: [id])
+
+  @@unique([staffId, date])
+  @@index([staffId, date])
+  @@map("staff_attendances")
+}
+
+// ============================================================================
+// 4. BILLING & FINANCE
+// ============================================================================
+
+/// Invoice — Monthly billing records
+/// status: "PENDING" | "PAID" | "OVERDUE" | "PARTIAL" | "REFUNDED" | "CANCELLED"
+model Invoice {
+  id          String    @id @default(cuid())
+  academyId   String
+  studentId   String
+  title       String    // e.g. "2026년 3월 수강료"
+  amount      Int       // Total amount in KRW
+  discount    Int       @default(0) // Discount amount
+  finalAmount Int       // amount - discount
+  dueDate     DateTime
+  paidDate    DateTime?
+  status      String    @default("PENDING")
+  memo        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  academy  Academy   @relation(fields: [academyId], references: [id])
+  student  Student   @relation(fields: [studentId], references: [id])
+  payments Payment[]
+
+  @@index([academyId, status])
+  @@index([studentId])
+  @@index([academyId, dueDate])
+  @@map("invoices")
+}
+
+/// Payment — Individual payment transactions
+/// method: "CARD" | "TRANSFER" | "CASH" | "KAKAO_PAY" | "NAVER_PAY" | "TOSS"
+model Payment {
+  id        String   @id @default(cuid())
+  invoiceId String
+  amount    Int
+  method    String   // "CARD" | "TRANSFER" | "CASH" | "KAKAO_PAY" | "NAVER_PAY" | "TOSS"
+  reference String?  // Transaction ID from payment gateway
+  paidAt    DateTime @default(now())
+  memo      String?
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+/// Expense — Academy expenditures
+/// category: "RENT" | "SALARY" | "MATERIALS" | "MARKETING" | "UTILITIES" | "MAINTENANCE" | "OTHER"
+model Expense {
+  id          String   @id @default(cuid())
+  academyId   String
+  category    String   // "RENT" | "SALARY" | "MATERIALS" | "MARKETING" | "UTILITIES" | "MAINTENANCE" | "OTHER"
+  amount      Int
+  date        DateTime
+  description String?
+  receipt     String?  // Receipt image URL
+  createdAt   DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@index([academyId, date])
+  @@index([academyId, category])
+  @@map("expenses")
+}
+
+/// Salary — Staff salary records
+model Salary {
+  id         String    @id @default(cuid())
+  academyId  String
+  staffId    String
+  month      String    // "2026-03" format
+  basePay    Int
+  bonus      Int       @default(0)
+  deductions Int       @default(0)
+  totalPay   Int
+  paidAt     DateTime?
+  memo       String?
+  createdAt  DateTime  @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id])
+  staff   Staff   @relation(fields: [staffId], references: [id])
+
+  @@unique([staffId, month])
+  @@index([academyId, month])
+  @@map("salaries")
+}
+
+// ============================================================================
+// 5. COMMUNICATION
+// ============================================================================
+
+/// Notice — Announcements
+/// targetType: "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
+model Notice {
+  id         String   @id @default(cuid())
+  academyId  String
+  title      String
+  content    String   @db.Text
+  targetType String   @default("ALL") // "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
+  targetId   String?  // classId or studentId depending on targetType
+  isPinned   Boolean  @default(false)
+  publishAt  DateTime @default(now()) // Scheduled publish time
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  academy Academy       @relation(fields: [academyId], references: [id])
+  reads   NoticeRead[]
+
+  @@index([academyId, publishAt])
+  @@map("notices")
+}
+
+/// NoticeRead — Track who read the notice
+model NoticeRead {
+  id        String   @id @default(cuid())
+  noticeId  String
+  readerId  String   // parentId or studentId
+  readerType String  // "PARENT" | "STUDENT"
+  readAt    DateTime @default(now())
+
+  notice Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+
+  @@unique([noticeId, readerId, readerType])
+  @@map("notice_reads")
+}
+
+/// Message — 1:1 messages (Teacher ↔ Parent, Director ↔ Anyone)
+model Message {
+  id           String   @id @default(cuid())
+  senderId     String
+  senderType   String   // "STAFF" | "PARENT"
+  receiverId   String
+  receiverType String   // "STAFF" | "PARENT"
+  content      String   @db.Text
+  attachments  String?  @db.Text // JSON array of file URLs
+  isRead       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  // Polymorphic relations
+  senderStaff    Staff?  @relation("SentMessages", fields: [senderId], references: [id], map: "msg_sender_staff")
+  receiverStaff  Staff?  @relation("ReceivedStaffMessages", fields: [receiverId], references: [id], map: "msg_receiver_staff")
+  senderParent   Parent? @relation("ParentMessages", fields: [senderId], references: [id], map: "msg_sender_parent")
+
+  @@index([receiverId, receiverType, isRead])
+  @@index([senderId, senderType])
+  @@map("messages")
+}
+
+/// CalendarEvent — Academy calendar
+/// type: "EXAM" | "EVENT" | "HOLIDAY" | "MEETING" | "OTHER"
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  academyId   String
+  title       String
+  description String?  @db.Text
+  startDate   DateTime
+  endDate     DateTime?
+  allDay      Boolean  @default(false)
+  type        String   @default("EVENT") // "EXAM" | "EVENT" | "HOLIDAY" | "MEETING" | "OTHER"
+  color       String?  // Custom event color
+  createdAt   DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@index([academyId, startDate])
+  @@map("calendar_events")
+}
+
+// ============================================================================
+// 6. CONSULTATION
+// ============================================================================
+
+/// Consultation — Counseling records
+/// type: "NEW_INQUIRY" | "STUDENT" | "PARENT" | "LEVEL_TEST"
+/// channel: "PHONE" | "VISIT" | "ONLINE" | "KAKAO"
+/// status: "SCHEDULED" | "COMPLETED" | "CANCELLED" | "FOLLOW_UP"
+model Consultation {
+  id           String    @id @default(cuid())
+  academyId    String
+  studentId    String?
+  staffId      String?   // Counselor
+  type         String    // "NEW_INQUIRY" | "STUDENT" | "PARENT" | "LEVEL_TEST"
+  channel      String?   // "PHONE" | "VISIT" | "ONLINE" | "KAKAO"
+  status       String    @default("SCHEDULED") // "SCHEDULED" | "COMPLETED" | "CANCELLED" | "FOLLOW_UP"
+  date         DateTime
+  content      String?   @db.Text
+  category     String?   // "GRADE" | "ATTITUDE" | "CAREER" | "PARENT_REQUEST" | "OTHER"
+  followUpDate DateTime?
+  followUpNote String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  academy Academy  @relation(fields: [academyId], references: [id])
+  student Student? @relation(fields: [studentId], references: [id])
+  staff   Staff?   @relation(fields: [staffId], references: [id])
+
+  @@index([academyId, date])
+  @@index([studentId])
+  @@map("consultations")
+}
+
+// ============================================================================
+// 7. ASSIGNMENT
+// ============================================================================
+
+/// Assignment — Homework and tasks
+/// targetType: "CLASS" | "INDIVIDUAL"
+model Assignment {
+  id          String   @id @default(cuid())
+  academyId   String
+  classId     String?
+  title       String
+  description String?  @db.Text
+  targetType  String   @default("CLASS") // "CLASS" | "INDIVIDUAL"
+  dueDate     DateTime
+  maxScore    Int?     // If graded
+  attachments String?  @db.Text // JSON array of file URLs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy     Academy              @relation(fields: [academyId], references: [id])
+  class       Class?               @relation(fields: [classId], references: [id])
+  submissions AssignmentSubmission[]
+
+  @@index([academyId, dueDate])
+  @@index([classId])
+  @@map("assignments")
+}
+
+/// AssignmentSubmission — Student submissions
+/// status: "PENDING" | "SUBMITTED" | "LATE" | "GRADED"
+model AssignmentSubmission {
+  id           String    @id @default(cuid())
+  assignmentId String
+  studentId    String
+  status       String    @default("PENDING") // "PENDING" | "SUBMITTED" | "LATE" | "GRADED"
+  content      String?   @db.Text
+  attachments  String?   @db.Text // JSON
+  score        Int?
+  feedback     String?   @db.Text
+  submittedAt  DateTime?
+  gradedAt     DateTime?
+  createdAt    DateTime  @default(now())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id])
+
+  @@unique([assignmentId, studentId])
+  @@index([studentId])
+  @@map("assignment_submissions")
+}
+
+// ============================================================================
+// 8. AI CONTENT — Passages
+// ============================================================================
+
+/// Passage — Text passages for study and question generation
+/// difficulty: "BEGINNER" | "ELEMENTARY" | "INTERMEDIATE" | "UPPER_INTERMEDIATE" | "ADVANCED" | "EXPERT"
+model Passage {
+  id          String   @id @default(cuid())
+  academyId   String
+  schoolId    String?  // Optional: school-specific passage
+  title       String
+  content     String   @db.Text
+  source      String?  // Source reference
+  grade       Int?
+  semester    String?  // "FIRST" | "SECOND"
+  unit        String?
+  publisher   String?  // 교과서 출판사
+  difficulty  String?  // "BEGINNER" ~ "EXPERT"
+  tags        String?  @db.Text // JSON array of tags
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  academy        Academy          @relation(fields: [academyId], references: [id])
+  school         School?          @relation(fields: [schoolId], references: [id])
+  notes          PassageNote[]
+  analysis       PassageAnalysis?
+  questions      Question[]
+  teacherPrompts TeacherPrompt[]
+
+  @@index([academyId])
+  @@index([schoolId])
+  @@index([academyId, grade, semester])
+  @@map("passages")
+}
+
+/// PassageAnalysis — AI-generated analysis cache
 model PassageAnalysis {
   id           String   @id @default(cuid())
   passageId    String   @unique
-  analysisData String   @db.Text // JSON string of PassageAnalysisData
-  contentHash  String   // MD5 hash of passage.content for change detection
+  analysisData String   @db.Text // JSON: sentences, vocab, grammar, structure
+  contentHash  String   // MD5 for change detection
   version      Int      @default(1)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // Relations
   passage Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
 
   @@map("passage_analyses")
 }
 
-// ============================================================================
-// PassageNote
-// ============================================================================
-/// noteType uses NoteType values: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
+/// PassageNote — Teacher annotations on passages
+/// noteType: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
 model PassageNote {
   id             String   @id @default(cuid())
   passageId      String
   content        String   @db.Text
   highlightStart Int?
   highlightEnd   Int?
-  noteType       String   @default("EMPHASIS") // NoteType: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
+  noteType       String   @default("EMPHASIS")
   order          Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  // Relations
   passage Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
 
   @@index([passageId])
@@ -143,33 +618,175 @@ model PassageNote {
 }
 
 // ============================================================================
-// VocabularyList
+// 9. AI CONTENT — Questions & Question Bank
 // ============================================================================
-/// semester uses Semester values: "FIRST" | "SECOND"
+
+/// Question — Question bank (AI-generated or manual)
+/// type: "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "ESSAY" | "FILL_BLANK" | "ORDERING" | "VOCAB"
+/// subType: Specific question pattern (e.g. "BLANK_INFERENCE", "GRAMMAR_ERROR", "SENTENCE_INSERT" etc.)
+/// difficulty: "BASIC" | "INTERMEDIATE" | "KILLER"
+model Question {
+  id             String   @id @default(cuid())
+  academyId      String
+  passageId      String?  // Source passage (if passage-based)
+  type           String   // "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "ESSAY" | "FILL_BLANK" | "ORDERING" | "VOCAB"
+  subType        String?  // Specific pattern within type
+  questionText   String   @db.Text
+  questionImage  String?  // Image URL
+  options        String?  @db.Text // JSON: [{ label: "①", text: "..." }, ...] for MC
+  correctAnswer  String   @db.Text // Answer text or JSON for complex answers
+  points         Int      @default(1)
+  difficulty     String   @default("INTERMEDIATE") // "BASIC" | "INTERMEDIATE" | "KILLER"
+  tags           String?  @db.Text // JSON: ["관계대명사", "시제", ...] for filtering
+  aiGenerated    Boolean  @default(false)
+  approved       Boolean  @default(false) // Teacher review status
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  academy     Academy              @relation(fields: [academyId], references: [id])
+  passage     Passage?             @relation(fields: [passageId], references: [id])
+  explanation QuestionExplanation?
+  examLinks       ExamQuestion[]
+  wrongLogs       WrongAnswerLog[]
+  aiConversations AIConversation[]
+  collectionItems QuestionCollectionItem[]
+
+  @@index([academyId])
+  @@index([passageId])
+  @@index([academyId, type, difficulty])
+  @@index([academyId, approved])
+  @@map("questions")
+}
+
+/// QuestionExplanation — Detailed explanation for each question
+model QuestionExplanation {
+  id                    String   @id @default(cuid())
+  questionId            String   @unique
+  content               String   @db.Text // Rich HTML explanation
+  keyPoints             String?  @db.Text // JSON string array
+  wrongOptionExplanations String? @db.Text // JSON: { "1": "왜 틀렸는지...", "2": "..." }
+  relatedGrammar        String?  @db.Text // Related grammar rules
+  difficulty            String?
+  aiGenerated           Boolean  @default(false)
+  approved              Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("question_explanations")
+}
+
+// ============================================================================
+// 10. EXAMS
+// ============================================================================
+
+/// Exam — Test papers (online CBT or offline)
+/// type: "OFFLINE" | "ONLINE" | "VOCAB" | "MOCK"
+/// status: "DRAFT" | "PUBLISHED" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED"
+model Exam {
+  id          String   @id @default(cuid())
+  academyId   String
+  schoolId    String?  // Optional school association
+  classId     String?  // Optional class association
+  title       String
+  type        String   // "OFFLINE" | "ONLINE" | "VOCAB" | "MOCK"
+  status      String   @default("DRAFT") // "DRAFT" | "PUBLISHED" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED"
+  grade       Int?
+  semester    String?  // "FIRST" | "SECOND"
+  examType    String?  // "MIDTERM" | "FINAL" | "QUIZ" | "MOCK"
+  year        Int?
+  examDate    DateTime?
+  duration    Int?     // Time limit in minutes (for online)
+  totalPoints Int      @default(100)
+  shuffleQuestions Boolean @default(false) // Anti-cheat for online
+  shuffleOptions   Boolean @default(false)
+  showResults      Boolean @default(true) // Show results immediately after submission
+  settings    String?  @db.Text // JSON: additional exam settings
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  academy     Academy          @relation(fields: [academyId], references: [id])
+  school      School?          @relation(fields: [schoolId], references: [id])
+  class       Class?           @relation(fields: [classId], references: [id])
+  questions   ExamQuestion[]
+  submissions ExamSubmission[]
+
+  @@index([academyId])
+  @@index([academyId, status])
+  @@index([schoolId])
+  @@map("exams")
+}
+
+/// ExamQuestion — Links questions to exams with ordering and point values
+model ExamQuestion {
+  id         String @id @default(cuid())
+  examId     String
+  questionId String
+  orderNum   Int
+  points     Int    @default(1)
+
+  exam     Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([examId, orderNum])
+  @@unique([examId, questionId])
+  @@index([examId])
+  @@map("exam_questions")
+}
+
+/// ExamSubmission — Student exam submissions
+/// status: "IN_PROGRESS" | "SUBMITTED" | "GRADED"
+model ExamSubmission {
+  id          String    @id @default(cuid())
+  examId      String
+  studentId   String
+  answers     String    @db.Text // JSON: { "questionId": "answer", ... }
+  score       Int?      // Total score (null until graded)
+  maxScore    Int?
+  percent     Float?
+  status      String    @default("IN_PROGRESS") // "IN_PROGRESS" | "SUBMITTED" | "GRADED"
+  startedAt   DateTime  @default(now())
+  submittedAt DateTime?
+  gradedAt    DateTime?
+  gradedBy    String?   // staffId who graded (for manual grading)
+
+  exam    Exam    @relation(fields: [examId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@unique([examId, studentId])
+  @@index([studentId])
+  @@map("exam_submissions")
+}
+
+// ============================================================================
+// 11. VOCABULARY
+// ============================================================================
+
+/// VocabularyList — Word lists for study and testing
 model VocabularyList {
   id        String   @id @default(cuid())
-  schoolId  String
+  academyId String
   title     String
-  grade     Int
-  semester  String // Semester: "FIRST" | "SECOND"
+  grade     Int?
+  semester  String?  // "FIRST" | "SECOND"
   unit      String?
+  schoolId  String?  // Optional school-specific
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  school      School            @relation(fields: [schoolId], references: [id])
+  academy     Academy          @relation(fields: [academyId], references: [id])
   items       VocabularyItem[]
   testResults VocabTestResult[]
 
-  @@index([schoolId])
-  @@index([schoolId, grade, semester])
+  @@index([academyId])
   @@map("vocabulary_lists")
 }
 
-// ============================================================================
-// VocabularyItem
-// ============================================================================
+/// VocabularyItem — Individual vocabulary words
 model VocabularyItem {
   id           String   @id @default(cuid())
   listId       String
@@ -179,10 +796,11 @@ model VocabularyItem {
   exampleEn    String?
   exampleKr    String?
   phonetic     String?
+  synonyms     String?  // Comma-separated
+  antonyms     String?  // Comma-separated
   order        Int      @default(0)
   createdAt    DateTime @default(now())
 
-  // Relations
   list         VocabularyList     @relation(fields: [listId], references: [id], onDelete: Cascade)
   wrongAnswers WrongVocabAnswer[]
 
@@ -190,22 +808,19 @@ model VocabularyItem {
   @@map("vocabulary_items")
 }
 
-// ============================================================================
-// VocabTestResult
-// ============================================================================
-/// testType uses VocabTestType values: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+/// VocabTestResult — Vocabulary test results
+/// testType: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
 model VocabTestResult {
   id        String   @id @default(cuid())
   studentId String
   listId    String
-  testType  String // VocabTestType: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+  testType  String   // "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
   score     Int
   total     Int
   percent   Float
-  duration  Int? // Duration in seconds
+  duration  Int?     // seconds
   takenAt   DateTime @default(now())
 
-  // Relations
   student Student        @relation(fields: [studentId], references: [id])
   list    VocabularyList @relation(fields: [listId], references: [id])
 
@@ -214,20 +829,16 @@ model VocabTestResult {
   @@map("vocab_test_results")
 }
 
-// ============================================================================
-// WrongVocabAnswer
-// ============================================================================
-/// testType uses VocabTestType values: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+/// WrongVocabAnswer — Tracks vocabulary mistakes
 model WrongVocabAnswer {
   id           String   @id @default(cuid())
   studentId    String
   itemId       String
-  testType     String // VocabTestType: "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+  testType     String   // "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
   givenAnswer  String
   count        Int      @default(1)
   lastMissedAt DateTime @default(now())
 
-  // Relations
   student Student        @relation(fields: [studentId], references: [id])
   item    VocabularyItem @relation(fields: [itemId], references: [id])
 
@@ -237,121 +848,51 @@ model WrongVocabAnswer {
 }
 
 // ============================================================================
-// Exam
+// 12. ANALYTICS & GAMIFICATION
 // ============================================================================
-/// semester uses Semester values: "FIRST" | "SECOND"
-/// examType uses ExamType values: "MIDTERM" | "FINAL" | "MOCK"
-model Exam {
-  id        String   @id @default(cuid())
-  schoolId  String
-  grade     Int
-  semester  String // Semester: "FIRST" | "SECOND"
-  examType  String // ExamType: "MIDTERM" | "FINAL" | "MOCK"
-  year      Int
-  title     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  // Relations
-  school    School         @relation(fields: [schoolId], references: [id])
-  questions ExamQuestion[]
+/// StudentAnalytics — Comprehensive student performance data ("영어 인바디")
+model StudentAnalytics {
+  id            String   @id @default(cuid())
+  studentId     String   @unique
+  overallScore  Float    @default(0) // 0-100 composite score
+  grammarScore  Float    @default(0) // 0-100
+  vocabScore    Float    @default(0) // 0-100
+  readingScore  Float    @default(0) // 0-100
+  writingScore  Float    @default(0) // 0-100
+  listeningScore Float   @default(0) // 0-100
+  level         String   @default("D") // "S" | "A" | "B" | "C" | "D"
+  // Detailed grammar breakdown (JSON)
+  grammarDetail String?  @db.Text // JSON: { "tense": 85, "passive": 60, "relative": 40, ... }
+  // Detailed weak points
+  weakPoints    String?  @db.Text // JSON: ["관계대명사 who/which 구분", ...]
+  updatedAt     DateTime @updatedAt
 
-  @@index([schoolId, grade, year])
-  @@map("exams")
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@map("student_analytics")
 }
 
-// ============================================================================
-// ExamQuestion
-// ============================================================================
-model ExamQuestion {
-  id             String   @id @default(cuid())
-  examId         String
-  questionNumber Int
-  questionText   String
-  questionImage  String?
-  correctAnswer  String
-  points         Int      @default(1)
-  passageId      String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+/// WrongAnswerLog — Tracks wrong answers for pattern analysis
+model WrongAnswerLog {
+  id          String   @id @default(cuid())
+  studentId   String
+  questionId  String
+  givenAnswer String
+  category    String?  // "GRAMMAR" | "VOCAB" | "READING" | "WRITING"
+  subCategory String?  // "TENSE" | "RELATIVE_PRONOUN" | "SYNONYM" etc.
+  count       Int      @default(1)
+  lastWrongAt DateTime @default(now())
 
-  // Relations
-  exam            Exam                 @relation(fields: [examId], references: [id], onDelete: Cascade)
-  passage         Passage?             @relation(fields: [passageId], references: [id])
-  explanation     QuestionExplanation?
-  aiConversations AIConversation[]
-
-  @@unique([examId, questionNumber])
-  @@index([examId])
-  @@index([passageId])
-  @@map("exam_questions")
-}
-
-// ============================================================================
-// QuestionExplanation
-// ============================================================================
-model QuestionExplanation {
-  id         String   @id @default(cuid())
-  questionId String   @unique
-  content    String @db.Text // Rich HTML content
-  keyPoints  String @db.Text // JSON string of string array, e.g. '["point1","point2"]'
-  difficulty String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  // Relations
-  question ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-  @@map("question_explanations")
-}
-
-// ============================================================================
-// TeacherPrompt
-// ============================================================================
-/// promptType uses PromptType values: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
-model TeacherPrompt {
-  id         String   @id @default(cuid())
-  schoolId   String
-  passageId  String?
-  content    String   @db.Text
-  promptType String   @default("GENERAL") // PromptType: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  // Relations
-  school  School   @relation(fields: [schoolId], references: [id])
-  passage Passage? @relation(fields: [passageId], references: [id])
-
-  @@index([schoolId])
-  @@index([schoolId, passageId])
-  @@map("teacher_prompts")
-}
-
-// ============================================================================
-// AIConversation
-// ============================================================================
-model AIConversation {
-  id         String   @id @default(cuid())
-  studentId  String
-  questionId String
-  messages   String @db.Text // JSON string of message array, e.g. '[{"role":"user","content":"..."},...]'
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  // Relations
-  student  Student      @relation(fields: [studentId], references: [id])
-  question ExamQuestion @relation(fields: [questionId], references: [id])
+  student  Student  @relation(fields: [studentId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
 
   @@unique([studentId, questionId])
-  @@index([studentId])
-  @@index([questionId])
-  @@map("ai_conversations")
+  @@index([studentId, category])
+  @@map("wrong_answer_logs")
 }
 
-// ============================================================================
-// StudyProgress
-// ============================================================================
+/// StudyProgress — Daily study tracking
 model StudyProgress {
   id               String   @id @default(cuid())
   studentId        String
@@ -359,12 +900,168 @@ model StudyProgress {
   vocabTests       Int      @default(0)
   vocabScore       Float    @default(0)
   questionsViewed  Int      @default(0)
+  questionsAnswered Int     @default(0)
   aiQuestionsAsked Int      @default(0)
+  studyMinutes     Int      @default(0)
+  xpEarned         Int      @default(0)
 
-  // Relations
   student Student @relation(fields: [studentId], references: [id])
 
   @@unique([studentId, date])
   @@index([studentId])
   @@map("study_progress")
+}
+
+/// Achievement — Available badges/achievements
+/// category: "ATTENDANCE" | "VOCAB" | "GRAMMAR" | "GROWTH" | "ASSIGNMENT" | "STREAK"
+model Achievement {
+  id          String @id @default(cuid())
+  academyId   String
+  name        String
+  description String
+  icon        String // Emoji or icon identifier
+  category    String // "ATTENDANCE" | "VOCAB" | "GRAMMAR" | "GROWTH" | "ASSIGNMENT" | "STREAK"
+  condition   String @db.Text // JSON: { type: "STREAK", value: 7 } or { type: "SCORE", min: 90, count: 3 }
+  xpReward    Int    @default(0)
+
+  academy           Academy              @relation(fields: [academyId], references: [id])
+  studentAchievements StudentAchievement[]
+
+  @@index([academyId])
+  @@map("achievements")
+}
+
+/// StudentAchievement — Earned badges
+model StudentAchievement {
+  id            String   @id @default(cuid())
+  studentId     String
+  achievementId String
+  earnedAt      DateTime @default(now())
+
+  student     Student     @relation(fields: [studentId], references: [id])
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+
+  @@unique([studentId, achievementId])
+  @@map("student_achievements")
+}
+
+// ============================================================================
+// 13. AI CONVERSATIONS & PROMPTS
+// ============================================================================
+
+/// AIConversation — Student ↔ AI chat history per question
+model AIConversation {
+  id         String   @id @default(cuid())
+  studentId  String
+  questionId String
+  messages   String   @db.Text // JSON: [{ role, content, timestamp }]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  student  Student  @relation(fields: [studentId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([studentId, questionId])
+  @@index([studentId])
+  @@index([questionId])
+  @@map("ai_conversations")
+}
+
+/// TeacherPrompt — Custom AI instructions per school/passage
+/// promptType: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
+model TeacherPrompt {
+  id         String   @id @default(cuid())
+  academyId  String
+  passageId  String?
+  content    String   @db.Text
+  promptType String   @default("GENERAL")
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  academy Academy  @relation(fields: [academyId], references: [id])
+  passage Passage? @relation(fields: [passageId], references: [id])
+
+  @@index([academyId])
+  @@index([academyId, passageId])
+  @@map("teacher_prompts")
+}
+
+// ============================================================================
+// 14. PARENT REPORTS
+// ============================================================================
+
+/// ParentReport — Auto-generated reports sent to parents
+/// type: "WEEKLY" | "MONTHLY" | "CUSTOM"
+/// status: "DRAFT" | "SENT" | "VIEWED"
+model ParentReport {
+  id         String   @id @default(cuid())
+  studentId  String
+  parentId   String?
+  type       String   // "WEEKLY" | "MONTHLY" | "CUSTOM"
+  reportData String   @db.Text // JSON: scores, attendance, analysis, teacher comment
+  status     String   @default("DRAFT") // "DRAFT" | "SENT" | "VIEWED"
+  sentAt     DateTime?
+  viewedAt   DateTime?
+  createdAt  DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+  parent  Parent? @relation(fields: [parentId], references: [id])
+
+  @@index([studentId])
+  @@index([parentId])
+  @@map("parent_reports")
+}
+
+// ============================================================================
+// 15. TEXTBOOK / CURRICULUM
+// ============================================================================
+
+/// Textbook — Publisher textbook references
+model Textbook {
+  id        String @id @default(cuid())
+  academyId String
+  publisher String // "능률" | "비상" | "YBM" | "천재" | "지학사"
+  title     String
+  grade     Int?
+  year      Int?
+  chapters  String? @db.Text // JSON: [{ unit: 1, title: "..." }]
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@index([academyId])
+  @@map("textbooks")
+}
+
+// ============================================================================
+// QUESTION COLLECTIONS (YouTube-playlist-style grouping)
+// ============================================================================
+
+model QuestionCollection {
+  id          String   @id @default(cuid())
+  academyId   String
+  name        String
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy Academy                  @relation(fields: [academyId], references: [id])
+  items   QuestionCollectionItem[]
+
+  @@index([academyId])
+  @@map("question_collections")
+}
+
+model QuestionCollectionItem {
+  id           String @id @default(cuid())
+  collectionId String
+  questionId   String
+  orderNum     Int    @default(0)
+
+  collection QuestionCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  question   Question           @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, questionId])
+  @@index([collectionId])
+  @@map("question_collection_items")
 }

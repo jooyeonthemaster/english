@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.mcp.json
 
 # debug
 npm-debug.log*
@@ -49,3 +50,6 @@ scripts/analyses/
 scripts/*-passages.json
 scripts/passages-to-analyze.json
 nul
+
+.vercel
+.playwright-mcp/

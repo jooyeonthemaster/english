@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { loginStudent } from "@/lib/auth-student";
+import { loginStudent, logoutStudent } from "@/lib/auth-student";
 
 interface LoginResult {
   success: boolean;
@@ -24,8 +24,8 @@ export async function loginStudentAction(
   }
 
   try {
-    // Look up school by slug to get the actual ID
-    const school = await prisma.school.findUnique({
+    // Look up school by slug (School.slug is not unique alone — use findFirst)
+    const school = await prisma.school.findFirst({
       where: { slug: schoolSlug.trim() },
     });
 
@@ -33,8 +33,8 @@ export async function loginStudentAction(
       return { success: false, error: "존재하지 않는 학교입니다." };
     }
 
-    const session = await loginStudent(school.id, studentCode.trim());
-    return { success: true, schoolSlug: session.schoolSlug };
+    const session = await loginStudent(school.academyId, studentCode.trim());
+    return { success: true };
   } catch (error) {
     const message =
       error instanceof Error
@@ -42,4 +42,8 @@ export async function loginStudentAction(
         : "로그인 중 오류가 발생했습니다.";
     return { success: false, error: message };
   }
+}
+
+export async function logoutStudentAction(): Promise<void> {
+  await logoutStudent();
 }

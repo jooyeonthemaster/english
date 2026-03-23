@@ -1,36 +1,22 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:1.dressup1000.com)",
-      "WebFetch(domain:namu.wiki)",
-      "WebFetch(domain:academy.prompie.com)",
-      "WebFetch(domain:www.edufindkorea.com)",
-      "Bash(npx create-next-app@latest:*)",
-      "Bash(npm install:*)",
-      "Bash(npx shadcn@latest init:*)",
-      "Bash(npx shadcn@latest add button card input label tabs badge separator sheet dialog dropdown-menu select textarea table avatar scroll-area skeleton tooltip progress popover command checkbox radio-group form sonner)",
-      "Bash(test:*)",
-      "Bash(npx prisma validate:*)",
-      "Bash(npx prisma:*)",
-      "Bash(npx tsx prisma/seed.ts:*)",
-      "Bash(cmd.exe /c \"del /f \"\"c:\\\\Users\\\\jooye\\\\Desktop\\\\2026project\\\\nara\\\\src\\\\app\\\\page.tsx\"\"\")",
-      "Bash(wc:*)",
-      "Bash(npm run dev:*)",
-      "Bash(npx next build:*)",
-      "Bash(npx tailwindcss --help:*)",
-      "mcp__playwright__browser_navigate",
-      "Bash(npx next dev:*)",
-      "Bash(powershell -Command:*)",
-      "mcp__playwright__browser_take_screenshot",
-      "Bash(npx tsx:*)",
-      "Bash(del:*)",
-      "Bash(npx tsc:*)",
-      "Bash(node:*)",
-      "Bash(timeout:*)",
-      "Bash(sqlite3:*)",
-      "Bash(\"c:/Users/jooye/Desktop/2026project/nara/scripts/export-gangdong.mjs\" << 'ENDOFFILE'\nimport { PrismaClient } from \"@prisma/client\";\nimport { writeFileSync } from \"fs\";\nconst prisma = new PrismaClient\\(\\);\nconst passages = await prisma.passage.findMany\\({\n  where: { school: { slug: \"gangdong-hs\" } },\n  select: { id: true, title: true, content: true, grade: true, semester: true, unit: true },\n  orderBy: { createdAt: \"asc\" }\n}\\);\nwriteFileSync\\(\"scripts/gangdong-passages.json\", JSON.stringify\\(passages, null, 2\\)\\);\nconsole.log\\(\"Exported\", passages.length, \"passages\"\\);\nawait prisma.$disconnect\\(\\);\nENDOFFILE)",
-      "Bash(git init:*)",
-      "Bash(git branch:*)"
+      "Bash(*)",
+      "WebFetch(*)",
+      "mcp__playwright__*",
+      "WebSearch",
+      "mcp__supabase__*"
     ]
+  },
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_dc14668a513d0e393e48678ac3c3dbd5043dcb22"
+      ]
+    }
   }
 }

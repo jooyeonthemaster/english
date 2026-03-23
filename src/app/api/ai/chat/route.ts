@@ -27,14 +27,11 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Fetch question with explanation and passage
-    const question = await prisma.examQuestion.findUnique({
+    const question = await prisma.question.findUnique({
       where: { id: questionId },
       include: {
         explanation: true,
         passage: true,
-        exam: {
-          select: { schoolId: true },
-        },
       },
     });
 
@@ -45,19 +42,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Fetch teacher prompts for the school + passage
+    // 4. Fetch teacher prompts for the academy + passage
     const teacherPrompts = await prisma.teacherPrompt.findMany({
       where: {
-        schoolId: question.exam.schoolId,
+        academyId: question.academyId,
         isActive: true,
         OR: [
-          { passageId: null }, // General prompts
+          { passageId: null },
           ...(question.passageId ? [{ passageId: question.passageId }] : []),
         ],
       },
     });
 
-    // 5. Load existing conversation if conversationId provided
+    // 5. Load existing conversation
     let conversationHistory: { role: string; content: string }[] = [];
     let existingConversationId: string | null = conversationId || null;
 
@@ -73,7 +70,6 @@ export async function POST(request: NextRequest) {
         }
       }
     } else {
-      // Check if there's an existing conversation for this student + question
       const existingConversation = await prisma.aIConversation.findUnique({
         where: {
           studentId_questionId: {
@@ -111,11 +107,10 @@ export async function POST(request: NextRequest) {
             .join("\n")
         : "없음";
 
-    const systemPrompt = `당신은 '다른 영어 학원'의 영어 튜터입니다.
+    const systemPrompt = `당신은 영어학원의 영어 튜터입니다.
 학생이 시험 문항에 대해 질문하고 있습니다.
 
 ## 문항 정보
-문항 번호: ${question.questionNumber}
 문제: ${question.questionText}
 정답: ${question.correctAnswer}
 
@@ -157,7 +152,6 @@ ${teacherPromptsText}
       system: systemPrompt,
       messages: aiMessages,
       onFinish: async ({ text }) => {
-        // 10. Save conversation after streaming completes
         const updatedMessages = [
           ...conversationHistory,
           { role: "user", content: message },
@@ -182,7 +176,6 @@ ${teacherPromptsText}
             },
           });
 
-          // Update study progress
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 

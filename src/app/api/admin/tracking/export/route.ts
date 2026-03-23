@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const where: Record<string, unknown> = {};
 
   if (schoolSlug) {
-    const school = await prisma.school.findUnique({
+    const school = await prisma.school.findFirst({
       where: { slug: schoolSlug },
       select: { id: true },
     });
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
     return [
       r.student.name,
       r.student.studentCode,
-      r.student.school.name,
+      r.student.school?.name ?? "",
       date,
       `"${r.list.title}"`,
       testTypeMap[r.testType] || r.testType,
