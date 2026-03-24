@@ -111,7 +111,7 @@ export async function getWorkbenchPassages(
       where,
       include: {
         school: { select: { id: true, name: true, type: true } },
-        analysis: { select: { id: true, updatedAt: true } },
+        analysis: { select: { id: true, updatedAt: true, analysisData: true } },
         _count: { select: { questions: true, notes: true } },
       },
       orderBy: { createdAt: "desc" },
@@ -257,7 +257,13 @@ export async function getWorkbenchQuestions(
     prisma.question.findMany({
       where,
       include: {
-        passage: { select: { id: true, title: true, content: true } },
+        passage: {
+          select: {
+            id: true, title: true, content: true,
+            grade: true, semester: true, publisher: true,
+            school: { select: { id: true, name: true } },
+          },
+        },
         explanation: true,
         _count: { select: { examLinks: true } },
       },

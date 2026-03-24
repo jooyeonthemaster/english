@@ -95,8 +95,10 @@ export function EditableSentences({
           key={s.index}
           className="rounded-lg border border-slate-100 hover:border-slate-200 transition-colors group"
         >
-          <button
-            className="w-full text-left p-3 flex items-start gap-3"
+          <div
+            role="button"
+            tabIndex={0}
+            className="w-full text-left p-3 flex items-start gap-3 cursor-pointer"
             onClick={() =>
               setExpandedIndex(expandedIndex === s.index ? null : s.index)
             }
@@ -191,7 +193,7 @@ export function EditableSentences({
             ) : (
               <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
             )}
-          </button>
+          </div>
         </div>
       ))}
     </div>

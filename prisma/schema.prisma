@@ -968,11 +968,13 @@ model AIConversation {
 }
 
 /// TeacherPrompt — Custom AI instructions per school/passage
-/// promptType: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS"
+/// promptType: "GENERAL" | "GRAMMAR" | "VOCAB" | "EXAM_FOCUS" | "QUESTION_GENERATION"
 model TeacherPrompt {
   id         String   @id @default(cuid())
   academyId  String
+  staffId    String?
   passageId  String?
+  name       String   @default("")
   content    String   @db.Text
   promptType String   @default("GENERAL")
   isActive   Boolean  @default(true)
@@ -983,6 +985,7 @@ model TeacherPrompt {
   passage Passage? @relation(fields: [passageId], references: [id])
 
   @@index([academyId])
+  @@index([academyId, promptType])
   @@index([academyId, passageId])
   @@map("teacher_prompts")
 }

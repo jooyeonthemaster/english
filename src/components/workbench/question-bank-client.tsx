@@ -8,7 +8,6 @@ import {
   Database,
   Search,
   Filter,
-  Sparkles,
   CheckCircle2,
   Clock,
   ChevronLeft,
@@ -26,6 +25,12 @@ import {
   ClipboardList,
   SquareCheck,
   Square,
+  Grid3X3,
+  Building2,
+  Calendar,
+  Folder,
+  FolderOpen,
+  Layers,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -122,7 +127,11 @@ interface QuestionItem {
   aiGenerated: boolean;
   approved: boolean;
   createdAt: Date;
-  passage: { id: string; title: string; content: string } | null;
+  passage: {
+    id: string; title: string; content: string;
+    grade?: number | null; semester?: string | null; publisher?: string | null;
+    school?: { id: string; name: string } | null;
+  } | null;
   explanation: {
     id: string;
     content: string;
@@ -301,7 +310,7 @@ function QuestionCard({
                 </Badge>
               )}
               {q.aiGenerated && (
-                <Sparkles className="w-3 h-3 text-amber-500" />
+                <Layers className="w-3 h-3 text-blue-400" />
               )}
               {q.approved ? (
                 <CheckCircle2 className="w-3 h-3 text-emerald-500" />
@@ -492,6 +501,7 @@ export function QuestionBankClient({
   const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
+  const isCollectionsTab = searchParams.get("tab") === "collections";
 
   // Selection
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -507,6 +517,59 @@ export function QuestionBankClient({
   const [createExamOpen, setCreateExamOpen] = useState(false);
   const [examTitle, setExamTitle] = useState("");
   const [creatingExam, setCreatingExam] = useState(false);
+
+  // View mode
+  type ViewMode = "all" | "school" | "publisher" | "year";
+  const [viewMode, setViewMode] = useState<ViewMode>("all");
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(["__all__"]));
+
+  function toggleGroup(key: string) {
+    setExpandedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  const grouped = useMemo(() => {
+    const qs = questionsData.questions;
+    if (viewMode === "school") {
+      const map: Record<string, { label: string; questions: typeof qs }> = {};
+      qs.forEach((q) => {
+        const key = q.passage?.school?.name || "미분류";
+        if (!map[key]) map[key] = { label: key, questions: [] };
+        map[key].questions.push(q);
+      });
+      return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
+    }
+    if (viewMode === "publisher") {
+      const map: Record<string, { label: string; questions: typeof qs }> = {};
+      qs.forEach((q) => {
+        const key = q.passage?.publisher || q.passage?.school?.name || "미분류";
+        if (!map[key]) map[key] = { label: key, questions: [] };
+        map[key].questions.push(q);
+      });
+      return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
+    }
+    if (viewMode === "year") {
+      const map: Record<string, { label: string; questions: typeof qs }> = {};
+      qs.forEach((q) => {
+        const year = new Date(q.createdAt).getFullYear().toString();
+        if (!map[year]) map[year] = { label: `${year}년`, questions: [] };
+        map[year].questions.push(q);
+      });
+      return Object.entries(map).sort(([a], [b]) => b.localeCompare(a));
+    }
+    return [["__all__", { label: "전체", questions: qs }]] as [string, { label: string; questions: typeof qs }][];
+  }, [questionsData.questions, viewMode]);
+
+  const VIEW_TABS = [
+    { id: "all" as ViewMode, label: "전체", icon: Grid3X3 },
+    { id: "school" as ViewMode, label: "학교별", icon: Building2 },
+    { id: "publisher" as ViewMode, label: "출판사별", icon: BookOpen },
+    { id: "year" as ViewMode, label: "연도별", icon: Calendar },
+  ];
 
   const allIds = useMemo(
     () => questionsData.questions.map((q) => q.id),
@@ -762,15 +825,136 @@ export function QuestionBankClient({
             size="sm"
             onClick={() => setGenerateDialogOpen(true)}
           >
-            <Sparkles className="w-4 h-4 mr-1.5" />
+            <Layers className="w-4 h-4 mr-1.5" />
             AI 문제 생성
           </Button>
         </div>
       </div>
 
+      {/* Main tab toggle: 전체 문제 / 컬렉션 */}
+      <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg w-fit">
+        <Link
+          href="/director/questions"
+          className={`px-4 py-1.5 rounded-md text-[13px] font-medium transition-all ${
+            !isCollectionsTab ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          전체 문제
+        </Link>
+        <Link
+          href="/director/questions?tab=collections"
+          className={`px-4 py-1.5 rounded-md text-[13px] font-medium transition-all ${
+            isCollectionsTab ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          컬렉션 ({collections.length})
+        </Link>
+      </div>
+
+      {/* Collections view */}
+      {isCollectionsTab ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-slate-500">문제를 분류하고 관리하는 컬렉션입니다.</p>
+            <Button
+              size="sm"
+              className="h-8 text-xs bg-slate-900 hover:bg-slate-800"
+              onClick={() => { setNewCollectionName(""); setCreateCollectionOpen(true); }}
+            >
+              <FolderPlus className="w-3.5 h-3.5 mr-1" />
+              새 컬렉션
+            </Button>
+          </div>
+
+          {collections.length === 0 ? (
+            <div className="bg-white rounded-xl border text-center py-16">
+              <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+              <p className="text-slate-500 font-medium">컬렉션이 없습니다</p>
+              <p className="text-sm text-slate-400 mt-1">문제를 선택하여 컬렉션에 추가하세요</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {collections.map((c) => (
+                <div
+                  key={c.id}
+                  className="bg-white rounded-xl border p-4 hover:border-blue-200 hover:shadow-sm transition-all group"
+                >
+                  <div className="flex items-start justify-between">
+                    <button
+                      onClick={() => {
+                        updateFilter("collectionId", c.id);
+                        router.push(`/director/questions?collectionId=${c.id}`);
+                      }}
+                      className="flex items-center gap-2.5 min-w-0 text-left"
+                    >
+                      <Folder className="w-5 h-5 text-blue-400 shrink-0" />
+                      <div className="min-w-0">
+                        {editingCollection?.id === c.id ? (
+                          <input
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") { handleRenameCollection(); }
+                              if (e.key === "Escape") setEditingCollection(null);
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[14px] font-semibold text-slate-800 border-b border-blue-400 outline-none bg-transparent w-full"
+                            autoFocus
+                          />
+                        ) : (
+                          <span className="text-[14px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors block truncate">
+                            {c.name}
+                          </span>
+                        )}
+                        <span className="text-[12px] text-slate-400">{c._count.items}개 문제</span>
+                      </div>
+                    </button>
+                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                      <button
+                        onClick={() => { setEditingCollection(c); setEditName(c.name); }}
+                        className="w-7 h-7 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCollection(c.id)}
+                        className="w-7 h-7 flex items-center justify-center rounded-md text-red-400 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+      <>
       {/* Filter bar */}
       <Card>
-        <CardContent className="py-3 px-4">
+        <CardContent className="py-3 px-4 space-y-3">
+          {/* View mode tabs */}
+          <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg w-fit">
+            {VIEW_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setViewMode(tab.id);
+                  setExpandedGroups(new Set(["__all__"]));
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                  viewMode === tab.id
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                <tab.icon className="w-3.5 h-3.5" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           <div className="flex items-center gap-3 flex-wrap">
             <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
 
@@ -939,19 +1123,56 @@ export function QuestionBankClient({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {questionsData.questions.map((q, idx) => {
-            const num = (questionsData.page - 1) * 20 + idx + 1;
+        <div className="space-y-4">
+          {grouped.map(([key, group]) => {
+            const isExpanded = viewMode === "all" || expandedGroups.has(key);
+            let globalIdx = 0;
+            // Calculate start index for numbering
+            const startIdx = (questionsData.page - 1) * 20;
+
             return (
-              <QuestionCard
-                key={q.id}
-                q={q}
-                num={num}
-                selected={selectedIds.has(q.id)}
-                onToggle={() => toggleSelect(q.id)}
-                onDelete={() => handleDelete(q.id)}
-                onApprove={() => handleApprove(q.id)}
-              />
+              <div key={key}>
+                {/* Group header (hidden in "all" mode) */}
+                {viewMode !== "all" && (
+                  <button
+                    onClick={() => toggleGroup(key)}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-white rounded-xl border mb-3 hover:bg-slate-50 transition-colors"
+                  >
+                    {isExpanded ? (
+                      <FolderOpen className="w-5 h-5 text-blue-500" />
+                    ) : (
+                      <Folder className="w-5 h-5 text-slate-400" />
+                    )}
+                    <span className="text-[14px] font-semibold text-slate-800 flex-1 text-left">
+                      {group.label}
+                    </span>
+                    <span className="text-[12px] text-slate-400 mr-2">
+                      {group.questions.length}개 문제
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform ${isExpanded ? "rotate-0" : "-rotate-90"}`} />
+                  </button>
+                )}
+
+                {isExpanded && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {group.questions.map((q, idx) => {
+                      const num = startIdx + (viewMode === "all" ? idx : globalIdx) + 1;
+                      globalIdx++;
+                      return (
+                        <QuestionCard
+                          key={q.id}
+                          q={q}
+                          num={num}
+                          selected={selectedIds.has(q.id)}
+                          onToggle={() => toggleSelect(q.id)}
+                          onDelete={() => handleDelete(q.id)}
+                          onApprove={() => handleApprove(q.id)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
@@ -980,6 +1201,9 @@ export function QuestionBankClient({
             <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
+      )}
+
+      </>
       )}
 
       {/* ---- Dialogs ---- */}

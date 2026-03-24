@@ -21,11 +21,17 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+export interface NavChild {
+  label: string;
+  href: string;
+}
+
 export interface NavItem {
   label: string;
   icon: LucideIcon;
   href: string;
   directorOnly?: boolean;
+  children?: NavChild[];
 }
 
 export interface NavGroup {
@@ -59,9 +65,34 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
     {
       title: "AI 콘텐츠",
       items: [
-        { label: "AI 워크벤치", icon: Sparkles, href: `${basePath}/workbench` },
-        { label: "시험 관리", icon: GraduationCap, href: `${basePath}/exams` },
-        { label: "문제 은행", icon: Database, href: `${basePath}/questions` },
+        {
+          label: "AI 워크벤치",
+          icon: Sparkles,
+          href: `${basePath}/workbench`,
+          children: [
+            { label: "지문 관리", href: `${basePath}/workbench/passages` },
+            { label: "지문 등록", href: `${basePath}/workbench/passages/create` },
+            { label: "문제 생성", href: `${basePath}/workbench/generate` },
+          ],
+        },
+        {
+          label: "문제 은행",
+          icon: Database,
+          href: `${basePath}/questions`,
+          children: [
+            { label: "전체 문제", href: `${basePath}/questions` },
+            { label: "컬렉션", href: `${basePath}/questions?tab=collections` },
+          ],
+        },
+        {
+          label: "시험 관리",
+          icon: GraduationCap,
+          href: `${basePath}/exams`,
+          children: [
+            { label: "시험 목록", href: `${basePath}/exams` },
+            { label: "시험 생성", href: `${basePath}/exams/create` },
+          ],
+        },
       ],
     },
     {

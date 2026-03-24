@@ -12,6 +12,11 @@ import {
   ChevronRight,
   FileText,
   X,
+  Bookmark,
+  ChevronDown,
+  Pencil,
+  Trash2,
+  Check,
 } from "lucide-react";
 import {
   Dialog,
@@ -23,6 +28,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StructuredQuestionRenderer } from "./question-renderers";
+import {
+  getCustomPrompts,
+  createCustomPrompt,
+  deleteCustomPrompt,
+} from "@/actions/custom-prompts";
 
 const EXAM_TYPE_GROUPS = [
   {
@@ -110,6 +120,18 @@ export function GenerateQuestionsDialog({
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
   const [prompt, setPrompt] = useState("");
 
+  // Saved prompts
+  const [savedPrompts, setSavedPrompts] = useState<{ id: string; name: string; content: string }[]>([]);
+  const [showSavedPrompts, setShowSavedPrompts] = useState(false);
+  const [showSaveInput, setShowSaveInput] = useState(false);
+  const [savePromptName, setSavePromptName] = useState("");
+  const [savingPrompt, setSavingPrompt] = useState(false);
+
+  const loadSavedPrompts = async () => {
+    const prompts = await getCustomPrompts("QUESTION_GENERATION");
+    setSavedPrompts(prompts.map((p) => ({ id: p.id, name: p.name, content: p.content })));
+  };
+
   // Generation
   const [generating, setGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState<Record<string, "pending" | "done" | "error">>({});
@@ -117,6 +139,11 @@ export function GenerateQuestionsDialog({
 
   const totalQuestions = Object.values(typeCounts).reduce((a, b) => a + b, 0);
   const activeTypes = Object.keys(typeCounts).filter((k) => typeCounts[k] > 0);
+
+  // Load saved prompts when dialog opens
+  useEffect(() => {
+    if (open) loadSavedPrompts();
+  }, [open]);
 
   // Load passages
   useEffect(() => {
@@ -499,13 +526,97 @@ export function GenerateQuestionsDialog({
                 </div>
               )}
 
-              {/* Prompt */}
-              <textarea
-                placeholder="추가 지시사항 (선택)"
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="w-full min-h-[56px] px-3 py-2 text-[13px] leading-relaxed rounded-lg border border-slate-200 bg-slate-50/60 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-300 resize-none"
-              />
+              {/* Prompt with saved presets */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-semibold text-slate-400 tracking-wider">추가 지시사항</span>
+                  <div className="flex items-center gap-1">
+                    {prompt.trim() && !showSaveInput && (
+                      <button
+                        onClick={() => setShowSaveInput(true)}
+                        className="flex items-center gap-1 text-[10px] text-blue-500 hover:text-blue-700 font-medium px-1.5 py-0.5 rounded hover:bg-blue-50"
+                      >
+                        <Save className="w-2.5 h-2.5" />저장
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setShowSavedPrompts(!showSavedPrompts)}
+                      className={`flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded transition-colors ${
+                        showSavedPrompts ? "text-blue-700 bg-blue-50" : "text-slate-500 hover:bg-slate-50"
+                      }`}
+                    >
+                      <Bookmark className="w-2.5 h-2.5" />
+                      불러오기 ({savedPrompts.length})
+                    </button>
+                  </div>
+                </div>
+
+                {showSaveInput && (
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-blue-50 border border-blue-200">
+                    <input
+                      placeholder="지시사항 이름"
+                      value={savePromptName}
+                      onChange={(e) => setSavePromptName(e.target.value)}
+                      className="flex-1 h-7 px-2 text-[11px] rounded border border-blue-200 bg-white outline-none focus:border-blue-400"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && savePromptName.trim()) {
+                          setSavingPrompt(true);
+                          createCustomPrompt({ name: savePromptName.trim(), content: prompt }).then(() => {
+                            toast.success("저장됨"); setSavePromptName(""); setShowSaveInput(false); setSavingPrompt(false); loadSavedPrompts();
+                          });
+                        }
+                        if (e.key === "Escape") setShowSaveInput(false);
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        if (!savePromptName.trim()) return;
+                        setSavingPrompt(true);
+                        createCustomPrompt({ name: savePromptName.trim(), content: prompt }).then(() => {
+                          toast.success("저장됨"); setSavePromptName(""); setShowSaveInput(false); setSavingPrompt(false); loadSavedPrompts();
+                        });
+                      }}
+                      disabled={!savePromptName.trim() || savingPrompt}
+                      className="h-7 px-2 text-[10px] font-medium bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {savingPrompt ? <Loader2 className="w-3 h-3 animate-spin" /> : "저장"}
+                    </button>
+                    <button onClick={() => setShowSaveInput(false)} className="h-7 w-7 flex items-center justify-center text-slate-400 hover:text-slate-600">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+
+                {showSavedPrompts && savedPrompts.length > 0 && (
+                  <div className="rounded-lg border border-slate-200 divide-y divide-slate-100 max-h-[150px] overflow-y-auto">
+                    {savedPrompts.map((sp) => (
+                      <div key={sp.id} className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 group">
+                        <button
+                          onClick={() => { setPrompt(sp.content); setShowSavedPrompts(false); toast.success(`"${sp.name}" 불러옴`); }}
+                          className="flex-1 text-left min-w-0"
+                        >
+                          <span className="text-[11px] font-medium text-slate-700 block truncate">{sp.name || "이름 없음"}</span>
+                          <span className="text-[10px] text-slate-400 block truncate">{sp.content.slice(0, 60)}</span>
+                        </button>
+                        <button
+                          onClick={() => { deleteCustomPrompt(sp.id).then(() => { toast.success("삭제됨"); loadSavedPrompts(); }); }}
+                          className="w-5 h-5 flex items-center justify-center text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 shrink-0"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <textarea
+                  placeholder="예: 킬러 문항은 빈칸 추론으로, 서술형은 조건부 영작 위주로..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  className="w-full min-h-[56px] px-3 py-2 text-[13px] leading-relaxed rounded-lg border border-slate-200 bg-slate-50/60 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-300 resize-none"
+                />
+              </div>
 
               {/* Actions */}
               <div className="flex items-center gap-3">

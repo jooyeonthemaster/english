@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Sparkles,
   FileText,
   BookOpen,
   Languages,
@@ -17,6 +16,8 @@ import {
   Trash2,
   Save,
   X,
+  ChevronDown,
+  Layers,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 import { deleteWorkbenchPassage, updatePassageAnalysis } from "@/actions/workbench";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
@@ -41,6 +43,7 @@ import { EditableVocabulary } from "./editable-vocabulary";
 import { EditableGrammar } from "./editable-grammar";
 import { EditableStructure } from "./editable-structure";
 import { StructuredQuestionRenderer } from "./question-renderers";
+import { InteractivePassageView } from "./interactive-passage-view";
 
 interface PassageDetailProps {
   autoAnalyze?: boolean;
@@ -78,8 +81,19 @@ interface PassageDetailProps {
       subType: string | null;
       difficulty: string;
       questionText: string;
+      options: string | null;
+      correctAnswer: string;
+      tags: string | null;
       aiGenerated: boolean;
       approved: boolean;
+      createdAt: Date;
+      explanation: {
+        id: string;
+        content: string;
+        keyPoints: string | null;
+        wrongOptionExplanations: string | null;
+      } | null;
+      _count?: { examLinks: number };
     }>;
   };
 }
@@ -324,243 +338,54 @@ export function PassageDetailClient({ passage, autoAnalyze, initialPrompt, initi
                 }
               }}
             >
-              <Sparkles className="w-4 h-4 mr-1.5" />
+              <Layers className="w-4 h-4 mr-1.5" />
               문제 생성
             </Button>
           </div>
         </div>
 
-        {/* Top: Passage text + AI prompt panel side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6">
-          {/* Left: Passage text */}
+        {/* Interactive Passage View — integrated analysis */}
+        <InteractivePassageView
+          content={passage.content}
+          analysisData={analysisData}
+        />
+
+        {/* AI 분석 설정 — collapsible */}
+        <AnalysisPromptPanel
+          onRunAnalysis={runAnalysisWithConfig}
+          analyzing={analyzing}
+          hasExistingAnalysis={!!analysisData}
+          initialConfig={lastPromptConfig}
+        />
+
+        {/* 출제 섹션 — separate from analysis */}
+        {analysisData && (
           <Card>
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-slate-400" />
-                  지문 원문
-                </CardTitle>
-                <span className="text-xs text-slate-400">
-                  {passage.content.trim().split(/\s+/).length} words
-                </span>
-              </div>
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <Target className="w-4 h-4 text-blue-500" />
+                문제 출제
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="font-mono text-sm leading-[1.8] text-slate-700 whitespace-pre-wrap max-h-[500px] overflow-y-auto">
-                {analysisData
-                  ? analysisData.sentences.map((sentence, idx) => {
-                      const vocabsInSentence =
-                        analysisData.vocabulary.filter(
-                          (v) => v.sentenceIndex === idx
-                        );
-                      const grammarsInSentence =
-                        analysisData.grammarPoints.filter(
-                          (g) => g.sentenceIndex === idx
-                        );
-
-                      return (
-                        <span key={idx} className="inline">
-                          {renderHighlightedSentence(
-                            sentence.english,
-                            vocabsInSentence,
-                            grammarsInSentence
-                          )}{" "}
-                        </span>
-                      );
-                    })
-                  : passage.content}
-              </div>
+              <ExamPointsEditor
+                keyPoints={analysisData.structure.keyPoints}
+                onUpdate={(newPoints) => {
+                  updateStructure({
+                    ...analysisData.structure,
+                    keyPoints: newPoints,
+                  });
+                }}
+                passageId={passage.id}
+              />
             </CardContent>
           </Card>
+        )}
 
-          {/* Right: AI prompt panel */}
-          <div className="space-y-4">
-            <AnalysisPromptPanel
-              onRunAnalysis={runAnalysisWithConfig}
-              analyzing={analyzing}
-              hasExistingAnalysis={!!analysisData}
-              initialConfig={lastPromptConfig}
-            />
-
-            {/* Question count */}
-            {passage.questions.length > 0 && (
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-semibold">
-                    연결된 문제 ({passage.questions.length}개)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {passage.questions.slice(0, 5).map((q) => (
-                    <Link
-                      key={q.id}
-                      href={`/director/questions/${q.id}`}
-                      className="flex items-center gap-2 p-2 rounded hover:bg-slate-50 text-sm"
-                    >
-                      <Badge variant="outline" className="text-[10px]">
-                        {q.type === "MULTIPLE_CHOICE" ? "객관식" : q.type}
-                      </Badge>
-                      <span className="text-slate-600 truncate flex-1">
-                        {q.questionText.slice(0, 50)}...
-                      </span>
-                      {q.aiGenerated && (
-                        <Sparkles className="w-3 h-3 text-amber-500 shrink-0" />
-                      )}
-                    </Link>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom: Analysis results (full width) */}
-        <div className="space-y-4">
-
-            {!analysisData ? (
-              <Card className="flex items-center justify-center">
-                <CardContent className="text-center py-12">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-50 mb-4">
-                    <Sparkles className="w-8 h-8 text-blue-500" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">
-                    AI 분석 실행
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-2 max-w-xs mx-auto">
-                    위의 설정 패널에서 분석 옵션을 선택한 후 실행하세요.
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    또는 기본 설정으로 바로 분석을 시작할 수 있습니다.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card>
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-500" />
-                      AI 분석 결과
-                      {hasUnsavedChanges && (
-                        <Badge
-                          variant="outline"
-                          className="text-[10px] text-amber-600 border-amber-200"
-                        >
-                          수정됨
-                        </Badge>
-                      )}
-                    </CardTitle>
-                    <div className="flex items-center gap-1">
-                      {hasUnsavedChanges && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleSave}
-                          disabled={saving}
-                          className="text-xs text-blue-600"
-                        >
-                          {saving ? (
-                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                          ) : (
-                            <Save className="w-3 h-3 mr-1" />
-                          )}
-                          저장
-                        </Button>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={runQuickAnalysis}
-                        disabled={analyzing}
-                        className="text-xs"
-                      >
-                        {analyzing ? (
-                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                        ) : (
-                          <RefreshCw className="w-3 h-3 mr-1" />
-                        )}
-                        재분석
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <Tabs defaultValue="sentences">
-                    <TabsList className="grid grid-cols-5 w-full">
-                      <TabsTrigger value="sentences" className="text-xs">
-                        <Languages className="w-3 h-3 mr-1" />
-                        문장
-                      </TabsTrigger>
-                      <TabsTrigger value="vocab" className="text-xs">
-                        <BookOpen className="w-3 h-3 mr-1" />
-                        어휘
-                      </TabsTrigger>
-                      <TabsTrigger value="grammar" className="text-xs">
-                        <Lightbulb className="w-3 h-3 mr-1" />
-                        문법
-                      </TabsTrigger>
-                      <TabsTrigger value="structure" className="text-xs">
-                        <LayoutList className="w-3 h-3 mr-1" />
-                        구조
-                      </TabsTrigger>
-                      <TabsTrigger value="points" className="text-xs">
-                        <Target className="w-3 h-3 mr-1" />
-                        출제
-                      </TabsTrigger>
-                    </TabsList>
-
-                    {/* Sentences tab — editable */}
-                    <TabsContent value="sentences" className="mt-4 space-y-1">
-                      <EditableSentences
-                        sentences={analysisData.sentences}
-                        onUpdate={updateSentences}
-                        passageId={passage.id}
-                      />
-                    </TabsContent>
-
-                    {/* Vocabulary tab — editable */}
-                    <TabsContent value="vocab" className="mt-4">
-                      <EditableVocabulary
-                        vocabulary={analysisData.vocabulary}
-                        onUpdate={updateVocabulary}
-                      />
-                    </TabsContent>
-
-                    {/* Grammar tab — editable */}
-                    <TabsContent value="grammar" className="mt-4">
-                      <EditableGrammar
-                        grammarPoints={analysisData.grammarPoints}
-                        onUpdate={updateGrammarPoints}
-                        passageId={passage.id}
-                      />
-                    </TabsContent>
-
-                    {/* Structure tab — editable */}
-                    <TabsContent value="structure" className="mt-4 space-y-4">
-                      <EditableStructure
-                        structure={analysisData.structure}
-                        onUpdate={updateStructure}
-                      />
-                    </TabsContent>
-
-                    {/* Exam points tab — editable + question generation prompt */}
-                    <TabsContent value="points" className="mt-4">
-                      <ExamPointsEditor
-                        keyPoints={analysisData.structure.keyPoints}
-                        onUpdate={(newPoints) => {
-                          updateStructure({
-                            ...analysisData.structure,
-                            keyPoints: newPoints,
-                          });
-                        }}
-                        passageId={passage.id}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+        {/* 연결된 문제 — toggle + 2-column grid */}
+        {passage.questions.length > 0 && (
+          <QuestionsSection questions={passage.questions} />
+        )}
         </div>
       </TooltipProvider>
   );
@@ -857,7 +682,7 @@ function ExamPointsEditor({
       {/* Question type selection + generation prompt */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-blue-600" />
+          <Layers className="w-4 h-4 text-blue-600" />
           <span className="text-sm font-semibold text-slate-900">문제 생성</span>
           {totalQuestions > 0 && (
             <span className="text-[11px] text-blue-600 font-medium">총 {totalQuestions}문제</span>
@@ -959,7 +784,7 @@ function ExamPointsEditor({
             </>
           ) : (
             <>
-              <Sparkles className="w-4 h-4 mr-1.5" />
+              <Layers className="w-4 h-4 mr-1.5" />
               {totalQuestions > 0 ? `${totalQuestions}문제 생성하기` : "유형과 개수를 선택하세요"}
             </>
           )}
@@ -1033,6 +858,190 @@ function ExamPointsEditor({
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Questions Section — toggle + 2-column grid with FULL question cards
+// ---------------------------------------------------------------------------
+
+const Q_TYPE_LABELS: Record<string, string> = {
+  MULTIPLE_CHOICE: "객관식",
+  SHORT_ANSWER: "주관식",
+  FILL_BLANK: "빈칸",
+  ORDERING: "순서배열",
+  VOCAB: "어휘",
+};
+
+const Q_SUBTYPE_LABELS: Record<string, string> = {
+  BLANK_INFERENCE: "빈칸 추론", GRAMMAR_ERROR: "어법 판단", VOCAB_CHOICE: "어휘 적절성",
+  SENTENCE_INSERT: "문장 삽입", SENTENCE_ORDER: "글의 순서", TOPIC_MAIN_IDEA: "주제/요지",
+  TITLE: "제목 추론", REFERENCE: "지칭 추론", CONTENT_MATCH: "내용 일치",
+  IRRELEVANT: "무관한 문장", CONDITIONAL_WRITING: "조건부 영작", SENTENCE_TRANSFORM: "문장 전환",
+  FILL_BLANK_KEY: "핵심 표현 빈칸", SUMMARY_COMPLETE: "요약문 완성", WORD_ORDER: "배열 영작",
+  GRAMMAR_CORRECTION: "문법 오류 수정", CONTEXT_MEANING: "문맥 속 의미", SYNONYM: "동의어", ANTONYM: "반의어",
+};
+
+const Q_DIFF: Record<string, { label: string; cls: string }> = {
+  BASIC: { label: "기본", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  INTERMEDIATE: { label: "중급", cls: "bg-blue-50 text-blue-700 border-blue-200" },
+  KILLER: { label: "킬러", cls: "bg-red-50 text-red-700 border-red-200" },
+};
+
+function safeParseJSON<T>(str: unknown, fallback: T): T {
+  if (!str) return fallback;
+  if (Array.isArray(str)) return str as T;
+  if (typeof str === "object") return Array.isArray(fallback) && !Array.isArray(str) ? fallback : (str as T);
+  if (typeof str !== "string") return fallback;
+  try { const parsed = JSON.parse(str); return Array.isArray(fallback) && !Array.isArray(parsed) ? fallback : parsed; }
+  catch { return fallback; }
+}
+
+function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["questions"][0]; num: number }) {
+  const [showExplanation, setShowExplanation] = useState(false);
+  const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
+  const tags = safeParseJSON<string[]>(q.tags, []);
+  const keyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);
+
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all">
+      {/* Header */}
+      <div className="px-4 pt-4 pb-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[12px] font-bold text-slate-400 mr-1">{num}.</span>
+          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
+            {Q_TYPE_LABELS[q.type] || q.type}
+          </span>
+          {q.subType && (
+            <span className="text-[10px] text-slate-500">
+              {Q_SUBTYPE_LABELS[q.subType] || q.subType}
+            </span>
+          )}
+          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${Q_DIFF[q.difficulty]?.cls || "bg-slate-100 text-slate-500"}`}>
+            {Q_DIFF[q.difficulty]?.label || q.difficulty}
+          </span>
+          {q.approved && (
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600">승인</span>
+          )}
+          <Link href={`/director/questions/${q.id}`} className="ml-auto text-[10px] text-blue-500 hover:text-blue-700 font-medium">
+            편집
+          </Link>
+        </div>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {tags.map((tag) => (
+              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Question text */}
+      <div className="px-4 py-3">
+        <p className="text-[13px] text-slate-800 leading-relaxed whitespace-pre-wrap">
+          {q.questionText}
+        </p>
+      </div>
+
+      {/* Options (for multiple choice) */}
+      {options.length > 0 && (
+        <div className="px-4 pb-3 space-y-1">
+          {options.map((opt, i) => {
+            const isCorrect = q.correctAnswer === opt.label || q.correctAnswer === opt.text || q.correctAnswer === String(i + 1);
+            return (
+              <div
+                key={i}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] ${
+                  isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"
+                }`}
+              >
+                <span className={`w-5 h-5 rounded-full text-[11px] font-bold flex items-center justify-center shrink-0 ${
+                  isCorrect ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-500"
+                }`}>
+                  {i + 1}
+                </span>
+                {opt.text || opt.label}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Short answer */}
+      {options.length === 0 && q.correctAnswer && (
+        <div className="px-4 pb-3">
+          <div className="px-3 py-2 rounded-lg bg-emerald-50 text-[13px] text-emerald-800 font-medium">
+            정답: {q.correctAnswer}
+          </div>
+        </div>
+      )}
+
+      {/* Explanation toggle */}
+      {q.explanation && (
+        <div className="border-t border-slate-100">
+          <button
+            onClick={() => setShowExplanation(!showExplanation)}
+            className="w-full flex items-center gap-1.5 px-4 py-2.5 text-[12px] text-blue-600 font-medium hover:bg-slate-50 transition-colors"
+          >
+            해설 보기
+            <ChevronDown className={`w-3 h-3 transition-transform ${showExplanation ? "rotate-180" : ""}`} />
+          </button>
+          {showExplanation && (
+            <div className="px-4 pb-4 space-y-2">
+              <p className="text-[12px] text-slate-600 leading-relaxed whitespace-pre-wrap">
+                {q.explanation.content}
+              </p>
+              {keyPoints.length > 0 && (
+                <div className="space-y-1 pt-1">
+                  <span className="text-[11px] font-semibold text-slate-500">핵심 포인트</span>
+                  {keyPoints.map((kp, i) => (
+                    <p key={i} className="text-[11px] text-slate-500 pl-2 border-l-2 border-blue-200">{kp}</p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="px-4 py-2 border-t border-slate-100 flex items-center justify-between">
+        <span className="text-[10px] text-slate-400">{formatDate(q.createdAt)}</span>
+        {q._count?.examLinks !== undefined && q._count.examLinks > 0 && (
+          <span className="text-[10px] text-slate-400">시험 {q._count.examLinks}회 사용</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function QuestionsSection({ questions }: { questions: PassageDetailProps["passage"]["questions"] }) {
+  const [expanded, setExpanded] = useState(true);
+
+  return (
+    <div className="bg-white rounded-xl border">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
+      >
+        <span className="text-[14px] font-semibold text-slate-800">
+          연결된 문제 ({questions.length}개)
+        </span>
+        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${expanded ? "rotate-0" : "-rotate-90"}`} />
+      </button>
+      {expanded && (
+        <div className="px-4 pb-4 border-t border-slate-100 pt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {questions.map((q, idx) => (
+              <PassageQuestionCard key={q.id} q={q} num={idx + 1} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

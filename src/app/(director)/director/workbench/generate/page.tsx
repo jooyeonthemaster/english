@@ -1,27 +1,10 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getWorkbenchPassages } from "@/actions/workbench";
-import { QuestionGeneratorClient } from "@/components/workbench/question-generator-client";
+import { GeneratePageClient } from "./generate-page-client";
 
-interface PageProps {
-  searchParams: Promise<{ passageId?: string }>;
-}
-
-export default async function GeneratePage({ searchParams }: PageProps) {
+export default async function GeneratePage() {
   const staff = await getStaffSession();
   if (!staff) redirect("/login");
 
-  const params = await searchParams;
-
-  // Load passages for selection
-  const passagesData = await getWorkbenchPassages(staff.academyId, {
-    limit: 100,
-  });
-
-  return (
-    <QuestionGeneratorClient
-      passages={passagesData.passages}
-      initialPassageId={params.passageId}
-    />
-  );
+  return <GeneratePageClient academyId={staff.academyId} />;
 }

@@ -341,12 +341,12 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               </div>
               <div className="space-y-2">
                 <Label>반 (선택)</Label>
-                <Select value={classId} onValueChange={setClassId}>
+                <Select value={classId || "__none__"} onValueChange={(v) => setClassId(v === "__none__" ? "" : v)}>
                   <SelectTrigger className="border-[#E5E8EB]">
                     <SelectValue placeholder="전체" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">전체</SelectItem>
+                    <SelectItem value="__none__">전체</SelectItem>
                     {classes.map((c) => (
                       <SelectItem key={c.id} value={c.id}>
                         {c.name}
@@ -360,12 +360,12 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>학교 (선택)</Label>
-                <Select value={schoolId} onValueChange={setSchoolId}>
+                <Select value={schoolId || "__none__"} onValueChange={(v) => setSchoolId(v === "__none__" ? "" : v)}>
                   <SelectTrigger className="border-[#E5E8EB]">
                     <SelectValue placeholder="미지정" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">미지정</SelectItem>
+                    <SelectItem value="__none__">미지정</SelectItem>
                     {schools.map((s) => (
                       <SelectItem key={s.id} value={s.id}>
                         {s.name}
@@ -376,12 +376,12 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               </div>
               <div className="space-y-2">
                 <Label>학년</Label>
-                <Select value={grade} onValueChange={setGrade}>
+                <Select value={grade || "__none__"} onValueChange={(v) => setGrade(v === "__none__" ? "" : v)}>
                   <SelectTrigger className="border-[#E5E8EB]">
                     <SelectValue placeholder="선택" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">선택</SelectItem>
+                    <SelectItem value="__none__">선택</SelectItem>
                     {[1, 2, 3].map((g) => (
                       <SelectItem key={g} value={String(g)}>
                         {g}학년
@@ -395,12 +395,12 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>학기</Label>
-                <Select value={semester} onValueChange={setSemester}>
+                <Select value={semester || "__none__"} onValueChange={(v) => setSemester(v === "__none__" ? "" : v)}>
                   <SelectTrigger className="border-[#E5E8EB]">
                     <SelectValue placeholder="선택" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">선택</SelectItem>
+                    <SelectItem value="__none__">선택</SelectItem>
                     <SelectItem value="FIRST">1학기</SelectItem>
                     <SelectItem value="SECOND">2학기</SelectItem>
                   </SelectContent>
@@ -408,12 +408,12 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               </div>
               <div className="space-y-2">
                 <Label>시험 종류</Label>
-                <Select value={examSubType} onValueChange={setExamSubType}>
+                <Select value={examSubType || "__none__"} onValueChange={(v) => setExamSubType(v === "__none__" ? "" : v)}>
                   <SelectTrigger className="border-[#E5E8EB]">
                     <SelectValue placeholder="선택" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">선택</SelectItem>
+                    <SelectItem value="__none__">선택</SelectItem>
                     <SelectItem value="MIDTERM">중간고사</SelectItem>
                     <SelectItem value="FINAL">기말고사</SelectItem>
                     <SelectItem value="QUIZ">쪽지시험</SelectItem>

@@ -1,9 +1,9 @@
 // @ts-nocheck
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useTransition } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   PanelLeftClose,
@@ -50,8 +50,16 @@ const SIDEBAR_STORAGE_KEY = "nara-sidebar-collapsed";
 
 export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // Clear navigating state when pathname changes
+  useEffect(() => {
+    setNavigatingTo(null);
+  }, [pathname]);
 
   useEffect(() => {
     const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
@@ -67,6 +75,8 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     });
   }, []);
 
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+
   const isDirector = staff.role === "DIRECTOR";
   const navGroups = getNavGroups(basePath);
 
@@ -78,9 +88,37 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     }));
 
   function isActive(href: string) {
-    if (href === basePath) return pathname === basePath;
-    return pathname.startsWith(href);
+    // Show navigating item as active immediately
+    const effectivePath = navigatingTo || pathname;
+    if (href === basePath) return effectivePath === basePath;
+    return effectivePath.startsWith(href);
   }
+
+  function handleNavClick(href: string, e: React.MouseEvent) {
+    e.preventDefault();
+    if (href === pathname) return;
+    setNavigatingTo(href);
+    startTransition(() => {
+      router.push(href);
+    });
+  }
+
+  // Auto-open menus whose children match current path
+  useEffect(() => {
+    const newOpen: Record<string, boolean> = {};
+    for (const group of filteredGroups) {
+      for (const item of group.items) {
+        if (item.children && item.children.some((c) => pathname === c.href || pathname.startsWith(c.href))) {
+          newOpen[item.href] = true;
+        }
+      }
+    }
+    setOpenMenus((prev) => ({ ...prev, ...newOpen }));
+  }, [pathname]);
+
+  const toggleMenu = useCallback((href: string) => {
+    setOpenMenus((prev) => ({ ...prev, [href]: !prev[href] }));
+  }, []);
 
   if (!mounted) {
     return (
@@ -150,10 +188,102 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                   {group.items.map((item) => {
                     const active = isActive(item.href);
                     const Icon = item.icon;
+                    const hasChildren = item.children && item.children.length > 0;
+                    const isOpen = openMenus[item.href];
+                    const childActive = hasChildren && item.children!.some((c) => pathname === c.href || pathname.startsWith(c.href + "/"));
 
+                    // Parent button for items with children (expanded sidebar)
+                    if (hasChildren && !collapsed) {
+                      return (
+                        <li key={item.href}>
+                          <div
+                            className={cn(
+                              "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200 w-full h-[38px] px-3",
+                              active || childActive
+                                ? "text-blue-600"
+                                : "text-gray-400 hover:text-gray-700"
+                            )}
+                            style={(active || childActive) ? {
+                              background: "rgba(59, 130, 246, 0.08)",
+                              boxShadow: "0 1px 3px rgba(59, 130, 246, 0.06)",
+                            } : undefined}
+                          >
+                            {/* Clickable label area → navigates to page + opens submenu */}
+                            <Link
+                              href={item.href}
+                              onClick={(e) => {
+                                if (!isOpen) setOpenMenus((prev) => ({ ...prev, [item.href]: true }));
+                                handleNavClick(item.href, e);
+                              }}
+                              className="flex items-center gap-3 flex-1 min-w-0"
+                            >
+                              <Icon
+                                className={cn(
+                                  "shrink-0 transition-colors duration-200 size-[17px]",
+                                  active || childActive ? "text-blue-500" : "text-gray-350 group-hover/item:text-gray-500"
+                                )}
+                                strokeWidth={active || childActive ? 2 : 1.7}
+                              />
+                              <span className="truncate">{item.label}</span>
+                            </Link>
+                            {/* Toggle button → only toggles submenu */}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); toggleMenu(item.href); }}
+                              className="p-1 -mr-1 rounded hover:bg-black/[0.04] transition-colors"
+                            >
+                              <ChevronDown
+                                className={cn(
+                                  "size-3.5 shrink-0 transition-transform duration-200",
+                                  active || childActive ? "text-blue-400" : "text-gray-300 group-hover/item:text-gray-400",
+                                  isOpen ? "rotate-0" : "-rotate-90"
+                                )}
+                              />
+                            </button>
+                          </div>
+                          {/* Sub-menu */}
+                          <div
+                            className={cn(
+                              "overflow-hidden transition-all duration-200",
+                              isOpen ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0"
+                            )}
+                          >
+                            <div className="ml-2 mr-1 mt-1 bg-gray-50/80 rounded-lg py-1.5 px-2 space-y-0.5">
+                              {item.children!.map((child, ci) => {
+                                const effectivePath = navigatingTo || pathname;
+                                const exactMatch = effectivePath === child.href;
+                                const prefixMatch = effectivePath.startsWith(child.href + "/");
+                                const siblingHasExactOrBetterMatch = item.children!.some(
+                                  (other, oi) => oi !== ci && (effectivePath === other.href || effectivePath.startsWith(other.href + "/"))
+                                    && other.href.length > child.href.length
+                                );
+                                const childIsActive = exactMatch || (prefixMatch && !siblingHasExactOrBetterMatch);
+                                return (
+                                  <Link
+                                    key={child.href}
+                                    href={child.href}
+                                    onClick={(e) => handleNavClick(child.href, e)}
+                                    className={cn(
+                                      "block px-3 py-1.5 text-[12px] rounded-md transition-colors",
+                                      childIsActive
+                                        ? "text-blue-600 font-semibold bg-white shadow-sm"
+                                        : "text-gray-500 hover:text-blue-600 hover:font-medium hover:bg-white"
+                                    )}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    }
+
+                    // Regular link (no children, or collapsed mode)
                     const linkContent = (
                       <Link
                         href={item.href}
+                        onClick={(e) => handleNavClick(item.href, e)}
                         className={cn(
                           "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200",
                           collapsed
@@ -313,7 +443,17 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           </header>
 
           {/* Page content */}
-          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+          <main className="flex-1 overflow-y-auto p-6 relative">
+            {isPending && (
+              <div className="absolute inset-0 z-10 bg-[#F4F6F9]/60 flex items-start justify-center pt-32">
+                <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border">
+                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-[13px] text-slate-600 font-medium">로딩 중...</span>
+                </div>
+              </div>
+            )}
+            {children}
+          </main>
         </div>
       </div>
     </TooltipProvider>
