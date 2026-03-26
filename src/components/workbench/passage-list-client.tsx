@@ -18,6 +18,11 @@ import {
   BookOpen,
   Building2,
   ChevronDown,
+  Cpu,
+  CheckCircle2,
+  Clock,
+  Upload,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,27 +54,10 @@ interface PassageItem {
 interface AnalysisData {
   structure?: {
     mainIdea?: string;
-    purpose?: string;
-    textType?: string;
-    keyPoints?: string[];
-    paragraphSummaries?: string[];
   };
-  vocabulary?: Array<{
-    word: string;
-    meaning: string;
-    partOfSpeech?: string;
-    difficulty?: string;
-  }>;
-  grammar?: Array<{
-    pattern: string;
-    explanation?: string;
-    textFragment?: string;
-  }>;
-  sentences?: Array<{
-    index: number;
-    english: string;
-    korean: string;
-  }>;
+  vocabulary?: Array<{ word: string }>;
+  grammar?: Array<{ pattern: string }>;
+  sentences?: Array<{ index: number }>;
 }
 
 interface PassageListProps {
@@ -100,7 +88,7 @@ const DIFFICULTY_LABELS: Record<string, { label: string; className: string }> = 
   ELEMENTARY: { label: "기초", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   INTERMEDIATE: { label: "중급", className: "bg-blue-50 text-blue-700 border-blue-200" },
   UPPER_INTERMEDIATE: { label: "중상", className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  ADVANCED: { label: "고급", className: "bg-orange-50 text-orange-700 border-orange-200" },
+  ADVANCED: { label: "고급", className: "bg-slate-100 text-slate-700 border-slate-300" },
   EXPERT: { label: "최상급", className: "bg-red-50 text-red-700 border-red-200" },
 };
 
@@ -117,120 +105,142 @@ function parseAnalysisData(analysis: PassageItem["analysis"]): AnalysisData | nu
   }
 }
 
+// ─── Status-aware Passage Card ─────────────────────────
 function PassageCard({ passage }: { passage: PassageItem }) {
   const analysisData = parseAnalysisData(passage.analysis);
+  const isAnalyzed = !!passage.analysis;
   const vocabCount = analysisData?.vocabulary?.length ?? 0;
   const grammarCount = analysisData?.grammar?.length ?? 0;
   const sentenceCount = analysisData?.sentences?.length ?? 0;
   const mainIdea = analysisData?.structure?.mainIdea;
-  const topVocab = analysisData?.vocabulary?.slice(0, 5) ?? [];
-  const topGrammar = analysisData?.grammar?.slice(0, 3) ?? [];
+  const questionCount = passage._count.questions;
+
+  // Determine passage status
+  const status = !isAnalyzed
+    ? "pending"
+    : questionCount === 0
+    ? "analyzed"
+    : "active";
+
+  const statusConfig = {
+    pending: {
+      label: "분석 대기",
+      icon: Clock,
+      className: "text-slate-500 bg-slate-50 border-slate-200",
+      dotClass: "bg-slate-400",
+    },
+    analyzed: {
+      label: "분석 완료",
+      icon: CheckCircle2,
+      className: "text-blue-600 bg-blue-50 border-blue-200",
+      dotClass: "bg-blue-400",
+    },
+    active: {
+      label: `문제 ${questionCount}개`,
+      icon: Layers,
+      className: "text-emerald-600 bg-emerald-50 border-emerald-200",
+      dotClass: "bg-emerald-400",
+    },
+  };
+
+  const sc = statusConfig[status];
 
   return (
-    <Link href={`/director/workbench/passages/${passage.id}`} className="block group">
-      <div className="bg-white rounded-xl border border-slate-200 p-4 h-full hover:border-slate-300 hover:shadow-sm transition-all">
-        {/* Title row */}
+    <div className="bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all group">
+      <Link href={`/director/workbench/passages/${passage.id}`} className="block p-4">
+        {/* Top: Status + Metadata */}
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-[14px] font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors leading-tight flex-1">
-            {passage.title}
-          </h3>
-          {passage.difficulty && DIFFICULTY_LABELS[passage.difficulty] && (
-            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border shrink-0 ${DIFFICULTY_LABELS[passage.difficulty].className}`}>
-              {DIFFICULTY_LABELS[passage.difficulty].label}
-            </span>
-          )}
+          <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
+            {passage.school && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
+                {passage.school.name}
+              </span>
+            )}
+            {passage.grade && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
+                {passage.grade}학년
+              </span>
+            )}
+            {passage.semester && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
+                {getSemesterLabel(passage.semester)}
+              </span>
+            )}
+            {passage.difficulty && DIFFICULTY_LABELS[passage.difficulty] && (
+              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border shrink-0 ${DIFFICULTY_LABELS[passage.difficulty].className}`}>
+                {DIFFICULTY_LABELS[passage.difficulty].label}
+              </span>
+            )}
+          </div>
+          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border shrink-0 flex items-center gap-1 ${sc.className}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${sc.dotClass}`} />
+            {sc.label}
+          </span>
         </div>
 
-        {/* Badges */}
-        <div className="flex items-center gap-1.5 mb-2.5 flex-wrap">
-          {passage.school && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
-              {passage.school.name}
-            </span>
-          )}
-          {passage.grade && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
-              {passage.grade}학년
-            </span>
-          )}
-          {passage.semester && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
-              {getSemesterLabel(passage.semester)}
-            </span>
-          )}
-        </div>
+        {/* Title */}
+        <h3 className="text-[14px] font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors leading-tight mb-2">
+          {passage.title}
+        </h3>
 
         {/* Content preview */}
-        <p className="text-[11px] text-slate-500 font-mono leading-relaxed line-clamp-3 mb-3">
+        <p className="text-[11px] text-slate-500 font-mono leading-relaxed line-clamp-2 mb-3">
           {passage.content}
         </p>
 
-        {/* Analysis section */}
-        {analysisData ? (
-          <div className="border-t border-slate-100 pt-2.5 space-y-2">
-            {/* Main idea */}
+        {/* Analysis summary (if analyzed) */}
+        {analysisData && (
+          <div className="space-y-1.5">
             {mainIdea && (
               <p className="text-[11px] text-slate-600 truncate leading-tight">
-                <span className="font-medium text-slate-700">주제</span>{" "}
+                <span className="font-medium text-slate-500">주제</span>{" "}
                 {mainIdea}
               </p>
             )}
-
-            {/* Stats row */}
-            <p className="text-[10px] text-slate-400 font-medium">
+            <p className="text-[10px] text-slate-400">
               어휘 {vocabCount}개 · 문법 {grammarCount}개 · 문장 {sentenceCount}개
             </p>
-
-            {/* Vocabulary pills */}
-            {topVocab.length > 0 && (
-              <div className="flex items-center gap-1 flex-wrap">
-                {topVocab.map((v, i) => (
-                  <span
-                    key={i}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 font-medium"
-                  >
-                    {v.word}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Grammar pills */}
-            {topGrammar.length > 0 && (
-              <div className="flex items-center gap-1 flex-wrap">
-                {topGrammar.map((g, i) => (
-                  <span
-                    key={i}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 font-medium"
-                  >
-                    {g.pattern}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="border-t border-slate-100 pt-2.5">
-            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-50 text-slate-400 border border-slate-200">
-              분석 대기
-            </span>
           </div>
         )}
+      </Link>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100">
-          <span className="text-[10px] text-slate-400">
-            {formatDate(passage.createdAt)}
-          </span>
-          <span className="text-[11px] text-slate-500 font-medium">
-            문제 {passage._count.questions}개
-          </span>
+      {/* Action bar */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-t border-slate-100">
+        <span className="text-[10px] text-slate-400">
+          {formatDate(passage.createdAt)}
+        </span>
+        <div className="flex items-center gap-1.5">
+          {!isAnalyzed && (
+            <Link href={`/director/workbench/passages/${passage.id}?autoAnalyze=true`}>
+              <button className="text-[11px] font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 px-2 py-1 rounded-md hover:bg-blue-50 transition-colors">
+                <Cpu className="w-3 h-3" />
+                분석 실행
+              </button>
+            </Link>
+          )}
+          {isAnalyzed && questionCount === 0 && (
+            <Link href={`/director/workbench/generate?passageId=${passage.id}`}>
+              <button className="text-[11px] font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1 px-2 py-1 rounded-md hover:bg-indigo-50 transition-colors">
+                <Layers className="w-3 h-3" />
+                문제 생성
+              </button>
+            </Link>
+          )}
+          {questionCount > 0 && (
+            <Link href={`/director/workbench/passages/${passage.id}`}>
+              <button className="text-[11px] font-medium text-slate-500 hover:text-slate-700 flex items-center gap-1 px-2 py-1 rounded-md hover:bg-slate-50 transition-colors">
+                상세 보기
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </Link>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
+// ─── Main List Component ────────────────────────────────
 export function PassageListClient({
   passagesData,
   schools,
@@ -242,6 +252,11 @@ export function PassageListClient({
   const [importOpen, setImportOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("all");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(["__all__"]));
+
+  // Stats for the summary bar
+  const totalCount = passagesData.total;
+  const analyzedCount = passagesData.passages.filter((p) => p.analysis).length;
+  const pendingCount = passagesData.passages.filter((p) => !p.analysis).length;
 
   function updateFilter(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -328,7 +343,7 @@ export function PassageListClient({
           <div>
             <h1 className="text-xl font-bold text-slate-900">지문 관리</h1>
             <p className="text-sm text-slate-500 mt-0.5">
-              총 {passagesData.total}개 지문
+              지문 등록, AI 분석, 문제 생성까지 관리합니다
             </p>
           </div>
         </div>
@@ -339,16 +354,40 @@ export function PassageListClient({
             onClick={() => setImportOpen(true)}
             className="h-9 text-[13px]"
           >
-            <FileText className="w-3.5 h-3.5 mr-1.5" />
+            <Upload className="w-3.5 h-3.5 mr-1.5" />
             일괄 등록
           </Button>
           <Link href="/director/workbench/passages/create">
-            <Button size="sm" className="h-9 text-[13px] bg-slate-900 hover:bg-slate-800">
+            <Button size="sm" className="h-9 text-[13px] bg-blue-600 hover:bg-blue-700">
               <Plus className="w-3.5 h-3.5 mr-1.5" />
               지문 등록
             </Button>
           </Link>
         </div>
+      </div>
+
+      {/* Summary stats bar */}
+      <div className="flex items-center gap-4 px-4 py-3 bg-white rounded-xl border border-slate-200">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[12px] text-slate-500">전체</span>
+          <span className="text-[14px] font-bold text-slate-800">{totalCount}</span>
+        </div>
+        <div className="w-px h-4 bg-slate-200" />
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+          <span className="text-[12px] text-slate-500">분석 완료</span>
+          <span className="text-[12px] font-semibold text-slate-700">{analyzedCount}</span>
+        </div>
+        {pendingCount > 0 && (
+          <>
+            <div className="w-px h-4 bg-slate-200" />
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+              <span className="text-[12px] text-slate-500">분석 대기</span>
+              <span className="text-[12px] font-semibold text-slate-600">{pendingCount}</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Toolbar */}
@@ -441,12 +480,18 @@ export function PassageListClient({
           <p className="text-sm text-slate-400 mt-1">
             지문을 등록하여 AI 문제 생성을 시작하세요
           </p>
-          <Link href="/director/workbench/passages/create">
-            <Button className="mt-4 bg-slate-900 hover:bg-slate-800" size="sm">
-              <Plus className="w-3.5 h-3.5 mr-1.5" />
-              첫 지문 등록
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <Link href="/director/workbench/passages/create">
+              <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
+                <Plus className="w-3.5 h-3.5 mr-1.5" />
+                지문 등록
+              </Button>
+            </Link>
+            <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+              <Upload className="w-3.5 h-3.5 mr-1.5" />
+              일괄 등록
             </Button>
-          </Link>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">

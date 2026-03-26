@@ -460,13 +460,24 @@ export async function getWorkbenchStats(academyId: string) {
     totalQuestions,
     aiGeneratedCount,
     approvedCount,
+    pendingAnalysisCount,
+    analyzedPassageCount,
     recentPassages,
     recentQuestions,
+    pendingPassages,
   ] = await Promise.all([
     prisma.passage.count({ where: { academyId } }),
     prisma.question.count({ where: { academyId } }),
     prisma.question.count({ where: { academyId, aiGenerated: true } }),
     prisma.question.count({ where: { academyId, approved: true } }),
+    // Passages without analysis
+    prisma.passage.count({
+      where: { academyId, analysis: null },
+    }),
+    // Passages with analysis
+    prisma.passage.count({
+      where: { academyId, analysis: { isNot: null } },
+    }),
     prisma.passage.findMany({
       where: { academyId },
       orderBy: { createdAt: "desc" },
@@ -476,6 +487,7 @@ export async function getWorkbenchStats(academyId: string) {
         title: true,
         grade: true,
         createdAt: true,
+        analysis: { select: { id: true } },
         _count: { select: { questions: true } },
       },
     }),
@@ -494,6 +506,18 @@ export async function getWorkbenchStats(academyId: string) {
         createdAt: true,
       },
     }),
+    // Passages awaiting analysis (for action items)
+    prisma.passage.findMany({
+      where: { academyId, analysis: null },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      select: {
+        id: true,
+        title: true,
+        grade: true,
+        createdAt: true,
+      },
+    }),
   ]);
 
   return {
@@ -501,8 +525,12 @@ export async function getWorkbenchStats(academyId: string) {
     totalQuestions,
     aiGeneratedCount,
     approvedCount,
+    pendingAnalysisCount,
+    analyzedPassageCount,
     recentPassages,
     recentQuestions,
+    pendingPassages,
+    unapprovedCount: totalQuestions - approvedCount,
   };
 }
 

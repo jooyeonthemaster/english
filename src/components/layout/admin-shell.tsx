@@ -123,7 +123,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   if (!mounted) {
     return (
       <div className="flex h-screen bg-[#F4F6F9]">
-        <div className="w-[260px] shrink-0" />
+        <div className="w-[220px] shrink-0" />
         <div className="flex-1" />
       </div>
     );
@@ -136,7 +136,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
         <aside
           className={cn(
             "fixed inset-y-0 left-0 z-30 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
-            collapsed ? "w-[72px]" : "w-[260px]"
+            collapsed ? "w-[72px]" : "w-[220px]"
           )}
           style={{
             background: "rgba(255,255,255,0.55)",
@@ -364,7 +364,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
         <div
           className={cn(
             "flex-1 flex flex-col min-h-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
-            collapsed ? "ml-[72px]" : "ml-[260px]"
+            collapsed ? "ml-[72px]" : "ml-[220px]"
           )}
         >
           {/* Top header */}

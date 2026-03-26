@@ -5,7 +5,12 @@
       "WebFetch(*)",
       "mcp__playwright__*",
       "WebSearch",
-      "mcp__supabase__*"
+      "mcp__supabase__*",
+      "Read(//c/Users/jooye/Desktop/2026project/nara/src/components/workbench/**)",
+      "Read(//c/Users/jooye/Desktop/2026project/nara/src/components/students/**)",
+      "Read(//c/Users/jooye/Desktop/2026project/nara/src/components/layout/**)",
+      "Read(//c/Users/jooye/Desktop/2026project/nara/src/types/**)",
+      "Read(//c/Users/jooye/Desktop/2026project/nara/**)"
     ]
   },
   "mcpServers": {

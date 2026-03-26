@@ -5,32 +5,11 @@ import { hashContent } from "@/lib/passage-utils";
 import { passageAnalysisSchema } from "@/lib/passage-analysis-schema";
 import { NextRequest, NextResponse } from "next/server";
 
-// ---------------------------------------------------------------------------
-// Focus area prompt fragments
-// ---------------------------------------------------------------------------
-const FOCUS_AREA_PROMPTS: Record<string, string> = {
-  grammar:
-    "문법 포인트를 특히 자세하게 분석하세요. 내신 빈출 문법을 최대한 많이 식별하고 상세한 설명을 제공하세요.",
-  vocabulary:
-    "핵심 어휘를 더 상세하게 분석하세요. 동의어, 반의어, 파생어 관계도 설명에 포함하세요.",
-  structure:
-    "문장 구조 분석에 집중하세요. 각 문장의 주어/동사/목적어 구조와 수식 관계를 명확히 밝히세요.",
-  examPoints:
-    "시험 출제 가능성이 높은 포인트를 하이라이팅하세요. 빈칸 출제, 어법 출제, 서술형 출제 포인트를 구분하세요.",
-  grammarLevel:
-    "문법 포인트를 난이도별로 분류하세요. 기초(중학), 중급(고1-2), 고급(고3/수능) 레벨을 명시하세요.",
-};
+export const maxDuration = 120;
 
-const TARGET_LEVEL_PROMPTS: Record<string, string> = {
-  "middle-basic": "중학교 기초 수준 학생을 대상으로 쉬운 용어와 기본 문법 위주로 분석하세요.",
-  "middle-advanced": "중학교 심화 수준 학생을 대상으로 분석하세요. 교과서 이상의 심화 문법도 포함하세요.",
-  "high-basic": "고등학교 기초 수준 학생을 대상으로 분석하세요. 고1 모의고사 수준의 문법과 어휘를 중심으로 하세요.",
-  "high-advanced": "고등학교 심화 수준 학생을 대상으로 분석하세요. 고2-3 내신과 모의고사 수준의 고급 문법을 포함하세요.",
-  csat: "수능 대비 수준으로 분석하세요. 수능 기출 빈출 문법, 고난도 어휘, 변형 출제 포인트를 집중 분석하세요.",
-};
 
 // ---------------------------------------------------------------------------
-// GET — original analysis (with cache)
+// GET — analysis with cache
 // ---------------------------------------------------------------------------
 export async function GET(
   _request: NextRequest,
@@ -48,13 +27,9 @@ export async function GET(
     });
 
     if (!passage) {
-      return NextResponse.json(
-        { error: "지문을 찾을 수 없습니다." },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
-    // Check cache
     const currentHash = hashContent(passage.content);
     if (passage.analysis && passage.analysis.contentHash === currentHash) {
       return NextResponse.json({
@@ -63,32 +38,18 @@ export async function GET(
       });
     }
 
-    // Generate analysis with Gemini
     const analysisData = await runFullAnalysis(passage);
 
-    // Cache the result
     await prisma.passageAnalysis.upsert({
       where: { passageId },
-      update: {
-        analysisData: JSON.stringify(analysisData),
-        contentHash: currentHash,
-        version: 1,
-      },
-      create: {
-        passageId,
-        analysisData: JSON.stringify(analysisData),
-        contentHash: currentHash,
-        version: 1,
-      },
+      update: { analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
+      create: { passageId, analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
     });
 
     return NextResponse.json({ data: analysisData, cached: false });
   } catch (error) {
     console.error("Passage analysis error:", error);
-    return NextResponse.json(
-      { error: "지문 분석 중 오류가 발생했습니다." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "지문 분석 중 오류가 발생했습니다." }, { status: 500 });
   }
 }
 
@@ -105,17 +66,11 @@ export async function POST(
 
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
-      include: {
-        analysis: true,
-        school: { select: { type: true } },
-      },
+      include: { analysis: true, school: { select: { type: true } } },
     });
 
     if (!passage) {
-      return NextResponse.json(
-        { error: "지문을 찾을 수 없습니다." },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
     // --- Action: retranslate a single sentence ---
@@ -123,13 +78,8 @@ export async function POST(
       const { english } = body;
       const { text } = await generateText({
         model,
-        prompt: `다음 영어 문장을 자연스러운 한국어로 번역하세요. 번역만 출력하세요.
-
-영어: ${english}
-
-한국어 번역:`,
+        prompt: `다음 영어 문장을 자연스러운 한국어로 번역하세요. 번역만 출력하세요.\n\n영어: ${english}\n\n한국어 번역:`,
       });
-
       return NextResponse.json({ korean: text.trim() });
     }
 
@@ -153,49 +103,32 @@ export async function POST(
 sentenceIndex는 ${grammarPoint.sentenceIndex}로 유지하세요.
 id는 "${grammarPoint.id}"로 유지하세요.`,
       });
-
       return NextResponse.json({ grammarPoint: enhanced });
     }
 
     // --- Action: full analysis with custom prompt ---
-    const { customPrompt, focusAreas, targetLevel } = body;
+    const { customPrompt } = body;
 
-    const analysisData = await runFullAnalysis(
-      passage,
-      customPrompt,
-      focusAreas,
-      targetLevel
-    );
+    console.log("[ANALYSIS] Custom prompt received:", customPrompt ? `${customPrompt.slice(0, 200)}...` : "NONE");
 
-    // Save to cache (always overwrite when custom prompt is used)
+    const analysisData = await runFullAnalysis(passage, customPrompt);
+
     const currentHash = hashContent(passage.content);
     await prisma.passageAnalysis.upsert({
       where: { passageId },
-      update: {
-        analysisData: JSON.stringify(analysisData),
-        contentHash: currentHash,
-        version: 1,
-      },
-      create: {
-        passageId,
-        analysisData: JSON.stringify(analysisData),
-        contentHash: currentHash,
-        version: 1,
-      },
+      update: { analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
+      create: { passageId, analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
     });
 
     return NextResponse.json({ data: analysisData, cached: false });
   } catch (error) {
     console.error("Passage analysis POST error:", error);
-    return NextResponse.json(
-      { error: "분석 중 오류가 발생했습니다." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "분석 중 오류가 발생했습니다." }, { status: 500 });
   }
 }
 
 // ---------------------------------------------------------------------------
-// Shared analysis generation
+// 5-Layer Full Analysis
 // ---------------------------------------------------------------------------
 async function runFullAnalysis(
   passage: {
@@ -203,80 +136,122 @@ async function runFullAnalysis(
     grade: number | null;
     school: { type: string } | null;
   },
-  customPrompt?: string,
-  focusAreas?: string[],
-  targetLevel?: string
+  customPrompt?: string
 ) {
-  const schoolType =
-    passage.school?.type === "MIDDLE" ? "중학교" : "고등학교";
+  const schoolType = passage.school?.type === "MIDDLE" ? "중학교" : "고등학교";
+  const gradeLabel = passage.grade
+    ? `${schoolType} ${passage.grade}학년`
+    : schoolType;
 
-  // Build additional instructions
-  let additionalInstructions = "";
+  const teacherNote = customPrompt
+    ? `\n\n## 선생님 지시사항 (최우선 반영)\n${customPrompt}`
+    : "";
 
-  if (focusAreas && focusAreas.length > 0) {
-    const focusInstructions = focusAreas
-      .map((area) => FOCUS_AREA_PROMPTS[area])
-      .filter(Boolean)
-      .join("\n- ");
-    if (focusInstructions) {
-      additionalInstructions += `\n\n## 분석 집중 영역\n- ${focusInstructions}`;
-    }
-  }
+  const startTime = Date.now();
+  console.log("[ANALYSIS] Starting generateText (JSON mode)...");
 
-  if (targetLevel && TARGET_LEVEL_PROMPTS[targetLevel]) {
-    additionalInstructions += `\n\n## 대상 수준\n${TARGET_LEVEL_PROMPTS[targetLevel]}`;
-  }
-
-  if (customPrompt) {
-    additionalInstructions += `\n\n## 선생님 추가 지시사항\n${customPrompt}`;
-  }
-
-  const { object: analysisData } = await generateObject({
+  const { text: rawJson } = await generateText({
     model,
-    schema: passageAnalysisSchema,
     prompt: `당신은 한국 중고등학교 영어 내신 시험 대비 전문 분석가입니다.
-아래 영어 지문을 분석하여 학생들의 심층 학습을 위한 구조화된 데이터를 생성하세요.
+아래 지문을 내신 시험 출제 관점에서 분석하고, 결과를 **JSON만** 출력하세요.
+JSON 외에 다른 텍스트는 절대 출력하지 마세요.
 
-## 지문 정보
-- 학년: ${passage.grade}학년
-- 학교 유형: ${schoolType}
+대상: ${gradeLabel}
+${teacherNote}
 
-## 지문 내용
+## 지문
 ${passage.content}
 
-## 분석 지침
+## 출력 JSON 형식
+{
+  "sentences": [
+    { "index": 0, "english": "원문 그대로", "korean": "한국어 번역" }
+  ],
+  "vocabulary": [
+    {
+      "word": "단어", "meaning": "뜻", "partOfSpeech": "품사(한국어)", "pronunciation": "한국어발음",
+      "sentenceIndex": 0, "difficulty": "basic|intermediate|advanced",
+      "synonyms": ["최대3개"], "antonyms": ["최대2개"], "derivatives": ["최대3개"],
+      "collocations": ["최대3개"], "englishDefinition": "영영풀이",
+      "contextMeaning": "문맥 속 의미", "examType": "빈칸추론|동의어|영영풀이|문맥추론|어휘적절성"
+    }
+  ],
+  "grammarPoints": [
+    {
+      "id": "gp-1", "pattern": "문법용어(한국어)", "explanation": "설명",
+      "textFragment": "지문 원문 정확 일치", "sentenceIndex": 0,
+      "examples": ["예문2-3개"], "level": "고1",
+      "examType": "어법객관식|서술형고치기|문장전환|빈칸|어순배열",
+      "commonMistake": "오답 함정", "transformations": ["변형 최대3개"],
+      "gradeLevel": "중1|중2|중3|고1|고2|고3/수능",
+      "relatedGrammar": ["연관문법 최대3개"], "csatFrequency": "최다빈출|빈출|간헐|해당없음"
+    }
+  ],
+  "structure": {
+    "mainIdea": "주제", "purpose": "목적", "textType": "유형",
+    "paragraphSummaries": [{ "paragraphIndex": 0, "summary": "요약", "role": "역할" }],
+    "keyPoints": ["출제 핵심 3-5개"],
+    "logicFlow": [{ "role": "주장|근거|예시|결론", "sentenceIndices": [0], "summary": "요약" }],
+    "connectorAnalysis": [{ "word": "연결어", "sentenceIndex": 0, "role": "역할", "examRelevance": "출제 연관" }],
+    "topicSentenceIndex": 0, "blankSuitablePositions": ["위치설명"], "tone": "어조"
+  },
+  "syntaxAnalysis": [
+    {
+      "sentenceIndex": 0, "structure": "S/V/O/C 분석", "chunkReading": "끊어/읽기",
+      "patternType": "특수구문", "transformPoint": "전환 가능", "complexity": "complex", "keyPhrase": "핵심구문"
+    }
+  ],
+  "examDesign": {
+    "paraphrasableSegments": [{
+      "original": "지문에서 정확히 복사한 원문 구간",
+      "alternatives": ["동의 표현1", "동의 표현2"],
+      "sentenceIndex": 0,
+      "reason": "이 표현이 출제 포인트인 이유 (예: 빈칸에 자주 출제되는 추상적 표현)",
+      "questionExample": "다음 빈칸에 들어갈 말로 가장 적절한 것은? _____ (→ 원문 표현)",
+      "difficulty": "중급",
+      "relatedPoint": "관련 어휘/문법 (예: struggle = have difficulty -ing)"
+    }],
+    "structureTransformPoints": [{
+      "original": "지문에서 정확히 복사한 원문 구간",
+      "transformType": "변형유형 (수동태전환/분사구문/관계사절축약 등)",
+      "example": "변형된 문장 전체",
+      "sentenceIndex": 0,
+      "reason": "이 변형이 출제에 유용한 이유 (예: 수동태↔능동태 전환은 서술형 단골)",
+      "questionExample": "다음 문장을 주어진 조건에 맞게 바꿔 쓰시오.",
+      "difficulty": "고급"
+    }],
+    "summaryKeyPoints": ["요약문 작성 핵심 내용"],
+    "descriptiveConditions": ["서술형 조건 (예: 주어진 단어를 사용하여 3번 문장을 수동태로 전환하시오)"]
+  }
+}
 
-### sentences (문장별 분석)
-- 지문을 문장 단위로 정확히 분리하세요
-- english 필드에는 원문의 문장을 그대로 복사하세요 (한 글자도 변경하지 마세요)
-- korean 필드에는 자연스러운 한국어 번역을 제공하세요
-- 문장 순서대로 index를 0부터 부여하세요
-
-### vocabulary (핵심 어휘)
-- 시험 출제 가능성이 높은 핵심 어휘 10-20개를 선별하세요
-- 너무 쉬운 단어(a, the, is, have 등)는 제외하세요
-- partOfSpeech는 한국어로: 명사, 동사, 형용사, 부사, 전치사, 접속사, 대명사
-- pronunciation은 한국어 발음 표기 (예: environment → "인바이런먼트")
-- sentenceIndex는 해당 단어가 처음 등장하는 문장의 index
-- difficulty는 학년 수준 기준: basic(교과서 필수), intermediate(심화), advanced(고난도)
-
-### grammarPoints (문법 포인트)
-- 내신 시험 빈출 문법 패턴 3-8개를 식별하세요
-- textFragment는 지문에서 해당 문법이 사용된 정확한 부분 문자열이어야 합니다 (대소문자 포함 정확히 일치)
-- pattern은 한국어 문법 용어 (예: "현재완료 have+p.p.", "관계대명사 which", "가정법 과거")
-- explanation은 학생이 이해할 수 있는 쉬운 한국어 설명
-- examples는 같은 문법 패턴의 추가 예문 2-3개
-- level은 학년 태그 (중1, 중2, 중3, 고1, 고2, 고3)
-- id는 "gp-1", "gp-2" 형식으로 부여
-
-### structure (글 구조 분석)
-- 모든 내용은 한국어로 작성
-- mainIdea: 글의 핵심 주제를 한 문장으로
-- purpose: 글의 목적 (정보 전달, 설득, 묘사, 이야기 등)
-- textType: 글의 유형 (설명문, 논설문, 서사문, 수필, 대화문, 편지 등)
-- paragraphSummaries: 각 단락의 요약과 역할 (role은 서론, 본론, 결론, 전환 등)
-- keyPoints: 시험에 나올 수 있는 핵심 포인트 3-5개${additionalInstructions}`,
+## 규칙
+- vocabulary: 핵심 어휘 8-12개, 각 단어 1번만, 쉬운 단어 제외
+- grammarPoints: 빈출 문법 3-6개
+- syntaxAnalysis: 복잡한 문장 2-3개만
+- 모든 배열은 지정된 최대 개수 엄수
+- examDesign의 original 필드는 지문 원문에서 정확히 복사 (축약/"..."/생략 절대 금지)
+- examDesign의 reason, questionExample 필드를 반드시 채워서 출제 의도를 명확히
+- paraphrasableSegments는 빈칸/동의어 출제에 적합한 핵심 표현 위주 (3-4개)
+- structureTransformPoints는 서술형 출제에 적합한 구문 변형 위주 (2-3개)
+- JSON만 출력, 다른 텍스트 없이`,
   });
 
+  console.log(`[ANALYSIS] generateText completed in ${((Date.now() - startTime) / 1000).toFixed(1)}s`);
+
+  // Parse JSON from response
+  let jsonStr = rawJson.trim();
+  // Strip markdown code fences if present
+  if (jsonStr.startsWith("```")) {
+    jsonStr = jsonStr.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+  }
+
+  const parsed = JSON.parse(jsonStr);
+
+  // Validate with Zod — use safeParse so we can fallback to raw data on validation errors
+  const validation = passageAnalysisSchema.safeParse(parsed);
+  const analysisData = validation.success ? validation.data : parsed;
+
+  console.log("[ANALYSIS] Keys:", Object.keys(analysisData));
   return analysisData;
 }

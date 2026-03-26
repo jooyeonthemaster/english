@@ -4,9 +4,7 @@ import {
   BookOpen,
   ClipboardCheck,
   FileText,
-  Sparkles,
   GraduationCap,
-  Database,
   CreditCard,
   BarChart3,
   Wallet,
@@ -18,6 +16,7 @@ import {
   FileBarChart,
   Settings,
   UserCog,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 
@@ -66,22 +65,21 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "AI 콘텐츠",
       items: [
         {
-          label: "AI 워크벤치",
-          icon: Sparkles,
-          href: `${basePath}/workbench`,
+          label: "지문 관리",
+          icon: FileText,
+          href: `${basePath}/workbench/passages`,
           children: [
-            { label: "지문 관리", href: `${basePath}/workbench/passages` },
             { label: "지문 등록", href: `${basePath}/workbench/passages/create` },
-            { label: "문제 생성", href: `${basePath}/workbench/generate` },
+            { label: "전체 지문", href: `${basePath}/workbench/passages` },
           ],
         },
         {
-          label: "문제 은행",
-          icon: Database,
-          href: `${basePath}/questions`,
+          label: "문제 관리",
+          icon: Layers,
+          href: `${basePath}/workbench/generate`,
           children: [
-            { label: "전체 문제", href: `${basePath}/questions` },
-            { label: "컬렉션", href: `${basePath}/questions?tab=collections` },
+            { label: "문제 생성", href: `${basePath}/workbench/generate` },
+            { label: "문제 은행", href: `${basePath}/questions` },
           ],
         },
         {

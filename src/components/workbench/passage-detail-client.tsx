@@ -44,6 +44,7 @@ import { EditableGrammar } from "./editable-grammar";
 import { EditableStructure } from "./editable-structure";
 import { StructuredQuestionRenderer } from "./question-renderers";
 import { InteractivePassageView } from "./interactive-passage-view";
+import { AnalysisLoadingOverlay } from "./analysis-loading-overlay";
 
 interface PassageDetailProps {
   autoAnalyze?: boolean;
@@ -252,7 +253,10 @@ export function PassageDetailClient({ passage, autoAnalyze, initialPrompt, initi
 
   return (
     <TooltipProvider>
-      <div className="p-6 max-w-7xl mx-auto space-y-6">
+      {/* Full-screen analysis loading overlay */}
+      {analyzing && <AnalysisLoadingOverlay />}
+
+      <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -358,29 +362,7 @@ export function PassageDetailClient({ passage, autoAnalyze, initialPrompt, initi
           initialConfig={lastPromptConfig}
         />
 
-        {/* 출제 섹션 — separate from analysis */}
-        {analysisData && (
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <Target className="w-4 h-4 text-blue-500" />
-                문제 출제
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ExamPointsEditor
-                keyPoints={analysisData.structure.keyPoints}
-                onUpdate={(newPoints) => {
-                  updateStructure({
-                    ...analysisData.structure,
-                    keyPoints: newPoints,
-                  });
-                }}
-                passageId={passage.id}
-              />
-            </CardContent>
-          </Card>
-        )}
+        {/* ExamPointsEditor removed — exam design info is shown in InteractivePassageView summary */}
 
         {/* 연결된 문제 — toggle + 2-column grid */}
         {passage.questions.length > 0 && (

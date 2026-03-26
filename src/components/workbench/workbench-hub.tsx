@@ -4,24 +4,30 @@ import Link from "next/link";
 import {
   FileText,
   Database,
-  ArrowRight,
   ChevronRight,
   Plus,
   Layers,
-  CheckCircle2,
+  ArrowRight,
+  Cpu,
+  ClipboardCheck,
+  GraduationCap,
 } from "lucide-react";
-import { formatRelativeTime, truncate } from "@/lib/utils";
+import { formatRelativeTime } from "@/lib/utils";
 
 interface WorkbenchStats {
   totalPassages: number;
   totalQuestions: number;
   aiGeneratedCount: number;
   approvedCount: number;
+  pendingAnalysisCount: number;
+  analyzedPassageCount: number;
+  unapprovedCount: number;
   recentPassages: {
     id: string;
     title: string;
     grade: number | null;
     createdAt: Date;
+    analysis: { id: string } | null;
     _count: { questions: number };
   }[];
   recentQuestions: {
@@ -34,273 +40,268 @@ interface WorkbenchStats {
     approved: boolean;
     createdAt: Date;
   }[];
+  pendingPassages: {
+    id: string;
+    title: string;
+    grade: number | null;
+    createdAt: Date;
+  }[];
 }
 
-const QUESTION_TYPE_LABELS: Record<string, string> = {
-  MULTIPLE_CHOICE: "객관식",
-  SHORT_ANSWER: "주관식",
-  FILL_BLANK: "빈칸",
-  ORDERING: "순서배열",
-  VOCAB: "어휘",
-  ESSAY: "서술형",
-};
-
-const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-emerald-400/15 text-emerald-300 border-emerald-400/20" },
-  INTERMEDIATE: { label: "중급", className: "bg-sky-400/15 text-sky-300 border-sky-400/20" },
-  KILLER: { label: "킬러", className: "bg-rose-400/15 text-rose-300 border-rose-400/20" },
-};
-
-const DIFFICULTY_CONFIG_LIGHT: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-emerald-50 text-emerald-600" },
-  INTERMEDIATE: { label: "중급", className: "bg-blue-50 text-blue-600" },
-  KILLER: { label: "킬러", className: "bg-red-50 text-red-600" },
-};
-
 export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
+  const hasActions = stats.pendingAnalysisCount > 0 || stats.unapprovedCount > 0;
+
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      {/* ─── Hero Section ─── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-8">
-        {/* Decorative blobs */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-blue-400/20 blur-3xl" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-indigo-400/20 blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-sky-400/10 blur-3xl" />
+    <div className="max-w-[1100px] mx-auto space-y-7">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+            AI 콘텐츠
+          </h1>
+          <p className="text-[15px] text-slate-500 mt-1">
+            지문 등록부터 시험 출제까지, AI 기반 콘텐츠 제작 도구
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/director/workbench/passages/create">
+            <button className="h-10 px-5 text-[14px] font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm">
+              <Plus className="w-4 h-4" />
+              지문 등록
+            </button>
+          </Link>
+        </div>
+      </div>
 
-        <div className="relative z-10">
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">AI 워크벤치</h1>
-              <p className="text-blue-200/80 text-sm mt-1">
-                지문 등록 → AI 분석 → 문제 생성 → 문제 은행
-              </p>
+      {/* Workflow Cards — 2x2 grid */}
+      <div className="grid grid-cols-2 gap-5">
+        {/* 지문 관리 */}
+        <Link href="/director/workbench/passages" className="group">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:border-blue-200 hover:shadow-md transition-all h-full flex flex-col">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-blue-600" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 mt-1.5 transition-colors" />
             </div>
-            <div className="flex items-center gap-2">
-              <Link href="/director/workbench/passages/create">
-                <button className="h-9 px-4 text-[13px] font-medium rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-all flex items-center gap-1.5">
-                  <Plus className="w-3.5 h-3.5" />
-                  지문 등록
-                </button>
-              </Link>
-              <Link href="/director/workbench/generate">
-                <button className="h-9 px-4 text-[13px] font-medium rounded-xl bg-white text-blue-700 hover:bg-blue-50 transition-all flex items-center gap-1.5 shadow-lg shadow-blue-900/20">
-                  <Layers className="w-3.5 h-3.5" />
-                  문제 생성
-                </button>
-              </Link>
-            </div>
+            <h3 className="text-[18px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+              지문 관리
+            </h3>
+            <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed flex-1">
+              영어 지문을 등록하고 AI가 어휘·문법·구조를 자동 분석합니다.
+              분석 결과를 검토하고 수정할 수 있습니다.
+            </p>
+            <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-500">
+              지문을 등록하고 AI 분석을 실행하세요
+            </p>
           </div>
+        </Link>
 
-          {/* Glass Stats */}
-          <div className="grid grid-cols-4 gap-3">
+        {/* 문제 생성 */}
+        <Link href="/director/workbench/generate" className="group">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:border-blue-200 hover:shadow-md transition-all h-full flex flex-col">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center">
+                <Layers className="w-5 h-5 text-indigo-600" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 mt-1.5 transition-colors" />
+            </div>
+            <h3 className="text-[18px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+              문제 생성
+            </h3>
+            <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed flex-1">
+              분석된 지문을 기반으로 수능·내신·어휘 등 다양한 유형의
+              문제를 AI가 자동 생성합니다.
+            </p>
+            {stats.analyzedPassageCount > 0 ? (
+              <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-500">
+                분석 완료된 지문 <span className="font-semibold text-slate-700">{stats.analyzedPassageCount}개</span>로 문제 생성 가능
+              </p>
+            ) : (
+              <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-400">
+                먼저 지문을 등록하고 AI 분석을 실행하세요
+              </p>
+            )}
+          </div>
+        </Link>
+
+        {/* 문제 은행 */}
+        <Link href="/director/questions" className="group">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:border-blue-200 hover:shadow-md transition-all h-full flex flex-col">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-11 h-11 rounded-xl bg-sky-50 flex items-center justify-center">
+                <Database className="w-5 h-5 text-sky-600" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 mt-1.5 transition-colors" />
+            </div>
+            <h3 className="text-[18px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+              문제 은행
+            </h3>
+            <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed flex-1">
+              생성된 문제를 검수하고 편집합니다.
+              컬렉션으로 분류·정리하여 시험 출제에 활용하세요.
+            </p>
+            {stats.totalQuestions > 0 ? (
+              <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-500">
+                전체 <span className="font-semibold text-slate-700">{stats.totalQuestions}개</span> 문제
+                {stats.unapprovedCount > 0 && (
+                  <> · 검수 대기 <span className="font-semibold text-slate-700">{stats.unapprovedCount}개</span></>
+                )}
+              </p>
+            ) : (
+              <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-400">
+                문제를 생성하면 여기에 쌓입니다
+              </p>
+            )}
+          </div>
+        </Link>
+
+        {/* 시험 출제 */}
+        <Link href="/director/exams" className="group">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:border-blue-200 hover:shadow-md transition-all h-full flex flex-col">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-11 h-11 rounded-xl bg-violet-50 flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-violet-600" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 mt-1.5 transition-colors" />
+            </div>
+            <h3 className="text-[18px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+              시험 출제
+            </h3>
+            <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed flex-1">
+              문제 은행에서 문제를 선택하여 시험지를 구성합니다.
+              반별·학생별 시험을 배포하고 결과를 확인하세요.
+            </p>
+            {stats.approvedCount > 0 ? (
+              <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-500">
+                검수 완료 문제 <span className="font-semibold text-slate-700">{stats.approvedCount}개</span>로 출제 가능
+              </p>
+            ) : (
+              <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-400">
+                문제를 검수하면 시험 출제에 활용할 수 있습니다
+              </p>
+            )}
+          </div>
+        </Link>
+      </div>
+
+      {/* Action Items — only when there's something to do */}
+      {hasActions && (
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+          <span className="text-[15px] font-semibold text-slate-800">처리가 필요한 항목</span>
+
+          {stats.pendingPassages.map((p) => (
+            <ActionItem
+              key={p.id}
+              href={`/director/workbench/passages/${p.id}?autoAnalyze=true`}
+              icon={<Cpu className="w-4 h-4 text-blue-500" />}
+              title={`"${p.title}" AI 분석 대기`}
+              desc={`${formatRelativeTime(p.createdAt)} 등록`}
+              actionLabel="분석 실행"
+            />
+          ))}
+
+          {stats.pendingAnalysisCount > 3 && (
+            <Link
+              href="/director/workbench/passages"
+              className="block text-center text-[13px] text-blue-600 hover:text-blue-700 py-1.5 font-medium"
+            >
+              외 {stats.pendingAnalysisCount - 3}개 더 보기
+            </Link>
+          )}
+
+          {stats.unapprovedCount > 0 && (
+            <ActionItem
+              href="/director/questions?approved=false"
+              icon={<ClipboardCheck className="w-4 h-4 text-blue-500" />}
+              title={`검수 대기 문제 ${stats.unapprovedCount}개`}
+              desc="생성된 문제를 검토하고 승인하세요"
+              actionLabel="검수하기"
+            />
+          )}
+        </div>
+      )}
+
+      {/* Quick Start Guide (only when brand new) */}
+      {stats.totalPassages === 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200 p-7">
+          <h3 className="text-[16px] font-semibold text-slate-800 mb-5">
+            시작 가이드
+          </h3>
+          <div className="grid grid-cols-2 gap-x-10 gap-y-6">
             {[
-              { label: "등록 지문", value: stats.totalPassages, icon: FileText },
-              { label: "총 문제", value: stats.totalQuestions, icon: Database },
-              { label: "AI 생성", value: stats.aiGeneratedCount, icon: Layers },
-              { label: "검수 완료", value: stats.approvedCount, icon: CheckCircle2 },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="rounded-xl px-4 py-3 border border-white/15"
-                style={{
-                  background: "rgba(255,255,255,0.08)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-blue-200/70">{s.label}</span>
-                  <s.icon className="w-3.5 h-3.5 text-blue-300/50" />
+              {
+                step: "1",
+                title: "지문 붙여넣기",
+                desc: "교과서나 모의고사 영어 지문을 복사해서 붙여넣으세요. 학교·학년 정보는 나중에 추가해도 됩니다.",
+              },
+              {
+                step: "2",
+                title: "AI 자동 분석",
+                desc: "어휘, 문법 포인트, 문장 구조를 AI가 즉시 분석합니다. 분석 결과를 직접 수정할 수도 있습니다.",
+              },
+              {
+                step: "3",
+                title: "문제 자동 생성",
+                desc: "빈칸 추론, 어법 판단, 서술형 등 원하는 유형의 문제를 AI가 자동으로 만들어 줍니다.",
+              },
+              {
+                step: "4",
+                title: "시험 출제",
+                desc: "검수 완료된 문제를 모아 시험지를 구성하고, 반별로 배포하여 결과를 확인하세요.",
+              },
+            ].map((g) => (
+              <div key={g.step} className="flex gap-3.5">
+                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[13px] font-bold shrink-0 mt-0.5">
+                  {g.step}
                 </div>
-                <span className="text-2xl font-bold text-white mt-1 block">{s.value}</span>
+                <div>
+                  <p className="text-[14px] font-semibold text-slate-700">{g.title}</p>
+                  <p className="text-[13px] text-slate-500 mt-1.5 leading-relaxed">{g.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* ─── Quick Actions ─── */}
-      <div className="grid grid-cols-3 gap-4">
-        <QuickActionCard
-          href="/director/workbench/passages"
-          icon={FileText}
-          title="지문 관리"
-          description="영어 지문 등록 및 AI 분석"
-          count={stats.totalPassages}
-          countLabel="지문"
-          accent="blue"
-        />
-        <QuickActionCard
-          href="/director/workbench/generate"
-          icon={Layers}
-          title="문제 생성"
-          description="유형별 AI 문제 자동 생성"
-          count={stats.aiGeneratedCount}
-          countLabel="AI 생성"
-          accent="indigo"
-        />
-        <QuickActionCard
-          href="/director/questions"
-          icon={Database}
-          title="문제 은행"
-          description="문제 검수 및 시험 출제"
-          count={stats.totalQuestions}
-          countLabel="문제"
-          accent="sky"
-        />
-      </div>
-
-      {/* ─── Recent Activity ─── */}
-      <div className="grid grid-cols-2 gap-4">
-        {/* Recent Passages */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
-          <div className="flex items-center justify-between px-5 pt-5 pb-3">
-            <span className="text-[13px] font-semibold text-slate-800">최근 지문</span>
-            <Link href="/director/workbench/passages" className="text-[11px] text-blue-500 hover:text-blue-700 flex items-center gap-0.5 font-medium">
-              전체 보기 <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="px-3 pb-3 space-y-0.5">
-            {stats.recentPassages.length === 0 ? (
-              <div className="text-sm text-slate-400 text-center py-10">
-                등록된 지문이 없습니다
-              </div>
-            ) : (
-              stats.recentPassages.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/director/workbench/passages/${p.id}`}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-blue-50/50 transition-colors group"
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                      <FileText className="w-3.5 h-3.5 text-blue-400" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[13px] font-medium text-slate-700 truncate group-hover:text-blue-600 transition-colors">
-                        {p.title}
-                      </p>
-                      <p className="text-[11px] text-slate-400">
-                        {p.grade ? `${p.grade}학년` : ""}
-                        {p.grade && p._count.questions > 0 ? " · " : ""}
-                        {p._count.questions > 0 ? `문제 ${p._count.questions}개` : ""}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-slate-300 shrink-0">
-                    {formatRelativeTime(p.createdAt)}
-                  </span>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Recent Questions */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
-          <div className="flex items-center justify-between px-5 pt-5 pb-3">
-            <span className="text-[13px] font-semibold text-slate-800">최근 문제</span>
-            <Link href="/director/questions" className="text-[11px] text-blue-500 hover:text-blue-700 flex items-center gap-0.5 font-medium">
-              전체 보기 <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="px-3 pb-3 space-y-0.5">
-            {stats.recentQuestions.length === 0 ? (
-              <div className="text-sm text-slate-400 text-center py-10">
-                생성된 문제가 없습니다
-              </div>
-            ) : (
-              stats.recentQuestions.map((q) => (
-                <Link
-                  key={q.id}
-                  href={`/director/questions/${q.id}`}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-blue-50/50 transition-colors group"
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div className="flex gap-1 shrink-0">
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500">
-                        {QUESTION_TYPE_LABELS[q.type] || q.type}
-                      </span>
-                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${
-                        DIFFICULTY_CONFIG_LIGHT[q.difficulty]?.className || "bg-slate-100 text-slate-500"
-                      }`}>
-                        {DIFFICULTY_CONFIG_LIGHT[q.difficulty]?.label || q.difficulty}
-                      </span>
-                    </div>
-                    <p className="text-[13px] text-slate-600 truncate min-w-0 group-hover:text-blue-600 transition-colors">
-                      {truncate(q.questionText, 30)}
-                    </p>
-                  </div>
-                  <span className="text-[10px] text-slate-300 shrink-0">
-                    {formatRelativeTime(q.createdAt)}
-                  </span>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
 
-const ACCENT_STYLES = {
-  blue: {
-    iconBg: "bg-blue-50 group-hover:bg-blue-100",
-    iconText: "text-blue-500",
-    border: "hover:border-blue-200",
-    countText: "text-blue-600",
-  },
-  indigo: {
-    iconBg: "bg-indigo-50 group-hover:bg-indigo-100",
-    iconText: "text-indigo-500",
-    border: "hover:border-indigo-200",
-    countText: "text-indigo-600",
-  },
-  sky: {
-    iconBg: "bg-sky-50 group-hover:bg-sky-100",
-    iconText: "text-sky-500",
-    border: "hover:border-sky-200",
-    countText: "text-sky-600",
-  },
-};
+// ─── Action Item ─────────────────────────────────────────
 
-function QuickActionCard({
+function ActionItem({
   href,
-  icon: Icon,
+  icon,
   title,
-  description,
-  count,
-  countLabel,
-  accent,
+  desc,
+  actionLabel,
 }: {
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ReactNode;
   title: string;
-  description: string;
-  count: number;
-  countLabel: string;
-  accent: keyof typeof ACCENT_STYLES;
+  desc: string;
+  actionLabel: string;
 }) {
-  const style = ACCENT_STYLES[accent];
   return (
-    <Link href={href}>
-      <div className={`bg-white rounded-2xl border border-slate-200/80 px-5 py-5 ${style.border} hover:shadow-md transition-all cursor-pointer group`}>
-        <div className="flex items-start justify-between">
-          <div className={`w-10 h-10 rounded-xl ${style.iconBg} flex items-center justify-center transition-colors`}>
-            <Icon className={`w-5 h-5 ${style.iconText}`} />
-          </div>
-          <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 mt-1 transition-colors" />
+    <Link
+      href={href}
+      className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-sm transition-all group"
+    >
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+          {icon}
         </div>
-        <h3 className="text-[15px] font-semibold text-slate-800 mt-3 group-hover:text-blue-600 transition-colors">
-          {title}
-        </h3>
-        <p className="text-[12px] text-slate-400 mt-0.5">{description}</p>
-        <div className="flex items-baseline gap-1.5 mt-4 pt-3 border-t border-slate-100">
-          <span className={`text-xl font-bold ${style.countText}`}>{count}</span>
-          <span className="text-[11px] text-slate-400">{countLabel}</span>
+        <div>
+          <p className="text-[14px] font-medium text-slate-700 group-hover:text-blue-600 transition-colors">
+            {title}
+          </p>
+          <p className="text-[12px] text-slate-400 mt-0.5">{desc}</p>
         </div>
       </div>
+      <span className="text-[13px] text-blue-600 font-medium group-hover:text-blue-700 flex items-center gap-1 shrink-0">
+        {actionLabel} <ArrowRight className="w-3.5 h-3.5" />
+      </span>
     </Link>
   );
 }
