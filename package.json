@@ -17,6 +17,7 @@
     "remotion:render-scene": "remotion render remotion/index.ts"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.64",
     "@ai-sdk/google": "^3.0.31",
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.9",
     "@auth/prisma-adapter": "^2.11.1",
