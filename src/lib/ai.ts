@@ -1,7 +1,7 @@
-import { google } from "@ai-sdk/google";
+import { anthropic } from "@ai-sdk/anthropic";
 
 /**
- * Gemini 3.0 Flash model instance for AI tutoring.
- * Used with Vercel AI SDK's streamText() for streaming responses.
+ * Claude Sonnet 4.6 model instance for AI question generation.
+ * Used with Vercel AI SDK's generateObject() for structured output.
  */
-export const model = google("gemini-3-flash-preview");
+export const model = anthropic("claude-sonnet-4-6");
