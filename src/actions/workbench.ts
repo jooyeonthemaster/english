@@ -520,6 +520,12 @@ export async function getWorkbenchStats(academyId: string) {
     }),
   ]);
 
+  // Learning question counts (내신링고 + 수능링고)
+  const [naeshinCount, suneungCount] = await Promise.all([
+    prisma.naeshinQuestion.count({ where: { academyId } }),
+    prisma.suneungQuestion.count(),
+  ]);
+
   return {
     totalPassages,
     totalQuestions,
@@ -531,6 +537,7 @@ export async function getWorkbenchStats(academyId: string) {
     recentQuestions,
     pendingPassages,
     unapprovedCount: totalQuestions - approvedCount,
+    totalLearningQuestions: naeshinCount + suneungCount,
   };
 }
 

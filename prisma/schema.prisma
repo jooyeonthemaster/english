@@ -31,28 +31,30 @@ model Academy {
   updatedAt DateTime @updatedAt
 
   // Relations
-  staff          Staff[]
-  students       Student[]
-  parents        Parent[]
-  schools        School[]
-  classes        Class[]
-  attendances    Attendance[]
-  invoices       Invoice[]
-  expenses       Expense[]
-  salaries       Salary[]
-  notices        Notice[]
-  calendarEvents CalendarEvent[]
-  consultations  Consultation[]
-  assignments    Assignment[]
-  passages              Passage[]
-  questions             Question[]
-  questionCollections   QuestionCollection[]
-  passageCollections    PassageCollection[]
-  exams                 Exam[]
-  vocabLists     VocabularyList[]
-  teacherPrompts TeacherPrompt[]
-  textbooks      Textbook[]
-  achievements   Achievement[]
+  staff               Staff[]
+  students            Student[]
+  parents             Parent[]
+  schools             School[]
+  classes             Class[]
+  attendances         Attendance[]
+  invoices            Invoice[]
+  expenses            Expense[]
+  salaries            Salary[]
+  notices             Notice[]
+  calendarEvents      CalendarEvent[]
+  consultations       Consultation[]
+  assignments         Assignment[]
+  passages            Passage[]
+  questions           Question[]
+  questionCollections QuestionCollection[]
+  exams               Exam[]
+  vocabLists          VocabularyList[]
+  teacherPrompts      TeacherPrompt[]
+  textbooks           Textbook[]
+  achievements        Achievement[]
+  studySeasons        StudySeason[]
+  naeshinQuestions    NaeshinQuestion[]
+  learningSets        LearningSet[]
 
   @@map("academies")
 }
@@ -74,7 +76,7 @@ model Staff {
 
   // Relations
   academy          Academy           @relation(fields: [academyId], references: [id])
-  classes          Class[]           // Classes taught
+  classes          Class[] // Classes taught
   staffAttendances StaffAttendance[]
   salaries         Salary[]
   consultations    Consultation[]
@@ -92,15 +94,16 @@ model School {
   academyId String
   name      String
   slug      String
-  type      String   // "MIDDLE" | "HIGH" | "ELEMENTARY"
-  publisher String?  // 교과서 출판사
+  type      String // "MIDDLE" | "HIGH" | "ELEMENTARY"
+  publisher String? // 교과서 출판사
   createdAt DateTime @default(now())
 
   // Relations
-  academy  Academy   @relation(fields: [academyId], references: [id])
-  students Student[]
-  passages Passage[]
-  exams    Exam[]
+  academy          Academy           @relation(fields: [academyId], references: [id])
+  students         Student[]
+  passages         Passage[]
+  exams            Exam[]
+  naeshinQuestions NaeshinQuestion[]
 
   @@unique([academyId, slug])
   @@index([academyId])
@@ -111,47 +114,54 @@ model School {
 /// status: "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
 /// gender: "MALE" | "FEMALE" | null
 model Student {
-  id          String    @id @default(cuid())
-  academyId   String
-  name        String
-  studentCode String    @unique // 4-digit login code
-  birthDate   DateTime?
-  gender      String?   // "MALE" | "FEMALE"
-  phone       String?
-  schoolId    String?
-  grade       Int
-  status      String    @default("ACTIVE") // "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
-  enrollDate  DateTime  @default(now())
+  id           String    @id @default(cuid())
+  academyId    String
+  name         String
+  studentCode  String    @unique // 4-digit login code
+  birthDate    DateTime?
+  gender       String? // "MALE" | "FEMALE"
+  phone        String?
+  schoolId     String?
+  grade        Int
+  status       String    @default("ACTIVE") // "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
+  enrollDate   DateTime  @default(now())
   withdrawDate DateTime?
-  pauseDate   DateTime?
-  memo        String?   @db.Text // Special notes (allergies, personality, etc.)
-  avatarUrl   String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  pauseDate    DateTime?
+  memo         String?   @db.Text // Special notes (allergies, personality, etc.)
+  avatarUrl    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   // Gamification
-  xp     Int @default(0)
-  level  Int @default(1)
-  streak Int @default(0)
+  xp                Int       @default(0)
+  level             Int       @default(1)
+  streak            Int       @default(0)
+  streakFreezeCount Int       @default(0) // max 3
+  lastStudyDate     DateTime?
 
   // Relations
-  academy            Academy              @relation(fields: [academyId], references: [id])
-  school             School?              @relation(fields: [schoolId], references: [id])
-  parentLinks        ParentStudent[]
-  classEnrollments   ClassEnrollment[]
-  attendances        Attendance[]
-  invoices           Invoice[]
-  consultations      Consultation[]
-  assignmentSubs     AssignmentSubmission[]
-  examSubmissions    ExamSubmission[]
-  vocabTestResults   VocabTestResult[]
-  wrongVocabAnswers  WrongVocabAnswer[]
-  aiConversations    AIConversation[]
-  studyProgress      StudyProgress[]
-  studentAchievements StudentAchievement[]
-  studentAnalytics   StudentAnalytics?
-  parentReports      ParentReport[]
-  wrongAnswerLogs    WrongAnswerLog[]
+  academy                Academy                 @relation(fields: [academyId], references: [id])
+  school                 School?                 @relation(fields: [schoolId], references: [id])
+  parentLinks            ParentStudent[]
+  classEnrollments       ClassEnrollment[]
+  attendances            Attendance[]
+  invoices               Invoice[]
+  consultations          Consultation[]
+  assignmentSubs         AssignmentSubmission[]
+  examSubmissions        ExamSubmission[]
+  vocabTestResults       VocabTestResult[]
+  wrongVocabAnswers      WrongVocabAnswer[]
+  aiConversations        AIConversation[]
+  studyProgress          StudyProgress[]
+  studentAchievements    StudentAchievement[]
+  studentAnalytics       StudentAnalytics?
+  parentReports          ParentReport[]
+  wrongAnswerLogs        WrongAnswerLog[]
+  lessonProgress         LessonProgress[]
+  sessionRecords         SessionRecord[]
+  dailyMissions          StudentDailyMission[]
+  naeshinWrongAnswerLogs NaeshinWrongAnswerLog[]
+  suneungWrongAnswerLogs SuneungWrongAnswerLog[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -166,7 +176,7 @@ model Parent {
   name             String
   phone            String
   email            String?
-  relation         String?  // "MOTHER" | "FATHER" | "GUARDIAN" | "OTHER"
+  relation         String? // "MOTHER" | "FATHER" | "GUARDIAN" | "OTHER"
   emergencyContact String?
   memo             String?  @db.Text
   loginToken       String?  @unique // For passwordless parent login via link
@@ -174,10 +184,10 @@ model Parent {
   updatedAt        DateTime @updatedAt
 
   // Relations
-  academy        Academy        @relation(fields: [academyId], references: [id])
-  studentLinks   ParentStudent[]
-  parentReports  ParentReport[]
-  messages       Message[]      @relation("ParentMessages")
+  academy       Academy         @relation(fields: [academyId], references: [id])
+  studentLinks  ParentStudent[]
+  parentReports ParentReport[]
+  messages      Message[]       @relation("ParentMessages")
 
   @@index([academyId])
   @@index([phone])
@@ -210,14 +220,14 @@ model Class {
   schedule  String?  @db.Text // JSON: [{ day: "MON", startTime: "14:00", endTime: "16:00" }]
   capacity  Int      @default(20)
   fee       Int      @default(0) // Monthly fee in KRW
-  room      String?  // Classroom name/number
+  room      String? // Classroom name/number
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  academy     Academy            @relation(fields: [academyId], references: [id])
-  teacher     Staff?             @relation(fields: [teacherId], references: [id])
+  academy     Academy           @relation(fields: [academyId], references: [id])
+  teacher     Staff?            @relation(fields: [teacherId], references: [id])
   enrollments ClassEnrollment[]
   attendances Attendance[]
   assignments Assignment[]
@@ -231,11 +241,11 @@ model Class {
 /// ClassEnrollment — Student ↔ Class enrollment (supports multiple classes)
 /// status: "ENROLLED" | "WAITLISTED" | "DROPPED"
 model ClassEnrollment {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   classId    String
   studentId  String
-  status     String   @default("ENROLLED") // "ENROLLED" | "WAITLISTED" | "DROPPED"
-  enrolledAt DateTime @default(now())
+  status     String    @default("ENROLLED") // "ENROLLED" | "WAITLISTED" | "DROPPED"
+  enrolledAt DateTime  @default(now())
   droppedAt  DateTime?
 
   class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
@@ -262,13 +272,13 @@ model Attendance {
   checkOutTime DateTime?
   status       String    @default("PRESENT") // "PRESENT" | "ABSENT" | "LATE" | "EARLY_LEAVE" | "MAKEUP"
   note         String?
-  method       String?   // "KIOSK" | "QR" | "MANUAL"
+  method       String? // "KIOSK" | "QR" | "MANUAL"
   createdAt    DateTime  @default(now())
 
   // Relations
-  academy Academy  @relation(fields: [academyId], references: [id])
-  student Student  @relation(fields: [studentId], references: [id])
-  class   Class?   @relation(fields: [classId], references: [id])
+  academy Academy @relation(fields: [academyId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+  class   Class?  @relation(fields: [classId], references: [id])
 
   @@unique([studentId, classId, date])
   @@index([academyId, date])
@@ -302,10 +312,10 @@ model Invoice {
   id          String    @id @default(cuid())
   academyId   String
   studentId   String
-  title       String    // e.g. "2026년 3월 수강료"
-  amount      Int       // Total amount in KRW
+  title       String // e.g. "2026년 3월 수강료"
+  amount      Int // Total amount in KRW
   discount    Int       @default(0) // Discount amount
-  finalAmount Int       // amount - discount
+  finalAmount Int // amount - discount
   dueDate     DateTime
   paidDate    DateTime?
   status      String    @default("PENDING")
@@ -330,8 +340,8 @@ model Payment {
   id        String   @id @default(cuid())
   invoiceId String
   amount    Int
-  method    String   // "CARD" | "TRANSFER" | "CASH" | "KAKAO_PAY" | "NAVER_PAY" | "TOSS"
-  reference String?  // Transaction ID from payment gateway
+  method    String // "CARD" | "TRANSFER" | "CASH" | "KAKAO_PAY" | "NAVER_PAY" | "TOSS"
+  reference String? // Transaction ID from payment gateway
   paidAt    DateTime @default(now())
   memo      String?
 
@@ -346,11 +356,11 @@ model Payment {
 model Expense {
   id          String   @id @default(cuid())
   academyId   String
-  category    String   // "RENT" | "SALARY" | "MATERIALS" | "MARKETING" | "UTILITIES" | "MAINTENANCE" | "OTHER"
+  category    String // "RENT" | "SALARY" | "MATERIALS" | "MARKETING" | "UTILITIES" | "MAINTENANCE" | "OTHER"
   amount      Int
   date        DateTime
   description String?
-  receipt     String?  // Receipt image URL
+  receipt     String? // Receipt image URL
   createdAt   DateTime @default(now())
 
   academy Academy @relation(fields: [academyId], references: [id])
@@ -365,7 +375,7 @@ model Salary {
   id         String    @id @default(cuid())
   academyId  String
   staffId    String
-  month      String    // "2026-03" format
+  month      String // "2026-03" format
   basePay    Int
   bonus      Int       @default(0)
   deductions Int       @default(0)
@@ -394,13 +404,13 @@ model Notice {
   title      String
   content    String   @db.Text
   targetType String   @default("ALL") // "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
-  targetId   String?  // classId or studentId depending on targetType
+  targetId   String? // classId or studentId depending on targetType
   isPinned   Boolean  @default(false)
   publishAt  DateTime @default(now()) // Scheduled publish time
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  academy Academy       @relation(fields: [academyId], references: [id])
+  academy Academy      @relation(fields: [academyId], references: [id])
   reads   NoticeRead[]
 
   @@index([academyId, publishAt])
@@ -409,11 +419,11 @@ model Notice {
 
 /// NoticeRead — Track who read the notice
 model NoticeRead {
-  id        String   @id @default(cuid())
-  noticeId  String
-  readerId  String   // parentId or studentId
-  readerType String  // "PARENT" | "STUDENT"
-  readAt    DateTime @default(now())
+  id         String   @id @default(cuid())
+  noticeId   String
+  readerId   String // parentId or studentId
+  readerType String // "PARENT" | "STUDENT"
+  readAt     DateTime @default(now())
 
   notice Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
 
@@ -425,18 +435,18 @@ model NoticeRead {
 model Message {
   id           String   @id @default(cuid())
   senderId     String
-  senderType   String   // "STAFF" | "PARENT"
+  senderType   String // "STAFF" | "PARENT"
   receiverId   String
-  receiverType String   // "STAFF" | "PARENT"
+  receiverType String // "STAFF" | "PARENT"
   content      String   @db.Text
   attachments  String?  @db.Text // JSON array of file URLs
   isRead       Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   // Polymorphic relations
-  senderStaff    Staff?  @relation("SentMessages", fields: [senderId], references: [id], map: "msg_sender_staff")
-  receiverStaff  Staff?  @relation("ReceivedStaffMessages", fields: [receiverId], references: [id], map: "msg_receiver_staff")
-  senderParent   Parent? @relation("ParentMessages", fields: [senderId], references: [id], map: "msg_sender_parent")
+  senderStaff   Staff?  @relation("SentMessages", fields: [senderId], references: [id], map: "msg_sender_staff")
+  receiverStaff Staff?  @relation("ReceivedStaffMessages", fields: [receiverId], references: [id], map: "msg_receiver_staff")
+  senderParent  Parent? @relation("ParentMessages", fields: [senderId], references: [id], map: "msg_sender_parent")
 
   @@index([receiverId, receiverType, isRead])
   @@index([senderId, senderType])
@@ -446,16 +456,16 @@ model Message {
 /// CalendarEvent — Academy calendar
 /// type: "EXAM" | "EVENT" | "HOLIDAY" | "MEETING" | "OTHER"
 model CalendarEvent {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   academyId   String
   title       String
-  description String?  @db.Text
+  description String?   @db.Text
   startDate   DateTime
   endDate     DateTime?
-  allDay      Boolean  @default(false)
-  type        String   @default("EVENT") // "EXAM" | "EVENT" | "HOLIDAY" | "MEETING" | "OTHER"
-  color       String?  // Custom event color
-  createdAt   DateTime @default(now())
+  allDay      Boolean   @default(false)
+  type        String    @default("EVENT") // "EXAM" | "EVENT" | "HOLIDAY" | "MEETING" | "OTHER"
+  color       String? // Custom event color
+  createdAt   DateTime  @default(now())
 
   academy Academy @relation(fields: [academyId], references: [id])
 
@@ -475,13 +485,13 @@ model Consultation {
   id           String    @id @default(cuid())
   academyId    String
   studentId    String?
-  staffId      String?   // Counselor
-  type         String    // "NEW_INQUIRY" | "STUDENT" | "PARENT" | "LEVEL_TEST"
-  channel      String?   // "PHONE" | "VISIT" | "ONLINE" | "KAKAO"
+  staffId      String? // Counselor
+  type         String // "NEW_INQUIRY" | "STUDENT" | "PARENT" | "LEVEL_TEST"
+  channel      String? // "PHONE" | "VISIT" | "ONLINE" | "KAKAO"
   status       String    @default("SCHEDULED") // "SCHEDULED" | "COMPLETED" | "CANCELLED" | "FOLLOW_UP"
   date         DateTime
   content      String?   @db.Text
-  category     String?   // "GRADE" | "ATTITUDE" | "CAREER" | "PARENT_REQUEST" | "OTHER"
+  category     String? // "GRADE" | "ATTITUDE" | "CAREER" | "PARENT_REQUEST" | "OTHER"
   followUpDate DateTime?
   followUpNote String?
   createdAt    DateTime  @default(now())
@@ -510,13 +520,13 @@ model Assignment {
   description String?  @db.Text
   targetType  String   @default("CLASS") // "CLASS" | "INDIVIDUAL"
   dueDate     DateTime
-  maxScore    Int?     // If graded
+  maxScore    Int? // If graded
   attachments String?  @db.Text // JSON array of file URLs
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  academy     Academy              @relation(fields: [academyId], references: [id])
-  class       Class?               @relation(fields: [classId], references: [id])
+  academy     Academy                @relation(fields: [academyId], references: [id])
+  class       Class?                 @relation(fields: [classId], references: [id])
   submissions AssignmentSubmission[]
 
   @@index([academyId, dueDate])
@@ -554,30 +564,34 @@ model AssignmentSubmission {
 /// Passage — Text passages for study and question generation
 /// difficulty: "BEGINNER" | "ELEMENTARY" | "INTERMEDIATE" | "UPPER_INTERMEDIATE" | "ADVANCED" | "EXPERT"
 model Passage {
-  id          String   @id @default(cuid())
-  academyId   String
-  schoolId    String?  // Optional: school-specific passage
-  title       String
-  content     String   @db.Text
-  source      String?  // Source reference
-  grade       Int?
-  semester    String?  // "FIRST" | "SECOND"
-  unit        String?
-  publisher   String?  // 교과서 출판사
-  difficulty  String?  // "BEGINNER" ~ "EXPERT"
-  tags        String?  @db.Text // JSON array of tags
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  academyId  String
+  schoolId   String? // Optional: school-specific passage
+  title      String
+  content    String   @db.Text
+  source     String? // Source reference
+  grade      Int?
+  semester   String? // "FIRST" | "SECOND"
+  unit       String?
+  publisher  String? // 교과서 출판사
+  difficulty String? // "BEGINNER" ~ "EXPERT"
+  tags       String?  @db.Text // JSON array of tags
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
-  academy        Academy          @relation(fields: [academyId], references: [id])
-  school         School?          @relation(fields: [schoolId], references: [id])
-  notes          PassageNote[]
-  analysis       PassageAnalysis?
-  questions      Question[]
-  teacherPrompts  TeacherPrompt[]
-  collectionItems PassageCollectionItem[]
+  academy          Academy           @relation(fields: [academyId], references: [id])
+  school           School?           @relation(fields: [schoolId], references: [id])
+  notes            PassageNote[]
+  analysis         PassageAnalysis?
+  questions        Question[]
+  teacherPrompts   TeacherPrompt[]
+  seasonLinks      SeasonPassage[]
+  lessonProgress   LessonProgress[]
+  sessionRecords   SessionRecord[]
+  naeshinQuestions NaeshinQuestion[]
+  learningSets     LearningSet[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -590,7 +604,7 @@ model PassageAnalysis {
   id           String   @id @default(cuid())
   passageId    String   @unique
   analysisData String   @db.Text // JSON: sentences, vocab, grammar, structure
-  contentHash  String   // MD5 for change detection
+  contentHash  String // MD5 for change detection
   version      Int      @default(1)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -628,27 +642,28 @@ model PassageNote {
 /// subType: Specific question pattern (e.g. "BLANK_INFERENCE", "GRAMMAR_ERROR", "SENTENCE_INSERT" etc.)
 /// difficulty: "BASIC" | "INTERMEDIATE" | "KILLER"
 model Question {
-  id             String   @id @default(cuid())
-  academyId      String
-  passageId      String?  // Source passage (if passage-based)
-  type           String   // "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "ESSAY" | "FILL_BLANK" | "ORDERING" | "VOCAB"
-  subType        String?  // Specific pattern within type
-  questionText   String   @db.Text
-  questionImage  String?  // Image URL
-  options        String?  @db.Text // JSON: [{ label: "①", text: "..." }, ...] for MC
-  correctAnswer  String   @db.Text // Answer text or JSON for complex answers
-  points         Int      @default(1)
-  difficulty     String   @default("INTERMEDIATE") // "BASIC" | "INTERMEDIATE" | "KILLER"
-  tags           String?  @db.Text // JSON: ["관계대명사", "시제", ...] for filtering
-  aiGenerated    Boolean  @default(false)
-  approved       Boolean  @default(false) // Teacher review status
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id               String   @id @default(cuid())
+  academyId        String
+  passageId        String? // Source passage (if passage-based)
+  type             String // "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "ESSAY" | "FILL_BLANK" | "ORDERING" | "VOCAB"
+  subType          String? // Specific pattern within type
+  questionText     String   @db.Text
+  questionImage    String? // Image URL
+  options          String?  @db.Text // JSON: [{ label: "①", text: "..." }, ...] for MC
+  correctAnswer    String   @db.Text // Answer text or JSON for complex answers
+  points           Int      @default(1)
+  difficulty       String   @default("INTERMEDIATE") // "BASIC" | "INTERMEDIATE" | "KILLER"
+  tags             String?  @db.Text // JSON: ["관계대명사", "시제", ...] for filtering
+  learningCategory String? // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
+  aiGenerated      Boolean  @default(false)
+  approved         Boolean  @default(false) // Teacher review status
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   // Relations
-  academy     Academy              @relation(fields: [academyId], references: [id])
-  passage     Passage?             @relation(fields: [passageId], references: [id])
-  explanation QuestionExplanation?
+  academy         Academy                  @relation(fields: [academyId], references: [id])
+  passage         Passage?                 @relation(fields: [passageId], references: [id])
+  explanation     QuestionExplanation?
   examLinks       ExamQuestion[]
   wrongLogs       WrongAnswerLog[]
   aiConversations AIConversation[]
@@ -663,17 +678,17 @@ model Question {
 
 /// QuestionExplanation — Detailed explanation for each question
 model QuestionExplanation {
-  id                    String   @id @default(cuid())
-  questionId            String   @unique
-  content               String   @db.Text // Rich HTML explanation
-  keyPoints             String?  @db.Text // JSON string array
-  wrongOptionExplanations String? @db.Text // JSON: { "1": "왜 틀렸는지...", "2": "..." }
-  relatedGrammar        String?  @db.Text // Related grammar rules
-  difficulty            String?
-  aiGenerated           Boolean  @default(false)
-  approved              Boolean  @default(false)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                      String   @id @default(cuid())
+  questionId              String   @unique
+  content                 String   @db.Text // Rich HTML explanation
+  keyPoints               String?  @db.Text // JSON string array
+  wrongOptionExplanations String?  @db.Text // JSON: { "1": "왜 틀렸는지...", "2": "..." }
+  relatedGrammar          String?  @db.Text // Related grammar rules
+  difficulty              String?
+  aiGenerated             Boolean  @default(false)
+  approved                Boolean  @default(false)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
@@ -688,26 +703,26 @@ model QuestionExplanation {
 /// type: "OFFLINE" | "ONLINE" | "VOCAB" | "MOCK"
 /// status: "DRAFT" | "PUBLISHED" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED"
 model Exam {
-  id          String   @id @default(cuid())
-  academyId   String
-  schoolId    String?  // Optional school association
-  classId     String?  // Optional class association
-  title       String
-  type        String   // "OFFLINE" | "ONLINE" | "VOCAB" | "MOCK"
-  status      String   @default("DRAFT") // "DRAFT" | "PUBLISHED" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED"
-  grade       Int?
-  semester    String?  // "FIRST" | "SECOND"
-  examType    String?  // "MIDTERM" | "FINAL" | "QUIZ" | "MOCK"
-  year        Int?
-  examDate    DateTime?
-  duration    Int?     // Time limit in minutes (for online)
-  totalPoints Int      @default(100)
-  shuffleQuestions Boolean @default(false) // Anti-cheat for online
-  shuffleOptions   Boolean @default(false)
-  showResults      Boolean @default(true) // Show results immediately after submission
-  settings    String?  @db.Text // JSON: additional exam settings
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String    @id @default(cuid())
+  academyId        String
+  schoolId         String? // Optional school association
+  classId          String? // Optional class association
+  title            String
+  type             String // "OFFLINE" | "ONLINE" | "VOCAB" | "MOCK"
+  status           String    @default("DRAFT") // "DRAFT" | "PUBLISHED" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED"
+  grade            Int?
+  semester         String? // "FIRST" | "SECOND"
+  examType         String? // "MIDTERM" | "FINAL" | "QUIZ" | "MOCK"
+  year             Int?
+  examDate         DateTime?
+  duration         Int? // Time limit in minutes (for online)
+  totalPoints      Int       @default(100)
+  shuffleQuestions Boolean   @default(false) // Anti-cheat for online
+  shuffleOptions   Boolean   @default(false)
+  showResults      Boolean   @default(true) // Show results immediately after submission
+  settings         String?   @db.Text // JSON: additional exam settings
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   // Relations
   academy     Academy          @relation(fields: [academyId], references: [id])
@@ -746,14 +761,14 @@ model ExamSubmission {
   examId      String
   studentId   String
   answers     String    @db.Text // JSON: { "questionId": "answer", ... }
-  score       Int?      // Total score (null until graded)
+  score       Int? // Total score (null until graded)
   maxScore    Int?
   percent     Float?
   status      String    @default("IN_PROGRESS") // "IN_PROGRESS" | "SUBMITTED" | "GRADED"
   startedAt   DateTime  @default(now())
   submittedAt DateTime?
   gradedAt    DateTime?
-  gradedBy    String?   // staffId who graded (for manual grading)
+  gradedBy    String? // staffId who graded (for manual grading)
 
   exam    Exam    @relation(fields: [examId], references: [id])
   student Student @relation(fields: [studentId], references: [id])
@@ -773,14 +788,14 @@ model VocabularyList {
   academyId String
   title     String
   grade     Int?
-  semester  String?  // "FIRST" | "SECOND"
+  semester  String? // "FIRST" | "SECOND"
   unit      String?
-  schoolId  String?  // Optional school-specific
+  schoolId  String? // Optional school-specific
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  academy     Academy          @relation(fields: [academyId], references: [id])
+  academy     Academy           @relation(fields: [academyId], references: [id])
   items       VocabularyItem[]
   testResults VocabTestResult[]
 
@@ -798,8 +813,8 @@ model VocabularyItem {
   exampleEn    String?
   exampleKr    String?
   phonetic     String?
-  synonyms     String?  // Comma-separated
-  antonyms     String?  // Comma-separated
+  synonyms     String? // Comma-separated
+  antonyms     String? // Comma-separated
   order        Int      @default(0)
   createdAt    DateTime @default(now())
 
@@ -816,11 +831,11 @@ model VocabTestResult {
   id        String   @id @default(cuid())
   studentId String
   listId    String
-  testType  String   // "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+  testType  String // "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
   score     Int
   total     Int
   percent   Float
-  duration  Int?     // seconds
+  duration  Int? // seconds
   takenAt   DateTime @default(now())
 
   student Student        @relation(fields: [studentId], references: [id])
@@ -836,7 +851,7 @@ model WrongVocabAnswer {
   id           String   @id @default(cuid())
   studentId    String
   itemId       String
-  testType     String   // "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
+  testType     String // "EN_TO_KR" | "KR_TO_EN" | "SPELLING"
   givenAnswer  String
   count        Int      @default(1)
   lastMissedAt DateTime @default(now())
@@ -855,20 +870,20 @@ model WrongVocabAnswer {
 
 /// StudentAnalytics — Comprehensive student performance data ("영어 인바디")
 model StudentAnalytics {
-  id            String   @id @default(cuid())
-  studentId     String   @unique
-  overallScore  Float    @default(0) // 0-100 composite score
-  grammarScore  Float    @default(0) // 0-100
-  vocabScore    Float    @default(0) // 0-100
-  readingScore  Float    @default(0) // 0-100
-  writingScore  Float    @default(0) // 0-100
-  listeningScore Float   @default(0) // 0-100
-  level         String   @default("D") // "S" | "A" | "B" | "C" | "D"
+  id             String   @id @default(cuid())
+  studentId      String   @unique
+  overallScore   Float    @default(0) // 0-100 composite score
+  grammarScore   Float    @default(0) // 0-100
+  vocabScore     Float    @default(0) // 0-100
+  readingScore   Float    @default(0) // 0-100
+  writingScore   Float    @default(0) // 0-100
+  listeningScore Float    @default(0) // 0-100
+  level          String   @default("D") // "S" | "A" | "B" | "C" | "D"
   // Detailed grammar breakdown (JSON)
-  grammarDetail String?  @db.Text // JSON: { "tense": 85, "passive": 60, "relative": 40, ... }
+  grammarDetail  String?  @db.Text // JSON: { "tense": 85, "passive": 60, "relative": 40, ... }
   // Detailed weak points
-  weakPoints    String?  @db.Text // JSON: ["관계대명사 who/which 구분", ...]
-  updatedAt     DateTime @updatedAt
+  weakPoints     String?  @db.Text // JSON: ["관계대명사 who/which 구분", ...]
+  updatedAt      DateTime @updatedAt
 
   student Student @relation(fields: [studentId], references: [id])
 
@@ -881,8 +896,8 @@ model WrongAnswerLog {
   studentId   String
   questionId  String
   givenAnswer String
-  category    String?  // "GRAMMAR" | "VOCAB" | "READING" | "WRITING"
-  subCategory String?  // "TENSE" | "RELATIVE_PRONOUN" | "SYNONYM" etc.
+  category    String? // "GRAMMAR" | "VOCAB" | "READING" | "WRITING"
+  subCategory String? // "TENSE" | "RELATIVE_PRONOUN" | "SYNONYM" etc.
   count       Int      @default(1)
   lastWrongAt DateTime @default(now())
 
@@ -896,16 +911,16 @@ model WrongAnswerLog {
 
 /// StudyProgress — Daily study tracking
 model StudyProgress {
-  id               String   @id @default(cuid())
-  studentId        String
-  date             DateTime
-  vocabTests       Int      @default(0)
-  vocabScore       Float    @default(0)
-  questionsViewed  Int      @default(0)
-  questionsAnswered Int     @default(0)
-  aiQuestionsAsked Int      @default(0)
-  studyMinutes     Int      @default(0)
-  xpEarned         Int      @default(0)
+  id                String   @id @default(cuid())
+  studentId         String
+  date              DateTime
+  vocabTests        Int      @default(0)
+  vocabScore        Float    @default(0)
+  questionsViewed   Int      @default(0)
+  questionsAnswered Int      @default(0)
+  aiQuestionsAsked  Int      @default(0)
+  studyMinutes      Int      @default(0)
+  xpEarned          Int      @default(0)
 
   student Student @relation(fields: [studentId], references: [id])
 
@@ -926,7 +941,7 @@ model Achievement {
   condition   String @db.Text // JSON: { type: "STREAK", value: 7 } or { type: "SCORE", min: 90, count: 3 }
   xpReward    Int    @default(0)
 
-  academy           Academy              @relation(fields: [academyId], references: [id])
+  academy             Academy              @relation(fields: [academyId], references: [id])
   studentAchievements StudentAchievement[]
 
   @@index([academyId])
@@ -1000,15 +1015,15 @@ model TeacherPrompt {
 /// type: "WEEKLY" | "MONTHLY" | "CUSTOM"
 /// status: "DRAFT" | "SENT" | "VIEWED"
 model ParentReport {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   studentId  String
   parentId   String?
-  type       String   // "WEEKLY" | "MONTHLY" | "CUSTOM"
-  reportData String   @db.Text // JSON: scores, attendance, analysis, teacher comment
-  status     String   @default("DRAFT") // "DRAFT" | "SENT" | "VIEWED"
+  type       String // "WEEKLY" | "MONTHLY" | "CUSTOM"
+  reportData String    @db.Text // JSON: scores, attendance, analysis, teacher comment
+  status     String    @default("DRAFT") // "DRAFT" | "SENT" | "VIEWED"
   sentAt     DateTime?
   viewedAt   DateTime?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
   student Student @relation(fields: [studentId], references: [id])
   parent  Parent? @relation(fields: [parentId], references: [id])
@@ -1024,7 +1039,7 @@ model ParentReport {
 
 /// Textbook — Publisher textbook references
 model Textbook {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   academyId String
   publisher String // "능률" | "비상" | "YBM" | "천재" | "지학사"
   title     String
@@ -1072,39 +1087,316 @@ model QuestionCollectionItem {
 }
 
 // ============================================================================
-// 11. PASSAGE COLLECTIONS — Folder-like organization for passages
+// 16. DUOLINGO-STYLE LEARNING SERVICE
 // ============================================================================
 
-model PassageCollection {
+/// StudySeason — 학습 시즌 (내신 집중 기간 or 평상시)
+/// type: "EXAM_PREP" | "REGULAR"
+model StudySeason {
   id          String   @id @default(cuid())
   academyId   String
-  parentId    String?  // Self-reference for nested folders (null = root)
-  name        String
-  description String?  @db.Text
-  color       String?  // Hex color for visual distinction
+  name        String // "1학기 중간고사 대비" etc.
+  type        String // "EXAM_PREP" | "REGULAR"
+  grade       Int? // 대상 학년
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean  @default(true)
+  createdById String? // staffId (강사)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  academy  Academy                 @relation(fields: [academyId], references: [id])
-  parent   PassageCollection?      @relation("FolderTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children PassageCollection[]     @relation("FolderTree")
-  items    PassageCollectionItem[]
+  academy        Academy          @relation(fields: [academyId], references: [id])
+  passages       SeasonPassage[]
+  sessionRecords SessionRecord[]
+  lessonProgress LessonProgress[]
 
   @@index([academyId])
-  @@index([parentId])
-  @@map("passage_collections")
+  @@index([academyId, isActive])
+  @@map("study_seasons")
 }
 
-model PassageCollectionItem {
-  id           String @id @default(cuid())
-  collectionId String
-  passageId    String
-  orderNum     Int    @default(0)
+/// SeasonPassage — 시즌에 배정된 지문 (순서 포함)
+model SeasonPassage {
+  id        String @id @default(cuid())
+  seasonId  String
+  passageId String
+  order     Int    @default(0)
 
-  collection PassageCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  passage    Passage           @relation(fields: [passageId], references: [id], onDelete: Cascade)
+  season  StudySeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  passage Passage     @relation(fields: [passageId], references: [id])
 
-  @@unique([collectionId, passageId])
-  @@index([collectionId])
-  @@map("passage_collection_items")
+  @@unique([seasonId, passageId])
+  @@index([seasonId])
+  @@map("season_passages")
+}
+
+/// LessonProgress — 학생의 레슨(지문)별 진행도
+model LessonProgress {
+  id        String  @id @default(cuid())
+  studentId String
+  passageId String
+  seasonId  String?
+
+  session1Done Boolean @default(false) // 필수: 종합 믹스 1
+  session2Done Boolean @default(false) // 필수: 종합 믹스 2
+  storiesDone  Boolean @default(false) // 필수: Stories 통독
+  session3Done Boolean @default(false) // 선택: 어휘 집중
+  session4Done Boolean @default(false) // 선택: 문법 집중
+  session5Done Boolean @default(false) // 선택: 약점 집중
+
+  masteryScore Float    @default(0) // 숙달도 0-100
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  student Student      @relation(fields: [studentId], references: [id])
+  passage Passage      @relation(fields: [passageId], references: [id])
+  season  StudySeason? @relation(fields: [seasonId], references: [id])
+
+  @@unique([studentId, passageId, seasonId])
+  @@index([studentId])
+  @@map("lesson_progress")
+}
+
+/// SessionRecord — 세션 완료 기록
+/// sessionType: "MIX_1" | "MIX_2" | "STORIES" | "VOCAB_FOCUS" | "GRAMMAR_FOCUS" | "WEAKNESS_FOCUS"
+model SessionRecord {
+  id               String   @id @default(cuid())
+  studentId        String
+  passageId        String
+  seasonId         String?
+  sessionType      String // "MIX_1" | "MIX_2" | "STORIES" | "VOCAB_FOCUS" | "GRAMMAR_FOCUS" | "WEAKNESS_FOCUS"
+  score            Float // 정답률 0-100
+  correctCount     Int
+  totalCount       Int
+  wrongQuestionIds String?  @db.Text // JSON: ["questionId1", ...]
+  xpEarned         Int      @default(0)
+  startedAt        DateTime @default(now())
+  completedAt      DateTime @default(now())
+
+  student Student      @relation(fields: [studentId], references: [id])
+  passage Passage      @relation(fields: [passageId], references: [id])
+  season  StudySeason? @relation(fields: [seasonId], references: [id])
+
+  @@index([studentId])
+  @@index([studentId, completedAt]) // 주간 XP 랭킹 계산용
+  @@index([passageId])
+  @@map("session_records")
+}
+
+/// StudentDailyMission — 데일리 미션 추적
+model StudentDailyMission {
+  id                  String    @id @default(cuid())
+  studentId           String
+  date                DateTime // 날짜 (시간 제외)
+  easyCompleted       Boolean   @default(false)
+  hardCompleted       Boolean   @default(false)
+  multiplierActive    Float? // 1.2 or 2.0
+  multiplierExpiresAt DateTime?
+  createdAt           DateTime  @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, date])
+  @@index([studentId])
+  @@map("student_daily_missions")
+}
+
+// ============================================================================
+// 17. 수능링고 — 글로벌 학습 시스템 (academyId 없음)
+// ============================================================================
+
+/// SuneungPassage — 수능/모의고사 공용 지문 (플랫폼 전체 공유)
+model SuneungPassage {
+  id         String   @id @default(cuid())
+  title      String
+  content    String   @db.Text
+  source     String? // "2025 수능", "2024 9월 모의고사" 등
+  grade      Int // 7~12
+  year       Int? // 출제 연도
+  examType   String? // "SUNEUNG" | "MOCK_6" | "MOCK_9" | "EBS" | "OTHER"
+  difficulty String? // "BEGINNER" ~ "EXPERT"
+  tags       String?  @db.Text
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  analysis  SuneungPassageAnalysis?
+  questions SuneungQuestion[]
+
+  @@index([grade])
+  @@map("suneung_passages")
+}
+
+/// SuneungPassageAnalysis — 수능 지문 AI 분석 캐시
+model SuneungPassageAnalysis {
+  id           String   @id @default(cuid())
+  passageId    String   @unique
+  analysisData String   @db.Text // JSON: 5레이어 분석 구조
+  contentHash  String
+  version      Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  passage SuneungPassage @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  @@map("suneung_passage_analyses")
+}
+
+// ============================================================================
+// 18. 내신링고 — 학원별 학습 문제 시스템
+// ============================================================================
+
+/// LearningSet — 학습 문제 세트 (출판사/교재/단원 기준 그룹핑)
+model LearningSet {
+  id            String   @id @default(cuid())
+  academyId     String
+  passageId     String   // 원본 지문 참조 (분석 데이터 활용)
+  publisher     String   // 출판사 (능률(양), 비상(홍) 등)
+  textbook      String?  // 교재명
+  grade         Int?     // 학년
+  unit          String?  // 단원/과
+  title         String   // 세트 제목
+  questionCount Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  academy   Academy            @relation(fields: [academyId], references: [id])
+  passage   Passage            @relation(fields: [passageId], references: [id])
+  questions NaeshinQuestion[]
+
+  @@index([academyId])
+  @@index([academyId, publisher])
+  @@map("learning_sets")
+}
+
+/// NaeshinQuestion — 내신링고 학습 전용 문제
+model NaeshinQuestion {
+  id               String   @id @default(cuid())
+  academyId        String
+  passageId        String
+  learningSetId    String?  // 학습 세트 소속
+  learningCategory String   // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
+  type             String   // interaction type
+  subType          String?  // 23종 subType
+  questionText     String   @db.Text
+  options          String?  @db.Text // JSON: [{ label, text }]
+  correctAnswer    String   @db.Text
+  difficulty       String   @default("INTERMEDIATE")
+  tags             String?  @db.Text // JSON array
+  aiGenerated      Boolean  @default(true)
+  approved         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  academy     Academy                     @relation(fields: [academyId], references: [id])
+  passage     Passage                     @relation(fields: [passageId], references: [id])
+  learningSet LearningSet?                @relation(fields: [learningSetId], references: [id])
+  school      School?                     @relation(fields: [schoolId], references: [id])
+  schoolId    String?
+  explanation NaeshinQuestionExplanation?
+  wrongLogs   NaeshinWrongAnswerLog[]
+
+  @@index([passageId, learningCategory])
+  @@index([academyId])
+  @@index([learningSetId])
+  @@map("naeshin_questions")
+}
+
+/// NaeshinQuestionExplanation — 내신 학습 문제 해설
+model NaeshinQuestionExplanation {
+  id                      String   @id @default(cuid())
+  questionId              String   @unique
+  content                 String   @db.Text
+  keyPoints               String?  @db.Text
+  wrongOptionExplanations String?  @db.Text
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  question NaeshinQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("naeshin_question_explanations")
+}
+
+/// NaeshinWrongAnswerLog — 내신링고 오답 기록
+model NaeshinWrongAnswerLog {
+  id          String   @id @default(cuid())
+  studentId   String
+  questionId  String
+  givenAnswer String
+  category    String?
+  subCategory String?
+  count       Int      @default(1)
+  lastWrongAt DateTime @default(now())
+
+  student  Student         @relation(fields: [studentId], references: [id])
+  question NaeshinQuestion @relation(fields: [questionId], references: [id])
+
+  @@unique([studentId, questionId])
+  @@index([studentId, category])
+  @@map("naeshin_wrong_answer_logs")
+}
+
+// ============================================================================
+// 19. 수능링고 — 글로벌 학습 문제
+// ============================================================================
+
+/// SuneungQuestion — 수능링고 학습 전용 문제 (academyId 없음)
+model SuneungQuestion {
+  id               String   @id @default(cuid())
+  passageId        String
+  learningCategory String // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
+  type             String // "MULTIPLE_CHOICE" | "SHORT_ANSWER"
+  subType          String?
+  questionText     String   @db.Text
+  options          String?  @db.Text
+  correctAnswer    String   @db.Text
+  difficulty       String   @default("INTERMEDIATE")
+  grade            Int // 대상 학년
+  tags             String?  @db.Text
+  aiGenerated      Boolean  @default(true)
+  approved         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  passage     SuneungPassage              @relation(fields: [passageId], references: [id])
+  explanation SuneungQuestionExplanation?
+  wrongLogs   SuneungWrongAnswerLog[]
+
+  @@index([passageId, learningCategory])
+  @@index([grade])
+  @@map("suneung_questions")
+}
+
+/// SuneungQuestionExplanation — 수능 학습 문제 해설
+model SuneungQuestionExplanation {
+  id                      String   @id @default(cuid())
+  questionId              String   @unique
+  content                 String   @db.Text
+  keyPoints               String?  @db.Text
+  wrongOptionExplanations String?  @db.Text
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  question SuneungQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("suneung_question_explanations")
+}
+
+/// SuneungWrongAnswerLog — 수능링고 오답 기록
+model SuneungWrongAnswerLog {
+  id          String   @id @default(cuid())
+  studentId   String
+  questionId  String
+  givenAnswer String
+  category    String?
+  subCategory String?
+  count       Int      @default(1)
+  lastWrongAt DateTime @default(now())
+
+  student  Student         @relation(fields: [studentId], references: [id])
+  question SuneungQuestion @relation(fields: [questionId], references: [id])
+
+  @@unique([studentId, questionId])
+  @@index([studentId, category])
+  @@map("suneung_wrong_answer_logs")
 }

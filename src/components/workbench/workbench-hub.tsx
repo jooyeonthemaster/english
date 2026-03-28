@@ -46,6 +46,7 @@ interface WorkbenchStats {
     grade: number | null;
     createdAt: Date;
   }[];
+  totalLearningQuestions?: number;
 }
 
 export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
