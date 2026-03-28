@@ -47,6 +47,7 @@ model Academy {
   passages            Passage[]
   questions           Question[]
   questionCollections QuestionCollection[]
+  passageCollections  PassageCollection[]
   exams               Exam[]
   vocabLists          VocabularyList[]
   teacherPrompts      TeacherPrompt[]
@@ -592,6 +593,7 @@ model Passage {
   sessionRecords   SessionRecord[]
   naeshinQuestions NaeshinQuestion[]
   learningSets     LearningSet[]
+  collectionItems  PassageCollectionItem[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -1399,4 +1401,42 @@ model SuneungWrongAnswerLog {
   @@unique([studentId, questionId])
   @@index([studentId, category])
   @@map("suneung_wrong_answer_logs")
+}
+
+// ============================================================================
+// PASSAGE COLLECTIONS — Folder-like organization for passages
+// ============================================================================
+
+model PassageCollection {
+  id          String   @id @default(cuid())
+  academyId   String
+  parentId    String?  // Self-reference for nested folders (null = root)
+  name        String
+  description String?  @db.Text
+  color       String?  // Hex color for visual distinction
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy  Academy                 @relation(fields: [academyId], references: [id])
+  parent   PassageCollection?      @relation("FolderTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children PassageCollection[]     @relation("FolderTree")
+  items    PassageCollectionItem[]
+
+  @@index([academyId])
+  @@index([parentId])
+  @@map("passage_collections")
+}
+
+model PassageCollectionItem {
+  id           String @id @default(cuid())
+  collectionId String
+  passageId    String
+  orderNum     Int    @default(0)
+
+  collection PassageCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  passage    Passage           @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, passageId])
+  @@index([collectionId])
+  @@map("passage_collection_items")
 }
