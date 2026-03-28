@@ -42,6 +42,222 @@ function calculateMastery(sessions: { score: number; sessionType: string }[]): n
 }
 
 // ---------------------------------------------------------------------------
+// questionText JSON → 요약 텍스트 (결과 화면용)
+// ---------------------------------------------------------------------------
+
+function summarizeQuestionText(subType: string | null, raw: string): string {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const d: Record<string, any> = JSON.parse(raw);
+    switch (subType) {
+      case "WORD_MEANING": case "WORD_MEANING_REVERSE":
+        return d.word ? `단어: ${d.word}` : raw.slice(0, 80);
+      case "WORD_FILL": case "VOCAB_COLLOCATION": case "VOCAB_CONFUSABLE":
+      case "KEY_EXPRESSION": case "GRAMMAR_SELECT": case "PASSAGE_FILL":
+        return d.sentence || d.excerpt || raw.slice(0, 80);
+      case "SENTENCE_INTERPRET":
+        return d.englishSentence || raw.slice(0, 80);
+      case "SENTENCE_COMPLETE":
+        return d.koreanSentence || raw.slice(0, 80);
+      case "GRAM_TRANSFORM":
+        return d.originalSentence || raw.slice(0, 80);
+      case "GRAM_BINARY":
+        return d.sentence || raw.slice(0, 80);
+      case "TRUE_FALSE":
+        return d.statement || raw.slice(0, 80);
+      case "CONTENT_QUESTION":
+        return d.question || raw.slice(0, 80);
+      case "CONNECTOR_FILL":
+        return `${(d.sentenceBefore || "").slice(0, 50)}… ___ …${(d.sentenceAfter || "").slice(0, 30)}`;
+      case "ERROR_FIND": case "ERROR_CORRECT":
+        return d.sentence || raw.slice(0, 80);
+      case "WORD_ARRANGE":
+        return d.koreanSentence || raw.slice(0, 80);
+      case "SENT_CHUNK_ORDER":
+        return d.koreanHint || raw.slice(0, 80);
+      case "WORD_MATCH":
+        return `${d.pairs?.length || 0}쌍 매칭`;
+      case "WORD_SPELL":
+        return `${d.koreanMeaning || ""} → 스펠링`;
+      case "VOCAB_SYNONYM":
+        return `${d.word || ""} (${d.targetRelation === "synonym" ? "유의어" : "반의어"})`;
+      case "VOCAB_DEFINITION":
+        return d.englishDefinition || raw.slice(0, 80);
+      default:
+        return raw.slice(0, 80);
+    }
+  } catch {
+    return raw.slice(0, 80);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// NaeshinQuestion → SessionQuestion 변환
+// ---------------------------------------------------------------------------
+
+interface NaeshinQuestionRow {
+  id: string;
+  type: string;
+  subType: string | null;
+  learningCategory: string;
+  questionText: string;
+  options: string | null;
+  correctAnswer: string;
+  explanation: { content: string; keyPoints: string | null } | null;
+}
+
+function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningCategory): SessionQuestion {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let data: Record<string, any> = {};
+  try { data = JSON.parse(q.questionText); } catch { /* raw text fallback */ }
+
+  const subType = q.subType ?? "";
+  let questionText = "";
+  let options: { label: string; text: string }[] | null = null;
+  let correctAnswer = q.correctAnswer || "";
+  let passageSnippet: string | undefined;
+
+  switch (subType) {
+    // ── VOCAB ────────────────────────────────
+    case "WORD_MEANING":
+      questionText = `다음 문장에서 '${data.word}'의 의미로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`;
+      options = data.options || null;
+      break;
+    case "WORD_MEANING_REVERSE":
+      questionText = `'${data.koreanMeaning}'에 해당하는 영어 단어는?\n\n${data.contextSentence || ""}`;
+      options = data.options || null;
+      break;
+    case "WORD_FILL":
+      questionText = `빈칸에 들어갈 가장 알맞은 단어는?\n\n${data.sentence || ""}`;
+      options = data.options || null;
+      break;
+    case "WORD_MATCH":
+      questionText = "영어 단어와 한국어 뜻을 올바르게 연결하세요.";
+      // WORD_MATCH는 매칭형 — pairs를 JSON으로 전달
+      break;
+    case "WORD_SPELL":
+      questionText = `'${data.koreanMeaning}' — 힌트: ${data.hint || ""}`;
+      correctAnswer = data.correctAnswer || q.correctAnswer || "";
+      break;
+    case "VOCAB_SYNONYM":
+      questionText = `'${data.word}'의 ${data.targetRelation === "synonym" ? "유의어" : "반의어"}로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`;
+      options = data.options || null;
+      break;
+    case "VOCAB_DEFINITION":
+      questionText = `다음 영어 정의에 해당하는 단어는?\n\n"${data.englishDefinition || ""}"`;
+      options = data.options || null;
+      passageSnippet = data.contextSentence;
+      break;
+    case "VOCAB_COLLOCATION":
+      questionText = `빈칸에 들어갈 알맞은 단어는?\n\n${data.sentence || ""}`;
+      options = data.options || null;
+      break;
+    case "VOCAB_CONFUSABLE":
+      questionText = `빈칸에 들어갈 올바른 단어는?\n\n${data.sentence || ""}`;
+      options = data.options || null;
+      break;
+
+    // ── INTERPRETATION ───────────────────────
+    case "SENTENCE_INTERPRET":
+      questionText = `다음 영어 문장의 해석으로 가장 알맞은 것은?\n\n${data.englishSentence || ""}`;
+      options = data.options || null;
+      break;
+    case "SENTENCE_COMPLETE":
+      questionText = `다음 한국어 해석에 맞는 영어 문장을 고르세요.\n\n${data.koreanSentence || ""}`;
+      options = data.options || null;
+      break;
+    case "WORD_ARRANGE":
+      questionText = `다음 한국어 뜻에 맞게 영어 단어/구를 배열하세요.\n\n${data.koreanSentence || ""}`;
+      // correctOrder + distractorWords를 JSON으로 전달
+      break;
+    case "KEY_EXPRESSION":
+      questionText = `빈칸에 들어갈 핵심 표현은?\n\n${data.sentence || ""}`;
+      options = data.options || null;
+      break;
+    case "SENT_CHUNK_ORDER":
+      questionText = `다음 한국어 해석에 맞게 끊어읽기 순서를 배열하세요.\n\n${data.koreanHint || ""}`;
+      // chunks + correctOrder를 JSON으로 전달
+      break;
+
+    // ── GRAMMAR ──────────────────────────────
+    case "GRAMMAR_SELECT":
+      questionText = `빈칸에 들어갈 올바른 문법 형태는?\n\n${data.sentence || ""}`;
+      options = data.options || null;
+      break;
+    case "ERROR_FIND":
+      questionText = `다음 문장에서 문법 오류가 있는 단어를 찾으세요.\n\n${data.sentence || ""}`;
+      // words 배열에서 탭 선택 — 특수 UI 필요, 현재는 단답형으로 처리
+      correctAnswer = data.errorWord || q.correctAnswer || "";
+      break;
+    case "ERROR_CORRECT":
+      questionText = `다음 문장의 밑줄 친 부분을 올바르게 고치세요.\n\n${data.sentence || ""}\n\n오류 부분: ${data.errorPart || ""}`;
+      correctAnswer = data.correctAnswer || q.correctAnswer || "";
+      break;
+    case "GRAM_TRANSFORM":
+      questionText = `다음 문장을 지시에 따라 전환하세요.\n\n${data.originalSentence || ""}\n\n${data.instruction || ""}`;
+      correctAnswer = data.correctAnswer || q.correctAnswer || "";
+      break;
+    case "GRAM_BINARY":
+      questionText = `다음 문장의 문법이 맞으면 O, 틀리면 X를 선택하세요.\n\n${data.sentence || ""}`;
+      options = [
+        { label: "O", text: "맞다" },
+        { label: "X", text: "틀리다" },
+      ];
+      correctAnswer = data.isCorrect === true ? "O" : "X";
+      break;
+
+    // ── COMPREHENSION ────────────────────────
+    case "TRUE_FALSE":
+      questionText = `다음 진술이 지문 내용과 일치하면 O, 불일치하면 X를 선택하세요.\n\n${data.statement || ""}`;
+      options = [
+        { label: "O", text: "일치" },
+        { label: "X", text: "불일치" },
+      ];
+      correctAnswer = data.isTrue === true ? "O" : "X";
+      passageSnippet = data.contextExcerpt;
+      break;
+    case "CONTENT_QUESTION":
+      questionText = data.question || "";
+      options = data.options || null;
+      passageSnippet = data.contextExcerpt;
+      break;
+    case "PASSAGE_FILL":
+      questionText = `빈칸에 들어갈 표현으로 가장 알맞은 것은?\n\n${data.excerpt || ""}`;
+      options = data.options || null;
+      break;
+    case "CONNECTOR_FILL":
+      questionText = `두 문장 사이에 들어갈 연결어로 가장 알맞은 것은?\n\n${data.sentenceBefore || ""}\n\n___________\n\n${data.sentenceAfter || ""}`;
+      options = data.options || null;
+      break;
+
+    default:
+      questionText = q.questionText;
+      break;
+  }
+
+  // correctAnswer가 비어있으면 DB 값 사용
+  if (!correctAnswer) correctAnswer = q.correctAnswer || "";
+
+  return {
+    id: q.id,
+    type: q.type,
+    subType,
+    learningCategory: (q.learningCategory || fallbackCategory) as LearningCategory,
+    questionText,
+    options,
+    correctAnswer,
+    includesPassage: !!passageSnippet,
+    passageSnippet,
+    explanation: q.explanation
+      ? {
+          content: q.explanation.content,
+          keyPoints: q.explanation.keyPoints ? JSON.parse(q.explanation.keyPoints) : undefined,
+        }
+      : undefined,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // 1. getActiveSeason — 현재 활성 시즌 조회
 // ---------------------------------------------------------------------------
 
@@ -269,24 +485,7 @@ export async function startSession(
     const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, count);
 
     for (const q of shuffled) {
-      allQuestions.push({
-        id: q.id,
-        type: q.type,
-        subType: q.subType ?? "",
-        learningCategory: (q.learningCategory ?? category) as LearningCategory,
-        questionText: q.questionText,
-        options: q.options ? JSON.parse(q.options) : null,
-        correctAnswer: q.correctAnswer,
-        includesPassage: false,
-        explanation: q.explanation
-          ? {
-              content: q.explanation.content,
-              keyPoints: q.explanation.keyPoints
-                ? JSON.parse(q.explanation.keyPoints)
-                : undefined,
-            }
-          : undefined,
-      });
+      allQuestions.push(parseNaeshinQuestion(q, category as LearningCategory));
     }
   }
 
@@ -316,24 +515,7 @@ async function pickStoriesQuestions(passageId: string): Promise<SessionQuestion[
 
   const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, STORIES_QUESTIONS_COUNT);
 
-  return shuffled.map((q) => ({
-    id: q.id,
-    type: q.type,
-    subType: q.subType ?? "",
-    learningCategory: (q.learningCategory ?? "COMPREHENSION") as LearningCategory,
-    questionText: q.questionText,
-    options: q.options ? JSON.parse(q.options) : null,
-    correctAnswer: q.correctAnswer,
-    includesPassage: false,
-    explanation: q.explanation
-      ? {
-          content: q.explanation.content,
-          keyPoints: q.explanation.keyPoints
-            ? JSON.parse(q.explanation.keyPoints)
-            : undefined,
-        }
-      : undefined,
-  }));
+  return shuffled.map((q) => parseNaeshinQuestion(q, "COMPREHENSION"));
 }
 
 // ---------------------------------------------------------------------------
@@ -453,7 +635,7 @@ export async function submitSession(data: {
   const wrongDetails = wrongQuestionIds.length > 0
     ? await prisma.naeshinQuestion.findMany({
         where: { id: { in: wrongQuestionIds } },
-        select: { id: true, questionText: true, correctAnswer: true },
+        select: { id: true, subType: true, questionText: true, correctAnswer: true },
       })
     : [];
 
@@ -470,7 +652,7 @@ export async function submitSession(data: {
       const q = wrongMap.get(wa.questionId);
       return {
         questionId: wa.questionId,
-        questionText: q?.questionText ?? "",
+        questionText: q ? summarizeQuestionText(q.subType, q.questionText) : "",
         givenAnswer: wa.givenAnswer,
         correctAnswer: q?.correctAnswer ?? "",
       };

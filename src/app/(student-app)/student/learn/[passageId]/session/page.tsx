@@ -197,7 +197,7 @@ export default function SessionPage() {
             )}
 
             {/* Question text */}
-            <p className="text-base font-semibold text-gray-900 mb-6 leading-relaxed">
+            <p className="text-base font-semibold text-gray-900 mb-6 leading-relaxed whitespace-pre-line">
               {currentQuestion.questionText}
             </p>
 
@@ -205,13 +205,13 @@ export default function SessionPage() {
             {currentQuestion.options && (
               <div className="space-y-2.5">
                 {currentQuestion.options.map((opt) => {
-                  const isSelected = selectedOption === opt.text;
-                  const isAnswer = opt.text.trim() === currentQuestion.correctAnswer.trim();
+                  const isSelected = selectedOption === opt.label;
+                  const isAnswer = opt.label === currentQuestion.correctAnswer;
 
                   return (
                     <button
                       key={opt.label}
-                      onClick={() => handleSelect(opt.text)}
+                      onClick={() => handleSelect(opt.label)}
                       disabled={showFeedback}
                       className={cn(
                         "w-full text-left rounded-xl border-2 p-3.5 transition-all",
@@ -301,7 +301,9 @@ export default function SessionPage() {
               </div>
               {!isCorrect && (
                 <p className="text-xs text-rose-600 mb-1">
-                  정답: {currentQuestion.correctAnswer}
+                  정답: {currentQuestion.options
+                    ? `${currentQuestion.correctAnswer}. ${currentQuestion.options.find(o => o.label === currentQuestion.correctAnswer)?.text || ""}`
+                    : currentQuestion.correctAnswer}
                 </p>
               )}
               <button
