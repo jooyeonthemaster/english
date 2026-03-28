@@ -64,10 +64,21 @@ function collectHighlights(text: string, vocab: VocabItem[], grammar: GrammarPoi
     const i = text.toLowerCase().indexOf(g.textFragment.toLowerCase());
     if (i !== -1) hl.push({ start: i, end: i + g.textFragment.length, type: "grammar", data: g });
   }
-  if (syntax?.keyPhrase) {
-    const phrase = syntax.keyPhrase.replace(/\.{2,}$/, "").trim();
-    const i = text.toLowerCase().indexOf(phrase.toLowerCase());
-    if (i !== -1) hl.push({ start: i, end: i + phrase.length, type: "syntax", data: syntax });
+  if (syntax) {
+    // Try keyPhrase first for precise highlight
+    let matched = false;
+    if (syntax.keyPhrase) {
+      const phrase = syntax.keyPhrase.replace(/\.{2,}$/, "").trim();
+      const i = text.toLowerCase().indexOf(phrase.toLowerCase());
+      if (i !== -1) {
+        hl.push({ start: i, end: i + phrase.length, type: "syntax", data: syntax });
+        matched = true;
+      }
+    }
+    // Fallback: highlight entire sentence so syntax is always clickable
+    if (!matched && text.length > 0) {
+      hl.push({ start: 0, end: text.length, type: "syntax", data: syntax });
+    }
   }
   for (const et of examTexts) {
     const clean = et.text.replace(/\.{2,}$/, "").replace(/…$/, "").trim();
@@ -144,6 +155,8 @@ export function InteractivePassageView({ content, analysisData }: Props) {
   const [showTranslation, setShowTranslation] = useState(true);
   const [activeDetail, setActiveDetail] = useState<ActiveDetail>(null);
   const [summaryOpen, setSummaryOpen] = useState(true);
+  // Track last clicked segment for cycling through overlapping highlights
+  const lastClickRef = React.useRef<{ key: string; index: number }>({ key: "", index: -1 });
 
   const wordCount = useMemo(() => countWords(content), [content]);
   const hasAnalysis = analysisData !== null;
@@ -202,8 +215,8 @@ export function InteractivePassageView({ content, analysisData }: Props) {
     return m;
   }, [analysisData]);
 
-  // ─── Click handler ─────────────────────────────────────
-  const handleHighlightClick = useCallback((h: Highlight, sentence: SentenceAnalysis) => {
+  // ─── Click handler (single highlight) ──────────────────
+  const activateHighlight = useCallback((h: Highlight, sentence: SentenceAnalysis) => {
     if (h.type === "vocab") {
       const v = h.data as VocabItem;
       setActiveDetail({ kind: "vocab", item: v, sentence: sentenceMap.get(v.sentenceIndex) || null });
@@ -221,6 +234,23 @@ export function InteractivePassageView({ content, analysisData }: Props) {
       }
     }
   }, [sentenceMap]);
+
+  // ─── Cycle click handler (for overlapping highlights) ──
+  const handleSegmentClick = useCallback((segKey: string, highlights: Highlight[], sentence: SentenceAnalysis) => {
+    // Sort by priority descending so first click = highest priority
+    const sorted = [...highlights].sort((a, b) => TYPE_PRIORITY[b.type] - TYPE_PRIORITY[a.type]);
+    if (sorted.length <= 1) {
+      activateHighlight(sorted[0], sentence);
+      return;
+    }
+    // Cycle: if same segment was clicked, advance index; otherwise start from 0
+    let nextIndex = 0;
+    if (lastClickRef.current.key === segKey) {
+      nextIndex = (lastClickRef.current.index + 1) % sorted.length;
+    }
+    lastClickRef.current = { key: segKey, index: nextIndex };
+    activateHighlight(sorted[nextIndex], sentence);
+  }, [activateHighlight]);
 
   const handleKeySentenceClick = useCallback((sentence: SentenceAnalysis) => {
     const flow = analysisData?.structure.logicFlow?.find(f => f.sentenceIndices.includes(sentence.index));
@@ -247,17 +277,33 @@ export function InteractivePassageView({ content, analysisData }: Props) {
     const allHighlights = collectHighlights(text, vocab, grammar, syntax, examTexts);
     const segments = buildSegments(allHighlights);
 
+    const TYPE_COLORS: Record<string, string> = { vocab: "bg-blue-500", grammar: "bg-violet-500", syntax: "bg-cyan-500", exam: "bg-yellow-500" };
+
     const parts: React.ReactNode[] = [];
     let cursor = 0;
     for (const seg of segments) {
       if (cursor < seg.start) parts.push(<span key={`p-${sentence.index}-${cursor}`}>{text.slice(cursor, seg.start)}</span>);
       const frag = text.slice(seg.start, seg.end);
       const style = getSegmentStyle(seg.types);
-      const primary = [...seg.highlights].sort((a, b) => TYPE_PRIORITY[b.type] - TYPE_PRIORITY[a.type])[0];
+      const segKey = `${sentence.index}-${seg.start}`;
+      // Deduplicate highlight types for this segment
+      const uniqueTypes = [...new Set(seg.highlights.map(h => h.type))];
+      const hasOverlap = uniqueTypes.length > 1;
       const hoverCls = seg.types.has("exam") ? "hover:opacity-80" : seg.types.has("grammar") && !seg.types.has("vocab") && !seg.types.has("exam") ? "hover:bg-violet-50" : seg.types.has("syntax") && seg.types.size === 1 ? "hover:bg-cyan-50" : "";
       parts.push(
-        <span key={`h-${sentence.index}-${seg.start}`} onClick={(e) => { e.stopPropagation(); handleHighlightClick(primary, sentence); }} role="button" tabIndex={0}
-          className={`cursor-pointer transition-colors ${hoverCls}`} style={style}>{frag}</span>
+        <span key={`h-${segKey}`} className={`cursor-pointer transition-colors ${hoverCls} relative`} style={style}
+          onClick={(e) => { e.stopPropagation(); handleSegmentClick(segKey, seg.highlights, sentence); }} role="button" tabIndex={0}
+          title={hasOverlap ? `클릭하여 순환: ${uniqueTypes.map(t => t === "vocab" ? "어휘" : t === "grammar" ? "문법" : t === "syntax" ? "구문" : "출제포인트").join(" → ")}` : undefined}
+        >
+          {frag}
+          {hasOverlap && (
+            <span className="absolute -top-1 -right-0.5 flex gap-px pointer-events-none">
+              {uniqueTypes.map(t => (
+                <span key={t} className={`w-1 h-1 rounded-full ${TYPE_COLORS[t]}`} />
+              ))}
+            </span>
+          )}
+        </span>
       );
       cursor = seg.end;
     }
@@ -270,12 +316,26 @@ export function InteractivePassageView({ content, analysisData }: Props) {
     return (
       <div key={`s-${sentence.index}`} className={`mb-3 ${isKey ? "border-l-[3px] border-green-500 pl-2 bg-green-50/30 rounded-r" : ""}`}>
         <div className="flex items-start gap-1">
-          {/* 줄번호 + 핵심문장 뱃지: 여기만 keySentence 클릭 */}
-          <div className={`flex items-center gap-1 shrink-0 mt-0.5 ${isKey ? "cursor-pointer" : ""}`}
-            onClick={isKey ? () => handleKeySentenceClick(sentence) : undefined}>
+          {/* 줄번호 + 핵심문장/구문 뱃지 */}
+          <div className="flex items-center gap-1 shrink-0 mt-0.5">
             <sup className="text-[10px] font-bold text-slate-400 select-none w-3">{sentence.index + 1}</sup>
-            {isTopic && <span className="text-[8px] font-bold text-green-600 bg-green-100 px-1 py-0.5 rounded leading-none">주제문</span>}
-            {flow && isKey && !isTopic && <span className="text-[8px] font-bold text-green-600 bg-green-100 px-1 py-0.5 rounded leading-none">{flow.role}</span>}
+            {isTopic && (
+              <span className={`text-[8px] font-bold text-green-600 bg-green-100 px-1 py-0.5 rounded leading-none ${isKey ? "cursor-pointer hover:bg-green-200" : ""}`}
+                onClick={isKey ? () => handleKeySentenceClick(sentence) : undefined}>주제문</span>
+            )}
+            {flow && isKey && !isTopic && (
+              <span className="text-[8px] font-bold text-green-600 bg-green-100 px-1 py-0.5 rounded leading-none cursor-pointer hover:bg-green-200"
+                onClick={() => handleKeySentenceClick(sentence)}>{flow.role}</span>
+            )}
+            {syntax && (
+              <span
+                className="text-[8px] font-bold text-cyan-600 bg-cyan-50 px-1 py-0.5 rounded leading-none cursor-pointer hover:bg-cyan-100 transition-colors"
+                onClick={() => setActiveDetail({ kind: "syntax", item: syntax, sentence })}
+                title="구문 분석 보기"
+              >
+                구문
+              </span>
+            )}
           </div>
           {/* 본문 텍스트: 내부 하이라이트 개별 클릭 */}
           <span className="font-mono text-[14px] leading-[1.9]" style={syntaxInlineStyle}>{parts}</span>
@@ -285,7 +345,7 @@ export function InteractivePassageView({ content, analysisData }: Props) {
         )}
       </div>
     );
-  }, [vocabBySentence, grammarBySentence, syntaxBySentence, examHighlightsBySentence, keySentenceIndices, analysisData, showTranslation, handleHighlightClick, handleKeySentenceClick]);
+  }, [vocabBySentence, grammarBySentence, syntaxBySentence, examHighlightsBySentence, keySentenceIndices, analysisData, showTranslation, handleSegmentClick, handleKeySentenceClick]);
 
   // ─── Count badges ──────────────────────────────────────
   const counts = hasAnalysis ? {

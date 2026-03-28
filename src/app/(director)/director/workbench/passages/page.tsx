@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getWorkbenchPassages, getAcademySchools } from "@/actions/workbench";
+import { getWorkbenchPassages, getAcademySchools, getPassageCollections } from "@/actions/workbench";
+import { prisma } from "@/lib/prisma";
 import { PassageListClient } from "@/components/workbench/passage-list-client";
 
 interface PageProps {
@@ -28,16 +29,32 @@ export default async function PassagesPage({ searchParams }: PageProps) {
     search: params.search || undefined,
   };
 
-  const [passagesData, schools] = await Promise.all([
+  const [passagesData, schools, collections, collectionItems] = await Promise.all([
     getWorkbenchPassages(staff.academyId, filters),
     getAcademySchools(staff.academyId),
+    getPassageCollections(staff.academyId),
+    prisma.passageCollectionItem.findMany({
+      where: { collection: { academyId: staff.academyId } },
+      select: { collectionId: true, passageId: true },
+    }),
   ]);
+
+  // Build membership map: { collectionId: Set<passageId> }
+  const membershipRaw: Record<string, string[]> = {};
+  for (const item of collectionItems) {
+    if (!membershipRaw[item.collectionId]) membershipRaw[item.collectionId] = [];
+    membershipRaw[item.collectionId].push(item.passageId);
+  }
 
   return (
     <PassageListClient
       passagesData={passagesData}
       schools={schools}
       filters={filters}
+      collections={collections as any}
+      collectionMembership={Object.fromEntries(
+        Object.entries(membershipRaw).map(([k, v]) => [k, new Set(v)])
+      )}
     />
   );
 }
