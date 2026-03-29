@@ -9,7 +9,7 @@ export async function GET() {
       return NextResponse.json({ error: "인증 필요" }, { status: 401 });
     }
 
-    const [passages, schools] = await Promise.all([
+    const [passages, schools, collections] = await Promise.all([
       prisma.passage.findMany({
         where: { academyId: staff.academyId },
         select: {
@@ -22,6 +22,8 @@ export async function GET() {
           publisher: true,
           difficulty: true,
           school: { select: { id: true, name: true } },
+          analysis: { select: { analysisData: true } },
+          collectionItems: { select: { collectionId: true } },
         },
         orderBy: { createdAt: "desc" },
         take: 200,
@@ -29,6 +31,11 @@ export async function GET() {
       prisma.school.findMany({
         where: { academyId: staff.academyId },
         select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.passageCollection.findMany({
+        where: { academyId: staff.academyId },
+        select: { id: true, name: true, _count: { select: { items: true } } },
         orderBy: { name: "asc" },
       }),
     ]);
@@ -41,6 +48,7 @@ export async function GET() {
     return NextResponse.json({
       passages,
       filters: { schools, grades, semesters, publishers },
+      collections,
     });
   } catch {
     return NextResponse.json({ passages: [], filters: { schools: [], grades: [], semesters: [], publishers: [] } });

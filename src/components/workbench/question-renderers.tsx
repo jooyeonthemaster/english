@@ -922,9 +922,12 @@ function FallbackRenderer({ question: q }: { question: any }) {
       )}
 
       <div className="flex items-center justify-between pt-1 border-t border-slate-100">
-        <span className="text-[12px] text-slate-400">
-          정답: <span className="font-bold text-emerald-600">{q.correctAnswer}</span>
-        </span>
+        {/* Hide duplicate "정답" if modelAnswer already shown above */}
+        {!(q.modelAnswer && (!q.options || q.options.length === 0)) ? (
+          <span className="text-[12px] text-slate-400">
+            정답: <span className="font-bold text-emerald-600">{q.correctAnswer}</span>
+          </span>
+        ) : <span />}
         <button
           type="button"
           onClick={() => setShowExplanation(!showExplanation)}
