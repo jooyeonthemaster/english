@@ -11,11 +11,11 @@ import { getStudentAttendance } from "@/actions/student-app";
 type AttendanceData = Awaited<ReturnType<typeof getStudentAttendance>>;
 
 const STATUS_STYLE: Record<string, { label: string; className: string; symbol: string }> = {
-  PRESENT: { label: "출석", className: "bg-[var(--student-success)] text-white", symbol: "✓" },
-  LATE: { label: "지각", className: "bg-[var(--student-accent)] text-white", symbol: "▲" },
-  ABSENT: { label: "결석", className: "bg-[var(--student-wrong)] text-white", symbol: "✕" },
-  EARLY_LEAVE: { label: "조퇴", className: "bg-[var(--student-purple)] text-white", symbol: "◆" },
-  MAKEUP: { label: "보충", className: "bg-[var(--student-primary)] text-white", symbol: "◇" },
+  PRESENT: { label: "출석", className: "bg-emerald-500 text-white", symbol: "✓" },
+  LATE: { label: "지각", className: "bg-amber-500 text-white", symbol: "▲" },
+  ABSENT: { label: "결석", className: "bg-red-500 text-white", symbol: "✕" },
+  EARLY_LEAVE: { label: "조퇴", className: "bg-purple-500 text-white", symbol: "◆" },
+  MAKEUP: { label: "보충", className: "bg-blue-500 text-white", symbol: "◇" },
 };
 
 const DAY_HEADERS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -58,7 +58,7 @@ export function AttendanceCalendar() {
   );
 
   return (
-    <div className="space-y-[var(--space-sm)]">
+    <div className="space-y-3">
       {/* Month navigation */}
       <div className="flex items-center justify-between">
         <button
@@ -66,9 +66,9 @@ export function AttendanceCalendar() {
           className="p-1.5 rounded-lg active:bg-gray-100 transition-colors"
           aria-label="이전 달"
         >
-          <ChevronLeft className="size-[var(--icon-md)] text-gray-500" />
+          <ChevronLeft className="w-5 h-5 text-gray-500" />
         </button>
-        <h3 className="text-[var(--text-base)] font-bold text-gray-800">
+        <h3 className="text-base font-bold text-gray-800">
           {year}년 {month}월
         </h3>
         <button
@@ -76,7 +76,7 @@ export function AttendanceCalendar() {
           className="p-1.5 rounded-lg active:bg-gray-100 transition-colors"
           aria-label="다음 달"
         >
-          <ChevronRight className="size-[var(--icon-md)] text-gray-500" />
+          <ChevronRight className="w-5 h-5 text-gray-500" />
         </button>
       </div>
 
@@ -86,7 +86,7 @@ export function AttendanceCalendar() {
           <div
             key={d}
             className={cn(
-              "text-center text-[var(--text-2xs)] font-medium py-1",
+              "text-center text-[10px] font-medium py-1",
               i === 0 ? "text-rose-400" : i === 6 ? "text-blue-400" : "text-gray-400",
             )}
           >
@@ -99,7 +99,7 @@ export function AttendanceCalendar() {
       {loading ? (
         <div className="grid grid-cols-7 gap-1">
           {Array.from({ length: 35 }).map((_, i) => (
-            <div key={i} className="aspect-square rounded-[var(--card-radius-sm)] bg-gray-50 animate-pulse" />
+            <div key={i} className="aspect-square rounded-xl bg-gray-50 animate-pulse" />
           ))}
         </div>
       ) : (
@@ -121,11 +121,11 @@ export function AttendanceCalendar() {
               <div
                 key={day}
                 className={cn(
-                  "aspect-square rounded-[var(--card-radius-sm)] flex flex-col items-center justify-center text-[var(--text-2xs)] font-medium transition-colors",
+                  "aspect-square rounded-xl flex flex-col items-center justify-center text-[10px] font-medium transition-colors",
                   style?.className,
                   !style && !isFuture && !isToday && "text-gray-600",
                   isFuture && "text-gray-200",
-                  isToday && !style && "ring-2 ring-[var(--student-primary)]/40 text-[var(--student-primary)] font-bold",
+                  isToday && !style && "ring-2 ring-blue-500/40 text-blue-500 font-bold",
                 )}
               >
                 <span>{day}</span>
@@ -140,20 +140,20 @@ export function AttendanceCalendar() {
 
       {/* Stats summary */}
       {data && data.stats.total > 0 && (
-        <div className="flex items-center justify-between px-[var(--space-xs)] pt-[var(--space-xs)] border-t border-gray-100">
-          <div className="flex items-center gap-[var(--space-sm)] flex-wrap">
-            <StatBadge color="bg-[var(--student-success)]" label="출석" count={data.stats.present} />
-            <StatBadge color="bg-[var(--student-accent)]" label="지각" count={data.stats.late} />
-            <StatBadge color="bg-[var(--student-wrong)]" label="결석" count={data.stats.absent} />
+        <div className="flex items-center justify-between px-2 pt-2 border-t border-gray-100">
+          <div className="flex items-center gap-3 flex-wrap">
+            <StatBadge color="bg-emerald-500" label="출석" count={data.stats.present} />
+            <StatBadge color="bg-amber-500" label="지각" count={data.stats.late} />
+            <StatBadge color="bg-red-500" label="결석" count={data.stats.absent} />
           </div>
-          <span className="text-[var(--text-sm)] font-bold text-gray-700">
+          <span className="text-sm font-bold text-gray-700">
             {data.stats.rate}%
           </span>
         </div>
       )}
 
       {data && data.stats.total === 0 && (
-        <p className="text-center text-[var(--text-xs)] text-gray-400 py-[var(--space-md)]">
+        <p className="text-center text-xs text-gray-400 py-5">
           이 달의 출석 기록이 없습니다
         </p>
       )}
@@ -165,7 +165,7 @@ function StatBadge({ color, label, count }: { color: string; label: string; coun
   return (
     <div className="flex items-center gap-1">
       <div className={cn("size-2 rounded-full", color)} />
-      <span className="text-[var(--text-2xs)] text-gray-500">
+      <span className="text-[10px] text-gray-500">
         {label} {count}일
       </span>
     </div>

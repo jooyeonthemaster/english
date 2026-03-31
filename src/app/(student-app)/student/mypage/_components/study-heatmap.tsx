@@ -42,8 +42,8 @@ export function StudyHeatmap({ data }: { data: HeatmapEntry[] }) {
   }, [data]);
 
   return (
-    <div className="bg-white rounded-[var(--card-radius)] border border-gray-100 p-[var(--space-md)] shadow-sm">
-      <h4 className="text-[var(--text-xs)] font-bold text-gray-900 mb-2">학습 캘린더</h4>
+    <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <h4 className="text-xs font-bold text-gray-900 mb-2">학습 캘린더</h4>
       <div className="overflow-x-auto hide-scrollbar">
         <div className="flex gap-[3px] min-w-fit">
           {weeks.map((week, wi) => (
@@ -63,11 +63,11 @@ export function StudyHeatmap({ data }: { data: HeatmapEntry[] }) {
           ))}
         </div>
         <div className="flex items-center gap-1 mt-1.5 justify-end">
-          <span className="text-[var(--text-2xs)] text-gray-400 mr-0.5">적음</span>
+          <span className="text-[10px] text-gray-400 mr-0.5">적음</span>
           {GREEN_LEVELS.map((c, i) => (
             <div key={i} className={cn("size-[clamp(0.4rem,1vw,0.5625rem)] rounded-[2px]", c)} />
           ))}
-          <span className="text-[var(--text-2xs)] text-gray-400 ml-0.5">많음</span>
+          <span className="text-[10px] text-gray-400 ml-0.5">많음</span>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getVocabListsForStudent } from "@/actions/student-app";
+import { getVocabListsForStudent } from "@/actions/student-app-vocab";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -136,7 +136,7 @@ export default function VocabListPage() {
                   >
                     <Link
                       href={`/student/vocab/${list.id}/test`}
-                      className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-card press-scale transition-shadow hover:shadow-card-hover"
+                      className="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] press-scale transition-shadow hover:shadow-lg"
                     >
                       <div className="size-11 rounded-xl bg-blue-50 flex items-center justify-center">
                         <BookOpen className="size-5 text-blue-500" />

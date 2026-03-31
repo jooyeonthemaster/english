@@ -13,11 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  getStudentDashboard,
-  getStudentNotices,
-  getStudentAssignmentList,
-} from "@/actions/student-app";
+import { getNotificationsData } from "@/actions/student-app-resources";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -42,13 +38,13 @@ interface NotifItem {
 }
 
 const CATEGORY_COLORS: Record<NotifCategory, string> = {
-  notice: "bg-[var(--erp-primary)]",
-  assignment: "bg-[var(--erp-warning)]",
-  exam: "bg-[var(--erp-success)]",
-  attendance: "bg-[var(--erp-info)]",
-  study: "bg-[var(--learn-primary)]",
-  streak: "bg-[var(--learn-streak)]",
-  ranking: "bg-[var(--learn-xp)]",
+  notice: "bg-blue-500",
+  assignment: "bg-amber-500",
+  exam: "bg-emerald-500",
+  attendance: "bg-sky-500",
+  study: "bg-indigo-500",
+  streak: "bg-orange-500",
+  ranking: "bg-yellow-500",
 };
 
 const CATEGORY_LABELS: Record<NotifCategory, string> = {
@@ -72,19 +68,15 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState<FilterKey>("all");
 
   useEffect(() => {
-    Promise.all([
-      getStudentDashboard(),
-      getStudentNotices(),
-      getStudentAssignmentList(),
-    ])
-      .then(([dashboard, notices, assignments]) => {
+    getNotificationsData()
+      .then(({ dashboard, notices, assignments }) => {
         const notifs: NotifItem[] = [];
 
-        // ── 공지사항 ──
+        // -- 공지사항 --
         for (const n of notices.slice(0, 10)) {
           notifs.push({
             id: `notice-${n.id}`,
-            icon: <Megaphone size={16} className="text-[var(--erp-primary)]" />,
+            icon: <Megaphone size={16} className="text-blue-500" />,
             title: n.isPinned ? `[공지] ${n.title}` : n.title,
             body: (n.content ?? "").slice(0, 60) + ((n.content?.length ?? 0) > 60 ? "..." : ""),
             time: relativeTime(n.publishedAt),
@@ -93,7 +85,7 @@ export default function NotificationsPage() {
           });
         }
 
-        // ── 숙제 마감 리마인더 ──
+        // -- 숙제 마감 리마인더 --
         const pending = assignments.filter((a) => !a.submission);
         for (const a of pending) {
           const dDay = Math.ceil(
@@ -102,7 +94,7 @@ export default function NotificationsPage() {
           if (dDay <= 3 && dDay >= 0) {
             notifs.push({
               id: `hw-${a.id}`,
-              icon: <ClipboardCheck size={16} className="text-[var(--erp-warning)]" />,
+              icon: <ClipboardCheck size={16} className="text-amber-500" />,
               title: `숙제 마감 ${dDay === 0 ? "오늘" : `D-${dDay}`}`,
               body: `${a.title} (${a.className})`,
               time: new Date(a.dueDate).toLocaleDateString("ko-KR", {
@@ -114,7 +106,7 @@ export default function NotificationsPage() {
           }
         }
 
-        // ── 시험 D-day ──
+        // -- 시험 D-day --
         for (const exam of dashboard.upcomingExams) {
           if (!exam.examDate) continue;
           const dDay = Math.ceil(
@@ -123,7 +115,7 @@ export default function NotificationsPage() {
           if (dDay <= 7 && dDay >= 0) {
             notifs.push({
               id: `exam-${exam.id}`,
-              icon: <Clock size={16} className="text-[var(--erp-success)]" />,
+              icon: <Clock size={16} className="text-emerald-500" />,
               title: `시험 ${dDay === 0 ? "D-Day" : `D-${dDay}`}`,
               body: exam.title,
               time: new Date(exam.examDate).toLocaleDateString("ko-KR", {
@@ -135,11 +127,11 @@ export default function NotificationsPage() {
           }
         }
 
-        // ── 출석 ──
+        // -- 출석 --
         if (dashboard.todayAttendance) {
           notifs.push({
             id: "attendance-today",
-            icon: <CheckCircle2 size={16} className="text-[var(--erp-info)]" />,
+            icon: <CheckCircle2 size={16} className="text-sky-500" />,
             title: "출석 확인",
             body: `오늘 ${dashboard.todayAttendance.checkIn ?? ""} 출석 완료`,
             time: "오늘",
@@ -147,12 +139,12 @@ export default function NotificationsPage() {
           });
         }
 
-        // ── 학습 리마인더 ──
+        // -- 학습 리마인더 --
         const todayDone = dashboard.weekCalendar.days[new Date().getDay()];
         if (!todayDone) {
           notifs.push({
             id: "study-reminder",
-            icon: <BookOpen size={16} className="text-[var(--learn-primary)]" />,
+            icon: <BookOpen size={16} className="text-indigo-500" />,
             title: "오늘 학습 아직 안 했어요!",
             body: dashboard.todayLesson
               ? `"${dashboard.todayLesson.passageTitle}" 이어서 하기`
@@ -162,12 +154,12 @@ export default function NotificationsPage() {
           });
         }
 
-        // ── 스트릭 ──
+        // -- 스트릭 --
         const streak = dashboard.student.streak;
         if (streak > 0 && !todayDone) {
           notifs.push({
             id: "streak-warning",
-            icon: <Flame size={16} className="text-[var(--learn-streak)]" />,
+            icon: <Flame size={16} className="text-orange-500" />,
             title: "스트릭이 끊길 수 있어요!",
             body: `${streak}일 연속 학습을 유지하려면 오늘도 공부하세요`,
             time: "오늘",
@@ -180,7 +172,7 @@ export default function NotificationsPage() {
         ) {
           notifs.push({
             id: "streak-milestone",
-            icon: <Flame size={16} className="text-[var(--learn-streak)]" />,
+            icon: <Flame size={16} className="text-orange-500" />,
             title: `${streak}일 연속 학습 달성!`,
             body: "대단해요! 계속 이어가세요",
             time: "오늘",
@@ -188,12 +180,12 @@ export default function NotificationsPage() {
           });
         }
 
-        // ── 랭킹 ──
+        // -- 랭킹 --
         const myRank = dashboard.ranking.find((r) => r.isMe);
         if (myRank && myRank.rank <= 3) {
           notifs.push({
             id: "rank-up",
-            icon: <Trophy size={16} className="text-[var(--learn-xp)]" />,
+            icon: <Trophy size={16} className="text-yellow-500" />,
             title: `이번 주 랭킹 ${myRank.rank}위!`,
             body: `${myRank.xp} XP 달성`,
             time: "이번 주",
@@ -220,9 +212,9 @@ export default function NotificationsPage() {
 
   if (loading) {
     return (
-      <div className="px-[var(--sp-3)] pt-[var(--sp-2)] space-y-2 animate-pulse">
+      <div className="px-5 pt-3 space-y-2 animate-pulse">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-16 bg-[var(--erp-border-light)] rounded-[var(--radius-md)]" />
+          <div key={i} className="h-16 bg-gray-100 rounded-2xl" />
         ))}
       </div>
     );
@@ -231,8 +223,8 @@ export default function NotificationsPage() {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[50vh] gap-2">
-        <Bell size={36} className="text-[var(--erp-border)]" />
-        <p className="text-[var(--fs-sm)] text-[var(--erp-text-muted)]">
+        <Bell size={36} className="text-gray-200" />
+        <p className="text-sm text-gray-400">
           새로운 알림이 없습니다
         </p>
       </div>
@@ -240,18 +232,18 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="flex flex-col px-[var(--sp-3)] pt-[var(--pt-page)] pb-[var(--pb-page)] gap-[var(--gap-section-sm)]">
+    <div className="flex flex-col px-5 pt-3 pb-6 gap-4">
       {/* Filter chips */}
-      <div className="flex gap-1.5 pb-[var(--sp-2)] overflow-x-auto hide-scrollbar">
+      <div className="flex gap-1.5 pb-3 overflow-x-auto hide-scrollbar">
         {filterButtons.map((f) => (
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={cn(
-              "px-3 py-1 rounded-full text-[var(--fs-caption)] font-medium transition-colors whitespace-nowrap",
+              "px-3 py-1 rounded-full text-[10px] font-medium transition-colors whitespace-nowrap active:scale-95",
               filter === f.key
-                ? "bg-[var(--erp-primary)] text-white"
-                : "bg-[var(--erp-border-light)] text-[var(--erp-text-muted)]",
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-400",
             )}
           >
             {f.label}
@@ -268,10 +260,10 @@ export default function NotificationsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.03 }}
             className={cn(
-              "flex items-start gap-3 p-3 rounded-[var(--radius-md)] border relative overflow-hidden",
+              "flex items-start gap-3 p-3 rounded-2xl relative overflow-hidden",
               n.isRead === false
-                ? "bg-[var(--erp-primary)]/5 border-[var(--erp-primary)]/20"
-                : "bg-[var(--erp-surface)] border-[var(--erp-border)]",
+                ? "bg-blue-50"
+                : "bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
             )}
           >
             {/* Category color bar */}
@@ -283,19 +275,19 @@ export default function NotificationsPage() {
             />
             <div className="mt-0.5 ml-1">{n.icon}</div>
             <div className="flex-1 min-w-0">
-              <p className="text-[var(--fs-xs)] font-semibold text-[var(--erp-text)]">
+              <p className="text-xs font-semibold text-gray-900">
                 {n.title}
               </p>
-              <p className="text-[var(--fs-caption)] text-[var(--erp-text-muted)] mt-0.5 line-clamp-2">
+              <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-2">
                 {n.body}
               </p>
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
-              <span className="text-[var(--fs-caption)] text-[var(--erp-text-muted)]">
+              <span className="text-[10px] text-gray-400">
                 {n.time}
               </span>
               {n.isRead === false && (
-                <div className="w-2 h-2 rounded-full bg-[var(--erp-primary)]" />
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
               )}
             </div>
           </motion.div>

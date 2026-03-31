@@ -16,7 +16,7 @@ import {
 } from "recharts";
 import { ArrowLeft, TrendingUp, Zap, BookOpen, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getStudentProgress } from "@/actions/student-app";
+import { getStudentProgress } from "@/actions/student-app-progress";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -137,7 +137,7 @@ export default function ProgressPage() {
       {/* Vocab Score Trend */}
       {data.vocabTrend.length > 0 && (
         <motion.div
-          className="bg-white rounded-2xl shadow-card border border-gray-100 p-4"
+          className="bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-4"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -192,7 +192,7 @@ export default function ProgressPage() {
       {/* Exam Score Trend */}
       {data.examTrend.length > 0 && (
         <motion.div
-          className="bg-white rounded-2xl shadow-card border border-gray-100 p-4"
+          className="bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-4"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -240,7 +240,7 @@ export default function ProgressPage() {
       {/* Daily XP Trend */}
       {data.dailyStudy.length > 0 && (
         <motion.div
-          className="bg-white rounded-2xl shadow-card border border-gray-100 p-4"
+          className="bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-4"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}

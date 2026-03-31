@@ -50,7 +50,7 @@ interface GradesTabProps {
 export function GradesTab({ analytics, heatmap, recentTests, recentExams, badges }: GradesTabProps) {
   return (
     <motion.div
-      className="space-y-[var(--sp-2)]"
+      className="space-y-3"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >

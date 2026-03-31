@@ -407,6 +407,27 @@ export async function getLessonList(seasonId: string): Promise<LessonItem[]> {
 }
 
 // ---------------------------------------------------------------------------
+// 2-1. getLearnPageData — 학습 홈 통합 로드 (워터폴 제거)
+// ---------------------------------------------------------------------------
+
+export async function getLearnPageData() {
+  const session = await requireStudent();
+  const { getDailyMission, getStreakInfo } = await import("@/actions/learning-gamification");
+
+  // Phase 1: 병렬로 시즌 + 미션 + 스트릭 로드
+  const [seasonData, missionData, streakData] = await Promise.all([
+    getActiveSeason(),
+    getDailyMission(),
+    getStreakInfo(),
+  ]);
+
+  // Phase 2: 시즌이 있으면 레슨 목록 로드 (서버에서 순차 — 클라이언트 RTT 1회)
+  const lessons = seasonData ? await getLessonList(seasonData.id) : [];
+
+  return { season: seasonData, mission: missionData, streak: streakData, lessons };
+}
+
+// ---------------------------------------------------------------------------
 // 3. startSession — 세션 시작 (문제 선별)
 // ---------------------------------------------------------------------------
 
@@ -467,27 +488,29 @@ export async function startSession(
     select: { wrongQuestionIds: true },
   });
 
-  // 카테고리별 문제 추출 (NaeshinQuestion 사용)
-  for (const [category, count] of Object.entries(composition)) {
-    if (count === 0) continue;
+  // 카테고리별 문제 추출 — 병렬 실행 (NaeshinQuestion 사용)
+  const categoryEntries = Object.entries(composition).filter(([, count]) => count > 0);
+  const categoryResults = await Promise.all(
+    categoryEntries.map(([category, count]) =>
+      prisma.naeshinQuestion.findMany({
+        where: {
+          passageId,
+          learningCategory: category,
+          ...(weaknessQuestionIds.length > 0 && sessionType === "WEAKNESS_FOCUS"
+            ? { id: { in: weaknessQuestionIds } }
+            : {}),
+        },
+        include: { explanation: true },
+        take: count * 3,
+      }).then((questions) => {
+        const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, count);
+        return shuffled.map((q) => parseNaeshinQuestion(q, category as LearningCategory));
+      })
+    )
+  );
 
-    const questions = await prisma.naeshinQuestion.findMany({
-      where: {
-        passageId,
-        learningCategory: category,
-        ...(weaknessQuestionIds.length > 0 && sessionType === "WEAKNESS_FOCUS"
-          ? { id: { in: weaknessQuestionIds } }
-          : {}),
-      },
-      include: { explanation: true },
-      take: count * 3,
-    });
-
-    const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, count);
-
-    for (const q of shuffled) {
-      allQuestions.push(parseNaeshinQuestion(q, category as LearningCategory));
-    }
+  for (const questions of categoryResults) {
+    allQuestions.push(...questions);
   }
 
   // 최종 셔플
@@ -519,280 +542,4 @@ async function pickStoriesQuestions(passageId: string): Promise<SessionQuestion[
   return shuffled.map((q) => parseNaeshinQuestion(q, "COMPREHENSION"));
 }
 
-// ---------------------------------------------------------------------------
-// 4. submitSession — 세션 완료 제출
-// ---------------------------------------------------------------------------
-
-export async function submitSession(data: {
-  passageId: string;
-  sessionType: SessionType;
-  seasonId?: string;
-  answers: { questionId: string; givenAnswer: string; isCorrect: boolean }[];
-  startedAt: string;
-}): Promise<SessionResult> {
-  const session = await requireStudent();
-  const studentId = session.studentId;
-
-  const correctCount = data.answers.filter((a) => a.isCorrect).length;
-  const totalCount = data.answers.length;
-  const score = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
-
-  // XP 배율 체크 (데일리 미션)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const mission = await prisma.studentDailyMission.findUnique({
-    where: { studentId_date: { studentId, date: today } },
-  });
-
-  let multiplier = 1;
-  if (
-    mission?.multiplierActive &&
-    mission.multiplierExpiresAt &&
-    new Date() < mission.multiplierExpiresAt
-  ) {
-    multiplier = mission.multiplierActive;
-  }
-
-  const baseXp =
-    data.sessionType === "STORIES"
-      ? LEARNING_XP.STORIES_COMPLETE
-      : LEARNING_XP.SESSION_COMPLETE;
-  const perfectBonus = score === 100 ? LEARNING_XP.PERFECT_SESSION : 0;
-  const xpEarned = Math.round((baseXp + perfectBonus) * multiplier);
-
-  // 오답 문제 ID
-  const wrongAnswers = data.answers.filter((a) => !a.isCorrect);
-  const wrongQuestionIds = wrongAnswers.map((a) => a.questionId);
-
-  // 병렬 처리: 세션 기록 + 오답 로그 + XP 추가 + 레슨 진행도
-  const [sessionRecord] = await Promise.all([
-    // 세션 기록
-    prisma.sessionRecord.create({
-      data: {
-        studentId,
-        passageId: data.passageId,
-        seasonId: data.seasonId,
-        sessionType: data.sessionType,
-        score,
-        correctCount,
-        totalCount,
-        wrongQuestionIds: JSON.stringify(wrongQuestionIds),
-        xpEarned,
-        startedAt: new Date(data.startedAt),
-        completedAt: new Date(),
-      },
-    }),
-    // 오답 로그 upsert (NaeshinWrongAnswerLog)
-    ...wrongAnswers.map((wa) =>
-      prisma.naeshinWrongAnswerLog.upsert({
-        where: { studentId_questionId: { studentId, questionId: wa.questionId } },
-        create: {
-          studentId,
-          questionId: wa.questionId,
-          givenAnswer: wa.givenAnswer,
-          category: undefined,
-        },
-        update: {
-          count: { increment: 1 },
-          lastWrongAt: new Date(),
-          givenAnswer: wa.givenAnswer,
-        },
-      })
-    ),
-  ]);
-
-  // XP 추가 + 레벨업
-  await addXpInternal(studentId, xpEarned);
-
-  // 레슨 진행도 업데이트
-  const lessonProgress = await updateLessonProgress(
-    studentId,
-    data.passageId,
-    data.sessionType,
-    data.seasonId
-  );
-
-  // 스트릭 업데이트
-  await updateStreak(studentId);
-
-  // StudyProgress 일별 추적 업데이트
-  await prisma.studyProgress.upsert({
-    where: { studentId_date: { studentId, date: today } },
-    create: {
-      studentId,
-      date: today,
-      questionsAnswered: totalCount,
-      xpEarned,
-    },
-    update: {
-      questionsAnswered: { increment: totalCount },
-      xpEarned: { increment: xpEarned },
-    },
-  });
-
-  revalidatePath("/student");
-
-  // 오답 문제 상세 가져오기 (NaeshinQuestion)
-  const wrongDetails = wrongQuestionIds.length > 0
-    ? await prisma.naeshinQuestion.findMany({
-        where: { id: { in: wrongQuestionIds } },
-        select: { id: true, subType: true, questionText: true, correctAnswer: true },
-      })
-    : [];
-
-  const wrongMap = new Map(wrongDetails.map((q) => [q.id, q]));
-
-  return {
-    sessionType: data.sessionType,
-    score,
-    correctCount,
-    totalCount,
-    xpEarned,
-    xpMultiplier: multiplier,
-    wrongQuestions: wrongAnswers.map((wa) => {
-      const q = wrongMap.get(wa.questionId);
-      return {
-        questionId: wa.questionId,
-        questionText: q ? summarizeQuestionText(q.subType, q.questionText) : "",
-        givenAnswer: wa.givenAnswer,
-        correctAnswer: q?.correctAnswer ?? "",
-      };
-    }),
-    lessonProgress: {
-      session1Done: lessonProgress.session1Done,
-      session2Done: lessonProgress.session2Done,
-      storiesDone: lessonProgress.storiesDone,
-      session3Done: lessonProgress.session3Done,
-      session4Done: lessonProgress.session4Done,
-      session5Done: lessonProgress.session5Done,
-      masteryScore: lessonProgress.masteryScore,
-    },
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Internal helpers
-// ---------------------------------------------------------------------------
-
-async function addXpInternal(studentId: string, amount: number) {
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    select: { xp: true, level: true },
-  });
-  if (!student) return;
-
-  let newXp = student.xp + amount;
-  let newLevel = student.level;
-  while (newXp >= xpForLevel(newLevel)) {
-    newXp -= xpForLevel(newLevel);
-    newLevel++;
-  }
-
-  await prisma.student.update({
-    where: { id: studentId },
-    data: { xp: newXp, level: newLevel },
-  });
-}
-
-async function updateLessonProgress(
-  studentId: string,
-  passageId: string,
-  sessionType: SessionType,
-  seasonId?: string
-) {
-  const sessionFieldMap: Record<string, string> = {
-    MIX_1: "session1Done",
-    MIX_2: "session2Done",
-    STORIES: "storiesDone",
-    VOCAB_FOCUS: "session3Done",
-    GRAMMAR_FOCUS: "session4Done",
-    WEAKNESS_FOCUS: "session5Done",
-  };
-
-  const field = sessionFieldMap[sessionType];
-
-  // 세션 기록으로 숙달도 재계산
-  const allSessions = await prisma.sessionRecord.findMany({
-    where: { studentId, passageId },
-    select: { score: true, sessionType: true },
-  });
-  const mastery = calculateMastery(allSessions);
-
-  const progress = await prisma.lessonProgress.upsert({
-    where: {
-      studentId_passageId_seasonId: {
-        studentId,
-        passageId,
-        seasonId: seasonId ?? "",
-      },
-    },
-    create: {
-      studentId,
-      passageId,
-      seasonId,
-      [field]: true,
-      masteryScore: mastery,
-    },
-    update: {
-      [field]: true,
-      masteryScore: mastery,
-    },
-  });
-
-  return progress;
-}
-
-async function updateStreak(studentId: string) {
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    select: { streak: true, lastStudyDate: true, streakFreezeCount: true },
-  });
-  if (!student) return;
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const lastDate = student.lastStudyDate
-    ? new Date(student.lastStudyDate)
-    : null;
-  if (lastDate) lastDate.setHours(0, 0, 0, 0);
-
-  // 이미 오늘 기록 있으면 스킵
-  if (lastDate && lastDate.getTime() === today.getTime()) return;
-
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  let newStreak = student.streak;
-
-  if (lastDate && lastDate.getTime() === yesterday.getTime()) {
-    // 어제 학습 → 스트릭 +1
-    newStreak++;
-  } else if (lastDate && lastDate.getTime() < yesterday.getTime()) {
-    // 하루 이상 빠짐 → 프리즈 체크
-    const daysMissed = Math.floor(
-      (yesterday.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    if (daysMissed === 1 && student.streakFreezeCount > 0) {
-      // 프리즈 사용
-      await prisma.student.update({
-        where: { id: studentId },
-        data: { streakFreezeCount: { decrement: 1 } },
-      });
-      newStreak++; // 프리즈로 유지 + 오늘 학습
-    } else {
-      newStreak = 1; // 리셋
-    }
-  } else {
-    newStreak = 1; // 첫 학습
-  }
-
-  await prisma.student.update({
-    where: { id: studentId },
-    data: {
-      streak: newStreak,
-      lastStudyDate: today,
-    },
-  });
-}
 

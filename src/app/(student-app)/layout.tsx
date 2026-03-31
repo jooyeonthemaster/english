@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Home, UserCheck, FolderOpen, User, BookOpenCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StudentHeader } from "@/components/layout/student-header";
-import { getStudentDashboard } from "@/actions/student-app";
+import { getStudentHeaderData } from "@/actions/student-app";
 
 // ---------------------------------------------------------------------------
 // Header data type
@@ -20,15 +20,24 @@ interface HeaderData {
 }
 
 // ---------------------------------------------------------------------------
-// 5-tab bottom navigation (center = floating CTA)
+// 5 sections (swipe order)
 // ---------------------------------------------------------------------------
-const bottomTabs = [
+const SECTIONS = [
   { label: "홈", icon: Home, href: "/student" },
   { label: "출석", icon: UserCheck, href: "/student/attendance" },
-  // center (index 2) is the floating "공부하러가기" button, handled separately
+  { label: "학습", icon: BookOpenCheck, href: "/student/learn" },
   { label: "자료실", icon: FolderOpen, href: "/student/resources" },
   { label: "마이", icon: User, href: "/student/mypage" },
 ];
+
+function getSectionIndex(pathname: string): number {
+  if (pathname === "/student") return 0;
+  if (pathname.startsWith("/student/attendance")) return 1;
+  if (pathname.startsWith("/student/learn")) return 2;
+  if (pathname.startsWith("/student/resources")) return 3;
+  if (pathname.startsWith("/student/mypage")) return 4;
+  return -1;
+}
 
 // ---------------------------------------------------------------------------
 // Layout
@@ -39,23 +48,15 @@ export default function StudentAppLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [headerData, setHeaderData] = useState<HeaderData | null>(null);
 
   useEffect(() => {
-    getStudentDashboard()
-      .then((d) =>
-        setHeaderData({
-          studentName: d.student.name,
-          schoolName: d.student.schoolName ?? "",
-          grade: d.student.grade,
-          academyName: d.student.academyName ?? "",
-          streak: d.student.streak,
-        }),
-      )
+    getStudentHeaderData()
+      .then((d) => { if (d) setHeaderData(d); })
       .catch(() => {});
   }, []);
 
-  // --- Hide chrome conditions ---
   const isLoginPage = pathname === "/student/login";
   const isLearningSession =
     pathname.includes("/learn/") &&
@@ -63,18 +64,56 @@ export default function StudentAppLayout({
   const isVocabTest = pathname.includes("/vocab/") && pathname.includes("/test");
   const hideChrome = isLoginPage || isLearningSession || isVocabTest;
 
+  const currentSection = getSectionIndex(pathname);
+
+  // --- Swipe detection ---
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const swiping = useRef(false);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    swiping.current = false;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (currentSection < 0) return;
+
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+
+    // 가로 이동이 세로보다 크고, 최소 60px 이상 스와이프
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
+      if (dx < 0 && currentSection < SECTIONS.length - 1) {
+        // 왼쪽 스와이프 → 다음 섹션
+        router.push(SECTIONS[currentSection + 1].href);
+      } else if (dx > 0 && currentSection > 0) {
+        // 오른쪽 스와이프 → 이전 섹션
+        router.push(SECTIONS[currentSection - 1].href);
+      }
+    }
+  }, [currentSection, router]);
+
+  // --- Tab helpers ---
   function isActive(href: string) {
     if (href === "/student") return pathname === "/student";
     return pathname.startsWith(href);
   }
 
-  const isLearnActive = pathname.startsWith("/student/learn");
+  if (hideChrome) {
+    return (
+      <div className="flex justify-center min-h-screen bg-white">
+        <div className="w-full max-w-2xl min-h-screen">{children}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex justify-center min-h-screen bg-[var(--erp-bg)]">
-      <div className="w-full max-w-2xl bg-[var(--erp-surface)] min-h-screen flex flex-col relative">
-        {/* Header */}
-        {!hideChrome && (
+    <div className="flex justify-center h-screen bg-[#F5F5F5]">
+      <div className="w-full max-w-2xl h-screen flex flex-col">
+        {/* 헤더 */}
+        <div className="shrink-0 z-40 bg-[#F5F5F5]">
           <StudentHeader
             studentName={headerData?.studentName}
             schoolName={headerData?.schoolName}
@@ -82,74 +121,34 @@ export default function StudentAppLayout({
             academyName={headerData?.academyName}
             streak={headerData?.streak ?? 0}
           />
-        )}
+        </div>
 
-        {/* Content */}
+        {/* 콘텐츠 — 스와이프 + 세로 스크롤 */}
         <main
-          className={cn(
-            "flex-1 flex flex-col",
-            !hideChrome && "pb-[calc(var(--tab-h)+1rem+env(safe-area-inset-bottom,0px))]",
-          )}
+          className="flex-1 overflow-y-auto overflow-x-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          {children}
+          <div className="pb-28">
+            {children}
+          </div>
         </main>
 
-        {/* Bottom Navigation — 5 tabs with floating center CTA */}
-        {!hideChrome && (
-          <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl z-30 safe-bottom">
-            <div className="relative bg-[var(--erp-surface)] shadow-[0_-1px_4px_rgba(0,0,0,0.06)]">
-              {/* Notch background behind FAB */}
-              <div
-                className="absolute left-1/2 -translate-x-1/2 -top-[calc(var(--fab-size)*0.4)] w-[calc(var(--fab-size)+1.25rem)] h-[calc(var(--fab-size)*0.4+1px)] bg-[var(--erp-surface)] rounded-t-[50%]"
-                aria-hidden="true"
-              />
-
-              <div className="flex items-center h-[var(--tab-h)]">
-                {/* Left 2 tabs */}
-                {bottomTabs.slice(0, 2).map((tab) => (
-                  <TabItem
-                    key={tab.href}
-                    tab={tab}
-                    active={isActive(tab.href)}
-                  />
-                ))}
-
-                {/* Center spacer for floating button */}
-                <div className="flex-1" />
-
-                {/* Right 2 tabs */}
-                {bottomTabs.slice(2).map((tab) => (
-                  <TabItem
-                    key={tab.href}
-                    tab={tab}
-                    active={isActive(tab.href)}
-                  />
-                ))}
-              </div>
-
-              {/* Floating center CTA — 공부하러가기 */}
-              <Link
-                href="/student/learn"
-                className={cn(
-                  "absolute left-1/2 -translate-x-1/2",
-                  "flex items-center justify-center",
-                  "w-[var(--fab-size)] h-[var(--fab-size)] rounded-full",
-                  "shadow-lg active:scale-95 transition-transform",
-                  isLearnActive
-                    ? "bg-[var(--erp-primary)] shadow-blue-500/30"
-                    : "bg-[var(--erp-primary)] shadow-blue-500/20",
-                )}
-                style={{ top: `calc(-1 * var(--fab-size) * 0.4)` }}
-              >
-                <BookOpenCheck className="text-white w-[var(--icon-md)] h-[var(--icon-md)]" />
-              </Link>
-              {/* Active dot under FAB */}
-              {isLearnActive && (
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-[var(--sp-1)] w-1 h-1 rounded-full bg-[var(--erp-primary)]" />
-              )}
+        {/* 하단 네비 */}
+        <div className="shrink-0 z-30 px-4 pb-[env(safe-area-inset-bottom,6px)] pt-1 bg-transparent pointer-events-none">
+          <div className="relative bg-white rounded-[28px] shadow-[0_4px_24px_rgba(0,0,0,0.10)] mx-1 pointer-events-auto">
+            <div className="flex items-center h-16 px-1">
+              {SECTIONS.map((section) => (
+                <TabItem
+                  key={section.href}
+                  tab={section}
+                  active={isActive(section.href)}
+                  isFab={section.href === "/student/learn"}
+                />
+              ))}
             </div>
-          </nav>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -161,29 +160,47 @@ export default function StudentAppLayout({
 function TabItem({
   tab,
   active,
+  isFab,
 }: {
-  tab: { label: string; icon: React.ComponentType<{ className?: string }>; href: string };
+  tab: { label: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }>; href: string };
   active: boolean;
+  isFab?: boolean;
 }) {
   const Icon = tab.icon;
+
+  if (isFab) {
+    return (
+      <Link
+        href={tab.href}
+        className="relative flex flex-1 items-center justify-center h-full"
+      >
+        <div
+          className={cn(
+            "w-12 h-12 rounded-full flex items-center justify-center",
+            "bg-gradient-to-br from-blue-500 to-indigo-600",
+            "shadow-[0_4px_16px_rgba(59,130,246,0.35)]",
+            "active:scale-90 transition-all duration-200",
+            active && "ring-[3px] ring-blue-100",
+          )}
+        >
+          <Icon className="text-white w-5 h-5" strokeWidth={2.5} />
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <Link
       href={tab.href}
       className={cn(
-        "relative flex flex-1 flex-col items-center justify-center h-full transition-colors",
-        active ? "text-[var(--erp-primary)]" : "text-[var(--erp-text-muted)]",
+        "relative flex flex-1 flex-col items-center justify-center h-full gap-0.5 transition-all",
+        active ? "text-blue-500" : "text-gray-300",
       )}
     >
-      <Icon
-        className={cn(
-          "transition-all w-[var(--icon-md)] h-[var(--icon-md)]",
-          active && "scale-110",
-        )}
-      />
-      {/* Active indicator dot */}
-      {active && (
-        <div className="w-1 h-1 rounded-full bg-[var(--erp-primary)] mt-1" />
-      )}
+      <Icon className={cn("w-5 h-5", active && "scale-110")} strokeWidth={active ? 2.5 : 1.8} />
+      <span className={cn("text-[10px] font-semibold", active ? "text-blue-500" : "text-gray-300")}>
+        {tab.label}
+      </span>
     </Link>
   );
 }

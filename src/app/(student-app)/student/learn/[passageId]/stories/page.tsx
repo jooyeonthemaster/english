@@ -5,7 +5,8 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, MessageCircle, ChevronDown, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { startSession, submitSession } from "@/actions/learning-session";
+import { startSession } from "@/actions/learning-session";
+import { submitSession } from "@/actions/learning-session-submit";
 import { checkDailyMission } from "@/actions/learning-gamification";
 import type { SessionStartData, SessionQuestion } from "@/lib/learning-types";
 

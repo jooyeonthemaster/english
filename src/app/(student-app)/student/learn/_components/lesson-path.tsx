@@ -21,7 +21,7 @@ function Connector({ completed }: { completed: boolean }) {
       <svg width="60" height="32" viewBox="0 0 60 32" fill="none">
         <path
           d="M30 0 C30 12, 30 20, 30 32"
-          stroke={completed ? "var(--student-success)" : "var(--student-locked)"}
+          stroke={completed ? "#10b981" : "#d1d5db"}
           strokeWidth={completed ? 3 : 2}
           strokeDasharray={completed ? "none" : "6 4"}
           strokeLinecap="round"
@@ -38,7 +38,7 @@ export function LessonPath({ lessons, seasonId }: LessonPathProps) {
   if (lessons.length === 0) return null;
 
   return (
-    <div className="relative flex flex-col items-center py-[var(--space-md)]">
+    <div className="relative flex flex-col items-center py-5">
       {lessons.map((lesson, i) => (
         <div key={lesson.passageId} className="w-full">
           {/* Connector line */}

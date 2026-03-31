@@ -28,7 +28,7 @@ export function ExamsTab() {
     return (
       <div className="space-y-2">
         {[1, 2].map((i) => (
-          <div key={i} className="h-16 bg-[var(--erp-border-light)] rounded-[var(--radius-md)] animate-pulse" />
+          <div key={i} className="h-16 bg-gray-100 rounded-2xl animate-pulse" />
         ))}
       </div>
     );
@@ -36,9 +36,9 @@ export function ExamsTab() {
 
   if (exams.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-[var(--erp-text-muted)]">
+      <div className="flex flex-col items-center justify-center py-16 text-gray-400">
         <Calendar size={32} className="mb-2" />
-        <p className="text-[var(--fs-sm)]">예정된 시험이 없습니다</p>
+        <p className="text-sm">예정된 시험이 없습니다</p>
       </div>
     );
   }
@@ -56,17 +56,17 @@ export function ExamsTab() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04 }}
-            className="rounded-[var(--radius-md)] border border-[var(--erp-border)] bg-[var(--erp-surface)] p-3"
+            className="rounded-3xl bg-white shadow-card p-3"
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-[var(--fs-sm)] font-semibold text-[var(--erp-text)] truncate">
+                <p className="text-sm font-semibold text-gray-900 truncate">
                   {exam.title}
                 </p>
                 {exam.examDate && (
                   <div className="flex items-center gap-1 mt-1">
-                    <Clock size={12} className="text-[var(--erp-text-muted)]" />
-                    <p className="text-[var(--fs-caption)] text-[var(--erp-text-muted)]">
+                    <Clock size={12} className="text-gray-400" />
+                    <p className="text-[10px] text-gray-400">
                       {new Date(exam.examDate).toLocaleDateString("ko-KR", {
                         month: "long",
                         day: "numeric",
@@ -79,12 +79,12 @@ export function ExamsTab() {
               {dDay !== null && (
                 <span
                   className={cn(
-                    "text-[var(--fs-xs)] font-bold px-2 py-1 rounded-[var(--radius-sm)]",
+                    "text-xs font-bold px-2 py-1 rounded-xl",
                     dDay <= 3
-                      ? "bg-[var(--erp-error-light)] text-[var(--erp-error)]"
+                      ? "bg-red-50 text-red-500"
                       : dDay <= 7
-                        ? "bg-[var(--erp-warning-light)] text-[var(--erp-warning)]"
-                        : "bg-[var(--erp-border-light)] text-[var(--erp-text-secondary)]",
+                        ? "bg-amber-50 text-amber-500"
+                        : "bg-gray-100 text-gray-500",
                   )}
                 >
                   {dDay === 0 ? "D-Day" : dDay > 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`}

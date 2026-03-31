@@ -36,32 +36,27 @@ export default function ResourcesPage() {
   }, [searchParams]);
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Tab bar */}
-      <div className="sticky top-[var(--header-h)] z-20 bg-[var(--erp-surface)] border-b border-[var(--erp-border-light)] px-[var(--sp-3)]">
-        <div className="flex">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "flex-1 py-2.5 text-[var(--fs-sm)] font-medium transition-colors relative",
-                activeTab === tab.key
-                  ? "text-[var(--erp-primary)] font-semibold"
-                  : "text-[var(--erp-text-muted)]",
-              )}
-            >
-              {tab.label}
-              {activeTab === tab.key && (
-                <span className="absolute bottom-0 left-1/4 right-1/4 h-[2px] rounded-full bg-[var(--erp-primary)]" />
-              )}
-            </button>
-          ))}
-        </div>
+    <div className="flex flex-col px-5 pt-2 pb-6 gap-4">
+      {/* Tab bar — pill 스타일 */}
+      <div className="flex bg-gray-100 rounded-2xl p-1">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={cn(
+              "flex-1 py-2 text-xs font-semibold rounded-xl transition-all duration-200",
+              activeTab === tab.key
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-400",
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* Tab content */}
-      <div className="flex-1 px-[var(--sp-3)] pt-[var(--pt-page)] pb-[var(--pb-page)]">
+      <div>
         {activeTab === "notices" && <NoticesTab />}
         {activeTab === "materials" && <MaterialsTab />}
         {activeTab === "assignments" && <AssignmentsTab />}

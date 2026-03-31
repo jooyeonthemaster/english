@@ -56,10 +56,10 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
   }));
 
   return (
-    <div className="space-y-[var(--space-md)]">
+    <div className="space-y-4">
       {/* Radar Chart */}
-      <div className="bg-white rounded-[var(--card-radius)] border border-gray-100 p-[var(--space-md)] shadow-sm">
-        <h3 className="text-[var(--text-sm)] font-bold text-gray-900 mb-1">종합 실력 리포트</h3>
+      <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+        <h3 className="text-sm font-bold text-gray-900 mb-1">종합 실력 리포트</h3>
         <div className="relative">
           <ResponsiveContainer width="100%" height={220}>
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -72,25 +72,25 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
               <Radar
                 name="실력"
                 dataKey="score"
-                stroke="var(--student-primary)"
+                stroke="#3B82F6"
                 fill="url(#radarGrad)"
                 fillOpacity={0.4}
                 strokeWidth={2}
               />
               <defs>
                 <linearGradient id="radarGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--student-primary)" stopOpacity={0.6} />
-                  <stop offset="100%" stopColor="var(--student-secondary)" stopOpacity={0.2} />
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.6} />
+                  <stop offset="100%" stopColor="#6366F1" stopOpacity={0.2} />
                 </linearGradient>
               </defs>
             </RadarChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
-              <p className="text-[var(--text-2xl)] font-black text-gray-900">
+              <p className="text-3xl font-black text-gray-900">
                 {Math.round(analytics.overallScore)}
               </p>
-              <p className="text-[var(--text-2xs)] text-gray-400">종합점수</p>
+              <p className="text-[10px] text-gray-400">종합점수</p>
             </div>
           </div>
         </div>
@@ -98,8 +98,8 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
         <div className="grid grid-cols-5 gap-1">
           {radarData.map((item) => (
             <div key={item.subject} className="text-center">
-              <p className="text-[var(--text-base)] font-bold text-gray-900">{Math.round(item.score)}</p>
-              <p className="text-[var(--text-2xs)] text-gray-400">{item.subject}</p>
+              <p className="text-base font-bold text-gray-900">{Math.round(item.score)}</p>
+              <p className="text-[10px] text-gray-400">{item.subject}</p>
             </div>
           ))}
         </div>
@@ -107,8 +107,8 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
 
       {/* Grammar detail */}
       {grammarBarData.length > 0 && (
-        <div className="bg-white rounded-[var(--card-radius)] border border-gray-100 p-[var(--space-md)] shadow-sm">
-          <h4 className="text-[var(--text-xs)] font-bold text-gray-900 mb-2">문법 세부 분석</h4>
+        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <h4 className="text-xs font-bold text-gray-900 mb-2">문법 세부 분석</h4>
           <ResponsiveContainer width="100%" height={grammarBarData.length * 32 + 10}>
             <BarChart data={grammarBarData} layout="vertical" margin={{ top: 0, right: 16, left: 0, bottom: 0 }}>
               <XAxis type="number" domain={[0, 100]} hide />
@@ -118,7 +118,7 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
                 {grammarBarData.map((entry, i) => (
                   <Cell
                     key={i}
-                    fill={entry.score >= 80 ? "var(--student-success)" : entry.score >= 60 ? "var(--student-primary)" : entry.score >= 40 ? "var(--student-accent)" : "var(--student-wrong)"}
+                    fill={entry.score >= 80 ? "#10B981" : entry.score >= 60 ? "#3B82F6" : entry.score >= 40 ? "#F59E0B" : "#EF4444"}
                   />
                 ))}
               </Bar>
@@ -129,15 +129,15 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
 
       {/* Weak points */}
       {analytics.weakPoints.length > 0 && (
-        <div className="bg-white rounded-[var(--card-radius)] border border-gray-100 p-[var(--space-md)] shadow-sm">
-          <h4 className="text-[var(--text-xs)] font-bold text-gray-900 mb-2">약점 Top 3</h4>
+        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <h4 className="text-xs font-bold text-gray-900 mb-2">약점 Top 3</h4>
           <div className="space-y-1.5">
             {analytics.weakPoints.slice(0, 3).map((point, i) => (
-              <div key={i} className="flex items-center gap-2 p-2 bg-[var(--student-wrong-light)] rounded-[var(--card-radius-sm)]">
-                <div className="size-5 rounded-full bg-red-100 flex items-center justify-center text-[var(--text-2xs)] font-bold text-[var(--student-wrong)]">
+              <div key={i} className="flex items-center gap-2 p-2 bg-red-50 rounded-xl">
+                <div className="size-5 rounded-full bg-red-100 flex items-center justify-center text-[10px] font-bold text-red-500">
                   {i + 1}
                 </div>
-                <p className="text-[var(--text-xs)] text-gray-700 font-medium">{point}</p>
+                <p className="text-xs text-gray-700 font-medium">{point}</p>
               </div>
             ))}
           </div>

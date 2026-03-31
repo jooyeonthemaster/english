@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import {
   getStudentAttendanceHistory,
   studentCheckIn,
-} from "@/actions/student-app";
+} from "@/actions/student-app-resources";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -38,11 +38,11 @@ type AttendanceStats = {
 };
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ComponentType<{ className?: string; size?: number }>; color: string; bg: string }> = {
-  PRESENT: { label: "출석", icon: CheckCircle2, color: "text-[var(--erp-success)]", bg: "bg-[var(--erp-success-subtle)]" },
-  LATE: { label: "지각", icon: Clock, color: "text-[var(--erp-warning)]", bg: "bg-[var(--erp-warning-subtle)]" },
-  ABSENT: { label: "결석", icon: XCircle, color: "text-[var(--erp-error)]", bg: "bg-[var(--erp-error-subtle)]" },
-  EARLY_LEAVE: { label: "조퇴", icon: AlertTriangle, color: "text-[var(--learn-xp)]", bg: "bg-[var(--learn-xp-light)]" },
-  MAKEUP: { label: "보강", icon: CheckCircle2, color: "text-[var(--erp-info)]", bg: "bg-[var(--erp-info-light)]" },
+  PRESENT: { label: "출석", icon: CheckCircle2, color: "text-emerald-500", bg: "bg-emerald-50" },
+  LATE: { label: "지각", icon: Clock, color: "text-amber-500", bg: "bg-amber-50" },
+  ABSENT: { label: "결석", icon: XCircle, color: "text-red-500", bg: "bg-red-50" },
+  EARLY_LEAVE: { label: "조퇴", icon: AlertTriangle, color: "text-orange-500", bg: "bg-orange-50" },
+  MAKEUP: { label: "보강", icon: CheckCircle2, color: "text-sky-500", bg: "bg-sky-50" },
 };
 
 const DAY_HEADERS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -120,33 +120,33 @@ export default function AttendancePage() {
   const todayStr = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="flex flex-col px-[var(--sp-3)] pt-[var(--pt-page)] pb-[var(--pb-page)] gap-[var(--gap-section)]">
-      {/* ═══ Check-in card ═══ */}
-      <div className="rounded-[var(--radius-lg)] border border-[var(--erp-border)] bg-[var(--erp-surface)] p-[var(--sp-4)] text-center">
+    <div className="flex flex-col px-5 pt-3 pb-6 gap-5">
+      {/* Check-in card */}
+      <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5 text-center">
         {todayStatus ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-full bg-[var(--erp-success-subtle)] flex items-center justify-center">
-              <CheckCircle2 size={28} className="text-[var(--erp-success)]" />
+            <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
+              <CheckCircle2 size={28} className="text-emerald-500" />
             </div>
-            <p className="text-[var(--fs-md)] font-bold text-[var(--erp-text)]">출석 완료</p>
-            <p className="text-[var(--fs-xs)] text-[var(--erp-text-muted)]">
+            <p className="text-base font-bold text-gray-900">출석 완료</p>
+            <p className="text-xs text-gray-400">
               {records.find((r) => r.date === todayStr)?.checkInTime ?? ""}
             </p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-[var(--erp-primary-subtle)] flex items-center justify-center">
-              <QrCode size={28} className="text-[var(--erp-primary)]" />
+            <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
+              <QrCode size={28} className="text-blue-500" />
             </div>
-            <p className="text-[var(--fs-md)] font-bold text-[var(--erp-text)]">
+            <p className="text-base font-bold text-gray-900">
               오늘 출석을 해주세요
             </p>
             <button
               onClick={handleCheckIn}
               disabled={checkingIn}
               className={cn(
-                "px-6 py-2.5 rounded-[var(--radius-md)] text-[var(--fs-sm)] font-semibold text-white transition-all",
-                "bg-[var(--erp-primary)] active:bg-[var(--erp-primary-hover)]",
+                "px-6 py-2.5 rounded-2xl text-sm font-semibold text-white transition-all",
+                "bg-blue-500 active:scale-95",
                 checkingIn && "opacity-60",
               )}
             >
@@ -163,10 +163,10 @@ export default function AttendancePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               className={cn(
-                "mt-3 px-3 py-2 rounded-[var(--radius-md)] text-[var(--fs-xs)] font-medium",
+                "mt-3 px-3 py-2 rounded-2xl text-xs font-medium",
                 checkInResult.success
-                  ? "bg-[var(--erp-success-subtle)] text-[var(--erp-success)]"
-                  : "bg-[var(--erp-warning-subtle)] text-[var(--erp-warning)]",
+                  ? "bg-emerald-50 text-emerald-500"
+                  : "bg-amber-50 text-amber-500",
               )}
             >
               {checkInResult.message}
@@ -175,18 +175,18 @@ export default function AttendancePage() {
         </AnimatePresence>
       </div>
 
-      {/* ═══ Calendar ═══ */}
-      <div className="rounded-[var(--radius-lg)] border border-[var(--erp-border)] bg-[var(--erp-surface)] p-[var(--sp-3)]">
+      {/* Calendar */}
+      <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
         {/* Month navigation */}
-        <div className="flex items-center justify-between mb-[var(--sp-3)]">
-          <button onClick={prevMonth} className="p-1.5 rounded-md active:bg-[var(--erp-bg)] transition-colors">
-            <ChevronLeft size={18} className="text-[var(--erp-text-secondary)]" />
+        <div className="flex items-center justify-between mb-3">
+          <button onClick={prevMonth} className="p-1.5 rounded-md active:bg-black/5 transition-colors">
+            <ChevronLeft size={18} className="text-gray-500" />
           </button>
-          <h3 className="text-[var(--fs-base)] font-bold text-[var(--erp-text)]">
+          <h3 className="text-base font-bold text-gray-900">
             {year}년 {month}월
           </h3>
-          <button onClick={nextMonth} className="p-1.5 rounded-md active:bg-[var(--erp-bg)] transition-colors">
-            <ChevronRight size={18} className="text-[var(--erp-text-secondary)]" />
+          <button onClick={nextMonth} className="p-1.5 rounded-md active:bg-black/5 transition-colors">
+            <ChevronRight size={18} className="text-gray-500" />
           </button>
         </div>
 
@@ -196,8 +196,8 @@ export default function AttendancePage() {
             <div
               key={d}
               className={cn(
-                "text-center text-[var(--fs-caption)] font-medium py-1",
-                i === 0 ? "text-[var(--erp-error)]" : i === 6 ? "text-[var(--erp-primary)]" : "text-[var(--erp-text-muted)]",
+                "text-center text-[10px] font-medium py-1",
+                i === 0 ? "text-red-500" : i === 6 ? "text-blue-500" : "text-gray-400",
               )}
             >
               {d}
@@ -209,7 +209,7 @@ export default function AttendancePage() {
         {loading ? (
           <div className="grid grid-cols-7 gap-1">
             {Array.from({ length: 35 }).map((_, i) => (
-              <div key={i} className="aspect-square rounded-md bg-[var(--erp-border-light)] animate-pulse" />
+              <div key={i} className="aspect-square rounded-md bg-gray-100 animate-pulse" />
             ))}
           </div>
         ) : (
@@ -230,16 +230,16 @@ export default function AttendancePage() {
                 <div
                   key={day}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-md text-[var(--fs-xs)] relative",
-                    isToday && "ring-1.5 ring-[var(--erp-primary)]",
+                    "aspect-square flex flex-col items-center justify-center rounded-md text-xs relative",
+                    isToday && "ring-1.5 ring-blue-500",
                     statusCfg?.bg,
                   )}
                 >
                   <span
                     className={cn(
                       "font-medium",
-                      statusCfg ? statusCfg.color : "text-[var(--erp-text-secondary)]",
-                      isToday && !statusCfg && "text-[var(--erp-primary)] font-bold",
+                      statusCfg ? statusCfg.color : "text-gray-500",
+                      isToday && !statusCfg && "text-blue-500 font-bold",
                     )}
                   >
                     {day}
@@ -256,25 +256,25 @@ export default function AttendancePage() {
         )}
       </div>
 
-      {/* ═══ Stats ═══ */}
+      {/* Stats */}
       {stats && (
-        <div className="rounded-[var(--radius-lg)] border border-[var(--erp-border)] bg-[var(--erp-surface)] p-[var(--sp-3)]">
-          <div className="flex items-center justify-between mb-[var(--sp-2)]">
-            <h3 className="text-[var(--fs-sm)] font-semibold text-[var(--erp-text)]">출석 현황</h3>
-            <span className="text-[var(--fs-xl)] font-black text-[var(--erp-primary)]">
+        <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-900">출석 현황</h3>
+            <span className="text-xl font-black text-blue-500">
               {stats.rate}%
             </span>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {[
-              { label: "출석", value: stats.present, color: "text-[var(--erp-success)]" },
-              { label: "지각", value: stats.late, color: "text-[var(--erp-warning)]" },
-              { label: "결석", value: stats.absent, color: "text-[var(--erp-error)]" },
-              { label: "조퇴", value: stats.earlyLeave, color: "text-[var(--learn-xp)]" },
+              { label: "출석", value: stats.present, color: "text-emerald-500" },
+              { label: "지각", value: stats.late, color: "text-amber-500" },
+              { label: "결석", value: stats.absent, color: "text-red-500" },
+              { label: "조퇴", value: stats.earlyLeave, color: "text-orange-500" },
             ].map((item) => (
-              <div key={item.label} className="text-center py-2 rounded-[var(--radius-sm)] bg-[var(--erp-bg)]">
-                <p className={cn("text-[var(--fs-lg)] font-bold", item.color)}>{item.value}</p>
-                <p className="text-[var(--fs-caption)] text-[var(--erp-text-muted)]">{item.label}</p>
+              <div key={item.label} className="text-center py-2 rounded-xl bg-gray-50">
+                <p className={cn("text-lg font-bold", item.color)}>{item.value}</p>
+                <p className="text-[10px] text-gray-400">{item.label}</p>
               </div>
             ))}
           </div>

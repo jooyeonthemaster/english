@@ -77,31 +77,33 @@ export async function recordWrongAnswers(
       return { success: false, error: "인증이 필요합니다." };
     }
 
-    // Upsert each wrong answer (increment count if exists)
-    for (const item of wrongItems) {
-      await prisma.wrongVocabAnswer.upsert({
-        where: {
-          studentId_itemId_testType: {
+    // 배치 트랜잭션: 모든 오답을 한 번에 upsert
+    await prisma.$transaction(
+      wrongItems.map((item) =>
+        prisma.wrongVocabAnswer.upsert({
+          where: {
+            studentId_itemId_testType: {
+              studentId: session.studentId,
+              itemId: item.itemId,
+              testType: item.testType,
+            },
+          },
+          create: {
             studentId: session.studentId,
             itemId: item.itemId,
             testType: item.testType,
+            givenAnswer: item.givenAnswer,
+            count: 1,
+            lastMissedAt: new Date(),
           },
-        },
-        create: {
-          studentId: session.studentId,
-          itemId: item.itemId,
-          testType: item.testType,
-          givenAnswer: item.givenAnswer,
-          count: 1,
-          lastMissedAt: new Date(),
-        },
-        update: {
-          givenAnswer: item.givenAnswer,
-          count: { increment: 1 },
-          lastMissedAt: new Date(),
-        },
-      });
-    }
+          update: {
+            givenAnswer: item.givenAnswer,
+            count: { increment: 1 },
+            lastMissedAt: new Date(),
+          },
+        })
+      )
+    );
 
     return { success: true };
   } catch (error) {

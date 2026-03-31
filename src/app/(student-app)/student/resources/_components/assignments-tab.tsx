@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Clock, CheckCircle2, AlertTriangle, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getStudentAssignmentList } from "@/actions/student-app";
+import { getStudentAssignmentList } from "@/actions/student-app-resources";
 
 type Assignment = Awaited<ReturnType<typeof getStudentAssignmentList>>[number];
 
@@ -41,14 +41,14 @@ export function AssignmentsTab() {
     return (
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-20 bg-[var(--erp-border-light)] rounded-[var(--radius-md)] animate-pulse" />
+          <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-[var(--sp-2)]">
+    <div className="space-y-3">
       {/* Filter chips */}
       <div className="flex gap-1.5 pb-1">
         {FILTERS.map((f) => (
@@ -56,10 +56,10 @@ export function AssignmentsTab() {
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={cn(
-              "px-3 py-1 rounded-full text-[var(--fs-caption)] font-medium transition-colors",
+              "px-3 py-1 rounded-full text-[10px] font-medium transition-colors",
               filter === f.key
-                ? "bg-[var(--erp-primary)] text-white"
-                : "bg-[var(--erp-bg)] text-[var(--erp-text-muted)]",
+                ? "bg-blue-500 text-white"
+                : "bg-gray-50 text-gray-400",
             )}
           >
             {f.label}
@@ -69,8 +69,8 @@ export function AssignmentsTab() {
 
       {/* Assignment list */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-[var(--erp-text-muted)]">
-          <p className="text-[var(--fs-sm)]">
+        <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <p className="text-sm">
             {filter === "pending" ? "미제출 숙제가 없습니다" : "숙제가 없습니다"}
           </p>
         </div>
@@ -91,26 +91,26 @@ function AssignmentCard({ assignment: a, index }: { assignment: Assignment; inde
   const isPending = !a.submission;
   const isGraded = a.submission?.status === "GRADED";
 
-  let statusIcon = <FileText size={16} className="text-[var(--erp-text-muted)]" />;
+  let statusIcon = <FileText size={16} className="text-gray-400" />;
   let statusLabel = "미정";
-  let statusColor = "text-[var(--erp-text-muted)]";
+  let statusColor = "text-gray-400";
 
   if (isGraded) {
-    statusIcon = <CheckCircle2 size={16} className="text-[var(--erp-success)]" />;
+    statusIcon = <CheckCircle2 size={16} className="text-emerald-500" />;
     statusLabel = `${a.submission!.score ?? 0}/${a.maxScore}점`;
-    statusColor = "text-[var(--erp-success)]";
+    statusColor = "text-emerald-500";
   } else if (a.submission) {
-    statusIcon = <CheckCircle2 size={16} className="text-[var(--erp-primary)]" />;
+    statusIcon = <CheckCircle2 size={16} className="text-blue-500" />;
     statusLabel = "제출완료";
-    statusColor = "text-[var(--erp-primary)]";
+    statusColor = "text-blue-500";
   } else if (a.isOverdue) {
-    statusIcon = <AlertTriangle size={16} className="text-[var(--erp-error)]" />;
+    statusIcon = <AlertTriangle size={16} className="text-red-500" />;
     statusLabel = "기한초과";
-    statusColor = "text-[var(--erp-error)]";
+    statusColor = "text-red-500";
   } else {
-    statusIcon = <Clock size={16} className="text-[var(--erp-warning)]" />;
+    statusIcon = <Clock size={16} className="text-amber-500" />;
     statusLabel = dDay <= 0 ? "오늘 마감" : `D-${dDay}`;
-    statusColor = dDay <= 1 ? "text-[var(--erp-error)]" : "text-[var(--erp-warning)]";
+    statusColor = dDay <= 1 ? "text-red-500" : "text-amber-500";
   }
 
   return (
@@ -119,27 +119,27 @@ function AssignmentCard({ assignment: a, index }: { assignment: Assignment; inde
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.03 }}
       className={cn(
-        "rounded-[var(--radius-md)] border bg-[var(--erp-surface)] p-3",
-        isPending && !a.isOverdue ? "border-[var(--erp-warning)]/30" : "border-[var(--erp-border)]",
+        "rounded-2xl border bg-white p-3",
+        isPending && !a.isOverdue ? "border-amber-500/30" : "border-gray-100",
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-[var(--fs-sm)] font-semibold text-[var(--erp-text)] truncate">
+          <p className="text-sm font-semibold text-gray-900 truncate">
             {a.title}
           </p>
-          <p className="text-[var(--fs-caption)] text-[var(--erp-text-muted)] mt-0.5">
+          <p className="text-[10px] text-gray-400 mt-0.5">
             {a.className} · 마감 {dueDate.toLocaleDateString("ko-KR")}
           </p>
           {a.description && (
-            <p className="text-[var(--fs-caption)] text-[var(--erp-text-secondary)] mt-1 line-clamp-2">
+            <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">
               {a.description}
             </p>
           )}
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {statusIcon}
-          <span className={cn("text-[var(--fs-caption)] font-semibold", statusColor)}>
+          <span className={cn("text-[10px] font-semibold", statusColor)}>
             {statusLabel}
           </span>
         </div>
@@ -147,8 +147,8 @@ function AssignmentCard({ assignment: a, index }: { assignment: Assignment; inde
 
       {/* Feedback */}
       {a.submission?.feedback && (
-        <div className="mt-2 px-2 py-1.5 rounded-[var(--radius-sm)] bg-[var(--erp-success-subtle)]">
-          <p className="text-[var(--fs-caption)] text-[var(--erp-success)]">
+        <div className="mt-2 px-2 py-1.5 rounded-xl bg-emerald-50">
+          <p className="text-[10px] text-emerald-500">
             강사 피드백: {a.submission.feedback}
           </p>
         </div>

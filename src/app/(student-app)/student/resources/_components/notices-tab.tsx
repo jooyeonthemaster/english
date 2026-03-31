@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pin, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getStudentNotices, markNoticeAsRead } from "@/actions/student-app";
+import { getStudentNotices, markNoticeAsRead } from "@/actions/student-app-resources";
 
 type Notice = Awaited<ReturnType<typeof getStudentNotices>>[number];
 
@@ -38,7 +38,7 @@ export function NoticesTab() {
     return (
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-[var(--erp-border-light)] rounded-[var(--radius-md)] animate-pulse" />
+          <div key={i} className="h-16 bg-gray-100 rounded-2xl animate-pulse" />
         ))}
       </div>
     );
@@ -46,8 +46,8 @@ export function NoticesTab() {
 
   if (notices.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-[var(--erp-text-muted)]">
-        <p className="text-[var(--fs-sm)]">공지사항이 없습니다</p>
+      <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+        <p className="text-sm">공지사항이 없습니다</p>
       </div>
     );
   }
@@ -60,8 +60,8 @@ export function NoticesTab() {
           <div
             key={notice.id}
             className={cn(
-              "rounded-[var(--radius-md)] border bg-[var(--erp-surface)] transition-colors",
-              notice.isRead ? "border-[var(--erp-border-light)]" : "border-[var(--erp-primary)]/30 bg-[var(--erp-primary-subtle)]",
+              "rounded-2xl border bg-white transition-colors",
+              notice.isRead ? "border-gray-100" : "border-blue-500/30 bg-blue-50",
             )}
           >
             <button
@@ -69,26 +69,26 @@ export function NoticesTab() {
               className="w-full flex items-center gap-2 p-3 text-left"
             >
               {notice.isPinned && (
-                <Pin size={13} className="text-[var(--erp-error)] shrink-0" />
+                <Pin size={13} className="text-red-500 shrink-0" />
               )}
               {!notice.isRead && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--erp-primary)] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
               )}
               <div className="flex-1 min-w-0">
                 <p className={cn(
-                  "text-[var(--fs-sm)] truncate",
-                  notice.isRead ? "text-[var(--erp-text-secondary)]" : "text-[var(--erp-text)] font-semibold",
+                  "text-sm truncate",
+                  notice.isRead ? "text-gray-500" : "text-gray-900 font-semibold",
                 )}>
                   {notice.title}
                 </p>
-                <p className="text-[var(--fs-caption)] text-[var(--erp-text-muted)] mt-0.5">
+                <p className="text-[10px] text-gray-400 mt-0.5">
                   {new Date(notice.publishedAt).toLocaleDateString("ko-KR")}
                 </p>
               </div>
               {isExpanded ? (
-                <ChevronUp size={16} className="text-[var(--erp-text-muted)] shrink-0" />
+                <ChevronUp size={16} className="text-gray-400 shrink-0" />
               ) : (
-                <ChevronDown size={16} className="text-[var(--erp-text-muted)] shrink-0" />
+                <ChevronDown size={16} className="text-gray-400 shrink-0" />
               )}
             </button>
             <AnimatePresence>
@@ -99,8 +99,8 @@ export function NoticesTab() {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-3 pb-3 pt-0 border-t border-[var(--erp-border-light)]">
-                    <p className="text-[var(--fs-xs)] text-[var(--erp-text-secondary)] whitespace-pre-wrap pt-2 leading-relaxed">
+                  <div className="px-3 pb-3 pt-0 border-t border-gray-100">
+                    <p className="text-xs text-gray-500 whitespace-pre-wrap pt-2 leading-relaxed">
                       {notice.content}
                     </p>
                   </div>

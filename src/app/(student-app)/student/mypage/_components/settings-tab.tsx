@@ -28,7 +28,7 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
 
   return (
     <motion.div
-      className="space-y-[var(--sp-2)]"
+      className="space-y-3"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
@@ -47,10 +47,10 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
           onClick={() => router.push("/student/mypage/settings")}
           className="w-full flex items-center justify-between py-2"
         >
-          <span className="text-[var(--fs-xs)] text-[var(--erp-text-secondary)]">
+          <span className="text-xs text-gray-500">
             알림 카테고리 관리
           </span>
-          <ChevronRight size={16} className="text-[var(--erp-text-muted)]" />
+          <ChevronRight size={16} className="text-gray-400" />
         </button>
       </SettingsCard>
 
@@ -60,10 +60,10 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
           onClick={() => router.push("/student/mypage/settings")}
           className="w-full flex items-center justify-between py-2"
         >
-          <span className="text-[var(--fs-xs)] text-[var(--erp-text-secondary)]">
+          <span className="text-xs text-gray-500">
             홈 바로가기 편집
           </span>
-          <ChevronRight size={16} className="text-[var(--erp-text-muted)]" />
+          <ChevronRight size={16} className="text-gray-400" />
         </button>
       </SettingsCard>
 
@@ -75,7 +75,7 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
       {/* 로그아웃 */}
       <button
         onClick={onLogout}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-[var(--radius-md)] border border-[var(--erp-error)]/20 text-[var(--erp-error)] text-[var(--fs-sm)] font-medium active:bg-[var(--erp-error-light)] transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border border-red-500/20 text-red-500 text-sm font-medium active:bg-red-50 transition-colors"
       >
         <LogOut size={16} />
         로그아웃
@@ -97,10 +97,10 @@ function SettingsCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--erp-border)] bg-[var(--erp-surface)] p-3">
+    <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
       <div className="flex items-center gap-1.5 mb-2">
-        <span className="text-[var(--erp-text-muted)]">{icon}</span>
-        <h3 className="text-[var(--fs-xs)] font-semibold text-[var(--erp-text-secondary)]">
+        <span className="text-gray-400">{icon}</span>
+        <h3 className="text-xs font-semibold text-gray-500">
           {title}
         </h3>
       </div>
@@ -112,8 +112,8 @@ function SettingsCard({
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-[var(--fs-xs)] text-[var(--erp-text-muted)]">{label}</span>
-      <span className="text-[var(--fs-xs)] font-medium text-[var(--erp-text)]">{value}</span>
+      <span className="text-xs text-gray-400">{label}</span>
+      <span className="text-xs font-medium text-gray-900">{value}</span>
     </div>
   );
 }

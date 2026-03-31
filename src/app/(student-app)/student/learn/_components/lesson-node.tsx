@@ -43,32 +43,32 @@ export function LessonNode({ lesson, index, seasonId }: LessonNodeProps) {
   // Node style by crown level
   const nodeStyle = {
     0: {
-      bg: "bg-[var(--student-locked)]",
+      bg: "bg-gray-300",
       text: "text-gray-400",
       ring: "",
-      icon: <Lock className="size-[var(--icon-md)] text-gray-400" />,
+      icon: <Lock className="w-5 h-5 text-gray-400" />,
     },
     1: {
-      bg: "bg-[var(--student-primary)]",
+      bg: "bg-blue-500",
       text: "text-white",
-      ring: "ring-4 ring-[var(--student-primary)]/20",
-      icon: <Star className="size-[var(--icon-md)] text-white" />,
+      ring: "ring-4 ring-blue-500/20",
+      icon: <Star className="w-5 h-5 text-white" />,
     },
     2: {
-      bg: "bg-[var(--student-primary)]",
+      bg: "bg-blue-500",
       text: "text-white",
       ring: "",
       icon: (
-        <span className="text-[var(--text-sm)] font-bold text-white">
+        <span className="text-sm font-bold text-white">
           {completedSessions}/6
         </span>
       ),
     },
     3: {
-      bg: "bg-[var(--student-success)]",
+      bg: "bg-emerald-500",
       text: "text-white",
-      ring: "ring-4 ring-[var(--student-success)]/20",
-      icon: <Check className="size-[var(--icon-md)] text-white" strokeWidth={3} />,
+      ring: "ring-4 ring-emerald-500/20",
+      icon: <Check className="w-5 h-5 text-white" strokeWidth={3} />,
     },
   }[crownLevel];
 
@@ -84,7 +84,7 @@ export function LessonNode({ lesson, index, seasonId }: LessonNodeProps) {
         onClick={handleClick}
         disabled={false}
         className={cn(
-          "relative size-[var(--node-size)] rounded-full flex items-center justify-center transition-all duration-200",
+          "relative size-14 rounded-full flex items-center justify-center transition-all duration-200",
           nodeStyle.bg,
           nodeStyle.ring,
           isLocked ? "opacity-50 cursor-not-allowed" : "cursor-pointer active:scale-95",
@@ -96,14 +96,14 @@ export function LessonNode({ lesson, index, seasonId }: LessonNodeProps) {
 
         {/* Crown badge for mastered */}
         {crownLevel === 3 && (
-          <span className="absolute -top-1 -right-1 text-[var(--text-sm)]">👑</span>
+          <span className="absolute -top-1 -right-1 text-sm">👑</span>
         )}
       </button>
 
       {/* Label */}
       <span
         className={cn(
-          "text-[var(--text-2xs)] font-medium text-center max-w-[5rem] truncate leading-tight",
+          "text-[10px] font-medium text-center max-w-[5rem] truncate leading-tight",
           isLocked ? "text-gray-300" : "text-gray-600",
         )}
       >
@@ -125,7 +125,7 @@ export function LessonNode({ lesson, index, seasonId }: LessonNodeProps) {
               key={di}
               className={cn(
                 "size-1.5 rounded-full",
-                done ? "bg-[var(--student-success)]" : "bg-gray-200",
+                done ? "bg-emerald-500" : "bg-gray-200",
               )}
             />
           ))}

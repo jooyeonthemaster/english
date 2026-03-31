@@ -64,7 +64,7 @@ export default function AnalyticsPage() {
 
       {/* Radar Chart */}
       <div className="px-5 mb-4">
-        <div className="bg-white rounded-2xl border border-gray-200 p-5">
+        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <h2 className="text-sm font-bold text-gray-700 mb-4">영역별 분석</h2>
           <RadarChart scores={data.radarScores} />
         </div>
@@ -73,7 +73,7 @@ export default function AnalyticsPage() {
       {/* Passage Mastery */}
       {data.passageMastery.length > 0 && (
         <div className="px-5 mb-4">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center gap-2 mb-4">
               <BookOpen className="size-4 text-blue-500" />
               <h2 className="text-sm font-bold text-gray-700">지문별 숙달도</h2>
@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
       {/* Weak Points */}
       {data.weakPoints.length > 0 && (
         <div className="px-5 mb-4">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="size-4 text-rose-500" />
               <h2 className="text-sm font-bold text-gray-700">오답 패턴</h2>
@@ -151,7 +151,7 @@ export default function AnalyticsPage() {
       {/* Weekly Trend */}
       {data.weeklyTrend.length > 0 && (
         <div className="px-5">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="size-4 text-emerald-500" />
               <h2 className="text-sm font-bold text-gray-700">주간 추이</h2>
