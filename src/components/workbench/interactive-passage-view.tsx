@@ -26,6 +26,8 @@ import type {
 interface Props {
   content: string;
   analysisData: PassageAnalysisData | null;
+  /** "horizontal" (default): 지문|분석 가로 배치. "vertical": 지문 위, 분석 아래 세로 배치 */
+  layout?: "horizontal" | "vertical";
 }
 
 interface Highlight {
@@ -151,7 +153,7 @@ function highlightWord(text: string, word: string) {
 }
 
 // ─── Main Component ──────────────────────────────────────
-export function InteractivePassageView({ content, analysisData }: Props) {
+export function InteractivePassageView({ content, analysisData, layout = "horizontal" }: Props) {
   const [showTranslation, setShowTranslation] = useState(true);
   const [activeDetail, setActiveDetail] = useState<ActiveDetail>(null);
   const [summaryOpen, setSummaryOpen] = useState(true);
@@ -380,16 +382,19 @@ export function InteractivePassageView({ content, analysisData }: Props) {
         </div>
       </div>
 
-      {/* ─── 2-Column Layout ─── */}
-      <div className="grid grid-cols-[1fr_1fr] divide-x divide-slate-100 min-h-[400px]">
-        {/* LEFT: 지문 필기노트 */}
-        <div className="p-5 overflow-y-auto max-h-[700px]">
+      {/* ─── Content Layout (horizontal or vertical) ─── */}
+      <div className={layout === "vertical"
+        ? "flex flex-col divide-y divide-slate-100"
+        : "grid grid-cols-[1fr_1fr] divide-x divide-slate-100 min-h-[400px]"
+      }>
+        {/* 지문 필기노트 */}
+        <div className={layout === "vertical" ? "p-5 overflow-y-auto max-h-[45vh]" : "p-5 overflow-y-auto max-h-[700px]"}>
           {!hasAnalysis && <p className="text-[13px] text-slate-400 mb-3">AI 분석을 실행하면 어휘·문법·구문 하이라이트가 표시됩니다.</p>}
           <div>{hasAnalysis ? analysisData.sentences.map(s => renderSentence(s)) : <div className="font-mono text-sm leading-[2]">{content}</div>}</div>
         </div>
 
-        {/* RIGHT: 분석 요약 + 상세 패널 */}
-        <div className="p-5 overflow-y-auto max-h-[700px] space-y-4">
+        {/* 분석 요약 + 상세 패널 */}
+        <div className={layout === "vertical" ? "p-5 space-y-4" : "p-5 overflow-y-auto max-h-[700px] space-y-4"}>
           {/* 분석 요약 — 항상 상단 */}
           {hasAnalysis && (
             <div>
