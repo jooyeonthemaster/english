@@ -38,7 +38,7 @@ export function ExamsTab() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-gray-400">
         <Calendar size={32} className="mb-2" />
-        <p className="text-sm">예정된 시험이 없습니다</p>
+        <p className="text-[var(--fs-base)]">예정된 시험이 없습니다</p>
       </div>
     );
   }
@@ -60,13 +60,13 @@ export function ExamsTab() {
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">
+                <p className="text-[var(--fs-base)] font-semibold text-gray-900 truncate">
                   {exam.title}
                 </p>
                 {exam.examDate && (
                   <div className="flex items-center gap-1 mt-1">
                     <Clock size={12} className="text-gray-400" />
-                    <p className="text-[10px] text-gray-400">
+                    <p className="text-[var(--fs-caption)] text-gray-500">
                       {new Date(exam.examDate).toLocaleDateString("ko-KR", {
                         month: "long",
                         day: "numeric",
@@ -79,7 +79,7 @@ export function ExamsTab() {
               {dDay !== null && (
                 <span
                   className={cn(
-                    "text-xs font-bold px-2 py-1 rounded-xl",
+                    "text-[var(--fs-xs)] font-bold px-2 py-1 rounded-xl",
                     dDay <= 3
                       ? "bg-red-50 text-red-500"
                       : dDay <= 7

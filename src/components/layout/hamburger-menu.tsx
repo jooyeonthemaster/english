@@ -34,8 +34,7 @@ const MENU_SECTIONS: { title?: string; items: MenuItem[] }[] = [
   {
     items: [
       { label: "홈", icon: Home, path: "" },
-      { label: "지문", icon: FileText, path: "/passages" },
-      { label: "단어", icon: BookOpen, path: "/vocab" },
+      { label: "학습", icon: BookOpen, path: "/learn" },
       { label: "시험", icon: ClipboardCheck, path: "/exams" },
       { label: "마이페이지", icon: User, path: "/mypage" },
     ],

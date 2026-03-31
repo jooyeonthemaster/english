@@ -23,9 +23,9 @@ export default function QuickMenuSection({ items }: QuickMenuSectionProps) {
               "w-14 h-14 rounded-2xl flex items-center justify-center",
               item.bg,
             )}>
-              <Icon className={cn("w-6 h-6", item.color)} />
+              <Icon className={cn("w-[var(--icon-md)] h-[var(--icon-md)]", item.color)} />
             </div>
-            <span className="text-xs font-semibold text-gray-500">
+            <span className="text-[var(--fs-xs)] font-semibold text-gray-500">
               {item.label}
             </span>
           </Link>

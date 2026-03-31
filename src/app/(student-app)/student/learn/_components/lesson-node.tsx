@@ -103,8 +103,8 @@ export function LessonNode({ lesson, index, seasonId }: LessonNodeProps) {
       {/* Label */}
       <span
         className={cn(
-          "text-[10px] font-medium text-center max-w-[5rem] truncate leading-tight",
-          isLocked ? "text-gray-300" : "text-gray-600",
+          "text-[var(--fs-caption)] font-medium text-center max-w-[5rem] truncate leading-tight",
+          isLocked ? "text-gray-400" : "text-gray-600",
         )}
       >
         {passageTitle}

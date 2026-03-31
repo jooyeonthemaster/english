@@ -72,7 +72,7 @@ export interface ParentReportData {
   recommendations: string[];
 }
 
-// Student Analytics for "영어 인바디"
+// Student Analytics for 성적 분석
 export interface InbadiData {
   overall: number;
   grammar: number;

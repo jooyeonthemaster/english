@@ -96,21 +96,21 @@
   --pt-page: max(0.75rem, 1.5svh);        /* 페이지 상단 패딩 */
   --pb-page: max(1rem, 2svh);             /* 페이지 하단 패딩 */
 
-  /* ── Typography ── v3: 1단계씩 키움 (대담한 미니멀리즘) */
-  --fs-caption: clamp(0.625rem, 3.1vw, 0.875rem);       /* 12px@390 (was 11) */
-  --fs-xs: clamp(0.6875rem, 3.35vw, 0.9375rem);          /* 13px@390 (was 12) */
-  --fs-sm: clamp(0.75rem, 3.6vw, 1rem);                   /* 14px@390 (was 13) */
-  --fs-base: clamp(0.875rem, 4.1vw, 1.125rem);            /* 16px@390 (was 15) */
-  --fs-md: clamp(0.9375rem, 4.6vw, 1.25rem);              /* 18px@390 (was 17) */
-  --fs-lg: clamp(1.125rem, 5.4vw, 1.5rem);                /* 21px@390 (was 20) */
-  --fs-xl: clamp(1.375rem, 6.7vw, 1.875rem);              /* 26px@390 (was 24) */
-  --fs-2xl: clamp(1.625rem, 8.2vw, 2.5rem);               /* 32px@390 (was 30) */
+  /* ── Typography ── 최소 12px 보장 (WCAG 가독성 기준) */
+  --fs-caption: clamp(0.75rem, 3.1vw, 0.875rem);          /* 12~14px (최소 12px) */
+  --fs-xs: clamp(0.75rem, 3.35vw, 1rem);                   /* 12~16px (최소 12px) */
+  --fs-sm: clamp(0.8125rem, 3.6vw, 1rem);                  /* 13~16px (최소 13px) */
+  --fs-base: clamp(0.875rem, 4.1vw, 1.125rem);             /* 14~18px */
+  --fs-md: clamp(0.9375rem, 4.6vw, 1.25rem);               /* 15~20px */
+  --fs-lg: clamp(1.125rem, 5.4vw, 1.5rem);                 /* 18~24px */
+  --fs-xl: clamp(1.375rem, 6.7vw, 1.875rem);               /* 22~30px */
+  --fs-2xl: clamp(1.625rem, 8.2vw, 2.5rem);                /* 26~40px */
 
   /* ── Component sizing ── svh 기반 (세로 비례)
-     SE(667px): 6.5svh=43px / 14(844px): 6.5svh=55px / PM(932px): 6.5svh=61px */
-  --header-h: clamp(2.75rem, 6.5svh, 4rem);       /* 세로 비례 헤더 */
-  --tab-h: clamp(2.75rem, 6.5svh, 4rem);          /* 세로 비례 탭바 */
-  --fab-size: clamp(2.75rem, 6.5svh, 4rem);       /* 세로 비례 FAB */
+     SE(667px): 7svh=47px / 14(844px): 7svh=59px / PM(932px): 7svh=65px */
+  --header-h: clamp(3.5rem, 7.5svh, 4.5rem);          /* 56~72px */
+  --tab-h: clamp(3.25rem, 7.5svh, 4rem);          /* 52~64px (최소 52px) */
+  --fab-size: clamp(3rem, 7svh, 4rem);             /* 48~64px */
   --avatar-sm: clamp(1.625rem, 8.2vw, 2.5rem);    /* 32px@390 */
   --avatar-md: clamp(2rem, 10.25vw, 3rem);         /* 40px@390 */
   --avatar-lg: clamp(3.25rem, 16.4vw, 4.75rem);   /* 64px@390 */

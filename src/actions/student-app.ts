@@ -312,9 +312,9 @@ export async function getStudentDashboard() {
         return { id: e.class.id, name: e.class.name, schedule: scheduleSlots };
       }),
     },
-    analytics: {
-      overallScore: student.studentAnalytics?.overallScore ?? 0,
-      level: (student.studentAnalytics?.level as string) ?? "D",
+    xp: {
+      total: student.xp,
+      weekly: weeklyRanking.find((r) => r.studentId === studentId)?._sum?.xpEarned ?? 0,
     },
     stats: {
       streak,
@@ -373,7 +373,7 @@ export async function getStudentDashboard() {
 }
 
 // ---------------------------------------------------------------------------
-// 2. getStudentInbadi — Full 영어 인바디 analytics
+// 2. getStudentInbadi — 성적 분석 데이터
 // ---------------------------------------------------------------------------
 export async function getStudentInbadi() {
   const session = await requireStudent();

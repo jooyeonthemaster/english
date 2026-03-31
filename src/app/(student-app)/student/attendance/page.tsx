@@ -128,8 +128,8 @@ export default function AttendancePage() {
             <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
               <CheckCircle2 size={28} className="text-emerald-500" />
             </div>
-            <p className="text-base font-bold text-gray-900">출석 완료</p>
-            <p className="text-xs text-gray-400">
+            <p className="text-[var(--fs-lg)] font-bold text-gray-900">출석 완료</p>
+            <p className="text-[var(--fs-xs)] text-gray-500">
               {records.find((r) => r.date === todayStr)?.checkInTime ?? ""}
             </p>
           </div>
@@ -138,14 +138,14 @@ export default function AttendancePage() {
             <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
               <QrCode size={28} className="text-blue-500" />
             </div>
-            <p className="text-base font-bold text-gray-900">
+            <p className="text-[var(--fs-lg)] font-bold text-gray-900">
               오늘 출석을 해주세요
             </p>
             <button
               onClick={handleCheckIn}
               disabled={checkingIn}
               className={cn(
-                "px-6 py-2.5 rounded-2xl text-sm font-semibold text-white transition-all",
+                "px-6 py-2.5 rounded-2xl text-[var(--fs-sm)] font-semibold text-white transition-all",
                 "bg-blue-500 active:scale-95",
                 checkingIn && "opacity-60",
               )}
@@ -163,7 +163,7 @@ export default function AttendancePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               className={cn(
-                "mt-3 px-3 py-2 rounded-2xl text-xs font-medium",
+                "mt-3 px-3 py-2 rounded-2xl text-[var(--fs-xs)] font-medium",
                 checkInResult.success
                   ? "bg-emerald-50 text-emerald-500"
                   : "bg-amber-50 text-amber-500",
@@ -182,7 +182,7 @@ export default function AttendancePage() {
           <button onClick={prevMonth} className="p-1.5 rounded-md active:bg-black/5 transition-colors">
             <ChevronLeft size={18} className="text-gray-500" />
           </button>
-          <h3 className="text-base font-bold text-gray-900">
+          <h3 className="text-[var(--fs-lg)] font-bold text-gray-900">
             {year}년 {month}월
           </h3>
           <button onClick={nextMonth} className="p-1.5 rounded-md active:bg-black/5 transition-colors">
@@ -196,7 +196,7 @@ export default function AttendancePage() {
             <div
               key={d}
               className={cn(
-                "text-center text-[10px] font-medium py-1",
+                "text-center text-[var(--fs-caption)] font-medium py-1",
                 i === 0 ? "text-red-500" : i === 6 ? "text-blue-500" : "text-gray-400",
               )}
             >
@@ -230,7 +230,7 @@ export default function AttendancePage() {
                 <div
                   key={day}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-md text-xs relative",
+                    "aspect-square flex flex-col items-center justify-center rounded-md text-[var(--fs-xs)] relative",
                     isToday && "ring-1.5 ring-blue-500",
                     statusCfg?.bg,
                   )}
@@ -260,8 +260,8 @@ export default function AttendancePage() {
       {stats && (
         <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-900">출석 현황</h3>
-            <span className="text-xl font-black text-blue-500">
+            <h3 className="text-[var(--fs-md)] font-semibold text-gray-900">출석 현황</h3>
+            <span className="text-[var(--fs-xl)] font-black text-blue-500">
               {stats.rate}%
             </span>
           </div>
@@ -273,8 +273,8 @@ export default function AttendancePage() {
               { label: "조퇴", value: stats.earlyLeave, color: "text-orange-500" },
             ].map((item) => (
               <div key={item.label} className="text-center py-2 rounded-xl bg-gray-50">
-                <p className={cn("text-lg font-bold", item.color)}>{item.value}</p>
-                <p className="text-[10px] text-gray-400">{item.label}</p>
+                <p className={cn("text-[var(--fs-lg)] font-bold", item.color)}>{item.value}</p>
+                <p className="text-[var(--fs-caption)] text-gray-500">{item.label}</p>
               </div>
             ))}
           </div>

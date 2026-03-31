@@ -47,7 +47,7 @@ export function NoticesTab() {
   if (notices.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-        <p className="text-sm">공지사항이 없습니다</p>
+        <p className="text-[var(--fs-base)]">공지사항이 없습니다</p>
       </div>
     );
   }
@@ -76,12 +76,12 @@ export function NoticesTab() {
               )}
               <div className="flex-1 min-w-0">
                 <p className={cn(
-                  "text-sm truncate",
+                  "text-[var(--fs-base)] truncate",
                   notice.isRead ? "text-gray-500" : "text-gray-900 font-semibold",
                 )}>
                   {notice.title}
                 </p>
-                <p className="text-[10px] text-gray-400 mt-0.5">
+                <p className="text-[var(--fs-caption)] text-gray-500 mt-0.5">
                   {new Date(notice.publishedAt).toLocaleDateString("ko-KR")}
                 </p>
               </div>
@@ -100,7 +100,7 @@ export function NoticesTab() {
                   className="overflow-hidden"
                 >
                   <div className="px-3 pb-3 pt-0 border-t border-gray-100">
-                    <p className="text-xs text-gray-500 whitespace-pre-wrap pt-2 leading-relaxed">
+                    <p className="text-[var(--fs-xs)] text-gray-500 whitespace-pre-wrap pt-2 leading-relaxed">
                       {notice.content}
                     </p>
                   </div>

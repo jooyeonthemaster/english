@@ -25,7 +25,7 @@ export default function ScheduleSection({
   return (
     <div className="rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-bold text-gray-900">이번 주 수업</h3>
+        <h3 className="text-[var(--fs-lg)] font-bold text-gray-900">이번 주 수업</h3>
       </div>
 
       {/* 주간 캘린더 — 원형 도트 스타일 */}
@@ -37,8 +37,8 @@ export default function ScheduleSection({
           return (
             <div key={dayLabel} className="flex flex-col items-center gap-2">
               <span className={cn(
-                "text-xs font-bold",
-                isToday ? "text-blue-500" : "text-gray-300",
+                "text-[var(--fs-xs)] font-bold",
+                isToday ? "text-blue-500" : "text-gray-400",
               )}>
                 {dayLabel}
               </span>
@@ -50,7 +50,7 @@ export default function ScheduleSection({
                 !isToday && !hasClass && "bg-gray-50",
               )}>
                 {isToday ? (
-                  <span className={cn("text-xs font-black", hasClass ? "text-white" : "text-blue-400")}>
+                  <span className={cn("text-[var(--fs-xs)] font-black", hasClass ? "text-white" : "text-blue-400")}>
                     {new Date().getDate()}
                   </span>
                 ) : hasClass ? (
@@ -65,22 +65,22 @@ export default function ScheduleSection({
       {/* 오늘 수업 정보 */}
       {todayClasses.length > 0 ? (
         <div className="mt-4 bg-blue-50 rounded-2xl p-4">
-          <p className="text-xs font-bold text-blue-600 mb-2">오늘 수업</p>
+          <p className="text-[var(--fs-xs)] font-bold text-blue-600 mb-2">오늘 수업</p>
           <div className="space-y-2">
             {todayClasses.map((cls, ci) => (
               <div key={ci} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-1 h-5 rounded-full bg-blue-500" />
-                  <span className="text-sm font-semibold text-gray-800">{cls.className}</span>
+                  <span className="text-[var(--fs-base)] font-semibold text-gray-800">{cls.className}</span>
                 </div>
-                <span className="text-xs text-gray-400 font-medium">{cls.startTime} - {cls.endTime}</span>
+                <span className="text-[var(--fs-xs)] text-gray-500 font-medium">{cls.startTime} - {cls.endTime}</span>
               </div>
             ))}
           </div>
         </div>
       ) : hasAnyClass ? (
         <div className="mt-4 bg-gray-50 rounded-2xl p-4 text-center">
-          <p className="text-sm text-gray-400">오늘은 수업이 없어요</p>
+          <p className="text-[var(--fs-base)] text-gray-400">오늘은 수업이 없어요</p>
         </div>
       ) : null}
 
@@ -93,9 +93,9 @@ export default function ScheduleSection({
               : null;
             return (
               <div key={exam.id} className="flex items-center gap-3 bg-red-50 rounded-2xl px-4 py-3">
-                <Clock className="w-4 h-4 text-red-400 shrink-0" />
-                <span className="text-sm text-gray-700 flex-1 truncate">{exam.title}</span>
-                <span className="text-xs font-black text-red-500 shrink-0">
+                <Clock className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-red-400 shrink-0" />
+                <span className="text-[var(--fs-base)] text-gray-700 flex-1 truncate">{exam.title}</span>
+                <span className="text-[var(--fs-xs)] font-black text-red-500 shrink-0">
                   {dDay === 0 ? "D-Day" : dDay && dDay > 0 ? `D-${dDay}` : ""}
                 </span>
               </div>
@@ -106,9 +106,9 @@ export default function ScheduleSection({
               href="/student/resources?tab=assignments"
               className="flex items-center gap-3 bg-amber-50 rounded-2xl px-4 py-3 group"
             >
-              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-              <span className="text-sm text-gray-700 flex-1">미제출 숙제 {pendingAssignments.length}건</span>
-              <ChevronRight className="w-4 h-4 text-gray-300 group-active:translate-x-0.5 transition-transform" />
+              <AlertCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-amber-400 shrink-0" />
+              <span className="text-[var(--fs-base)] text-gray-700 flex-1">미제출 숙제 {pendingAssignments.length}건</span>
+              <ChevronRight className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-gray-400 group-active:translate-x-0.5 transition-transform" />
             </Link>
           )}
         </div>

@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Target, Zap, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { SessionResult } from "@/lib/learning-types";
+import type { SessionResult, QuestProgressUpdate } from "@/lib/learning-types";
 
 interface ResultScreenProps {
   result: SessionResult;
@@ -13,6 +13,8 @@ interface ResultScreenProps {
 
 export default function ResultScreen({ result, passageId }: ResultScreenProps) {
   const router = useRouter();
+  const questUpdates = result.questUpdates ?? [];
+  const completedQuests = questUpdates.filter((q) => q.justCompleted);
 
   return (
     <div className="max-w-lg mx-auto min-h-screen flex flex-col bg-white">
@@ -42,7 +44,7 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-2xl font-bold text-gray-900 mb-2"
+          className="text-[var(--fs-xl)] font-bold text-gray-900 mb-2"
         >
           {result.score >= 80 ? "훌륭해요!" : result.score >= 50 ? "잘했어요!" : "괜찮아요!"}
         </motion.h1>
@@ -54,13 +56,13 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           className="flex items-center gap-6 mb-6"
         >
           <div>
-            <p className="text-3xl font-bold text-gray-900">{result.score}%</p>
-            <p className="text-xs text-gray-500">정답률</p>
+            <p className="text-[var(--fs-2xl)] font-bold text-gray-900">{result.score}%</p>
+            <p className="text-[var(--fs-xs)] text-gray-500">정답률</p>
           </div>
           <div className="w-px h-10 bg-gray-200" />
           <div>
-            <p className="text-3xl font-bold text-blue-500">+{result.xpEarned}</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-[var(--fs-2xl)] font-bold text-blue-500">+{result.xpEarned}</p>
+            <p className="text-[var(--fs-xs)] text-gray-500">
               XP {result.xpMultiplier > 1 ? `(x${result.xpMultiplier})` : ""}
             </p>
           </div>
@@ -70,27 +72,80 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="text-sm text-gray-500 mb-8"
+          className="text-[var(--fs-base)] text-gray-500 mb-6"
         >
           {result.correctCount}/{result.totalCount} 문제 정답
         </motion.p>
 
-        {/* Wrong questions summary */}
-        {result.wrongQuestions.length > 0 && (
+        {/* 미션 진행도 섹션 */}
+        {questUpdates.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className="w-full text-left mb-6"
           >
-            <p className="text-xs font-semibold text-gray-400 uppercase mb-2">
+            <div className="flex items-center gap-1.5 mb-3">
+              <Target className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-purple-500" />
+              <p className="text-[var(--fs-xs)] font-semibold text-gray-500 uppercase">
+                오늘의 미션
+              </p>
+            </div>
+            <div className="space-y-2.5">
+              {questUpdates.map((q, i) => (
+                <QuestProgressBar key={q.questId} quest={q} delay={0.6 + i * 0.15} />
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* 미션 달성 알림 */}
+        {completedQuests.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.0, type: "spring", stiffness: 200 }}
+            className="w-full mb-6"
+          >
+            {completedQuests.map((q) => (
+              <div
+                key={q.questId}
+                className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-2"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Trophy className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-amber-500" />
+                  <span className="text-[var(--fs-base)] font-bold text-amber-700">미션 달성!</span>
+                </div>
+                <p className="text-[var(--fs-xs)] text-amber-600 mb-2">{q.label}</p>
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-500" />
+                  <span className="text-[var(--fs-xs)] font-bold text-amber-700">
+                    {q.rewardType === "MULTIPLIER"
+                      ? `10분간 XP x${q.rewardValue} 보너스!`
+                      : `보너스 +${q.rewardValue} XP 획득!`}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* 틀린 문제 */}
+        {result.wrongQuestions.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="w-full text-left mb-6"
+          >
+            <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase mb-2">
               틀린 문제 ({result.wrongQuestions.length}개)
             </p>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {result.wrongQuestions.map((wq) => (
                 <div
                   key={wq.questionId}
-                  className="bg-rose-50 rounded-xl p-3 text-xs"
+                  className="bg-rose-50 rounded-xl p-3 text-[var(--fs-xs)]"
                 >
                   <p className="text-gray-700 mb-1 line-clamp-2">{wq.questionText}</p>
                   <p className="text-rose-600">
@@ -107,17 +162,91 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
       <div className="px-5 pb-8 space-y-2.5">
         <button
           onClick={() => router.push(`/student/learn/${passageId}`)}
-          className="w-full py-3.5 rounded-xl bg-blue-500 text-white font-bold text-sm active:bg-blue-600"
+          className="w-full py-3.5 rounded-xl bg-blue-500 text-white font-bold text-[var(--fs-base)] active:bg-blue-600"
         >
           레슨으로 돌아가기
         </button>
         <button
           onClick={() => router.push("/student/learn")}
-          className="w-full py-3.5 rounded-xl bg-gray-100 text-gray-600 font-bold text-sm active:bg-gray-200"
+          className="w-full py-3.5 rounded-xl bg-gray-100 text-gray-600 font-bold text-[var(--fs-base)] active:bg-gray-200"
         >
           학습 홈
         </button>
       </div>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// QuestProgressBar — 개별 미션 프로그레스바 (애니메이션 포함)
+// ---------------------------------------------------------------------------
+
+function QuestProgressBar({
+  quest,
+  delay,
+}: {
+  quest: QuestProgressUpdate;
+  delay: number;
+}) {
+  const percent = Math.min(100, Math.round((quest.newProgress / quest.target) * 100));
+  const prevPercent = Math.min(100, Math.round((quest.previousProgress / quest.target) * 100));
+
+  const difficultyColor = quest.justCompleted
+    ? "bg-emerald-500"
+    : "bg-blue-500";
+
+  const rewardLabel =
+    quest.rewardType === "MULTIPLIER"
+      ? `x${quest.rewardValue}`
+      : `+${quest.rewardValue} XP`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay }}
+      className={cn(
+        "rounded-xl p-3 border",
+        quest.justCompleted
+          ? "bg-emerald-50 border-emerald-200"
+          : "bg-gray-50 border-gray-100"
+      )}
+    >
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="text-[var(--fs-xs)] font-medium text-gray-700 flex-1 mr-2">
+          {quest.label}
+        </span>
+        <span
+          className={cn(
+            "text-[var(--fs-caption)] font-bold px-1.5 py-0.5 rounded-full",
+            quest.justCompleted
+              ? "bg-emerald-100 text-emerald-600"
+              : "bg-gray-200 text-gray-500"
+          )}
+        >
+          {quest.justCompleted ? "달성!" : rewardLabel}
+        </span>
+      </div>
+      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: `${prevPercent}%` }}
+          animate={{ width: `${percent}%` }}
+          transition={{ delay: delay + 0.3, duration: 0.6, ease: "easeOut" }}
+          className={cn("h-full rounded-full", difficultyColor)}
+        />
+      </div>
+      <div className="flex justify-between mt-1">
+        <span className="text-[var(--fs-caption)] text-gray-500">
+          {quest.newProgress}/{quest.target}
+        </span>
+        {quest.justCompleted && (
+          <span className="text-[var(--fs-caption)] font-bold text-emerald-500">
+            {quest.rewardType === "MULTIPLIER"
+              ? `x${quest.rewardValue} 배율 활성!`
+              : `+${quest.rewardValue} XP 획득!`}
+          </span>
+        )}
+      </div>
+    </motion.div>
   );
 }

@@ -21,7 +21,7 @@ export function BadgeGrid({ earned, locked }: BadgeGridProps) {
     return (
       <div className="text-center py-8">
         <Award className="size-10 text-gray-200 mx-auto" />
-        <p className="text-xs text-gray-400 mt-2">아직 배지가 없습니다</p>
+        <p className="text-xs text-gray-500 mt-2">아직 배지가 없습니다</p>
       </div>
     );
   }
@@ -41,7 +41,7 @@ export function BadgeGrid({ earned, locked }: BadgeGridProps) {
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="text-xl">{b.icon}</span>
-                <span className="text-[10px] font-medium text-gray-700 text-center leading-tight">
+                <span className="text-[var(--fs-caption)] font-medium text-gray-700 text-center leading-tight">
                   {b.name}
                 </span>
               </motion.div>
@@ -65,7 +65,7 @@ export function BadgeGrid({ earned, locked }: BadgeGridProps) {
                   <span className="text-xl grayscale">{b.icon}</span>
                   <Lock className="size-2.5 text-gray-400 absolute -bottom-0.5 -right-0.5" />
                 </div>
-                <span className="text-[10px] font-medium text-gray-400 text-center leading-tight">
+                <span className="text-[var(--fs-caption)] font-medium text-gray-400 text-center leading-tight">
                   {b.name}
                 </span>
               </div>

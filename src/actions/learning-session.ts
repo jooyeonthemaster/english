@@ -542,4 +542,57 @@ async function pickStoriesQuestions(passageId: string): Promise<SessionQuestion[
   return shuffled.map((q) => parseNaeshinQuestion(q, "COMPREHENSION"));
 }
 
+// ---------------------------------------------------------------------------
+// startReviewSession — 오답 재풀이 세션 (특정 문제 ID로 시작)
+// ---------------------------------------------------------------------------
 
+export async function startReviewSession(
+  passageId: string,
+  questionIds: string[],
+  category?: string
+): Promise<SessionStartData> {
+  const session = await getStudentSession();
+  if (!session) throw new Error("로그인이 필요합니다.");
+
+  const passage = await prisma.passage.findUnique({
+    where: { id: passageId },
+    select: { id: true, title: true, content: true },
+  });
+  if (!passage) throw new Error("지문을 찾을 수 없습니다.");
+
+  const where: Record<string, unknown> = { id: { in: questionIds } };
+  if (category) where.learningCategory = category;
+
+  const questions = await prisma.naeshinQuestion.findMany({
+    where,
+    include: { explanation: true },
+  });
+
+  if (questions.length === 0) throw new Error("풀 수 있는 문제가 없습니다.");
+
+  const shuffled = questions.sort(() => Math.random() - 0.5);
+
+  return {
+    sessionType: "WEAKNESS_FOCUS",
+    passageId: passage.id,
+    passageTitle: passage.title,
+    passageContent: passage.content,
+    questions: shuffled.map((q) =>
+      parseNaeshinQuestion(
+        {
+          id: q.id,
+          type: q.type,
+          subType: q.subType,
+          learningCategory: q.learningCategory,
+          questionText: q.questionText,
+          options: q.options,
+          correctAnswer: q.correctAnswer,
+          explanation: q.explanation
+            ? { content: q.explanation.content, keyPoints: q.explanation.keyPoints }
+            : null,
+        },
+        (q.learningCategory as LearningCategory) ?? "VOCAB"
+      )
+    ),
+  };
+}

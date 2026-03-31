@@ -99,7 +99,7 @@ export default function StudentLoginPage() {
                 <span className="text-3xl font-extrabold tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors duration-300">
                   NARA
                 </span>
-                <span className="text-[10px] font-bold text-emerald-500 tracking-[0.3em] uppercase opacity-90 mt-0.5">
+                <span className="text-[var(--fs-caption)] font-bold text-emerald-500 tracking-[0.3em] uppercase opacity-90 mt-0.5">
                   STUDENT AI
                 </span>
               </div>
@@ -265,13 +265,13 @@ export default function StudentLoginPage() {
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-white/90 font-bold shrink-0">새로운 AI 모의고사</span>
-                <span className="px-3 py-1 ml-2 rounded-full bg-teal-500/20 text-teal-200 text-[11px] font-bold border border-teal-500/30 animate-pulse whitespace-nowrap">
+                <span className="px-3 py-1 ml-2 rounded-full bg-teal-500/20 text-teal-200 text-[var(--fs-xs)] font-bold border border-teal-500/30 animate-pulse whitespace-nowrap">
                   도전 가능!
                 </span>
               </div>
               <div className="flex items-end gap-3 mb-2">
                 <span className="text-3xl font-extrabold text-white">15</span>
-                <span className="text-sm font-medium text-white/50 mb-1">문항 (오답 노트 연계)</span>
+                <span className="text-sm font-medium text-white/70 mb-1">문항 (오답 노트 연계)</span>
               </div>
             </motion.div>
           </div>

@@ -1,4 +1,4 @@
-// @ts-nocheck — sessionRecord/lessonProgress models not yet in schema
+// @ts-nocheck — sessionRecord/lessonProgress models pending
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -16,7 +16,7 @@ async function requireStudent() {
 }
 
 // ---------------------------------------------------------------------------
-// 1. getLearningAnalytics — 학생용 학습 분석 (인바디)
+// 1. getLearningAnalytics — 학생용 학습 분석 (모바일 세션 기반)
 // ---------------------------------------------------------------------------
 
 export async function getLearningAnalytics(): Promise<LearningAnalytics> {
@@ -26,7 +26,7 @@ export async function getLearningAnalytics(): Promise<LearningAnalytics> {
   const threeMonthsAgo = new Date();
   threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
-  const [sessionRecords, wrongLogs, lessonProgressList] = await Promise.all([
+  const [sessionRecords, lessonProgressList] = await Promise.all([
     prisma.sessionRecord.findMany({
       where: { studentId, completedAt: { gte: threeMonthsAgo } },
       select: {
@@ -37,13 +37,16 @@ export async function getLearningAnalytics(): Promise<LearningAnalytics> {
         passageId: true,
         correctCount: true,
         totalCount: true,
+        vocabCorrect: true,
+        vocabTotal: true,
+        grammarCorrect: true,
+        grammarTotal: true,
+        interpretCorrect: true,
+        interpretTotal: true,
+        compCorrect: true,
+        compTotal: true,
       },
       orderBy: { completedAt: "asc" },
-    }),
-    prisma.wrongAnswerLog.findMany({
-      where: { studentId },
-      select: { category: true, subCategory: true, count: true },
-      orderBy: { count: "desc" },
     }),
     prisma.lessonProgress.findMany({
       where: { studentId },
@@ -51,57 +54,70 @@ export async function getLearningAnalytics(): Promise<LearningAnalytics> {
     }),
   ]);
 
-  // 영역별 점수 (세션 타입에서 추론)
-  const categoryScores = { VOCAB: [] as number[], INTERPRETATION: [] as number[], GRAMMAR: [] as number[], COMPREHENSION: [] as number[] };
+  // ── 영역별 점수: 카테고리 필드에서 직접 집계 ──
+  let vocabCorrectSum = 0, vocabTotalSum = 0;
+  let grammarCorrectSum = 0, grammarTotalSum = 0;
+  let interpretCorrectSum = 0, interpretTotalSum = 0;
+  let compCorrectSum = 0, compTotalSum = 0;
 
-  for (const record of sessionRecords) {
-    if (record.sessionType === "VOCAB_FOCUS") {
-      categoryScores.VOCAB.push(record.score);
-    } else if (record.sessionType === "GRAMMAR_FOCUS") {
-      categoryScores.GRAMMAR.push(record.score);
-    } else if (record.sessionType === "MIX_1" || record.sessionType === "MIX_2") {
-      // 종합 믹스는 모든 카테고리에 기여
-      categoryScores.VOCAB.push(record.score);
-      categoryScores.INTERPRETATION.push(record.score);
-      categoryScores.GRAMMAR.push(record.score);
-      categoryScores.COMPREHENSION.push(record.score);
-    }
+  for (const r of sessionRecords) {
+    vocabCorrectSum += r.vocabCorrect;
+    vocabTotalSum += r.vocabTotal;
+    grammarCorrectSum += r.grammarCorrect;
+    grammarTotalSum += r.grammarTotal;
+    interpretCorrectSum += r.interpretCorrect;
+    interpretTotalSum += r.interpretTotal;
+    compCorrectSum += r.compCorrect;
+    compTotalSum += r.compTotal;
   }
 
-  const avg = (arr: number[]) =>
-    arr.length > 0 ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length) : 0;
+  const pct = (correct: number, total: number) =>
+    total > 0 ? Math.round((correct / total) * 100) : 0;
 
   const radarScores = {
-    vocab: avg(categoryScores.VOCAB),
-    interpretation: avg(categoryScores.INTERPRETATION),
-    grammar: avg(categoryScores.GRAMMAR),
-    comprehension: avg(categoryScores.COMPREHENSION),
+    vocab: pct(vocabCorrectSum, vocabTotalSum),
+    interpretation: pct(interpretCorrectSum, interpretTotalSum),
+    grammar: pct(grammarCorrectSum, grammarTotalSum),
+    comprehension: pct(compCorrectSum, compTotalSum),
   };
 
-  // 지문별 숙달도
+  // ── 지문별 숙달도 ──
   const passageMastery = lessonProgressList.map((lp) => ({
     passageId: lp.passage.id,
     passageTitle: lp.passage.title,
     masteryScore: Math.round(lp.masteryScore),
   }));
 
-  // 오답 패턴 (많은 순, 상위 10개)
-  const weakPoints = wrongLogs
-    .filter((w) => w.category)
-    .slice(0, 10)
+  // ── 오답 패턴 (NaeshinWrongAnswerLog 기반) ──
+  const naeshinWrongLogs = await prisma.naeshinWrongAnswerLog.findMany({
+    where: { studentId },
+    include: {
+      question: {
+        select: { learningCategory: true, subType: true },
+      },
+    },
+    orderBy: { count: "desc" },
+    take: 10,
+  });
+
+  const weakPoints = naeshinWrongLogs
+    .filter((w) => w.question?.learningCategory)
     .map((w) => ({
-      category: w.category ?? "",
-      subCategory: w.subCategory ?? "",
+      category: w.question?.learningCategory ?? "",
+      subCategory: w.question?.subType ?? "",
       wrongCount: w.count,
     }));
 
-  // 주간 추이 (최근 8주)
+  // ── 주간 추이 (최근 8주) ──
+  const avg = (arr: number[]) =>
+    arr.length > 0 ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length) : 0;
+
   const weeklyTrend: LearningAnalytics["weeklyTrend"] = [];
   const now = new Date();
 
   for (let i = 7; i >= 0; i--) {
     const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - now.getDay() - i * 7 + 1); // Monday
+    weekStart.setDate(now.getDate() - now.getDay() - i * 7 + 1);
     weekStart.setHours(0, 0, 0, 0);
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekEnd.getDate() + 7);

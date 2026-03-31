@@ -112,7 +112,7 @@ function SettingsCard({
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-xs text-gray-400">{label}</span>
+      <span className="text-xs text-gray-500">{label}</span>
       <span className="text-xs font-medium text-gray-900">{value}</span>
     </div>
   );

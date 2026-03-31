@@ -14,7 +14,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: "홈", icon: Home, path: "" },
-  { label: "학습", icon: BookOpen, path: "/vocab" },
+  { label: "학습", icon: BookOpen, path: "/learn" },
   { label: "MY", icon: User, path: "/mypage" },
 ];
 

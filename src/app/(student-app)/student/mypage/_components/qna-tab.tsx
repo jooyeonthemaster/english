@@ -14,7 +14,7 @@ export function QnaTab() {
       <p className="text-base font-semibold text-gray-500 mb-1">
         준비 중입니다
       </p>
-      <p className="text-xs text-gray-400 text-center max-w-[240px]">
+      <p className="text-xs text-gray-500 text-center max-w-[240px]">
         수업별 질문을 등록하고 강사의 답변을 받을 수 있습니다
       </p>
     </div>

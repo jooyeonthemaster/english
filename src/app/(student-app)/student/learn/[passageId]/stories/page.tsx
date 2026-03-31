@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { startSession } from "@/actions/learning-session";
 import { submitSession } from "@/actions/learning-session-submit";
 import { checkDailyMission } from "@/actions/learning-gamification";
+import { getPassageTranslations } from "@/actions/student-app-resources";
 import type { SessionStartData, SessionQuestion } from "@/lib/learning-types";
 
 // ---------------------------------------------------------------------------
@@ -38,6 +39,7 @@ export default function StoriesPage() {
   const [loading, setLoading] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [xpEarned, setXpEarned] = useState(0);
+  const [translations, setTranslations] = useState<Record<number, string>>({});
 
   // 중간 문제
   const [activeQuestion, setActiveQuestion] = useState<SessionQuestion | null>(null);
@@ -54,8 +56,12 @@ export default function StoriesPage() {
   useEffect(() => {
     async function load() {
       try {
-        const sessionData = await startSession(passageId, "STORIES", seasonId);
+        const [sessionData, trans] = await Promise.all([
+          startSession(passageId, "STORIES", seasonId),
+          getPassageTranslations(passageId),
+        ]);
         setData(sessionData);
+        setTranslations(trans);
 
         // 지문을 문장 단위로 파싱
         const content = sessionData.passageContent;
@@ -219,7 +225,7 @@ export default function StoriesPage() {
             animate={{ width: `${progress * 100}%` }}
           />
         </div>
-        <span className="text-xs text-gray-400">Stories</span>
+        <span className="text-xs text-gray-500">Stories</span>
       </div>
 
       {/* Title */}
@@ -258,7 +264,7 @@ export default function StoriesPage() {
                     exit={{ opacity: 0, height: 0 }}
                     className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-1.5 mt-1"
                   >
-                    (탭하여 해석 확인 — AI 번역 준비 중)
+                    {translations[sentence.index] ?? "해석 데이터가 없습니다"}
                   </motion.p>
                 )}
               </AnimatePresence>

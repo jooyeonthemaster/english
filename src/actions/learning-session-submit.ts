@@ -8,7 +8,8 @@ import {
   LEARNING_XP,
   type SessionType,
 } from "@/lib/learning-constants";
-import type { SessionResult } from "@/lib/learning-types";
+import type { SessionResult, QuestProgressUpdate } from "@/lib/learning-types";
+import { getActiveMultiplier, updateQuestProgress } from "./learning-gamification";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -18,10 +19,6 @@ async function requireStudent() {
   const session = await getStudentSession();
   if (!session) throw new Error("로그인이 필요합니다.");
   return session;
-}
-
-function xpForLevel(level: number): number {
-  return 100 + (level - 1) * 50;
 }
 
 function calculateMastery(sessions: { score: number; sessionType: string }[]): number {
@@ -61,21 +58,10 @@ export async function submitSession(data: {
   const totalCount = data.answers.length;
   const score = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
 
-  // XP 배율 체크 (데일리 미션)
+  // XP 배율 체크 (데일리 퀘스트)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const mission = await prisma.studentDailyMission.findUnique({
-    where: { studentId_date: { studentId, date: today } },
-  });
-
-  let multiplier = 1;
-  if (
-    mission?.multiplierActive &&
-    mission.multiplierExpiresAt &&
-    new Date() < mission.multiplierExpiresAt
-  ) {
-    multiplier = mission.multiplierActive;
-  }
+  const multiplier = await getActiveMultiplier(studentId);
 
   const baseXp =
     data.sessionType === "STORIES"
@@ -87,6 +73,26 @@ export async function submitSession(data: {
   // 오답 문제 ID
   const wrongAnswers = data.answers.filter((a) => !a.isCorrect);
   const wrongQuestionIds = wrongAnswers.map((a) => a.questionId);
+
+  // 카테고리별 정답/총 문제 수 집계
+  const allQuestionIds = data.answers.map((a) => a.questionId);
+  const questions = allQuestionIds.length > 0
+    ? await prisma.naeshinQuestion.findMany({
+        where: { id: { in: allQuestionIds } },
+        select: { id: true, learningCategory: true },
+      })
+    : [];
+  const categoryMap = new Map(questions.map((q) => [q.id, q.learningCategory]));
+
+  const catStats = { VOCAB: { correct: 0, total: 0 }, INTERPRETATION: { correct: 0, total: 0 }, GRAMMAR: { correct: 0, total: 0 }, COMPREHENSION: { correct: 0, total: 0 } };
+  for (const ans of data.answers) {
+    const cat = categoryMap.get(ans.questionId);
+    if (cat && cat in catStats) {
+      const s = catStats[cat as keyof typeof catStats];
+      s.total++;
+      if (ans.isCorrect) s.correct++;
+    }
+  }
 
   // 트랜잭션: 세션 기록 + 오답 로그 (원자적 처리)
   const [sessionRecord] = await prisma.$transaction([
@@ -101,6 +107,14 @@ export async function submitSession(data: {
         totalCount,
         wrongQuestionIds: JSON.stringify(wrongQuestionIds),
         xpEarned,
+        vocabCorrect: catStats.VOCAB.correct,
+        vocabTotal: catStats.VOCAB.total,
+        grammarCorrect: catStats.GRAMMAR.correct,
+        grammarTotal: catStats.GRAMMAR.total,
+        interpretCorrect: catStats.INTERPRETATION.correct,
+        interpretTotal: catStats.INTERPRETATION.total,
+        compCorrect: catStats.COMPREHENSION.correct,
+        compTotal: catStats.COMPREHENSION.total,
         startedAt: new Date(data.startedAt),
         completedAt: new Date(),
       },
@@ -140,6 +154,9 @@ export async function submitSession(data: {
 
   revalidatePath("/student");
 
+  // 퀘스트 진행도 업데이트
+  const questUpdates = await updateQuestProgress(score, xpEarned, data.sessionType);
+
   // 오답 문제 상세 가져오기 (NaeshinQuestion)
   const wrongDetails = wrongQuestionIds.length > 0
     ? await prisma.naeshinQuestion.findMany({
@@ -175,6 +192,7 @@ export async function submitSession(data: {
       session5Done: lessonProgress.session5Done,
       masteryScore: lessonProgress.masteryScore,
     },
+    questUpdates,
   };
 }
 
@@ -183,22 +201,9 @@ export async function submitSession(data: {
 // ---------------------------------------------------------------------------
 
 async function addXpInternal(studentId: string, amount: number) {
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    select: { xp: true, level: true },
-  });
-  if (!student) return;
-
-  let newXp = student.xp + amount;
-  let newLevel = student.level;
-  while (newXp >= xpForLevel(newLevel)) {
-    newXp -= xpForLevel(newLevel);
-    newLevel++;
-  }
-
   await prisma.student.update({
     where: { id: studentId },
-    data: { xp: newXp, level: newLevel },
+    data: { xp: { increment: amount } },
   });
 }
 
@@ -298,3 +303,4 @@ async function updateStreak(studentId: string) {
     },
   });
 }
+

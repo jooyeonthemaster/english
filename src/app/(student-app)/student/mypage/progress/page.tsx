@@ -14,7 +14,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { ArrowLeft, TrendingUp, Zap, BookOpen, Clock } from "lucide-react";
+import { TrendingUp, Zap, BookOpen, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getStudentProgress } from "@/actions/student-app-progress";
 
@@ -45,9 +45,9 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white rounded-lg shadow-float border border-gray-100 px-3 py-2">
-      <p className="text-[10px] text-gray-400">{label}</p>
+      <p className="text-[var(--fs-caption)] text-gray-500">{label}</p>
       {payload.map((entry, i) => (
-        <p key={i} className="text-xs font-bold" style={{ color: entry.color }}>
+        <p key={i} className="text-[var(--fs-xs)] font-bold" style={{ color: entry.color }}>
           {entry.name}: {Math.round(entry.value)}
           {entry.name.includes("%") || entry.name === "점수" ? "%" : ""}
         </p>
@@ -101,13 +101,6 @@ export default function ProgressPage() {
 
   return (
     <div className="px-5 pt-6 pb-4 space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Link href="/student/mypage" className="press-scale">
-          <ArrowLeft className="size-5 text-gray-600" />
-        </Link>
-        <h1 className="text-lg font-bold text-gray-900">성적 추이</h1>
-      </div>
 
       {/* XP / Level Card */}
       <motion.div
@@ -118,9 +111,9 @@ export default function ProgressPage() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Zap className="size-5" />
-            <span className="text-sm font-bold">Level {data.currentLevel}</span>
+            <span className="text-[var(--fs-base)] font-bold">Level {data.currentLevel}</span>
           </div>
-          <span className="text-xs text-white/70">
+          <span className="text-[var(--fs-xs)] text-white/70">
             {data.currentXp}/{data.xpForNextLevel} XP
           </span>
         </div>
@@ -144,7 +137,7 @@ export default function ProgressPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="size-4 text-blue-500" />
-            <h3 className="text-sm font-bold text-gray-900">단어 시험 점수 추이</h3>
+            <h3 className="text-[var(--fs-md)] font-bold text-gray-900">단어 시험 점수 추이</h3>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart
@@ -199,7 +192,7 @@ export default function ProgressPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="size-4 text-emerald-500" />
-            <h3 className="text-sm font-bold text-gray-900">시험 점수 추이</h3>
+            <h3 className="text-[var(--fs-md)] font-bold text-gray-900">시험 점수 추이</h3>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart
@@ -247,7 +240,7 @@ export default function ProgressPage() {
         >
           <div className="flex items-center gap-2 mb-4">
             <Zap className="size-4 text-amber-500" />
-            <h3 className="text-sm font-bold text-gray-900">일별 XP 획득</h3>
+            <h3 className="text-[var(--fs-md)] font-bold text-gray-900">일별 XP 획득</h3>
           </div>
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart
@@ -294,8 +287,8 @@ export default function ProgressPage() {
       {data.vocabTrend.length === 0 && data.examTrend.length === 0 && (
         <div className="text-center py-16">
           <TrendingUp className="size-12 text-gray-200 mx-auto" />
-          <p className="text-sm text-gray-400 mt-3">아직 기록이 없습니다</p>
-          <p className="text-xs text-gray-300 mt-1">
+          <p className="text-[var(--fs-base)] text-gray-400 mt-3">아직 기록이 없습니다</p>
+          <p className="text-[var(--fs-xs)] text-gray-500 mt-1">
             시험을 보면 여기에 추이가 표시됩니다
           </p>
         </div>

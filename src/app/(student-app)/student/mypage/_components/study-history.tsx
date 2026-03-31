@@ -38,7 +38,7 @@ export function StudyHistory({ recentTests, recentExams }: StudyHistoryProps) {
   if (recentTests.length === 0 && recentExams.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-xs text-gray-400">아직 시험 기록이 없습니다</p>
+        <p className="text-xs text-gray-500">아직 시험 기록이 없습니다</p>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export function StudyHistory({ recentTests, recentExams }: StudyHistoryProps) {
                 <div key={t.id} className="flex items-center gap-2 py-1.5 border-b border-gray-50 last:border-0">
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-gray-800 truncate">{t.title}</p>
-                    <p className="text-[10px] text-gray-400">
+                    <p className="text-[var(--fs-caption)] text-gray-500">
                       {new Date(t.date).toLocaleDateString("ko-KR")}
                       {" · "}
                       {t.testType === "EN_TO_KR" ? "영→한" : t.testType === "KR_TO_EN" ? "한→영" : "스펠링"}
@@ -86,7 +86,7 @@ export function StudyHistory({ recentTests, recentExams }: StudyHistoryProps) {
               <div key={e.id} className="flex items-center gap-2 py-1.5 border-b border-gray-50 last:border-0">
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-gray-800 truncate">{e.title}</p>
-                  <p className="text-[10px] text-gray-400">
+                  <p className="text-[var(--fs-caption)] text-gray-500">
                     {new Date(e.date).toLocaleDateString("ko-KR")}
                   </p>
                 </div>

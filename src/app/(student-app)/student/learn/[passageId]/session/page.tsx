@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { startSession } from "@/actions/learning-session";
+import { startSession, startReviewSession } from "@/actions/learning-session";
 import { submitSession } from "@/actions/learning-session-submit";
 import { checkDailyMission } from "@/actions/learning-gamification";
 import type { SessionStartData, SessionQuestion, SessionResult } from "@/lib/learning-types";
@@ -26,6 +26,9 @@ export default function SessionPage() {
   const passageId = params.passageId as string;
   const sessionType = searchParams.get("type") as SessionType;
   const seasonId = searchParams.get("seasonId") ?? undefined;
+  const reviewMode = searchParams.get("mode") === "review";
+  const reviewQuestionIds = searchParams.get("questionIds")?.split(",").filter(Boolean) ?? [];
+  const reviewCategory = searchParams.get("category") ?? undefined;
 
   const [data, setData] = useState<SessionStartData | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,20 +47,37 @@ export default function SessionPage() {
   const [retryQueue, setRetryQueue] = useState<SessionQuestion[]>([]);
   // 지문 펼침 상태
   const [passageOpen, setPassageOpen] = useState(false);
+  // 나가기 확인
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   useEffect(() => {
+    // reviewMode가 아닌 경우 sessionType이 필수
+    if (!reviewMode && !sessionType) return;
+
+    let cancelled = false;
+    setLoading(true);
+    setData(null);
+    setCurrentIndex(0);
+    setAnswers(new Map());
+    setRetryQueue([]);
+
     async function load() {
       try {
-        const sessionData = await startSession(passageId, sessionType, seasonId);
-        setData(sessionData);
+        const sessionData = reviewMode && reviewQuestionIds.length > 0
+          ? await startReviewSession(passageId, reviewQuestionIds, reviewCategory)
+          : await startSession(passageId, sessionType, seasonId);
+        if (!cancelled) setData(sessionData);
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     load();
-  }, [passageId, sessionType, seasonId]);
+
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passageId, sessionType, seasonId, reviewMode]);
 
   // 현재 문제 (원래 문제 + 재출제 큐)
   const allQuestions = data ? [...data.questions, ...retryQueue] : [];
@@ -162,7 +182,7 @@ export default function SessionPage() {
       {/* Top bar */}
       <div className="px-4 pt-4 pb-2 flex items-center gap-3">
         <button
-          onClick={() => router.back()}
+          onClick={() => setShowExitConfirm(true)}
           className="p-1 text-gray-400 hover:text-gray-600"
         >
           <X className="size-5" />
@@ -174,7 +194,7 @@ export default function SessionPage() {
             transition={{ duration: 0.3 }}
           />
         </div>
-        <span className="text-xs text-gray-400 font-medium tabular-nums">
+        <span className="text-[var(--fs-xs)] text-gray-500 font-medium tabular-nums">
           {Math.min(currentIndex + 1, totalOriginal)}/{totalOriginal}
         </span>
       </div>
@@ -201,7 +221,7 @@ export default function SessionPage() {
             )}
 
             {/* Question text */}
-            <p className="text-base font-semibold text-gray-900 mb-6 leading-relaxed whitespace-pre-line">
+            <p className="text-[var(--fs-lg)] font-semibold text-gray-900 mb-6 leading-relaxed whitespace-pre-line">
               {currentQuestion.questionText}
             </p>
 
@@ -233,7 +253,7 @@ export default function SessionPage() {
                       <div className="flex items-start gap-3">
                         <span
                           className={cn(
-                            "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold",
+                            "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[var(--fs-xs)] font-bold",
                             showFeedback
                               ? isAnswer
                                 ? "bg-emerald-500 text-white"
@@ -249,7 +269,7 @@ export default function SessionPage() {
                         </span>
                         <span
                           className={cn(
-                            "text-sm leading-relaxed",
+                            "text-[var(--fs-base)] leading-relaxed",
                             showFeedback && isAnswer
                               ? "text-emerald-700 font-medium"
                               : showFeedback && isSelected
@@ -296,7 +316,7 @@ export default function SessionPage() {
                 )}
                 <span
                   className={cn(
-                    "text-sm font-bold",
+                    "text-[var(--fs-base)] font-bold",
                     isCorrect ? "text-emerald-700" : "text-rose-700"
                   )}
                 >
@@ -304,17 +324,35 @@ export default function SessionPage() {
                 </span>
               </div>
               {!isCorrect && (
-                <p className="text-xs text-rose-600 mb-1">
+                <p className="text-[var(--fs-xs)] text-rose-600 mb-1">
                   정답: {currentQuestion.options
                     ? `${currentQuestion.correctAnswer}. ${currentQuestion.options.find(o => o.label === currentQuestion.correctAnswer)?.text || ""}`
                     : currentQuestion.correctAnswer}
                 </p>
               )}
+              {/* 해설 */}
+              {currentQuestion.explanation && (
+                <div className="mt-2 bg-white/60 rounded-xl p-3">
+                  <p className="text-[var(--fs-xs)] text-gray-700 leading-relaxed">
+                    {currentQuestion.explanation.content}
+                  </p>
+                  {currentQuestion.explanation.keyPoints && currentQuestion.explanation.keyPoints.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      {currentQuestion.explanation.keyPoints.map((pt, i) => (
+                        <div key={i} className="flex items-start gap-1.5">
+                          <span className="text-[var(--fs-caption)] text-blue-500 mt-0.5">•</span>
+                          <p className="text-[var(--fs-xs)] text-gray-600">{pt}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               <button
                 onClick={handleNext}
                 disabled={submitting}
                 className={cn(
-                  "w-full mt-2 py-3 rounded-xl font-bold text-sm text-white transition-all",
+                  "w-full mt-3 py-3 rounded-xl font-bold text-[var(--fs-base)] text-white transition-all",
                   isCorrect
                     ? "bg-emerald-500 active:bg-emerald-600"
                     : "bg-rose-500 active:bg-rose-600",
@@ -327,6 +365,46 @@ export default function SessionPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* 나가기 확인 모달 */}
+      <AnimatePresence>
+        {showExitConfirm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowExitConfirm(false)}
+              className="fixed inset-0 bg-black/40 z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl p-6 w-[280px] shadow-xl"
+            >
+              <h3 className="text-[var(--fs-lg)] font-bold text-gray-900 mb-2">세션을 중단할까요?</h3>
+              <p className="text-[var(--fs-xs)] text-gray-500 mb-5">
+                진행 상황이 저장되지 않습니다.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-600 text-[var(--fs-base)] font-bold active:bg-gray-200"
+                >
+                  계속하기
+                </button>
+                <button
+                  onClick={() => router.back()}
+                  className="flex-1 py-2.5 rounded-xl bg-rose-500 text-white text-[var(--fs-base)] font-bold active:bg-rose-600"
+                >
+                  나가기
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

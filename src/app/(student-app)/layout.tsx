@@ -103,15 +103,15 @@ export default function StudentAppLayout({
 
   if (hideChrome) {
     return (
-      <div className="flex justify-center min-h-screen bg-white">
-        <div className="w-full max-w-2xl min-h-screen">{children}</div>
+      <div className="flex justify-center bg-white" style={{ minHeight: "100dvh" }}>
+        <div className="w-full max-w-2xl" style={{ minHeight: "100dvh" }}>{children}</div>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center h-screen bg-[#F5F5F5]">
-      <div className="w-full max-w-2xl h-screen flex flex-col">
+    <div className="flex justify-center bg-[#F5F5F5]" style={{ height: "100dvh" }}>
+      <div className="w-full max-w-2xl flex flex-col" style={{ height: "100dvh" }}>
         {/* 헤더 */}
         <div className="shrink-0 z-40 bg-[#F5F5F5]">
           <StudentHeader
@@ -129,15 +129,15 @@ export default function StudentAppLayout({
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="pb-28">
+          <div className="pb-4">
             {children}
           </div>
         </main>
 
         {/* 하단 네비 */}
-        <div className="shrink-0 z-30 px-4 pb-[env(safe-area-inset-bottom,6px)] pt-1 bg-transparent pointer-events-none">
+        <div className="shrink-0 z-30 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))] pt-1 bg-transparent pointer-events-none">
           <div className="relative bg-white rounded-[28px] shadow-[0_4px_24px_rgba(0,0,0,0.10)] mx-1 pointer-events-auto">
-            <div className="flex items-center h-16 px-1">
+            <div className="flex items-center h-[var(--tab-h)] px-1">
               {SECTIONS.map((section) => (
                 <TabItem
                   key={section.href}
@@ -193,14 +193,11 @@ function TabItem({
     <Link
       href={tab.href}
       className={cn(
-        "relative flex flex-1 flex-col items-center justify-center h-full gap-0.5 transition-all",
-        active ? "text-blue-500" : "text-gray-300",
+        "relative flex flex-1 items-center justify-center h-full transition-all",
+        active ? "text-blue-500" : "text-gray-400",
       )}
     >
-      <Icon className={cn("w-5 h-5", active && "scale-110")} strokeWidth={active ? 2.5 : 1.8} />
-      <span className={cn("text-[10px] font-semibold", active ? "text-blue-500" : "text-gray-300")}>
-        {tab.label}
-      </span>
+      <Icon className={cn("w-6 h-6", active && "scale-110")} strokeWidth={active ? 2.5 : 1.8} />
     </Link>
   );
 }

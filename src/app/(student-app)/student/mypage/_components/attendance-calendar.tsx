@@ -86,7 +86,7 @@ export function AttendanceCalendar() {
           <div
             key={d}
             className={cn(
-              "text-center text-[10px] font-medium py-1",
+              "text-center text-[var(--fs-caption)] font-medium py-1",
               i === 0 ? "text-rose-400" : i === 6 ? "text-blue-400" : "text-gray-400",
             )}
           >
@@ -121,7 +121,7 @@ export function AttendanceCalendar() {
               <div
                 key={day}
                 className={cn(
-                  "aspect-square rounded-xl flex flex-col items-center justify-center text-[10px] font-medium transition-colors",
+                  "aspect-square rounded-xl flex flex-col items-center justify-center text-[var(--fs-caption)] font-medium transition-colors",
                   style?.className,
                   !style && !isFuture && !isToday && "text-gray-600",
                   isFuture && "text-gray-200",
@@ -153,7 +153,7 @@ export function AttendanceCalendar() {
       )}
 
       {data && data.stats.total === 0 && (
-        <p className="text-center text-xs text-gray-400 py-5">
+        <p className="text-center text-xs text-gray-500 py-5">
           이 달의 출석 기록이 없습니다
         </p>
       )}
@@ -165,7 +165,7 @@ function StatBadge({ color, label, count }: { color: string; label: string; coun
   return (
     <div className="flex items-center gap-1">
       <div className={cn("size-2 rounded-full", color)} />
-      <span className="text-[10px] text-gray-500">
+      <span className="text-[var(--fs-caption)] text-gray-500">
         {label} {count}일
       </span>
     </div>

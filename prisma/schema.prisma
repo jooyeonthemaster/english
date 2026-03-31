@@ -160,7 +160,8 @@ model Student {
   wrongAnswerLogs        WrongAnswerLog[]
   lessonProgress         LessonProgress[]
   sessionRecords         SessionRecord[]
-  dailyMissions          StudentDailyMission[]
+  dailyMissions          StudentDailyMission[] // legacy
+  dailyQuests            DailyQuest[]
   naeshinWrongAnswerLogs NaeshinWrongAnswerLog[]
   suneungWrongAnswerLogs SuneungWrongAnswerLog[]
 
@@ -1172,6 +1173,15 @@ model SessionRecord {
   totalCount       Int
   wrongQuestionIds String?  @db.Text // JSON: ["questionId1", ...]
   xpEarned         Int      @default(0)
+  // 카테고리별 정답/총 문제 수
+  vocabCorrect     Int      @default(0)
+  vocabTotal       Int      @default(0)
+  grammarCorrect   Int      @default(0)
+  grammarTotal     Int      @default(0)
+  interpretCorrect Int      @default(0)
+  interpretTotal   Int      @default(0)
+  compCorrect      Int      @default(0)
+  compTotal        Int      @default(0)
   startedAt        DateTime @default(now())
   completedAt      DateTime @default(now())
 
@@ -1201,6 +1211,32 @@ model StudentDailyMission {
   @@unique([studentId, date])
   @@index([studentId])
   @@map("student_daily_missions")
+}
+
+/// DailyQuest — 듀오링고 스타일 데일리 퀘스트 (매일 3개)
+model DailyQuest {
+  id          String    @id @default(cuid())
+  studentId   String
+  date        DateTime // 날짜 (시간 제외)
+  missionType String // XP_EARN, SESSION_COUNT, PERFECT, STREAK_KEEP, ACCURACY, VOCAB_TEST, CATEGORY_FOCUS
+  difficulty  String // EASY, MEDIUM, HARD
+  label       String // "오늘 XP 40 이상 획득하기"
+  target      Int // 목표값 (40, 3, 1 등)
+  progress    Int       @default(0) // 현재 진행도
+  completed   Boolean   @default(false)
+  rewardType  String // MULTIPLIER, BONUS_XP
+  rewardValue Float // 1.2, 1.5, 2.0, 또는 보너스 XP양
+  rewardClaimed Boolean @default(false) // 보상 수령 여부
+  multiplierExpiresAt DateTime? // 배율 만료 시각 (rewardType=MULTIPLIER일 때)
+  completedAt DateTime? // 완료 시각
+  createdAt   DateTime  @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, date, difficulty])
+  @@index([studentId])
+  @@index([studentId, date])
+  @@map("daily_quests")
 }
 
 // ============================================================================

@@ -104,6 +104,8 @@ export interface SessionResult {
     session5Done: boolean;
     masteryScore: number;
   };
+  // 퀘스트 진행도 (세션 완료 후 표시용)
+  questUpdates?: QuestProgressUpdate[];
 }
 
 // ---------------------------------------------------------------------------
@@ -172,7 +174,7 @@ export interface AcademyRankingEntry {
 }
 
 // ---------------------------------------------------------------------------
-// 5. 데일리 미션
+// 5. 데일리 미션 (레거시)
 // ---------------------------------------------------------------------------
 
 export interface DailyMissionStatus {
@@ -188,12 +190,52 @@ export interface DailyMissionStatus {
     rewardMultiplier: number;
     condition: { sessionsRequired: number; minAccuracy: number };
   };
-  activeMultiplier: number | null; // 현재 적용 중인 배율
+  activeMultiplier: number | null;
   multiplierExpiresAt: string | null;
 }
 
 // ---------------------------------------------------------------------------
-// 6. 학습 분석 (인바디)
+// 5-2. 데일리 퀘스트 (듀오링고 스타일, 신규)
+// ---------------------------------------------------------------------------
+
+export interface QuestItem {
+  id: string;
+  missionType: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
+  label: string;
+  target: number;
+  progress: number;
+  completed: boolean;
+  rewardType: "MULTIPLIER" | "BONUS_XP";
+  rewardValue: number;
+  rewardClaimed: boolean;
+  multiplierExpiresAt: string | null;
+  completedAt: string | null;
+}
+
+export interface DailyQuestStatus {
+  date: string;
+  quests: QuestItem[];
+  /** 현재 활성 배율 중 가장 높은 값 */
+  activeMultiplier: number | null;
+  /** 가장 늦게 만료되는 배율의 만료시각 */
+  multiplierExpiresAt: string | null;
+}
+
+/** 세션 완료 후 퀘스트 진행도 업데이트 결과 */
+export interface QuestProgressUpdate {
+  questId: string;
+  label: string;
+  previousProgress: number;
+  newProgress: number;
+  target: number;
+  justCompleted: boolean;
+  rewardType: "MULTIPLIER" | "BONUS_XP";
+  rewardValue: number;
+}
+
+// ---------------------------------------------------------------------------
+// 6. 학습 분석
 // ---------------------------------------------------------------------------
 
 export interface LearningAnalytics {

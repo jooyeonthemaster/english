@@ -138,7 +138,7 @@ function EnrollmentCard({
         )}
       </div>
 
-      <p className="text-xs text-gray-400 mt-1.5">
+      <p className="text-xs text-gray-500 mt-1.5">
         수강 시작: {new Date(e.enrolledAt).toLocaleDateString("ko-KR")}
         {e.status !== "ENROLLED" && (
           <span className="ml-2 text-amber-500">

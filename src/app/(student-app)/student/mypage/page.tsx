@@ -48,7 +48,7 @@ export default function StudentMyPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
-  // 초기 로드: 핵심 데이터(인바디)만 먼저 로드
+  // 초기 로드: 핵심 데이터(성적 분석)만 먼저 로드
   useEffect(() => {
     getStudentInbadi()
       .then(setInbadi)
@@ -95,7 +95,7 @@ export default function StudentMyPage() {
   if (!inbadi) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <p className="text-sm text-gray-400">
+        <p className="text-[var(--fs-base)] text-gray-400">
           데이터를 불러올 수 없습니다.
         </p>
       </div>
@@ -119,7 +119,7 @@ export default function StudentMyPage() {
               key={tab.key}
               onClick={() => handleTabChange(tab.key)}
               className={cn(
-                "flex-1 py-2 text-xs font-medium rounded-xl transition-all",
+                "flex-1 py-2 text-[var(--fs-sm)] font-medium rounded-xl transition-all",
                 activeTab === tab.key
                   ? "bg-white text-gray-900 shadow-sm font-semibold"
                   : "text-gray-400",

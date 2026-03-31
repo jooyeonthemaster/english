@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft,
   Play,
   CheckCircle2,
   Lock,
@@ -105,15 +104,10 @@ export default function LessonDetailPage() {
 
   return (
     <div className="max-w-lg mx-auto pb-8">
-      {/* Header */}
-      <div className="px-5 pt-4 pb-5">
-        <button onClick={() => router.back()} className="mb-3 p-1 -ml-1">
-          <ArrowLeft className="size-5 text-gray-600" />
-        </button>
-        <h1 className="text-lg font-bold text-gray-900 mb-1">{lesson.passageTitle}</h1>
+      <div className="px-5 pt-2 pb-5">
         {lesson.masteryScore > 0 && (
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-xs text-gray-500">숙달도</span>
+            <span className="text-[var(--fs-xs)] text-gray-500">숙달도</span>
             <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
                 className={cn(
@@ -127,7 +121,7 @@ export default function LessonDetailPage() {
                 style={{ width: `${lesson.masteryScore}%` }}
               />
             </div>
-            <span className="text-xs font-bold text-gray-600">
+            <span className="text-[var(--fs-xs)] font-bold text-gray-600">
               {Math.round(lesson.masteryScore)}%
             </span>
           </div>
@@ -136,7 +130,7 @@ export default function LessonDetailPage() {
 
       {/* Required Sessions */}
       <div className="px-5 mb-2">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+        <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase tracking-wider mb-2">
           필수 세션
         </p>
       </div>
@@ -154,7 +148,7 @@ export default function LessonDetailPage() {
 
       {/* Optional Sessions */}
       <div className="px-5 mb-2">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+        <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase tracking-wider mb-2">
           선택 세션
         </p>
       </div>
@@ -235,7 +229,7 @@ function SessionCard({
         {session.done ? (
           <CheckCircle2 className="size-5 text-emerald-500" />
         ) : session.locked ? (
-          <Lock className="size-5 text-gray-300" />
+          <Lock className="size-5 text-gray-400" />
         ) : (
           <Icon className={cn("size-5", colors.text)} />
         )}
@@ -245,13 +239,13 @@ function SessionCard({
       <div className="flex-1">
         <p
           className={cn(
-            "text-sm font-semibold",
+            "text-[var(--fs-base)] font-semibold",
             session.done ? "text-gray-500" : session.locked ? "text-gray-400" : "text-gray-900"
           )}
         >
           {meta.label}
         </p>
-        <p className="text-xs text-gray-400 mt-0.5">
+        <p className="text-[var(--fs-xs)] text-gray-500 mt-0.5">
           {session.done
             ? "완료"
             : session.locked

@@ -176,9 +176,44 @@ export const STREAK_CONFIG = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// 7. 데일리 미션
+// 7. 데일리 퀘스트 (듀오링고 스타일)
 // ---------------------------------------------------------------------------
 
+export type QuestMissionType =
+  | "XP_EARN"
+  | "SESSION_COUNT"
+  | "PERFECT"
+  | "STREAK_KEEP"
+  | "ACCURACY"
+  | "VOCAB_TEST"
+  | "CATEGORY_FOCUS";
+
+export type QuestDifficulty = "EASY" | "MEDIUM" | "HARD";
+
+export interface QuestTemplate {
+  missionType: QuestMissionType;
+  difficulty: QuestDifficulty;
+  label: string;
+  target: number;
+  rewardType: "MULTIPLIER" | "BONUS_XP";
+  rewardValue: number;
+}
+
+/** 퀘스트 풀 — 매일 EASY 1개 + HARD 1개 = 총 2개 선택 (전부 배율 보상, 10분) */
+export const QUEST_POOL: QuestTemplate[] = [
+  // EASY (1개 선택) — x1.2 ~ x1.3
+  { missionType: "SESSION_COUNT", difficulty: "EASY", label: "세션 1개 완료하기", target: 1, rewardType: "MULTIPLIER", rewardValue: 1.2 },
+  { missionType: "XP_EARN", difficulty: "EASY", label: "XP 20 이상 획득하기", target: 20, rewardType: "MULTIPLIER", rewardValue: 1.2 },
+  { missionType: "STREAK_KEEP", difficulty: "EASY", label: "오늘도 학습해서 스트릭 유지", target: 1, rewardType: "MULTIPLIER", rewardValue: 1.2 },
+  { missionType: "VOCAB_TEST", difficulty: "EASY", label: "단어 시험 1회 완료하기", target: 1, rewardType: "MULTIPLIER", rewardValue: 1.3 },
+  // HARD (1개 선택) — x1.5 ~ x2.0
+  { missionType: "CATEGORY_FOCUS", difficulty: "HARD", label: "문법 세션 1개 완료하기", target: 1, rewardType: "MULTIPLIER", rewardValue: 1.5 },
+  { missionType: "SESSION_COUNT", difficulty: "HARD", label: "세션 3개 완료하기", target: 3, rewardType: "MULTIPLIER", rewardValue: 1.8 },
+  { missionType: "ACCURACY", difficulty: "HARD", label: "평균 정답률 90% 이상 달성", target: 90, rewardType: "MULTIPLIER", rewardValue: 2.0 },
+  { missionType: "PERFECT", difficulty: "HARD", label: "만점 세션 1개 달성하기", target: 1, rewardType: "MULTIPLIER", rewardValue: 2.0 },
+];
+
+/** 레거시 호환용 — 기존 코드에서 참조하는 경우 */
 export const DAILY_MISSION_TYPES = {
   EASY: {
     label: "세션 1개 완료하기",

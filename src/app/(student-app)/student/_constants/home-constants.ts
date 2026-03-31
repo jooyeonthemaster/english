@@ -34,15 +34,15 @@ export const RANKING_TABS: { key: RankingTab; label: string }[] = [
 // Quick menu
 // ---------------------------------------------------------------------------
 export const QUICK_MENU_OPTIONS: QuickMenuItem[] = [
-  { id: "review", label: "오답복습", icon: Target, href: "/student/review", color: "text-red-500", bg: "bg-red-50" },
-  { id: "vocab", label: "단어장", icon: BookOpen, href: "/student/vocab", color: "text-violet-500", bg: "bg-violet-50" },
+  { id: "review", label: "오답복습", icon: Target, href: "/student/learn/analytics", color: "text-red-500", bg: "bg-red-50" },
+  { id: "learn", label: "학습", icon: BookOpen, href: "/student/learn", color: "text-violet-500", bg: "bg-violet-50" },
   { id: "assignments", label: "숙제", icon: ClipboardList, href: "/student/resources?tab=assignments", color: "text-amber-500", bg: "bg-amber-50" },
   { id: "notices", label: "공지사항", icon: FileText, href: "/student/resources?tab=notices", color: "text-blue-500", bg: "bg-blue-50" },
   { id: "grades", label: "성적", icon: BarChart3, href: "/student/mypage?tab=grades", color: "text-emerald-500", bg: "bg-emerald-50" },
   { id: "qna", label: "질문하기", icon: MessageSquare, href: "/student/mypage?tab=qna", color: "text-blue-500", bg: "bg-blue-50" },
 ];
 
-export const DEFAULT_SHORTCUTS = ["review", "vocab", "assignments", "notices"];
+export const DEFAULT_SHORTCUTS = ["review", "learn", "assignments", "notices"];
 
 export function getShortcuts(): string[] {
   if (typeof window === "undefined") return DEFAULT_SHORTCUTS;

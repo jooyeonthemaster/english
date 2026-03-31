@@ -43,12 +43,12 @@ export default function StudentHomePage() {
   if (!data) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <p className="text-sm text-gray-400">데이터를 불러올 수 없습니다.</p>
+        <p className="text-[var(--fs-base)] text-gray-400">데이터를 불러올 수 없습니다.</p>
       </div>
     );
   }
 
-  const { student, stats, upcomingExams, pendingAssignments, analytics, recentNotices, ranking } = data;
+  const { student, stats, upcomingExams, pendingAssignments, xp, recentNotices, ranking } = data;
   const todayIdx = getTodayDayIndex();
 
   const quickMenuItems = shortcuts
@@ -83,7 +83,7 @@ export default function StudentHomePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <ScoreRankingSection analytics={analytics} stats={stats} ranking={ranking} />
+        <ScoreRankingSection xp={xp} stats={stats} ranking={ranking} />
       </motion.div>
 
       {/* Section 2: 바로가기 */}
@@ -119,10 +119,10 @@ export default function StudentHomePage() {
       >
         <div className="rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-base font-bold text-gray-900">공지사항</h3>
+            <h3 className="text-[var(--fs-lg)] font-bold text-gray-900">공지사항</h3>
             <Link
               href="/student/resources?tab=notices"
-              className="text-xs text-blue-500 font-semibold"
+              className="text-[var(--fs-xs)] text-blue-500 font-semibold"
             >
               전체보기
             </Link>
@@ -138,17 +138,17 @@ export default function StudentHomePage() {
                   {notice.isPinned && (
                     <Pin className="w-3.5 h-3.5 text-red-400 shrink-0" />
                   )}
-                  <span className="text-sm text-gray-700 truncate flex-1 font-medium">
+                  <span className="text-[var(--fs-base)] text-gray-700 truncate flex-1 font-medium">
                     {notice.title}
                   </span>
-                  <span className="text-xs text-gray-300 shrink-0">
+                  <span className="text-[var(--fs-xs)] text-gray-500 shrink-0">
                     {new Date(notice.publishAt).toLocaleDateString("ko-KR", { month: "short", day: "numeric" })}
                   </span>
                 </Link>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-300 text-center py-4">
+            <p className="text-[var(--fs-base)] text-gray-400 text-center py-4">
               새로운 공지사항이 없습니다
             </p>
           )}
@@ -164,10 +164,10 @@ export default function StudentHomePage() {
         >
           <div className="rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-base font-bold text-gray-900">숙제</h3>
+              <h3 className="text-[var(--fs-lg)] font-bold text-gray-900">숙제</h3>
               <Link
                 href="/student/resources?tab=assignments"
-                className="text-xs text-blue-500 font-semibold"
+                className="text-[var(--fs-xs)] text-blue-500 font-semibold"
               >
                 전체보기
               </Link>
@@ -180,7 +180,7 @@ export default function StudentHomePage() {
                   <div key={a.id} className="flex items-center gap-3 py-2">
                     <span
                       className={cn(
-                        "text-xs font-black px-2.5 py-1 rounded-lg shrink-0",
+                        "text-[var(--fs-xs)] font-black px-2.5 py-1 rounded-lg shrink-0",
                         daysLeft <= 1
                           ? "bg-red-50 text-red-500"
                           : daysLeft <= 3
@@ -190,8 +190,8 @@ export default function StudentHomePage() {
                     >
                       {daysLeft <= 0 ? "오늘" : `D-${daysLeft}`}
                     </span>
-                    <span className="text-sm text-gray-700 truncate flex-1 font-medium">{a.title}</span>
-                    <span className="text-xs text-gray-300 shrink-0">
+                    <span className="text-[var(--fs-base)] text-gray-700 truncate flex-1 font-medium">{a.title}</span>
+                    <span className="text-[var(--fs-xs)] text-gray-500 shrink-0">
                       {dueDate.toLocaleDateString("ko-KR", { month: "short", day: "numeric" })}
                     </span>
                   </div>

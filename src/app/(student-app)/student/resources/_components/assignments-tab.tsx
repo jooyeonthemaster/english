@@ -56,7 +56,7 @@ export function AssignmentsTab() {
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={cn(
-              "px-3 py-1 rounded-full text-[10px] font-medium transition-colors",
+              "px-3 py-1 rounded-full text-[var(--fs-caption)] font-medium transition-colors",
               filter === f.key
                 ? "bg-blue-500 text-white"
                 : "bg-gray-50 text-gray-400",
@@ -70,7 +70,7 @@ export function AssignmentsTab() {
       {/* Assignment list */}
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-          <p className="text-sm">
+          <p className="text-[var(--fs-base)]">
             {filter === "pending" ? "미제출 숙제가 없습니다" : "숙제가 없습니다"}
           </p>
         </div>
@@ -125,21 +125,21 @@ function AssignmentCard({ assignment: a, index }: { assignment: Assignment; inde
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">
+          <p className="text-[var(--fs-base)] font-semibold text-gray-900 truncate">
             {a.title}
           </p>
-          <p className="text-[10px] text-gray-400 mt-0.5">
+          <p className="text-[var(--fs-caption)] text-gray-500 mt-0.5">
             {a.className} · 마감 {dueDate.toLocaleDateString("ko-KR")}
           </p>
           {a.description && (
-            <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">
+            <p className="text-[var(--fs-caption)] text-gray-500 mt-1 line-clamp-2">
               {a.description}
             </p>
           )}
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {statusIcon}
-          <span className={cn("text-[10px] font-semibold", statusColor)}>
+          <span className={cn("text-[var(--fs-caption)] font-semibold", statusColor)}>
             {statusLabel}
           </span>
         </div>
@@ -148,7 +148,7 @@ function AssignmentCard({ assignment: a, index }: { assignment: Assignment; inde
       {/* Feedback */}
       {a.submission?.feedback && (
         <div className="mt-2 px-2 py-1.5 rounded-xl bg-emerald-50">
-          <p className="text-[10px] text-emerald-500">
+          <p className="text-[var(--fs-caption)] text-emerald-500">
             강사 피드백: {a.submission.feedback}
           </p>
         </div>

@@ -49,18 +49,18 @@ export function ProfileHeader({ student, analyticsLevel, onLogout }: ProfileHead
     >
       {/* Top row */}
       <div className="flex items-center justify-between mb-3">
-        <h1 className="text-base font-bold">영어 인바디</h1>
+        <h1 className="text-[var(--fs-lg)] font-bold">성적 분석</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.push("/student/mypage/settings")}
             className="p-1.5 rounded-xl hover:bg-white/10 transition-colors"
             aria-label="설정"
           >
-            <Settings className="w-4 h-4 text-white/70" />
+            <Settings className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-white/70" />
           </button>
           <button
             onClick={onLogout}
-            className="flex items-center gap-1 text-white/60 hover:text-white text-[10px]"
+            className="flex items-center gap-1 text-white/60 hover:text-white text-[var(--fs-caption)]"
           >
             <LogOut className="size-3" />
             로그아웃
@@ -70,23 +70,23 @@ export function ProfileHeader({ student, analyticsLevel, onLogout }: ProfileHead
 
       {/* Student info */}
       <div className="flex items-center gap-3">
-        <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-lg font-bold backdrop-blur-sm border-2 border-white/30">
+        <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-[var(--fs-lg)] font-bold backdrop-blur-sm border-2 border-white/30">
           {student.name.charAt(0)}
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold">{student.name}</h2>
-            <span className="px-1.5 py-0.5 bg-white/20 rounded-full text-[10px] font-medium">
+            <h2 className="text-[var(--fs-lg)] font-bold">{student.name}</h2>
+            <span className="px-1.5 py-0.5 bg-white/20 rounded-full text-[var(--fs-caption)] font-medium">
               Lv.{student.level} {getLevelTitle(student.level)}
             </span>
           </div>
-          <p className="text-xs text-white/70 mt-0.5">
+          <p className="text-[var(--fs-xs)] text-white/70 mt-0.5">
             {student.schoolName ? `${student.schoolName} ` : ""}
             {student.grade}학년
           </p>
           {/* XP Bar */}
           <div className="mt-1.5">
-            <div className="flex justify-between text-[10px] text-white/50 mb-0.5">
+            <div className="flex justify-between text-[var(--fs-caption)] text-white/70 mb-0.5">
               <span>XP</span>
               <span>{student.xp}/{student.xpForNextLevel}</span>
             </div>
@@ -105,10 +105,10 @@ export function ProfileHeader({ student, analyticsLevel, onLogout }: ProfileHead
       {/* Streak + Grade badge */}
       <div className="flex items-center gap-2 mt-3">
         <div className="flex items-center gap-1.5 bg-white/10 rounded-xl px-2.5 py-1.5 flex-1">
-          <Flame className="w-4 h-4 text-orange-300" />
-          <span className="text-xs font-medium">{student.streak}일 연속</span>
+          <Flame className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-orange-300" />
+          <span className="text-[var(--fs-xs)] font-medium">{student.streak}일 연속</span>
         </div>
-        <div className={cn("px-3 py-1.5 rounded-xl text-sm font-bold text-white", gradeColor)}>
+        <div className={cn("px-3 py-1.5 rounded-xl text-[var(--fs-base)] font-bold text-white", gradeColor)}>
           {analyticsLevel}등급
         </div>
       </div>
