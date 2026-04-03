@@ -124,10 +124,26 @@ ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
 정확히 ${count}문제를 생성하세요.`,
     });
 
+    // WORD_ORDER: 강제 셔플 — AI가 정답 순서로 넣는 경우 방지
+    const questions = (object.questions || []).map((q: any) => {
+      if (questionType === "WORD_ORDER" && Array.isArray(q.scrambledWords) && q.scrambledWords.length > 1) {
+        const arr = [...q.scrambledWords];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        if (arr.join("|") === q.scrambledWords.join("|")) {
+          [arr[0], arr[arr.length - 1]] = [arr[arr.length - 1], arr[0]];
+        }
+        return { ...q, scrambledWords: arr };
+      }
+      return q;
+    });
+
     return NextResponse.json({
       questionType,
       difficulty,
-      questions: object.questions,
+      questions,
     });
   } catch (error) {
     console.error("Single question generation error:", error);

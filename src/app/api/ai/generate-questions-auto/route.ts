@@ -66,6 +66,12 @@ export async function POST(request: NextRequest) {
     const schoolType = passage.school?.type === "MIDDLE" ? "중학교" : "고등학교";
     const gradeInfo = passage.grade ? `${passage.grade}학년` : "";
     const diffLabel = difficulty || "INTERMEDIATE";
+    const diffDescription: Record<string, string> = {
+      BASIC: "기본 — 교과서 수준, 직접적 이해 위주, 쉬운 어휘와 단순 문법",
+      INTERMEDIATE: "중급 — 모의고사 중위권 수준, 추론 필요, 패러프레이징 포함",
+      KILLER: "킬러 — 수능 1등급 컷 수준, 고난도 추론/함축 의미 파악, 복잡한 구문과 어휘, 매력적인 오답",
+    };
+    const diffInstruction = diffDescription[diffLabel] || diffDescription.INTERMEDIATE;
 
     // ── Build analysis context ──
     let analysisContext = "";
@@ -135,10 +141,7 @@ export async function POST(request: NextRequest) {
 
     // ═══ STEP 1: AI plans question type distribution ═══
     console.log("[AUTO-GEN] Step 1: Planning started for passage:", passage.title?.slice(0, 30));
-    const planController = new AbortController();
-    const planTimeout = setTimeout(() => planController.abort(), 30000); // 30s for planning
     const { object: planResult } = await generateObject({
-      abortSignal: planController.signal,
       model,
       schema: planSchema,
       prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제위원입니다.
@@ -173,7 +176,6 @@ ${analysisContext}
       CONTEXT_MEANING: "문맥 속 의미", SYNONYM: "동의어", ANTONYM: "반의어",
     };
 
-    clearTimeout(planTimeout);
     console.log("[AUTO-GEN] Step 1 done. Plan:", JSON.stringify(planResult.plan.map(p => ({ type: p.subType, count: p.count }))));
 
     const allQuestions: any[] = [];
@@ -208,12 +210,9 @@ ${analysisContext}
       }
 
       try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 90000); // 90s timeout per type
         const { object } = await generateObject({
           model,
           schema: responseSchema,
-          abortSignal: controller.signal,
           prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신/수능 시험 출제 전문가입니다.
 
 ## 지문
@@ -227,24 +226,35 @@ ${structuredInstructions}
 
 ## 생성 조건
 - 문제 수: ${typeCount}문제
-- 난이도: ${diffLabel}
+- **난이도: ${diffLabel} (${diffInstruction})**
+- difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지 (options 배열에 {label, text} 형태)
 - 해설(explanation): 왜 정답인지 지문 근거와 함께 상세히 한국어로 작성
 - keyPoints: 3개 이상의 학습 포인트
 - wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 작성 (객관식인 경우 필수)
 - tags: 관련 문법/어휘/유형 태그를 한국어로
-- difficulty: "${diffLabel}"
 
 위의 "활용할 분석 포인트"에 명시된 어휘/문법/출제포인트를 반드시 문제에 반영하세요.
 정확히 ${typeCount}문제를 생성하세요.`,
         });
 
-        const qs = (object.questions || []).map((q: any) => ({
-          ...q,
-          _typeId: subType,
-          _typeLabel: TYPE_LABELS[subType] || subType,
-        }));
-        clearTimeout(timeout);
+        const qs = (object.questions || []).map((q: any) => {
+          const mapped = { ...q, _typeId: subType, _typeLabel: TYPE_LABELS[subType] || subType };
+          // WORD_ORDER: 강제 셔플 — AI가 정답 순서로 넣는 경우 방지
+          if (subType === "WORD_ORDER" && Array.isArray(mapped.scrambledWords) && mapped.scrambledWords.length > 1) {
+            const arr = [...mapped.scrambledWords];
+            for (let i = arr.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            // 셔플 후에도 원래 순서와 같으면 한번 더
+            if (arr.join("|") === mapped.scrambledWords.join("|")) {
+              [arr[0], arr[arr.length - 1]] = [arr[arr.length - 1], arr[0]];
+            }
+            mapped.scrambledWords = arr;
+          }
+          return mapped;
+        });
         allQuestions.push(...qs);
         console.log(`[AUTO-GEN] ${subType} done: ${qs.length} questions`);
       } catch (err) {
