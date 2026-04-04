@@ -14,25 +14,26 @@ export const SEASON_TYPES = [
 ] as const;
 
 // ---------------------------------------------------------------------------
-// 2. 세션 타입
+// 2. 세션 타입 (카테고리별 분리 + 마스터리)
 // ---------------------------------------------------------------------------
 
 export type SessionType =
-  | "MIX_1"
-  | "MIX_2"
-  | "STORIES"
-  | "VOCAB_FOCUS"
-  | "GRAMMAR_FOCUS"
-  | "WEAKNESS_FOCUS";
+  | "VOCAB"
+  | "INTERPRETATION"
+  | "GRAMMAR"
+  | "COMPREHENSION"
+  | "MASTERY";
 
-export const SESSION_TYPES = {
-  MIX_1: { label: "종합 믹스 1", required: true, order: 1 },
-  MIX_2: { label: "종합 믹스 2", required: true, order: 2 },
-  STORIES: { label: "Stories", required: true, order: 3 },
-  VOCAB_FOCUS: { label: "어휘 집중", required: false, order: 4 },
-  GRAMMAR_FOCUS: { label: "문법 집중", required: false, order: 5 },
-  WEAKNESS_FOCUS: { label: "약점 집중", required: false, order: 6 },
-} as const;
+export const SESSION_TYPES: Record<
+  SessionType,
+  { label: string; color: string; icon: string }
+> = {
+  VOCAB: { label: "어휘", color: "emerald", icon: "Languages" },
+  INTERPRETATION: { label: "해석", color: "blue", icon: "BookOpen" },
+  GRAMMAR: { label: "문법", color: "purple", icon: "Brain" },
+  COMPREHENSION: { label: "이해", color: "amber", icon: "Target" },
+  MASTERY: { label: "마스터리", color: "rose", icon: "Crown" },
+};
 
 // ---------------------------------------------------------------------------
 // 3. 학습 카테고리 (Question.learningCategory)
@@ -47,7 +48,7 @@ export const LEARNING_CATEGORIES = [
   { value: "COMPREHENSION" as const, label: "이해" },
 ] as const;
 
-/** subType → learningCategory 매핑 (듀오링고 스타일 23종) */
+/** subType → learningCategory 매핑 (23종) */
 export const SUBTYPE_TO_CATEGORY: Record<string, LearningCategory> = {
   // 어휘 (9종)
   WORD_MEANING: "VOCAB",
@@ -136,47 +137,64 @@ export const LEARNING_SUBTYPE_LABELS: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// 4. 세션별 문제 구성 (15문제)
+// 4. 세션 구성 상수
 // ---------------------------------------------------------------------------
 
-export const SESSION_COMPOSITION: Record<
-  Exclude<SessionType, "STORIES">,
-  Record<LearningCategory, number>
-> = {
-  MIX_1: { VOCAB: 5, INTERPRETATION: 5, GRAMMAR: 3, COMPREHENSION: 2 },
-  MIX_2: { VOCAB: 5, INTERPRETATION: 5, GRAMMAR: 3, COMPREHENSION: 2 },
-  VOCAB_FOCUS: { VOCAB: 10, INTERPRETATION: 3, GRAMMAR: 2, COMPREHENSION: 0 },
-  GRAMMAR_FOCUS: { VOCAB: 3, INTERPRETATION: 2, GRAMMAR: 10, COMPREHENSION: 0 },
-  WEAKNESS_FOCUS: { VOCAB: 4, INTERPRETATION: 4, GRAMMAR: 4, COMPREHENSION: 3 },
-};
-
+export const SESSIONS_PER_CATEGORY = 5;
 export const QUESTIONS_PER_SESSION = 15;
-export const STORIES_QUESTIONS_COUNT = 5; // Stories 모드 중간 문제 수
+export const QUESTIONS_PER_CATEGORY = 75; // 5 × 15
+export const TOTAL_QUESTIONS_PER_PASSAGE = 300; // 4 × 75
 
 // ---------------------------------------------------------------------------
-// 5. XP 보상
+// 5. 마스터리 챌린지 상수
+// ---------------------------------------------------------------------------
+
+export const MASTERY_FAIL_THRESHOLD = 5; // 5개 이상 틀리면 실패
+export const MASTERY_QUESTIONS_PER_SUBTYPE = 2;
+
+/** 마스터리에 포함되는 subType (지문 문장 참조 문제만) */
+export const MASTERY_SUBTYPES = [
+  // VOCAB (지문 문장 참조)
+  "WORD_MEANING", "WORD_MEANING_REVERSE", "VOCAB_SYNONYM", "VOCAB_DEFINITION",
+  // INTERPRETATION
+  "SENTENCE_INTERPRET", "SENTENCE_COMPLETE", "WORD_ARRANGE", "SENT_CHUNK_ORDER", "KEY_EXPRESSION",
+  // GRAMMAR (지문 문장 참조)
+  "GRAMMAR_SELECT", "ERROR_FIND", "ERROR_CORRECT",
+  // COMPREHENSION
+  "CONTENT_QUESTION", "TRUE_FALSE", "PASSAGE_FILL", "CONNECTOR_FILL",
+] as const;
+
+/** 마스터리에서 제외되는 subType (독립 문제, 지문 참조 없음) */
+export const MASTERY_EXCLUDED_SUBTYPES = [
+  "WORD_FILL", "WORD_MATCH", "WORD_SPELL",
+  "VOCAB_COLLOCATION", "VOCAB_CONFUSABLE",
+  "GRAM_BINARY", "GRAM_TRANSFORM",
+] as const;
+
+// ---------------------------------------------------------------------------
+// 6. XP 보상
 // ---------------------------------------------------------------------------
 
 export const LEARNING_XP = {
   SESSION_COMPLETE: 15,
-  STORIES_COMPLETE: 20,
-  PERFECT_SESSION: 10, // 보너스 (전문 정답)
+  MASTERY_COMPLETE: 30, // 마스터리 통과 보너스
+  PERFECT_SESSION: 10,
   DAILY_EASY_MULTIPLIER: 1.2,
   DAILY_HARD_MULTIPLIER: 2.0,
   MULTIPLIER_DURATION_MS: 10 * 60 * 1000, // 10분
 } as const;
 
 // ---------------------------------------------------------------------------
-// 6. 스트릭 & 프리즈
+// 7. 스트릭 & 프리즈
 // ---------------------------------------------------------------------------
 
 export const STREAK_CONFIG = {
   MAX_FREEZE_COUNT: 3,
-  FREEZE_RECHARGE_DAYS: 7, // 연속 7일 출석 시 1개 충전
+  FREEZE_RECHARGE_DAYS: 7,
 } as const;
 
 // ---------------------------------------------------------------------------
-// 7. 데일리 퀘스트 (듀오링고 스타일)
+// 8. 데일리 퀘스트 (듀오링고 스타일)
 // ---------------------------------------------------------------------------
 
 export type QuestMissionType =
@@ -230,23 +248,23 @@ export const DAILY_MISSION_TYPES = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// 8. AI 문제 생성 목표량 (지문당)
+// 9. AI 문제 생성 목표량 (지문당, 카테고리 균등)
 // ---------------------------------------------------------------------------
 
 export const QUESTION_GENERATION_TARGET: Record<LearningCategory, number> = {
-  VOCAB: 80,
-  INTERPRETATION: 70,
-  GRAMMAR: 60,
-  COMPREHENSION: 50,
+  VOCAB: 75,
+  INTERPRETATION: 75,
+  GRAMMAR: 75,
+  COMPREHENSION: 75,
 };
 
-// 지문당 총 목표: 260개 (자동채우기 모드에서 사용)
+// 지문당 총 목표: 300개
 
 /** 커스텀 생성 시 전체 유형 합산 최대 개수 */
 export const MAX_CUSTOM_TOTAL = 50;
 
 // ---------------------------------------------------------------------------
-// 9. 난이도 (학년 기반)
+// 10. 난이도 (학년 기반)
 // ---------------------------------------------------------------------------
 
 export const GRADE_LEVELS = [

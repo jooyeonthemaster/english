@@ -122,33 +122,38 @@ export default function AttendancePage() {
   return (
     <div className="flex flex-col px-5 pt-3 pb-6 gap-5">
       {/* Check-in card */}
-      <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5 text-center">
+      <div
+        className="rounded-3xl bg-white p-5 text-center"
+      >
         {todayStatus ? (
           <div className="flex flex-col items-center gap-2">
             <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
               <CheckCircle2 size={28} className="text-emerald-500" />
             </div>
-            <p className="text-[var(--fs-lg)] font-bold text-gray-900">출석 완료</p>
+            <p className="text-[var(--fs-lg)] font-bold text-black">출석 완료</p>
             <p className="text-[var(--fs-xs)] text-gray-500">
               {records.find((r) => r.date === todayStr)?.checkInTime ?? ""}
             </p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
-              <QrCode size={28} className="text-blue-500" />
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}
+            >
+              <QrCode size={28} style={{ color: "var(--key-color)" }} />
             </div>
-            <p className="text-[var(--fs-lg)] font-bold text-gray-900">
+            <p className="text-[var(--fs-lg)] font-bold text-black">
               오늘 출석을 해주세요
             </p>
             <button
               onClick={handleCheckIn}
               disabled={checkingIn}
               className={cn(
-                "px-6 py-2.5 rounded-2xl text-[var(--fs-sm)] font-semibold text-white transition-all",
-                "bg-blue-500 active:scale-95",
+                "px-6 py-2.5 rounded-2xl text-[var(--fs-sm)] font-semibold text-white transition-all active:scale-95",
                 checkingIn && "opacity-60",
               )}
+              style={{ backgroundColor: "var(--key-color)" }}
             >
               {checkingIn ? "처리 중..." : "출석하기"}
             </button>
@@ -176,13 +181,15 @@ export default function AttendancePage() {
       </div>
 
       {/* Calendar */}
-      <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
+      <div
+        className="rounded-3xl bg-white p-5"
+      >
         {/* Month navigation */}
         <div className="flex items-center justify-between mb-3">
           <button onClick={prevMonth} className="p-1.5 rounded-md active:bg-black/5 transition-colors">
             <ChevronLeft size={18} className="text-gray-500" />
           </button>
-          <h3 className="text-[var(--fs-lg)] font-bold text-gray-900">
+          <h3 className="text-[var(--fs-lg)] font-bold text-black">
             {year}년 {month}월
           </h3>
           <button onClick={nextMonth} className="p-1.5 rounded-md active:bg-black/5 transition-colors">
@@ -192,13 +199,10 @@ export default function AttendancePage() {
 
         {/* Day headers */}
         <div className="grid grid-cols-7 mb-1">
-          {DAY_HEADERS.map((d, i) => (
+          {DAY_HEADERS.map((d) => (
             <div
               key={d}
-              className={cn(
-                "text-center text-[var(--fs-caption)] font-medium py-1",
-                i === 0 ? "text-red-500" : i === 6 ? "text-blue-500" : "text-gray-400",
-              )}
+              className="text-center text-[var(--fs-caption)] font-medium py-1 text-gray-400"
             >
               {d}
             </div>
@@ -231,16 +235,16 @@ export default function AttendancePage() {
                   key={day}
                   className={cn(
                     "aspect-square flex flex-col items-center justify-center rounded-md text-[var(--fs-xs)] relative",
-                    isToday && "ring-1.5 ring-blue-500",
                     statusCfg?.bg,
                   )}
+                  style={isToday && !statusCfg ? { outline: "1.5px solid var(--key-color)" } : undefined}
                 >
                   <span
                     className={cn(
                       "font-medium",
                       statusCfg ? statusCfg.color : "text-gray-500",
-                      isToday && !statusCfg && "text-blue-500 font-bold",
                     )}
+                    style={isToday && !statusCfg ? { color: "var(--key-color)", fontWeight: 700 } : undefined}
                   >
                     {day}
                   </span>
@@ -258,10 +262,12 @@ export default function AttendancePage() {
 
       {/* Stats */}
       {stats && (
-        <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
+        <div
+          className="rounded-3xl bg-white p-5"
+          >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-[var(--fs-md)] font-semibold text-gray-900">출석 현황</h3>
-            <span className="text-[var(--fs-xl)] font-black text-blue-500">
+            <h3 className="text-[var(--fs-md)] font-semibold text-black">출석 현황</h3>
+            <span className="text-[var(--fs-xl)] font-black" style={{ color: "var(--key-color)" }}>
               {stats.rate}%
             </span>
           </div>

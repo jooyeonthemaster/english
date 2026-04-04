@@ -86,7 +86,7 @@ export function EnrollmentTab({ enrollments }: EnrollmentTabProps) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="text-xs font-semibold text-gray-500 mb-2">
+      <h3 className="text-xs font-semibold text-black mb-2">
         {title}
       </h3>
       <div className="space-y-2">{children}</div>
@@ -111,11 +111,11 @@ function EnrollmentCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
       className={cn(
-        "rounded-2xl bg-white p-3 shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
+        "rounded-3xl bg-white p-5 ",
         muted && "opacity-60",
       )}
     >
-      <p className="text-sm font-semibold text-gray-900">
+      <p className="text-sm font-semibold text-black">
         {e.className}
       </p>
 
@@ -123,7 +123,7 @@ function EnrollmentCard({
         {e.teacherName && (
           <div className="flex items-center gap-1.5">
             <User size={12} className="text-gray-400" />
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-black">
               {e.teacherName} 선생님
             </span>
           </div>
@@ -131,14 +131,14 @@ function EnrollmentCard({
         {schedule && (
           <div className="flex items-center gap-1.5">
             <Clock size={12} className="text-gray-400" />
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-black">
               {schedule}
             </span>
           </div>
         )}
       </div>
 
-      <p className="text-xs text-gray-500 mt-1.5">
+      <p className="text-xs text-black mt-1.5">
         수강 시작: {new Date(e.enrolledAt).toLocaleDateString("ko-KR")}
         {e.status !== "ENROLLED" && (
           <span className="ml-2 text-amber-500">

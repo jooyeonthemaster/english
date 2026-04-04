@@ -78,8 +78,8 @@ export default function AnalyticsPage() {
 
       {/* Radar Chart */}
       <div className="px-5 mb-4">
-        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <h2 className="text-[var(--fs-md)] font-bold text-gray-700 mb-4">영역별 분석</h2>
+        <div className="bg-white rounded-3xl p-5 ">
+          <h2 className="text-[var(--fs-md)] font-bold text-black mb-4">영역별 분석</h2>
           <RadarChart scores={data.radarScores} />
         </div>
       </div>
@@ -87,16 +87,16 @@ export default function AnalyticsPage() {
       {/* Passage Mastery */}
       {data.passageMastery.length > 0 && (
         <div className="px-5 mb-4">
-          <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="bg-white rounded-3xl p-5 ">
             <div className="flex items-center gap-2 mb-4">
-              <BookOpen className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-blue-500" />
-              <h2 className="text-[var(--fs-md)] font-bold text-gray-700">지문별 숙달도</h2>
+              <BookOpen className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-black" />
+              <h2 className="text-[var(--fs-md)] font-bold text-black">지문별 숙달도</h2>
             </div>
             <div className="space-y-3">
               {data.passageMastery.map((p) => (
                 <div key={p.passageId}>
                   <div className="flex justify-between mb-1">
-                    <span className="text-[var(--fs-xs)] text-gray-600 truncate max-w-[70%]">
+                    <span className="text-[var(--fs-xs)] text-black truncate max-w-[70%]">
                       {p.passageTitle}
                     </span>
                     <span
@@ -117,14 +117,8 @@ export default function AnalyticsPage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${p.masteryScore}%` }}
                       transition={{ duration: 0.6, ease: "easeOut" }}
-                      className={cn(
-                        "h-full rounded-full",
-                        p.masteryScore >= 80
-                          ? "bg-emerald-500"
-                          : p.masteryScore >= 50
-                            ? "bg-blue-500"
-                            : "bg-amber-500"
-                      )}
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: "var(--key-color)" }}
                     />
                   </div>
                 </div>
@@ -147,10 +141,10 @@ export default function AnalyticsPage() {
       {/* Weekly Trend */}
       {data.weeklyTrend.length > 0 && (
         <div className="px-5">
-          <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="bg-white rounded-3xl p-5 ">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-emerald-500" />
-              <h2 className="text-[var(--fs-md)] font-bold text-gray-700">주간 추이</h2>
+              <h2 className="text-[var(--fs-md)] font-bold text-black">주간 추이</h2>
             </div>
             <div className="space-y-2">
               {data.weeklyTrend.map((w) => (
@@ -165,7 +159,7 @@ export default function AnalyticsPage() {
                       style={{ width: `${w.accuracy}%` }}
                     />
                   </div>
-                  <span className="text-gray-600 font-medium w-10 text-right">
+                  <span className="text-black font-medium w-10 text-right">
                     {w.accuracy}%
                   </span>
                   <span className="text-gray-400 w-12 text-right">
@@ -255,14 +249,14 @@ function RadarChart({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           points={dataPoints.map((p) => `${p.x},${p.y}`).join(" ")}
-          fill="rgba(59, 130, 246, 0.15)"
-          stroke="#3b82f6"
+          fill="color-mix(in srgb, var(--key-color) 15%, transparent)"
+          stroke="var(--key-color)"
           strokeWidth="2"
         />
 
         {/* Data points */}
         {dataPoints.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="4" fill="#3b82f6" />
+          <circle key={i} cx={p.x} cy={p.y} r="4" fill="var(--key-color)" />
         ))}
 
         {/* Labels */}
@@ -332,7 +326,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; bar: string }> = {
-  VOCAB: { bg: "bg-violet-50", text: "text-violet-600", bar: "bg-violet-400" },
+  VOCAB: { bg: "bg-emerald-50", text: "text-emerald-600", bar: "bg-emerald-400" },
   INTERPRETATION: { bg: "bg-blue-50", text: "text-blue-600", bar: "bg-blue-400" },
   GRAMMAR: { bg: "bg-amber-50", text: "text-amber-600", bar: "bg-amber-400" },
   COMPREHENSION: { bg: "bg-emerald-50", text: "text-emerald-600", bar: "bg-emerald-400" },
@@ -376,17 +370,18 @@ function WrongPatternCard({
   }
 
   return (
-    <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+    <div className="bg-white rounded-3xl p-5 ">
       {/* 헤더 + 복습하기 버튼 */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-rose-500" />
-          <h2 className="text-[var(--fs-md)] font-bold text-gray-700">오답 패턴</h2>
+          <h2 className="text-[var(--fs-md)] font-bold text-black">오답 패턴</h2>
           <span className="text-[var(--fs-caption)] text-gray-500">{totalWrong}회</span>
         </div>
         <button
           onClick={() => router.push("/student/learn/analytics/review")}
-          className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white text-[var(--fs-xs)] font-bold rounded-lg active:bg-blue-600"
+          className="flex items-center gap-1 px-3 py-1.5 text-white text-[var(--fs-xs)] font-bold rounded-lg active:opacity-80"
+            style={{ backgroundColor: "var(--key-color)" }}
         >
           <RotateCcw className="w-3 h-3" />
           복습하기
@@ -439,7 +434,7 @@ function WrongPatternCard({
                             const maxSub = Math.max(...Object.values(subTypes), 1);
                             return (
                               <div key={subType} className="flex items-center gap-2">
-                                <span className={cn("text-[var(--fs-caption)] w-20 shrink-0 truncate", count > 0 ? "text-gray-600" : "text-gray-400")}>
+                                <span className={cn("text-[var(--fs-caption)] w-20 shrink-0 truncate", count > 0 ? "text-black" : "text-gray-400")}>
                                   {SUBTYPE_LABELS[subType] ?? subType}
                                 </span>
                                 <div className="flex-1 h-1.5 bg-white/60 rounded-full overflow-hidden">

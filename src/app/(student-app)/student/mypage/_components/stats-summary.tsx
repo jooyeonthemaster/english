@@ -58,8 +58,8 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
   return (
     <div className="space-y-4">
       {/* Radar Chart */}
-      <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[var(--fs-md)] font-bold text-gray-900 mb-1">종합 실력 리포트</h3>
+      <div className="bg-white rounded-3xl p-5 ">
+        <h3 className="text-[var(--fs-md)] font-bold text-black mb-1">종합 실력 리포트</h3>
         <div className="relative">
           <ResponsiveContainer width="100%" height={220}>
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -87,10 +87,10 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
-              <p className="text-[var(--fs-2xl)] font-black text-gray-900">
+              <p className="text-[var(--fs-2xl)] font-black text-black">
                 {Math.round(analytics.overallScore)}
               </p>
-              <p className="text-[var(--fs-caption)] text-gray-500">종합점수</p>
+              <p className="text-[var(--fs-caption)] text-gray-400">종합점수</p>
             </div>
           </div>
         </div>
@@ -98,8 +98,8 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
         <div className="grid grid-cols-5 gap-1">
           {radarData.map((item) => (
             <div key={item.subject} className="text-center">
-              <p className="text-[var(--fs-lg)] font-bold text-gray-900">{Math.round(item.score)}</p>
-              <p className="text-[var(--fs-caption)] text-gray-500">{item.subject}</p>
+              <p className="text-[var(--fs-lg)] font-bold text-black">{Math.round(item.score)}</p>
+              <p className="text-[var(--fs-caption)] text-gray-400">{item.subject}</p>
             </div>
           ))}
         </div>
@@ -107,8 +107,8 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
 
       {/* Grammar detail */}
       {grammarBarData.length > 0 && (
-        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <h4 className="text-[var(--fs-xs)] font-bold text-gray-900 mb-2">문법 세부 분석</h4>
+        <div className="bg-white rounded-3xl p-5 ">
+          <h4 className="text-[var(--fs-xs)] font-bold text-black mb-2">문법 세부 분석</h4>
           <ResponsiveContainer width="100%" height={grammarBarData.length * 32 + 10}>
             <BarChart data={grammarBarData} layout="vertical" margin={{ top: 0, right: 16, left: 0, bottom: 0 }}>
               <XAxis type="number" domain={[0, 100]} hide />
@@ -129,15 +129,15 @@ export function StatsSummary({ analytics }: StatsSummaryProps) {
 
       {/* Weak points */}
       {analytics.weakPoints.length > 0 && (
-        <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <h4 className="text-[var(--fs-xs)] font-bold text-gray-900 mb-2">약점 Top 3</h4>
+        <div className="bg-white rounded-3xl p-5 ">
+          <h4 className="text-[var(--fs-xs)] font-bold text-black mb-2">약점 Top 3</h4>
           <div className="space-y-1.5">
             {analytics.weakPoints.slice(0, 3).map((point, i) => (
               <div key={i} className="flex items-center gap-2 p-2 bg-red-50 rounded-xl">
                 <div className="size-5 rounded-full bg-red-100 flex items-center justify-center text-[var(--fs-caption)] font-bold text-red-500">
                   {i + 1}
                 </div>
-                <p className="text-[var(--fs-xs)] text-gray-700 font-medium">{point}</p>
+                <p className="text-[var(--fs-xs)] text-black font-medium">{point}</p>
               </div>
             ))}
           </div>

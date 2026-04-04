@@ -131,7 +131,7 @@ export function CategoryConfig({
                   : "bg-blue-50 text-blue-700 hover:bg-blue-100"
               }`}
             >
-              {autoFill ? "자동 채우기 ON (260개)" : "자동 채우기"}
+              {autoFill ? `자동 채우기 ON (${Object.values(typeCounts).reduce((a, b) => a + b, 0)}개)` : "자동 채우기"}
             </button>
           </div>
 

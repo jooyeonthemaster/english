@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Sparkles, Target, Zap, Trophy } from "lucide-react";
+import { Sparkles, Target, Zap, Trophy, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SessionResult, QuestProgressUpdate } from "@/lib/learning-types";
+import { LEARNING_SUBTYPE_LABELS } from "@/lib/learning-constants";
 
 interface ResultScreenProps {
   result: SessionResult;
@@ -130,7 +131,7 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           </motion.div>
         )}
 
-        {/* 틀린 문제 */}
+        {/* 틀린 유형 통계 */}
         {result.wrongQuestions.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -138,21 +139,30 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
             transition={{ delay: 0.8 }}
             className="w-full text-left mb-6"
           >
-            <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase mb-2">
-              틀린 문제 ({result.wrongQuestions.length}개)
-            </p>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {result.wrongQuestions.map((wq) => (
-                <div
-                  key={wq.questionId}
-                  className="bg-rose-50 rounded-xl p-3 text-[var(--fs-xs)]"
-                >
-                  <p className="text-gray-700 mb-1 line-clamp-2">{wq.questionText}</p>
-                  <p className="text-rose-600">
-                    정답: <span className="font-medium">{wq.correctAnswer}</span>
-                  </p>
-                </div>
-              ))}
+            <div className="flex items-center gap-1.5 mb-2">
+              <AlertCircle className="size-3.5 text-rose-400" />
+              <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase">
+                오답 유형 ({result.wrongQuestions.length}개)
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {Object.entries(
+                result.wrongQuestions.reduce<Record<string, number>>((acc, wq) => {
+                  const label = LEARNING_SUBTYPE_LABELS[wq.subType] || wq.subType || "기타";
+                  acc[label] = (acc[label] || 0) + 1;
+                  return acc;
+                }, {})
+              )
+                .sort((a, b) => b[1] - a[1])
+                .map(([label, count]) => (
+                  <span
+                    key={label}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-50 text-rose-600 rounded-lg text-[var(--fs-xs)] font-medium border border-rose-100"
+                  >
+                    {label}
+                    <span className="text-rose-400">{count}</span>
+                  </span>
+                ))}
             </div>
           </motion.div>
         )}

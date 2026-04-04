@@ -3,34 +3,27 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { BarChart3, CalendarCheck, BookOpen, CreditCard, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  getStudentInbadi,
-  getStudentBadges,
-  getStudentHeatmap,
-} from "@/actions/student-app";
-import { getStudentEnrollments } from "@/actions/student-app-resources";
+import { useMyPage, useEnrollments } from "@/hooks/use-student-data";
 import { logoutStudentAction } from "@/actions/auth";
-import { ProfileHeader } from "./_components/profile-header";
 import { GradesTab } from "./_components/grades-tab";
+import { AttendanceTab } from "./_components/attendance-tab";
 import { EnrollmentTab } from "./_components/enrollment-tab";
-import { QnaTab } from "./_components/qna-tab";
+import { PaymentTab } from "./_components/payment-tab";
 import { SettingsTab } from "./_components/settings-tab";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-type InbadiData = Awaited<ReturnType<typeof getStudentInbadi>>;
-type BadgesData = Awaited<ReturnType<typeof getStudentBadges>>;
-type HeatmapData = Awaited<ReturnType<typeof getStudentHeatmap>>;
-type EnrollmentData = Awaited<ReturnType<typeof getStudentEnrollments>>;
-type Tab = "grades" | "enrollment" | "qna" | "settings";
+type Tab = "grades" | "attendance" | "enrollment" | "payment" | "settings";
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: "grades", label: "성적" },
-  { key: "enrollment", label: "수강" },
-  { key: "qna", label: "질문" },
-  { key: "settings", label: "설정" },
+const TABS: { key: Tab; label: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }> }[] = [
+  { key: "grades", label: "성적", icon: BarChart3 },
+  { key: "attendance", label: "출결", icon: CalendarCheck },
+  { key: "enrollment", label: "수강", icon: BookOpen },
+  { key: "payment", label: "수납", icon: CreditCard },
+  { key: "settings", label: "설정", icon: Settings },
 ];
 
 // ---------------------------------------------------------------------------
@@ -41,38 +34,9 @@ export default function StudentMyPage() {
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get("tab") as Tab) || "grades";
 
-  const [inbadi, setInbadi] = useState<InbadiData | null>(null);
-  const [badges, setBadges] = useState<BadgesData | null>(null);
-  const [heatmap, setHeatmap] = useState<HeatmapData>([]);
-  const [enrollments, setEnrollments] = useState<EnrollmentData>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: inbadi, isLoading } = useMyPage();
+  const { data: enrollments = [], refetch: refetchEnrollments } = useEnrollments();
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
-
-  // 초기 로드: 핵심 데이터(성적 분석)만 먼저 로드
-  useEffect(() => {
-    getStudentInbadi()
-      .then(setInbadi)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
-  // 탭별 지연 로드
-  const loadTabData = useCallback((tab: Tab) => {
-    if (tab === "grades" && !badges) {
-      Promise.all([getStudentBadges(), getStudentHeatmap()])
-        .then(([b, h]) => { setBadges(b); setHeatmap(h); })
-        .catch(console.error);
-    } else if (tab === "enrollment" && enrollments.length === 0) {
-      getStudentEnrollments()
-        .then(setEnrollments)
-        .catch(console.error);
-    }
-  }, [badges, enrollments.length]);
-
-  // 초기 탭 데이터 로드
-  useEffect(() => {
-    if (!loading && inbadi) loadTabData(activeTab);
-  }, [loading, inbadi, activeTab, loadTabData]);
 
   useEffect(() => {
     const tab = searchParams.get("tab") as Tab;
@@ -81,68 +45,72 @@ export default function StudentMyPage() {
     }
   }, [searchParams]);
 
-  const handleTabChange = (tab: Tab) => {
+  const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab);
-    loadTabData(tab);
-  };
+    if (tab === "enrollment" && enrollments.length === 0) {
+      refetchEnrollments();
+    }
+  }, [enrollments.length, refetchEnrollments]);
 
   const handleLogout = async () => {
     await logoutStudentAction();
     router.push("/student/login");
   };
 
-  if (loading) return <MyPageSkeleton />;
+  if (isLoading && !inbadi) return <MyPageSkeleton />;
   if (!inbadi) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <p className="text-[var(--fs-base)] text-gray-400">
-          데이터를 불러올 수 없습니다.
-        </p>
+        <p className="text-sm text-gray-400">데이터를 불러올 수 없습니다.</p>
       </div>
     );
   }
 
+  const { student, analytics } = inbadi;
+
   return (
     <div className="pb-6">
-      {/* Profile header */}
-      <ProfileHeader
-        student={inbadi.student}
-        analyticsLevel={inbadi.analytics.level}
-        onLogout={handleLogout}
-      />
-
-      {/* Tabs */}
-      <div className="px-5 mt-4">
-        <div className="flex gap-0.5 bg-gray-100 rounded-2xl p-1">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => handleTabChange(tab.key)}
-              className={cn(
-                "flex-1 py-2 text-[var(--fs-sm)] font-medium rounded-xl transition-all",
-                activeTab === tab.key
-                  ? "bg-white text-gray-900 shadow-sm font-semibold"
-                  : "text-gray-400",
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* 탭바 — 홈 퀵메뉴와 동일 스타일 */}
+      <div className="px-5 mb-3">
+        <div className="flex gap-4 justify-between">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => handleTabChange(tab.key)}
+                className="flex flex-col items-center gap-1.5 flex-1 active:scale-95 transition-transform"
+              >
+                <div
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white "
+                  style={active ? { color: "var(--key-color)" } : undefined}
+                >
+                  <Icon
+                    className={cn("w-5 h-5", !active && "text-black")}
+                    strokeWidth={active ? 2.5 : 1.8}
+                  />
+                </div>
+                <span className={cn("text-xs font-medium", active ? "text-black font-semibold" : "text-black")}>
+                  {tab.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Tab content */}
-      <div className="px-5 mt-3">
+      {/* 탭 콘텐츠 */}
+      <div className="px-5">
         <AnimatePresence mode="wait">
           {activeTab === "grades" && (
             <motion.div key="grades" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <GradesTab
-                analytics={inbadi.analytics}
-                heatmap={heatmap}
-                recentTests={inbadi.recentTests}
-                recentExams={inbadi.recentExams}
-                badges={badges}
-              />
+              <GradesTab analytics={analytics} />
+            </motion.div>
+          )}
+          {activeTab === "attendance" && (
+            <motion.div key="attendance" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <AttendanceTab />
             </motion.div>
           )}
           {activeTab === "enrollment" && (
@@ -150,14 +118,14 @@ export default function StudentMyPage() {
               <EnrollmentTab enrollments={enrollments} />
             </motion.div>
           )}
-          {activeTab === "qna" && (
-            <motion.div key="qna" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <QnaTab />
+          {activeTab === "payment" && (
+            <motion.div key="payment" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <PaymentTab />
             </motion.div>
           )}
           {activeTab === "settings" && (
             <motion.div key="settings" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <SettingsTab student={inbadi.student} onLogout={handleLogout} />
+              <SettingsTab student={student} onLogout={handleLogout} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -171,20 +139,10 @@ export default function StudentMyPage() {
 // ---------------------------------------------------------------------------
 function MyPageSkeleton() {
   return (
-    <div className="animate-pulse">
-      <div className="bg-gradient-to-br from-blue-500 to-indigo-600 px-5 pt-6 pb-7">
-        <div className="flex items-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-white/20" />
-          <div className="flex-1">
-            <div className="h-4 w-28 bg-white/20 rounded" />
-            <div className="h-3 w-20 bg-white/20 rounded mt-1.5" />
-          </div>
-        </div>
-      </div>
-      <div className="px-5 mt-4 space-y-3">
-        <div className="h-9 bg-gray-100 rounded-2xl" />
-        <div className="h-60 bg-gray-100 rounded-3xl" />
-      </div>
+    <div className="animate-pulse px-5 pt-4">
+      <div className="h-40 bg-gray-100 rounded-3xl mb-4" />
+      <div className="h-10 bg-gray-100 rounded-2xl mb-3" />
+      <div className="h-60 bg-gray-100 rounded-3xl" />
     </div>
   );
 }

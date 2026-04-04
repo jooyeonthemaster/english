@@ -55,51 +55,57 @@ export default function ScoreRankingSection({ xp, stats, ranking }: ScoreRanking
 
   return (
     <div className="flex flex-col gap-3">
-      {/* 메인 XP 카드 */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6">
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-[var(--fs-sm)] font-medium text-blue-100/80">이번 주 XP</p>
-              <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-[var(--fs-2xl)] font-black text-white tracking-tight">
-                  {xp.weekly.toLocaleString()}
-                </span>
-                <span className="text-[var(--fs-lg)] font-bold text-white/70">XP</span>
-              </div>
-              <p className="text-[var(--fs-xs)] text-white/70 mt-1">
-                누적 {xp.total.toLocaleString()} XP
-              </p>
-            </div>
-            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <Zap className="w-[var(--icon-lg)] h-[var(--icon-lg)] text-white" />
-            </div>
-          </div>
-
-          {/* 스트릭 + 학습 상태 */}
-          <div className="flex items-center gap-3">
-            {stats.streak > 0 && (
-              <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <Flame className="w-[var(--icon-xs)] h-[var(--icon-xs)] text-white" />
-                <span className="text-[var(--fs-xs)] font-bold text-white">{stats.streak}일 연속</span>
-              </div>
-            )}
-            <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-              <TrendingUp className="w-[var(--icon-xs)] h-[var(--icon-xs)] text-white" />
-              <span className="text-[var(--fs-xs)] font-bold text-white">
-                {stats.weekStudyDays > 0 ? "오늘 학습 완료" : "오늘 미학습"}
+      {/* 메인 XP 카드 — 6:3:1 (화이트 카드 + 블랙 텍스트 + 키컬러 포인트) */}
+      <div
+        className="rounded-3xl bg-white p-6"
+        style={{ boxShadow: "0 2px 12px color-mix(in srgb, var(--key-color) 12%, transparent)" }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-[var(--fs-sm)] font-medium text-black">이번 주 XP</p>
+            <div className="flex items-baseline gap-2 mt-1">
+              <span className="text-[var(--fs-2xl)] font-black tracking-tight" style={{ color: "var(--key-color)" }}>
+                {xp.weekly.toLocaleString()}
               </span>
+              <span className="text-[var(--fs-lg)] font-bold text-black">XP</span>
             </div>
+            <p className="text-[var(--fs-xs)] text-black mt-1">
+              누적 {xp.total.toLocaleString()} XP
+            </p>
+          </div>
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}
+          >
+            <Zap className="w-[var(--icon-lg)] h-[var(--icon-lg)]" style={{ color: "var(--key-color)" }} />
           </div>
         </div>
 
-        {/* 배경 장식 */}
-        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
-        <div className="absolute -right-4 -bottom-12 w-32 h-32 rounded-full bg-white/5" />
+        {/* 스트릭 + 학습 상태 */}
+        <div className="flex items-center gap-3">
+          {stats.streak > 0 && (
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+              style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}
+            >
+              <Flame className="w-[var(--icon-xs)] h-[var(--icon-xs)]" style={{ color: "var(--key-color)" }} />
+              <span className="text-[var(--fs-xs)] font-bold text-black">{stats.streak}일 연속</span>
+            </div>
+          )}
+          <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
+            <TrendingUp className="w-[var(--icon-xs)] h-[var(--icon-xs)] text-black" />
+            <span className="text-[var(--fs-xs)] font-bold text-black">
+              {stats.weekStudyDays > 0 ? "오늘 학습 완료" : "오늘 미학습"}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* 랭킹 카드 */}
-      <div className="rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <div
+        className="rounded-3xl bg-white p-5"
+        style={{ boxShadow: "0 2px 12px color-mix(in srgb, var(--key-color) 12%, transparent)" }}
+      >
         {/* 탭 */}
         <div className="flex bg-gray-100 rounded-2xl p-1 mb-4">
           {(["individual", "school", "academy"] as RankingTab[]).map((tab) => (
@@ -109,8 +115,8 @@ export default function ScoreRankingSection({ xp, stats, ranking }: ScoreRanking
               className={cn(
                 "flex-1 py-2.5 text-[var(--fs-sm)] font-semibold rounded-xl transition-all duration-200",
                 rankTab === tab
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-400",
+                  ? "bg-white text-black shadow-sm"
+                  : "text-black",
               )}
             >
               {tab === "individual" ? "개인" : tab === "school" ? "학교" : "학원"}
@@ -120,15 +126,15 @@ export default function ScoreRankingSection({ xp, stats, ranking }: ScoreRanking
 
         {/* 랭킹 표시 */}
         <div className="flex items-center justify-center gap-4 py-2">
-          <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center">
-            <Crown className="w-[var(--icon-lg)] h-[var(--icon-lg)] text-amber-500" />
+          <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center">
+            <Crown className="w-[var(--icon-lg)] h-[var(--icon-lg)] text-black" />
           </div>
           <div>
-            <p className="text-[var(--fs-xl)] font-black text-gray-900 tracking-tight">
+            <p className="text-[var(--fs-xl)] font-black text-black tracking-tight">
               {myRank?.label ?? "-"}
             </p>
             {myRank && myRank.total > 0 && (
-              <p className="text-[var(--fs-sm)] text-gray-500 font-medium">전체 {myRank.total}명 중</p>
+              <p className="text-[var(--fs-sm)] text-black font-medium">전체 {myRank.total}명 중</p>
             )}
           </div>
         </div>

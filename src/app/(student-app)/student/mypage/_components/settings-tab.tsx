@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LogOut, ChevronRight, Bell, Grid3X3, User, Info } from "lucide-react";
+import { LogOut, ChevronRight, Bell, User, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // ---------------------------------------------------------------------------
@@ -47,21 +47,8 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
           onClick={() => router.push("/student/mypage/settings")}
           className="w-full flex items-center justify-between py-2"
         >
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-400">
             알림 카테고리 관리
-          </span>
-          <ChevronRight size={16} className="text-gray-400" />
-        </button>
-      </SettingsCard>
-
-      {/* 바로가기 편집 */}
-      <SettingsCard title="바로가기 메뉴" icon={<Grid3X3 size={16} />}>
-        <button
-          onClick={() => router.push("/student/mypage/settings")}
-          className="w-full flex items-center justify-between py-2"
-        >
-          <span className="text-xs text-gray-500">
-            홈 바로가기 편집
           </span>
           <ChevronRight size={16} className="text-gray-400" />
         </button>
@@ -97,10 +84,10 @@ function SettingsCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] p-5">
+    <div className="rounded-3xl bg-white  p-5">
       <div className="flex items-center gap-1.5 mb-2">
         <span className="text-gray-400">{icon}</span>
-        <h3 className="text-xs font-semibold text-gray-500">
+        <h3 className="text-xs font-semibold text-gray-400">
           {title}
         </h3>
       </div>
@@ -112,8 +99,8 @@ function SettingsCard({
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-xs text-gray-500">{label}</span>
-      <span className="text-xs font-medium text-gray-900">{value}</span>
+      <span className="text-xs text-gray-400">{label}</span>
+      <span className="text-xs font-medium text-black">{value}</span>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache, revalidateTag } from "next/cache";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -39,26 +39,31 @@ export async function getStudentHeaderData() {
   const session = await getStudentSession();
   if (!session) return null;
 
-  const student = await prisma.student.findUnique({
-    where: { id: session.studentId },
-    select: {
-      name: true,
-      grade: true,
-      streak: true,
-      school: { select: { name: true } },
-      academy: { select: { name: true } },
+  const cached = unstable_cache(
+    async () => {
+      const student = await prisma.student.findUnique({
+        where: { id: session.studentId },
+        select: {
+          name: true,
+          grade: true,
+          streak: true,
+          school: { select: { name: true } },
+          academy: { select: { name: true } },
+        },
+      });
+      if (!student) return null;
+      return {
+        studentName: student.name,
+        schoolName: student.school?.name ?? "",
+        grade: student.grade,
+        academyName: student.academy?.name ?? "",
+        streak: student.streak,
+      };
     },
-  });
-
-  if (!student) return null;
-
-  return {
-    studentName: student.name,
-    schoolName: student.school?.name ?? "",
-    grade: student.grade,
-    academyName: student.academy?.name ?? "",
-    streak: student.streak,
-  };
+    [`header-${session.studentId}`],
+    { revalidate: 300, tags: [`student-${session.studentId}`] }
+  );
+  return cached();
 }
 
 // ---------------------------------------------------------------------------
@@ -66,60 +71,62 @@ export async function getStudentHeaderData() {
 // ---------------------------------------------------------------------------
 export async function getStudentDashboard() {
   const session = await requireStudent();
-  const studentId = session.studentId;
+  const cached = unstable_cache(
+    () => _getStudentDashboard(session.studentId, session.academyId),
+    [`dashboard-${session.studentId}`],
+    { revalidate: 120, tags: [`student-${session.studentId}`] }
+  );
+  return cached();
+}
 
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    include: {
-      school: true,
-      academy: true,
-      studentAnalytics: true,
-      classEnrollments: {
-        where: { status: "ENROLLED" },
-        include: { class: true },
-      },
-    },
-  });
-
-  if (!student) throw new Error("학생 정보를 찾을 수 없습니다.");
-
-  // Streak
-  const streak = student.streak;
-
-  // This week's study count
+async function _getStudentDashboard(studentId: string, academyId: string) {
   const now = new Date();
   const startOfWeek = new Date(now);
   startOfWeek.setDate(now.getDate() - now.getDay());
   startOfWeek.setHours(0, 0, 0, 0);
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const todayEnd = new Date(todayStart);
+  todayEnd.setDate(todayEnd.getDate() + 1);
 
-  // All queries are independent — run in parallel
+  // Phase 1: student + 8쿼리 + raw SQL 랭킹 — 전부 병렬 (3단계→1단계)
   const [
+    student,
     weekProgress,
     upcomingExams,
     pendingAssignments,
     recentResults,
     activeSeason,
     wrongLogs,
-    weeklyRanking,
+    rankingRows,
     todayAttendanceRecord,
-    recentNotices,
   ] = await Promise.all([
+    prisma.student.findUnique({
+      where: { id: studentId },
+      select: {
+        id: true, name: true, grade: true, level: true, xp: true, streak: true,
+        academyId: true,
+        school: { select: { name: true } },
+        academy: { select: { name: true } },
+        classEnrollments: {
+          where: { status: "ENROLLED" },
+          select: { classId: true, class: { select: { id: true, name: true, schedule: true } } },
+        },
+      },
+    }),
     prisma.studyProgress.findMany({
       where: { studentId, date: { gte: startOfWeek } },
     }),
     prisma.exam.findMany({
       where: {
         status: { in: ["PUBLISHED", "IN_PROGRESS"] },
-        class: {
-          enrollments: { some: { studentId, status: "ENROLLED" } },
-        },
+        class: { enrollments: { some: { studentId, status: "ENROLLED" } } },
       },
       orderBy: { examDate: "asc" },
       take: 3,
     }),
     prisma.assignment.findMany({
       where: {
-        dueDate: { gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()) },
+        dueDate: { gte: todayStart },
         OR: [
           { targetType: "CLASS", class: { enrollments: { some: { studentId, status: "ENROLLED" } } } },
           { targetType: "INDIVIDUAL", submissions: { some: { studentId } } },
@@ -135,68 +142,57 @@ export async function getStudentDashboard() {
       orderBy: { takenAt: "desc" },
       take: 5,
     }),
-    // Active season for "오늘의 학습" CTA
     prisma.studySeason.findFirst({
-      where: {
-        academyId: student.academyId,
-        isActive: true,
-        startDate: { lte: now },
-        endDate: { gte: now },
-      },
+      where: { academyId, isActive: true, startDate: { lte: now }, endDate: { gte: now } },
       orderBy: { startDate: "desc" },
     }),
-    // Top weak points
     prisma.wrongAnswerLog.findMany({
       where: { studentId },
       select: { category: true, subCategory: true, count: true },
       orderBy: { count: "desc" },
       take: 5,
     }),
-    // Weekly XP ranking (same academy students)
-    prisma.sessionRecord.groupBy({
-      by: ["studentId"],
-      where: {
-        student: { academyId: student.academyId },
-        completedAt: { gte: startOfWeek },
-      },
-      _sum: { xpEarned: true },
-      orderBy: { _sum: { xpEarned: "desc" } },
-      take: 10,
-    }),
-    // Today's attendance
+    // Raw SQL: 랭킹 + 이름 1쿼리로 (기존 groupBy + findMany 2쿼리 제거)
+    prisma.$queryRaw<{ studentId: string; name: string; total_xp: number }[]>`
+      SELECT s.id as "studentId", s.name, COALESCE(SUM(sr."xpEarned"), 0)::int as total_xp
+      FROM students s
+      LEFT JOIN session_records sr ON sr."studentId" = s.id AND sr."completedAt" >= ${startOfWeek}
+      WHERE s."academyId" = ${academyId}
+      GROUP BY s.id, s.name
+      HAVING COALESCE(SUM(sr."xpEarned"), 0) > 0
+      ORDER BY total_xp DESC
+      LIMIT 10
+    `,
     prisma.attendance.findFirst({
-      where: {
-        studentId,
-        date: {
-          gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-          lt: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
-        },
-      },
+      where: { studentId, date: { gte: todayStart, lt: todayEnd } },
       select: { status: true, checkInTime: true },
-    }),
-    // Recent notices for home page
-    prisma.notice.findMany({
-      where: {
-        academyId: student.academyId,
-        publishAt: { lte: now },
-        OR: [
-          { targetType: "ALL" },
-          { targetType: "INDIVIDUAL", targetId: studentId },
-          ...(student.classEnrollments.length > 0
-            ? [{ targetType: "CLASS", targetId: { in: student.classEnrollments.map((e) => e.classId) } }]
-            : []),
-        ],
-      },
-      orderBy: [{ isPinned: "desc" }, { publishAt: "desc" }],
-      take: 3,
-      select: { id: true, title: true, isPinned: true, publishAt: true },
     }),
   ]);
 
+  if (!student) throw new Error("학생 정보를 찾을 수 없습니다.");
+
+  const streak = student.streak;
   const weekStudyDays = weekProgress.length;
   const weekVocabTests = weekProgress.reduce((s, p) => s + p.vocabTests, 0);
 
-  // --- 오늘의 학습 추천 (다음 해야 할 세션 자동 계산) ---
+  // 공지 (classEnrollments 필요하므로 student 이후) — 가볍고 빠름
+  const classIds = student.classEnrollments.map((e) => e.classId);
+  const recentNotices = await prisma.notice.findMany({
+    where: {
+      academyId: student.academyId,
+      publishAt: { lte: now },
+      OR: [
+        { targetType: "ALL" },
+        { targetType: "INDIVIDUAL", targetId: studentId },
+        ...(classIds.length > 0 ? [{ targetType: "CLASS", targetId: { in: classIds } }] : []),
+      ],
+    },
+    orderBy: [{ isPinned: "desc" }, { publishAt: "desc" }],
+    take: 3,
+    select: { id: true, title: true, isPinned: true, publishAt: true },
+  });
+
+  // Phase 2: 시즌 의존 쿼리만 (activeSeason 있을 때)
   let todayLesson: {
     passageId: string;
     passageTitle: string;
@@ -214,73 +210,53 @@ export async function getStudentDashboard() {
       }),
       prisma.lessonProgress.findMany({
         where: { studentId, seasonId: activeSeason.id },
+        select: { passageId: true, vocabDone: true, interpDone: true, grammarDone: true, compDone: true, masteryPassed: true },
       }),
     ]);
-
-    const progressMap = new Map(
-      lessonProgressList.map((p) => [p.passageId, p]),
-    );
+    const progressMap = new Map(lessonProgressList.map((p) => [p.passageId, p]));
 
     for (const sp of seasonPassages) {
       const prog = progressMap.get(sp.passageId);
-      const done = [
-        prog?.session1Done,
-        prog?.session2Done,
-        prog?.storiesDone,
-        prog?.session3Done,
-        prog?.session4Done,
-        prog?.session5Done,
-      ];
-      const completedCount = done.filter(Boolean).length;
+      const completedCount =
+        (prog?.vocabDone ?? 0) + (prog?.interpDone ?? 0) +
+        (prog?.grammarDone ?? 0) + (prog?.compDone ?? 0) +
+        (prog?.masteryPassed ? 1 : 0);
 
-      if (completedCount < 6) {
-        let next = "MIX_1";
-        if (!prog?.session1Done) next = "MIX_1";
-        else if (!prog?.session2Done) next = "MIX_2";
-        else if (!prog?.storiesDone) next = "STORIES";
-        else if (!prog?.session3Done) next = "VOCAB_FOCUS";
-        else if (!prog?.session4Done) next = "GRAMMAR_FOCUS";
-        else next = "WEAKNESS_FOCUS";
+      if (completedCount < 21) {
+        const catProgress = {
+          VOCAB: prog?.vocabDone ?? 0,
+          INTERPRETATION: prog?.interpDone ?? 0,
+          GRAMMAR: prog?.grammarDone ?? 0,
+          COMPREHENSION: prog?.compDone ?? 0,
+        };
+        const next = (Object.entries(catProgress) as [string, number][])
+          .filter(([, v]) => v < 5)
+          .sort((a, b) => a[1] - b[1])[0]?.[0] ?? "VOCAB";
 
         todayLesson = {
           passageId: sp.passageId,
           passageTitle: sp.passage.title,
           nextSession: next,
           completedSessions: completedCount,
-          totalSessions: 6,
+          totalSessions: 21,
         };
         break;
       }
     }
   }
 
-  // --- 주간 학습 캘린더 (요일별 학습 여부) ---
+  // --- 주간 학습 캘린더 ---
   const weekDays: boolean[] = Array(7).fill(false);
-  for (const p of weekProgress) {
-    const day = new Date(p.date).getDay(); // 0=Sun
-    weekDays[day] = true;
-  }
-  const weekSessionCount = weekProgress.reduce(
-    (s, p) => s + p.questionsAnswered,
-    0,
-  );
+  for (const p of weekProgress) weekDays[new Date(p.date).getDay()] = true;
+  const weekSessionCount = weekProgress.reduce((s, p) => s + p.questionsAnswered, 0);
 
-  // --- 미니 랭킹 (상위 3명) ---
-  const rankStudentIds = weeklyRanking.map((r) => r.studentId);
-  const rankStudents =
-    rankStudentIds.length > 0
-      ? await prisma.student.findMany({
-          where: { id: { in: rankStudentIds } },
-          select: { id: true, name: true },
-        })
-      : [];
-  const nameMap = new Map(rankStudents.map((s) => [s.id, s.name]));
-
-  const ranking = weeklyRanking.slice(0, 5).map((r, i) => ({
+  // --- 랭킹 (raw SQL 결과 매핑) ---
+  const myWeeklyXp = rankingRows.find((r) => r.studentId === studentId)?.total_xp ?? 0;
+  const ranking = rankingRows.slice(0, 5).map((r, i) => ({
     rank: i + 1,
     studentId: r.studentId,
-    name: nameMap.get(r.studentId) ?? "???",
-    xp: r._sum.xpEarned ?? 0,
+    name: r.name,
+    xp: r.total_xp,
     isMe: r.studentId === studentId,
   }));
 
@@ -314,7 +290,7 @@ export async function getStudentDashboard() {
     },
     xp: {
       total: student.xp,
-      weekly: weeklyRanking.find((r) => r.studentId === studentId)?._sum?.xpEarned ?? 0,
+      weekly: myWeeklyXp,
     },
     stats: {
       streak,
@@ -377,13 +353,39 @@ export async function getStudentDashboard() {
 // ---------------------------------------------------------------------------
 export async function getStudentInbadi() {
   const session = await requireStudent();
-  const studentId = session.studentId;
+  const cached = unstable_cache(
+    () => _getStudentInbadi(session.studentId),
+    [`inbadi-${session.studentId}`],
+    { revalidate: 180, tags: [`student-${session.studentId}`] }
+  );
+  return cached();
+}
+
+async function _getStudentInbadi(studentId: string) {
 
   const student = await prisma.student.findUnique({
     where: { id: studentId },
-    include: {
-      school: true,
-      studentAnalytics: true,
+    select: {
+      id: true,
+      name: true,
+      grade: true,
+      level: true,
+      xp: true,
+      streak: true,
+      school: { select: { name: true } },
+      studentAnalytics: {
+        select: {
+          overallScore: true,
+          grammarScore: true,
+          vocabScore: true,
+          readingScore: true,
+          writingScore: true,
+          listeningScore: true,
+          level: true,
+          grammarDetail: true,
+          weakPoints: true,
+        },
+      },
     },
   });
 

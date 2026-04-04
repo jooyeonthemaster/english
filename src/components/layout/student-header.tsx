@@ -8,9 +8,7 @@ import { ArrowLeft, Bell } from "lucide-react";
 // ---------------------------------------------------------------------------
 const SECTION_TITLES: Record<string, string> = {
   "/student/attendance": "출석",
-  "/student/learn": "학습",
   "/student/resources": "자료실",
-  "/student/mypage": "마이페이지",
   "/student/notifications": "알림",
   "/student/learn/review": "오답 관리",
   "/student/learn/analytics": "학습 분석",
@@ -26,151 +24,71 @@ function getPageTitle(pathname: string): string | null {
   if (/^\/student\/learn\/[^/]+\/session/.test(pathname)) return "학습 세션";
   if (/^\/student\/learn\/[^/]+\/stories/.test(pathname)) return "스토리";
   if (/^\/student\/learn\/[^/]+$/.test(pathname)) return "지문 학습";
-  if (pathname === "/student") return null;
   return null;
 }
-
-// ---------------------------------------------------------------------------
-// 전광판 멘트
-// ---------------------------------------------------------------------------
-const MARQUEE_MESSAGES = [
-  "오늘도 한 걸음 더! 꾸준함이 실력이 됩니다 💪",
-  "🔥 30일 연속 학습 달성하면 문화상품권 1만원!",
-  "상위 1%는 매일 학습합니다. 오늘도 시작해볼까요?",
-  "미션 달성하면 XP 배율 보너스! ✨",
-  "어제보다 1문제 더! 작은 차이가 큰 변화를 만듭니다",
-  "🏆 이번 주 랭킹 도전! XP를 모아보세요",
-  "틀린 문제 복습하면 정답률 2배 UP! 📈",
-  "매일 3분 투자로 영어 실력이 달라집니다",
-];
 
 // ---------------------------------------------------------------------------
 // Props
 // ---------------------------------------------------------------------------
 interface StudentHeaderProps {
-  studentName?: string;
-  schoolName?: string;
-  grade?: number;
   academyName?: string;
-  streak?: number;
 }
 
 // ---------------------------------------------------------------------------
-// Component
+// Component — 항상 로고 헤더 + 서브페이지면 뒤로가기+제목 추가
 // ---------------------------------------------------------------------------
 export function StudentHeader({
-  studentName = "",
-  schoolName = "",
-  grade,
   academyName = "",
 }: StudentHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isHomePage = pathname === "/student";
+  const isMainTab = pathname === "/student"
+    || pathname === "/student/learn"
+    || pathname === "/student/mypage";
+
   const pageTitle = getPageTitle(pathname);
-  const gradeLabel = grade ? `${grade}학년` : "";
 
-  const marqueeChunk = MARQUEE_MESSAGES.join("   ✦   ");
-
-  // ── 홈 화면: 2줄 헤더 ──
-  if (isHomePage) {
-    return (
-      <header className="w-full bg-[#F5F5F5]">
-        {/* 1줄: 로고 — 학원명 — 알림 */}
-        <div className="flex items-center justify-between px-5 h-[var(--header-h)]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-[var(--icon-lg)] h-[var(--icon-lg)] rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-              <span className="text-[var(--fs-caption)] font-black text-white">N</span>
-            </div>
-            <span className="text-[var(--fs-base)] font-extrabold text-gray-900 tracking-tight">
-              {academyName || "NARA"}
-            </span>
-          </div>
-
-          <button
-            onClick={() => router.push("/student/notifications")}
-            className="relative p-2 rounded-2xl active:bg-black/5 transition-colors"
-            aria-label="알림"
-          >
-            <Bell className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-gray-500" strokeWidth={2} />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-[#F5F5F5]" />
-          </button>
-        </div>
-
-        {/* 2줄: 학생 버블 + 전광판 */}
-        <div className="flex items-center gap-3 px-5 pb-3">
-          {/* 학생 정보 버블 */}
-          <button
-            onClick={() => router.push("/student/mypage")}
-            className="shrink-0 flex flex-col items-center px-4 py-2 rounded-2xl bg-white shadow-[0_1px_8px_rgba(0,0,0,0.06)] active:scale-95 transition-transform"
-          >
-            <span className="text-[var(--fs-xs)] font-bold text-gray-800 leading-tight">
-              {studentName || "학생"}
-            </span>
-            {(schoolName || gradeLabel) && (
-              <span className="text-[var(--fs-caption)] text-gray-500 leading-tight mt-0.5">
-                {[schoolName, gradeLabel].filter(Boolean).join(" · ")}
-              </span>
-            )}
-          </button>
-
-          {/* 전광판 — 무한 루프 */}
-          <div className="flex-1 overflow-hidden rounded-2xl bg-white/60 py-2.5 min-w-0">
-            <div className="flex whitespace-nowrap" style={{ animation: "marquee-loop 6s linear infinite" }}>
-              <span className="text-[var(--fs-xs)] font-medium text-gray-500 shrink-0 px-2">{marqueeChunk}</span>
-              <span className="text-[var(--fs-xs)] font-medium text-gray-500 shrink-0 px-2">{marqueeChunk}</span>
-            </div>
-          </div>
-        </div>
-      </header>
-    );
-  }
-
-  // ── 서브 페이지 ──
   return (
-    <header className="w-full bg-[#F5F5F5]">
-      <div className="relative flex h-[var(--header-h)] items-center px-3">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-0.5 p-2 rounded-2xl active:bg-black/5 transition-colors shrink-0"
-          aria-label="뒤로 가기"
-        >
-          <ArrowLeft className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-gray-900" strokeWidth={2.5} />
-        </button>
-        {pageTitle && (
-          <span className="text-[var(--fs-lg)] font-bold text-gray-900 ml-1 truncate max-w-[30%]">
-            {pageTitle}
+    <header className="w-full" style={{ backgroundColor: "var(--base-bg)" }}>
+      {/* 로고 바 — 항상 표시 */}
+      <div className="flex items-center justify-between px-5 h-14">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center">
+            <span className="text-xs font-black text-white">N</span>
+          </div>
+          <span className="text-base font-extrabold text-black tracking-tight">
+            {academyName || "NARA"}
           </span>
-        )}
-
-        {studentName && (
-          <button
-            onClick={() => router.push("/student/mypage")}
-            className="absolute left-1/2 -translate-x-1/2 z-10 flex flex-col items-center px-[var(--sp-2)] py-[var(--sp-1)] rounded-full bg-white shadow-[0_1px_8px_rgba(0,0,0,0.08)] active:scale-95 transition-transform"
-          >
-            <span className="text-[var(--fs-xs)] font-bold text-gray-800 leading-tight">
-              {studentName}
-            </span>
-            {(schoolName || gradeLabel) && (
-              <span className="text-[var(--fs-caption)] text-gray-500 leading-tight">
-                {[schoolName, gradeLabel].filter(Boolean).join(" · ")}
-              </span>
-            )}
-          </button>
-        )}
-
-        <div className="ml-auto">
-          <button
-            onClick={() => router.push("/student/notifications")}
-            className="relative p-2 rounded-2xl active:bg-black/5 transition-colors"
-            aria-label="알림"
-          >
-            <Bell className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-gray-600" strokeWidth={2} />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-[#F5F5F5]" />
-          </button>
         </div>
+
+        <button
+          onClick={() => router.push("/student/notifications")}
+          className="relative p-2 rounded-2xl active:bg-black/5 transition-colors"
+          aria-label="알림"
+        >
+          <Bell className="w-5 h-5 text-black" strokeWidth={2} />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-[var(--base-bg)]" />
+        </button>
       </div>
+
+      {/* 서브 페이지: 뒤로가기 + 제목 */}
+      {!isMainTab && (
+        <div className="flex items-center px-3 pb-2">
+          <button
+            onClick={() => router.back()}
+            className="p-2 rounded-2xl active:bg-black/5 transition-colors shrink-0"
+            aria-label="뒤로 가기"
+          >
+            <ArrowLeft className="w-5 h-5 text-black" strokeWidth={2.5} />
+          </button>
+          {pageTitle && (
+            <span className="text-lg font-bold text-black ml-1">
+              {pageTitle}
+            </span>
+          )}
+        </div>
+      )}
     </header>
   );
 }

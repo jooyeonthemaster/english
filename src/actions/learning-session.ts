@@ -1,15 +1,12 @@
-// @ts-nocheck — studySeason model not yet in schema (pending migration)
 "use server";
 
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
-import { revalidatePath } from "next/cache";
+import { unstable_cache } from "next/cache";
 import {
-  SESSION_COMPOSITION,
   QUESTIONS_PER_SESSION,
-  STORIES_QUESTIONS_COUNT,
+  MASTERY_FAIL_THRESHOLD,
   LEARNING_XP,
-  SUBTYPE_TO_CATEGORY,
   type SessionType,
   type LearningCategory,
 } from "@/lib/learning-constants";
@@ -18,7 +15,6 @@ import type {
   SeasonInfo,
   SessionStartData,
   SessionQuestion,
-  SessionResult,
 } from "@/lib/learning-types";
 
 // ---------------------------------------------------------------------------
@@ -29,67 +25,6 @@ async function requireStudent() {
   const session = await getStudentSession();
   if (!session) throw new Error("로그인이 필요합니다.");
   return session;
-}
-
-function xpForLevel(level: number): number {
-  return 100 + (level - 1) * 50;
-}
-
-/** 숙달도 계산: 해당 지문의 모든 세션 정답률 가중 평균 */
-function calculateMastery(sessions: { score: number; sessionType: string }[]): number {
-  if (sessions.length === 0) return 0;
-  const total = sessions.reduce((sum, s) => sum + s.score, 0);
-  return Math.round(total / sessions.length);
-}
-
-// ---------------------------------------------------------------------------
-// questionText JSON → 요약 텍스트 (결과 화면용)
-// ---------------------------------------------------------------------------
-
-function summarizeQuestionText(subType: string | null, raw: string): string {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const d: Record<string, any> = JSON.parse(raw);
-    switch (subType) {
-      case "WORD_MEANING": case "WORD_MEANING_REVERSE":
-        return d.word ? `단어: ${d.word}` : raw.slice(0, 80);
-      case "WORD_FILL": case "VOCAB_COLLOCATION": case "VOCAB_CONFUSABLE":
-      case "KEY_EXPRESSION": case "GRAMMAR_SELECT": case "PASSAGE_FILL":
-        return d.sentence || d.excerpt || raw.slice(0, 80);
-      case "SENTENCE_INTERPRET":
-        return d.englishSentence || raw.slice(0, 80);
-      case "SENTENCE_COMPLETE":
-        return d.koreanSentence || raw.slice(0, 80);
-      case "GRAM_TRANSFORM":
-        return d.originalSentence || raw.slice(0, 80);
-      case "GRAM_BINARY":
-        return d.sentence || raw.slice(0, 80);
-      case "TRUE_FALSE":
-        return d.statement || raw.slice(0, 80);
-      case "CONTENT_QUESTION":
-        return d.question || raw.slice(0, 80);
-      case "CONNECTOR_FILL":
-        return `${(d.sentenceBefore || "").slice(0, 50)}… ___ …${(d.sentenceAfter || "").slice(0, 30)}`;
-      case "ERROR_FIND": case "ERROR_CORRECT":
-        return d.sentence || raw.slice(0, 80);
-      case "WORD_ARRANGE":
-        return d.koreanSentence || raw.slice(0, 80);
-      case "SENT_CHUNK_ORDER":
-        return d.koreanHint || raw.slice(0, 80);
-      case "WORD_MATCH":
-        return `${d.pairs?.length || 0}쌍 매칭`;
-      case "WORD_SPELL":
-        return `${d.koreanMeaning || ""} → 스펠링`;
-      case "VOCAB_SYNONYM":
-        return `${d.word || ""} (${d.targetRelation === "synonym" ? "유의어" : "반의어"})`;
-      case "VOCAB_DEFINITION":
-        return d.englishDefinition || raw.slice(0, 80);
-      default:
-        return raw.slice(0, 80);
-    }
-  } catch {
-    return raw.slice(0, 80);
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -107,7 +42,45 @@ interface NaeshinQuestionRow {
   explanation: { content: string; keyPoints: string | null } | null;
 }
 
-function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningCategory): SessionQuestion {
+/** options 정규화 — AI 출력이 여러 형태로 올 수 있음
+ *  1) [{label:"A", text:"..."}]  → 정상
+ *  2) {"A":"...", "B":"..."}     → 객체 형태
+ *  3) ["A. ...", "B. ..."]       → 문자열 배열 */
+function normalizeOptions(raw: unknown): { label: string; text: string }[] | null {
+  if (!raw) return null;
+  if (Array.isArray(raw)) {
+    if (raw.length === 0) return null;
+    // [{label, text}] 형태
+    if (typeof raw[0] === "object" && raw[0] !== null && "label" in raw[0] && "text" in raw[0]) {
+      return raw as { label: string; text: string }[];
+    }
+    // ["A. ...", "B. ..."] 문자열 배열
+    if (typeof raw[0] === "string") {
+      return raw.map((s: string, i: number) => {
+        const match = s.match(/^([A-Z])[.:]\s*(.*)/);
+        if (match) return { label: match[1], text: match[2] };
+        return { label: String.fromCharCode(65 + i), text: s };
+      });
+    }
+    // ["A: ...", ...] 형태
+    if (typeof raw[0] === "string") {
+      return raw.map((s: string, i: number) => ({
+        label: String.fromCharCode(65 + i),
+        text: String(s),
+      }));
+    }
+  }
+  // {"A":"...", "B":"..."} 객체 형태
+  if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
+    return Object.entries(raw).map(([label, text]) => ({
+      label,
+      text: String(text),
+    }));
+  }
+  return null;
+}
+
+function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningCategory, sentenceTranslations?: Map<string, string>): SessionQuestion {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let data: Record<string, any> = {};
   try { data = JSON.parse(q.questionText); } catch { /* raw text fallback */ }
@@ -121,73 +94,117 @@ function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningC
   switch (subType) {
     // ── VOCAB ────────────────────────────────
     case "WORD_MEANING":
-      questionText = `다음 문장에서 '${data.word}'의 의미로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`;
-      options = data.options || null;
+      questionText = data.word
+        ? `다음 문장에서 '${data.word}'의 의미로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`
+        : `다음 단어의 의미로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`;
+      options = normalizeOptions(data.options);
       break;
-    case "WORD_MEANING_REVERSE":
-      questionText = `'${data.koreanMeaning}'에 해당하는 영어 단어는?\n\n${data.contextSentence || ""}`;
-      options = data.options || null;
+    case "WORD_MEANING_REVERSE": {
+      const korMeaning = data.koreanMeaning || data.meaning || "";
+      questionText = korMeaning
+        ? `'${korMeaning}'에 해당하는 영어 단어는?`
+        : `다음에 해당하는 영어 단어는?`;
+      options = normalizeOptions(data.options);
       break;
+    }
     case "WORD_FILL":
       questionText = `빈칸에 들어갈 가장 알맞은 단어는?\n\n${data.sentence || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
     case "WORD_MATCH":
       questionText = "영어 단어와 한국어 뜻을 올바르게 연결하세요.";
-      // WORD_MATCH는 매칭형 — pairs를 JSON으로 전달
+      // pairs는 rawData로 전달
       break;
-    case "WORD_SPELL":
-      questionText = `'${data.koreanMeaning}' — 힌트: ${data.hint || ""}`;
-      correctAnswer = data.correctAnswer || q.correctAnswer || "";
+    case "WORD_SPELL": {
+      const meaning = data.koreanMeaning || "";
+      const hint = data.hint || "";
+      const answer = data.correctAnswer || q.correctAnswer || "";
+      const blanks = answer.length > hint.length ? "_".repeat(answer.length - hint.length) : "____";
+      // correctAnswer(영단어)로 PassageAnalysis에서 포함 문장의 한국어 번역 찾기
+      let contextLine = "";
+      if (sentenceTranslations && sentenceTranslations.size > 0 && answer) {
+        const answerLower = answer.toLowerCase();
+        for (const [eng, kor] of sentenceTranslations) {
+          if (eng.includes(answerLower)) {
+            if (meaning) {
+              // 정확 일치 먼저
+              if (kor.includes(meaning)) {
+                contextLine = kor.replace(meaning, `**${meaning}**`);
+              } else {
+                // 어근 매칭: "식별하다" → "식별" 추출 후 "식별하기는" 찾기
+                const stem = meaning.replace(/(하다|되다|시키다|적인|적$)/g, "");
+                if (stem.length >= 2) {
+                  const regex = new RegExp(`(${stem}[가-힣]*)`, "g");
+                  const match = kor.match(regex);
+                  if (match) {
+                    contextLine = kor.replace(match[0], `**${match[0]}**`);
+                  } else {
+                    contextLine = kor;
+                  }
+                } else {
+                  contextLine = kor;
+                }
+              }
+            } else {
+              contextLine = kor;
+            }
+            break;
+          }
+        }
+      }
+      questionText = contextLine
+        ? `강조된 단어를 영어로 입력하세요.\n\n${contextLine}\n\n힌트: ${hint}${blanks}`
+        : `다음 뜻에 해당하는 영어 단어를 입력하세요.\n\n"${meaning}"\n\n힌트: ${hint}${blanks}`;
+      correctAnswer = answer;
       break;
+    }
     case "VOCAB_SYNONYM":
-      questionText = `'${data.word}'의 ${data.targetRelation === "synonym" ? "유의어" : "반의어"}로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`;
-      options = data.options || null;
+      questionText = data.word
+        ? `'${data.word}'의 ${data.targetRelation === "synonym" ? "유의어" : "반의어"}로 가장 알맞은 것은?\n\n${data.contextSentence || ""}`
+        : `다음 단어의 ${data.targetRelation === "synonym" ? "유의어" : "반의어"}는?\n\n${data.contextSentence || ""}`;
+      options = normalizeOptions(data.options);
       break;
     case "VOCAB_DEFINITION":
       questionText = `다음 영어 정의에 해당하는 단어는?\n\n"${data.englishDefinition || ""}"`;
-      options = data.options || null;
-      passageSnippet = data.contextSentence;
+      options = normalizeOptions(data.options);
+      // contextSentence에 정답이 포함되므로 지문 표시 안 함
       break;
     case "VOCAB_COLLOCATION":
       questionText = `빈칸에 들어갈 알맞은 단어는?\n\n${data.sentence || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
     case "VOCAB_CONFUSABLE":
       questionText = `빈칸에 들어갈 올바른 단어는?\n\n${data.sentence || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
 
     // ── INTERPRETATION ───────────────────────
     case "SENTENCE_INTERPRET":
       questionText = `다음 영어 문장의 해석으로 가장 알맞은 것은?\n\n${data.englishSentence || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
     case "SENTENCE_COMPLETE":
       questionText = `다음 한국어 해석에 맞는 영어 문장을 고르세요.\n\n${data.koreanSentence || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
     case "WORD_ARRANGE":
       questionText = `다음 한국어 뜻에 맞게 영어 단어/구를 배열하세요.\n\n${data.koreanSentence || ""}`;
-      // correctOrder + distractorWords를 JSON으로 전달
       break;
     case "KEY_EXPRESSION":
       questionText = `빈칸에 들어갈 핵심 표현은?\n\n${data.sentence || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
     case "SENT_CHUNK_ORDER":
       questionText = `다음 한국어 해석에 맞게 끊어읽기 순서를 배열하세요.\n\n${data.koreanHint || ""}`;
-      // chunks + correctOrder를 JSON으로 전달
       break;
 
     // ── GRAMMAR ──────────────────────────────
     case "GRAMMAR_SELECT":
-      questionText = `빈칸에 들어갈 올바른 문법 형태는?\n\n${data.sentence || ""}`;
-      options = data.options || null;
+      questionText = `빈칸에 들어갈 올바른 문법 형태는?\n\n${data.sentence || data.contextSentence || ""}`;
+      options = normalizeOptions(data.options);
       break;
     case "ERROR_FIND":
       questionText = `다음 문장에서 문법 오류가 있는 단어를 찾으세요.\n\n${data.sentence || ""}`;
-      // words 배열에서 탭 선택 — 특수 UI 필요, 현재는 단답형으로 처리
       correctAnswer = data.errorWord || q.correctAnswer || "";
       break;
     case "ERROR_CORRECT":
@@ -195,40 +212,34 @@ function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningC
       correctAnswer = data.correctAnswer || q.correctAnswer || "";
       break;
     case "GRAM_TRANSFORM":
-      questionText = `다음 문장을 지시에 따라 전환하세요.\n\n${data.originalSentence || ""}\n\n${data.instruction || ""}`;
+      questionText = `다음 문장을 지시에 따라 전환하세요.\n\n${data.originalSentence || ""}\n\n[${data.instruction || data.grammarPoint || ""}]`;
       correctAnswer = data.correctAnswer || q.correctAnswer || "";
       break;
     case "GRAM_BINARY":
       questionText = `다음 문장의 문법이 맞으면 O, 틀리면 X를 선택하세요.\n\n${data.sentence || ""}`;
-      options = [
-        { label: "O", text: "맞다" },
-        { label: "X", text: "틀리다" },
-      ];
+      options = [{ label: "O", text: "맞다" }, { label: "X", text: "틀리다" }];
       correctAnswer = data.isCorrect === true ? "O" : "X";
       break;
 
     // ── COMPREHENSION ────────────────────────
     case "TRUE_FALSE":
       questionText = `다음 진술이 지문 내용과 일치하면 O, 불일치하면 X를 선택하세요.\n\n${data.statement || ""}`;
-      options = [
-        { label: "O", text: "일치" },
-        { label: "X", text: "불일치" },
-      ];
+      options = [{ label: "O", text: "일치" }, { label: "X", text: "불일치" }];
       correctAnswer = data.isTrue === true ? "O" : "X";
       passageSnippet = data.contextExcerpt;
       break;
     case "CONTENT_QUESTION":
-      questionText = data.question || "";
-      options = data.options || null;
-      passageSnippet = data.contextExcerpt;
+      questionText = data.question || data.contextExcerpt || "다음 지문의 내용과 관련된 질문입니다.";
+      options = normalizeOptions(data.options);
+      passageSnippet = data.question ? data.contextExcerpt : undefined;
       break;
     case "PASSAGE_FILL":
       questionText = `빈칸에 들어갈 표현으로 가장 알맞은 것은?\n\n${data.excerpt || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
     case "CONNECTOR_FILL":
       questionText = `두 문장 사이에 들어갈 연결어로 가장 알맞은 것은?\n\n${data.sentenceBefore || ""}\n\n___________\n\n${data.sentenceAfter || ""}`;
-      options = data.options || null;
+      options = normalizeOptions(data.options);
       break;
 
     default:
@@ -236,8 +247,11 @@ function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningC
       break;
   }
 
-  // correctAnswer가 비어있으면 DB 값 사용
   if (!correctAnswer) correctAnswer = q.correctAnswer || "";
+
+  // 특수 인터랙션용 rawData
+  const specialSubTypes = ["WORD_MATCH", "WORD_ARRANGE", "SENT_CHUNK_ORDER", "ERROR_FIND"];
+  const rawData = specialSubTypes.includes(subType) ? data : undefined;
 
   return {
     id: q.id,
@@ -249,6 +263,7 @@ function parseNaeshinQuestion(q: NaeshinQuestionRow, fallbackCategory: LearningC
     correctAnswer,
     includesPassage: !!passageSnippet,
     passageSnippet,
+    rawData,
     explanation: q.explanation
       ? {
           content: q.explanation.content,
@@ -266,38 +281,26 @@ export async function getActiveSeason(): Promise<SeasonInfo | null> {
   const session = await requireStudent();
   const now = new Date();
 
-  // 내신 집중 모드 우선
   const season = await prisma.studySeason.findFirst({
     where: {
       academyId: session.academyId,
       isActive: true,
       startDate: { lte: now },
       endDate: { gte: now },
-      OR: [
-        { grade: session.grade },
-        { grade: null }, // 전체 학년 대상
-      ],
+      OR: [{ grade: session.grade }, { grade: null }],
     },
-    include: {
-      passages: { orderBy: { order: "asc" } },
-    },
-    orderBy: [
-      // EXAM_PREP 우선
-      { type: "asc" },
-      { startDate: "desc" },
-    ],
+    include: { passages: { orderBy: { order: "asc" } } },
+    orderBy: [{ type: "asc" }, { startDate: "desc" }],
   });
 
   if (!season) return null;
 
-  // 완료한 레슨 수 계산
+  // 완료 = 마스터리 통과
   const completedCount = await prisma.lessonProgress.count({
     where: {
       studentId: session.studentId,
       seasonId: season.id,
-      session1Done: true,
-      session2Done: true,
-      storiesDone: true,
+      masteryPassed: true,
     },
   });
 
@@ -319,7 +322,7 @@ export async function getActiveSeason(): Promise<SeasonInfo | null> {
 }
 
 // ---------------------------------------------------------------------------
-// 2. getLessonList — 레슨 목록 (지문별 진행도 포함)
+// 2. getLessonList — 레슨 목록 (카테고리별 진행도)
 // ---------------------------------------------------------------------------
 
 export async function getLessonList(seasonId: string): Promise<LessonItem[]> {
@@ -339,101 +342,158 @@ export async function getLessonList(seasonId: string): Promise<LessonItem[]> {
 
   const progressMap = new Map(progressList.map((p) => [p.passageId, p]));
 
-  // Build base lesson data
-  const baseLessons = seasonPassages.map((sp) => {
+  return seasonPassages.map((sp) => {
     const prog = progressMap.get(sp.passageId);
-    const s1 = prog?.session1Done ?? false;
-    const s2 = prog?.session2Done ?? false;
-    const stories = prog?.storiesDone ?? false;
-    const s3 = prog?.session3Done ?? false;
-    const s4 = prog?.session4Done ?? false;
-    const s5 = prog?.session5Done ?? false;
+    const catProgress = {
+      VOCAB: prog?.vocabDone ?? 0,
+      INTERPRETATION: prog?.interpDone ?? 0,
+      GRAMMAR: prog?.grammarDone ?? 0,
+      COMPREHENSION: prog?.compDone ?? 0,
+    };
 
-    const storiesUnlocked = s1 && s2;
+    const masteryUnlocked =
+      catProgress.VOCAB >= 1 &&
+      catProgress.INTERPRETATION >= 1 &&
+      catProgress.GRAMMAR >= 1 &&
+      catProgress.COMPREHENSION >= 1;
 
-    let nextSession: SessionType | null = null;
-    if (!s1) nextSession = "MIX_1";
-    else if (!s2) nextSession = "MIX_2";
-    else if (!stories) nextSession = "STORIES";
-    else if (!s3) nextSession = "VOCAB_FOCUS";
-    else if (!s4) nextSession = "GRAMMAR_FOCUS";
-    else if (!s5) nextSession = "WEAKNESS_FOCUS";
-
-    const isCompleted = s1 && s2 && stories;
-    const allDone = isCompleted && s3 && s4 && s5;
-    const anySessions = s1 || s2 || stories || s3 || s4 || s5;
+    const totalSessionsDone =
+      catProgress.VOCAB + catProgress.INTERPRETATION +
+      catProgress.GRAMMAR + catProgress.COMPREHENSION +
+      (prog?.masteryPassed ? 1 : 0);
 
     return {
       passageId: sp.passageId,
       passageTitle: sp.passage.title,
       order: sp.order,
-      session1Done: s1,
-      session2Done: s2,
-      storiesDone: stories,
-      session3Done: s3,
-      session4Done: s4,
-      session5Done: s5,
+      categoryProgress: catProgress,
+      masteryUnlocked,
+      masteryPassed: prog?.masteryPassed ?? false,
       masteryScore: prog?.masteryScore ?? 0,
-      storiesUnlocked,
-      nextSession,
-      isCompleted,
-      _allDone: allDone,
-      _anySessions: anySessions,
+      masteryAttempts: prog?.masteryAttempts ?? 0,
+      isCompleted: prog?.masteryPassed ?? false,
+      totalSessionsDone,
     };
-  });
-
-  // Sequential lock logic
-  let firstIncomplete = -1;
-  return baseLessons.map((lesson, i) => {
-    const isLocked = i > 0 && !baseLessons[i - 1].isCompleted;
-    if (!lesson.isCompleted && firstIncomplete === -1) firstIncomplete = i;
-    const isCurrent = i === firstIncomplete;
-
-    let crownLevel: 0 | 1 | 2 | 3 = 0;
-    if (isLocked) {
-      crownLevel = 0;
-    } else if (lesson._allDone && lesson.masteryScore >= 80) {
-      crownLevel = 3;
-    } else if (lesson._anySessions) {
-      crownLevel = 2;
-    } else {
-      crownLevel = 1;
-    }
-
-    // Strip internal fields
-    const { _allDone, _anySessions, ...rest } = lesson;
-    return { ...rest, isLocked, isCurrent, crownLevel };
   });
 }
 
 // ---------------------------------------------------------------------------
-// 2-1. getLearnPageData — 학습 홈 통합 로드 (워터폴 제거)
+// 2-1. getLearnPageData — 학습 홈 통합 로드
 // ---------------------------------------------------------------------------
 
 export async function getLearnPageData() {
   const session = await requireStudent();
   const { getDailyMission, getStreakInfo } = await import("@/actions/learning-gamification");
 
-  // Phase 1: 병렬로 시즌 + 미션 + 스트릭 로드
-  const [seasonData, missionData, streakData] = await Promise.all([
-    getActiveSeason(),
+  // 시즌+레슨은 캐싱 (cookies 접근 불가 → 인자로 전달)
+  const cachedSeasonLessons = unstable_cache(
+    async (studentId: string, academyId: string, grade: number) => {
+      const seasonData = await _getActiveSeason(studentId, academyId, grade);
+      const lessons = seasonData ? await _getLessonList(studentId, seasonData.id) : [];
+      return { season: seasonData, lessons };
+    },
+    [`learn-${session.studentId}`],
+    { revalidate: 120, tags: [`student-${session.studentId}`] }
+  );
+
+  const [{ season: seasonData, lessons }, missionData, streakData] = await Promise.all([
+    cachedSeasonLessons(session.studentId, session.academyId, session.grade),
     getDailyMission(),
     getStreakInfo(),
   ]);
 
-  // Phase 2: 시즌이 있으면 레슨 목록 로드 (서버에서 순차 — 클라이언트 RTT 1회)
-  const lessons = seasonData ? await getLessonList(seasonData.id) : [];
-
   return { season: seasonData, mission: missionData, streak: streakData, lessons };
 }
 
+// 캐시용 내부 함수 (cookies 미사용)
+async function _getActiveSeason(studentId: string, academyId: string, grade: number): Promise<SeasonInfo | null> {
+  const now = new Date();
+  const season = await prisma.studySeason.findFirst({
+    where: {
+      academyId,
+      isActive: true,
+      startDate: { lte: now },
+      endDate: { gte: now },
+      OR: [{ grade }, { grade: null }],
+    },
+    include: { passages: { orderBy: { order: "asc" } } },
+    orderBy: [{ type: "asc" }, { startDate: "desc" }],
+  });
+  if (!season) return null;
+
+  const completedCount = await prisma.lessonProgress.count({
+    where: { studentId, seasonId: season.id, masteryPassed: true },
+  });
+
+  const dDay = season.type === "EXAM_PREP"
+    ? Math.ceil((season.endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    : null;
+
+  return {
+    id: season.id,
+    name: season.name,
+    type: season.type as "EXAM_PREP" | "REGULAR",
+    startDate: season.startDate.toISOString(),
+    endDate: season.endDate.toISOString(),
+    dDay,
+    totalLessons: season.passages.length,
+    completedLessons: completedCount,
+  };
+}
+
+async function _getLessonList(studentId: string, seasonId: string): Promise<LessonItem[]> {
+  const [seasonPassages, progressList] = await Promise.all([
+    prisma.seasonPassage.findMany({
+      where: { seasonId },
+      include: { passage: { select: { id: true, title: true } } },
+      orderBy: { order: "asc" },
+    }),
+    prisma.lessonProgress.findMany({
+      where: { studentId, seasonId },
+    }),
+  ]);
+
+  const progressMap = new Map(progressList.map((p) => [p.passageId, p]));
+
+  return seasonPassages.map((sp) => {
+    const prog = progressMap.get(sp.passageId);
+    const catProgress = {
+      VOCAB: prog?.vocabDone ?? 0,
+      INTERPRETATION: prog?.interpDone ?? 0,
+      GRAMMAR: prog?.grammarDone ?? 0,
+      COMPREHENSION: prog?.compDone ?? 0,
+    };
+    const masteryUnlocked =
+      catProgress.VOCAB >= 1 && catProgress.INTERPRETATION >= 1 &&
+      catProgress.GRAMMAR >= 1 && catProgress.COMPREHENSION >= 1;
+    const totalSessionsDone =
+      catProgress.VOCAB + catProgress.INTERPRETATION +
+      catProgress.GRAMMAR + catProgress.COMPREHENSION +
+      (prog?.masteryPassed ? 1 : 0);
+
+    return {
+      passageId: sp.passageId,
+      passageTitle: sp.passage.title,
+      order: sp.order,
+      categoryProgress: catProgress,
+      masteryUnlocked,
+      masteryPassed: prog?.masteryPassed ?? false,
+      masteryScore: prog?.masteryScore ?? 0,
+      masteryAttempts: prog?.masteryAttempts ?? 0,
+      isCompleted: prog?.masteryPassed ?? false,
+      totalSessionsDone,
+    };
+  });
+}
+
 // ---------------------------------------------------------------------------
-// 3. startSession — 세션 시작 (문제 선별)
+// 3. startSession — 사전 생성된 세션 조회
 // ---------------------------------------------------------------------------
 
 export async function startSession(
   passageId: string,
   sessionType: SessionType,
+  sessionSeq: number,
   seasonId?: string
 ): Promise<SessionStartData> {
   const session = await requireStudent();
@@ -445,105 +505,118 @@ export async function startSession(
   });
   if (!passage) throw new Error("지문을 찾을 수 없습니다.");
 
-  // 레슨 순차 잠금 검증
-  if (seasonId) {
-    const lessons = await getLessonList(seasonId);
-    const target = lessons.find((l) => l.passageId === passageId);
-    if (target?.isLocked) {
-      throw new Error("이전 레슨을 먼저 완료하세요.");
+  // PrebuiltSession 조회
+  const prebuilt = await prisma.prebuiltSession.findUnique({
+    where: {
+      passageId_category_sessionSeq: {
+        passageId,
+        category: sessionType,
+        sessionSeq,
+      },
+    },
+  });
+  if (!prebuilt) throw new Error("세션이 아직 생성되지 않았습니다.");
+
+  // 순차 잠금 / 마스터리 해금 검증 (1회 조회로 통합)
+  if ((sessionType !== "MASTERY" && sessionSeq > 1) || sessionType === "MASTERY") {
+    const progress = await prisma.lessonProgress.findFirst({
+      where: { studentId, passageId, seasonId },
+    });
+
+    if (sessionType !== "MASTERY" && sessionSeq > 1) {
+      const doneCount = getCategoryDoneCount(progress, sessionType);
+      if (doneCount < sessionSeq - 1) {
+        throw new Error("이전 세션을 먼저 완료하세요.");
+      }
+    }
+
+    if (sessionType === "MASTERY") {
+      if (
+        !progress ||
+        progress.vocabDone < 1 ||
+        progress.interpDone < 1 ||
+        progress.grammarDone < 1 ||
+        progress.compDone < 1
+      ) {
+        throw new Error("각 카테고리 세션을 1개 이상 완료해야 마스터리에 도전할 수 있습니다.");
+      }
     }
   }
 
-  // Stories 모드는 별도 처리
-  if (sessionType === "STORIES") {
-    const questions = await pickStoriesQuestions(passageId);
-    return {
-      sessionType,
-      passageId: passage.id,
-      passageTitle: passage.title,
-      passageContent: passage.content,
-      questions,
-      seasonId,
-    };
+  // 문제 로드 (사전 생성된 순서 유지)
+  const questionIds: string[] = JSON.parse(prebuilt.questionIds);
+  const [questions, analysis] = await Promise.all([
+    prisma.naeshinQuestion.findMany({
+      where: { id: { in: questionIds } },
+      include: { explanation: true },
+    }),
+    prisma.passageAnalysis.findUnique({
+      where: { passageId },
+      select: { analysisData: true },
+    }),
+  ]);
+
+  // PassageAnalysis 문장별 한국어 번역 맵 (WORD_SPELL 등에서 사용)
+  let sentenceTranslations: Map<string, string> = new Map();
+  if (analysis?.analysisData) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const parsed = typeof analysis.analysisData === "string" ? JSON.parse(analysis.analysisData) : analysis.analysisData as any;
+      if (Array.isArray(parsed.sentences)) {
+        for (const s of parsed.sentences) {
+          if (s.english && s.korean) {
+            sentenceTranslations.set(s.english.trim().toLowerCase(), s.korean);
+          }
+        }
+      }
+    } catch {}
   }
 
-  const composition = SESSION_COMPOSITION[sessionType];
-  const allQuestions: SessionQuestion[] = [];
+  const questionMap = new Map(questions.map((q) => [q.id, q]));
+  const orderedQuestions = questionIds
+    .map((id) => questionMap.get(id))
+    .filter(Boolean) as typeof questions;
 
-  // 약점 집중: 이전 오답 문제 우선
-  let weaknessQuestionIds: string[] = [];
-  if (sessionType === "WEAKNESS_FOCUS") {
-    const wrongLogs = await prisma.naeshinWrongAnswerLog.findMany({
-      where: { studentId, question: { passageId } },
-      orderBy: { count: "desc" },
-      take: QUESTIONS_PER_SESSION,
-      select: { questionId: true },
-    });
-    weaknessQuestionIds = wrongLogs.map((w) => w.questionId);
-  }
-
-  // 이미 풀었던 문제 ID 가져오기 (중복 출제 최소화)
-  const previousRecords = await prisma.sessionRecord.findMany({
-    where: { studentId, passageId },
-    select: { wrongQuestionIds: true },
-  });
-
-  // 카테고리별 문제 추출 — 병렬 실행 (NaeshinQuestion 사용)
-  const categoryEntries = Object.entries(composition).filter(([, count]) => count > 0);
-  const categoryResults = await Promise.all(
-    categoryEntries.map(([category, count]) =>
-      prisma.naeshinQuestion.findMany({
-        where: {
-          passageId,
-          learningCategory: category,
-          ...(weaknessQuestionIds.length > 0 && sessionType === "WEAKNESS_FOCUS"
-            ? { id: { in: weaknessQuestionIds } }
-            : {}),
-        },
-        include: { explanation: true },
-        take: count * 3,
-      }).then((questions) => {
-        const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, count);
-        return shuffled.map((q) => parseNaeshinQuestion(q, category as LearningCategory));
-      })
-    )
-  );
-
-  for (const questions of categoryResults) {
-    allQuestions.push(...questions);
-  }
-
-  // 최종 셔플
-  const finalQuestions = allQuestions.sort(() => Math.random() - 0.5);
+  const isMastery = sessionType === "MASTERY";
 
   return {
     sessionType,
+    sessionSeq,
     passageId: passage.id,
     passageTitle: passage.title,
     passageContent: passage.content,
-    questions: finalQuestions.slice(0, QUESTIONS_PER_SESSION),
+    questions: orderedQuestions.map((q) =>
+      parseNaeshinQuestion(q, (q.learningCategory as LearningCategory) ?? "VOCAB", sentenceTranslations)
+    ),
     seasonId,
+    isMastery,
+    masteryFailThreshold: isMastery ? MASTERY_FAIL_THRESHOLD : undefined,
+    hintsEnabled: !isMastery,
   };
 }
 
-/** Stories용 가벼운 이해도 문제 선별 */
-async function pickStoriesQuestions(passageId: string): Promise<SessionQuestion[]> {
-  const questions = await prisma.naeshinQuestion.findMany({
-    where: {
-      passageId,
-      learningCategory: { in: ["COMPREHENSION", "INTERPRETATION"] },
-    },
-    include: { explanation: true },
-    take: STORIES_QUESTIONS_COUNT * 3,
-  });
+// ---------------------------------------------------------------------------
+// Helper: 카테고리별 완료 세션 수 조회
+// ---------------------------------------------------------------------------
 
-  const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, STORIES_QUESTIONS_COUNT);
-
-  return shuffled.map((q) => parseNaeshinQuestion(q, "COMPREHENSION"));
+function getCategoryDoneCount(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  progress: any | null,
+  sessionType: SessionType
+): number {
+  if (!progress) return 0;
+  const map: Record<string, string> = {
+    VOCAB: "vocabDone",
+    INTERPRETATION: "interpDone",
+    GRAMMAR: "grammarDone",
+    COMPREHENSION: "compDone",
+  };
+  const field = map[sessionType];
+  return field ? (progress[field] ?? 0) : 0;
 }
 
 // ---------------------------------------------------------------------------
-// startReviewSession — 오답 재풀이 세션 (특정 문제 ID로 시작)
+// 4. startReviewSession — 오답 재풀이
 // ---------------------------------------------------------------------------
 
 export async function startReviewSession(
@@ -560,6 +633,7 @@ export async function startReviewSession(
   });
   if (!passage) throw new Error("지문을 찾을 수 없습니다.");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: Record<string, unknown> = { id: { in: questionIds } };
   if (category) where.learningCategory = category;
 
@@ -570,10 +644,16 @@ export async function startReviewSession(
 
   if (questions.length === 0) throw new Error("풀 수 있는 문제가 없습니다.");
 
-  const shuffled = questions.sort(() => Math.random() - 0.5);
+  // Fisher-Yates 셔플
+  const shuffled = [...questions];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
 
   return {
-    sessionType: "WEAKNESS_FOCUS",
+    sessionType: "VOCAB", // 오답 복습은 카테고리 무관
+    sessionSeq: 0,
     passageId: passage.id,
     passageTitle: passage.title,
     passageContent: passage.content,
@@ -594,5 +674,8 @@ export async function startReviewSession(
         (q.learningCategory as LearningCategory) ?? "VOCAB"
       )
     ),
+    seasonId: undefined,
+    isMastery: false,
+    hintsEnabled: true,
   };
 }

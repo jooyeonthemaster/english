@@ -13,6 +13,56 @@ import type { SessionType } from "@/lib/learning-constants";
 import PassageCard from "./_components/passage-card";
 import ShortAnswerInput from "./_components/short-answer-input";
 import ResultScreen from "./_components/result-screen";
+import MatchInteraction from "./_components/match-interaction";
+import ArrangeInteraction from "./_components/arrange-interaction";
+import TapTextInteraction from "./_components/tap-text-interaction";
+import { SUBTYPE_TO_INTERACTION } from "@/lib/learning-constants";
+
+// ---------------------------------------------------------------------------
+// 유사 정답 허용 (TEXT_INPUT 유형: 대소문자, 단복수, ing형 등)
+// ---------------------------------------------------------------------------
+
+function normalizeWord(w: string): string {
+  return w.trim().toLowerCase().replace(/[.,!?;:'"()]/g, "");
+}
+
+/** 영단어 변형 생성 (기본형 ↔ 복수/과거/ing 등) */
+function getWordVariants(word: string): string[] {
+  const w = normalizeWord(word);
+  const variants = [w];
+  // 복수형 ↔ 단수형
+  if (w.endsWith("ies")) variants.push(w.slice(0, -3) + "y");
+  else if (w.endsWith("es")) variants.push(w.slice(0, -2));
+  else if (w.endsWith("s") && !w.endsWith("ss")) variants.push(w.slice(0, -1));
+  if (!w.endsWith("s")) { variants.push(w + "s"); variants.push(w + "es"); }
+  if (w.endsWith("y")) variants.push(w.slice(0, -1) + "ies");
+  // ing형
+  if (w.endsWith("ing")) { variants.push(w.slice(0, -3)); variants.push(w.slice(0, -3) + "e"); }
+  if (!w.endsWith("ing")) variants.push(w + "ing");
+  if (w.endsWith("e") && !w.endsWith("ing")) variants.push(w.slice(0, -1) + "ing");
+  // ed형
+  if (w.endsWith("ed")) { variants.push(w.slice(0, -2)); variants.push(w.slice(0, -1)); }
+  if (!w.endsWith("ed")) { variants.push(w + "ed"); variants.push(w + "d"); }
+  // ly형
+  if (w.endsWith("ly")) variants.push(w.slice(0, -2));
+  return [...new Set(variants)];
+}
+
+function isAnswerCorrect(input: string, correctAnswer: string, subType: string): boolean {
+  const a = normalizeWord(input);
+  const b = normalizeWord(correctAnswer);
+  // 정확히 일치
+  if (a === b) return true;
+  // 선택형 (A/B/C/D) — 정확 일치만
+  if (/^[A-Da-d]$/.test(b) || /^[A-Da-d]$/.test(a)) return a === b;
+  // TEXT_INPUT 유형 (WORD_SPELL, ERROR_CORRECT, GRAM_TRANSFORM): 유사 정답 허용
+  const textInputTypes = ["WORD_SPELL", "ERROR_CORRECT", "GRAM_TRANSFORM"];
+  if (textInputTypes.includes(subType)) {
+    const variants = getWordVariants(b);
+    return variants.includes(a);
+  }
+  return false;
+}
 
 // ---------------------------------------------------------------------------
 // Page
@@ -25,6 +75,7 @@ export default function SessionPage() {
 
   const passageId = params.passageId as string;
   const sessionType = searchParams.get("type") as SessionType;
+  const sessionSeq = Number(searchParams.get("seq") ?? "1");
   const seasonId = searchParams.get("seasonId") ?? undefined;
   const reviewMode = searchParams.get("mode") === "review";
   const reviewQuestionIds = searchParams.get("questionIds")?.split(",").filter(Boolean) ?? [];
@@ -65,7 +116,7 @@ export default function SessionPage() {
       try {
         const sessionData = reviewMode && reviewQuestionIds.length > 0
           ? await startReviewSession(passageId, reviewQuestionIds, reviewCategory)
-          : await startSession(passageId, sessionType, seasonId);
+          : await startSession(passageId, sessionType, sessionSeq, seasonId);
         if (!cancelled) setData(sessionData);
       } catch (err) {
         console.error(err);
@@ -99,7 +150,12 @@ export default function SessionPage() {
       if (showFeedback || !currentQuestion) return;
 
       setSelectedOption(option);
-      const correct = option.trim() === currentQuestion.correctAnswer.trim();
+      // 특수 인터랙션(WORD_MATCH, WORD_ARRANGE 등)은 "CORRECT"/"WRONG"으로 전달
+      const correct = option === "CORRECT"
+        ? true
+        : option === "WRONG"
+          ? false
+          : isAnswerCorrect(option, currentQuestion.correctAnswer, currentQuestion.subType);
       setIsCorrect(correct);
       setShowFeedback(true);
 
@@ -139,6 +195,7 @@ export default function SessionPage() {
         const sessionResult = await submitSession({
           passageId,
           sessionType,
+          sessionSeq,
           seasonId,
           answers: answerList,
           startedAt,
@@ -220,79 +277,132 @@ export default function SessionPage() {
               />
             )}
 
-            {/* Question text */}
+            {/* Question text — **bold** 마크다운 지원 */}
             <p className="text-[var(--fs-lg)] font-semibold text-gray-900 mb-6 leading-relaxed whitespace-pre-line">
-              {currentQuestion.questionText}
+              {currentQuestion.questionText.split(/(\*\*[^*]+\*\*)/).map((part, i) =>
+                part.startsWith("**") && part.endsWith("**")
+                  ? <mark key={i} className="bg-yellow-200 text-gray-900 px-0.5 rounded-sm font-bold">{part.slice(2, -2)}</mark>
+                  : part
+              )}
             </p>
 
-            {/* Options */}
-            {currentQuestion.options && (
-              <div className="space-y-2.5">
-                {currentQuestion.options.map((opt) => {
-                  const isSelected = selectedOption === opt.label;
-                  const isAnswer = opt.label === currentQuestion.correctAnswer;
+            {/* Interaction by subType */}
+            {(() => {
+              const interaction = SUBTYPE_TO_INTERACTION[currentQuestion.subType];
+              const raw = currentQuestion.rawData;
 
+              // MATCHING (WORD_MATCH)
+              if (interaction === "MATCHING" && raw?.pairs?.length > 0) {
+                return (
+                  <MatchInteraction
+                    pairs={raw!.pairs}
+                    onComplete={(correct) => handleSelect(correct ? "CORRECT" : "WRONG")}
+                    disabled={showFeedback}
+                  />
+                );
+              }
+
+              // WORD_BANK (WORD_ARRANGE, SENT_CHUNK_ORDER)
+              if (interaction === "WORD_BANK" && raw) {
+                const pieces: string[] = raw!.chunks || raw!.correctOrder || [];
+                const correctOrder: string[] | number[] = raw!.correctOrder || [];
+                const distractors: string[] = raw!.distractorWords || [];
+
+                if (pieces.length > 0) {
                   return (
-                    <button
-                      key={opt.label}
-                      onClick={() => handleSelect(opt.label)}
+                    <ArrangeInteraction
+                      pieces={pieces}
+                      correctOrder={correctOrder}
+                      distractors={distractors}
+                      onComplete={(correct) => handleSelect(correct ? "CORRECT" : "WRONG")}
                       disabled={showFeedback}
-                      className={cn(
-                        "w-full text-left rounded-xl border-2 p-3.5 transition-all",
-                        showFeedback
-                          ? isAnswer
-                            ? "border-emerald-400 bg-emerald-50"
-                            : isSelected
-                              ? "border-rose-400 bg-rose-50"
-                              : "border-gray-100 bg-gray-50 opacity-50"
-                          : isSelected
-                            ? "border-blue-400 bg-blue-50"
-                            : "border-gray-200 bg-white active:border-blue-300 active:bg-blue-50"
-                      )}
-                    >
-                      <div className="flex items-start gap-3">
-                        <span
+                    />
+                  );
+                }
+              }
+
+              // TAP_TEXT (ERROR_FIND)
+              if (interaction === "TAP_TEXT" && raw?.words?.length > 0) {
+                return (
+                  <TapTextInteraction
+                    words={raw!.words}
+                    errorWord={raw!.errorWord || currentQuestion.correctAnswer}
+                    onComplete={(correct, selected) => handleSelect(correct ? (raw!.errorWord || currentQuestion.correctAnswer) : selected)}
+                    disabled={showFeedback}
+                  />
+                );
+              }
+
+              // 기본: 선택형
+              if (currentQuestion.options) {
+                return (
+                  <div className="space-y-2.5">
+                    {currentQuestion.options.map((opt) => {
+                      const isSelected = selectedOption === opt.label;
+                      const isAnswer = opt.label === currentQuestion.correctAnswer;
+                      return (
+                        <button
+                          key={opt.label}
+                          onClick={() => handleSelect(opt.label)}
+                          disabled={showFeedback}
                           className={cn(
-                            "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[var(--fs-xs)] font-bold",
+                            "w-full text-left rounded-xl border-2 p-3.5 transition-all",
                             showFeedback
                               ? isAnswer
-                                ? "bg-emerald-500 text-white"
+                                ? "border-emerald-400 bg-emerald-50"
                                 : isSelected
-                                  ? "bg-rose-500 text-white"
-                                  : "bg-gray-200 text-gray-400"
+                                  ? "border-rose-400 bg-rose-50"
+                                  : "border-gray-100 bg-gray-50 opacity-50"
                               : isSelected
-                                ? "bg-blue-500 text-white"
-                                : "bg-gray-100 text-gray-500"
+                                ? "border-blue-400 bg-blue-50"
+                                : "border-gray-200 bg-white active:border-blue-300 active:bg-blue-50"
                           )}
                         >
-                          {opt.label}
-                        </span>
-                        <span
-                          className={cn(
-                            "text-[var(--fs-base)] leading-relaxed",
-                            showFeedback && isAnswer
-                              ? "text-emerald-700 font-medium"
-                              : showFeedback && isSelected
-                                ? "text-rose-700"
-                                : "text-gray-700"
-                          )}
-                        >
-                          {opt.text}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+                          <div className="flex items-start gap-3">
+                            <span
+                              className={cn(
+                                "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[var(--fs-xs)] font-bold",
+                                showFeedback
+                                  ? isAnswer
+                                    ? "bg-emerald-500 text-white"
+                                    : isSelected
+                                      ? "bg-rose-500 text-white"
+                                      : "bg-gray-200 text-gray-400"
+                                  : isSelected
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-100 text-gray-500"
+                              )}
+                            >
+                              {opt.label}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-[var(--fs-base)] leading-relaxed",
+                                showFeedback && isAnswer
+                                  ? "text-emerald-700 font-medium"
+                                  : showFeedback && isSelected
+                                    ? "text-rose-700"
+                                    : "text-gray-700"
+                              )}
+                            >
+                              {opt.text}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              }
 
-            {/* Short answer (no options) */}
-            {!currentQuestion.options && (
-              <ShortAnswerInput
-                onSubmit={handleSelect}
-                disabled={showFeedback}
-              />
-            )}
+              // 기본: 단답형
+              return (
+                <ShortAnswerInput
+                  onSubmit={handleSelect}
+                  disabled={showFeedback}
+                />
+              );
+            })()}
           </motion.div>
         </AnimatePresence>
 

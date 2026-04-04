@@ -12,23 +12,21 @@ export interface LessonItem {
   passageId: string;
   passageTitle: string;
   order: number;
-  // 세션 진행도
-  session1Done: boolean;
-  session2Done: boolean;
-  storiesDone: boolean;
-  session3Done: boolean;
-  session4Done: boolean;
-  session5Done: boolean;
+  // 카테고리별 완료 세션 수 (0~5)
+  categoryProgress: {
+    VOCAB: number;
+    INTERPRETATION: number;
+    GRAMMAR: number;
+    COMPREHENSION: number;
+  };
+  // 마스터리
+  masteryUnlocked: boolean; // 4카테고리 각 ≥1 완료
+  masteryPassed: boolean;
   masteryScore: number;
-  // 잠금 상태 (Stories는 필수 세션 2개 완료 후 해제)
-  storiesUnlocked: boolean;
-  // 다음 해야 할 세션
-  nextSession: SessionType | null;
-  // 순차 잠금 상태
-  isLocked: boolean;        // 이전 레슨 미완료 → true
-  isCompleted: boolean;     // 필수 세션(MIX_1+MIX_2+STORIES) 모두 완료
-  isCurrent: boolean;       // 첫 번째 isCompleted===false & !isLocked인 레슨
-  crownLevel: 0 | 1 | 2 | 3; // 0=잠금, 1=해금(미시작), 2=진행중, 3=마스터
+  masteryAttempts: number;
+  // 상태
+  isCompleted: boolean; // masteryPassed
+  totalSessionsDone: number; // 0~21
 }
 
 export interface SeasonInfo {
@@ -37,9 +35,9 @@ export interface SeasonInfo {
   type: "EXAM_PREP" | "REGULAR";
   startDate: string;
   endDate: string;
-  dDay: number | null; // D-day (시험까지 남은 일수, 평상시면 null)
+  dDay: number | null;
   totalLessons: number;
-  completedLessons: number; // 필수 전부 완료한 레슨 수
+  completedLessons: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -54,10 +52,11 @@ export interface SessionQuestion {
   questionText: string;
   options: { label: string; text: string }[] | null;
   correctAnswer: string;
-  /** 지문 포함 문제인지 (includesPassage) */
   includesPassage: boolean;
-  /** 수정된 지문 텍스트 (includesPassage=true일 때) */
   passageSnippet?: string;
+  /** 특수 인터랙션용 원본 JSON 데이터 (WORD_MATCH pairs, WORD_ARRANGE correctOrder 등) */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rawData?: Record<string, any>;
   explanation?: {
     content: string;
     keyPoints?: string[];
@@ -66,11 +65,15 @@ export interface SessionQuestion {
 
 export interface SessionStartData {
   sessionType: SessionType;
+  sessionSeq: number; // 카테고리 내 순번 (1~5, MASTERY는 1)
   passageId: string;
   passageTitle: string;
-  passageContent: string; // Stories/전체 지문 참고용
+  passageContent: string;
   questions: SessionQuestion[];
   seasonId?: string;
+  isMastery: boolean;
+  masteryFailThreshold?: number; // 마스터리일 때만
+  hintsEnabled: boolean; // 마스터리=false, 일반=true
 }
 
 export interface SessionAnswer {
@@ -82,70 +85,36 @@ export interface SessionAnswer {
 
 export interface SessionResult {
   sessionType: SessionType;
+  sessionSeq: number;
   score: number; // 0-100
   correctCount: number;
   totalCount: number;
   xpEarned: number;
-  xpMultiplier: number; // 데일리 미션 배율 적용 시
+  xpMultiplier: number;
   wrongQuestions: {
     questionId: string;
+    subType: string;
     questionText: string;
     givenAnswer: string;
     correctAnswer: string;
     explanation?: string;
   }[];
-  // 레슨 진행도 업데이트
-  lessonProgress: {
-    session1Done: boolean;
-    session2Done: boolean;
-    storiesDone: boolean;
-    session3Done: boolean;
-    session4Done: boolean;
-    session5Done: boolean;
-    masteryScore: number;
+  // 카테고리별 진행도 (새 구조)
+  categoryProgress: {
+    VOCAB: number;
+    INTERPRETATION: number;
+    GRAMMAR: number;
+    COMPREHENSION: number;
   };
-  // 퀘스트 진행도 (세션 완료 후 표시용)
+  // 마스터리 관련
+  masteryFailed?: boolean;
+  masteryPassed?: boolean;
+  // 퀘스트 진행도
   questUpdates?: QuestProgressUpdate[];
 }
 
 // ---------------------------------------------------------------------------
-// 3. Stories 모드
-// ---------------------------------------------------------------------------
-
-export interface StoriesSentence {
-  index: number;
-  text: string;
-  translation: string;
-  /** 하이라이트할 단어 목록 */
-  highlightWords?: {
-    word: string;
-    meaning: string;
-    pos: string; // part of speech
-  }[];
-  /** 문법 포인트 (밑줄 표시용) */
-  grammarNote?: {
-    target: string; // 밑줄 대상 텍스트
-    explanation: string;
-  };
-}
-
-export interface StoriesCheckQuestion {
-  /** 몇 번째 문장 뒤에 나오는지 */
-  afterSentenceIndex: number;
-  questionText: string;
-  options: { label: string; text: string }[];
-  correctAnswer: string;
-}
-
-export interface StoriesData {
-  passageId: string;
-  passageTitle: string;
-  sentences: StoriesSentence[];
-  checkQuestions: StoriesCheckQuestion[];
-}
-
-// ---------------------------------------------------------------------------
-// 4. 랭킹
+// 3. 랭킹
 // ---------------------------------------------------------------------------
 
 export interface RankingEntry {
@@ -154,7 +123,7 @@ export interface RankingEntry {
   name: string;
   weeklyXp: number;
   avatarUrl?: string;
-  isMe?: boolean; // 개인 랭킹에서 본인 표시
+  isMe?: boolean;
 }
 
 export interface SchoolRankingEntry {
@@ -174,7 +143,7 @@ export interface AcademyRankingEntry {
 }
 
 // ---------------------------------------------------------------------------
-// 5. 데일리 미션 (레거시)
+// 4. 데일리 미션 (레거시)
 // ---------------------------------------------------------------------------
 
 export interface DailyMissionStatus {
@@ -195,7 +164,7 @@ export interface DailyMissionStatus {
 }
 
 // ---------------------------------------------------------------------------
-// 5-2. 데일리 퀘스트 (듀오링고 스타일, 신규)
+// 5. 데일리 퀘스트 (듀오링고 스타일)
 // ---------------------------------------------------------------------------
 
 export interface QuestItem {
@@ -216,13 +185,10 @@ export interface QuestItem {
 export interface DailyQuestStatus {
   date: string;
   quests: QuestItem[];
-  /** 현재 활성 배율 중 가장 높은 값 */
   activeMultiplier: number | null;
-  /** 가장 늦게 만료되는 배율의 만료시각 */
   multiplierExpiresAt: string | null;
 }
 
-/** 세션 완료 후 퀘스트 진행도 업데이트 결과 */
 export interface QuestProgressUpdate {
   questId: string;
   label: string;
@@ -239,28 +205,24 @@ export interface QuestProgressUpdate {
 // ---------------------------------------------------------------------------
 
 export interface LearningAnalytics {
-  // 영역별 점수 (레이더 차트용)
   radarScores: {
-    vocab: number; // 0-100
+    vocab: number;
     interpretation: number;
     grammar: number;
     comprehension: number;
   };
-  // 지문별 숙달도
   passageMastery: {
     passageId: string;
     passageTitle: string;
-    masteryScore: number; // 0-100
+    masteryScore: number;
   }[];
-  // 오답 패턴 (많은 순)
   weakPoints: {
     category: string;
     subCategory: string;
     wrongCount: number;
   }[];
-  // 주간 추이
   weeklyTrend: {
-    weekLabel: string; // "3/18 ~ 3/24"
+    weekLabel: string;
     accuracy: number;
     sessionsCompleted: number;
     xpEarned: number;

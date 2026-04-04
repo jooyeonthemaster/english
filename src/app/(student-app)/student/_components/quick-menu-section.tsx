@@ -19,13 +19,10 @@ export default function QuickMenuSection({ items }: QuickMenuSectionProps) {
             href={item.href}
             className="flex flex-col items-center gap-2 py-3 rounded-2xl active:bg-gray-50 transition-colors"
           >
-            <div className={cn(
-              "w-14 h-14 rounded-2xl flex items-center justify-center",
-              item.bg,
-            )}>
-              <Icon className={cn("w-[var(--icon-md)] h-[var(--icon-md)]", item.color)} />
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-100">
+              <Icon className="w-[var(--icon-md)] h-[var(--icon-md)] text-black" />
             </div>
-            <span className="text-[var(--fs-xs)] font-semibold text-gray-500">
+            <span className="text-[var(--fs-xs)] font-semibold text-black">
               {item.label}
             </span>
           </Link>

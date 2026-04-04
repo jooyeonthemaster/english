@@ -592,9 +592,10 @@ model Passage {
   seasonLinks      SeasonPassage[]
   lessonProgress   LessonProgress[]
   sessionRecords   SessionRecord[]
-  naeshinQuestions NaeshinQuestion[]
-  learningSets     LearningSet[]
-  collectionItems  PassageCollectionItem[]
+  naeshinQuestions  NaeshinQuestion[]
+  learningSets      LearningSet[]
+  collectionItems   PassageCollectionItem[]
+  prebuiltSessions  PrebuiltSession[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -1134,22 +1135,26 @@ model SeasonPassage {
 }
 
 /// LessonProgress — 학생의 레슨(지문)별 진행도
+/// 카테고리별 완료 세션 수 (0~5) + 마스터리 상태
 model LessonProgress {
   id        String  @id @default(cuid())
   studentId String
   passageId String
   seasonId  String?
 
-  session1Done Boolean @default(false) // 필수: 종합 믹스 1
-  session2Done Boolean @default(false) // 필수: 종합 믹스 2
-  storiesDone  Boolean @default(false) // 필수: Stories 통독
-  session3Done Boolean @default(false) // 선택: 어휘 집중
-  session4Done Boolean @default(false) // 선택: 문법 집중
-  session5Done Boolean @default(false) // 선택: 약점 집중
+  // 카테고리별 완료 세션 수 (0~5)
+  vocabDone   Int @default(0)
+  interpDone  Int @default(0)
+  grammarDone Int @default(0)
+  compDone    Int @default(0)
 
-  masteryScore Float    @default(0) // 숙달도 0-100
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  // 마스터리 챌린지
+  masteryPassed   Boolean @default(false)
+  masteryAttempts Int     @default(0)
+  masteryScore    Float   @default(0) // 최고 점수 0-100
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   student Student      @relation(fields: [studentId], references: [id])
   passage Passage      @relation(fields: [passageId], references: [id])
@@ -1161,18 +1166,20 @@ model LessonProgress {
 }
 
 /// SessionRecord — 세션 완료 기록
-/// sessionType: "MIX_1" | "MIX_2" | "STORIES" | "VOCAB_FOCUS" | "GRAMMAR_FOCUS" | "WEAKNESS_FOCUS"
+/// sessionType: "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION" | "MASTERY"
 model SessionRecord {
   id               String   @id @default(cuid())
   studentId        String
   passageId        String
   seasonId         String?
-  sessionType      String // "MIX_1" | "MIX_2" | "STORIES" | "VOCAB_FOCUS" | "GRAMMAR_FOCUS" | "WEAKNESS_FOCUS"
+  sessionType      String // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION" | "MASTERY"
+  sessionSeq       Int? // 카테고리 내 순번 (1~5, MASTERY는 1)
   score            Float // 정답률 0-100
   correctCount     Int
   totalCount       Int
   wrongQuestionIds String?  @db.Text // JSON: ["questionId1", ...]
   xpEarned         Int      @default(0)
+  isMasteryFail    Boolean  @default(false)
   // 카테고리별 정답/총 문제 수
   vocabCorrect     Int      @default(0)
   vocabTotal       Int      @default(0)
@@ -1193,6 +1200,24 @@ model SessionRecord {
   @@index([studentId, completedAt]) // 주간 XP 랭킹 계산용
   @@index([passageId])
   @@map("session_records")
+}
+
+/// PrebuiltSession — 사전 생성된 세션 (문제 ID 목록 + 순서 보존)
+/// category: "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION" | "MASTERY"
+model PrebuiltSession {
+  id            String   @id @default(cuid())
+  passageId     String
+  category      String // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION" | "MASTERY"
+  sessionSeq    Int // 카테고리 내 순번 (1~5, MASTERY는 1)
+  questionIds   String   @db.Text // JSON: ["qid1","qid2",...] 순서 보존
+  questionCount Int      @default(15)
+  createdAt     DateTime @default(now())
+
+  passage Passage @relation(fields: [passageId], references: [id])
+
+  @@unique([passageId, category, sessionSeq])
+  @@index([passageId])
+  @@map("prebuilt_sessions")
 }
 
 /// StudentDailyMission — 데일리 미션 추적
@@ -1316,6 +1341,7 @@ model NaeshinQuestion {
   learningCategory String   // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
   type             String   // interaction type
   subType          String?  // 23종 subType
+  sentenceIndex    Int? // 지문 내 참조 문장 인덱스 (0-based), 마스터리 정렬용
   questionText     String   @db.Text
   options          String?  @db.Text // JSON: [{ label, text }]
   correctAnswer    String   @db.Text

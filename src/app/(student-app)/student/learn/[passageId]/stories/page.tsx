@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, MessageCircle, ChevronDown, Volume2 } from "lucide-react";
+import { X, Check, MessageCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { startSession } from "@/actions/learning-session";
 import { submitSession } from "@/actions/learning-session-submit";
@@ -57,7 +57,7 @@ export default function StoriesPage() {
     async function load() {
       try {
         const [sessionData, trans] = await Promise.all([
-          startSession(passageId, "STORIES", seasonId),
+          startSession(passageId, "COMPREHENSION", 1, seasonId),
           getPassageTranslations(passageId),
         ]);
         setData(sessionData);
@@ -146,7 +146,8 @@ export default function StoriesPage() {
     try {
       const result = await submitSession({
         passageId,
-        sessionType: "STORIES",
+        sessionType: "COMPREHENSION",
+        sessionSeq: 1,
         seasonId,
         answers: questionAnswers,
         startedAt: startedAt.current,

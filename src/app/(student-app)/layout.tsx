@@ -1,95 +1,104 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, UserCheck, FolderOpen, User, BookOpenCheck } from "lucide-react";
+import { Home, User, BookOpenCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StudentHeader } from "@/components/layout/student-header";
-import { getStudentHeaderData } from "@/actions/student-app";
+import { QueryProvider } from "@/providers/query-provider";
+import { useHeaderData } from "@/hooks/use-student-data";
 
 // ---------------------------------------------------------------------------
-// Header data type
+// Marquee messages
 // ---------------------------------------------------------------------------
-interface HeaderData {
-  studentName: string;
-  schoolName: string;
-  grade: number;
-  academyName: string;
-  streak: number;
-}
+const MARQUEE_MESSAGES = [
+  "오늘도 한 걸음 더! 꾸준함이 실력이 됩니다 💪",
+  "🔥 30일 연속 학습 달성하면 문화상품권 1만원!",
+  "상위 1%는 매일 학습합니다. 오늘도 시작해볼까요?",
+  "미션 달성하면 XP 배율 보너스! ✨",
+  "어제보다 1문제 더! 작은 차이가 큰 변화를 만듭니다",
+  "🏆 이번 주 랭킹 도전! XP를 모아보세요",
+  "틀린 문제 복습하면 정답률 2배 UP! 📈",
+  "매일 3분 투자로 영어 실력이 달라집니다",
+];
+const MARQUEE_CHUNK = MARQUEE_MESSAGES.join("   ✦   ");
 
 // ---------------------------------------------------------------------------
-// 5 sections (swipe order)
+// 3 sections
 // ---------------------------------------------------------------------------
 const SECTIONS = [
-  { label: "홈", icon: Home, href: "/student" },
-  { label: "출석", icon: UserCheck, href: "/student/attendance" },
-  { label: "학습", icon: BookOpenCheck, href: "/student/learn" },
-  { label: "자료실", icon: FolderOpen, href: "/student/resources" },
-  { label: "마이", icon: User, href: "/student/mypage" },
+  { label: "학습", icon: BookOpenCheck, href: "/student/learn", keyColor: "var(--key-learn)" },
+  { label: "홈", icon: Home, href: "/student", keyColor: "var(--key-home)" },
+  { label: "마이", icon: User, href: "/student/mypage", keyColor: "var(--key-mypage)" },
 ];
 
 function getSectionIndex(pathname: string): number {
-  if (pathname === "/student") return 0;
+  if (pathname.startsWith("/student/learn")) return 0;
+  if (pathname === "/student") return 1;
+  if (pathname.startsWith("/student/mypage")) return 2;
+  // 출석/자료실은 홈 키컬러 사용
   if (pathname.startsWith("/student/attendance")) return 1;
-  if (pathname.startsWith("/student/learn")) return 2;
-  if (pathname.startsWith("/student/resources")) return 3;
-  if (pathname.startsWith("/student/mypage")) return 4;
+  if (pathname.startsWith("/student/resources")) return 1;
   return -1;
 }
 
 // ---------------------------------------------------------------------------
 // Layout
 // ---------------------------------------------------------------------------
-export default function StudentAppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function StudentAppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <QueryProvider>
+      <StudentAppLayoutInner>{children}</StudentAppLayoutInner>
+    </QueryProvider>
+  );
+}
+
+function StudentAppLayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [headerData, setHeaderData] = useState<HeaderData | null>(null);
-
-  useEffect(() => {
-    getStudentHeaderData()
-      .then((d) => { if (d) setHeaderData(d); })
-      .catch(() => {});
-  }, []);
+  const { data: headerData } = useHeaderData();
 
   const isLoginPage = pathname === "/student/login";
   const isLearningSession =
     pathname.includes("/learn/") &&
     (pathname.includes("/session") || pathname.includes("/stories"));
-  const isVocabTest = pathname.includes("/vocab/") && pathname.includes("/test");
-  const hideChrome = isLoginPage || isLearningSession || isVocabTest;
+  const hideChrome = isLoginPage || isLearningSession;
 
   const currentSection = getSectionIndex(pathname);
+
+  // --- 현재 탭의 키컬러를 CSS 변수로 설정 ---
+  useEffect(() => {
+    if (currentSection >= 0 && currentSection < SECTIONS.length) {
+      document.documentElement.style.setProperty("--key-color", SECTIONS[currentSection].keyColor);
+    }
+  }, [currentSection]);
 
   // --- Swipe detection ---
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
-  const swiping = useRef(false);
+
+  const swipeBlocked = useRef(false);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
-    swiping.current = false;
+    // 가로 스크롤 가능한 요소 안에서 시작된 터치는 탭 스와이프 차단
+    const target = e.target as HTMLElement;
+    const scrollParent = target.closest(".overflow-x-auto, .overflow-x-scroll, [data-no-swipe]");
+    swipeBlocked.current = !!scrollParent;
   }, []);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (currentSection < 0) return;
+    if (currentSection < 0 || swipeBlocked.current) return;
 
     const dx = e.changedTouches[0].clientX - touchStartX.current;
     const dy = e.changedTouches[0].clientY - touchStartY.current;
 
-    // 가로 이동이 세로보다 크고, 최소 60px 이상 스와이프
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
       if (dx < 0 && currentSection < SECTIONS.length - 1) {
-        // 왼쪽 스와이프 → 다음 섹션
         router.push(SECTIONS[currentSection + 1].href);
       } else if (dx > 0 && currentSection > 0) {
-        // 오른쪽 스와이프 → 이전 섹션
         router.push(SECTIONS[currentSection - 1].href);
       }
     }
@@ -97,9 +106,18 @@ export default function StudentAppLayout({
 
   // --- Tab helpers ---
   function isActive(href: string) {
-    if (href === "/student") return pathname === "/student";
+    if (href === "/student") {
+      return pathname === "/student" ||
+        pathname.startsWith("/student/attendance") ||
+        pathname.startsWith("/student/resources");
+    }
     return pathname.startsWith(href);
   }
+
+  // 메인 3탭 페이지인지 판별 (학생 정보 + 마퀴 표시용)
+  const isMainTab = pathname === "/student" ||
+    pathname === "/student/learn" ||
+    pathname === "/student/mypage";
 
   if (hideChrome) {
     return (
@@ -110,43 +128,58 @@ export default function StudentAppLayout({
   }
 
   return (
-    <div className="flex justify-center bg-[#F5F5F5]" style={{ height: "100dvh" }}>
+    <div className="flex justify-center" style={{ height: "100dvh", backgroundColor: "var(--base-bg)" }}>
       <div className="w-full max-w-2xl flex flex-col" style={{ height: "100dvh" }}>
-        {/* 헤더 */}
-        <div className="shrink-0 z-40 bg-[#F5F5F5]">
+        {/* 헤더 — 고정 */}
+        <div className="shrink-0 z-40" style={{ backgroundColor: "var(--base-bg)" }}>
           <StudentHeader
-            studentName={headerData?.studentName}
-            schoolName={headerData?.schoolName}
-            grade={headerData?.grade}
             academyName={headerData?.academyName}
-            streak={headerData?.streak ?? 0}
           />
         </div>
 
-        {/* 콘텐츠 — 스와이프 + 세로 스크롤 */}
+        {/* 콘텐츠 — 스크롤 */}
         <main
           className="flex-1 overflow-y-auto overflow-x-hidden"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
+          {/* 메인 탭: 학생 정보 + 마퀴 */}
+          {isMainTab && headerData && (
+            <div className="text-center pt-6 pb-2 px-5">
+              <h1 className="text-3xl font-bold text-black tracking-tight">
+                {headerData.studentName}
+              </h1>
+              <p className="text-sm text-black mt-1">
+                {headerData.schoolName ? `${headerData.schoolName} · ` : ""}{headerData.grade}학년
+              </p>
+            </div>
+          )}
+          {isMainTab && (
+            <div className="overflow-hidden px-5 mb-6">
+              <div className="flex whitespace-nowrap" style={{ animation: "marquee-loop 30s linear infinite" }}>
+                <span className="text-xs font-medium text-gray-400 shrink-0 px-2">{MARQUEE_CHUNK}</span>
+                <span className="text-xs font-medium text-gray-400 shrink-0 px-2">{MARQUEE_CHUNK}</span>
+              </div>
+            </div>
+          )}
           <div className="pb-4">
             {children}
           </div>
         </main>
 
-        {/* 하단 네비 */}
-        <div className="shrink-0 z-30 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))] pt-1 bg-transparent pointer-events-none">
-          <div className="relative bg-white rounded-[28px] shadow-[0_4px_24px_rgba(0,0,0,0.10)] mx-1 pointer-events-auto">
-            <div className="flex items-center h-[var(--tab-h)] px-1">
-              {SECTIONS.map((section) => (
-                <TabItem
-                  key={section.href}
-                  tab={section}
-                  active={isActive(section.href)}
-                  isFab={section.href === "/student/learn"}
-                />
-              ))}
-            </div>
+        {/* 하단 탭바 — Google One 스타일 3탭 */}
+        <div
+          className="shrink-0 z-30 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))]"
+          style={{ backgroundColor: "var(--base-bg)" }}
+        >
+          <div className="flex items-center justify-around h-16 px-6">
+            {SECTIONS.map((section) => (
+              <TabItem
+                key={section.href}
+                tab={section}
+                active={isActive(section.href)}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -155,49 +188,34 @@ export default function StudentAppLayout({
 }
 
 // ---------------------------------------------------------------------------
-// Tab Item
+// Tab Item — Google One 스타일 (아이콘+텍스트, 활성=pill)
 // ---------------------------------------------------------------------------
 function TabItem({
   tab,
   active,
-  isFab,
 }: {
-  tab: { label: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }>; href: string };
+  tab: { label: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }>; href: string; keyColor: string };
   active: boolean;
-  isFab?: boolean;
 }) {
   const Icon = tab.icon;
-
-  if (isFab) {
-    return (
-      <Link
-        href={tab.href}
-        className="relative flex flex-1 items-center justify-center h-full"
-      >
-        <div
-          className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center",
-            "bg-gradient-to-br from-blue-500 to-indigo-600",
-            "shadow-[0_4px_16px_rgba(59,130,246,0.35)]",
-            "active:scale-90 transition-all duration-200",
-            active && "ring-[3px] ring-blue-100",
-          )}
-        >
-          <Icon className="text-white w-5 h-5" strokeWidth={2.5} />
-        </div>
-      </Link>
-    );
-  }
 
   return (
     <Link
       href={tab.href}
       className={cn(
-        "relative flex flex-1 items-center justify-center h-full transition-all",
-        active ? "text-blue-500" : "text-gray-400",
+        "flex items-center gap-2 px-5 py-2.5 rounded-full transition-all",
+        active ? "font-semibold" : "text-black",
       )}
+      style={active ? {
+        backgroundColor: `color-mix(in srgb, ${tab.keyColor} 12%, white)`,
+        color: tab.keyColor,
+      } : undefined}
     >
-      <Icon className={cn("w-6 h-6", active && "scale-110")} strokeWidth={active ? 2.5 : 1.8} />
+      <Icon
+        className="w-6 h-6"
+        strokeWidth={active ? 2.5 : 1.8}
+      />
+      <span className="text-sm">{tab.label}</span>
     </Link>
   );
 }

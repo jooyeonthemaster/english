@@ -84,21 +84,21 @@ export async function getDailyQuests(): Promise<DailyQuestStatus> {
     orderBy: { difficulty: "asc" },
   });
 
-  // Lazy Creation: 오늘 퀘스트가 없으면 자동 생성
+  // Lazy Creation: 오늘 퀘스트가 없으면 자동 생성 (createMany 후 재조회 없이 반환)
   if (quests.length === 0) {
     const templates = pickDailyQuests(studentId, today);
-    await prisma.dailyQuest.createMany({
-      data: templates.map((t) => ({
-        studentId,
-        date: today,
-        missionType: t.missionType,
-        difficulty: t.difficulty,
-        label: t.label,
-        target: t.target,
-        rewardType: t.rewardType,
-        rewardValue: t.rewardValue,
-      })),
-    });
+    const data = templates.map((t) => ({
+      studentId,
+      date: today,
+      missionType: t.missionType,
+      difficulty: t.difficulty,
+      label: t.label,
+      target: t.target,
+      rewardType: t.rewardType,
+      rewardValue: t.rewardValue,
+    }));
+    // createMany + 1회 조회 → skipDuplicates로 안전하게
+    await prisma.dailyQuest.createMany({ data, skipDuplicates: true });
     quests = await prisma.dailyQuest.findMany({
       where: { studentId, date: today },
       orderBy: { difficulty: "asc" },

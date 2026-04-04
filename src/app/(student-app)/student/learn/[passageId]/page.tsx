@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Play,
@@ -11,52 +11,63 @@ import {
   Brain,
   Languages,
   Target,
-  Sparkles,
+  Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getActiveSeason, getLessonList } from "@/actions/learning-session";
-import { SESSION_TYPES, type SessionType } from "@/lib/learning-constants";
+import { SESSION_TYPES, SESSIONS_PER_CATEGORY, type SessionType } from "@/lib/learning-constants";
 import type { LessonItem } from "@/lib/learning-types";
 
 // ---------------------------------------------------------------------------
-// Session card config
+// 카테고리 설정
 // ---------------------------------------------------------------------------
-
-const SESSION_ICONS: Record<string, typeof Brain> = {
-  MIX_1: Sparkles,
-  MIX_2: Sparkles,
-  STORIES: BookOpen,
-  VOCAB_FOCUS: Languages,
-  GRAMMAR_FOCUS: Brain,
-  WEAKNESS_FOCUS: Target,
-};
-
-const SESSION_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  MIX_1: { bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
-  MIX_2: { bg: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-200" },
-  STORIES: { bg: "bg-amber-50", text: "text-amber-600", border: "border-amber-200" },
-  VOCAB_FOCUS: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
-  GRAMMAR_FOCUS: { bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
-  WEAKNESS_FOCUS: { bg: "bg-rose-50", text: "text-rose-600", border: "border-rose-200" },
-};
+const CATEGORY_CONFIG: {
+  type: SessionType;
+  Icon: typeof Brain;
+  color: { bg: string; text: string; border: string; iconBg: string; barColor: string };
+}[] = [
+  {
+    type: "VOCAB",
+    Icon: Languages,
+    color: { bg: "bg-white", text: "text-emerald-600", border: "border-gray-200", iconBg: "bg-emerald-50", barColor: "bg-emerald-500" },
+  },
+  {
+    type: "INTERPRETATION",
+    Icon: BookOpen,
+    color: { bg: "bg-white", text: "text-blue-600", border: "border-gray-200", iconBg: "bg-blue-50", barColor: "bg-blue-500" },
+  },
+  {
+    type: "GRAMMAR",
+    Icon: Brain,
+    color: { bg: "bg-white", text: "text-purple-600", border: "border-gray-200", iconBg: "bg-purple-50", barColor: "bg-purple-500" },
+  },
+  {
+    type: "COMPREHENSION",
+    Icon: Target,
+    color: { bg: "bg-white", text: "text-amber-600", border: "border-gray-200", iconBg: "bg-amber-50", barColor: "bg-amber-500" },
+  },
+];
 
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
-
 export default function LessonDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const passageId = params.passageId as string;
+  const seasonIdParam = searchParams.get("seasonId");
 
   const [lesson, setLesson] = useState<LessonItem | null>(null);
-  const [seasonId, setSeasonId] = useState<string | null>(null);
+  const [seasonId, setSeasonId] = useState<string | null>(seasonIdParam);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const season = await getActiveSeason();
+        const season = seasonIdParam
+          ? { id: seasonIdParam }
+          : await getActiveSeason();
         if (!season) {
           router.push("/student/learn");
           return;
@@ -72,13 +83,13 @@ export default function LessonDetailPage() {
       }
     }
     load();
-  }, [passageId, router]);
+  }, [passageId, router, seasonIdParam]);
 
   if (loading) {
     return (
       <div className="max-w-lg mx-auto px-5 pt-6 animate-pulse">
         <div className="h-6 bg-gray-200 rounded w-48 mb-6" />
-        {[1, 2, 3, 4, 5, 6].map((i) => (
+        {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="h-20 bg-gray-100 rounded-2xl mb-3" />
         ))}
       </div>
@@ -88,116 +99,109 @@ export default function LessonDetailPage() {
   if (!lesson) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-        <p className="text-gray-500">레슨을 찾을 수 없습니다</p>
+        <p className="text-black">레슨을 찾을 수 없습니다</p>
       </div>
     );
   }
 
-  const sessions: { type: SessionType; done: boolean; locked: boolean }[] = [
-    { type: "MIX_1", done: lesson.session1Done, locked: false },
-    { type: "MIX_2", done: lesson.session2Done, locked: false },
-    { type: "STORIES", done: lesson.storiesDone, locked: !lesson.storiesUnlocked },
-    { type: "VOCAB_FOCUS", done: lesson.session3Done, locked: false },
-    { type: "GRAMMAR_FOCUS", done: lesson.session4Done, locked: false },
-    { type: "WEAKNESS_FOCUS", done: lesson.session5Done, locked: false },
-  ];
+  const catFieldMap: Record<string, keyof typeof lesson.categoryProgress> = {
+    VOCAB: "VOCAB",
+    INTERPRETATION: "INTERPRETATION",
+    GRAMMAR: "GRAMMAR",
+    COMPREHENSION: "COMPREHENSION",
+  };
 
   return (
     <div className="max-w-lg mx-auto pb-8">
-      <div className="px-5 pt-2 pb-5">
-        {lesson.masteryScore > 0 && (
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-[var(--fs-xs)] text-gray-500">숙달도</span>
-            <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all",
-                  lesson.masteryScore >= 80
-                    ? "bg-emerald-500"
-                    : lesson.masteryScore >= 50
-                      ? "bg-blue-500"
-                      : "bg-amber-500"
-                )}
-                style={{ width: `${lesson.masteryScore}%` }}
-              />
-            </div>
-            <span className="text-[var(--fs-xs)] font-bold text-gray-600">
-              {Math.round(lesson.masteryScore)}%
+      {/* Header */}
+      <div className="px-5 pt-2 pb-4">
+        <div className="flex items-center justify-between">
+          <span className="text-[var(--fs-xs)] text-black">
+            진행률 {lesson.totalSessionsDone}/21
+          </span>
+          {lesson.masteryPassed && (
+            <span className="flex items-center gap-1 text-[var(--fs-xs)] text-black font-semibold">
+              <Crown className="size-4" /> 마스터리 달성
             </span>
-          </div>
-        )}
+          )}
+        </div>
+        {/* Overall progress bar */}
+        <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all"
+            style={{ width: `${(lesson.totalSessionsDone / 21) * 100}%`, backgroundColor: "var(--key-color)" }}
+          />
+        </div>
       </div>
 
-      {/* Required Sessions */}
-      <div className="px-5 mb-2">
-        <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase tracking-wider mb-2">
-          필수 세션
-        </p>
-      </div>
-      <div className="px-5 space-y-2.5 mb-6">
-        {sessions.slice(0, 3).map((s, i) => (
-          <SessionCard
-            key={s.type}
-            session={s}
-            index={i}
-            passageId={passageId}
-            seasonId={seasonId}
-          />
-        ))}
+      {/* Category tracks */}
+      <div className="px-5 space-y-3 mb-6">
+        {CATEGORY_CONFIG.map(({ type, Icon, color }, ci) => {
+          const done = lesson.categoryProgress[catFieldMap[type]];
+          const meta = SESSION_TYPES[type];
+
+          return (
+            <CategoryTrack
+              key={type}
+              type={type}
+              label={meta.label}
+              Icon={Icon}
+              color={color}
+              done={done}
+              total={SESSIONS_PER_CATEGORY}
+              passageId={passageId}
+              seasonId={seasonId}
+              index={ci}
+            />
+          );
+        })}
       </div>
 
-      {/* Optional Sessions */}
-      <div className="px-5 mb-2">
-        <p className="text-[var(--fs-xs)] font-semibold text-gray-400 uppercase tracking-wider mb-2">
-          선택 세션
-        </p>
-      </div>
-      <div className="px-5 space-y-2.5">
-        {sessions.slice(3).map((s, i) => (
-          <SessionCard
-            key={s.type}
-            session={s}
-            index={i + 3}
-            passageId={passageId}
-            seasonId={seasonId}
-          />
-        ))}
+      {/* Mastery track */}
+      <div className="px-5">
+        <MasteryTrack
+          lesson={lesson}
+          passageId={passageId}
+          seasonId={seasonId}
+        />
       </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Session Card
+// Category Track
 // ---------------------------------------------------------------------------
-
-function SessionCard({
-  session,
-  index,
+function CategoryTrack({
+  type,
+  label,
+  Icon,
+  color,
+  done,
+  total,
   passageId,
   seasonId,
+  index,
 }: {
-  session: { type: SessionType; done: boolean; locked: boolean };
-  index: number;
+  type: SessionType;
+  label: string;
+  Icon: typeof Brain;
+  color: { bg: string; text: string; border: string; iconBg: string; barColor: string };
+  done: number;
+  total: number;
   passageId: string;
   seasonId: string | null;
+  index: number;
 }) {
   const router = useRouter();
-  const meta = SESSION_TYPES[session.type];
-  const Icon = SESSION_ICONS[session.type] ?? Sparkles;
-  const colors = SESSION_COLORS[session.type];
+  const nextSeq = Math.min(done + 1, total);
+  const allDone = done >= total;
 
   const handleStart = () => {
-    if (session.locked) return;
-    if (session.type === "STORIES") {
-      const params = new URLSearchParams({
-        ...(seasonId ? { seasonId } : {}),
-      });
-      router.push(`/student/learn/${passageId}/stories?${params}`);
-      return;
-    }
+    if (allDone) return;
     const params = new URLSearchParams({
-      type: session.type,
+      type,
+      seq: String(nextSeq),
       ...(seasonId ? { seasonId } : {}),
     });
     router.push(`/student/learn/${passageId}/session?${params}`);
@@ -206,60 +210,129 @@ function SessionCard({
   return (
     <motion.button
       onClick={handleStart}
-      disabled={session.locked}
-      initial={{ opacity: 0, x: -20 }}
+      initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.06 }}
       className={cn(
-        "w-full flex items-center gap-3 rounded-2xl border p-4 text-left transition-all",
-        session.done
+        "w-full flex items-center gap-3 rounded-3xl border p-5 text-left transition-all",
+        allDone
           ? "bg-gray-50 border-gray-200"
-          : session.locked
-            ? "bg-gray-50 border-gray-100 opacity-50"
-            : cn(colors.bg, colors.border, "active:scale-[0.98] shadow-sm")
+          : cn(color.bg, color.border, "active:scale-[0.98] ")
       )}
     >
       {/* Icon */}
-      <div
-        className={cn(
-          "w-10 h-10 rounded-xl flex items-center justify-center",
-          session.done ? "bg-emerald-100" : session.locked ? "bg-gray-100" : colors.bg
-        )}
-      >
-        {session.done ? (
+      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", allDone ? "bg-emerald-100" : color.iconBg)}>
+        {allDone ? (
           <CheckCircle2 className="size-5 text-emerald-500" />
-        ) : session.locked ? (
-          <Lock className="size-5 text-gray-400" />
         ) : (
-          <Icon className={cn("size-5", colors.text)} />
+          <Icon className={cn("size-5", color.text)} />
         )}
       </div>
 
-      {/* Label */}
-      <div className="flex-1">
-        <p
-          className={cn(
-            "text-[var(--fs-base)] font-semibold",
-            session.done ? "text-gray-500" : session.locked ? "text-gray-400" : "text-gray-900"
-          )}
-        >
-          {meta.label}
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className={cn("text-[var(--fs-base)] font-semibold", allDone ? "text-black" : "text-gray-900")}>
+          {label}
         </p>
-        <p className="text-[var(--fs-xs)] text-gray-500 mt-0.5">
-          {session.done
-            ? "완료"
-            : session.locked
-              ? "필수 세션 완료 후 해제"
-              : meta.required
-                ? "필수 · ~3분"
-                : "선택 · ~3분"}
+        <div className="flex items-center gap-2 mt-1">
+          <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className={cn("h-full rounded-full transition-all", allDone ? "bg-emerald-500" : color.barColor)}
+              style={{ width: `${(done / total) * 100}%` }}
+            />
+          </div>
+          <span className="text-[var(--fs-xs)] text-black whitespace-nowrap">{done}/{total}</span>
+        </div>
+      </div>
+
+      {/* Play button */}
+      {!allDone && (
+        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}>
+          <Play className="size-4 ml-0.5" style={{ color: "var(--key-color)" }} />
+        </div>
+      )}
+    </motion.button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Mastery Track
+// ---------------------------------------------------------------------------
+function MasteryTrack({
+  lesson,
+  passageId,
+  seasonId,
+}: {
+  lesson: LessonItem;
+  passageId: string;
+  seasonId: string | null;
+}) {
+  const router = useRouter();
+  const { masteryUnlocked, masteryPassed, masteryAttempts, masteryScore } = lesson;
+
+  const handleStart = () => {
+    if (!masteryUnlocked || masteryPassed) return;
+    const params = new URLSearchParams({
+      type: "MASTERY",
+      seq: "1",
+      ...(seasonId ? { seasonId } : {}),
+    });
+    router.push(`/student/learn/${passageId}/session?${params}`);
+  };
+
+  return (
+    <motion.button
+      onClick={handleStart}
+      disabled={!masteryUnlocked || masteryPassed}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+      className={cn(
+        "w-full flex items-center gap-3 rounded-3xl border p-5 text-left transition-all",
+        masteryPassed
+          ? "bg-white border-gray-200"
+          : masteryUnlocked
+            ? "bg-white border-gray-200 active:scale-[0.98] "
+            : "bg-gray-50 border-gray-100 opacity-50"
+      )}
+    >
+      {/* Icon */}
+      <div className={cn(
+        "w-10 h-10 rounded-xl flex items-center justify-center",
+        masteryPassed ? "bg-gray-100" : masteryUnlocked ? "bg-gray-100" : "bg-gray-100"
+      )}>
+        {masteryPassed ? (
+          <Crown className="size-5 text-black" />
+        ) : masteryUnlocked ? (
+          <Crown className="size-5 text-black" />
+        ) : (
+          <Lock className="size-5 text-gray-400" />
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="flex-1">
+        <p className={cn(
+          "text-[var(--fs-base)] font-semibold",
+          masteryPassed ? "text-black" : masteryUnlocked ? "text-black" : "text-gray-400"
+        )}>
+          마스터리 챌린지
+        </p>
+        <p className="text-[var(--fs-xs)] text-black mt-0.5">
+          {masteryPassed
+            ? `달성! (${Math.round(masteryScore)}점, ${masteryAttempts}회 시도)`
+            : !masteryUnlocked
+              ? "각 카테고리 1세션 이상 완료 필요"
+              : masteryAttempts > 0
+                ? `${masteryAttempts}회 시도 · 힌트 없음 · 5개 이상 틀리면 실패`
+                : "힌트 없음 · 5개 이상 틀리면 실패"}
         </p>
       </div>
 
-      {/* Action */}
-      {!session.done && !session.locked && (
-        <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", colors.bg)}>
-          <Play className={cn("size-4 ml-0.5", colors.text)} />
+      {/* Play */}
+      {masteryUnlocked && !masteryPassed && (
+        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}>
+          <Play className="size-4 ml-0.5" style={{ color: "var(--key-color)" }} />
         </div>
       )}
     </motion.button>

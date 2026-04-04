@@ -58,7 +58,7 @@ export function AssignmentsTab() {
             className={cn(
               "px-3 py-1 rounded-full text-[var(--fs-caption)] font-medium transition-colors",
               filter === f.key
-                ? "bg-blue-500 text-white"
+                ? "bg-black text-white"
                 : "bg-gray-50 text-gray-400",
             )}
           >

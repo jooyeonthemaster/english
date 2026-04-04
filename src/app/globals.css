@@ -44,35 +44,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
 
-  /* ────── NARA Professional Design System ────── */
-  --color-nara-blue: #3B82F6;
-  --color-nara-blue-hover: #2563EB;
-  --color-nara-blue-subtle: #EFF6FF;
-  --color-nara-blue-light: #BFDBFE;
-  --color-nara-indigo: #6366F1;
-  --color-nara-indigo-subtle: #EEF2FF;
-  --color-nara-emerald: #10B981;
-  --color-nara-emerald-subtle: #ECFDF5;
-  --color-nara-amber: #F59E0B;
-  --color-nara-amber-subtle: #FFFBEB;
-  --color-nara-red: #EF4444;
-  --color-nara-red-subtle: #FEF2F2;
-  --color-nara-purple: #8B5CF6;
-  --color-nara-purple-subtle: #F5F3FF;
-  --color-gray-50: #F9FAFB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-200: #E5E7EB;
-  --color-gray-300: #D1D5DB;
-  --color-gray-400: #9CA3AF;
-  --color-gray-500: #6B7280;
-  --color-gray-600: #4B5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1F2937;
-  --color-gray-900: #111827;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -126,67 +98,39 @@
   --radius-xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* ── Color Palette v3 — Instagram 미니멀 + 모던 학습앱 ── */
-  /* Brand — 더 밝고 활기찬 블루 */
-  --erp-primary: #3B82F6;
-  --erp-primary-hover: #2563EB;
-  --erp-primary-light: #DBEAFE;
-  --erp-primary-subtle: #EFF6FF;
-  /* Secondary */
-  --erp-secondary: #6B7280;
-  --erp-secondary-light: #F3F4F6;
-  /* Semantic — 더 밝은 톤 */
-  --erp-success: #22C55E;
-  --erp-success-light: #DCFCE7;
-  --erp-success-subtle: #F0FDF4;
-  --erp-warning: #F59E0B;
-  --erp-warning-light: #FEF3C7;
-  --erp-warning-subtle: #FFFBEB;
-  --erp-error: #EF4444;
-  --erp-error-light: #FEE2E2;
-  --erp-error-subtle: #FEF2F2;
-  --erp-info: #3B82F6;
-  --erp-info-light: #EFF6FF;
-  /* Neutrals — Instagram식 깨끗한 톤 */
-  --erp-bg: #FAFAFA;
-  --erp-surface: #FFFFFF;
-  --erp-border: #F0F0F0;
-  --erp-border-light: #F5F5F5;
-  --erp-text: #1A1A1A;
-  --erp-text-secondary: #737373;
-  --erp-text-muted: #A3A3A3;
-  --erp-text-inverse: #FFFFFF;
+  /* ══ 6:3:1 Design System ══
+     60% White (#FFFFFF) / 30% Dark Gray (#111827) / 10% Key Color
+     Key color changes per tab section ══ */
 
-  /* ── Learning (Gamification) Colors ── */
-  --learn-primary: #3B82F6;
-  --learn-primary-dark: #2563EB;
-  --learn-accent: #F59E0B;
-  --learn-accent-warm: #FB923C;
-  --learn-streak: #EF6C00;
-  --learn-xp: #7C3AED;
-  --learn-xp-light: #EDE9FE;
-  --learn-success: #10B981;
-  --learn-wrong: #EF4444;
-  --learn-locked: #CBD5E1;
-  --learn-gold: #FBBF24;
+  /* ── Tab Key Colors (3탭) ── */
+  --key-learn: #FF8700;     /* 파파야 오렌지 (맥라렌) */
+  --key-home: #EF0107;      /* 아스날 레드 */
+  --key-mypage: #4CAF50;    /* 짙은 초록 */
 
-  /* ── Legacy compat (used by existing learn pages) ── */
-  --student-primary: var(--learn-primary);
-  --student-primary-dark: var(--learn-primary-dark);
-  --student-primary-light: var(--erp-primary-light);
-  --student-secondary: #6366F1;
-  --student-accent: var(--learn-accent);
-  --student-accent-warm: var(--learn-accent-warm);
-  --student-success: var(--learn-success);
-  --student-success-light: var(--erp-success-light);
-  --student-wrong: var(--learn-wrong);
-  --student-wrong-light: var(--erp-error-light);
-  --student-locked: var(--learn-locked);
-  --student-gold: var(--learn-gold);
-  --student-purple: #8B5CF6;
-  --student-bg: var(--erp-bg);
-  --student-card: var(--erp-surface);
-  /* Legacy spacing (learn pages still use these) */
+  /* 레거시 호환 (출석/자료실 페이지에서 사용) */
+  --key-resources: #F74404;
+  --key-attendance: #D45C3A;
+
+  /* ── Active Key Color (탭 전환 시 JS로 업데이트) ── */
+  --key-color: var(--key-home);
+
+  /* ── Category Colors (학습 세션 전용) ── */
+  --cat-vocab: #10B981;         /* emerald */
+  --cat-interpretation: #3B82F6; /* blue */
+  --cat-grammar: #8B5CF6;       /* purple */
+  --cat-comprehension: #F59E0B;  /* amber */
+
+  /* ── Status Colors (키컬러와 무관, 정보 전달용) ── */
+  --status-success: #10B981;
+  --status-error: #EF4444;
+  --status-warning: #F59E0B;
+
+  /* ── 6:3:1 Base (Google One 스타일) ── */
+  --base-white: #FFFFFF;
+  --base-dark: #111827;
+  --base-bg: #F2F2F2;         /* 연한 그레이 배경 */
+
+  /* ── Legacy spacing (learn pages still use these) ── */
   --space-xs: var(--sp-1);
   --space-sm: var(--sp-2);
   --space-md: var(--sp-3);
@@ -258,34 +202,19 @@
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(100%); }
-  to { opacity: 1; transform: translateY(0); }
-}
 @keyframes slide-in-right {
   from { opacity: 0; transform: translateX(20px); }
   to { opacity: 1; transform: translateX(0); }
-}
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 @keyframes pulse-ring {
   0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.35); }
   70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
   100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
 }
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-@keyframes bounce-subtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-@keyframes count-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
 }
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
@@ -345,13 +274,7 @@
   background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
 }
 
-@utility gradient-hero {
-  background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 50%, #ECFDF5 100%);
-}
 
-@utility gradient-sidebar {
-  background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
-}
 
 @utility gradient-card {
   background: linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%);
@@ -376,12 +299,6 @@
     0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-@utility shadow-nav {
-  box-shadow:
-    0 -1px 0 rgba(0, 0, 0, 0.03),
-    0 -4px 16px rgba(0, 0, 0, 0.06);
-}
-
 @utility shadow-sidebar {
   box-shadow: 1px 0 0 rgba(0, 0, 0, 0.05);
 }
@@ -399,10 +316,9 @@
   animation: slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@utility animate-fade-in {
-  animation: fade-in 0.3s ease both;
+@utility animate-shake {
+  animation: shake 0.4s ease;
 }
-
 
 @utility animate-shimmer {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
@@ -412,10 +328,6 @@
 
 @utility animate-pulse-ring {
   animation: pulse-ring 2s ease-in-out infinite;
-}
-
-@utility animate-count-up {
-  animation: count-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @utility animate-spin-slow {

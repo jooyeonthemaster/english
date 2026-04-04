@@ -46,7 +46,7 @@ export default function ResourcesPage() {
             className={cn(
               "flex-1 py-2 text-xs font-semibold rounded-xl transition-all duration-200",
               activeTab === tab.key
-                ? "bg-white text-gray-900 shadow-sm"
+                ? "bg-white text-black "
                 : "text-gray-400",
             )}
           >

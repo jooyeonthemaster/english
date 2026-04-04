@@ -56,11 +56,11 @@ export function ExamsTab() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04 }}
-            className="rounded-3xl bg-white shadow-card p-3"
+            className="rounded-3xl bg-white p-5"
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-[var(--fs-base)] font-semibold text-gray-900 truncate">
+                <p className="text-[var(--fs-base)] font-semibold text-black truncate">
                   {exam.title}
                 </p>
                 {exam.examDate && (

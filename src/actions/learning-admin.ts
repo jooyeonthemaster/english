@@ -1,4 +1,3 @@
-// @ts-nocheck — studySeason model not yet in schema (pending migration)
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -153,13 +152,15 @@ export async function getSeasonStudentProgress(seasonId: string) {
 
   const season = await prisma.studySeason.findUnique({
     where: { id: seasonId },
-    include: { passages: true },
+    include: {
+      passages: {
+        include: { passage: { select: { id: true, title: true } } },
+        orderBy: { order: "asc" },
+      },
+    },
   });
   if (!season) throw new Error("시즌을 찾을 수 없습니다.");
 
-  const totalPassages = season.passages.length;
-
-  // 해당 학년 학생들의 진도 조회
   const students = await prisma.student.findMany({
     where: {
       academyId: user.academyId,
@@ -174,41 +175,44 @@ export async function getSeasonStudentProgress(seasonId: string) {
     where: { seasonId },
   });
 
-  const progressByStudent = new Map<
-    string,
-    { completed: number; total: number; mastery: number }
-  >();
+  const totalPassages = season.passages.length;
+  // 지문당 최대 세션 = 카테고리 4 × 5 + 마스터리 1 = 21
+  const maxSessionsPerPassage = 21;
+  const totalMaxSessions = totalPassages * maxSessionsPerPassage;
 
-  for (const student of students) {
-    const studentProgress = progressList.filter((p) => p.studentId === student.id);
-    const completed = studentProgress.filter(
-      (p) => p.session1Done && p.session2Done && p.storiesDone
-    ).length;
-    const avgMastery =
-      studentProgress.length > 0
-        ? studentProgress.reduce((sum, p) => sum + p.masteryScore, 0) / studentProgress.length
-        : 0;
+  return students.map((student) => {
+    const studentProg = progressList.filter((p) => p.studentId === student.id);
+    const progMap = new Map(studentProg.map((p) => [p.passageId, p]));
 
-    progressByStudent.set(student.id, {
-      completed,
-      total: totalPassages,
-      mastery: Math.round(avgMastery),
+    // 지문별 상세 진도
+    const passageDetails = season.passages.map((sp) => {
+      const p = progMap.get(sp.passageId);
+      return {
+        passageId: sp.passageId,
+        passageTitle: sp.passage.title,
+        vocabDone: p?.vocabDone ?? 0,
+        interpDone: p?.interpDone ?? 0,
+        grammarDone: p?.grammarDone ?? 0,
+        compDone: p?.compDone ?? 0,
+        masteryPassed: p?.masteryPassed ?? false,
+        masteryScore: p?.masteryScore ?? 0,
+        totalDone: (p?.vocabDone ?? 0) + (p?.interpDone ?? 0) + (p?.grammarDone ?? 0) + (p?.compDone ?? 0) + (p?.masteryPassed ? 1 : 0),
+      };
     });
-  }
 
-  return students.map((s) => {
-    const prog = progressByStudent.get(s.id);
+    const totalSessionsDone = passageDetails.reduce((sum, d) => sum + d.totalDone, 0);
+    const masteryPassedCount = passageDetails.filter((d) => d.masteryPassed).length;
+
     return {
-      studentId: s.id,
-      name: s.name,
-      grade: s.grade,
-      completedLessons: prog?.completed ?? 0,
-      totalLessons: prog?.total ?? totalPassages,
-      masteryScore: prog?.mastery ?? 0,
-      progressPercent:
-        totalPassages > 0
-          ? Math.round(((prog?.completed ?? 0) / totalPassages) * 100)
-          : 0,
+      studentId: student.id,
+      name: student.name,
+      grade: student.grade,
+      completedLessons: masteryPassedCount,
+      totalLessons: totalPassages,
+      totalSessionsDone,
+      totalMaxSessions,
+      progressPercent: totalMaxSessions > 0 ? Math.round((totalSessionsDone / totalMaxSessions) * 100) : 0,
+      passageDetails,
     };
   });
 }
@@ -244,4 +248,103 @@ export async function getAvailablePassages(grade?: number) {
     publisher: p.publisher,
     questionCount: p._count.naeshinQuestions,
   }));
+}
+
+// ---------------------------------------------------------------------------
+// 7. deleteSeason — 시즌 삭제
+// ---------------------------------------------------------------------------
+
+export async function deleteSeason(seasonId: string) {
+  await requireStaff();
+
+  // SeasonPassage는 cascade 삭제됨
+  // LessonProgress, SessionRecord의 seasonId는 optional이므로 null로 처리
+  await prisma.lessonProgress.updateMany({
+    where: { seasonId },
+    data: { seasonId: null },
+  });
+  await prisma.sessionRecord.updateMany({
+    where: { seasonId },
+    data: { seasonId: null },
+  });
+
+  await prisma.studySeason.delete({ where: { id: seasonId } });
+
+  revalidatePath("/director/learning");
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// 8. removeSeasonPassage — 시즌에서 지문 개별 제거
+// ---------------------------------------------------------------------------
+
+export async function removeSeasonPassage(seasonId: string, passageId: string) {
+  await requireStaff();
+
+  await prisma.seasonPassage.deleteMany({
+    where: { seasonId, passageId },
+  });
+
+  // 순서 재정렬
+  const remaining = await prisma.seasonPassage.findMany({
+    where: { seasonId },
+    orderBy: { order: "asc" },
+  });
+  for (let i = 0; i < remaining.length; i++) {
+    if (remaining[i].order !== i) {
+      await prisma.seasonPassage.update({
+        where: { id: remaining[i].id },
+        data: { order: i },
+      });
+    }
+  }
+
+  revalidatePath("/director/learning");
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// 9. reorderSeasonPassages — 시즌 지문 순서 변경
+// ---------------------------------------------------------------------------
+
+export async function reorderSeasonPassages(
+  seasonId: string,
+  passageIds: string[]
+) {
+  await requireStaff();
+
+  for (let i = 0; i < passageIds.length; i++) {
+    await prisma.seasonPassage.updateMany({
+      where: { seasonId, passageId: passageIds[i] },
+      data: { order: i },
+    });
+  }
+
+  revalidatePath("/director/learning");
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// 10. addSeasonPassage — 시즌에 지문 개별 추가
+// ---------------------------------------------------------------------------
+
+export async function addSeasonPassage(seasonId: string, passageId: string) {
+  await requireStaff();
+
+  const maxOrder = await prisma.seasonPassage.findFirst({
+    where: { seasonId },
+    orderBy: { order: "desc" },
+    select: { order: true },
+  });
+
+  await prisma.seasonPassage.create({
+    data: {
+      seasonId,
+      passageId,
+      order: (maxOrder?.order ?? -1) + 1,
+    },
+  });
+
+  revalidatePath("/director/learning");
+  return { success: true };
 }

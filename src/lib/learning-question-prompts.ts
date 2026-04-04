@@ -24,6 +24,15 @@ const CONTEXT_RULES = `
 - 정답을 항상 A에 두지 말 것 — A, B, C, D에 고르게 분배
 - correctAnswer 값은 정답이 위치한 label(A/B/C/D)로 설정
 
+## 해설 규칙 (필수 준수)
+- **모든 문제에 explanation 필드를 반드시 포함**할 것 (빈 문자열 금지)
+- explanation은 학생이 왜 그 답이 맞는지 이해할 수 있도록 간결하게 설명
+- WORD_MATCH: 각 단어 쌍의 핵심 의미를 간략히 설명
+- WORD_SPELL: 해당 단어의 어원이나 암기 팁 제공
+- WORD_ARRANGE: 문장 구조(주어-동사-목적어 등) 설명
+- SENT_CHUNK_ORDER: 끊어읽기 원리 설명
+- GRAM_BINARY: 문법 포인트와 정오 판단 근거 설명
+
 ## 원문 인용 규칙 (가장 중요 — 반드시 준수)
 - contextSentence, sentence, englishSentence, sentenceBefore, sentenceAfter, contextExcerpt, excerpt, originalSentence 필드에는 **지문 원문을 한 글자도 바꾸지 말고 그대로 복사**할 것
 - 단어를 빼거나, 추가하거나, 순서를 바꾸거나, 요약하거나, 축약하는 것 **일체 금지**
@@ -121,8 +130,9 @@ ${JSON.stringify(a.sentences, null, 2)}
 
 ### WORD_SPELL (철자 입력)
 - koreanMeaning: vocabulary[].meaning
+- contextSentence: sentences[sentenceIndex].english **원문 그대로 복사** (해당 단어 포함 문장 1개)
 - hint: 단어의 첫 1~2글자 (예: "el" for "elaborate")
-- correctAnswer: vocabulary[].word
+- correctAnswer: vocabulary[].word (**사전 기본형/원형**으로 — 복수형/과거형 X)
 
 ### VOCAB_SYNONYM (유의어/반의어 3지선다)
 - vocabulary[].synonyms와 vocabulary[].antonyms 필드를 **반드시** 활용

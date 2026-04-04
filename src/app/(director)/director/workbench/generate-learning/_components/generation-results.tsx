@@ -89,7 +89,8 @@ function ChoicePreview({ question }: { question: Record<string, unknown> }) {
     q.koreanSentence || q.sentence || q.excerpt || q.question || "") as string;
   const context = (q.contextSentence || q.sentenceBefore || "") as string;
   const contextAfter = q.sentenceAfter as string | undefined;
-  const options = (q.options || []) as { label: string; text: string }[];
+  const rawOptions = q.options;
+  const options: { label: string; text: string }[] = Array.isArray(rawOptions) ? rawOptions : [];
   const correct = q.correctAnswer as string;
 
   return (
@@ -98,9 +99,9 @@ function ChoicePreview({ question }: { question: Record<string, unknown> }) {
       {context && <p className="text-[11px] text-slate-400 italic">{context}</p>}
       {contextAfter && <p className="text-[11px] text-slate-400 italic">{contextAfter}</p>}
       <div className="flex flex-wrap gap-1.5 mt-1">
-        {options.map((opt) => (
+        {options.map((opt, optIdx) => (
           <span
-            key={opt.label}
+            key={`${opt.label}-${optIdx}`}
             className={`text-[11px] px-2 py-1 rounded-lg border ${
               opt.label === correct
                 ? "bg-emerald-50 border-emerald-300 text-emerald-700 font-semibold"

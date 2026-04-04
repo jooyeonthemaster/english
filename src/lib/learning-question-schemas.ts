@@ -98,6 +98,7 @@ export const wordMatchItemSchema = z.object({
 
 export const wordSpellItemSchema = z.object({
   koreanMeaning: z.string(),
+  contextSentence: z.string().optional().describe("해당 단어 포함 문장 1개 (원문 그대로)"),
   hint: z.string().describe("첫 1~2글자 힌트"),
   correctAnswer: z.string(),
   explanation: z.string(),

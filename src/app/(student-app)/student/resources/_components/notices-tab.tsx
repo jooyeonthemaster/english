@@ -61,7 +61,7 @@ export function NoticesTab() {
             key={notice.id}
             className={cn(
               "rounded-2xl border bg-white transition-colors",
-              notice.isRead ? "border-gray-100" : "border-blue-500/30 bg-blue-50",
+              notice.isRead ? "border-gray-100" : "border-gray-300 bg-gray-50",
             )}
           >
             <button
@@ -72,7 +72,7 @@ export function NoticesTab() {
                 <Pin size={13} className="text-red-500 shrink-0" />
               )}
               {!notice.isRead && (
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
               )}
               <div className="flex-1 min-w-0">
                 <p className={cn(

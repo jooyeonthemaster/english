@@ -63,7 +63,7 @@ export default function RankingPage() {
   return (
     <div className="max-w-lg mx-auto pb-8">
       <div className="px-5 pt-2 pb-1">
-        <p className="text-[var(--fs-xs)] text-gray-500">매주 월요일 초기화</p>
+        <p className="text-[var(--fs-xs)] text-black">매주 월요일 초기화</p>
       </div>
 
       {/* Tabs */}
@@ -76,8 +76,8 @@ export default function RankingPage() {
               className={cn(
                 "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-[var(--fs-sm)] font-medium transition-all",
                 tab === t.value
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-500"
+                  ? "bg-white text-black "
+                  : "text-black"
               )}
             >
               <t.icon className="size-3.5" />
@@ -142,8 +142,8 @@ function IndividualTab({
             transition={{ delay: i * 0.05 }}
             className={cn(
               "flex items-center gap-3 rounded-xl p-3.5",
-              entry.isMe ? "bg-blue-50 border border-blue-200" : "bg-gray-50",
-              entry.rank <= 3 && "bg-amber-50/50"
+              entry.isMe ? "border" : "bg-gray-50",
+              entry.rank <= 3 && "bg-gray-50"
             )}
           >
             <span className="w-8 text-center text-[var(--fs-lg)]">
@@ -155,11 +155,11 @@ function IndividualTab({
               <User className="size-4 text-gray-400" />
             </div>
             <div className="flex-1">
-              <p className={cn("text-[var(--fs-base)] font-semibold", entry.isMe && "text-blue-600")}>
+              <p className={cn("text-[var(--fs-base)] font-semibold", entry.isMe && "text-black font-bold")}>
                 {entry.name} {entry.isMe && "(나)"}
               </p>
             </div>
-            <span className="text-[var(--fs-base)] font-bold text-gray-700">{entry.weeklyXp} XP</span>
+            <span className="text-[var(--fs-base)] font-bold text-black">{entry.weeklyXp} XP</span>
           </motion.div>
         ))}
       </div>
@@ -169,10 +169,10 @@ function IndividualTab({
         <>
           <div className="flex items-center gap-2 my-4">
             <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-[var(--fs-xs)] text-gray-500">...</span>
+            <span className="text-[var(--fs-xs)] text-black">...</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
-          <div className="flex items-center gap-3 rounded-xl p-3.5 bg-blue-50 border border-blue-200">
+          <div className="flex items-center gap-3 rounded-xl p-3.5 border">
             <span className="w-8 text-center text-[var(--fs-sm)] font-bold text-gray-400">
               {data.myRank.rank}
             </span>
@@ -180,9 +180,9 @@ function IndividualTab({
               <User className="size-4 text-blue-500" />
             </div>
             <div className="flex-1">
-              <p className="text-[var(--fs-base)] font-semibold text-blue-600">{data.myRank.name} (나)</p>
+              <p className="text-[var(--fs-base)] font-semibold text-black font-bold">{data.myRank.name} (나)</p>
             </div>
-            <span className="text-[var(--fs-base)] font-bold text-blue-600">{data.myRank.weeklyXp} XP</span>
+            <span className="text-[var(--fs-base)] font-bold text-black font-bold">{data.myRank.weeklyXp} XP</span>
           </div>
         </>
       )}
@@ -209,7 +209,7 @@ function GenericTab({
           transition={{ delay: i * 0.05 }}
           className={cn(
             "flex items-center gap-3 rounded-xl p-3.5",
-            entry.rank <= 3 ? "bg-amber-50/50" : "bg-gray-50"
+            entry.rank <= 3 ? "bg-gray-50" : "bg-gray-50"
           )}
         >
           <span className="w-8 text-center text-lg">
@@ -218,10 +218,10 @@ function GenericTab({
             )}
           </span>
           <div className="flex-1">
-            <p className="text-[var(--fs-base)] font-semibold text-gray-900">{entry.name}</p>
-            <p className="text-[var(--fs-xs)] text-gray-500">{entry.sub}</p>
+            <p className="text-[var(--fs-base)] font-semibold text-black">{entry.name}</p>
+            <p className="text-[var(--fs-xs)] text-black">{entry.sub}</p>
           </div>
-          <span className="text-[var(--fs-base)] font-bold text-gray-700">
+          <span className="text-[var(--fs-base)] font-bold text-black">
             평균 {entry.xp} XP
           </span>
         </motion.div>
