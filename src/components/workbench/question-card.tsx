@@ -25,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
+import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
+import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -87,6 +89,8 @@ export interface QuestionCardItem {
     wrongOptionExplanations: string | null;
   } | null;
   _count?: { examLinks: number };
+  /** AI 생성 시 원본 구조화 데이터 (StructuredQuestionRenderer용) */
+  structuredData?: Record<string, any>;
 }
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -251,10 +255,6 @@ export function QuestionCard({
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const passageMarking = detectPassageMarking(q.passage?.content || q.questionText);
-  // 3 levels of (a)/(A) marker rendering:
-  // Level 1 — underline + marker highlight: types where (a) word means "this word is being tested"
-  // Level 2 — marker highlight only: types where (a) marks a position but word shouldn't be underlined
-  // Level 3 — plain text: types where (a) in passage is irrelevant to this question
   const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "ANTONYM"];
   const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
   const sub = q.subType || "";
@@ -263,6 +263,13 @@ export function QuestionCard({
   const tags: string[] = Array.isArray(q.tags) ? q.tags : parseJSON<string[]>(q.tags, []);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
+
+  // 구조화 데이터가 있으면 해당 유형의 전용 렌더러 사용 (compact 아닐 때)
+  const hasStructured = !!q.structuredData?._typeId;
+  // 유형이 자체 지문을 포함하면 원본 지문 블록 숨김 (중복 방지)
+  const typeMeta = sub ? QUESTION_TYPE_META[sub] : undefined;
+  const typeIncludesPassage = typeMeta?.includesPassage ?? false;
+  const hidePassageBlock = hasStructured && typeIncludesPassage;
 
   return (
     <Card className={`transition-all ${selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"}`}>
@@ -323,74 +330,100 @@ export function QuestionCard({
           )}
         </div>
 
-        {/* Passage */}
-        {q.passage && !compact && (
-          <div className="bg-slate-50 rounded-md px-3 py-2">
-            <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
-              <FileText className="w-3 h-3 shrink-0" />
-              <span className="truncate">{q.passage.title}</span>
-              {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
-            </button>
-            <p className={`text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5 ${passageOpen ? "" : "line-clamp-3"}`}>
-              {renderFormatted(q.passage.content, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
-            </p>
-          </div>
-        )}
-
-        {/* Question text */}
-        <div className={`text-slate-800 leading-relaxed font-medium whitespace-pre-line ${compact ? "text-[12px] line-clamp-3" : "text-[13px]"}`}>
-          {renderFormatted(q.questionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
-        </div>
-
-        {/* Options */}
-        {options.length > 0 && (
-          <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
-            {(compact ? options.filter(o => o.label === q.correctAnswer) : options).map((opt, idx) => {
-              const isCorrect = opt.label === q.correctAnswer;
-              const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
-              return (
-                <div key={opt.label} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
-                  <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
-                    {displayLabel}.
-                  </span>
-                  <span className="pt-0.5">{displayText}</span>
-                </div>
-              );
-            })}
-            {compact && options.length > 1 && (
-              <span className="text-[10px] text-slate-400 pl-2">외 {options.length - 1}개 선택지</span>
+        {/* ── 구조화 데이터가 있고 compact가 아닐 때: StructuredQuestionRenderer 사용 ── */}
+        {hasStructured && !compact ? (
+          <>
+            {/* 원본 지문: 유형이 자체 지문을 포함하지 않는 경우에만 표시 */}
+            {q.passage && !hidePassageBlock && (
+              <div className="bg-slate-50 rounded-md px-3 py-2">
+                <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
+                  <FileText className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{q.passage.title}</span>
+                  {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
+                </button>
+                {passageOpen && (
+                  <p className="text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5">
+                    {renderFormatted(q.passage.content, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
+            <StructuredQuestionRenderer question={q.structuredData} index={num - 1} hideHeader />
+          </>
+        ) : (
+          <>
+            {/* ── Flat 렌더링 (DB 저장 문제 또는 compact 모드) ── */}
 
-        {/* Non-MC answer — hide if already shown in questionText */}
-        {options.length === 0 && q.correctAnswer && !q.questionText.includes(q.correctAnswer) && (
-          <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
-            <span className="font-medium">정답:</span> {q.correctAnswer}
-          </div>
-        )}
+            {/* Passage — structuredData가 있고 includesPassage인 유형만 지문 숨김 (DB 로드 문제는 항상 지문 표시) */}
+            {q.passage && !compact && !(q.structuredData && typeIncludesPassage) && (
+              <div className="bg-slate-50 rounded-md px-3 py-2">
+                <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
+                  <FileText className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{q.passage.title}</span>
+                  {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
+                </button>
+                <p className={`text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5 ${passageOpen ? "" : "line-clamp-3"}`}>
+                  {renderFormatted(q.passage.content, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
+                </p>
+              </div>
+            )}
 
-        {/* Explanation */}
-        {q.explanation && (
-          <div>
-            <button className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1" onClick={() => setExplanationOpen(!explanationOpen)}>
-              {explanationOpen ? "해설 접기" : "해설 보기"}
-              {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            </button>
-            {explanationOpen && (
-              <div className="mt-2 bg-slate-50 border border-slate-100 rounded-md px-3 py-2 space-y-2">
-                <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">{q.explanation.content}</p>
-                {keyPoints.length > 0 && (
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-semibold text-slate-500">핵심 포인트</span>
-                    {keyPoints.map((kp, i) => (
-                      <p key={i} className="text-[11px] text-slate-600 pl-2 border-l-2 border-teal-300">{kp}</p>
-                    ))}
+            {/* Question text */}
+            <div className={`text-slate-800 leading-relaxed font-medium whitespace-pre-line ${compact ? "text-[12px] line-clamp-3" : "text-[13px]"}`}>
+              {renderFormatted(q.questionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
+            </div>
+
+            {/* Options */}
+            {options.length > 0 && (
+              <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
+                {(compact ? options.filter(o => o.label === q.correctAnswer) : options).map((opt, idx) => {
+                  const isCorrect = opt.label === q.correctAnswer;
+                  const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
+                  return (
+                    <div key={opt.label} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
+                      <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
+                        {displayLabel}.
+                      </span>
+                      <span className="pt-0.5">{displayText}</span>
+                    </div>
+                  );
+                })}
+                {compact && options.length > 1 && (
+                  <span className="text-[10px] text-slate-400 pl-2">외 {options.length - 1}개 선택지</span>
+                )}
+              </div>
+            )}
+
+            {/* Non-MC answer */}
+            {options.length === 0 && q.correctAnswer && !q.questionText.includes(q.correctAnswer) && (
+              <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
+                <span className="font-medium">정답:</span> {q.correctAnswer}
+              </div>
+            )}
+
+            {/* Explanation */}
+            {q.explanation && (
+              <div>
+                <button className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1" onClick={() => setExplanationOpen(!explanationOpen)}>
+                  {explanationOpen ? "해설 접기" : "해설 보기"}
+                  {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                </button>
+                {explanationOpen && (
+                  <div className="mt-2 bg-slate-50 border border-slate-100 rounded-md px-3 py-2 space-y-2">
+                    <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">{q.explanation.content}</p>
+                    {keyPoints.length > 0 && (
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-semibold text-slate-500">핵심 포인트</span>
+                        {keyPoints.map((kp, i) => (
+                          <p key={i} className="text-[11px] text-slate-600 pl-2 border-l-2 border-teal-300">{kp}</p>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             )}
-          </div>
+          </>
         )}
 
         {/* Footer */}
