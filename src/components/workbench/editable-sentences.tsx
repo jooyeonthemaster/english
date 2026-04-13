@@ -180,6 +180,7 @@ export function EditableSentences({
                           <>
                             <Sparkles className="w-3 h-3 mr-0.5" />
                             AI 재번역
+                            <span className="ml-0.5 text-[8px] font-bold bg-amber-100 text-amber-700 px-1 rounded">1</span>
                           </>
                         )}
                       </Button>

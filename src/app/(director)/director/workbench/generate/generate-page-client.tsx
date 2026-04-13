@@ -76,7 +76,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   // ── Session queue ──
   const [sessionQueue, setSessionQueue] = useState<QueueItem[]>([]);
-  const [queueFilter, setQueueFilter] = useState<"all" | "unreviewed" | "reviewed" | "error">("all");
+  const [queueFilter, setQueueFilter] = useState<"all" | "error">("all");
 
   // ── Review modal ──
   const [reviewModalId, setReviewModalId] = useState<string | null>(null);
@@ -115,8 +115,6 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   const filteredQueue = useMemo(() => {
     if (queueFilter === "all") return sessionQueue;
-    if (queueFilter === "unreviewed") return sessionQueue.filter((q) => q.status === "done");
-    if (queueFilter === "reviewed") return sessionQueue.filter((q) => q.status === "reviewed");
     if (queueFilter === "error") return sessionQueue.filter((q) => q.status === "error");
     return sessionQueue;
   }, [sessionQueue, queueFilter]);
@@ -125,8 +123,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   const queueCounts = useMemo(() => ({
     generating: sessionQueue.filter((q) => q.status === "generating").length,
-    done: sessionQueue.filter((q) => q.status === "done").length,
-    reviewed: sessionQueue.filter((q) => q.status === "reviewed").length,
+    done: sessionQueue.filter((q) => q.status === "done" || q.status === "reviewed").length,
     error: sessionQueue.filter((q) => q.status === "error").length,
   }), [sessionQueue]);
 
@@ -290,15 +287,9 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
             </div>
           )}
           {queueCounts.done > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-teal-50 border border-teal-200/60">
-              <Eye className="w-3.5 h-3.5 text-teal-600" />
-              <span className="text-[12px] font-semibold text-teal-700">미검토 {queueCounts.done}</span>
-            </div>
-          )}
-          {queueCounts.reviewed > 0 && (
             <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-emerald-50 border border-emerald-200/60">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-[12px] font-semibold text-emerald-700">완료 {queueCounts.reviewed}</span>
+              <span className="text-[12px] font-semibold text-emerald-700">완료 {queueCounts.done}</span>
             </div>
           )}
         </div>
@@ -308,7 +299,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       <div className="flex flex-col">
 
       {/* ═══ TOP SECTION: 지문 카드 + 설정 (가로 2패널, 고정 높이) ═══ */}
-      <div className="grid grid-cols-[1fr_420px] bg-white h-[420px]">
+      <div className="flex flex-col lg:flex-row bg-white lg:min-h-[420px] xl:h-[450px]">
 
         {/* ═══ LEFT PANEL: Passage cards ═══ */}
         <PassageCardGrid

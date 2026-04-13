@@ -16,9 +16,9 @@ interface BottomQueueSectionProps {
   // Session queue
   sessionQueue: QueueItem[];
   filteredQueue: QueueItem[];
-  queueFilter: "all" | "unreviewed" | "reviewed" | "error";
-  setQueueFilter: (v: "all" | "unreviewed" | "reviewed" | "error") => void;
-  queueCounts: { generating: number; done: number; reviewed: number; error: number };
+  queueFilter: "all" | "error";
+  setQueueFilter: (v: "all" | "error") => void;
+  queueCounts: { generating: number; done: number; error: number };
   autoCount: number;
 
   // Saved questions
@@ -51,19 +51,20 @@ export function BottomQueueSection({
           <div>
             <div className="flex items-center gap-4 mb-3">
               <h3 className="text-[14px] font-bold text-slate-800">현재 세션</h3>
-              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white border border-slate-200">
-                {(["all", "unreviewed", "reviewed", "error"] as const).map((f) => {
-                  const labels = { all: "전체", unreviewed: "미검토", reviewed: "저장됨", error: "오류" };
-                  const counts = { all: sessionQueue.length, unreviewed: queueCounts.done, reviewed: queueCounts.reviewed, error: queueCounts.error };
-                  if (f !== "all" && counts[f] === 0) return null;
-                  return (
-                    <button key={f} onClick={() => setQueueFilter(f)}
-                      className={`text-[11px] px-3 py-1.5 rounded-md font-semibold transition-all ${
-                        queueFilter === f ? "bg-teal-50 text-teal-700 shadow-sm" : "text-slate-400 hover:text-slate-600"
-                      }`}>{labels[f]} {counts[f]}</button>
-                  );
-                })}
-              </div>
+              {queueCounts.error > 0 && (
+                <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white border border-slate-200">
+                  {(["all", "error"] as const).map((f) => {
+                    const labels = { all: "전체", error: "오류" };
+                    const counts = { all: sessionQueue.length, error: queueCounts.error };
+                    return (
+                      <button key={f} onClick={() => setQueueFilter(f)}
+                        className={`text-[11px] px-3 py-1.5 rounded-md font-semibold transition-all ${
+                          queueFilter === f ? "bg-teal-50 text-teal-700 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                        }`}>{labels[f]} {counts[f]}</button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {filteredQueue.map((item) => {
@@ -119,7 +120,7 @@ export function BottomQueueSection({
                     difficulty: q.difficulty || "INTERMEDIATE",
                     tags: q.tags ? JSON.stringify(q.tags) : null,
                     aiGenerated: true,
-                    approved: item.status === "reviewed",
+                    approved: true,
                     createdAt: new Date(),
                     passage: { id: item.passageId, title: item.passageTitle, content: item.passageContent },
                     explanation: q.explanation ? {
@@ -131,7 +132,11 @@ export function BottomQueueSection({
                     structuredData: q,
                   };
                   return (
-                    <div key={`${item.id}-${qi}`} onClick={() => setDetailQuestion(cardItem)} className="cursor-pointer">
+                    <div key={`${item.id}-${qi}`} onClick={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (target.closest('button') || target.closest('a') || target.closest('input')) return;
+                      setDetailQuestion(cardItem);
+                    }} className="cursor-pointer">
                       <QuestionCard q={cardItem} num={qi + 1} readonly compact />
                     </div>
                   );
@@ -165,7 +170,11 @@ export function BottomQueueSection({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {savedQuestions.slice(0, 30).map((q, i) => (
-                <div key={q.id} onClick={() => setDetailQuestion(q)} className="cursor-pointer">
+                <div key={q.id} onClick={(e) => {
+                  const target = e.target as HTMLElement;
+                  if (target.closest('button') || target.closest('a') || target.closest('input')) return;
+                  setDetailQuestion(q);
+                }} className="cursor-pointer">
                   <QuestionCard q={q} num={i + 1} readonly compact />
                 </div>
               ))}

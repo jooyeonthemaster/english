@@ -113,6 +113,21 @@ const PUBLISHERS = [
 
 const ACCEPTED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 
+const TEST_PASSAGES = [
+  {
+    title: "The Science of Sleep",
+    content: `Sleep is one of the most important activities for human health. During sleep, the brain processes memories and removes waste products that build up during the day. Scientists have discovered that people who consistently get less than seven hours of sleep are more likely to develop serious health problems. The stages of sleep, including REM and deep sleep, each serve different functions. REM sleep is essential for emotional regulation, while deep sleep helps repair muscles and strengthen the immune system. Despite its importance, many people sacrifice sleep for work or entertainment, unaware of the long-term consequences.`,
+  },
+  {
+    title: "Urban Farming Revolution",
+    content: `In cities around the world, a quiet revolution is taking place on rooftops and in abandoned buildings. Urban farming has grown rapidly as people seek fresh, locally grown food. Unlike traditional agriculture, urban farms use innovative techniques such as vertical farming and hydroponics to grow crops in limited spaces. These methods use significantly less water and no soil at all. Beyond providing food, urban farms create green spaces that reduce air pollution and lower temperatures in crowded neighborhoods. Community gardens also bring people together, fostering social connections in areas where neighbors rarely interact.`,
+  },
+  {
+    title: "The Digital Divide",
+    content: `Access to the internet has become essential for education, employment, and social participation. However, millions of people worldwide still lack reliable internet connections. This gap, known as the digital divide, disproportionately affects rural communities and low-income households. Students without internet access struggle to complete homework assignments and miss opportunities for online learning. Governments and nonprofit organizations are working to bridge this divide by expanding broadband infrastructure and providing affordable devices. Closing the digital divide is not just a matter of technology — it is a matter of equality and opportunity for future generations.`,
+  },
+];
+
 interface SavedPrompt {
   id: string;
   name: string;
@@ -739,7 +754,7 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
             {!formCollapsed && (
               <div className="px-6 pb-5">
                 {/* ─── 3-Column Layout: Editor | Metadata | Prompt ─── */}
-                <div className="grid grid-cols-[1fr_320px_320px] gap-5 min-h-[420px]">
+                <div className="grid grid-cols-[1fr_320px_320px] gap-5 h-[520px]">
                   {/* Column 1: Title + Content Editor */}
                   <div className="flex flex-col min-h-0">
                     <div className="mb-2">
@@ -753,6 +768,32 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
                         onChange={(e) => setTitle(e.target.value)}
                         className="text-base border-slate-200"
                       />
+                    </div>
+
+                    {/* 테스트 지문 불러오기 */}
+                    <div className="mb-2">
+                      <Select
+                        value=""
+                        onValueChange={(val) => {
+                          const tp = TEST_PASSAGES[Number(val)];
+                          if (tp) {
+                            setTitle(tp.title);
+                            setContent(tp.content);
+                            setAnnotations([]);
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-[220px] text-[11px] text-slate-400 border-dashed border-slate-300 bg-transparent hover:bg-slate-50">
+                          <SelectValue placeholder="테스트 지문 불러오기..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TEST_PASSAGES.map((tp, idx) => (
+                            <SelectItem key={idx} value={String(idx)} className="text-[12px]">
+                              {tp.title}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="flex-1 flex flex-col min-h-0">
@@ -817,8 +858,8 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
                   </div>
 
                   {/* Column 2: Metadata */}
-                  <div className="bg-slate-50/70 rounded-xl border border-slate-200 p-5 flex flex-col">
-                    <h3 className="text-[14px] font-semibold text-slate-700 mb-3">지문 정보</h3>
+                  <div className="bg-slate-50/70 rounded-xl border border-slate-200 p-5 flex flex-col min-h-0 overflow-y-auto">
+                    <h3 className="text-[14px] font-semibold text-slate-700 mb-3 shrink-0">지문 정보</h3>
 
                     <div className="space-y-3 flex-1">
                       {/* 학교 */}
@@ -919,7 +960,7 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
 
                   {/* Column 3: Teacher's Prompt */}
                   <div
-                    className="rounded-xl border border-blue-200/60 p-5 flex flex-col"
+                    className="rounded-xl border border-blue-200/60 p-5 flex flex-col min-h-0 overflow-y-auto"
                     style={{ background: "linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)" }}
                   >
                     <div className="flex items-center justify-between mb-2 shrink-0">
@@ -1036,6 +1077,7 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
                     >
                       {saving ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Wand2 className="w-4 h-4 mr-1.5" />}
                       등록 + AI 분석 실행
+                      <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">5 크레딧</span>
                     </Button>
                   </div>
                 </div>
@@ -1289,7 +1331,7 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
                 )}
 
                 {/* ─── Card grid ─── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
                   {filteredQueue.map((passage) => (
                     <PassageQueueCard
                       key={passage.id}

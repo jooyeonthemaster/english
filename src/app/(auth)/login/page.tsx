@@ -242,9 +242,18 @@ function StaffLoginForm() {
                 </div>
               </button>
             </motion.div>
+
+            <motion.div custom={4} initial="hidden" animate="visible" variants={fadeUp} className="mt-4">
+              <a
+                href="/register"
+                className="flex items-center justify-center w-full h-[52px] rounded-2xl text-[15px] font-bold text-blue-600 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-200"
+              >
+                학원 가입 신청하기
+              </a>
+            </motion.div>
           </form>
 
-          <motion.div custom={4} initial="hidden" animate="visible" variants={fadeUp} className="mt-16 pt-8 border-t border-slate-100 flex flex-col items-center">
+          <motion.div custom={5} initial="hidden" animate="visible" variants={fadeUp} className="mt-16 pt-8 border-t border-slate-100 flex flex-col items-center">
             <div className="flex gap-6 mb-4">
               <span className="text-[13px] font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">이용약관</span>
               <span className="text-[13px] font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">개인정보처리방침</span>

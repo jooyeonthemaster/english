@@ -30,6 +30,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getNavGroups, type NavGroup } from "./nav-config";
+import { HelpChatbot } from "@/components/help-chatbot/help-chatbot";
+import { CreditBadge } from "@/components/credits/credit-badge";
 
 interface StaffSession {
   id: string;
@@ -387,6 +389,9 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </div>
 
             <div className="flex items-center gap-1">
+              {/* Credit badge */}
+              <CreditBadge />
+
               {/* Notification */}
               <button
                 className="relative flex items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.03] transition-all duration-200"
@@ -455,6 +460,9 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             {children}
           </main>
         </div>
+
+        {/* Help Chatbot */}
+        <HelpChatbot />
       </div>
     </TooltipProvider>
   );

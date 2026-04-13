@@ -3,6 +3,8 @@ import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+import { getStaffSession } from "@/lib/auth";
+import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 
 const questionOptionSchema = z.object({
   label: z.string(),
@@ -28,6 +30,12 @@ const responseSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // ── Auth check ──
+    const staff = await getStaffSession();
+    if (!staff) {
+      return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+    }
+
     const body = await request.json();
     const {
       passageId,
@@ -41,6 +49,24 @@ export async function POST(request: NextRequest) {
       count: number;
     };
 
+    // ── Credit deduction ──
+    let creditResult: { balanceAfter: number; transactionId: string };
+    try {
+      creditResult = await deductCredits(staff.academyId, "QUESTION_GEN_SINGLE", staff.id, {
+        passageId,
+        questionTypes,
+        count,
+      });
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "크레딧이 부족합니다", balance: err.currentBalance, required: err.requiredCredits },
+          { status: 402 },
+        );
+      }
+      throw err;
+    }
+
     // Fetch passage
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
@@ -51,6 +77,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!passage) {
+      await refundCredits(staff.academyId, "QUESTION_GEN_SINGLE", creditResult.transactionId, "Passage not found");
       return NextResponse.json(
         { error: "지문을 찾을 수 없습니다." },
         { status: 404 }
@@ -128,10 +155,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { object } = await generateObject({
-      model,
-      schema: responseSchema,
-      prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제 전문가입니다.
+    let object: z.infer<typeof responseSchema>;
+    try {
+      const { object: _object } = await generateObject({
+        model,
+        schema: responseSchema,
+        prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제 전문가입니다.
 아래 영어 지문을 기반으로 고품질 시험 문제를 생성하세요.
 
 ## 지문 정보
@@ -176,9 +205,14 @@ ${analysisContext}
 13. keyPoints는 반드시 3개 이상 포함하세요 (이 문제에서 학생이 배워야 할 핵심 포인트)
 14. "밑줄 친" 표현을 쓸 때는 해당 단어를 반드시 작은따옴표로 감싸세요 (예: "밑줄 친 'conduit'과"). UI에서 자동으로 밑줄이 렌더링됩니다
 15. 빈칸은 반드시 언더스코어 5개 이상으로 표시하세요 (예: "The key is to focus on _____ rather than goals.")`,
-    });
+      });
+      object = _object;
+    } catch (aiError) {
+      await refundCredits(staff.academyId, "QUESTION_GEN_SINGLE", creditResult.transactionId, "AI generation failed");
+      throw aiError;
+    }
 
-    return NextResponse.json({ questions: object.questions });
+    return NextResponse.json({ questions: object.questions, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {
     console.error("Question generation error:", error);
     return NextResponse.json(

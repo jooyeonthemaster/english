@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { buildCategoryPrompt } from "@/lib/learning-question-prompts";
+import { getStaffSession } from "@/lib/auth";
+import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 
 // ---------------------------------------------------------------------------
 // 후처리 — AI 출력 필드명 정규화 + 셔플
@@ -139,6 +141,11 @@ function normalizeResults(parsed: Record<string, unknown>): Record<string, unkno
 
 export async function POST(request: NextRequest) {
   try {
+    const staff = await getStaffSession();
+    if (!staff) {
+      return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+    }
+
     const body = await request.json();
     const { passageId, category, counts } = body as {
       passageId: string;
@@ -153,6 +160,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let creditResult: { balanceAfter: number; transactionId: string };
+    try {
+      creditResult = await deductCredits(staff.academyId, "LEARNING_QUESTION_GEN", staff.id, {
+        passageId,
+        category,
+      });
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "크레딧이 부족합니다", balance: err.currentBalance, required: err.requiredCredits },
+          { status: 402 },
+        );
+      }
+      throw err;
+    }
+
     // 1. 지문 + 분석 데이터 로드
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
@@ -160,10 +183,12 @@ export async function POST(request: NextRequest) {
     });
 
     if (!passage) {
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Passage not found");
       return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
     if (!passage.analysis?.analysisData) {
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Analysis data missing");
       return NextResponse.json(
         { error: "지문 분석을 먼저 완료해주세요." },
         { status: 400 },
@@ -185,16 +210,24 @@ export async function POST(request: NextRequest) {
     const prompt = buildCategoryPrompt(category, analysis, passage.content, counts)
       + "\n\n## 출력 형식\n반드시 유효한 JSON 객체로만 응답하세요. 다른 텍스트나 설명 없이 JSON만 출력하세요.";
 
-    const { text } = await generateText({ model, prompt, maxOutputTokens: 128000 });
+    let text: string;
+    try {
+      const result = await generateText({ model, prompt, maxOutputTokens: 128000 });
+      text = result.text;
+    } catch (aiError) {
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Learning question generation failed");
+      throw aiError;
+    }
 
     // JSON 파싱 (코드블록 감싸져 있을 수 있음)
     const jsonStr = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
     try {
       const parsed = JSON.parse(jsonStr);
       const normalized = normalizeResults(parsed);
-      return NextResponse.json({ category, results: normalized });
+      return NextResponse.json({ category, results: normalized, creditsRemaining: creditResult.balanceAfter });
     } catch (parseErr) {
       console.error(`JSON parse failed for ${category}:`, parseErr, "\nRaw text:", text.slice(0, 1000));
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "JSON parse failed");
       return NextResponse.json(
         { error: `${category} JSON 파싱 실패` },
         { status: 500 },

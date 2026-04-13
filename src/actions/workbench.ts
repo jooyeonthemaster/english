@@ -26,7 +26,9 @@ export interface WorkbenchQuestionFilters {
   tags?: string;
   aiGenerated?: boolean;
   approved?: boolean;
+  starred?: boolean;
   search?: string;
+  sort?: string;
   page?: number;
   limit?: number;
 }
@@ -240,8 +242,16 @@ export async function getWorkbenchQuestions(
 
   const where: Record<string, unknown> = { academyId };
 
-  if (filters?.type) where.type = filters.type;
-  if (filters?.subType) where.subType = filters.subType;
+  if (filters?.type) {
+    // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
+    const types = filters.type.split(",").filter(Boolean);
+    where.type = types.length > 1 ? { in: types } : types[0];
+  }
+  if (filters?.subType) {
+    // Support comma-separated multi-subtype: "BLANK_INFERENCE,GRAMMAR_ERROR"
+    const subs = filters.subType.split(",").filter(Boolean);
+    where.subType = subs.length > 1 ? { in: subs } : subs[0];
+  }
   if (filters?.difficulty) where.difficulty = filters.difficulty;
   if (filters?.passageId) where.passageId = filters.passageId;
   if (filters?.collectionId) {
@@ -249,9 +259,24 @@ export async function getWorkbenchQuestions(
   }
   if (filters?.aiGenerated !== undefined) where.aiGenerated = filters.aiGenerated;
   if (filters?.approved !== undefined) where.approved = filters.approved;
+  if (filters?.starred !== undefined) where.starred = filters.starred;
   if (filters?.search) {
     where.questionText = { contains: filters.search, mode: "insensitive" };
   }
+
+  // Build orderBy based on sort param
+  const DIFFICULTY_ORDER_DESC = ["KILLER", "INTERMEDIATE", "BASIC"];
+  const DIFFICULTY_ORDER_ASC = ["BASIC", "INTERMEDIATE", "KILLER"];
+  let orderBy: any = { createdAt: "desc" as const }; // default: newest first
+  if (filters?.sort === "oldest") {
+    orderBy = { createdAt: "asc" as const };
+  } else if (filters?.sort === "starred") {
+    orderBy = [{ starred: "desc" as const }, { createdAt: "desc" as const }];
+  }
+  // For difficulty sorts, we still use createdAt ordering at DB level
+  // and sort in-memory since Prisma doesn't support custom enum ordering.
+  // However, for simplicity, we use a raw approach with orderBy on the field.
+  const needsDifficultySort = filters?.sort === "difficulty_desc" || filters?.sort === "difficulty_asc";
 
   const [questions, total] = await Promise.all([
     prisma.question.findMany({
@@ -267,12 +292,22 @@ export async function getWorkbenchQuestions(
         explanation: true,
         _count: { select: { examLinks: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: needsDifficultySort ? { createdAt: "desc" as const } : orderBy,
       skip,
       take: limit,
     }),
     prisma.question.count({ where }),
   ]);
+
+  // In-memory sort for difficulty (since it's a string enum, not natively orderable)
+  if (needsDifficultySort) {
+    const order = filters?.sort === "difficulty_desc" ? DIFFICULTY_ORDER_DESC : DIFFICULTY_ORDER_ASC;
+    questions.sort((a, b) => {
+      const ai = order.indexOf(a.difficulty);
+      const bi = order.indexOf(b.difficulty);
+      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+    });
+  }
 
   return { questions, total, page, limit, totalPages: Math.ceil(total / limit) };
 }
@@ -448,6 +483,37 @@ export async function approveWorkbenchQuestion(
   }
 }
 
+export async function toggleQuestionStar(
+  questionId: string
+): Promise<ActionResult> {
+  try {
+    await requireAuth();
+
+    const question = await prisma.question.findUnique({
+      where: { id: questionId },
+      select: { starred: true },
+    });
+
+    if (!question) {
+      return { success: false, error: "문제를 찾을 수 없습니다." };
+    }
+
+    await prisma.question.update({
+      where: { id: questionId },
+      data: { starred: !question.starred },
+    });
+
+    revalidatePath("/director/questions");
+    return { success: true };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "중요 표시 변경 중 오류가 발생했습니다.";
+    return { success: false, error: message };
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Stats
 // ---------------------------------------------------------------------------
@@ -600,14 +666,16 @@ export async function getQuestionCollections(academyId: string) {
   await requireAuth();
   return prisma.questionCollection.findMany({
     where: { academyId },
-    include: { _count: { select: { items: true } } },
-    orderBy: { updatedAt: "desc" },
+    include: { _count: { select: { items: true, children: true } } },
+    orderBy: { name: "asc" },
   });
 }
 
 export async function createQuestionCollection(data: {
   name: string;
   description?: string;
+  parentId?: string;
+  color?: string;
 }) {
   const staff = await requireAuth();
   try {
@@ -616,6 +684,8 @@ export async function createQuestionCollection(data: {
         academyId: staff.academyId,
         name: data.name,
         description: data.description || null,
+        parentId: data.parentId || null,
+        color: data.color || null,
       },
     });
     revalidatePath("/director/questions");

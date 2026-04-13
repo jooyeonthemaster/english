@@ -92,7 +92,7 @@ export function PassageCardGrid({
   handleOpenAnalysisModal,
 }: PassageCardGridProps) {
   return (
-    <div className="flex flex-col overflow-hidden bg-white border-r border-slate-200/80">
+    <div className="flex flex-col overflow-hidden bg-white border-r lg:border-r-0 border-slate-200/80 flex-1 min-w-0">
       {/* Selection toolbar */}
       {selectedIds.size > 0 && (
         <div className="px-5 py-2 bg-blue-50 border-b border-blue-200 shrink-0 flex items-center gap-3">
@@ -147,7 +147,7 @@ export function PassageCardGrid({
         </div>
 
         {showFilters && (
-          <div className="flex items-center gap-2 mt-2.5 pt-2.5 border-t border-slate-100">
+          <div className="flex items-center flex-wrap gap-2 mt-2.5 pt-2.5 border-t border-slate-100">
             {filterOptions.schools.length > 0 && (
               <select value={filterSchool} onChange={(e) => setFilterSchool(e.target.value)}
                 className={`h-7 px-2 pr-6 rounded-md text-[11px] font-medium border appearance-none cursor-pointer transition-all ${
@@ -231,7 +231,7 @@ export function PassageCardGrid({
             </span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
             {filteredPassages.map((p) => {
               // Parse analysis
               let aData: any = null;

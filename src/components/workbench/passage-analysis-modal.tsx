@@ -629,6 +629,7 @@ export function PassageAnalysisModal({
                         <RefreshCw className="w-4 h-4 mr-1.5" />
                       )}
                       AI 분석 실행
+                      <span className="ml-1.5 inline-flex items-center text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">5 크레딧</span>
                     </Button>
                   </div>
                 )}
@@ -745,6 +746,11 @@ export function PassageAnalysisModal({
                         <>
                           <Layers className="w-4 h-4 mr-1.5" />
                           {totalQuestions > 0 ? `${totalQuestions}문제 생성하기` : "유형과 개수를 선택하세요"}
+                          {totalQuestions > 0 && (
+                            <span className="ml-1.5 inline-flex items-center text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">
+                              {activeTypes.length * 2} 크레딧
+                            </span>
+                          )}
                         </>
                       )}
                     </Button>

@@ -324,7 +324,7 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>시험 유형 *</Label>
                 <Select value={examType} onValueChange={setExamType}>
@@ -357,7 +357,7 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>학교 (선택)</Label>
                 <Select value={schoolId || "__none__"} onValueChange={(v) => setSchoolId(v === "__none__" ? "" : v)}>
@@ -392,7 +392,7 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>학기</Label>
                 <Select value={semester || "__none__"} onValueChange={(v) => setSemester(v === "__none__" ? "" : v)}>
@@ -423,7 +423,7 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="examDate">시험일</Label>
                 <Input
@@ -632,7 +632,7 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
             </h2>
 
             <div className="rounded-lg bg-[#F7F8FA] p-5 space-y-3">
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-[#8B95A1]">시험명:</span>{" "}
                   <span className="font-medium text-[#191F28]">{title}</span>

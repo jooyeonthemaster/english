@@ -566,6 +566,142 @@ export async function getSchoolsForFilter(academyId: string) {
   return schools;
 }
 
+// ---------------------------------------------------------------------------
+// Exam Collections — Folder-like organization for exams
+// ---------------------------------------------------------------------------
+
+export async function getExamCollections(academyId: string) {
+  await requireStaffAuth();
+  const collections = await prisma.examCollection.findMany({
+    where: { academyId },
+    include: {
+      _count: { select: { items: true, children: true } },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+  return collections.map((c) => ({
+    id: c.id,
+    parentId: c.parentId,
+    name: c.name,
+    description: c.description,
+    color: c.color,
+    _count: { items: c._count.items, children: c._count.children },
+  }));
+}
+
+export async function getExamCollectionMembership(academyId: string) {
+  await requireStaffAuth();
+  const items = await prisma.examCollectionItem.findMany({
+    where: { collection: { academyId } },
+    select: { collectionId: true, examId: true },
+  });
+  const membership: Record<string, string[]> = {};
+  for (const item of items) {
+    if (!membership[item.collectionId]) membership[item.collectionId] = [];
+    membership[item.collectionId].push(item.examId);
+  }
+  return membership;
+}
+
+export async function createExamCollection(data: {
+  name: string;
+  description?: string;
+  parentId?: string;
+  color?: string;
+}): Promise<ActionResult> {
+  const staff = await requireStaffAuth();
+  try {
+    const collection = await prisma.examCollection.create({
+      data: {
+        academyId: staff.academyId,
+        name: data.name,
+        description: data.description || null,
+        parentId: data.parentId || null,
+        color: data.color || null,
+      },
+    });
+    revalidatePath("/director/exams");
+    return { success: true, id: collection.id };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "폴더 생성 실패";
+    return { success: false, error: message };
+  }
+}
+
+export async function updateExamCollection(
+  collectionId: string,
+  data: { name?: string; description?: string }
+): Promise<ActionResult> {
+  await requireStaffAuth();
+  try {
+    await prisma.examCollection.update({ where: { id: collectionId }, data });
+    revalidatePath("/director/exams");
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "폴더 수정 실패";
+    return { success: false, error: message };
+  }
+}
+
+export async function deleteExamCollection(collectionId: string): Promise<ActionResult> {
+  await requireStaffAuth();
+  try {
+    await prisma.examCollection.delete({ where: { id: collectionId } });
+    revalidatePath("/director/exams");
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "폴더 삭제 실패";
+    return { success: false, error: message };
+  }
+}
+
+export async function addExamsToCollection(
+  collectionId: string,
+  examIds: string[]
+): Promise<ActionResult> {
+  await requireStaffAuth();
+  try {
+    const maxItem = await prisma.examCollectionItem.findFirst({
+      where: { collectionId },
+      orderBy: { orderNum: "desc" },
+      select: { orderNum: true },
+    });
+    const startOrder = (maxItem?.orderNum ?? -1) + 1;
+
+    await prisma.examCollectionItem.createMany({
+      data: examIds.map((examId, idx) => ({
+        collectionId,
+        examId,
+        orderNum: startOrder + idx,
+      })),
+      skipDuplicates: true,
+    });
+
+    revalidatePath("/director/exams");
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "폴더 추가 실패";
+    return { success: false, error: message };
+  }
+}
+
+export async function removeExamsFromCollection(
+  collectionId: string,
+  examIds: string[]
+): Promise<ActionResult> {
+  await requireStaffAuth();
+  try {
+    await prisma.examCollectionItem.deleteMany({
+      where: { collectionId, examId: { in: examIds } },
+    });
+    revalidatePath("/director/exams");
+    return { success: true };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "폴더에서 제거 실패";
+    return { success: false, error: message };
+  }
+}
+
 // ── Backward-compatible stubs for old (admin) routes ──
 
 export async function createQuestion(

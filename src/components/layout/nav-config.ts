@@ -8,6 +8,7 @@ import {
   CreditCard,
   BarChart3,
   Wallet,
+  Coins,
   Megaphone,
   MessageSquare,
   Mail,
@@ -70,7 +71,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           href: `${basePath}/workbench/passages`,
           children: [
             { label: "지문 등록", href: `${basePath}/workbench/passages/create` },
-            { label: "전체 지문", href: `${basePath}/workbench/passages` },
+            { label: "전체 지문 & 시험 생성", href: `${basePath}/workbench/passages` },
           ],
         },
         {
@@ -90,7 +91,6 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           href: `${basePath}/exams`,
           children: [
             { label: "시험 목록", href: `${basePath}/exams` },
-            { label: "시험 생성", href: `${basePath}/exams/create` },
           ],
         },
       ],
@@ -102,6 +102,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         { label: "수납 관리", icon: CreditCard, href: `${basePath}/billing`, directorOnly: true },
         { label: "재무 관리", icon: BarChart3, href: `${basePath}/finance`, directorOnly: true },
         { label: "급여 관리", icon: Wallet, href: `${basePath}/salaries`, directorOnly: true },
+        { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
       ],
     },
     {

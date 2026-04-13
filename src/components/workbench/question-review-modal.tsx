@@ -147,11 +147,11 @@ export function QuestionReviewModal({
           </div>
         </div>
 
-        {/* Content: 2-column — passage gets more space */}
-        <div className="flex-1 overflow-hidden grid grid-cols-2">
+        {/* Content: responsive columns */}
+        <div className="flex-1 overflow-y-auto lg:overflow-hidden grid grid-cols-1 lg:grid-cols-2">
           {/* Left: Passage with analysis highlights */}
-          <div className="border-r border-slate-200 bg-white overflow-y-auto">
-            <div className="px-6 py-5">
+          <div className="border-b lg:border-b-0 lg:border-r border-slate-200 bg-white lg:overflow-y-auto">
+            <div className="px-5 py-4 lg:px-6 lg:py-5">
               <InteractivePassageView
                 content={passageContent}
                 analysisData={analysisData || null}
@@ -161,8 +161,8 @@ export function QuestionReviewModal({
           </div>
 
           {/* Right: Questions */}
-          <div className="overflow-y-auto">
-            <div className="px-6 py-5 space-y-6">
+          <div className="lg:overflow-y-auto">
+            <div className="px-5 py-4 lg:px-6 lg:py-5 space-y-6">
               {Object.entries(groups).map(([label, qs]) => (
                 <div key={label} className="space-y-3">
                   <div className="flex items-center gap-2">

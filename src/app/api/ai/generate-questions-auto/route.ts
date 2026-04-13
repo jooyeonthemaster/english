@@ -4,12 +4,18 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 import {
-  getResponseSchema,
   STRUCTURED_TYPE_PROMPTS,
   QUESTION_SCHEMAS,
 } from "@/lib/question-schemas";
+import {
+  AI_QUESTION_SCHEMAS,
+  getAiResponseSchema,
+} from "@/lib/question-ai-schemas-mc";
+import { postProcessQuestion } from "@/lib/question-postprocess";
+import { getStaffSession } from "@/lib/auth";
+import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 // ─── Step 1 Schema: AI plans which types to use ───
 const planSchema = z.object({
@@ -43,6 +49,12 @@ const fallbackResponseSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // ── Auth + Credit deduction ──
+    const staff = await getStaffSession();
+    if (!staff) {
+      return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+    }
+
     const body = await request.json();
     const { passageId, count, difficulty, customPrompt } = body as {
       passageId: string;
@@ -50,6 +62,22 @@ export async function POST(request: NextRequest) {
       difficulty?: string;
       customPrompt?: string;
     };
+
+    let creditResult: { balanceAfter: number; transactionId: string };
+    try {
+      creditResult = await deductCredits(staff.academyId, "AUTO_GEN_BATCH", staff.id, {
+        passageId,
+        count,
+      });
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "크레딧이 부족합니다", balance: err.currentBalance, required: err.requiredCredits },
+          { status: 402 },
+        );
+      }
+      throw err;
+    }
 
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
@@ -60,6 +88,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!passage) {
+      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "Passage not found");
       return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
@@ -141,7 +170,10 @@ export async function POST(request: NextRequest) {
 
     // ═══ STEP 1: AI plans question type distribution ═══
     console.log("[AUTO-GEN] Step 1: Planning started for passage:", passage.title?.slice(0, 30));
-    const { object: planResult } = await generateObject({
+    let planResult: z.infer<typeof planSchema>;
+    let allQuestions: any[];
+    try {
+    const { object: _planResult } = await generateObject({
       model,
       schema: planSchema,
       prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제위원입니다.
@@ -165,6 +197,7 @@ ${analysisContext}
 
 총 ${count}문제의 배분 계획을 세우세요.${customPrompt ? `\n\n## 선생님 추가 지시\n${customPrompt}` : ""}`,
     });
+    planResult = _planResult;
 
     // ═══ STEP 2: Generate questions per type using existing structured schemas ═══
     const TYPE_LABELS: Record<string, string> = {
@@ -178,7 +211,39 @@ ${analysisContext}
 
     console.log("[AUTO-GEN] Step 1 done. Plan:", JSON.stringify(planResult.plan.map(p => ({ type: p.subType, count: p.count }))));
 
-    const allQuestions: any[] = [];
+    allQuestions = [];
+
+    // ── Helper: generateObject with retry ──
+    async function generateWithRetry(
+      schema: z.ZodType,
+      prompt: string,
+      maxRetries = 2,
+    ) {
+      let lastError: unknown;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          if (attempt > 0) console.log(`[AUTO-GEN] Retry attempt ${attempt}...`);
+          const { object } = await generateObject({
+            model,
+            schema,
+            prompt,
+            providerOptions: {
+              google: { thinkingConfig: { thinkingBudget: 4096 } },
+            },
+          });
+          return object;
+        } catch (err: any) {
+          lastError = err;
+          const msg = err instanceof Error ? err.message : String(err);
+          console.warn(`[AUTO-GEN] Attempt ${attempt} failed:`, msg);
+          // Log diagnostic info for debugging
+          if (err.finishReason) console.warn(`[AUTO-GEN]   finishReason: ${err.finishReason}`);
+          if (err.usage) console.warn(`[AUTO-GEN]   tokens: input=${err.usage.inputTokens}, output=${err.usage.outputTokens}`);
+          if (err.text) console.warn(`[AUTO-GEN]   rawText (first 300): ${err.text.slice(0, 300)}`);
+        }
+      }
+      throw lastError;
+    }
 
     // Generate each type SEQUENTIALLY
     for (const item of planResult.plan) {
@@ -188,18 +253,21 @@ ${analysisContext}
       console.log(`[AUTO-GEN] Step 2: Generating ${subType} x${typeCount}...`);
 
       const typePrompt = STRUCTURED_TYPE_PROMPTS[subType] || `${subType} 유형의 문제를 만드세요.`;
-      const isStructured = !!QUESTION_SCHEMAS[subType];
-      const responseSchema = isStructured
-        ? getResponseSchema(subType)
-        : fallbackResponseSchema;
+      // Use AI-minimal schema if available, otherwise fall back to full schema
+      const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
+      const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
+      const responseSchema = hasAiSchema
+        ? getAiResponseSchema(subType)
+        : isStructured
+          ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
+          : fallbackResponseSchema;
 
       const structuredInstructions = isStructured
         ? `\n## 출력 형식 안내
 - 반드시 아래 유형별 지시사항의 필드 이름을 정확히 사용하세요.
-- 밑줄 표시: __단어__ 형태로 감싸세요 (double underscore).
-- 빈칸 표시: _____ (underscore 5개 이상)으로 표시하세요.
 - direction 필드에는 발문(한국어)을 넣으세요.
-- correctAnswer 필드에는 정답 선지 label (객관식) 또는 정답 텍스트 (서술형)를 넣으세요.`
+- correctAnswer 필드에는 정답 선지 label (객관식) 또는 정답 텍스트 (서술형)를 넣으세요.
+- ⚠️ 지문 전체를 복사하는 필드(passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers)는 절대 생성하지 마세요. 서버에서 자동 생성합니다.`
         : `\n## 출력 형식 안내
 - 밑줄 친 표현은 __단어__ 형태로 감쌉니다
 - 빈칸은 _____(5개 이상)으로 표시합니다`;
@@ -210,10 +278,9 @@ ${analysisContext}
       }
 
       try {
-        const { object } = await generateObject({
-          model,
-          schema: responseSchema,
-          prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신/수능 시험 출제 전문가입니다.
+        const object = await generateWithRetry(
+          responseSchema,
+          `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신/수능 시험 출제 전문가입니다.
 
 ## 지문
 ${passage.content}
@@ -229,17 +296,29 @@ ${structuredInstructions}
 - **난이도: ${diffLabel} (${diffInstruction})**
 - difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지 (options 배열에 {label, text} 형태)
-- 해설(explanation): 왜 정답인지 지문 근거와 함께 상세히 한국어로 작성
-- keyPoints: 3개 이상의 학습 포인트
-- wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 작성 (객관식인 경우 필수)
+- 해설(explanation): 왜 정답인지 지문 근거와 함께 한국어로 작성 (3~5문장, 300자 이내로 간결하게)
+- keyPoints: 3개의 학습 포인트 (각 1문장)
+- wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 간결하게 (각 1~2문장)
 - tags: 관련 문법/어휘/유형 태그를 한국어로
 
 위의 "활용할 분석 포인트"에 명시된 어휘/문법/출제포인트를 반드시 문제에 반영하세요.
 정확히 ${typeCount}문제를 생성하세요.`,
-        });
+        );
 
-        const qs = (object.questions || []).map((q: any) => {
-          const mapped = { ...q, _typeId: subType, _typeLabel: TYPE_LABELS[subType] || subType };
+        const qs: any[] = [];
+        for (const q of ((object as any).questions || [])) {
+          // Post-process: reconstruct passage fields from AI minimal output
+          const ppResult = postProcessQuestion(subType, passage.content, q);
+          if (!ppResult.success) {
+            console.warn(`[AUTO-GEN] Post-process failed for ${subType}: ${ppResult.error}`);
+            continue; // Skip this question
+          }
+          if (ppResult.warnings.length > 0) {
+            console.warn(`[AUTO-GEN] Post-process warnings for ${subType}:`, ppResult.warnings);
+          }
+
+          const mapped: any = { ...ppResult.data, _typeId: subType, _typeLabel: TYPE_LABELS[subType] || subType };
+
           // WORD_ORDER: 강제 셔플 — AI가 정답 순서로 넣는 경우 방지
           if (subType === "WORD_ORDER" && Array.isArray(mapped.scrambledWords) && mapped.scrambledWords.length > 1) {
             const arr = [...mapped.scrambledWords];
@@ -247,14 +326,13 @@ ${structuredInstructions}
               const j = Math.floor(Math.random() * (i + 1));
               [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-            // 셔플 후에도 원래 순서와 같으면 한번 더
             if (arr.join("|") === mapped.scrambledWords.join("|")) {
               [arr[0], arr[arr.length - 1]] = [arr[arr.length - 1], arr[0]];
             }
             mapped.scrambledWords = arr;
           }
-          return mapped;
-        });
+          qs.push(mapped);
+        }
         allQuestions.push(...qs);
         console.log(`[AUTO-GEN] ${subType} done: ${qs.length} questions`);
       } catch (err) {
@@ -262,14 +340,23 @@ ${structuredInstructions}
       }
     }
 
+    } catch (aiError) {
+      // Refund credits on AI failure
+      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "Auto generation failed");
+      throw aiError;
+    }
+
     if (allQuestions.length === 0) {
-      return NextResponse.json({ error: "문제 생성에 실패했습니다.", questions: [] });
+      // Refund if no questions were produced
+      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "No questions generated");
+      return NextResponse.json({ error: "문제 생성에 실패했습니다.", questions: [], creditsRemaining: creditResult.balanceAfter });
     }
 
     return NextResponse.json({
       questions: allQuestions,
       rationale: planResult.rationale,
       count: allQuestions.length,
+      creditsRemaining: creditResult.balanceAfter,
     });
   } catch (error) {
     console.error("Auto question generation error:", error);

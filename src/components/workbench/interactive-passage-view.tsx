@@ -382,10 +382,9 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
         </div>
       </div>
 
-      {/* ─── Content Layout (horizontal or vertical) ─── */}
       <div className={layout === "vertical"
         ? "flex flex-col divide-y divide-slate-100"
-        : "grid grid-cols-[1fr_1fr] divide-x divide-slate-100 min-h-[400px]"
+        : "grid grid-cols-1 lg:grid-cols-[1fr_1fr] lg:divide-x divide-y lg:divide-y-0 divide-slate-100 min-h-[400px]"
       }>
         {/* 지문 필기노트 */}
         <div className={layout === "vertical" ? "p-5 overflow-y-auto max-h-[45vh]" : "p-5 overflow-y-auto max-h-[700px]"}>

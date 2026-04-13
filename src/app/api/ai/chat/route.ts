@@ -3,6 +3,7 @@ import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
 import { NextRequest, NextResponse } from "next/server";
+import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +27,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 2.5. Deduct credits before AI call
+    let creditResult: { balanceAfter: number; transactionId: string };
+    try {
+      creditResult = await deductCredits(session.academyId, "AI_CHAT", undefined, {
+        studentId: session.studentId,
+        questionId,
+      });
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "크레딧이 부족합니다", balance: err.currentBalance, required: err.requiredCredits },
+          { status: 402 },
+        );
+      }
+      throw err;
+    }
+
     // 3. Fetch question with explanation and passage
     const question = await prisma.question.findUnique({
       where: { id: questionId },
@@ -36,6 +54,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!question) {
+      await refundCredits(session.academyId, "AI_CHAT", creditResult.transactionId, "Question not found");
       return NextResponse.json(
         { error: "문항을 찾을 수 없습니다." },
         { status: 404 }
@@ -151,7 +170,16 @@ ${teacherPromptsText}
       model,
       system: systemPrompt,
       messages: aiMessages,
-      onFinish: async ({ text }) => {
+      onFinish: async ({ text, finishReason }) => {
+        // Refund if the generation was aborted or errored
+        if (finishReason === "error") {
+          try {
+            await refundCredits(session.academyId, "AI_CHAT", creditResult.transactionId, "Chat stream error");
+          } catch (refundErr) {
+            console.error("Failed to refund credits:", refundErr);
+          }
+          return;
+        }
         const updatedMessages = [
           ...conversationHistory,
           { role: "user", content: message },

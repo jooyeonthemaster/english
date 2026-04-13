@@ -2,6 +2,7 @@
 "use client";
 
 import {
+  Coins,
   Cpu,
   FileText,
   Minus,
@@ -13,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 
 // ─── Props ───────────────────────────────────────────
 
@@ -93,7 +95,7 @@ export function GenerationConfigPanel({
   handleBatchGenerate,
 }: GenerationConfigPanelProps) {
   return (
-    <div className="flex flex-col bg-white overflow-hidden">
+    <div className="flex flex-col bg-white overflow-hidden w-full lg:w-[340px] xl:w-[420px] shrink-0 border-l border-slate-200/80">
       <div className="flex-1 overflow-y-auto">
 
         {/* Mode Toggle */}
@@ -286,37 +288,53 @@ export function GenerationConfigPanel({
 
       {/* Generate Button */}
       <div className="px-5 py-4 border-t border-slate-100 bg-white shrink-0">
-        <Button
-          className={`w-full h-12 rounded-xl text-[14px] font-bold transition-all duration-200 ${
-            canGenerate
-              ? "bg-teal-600 hover:bg-teal-700 shadow-md shadow-teal-200/50 hover:shadow-lg hover:shadow-teal-200/60"
-              : "bg-slate-200 text-slate-400 cursor-not-allowed"
-          }`}
-          onClick={handleBatchGenerate}
-          disabled={!canGenerate}
-        >
-          {selectedIds.size === 0 ? (
-            <span className="flex items-center gap-2">
-              <FileText className="w-4.5 h-4.5" />
-              지문을 선택하세요
-            </span>
-          ) : genMode === "auto" ? (
-            <span className="flex items-center gap-2">
-              <Zap className="w-4.5 h-4.5" />
-              {selectedIds.size === 1 ? `${autoCount}문제 자동 생성` : `${selectedIds.size}개 지문 × ${autoCount}문제 생성`}
-            </span>
-          ) : totalQuestions > 0 ? (
-            <span className="flex items-center gap-2">
-              <Cpu className="w-4.5 h-4.5" />
-              {selectedIds.size === 1 ? `${totalQuestions}문제 생성` : `${selectedIds.size}개 지문 × ${totalQuestions}문제 생성`}
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <Target className="w-4.5 h-4.5" />
-              유형을 선택하세요
-            </span>
-          )}
-        </Button>
+        {(() => {
+          // 크레딧 비용 계산
+          const creditCost = genMode === "auto"
+            ? CREDIT_COSTS.AUTO_GEN_BATCH * selectedIds.size
+            : CREDIT_COSTS.QUESTION_GEN_SINGLE * Object.values(typeCounts).filter(v => v > 0).length * selectedIds.size;
+          return (
+            <>
+              <Button
+                className={`w-full h-12 rounded-xl text-[14px] font-bold transition-all duration-200 ${
+                  canGenerate
+                    ? "bg-teal-600 hover:bg-teal-700 shadow-md shadow-teal-200/50 hover:shadow-lg hover:shadow-teal-200/60"
+                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                }`}
+                onClick={handleBatchGenerate}
+                disabled={!canGenerate}
+              >
+                {selectedIds.size === 0 ? (
+                  <span className="flex items-center gap-2">
+                    <FileText className="w-4.5 h-4.5" />
+                    지문을 선택하세요
+                  </span>
+                ) : genMode === "auto" ? (
+                  <span className="flex items-center gap-2">
+                    <Zap className="w-4.5 h-4.5" />
+                    {selectedIds.size === 1 ? `${autoCount}문제 자동 생성` : `${selectedIds.size}개 지문 × ${autoCount}문제 생성`}
+                  </span>
+                ) : totalQuestions > 0 ? (
+                  <span className="flex items-center gap-2">
+                    <Cpu className="w-4.5 h-4.5" />
+                    {selectedIds.size === 1 ? `${totalQuestions}문제 생성` : `${selectedIds.size}개 지문 × ${totalQuestions}문제 생성`}
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Target className="w-4.5 h-4.5" />
+                    유형을 선택하세요
+                  </span>
+                )}
+              </Button>
+              {canGenerate && creditCost > 0 && (
+                <div className="flex items-center justify-center gap-1.5 mt-2 text-[11px] text-slate-400">
+                  <Coins className="w-3 h-3" />
+                  <span>이 작업에 <strong className="text-slate-600 font-semibold">{creditCost} 크레딧</strong>이 차감됩니다</span>
+                </div>
+              )}
+            </>
+          );
+        })()}
       </div>
     </div>
   );

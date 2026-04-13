@@ -215,12 +215,202 @@ async function main() {
   }
   console.log(`✅ ${achievements.length} achievements created`);
 
+  // 10. Create Super Admin
+  const adminPassword = await bcrypt.hash("@nadr1106", 10);
+  await prisma.superAdmin.upsert({
+    where: { email: "admin@nara.dev" },
+    update: {},
+    create: {
+      email: "admin@nara.dev",
+      password: adminPassword,
+      name: "시스템 관리자",
+      role: "SUPER_ADMIN",
+    },
+  });
+  console.log("✅ Super Admin created (admin@nara.dev / @nadr1106)");
+
+  // 11. Create Subscription Plans
+  const plans = [
+    {
+      name: "스타터",
+      tier: "STARTER",
+      monthlyPrice: 300000,
+      monthlyCredits: 500,
+      maxStudents: 50,
+      maxStaff: 3,
+      rolloverPolicy: "RESET",
+      rolloverMaxRate: 0,
+      sortOrder: 1,
+      description: "소규모 학원을 위한 기본 플랜",
+      features: JSON.stringify({
+        questionGenSingle: true,
+        questionGenVocab: true,
+        passageAnalysis: true,
+        autoGeneration: false,
+        learningSystem: false,
+        parentReports: false,
+        advancedAnalytics: false,
+        customPrompts: true,
+        examBuilder: true,
+        studentApp: true,
+        parentApp: false,
+        apiAccess: false,
+        customBranding: false,
+        maxExamsPerMonth: 20,
+        maxAiChatMessagesPerStudent: 30,
+      }),
+    },
+    {
+      name: "스탠다드",
+      tier: "STANDARD",
+      monthlyPrice: 500000,
+      monthlyCredits: 1200,
+      maxStudents: 150,
+      maxStaff: 8,
+      rolloverPolicy: "PARTIAL_ROLLOVER",
+      rolloverMaxRate: 0.2,
+      sortOrder: 2,
+      description: "중규모 학원을 위한 표준 플랜",
+      features: JSON.stringify({
+        questionGenSingle: true,
+        questionGenVocab: true,
+        passageAnalysis: true,
+        autoGeneration: true,
+        learningSystem: true,
+        parentReports: false,
+        advancedAnalytics: false,
+        customPrompts: true,
+        examBuilder: true,
+        studentApp: true,
+        parentApp: true,
+        apiAccess: false,
+        customBranding: false,
+        maxExamsPerMonth: 50,
+        maxAiChatMessagesPerStudent: 50,
+      }),
+    },
+    {
+      name: "프리미엄",
+      tier: "PREMIUM",
+      monthlyPrice: 1000000,
+      monthlyCredits: 3000,
+      maxStudents: 500,
+      maxStaff: 20,
+      rolloverPolicy: "ROLLOVER",
+      rolloverMaxRate: 1.0,
+      sortOrder: 3,
+      description: "대규모 학원을 위한 프리미엄 플랜",
+      features: JSON.stringify({
+        questionGenSingle: true,
+        questionGenVocab: true,
+        passageAnalysis: true,
+        autoGeneration: true,
+        learningSystem: true,
+        parentReports: true,
+        advancedAnalytics: true,
+        customPrompts: true,
+        examBuilder: true,
+        studentApp: true,
+        parentApp: true,
+        apiAccess: false,
+        customBranding: true,
+        maxExamsPerMonth: -1,
+        maxAiChatMessagesPerStudent: 100,
+      }),
+    },
+    {
+      name: "엔터프라이즈",
+      tier: "ENTERPRISE",
+      monthlyPrice: 0,
+      monthlyCredits: 10000,
+      maxStudents: 99999,
+      maxStaff: 99999,
+      rolloverPolicy: "ROLLOVER",
+      rolloverMaxRate: 1.0,
+      sortOrder: 4,
+      description: "맞춤 솔루션이 필요한 대형 학원/프랜차이즈",
+      features: JSON.stringify({
+        questionGenSingle: true,
+        questionGenVocab: true,
+        passageAnalysis: true,
+        autoGeneration: true,
+        learningSystem: true,
+        parentReports: true,
+        advancedAnalytics: true,
+        customPrompts: true,
+        examBuilder: true,
+        studentApp: true,
+        parentApp: true,
+        apiAccess: true,
+        customBranding: true,
+        maxExamsPerMonth: -1,
+        maxAiChatMessagesPerStudent: -1,
+      }),
+    },
+  ];
+
+  for (const plan of plans) {
+    await prisma.subscriptionPlan.upsert({
+      where: { tier: plan.tier },
+      update: {},
+      create: plan,
+    });
+  }
+  console.log(`✅ ${plans.length} subscription plans created`);
+
+  // 12. Create Subscription and Credit Balance for existing academy
+  const standardPlan = await prisma.subscriptionPlan.findUnique({
+    where: { tier: "STANDARD" },
+  });
+
+  if (standardPlan) {
+    const now = new Date();
+    const periodEnd = new Date(now);
+    periodEnd.setMonth(periodEnd.getMonth() + 1);
+
+    await prisma.academySubscription.upsert({
+      where: { id: "seed-subscription" },
+      update: {},
+      create: {
+        id: "seed-subscription",
+        academyId: academy.id,
+        planId: standardPlan.id,
+        status: "ACTIVE",
+        currentPeriodStart: now,
+        currentPeriodEnd: periodEnd,
+      },
+    });
+
+    await prisma.creditBalance.upsert({
+      where: { academyId: academy.id },
+      update: {},
+      create: {
+        academyId: academy.id,
+        balance: 1200,
+        monthlyAllocation: 1200,
+        totalAllocated: 1200,
+      },
+    });
+
+    await prisma.creditTransaction.create({
+      data: {
+        academyId: academy.id,
+        type: "ALLOCATION",
+        amount: 1200,
+        balanceAfter: 1200,
+        description: "Initial STANDARD plan allocation",
+      },
+    });
+    console.log("✅ Subscription (STANDARD) and credit balance created for academy");
+  }
+
   console.log("\n🎉 NARA ERP seeding completed!");
   console.log("\n📋 Login credentials:");
   console.log("  원장: director@darun.academy / admin1234");
   console.log("  강사: teacher@darun.academy / teacher1234");
   console.log("  학생: NAR001 ~ NAR005");
   console.log("  학부모: 01012345678");
+  console.log("  관리자: admin@nara.dev / superadmin1234");
 }
 
 main()
