@@ -80,6 +80,7 @@ export function PassageAnnotationEditor({
 
   const styleRef = useRef<HTMLStyleElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const selectionRef = useRef<{ from: number; to: number } | null>(null);
   const justMarkedRef = useRef(false);
   const popupLockRef = useRef(false); // prevents handleMouseDown from closing popup right after doMark
@@ -117,13 +118,18 @@ export function PassageAnnotationEditor({
           if (type) {
             const ann = annotations.find((a) => a.id === mark.attrs.id);
             if (ann) {
-              const domSel = window.getSelection();
+              // Use ProseMirror's coordsAtPos for cross-browser consistency (Safari bug fix)
               const cRect = containerRef.current?.getBoundingClientRect();
-              if (domSel && domSel.rangeCount > 0 && cRect) {
-                const rect = domSel.getRangeAt(0).getBoundingClientRect();
+              const innerRect = innerRef.current?.getBoundingClientRect();
+              if (cRect && innerRect) {
+                const startCoords = view.coordsAtPos(ann.from);
+                const endCoords = view.coordsAtPos(ann.to);
+                const centerX = (startCoords.left + endCoords.right) / 2;
+                const bottomY = Math.max(startCoords.bottom, endCoords.bottom);
+                const scrollTop = innerRef.current?.scrollTop ?? 0;
                 setPopupPos({
-                  x: rect.left + rect.width / 2 - cRect.left,
-                  y: rect.bottom - cRect.top + 8,
+                  x: centerX - innerRect.left,
+                  y: bottomY - innerRect.top + scrollTop + 8,
                   below: true,
                 });
               }
@@ -162,13 +168,23 @@ export function PassageAnnotationEditor({
         const text = editor.state.doc.textBetween(from, to);
         if (text.trim() && from !== to) {
           selectionRef.current = { from, to };
-          const domSel = window.getSelection();
-          const cRect = containerRef.current?.getBoundingClientRect();
-          if (domSel && domSel.rangeCount > 0 && cRect) {
-            const rect = domSel.getRangeAt(0).getBoundingClientRect();
+          // Use ProseMirror coordsAtPos for Safari cross-browser consistency.
+          // Safari's getBoundingClientRect on a selection range spanning inline marks
+          // returns only the first client-rect, producing wildly wrong popup positions.
+          const innerRect = innerRef.current?.getBoundingClientRect();
+          if (innerRect) {
+            const startCoords = editor.view.coordsAtPos(from);
+            const endCoords = editor.view.coordsAtPos(to);
+            // Same-line selection → midpoint; multi-line → use end position (anchor of user's gesture)
+            const sameLine = Math.abs(startCoords.top - endCoords.top) < 4;
+            const centerX = sameLine
+              ? (startCoords.left + endCoords.right) / 2
+              : endCoords.right;
+            const bottomY = Math.max(startCoords.bottom, endCoords.bottom);
+            const scrollTop = innerRef.current?.scrollTop ?? 0;
             setPopupPos({
-              x: rect.left + rect.width / 2 - cRect.left,
-              y: rect.bottom - cRect.top + 8,
+              x: centerX - innerRect.left,
+              y: bottomY - innerRect.top + scrollTop + 8,
               below: true,
             });
           }
@@ -268,8 +284,8 @@ export function PassageAnnotationEditor({
   const hasText = editor.getText().trim().length > 0;
   const counts = ANNOTATION_TYPES.reduce((acc, t) => { acc[t] = annotations.filter((a) => a.type === t).length; return acc; }, {} as Record<AnnotationType, number>);
 
-  // Popup positioning
-  const containerWidth = containerRef.current?.offsetWidth || 600;
+  // Popup positioning — measured against the inner (positioning context) container
+  const containerWidth = innerRef.current?.offsetWidth || containerRef.current?.offsetWidth || 600;
   const popupWidth = popup?.mode === "toolbar" ? 340 : 300;
   const halfPopup = popupWidth / 2;
   const clampedLeft = Math.max(8, Math.min(popupPos.x - halfPopup, containerWidth - popupWidth - 8));
@@ -290,7 +306,7 @@ export function PassageAnnotationEditor({
       )}
 
       {/* Editor + all popups */}
-      <div className="flex-1 relative min-h-0 overflow-y-auto">
+      <div ref={innerRef} className="flex-1 relative min-h-0 overflow-y-auto">
         <EditorContent editor={editor} className="h-full" />
 
         {/* Unified popup — toolbar / memo / edit */}

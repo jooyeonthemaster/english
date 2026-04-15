@@ -72,8 +72,12 @@ interface PassageDetailProps {
     } | null;
     notes: Array<{
       id: string;
+      annotationId: string | null;
       noteType: string;
       content: string;
+      memo: string;
+      highlightStart: number | null;
+      highlightEnd: number | null;
       order: number;
     }>;
     questions: Array<{

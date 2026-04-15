@@ -50,12 +50,38 @@ interface Registration {
   directorEmail: string;
   directorPhone: string;
   phone: string;
+  address?: string | null;
+  district?: string | null;
   desiredPlan: string | null;
   status: string;
   message: string | null;
   reviewNote: string | null;
   createdAt: Date;
   reviewedBy?: { name: string } | null;
+}
+
+const SEOUL_DISTRICTS = [
+  "강남구", "강동구", "강북구", "강서구", "관악구",
+  "광진구", "구로구", "금천구", "노원구", "도봉구",
+  "동대문구", "동작구", "마포구", "서대문구", "서초구",
+  "성동구", "성북구", "송파구", "양천구", "영등포구",
+  "용산구", "은평구", "종로구", "중구", "중랑구",
+];
+
+const DISTRICT_CAPACITY = 100;
+const CAMPAIGN_PLAN = "FREE_MAY_2026";
+
+/** Pull district from explicit field or from address/message prefix fallback. */
+function getDistrict(r: Registration): string | null {
+  if (r.district) return r.district;
+  if (r.address) {
+    for (const d of SEOUL_DISTRICTS) if (r.address.includes(d)) return d;
+  }
+  if (r.message) {
+    const m = r.message.match(/__DISTRICT__:([^\s|]+)/);
+    if (m) return m[1];
+  }
+  return null;
 }
 
 interface Plan {
@@ -93,6 +119,8 @@ export function RegistrationsClient({
   const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const [campaignTab, setCampaignTab] = useState<"ALL" | "CAMPAIGN" | "GENERAL">("ALL");
+  const [districtFilter, setDistrictFilter] = useState<string | null>(null);
 
   // Approve dialog
   const [approveTarget, setApproveTarget] = useState<Registration | null>(null);
@@ -112,8 +140,25 @@ export function RegistrationsClient({
     tempPassword: string;
   } | null>(null);
 
-  const filtered = initialRegistrations.filter((r) => {
+  const campaignScoped = initialRegistrations.filter((r) => {
+    if (campaignTab === "CAMPAIGN") return r.desiredPlan === CAMPAIGN_PLAN;
+    if (campaignTab === "GENERAL") return r.desiredPlan !== CAMPAIGN_PLAN;
+    return true;
+  });
+
+  // 구별 counts — only for campaign registrations
+  const districtCounts = SEOUL_DISTRICTS.map((d) => {
+    const count = initialRegistrations.filter(
+      (r) => r.desiredPlan === CAMPAIGN_PLAN && getDistrict(r) === d,
+    ).length;
+    return { district: d, count };
+  });
+
+  const filtered = campaignScoped.filter((r) => {
     if (activeTab !== "ALL" && r.status !== activeTab) return false;
+    if (districtFilter) {
+      if (getDistrict(r) !== districtFilter) return false;
+    }
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
@@ -172,8 +217,99 @@ export function RegistrationsClient({
     }
   }
 
+  const campaignCount = initialRegistrations.filter((r) => r.desiredPlan === CAMPAIGN_PLAN).length;
+  const generalCount = initialRegistrations.length - campaignCount;
+
   return (
     <>
+    <div className="space-y-4">
+      {/* Campaign segment tabs */}
+      <div className="flex items-center gap-1.5">
+        {[
+          { v: "ALL", label: "전체", n: initialRegistrations.length },
+          { v: "CAMPAIGN", label: "캠페인 (2026-05)", n: campaignCount },
+          { v: "GENERAL", label: "일반", n: generalCount },
+        ].map((t) => (
+          <button
+            key={t.v}
+            onClick={() => {
+              setCampaignTab(t.v as typeof campaignTab);
+              if (t.v !== "CAMPAIGN") setDistrictFilter(null);
+            }}
+            className={cn(
+              "px-3.5 py-1.5 rounded-lg text-[12.5px] font-semibold transition-colors border",
+              campaignTab === t.v
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-600 border-gray-200 hover:border-gray-400",
+            )}
+          >
+            {t.label}
+            <span className={cn("ml-1.5 text-[11px]", campaignTab === t.v ? "text-white/60" : "text-gray-400")}>
+              {t.n}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* 구별 분포 — only visible in CAMPAIGN tab */}
+      {campaignTab === "CAMPAIGN" && (
+        <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-gray-900">서울 25개 구 분포</h3>
+              <p className="text-[11.5px] text-gray-400 mt-0.5">
+                각 구별 정원 {DISTRICT_CAPACITY}명 · 클릭하면 해당 구만 필터링됩니다.
+              </p>
+            </div>
+            {districtFilter && (
+              <button
+                onClick={() => setDistrictFilter(null)}
+                className="text-[11.5px] text-gray-500 hover:text-gray-900 px-2.5 py-1 rounded-md border border-gray-200"
+              >
+                필터 해제 · {districtFilter}
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-5 gap-2">
+            {districtCounts.map((d) => {
+              const pct = Math.min(100, Math.round((d.count / DISTRICT_CAPACITY) * 100));
+              const active = districtFilter === d.district;
+              return (
+                <button
+                  key={d.district}
+                  onClick={() =>
+                    setDistrictFilter(active ? null : d.district)
+                  }
+                  className={cn(
+                    "text-left rounded-lg border p-2.5 transition-colors",
+                    active
+                      ? "bg-[#EFF6FF] border-[#3B82F6]"
+                      : "bg-white border-gray-100 hover:border-gray-300",
+                  )}
+                >
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-[12px] font-bold text-gray-900">{d.district}</span>
+                    <span className="text-[10.5px] text-gray-400 font-mono">
+                      {d.count}/{DISTRICT_CAPACITY}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 h-1 w-full rounded-full bg-gray-100 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${pct}%`,
+                        background:
+                          pct >= 100 ? "#0f172a" : "#3B82F6",
+                      }}
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Filter bar */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
@@ -227,6 +363,9 @@ export function RegistrationsClient({
                 원장
               </TableHead>
               <TableHead className="text-[12px] text-gray-400 font-medium h-10">
+                구
+              </TableHead>
+              <TableHead className="text-[12px] text-gray-400 font-medium h-10">
                 이메일
               </TableHead>
               <TableHead className="text-[12px] text-gray-400 font-medium h-10">
@@ -250,7 +389,7 @@ export function RegistrationsClient({
             {filtered.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={8}
+                  colSpan={9}
                   className="text-center text-[13px] text-gray-400 py-16"
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -279,6 +418,19 @@ export function RegistrationsClient({
                     </TableCell>
                     <TableCell className="text-[13px] text-gray-600">
                       {reg.directorName}
+                    </TableCell>
+                    <TableCell className="text-[12px]">
+                      {(() => {
+                        const d = getDistrict(reg);
+                        return d ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#1d4ed8] text-[11px] font-semibold">
+                            <span className="w-1 h-1 rounded-full bg-[#3B82F6]" />
+                            {d}
+                          </span>
+                        ) : (
+                          <span className="text-gray-300">-</span>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell className="text-[12px] text-gray-500">
                       {reg.directorEmail}
@@ -347,6 +499,7 @@ export function RegistrationsClient({
           </TableBody>
         </Table>
       </div>
+    </div>
 
       {/* Approve Dialog */}
       <Dialog

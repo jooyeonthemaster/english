@@ -623,15 +623,22 @@ model PassageAnalysis {
   @@map("passage_analyses")
 }
 
-/// PassageNote — Teacher annotations on passages
-/// noteType: "EMPHASIS" | "GRAMMAR" | "VOCAB" | "TIP"
+/// PassageNote — Teacher annotations on passages (Tiptap marks + memos).
+/// noteType: "vocab" | "grammar" | "syntax" | "sentence" | "examPoint"
+///   (5 marking types matching PassageAnnotationEditor; legacy values EMPHASIS/TIP still accepted)
+/// content: the selected passage text (what the teacher highlighted)
+/// memo: the teacher's note about WHY they marked it (fed to AI as intent signal)
+/// annotationId: client-side UUID used by the Tiptap mark to round-trip selections
+/// highlightStart / highlightEnd: ProseMirror positions (from/to) for mark restoration
 model PassageNote {
   id             String   @id @default(cuid())
   passageId      String
+  annotationId   String? // matches Tiptap mark attrs.id for client round-trip
   content        String   @db.Text
+  memo           String   @default("") @db.Text
   highlightStart Int?
   highlightEnd   Int?
-  noteType       String   @default("EMPHASIS")
+  noteType       String   @default("vocab")
   order          Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -639,6 +646,7 @@ model PassageNote {
   passage Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
 
   @@index([passageId])
+  @@index([passageId, annotationId])
   @@map("passage_notes")
 }
 
@@ -1655,6 +1663,7 @@ model AcademyRegistration {
   businessNumber    String? // 사업자등록번호
   phone             String
   address           String?
+  district          String? // Extracted Seoul district (e.g. "강남구") for campaign tracking
   estimatedStudents Int?
   // Director info
   directorName      String
@@ -1677,5 +1686,7 @@ model AcademyRegistration {
 
   @@index([status])
   @@index([createdAt])
+  @@index([district])
+  @@index([desiredPlan])
   @@map("academy_registrations")
 }

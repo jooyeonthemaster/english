@@ -15,8 +15,39 @@ import { postProcessQuestion } from "@/lib/question-postprocess";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import type { OperationType } from "@/lib/credit-costs";
+import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
+import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
 const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
+
+/**
+ * Pick annotation types that are most relevant for a given questionType so we
+ * don't drown the prompt in unrelated markings. examPoint is always relevant
+ * (it's the catch-all "this matters" signal from the teacher).
+ */
+function filterAnnotationsForType(
+  anns: PassageAnnotationInput[],
+  questionType: string,
+): PassageAnnotationInput[] {
+  if (!anns?.length) return [];
+  const grammarTypes = new Set([
+    "GRAMMAR_ERROR", "GRAMMAR_TRANSFORM", "WORD_ORDER",
+  ]);
+  const vocabTypes = VOCAB_TYPES;
+  const structureTypes = new Set([
+    "ORDERING", "SENTENCE_INSERT", "TOPIC_GIST", "TITLE",
+    "MAIN_IDEA", "IRRELEVANT_SENTENCE", "SUMMARY",
+  ]);
+
+  return anns.filter((a) => {
+    if (a.type === "examPoint") return true;
+    if (grammarTypes.has(questionType)) return a.type === "grammar" || a.type === "syntax";
+    if (vocabTypes.has(questionType)) return a.type === "vocab";
+    if (structureTypes.has(questionType)) return a.type === "sentence" || a.type === "syntax";
+    // Default: BLANK_INFERENCE etc. — broad relevance, include all but narrow noise types
+    return true;
+  });
+}
 
 // ─── Fallback generic schema (for unknown types) ───
 const fallbackQuestionSchema = z.object({
@@ -112,6 +143,7 @@ export async function POST(request: NextRequest) {
       include: {
         school: { select: { type: true, name: true } },
         analysis: { select: { analysisData: true } },
+        notes: { orderBy: { order: "asc" } },
       },
     });
 
@@ -134,6 +166,19 @@ export async function POST(request: NextRequest) {
       : isStructured
         ? z.object({ questions: z.array(QUESTION_SCHEMAS[questionType]) })
         : fallbackResponseSchema;
+
+    // Teacher annotation block — direct intent signal piped into question generation.
+    // Filter to types relevant for this questionType so we don't dilute the prompt.
+    const allAnnotations: PassageAnnotationInput[] = (passage.notes ?? []).map((n) => ({
+      id: n.annotationId ?? n.id,
+      type: ((n.noteType ?? "vocab") as PassageAnnotationType),
+      text: n.content,
+      memo: n.memo ?? "",
+      from: n.highlightStart ?? 0,
+      to: n.highlightEnd ?? 0,
+    }));
+    const relevantAnnotations = filterAnnotationsForType(allAnnotations, questionType);
+    const annotationBlock = buildQuestionAnnotationBlock(relevantAnnotations);
 
     // Include analysis context if available
     let analysisContext = "";
@@ -179,7 +224,7 @@ export async function POST(request: NextRequest) {
 
 ## 지문
 ${passage.content}
-${analysisContext}
+${annotationBlock ? `\n${annotationBlock}\n` : ""}${analysisContext}
 
 ## 출제 유형 지시사항
 ${typePrompt}

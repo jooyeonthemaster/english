@@ -65,6 +65,7 @@ import {
 } from "@/actions/custom-prompts";
 import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
 import { PassageAnnotationEditor, type Annotation } from "@/components/workbench/editor";
+import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import { PassageQueueCard } from "@/components/workbench/passage-queue-card";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
@@ -532,47 +533,6 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
     return data.text || null;
   }
 
-  // Build combined prompt from teacher's text + 5-layer annotations
-  function buildAnalysisPrompt(textPrompt: string, anns: Annotation[]): string {
-    const parts: string[] = [];
-
-    if (textPrompt.trim()) {
-      parts.push(`[선생님 지시사항]\n${textPrompt.trim()}`);
-    }
-
-    const groups: Record<string, { header: string; anns: Annotation[] }> = {
-      vocab: {
-        header: "[선생님이 표시한 핵심 어휘 — 이 단어들을 vocabulary에 각각 1번씩만 포함하고 상세히 분석하세요. 절대 같은 단어를 중복 생성하지 마세요]",
-        anns: anns.filter((a) => a.type === "vocab"),
-      },
-      grammar: {
-        header: "[선생님이 표시한 문법/어법 포인트 — 이 부분의 문법을 grammarPoints에서 반드시 집중 분석하고, 출제 유형/오답 함정/변형 방향을 상세히 다루세요]",
-        anns: anns.filter((a) => a.type === "grammar"),
-      },
-      syntax: {
-        header: "[선생님이 표시한 구문 분석 대상 — syntaxAnalysis에서 이 문장들의 S/V/O/C 구조, 끊어읽기, 핵심 구문 패턴을 반드시 다루세요]",
-        anns: anns.filter((a) => a.type === "syntax"),
-      },
-      sentence: {
-        header: "[선생님이 표시한 핵심 문장 — structure 분석에서 이 문장들의 논리적 역할, 빈칸/순서 출제 적합성을 반드시 다루세요]",
-        anns: anns.filter((a) => a.type === "sentence"),
-      },
-      examPoint: {
-        header: "[선생님이 표시한 출제 포인트 — examDesign에서 이 부분의 패러프레이징, 구조 변형, 서술형 조건 설정을 반드시 다루세요]",
-        anns: anns.filter((a) => a.type === "examPoint"),
-      },
-    };
-
-    for (const g of Object.values(groups)) {
-      if (g.anns.length > 0) {
-        const lines = g.anns.map((a) => `- "${a.text}"${a.memo ? ` → ${a.memo}` : ""}`);
-        parts.push(`${g.header}\n${lines.join("\n")}`);
-      }
-    }
-
-    return parts.join("\n\n");
-  }
-
   // Reset form (keep school/grade/semester for batch entry)
   function resetForm() {
     setTitle("");
@@ -618,6 +578,19 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
         publisher: effectivePublisher || undefined,
         source: source.trim() || undefined,
         tags: tags.length > 0 ? tags : undefined,
+        // Persist teacher markings alongside the passage so they survive
+        // reloads, flow into future re-analyses, and can be injected into
+        // question generation prompts.
+        annotations: annotations.length > 0
+          ? annotations.map((a) => ({
+              id: a.id,
+              type: a.type,
+              text: a.text,
+              memo: a.memo,
+              from: a.from,
+              to: a.to,
+            }))
+          : undefined,
       });
 
       if (result.success && result.id) {

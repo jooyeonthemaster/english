@@ -7,6 +7,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import type { OperationType } from "@/lib/credit-costs";
+import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
+import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
+
+async function loadPersistedAnnotations(
+  passageId: string,
+): Promise<PassageAnnotationInput[]> {
+  const rows = await prisma.passageNote.findMany({
+    where: { passageId },
+    orderBy: { order: "asc" },
+  });
+  return rows.map((r) => ({
+    id: r.annotationId ?? r.id,
+    type: ((r.noteType ?? "vocab") as PassageAnnotationType),
+    text: r.content,
+    memo: r.memo ?? "",
+    from: r.highlightStart ?? 0,
+    to: r.highlightEnd ?? 0,
+  }));
+}
 
 export const maxDuration = 120;
 
@@ -62,7 +81,13 @@ export async function GET(
 
     let analysisData: unknown;
     try {
-      analysisData = await runFullAnalysis(passage);
+      // Auto-inject persisted teacher annotations so cache-miss re-analyses
+      // always reflect the latest marking intent (no caller wiring needed).
+      const persistedAnns = await loadPersistedAnnotations(passageId);
+      const autoPrompt = persistedAnns.length > 0
+        ? buildAnalysisPrompt("", persistedAnns)
+        : undefined;
+      analysisData = await runFullAnalysis(passage, autoPrompt);
     } catch (aiError) {
       await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", creditResult.transactionId, "Analysis failed");
       throw aiError;
@@ -190,11 +215,21 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
     }
 
     const { customPrompt } = body;
+    // Always merge persisted annotations, then layer the caller's custom prompt
+    // on top so explicit instructions still win precedence.
+    const persistedAnns = await loadPersistedAnnotations(passageId);
+    const annotationBlock = persistedAnns.length > 0
+      ? buildAnalysisPrompt("", persistedAnns)
+      : "";
+    const mergedPrompt = [annotationBlock, customPrompt]
+      .filter((s) => typeof s === "string" && s.trim().length > 0)
+      .join("\n\n");
     console.log("[ANALYSIS] Custom prompt received:", customPrompt ? `${customPrompt.slice(0, 200)}...` : "NONE");
+    console.log("[ANALYSIS] Persisted annotations:", persistedAnns.length);
 
     let analysisData: unknown;
     try {
-      analysisData = await runFullAnalysis(passage, customPrompt);
+      analysisData = await runFullAnalysis(passage, mergedPrompt || undefined);
     } catch (aiError) {
       await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", creditResult.transactionId, "Custom analysis failed");
       throw aiError;

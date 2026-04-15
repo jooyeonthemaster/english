@@ -14,6 +14,8 @@ import {
 import { postProcessQuestion } from "@/lib/question-postprocess";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
+import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
 export const maxDuration = 300;
 
@@ -84,6 +86,7 @@ export async function POST(request: NextRequest) {
       include: {
         school: { select: { type: true, name: true } },
         analysis: { select: { analysisData: true } },
+        notes: { orderBy: { order: "asc" } },
       },
     });
 
@@ -94,6 +97,19 @@ export async function POST(request: NextRequest) {
 
     const schoolType = passage.school?.type === "MIDDLE" ? "중학교" : "고등학교";
     const gradeInfo = passage.grade ? `${passage.grade}학년` : "";
+
+    // Teacher markings — fed to BOTH the planning step (so type/count distribution
+    // reflects what the teacher emphasized) AND each generation step (so the
+    // produced questions actually target the marked spans).
+    const teacherAnnotations: PassageAnnotationInput[] = (passage.notes ?? []).map((n) => ({
+      id: n.annotationId ?? n.id,
+      type: ((n.noteType ?? "vocab") as PassageAnnotationType),
+      text: n.content,
+      memo: n.memo ?? "",
+      from: n.highlightStart ?? 0,
+      to: n.highlightEnd ?? 0,
+    }));
+    const teacherIntentBlock = buildQuestionAnnotationBlock(teacherAnnotations);
     const diffLabel = difficulty || "INTERMEDIATE";
     const diffDescription: Record<string, string> = {
       BASIC: "기본 — 교과서 수준, 직접적 이해 위주, 쉬운 어휘와 단순 문법",
@@ -188,7 +204,7 @@ export async function POST(request: NextRequest) {
 
 ## 지문
 ${passage.content}
-${analysisContext}
+${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
 
 ## 사용 가능한 유형
 객관식: BLANK_INFERENCE, GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_ORDER, SENTENCE_INSERT, TOPIC_MAIN_IDEA, TITLE, REFERENCE, CONTENT_MATCH, IRRELEVANT
@@ -284,7 +300,7 @@ ${analysisContext}
 
 ## 지문
 ${passage.content}
-${analysisContext}
+${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
 ${targetContext}
 
 ## 출제 유형 지시사항
