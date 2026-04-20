@@ -13,6 +13,8 @@ import {
   Grid2x2,
   List,
   Upload,
+  X,
+  BookMarked,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -84,10 +86,16 @@ interface PassageListProps {
     semester?: string;
     publisher?: string;
     search?: string;
+    sourceMaterialId?: string;
+    collectionId?: string;
   };
   collections: CollectionItem[];
   /** passageIds belonging to each collection, keyed by collectionId */
   collectionMembership: Record<string, Set<string>>;
+  /** when entering from 시험지 인식 완료 화면, show a pinned source material badge */
+  sourceMaterialBadge?: { id: string; label: string } | null;
+  /** when entering from a collection deep-link, show the collection badge */
+  collectionBadge?: { id: string; label: string } | null;
 }
 
 // ─── Server action adapters ──────────────────────────────
@@ -106,6 +114,8 @@ export function PassageListClient({
   filters,
   collections: initialCollections,
   collectionMembership: initialMembership,
+  sourceMaterialBadge = null,
+  collectionBadge = null,
 }: PassageListProps) {
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [importOpen, setImportOpen] = useState(false);
@@ -303,6 +313,39 @@ export function PassageListClient({
           </Link>
         </div>
       </div>
+
+      {/* ─── Deep-link filter badges (sourceMaterial / collection) ─── */}
+      {(sourceMaterialBadge || collectionBadge) && (
+        <div className="px-6 py-2 bg-sky-50/70 border-b border-sky-100 flex items-center gap-2 shrink-0">
+          <span className="text-[11px] font-semibold text-slate-500 mr-1">
+            필터 고정됨
+          </span>
+          {sourceMaterialBadge && (
+            <button
+              type="button"
+              onClick={() => updateFilter("sourceMaterialId", "")}
+              className="group inline-flex items-center gap-1.5 h-7 pl-2.5 pr-1.5 rounded-full bg-white text-[11px] font-medium text-sky-700 border border-sky-200 hover:bg-sky-100 transition-colors"
+              title="이 시험지 필터 해제"
+            >
+              <BookMarked className="w-3 h-3" />
+              <span className="truncate max-w-[220px]">{sourceMaterialBadge.label}</span>
+              <X className="w-3 h-3 text-slate-400 group-hover:text-sky-700" />
+            </button>
+          )}
+          {collectionBadge && (
+            <button
+              type="button"
+              onClick={() => updateFilter("collectionId", "")}
+              className="group inline-flex items-center gap-1.5 h-7 pl-2.5 pr-1.5 rounded-full bg-white text-[11px] font-medium text-sky-700 border border-sky-200 hover:bg-sky-100 transition-colors"
+              title="이 폴더 필터 해제"
+            >
+              <Folder className="w-3 h-3" />
+              <span className="truncate max-w-[180px]">{collectionBadge.label}</span>
+              <X className="w-3 h-3 text-slate-400 group-hover:text-sky-700" />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* ─── Selection toolbar ─── */}
       <SelectionToolbar

@@ -18,6 +18,7 @@ import {
   Settings,
   UserCog,
   Layers,
+  ScanLine,
   type LucideIcon,
 } from "lucide-react";
 
@@ -73,6 +74,11 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
             { label: "지문 등록", href: `${basePath}/workbench/passages/create` },
             { label: "전체 지문 & 시험 생성", href: `${basePath}/workbench/passages` },
           ],
+        },
+        {
+          label: "시험지 인식",
+          icon: ScanLine,
+          href: `${basePath}/workbench/passages/import`,
         },
         {
           label: "문제 관리",

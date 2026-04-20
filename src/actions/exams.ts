@@ -52,11 +52,87 @@ export interface GradeInput {
 }
 
 // ---------------------------------------------------------------------------
+// Internal helpers — tenant isolation guards
+// ---------------------------------------------------------------------------
+// Every mutating action below must verify that the entity referenced by the
+// caller-supplied id is owned by the authenticated staff's academyId. These
+// helpers centralise the check so we can audit for misses with `grep`.
+// ---------------------------------------------------------------------------
+
+async function assertExamBelongsToAcademy(
+  examId: string,
+  academyId: string
+): Promise<void> {
+  const exam = await prisma.exam.findFirst({
+    where: { id: examId, academyId },
+    select: { id: true },
+  });
+  if (!exam) {
+    throw new Error("시험을 찾을 수 없습니다.");
+  }
+}
+
+async function assertQuestionsBelongToAcademy(
+  questionIds: string[],
+  academyId: string
+): Promise<void> {
+  if (questionIds.length === 0) return;
+  const valid = await prisma.question.findMany({
+    where: { id: { in: questionIds }, academyId },
+    select: { id: true },
+  });
+  if (valid.length !== new Set(questionIds).size) {
+    throw new Error("일부 문제가 이 학원에 속하지 않습니다.");
+  }
+}
+
+async function assertClassBelongsToAcademy(
+  classId: string,
+  academyId: string
+): Promise<void> {
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, academyId },
+    select: { id: true },
+  });
+  if (!cls) {
+    throw new Error("반을 찾을 수 없습니다.");
+  }
+}
+
+async function assertExamCollectionBelongsToAcademy(
+  collectionId: string,
+  academyId: string
+): Promise<void> {
+  const collection = await prisma.examCollection.findFirst({
+    where: { id: collectionId, academyId },
+    select: { id: true },
+  });
+  if (!collection) {
+    throw new Error("폴더를 찾을 수 없습니다.");
+  }
+}
+
+async function assertExamsBelongToAcademy(
+  examIds: string[],
+  academyId: string
+): Promise<void> {
+  if (examIds.length === 0) return;
+  const valid = await prisma.exam.findMany({
+    where: { id: { in: examIds }, academyId },
+    select: { id: true },
+  });
+  if (valid.length !== new Set(examIds).size) {
+    throw new Error("일부 시험이 이 학원에 속하지 않습니다.");
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Exam CRUD
 // ---------------------------------------------------------------------------
 
 export async function getExams(academyId: string, filters?: ExamFilters) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
 
   const where: Record<string, unknown> = { academyId };
 
@@ -87,10 +163,12 @@ export async function getExams(academyId: string, filters?: ExamFilters) {
 }
 
 export async function getExam(examId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
 
-  const exam = await prisma.exam.findUnique({
-    where: { id: examId },
+  // Scope lookup to the caller's academy so a manipulated examId can't
+  // read another tenant's exam (including its full question bodies).
+  const exam = await prisma.exam.findFirst({
+    where: { id: examId, academyId: staff.academyId },
     include: {
       class: { select: { id: true, name: true } },
       school: { select: { id: true, name: true } },
@@ -121,11 +199,32 @@ export async function createExam(
   data: ExamCreateData
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // P0 guard: caller must not be able to forge the academyId argument.
+    // The session's academyId is the source of truth.
+    if (staff.academyId !== academyId) {
+      return { success: false, error: "학원 정보가 일치하지 않습니다." };
+    }
+
+    // If caller passed a classId, verify it belongs to this academy.
+    if (data.classId) {
+      await assertClassBelongsToAcademy(data.classId, staff.academyId);
+    }
+
+    // If caller pre-populated questions, each questionId must be owned
+    // by this academy — otherwise we'd let them attach another tenant's
+    // question rows to our new exam.
+    if (data.questions && data.questions.length > 0) {
+      await assertQuestionsBelongToAcademy(
+        data.questions.map((q) => q.questionId),
+        staff.academyId
+      );
+    }
 
     const exam = await prisma.exam.create({
       data: {
-        academyId,
+        academyId: staff.academyId,
         title: data.title,
         type: data.type,
         classId: data.classId || null,
@@ -143,7 +242,6 @@ export async function createExam(
       },
     });
 
-    // Add questions if provided
     if (data.questions && data.questions.length > 0) {
       await prisma.examQuestion.createMany({
         data: data.questions.map((q) => ({
@@ -171,7 +269,16 @@ export async function updateExam(
   data: Partial<ExamCreateData>
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // P0 guard: the exam must belong to the caller's academy before any
+    // update touches its row. Without this, any staff of any academy
+    // could overwrite this exam.
+    await assertExamBelongsToAcademy(examId, staff.academyId);
+
+    if (data.classId) {
+      await assertClassBelongsToAcademy(data.classId, staff.academyId);
+    }
 
     await prisma.exam.update({
       where: { id: examId },
@@ -205,9 +312,15 @@ export async function updateExam(
 
 export async function deleteExam(examId: string): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
 
-    const exam = await prisma.exam.findUnique({ where: { id: examId } });
+    // Scope the existence check to the caller's academy. Previously we
+    // did findUnique(id) which would happily return a cross-tenant exam
+    // and then delete it.
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
+      select: { id: true, status: true },
+    });
     if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
     if (exam.status !== "DRAFT") {
       return { success: false, error: "초안 상태의 시험만 삭제할 수 있습니다." };
@@ -228,10 +341,10 @@ export async function deleteExam(examId: string): Promise<ActionResult> {
 
 export async function publishExam(examId: string): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
 
-    const exam = await prisma.exam.findUnique({
-      where: { id: examId },
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
       include: { _count: { select: { questions: true } } },
     });
 
@@ -265,9 +378,15 @@ export async function addQuestionsToExam(
   questionIds: string[]
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
 
-    // Get current max order
+    // P0-1 guard: both the target exam and every question being attached
+    // must live in the caller's academy. Previously, a crafted payload
+    // could graft this academy's questions onto another tenant's exam,
+    // or vice-versa.
+    await assertExamBelongsToAcademy(examId, staff.academyId);
+    await assertQuestionsBelongToAcademy(questionIds, staff.academyId);
+
     const maxOrder = await prisma.examQuestion.findFirst({
       where: { examId },
       orderBy: { orderNum: "desc" },
@@ -302,7 +421,22 @@ export async function removeQuestionFromExam(
   examQuestionId: string
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // Verify the examQuestion row actually belongs to an exam owned by
+    // this academy. Without this, an attacker could delete any
+    // ExamQuestion row they know the id of.
+    const link = await prisma.examQuestion.findFirst({
+      where: {
+        id: examQuestionId,
+        examId,
+        exam: { academyId: staff.academyId },
+      },
+      select: { id: true },
+    });
+    if (!link) {
+      return { success: false, error: "문제 연결을 찾을 수 없습니다." };
+    }
 
     await prisma.examQuestion.delete({
       where: { id: examQuestionId },
@@ -324,7 +458,27 @@ export async function reorderExamQuestions(
   orderedIds: string[]
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // Every ExamQuestion id must belong to an exam in this academy, and
+    // to the specific exam being reordered. Otherwise a payload could
+    // re-number unrelated ExamQuestion rows across tenants.
+    await assertExamBelongsToAcademy(examId, staff.academyId);
+    if (orderedIds.length > 0) {
+      const valid = await prisma.examQuestion.findMany({
+        where: {
+          id: { in: orderedIds },
+          examId,
+        },
+        select: { id: true },
+      });
+      if (valid.length !== new Set(orderedIds).size) {
+        return {
+          success: false,
+          error: "일부 문제 연결이 이 시험에 속하지 않습니다.",
+        };
+      }
+    }
 
     const updates = orderedIds.map((id, index) =>
       prisma.examQuestion.update({
@@ -351,7 +505,14 @@ export async function reorderExamQuestions(
 // ---------------------------------------------------------------------------
 
 export async function getExamSubmissions(examId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+
+  // Only return submissions when the exam belongs to this academy.
+  const exam = await prisma.exam.findFirst({
+    where: { id: examId, academyId: staff.academyId },
+    select: { id: true },
+  });
+  if (!exam) return [];
 
   const submissions = await prisma.examSubmission.findMany({
     where: { examId },
@@ -372,8 +533,10 @@ export async function gradeSubmission(
   try {
     const staff = await requireStaffAuth();
 
-    const submission = await prisma.examSubmission.findUnique({
-      where: { id: submissionId },
+    // Scope the submission to the caller's academy. Previously any staff
+    // could grade any submission across tenants given its id.
+    const submission = await prisma.examSubmission.findFirst({
+      where: { id: submissionId, exam: { academyId: staff.academyId } },
       include: { exam: true },
     });
 
@@ -381,7 +544,6 @@ export async function gradeSubmission(
       return { success: false, error: "제출을 찾을 수 없습니다." };
     }
 
-    // Parse existing answers and merge with grades
     const existingAnswers = JSON.parse(submission.answers || "{}");
     const gradedAnswers = { ...existingAnswers };
 
@@ -426,10 +588,10 @@ export async function gradeSubmission(
 }
 
 export async function getExamAnalytics(examId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
 
-  const exam = await prisma.exam.findUnique({
-    where: { id: examId },
+  const exam = await prisma.exam.findFirst({
+    where: { id: examId, academyId: staff.academyId },
     include: {
       questions: {
         include: { question: true },
@@ -453,7 +615,6 @@ export async function getExamAnalytics(examId: string) {
   const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
   const minScore = scores.length > 0 ? Math.min(...scores) : 0;
 
-  // Score distribution (0-10, 10-20, ..., 90-100)
   const distribution = Array(10).fill(0);
   for (const s of submissions) {
     if (s.percent != null) {
@@ -462,7 +623,6 @@ export async function getExamAnalytics(examId: string) {
     }
   }
 
-  // Parse all submission answers once, instead of re-parsing per question
   const parsedAnswersBySubmission = submissions.map((sub) => {
     try {
       return JSON.parse(sub.answers || "{}") as Record<string, unknown>;
@@ -471,7 +631,6 @@ export async function getExamAnalytics(examId: string) {
     }
   });
 
-  // Question-level analysis using pre-parsed answers
   const questionAnalysis = exam.questions.map((eq) => {
     let correctCount = 0;
     const correctAnswerNorm = eq.question.correctAnswer.trim().toLowerCase();
@@ -518,7 +677,8 @@ export async function getQuestionBank(
     search?: string;
   }
 ) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
 
   const where: Record<string, unknown> = { academyId };
 
@@ -543,7 +703,8 @@ export async function getQuestionBank(
 // ---------------------------------------------------------------------------
 
 export async function getClassesForFilter(academyId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
 
   const classes = await prisma.class.findMany({
     where: { academyId, isActive: true },
@@ -555,7 +716,8 @@ export async function getClassesForFilter(academyId: string) {
 }
 
 export async function getSchoolsForFilter(academyId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
 
   const schools = await prisma.school.findMany({
     where: { academyId },
@@ -571,7 +733,8 @@ export async function getSchoolsForFilter(academyId: string) {
 // ---------------------------------------------------------------------------
 
 export async function getExamCollections(academyId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
   const collections = await prisma.examCollection.findMany({
     where: { academyId },
     include: {
@@ -590,7 +753,8 @@ export async function getExamCollections(academyId: string) {
 }
 
 export async function getExamCollectionMembership(academyId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return {};
   const items = await prisma.examCollectionItem.findMany({
     where: { collection: { academyId } },
     select: { collectionId: true, examId: true },
@@ -611,6 +775,12 @@ export async function createExamCollection(data: {
 }): Promise<ActionResult> {
   const staff = await requireStaffAuth();
   try {
+    // If a parent folder is provided, make sure it's also in this academy —
+    // otherwise the caller could nest a folder under another tenant's tree.
+    if (data.parentId) {
+      await assertExamCollectionBelongsToAcademy(data.parentId, staff.academyId);
+    }
+
     const collection = await prisma.examCollection.create({
       data: {
         academyId: staff.academyId,
@@ -632,8 +802,10 @@ export async function updateExamCollection(
   collectionId: string,
   data: { name?: string; description?: string }
 ): Promise<ActionResult> {
-  await requireStaffAuth();
   try {
+    const staff = await requireStaffAuth();
+    await assertExamCollectionBelongsToAcademy(collectionId, staff.academyId);
+
     await prisma.examCollection.update({ where: { id: collectionId }, data });
     revalidatePath("/director/exams");
     return { success: true };
@@ -644,8 +816,10 @@ export async function updateExamCollection(
 }
 
 export async function deleteExamCollection(collectionId: string): Promise<ActionResult> {
-  await requireStaffAuth();
   try {
+    const staff = await requireStaffAuth();
+    await assertExamCollectionBelongsToAcademy(collectionId, staff.academyId);
+
     await prisma.examCollection.delete({ where: { id: collectionId } });
     revalidatePath("/director/exams");
     return { success: true };
@@ -659,8 +833,11 @@ export async function addExamsToCollection(
   collectionId: string,
   examIds: string[]
 ): Promise<ActionResult> {
-  await requireStaffAuth();
   try {
+    const staff = await requireStaffAuth();
+    await assertExamCollectionBelongsToAcademy(collectionId, staff.academyId);
+    await assertExamsBelongToAcademy(examIds, staff.academyId);
+
     const maxItem = await prisma.examCollectionItem.findFirst({
       where: { collectionId },
       orderBy: { orderNum: "desc" },
@@ -689,8 +866,14 @@ export async function removeExamsFromCollection(
   collectionId: string,
   examIds: string[]
 ): Promise<ActionResult> {
-  await requireStaffAuth();
   try {
+    const staff = await requireStaffAuth();
+    await assertExamCollectionBelongsToAcademy(collectionId, staff.academyId);
+    // examIds don't need academy verification here because deleteMany is
+    // scoped by { collectionId, examId in: ... } and the collection itself
+    // has already been proven to belong to this academy. Rows referencing
+    // foreign examIds simply won't match and will no-op.
+
     await prisma.examCollectionItem.deleteMany({
       where: { collectionId, examId: { in: examIds } },
     });
@@ -717,8 +900,24 @@ export async function createQuestion(
 ): Promise<ActionResult> {
   try {
     const staff = await requireStaffAuth();
-    const exam = await prisma.exam.findUnique({ where: { id: examId } });
+
+    // Scope the exam lookup to this academy so we cannot plant a question
+    // in someone else's exam (and thereby inherit their academyId).
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
+      select: { id: true, academyId: true },
+    });
     if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
+
+    if (data.passageId) {
+      const passage = await prisma.passage.findFirst({
+        where: { id: data.passageId, academyId: staff.academyId },
+        select: { id: true },
+      });
+      if (!passage) {
+        return { success: false, error: "지문을 찾을 수 없습니다." };
+      }
+    }
 
     const question = await prisma.question.create({
       data: {
@@ -756,7 +955,18 @@ export async function createQuestion(
 
 export async function deleteQuestion(questionId: string): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // Scope the question to this academy — otherwise any id leaks let
+    // anyone delete any other tenant's question row.
+    const question = await prisma.question.findFirst({
+      where: { id: questionId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!question) {
+      return { success: false, error: "문제를 찾을 수 없습니다." };
+    }
+
     await prisma.examQuestion.deleteMany({ where: { questionId } });
     await prisma.question.delete({ where: { id: questionId } });
     revalidatePath(`/admin`);

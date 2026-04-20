@@ -51,5 +51,10 @@ scripts/*-passages.json
 scripts/passages-to-analyze.json
 nul
 
+# local scratch / temporary debug files (page dumps, OCR text exports, one-off scripts)
+temp_*
+text*.txt
+verify-db.mjs
+
 .vercel
 .playwright-mcp/

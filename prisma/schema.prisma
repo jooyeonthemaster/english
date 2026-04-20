@@ -63,6 +63,8 @@ model Academy {
   creditBalance       CreditBalance?
   creditTransactions  CreditTransaction[]
   creditTopUps        CreditTopUp[]
+  extractionJobs      ExtractionJob[]
+  sourceMaterials     SourceMaterial[]
 
   @@map("academies")
 }
@@ -83,13 +85,15 @@ model Staff {
   updatedAt DateTime @updatedAt
 
   // Relations
-  academy          Academy           @relation(fields: [academyId], references: [id])
-  classes          Class[] // Classes taught
-  staffAttendances StaffAttendance[]
-  salaries         Salary[]
-  consultations    Consultation[]
-  messages         Message[]         @relation("SentMessages")
-  receivedMessages Message[]         @relation("ReceivedStaffMessages")
+  academy                Academy           @relation(fields: [academyId], references: [id])
+  classes                Class[] // Classes taught
+  staffAttendances       StaffAttendance[]
+  salaries               Salary[]
+  consultations          Consultation[]
+  messages               Message[]         @relation("SentMessages")
+  receivedMessages       Message[]         @relation("ReceivedStaffMessages")
+  extractionJobs         ExtractionJob[]   @relation("ExtractionJobCreator")
+  createdSourceMaterials SourceMaterial[]  @relation("SourceMaterialCreator")
 
   @@index([academyId])
   @@map("staff")
@@ -112,6 +116,7 @@ model School {
   passages         Passage[]
   exams            Exam[]
   naeshinQuestions NaeshinQuestion[]
+  sourceMaterials  SourceMaterial[]
 
   @@unique([academyId, slug])
   @@index([academyId])
@@ -572,25 +577,32 @@ model AssignmentSubmission {
 /// Passage — Text passages for study and question generation
 /// difficulty: "BEGINNER" | "ELEMENTARY" | "INTERMEDIATE" | "UPPER_INTERMEDIATE" | "ADVANCED" | "EXPERT"
 model Passage {
-  id         String   @id @default(cuid())
+  id         String  @id @default(cuid())
   academyId  String
   schoolId   String? // Optional: school-specific passage
   title      String
-  content    String   @db.Text
-  source     String? // Source reference
+  content    String  @db.Text
+  source     String? // Source reference (legacy free-form)
   grade      Int?
   semester   String? // "FIRST" | "SECOND"
   unit       String?
   publisher  String? // 교과서 출판사
   difficulty String? // "BEGINNER" ~ "EXPERT"
-  tags       String?  @db.Text // JSON array of tags
-  order      Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  tags       String? @db.Text // JSON array of tags
+  order      Int     @default(0)
+
+  // ── Extraction lineage (nullable — manual passages stay untouched) ──
+  sourceMaterialId       String?
+  sourceExtractionItemId String? @unique
+  contentHash            String? // sha1 of content — duplicate detection
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  academy          Academy           @relation(fields: [academyId], references: [id])
-  school           School?           @relation(fields: [schoolId], references: [id])
+  academy          Academy                 @relation(fields: [academyId], references: [id])
+  school           School?                 @relation(fields: [schoolId], references: [id])
+  sourceMaterial   SourceMaterial?         @relation(fields: [sourceMaterialId], references: [id])
   notes            PassageNote[]
   analysis         PassageAnalysis?
   questions        Question[]
@@ -601,10 +613,13 @@ model Passage {
   naeshinQuestions NaeshinQuestion[]
   learningSets     LearningSet[]
   collectionItems  PassageCollectionItem[]
+  bundles          PassageBundle[]
 
   @@index([academyId])
   @@index([schoolId])
   @@index([academyId, grade, semester])
+  @@index([sourceMaterialId])
+  @@index([contentHash])
   @@map("passages")
 }
 
@@ -659,28 +674,37 @@ model PassageNote {
 /// subType: Specific question pattern (e.g. "BLANK_INFERENCE", "GRAMMAR_ERROR", "SENTENCE_INSERT" etc.)
 /// difficulty: "BASIC" | "INTERMEDIATE" | "KILLER"
 model Question {
-  id               String   @id @default(cuid())
+  id               String  @id @default(cuid())
   academyId        String
   passageId        String? // Source passage (if passage-based)
   type             String // "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "ESSAY" | "FILL_BLANK" | "ORDERING" | "VOCAB"
   subType          String? // Specific pattern within type
-  questionText     String   @db.Text
+  questionText     String  @db.Text
   questionImage    String? // Image URL
-  options          String?  @db.Text // JSON: [{ label: "①", text: "..." }, ...] for MC
-  correctAnswer    String   @db.Text // Answer text or JSON for complex answers
-  points           Int      @default(1)
-  difficulty       String   @default("INTERMEDIATE") // "BASIC" | "INTERMEDIATE" | "KILLER"
-  tags             String?  @db.Text // JSON: ["관계대명사", "시제", ...] for filtering
+  options          String? @db.Text // JSON: [{ label: "①", text: "..." }, ...] for MC
+  correctAnswer    String  @db.Text // Answer text or JSON for complex answers
+  points           Int     @default(1)
+  difficulty       String  @default("INTERMEDIATE") // "BASIC" | "INTERMEDIATE" | "KILLER"
+  tags             String? @db.Text // JSON: ["관계대명사", "시제", ...] for filtering
   learningCategory String? // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
-  aiGenerated      Boolean  @default(false)
-  approved         Boolean  @default(false) // Teacher review status
-  starred          Boolean  @default(false) // Important/starred by teacher
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  aiGenerated      Boolean @default(false)
+  approved         Boolean @default(false) // Teacher review status
+  starred          Boolean @default(false) // Important/starred by teacher
+
+  // ── Extraction lineage (nullable — manual questions stay untouched) ──
+  sourceMaterialId       String?
+  bundleId               String?
+  sourceExtractionItemId String? @unique
+  questionNumber         Int? // printed number on the original exam (e.g. 33)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   academy         Academy                  @relation(fields: [academyId], references: [id])
   passage         Passage?                 @relation(fields: [passageId], references: [id])
+  sourceMaterial  SourceMaterial?          @relation(fields: [sourceMaterialId], references: [id])
+  bundle          PassageBundle?           @relation("BundleQuestions", fields: [bundleId], references: [id])
   explanation     QuestionExplanation?
   examLinks       ExamQuestion[]
   wrongLogs       WrongAnswerLog[]
@@ -691,6 +715,8 @@ model Question {
   @@index([passageId])
   @@index([academyId, type, difficulty])
   @@index([academyId, approved])
+  @@index([sourceMaterialId])
+  @@index([bundleId])
   @@map("questions")
 }
 
@@ -739,13 +765,18 @@ model Exam {
   shuffleOptions   Boolean   @default(false)
   showResults      Boolean   @default(true) // Show results immediately after submission
   settings         String?   @db.Text // JSON: additional exam settings
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+
+  // ── Extraction lineage ──
+  sourceMaterialId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  academy     Academy          @relation(fields: [academyId], references: [id])
-  school      School?          @relation(fields: [schoolId], references: [id])
-  class       Class?           @relation(fields: [classId], references: [id])
+  academy         Academy              @relation(fields: [academyId], references: [id])
+  school          School?              @relation(fields: [schoolId], references: [id])
+  class           Class?               @relation(fields: [classId], references: [id])
+  sourceMaterial  SourceMaterial?      @relation(fields: [sourceMaterialId], references: [id])
   questions       ExamQuestion[]
   submissions     ExamSubmission[]
   collectionItems ExamCollectionItem[]
@@ -753,6 +784,7 @@ model Exam {
   @@index([academyId])
   @@index([academyId, status])
   @@index([schoolId])
+  @@index([sourceMaterialId])
   @@map("exams")
 }
 
@@ -1079,10 +1111,10 @@ model Textbook {
 model QuestionCollection {
   id          String   @id @default(cuid())
   academyId   String
-  parentId    String?  // Self-reference for nested folders (null = root)
+  parentId    String? // Self-reference for nested folders (null = root)
   name        String
   description String?  @db.Text
-  color       String?  // Hex color for visual distinction
+  color       String? // Hex color for visual distinction
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -1274,18 +1306,18 @@ model SuneungPassageAnalysis {
 model LearningSet {
   id            String   @id @default(cuid())
   academyId     String
-  passageId     String   // 원본 지문 참조 (분석 데이터 활용)
-  publisher     String   // 출판사 (능률(양), 비상(홍) 등)
-  textbook      String?  // 교재명
-  grade         Int?     // 학년
-  unit          String?  // 단원/과
-  title         String   // 세트 제목
+  passageId     String // 원본 지문 참조 (분석 데이터 활용)
+  publisher     String // 출판사 (능률(양), 비상(홍) 등)
+  textbook      String? // 교재명
+  grade         Int? // 학년
+  unit          String? // 단원/과
+  title         String // 세트 제목
   questionCount Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  academy   Academy            @relation(fields: [academyId], references: [id])
-  passage   Passage            @relation(fields: [passageId], references: [id])
+  academy   Academy           @relation(fields: [academyId], references: [id])
+  passage   Passage           @relation(fields: [passageId], references: [id])
   questions NaeshinQuestion[]
 
   @@index([academyId])
@@ -1298,10 +1330,10 @@ model NaeshinQuestion {
   id               String   @id @default(cuid())
   academyId        String
   passageId        String
-  learningSetId    String?  // 학습 세트 소속
-  learningCategory String   // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
-  type             String   // interaction type
-  subType          String?  // 23종 subType
+  learningSetId    String? // 학습 세트 소속
+  learningCategory String // "VOCAB" | "INTERPRETATION" | "GRAMMAR" | "COMPREHENSION"
+  type             String // interaction type
+  subType          String? // 23종 subType
   questionText     String   @db.Text
   options          String?  @db.Text // JSON: [{ label, text }]
   correctAnswer    String   @db.Text
@@ -1432,10 +1464,10 @@ model SuneungWrongAnswerLog {
 model PassageCollection {
   id          String   @id @default(cuid())
   academyId   String
-  parentId    String?  // Self-reference for nested folders (null = root)
+  parentId    String? // Self-reference for nested folders (null = root)
   name        String
   description String?  @db.Text
-  color       String?  // Hex color for visual distinction
+  color       String? // Hex color for visual distinction
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -1470,10 +1502,10 @@ model PassageCollectionItem {
 model ExamCollection {
   id          String   @id @default(cuid())
   academyId   String
-  parentId    String?  // Self-reference for nested folders (null = root)
+  parentId    String? // Self-reference for nested folders (null = root)
   name        String
   description String?  @db.Text
-  color       String?  // Hex color for visual distinction
+  color       String? // Hex color for visual distinction
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -1615,7 +1647,7 @@ model CreditTransaction {
   referenceType String? // "QUESTION" | "PASSAGE" | "EXAM" | "CREDIT_TRANSACTION"
   staffId       String? // Staff member who triggered the operation
   adminId       String? // SuperAdmin who made manual adjustment
-  metadata      String? @db.Text // JSON: { model, inputTokens, outputTokens, costUsd, durationMs, promptHash }
+  metadata      String?  @db.Text // JSON: { model, inputTokens, outputTokens, costUsd, durationMs, promptHash }
   createdAt     DateTime @default(now())
 
   academy Academy     @relation(fields: [academyId], references: [id])
@@ -1689,4 +1721,289 @@ model AcademyRegistration {
   @@index([district])
   @@index([desiredPlan])
   @@map("academy_registrations")
+}
+
+// ============================================================================
+// 24. BULK PASSAGE EXTRACTION — PDF/image → passages pipeline
+// ============================================================================
+
+/// ExtractionJob — 하나의 "대량 추출" 요청 단위
+/// status: "PENDING" | "PROCESSING" | "COMPLETED" | "PARTIAL" | "FAILED" | "CANCELLED"
+/// sourceType: "PDF" | "IMAGES"
+/// mode: "PASSAGE_ONLY" | "QUESTION_SET" | "EXPLANATION" | "FULL_EXAM"
+///   - PASSAGE_ONLY (M1): 본문만 뽑아 지문 라이브러리에 적재
+///   - QUESTION_SET  (M2): 지문+문제+선지(+정답) → 문제 은행
+///   - EXPLANATION   (M3): 해설지 → 기존 Question에 매핑
+///   - FULL_EXAM     (M4): 지문+문제+시험지(Exam) 통째
+model ExtractionJob {
+  id          String @id @default(cuid())
+  academyId   String
+  createdById String // staff.id
+
+  sourceType       String // "PDF" | "IMAGES"
+  mode             String  @default("PASSAGE_ONLY") // M1 ~ M4 (see header)
+  originalFileUrl  String? @db.Text // Supabase Storage path for source PDF
+  originalFileName String?
+
+  // Upstream "a single exam / worksheet" it materialises into.
+  // Populated by extraction-finalize when the job reaches a terminal state.
+  sourceMaterialId String?
+
+  status       String @default("PENDING")
+  totalPages   Int
+  successPages Int    @default(0)
+  failedPages  Int    @default(0)
+  pendingPages Int // init = totalPages
+
+  creditsReserved Int @default(0) // pre-flight projected cost (not actually charged)
+  creditsConsumed Int @default(0) // sum of successful page charges
+  creditsRefunded Int @default(0) // sum of refunds
+
+  concurrencyLimit Int     @default(5)
+  triggerRunId     String? @db.Text // Trigger.dev orchestrator run handle (cancel/cleanup)
+
+  errorSummary String? @db.Text // JSON summary of errors
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  academy        Academy            @relation(fields: [academyId], references: [id])
+  createdBy      Staff              @relation("ExtractionJobCreator", fields: [createdById], references: [id])
+  sourceMaterial SourceMaterial?    @relation(fields: [sourceMaterialId], references: [id])
+  pages          ExtractionPage[]
+  results        ExtractionResult[]
+  items          ExtractionItem[]
+
+  @@index([academyId, status])
+  @@index([academyId, createdAt])
+  @@index([status, createdAt])
+  @@index([sourceMaterialId])
+  @@map("extraction_jobs")
+}
+
+/// ExtractionPage — 페이지 1장 = Gemini 호출 1회 단위 (원자 단위)
+/// status: "PENDING" | "PROCESSING" | "SUCCESS" | "FAILED" | "DEAD" | "SKIPPED"
+/// idempotencyKey = `${jobId}:${pageIndex}` — UNIQUE로 3중 방어선의 2차 방벽 역할
+model ExtractionPage {
+  id         String @id @default(cuid())
+  jobId      String
+  pageIndex  Int // 0-based 순서
+  imageUrl   String @db.Text // Supabase Storage key (not public URL)
+  imageBytes Int?
+
+  status       String @default("PENDING")
+  attemptCount Int    @default(0)
+  maxAttempts  Int    @default(3)
+
+  // ─── 멱등성 핵심 ──────────────────────────────
+  idempotencyKey String // `${jobId}:${pageIndex}` — UNIQUE
+  leaseOwner     String? // Trigger.dev run id
+  leaseExpiresAt DateTime? // stuck lease 복구용
+
+  // ─── 결과 ─────────────────────────────────────
+  extractedText String? @db.Text
+  confidence    Float?
+  modelUsed     String?
+  inputTokens   Int?
+  outputTokens  Int?
+  latencyMs     Int?
+
+  // ─── 크레딧 연결 ──────────────────────────────
+  creditTxId String? // CreditTransaction.id for dedup on retry
+
+  // ─── 에러 ─────────────────────────────────────
+  errorCode    String?
+  errorMessage String? @db.Text
+
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  job   ExtractionJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  items ExtractionItem[]
+
+  @@unique([idempotencyKey])
+  @@unique([jobId, pageIndex])
+  @@index([jobId, status])
+  @@index([status, leaseExpiresAt])
+  @@map("extraction_pages")
+}
+
+/// ExtractionResult — 지문 단위 결과 (세그멘테이션 후 산출물)
+/// status: "DRAFT" | "REVIEWED" | "SAVED" | "SKIPPED"
+model ExtractionResult {
+  id           String @id @default(cuid())
+  jobId        String
+  passageOrder Int // job 내 정렬
+
+  sourcePageIndex Int[] // 예: [3,4,5] — 여러 페이지 걸친 지문 지원
+
+  title   String?
+  content String  @db.Text
+  meta    Json? // { markerDetected, mergedFromPages, confidenceNote }
+
+  confidence     Float?
+  status         String  @default("DRAFT")
+  savedPassageId String? // Passage.id after commit
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  job ExtractionJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId, passageOrder])
+  @@index([jobId, status])
+  @@map("extraction_results")
+}
+
+// ============================================================================
+// 25. EXTRACTION ITEMS — granular block-level representation
+// ============================================================================
+// Replaces the legacy ExtractionResult for new jobs. Each extracted document
+// is represented as a tree of typed blocks (passage body, question stem,
+// choice, explanation, exam meta, etc.) with parent/child relationships so
+// the review UI can classify, regroup, and promote them into proper Passage /
+// Question / QuestionExplanation / SourceMaterial records.
+// ============================================================================
+
+/// ExtractionItem — a typed block emitted by segmentation
+/// blockType: "PASSAGE_BODY" | "QUESTION_STEM" | "CHOICE" | "EXPLANATION" | "EXAM_META" | "HEADER" | "FOOTER" | "DIAGRAM" | "NOISE"
+/// status:    "DRAFT" | "REVIEWED" | "PROMOTED" | "SKIPPED" | "MERGED"
+model ExtractionItem {
+  id              String  @id @default(cuid())
+  jobId           String
+  pageId          String? // ExtractionPage.id (null when item spans multiple pages)
+  sourcePageIndex Int[] // supports multi-page items
+
+  // ─── Identity ────────────────────────────────
+  blockType    String
+  groupId      String? // passage↔question↔choice clustering key (job-scoped)
+  parentItemId String? // CHOICE → QUESTION_STEM / EXPLANATION → QUESTION_STEM
+
+  order      Int // global order within job
+  localOrder Int? // position within parent group (1st choice, 2nd choice, ...)
+
+  // ─── Content ─────────────────────────────────
+  title   String?
+  content String  @db.Text // editable final text (what review UI shows)
+  rawText String? @db.Text // original OCR text — preserved verbatim
+
+  // ─── Type-specific metadata (Json, validated per blockType in app layer) ──
+  questionMeta Json? // { number, points, pattern, answerChoice, ... }
+  choiceMeta   Json? // { index, label, isAnswer }
+  passageMeta  Json? // { wordCount, paragraphCount, markerDetected }
+  examMeta     Json? // { subject, grade, year, round, publisher, school }
+
+  boundingBox Json? // { page, x, y, w, h } — click-to-highlight in viewer
+
+  // ─── Quality ────────────────────────────────
+  confidence  Float?
+  needsReview Boolean @default(false)
+  status      String  @default("DRAFT")
+
+  // ─── Promotion tracking ─────────────────────
+  // URN string — e.g. "Passage:clxxxxx" / "Question:clxxxxx" / "QuestionExplanation:clxxxxx"
+  promotedTo String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  job      ExtractionJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  page     ExtractionPage?  @relation(fields: [pageId], references: [id], onDelete: SetNull)
+  parent   ExtractionItem?  @relation("ItemTree", fields: [parentItemId], references: [id], onDelete: SetNull)
+  children ExtractionItem[] @relation("ItemTree")
+
+  @@index([jobId, order])
+  @@index([jobId, blockType])
+  @@index([jobId, groupId])
+  @@index([parentItemId])
+  @@map("extraction_items")
+}
+
+// ============================================================================
+// 26. SOURCE MATERIAL — "a single exam / textbook / worksheet" as first-class citizen
+// ============================================================================
+// Every Passage / Question / Exam that originated from a physical document
+// points back to one SourceMaterial. This is the hub that lets us answer
+// "where did this passage come from?" and "show me everything from that exam"
+// without denormalising metadata into every child row.
+// ============================================================================
+
+/// SourceMaterial — one physical source document (exam paper, textbook chapter, handout)
+/// type: "EXAM" | "TEXTBOOK" | "WORKBOOK" | "HANDOUT" | "MOCK" | "SUNEUNG" | "OTHER"
+/// subject: "ENGLISH" | "KOREAN" | "MATH" | "OTHER"
+/// examType: "MIDTERM" | "FINAL" | "MOCK" | "SUNEUNG" | "DIAGNOSTIC" | "EBS" | "PRIVATE"
+model SourceMaterial {
+  id        String  @id @default(cuid())
+  academyId String
+  schoolId  String?
+
+  type     String
+  title    String
+  subtitle String?
+
+  // Common metadata (first-class columns for fast filtering)
+  subject   String? @default("ENGLISH")
+  grade     Int?
+  semester  String? // "FIRST" | "SECOND"
+  year      Int?
+  round     String? // "6월", "9월", "11월" or "1회", "2회"
+  examType  String?
+  publisher String?
+  sourceRef String? // free-form reference (URL, ISBN, distributor)
+
+  // Extraction linkage
+  originalFileUrl String? @db.Text // archived PDF in Supabase Storage
+  contentHash     String? // sha1 of concatenated extracted texts — duplicate detection
+
+  createdById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  academy   Academy @relation(fields: [academyId], references: [id])
+  school    School? @relation(fields: [schoolId], references: [id])
+  createdBy Staff?  @relation("SourceMaterialCreator", fields: [createdById], references: [id])
+
+  bundles        PassageBundle[]
+  passages       Passage[]
+  questions      Question[]
+  exams          Exam[]
+  extractionJobs ExtractionJob[]
+
+  @@unique([academyId, contentHash], name: "academy_content_hash_unique")
+  @@index([academyId, type])
+  @@index([academyId, grade, year])
+  @@index([academyId, createdAt])
+  @@index([schoolId])
+  @@index([contentHash])
+  @@map("source_materials")
+}
+
+// ============================================================================
+// 27. PASSAGE BUNDLE — a passage + its shared questions (e.g. CSAT [2~4])
+// ============================================================================
+
+/// PassageBundle — groups one passage with its sharing questions, scoped per source
+/// A single Passage can appear in multiple bundles (reused across exams).
+model PassageBundle {
+  id               String  @id @default(cuid())
+  sourceMaterialId String
+  passageId        String
+  orderInMaterial  Int // order within the source (e.g. passage #2 on the exam)
+  sharedLabel      String? // "[32~34]" label as printed
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sourceMaterial SourceMaterial @relation(fields: [sourceMaterialId], references: [id], onDelete: Cascade)
+  passage        Passage        @relation(fields: [passageId], references: [id], onDelete: Cascade)
+  questions      Question[]     @relation("BundleQuestions")
+
+  @@unique([sourceMaterialId, passageId])
+  @@index([sourceMaterialId])
+  @@index([passageId])
+  @@map("passage_bundles")
 }

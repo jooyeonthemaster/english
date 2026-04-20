@@ -1,8 +1,8 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -32,6 +32,42 @@ import { useGenerationHandlers } from "./use-generation-handlers";
 
 export function GeneratePageClient({ academyId }: { academyId: string }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ── Deep-link context (from /import or detail page) ──
+  // Accept `?passageIds=cuid1,cuid2` for pre-selection,
+  // and `?mode=auto|manual` to decide which config panel opens.
+  //
+  // Defensive parsing: URL may be percent-encoded, contain stray whitespace,
+  // or be maliciously stuffed — we decode, split on comma, filter empties,
+  // dedupe and cap at 100 ids so downstream `Set` construction + the cross-
+  // tenant validity filter (useEffect below) never have to chew on junk.
+  const initialPassageIdsRef = useRef<string[]>(
+    (() => {
+      const raw = searchParams.get("passageIds") || "";
+      let decoded = raw;
+      try {
+        decoded = decodeURIComponent(raw);
+      } catch {
+        decoded = raw;
+      }
+      const parts = decoded.split(",").map((s) => s.trim()).filter(Boolean);
+      // Dedupe while preserving order, cap at 100.
+      const seen = new Set<string>();
+      const out: string[] = [];
+      for (const id of parts) {
+        if (seen.has(id)) continue;
+        seen.add(id);
+        out.push(id);
+        if (out.length >= 100) break;
+      }
+      return out;
+    })()
+  );
+  const initialModeRef = useRef<"auto" | "manual">(
+    searchParams.get("mode") === "manual" ? "manual" : "auto"
+  );
+  const prefillAppliedRef = useRef(false);
 
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
@@ -54,8 +90,8 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
 
-  // ── Mode: auto vs manual ──
-  const [genMode, setGenMode] = useState<"auto" | "manual">("auto");
+  // ── Mode: auto vs manual (seeded from ?mode= URL param) ──
+  const [genMode, setGenMode] = useState<"auto" | "manual">(initialModeRef.current);
 
   // ── Auto mode config ──
   const [autoCount, setAutoCount] = useState(1);
@@ -81,8 +117,10 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   // ── Review modal ──
   const [reviewModalId, setReviewModalId] = useState<string | null>(null);
 
-  // ── Checkbox multi-select ──
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  // ── Checkbox multi-select (seeded from ?passageIds= URL param) ──
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(
+    () => new Set(initialPassageIdsRef.current)
+  );
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -142,6 +180,32 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       .catch(() => {})
       .finally(() => setLoadingPassages(false));
   }, [academyId]);
+
+  // ── Apply deep-link pre-selection once passages are loaded ──
+  // Runs once — filters the incoming ?passageIds= against the academy-scoped
+  // list so stale / cross-academy ids can't bleed through a shared URL.
+  useEffect(() => {
+    if (prefillAppliedRef.current) return;
+    if (loadingPassages) return;
+    if (passages.length === 0) return;
+    const ids = initialPassageIdsRef.current;
+    if (ids.length === 0) {
+      prefillAppliedRef.current = true;
+      return;
+    }
+    const validIds = ids.filter((id) => passages.some((p) => p.id === id));
+    if (validIds.length > 0) {
+      setSelectedIds(new Set(validIds));
+      const first = passages.find((p) => p.id === validIds[0]);
+      if (first) setSelectedPassage(first);
+      toast.success(
+        validIds.length === ids.length
+          ? `지문 ${validIds.length}개를 불러왔습니다.`
+          : `지문 ${validIds.length}/${ids.length}개를 불러왔습니다.`
+      );
+    }
+    prefillAppliedRef.current = true;
+  }, [loadingPassages, passages]);
 
   // ── Load saved questions from DB ──
   const loadSavedQuestions = useCallback(async () => {

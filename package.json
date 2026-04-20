@@ -12,6 +12,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
+    "trigger:dev": "trigger.dev@latest dev",
+    "trigger:deploy": "trigger.dev@latest deploy",
     "remotion:preview": "remotion studio remotion/index.ts",
     "remotion:render": "remotion render remotion/index.ts NaraDemoVideo out/nara-demo.mp4",
     "remotion:render-scene": "remotion render remotion/index.ts",
@@ -26,6 +28,7 @@
     "@auth/prisma-adapter": "^2.11.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.2",
+    "@supabase/supabase-js": "^2.103.3",
     "@tanstack/react-query": "^5.90.21",
     "@tiptap/extension-bubble-menu": "^3.20.5",
     "@tiptap/extension-color": "^3.20.5",
@@ -35,6 +38,8 @@
     "@tiptap/pm": "^3.20.5",
     "@tiptap/react": "^3.20.5",
     "@tiptap/starter-kit": "^3.20.5",
+    "@trigger.dev/build": "^4.4.4",
+    "@trigger.dev/sdk": "^4.4.4",
     "ai": "^6.0.99",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
@@ -48,6 +53,7 @@
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
     "next-themes": "^0.4.6",
+    "pdfjs-dist": "^5.6.205",
     "prisma": "^6.19.2",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
@@ -57,7 +63,8 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "vaul": "^1.1.2",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
