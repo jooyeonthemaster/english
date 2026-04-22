@@ -62,25 +62,56 @@ const CIRCLED_INDEX: Record<string, number> = {
 
 /**
  * Exam-paper header patterns — the first few lines of page 1 often carry
- * metadata (교재명, 학교명, 학년, 교시, 과목코드, 시행년도/회차 등). These
- * should be stripped from the "지문 1" bucket so it's not polluted.
+ * metadata (교재명, 학교명, 학년, 교시, 과목코드, 시행년도/회차 등) AND notice
+ * text (답안 작성법, 배점 안내, 선택형/서술형 문항 수 안내). These should be
+ * stripped from the "지문 1" bucket so it's not polluted.
+ *
+ * Patterns cover:
+ *   - 교재명 / 단원 / 시행년도 / 학기 / 학교
+ *   - 교시 / 과목코드 / 과정(문이과) / 과목명
+ *   - 답안 유의사항 bullets (◦ ㅇ ○ • ▸ 등 다양한 불릿 접두)
+ *   - 성명/학번/반 기재란 + [마스킹] placeholder
+ *   - 날짜 ("12월 19일(월)") / 쪽번호 / 시험 본 가운데 타이틀
  */
 const HEADER_PATTERNS: RegExp[] = [
-  /(?:리딩파워|리딩튜터|리딩릴레이|해커스|빠바|천일문|그래머존|워드마스터|수능특강|수능완성|EBS)/, // 교재명
-  /(?:Ch(?:apter)?\.?\s*\d|Unit\s*\d|제?\s*\d+\s*(?:강|과|단원|회))/, // 단원
-  /\d{4}\s*학년도/, // 시행년도
-  /(?:2학기|1학기)/, // 학기
-  /(?:중학교|고등학교|초등학교)/, // 학교명
-  /제?\s*\d+\s*교시/, // 교시
-  /과목\s*코드/, // 과목코드
-  /(?:공통\s*과정|인문[·\s]*사회|자연[·\s]*이공)/, // 문과/이과
-  /(?:영\s*어|국\s*어|수\s*학|사\s*회|과\s*학)\s*(?:I{1,3}|1|2|II|III)?$/, // 과목명만
-  /^\s*(?:답안지에|문항에\s*따라|선택형|서술형|문제지면)/, // 답안 유의사항
-  /(?:외부지문|유형완성|유형독해|기출문제|교과서|모의고사)\s*[:：]/, // 유형 분류
-  /^\s*[\d가-힣]{1,10}(?:월|일)\s*\d+일?\s*\(/, // 날짜 표기 "12월 19일(월)"
-  /^\s*[-–—]\s*\d+\s*[-–—]\s*$/, // 쪽번호 "- 1 -"
-  /^\s*\d+\s*$/, // 단독 숫자 (쪽번호)
+  // 교재명 / 출처 표시
+  /(?:리딩파워|리딩튜터|리딩릴레이|해커스|빠바|천일문|그래머존|워드마스터|수능특강|수능완성|수능특강[^가-힣]*|EBS)/,
+  /(?:Ch(?:apter)?\.?\s*\d|Unit\s*\d|제?\s*\d+\s*(?:강|과|단원|회))/,
+  /(?:외부지문|유형완성|유형독해|기출문제|교과서|모의고사|내신|학평|모평)\s*[:：]/,
+  /(?:완전\s*새로운\s*지문)/, // "리딩파워(유형완성)(ch.3) 완전 새로운 지문"
+
+  // 시험 메타
+  /\d{4}\s*학년도/,
+  /(?:\d\s*학기|1학기|2학기)/,
+  /(?:중학교|고등학교|초등학교)/,
+  /제?\s*\d+\s*교시/,
+  /과목\s*코드/,
+  /(?:공통\s*과정|인문[·\s]*사회|자연[·\s]*이공)/,
+  /^\s*(?:영\s*어|국\s*어|수\s*학|사\s*회|과\s*학)\s*(?:I{1,3}|Ⅰ{1,3}|1|2|II|III)?\s*$/,
+
+  // 답안 유의사항 bullets — 불릿 접두어(ㅇ ◦ ○ • ▸ ▪ ∘ — -) 허용
+  /^\s*[\u3147\u25E6\u25CB\u2022\u25B8\u25AA\u2218\u26AC\-—]\s*(?:답안지|문항에|선택형|서술형|문제지면|배점|답\s*을|위\s*사항|수험|다음\s*사항)/,
+  /^\s*(?:답안지에|문항에\s*따라|선택형|서술형|문제지면)/,
+  /^\s*[\u3147\u25E6\u25CB\u2022]\s+\S/, // Any bullet-prefixed short notice line (broad catch)
+
+  // 수험자 기재란
+  /^\s*(?:학번|성명|이름|수험번호|반\s*번호|과\s*정)\s*[\[:：]/,
+  /\[마스킹\]/, // 강력한 헤더 신호 — 어디에 있어도 헤더/메타
+
+  // 날짜·쪽번호
+  /^\s*\d{1,2}\s*월\s*\d{1,2}\s*일?\s*\(/,
+  /^\s*[-–—]\s*\d+\s*[-–—]\s*$/,
+  /^\s*\d{1,3}\s*$/,
+
+  // 시험지 한국어 타이틀(보통 영역제목, 지문이 아닌 시험지 본 가운데 표기)
+  /^\s*[가-힣A-Za-z0-9\s·,&]+의\s*(?:주의력|영향|변화|방법|관계|중요성)(?:에\s*미치는)?.*$/,
 ];
+
+/** Content-validator patterns — a bucket that matches these heavily is
+ *  almost certainly non-passage (notice / header leftover) and should be
+ *  dropped after segmentation. */
+const BULLET_NOTICE_RE = /^\s*[\u3147\u25E6\u25CB\u2022\u25B8\u25AA\u2218\u26AC]\s+/;
+const PROSE_SENTENCE_END_RE = /[.!?]\s*$/;
 
 /** Terminal punctuation test — does this end-of-line close a thought? */
 const END_SENTENCE_RE = /[.!?"'"'」』\])}]\s*$/;
@@ -249,21 +280,21 @@ function extractHeader(lines: string[]): {
   body: string[];
 } {
   const header: string[] = [];
-  const maxScan = Math.min(lines.length, 25);
+  const maxScan = Math.min(lines.length, 40);
   let splitAt = 0;
 
   for (let i = 0; i < maxScan; i++) {
     const line = lines[i];
     const trimmed = line.trim();
     if (!trimmed) {
-      // Keep blank lines attached to whichever side we're currently on.
       if (header.length > 0) {
         header.push(line);
+        splitAt = i + 1;
       }
       continue;
     }
 
-    // Hard stop: first real content line.
+    // Hard stop: first real content line (지시문 / 문제번호 / 선지 글리프)
     if (
       detectMarker(line).isInstruction ||
       QUESTION_NUMBER_RE.test(line) ||
@@ -273,41 +304,81 @@ function extractHeader(lines: string[]): {
       break;
     }
 
-    // Header signal match → absorb.
+    // Header signal match → absorb REGARDLESS of line length. 길이 무시가 핵심:
+    // "ㅇ 문항에 따라 배점이 다르므로 각 물음의 끝에 표시된 배점을 참고하시오."
+    // 같은 긴 안내문도 헤더 불릿 패턴에 걸리면 헤더로 흡수해야 한다.
     if (HEADER_PATTERNS.some((p) => p.test(line))) {
       header.push(line);
       splitAt = i + 1;
       continue;
     }
 
-    // Long prose line (probably passage body) → stop.
-    if (trimmed.length > 40) {
-      splitAt = i;
-      break;
-    }
-
-    // Short neutral line near the top: treat as header if we're already
-    // accumulating header content, else start the body here.
-    if (header.length > 0) {
+    // Already accumulating header and this is a short neutral line
+    // (제목·부제 느낌) → absorb.
+    if (header.length > 0 && trimmed.length <= 40) {
       header.push(line);
       splitAt = i + 1;
       continue;
     }
 
-    // Ambiguous — start body here.
+    // 긴 prose 라인 + 헤더 모드 아님 → 지문 시작.
+    if (trimmed.length > 40) {
+      splitAt = i;
+      break;
+    }
+
+    // 애매한 짧은 줄 — 지문 시작으로 간주.
     splitAt = i;
     break;
-  }
-
-  // If we never found a clear stop, scan continues from where we left off.
-  if (splitAt === 0 && header.length > 0) {
-    splitAt = header.length;
   }
 
   return {
     header,
     body: lines.slice(splitAt),
   };
+}
+
+/**
+ * Heuristic content validator — answers "is this bucket actually a passage?".
+ *
+ * Filters out buckets that survived segmentation but are clearly
+ * header/notice leftovers (e.g. a handful of bullet-prefixed notice lines +
+ * a section title + a textbook marker with no real prose).
+ *
+ * Rules:
+ *   1. 40자 미만이면 drop (constants.ts MIN_COMMIT_PASSAGE_LENGTH와 동등).
+ *   2. 라인의 40% 이상이 불릿(◦/ㅇ/○/•) 접두면 notice → drop.
+ *   3. 라인의 50% 이상이 HEADER_PATTERNS 매치면 헤더 유출 → drop.
+ *   4. 종결부호(. ! ?)로 끝나는 prose 문장이 0개 + 문장 수 ≤ 4면 지문 아님 → drop.
+ *   5. 통과하면 ok=true.
+ */
+function looksLikePassage(content: string): { ok: boolean; reason?: string } {
+  const trimmed = content.trim();
+  if (trimmed.length < MIN_COMMIT_PASSAGE_LENGTH) {
+    return { ok: false, reason: "too_short" };
+  }
+
+  const lines = trimmed.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  if (lines.length === 0) return { ok: false, reason: "empty_after_split" };
+
+  const bulletNoticeCount = lines.filter((l) => BULLET_NOTICE_RE.test(l)).length;
+  if (bulletNoticeCount / lines.length > 0.4) {
+    return { ok: false, reason: "mostly_bullet_notices" };
+  }
+
+  const headerSignalCount = lines.filter((l) =>
+    HEADER_PATTERNS.some((p) => p.test(l)),
+  ).length;
+  if (headerSignalCount / lines.length > 0.5) {
+    return { ok: false, reason: "mostly_header_signals" };
+  }
+
+  const proseSentenceCount = lines.filter((l) => PROSE_SENTENCE_END_RE.test(l)).length;
+  if (proseSentenceCount === 0 && lines.length <= 4) {
+    return { ok: false, reason: "no_prose_sentences" };
+  }
+
+  return { ok: true };
 }
 
 export function segmentPages(pages: PageOcrInput[]): ResultDraft[] {
@@ -320,7 +391,14 @@ export function segmentPages(pages: PageOcrInput[]): ResultDraft[] {
   const flush = () => {
     const content = current.lines.join("\n").trim();
     if (content.length >= MIN_COMMIT_PASSAGE_LENGTH) {
-      drafts.push(bucketToDraft(current, drafts.length, extra));
+      // Content validator: drop buckets that look like notice/header leftovers
+      // (e.g. bucket containing "◦ 문항에 따라 배점이 다르므로…" + "리딩파워 CH.3").
+      // A real passage has multiple prose sentences and is not dominated by
+      // bullet-prefixed notice lines or header signals.
+      const check = looksLikePassage(content);
+      if (check.ok) {
+        drafts.push(bucketToDraft(current, drafts.length, extra));
+      }
     }
     current = emptyBucket();
     extra = emptyExtra();
