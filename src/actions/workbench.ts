@@ -1,9 +1,10 @@
-"use server";
-
 // ---------------------------------------------------------------------------
 // Barrel entry for @/actions/workbench. Splits the original monolithic action
 // file into logical modules under ./workbench/* while preserving the public
-// import surface exactly.
+// import surface exactly. Each sub-module retains its own "use server"
+// directive so every exported function remains a server action. This barrel
+// is NOT "use server" because Next.js 16's build validator rejects named
+// re-exports from directive files.
 // ---------------------------------------------------------------------------
 
 export type {

@@ -1,4 +1,8 @@
-"use server";
+// Barrel entry for @/actions/student-app. Each sub-module retains its own
+// "use server" directive so every exported function remains a server action.
+// This barrel itself is NOT "use server" because Next.js 16's build validator
+// rejects named re-exports from directive files (cannot statically confirm
+// async-ness of re-exported identifiers).
 
 export { getStudentDashboard } from "./student-app/get-dashboard";
 export { getStudentInbadi } from "./student-app/get-inbadi";
