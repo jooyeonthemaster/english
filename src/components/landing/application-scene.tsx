@@ -41,9 +41,9 @@ function formatPhone(raw: string): string {
 }
 
 const inputCls =
-  "h-12 w-full rounded-lg border border-blue-100 bg-white px-4 text-[14px] text-gray-900 placeholder:text-gray-400 transition-colors outline-none focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 disabled:opacity-60";
+  "h-11 w-full rounded-lg border border-blue-100 bg-white px-4 text-[14px] text-gray-900 placeholder:text-gray-400 transition-colors outline-none focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 disabled:opacity-60";
 
-const labelCls = "block text-[13px] font-bold text-blue-900 mb-1.5";
+const labelCls = "block text-[12px] font-bold text-blue-900 mb-1";
 
 export function ApplicationScene() {
   const [form, setForm] = useState<FormState>(INITIAL);
@@ -92,7 +92,7 @@ export function ApplicationScene() {
   return (
     <section
       id="apply"
-      className="relative w-full overflow-hidden py-24 lg:py-28"
+      className="relative w-full overflow-hidden py-14 lg:py-16"
       style={{ backgroundColor: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}
     >
       <div
@@ -106,34 +106,33 @@ export function ApplicationScene() {
         style={{ background: "radial-gradient(circle, rgba(96,165,250,0.1) 0%, rgba(96,165,250,0) 70%)" }}
       />
 
-      <div className="relative max-w-[1280px] mx-auto px-6 lg:px-10">
-        <div className="flex justify-center mb-6">
+      <div className="relative max-w-[1440px] mx-auto px-6 lg:px-10">
+        <div className="flex justify-center mb-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 border border-blue-200">
             <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-pulse" />
-            <span className="text-[#1D4ED8] text-[13px] font-bold uppercase tracking-[0.25em]">
-              모집 중 · 2026년 5월 한정 캠페인
+            <span className="text-[#1D4ED8] text-[12px] font-bold uppercase tracking-[0.25em]">
+              100% 무료 · 2026년 5월 한정 캠페인
             </span>
           </div>
         </div>
 
         <h2
-          className="font-black text-gray-900 text-center leading-[1.1] mb-5"
-          style={{ fontSize: "clamp(36px, 5vw, 76px)", letterSpacing: "-0.035em" }}
+          className="font-black text-gray-900 text-center leading-[1.05] mb-4"
+          style={{ fontSize: "clamp(28px, 3.6vw, 52px)", letterSpacing: "-0.035em" }}
         >
-          선착순 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">100명</span>,
-          <br />
-          사전예약 접수 중.
+          선착순 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-0.5">100명</span>,
+          {" "}사전예약 접수 중.
         </h2>
 
         <p
-          className="text-gray-600 text-center mx-auto mb-12 font-medium leading-[1.8] max-w-2xl"
+          className="text-gray-600 text-center mx-auto mb-8 font-medium leading-[1.6] whitespace-nowrap"
           style={{
-            fontSize: "clamp(15px, 1.5vw, 19px)",
+            fontSize: "clamp(13px, 1.25vw, 17px)",
             letterSpacing: "-0.01em",
-            wordBreak: "keep-all",
           }}
         >
-          지문 분석부터 시험지 출력까지, NARA의 모든 기능을 5월 한 달간 제한 없이 사용할 수 있는 기회입니다.
+          지문 분석부터 시험지 출력까지 — NARA의 모든 기능을 5월 한 달간{" "}
+          <strong className="font-black text-[#3B82F6]">100% 무료</strong>로 제한 없이 사용할 수 있는 기회입니다.
         </p>
 
         <motion.div
@@ -141,30 +140,30 @@ export function ApplicationScene() {
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-white rounded-3xl p-8 lg:p-12 max-w-[1100px] mx-auto border border-blue-100"
+          className="bg-white rounded-3xl p-6 lg:p-10 max-w-[1360px] mx-auto border border-blue-100"
           style={{ boxShadow: "0 40px 80px -20px rgba(59,130,246,0.1), 0 2px 10px rgba(59,130,246,0.05)" }}
         >
           {!submitted ? (
             <form onSubmit={handleSubmit} noValidate>
-              <div className="flex items-baseline justify-between mb-8 flex-wrap gap-3 border-b border-blue-50 pb-6">
+              <div className="flex items-baseline justify-between mb-5 flex-wrap gap-3 border-b border-blue-50 pb-4">
                 <div>
-                  <div className="text-[12px] font-bold tracking-[0.2em] text-[#60A5FA] mb-1 uppercase">
+                  <div className="text-[11px] font-bold tracking-[0.2em] text-[#60A5FA] mb-0.5 uppercase">
                     Free Credit Application
                   </div>
-                  <h3 className="text-[24px] font-black text-gray-900 tracking-tight">무료 크레딧 사전예약</h3>
+                  <h3 className="text-[20px] font-black text-gray-900 tracking-tight">무료 크레딧 사전예약</h3>
                 </div>
-                <p className="text-[14px] text-gray-500 font-medium">
+                <p className="text-[13px] text-gray-500 font-medium">
                   접수 후 24시간 내 담당자가 연락드립니다.
                 </p>
               </div>
 
               {error && (
-                <div className="mb-6 bg-red-50 border border-red-200 text-red-800 text-[14px] font-medium p-4 rounded-xl">
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-800 text-[14px] font-medium p-3 rounded-xl">
                   {error}
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-4">
                 <div>
                   <label htmlFor="academyName" className={labelCls}>
                     학원명 <span className="text-[#3B82F6]">*</span>
@@ -182,7 +181,7 @@ export function ApplicationScene() {
                 </div>
                 <div>
                   <label htmlFor="directorName" className={labelCls}>
-                    원장 성함 <span className="text-[#3B82F6]">*</span>
+                    신청자 성함 <span className="text-[#3B82F6]">*</span>
                   </label>
                   <input
                     id="directorName"
@@ -227,7 +226,7 @@ export function ApplicationScene() {
                     autoComplete="email"
                   />
                 </div>
-                <div className="md:col-span-2">
+                <div className="md:col-span-2 lg:col-span-3">
                   <label htmlFor="address" className={labelCls}>
                     학원 주소 <span className="text-[#3B82F6]">*</span>
                   </label>
@@ -260,7 +259,7 @@ export function ApplicationScene() {
                     ))}
                   </select>
                 </div>
-                <div className="md:col-span-2">
+                <div className="md:col-span-2 lg:col-span-4">
                   <label htmlFor="message" className={labelCls}>
                     문의사항
                   </label>
@@ -275,7 +274,7 @@ export function ApplicationScene() {
                 </div>
               </div>
 
-              <div className="mt-8 flex items-center justify-between flex-wrap gap-6 pt-6 border-t border-blue-50">
+              <div className="mt-5 flex items-center justify-between flex-wrap gap-4 pt-4 border-t border-blue-50">
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -295,7 +294,7 @@ export function ApplicationScene() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="h-14 px-12 rounded-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-black text-[16px] tracking-tight transition-all shadow-[0_5px_20px_rgba(59,130,246,0.3)] hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="h-12 px-10 rounded-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-black text-[15px] tracking-tight transition-all shadow-[0_5px_20px_rgba(59,130,246,0.3)] hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   {submitting ? "접수 중..." : "무료 크레딧 사전예약 →"}
                 </button>

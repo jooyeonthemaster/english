@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { HERO_ANNOTATIONS } from "./shared/mock-data";
 import { ANNOTATION_COLORS, ANNOTATION_LABEL } from "./shared/annotation-marks";
 
@@ -50,12 +49,6 @@ export function HeroScene() {
           <a href="#section-question" className="hover:text-gray-900 transition">출제 기반 생성</a>
           <a href="#section-exam" className="hover:text-gray-900 transition">Word 시험지</a>
           <a href="#section-folder" className="hover:text-gray-900 transition">파일 아카이브</a>
-          <Link
-            href="/login"
-            className="px-5 py-2 rounded-full bg-gray-100 text-gray-900 text-[12px] font-bold hover:bg-gray-200 transition"
-          >
-            로그인
-          </Link>
         </nav>
       </header>
 
@@ -83,12 +76,16 @@ export function HeroScene() {
 
         {/* CTAs */}
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-          <Link
-            href="/login"
+          <a
+            href="#apply"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo("apply");
+            }}
             className="inline-flex items-center justify-center h-14 px-10 rounded-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-bold text-[16px] shadow-[0_10px_30px_rgba(59,130,246,0.3)] transition-all hover:scale-105"
           >
             지금 무료로 가입하기 →
-          </Link>
+          </a>
         </div>
       </div>
 

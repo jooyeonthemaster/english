@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendRegistrationNotification } from "@/lib/email/registration-notification";
 
-export const SEOUL_DISTRICTS = [
+const SEOUL_DISTRICTS = [
   "강남구", "강동구", "강북구", "강서구", "관악구",
   "광진구", "구로구", "금천구", "노원구", "도봉구",
   "동대문구", "동작구", "마포구", "서대문구", "서초구",
@@ -9,9 +10,7 @@ export const SEOUL_DISTRICTS = [
   "용산구", "은평구", "종로구", "중구", "중랑구",
 ] as const;
 
-export type SeoulDistrict = (typeof SEOUL_DISTRICTS)[number];
-
-export function extractDistrict(address: string | null | undefined): string | null {
+function extractDistrict(address: string | null | undefined): string | null {
   if (!address) return null;
   for (const d of SEOUL_DISTRICTS) {
     if (address.includes(d)) return d;
@@ -67,7 +66,7 @@ export async function POST(req: Request) {
   const agree = body.agree === true;
 
   if (!academyName) return NextResponse.json({ success: false, error: "학원명을 입력해 주세요." }, { status: 400 });
-  if (!directorName) return NextResponse.json({ success: false, error: "원장 성함을 입력해 주세요." }, { status: 400 });
+  if (!directorName) return NextResponse.json({ success: false, error: "신청자 성함을 입력해 주세요." }, { status: 400 });
   if (!directorPhone || !PHONE_RE.test(directorPhone.replace(/\s/g, ""))) {
     return NextResponse.json({ success: false, error: "연락처 형식이 올바르지 않습니다. (010-XXXX-XXXX)" }, { status: 400 });
   }
@@ -108,6 +107,20 @@ export async function POST(req: Request) {
     ) => Promise<{ id: string }>;
     const created = await createFn({ data });
 
+    // Fire-and-forget notification: never block the user's submission on mail delivery.
+    void sendRegistrationNotification({
+      id: created.id,
+      academyName,
+      directorName,
+      directorPhone: normalizedPhone,
+      directorEmail,
+      address,
+      district,
+      estimatedStudents,
+      message: userMessage || null,
+      desiredPlan,
+    }).catch((e) => console.error("[landing/apply] notify failed", e));
+
     return NextResponse.json({
       success: true,
       id: created.id,
@@ -130,6 +143,18 @@ export async function POST(req: Request) {
             desiredPlan,
           },
         });
+        void sendRegistrationNotification({
+          id: created.id,
+          academyName,
+          directorName,
+          directorPhone: normalizedPhone,
+          directorEmail,
+          address,
+          district,
+          estimatedStudents,
+          message: userMessage || null,
+          desiredPlan,
+        }).catch((e) => console.error("[landing/apply] notify failed", e));
         return NextResponse.json({ success: true, id: created.id, district });
       } catch (e2) {
         console.error("[landing/apply] fallback create failed", e2);
