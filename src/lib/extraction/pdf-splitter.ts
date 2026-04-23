@@ -25,18 +25,17 @@ import {
 type PdfjsModule = typeof import("pdfjs-dist");
 
 let pdfjsCache: PdfjsModule | null = null;
+const PDFJS_WORKER_SRC = "/pdf.worker.min.mjs";
 
 /** Lazy-load pdfjs-dist and wire its worker. Called on first PDF split. */
 async function loadPdfjs(): Promise<PdfjsModule> {
   if (pdfjsCache) return pdfjsCache;
-  const pdfjs = await import("pdfjs-dist");
-  // pdfjs v5 ships the worker as an ES module.
-  // Using `new URL(..., import.meta.url)` lets webpack bundle it alongside
-  // the page chunk; no manual copy-to-public step is needed.
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.min.mjs",
-    import.meta.url,
-  ).toString();
+  // pdfjs-dist ships a webpack-generated ESM bundle. Importing that bundle
+  // through Next's dev webpack path can crash before the module initializes,
+  // so we let the browser load the prebuilt file from /public directly.
+  // @ts-expect-error - served from /public at runtime rather than resolved by TS
+  const pdfjs = (await import(/* webpackIgnore: true */ "/pdf.min.mjs")) as PdfjsModule;
+  pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_SRC;
   pdfjsCache = pdfjs;
   return pdfjs;
 }

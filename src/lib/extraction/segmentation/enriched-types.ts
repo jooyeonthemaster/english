@@ -56,7 +56,7 @@ export type PassageDraftStatus = EnrichedDraft["status"];
 
 export interface GroupBucket {
   groupId: string;
-  passage: ExtractionItemSnapshot | null;
+  passages: ExtractionItemSnapshot[];
   stems: ExtractionItemSnapshot[];
   choicesByStemId: Map<string, ExtractionItemSnapshot[]>;
   explanationByStemId: Map<string, ExtractionItemSnapshot>;

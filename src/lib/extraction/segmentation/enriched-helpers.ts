@@ -32,7 +32,8 @@ export function mapItemStatusToDraftStatus(
 export function coerceQuestionNumber(item: ExtractionItemSnapshot): number | null {
   const meta = item.questionMeta;
   if (meta && typeof meta === "object") {
-    const raw = (meta as Record<string, unknown>).questionNumber;
+    const record = meta as Record<string, unknown>;
+    const raw = record.number ?? record.questionNumber;
     if (typeof raw === "number" && Number.isFinite(raw)) return raw;
     if (typeof raw === "string") {
       const parsed = Number(raw);
@@ -45,7 +46,8 @@ export function coerceQuestionNumber(item: ExtractionItemSnapshot): number | nul
 export function coerceChoiceIndex(item: ExtractionItemSnapshot): number | null {
   const meta = item.choiceMeta;
   if (meta && typeof meta === "object") {
-    const raw = (meta as Record<string, unknown>).choiceIndex;
+    const record = meta as Record<string, unknown>;
+    const raw = record.index ?? record.choiceIndex;
     if (typeof raw === "number" && Number.isFinite(raw)) return raw;
     if (typeof raw === "string") {
       const parsed = Number(raw);
@@ -162,7 +164,7 @@ export function averageConfidence(values: Array<number | null | undefined>): num
 export function newBucket(groupId: string, firstOrder: number): GroupBucket {
   return {
     groupId,
-    passage: null,
+    passages: [],
     stems: [],
     choicesByStemId: new Map(),
     explanationByStemId: new Map(),

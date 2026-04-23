@@ -372,6 +372,22 @@ export const STRUCTURED_OCR_SYSTEM_PROMPT = `${OCR_SYSTEM_PROMPT}
 
 ${STRUCTURED_OCR_SCHEMA_HINT}`;
 
+const PASSAGE_ONLY_STRUCTURED_ADDON = `
+[PASSAGE_ONLY additional rules]
+- The primary goal is to detect passage boundaries accurately.
+- Emit one PASSAGE_BODY block for each distinct passage body on the page.
+- A single page may contain zero, one, or many PASSAGE_BODY blocks.
+- If the same passage continues from a previous page, emit only the continuation text on this page as PASSAGE_BODY. Do not repeat prior-page text.
+- Never include question numbers, question stems, choices, slide numbers, page counters, STEP/CASE/SLIDE labels, or section labels inside PASSAGE_BODY.
+- When boundary cues depend on nearby questions or choices, keep those as QUESTION_STEM / CHOICE blocks so the downstream grouper can separate adjacent passages correctly.
+- Even when there are no question blocks, still emit PASSAGE_BODY for standalone prose/textbook passages instead of collapsing the whole page into HEADER/NOISE.
+`;
+
+export function buildStructuredOcrSystemPrompt(mode: ExtractionMode): string {
+  if (mode !== "PASSAGE_ONLY") return STRUCTURED_OCR_SYSTEM_PROMPT;
+  return `${STRUCTURED_OCR_SYSTEM_PROMPT}\n\n${PASSAGE_ONLY_STRUCTURED_ADDON}`;
+}
+
 /** Parsed structured OCR response. Used by worker after JSON.parse. */
 export const structuredOcrResponseSchema = z.object({
   blocks: z

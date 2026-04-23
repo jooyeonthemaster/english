@@ -214,5 +214,13 @@ export function isValidMode(value: unknown): value is ExtractionMode {
   return typeof value === "string" && value in MODES;
 }
 
+export function usesStructuredExtraction(mode: ExtractionMode): boolean {
+  return (
+    mode === "PASSAGE_ONLY" ||
+    mode === "QUESTION_SET" ||
+    mode === "FULL_EXAM"
+  );
+}
+
 /** 기본 모드 — 기존 코드 호환 (mode 미지정 시 M1). */
 export const DEFAULT_EXTRACTION_MODE: ExtractionMode = "PASSAGE_ONLY";

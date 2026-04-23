@@ -6,8 +6,10 @@
 // Fully idempotent — checks job.status before mutating.
 //
 // Mode-aware behaviour:
-//   - M1 PASSAGE_ONLY : classic regex-based passage segmentation over the
-//                       per-page OCR text. Emits ExtractionResult drafts.
+//   - M1 PASSAGE_ONLY : structured page OCR + passage-centric grouping. If the
+//                       model fails to emit any PASSAGE_BODY blocks, finalize
+//                       falls back to the legacy regex segmenter over the
+//                       per-page OCR text so the review UI is never blank.
 //   - M2 QUESTION_SET : ExtractionItem rows are already persisted by the page
 //                       worker. finalize assigns groupId / parentItemId /
 //                       global order, creates a SourceMaterial record, and
@@ -15,7 +17,7 @@
 //                       the legacy review UI.
 //   - M4 FULL_EXAM    : Same as M2 plus: SourceMaterial uses EXAM_META blocks
 //                       as primary signal, content hash spans every passage.
-//   - M3 EXPLANATION  : Treated like M1 for now (feature-gated).
+//   - M3 EXPLANATION  : Uses the legacy plain-text segmenter for now.
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
@@ -28,6 +30,7 @@ import {
   type StructuredBlockDraft,
 } from "@/lib/extraction/segmentation";
 import { parseSourceMeta, computeContentHash } from "@/lib/extraction/meta-parser";
+import { usesStructuredExtraction } from "@/lib/extraction/modes";
 import type {
   BlockType,
   ExtractionItemSnapshot,
@@ -90,7 +93,7 @@ export const extractionFinalizeTask = task({
     }
 
     const mode = (job.mode as ExtractionMode) ?? "PASSAGE_ONLY";
-    const isStructured = mode === "QUESTION_SET" || mode === "FULL_EXAM";
+    const isStructured = usesStructuredExtraction(mode);
 
     // Compute status
     let finalStatus: "COMPLETED" | "PARTIAL" | "FAILED";
@@ -400,6 +403,20 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
         ? localIdToDbId.get(c.parentLocalId) ?? null
         : null;
       const originalItem = items.find((it) => it.id === dbId);
+      const originalQuestionMeta =
+        originalItem?.questionMeta &&
+        typeof originalItem.questionMeta === "object"
+          ? (originalItem.questionMeta as Record<string, unknown>)
+          : null;
+      const originalChoiceMeta =
+        originalItem?.choiceMeta && typeof originalItem.choiceMeta === "object"
+          ? (originalItem.choiceMeta as Record<string, unknown>)
+          : null;
+      const originalPassageMeta =
+        originalItem?.passageMeta &&
+        typeof originalItem.passageMeta === "object"
+          ? (originalItem.passageMeta as Record<string, unknown>)
+          : null;
       return {
         id: dbId ?? `synthetic-${idx}`,
         jobId,
@@ -418,19 +435,26 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
         // Anything else (legacy `questionNumber`, `choiceIndex`) is rejected
         // at read time above and therefore never reaches this point.
         questionMeta:
-          c.questionNumber !== null
-            ? { number: c.questionNumber }
+          c.questionNumber !== null || originalQuestionMeta
+            ? {
+                ...(originalQuestionMeta ?? {}),
+                ...(c.questionNumber !== null ? { number: c.questionNumber } : {}),
+              }
             : null,
         choiceMeta:
-          c.choiceIndex !== null || c.isAnswer !== null
+          c.choiceIndex !== null || c.isAnswer !== null || originalChoiceMeta
             ? {
+                ...(originalChoiceMeta ?? {}),
                 index: c.choiceIndex,
                 isAnswer: c.isAnswer === true,
               }
             : null,
         passageMeta:
           c.blockType === "PASSAGE_BODY"
-            ? { wordCount: c.content.split(/\s+/).filter(Boolean).length }
+            ? {
+                ...(originalPassageMeta ?? {}),
+                wordCount: c.content.split(/\s+/).filter(Boolean).length,
+              }
             : null,
         examMeta: c.examMeta as Record<string, unknown> | null,
         boundingBox: null,
@@ -444,6 +468,25 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
   );
 
   const enriched = buildEnrichedDrafts(snapshotItems);
+  const structuredPassageCount = snapshotItems.filter(
+    (item) => item.blockType === "PASSAGE_BODY",
+  ).length;
+  const useLegacyFallback =
+    input.mode === "PASSAGE_ONLY" &&
+    (structuredPassageCount === 0 ||
+      enriched.every((draft) => draft.content.trim().length === 0));
+  const legacyFallbackDrafts = useLegacyFallback
+    ? segmentPages(
+        [...pages]
+          .filter((p) => p.status === "SUCCESS" && p.extractedText)
+          .sort((a, b) => a.pageIndex - b.pageIndex)
+          .map((p) => ({
+            pageIndex: p.pageIndex,
+            text: p.extractedText ?? "",
+            confidence: p.confidence,
+          })),
+      )
+    : [];
 
   // ── 5) Persist everything in one transaction.
   await prisma.$transaction(async (tx) => {
@@ -471,37 +514,57 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
       where: { jobId, status: "DRAFT" },
     });
 
-    for (const d of enriched) {
-      const resultMeta = {
-        ...(d.meta ?? {}),
-        groupId: d.passageItemId ?? null,
-        questions: d.questions.map((q) => ({
-          questionItemId: q.questionItemId,
-          questionNumber: q.questionNumber,
-          stem: q.stem,
-          choices: q.choices.map((c) => ({
-            itemId: c.itemId,
-            label: c.label,
-            content: c.content,
-            isAnswer: c.isAnswer,
+    if (useLegacyFallback) {
+      for (const d of legacyFallbackDrafts) {
+        await tx.extractionResult.create({
+          data: {
+            jobId,
+            passageOrder: d.passageOrder,
+            sourcePageIndex: d.sourcePageIndex,
+            title: d.title,
+            content: d.content,
+            meta: {
+              ...(d.meta ?? {}),
+              structuredFallback: true,
+            } as Prisma.InputJsonValue,
+            confidence: d.confidence,
+            status: "DRAFT",
+          },
+        });
+      }
+    } else {
+      for (const d of enriched) {
+        const resultMeta = {
+          ...(d.meta ?? {}),
+          groupId: d.passageItemId ?? null,
+          questions: d.questions.map((q) => ({
+            questionItemId: q.questionItemId,
+            questionNumber: q.questionNumber,
+            stem: q.stem,
+            choices: q.choices.map((c) => ({
+              itemId: c.itemId,
+              label: c.label,
+              content: c.content,
+              isAnswer: c.isAnswer,
+            })),
+            explanation: q.explanation,
           })),
-          explanation: q.explanation,
-        })),
-        examMeta: d.examMeta ?? null,
-      } satisfies Record<string, unknown>;
+          examMeta: d.examMeta ?? null,
+        } satisfies Record<string, unknown>;
 
-      await tx.extractionResult.create({
-        data: {
-          jobId,
-          passageOrder: d.passageOrder,
-          sourcePageIndex: d.sourcePageIndex,
-          title: d.title,
-          content: d.content,
-          meta: resultMeta as Prisma.InputJsonValue,
-          confidence: d.confidence,
-          status: "DRAFT",
-        },
-      });
+        await tx.extractionResult.create({
+          data: {
+            jobId,
+            passageOrder: d.passageOrder,
+            sourcePageIndex: d.sourcePageIndex,
+            title: d.title,
+            content: d.content,
+            meta: resultMeta as Prisma.InputJsonValue,
+            confidence: d.confidence,
+            status: "DRAFT",
+          },
+        });
+      }
     }
 
     // 5c) Job status + sourceMaterialId
@@ -515,7 +578,10 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
     });
   });
 
-  return { draftCount: enriched.length, sourceMaterialId };
+  return {
+    draftCount: useLegacyFallback ? legacyFallbackDrafts.length : enriched.length,
+    sourceMaterialId,
+  };
 }
 
 // ────────────────────────────────────────────────────────────────────────────

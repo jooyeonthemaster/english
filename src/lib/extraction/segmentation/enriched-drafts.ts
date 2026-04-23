@@ -55,7 +55,7 @@ export function buildEnrichedDrafts(
 
     switch (item.blockType) {
       case "PASSAGE_BODY":
-        if (!bucket.passage) bucket.passage = item;
+        bucket.passages.push(item);
         break;
       case "QUESTION_STEM":
         bucket.stems.push(item);
@@ -92,14 +92,19 @@ export function buildEnrichedDrafts(
     // (fallback placeholder) to emit a draft.
     const hasOrphanChoices = bucket.orphanChoices.length > 0;
     if (
-      !bucket.passage &&
+      bucket.passages.length === 0 &&
       bucket.stems.length === 0 &&
       !hasOrphanChoices
     ) {
       return;
     }
 
-    const passage = bucket.passage;
+    const passageBlocks = [...bucket.passages].sort((a, b) => a.order - b.order);
+    const anchorPassage = passageBlocks[0] ?? null;
+    const mergedPassageContent = passageBlocks
+      .map((passage) => passage.content.trim())
+      .filter((content) => content.length > 0)
+      .join("\n\n");
     const stemsSorted = [...bucket.stems].sort((a, b) => a.order - b.order);
 
     // P0-3 FIX: orphan choices with NO stem in the group → create a synthetic
@@ -196,8 +201,8 @@ export function buildEnrichedDrafts(
     // Anchor item — used for status mapping. Prefer passage, then first real
     // stem. When neither exists (orphan-choice-only bucket), fall back to
     // DRAFT status.
-    const anchorStatus: ExtractionItemSnapshot["status"] = passage
-      ? passage.status
+    const anchorStatus: ExtractionItemSnapshot["status"] = anchorPassage
+      ? anchorPassage.status
       : stemsSorted.length > 0
         ? stemsSorted[0].status
         : "DRAFT";
@@ -206,7 +211,7 @@ export function buildEnrichedDrafts(
     // Synthetic placeholder rows are excluded (they have no pages or
     // confidence); their attached orphan choices are added separately.
     const allItems: ExtractionItemSnapshot[] = [
-      ...(passage ? [passage] : []),
+      ...passageBlocks,
       ...stemsSorted,
       ...stemsSorted.flatMap((s) => bucket.choicesByStemId.get(s.id) ?? []),
       ...stemsSorted
@@ -224,30 +229,30 @@ export function buildEnrichedDrafts(
     const confidence = averageConfidence(allItems.map((i) => i.confidence));
 
     const title =
-      passage?.title ??
+      anchorPassage?.title ??
       (questions[0]?.questionNumber != null
         ? `[${questions[0].questionNumber}]번 문제 세트`
         : `지문 ${index + 1}`);
 
     const draft: EnrichedDraft = {
-      passageItemId: passage ? passage.id : null,
+      passageItemId: anchorPassage ? anchorPassage.id : null,
       passageOrder: index,
       sourcePageIndex: pages,
       title,
-      content: passage ? passage.content : "",
+      content: mergedPassageContent,
       confidence,
       status: mapItemStatusToDraftStatus(anchorStatus),
       questions,
       examMeta: null,
       meta: {
-        markerDetected: passage
-          ? Boolean(
-              (passage.passageMeta as Record<string, unknown> | null)
-                ?.markerDetected,
-            )
-          : false,
+        markerDetected: passageBlocks.some((passageBlock) =>
+          Boolean(
+            (passageBlock.passageMeta as Record<string, unknown> | null)
+              ?.markerDetected,
+          ),
+        ),
         mergedFromPages: pages.length > 1 ? pages : undefined,
-        confidenceNote: passage
+        confidenceNote: anchorPassage
           ? undefined
           : syntheticPlaceholder
             ? "문항 본문이 감지되지 않아 선택지만 묶었습니다. 문항을 추가하거나 병합하세요."

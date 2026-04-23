@@ -8,6 +8,7 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { toast } from "sonner";
 import type { EnrichedDraft } from "@/lib/extraction/segmentation";
+import { getModeConfig } from "@/lib/extraction/modes";
 import type {
   ExtractionItemSnapshot,
   ResultDraft,
@@ -74,7 +75,16 @@ export function useLoadJob(handlers: LoadJobHandlers) {
         setPagesData(loadedPages);
         setOriginalFileName(data.job?.originalFileName ?? null);
 
-        const rawItems = (data.items ?? []) as ExtractionItemSnapshot[];
+        const jobMode = data.job?.mode ?? "PASSAGE_ONLY";
+        const relevantBlockTypes = new Set(
+          getModeConfig(jobMode).relevantBlockTypes,
+        );
+        const rawItems =
+          jobMode === "PASSAGE_ONLY"
+            ? []
+            : ((data.items ?? []) as ExtractionItemSnapshot[]).filter((item) =>
+                relevantBlockTypes.has(item.blockType),
+              );
         const rawResults = (data.results ?? []) as Array<{
           id: string;
           passageOrder: number;

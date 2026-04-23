@@ -16,10 +16,9 @@
 //     INSUFFICIENT_CREDITS) → mark page DEAD, refund credits if charged, return.
 //
 // Mode routing:
-//   - M1 PASSAGE_ONLY: classic plain-text OCR. extractedText stored as-is.
-//   - M2 QUESTION_SET / M4 FULL_EXAM: STRUCTURED_OCR_SYSTEM_PROMPT + JSON block
-//     response. Each block becomes one ExtractionItem row; extractedText is
-//     the concatenation of all block contents (so legacy readers still work).
+//   - M1 PASSAGE_ONLY / M2 QUESTION_SET / M4 FULL_EXAM: structured JSON block
+//     OCR. Each block becomes one ExtractionItem row; extractedText is the
+//     concatenation of all block contents (so legacy readers still work).
 //   - M3 EXPLANATION: falls back to plain OCR for now (feature gated off).
 //
 // Billing-idempotency invariant (critical):
@@ -50,7 +49,7 @@ import {
   OCR_USER_PROMPT,
   OCR_GENERATION_CONFIG,
   sanitizeOcrOutput,
-  STRUCTURED_OCR_SYSTEM_PROMPT,
+  buildStructuredOcrSystemPrompt,
   structuredOcrResponseSchema,
   buildOcrSystemPrompt,
   buildOcrUserPrompt,
@@ -63,6 +62,7 @@ import {
   MAX_PAGE_ATTEMPTS,
 } from "@/lib/extraction/constants";
 import type { ExtractionMode } from "@/lib/extraction/types";
+import { usesStructuredExtraction } from "@/lib/extraction/modes";
 import { extractionFinalizeTask } from "./extraction-finalize";
 
 type Input = { jobId: string; pageIndex: number; mode?: ExtractionMode };
@@ -203,7 +203,7 @@ export const extractionPageTask = task({
     // change and left mode undefined. Saves one SELECT per page at scale.
     const mode: ExtractionMode =
       payload.mode ?? (page.job.mode as ExtractionMode) ?? "PASSAGE_ONLY";
-    const isStructured = mode === "QUESTION_SET" || mode === "FULL_EXAM";
+    const isStructured = usesStructuredExtraction(mode);
 
     // ─── (B) Deduct credits (skip if already charged) ─────────────────────
     //
@@ -304,7 +304,7 @@ export const extractionPageTask = task({
       const mimeType = "image/jpeg";
 
       const systemPrompt = isStructured
-        ? STRUCTURED_OCR_SYSTEM_PROMPT
+        ? buildStructuredOcrSystemPrompt(mode)
         : mode === "PASSAGE_ONLY"
           ? OCR_SYSTEM_PROMPT
           : buildOcrSystemPrompt(mode);
@@ -486,10 +486,18 @@ export const extractionPageTask = task({
         for (let i = 0; i < structured.blocks.length; i++) {
           const b = structured.blocks[i];
           const tempOrder = page.pageIndex * 1000 + i;
+          const sharedPassageRange =
+            typeof b.sharedPassageRange === "string" &&
+            b.sharedPassageRange.trim().length > 0
+              ? b.sharedPassageRange.trim()
+              : null;
 
           const questionMeta: Prisma.InputJsonValue | undefined =
             b.blockType === "QUESTION_STEM"
-              ? { number: b.questionNumber ?? null }
+              ? {
+                  number: b.questionNumber ?? null,
+                  sharedPassageRange,
+                }
               : undefined;
           const choiceMeta: Prisma.InputJsonValue | undefined =
             b.blockType === "CHOICE"
@@ -505,7 +513,11 @@ export const extractionPageTask = task({
               : undefined;
           const passageMeta: Prisma.InputJsonValue | undefined =
             b.blockType === "PASSAGE_BODY"
-              ? { wordCount: b.content.split(/\s+/).filter(Boolean).length }
+              ? {
+                  wordCount: b.content.split(/\s+/).filter(Boolean).length,
+                  markerDetected: sharedPassageRange !== null,
+                  questionRange: sharedPassageRange,
+                }
               : undefined;
 
           await tx.extractionItem.create({
