@@ -105,7 +105,7 @@ export function PassageCardGrid({
           <div className="flex-1" />
           <Button
             size="sm"
-            className="h-8 text-[12px] bg-teal-600 hover:bg-teal-700 rounded-lg"
+            className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700 rounded-lg"
             onClick={handleBatchGenerate}
             disabled={genMode === "manual" && totalQuestions === 0}
           >
@@ -125,14 +125,14 @@ export function PassageCardGrid({
               placeholder="지문 제목 또는 내용으로 검색..."
               value={passageSearch}
               onChange={(e) => setPassageSearch(e.target.value)}
-              className="w-full h-9 pl-10 pr-4 text-[13px] rounded-lg border border-slate-200 bg-slate-50/80 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-500/10 placeholder:text-slate-400 transition-all"
+              className="w-full h-9 pl-10 pr-4 text-[13px] rounded-lg border border-slate-200 bg-slate-50/80 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-400 transition-all"
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`h-9 px-3 rounded-lg text-[12px] font-medium flex items-center gap-1.5 transition-all border ${
               showFilters || activeFilterCount > 0
-                ? "bg-teal-50 text-teal-700 border-teal-300 shadow-sm shadow-teal-100"
+                ? "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-100"
                 : "text-slate-500 border-slate-200 hover:bg-slate-50 hover:border-slate-300"
             }`}
           >
@@ -151,7 +151,7 @@ export function PassageCardGrid({
             {filterOptions.schools.length > 0 && (
               <select value={filterSchool} onChange={(e) => setFilterSchool(e.target.value)}
                 className={`h-7 px-2 pr-6 rounded-md text-[11px] font-medium border appearance-none cursor-pointer transition-all ${
-                  filterSchool ? "bg-teal-50 text-teal-700 border-teal-300" : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                  filterSchool ? "bg-blue-50 text-blue-700 border-blue-300" : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
                 }`}>
                 <option value="">학교 전체</option>
                 {filterOptions.schools.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -160,7 +160,7 @@ export function PassageCardGrid({
             {filterOptions.grades.length > 0 && (
               <select value={filterGrade} onChange={(e) => setFilterGrade(e.target.value)}
                 className={`h-7 px-2 pr-6 rounded-md text-[11px] font-medium border appearance-none cursor-pointer transition-all ${
-                  filterGrade ? "bg-teal-50 text-teal-700 border-teal-300" : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                  filterGrade ? "bg-blue-50 text-blue-700 border-blue-300" : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
                 }`}>
                 <option value="">학년 전체</option>
                 {filterOptions.grades.map((g) => <option key={g} value={g}>{g}학년</option>)}
@@ -170,13 +170,13 @@ export function PassageCardGrid({
               {[{ value: "", label: "전체" }, { value: "FIRST", label: "1학기" }, { value: "SECOND", label: "2학기" }].map((s) => (
                 <button key={s.value} onClick={() => setFilterSemester(s.value)}
                   className={`h-6 px-2.5 rounded-md text-[11px] font-medium transition-all ${
-                    filterSemester === s.value ? "bg-white text-teal-700 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                    filterSemester === s.value ? "bg-white text-blue-700 shadow-sm" : "text-slate-400 hover:text-slate-600"
                   }`}>{s.label}</button>
               ))}
             </div>
             {activeFilterCount > 0 && (
               <button onClick={() => { setFilterSchool(""); setFilterGrade(""); setFilterSemester(""); }}
-                className="text-[11px] text-teal-600 hover:text-teal-700 font-medium ml-auto flex items-center gap-1">
+                className="text-[11px] text-blue-600 hover:text-blue-700 font-medium ml-auto flex items-center gap-1">
                 <X className="w-3 h-3" />
                 초기화
               </button>
@@ -191,7 +191,7 @@ export function PassageCardGrid({
               onClick={() => setSelectedCollectionId("")}
               className={`shrink-0 h-7 px-3 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all border ${
                 !selectedCollectionId
-                  ? "bg-teal-50 text-teal-700 border-teal-300"
+                  ? "bg-blue-50 text-blue-700 border-blue-300"
                   : "text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
               }`}
             >
@@ -203,7 +203,7 @@ export function PassageCardGrid({
                 onClick={() => setSelectedCollectionId(selectedCollectionId === c.id ? "" : c.id)}
                 className={`shrink-0 h-7 px-3 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all border ${
                   selectedCollectionId === c.id
-                    ? "bg-teal-50 text-teal-700 border-teal-300"
+                    ? "bg-blue-50 text-blue-700 border-blue-300"
                     : "text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
                 }`}
               >
@@ -220,7 +220,7 @@ export function PassageCardGrid({
       <div className="flex-1 overflow-y-auto px-5 py-4">
         {loadingPassages ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
-            <Loader2 className="w-5 h-5 animate-spin text-teal-500" />
+            <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
             <span className="text-[12px] text-slate-400">지문 불러오는 중...</span>
           </div>
         ) : filteredPassages.length === 0 ? (
@@ -343,7 +343,7 @@ export function PassageCardGrid({
                   <div className="flex-1" />
                   <button
                     onClick={(e) => { e.stopPropagation(); handleOpenAnalysisModal(p.id); }}
-                    className="w-full mt-3 h-8 rounded-lg border border-teal-200 bg-teal-50 hover:bg-teal-100 text-[11px] font-medium text-teal-700 hover:text-teal-800 transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full mt-3 h-8 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-[11px] font-medium text-blue-700 hover:text-blue-800 transition-colors flex items-center justify-center gap-1.5"
                   >
                     <Eye className="w-3 h-3" />
                     상세 보기

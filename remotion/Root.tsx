@@ -15,6 +15,8 @@ import CommunicationScene from './scenes/CommunicationScene';
 import StudentAppScene from './scenes/StudentAppScene';
 import ParentAppScene from './scenes/ParentAppScene';
 import TechOutroScene from './scenes/TechOutroScene';
+import AIFlowMobilePromo from './scenes/AIFlowMobilePromo';
+import PassageAnalysisDeepDive, { PASSAGE_DEEP_DIVE_TOTAL } from './scenes/PassageAnalysisDeepDive';
 
 const NaraDemoVideo: React.FC = () => {
   return (
@@ -78,6 +80,26 @@ export const RemotionRoot: React.FC = () => {
           />
         );
       })}
+      
+      {/* Mobile Promo Video (1080x1920) */}
+      <Composition
+        id="AIFlowMobilePromo"
+        component={AIFlowMobilePromo}
+        durationInFrames={1140}
+        fps={FPS}
+        width={1080}
+        height={1920}
+      />
+
+      {/* Passage Analysis Deep Dive (1080x1920) */}
+      <Composition
+        id="PassageAnalysisDeepDive"
+        component={PassageAnalysisDeepDive}
+        durationInFrames={PASSAGE_DEEP_DIVE_TOTAL}
+        fps={FPS}
+        width={1080}
+        height={1920}
+      />
     </>
   );
 };

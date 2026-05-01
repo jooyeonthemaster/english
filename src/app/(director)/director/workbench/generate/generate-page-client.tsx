@@ -337,23 +337,23 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
         </Link>
         <div className="flex-1">
           <h1 className="text-[18px] font-bold text-slate-800 tracking-tight flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-teal-50 border border-teal-100">
-              <Cpu className="w-4.5 h-4.5 text-teal-600" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 border border-blue-100">
+              <Cpu className="w-4.5 h-4.5 text-blue-600" />
             </div>
             AI 문제 생성
           </h1>
         </div>
         <div className="flex items-center gap-2.5">
           {queueCounts.generating > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-teal-50 border border-teal-200/60">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-teal-600" />
-              <span className="text-[12px] font-semibold text-teal-700">생성중 {queueCounts.generating}</span>
+            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-blue-50 border border-blue-200/60">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />
+              <span className="text-[12px] font-semibold text-blue-700">생성중 {queueCounts.generating}</span>
             </div>
           )}
           {queueCounts.done > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-emerald-50 border border-emerald-200/60">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-[12px] font-semibold text-emerald-700">완료 {queueCounts.done}</span>
+            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-sky-50 border border-sky-200/60">
+              <CheckCircle2 className="w-3.5 h-3.5 text-sky-600" />
+              <span className="text-[12px] font-semibold text-sky-700">완료 {queueCounts.done}</span>
             </div>
           )}
         </div>
@@ -363,7 +363,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       <div className="flex flex-col">
 
       {/* ═══ TOP SECTION: 지문 카드 + 설정 (가로 2패널, 고정 높이) ═══ */}
-      <div className="flex flex-col lg:flex-row bg-white lg:min-h-[420px] xl:h-[450px]">
+      <div className="flex flex-col lg:flex-row bg-white lg:h-[550px] xl:h-[600px] w-full">
 
         {/* ═══ LEFT PANEL: Passage cards ═══ */}
         <PassageCardGrid
@@ -537,7 +537,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       {loadingAnalysisModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
           <div className="bg-white rounded-xl px-6 py-4 shadow-xl flex items-center gap-3">
-            <Loader2 className="w-5 h-5 animate-spin text-teal-600" />
+            <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
             <span className="text-[13px] text-slate-700 font-medium">지문 분석 데이터 로딩 중...</span>
           </div>
         </div>

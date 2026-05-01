@@ -3,12 +3,22 @@ import { getStaffSession } from "@/lib/auth";
 import { getExams, getClassesForFilter, getExamCollections, getExamCollectionMembership } from "@/actions/exams";
 import { ExamListClient } from "@/components/exams/exam-list-client";
 
-export default async function ExamsPage() {
+interface PageProps {
+  searchParams: Promise<{
+    collectionId?: string;
+  }>;
+}
+
+export default async function ExamsPage({ searchParams }: PageProps) {
   const staff = await getStaffSession();
   if (!staff) redirect("/login");
 
+  const params = await searchParams;
+
   const [exams, classes, collections, membershipRaw] = await Promise.all([
-    getExams(staff.academyId),
+    getExams(staff.academyId, {
+      collectionId: params.collectionId || undefined,
+    }),
     getClassesForFilter(staff.academyId),
     getExamCollections(staff.academyId),
     getExamCollectionMembership(staff.academyId),

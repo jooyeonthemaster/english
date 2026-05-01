@@ -1,553 +1,1183 @@
-import { Suspense } from "react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getStaffSession } from "@/lib/auth";
 import {
-  Users,
-  Banknote,
-  CalendarCheck,
-  UserPlus,
-  TrendingUp,
-  TrendingDown,
-  Clock,
-  AlertTriangle,
-  MessageSquare,
+  AlertCircle,
+  ArrowRight,
   ChevronRight,
+  ClipboardCheck,
+  Database,
+  Download,
+  FileText,
+  FileUp,
+  FolderOpen,
+  FolderTree,
+  GraduationCap,
+  Layers,
+  ListChecks,
+  NotebookPen,
+  PencilLine,
+  SearchCheck,
+  Sparkles,
+  WandSparkles,
+  Workflow,
+  type LucideIcon,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn, formatCurrency, formatNumber, formatRelativeTime, formatKoreanDate } from "@/lib/utils";
-import {
-  getDashboardKPIs,
-  getStudentTrend,
-  getPaymentSummary,
-  getTodayClasses,
-  getOverdueInvoices,
-  getRecentConsultations,
-} from "@/actions/dashboard";
-import type {
-  KPIData,
-  StudentTrendPoint,
-  PaymentSummaryItem,
-  TodayClassItem,
-  OverdueInvoiceItem,
-  ConsultationItem,
-} from "@/actions/dashboard";
-import { StudentTrendChart, PaymentDonutChart } from "./dashboard-charts";
 
-// ============================================================================
-// Page
-// ============================================================================
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { getStaffSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { cn, formatKoreanDate, formatNumber } from "@/lib/utils";
+
+type FolderKind = "passage" | "question" | "exam";
+
+interface CollectionSnapshot {
+  id: string;
+  kind: FolderKind;
+  name: string;
+  parentId: string | null;
+  color: string | null;
+  items: number;
+  children: number;
+  updatedAt: Date;
+  href: string;
+}
+
+interface UnifiedFolder {
+  key: string;
+  name: string;
+  passage?: CollectionSnapshot;
+  question?: CollectionSnapshot;
+  exam?: CollectionSnapshot;
+  totalItems: number;
+  stageCount: number;
+  updatedAt: Date;
+}
+
+interface DashboardData {
+  sourceMaterialCount: number;
+  recentExtractionJobs: {
+    id: string;
+    originalFileName: string | null;
+    sourceType: string;
+    mode: string;
+    status: string;
+    totalPages: number;
+    successPages: number;
+    failedPages: number;
+    pendingPages: number;
+    createdAt: Date;
+  }[];
+  content: {
+    passages: number;
+    analyzedPassages: number;
+    pendingAnalysis: number;
+    annotatedPassages: number;
+    questions: number;
+    aiQuestions: number;
+    approvedQuestions: number;
+    unapprovedQuestions: number;
+    exams: number;
+    draftExams: number;
+    exportReadyExams: number;
+  };
+  folders: {
+    unified: UnifiedFolder[];
+    passage: CollectionSnapshot[];
+    question: CollectionSnapshot[];
+    exam: CollectionSnapshot[];
+    unfiled: Record<FolderKind, number>;
+  };
+  recent: {
+    sourceMaterials: {
+      id: string;
+      title: string;
+      type: string;
+      year: number | null;
+      round: string | null;
+      grade: number | null;
+      createdAt: Date;
+      _count: { passages: number; questions: number; exams: number };
+    }[];
+    passages: {
+      id: string;
+      title: string;
+      grade: number | null;
+      createdAt: Date;
+      analysis: { id: string } | null;
+      _count: { questions: number; notes: number };
+    }[];
+    questions: {
+      id: string;
+      questionText: string;
+      type: string;
+      approved: boolean;
+      aiGenerated: boolean;
+      createdAt: Date;
+      passage: { title: string } | null;
+    }[];
+    exams: {
+      id: string;
+      title: string;
+      status: string;
+      createdAt: Date;
+      _count: { questions: number };
+    }[];
+  };
+}
+
+const folderMeta: Record<
+  FolderKind,
+  {
+    label: string;
+    href: string;
+    icon: LucideIcon;
+    iconClass: string;
+    chipClass: string;
+  }
+> = {
+  passage: {
+    label: "지문",
+    href: "/director/workbench/passages",
+    icon: FileText,
+    iconClass: "bg-blue-50 text-blue-600",
+    chipClass: "border-blue-100 bg-blue-50 text-blue-700",
+  },
+  question: {
+    label: "문제",
+    href: "/director/questions",
+    icon: ListChecks,
+    iconClass: "bg-sky-50 text-sky-600",
+    chipClass: "border-sky-100 bg-sky-50 text-sky-700",
+  },
+  exam: {
+    label: "시험지",
+    href: "/director/exams",
+    icon: GraduationCap,
+    iconClass: "bg-cyan-50 text-cyan-600",
+    chipClass: "border-cyan-100 bg-cyan-50 text-cyan-700",
+  },
+};
 
 export default async function DirectorDashboardPage() {
   const staff = await getStaffSession();
   if (!staff) redirect("/login?callbackUrl=/director");
 
-  return (
-    <div className="space-y-6 p-4 md:p-6 lg:p-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-          대시보드
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          {formatKoreanDate(new Date())} 기준 실시간 현황
-        </p>
-      </div>
+  const data = await getWorkflowDashboardData(staff.academyId);
 
-      {/* KPI Cards */}
-      <Suspense fallback={<KPICardsSkeleton />}>
-        <KPICards academyId={staff.academyId} />
-      </Suspense>
-
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Suspense fallback={<ChartSkeleton title="재원생 추이" />}>
-          <StudentTrendSection academyId={staff.academyId} />
-        </Suspense>
-        <Suspense fallback={<ChartSkeleton title="수납 현황" />}>
-          <PaymentStatusSection academyId={staff.academyId} />
-        </Suspense>
-      </div>
-
-      {/* Bottom Three Columns */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Suspense fallback={<ListSkeleton title="오늘의 수업" />}>
-          <TodayClassesSection academyId={staff.academyId} />
-        </Suspense>
-        <Suspense fallback={<ListSkeleton title="미납 알림" />}>
-          <OverdueAlertsSection academyId={staff.academyId} />
-        </Suspense>
-        <Suspense fallback={<ListSkeleton title="최근 상담" />}>
-          <RecentConsultationsSection academyId={staff.academyId} />
-        </Suspense>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// KPI Cards (Server Component)
-// ============================================================================
-
-async function KPICards({ academyId }: { academyId: string }) {
-  const kpi: KPIData = await getDashboardKPIs(academyId);
-
-  const cards = [
+  const workflowStages = [
     {
-      title: "총 재원생",
-      value: formatNumber(kpi.totalStudents),
-      suffix: "명",
-      delta: kpi.studentDelta,
-      deltaLabel: "전월 대비",
-      icon: Users,
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-600",
+      step: "01",
+      title: "자료 추출",
+      summary: "이미지와 PDF를 텍스트, 지문, 문제 원본으로 전환합니다.",
+      href: "/director/workbench/passages/import",
+      cta: "추출 시작",
+      icon: FileUp,
+      iconClass: "bg-slate-50 text-slate-600",
+      borderClass: "hover:border-slate-300",
+      stats: [
+        { label: "원본 자료", value: data.sourceMaterialCount },
+        { label: "최근 작업", value: data.recentExtractionJobs.length },
+      ],
     },
     {
-      title: "이번 달 매출",
-      value: formatCurrency(kpi.monthlyRevenue),
-      suffix: "",
-      delta: kpi.collectionRate,
-      deltaLabel: "수납률",
-      deltaIsPercent: true,
-      icon: Banknote,
-      iconBg: "bg-emerald-50",
-      iconColor: "text-emerald-600",
+      step: "02",
+      title: "지문 분석",
+      summary: "추출된 텍스트를 불러와 필기와 AI 분석을 함께 쌓습니다.",
+      href: "/director/workbench/passages",
+      cta: "지문 열기",
+      icon: NotebookPen,
+      iconClass: "bg-blue-50 text-blue-600",
+      borderClass: "hover:border-blue-300",
+      stats: [
+        { label: "분석 완료", value: data.content.analyzedPassages },
+        { label: "필기 지문", value: data.content.annotatedPassages },
+      ],
     },
     {
-      title: "출석률",
-      value: `${kpi.attendanceRate}`,
-      suffix: "%",
-      delta: null,
-      deltaLabel: `${kpi.presentCount}/${kpi.totalAttendanceCount}명 출석`,
-      icon: CalendarCheck,
-      iconBg: "bg-amber-50",
-      iconColor: "text-amber-600",
+      step: "03",
+      title: "문제 생성",
+      summary: "분석된 지문과 필기 포인트를 기반으로 문제를 만듭니다.",
+      href: "/director/workbench/generate",
+      cta: "문제 생성",
+      icon: WandSparkles,
+      iconClass: "bg-sky-50 text-sky-600",
+      borderClass: "hover:border-sky-300",
+      stats: [
+        { label: "AI 문제", value: data.content.aiQuestions },
+        { label: "검수 대기", value: data.content.unapprovedQuestions },
+      ],
     },
     {
-      title: "신규 등록",
-      value: formatNumber(kpi.newRegistrations),
-      suffix: "명",
-      delta: kpi.newRegDelta,
-      deltaLabel: "전월 대비",
-      icon: UserPlus,
-      iconBg: "bg-purple-50",
-      iconColor: "text-purple-600",
+      step: "04",
+      title: "시험지·DOCX",
+      summary: "검수한 문제를 시험지로 묶고 문서 파일로 내보냅니다.",
+      href: "/director/exams",
+      cta: "시험지 관리",
+      icon: Download,
+      iconClass: "bg-cyan-50 text-cyan-600",
+      borderClass: "hover:border-cyan-300",
+      stats: [
+        { label: "시험지", value: data.content.exams },
+        { label: "내보내기 가능", value: data.content.exportReadyExams },
+      ],
+    },
+  ];
+
+  const workQueue = [
+    {
+      title: "분석 대기 지문",
+      count: data.content.pendingAnalysis,
+      href: "/director/workbench/passages",
+      icon: SearchCheck,
+      tone: "blue" as const,
+    },
+    {
+      title: "검수 대기 문제",
+      count: data.content.unapprovedQuestions,
+      href: "/director/questions?approved=false",
+      icon: ClipboardCheck,
+      tone: "sky" as const,
+    },
+    {
+      title: "작성 중 시험지",
+      count: data.content.draftExams,
+      href: "/director/exams",
+      icon: PencilLine,
+      tone: "cyan" as const,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((card, i) => (
-        <Card
-          key={card.title}
-          className={cn(
-            "kpi-card border border-gray-200/80 shadow-card animate-float-up",
-            i === 0 && "stagger-1",
-            i === 1 && "stagger-2",
-            i === 2 && "stagger-3",
-            i === 3 && "stagger-4"
-          )}
-        >
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">{card.title}</p>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-bold tracking-tight text-gray-900">
-                    {card.value}
-                  </span>
-                  {card.suffix && (
-                    <span className="text-base font-medium text-gray-500">
-                      {card.suffix}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div
-                className={cn(
-                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
-                  card.iconBg
-                )}
-              >
-                <card.icon className={cn("h-5 w-5", card.iconColor)} />
-              </div>
-            </div>
-            <div className="mt-3 flex items-center gap-1.5">
-              {card.delta !== null && card.delta !== undefined ? (
-                <>
-                  {card.deltaIsPercent ? (
-                    <Badge
-                      variant="secondary"
-                      className={cn(
-                        "gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-semibold",
-                        card.delta >= 80
-                          ? "bg-emerald-50 text-emerald-700"
-                          : card.delta >= 50
-                            ? "bg-amber-50 text-amber-700"
-                            : "bg-red-50 text-red-700"
-                      )}
-                    >
-                      {card.delta}%
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="secondary"
-                      className={cn(
-                        "gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-semibold",
-                        card.delta > 0
-                          ? "bg-emerald-50 text-emerald-700"
-                          : card.delta < 0
-                            ? "bg-red-50 text-red-700"
-                            : "bg-gray-50 text-gray-600"
-                      )}
-                    >
-                      {card.delta > 0 ? (
-                        <TrendingUp className="h-3 w-3" />
-                      ) : card.delta < 0 ? (
-                        <TrendingDown className="h-3 w-3" />
-                      ) : null}
-                      {card.delta > 0 ? "+" : ""}
-                      {card.delta}
-                    </Badge>
-                  )}
-                  <span className="text-xs text-gray-400">{card.deltaLabel}</span>
-                </>
-              ) : (
-                <span className="text-xs text-gray-400">{card.deltaLabel}</span>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+    <div className="w-full px-6 md:px-10 py-8 flex flex-col gap-8 bg-slate-50/30">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0">
+          <div className="mb-2 inline-flex items-center gap-2 rounded-md border border-blue-100 bg-blue-50 px-2.5 py-1 text-[12px] font-semibold text-blue-700">
+            <Workflow className="size-3.5" />
+            AI 콘텐츠 제작 허브
+          </div>
+          <h1 className="text-[28px] font-bold tracking-tight text-slate-950">
+            추출부터 DOCX까지 이어지는 출제 워크플로우
+          </h1>
+          <p className="mt-2 max-w-[760px] text-[14px] leading-6 text-slate-500">
+            {formatKoreanDate(new Date())} 기준으로 원본 자료, 지문 분석, 문제 생성,
+            시험지 폴더를 한 화면에서 이어 봅니다.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild className="h-10 rounded-md bg-slate-950 px-4 hover:bg-slate-800">
+            <Link href="/director/workbench/passages/import">
+              <FileUp className="size-4" />
+              자료 추출
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="h-10 rounded-md bg-white px-4">
+            <Link href="/director/workbench/generate">
+              <Sparkles className="size-4" />
+              문제 생성
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="h-10 rounded-md bg-white px-4">
+            <Link href="/director/exams/create">
+              <GraduationCap className="size-4" />
+              시험지 만들기
+            </Link>
+          </Button>
+        </div>
+      </header>
+
+      <section>
+        <SectionHeading
+          eyebrow="Main Flow"
+          title="한 번에 이어지는 4단계"
+          description="각 단계는 실제 작업 페이지로 바로 연결됩니다."
+        />
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-4">
+          {workflowStages.map((stage) => (
+            <WorkflowStageCard key={stage.step} {...stage} />
+          ))}
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+        <UnifiedFolderBoard folders={data.folders.unified} />
+        <ActionQueue items={workQueue} recentJobs={data.recentExtractionJobs} />
+      </section>
+
+      <section>
+        <SectionHeading
+          eyebrow="Library Control"
+          title="지문·문제·시험지 폴더 통합 보기"
+          description="서로 다른 폴더 구조를 같은 작업 단위로 맞춰볼 수 있게 묶었습니다."
+        />
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+          <FolderLane
+            kind="passage"
+            folders={data.folders.passage}
+            unfiledCount={data.folders.unfiled.passage}
+          />
+          <FolderLane
+            kind="question"
+            folders={data.folders.question}
+            unfiledCount={data.folders.unfiled.question}
+          />
+          <FolderLane
+            kind="exam"
+            folders={data.folders.exam}
+            unfiledCount={data.folders.unfiled.exam}
+          />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+        <RecentSourceMaterials items={data.recent.sourceMaterials} />
+        <RecentContentPanel data={data.recent} />
+      </section>
     </div>
   );
 }
 
-// ============================================================================
-// Student Trend Section
-// ============================================================================
+async function getWorkflowDashboardData(academyId: string): Promise<DashboardData> {
+  const [
+    sourceMaterialCount,
+    recentExtractionJobs,
+    passages,
+    analyzedPassages,
+    pendingAnalysis,
+    annotatedPassageIds,
+    questions,
+    aiQuestions,
+    approvedQuestions,
+    exams,
+    draftExams,
+    exportReadyExams,
+    passageCollections,
+    questionCollections,
+    examCollections,
+    unfiledPassages,
+    unfiledQuestions,
+    unfiledExams,
+    recentSourceMaterials,
+    recentPassages,
+    recentQuestions,
+    recentExams,
+  ] = await Promise.all([
+    prisma.sourceMaterial.count({ where: { academyId } }),
+    prisma.extractionJob.findMany({
+      where: { academyId },
+      orderBy: { createdAt: "desc" },
+      take: 4,
+      select: {
+        id: true,
+        originalFileName: true,
+        sourceType: true,
+        mode: true,
+        status: true,
+        totalPages: true,
+        successPages: true,
+        failedPages: true,
+        pendingPages: true,
+        createdAt: true,
+      },
+    }),
+    prisma.passage.count({ where: { academyId } }),
+    prisma.passage.count({ where: { academyId, analysis: { isNot: null } } }),
+    prisma.passage.count({ where: { academyId, analysis: null } }),
+    prisma.passageNote.findMany({
+      where: { passage: { academyId } },
+      distinct: ["passageId"],
+      select: { passageId: true },
+    }),
+    prisma.question.count({ where: { academyId } }),
+    prisma.question.count({ where: { academyId, aiGenerated: true } }),
+    prisma.question.count({ where: { academyId, approved: true } }),
+    prisma.exam.count({ where: { academyId } }),
+    prisma.exam.count({ where: { academyId, status: "DRAFT" } }),
+    prisma.exam.count({ where: { academyId, questions: { some: {} } } }),
+    prisma.passageCollection.findMany({
+      where: { academyId },
+      include: { _count: { select: { items: true, children: true } } },
+      orderBy: [{ updatedAt: "desc" }, { name: "asc" }],
+    }),
+    prisma.questionCollection.findMany({
+      where: { academyId },
+      include: { _count: { select: { items: true, children: true } } },
+      orderBy: [{ updatedAt: "desc" }, { name: "asc" }],
+    }),
+    prisma.examCollection.findMany({
+      where: { academyId },
+      include: { _count: { select: { items: true, children: true } } },
+      orderBy: [{ updatedAt: "desc" }, { name: "asc" }],
+    }),
+    prisma.passage.count({ where: { academyId, collectionItems: { none: {} } } }),
+    prisma.question.count({ where: { academyId, collectionItems: { none: {} } } }),
+    prisma.exam.count({ where: { academyId, collectionItems: { none: {} } } }),
+    prisma.sourceMaterial.findMany({
+      where: { academyId },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        year: true,
+        round: true,
+        grade: true,
+        createdAt: true,
+        _count: { select: { passages: true, questions: true, exams: true } },
+      },
+    }),
+    prisma.passage.findMany({
+      where: { academyId },
+      orderBy: { updatedAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        title: true,
+        grade: true,
+        createdAt: true,
+        analysis: { select: { id: true } },
+        _count: { select: { questions: true, notes: true } },
+      },
+    }),
+    prisma.question.findMany({
+      where: { academyId },
+      orderBy: { updatedAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        questionText: true,
+        type: true,
+        approved: true,
+        aiGenerated: true,
+        createdAt: true,
+        passage: { select: { title: true } },
+      },
+    }),
+    prisma.exam.findMany({
+      where: { academyId },
+      orderBy: { updatedAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        createdAt: true,
+        _count: { select: { questions: true } },
+      },
+    }),
+  ]);
 
-async function StudentTrendSection({ academyId }: { academyId: string }) {
-  const trend: StudentTrendPoint[] = await getStudentTrend(academyId);
-
-  return (
-    <Card className="border border-gray-200/80 shadow-card">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold text-gray-900">
-          재원생 추이
-        </CardTitle>
-        <p className="text-xs text-gray-500">최근 6개월</p>
-      </CardHeader>
-      <CardContent className="pt-0">
-        {trend.length > 0 ? (
-          <StudentTrendChart data={trend} />
-        ) : (
-          <EmptyState message="재원생 데이터가 없습니다." />
-        )}
-      </CardContent>
-    </Card>
+  const passageSnapshots = passageCollections.map((collection) =>
+    toCollectionSnapshot(collection, "passage")
   );
+  const questionSnapshots = questionCollections.map((collection) =>
+    toCollectionSnapshot(collection, "question")
+  );
+  const examSnapshots = examCollections.map((collection) =>
+    toCollectionSnapshot(collection, "exam")
+  );
+
+  return {
+    sourceMaterialCount,
+    recentExtractionJobs,
+    content: {
+      passages,
+      analyzedPassages,
+      pendingAnalysis,
+      annotatedPassages: annotatedPassageIds.length,
+      questions,
+      aiQuestions,
+      approvedQuestions,
+      unapprovedQuestions: Math.max(questions - approvedQuestions, 0),
+      exams,
+      draftExams,
+      exportReadyExams,
+    },
+    folders: {
+      unified: buildUnifiedFolders([
+        ...passageSnapshots,
+        ...questionSnapshots,
+        ...examSnapshots,
+      ]),
+      passage: passageSnapshots,
+      question: questionSnapshots,
+      exam: examSnapshots,
+      unfiled: {
+        passage: unfiledPassages,
+        question: unfiledQuestions,
+        exam: unfiledExams,
+      },
+    },
+    recent: {
+      sourceMaterials: recentSourceMaterials,
+      passages: recentPassages,
+      questions: recentQuestions,
+      exams: recentExams,
+    },
+  };
 }
 
-// ============================================================================
-// Payment Status Section
-// ============================================================================
+function toCollectionSnapshot(
+  collection: {
+    id: string;
+    parentId: string | null;
+    name: string;
+    color: string | null;
+    updatedAt: Date;
+    _count: { items: number; children: number };
+  },
+  kind: FolderKind
+): CollectionSnapshot {
+  const query = `collectionId=${encodeURIComponent(collection.id)}`;
+  const href =
+    kind === "passage"
+      ? `/director/workbench/passages?${query}`
+      : kind === "question"
+        ? `/director/questions?${query}`
+        : `/director/exams?${query}`;
 
-async function PaymentStatusSection({ academyId }: { academyId: string }) {
-  const summary: PaymentSummaryItem[] = await getPaymentSummary(academyId);
-  const total = summary.reduce((s, item) => s + item.amount, 0);
-
-  return (
-    <Card className="border border-gray-200/80 shadow-card">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold text-gray-900">
-          수납 현황
-        </CardTitle>
-        <p className="text-xs text-gray-500">이번 달 청구 기준</p>
-      </CardHeader>
-      <CardContent className="pt-0">
-        {total > 0 ? (
-          <PaymentDonutChart data={summary} total={total} />
-        ) : (
-          <EmptyState message="청구 내역이 없습니다." />
-        )}
-      </CardContent>
-    </Card>
-  );
+  return {
+    id: collection.id,
+    kind,
+    name: collection.name,
+    parentId: collection.parentId,
+    color: collection.color,
+    items: collection._count.items,
+    children: collection._count.children,
+    updatedAt: collection.updatedAt,
+    href,
+  };
 }
 
-// ============================================================================
-// Today's Classes Section
-// ============================================================================
+function buildUnifiedFolders(collections: CollectionSnapshot[]): UnifiedFolder[] {
+  const grouped = new Map<string, UnifiedFolder>();
 
-async function TodayClassesSection({ academyId }: { academyId: string }) {
-  const classes: TodayClassItem[] = await getTodayClasses(academyId);
+  for (const collection of collections) {
+    const key = normalizeFolderName(collection.name);
+    const current =
+      grouped.get(key) ??
+      ({
+        key,
+        name: collection.name,
+        totalItems: 0,
+        stageCount: 0,
+        updatedAt: collection.updatedAt,
+      } satisfies UnifiedFolder);
 
-  return (
-    <Card className="border border-gray-200/80 shadow-card">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <div>
-          <CardTitle className="text-base font-semibold text-gray-900">
-            오늘의 수업
-          </CardTitle>
-          <p className="text-xs text-gray-500">{classes.length}개 수업</p>
-        </div>
-        <Clock className="h-4 w-4 text-gray-400" />
-      </CardHeader>
-      <CardContent className="pt-0">
-        {classes.length > 0 ? (
-          <div className="space-y-2.5">
-            {classes.map((cls) => (
-              <div
-                key={cls.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3 transition-colors hover:bg-gray-50"
-              >
-                <div
-                  className={cn(
-                    "h-2 w-2 shrink-0 rounded-full",
-                    cls.status === "in-progress" && "bg-blue-500 animate-pulse-ring",
-                    cls.status === "upcoming" && "bg-gray-400",
-                    cls.status === "completed" && "bg-emerald-500"
-                  )}
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium text-gray-900">
-                      {cls.name}
-                    </span>
-                    {cls.room && (
-                      <Badge variant="secondary" className="shrink-0 text-[10px]">
-                        {cls.room}
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500">
-                    <span>{cls.time}</span>
-                    <span className="text-gray-300">|</span>
-                    <span>{cls.teacherName}</span>
-                    <span className="text-gray-300">|</span>
-                    <span>{cls.studentCount}명</span>
-                  </div>
-                </div>
-                <Badge
-                  variant="secondary"
-                  className={cn(
-                    "shrink-0 text-[10px]",
-                    cls.status === "in-progress" && "bg-blue-50 text-blue-700",
-                    cls.status === "upcoming" && "bg-gray-100 text-gray-600",
-                    cls.status === "completed" && "bg-emerald-50 text-emerald-700"
-                  )}
-                >
-                  {cls.status === "in-progress"
-                    ? "수업 중"
-                    : cls.status === "upcoming"
-                      ? "예정"
-                      : "완료"}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="오늘 예정된 수업이 없습니다." />
-        )}
-      </CardContent>
-    </Card>
-  );
+    current[collection.kind] = collection;
+    current.totalItems += collection.items;
+    current.stageCount = ["passage", "question", "exam"].filter(
+      (kind) => current[kind as FolderKind]
+    ).length;
+    if (collection.updatedAt > current.updatedAt) current.updatedAt = collection.updatedAt;
+
+    grouped.set(key, current);
+  }
+
+  return [...grouped.values()]
+    .sort((a, b) => {
+      if (b.stageCount !== a.stageCount) return b.stageCount - a.stageCount;
+      if (b.totalItems !== a.totalItems) return b.totalItems - a.totalItems;
+      return b.updatedAt.getTime() - a.updatedAt.getTime();
+    })
+    .slice(0, 7);
 }
 
-// ============================================================================
-// Overdue Alerts Section
-// ============================================================================
-
-async function OverdueAlertsSection({ academyId }: { academyId: string }) {
-  const overdue: OverdueInvoiceItem[] = await getOverdueInvoices(academyId);
-
-  return (
-    <Card className="border border-gray-200/80 shadow-card">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <div>
-          <CardTitle className="text-base font-semibold text-gray-900">
-            미납 알림
-          </CardTitle>
-          <p className="text-xs text-gray-500">{overdue.length}건 연체</p>
-        </div>
-        <AlertTriangle className="h-4 w-4 text-amber-500" />
-      </CardHeader>
-      <CardContent className="pt-0">
-        {overdue.length > 0 ? (
-          <div className="space-y-2.5">
-            {overdue.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between rounded-lg border border-red-100/60 bg-red-50/30 p-3"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-gray-900">
-                    {item.studentName}
-                  </p>
-                  <p className="mt-0.5 text-xs text-gray-500">{item.title}</p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="text-sm font-semibold text-red-600">
-                    {formatCurrency(item.amount)}
-                  </p>
-                  <p className="mt-0.5 text-[10px] font-medium text-red-500">
-                    {item.daysOverdue}일 연체
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="미납 내역이 없습니다." positive />
-        )}
-      </CardContent>
-    </Card>
-  );
+function normalizeFolderName(name: string) {
+  return name.trim().replace(/\s+/g, " ").toLowerCase();
 }
 
-// ============================================================================
-// Recent Consultations Section
-// ============================================================================
-
-async function RecentConsultationsSection({ academyId }: { academyId: string }) {
-  const consultations: ConsultationItem[] = await getRecentConsultations(academyId);
-
-  return (
-    <Card className="border border-gray-200/80 shadow-card">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <div>
-          <CardTitle className="text-base font-semibold text-gray-900">
-            최근 상담
-          </CardTitle>
-          <p className="text-xs text-gray-500">최근 기록</p>
-        </div>
-        <MessageSquare className="h-4 w-4 text-gray-400" />
-      </CardHeader>
-      <CardContent className="pt-0">
-        {consultations.length > 0 ? (
-          <div className="space-y-2.5">
-            {consultations.map((c) => (
-              <div
-                key={c.id}
-                className="group flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50/50 p-3 transition-colors hover:bg-gray-50"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium text-gray-900">
-                      {c.studentName || "일반 상담"}
-                    </span>
-                    <Badge
-                      variant="secondary"
-                      className="shrink-0 text-[10px]"
-                    >
-                      {c.typeLabel}
-                    </Badge>
-                  </div>
-                  <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500">
-                    <span>{formatRelativeTime(c.date)}</span>
-                    {c.staffName && (
-                      <>
-                        <span className="text-gray-300">|</span>
-                        <span>{c.staffName}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 shrink-0 text-gray-300 transition-colors group-hover:text-gray-500" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="최근 상담 기록이 없습니다." />
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-// ============================================================================
-// Shared Components
-// ============================================================================
-
-function EmptyState({
-  message,
-  positive = false,
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
 }: {
-  message: string;
-  positive?: boolean;
+  eyebrow: string;
+  title: string;
+  description: string;
 }) {
   return (
-    <div className="flex min-h-[120px] items-center justify-center">
-      <p
-        className={cn(
-          "text-sm",
-          positive ? "text-emerald-600" : "text-gray-400"
-        )}
-      >
-        {message}
+    <div className="mb-3 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+          {eyebrow}
+        </p>
+        <h2 className="mt-1 text-[18px] font-bold text-slate-900">{title}</h2>
+      </div>
+      <p className="max-w-[520px] text-[13px] leading-5 text-slate-500 md:text-right">
+        {description}
       </p>
     </div>
   );
 }
 
-// ============================================================================
-// Skeletons
-// ============================================================================
-
-function KPICardsSkeleton() {
+function WorkflowStageCard({
+  step,
+  title,
+  summary,
+  href,
+  cta,
+  icon: Icon,
+  iconClass,
+  borderClass,
+  stats,
+}: {
+  step: string;
+  title: string;
+  summary: string;
+  href: string;
+  cta: string;
+  icon: LucideIcon;
+  iconClass: string;
+  borderClass: string;
+  stats: { label: string; value: number }[];
+}) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="border border-gray-200/80">
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between">
-              <div className="space-y-3">
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-8 w-28" />
-              </div>
-              <Skeleton className="h-11 w-11 rounded-xl" />
+    <Link
+      href={href}
+      className={cn(
+        "group flex min-h-[224px] flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover",
+        borderClass
+      )}
+    >
+      <div className="flex items-start justify-between">
+        <div className={cn("flex size-11 items-center justify-center rounded-md", iconClass)}>
+          <Icon className="size-5" />
+        </div>
+        <span className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-bold tabular-nums text-slate-500">
+          {step}
+        </span>
+      </div>
+      <h3 className="mt-4 text-[17px] font-bold text-slate-950">{title}</h3>
+      <p className="mt-2 min-h-[42px] text-[13px] leading-5 text-slate-500">{summary}</p>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        {stats.map((stat) => (
+          <div key={stat.label} className="rounded-md bg-slate-50 px-3 py-2">
+            <p className="text-[11px] font-medium text-slate-400">{stat.label}</p>
+            <p className="mt-1 text-[16px] font-bold tabular-nums text-slate-800">
+              {formatNumber(stat.value)}
+            </p>
+          </div>
+        ))}
+      </div>
+      <span className="mt-auto flex items-center gap-1 pt-4 text-[13px] font-semibold text-blue-600">
+        {cta}
+        <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+      </span>
+    </Link>
+  );
+}
+
+function UnifiedFolderBoard({ folders }: { folders: UnifiedFolder[] }) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <FolderTree className="size-4 text-slate-500" />
+            <h2 className="text-[16px] font-bold text-slate-900">통합 작업 세트</h2>
+          </div>
+          <p className="mt-1 text-[12px] text-slate-500">
+            같은 이름의 지문·문제·시험지 폴더를 하나의 제작 단위로 묶었습니다.
+          </p>
+        </div>
+        <Badge variant="secondary" className="w-fit rounded-md bg-slate-100 text-slate-600">
+          최대 7개 표시
+        </Badge>
+      </div>
+
+      <div className="mt-4 overflow-x-auto">
+        {folders.length > 0 ? (
+          <div className="min-w-[760px]">
+            <div className="grid grid-cols-[minmax(220px,1.25fr)_116px_116px_116px_148px] gap-2 border-b border-slate-100 px-3 pb-2 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-400">
+              <span>작업 세트</span>
+              <span>지문</span>
+              <span>문제</span>
+              <span>시험지</span>
+              <span>다음 이동</span>
             </div>
-            <Skeleton className="mt-3 h-4 w-32" />
-          </CardContent>
-        </Card>
-      ))}
+            <div className="divide-y divide-slate-100">
+              {folders.map((folder) => (
+                <UnifiedFolderRow key={folder.key} folder={folder} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex min-h-[188px] items-center justify-center rounded-md border border-dashed border-slate-200 bg-slate-50 text-[13px] text-slate-400">
+            아직 폴더가 없습니다.
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-function ChartSkeleton({ title }: { title: string }) {
+function UnifiedFolderRow({ folder }: { folder: UnifiedFolder }) {
+  const action = getFolderNextAction(folder);
+
   return (
-    <Card className="border border-gray-200/80">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold text-gray-900">
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="h-[240px] w-full rounded-lg" />
-      </CardContent>
-    </Card>
+    <div className="grid grid-cols-[minmax(220px,1.25fr)_116px_116px_116px_148px] items-center gap-2 px-3 py-3">
+      <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-2">
+          <p className="truncate text-[14px] font-semibold text-slate-900">{folder.name}</p>
+          <span className="shrink-0 rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500">
+            {folder.stageCount}/3
+          </span>
+        </div>
+        <div className="mt-2 flex gap-1.5">
+          {(["passage", "question", "exam"] as FolderKind[]).map((kind) => (
+            <span
+              key={kind}
+              className={cn(
+                "h-1.5 w-8 rounded-full",
+                folder[kind] ? "bg-blue-500" : "bg-slate-200"
+              )}
+            />
+          ))}
+        </div>
+      </div>
+      <FolderCell snapshot={folder.passage} kind="passage" />
+      <FolderCell snapshot={folder.question} kind="question" />
+      <FolderCell snapshot={folder.exam} kind="exam" />
+      <Link
+        href={action.href}
+        className="inline-flex h-8 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition-colors hover:border-blue-200 hover:text-blue-600"
+      >
+        {action.label}
+        <ChevronRight className="size-3.5" />
+      </Link>
+    </div>
   );
 }
 
-function ListSkeleton({ title }: { title: string }) {
+function FolderCell({
+  snapshot,
+  kind,
+}: {
+  snapshot?: CollectionSnapshot;
+  kind: FolderKind;
+}) {
+  const meta = folderMeta[kind];
+  if (!snapshot) {
+    return <span className="text-[12px] text-slate-300">없음</span>;
+  }
+
   return (
-    <Card className="border border-gray-200/80">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold text-gray-900">
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2.5">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-lg" />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+    <Link
+      href={snapshot.href}
+      className={cn(
+        "inline-flex h-8 w-fit max-w-[104px] items-center gap-1.5 rounded-md border px-2.5 text-[12px] font-semibold transition-colors hover:bg-white",
+        meta.chipClass
+      )}
+    >
+      <FolderOpen className="size-3.5 shrink-0" />
+      <span className="truncate">{formatNumber(snapshot.items)}개</span>
+    </Link>
   );
+}
+
+function getFolderNextAction(folder: UnifiedFolder) {
+  if (!folder.passage) {
+    return { label: "자료 추출", href: "/director/workbench/passages/import" };
+  }
+  if (!folder.question) {
+    return { label: "문제 생성", href: "/director/workbench/generate" };
+  }
+  if (!folder.exam) {
+    return { label: "시험지 구성", href: "/director/exams/create" };
+  }
+  return { label: "DOCX 내보내기", href: "/director/exams" };
+}
+
+function ActionQueue({
+  items,
+  recentJobs,
+}: {
+  items: {
+    title: string;
+    count: number;
+    href: string;
+    icon: LucideIcon;
+    tone: "blue" | "sky" | "cyan";
+  }[];
+  recentJobs: DashboardData["recentExtractionJobs"];
+}) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
+      <div className="flex items-center gap-2">
+        <AlertCircle className="size-4 text-slate-500" />
+        <h2 className="text-[16px] font-bold text-slate-900">이어 할 작업</h2>
+      </div>
+      <div className="mt-4 grid grid-cols-1 gap-2">
+        {items.map((item) => (
+          <QueueLink key={item.title} {...item} />
+        ))}
+      </div>
+      <div className="mt-5 border-t border-slate-100 pt-4">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-slate-400">
+            최근 추출
+          </p>
+          <Link
+            href="/director/workbench/passages/import"
+            className="text-[12px] font-semibold text-blue-600 hover:text-blue-700"
+          >
+            새 추출
+          </Link>
+        </div>
+        <div className="space-y-2">
+          {recentJobs.length > 0 ? (
+            recentJobs.slice(0, 3).map((job) => <ExtractionJobRow key={job.id} job={job} />)
+          ) : (
+            <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-5 text-center text-[13px] text-slate-400">
+              추출 작업이 아직 없습니다.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QueueLink({
+  title,
+  count,
+  href,
+  icon: Icon,
+  tone,
+}: {
+  title: string;
+  count: number;
+  href: string;
+  icon: LucideIcon;
+  tone: "blue" | "sky" | "cyan";
+}) {
+  const toneClass = {
+    blue: "bg-blue-50 text-blue-600",
+    sky: "bg-sky-50 text-sky-600",
+    cyan: "bg-cyan-50 text-cyan-600",
+  }[tone];
+
+  return (
+    <Link
+      href={href}
+      className="group flex items-center justify-between rounded-md border border-slate-100 bg-slate-50/80 px-3 py-3 transition-colors hover:border-blue-200 hover:bg-white"
+    >
+      <div className="flex min-w-0 items-center gap-3">
+        <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-md", toneClass)}>
+          <Icon className="size-4" />
+        </div>
+        <span className="truncate text-[13px] font-semibold text-slate-700">{title}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-[16px] font-bold tabular-nums text-slate-900">
+          {formatNumber(count)}
+        </span>
+        <ChevronRight className="size-4 text-slate-300 transition-colors group-hover:text-blue-500" />
+      </div>
+    </Link>
+  );
+}
+
+function ExtractionJobRow({ job }: { job: DashboardData["recentExtractionJobs"][number] }) {
+  const status = getExtractionStatus(job.status);
+  const progress = job.totalPages > 0 ? Math.round((job.successPages / job.totalPages) * 100) : 0;
+
+  return (
+    <div className="rounded-md border border-slate-100 px-3 py-2.5">
+      <div className="flex items-center justify-between gap-3">
+        <p className="min-w-0 truncate text-[13px] font-semibold text-slate-700">
+          {job.originalFileName || `${job.sourceType} 추출`}
+        </p>
+        <span className={cn("shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-semibold", status.className)}>
+          {status.label}
+        </span>
+      </div>
+      <div className="mt-2 flex items-center gap-2">
+        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+          <div className={cn("h-full rounded-full", status.barClass)} style={{ width: `${progress}%` }} />
+        </div>
+        <span className="text-[11px] tabular-nums text-slate-400">
+          {job.successPages}/{job.totalPages}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function getExtractionStatus(status: string) {
+  switch (status) {
+    case "COMPLETED":
+      return {
+        label: "완료",
+        className: "bg-blue-50 text-blue-700",
+        barClass: "bg-blue-500",
+      };
+    case "PARTIAL":
+      return {
+        label: "부분 완료",
+        className: "bg-sky-50 text-sky-700",
+        barClass: "bg-sky-500",
+      };
+    case "FAILED":
+      return {
+        label: "실패",
+        className: "bg-red-50 text-red-700",
+        barClass: "bg-red-500",
+      };
+    case "PROCESSING":
+      return {
+        label: "진행 중",
+        className: "bg-blue-50 text-blue-700",
+        barClass: "bg-blue-500",
+      };
+    case "CANCELLED":
+      return {
+        label: "취소",
+        className: "bg-slate-100 text-slate-500",
+        barClass: "bg-slate-400",
+      };
+    default:
+      return {
+        label: "대기",
+        className: "bg-slate-100 text-slate-600",
+        barClass: "bg-slate-400",
+      };
+  }
+}
+
+function FolderLane({
+  kind,
+  folders,
+  unfiledCount,
+}: {
+  kind: FolderKind;
+  folders: CollectionSnapshot[];
+  unfiledCount: number;
+}) {
+  const meta = folderMeta[kind];
+  const Icon = meta.icon;
+  const topFolders = folders.slice(0, 5);
+
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-card">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-md", meta.iconClass)}>
+            <Icon className="size-4" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="truncate text-[15px] font-bold text-slate-900">{meta.label} 폴더</h3>
+            <p className="text-[12px] text-slate-400">
+              {formatNumber(folders.length)}개 폴더
+            </p>
+          </div>
+        </div>
+        <Button asChild variant="outline" size="sm" className="h-8 rounded-md bg-white">
+          <Link href={meta.href}>열기</Link>
+        </Button>
+      </div>
+      <div className="mt-4 space-y-2">
+        {topFolders.length > 0 ? (
+          topFolders.map((folder) => (
+            <Link
+              href={folder.href}
+              key={folder.id}
+              className="flex items-center justify-between gap-3 rounded-md border border-slate-100 bg-slate-50/70 px-3 py-2.5 transition-colors hover:border-blue-200 hover:bg-white"
+            >
+              <div className="min-w-0">
+                <p className="truncate text-[13px] font-semibold text-slate-700">{folder.name}</p>
+                <p className="mt-0.5 text-[11px] text-slate-400">
+                  하위 폴더 {formatNumber(folder.children)}개
+                </p>
+              </div>
+              <span className="shrink-0 text-[13px] font-bold tabular-nums text-slate-800">
+                {formatNumber(folder.items)}
+              </span>
+            </Link>
+          ))
+        ) : (
+          <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-8 text-center text-[13px] text-slate-400">
+            폴더 없음
+          </div>
+        )}
+      </div>
+      <Link
+        href={meta.href}
+        className="mt-3 flex items-center justify-between rounded-md border border-dashed border-slate-200 px-3 py-2 text-[12px] font-semibold text-slate-500 hover:border-blue-200 hover:text-blue-600"
+      >
+        <span>미분류 {meta.label}</span>
+        <span className="tabular-nums">{formatNumber(unfiledCount)}개</span>
+      </Link>
+    </div>
+  );
+}
+
+function RecentSourceMaterials({
+  items,
+}: {
+  items: DashboardData["recent"]["sourceMaterials"];
+}) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Database className="size-4 text-slate-500" />
+          <h2 className="text-[16px] font-bold text-slate-900">최근 원본 자료</h2>
+        </div>
+        <Button asChild variant="outline" size="sm" className="h-8 rounded-md bg-white">
+          <Link href="/director/workbench/passages/import">추출</Link>
+        </Button>
+      </div>
+      <div className="mt-4 divide-y divide-slate-100">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <div key={item.id} className="flex items-center justify-between gap-3 py-3">
+              <div className="min-w-0">
+                <p className="truncate text-[14px] font-semibold text-slate-800">{item.title}</p>
+                <p className="mt-1 truncate text-[12px] text-slate-400">
+                  {[item.year, item.round, item.grade ? `${item.grade}학년` : null, item.type]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-1.5">
+                <MiniCount label="지문" value={item._count.passages} />
+                <MiniCount label="문제" value={item._count.questions} />
+                <MiniCount label="시험" value={item._count.exams} />
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="flex min-h-[190px] items-center justify-center rounded-md border border-dashed border-slate-200 bg-slate-50 text-[13px] text-slate-400">
+            등록된 원본 자료가 없습니다.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MiniCount({ label, value }: { label: string; value: number }) {
+  return (
+    <span className="inline-flex min-w-12 flex-col items-center rounded-md bg-slate-50 px-2 py-1">
+      <span className="text-[10px] font-medium text-slate-400">{label}</span>
+      <span className="text-[12px] font-bold tabular-nums text-slate-700">{formatNumber(value)}</span>
+    </span>
+  );
+}
+
+function RecentContentPanel({ data }: { data: DashboardData["recent"] }) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
+      <div className="flex items-center gap-2">
+        <Layers className="size-4 text-slate-500" />
+        <h2 className="text-[16px] font-bold text-slate-900">최근 콘텐츠 흐름</h2>
+      </div>
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <RecentColumn
+          title="지문"
+          href="/director/workbench/passages"
+          icon={FileText}
+          rows={data.passages.map((item) => ({
+            id: item.id,
+            href: `/director/workbench/passages/${item.id}`,
+            title: item.title,
+            meta: item.analysis ? `분석 완료 · 문제 ${item._count.questions}개` : "분석 대기",
+            badge: item._count.notes > 0 ? `필기 ${item._count.notes}` : undefined,
+            muted: !item.analysis,
+          }))}
+        />
+        <RecentColumn
+          title="문제"
+          href="/director/questions"
+          icon={ListChecks}
+          rows={data.questions.map((item) => ({
+            id: item.id,
+            href: `/director/questions/${item.id}`,
+            title: cleanQuestionPreview(item.questionText),
+            meta: item.passage?.title || item.type,
+            badge: item.approved ? "검수 완료" : "검수 대기",
+            muted: !item.approved,
+          }))}
+        />
+        <RecentColumn
+          title="시험지"
+          href="/director/exams"
+          icon={GraduationCap}
+          rows={data.exams.map((item) => ({
+            id: item.id,
+            href: `/director/exams/${item.id}`,
+            title: item.title,
+            meta: `${item.status} · 문제 ${item._count.questions}개`,
+            badge: item._count.questions > 0 ? "DOCX 가능" : undefined,
+            muted: item._count.questions === 0,
+          }))}
+        />
+      </div>
+    </div>
+  );
+}
+
+function RecentColumn({
+  title,
+  href,
+  icon: Icon,
+  rows,
+}: {
+  title: string;
+  href: string;
+  icon: LucideIcon;
+  rows: { id: string; href: string; title: string; meta: string; badge?: string; muted?: boolean }[];
+}) {
+  return (
+    <div className="min-w-0">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <Icon className="size-3.5 text-slate-400" />
+          <p className="text-[13px] font-bold text-slate-700">{title}</p>
+        </div>
+        <Link href={href} className="text-[12px] font-semibold text-blue-600 hover:text-blue-700">
+          전체
+        </Link>
+      </div>
+      <div className="space-y-2">
+        {rows.length > 0 ? (
+          rows.slice(0, 4).map((row) => (
+            <Link
+              key={row.id}
+              href={row.href}
+              className="block rounded-md border border-slate-100 bg-slate-50/70 px-3 py-2.5 transition-colors hover:border-blue-200 hover:bg-white"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <p className="min-w-0 truncate text-[13px] font-semibold text-slate-800">
+                  {row.title}
+                </p>
+                {row.badge ? (
+                  <span
+                    className={cn(
+                      "shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-semibold",
+                      row.muted ? "bg-slate-100 text-slate-500" : "bg-blue-50 text-blue-700"
+                    )}
+                  >
+                    {row.badge}
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-1 truncate text-[11px] text-slate-400">{row.meta}</p>
+            </Link>
+          ))
+        ) : (
+          <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-8 text-center text-[13px] text-slate-400">
+            항목 없음
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function cleanQuestionPreview(text: string) {
+  return text.replace(/\s+/g, " ").trim().slice(0, 80) || "문제 본문 없음";
 }

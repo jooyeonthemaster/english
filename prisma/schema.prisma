@@ -72,17 +72,21 @@ model Academy {
 /// Staff — Directors and Teachers
 /// role: "DIRECTOR" | "TEACHER"
 model Staff {
-  id        String   @id @default(cuid())
-  academyId String
-  email     String   @unique
-  password  String
-  name      String
-  phone     String?
-  role      String   @default("TEACHER") // "DIRECTOR" | "TEACHER"
-  avatarUrl String?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String    @id @default(cuid())
+  academyId       String
+  email           String    @unique
+  password        String
+  name            String
+  phone           String?
+  role            String    @default("TEACHER") // "DIRECTOR" | "TEACHER"
+  avatarUrl       String?
+  isActive        Boolean   @default(true)
+  supabaseUserId  String?   @unique @map("supabase_user_id") @db.Uuid
+  kakaoId         String?   @unique @map("kakao_id")
+  authProvider    String?   @map("auth_provider") // credentials | google | kakao
+  lastLoginAt     DateTime? @map("last_login_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
   academy                Academy           @relation(fields: [academyId], references: [id])

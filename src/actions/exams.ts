@@ -11,6 +11,7 @@ export interface ExamFilters {
   type?: string;
   status?: string;
   classId?: string;
+  collectionId?: string;
   dateFrom?: string;
   dateTo?: string;
   search?: string;
@@ -139,6 +140,9 @@ export async function getExams(academyId: string, filters?: ExamFilters) {
   if (filters?.type && filters.type !== "ALL") where.type = filters.type;
   if (filters?.status && filters.status !== "ALL") where.status = filters.status;
   if (filters?.classId) where.classId = filters.classId;
+  if (filters?.collectionId) {
+    where.collectionItems = { some: { collectionId: filters.collectionId } };
+  }
   if (filters?.search) {
     where.title = { contains: filters.search, mode: "insensitive" };
   }

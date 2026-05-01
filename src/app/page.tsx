@@ -8,10 +8,12 @@ import { FolderScene } from "@/components/landing/folder-scene";
 import { ApplicationScene } from "@/components/landing/application-scene";
 import { CtaScene } from "@/components/landing/cta-scene";
 import { StickyCreditBar } from "@/components/landing/sticky-credit-bar";
+import { LandingHeader } from "@/components/landing/landing-header";
 
 export default function RootPage() {
   return (
     <main className="w-full overflow-x-hidden bg-white text-gray-900 selection:bg-[#3B82F6] selection:text-white font-sans antialiased">
+      <LandingHeader />
       <HeroScene />
       <div id="section-annotation" className="w-full">
         <AnnotationScene />

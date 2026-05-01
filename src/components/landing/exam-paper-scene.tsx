@@ -1,16 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { EXAM_QUESTIONS } from "./shared/mock-data";
-import { useReducedMotionPref } from "./shared/use-typewriter";
 
 export function ExamPaperScene() {
-  const reduced = useReducedMotionPref();
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const tilt = useTransform(scrollYProgress, [0, 0.5, 1], [5, 0, -5]);
-  const yShift = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
     <section ref={ref} id="paper" className="relative w-full min-h-screen bg-[#EFF6FF] py-24 lg:py-32 overflow-hidden border-t border-blue-100">
