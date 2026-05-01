@@ -53,7 +53,7 @@ export function ExamPaperScene() {
           </h2>
           <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium">
             아무리 문제가 좋아도 결국 학원 포맷에 맞춰 편집해야 한다면 반쪽짜리입니다. <br/>
-            NARA는 생성된 모든 문항을 폰트, 여백, 문항 간격, 표지 양식까지 완벽하게 조판하여 
+            영신ai는 생성된 모든 문항을 폰트, 여백, 문항 간격, 표지 양식까지 완벽하게 조판하여
             <strong className="text-[#1E3A8A] font-bold"> 즉시 인쇄하고 편집할 수 있는 Word(.docx) 파일 형태로 제공</strong>합니다.
           </p>
 

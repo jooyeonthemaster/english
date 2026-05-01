@@ -45,11 +45,11 @@ export function LandingHeader() {
         >
           <Link href="/" className="group flex items-center gap-2.5">
             <span className="flex size-9 items-center justify-center rounded-2xl bg-slate-950 text-[13px] font-black text-white shadow-[0_16px_32px_-22px_rgba(15,23,42,0.8)] transition group-hover:bg-blue-600">
-              N
+              영
             </span>
             <span className="flex flex-col leading-none">
               <span className="text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
-                NARA
+                영신ai
               </span>
               <span className="hidden text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 sm:block">
                 English AI Workbench

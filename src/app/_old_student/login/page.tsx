@@ -59,7 +59,7 @@ export default function LoginPage() {
         <div className="pointer-events-none absolute top-12 left-10 size-14 rounded-full border border-[#AED581]/8" />
         <div className="pointer-events-none absolute bottom-6 left-1/3 size-6 rounded-lg bg-[#AED581]/6 rotate-45" />
 
-        {/* NARA branding */}
+        {/* 영신ai branding */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,7 +67,7 @@ export default function LoginPage() {
           className="relative z-10 px-5 pt-10"
         >
           <span className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#7CB342]">
-            NARA
+            영신ai
           </span>
         </motion.div>
 

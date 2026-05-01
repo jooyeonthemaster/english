@@ -130,7 +130,7 @@ export function ComingSoonOverlay({ feature, label, children }: ComingSoonOverla
           <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.2em] text-sky-700">
             <span
               className="size-1.5 rounded-full bg-sky-500"
-              style={{ animation: "nara-pulse 1.6s ease-in-out infinite" }}
+              style={{ animation: "yshin-pulse 1.6s ease-in-out infinite" }}
             />
             Coming Soon
           </div>

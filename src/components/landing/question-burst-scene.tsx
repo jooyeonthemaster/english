@@ -86,7 +86,7 @@ export function QuestionBurstScene() {
             단순 변형이 아닙니다. 사전에 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">철저하게 분석된 출제 포인트</span>를 기반으로 문제를 생성합니다.
           </h2>
           <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl">
-            흔한 자동 생성기와 다릅니다. 선생님이 설계한 의도와 NARA가 딥다이브한 분석 결과를 바탕으로, 
+            흔한 자동 생성기와 다릅니다. 선생님이 설계한 의도와 영신ai가 딥다이브한 분석 결과를 바탕으로,
             실제 내신과 수능에 직결되는 고퀄리티 문항을 단 1초 만에 <strong className="text-gray-900 font-bold">19개 전 유형</strong>으로 폭발적으로 생성합니다.
           </p>
         </div>

@@ -53,7 +53,7 @@ const NAV_ITEMS = [
   { label: "설정", icon: Settings, href: "/admin/settings" },
 ];
 
-const SIDEBAR_STORAGE_KEY = "nara-admin-sidebar-collapsed";
+const SIDEBAR_STORAGE_KEY = "yshin-admin-sidebar-collapsed";
 
 export function SuperAdminShell({ children, admin }: AdminShellProps) {
   const pathname = usePathname();
@@ -135,7 +135,7 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
               <Shield className="size-5 text-blue-400" strokeWidth={2} />
               {!collapsed && (
                 <span className="font-bold text-white tracking-tight text-[18px]">
-                  NARA
+                  영신ai
                   <span className="text-[10px] text-slate-400 font-medium tracking-widest uppercase ml-1.5">
                     admin
                   </span>

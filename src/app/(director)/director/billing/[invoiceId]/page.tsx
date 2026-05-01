@@ -3,7 +3,7 @@ import { getInvoice } from "@/actions/billing";
 import { InvoiceDetailClient } from "./invoice-detail-client";
 
 export const metadata = {
-  title: "청구서 상세 | NARA",
+  title: "청구서 상세 | 영신ai",
 };
 
 interface PageProps {

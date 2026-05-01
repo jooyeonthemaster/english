@@ -15,7 +15,7 @@ const ADMIN_JWT_SECRET = (() => {
   }
   return new TextEncoder().encode(secret);
 })();
-const COOKIE_NAME = "nara-admin-session";
+const COOKIE_NAME = "yshin-admin-session";
 const TOKEN_EXPIRY = "7d";
 
 interface AdminTokenPayload extends JWTPayload {

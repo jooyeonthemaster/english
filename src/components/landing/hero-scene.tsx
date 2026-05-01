@@ -135,35 +135,35 @@ function ProductDashboard() {
   return (
     <div className="relative mx-auto w-full max-w-[1080px]">
       <style>{`
-        @keyframes nara-dashboard-float {
+        @keyframes yshin-dashboard-float {
           0%, 100% { transform: translateY(0) rotateX(14deg) rotateY(-10deg) rotateZ(4deg); }
           50% { transform: translateY(-12px) rotateX(16deg) rotateY(-12deg) rotateZ(5deg); }
         }
 
-        @keyframes nara-scan-line {
+        @keyframes yshin-scan-line {
           0% { transform: translateX(-110%); opacity: 0; }
           12% { opacity: 1; }
           88% { opacity: 1; }
           100% { transform: translateX(110%); opacity: 0; }
         }
 
-        .nara-dashboard-float {
-          animation: nara-dashboard-float 8s ease-in-out infinite;
+        .yshin-dashboard-float {
+          animation: yshin-dashboard-float 8s ease-in-out infinite;
         }
 
-        .nara-scan-line {
-          animation: nara-scan-line 3.6s ease-in-out infinite;
+        .yshin-scan-line {
+          animation: yshin-scan-line 3.6s ease-in-out infinite;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .nara-dashboard-float,
-          .nara-scan-line {
+          .yshin-dashboard-float,
+          .yshin-scan-line {
             animation: none !important;
           }
         }
       `}</style>
 
-      <div className="nara-dashboard-float relative w-full transform-gpu" style={{ transformStyle: "preserve-3d" }}>
+      <div className="yshin-dashboard-float relative w-full transform-gpu" style={{ transformStyle: "preserve-3d" }}>
         <FloatingBadge
           className="-left-10 top-12"
           icon={ScanText}
@@ -194,7 +194,7 @@ function ProductDashboard() {
               <span className="size-2.5 rounded-full bg-amber-300" />
               <span className="size-2.5 rounded-full bg-emerald-300" />
               <span className="ml-3 hidden rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black text-slate-500 sm:block">
-                nara.ai/workbench
+                youngshin.ai/workbench
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -212,9 +212,9 @@ function ProductDashboard() {
             <aside className="border-r border-slate-100 bg-white px-3 py-4 sm:px-4">
               <div className="mb-5 flex items-center gap-2">
                 <span className="flex size-8 items-center justify-center rounded-xl bg-slate-950 text-[12px] font-black text-white">
-                  N
+                  영
                 </span>
-                <span className="hidden text-[13px] font-black text-slate-950 sm:block">NARA</span>
+                <span className="hidden text-[13px] font-black text-slate-950 sm:block">영신ai</span>
               </div>
               <div className="space-y-2">
                 {["지문 분석", "문항 생성", "시험지", "보관함"].map((item, index) => (
@@ -237,7 +237,7 @@ function ProductDashboard() {
             </aside>
 
             <main className="relative min-w-0 overflow-hidden p-3 sm:p-5 lg:p-6">
-              <div className="nara-scan-line pointer-events-none absolute left-0 top-[92px] h-px w-full bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+              <div className="yshin-scan-line pointer-events-none absolute left-0 top-[92px] h-px w-full bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
 
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -380,7 +380,7 @@ export function HeroScene() {
           <h1 className="text-4xl font-black leading-[1.15] tracking-tight text-slate-950 sm:text-5xl lg:text-7xl drop-shadow-sm">
             지문 분석부터 시험지까지,
             <br className="hidden sm:block" />
-            <span className="text-blue-600">NARA가 한 번에 완성</span>합니다
+            <span className="text-blue-600">영신ai가 한 번에 완성</span>합니다
           </h1>
 
           <p className="mx-auto mt-5 max-w-[760px] text-[15px] font-semibold leading-7 text-slate-600 sm:text-[17px]">

@@ -28,7 +28,7 @@ function slugify(name: string): string {
     .replace(/^-+|-+$/g, "")
     .slice(0, 32);
   const suffix = randomBytes(3).toString("hex");
-  return base ? `${base}-${suffix}` : `nara-${suffix}`;
+  return base ? `${base}-${suffix}` : `yshin-${suffix}`;
 }
 
 export async function POST(request: NextRequest) {

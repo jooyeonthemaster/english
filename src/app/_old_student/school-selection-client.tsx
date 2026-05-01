@@ -82,7 +82,7 @@ export function SchoolSelectionClient({ schools }: SchoolSelectionClientProps) {
             className="relative flex size-[56px] shrink-0 items-center justify-center rounded-full overflow-hidden border border-[#E5E7E0]/60 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] bg-white"
           >
             <img
-              src="https://api.dicebear.com/7.x/notionists/svg?seed=NaraStudent&backgroundColor=f2f2f7"
+              src="https://api.dicebear.com/7.x/notionists/svg?seed=YshinStudent&backgroundColor=f2f2f7"
               alt="Profile"
               className="size-full object-cover"
             />

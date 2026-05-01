@@ -69,25 +69,25 @@ export function StickyCreditBar() {
   return (
     <>
       <style>{`
-        @keyframes nara-sticky-slide-up {
+        @keyframes yshin-sticky-slide-up {
           from { transform: translateY(100%); }
           to   { transform: translateY(0); }
         }
-        @keyframes nara-red-flash {
+        @keyframes yshin-red-flash {
           0%, 100% { background-color: #EF4444; color: white; transform: scale(1); }
           50% { background-color: #DC2626; color: #FEF2F2; transform: scale(1.02); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .nara-sticky-root { animation: none !important; }
-          .nara-red-flash { animation: none !important; }
+          .yshin-sticky-root { animation: none !important; }
+          .yshin-red-flash { animation: none !important; }
         }
       `}</style>
 
       {shown && (
         <div
-          className="nara-sticky-root fixed bottom-0 left-0 right-0 z-50 w-full bg-[#EF4444]"
+          className="yshin-sticky-root fixed bottom-0 left-0 right-0 z-50 w-full bg-[#EF4444]"
           style={{
-            animation: "nara-sticky-slide-up 300ms ease-out both",
+            animation: "yshin-sticky-slide-up 300ms ease-out both",
             boxShadow: "0 -10px 40px rgba(239,68,68,0.4)",
           }}
         >
@@ -110,7 +110,7 @@ export function StickyCreditBar() {
               <a
                 href="#apply"
                 onClick={scrollToApply}
-                className="nara-red-flash inline-flex items-center justify-center h-14 px-8 rounded-full bg-yellow-400 text-red-900 font-black text-[16px] shadow-[0_5px_15px_rgba(0,0,0,0.3)] transition-all hover:bg-yellow-300 border-2 border-yellow-300"
+                className="yshin-red-flash inline-flex items-center justify-center h-14 px-8 rounded-full bg-yellow-400 text-red-900 font-black text-[16px] shadow-[0_5px_15px_rgba(0,0,0,0.3)] transition-all hover:bg-yellow-300 border-2 border-yellow-300"
               >
                 지금 사전 예약하기 →
               </a>

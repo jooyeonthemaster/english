@@ -14,8 +14,8 @@ interface Props {
   initialCreditBalance: number;
 }
 
-const LAST_MODE_KEY = "nara-last-extraction-mode";
-const SKIP_KEY = "nara-extraction-skip-mode-select";
+const LAST_MODE_KEY = "yshin-last-extraction-mode";
+const SKIP_KEY = "yshin-extraction-skip-mode-select";
 
 // `useSyncExternalStore` subscribes to `storage` events so we can read
 // localStorage in a SSR-safe, lint-clean way (no `setState`-in-effect).

@@ -49,7 +49,7 @@ interface AdminShellProps {
   basePath: "/director" | "/teacher";
 }
 
-const SIDEBAR_STORAGE_KEY = "nara-sidebar-collapsed";
+const SIDEBAR_STORAGE_KEY = "yshin-sidebar-collapsed";
 
 export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const pathname = usePathname();
@@ -163,7 +163,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 "font-bold text-gray-900 tracking-tight transition-all duration-300",
                 collapsed ? "text-[18px]" : "text-[20px]"
               )}>
-                NARA
+                영신ai
               </span>
               {!collapsed && (
                 <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">
@@ -199,7 +199,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                         </span>
                         <span
                           className="size-1.5 rounded-full bg-sky-500"
-                          style={{ animation: "nara-pulse 1.6s ease-in-out infinite" }}
+                          style={{ animation: "yshin-pulse 1.6s ease-in-out infinite" }}
                         />
                       </>
                     ) : (

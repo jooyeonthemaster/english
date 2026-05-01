@@ -286,7 +286,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-extrabold tracking-tight text-slate-900">NARA</span>
+                <span className="text-lg font-extrabold tracking-tight text-slate-900">영신ai</span>
                 <span className="text-[8px] font-bold text-blue-500 tracking-[0.3em] uppercase -mt-0.5">A.I. SYSTEM</span>
               </div>
             </div>

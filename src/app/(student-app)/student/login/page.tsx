@@ -97,7 +97,7 @@ export default function StudentLoginPage() {
               </div>
               <div className="flex flex-col">
                 <span className="text-3xl font-extrabold tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors duration-300">
-                  NARA
+                  영신ai
                 </span>
                 <span className="text-[10px] font-bold text-emerald-500 tracking-[0.3em] uppercase opacity-90 mt-0.5">
                   STUDENT AI

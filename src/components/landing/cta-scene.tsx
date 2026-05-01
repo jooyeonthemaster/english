@@ -63,7 +63,7 @@ export function CtaScene() {
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-baseline gap-3">
             <span className="text-gray-900 font-black text-base tracking-widest">
-              NARA
+              영신ai
             </span>
             <span className="text-gray-500 text-sm font-bold">
               Intelligent English Authoring
@@ -72,8 +72,8 @@ export function CtaScene() {
           <div className="text-gray-400 text-xs flex items-center gap-3 font-medium">
             <span>© 2026</span>
             <span aria-hidden>·</span>
-            <a href="mailto:support@nara.team" className="hover:text-gray-900 transition">
-              support@nara.team
+            <a href="mailto:support@youngshin.team" className="hover:text-gray-900 transition">
+              support@youngshin.team
             </a>
             <span aria-hidden>·</span>
             <Link href="/terms" className="hover:text-gray-900 transition">

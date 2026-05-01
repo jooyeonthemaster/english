@@ -3,7 +3,7 @@ import { getInvoices, getBillingSummary, getOverdueInvoices } from "@/actions/bi
 import { BillingDashboardClient } from "./billing-dashboard-client";
 
 export const metadata = {
-  title: "수납 관리 | NARA",
+  title: "수납 관리 | 영신ai",
 };
 
 interface PageProps {

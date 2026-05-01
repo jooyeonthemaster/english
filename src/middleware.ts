@@ -8,7 +8,7 @@ export default auth(async (req) => {
   const staffRole = (req.auth?.user as unknown as Record<string, unknown>)?.role as string | undefined;
 
   // =========================================================================
-  // Admin routes — require valid JWT in nara-admin-session cookie
+  // Admin routes — require valid JWT in yshin-admin-session cookie
   // =========================================================================
   if (pathname.startsWith("/admin")) {
     // Allow access to admin login page without auth
@@ -16,7 +16,7 @@ export default auth(async (req) => {
       return NextResponse.next();
     }
 
-    const adminSession = req.cookies.get("nara-admin-session");
+    const adminSession = req.cookies.get("yshin-admin-session");
     const adminLoginUrl = new URL("/admin/login", req.nextUrl.origin);
 
     // No cookie at all — redirect immediately

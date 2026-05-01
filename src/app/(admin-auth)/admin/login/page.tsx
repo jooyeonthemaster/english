@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
             <Shield className="size-6 text-blue-400" strokeWidth={1.8} />
           </div>
           <h1 className="text-[22px] font-bold text-white tracking-tight">
-            NARA Admin
+            영신ai Admin
           </h1>
           <p className="text-[13px] text-slate-500 mt-1">
             관리자 인증이 필요합니다

@@ -39,8 +39,8 @@ const ICON_MAP: Record<ModeIcon, LucideIcon> = {
   FilePlus2,
 };
 
-const LAST_MODE_KEY = "nara-last-extraction-mode";
-const SKIP_KEY = "nara-extraction-skip-mode-select";
+const LAST_MODE_KEY = "yshin-last-extraction-mode";
+const SKIP_KEY = "yshin-extraction-skip-mode-select";
 
 // Subscribe to the `storage` event so cross-tab changes trickle through.
 function subscribeToStorage(callback: () => void) {

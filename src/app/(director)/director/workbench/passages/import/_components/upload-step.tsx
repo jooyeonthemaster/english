@@ -42,7 +42,7 @@ const MODE_ICON_MAP: Record<ModeIcon, LucideIcon> = {
   FilePlus2,
 };
 
-const LAST_MODE_KEY = "nara-last-extraction-mode";
+const LAST_MODE_KEY = "yshin-last-extraction-mode";
 
 export function UploadStep() {
   const phase = useExtractionStore((s) => s.phase);

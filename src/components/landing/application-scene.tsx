@@ -131,7 +131,7 @@ export function ApplicationScene() {
             letterSpacing: "-0.01em",
           }}
         >
-          지문 분석부터 시험지 출력까지 — NARA의 모든 기능을 5월 한 달간{" "}
+          지문 분석부터 시험지 출력까지 — 영신ai의 모든 기능을 5월 한 달간{" "}
           <strong className="font-black text-[#3B82F6]">100% 무료</strong>로 제한 없이 사용할 수 있는 기회입니다.
         </p>
 
@@ -174,7 +174,7 @@ export function ApplicationScene() {
                     required
                     value={form.academyName}
                     onChange={(e) => update("academyName", e.target.value)}
-                    placeholder="예: 나라영어학원"
+                    placeholder="예: 영신영어학원"
                     className={inputCls}
                     autoComplete="organization"
                   />

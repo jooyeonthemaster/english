@@ -2,7 +2,7 @@ import { getSalaries } from "@/actions/finance";
 import { SalariesClient } from "./salaries-client";
 
 export const metadata = {
-  title: "급여 관리 | NARA",
+  title: "급여 관리 | 영신ai",
 };
 
 interface PageProps {

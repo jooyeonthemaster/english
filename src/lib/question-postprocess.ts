@@ -1,5 +1,5 @@
 // ============================================================================
-// NARA ERP — Question Post-Processing Engine
+// 영신ai ERP — Question Post-Processing Engine
 // ============================================================================
 // Takes AI's minimal output (no full passage text) and reconstructs the
 // passage fields that frontend renderers expect.

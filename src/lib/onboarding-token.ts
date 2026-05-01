@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 
-const ISSUER = "nara-onboarding";
-const AUDIENCE = "nara-onboarding-flow";
+const ISSUER = "yshin-onboarding";
+const AUDIENCE = "yshin-onboarding-flow";
 
 function getSecret() {
   const secret = process.env.NEXTAUTH_SECRET;

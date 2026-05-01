@@ -50,7 +50,7 @@ function renderHtml(p: RegistrationNotificationPayload): string {
 <body style="margin:0;padding:24px;background:#F1F5F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;">
   <div style="max-width:640px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E2E8F0;">
     <div style="padding:28px 32px;background:#3B82F6;color:#fff;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;opacity:0.85;">NARA · Free Credit Application</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;opacity:0.85;">영신ai · Free Credit Application</div>
       <div style="font-size:22px;font-weight:900;margin-top:8px;letter-spacing:-0.02em;">신규 사전예약 접수</div>
     </div>
     <table style="width:100%;border-collapse:collapse;">${rowsHtml}</table>
@@ -63,7 +63,7 @@ function renderHtml(p: RegistrationNotificationPayload): string {
 
 function renderText(p: RegistrationNotificationPayload): string {
   return [
-    "[NARA] 신규 사전예약 접수",
+    "[영신ai] 신규 사전예약 접수",
     "",
     `학원명:          ${p.academyName}`,
     `원장 성함:       ${p.directorName}`,
@@ -93,10 +93,10 @@ export async function sendRegistrationNotification(
 
   const resend = new Resend(apiKey);
 
-  const subject = `[NARA 사전예약] ${payload.academyName} · ${payload.directorName} (${payload.directorPhone})`;
+  const subject = `[영신ai 사전예약] ${payload.academyName} · ${payload.directorName} (${payload.directorPhone})`;
 
   const { error } = await resend.emails.send({
-    from: "NARA 사전예약 <onboarding@resend.dev>",
+    from: "영신ai 사전예약 <onboarding@resend.dev>",
     to: [to],
     replyTo: payload.directorEmail,
     subject,

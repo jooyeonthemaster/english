@@ -140,7 +140,7 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
             <div className="px-8 pt-10 pb-8">
               <div className="mb-8">
                 <h2 className="text-[26px] font-extrabold text-slate-900 tracking-tight leading-tight">
-                  NARA 로그인
+                  영신ai 로그인
                 </h2>
                 <p className="mt-2 text-[14px] text-slate-500">
                   학원 운영을 더 스마트하게.

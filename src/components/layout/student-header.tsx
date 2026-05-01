@@ -96,10 +96,10 @@ export function StudentHeader({
               {/* Academy logo placeholder + name */}
               <div className="flex items-center gap-[var(--sp-1)]">
                 <div className="w-[var(--icon-md)] h-[var(--icon-md)] rounded-md bg-[var(--erp-primary)] flex items-center justify-center">
-                  <span className="text-[var(--fs-caption)] font-black text-white leading-none">N</span>
+                  <span className="text-[var(--fs-caption)] font-black text-white leading-none">영</span>
                 </div>
                 <span className="text-[var(--fs-sm)] font-bold text-[var(--erp-text)] tracking-tight">
-                  {academyName || "NARA"}
+                  {academyName || "영신ai"}
                 </span>
               </div>
             </div>

@@ -177,7 +177,7 @@ function StaffLoginForm() {
               {/* Text */}
               <div className="flex flex-col">
                 <span className="text-3xl font-extrabold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-300">
-                  NARA
+                  영신ai
                 </span>
                 <span className="text-[10px] font-bold text-blue-500 tracking-[0.3em] uppercase opacity-90 mt-0.5">
                   A.I. SYSTEM
@@ -354,7 +354,7 @@ function StaffLoginForm() {
               <span className="text-[13px] font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">고객센터</span>
             </div>
             <p className="text-[12px] font-medium text-slate-400">
-              &copy; {new Date().getFullYear()} NARA Edutech. All rights reserved.
+              &copy; {new Date().getFullYear()} 영신ai Edutech. All rights reserved.
             </p>
           </motion.div>
         
