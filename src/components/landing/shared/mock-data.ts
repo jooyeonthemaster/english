@@ -193,6 +193,8 @@ export type QuestionSample = {
   blanks?: Array<{ label: string; value: string }>;
   // the correct answer — displayed on reveal (e.g., "②", "(A) focus, (B) shape")
   answer: string;
+  // Substrings of HERO_PASSAGE that this question type "extracts" — lights up live in the source panel
+  sourceTokens?: string[];
 };
 
 export const QUESTION_SAMPLES: QuestionSample[] = [
@@ -205,6 +207,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     given: "The most valuable currency in the digital age is ______.",
     options: ["attention", "memory", "wealth", "silence", "patience"],
     answer: "①",
+    sourceTokens: ["the most valuable currency", "attention"],
   },
   {
     no: "02",
@@ -215,6 +218,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     given: "Attention ①has become the currency ②were demanding ③what we ④engage with ⑤shapes us.",
     options: ["①has become", "②were demanding", "③what we", "④engage with", "⑤shapes us"],
     answer: "②",
+    sourceTokens: ["has become", "demands", "what we choose"],
   },
   {
     no: "03",
@@ -225,6 +229,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     given: "Every swipe ①demands focus, ②shaping habits and ③eroding our ④abundant ⑤patience daily.",
     options: ["①demands", "②shaping", "③eroding", "④abundant", "⑤patience"],
     answer: "④",
+    sourceTokens: ["every swipe", "demands", "consciousness"],
   },
   {
     no: "04",
@@ -240,6 +245,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     ],
     options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(A)-(C)", "(B)-(C)-(A)", "(C)-(A)-(B)"],
     answer: "①",
+    sourceTokens: ["In the digital age", "attention has become"],
   },
   {
     no: "05",
@@ -247,9 +253,10 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     category: "객관식",
     shape: "insert",
     stem: "주어진 문장이 들어가기에 가장 적절한 곳은?",
-    given: "⟪ But this abundance came at a hidden cost. ⟫",
+    given: "But this abundance came at a hidden cost.",
     options: ["①", "②", "③", "④", "⑤"],
     answer: "③",
+    sourceTokens: ["Every notification", "demands a fragment"],
   },
   {
     no: "06",
@@ -265,6 +272,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
       "현대인은 집중력을 완전히 잃었다.",
     ],
     answer: "①",
+    sourceTokens: ["shapes the architecture of our thinking"],
   },
   {
     no: "07",
@@ -280,6 +288,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
       "Shaping Thought with Tech",
     ],
     answer: "①",
+    sourceTokens: ["attention", "the most valuable currency"],
   },
   {
     no: "08",
@@ -290,6 +299,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     given: "Attention shapes thought, and losing it fractures the self.",
     options: ["attention", "thought", "self", "notification", "currency"],
     answer: "①",
+    sourceTokens: ["what we choose to engage with"],
   },
   {
     no: "09",
@@ -305,6 +315,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
       "디지털 환경은 집중을 분산시킨다.",
     ],
     answer: "④",
+    sourceTokens: ["demands a fragment of our consciousness"],
   },
   {
     no: "10",
@@ -320,6 +331,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
       "⑤집중 복원은 훈련이 필요하다.",
     ],
     answer: "④",
+    sourceTokens: ["the most valuable currency"],
   },
   {
     no: "11",
@@ -329,6 +341,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "[조건] however를 포함, 9~11단어로 영작하시오.",
     prompt: "그러나 주의력은 여전히 우리가 지켜야 할 통화이다.",
     answer: "However, attention is still a currency we must protect.",
+    sourceTokens: ["attention", "currency"],
   },
   {
     no: "12",
@@ -338,6 +351,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "주어진 문장을 수동태로 바꿔 쓰시오.",
     prompt: "People think that he is kind.",
     answer: "He is thought to be kind.",
+    sourceTokens: ["shapes the architecture"],
   },
   {
     no: "13",
@@ -347,6 +361,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "빈칸에 들어갈 한 단어를 본문에서 찾아 쓰시오.",
     prompt: "Attention has become the most valuable ______ of the digital age.",
     answer: "currency",
+    sourceTokens: ["the most valuable currency"],
   },
   {
     no: "14",
@@ -360,6 +375,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
       { label: "B", value: "shapes" },
     ],
     answer: "(A) choose · (B) shapes",
+    sourceTokens: ["what we choose to engage with shapes"],
   },
   {
     no: "15",
@@ -369,6 +385,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "주어진 단어를 바른 순서로 배열하시오.",
     chips: ["has", "attention", "currency", "become", "the", "most", "valuable"],
     answer: "attention has become the most valuable currency",
+    sourceTokens: ["attention has become the most valuable currency"],
   },
   {
     no: "16",
@@ -378,6 +395,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "밑줄 친 부분을 어법에 맞게 고쳐 쓰시오.",
     prompt: "Every notification demand a fragment of consciousness.",
     answer: "demand → demands",
+    sourceTokens: ["Every notification", "demands"],
   },
   {
     no: "17",
@@ -388,6 +406,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     given: "What we engage with shapes the architecture of our thinking.",
     options: ["forms", "breaks", "hides", "ignores", "copies"],
     answer: "①",
+    sourceTokens: ["shapes the architecture"],
   },
   {
     no: "18",
@@ -397,6 +416,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "attention의 동의어로 가장 적절한 것은?",
     options: ["focus", "absence", "noise", "silence", "escape"],
     answer: "①",
+    sourceTokens: ["attention"],
   },
   {
     no: "19",
@@ -406,6 +426,7 @@ export const QUESTION_SAMPLES: QuestionSample[] = [
     stem: "valuable의 반의어로 가장 적절한 것은?",
     options: ["priceless", "worthless", "precious", "treasured", "costly"],
     answer: "②",
+    sourceTokens: ["the most valuable currency"],
   },
 ];
 
