@@ -1,5 +1,6 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { revalidatePath } from "next/cache";
@@ -466,6 +467,18 @@ export async function getAcademyDetail(academyId: string) {
  * Manually adjust an academy's credit balance. Positive amount adds credits,
  * negative amount subtracts credits. Creates an audit trail transaction.
  */
+/**
+ * Adjust an academy's credit balance with race-safe overdraft detection and
+ * a guaranteed-coupled audit row. Mirrors `adjustMemberCredits` in
+ * src/actions/admin-members.ts; both must move together so neither becomes
+ * a TOCTOU sidedoor.
+ *
+ * Pre-2026-05 a naive read-then-write version of this lived here and was
+ * race-vulnerable. The new path uses raw `UPDATE/INSERT ... RETURNING` so
+ * `balanceAfter` is read out of the same statement that mutated the row,
+ * eliminating any window where concurrent writers can produce inconsistent
+ * audit snapshots.
+ */
 export async function adjustCredits(
   academyId: string,
   amount: number,
@@ -473,64 +486,100 @@ export async function adjustCredits(
 ): Promise<ActionResult> {
   const admin = await requireAdminAuth("SUPER_ADMIN");
 
-  if (amount === 0) {
-    return { success: false, error: "Adjustment amount cannot be zero" };
+  if (!Number.isInteger(amount) || amount === 0) {
+    return { success: false, error: "Adjustment amount must be a non-zero integer" };
   }
-  if (!description.trim()) {
-    return { success: false, error: "Description is required for credit adjustments" };
+  if (Math.abs(amount) > 1_000_000) {
+    return { success: false, error: "Adjustment amount exceeds 1,000,000" };
   }
+  const trimmed = description.trim();
+  if (trimmed.length < 5) {
+    return { success: false, error: "Description must be at least 5 characters" };
+  }
+
+  // Resolve plan's monthlyCredits — needed when initializing a CreditBalance
+  // row that doesn't yet exist (so the monthly reset job uses the right
+  // allocation).
+  const activeSub = await prisma.academySubscription.findFirst({
+    where: { academyId, status: { in: ["ACTIVE", "TRIAL"] } },
+    include: { plan: { select: { monthlyCredits: true } } },
+    orderBy: { createdAt: "desc" },
+  });
+  const planMonthlyCredits = activeSub?.plan.monthlyCredits ?? 0;
 
   try {
-    await prisma.$transaction(async (tx) => {
-      // Lock and fetch current balance
-      const balance = await tx.creditBalance.findUnique({
-        where: { academyId },
-      });
+    await prisma.$transaction(
+      async (tx) => {
+        let newBalance: number;
 
-      if (!balance) {
-        throw new Error(`Credit balance not found for academy ${academyId}`);
-      }
+        if (amount < 0) {
+          const decremented = await tx.$queryRaw<Array<{ balance: number }>>`
+            UPDATE credit_balances
+            SET balance = balance + ${amount}, "updatedAt" = NOW()
+            WHERE "academyId" = ${academyId}
+              AND balance >= ${-amount}
+            RETURNING balance
+          `;
+          if (decremented.length === 0) {
+            const exists = await tx.creditBalance.findUnique({
+              where: { academyId },
+              select: { id: true },
+            });
+            if (!exists) throw new Error("balance_not_initialized");
+            throw new Error("insufficient_balance");
+          }
+          newBalance = decremented[0].balance;
+        } else {
+          const upserted = await tx.$queryRaw<Array<{ balance: number }>>`
+            INSERT INTO credit_balances (id, "academyId", balance, "monthlyAllocation", "updatedAt")
+            VALUES (${crypto.randomUUID()}, ${academyId}, ${amount}, ${planMonthlyCredits}, NOW())
+            ON CONFLICT ("academyId") DO UPDATE
+              SET balance = credit_balances.balance + EXCLUDED.balance,
+                  "updatedAt" = NOW()
+            RETURNING balance
+          `;
+          if (upserted.length === 0) throw new Error("balance_upsert_failed");
+          newBalance = upserted[0].balance;
+        }
 
-      const newBalance = balance.balance + amount;
-      if (newBalance < 0) {
-        throw new Error(
-          `Adjustment would result in negative balance (current: ${balance.balance}, adjustment: ${amount})`,
-        );
-      }
-
-      // Update balance
-      await tx.creditBalance.update({
-        where: { academyId },
-        data: {
-          balance: newBalance,
-          totalAllocated: amount > 0 ? { increment: amount } : undefined,
-          totalConsumed: amount < 0 ? { increment: Math.abs(amount) } : undefined,
-          bonusCredits: amount > 0 ? { increment: amount } : undefined,
-        },
-      });
-
-      // Create audit transaction
-      await tx.creditTransaction.create({
-        data: {
-          academyId,
-          type: "ADJUSTMENT",
-          amount,
-          balanceAfter: newBalance,
-          description: description.trim(),
-          adminId: admin.adminId,
-        },
-      });
-    });
+        await tx.creditTransaction.create({
+          data: {
+            academyId,
+            type: "ADJUSTMENT",
+            amount,
+            balanceAfter: newBalance,
+            description: trimmed,
+            adminId: admin.adminId,
+            referenceType: "ADMIN_ADJUSTMENT",
+          },
+        });
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted,
+        timeout: 10_000,
+      },
+    );
 
     revalidatePath("/admin/academies");
     revalidatePath(`/admin/academies/${academyId}`);
+    revalidatePath("/admin/members");
 
     return { success: true };
   } catch (err) {
-    console.error("[adjustCredits] Error:", err);
+    const code = err instanceof Error ? err.message : "unknown_error";
+    if (code === "insufficient_balance") {
+      return { success: false, error: "Adjustment would result in negative balance" };
+    }
+    if (code === "balance_not_initialized") {
+      return {
+        success: false,
+        error: "Credit balance not initialized; run a positive adjustment first",
+      };
+    }
+    console.error("[adjustCredits] Error", { academyId, adminId: admin.adminId, err });
     return {
       success: false,
-      error: err instanceof Error ? err.message : "Failed to adjust credits",
+      error: "Failed to adjust credits. Please retry.",
     };
   }
 }
@@ -552,6 +601,7 @@ export async function getSystemStats() {
     pendingRegistrations,
     creditStats,
     recentTransactions,
+    directorProviderRows,
   ] = await Promise.all([
     prisma.academy.count(),
     prisma.academy.count({ where: { status: "ACTIVE" } }),
@@ -570,6 +620,11 @@ export async function getSystemStats() {
         createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
       },
     }),
+    prisma.staff.groupBy({
+      by: ["authProvider"],
+      where: { role: "DIRECTOR" },
+      _count: { _all: true },
+    }),
   ]);
 
   // Revenue estimate: sum of all subscription plan monthly prices for active subscriptions
@@ -581,6 +636,19 @@ export async function getSystemStats() {
     (sum, sub) => sum + sub.plan.monthlyPrice,
     0,
   );
+
+  // Director signup attribution. Kakao bypasses Supabase Auth (custom OAuth in
+  // /api/auth/kakao), so the canonical source is staff.authProvider, not
+  // auth.identities. Null = pre-OAuth seed data or credential-based imports.
+  const providerCounts = { google: 0, kakao: 0, other: 0 };
+  for (const row of directorProviderRows) {
+    const key = row.authProvider;
+    if (key === "google") providerCounts.google += row._count._all;
+    else if (key === "kakao") providerCounts.kakao += row._count._all;
+    else providerCounts.other += row._count._all;
+  }
+  const totalDirectors =
+    providerCounts.google + providerCounts.kakao + providerCounts.other;
 
   return {
     totalAcademies,
@@ -594,6 +662,12 @@ export async function getSystemStats() {
     totalCreditsConsumed: Math.abs(creditStats._sum.amount ?? 0),
     transactionsLast30Days: recentTransactions,
     estimatedMonthlyRevenue: monthlyRevenue,
+    directorsByProvider: {
+      total: totalDirectors,
+      google: providerCounts.google,
+      kakao: providerCounts.kakao,
+      other: providerCounts.other,
+    },
   };
 }
 

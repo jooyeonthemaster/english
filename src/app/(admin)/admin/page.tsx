@@ -7,7 +7,6 @@ import {
   Coins,
   TrendingUp,
   Clock,
-  Activity,
 } from "lucide-react";
 import {
   Table,
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatNumber, formatRelativeTime } from "@/lib/utils";
+import { DirectorProviderCard } from "@/components/admin/director-provider-card";
 
 function DashboardSkeleton() {
   return (
@@ -199,37 +199,7 @@ async function DashboardContent() {
           </div>
         </div>
 
-        {/* 요약 통계 */}
-        <div className="bg-white rounded-xl border border-gray-100">
-          <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-50">
-            <Activity className="size-4 text-gray-400" strokeWidth={1.8} />
-            <h3 className="text-[14px] font-semibold text-gray-800">
-              콘텐츠 현황
-            </h3>
-          </div>
-          <div className="p-5 space-y-3">
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">전체 지문</span>
-              <span className="font-semibold text-gray-800">{formatNumber(stats.totalPassages)}개</span>
-            </div>
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">전체 문제</span>
-              <span className="font-semibold text-gray-800">{formatNumber(stats.totalQuestions)}개</span>
-            </div>
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">전체 시험</span>
-              <span className="font-semibold text-gray-800">{formatNumber(stats.totalExams)}개</span>
-            </div>
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">전체 학생</span>
-              <span className="font-semibold text-gray-800">{formatNumber(stats.totalStudents)}명</span>
-            </div>
-            <div className="flex items-center justify-between text-[13px]">
-              <span className="text-gray-500">전체 직원</span>
-              <span className="font-semibold text-gray-800">{formatNumber(stats.totalStaff)}명</span>
-            </div>
-          </div>
-        </div>
+        <DirectorProviderCard stats={stats.directorsByProvider} />
       </div>
     </div>
   );

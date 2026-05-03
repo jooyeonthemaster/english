@@ -1555,8 +1555,34 @@ model SuperAdmin {
 
   reviewedRegistrations AcademyRegistration[] @relation("ReviewedBy")
   creditAdjustments     CreditTransaction[]   @relation("AdjustedBy")
+  auditLogs             AdminAuditLog[]       @relation("AuditedBy")
 
   @@map("super_admins")
+}
+
+/// AdminAuditLog — Append-only audit trail for non-credit admin actions
+/// (member toggle, plan change, etc.). Credit changes are already captured
+/// in CreditTransaction with adminId. This table covers everything else.
+/// targetType: "MEMBER" | "ACADEMY" | "SUBSCRIPTION" | ...
+/// action: "TOGGLE_ACTIVE" | "CHANGE_PLAN" | ...
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  adminId    String   @map("admin_id")
+  targetType String   @map("target_type")
+  targetId   String   @map("target_id")
+  action     String
+  reason     String?  @db.Text
+  beforeJson String?  @map("before_json") @db.Text // JSON snapshot
+  afterJson  String?  @map("after_json")  @db.Text // JSON snapshot
+  metadata   String?  @db.Text                     // JSON: extra context
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  admin SuperAdmin @relation("AuditedBy", fields: [adminId], references: [id])
+
+  @@index([targetType, targetId, createdAt])
+  @@index([adminId, createdAt])
+  @@index([action, createdAt])
+  @@map("admin_audit_logs")
 }
 
 // ============================================================================
