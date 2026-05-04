@@ -2,10 +2,12 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { verifySocialBridgeToken } from "@/lib/social-bridge";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
+      id: "credentials",
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -33,6 +35,44 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!isPasswordValid) {
           return null;
         }
+
+        await prisma.staff.update({
+          where: { id: staff.id },
+          data: { lastLoginAt: new Date(), authProvider: "credentials" },
+        });
+
+        return {
+          id: staff.id,
+          email: staff.email,
+          name: staff.name,
+          role: staff.role,
+          academyId: staff.academyId,
+          academyName: staff.academy.name,
+          academySlug: staff.academy.slug,
+        };
+      },
+    }),
+    Credentials({
+      id: "social-bridge",
+      name: "social-bridge",
+      credentials: {
+        bridgeToken: { label: "Bridge Token", type: "text" },
+      },
+      async authorize(credentials) {
+        const token = credentials?.bridgeToken as string | undefined;
+        if (!token) return null;
+
+        const payload = await verifySocialBridgeToken(token);
+        if (!payload) return null;
+
+        const staff = await prisma.staff.findUnique({
+          where: { id: payload.staffId },
+          include: { academy: true },
+        });
+
+        if (!staff || !staff.isActive) return null;
+        if (staff.email !== payload.email) return null;
+        if (staff.role !== "DIRECTOR") return null;
 
         return {
           id: staff.id,

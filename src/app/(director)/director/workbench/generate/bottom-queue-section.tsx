@@ -16,9 +16,9 @@ interface BottomQueueSectionProps {
   // Session queue
   sessionQueue: QueueItem[];
   filteredQueue: QueueItem[];
-  queueFilter: "all" | "unreviewed" | "reviewed" | "error";
-  setQueueFilter: (v: "all" | "unreviewed" | "reviewed" | "error") => void;
-  queueCounts: { generating: number; done: number; reviewed: number; error: number };
+  queueFilter: "all" | "error";
+  setQueueFilter: (v: "all" | "error") => void;
+  queueCounts: { generating: number; done: number; error: number };
   autoCount: number;
 
   // Saved questions
@@ -51,19 +51,20 @@ export function BottomQueueSection({
           <div>
             <div className="flex items-center gap-4 mb-3">
               <h3 className="text-[14px] font-bold text-slate-800">현재 세션</h3>
-              <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white border border-slate-200">
-                {(["all", "unreviewed", "reviewed", "error"] as const).map((f) => {
-                  const labels = { all: "전체", unreviewed: "미검토", reviewed: "저장됨", error: "오류" };
-                  const counts = { all: sessionQueue.length, unreviewed: queueCounts.done, reviewed: queueCounts.reviewed, error: queueCounts.error };
-                  if (f !== "all" && counts[f] === 0) return null;
-                  return (
-                    <button key={f} onClick={() => setQueueFilter(f)}
-                      className={`text-[11px] px-3 py-1.5 rounded-md font-semibold transition-all ${
-                        queueFilter === f ? "bg-teal-50 text-teal-700 shadow-sm" : "text-slate-400 hover:text-slate-600"
-                      }`}>{labels[f]} {counts[f]}</button>
-                  );
-                })}
-              </div>
+              {queueCounts.error > 0 && (
+                <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white border border-slate-200">
+                  {(["all", "error"] as const).map((f) => {
+                    const labels = { all: "전체", error: "오류" };
+                    const counts = { all: sessionQueue.length, error: queueCounts.error };
+                    return (
+                      <button key={f} onClick={() => setQueueFilter(f)}
+                        className={`text-[11px] px-3 py-1.5 rounded-md font-semibold transition-all ${
+                          queueFilter === f ? "bg-blue-50 text-blue-700 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                        }`}>{labels[f]} {counts[f]}</button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {filteredQueue.map((item) => {
@@ -72,17 +73,17 @@ export function BottomQueueSection({
                   const progressDone = Object.values(item.progress).filter(v => v === "done").length;
                   const progressTotal = Math.max(1, Object.keys(item.progress).length);
                   return (
-                    <div key={item.id} className="relative rounded-xl border border-teal-300 bg-white p-4 overflow-hidden">
-                      <div className="absolute -inset-px rounded-xl border-2 border-teal-400/40 animate-pulse pointer-events-none" />
-                      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-teal-100">
-                        <div className="h-full bg-gradient-to-r from-teal-400 to-teal-500 rounded-full transition-all duration-700"
+                    <div key={item.id} className="relative rounded-xl border border-blue-300 bg-white p-4 overflow-hidden">
+                      <div className="absolute -inset-px rounded-xl border-2 border-blue-400/40 animate-pulse pointer-events-none" />
+                      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-blue-100">
+                        <div className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-700"
                           style={{ width: `${Math.max(8, (progressDone / progressTotal) * 100)}%` }} />
                       </div>
                       <div className="flex items-center gap-3">
-                        <Loader2 className="w-5 h-5 animate-spin text-teal-500 shrink-0" />
+                        <Loader2 className="w-5 h-5 animate-spin text-blue-500 shrink-0" />
                         <div>
                           <h4 className="text-[13px] font-bold text-slate-800 truncate">{item.passageTitle}</h4>
-                          <span className="text-[11px] text-teal-500 font-medium">
+                          <span className="text-[11px] text-blue-500 font-medium">
                             {item.config.mode === "auto" ? `${autoCount}문제 생성 중...` : `${Object.values(item.config.typeCounts).reduce((a, b) => a + b, 0)}문제 생성 중...`}
                           </span>
                         </div>
@@ -119,7 +120,7 @@ export function BottomQueueSection({
                     difficulty: q.difficulty || "INTERMEDIATE",
                     tags: q.tags ? JSON.stringify(q.tags) : null,
                     aiGenerated: true,
-                    approved: item.status === "reviewed",
+                    approved: true,
                     createdAt: new Date(),
                     passage: { id: item.passageId, title: item.passageTitle, content: item.passageContent },
                     explanation: q.explanation ? {
@@ -131,7 +132,11 @@ export function BottomQueueSection({
                     structuredData: q,
                   };
                   return (
-                    <div key={`${item.id}-${qi}`} onClick={() => setDetailQuestion(cardItem)} className="cursor-pointer">
+                    <div key={`${item.id}-${qi}`} onClick={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (target.closest('button') || target.closest('a') || target.closest('input')) return;
+                      setDetailQuestion(cardItem);
+                    }} className="cursor-pointer">
                       <QuestionCard q={cardItem} num={qi + 1} readonly compact />
                     </div>
                   );
@@ -148,7 +153,7 @@ export function BottomQueueSection({
               저장된 문제 {savedQuestions.length > 0 && <span className="text-slate-400 font-normal ml-1">{savedQuestions.length}개</span>}
             </h3>
             {savedQuestions.length > 0 && (
-              <Link href="/director/questions" className="text-[12px] text-teal-600 hover:text-teal-700 font-medium">
+              <Link href="/director/questions" className="text-[12px] text-blue-600 hover:text-blue-700 font-medium">
                 문제은행 전체 보기 →
               </Link>
             )}
@@ -165,7 +170,11 @@ export function BottomQueueSection({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {savedQuestions.slice(0, 30).map((q, i) => (
-                <div key={q.id} onClick={() => setDetailQuestion(q)} className="cursor-pointer">
+                <div key={q.id} onClick={(e) => {
+                  const target = e.target as HTMLElement;
+                  if (target.closest('button') || target.closest('a') || target.closest('input')) return;
+                  setDetailQuestion(q);
+                }} className="cursor-pointer">
                   <QuestionCard q={q} num={i + 1} readonly compact />
                 </div>
               ))}

@@ -30,6 +30,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getNavGroups, type NavGroup } from "./nav-config";
+import { HelpChatbot } from "@/components/help-chatbot/help-chatbot";
+import { CreditBadge } from "@/components/credits/credit-badge";
+import { MaybeComingSoon } from "./maybe-coming-soon";
 
 interface StaffSession {
   id: string;
@@ -46,7 +49,7 @@ interface AdminShellProps {
   basePath: "/director" | "/teacher";
 }
 
-const SIDEBAR_STORAGE_KEY = "nara-sidebar-collapsed";
+const SIDEBAR_STORAGE_KEY = "yshin-sidebar-collapsed";
 
 export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const pathname = usePathname();
@@ -160,7 +163,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 "font-bold text-gray-900 tracking-tight transition-all duration-300",
                 collapsed ? "text-[18px]" : "text-[20px]"
               )}>
-                NARA
+                영신ai
               </span>
               {!collapsed && (
                 <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">
@@ -173,12 +176,37 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto sidebar-scroll py-3 px-3">
             {filteredGroups.map((group, gi) => (
-              <div key={gi} className={cn(gi > 0 && "mt-6")}>
+              <div
+                key={gi}
+                className={cn(
+                  gi > 0 && "mt-6",
+                  group.comingSoon && "mt-8 pt-5",
+                )}
+                style={
+                  group.comingSoon
+                    ? {
+                        borderTop: "1px dashed rgba(56, 189, 248, 0.25)",
+                      }
+                    : undefined
+                }
+              >
                 {group.title && !collapsed && (
-                  <div className="px-3 mb-2">
-                    <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-[0.12em]">
-                      {group.title}
-                    </span>
+                  <div className="px-3 mb-2 flex items-center gap-2">
+                    {group.comingSoon ? (
+                      <>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-600">
+                          Coming Soon
+                        </span>
+                        <span
+                          className="size-1.5 rounded-full bg-sky-500"
+                          style={{ animation: "yshin-pulse 1.6s ease-in-out infinite" }}
+                        />
+                      </>
+                    ) : (
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-300">
+                        {group.title}
+                      </span>
+                    )}
                   </div>
                 )}
                 {group.title && collapsed && gi > 0 && (
@@ -280,6 +308,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                     }
 
                     // Regular link (no children, or collapsed mode)
+                    const isComingSoon = !!item.comingSoon;
                     const linkContent = (
                       <Link
                         href={item.href}
@@ -289,25 +318,61 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                           collapsed
                             ? "justify-center h-10 w-10 mx-auto"
                             : "h-[38px] px-3",
-                          active
-                            ? "text-blue-600"
-                            : "text-gray-400 hover:text-gray-700"
+                          isComingSoon
+                            ? active
+                              ? "text-sky-700"
+                              : "text-slate-500 hover:text-sky-700"
+                            : active
+                              ? "text-blue-600"
+                              : "text-gray-400 hover:text-gray-700",
                         )}
-                        style={active ? {
-                          background: "rgba(59, 130, 246, 0.08)",
-                          boxShadow: "0 1px 3px rgba(59, 130, 246, 0.06)",
-                        } : undefined}
+                        style={
+                          active && !isComingSoon
+                            ? {
+                                background: "rgba(59, 130, 246, 0.08)",
+                                boxShadow: "0 1px 3px rgba(59, 130, 246, 0.06)",
+                              }
+                            : active && isComingSoon
+                              ? {
+                                  background: "rgba(56, 189, 248, 0.1)",
+                                  boxShadow: "0 1px 3px rgba(56, 189, 248, 0.08)",
+                                }
+                              : undefined
+                        }
                       >
                         <Icon
                           className={cn(
                             "shrink-0 transition-colors duration-200",
-                            active ? "text-blue-500" : "text-gray-350 group-hover/item:text-gray-500",
-                            collapsed ? "size-[20px]" : "size-[17px]"
+                            isComingSoon
+                              ? active
+                                ? "text-sky-500"
+                                : "text-slate-400 group-hover/item:text-sky-500"
+                              : active
+                                ? "text-blue-500"
+                                : "text-gray-350 group-hover/item:text-gray-500",
+                            collapsed ? "size-[20px]" : "size-[17px]",
                           )}
                           strokeWidth={active ? 2 : 1.7}
                         />
                         {!collapsed && (
-                          <span className="truncate">{item.label}</span>
+                          <>
+                            <span className="truncate flex-1">{item.label}</span>
+                            {isComingSoon && (
+                              <span
+                                className={cn(
+                                  "size-1.5 rounded-full shrink-0 transition-all",
+                                  active
+                                    ? "bg-sky-500"
+                                    : "bg-sky-300 group-hover/item:bg-sky-500",
+                                )}
+                                style={{
+                                  boxShadow: active
+                                    ? "0 0 8px rgba(56, 189, 248, 0.6)"
+                                    : undefined,
+                                }}
+                              />
+                            )}
+                          </>
                         )}
                       </Link>
                     );
@@ -387,6 +452,9 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </div>
 
             <div className="flex items-center gap-1">
+              {/* Credit badge */}
+              <CreditBadge />
+
               {/* Notification */}
               <button
                 className="relative flex items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.03] transition-all duration-200"
@@ -452,9 +520,14 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 </div>
               </div>
             )}
-            {children}
+            <MaybeComingSoon pathname={pathname} basePath={basePath}>
+              {children}
+            </MaybeComingSoon>
           </main>
         </div>
+
+        {/* Help Chatbot */}
+        <HelpChatbot />
       </div>
     </TooltipProvider>
   );

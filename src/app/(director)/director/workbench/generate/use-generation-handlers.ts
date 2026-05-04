@@ -90,7 +90,6 @@ export function useGenerationHandlers({
         try { pAnalysis = typeof p.analysis.analysisData === "string" ? JSON.parse(p.analysis.analysisData) : p.analysis.analysisData; } catch {}
       }
 
-      const queueId = `${p.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
       const config = {
         typeCounts: genMode === "manual" ? { ...typeCounts } : {},
         difficulty,
@@ -98,23 +97,22 @@ export function useGenerationHandlers({
         mode: genMode,
       };
 
-      const newItem: QueueItem = {
-        id: queueId,
-        passageId: p.id,
-        passageTitle: p.title,
-        passageContent: p.content,
-        passageMeta: { school: p.school?.name, grade: p.grade, semester: p.semester, unit: p.unit },
-        analysisData: pAnalysis,
-        status: "generating",
-        progress: genMode === "auto" ? { auto: "pending" } : Object.fromEntries(activeTypes.map((t) => [t, "pending" as const])),
-        questions: [],
-        config,
-      };
-
-      setSessionQueue((prev) => [newItem, ...prev]);
-
       // Fire generation (don't await -- run in background)
       if (genMode === "auto") {
+        const queueId = `${p.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const newItem: QueueItem = {
+          id: queueId,
+          passageId: p.id,
+          passageTitle: p.title,
+          passageContent: p.content,
+          passageMeta: { school: p.school?.name, grade: p.grade, semester: p.semester, unit: p.unit },
+          analysisData: pAnalysis,
+          status: "generating",
+          progress: { auto: "pending" },
+          questions: [],
+          config,
+        };
+        setSessionQueue((prev) => [newItem, ...prev]);
         (async () => {
           const id = queueId;
           try {
@@ -139,28 +137,48 @@ export function useGenerationHandlers({
           }
         })();
       } else {
-        // Manual: parallel per type
+        // Manual: separate queue item per type, each fires independently
         const types = Object.keys(typeCounts).filter((k) => typeCounts[k] > 0);
-        Promise.all(types.map(async (typeId) => {
-          try {
-            const res = await fetch("/api/ai/generate-question", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ passageId: p.id, questionType: typeId, count: typeCounts[typeId], difficulty, customPrompt: config.prompt || undefined }),
-            });
-            const data = await res.json();
-            setSessionQueue((prev) => prev.map((item) => item.id === queueId ? { ...item, progress: { ...item.progress, [typeId]: data.error ? "error" : "done" } } : item));
-            return { typeId, label: typeLabel(typeId), questions: data.questions || [] };
-          } catch {
-            setSessionQueue((prev) => prev.map((item) => item.id === queueId ? { ...item, progress: { ...item.progress, [typeId]: "error" } } : item));
-            return { typeId, label: typeLabel(typeId), questions: [] };
-          }
-        })).then((results) => {
-          const allQ: any[] = [];
-          for (const r of results) for (const q of r.questions) allQ.push({ ...q, _typeId: r.typeId, _typeLabel: r.label });
-          setSessionQueue((prev) => prev.map((item) => item.id === queueId ? { ...item, status: allQ.length === 0 ? "error" : "done", questions: allQ } : item));
-          if (allQ.length > 0) toast.success(`${p.title.slice(0, 20)}... — ${allQ.length}문제 생성`);
-        });
+        for (const typeId of types) {
+          const typeQueueId = `${p.id}-${typeId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+          const typeItem: QueueItem = {
+            id: typeQueueId,
+            passageId: p.id,
+            passageTitle: p.title,
+            passageContent: p.content,
+            passageMeta: { school: p.school?.name, grade: p.grade, semester: p.semester, unit: p.unit },
+            analysisData: pAnalysis,
+            status: "generating",
+            progress: { [typeId]: "pending" },
+            questions: [],
+            config: { ...config, typeCounts: { [typeId]: typeCounts[typeId] } },
+          };
+          setSessionQueue((prev) => [typeItem, ...prev]);
+
+          (async () => {
+            const id = typeQueueId;
+            try {
+              const res = await fetch("/api/ai/generate-question", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ passageId: p.id, questionType: typeId, count: typeCounts[typeId], difficulty, customPrompt: config.prompt || undefined }),
+              });
+              const data = await res.json();
+              if (data.error || !data.questions?.length) {
+                setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
+                toast.error(`${typeLabel(typeId)} 생성 실패`);
+              } else {
+                const questions = data.questions.map((q: any) => ({ ...q, _typeId: typeId, _typeLabel: typeLabel(typeId) }));
+                setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "done", progress: { [typeId]: "done" }, questions } : item));
+                toast.success(`${typeLabel(typeId)} ${questions.length}문제 생성`);
+                autoSave(p.id, questions);
+              }
+            } catch {
+              setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
+              toast.error(`${typeLabel(typeId)} 네트워크 오류`);
+            }
+          })();
+        }
       }
     }
 
@@ -173,7 +191,6 @@ export function useGenerationHandlers({
     if (!selectedPassage) return;
     if (genMode === "manual" && totalQuestions === 0) return;
 
-    const queueId = `${selectedPassage.id}-${Date.now()}`;
     const config = {
       typeCounts: genMode === "manual" ? { ...typeCounts } : {},
       difficulty,
@@ -181,27 +198,26 @@ export function useGenerationHandlers({
       mode: genMode,
     };
 
-    const newItem: QueueItem = {
-      id: queueId,
-      passageId: selectedPassage.id,
-      passageTitle: selectedPassage.title,
-      passageContent: selectedPassage.content,
-      passageMeta: {
-        school: selectedPassage.school?.name,
-        grade: selectedPassage.grade,
-        semester: selectedPassage.semester,
-        unit: selectedPassage.unit,
-      },
-      analysisData,
-      status: "generating",
-      progress: genMode === "auto" ? { auto: "pending" } : Object.fromEntries(activeTypes.map((t) => [t, "pending"])),
-      questions: [],
-      config,
-    };
-
-    setSessionQueue((prev) => [newItem, ...prev]);
-
     if (genMode === "auto") {
+      const queueId = `${selectedPassage.id}-${Date.now()}`;
+      const newItem: QueueItem = {
+        id: queueId,
+        passageId: selectedPassage.id,
+        passageTitle: selectedPassage.title,
+        passageContent: selectedPassage.content,
+        passageMeta: {
+          school: selectedPassage.school?.name,
+          grade: selectedPassage.grade,
+          semester: selectedPassage.semester,
+          unit: selectedPassage.unit,
+        },
+        analysisData,
+        status: "generating",
+        progress: { auto: "pending" },
+        questions: [],
+        config,
+      };
+      setSessionQueue((prev) => [newItem, ...prev]);
       // ── Auto generation: single API call ──
       try {
         const res = await fetch("/api/ai/generate-questions-auto", {
@@ -235,9 +251,31 @@ export function useGenerationHandlers({
         toast.error("자동 생성 실패");
       }
     } else {
-      // ── Manual generation: parallel API calls per type ──
-      try {
-        const promises = activeTypes.map(async (typeId) => {
+      // ── Manual generation: separate queue item per type ──
+      for (const typeId of activeTypes) {
+        const typeQueueId = `${selectedPassage.id}-${typeId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const typeItem: QueueItem = {
+          id: typeQueueId,
+          passageId: selectedPassage.id,
+          passageTitle: selectedPassage.title,
+          passageContent: selectedPassage.content,
+          passageMeta: {
+            school: selectedPassage.school?.name,
+            grade: selectedPassage.grade,
+            semester: selectedPassage.semester,
+            unit: selectedPassage.unit,
+          },
+          analysisData,
+          status: "generating",
+          progress: { [typeId]: "pending" },
+          questions: [],
+          config: { ...config, typeCounts: { [typeId]: typeCounts[typeId] } },
+        };
+        setSessionQueue((prev) => [typeItem, ...prev]);
+
+        // Fire independently (no await)
+        (async () => {
+          const id = typeQueueId;
           try {
             const res = await fetch("/api/ai/generate-question", {
               method: "POST",
@@ -251,46 +289,20 @@ export function useGenerationHandlers({
               }),
             });
             const data = await res.json();
-            const status = data.error ? "error" : "done";
-            setSessionQueue((prev) =>
-              prev.map((item) => item.id === queueId ? { ...item, progress: { ...item.progress, [typeId]: status } } : item)
-            );
-            return { typeId, label: typeLabel(typeId), questions: data.questions || [] };
+            if (data.error || !data.questions?.length) {
+              setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
+              toast.error(`${typeLabel(typeId)} 생성 실패`);
+            } else {
+              const questions = data.questions.map((q: any) => ({ ...q, _typeId: typeId, _typeLabel: typeLabel(typeId) }));
+              setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "done", progress: { [typeId]: "done" }, questions } : item));
+              toast.success(`${typeLabel(typeId)} ${questions.length}문제 생성`);
+              autoSave(selectedPassage.id, questions);
+            }
           } catch {
-            setSessionQueue((prev) =>
-              prev.map((item) => item.id === queueId ? { ...item, progress: { ...item.progress, [typeId]: "error" } } : item)
-            );
-            return { typeId, label: typeLabel(typeId), questions: [] };
+            setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
+            toast.error(`${typeLabel(typeId)} 네트워크 오류`);
           }
-        });
-
-        const results = await Promise.all(promises);
-        const allQuestions: any[] = [];
-        for (const r of results) {
-          for (const q of r.questions) {
-            allQuestions.push({ ...q, _typeId: r.typeId, _typeLabel: r.label });
-          }
-        }
-
-        setSessionQueue((prev) =>
-          prev.map((item) =>
-            item.id === queueId
-              ? { ...item, status: allQuestions.length === 0 ? "error" : "done", questions: allQuestions }
-              : item
-          )
-        );
-
-        if (allQuestions.length > 0) {
-          toast.success(`${allQuestions.length}개 문제 생성 완료`);
-          autoSave(selectedPassage.id, allQuestions);
-        } else {
-          toast.error("문제 생성에 실패했습니다.");
-        }
-      } catch {
-        setSessionQueue((prev) =>
-          prev.map((item) => item.id === queueId ? { ...item, status: "error" } : item)
-        );
-        toast.error("생성 실패");
+        })();
       }
     }
   }, [selectedPassage, genMode, totalQuestions, activeTypes, typeCounts, difficulty, customPrompt, autoCount]);

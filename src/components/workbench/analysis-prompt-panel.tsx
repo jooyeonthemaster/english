@@ -87,6 +87,7 @@ export function AnalysisPromptPanel({
               <>
                 <RefreshCw className="w-4 h-4 mr-1.5" />
                 다시 분석하기
+                <span className="ml-1.5 text-[10px] font-semibold bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">5 크레딧</span>
               </>
             )}
           </Button>

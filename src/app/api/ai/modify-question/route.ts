@@ -3,6 +3,8 @@ import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+import { getStaffSession } from "@/lib/auth";
+import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 
 const modifiedQuestionSchema = z.object({
   questionText: z.string(),
@@ -18,6 +20,11 @@ const modifiedQuestionSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const staff = await getStaffSession();
+    if (!staff) {
+      return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+    }
+
     const body = await request.json();
     const { questionId, instruction, currentState } = body as {
       questionId: string;
@@ -54,6 +61,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let creditResult: { balanceAfter: number; transactionId: string };
+    try {
+      creditResult = await deductCredits(staff.academyId, "QUESTION_MODIFY", staff.id, { questionId });
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "크레딧이 부족합니다", balance: err.currentBalance, required: err.requiredCredits },
+          { status: 402 },
+        );
+      }
+      throw err;
+    }
+
     const passage = question.passage;
     const schoolType =
       passage?.school?.type === "MIDDLE" ? "중학교" : "고등학교";
@@ -65,7 +85,9 @@ export async function POST(request: NextRequest) {
             .join("\n")
         : "없음";
 
-    const { object } = await generateObject({
+    let object: z.infer<typeof modifiedQuestionSchema>;
+    try {
+    const { object: _object } = await generateObject({
       model,
       schema: modifiedQuestionSchema,
       prompt: `당신은 한국 ${schoolType} 영어 시험 출제 전문가입니다.
@@ -97,8 +119,13 @@ ${instruction}
 
 수정된 문제 1개를 출력하세요.`,
     });
+    object = _object;
+    } catch (aiError) {
+      await refundCredits(staff.academyId, "QUESTION_MODIFY", creditResult.transactionId, "Question modification failed");
+      throw aiError;
+    }
 
-    return NextResponse.json({ question: object });
+    return NextResponse.json({ question: object, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {
     console.error("Question modification error:", error);
     return NextResponse.json(

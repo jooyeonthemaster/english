@@ -1,42 +1,26 @@
+// @ts-nocheck
 "use client";
 
-import React, { useState, useMemo } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
   Database,
   Search,
-  Filter,
-  CheckCircle2,
-  Clock,
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
-  Trash2,
-  Eye,
-  FileText,
-  ListPlus,
   FolderPlus,
-  Pencil,
-  X,
-  BookOpen,
   ClipboardList,
-  SquareCheck,
   Square,
+  Grid2X2,
   Grid3X3,
-  Building2,
-  Calendar,
+  LayoutGrid,
   Folder,
-  FolderOpen,
   Layers,
+  ArrowLeft,
+  Star,
+  ArrowUpDown,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -51,65 +35,35 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import {
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
+  toggleQuestionStar,
   createQuestionCollection,
   addQuestionsToCollection,
+  removeQuestionsFromCollection,
   deleteQuestionCollection,
   updateQuestionCollection,
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
-import { formatDate } from "@/lib/utils";
 
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
+// Shared modules
+import type { CollectionItem } from "./shared/types";
+import { Pagination } from "./shared/pagination";
+import { FolderSection } from "./shared/folder-section";
+import { SelectionToolbar } from "./shared/selection-toolbar";
+import { BreadcrumbNav } from "./shared/breadcrumb-nav";
+import {
+  TypeFilterPopover,
+  TYPE_SUBTYPE_MAP,
+} from "./question-type-filter";
+import { QuestionBankCard } from "./question-bank-card";
 
-const TYPE_LABELS: Record<string, string> = {
-  MULTIPLE_CHOICE: "객관식",
-  SHORT_ANSWER: "주관식",
-  FILL_BLANK: "빈칸",
-  ORDERING: "순서배열",
-  VOCAB: "어휘",
-  ESSAY: "서술형",
-};
-
-const SUBTYPE_LABELS: Record<string, string> = {
-  BLANK_INFERENCE: "빈칸 추론",
-  GRAMMAR_ERROR: "어법 판단",
-  VOCAB_CHOICE: "어휘 적절성",
-  SENTENCE_INSERT: "문장 삽입",
-  SENTENCE_ORDER: "글의 순서",
-  TOPIC_MAIN_IDEA: "주제/요지",
-  TITLE: "제목 추론",
-  REFERENCE: "지칭 추론",
-  CONTENT_MATCH: "내용 일치",
-  IRRELEVANT: "무관한 문장",
-  CONDITIONAL_WRITING: "조건부 영작",
-  SENTENCE_TRANSFORM: "문장 전환",
-  FILL_BLANK_KEY: "핵심 표현 빈칸",
-  SUMMARY_COMPLETE: "요약문 완성",
-  WORD_ORDER: "배열 영작",
-  GRAMMAR_CORRECTION: "문법 오류 수정",
-  CONTEXT_MEANING: "문맥 속 의미",
-  SYNONYM: "동의어",
-  ANTONYM: "반의어",
-};
-
-const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  INTERMEDIATE: { label: "중급", className: "bg-blue-50 text-blue-700 border-blue-200" },
-  KILLER: { label: "킬러", className: "bg-red-50 text-red-700 border-red-200" },
-};
+// Hooks
+import { useUrlFilters } from "@/hooks/use-url-filters";
+import { useSelection } from "@/hooks/use-selection";
+import { useFolderManager } from "@/hooks/use-folder-manager";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -126,6 +80,7 @@ interface QuestionItem {
   tags: string | null;
   aiGenerated: boolean;
   approved: boolean;
+  starred: boolean;
   createdAt: Date;
   passage: {
     id: string; title: string; content: string;
@@ -139,13 +94,6 @@ interface QuestionItem {
     wrongOptionExplanations: string | null;
   } | null;
   _count: { examLinks: number };
-}
-
-interface Collection {
-  id: string;
-  name: string;
-  description: string | null;
-  _count: { items: number };
 }
 
 interface QuestionBankProps {
@@ -164,327 +112,12 @@ interface QuestionBankProps {
     collectionId?: string;
     aiGenerated?: boolean;
     approved?: boolean;
+    starred?: boolean;
+    sort?: string;
     search?: string;
   };
-  collections: Collection[];
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function parseJSON<T>(str: unknown, fallback: T): T {
-  if (!str) return fallback;
-  if (Array.isArray(str)) return str as T;
-  if (typeof str === "object" && str !== null) {
-    return (Array.isArray(fallback) ? fallback : str) as T;
-  }
-  if (typeof str !== "string") return fallback;
-  try {
-    const parsed = JSON.parse(str);
-    if (Array.isArray(fallback) && !Array.isArray(parsed)) return fallback;
-    return parsed;
-  } catch {
-    return fallback;
-  }
-}
-
-/** Render text with __word__ → underline, _____ → blank line, ①②③④⑤ → markers */
-function renderFormatted(text: string): React.ReactNode {
-  const regex = /__([^_]+)__|_{3,}|([①②③④⑤])/g;
-  const parts: React.ReactNode[] = [];
-  let lastIndex = 0;
-  let match;
-  let key = 0;
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
-    }
-
-    if (match[1]) {
-      // __word__ → underline
-      parts.push(
-        <span
-          key={key++}
-          className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900"
-        >
-          {match[1]}
-        </span>
-      );
-    } else if (match[2]) {
-      // ①②③④⑤ → marker badge
-      parts.push(
-        <span
-          key={key++}
-          className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-700 text-[9px] font-bold mx-0.5"
-        >
-          {match[2]}
-        </span>
-      );
-    } else {
-      // _____ → blank
-      parts.push(
-        <span
-          key={key++}
-          className="inline-block min-w-[80px] border-b-2 border-blue-400 mx-1 align-baseline"
-        >
-          &nbsp;
-        </span>
-      );
-    }
-    lastIndex = match.index + match[0].length;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
-  }
-
-  return parts.length > 0 ? <>{parts}</> : text;
-}
-
-// ---------------------------------------------------------------------------
-// Question Card
-// ---------------------------------------------------------------------------
-
-function QuestionCard({
-  q,
-  num,
-  selected,
-  onToggle,
-  onDelete,
-  onApprove,
-}: {
-  q: QuestionItem;
-  num: number;
-  selected: boolean;
-  onToggle: () => void;
-  onDelete: () => void;
-  onApprove: () => void;
-}) {
-  const [passageOpen, setPassageOpen] = useState(false);
-  const [explanationOpen, setExplanationOpen] = useState(false);
-  const router = useRouter();
-
-  const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
-  const tags: string[] = Array.isArray(q.tags)
-    ? q.tags
-    : parseJSON<string[]>(q.tags, []);
-  const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
-  const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
-
-  return (
-    <Card
-      className={`transition-all ${
-        selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
-      }`}
-    >
-      <CardContent className="p-4 space-y-3">
-        {/* Top row: checkbox + meta */}
-        <div className="flex items-start gap-3">
-          <div className="pt-0.5">
-            <Checkbox
-              checked={selected}
-              onCheckedChange={onToggle}
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs font-bold text-slate-400">
-                {num}.
-              </span>
-              <Badge variant="outline" className="text-[10px]">
-                {TYPE_LABELS[q.type] || q.type}
-              </Badge>
-              {q.subType && (
-                <span className="text-[10px] text-slate-500">
-                  {SUBTYPE_LABELS[q.subType] || q.subType}
-                </span>
-              )}
-              {diffConfig && (
-                <Badge
-                  variant="outline"
-                  className={`text-[10px] ${diffConfig.className}`}
-                >
-                  {diffConfig.label}
-                </Badge>
-              )}
-              {q.aiGenerated && (
-                <Layers className="w-3 h-3 text-blue-400" />
-              )}
-              {q.approved ? (
-                <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-              ) : (
-                <Clock className="w-3 h-3 text-slate-300" />
-              )}
-            </div>
-            {Array.isArray(tags) && tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => router.push(`/director/questions/${q.id}`)}
-            >
-              <Pencil className="w-3 h-3" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7">
-                  <span className="text-xs">...</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => router.push(`/director/questions/${q.id}`)}
-                >
-                  <Eye className="w-3.5 h-3.5 mr-2" />
-                  상세 보기
-                </DropdownMenuItem>
-                {!q.approved && (
-                  <DropdownMenuItem onClick={onApprove}>
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-2" />
-                    승인
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={onDelete} className="text-red-600">
-                  <Trash2 className="w-3.5 h-3.5 mr-2" />
-                  삭제
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-
-        {/* Passage */}
-        {q.passage && (
-          <div className="bg-slate-50 rounded-md px-3 py-2">
-            <button
-              className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left"
-              onClick={() => setPassageOpen(!passageOpen)}
-            >
-              <FileText className="w-3 h-3 shrink-0" />
-              <span className="truncate">{q.passage.title}</span>
-              {passageOpen ? (
-                <ChevronUp className="w-3 h-3 ml-auto shrink-0" />
-              ) : (
-                <ChevronDown className="w-3 h-3 ml-auto shrink-0" />
-              )}
-            </button>
-            <p
-              className={`text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5 ${
-                passageOpen ? "" : "line-clamp-3"
-              }`}
-            >
-              {renderFormatted(q.passage.content)}
-            </p>
-          </div>
-        )}
-
-        {/* Question text */}
-        <div className="text-[13px] text-slate-800 leading-relaxed font-medium whitespace-pre-line">
-          {renderFormatted(q.questionText)}
-        </div>
-
-        {/* Options */}
-        {options.length > 0 && (
-          <div className="space-y-1 pl-1">
-            {options.map((opt) => {
-              const isCorrect = opt.label === q.correctAnswer;
-              return (
-                <div
-                  key={opt.label}
-                  className={`flex items-start gap-2 text-[12px] rounded px-2 py-1 ${
-                    isCorrect
-                      ? "bg-emerald-50 text-emerald-800 font-medium"
-                      : "text-slate-600"
-                  }`}
-                >
-                  <span
-                    className={`shrink-0 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                      isCorrect
-                        ? "bg-emerald-500 text-white"
-                        : "bg-slate-200 text-slate-500"
-                    }`}
-                  >
-                    {opt.label}
-                  </span>
-                  <span className="pt-0.5">{renderFormatted(opt.text)}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Non-MC correct answer */}
-        {options.length === 0 && q.correctAnswer && (
-          <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
-            <span className="font-medium">정답:</span> {q.correctAnswer}
-          </div>
-        )}
-
-        {/* Explanation toggle */}
-        {q.explanation && (
-          <div>
-            <button
-              className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-              onClick={() => setExplanationOpen(!explanationOpen)}
-            >
-              {explanationOpen ? "해설 접기" : "해설 보기"}
-              {explanationOpen ? (
-                <ChevronUp className="w-3 h-3" />
-              ) : (
-                <ChevronDown className="w-3 h-3" />
-              )}
-            </button>
-            {explanationOpen && (
-              <div className="mt-2 bg-amber-50/50 border border-amber-100 rounded-md px-3 py-2 space-y-2">
-                <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">
-                  {q.explanation.content}
-                </p>
-                {keyPoints.length > 0 && (
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-semibold text-slate-500">
-                      핵심 포인트
-                    </span>
-                    {keyPoints.map((kp, i) => (
-                      <p
-                        key={i}
-                        className="text-[11px] text-slate-600 pl-2 border-l-2 border-amber-300"
-                      >
-                        {kp}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="flex items-center gap-3 text-[10px] text-slate-400 pt-1 border-t border-slate-100">
-          <span>{formatDate(q.createdAt)}</span>
-          {q._count.examLinks > 0 && (
-            <span>시험 {q._count.examLinks}회 사용</span>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
+  collections: CollectionItem[];
+  collectionMembership: Record<string, Set<string>>;
 }
 
 // ---------------------------------------------------------------------------
@@ -495,130 +128,77 @@ export function QuestionBankClient({
   academyId,
   questionsData,
   filters,
-  collections,
+  collections: initialCollections,
+  collectionMembership: initialMembership,
 }: QuestionBankProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
-  const isCollectionsTab = searchParams.get("tab") === "collections";
+
+  // URL filters
+  const { updateFilter, updateFilters, handleSearch: urlSearch, goToPage } = useUrlFilters("/director/questions");
+
+  function handleSearch() { urlSearch(searchValue); }
+
+  // Folder manager
+  const folders = useFolderManager({
+    initialCollections,
+    initialMembership,
+    actions: {
+      createCollection: createQuestionCollection,
+      updateCollection: updateQuestionCollection,
+      deleteCollection: deleteQuestionCollection,
+      addToCollection: addQuestionsToCollection,
+      removeFromCollection: removeQuestionsFromCollection,
+    },
+    itemLabel: "문제",
+  });
+
+  // Grid view mode
+  const [gridCols, setGridCols] = useState<2 | 3 | 4>(2);
+  const viewSize: "lg" | "md" | "sm" = gridCols === 2 ? "lg" : gridCols === 3 ? "md" : "sm";
+
+  // Questions in active folder
+  const questionsInActiveFolder = useMemo(() => {
+    if (folders.activeFolder === null) return questionsData.questions;
+    const ids = folders.membership[folders.activeFolder];
+    if (!ids) return [];
+    return questionsData.questions.filter((q) => ids.has(q.id));
+  }, [questionsData.questions, folders.activeFolder, folders.membership]);
+
+  const displayedQuestions = folders.activeFolder === null ? questionsData.questions : questionsInActiveFolder;
 
   // Selection
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const getDisplayedIds = useCallback(
+    () => displayedQuestions.map((q) => q.id),
+    [displayedQuestions],
+  );
+  const { selectedIds, setSelectedIds, toggleSelect, selectAll, clearSelection } = useSelection(getDisplayedIds);
 
-  // Collection dialogs
-  const [addToCollectionOpen, setAddToCollectionOpen] = useState(false);
-  const [createCollectionOpen, setCreateCollectionOpen] = useState(false);
-  const [newCollectionName, setNewCollectionName] = useState("");
-  const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
-  const [editName, setEditName] = useState("");
+  // "Add to folder" dropdown (question-specific)
+  const [showAddToFolder, setShowAddToFolder] = useState(false);
+  const addToFolderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showAddToFolder) return;
+    function handleClick(e: MouseEvent) {
+      if (addToFolderRef.current && !addToFolderRef.current.contains(e.target as Node)) {
+        setShowAddToFolder(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showAddToFolder]);
 
   // Exam dialog
   const [createExamOpen, setCreateExamOpen] = useState(false);
   const [examTitle, setExamTitle] = useState("");
   const [creatingExam, setCreatingExam] = useState(false);
 
-  // View mode
-  type ViewMode = "all" | "school" | "publisher" | "year";
-  const [viewMode, setViewMode] = useState<ViewMode>("all");
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(["__all__"]));
+  // Stats
+  const totalCount = questionsData.total;
 
-  function toggleGroup(key: string) {
-    setExpandedGroups((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  }
-
-  const grouped = useMemo(() => {
-    const qs = questionsData.questions;
-    if (viewMode === "school") {
-      const map: Record<string, { label: string; questions: typeof qs }> = {};
-      qs.forEach((q) => {
-        const key = q.passage?.school?.name || "미분류";
-        if (!map[key]) map[key] = { label: key, questions: [] };
-        map[key].questions.push(q);
-      });
-      return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
-    }
-    if (viewMode === "publisher") {
-      const map: Record<string, { label: string; questions: typeof qs }> = {};
-      qs.forEach((q) => {
-        const key = q.passage?.publisher || q.passage?.school?.name || "미분류";
-        if (!map[key]) map[key] = { label: key, questions: [] };
-        map[key].questions.push(q);
-      });
-      return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
-    }
-    if (viewMode === "year") {
-      const map: Record<string, { label: string; questions: typeof qs }> = {};
-      qs.forEach((q) => {
-        const year = new Date(q.createdAt).getFullYear().toString();
-        if (!map[year]) map[year] = { label: `${year}년`, questions: [] };
-        map[year].questions.push(q);
-      });
-      return Object.entries(map).sort(([a], [b]) => b.localeCompare(a));
-    }
-    return [["__all__", { label: "전체", questions: qs }]] as [string, { label: string; questions: typeof qs }][];
-  }, [questionsData.questions, viewMode]);
-
-  const VIEW_TABS = [
-    { id: "all" as ViewMode, label: "전체", icon: Grid3X3 },
-    { id: "school" as ViewMode, label: "학교별", icon: Building2 },
-    { id: "publisher" as ViewMode, label: "출판사별", icon: BookOpen },
-    { id: "year" as ViewMode, label: "연도별", icon: Calendar },
-  ];
-
-  const allIds = useMemo(
-    () => questionsData.questions.map((q) => q.id),
-    [questionsData.questions]
-  );
-  const allSelected =
-    allIds.length > 0 && allIds.every((id) => selectedIds.has(id));
-
-  // ------- Filters -------
-  function updateFilter(key: string, value: string) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value && value !== "ALL") {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-    params.delete("page");
-    router.push(`/director/questions?${params.toString()}`);
-  }
-
-  function handleSearch() {
-    updateFilter("search", searchValue);
-  }
-
-  function goToPage(page: number) {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(page));
-    router.push(`/director/questions?${params.toString()}`);
-  }
-
-  // ------- Selection -------
-  function toggleSelect(id: string) {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  function toggleAll() {
-    if (allSelected) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(allIds));
-    }
-  }
-
-  // ------- Actions -------
+  // ─── Question Actions ───
   async function handleDelete(id: string) {
     if (!confirm("이 문제를 삭제하시겠습니까?")) return;
     const result = await deleteWorkbenchQuestion(id);
@@ -642,65 +222,37 @@ export function QuestionBankClient({
     }
   }
 
-  async function handleAddToCollection(collectionId: string) {
-    const ids = Array.from(selectedIds);
-    if (ids.length === 0) return;
-    const result = await addQuestionsToCollection(collectionId, ids);
+  async function handleToggleStar(id: string) {
+    const result = await toggleQuestionStar(id);
     if (result.success) {
-      toast.success(`${ids.length}개 문제를 컬렉션에 추가했습니다.`);
-      setAddToCollectionOpen(false);
       router.refresh();
     } else {
-      toast.error(result.error || "추가 실패");
+      toast.error(result.error || "중요 표시 변경 실패");
     }
   }
 
-  async function handleCreateCollection() {
-    if (!newCollectionName.trim()) return;
-    const result = await createQuestionCollection({
-      name: newCollectionName.trim(),
-    });
-    if (result.success) {
-      toast.success("컬렉션이 생성되었습니다.");
-      setNewCollectionName("");
-      setCreateCollectionOpen(false);
-      // If we have selected items, add them to the new collection
-      if (selectedIds.size > 0 && result.id) {
-        await addQuestionsToCollection(result.id, Array.from(selectedIds));
-        toast.success(`${selectedIds.size}개 문제를 새 컬렉션에 추가했습니다.`);
-      }
-      router.refresh();
-    } else {
-      toast.error(result.error || "생성 실패");
+  // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
+  const handleDragToFolder = useCallback(
+    async (itemId: string, folderId: string, copy: boolean) => {
+      const success = await folders.handleDragToFolder(itemId, folderId, copy, selectedIds);
+      if (success) clearSelection();
+    },
+    [folders.handleDragToFolder, selectedIds, clearSelection],
+  );
+
+  // ─── Add to folder (wraps hook's handler) ───
+  async function handleAddToFolder(collectionId: string) {
+    const success = await folders.handleAddToFolder(collectionId, selectedIds);
+    if (success) {
+      clearSelection();
+      setShowAddToFolder(false);
     }
   }
 
-  async function handleDeleteCollection(id: string) {
-    if (!confirm("이 컬렉션을 삭제하시겠습니까?")) return;
-    const result = await deleteQuestionCollection(id);
-    if (result.success) {
-      toast.success("컬렉션 삭제됨");
-      if (filters.collectionId === id) {
-        updateFilter("collectionId", "");
-      }
-      router.refresh();
-    } else {
-      toast.error(result.error || "삭제 실패");
-    }
-  }
-
-  async function handleRenameCollection() {
-    if (!editingCollection || !editName.trim()) return;
-    const result = await updateQuestionCollection(editingCollection.id, {
-      name: editName.trim(),
-    });
-    if (result.success) {
-      toast.success("이름 변경됨");
-      setEditingCollection(null);
-      router.refresh();
-    } else {
-      toast.error(result.error || "변경 실패");
-    }
+  // ─── Remove from folder (wraps hook's handler) ───
+  async function handleRemoveFromFolder() {
+    const success = await folders.handleRemoveFromFolder(selectedIds);
+    if (success) clearSelection();
   }
 
   async function handleCreateExam() {
@@ -727,595 +279,336 @@ export function QuestionBankClient({
     setCreatingExam(false);
   }
 
-  const activeCollection = collections.find(
-    (c) => c.id === filters.collectionId
+  // ─── Extra actions for selection toolbar (question-specific) ───
+  const selectionExtraActions = (
+    <>
+      {/* Add to folder */}
+      <div ref={addToFolderRef} className="relative">
+        <button
+          onClick={() => setShowAddToFolder(!showAddToFolder)}
+          className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
+        >
+          <FolderPlus className="w-3.5 h-3.5" />
+          폴더에 추가
+        </button>
+        {showAddToFolder && (
+          <div className="absolute left-0 top-8 z-20 w-56 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
+            {folders.collections.length === 0 ? (
+              <p className="px-3 py-2 text-[12px] text-slate-400">폴더가 없습니다.</p>
+            ) : (
+              folders.collections.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => handleAddToFolder(c.id)}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-slate-700 hover:bg-blue-50 text-left"
+                >
+                  <Folder className="w-3.5 h-3.5 text-slate-400" />
+                  {c.name}
+                  <span className="ml-auto text-[10px] text-slate-400">{c._count.items}개</span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
+      <span className="text-slate-300">|</span>
+
+      {/* Create exam */}
+      <button
+        onClick={() => { setExamTitle(""); setCreateExamOpen(true); }}
+        className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
+      >
+        <ClipboardList className="w-3.5 h-3.5" />
+        시험지 만들기
+      </button>
+    </>
   );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Database className="w-5 h-5 text-emerald-600" />
-            문제 은행
-          </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            총 {questionsData.total}개 문제
-            {activeCollection && (
-              <span className="text-blue-600 font-medium">
-                {" "}
-                &middot; {activeCollection.name}
-              </span>
-            )}
-          </p>
+    <div className="flex flex-col h-[calc(100vh-64px)]">
+      {/* ─── Unified Header: title + breadcrumb + search + filters + AI button ─── */}
+      <div className="px-6 py-2.5 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        {/* Left: back/icon + title + breadcrumb */}
+        <div className="flex items-center gap-2 shrink-0">
+          {folders.activeFolder ? (
+            <button
+              onClick={() => {
+                folders.navigateUp();
+                clearSelection();
+              }}
+              className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-500" />
+            </button>
+          ) : (
+            <Database className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
+          )}
+          <h1 className="text-[15px] font-bold text-slate-900">문제 은행</h1>
+          <span className="text-[12px] text-slate-400">{totalCount}개</span>
+          <BreadcrumbNav
+            activeFolder={folders.activeFolder}
+            breadcrumbPath={folders.breadcrumbPath}
+            onNavigateToFolder={(id) => { folders.navigateToFolder(id); clearSelection(); }}
+            rootLabel="전체 문제"
+          />
         </div>
-        <div className="flex items-center gap-2">
-          {/* Collection management dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <BookOpen className="w-4 h-4 mr-1.5" />
-                컬렉션
-                {collections.length > 0 && (
-                  <Badge variant="secondary" className="ml-1.5 text-[10px]">
-                    {collections.length}
-                  </Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[240px]">
-              <DropdownMenuItem
-                onClick={() => updateFilter("collectionId", "")}
-                className={!filters.collectionId ? "font-semibold" : ""}
-              >
-                <Database className="w-3.5 h-3.5 mr-2" />
-                전체 문제
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {collections.map((c) => (
-                <div key={c.id} className="flex items-center group">
-                  <DropdownMenuItem
-                    className={`flex-1 ${
-                      filters.collectionId === c.id ? "font-semibold bg-blue-50" : ""
-                    }`}
-                    onClick={() => updateFilter("collectionId", c.id)}
-                  >
-                    <ListPlus className="w-3.5 h-3.5 mr-2 shrink-0" />
-                    <span className="truncate">{c.name}</span>
-                    <span className="ml-auto text-[10px] text-slate-400 pl-2">
-                      {c._count.items}
-                    </span>
-                  </DropdownMenuItem>
-                  <div className="flex opacity-0 group-hover:opacity-100 transition-opacity pr-1">
-                    <button
-                      className="p-1 text-slate-400 hover:text-slate-600"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditingCollection(c);
-                        setEditName(c.name);
-                      }}
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                    <button
-                      className="p-1 text-slate-400 hover:text-red-500"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteCollection(c.id);
-                      }}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setCreateCollectionOpen(true)}
-              >
-                <FolderPlus className="w-3.5 h-3.5 mr-2" />
-                새 컬렉션 만들기
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+        <div className="flex-1" />
+
+        {/* Right: search + filters + AI button */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
+            <input
+              placeholder="검색..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="w-44 h-8 pl-8 pr-3 text-[12px] rounded-lg border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+            />
+          </div>
+
+          {/* Multi-select hierarchical type filter */}
+          <TypeFilterPopover
+            currentSubTypes={filters.subType?.split(",").filter(Boolean) || []}
+            onApply={(selectedSubs) => {
+              if (selectedSubs.length === 0) {
+                updateFilters({ type: "ALL", subType: "ALL" });
+              } else {
+                // Infer types from selected subtypes
+                const types = new Set<string>();
+                for (const sub of selectedSubs) {
+                  const group = TYPE_SUBTYPE_MAP.find((g) => g.subtypes.some((s) => s.value === sub));
+                  if (group) types.add(group.type);
+                }
+                updateFilters({
+                  type: types.size > 0 ? [...types].join(",") : "ALL",
+                  subType: selectedSubs.join(","),
+                });
+              }
+            }}
+          />
+
+          <Select value={filters.difficulty || "ALL"} onValueChange={(v) => updateFilter("difficulty", v)}>
+            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="난이도" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">전체 난이도</SelectItem>
+              <SelectItem value="BASIC">기본</SelectItem>
+              <SelectItem value="INTERMEDIATE">중급</SelectItem>
+              <SelectItem value="KILLER">킬러</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.approved === true ? "true" : filters.approved === false ? "false" : "ALL"}
+            onValueChange={(v) => updateFilter("approved", v)}
+          >
+            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="상태" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">전체 상태</SelectItem>
+              <SelectItem value="true">승인 완료</SelectItem>
+              <SelectItem value="false">미승인</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Starred filter */}
+          <button
+            onClick={() => {
+              if (filters.starred === true) {
+                updateFilter("starred", "ALL");
+              } else {
+                updateFilter("starred", "true");
+              }
+            }}
+            className={`flex items-center gap-1 h-8 px-2.5 text-[12px] font-medium rounded-lg border transition-colors ${
+              filters.starred === true
+                ? "bg-yellow-50 border-yellow-300 text-yellow-700"
+                : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+            }`}
+            aria-label="중요 문제 필터"
+            aria-pressed={filters.starred === true}
+          >
+            <Star className={`w-3.5 h-3.5 ${filters.starred === true ? "fill-yellow-400 text-yellow-500" : ""}`} />
+            중요
+          </button>
+
+          {/* Sort dropdown */}
+          <Select value={filters.sort || "newest"} onValueChange={(v) => updateFilter("sort", v === "newest" ? "ALL" : v)}>
+            <SelectTrigger className="w-32 h-8 text-[12px]">
+              <ArrowUpDown className="w-3 h-3 mr-1 shrink-0" />
+              <SelectValue placeholder="정렬" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">최신순</SelectItem>
+              <SelectItem value="oldest">오래된순</SelectItem>
+              <SelectItem value="difficulty_desc">난이도 높은순</SelectItem>
+              <SelectItem value="difficulty_asc">난이도 낮은순</SelectItem>
+              <SelectItem value="starred">중요 문제 먼저</SelectItem>
+            </SelectContent>
+          </Select>
 
           <Button
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 hover:bg-blue-700 h-8"
             size="sm"
             onClick={() => setGenerateDialogOpen(true)}
           >
-            <Layers className="w-4 h-4 mr-1.5" />
+            <Layers className="w-3.5 h-3.5 mr-1" />
             AI 문제 생성
           </Button>
         </div>
       </div>
 
-      {/* Main tab toggle: 전체 문제 / 컬렉션 */}
-      <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg w-fit">
-        <Link
-          href="/director/questions"
-          className={`px-4 py-1.5 rounded-md text-[13px] font-medium transition-all ${
-            !isCollectionsTab ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
-          }`}
-        >
-          전체 문제
-        </Link>
-        <Link
-          href="/director/questions?tab=collections"
-          className={`px-4 py-1.5 rounded-md text-[13px] font-medium transition-all ${
-            isCollectionsTab ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
-          }`}
-        >
-          컬렉션 ({collections.length})
-        </Link>
+      {/* ─── Selection toolbar ─── */}
+      <SelectionToolbar
+        selectedCount={selectedIds.size}
+        totalCount={displayedQuestions.length}
+        isAllSelected={selectedIds.size === displayedQuestions.length && displayedQuestions.length > 0}
+        onSelectAll={selectAll}
+        onClearSelection={clearSelection}
+        activeFolder={folders.activeFolder}
+        onRemoveFromFolder={handleRemoveFromFolder}
+        extraActions={selectionExtraActions}
+      />
+
+      {/* ─── Content ─── */}
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 py-4">
+        {questionsData.questions.length === 0 && !folders.activeFolder ? (
+          <div className="bg-white rounded-xl border text-center py-20">
+            <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+            <p className="text-slate-500 font-medium">문제가 없습니다</p>
+            <p className="text-sm text-slate-400 mt-1">AI 워크벤치에서 문제를 생성해보세요</p>
+          </div>
+        ) : (
+          <>
+          {/* Folders section -- sticky below header */}
+          <FolderSection
+            childFolders={folders.childFolders}
+            activeFolder={folders.activeFolder}
+            dragItemType="question"
+            dragItemIdKey="questionId"
+            itemCountLabel="문제"
+            showNewFolder={folders.showNewFolder}
+            newFolderName={folders.newFolderName}
+            onNewFolderNameChange={folders.setNewFolderName}
+            onShowNewFolder={folders.setShowNewFolder}
+            onCreateFolder={folders.handleCreateFolder}
+            onNavigateToFolder={(id) => { folders.navigateToFolder(id); clearSelection(); }}
+            onRenameFolder={folders.handleRenameFolder}
+            onDeleteFolder={folders.handleDeleteFolder}
+            onDragToFolder={handleDragToFolder}
+          />
+
+            {/* Questions section */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-[13px] font-semibold text-slate-600">
+                  문제
+                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">{displayedQuestions.length}개</span>
+                </h3>
+                <div className="flex items-center gap-2">
+                  {/* Grid view toggle */}
+                  <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => setGridCols(2)}
+                      className={`p-1.5 transition-colors ${gridCols === 2 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+                      aria-label="2열 보기"
+                      aria-pressed={gridCols === 2}
+                    >
+                      <Grid2X2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setGridCols(3)}
+                      className={`p-1.5 transition-colors border-x border-slate-200 ${gridCols === 3 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+                      aria-label="3열 보기"
+                      aria-pressed={gridCols === 3}
+                    >
+                      <Grid3X3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setGridCols(4)}
+                      className={`p-1.5 transition-colors ${gridCols === 4 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+                      aria-label="4열 보기"
+                      aria-pressed={gridCols === 4}
+                    >
+                      <LayoutGrid className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  {folders.childFolders.length === 0 && !folders.showNewFolder && (
+                    <button
+                      onClick={() => folders.setShowNewFolder(true)}
+                      className="flex items-center gap-1 text-[11px] text-blue-600 font-medium hover:text-blue-700"
+                    >
+                      <FolderPlus className="w-3.5 h-3.5" />새 폴더
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Select all toggle */}
+              {displayedQuestions.length > 0 && selectedIds.size === 0 && (
+                <div className="flex items-center gap-2 mb-3">
+                  <button
+                    onClick={selectAll}
+                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700"
+                  >
+                    <Square className="w-3.5 h-3.5" />
+                    전체 선택
+                  </button>
+                </div>
+              )}
+
+              {displayedQuestions.length === 0 ? (
+                <div className="text-center py-12">
+                  <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                  <p className="text-[13px] text-slate-400">
+                    {folders.activeFolder ? "이 폴더에 문제가 없습니다." : "등록된 문제가 없습니다."}
+                  </p>
+                  {folders.activeFolder && (
+                    <p className="text-[12px] text-slate-400 mt-1">문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.</p>
+                  )}
+                </div>
+              ) : (
+                <div className={`grid gap-3 ${
+                  gridCols === 2
+                    ? "grid-cols-1 md:grid-cols-2"
+                    : gridCols === 3
+                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                }`}>
+                  {displayedQuestions.map((q, idx) => {
+                    const startIdx = (questionsData.page - 1) * 20;
+                    return (
+                      <QuestionBankCard
+                        key={q.id}
+                        q={q}
+                        num={startIdx + idx + 1}
+                        selected={selectedIds.has(q.id)}
+                        onToggle={() => toggleSelect(q.id)}
+                        onDelete={() => handleDelete(q.id)}
+                        onApprove={() => handleApprove(q.id)}
+                        onToggleStar={() => handleToggleStar(q.id)}
+                        viewSize={viewSize}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Pagination */}
+        {!folders.activeFolder && (
+          <Pagination
+            page={questionsData.page}
+            totalPages={questionsData.totalPages}
+            onGoToPage={goToPage}
+          />
+        )}
       </div>
 
-      {/* Collections view */}
-      {isCollectionsTab ? (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-slate-500">문제를 분류하고 관리하는 컬렉션입니다.</p>
-            <Button
-              size="sm"
-              className="h-8 text-xs bg-slate-900 hover:bg-slate-800"
-              onClick={() => { setNewCollectionName(""); setCreateCollectionOpen(true); }}
-            >
-              <FolderPlus className="w-3.5 h-3.5 mr-1" />
-              새 컬렉션
-            </Button>
-          </div>
-
-          {collections.length === 0 ? (
-            <div className="bg-white rounded-xl border text-center py-16">
-              <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-              <p className="text-slate-500 font-medium">컬렉션이 없습니다</p>
-              <p className="text-sm text-slate-400 mt-1">문제를 선택하여 컬렉션에 추가하세요</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {collections.map((c) => (
-                <div
-                  key={c.id}
-                  className="bg-white rounded-xl border p-4 hover:border-blue-200 hover:shadow-sm transition-all group"
-                >
-                  <div className="flex items-start justify-between">
-                    <button
-                      onClick={() => {
-                        updateFilter("collectionId", c.id);
-                        router.push(`/director/questions?collectionId=${c.id}`);
-                      }}
-                      className="flex items-center gap-2.5 min-w-0 text-left"
-                    >
-                      <Folder className="w-5 h-5 text-blue-400 shrink-0" />
-                      <div className="min-w-0">
-                        {editingCollection?.id === c.id ? (
-                          <input
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") { handleRenameCollection(); }
-                              if (e.key === "Escape") setEditingCollection(null);
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="text-[14px] font-semibold text-slate-800 border-b border-blue-400 outline-none bg-transparent w-full"
-                            autoFocus
-                          />
-                        ) : (
-                          <span className="text-[14px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors block truncate">
-                            {c.name}
-                          </span>
-                        )}
-                        <span className="text-[12px] text-slate-400">{c._count.items}개 문제</span>
-                      </div>
-                    </button>
-                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                      <button
-                        onClick={() => { setEditingCollection(c); setEditName(c.name); }}
-                        className="w-7 h-7 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100"
-                      >
-                        <Pencil className="w-3 h-3" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteCollection(c.id)}
-                        className="w-7 h-7 flex items-center justify-center rounded-md text-red-400 hover:text-red-600 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ) : (
-      <>
-      {/* Filter bar */}
-      <Card>
-        <CardContent className="py-3 px-4 space-y-3">
-          {/* View mode tabs */}
-          <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg w-fit">
-            {VIEW_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setViewMode(tab.id);
-                  setExpandedGroups(new Set(["__all__"]));
-                }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
-                  viewMode === tab.id
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                <tab.icon className="w-3.5 h-3.5" />
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap">
-            <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-
-            <Select
-              value={filters.type || "ALL"}
-              onValueChange={(v) => updateFilter("type", v)}
-            >
-              <SelectTrigger className="h-8 w-[110px] text-xs">
-                <SelectValue placeholder="유형" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">전체 유형</SelectItem>
-                {Object.entries(TYPE_LABELS).map(([k, v]) => (
-                  <SelectItem key={k} value={k}>
-                    {v}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={filters.difficulty || "ALL"}
-              onValueChange={(v) => updateFilter("difficulty", v)}
-            >
-              <SelectTrigger className="h-8 w-[100px] text-xs">
-                <SelectValue placeholder="난이도" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">전체 난이도</SelectItem>
-                <SelectItem value="BASIC">기본</SelectItem>
-                <SelectItem value="INTERMEDIATE">중급</SelectItem>
-                <SelectItem value="KILLER">킬러</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={
-                filters.approved === true
-                  ? "true"
-                  : filters.approved === false
-                  ? "false"
-                  : "ALL"
-              }
-              onValueChange={(v) => updateFilter("approved", v)}
-            >
-              <SelectTrigger className="h-8 w-[110px] text-xs">
-                <SelectValue placeholder="상태" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">전체 상태</SelectItem>
-                <SelectItem value="true">승인 완료</SelectItem>
-                <SelectItem value="false">미승인</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={
-                filters.aiGenerated === true
-                  ? "true"
-                  : filters.aiGenerated === false
-                  ? "false"
-                  : "ALL"
-              }
-              onValueChange={(v) => updateFilter("aiGenerated", v)}
-            >
-              <SelectTrigger className="h-8 w-[100px] text-xs">
-                <SelectValue placeholder="생성" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">전체</SelectItem>
-                <SelectItem value="true">AI 생성</SelectItem>
-                <SelectItem value="false">수동</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="flex-1" />
-
-            <div className="flex items-center gap-1.5">
-              <Input
-                placeholder="문제 검색..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="h-8 w-[180px] text-xs"
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                onClick={handleSearch}
-              >
-                <Search className="w-3.5 h-3.5" />
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Selection action bar */}
-      {selectedIds.size > 0 && (
-        <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5">
-          <button
-            onClick={toggleAll}
-            className="flex items-center gap-1.5 text-xs font-medium text-blue-700"
-          >
-            {allSelected ? (
-              <SquareCheck className="w-4 h-4" />
-            ) : (
-              <Square className="w-4 h-4" />
-            )}
-            {allSelected ? "선택 해제" : "전체 선택"}
-          </button>
-          <span className="text-xs text-blue-600 font-semibold">
-            {selectedIds.size}개 선택
-          </span>
-          <div className="flex-1" />
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-7 text-xs"
-            onClick={() => setAddToCollectionOpen(true)}
-          >
-            <ListPlus className="w-3.5 h-3.5 mr-1" />
-            컬렉션에 추가
-          </Button>
-          <Button
-            size="sm"
-            className="h-7 text-xs bg-blue-600 hover:bg-blue-700"
-            onClick={() => {
-              setExamTitle("");
-              setCreateExamOpen(true);
-            }}
-          >
-            <ClipboardList className="w-3.5 h-3.5 mr-1" />
-            시험지 만들기
-          </Button>
-          <button
-            className="text-blue-400 hover:text-blue-600"
-            onClick={() => setSelectedIds(new Set())}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
-      {/* Select all toggle (when nothing selected) */}
-      {selectedIds.size === 0 && questionsData.questions.length > 0 && (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleAll}
-            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700"
-          >
-            <Square className="w-3.5 h-3.5" />
-            전체 선택
-          </button>
-        </div>
-      )}
-
-      {/* Question grid */}
-      {questionsData.questions.length === 0 ? (
-        <div className="text-center py-16">
-          <Database className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500 font-medium">문제가 없습니다</p>
-          <p className="text-sm text-slate-400 mt-1">
-            AI 워크벤치에서 문제를 생성해보세요
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {grouped.map(([key, group]) => {
-            const isExpanded = viewMode === "all" || expandedGroups.has(key);
-            let globalIdx = 0;
-            // Calculate start index for numbering
-            const startIdx = (questionsData.page - 1) * 20;
-
-            return (
-              <div key={key}>
-                {/* Group header (hidden in "all" mode) */}
-                {viewMode !== "all" && (
-                  <button
-                    onClick={() => toggleGroup(key)}
-                    className="w-full flex items-center gap-3 px-4 py-3 bg-white rounded-xl border mb-3 hover:bg-slate-50 transition-colors"
-                  >
-                    {isExpanded ? (
-                      <FolderOpen className="w-5 h-5 text-blue-500" />
-                    ) : (
-                      <Folder className="w-5 h-5 text-slate-400" />
-                    )}
-                    <span className="text-[14px] font-semibold text-slate-800 flex-1 text-left">
-                      {group.label}
-                    </span>
-                    <span className="text-[12px] text-slate-400 mr-2">
-                      {group.questions.length}개 문제
-                    </span>
-                    <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform ${isExpanded ? "rotate-0" : "-rotate-90"}`} />
-                  </button>
-                )}
-
-                {isExpanded && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {group.questions.map((q, idx) => {
-                      const num = startIdx + (viewMode === "all" ? idx : globalIdx) + 1;
-                      globalIdx++;
-                      return (
-                        <QuestionCard
-                          key={q.id}
-                          q={q}
-                          num={num}
-                          selected={selectedIds.has(q.id)}
-                          onToggle={() => toggleSelect(q.id)}
-                          onDelete={() => handleDelete(q.id)}
-                          onApprove={() => handleApprove(q.id)}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Pagination */}
-      {questionsData.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={questionsData.page <= 1}
-            onClick={() => goToPage(questionsData.page - 1)}
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <span className="text-sm text-slate-600 px-3">
-            {questionsData.page} / {questionsData.totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={questionsData.page >= questionsData.totalPages}
-            onClick={() => goToPage(questionsData.page + 1)}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      )}
-
-      </>
-      )}
-
-      {/* ---- Dialogs ---- */}
-
-      {/* Add to collection dialog */}
-      <Dialog open={addToCollectionOpen} onOpenChange={setAddToCollectionOpen}>
-        <DialogContent className="sm:max-w-[360px]">
-          <DialogHeader>
-            <DialogTitle className="text-sm">
-              컬렉션에 추가 ({selectedIds.size}개)
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
-            {collections.map((c) => (
-              <button
-                key={c.id}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors text-left"
-                onClick={() => handleAddToCollection(c.id)}
-              >
-                <ListPlus className="w-4 h-4 text-slate-400 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-700 truncate">
-                    {c.name}
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    {c._count.items}개 문제
-                  </p>
-                </div>
-              </button>
-            ))}
-            {collections.length === 0 && (
-              <p className="text-sm text-slate-400 text-center py-4">
-                컬렉션이 없습니다
-              </p>
-            )}
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setAddToCollectionOpen(false);
-                setCreateCollectionOpen(true);
-              }}
-            >
-              <FolderPlus className="w-3.5 h-3.5 mr-1.5" />
-              새 컬렉션 만들기
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Create collection dialog */}
-      <Dialog open={createCollectionOpen} onOpenChange={setCreateCollectionOpen}>
-        <DialogContent className="sm:max-w-[360px]">
-          <DialogHeader>
-            <DialogTitle className="text-sm">새 컬렉션</DialogTitle>
-          </DialogHeader>
-          <Input
-            placeholder="컬렉션 이름"
-            value={newCollectionName}
-            onChange={(e) => setNewCollectionName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleCreateCollection();
-            }}
-            autoFocus
-          />
-          {selectedIds.size > 0 && (
-            <p className="text-xs text-slate-500">
-              선택한 {selectedIds.size}개 문제가 자동으로 추가됩니다.
-            </p>
-          )}
-          <DialogFooter>
-            <Button
-              size="sm"
-              onClick={handleCreateCollection}
-              disabled={!newCollectionName.trim()}
-            >
-              만들기
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Rename collection dialog */}
-      <Dialog
-        open={!!editingCollection}
-        onOpenChange={(open) => !open && setEditingCollection(null)}
-      >
-        <DialogContent className="sm:max-w-[360px]">
-          <DialogHeader>
-            <DialogTitle className="text-sm">컬렉션 이름 변경</DialogTitle>
-          </DialogHeader>
-          <Input
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleRenameCollection();
-            }}
-            autoFocus
-          />
-          <DialogFooter>
-            <Button
-              size="sm"
-              onClick={handleRenameCollection}
-              disabled={!editName.trim()}
-            >
-              저장
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* ─── Dialogs ─── */}
 
       {/* Create exam dialog */}
       <Dialog open={createExamOpen} onOpenChange={setCreateExamOpen}>

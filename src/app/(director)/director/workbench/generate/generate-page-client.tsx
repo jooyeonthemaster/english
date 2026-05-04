@@ -1,8 +1,8 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -32,6 +32,42 @@ import { useGenerationHandlers } from "./use-generation-handlers";
 
 export function GeneratePageClient({ academyId }: { academyId: string }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ── Deep-link context (from /import or detail page) ──
+  // Accept `?passageIds=cuid1,cuid2` for pre-selection,
+  // and `?mode=auto|manual` to decide which config panel opens.
+  //
+  // Defensive parsing: URL may be percent-encoded, contain stray whitespace,
+  // or be maliciously stuffed — we decode, split on comma, filter empties,
+  // dedupe and cap at 100 ids so downstream `Set` construction + the cross-
+  // tenant validity filter (useEffect below) never have to chew on junk.
+  const initialPassageIdsRef = useRef<string[]>(
+    (() => {
+      const raw = searchParams.get("passageIds") || "";
+      let decoded = raw;
+      try {
+        decoded = decodeURIComponent(raw);
+      } catch {
+        decoded = raw;
+      }
+      const parts = decoded.split(",").map((s) => s.trim()).filter(Boolean);
+      // Dedupe while preserving order, cap at 100.
+      const seen = new Set<string>();
+      const out: string[] = [];
+      for (const id of parts) {
+        if (seen.has(id)) continue;
+        seen.add(id);
+        out.push(id);
+        if (out.length >= 100) break;
+      }
+      return out;
+    })()
+  );
+  const initialModeRef = useRef<"auto" | "manual">(
+    searchParams.get("mode") === "manual" ? "manual" : "auto"
+  );
+  const prefillAppliedRef = useRef(false);
 
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
@@ -54,8 +90,8 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
 
-  // ── Mode: auto vs manual ──
-  const [genMode, setGenMode] = useState<"auto" | "manual">("auto");
+  // ── Mode: auto vs manual (seeded from ?mode= URL param) ──
+  const [genMode, setGenMode] = useState<"auto" | "manual">(initialModeRef.current);
 
   // ── Auto mode config ──
   const [autoCount, setAutoCount] = useState(1);
@@ -76,13 +112,15 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   // ── Session queue ──
   const [sessionQueue, setSessionQueue] = useState<QueueItem[]>([]);
-  const [queueFilter, setQueueFilter] = useState<"all" | "unreviewed" | "reviewed" | "error">("all");
+  const [queueFilter, setQueueFilter] = useState<"all" | "error">("all");
 
   // ── Review modal ──
   const [reviewModalId, setReviewModalId] = useState<string | null>(null);
 
-  // ── Checkbox multi-select ──
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  // ── Checkbox multi-select (seeded from ?passageIds= URL param) ──
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(
+    () => new Set(initialPassageIdsRef.current)
+  );
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -115,8 +153,6 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   const filteredQueue = useMemo(() => {
     if (queueFilter === "all") return sessionQueue;
-    if (queueFilter === "unreviewed") return sessionQueue.filter((q) => q.status === "done");
-    if (queueFilter === "reviewed") return sessionQueue.filter((q) => q.status === "reviewed");
     if (queueFilter === "error") return sessionQueue.filter((q) => q.status === "error");
     return sessionQueue;
   }, [sessionQueue, queueFilter]);
@@ -125,8 +161,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   const queueCounts = useMemo(() => ({
     generating: sessionQueue.filter((q) => q.status === "generating").length,
-    done: sessionQueue.filter((q) => q.status === "done").length,
-    reviewed: sessionQueue.filter((q) => q.status === "reviewed").length,
+    done: sessionQueue.filter((q) => q.status === "done" || q.status === "reviewed").length,
     error: sessionQueue.filter((q) => q.status === "error").length,
   }), [sessionQueue]);
 
@@ -145,6 +180,32 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       .catch(() => {})
       .finally(() => setLoadingPassages(false));
   }, [academyId]);
+
+  // ── Apply deep-link pre-selection once passages are loaded ──
+  // Runs once — filters the incoming ?passageIds= against the academy-scoped
+  // list so stale / cross-academy ids can't bleed through a shared URL.
+  useEffect(() => {
+    if (prefillAppliedRef.current) return;
+    if (loadingPassages) return;
+    if (passages.length === 0) return;
+    const ids = initialPassageIdsRef.current;
+    if (ids.length === 0) {
+      prefillAppliedRef.current = true;
+      return;
+    }
+    const validIds = ids.filter((id) => passages.some((p) => p.id === id));
+    if (validIds.length > 0) {
+      setSelectedIds(new Set(validIds));
+      const first = passages.find((p) => p.id === validIds[0]);
+      if (first) setSelectedPassage(first);
+      toast.success(
+        validIds.length === ids.length
+          ? `지문 ${validIds.length}개를 불러왔습니다.`
+          : `지문 ${validIds.length}/${ids.length}개를 불러왔습니다.`
+      );
+    }
+    prefillAppliedRef.current = true;
+  }, [loadingPassages, passages]);
 
   // ── Load saved questions from DB ──
   const loadSavedQuestions = useCallback(async () => {
@@ -276,29 +337,23 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
         </Link>
         <div className="flex-1">
           <h1 className="text-[18px] font-bold text-slate-800 tracking-tight flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-teal-50 border border-teal-100">
-              <Cpu className="w-4.5 h-4.5 text-teal-600" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 border border-blue-100">
+              <Cpu className="w-4.5 h-4.5 text-blue-600" />
             </div>
             AI 문제 생성
           </h1>
         </div>
         <div className="flex items-center gap-2.5">
           {queueCounts.generating > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-teal-50 border border-teal-200/60">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-teal-600" />
-              <span className="text-[12px] font-semibold text-teal-700">생성중 {queueCounts.generating}</span>
+            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-blue-50 border border-blue-200/60">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />
+              <span className="text-[12px] font-semibold text-blue-700">생성중 {queueCounts.generating}</span>
             </div>
           )}
           {queueCounts.done > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-teal-50 border border-teal-200/60">
-              <Eye className="w-3.5 h-3.5 text-teal-600" />
-              <span className="text-[12px] font-semibold text-teal-700">미검토 {queueCounts.done}</span>
-            </div>
-          )}
-          {queueCounts.reviewed > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-emerald-50 border border-emerald-200/60">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-[12px] font-semibold text-emerald-700">완료 {queueCounts.reviewed}</span>
+            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-sky-50 border border-sky-200/60">
+              <CheckCircle2 className="w-3.5 h-3.5 text-sky-600" />
+              <span className="text-[12px] font-semibold text-sky-700">완료 {queueCounts.done}</span>
             </div>
           )}
         </div>
@@ -308,7 +363,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       <div className="flex flex-col">
 
       {/* ═══ TOP SECTION: 지문 카드 + 설정 (가로 2패널, 고정 높이) ═══ */}
-      <div className="grid grid-cols-[1fr_420px] bg-white h-[420px]">
+      <div className="flex flex-col lg:flex-row bg-white lg:h-[550px] xl:h-[600px] w-full">
 
         {/* ═══ LEFT PANEL: Passage cards ═══ */}
         <PassageCardGrid
@@ -482,7 +537,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       {loadingAnalysisModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
           <div className="bg-white rounded-xl px-6 py-4 shadow-xl flex items-center gap-3">
-            <Loader2 className="w-5 h-5 animate-spin text-teal-600" />
+            <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
             <span className="text-[13px] text-slate-700 font-medium">지문 분석 데이터 로딩 중...</span>
           </div>
         </div>

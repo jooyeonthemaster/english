@@ -3,6 +3,8 @@ import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+import { getStaffSession } from "@/lib/auth";
+import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 
 const explanationSchema = z.object({
   explanation: z.string(),
@@ -13,8 +15,26 @@ const explanationSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const staff = await getStaffSession();
+    if (!staff) {
+      return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+    }
+
     const body = await request.json();
     const { questionId } = body as { questionId: string };
+
+    let creditResult: { balanceAfter: number; transactionId: string };
+    try {
+      creditResult = await deductCredits(staff.academyId, "QUESTION_EXPLANATION", staff.id, { questionId });
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "크레딧이 부족합니다", balance: err.currentBalance, required: err.requiredCredits },
+          { status: 402 },
+        );
+      }
+      throw err;
+    }
 
     const question = await prisma.question.findUnique({
       where: { id: questionId },
@@ -24,6 +44,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!question) {
+      await refundCredits(staff.academyId, "QUESTION_EXPLANATION", creditResult.transactionId, "Question not found");
       return NextResponse.json(
         { error: "문제를 찾을 수 없습니다." },
         { status: 404 }
@@ -39,7 +60,9 @@ export async function POST(request: NextRequest) {
           .join("\n")
       : "주관식 문제";
 
-    const { object } = await generateObject({
+    let object: z.infer<typeof explanationSchema>;
+    try {
+    const { object: _object } = await generateObject({
       model,
       schema: explanationSchema,
       prompt: `당신은 한국 중고등학교 영어 시험 해설을 작성하는 전문가입니다.
@@ -68,6 +91,11 @@ ${question.correctAnswer}
 4. relatedGrammar: 관련 문법 규칙이 있다면 설명
 5. 학생이 쉽게 이해할 수 있는 명확한 한국어로 작성하세요`,
     });
+    object = _object;
+    } catch (aiError) {
+      await refundCredits(staff.academyId, "QUESTION_EXPLANATION", creditResult.transactionId, "Explanation generation failed");
+      throw aiError;
+    }
 
     // Save to database
     const existing = await prisma.questionExplanation.findUnique({
@@ -102,7 +130,7 @@ ${question.correctAnswer}
       });
     }
 
-    return NextResponse.json({ data: object });
+    return NextResponse.json({ data: object, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {
     console.error("Explanation generation error:", error);
     return NextResponse.json(

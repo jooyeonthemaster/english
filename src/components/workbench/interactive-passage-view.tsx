@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 "use client";
 
@@ -34,7 +35,7 @@ interface Highlight {
   start: number;
   end: number;
   type: "vocab" | "grammar" | "syntax" | "exam";
-  data: VocabItem | GrammarPoint | SyntaxItem | null;
+  data: VocabItem | GrammarPoint | SyntaxItem | ExamPointData | null;
 }
 
 type ActiveDetail =
@@ -44,6 +45,43 @@ type ActiveDetail =
   | { kind: "keySentence"; sentence: SentenceAnalysis; role: string; summary: string; isTopicSentence: boolean }
   | { kind: "examPoint"; text: string; alternatives?: string[]; transformType?: string; example?: string; reason?: string; questionExample?: string; difficulty?: string; relatedPoint?: string }
   | null;
+
+type NoteCategory = "vocab" | "grammar" | "syntax" | "key" | "exam";
+
+interface FocusedNote {
+  id: string;
+  category: NoteCategory;
+  pulseKey: number;
+}
+
+interface KeySentenceCollectionData {
+  role: string;
+  summary: string;
+  isTopicSentence: boolean;
+}
+
+interface ExamPointData {
+  kind?: "paraphrase" | "transform" | string;
+  sentenceIndex: number;
+  original?: string;
+  text?: string;
+  example?: string;
+  alternatives?: string[];
+  transformType?: string;
+  reason?: string;
+  questionExample?: string;
+  difficulty?: string;
+  relatedPoint?: string;
+}
+
+interface CollectionEntry {
+  id: string;
+  category: NoteCategory;
+  item: VocabItem | GrammarPoint | SyntaxItem | KeySentenceCollectionData | ExamPointData;
+  sentence: SentenceAnalysis | null;
+  sentenceIndex: number;
+  visible: boolean;
+}
 
 // ─── Helpers ─────────────────────────────────────────────
 function countWords(t: string) { return t.trim().split(/\s+/).filter(w => w.length > 0).length; }
@@ -56,24 +94,202 @@ const DIFF_LABELS: Record<string, { label: string; cls: string }> = {
 
 const TYPE_PRIORITY: Record<Highlight["type"], number> = { exam: 4, grammar: 3, syntax: 2, vocab: 1 };
 
-function collectHighlights(text: string, vocab: VocabItem[], grammar: GrammarPoint[], syntax: SyntaxItem | undefined, examTexts: { text: string; data: any }[]): Highlight[] {
+const CATEGORY_META: Record<NoteCategory, {
+  label: string;
+  title: string;
+  dot: string;
+  text: string;
+  soft: string;
+  border: string;
+  active: string;
+  ring: string;
+}> = {
+  vocab: {
+    label: "어휘",
+    title: "어휘 정리본",
+    dot: "bg-blue-500",
+    text: "text-blue-600",
+    soft: "bg-blue-50",
+    border: "border-blue-200",
+    active: "bg-blue-50 border-blue-200 text-blue-700",
+    ring: "ring-blue-300",
+  },
+  grammar: {
+    label: "문법",
+    title: "문법 정리본",
+    dot: "bg-violet-500",
+    text: "text-violet-600",
+    soft: "bg-violet-50",
+    border: "border-violet-200",
+    active: "bg-violet-50 border-violet-200 text-violet-700",
+    ring: "ring-violet-300",
+  },
+  syntax: {
+    label: "구문",
+    title: "구문 분석본",
+    dot: "bg-cyan-500",
+    text: "text-cyan-600",
+    soft: "bg-cyan-50",
+    border: "border-cyan-200",
+    active: "bg-cyan-50 border-cyan-200 text-cyan-700",
+    ring: "ring-cyan-300",
+  },
+  key: {
+    label: "핵심문장",
+    title: "핵심문장 정리본",
+    dot: "bg-green-500",
+    text: "text-green-600",
+    soft: "bg-green-50",
+    border: "border-green-200",
+    active: "bg-green-50 border-green-200 text-green-700",
+    ring: "ring-green-300",
+  },
+  exam: {
+    label: "출제포인트",
+    title: "출제포인트 정리본",
+    dot: "bg-yellow-500",
+    text: "text-yellow-600",
+    soft: "bg-yellow-50",
+    border: "border-yellow-200",
+    active: "bg-yellow-50 border-yellow-200 text-yellow-700",
+    ring: "ring-yellow-300",
+  },
+};
+
+const FOCUS_STYLES: Record<NoteCategory, React.CSSProperties> = {
+  vocab: {
+    background: "linear-gradient(to top, #bfdbfe 78%, transparent 78%)",
+    boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.38), 0 0 0 7px rgba(59, 130, 246, 0.12)",
+    borderRadius: 4,
+  },
+  grammar: {
+    background: "rgba(237, 233, 254, 0.92)",
+    boxShadow: "0 0 0 2px rgba(139, 92, 246, 0.4), 0 0 0 7px rgba(139, 92, 246, 0.12)",
+    borderRadius: 4,
+  },
+  syntax: {
+    background: "rgba(207, 250, 254, 0.92)",
+    boxShadow: "0 0 0 2px rgba(8, 145, 178, 0.4), 0 0 0 7px rgba(8, 145, 178, 0.12)",
+    borderRadius: 4,
+  },
+  key: {
+    background: "rgba(220, 252, 231, 0.9)",
+    boxShadow: "0 0 0 2px rgba(34, 197, 94, 0.42), 0 0 0 7px rgba(34, 197, 94, 0.12)",
+    borderRadius: 6,
+  },
+  exam: {
+    background: "linear-gradient(to top, #fde68a 82%, transparent 82%)",
+    boxShadow: "0 0 0 2px rgba(234, 179, 8, 0.45), 0 0 0 7px rgba(234, 179, 8, 0.14)",
+    borderRadius: 4,
+  },
+};
+
+function vocabKey(v: VocabItem) {
+  return `vocab:${v.sentenceIndex}:${v.word}:${v.meaning}`;
+}
+
+function grammarKey(g: GrammarPoint) {
+  return `grammar:${g.id || `${g.sentenceIndex}:${g.pattern}:${g.textFragment}`}`;
+}
+
+function syntaxKey(s: SyntaxItem) {
+  return `syntax:${s.sentenceIndex}:${s.keyPhrase || s.structure || s.chunkReading}`;
+}
+
+function examKey(d: ExamPointData) {
+  return `exam:${d.kind || "point"}:${d.sentenceIndex}:${d.original || d.text || d.example || ""}`;
+}
+
+function keySentenceKey(index: number) {
+  return `key:${index}`;
+}
+
+function noteDomId(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) | 0;
+  }
+  return `passage-note-${Math.abs(hash)}-${id.length}`;
+}
+
+function highlightCategory(type: Highlight["type"]): NoteCategory {
+  return type === "exam" ? "exam" : type;
+}
+
+function highlightNoteId(h: Highlight) {
+  if (!h.data) return null;
+  if (h.type === "vocab") return vocabKey(h.data as VocabItem);
+  if (h.type === "grammar") return grammarKey(h.data as GrammarPoint);
+  if (h.type === "syntax") return syntaxKey(h.data as SyntaxItem);
+  return examKey(h.data as ExamPointData);
+}
+
+function buildSearchIndex(text: string) {
+  let normalized = "";
+  const map: number[] = [];
+  let lastWasSpace = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+      .toLowerCase()
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/[–—]/g, "-")
+      .replace(/…/g, ".");
+
+    if (/\s/.test(ch)) {
+      if (!lastWasSpace) {
+        normalized += " ";
+        map.push(i);
+        lastWasSpace = true;
+      }
+      continue;
+    }
+
+    normalized += ch;
+    map.push(i);
+    lastWasSpace = false;
+  }
+
+  return { normalized: normalized.trim(), map };
+}
+
+function findTextRange(text: string, query: string): { start: number; end: number } | null {
+  const cleanQuery = query?.replace(/\.{2,}$/, "").replace(/…$/, "").trim();
+  if (!cleanQuery) return null;
+
+  const direct = text.toLowerCase().indexOf(cleanQuery.toLowerCase());
+  if (direct !== -1) return { start: direct, end: direct + cleanQuery.length };
+
+  const source = buildSearchIndex(text);
+  const target = buildSearchIndex(cleanQuery).normalized;
+  if (!target) return null;
+
+  const matched = source.normalized.indexOf(target);
+  if (matched === -1) return null;
+
+  const start = source.map[matched] ?? 0;
+  const endSourceIndex = source.map[Math.min(matched + target.length - 1, source.map.length - 1)] ?? start;
+  return { start, end: Math.min(endSourceIndex + 1, text.length) };
+}
+
+function collectHighlights(text: string, vocab: VocabItem[], grammar: GrammarPoint[], syntax: SyntaxItem | undefined, examTexts: { text: string; data: ExamPointData }[]): Highlight[] {
   const hl: Highlight[] = [];
   for (const v of vocab) {
-    const i = text.toLowerCase().indexOf(v.word.toLowerCase());
-    if (i !== -1) hl.push({ start: i, end: i + v.word.length, type: "vocab", data: v });
+    const range = findTextRange(text, v.word);
+    if (range) hl.push({ ...range, type: "vocab", data: v });
   }
   for (const g of grammar) {
-    const i = text.toLowerCase().indexOf(g.textFragment.toLowerCase());
-    if (i !== -1) hl.push({ start: i, end: i + g.textFragment.length, type: "grammar", data: g });
+    const range = findTextRange(text, g.textFragment);
+    if (range) hl.push({ ...range, type: "grammar", data: g });
   }
   if (syntax) {
     // Try keyPhrase first for precise highlight
     let matched = false;
     if (syntax.keyPhrase) {
-      const phrase = syntax.keyPhrase.replace(/\.{2,}$/, "").trim();
-      const i = text.toLowerCase().indexOf(phrase.toLowerCase());
-      if (i !== -1) {
-        hl.push({ start: i, end: i + phrase.length, type: "syntax", data: syntax });
+      const range = findTextRange(text, syntax.keyPhrase);
+      if (range) {
+        hl.push({ ...range, type: "syntax", data: syntax });
         matched = true;
       }
     }
@@ -83,19 +299,19 @@ function collectHighlights(text: string, vocab: VocabItem[], grammar: GrammarPoi
     }
   }
   for (const et of examTexts) {
-    const clean = et.text.replace(/\.{2,}$/, "").replace(/…$/, "").trim();
-    if (clean.length < 3) continue;
-    let i = text.toLowerCase().indexOf(clean.toLowerCase());
-    if (i === -1 && clean.split(" ").length >= 3) {
+    const clean = et.text?.replace(/\.{2,}$/, "").replace(/…$/, "").trim();
+    if (!clean || clean.length < 3) continue;
+    const range = findTextRange(text, clean);
+    if (!range && clean.split(" ").length >= 3) {
       const prefix = clean.split(" ").slice(0, 4).join(" ");
-      i = text.toLowerCase().indexOf(prefix.toLowerCase());
-      if (i !== -1) {
-        const endIdx = Math.min(i + clean.length + 20, text.indexOf(".", i + prefix.length) + 1 || text.length);
-        hl.push({ start: i, end: endIdx, type: "exam", data: et.data });
+      const prefixRange = findTextRange(text, prefix);
+      if (prefixRange) {
+        const endIdx = Math.min(prefixRange.start + clean.length + 20, text.indexOf(".", prefixRange.end) + 1 || text.length);
+        hl.push({ start: prefixRange.start, end: endIdx, type: "exam", data: et.data });
         continue;
       }
     }
-    if (i !== -1) hl.push({ start: i, end: i + clean.length, type: "exam", data: et.data });
+    if (range) hl.push({ ...range, type: "exam", data: et.data });
   }
   return hl;
 }
@@ -124,7 +340,7 @@ function buildSegments(allHighlights: Highlight[]): Segment[] {
 }
 
 function getSegmentStyle(types: Set<Highlight["type"]>): React.CSSProperties {
-  const s: React.CSSProperties = {};
+  const s: React.CSSProperties & { textDecorationSkipInk?: string } = {};
   if (types.has("exam")) {
     s.background = "linear-gradient(to top, #fef08a 40%, transparent 40%)";
   } else if (types.has("vocab")) {
@@ -141,7 +357,7 @@ function getSegmentStyle(types: Set<Highlight["type"]>): React.CSSProperties {
   if (types.has("grammar")) {
     s.textDecoration = "underline wavy #8b5cf6";
     s.textUnderlineOffset = "3px";
-    (s as any).textDecorationSkipInk = "none";
+    s.textDecorationSkipInk = "none";
   }
   return s;
 }
@@ -156,6 +372,8 @@ function highlightWord(text: string, word: string) {
 export function InteractivePassageView({ content, analysisData, layout = "horizontal" }: Props) {
   const [showTranslation, setShowTranslation] = useState(true);
   const [activeDetail, setActiveDetail] = useState<ActiveDetail>(null);
+  const [activeCollection, setActiveCollection] = useState<NoteCategory | null>(null);
+  const [focusedNote, setFocusedNote] = useState<FocusedNote | null>(null);
   const [summaryOpen, setSummaryOpen] = useState(true);
   // Track last clicked segment for cycling through overlapping highlights
   const lastClickRef = React.useRef<{ key: string; index: number }>({ key: "", index: -1 });
@@ -163,23 +381,31 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
   const wordCount = useMemo(() => countWords(content), [content]);
   const hasAnalysis = analysisData !== null;
 
+  React.useEffect(() => {
+    if (!focusedNote) return;
+    window.requestAnimationFrame(() => {
+      const el = document.getElementById(noteDomId(focusedNote.id));
+      el?.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    });
+  }, [focusedNote]);
+
   // ─── Data maps ─────────────────────────────────────────
   const sentenceMap = useMemo(() => {
     if (!analysisData) return new Map<number, SentenceAnalysis>();
-    return new Map(analysisData.sentences.map(s => [s.index, s]));
+    return new Map((analysisData.sentences || []).map(s => [s.index, s]));
   }, [analysisData]);
 
   const vocabBySentence = useMemo(() => {
     if (!analysisData) return new Map<number, VocabItem[]>();
     const m = new Map<number, VocabItem[]>();
-    for (const v of analysisData.vocabulary) { const a = m.get(v.sentenceIndex) || []; a.push(v); m.set(v.sentenceIndex, a); }
+    for (const v of analysisData.vocabulary || []) { const a = m.get(v.sentenceIndex) || []; a.push(v); m.set(v.sentenceIndex, a); }
     return m;
   }, [analysisData]);
 
   const grammarBySentence = useMemo(() => {
     if (!analysisData) return new Map<number, GrammarPoint[]>();
     const m = new Map<number, GrammarPoint[]>();
-    for (const g of analysisData.grammarPoints) { const a = m.get(g.sentenceIndex) || []; a.push(g); m.set(g.sentenceIndex, a); }
+    for (const g of analysisData.grammarPoints || []) { const a = m.get(g.sentenceIndex) || []; a.push(g); m.set(g.sentenceIndex, a); }
     return m;
   }, [analysisData]);
 
@@ -191,8 +417,8 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
   const keySentenceIndices = useMemo(() => {
     if (!analysisData) return new Set<number>();
     const set = new Set<number>();
-    if (analysisData.structure.topicSentenceIndex != null) set.add(analysisData.structure.topicSentenceIndex);
-    if (analysisData.structure.logicFlow) {
+    if (analysisData.structure?.topicSentenceIndex != null) set.add(analysisData.structure.topicSentenceIndex);
+    if (analysisData.structure?.logicFlow) {
       for (const f of analysisData.structure.logicFlow) {
         if (f.role === "주장" || f.role === "결론") for (const idx of f.sentenceIndices) set.add(idx);
       }
@@ -202,14 +428,14 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
 
   // Exam highlights — include both paraphrasable + transform points with their data
   const examHighlightsBySentence = useMemo(() => {
-    if (!analysisData?.examDesign) return new Map<number, { text: string; data: any }[]>();
-    const m = new Map<number, { text: string; data: any }[]>();
-    for (const seg of analysisData.examDesign.paraphrasableSegments) {
+    if (!analysisData?.examDesign) return new Map<number, { text: string; data: ExamPointData }[]>();
+    const m = new Map<number, { text: string; data: ExamPointData }[]>();
+    for (const seg of analysisData.examDesign.paraphrasableSegments || []) {
       const a = m.get(seg.sentenceIndex) || [];
       a.push({ text: seg.original, data: { kind: "paraphrase", ...seg } });
       m.set(seg.sentenceIndex, a);
     }
-    for (const tp of analysisData.examDesign.structureTransformPoints) {
+    for (const tp of analysisData.examDesign.structureTransformPoints || []) {
       const a = m.get(tp.sentenceIndex) || [];
       a.push({ text: tp.original, data: { kind: "transform", ...tp } });
       m.set(tp.sentenceIndex, a);
@@ -217,8 +443,146 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
     return m;
   }, [analysisData]);
 
+  const noteSummary = useMemo(() => {
+    const visibleKeys: Record<NoteCategory, Set<string>> = {
+      vocab: new Set(),
+      grammar: new Set(),
+      syntax: new Set(),
+      key: new Set(),
+      exam: new Set(),
+    };
+    const emptyCounts = { vocab: 0, grammar: 0, syntax: 0, key: 0, exam: 0 };
+    if (!analysisData) {
+      return { counts: emptyCounts, rawCounts: emptyCounts, visibleKeys };
+    }
+
+    for (const sentence of analysisData.sentences || []) {
+      const vocab = vocabBySentence.get(sentence.index) || [];
+      const grammar = grammarBySentence.get(sentence.index) || [];
+      const syntax = syntaxBySentence.get(sentence.index);
+      const examTexts = examHighlightsBySentence.get(sentence.index) || [];
+      const highlights = collectHighlights(sentence.english, vocab, grammar, syntax, examTexts);
+
+      for (const h of highlights) {
+        if (h.type === "vocab" && h.data) visibleKeys.vocab.add(vocabKey(h.data as VocabItem));
+        if (h.type === "grammar" && h.data) visibleKeys.grammar.add(grammarKey(h.data as GrammarPoint));
+        if (h.type === "syntax" && h.data) visibleKeys.syntax.add(syntaxKey(h.data as SyntaxItem));
+        if (h.type === "exam" && h.data) visibleKeys.exam.add(examKey(h.data));
+      }
+    }
+
+    for (const index of keySentenceIndices) {
+      if (sentenceMap.has(index)) visibleKeys.key.add(keySentenceKey(index));
+    }
+
+    const rawCounts = {
+      vocab: analysisData.vocabulary?.length || 0,
+      grammar: analysisData.grammarPoints?.length || 0,
+      syntax: analysisData.syntaxAnalysis?.length || 0,
+      key: keySentenceIndices.size,
+      exam: (analysisData.examDesign?.paraphrasableSegments?.length || 0) + (analysisData.examDesign?.structureTransformPoints?.length || 0),
+    };
+
+    return {
+      counts: {
+        vocab: visibleKeys.vocab.size,
+        grammar: visibleKeys.grammar.size,
+        syntax: visibleKeys.syntax.size,
+        key: visibleKeys.key.size,
+        exam: visibleKeys.exam.size,
+      },
+      rawCounts,
+      visibleKeys,
+    };
+  }, [analysisData, vocabBySentence, grammarBySentence, syntaxBySentence, examHighlightsBySentence, keySentenceIndices, sentenceMap]);
+
+  const collections = useMemo<Record<NoteCategory, CollectionEntry[]>>(() => {
+    const empty = { vocab: [], grammar: [], syntax: [], key: [], exam: [] };
+    if (!analysisData) return empty;
+
+    const vocab = (analysisData.vocabulary || []).map((item) => {
+      const id = vocabKey(item);
+      return {
+        id,
+        category: "vocab" as const,
+        item,
+        sentence: sentenceMap.get(item.sentenceIndex) || null,
+        sentenceIndex: item.sentenceIndex,
+        visible: noteSummary.visibleKeys.vocab.has(id),
+      };
+    });
+
+    const grammar = (analysisData.grammarPoints || []).map((item) => {
+      const id = grammarKey(item);
+      return {
+        id,
+        category: "grammar" as const,
+        item,
+        sentence: sentenceMap.get(item.sentenceIndex) || null,
+        sentenceIndex: item.sentenceIndex,
+        visible: noteSummary.visibleKeys.grammar.has(id),
+      };
+    });
+
+    const syntax = (analysisData.syntaxAnalysis || []).map((item) => {
+      const id = syntaxKey(item);
+      return {
+        id,
+        category: "syntax" as const,
+        item,
+        sentence: sentenceMap.get(item.sentenceIndex) || null,
+        sentenceIndex: item.sentenceIndex,
+        visible: noteSummary.visibleKeys.syntax.has(id),
+      };
+    });
+
+    const key = Array.from(keySentenceIndices)
+      .sort((a, b) => a - b)
+      .map((index) => {
+        const sentence = sentenceMap.get(index) || null;
+        const flow = analysisData.structure?.logicFlow?.find(f => f.sentenceIndices.includes(index));
+        const isTopicSentence = analysisData.structure?.topicSentenceIndex === index;
+        const item = {
+          role: flow?.role || (isTopicSentence ? "주제문" : "핵심"),
+          summary: flow?.summary || sentence?.korean || "",
+          isTopicSentence,
+        };
+        const id = keySentenceKey(index);
+        return {
+          id,
+          category: "key" as const,
+          item,
+          sentence,
+          sentenceIndex: index,
+          visible: noteSummary.visibleKeys.key.has(id),
+        };
+      });
+
+    const paraphrases = (analysisData.examDesign?.paraphrasableSegments || []).map((seg) => ({ kind: "paraphrase", ...seg }));
+    const transforms = (analysisData.examDesign?.structureTransformPoints || []).map((tp) => ({ kind: "transform", ...tp }));
+    const exam = [...paraphrases, ...transforms].map((item) => {
+      const id = examKey(item);
+      return {
+        id,
+        category: "exam" as const,
+        item,
+        sentence: sentenceMap.get(item.sentenceIndex) || null,
+        sentenceIndex: item.sentenceIndex,
+        visible: noteSummary.visibleKeys.exam.has(id),
+      };
+    });
+
+    return { vocab, grammar, syntax, key, exam };
+  }, [analysisData, sentenceMap, keySentenceIndices, noteSummary]);
+
+  const handleCollectionEntrySelect = useCallback((entry: CollectionEntry) => {
+    if (!entry.visible) return;
+    setFocusedNote({ id: entry.id, category: entry.category, pulseKey: Date.now() });
+  }, []);
+
   // ─── Click handler (single highlight) ──────────────────
   const activateHighlight = useCallback((h: Highlight, sentence: SentenceAnalysis) => {
+    setActiveCollection(null);
     if (h.type === "vocab") {
       const v = h.data as VocabItem;
       setActiveDetail({ kind: "vocab", item: v, sentence: sentenceMap.get(v.sentenceIndex) || null });
@@ -255,8 +619,9 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
   }, [activateHighlight]);
 
   const handleKeySentenceClick = useCallback((sentence: SentenceAnalysis) => {
-    const flow = analysisData?.structure.logicFlow?.find(f => f.sentenceIndices.includes(sentence.index));
-    const isTopic = analysisData?.structure.topicSentenceIndex === sentence.index;
+    setActiveCollection(null);
+    const flow = analysisData?.structure?.logicFlow?.find(f => f.sentenceIndices.includes(sentence.index));
+    const isTopic = analysisData?.structure?.topicSentenceIndex === sentence.index;
     setActiveDetail({
       kind: "keySentence",
       sentence,
@@ -274,8 +639,8 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
     const syntax = syntaxBySentence.get(sentence.index);
     const examTexts = examHighlightsBySentence.get(sentence.index) || [];
     const isKey = keySentenceIndices.has(sentence.index);
-    const isTopic = analysisData?.structure.topicSentenceIndex === sentence.index;
-    const flow = analysisData?.structure.logicFlow?.find(f => f.sentenceIndices.includes(sentence.index));
+    const isTopic = analysisData?.structure?.topicSentenceIndex === sentence.index;
+    const flow = analysisData?.structure?.logicFlow?.find(f => f.sentenceIndices.includes(sentence.index));
     const allHighlights = collectHighlights(text, vocab, grammar, syntax, examTexts);
     const segments = buildSegments(allHighlights);
 
@@ -283,6 +648,7 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
 
     const parts: React.ReactNode[] = [];
     let cursor = 0;
+    let focusAnchorAttached = false;
     for (const seg of segments) {
       if (cursor < seg.start) parts.push(<span key={`p-${sentence.index}-${cursor}`}>{text.slice(cursor, seg.start)}</span>);
       const frag = text.slice(seg.start, seg.end);
@@ -291,9 +657,17 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
       // Deduplicate highlight types for this segment
       const uniqueTypes = [...new Set(seg.highlights.map(h => h.type))];
       const hasOverlap = uniqueTypes.length > 1;
+      const focusedHighlight = focusedNote
+        ? seg.highlights.find((h) => highlightNoteId(h) === focusedNote.id)
+        : null;
+      const focusCategory = focusedHighlight ? highlightCategory(focusedHighlight.type) : null;
       const hoverCls = seg.types.has("exam") ? "hover:opacity-80" : seg.types.has("grammar") && !seg.types.has("vocab") && !seg.types.has("exam") ? "hover:bg-violet-50" : seg.types.has("syntax") && seg.types.size === 1 ? "hover:bg-cyan-50" : "";
       parts.push(
-        <span key={`h-${segKey}`} className={`cursor-pointer transition-colors ${hoverCls} relative`} style={style}
+        <span
+          key={`h-${segKey}`}
+          id={focusedHighlight && focusedNote && !focusAnchorAttached ? noteDomId(focusedNote.id) : undefined}
+          className={`cursor-pointer transition-colors ${hoverCls} relative scroll-mt-20 ${focusedHighlight ? "z-10" : ""}`}
+          style={focusCategory ? { ...style, ...FOCUS_STYLES[focusCategory] } : style}
           onClick={(e) => { e.stopPropagation(); handleSegmentClick(segKey, seg.highlights, sentence); }} role="button" tabIndex={0}
           title={hasOverlap ? `클릭하여 순환: ${uniqueTypes.map(t => t === "vocab" ? "어휘" : t === "grammar" ? "문법" : t === "syntax" ? "구문" : "출제포인트").join(" → ")}` : undefined}
         >
@@ -307,16 +681,22 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
           )}
         </span>
       );
+      if (focusedHighlight) focusAnchorAttached = true;
       cursor = seg.end;
     }
     if (cursor < text.length) parts.push(<span key={`p-${sentence.index}-end`}>{text.slice(cursor)}</span>);
 
     // Use text-decoration instead of border-bottom so it wraps across multiple lines
-    const syntaxStyle = syntax ? "" : "";
     const syntaxInlineStyle = syntax ? { textDecoration: "underline dashed #22d3ee", textUnderlineOffset: "4px", textDecorationSkipInk: "none" as const } : undefined;
+    const isFocusedKeySentence = focusedNote?.id === keySentenceKey(sentence.index);
 
     return (
-      <div key={`s-${sentence.index}`} className={`mb-3 ${isKey ? "border-l-[3px] border-green-500 pl-2 bg-green-50/30 rounded-r" : ""}`}>
+      <div
+        key={`s-${sentence.index}`}
+        id={isFocusedKeySentence && focusedNote ? noteDomId(focusedNote.id) : undefined}
+        className={`mb-3 scroll-mt-20 transition-all ${isKey ? "border-l-[3px] border-green-500 pl-2 bg-green-50/30 rounded-r" : ""} ${isFocusedKeySentence ? "ring-2 ring-green-400 ring-offset-2 shadow-sm" : ""}`}
+        style={isFocusedKeySentence ? FOCUS_STYLES.key : undefined}
+      >
         <div className="flex items-start gap-1">
           {/* 줄번호 + 핵심문장/구문 뱃지 */}
           <div className="flex items-center gap-1 shrink-0 mt-0.5">
@@ -332,7 +712,7 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
             {syntax && (
               <span
                 className="text-[8px] font-bold text-cyan-600 bg-cyan-50 px-1 py-0.5 rounded leading-none cursor-pointer hover:bg-cyan-100 transition-colors"
-                onClick={() => setActiveDetail({ kind: "syntax", item: syntax, sentence })}
+                onClick={() => { setActiveCollection(null); setActiveDetail({ kind: "syntax", item: syntax, sentence }); }}
                 title="구문 분석 보기"
               >
                 구문
@@ -347,28 +727,23 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
         )}
       </div>
     );
-  }, [vocabBySentence, grammarBySentence, syntaxBySentence, examHighlightsBySentence, keySentenceIndices, analysisData, showTranslation, handleSegmentClick, handleKeySentenceClick]);
+  }, [vocabBySentence, grammarBySentence, syntaxBySentence, examHighlightsBySentence, keySentenceIndices, analysisData, showTranslation, focusedNote, handleSegmentClick, handleKeySentenceClick]);
 
   // ─── Count badges ──────────────────────────────────────
-  const counts = hasAnalysis ? {
-    vocab: analysisData.vocabulary.length,
-    grammar: analysisData.grammarPoints.length,
-    syntax: analysisData.syntaxAnalysis?.length || 0,
-    key: keySentenceIndices.size,
-    exam: (analysisData.examDesign?.paraphrasableSegments.length || 0) + (analysisData.examDesign?.structureTransformPoints.length || 0),
-  } : null;
+  const counts = hasAnalysis ? noteSummary.counts : null;
+  const rawCounts = hasAnalysis ? noteSummary.rawCounts : null;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3 px-5 py-3 border-b">
+        <div className="flex items-center gap-2 flex-wrap min-w-0">
           {counts && <>
-            {counts.vocab > 0 && <span className="flex items-center gap-1 text-[11px] text-blue-600 font-medium"><span className="w-1.5 h-1.5 rounded-full bg-blue-500" />어휘 {counts.vocab}</span>}
-            {counts.grammar > 0 && <span className="flex items-center gap-1 text-[11px] text-violet-600 font-medium"><span className="w-1.5 h-1.5 rounded-full bg-violet-500" />문법 {counts.grammar}</span>}
-            {counts.syntax > 0 && <span className="flex items-center gap-1 text-[11px] text-cyan-600 font-medium"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />구문 {counts.syntax}</span>}
-            {counts.key > 0 && <span className="flex items-center gap-1 text-[11px] text-green-600 font-medium"><span className="w-1.5 h-1.5 rounded-full bg-green-500" />핵심문장 {counts.key}</span>}
-            {counts.exam > 0 && <span className="flex items-center gap-1 text-[11px] text-yellow-600 font-medium"><span className="w-1.5 h-1.5 rounded-full bg-yellow-500" />출제포인트 {counts.exam}</span>}
+            {rawCounts.vocab > 0 && <CategoryChip category="vocab" count={counts.vocab} rawCount={rawCounts.vocab} active={activeCollection === "vocab"} onClick={() => { setActiveCollection(v => v === "vocab" ? null : "vocab"); setActiveDetail(null); }} />}
+            {rawCounts.grammar > 0 && <CategoryChip category="grammar" count={counts.grammar} rawCount={rawCounts.grammar} active={activeCollection === "grammar"} onClick={() => { setActiveCollection(v => v === "grammar" ? null : "grammar"); setActiveDetail(null); }} />}
+            {rawCounts.syntax > 0 && <CategoryChip category="syntax" count={counts.syntax} rawCount={rawCounts.syntax} active={activeCollection === "syntax"} onClick={() => { setActiveCollection(v => v === "syntax" ? null : "syntax"); setActiveDetail(null); }} />}
+            {rawCounts.key > 0 && <CategoryChip category="key" count={counts.key} rawCount={rawCounts.key} active={activeCollection === "key"} onClick={() => { setActiveCollection(v => v === "key" ? null : "key"); setActiveDetail(null); }} />}
+            {rawCounts.exam > 0 && <CategoryChip category="exam" count={counts.exam} rawCount={rawCounts.exam} active={activeCollection === "exam"} onClick={() => { setActiveCollection(v => v === "exam" ? null : "exam"); setActiveDetail(null); }} />}
           </>}
         </div>
         <div className="flex items-center gap-2">
@@ -382,21 +757,32 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
         </div>
       </div>
 
-      {/* ─── Content Layout (horizontal or vertical) ─── */}
       <div className={layout === "vertical"
         ? "flex flex-col divide-y divide-slate-100"
-        : "grid grid-cols-[1fr_1fr] divide-x divide-slate-100 min-h-[400px]"
+        : "grid grid-cols-1 lg:grid-cols-[1fr_1fr] lg:divide-x divide-y lg:divide-y-0 divide-slate-100 min-h-[400px]"
       }>
         {/* 지문 필기노트 */}
         <div className={layout === "vertical" ? "p-5 overflow-y-auto max-h-[45vh]" : "p-5 overflow-y-auto max-h-[700px]"}>
           {!hasAnalysis && <p className="text-[13px] text-slate-400 mb-3">AI 분석을 실행하면 어휘·문법·구문 하이라이트가 표시됩니다.</p>}
-          <div>{hasAnalysis ? analysisData.sentences.map(s => renderSentence(s)) : <div className="font-mono text-sm leading-[2]">{content}</div>}</div>
+          <div>{hasAnalysis ? (analysisData.sentences || []).map(s => renderSentence(s)) : <div className="font-mono text-sm leading-[2]">{content}</div>}</div>
         </div>
 
         {/* 분석 요약 + 상세 패널 */}
         <div className={layout === "vertical" ? "p-5 space-y-4" : "p-5 overflow-y-auto max-h-[700px] space-y-4"}>
+          {activeCollection && hasAnalysis && (
+            <CategoryCollectionPanel
+              category={activeCollection}
+              entries={collections[activeCollection]}
+              visibleCount={noteSummary.counts[activeCollection]}
+              rawCount={noteSummary.rawCounts[activeCollection]}
+              focusedNoteId={focusedNote?.id || null}
+              onSelect={handleCollectionEntrySelect}
+              onClose={() => setActiveCollection(null)}
+            />
+          )}
+
           {/* 분석 요약 — 항상 상단 */}
-          {hasAnalysis && (
+          {hasAnalysis && !activeCollection && (
             <div>
               <button type="button" onClick={() => setSummaryOpen(v => !v)}
                 className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-700 hover:text-slate-900 transition-colors w-full mb-3">
@@ -408,7 +794,7 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
           )}
 
           {/* Active detail (클릭한 항목) — 요약 아래 */}
-          {activeDetail && (
+          {activeDetail && !activeCollection && (
             <div>
               {activeDetail.kind === "vocab" && <VocabPanel item={activeDetail.item} sentence={activeDetail.sentence} onClose={() => setActiveDetail(null)} />}
               {activeDetail.kind === "grammar" && <GrammarPanel item={activeDetail.item} sentence={activeDetail.sentence} onClose={() => setActiveDetail(null)} />}
@@ -418,11 +804,264 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
             </div>
           )}
 
-          {!activeDetail && !hasAnalysis && (
+          {!activeDetail && !activeCollection && !hasAnalysis && (
             <p className="text-[13px] text-slate-400">지문의 하이라이트를 클릭하면 상세 분석이 여기에 표시됩니다.</p>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function CategoryChip({
+  category,
+  count,
+  rawCount,
+  active,
+  onClick,
+}: {
+  category: NoteCategory;
+  count: number;
+  rawCount: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const meta = CATEGORY_META[category];
+  const hasMismatch = rawCount > count;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      title={`본문 표시 ${count}개 / 분석 원본 ${rawCount}개`}
+      className={`inline-flex h-6 items-center gap-1 rounded-md border px-2 text-[11px] font-medium transition-colors ${
+        active ? meta.active : `${meta.text} border-transparent hover:bg-slate-50`
+      }`}
+    >
+      <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
+      <span>{meta.label}</span>
+      <span>{count}</span>
+      {hasMismatch && <span className="text-slate-400">/{rawCount}</span>}
+    </button>
+  );
+}
+
+function CategoryCollectionPanel({
+  category,
+  entries,
+  visibleCount,
+  rawCount,
+  focusedNoteId,
+  onSelect,
+  onClose,
+}: {
+  category: NoteCategory;
+  entries: CollectionEntry[];
+  visibleCount: number;
+  rawCount: number;
+  focusedNoteId: string | null;
+  onSelect: (entry: CollectionEntry) => void;
+  onClose: () => void;
+}) {
+  const meta = CATEGORY_META[category];
+  const visible = entries.filter((entry) => entry.visible);
+  const hidden = entries.filter((entry) => !entry.visible);
+  const Icon = category === "vocab" ? BookOpen : category === "key" ? MessageSquare : category === "exam" ? Target : Braces;
+
+  return (
+    <div className={`rounded-xl border ${meta.border} bg-white p-4 space-y-4`}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className={`w-8 h-8 rounded-lg ${meta.soft} flex items-center justify-center shrink-0`}>
+              <Icon className={`w-4 h-4 ${meta.text}`} />
+            </span>
+            <div>
+              <h3 className="text-[15px] font-bold text-slate-900">{meta.title}</h3>
+              <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-400">
+                <span>본문 필기 {visibleCount}</span>
+                <span>분석 원본 {rawCount}</span>
+                {hidden.length > 0 && <span className="text-amber-600">매칭 필요 {hidden.length}</span>}
+              </div>
+            </div>
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0 shrink-0">
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {visible.length > 0 ? (
+        <div className="space-y-2">
+          {visible.map((entry) => renderCollectionEntry(category, entry, focusedNoteId, onSelect))}
+        </div>
+      ) : (
+        <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-4 text-center text-[12px] text-slate-400">
+          본문에 표시된 항목이 없습니다.
+        </div>
+      )}
+
+      {hidden.length > 0 && (
+        <div className="border-t border-slate-100 pt-3">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[12px] font-semibold text-slate-500">원문 매칭 필요</span>
+            <Badge variant="outline" className="text-[10px] h-5 text-amber-700 border-amber-200 bg-amber-50">{hidden.length}</Badge>
+          </div>
+          <div className="space-y-2">
+            {hidden.map((entry) => renderCollectionEntry(category, entry, focusedNoteId, onSelect))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function renderCollectionEntry(
+  category: NoteCategory,
+  entry: CollectionEntry,
+  focusedNoteId: string | null,
+  onSelect: (entry: CollectionEntry) => void
+) {
+  const statusBadge = entry.visible ? (
+    <Badge className="h-5 border-0 bg-emerald-50 text-[10px] text-emerald-700">본문 표시</Badge>
+  ) : (
+    <Badge variant="outline" className="h-5 border-amber-200 bg-amber-50 text-[10px] text-amber-700">매칭 필요</Badge>
+  );
+  const isFocused = focusedNoteId === entry.id;
+
+  return (
+    <div
+      key={entry.id}
+      role={entry.visible ? "button" : undefined}
+      tabIndex={entry.visible ? 0 : undefined}
+      title={entry.visible ? "본문에서 위치 강조" : undefined}
+      onClick={entry.visible ? () => onSelect(entry) : undefined}
+      onKeyDown={entry.visible ? (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect(entry);
+        }
+      } : undefined}
+      className={`rounded-lg border p-3 transition-all ${
+        entry.visible ? "cursor-pointer border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60" : "border-dashed border-slate-200 bg-slate-50/80"
+      } ${isFocused ? `${CATEGORY_META[category].active} ${CATEGORY_META[category].ring} ring-2 ring-offset-1 shadow-sm` : ""}`}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <span className="text-[10px] font-bold text-slate-400">{entry.sentenceIndex + 1}번 문장</span>
+        {statusBadge}
+      </div>
+      {category === "vocab" && <VocabCollectionItem entry={entry} />}
+      {category === "grammar" && <GrammarCollectionItem entry={entry} />}
+      {category === "syntax" && <SyntaxCollectionItem entry={entry} />}
+      {category === "key" && <KeyCollectionItem entry={entry} />}
+      {category === "exam" && <ExamCollectionItem entry={entry} />}
+    </div>
+  );
+}
+
+function VocabCollectionItem({ entry }: { entry: CollectionEntry }) {
+  const item = entry.item as VocabItem;
+  return (
+    <div className="space-y-2">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-mono text-[15px] font-bold text-slate-900">{item.word}</span>
+            {item.partOfSpeech && <Badge variant="outline" className="h-5 text-[10px]">{item.partOfSpeech}</Badge>}
+            {DIFF_LABELS[item.difficulty] && <Badge className={`h-5 border-0 text-[10px] ${DIFF_LABELS[item.difficulty].cls}`}>{DIFF_LABELS[item.difficulty].label}</Badge>}
+          </div>
+          {item.pronunciation && <span className="text-[11px] text-slate-400">{item.pronunciation}</span>}
+        </div>
+        <span className="text-right text-[13px] font-semibold text-blue-700">{item.meaning}</span>
+      </div>
+      {item.contextMeaning && <p className="rounded-md bg-slate-50 px-2 py-1.5 text-[12px] text-slate-600">{item.contextMeaning}</p>}
+      {entry.sentence && <p className="rounded-md border border-slate-100 bg-white px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-600">{highlightWord(entry.sentence.english, item.word)}</p>}
+      {(item.synonyms?.length > 0 || item.antonyms?.length > 0 || item.collocations?.length > 0) && (
+        <div className="flex flex-wrap gap-1.5 text-[11px]">
+          {item.synonyms?.slice(0, 4).map((v, i) => <span key={`s-${i}`} className="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">동의 {v}</span>)}
+          {item.antonyms?.slice(0, 4).map((v, i) => <span key={`a-${i}`} className="rounded bg-rose-50 px-1.5 py-0.5 text-rose-700">반의 {v}</span>)}
+          {item.collocations?.slice(0, 4).map((v, i) => <span key={`c-${i}`} className="rounded bg-green-50 px-1.5 py-0.5 text-green-700">{v}</span>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function GrammarCollectionItem({ entry }: { entry: CollectionEntry }) {
+  const item = entry.item as GrammarPoint;
+  return (
+    <div className="space-y-2">
+      <div className="flex items-start justify-between gap-3">
+        <span className="text-[14px] font-bold text-slate-900">{item.pattern}</span>
+        {item.level && <Badge variant="outline" className="h-5 shrink-0 text-[10px]">{item.level}</Badge>}
+      </div>
+      {item.textFragment && <p className="rounded-md border border-violet-100 bg-violet-50/50 px-2 py-1.5 font-mono text-[12px] text-violet-800">{item.textFragment}</p>}
+      <p className="text-[12px] leading-relaxed text-slate-600">{item.explanation}</p>
+      {item.commonMistake && <p className="rounded-md bg-rose-50 px-2 py-1.5 text-[12px] text-rose-700"><span className="font-semibold">오답 함정:</span> {item.commonMistake}</p>}
+      {item.transformations?.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 text-[11px]">
+          {item.transformations.slice(0, 4).map((v, i) => <span key={i} className="rounded bg-violet-50 px-1.5 py-0.5 text-violet-700">{v}</span>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SyntaxCollectionItem({ entry }: { entry: CollectionEntry }) {
+  const item = entry.item as SyntaxItem;
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[13px] font-bold text-cyan-700">구문 분석</span>
+        <Badge className="h-5 border-0 bg-cyan-50 text-[10px] text-cyan-700">{item.complexity}</Badge>
+        {item.patternType && <Badge variant="outline" className="h-5 text-[10px]">{item.patternType}</Badge>}
+      </div>
+      <p className="rounded-md border border-slate-100 bg-white px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-700">{item.structure}</p>
+      {item.chunkReading && <p className="rounded-md bg-cyan-50 px-2 py-1.5 font-mono text-[12px] leading-relaxed text-cyan-800">{item.chunkReading}</p>}
+      {item.transformPoint && <p className="text-[12px] text-slate-600">{item.transformPoint}</p>}
+    </div>
+  );
+}
+
+function KeyCollectionItem({ entry }: { entry: CollectionEntry }) {
+  const item = entry.item;
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-1.5">
+        <Badge className="h-5 border-0 bg-green-50 text-[10px] text-green-700">{item.role}</Badge>
+        {item.isTopicSentence && <Badge className="h-5 border-0 bg-green-50 text-[10px] text-green-700">주제문</Badge>}
+      </div>
+      {item.summary && <p className="text-[13px] leading-relaxed text-slate-700">{item.summary}</p>}
+      {entry.sentence && (
+        <>
+          <p className="rounded-md border border-slate-100 bg-white px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-700">{entry.sentence.english}</p>
+          <p className="text-[12px] leading-relaxed text-slate-400">{entry.sentence.korean}</p>
+        </>
+      )}
+    </div>
+  );
+}
+
+function ExamCollectionItem({ entry }: { entry: CollectionEntry }) {
+  const item = entry.item;
+  const isParaphrase = item.kind === "paraphrase";
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <Badge className={`h-5 border-0 text-[10px] ${isParaphrase ? "bg-blue-50 text-blue-700" : "bg-violet-50 text-violet-700"}`}>
+          {isParaphrase ? "패러프레이징" : item.transformType || "구조 변형"}
+        </Badge>
+        {item.difficulty && <Badge variant="outline" className="h-5 text-[10px]">{item.difficulty}</Badge>}
+      </div>
+      <p className="rounded-md border border-yellow-100 bg-yellow-50/70 px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-800">{item.original}</p>
+      {item.reason && <p className="text-[12px] leading-relaxed text-slate-600"><span className="font-semibold text-yellow-700">이유:</span> {item.reason}</p>}
+      {item.questionExample && <p className="rounded-md bg-slate-50 px-2 py-1.5 text-[12px] leading-relaxed text-slate-700">{item.questionExample}</p>}
+      {item.alternatives?.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 text-[11px]">
+          {item.alternatives.slice(0, 4).map((v, i) => <span key={i} className="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">{v}</span>)}
+        </div>
+      )}
+      {item.example && <p className="rounded-md bg-violet-50 px-2 py-1.5 font-mono text-[12px] text-violet-800">{item.example}</p>}
     </div>
   );
 }
@@ -460,7 +1099,7 @@ function VocabPanel({ item, sentence, onClose }: { item: VocabItem; sentence: Se
 }
 
 // ─── Grammar Panel ───────────────────────────────────────
-function GrammarPanel({ item, sentence, onClose }: { item: GrammarPoint; sentence: SentenceAnalysis | null; onClose: () => void }) {
+function GrammarPanel({ item, onClose }: { item: GrammarPoint; sentence: SentenceAnalysis | null; onClose: () => void }) {
   return (
     <div className="rounded-xl border border-violet-200 bg-gradient-to-b from-violet-50/50 to-white p-4 space-y-2.5">
       <div className="flex items-start justify-between">
@@ -485,7 +1124,7 @@ function GrammarPanel({ item, sentence, onClose }: { item: GrammarPoint; sentenc
 }
 
 // ─── Syntax Panel ────────────────────────────────────────
-function SyntaxPanel({ item, sentence, onClose }: { item: SyntaxItem; sentence: SentenceAnalysis | null; onClose: () => void }) {
+function SyntaxPanel({ item, onClose }: { item: SyntaxItem; sentence: SentenceAnalysis | null; onClose: () => void }) {
   return (
     <div className="rounded-xl border border-cyan-200 bg-gradient-to-b from-cyan-50/50 to-white p-4 space-y-2.5">
       <div className="flex items-start justify-between">

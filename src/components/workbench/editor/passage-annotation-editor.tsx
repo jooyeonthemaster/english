@@ -36,6 +36,11 @@ const EDITOR_STYLES = `
   .ann-sentence:hover { background: linear-gradient(to right, #16a34a 3px, #dcfce7 3px); }
   .ann-exam { background: linear-gradient(to top, #fef08a 40%, transparent 40%); cursor: pointer; transition: all 0.15s; padding: 0 2px; border-radius: 1px; }
   .ann-exam:hover { background: linear-gradient(to top, #fde047 50%, transparent 50%); }
+  .ProseMirror { -webkit-user-select: text; user-select: text; -webkit-touch-callout: none; }
+  @media (pointer: coarse) {
+    .ProseMirror { font-size: 15px; line-height: 2; padding: 48px 16px 20px 16px; }
+    .ann-vocab, .ann-grammar, .ann-syntax, .ann-sentence, .ann-exam { padding: 2px 3px; }
+  }
 `;
 
 // ─── Config ──────────────────────────────────────────────
@@ -75,6 +80,7 @@ export function PassageAnnotationEditor({
 
   const styleRef = useRef<HTMLStyleElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const selectionRef = useRef<{ from: number; to: number } | null>(null);
   const justMarkedRef = useRef(false);
   const popupLockRef = useRef(false); // prevents handleMouseDown from closing popup right after doMark
@@ -112,13 +118,18 @@ export function PassageAnnotationEditor({
           if (type) {
             const ann = annotations.find((a) => a.id === mark.attrs.id);
             if (ann) {
-              const domSel = window.getSelection();
+              // Use ProseMirror's coordsAtPos for cross-browser consistency (Safari bug fix)
               const cRect = containerRef.current?.getBoundingClientRect();
-              if (domSel && domSel.rangeCount > 0 && cRect) {
-                const rect = domSel.getRangeAt(0).getBoundingClientRect();
+              const innerRect = innerRef.current?.getBoundingClientRect();
+              if (cRect && innerRect) {
+                const startCoords = view.coordsAtPos(ann.from);
+                const endCoords = view.coordsAtPos(ann.to);
+                const centerX = (startCoords.left + endCoords.right) / 2;
+                const bottomY = Math.max(startCoords.bottom, endCoords.bottom);
+                const scrollTop = innerRef.current?.scrollTop ?? 0;
                 setPopupPos({
-                  x: rect.left + rect.width / 2 - cRect.left,
-                  y: rect.bottom - cRect.top + 8,
+                  x: centerX - innerRect.left,
+                  y: bottomY - innerRect.top + scrollTop + 8,
                   below: true,
                 });
               }
@@ -138,35 +149,42 @@ export function PassageAnnotationEditor({
   useEffect(() => {
     if (!editor) return;
     const currentText = editor.getText();
-    if (content && !currentText && content !== currentText) {
+    if (content && content !== currentText) {
       editor.commands.setContent(`<p>${content.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br>")}</p>`);
+    }
+    if (!content && currentText) {
+      editor.commands.setContent("");
     }
   }, [content, editor]);
 
-  // ─── Show toolbar on mouseup (only inside ProseMirror) ──
+  // ─── Show toolbar on selection end (pointer = mouse + touch + pen) ──
   useEffect(() => {
-    function handleMouseUp(e: MouseEvent) {
+    function showToolbarFromSelection() {
       if (!editor) return;
-      // ONLY trigger toolbar from mouseup inside the actual editor text
-      const target = e.target as HTMLElement;
-      if (!target.closest(".ProseMirror")) return;
-
       requestAnimationFrame(() => {
         if (justMarkedRef.current) { justMarkedRef.current = false; return; }
-        // Don't replace memo/edit popup with toolbar
         if (popupLockRef.current) return;
         const { from, to } = editor.state.selection;
         const text = editor.state.doc.textBetween(from, to);
         if (text.trim() && from !== to) {
           selectionRef.current = { from, to };
-          const domSel = window.getSelection();
-          const cRect = containerRef.current?.getBoundingClientRect();
-          if (domSel && domSel.rangeCount > 0 && cRect) {
-            const rect = domSel.getRangeAt(0).getBoundingClientRect();
-            // Always show below selection so it never covers the selected text
+          // Use ProseMirror coordsAtPos for Safari cross-browser consistency.
+          // Safari's getBoundingClientRect on a selection range spanning inline marks
+          // returns only the first client-rect, producing wildly wrong popup positions.
+          const innerRect = innerRef.current?.getBoundingClientRect();
+          if (innerRect) {
+            const startCoords = editor.view.coordsAtPos(from);
+            const endCoords = editor.view.coordsAtPos(to);
+            // Same-line selection → midpoint; multi-line → use end position (anchor of user's gesture)
+            const sameLine = Math.abs(startCoords.top - endCoords.top) < 4;
+            const centerX = sameLine
+              ? (startCoords.left + endCoords.right) / 2
+              : endCoords.right;
+            const bottomY = Math.max(startCoords.bottom, endCoords.bottom);
+            const scrollTop = innerRef.current?.scrollTop ?? 0;
             setPopupPos({
-              x: rect.left + rect.width / 2 - cRect.left,
-              y: rect.bottom - cRect.top + 8,
+              x: centerX - innerRect.left,
+              y: bottomY - innerRect.top + scrollTop + 8,
               below: true,
             });
           }
@@ -174,20 +192,46 @@ export function PassageAnnotationEditor({
         }
       });
     }
-    // Close ONLY toolbar mode on outside click (memo/edit are NOT closed)
-    function handleMouseDown(e: MouseEvent) {
+
+    function handlePointerUp(e: PointerEvent) {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".ProseMirror")) return;
+      // Touch devices: selection isn't finalized at pointerup, wait a tick
+      if (e.pointerType === "touch") {
+        setTimeout(showToolbarFromSelection, 80);
+      } else {
+        showToolbarFromSelection();
+      }
+    }
+
+    // iOS/Android: also listen for selectionchange to catch OS-level text selection handles
+    function handleSelectionChange() {
+      if (!editor) return;
+      // Only handle touch — mouse is already covered by pointerup
+      if (!("ontouchstart" in window)) return;
+      const domSel = window.getSelection();
+      if (!domSel || domSel.isCollapsed || domSel.rangeCount === 0) return;
+      const range = domSel.getRangeAt(0);
+      const container = containerRef.current;
+      if (!container || !container.contains(range.commonAncestorContainer)) return;
+      showToolbarFromSelection();
+    }
+
+    // Close ONLY toolbar mode on outside tap/click
+    function handlePointerDown(e: PointerEvent) {
       const t = e.target as HTMLElement;
-      if (t.closest("[data-popup]")) return; // clicking popup itself
-      // Only auto-close toolbar mode, never memo/edit
+      if (t.closest("[data-popup]")) return;
       setPopup((prev) => (prev?.mode === "toolbar" ? null : prev));
     }
 
     const container = containerRef.current;
-    container?.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mousedown", handleMouseDown);
+    container?.addEventListener("pointerup", handlePointerUp);
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("selectionchange", handleSelectionChange);
     return () => {
-      container?.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mousedown", handleMouseDown);
+      container?.removeEventListener("pointerup", handlePointerUp);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("selectionchange", handleSelectionChange);
     };
   }, [editor]);
 
@@ -240,8 +284,8 @@ export function PassageAnnotationEditor({
   const hasText = editor.getText().trim().length > 0;
   const counts = ANNOTATION_TYPES.reduce((acc, t) => { acc[t] = annotations.filter((a) => a.type === t).length; return acc; }, {} as Record<AnnotationType, number>);
 
-  // Popup positioning
-  const containerWidth = containerRef.current?.offsetWidth || 600;
+  // Popup positioning — measured against the inner (positioning context) container
+  const containerWidth = innerRef.current?.offsetWidth || containerRef.current?.offsetWidth || 600;
   const popupWidth = popup?.mode === "toolbar" ? 340 : 300;
   const halfPopup = popupWidth / 2;
   const clampedLeft = Math.max(8, Math.min(popupPos.x - halfPopup, containerWidth - popupWidth - 8));
@@ -262,7 +306,7 @@ export function PassageAnnotationEditor({
       )}
 
       {/* Editor + all popups */}
-      <div className="flex-1 relative min-h-0 overflow-y-auto">
+      <div ref={innerRef} className="flex-1 relative min-h-0 overflow-y-auto">
         <EditorContent editor={editor} className="h-full" />
 
         {/* Unified popup — toolbar / memo / edit */}
@@ -293,8 +337,8 @@ export function PassageAnnotationEditor({
                   const config = ANNOTATION_CONFIG[type];
                   const Icon = config.icon;
                   return (
-                    <button key={type} onMouseDown={(e) => { e.preventDefault(); doMark(type); }}
-                      className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-medium text-white hover:bg-white/15 transition-colors whitespace-nowrap"
+                    <button key={type} onPointerDown={(e) => { e.preventDefault(); doMark(type); }}
+                      className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-medium text-white hover:bg-white/15 active:bg-white/25 transition-colors whitespace-nowrap touch-manipulation"
                       title={config.description}
                     >
                       <Icon className="w-3.5 h-3.5" />{config.shortLabel}
@@ -363,7 +407,7 @@ export function PassageAnnotationEditor({
         <div className="shrink-0 flex items-center gap-2.5 px-4 py-2.5 border-t border-blue-100 bg-blue-50/40">
           <MousePointerClick className="w-4 h-4 text-blue-400 shrink-0" />
           <p className="text-[12px] text-blue-600/80">
-            텍스트를 <span className="font-semibold text-blue-700">드래그</span>하면 핵심 어휘, 문법 포인트, 출제 포인트 등을 마킹할 수 있습니다
+            텍스트를 <span className="font-semibold text-blue-700">드래그(터치 길게 누르기)</span>하면 핵심 어휘, 문법 포인트, 출제 포인트 등을 마킹할 수 있습니다
           </p>
         </div>
       )}

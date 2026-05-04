@@ -30,6 +30,23 @@ export interface AssignmentCreateData {
 }
 
 // ---------------------------------------------------------------------------
+// Internal helpers — tenant isolation guards
+// ---------------------------------------------------------------------------
+
+async function assertClassBelongsToAcademy(
+  classId: string,
+  academyId: string
+): Promise<void> {
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, academyId },
+    select: { id: true },
+  });
+  if (!cls) {
+    throw new Error("반을 찾을 수 없습니다.");
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Assignment CRUD (Teacher/Director)
 // ---------------------------------------------------------------------------
 
@@ -37,7 +54,8 @@ export async function getAssignments(
   academyId: string,
   filters?: AssignmentFilters
 ) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
 
   const where: Record<string, unknown> = { academyId };
 
@@ -64,7 +82,6 @@ export async function getAssignments(
     orderBy: { dueDate: "desc" },
   });
 
-  // Count enrolled students per class for submission rate
   const classIds = [
     ...new Set(
       assignments.map((a) => a.classId).filter(Boolean) as string[]
@@ -99,11 +116,23 @@ export async function createAssignment(
   data: AssignmentCreateData
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // P0-2 guard: the caller-supplied academyId must match the session,
+    // and if a classId is provided it must also belong to the same
+    // academy — otherwise a crafted payload could (a) author assignments
+    // into another tenant's bucket or (b) target another tenant's class
+    // and then materialise PENDING submissions against their students.
+    if (staff.academyId !== academyId) {
+      return { success: false, error: "학원 정보가 일치하지 않습니다." };
+    }
+    if (data.classId) {
+      await assertClassBelongsToAcademy(data.classId, staff.academyId);
+    }
 
     const assignment = await prisma.assignment.create({
       data: {
-        academyId,
+        academyId: staff.academyId,
         title: data.title,
         description: data.description || null,
         classId: data.classId || null,
@@ -114,7 +143,6 @@ export async function createAssignment(
       },
     });
 
-    // If targeting a class, create pending submissions for all enrolled students
     if (data.classId && data.targetType === "CLASS") {
       const enrollments = await prisma.classEnrollment.findMany({
         where: { classId: data.classId, status: "ENROLLED" },
@@ -144,10 +172,12 @@ export async function createAssignment(
 }
 
 export async function getAssignment(assignmentId: string) {
-  await requireStaffAuth();
+  const staff = await requireStaffAuth();
 
-  const assignment = await prisma.assignment.findUnique({
-    where: { id: assignmentId },
+  // Scope to this academy — a leaked assignmentId from another tenant
+  // must not return student names + submission bodies.
+  const assignment = await prisma.assignment.findFirst({
+    where: { id: assignmentId, academyId: staff.academyId },
     include: {
       class: { select: { id: true, name: true } },
       submissions: {
@@ -170,18 +200,31 @@ export async function submitAssignment(
   data: { content?: string; attachments?: string }
 ): Promise<ActionResult> {
   try {
+    // Student-facing action (no staff session). We still need to verify
+    // that the (assignmentId, studentId) pair is internally consistent —
+    // i.e. the student belongs to the same academy as the assignment —
+    // otherwise a crafted call could insert rows linking an assignment
+    // to a student from another academy.
     const assignment = await prisma.assignment.findUnique({
       where: { id: assignmentId },
+      select: { id: true, academyId: true, dueDate: true },
     });
 
     if (!assignment) {
       return { success: false, error: "과제를 찾을 수 없습니다." };
     }
 
+    const student = await prisma.student.findUnique({
+      where: { id: studentId },
+      select: { id: true, academyId: true },
+    });
+    if (!student || student.academyId !== assignment.academyId) {
+      return { success: false, error: "학생과 과제의 학원이 일치하지 않습니다." };
+    }
+
     const now = new Date();
     const isLate = now > new Date(assignment.dueDate);
 
-    // Upsert submission
     await prisma.assignmentSubmission.upsert({
       where: {
         assignmentId_studentId: { assignmentId, studentId },
@@ -220,7 +263,20 @@ export async function gradeAssignment(
   feedback?: string
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
+
+    // Scope the submission to this academy. Without this guard, any staff
+    // could grade any assignment submission across tenants.
+    const submission = await prisma.assignmentSubmission.findFirst({
+      where: {
+        id: submissionId,
+        assignment: { academyId: staff.academyId },
+      },
+      select: { id: true },
+    });
+    if (!submission) {
+      return { success: false, error: "제출을 찾을 수 없습니다." };
+    }
 
     const submission = await prisma.assignmentSubmission.update({
       where: { id: submissionId },
@@ -258,7 +314,6 @@ export async function getStudentAssignments(studentId: string) {
 
   if (!student) return [];
 
-  // Get student's class enrollments
   const enrollments = await prisma.classEnrollment.findMany({
     where: { studentId, status: "ENROLLED" },
     select: { classId: true },
@@ -304,3 +359,4 @@ export async function getStudentAssignments(studentId: string) {
     submission: a.submissions[0] || null,
   }));
 }
+

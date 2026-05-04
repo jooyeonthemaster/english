@@ -1,0 +1,204 @@
+// ============================================================================
+// NARA Credit Billing System - Prisma Schema Additions
+// Copy these models into prisma/schema.prisma
+// ============================================================================
+// IMPORTANT: Also add these fields/relations to existing Academy model:
+//
+//   model Academy {
+//     // ... existing fields ...
+//     status String @default("ACTIVE") // "ACTIVE" | "TRIAL" | "SUSPENDED" | "DEACTIVATED"
+//
+//     // ... existing relations ...
+//     subscriptions      AcademySubscription[]
+//     creditBalance      CreditBalance?
+//     creditTransactions CreditTransaction[]
+//     creditTopUps       CreditTopUp[]
+//   }
+// ============================================================================
+
+// ============================================================================
+// 20. PLATFORM ADMINISTRATION
+// ============================================================================
+
+/// SuperAdmin -- Platform-level administrator (developer/operator)
+/// role: "SUPER_ADMIN" | "SUPPORT"
+model SuperAdmin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("SUPER_ADMIN") // "SUPER_ADMIN" | "SUPPORT"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviewedRegistrations AcademyRegistration[] @relation("ReviewedBy")
+  creditAdjustments     CreditTransaction[]   @relation("AdjustedBy")
+
+  @@map("super_admins")
+}
+
+// ============================================================================
+// 21. SUBSCRIPTION & BILLING
+// ============================================================================
+
+/// SubscriptionPlan -- Catalog of available plans
+/// tier: "STARTER" | "STANDARD" | "PREMIUM" | "ENTERPRISE"
+/// rolloverPolicy: "RESET" | "ROLLOVER" | "PARTIAL_ROLLOVER"
+model SubscriptionPlan {
+  id              String   @id @default(cuid())
+  name            String // "스타터", "스탠다드", "프리미엄", "엔터프라이즈"
+  tier            String   @unique // "STARTER" | "STANDARD" | "PREMIUM" | "ENTERPRISE"
+  monthlyPrice    Int // KRW (300000, 500000, 1000000, 0)
+  monthlyCredits  Int // 500, 1200, 3000, custom
+  maxStudents     Int // 50, 150, 500, 99999
+  maxStaff        Int // 3, 8, 20, 99999
+  features        String   @db.Text // JSON: feature flags object
+  rolloverPolicy  String   @default("RESET") // "RESET" | "ROLLOVER" | "PARTIAL_ROLLOVER"
+  rolloverMaxRate Float    @default(0) // For PARTIAL_ROLLOVER: 0.2 = carry over up to 20%
+  description     String?  @db.Text
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  subscriptions AcademySubscription[]
+
+  @@map("subscription_plans")
+}
+
+/// AcademySubscription -- Active subscription per academy
+/// status: "TRIAL" | "ACTIVE" | "PAST_DUE" | "CANCELLED" | "SUSPENDED"
+model AcademySubscription {
+  id                 String    @id @default(cuid())
+  academyId          String
+  planId             String
+  status             String    @default("TRIAL") // "TRIAL" | "ACTIVE" | "PAST_DUE" | "CANCELLED" | "SUSPENDED"
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  trialEndsAt        DateTime?
+  cancelledAt        DateTime?
+  graceEndsAt        DateTime? // Read-only access after expiry, before suspension
+  paymentMethod      String? // "CARD" | "TRANSFER" | "KAKAO_PAY"
+  paymentReference   String? // External payment system reference
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  academy Academy          @relation(fields: [academyId], references: [id])
+  plan    SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@index([academyId])
+  @@index([status])
+  @@index([currentPeriodEnd])
+  @@map("academy_subscriptions")
+}
+
+// ============================================================================
+// 22. CREDIT SYSTEM
+// ============================================================================
+
+/// CreditBalance -- Current credit state per academy (one row per academy)
+model CreditBalance {
+  id                 String    @id @default(cuid())
+  academyId          String    @unique
+  balance            Int       @default(0) // Current available credits
+  monthlyAllocation  Int       @default(0) // Credits from subscription plan
+  bonusCredits       Int       @default(0) // Remaining top-up credits
+  totalConsumed      Int       @default(0) // Lifetime consumption
+  totalAllocated     Int       @default(0) // Lifetime allocation
+  lowCreditThreshold Int       @default(50) // Warning threshold
+  lastResetAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@map("credit_balances")
+}
+
+/// CreditTransaction -- Immutable audit log of every credit movement
+/// type: "ALLOCATION" | "CONSUMPTION" | "TOP_UP" | "ADJUSTMENT" | "REFUND" | "RESET" | "ROLLOVER"
+model CreditTransaction {
+  id            String   @id @default(cuid())
+  academyId     String
+  type          String // "ALLOCATION" | "CONSUMPTION" | "TOP_UP" | "ADJUSTMENT" | "REFUND" | "RESET" | "ROLLOVER"
+  amount        Int // Positive = add, Negative = consume
+  balanceAfter  Int // Snapshot of balance after this transaction
+  operationType String? // "QUESTION_GEN_SINGLE" | "PASSAGE_ANALYSIS" | etc (null for non-AI operations)
+  description   String?
+  referenceId   String? // Related entity ID (questionId, passageId, transactionId for refunds)
+  referenceType String? // "QUESTION" | "PASSAGE" | "EXAM" | "CREDIT_TRANSACTION"
+  staffId       String? // Staff member who triggered the operation
+  adminId       String? // SuperAdmin who made manual adjustment
+  metadata      String? @db.Text // JSON: { model, inputTokens, outputTokens, costUsd, durationMs, promptHash }
+  createdAt     DateTime @default(now())
+
+  academy Academy     @relation(fields: [academyId], references: [id])
+  admin   SuperAdmin? @relation("AdjustedBy", fields: [adminId], references: [id])
+
+  @@index([academyId, createdAt])
+  @@index([academyId, type])
+  @@index([academyId, operationType])
+  @@index([staffId])
+  @@index([createdAt])
+  @@map("credit_transactions")
+}
+
+/// CreditTopUp -- Additional credit purchase records
+/// status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED"
+model CreditTopUp {
+  id               String    @id @default(cuid())
+  academyId        String
+  creditAmount     Int // Credits purchased
+  price            Int // KRW paid
+  paymentMethod    String? // "CARD" | "TRANSFER" | "KAKAO_PAY"
+  paymentReference String? // External transaction ID
+  status           String    @default("PENDING") // "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED"
+  completedAt      DateTime?
+  requestedBy      String? // staffId
+  createdAt        DateTime  @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@index([academyId])
+  @@index([status])
+  @@map("credit_top_ups")
+}
+
+// ============================================================================
+// 23. ACADEMY REGISTRATION
+// ============================================================================
+
+/// AcademyRegistration -- Pending registration requests from new academies
+/// status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED"
+model AcademyRegistration {
+  id                String    @id @default(cuid())
+  // Academy info
+  academyName       String
+  businessNumber    String? // 사업자등록번호
+  phone             String
+  address           String?
+  estimatedStudents Int?
+  // Director info
+  directorName      String
+  directorEmail     String
+  directorPhone     String
+  // Request
+  message           String?   @db.Text
+  desiredPlan       String? // Requested tier
+  // Review
+  status            String    @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED"
+  reviewedById      String?
+  reviewNote        String?   @db.Text
+  reviewedAt        DateTime?
+  // Result (set on approval)
+  academyId         String? // Created Academy ID
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  reviewedBy SuperAdmin? @relation("ReviewedBy", fields: [reviewedById], references: [id])
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("academy_registrations")
+}

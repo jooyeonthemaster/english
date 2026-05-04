@@ -85,7 +85,7 @@ export function HamburgerMenu({
         <SheetHeader className="px-5 pt-6 pb-4 border-b border-[#F3F4F0]">
           <SheetTitle className="text-left">
             <span className="text-[18px] font-bold tracking-[-0.025em] text-[#1A1F16]">
-              {schoolName ?? "Nara"}
+              {schoolName ?? "영신ai"}
             </span>
           </SheetTitle>
           {isLoggedIn && studentName ? (
@@ -171,7 +171,7 @@ export function HamburgerMenu({
               <span>로그인</span>
             </Link>
           )}
-          <p className="text-[11px] text-[#C8CCC2]">Nara v0.1.0</p>
+          <p className="text-[11px] text-[#C8CCC2]">영신ai v0.1.0</p>
         </div>
       </SheetContent>
     </Sheet>

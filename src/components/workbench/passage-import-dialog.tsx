@@ -286,7 +286,7 @@ export function PassageImportDialog({
             <p className="text-[12px] font-semibold text-gray-500 mb-2">
               지원 컬럼 (한글/영문 모두 인식)
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[12px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-[12px]">
               <span className="text-gray-600">
                 <strong className="text-gray-900">제목</strong> / title
                 <span className="text-red-400 ml-0.5">*</span>

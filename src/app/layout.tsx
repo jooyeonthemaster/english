@@ -10,7 +10,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NARA | 영어학원 AI ERP",
+  title: "영신ai | 영어학원 AI ERP",
   description: "영어학원 통합 관리 플랫폼 — 원생관리, 출결, 수납, AI 문제생성, 성적분석",
 };
 

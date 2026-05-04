@@ -1,5 +1,5 @@
 // ============================================================================
-// NARA ERP — Structured Question Type Schemas (배럴 파일)
+// 영신ai ERP — Structured Question Type Schemas (배럴 파일)
 // ============================================================================
 // 스키마: question-schemas-{mc,essay,vocab}.ts
 // 프롬프트: question-prompts-{mc,essay,vocab}.ts

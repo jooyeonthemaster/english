@@ -443,7 +443,7 @@ export function ReportDetailClient({
             {report.academyName} | {formatDate(report.createdAt)} 발행
           </p>
           <p className="text-[10px] text-gray-300 mt-1">
-            NARA English Academy ERP
+            영신ai English Academy ERP
           </p>
         </footer>
       </div>

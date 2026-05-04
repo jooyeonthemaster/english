@@ -1,29 +1,27 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { ArrowLeft, Bell } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ChevronLeft, Bell } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// 섹션별 타이틀
+// Sub-page titles
 // ---------------------------------------------------------------------------
-const SECTION_TITLES: Record<string, string> = {
+const SUB_PAGE_TITLES: Record<string, string> = {
   "/student/attendance": "출석",
   "/student/resources": "자료실",
-  "/student/notifications": "알림",
-  "/student/learn/review": "오답 관리",
-  "/student/learn/analytics": "학습 분석",
-  "/student/learn/analytics/review": "복습하기",
+  "/student/mypage": "마이페이지",
   "/student/mypage/settings": "설정",
-  "/student/mypage/progress": "학습 추이",
-  "/student/learn/ranking": "랭킹",
+  "/student/notifications": "알림",
+  "/student/review": "오답 복습",
 };
 
-function getPageTitle(pathname: string): string | null {
-  if (SECTION_TITLES[pathname]) return SECTION_TITLES[pathname];
-  if (/^\/student\/learn\/analytics\/[^/]+$/.test(pathname)) return "오답 상세";
-  if (/^\/student\/learn\/[^/]+\/session/.test(pathname)) return "학습 세션";
-  if (/^\/student\/learn\/[^/]+\/stories/.test(pathname)) return "스토리";
+function getSubPageTitle(pathname: string): string | null {
+  if (SUB_PAGE_TITLES[pathname]) return SUB_PAGE_TITLES[pathname];
   if (/^\/student\/learn\/[^/]+$/.test(pathname)) return "지문 학습";
+  if (/^\/student\/vocab\/[^/]+/.test(pathname)) return "단어 시험";
+  if (/^\/student\/mypage\/progress/.test(pathname)) return "학습 추이";
   return null;
 }
 
@@ -31,64 +29,115 @@ function getPageTitle(pathname: string): string | null {
 // Props
 // ---------------------------------------------------------------------------
 interface StudentHeaderProps {
+  studentName?: string;
+  schoolName?: string;
+  grade?: number;
   academyName?: string;
+  streak?: number;
 }
 
 // ---------------------------------------------------------------------------
-// Component — 항상 로고 헤더 + 서브페이지면 뒤로가기+제목 추가
+// Component
 // ---------------------------------------------------------------------------
 export function StudentHeader({
+  studentName = "",
+  schoolName = "",
+  grade,
   academyName = "",
 }: StudentHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const isMainTab = pathname === "/student"
-    || pathname === "/student/learn"
-    || pathname === "/student/mypage";
+  const subTitle = getSubPageTitle(pathname);
+  const isSubPage = subTitle !== null;
+  const isHomePage = pathname === "/student";
 
-  const pageTitle = getPageTitle(pathname);
+  // Scroll shadow detection
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { threshold: 1 },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
+  const gradeLabel = grade ? `${grade}학년` : "";
 
   return (
-    <header className="w-full" style={{ backgroundColor: "var(--base-bg)" }}>
-      {/* 로고 바 — 항상 표시 */}
-      <div className="flex items-center justify-between px-5 h-14">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center">
-            <span className="text-xs font-black text-white">N</span>
-          </div>
-          <span className="text-base font-extrabold text-black tracking-tight">
-            {academyName || "NARA"}
-          </span>
-        </div>
+    <>
+      <div ref={sentinelRef} className="h-0 w-full" aria-hidden="true" />
 
-        <button
-          onClick={() => router.push("/student/notifications")}
-          className="relative p-2 rounded-2xl active:bg-black/5 transition-colors"
-          aria-label="알림"
-        >
-          <Bell className="w-5 h-5 text-black" strokeWidth={2} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-[var(--base-bg)]" />
-        </button>
-      </div>
-
-      {/* 서브 페이지: 뒤로가기 + 제목 */}
-      {!isMainTab && (
-        <div className="flex items-center px-3 pb-2">
-          <button
-            onClick={() => router.back()}
-            className="p-2 rounded-2xl active:bg-black/5 transition-colors shrink-0"
-            aria-label="뒤로 가기"
-          >
-            <ArrowLeft className="w-5 h-5 text-black" strokeWidth={2.5} />
-          </button>
-          {pageTitle && (
-            <span className="text-lg font-bold text-black ml-1">
-              {pageTitle}
-            </span>
+      <header
+        className={cn(
+          "sticky top-0 z-40 w-full bg-[var(--erp-surface)]/95 backdrop-blur-xl transition-shadow duration-200",
+          scrolled && "shadow-[0_1px_3px_rgba(0,0,0,0.06)]",
+        )}
+      >
+        <div className="relative flex h-[var(--header-h)] items-center justify-between px-[var(--sp-3)]">
+          {/* ── Left ── */}
+          {isSubPage ? (
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-[var(--sp-1)] rounded-lg px-[var(--sp-1)] py-[var(--sp-1)] active:bg-[var(--erp-secondary-light)] transition-colors"
+              aria-label="뒤로 가기"
+            >
+              <ChevronLeft className="text-[var(--erp-text)] w-[var(--icon-md)] h-[var(--icon-md)]" />
+              <span className="text-[var(--fs-sm)] font-semibold text-[var(--erp-text)]">
+                {subTitle}
+              </span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-[var(--sp-2)]">
+              {/* Academy logo placeholder + name */}
+              <div className="flex items-center gap-[var(--sp-1)]">
+                <div className="w-[var(--icon-md)] h-[var(--icon-md)] rounded-md bg-[var(--erp-primary)] flex items-center justify-center">
+                  <span className="text-[var(--fs-caption)] font-black text-white leading-none">영</span>
+                </div>
+                <span className="text-[var(--fs-sm)] font-bold text-[var(--erp-text)] tracking-tight">
+                  {academyName || "영신ai"}
+                </span>
+              </div>
+            </div>
           )}
+
+          {/* ── Center: Student info (home page only) — absolute center ── */}
+          {isHomePage && studentName && (
+            <button
+              onClick={() => router.push("/student/mypage")}
+              className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center px-[var(--sp-3)] py-[var(--sp-1)] rounded-full bg-[var(--erp-secondary-light)] border border-[var(--erp-border)] active:bg-[var(--erp-border-light)] transition-colors"
+            >
+              <span className="text-[var(--fs-xs)] font-semibold text-[var(--erp-text)] leading-tight">
+                {studentName}
+              </span>
+              {(schoolName || gradeLabel) && (
+                <span className="text-[var(--fs-caption)] text-[var(--erp-text-muted)] leading-tight">
+                  {[schoolName, gradeLabel].filter(Boolean).join(" · ")}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* ── Right: Notification bell ── */}
+          <div className="flex items-center">
+            <button
+              onClick={() => router.push("/student/notifications")}
+              className="relative rounded-lg p-[var(--sp-1)] active:bg-[var(--erp-secondary-light)] transition-colors"
+              aria-label="알림"
+            >
+              <Bell
+                className="text-[var(--erp-text-secondary)] w-[var(--icon-md)] h-[var(--icon-md)]"
+              />
+              {/* Unread dot */}
+              <span className="absolute top-1 right-1 w-[var(--sp-1)] h-[var(--sp-1)] rounded-full bg-[var(--erp-error)]" />
+            </button>
+          </div>
         </div>
-      )}
-    </header>
+      </header>
+    </>
   );
 }
