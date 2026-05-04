@@ -9,9 +9,7 @@ interface ProfileHeaderProps {
   student: {
     name: string;
     grade: number;
-    level: number;
     xp: number;
-    xpForNextLevel: number;
     streak: number;
     schoolName: string | null;
   };
@@ -27,18 +25,8 @@ const levelColors: Record<string, string> = {
   D: "bg-gradient-to-br from-gray-300 to-gray-400",
 };
 
-function getLevelTitle(level: number): string {
-  if (level >= 30) return "Master";
-  if (level >= 20) return "Advanced";
-  if (level >= 15) return "Intermediate";
-  if (level >= 10) return "Pre-Intermediate";
-  if (level >= 5) return "Elementary";
-  return "Beginner";
-}
-
 export function ProfileHeader({ student, analyticsLevel, onLogout }: ProfileHeaderProps) {
   const router = useRouter();
-  const xpPercent = Math.min(100, (student.xp / student.xpForNextLevel) * 100);
   const gradeColor = levelColors[analyticsLevel] ?? levelColors.D;
 
   return (
@@ -83,41 +71,27 @@ export function ProfileHeader({ student, analyticsLevel, onLogout }: ProfileHead
           <div className="flex items-center gap-2">
             <h2 className="text-[var(--fs-lg)] font-bold text-black">{student.name}</h2>
             <span className="px-1.5 py-0.5 bg-gray-100 rounded-full text-[var(--fs-caption)] font-medium text-black">
-              Lv.{student.level} {getLevelTitle(student.level)}
+              {student.xp.toLocaleString()} XP
             </span>
           </div>
           <p className="text-[var(--fs-xs)] text-gray-500 mt-0.5">
             {student.schoolName ? `${student.schoolName} ` : ""}
             {student.grade}학년
           </p>
-          {/* XP Bar */}
-          <div className="mt-1.5">
-            <div className="flex justify-between text-[var(--fs-caption)] text-gray-500 mb-0.5">
-              <span>XP</span>
-              <span>{student.xp}/{student.xpForNextLevel}</span>
-            </div>
-            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ backgroundColor: "var(--key-color)" }}
-                initial={{ width: 0 }}
-                animate={{ width: `${xpPercent}%` }}
-                transition={{ duration: 1, delay: 0.3 }}
-              />
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Streak + Grade badge */}
+      {/* 연속 학습 + Grade badge */}
       <div className="flex items-center gap-2 mt-3">
-        <div
-          className="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 flex-1"
-          style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}
-        >
-          <Flame className="w-[var(--icon-sm)] h-[var(--icon-sm)]" style={{ color: "var(--key-color)" }} />
-          <span className="text-[var(--fs-xs)] font-medium text-black">{student.streak}일 연속</span>
-        </div>
+        {student.streak > 0 && (
+          <div
+            className="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 flex-1"
+            style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}
+          >
+            <Flame className="w-[var(--icon-sm)] h-[var(--icon-sm)]" style={{ color: "var(--key-color)" }} />
+            <span className="text-[var(--fs-xs)] font-medium text-black">연속 {student.streak}일째 학습 중</span>
+          </div>
+        )}
         <div className={cn("px-3 py-1.5 rounded-xl text-[var(--fs-base)] font-bold text-white", gradeColor)}>
           {analyticsLevel}등급
         </div>

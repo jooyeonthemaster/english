@@ -394,24 +394,34 @@ export async function getLearningSets(academyId: string, filters?: {
   if (filters?.publisher) where.publisher = filters.publisher;
   if (filters?.grade) where.grade = filters.grade;
 
-  const sets = await prisma.learningSet.findMany({
-    where,
-    include: {
-      passage: { select: { id: true, title: true } },
-      _count: { select: { questions: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const [sets, publishers] = await Promise.all([
+    prisma.learningSet.findMany({
+      where,
+      include: {
+        passage: { select: { id: true, title: true, content: true, grade: true, school: { select: { id: true, name: true } } } },
+        _count: { select: { questions: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.learningSet.findMany({
+      where: { academyId },
+      select: { publisher: true },
+      distinct: ["publisher"],
+      orderBy: { publisher: "asc" },
+    }),
+  ]);
 
-  // 출판사 목록 (필터용)
-  const publishers = await prisma.learningSet.findMany({
-    where: { academyId },
-    select: { publisher: true },
-    distinct: ["publisher"],
-    orderBy: { publisher: "asc" },
-  });
+  // 학교 목록 추출 (세트의 passage에서)
+  const schoolMap = new Map<string, string>();
+  const gradeSet = new Set<number>();
+  for (const s of sets) {
+    if (s.passage.school) schoolMap.set(s.passage.school.id, s.passage.school.name);
+    if (s.passage.grade) gradeSet.add(s.passage.grade);
+  }
+  const schools = Array.from(schoolMap.entries()).map(([id, name]) => ({ id, name }));
+  const grades = Array.from(gradeSet).sort();
 
-  return { sets, publishers: publishers.map((p) => p.publisher) };
+  return { sets, publishers: publishers.map((p) => p.publisher), schools, grades };
 }
 
 // ---------------------------------------------------------------------------
@@ -506,6 +516,70 @@ export async function bulkApproveNaeshinQuestions(ids: string[]): Promise<Action
     await requireAuth();
     await prisma.naeshinQuestion.updateMany({
       where: { id: { in: ids } },
+      data: { approved: true },
+    });
+    revalidatePath("/director/learning-questions");
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : "승인 실패" };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 세트별 카테고리 통계 (category dashboard용)
+// ---------------------------------------------------------------------------
+
+export async function getSetCategoryStats(setId: string) {
+  await requireAuth();
+
+  const questions = await prisma.naeshinQuestion.findMany({
+    where: { learningSetId: setId },
+    select: { learningCategory: true, subType: true, difficulty: true, approved: true },
+  });
+
+  // 카테고리별 집계
+  const categories: Record<
+    string,
+    {
+      total: number;
+      approved: number;
+      subtypes: Record<string, number>;
+      difficulties: Record<string, number>;
+    }
+  > = {};
+
+  for (const q of questions) {
+    const cat = q.learningCategory;
+    if (!categories[cat]) {
+      categories[cat] = { total: 0, approved: 0, subtypes: {}, difficulties: {} };
+    }
+    categories[cat].total++;
+    if (q.approved) categories[cat].approved++;
+    if (q.subType) {
+      categories[cat].subtypes[q.subType] = (categories[cat].subtypes[q.subType] ?? 0) + 1;
+    }
+    categories[cat].difficulties[q.difficulty] = (categories[cat].difficulties[q.difficulty] ?? 0) + 1;
+  }
+
+  return {
+    total: questions.length,
+    approved: questions.filter((q) => q.approved).length,
+    categories,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 카테고리 단위 일괄 승인
+// ---------------------------------------------------------------------------
+
+export async function approveCategoryQuestions(
+  setId: string,
+  category: string
+): Promise<ActionResult> {
+  try {
+    await requireAuth();
+    await prisma.naeshinQuestion.updateMany({
+      where: { learningSetId: setId, learningCategory: category, approved: false },
       data: { approved: true },
     });
     revalidatePath("/director/learning-questions");

@@ -34,7 +34,8 @@ import {
   Save,
   Send,
 } from "lucide-react";
-import { createExam, publishExam, getQuestionBank } from "@/actions/exams";
+import { createExam, publishExam } from "@/actions/exams";
+import { getQuestionBank } from "@/actions/exam-questions";
 import { toast } from "sonner";
 
 // ---------------------------------------------------------------------------

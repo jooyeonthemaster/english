@@ -13,43 +13,32 @@ interface PassageCardProps {
 export default function PassageCard({ content, open, onToggle, highlighted }: PassageCardProps) {
   return (
     <div
-      className={cn(
-        "mb-4 rounded-xl border transition-colors",
-        highlighted
-          ? "border-blue-200 bg-blue-50/50"
-          : "border-gray-200 bg-gray-50/50"
-      )}
+      className="card-3d mb-4 bg-white"
+      style={highlighted ? { borderColor: "color-mix(in srgb, var(--key-color) 40%, transparent)", borderBottomColor: "color-mix(in srgb, var(--key-color) 50%, transparent)" } : undefined}
     >
       <button
         onClick={onToggle}
         className="w-full flex items-center gap-2 px-3 py-2.5 text-left"
       >
         <BookOpen
-          className={cn(
-            "size-4 flex-shrink-0",
-            highlighted ? "text-blue-500" : "text-gray-400"
-          )}
+          className="size-4 flex-shrink-0"
+          style={highlighted ? { color: "var(--key-color)" } : { color: "#9CA3AF" }}
         />
         <span
-          className={cn(
-            "text-xs font-semibold flex-1",
-            highlighted ? "text-blue-600" : "text-gray-500"
-          )}
+          className="text-xs font-semibold flex-1"
+          style={highlighted ? { color: "var(--key-color)" } : { color: "#6B7280" }}
         >
           {highlighted ? "지문 (이 문제에 필요)" : "지문 보기"}
         </span>
         <ChevronDown
-          className={cn(
-            "size-4 transition-transform",
-            highlighted ? "text-blue-400" : "text-gray-400",
-            open && "rotate-180"
-          )}
+          className={cn("size-4 transition-transform", open && "rotate-180")}
+          style={highlighted ? { color: "var(--key-color)" } : { color: "#9CA3AF" }}
         />
       </button>
       {open && (
         <div className="px-3 pb-3">
           <div className="max-h-48 overflow-y-auto rounded-lg bg-white p-3 border border-gray-100">
-            <p className="text-xs leading-relaxed text-gray-700 whitespace-pre-line">
+            <p className="text-xs leading-relaxed text-black whitespace-pre-line">
               {content}
             </p>
           </div>

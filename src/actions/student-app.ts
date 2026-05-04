@@ -28,9 +28,6 @@ function getLevelGrade(score: number): "S" | "A" | "B" | "C" | "D" {
   return "D";
 }
 
-function xpForLevel(level: number): number {
-  return 100 + (level - 1) * 50; // Level 1: 100XP, Level 2: 150XP, etc.
-}
 
 // ---------------------------------------------------------------------------
 // 0. getStudentHeaderData — Layout header only (lightweight)
@@ -80,13 +77,10 @@ export async function getStudentDashboard() {
 }
 
 async function _getStudentDashboard(studentId: string, academyId: string) {
+  const { getWeekStartKST, getTodayRangeKST } = await import("@/lib/date-utils");
   const now = new Date();
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay());
-  startOfWeek.setHours(0, 0, 0, 0);
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const todayEnd = new Date(todayStart);
-  todayEnd.setDate(todayEnd.getDate() + 1);
+  const startOfWeek = getWeekStartKST();
+  const { today: todayStart, tomorrow: todayEnd } = getTodayRangeKST();
 
   // Phase 1: student + 8쿼리 + raw SQL 랭킹 — 전부 병렬 (3단계→1단계)
   const [
@@ -103,7 +97,7 @@ async function _getStudentDashboard(studentId: string, academyId: string) {
     prisma.student.findUnique({
       where: { id: studentId },
       select: {
-        id: true, name: true, grade: true, level: true, xp: true, streak: true,
+        id: true, name: true, grade: true, level: true, xp: true, streak: true, lastStudyDate: true, streakFreezeCount: true,
         academyId: true,
         school: { select: { name: true } },
         academy: { select: { name: true } },
@@ -171,7 +165,18 @@ async function _getStudentDashboard(studentId: string, academyId: string) {
 
   if (!student) throw new Error("학생 정보를 찾을 수 없습니다.");
 
-  const streak = student.streak;
+  // 스트릭 만료 체크
+  let streak = student.streak;
+  if (!student.lastStudyDate) {
+    streak = 0;
+  } else {
+    const { normalizeToKSTMidnight } = await import("@/lib/date-utils");
+    const lastDate = normalizeToKSTMidnight(new Date(student.lastStudyDate));
+    const diffDays = Math.round((todayStart.getTime() - lastDate.getTime()) / 86400000);
+    if (diffDays > 1 && !(diffDays === 2 && student.streakFreezeCount > 0)) {
+      streak = 0;
+    }
+  }
   const weekStudyDays = weekProgress.length;
   const weekVocabTests = weekProgress.reduce((s, p) => s + p.vocabTests, 0);
 
@@ -267,7 +272,7 @@ async function _getStudentDashboard(studentId: string, academyId: string) {
       grade: student.grade,
       level: student.level,
       xp: student.xp,
-      xpForNextLevel: xpForLevel(student.level),
+      xpForNextLevel: 0, // 레벨 시스템 제거됨
       streak,
       schoolName: student.school?.name ?? null,
       academyName: student.academy?.name ?? null,
@@ -321,16 +326,7 @@ async function _getStudentDashboard(studentId: string, academyId: string) {
         wrongCount: w.count,
       })),
     ranking,
-    recentActivity: recentResults.map((r) => ({
-      id: r.id,
-      type: "VOCAB_TEST" as const,
-      title: r.list.title,
-      score: r.score,
-      total: r.total,
-      percent: r.percent,
-      date: r.takenAt.toISOString(),
-      scoreColor: getScoreColor(r.percent),
-    })),
+    recentActivity: [] as { id: string; type: string; title: string; score: number; total: number; percent: number; date: string; scoreColor: string }[],
     todayAttendance: todayAttendanceRecord
       ? {
           status: todayAttendanceRecord.status,
@@ -413,8 +409,8 @@ async function _getStudentInbadi(studentId: string) {
     }
   }
 
-  // Both queries are independent — run in parallel
-  const [recentTests, recentExams] = await Promise.all([
+  // All queries are independent — run in parallel
+  const [recentTests, recentExams, assignmentGrades] = await Promise.all([
     // Recent test history
     prisma.vocabTestResult.findMany({
       where: { studentId },
@@ -429,6 +425,22 @@ async function _getStudentInbadi(studentId: string) {
       orderBy: { submittedAt: "desc" },
       take: 10,
     }),
+    // Assignment grades
+    prisma.assignmentSubmission.findMany({
+      where: { studentId, status: "GRADED" },
+      include: {
+        assignment: {
+          select: {
+            title: true,
+            maxScore: true,
+            dueDate: true,
+            class: { select: { name: true } },
+          },
+        },
+      },
+      orderBy: { gradedAt: "desc" },
+      take: 10,
+    }),
   ]);
 
   return {
@@ -438,7 +450,7 @@ async function _getStudentInbadi(studentId: string) {
       grade: student.grade,
       level: student.level,
       xp: student.xp,
-      xpForNextLevel: xpForLevel(student.level),
+      xpForNextLevel: 0, // 레벨 시스템 제거됨
       streak: student.streak,
       schoolName: student.school?.name ?? null,
     },
@@ -469,6 +481,15 @@ async function _getStudentInbadi(studentId: string) {
       maxScore: s.maxScore ?? 100,
       percent: s.percent ?? 0,
       date: s.submittedAt?.toISOString() ?? s.startedAt.toISOString(),
+    })),
+    assignmentGrades: assignmentGrades.map((s) => ({
+      id: s.id,
+      title: s.assignment.title,
+      className: s.assignment.class?.name ?? "",
+      score: s.score ?? 0,
+      maxScore: s.assignment.maxScore ?? 100,
+      feedback: s.feedback,
+      date: s.gradedAt?.toISOString() ?? "",
     })),
   };
 }

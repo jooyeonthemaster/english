@@ -13,9 +13,6 @@ async function requireStudent() {
   return session;
 }
 
-function xpForLevel(level: number): number {
-  return 100 + (level - 1) * 50;
-}
 
 // ---------------------------------------------------------------------------
 // checkAndAwardBadges — Check and award new badges
@@ -125,23 +122,15 @@ export async function addXP(amount: number, reason: string) {
   });
   if (!student) return { success: false };
 
-  let newXp = student.xp + amount;
-  let newLevel = student.level;
-  let leveledUp = false;
-
-  while (newXp >= xpForLevel(newLevel)) {
-    newXp -= xpForLevel(newLevel);
-    newLevel++;
-    leveledUp = true;
-  }
+  const newXp = student.xp + amount;
 
   await prisma.student.update({
     where: { id: studentId },
-    data: { xp: newXp, level: newLevel },
+    data: { xp: newXp },
   });
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const { getTodayKST } = await import("@/lib/date-utils");
+  const today = getTodayKST();
   await prisma.studyProgress.upsert({
     where: { studentId_date: { studentId, date: today } },
     create: { studentId, date: today, xpEarned: amount },
@@ -150,7 +139,7 @@ export async function addXP(amount: number, reason: string) {
 
   revalidatePath("/student");
 
-  return { success: true, newXp, newLevel, leveledUp, reason };
+  return { success: true, newXp, reason };
 }
 
 // ---------------------------------------------------------------------------
@@ -206,8 +195,8 @@ export async function getStudentProgress() {
       vocabTests: p.vocabTests,
       xp: p.xpEarned,
     })),
-    currentLevel: student?.level ?? 1,
+    currentLevel: 0, // 레벨 시스템 제거됨
     currentXp: student?.xp ?? 0,
-    xpForNextLevel: xpForLevel(student?.level ?? 1),
+    xpForNextLevel: 0,
   };
 }

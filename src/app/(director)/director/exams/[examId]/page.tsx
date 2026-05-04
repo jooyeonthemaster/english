@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getExam, getExamAnalytics } from "@/actions/exams";
+import { getExam } from "@/actions/exams";
+import { getExamAnalytics } from "@/actions/exam-grading";
 import { ExamDetailClient } from "@/components/exams/exam-detail-client";
 
 interface PageProps {

@@ -414,3 +414,24 @@
 .table-row-hover:hover {
   background-color: #F9FAFB;
 }
+
+/* ────── 3D Card (Duolingo-style pushable) ────── */
+.card-3d {
+  border: 2px solid #E5E5E5;
+  border-bottom: 4px solid #D1D5DB;
+  border-radius: 16px;
+  transition: transform 34ms linear, border-bottom-width 34ms linear, border-color 150ms ease, background-color 150ms ease;
+}
+.card-3d:active {
+  border-bottom-width: 2px;
+  transform: translateY(2px);
+}
+
+.btn-3d {
+  border-bottom: 4px solid rgba(0,0,0,0.15);
+  transition: transform 34ms linear, border-bottom-width 34ms linear;
+}
+.btn-3d:active {
+  border-bottom-width: 2px;
+  transform: translateY(2px);
+}

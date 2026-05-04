@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getClassesForFilter, getSchoolsForFilter } from "@/actions/exams";
+import { getClassesForFilter, getSchoolsForFilter } from "@/actions/exam-questions";
 import { ExamCreateWizard } from "@/components/exams/exam-create-wizard";
 
 export default async function ExamCreatePage() {

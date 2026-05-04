@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, RotateCcw, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getReviewPassageList } from "@/actions/student-app-resources";
+import { getReviewPassageList } from "@/actions/student-wrong-answers";
 
 // ---------------------------------------------------------------------------
 // Constants

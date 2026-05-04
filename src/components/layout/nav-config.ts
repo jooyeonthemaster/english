@@ -17,6 +17,7 @@ import {
   Settings,
   UserCog,
   Layers,
+  FolderOpen,
   type LucideIcon,
 } from "lucide-react";
 
@@ -59,6 +60,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       items: [
         { label: "출결 관리", icon: ClipboardCheck, href: `${basePath}/attendance` },
         { label: "과제 관리", icon: FileText, href: `${basePath}/assignments` },
+        { label: "수업 자료", icon: FolderOpen, href: `${basePath}/materials` },
       ],
     },
     {

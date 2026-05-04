@@ -2,7 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { deleteQuestion } from "@/actions/exams";
+import { deleteQuestion } from "@/actions/exam-questions";
 import { Plus, ChevronRight, ArrowLeft, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

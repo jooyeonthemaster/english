@@ -16,7 +16,7 @@ import {
   ChevronRight,
   User,
 } from "lucide-react";
-import { gradeSubmission } from "@/actions/exams";
+import { gradeSubmission } from "@/actions/exam-grading";
 import { toast } from "sonner";
 
 // ---------------------------------------------------------------------------

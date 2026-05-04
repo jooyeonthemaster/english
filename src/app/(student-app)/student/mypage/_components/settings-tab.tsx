@@ -11,9 +11,7 @@ interface SettingsTabProps {
   student: {
     name: string;
     grade: number;
-    level: number;
     xp: number;
-    xpForNextLevel: number;
     streak: number;
     schoolName: string | null;
   };
@@ -37,8 +35,8 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
         <InfoRow label="이름" value={student.name} />
         <InfoRow label="학교" value={student.schoolName ?? "-"} />
         <InfoRow label="학년" value={`${student.grade}학년`} />
-        <InfoRow label="레벨" value={`Lv.${student.level}`} />
-        <InfoRow label="연속 학습" value={`${student.streak}일`} />
+        <InfoRow label="XP" value={`${student.xp.toLocaleString()} XP`} />
+        <InfoRow label="연속 학습" value={student.streak > 0 ? `${student.streak}일째` : "-"} />
       </SettingsCard>
 
       {/* 알림 설정 */}

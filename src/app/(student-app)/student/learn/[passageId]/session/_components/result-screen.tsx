@@ -26,26 +26,17 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
           className={cn(
             "w-24 h-24 rounded-full flex items-center justify-center mb-6",
-            result.score >= 80 ? "bg-emerald-100" : result.score >= 50 ? "bg-blue-100" : "bg-amber-100"
+            "bg-orange-50"
           )}
         >
-          <Sparkles
-            className={cn(
-              "size-10",
-              result.score >= 80
-                ? "text-emerald-500"
-                : result.score >= 50
-                  ? "text-blue-500"
-                  : "text-amber-500"
-            )}
-          />
+          <Sparkles className="size-10" style={{ color: "var(--key-color)" }} />
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-[var(--fs-xl)] font-bold text-gray-900 mb-2"
+          className="text-[var(--fs-xl)] font-bold text-black mb-2"
         >
           {result.score >= 80 ? "훌륭해요!" : result.score >= 50 ? "잘했어요!" : "괜찮아요!"}
         </motion.h1>
@@ -57,12 +48,12 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           className="flex items-center gap-6 mb-6"
         >
           <div>
-            <p className="text-[var(--fs-2xl)] font-bold text-gray-900">{result.score}%</p>
+            <p className="text-[var(--fs-2xl)] font-bold text-black">{result.score}%</p>
             <p className="text-[var(--fs-xs)] text-gray-500">정답률</p>
           </div>
           <div className="w-px h-10 bg-gray-200" />
           <div>
-            <p className="text-[var(--fs-2xl)] font-bold text-blue-500">+{result.xpEarned}</p>
+            <p className="text-[var(--fs-2xl)] font-bold text-orange-500">+{result.xpEarned}</p>
             <p className="text-[var(--fs-xs)] text-gray-500">
               XP {result.xpMultiplier > 1 ? `(x${result.xpMultiplier})` : ""}
             </p>
@@ -87,7 +78,7 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
             className="w-full text-left mb-6"
           >
             <div className="flex items-center gap-1.5 mb-3">
-              <Target className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-purple-500" />
+              <Target className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-orange-500" />
               <p className="text-[var(--fs-xs)] font-semibold text-gray-500 uppercase">
                 오늘의 미션
               </p>
@@ -114,13 +105,13 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
                 className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 mb-2"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <Trophy className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-amber-500" />
-                  <span className="text-[var(--fs-base)] font-bold text-amber-700">미션 달성!</span>
+                  <Trophy className="w-[var(--icon-sm)] h-[var(--icon-sm)] text-orange-500" />
+                  <span className="text-[var(--fs-base)] font-bold text-orange-700">미션 달성!</span>
                 </div>
-                <p className="text-[var(--fs-xs)] text-amber-600 mb-2">{q.label}</p>
+                <p className="text-[var(--fs-xs)] text-orange-600 mb-2">{q.label}</p>
                 <div className="flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-amber-500" />
-                  <span className="text-[var(--fs-xs)] font-bold text-amber-700">
+                  <Zap className="w-3.5 h-3.5 text-orange-500" />
+                  <span className="text-[var(--fs-xs)] font-bold text-orange-700">
                     {q.rewardType === "MULTIPLIER"
                       ? `10분간 XP x${q.rewardValue} 보너스!`
                       : `보너스 +${q.rewardValue} XP 획득!`}
@@ -172,7 +163,7 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
       <div className="px-5 pb-8 space-y-2.5">
         <button
           onClick={() => router.push(`/student/learn/${passageId}`)}
-          className="w-full py-3.5 rounded-xl bg-blue-500 text-white font-bold text-[var(--fs-base)] active:bg-blue-600"
+          className="w-full py-3.5 rounded-xl bg-orange-500 text-white font-bold text-[var(--fs-base)] active:bg-blue-600"
         >
           레슨으로 돌아가기
         </button>
@@ -203,7 +194,7 @@ function QuestProgressBar({
 
   const difficultyColor = quest.justCompleted
     ? "bg-emerald-500"
-    : "bg-blue-500";
+    : "bg-orange-500";
 
   const rewardLabel =
     quest.rewardType === "MULTIPLIER"
@@ -223,7 +214,7 @@ function QuestProgressBar({
       )}
     >
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[var(--fs-xs)] font-medium text-gray-700 flex-1 mr-2">
+        <span className="text-[var(--fs-xs)] font-medium text-black flex-1 mr-2">
           {quest.label}
         </span>
         <span

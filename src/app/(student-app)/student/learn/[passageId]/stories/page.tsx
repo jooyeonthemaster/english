@@ -172,7 +172,7 @@ export default function StoriesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -192,15 +192,15 @@ export default function StoriesPage() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200 }}
-          className="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center mb-6"
+          className="w-24 h-24 rounded-full bg-orange-100 flex items-center justify-center mb-6"
         >
-          <Check className="size-10 text-amber-500" />
+          <Check className="size-10 text-orange-500" />
         </motion.div>
         <h1 className="text-2xl font-bold mb-2">통독 완료!</h1>
         <p className="text-blue-500 font-bold text-xl mb-8">+{xpEarned} XP</p>
         <button
           onClick={() => router.push(`/student/learn/${passageId}`)}
-          className="w-full py-3.5 rounded-xl bg-amber-500 text-white font-bold text-sm active:bg-amber-600"
+          className="w-full py-3.5 rounded-xl bg-orange-500 text-white font-bold text-sm active:bg-orange-600"
         >
           레슨으로 돌아가기
         </button>
@@ -211,7 +211,7 @@ export default function StoriesPage() {
   const progress = sentences.length > 0 ? revealedCount / sentences.length : 0;
 
   return (
-    <div className="max-w-lg mx-auto min-h-screen flex flex-col bg-amber-50/30">
+    <div className="max-w-lg mx-auto min-h-screen flex flex-col bg-white">
       {/* Top bar */}
       <div className="px-4 pt-4 pb-2 flex items-center gap-3 bg-white">
         <button
@@ -222,7 +222,7 @@ export default function StoriesPage() {
         </button>
         <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"
+            className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full"
             animate={{ width: `${progress * 100}%` }}
           />
         </div>
@@ -231,7 +231,7 @@ export default function StoriesPage() {
 
       {/* Title */}
       <div className="px-5 py-3 bg-white border-b border-gray-100">
-        <h2 className="text-base font-bold text-gray-900">{data.passageTitle}</h2>
+        <h2 className="text-base font-bold text-black">{data.passageTitle}</h2>
       </div>
 
       {/* Sentences */}
@@ -263,7 +263,7 @@ export default function StoriesPage() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-1.5 mt-1"
+                    className="text-xs text-orange-700 bg-orange-50 rounded-lg px-3 py-1.5 mt-1"
                   >
                     {translations[sentence.index] ?? "해석 데이터가 없습니다"}
                   </motion.p>
@@ -280,14 +280,14 @@ export default function StoriesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="mt-6 bg-white rounded-2xl shadow-lg border border-amber-200 p-5"
+              className="mt-6 bg-white rounded-2xl shadow-lg border border-gray-200 p-5"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center gap-2 mb-3">
-                <MessageCircle className="size-4 text-amber-500" />
-                <span className="text-xs font-bold text-amber-600">이해도 체크</span>
+                <MessageCircle className="size-4 text-orange-500" />
+                <span className="text-xs font-bold text-orange-600">이해도 체크</span>
               </div>
-              <p className="text-sm font-semibold text-gray-900 mb-4">
+              <p className="text-sm font-semibold text-black mb-4">
                 {activeQuestion.questionText}
               </p>
               {activeQuestion.options && (
@@ -309,7 +309,7 @@ export default function StoriesPage() {
                               : isSelected
                                 ? "border-rose-400 bg-rose-50"
                                 : "border-gray-100 opacity-50"
-                            : "border-gray-200 active:border-amber-300"
+                            : "border-gray-200 active:border-orange-300"
                         )}
                       >
                         <span className="font-medium">{opt.label}</span> {opt.text}
@@ -321,7 +321,7 @@ export default function StoriesPage() {
               {showAnswer && (
                 <button
                   onClick={handleQuestionContinue}
-                  className="w-full mt-3 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-bold active:bg-amber-600"
+                  className="w-full mt-3 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-bold active:bg-orange-600"
                 >
                   계속 읽기
                 </button>
@@ -349,7 +349,7 @@ export default function StoriesPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={handleComplete}
-            className="w-full mt-8 py-3.5 rounded-xl bg-amber-500 text-white font-bold text-sm active:bg-amber-600"
+            className="w-full mt-8 py-3.5 rounded-xl bg-orange-500 text-white font-bold text-sm active:bg-orange-600"
           >
             통독 완료!
           </motion.button>

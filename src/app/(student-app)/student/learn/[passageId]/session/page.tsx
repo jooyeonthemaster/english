@@ -218,7 +218,7 @@ export default function SessionPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "var(--key-color)", borderTopColor: "transparent" }} />
       </div>
     );
   }
@@ -244,14 +244,15 @@ export default function SessionPage() {
         >
           <X className="size-5" />
         </button>
-        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"
+            className="h-full rounded-full"
+            style={{ backgroundColor: "var(--key-color)" }}
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           />
         </div>
-        <span className="text-[var(--fs-xs)] text-gray-500 font-medium tabular-nums">
+        <span className="text-[var(--fs-xs)] text-black font-medium tabular-nums">
           {Math.min(currentIndex + 1, totalOriginal)}/{totalOriginal}
         </span>
       </div>
@@ -278,10 +279,10 @@ export default function SessionPage() {
             )}
 
             {/* Question text — **bold** 마크다운 지원 */}
-            <p className="text-[var(--fs-lg)] font-semibold text-gray-900 mb-6 leading-relaxed whitespace-pre-line">
+            <p className="text-[var(--fs-lg)] font-semibold text-black mb-8 leading-relaxed whitespace-pre-line">
               {currentQuestion.questionText.split(/(\*\*[^*]+\*\*)/).map((part, i) =>
                 part.startsWith("**") && part.endsWith("**")
-                  ? <mark key={i} className="bg-yellow-200 text-gray-900 px-0.5 rounded-sm font-bold">{part.slice(2, -2)}</mark>
+                  ? <mark key={i} className="bg-yellow-200 text-black px-0.5 rounded-sm font-bold">{part.slice(2, -2)}</mark>
                   : part
               )}
             </p>
@@ -336,7 +337,7 @@ export default function SessionPage() {
               // 기본: 선택형
               if (currentQuestion.options) {
                 return (
-                  <div className="space-y-2.5">
+                  <div className="space-y-3">
                     {currentQuestion.options.map((opt) => {
                       const isSelected = selectedOption === opt.label;
                       const isAnswer = opt.label === currentQuestion.correctAnswer;
@@ -346,22 +347,22 @@ export default function SessionPage() {
                           onClick={() => handleSelect(opt.label)}
                           disabled={showFeedback}
                           className={cn(
-                            "w-full text-left rounded-xl border-2 p-3.5 transition-all",
+                            "card-3d w-full text-left p-4",
                             showFeedback
                               ? isAnswer
-                                ? "border-emerald-400 bg-emerald-50"
+                                ? "!border-emerald-400 !border-b-emerald-500 bg-emerald-50"
                                 : isSelected
-                                  ? "border-rose-400 bg-rose-50"
-                                  : "border-gray-100 bg-gray-50 opacity-50"
+                                  ? "!border-rose-400 !border-b-rose-500 bg-rose-50"
+                                  : "!border-gray-100 bg-gray-50 opacity-50"
                               : isSelected
-                                ? "border-blue-400 bg-blue-50"
-                                : "border-gray-200 bg-white active:border-blue-300 active:bg-blue-50"
+                                ? "!border-orange-400 !border-b-orange-500 bg-orange-50"
+                                : ""
                           )}
                         >
                           <div className="flex items-start gap-3">
                             <span
                               className={cn(
-                                "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[var(--fs-xs)] font-bold",
+                                "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
                                 showFeedback
                                   ? isAnswer
                                     ? "bg-emerald-500 text-white"
@@ -369,20 +370,20 @@ export default function SessionPage() {
                                       ? "bg-rose-500 text-white"
                                       : "bg-gray-200 text-gray-400"
                                   : isSelected
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-100 text-gray-500"
+                                    ? "bg-orange-500 text-white"
+                                    : "bg-gray-100 text-black"
                               )}
                             >
                               {opt.label}
                             </span>
                             <span
                               className={cn(
-                                "text-[var(--fs-base)] leading-relaxed",
+                                "text-[var(--fs-base)] leading-relaxed pt-1",
                                 showFeedback && isAnswer
                                   ? "text-emerald-700 font-medium"
                                   : showFeedback && isSelected
                                     ? "text-rose-700"
-                                    : "text-gray-700"
+                                    : "text-black"
                               )}
                             >
                               {opt.text}
@@ -415,14 +416,14 @@ export default function SessionPage() {
               exit={{ opacity: 0, y: 20 }}
               className={cn(
                 "mt-auto rounded-2xl p-4",
-                isCorrect ? "bg-emerald-50" : "bg-rose-50"
+                isCorrect ? "bg-[#D7FFB8]" : "bg-[#FFDFE0]"
               )}
             >
               <div className="flex items-center gap-2 mb-1">
                 {isCorrect ? (
-                  <Check className="size-5 text-emerald-500" />
+                  <Check className="size-6 text-[#58CC02]" />
                 ) : (
-                  <AlertCircle className="size-5 text-rose-500" />
+                  <AlertCircle className="size-6 text-[#FF4B4B]" />
                 )}
                 <span
                   className={cn(
@@ -443,14 +444,14 @@ export default function SessionPage() {
               {/* 해설 */}
               {currentQuestion.explanation && (
                 <div className="mt-2 bg-white/60 rounded-xl p-3">
-                  <p className="text-[var(--fs-xs)] text-gray-700 leading-relaxed">
+                  <p className="text-[var(--fs-xs)] text-black leading-relaxed">
                     {currentQuestion.explanation.content}
                   </p>
                   {currentQuestion.explanation.keyPoints && currentQuestion.explanation.keyPoints.length > 0 && (
                     <div className="mt-2 space-y-1">
                       {currentQuestion.explanation.keyPoints.map((pt, i) => (
                         <div key={i} className="flex items-start gap-1.5">
-                          <span className="text-[var(--fs-caption)] text-blue-500 mt-0.5">•</span>
+                          <span className="text-[var(--fs-caption)] mt-0.5" style={{ color: "var(--key-color)" }}>•</span>
                           <p className="text-[var(--fs-xs)] text-gray-600">{pt}</p>
                         </div>
                       ))}
@@ -462,12 +463,10 @@ export default function SessionPage() {
                 onClick={handleNext}
                 disabled={submitting}
                 className={cn(
-                  "w-full mt-3 py-3 rounded-xl font-bold text-[var(--fs-base)] text-white transition-all",
-                  isCorrect
-                    ? "bg-emerald-500 active:bg-emerald-600"
-                    : "bg-rose-500 active:bg-rose-600",
+                  "btn-3d w-full mt-3 py-3.5 rounded-2xl font-bold text-[var(--fs-base)] text-white",
                   submitting && "opacity-50"
                 )}
+                style={{ backgroundColor: isCorrect ? "#58CC02" : "#FF4B4B" }}
               >
                 {submitting ? "제출 중..." : "계속"}
               </button>
@@ -493,7 +492,7 @@ export default function SessionPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl p-6 w-[280px] shadow-xl"
             >
-              <h3 className="text-[var(--fs-lg)] font-bold text-gray-900 mb-2">세션을 중단할까요?</h3>
+              <h3 className="text-[var(--fs-lg)] font-bold text-black mb-2">세션을 중단할까요?</h3>
               <p className="text-[var(--fs-xs)] text-gray-500 mb-5">
                 진행 상황이 저장되지 않습니다.
               </p>

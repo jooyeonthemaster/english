@@ -222,7 +222,7 @@ export async function gradeAssignment(
   try {
     await requireStaffAuth();
 
-    await prisma.assignmentSubmission.update({
+    const submission = await prisma.assignmentSubmission.update({
       where: { id: submissionId },
       data: {
         score,
@@ -230,9 +230,16 @@ export async function gradeAssignment(
         status: "GRADED",
         gradedAt: new Date(),
       },
+      select: { studentId: true },
     });
 
     revalidatePath("/director/assignments");
+
+    // StudentAnalytics 자동 갱신 (fire-and-forget)
+    import("./learning-analytics")
+      .then((mod) => mod.updateStudentAnalytics(submission.studentId))
+      .catch(() => {});
+
     return { success: true };
   } catch (error) {
     const message =

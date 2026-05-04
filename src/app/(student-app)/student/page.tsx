@@ -122,7 +122,7 @@ export default function StudentHomePage() {
                 style={{ backgroundColor: "color-mix(in srgb, var(--key-color) 10%, white)" }}
               >
                 <Flame className="w-4 h-4" style={{ color: "var(--key-color)" }} />
-                <span className="text-xs font-bold text-black">{stats.streak}일 연속</span>
+                <span className="text-xs font-bold text-black">연속 {stats.streak}일째 학습 중</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">

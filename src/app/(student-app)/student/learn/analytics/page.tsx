@@ -7,7 +7,7 @@ import { BookOpen, AlertTriangle, TrendingUp, ChevronDown, RotateCcw } from "luc
 import { cn } from "@/lib/utils";
 import { getLearningAnalytics } from "@/actions/learning-analytics";
 import { SUBTYPE_TO_CATEGORY } from "@/lib/learning-constants";
-import { getWrongAnswerDashboard } from "@/actions/student-app-resources";
+import { getWrongAnswerDashboard } from "@/actions/student-wrong-answers";
 import type { LearningAnalytics } from "@/lib/learning-types";
 
 // ---------------------------------------------------------------------------

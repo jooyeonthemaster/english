@@ -4,6 +4,11 @@
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
 import {
+  getTodayRangeKST,
+  getWeekStartKST,
+  getTodayStringKST,
+} from "@/lib/date-utils";
+import {
   QUEST_POOL,
   LEARNING_XP,
   STREAK_CONFIG,
@@ -29,31 +34,22 @@ async function requireStudent() {
   return session;
 }
 
-function getWeekStart(): Date {
-  const now = new Date();
-  const day = now.getDay(); // 0=Sun
-  const diff = day === 0 ? 6 : day - 1; // Monday as start
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - diff);
-  monday.setHours(0, 0, 0, 0);
-  return monday;
-}
-
-function getTodayRange() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  return { today, tomorrow };
-}
-
 /** 날짜 기반 시드로 퀘스트 2개 선택 (EASY 1 + HARD 1, 학생별 다른 조합) */
 function pickDailyQuests(studentId: string, date: Date) {
-  const dateStr = date.toISOString().split("T")[0];
+  const dateStr = getTodayStringKST(); // KST 기준 날짜 문자열
   const seed = hashCode(`${studentId}-${dateStr}`);
 
   const easy = QUEST_POOL.filter((q) => q.difficulty === "EASY");
   const hard = QUEST_POOL.filter((q) => q.difficulty === "HARD");
+
+  // 빈 배열 가드
+  if (easy.length === 0 || hard.length === 0) {
+    const fallback = QUEST_POOL[0];
+    return [
+      easy.length > 0 ? easy[Math.abs(seed) % easy.length] : fallback,
+      hard.length > 0 ? hard[Math.abs(seed >> 8) % hard.length] : fallback,
+    ];
+  }
 
   return [
     easy[Math.abs(seed) % easy.length],
@@ -71,20 +67,20 @@ function hashCode(str: string): number {
 }
 
 // ---------------------------------------------------------------------------
-// 1. getDailyQuests — 오늘의 퀘스트 3개 조회 (없으면 자동 생성)
+// 1. getDailyQuests — 오늘의 퀘스트 조회 (없으면 자동 생성)
 // ---------------------------------------------------------------------------
 
 export async function getDailyQuests(): Promise<DailyQuestStatus> {
   const session = await requireStudent();
   const studentId = session.studentId;
-  const { today } = getTodayRange();
+  const { today } = getTodayRangeKST();
 
   let quests = await prisma.dailyQuest.findMany({
     where: { studentId, date: today },
     orderBy: { difficulty: "asc" },
   });
 
-  // Lazy Creation: 오늘 퀘스트가 없으면 자동 생성 (createMany 후 재조회 없이 반환)
+  // Lazy Creation: 오늘 퀘스트가 없으면 자동 생성
   if (quests.length === 0) {
     const templates = pickDailyQuests(studentId, today);
     const data = templates.map((t) => ({
@@ -97,7 +93,6 @@ export async function getDailyQuests(): Promise<DailyQuestStatus> {
       rewardType: t.rewardType,
       rewardValue: t.rewardValue,
     }));
-    // createMany + 1회 조회 → skipDuplicates로 안전하게
     await prisma.dailyQuest.createMany({ data, skipDuplicates: true });
     quests = await prisma.dailyQuest.findMany({
       where: { studentId, date: today },
@@ -121,7 +116,7 @@ export async function getDailyQuests(): Promise<DailyQuestStatus> {
     completedAt: q.completedAt?.toISOString() ?? null,
   }));
 
-  // 현재 활성 배율 중 가장 높은 값
+  // 현재 활성 배율
   const activeMultipliers = quests
     .filter(
       (q) =>
@@ -132,19 +127,22 @@ export async function getDailyQuests(): Promise<DailyQuestStatus> {
     )
     .map((q) => q.rewardValue);
 
-  const activeMultiplier = activeMultipliers.length > 0
-    ? Math.max(...activeMultipliers)
-    : null;
+  const activeMultiplier =
+    activeMultipliers.length > 0 ? Math.max(...activeMultipliers) : null;
 
   const latestExpiry = quests
     .filter((q) => q.multiplierExpiresAt && now < q.multiplierExpiresAt)
-    .sort((a, b) => b.multiplierExpiresAt!.getTime() - a.multiplierExpiresAt!.getTime())[0];
+    .sort(
+      (a, b) =>
+        b.multiplierExpiresAt!.getTime() - a.multiplierExpiresAt!.getTime()
+    )[0];
 
   return {
-    date: today.toISOString().split("T")[0],
+    date: getTodayStringKST(),
     quests: questItems,
     activeMultiplier,
-    multiplierExpiresAt: latestExpiry?.multiplierExpiresAt?.toISOString() ?? null,
+    multiplierExpiresAt:
+      latestExpiry?.multiplierExpiresAt?.toISOString() ?? null,
   };
 }
 
@@ -159,9 +157,9 @@ export async function updateQuestProgress(
 ): Promise<QuestProgressUpdate[]> {
   const session = await requireStudent();
   const studentId = session.studentId;
-  const { today, tomorrow } = getTodayRange();
+  const { today, tomorrow } = getTodayRangeKST();
 
-  // 퀘스트 조회 (미완료만)
+  // 퀘스트 조회
   let quests = await prisma.dailyQuest.findMany({
     where: { studentId, date: today },
   });
@@ -174,114 +172,118 @@ export async function updateQuestProgress(
     });
   }
 
-  // 오늘 세션 통계 조회
+  // 오늘 세션 통계 (KST 기준 범위)
   const todaySessions = await prisma.sessionRecord.findMany({
     where: { studentId, completedAt: { gte: today, lt: tomorrow } },
     select: { score: true, sessionType: true, xpEarned: true },
   });
 
-  const todayVocabTests = await prisma.vocabTestResult.count({
-    where: { studentId, takenAt: { gte: today, lt: tomorrow } },
-  });
-
   const sessionCount = todaySessions.length;
-  const avgAccuracy = sessionCount > 0
-    ? Math.round(todaySessions.reduce((s, r) => s + r.score, 0) / sessionCount)
-    : 0;
+  const avgAccuracy =
+    sessionCount > 0
+      ? Math.round(
+          todaySessions.reduce((s, r) => s + r.score, 0) / sessionCount
+        )
+      : 0;
   const totalXpToday = todaySessions.reduce((s, r) => s + r.xpEarned, 0);
   const perfectCount = todaySessions.filter((s) => s.score === 100).length;
+  // CATEGORY_FOCUS: "GRAMMAR" sessionType 매칭 (타입 오류 수정)
   const grammarSessionCount = todaySessions.filter(
-    (s) => s.sessionType === "GRAMMAR_FOCUS"
+    (s) => s.sessionType === "GRAMMAR"
   ).length;
 
   const updates: QuestProgressUpdate[] = [];
 
-  for (const quest of quests) {
-    if (quest.completed) continue;
+  // 트랜잭션으로 레이스 컨디션 방지
+  await prisma.$transaction(async (tx) => {
+    for (const quest of quests) {
+      if (quest.completed) continue;
 
-    const prevProgress = quest.progress;
-    let newProgress = prevProgress;
+      const prevProgress = quest.progress;
+      let newProgress = prevProgress;
 
-    switch (quest.missionType as QuestMissionType) {
-      case "SESSION_COUNT":
-        newProgress = sessionCount;
-        break;
-      case "XP_EARN":
-        newProgress = totalXpToday;
-        break;
-      case "PERFECT":
-        newProgress = perfectCount;
-        break;
-      case "STREAK_KEEP":
-        newProgress = sessionCount > 0 ? 1 : 0;
-        break;
-      case "ACCURACY":
-        newProgress = avgAccuracy;
-        break;
-      case "VOCAB_TEST":
-        newProgress = todayVocabTests;
-        break;
-      case "CATEGORY_FOCUS":
-        newProgress = grammarSessionCount;
-        break;
-    }
-
-    const justCompleted = !quest.completed && newProgress >= quest.target;
-
-    // DB 업데이트
-    const updateData: Record<string, unknown> = {
-      progress: Math.min(newProgress, quest.target),
-    };
-
-    if (justCompleted) {
-      updateData.completed = true;
-      updateData.completedAt = new Date();
-      updateData.rewardClaimed = true;
-
-      if (quest.rewardType === "MULTIPLIER") {
-        updateData.multiplierExpiresAt = new Date(
-          Date.now() + LEARNING_XP.MULTIPLIER_DURATION_MS
-        );
+      switch (quest.missionType as QuestMissionType) {
+        case "SESSION_COUNT":
+          newProgress = sessionCount;
+          break;
+        case "XP_EARN":
+          newProgress = totalXpToday;
+          break;
+        case "PERFECT":
+          newProgress = perfectCount;
+          break;
+        case "STREAK_KEEP":
+          newProgress = sessionCount > 0 ? 1 : 0;
+          break;
+        case "ACCURACY":
+          newProgress = avgAccuracy;
+          break;
+        case "VOCAB_TEST":
+          newProgress = sessionCount; // 단어 테스트 → 세션 카운트로 대체
+          break;
+        case "CATEGORY_FOCUS":
+          newProgress = grammarSessionCount;
+          break;
       }
 
-      // BONUS_XP 보상 즉시 지급
-      if (quest.rewardType === "BONUS_XP") {
-        await prisma.student.update({
-          where: { id: studentId },
-          data: { xp: { increment: quest.rewardValue } },
+      // 음수 방지 + 타겟 초과 방지
+      newProgress = Math.max(0, Math.min(newProgress, quest.target));
+
+      const justCompleted = !quest.completed && newProgress >= quest.target;
+
+      const updateData: Record<string, unknown> = {
+        progress: newProgress,
+      };
+
+      if (justCompleted) {
+        updateData.completed = true;
+        updateData.completedAt = new Date();
+        updateData.rewardClaimed = true;
+
+        if (quest.rewardType === "MULTIPLIER") {
+          updateData.multiplierExpiresAt = new Date(
+            Date.now() + LEARNING_XP.MULTIPLIER_DURATION_MS
+          );
+        }
+
+        // BONUS_XP 보상 즉시 지급
+        if (quest.rewardType === "BONUS_XP") {
+          await tx.student.update({
+            where: { id: studentId },
+            data: { xp: { increment: Math.max(0, quest.rewardValue) } },
+          });
+        }
+      }
+
+      await tx.dailyQuest.update({
+        where: { id: quest.id },
+        data: updateData,
+      });
+
+      if (newProgress !== prevProgress || justCompleted) {
+        updates.push({
+          questId: quest.id,
+          label: quest.label,
+          previousProgress: prevProgress,
+          newProgress,
+          target: quest.target,
+          justCompleted,
+          rewardType: quest.rewardType as "MULTIPLIER" | "BONUS_XP",
+          rewardValue: quest.rewardValue,
         });
       }
     }
-
-    await prisma.dailyQuest.update({
-      where: { id: quest.id },
-      data: updateData,
-    });
-
-    // 진행도가 바뀌었거나 방금 완료된 경우만 포함
-    if (newProgress !== prevProgress || justCompleted) {
-      updates.push({
-        questId: quest.id,
-        label: quest.label,
-        previousProgress: prevProgress,
-        newProgress: Math.min(newProgress, quest.target),
-        target: quest.target,
-        justCompleted,
-        rewardType: quest.rewardType as "MULTIPLIER" | "BONUS_XP",
-        rewardValue: quest.rewardValue,
-      });
-    }
-  }
+  });
 
   return updates;
 }
 
 // ---------------------------------------------------------------------------
-// 3. getActiveMultiplier — 현재 활성 배율 조회 (submitSession에서 사용)
+// 3. getActiveMultiplier — 현재 활성 배율 조회
 // ---------------------------------------------------------------------------
 
 export async function getActiveMultiplier(studentId: string): Promise<number> {
-  const { today } = getTodayRange();
+  const { today } = getTodayRangeKST();
   const now = new Date();
 
   const activeQuests = await prisma.dailyQuest.findMany({
@@ -300,7 +302,7 @@ export async function getActiveMultiplier(studentId: string): Promise<number> {
 }
 
 // ---------------------------------------------------------------------------
-// 4. getDailyMission — 레거시 호환 (기존 UI에서 호출)
+// 4. getDailyMission — 레거시 호환
 // ---------------------------------------------------------------------------
 
 export async function getDailyMission(): Promise<DailyMissionStatus> {
@@ -328,7 +330,7 @@ export async function getDailyMission(): Promise<DailyMissionStatus> {
 }
 
 // ---------------------------------------------------------------------------
-// 5. checkDailyMission — 레거시 호환 (세션 완료 후 호출)
+// 5. checkDailyMission — 레거시 호환 (빈 응답)
 // ---------------------------------------------------------------------------
 
 export async function checkDailyMission(): Promise<{
@@ -336,7 +338,6 @@ export async function checkDailyMission(): Promise<{
   hardJustCompleted: boolean;
   multiplier: number | null;
 }> {
-  // 새 시스템에서는 updateQuestProgress가 대체하므로 빈 응답
   return { easyJustCompleted: false, hardJustCompleted: false, multiplier: null };
 }
 
@@ -349,10 +350,15 @@ export async function getIndividualRanking(): Promise<{
   myRank: RankingEntry | null;
 }> {
   const session = await requireStudent();
-  const weekStart = getWeekStart();
+  const weekStart = getWeekStartKST();
 
   const rankings = await prisma.$queryRaw<
-    { studentId: string; name: string; avatarUrl: string | null; weeklyXp: bigint }[]
+    {
+      studentId: string;
+      name: string;
+      avatarUrl: string | null;
+      weeklyXp: bigint;
+    }[]
   >`
     SELECT s.id as "studentId", s.name, s."avatarUrl",
            COALESCE(SUM(sr."xpEarned"), 0) as "weeklyXp"
@@ -386,10 +392,15 @@ export async function getIndividualRanking(): Promise<{
 
 export async function getSchoolRanking(): Promise<SchoolRankingEntry[]> {
   await requireStudent();
-  const weekStart = getWeekStart();
+  const weekStart = getWeekStartKST();
 
   const rankings = await prisma.$queryRaw<
-    { schoolId: string; schoolName: string; avgXp: number; studentCount: bigint }[]
+    {
+      schoolId: string;
+      schoolName: string;
+      avgXp: number;
+      studentCount: bigint;
+    }[]
   >`
     SELECT sc.id as "schoolId", sc.name as "schoolName",
            COALESCE(AVG(weekly.xp), 0) as "avgXp",
@@ -423,10 +434,15 @@ export async function getSchoolRanking(): Promise<SchoolRankingEntry[]> {
 
 export async function getAcademyRanking(): Promise<AcademyRankingEntry[]> {
   await requireStudent();
-  const weekStart = getWeekStart();
+  const weekStart = getWeekStartKST();
 
   const rankings = await prisma.$queryRaw<
-    { academyId: string; academyName: string; avgXp: number; studentCount: bigint }[]
+    {
+      academyId: string;
+      academyName: string;
+      avgXp: number;
+      studentCount: bigint;
+    }[]
   >`
     SELECT a.id as "academyId", a.name as "academyName",
            COALESCE(AVG(weekly.xp), 0) as "avgXp",
@@ -460,6 +476,9 @@ export async function getAcademyRanking(): Promise<AcademyRankingEntry[]> {
 
 export async function getStreakInfo() {
   const session = await requireStudent();
+  const { getTodayKST, normalizeToKSTMidnight } = await import(
+    "@/lib/date-utils"
+  );
 
   const student = await prisma.student.findUnique({
     where: { id: session.studentId },
@@ -468,13 +487,38 @@ export async function getStreakInfo() {
 
   if (!student) throw new Error("학생 정보를 찾을 수 없습니다.");
 
+  // 스트릭 만료 체크: lastStudyDate 기준으로 실제 유효한 streak 계산
+  let effectiveStreak = student.streak;
+
+  if (!student.lastStudyDate) {
+    // 학습 기록 없으면 streak 0
+    effectiveStreak = 0;
+  } else {
+    const today = getTodayKST();
+    const lastDate = normalizeToKSTMidnight(new Date(student.lastStudyDate));
+    const diffDays = Math.round(
+      (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays === 0 || diffDays === 1) {
+      // 오늘 또는 어제 학습 → streak 유효
+      effectiveStreak = student.streak;
+    } else if (diffDays === 2 && student.streakFreezeCount > 0) {
+      // 이틀 전 학습 + 프리즈 보유 → streak 유지
+      effectiveStreak = student.streak;
+    } else {
+      // 2일 이상 안 했으면 만료
+      effectiveStreak = 0;
+    }
+  }
+
   const canRechargeFreeze =
-    student.streak > 0 &&
-    student.streak % STREAK_CONFIG.FREEZE_RECHARGE_DAYS === 0 &&
+    effectiveStreak > 0 &&
+    effectiveStreak % STREAK_CONFIG.FREEZE_RECHARGE_DAYS === 0 &&
     student.streakFreezeCount < STREAK_CONFIG.MAX_FREEZE_COUNT;
 
   return {
-    streak: student.streak,
+    streak: effectiveStreak,
     freezeCount: student.streakFreezeCount,
     maxFreeze: STREAK_CONFIG.MAX_FREEZE_COUNT,
     lastStudyDate: student.lastStudyDate?.toISOString() ?? null,

@@ -89,12 +89,12 @@ export default function ArrangeInteraction({
       {/* 선택된 배열 영역 */}
       <div
         className={cn(
-          "min-h-[3.5rem] rounded-xl border-2 border-dashed p-2 flex flex-wrap gap-1.5",
+          "min-h-[4rem] rounded-2xl border-2 p-3 flex flex-wrap gap-2",
           completed
             ? isCorrect
               ? "border-emerald-300 bg-emerald-50"
               : "border-red-300 bg-red-50"
-            : "border-gray-300 bg-gray-50"
+            : "border-gray-200 bg-gray-50"
         )}
       >
         <AnimatePresence>
@@ -107,12 +107,12 @@ export default function ArrangeInteraction({
               onClick={() => handlePieceClick(piece, true)}
               disabled={completed}
               className={cn(
-                "px-3 py-1.5 rounded-lg text-[var(--fs-sm)] font-medium border transition-all",
+                "card-3d !rounded-xl px-4 py-2 text-sm font-medium",
                 completed
                   ? isCorrect
-                    ? "bg-emerald-100 border-emerald-300 text-emerald-800"
-                    : "bg-red-100 border-red-300 text-red-800"
-                  : "bg-blue-100 border-blue-300 text-blue-800 active:scale-95"
+                    ? "!border-emerald-300 !border-b-emerald-400 bg-emerald-50 text-emerald-800"
+                    : "!border-red-300 !border-b-red-400 bg-red-50 text-red-800"
+                  : "!border-orange-300 !border-b-orange-400 bg-orange-50 text-orange-800"
               )}
             >
               {piece}
@@ -135,7 +135,7 @@ export default function ArrangeInteraction({
             onClick={() => handlePieceClick(piece, false)}
             disabled={completed}
             whileTap={{ scale: 0.95 }}
-            className="px-3 py-1.5 rounded-lg text-[var(--fs-sm)] font-medium bg-white border-2 border-gray-200 text-gray-800 hover:border-blue-300 transition-all"
+            className="card-3d !rounded-xl px-4 py-2 text-sm font-medium text-black"
           >
             {piece}
           </motion.button>
@@ -146,7 +146,8 @@ export default function ArrangeInteraction({
       {!completed && selected.length > 0 && (
         <button
           onClick={handleSubmit}
-          className="w-full py-3 rounded-xl bg-blue-500 text-white font-semibold text-[var(--fs-base)] active:scale-[0.98] transition-all"
+          className="btn-3d w-full py-3.5 rounded-2xl text-white font-bold text-[var(--fs-base)]"
+          style={{ backgroundColor: "var(--key-color)" }}
         >
           확인
         </button>

@@ -88,10 +88,7 @@ export default function ProgressPage() {
     );
   }
 
-  const xpPercent = Math.min(
-    100,
-    (data.currentXp / data.xpForNextLevel) * 100
-  );
+  const xpPercent = 100; // 레벨 시스템 제거됨
 
   // Format dates for charts
   const formatDate = (d: string) => {
@@ -108,22 +105,14 @@ export default function ProgressPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Zap className="size-5" />
-            <span className="text-[var(--fs-base)] font-bold">Level {data.currentLevel}</span>
+            <span className="text-[var(--fs-base)] font-bold">누적 경험치</span>
           </div>
-          <span className="text-[var(--fs-xs)] text-white/70">
-            {data.currentXp}/{data.xpForNextLevel} XP
+          <span className="text-[var(--fs-lg)] font-bold">
+            {data.currentXp.toLocaleString()} XP
           </span>
-        </div>
-        <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-white rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${xpPercent}%` }}
-            transition={{ duration: 1 }}
-          />
         </div>
       </motion.div>
 

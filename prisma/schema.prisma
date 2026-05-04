@@ -56,6 +56,7 @@ model Academy {
   studySeasons        StudySeason[]
   naeshinQuestions    NaeshinQuestion[]
   learningSets        LearningSet[]
+  classMaterials      ClassMaterial[]
 
   @@map("academies")
 }
@@ -83,6 +84,7 @@ model Staff {
   consultations    Consultation[]
   messages         Message[]         @relation("SentMessages")
   receivedMessages Message[]         @relation("ReceivedStaffMessages")
+  classMaterials   ClassMaterial[]
 
   @@index([academyId])
   @@map("staff")
@@ -230,10 +232,11 @@ model Class {
   // Relations
   academy     Academy           @relation(fields: [academyId], references: [id])
   teacher     Staff?            @relation(fields: [teacherId], references: [id])
-  enrollments ClassEnrollment[]
-  attendances Attendance[]
-  assignments Assignment[]
-  exams       Exam[]
+  enrollments    ClassEnrollment[]
+  attendances    Attendance[]
+  assignments    Assignment[]
+  exams          Exam[]
+  classMaterials ClassMaterial[]
 
   @@index([academyId])
   @@index([teacherId])
@@ -1501,4 +1504,28 @@ model PassageCollectionItem {
   @@unique([collectionId, passageId])
   @@index([collectionId])
   @@map("passage_collection_items")
+}
+
+/// ClassMaterial — 수업 자료 (강사가 업로드, 학생이 다운로드)
+model ClassMaterial {
+  id          String   @id @default(cuid())
+  academyId   String
+  classId     String?
+  title       String
+  description String?  @db.Text
+  fileUrl     String
+  fileName    String
+  fileType    String   // "pdf" | "image" | "docx" | "video" | "other"
+  fileSize    Int      // bytes
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy  Academy @relation(fields: [academyId], references: [id])
+  class    Class?  @relation(fields: [classId], references: [id])
+  uploader Staff   @relation(fields: [uploadedBy], references: [id])
+
+  @@index([academyId, classId])
+  @@index([classId])
+  @@map("class_materials")
 }

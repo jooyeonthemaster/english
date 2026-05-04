@@ -23,25 +23,26 @@ export default async function LearningQuestionsPage({ searchParams }: PageProps)
 
   const params = await searchParams;
 
-  // 세트 목록 조회
-  const setsData = await getLearningSets(staff.academyId, {
-    publisher: params.publisher || undefined,
-    grade: params.grade ? parseInt(params.grade) : undefined,
-  });
+  // 세트 + 문제 병렬 조회 (문제는 setId + learningCategory 둘 다 있을 때만)
+  const needQuestions = !!(params.setId && params.learningCategory);
 
-  // 특정 세트 선택 시 문제 목록 조회
-  let questionsData = null;
-  if (params.setId) {
-    questionsData = await getNaeshinQuestions(staff.academyId, {
-      learningSetId: params.setId,
-      learningCategory: params.learningCategory || undefined,
-      subType: params.subType || undefined,
-      difficulty: params.difficulty || undefined,
-      approved: params.approved === "true" ? true : params.approved === "false" ? false : undefined,
-      search: params.search || undefined,
-      page: params.page ? parseInt(params.page) : 1,
-    });
-  }
+  const [setsData, questionsData] = await Promise.all([
+    getLearningSets(staff.academyId, {
+      publisher: params.publisher || undefined,
+      grade: params.grade ? parseInt(params.grade) : undefined,
+    }),
+    needQuestions
+      ? getNaeshinQuestions(staff.academyId, {
+          learningSetId: params.setId,
+          learningCategory: params.learningCategory || undefined,
+          subType: params.subType || undefined,
+          difficulty: params.difficulty || undefined,
+          approved: params.approved === "true" ? true : params.approved === "false" ? false : undefined,
+          search: params.search || undefined,
+          page: params.page ? parseInt(params.page) : 1,
+        })
+      : Promise.resolve(null),
+  ]);
 
   return (
     <LearningQuestionBankClient

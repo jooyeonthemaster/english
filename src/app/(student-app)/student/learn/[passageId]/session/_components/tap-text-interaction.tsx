@@ -54,7 +54,7 @@ export default function TapTextInteraction({
   return (
     <div className="space-y-4">
       {/* 문장 (단어별 탭 가능) */}
-      <div className="flex flex-wrap gap-1.5 p-3 rounded-xl bg-gray-50 border border-gray-200">
+      <div className="flex flex-wrap gap-2 p-4 rounded-2xl bg-white border-2 border-gray-200">
         {words.map((word, i) => {
           const isSelected = selectedIdx === i;
           const isError = completed && i === errorIdx;
@@ -67,7 +67,7 @@ export default function TapTextInteraction({
               disabled={completed}
               whileTap={!completed ? { scale: 0.95 } : undefined}
               className={cn(
-                "px-2 py-1 rounded-lg text-[var(--fs-base)] font-medium transition-all border-2",
+                "px-3 py-2 rounded-xl text-[var(--fs-base)] font-medium transition-all border-2 border-b-4",
                 completed
                   ? isError
                     ? "bg-red-100 border-red-400 text-red-800 underline decoration-2"
@@ -77,8 +77,8 @@ export default function TapTextInteraction({
                         ? "bg-emerald-100 border-emerald-400 text-emerald-800"
                         : "border-transparent text-gray-700"
                   : isSelected
-                    ? "bg-blue-100 border-blue-400 text-blue-800"
-                    : "border-transparent text-gray-800 hover:bg-blue-50 hover:border-blue-200"
+                    ? "bg-orange-50 border-orange-400 text-orange-800"
+                    : "border-transparent text-black hover:bg-orange-50 hover:border-orange-200"
               )}
             >
               {word}
@@ -98,7 +98,8 @@ export default function TapTextInteraction({
       {!completed && selectedIdx !== null && (
         <button
           onClick={handleSubmit}
-          className="w-full py-3 rounded-xl bg-blue-500 text-white font-semibold text-[var(--fs-base)] active:scale-[0.98] transition-all"
+          className="btn-3d w-full py-3.5 rounded-2xl text-white font-bold text-[var(--fs-base)]"
+          style={{ backgroundColor: "var(--key-color)" }}
         >
           확인
         </button>

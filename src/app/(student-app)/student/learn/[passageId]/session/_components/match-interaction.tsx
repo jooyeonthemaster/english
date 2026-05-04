@@ -74,60 +74,75 @@ export default function MatchInteraction({ pairs, onComplete, disabled }: MatchI
   const matchedKoIndices = new Set(matches.values());
 
   return (
-    <div className="flex gap-3">
-      {/* 영어 열 */}
-      <div className="flex-1 space-y-2">
-        {pairs.map((p, i) => {
-          const isMatched = matches.has(i);
-          const isSelected = selectedEn === i;
-          const isWrong = wrongPair?.en === i;
-          return (
-            <motion.button
-              key={`en-${i}`}
-              onClick={() => handleEnClick(i)}
-              className={cn(
-                "w-full py-3 px-3 rounded-xl text-[var(--fs-sm)] font-medium border-2 transition-all text-left",
-                isMatched
-                  ? "bg-emerald-50 border-emerald-300 text-emerald-700"
-                  : isWrong
-                    ? "bg-red-50 border-red-300 text-red-700 animate-shake"
-                    : isSelected
-                      ? "bg-blue-50 border-blue-400 text-blue-700"
-                      : "bg-white border-gray-200 text-gray-900"
-              )}
-              disabled={isMatched}
-            >
-              {p.en}
-            </motion.button>
-          );
-        })}
+    <div className="space-y-3">
+      {/* 진행 카운터 */}
+      <div className="flex items-center gap-2">
+        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{ width: `${(matches.size / pairs.length) * 100}%`, backgroundColor: "#58CC02" }}
+          />
+        </div>
+        <span className="text-xs font-bold text-black">{matches.size}/{pairs.length}</span>
       </div>
 
-      {/* 한국어 열 */}
-      <div className="flex-1 space-y-2">
-        {shuffledKo.map((ko, i) => {
-          const isMatched = matchedKoIndices.has(i);
-          const isWrong = wrongPair?.ko === i;
-          return (
-            <motion.button
-              key={`ko-${i}`}
-              onClick={() => handleKoClick(i)}
-              className={cn(
-                "w-full py-3 px-3 rounded-xl text-[var(--fs-sm)] font-medium border-2 transition-all text-left",
-                isMatched
-                  ? "bg-emerald-50 border-emerald-300 text-emerald-700"
-                  : isWrong
-                    ? "bg-red-50 border-red-300 text-red-700 animate-shake"
-                    : selectedEn !== null
-                      ? "bg-gray-50 border-gray-300 text-gray-700 hover:border-blue-300"
-                      : "bg-white border-gray-200 text-gray-600"
-              )}
-              disabled={isMatched || selectedEn === null}
-            >
-              {ko}
-            </motion.button>
-          );
-        })}
+      <div className="flex gap-3">
+        {/* 영어 열 */}
+        <div className="flex-1 space-y-2.5">
+          {pairs.map((p, i) => {
+            const isMatched = matches.has(i);
+            const isSelected = selectedEn === i;
+            const isWrong = wrongPair?.en === i;
+            return (
+              <motion.button
+                key={`en-${i}`}
+                onClick={() => handleEnClick(i)}
+                className={cn(
+                  "card-3d w-full py-3.5 px-4 text-sm font-medium text-left",
+                  isMatched
+                    ? "!border-emerald-300 !border-b-emerald-400 bg-emerald-50 text-emerald-700 opacity-60"
+                    : isWrong
+                      ? "!border-red-300 !border-b-red-400 bg-red-50 text-red-700 animate-shake"
+                      : isSelected
+                        ? "!border-orange-400 !border-b-orange-500 bg-orange-50 text-orange-700"
+                        : "text-black"
+                )}
+                disabled={isMatched}
+              >
+                {p.en}
+                {isMatched && <span className="ml-1 text-emerald-500">✓</span>}
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* 한국어 열 */}
+        <div className="flex-1 space-y-2.5">
+          {shuffledKo.map((ko, i) => {
+            const isMatched = matchedKoIndices.has(i);
+            const isWrong = wrongPair?.ko === i;
+            return (
+              <motion.button
+                key={`ko-${i}`}
+                onClick={() => handleKoClick(i)}
+                className={cn(
+                  "card-3d w-full py-3.5 px-4 text-sm font-medium text-left",
+                  isMatched
+                    ? "!border-emerald-300 !border-b-emerald-400 bg-emerald-50 text-emerald-700 opacity-60"
+                    : isWrong
+                      ? "!border-red-300 !border-b-red-400 bg-red-50 text-red-700 animate-shake"
+                      : selectedEn !== null
+                        ? "bg-gray-50 text-black"
+                        : "text-black"
+                )}
+                disabled={isMatched || selectedEn === null}
+              >
+                {ko}
+                {isMatched && <span className="ml-1 text-emerald-500">✓</span>}
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { getAssignments } from "@/actions/assignments";
-import { getClassesForFilter } from "@/actions/exams";
+import { getClassesForFilter } from "@/actions/exam-questions";
 import { AssignmentsPageClient } from "@/components/assignments/assignments-page-client";
 
 export default async function AssignmentsPage() {

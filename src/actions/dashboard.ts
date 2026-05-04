@@ -132,7 +132,8 @@ function getTodaySchedule(scheduleJson: string | null): ScheduleSlot | null {
   if (!scheduleJson) return null;
   try {
     const slots: ScheduleSlot[] = JSON.parse(scheduleJson);
-    const todayDay = DAY_MAP[new Date().getDay()];
+    const { getDayOfWeekKST } = require("@/lib/date-utils");
+    const todayDay = DAY_MAP[getDayOfWeekKST()];
     return slots.find((s) => s.day === todayDay) || null;
   } catch {
     return null;
@@ -161,13 +162,11 @@ function getClassStatus(
 
 export async function getDashboardKPIs(academyId: string): Promise<KPIData> {
   try {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayEnd.getDate() + 1);
+    const { getMonthStartKST, getLastMonthStartKST, getTodayRangeKST } = require("@/lib/date-utils");
+    const startOfMonth = getMonthStartKST();
+    const startOfLastMonth = getLastMonthStartKST();
+    const endOfLastMonth = new Date(startOfMonth.getTime() - 1);
+    const { today: todayStart, tomorrow: todayEnd } = getTodayRangeKST();
 
     // All 7 queries are independent — run in parallel
     const [
@@ -287,14 +286,17 @@ export async function getDashboardKPIs(academyId: string): Promise<KPIData> {
 
 export async function getStudentTrend(academyId: string): Promise<StudentTrendPoint[]> {
   try {
-    const now = new Date();
+    const KST = 9 * 60 * 60 * 1000;
+    const kstNow = new Date(Date.now() + KST);
 
-    // Build month descriptors for the last 6 months
+    // Build month descriptors for the last 6 months (KST 기준)
     const months = Array.from({ length: 6 }, (_, idx) => {
       const i = 5 - idx;
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const endDate = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
-      return { monthLabel: `${date.getMonth() + 1}월`, endDate };
+      const y = kstNow.getUTCFullYear();
+      const m = kstNow.getUTCMonth() - i;
+      const startDate = new Date(Date.UTC(y, m, 1) - KST);
+      const endDate = new Date(Date.UTC(y, m + 1, 1) - KST);
+      return { monthLabel: `${((m % 12) + 12) % 12 + 1}월`, startDate, endDate };
     });
 
     // All 6 count queries are independent — run in parallel
@@ -331,9 +333,11 @@ export async function getStudentTrend(academyId: string): Promise<StudentTrendPo
 
 export async function getPaymentSummary(academyId: string): Promise<PaymentSummaryItem[]> {
   try {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const { getMonthStartKST } = require("@/lib/date-utils");
+    const startOfMonth = getMonthStartKST();
+    const KST2 = 9 * 60 * 60 * 1000;
+    const kst2 = new Date(Date.now() + KST2);
+    const endOfMonth = new Date(Date.UTC(kst2.getUTCFullYear(), kst2.getUTCMonth() + 1, 1) - KST2);
 
     const statuses = ["PAID", "PENDING", "OVERDUE"] as const;
     const labels: Record<string, string> = {
@@ -567,10 +571,8 @@ export async function getTeacherTodayClasses(
   staffId: string
 ): Promise<TeacherClassItem[]> {
   try {
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayEnd.getDate() + 1);
+    const { getTodayRangeKST } = require("@/lib/date-utils");
+    const { today: todayStart, tomorrow: todayEnd } = getTodayRangeKST();
 
     const classes = await prisma.class.findMany({
       where: { academyId, teacherId: staffId, isActive: true },

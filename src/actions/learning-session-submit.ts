@@ -141,8 +141,8 @@ export async function submitSession(data: {
   ]);
 
   // 후속 처리: XP + 레슨 진행도 + 스트릭 + 일별 기록
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const { getTodayKST } = await import("@/lib/date-utils");
+  const today = getTodayKST();
 
   const [, updatedProgress] = await Promise.all([
     xpEarned > 0
@@ -162,6 +162,11 @@ export async function submitSession(data: {
 
   revalidatePath("/student");
   revalidateTag(`student-${studentId}`, "default");
+
+  // StudentAnalytics 자동 갱신 (fire-and-forget)
+  import("./learning-analytics")
+    .then((mod) => mod.updateStudentAnalytics(studentId))
+    .catch(() => {});
 
   // 퀘스트 진행도
   const questUpdates = await updateQuestProgress(score, xpEarned, data.sessionType);
@@ -284,46 +289,52 @@ async function updateLessonProgress(
 // ---------------------------------------------------------------------------
 
 async function updateStreak(studentId: string) {
+  const { getTodayKST, normalizeToKSTMidnight } = await import("@/lib/date-utils");
+
   const student = await prisma.student.findUnique({
     where: { id: studentId },
     select: { streak: true, lastStudyDate: true, streakFreezeCount: true },
   });
   if (!student) return;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = getTodayKST();
 
-  const lastDate = student.lastStudyDate ? new Date(student.lastStudyDate) : null;
-  if (lastDate) lastDate.setHours(0, 0, 0, 0);
-
-  if (lastDate && lastDate.getTime() === today.getTime()) return;
-
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  let newStreak = student.streak;
-
-  if (lastDate && lastDate.getTime() === yesterday.getTime()) {
-    newStreak++;
-  } else if (lastDate && lastDate.getTime() < yesterday.getTime()) {
-    const daysMissed = Math.floor(
-      (yesterday.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+  // 일 단위 차이 계산 (밀리초 비교 대신 — DB 정밀도 차이 방지)
+  if (student.lastStudyDate) {
+    const lastDate = normalizeToKSTMidnight(new Date(student.lastStudyDate));
+    const diffDays = Math.round(
+      (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-    if (daysMissed === 1 && student.streakFreezeCount > 0) {
+
+    // 같은 날 → 아무것도 안 함
+    if (diffDays === 0) return;
+
+    let newStreak = student.streak;
+
+    if (diffDays === 1) {
+      // 어제 학습 → streak 증가
+      newStreak++;
+    } else if (diffDays === 2 && student.streakFreezeCount > 0) {
+      // 이틀 전 학습 + 프리즈 → streak 유지하며 증가
       await prisma.student.update({
         where: { id: studentId },
         data: { streakFreezeCount: { decrement: 1 } },
       });
       newStreak++;
     } else {
+      // 2일 이상 빠짐 → 리셋
       newStreak = 1;
     }
-  } else {
-    newStreak = 1;
-  }
 
-  await prisma.student.update({
-    where: { id: studentId },
-    data: { streak: newStreak, lastStudyDate: today },
-  });
+    await prisma.student.update({
+      where: { id: studentId },
+      data: { streak: newStreak, lastStudyDate: today },
+    });
+  } else {
+    // 첫 학습 → streak 1
+    await prisma.student.update({
+      where: { id: studentId },
+      data: { streak: 1, lastStudyDate: today },
+    });
+  }
 }

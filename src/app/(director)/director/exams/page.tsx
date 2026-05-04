@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getExams, getClassesForFilter } from "@/actions/exams";
+import { getExams } from "@/actions/exams";
+import { getClassesForFilter } from "@/actions/exam-questions";
 import { ExamListClient } from "@/components/exams/exam-list-client";
 
 export default async function ExamsPage() {

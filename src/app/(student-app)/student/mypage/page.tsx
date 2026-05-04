@@ -66,7 +66,7 @@ export default function StudentMyPage() {
     );
   }
 
-  const { student, analytics } = inbadi;
+  const { student, analytics, recentExams, recentTests, assignmentGrades } = inbadi;
 
   return (
     <div className="pb-6">
@@ -105,7 +105,12 @@ export default function StudentMyPage() {
         <AnimatePresence mode="wait">
           {activeTab === "grades" && (
             <motion.div key="grades" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <GradesTab analytics={analytics} />
+              <GradesTab
+                analytics={analytics}
+                recentExams={recentExams}
+                recentTests={recentTests}
+                assignmentGrades={assignmentGrades}
+              />
             </motion.div>
           )}
           {activeTab === "attendance" && (
