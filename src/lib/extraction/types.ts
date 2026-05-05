@@ -13,6 +13,8 @@ export type { ExtractionMode } from "./modes";
 
 export type ExtractionSourceType = "PDF" | "IMAGES";
 
+export type ExtractionEngine = "direct" | "trigger";
+
 export type ExtractionJobStatus =
   | "PENDING"
   | "PROCESSING"

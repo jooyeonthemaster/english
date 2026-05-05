@@ -8,6 +8,9 @@
  *  budgets on both the UI grid and Gemini verbatim fidelity. */
 export const MAX_PAGES_PER_JOB = 30;
 
+/** Small synchronous extraction path for M1. Larger jobs should use workers. */
+export const DIRECT_PASSAGE_MAX_PAGES = 5;
+
 /** Maximum raw PDF size (bytes). PDFs over this should be split by the user. */
 export const MAX_PDF_BYTES = 50 * 1024 * 1024; // 50MB
 

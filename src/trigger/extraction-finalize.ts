@@ -487,99 +487,107 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
           })),
       )
     : [];
+  const structuredDraftsForResults =
+    input.mode === "PASSAGE_ONLY"
+      ? enriched.filter((draft) => {
+          if (draft.content.trim().length > 0) return true;
+          return draft.questions.some(
+            (q) => q.choices.length > 0 || q.explanation !== null,
+          );
+        })
+      : enriched;
 
-  // ── 5) Persist everything in one transaction.
-  await prisma.$transaction(async (tx) => {
-    // 5a) Update every ExtractionItem with groupId / parentItemId / final order.
-    for (let i = 0; i < withGlobalOrder.length; i++) {
-      const c = withGlobalOrder[i];
-      const localId = `${c.pageIndex}:${c.order}`;
-      const dbId = localIdToDbId.get(localId);
-      if (!dbId) continue;
-      const parentDbId = c.parentLocalId
-        ? localIdToDbId.get(c.parentLocalId) ?? null
-        : null;
-      await tx.extractionItem.update({
+  const itemUpdateOps = withGlobalOrder.flatMap((c) => {
+    const localId = `${c.pageIndex}:${c.order}`;
+    const dbId = localIdToDbId.get(localId);
+    if (!dbId) return [];
+    const parentDbId = c.parentLocalId
+      ? localIdToDbId.get(c.parentLocalId) ?? null
+      : null;
+    return [
+      prisma.extractionItem.update({
         where: { id: dbId },
         data: {
           groupId: c.groupId,
           parentItemId: parentDbId,
           order: c.globalOrder,
         },
-      });
-    }
+      }),
+    ];
+  });
 
-    // 5b) Re-run safe: wipe existing DRAFT results.
-    await tx.extractionResult.deleteMany({
-      where: { jobId, status: "DRAFT" },
-    });
-
-    if (useLegacyFallback) {
-      for (const d of legacyFallbackDrafts) {
-        await tx.extractionResult.create({
-          data: {
-            jobId,
-            passageOrder: d.passageOrder,
-            sourcePageIndex: d.sourcePageIndex,
-            title: d.title,
-            content: d.content,
-            meta: {
-              ...(d.meta ?? {}),
-              structuredFallback: true,
-            } as Prisma.InputJsonValue,
-            confidence: d.confidence,
-            status: "DRAFT",
-          },
-        });
-      }
-    } else {
-      for (const d of enriched) {
-        const resultMeta = {
-          ...(d.meta ?? {}),
-          groupId: d.passageItemId ?? null,
-          questions: d.questions.map((q) => ({
-            questionItemId: q.questionItemId,
-            questionNumber: q.questionNumber,
-            stem: q.stem,
-            choices: q.choices.map((c) => ({
-              itemId: c.itemId,
-              label: c.label,
-              content: c.content,
-              isAnswer: c.isAnswer,
+  const resultRows: Prisma.ExtractionResultCreateManyInput[] =
+    useLegacyFallback
+      ? legacyFallbackDrafts.map((d) => ({
+          jobId,
+          passageOrder: d.passageOrder,
+          sourcePageIndex: d.sourcePageIndex,
+          title: d.title,
+          content: d.content,
+          meta: {
+            ...(d.meta ?? {}),
+            structuredFallback: true,
+          } as Prisma.InputJsonValue,
+          confidence: d.confidence,
+          status: "DRAFT",
+        }))
+      : structuredDraftsForResults.map((d, index) => {
+          const resultMeta = {
+            ...(d.meta ?? {}),
+            groupId: d.passageItemId ?? null,
+            questions: d.questions.map((q) => ({
+              questionItemId: q.questionItemId,
+              questionNumber: q.questionNumber,
+              stem: q.stem,
+              choices: q.choices.map((c) => ({
+                itemId: c.itemId,
+                label: c.label,
+                content: c.content,
+                isAnswer: c.isAnswer,
+              })),
+              explanation: q.explanation,
             })),
-            explanation: q.explanation,
-          })),
-          examMeta: d.examMeta ?? null,
-        } satisfies Record<string, unknown>;
+            examMeta: d.examMeta ?? null,
+          } satisfies Record<string, unknown>;
 
-        await tx.extractionResult.create({
-          data: {
+          return {
             jobId,
-            passageOrder: d.passageOrder,
+            passageOrder: index,
             sourcePageIndex: d.sourcePageIndex,
             title: d.title,
             content: d.content,
             meta: resultMeta as Prisma.InputJsonValue,
             confidence: d.confidence,
             status: "DRAFT",
-          },
+          };
         });
-      }
-    }
 
-    // 5c) Job status + sourceMaterialId
-    await tx.extractionJob.update({
+  const persistOps: Prisma.PrismaPromise<unknown>[] = [
+    ...itemUpdateOps,
+    prisma.extractionResult.deleteMany({
+      where: { jobId, status: "DRAFT" },
+    }),
+  ];
+  if (resultRows.length > 0) {
+    persistOps.push(prisma.extractionResult.createMany({ data: resultRows }));
+  }
+  persistOps.push(
+    prisma.extractionJob.update({
       where: { id: jobId },
       data: {
         status: finalStatus,
         completedAt: new Date(),
         ...(sourceMaterialId ? { sourceMaterialId } : {}),
       },
-    });
-  });
+    }),
+  );
+
+  await prisma.$transaction(persistOps);
 
   return {
-    draftCount: useLegacyFallback ? legacyFallbackDrafts.length : enriched.length,
+    draftCount: useLegacyFallback
+      ? legacyFallbackDrafts.length
+      : structuredDraftsForResults.length,
     sourceMaterialId,
   };
 }

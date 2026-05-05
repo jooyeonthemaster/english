@@ -140,7 +140,7 @@ export async function GET(req: NextRequest) {
   const staff = await requireStaff();
   if (staff instanceof NextResponse) return staff;
 
-  const limit = Math.min(50, Math.max(1, Number(req.nextUrl.searchParams.get("limit") ?? 20)));
+  const limit = Math.min(200, Math.max(1, Number(req.nextUrl.searchParams.get("limit") ?? 20)));
 
   const jobs = await prisma.extractionJob.findMany({
     where: { academyId: staff.academyId },
@@ -165,5 +165,41 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ jobs });
+  const jobIds = jobs.map((job) => job.id);
+  const resultCounts =
+    jobIds.length > 0
+      ? await prisma.extractionResult.groupBy({
+          by: ["jobId", "status"],
+          where: { jobId: { in: jobIds } },
+          _count: { _all: true },
+        })
+      : [];
+  const countsByJob = new Map<
+    string,
+    { draftResultCount: number; savedResultCount: number; resultCount: number }
+  >();
+  for (const row of resultCounts) {
+    const current =
+      countsByJob.get(row.jobId) ??
+      { draftResultCount: 0, savedResultCount: 0, resultCount: 0 };
+    current.resultCount += row._count._all;
+    if (row.status === "DRAFT" || row.status === "REVIEWED") {
+      current.draftResultCount += row._count._all;
+    }
+    if (row.status === "SAVED") {
+      current.savedResultCount += row._count._all;
+    }
+    countsByJob.set(row.jobId, current);
+  }
+
+  return NextResponse.json({
+    jobs: jobs.map((job) => ({
+      ...job,
+      ...(countsByJob.get(job.id) ?? {
+        draftResultCount: 0,
+        savedResultCount: 0,
+        resultCount: 0,
+      }),
+    })),
+  });
 }

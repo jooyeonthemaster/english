@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
   UploadCloud,
   FileText,
@@ -12,6 +12,8 @@ import {
   Pencil,
   Check,
   ArrowRight,
+  Cloud,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 import { useExtractionStore } from "@/lib/extraction/store";
@@ -23,6 +25,7 @@ import {
 import {
   ACCEPTED_IMAGE_MIMES,
   ACCEPTED_PDF_MIMES,
+  DIRECT_PASSAGE_MAX_PAGES,
   MAX_INPUT_IMAGE_BYTES,
   MAX_PAGES_PER_JOB,
   MAX_PDF_BYTES,
@@ -49,9 +52,11 @@ export function UploadStep() {
   const slots = useExtractionStore((s) => s.slots);
   const splitProgress = useExtractionStore((s) => s.splitProgress);
   const mode = useExtractionStore((s) => s.mode);
+  const extractionEngine = useExtractionStore((s) => s.extractionEngine);
   const setSlots = useExtractionStore((s) => s.setSlots);
   const setSource = useExtractionStore((s) => s.setSource);
   const setPhase = useExtractionStore((s) => s.setPhase);
+  const setExtractionEngine = useExtractionStore((s) => s.setExtractionEngine);
   const setSplitProgress = useExtractionStore((s) => s.setSplitProgress);
   const setError = useExtractionStore((s) => s.setError);
   const startUpload = useExtractionUpload();
@@ -70,6 +75,18 @@ export function UploadStep() {
   const constraintsId = useId();
 
   const modeConfig = useMemo(() => (mode ? MODES[mode] : null), [mode]);
+  const showEngineSelector = mode === "PASSAGE_ONLY";
+  const directAvailable = slots.length <= DIRECT_PASSAGE_MAX_PAGES;
+
+  useEffect(() => {
+    if (
+      mode === "PASSAGE_ONLY" &&
+      slots.length > DIRECT_PASSAGE_MAX_PAGES &&
+      extractionEngine === "direct"
+    ) {
+      setExtractionEngine("trigger");
+    }
+  }, [mode, slots.length, extractionEngine, setExtractionEngine]);
 
   const handleFiles = useCallback(
     async (files: FileList | File[]) => {
@@ -175,13 +192,18 @@ export function UploadStep() {
     } catch {
       // ignore
     }
+    const engine =
+      mode === "PASSAGE_ONLY" && extractionEngine === "direct"
+        ? "direct"
+        : "trigger";
     await startUpload({
       slots,
       sourceType,
       originalFileName: sourceName,
       mode,
+      engine,
     });
-  }, [slots, sourceType, sourceName, mode, setError, startUpload]);
+  }, [slots, sourceType, sourceName, mode, extractionEngine, setError, startUpload]);
 
   const clearAll = useCallback(() => {
     setSlots([]);
@@ -335,7 +357,18 @@ export function UploadStep() {
             ) : null}
           </label>
 
-          {modeConfig ? <ExpectedOutputCard mode={modeConfig} /> : null}
+          {modeConfig ? (
+            <div className="flex min-h-0 flex-col gap-3">
+              {showEngineSelector ? (
+                <ExecutionEngineSelector
+                  value={extractionEngine}
+                  directAvailable={directAvailable}
+                  onChange={setExtractionEngine}
+                />
+              ) : null}
+              <ExpectedOutputCard mode={modeConfig} />
+            </div>
+          ) : null}
         </div>
       ) : (
         // ─── AFTER SELECTION: thumbs (left) + CTA panel (right) ────────
@@ -433,6 +466,14 @@ export function UploadStep() {
                 <CheckItem>업로드 원본은 30일 후 자동 삭제</CheckItem>
               </ul>
 
+              {showEngineSelector ? (
+                <ExecutionEngineSelector
+                  value={extractionEngine}
+                  directAvailable={directAvailable}
+                  onChange={setExtractionEngine}
+                />
+              ) : null}
+
               <div className="mt-1 flex items-center justify-between rounded-lg border border-sky-100 bg-white/70 px-3 py-2">
                 <span className="text-[11px] font-medium text-slate-500">
                   예상 비용
@@ -462,6 +503,88 @@ export function UploadStep() {
         </div>
       )}
     </div>
+  );
+}
+
+function ExecutionEngineSelector({
+  value,
+  directAvailable,
+  onChange,
+}: {
+  value: "direct" | "trigger";
+  directAvailable: boolean;
+  onChange: (value: "direct" | "trigger") => void;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white/80 p-2">
+      <div className="grid grid-cols-2 gap-1.5">
+        <EngineButton
+          active={value === "direct" && directAvailable}
+          disabled={!directAvailable}
+          icon={Zap}
+          label="빠른 추출"
+          detail={`최대 ${DIRECT_PASSAGE_MAX_PAGES}장`}
+          onClick={() => onChange("direct")}
+        />
+        <EngineButton
+          active={value === "trigger" || !directAvailable}
+          icon={Cloud}
+          label="백그라운드"
+          detail="기존 M1"
+          onClick={() => onChange("trigger")}
+        />
+      </div>
+      {!directAvailable ? (
+        <p className="mt-2 px-1 text-[10.5px] leading-snug text-slate-500">
+          빠른 추출은 {DIRECT_PASSAGE_MAX_PAGES}페이지 이하에서만 사용할 수 있습니다.
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function EngineButton({
+  active,
+  disabled = false,
+  icon: Icon,
+  label,
+  detail,
+  onClick,
+}: {
+  active: boolean;
+  disabled?: boolean;
+  icon: LucideIcon;
+  label: string;
+  detail: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={
+        "flex min-h-16 flex-col items-start justify-center gap-1 rounded-lg border px-2.5 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 " +
+        (disabled
+          ? "cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400"
+          : active
+            ? "border-sky-300 bg-sky-50 text-sky-800"
+            : "border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:bg-sky-50/40")
+      }
+    >
+      <span className="flex items-center gap-1.5 text-[11.5px] font-bold">
+        <Icon className="size-3.5" strokeWidth={2} aria-hidden="true" />
+        {label}
+      </span>
+      <span
+        className={
+          "text-[10.5px] font-medium " +
+          (active && !disabled ? "text-sky-600" : "text-slate-500")
+        }
+      >
+        {detail}
+      </span>
+    </button>
   );
 }
 

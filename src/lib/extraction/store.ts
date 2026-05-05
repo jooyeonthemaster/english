@@ -12,6 +12,7 @@
 import { create } from "zustand";
 import type {
   ClientPageSlot,
+  ExtractionEngine,
   ExtractionItemSnapshot,
   ExtractionJobStatus,
   ExtractionPageStatus,
@@ -87,6 +88,7 @@ interface ExtractionStoreState {
 
   // Mode (chosen on the very first screen)
   mode: ExtractionMode | null;
+  extractionEngine: ExtractionEngine;
 
   // Upload bookkeeping
   sourceName: string | null;
@@ -126,6 +128,7 @@ interface ExtractionStoreState {
   setPhase: (p: ExtractionPhase) => void;
   setError: (msg: string | null) => void;
   setMode: (mode: ExtractionMode | null) => void;
+  setExtractionEngine: (engine: ExtractionEngine) => void;
   setSource: (name: string, type: "PDF" | "IMAGES") => void;
   setSlots: (slots: ClientPageSlot[]) => void;
   setSplitProgress: (p: { pageIndex?: number; totalPages?: number } | null) => void;
@@ -162,6 +165,7 @@ export const useExtractionStore = create<ExtractionStoreState>((set, get) => ({
   jobId: null,
   error: null,
   mode: null,
+  extractionEngine: "direct",
   sourceName: null,
   sourceType: null,
   slots: [],
@@ -182,6 +186,7 @@ export const useExtractionStore = create<ExtractionStoreState>((set, get) => ({
   setPhase: (p) => set({ phase: p }),
   setError: (msg) => set({ error: msg, phase: msg ? "error" : get().phase }),
   setMode: (mode) => set({ mode }),
+  setExtractionEngine: (extractionEngine) => set({ extractionEngine }),
   setSource: (name, type) => set({ sourceName: name, sourceType: type }),
 
   setSlots: (slots) => {
@@ -241,6 +246,7 @@ export const useExtractionStore = create<ExtractionStoreState>((set, get) => ({
       jobId: null,
       error: null,
       mode: null,
+      extractionEngine: "direct",
       sourceName: null,
       sourceType: null,
       slots: [],

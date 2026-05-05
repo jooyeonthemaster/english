@@ -81,10 +81,16 @@ export type CreateJobResponse = z.infer<typeof createJobResponseSchema>;
 
 // ─── POST /api/extraction/jobs/:id/start ────────────────────────────────────
 
+export const startJobRequestSchema = z.object({
+  engine: z.enum(["direct", "trigger"]).default("trigger"),
+});
+
 export const startJobResponseSchema = z.object({
   jobId: z.string(),
-  status: z.literal("PROCESSING"),
-  triggerRunId: z.string(),
+  status: z.enum(["PROCESSING", "COMPLETED", "PARTIAL", "FAILED", "CANCELLED"]),
+  triggerRunId: z.string().optional(),
+  direct: z.boolean().optional(),
+  draftCount: z.number().optional(),
 });
 
 // ─── POST /api/extraction/jobs/:id/commit ───────────────────────────────────

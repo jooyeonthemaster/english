@@ -61,15 +61,22 @@ export function classifyGeminiError(err: unknown): ExtractionErrorClassification
 
   let code: ExtractionErrorCode = "UNKNOWN";
 
-  if (status === 401 || status === 403) code = "GEMINI_AUTH";
+  if (e.code === "PARSE_ERROR") code = "PARSE_ERROR";
+  else if (e.code === "EMPTY_OUTPUT") code = "EMPTY_OUTPUT";
+  else if (e.code === "GEMINI_TIMEOUT") code = "GEMINI_TIMEOUT";
+  else if (status === 401 || status === 403) code = "GEMINI_AUTH";
   else if (status === 429) code = "GEMINI_RATE_LIMIT";
   else if (typeof status === "number" && status >= 500 && status < 600) code = "GEMINI_SERVER";
   else if (status === 400 && /image|decode|media/i.test(msg)) code = "INVALID_IMAGE";
   else if (/safety|blocked|prohibited|policy/i.test(lower)) code = "SAFETY_BLOCKED";
+  else if (/api key|api_key|api-key|invalid_argument/i.test(lower)) code = "GEMINI_AUTH";
+  else if (/storage|download/i.test(lower) && /timeout|timed out|etimedout|esockettimedout/i.test(lower)) {
+    code = "STORAGE_FETCH";
+  }
   else if (/timeout|timed out|etimedout|esockettimedout/i.test(lower)) code = "GEMINI_TIMEOUT";
   else if (/econnreset|fetch failed|enotfound|network|socket/i.test(lower)) code = "NETWORK";
   else if (/empty|no content|no text|empty response/i.test(lower)) code = "EMPTY_OUTPUT";
-  else if (/storage|not found|object not found/i.test(lower)) code = "STORAGE_FETCH";
+  else if (/storage|download failed|object not found|bucket not found/i.test(lower)) code = "STORAGE_FETCH";
   else if (
     err instanceof SyntaxError ||
     /json|parse error|unexpected token|invalid_structured_response|schema/i.test(lower)

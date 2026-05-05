@@ -4,11 +4,13 @@ import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useExtractionStore } from "@/lib/extraction/store";
 import { useExtractionStream } from "@/hooks/use-extraction-stream";
 import { isValidMode, MODES } from "@/lib/extraction/modes";
+import type { ExtractionJobStatus } from "@/lib/extraction/types";
 import { ModeSelectStep } from "./mode-select-step";
 import { UploadStep } from "./upload-step";
 import { ProcessingStep } from "./processing-step";
 import { ReviewStep } from "./review-step";
 import { DoneStep } from "./done-step";
+import { RecentExtractionJobs } from "./recent-extraction-jobs";
 
 interface Props {
   initialCreditBalance: number;
@@ -16,6 +18,7 @@ interface Props {
 
 const LAST_MODE_KEY = "yshin-last-extraction-mode";
 const SKIP_KEY = "yshin-extraction-skip-mode-select";
+const TERMINAL_REVIEW = new Set<ExtractionJobStatus>(["COMPLETED", "PARTIAL"]);
 
 // `useSyncExternalStore` subscribes to `storage` events so we can read
 // localStorage in a SSR-safe, lint-clean way (no `setState`-in-effect).
@@ -60,6 +63,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
   const mode = useExtractionStore((s) => s.mode);
   const setMode = useExtractionStore((s) => s.setMode);
   const setPhase = useExtractionStore((s) => s.setPhase);
+  const setJobId = useExtractionStore((s) => s.setJobId);
 
   useExtractionStream({ jobId, enabled: phase === "processing" || phase === "starting" });
 
@@ -89,6 +93,34 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
   useEffect(() => {
     if (bootstrappedRef.current) return;
     bootstrappedRef.current = true;
+    const resumeJobId =
+      typeof window === "undefined"
+        ? null
+        : new URLSearchParams(window.location.search).get("jobId");
+    if (resumeJobId) {
+      setJobId(resumeJobId);
+      void fetch(`/api/extraction/jobs/${resumeJobId}`, {
+        credentials: "include",
+        cache: "no-store",
+      })
+        .then(async (res) => {
+          if (!res.ok) throw new Error("job load failed");
+          return (await res.json()) as {
+            job?: { mode?: string; status?: ExtractionJobStatus };
+          };
+        })
+        .then((data) => {
+          const loadedMode = data.job?.mode;
+          if (isValidMode(loadedMode)) setMode(loadedMode);
+          const status = data.job?.status;
+          setPhase(status && TERMINAL_REVIEW.has(status) ? "reviewing" : "processing");
+        })
+        .catch(() => {
+          setJobId(null);
+          setPhase("mode-select");
+        });
+      return;
+    }
     const skip = readSkipModeSelect();
     const lastMode = readLastMode();
     if (skip && isValidMode(lastMode)) {
@@ -100,7 +132,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
       }
     }
     setPhase("mode-select");
-  }, [setMode, setPhase]);
+  }, [setJobId, setMode, setPhase]);
 
   // Defensive fallback: if we land in a non-select phase without a mode,
   // send the user back to mode-select (e.g. stale state after reset).
@@ -149,6 +181,10 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
        * `min-h-0` the inner content would push the container beyond the
        * viewport and clip silently on mode-select / upload steps.
        */}
+      {phase === "mode-select" || phase === "idle" ? (
+        <RecentExtractionJobs />
+      ) : null}
+
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {phase === "mode-select" ? (
           <ModeSelectStep />

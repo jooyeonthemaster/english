@@ -10,7 +10,7 @@ import { syncEnvVars } from "@trigger.dev/build/extensions/core";
  */
 export default defineConfig({
   project: "proj_xlyxputqkbksyzuyraxl",
-  runtime: "node",
+  runtime: "node-22",
   logLevel: "log",
   maxDuration: 900,
   retries: {

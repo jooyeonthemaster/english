@@ -16,6 +16,7 @@
 import { useCallback } from "react";
 import { useExtractionStore } from "@/lib/extraction/store";
 import type { ClientPageSlot } from "@/lib/extraction/types";
+import type { ExtractionEngine } from "@/lib/extraction/types";
 import type { ExtractionMode } from "@/lib/extraction/modes";
 
 interface UploadTarget {
@@ -31,6 +32,12 @@ interface CreateJobResponse {
   uploadTargets: UploadTarget[];
   creditsProjected: number;
   creditsBalanceBefore: number;
+}
+
+interface StartJobResponse {
+  jobId: string;
+  status: "PROCESSING" | "COMPLETED" | "PARTIAL" | "FAILED" | "CANCELLED";
+  direct?: boolean;
 }
 
 const UPLOAD_CONCURRENCY = 4;
@@ -86,8 +93,9 @@ export function useExtractionUpload() {
       sourceType: "PDF" | "IMAGES";
       originalFileName: string | null;
       mode: ExtractionMode;
+      engine: ExtractionEngine;
     }): Promise<string | null> => {
-      const { slots, sourceType, originalFileName, mode } = opts;
+      const { slots, sourceType, originalFileName, mode, engine } = opts;
       if (slots.length === 0) {
         setError("업로드할 페이지가 없습니다.");
         return null;
@@ -133,13 +141,22 @@ export function useExtractionUpload() {
         setPhase("starting");
         const startRes = await fetch(
           `/api/extraction/jobs/${created.jobId}/start`,
-          { method: "POST" },
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ engine }),
+          },
         );
         if (!startRes.ok) {
           const data = await startRes.json().catch(() => ({}));
           throw new Error(data?.error ?? "작업 시작에 실패했습니다.");
         }
-        setPhase("processing");
+        const started = (await startRes.json()) as StartJobResponse;
+        setPhase(
+          ["COMPLETED", "PARTIAL", "FAILED", "CANCELLED"].includes(started.status)
+            ? "reviewing"
+            : "processing",
+        );
         return created.jobId;
       } catch (err) {
         setError((err as Error).message);

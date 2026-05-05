@@ -405,10 +405,10 @@ export const structuredOcrResponseSchema = z.object({
           "NOISE",
         ]),
         content: z.string(),
-        confidence: z.number().min(0).max(1).optional(),
-        questionNumber: z.number().int().min(1).max(999).optional(),
-        choiceIndex: z.number().int().min(1).max(9).optional(),
-        isAnswer: z.boolean().optional(),
+        confidence: z.number().min(0).max(1).nullable().optional(),
+        questionNumber: z.number().int().min(1).max(999).nullable().optional(),
+        choiceIndex: z.number().int().min(1).max(9).nullable().optional(),
+        isAnswer: z.boolean().nullable().optional(),
         /** Range (e.g. "2~4") this block belongs to when it's part of a
          *  shared-passage set. Null / omitted for independent passages. */
         sharedPassageRange: z.string().nullable().optional(),
@@ -417,12 +417,12 @@ export const structuredOcrResponseSchema = z.object({
     .default([]),
   pageMeta: z
     .object({
-      hasExamHeader: z.boolean().optional(),
-      subject: z.enum(["ENGLISH", "KOREAN", "MATH", "OTHER"]).optional(),
-      year: z.number().int().optional(),
-      round: z.string().optional(),
-      schoolName: z.string().optional(),
-      publisher: z.string().optional(),
+      hasExamHeader: z.boolean().nullable().optional(),
+      subject: z.enum(["ENGLISH", "KOREAN", "MATH", "OTHER"]).nullable().optional(),
+      year: z.number().int().nullable().optional(),
+      round: z.string().nullable().optional(),
+      schoolName: z.string().nullable().optional(),
+      publisher: z.string().nullable().optional(),
     })
     .optional(),
 });

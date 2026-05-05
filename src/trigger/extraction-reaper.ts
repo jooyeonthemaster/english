@@ -2,11 +2,13 @@
 // extraction-reaper — every 5 minutes, clean up stuck state.
 //
 // Three safety nets:
-//   (1) Expired PROCESSING leases → reset to PENDING so other workers can
-//       take over. This handles worker crashes / timeouts.
-//   (2) PENDING pages belonging to a PROCESSING job → re-dispatch with the
+//   (1) Expired PROCESSING leases with retry budget left → reset to PENDING
+//       so another worker can take over.
+//   (2) Expired/PENDING pages with no retry budget left → DEAD, so a stuck
+//       external call cannot spin forever.
+//   (3) PENDING pages belonging to a PROCESSING job → re-dispatch with the
 //       same idempotencyKey (no double-charge because creditTxId is reused).
-//   (3) PROCESSING jobs whose every page is terminal → fire finalize.
+//   (4) PROCESSING jobs whose every page is terminal → fire finalize.
 //
 // Everything is idempotent — running this twice in quick succession is safe.
 // ============================================================================
@@ -22,21 +24,103 @@ export const extractionReaperTask = schedules.task({
   async run() {
     const now = new Date();
 
-    // (1) Reclaim expired leases
-    const reclaimed = await prisma.extractionPage.updateMany({
+    const expiredProcessing = await prisma.extractionPage.findMany({
       where: { status: "PROCESSING", leaseExpiresAt: { lt: now } },
-      data: { status: "PENDING", leaseOwner: null, leaseExpiresAt: null },
+      select: {
+        id: true,
+        jobId: true,
+        pageIndex: true,
+        status: true,
+        attemptCount: true,
+        maxAttempts: true,
+      },
+      take: 500,
     });
-
-    // (2) Re-dispatch PENDING pages of PROCESSING jobs
-    const pending = await prisma.extractionPage.findMany({
+    const pendingOverBudget = await prisma.extractionPage.findMany({
       where: {
         status: "PENDING",
         job: { status: "PROCESSING" },
       },
-      select: { jobId: true, pageIndex: true, idempotencyKey: true },
-      take: 200,
+      select: {
+        id: true,
+        jobId: true,
+        pageIndex: true,
+        status: true,
+        attemptCount: true,
+        maxAttempts: true,
+      },
+      take: 500,
     });
+
+    const exhausted = [
+      ...expiredProcessing.filter((p) => p.attemptCount >= p.maxAttempts),
+      ...pendingOverBudget.filter((p) => p.attemptCount >= p.maxAttempts),
+    ];
+    const reclaimableIds = expiredProcessing
+      .filter((p) => p.attemptCount < p.maxAttempts)
+      .map((p) => p.id);
+
+    // (1) Reclaim expired leases only while retry budget remains.
+    const reclaimed = await prisma.extractionPage.updateMany({
+      where: { id: { in: reclaimableIds }, status: "PROCESSING" },
+      data: { status: "PENDING", leaseOwner: null, leaseExpiresAt: null },
+    });
+
+    // (2) Terminalize pages that already exhausted their retry budget.
+    let exhaustedCount = 0;
+    for (const page of exhausted) {
+      await prisma.$transaction(async (tx) => {
+        const updated = await tx.extractionPage.updateMany({
+          where: {
+            id: page.id,
+            status: page.status,
+          },
+          data: {
+            status: "DEAD",
+            errorCode: "WORKER_ATTEMPTS_EXHAUSTED",
+            errorMessage:
+              "워커가 여러 번 멈춰 자동 재시도를 중단했습니다. 수동 재시도를 눌러 다시 시도해 주세요.",
+            completedAt: now,
+            leaseOwner: null,
+            leaseExpiresAt: null,
+          },
+        });
+        if (updated.count === 0) return;
+
+        const job = await tx.extractionJob.findUnique({
+          where: { id: page.jobId },
+          select: { pendingPages: true },
+        });
+        await tx.extractionJob.update({
+          where: { id: page.jobId },
+          data: {
+            pendingPages: Math.max(0, (job?.pendingPages ?? 0) - 1),
+            failedPages: { increment: 1 },
+          },
+        });
+        exhaustedCount += 1;
+      });
+    }
+
+    // (3) Re-dispatch PENDING pages of PROCESSING jobs, but only if they
+    // still have retry budget left.
+    const pendingCandidates = await prisma.extractionPage.findMany({
+      where: {
+        status: "PENDING",
+        job: { status: "PROCESSING" },
+      },
+      select: {
+        jobId: true,
+        pageIndex: true,
+        idempotencyKey: true,
+        attemptCount: true,
+        maxAttempts: true,
+      },
+      take: 500,
+    });
+    const pending = pendingCandidates
+      .filter((p) => p.attemptCount < p.maxAttempts)
+      .slice(0, 200);
 
     for (const p of pending) {
       await extractionPageTask.trigger(
@@ -61,12 +145,14 @@ export const extractionReaperTask = schedules.task({
     }
 
     logger.info("reaper pass", {
+      exhausted: exhaustedCount,
       reclaimed: reclaimed.count,
       redispatched: pending.length,
       finalised: processingJobs.length,
     });
 
     return {
+      exhausted: exhaustedCount,
       reclaimed: reclaimed.count,
       redispatched: pending.length,
       finalised: processingJobs.length,

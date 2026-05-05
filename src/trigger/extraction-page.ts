@@ -33,9 +33,7 @@
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
-import { generateText, generateObject, NoObjectGeneratedError } from "ai";
 import type { Prisma } from "@prisma/client";
-import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
@@ -47,10 +45,7 @@ import { classifyGeminiError } from "@/lib/extraction/error-classifier";
 import {
   OCR_SYSTEM_PROMPT,
   OCR_USER_PROMPT,
-  OCR_GENERATION_CONFIG,
-  sanitizeOcrOutput,
   buildStructuredOcrSystemPrompt,
-  structuredOcrResponseSchema,
   buildOcrSystemPrompt,
   buildOcrUserPrompt,
   type StructuredOcrResponse,
@@ -64,24 +59,19 @@ import {
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { usesStructuredExtraction } from "@/lib/extraction/modes";
 import { extractionFinalizeTask } from "./extraction-finalize";
+import {
+  generatePlainOcrWithTriggerFetch,
+  generateStructuredOcrWithTriggerFetch,
+} from "./_lib/gemini-ocr";
 
 type Input = { jobId: string; pageIndex: number; mode?: ExtractionMode };
 
-// ─── JSON-forced model for M2/M4 ──────────────────────────────────────────
-// (P0 FIX — 2026-04)
-// Previously we used `generateText()` + `wrapLanguageModel(defaultSettingsMiddleware)`
-// to inject `responseFormat: {type:"json"}`. That is a known Vercel AI SDK
-// footgun: `generateText()` unconditionally overrides `responseFormat` with
-// `{type:"text"}` (from its default text Output), and `defaultSettingsMiddleware`
-// merges in the wrong order so the override wins. Gemini ends up with
-// `responseMimeType === undefined` → replies in prose → `sanitizeStructuredJson`
-// throws → PARSE_ERROR → 3× retry → DEAD → 0 items.
-//
-// Fix: use `generateObject()` with the Zod schema directly. This goes through
-// the `Output.object` contract which correctly sets
-// `generationConfig.responseMimeType = "application/json"` AND attaches the
-// schema via `responseSchema`, so Gemini is constrained to valid JSON and the
-// result is already schema-validated on return.
+const GEMINI_CALL_TIMEOUT_MS = 90_000;
+const STORAGE_DOWNLOAD_TIMEOUT_MS = 30_000;
+
+// Gemini HTTP calls are delegated to ./_lib/gemini-ocr. That module uses
+// Trigger.dev's retry.fetch timeout support so page workers do not depend on
+// native fetch abort behaviour in the managed runtime.
 
 /** Convert 1..5 → ①..⑤. Returns null for out-of-range or null input. */
 function encodeCircled(index: number | null | undefined): string | null {
@@ -100,13 +90,183 @@ function encodeCircled(index: number | null | undefined): string | null {
   return map[index] ?? null;
 }
 
-/** Custom error class so the catch block can distinguish parse failures. */
-class StructuredParseError extends Error {
-  code: "PARSE_ERROR" = "PARSE_ERROR" as const;
-  constructor(message: string, public readonly cause?: unknown) {
-    super(message);
-    this.name = "StructuredParseError";
+class OperationTimeoutError extends Error {
+  constructor(operationName: string, timeoutMs: number) {
+    super(`${operationName} timed out after ${timeoutMs}ms`);
+    this.name = "OperationTimeoutError";
   }
+}
+
+async function withTimeout<T>(
+  operationName: string,
+  timeoutMs: number,
+  operation: () => Promise<T>,
+): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => {
+      reject(new OperationTimeoutError(operationName, timeoutMs));
+    }, timeoutMs);
+  });
+  try {
+    return await Promise.race([operation(), timeoutPromise]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
+async function markProcessingPhase(
+  idempotencyKey: string,
+  phase: string,
+): Promise<void> {
+  try {
+    await prisma.extractionPage.update({
+      where: { idempotencyKey },
+      data: { errorMessage: `[processing] ${phase}` },
+    });
+  } catch (err) {
+    logger.warn("failed to mark extraction phase", {
+      idempotencyKey,
+      phase,
+      err: String(err),
+    });
+  }
+}
+
+function getErrorDebugMessage(err: unknown): string {
+  if (err instanceof Error) {
+    return `${err.name}: ${err.message}`.slice(0, 500);
+  }
+  return String(err).slice(0, 500);
+}
+
+type StructuredOcrBlock = StructuredOcrResponse["blocks"][number];
+
+function buildExtractionItemRows(params: {
+  jobId: string;
+  pageId: string;
+  pageIndex: number;
+  structured: StructuredOcrResponse;
+}): Prisma.ExtractionItemCreateManyInput[] {
+  const { jobId, pageId, pageIndex, structured } = params;
+
+  return structured.blocks.map((b: StructuredOcrBlock, i: number) => {
+    const sharedPassageRange =
+      typeof b.sharedPassageRange === "string" &&
+      b.sharedPassageRange.trim().length > 0
+        ? b.sharedPassageRange.trim()
+        : null;
+
+    const questionMeta: Prisma.InputJsonValue | undefined =
+      b.blockType === "QUESTION_STEM"
+        ? {
+            number: b.questionNumber ?? null,
+            sharedPassageRange,
+          }
+        : undefined;
+    const choiceMeta: Prisma.InputJsonValue | undefined =
+      b.blockType === "CHOICE"
+        ? {
+            index: b.choiceIndex ?? null,
+            label: encodeCircled(b.choiceIndex ?? undefined),
+            isAnswer: b.isAnswer ?? false,
+          }
+        : undefined;
+    const examMeta: Prisma.InputJsonValue | undefined =
+      b.blockType === "EXAM_META"
+        ? ((structured.pageMeta ?? {}) as Prisma.InputJsonValue)
+        : undefined;
+    const passageMeta: Prisma.InputJsonValue | undefined =
+      b.blockType === "PASSAGE_BODY"
+        ? {
+            wordCount: b.content.split(/\s+/).filter(Boolean).length,
+            markerDetected: sharedPassageRange !== null,
+            questionRange: sharedPassageRange,
+          }
+        : undefined;
+
+    return {
+      jobId,
+      pageId,
+      sourcePageIndex: [pageIndex],
+      blockType: b.blockType,
+      content: b.content,
+      rawText: b.content,
+      confidence: b.confidence ?? null,
+      order: pageIndex * 1000 + i,
+      localOrder: null,
+      questionMeta,
+      choiceMeta,
+      examMeta,
+      passageMeta,
+      needsReview: (b.confidence ?? 1) < 0.7,
+      status: "DRAFT",
+      groupId: null,
+      parentItemId: null,
+    };
+  });
+}
+
+async function persistPageSuccess(params: {
+  idempotencyKey: string;
+  jobId: string;
+  pageId: string;
+  pageIndex: number;
+  extractedText: string;
+  inputTokens: number | undefined;
+  outputTokens: number | undefined;
+  latencyMs: number;
+  structured: StructuredOcrResponse | undefined;
+}): Promise<void> {
+  const {
+    idempotencyKey,
+    jobId,
+    pageId,
+    pageIndex,
+    extractedText,
+    inputTokens,
+    outputTokens,
+    latencyMs,
+    structured,
+  } = params;
+  const itemRows = structured
+    ? buildExtractionItemRows({ jobId, pageId, pageIndex, structured })
+    : [];
+  const operations: Prisma.PrismaPromise<unknown>[] = [
+    prisma.extractionPage.update({
+      where: { idempotencyKey },
+      data: {
+        status: "SUCCESS",
+        extractedText,
+        modelUsed: "gemini-3-flash-preview",
+        inputTokens: inputTokens ?? null,
+        outputTokens: outputTokens ?? null,
+        latencyMs,
+        completedAt: new Date(),
+        leaseOwner: null,
+        leaseExpiresAt: null,
+        errorCode: null,
+        errorMessage: null,
+      },
+    }),
+  ];
+
+  if (itemRows.length > 0) {
+    operations.push(prisma.extractionItem.createMany({ data: itemRows }));
+  }
+
+  operations.push(
+    prisma.extractionJob.update({
+      where: { id: jobId },
+      data: {
+        successPages: { increment: 1 },
+        pendingPages: { decrement: 1 },
+        creditsConsumed: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
+      },
+    }),
+  );
+
+  await prisma.$transaction(operations);
 }
 
 export const extractionPageTask = task({
@@ -126,8 +286,9 @@ export const extractionPageTask = task({
     const leaseExpiresAt = new Date(Date.now() + PAGE_LEASE_DURATION_MS);
 
     // ─── (A) Acquire lease + wipe retry crumbs in ONE transaction ─────────
-    // Conditional UPDATE: only succeed if the row is PENDING, or FAILED (for
-    // retries), or PROCESSING with an expired lease (crashed worker).
+    // Conditional UPDATE: only succeed if the row is PENDING, FAILED (for
+    // retries), PROCESSING by this same Trigger run (attempt retry), or
+    // PROCESSING with an expired lease (crashed worker).
     //
     // (A-fix P0-3) We MUST wipe leftover ExtractionItem rows from a prior
     // attempt in the SAME transaction as the lease claim. Splitting them
@@ -145,6 +306,7 @@ export const extractionPageTask = task({
           OR: [
             { status: "PENDING" },
             { status: "FAILED" },
+            { status: "PROCESSING", leaseOwner },
             { status: "PROCESSING", leaseExpiresAt: { lt: new Date() } },
           ],
         },
@@ -299,7 +461,12 @@ export const extractionPageTask = task({
     let outputTokens: number | undefined;
 
     try {
-      const bytes = await downloadAsBuffer(page.imageUrl);
+      await markProcessingPhase(idempotencyKey, "storage_download");
+      const bytes = await withTimeout(
+        "storage download",
+        STORAGE_DOWNLOAD_TIMEOUT_MS,
+        () => downloadAsBuffer(page.imageUrl),
+      );
       const base64 = bytes.toString("base64");
       const mimeType = "image/jpeg";
 
@@ -314,89 +481,50 @@ export const extractionPageTask = task({
           ? OCR_USER_PROMPT
           : buildOcrUserPrompt(mode, pageIndex, page.job.totalPages);
 
-      const commonMessages = [
-        { role: "system" as const, content: systemPrompt },
-        {
-          role: "user" as const,
-          content: [
-            { type: "image" as const, image: `data:${mimeType};base64,${base64}` },
-            { type: "text" as const, text: userPrompt },
-          ],
-        },
-      ];
-
+      await markProcessingPhase(idempotencyKey, "gemini_call");
       if (isStructured) {
-        // (P0 FIX) generateObject() uses the Output.object contract which
-        // correctly forces Gemini's responseMimeType=application/json AND
-        // attaches the Zod schema as responseSchema. Zero ambiguity, zero
-        // fence/prose leaks, and the return value is already schema-validated.
-        try {
-          const result = await generateObject({
-            model,
-            schema: structuredOcrResponseSchema,
-            temperature: OCR_GENERATION_CONFIG.temperature,
-            topK: OCR_GENERATION_CONFIG.topK,
-            topP: OCR_GENERATION_CONFIG.topP,
-            maxOutputTokens: OCR_GENERATION_CONFIG.maxOutputTokens,
-            messages: commonMessages,
-          });
-          structured = result.object;
-          const usage = result.usage;
-          inputTokens = usage?.inputTokens;
-          outputTokens = usage?.outputTokens;
-          extractedText = structured.blocks
-            .map((b) => b.content)
-            .filter((c) => c && c.length > 0)
-            .join("\n\n");
-          if (structured.blocks.length === 0) {
-            const emptyErr = new Error("Structured OCR returned 0 blocks");
-            (emptyErr as Error & { code?: string }).code = "EMPTY_OUTPUT";
-            throw emptyErr;
-          }
-        } catch (objErr) {
-          // NoObjectGeneratedError: Gemini returned something unparseable or
-          // schema-violating. Classify as PARSE_ERROR so it's retryable.
-          if (NoObjectGeneratedError.isInstance(objErr)) {
-            const rawText = (objErr as { text?: string }).text ?? "";
-            const usage = (objErr as { usage?: { inputTokens?: number; outputTokens?: number } }).usage;
-            inputTokens = usage?.inputTokens;
-            outputTokens = usage?.outputTokens;
-            throw new StructuredParseError(
-              `generateObject schema/parse failure: ${(objErr as Error).message}. Raw: ${rawText.slice(0, 300)}`,
-              objErr,
-            );
-          }
-          throw objErr;
+        const result = await generateStructuredOcrWithTriggerFetch({
+          systemPrompt,
+          userPrompt,
+          mimeType,
+          base64,
+          timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
+        });
+        structured = result.object;
+        const usage = result.usage;
+        inputTokens = usage?.inputTokens;
+        outputTokens = usage?.outputTokens;
+        extractedText = structured.blocks
+          .map((b) => b.content)
+          .filter((c) => c && c.length > 0)
+          .join("\n\n");
+        if (structured.blocks.length === 0) {
+          const emptyErr = new Error("Structured OCR returned 0 blocks");
+          (emptyErr as Error & { code?: string }).code = "EMPTY_OUTPUT";
+          throw emptyErr;
         }
       } else {
-        // Plain-text OCR (M1 / M3). generateText is correct here —
-        // forcing JSON would corrupt verbatim text preservation.
-        const result = await generateText({
-          model,
-          temperature: OCR_GENERATION_CONFIG.temperature,
-          topK: OCR_GENERATION_CONFIG.topK,
-          topP: OCR_GENERATION_CONFIG.topP,
-          maxOutputTokens: OCR_GENERATION_CONFIG.maxOutputTokens,
-          messages: commonMessages,
+        const result = await generatePlainOcrWithTriggerFetch({
+          systemPrompt,
+          userPrompt,
+          mimeType,
+          base64,
+          timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
         });
-        const usage = (result as { usage?: { inputTokens?: number; outputTokens?: number; promptTokens?: number; completionTokens?: number } }).usage;
-        inputTokens = usage?.inputTokens ?? usage?.promptTokens;
-        outputTokens = usage?.outputTokens ?? usage?.completionTokens;
-        extractedText = sanitizeOcrOutput(result.text);
-        if (extractedText.length === 0) {
-          const err = new Error("Gemini returned empty text");
-          (err as Error & { code?: string }).code = "EMPTY_OUTPUT";
-          throw err;
-        }
+        inputTokens = result.usage?.inputTokens;
+        outputTokens = result.usage?.outputTokens;
+        extractedText = result.text;
       }
     } catch (err) {
       const classified = classifyGeminiError(err);
+      const debugMessage = getErrorDebugMessage(err);
       logger.warn("page extraction error", {
         idempotencyKey,
         mode,
         code: classified.code,
         retryable: classified.retryable,
         attemptCount: page.attemptCount + 1,
+        error: debugMessage,
       });
 
       if (classified.retryable && page.attemptCount + 1 < page.maxAttempts) {
@@ -408,7 +536,7 @@ export const extractionPageTask = task({
           data: {
             status: "FAILED",
             errorCode: classified.code,
-            errorMessage: classified.userMessage,
+            errorMessage: `${classified.userMessage}\n${debugMessage}`,
             leaseOwner: null,
             leaseExpiresAt: null,
           },
@@ -423,7 +551,7 @@ export const extractionPageTask = task({
           data: {
             status: "DEAD",
             errorCode: classified.code,
-            errorMessage: classified.userMessage,
+            errorMessage: `${classified.userMessage}\n${debugMessage}`,
             completedAt: new Date(),
             leaseOwner: null,
             leaseExpiresAt: null,
@@ -461,99 +589,18 @@ export const extractionPageTask = task({
 
     // ─── (D) Success: persist + release lease + bump job counters ─────────
     const latencyMs = Date.now() - startTs;
-    await prisma.$transaction(async (tx) => {
-      await tx.extractionPage.update({
-        where: { idempotencyKey },
-        data: {
-          status: "SUCCESS",
-          extractedText,
-          modelUsed: "gemini-3-flash-preview",
-          inputTokens: inputTokens ?? null,
-          outputTokens: outputTokens ?? null,
-          latencyMs,
-          completedAt: new Date(),
-          leaseOwner: null,
-          leaseExpiresAt: null,
-          errorCode: null,
-          errorMessage: null,
-        },
-      });
-
-      if (isStructured && structured) {
-        // Insert ExtractionItem rows in block order. `order` here is a
-        // temporary page-scoped number — finalize() will re-assign a
-        // globally-consistent order once all pages have landed.
-        for (let i = 0; i < structured.blocks.length; i++) {
-          const b = structured.blocks[i];
-          const tempOrder = page.pageIndex * 1000 + i;
-          const sharedPassageRange =
-            typeof b.sharedPassageRange === "string" &&
-            b.sharedPassageRange.trim().length > 0
-              ? b.sharedPassageRange.trim()
-              : null;
-
-          const questionMeta: Prisma.InputJsonValue | undefined =
-            b.blockType === "QUESTION_STEM"
-              ? {
-                  number: b.questionNumber ?? null,
-                  sharedPassageRange,
-                }
-              : undefined;
-          const choiceMeta: Prisma.InputJsonValue | undefined =
-            b.blockType === "CHOICE"
-              ? {
-                  index: b.choiceIndex ?? null,
-                  label: encodeCircled(b.choiceIndex ?? undefined),
-                  isAnswer: b.isAnswer ?? false,
-                }
-              : undefined;
-          const examMeta: Prisma.InputJsonValue | undefined =
-            b.blockType === "EXAM_META"
-              ? ((structured.pageMeta ?? {}) as Prisma.InputJsonValue)
-              : undefined;
-          const passageMeta: Prisma.InputJsonValue | undefined =
-            b.blockType === "PASSAGE_BODY"
-              ? {
-                  wordCount: b.content.split(/\s+/).filter(Boolean).length,
-                  markerDetected: sharedPassageRange !== null,
-                  questionRange: sharedPassageRange,
-                }
-              : undefined;
-
-          await tx.extractionItem.create({
-            data: {
-              jobId,
-              pageId: page.id,
-              sourcePageIndex: [page.pageIndex],
-              blockType: b.blockType,
-              content: b.content,
-              rawText: b.content,
-              confidence: b.confidence ?? null,
-              order: tempOrder,
-              localOrder: null,
-              questionMeta,
-              choiceMeta,
-              examMeta,
-              passageMeta,
-              boundingBox: undefined,
-              needsReview: (b.confidence ?? 1) < 0.7,
-              status: "DRAFT",
-              groupId: null,
-              parentItemId: null,
-            },
-          });
-        }
-      }
-
-      await tx.extractionJob.update({
-        where: { id: jobId },
-        data: {
-          successPages: { increment: 1 },
-          pendingPages: { decrement: 1 },
-          creditsConsumed: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
-        },
-      });
+    await persistPageSuccess({
+      idempotencyKey,
+      jobId,
+      pageId: page.id,
+      pageIndex: page.pageIndex,
+      extractedText,
+      inputTokens,
+      outputTokens,
+      latencyMs,
+      structured: isStructured ? structured : undefined,
     });
+
 
     logger.info("page success", {
       idempotencyKey,
