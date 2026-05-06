@@ -72,21 +72,21 @@ model Academy {
 /// Staff — Directors and Teachers
 /// role: "DIRECTOR" | "TEACHER"
 model Staff {
-  id              String    @id @default(cuid())
-  academyId       String
-  email           String    @unique
-  password        String
-  name            String
-  phone           String?
-  role            String    @default("TEACHER") // "DIRECTOR" | "TEACHER"
-  avatarUrl       String?
-  isActive        Boolean   @default(true)
-  supabaseUserId  String?   @unique @map("supabase_user_id") @db.Uuid
-  kakaoId         String?   @unique @map("kakao_id")
-  authProvider    String?   @map("auth_provider") // credentials | google | kakao
-  lastLoginAt     DateTime? @map("last_login_at") @db.Timestamptz(6)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  academyId      String
+  email          String    @unique
+  password       String
+  name           String
+  phone          String?
+  role           String    @default("TEACHER") // "DIRECTOR" | "TEACHER"
+  avatarUrl      String?
+  isActive       Boolean   @default(true)
+  supabaseUserId String?   @unique @map("supabase_user_id") @db.Uuid
+  kakaoId        String?   @unique @map("kakao_id")
+  authProvider   String?   @map("auth_provider") // credentials | google | kakao
+  lastLoginAt    DateTime? @map("last_login_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   // Relations
   academy                Academy           @relation(fields: [academyId], references: [id])
@@ -1573,8 +1573,8 @@ model AdminAuditLog {
   action     String
   reason     String?  @db.Text
   beforeJson String?  @map("before_json") @db.Text // JSON snapshot
-  afterJson  String?  @map("after_json")  @db.Text // JSON snapshot
-  metadata   String?  @db.Text                     // JSON: extra context
+  afterJson  String?  @map("after_json") @db.Text // JSON snapshot
+  metadata   String?  @db.Text // JSON: extra context
   createdAt  DateTime @default(now()) @map("created_at")
 
   admin SuperAdmin @relation("AuditedBy", fields: [adminId], references: [id])
@@ -1799,12 +1799,14 @@ model ExtractionJob {
   completedAt DateTime?
   updatedAt   DateTime  @updatedAt
 
-  academy        Academy            @relation(fields: [academyId], references: [id])
-  createdBy      Staff              @relation("ExtractionJobCreator", fields: [createdById], references: [id])
-  sourceMaterial SourceMaterial?    @relation(fields: [sourceMaterialId], references: [id])
+  academy        Academy                   @relation(fields: [academyId], references: [id])
+  createdBy      Staff                     @relation("ExtractionJobCreator", fields: [createdById], references: [id])
+  sourceMaterial SourceMaterial?           @relation(fields: [sourceMaterialId], references: [id])
   pages          ExtractionPage[]
   results        ExtractionResult[]
   items          ExtractionItem[]
+  passageDrafts  ExtractionPassageDraft[]
+  questionDrafts ExtractionQuestionDraft[]
 
   @@index([academyId, status])
   @@index([academyId, createdAt])
@@ -1881,7 +1883,8 @@ model ExtractionResult {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  job ExtractionJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  job           ExtractionJob            @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  passageDrafts ExtractionPassageDraft[]
 
   @@index([jobId, passageOrder])
   @@index([jobId, status])
@@ -2002,6 +2005,7 @@ model SourceMaterial {
   questions      Question[]
   exams          Exam[]
   extractionJobs ExtractionJob[]
+  passageDrafts  ExtractionPassageDraft[]
 
   @@unique([academyId, contentHash], name: "academy_content_hash_unique")
   @@index([academyId, type])
@@ -2036,4 +2040,181 @@ model PassageBundle {
   @@index([sourceMaterialId])
   @@index([passageId])
   @@map("passage_bundles")
+}
+
+// ============================================================================
+// 28. M2 EXTRACTION DRAFTS — review-first passage + question registration
+// ============================================================================
+
+/// ExtractionPassageDraft — restored passage candidate created from M2.
+/// The final Passage row is created later, after teacher review/registration.
+model ExtractionPassageDraft {
+  id                 String  @id @default(cuid())
+  jobId              String
+  extractionResultId String?
+  sourceMaterialId   String?
+
+  passageOrder    Int
+  sourcePageIndex Int[]
+
+  problemText        String  @db.Text
+  restoredText       String? @db.Text
+  teacherText        String? @db.Text
+  restorationStatus  String  @default("PENDING")
+  verificationStatus String  @default("PENDING")
+  reviewStatus       String  @default("DRAFT")
+
+  confidence Float?
+  warnings   Json?
+  metadata   Json?
+
+  confirmedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  job              ExtractionJob                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  extractionResult ExtractionResult?              @relation(fields: [extractionResultId], references: [id], onDelete: SetNull)
+  sourceMaterial   SourceMaterial?                @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
+  sentences        ExtractionPassageSentence[]
+  questions        ExtractionQuestionDraft[]
+  restoration      ExtractionPassageRestoration?
+  sourceMatches    ExtractionPassageSourceMatch[]
+
+  @@unique([jobId, passageOrder])
+  @@index([jobId])
+  @@index([sourceMaterialId])
+  @@index([reviewStatus])
+  @@map("extraction_passage_drafts")
+}
+
+/// ExtractionQuestionDraft — question candidate linked to an M2 passage draft.
+/// The final Question row is created later, after teacher review/registration.
+model ExtractionQuestionDraft {
+  id             String  @id @default(cuid())
+  jobId          String
+  passageDraftId String?
+
+  questionOrder   Int
+  questionNumber  Int?
+  sourcePageIndex Int[]
+
+  stem         String  @db.Text
+  choices      Json?
+  answer       String? @db.Text
+  explanation  String? @db.Text
+  questionType String?
+
+  confidence   Float?
+  warnings     Json?
+  reviewStatus String @default("DRAFT")
+  metadata     Json?
+
+  confirmedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  job          ExtractionJob           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  passageDraft ExtractionPassageDraft? @relation(fields: [passageDraftId], references: [id], onDelete: SetNull)
+
+  @@unique([jobId, questionOrder])
+  @@index([jobId])
+  @@index([passageDraftId])
+  @@index([reviewStatus])
+  @@map("extraction_question_drafts")
+}
+
+/// ExtractionPassageSentence — sentence-numbered review view for a passage draft.
+model ExtractionPassageSentence {
+  id             String @id @default(cuid())
+  passageDraftId String
+  order          Int
+
+  problemText  String? @db.Text
+  restoredText String  @db.Text
+  status       String  @default("OK")
+  metadata     Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  passageDraft ExtractionPassageDraft @relation(fields: [passageDraftId], references: [id], onDelete: Cascade)
+
+  @@unique([passageDraftId, order])
+  @@index([passageDraftId])
+  @@map("extraction_passage_sentences")
+}
+
+/// ExtractionPassageRestoration — one restoration attempt/result per passage draft.
+model ExtractionPassageRestoration {
+  id             String @id @default(cuid())
+  passageDraftId String @unique
+
+  method     String
+  status     String
+  confidence Float?
+
+  originalText      String  @db.Text
+  restoredText      String  @db.Text
+  modelUsed         String?
+  unresolvedMarkers Json?
+  warnings          Json?
+  rawResponse       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  passageDraft ExtractionPassageDraft               @relation(fields: [passageDraftId], references: [id], onDelete: Cascade)
+  changes      ExtractionPassageRestorationChange[]
+
+  @@index([status])
+  @@map("extraction_passage_restorations")
+}
+
+/// ExtractionPassageRestorationChange — auditable before/after restoration diff.
+model ExtractionPassageRestorationChange {
+  id            String @id @default(cuid())
+  restorationId String
+
+  sentenceOrder          Int?
+  before                 String  @db.Text
+  after                  String  @db.Text
+  reason                 String? @db.Text
+  evidenceQuestionNumber Int?
+  evidenceType           String?
+  confidence             Float?
+
+  createdAt DateTime @default(now())
+
+  restoration ExtractionPassageRestoration @relation(fields: [restorationId], references: [id], onDelete: Cascade)
+
+  @@index([restorationId])
+  @@map("extraction_passage_restoration_changes")
+}
+
+/// ExtractionPassageSourceMatch — candidate source/original match for a draft.
+model ExtractionPassageSourceMatch {
+  id             String @id @default(cuid())
+  passageDraftId String
+
+  sourceType String
+  sourceId   String?
+  sourceRef  String? @db.Text
+  title      String?
+  publisher  String?
+  unit       String?
+  year       Int?
+  confidence Float?
+  method     String
+  reason     String? @db.Text
+  selected   Boolean @default(false)
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  passageDraft ExtractionPassageDraft @relation(fields: [passageDraftId], references: [id], onDelete: Cascade)
+
+  @@index([passageDraftId])
+  @@index([sourceId])
+  @@map("extraction_passage_source_matches")
 }

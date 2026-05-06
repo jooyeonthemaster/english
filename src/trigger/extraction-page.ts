@@ -598,7 +598,7 @@ export const extractionPageTask = task({
       inputTokens,
       outputTokens,
       latencyMs,
-      structured: isStructured ? structured : undefined,
+      structured: isStructured && structured ? structured : undefined,
     });
 
 

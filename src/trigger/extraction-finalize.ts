@@ -37,6 +37,7 @@ import type {
   ExtractionItemStatus,
   ExtractionMode,
 } from "@/lib/extraction/types";
+import { persistM2ExtractionDrafts } from "./_lib/m2-draft-pipeline";
 
 type Input = { jobId: string };
 
@@ -583,6 +584,34 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
   );
 
   await prisma.$transaction(persistOps);
+
+  if (input.mode === "QUESTION_SET") {
+    try {
+      const m2DraftResult = await persistM2ExtractionDrafts({
+        jobId,
+        academyId: input.academyId,
+        sourceMaterialId,
+        drafts: structuredDraftsForResults,
+      });
+      logger.info("m2 draft pipeline done", {
+        jobId,
+        ...m2DraftResult,
+      });
+    } catch (err) {
+      logger.error("m2 draft pipeline failed", {
+        jobId,
+        err: err instanceof Error ? err.message : String(err),
+      });
+      await prisma.extractionJob.update({
+        where: { id: jobId },
+        data: {
+          errorSummary: JSON.stringify({
+            m2DraftPipeline: err instanceof Error ? err.message : String(err),
+          }),
+        },
+      });
+    }
+  }
 
   return {
     draftCount: useLegacyFallback

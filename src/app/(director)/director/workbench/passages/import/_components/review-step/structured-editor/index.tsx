@@ -11,7 +11,11 @@ import type {
   ExtractionItemSnapshot,
   SourceMaterialSnapshot,
 } from "@/lib/extraction/types";
-import type { EditorTab, SourceMaterialDraft } from "../types";
+import type {
+  EditorTab,
+  M2PassageDraftSnapshot,
+  SourceMaterialDraft,
+} from "../types";
 import { ExplanationTab } from "./explanation-tab";
 import { MetaTab } from "./meta-tab";
 import { PassageTab } from "./passage-tab";
@@ -33,6 +37,7 @@ interface StructuredEditorProps {
   sourceDraft: SourceMaterialDraft;
   setSourceDraft: (draft: SourceMaterialDraft) => void;
   sourceMaterial: SourceMaterialSnapshot | null;
+  m2PassageDrafts?: M2PassageDraftSnapshot[];
 }
 
 export function StructuredEditor(props: StructuredEditorProps) {
@@ -50,7 +55,12 @@ export function StructuredEditor(props: StructuredEditorProps) {
     onSkipToggle,
     sourceDraft,
     setSourceDraft,
+    m2PassageDrafts = [],
   } = props;
+
+  const passageItem = pickForTab(items, selectedItem, "PASSAGE_BODY");
+  const m2Draft = findM2DraftForItem(m2PassageDrafts, passageItem);
+  const sourceMatches = m2PassageDrafts.flatMap((draft) => draft.sourceMatches);
 
   const tabLabels: Record<EditorTab, string> = {
     passage: "지문",
@@ -96,7 +106,8 @@ export function StructuredEditor(props: StructuredEditorProps) {
       <div className="flex min-h-0 flex-1 flex-col">
         {activeTab === "passage" ? (
           <PassageTab
-            item={pickForTab(items, selectedItem, "PASSAGE_BODY")}
+            item={passageItem}
+            m2Draft={m2Draft}
             onChangeContent={onChangeContent}
             onChangeTitle={onChangeTitle}
             onChangeType={onChangeType}
@@ -125,7 +136,11 @@ export function StructuredEditor(props: StructuredEditorProps) {
         ) : null}
 
         {activeTab === "meta" ? (
-          <MetaTab draft={sourceDraft} setDraft={setSourceDraft} />
+          <MetaTab
+            draft={sourceDraft}
+            setDraft={setSourceDraft}
+            sourceMatches={sourceMatches}
+          />
         ) : null}
       </div>
     </aside>
@@ -142,20 +157,30 @@ function pickForTab(
     // Walk parent chain if the selection is a child of the preferred type
     if (preferType === "PASSAGE_BODY") {
       // Try to find the nearest PASSAGE in the same group
-      const group = items.filter(
-        (it) => it.groupId === selectedItem.groupId,
-      );
+      const group = items.filter((it) => it.groupId === selectedItem.groupId);
       const passage = group.find((g) => g.blockType === "PASSAGE_BODY");
       if (passage) return passage;
     }
     if (preferType === "EXPLANATION") {
       const exp = items.find(
         (it) =>
-          it.blockType === "EXPLANATION" &&
-          it.parentItemId === selectedItem.id,
+          it.blockType === "EXPLANATION" && it.parentItemId === selectedItem.id,
       );
       if (exp) return exp;
     }
   }
   return items.find((it) => it.blockType === preferType) ?? null;
+}
+
+function findM2DraftForItem(
+  drafts: M2PassageDraftSnapshot[],
+  item: ExtractionItemSnapshot | null,
+): M2PassageDraftSnapshot | null {
+  if (!item) return drafts[0] ?? null;
+  const byItemId = drafts.find((draft) => {
+    const metadata = draft.metadata as Record<string, unknown> | null;
+    return metadata?.passageItemId === item.id;
+  });
+  if (byItemId) return byItemId;
+  return drafts[0] ?? null;
 }

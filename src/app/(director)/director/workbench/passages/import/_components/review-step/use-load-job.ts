@@ -16,7 +16,11 @@ import type {
 } from "@/lib/extraction/types";
 import { itemsToDraftSummaries } from "./commit/items-to-drafts";
 import { buildSourceDraft, firstPageOf } from "./source-draft";
-import type { LoadedPage, SourceMaterialDraft } from "./types";
+import type {
+  LoadedPage,
+  M2PassageDraftSnapshot,
+  SourceMaterialDraft,
+} from "./types";
 
 interface LoadJobHandlers {
   jobId: string | null;
@@ -31,6 +35,7 @@ interface LoadJobHandlers {
   setLegacyDraftId: Dispatch<SetStateAction<string | null>>;
   setSourceMaterial: (mat: SourceMaterialSnapshot | null) => void;
   setSourceDraft: Dispatch<SetStateAction<SourceMaterialDraft>>;
+  setM2PassageDrafts: Dispatch<SetStateAction<M2PassageDraftSnapshot[]>>;
 }
 
 export function useLoadJob(handlers: LoadJobHandlers) {
@@ -47,13 +52,16 @@ export function useLoadJob(handlers: LoadJobHandlers) {
     setLegacyDraftId,
     setSourceMaterial,
     setSourceDraft,
+    setM2PassageDrafts,
   } = handlers;
 
   useEffect(() => {
     if (!jobId) return;
     let cancelled = false;
-    (async () => {
-      setLoading(true);
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    const load = async (attempt = 0) => {
+      if (attempt === 0) setLoading(true);
       try {
         const res = await fetch(`/api/extraction/jobs/${jobId}`);
         if (!res.ok) {
@@ -74,6 +82,10 @@ export function useLoadJob(handlers: LoadJobHandlers) {
         );
         setPagesData(loadedPages);
         setOriginalFileName(data.job?.originalFileName ?? null);
+        const loadedM2Drafts = (
+          (data.passageDrafts ?? []) as M2PassageDraftSnapshot[]
+        ).sort((a, b) => a.passageOrder - b.passageOrder);
+        setM2PassageDrafts(loadedM2Drafts);
 
         const jobMode = data.job?.mode ?? "PASSAGE_ONLY";
         const relevantBlockTypes = new Set(
@@ -85,6 +97,23 @@ export function useLoadJob(handlers: LoadJobHandlers) {
             : ((data.items ?? []) as ExtractionItemSnapshot[]).filter((item) =>
                 relevantBlockTypes.has(item.blockType),
               );
+        const shouldRetryM2Drafts =
+          jobMode === "QUESTION_SET" &&
+          loadedM2Drafts.length === 0 &&
+          ((data.items ?? []) as ExtractionItemSnapshot[]).some(
+            (item) => item.blockType === "PASSAGE_BODY",
+          ) &&
+          attempt < 8;
+
+        if (shouldRetryM2Drafts) {
+          const delayMs = Math.min(1500 + attempt * 750, 5000);
+          timers.push(
+            setTimeout(() => {
+              if (!cancelled) void load(attempt + 1);
+            }, delayMs),
+          );
+        }
+
         const rawResults = (data.results ?? []) as Array<{
           id: string;
           passageOrder: number;
@@ -137,7 +166,8 @@ export function useLoadJob(handlers: LoadJobHandlers) {
           }
         }
 
-        const mat = (data.sourceMaterial ?? null) as SourceMaterialSnapshot | null;
+        const mat = (data.sourceMaterial ??
+          null) as SourceMaterialSnapshot | null;
         if (mat) {
           setSourceMaterial(mat);
           setSourceDraft(buildSourceDraft(mat));
@@ -148,11 +178,14 @@ export function useLoadJob(handlers: LoadJobHandlers) {
           }));
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && attempt === 0) setLoading(false);
       }
-    })();
+    };
+
+    void load();
     return () => {
       cancelled = true;
+      for (const timer of timers) clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobId]);

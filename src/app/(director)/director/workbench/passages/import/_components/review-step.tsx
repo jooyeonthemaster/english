@@ -35,14 +35,20 @@ import {
   handleSplit,
 } from "./review-step/commit/mutations";
 import { LegacyReview } from "./review-step/legacy/legacy-review";
+import { M2DraftPanel } from "./review-step/m2-drafts/m2-draft-panel";
 import { OriginalViewer } from "./review-step/original-viewer";
-import { buildSourceDraft, firstPageOf } from "./review-step/source-draft";
+import {
+  buildSourceDraft,
+  firstPageOf,
+  mergeSourceMatchIntoDraft,
+} from "./review-step/source-draft";
 import { StructuredEditor } from "./review-step/structured-editor";
 import { TopBar } from "./review-step/top-bar";
 import { buildTree, statsOf } from "./review-step/tree-utils";
 import type {
   EditorTab,
   LoadedPage,
+  M2PassageDraftSnapshot,
   SourceMaterialDraft,
 } from "./review-step/types";
 import { useCommit } from "./review-step/use-commit";
@@ -84,6 +90,9 @@ export function ReviewStep() {
   const [suspectOnly, setSuspectOnly] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTab>("passage");
   const [originalFileName, setOriginalFileName] = useState<string | null>(null);
+  const [m2PassageDrafts, setM2PassageDrafts] = useState<
+    M2PassageDraftSnapshot[]
+  >([]);
   const [sourceDraft, setSourceDraft] = useState<SourceMaterialDraft>(
     buildSourceDraft(null),
   );
@@ -109,12 +118,16 @@ export function ReviewStep() {
     setLegacyDraftId,
     setSourceMaterial,
     setSourceDraft,
+    setM2PassageDrafts,
   });
 
   // ────────────────────────────────────────────────────────────────────
   // Derived: tree, selected item, suspect filter
   // ────────────────────────────────────────────────────────────────────
-  const tree = useMemo(() => buildTree(items, suspectOnly), [items, suspectOnly]);
+  const tree = useMemo(
+    () => buildTree(items, suspectOnly),
+    [items, suspectOnly],
+  );
 
   const selectedItem = useMemo(
     () => items.find((it) => it.id === selectedItemId) ?? null,
@@ -155,6 +168,14 @@ export function ReviewStep() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem?.id]);
+
+  useEffect(() => {
+    const bestMatch = m2PassageDrafts
+      .flatMap((draft) => draft.sourceMatches)
+      .find((match) => match.selected);
+    if (!bestMatch) return;
+    setSourceDraft((prev) => mergeSourceMatchIntoDraft(prev, bestMatch));
+  }, [m2PassageDrafts]);
 
   const onCommit = useCommit({
     jobId,
@@ -203,6 +224,10 @@ export function ReviewStep() {
         committing={phase === "committing"}
       />
 
+      {currentMode === "QUESTION_SET" && m2PassageDrafts.length > 0 ? (
+        <M2DraftPanel drafts={m2PassageDrafts} />
+      ) : null}
+
       <div className="flex min-h-0 flex-1">
         {hasItems ? (
           <>
@@ -248,6 +273,7 @@ export function ReviewStep() {
               sourceDraft={sourceDraft}
               setSourceDraft={setSourceDraft}
               sourceMaterial={sourceMaterial}
+              m2PassageDrafts={m2PassageDrafts}
             />
           </>
         ) : (

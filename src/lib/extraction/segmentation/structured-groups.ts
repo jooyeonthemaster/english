@@ -156,6 +156,8 @@ export function assignGroupIds(
 
     switch (block.blockType) {
       case "PASSAGE_BODY": {
+        const prePassageQuestionGroupId =
+          currentPassageGroupId === null ? currentQuestionGroupId : null;
         const shouldMerge =
           lastPassageContentBlock !== null &&
           currentPassageGroupId !== null &&
@@ -167,15 +169,29 @@ export function assignGroupIds(
           currentPassageGroupId = `p-${passageCounter}`;
           currentPassageLocalId = localId;
           lastPassageAnchorBlock = block;
-          // Reset the "current question" — a CHOICE that appears before the
-          // next QUESTION_STEM is orphaned.
-          currentQuestionGroupId = null;
-          currentQuestionLocalId = null;
-          questionCounter = 0;
+          if (prePassageQuestionGroupId) {
+            for (const previous of out) {
+              if (previous.groupId === prePassageQuestionGroupId) {
+                previous.groupId = currentPassageGroupId;
+              }
+              if (
+                previous.blockType === "QUESTION_STEM" &&
+                previous.questionGroupId === prePassageQuestionGroupId
+              ) {
+                previous.parentLocalId = currentPassageLocalId;
+              }
+            }
+          } else {
+            // Reset the "current question" — a CHOICE that appears before the
+            // next QUESTION_STEM is orphaned.
+            currentQuestionGroupId = null;
+            currentQuestionLocalId = null;
+            questionCounter = 0;
+          }
           // P1 FIX: only reset the "question-flow" flag on a NEW passage.
           // During a merge we leave it alone (was already false, else we
           // wouldn't be merging) so users don't trigger state flips.
-          questionFlowOpened = false;
+          questionFlowOpened = Boolean(prePassageQuestionGroupId);
         }
         // Regardless of merge, the current block belongs to the passage
         // group. When merging, we keep the anchor PASSAGE_BODY (the first

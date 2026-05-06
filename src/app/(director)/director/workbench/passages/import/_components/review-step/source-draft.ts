@@ -7,7 +7,7 @@ import type {
   ExtractionItemSnapshot,
   SourceMaterialSnapshot,
 } from "@/lib/extraction/types";
-import type { SourceMaterialDraft } from "./types";
+import type { M2SourceMatchSnapshot, SourceMaterialDraft } from "./types";
 
 export function firstPageOf(item: ExtractionItemSnapshot): number {
   if (item.boundingBox?.page != null) return item.boundingBox.page;
@@ -51,4 +51,85 @@ export function sourceDraftToPayload(draft: SourceMaterialDraft) {
   // (zod schema는 optional `schoolId`를 받으므로 별도 `schoolName` 키로 분리 전송한다.)
   if (draft.school.trim()) payload.schoolName = draft.school.trim();
   return payload;
+}
+
+export function mergeSourceMatchIntoDraft(
+  draft: SourceMaterialDraft,
+  match: M2SourceMatchSnapshot | null,
+): SourceMaterialDraft {
+  if (!match) return draft;
+  const metadata =
+    match.metadata && typeof match.metadata === "object"
+      ? (match.metadata as Record<string, unknown>)
+      : {};
+
+  return {
+    ...draft,
+    title: draft.title || match.title || "",
+    publisher: draft.publisher || match.publisher || "",
+    grade:
+      draft.grade ||
+      stringFromUnknown(metadata.grade) ||
+      stringFromUnknown(metadata.sourceMaterialGrade),
+    semester:
+      draft.semester ||
+      enumFromUnknown<SourceMaterialDraft["semester"]>(
+        metadata.semester ?? metadata.sourceMaterialSemester,
+        ["FIRST", "SECOND", ""],
+      ),
+    year:
+      draft.year ||
+      stringFromUnknown(match.year) ||
+      stringFromUnknown(metadata.year),
+    round: draft.round || stringFromUnknown(metadata.round),
+    examType:
+      draft.examType ||
+      enumFromUnknown<SourceMaterialDraft["examType"]>(metadata.examType, [
+        "MIDTERM",
+        "FINAL",
+        "MOCK",
+        "SUNEUNG",
+        "DIAGNOSTIC",
+        "EBS",
+        "PRIVATE",
+        "",
+      ]),
+    type:
+      draft.type ||
+      enumFromUnknown<SourceMaterialDraft["type"]>(metadata.type, [
+        "EXAM",
+        "TEXTBOOK",
+        "WORKBOOK",
+        "HANDOUT",
+        "MOCK",
+        "SUNEUNG",
+        "OTHER",
+        "",
+      ]),
+    subject:
+      draft.subject ||
+      enumFromUnknown<SourceMaterialDraft["subject"]>(metadata.subject, [
+        "ENGLISH",
+        "KOREAN",
+        "MATH",
+        "OTHER",
+        "",
+      ]),
+    school: draft.school || stringFromUnknown(metadata.schoolName),
+  };
+}
+
+function stringFromUnknown(value: unknown): string {
+  if (value == null) return "";
+  return String(value);
+}
+
+function enumFromUnknown<T extends string>(
+  value: unknown,
+  allowed: readonly T[],
+): T {
+  const text = stringFromUnknown(value);
+  return allowed.includes(text as T)
+    ? (text as T)
+    : allowed[allowed.length - 1];
 }

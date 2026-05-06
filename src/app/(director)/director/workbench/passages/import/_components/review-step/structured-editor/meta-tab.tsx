@@ -5,14 +5,16 @@
 // Extracted from review-step.tsx during mechanical split.
 // ============================================================================
 
-import type { SourceMaterialDraft } from "../types";
+import type { M2SourceMatchSnapshot, SourceMaterialDraft } from "../types";
 
 export function MetaTab({
   draft,
   setDraft,
+  sourceMatches = [],
 }: {
   draft: SourceMaterialDraft;
   setDraft: (d: SourceMaterialDraft) => void;
+  sourceMatches?: M2SourceMatchSnapshot[];
 }) {
   const update = <K extends keyof SourceMaterialDraft>(
     key: K,
@@ -29,6 +31,48 @@ export function MetaTab({
           EXAM_META 블록에서 자동 채워진 값입니다. 필요하면 직접 수정하세요.
         </p>
       </div>
+
+      {sourceMatches.length > 0 ? (
+        <div className="mb-4 rounded-md border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <span className="text-[11px] font-bold text-emerald-800">
+              DB 출처 매칭
+            </span>
+            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+              {sourceMatches.length}개 후보
+            </span>
+          </div>
+          <div className="space-y-2">
+            {sourceMatches.slice(0, 3).map((match) => (
+              <div key={match.id} className="text-[11px] leading-5">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-slate-800">
+                    {match.title ?? "제목 없음"}
+                  </span>
+                  {match.selected ? (
+                    <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                      선택됨
+                    </span>
+                  ) : null}
+                  <span className="text-slate-500">
+                    {formatConfidence(match.confidence)}
+                  </span>
+                </div>
+                <p className="text-slate-500">
+                  {[match.publisher, match.unit, match.year]
+                    .filter(Boolean)
+                    .join(" · ") ||
+                    match.reason ||
+                    match.method}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-[10px] leading-4 text-emerald-700">
+            매칭 후보의 구조화 메타가 있을 때 빈 필드에 자동 반영됩니다.
+          </p>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-2 gap-3 text-[12px]">
         <Field label="제목" full>
@@ -168,6 +212,11 @@ export function MetaTab({
       `}</style>
     </div>
   );
+}
+
+function formatConfidence(value: number | null): string {
+  if (typeof value !== "number") return "-";
+  return `${Math.round(value * 100)}%`;
 }
 
 function Field({

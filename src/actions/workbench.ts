@@ -48,6 +48,15 @@ export {
 } from "./workbench/questions";
 
 export {
+  getPendingQuestionDrafts,
+  updateQuestionDraft,
+  skipQuestionDraft,
+  promoteQuestionDraft,
+} from "./workbench/question-drafts";
+
+export type { QuestionDraftListItem } from "./workbench/question-drafts";
+
+export {
   getWorkbenchStats,
   getAcademySchools,
 } from "./workbench/stats";

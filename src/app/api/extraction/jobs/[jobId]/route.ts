@@ -31,39 +31,62 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const auth = await loadJobWithAuth(jobId, staff.academyId);
   if (!auth.ok) return auth.response;
 
-  const [pages, results, items, sourceMaterial] = await Promise.all([
-    prisma.extractionPage.findMany({
-      where: { jobId },
-      orderBy: { pageIndex: "asc" },
-      select: {
-        pageIndex: true,
-        status: true,
-        attemptCount: true,
-        extractedText: true,
-        confidence: true,
-        errorCode: true,
-        errorMessage: true,
-        latencyMs: true,
-        imageUrl: true,
-      },
-    }),
-    prisma.extractionResult.findMany({
-      where: { jobId },
-      orderBy: { passageOrder: "asc" },
-    }),
-    prisma.extractionItem.findMany({
-      where: { jobId },
-      orderBy: { order: "asc" },
-    }),
-    auth.job.sourceMaterialId
-      ? prisma.sourceMaterial.findFirst({
-          where: {
-            id: auth.job.sourceMaterialId,
-            academyId: staff.academyId,
+  const [pages, results, items, sourceMaterial, passageDrafts] =
+    await Promise.all([
+      prisma.extractionPage.findMany({
+        where: { jobId },
+        orderBy: { pageIndex: "asc" },
+        select: {
+          pageIndex: true,
+          status: true,
+          attemptCount: true,
+          extractedText: true,
+          confidence: true,
+          errorCode: true,
+          errorMessage: true,
+          latencyMs: true,
+          imageUrl: true,
+        },
+      }),
+      prisma.extractionResult.findMany({
+        where: { jobId },
+        orderBy: { passageOrder: "asc" },
+      }),
+      prisma.extractionItem.findMany({
+        where: { jobId },
+        orderBy: { order: "asc" },
+      }),
+      auth.job.sourceMaterialId
+        ? prisma.sourceMaterial.findFirst({
+            where: {
+              id: auth.job.sourceMaterialId,
+              academyId: staff.academyId,
+            },
+          })
+        : Promise.resolve(null),
+      prisma.extractionPassageDraft.findMany({
+        where: { jobId },
+        orderBy: { passageOrder: "asc" },
+        include: {
+          sentences: {
+            orderBy: { order: "asc" },
           },
-        })
-      : Promise.resolve(null),
-  ]);
+          questions: {
+            orderBy: { questionOrder: "asc" },
+          },
+          restoration: {
+            include: {
+              changes: {
+                orderBy: [{ sentenceOrder: "asc" }, { createdAt: "asc" }],
+              },
+            },
+          },
+          sourceMatches: {
+            orderBy: [{ selected: "desc" }, { confidence: "desc" }],
+          },
+        },
+      }),
+    ]);
 
   // Sign each imageUrl so the review UI can display the original page.
   const signed = await Promise.all(
@@ -114,6 +137,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     results,
     items,
     sourceMaterial,
+    passageDrafts,
   });
 }
 
