@@ -1,0 +1,8 @@
+ALTER TABLE "webtoons"
+  ADD COLUMN IF NOT EXISTS "promptSnapshot" TEXT,
+  ADD COLUMN IF NOT EXISTS "promptHash" TEXT,
+  ADD COLUMN IF NOT EXISTS "imageModel" TEXT,
+  ADD COLUMN IF NOT EXISTS "imageSize" TEXT,
+  ADD COLUMN IF NOT EXISTS "imageQuality" TEXT,
+  ADD COLUMN IF NOT EXISTS "imageOutputFormat" TEXT,
+  ADD COLUMN IF NOT EXISTS "atlasPredictionId" TEXT;

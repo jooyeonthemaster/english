@@ -133,6 +133,7 @@ export async function getStudentDashboard() {
 
   const weekStudyDays = weekProgress.length;
   const weekVocabTests = weekProgress.reduce((s, p) => s + p.vocabTests, 0);
+  const weeklyXp = weekProgress.reduce((s, p) => s + p.xpEarned, 0);
 
   // --- 오늘의 학습 추천 (다음 해야 할 세션 자동 계산) ---
   let todayLesson: {
@@ -247,6 +248,10 @@ export async function getStudentDashboard() {
       streak,
       weekStudyDays,
       weekVocabTests,
+    },
+    xp: {
+      weekly: weeklyXp,
+      total: student.xp,
     },
     todayLesson,
     weekCalendar: {

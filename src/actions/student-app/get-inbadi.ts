@@ -43,7 +43,7 @@ export async function getStudentInbadi() {
   }
 
   // Both queries are independent — run in parallel
-  const [recentTests, recentExams] = await Promise.all([
+  const [recentTests, recentExams, assignmentGrades] = await Promise.all([
     // Recent test history
     prisma.vocabTestResult.findMany({
       where: { studentId },
@@ -56,6 +56,24 @@ export async function getStudentInbadi() {
       where: { studentId, status: "GRADED" },
       include: { exam: true },
       orderBy: { submittedAt: "desc" },
+      take: 10,
+    }),
+    prisma.assignmentSubmission.findMany({
+      where: {
+        studentId,
+        status: "GRADED",
+        score: { not: null },
+      },
+      include: {
+        assignment: {
+          select: {
+            title: true,
+            maxScore: true,
+            class: { select: { name: true } },
+          },
+        },
+      },
+      orderBy: [{ gradedAt: "desc" }, { submittedAt: "desc" }],
       take: 10,
     }),
   ]);
@@ -98,6 +116,15 @@ export async function getStudentInbadi() {
       maxScore: s.maxScore ?? 100,
       percent: s.percent ?? 0,
       date: s.submittedAt?.toISOString() ?? s.startedAt.toISOString(),
+    })),
+    assignmentGrades: assignmentGrades.map((s) => ({
+      id: s.id,
+      title: s.assignment.title,
+      className: s.assignment.class?.name ?? "",
+      score: s.score ?? 0,
+      maxScore: s.assignment.maxScore ?? 100,
+      feedback: s.feedback,
+      date: s.gradedAt?.toISOString() ?? s.submittedAt?.toISOString() ?? s.createdAt.toISOString(),
     })),
   };
 }

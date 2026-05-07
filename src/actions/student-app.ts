@@ -5,6 +5,7 @@
 // async-ness of re-exported identifiers).
 
 export { getStudentDashboard } from "./student-app/get-dashboard";
+export { getStudentHeaderData } from "./student-app/get-header-data";
 export { getStudentInbadi } from "./student-app/get-inbadi";
 export { getStudentBadges, checkAndAwardBadges, addXP } from "./student-app/badges";
 export { getStudentHeatmap } from "./student-app/heatmap";

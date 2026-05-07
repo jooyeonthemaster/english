@@ -23,6 +23,9 @@ export const CREDIT_COSTS = {
 
   // Content extraction
   TEXT_EXTRACTION: 3,          // PDF/image OCR text extraction
+
+  // Webtoon
+  WEBTOON_IMAGE: 5,            // 한 지문 → 멀티패널 단일 9:16 웹툰 이미지
 } as const;
 
 export type OperationType = keyof typeof CREDIT_COSTS;
@@ -40,6 +43,7 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   QUESTION_MODIFY: "문제 수정",
   AI_CHAT: "AI 튜터링",
   TEXT_EXTRACTION: "텍스트 추출 (OCR)",
+  WEBTOON_IMAGE: "웹툰 이미지 생성",
 };
 
 // Top-up pricing tiers (KRW per credit pack)

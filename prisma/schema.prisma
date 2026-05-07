@@ -65,6 +65,8 @@ model Academy {
   creditTopUps        CreditTopUp[]
   extractionJobs      ExtractionJob[]
   sourceMaterials     SourceMaterial[]
+  webtoons            Webtoon[]
+  classMaterials      ClassMaterial[]
 
   @@map("academies")
 }
@@ -98,6 +100,8 @@ model Staff {
   receivedMessages       Message[]         @relation("ReceivedStaffMessages")
   extractionJobs         ExtractionJob[]   @relation("ExtractionJobCreator")
   createdSourceMaterials SourceMaterial[]  @relation("SourceMaterialCreator")
+  webtoons               Webtoon[]         @relation("WebtoonCreator")
+  uploadedMaterials      ClassMaterial[]   @relation("ClassMaterialUploader")
 
   @@index([academyId])
   @@map("staff")
@@ -249,6 +253,7 @@ model Class {
   attendances Attendance[]
   assignments Assignment[]
   exams       Exam[]
+  materials   ClassMaterial[]
 
   @@index([academyId])
   @@index([teacherId])
@@ -615,9 +620,11 @@ model Passage {
   lessonProgress   LessonProgress[]
   sessionRecords   SessionRecord[]
   naeshinQuestions NaeshinQuestion[]
+  prebuiltSessions PrebuiltSession[]
   learningSets     LearningSet[]
   collectionItems  PassageCollectionItem[]
   bundles          PassageBundle[]
+  webtoons         Webtoon[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -1204,6 +1211,13 @@ model LessonProgress {
   session4Done Boolean @default(false) // 선택: 문법 집중
   session5Done Boolean @default(false) // 선택: 약점 집중
 
+  vocabDone     Int     @default(0)
+  interpDone    Int     @default(0)
+  grammarDone   Int     @default(0)
+  compDone      Int     @default(0)
+  masteryPassed Boolean @default(false)
+  masteryAttempts Int   @default(0)
+
   masteryScore Float    @default(0) // 숙달도 0-100
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -1225,11 +1239,21 @@ model SessionRecord {
   passageId        String
   seasonId         String?
   sessionType      String // "MIX_1" | "MIX_2" | "STORIES" | "VOCAB_FOCUS" | "GRAMMAR_FOCUS" | "WEAKNESS_FOCUS"
+  sessionSeq       Int      @default(1)
   score            Float // 정답률 0-100
   correctCount     Int
   totalCount       Int
   wrongQuestionIds String?  @db.Text // JSON: ["questionId1", ...]
   xpEarned         Int      @default(0)
+  isMasteryFail    Boolean  @default(false)
+  vocabCorrect     Int      @default(0)
+  vocabTotal       Int      @default(0)
+  grammarCorrect   Int      @default(0)
+  grammarTotal     Int      @default(0)
+  interpretCorrect Int      @default(0)
+  interpretTotal   Int      @default(0)
+  compCorrect      Int      @default(0)
+  compTotal        Int      @default(0)
   startedAt        DateTime @default(now())
   completedAt      DateTime @default(now())
 
@@ -1341,6 +1365,7 @@ model NaeshinQuestion {
   questionText     String   @db.Text
   options          String?  @db.Text // JSON: [{ label, text }]
   correctAnswer    String   @db.Text
+  sentenceIndex    Int?
   difficulty       String   @default("INTERMEDIATE")
   tags             String?  @db.Text // JSON array
   aiGenerated      Boolean  @default(true)
@@ -1360,6 +1385,49 @@ model NaeshinQuestion {
   @@index([academyId])
   @@index([learningSetId])
   @@map("naeshin_questions")
+}
+
+/// PrebuiltSession — cached question ids for each learning session.
+model PrebuiltSession {
+  id            String   @id @default(cuid())
+  passageId     String
+  category      String
+  sessionSeq    Int
+  questionIds   String   @db.Text
+  questionCount Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  passage Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  @@unique([passageId, category, sessionSeq])
+  @@index([passageId])
+  @@map("prebuilt_sessions")
+}
+
+/// ClassMaterial — uploaded teaching materials for classes or the whole academy.
+model ClassMaterial {
+  id          String   @id @default(cuid())
+  academyId   String
+  classId     String?
+  title       String
+  description String?  @db.Text
+  fileUrl     String   @db.Text
+  fileName    String
+  fileType    String
+  fileSize    Int
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy  Academy @relation(fields: [academyId], references: [id])
+  class    Class?  @relation(fields: [classId], references: [id], onDelete: SetNull)
+  uploader Staff   @relation("ClassMaterialUploader", fields: [uploadedBy], references: [id])
+
+  @@index([academyId])
+  @@index([classId])
+  @@index([uploadedBy])
+  @@map("class_materials")
 }
 
 /// NaeshinQuestionExplanation — 내신 학습 문제 해설
@@ -2217,4 +2285,55 @@ model ExtractionPassageSourceMatch {
   @@index([passageDraftId])
   @@index([sourceId])
   @@map("extraction_passage_source_matches")
+}
+
+// ============================================================================
+// 25. WEBTOON — AI-generated multi-panel webtoon images per passage
+// ============================================================================
+
+/// Webtoon — One generated 9:16 multi-panel webtoon image per passage.
+/// Generation is async via Trigger.dev: status PENDING → GENERATING → COMPLETED|FAILED.
+/// imageUrl is the permanent Supabase public URL once COMPLETED.
+/// status: "PENDING" | "GENERATING" | "COMPLETED" | "FAILED"
+model Webtoon {
+  id          String @id @default(cuid())
+  academyId   String
+  passageId   String
+  createdById String // staff.id
+
+  style        String // "KOREAN_WEBTOON" | "PIXAR_3D" | "GHIBLI" | "MANHWA_ROMANCE" | "REALISTIC"
+  customPrompt String? @db.Text
+
+  status      String  @default("PENDING")
+  imageUrl    String? @db.Text // Supabase public URL (final, permanent)
+  storagePath String? // Supabase storage path for cleanup
+  rawAtlasUrl String? @db.Text // Original AtlasCloud URL (kept for debug)
+
+  promptSnapshot    String? @db.Text // Exact prompt sent to the image model
+  promptHash        String?
+  imageModel        String?
+  imageSize         String?
+  imageQuality      String?
+  imageOutputFormat String?
+  atlasPredictionId String?
+
+  errorMessage        String? @db.Text
+  triggerRunId        String? // Trigger.dev run id for tracking
+  creditTransactionId String? @unique // For refunds
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  academy   Academy @relation(fields: [academyId], references: [id])
+  passage   Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
+  createdBy Staff   @relation("WebtoonCreator", fields: [createdById], references: [id])
+
+  @@index([academyId])
+  @@index([passageId])
+  @@index([status])
+  @@index([academyId, status])
+  @@index([createdAt])
+  @@map("webtoons")
 }

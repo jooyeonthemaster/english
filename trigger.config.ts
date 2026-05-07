@@ -41,6 +41,13 @@ export default defineConfig({
           "SUPABASE_URL",
           "SUPABASE_ANON_KEY",
           "SUPABASE_SERVICE_ROLE_KEY",
+          "ATLASCLOUD_API_KEY",
+          "ATLASCLOUD_BASE_URL",
+          "ATLASCLOUD_MODEL",
+          "WEBTOON_IMAGE_SIZE",
+          "WEBTOON_IMAGE_QUALITY",
+          "WEBTOON_IMAGE_TIMEOUT_MS",
+          "WEBTOON_IMAGE_MAX_ATTEMPTS",
         ];
         const out: Record<string, string> = {};
         for (const k of keys) {
