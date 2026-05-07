@@ -18,7 +18,7 @@ import { startJobRequestSchema } from "@/lib/extraction/zod-schemas";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 900;
+export const maxDuration = 800;
 
 interface RouteContext {
   params: Promise<{ jobId: string }>;
