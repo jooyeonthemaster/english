@@ -10,10 +10,7 @@ import {
 } from "react";
 import {
   AlertCircle,
-  ChevronDown,
-  ChevronUp,
   FileImage,
-  FileText,
   Loader2,
   PanelBottomOpen,
   RefreshCw,
@@ -102,7 +99,7 @@ type M1PassageDraftWithJob = M1PassageDraftSnapshot & {
   job?: M1DraftJobSummary;
 };
 
-type WorkPanel = "input" | "results" | "jobs" | null;
+type WorkPanel = "jobs" | null;
 
 const ACCEPTED = [...ACCEPTED_PDF_MIMES, ...ACCEPTED_IMAGE_MIMES] as const;
 const TERMINAL = new Set<ExtractionJobStatus>([
@@ -558,193 +555,143 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     phase === "processing";
 
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-8 py-7">
-      <main className="mx-auto flex max-w-[1560px] flex-col gap-4">
-        <section className="flex items-center gap-2 text-[12px] font-semibold text-sky-700">
-          <FileText className="size-4" aria-hidden="true" />
-          지문 추출 작업실
-        </section>
+    <div className="-m-6 min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-6 py-6 xl:px-8">
+      <main className="mx-auto flex max-w-[1680px] flex-col gap-4">
+        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
+            <div className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <UploadCloud className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <h1 className="text-[20px] font-bold tracking-tight text-slate-950">자료 추출</h1>
+                <p className="mt-1 text-[13px] text-slate-500">
+                  PDF 또는 이미지를 등록하면 백그라운드에서 지문을 추출하고 복원합니다.
+                </p>
+              </div>
+            </div>
 
-        {error ? (
-          <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
-            <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-            <span>{error}</span>
-          </div>
-        ) : null}
-
-        <section className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
-          <div className="flex flex-wrap items-center gap-2">
-            <ToolButton
-              active={activePanel === "input"}
-              icon={<UploadCloud className="size-4" aria-hidden="true" />}
-              label="자료 추가"
-              meta={slots.length + "페이지"}
-              onClick={() => togglePanel("input")}
-            />
-            <ToolButton
-              active={activePanel === "results"}
-              icon={<FileText className="size-4" aria-hidden="true" />}
-              label="결과 선택"
-              meta={drafts.length + "개"}
-              onClick={() => togglePanel("results")}
-            />
-            <ToolButton
-              active={activePanel === "jobs"}
-              icon={<PanelBottomOpen className="size-4" aria-hidden="true" />}
-              label="작업 목록"
-              meta="상태"
-              onClick={() => togglePanel("jobs")}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            {resultScope === "job" ? (
-              <button
-                type="button"
-                onClick={showAllResults}
-                className="inline-flex h-9 items-center rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 hover:bg-slate-50"
-              >
-                전체 결과
-              </button>
-            ) : null}
-            <button
-              type="button"
-              onClick={refreshResults}
-              className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 hover:bg-slate-50"
-            >
-              <RefreshCw className="size-3.5" aria-hidden="true" />
-              새로고침
-            </button>
-          </div>
-        </section>
-
-        {activePanel ? (
-          <div className="pointer-events-none absolute inset-x-0 top-[168px] z-40 px-4 md:px-8">
-            <div className="mx-auto flex max-w-[1560px] justify-center">
-              <div
-                className={
-                  "pointer-events-auto relative max-h-[calc(100vh-282px)] overflow-y-auto rounded-lg bg-white shadow-2xl ring-1 ring-slate-200/80 [&>section>div:first-child]:pr-14 " +
-                  (activePanel === "input"
-                    ? "w-[min(540px,calc(100vw-48px))]"
-                    : activePanel === "results"
-                      ? "w-[min(480px,calc(100vw-48px))]"
-                      : "w-[min(520px,calc(100vw-48px))]")
-                }
-              >
+            <div className="flex items-center gap-2">
+              {resultScope === "job" ? (
                 <button
                   type="button"
-                  onClick={() => setActivePanel(null)}
-                  className="absolute right-3 top-3 z-10 inline-flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 shadow-sm hover:bg-slate-50 hover:text-slate-900"
-                  aria-label="패널 닫기"
+                  onClick={showAllResults}
+                  className="inline-flex h-9 items-center rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
                 >
-                  <X className="size-4" aria-hidden="true" />
+                  전체 결과
                 </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={refreshResults}
+                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+              >
+                <RefreshCw className="size-3.5" aria-hidden="true" />
+                새로고침
+              </button>
+              <button
+                type="button"
+                onClick={() => togglePanel("jobs")}
+                className={
+                  "inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-[12px] font-bold transition-colors " +
+                  (activePanel === "jobs"
+                    ? "border-blue-300 bg-blue-50 text-blue-700"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
+                }
+              >
+                <PanelBottomOpen className="size-3.5" aria-hidden="true" />
+                작업 목록
+              </button>
+            </div>
+          </div>
 
-                {activePanel === "input" ? (
-                  <UploadPanel
-                    busy={busy}
-                    dragActive={dragActive}
-                    fileInputId={fileInputId}
-                    slots={slots}
-                    splitProgress={splitProgress}
-                    uploadProgress={uploadProgress}
-                    onClear={clearFiles}
-                    onFiles={handleFiles}
-                    onStart={startExtraction}
-                    onDragActiveChange={setDragActive}
-                  />
-                ) : null}
+          {error ? (
+            <div className="mx-6 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
+              <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span>{error}</span>
+            </div>
+          ) : null}
 
-                {activePanel === "results" ? (
-                  <ResultSelectorPanel
-                    busy={busy}
-                    drafts={drafts}
-                    loading={loadingDetails}
-                    selectedDraftId={selectedDraftId}
-                    onSelect={(id) => {
-                      setSelectedDraftId(id);
-                      setActivePanel(null);
-                    }}
-                  />
-                ) : null}
+          <div className="grid gap-4 p-6 xl:grid-cols-[minmax(420px,0.95fr)_minmax(320px,0.65fr)]">
+            <UploadPanel
+              busy={busy}
+              dragActive={dragActive}
+              fileInputId={fileInputId}
+              slots={slots}
+              splitProgress={splitProgress}
+              uploadProgress={uploadProgress}
+              onClear={clearFiles}
+              onFiles={handleFiles}
+              onStart={startExtraction}
+              onDragActiveChange={setDragActive}
+            />
+            <ResultSelectorPanel
+              busy={busy}
+              drafts={drafts}
+              loading={loadingDetails}
+              selectedDraftId={selectedDraftId}
+              onSelect={setSelectedDraftId}
+            />
+          </div>
+        </section>
 
-                {activePanel === "jobs" ? (
-                  <QueuePanel
-                    activeJobId={jobId}
-                    refreshKey={queueRefreshKey}
-                    onDeleteActiveJob={showAllResults}
-                    onOpenJob={(id) => {
-                      setResultScope("job");
-                      setJobId(id);
-                      setPhase("processing");
-                      setActivePanel(null);
-                      void loadJobDetails(id);
-                      if (typeof window !== "undefined") {
-                        window.history.replaceState(null, "", "?jobId=" + id);
-                      }
-                    }}
-                  />
-                ) : null}
-              </div>
+        <ResultPanel
+          busy={busy}
+          drafts={drafts}
+          loading={loadingDetails}
+          selectedDraft={selectedDraft}
+          savingId={savingId}
+          deletingDraftId={deletingDraftId}
+          onDelete={deleteDraft}
+          onSave={saveDraft}
+          onTextChange={updateDraftText}
+        />
+
+        <button
+          type="button"
+          onClick={() => togglePanel("jobs")}
+          className={
+            "fixed bottom-24 right-8 z-40 inline-flex h-11 items-center gap-2 rounded-full border px-4 text-[13px] font-bold shadow-lg transition-all " +
+            (activePanel === "jobs"
+              ? "border-blue-500 bg-blue-600 text-white"
+              : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700")
+          }
+        >
+          <PanelBottomOpen className="size-4" aria-hidden="true" />
+          작업 목록
+        </button>
+
+        {activePanel === "jobs" ? (
+          <div className="fixed bottom-40 right-8 z-50 w-[min(520px,calc(100vw-40px))]">
+            <div className="relative max-h-[min(620px,calc(100vh-220px))] overflow-y-auto rounded-lg bg-white shadow-2xl ring-1 ring-slate-200/80 [&>section>div:first-child]:pr-14">
+              <button
+                type="button"
+                onClick={() => setActivePanel(null)}
+                className="absolute right-3 top-3 z-10 inline-flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 shadow-sm hover:bg-slate-50 hover:text-slate-900"
+                aria-label="작업 목록 닫기"
+              >
+                <X className="size-4" aria-hidden="true" />
+              </button>
+              <QueuePanel
+                activeJobId={jobId}
+                refreshKey={queueRefreshKey}
+                onDeleteActiveJob={showAllResults}
+                onOpenJob={(id) => {
+                  setResultScope("job");
+                  setJobId(id);
+                  setPhase("processing");
+                  setActivePanel(null);
+                  void loadJobDetails(id);
+                  if (typeof window !== "undefined") {
+                    window.history.replaceState(null, "", "?jobId=" + id);
+                  }
+                }}
+              />
             </div>
           </div>
         ) : null}
-
-        <div className="min-h-[650px]">
-
-          <ResultPanel
-            busy={busy}
-            drafts={drafts}
-            loading={loadingDetails}
-            selectedDraft={selectedDraft}
-            savingId={savingId}
-            deletingDraftId={deletingDraftId}
-            onDelete={deleteDraft}
-            onSave={saveDraft}
-            onTextChange={updateDraftText}
-          />
-        </div>
       </main>
     </div>
-  );
-}
-
-function ToolButton({
-  active,
-  icon,
-  label,
-  meta,
-  onClick,
-}: {
-  active: boolean;
-  icon: ReactNode;
-  label: string;
-  meta: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={
-        "inline-flex h-9 items-center gap-2 rounded-md border px-3 text-[12px] font-bold transition-colors " +
-        (active
-          ? "border-sky-300 bg-sky-50 text-sky-700"
-          : "border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-slate-50")
-      }
-    >
-      {icon}
-      <span>{label}</span>
-      <span
-        className={
-          "rounded-full px-1.5 py-0.5 text-[10.5px] " +
-          (active ? "bg-white text-sky-700" : "bg-slate-100 text-slate-500")
-        }
-      >
-        {meta}
-      </span>
-      {active ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
-    </button>
   );
 }
 
@@ -775,7 +722,7 @@ function UploadPanel({
     <section className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
         <div>
-          <h2 className="text-[15px] font-bold text-slate-900">입력 자료</h2>
+          <h2 className="text-[15px] font-bold text-slate-900">자료 입력</h2>
           <p className="mt-0.5 text-[12px] text-slate-500">
             PDF와 이미지를 계속 추가할 수 있습니다.
           </p>
@@ -930,9 +877,9 @@ function ResultSelectorPanel({
     <section className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
         <div>
-          <h2 className="text-[14px] font-bold text-slate-900">결과 선택</h2>
+          <h2 className="text-[14px] font-bold text-slate-900">자료 목록</h2>
           <p className="mt-0.5 text-[11px] text-slate-500">
-            크게 볼 추출 지문을 선택합니다.
+            검토할 추출 지문을 선택합니다.
           </p>
         </div>
         <span className="rounded bg-slate-50 px-2 py-1 text-[11px] font-bold text-sky-700">
@@ -1015,7 +962,7 @@ function ResultPanel({
     <section className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
         <div>
-          <h2 className="text-[15px] font-bold text-slate-900">자료 추출 결과방</h2>
+          <h2 className="text-[15px] font-bold text-slate-900">자료 추출 결과</h2>
           <p className="mt-0.5 text-[12px] text-slate-500">
             선택한 지문의 원문과 복원본을 크게 비교합니다.
           </p>
@@ -1044,7 +991,7 @@ function ResultPanel({
           <EmptyState
             icon={<FileImage className="size-7" />}
             title={busy ? "추출 결과를 기다리는 중입니다." : "추출된 지문이 여기에 표시됩니다."}
-            description="결과 선택을 열어 크게 볼 지문을 고를 수 있습니다."
+            description="자료 목록에서 검토할 지문을 선택할 수 있습니다."
           />
         )}
       </div>
