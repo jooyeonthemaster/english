@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   AlertCircle,
   FileImage,
@@ -152,6 +153,7 @@ function formatBytes(bytes: number): string {
 export function BulkExtractClient({ initialCreditBalance }: Props) {
   void initialCreditBalance;
 
+  const router = useRouter();
   const phase = useExtractionStore((s) => s.phase);
   const jobId = useExtractionStore((s) => s.jobId);
   const error = useExtractionStore((s) => s.error);
@@ -171,12 +173,6 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
   const [sourceName, setSourceName] = useState<string | null>(null);
   const [sourceType, setSourceType] = useState<ExtractionSourceType | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>([]);
-  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
-  const [loadingDetails, setLoadingDetails] = useState(false);
-  const [savingId, setSavingId] = useState<string | null>(null);
-  const [deletingDraftId, setDeletingDraftId] = useState<string | null>(null);
-  const [resultScope, setResultScope] = useState<"all" | "job">("all");
   const [queueRefreshKey, setQueueRefreshKey] = useState(0);
   const [activePanel, setActivePanel] = useState<WorkPanel>(null);
 
@@ -188,102 +184,21 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     enabled: phase === "processing" || phase === "starting" || phase === "uploading",
   });
 
-  const loadJobDetails = useCallback(
-    async (nextJobId: string) => {
-      setLoadingDetails(true);
-      try {
-        const res = await fetch(`/api/extraction/jobs/${nextJobId}`, {
-          credentials: "include",
-          cache: "no-store",
-        });
-        if (!res.ok) throw new Error("작업 정보를 불러오지 못했습니다.");
-        const data = (await res.json()) as JobDetailResponse;
-        setError(null);
-        const jobSummary: M1DraftJobSummary = {
-          id: data.job.id,
-          originalFileName: data.job.originalFileName,
-          totalPages: data.job.totalPages,
-          status: data.job.status,
-          createdAt: data.job.createdAt,
-          completedAt: data.job.completedAt,
-          pages: (data.pages ?? []).map((page) => ({
-            pageIndex: page.pageIndex,
-            sourceFileName: page.sourceFileName ?? null,
-          })),
-        };
-        const nextDrafts = (data.m1PassageDrafts ?? []).map((draft) => ({
-          ...draft,
-          job: jobSummary,
-        }));
-        setDrafts(nextDrafts);
-        setSelectedDraftId((current) => {
-          if (current && nextDrafts.some((draft) => draft.id === current)) {
-            return current;
-          }
-          return nextDrafts[0]?.id ?? null;
-        });
-        if (TERMINAL.has(data.job.status)) setPhase("reviewing");
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "작업 정보를 불러오지 못했습니다.");
-      } finally {
-        setLoadingDetails(false);
-      }
-    },
-    [setError, setPhase],
-  );
-
-  const loadAllDrafts = useCallback(async () => {
-    setLoadingDetails(true);
-    try {
-      const res = await fetch("/api/extraction/m1-passages?limit=200", {
-        credentials: "include",
-        cache: "no-store",
-      });
-      if (!res.ok) throw new Error("지문 추출 결과를 불러오지 못했습니다.");
-      const data = (await res.json()) as { drafts?: M1PassageDraftWithJob[] };
-      setError(null);
-      const nextDrafts = data.drafts ?? [];
-      setDrafts(nextDrafts);
-      setSelectedDraftId((current) => {
-        if (current && nextDrafts.some((draft) => draft.id === current)) {
-          return current;
-        }
-        return nextDrafts[0]?.id ?? null;
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "지문 추출 결과를 불러오지 못했습니다.");
-    } finally {
-      setLoadingDetails(false);
-    }
-  }, [setError]);
-
   useEffect(() => {
     if (bootstrapped.current) return;
     bootstrapped.current = true;
     setMode("PASSAGE_ONLY");
 
-    const resumeJobId =
-      typeof window === "undefined"
-        ? null
-        : new URLSearchParams(window.location.search).get("jobId");
-
-    if (resumeJobId) {
-      setResultScope("job");
-      setJobId(resumeJobId);
-      setPhase("processing");
-      void loadJobDetails(resumeJobId);
-      return;
+    if (typeof window !== "undefined") {
+      const resumeJobId = new URLSearchParams(window.location.search).get("jobId");
+      if (resumeJobId) {
+        router.replace(`/director/workbench/passages/import/jobs?jobId=${resumeJobId}`);
+        return;
+      }
     }
 
     setPhase("idle");
-    void loadAllDrafts();
-  }, [loadAllDrafts, loadJobDetails, setJobId, setMode, setPhase]);
-
-  useEffect(() => {
-    if (!jobId) return;
-    if (phase === "reviewing" && resultScope === "job") void loadJobDetails(jobId);
-    if (phase === "reviewing" && resultScope === "all") void loadAllDrafts();
-  }, [jobId, loadAllDrafts, loadJobDetails, phase, resultScope]);
+  }, [router, setMode, setPhase]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -418,15 +333,12 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
       mode: "PASSAGE_ONLY",
     });
     if (nextJobId) {
-      setResultScope("all");
-      setDrafts([]);
-      setSelectedDraftId(null);
       setJobId(nextJobId);
       setSlots([]);
       setSourceName(null);
       setSourceType(null);
       setUploadProgress(null);
-      setActivePanel(null);
+      setActivePanel("jobs");
       setQueueRefreshKey((value) => value + 1);
     }
   }, [
@@ -447,21 +359,6 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     setError(null);
   }, [setError, setSlots]);
 
-  const showAllResults = useCallback(() => {
-    setResultScope("all");
-    setJobId(null);
-    setPhase("idle");
-    if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", window.location.pathname);
-    }
-    void loadAllDrafts();
-  }, [loadAllDrafts, setJobId, setPhase]);
-
-  const refreshResults = useCallback(() => {
-    if (resultScope === "job" && jobId) void loadJobDetails(jobId);
-    else void loadAllDrafts();
-  }, [jobId, loadAllDrafts, loadJobDetails, resultScope]);
-
   const togglePanel = useCallback((panel: Exclude<WorkPanel, null>) => {
     setActivePanel((current) => (current === panel ? null : panel));
   }, []);
@@ -474,79 +371,6 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activePanel]);
-
-  const selectedDraft = useMemo(
-    () => drafts.find((draft) => draft.id === selectedDraftId) ?? drafts[0] ?? null,
-    [drafts, selectedDraftId],
-  );
-
-  const updateDraftText = useCallback((id: string, teacherText: string) => {
-    setDrafts((current) =>
-      current.map((draft) => (draft.id === id ? { ...draft, teacherText } : draft)),
-    );
-  }, []);
-
-  const saveDraft = useCallback(
-    async (draft: M1PassageDraftSnapshot) => {
-      setSavingId(draft.id);
-      try {
-        const res = await fetch(`/api/extraction/m1-passages/${draft.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            teacherText: draft.teacherText,
-            title: draft.title,
-          }),
-        });
-        if (!res.ok) throw new Error("수정 내용을 저장하지 못했습니다.");
-        const data = (await res.json()) as { draft: M1PassageDraftSnapshot };
-        setDrafts((current) =>
-          current.map((item) =>
-            item.id === data.draft.id ? { ...item, ...data.draft } : item,
-          ),
-        );
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "수정 내용을 저장하지 못했습니다.");
-      } finally {
-        setSavingId(null);
-      }
-    },
-    [setError],
-  );
-
-  const deleteDraft = useCallback(
-    async (draft: M1PassageDraftSnapshot) => {
-      const ok =
-        typeof window === "undefined"
-          ? true
-          : window.confirm("이 지문 추출 결과를 삭제할까요?");
-      if (!ok) return;
-
-      setDeletingDraftId(draft.id);
-      try {
-        const res = await fetch(`/api/extraction/m1-passages/${draft.id}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("지문 추출 결과를 삭제하지 못했습니다.");
-        setDrafts((current) => {
-          const next = current.filter((item) => item.id !== draft.id);
-          setSelectedDraftId((selected) => {
-            if (selected !== draft.id) return selected;
-            return next[0]?.id ?? null;
-          });
-          return next;
-        });
-        setQueueRefreshKey((value) => value + 1);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "지문 추출 결과를 삭제하지 못했습니다.");
-      } finally {
-        setDeletingDraftId(null);
-      }
-    },
-    [setError],
-  );
 
   const busy =
     phase === "preparing" ||
@@ -572,18 +396,9 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             </div>
 
             <div className="flex items-center gap-2">
-              {resultScope === "job" ? (
-                <button
-                  type="button"
-                  onClick={showAllResults}
-                  className="inline-flex h-9 items-center rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-                >
-                  전체 결과
-                </button>
-              ) : null}
               <button
                 type="button"
-                onClick={refreshResults}
+                onClick={() => setQueueRefreshKey((value) => value + 1)}
                 className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
               >
                 <RefreshCw className="size-3.5" aria-hidden="true" />
@@ -625,27 +440,14 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
               onStart={startExtraction}
               onDragActiveChange={setDragActive}
             />
-            <ResultSelectorPanel
+            <ExtractionRunPanel
               busy={busy}
-              drafts={drafts}
-              loading={loadingDetails}
-              selectedDraftId={selectedDraftId}
-              onSelect={setSelectedDraftId}
+              pageCount={slots.length}
+              activeJobId={jobId}
+              onOpenManage={() => router.push("/director/workbench/passages/import/jobs")}
             />
           </div>
         </section>
-
-        <ResultPanel
-          busy={busy}
-          drafts={drafts}
-          loading={loadingDetails}
-          selectedDraft={selectedDraft}
-          savingId={savingId}
-          deletingDraftId={deletingDraftId}
-          onDelete={deleteDraft}
-          onSave={saveDraft}
-          onTextChange={updateDraftText}
-        />
 
         <button
           type="button"
@@ -675,16 +477,15 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
               <QueuePanel
                 activeJobId={jobId}
                 refreshKey={queueRefreshKey}
-                onDeleteActiveJob={showAllResults}
+                onDeleteActiveJob={() => {
+                  setJobId(null);
+                  setPhase("idle");
+                }}
                 onOpenJob={(id) => {
-                  setResultScope("job");
                   setJobId(id);
                   setPhase("processing");
                   setActivePanel(null);
-                  void loadJobDetails(id);
-                  if (typeof window !== "undefined") {
-                    window.history.replaceState(null, "", "?jobId=" + id);
-                  }
+                  router.push("/director/workbench/passages/import/jobs?jobId=" + id);
                 }}
               />
             </div>
@@ -692,6 +493,338 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
         ) : null}
       </main>
     </div>
+  );
+}
+
+export function ExtractionManageClient() {
+  const router = useRouter();
+  const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>([]);
+  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingDraftId, setDeletingDraftId] = useState<string | null>(null);
+  const [resultScope, setResultScope] = useState<"all" | "job">("all");
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [queueRefreshKey, setQueueRefreshKey] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const bootstrapped = useRef(false);
+
+  const selectedDraft = useMemo(
+    () => drafts.find((draft) => draft.id === selectedDraftId) ?? drafts[0] ?? null,
+    [drafts, selectedDraftId],
+  );
+
+  const loadJobDetails = useCallback(async (nextJobId: string) => {
+    setLoadingDetails(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/extraction/jobs/" + nextJobId, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (!res.ok) throw new Error("작업 정보를 불러오지 못했습니다.");
+
+      const data = (await res.json()) as JobDetailResponse;
+      const jobSummary: M1DraftJobSummary = {
+        id: data.job.id,
+        originalFileName: data.job.originalFileName,
+        totalPages: data.job.totalPages,
+        status: data.job.status,
+        createdAt: data.job.createdAt,
+        completedAt: data.job.completedAt,
+        pages: (data.pages ?? []).map((page) => ({
+          pageIndex: page.pageIndex,
+          sourceFileName: page.sourceFileName ?? null,
+        })),
+      };
+      const nextDrafts = data.m1PassageDrafts.map((draft) => ({
+        ...draft,
+        job: jobSummary,
+      }));
+      setDrafts(nextDrafts);
+      setSelectedDraftId(nextDrafts[0]?.id ?? null);
+      setResultScope("job");
+      setJobId(nextJobId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "작업 정보를 불러오지 못했습니다.");
+    } finally {
+      setLoadingDetails(false);
+    }
+  }, []);
+
+  const loadAllDrafts = useCallback(async () => {
+    setLoadingDetails(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/extraction/m1-passages?limit=200", {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (!res.ok) throw new Error("자료 목록을 불러오지 못했습니다.");
+
+      const data = (await res.json()) as { drafts: M1PassageDraftWithJob[] };
+      setDrafts(data.drafts);
+      setSelectedDraftId(data.drafts[0]?.id ?? null);
+      setResultScope("all");
+      setJobId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "자료 목록을 불러오지 못했습니다.");
+    } finally {
+      setLoadingDetails(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (bootstrapped.current) return;
+    bootstrapped.current = true;
+
+    const nextJobId =
+      typeof window === "undefined"
+        ? null
+        : new URLSearchParams(window.location.search).get("jobId");
+    if (nextJobId) {
+      void loadJobDetails(nextJobId);
+      return;
+    }
+    void loadAllDrafts();
+  }, [loadAllDrafts, loadJobDetails]);
+
+  const showAllResults = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    void loadAllDrafts();
+  }, [loadAllDrafts]);
+
+  const refreshResults = useCallback(() => {
+    setQueueRefreshKey((value) => value + 1);
+    if (resultScope === "job" && jobId) {
+      void loadJobDetails(jobId);
+      return;
+    }
+    void loadAllDrafts();
+  }, [jobId, loadAllDrafts, loadJobDetails, resultScope]);
+
+  const openJob = useCallback(
+    (nextJobId: string) => {
+      if (typeof window !== "undefined") {
+        window.history.replaceState(null, "", "?jobId=" + nextJobId);
+      }
+      void loadJobDetails(nextJobId);
+    },
+    [loadJobDetails],
+  );
+
+  const updateDraftText = useCallback((id: string, teacherText: string) => {
+    setDrafts((current) =>
+      current.map((draft) => (draft.id === id ? { ...draft, teacherText } : draft)),
+    );
+  }, []);
+
+  const saveDraft = useCallback(async (draft: M1PassageDraftSnapshot) => {
+    setSavingId(draft.id);
+    setError(null);
+    try {
+      const res = await fetch("/api/extraction/m1-passages/" + draft.id, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: draft.title ?? null,
+          teacherText: draft.teacherText,
+        }),
+      });
+      if (!res.ok) throw new Error("수정 내용을 저장하지 못했습니다.");
+
+      const data = (await res.json()) as { draft: M1PassageDraftSnapshot };
+      setDrafts((current) =>
+        current.map((item) =>
+          item.id === data.draft.id
+            ? {
+                ...item,
+                ...data.draft,
+              }
+            : item,
+        ),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "수정 내용을 저장하지 못했습니다.");
+    } finally {
+      setSavingId(null);
+    }
+  }, []);
+
+  const deleteDraft = useCallback(async (draft: M1PassageDraftSnapshot) => {
+    const ok =
+      typeof window === "undefined" ? true : window.confirm("이 추출 지문을 삭제할까요?");
+    if (!ok) return;
+
+    setDeletingDraftId(draft.id);
+    setError(null);
+    try {
+      const res = await fetch("/api/extraction/m1-passages/" + draft.id, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("지문을 삭제하지 못했습니다.");
+
+      setDrafts((current) => {
+        const next = current.filter((item) => item.id !== draft.id);
+        setSelectedDraftId((selected) =>
+          selected === draft.id ? next[0]?.id ?? null : selected,
+        );
+        return next;
+      });
+      setQueueRefreshKey((value) => value + 1);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "지문을 삭제하지 못했습니다.");
+    } finally {
+      setDeletingDraftId(null);
+    }
+  }, []);
+
+  return (
+    <div className="-m-6 min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-6 py-6 xl:px-8">
+      <main className="mx-auto flex max-w-[1680px] flex-col gap-4">
+        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
+            <div className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <FileImage className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <h1 className="text-[20px] font-bold tracking-tight text-slate-950">자료 관리</h1>
+                <p className="mt-1 text-[13px] text-slate-500">
+                  추출된 지문을 작업별로 확인하고 복원본을 수정한 뒤 저장합니다.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => router.push("/director/workbench/passages/import")}
+                className="inline-flex h-9 items-center rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+              >
+                자료 추출
+              </button>
+              {resultScope === "job" ? (
+                <button
+                  type="button"
+                  onClick={showAllResults}
+                  className="inline-flex h-9 items-center rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                >
+                  전체 결과
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={refreshResults}
+                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+              >
+                <RefreshCw className="size-3.5" aria-hidden="true" />
+                새로고침
+              </button>
+            </div>
+          </div>
+
+          {error ? (
+            <div className="mx-6 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
+              <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span>{error}</span>
+            </div>
+          ) : null}
+
+          <div className="grid gap-4 p-6 xl:grid-cols-[minmax(320px,0.44fr)_minmax(360px,0.56fr)]">
+            <QueuePanel
+              activeJobId={jobId}
+              refreshKey={queueRefreshKey}
+              onDeleteActiveJob={showAllResults}
+              onOpenJob={openJob}
+            />
+            <ResultSelectorPanel
+              busy={false}
+              drafts={drafts}
+              loading={loadingDetails}
+              selectedDraftId={selectedDraftId}
+              onSelect={setSelectedDraftId}
+            />
+          </div>
+        </section>
+
+        <ResultPanel
+          busy={false}
+          drafts={drafts}
+          loading={loadingDetails}
+          selectedDraft={selectedDraft}
+          savingId={savingId}
+          deletingDraftId={deletingDraftId}
+          onDelete={deleteDraft}
+          onSave={saveDraft}
+          onTextChange={updateDraftText}
+        />
+      </main>
+    </div>
+  );
+}
+
+function ExtractionRunPanel({
+  activeJobId,
+  busy,
+  pageCount,
+  onOpenManage,
+}: {
+  activeJobId: string | null;
+  busy: boolean;
+  pageCount: number;
+  onOpenManage: () => void;
+}) {
+  return (
+    <aside className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-100 px-5 py-4">
+        <h2 className="text-[15px] font-bold text-slate-900">추출 진행</h2>
+        <p className="mt-0.5 text-[12px] text-slate-500">
+          이 화면에서는 자료를 넣고 추출 작업을 시작합니다.
+        </p>
+      </div>
+
+      <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[12px] font-bold text-slate-700">선택 자료</span>
+            <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-700 ring-1 ring-sky-100">
+              {pageCount}페이지
+            </span>
+          </div>
+          <div className="mt-3 grid gap-2 text-[12px] text-slate-500">
+            <div className="flex items-center justify-between rounded-md bg-white px-3 py-2">
+              <span>추출 방식</span>
+              <strong className="text-slate-800">지문 전용</strong>
+            </div>
+            <div className="flex items-center justify-between rounded-md bg-white px-3 py-2">
+              <span>검수 위치</span>
+              <strong className="text-slate-800">자료 관리</strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-4">
+          <div className="text-[13px] font-bold text-blue-900">작업 완료 후 흐름</div>
+          <div className="mt-2 space-y-2 text-[12px] leading-5 text-blue-800">
+            <p>추출이 시작되면 작업 목록에서 처리 상태를 확인할 수 있습니다.</p>
+            <p>원문 비교, 복원본 수정, 저장과 삭제는 자료 관리에서 이어서 진행합니다.</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={onOpenManage}
+          className="mt-auto inline-flex h-10 w-full items-center justify-center rounded-md border border-sky-200 bg-white text-[13px] font-bold text-sky-700 shadow-sm hover:bg-sky-50"
+        >
+          {activeJobId || busy ? "진행 작업 관리로 이동" : "자료 관리 열기"}
+        </button>
+      </div>
+    </aside>
   );
 }
 
