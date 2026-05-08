@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   Star,
   ArrowUpDown,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
+  getWorkbenchQuestion,
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
   toggleQuestionStar,
@@ -59,6 +61,7 @@ import {
   TYPE_SUBTYPE_MAP,
 } from "./question-type-filter";
 import { QuestionBankCard } from "./question-bank-card";
+import { QuestionEditClient } from "./question-edit-client";
 
 // Hooks
 import { useUrlFilters } from "@/hooks/use-url-filters";
@@ -134,6 +137,12 @@ export function QuestionBankClient({
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [editingQuestion, setEditingQuestion] = useState<Awaited<ReturnType<typeof getWorkbenchQuestion>> | null>(null);
+  const [questionLoading, setQuestionLoading] = useState(false);
+  const [questionLoadError, setQuestionLoadError] = useState<string | null>(null);
+  const editLoadTokenRef = useRef(0);
 
   // URL filters
   const { updateFilter, updateFilters, handleSearch: urlSearch, goToPage } = useUrlFilters("/director/questions");
@@ -197,6 +206,49 @@ export function QuestionBankClient({
 
   // Stats
   const totalCount = questionsData.total;
+
+  async function handleOpenQuestionEditor(id: string) {
+    const token = editLoadTokenRef.current + 1;
+    editLoadTokenRef.current = token;
+    setEditDialogOpen(true);
+    setEditingQuestionId(id);
+    setEditingQuestion(null);
+    setQuestionLoadError(null);
+    setQuestionLoading(true);
+
+    try {
+      const question = await getWorkbenchQuestion(id);
+      if (editLoadTokenRef.current !== token) return;
+      if (!question) {
+        setQuestionLoadError("문제를 찾을 수 없습니다.");
+        toast.error("문제를 찾을 수 없습니다.");
+        return;
+      }
+      setEditingQuestion(question);
+    } catch {
+      if (editLoadTokenRef.current !== token) return;
+      setQuestionLoadError("문제를 불러오는 중 오류가 발생했습니다.");
+      toast.error("문제를 불러오지 못했습니다.");
+    } finally {
+      if (editLoadTokenRef.current === token) setQuestionLoading(false);
+    }
+  }
+
+  function closeQuestionEditor() {
+    editLoadTokenRef.current += 1;
+    setEditDialogOpen(false);
+    setEditingQuestionId(null);
+    setEditingQuestion(null);
+    setQuestionLoadError(null);
+    setQuestionLoading(false);
+  }
+
+  function handleEditorDeleted(id: string) {
+    selectedIds.delete(id);
+    setSelectedIds(new Set(selectedIds));
+    closeQuestionEditor();
+    router.refresh();
+  }
 
   // ─── Question Actions ───
   async function handleDelete(id: string) {
@@ -344,7 +396,7 @@ export function QuestionBankClient({
           ) : (
             <Database className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
           )}
-          <h1 className="text-[15px] font-bold text-slate-900">문제 은행</h1>
+          <h1 className="text-[15px] font-bold text-slate-900">문제 관리</h1>
           <span className="text-[12px] text-slate-400">{totalCount}개</span>
           <BreadcrumbNav
             activeFolder={folders.activeFolder}
@@ -497,6 +549,8 @@ export function QuestionBankClient({
             onRenameFolder={folders.handleRenameFolder}
             onDeleteFolder={folders.handleDeleteFolder}
             onDragToFolder={handleDragToFolder}
+            breadcrumbPath={folders.breadcrumbPath}
+            onNavigateToRoot={() => { folders.setActiveFolder(null); clearSelection(); }}
           />
 
             {/* Questions section */}
@@ -588,6 +642,7 @@ export function QuestionBankClient({
                         onDelete={() => handleDelete(q.id)}
                         onApprove={() => handleApprove(q.id)}
                         onToggleStar={() => handleToggleStar(q.id)}
+                        onEdit={() => handleOpenQuestionEditor(q.id)}
                         viewSize={viewSize}
                       />
                     );
@@ -651,6 +706,56 @@ export function QuestionBankClient({
         onOpenChange={setGenerateDialogOpen}
         academyId={academyId}
       />
+
+      <Dialog
+        open={editDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) closeQuestionEditor();
+          else setEditDialogOpen(true);
+        }}
+      >
+        <DialogContent
+          className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1440px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1440px]"
+          showCloseButton={false}
+        >
+          <DialogHeader className="sr-only">
+            <DialogTitle>문제 수정</DialogTitle>
+          </DialogHeader>
+
+          {questionLoading ? (
+            <div className="flex h-full items-center justify-center bg-white">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                문제를 불러오는 중
+              </div>
+            </div>
+          ) : questionLoadError ? (
+            <div className="flex h-full items-center justify-center bg-white">
+              <div className="space-y-3 text-center">
+                <p className="text-sm font-medium text-slate-700">{questionLoadError}</p>
+                <div className="flex justify-center gap-2">
+                  <Button variant="outline" size="sm" onClick={closeQuestionEditor}>
+                    닫기
+                  </Button>
+                  {editingQuestionId && (
+                    <Button size="sm" onClick={() => handleOpenQuestionEditor(editingQuestionId)}>
+                      다시 불러오기
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : editingQuestion ? (
+            <QuestionEditClient
+              key={editingQuestion.id}
+              question={editingQuestion}
+              mode="modal"
+              onClose={closeQuestionEditor}
+              onDeleted={handleEditorDeleted}
+            />
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

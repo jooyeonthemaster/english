@@ -3,7 +3,6 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { useRouter } from "next/navigation";
 import {
   CheckCircle2,
   Clock,
@@ -471,6 +470,7 @@ export function QuestionBankCard({
   onDelete,
   onApprove,
   onToggleStar,
+  onEdit,
   viewSize = "lg",
 }: {
   q: QuestionBankItem;
@@ -480,6 +480,7 @@ export function QuestionBankCard({
   onDelete: () => void;
   onApprove: () => void;
   onToggleStar?: () => void;
+  onEdit?: () => void;
   viewSize?: "lg" | "md" | "sm";
 }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -488,7 +489,6 @@ export function QuestionBankCard({
   const [explanationOpen, setExplanationOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const tags: string[] = Array.isArray(q.tags)
@@ -589,23 +589,28 @@ export function QuestionBankCard({
             {/* Expand/Collapse toggle */}
             <button
               onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); if (!expanded) setPassageOpen(false); }}
-              className={`h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-all border ${
+              aria-expanded={expanded}
+              title={expanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
+              className={`group/expand h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-colors border ${
                 expanded
-                  ? "text-blue-600 bg-blue-50 border-blue-200 hover:bg-blue-100"
-                  : "text-slate-500 bg-slate-50 border-slate-200 hover:bg-slate-100 hover:text-slate-700"
+                  ? "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
+                  : "text-blue-600 bg-blue-50/70 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
               }`}
             >
               {expanded ? (
                 <><ChevronUp className="w-3.5 h-3.5" />접기</>
               ) : (
-                <><ChevronDown className="w-3.5 h-3.5" />펼치기</>
+                <><ChevronDown className="w-3.5 h-3.5 transition-transform group-hover/expand:translate-y-0.5" />펼치기</>
               )}
             </button>
             <Button
               variant="ghost"
               size="icon"
               className="h-6 w-6"
-              onClick={() => router.push(`/director/questions/${q.id}`)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit?.();
+              }}
             >
               <Pencil className="w-3 h-3" />
             </Button>
@@ -617,7 +622,7 @@ export function QuestionBankCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
-                  onClick={() => router.push(`/director/questions/${q.id}`)}
+                  onClick={onEdit}
                 >
                   <Eye className="w-3.5 h-3.5 mr-2" />
                   상세 보기

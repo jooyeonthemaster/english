@@ -10,9 +10,9 @@ import {
   PanelLeftOpen,
   Bell,
   LogOut,
-  Megaphone,
   User,
   ChevronDown,
+  Megaphone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getInitials } from "@/lib/utils";
@@ -87,7 +87,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const filteredGroups: NavGroup[] = useMemo(
     () =>
       navGroups
-        .filter((group) => !group.directorOnly || isDirector)
+        .filter((group) => !group.comingSoon && (!group.directorOnly || isDirector))
         .map((group) => ({
           ...group,
           items: group.items.filter((item) => !item.directorOnly || isDirector),
@@ -95,32 +95,23 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     [isDirector, navGroups],
   );
 
-  const activeHref = useMemo(() => {
-    const effectivePath = navigatingTo || pathname;
-    let bestHref: string | null = null;
-
-    const consider = (href: string) => {
-      const matches =
-        href === basePath
-          ? effectivePath === basePath
-          : effectivePath === href || effectivePath.startsWith(`${href}/`);
-      if (matches && (!bestHref || href.length > bestHref.length)) {
-        bestHref = href;
-      }
-    };
-
-    for (const group of filteredGroups) {
-      for (const item of group.items) {
-        consider(item.href);
-        item.children?.forEach((child) => consider(child.href));
-      }
+  const routeMatches = useCallback((href: string, path: string) => {
+    if (href === basePath) return path === basePath;
+    const passageBankHref = `${basePath}/workbench/passages`;
+    const passageImportHref = `${passageBankHref}/import`;
+    if (
+      href === passageBankHref &&
+      (path === passageImportHref || path.startsWith(`${passageImportHref}/`))
+    ) {
+      return false;
     }
-
-    return bestHref;
-  }, [basePath, filteredGroups, navigatingTo, pathname]);
+    return path === href || path.startsWith(`${href}/`);
+  }, [basePath]);
 
   function isActive(href: string) {
-    return activeHref === href;
+    // Show navigating item as active immediately
+    const effectivePath = navigatingTo || pathname;
+    return routeMatches(href, effectivePath);
   }
 
   function handleNavClick(href: string, e: React.MouseEvent) {
@@ -137,13 +128,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     const newOpen: Record<string, boolean> = {};
     for (const group of filteredGroups) {
       for (const item of group.items) {
-        if (item.children && item.children.some((c) => activeHref === c.href)) {
+        if (item.children && item.children.some((c) => routeMatches(c.href, pathname))) {
           newOpen[item.href] = true;
         }
       }
     }
     setOpenMenus((prev) => ({ ...prev, ...newOpen }));
-  }, [activeHref, filteredGroups]);
+  }, [filteredGroups, pathname, routeMatches]);
 
   const toggleMenu = useCallback((href: string) => {
     setOpenMenus((prev) => ({ ...prev, [href]: !prev[href] }));
@@ -244,7 +235,8 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                     const Icon = item.icon;
                     const hasChildren = item.children && item.children.length > 0;
                     const isOpen = openMenus[item.href];
-                    const childActive = hasChildren && item.children!.some((c) => activeHref === c.href);
+                    const effectivePath = navigatingTo || pathname;
+                    const childActive = hasChildren && item.children!.some((c) => routeMatches(c.href, effectivePath));
 
                     // Parent button for items with children (expanded sidebar)
                     if (hasChildren && !collapsed) {
@@ -302,8 +294,14 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                             )}
                           >
                             <div className="ml-2 mr-1 mt-1 bg-gray-50/80 rounded-lg py-1.5 px-2 space-y-0.5">
-                              {item.children!.map((child) => {
-                                const childIsActive = activeHref === child.href;
+                              {item.children!.map((child, ci) => {
+                                const exactMatch = effectivePath === child.href;
+                                const prefixMatch = routeMatches(child.href, effectivePath) && !exactMatch;
+                                const siblingHasExactOrBetterMatch = item.children!.some(
+                                  (other, oi) => oi !== ci && routeMatches(other.href, effectivePath)
+                                    && other.href.length > child.href.length
+                                );
+                                const childIsActive = exactMatch || (prefixMatch && !siblingHasExactOrBetterMatch);
                                 return (
                                   <Link
                                     key={child.href}
@@ -471,13 +469,21 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </div>
 
             <div className="flex items-center gap-1">
-              <Link
-                href={`${basePath}/notices`}
-                className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-blue-100 bg-blue-50/70 text-[12px] font-semibold text-blue-600 hover:bg-blue-100 transition-all duration-200"
-              >
-                <Megaphone className="size-3.5" strokeWidth={1.8} />
-                공지사항
-              </Link>
+              {isDirector && (
+                <Link
+                  href="/director/notices"
+                  onClick={(e) => handleNavClick("/director/notices", e)}
+                  className={cn(
+                    "hidden sm:inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[12px] font-semibold transition-all duration-200",
+                    pathname.startsWith("/director/notices")
+                      ? "border-blue-600 bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.18)]"
+                      : "border-blue-100 bg-blue-50/70 text-blue-600 hover:border-blue-200 hover:bg-white"
+                  )}
+                >
+                  <Megaphone className="size-3.5" />
+                  <span>공지사항</span>
+                </Link>
+              )}
 
               {/* Credit badge */}
               <CreditBadge />

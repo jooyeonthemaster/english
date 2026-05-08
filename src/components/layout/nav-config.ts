@@ -18,7 +18,6 @@ import {
   Settings,
   Layers,
   Palette,
-  FileCheck2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -72,7 +71,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       items: [
         {
           label: "지문 & 문제 추출",
-          icon: FileCheck2,
+          icon: ClipboardCheck,
           href: `${basePath}/workbench/passages/import`,
         },
         {
@@ -98,7 +97,8 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           icon: GraduationCap,
           href: `${basePath}/exams`,
           children: [
-            { label: "시험 목록", href: `${basePath}/exams` },
+            { label: "시험지 생성", href: `${basePath}/exams/create` },
+            { label: "시험지 관리", href: `${basePath}/exams` },
           ],
         },
         {
@@ -107,7 +107,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           href: `${basePath}/workbench/webtoon`,
           children: [
             { label: "웹툰 생성", href: `${basePath}/workbench/webtoon` },
-            { label: "웹툰 보관함", href: `${basePath}/workbench/webtoon/library` },
+            { label: "웹툰 관리", href: `${basePath}/workbench/webtoon/library` },
           ],
         },
       ],

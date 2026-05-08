@@ -21,7 +21,6 @@ import {
   ChevronDown,
   Layers,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -31,12 +30,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import {
   updateWorkbenchQuestion,
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
 } from "@/actions/workbench";
+import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
+import type { PassageAnalysisData } from "@/types/passage-analysis";
 
 interface Option { label: string; text: string; }
 
@@ -54,7 +56,16 @@ interface QuestionEditProps {
     aiGenerated: boolean;
     approved: boolean;
     createdAt: Date;
-    passage: { id: string; title: string; content: string } | null;
+    passage: {
+      id: string;
+      title: string;
+      content: string;
+      analysis?: {
+        id: string;
+        analysisData: string;
+        updatedAt: Date;
+      } | null;
+    } | null;
     explanation: {
       id: string;
       content: string;
@@ -64,6 +75,11 @@ interface QuestionEditProps {
       aiGenerated: boolean;
     } | null;
   };
+  mode?: "page" | "modal";
+  onClose?: () => void;
+  onDeleted?: (questionId: string) => void;
+  onSaved?: () => void;
+  onApproved?: () => void;
 }
 
 const TYPE_OPTIONS = [
@@ -81,11 +97,30 @@ const DIFFICULTY_OPTIONS = [
   { value: "KILLER", label: "킬러", color: "bg-red-50 text-red-700 border-red-200" },
 ];
 
-export function QuestionEditClient({ question }: QuestionEditProps) {
+function safeParseJSON<T>(str: unknown, fallback: T): T {
+  if (!str) return fallback;
+  if (typeof str === "object") return str as T;
+  if (typeof str !== "string") return fallback;
+  try {
+    return JSON.parse(str) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+export function QuestionEditClient({
+  question,
+  mode = "page",
+  onClose,
+  onDeleted,
+  onSaved,
+  onApproved,
+}: QuestionEditProps) {
   const router = useRouter();
+  const isModal = mode === "modal";
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [generatingExplanation, setGeneratingExplanation] = useState(false);
+  const [approved, setApproved] = useState(question.approved);
 
   const initialOptions: Option[] = question.options ? JSON.parse(question.options) : [];
   const initialTags: string[] = question.tags ? JSON.parse(question.tags) : [];
@@ -128,7 +163,7 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
         keyPoints: keyPoints.length > 0 ? keyPoints : undefined,
         wrongOptionExplanations: Object.keys(wrongExplanations).length > 0 ? wrongExplanations : undefined,
       });
-      if (result.success) { toast.success("수정 완료"); router.refresh(); }
+      if (result.success) { toast.success("수정 완료"); router.refresh(); onSaved?.(); }
       else toast.error(result.error || "수정 실패");
     } catch { toast.error("저장 중 오류"); } finally { setSaving(false); }
   }
@@ -137,13 +172,23 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
     if (!confirm("이 문제를 삭제하시겠습니까?")) return;
     setDeleting(true);
     const r = await deleteWorkbenchQuestion(question.id);
-    if (r.success) { toast.success("삭제됨"); router.push("/director/questions"); }
+    if (r.success) {
+      toast.success("삭제됨");
+      if (onDeleted) onDeleted(question.id);
+      else if (onClose) onClose();
+      else router.push("/director/questions");
+    }
     else { toast.error(r.error || "삭제 실패"); setDeleting(false); }
   }
 
   async function handleApprove() {
     const r = await approveWorkbenchQuestion(question.id);
-    if (r.success) { toast.success("승인됨"); router.refresh(); } else toast.error(r.error || "승인 실패");
+    if (r.success) {
+      toast.success("승인됨");
+      setApproved(true);
+      router.refresh();
+      onApproved?.();
+    } else toast.error(r.error || "승인 실패");
   }
 
   async function handleAiModify() {
@@ -171,38 +216,38 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
     } catch { toast.error("수정 중 오류"); } finally { setAiModifying(false); }
   }
 
-  async function handleGenerateExplanation() {
-    setGeneratingExplanation(true);
-    try {
-      const res = await fetch("/api/ai/generate-explanation", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ questionId: question.id }),
-      });
-      const json = await res.json();
-      if (json.error) { toast.error(json.error); }
-      else {
-        setExplanation(json.data.explanation); setKeyPoints(json.data.keyPoints || []);
-        if (json.data.wrongOptionExplanations) setWrongExplanations(json.data.wrongOptionExplanations);
-        toast.success("AI 해설 생성됨");
-      }
-    } catch { toast.error("해설 생성 중 오류"); } finally { setGeneratingExplanation(false); }
-  }
-
   const diffConfig = DIFFICULTY_OPTIONS.find((d) => d.value === difficulty);
+  const passageAnalysis = safeParseJSON<PassageAnalysisData | null>(
+    question.passage?.analysis?.analysisData,
+    null,
+  );
 
   return (
-    <div className="-m-6 flex flex-col" style={{ height: "calc(100vh - 56px)" }}>
+    <div
+      className={`${isModal ? "h-full" : "-m-6"} flex min-h-0 flex-col overflow-hidden`}
+      style={{ height: isModal ? "100%" : "calc(100vh - 56px)" }}
+    >
 
       {/* ─── Header: 44px ─── */}
       <div className="flex items-center justify-between px-5 py-2 border-b border-slate-200 bg-white shrink-0">
         <div className="flex items-center gap-3">
-          <Link href="/director/questions">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+          {isModal ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100"
+            >
               <ArrowLeft className="w-4 h-4 text-slate-500" />
             </button>
-          </Link>
+          ) : (
+            <Link href="/director/questions">
+              <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+                <ArrowLeft className="w-4 h-4 text-slate-500" />
+              </button>
+            </Link>
+          )}
           <span className="text-[15px] font-bold text-slate-900">문제 편집</span>
-          {question.approved ? (
+          {approved ? (
             <span className="inline-flex items-center gap-0.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
               <CheckCircle2 className="w-3 h-3" />승인
             </span>
@@ -231,7 +276,7 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
           <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50 h-8 text-[12px] px-2.5" onClick={handleDelete} disabled={deleting}>
             <Trash2 className="w-3.5 h-3.5 mr-1" />삭제
           </Button>
-          {!question.approved && (
+          {!approved && (
             <Button variant="ghost" size="sm" className="text-emerald-600 hover:bg-emerald-50 h-8 text-[12px] px-2.5" onClick={handleApprove}>
               <CheckCircle2 className="w-3.5 h-3.5 mr-1" />승인
             </Button>
@@ -243,27 +288,73 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
       </div>
 
       {/* ─── 3-Column Body ─── */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 min-h-0 flex overflow-auto">
 
-        {/* ── LEFT: Passage (always visible, only panel that scrolls) ── */}
+        {/* ── LEFT: Passage source, with analyzed/original views ── */}
         {question.passage && (
-          <div className="w-[320px] shrink-0 border-r border-slate-200 bg-slate-50 overflow-y-auto">
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-3">
+          <div className="w-[46%] min-w-[560px] max-w-[660px] shrink-0 border-r border-slate-200 bg-[#F8FAFB] flex min-h-0 flex-col overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-200 bg-white shrink-0">
+              <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-blue-500 shrink-0" />
-                <Link href={`/director/workbench/passages/${question.passage.id}`} className="text-[13px] font-semibold text-blue-600 hover:underline truncate">
-                  {question.passage.title}
-                </Link>
+                {isModal ? (
+                  <span className="text-[13px] font-semibold text-blue-600 truncate">
+                    {question.passage.title}
+                  </span>
+                ) : (
+                  <Link href={`/director/workbench/passages/${question.passage.id}`} className="text-[13px] font-semibold text-blue-600 hover:underline truncate">
+                    {question.passage.title}
+                  </Link>
+                )}
               </div>
-              <p className="text-[12.5px] text-slate-700 font-mono leading-[1.75] whitespace-pre-wrap">
-                {question.passage.content}
-              </p>
             </div>
+
+            <Tabs
+              defaultValue={passageAnalysis ? "analysis" : "original"}
+              className="flex min-h-0 flex-1 flex-col gap-0"
+            >
+              <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-2 shrink-0">
+                <TabsList className="h-8 bg-slate-100">
+                  <TabsTrigger
+                    value="analysis"
+                    disabled={!passageAnalysis}
+                    className="h-7 px-3 text-[12px]"
+                  >
+                    분석 보기
+                  </TabsTrigger>
+                  <TabsTrigger value="original" className="h-7 px-3 text-[12px]">
+                    원문 보기
+                  </TabsTrigger>
+                </TabsList>
+                {!passageAnalysis && (
+                  <span className="text-[11px] font-medium text-slate-400">
+                    분석 데이터 없음
+                  </span>
+                )}
+              </div>
+
+              <TabsContent value="analysis" className="m-0 min-h-0 flex-1 overflow-y-auto p-4">
+                {passageAnalysis && (
+                  <InteractivePassageView
+                    content={question.passage.content}
+                    analysisData={passageAnalysis}
+                    layout="vertical"
+                  />
+                )}
+              </TabsContent>
+
+              <TabsContent value="original" className="m-0 min-h-0 flex-1 overflow-y-auto p-4">
+                <div className="rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-[13px] text-slate-700 font-mono leading-[1.8] whitespace-pre-wrap">
+                    {question.passage.content}
+                  </p>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         )}
 
-        {/* ── CENTER: Question Editor (flex-fill, no scroll) ── */}
-        <div className="flex-1 overflow-hidden min-w-0 flex flex-col">
+        {/* ── CENTER: Question Editor ── */}
+        <div className="flex-1 min-w-[420px] overflow-hidden flex min-h-0 flex-col">
 
           {/* Tags bar */}
           <div className="flex items-center gap-1.5 px-5 py-2 border-b border-slate-100 bg-white shrink-0 flex-wrap">
@@ -283,8 +374,8 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
           </div>
 
           {/* Editor area — fills remaining space */}
-          <div className="flex-1 overflow-hidden p-5 bg-white">
-            <div className="h-full flex flex-col gap-4">
+          <div className="flex-1 min-h-0 overflow-y-auto p-5 bg-white">
+            <div className="min-h-full flex flex-col gap-4">
 
               {/* Question text — flex-[2] proportional fill */}
               <div className="flex-[2] min-h-0 flex flex-col gap-1.5">
@@ -303,9 +394,9 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
                   <label className="text-[12px] font-semibold text-slate-500 shrink-0">선택지</label>
                   <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto">
                     {options.map((opt, idx) => (
-                      <div key={idx} className="flex items-center gap-2 group">
+                      <div key={idx} className="flex items-start gap-2 rounded-lg border border-transparent px-1 py-1 transition-colors hover:border-slate-200 hover:bg-slate-50/70">
                         <button
-                          className={`w-8 h-8 rounded-full text-[13px] font-bold flex items-center justify-center shrink-0 transition-all ${
+                          className={`mt-0.5 w-8 h-8 rounded-full text-[13px] font-bold flex items-center justify-center shrink-0 transition-all ${
                             opt.label === correctAnswer ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                           }`}
                           onClick={() => setCorrectAnswer(opt.label)}
@@ -313,16 +404,44 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
                         >
                           {opt.label}
                         </button>
-                        <Input
+                        <textarea
                           value={opt.text}
                           onChange={(e) => updateOptionText(idx, e.target.value)}
                           placeholder={`${opt.label}번 선택지`}
-                          className={`flex-1 text-[14px] h-9 ${opt.label === correctAnswer ? "border-emerald-300 bg-emerald-50/50 font-medium" : ""}`}
+                          rows={2}
+                          className={`flex-1 min-h-[42px] resize-y rounded-md border px-3 py-2 text-[13.5px] leading-relaxed outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+                            opt.label === correctAnswer
+                              ? "border-emerald-300 bg-emerald-50/50 font-medium text-emerald-950"
+                              : "border-slate-200 bg-white text-slate-800"
+                          }`}
                         />
-                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 shrink-0 transition-opacity">
-                          <button onClick={() => moveOption(idx, "up")} disabled={idx === 0} className="w-6 h-6 rounded flex items-center justify-center hover:bg-slate-100 disabled:opacity-30"><ArrowUp className="w-3 h-3 text-slate-400" /></button>
-                          <button onClick={() => moveOption(idx, "down")} disabled={idx === options.length - 1} className="w-6 h-6 rounded flex items-center justify-center hover:bg-slate-100 disabled:opacity-30"><ArrowDown className="w-3 h-3 text-slate-400" /></button>
-                          <button onClick={() => removeOption(idx)} className="w-6 h-6 rounded flex items-center justify-center hover:bg-red-50 text-slate-400 hover:text-red-500"><X className="w-3 h-3" /></button>
+                        <div className="mt-1 flex shrink-0 items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => moveOption(idx, "up")}
+                            disabled={idx === 0}
+                            className="w-7 h-7 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-500 shadow-sm hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-35"
+                            title="위로 이동"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => moveOption(idx, "down")}
+                            disabled={idx === options.length - 1}
+                            className="w-7 h-7 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-500 shadow-sm hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-35"
+                            title="아래로 이동"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeOption(idx)}
+                            className="w-7 h-7 rounded-md border border-red-100 bg-white flex items-center justify-center text-red-500 shadow-sm hover:bg-red-50"
+                            title="선택지 삭제"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -372,32 +491,23 @@ export function QuestionEditClient({ question }: QuestionEditProps) {
           </div>
         </div>
 
-        {/* ── RIGHT: Explanation Panel (no scroll) ── */}
-        <div className="w-[400px] shrink-0 border-l border-slate-200 bg-slate-50 flex flex-col overflow-hidden">
+        {/* ── RIGHT: Explanation Panel ── */}
+        <div className="w-[360px] shrink-0 border-l border-slate-200 bg-slate-50 flex min-h-0 flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-white shrink-0">
             <h3 className="text-[13px] font-semibold text-slate-800 flex items-center gap-2">
               <Lightbulb className="w-4 h-4 text-blue-500" />해설
             </h3>
-            <button
-              onClick={handleGenerateExplanation}
-              disabled={generatingExplanation}
-              className="flex items-center gap-1.5 text-[11px] font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md border border-blue-200 transition-all disabled:opacity-50"
-            >
-              {generatingExplanation ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
-              AI 해설
-              <span className="ml-1 text-[9px] font-semibold bg-blue-100 text-blue-600 px-1 py-0.5 rounded">1</span>
-            </button>
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-4 flex flex-col gap-3 overflow-hidden">
+          <div className="flex-1 min-h-0 p-4 flex flex-col gap-3 overflow-y-auto">
             {/* Explanation textarea — flex-[3] fills available space */}
-            <div className="flex-[3] min-h-0 flex flex-col gap-1">
+            <div className="min-h-[220px] flex flex-col gap-1">
               <textarea
                 value={explanation}
                 onChange={(e) => setExplanation(e.target.value)}
-                className="w-full flex-1 min-h-0 px-3 py-2.5 text-[13px] leading-relaxed rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 resize-none placeholder:text-slate-400"
+                className="w-full min-h-[220px] px-3 py-2.5 text-[13px] leading-relaxed rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 resize-y placeholder:text-slate-400"
                 placeholder="해설을 입력하세요..."
               />
             </div>

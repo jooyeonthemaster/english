@@ -273,7 +273,9 @@ export function PassageCardGrid({
                       <div className="min-w-0 flex-1">
                         <h4 className="text-[13px] font-semibold text-slate-800 truncate">{p.title}</h4>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="text-[10px] font-medium text-emerald-600">분석 완료</span>
+                          {p.analysis && (
+                            <span className="text-[10px] font-medium text-emerald-600">분석 완료</span>
+                          )}
                           <span className="text-[10px] text-slate-400">{countWords(p.content)} words</span>
                         </div>
                       </div>

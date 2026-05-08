@@ -6,7 +6,6 @@ import { passageAnalysisSchema } from "@/lib/passage-analysis-schema";
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
-import type { OperationType } from "@/lib/credit-costs";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
@@ -28,6 +27,117 @@ async function loadPersistedAnnotations(
 }
 
 export const maxDuration = 120;
+
+type ClassifiedAnalysisError = {
+  status: number;
+  code: string;
+  message: string;
+  log: Record<string, unknown>;
+};
+
+function getErrorField(error: unknown, field: string): unknown {
+  if (!error || typeof error !== "object") return undefined;
+  return (error as Record<string, unknown>)[field];
+}
+
+function extractGoogleReason(responseBody: string): string | null {
+  if (!responseBody) return null;
+  try {
+    const parsed = JSON.parse(responseBody) as {
+      error?: {
+        status?: string;
+        details?: Array<{ reason?: string }>;
+      };
+    };
+    return (
+      parsed.error?.details?.find((detail) => detail.reason)?.reason ??
+      parsed.error?.status ??
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
+  const message = error instanceof Error ? error.message : String(error);
+  const statusCode = getErrorField(error, "statusCode");
+  const responseBody =
+    typeof getErrorField(error, "responseBody") === "string"
+      ? (getErrorField(error, "responseBody") as string)
+      : "";
+  const providerReason = extractGoogleReason(responseBody);
+  const combined = [message, responseBody, providerReason]
+    .filter(Boolean)
+    .join("\n");
+
+  const log = {
+    name: getErrorField(error, "name"),
+    message,
+    statusCode,
+    providerReason,
+  };
+
+  if (
+    combined.includes("API_KEY_INVALID") ||
+    /API Key not found|valid API key/i.test(combined)
+  ) {
+    return {
+      status: 500,
+      code: "GOOGLE_API_KEY_INVALID",
+      message:
+        "Google Gemini API 키가 유효하지 않습니다. GOOGLE_GENERATIVE_AI_API_KEY를 새 키로 교체한 뒤 서버를 재시작해주세요.",
+      log,
+    };
+  }
+
+  if (/API key is missing|API key.*missing/i.test(combined)) {
+    return {
+      status: 500,
+      code: "GOOGLE_API_KEY_MISSING",
+      message:
+        "Google Gemini API 키가 설정되어 있지 않습니다. GOOGLE_GENERATIVE_AI_API_KEY 환경변수를 확인해주세요.",
+      log,
+    };
+  }
+
+  if (providerReason === "PERMISSION_DENIED") {
+    return {
+      status: 502,
+      code: "GOOGLE_API_PERMISSION_DENIED",
+      message:
+        "Google Gemini API 권한이 거부되었습니다. API 사용 설정, 결제, 키 제한 설정을 확인해주세요.",
+      log,
+    };
+  }
+
+  if (statusCode === 429 || providerReason === "RESOURCE_EXHAUSTED") {
+    return {
+      status: 429,
+      code: "GOOGLE_API_RATE_LIMITED",
+      message:
+        "Google Gemini API 사용량 한도에 걸렸습니다. 잠시 후 다시 시도해주세요.",
+      log,
+    };
+  }
+
+  if (error instanceof SyntaxError) {
+    return {
+      status: 502,
+      code: "AI_RESPONSE_JSON_PARSE_FAILED",
+      message:
+        "AI 응답을 JSON으로 해석하지 못했습니다. 다시 시도하거나 프롬프트를 줄여주세요.",
+      log,
+    };
+  }
+
+  return {
+    status: 500,
+    code: "PASSAGE_ANALYSIS_FAILED",
+    message: "지문 분석 중 오류가 발생했습니다.",
+    log,
+  };
+}
 
 
 // ---------------------------------------------------------------------------
@@ -101,8 +211,12 @@ export async function GET(
 
     return NextResponse.json({ data: analysisData, cached: false, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {
-    console.error("Passage analysis error:", error);
-    return NextResponse.json({ error: "지문 분석 중 오류가 발생했습니다." }, { status: 500 });
+    const classified = classifyAnalysisError(error);
+    console.error("Passage analysis error:", classified.log, error);
+    return NextResponse.json(
+      { error: classified.message, code: classified.code },
+      { status: classified.status },
+    );
   }
 }
 
@@ -244,8 +358,12 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
 
     return NextResponse.json({ data: analysisData, cached: false, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {
-    console.error("Passage analysis POST error:", error);
-    return NextResponse.json({ error: "분석 중 오류가 발생했습니다." }, { status: 500 });
+    const classified = classifyAnalysisError(error);
+    console.error("Passage analysis POST error:", classified.log, error);
+    return NextResponse.json(
+      { error: classified.message, code: classified.code },
+      { status: classified.status },
+    );
   }
 }
 

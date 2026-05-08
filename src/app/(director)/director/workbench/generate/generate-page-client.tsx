@@ -218,7 +218,29 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
     } catch { /* ignore */ }
     finally { setLoadingSavedQuestions(false); }
   }, [academyId]);
-  useEffect(() => { loadSavedQuestions(); }, [loadSavedQuestions]);
+  useEffect(() => {
+    if (loadingPassages) return;
+
+    let cancelled = false;
+    const run = () => {
+      if (!cancelled) loadSavedQuestions();
+    };
+
+    const canUseIdle =
+      typeof window !== "undefined" && "requestIdleCallback" in window;
+    const idleId = canUseIdle
+      ? window.requestIdleCallback(run)
+      : window.setTimeout(run, 0);
+
+    return () => {
+      cancelled = true;
+      if (canUseIdle) {
+        window.cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
+    };
+  }, [loadingPassages, loadSavedQuestions]);
 
   // ── Load saved prompts ──
   const loadSavedPrompts = useCallback(async () => {
