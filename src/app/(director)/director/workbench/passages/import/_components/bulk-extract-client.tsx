@@ -379,10 +379,10 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     phase === "processing";
 
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-6 py-6 xl:px-8">
-      <main className="mx-auto flex max-w-[1680px] flex-col gap-4">
-        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
+    <div className="-m-6 flex min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <main className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-[1680px] flex-col gap-4">
+        <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 xl:px-6">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                 <UploadCloud className="size-5" aria-hidden="true" />
@@ -427,7 +427,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             </div>
           ) : null}
 
-          <div className="grid gap-4 p-6 xl:grid-cols-[minmax(420px,0.95fr)_minmax(320px,0.65fr)]">
+          <div className="grid min-h-0 flex-1 gap-4 p-4 sm:p-5 xl:grid-cols-[minmax(0,1fr)_minmax(340px,0.42fr)] xl:p-6">
             <UploadPanel
               busy={busy}
               dragActive={dragActive}
@@ -684,10 +684,10 @@ export function ExtractionManageClient() {
   }, []);
 
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-6 py-6 xl:px-8">
-      <main className="mx-auto flex max-w-[1680px] flex-col gap-4">
-        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
+    <div className="-m-6 flex min-h-[calc(100vh-56px)] bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <main className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-[1680px] flex-col gap-4">
+        <section className="flex min-h-0 flex-[0.95] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 xl:px-6">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                 <FileImage className="size-5" aria-hidden="true" />
@@ -735,7 +735,7 @@ export function ExtractionManageClient() {
             </div>
           ) : null}
 
-          <div className="grid gap-4 p-6 xl:grid-cols-[minmax(320px,0.44fr)_minmax(360px,0.56fr)]">
+          <div className="grid min-h-0 flex-1 gap-4 p-4 sm:p-5 xl:grid-cols-[minmax(320px,0.42fr)_minmax(420px,0.58fr)] xl:p-6">
             <QueuePanel
               activeJobId={jobId}
               refreshKey={queueRefreshKey}
@@ -788,7 +788,7 @@ function ExtractionRunPanel({
         </p>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 p-4">
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center justify-between">
             <span className="text-[12px] font-bold text-slate-700">선택 자료</span>
@@ -808,7 +808,7 @@ function ExtractionRunPanel({
           </div>
         </div>
 
-        <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-4">
+        <div className="flex min-h-[150px] flex-1 flex-col justify-center rounded-lg border border-blue-100 bg-blue-50/70 p-4">
           <div className="text-[13px] font-bold text-blue-900">작업 완료 후 흐름</div>
           <div className="mt-2 space-y-2 text-[12px] leading-5 text-blue-800">
             <p>추출이 시작되면 작업 목록에서 처리 상태를 확인할 수 있습니다.</p>
@@ -887,7 +887,7 @@ function UploadPanel({
             if (event.dataTransfer.files.length > 0) onFiles(event.dataTransfer.files);
           }}
           className={
-            "flex min-h-[118px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-5 text-center transition-colors " +
+            "flex min-h-[150px] flex-[0.9] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-5 text-center transition-colors " +
             (dragActive
               ? "border-sky-500 bg-sky-50"
               : "border-slate-300 bg-slate-50/60 hover:border-sky-400 hover:bg-sky-50/40")
@@ -910,7 +910,7 @@ function UploadPanel({
             파일을 끌어놓거나 클릭해서 추가
           </div>
           <div className="mt-1 text-[11px] text-slate-500">
-            PDF, PNG, JPG, WebP ? 최대 {MAX_PAGES_PER_JOB}페이지 ? PDF 최대 {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
+            PDF, PNG, JPG, WebP · 최대 {MAX_PAGES_PER_JOB}페이지 · PDF 최대 {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
           </div>
         </label>
 
@@ -929,7 +929,7 @@ function UploadPanel({
           />
         ) : null}
 
-        <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
+        <div className="flex min-h-[120px] flex-1 flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-3">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-[12px] font-bold text-slate-800">선택한 자료</span>
             <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-700 ring-1 ring-sky-100">
@@ -938,11 +938,11 @@ function UploadPanel({
           </div>
 
           {slots.length === 0 ? (
-            <div className="flex min-h-[64px] items-center justify-center rounded-md border border-dashed border-slate-200 bg-white text-center text-[12px] text-slate-400">
+            <div className="flex min-h-[86px] flex-1 items-center justify-center rounded-md border border-dashed border-slate-200 bg-white text-center text-[12px] text-slate-400">
               파일을 추가하면 페이지 목록이 여기에 표시됩니다.
             </div>
           ) : (
-            <div className="grid max-h-[210px] grid-cols-2 gap-2 overflow-y-auto pr-1 sm:grid-cols-3">
+            <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-3 2xl:grid-cols-4">
               {slots.map((slot) => (
                 <div
                   key={slot.pageIndex + '-' + slot.previewUrl}
@@ -1020,8 +1020,8 @@ function ResultSelectorPanel({
         </span>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        <div className="flex max-h-[360px] flex-col gap-1.5 overflow-y-auto pr-1 xl:max-h-none">
+      <div className="min-h-0 flex-1 overflow-hidden p-3">
+        <div className="flex h-full min-h-[180px] flex-col gap-1.5 overflow-y-auto pr-1">
           {drafts.length === 0 ? (
             <div className="rounded-md border border-dashed border-slate-200 bg-white px-3 py-8 text-center text-[12px] text-slate-400">
               {busy || loading
@@ -1092,7 +1092,7 @@ function ResultPanel({
   onTextChange: (id: string, teacherText: string) => void;
 }) {
   return (
-    <section className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
+    <section className="flex min-h-0 flex-1 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
         <div>
           <h2 className="text-[15px] font-bold text-slate-900">자료 추출 결과</h2>
@@ -1105,7 +1105,7 @@ function ResultPanel({
         </span>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-5">
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 xl:p-5">
         {loading ? (
           <EmptyState
             icon={<Loader2 className="size-7 animate-spin" />}
@@ -1148,7 +1148,7 @@ function PassageCompare({
   onTextChange: (value: string) => void;
 }) {
   return (
-    <div className="flex min-h-0 flex-col gap-4">
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -1192,7 +1192,7 @@ function PassageCompare({
         </div>
       </div>
 
-      <div className="grid gap-4 2xl:grid-cols-2">
+      <div className="grid min-h-0 flex-1 gap-4 2xl:grid-cols-2">
         <TextBox title="원문" tone="raw">
           {draft.rawText}
         </TextBox>
@@ -1216,7 +1216,7 @@ function TextBox({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white">
+    <div className="flex min-h-[260px] flex-col rounded-lg border border-slate-200 bg-white">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
         <span className="text-[13px] font-bold text-slate-900">{title}</span>
         <span
@@ -1230,7 +1230,7 @@ function TextBox({
           {tone === "raw" ? "RAW" : "RESTORED"}
         </span>
       </div>
-      <div className="min-h-[260px] whitespace-pre-wrap px-4 py-3 text-[14px] leading-7 text-slate-800">
+      <div className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap px-4 py-3 text-[14px] leading-7 text-slate-800">
         {children}
       </div>
     </div>
@@ -1247,17 +1247,17 @@ function EditableRestoredTextBox({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white">
+    <div className="flex min-h-[260px] flex-col rounded-lg border border-slate-200 bg-white">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
         <span className="text-[13px] font-bold text-slate-900">복원문</span>
         <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
           RESTORED
         </span>
       </div>
-      <div className="relative min-h-[320px]">
+      <div className="relative min-h-[260px] flex-1">
         <div
           aria-hidden="true"
-          className="pointer-events-none min-h-[320px] whitespace-pre-wrap px-4 py-3 text-[14px] leading-7 text-slate-800"
+          className="pointer-events-none h-full min-h-[260px] overflow-y-auto whitespace-pre-wrap px-4 py-3 text-[14px] leading-7 text-slate-800"
         >
           <HighlightedText text={value} changes={changes} />
         </div>
@@ -1266,7 +1266,7 @@ function EditableRestoredTextBox({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           spellCheck={false}
-          className="absolute inset-0 h-full min-h-[320px] w-full resize-none overflow-hidden rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7 text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200"
+          className="absolute inset-0 h-full min-h-[260px] w-full resize-none overflow-y-auto rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7 text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200"
         />
       </div>
     </div>
@@ -1412,7 +1412,7 @@ function QueuePanel({
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 p-3">
+      <div className="flex min-h-0 flex-1 flex-col p-3">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div className="flex gap-1">
             <QueueFilter active={filter === "all"} onClick={() => setFilter("all")}>
@@ -1438,7 +1438,7 @@ function QueuePanel({
           </button>
         </div>
 
-        <div className="max-h-[330px] space-y-2 overflow-y-auto pr-1 xl:max-h-none">
+        <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
           {filtered.length === 0 ? (
             <div className="rounded-md border border-dashed border-slate-200 py-8 text-center text-[12px] text-slate-400">
               표시할 작업이 없습니다.
