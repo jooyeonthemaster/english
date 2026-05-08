@@ -58,3 +58,4 @@ verify-db.mjs
 
 .vercel
 .playwright-mcp/
+.trigger/

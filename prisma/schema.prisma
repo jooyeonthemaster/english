@@ -1805,6 +1805,7 @@ model ExtractionJob {
   pages          ExtractionPage[]
   results        ExtractionResult[]
   items          ExtractionItem[]
+  m1PassageDrafts ExtractionM1PassageDraft[]
   passageDrafts  ExtractionPassageDraft[]
   questionDrafts ExtractionQuestionDraft[]
 
@@ -1824,6 +1825,7 @@ model ExtractionPage {
   pageIndex  Int // 0-based 순서
   imageUrl   String @db.Text // Supabase Storage key (not public URL)
   imageBytes Int?
+  sourceFileName String?
 
   status       String @default("PENDING")
   attemptCount Int    @default(0)
@@ -2005,6 +2007,7 @@ model SourceMaterial {
   questions      Question[]
   exams          Exam[]
   extractionJobs ExtractionJob[]
+  m1PassageDrafts ExtractionM1PassageDraft[]
   passageDrafts  ExtractionPassageDraft[]
 
   @@unique([academyId, contentHash], name: "academy_content_hash_unique")
@@ -2043,7 +2046,97 @@ model PassageBundle {
 }
 
 // ============================================================================
-// 28. M2 EXTRACTION DRAFTS — review-first passage + question registration
+// 28. M1 PASSAGE EXTRACTION DRAFTS — raw + restored passage pairs
+// ============================================================================
+
+/// ExtractionM1PassageDraft — one passage result from M1 extraction.
+/// Stores both the raw extracted text and the restored text used for review.
+model ExtractionM1PassageDraft {
+  id               String  @id @default(cuid())
+  jobId            String
+  sourceMaterialId String?
+
+  passageOrder    Int
+  sourcePageIndex Int[]
+
+  title        String?
+  rawText      String  @db.Text
+  restoredText String  @db.Text
+  teacherText  String  @db.Text
+
+  restorationStatus String @default("RESTORED")
+  reviewStatus      String @default("DRAFT")
+  confidence        Float?
+  warnings          Json?
+  metadata          Json?
+
+  confirmedAt    DateTime?
+  savedPassageId String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  job            ExtractionJob                   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  sourceMaterial SourceMaterial?                 @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
+  changes        ExtractionM1PassageDraftChange[]
+  sourceMatches  ExtractionM1PassageSourceMatch[]
+
+  @@unique([jobId, passageOrder])
+  @@index([jobId])
+  @@index([sourceMaterialId])
+  @@index([reviewStatus])
+  @@map("extraction_m1_passage_drafts")
+}
+
+/// ExtractionM1PassageDraftChange — restorable before/after spans for UI highlights.
+model ExtractionM1PassageDraftChange {
+  id             String @id @default(cuid())
+  passageDraftId String
+
+  sentenceOrder Int?
+  before        String @db.Text
+  after         String @db.Text
+  changeType    String?
+  reason        String? @db.Text
+  confidence    Float?
+
+  sourcePageIndex Int[]
+  createdAt       DateTime @default(now())
+
+  passageDraft ExtractionM1PassageDraft @relation(fields: [passageDraftId], references: [id], onDelete: Cascade)
+
+  @@index([passageDraftId])
+  @@map("extraction_m1_passage_draft_changes")
+}
+
+model ExtractionM1PassageSourceMatch {
+  id             String @id @default(cuid())
+  passageDraftId String
+
+  sourceType String
+  sourceId   String?
+  sourceRef  String? @db.Text
+  title      String?
+  publisher  String?
+  unit       String?
+  year       Int?
+  confidence Float?
+  method     String
+  reason     String? @db.Text
+  selected   Boolean @default(false)
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  passageDraft ExtractionM1PassageDraft @relation(fields: [passageDraftId], references: [id], onDelete: Cascade)
+
+  @@index([passageDraftId])
+  @@index([sourceId])
+  @@map("extraction_m1_passage_source_matches")
+}
+
+// ============================================================================
+// 29. M2 EXTRACTION DRAFTS — review-first passage + question registration
 // ============================================================================
 
 /// ExtractionPassageDraft — restored passage candidate created from M2.

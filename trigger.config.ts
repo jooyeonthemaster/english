@@ -41,6 +41,10 @@ export default defineConfig({
           "SUPABASE_URL",
           "SUPABASE_ANON_KEY",
           "SUPABASE_SERVICE_ROLE_KEY",
+          "SERPER_API_KEY",
+          "BRAVE_SEARCH_API_KEY",
+          "GOOGLE_CUSTOM_SEARCH_API_KEY",
+          "GOOGLE_CUSTOM_SEARCH_CX",
         ];
         const out: Record<string, string> = {};
         for (const k of keys) {

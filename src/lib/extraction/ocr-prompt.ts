@@ -260,7 +260,14 @@ export const STRUCTURED_OCR_SCHEMA_HINT = `[JSON 스키마 — 엄격히 준수]
       "questionNumber": 1~999 정수 (QUESTION_STEM/CHOICE/EXPLANATION에 권장),
       "choiceIndex": 1~9 정수 (CHOICE에만, ①=1 ⑤=5),
       "isAnswer": true/false (CHOICE에만, 정답 표기★/●/■가 보일 때만 true),
-      "sharedPassageRange": "2~4" 형태 문자열 (선택, 이 블록이 속한 공유 지문 범위)
+      "sharedPassageRange": "2~4" 형태 문자열 (선택, 이 블록이 속한 공유 지문 범위),
+      "restoredText": "PASSAGE_BODY only. Restored usable passage text; same as content when no restoration is needed.",
+      "restorationStatus": "RESTORED" | "NO_RESTORATION_NEEDED" | "PARTIAL" | "FAILED",
+      "restorationChanges": [{"sentenceOrder": 1, "before": "...", "after": "...", "changeType": "line-break|hyphen|missing-word|punctuation|other", "reason": "...", "confidence": 0.0~1.0}],
+      "restorationWarnings": ["..."],
+      "continuesFromPrevious": boolean,
+      "continuesToNext": boolean,
+      "boundaryConfidence": 0.0~1.0
     }
   ],
   "pageMeta": {
@@ -375,6 +382,14 @@ ${STRUCTURED_OCR_SCHEMA_HINT}`;
 const PASSAGE_ONLY_STRUCTURED_ADDON = `
 [PASSAGE_ONLY additional rules]
 - The primary goal is to detect passage boundaries accurately.
+- For every PASSAGE_BODY block, return raw page text in content and the restored usable passage in restoredText.
+- Restoration is mandatory by default. restoredText must be the clean original/source passage a teacher can register and reuse.
+- content must preserve the page OCR/raw passage. restoredText must remove exam annotations that are not part of the original passage: circled option/underline markers embedded in words (e.g. "①more" -> "more"), answer markers, page labels, line labels, and layout-only symbols.
+- Restore broken line wraps, hyphenated line breaks, missing spaces, and obvious scan/layout splits inside this single model call.
+- Do not run or simulate a separate validation stage. Set restorationStatus to NO_RESTORATION_NEEDED only when content is already the clean reusable source passage. If content contains circled numbers like ①/②/③/④/⑤ inside the passage, restorationStatus must be RESTORED.
+- If only part of a passage is visible on this page, restore only the visible chunk and set continuesFromPrevious/continuesToNext accurately.
+- Use restorationChanges to list meaningful edits from content to restoredText. Keep the list concise and leave it empty when restorationStatus is NO_RESTORATION_NEEDED.
+- If restoration would require inventing unseen text, do not invent it. Set restorationStatus to PARTIAL or FAILED and add restorationWarnings.
 - Emit one PASSAGE_BODY block for each distinct passage body on the page.
 - A single page may contain zero, one, or many PASSAGE_BODY blocks.
 - If the same passage continues from a previous page, emit only the continuation text on this page as PASSAGE_BODY. Do not repeat prior-page text.
@@ -412,6 +427,28 @@ export const structuredOcrResponseSchema = z.object({
         /** Range (e.g. "2~4") this block belongs to when it's part of a
          *  shared-passage set. Null / omitted for independent passages. */
         sharedPassageRange: z.string().nullable().optional(),
+        restoredText: z.string().nullable().optional(),
+        restorationStatus: z
+          .enum(["RESTORED", "NO_RESTORATION_NEEDED", "PARTIAL", "FAILED"])
+          .nullable()
+          .optional(),
+        restorationChanges: z
+          .array(
+            z.object({
+              sentenceOrder: z.number().int().min(1).nullable().optional(),
+              before: z.string().default(""),
+              after: z.string().default(""),
+              changeType: z.string().nullable().optional(),
+              reason: z.string().nullable().optional(),
+              confidence: z.number().min(0).max(1).nullable().optional(),
+            }),
+          )
+          .nullable()
+          .optional(),
+        restorationWarnings: z.array(z.string()).nullable().optional(),
+        continuesFromPrevious: z.boolean().nullable().optional(),
+        continuesToNext: z.boolean().nullable().optional(),
+        boundaryConfidence: z.number().min(0).max(1).nullable().optional(),
       }),
     )
     .default([]),

@@ -21,6 +21,7 @@
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
+import { randomUUID } from "node:crypto";
 import type { Prisma, ExtractionItem as ExtractionItemRow } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -37,6 +38,11 @@ import type {
   ExtractionItemStatus,
   ExtractionMode,
 } from "@/lib/extraction/types";
+import type {
+  RestorationQuestionInput,
+  SourceMatchInput,
+} from "@/lib/extraction/m2-restoration";
+import { restoreM1Passage } from "./_lib/m1-passage-restoration";
 import { persistM2ExtractionDrafts } from "./_lib/m2-draft-pipeline";
 
 type Input = { jobId: string };
@@ -585,6 +591,34 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
 
   await prisma.$transaction(persistOps);
 
+  if (input.mode === "PASSAGE_ONLY") {
+    try {
+      const m1DraftResult = await persistM1PassageDrafts({
+        jobId,
+        academyId: input.academyId,
+        sourceMaterialId,
+        items: snapshotItems,
+      });
+      logger.info("m1 draft pipeline done", {
+        jobId,
+        ...m1DraftResult,
+      });
+    } catch (err) {
+      logger.error("m1 draft pipeline failed", {
+        jobId,
+        err: err instanceof Error ? err.message : String(err),
+      });
+      await prisma.extractionJob.update({
+        where: { id: jobId },
+        data: {
+          errorSummary: JSON.stringify({
+            m1DraftPipeline: err instanceof Error ? err.message : String(err),
+          }),
+        },
+      });
+    }
+  }
+
   if (input.mode === "QUESTION_SET") {
     try {
       const m2DraftResult = await persistM2ExtractionDrafts({
@@ -624,6 +658,367 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
 // ────────────────────────────────────────────────────────────────────────────
 // SourceMaterial creation (shared)
 // ────────────────────────────────────────────────────────────────────────────
+
+// ----------------------------------------------------------------------------
+// M1 passage drafts - raw/restored pairs for the new passage extraction room.
+// ----------------------------------------------------------------------------
+
+type M1RestorationStatus =
+  | "RESTORED"
+  | "NO_RESTORATION_NEEDED"
+  | "PARTIAL"
+  | "FAILED";
+
+interface M1RestorationChange {
+  sentenceOrder: number | null;
+  before: string;
+  after: string;
+  changeType: string | null;
+  reason: string | null;
+  confidence: number | null;
+  sourcePageIndex: number[];
+}
+
+interface M1PassageChunk {
+  groupId: string | null;
+  sourcePageIndex: number[];
+  rawText: string;
+  restoredText: string;
+  restorationStatus: M1RestorationStatus;
+  restorationChanges: M1RestorationChange[];
+  restorationWarnings: string[];
+  continuesFromPrevious: boolean;
+  continuesToNext: boolean;
+  confidence: number | null;
+  boundaryConfidence: number | null;
+}
+
+interface PreparedM1PassageDraftGroup {
+  passageOrder: number;
+  rawText: string;
+  sourcePageIndex: number[];
+  restoredText: string;
+  restorationStatus: M1RestorationStatus;
+  confidence: number | null;
+  warnings: string[];
+  metadata: Prisma.InputJsonValue;
+  changes: M1RestorationChange[];
+  sourceMatches: SourceMatchInput[];
+}
+
+const LOCAL_DB_EXACT_THRESHOLD = 0.9;
+
+function asNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function asStringArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function readM1RestorationStatus(value: unknown): M1RestorationStatus {
+  if (
+    value === "RESTORED" ||
+    value === "NO_RESTORATION_NEEDED" ||
+    value === "PARTIAL" ||
+    value === "FAILED"
+  ) {
+    return value;
+  }
+  return "RESTORED";
+}
+
+function readM1PassageChunk(item: ExtractionItemSnapshot): M1PassageChunk | null {
+  if (item.blockType !== "PASSAGE_BODY") return null;
+  const rawText = item.content.trim();
+  if (!rawText) return null;
+
+  const meta = item.passageMeta ?? {};
+  const restoredValue = meta.restoredText;
+  const restoredText =
+    typeof restoredValue === "string" && restoredValue.trim().length > 0
+      ? restoredValue.trim()
+      : rawText;
+  const changes = Array.isArray(meta.restorationChanges)
+    ? meta.restorationChanges
+        .filter((change): change is Record<string, unknown> => {
+          return change !== null && typeof change === "object";
+        })
+        .map((change) => ({
+          sentenceOrder: asNumber(change.sentenceOrder),
+          before: typeof change.before === "string" ? change.before : "",
+          after: typeof change.after === "string" ? change.after : "",
+          changeType:
+            typeof change.changeType === "string" ? change.changeType : null,
+          reason: typeof change.reason === "string" ? change.reason : null,
+          confidence: asNumber(change.confidence),
+          sourcePageIndex: item.sourcePageIndex,
+        }))
+    : [];
+
+  return {
+    groupId: item.groupId,
+    sourcePageIndex: item.sourcePageIndex,
+    rawText,
+    restoredText,
+    restorationStatus: readM1RestorationStatus(meta.restorationStatus),
+    restorationChanges: changes,
+    restorationWarnings: asStringArray(meta.restorationWarnings),
+    continuesFromPrevious: meta.continuesFromPrevious === true,
+    continuesToNext: meta.continuesToNext === true,
+    confidence: item.confidence,
+    boundaryConfidence: asNumber(meta.boundaryConfidence),
+  };
+}
+
+function uniqueSorted(values: number[]): number[] {
+  return [...new Set(values)].sort((a, b) => a - b);
+}
+
+function buildRestorationQuestions(
+  items: ExtractionItemSnapshot[],
+  groupIds: Set<string>,
+): RestorationQuestionInput[] {
+  const questionItems = items
+    .filter(
+      (item) =>
+        item.blockType === "QUESTION_STEM" &&
+        item.groupId !== null &&
+        groupIds.has(item.groupId),
+    )
+    .sort((a, b) => a.order - b.order);
+
+  return questionItems.map((question, index) => {
+    const questionNumber =
+      typeof question.questionMeta?.number === "number"
+        ? question.questionMeta.number
+        : null;
+    const choices = items
+      .filter((item) => {
+        if (item.blockType !== "CHOICE") return false;
+        if (item.parentItemId === question.id) return true;
+        return (
+          item.groupId === question.groupId &&
+          item.order > question.order &&
+          item.order < (questionItems[index + 1]?.order ?? Number.POSITIVE_INFINITY)
+        );
+      })
+      .sort((a, b) => a.order - b.order)
+      .map((choice, choiceIndex) => ({
+        label:
+          typeof choice.choiceMeta?.label === "string"
+            ? choice.choiceMeta.label
+            : String(choiceIndex + 1),
+        content: choice.content,
+        isAnswer: choice.choiceMeta?.isAnswer === true,
+      }));
+
+    return {
+      questionNumber,
+      stem: question.content,
+      choices,
+      explanation: null,
+    };
+  });
+}
+
+function sourceMatchMethod(match: SourceMatchInput, index: number): string {
+  const exact = index === 0 && match.confidence >= LOCAL_DB_EXACT_THRESHOLD;
+  if (match.sourceType === "WEB_PAGE") {
+    return exact ? "WEB_SEARCH" : "WEB_SEARCH_CANDIDATE";
+  }
+  return exact ? "LOCAL_DB" : "LOCAL_DB_CANDIDATE";
+}
+
+async function persistM1PassageDrafts(input: {
+  jobId: string;
+  academyId: string;
+  sourceMaterialId: string | null;
+  items: ExtractionItemSnapshot[];
+}): Promise<{ draftCount: number; changeCount: number }> {
+  const chunks = input.items
+    .map(readM1PassageChunk)
+    .filter((chunk): chunk is M1PassageChunk => chunk !== null);
+
+  if (chunks.length === 0) {
+    await prisma.extractionM1PassageDraft.deleteMany({
+      where: { jobId: input.jobId, reviewStatus: "DRAFT" },
+    });
+    return { draftCount: 0, changeCount: 0 };
+  }
+
+  const groups: M1PassageChunk[][] = [];
+  for (const chunk of chunks) {
+    const previousGroup = groups[groups.length - 1];
+    const previousChunk = previousGroup?.[previousGroup.length - 1];
+    if (
+      previousGroup &&
+      previousChunk &&
+      (chunk.continuesFromPrevious || previousChunk.continuesToNext)
+    ) {
+      previousGroup.push(chunk);
+      continue;
+    }
+    groups.push([chunk]);
+  }
+
+  const preparedGroups: PreparedM1PassageDraftGroup[] = [];
+  for (const [index, group] of groups.entries()) {
+    const rawText = group.map((chunk) => chunk.rawText).join("\n\n").trim();
+    const sourcePageIndex = uniqueSorted(
+      group.flatMap((chunk) => chunk.sourcePageIndex),
+    );
+    const sourceGroupIds = new Set(
+      group
+        .map((chunk) => chunk.groupId)
+        .filter((groupId): groupId is string => groupId !== null),
+    );
+    const questions = buildRestorationQuestions(input.items, sourceGroupIds);
+    const restoration = await restoreM1Passage({
+      academyId: input.academyId,
+      rawText,
+      questions,
+    });
+    const confidenceValues = group
+      .map((chunk) => chunk.confidence)
+      .filter((value): value is number => typeof value === "number");
+    const extractionConfidence =
+      confidenceValues.length > 0
+        ? confidenceValues.reduce((sum, value) => sum + value, 0) /
+          confidenceValues.length
+        : null;
+    const restorationMetadata =
+      restoration.metadata &&
+      typeof restoration.metadata === "object" &&
+      !Array.isArray(restoration.metadata)
+        ? (restoration.metadata as Record<string, unknown>)
+        : {};
+
+    preparedGroups.push({
+      passageOrder: index,
+      rawText,
+      sourcePageIndex,
+      restoredText: restoration.restoredText,
+      restorationStatus: restoration.status,
+      confidence: restoration.confidence ?? extractionConfidence,
+      warnings: [
+        ...group.flatMap((chunk) => chunk.restorationWarnings),
+        ...restoration.warnings,
+      ],
+      metadata: {
+        chunks: group.map((chunk) => ({
+          sourcePageIndex: chunk.sourcePageIndex,
+          continuesFromPrevious: chunk.continuesFromPrevious,
+          continuesToNext: chunk.continuesToNext,
+          boundaryConfidence: chunk.boundaryConfidence,
+        })),
+        questions: questions.map((question) => ({
+          questionNumber: question.questionNumber,
+          stem: question.stem,
+          choices: question.choices,
+        })),
+        ...restorationMetadata,
+      } as Prisma.InputJsonValue,
+      changes: [
+        ...restoration.changes.map((change) => ({
+          sentenceOrder: change.sentenceOrder ?? null,
+          before: change.before,
+          after: change.after,
+          changeType: change.changeType ?? null,
+          reason: change.reason ?? null,
+          confidence: change.confidence ?? null,
+          sourcePageIndex,
+        })),
+      ],
+      sourceMatches: restoration.sourceMatches,
+    });
+  }
+
+  let changeCount = 0;
+  const draftRows: Prisma.ExtractionM1PassageDraftCreateManyInput[] = preparedGroups.map(
+    (prepared) => ({
+      id: randomUUID(),
+      jobId: input.jobId,
+      sourceMaterialId: input.sourceMaterialId,
+      passageOrder: prepared.passageOrder,
+      sourcePageIndex: prepared.sourcePageIndex,
+      title: null,
+      rawText: prepared.rawText,
+      restoredText: prepared.restoredText,
+      teacherText: prepared.restoredText,
+      restorationStatus: prepared.restorationStatus,
+      reviewStatus: "DRAFT",
+      confidence: prepared.confidence,
+      warnings:
+        prepared.warnings.length > 0
+          ? (prepared.warnings as Prisma.InputJsonValue)
+          : undefined,
+      metadata: prepared.metadata,
+    }),
+  );
+  const draftIdByOrder = new Map(
+    draftRows.map((row) => [row.passageOrder, row.id] as const),
+  );
+  const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =
+    preparedGroups.flatMap((prepared) => {
+      const passageDraftId = draftIdByOrder.get(prepared.passageOrder);
+      if (!passageDraftId) return [];
+      changeCount += prepared.changes.length;
+      return prepared.changes.map((change) => ({
+        passageDraftId,
+        sentenceOrder: change.sentenceOrder,
+        before: change.before,
+        after: change.after,
+        changeType: change.changeType,
+        reason: change.reason,
+        confidence: change.confidence,
+        sourcePageIndex: change.sourcePageIndex,
+      }));
+    });
+  const sourceMatchRows: Prisma.ExtractionM1PassageSourceMatchCreateManyInput[] =
+    preparedGroups.flatMap((prepared) => {
+      const passageDraftId = draftIdByOrder.get(prepared.passageOrder);
+      if (!passageDraftId) return [];
+      return prepared.sourceMatches.map((match, matchIndex) => ({
+        passageDraftId,
+        sourceType: match.sourceType,
+        sourceId: match.sourceId ?? null,
+        sourceRef: match.sourceRef ?? null,
+        title: match.title,
+        publisher: match.publisher ?? null,
+        unit: match.unit ?? null,
+        year: match.year ?? null,
+        confidence: match.confidence,
+        method: sourceMatchMethod(match, matchIndex),
+        reason: match.reason,
+        selected:
+          matchIndex === 0 && match.confidence >= LOCAL_DB_EXACT_THRESHOLD,
+        metadata: (match.metadata ?? {}) as Prisma.InputJsonValue,
+      }));
+    });
+
+  await prisma.$transaction(
+    async (tx) => {
+      await tx.extractionM1PassageDraft.deleteMany({
+        where: { jobId: input.jobId, reviewStatus: "DRAFT" },
+      });
+      await tx.extractionM1PassageDraft.createMany({ data: draftRows });
+      if (changeRows.length > 0) {
+        await tx.extractionM1PassageDraftChange.createMany({ data: changeRows });
+      }
+      if (sourceMatchRows.length > 0) {
+        await tx.extractionM1PassageSourceMatch.createMany({
+          data: sourceMatchRows,
+        });
+      }
+    },
+    { timeout: 30_000, maxWait: 10_000 },
+  );
+
+  return { draftCount: groups.length, changeCount };
+}
 
 interface EnsureSourceMaterialInput {
   jobId: string;

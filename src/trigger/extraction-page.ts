@@ -58,6 +58,10 @@ import {
 } from "@/lib/extraction/constants";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { usesStructuredExtraction } from "@/lib/extraction/modes";
+import {
+  buildFallbackM1Restoration,
+  hasUnresolvedM1ProblemArtifacts,
+} from "@/lib/extraction/m1-restoration";
 import { extractionFinalizeTask } from "./extraction-finalize";
 import {
   generatePlainOcrWithTriggerFetch,
@@ -176,12 +180,41 @@ function buildExtractionItemRows(params: {
       b.blockType === "EXAM_META"
         ? ((structured.pageMeta ?? {}) as Prisma.InputJsonValue)
         : undefined;
+    const fallbackRestoration = buildFallbackM1Restoration(b.content);
+    const aiRestorationChanges = Array.isArray(b.restorationChanges)
+      ? b.restorationChanges
+      : [];
+    const restoredText =
+      typeof b.restoredText === "string" && b.restoredText.trim().length > 0
+        ? b.restoredText.trim()
+        : fallbackRestoration.restoredText;
+    const restorationChanges =
+      aiRestorationChanges.length > 0
+        ? aiRestorationChanges
+        : fallbackRestoration.changes;
+    const unresolvedRestorationArtifacts =
+      b.blockType === "PASSAGE_BODY" &&
+      hasUnresolvedM1ProblemArtifacts(restoredText);
+    const restorationStatus: string =
+      unresolvedRestorationArtifacts
+        ? "FAILED"
+        : (b.restorationStatus ??
+          (restoredText === b.content.trim() && restorationChanges.length === 0
+            ? "NO_RESTORATION_NEEDED"
+            : fallbackRestoration.status));
     const passageMeta: Prisma.InputJsonValue | undefined =
       b.blockType === "PASSAGE_BODY"
         ? {
             wordCount: b.content.split(/\s+/).filter(Boolean).length,
             markerDetected: sharedPassageRange !== null,
             questionRange: sharedPassageRange,
+            restoredText,
+            restorationStatus,
+            restorationChanges: restorationChanges as Prisma.InputJsonValue,
+            restorationWarnings: b.restorationWarnings ?? [],
+            continuesFromPrevious: b.continuesFromPrevious === true,
+            continuesToNext: b.continuesToNext === true,
+            boundaryConfidence: b.boundaryConfidence ?? null,
           }
         : undefined;
 

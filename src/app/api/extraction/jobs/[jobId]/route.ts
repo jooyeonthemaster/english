@@ -19,6 +19,8 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED"];
+
 interface RouteContext {
   params: Promise<{ jobId: string }>;
 }
@@ -31,7 +33,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const auth = await loadJobWithAuth(jobId, staff.academyId);
   if (!auth.ok) return auth.response;
 
-  const [pages, results, items, sourceMaterial, passageDrafts] =
+  const [pages, results, items, sourceMaterial, passageDrafts, m1PassageDrafts] =
     await Promise.all([
       prisma.extractionPage.findMany({
         where: { jobId },
@@ -46,6 +48,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
           errorMessage: true,
           latencyMs: true,
           imageUrl: true,
+          sourceFileName: true,
         },
       }),
       prisma.extractionResult.findMany({
@@ -86,6 +89,21 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
           },
         },
       }),
+      prisma.extractionM1PassageDraft.findMany({
+        where: {
+          jobId,
+          reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
+        },
+        orderBy: { passageOrder: "asc" },
+        include: {
+          changes: {
+            orderBy: [{ sentenceOrder: "asc" }, { createdAt: "asc" }],
+          },
+          sourceMatches: {
+            orderBy: [{ selected: "desc" }, { confidence: "desc" }],
+          },
+        },
+      }),
     ]);
 
   // Sign each imageUrl so the review UI can display the original page.
@@ -109,6 +127,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
         errorMessage: p.errorMessage,
         latencyMs: p.latencyMs,
         imageUrl: signedUrl,
+        sourceFileName: p.sourceFileName,
       };
     }),
   );
@@ -138,6 +157,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     items,
     sourceMaterial,
     passageDrafts,
+    m1PassageDrafts,
   });
 }
 

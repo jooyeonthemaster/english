@@ -141,6 +141,7 @@ export async function splitPdfToImages(
         bytes: compressed.size,
         width: canvas.width,
         height: canvas.height,
+        sourceFileName: file.name,
       });
     } else {
       slots.push({
@@ -150,6 +151,7 @@ export async function splitPdfToImages(
         bytes: blob.size,
         width: canvas.width,
         height: canvas.height,
+        sourceFileName: file.name,
       });
     }
 
@@ -191,6 +193,7 @@ export async function imagesToSlots(files: File[]): Promise<ClientPageSlot[]> {
       bytes: file.size,
       width: dim.width,
       height: dim.height,
+      sourceFileName: file.name,
     });
   }
   return slots;

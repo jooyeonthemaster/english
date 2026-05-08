@@ -47,6 +47,7 @@ export const createJobRequestSchema = z.object({
         pageIndex: z.number().int().min(0).max(MAX_PAGES_PER_JOB - 1),
         size: z.number().int().positive().max(MAX_PAGE_IMAGE_BYTES),
         mimeType: z.enum(ACCEPTED_IMAGE_MIMES),
+        sourceFileName: z.string().trim().max(255).optional(),
       }),
     )
     .min(1)
@@ -81,15 +82,12 @@ export type CreateJobResponse = z.infer<typeof createJobResponseSchema>;
 
 // ─── POST /api/extraction/jobs/:id/start ────────────────────────────────────
 
-export const startJobRequestSchema = z.object({
-  engine: z.enum(["direct", "trigger"]).default("trigger"),
-});
+export const startJobRequestSchema = z.object({}).passthrough().default({});
 
 export const startJobResponseSchema = z.object({
   jobId: z.string(),
   status: z.enum(["PROCESSING", "COMPLETED", "PARTIAL", "FAILED", "CANCELLED"]),
   triggerRunId: z.string().optional(),
-  direct: z.boolean().optional(),
   draftCount: z.number().optional(),
 });
 
