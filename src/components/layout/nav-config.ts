@@ -17,6 +17,7 @@ import {
   FileBarChart,
   Settings,
   Layers,
+  Palette,
   type LucideIcon,
 } from "lucide-react";
 
@@ -88,6 +89,15 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
             { label: "문제 등록", href: `${basePath}/questions/pending` },
             { label: "문제 은행", href: `${basePath}/questions` },
             { label: "학습 문제 은행", href: `${basePath}/learning-questions` },
+          ],
+        },
+        {
+          label: "웹툰 관리",
+          icon: Palette,
+          href: `${basePath}/workbench/webtoon`,
+          children: [
+            { label: "웹툰 생성", href: `${basePath}/workbench/webtoon` },
+            { label: "웹툰 보관함", href: `${basePath}/workbench/webtoon/library` },
           ],
         },
         {
