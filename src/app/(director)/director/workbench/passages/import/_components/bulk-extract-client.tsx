@@ -11,9 +11,15 @@ import {
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
+  CheckCircle2,
+  Clock3,
+  Database,
   FileImage,
+  FileText,
+  Layers,
   Loader2,
   PanelBottomOpen,
+  PlayCircle,
   RefreshCw,
   Save,
   Trash2,
@@ -384,12 +390,12 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
         <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 xl:px-6">
             <div className="flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                <UploadCloud className="size-5" aria-hidden="true" />
+              <span className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                <UploadCloud className="size-4" aria-hidden="true" />
               </span>
               <div>
-                <h1 className="text-[20px] font-bold tracking-tight text-slate-950">자료 추출</h1>
-                <p className="mt-1 text-[13px] text-slate-500">
+                <h1 className="text-xl font-bold text-slate-950">자료 추출</h1>
+                <p className="mt-0.5 text-sm text-slate-500">
                   PDF 또는 이미지를 등록하면 백그라운드에서 지문을 추출하고 복원합니다.
                 </p>
               </div>
@@ -399,7 +405,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
               <button
                 type="button"
                 onClick={() => setQueueRefreshKey((value) => value + 1)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
                 <RefreshCw className="size-3.5" aria-hidden="true" />
                 새로고침
@@ -408,7 +414,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
                 type="button"
                 onClick={() => togglePanel("jobs")}
                 className={
-                  "inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-[12px] font-bold transition-colors " +
+                  "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
                   (activePanel === "jobs"
                     ? "border-blue-300 bg-blue-50 text-blue-700"
                     : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
@@ -427,7 +433,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             </div>
           ) : null}
 
-          <div className="grid min-h-0 flex-1 gap-4 p-4 sm:p-5 xl:grid-cols-[minmax(0,1fr)_minmax(340px,0.42fr)] xl:p-6">
+          <div className="grid min-h-0 flex-1 gap-4 p-4 sm:p-5 xl:grid-cols-[minmax(0,1fr)_minmax(340px,370px)] 2xl:grid-cols-[minmax(0,1fr)_390px] xl:p-6">
             <UploadPanel
               busy={busy}
               dragActive={dragActive}
@@ -779,52 +785,149 @@ function ExtractionRunPanel({
   pageCount: number;
   onOpenManage: () => void;
 }) {
+  const statusLabel = busy ? "처리 중" : pageCount > 0 ? "준비 완료" : "대기";
+  const statusIcon = busy ? (
+    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+  ) : pageCount > 0 ? (
+    <CheckCircle2 className="size-4" aria-hidden="true" />
+  ) : (
+    <Clock3 className="size-4" aria-hidden="true" />
+  );
+
   return (
-    <aside className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-100 px-5 py-4">
-        <h2 className="text-[15px] font-bold text-slate-900">추출 진행</h2>
-        <p className="mt-0.5 text-[12px] text-slate-500">
-          이 화면에서는 자료를 넣고 추출 작업을 시작합니다.
-        </p>
+    <aside className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-100 px-4 py-3">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-bold text-slate-950">추출 진행</h2>
+            <p className="mt-1 text-xs leading-5 text-slate-500">
+              등록한 자료는 작업 목록에서 처리 상태를 추적합니다.
+            </p>
+          </div>
+          <span
+            className={
+              "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold " +
+              (busy
+                ? "bg-blue-50 text-blue-700 ring-1 ring-blue-100"
+                : pageCount > 0
+                  ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100"
+                  : "bg-slate-50 text-slate-500 ring-1 ring-slate-200")
+            }
+            aria-live="polite"
+          >
+            {statusIcon}
+            {statusLabel}
+          </span>
+        </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 p-4">
-        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-[12px] font-bold text-slate-700">선택 자료</span>
-            <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-700 ring-1 ring-sky-100">
-              {pageCount}페이지
-            </span>
+      <div className="flex min-h-0 flex-1 flex-col gap-3 p-3.5">
+        <div className="grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+              <FileImage className="size-3.5" aria-hidden="true" />
+              선택 자료
+            </div>
+            <div className="mt-2 text-2xl font-bold leading-none text-slate-950">
+              {pageCount}
+            </div>
+            <div className="mt-1 text-xs text-slate-500">페이지</div>
           </div>
-          <div className="mt-3 grid gap-2 text-[12px] text-slate-500">
-            <div className="flex items-center justify-between rounded-md bg-white px-3 py-2">
-              <span>추출 방식</span>
-              <strong className="text-slate-800">지문 전용</strong>
+          <div className="rounded-lg border border-blue-100 bg-blue-50/70 px-3 py-3">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-700">
+              <FileText className="size-3.5" aria-hidden="true" />
+              추출 방식
             </div>
-            <div className="flex items-center justify-between rounded-md bg-white px-3 py-2">
-              <span>검수 위치</span>
-              <strong className="text-slate-800">자료 관리</strong>
-            </div>
+            <div className="mt-2 text-base font-bold text-blue-950">지문 전용</div>
+            <div className="mt-1 text-xs text-blue-700">M1</div>
           </div>
         </div>
 
-        <div className="flex min-h-[150px] flex-1 flex-col justify-center rounded-lg border border-blue-100 bg-blue-50/70 p-4">
-          <div className="text-[13px] font-bold text-blue-900">작업 완료 후 흐름</div>
-          <div className="mt-2 space-y-2 text-[12px] leading-5 text-blue-800">
-            <p>추출이 시작되면 작업 목록에서 처리 상태를 확인할 수 있습니다.</p>
-            <p>원문 비교, 복원본 수정, 저장과 삭제는 자료 관리에서 이어서 진행합니다.</p>
+        <div className="rounded-lg border border-slate-200 bg-white p-3.5">
+          <div className="mb-3 flex items-center gap-2">
+            <Layers className="size-4 text-blue-600" aria-hidden="true" />
+            <h3 className="text-sm font-bold text-slate-900">작업 흐름</h3>
+          </div>
+          <ol className="space-y-2">
+            <WorkflowStep
+              index={1}
+              title="자료 추가"
+              description="PDF 또는 이미지를 페이지 단위로 준비합니다."
+              active={pageCount > 0}
+            />
+            <WorkflowStep
+              index={2}
+              title="추출 실행"
+              description="백그라운드 작업으로 OCR과 복원을 실행합니다."
+              active={busy}
+            />
+            <WorkflowStep
+              index={3}
+              title="자료 관리"
+              description="결과 비교, 수정 저장, 삭제를 이어서 처리합니다."
+              active={Boolean(activeJobId)}
+            />
+          </ol>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-3.5">
+          <div className="flex items-center gap-2">
+            <Database className="size-4 text-slate-500" aria-hidden="true" />
+            <h3 className="text-sm font-bold text-slate-900">결과 위치</h3>
+          </div>
+          <p className="mt-2 text-xs leading-5 text-slate-600">
+            추출 결과의 원문 비교와 복원본 수정은 자료 관리에서 진행합니다.
+          </p>
+        </div>
+
+        <div className="min-h-0 flex-1 rounded-lg border border-dashed border-slate-200 bg-white p-3.5">
+          <div className="flex h-full min-h-[92px] flex-col justify-center">
+            <div className="text-xs font-bold text-slate-500">권장 순서</div>
+            <p className="mt-2 text-sm font-semibold leading-6 text-slate-800">
+              파일을 추가한 뒤 추출을 시작하고, 완료된 작업은 자료 관리에서 검수하세요.
+            </p>
           </div>
         </div>
 
         <button
           type="button"
           onClick={onOpenManage}
-          className="mt-auto inline-flex h-10 w-full items-center justify-center rounded-md border border-sky-200 bg-white text-[13px] font-bold text-sky-700 shadow-sm hover:bg-sky-50"
+          className="inline-flex h-10 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-white text-sm font-bold text-blue-700 shadow-sm transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
+          <Database className="size-4" aria-hidden="true" />
           {activeJobId || busy ? "진행 작업 관리로 이동" : "자료 관리 열기"}
         </button>
       </div>
     </aside>
+  );
+}
+
+function WorkflowStep({
+  active,
+  description,
+  index,
+  title,
+}: {
+  active: boolean;
+  description: string;
+  index: number;
+  title: string;
+}) {
+  return (
+    <li className="flex gap-2.5">
+      <span
+        className={
+          "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold " +
+          (active ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500")
+        }
+      >
+        {index}
+      </span>
+      <div className="min-w-0">
+        <div className="text-xs font-bold text-slate-800">{title}</div>
+        <p className="mt-0.5 text-xs leading-5 text-slate-500">{description}</p>
+      </div>
+    </li>
   );
 }
 
@@ -852,11 +955,11 @@ function UploadPanel({
   onDragActiveChange: (active: boolean) => void;
 }) {
   return (
-    <section className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+    <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
         <div>
-          <h2 className="text-[15px] font-bold text-slate-900">자료 입력</h2>
-          <p className="mt-0.5 text-[12px] text-slate-500">
+          <h2 className="text-sm font-bold text-slate-950">자료 입력</h2>
+          <p className="mt-1 text-xs text-slate-500">
             PDF와 이미지를 계속 추가할 수 있습니다.
           </p>
         </div>
@@ -865,7 +968,7 @@ function UploadPanel({
             type="button"
             onClick={onClear}
             disabled={busy}
-            className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 px-2.5 py-1.5 text-[12px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+            className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Trash2 className="size-3.5" aria-hidden="true" />
             비우기
@@ -873,7 +976,7 @@ function UploadPanel({
         ) : null}
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 p-4">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 p-3.5">
         <label
           htmlFor={fileInputId}
           onDragOver={(event) => {
@@ -887,10 +990,10 @@ function UploadPanel({
             if (event.dataTransfer.files.length > 0) onFiles(event.dataTransfer.files);
           }}
           className={
-            "flex min-h-[150px] flex-[0.9] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-5 text-center transition-colors " +
+            "flex min-h-[220px] flex-[1.05] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-5 text-center transition-colors " +
             (dragActive
               ? "border-sky-500 bg-sky-50"
-              : "border-slate-300 bg-slate-50/60 hover:border-sky-400 hover:bg-sky-50/40")
+              : "border-slate-300 bg-white hover:border-blue-400 hover:bg-blue-50/30")
           }
         >
           <input
@@ -905,12 +1008,25 @@ function UploadPanel({
               event.currentTarget.value = "";
             }}
           />
-          <UploadCloud className="size-8 text-sky-600" strokeWidth={1.7} />
-          <div className="mt-2 text-[13px] font-bold text-slate-800">
+          <span className="flex size-12 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+            <UploadCloud className="size-6" strokeWidth={1.8} aria-hidden="true" />
+          </span>
+          <div className="mt-3 text-sm font-bold text-slate-900">
             파일을 끌어놓거나 클릭해서 추가
           </div>
-          <div className="mt-1 text-[11px] text-slate-500">
-            PDF, PNG, JPG, WebP · 최대 {MAX_PAGES_PER_JOB}페이지 · PDF 최대 {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
+          <div className="mt-1 text-xs text-slate-500">
+            여러 이미지는 페이지 순서대로 등록됩니다.
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <UploadMetaChip icon={<FileText className="size-3.5" aria-hidden="true" />}>
+              PDF, PNG, JPG, WebP
+            </UploadMetaChip>
+            <UploadMetaChip icon={<Layers className="size-3.5" aria-hidden="true" />}>
+              최대 {MAX_PAGES_PER_JOB}페이지
+            </UploadMetaChip>
+            <UploadMetaChip icon={<Database className="size-3.5" aria-hidden="true" />}>
+              PDF {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
+            </UploadMetaChip>
           </div>
         </label>
 
@@ -929,20 +1045,29 @@ function UploadPanel({
           />
         ) : null}
 
-        <div className="flex min-h-[120px] flex-1 flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-3">
+        <div className="flex min-h-[160px] flex-1 flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-[12px] font-bold text-slate-800">선택한 자료</span>
-            <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-700 ring-1 ring-sky-100">
+            <div>
+              <span className="text-xs font-bold text-slate-900">자료 대기열</span>
+              <p className="mt-0.5 text-xs text-slate-500">추출할 페이지를 확인합니다.</p>
+            </div>
+            <span className="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-blue-700 ring-1 ring-blue-100">
               {slots.length}페이지
             </span>
           </div>
 
           {slots.length === 0 ? (
-            <div className="flex min-h-[86px] flex-1 items-center justify-center rounded-md border border-dashed border-slate-200 bg-white text-center text-[12px] text-slate-400">
-              파일을 추가하면 페이지 목록이 여기에 표시됩니다.
+            <div className="flex min-h-[120px] flex-1 flex-col items-center justify-center rounded-md border border-dashed border-slate-200 bg-white text-center">
+              <FileImage className="size-6 text-slate-300" aria-hidden="true" />
+              <div className="mt-2 text-xs font-semibold text-slate-500">
+                아직 선택된 자료가 없습니다.
+              </div>
+              <div className="mt-1 text-xs text-slate-400">
+                파일을 추가하면 페이지 목록이 표시됩니다.
+              </div>
             </div>
           ) : (
-            <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {slots.map((slot) => (
                 <div
                   key={slot.pageIndex + '-' + slot.previewUrl}
@@ -977,7 +1102,7 @@ function UploadPanel({
           type="button"
           onClick={onStart}
           disabled={busy || slots.length === 0}
-          className="inline-flex h-10 w-full items-center justify-center rounded-md bg-sky-600 px-5 text-[13px] font-bold text-white shadow-sm hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+          className="inline-flex h-11 w-full cursor-pointer items-center justify-center rounded-md bg-blue-600 px-5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           {busy ? (
             <>
@@ -985,11 +1110,29 @@ function UploadPanel({
               작업 중
             </>
           ) : (
-            "추출 시작"
+            <>
+              <PlayCircle className="mr-2 size-4" aria-hidden="true" />
+              추출 시작
+            </>
           )}
         </button>
       </div>
     </section>
+  );
+}
+
+function UploadMetaChip({
+  children,
+  icon,
+}: {
+  children: ReactNode;
+  icon: ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600">
+      {icon}
+      {children}
+    </span>
   );
 }
 
