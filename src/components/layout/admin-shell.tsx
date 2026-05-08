@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import React, { useState, useEffect, useCallback, useTransition } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -10,6 +10,7 @@ import {
   PanelLeftOpen,
   Bell,
   LogOut,
+  Megaphone,
   User,
   ChevronDown,
 } from "lucide-react";
@@ -81,20 +82,45 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
   const isDirector = staff.role === "DIRECTOR";
-  const navGroups = getNavGroups(basePath);
+  const navGroups = useMemo(() => getNavGroups(basePath), [basePath]);
 
-  const filteredGroups: NavGroup[] = navGroups
-    .filter((group) => !group.directorOnly || isDirector)
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((item) => !item.directorOnly || isDirector),
-    }));
+  const filteredGroups: NavGroup[] = useMemo(
+    () =>
+      navGroups
+        .filter((group) => !group.directorOnly || isDirector)
+        .map((group) => ({
+          ...group,
+          items: group.items.filter((item) => !item.directorOnly || isDirector),
+        })),
+    [isDirector, navGroups],
+  );
+
+  const activeHref = useMemo(() => {
+    const effectivePath = navigatingTo || pathname;
+    let bestHref: string | null = null;
+
+    const consider = (href: string) => {
+      const matches =
+        href === basePath
+          ? effectivePath === basePath
+          : effectivePath === href || effectivePath.startsWith(`${href}/`);
+      if (matches && (!bestHref || href.length > bestHref.length)) {
+        bestHref = href;
+      }
+    };
+
+    for (const group of filteredGroups) {
+      for (const item of group.items) {
+        consider(item.href);
+        item.children?.forEach((child) => consider(child.href));
+      }
+    }
+
+    return bestHref;
+  }, [basePath, filteredGroups, navigatingTo, pathname]);
 
   function isActive(href: string) {
-    // Show navigating item as active immediately
-    const effectivePath = navigatingTo || pathname;
-    if (href === basePath) return effectivePath === basePath;
-    return effectivePath.startsWith(href);
+    return activeHref === href;
   }
 
   function handleNavClick(href: string, e: React.MouseEvent) {
@@ -111,13 +137,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     const newOpen: Record<string, boolean> = {};
     for (const group of filteredGroups) {
       for (const item of group.items) {
-        if (item.children && item.children.some((c) => pathname === c.href || pathname.startsWith(c.href))) {
+        if (item.children && item.children.some((c) => activeHref === c.href)) {
           newOpen[item.href] = true;
         }
       }
     }
     setOpenMenus((prev) => ({ ...prev, ...newOpen }));
-  }, [pathname]);
+  }, [activeHref, filteredGroups]);
 
   const toggleMenu = useCallback((href: string) => {
     setOpenMenus((prev) => ({ ...prev, [href]: !prev[href] }));
@@ -218,7 +244,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                     const Icon = item.icon;
                     const hasChildren = item.children && item.children.length > 0;
                     const isOpen = openMenus[item.href];
-                    const childActive = hasChildren && item.children!.some((c) => pathname === c.href || pathname.startsWith(c.href + "/"));
+                    const childActive = hasChildren && item.children!.some((c) => activeHref === c.href);
 
                     // Parent button for items with children (expanded sidebar)
                     if (hasChildren && !collapsed) {
@@ -276,15 +302,8 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                             )}
                           >
                             <div className="ml-2 mr-1 mt-1 bg-gray-50/80 rounded-lg py-1.5 px-2 space-y-0.5">
-                              {item.children!.map((child, ci) => {
-                                const effectivePath = navigatingTo || pathname;
-                                const exactMatch = effectivePath === child.href;
-                                const prefixMatch = effectivePath.startsWith(child.href + "/");
-                                const siblingHasExactOrBetterMatch = item.children!.some(
-                                  (other, oi) => oi !== ci && (effectivePath === other.href || effectivePath.startsWith(other.href + "/"))
-                                    && other.href.length > child.href.length
-                                );
-                                const childIsActive = exactMatch || (prefixMatch && !siblingHasExactOrBetterMatch);
+                              {item.children!.map((child) => {
+                                const childIsActive = activeHref === child.href;
                                 return (
                                   <Link
                                     key={child.href}
@@ -452,6 +471,14 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </div>
 
             <div className="flex items-center gap-1">
+              <Link
+                href={`${basePath}/notices`}
+                className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl border border-blue-100 bg-blue-50/70 text-[12px] font-semibold text-blue-600 hover:bg-blue-100 transition-all duration-200"
+              >
+                <Megaphone className="size-3.5" strokeWidth={1.8} />
+                공지사항
+              </Link>
+
               {/* Credit badge */}
               <CreditBadge />
 
