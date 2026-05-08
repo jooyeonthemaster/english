@@ -101,7 +101,14 @@ export async function getWorkbenchQuestion(questionId: string) {
   const question = await prisma.question.findUnique({
     where: { id: questionId },
     include: {
-      passage: { select: { id: true, title: true, content: true } },
+      passage: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          analysis: { select: { id: true, analysisData: true, updatedAt: true } },
+        },
+      },
       explanation: true,
     },
   });

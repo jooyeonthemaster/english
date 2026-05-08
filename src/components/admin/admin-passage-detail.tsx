@@ -218,11 +218,13 @@ function ReadonlyQuestionCard({ q, num }: { q: QuestionItem; num: number }) {
         <div className="ml-auto">
           <button
             onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
+            title={expanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
             className={cn(
-              "h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-all border",
+              "group/expand h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-colors border",
               expanded
-                ? "text-blue-600 bg-blue-50 border-blue-200"
-                : "text-slate-500 bg-slate-50 border-slate-200 hover:bg-slate-100",
+                ? "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
+                : "text-blue-600 bg-blue-50/70 border-blue-200 hover:bg-blue-100 hover:text-blue-700",
             )}
           >
             {expanded ? (
@@ -232,7 +234,7 @@ function ReadonlyQuestionCard({ q, num }: { q: QuestionItem; num: number }) {
               </>
             ) : (
               <>
-                <ChevronDown className="w-3.5 h-3.5" />
+                <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover/expand:translate-y-0.5" />
                 펼치기
               </>
             )}

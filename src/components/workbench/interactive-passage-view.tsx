@@ -4,14 +4,15 @@
 
 import React, { useState, useMemo, useCallback } from "react";
 import {
-  ChevronDown,
   ChevronUp,
+  ChevronRight,
   X,
   ArrowRightLeft,
   Target,
   Braces,
   MessageSquare,
   BookOpen,
+  MousePointerClick,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -736,25 +737,42 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 px-5 py-3 border-b">
-        <div className="flex items-center gap-2 flex-wrap min-w-0">
-          {counts && <>
+      <div className="border-b px-5 py-3">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            {counts && (
+              <div className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 sm:flex">
+                <MousePointerClick className="h-4 w-4" />
+              </div>
+            )}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[12px] font-semibold text-slate-700">분석 포인트</span>
+                {counts && (
+                  <span className="hidden text-[11px] font-medium text-slate-400 sm:inline">칩을 눌러 목록 보기</span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            {hasAnalysis && (
+              <button onClick={() => setShowTranslation(v => !v)}
+                className={`h-8 rounded-lg border px-2.5 text-[11px] font-semibold shadow-sm transition-colors ${showTranslation ? "border-slate-200 bg-slate-100 text-slate-700" : "border-slate-200 bg-white text-slate-400 hover:text-slate-600"}`}>
+                번역 {showTranslation ? "ON" : "OFF"}
+              </button>
+            )}
+            <span className="rounded-lg bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-400">{wordCount} words</span>
+          </div>
+        </div>
+        {counts && (
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
             {rawCounts.vocab > 0 && <CategoryChip category="vocab" count={counts.vocab} rawCount={rawCounts.vocab} active={activeCollection === "vocab"} onClick={() => { setActiveCollection(v => v === "vocab" ? null : "vocab"); setActiveDetail(null); }} />}
             {rawCounts.grammar > 0 && <CategoryChip category="grammar" count={counts.grammar} rawCount={rawCounts.grammar} active={activeCollection === "grammar"} onClick={() => { setActiveCollection(v => v === "grammar" ? null : "grammar"); setActiveDetail(null); }} />}
             {rawCounts.syntax > 0 && <CategoryChip category="syntax" count={counts.syntax} rawCount={rawCounts.syntax} active={activeCollection === "syntax"} onClick={() => { setActiveCollection(v => v === "syntax" ? null : "syntax"); setActiveDetail(null); }} />}
             {rawCounts.key > 0 && <CategoryChip category="key" count={counts.key} rawCount={rawCounts.key} active={activeCollection === "key"} onClick={() => { setActiveCollection(v => v === "key" ? null : "key"); setActiveDetail(null); }} />}
             {rawCounts.exam > 0 && <CategoryChip category="exam" count={counts.exam} rawCount={rawCounts.exam} active={activeCollection === "exam"} onClick={() => { setActiveCollection(v => v === "exam" ? null : "exam"); setActiveDetail(null); }} />}
-          </>}
-        </div>
-        <div className="flex items-center gap-2">
-          {hasAnalysis && (
-            <button onClick={() => setShowTranslation(v => !v)}
-              className={`text-[11px] font-medium px-2 py-1 rounded-md transition-colors ${showTranslation ? "text-slate-700 bg-slate-100" : "text-slate-400 hover:text-slate-600"}`}>
-              번역 {showTranslation ? "ON" : "OFF"}
-            </button>
-          )}
-          <span className="text-[11px] text-slate-400">{wordCount} words</span>
-        </div>
+          </div>
+        )}
       </div>
 
       <div className={layout === "vertical"
@@ -783,13 +801,53 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
 
           {/* 분석 요약 — 항상 상단 */}
           {hasAnalysis && !activeCollection && (
-            <div>
-              <button type="button" onClick={() => setSummaryOpen(v => !v)}
-                className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-700 hover:text-slate-900 transition-colors w-full mb-3">
-                {summaryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                분석 요약
+            <div className={`overflow-hidden rounded-xl border bg-white shadow-sm transition-colors ${
+              summaryOpen ? "border-blue-200 ring-1 ring-blue-100" : "border-slate-200"
+            }`}>
+              <button
+                type="button"
+                onClick={() => setSummaryOpen(v => !v)}
+                aria-expanded={summaryOpen}
+                className={`group/summary flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors ${
+                  summaryOpen
+                    ? "bg-blue-50/90 hover:bg-blue-100/90"
+                    : "bg-slate-50/70 hover:bg-blue-50/80"
+                }`}
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 transition-colors ${
+                    summaryOpen
+                      ? "bg-blue-600 text-white ring-blue-500"
+                      : "bg-white text-slate-500 ring-slate-200 group-hover/summary:text-blue-600"
+                  }`}>
+                    <ChevronUp className={`h-4 w-4 transition-transform duration-200 ease-out ${summaryOpen ? "rotate-0" : "rotate-180"}`} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className={`block text-[13px] font-bold ${summaryOpen ? "text-blue-950" : "text-slate-800"}`}>분석 요약</span>
+                    <span className={`block text-[11px] font-medium ${summaryOpen ? "text-blue-600" : "text-slate-400"}`}>
+                      {summaryOpen ? "클릭해서 접기" : "클릭해서 펼치기"}
+                    </span>
+                  </span>
+                </span>
+                <span className={`shrink-0 rounded-md border px-2 py-1 text-[11px] font-bold shadow-sm transition-colors ${
+                  summaryOpen
+                    ? "border-blue-600 bg-blue-600 text-white"
+                    : "border-slate-200 bg-white text-slate-500 group-hover/summary:border-blue-200 group-hover/summary:text-blue-600"
+                }`}>
+                  {summaryOpen ? "접기" : "펼치기"}
+                </span>
               </button>
-              {summaryOpen && <SummarySection data={analysisData} />}
+              <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${
+                summaryOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+              }`}>
+                <div className="overflow-hidden">
+                  <div className={`border-t border-slate-100 p-4 transition-opacity duration-150 ease-out ${
+                    summaryOpen ? "opacity-100" : "opacity-0"
+                  }`}>
+                    <SummarySection data={analysisData} />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -833,15 +891,18 @@ function CategoryChip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      title={`본문 표시 ${count}개 / 분석 원본 ${rawCount}개`}
-      className={`inline-flex h-6 items-center gap-1 rounded-md border px-2 text-[11px] font-medium transition-colors ${
-        active ? meta.active : `${meta.text} border-transparent hover:bg-slate-50`
+      title={`${meta.label} ${count}개 목록 보기 · 분석 원본 ${rawCount}개`}
+      className={`group/chip inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-semibold shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 ${
+        active ? `${meta.active} shadow-md` : `bg-white ${meta.text} border-slate-200 hover:bg-slate-50 hover:border-slate-300`
       }`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
       <span>{meta.label}</span>
-      <span>{count}</span>
+      <span className={`ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[10px] font-bold ${active ? "bg-white/80 text-slate-700" : "bg-slate-50 text-slate-600"}`}>
+        {count}
+      </span>
       {hasMismatch && <span className="text-slate-400">/{rawCount}</span>}
+      <ChevronRight className="h-3 w-3 opacity-45 transition-transform group-hover/chip:translate-x-0.5 group-hover/chip:opacity-80" />
     </button>
   );
 }

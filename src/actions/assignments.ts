@@ -267,14 +267,14 @@ export async function gradeAssignment(
 
     // Scope the submission to this academy. Without this guard, any staff
     // could grade any assignment submission across tenants.
-    const submission = await prisma.assignmentSubmission.findFirst({
+    const existingSubmission = await prisma.assignmentSubmission.findFirst({
       where: {
         id: submissionId,
         assignment: { academyId: staff.academyId },
       },
       select: { id: true },
     });
-    if (!submission) {
+    if (!existingSubmission) {
       return { success: false, error: "제출을 찾을 수 없습니다." };
     }
 

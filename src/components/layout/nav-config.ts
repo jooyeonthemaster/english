@@ -17,6 +17,7 @@ import {
   FileBarChart,
   Settings,
   Layers,
+  Palette,
   type LucideIcon,
 } from "lucide-react";
 
@@ -69,12 +70,16 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "AI 콘텐츠",
       items: [
         {
+          label: "지문 & 문제 추출",
+          icon: ClipboardCheck,
+          href: `${basePath}/workbench/passages/import`,
+        },
+        {
           label: "지문 관리",
           icon: FileText,
           href: `${basePath}/workbench/passages`,
           children: [
-            { label: "지문 & 문제 추출", href: `${basePath}/workbench/passages/import` },
-            { label: "지문 등록", href: `${basePath}/workbench/passages/create` },
+            { label: "지문 분석", href: `${basePath}/workbench/passages/create` },
             { label: "지문 은행", href: `${basePath}/workbench/passages` },
           ],
         },
@@ -84,18 +89,25 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           href: `${basePath}/workbench/generate`,
           children: [
             { label: "문제 생성", href: `${basePath}/workbench/generate` },
-            { label: "학습 문제 생성", href: `${basePath}/workbench/generate-learning` },
-            { label: "문제 등록", href: `${basePath}/questions/pending` },
-            { label: "문제 은행", href: `${basePath}/questions` },
-            { label: "학습 문제 은행", href: `${basePath}/learning-questions` },
+            { label: "문제 관리", href: `${basePath}/questions` },
           ],
         },
         {
-          label: "시험 관리",
+          label: "시험지 관리",
           icon: GraduationCap,
           href: `${basePath}/exams`,
           children: [
-            { label: "시험 목록", href: `${basePath}/exams` },
+            { label: "시험지 생성", href: `${basePath}/exams/create` },
+            { label: "시험지 관리", href: `${basePath}/exams` },
+          ],
+        },
+        {
+          label: "지문 기반 웹툰",
+          icon: Palette,
+          href: `${basePath}/workbench/webtoon`,
+          children: [
+            { label: "웹툰 생성", href: `${basePath}/workbench/webtoon` },
+            { label: "웹툰 관리", href: `${basePath}/workbench/webtoon/library` },
           ],
         },
       ],
