@@ -210,7 +210,7 @@ function buildExtractionItemRows(params: {
             questionRange: sharedPassageRange,
             restoredText,
             restorationStatus,
-            restorationChanges: restorationChanges as Prisma.InputJsonValue,
+            restorationChanges: restorationChanges as unknown as Prisma.InputJsonValue,
             restorationWarnings: b.restorationWarnings ?? [],
             continuesFromPrevious: b.continuesFromPrevious === true,
             continuesToNext: b.continuesToNext === true,

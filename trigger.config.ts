@@ -45,6 +45,13 @@ export default defineConfig({
           "BRAVE_SEARCH_API_KEY",
           "GOOGLE_CUSTOM_SEARCH_API_KEY",
           "GOOGLE_CUSTOM_SEARCH_CX",
+          "ATLASCLOUD_API_KEY",
+          "ATLASCLOUD_BASE_URL",
+          "ATLASCLOUD_MODEL",
+          "WEBTOON_IMAGE_SIZE",
+          "WEBTOON_IMAGE_QUALITY",
+          "WEBTOON_IMAGE_TIMEOUT_MS",
+          "WEBTOON_IMAGE_MAX_ATTEMPTS",
         ];
         const out: Record<string, string> = {};
         for (const k of keys) {
