@@ -9,9 +9,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Eye, EyeOff, X, ShieldAlert } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
+import {
+  isJooyeonSpecialAccount,
+  JOOYEON_WELCOME_STORAGE_KEY,
+} from "@/lib/jooyeon-special-account";
 
 const loginSchema = z.object({
-  email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식이 아닙니다"),
+  email: z.string().min(1, "아이디 또는 이메일을 입력해주세요"),
   password: z.string().min(1, "비밀번호를 입력해주세요"),
 });
 type LoginForm = z.infer<typeof loginSchema>;
@@ -73,6 +77,9 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
     const res = await fetch("/api/auth/session");
     const session = await res.json();
     const role = session?.user?.role;
+    if (isJooyeonSpecialAccount(session?.user?.email) || isJooyeonSpecialAccount(data.email)) {
+      sessionStorage.setItem(JOOYEON_WELCOME_STORAGE_KEY, "true");
+    }
     onClose();
     router.push(role === "DIRECTOR" ? "/director" : "/teacher");
     router.refresh();
@@ -150,13 +157,13 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <label htmlFor="login-modal-email" className="block text-[13px] font-bold text-slate-700 mb-1.5">
-                    이메일
+                    아이디 또는 이메일
                   </label>
                   <input
                     id="login-modal-email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="name@academy.com"
+                    type="text"
+                    autoComplete="username"
+                    placeholder="jooyeon 또는 name@academy.com"
                     className="w-full h-12 px-4 rounded-xl text-[15px] text-slate-900 placeholder:text-slate-400 bg-slate-50 border border-slate-200 transition-all outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                     {...register("email")}
                   />

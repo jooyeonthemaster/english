@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { verifySocialBridgeToken } from "@/lib/social-bridge";
+import { isJooyeonSpecialAccount } from "@/lib/jooyeon-special-account";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -10,7 +11,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       id: "credentials",
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "ID or Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -18,11 +19,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        const email = credentials.email as string;
+        const email = (credentials.email as string).trim();
         const password = credentials.password as string;
+        const staffEmail = isJooyeonSpecialAccount(email) ? "jooyeon" : email;
 
-        const staff = await prisma.staff.findUnique({
-          where: { email },
+        const staff = await prisma.staff.findFirst({
+          where: { email: { equals: staffEmail, mode: "insensitive" } },
           include: { academy: true },
         });
 

@@ -6,9 +6,13 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Eye, EyeOff, ArrowRight, Sparkles, BookOpen, BrainCircuit, BarChart3, ShieldCheck } from "lucide-react";
+import { Loader2, Eye, EyeOff, ArrowRight, Sparkles, BrainCircuit, BarChart3, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
+import {
+  isJooyeonSpecialAccount,
+  JOOYEON_WELCOME_STORAGE_KEY,
+} from "@/lib/jooyeon-special-account";
 
 const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
   missing_code: "인증 코드를 받지 못했습니다. 다시 시도해주세요.",
@@ -26,7 +30,7 @@ const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
 };
 
 const loginSchema = z.object({
-  email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식이 아닙니다"),
+  email: z.string().min(1, "아이디 또는 이메일을 입력해주세요"),
   password: z.string().min(1, "비밀번호를 입력해주세요"),
 });
 type LoginForm = z.infer<typeof loginSchema>;
@@ -87,8 +91,8 @@ function StaffLoginForm() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "director@darun.academy",
-      password: "admin1234",
+      email: "jooyeon",
+      password: "jooyeon",
     },
   });
 
@@ -102,6 +106,9 @@ function StaffLoginForm() {
     const res = await fetch("/api/auth/session");
     const session = await res.json();
     const role = session?.user?.role;
+    if (isJooyeonSpecialAccount(session?.user?.email) || isJooyeonSpecialAccount(data.email)) {
+      sessionStorage.setItem(JOOYEON_WELCOME_STORAGE_KEY, "true");
+    }
     
     if (callbackUrl) router.push(callbackUrl);
     else if (role === "DIRECTOR") router.push("/director");
@@ -198,14 +205,14 @@ function StaffLoginForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <motion.div custom={1} initial="hidden" animate="visible" variants={fadeUp}>
               <label htmlFor="email" className="block text-[14px] font-bold text-slate-800 mb-2">
-                이메일
+                아이디 또는 이메일
               </label>
               <div className="relative group">
                 <input
                   id="email"
-                  type="email"
-                  placeholder="name@academy.com"
-                  autoComplete="email"
+                  type="text"
+                  placeholder="jooyeon 또는 name@academy.com"
+                  autoComplete="username"
                   className="w-full h-[56px] px-5 rounded-2xl text-[16px] text-slate-900 placeholder:text-slate-400 bg-slate-50 border-2 border-slate-100 transition-all duration-300 outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-200"
                   {...register("email")}
                 />
