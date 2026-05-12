@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import type { Prisma } from "@prisma/client";
 import { requireAuth, getAcademyId } from "./_helpers";
 import type {
   WorkbenchQuestionFilters,
@@ -50,7 +51,7 @@ export async function getWorkbenchQuestions(
   // Build orderBy based on sort param
   const DIFFICULTY_ORDER_DESC = ["KILLER", "INTERMEDIATE", "BASIC"];
   const DIFFICULTY_ORDER_ASC = ["BASIC", "INTERMEDIATE", "KILLER"];
-  let orderBy: any = { createdAt: "desc" as const }; // default: newest first
+  let orderBy: Prisma.QuestionOrderByWithRelationInput | Prisma.QuestionOrderByWithRelationInput[] = { createdAt: "desc" }; // default: newest first
   if (filters?.sort === "oldest") {
     orderBy = { createdAt: "asc" as const };
   } else if (filters?.sort === "starred") {

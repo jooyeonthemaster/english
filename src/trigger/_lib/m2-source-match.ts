@@ -42,7 +42,7 @@ function scoreCandidate(candidate: string, target: string): number {
   );
 }
 
-export async function findM2SourceMatches(input: {
+export async function findPassageSourceMatches(input: {
   academyId: string;
   problemText: string;
   limit?: number;
@@ -136,6 +136,9 @@ export async function findM2SourceMatches(input: {
       sourceRef: match.sourceRef,
       publisher: match.publisher,
       unit: match.unit,
+      year: match.year,
       metadata: match.metadata,
     }));
 }
+
+export const findM2SourceMatches = findPassageSourceMatches;

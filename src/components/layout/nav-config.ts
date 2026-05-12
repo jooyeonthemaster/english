@@ -70,9 +70,13 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "AI 콘텐츠",
       items: [
         {
-          label: "지문 & 문제 추출",
+          label: "자료 추출",
           icon: ClipboardCheck,
           href: `${basePath}/workbench/passages/import`,
+          children: [
+            { label: "자료 추출", href: `${basePath}/workbench/passages/import` },
+            { label: "자료 관리", href: `${basePath}/workbench/passages/import/jobs` },
+          ],
         },
         {
           label: "지문 관리",

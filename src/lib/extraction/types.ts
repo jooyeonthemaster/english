@@ -6,14 +6,13 @@
 
 import type { BlockType } from "./block-types";
 import type { ExtractionMode } from "./modes";
+import type { M1RestorationStatus } from "./m1-restoration";
 
 // Re-exports — consumers can import everything from "@/lib/extraction/types".
 export type { BlockType } from "./block-types";
 export type { ExtractionMode } from "./modes";
 
-export type ExtractionSourceType = "PDF" | "IMAGES";
-
-export type ExtractionEngine = "direct" | "trigger";
+export type ExtractionSourceType = "PDF" | "IMAGES" | "TEXT";
 
 export type ExtractionJobStatus =
   | "PENDING"
@@ -70,6 +69,7 @@ export interface ClientPageSlot {
   bytes: number;
   width: number;
   height: number;
+  sourceFileName?: string | null;
 }
 
 /** Server-side snapshot of a job page (returned by GET /jobs/:id). */
@@ -83,6 +83,7 @@ export interface JobPageSnapshot {
   errorMessage: string | null;
   latencyMs: number | null;
   imageUrl: string | null; // signed download URL (may be null if expired)
+  sourceFileName?: string | null;
 }
 
 export interface JobSnapshot {
@@ -154,6 +155,65 @@ export interface ExtractionItemSnapshot {
   status: ExtractionItemStatus;
   /** URN — "Passage:xxx" / "Question:xxx" etc. Null until promoted. */
   promotedTo: string | null;
+}
+
+export type { M1RestorationStatus } from "./m1-restoration";
+
+export type M1PassageReviewStatus = "DRAFT" | "REVIEWED" | "SAVED" | "SKIPPED";
+
+export interface M1PassageDraftChangeSnapshot {
+  id: string;
+  passageDraftId: string;
+  sentenceOrder: number | null;
+  before: string;
+  after: string;
+  changeType: string | null;
+  reason: string | null;
+  confidence: number | null;
+  sourcePageIndex: number[];
+  createdAt: string | Date;
+}
+
+export interface M1PassageSourceMatchSnapshot {
+  id: string;
+  passageDraftId: string;
+  sourceType: string;
+  sourceId: string | null;
+  sourceRef: string | null;
+  title: string | null;
+  publisher: string | null;
+  unit: string | null;
+  year: number | null;
+  confidence: number | null;
+  method: string;
+  reason: string | null;
+  selected: boolean;
+  metadata: unknown;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
+export interface M1PassageDraftSnapshot {
+  id: string;
+  jobId: string;
+  sourceMaterialId: string | null;
+  passageOrder: number;
+  sourcePageIndex: number[];
+  title: string | null;
+  rawText: string;
+  restoredText: string;
+  teacherText: string;
+  restorationStatus: M1RestorationStatus;
+  reviewStatus: M1PassageReviewStatus | string;
+  confidence: number | null;
+  warnings: unknown;
+  metadata: unknown;
+  confirmedAt: string | Date | null;
+  savedPassageId: string | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  changes: M1PassageDraftChangeSnapshot[];
+  sourceMatches: M1PassageSourceMatchSnapshot[];
 }
 
 /** Server-side snapshot of a SourceMaterial row. */

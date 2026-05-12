@@ -4,8 +4,8 @@
 // ModeSelectStep — first screen of /director/workbench/passages/import.
 //
 // Lets the director choose one of four extraction modes (M1~M4).
-// Renders one card per MODE_LIST entry and hands off to UploadStep by setting
-// `phase = "idle"` after `setMode()`.
+// Renders one card per MODE_LIST entry and hands off by setting `phase = "idle"`
+// after `setMode()`.
 // ============================================================================
 
 import {
