@@ -52,6 +52,12 @@ export default defineConfig({
           "WEBTOON_IMAGE_QUALITY",
           "WEBTOON_IMAGE_TIMEOUT_MS",
           "WEBTOON_IMAGE_MAX_ATTEMPTS",
+          // Google Cloud Document AI (RECITATION-free OCR engine)
+          "GOOGLE_DOC_AI_PROJECT_NUMBER",
+          "GOOGLE_DOC_AI_LOCATION",
+          "GOOGLE_DOC_AI_PROCESSOR_ID",
+          "GOOGLE_DOC_AI_SERVICE_ACCOUNT_B64",
+          "EXTRACTION_USE_DOCUMENT_AI",
         ];
         const out: Record<string, string> = {};
         for (const k of keys) {
