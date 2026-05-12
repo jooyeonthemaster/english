@@ -12,7 +12,7 @@ import type { M1RestorationStatus } from "./m1-restoration";
 export type { BlockType } from "./block-types";
 export type { ExtractionMode } from "./modes";
 
-export type ExtractionSourceType = "PDF" | "IMAGES";
+export type ExtractionSourceType = "PDF" | "IMAGES" | "TEXT";
 
 export type ExtractionJobStatus =
   | "PENDING"

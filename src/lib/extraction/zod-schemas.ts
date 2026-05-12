@@ -63,6 +63,16 @@ export const createJobRequestSchema = z.object({
 
 export type CreateJobRequest = z.infer<typeof createJobRequestSchema>;
 
+export const createTextExtractionRequestSchema = z.object({
+  mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
+  title: z.string().trim().max(200).optional(),
+  text: z.string().trim().min(20).max(60_000),
+});
+
+export type CreateTextExtractionRequest = z.infer<
+  typeof createTextExtractionRequestSchema
+>;
+
 export const createJobResponseSchema = z.object({
   jobId: z.string(),
   uploadTargets: z.array(
