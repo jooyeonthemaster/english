@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/extraction/api-utils";
+import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,5 +59,6 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ drafts });
+  const visibleDrafts = drafts.filter(isM1DraftVisible);
+  return NextResponse.json({ drafts: visibleDrafts });
 }

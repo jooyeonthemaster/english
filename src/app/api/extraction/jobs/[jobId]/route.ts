@@ -15,6 +15,7 @@ import {
   pageImageKey,
   removeJobAssets,
 } from "@/lib/supabase-storage";
+import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -132,6 +133,8 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     }),
   );
 
+  const visibleM1PassageDrafts = m1PassageDrafts.filter(isM1DraftVisible);
+
   return NextResponse.json({
     job: {
       id: auth.job.id,
@@ -157,7 +160,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     items,
     sourceMaterial,
     passageDrafts,
-    m1PassageDrafts,
+    m1PassageDrafts: visibleM1PassageDrafts,
   });
 }
 
