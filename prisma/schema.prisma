@@ -1882,6 +1882,11 @@ model ExtractionJob {
   originalFileUrl  String? @db.Text // Supabase Storage path for source PDF
   originalFileName String?
 
+  /// Teacher-editable label for the job ("5월 모의고사" 등). Null = fall back
+  /// to `originalFileName` in the UI. Original file name is preserved for
+  /// audit / debugging.
+  displayName String?
+
   // Upstream "a single exam / worksheet" it materialises into.
   // Populated by extraction-finalize when the job reaches a terminal state.
   sourceMaterialId String?

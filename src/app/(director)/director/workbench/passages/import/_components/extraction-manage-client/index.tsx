@@ -118,6 +118,7 @@ export function ExtractionManageClient({
       const jobSummary: M1DraftJobSummary = {
         id: data.job.id,
         originalFileName: data.job.originalFileName,
+        displayName: data.job.displayName ?? null,
         totalPages: data.job.totalPages,
         status: data.job.status,
         createdAt: data.job.createdAt,
@@ -193,6 +194,7 @@ export function ExtractionManageClient({
       const jobSummary: M1DraftJobSummary = {
         id: data.job.id,
         originalFileName: data.job.originalFileName,
+        displayName: data.job.displayName ?? null,
         totalPages: data.job.totalPages,
         status: data.job.status,
         createdAt: data.job.createdAt,
@@ -269,6 +271,79 @@ export function ExtractionManageClient({
   );
 
   // ─── CRUD ───
+  const renameJob = useCallback(
+    async (targetJobId: string, nextName: string | null) => {
+      // Capture rollback snapshot first
+      let previousDisplayName: string | null = null;
+      let previousOriginalName: string | null = null;
+      setDrafts((current) => {
+        const probe = current.find((d) => d.job?.id === targetJobId);
+        if (probe?.job) {
+          previousDisplayName = probe.job.displayName ?? null;
+          previousOriginalName = probe.job.originalFileName ?? null;
+        }
+        // Optimistic update on every draft from this job
+        return current.map((d) =>
+          d.job?.id === targetJobId
+            ? { ...d, job: { ...d.job, displayName: nextName } }
+            : d,
+        );
+      });
+
+      if (nextName === previousDisplayName) return;
+
+      try {
+        const res = await fetch("/api/extraction/jobs/" + targetJobId, {
+          method: "PATCH",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ displayName: nextName }),
+        });
+        if (!res.ok) throw new Error("작업 이름을 저장하지 못했습니다.");
+        const data = (await res.json()) as {
+          job: { id: string; displayName: string | null; originalFileName: string | null };
+        };
+        // Sync from server response (covers max-length truncation etc.)
+        setDrafts((current) =>
+          current.map((d) =>
+            d.job?.id === data.job.id
+              ? {
+                  ...d,
+                  job: {
+                    ...d.job,
+                    displayName: data.job.displayName,
+                    originalFileName: data.job.originalFileName,
+                  },
+                }
+              : d,
+          ),
+        );
+        toast.success("작업 이름이 저장되었습니다.");
+        queueDrawer.triggerRefresh();
+      } catch (err) {
+        // Rollback to previous values
+        setDrafts((current) =>
+          current.map((d) =>
+            d.job?.id === targetJobId
+              ? {
+                  ...d,
+                  job: {
+                    ...d.job,
+                    displayName: previousDisplayName,
+                    originalFileName: previousOriginalName,
+                  },
+                }
+              : d,
+          ),
+        );
+        toast.error(
+          err instanceof Error ? err.message : "작업 이름을 저장하지 못했습니다.",
+        );
+      }
+    },
+    [queueDrawer],
+  );
+
   const updateDraftText = useCallback((id: string, teacherText: string) => {
     setDrafts((current) =>
       current.map((draft) => (draft.id === id ? { ...draft, teacherText } : draft)),
@@ -509,7 +584,10 @@ export function ExtractionManageClient({
     for (const d of draftsInActiveFolder) {
       const jobId = d.job?.id;
       if (!jobId) continue;
-      const name = d.job?.originalFileName ?? "이름 없는 작업";
+      const name =
+        (d.job?.displayName?.trim() && d.job.displayName) ||
+        d.job?.originalFileName ||
+        "이름 없는 작업";
       const createdAtRaw = d.job?.createdAt;
       const createdAt =
         createdAtRaw instanceof Date
@@ -959,6 +1037,7 @@ export function ExtractionManageClient({
             selectedJobId={jobFilter}
             totalDraftCount={draftsInActiveFolder.length}
             onSelectJob={setJobFilter}
+            onRenameJob={renameJob}
             selectionBar={
               <DraftSelectionToolbar
                 selectedCount={selectedIds.size}

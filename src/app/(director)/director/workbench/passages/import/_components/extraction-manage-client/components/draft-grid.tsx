@@ -9,6 +9,7 @@ import {
   Grid3X3,
   Layers,
   LayoutGrid,
+  Pencil,
 } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
@@ -48,6 +49,9 @@ interface DraftGridProps {
 
   // Selection toolbar (shown above "자료 N개" row when active)
   selectionBar?: React.ReactNode;
+
+  // Job rename (jobId, newName | null)
+  onRenameJob: (jobId: string, name: string | null) => void;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
@@ -75,6 +79,7 @@ export function DraftGrid({
   totalDraftCount,
   onSelectJob,
   selectionBar,
+  onRenameJob,
 }: DraftGridProps) {
   const showJobFilter = jobs.length > 1;
 
@@ -133,9 +138,11 @@ export function DraftGrid({
               subLabel={job.subLabel}
               count={job.count}
               tone="blue"
+              editable
               onClick={() =>
                 onSelectJob(selectedJobId === job.jobId ? null : job.jobId)
               }
+              onRename={(next) => onRenameJob(job.jobId, next)}
             />
           ))}
         </div>
@@ -386,14 +393,18 @@ function JobFilterCard({
   subLabel,
   count,
   tone,
+  editable,
   onClick,
+  onRename,
 }: {
   active: boolean;
   label: string;
   subLabel?: string;
   count: number;
   tone: "blue" | "emerald";
+  editable?: boolean;
   onClick: () => void;
+  onRename?: (next: string | null) => void;
 }) {
   const Icon = tone === "emerald" ? Layers : FileText;
   const iconBg =
@@ -413,14 +424,33 @@ function JobFilterCard({
       : "text-blue-700"
     : "text-slate-700";
 
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(label);
+
+  useEffect(() => {
+    if (!editing) setDraft(label);
+  }, [label, editing]);
+
+  const commit = useCallback(() => {
+    if (!onRename) {
+      setEditing(false);
+      return;
+    }
+    const trimmed = draft.trim();
+    const next = trimmed.length > 0 ? trimmed : null;
+    if (next !== label) onRename(next);
+    setEditing(false);
+  }, [draft, label, onRename]);
+
+  const cancel = useCallback(() => {
+    setDraft(label);
+    setEditing(false);
+  }, [label]);
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      title={label}
+    <div
       className={
-        "group flex w-[220px] shrink-0 cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 text-left motion-safe:transition-all motion-safe:duration-150 " +
+        "group relative flex w-[220px] shrink-0 items-center gap-3 rounded-xl border px-3.5 py-3 motion-safe:transition-all motion-safe:duration-150 " +
         cardClass
       }
     >
@@ -429,12 +459,42 @@ function JobFilterCard({
       >
         <Icon className="size-5" aria-hidden="true" />
       </span>
-      <div className="min-w-0 flex-1">
-        <div className="truncate text-sm font-bold tracking-tight text-slate-900">
-          {label}
-        </div>
+      <button
+        type="button"
+        onClick={editing ? undefined : onClick}
+        aria-pressed={active}
+        title={label}
+        className="min-w-0 flex-1 cursor-pointer text-left"
+      >
+        {editing ? (
+          <input
+            autoFocus
+            value={draft}
+            maxLength={200}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                commit();
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                cancel();
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+            placeholder={label}
+            className="block w-full rounded-md border border-blue-300 bg-white px-1.5 py-0.5 text-sm font-bold text-slate-900 outline-none ring-2 ring-blue-100"
+          />
+        ) : (
+          <div className="truncate text-sm font-bold tracking-tight text-slate-900">
+            {label}
+          </div>
+        )}
         <div className="mt-0.5 flex items-baseline gap-1.5">
-          <span className={`text-[15px] font-extrabold tabular-nums leading-none ${countClass}`}>
+          <span
+            className={`text-[15px] font-extrabold tabular-nums leading-none ${countClass}`}
+          >
             {count.toLocaleString()}
           </span>
           <span className="text-[10.5px] font-semibold text-slate-400">개</span>
@@ -444,8 +504,23 @@ function JobFilterCard({
             </span>
           ) : null}
         </div>
-      </div>
-    </button>
+      </button>
+      {editable && !editing && onRename ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setDraft(label);
+            setEditing(true);
+          }}
+          className="absolute right-2 top-2 inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-slate-300 opacity-0 transition-opacity hover:bg-slate-100 hover:text-slate-600 group-hover:opacity-100"
+          aria-label="작업 이름 편집"
+          title="이름 편집"
+        >
+          <Pencil className="size-3.5" />
+        </button>
+      ) : null}
+    </div>
   );
 }
 

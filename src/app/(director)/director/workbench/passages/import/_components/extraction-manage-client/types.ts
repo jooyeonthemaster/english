@@ -9,6 +9,7 @@ export interface JobDetailResponse {
     mode: string;
     status: ExtractionJobStatus;
     originalFileName: string | null;
+    displayName: string | null;
     totalPages: number;
     successPages: number;
     failedPages: number;
@@ -26,6 +27,7 @@ export interface JobDetailResponse {
 export interface M1DraftJobSummary {
   id: string;
   originalFileName: string | null;
+  displayName: string | null;
   totalPages: number;
   status: ExtractionJobStatus;
   createdAt: string | Date;

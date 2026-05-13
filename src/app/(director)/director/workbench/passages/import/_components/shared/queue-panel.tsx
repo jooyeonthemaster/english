@@ -146,7 +146,9 @@ export function QueuePanel({
                     onClick={() => onOpenJob(job.id)}
                     className="min-w-0 flex-1 cursor-pointer truncate text-left text-sm font-bold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
-                    {job.originalFileName ?? job.totalPages + "페이지 이미지"}
+                    {(job.displayName?.trim() && job.displayName) ||
+                      job.originalFileName ||
+                      job.totalPages + "페이지 이미지"}
                   </button>
                   <div className="flex shrink-0 items-center gap-1.5">
                     {job.m1DraftPipelineError ? (

@@ -839,7 +839,16 @@ function readM1PassageGroupChunk(
 ): M1PassageChunk | null {
   if (groupItems.length === 0) return null;
 
-  const ordered = [...groupItems].sort((a, b) => a.order - b.order);
+  // Trust the caller's ordering. The STEM-led grouping walk pushed items
+  // into this bucket in the cluster-ordered input sequence — sorting by
+  // `item.order` here would silently revert to upload/OCR order, which
+  // breaks cross-page chunks where cluster page-ordering put a later-
+  // uploaded page first. (E.g. KakaoTalk 1쪽 was uploaded last → cluster
+  // sort puts page 9 before page 8, but item.order has page 8 < page 9
+  // because OCR numbered items in upload order. Re-sorting by item.order
+  // would move that page's CHOICES ahead of the STEM+BODY on the prior
+  // page.)
+  const ordered = [...groupItems];
   // The user-visible "문제 원문" must reproduce the entire problem the way it
   // appeared on the page. We keep:
   //   - PASSAGE_BODY / QUESTION_STEM / CHOICE / EXPLANATION (always content)

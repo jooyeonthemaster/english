@@ -33,7 +33,7 @@ export function QueueDrawer({
       }
       aria-hidden={!open}
     >
-      <div className="relative h-[min(440px,calc(100vh-220px))] overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-slate-200/80 [&>section>div:first-child]:pr-14">
+      <div className="relative h-[min(420px,calc(100vh-220px))] overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-slate-200/80 [&>section>div:first-child]:pr-14">
         <button
           type="button"
           onClick={onClose}

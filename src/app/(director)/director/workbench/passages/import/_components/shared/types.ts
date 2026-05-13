@@ -5,6 +5,7 @@ export interface QueueJob {
   mode: string;
   status: ExtractionJobStatus;
   originalFileName: string | null;
+  displayName: string | null;
   totalPages: number;
   successPages: number;
   failedPages: number;
