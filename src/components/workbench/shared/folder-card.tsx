@@ -15,7 +15,7 @@ import { FOLDER_COLORS } from "./constants";
 
 interface FolderCardProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: "question" | "passage" | "exam" | "draft";
   dragItemIdKey: string;
   itemCountLabel: string;
   selected?: boolean;

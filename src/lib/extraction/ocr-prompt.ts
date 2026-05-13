@@ -325,15 +325,15 @@ export function buildOcrUserPrompt(
   totalPages: number,
 ): string {
   const cfg = getModeConfig(mode);
-  const oneBased = pageIndex + 1;
   const positionHint =
     pageIndex === 0
-      ? "이 페이지는 전체 묶음의 첫 장입니다. 시험지 헤더(시행년도·회차·과목·학년)가 있다면 반드시 포함해 주세요."
+      ? "이 페이지는 업로드 묶음의 첫 장입니다. 시험지 헤더(시행년도·회차·과목·학년)가 있다면 반드시 포함해 주세요."
       : pageIndex === totalPages - 1
-        ? "이 페이지는 마지막 장입니다. 저작권 고지·쪽수 표기 같은 머리말·꼬리말은 본문과 분리해서 다뤄 주세요."
+        ? "이 페이지는 업로드 묶음의 마지막 장입니다. 저작권 고지·쪽수 표기 같은 머리말·꼬리말은 본문과 분리해서 다뤄 주세요."
         : "";
+  // 업로드 묶음 인덱스는 시험지 자체의 쪽수와 다를 수 있다 (사용자가 여러 시험지를 한 번에 올림 / 순서가 뒤섞임).
+  // 그래서 더 이상 "N장 중 M번째" 라고 알려주지 않는다 — 페이지 쪽수는 페이지에 실제로 표기된 표시에서만 추출.
   return [
-    `이 이미지는 전체 ${totalPages}장 중 ${oneBased}번째 페이지입니다.`,
     `모드: ${cfg.shortLabel} — ${cfg.label}.`,
     positionHint,
     "위 규칙을 지켜 인쇄된 모든 텍스트를 원문 그대로 추출해 주세요.",
@@ -375,6 +375,9 @@ export const STRUCTURED_OCR_SCHEMA_HINT = `[JSON 스키마 — 엄격히 준수]
     "round": "6월" | "9월" | "수능" | "중간" | "기말" | "1회" 등,
     "schoolName": 문자열 (내신시험일 때),
     "publisher": 문자열 (교재/학습지일 때, 예: "리딩파워", "수능특강", "빠바"),
+    "pageNumber": 정수 또는 null (이 페이지의 번호 — "1 / 8" 이면 1, "( 2 )" 이면 2; 표시 없으면 null),
+    "pageTotal": 정수 또는 null (이 페이지에 보이는 전체 쪽수 — "1 / 8" 이면 8; 없으면 null),
+    "examCode": 문자열 또는 null (페이지 상단의 시험 코드 — "과목코드 03", "코드 [05]" 같이 적힌 식별자; 없으면 null),
     "problemEvidence": {                     // 페이지 단위 풀이 단서 (선택)
       "sourceHints": ["출처 추정 단서 (대표 문장, 인용 표시 등)"],
       "unresolved": ["풀이 못 한 부분 메모"],
@@ -406,6 +409,30 @@ export const STRUCTURED_OCR_SYSTEM_PROMPT = `${OCR_SYSTEM_PROMPT}
     - "과목코드: [44]", "제 2 교시", "2학년 공통과정"
   → 반드시 EXAM_META로 분리. PASSAGE_BODY나 HEADER로 절대 분류 금지.
   → pageMeta 필드(subject/year/round/schoolName/publisher)도 함께 채운다.
+
+[페이지 식별 신호 (CRITICAL — 페이지 정렬 / cluster용)]
+- 페이지 어디든 "N / M", "(N)", "- N -", "N쪽", "N page" 같은 페이지 표기가 보이면
+  → pageMeta.pageNumber = N, pageMeta.pageTotal = M (분모 있을 때만).
+  EXAM_META / HEADER / FOOTER 어느 블록에 들어가든 pageMeta 에 함께 기록.
+- "과목코드 03", "코드 [05]", "시험번호: 7" 같은 시험 식별 코드가 페이지 상단에 보이면
+  → pageMeta.examCode = "03" (숫자만 또는 표시 그대로 짧게).
+  같은 시험지의 모든 페이지는 같은 examCode 를 공유한다. cluster signal로 사용.
+- 페이지 번호 / 시험 코드가 안 보이면 해당 필드를 null 로.
+
+[페이지 경계 처리 (CRITICAL — 문제/본문/보기가 페이지 사이에 잘리는 케이스)]
+- 페이지 마지막 부분에 "다음 쪽에 계속", "▶", "→ 계속", "(계속)", "→" 같은 continuation 표시가 보이면
+  → 그 직전 블록 (보통 마지막 PASSAGE_BODY 또는 마지막 QUESTION_STEM) 의
+    continuesToNext = true 로 표시. PASSAGE_BODY 가 아니라 QUESTION_STEM 인 경우에도
+    questionMeta 에 continuesToNext 형태로 보존 (선택 — 모르면 가까운 PASSAGE_BODY 에라도).
+- 페이지 첫 부분이 곧장 ①, ②, ③, ④, ⑤ 같은 보기 마커로 시작하면
+  → 그 보기들은 이전 페이지의 QUESTION_STEM 에 속하는 CHOICE 들이다. CHOICE 블록으로
+    출력하고, 같은 페이지 안에 등장하는 다른 STEM (다음 문제) 의 자식으로 묶지 말 것.
+    parentLocalId 는 비워둔다 (finalize 가 글로벌 순서로 자동 연결).
+- 페이지 첫 PASSAGE_BODY 가 소문자 / 연결사 / 마침표 없는 절로 시작하면
+  → 그 블록의 continuesFromPrevious = true 로 표시. 이전 페이지의 본문 끝과 자연스럽게
+    이어지는 segment 임을 명시.
+- 페이지 마지막 PASSAGE_BODY 가 마침표/물음표/느낌표로 끝나지 않으면
+  → 그 블록의 continuesToNext = true 로 표시 (continuation 표시가 없어도).
 
 ◆ HEADER — 페이지 머리말 (비문항 장식)
   포함: 페이지 번호, 쪽수 표기("1", "- 1 -"), 로고, 문서 타이틀 반복, 답안 작성 유의사항 헤더
@@ -581,24 +608,41 @@ export function buildStructuredOcrUserPromptForText(
   extractedText: string,
 ): string {
   const cfg = getModeConfig(mode);
-  const oneBased = pageIndex + 1;
   const positionHint =
     pageIndex === 0
-      ? "이 페이지는 전체 묶음의 첫 장입니다. 시험지 헤더(시행년도·회차·과목·학년)가 있다면 EXAM_META로 분리해 주세요."
+      ? "이 페이지는 업로드 묶음의 첫 장입니다. 시험지 헤더(시행년도·회차·과목·학년)가 있다면 EXAM_META로 분리해 주세요."
       : pageIndex === totalPages - 1
-        ? "이 페이지는 마지막 장입니다. 저작권 고지·쪽수 표기 같은 머리말·꼬리말은 본문과 분리해 주세요."
+        ? "이 페이지는 업로드 묶음의 마지막 장입니다. 저작권 고지·쪽수 표기 같은 머리말·꼬리말은 본문과 분리해 주세요."
         : "";
+  // CRITICAL: upload-bundle index is NOT the booklet's own page number.
+  // We deliberately do NOT tell the model "this is page N of M" because it
+  // confuses the booklet's footer pageTotal (e.g. "3 / 8") with the upload
+  // batch size, leading to inconsistent pageMeta.pageTotal across pages of
+  // the same booklet. The model should extract booklet page number / total
+  // ONLY from text it actually sees on the page (footer / header markup).
   return [
-    `이 페이지는 전체 ${totalPages}장 중 ${oneBased}번째 페이지입니다.`,
     `모드: ${cfg.shortLabel} — ${cfg.label}.`,
     positionHint,
+    "pageMeta.pageNumber / pageMeta.pageTotal 는 페이지에 실제로 표기된 쪽수 표시(\"N / M\", \"(N)\", \"- N -\", \"N쪽\" 등)에서만 추출하세요. 업로드 묶음 인덱스(전체 묶음에서 몇 번째 페이지인지)를 그대로 옮기지 마세요.",
     "",
-    "[Document AI가 추출한 페이지 텍스트]",
+    "[Document AI가 추출한 페이지 텍스트] (= 본문 텍스트의 source of truth)",
     "```",
     extractedText,
     "```",
     "",
-    "위 텍스트를 분류 규칙대로 블록으로 분해하고 JSON 1개로 반환해 주세요.",
+    "[참고용 페이지 이미지 사용 규칙 — CRITICAL]",
+    "이 요청에는 페이지 이미지가 함께 첨부됩니다. 이미지는 오직 다음 두 가지 용도로만 사용하세요:",
+    "  1) 위 텍스트에서 누락된 본문 안 마커(①②③④⑤, (a)~(f), (A)~(C), [A]~[C], ( ① )~( ⑤ ) 등)의 위치 확인",
+    "  2) 시각 신호로만 식별 가능한 layout 단서(박스로 둘러친 sentence, 본문 내 강조선 위치 등) 보강",
+    "이미지에서 본문 영어 문장을 새로 OCR하거나 다시 생성/재현하지 마세요.",
+    "이미지에서 본 글자를 길게 받아쓰는 행동은 RECITATION 위험을 유발하므로 **절대 금지**.",
+    "본문 텍스트는 위의 Document AI 결과를 그대로 옮기고, 누락된 마커만 본문 안의 정확한 단어 앞에 삽입하세요.",
+    "  - 예: Document AI text 가 \"...random variation is combined with nonrandom selection...\" 이고",
+    "    이미지 본문에 \"①combined\" 가 보이면 → blockType=PASSAGE_BODY 의 content 를",
+    "    \"...random variation is ①combined with nonrandom selection...\" 로 (Document AI text 그대로 + 마커만 부착).",
+    "  - 단어 자체 / 어순 / 띄어쓰기 / 마침표는 Document AI text 가 우선. 마커만 추가 보강.",
+    "",
+    "위 텍스트를 분류 규칙대로 블록으로 분해하고 (이미지에서 본 마커는 본문 안에 부착하여) JSON 1개로 반환해 주세요.",
   ]
     .filter((s) => s !== "")
     .join("\n");
@@ -716,6 +760,17 @@ export const structuredOcrResponseSchema = z.object({
       round: z.string().nullable().optional(),
       schoolName: z.string().nullable().optional(),
       publisher: z.string().nullable().optional(),
+      /** Page number visible on this sheet (1-based). e.g. "1 / 8" → 1.
+       *  Null when no page-number markup is present. Used by finalize to
+       *  reorder pages when the upload order is wrong. */
+      pageNumber: z.number().int().nullable().optional(),
+      /** Total page count visible on this sheet. e.g. "1 / 8" → 8.
+       *  Same fingerprint within a single test booklet, so it also acts
+       *  as a clustering signal across mixed-upload jobs. */
+      pageTotal: z.number().int().nullable().optional(),
+      /** Free-text exam code printed on the page (e.g. "과목코드 03").
+       *  Strongest single fingerprint for "same test booklet" clustering. */
+      examCode: z.string().nullable().optional(),
       problemEvidence: pageProblemEvidenceSchema.nullable().optional(),
     })
     .optional(),

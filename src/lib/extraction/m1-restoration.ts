@@ -1,4 +1,5 @@
 export type M1RestorationStatus =
+  | "PENDING"
   | "RESTORED"
   | "NO_RESTORATION_NEEDED"
   | "PARTIAL"

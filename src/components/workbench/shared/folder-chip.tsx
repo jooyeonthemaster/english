@@ -23,7 +23,7 @@ import { FOLDER_COLORS } from "./constants";
 
 interface FolderChipProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: "question" | "passage" | "exam" | "draft";
   dragItemIdKey: string;
   itemCountLabel: string;
   onClick: () => void;

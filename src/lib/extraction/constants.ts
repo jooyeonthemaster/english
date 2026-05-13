@@ -27,8 +27,9 @@ export const ACCEPTED_IMAGE_MIMES = [
 ] as const;
 
 /** Gemini concurrency ceiling (global, shared across all jobs).
- *  Gemini 3 Flash Tier 1: 60 RPM ≈ 5 concurrent × ~5s = 60 calls/min. */
-export const GEMINI_CONCURRENCY_LIMIT = 5;
+ *  Gemini 3 Flash Tier 1: 60 RPM. 8 동시 × ~10s/page ≈ 48 calls/min — 안전 마진.
+ *  8페이지 같은 작은 시험지는 두 wave (5+3) → 한 wave 로 줄어 시간 거의 절반. */
+export const GEMINI_CONCURRENCY_LIMIT = 8;
 
 /** Per-academy concurrent orchestrator jobs (rate limit). */
 export const ORCHESTRATOR_CONCURRENCY_LIMIT = 3;

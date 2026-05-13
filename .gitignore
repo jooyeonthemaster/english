@@ -73,3 +73,9 @@ google-credentials*.json
 .vercel
 .playwright-mcp/
 .trigger/
+
+# Local test materials (uploaded exam sheets / images for extraction testing).
+/test files/
+
+# Claude Code working directory (per-machine session state, lock files).
+.claude/

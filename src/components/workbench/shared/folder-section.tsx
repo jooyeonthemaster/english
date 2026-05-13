@@ -9,7 +9,7 @@ import { FolderCard } from "./folder-card";
 interface FolderSectionProps {
   childFolders: CollectionItem[];
   activeFolder: string | null;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: "question" | "passage" | "exam" | "draft";
   dragItemIdKey: string;
   itemCountLabel: string;
   showNewFolder: boolean;

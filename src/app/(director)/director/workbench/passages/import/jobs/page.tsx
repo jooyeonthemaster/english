@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { ExtractionManageClient } from "../_components/bulk-extract-client";
+import {
+  getM1DraftCollections,
+  getAcademyM1DraftCollectionMembership,
+} from "@/actions/workbench";
+import { ExtractionManageClient } from "../_components/extraction-manage-client";
 
 export const dynamic = "force-dynamic";
 
@@ -10,5 +14,20 @@ export default async function ExtractionJobsPage() {
     redirect("/login?callbackUrl=/director/workbench/passages/import/jobs");
   }
 
-  return <ExtractionManageClient />;
+  const [collections, membershipRaw] = await Promise.all([
+    getM1DraftCollections(staff.academyId),
+    getAcademyM1DraftCollectionMembership(staff.academyId),
+  ]);
+
+  const collectionMembership = Object.fromEntries(
+    Object.entries(membershipRaw).map(([k, v]) => [k, new Set(v)]),
+  );
+
+  return (
+    <ExtractionManageClient
+      academyId={staff.academyId}
+      initialCollections={collections}
+      initialCollectionMembership={collectionMembership}
+    />
+  );
 }
