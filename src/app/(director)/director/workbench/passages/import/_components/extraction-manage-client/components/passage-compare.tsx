@@ -1,44 +1,50 @@
 "use client";
 
-import { Loader2, RefreshCw, Save, Trash2 } from "lucide-react";
+import { CheckCircle2, Loader2, RefreshCw, Save, Trash2 } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import { getDraftSourceLabel } from "../utils/draft-source";
-import { ComparisonPanel } from "./comparison-panel";
+import { getDraftDisplayTitle } from "../utils/title";
 import { EditableRestoredTextBox } from "./editable-restored-text-box";
 import { OriginalProblemBox } from "./original-problem-box";
 import { RestorationBadge } from "./restoration-badge";
 import { RestorationMethodBadge } from "./restoration-method-badge";
-import { SourceMatchPanel } from "./source-match-panel";
 
 export function PassageCompare({
   draft,
   deleting,
   rerestoring,
   saving,
+  promoting,
   onDelete,
   onRerestore,
   onSave,
+  onPromote,
   onTextChange,
 }: {
   draft: M1PassageDraftWithJob;
   deleting: boolean;
   rerestoring: boolean;
   saving: boolean;
+  promoting: boolean;
   onDelete: () => void;
   onRerestore: () => void;
   onSave: () => void;
+  onPromote: () => void;
   onTextChange: (value: string) => void;
 }) {
-  const busy = deleting || rerestoring || saving;
+  const busy = deleting || rerestoring || saving || promoting;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
+            <span className="text-xs font-bold tabular-nums text-slate-400">
+              #{draft.passageOrder + 1}
+            </span>
             <h3 className="text-[17px] font-bold text-slate-950">
-              지문 {draft.passageOrder + 1}
+              {getDraftDisplayTitle(draft)}
             </h3>
             <RestorationBadge status={draft.restorationStatus} />
             <RestorationMethodBadge draft={draft} />
@@ -78,7 +84,7 @@ export function PassageCompare({
             type="button"
             onClick={onSave}
             disabled={busy}
-            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-[12px] font-bold text-white hover:bg-slate-700 disabled:opacity-60"
+            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
           >
             {saving ? (
               <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
@@ -87,17 +93,27 @@ export function PassageCompare({
             )}
             수정 저장
           </button>
+          <button
+            type="button"
+            onClick={onPromote}
+            disabled={busy}
+            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12px] font-bold text-white shadow-sm hover:bg-blue-700 disabled:opacity-60"
+          >
+            {promoting ? (
+              <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+            ) : (
+              <CheckCircle2 className="size-3.5" aria-hidden="true" />
+            )}
+            지문으로 등록
+          </button>
         </div>
       </div>
-
-      <SourceMatchPanel draft={draft} />
-      <ComparisonPanel draft={draft} />
 
       <div className="grid min-h-0 flex-1 gap-4 2xl:grid-cols-2">
         <OriginalProblemBox draft={draft} />
         <EditableRestoredTextBox
           value={draft.teacherText}
-          changes={draft.changes}
+          rawText={draft.rawText}
           onChange={onTextChange}
         />
       </div>

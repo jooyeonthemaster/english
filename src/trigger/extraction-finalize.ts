@@ -969,6 +969,43 @@ function sourceMatchMethod(match: SourceMatchInput, index: number): string {
   return m1SourceMatchMethod(match, index);
 }
 
+/**
+ * Question types that require grounded AI restoration because the body
+ * itself is modified (blanks to fill, sentences to reorder/insert/remove,
+ * grammar/vocab to correct). For every other type the body is the
+ * untouched source passage — we only need to strip problem-sheet markers.
+ *
+ * `UNKNOWN` is intentionally NOT in this set but is handled separately in
+ * the dispatch logic: we treat unclassified questions as restoration-
+ * required to avoid false negatives when the classifier failed.
+ */
+const RESTORATION_REQUIRED_TYPES = new Set([
+  "BLANK_INFERENCE",
+  "BLANK_WORD",
+  "BLANK_SENTENCE",
+  "CONNECTOR",
+  "SENTENCE_ORDER",
+  "PARAGRAPH_ORDER",
+  "SENTENCE_INSERT",
+  "IRRELEVANT",
+  "GRAMMAR_ERROR",
+  "GRAMMAR_CORRECTION",
+  "VOCAB_CHOICE",
+  "WORD_ORDER",
+  "SENTENCE_TRANSFORM",
+  "SUMMARY_COMPLETE",
+  "DIALOGUE_ORDER",
+]);
+
+/**
+ * Feature flag — flip to `EXTRACTION_TYPE_FILTERED_RESTORATION=false` in
+ * trigger.dev env to instantly disable the type-based skip and fall back
+ * to the previous "restore everything with a passage" behaviour. Defaults
+ * to ON so a no-op redeploy is enough to roll forward.
+ */
+const TYPE_FILTERED_RESTORATION_ENABLED =
+  process.env.EXTRACTION_TYPE_FILTERED_RESTORATION !== "false";
+
 const PASSAGE_QUESTION_TYPE_VALUES = new Set([
   "BLANK_INFERENCE",
   "BLANK_WORD",
@@ -1015,6 +1052,50 @@ function normalizeAnalysisQuestionType(value: unknown): string {
  * round-trip to compute problem evidence. We just shape the existing analysis
  * data into the response type the restoration pipeline already consumes.
  */
+/**
+ * For groups whose question types don't need AI restoration (지칭/일치/
+ * 주제/제목/목적 etc.), build the clean body locally: concat the
+ * PASSAGE_BODY block contents, then strip problem-sheet markers that the
+ * teacher will not want in the saved passage. Returns empty string when
+ * no PASSAGE_BODY block was classified — caller falls back to rawText.
+ */
+function buildCleanBodyForSkippedGroup(
+  groupItems: ExtractionItemSnapshot[],
+): string {
+  const bodies = groupItems
+    .filter((item) => item.blockType === "PASSAGE_BODY")
+    .sort((a, b) => a.order - b.order)
+    .map((item) => item.content.trim())
+    .filter((content) => content.length > 0);
+  if (bodies.length === 0) return "";
+
+  let cleaned = bodies.join("\n\n");
+  // ①②③④⑤ inline markers that classify attached for marker-position
+  // recovery — useful as raw evidence, but the clean passage shouldn't
+  // carry them.
+  cleaned = cleaned.replace(/[①②③④⑤⑥⑦⑧⑨⑩]/g, "");
+  // (A)~(D) chunk labels at line starts (ordering questions).
+  cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-D])\)[ \t]*/g, "$1");
+  // (a)~(e) inline referent markers placed in front of words.
+  cleaned = cleaned.replace(/\(([a-e])\)(?=\s|[,.!?:;])/g, "");
+  // Safety net: PASSAGE_BODY classified by OCR may absorb a Korean
+  // question stem fragment. Drop any line that is mostly Korean.
+  cleaned = cleaned
+    .split(/\n/)
+    .filter((line) => {
+      const koreanChars = (line.match(/[가-힣]/g) ?? []).length;
+      const totalChars = line.replace(/\s/g, "").length;
+      if (totalChars === 0) return true;
+      return koreanChars / totalChars < 0.3;
+    })
+    .join("\n");
+  // Collapse the gaps introduced by the strips above.
+  cleaned = cleaned.replace(/[ \t]{2,}/g, " ");
+  cleaned = cleaned.replace(/ +(?=\n)/g, "");
+  cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
+  return cleaned.trim();
+}
+
 function buildProblemEvidenceFromItems(
   groupItems: ExtractionItemSnapshot[],
 ): import("@/lib/extraction/problem-evidence").ProblemEvidenceResponse | null {
@@ -1412,6 +1493,14 @@ async function persistM1PassageDrafts(input: {
     questions: RestorationQuestionInput[];
     problemEvidence: ReturnType<typeof buildProblemEvidenceFromItems>;
     shouldRestore: boolean;
+    /** When the group was rejected by the type filter, the locally-built
+     *  clean body that should replace rawText as the displayed passage.
+     *  Empty when not applicable (= shouldRestore=true OR rejected for
+     *  other reasons like missing passage / short content). */
+    typeSkipBody: string;
+    /** Question types observed in the group (UNKNOWN included). Recorded
+     *  in metadata so the teacher can see why restoration was skipped. */
+    questionTypes: string[];
   }
   const stage1: PrepStage1[] = groups.map((group, index) => {
     const rawText = group.map((chunk) => chunk.rawText).join("\n\n").trim();
@@ -1432,8 +1521,44 @@ async function persistM1PassageDrafts(input: {
     const questions = buildRestorationQuestions(groupItems);
     const problemEvidence = buildProblemEvidenceFromItems(groupItems);
     const groupHasPassage = group.some((chunk) => chunk.hasPassageBody);
-    const shouldRestore =
+    const baseShouldRestore =
       groupHasPassage || rawText.length >= SHORT_CONTENT_THRESHOLD;
+
+    // Question types observed in this group — used by the type filter.
+    const questionTypes = groupItems
+      .filter((item) => item.blockType === "QUESTION_STEM")
+      .map((item) => {
+        const meta = item.questionMeta as Record<string, unknown> | null;
+        const analysis =
+          meta?.analysis && typeof meta.analysis === "object"
+            ? (meta.analysis as Record<string, unknown>)
+            : null;
+        return normalizeAnalysisQuestionType(analysis?.questionType);
+      });
+    // Restoration is required if ANY question in the group is on the
+    // whitelist. UNKNOWN is treated as "required" to avoid false
+    // negatives when the classifier failed. Empty list (no STEM detected
+    // in this group at all) → also required, fall back to legacy path.
+    const hasRestorationRequiredType =
+      questionTypes.length === 0 ||
+      questionTypes.some(
+        (t) => RESTORATION_REQUIRED_TYPES.has(t) || t === "UNKNOWN",
+      );
+
+    const shouldRestore = TYPE_FILTERED_RESTORATION_ENABLED
+      ? baseShouldRestore && hasRestorationRequiredType
+      : baseShouldRestore;
+
+    // If the type filter is the reason we're skipping, produce the
+    // clean body locally so the draft is still useful in the UI.
+    const skippedByTypeFilter =
+      TYPE_FILTERED_RESTORATION_ENABLED &&
+      baseShouldRestore &&
+      !hasRestorationRequiredType;
+    const typeSkipBody = skippedByTypeFilter
+      ? buildCleanBodyForSkippedGroup(groupItems)
+      : "";
+
     return {
       index,
       group,
@@ -1443,6 +1568,8 @@ async function persistM1PassageDrafts(input: {
       questions,
       problemEvidence,
       shouldRestore,
+      typeSkipBody,
+      questionTypes,
     };
   });
 
@@ -1480,6 +1607,12 @@ async function persistM1PassageDrafts(input: {
       const pendingStatus: M1RestorationStatus = s.shouldRestore
         ? "PENDING"
         : "NO_RESTORATION_NEEDED";
+      const skippedByTypeFilter = !s.shouldRestore && s.typeSkipBody.length > 0;
+      // For type-filter skips we replace the displayed text with the clean
+      // body (PASSAGE_BODY content with problem markers stripped). For the
+      // legacy stub-skip path (no passage / too short), keep rawText so the
+      // visibility filter behaves exactly as before.
+      const displayedText = skippedByTypeFilter ? s.typeSkipBody : s.rawText;
       const pendingMetadata: Record<string, unknown> = {
         chunks: s.group.map((chunk) => ({
           sourcePageIndex: chunk.sourcePageIndex,
@@ -1494,11 +1627,17 @@ async function persistM1PassageDrafts(input: {
         })),
         ...(s.shouldRestore
           ? { restoration: { phase: "PENDING" } }
-          : {
-              reason: "no_passage_body_and_short_content",
-              rawLength: s.rawText.length,
-              threshold: SHORT_CONTENT_THRESHOLD,
-            }),
+          : skippedByTypeFilter
+            ? {
+                reason: "type_no_restoration_needed",
+                questionTypes: s.questionTypes,
+                rawLength: s.rawText.length,
+              }
+            : {
+                reason: "no_passage_body_and_short_content",
+                rawLength: s.rawText.length,
+                threshold: SHORT_CONTENT_THRESHOLD,
+              }),
       };
       return {
         id,
@@ -1508,8 +1647,8 @@ async function persistM1PassageDrafts(input: {
         sourcePageIndex: s.sourcePageIndex,
         title: null,
         rawText: s.rawText,
-        restoredText: s.rawText,
-        teacherText: s.rawText,
+        restoredText: displayedText,
+        teacherText: displayedText,
         restorationStatus: pendingStatus,
         reviewStatus: "DRAFT",
         confidence: extractionConfidence,

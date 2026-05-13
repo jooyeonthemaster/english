@@ -7,7 +7,6 @@ import {
   PanelBottomOpen,
   RefreshCw,
   UploadCloud,
-  X,
 } from "lucide-react";
 
 import { useExtractionUpload } from "@/hooks/use-extraction-upload";
@@ -27,9 +26,9 @@ import {
 } from "@/lib/extraction/constants";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
-import { QueuePanel } from "../shared/queue-panel";
+import { useQueueDrawer } from "../queue-drawer-context";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
-import type { FileSourceType, InputMode, Props, WorkPanel } from "./types";
+import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
 import { ExtractionRunPanel } from "./components/extraction-run-panel";
 import { UploadPanel } from "./components/upload-panel";
@@ -57,8 +56,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
   const [sourceName, setSourceName] = useState<string | null>(null);
   const [sourceType, setSourceType] = useState<FileSourceType | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [queueRefreshKey, setQueueRefreshKey] = useState(0);
-  const [activePanel, setActivePanel] = useState<WorkPanel>(null);
+  const queueDrawer = useQueueDrawer();
   const [inputMode, setInputMode] = useState<InputMode>("file");
   const [textTitle, setTextTitle] = useState("");
   const [textValue, setTextValue] = useState("");
@@ -262,8 +260,8 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
       setSourceName(null);
       setSourceType(null);
       setUploadProgress(null);
-      setActivePanel("jobs");
-      setQueueRefreshKey((value) => value + 1);
+      queueDrawer.setOpen(true);
+      queueDrawer.triggerRefresh();
     }
   }, [
     setError,
@@ -307,8 +305,8 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
       setPhase("reviewing");
       setTextTitle("");
       setTextValue("");
-      setActivePanel("jobs");
-      setQueueRefreshKey((value) => value + 1);
+      queueDrawer.setOpen(true);
+      queueDrawer.triggerRefresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.");
       setPhase("idle");
@@ -327,19 +325,6 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     setTextValue("");
     setError(null);
   }, [setError]);
-
-  const togglePanel = useCallback((panel: Exclude<WorkPanel, null>) => {
-    setActivePanel((current) => (current === panel ? null : panel));
-  }, []);
-
-  useEffect(() => {
-    if (!activePanel) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setActivePanel(null);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activePanel]);
 
   const busy =
     phase === "preparing" ||
@@ -367,7 +352,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setQueueRefreshKey((value) => value + 1)}
+                onClick={queueDrawer.triggerRefresh}
                 className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
                 <RefreshCw className="size-3.5" aria-hidden="true" />
@@ -375,10 +360,10 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
               </button>
               <button
                 type="button"
-                onClick={() => togglePanel("jobs")}
+                onClick={queueDrawer.toggle}
                 className={
                   "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-                  (activePanel === "jobs"
+                  (queueDrawer.open
                     ? "border-blue-300 bg-blue-50 text-blue-700"
                     : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
                 }
@@ -428,49 +413,6 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             />
           </div>
         </section>
-
-        <button
-          type="button"
-          onClick={() => togglePanel("jobs")}
-          className={
-            "fixed bottom-24 right-8 z-40 inline-flex h-11 items-center gap-2 rounded-full border px-4 text-[13px] font-bold shadow-lg transition-all " +
-            (activePanel === "jobs"
-              ? "border-blue-500 bg-blue-600 text-white"
-              : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700")
-          }
-        >
-          <PanelBottomOpen className="size-4" aria-hidden="true" />
-          작업 목록
-        </button>
-
-        {activePanel === "jobs" ? (
-          <div className="fixed bottom-40 right-8 z-50 w-[min(520px,calc(100vw-40px))]">
-            <div className="relative max-h-[min(620px,calc(100vh-220px))] overflow-y-auto rounded-lg bg-white shadow-2xl ring-1 ring-slate-200/80 [&>section>div:first-child]:pr-14">
-              <button
-                type="button"
-                onClick={() => setActivePanel(null)}
-                className="absolute right-3 top-3 z-10 inline-flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 shadow-sm hover:bg-slate-50 hover:text-slate-900"
-                aria-label="작업 목록 닫기"
-              >
-                <X className="size-4" aria-hidden="true" />
-              </button>
-              <QueuePanel
-                activeJobId={jobId}
-                refreshKey={queueRefreshKey}
-                onDeleteActiveJob={() => {
-                  setJobId(null);
-                  setPhase("idle");
-                }}
-                onOpenJob={(id) => {
-                  setJobId(id);
-                  setPhase("processing");
-                  setActivePanel(null);
-                  router.push("/director/workbench/passages/import/jobs?jobId=" + id);
-                }}
-              />
-            </div>
-          </div>
-        ) : null}
       </main>
     </div>
   );

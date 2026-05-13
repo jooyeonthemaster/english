@@ -1,16 +1,9 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import {
-  Folder,
-  FolderOpen,
-  Pencil,
-  Trash2,
-  Check,
-  X,
-} from "lucide-react";
+import { Folder, FolderOpen, Pencil, Trash2 } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,12 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { CollectionItem } from "./types";
-import { FOLDER_COLORS } from "./constants";
+import { FOLDER_COLORS } from "@/components/workbench/shared/constants";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 
-interface FolderChipProps {
+interface DraftFolderChipProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
   dragItemIdKey: string;
   itemCountLabel: string;
   onClick: () => void;
@@ -32,16 +24,18 @@ interface FolderChipProps {
   onFileDrop: (itemId: string, folderId: string, copy: boolean) => void;
 }
 
-export function FolderChip({
+const DRAG_TYPE = "draft" as const;
+
+export function DraftFolderChip({
   collection,
-  dragItemType,
   dragItemIdKey,
   itemCountLabel,
   onClick,
   onRename,
   onDelete,
   onFileDrop,
-}: FolderChipProps) {
+}: DraftFolderChipProps) {
+  void itemCountLabel;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(collection.name);
@@ -56,7 +50,7 @@ export function FolderChip({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => source.data.type === DRAG_TYPE,
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
@@ -67,9 +61,8 @@ export function FolderChip({
         onFileDrop(itemId, collection.id, isCopy);
       },
     });
-  }, [collection.id, onFileDrop, dragItemType, dragItemIdKey]);
+  }, [collection.id, onFileDrop, dragItemIdKey]);
 
-  // Auto-focus input when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
@@ -96,15 +89,14 @@ export function FolderChip({
     setIsEditing(false);
   }
 
-  // ─── Edit mode: inline input inside the chip ───
   if (isEditing) {
     return (
       <div
         ref={dropRef}
-        className="flex flex-col items-center justify-center w-[120px] h-[80px] rounded-xl border-2 border-blue-400 bg-blue-50/60 backdrop-blur-sm shadow-lg transition-all animate-in fade-in zoom-in-95 duration-200"
+        className="flex w-[120px] flex-col items-center justify-center rounded-xl border-2 border-blue-400 bg-blue-50/60 px-2 py-2 shadow-lg transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        <Folder className="w-5 h-5 mb-1.5" style={{ color }} />
+        <Folder className="mb-1 size-5" style={{ color }} />
         <input
           ref={inputRef}
           value={editName}
@@ -114,14 +106,13 @@ export function FolderChip({
             if (e.key === "Escape") cancelRename();
           }}
           onBlur={confirmRename}
-          className="text-[11px] font-semibold w-[100px] text-center outline-none bg-white rounded-md px-2 py-1 border border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          className="w-[100px] rounded-md border border-blue-300 bg-white px-2 py-1 text-center text-[11px] font-semibold text-slate-700 outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
           maxLength={30}
         />
       </div>
     );
   }
 
-  // ─── Normal mode ───
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -129,21 +120,22 @@ export function FolderChip({
           ref={dropRef}
           onClick={onClick}
           onDoubleClick={startEditing}
-          className={`group flex flex-col items-center justify-center w-[100px] h-[72px] rounded-xl border cursor-pointer transition-all ${
-            isDragOver
-              ? "bg-blue-50 border-blue-400 scale-105 shadow-md"
-              : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
-          }`}
+          className={
+            "group flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
+            (isDragOver
+              ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
+              : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md")
+          }
         >
           {isDragOver ? (
-            <FolderOpen className="w-6 h-6 mb-1" style={{ color }} />
+            <FolderOpen className="mb-0.5 size-5" style={{ color }} />
           ) : (
-            <Folder className="w-6 h-6 mb-1" style={{ color }} />
+            <Folder className="mb-0.5 size-5" style={{ color }} />
           )}
-          <span className="text-[11px] font-semibold text-slate-700 truncate max-w-[80px] text-center leading-tight">
+          <span className="max-w-[84px] truncate text-center text-[11px] font-bold leading-tight text-slate-800">
             {collection.name}
           </span>
-          <span className="text-[9px] text-slate-400">
+          <span className="text-[10px] tabular-nums text-slate-400">
             {collection._count.items}개
           </span>
         </div>
@@ -155,7 +147,8 @@ export function FolderChip({
             onClick();
           }}
         >
-          <FolderOpen className="w-3.5 h-3.5 mr-2" />열기
+          <FolderOpen className="mr-2 size-4" />
+          열기
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={(e) => {
@@ -163,7 +156,8 @@ export function FolderChip({
             startEditing();
           }}
         >
-          <Pencil className="w-3.5 h-3.5 mr-2" />이름 변경
+          <Pencil className="mr-2 size-4" />
+          이름 변경
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -173,7 +167,8 @@ export function FolderChip({
           }}
           className="text-red-600"
         >
-          <Trash2 className="w-3.5 h-3.5 mr-2" />삭제
+          <Trash2 className="mr-2 size-4" />
+          삭제
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

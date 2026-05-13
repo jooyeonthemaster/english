@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -10,12 +9,12 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-import type { CollectionItem } from "./types";
-import { FOLDER_COLORS } from "./constants";
 
-interface FolderCardProps {
+import { FOLDER_COLORS } from "@/components/workbench/shared/constants";
+import type { CollectionItem } from "@/components/workbench/shared/types";
+
+interface DraftFolderCardProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
   dragItemIdKey: string;
   itemCountLabel: string;
   selected?: boolean;
@@ -25,9 +24,10 @@ interface FolderCardProps {
   onFileDrop: (itemId: string, folderId: string, copy: boolean) => void;
 }
 
-export function FolderCard({
+const DRAG_TYPE = "draft" as const;
+
+export function DraftFolderCard({
   collection,
-  dragItemType,
   dragItemIdKey,
   itemCountLabel,
   selected = false,
@@ -35,7 +35,7 @@ export function FolderCard({
   onRename,
   onDelete,
   onFileDrop,
-}: FolderCardProps) {
+}: DraftFolderCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(collection.name);
   const [showMenu, setShowMenu] = useState(false);
@@ -46,7 +46,6 @@ export function FolderCard({
     collection.color ||
     FOLDER_COLORS[collection.name.charCodeAt(0) % FOLDER_COLORS.length];
 
-  // Close menu on click outside
   useEffect(() => {
     if (!showMenu) return;
     function handleClick(e: MouseEvent) {
@@ -61,13 +60,12 @@ export function FolderCard({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [showMenu]);
 
-  // Drop target for drag-and-drop
   useEffect(() => {
     const el = dropRef.current;
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => source.data.type === DRAG_TYPE,
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
@@ -78,25 +76,24 @@ export function FolderCard({
         onFileDrop(itemId, collection.id, isCopy);
       },
     });
-  }, [collection.id, onFileDrop, dragItemType, dragItemIdKey]);
+  }, [collection.id, onFileDrop, dragItemIdKey]);
 
   return (
     <div
       ref={dropRef}
       onClick={editing ? undefined : onClick}
-      className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all hover:shadow-sm group ${
-        isDragOver
-          ? "bg-blue-50 border-blue-400 border-2 scale-[1.02] shadow-md"
+      className={
+        "group flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
+        (isDragOver
+          ? "scale-[1.02] border-2 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
           : selected
-          ? "bg-blue-50 border-blue-300"
-          : "bg-white border-slate-200 hover:border-slate-300"
-      }`}
+            ? "border-blue-300 bg-blue-50 shadow-md"
+            : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md")
+      }
     >
       <div
         className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors"
-        style={{
-          backgroundColor: isDragOver ? `${color}30` : `${color}15`,
-        }}
+        style={{ backgroundColor: isDragOver ? `${color}30` : `${color}15` }}
       >
         {isDragOver ? (
           <FolderOpen className="w-5 h-5" style={{ color }} />
@@ -126,52 +123,57 @@ export function FolderCard({
                 setEditing(false);
               }
             }}
-            className="text-[13px] font-semibold w-full outline-none border-b border-blue-400 bg-transparent"
+            className="w-full border-b border-blue-400 bg-transparent text-sm font-semibold outline-none"
           />
         ) : (
-          <p className="text-[13px] font-semibold text-slate-800 truncate">
+          <p className="truncate text-sm font-semibold text-slate-800">
             {collection.name}
           </p>
         )}
-        <p className="text-[11px] text-slate-400 mt-0.5">
+        <p className="mt-0.5 text-xs tabular-nums text-slate-400">
           {collection._count.items}개 {itemCountLabel}
         </p>
       </div>
 
-      {/* Context menu */}
       <div
         ref={menuRef}
         className="relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
+          type="button"
           onClick={() => setShowMenu(!showMenu)}
-          className="w-7 h-7 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-slate-100 transition-all"
+          className="flex size-8 cursor-pointer items-center justify-center rounded-lg opacity-0 transition-all hover:bg-slate-100 group-hover:opacity-100"
+          aria-label="폴더 메뉴"
         >
-          <MoreHorizontal className="w-4 h-4 text-slate-400" />
+          <MoreHorizontal className="size-4 text-slate-400" />
         </button>
-        {showMenu && (
-          <div className="absolute right-0 top-8 z-20 w-36 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
+        {showMenu ? (
+          <div className="absolute right-0 top-9 z-20 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
             <button
+              type="button"
               onClick={() => {
                 setEditing(true);
                 setShowMenu(false);
               }}
-              className="w-full flex items-center gap-2 px-3 py-1.5 text-[12px] text-slate-700 hover:bg-slate-50"
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50"
             >
-              <Pencil className="w-3 h-3" />이름 변경
+              <Pencil className="size-3.5" />
+              이름 변경
             </button>
             <button
+              type="button"
               onClick={() => {
                 onDelete(collection.id);
                 setShowMenu(false);
               }}
-              className="w-full flex items-center gap-2 px-3 py-1.5 text-[12px] text-red-600 hover:bg-red-50"
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50"
             >
-              <Trash2 className="w-3 h-3" />삭제
+              <Trash2 className="size-3.5" />
+              삭제
             </button>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

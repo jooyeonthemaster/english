@@ -154,12 +154,18 @@ function fingerprintFor(meta: PageMetaSummary): string {
 /**
  * Sort pages within a cluster. Priority:
  *   1) pageNumber when set on ALL pages (most reliable).
- *   2) minQuestionNumber when set on ALL pages.
- *   3) original pageIndex (= input order, last-resort fallback).
+ *   2) Partial pageNumber — at least one page has it. Unknown pages
+ *      slot in next to their input-order neighbour using a fractional
+ *      offset (lastKnown + 0.5, +1.0, …). This handles the common
+ *      case where OCR drops the footer on a handful of pages but
+ *      catches it on the rest, AND avoids the minQuestionNumber trap
+ *      where 서답형1~6 collide with regular Q1~Q6 numbering.
+ *   3) minQuestionNumber when set on ALL pages (legacy fallback).
+ *   4) original pageIndex (= input order, last-resort fallback).
  */
 function sortCluster(pages: PageMetaSummary[]): {
   sorted: PageMetaSummary[];
-  basis: "pageNumber" | "minQuestionNumber" | "inputOrder";
+  basis: "pageNumber" | "pageNumberPartial" | "minQuestionNumber" | "inputOrder";
 } {
   const hasAllPageNumbers = pages.every((p) => p.pageNumber !== null);
   if (hasAllPageNumbers) {
@@ -168,6 +174,40 @@ function sortCluster(pages: PageMetaSummary[]): {
         (a, b) => (a.pageNumber as number) - (b.pageNumber as number),
       ),
       basis: "pageNumber",
+    };
+  }
+  const hasAnyPageNumber = pages.some((p) => p.pageNumber !== null);
+  if (hasAnyPageNumber) {
+    // Walk pages in input (pageIndex) order. Known pageNumbers anchor
+    // the sequence; null pageNumbers receive the previous anchor's
+    // pageNumber plus a fractional offset so they keep their
+    // upload-order position relative to that anchor. When the cluster
+    // starts with unknown pages, anchor at 0 so the unknowns sort
+    // before the first known page rather than after it.
+    const byInputOrder = [...pages].sort(
+      (a, b) => a.pageIndex - b.pageIndex,
+    );
+    const rankByPageIndex = new Map<number, number>();
+    let lastKnown: number | null = null;
+    let fractional = 0;
+    for (const page of byInputOrder) {
+      if (page.pageNumber !== null) {
+        rankByPageIndex.set(page.pageIndex, page.pageNumber);
+        lastKnown = page.pageNumber;
+        fractional = 0;
+      } else {
+        fractional += 0.5;
+        const baseline = lastKnown ?? 0;
+        rankByPageIndex.set(page.pageIndex, baseline + fractional);
+      }
+    }
+    return {
+      sorted: [...pages].sort(
+        (a, b) =>
+          (rankByPageIndex.get(a.pageIndex) ?? Number.POSITIVE_INFINITY) -
+          (rankByPageIndex.get(b.pageIndex) ?? Number.POSITIVE_INFINITY),
+      ),
+      basis: "pageNumberPartial",
     };
   }
   const hasAllQuestionNumbers = pages.every(

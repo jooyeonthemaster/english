@@ -24,7 +24,7 @@ export function RestorationMethodBadge({ draft }: { draft: M1PassageDraftSnapsho
                 : "후보 검토";
 
   return (
-    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-bold text-slate-600">
+    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
       {label}
     </span>
   );

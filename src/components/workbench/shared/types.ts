@@ -7,7 +7,7 @@ export interface CollectionItem {
   _count: { items: number; children: number };
 }
 
-export type DragItemType = "question" | "passage" | "exam" | "draft";
+export type DragItemType = "question" | "passage" | "exam";
 
 export interface CollectionActions {
   create: (data: { name: string; parentId?: string }) => Promise<{ success: boolean; id?: string; error?: string }>;
