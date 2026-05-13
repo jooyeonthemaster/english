@@ -54,8 +54,17 @@ export function DraftCard({
   const primaryFile =
     fileNames[0] ?? draft.job?.originalFileName ?? null;
   const extraFileCount = Math.max(0, fileNames.length - 1);
+  // Prefer the booklet's own page number (examMeta.pageNumber). Falls back
+  // to upload-order pageIndex+1 when OCR didn't capture the page footer.
+  const examPageNumberByIndex = new Map(
+    (draft.job?.pages ?? [])
+      .filter((p) => typeof p.examPageNumber === "number")
+      .map((p) => [p.pageIndex, p.examPageNumber as number] as const),
+  );
   const pageLabel = draft.sourcePageIndex.length > 0
-    ? `${draft.sourcePageIndex.map((p) => p + 1).join(", ")}p`
+    ? `${draft.sourcePageIndex
+        .map((p) => examPageNumberByIndex.get(p) ?? p + 1)
+        .join(", ")}p`
     : null;
 
   return (

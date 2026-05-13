@@ -39,6 +39,7 @@ import type {
   M1DraftJobSummary,
   M1PassageDraftWithJob,
 } from "./types";
+import { buildExamPageNumberMap } from "./utils/exam-page-number";
 
 interface ExtractionManageClientProps {
   academyId: string;
@@ -115,6 +116,7 @@ export function ExtractionManageClient({
       if (!res.ok) throw new Error("작업 정보를 불러오지 못했습니다.");
 
       const data = (await res.json()) as JobDetailResponse;
+      const examPageNumberByPageIndex = buildExamPageNumberMap(data.items);
       const jobSummary: M1DraftJobSummary = {
         id: data.job.id,
         originalFileName: data.job.originalFileName,
@@ -126,6 +128,7 @@ export function ExtractionManageClient({
         pages: (data.pages ?? []).map((page) => ({
           pageIndex: page.pageIndex,
           sourceFileName: page.sourceFileName ?? null,
+          examPageNumber: examPageNumberByPageIndex.get(page.pageIndex) ?? null,
         })),
       };
       const nextDrafts = data.m1PassageDrafts.map((draft) => ({
@@ -191,6 +194,7 @@ export function ExtractionManageClient({
       });
       if (!res.ok) return;
       const data = (await res.json()) as JobDetailResponse;
+      const examPageNumberByPageIndex = buildExamPageNumberMap(data.items);
       const jobSummary: M1DraftJobSummary = {
         id: data.job.id,
         originalFileName: data.job.originalFileName,
@@ -202,6 +206,7 @@ export function ExtractionManageClient({
         pages: (data.pages ?? []).map((page) => ({
           pageIndex: page.pageIndex,
           sourceFileName: page.sourceFileName ?? null,
+          examPageNumber: examPageNumberByPageIndex.get(page.pageIndex) ?? null,
         })),
       };
       setDrafts(data.m1PassageDrafts.map((draft) => ({ ...draft, job: jobSummary })));

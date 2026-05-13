@@ -21,6 +21,13 @@ export interface JobDetailResponse {
     pageIndex: number;
     sourceFileName?: string | null;
   }>;
+  /** ExtractionItem rows. Only `examMeta` + `sourcePageIndex` are read on
+   *  the client (to surface the booklet's own page number on each draft
+   *  card); the rest is ignored. */
+  items?: Array<{
+    sourcePageIndex: number[];
+    examMeta: unknown;
+  }>;
   m1PassageDrafts: M1PassageDraftSnapshot[];
 }
 
@@ -35,6 +42,11 @@ export interface M1DraftJobSummary {
   pages?: Array<{
     pageIndex: number;
     sourceFileName: string | null;
+    /** Booklet's own page number ("1 / 8" → 1). Null when OCR couldn't
+     *  read it (page-meta footer absent or unparsed). Surface this on
+     *  draft cards instead of `pageIndex + 1` so the teacher sees the
+     *  booklet's page rather than the upload-order index. */
+    examPageNumber?: number | null;
   }>;
 }
 
