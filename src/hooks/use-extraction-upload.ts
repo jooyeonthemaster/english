@@ -1,22 +1,8 @@
-// ============================================================================
-// use-extraction-upload — orchestrates the upload half of the flow.
-//
-// Steps:
-//   1. POST /api/extraction/jobs { sourceType, totalPages, pages[] }
-//      → receives { jobId, uploadTargets }
-//   2. PUT each page blob to its signed uploadUrl (concurrent, capped)
-//   3. POST /api/extraction/jobs/:id/start
-//      → server triggers the orchestrator
-//
-// The Zustand store is updated at each step so UI can react.
-// ============================================================================
-
 "use client";
 
 import { useCallback } from "react";
 import { useExtractionStore } from "@/lib/extraction/store";
 import type { ClientPageSlot } from "@/lib/extraction/types";
-import type { ExtractionEngine } from "@/lib/extraction/types";
 import type { ExtractionMode } from "@/lib/extraction/modes";
 
 interface UploadTarget {
@@ -37,7 +23,6 @@ interface CreateJobResponse {
 interface StartJobResponse {
   jobId: string;
   status: "PROCESSING" | "COMPLETED" | "PARTIAL" | "FAILED" | "CANCELLED";
-  direct?: boolean;
 }
 
 const UPLOAD_CONCURRENCY = 4;
@@ -48,7 +33,7 @@ async function putWithLimit(
   onProgress: (uploaded: number) => void,
 ): Promise<void> {
   const queue = [...slots];
-  const byIndex = new Map(targets.map((t) => [t.pageIndex, t] as const));
+  const byIndex = new Map(targets.map((target) => [target.pageIndex, target] as const));
   let uploaded = 0;
 
   async function worker() {
@@ -67,17 +52,15 @@ async function putWithLimit(
         },
       });
       if (!res.ok) {
-        throw new Error(
-          `페이지 ${slot.pageIndex + 1} 업로드 실패 (${res.status})`,
-        );
+        throw new Error(`페이지 ${slot.pageIndex + 1} 업로드 실패 (${res.status})`);
       }
-      uploaded++;
+      uploaded += 1;
       onProgress(uploaded);
     }
   }
 
   const workers: Promise<void>[] = [];
-  for (let i = 0; i < UPLOAD_CONCURRENCY; i++) workers.push(worker());
+  for (let i = 0; i < UPLOAD_CONCURRENCY; i += 1) workers.push(worker());
   await Promise.all(workers);
 }
 
@@ -93,16 +76,14 @@ export function useExtractionUpload() {
       sourceType: "PDF" | "IMAGES";
       originalFileName: string | null;
       mode: ExtractionMode;
-      engine: ExtractionEngine;
     }): Promise<string | null> => {
-      const { slots, sourceType, originalFileName, mode, engine } = opts;
+      const { slots, sourceType, originalFileName, mode } = opts;
       if (slots.length === 0) {
         setError("업로드할 페이지가 없습니다.");
         return null;
       }
 
       try {
-        // 1. Create the job
         setPhase("uploading");
         setUploadProgress({ uploaded: 0, total: slots.length });
 
@@ -114,14 +95,16 @@ export function useExtractionUpload() {
             mode,
             totalPages: slots.length,
             originalFileName: originalFileName ?? undefined,
-            pages: slots.map((s) => ({
-              pageIndex: s.pageIndex,
-              size: s.bytes,
-              mimeType: s.blob.type === "image/png"
-                ? "image/png"
-                : s.blob.type === "image/webp"
-                  ? "image/webp"
-                  : "image/jpeg",
+            pages: slots.map((slot) => ({
+              pageIndex: slot.pageIndex,
+              size: slot.bytes,
+              sourceFileName: slot.sourceFileName ?? undefined,
+              mimeType:
+                slot.blob.type === "image/png"
+                  ? "image/png"
+                  : slot.blob.type === "image/webp"
+                    ? "image/webp"
+                    : "image/jpeg",
             })),
           }),
         });
@@ -132,25 +115,21 @@ export function useExtractionUpload() {
         const created = (await createRes.json()) as CreateJobResponse;
         setJobId(created.jobId);
 
-        // 2. Upload each page
         await putWithLimit(slots, created.uploadTargets, (uploaded) =>
           setUploadProgress({ uploaded, total: slots.length }),
         );
 
-        // 3. Kick off processing
         setPhase("starting");
-        const startRes = await fetch(
-          `/api/extraction/jobs/${created.jobId}/start`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ engine }),
-          },
-        );
+        const startRes = await fetch(`/api/extraction/jobs/${created.jobId}/start`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        });
         if (!startRes.ok) {
           const data = await startRes.json().catch(() => ({}));
           throw new Error(data?.error ?? "작업 시작에 실패했습니다.");
         }
+
         const started = (await startRes.json()) as StartJobResponse;
         setPhase(
           ["COMPLETED", "PARTIAL", "FAILED", "CANCELLED"].includes(started.status)

@@ -41,6 +41,10 @@ export default defineConfig({
           "SUPABASE_URL",
           "SUPABASE_ANON_KEY",
           "SUPABASE_SERVICE_ROLE_KEY",
+          "SERPER_API_KEY",
+          "BRAVE_SEARCH_API_KEY",
+          "GOOGLE_CUSTOM_SEARCH_API_KEY",
+          "GOOGLE_CUSTOM_SEARCH_CX",
           "ATLASCLOUD_API_KEY",
           "ATLASCLOUD_BASE_URL",
           "ATLASCLOUD_MODEL",
@@ -48,6 +52,12 @@ export default defineConfig({
           "WEBTOON_IMAGE_QUALITY",
           "WEBTOON_IMAGE_TIMEOUT_MS",
           "WEBTOON_IMAGE_MAX_ATTEMPTS",
+          // Google Cloud Document AI (RECITATION-free OCR engine)
+          "GOOGLE_DOC_AI_PROJECT_NUMBER",
+          "GOOGLE_DOC_AI_LOCATION",
+          "GOOGLE_DOC_AI_PROCESSOR_ID",
+          "GOOGLE_DOC_AI_SERVICE_ACCOUNT_B64",
+          "EXTRACTION_USE_DOCUMENT_AI",
         ];
         const out: Record<string, string> = {};
         for (const k of keys) {

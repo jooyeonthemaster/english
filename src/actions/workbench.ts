@@ -79,3 +79,13 @@ export {
   removePassagesFromCollection,
   getPassageCollectionItems,
 } from "./workbench/collections-passage";
+
+export {
+  getM1DraftCollections,
+  getAcademyM1DraftCollectionMembership,
+  createM1DraftCollection,
+  updateM1DraftCollection,
+  deleteM1DraftCollection,
+  addDraftsToCollection,
+  removeDraftsFromCollection,
+} from "./workbench/collections-draft";

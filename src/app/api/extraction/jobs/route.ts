@@ -21,6 +21,14 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
+const ACTIVE_M1_JOB_STATUSES = new Set(["PENDING", "PROCESSING"]);
+const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED"];
+
+function hasM1DraftPipelineError(errorSummary: string | null): boolean {
+  if (!errorSummary) return false;
+  return errorSummary.includes("m1DraftPipeline");
+}
+
 export async function POST(req: NextRequest) {
   const staff = await requireStaff();
   if (staff instanceof NextResponse) return staff;
@@ -87,6 +95,7 @@ export async function POST(req: NextRequest) {
           pageIndex: p.pageIndex,
           imageUrl: pageImageKey(staff.academyId, j.id, p.pageIndex),
           imageBytes: p.size,
+          sourceFileName: p.sourceFileName ?? null,
           idempotencyKey: `${j.id}:${p.pageIndex}`,
         })),
       });
@@ -152,6 +161,7 @@ export async function GET(req: NextRequest) {
       mode: true,
       sourceMaterialId: true,
       originalFileName: true,
+      displayName: true,
       status: true,
       totalPages: true,
       successPages: true,
@@ -159,6 +169,7 @@ export async function GET(req: NextRequest) {
       pendingPages: true,
       creditsConsumed: true,
       creditsRefunded: true,
+      errorSummary: true,
       createdAt: true,
       startedAt: true,
       completedAt: true,
@@ -171,6 +182,17 @@ export async function GET(req: NextRequest) {
       ? await prisma.extractionResult.groupBy({
           by: ["jobId", "status"],
           where: { jobId: { in: jobIds } },
+          _count: { _all: true },
+        })
+      : [];
+  const m1DraftCounts =
+    jobIds.length > 0
+      ? await prisma.extractionM1PassageDraft.groupBy({
+          by: ["jobId", "reviewStatus"],
+          where: {
+            jobId: { in: jobIds },
+            reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
+          },
           _count: { _all: true },
         })
       : [];
@@ -191,15 +213,46 @@ export async function GET(req: NextRequest) {
     }
     countsByJob.set(row.jobId, current);
   }
+  const m1CountsByJob = new Map<
+    string,
+    { draftResultCount: number; savedResultCount: number; resultCount: number }
+  >();
+  for (const row of m1DraftCounts) {
+    const current =
+      m1CountsByJob.get(row.jobId) ??
+      { draftResultCount: 0, savedResultCount: 0, resultCount: 0 };
+    current.resultCount += row._count._all;
+    if (row.reviewStatus === "DRAFT" || row.reviewStatus === "REVIEWED") {
+      current.draftResultCount += row._count._all;
+    }
+    if (row.reviewStatus === "SAVED") {
+      current.savedResultCount += row._count._all;
+    }
+    m1CountsByJob.set(row.jobId, current);
+  }
+
+  const visibleJobs = jobs.filter((job) => {
+    if (job.mode !== "PASSAGE_ONLY") return true;
+    if (ACTIVE_M1_JOB_STATUSES.has(job.status)) return true;
+    if (hasM1DraftPipelineError(job.errorSummary)) return true;
+    return (m1CountsByJob.get(job.id)?.resultCount ?? 0) > 0;
+  });
 
   return NextResponse.json({
-    jobs: jobs.map((job) => ({
-      ...job,
-      ...(countsByJob.get(job.id) ?? {
-        draftResultCount: 0,
-        savedResultCount: 0,
-        resultCount: 0,
-      }),
-    })),
+    jobs: visibleJobs.map((job) => {
+      const counts =
+        job.mode === "PASSAGE_ONLY"
+          ? m1CountsByJob.get(job.id)
+          : countsByJob.get(job.id);
+      return {
+        ...job,
+        m1DraftPipelineError: hasM1DraftPipelineError(job.errorSummary),
+        ...(counts ?? {
+          draftResultCount: 0,
+          savedResultCount: 0,
+          resultCount: 0,
+        }),
+      };
+    }),
   });
 }

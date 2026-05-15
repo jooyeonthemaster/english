@@ -46,8 +46,11 @@ import {
   OCR_SYSTEM_PROMPT,
   OCR_USER_PROMPT,
   buildStructuredOcrSystemPrompt,
+  buildStructuredOcrSystemPromptForText,
+  buildStructuredOcrUserPromptForText,
   buildOcrSystemPrompt,
   buildOcrUserPrompt,
+  structuredOcrResponseSchema,
   type StructuredOcrResponse,
 } from "@/lib/extraction/ocr-prompt";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
@@ -58,16 +61,37 @@ import {
 } from "@/lib/extraction/constants";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { usesStructuredExtraction } from "@/lib/extraction/modes";
+import {
+  buildFallbackM1Restoration,
+  hasUnresolvedM1ProblemArtifacts,
+} from "@/lib/extraction/m1-restoration";
 import { extractionFinalizeTask } from "./extraction-finalize";
 import {
   generatePlainOcrWithTriggerFetch,
   generateStructuredOcrWithTriggerFetch,
+  generateStructuredTextWithTriggerFetch,
 } from "./_lib/gemini-ocr";
+import { runDocumentAiOcr } from "./_lib/google-document-ai";
+import {
+  parsePageMetaFromDocumentAiText,
+  mergePageMeta,
+} from "./_lib/page-meta-parser";
 
 type Input = { jobId: string; pageIndex: number; mode?: ExtractionMode };
 
 const GEMINI_CALL_TIMEOUT_MS = 90_000;
+const DOCUMENT_AI_CALL_TIMEOUT_MS = 60_000;
 const STORAGE_DOWNLOAD_TIMEOUT_MS = 30_000;
+
+// Feature flag — when true, route structured-mode OCR through Document AI for
+// the raw text extraction step, then send the text to Gemini for block
+// classification + question analysis. This bypasses Gemini's RECITATION filter
+// which blocks certain 평가원 PDF pages. Disable by setting env to "false".
+function isDocumentAiOcrEnabled(): boolean {
+  const v = process.env.EXTRACTION_USE_DOCUMENT_AI;
+  if (v == null) return true;
+  return v.toLowerCase() !== "false" && v !== "0";
+}
 
 // Gemini HTTP calls are delegated to ./_lib/gemini-ocr. That module uses
 // Trigger.dev's retry.fetch timeout support so page workers do not depend on
@@ -150,6 +174,18 @@ function buildExtractionItemRows(params: {
 }): Prisma.ExtractionItemCreateManyInput[] {
   const { jobId, pageId, pageIndex, structured } = params;
 
+  // The page-level meta (pageNumber / pageTotal / examCode / subject / etc.)
+  // is needed on EVERY page so finalize can reorder mixed uploads and cluster
+  // multi-test jobs. OCR only outputs an EXAM_META block on page 1, so on
+  // pages without one we stamp `structured.pageMeta` onto the FIRST item's
+  // `examMeta`. Finalize's page-ordering reader picks up either source.
+  const pageMetaJson = structured.pageMeta
+    ? ((structured.pageMeta as unknown) as Prisma.InputJsonValue)
+    : null;
+  const hasExamMetaBlock = structured.blocks.some(
+    (b) => b.blockType === "EXAM_META",
+  );
+
   return structured.blocks.map((b: StructuredOcrBlock, i: number) => {
     const sharedPassageRange =
       typeof b.sharedPassageRange === "string" &&
@@ -157,12 +193,31 @@ function buildExtractionItemRows(params: {
         ? b.sharedPassageRange.trim()
         : null;
 
+    // 1st-pass question analysis (풀이 + 유형 분류) — 2차 grounded restoration
+    // 호출이 별도 problem-evidence 호출 없이 이 정보를 그대로 활용한다.
+    const questionAnalysis =
+      b.blockType === "QUESTION_STEM" && b.questionAnalysis
+        ? {
+            questionType: b.questionAnalysis.questionType ?? null,
+            typeLabel: b.questionAnalysis.typeLabel ?? null,
+            answer: b.questionAnalysis.answer ?? null,
+            answerConfidence: b.questionAnalysis.answerConfidence ?? null,
+            evidence: Array.isArray(b.questionAnalysis.evidence)
+              ? b.questionAnalysis.evidence
+              : [],
+            warnings: Array.isArray(b.questionAnalysis.warnings)
+              ? b.questionAnalysis.warnings
+              : [],
+          }
+        : null;
+
     const questionMeta: Prisma.InputJsonValue | undefined =
       b.blockType === "QUESTION_STEM"
-        ? {
+        ? ({
             number: b.questionNumber ?? null,
             sharedPassageRange,
-          }
+            ...(questionAnalysis ? { analysis: questionAnalysis } : {}),
+          } as Prisma.InputJsonValue)
         : undefined;
     const choiceMeta: Prisma.InputJsonValue | undefined =
       b.blockType === "CHOICE"
@@ -175,13 +230,22 @@ function buildExtractionItemRows(params: {
     const examMeta: Prisma.InputJsonValue | undefined =
       b.blockType === "EXAM_META"
         ? ((structured.pageMeta ?? {}) as Prisma.InputJsonValue)
-        : undefined;
+        : !hasExamMetaBlock && i === 0 && pageMetaJson !== null
+          ? pageMetaJson
+          : undefined;
+
+    // 1차 호출에서는 더 이상 본문 복원을 시도하지 않는다 — 복원은 2차의
+    // grounded restoration 호출이 담당. 페이지 경계 메타(continues*)는 그대로
+    // PASSAGE_BODY passageMeta에 보존해 finalize 의 그룹 빌더가 사용한다.
     const passageMeta: Prisma.InputJsonValue | undefined =
       b.blockType === "PASSAGE_BODY"
         ? {
             wordCount: b.content.split(/\s+/).filter(Boolean).length,
             markerDetected: sharedPassageRange !== null,
             questionRange: sharedPassageRange,
+            continuesFromPrevious: b.continuesFromPrevious === true,
+            continuesToNext: b.continuesToNext === true,
+            boundaryConfidence: b.boundaryConfidence ?? null,
           }
         : undefined;
 
@@ -481,8 +545,84 @@ export const extractionPageTask = task({
           ? OCR_USER_PROMPT
           : buildOcrUserPrompt(mode, pageIndex, page.job.totalPages);
 
-      await markProcessingPhase(idempotencyKey, "gemini_call");
-      if (isStructured) {
+      if (isStructured && isDocumentAiOcrEnabled()) {
+        // ─── Two-step OCR: Document AI extracts text, Gemini classifies ──
+        // Step 1: Document AI raw OCR (no RECITATION filter).
+        await markProcessingPhase(idempotencyKey, "document_ai_ocr");
+        const docAi = await runDocumentAiOcr({
+          base64,
+          mimeType,
+          timeoutInMs: DOCUMENT_AI_CALL_TIMEOUT_MS,
+        });
+        const ocrText = docAi.text.trim();
+        if (!ocrText) {
+          const emptyErr = new Error("Document AI returned empty text");
+          (emptyErr as Error & { code?: string }).code = "EMPTY_OUTPUT";
+          throw emptyErr;
+        }
+
+        // Step 2: Gemini classification + question analysis on the text.
+        await markProcessingPhase(idempotencyKey, "gemini_classify");
+        const textSystemPrompt = buildStructuredOcrSystemPromptForText(mode);
+        const textUserPrompt = buildStructuredOcrUserPromptForText(
+          mode,
+          pageIndex,
+          page.job.totalPages,
+          ocrText,
+        );
+        const classified = await generateStructuredTextWithTriggerFetch({
+          stage: "ocr",
+          systemPrompt: textSystemPrompt,
+          userPrompt: textUserPrompt,
+          schema: structuredOcrResponseSchema,
+          timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
+          image: { mimeType, base64 },
+        });
+        structured = classified.object;
+        inputTokens = classified.usage?.inputTokens;
+        outputTokens = classified.usage?.outputTokens;
+
+        // pageMeta is needed by finalize for cluster fingerprinting and
+        // page reordering. Gemini sometimes drops these fields in
+        // multimodal mode — override with deterministic regex parsing of
+        // the Document AI raw text, which always has the markup intact.
+        const parsedMeta = parsePageMetaFromDocumentAiText(ocrText);
+        structured = {
+          ...structured,
+          pageMeta: mergePageMeta(
+            structured.pageMeta,
+            parsedMeta,
+          ) as typeof structured.pageMeta,
+        };
+        logger.info("page_meta_parsed", {
+          idempotencyKey,
+          pageIndex,
+          parsed: parsedMeta,
+          merged: structured.pageMeta,
+        });
+
+        extractedText = structured.blocks
+          .map((b) => b.content)
+          .filter((c) => c && c.length > 0)
+          .join("\n\n");
+        if (structured.blocks.length === 0) {
+          // Gemini classification returned no blocks but Document AI did get
+          // text. Synthesize a single PASSAGE_BODY block so finalize can still
+          // produce a draft from this page instead of losing it entirely.
+          structured = {
+            ...structured,
+            blocks: [
+              {
+                blockType: "PASSAGE_BODY",
+                content: ocrText,
+                confidence: 0.5,
+              },
+            ],
+          };
+          extractedText = ocrText;
+        }
+      } else if (isStructured) {
+        await markProcessingPhase(idempotencyKey, "gemini_call");
         const result = await generateStructuredOcrWithTriggerFetch({
           systemPrompt,
           userPrompt,
@@ -504,6 +644,7 @@ export const extractionPageTask = task({
           throw emptyErr;
         }
       } else {
+        await markProcessingPhase(idempotencyKey, "gemini_call");
         const result = await generatePlainOcrWithTriggerFetch({
           systemPrompt,
           userPrompt,

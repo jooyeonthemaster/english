@@ -33,6 +33,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -56,5 +57,25 @@ temp_*
 text*.txt
 verify-db.mjs
 
+# Google Cloud service account JSON keys (contain private_key — NEVER commit)
+# Pattern matches GCP convention: <project-id>-<12-hex-chars>.json
+valued-mission-*.json
+nara-ai-*.json
+*-service-account*.json
+google-credentials*.json
+
+# Test PDFs / one-off OCR text dumps used during extraction-pipeline debugging.
+# These can be 1+ MB each and are not project assets.
+/nara*.pdf
+/고등영어_*.pdf
+.*-pdf.tmp.txt
+
 .vercel
 .playwright-mcp/
+.trigger/
+
+# Local test materials (uploaded exam sheets / images for extraction testing).
+/test files/
+
+# Claude Code working directory (per-machine session state, lock files).
+.claude/

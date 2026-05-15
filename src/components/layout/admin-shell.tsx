@@ -31,7 +31,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getNavGroups, type NavGroup } from "./nav-config";
-import { HelpChatbot } from "@/components/help-chatbot/help-chatbot";
 import { CreditBadge } from "@/components/credits/credit-badge";
 import { MaybeComingSoon } from "./maybe-coming-soon";
 
@@ -558,9 +557,6 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </MaybeComingSoon>
           </main>
         </div>
-
-        {/* Help Chatbot */}
-        <HelpChatbot />
       </div>
     </TooltipProvider>
   );
