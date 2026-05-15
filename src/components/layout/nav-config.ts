@@ -99,7 +99,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         {
           label: "시험지 생성",
           icon: GraduationCap,
-          href: `${basePath}/workbench/exams`,
+          href: `${basePath}/workbench/exams/create`,
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },

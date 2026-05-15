@@ -42,12 +42,12 @@ const workflowStages: WorkflowStage[] = [
     actions: [
       {
         label: "자료 추출하기",
-        href: "/director/workbench/passages/import",
+        href: "/director/workbench/extraction",
         variant: "primary",
       },
       {
         label: "추출된 자료 관리하기",
-        href: "/director/workbench/passages",
+        href: "/director/workbench/extraction/jobs",
         variant: "secondary",
       },
     ],
@@ -84,12 +84,12 @@ const workflowStages: WorkflowStage[] = [
     actions: [
       {
         label: "문제 생성하기",
-        href: "/director/workbench/generate",
+        href: "/director/workbench/questions/generate",
         variant: "primary",
       },
       {
         label: "생성된 문제 관리하기",
-        href: "/director/questions",
+        href: "/director/workbench/questions",
         variant: "secondary",
       },
     ],
@@ -105,12 +105,12 @@ const workflowStages: WorkflowStage[] = [
     actions: [
       {
         label: "시험지 생성",
-        href: "/director/exams/create",
+        href: "/director/workbench/exams/create",
         variant: "primary",
       },
       {
         label: "시험지 관리",
-        href: "/director/exams",
+        href: "/director/workbench/exams",
         variant: "secondary",
       },
     ],

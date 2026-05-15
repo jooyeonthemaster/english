@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
+import { PassageStudyNotePrintDialog } from "@/components/workbench/passage-study-note-print-dialog";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
@@ -122,6 +123,7 @@ export function PassageListClient({
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
   const [showAddToFolder, setShowAddToFolder] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
+  const [studyNoteOpen, setStudyNoteOpen] = useState(false);
 
   // ─── Shared hooks ───
   const { updateFilter, goToPage } = useUrlFilters("/director/workbench/passages");
@@ -145,6 +147,11 @@ export function PassageListClient({
   );
 
   const selection = useSelection(passageIds);
+
+  const selectedPassages = useMemo(
+    () => displayedPassages.filter((p) => selection.selectedIds.has(p.id)),
+    [displayedPassages, selection.selectedIds],
+  );
 
   // Stats
   const totalCount = passagesData.total;
@@ -225,6 +232,23 @@ export function PassageListClient({
         </div>
       )}
     </div>
+  );
+
+  const studyNoteAction = (
+    <button
+      onClick={() => setStudyNoteOpen(true)}
+      className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-emerald-700 bg-white border border-emerald-200 rounded-md hover:bg-emerald-50"
+    >
+      <BookMarked className="w-3.5 h-3.5" />
+      학습자료 만들기
+    </button>
+  );
+
+  const selectionActions = (
+    <>
+      {studyNoteAction}
+      {addToFolderAction}
+    </>
   );
 
   return (
@@ -356,7 +380,7 @@ export function PassageListClient({
         onClearSelection={selection.clearSelection}
         activeFolder={folder.activeFolder}
         onRemoveFromFolder={onRemoveFromFolder}
-        extraActions={addToFolderAction}
+        extraActions={selectionActions}
       />
 
       {/* ─── Content ─── */}
@@ -441,6 +465,11 @@ export function PassageListClient({
       </div>
 
       <PassageImportDialog open={importOpen} onOpenChange={setImportOpen} />
+      <PassageStudyNotePrintDialog
+        open={studyNoteOpen}
+        onOpenChange={setStudyNoteOpen}
+        passages={selectedPassages}
+      />
 
       {/* ─── Analysis Modal ─── */}
       {modalPassageId && (() => {

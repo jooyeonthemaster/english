@@ -7,12 +7,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   ArrowLeft,
+  ArrowDownToLine,
   BookOpen,
   Check,
   CheckCircle2,
   ClipboardList,
   Clock,
   Columns2,
+  CornerDownRight,
   Download,
   Eye,
   FileText,
@@ -89,6 +91,8 @@ type PaperTemplate = "clean" | "mock" | "worksheet" | "minimal" | "academy" | "m
 type Density = "comfortable" | "compact";
 type PassageStyle = "boxed" | "plain" | "underlined";
 
+type BreakBefore = "auto" | "column" | "page";
+
 type PaperItem = {
   localId: string;
   questionId: string;
@@ -105,6 +109,8 @@ type PaperItem = {
   answerSpaceLines: number;
   sectionTitle: string;
   teacherNote: string;
+  breakBefore: BreakBefore;
+  keepWithPrev: boolean;
 };
 
 type PaperGroup = {
@@ -115,7 +121,31 @@ type PaperGroup = {
   includePassage: boolean;
 };
 
-type PaperPage = PaperGroup[][];
+type RenderOption = { option: OptionItem; originalIndex: number };
+
+type RenderItemPart = {
+  source: PaperItem;
+  partKey: string;
+  showHeader: boolean;
+  showAnswer: boolean;
+  options: RenderOption[];
+  isStart: boolean;
+  isContinuation: boolean;
+};
+
+type RenderFragment = {
+  id: string;
+  passageTitle: string;
+  passageContent: string;
+  includePassage: boolean;
+  passageRenderedLines: string[];
+  passageStartLineIndex: number;
+  passageTotalLines: number;
+  groupSourceId: string;
+  parts: RenderItemPart[];
+};
+
+type PaperPage = RenderFragment[][];
 
 type PaginationSettings = {
   columns: 1 | 2;
@@ -505,20 +535,19 @@ function makeLocalId(questionId: string): string {
   return `${questionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-function makePaperItem(question: BuilderQuestion, orderNum: number, existingItems: PaperItem[]): PaperItem {
+function makePaperItem(question: BuilderQuestion, orderNum: number, _existingItems: PaperItem[]): PaperItem {
   const options = parseOptions(question.options);
-  const passageGroupId = question.passage ? `passage:${question.passage.id}` : `solo:${question.id}`;
-  const groupExists = existingItems.some((item) => item.groupId === passageGroupId);
+  const localId = makeLocalId(question.id);
   const isSubjective = options.length === 0;
 
   return {
-    localId: makeLocalId(question.id),
+    localId,
     questionId: question.id,
     sourceQuestion: question,
     orderNum,
     points: question.points || 1,
-    groupId: passageGroupId,
-    includePassage: question.passage ? !groupExists : false,
+    groupId: `single:${localId}`,
+    includePassage: Boolean(question.passage),
     passageTitle: question.passage?.title || "",
     passageContent: question.passage?.content || "",
     questionText: question.questionText,
@@ -527,6 +556,8 @@ function makePaperItem(question: BuilderQuestion, orderNum: number, existingItem
     answerSpaceLines: isSubjective ? 4 : 0,
     sectionTitle: "",
     teacherNote: "",
+    breakBefore: "auto",
+    keepWithPrev: false,
   };
 }
 
@@ -637,52 +668,139 @@ function estimatePassageHeight(group: PaperGroup, settings: PaginationSettings):
   return title + chrome + lines * lineHeight;
 }
 
-function estimateItemHeight(item: PaperItem, settings: PaginationSettings): number {
+function passageLineHeight(settings: PaginationSettings): number {
+  const compact = settings.density === "compact";
+  const fontSize = compact ? 10.5 : 11.5;
+  return fontSize * (compact ? 1.46 : 1.58);
+}
+
+function passageChromeHeight(group: PaperGroup, settings: PaginationSettings, includeTitle: boolean): number {
+  const titleHeight = includeTitle && settings.showPassageTitle && group.passageTitle ? 15 : 0;
+  const boxChrome =
+    settings.passageStyle === "boxed" ? 24 : settings.passageStyle === "underlined" ? 18 : 8;
+  return titleHeight + boxChrome + 12;
+}
+
+function passageToLines(content: string, settings: PaginationSettings): string[] {
+  if (!content) return [];
+  const compact = settings.density === "compact";
+  const { columnWidth } = pageMetrics(settings, 0);
+  const fontSize = compact ? 10.5 : 11.5;
+  const maxUnitsPerLine = Math.max(12, columnWidth / fontSize);
+  const lines: string[] = [];
+
+  for (const paragraph of content.replace(/\r/g, "").split("\n")) {
+    if (!paragraph.trim()) {
+      lines.push("");
+      continue;
+    }
+
+    let currentLine = "";
+    let currentUnits = 0;
+    let i = 0;
+
+    while (i < paragraph.length) {
+      let nextSpace = paragraph.indexOf(" ", i);
+      if (nextSpace === -1) nextSpace = paragraph.length;
+      const word = paragraph.slice(i, nextSpace);
+      const wordUnits = Array.from(word).reduce((sum, ch) => sum + glyphUnits(ch), 0);
+      const spaceFollows = nextSpace < paragraph.length;
+      const spaceUnits = spaceFollows ? glyphUnits(" ") : 0;
+
+      if (wordUnits > maxUnitsPerLine && !currentLine) {
+        // word longer than a line — break by chars
+        let chunk = "";
+        let chunkUnits = 0;
+        for (const ch of word) {
+          const u = glyphUnits(ch);
+          if (chunkUnits + u > maxUnitsPerLine && chunk) {
+            lines.push(chunk);
+            chunk = ch;
+            chunkUnits = u;
+          } else {
+            chunk += ch;
+            chunkUnits += u;
+          }
+        }
+        currentLine = chunk;
+        currentUnits = chunkUnits;
+      } else if (currentUnits + wordUnits > maxUnitsPerLine && currentLine) {
+        lines.push(currentLine.trimEnd());
+        currentLine = word;
+        currentUnits = wordUnits;
+      } else {
+        currentLine += word;
+        currentUnits += wordUnits;
+      }
+
+      if (spaceFollows) {
+        if (currentUnits + spaceUnits <= maxUnitsPerLine) {
+          currentLine += " ";
+          currentUnits += spaceUnits;
+        }
+      }
+
+      i = nextSpace + 1;
+    }
+
+    if (currentLine.trim()) lines.push(currentLine.trimEnd());
+    else if (currentLine === "") lines.push("");
+  }
+
+  return lines;
+}
+
+function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
   const fontSize = compact ? 10.5 : 11.5;
   const lineHeight = fontSize * (compact ? 1.46 : 1.58);
   const questionLines = estimateTextLines(item.questionText, columnWidth, fontSize);
   const metaHeight = settings.showQuestionMeta ? 18 : 16;
-  const optionHeight = item.options.reduce((sum, option) => {
-    const optionLines = estimateTextLines(option.text, Math.max(80, columnWidth - 22), compact ? 10 : 11);
-    return sum + Math.max(16, optionLines * (compact ? 14.5 : 16));
-  }, 0);
-  const answerHeight = settings.showAnswerSpace ? item.answerSpaceLines * 14 + (item.answerSpaceLines > 0 ? 8 : 0) : 0;
-  const teacherNoteHeight = settings.template === "worksheet" && item.teacherNote ? 24 : 0;
-
-  return metaHeight + questionLines * lineHeight + optionHeight + answerHeight + teacherNoteHeight + 6;
+  return metaHeight + questionLines * lineHeight + 6;
 }
 
-function estimateGroupHeight(group: PaperGroup, settings: PaginationSettings): number {
-  const passageHeight = estimatePassageHeight(group, settings);
-  const itemHeight = group.items.reduce((sum, item, index) => {
-    return sum + estimateItemHeight(item, settings) + (index > 0 ? ITEM_GAP : 0);
-  }, 0);
-
-  return passageHeight + (passageHeight > 0 && itemHeight > 0 ? 12 : 0) + itemHeight;
+function estimateOptionBlockHeight(option: OptionItem, settings: PaginationSettings): number {
+  const compact = settings.density === "compact";
+  const { columnWidth } = pageMetrics(settings, 0);
+  const optionLines = estimateTextLines(option.text, Math.max(80, columnWidth - 22), compact ? 10 : 11);
+  return Math.max(16, optionLines * (compact ? 14.5 : 16));
 }
 
-function cloneGroupFragment(group: PaperGroup, items: PaperItem[], includePassage: boolean): PaperGroup {
-  return {
-    ...group,
-    id: `${group.id}:${items[0]?.localId || "empty"}`,
-    items,
-    includePassage,
-  };
+function estimateAnswerBlockHeight(item: PaperItem): number {
+  return item.answerSpaceLines * 14 + (item.answerSpaceLines > 0 ? 8 : 0);
 }
 
-function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): PaperPage[] {
+function estimateTeacherNoteHeight(item: PaperItem, settings: PaginationSettings): number {
+  return settings.template === "worksheet" && item.teacherNote ? 24 : 0;
+}
+
+type FlowBlock =
+  | { kind: "passage-atom"; group: PaperGroup; allLines: string[]; height: number }
+  | { kind: "passage-line"; group: PaperGroup; line: string; lineIndex: number; totalLines: number; height: number }
+  | { kind: "header"; group: PaperGroup; item: PaperItem; height: number }
+  | { kind: "option"; group: PaperGroup; item: PaperItem; option: OptionItem; index: number; height: number }
+  | { kind: "answer"; group: PaperGroup; item: PaperItem; height: number }
+  | { kind: "note"; group: PaperGroup; item: PaperItem; height: number };
+
+type PaginationResult = {
+  pages: PaperPage[];
+  overflowItems: Set<string>;
+};
+
+function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): PaginationResult {
   const pages: PaperPage[] = [];
   let pageIndex = 0;
   let columnIndex = 0;
   let currentPage: PaperPage = Array.from({ length: settings.columns }, () => []);
   let columnHeights = Array.from({ length: settings.columns }, () => 0);
 
+  const passageTitleShownFor = new Set<string>();
+  const headerRenderedFor = new Set<string>();
+  const overflowItems = new Set<string>();
+
   function pushCurrentPage() {
-    if (currentPage.some((column) => column.length > 0)) {
-      pages.push(currentPage);
-    }
+    if (currentPage.some((column) => column.length > 0)) pages.push(currentPage);
     pageIndex += 1;
     columnIndex = 0;
     currentPage = Array.from({ length: settings.columns }, () => []);
@@ -692,67 +810,219 @@ function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): Pap
   function advanceColumn() {
     if (columnIndex < settings.columns - 1) {
       columnIndex += 1;
-      return;
+    } else {
+      pushCurrentPage();
     }
-    pushCurrentPage();
   }
 
   function currentCapacity() {
     return pageMetrics(settings, pageIndex).capacity;
   }
 
-  function heightWithColumnGap(fragment: PaperGroup) {
-    const gap = currentPage[columnIndex].length > 0 ? GROUP_GAP : 0;
-    return estimateGroupHeight(fragment, settings) + gap;
+  function ensureFragment(group: PaperGroup): RenderFragment {
+    const col = currentPage[columnIndex];
+    const last = col[col.length - 1];
+    if (last && last.groupSourceId === group.id) return last;
+
+    const gap = col.length > 0 ? GROUP_GAP : 0;
+    const fragment: RenderFragment = {
+      id: `${group.id}@p${pageIndex}c${columnIndex}n${col.length}`,
+      passageTitle: group.passageTitle,
+      passageContent: group.passageContent,
+      includePassage: false,
+      passageRenderedLines: [],
+      passageStartLineIndex: 0,
+      passageTotalLines: 0,
+      groupSourceId: group.id,
+      parts: [],
+    };
+    col.push(fragment);
+    columnHeights[columnIndex] += gap;
+    return fragment;
   }
 
-  function canFitCurrent(fragment: PaperGroup) {
-    const height = heightWithColumnGap(fragment);
-    return columnHeights[columnIndex] + height <= currentCapacity();
+  function ensurePart(fragment: RenderFragment, item: PaperItem): RenderItemPart {
+    const last = fragment.parts[fragment.parts.length - 1];
+    if (last && last.source.localId === item.localId) return last;
+
+    const hasPassageOrParts = fragment.parts.length > 0 || fragment.passageRenderedLines.length > 0;
+    const partGap = hasPassageOrParts ? ITEM_GAP : 0;
+    const isFreshStart = !headerRenderedFor.has(item.localId);
+    const part: RenderItemPart = {
+      source: item,
+      partKey: `${item.localId}@p${pageIndex}c${columnIndex}f${fragment.id}n${fragment.parts.length}`,
+      showHeader: isFreshStart,
+      showAnswer: false,
+      options: [],
+      isStart: isFreshStart,
+      isContinuation: !isFreshStart,
+    };
+    fragment.parts.push(part);
+    columnHeights[columnIndex] += partGap;
+    return part;
   }
 
-  function placeFragment(fragment: PaperGroup) {
-    if (fragment.items.length === 0) return;
+  function marginalCostForBlock(block: FlowBlock): number {
+    const col = currentPage[columnIndex];
+    const lastFrag = col[col.length - 1];
+    const sameFragment = !!lastFrag && lastFrag.groupSourceId === block.group.id;
 
-    let height = heightWithColumnGap(fragment);
-    if (columnHeights[columnIndex] > 0 && columnHeights[columnIndex] + height > currentCapacity()) {
-      advanceColumn();
-      height = heightWithColumnGap(fragment);
+    let cost = block.height;
+
+    if (!sameFragment) {
+      cost += col.length > 0 ? GROUP_GAP : 0;
     }
 
-    currentPage[columnIndex].push(fragment);
-    columnHeights[columnIndex] += height;
-  }
-
-  for (const group of groups) {
-    let fragmentItems: PaperItem[] = [];
-    let includePassage = group.includePassage;
-
-    function flushFragment() {
-      if (fragmentItems.length === 0) return;
-      placeFragment(cloneGroupFragment(group, fragmentItems, includePassage));
-      fragmentItems = [];
-      includePassage = false;
-    }
-
-    for (const item of group.items) {
-      const candidate = cloneGroupFragment(group, [...fragmentItems, item], includePassage);
-      const candidateHeight = estimateGroupHeight(candidate, settings);
-      const canMoveWholeCandidate =
-        columnHeights[columnIndex] > 0 && candidateHeight <= currentCapacity();
-
-      if (fragmentItems.length > 0 && !canFitCurrent(candidate) && !canMoveWholeCandidate) {
-        flushFragment();
+    if (block.kind === "passage-line") {
+      const isFirstLineOfFragment = !sameFragment || lastFrag!.passageRenderedLines.length === 0;
+      if (isFirstLineOfFragment) {
+        const includeTitle = !passageTitleShownFor.has(block.group.id);
+        cost += passageChromeHeight(block.group, settings, includeTitle);
       }
-
-      fragmentItems.push(item);
+    } else if (block.kind === "passage-atom") {
+      // height already includes chrome
+    } else {
+      const item = block.item;
+      const lastPart = sameFragment ? lastFrag!.parts[lastFrag!.parts.length - 1] : undefined;
+      const samePart = !!lastPart && lastPart.source.localId === item.localId;
+      if (!samePart) {
+        const hasPassageOrParts =
+          sameFragment &&
+          (lastFrag!.parts.length > 0 || lastFrag!.passageRenderedLines.length > 0);
+        if (hasPassageOrParts) cost += ITEM_GAP;
+      }
     }
 
-    flushFragment();
+    return cost;
+  }
+
+  // Build flow blocks
+  const blocks: FlowBlock[] = [];
+  for (const group of groups) {
+    if (group.includePassage && group.passageContent) {
+      const lines = passageToLines(group.passageContent, settings);
+      // Only split passage into per-line blocks when the group's first item is force-placed
+      // (keepWithPrev). Otherwise treat the passage as an atomic block (legacy behavior).
+      const splitPassage = Boolean(group.items[0]?.keepWithPrev);
+      if (splitPassage) {
+        const lineH = passageLineHeight(settings);
+        lines.forEach((line, idx) => {
+          blocks.push({
+            kind: "passage-line",
+            group,
+            line,
+            lineIndex: idx,
+            totalLines: lines.length,
+            height: lineH,
+          });
+        });
+      } else {
+        const lineH = passageLineHeight(settings);
+        const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
+        const chrome = passageChromeHeight(group, settings, includeTitle);
+        const atomHeight = chrome + lines.length * lineH;
+        blocks.push({
+          kind: "passage-atom",
+          group,
+          allLines: lines,
+          height: atomHeight,
+        });
+      }
+    }
+    for (const item of group.items) {
+      blocks.push({ kind: "header", group, item, height: estimateHeaderBlockHeight(item, settings) });
+      item.options.forEach((option, index) => {
+        blocks.push({ kind: "option", group, item, option, index, height: estimateOptionBlockHeight(option, settings) });
+      });
+      if (settings.showAnswerSpace && item.answerSpaceLines > 0) {
+        blocks.push({ kind: "answer", group, item, height: estimateAnswerBlockHeight(item) });
+      }
+      if (settings.template === "worksheet" && item.teacherNote) {
+        blocks.push({ kind: "note", group, item, height: estimateTeacherNoteHeight(item, settings) });
+      }
+    }
+  }
+
+  let isFirstBlockOverall = true;
+
+  for (const block of blocks) {
+    const group = block.group;
+    const item = block.kind === "passage-line" || block.kind === "passage-atom" ? undefined : block.item;
+    const isHeaderBlock = block.kind === "header";
+
+    const itemRequestsKeepStay = !!item && !isFirstBlockOverall && Boolean(item.keepWithPrev);
+    const headerForceStay = isHeaderBlock && itemRequestsKeepStay;
+
+    // breakBefore on header block
+    if (isHeaderBlock && item && !isFirstBlockOverall && !itemRequestsKeepStay) {
+      if (item.breakBefore === "page") {
+        if (currentPage.some((c) => c.length > 0)) pushCurrentPage();
+      } else if (item.breakBefore === "column") {
+        if (columnHeights[columnIndex] > 0) advanceColumn();
+      }
+    }
+
+    const cost = marginalCostForBlock(block);
+    const colHasContent = columnHeights[columnIndex] > 0;
+    const wouldOverflow = colHasContent && columnHeights[columnIndex] + cost > currentCapacity();
+
+    if (wouldOverflow && !headerForceStay) {
+      advanceColumn();
+    }
+
+    const fragment = ensureFragment(group);
+
+    if (block.kind === "passage-atom") {
+      fragment.includePassage = true;
+      fragment.passageRenderedLines = block.allLines;
+      fragment.passageStartLineIndex = 0;
+      fragment.passageTotalLines = block.allLines.length;
+      passageTitleShownFor.add(group.id);
+      columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "passage-line") {
+      const isFirstLineOfFragment = fragment.passageRenderedLines.length === 0;
+      if (isFirstLineOfFragment) {
+        const includeTitle = !passageTitleShownFor.has(group.id);
+        const chrome = passageChromeHeight(group, settings, includeTitle);
+        columnHeights[columnIndex] += chrome;
+        fragment.includePassage = true;
+        fragment.passageStartLineIndex = block.lineIndex;
+        fragment.passageTotalLines = block.totalLines;
+        if (includeTitle) passageTitleShownFor.add(group.id);
+      }
+      fragment.passageRenderedLines.push(block.line);
+      columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "header") {
+      const part = ensurePart(fragment, item!);
+      if (!headerRenderedFor.has(item!.localId)) {
+        headerRenderedFor.add(item!.localId);
+        columnHeights[columnIndex] += block.height;
+        if (headerForceStay && columnHeights[columnIndex] > currentCapacity()) {
+          overflowItems.add(item!.localId);
+        }
+      }
+      void part;
+    } else if (block.kind === "option") {
+      const part = ensurePart(fragment, item!);
+      part.options.push({ option: block.option, originalIndex: block.index });
+      columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "answer") {
+      const part = ensurePart(fragment, item!);
+      part.showAnswer = true;
+      columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "note") {
+      ensurePart(fragment, item!);
+      columnHeights[columnIndex] += block.height;
+    }
+
+    isFirstBlockOverall = false;
   }
 
   if (currentPage.some((column) => column.length > 0)) pages.push(currentPage);
-  return pages.length > 0 ? pages : [Array.from({ length: settings.columns }, () => [])];
+  return {
+    pages: pages.length > 0 ? pages : [Array.from({ length: settings.columns }, () => [])],
+    overflowItems,
+  };
 }
 
 function formatDateInput(date: Date): string {
@@ -890,19 +1160,24 @@ export function ExamPaperBuilderClient({
   }, [questions, search, selectedCollectionId, difficulty, questionType, approvedOnly, starredOnly]);
 
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
-  const paperPages = useMemo(
-    () =>
-      paginateGroups(paperGroups, {
-        columns,
-        density,
-        passageStyle,
-        showAnswerSpace,
-        showPassageTitle,
-        showQuestionMeta,
-        template,
-      }),
-    [paperGroups, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
+  const paginationSettings = useMemo<PaginationSettings>(
+    () => ({
+      columns,
+      density,
+      passageStyle,
+      showAnswerSpace,
+      showPassageTitle,
+      showQuestionMeta,
+      template,
+    }),
+    [columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
   );
+  const paginationResult = useMemo(
+    () => paginateGroups(paperGroups, paginationSettings),
+    [paperGroups, paginationSettings],
+  );
+  const paperPages = paginationResult.pages;
+  const overflowItemIds = paginationResult.overflowItems;
   const activeItem = useMemo(
     () => paperItems.find((item) => item.localId === activeItemId) || paperItems[0] || null,
     [paperItems, activeItemId],
@@ -959,6 +1234,24 @@ export function ExamPaperBuilderClient({
       current.map((item) => (item.localId === localId ? { ...item, ...patch } : item)),
     );
     markDirty();
+  }
+
+  function tryToggleKeepWithPrev(localId: string) {
+    const current = paperItems.find((item) => item.localId === localId);
+    if (!current) return;
+
+    if (current.keepWithPrev) {
+      updateItem(localId, { keepWithPrev: false });
+      return;
+    }
+
+    const itemIndex = paperItems.findIndex((item) => item.localId === localId);
+    if (itemIndex <= 0) {
+      toast.error("앞 문항이 없어서 강제 배치할 수 없습니다.");
+      return;
+    }
+
+    updateItem(localId, { keepWithPrev: true });
   }
 
   function updateGroupPassage(groupId: string | null, patch: Pick<Partial<PaperItem>, "passageTitle" | "passageContent">) {
@@ -1047,10 +1340,10 @@ export function ExamPaperBuilderClient({
       current.map((item) =>
         item.localId === localId
           ? {
-              ...item,
-              groupId: `single:${item.localId}`,
-              includePassage: Boolean(item.passageContent),
-            }
+            ...item,
+            groupId: `single:${item.localId}`,
+            includePassage: Boolean(item.passageContent),
+          }
           : item,
       ),
     );
@@ -1059,15 +1352,40 @@ export function ExamPaperBuilderClient({
 
   function regroupByPassage() {
     setPaperItems((current) => {
-      const seen = new Set<string>();
-      return current.map((item) => {
-        const groupId = item.sourceQuestion.passage
+      if (current.length === 0) return current;
+
+      const groupKey = (item: PaperItem) =>
+        item.sourceQuestion.passage
           ? `passage:${item.sourceQuestion.passage.id}`
           : `solo:${item.questionId}`;
+
+      const firstSeen = new Map<string, number>();
+      current.forEach((item, index) => {
+        const key = groupKey(item);
+        if (!firstSeen.has(key)) firstSeen.set(key, index);
+      });
+
+      const sorted = [...current]
+        .map((item, index) => ({ item, index }))
+        .sort((a, b) => {
+          const keyA = groupKey(a.item);
+          const keyB = groupKey(b.item);
+          const orderA = firstSeen.get(keyA) ?? 0;
+          const orderB = firstSeen.get(keyB) ?? 0;
+          if (orderA !== orderB) return orderA - orderB;
+          return a.index - b.index;
+        })
+        .map(({ item }) => item);
+
+      const seen = new Set<string>();
+      const grouped = sorted.map((item) => {
+        const groupId = groupKey(item);
         const includePassage = Boolean(item.sourceQuestion.passage && !seen.has(groupId));
         seen.add(groupId);
         return { ...item, groupId, includePassage };
       });
+
+      return reindexItems(grouped);
     });
     markDirty();
   }
@@ -1079,10 +1397,10 @@ export function ExamPaperBuilderClient({
       current.map((item) =>
         item.groupId === targetGroupId
           ? {
-              ...item,
-              groupId: `single:${item.localId}`,
-              includePassage: Boolean(item.passageContent),
-            }
+            ...item,
+            groupId: `single:${item.localId}`,
+            includePassage: Boolean(item.passageContent),
+          }
           : item,
       ),
     );
@@ -1979,6 +2297,8 @@ export function ExamPaperBuilderClient({
                         onRemoveItem={removeItem}
                         onUngroupItem={ungroupItem}
                         onRegroupByPassage={regroupByPassage}
+                        onToggleKeepWithPrev={tryToggleKeepWithPrev}
+                        overflowItemIds={overflowItemIds}
                         draggingItemId={draggingItemId}
                         setDraggingItemId={setDraggingItemId}
                         dragOverItemId={dragOverItemId}
@@ -2131,6 +2451,34 @@ export function ExamPaperBuilderClient({
                     className="h-9 w-full rounded-lg border border-slate-200 px-3 text-[12px] outline-none focus:border-blue-400"
                   />
                 </label>
+                <div className="col-span-2 space-y-2 rounded-lg border border-slate-200 bg-slate-50/60 p-2.5">
+                  <p className="text-[11px] font-bold text-slate-500">레이아웃 흐름</p>
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[11px] font-semibold text-slate-600">앞에서 줄바꿈</span>
+                    <select
+                      value={activeItem.breakBefore}
+                      onChange={(event) =>
+                        updateItem(activeItem.localId, { breakBefore: event.target.value as BreakBefore })
+                      }
+                      className="h-8 w-full rounded-lg border border-slate-200 bg-white px-2 text-[12px] outline-none focus:border-blue-400"
+                    >
+                      <option value="auto">자동 (빈 공간 채움)</option>
+                      <option value="column">다음 칸으로</option>
+                      <option value="page">다음 페이지로</option>
+                    </select>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={activeItem.keepWithPrev}
+                      onChange={(event) => updateItem(activeItem.localId, { keepWithPrev: event.target.checked })}
+                    />
+                    <span className="text-[11px] font-semibold text-slate-600">앞 문항 바로 아래에 강제 배치</span>
+                  </label>
+                  <p className="text-[10px] leading-relaxed text-slate-400">
+                    기본은 빈 공간을 채우면서 자연스럽게 흐릅니다. "다음 칸/페이지로"는 강제 분리, "강제 배치"는 앞 문항 바로 아래에 박아넣습니다 (칸 경계를 넘쳐도 옆 칸으로 안 밀어냄).
+                  </p>
+                </div>
                 <div className="col-span-2 flex items-center gap-2">
                   <button
                     onClick={ungroupActive}
@@ -2163,34 +2511,34 @@ export function ExamPaperBuilderClient({
           willChange: "transform",
         }}
       >
-      <button
-        id="exam-template-floating-button"
-        type="button"
-        aria-pressed={templatePanelOpen}
-        onPointerDown={startTemplateFloatingDrag}
-        onClick={handleTemplateFloatingButtonClick}
-        className={cn(
-          "inline-flex h-11 cursor-grab touch-none select-none items-center gap-2 rounded-full border px-4 text-[13px] font-bold shadow-lg transition-colors duration-150 active:cursor-grabbing",
-          templatePanelOpen
-            ? "border-blue-300 bg-blue-600 text-white shadow-blue-500/20"
-            : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700",
-        )}
-      >
-        <LayoutTemplate className="h-4 w-4" />
-        시험지 편집
-      </button>
-
-      {templatePanelOpen && (
-        <div
-          id="exam-template-floating-panel"
-          className="w-[340px] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/15"
-          style={{
-            maxHeight: "min(560px, calc(100dvh - 232px))",
-          }}
+        <button
+          id="exam-template-floating-button"
+          type="button"
+          aria-pressed={templatePanelOpen}
+          onPointerDown={startTemplateFloatingDrag}
+          onClick={handleTemplateFloatingButtonClick}
+          className={cn(
+            "inline-flex h-11 cursor-grab touch-none select-none items-center gap-2 rounded-full border px-4 text-[13px] font-bold shadow-lg transition-colors duration-150 active:cursor-grabbing",
+            templatePanelOpen
+              ? "border-blue-300 bg-blue-600 text-white shadow-blue-500/20"
+              : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700",
+          )}
         >
-          {templateSettingsPanel}
-        </div>
-      )}
+          <LayoutTemplate className="h-4 w-4" />
+          시험지 편집
+        </button>
+
+        {templatePanelOpen && (
+          <div
+            id="exam-template-floating-panel"
+            className="w-[340px] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/15"
+            style={{
+              maxHeight: "min(560px, calc(100dvh - 232px))",
+            }}
+          >
+            {templateSettingsPanel}
+          </div>
+        )}
       </div>
 
       {detailQuestion && (
@@ -2314,6 +2662,8 @@ interface A4PaperPageProps {
   onRemoveItem: (localId: string) => void;
   onUngroupItem: (localId: string) => void;
   onRegroupByPassage: () => void;
+  onToggleKeepWithPrev: (localId: string) => void;
+  overflowItemIds: Set<string>;
   draggingItemId: string | null;
   setDraggingItemId: (id: string | null) => void;
   dragOverItemId: string | null;
@@ -2396,6 +2746,8 @@ function A4PaperPage({
   onRemoveItem,
   onUngroupItem,
   onRegroupByPassage,
+  onToggleKeepWithPrev,
+  overflowItemIds,
   draggingItemId,
   setDraggingItemId,
   dragOverItemId,
@@ -2569,200 +2921,288 @@ function A4PaperPage({
             visual.mainClass,
           )}
         >
-          {pageColumns.map((columnGroups, columnIndex) => (
+          {pageColumns.map((columnFragments, columnIndex) => (
             <div key={columnIndex} className="min-h-0 space-y-4">
-              {columnGroups.map((group) => (
-                <div key={`${group.id}-${group.items[0]?.localId}`} className="break-inside-avoid">
-              {group.includePassage && group.passageContent && (
-                <div
-                  className={cn(
-                    "mb-3 break-inside-avoid",
-                    passageStyle === "boxed" && "rounded border px-3 py-2",
-                    passageStyle === "underlined" && "border-b border-t py-2",
-                    passageStyle === "plain" && "py-1",
-                    visual.passageClass,
-                  )}
-                >
-                  {showPassageTitle && group.passageTitle && (
-                    <p className={cn("mb-1 text-[10px] font-black uppercase tracking-wide", visual.passageTitleClass)}>
-                      <EditableText
-                        value={group.passageTitle}
-                        onCommit={(next) => onUpdateGroupPassage(group.items[0]?.groupId || null, { passageTitle: next })}
-                      >
-                        {group.passageTitle}
-                      </EditableText>
-                    </p>
-                  )}
-                  <p className={cn("whitespace-pre-line text-justify", visual.questionClass)}>
-                    <EditableText
-                      value={group.passageContent}
-                      onCommit={(next) => onUpdateGroupPassage(group.items[0]?.groupId || null, { passageContent: next })}
-                      className="block"
-                    >
-                      {renderFormattedInline(group.passageContent)}
-                    </EditableText>
-                  </p>
-                </div>
-              )}
-
-              <div className="space-y-3">
-                {group.items.map((item) => (
-                  <div
-                    key={item.localId}
-                    data-paper-item-id={item.localId}
-                    onClick={() => setActiveItemId(item.localId)}
-                    onMouseDownCapture={() => setActiveItemId(item.localId)}
-                    onFocusCapture={() => setActiveItemId(item.localId)}
-                    className={cn(
-                      "group/paper-item relative break-inside-avoid rounded-md transition-colors",
-                      visual.itemClass,
-                      activeItemId === item.localId && "bg-blue-50/80 ring-2 ring-blue-300",
-                      draggingItemId && draggingItemId !== item.localId && "hover:ring-2 hover:ring-blue-300 hover:ring-offset-2",
-                      dragOverItemId === item.localId && "ring-2 ring-blue-300 ring-offset-2",
-                      draggingItemId === item.localId && "opacity-55",
-                      activeItemId === item.localId ? "px-2 py-1.5" : "py-0.5",
-                    )}
-                  >
-                    {dragOverItemId === item.localId && (
+              {columnFragments.map((fragment) => (
+                <div key={fragment.id} className="break-inside-avoid">
+                  {fragment.includePassage && fragment.passageRenderedLines.length > 0 && (() => {
+                    const isPassageStart = fragment.passageStartLineIndex === 0;
+                    const endLineIndex = fragment.passageStartLineIndex + fragment.passageRenderedLines.length;
+                    const isPassageEnd = endLineIndex >= fragment.passageTotalLines;
+                    const renderedText = fragment.passageRenderedLines.join("\n");
+                    const isSplit = !(isPassageStart && isPassageEnd);
+                    return (
                       <div
                         className={cn(
-                          "no-print pointer-events-none absolute left-0 right-0 z-30 h-1 rounded-full bg-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.16)]",
-                          dragPlacement === "before" ? "-top-2" : "-bottom-2",
+                          "mb-3 break-inside-avoid",
+                          passageStyle === "boxed" && "rounded border px-3 py-2",
+                          passageStyle === "underlined" && "border-b border-t py-2",
+                          passageStyle === "plain" && "py-1",
+                          visual.passageClass,
                         )}
-                      />
-                    )}
-                    <div
-                      className={cn(
-                        "no-print pointer-events-none absolute -right-2 -top-3 z-20 flex items-center gap-1 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
-                        activeItemId === item.localId && "pointer-events-auto opacity-100",
-                      )}
-                    >
-                        <button
-                          type="button"
-                          onPointerDown={(event) => startPaperItemDrag(event, item.localId)}
-                          className="flex h-6 w-6 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
-                          title="문항 드래그"
-                        >
-                          <GripVertical className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onUpdateItem(item.localId, { points: Math.max(1, item.points - 1) });
-                          }}
-                          className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
-                          title="배점 낮추기"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onUpdateItem(item.localId, { points: item.points + 1 });
-                          }}
-                          className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
-                          title="배점 올리기"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onUpdateItem(item.localId, { includePassage: !item.includePassage });
+                      >
+                        {showPassageTitle && fragment.passageTitle && isPassageStart && (
+                          <p className={cn("mb-1 text-[10px] font-black uppercase tracking-wide", visual.passageTitleClass)}>
+                            <EditableText
+                              value={fragment.passageTitle}
+                              onCommit={(next) => onUpdateGroupPassage(fragment.groupSourceId, { passageTitle: next })}
+                            >
+                              {fragment.passageTitle}
+                            </EditableText>
+                          </p>
+                        )}
+                        {!isPassageStart && (
+                          <p className={cn("mb-1 text-[9px] italic", visual.passageTitleClass)}>
+                            (지문 계속)
+                          </p>
+                        )}
+                        <p className={cn("whitespace-pre-line text-justify", visual.questionClass)}>
+                          {isSplit ? (
+                            <span className="block">{renderFormattedInline(renderedText)}</span>
+                          ) : (
+                            <EditableText
+                              value={fragment.passageContent}
+                              onCommit={(next) => onUpdateGroupPassage(fragment.groupSourceId, { passageContent: next })}
+                              className="block"
+                            >
+                              {renderFormattedInline(renderedText)}
+                            </EditableText>
+                          )}
+                        </p>
+                        {isSplit && !isPassageEnd && (
+                          <p className={cn("mt-1 text-[9px] italic text-slate-400", visual.passageTitleClass)}>
+                            (다음 칸으로 이어짐 →)
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  <div className="space-y-3">
+                    {fragment.parts.map((part) => {
+                      const item = part.source;
+                      return (
+                        <div
+                          key={part.partKey}
+                          data-paper-item-id={item.localId}
+                          onClick={() => setActiveItemId(item.localId)}
+                          onMouseDownCapture={() => setActiveItemId(item.localId)}
+                          onFocusCapture={() => setActiveItemId(item.localId)}
+                          style={{
+                            breakBefore: part.isStart && item.breakBefore === "page" ? "page" : part.isStart && item.breakBefore === "column" ? "column" : undefined,
+                            breakInside: item.keepWithPrev ? "avoid" : undefined,
                           }}
                           className={cn(
-                            "flex h-6 w-6 items-center justify-center rounded-md hover:bg-slate-50",
-                            item.includePassage ? "text-blue-600" : "text-slate-400 hover:text-slate-700",
+                            "group/paper-item relative break-inside-avoid rounded-md transition-colors",
+                            visual.itemClass,
+                            activeItemId === item.localId && "bg-blue-50/80 ring-2 ring-blue-300",
+                            draggingItemId && draggingItemId !== item.localId && "hover:ring-2 hover:ring-blue-300 hover:ring-offset-2",
+                            dragOverItemId === item.localId && "ring-2 ring-blue-300 ring-offset-2",
+                            draggingItemId === item.localId && "opacity-55",
+                            activeItemId === item.localId ? "px-2 py-1.5" : "py-0.5",
                           )}
-                          title="지문 표시 전환"
                         >
-                          <BookOpen className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onUngroupItem(item.localId);
-                          }}
-                          className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
-                          title="현재 문항 묶음 해제"
-                        >
-                          <Ungroup className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onRegroupByPassage();
-                          }}
-                          className="flex h-6 w-6 items-center justify-center rounded-md text-blue-500 hover:bg-blue-50"
-                          title="지문별 다시 묶기"
-                        >
-                          <Group className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onRemoveItem(item.localId);
-                          }}
-                          className="flex h-6 w-6 items-center justify-center rounded-md text-rose-500 hover:bg-rose-50"
-                          title="문항 삭제"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </button>
-                    </div>
-                    <div className="mb-1 flex items-baseline gap-1.5">
-                      <span className={cn("font-black", compact ? "text-[12px]" : "text-[13px]", visual.numberClass)}>
-                        {item.orderNum}.
-                      </span>
-                      {showQuestionMeta && (
-                        <span className={cn("text-[9px] font-semibold", visual.metaClass)}>
-                          [{item.points}점{item.sourceQuestion.subType ? ` · ${SUBTYPE_LABELS[item.sourceQuestion.subType] || item.sourceQuestion.subType}` : ""}]
-                        </span>
-                      )}
-                    </div>
-                    <p className={cn("whitespace-pre-line font-semibold", visual.questionClass)}>
-                      <EditableText
-                        value={item.questionText}
-                        onCommit={(next) => onUpdateItem(item.localId, { questionText: next })}
-                        className="block"
-                      >
-                        {renderFormattedInline(item.questionText)}
-                      </EditableText>
-                    </p>
-                    {item.options.length > 0 && (
-                      <div className={cn("mt-1.5 space-y-1", compact ? "text-[10px]" : "text-[11px]")}>
-                        {item.options.map((option, index) => (
-                          <div key={`${item.localId}-${option.label}-${index}`} className={cn("flex items-start gap-1.5", visual.optionRowClass)}>
-                            <span className={cn("min-w-[18px] font-bold", visual.optionNumberClass)}>{index + 1}.</span>
-                            <EditableText
-                              value={option.text}
-                              onCommit={(nextText) => {
-                                const nextOptions = [...item.options];
-                                nextOptions[index] = { ...nextOptions[index], text: nextText };
-                                onUpdateItem(item.localId, { options: nextOptions });
-                              }}
-                              className="flex-1"
+                          {part.isStart && dragOverItemId === item.localId && (
+                            <div
+                              className={cn(
+                                "no-print pointer-events-none absolute left-0 right-0 z-30 h-1 rounded-full bg-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.16)]",
+                                dragPlacement === "before" ? "-top-2" : "-bottom-2",
+                              )}
+                            />
+                          )}
+                          {part.isStart && (
+                            <div
+                              className={cn(
+                                "no-print pointer-events-none absolute -right-2 -top-3 z-20 flex items-center gap-1 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
+                                activeItemId === item.localId && "pointer-events-auto opacity-100",
+                              )}
                             >
-                              {renderFormattedInline(option.text)}
-                            </EditableText>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {showAnswerSpace && item.answerSpaceLines > 0 && (
-                      <div className="mt-2 space-y-2">
-                        {Array.from({ length: item.answerSpaceLines }).map((_, index) => (
-                          <div key={index} className={cn("h-[12px] border-b", visual.answerLineClass)} />
-                        ))}
-                      </div>
-                    )}
-                    {template === "worksheet" && item.teacherNote && (
-                      <p className={cn("mt-2 rounded px-2 py-1 text-[9px] font-semibold", visual.teacherNoteClass)}>
-                        교사용 메모: {item.teacherNote}
-                      </p>
-                    )}
+                              <button
+                                type="button"
+                                onPointerDown={(event) => startPaperItemDrag(event, item.localId)}
+                                className="flex h-6 w-6 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
+                                title="문항 드래그"
+                              >
+                                <GripVertical className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onUpdateItem(item.localId, { points: Math.max(1, item.points - 1) });
+                                }}
+                                className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
+                                title="배점 낮추기"
+                              >
+                                <Minus className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onUpdateItem(item.localId, { points: item.points + 1 });
+                                }}
+                                className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
+                                title="배점 올리기"
+                              >
+                                <Plus className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onUpdateItem(item.localId, { includePassage: !item.includePassage });
+                                }}
+                                className={cn(
+                                  "flex h-6 w-6 items-center justify-center rounded-md hover:bg-slate-50",
+                                  item.includePassage ? "text-blue-600" : "text-slate-400 hover:text-slate-700",
+                                )}
+                                title="지문 표시 전환"
+                              >
+                                <BookOpen className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onToggleKeepWithPrev(item.localId);
+                                }}
+                                className={cn(
+                                  "flex h-6 w-6 items-center justify-center rounded-md hover:bg-blue-50",
+                                  item.keepWithPrev ? "text-blue-600" : "text-slate-400 hover:text-slate-700",
+                                  overflowItemIds.has(item.localId) && "ring-1 ring-rose-400",
+                                )}
+                                title={
+                                  overflowItemIds.has(item.localId)
+                                    ? "공간 부족 — 앞 문항 칸 경계를 넘쳤습니다"
+                                    : item.keepWithPrev
+                                      ? "앞 문항 바로 아래에 강제 배치 (켜짐)"
+                                      : "앞 문항 바로 아래에 강제 배치"
+                                }
+                              >
+                                <ArrowDownToLine className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  const next: BreakBefore =
+                                    item.breakBefore === "auto" ? "column" : item.breakBefore === "column" ? "page" : "auto";
+                                  onUpdateItem(item.localId, { breakBefore: next });
+                                }}
+                                className={cn(
+                                  "flex h-6 w-6 items-center justify-center rounded-md hover:bg-blue-50",
+                                  item.breakBefore === "column" && "text-emerald-600",
+                                  item.breakBefore === "page" && "text-blue-700",
+                                  item.breakBefore === "auto" && "text-slate-400 hover:text-slate-700",
+                                )}
+                                title={
+                                  item.breakBefore === "auto"
+                                    ? "앞에서 줄바꿈: 자동 (클릭 → 다음 칸으로)"
+                                    : item.breakBefore === "column"
+                                      ? "앞에서 줄바꿈: 다음 칸으로 (클릭 → 다음 페이지로)"
+                                      : "앞에서 줄바꿈: 다음 페이지로 (클릭 → 자동으로 되돌림)"
+                                }
+                              >
+                                {item.breakBefore === "page" ? (
+                                  <FileText className="h-3 w-3" />
+                                ) : item.breakBefore === "column" ? (
+                                  <Columns2 className="h-3 w-3" />
+                                ) : (
+                                  <CornerDownRight className="h-3 w-3" />
+                                )}
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onUngroupItem(item.localId);
+                                }}
+                                className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
+                                title="현재 문항 묶음 해제"
+                              >
+                                <Ungroup className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onRegroupByPassage();
+                                }}
+                                className="flex h-6 w-6 items-center justify-center rounded-md text-blue-500 hover:bg-blue-50"
+                                title="지문별 다시 묶기"
+                              >
+                                <Group className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onRemoveItem(item.localId);
+                                }}
+                                className="flex h-6 w-6 items-center justify-center rounded-md text-rose-500 hover:bg-rose-50"
+                                title="문항 삭제"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+                          {part.showHeader && (
+                            <>
+                              <div className="mb-1 flex items-baseline gap-1.5">
+                                <span className={cn("font-black", compact ? "text-[12px]" : "text-[13px]", visual.numberClass)}>
+                                  {item.orderNum}.
+                                </span>
+                                {showQuestionMeta && (
+                                  <span className={cn("text-[9px] font-semibold", visual.metaClass)}>
+                                    [{item.points}점{item.sourceQuestion.subType ? ` · ${SUBTYPE_LABELS[item.sourceQuestion.subType] || item.sourceQuestion.subType}` : ""}]
+                                  </span>
+                                )}
+                              </div>
+                              <p className={cn("whitespace-pre-line font-semibold", visual.questionClass)}>
+                                <EditableText
+                                  value={item.questionText}
+                                  onCommit={(next) => onUpdateItem(item.localId, { questionText: next })}
+                                  className="block"
+                                >
+                                  {renderFormattedInline(item.questionText)}
+                                </EditableText>
+                              </p>
+                            </>
+                          )}
+                          {part.isContinuation && part.options.length > 0 && (
+                            <p className={cn("mb-1 text-[9px] font-semibold italic", visual.metaClass)}>
+                              ({item.orderNum}번 계속)
+                            </p>
+                          )}
+                          {part.options.length > 0 && (
+                            <div className={cn("space-y-1", part.showHeader ? "mt-1.5" : "mt-0", compact ? "text-[10px]" : "text-[11px]")}>
+                              {part.options.map(({ option, originalIndex }) => (
+                                <div key={`${item.localId}-${originalIndex}`} className={cn("flex items-start gap-1.5", visual.optionRowClass)}>
+                                  <span className={cn("min-w-[18px] font-bold", visual.optionNumberClass)}>{originalIndex + 1}.</span>
+                                  <EditableText
+                                    value={option.text}
+                                    onCommit={(nextText) => {
+                                      const nextOptions = [...item.options];
+                                      nextOptions[originalIndex] = { ...nextOptions[originalIndex], text: nextText };
+                                      onUpdateItem(item.localId, { options: nextOptions });
+                                    }}
+                                    className="flex-1"
+                                  >
+                                    {renderFormattedInline(option.text)}
+                                  </EditableText>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {part.showAnswer && showAnswerSpace && item.answerSpaceLines > 0 && (
+                            <div className="mt-2 space-y-2">
+                              {Array.from({ length: item.answerSpaceLines }).map((_, index) => (
+                                <div key={index} className={cn("h-[12px] border-b", visual.answerLineClass)} />
+                              ))}
+                            </div>
+                          )}
+                          {part.showHeader && template === "worksheet" && item.teacherNote && (
+                            <p className={cn("mt-2 rounded px-2 py-1 text-[9px] font-semibold", visual.teacherNoteClass)}>
+                              교사용 메모: {item.teacherNote}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
                 </div>
               ))}
             </div>
