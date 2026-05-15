@@ -1,22 +1,21 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getClassesForFilter, getSchoolsForFilter } from "@/actions/exam-questions";
-import { ExamCreateWizard } from "@/components/exams/exam-create-wizard";
+import { getExamPaperBuilderData } from "@/actions/exam-paper-builder";
+import { ExamPaperBuilderClient } from "@/components/exams/exam-paper-builder-client";
 
 export default async function ExamCreatePage() {
   const staff = await getStaffSession();
   if (!staff) redirect("/login");
 
-  const [classes, schools] = await Promise.all([
-    getClassesForFilter(staff.academyId),
-    getSchoolsForFilter(staff.academyId),
-  ]);
+  const data = await getExamPaperBuilderData(staff.academyId);
 
   return (
-    <ExamCreateWizard
+    <ExamPaperBuilderClient
       academyId={staff.academyId}
-      classes={classes}
-      schools={schools}
+      questions={data.questions as never}
+      collections={data.collections as never}
+      classes={data.classes}
+      schools={data.schools}
     />
   );
 }

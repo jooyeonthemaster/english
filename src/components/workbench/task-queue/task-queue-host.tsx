@@ -1,11 +1,138 @@
 "use client";
 
-import { useContext, type ReactNode } from "react";
+import { useContext, useRef, useState, type PointerEvent, type ReactNode } from "react";
 
-import { TaskQueueContext, TaskQueueProvider } from "./context";
+import { TaskQueueContext, TaskQueueProvider, useTaskQueue } from "./context";
 import { TaskQueueDrawer } from "./components/task-queue-drawer";
 import { TaskQueueToggle } from "./components/task-queue-toggle";
 import type { TaskDomain } from "./types";
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function TaskQueueFloatingControls() {
+  const { open } = useTaskQueue();
+  const [floatingOffset, setFloatingOffset] = useState({ x: 0, y: 0 });
+  const floatingOffsetRef = useRef(floatingOffset);
+  const floatingFrameRef = useRef<number | null>(null);
+  const floatingMovedRef = useRef(false);
+  const floatingHostRef = useRef<HTMLDivElement | null>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  function startFloatingDrag(event: PointerEvent<HTMLElement>) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    const host = floatingHostRef.current;
+    const button = toggleButtonRef.current;
+    if (!host || !button) return;
+
+    event.stopPropagation();
+
+    const rect = open ? host.getBoundingClientRect() : button.getBoundingClientRect();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startOffset = floatingOffsetRef.current;
+    const margin = 8;
+    const minDeltaX = margin - rect.left;
+    const maxDeltaX = window.innerWidth - margin - rect.right;
+    const minDeltaY = margin - rect.top;
+    const maxDeltaY = window.innerHeight - margin - rect.bottom;
+    const pointerId = event.pointerId;
+    let didMove = false;
+    let latestOffset = startOffset;
+    const previousBodyCursor = document.body.style.cursor;
+    const previousBodyUserSelect = document.body.style.userSelect;
+
+    floatingMovedRef.current = false;
+    document.body.style.cursor = "grabbing";
+    document.body.style.userSelect = "none";
+    host.style.transition = "none";
+    host.style.willChange = "transform";
+
+    try {
+      event.currentTarget.setPointerCapture(pointerId);
+    } catch {
+      // Pointer capture is best-effort; window listeners keep the drag alive.
+    }
+
+    const applyFloatingTransform = () => {
+      floatingFrameRef.current = null;
+      host.style.transform = `translate3d(${latestOffset.x}px, ${latestOffset.y}px, 0)`;
+    };
+
+    const handlePointerMove = (moveEvent: globalThis.PointerEvent) => {
+      const rawDeltaX = moveEvent.clientX - startX;
+      const rawDeltaY = moveEvent.clientY - startY;
+      if (!didMove && Math.hypot(rawDeltaX, rawDeltaY) >= 2) {
+        didMove = true;
+        floatingMovedRef.current = true;
+      }
+
+      moveEvent.preventDefault();
+      latestOffset = {
+        x: startOffset.x + clampNumber(rawDeltaX, minDeltaX, maxDeltaX),
+        y: startOffset.y + clampNumber(rawDeltaY, minDeltaY, maxDeltaY),
+      };
+      floatingOffsetRef.current = latestOffset;
+
+      if (floatingFrameRef.current === null) {
+        floatingFrameRef.current = window.requestAnimationFrame(applyFloatingTransform);
+      }
+    };
+
+    const finishDrag = () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", finishDrag);
+      window.removeEventListener("pointercancel", finishDrag);
+      if (floatingFrameRef.current !== null) {
+        window.cancelAnimationFrame(floatingFrameRef.current);
+        floatingFrameRef.current = null;
+      }
+      applyFloatingTransform();
+      setFloatingOffset(latestOffset);
+      document.body.style.cursor = previousBodyCursor;
+      document.body.style.userSelect = previousBodyUserSelect;
+      host.style.transition = "";
+      host.style.willChange = "transform";
+      try {
+        event.currentTarget.releasePointerCapture(pointerId);
+      } catch {
+        // Pointer capture may already be released by the browser.
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: false });
+    window.addEventListener("pointerup", finishDrag, { once: true });
+    window.addEventListener("pointercancel", finishDrag, { once: true });
+  }
+
+  function shouldIgnoreToggleClick() {
+    if (!floatingMovedRef.current) return false;
+    floatingMovedRef.current = false;
+    return true;
+  }
+
+  return (
+    <div
+      ref={floatingHostRef}
+      className="pointer-events-none fixed bottom-24 right-8 z-50 flex touch-none select-none flex-col-reverse items-end gap-5"
+      style={{
+        backfaceVisibility: "hidden",
+        contain: "layout style",
+        transform: `translate3d(${floatingOffset.x}px, ${floatingOffset.y}px, 0)`,
+        willChange: "transform",
+      }}
+    >
+      <TaskQueueToggle
+        buttonRef={toggleButtonRef}
+        onDragPointerDown={startFloatingDrag}
+        shouldIgnoreClick={shouldIgnoreToggleClick}
+      />
+      <TaskQueueDrawer />
+    </div>
+  );
+}
 
 /**
  * Mounts the floating toggle button + drawer + provider for a page or layout.
@@ -33,8 +160,7 @@ export function TaskQueueHost({
   return (
     <TaskQueueProvider defaultDomain={defaultDomain}>
       {children}
-      <TaskQueueToggle />
-      <TaskQueueDrawer />
+      <TaskQueueFloatingControls />
     </TaskQueueProvider>
   );
 }

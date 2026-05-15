@@ -1,7 +1,7 @@
 "use client";
 
 import { PanelBottomOpen } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type PointerEventHandler, type Ref } from "react";
 
 import { ALL_ADAPTERS } from "../adapters";
 import { ACTIVE_STATUSES, POLL_INTERVAL_MS } from "../constants";
@@ -31,7 +31,15 @@ function writeCachedActiveCount(count: number) {
  * Initial value hydrates from localStorage so navigating between pages
  * doesn't flash the badge to empty before the first fetch resolves.
  */
-export function TaskQueueToggle() {
+export function TaskQueueToggle({
+  buttonRef,
+  onDragPointerDown,
+  shouldIgnoreClick,
+}: {
+  buttonRef?: Ref<HTMLButtonElement>;
+  onDragPointerDown?: PointerEventHandler<HTMLButtonElement>;
+  shouldIgnoreClick?: () => boolean;
+}) {
   const { open, toggle, refreshKey } = useTaskQueue();
   const [activeCount, setActiveCount] = useState<number>(readCachedActiveCount);
 
@@ -74,13 +82,22 @@ export function TaskQueueToggle() {
 
   return (
     <button
+      ref={buttonRef}
       type="button"
-      onClick={toggle}
+      onPointerDown={onDragPointerDown}
+      onClick={(event) => {
+        if (shouldIgnoreClick?.()) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+        toggle();
+      }}
       aria-pressed={open}
       aria-label={`작업 목록 열기 — ${tooltip}`}
       title={tooltip}
       className={
-        "fixed bottom-24 right-8 z-40 inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-[13px] font-bold shadow-lg motion-safe:transition-all motion-safe:duration-150 " +
+        "pointer-events-auto inline-flex h-11 cursor-grab touch-none select-none items-center gap-2 rounded-full border px-4 text-[13px] font-bold shadow-lg motion-safe:transition-colors motion-safe:duration-150 active:cursor-grabbing " +
         (open
           ? "border-blue-500 bg-blue-600 text-white"
           : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700")

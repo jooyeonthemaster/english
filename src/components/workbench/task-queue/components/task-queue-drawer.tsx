@@ -11,9 +11,9 @@ export function TaskQueueDrawer() {
   return (
     <div
       className={
-        "fixed bottom-40 right-8 z-50 w-[min(520px,calc(100vw-40px))] motion-safe:transition-[opacity,transform] motion-safe:duration-150 " +
+        "w-[min(520px,calc(100vw-40px))] motion-safe:transition-[opacity,transform] motion-safe:duration-150 " +
         (open
-          ? "opacity-100"
+          ? "pointer-events-auto opacity-100"
           : "pointer-events-none -translate-y-1 opacity-0")
       }
       aria-hidden={!open}

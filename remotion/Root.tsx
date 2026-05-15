@@ -17,6 +17,9 @@ import ParentAppScene from './scenes/ParentAppScene';
 import TechOutroScene from './scenes/TechOutroScene';
 import AIFlowMobilePromo from './scenes/AIFlowMobilePromo';
 import PassageAnalysisDeepDive, { PASSAGE_DEEP_DIVE_TOTAL } from './scenes/PassageAnalysisDeepDive';
+import HiggsfieldPromo, { HIGGSFIELD_PROMO_TOTAL, HIGGSFIELD_PROMO_FPS, HIGGSFIELD_PROMO_WIDTH, HIGGSFIELD_PROMO_HEIGHT } from './scenes/HiggsfieldPromo';
+import OrderShuffleMeme, { ORDER_MEME_TOTAL, ORDER_MEME_FPS, ORDER_MEME_W, ORDER_MEME_H } from './scenes/OrderShuffleMeme';
+import ExtremePromo, { EXTREME_PROMO_TOTAL, EXTREME_PROMO_FPS, EXTREME_PROMO_W, EXTREME_PROMO_H } from './scenes/ExtremePromo';
 
 const NaraDemoVideo: React.FC = () => {
   return (
@@ -99,6 +102,36 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={1080}
         height={1920}
+      />
+
+      {/* Higgsfield Promo: 8-cut 40s vertical ad */}
+      <Composition
+        id="HiggsfieldPromo"
+        component={HiggsfieldPromo}
+        durationInFrames={HIGGSFIELD_PROMO_TOTAL}
+        fps={HIGGSFIELD_PROMO_FPS}
+        width={HIGGSFIELD_PROMO_WIDTH}
+        height={HIGGSFIELD_PROMO_HEIGHT}
+      />
+
+      {/* Order Shuffle Meme: 9:16 high-energy promo for sentence-ordering test */}
+      <Composition
+        id="OrderShuffleMeme"
+        component={OrderShuffleMeme}
+        durationInFrames={ORDER_MEME_TOTAL}
+        fps={ORDER_MEME_FPS}
+        width={ORDER_MEME_W}
+        height={ORDER_MEME_H}
+      />
+
+      {/* Extreme Promo: 9:16 mobile promo with service UI tone & manner */}
+      <Composition
+        id="ExtremePromo"
+        component={ExtremePromo}
+        durationInFrames={EXTREME_PROMO_TOTAL}
+        fps={EXTREME_PROMO_FPS}
+        width={EXTREME_PROMO_W}
+        height={EXTREME_PROMO_H}
       />
     </>
   );

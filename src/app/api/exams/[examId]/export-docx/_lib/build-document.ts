@@ -20,7 +20,12 @@ import type { DocChild, ExamQuestionData } from "./types";
 export function buildExamDocument(
   title: string,
   questions: ExamQuestionData[],
-  includeAnswers: boolean
+  includeAnswers: boolean,
+  options?: {
+    columns?: 1 | 2;
+    density?: "comfortable" | "compact";
+    template?: string;
+  },
 ): Document {
   const allChildren: DocChild[] = [];
 
@@ -36,7 +41,7 @@ export function buildExamDocument(
           bold: true,
         }),
       ],
-    })
+    }),
   );
 
   const subtitleRuns: TextRun[] = [
@@ -55,7 +60,7 @@ export function buildExamDocument(
         size: SUBTITLE_SIZE,
         color: COLOR.darkGray,
         bold: true,
-      })
+      }),
     );
   }
   allChildren.push(
@@ -63,7 +68,7 @@ export function buildExamDocument(
       alignment: AlignmentType.CENTER,
       spacing: { after: 120 },
       children: subtitleRuns,
-    })
+    }),
   );
 
   allChildren.push(hrule(COLOR.black, 12, 80, 200));
@@ -76,15 +81,21 @@ export function buildExamDocument(
     allChildren.push(...buildAnswerKeyTable(questions));
   }
 
+  const compact = options?.density === "compact";
+  const margin = compact
+    ? { top: 560, bottom: 560, left: 560, right: 560 }
+    : { top: 720, bottom: 720, left: 720, right: 720 };
+  const columnCount = options?.columns ?? 2;
+
   return new Document({
     sections: [
       {
         properties: {
           page: {
-            size: { width: 11906, height: 16838 }, // A4
-            margin: { top: 720, bottom: 720, left: 720, right: 720 }, // 0.5in clean margins
+            size: { width: 11906, height: 16838 },
+            margin,
           },
-          column: { space: 480, count: 2 }, // 2 columns, slightly wider gap
+          column: { space: columnCount === 2 ? 480 : 0, count: columnCount },
         },
         headers: {
           default: new Header({

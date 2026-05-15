@@ -79,3 +79,16 @@ google-credentials*.json
 
 # Claude Code working directory (per-machine session state, lock files).
 .claude/
+
+# Local scratch / promo experiments
+/ExtremePromo.tsx
+/PromoVideo.tsx
+/Root.tsx
+/test_ui.html
+/cyberpunk_seoul_test.png
+/higgsfield-promo.mp4
+/hwp_mcp.log
+/data/
+/public/promo/
+/.agents/
+/skills-lock.json

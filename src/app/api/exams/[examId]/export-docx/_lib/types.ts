@@ -8,6 +8,7 @@ export interface ExamQuestionData {
   orderNum: number;
   points: number;
   question: {
+    id: string;
     type: string;
     subType: string | null;
     questionText: string;

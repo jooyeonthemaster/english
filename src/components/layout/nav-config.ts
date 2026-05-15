@@ -81,7 +81,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         {
           label: "지문 분석",
           icon: FileText,
-          href: `${basePath}/workbench/passages`,
+          href: `${basePath}/workbench/passages/create`,
           children: [
             { label: "지문 분석", href: `${basePath}/workbench/passages/create` },
             { label: "지문 관리", href: `${basePath}/workbench/passages` },
@@ -90,7 +90,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         {
           label: "문제 생성",
           icon: Layers,
-          href: `${basePath}/workbench/questions`,
+          href: `${basePath}/workbench/questions/generate`,
           children: [
             { label: "문제 생성", href: `${basePath}/workbench/questions/generate` },
             { label: "문제 관리", href: `${basePath}/workbench/questions` },
