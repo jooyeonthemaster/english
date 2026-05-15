@@ -165,8 +165,24 @@ export async function splitPdfToImages(
   return slots;
 }
 
+/**
+ * Natural-sort comparator for filenames: treats embedded digit runs as numbers
+ * so that `img2.jpg` < `img10.jpg`, and `KakaoTalk_..._01.jpg` < `_02.jpg`.
+ * The compare goes case-insensitive and uses the locale numeric option so
+ * Hangul / mixed strings still sort sensibly. Used to give image multi-uploads
+ * a sane default order — the user can still drag to reorder afterwards.
+ */
+function naturalCompareFilenames(a: string, b: string): number {
+  return a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
 /** Convert an array of uploaded image files into the same slot shape. Used
- *  when the user drops multiple images instead of a PDF. */
+ *  when the user drops multiple images instead of a PDF. Files are
+ *  natural-sorted by filename first so multi-select / drag-and-drop arrive
+ *  in a predictable order. */
 export async function imagesToSlots(files: File[]): Promise<ClientPageSlot[]> {
   if (files.length > MAX_PAGES_PER_JOB) {
     throw new Error(
@@ -174,9 +190,13 @@ export async function imagesToSlots(files: File[]): Promise<ClientPageSlot[]> {
     );
   }
 
+  const sorted = [...files].sort((a, b) =>
+    naturalCompareFilenames(a.name, b.name),
+  );
+
   const slots: ClientPageSlot[] = [];
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
+  for (let i = 0; i < sorted.length; i++) {
+    const file = sorted[i];
     if (file.size > MAX_PAGE_IMAGE_BYTES) {
       throw new Error(
         `${file.name}은(는) ${Math.round(file.size / 1024 / 1024)}MB로 너무 큽니다. 5MB 이하로 올려 주세요.`,

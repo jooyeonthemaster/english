@@ -37,6 +37,7 @@ import type {
   ExtractionItemSnapshot,
   ExtractionItemStatus,
   ExtractionMode,
+  M1RestorationStatus,
 } from "@/lib/extraction/types";
 import type {
   RestorationQuestionInput,
@@ -48,6 +49,13 @@ import {
   type M1PassageRestorationResult,
 } from "./_lib/m1-passage-restoration";
 import { persistM2ExtractionDrafts } from "./_lib/m2-draft-pipeline";
+import {
+  buildPageOrdering,
+  summarisePageMeta,
+  type PageCluster,
+  type PageMetaSummary,
+} from "./_lib/page-ordering";
+import { buildRestorationActions } from "./_lib/m1-restoration-actions";
 
 type Input = { jobId: string };
 
@@ -573,6 +581,14 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
           };
         });
 
+  // For PASSAGE_ONLY jobs the cluster loop below also persists drafts, so
+  // we delay the COMPLETED status flip until after that finishes. Otherwise
+  // the UI polling sees `status=COMPLETED` and stops fetching before any
+  // cluster's drafts have been INSERTed — the teacher sees an empty result
+  // until they refresh manually. (Non-PASSAGE_ONLY modes have no cluster
+  // loop, so they flip status here in the same transaction.)
+  const isPassageOnly = input.mode === "PASSAGE_ONLY";
+
   const persistOps: Prisma.PrismaPromise<unknown>[] = [
     ...itemUpdateOps,
     prisma.extractionResult.deleteMany({
@@ -586,8 +602,9 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
     prisma.extractionJob.update({
       where: { id: jobId },
       data: {
-        status: finalStatus,
-        completedAt: new Date(),
+        ...(isPassageOnly
+          ? {}
+          : { status: finalStatus, completedAt: new Date() }),
         ...(sourceMaterialId ? { sourceMaterialId } : {}),
       },
     }),
@@ -597,15 +614,98 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
 
   if (input.mode === "PASSAGE_ONLY") {
     try {
-      const m1DraftResult = await persistM1PassageDrafts({
+      // ── Page reordering + cluster detection ─────────────────────────
+      // Mixed-up uploads (image multi-select that arrived out of order) or
+      // multi-test jobs (several test booklets in a single upload) are
+      // recovered here by reading OCR-detected page numbers / exam codes
+      // and clustering by exam fingerprint. Single-cluster jobs degrade
+      // to the legacy single-pass behaviour.
+      const pageMetaSummaries = collectPageMetaSummaries(
+        snapshotItems,
+        pages as Array<{ pageIndex: number; pageMeta?: unknown }>,
+      );
+      const ordering = buildPageOrdering({ pageMetas: pageMetaSummaries });
+      const clusters: PageCluster[] = ordering.clusters;
+      logger.info("m1 page ordering computed", {
         jobId,
-        academyId: input.academyId,
-        sourceMaterialId,
-        items: snapshotItems,
+        clusterCount: clusters.length,
+        clusters: clusters.map((c) => ({
+          clusterId: c.clusterId,
+          fingerprint: c.fingerprint,
+          pageCount: c.pages.length,
+          pageIndexes: c.pages.map((p) => p.pageIndex),
+        })),
+        warnings: ordering.warnings,
       });
+
+      const itemsByCluster = groupSnapshotItemsByCluster(
+        snapshotItems,
+        ordering,
+      );
+
+      let totalDraftCount = 0;
+      let totalChangeCount = 0;
+      let clearedOnce = false;
+      for (let clusterIdx = 0; clusterIdx < clusters.length; clusterIdx += 1) {
+        const cluster = clusters[clusterIdx];
+        const clusterItems = itemsByCluster.get(cluster.clusterId) ?? [];
+        if (clusterItems.length === 0) continue;
+
+        // Pick the SourceMaterial for this cluster. First cluster reuses
+        // the job-level sourceMaterialId (preserves single-cluster legacy
+        // semantics + the job.sourceMaterialId link). Subsequent clusters
+        // get their own SourceMaterial via the cluster-scoped helper.
+        let clusterSourceMaterialId: string | null;
+        if (clusterIdx === 0) {
+          clusterSourceMaterialId = sourceMaterialId;
+        } else {
+          const clusterPassageTexts = clusterItems
+            .filter((it) => it.blockType === "PASSAGE_BODY")
+            .map((it) => it.content)
+            .filter(Boolean);
+          const clusterFirstPage = cluster.pages[0]?.pageIndex ?? 0;
+          const clusterPage1Text = clusterItems
+            .filter((it) => (it.sourcePageIndex[0] ?? 0) === clusterFirstPage)
+            .map((it) => it.content)
+            .join("\n");
+          clusterSourceMaterialId = await ensureClusterSourceMaterial({
+            jobId,
+            academyId: input.academyId,
+            createdById: input.createdById,
+            mode: input.mode,
+            filename: input.originalFileName,
+            page1Text: clusterPage1Text,
+            allTexts:
+              clusterPassageTexts.length > 0
+                ? clusterPassageTexts
+                : [clusterPage1Text],
+            examMetaSignals: clusterItems
+              .filter((it) => it.blockType === "EXAM_META")
+              .map((it) => ({ content: it.content, meta: it.examMeta })),
+          });
+        }
+
+        const result = await persistM1PassageDrafts({
+          jobId,
+          academyId: input.academyId,
+          sourceMaterialId: clusterSourceMaterialId,
+          items: clusterItems,
+          passageOrderOffset: totalDraftCount,
+          // Only the first non-empty cluster wipes existing DRAFT rows.
+          // Subsequent clusters append to the same job's draft list so
+          // earlier-cluster results aren't clobbered.
+          clearExistingDrafts: !clearedOnce,
+        });
+        clearedOnce = true;
+        totalDraftCount += result.draftCount;
+        totalChangeCount += result.changeCount;
+      }
+
       logger.info("m1 draft pipeline done", {
         jobId,
-        ...m1DraftResult,
+        clusterCount: clusters.length,
+        draftCount: totalDraftCount,
+        changeCount: totalChangeCount,
       });
     } catch (err) {
       logger.error("m1 draft pipeline failed", {
@@ -621,6 +721,20 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
         },
       });
     }
+
+    // PASSAGE_ONLY status flip — done HERE so the UI polling that watches
+    // `status === "COMPLETED"` doesn't unsubscribe before any cluster's
+    // drafts have been INSERTed. cluster loop above appends drafts in
+    // order (cluster 1 → cluster 2 → …), each visible to subsequent
+    // polls; flipping COMPLETED last keeps the polling alive until every
+    // cluster has surfaced.
+    await prisma.extractionJob.update({
+      where: { id: jobId },
+      data: {
+        status: finalStatus,
+        completedAt: new Date(),
+      },
+    });
   }
 
   if (input.mode === "QUESTION_SET") {
@@ -667,12 +781,6 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
 // M1 passage drafts - raw/restored pairs for the new passage extraction room.
 // ----------------------------------------------------------------------------
 
-type M1RestorationStatus =
-  | "RESTORED"
-  | "NO_RESTORATION_NEEDED"
-  | "PARTIAL"
-  | "FAILED";
-
 interface M1RestorationChange {
   sentenceOrder: number | null;
   before: string;
@@ -701,19 +809,12 @@ interface M1PassageChunk {
    *  those groups so the model does not hallucinate phantom passages from
    *  the audio script. */
   hasPassageBody: boolean;
-}
-
-interface PreparedM1PassageDraftGroup {
-  passageOrder: number;
-  rawText: string;
-  sourcePageIndex: number[];
-  restoredText: string;
-  restorationStatus: M1RestorationStatus;
-  confidence: number | null;
-  warnings: string[];
-  metadata: Prisma.InputJsonValue;
-  changes: M1RestorationChange[];
-  sourceMatches: SourceMatchInput[];
+  /** Items that belong to this chunk (= the bucket from STEM-led grouping).
+   *  Carried forward so downstream callers (buildRestorationQuestions /
+   *  buildProblemEvidenceFromItems) can identify the chunk's items by `id`
+   *  rather than the legacy PASSAGE-led `groupId` (which is set by
+   *  `assignGroupIds` and unrelated to the STEM-led bucket). */
+  items: ExtractionItemSnapshot[];
 }
 
 const LOCAL_DB_EXACT_THRESHOLD = 0.9;
@@ -730,6 +831,7 @@ function asStringArray(value: unknown): string[] {
 
 function readM1RestorationStatus(value: unknown): M1RestorationStatus {
   if (
+    value === "PENDING" ||
     value === "RESTORED" ||
     value === "NO_RESTORATION_NEEDED" ||
     value === "PARTIAL" ||
@@ -761,7 +863,16 @@ function readM1PassageGroupChunk(
 ): M1PassageChunk | null {
   if (groupItems.length === 0) return null;
 
-  const ordered = [...groupItems].sort((a, b) => a.order - b.order);
+  // Trust the caller's ordering. The STEM-led grouping walk pushed items
+  // into this bucket in the cluster-ordered input sequence — sorting by
+  // `item.order` here would silently revert to upload/OCR order, which
+  // breaks cross-page chunks where cluster page-ordering put a later-
+  // uploaded page first. (E.g. KakaoTalk 1쪽 was uploaded last → cluster
+  // sort puts page 9 before page 8, but item.order has page 8 < page 9
+  // because OCR numbered items in upload order. Re-sorting by item.order
+  // would move that page's CHOICES ahead of the STEM+BODY on the prior
+  // page.)
+  const ordered = [...groupItems];
   // The user-visible "문제 원문" must reproduce the entire problem the way it
   // appeared on the page. We keep:
   //   - PASSAGE_BODY / QUESTION_STEM / CHOICE / EXPLANATION (always content)
@@ -832,6 +943,7 @@ function readM1PassageGroupChunk(
     confidence,
     boundaryConfidence: asNumber(meta?.boundaryConfidence),
     hasPassageBody: anchor !== null,
+    items: ordered,
   };
 }
 
@@ -839,17 +951,19 @@ function uniqueSorted(values: number[]): number[] {
   return [...new Set(values)].sort((a, b) => a - b);
 }
 
+/**
+ * Build RestorationQuestionInput[] from a single STEM-led bucket's items.
+ *
+ * Caller passes the items that belong to ONE chunk (or one merged group of
+ * chunks) — every item is therefore in scope for choice matching. We do NOT
+ * fall back to the legacy `groupId` matching because the PASSAGE-led
+ * `assignGroupIds` ids do not align with STEM-led buckets.
+ */
 function buildRestorationQuestions(
-  items: ExtractionItemSnapshot[],
-  groupIds: Set<string>,
+  groupItems: ExtractionItemSnapshot[],
 ): RestorationQuestionInput[] {
-  const questionItems = items
-    .filter(
-      (item) =>
-        item.blockType === "QUESTION_STEM" &&
-        item.groupId !== null &&
-        groupIds.has(item.groupId),
-    )
+  const questionItems = groupItems
+    .filter((item) => item.blockType === "QUESTION_STEM")
     .sort((a, b) => a.order - b.order);
 
   return questionItems.map((question, index) => {
@@ -857,15 +971,13 @@ function buildRestorationQuestions(
       typeof question.questionMeta?.number === "number"
         ? question.questionMeta.number
         : null;
-    const choices = items
+    const nextStemOrder =
+      questionItems[index + 1]?.order ?? Number.POSITIVE_INFINITY;
+    const choices = groupItems
       .filter((item) => {
         if (item.blockType !== "CHOICE") return false;
         if (item.parentItemId === question.id) return true;
-        return (
-          item.groupId === question.groupId &&
-          item.order > question.order &&
-          item.order < (questionItems[index + 1]?.order ?? Number.POSITIVE_INFINITY)
-        );
+        return item.order > question.order && item.order < nextStemOrder;
       })
       .sort((a, b) => a.order - b.order)
       .map((choice, choiceIndex) => ({
@@ -889,6 +1001,43 @@ function buildRestorationQuestions(
 function sourceMatchMethod(match: SourceMatchInput, index: number): string {
   return m1SourceMatchMethod(match, index);
 }
+
+/**
+ * Question types that require grounded AI restoration because the body
+ * itself is modified (blanks to fill, sentences to reorder/insert/remove,
+ * grammar/vocab to correct). For every other type the body is the
+ * untouched source passage — we only need to strip problem-sheet markers.
+ *
+ * `UNKNOWN` is intentionally NOT in this set but is handled separately in
+ * the dispatch logic: we treat unclassified questions as restoration-
+ * required to avoid false negatives when the classifier failed.
+ */
+const RESTORATION_REQUIRED_TYPES = new Set([
+  "BLANK_INFERENCE",
+  "BLANK_WORD",
+  "BLANK_SENTENCE",
+  "CONNECTOR",
+  "SENTENCE_ORDER",
+  "PARAGRAPH_ORDER",
+  "SENTENCE_INSERT",
+  "IRRELEVANT",
+  "GRAMMAR_ERROR",
+  "GRAMMAR_CORRECTION",
+  "VOCAB_CHOICE",
+  "WORD_ORDER",
+  "SENTENCE_TRANSFORM",
+  "SUMMARY_COMPLETE",
+  "DIALOGUE_ORDER",
+]);
+
+/**
+ * Feature flag — flip to `EXTRACTION_TYPE_FILTERED_RESTORATION=false` in
+ * trigger.dev env to instantly disable the type-based skip and fall back
+ * to the previous "restore everything with a passage" behaviour. Defaults
+ * to ON so a no-op redeploy is enough to roll forward.
+ */
+const TYPE_FILTERED_RESTORATION_ENABLED =
+  process.env.EXTRACTION_TYPE_FILTERED_RESTORATION !== "false";
 
 const PASSAGE_QUESTION_TYPE_VALUES = new Set([
   "BLANK_INFERENCE",
@@ -936,21 +1085,59 @@ function normalizeAnalysisQuestionType(value: unknown): string {
  * round-trip to compute problem evidence. We just shape the existing analysis
  * data into the response type the restoration pipeline already consumes.
  */
+/**
+ * For groups whose question types don't need AI restoration (지칭/일치/
+ * 주제/제목/목적 etc.), build the clean body locally: concat the
+ * PASSAGE_BODY block contents, then strip problem-sheet markers that the
+ * teacher will not want in the saved passage. Returns empty string when
+ * no PASSAGE_BODY block was classified — caller falls back to rawText.
+ */
+function buildCleanBodyForSkippedGroup(
+  groupItems: ExtractionItemSnapshot[],
+): string {
+  const bodies = groupItems
+    .filter((item) => item.blockType === "PASSAGE_BODY")
+    .sort((a, b) => a.order - b.order)
+    .map((item) => item.content.trim())
+    .filter((content) => content.length > 0);
+  if (bodies.length === 0) return "";
+
+  let cleaned = bodies.join("\n\n");
+  // ①②③④⑤ inline markers that classify attached for marker-position
+  // recovery — useful as raw evidence, but the clean passage shouldn't
+  // carry them.
+  cleaned = cleaned.replace(/[①②③④⑤⑥⑦⑧⑨⑩]/g, "");
+  // (A)~(D) chunk labels at line starts (ordering questions).
+  cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-D])\)[ \t]*/g, "$1");
+  // (a)~(e) inline referent markers placed in front of words.
+  cleaned = cleaned.replace(/\(([a-e])\)(?=\s|[,.!?:;])/g, "");
+  // Safety net: PASSAGE_BODY classified by OCR may absorb a Korean
+  // question stem fragment. Drop any line that is mostly Korean.
+  cleaned = cleaned
+    .split(/\n/)
+    .filter((line) => {
+      const koreanChars = (line.match(/[가-힣]/g) ?? []).length;
+      const totalChars = line.replace(/\s/g, "").length;
+      if (totalChars === 0) return true;
+      return koreanChars / totalChars < 0.3;
+    })
+    .join("\n");
+  // Collapse the gaps introduced by the strips above.
+  cleaned = cleaned.replace(/[ \t]{2,}/g, " ");
+  cleaned = cleaned.replace(/ +(?=\n)/g, "");
+  cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
+  return cleaned.trim();
+}
+
 function buildProblemEvidenceFromItems(
-  items: ExtractionItemSnapshot[],
-  groupIds: Set<string>,
+  groupItems: ExtractionItemSnapshot[],
 ): import("@/lib/extraction/problem-evidence").ProblemEvidenceResponse | null {
-  const questionItems = items
-    .filter(
-      (item) =>
-        item.blockType === "QUESTION_STEM" &&
-        item.groupId !== null &&
-        groupIds.has(item.groupId),
-    )
+  const questionItems = groupItems
+    .filter((item) => item.blockType === "QUESTION_STEM")
     .sort((a, b) => a.order - b.order);
   if (questionItems.length === 0) return null;
 
-  const questions = questionItems.map((q) => {
+  const questions = questionItems.map((q, qIndex) => {
     const meta =
       q.questionMeta && typeof q.questionMeta === "object"
         ? (q.questionMeta as Record<string, unknown>)
@@ -979,6 +1166,43 @@ function buildProblemEvidenceFromItems(
     const warnings = Array.isArray(analysis?.warnings)
       ? analysis.warnings.filter((w): w is string => typeof w === "string")
       : [];
+
+    // Map each STEM to its CHOICE blocks (same logic as
+    // buildRestorationQuestions) so we can synthesize concrete
+    // restoration actions from the classify answer.
+    const nextStemOrder =
+      questionItems[qIndex + 1]?.order ?? Number.POSITIVE_INFINITY;
+    const stemChoices = groupItems
+      .filter((item) => {
+        if (item.blockType !== "CHOICE") return false;
+        if (item.parentItemId === q.id) return true;
+        return item.order > q.order && item.order < nextStemOrder;
+      })
+      .sort((a, b) => a.order - b.order)
+      .map((choice, choiceIndex) => {
+        const choiceMeta =
+          choice.choiceMeta && typeof choice.choiceMeta === "object"
+            ? (choice.choiceMeta as Record<string, unknown>)
+            : null;
+        return {
+          label:
+            typeof choiceMeta?.label === "string"
+              ? choiceMeta.label
+              : String(choiceIndex + 1),
+          content: choice.content,
+          isAnswer: choiceMeta?.isAnswer === true,
+        };
+      });
+    const restorationActions = buildRestorationActions(
+      {
+        questionType,
+        answer,
+        answerConfidence,
+        evidence,
+      },
+      stemChoices,
+    );
+
     return {
       questionNumber,
       questionType: questionType as
@@ -1016,7 +1240,7 @@ function buildProblemEvidenceFromItems(
       answer,
       answerConfidence,
       evidence,
-      restorationActions: [],
+      restorationActions,
       warnings,
     };
   });
@@ -1048,7 +1272,22 @@ async function persistM1PassageDrafts(input: {
   academyId: string;
   sourceMaterialId: string | null;
   items: ExtractionItemSnapshot[];
+  /**
+   * Number to add to every draft's passageOrder. Used by the cluster-aware
+   * caller to keep `(jobId, passageOrder)` unique across multiple clusters
+   * processed in the same job. Defaults to 0 (single-cluster legacy behaviour).
+   */
+  passageOrderOffset?: number;
+  /**
+   * When true (default), this call wipes every DRAFT row for the job before
+   * inserting — the original single-cluster semantics. The cluster-aware
+   * caller passes `false` for every cluster after the first so subsequent
+   * clusters append instead of clobbering earlier clusters' drafts.
+   */
+  clearExistingDrafts?: boolean;
 }): Promise<{ draftCount: number; changeCount: number }> {
+  const passageOrderOffset = input.passageOrderOffset ?? 0;
+  const clearExistingDrafts = input.clearExistingDrafts ?? true;
   // STEM-led grouping (new in 20260512.3).
   //
   // The previous PASSAGE-led approach (using `assignGroupIds`'s `groupId`)
@@ -1075,9 +1314,15 @@ async function persistM1PassageDrafts(input: {
     "FOOTER",
     "NOISE",
   ]);
-  const candidates = [...input.items]
-    .filter((item) => !EXCLUDED_BLOCK_TYPES.has(item.blockType))
-    .sort((a, b) => a.order - b.order);
+  // Trust caller's ordering. The cluster-aware caller pre-sorts items by
+  // (page-ordering rank, in-page order) so a page-number-driven reshuffle
+  // (e.g. cluster's pageIndex 9 has pageNumber=1 and must walk before
+  // pageIndex 8 with pageNumber=2) reaches the STEM-led walk intact. Re-
+  // sorting by `item.order` here would silently revert that to upload
+  // order because item.order encodes the original pageIndex. Filter only.
+  const candidates = [...input.items].filter(
+    (item) => !EXCLUDED_BLOCK_TYPES.has(item.blockType),
+  );
 
   const readSharedRange = (
     item: ExtractionItemSnapshot,
@@ -1227,6 +1472,14 @@ async function persistM1PassageDrafts(input: {
       // Otherwise (no current bucket OR no choice yet in current bucket)
       // it's either an orphan opening the next bucket OR a continuation
       // of the same problem's passage (page-boundary split).
+      //
+      // NOTE: an earlier revision also short-circuited on
+      // `passageMeta.continuesFromPrevious === false` to force a new bucket
+      // even before any choice appeared. That over-fired in practice —
+      // OCR was setting `continuesFromPrevious=false` on every paragraph
+      // boundary, which shattered single passages into multiple drafts.
+      // Reverted to the legacy has-choice-only heuristic until we can
+      // restrict the flag's effect to genuine page-boundary first passages.
       if (currentBucket && !currentBucketHasChoice) {
         currentBucket.push(item);
       } else {
@@ -1269,26 +1522,24 @@ async function persistM1PassageDrafts(input: {
   }
 
   if (chunks.length === 0) {
-    await prisma.extractionM1PassageDraft.deleteMany({
-      where: { jobId: input.jobId, reviewStatus: "DRAFT" },
-    });
+    if (clearExistingDrafts) {
+      await prisma.extractionM1PassageDraft.deleteMany({
+        where: { jobId: input.jobId, reviewStatus: "DRAFT" },
+      });
+    }
     return { draftCount: 0, changeCount: 0 };
   }
 
-  const groups: M1PassageChunk[][] = [];
-  for (const chunk of chunks) {
-    const previousGroup = groups[groups.length - 1];
-    const previousChunk = previousGroup?.[previousGroup.length - 1];
-    if (
-      previousGroup &&
-      previousChunk &&
-      (chunk.continuesFromPrevious || previousChunk.continuesToNext)
-    ) {
-      previousGroup.push(chunk);
-      continue;
-    }
-    groups.push([chunk]);
-  }
+  // STEM-led grouping (the bucket-builder above) already keeps a single
+  // passage on one bucket even when it spans a page boundary (continuation
+  // PASSAGE_BODY blocks join `currentBucket` until a new STEM appears). The
+  // earlier "merge consecutive chunks when continuesFromPrevious / to-next
+  // is set" pass was a leftover from the PASSAGE-led grouping era — under
+  // STEM-led, two consecutive chunks always represent two DIFFERENT problems,
+  // so merging them collapses unrelated questions (e.g. Q16 + Q17 with a
+  // mis-stamped `continuesToNext=true` on Q16's body). Each chunk now stays
+  // its own group.
+  const groups: M1PassageChunk[][] = chunks.map((chunk) => [chunk]);
 
   // 복원 호출을 그룹별 1회씩 하지 않고 한 번에 묶어서 처리한다.
   // - Google Search 도구 호출당 과금($0.035)이 비용의 ~80%인 점을 고려해
@@ -1312,25 +1563,72 @@ async function persistM1PassageDrafts(input: {
     questions: RestorationQuestionInput[];
     problemEvidence: ReturnType<typeof buildProblemEvidenceFromItems>;
     shouldRestore: boolean;
+    /** When the group was rejected by the type filter, the locally-built
+     *  clean body that should replace rawText as the displayed passage.
+     *  Empty when not applicable (= shouldRestore=true OR rejected for
+     *  other reasons like missing passage / short content). */
+    typeSkipBody: string;
+    /** Question types observed in the group (UNKNOWN included). Recorded
+     *  in metadata so the teacher can see why restoration was skipped. */
+    questionTypes: string[];
   }
   const stage1: PrepStage1[] = groups.map((group, index) => {
     const rawText = group.map((chunk) => chunk.rawText).join("\n\n").trim();
     const sourcePageIndex = uniqueSorted(
       group.flatMap((chunk) => chunk.sourcePageIndex),
     );
+    // STEM-led bucket items (= every block in this merged group). Sort by
+    // global `order` so QUESTION_STEM/CHOICE neighbourship is preserved
+    // across chunks that crossed a page boundary.
+    const groupItems = group
+      .flatMap((chunk) => chunk.items)
+      .sort((a, b) => a.order - b.order);
     const sourceGroupIds = new Set(
       group
         .map((chunk) => chunk.groupId)
         .filter((groupId): groupId is string => groupId !== null),
     );
-    const questions = buildRestorationQuestions(input.items, sourceGroupIds);
-    const problemEvidence = buildProblemEvidenceFromItems(
-      input.items,
-      sourceGroupIds,
-    );
+    const questions = buildRestorationQuestions(groupItems);
+    const problemEvidence = buildProblemEvidenceFromItems(groupItems);
     const groupHasPassage = group.some((chunk) => chunk.hasPassageBody);
-    const shouldRestore =
+    const baseShouldRestore =
       groupHasPassage || rawText.length >= SHORT_CONTENT_THRESHOLD;
+
+    // Question types observed in this group — used by the type filter.
+    const questionTypes = groupItems
+      .filter((item) => item.blockType === "QUESTION_STEM")
+      .map((item) => {
+        const meta = item.questionMeta as Record<string, unknown> | null;
+        const analysis =
+          meta?.analysis && typeof meta.analysis === "object"
+            ? (meta.analysis as Record<string, unknown>)
+            : null;
+        return normalizeAnalysisQuestionType(analysis?.questionType);
+      });
+    // Restoration is required if ANY question in the group is on the
+    // whitelist. UNKNOWN is treated as "required" to avoid false
+    // negatives when the classifier failed. Empty list (no STEM detected
+    // in this group at all) → also required, fall back to legacy path.
+    const hasRestorationRequiredType =
+      questionTypes.length === 0 ||
+      questionTypes.some(
+        (t) => RESTORATION_REQUIRED_TYPES.has(t) || t === "UNKNOWN",
+      );
+
+    const shouldRestore = TYPE_FILTERED_RESTORATION_ENABLED
+      ? baseShouldRestore && hasRestorationRequiredType
+      : baseShouldRestore;
+
+    // If the type filter is the reason we're skipping, produce the
+    // clean body locally so the draft is still useful in the UI.
+    const skippedByTypeFilter =
+      TYPE_FILTERED_RESTORATION_ENABLED &&
+      baseShouldRestore &&
+      !hasRestorationRequiredType;
+    const typeSkipBody = skippedByTypeFilter
+      ? buildCleanBodyForSkippedGroup(groupItems)
+      : "";
+
     return {
       index,
       group,
@@ -1340,76 +1638,52 @@ async function persistM1PassageDrafts(input: {
       questions,
       problemEvidence,
       shouldRestore,
+      typeSkipBody,
+      questionTypes,
     };
   });
 
-  // 호출 대상만 추려서 batch 호출.
+  // 호출 대상만 추려둔다. 실제 호출은 Phase A INSERT 직후에 시작.
   const restorationTargets = stage1.filter((s) => s.shouldRestore);
-  const restorationResults = await restoreM1PassageBatch(
-    restorationTargets.map((s) => ({
-      academyId: input.academyId,
-      rawText: s.rawText,
-      questions: s.questions,
-      problemEvidence: s.problemEvidence,
-    })),
-  );
 
-  // 호출 대상의 결과를 stage1.index 로 다시 매핑.
-  const restorationByIndex = new Map<
-    number,
-    M1PassageRestorationResult
-  >();
-  restorationTargets.forEach((s, i) => {
-    restorationByIndex.set(s.index, restorationResults[i]);
-  });
-
-  // 스킵 케이스용 기본 결과.
-  const buildSkippedRestoration = (
-    rawText: string,
-  ): M1PassageRestorationResult => ({
-    restoredText: rawText,
-    status: "NO_RESTORATION_NEEDED" as M1RestorationStatus,
-    confidence: null,
-    warnings: [],
-    changes: [],
-    metadata: {
-      reason: "no_passage_body_and_short_content",
-      rawLength: rawText.length,
-      threshold: SHORT_CONTENT_THRESHOLD,
-    } as Prisma.InputJsonValue,
-    sourceMatches: [] as SourceMatchInput[],
-  });
-
-  const preparedGroups: PreparedM1PassageDraftGroup[] = stage1.map((s) => {
-    const restoration = s.shouldRestore
-      ? (restorationByIndex.get(s.index) ?? buildSkippedRestoration(s.rawText))
-      : buildSkippedRestoration(s.rawText);
-    const confidenceValues = s.group
-      .map((chunk) => chunk.confidence)
-      .filter((value): value is number => typeof value === "number");
-    const extractionConfidence =
-      confidenceValues.length > 0
-        ? confidenceValues.reduce((sum, value) => sum + value, 0) /
-          confidenceValues.length
-        : null;
-    const restorationMetadata =
-      restoration.metadata &&
-      typeof restoration.metadata === "object" &&
-      !Array.isArray(restoration.metadata)
-        ? (restoration.metadata as Record<string, unknown>)
-        : {};
-    return {
-      passageOrder: s.index,
-      rawText: s.rawText,
-      sourcePageIndex: s.sourcePageIndex,
-      restoredText: restoration.restoredText,
-      restorationStatus: restoration.status,
-      confidence: restoration.confidence ?? extractionConfidence,
-      warnings: [
-        ...s.group.flatMap((chunk) => chunk.restorationWarnings),
-        ...restoration.warnings,
-      ],
-      metadata: {
+  // ─── Phase A: PENDING 상태로 draft 들을 즉시 INSERT ──────────────────────
+  //
+  // Progressive disclosure: teacher UI 는 finalize 가 끝나기를 기다리지 않고,
+  // 그루핑이 완료된 시점에서 raw text 본문을 즉시 볼 수 있어야 한다. 따라서
+  // 복원 호출 *전*에 모든 draft row 를 먼저 박는다.
+  //   - shouldRestore == true  → restorationStatus = "PENDING" (UI 가 "복원 중"
+  //     표시), restoredText = rawText (placeholder)
+  //   - shouldRestore == false → 곧장 NO_RESTORATION_NEEDED (visibility filter
+  //     가 stub 으로 숨김)
+  // Changes / sourceMatches 는 복원 결과가 도착할 때 별도로 INSERT.
+  const extractionConfidenceByOrder = new Map<number, number | null>();
+  const draftIdByOrder = new Map<number, string>();
+  const initialDraftRows: Prisma.ExtractionM1PassageDraftCreateManyInput[] =
+    stage1.map((s) => {
+      const id = randomUUID();
+      draftIdByOrder.set(s.index, id);
+      const confidenceValues = s.group
+        .map((chunk) => chunk.confidence)
+        .filter((value): value is number => typeof value === "number");
+      const extractionConfidence =
+        confidenceValues.length > 0
+          ? confidenceValues.reduce((sum, value) => sum + value, 0) /
+            confidenceValues.length
+          : null;
+      extractionConfidenceByOrder.set(s.index, extractionConfidence);
+      const chunkWarnings = s.group.flatMap(
+        (chunk) => chunk.restorationWarnings,
+      );
+      const pendingStatus: M1RestorationStatus = s.shouldRestore
+        ? "PENDING"
+        : "NO_RESTORATION_NEEDED";
+      const skippedByTypeFilter = !s.shouldRestore && s.typeSkipBody.length > 0;
+      // For type-filter skips we replace the displayed text with the clean
+      // body (PASSAGE_BODY content with problem markers stripped). For the
+      // legacy stub-skip path (no passage / too short), keep rawText so the
+      // visibility filter behaves exactly as before.
+      const displayedText = skippedByTypeFilter ? s.typeSkipBody : s.rawText;
+      const pendingMetadata: Record<string, unknown> = {
         chunks: s.group.map((chunk) => ({
           sourcePageIndex: chunk.sourcePageIndex,
           continuesFromPrevious: chunk.continuesFromPrevious,
@@ -1421,68 +1695,126 @@ async function persistM1PassageDrafts(input: {
           stem: question.stem,
           choices: question.choices,
         })),
-        ...restorationMetadata,
-      } as Prisma.InputJsonValue,
-      changes: restoration.changes.map((change) => ({
+        ...(s.shouldRestore
+          ? { restoration: { phase: "PENDING" } }
+          : skippedByTypeFilter
+            ? {
+                reason: "type_no_restoration_needed",
+                questionTypes: s.questionTypes,
+                rawLength: s.rawText.length,
+              }
+            : {
+                reason: "no_passage_body_and_short_content",
+                rawLength: s.rawText.length,
+                threshold: SHORT_CONTENT_THRESHOLD,
+              }),
+      };
+      return {
+        id,
+        jobId: input.jobId,
+        sourceMaterialId: input.sourceMaterialId,
+        passageOrder: s.index + passageOrderOffset,
+        sourcePageIndex: s.sourcePageIndex,
+        title: null,
+        rawText: s.rawText,
+        restoredText: displayedText,
+        teacherText: displayedText,
+        restorationStatus: pendingStatus,
+        reviewStatus: "DRAFT",
+        confidence: extractionConfidence,
+        warnings:
+          chunkWarnings.length > 0
+            ? (chunkWarnings as Prisma.InputJsonValue)
+            : undefined,
+        metadata: pendingMetadata as Prisma.InputJsonValue,
+      };
+    });
+
+  await prisma.$transaction(
+    async (tx) => {
+      if (clearExistingDrafts) {
+        await tx.extractionM1PassageDraft.deleteMany({
+          where: { jobId: input.jobId, reviewStatus: "DRAFT" },
+        });
+      }
+      if (initialDraftRows.length > 0) {
+        // `skipDuplicates: true` is the safety net for the rare double-fire
+        // case where a second finalize task starts before the first one's
+        // status=COMPLETED write is visible — both attempts try to insert
+        // the same (jobId, passageOrder) and Prisma surfaces a unique-
+        // constraint violation. With skipDuplicates the second attempt
+        // silently no-ops on conflicts, the first attempt's rows remain
+        // canonical, and the UI no longer reports a false "save failed".
+        await tx.extractionM1PassageDraft.createMany({
+          data: initialDraftRows,
+          skipDuplicates: true,
+        });
+      }
+    },
+    { timeout: 30_000, maxWait: 10_000 },
+  );
+
+  // ─── Phase B: per-batch UPDATE as restoration results arrive ────────────
+  //
+  // restoreM1PassageBatch 가 한 batch (= 5 drafts) 끝낼 때마다 콜백을 호출한다.
+  // 각 콜백에서:
+  //   1. 해당 draft row 들을 PENDING → 실제 restorationStatus 로 UPDATE
+  //      (restoredText, teacherText, confidence, warnings, metadata 갱신).
+  //   2. 그 draft 들의 changes / sourceMatches 를 INSERT.
+  // Promise.all 안의 batch 들이 병렬 실행되므로 콜백도 병렬로 호출될 수 있다.
+  // 각 콜백 내에서는 단일 row UPDATE + 보조 INSERT 만 다루고, 동일 draft 를
+  // 다른 콜백이 건드릴 일은 없다 (passageOrder 단일 매핑) — 락 충돌 없음.
+  let changeCount = 0;
+
+  const applyRestorationResult = async (
+    stageIndex: number,
+    restoration: M1PassageRestorationResult,
+  ) => {
+    const draftId = draftIdByOrder.get(stageIndex);
+    if (!draftId) return;
+    const target = stage1[stageIndex];
+    if (!target) return;
+
+    const extractionConfidence = extractionConfidenceByOrder.get(stageIndex) ?? null;
+    const restorationMetadata =
+      restoration.metadata &&
+      typeof restoration.metadata === "object" &&
+      !Array.isArray(restoration.metadata)
+        ? (restoration.metadata as Record<string, unknown>)
+        : {};
+    const mergedMetadata: Record<string, unknown> = {
+      chunks: target.group.map((chunk) => ({
+        sourcePageIndex: chunk.sourcePageIndex,
+        continuesFromPrevious: chunk.continuesFromPrevious,
+        continuesToNext: chunk.continuesToNext,
+        boundaryConfidence: chunk.boundaryConfidence,
+      })),
+      questions: target.questions.map((question) => ({
+        questionNumber: question.questionNumber,
+        stem: question.stem,
+        choices: question.choices,
+      })),
+      ...restorationMetadata,
+    };
+    const mergedWarnings = [
+      ...target.group.flatMap((chunk) => chunk.restorationWarnings),
+      ...restoration.warnings,
+    ];
+
+    const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =
+      restoration.changes.map((change) => ({
+        passageDraftId: draftId,
         sentenceOrder: change.sentenceOrder ?? null,
         before: change.before,
         after: change.after,
         changeType: change.changeType ?? null,
         reason: change.reason ?? null,
         confidence: change.confidence ?? null,
-        sourcePageIndex: s.sourcePageIndex,
-      })),
-      sourceMatches: restoration.sourceMatches,
-    };
-  });
-
-  let changeCount = 0;
-  const draftRows: Prisma.ExtractionM1PassageDraftCreateManyInput[] = preparedGroups.map(
-    (prepared) => ({
-      id: randomUUID(),
-      jobId: input.jobId,
-      sourceMaterialId: input.sourceMaterialId,
-      passageOrder: prepared.passageOrder,
-      sourcePageIndex: prepared.sourcePageIndex,
-      title: null,
-      rawText: prepared.rawText,
-      restoredText: prepared.restoredText,
-      teacherText: prepared.restoredText,
-      restorationStatus: prepared.restorationStatus,
-      reviewStatus: "DRAFT",
-      confidence: prepared.confidence,
-      warnings:
-        prepared.warnings.length > 0
-          ? (prepared.warnings as Prisma.InputJsonValue)
-          : undefined,
-      metadata: prepared.metadata,
-    }),
-  );
-  const draftIdByOrder = new Map(
-    draftRows.map((row) => [row.passageOrder, row.id] as const),
-  );
-  const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =
-    preparedGroups.flatMap((prepared) => {
-      const passageDraftId = draftIdByOrder.get(prepared.passageOrder);
-      if (!passageDraftId) return [];
-      changeCount += prepared.changes.length;
-      return prepared.changes.map((change) => ({
-        passageDraftId,
-        sentenceOrder: change.sentenceOrder,
-        before: change.before,
-        after: change.after,
-        changeType: change.changeType,
-        reason: change.reason,
-        confidence: change.confidence,
-        sourcePageIndex: change.sourcePageIndex,
+        sourcePageIndex: target.sourcePageIndex,
       }));
-    });
-  const sourceMatchRows: Prisma.ExtractionM1PassageSourceMatchCreateManyInput[] =
-    preparedGroups.flatMap((prepared) => {
-      const passageDraftId = draftIdByOrder.get(prepared.passageOrder);
-      if (!passageDraftId) return [];
-      return prepared.sourceMatches.map((match, matchIndex) => ({
-        passageDraftId,
+    const sourceMatchRows: Prisma.ExtractionM1PassageSourceMatchCreateManyInput[] =
+      restoration.sourceMatches.map((match, matchIndex) => ({
+        passageDraftId: draftId,
         sourceType: match.sourceType,
         sourceId: match.sourceId ?? null,
         sourceRef: match.sourceRef ?? null,
@@ -1497,25 +1829,67 @@ async function persistM1PassageDrafts(input: {
           matchIndex === 0 && match.confidence >= LOCAL_DB_EXACT_THRESHOLD,
         metadata: (match.metadata ?? {}) as Prisma.InputJsonValue,
       }));
-    });
 
-  await prisma.$transaction(
-    async (tx) => {
-      await tx.extractionM1PassageDraft.deleteMany({
-        where: { jobId: input.jobId, reviewStatus: "DRAFT" },
-      });
-      await tx.extractionM1PassageDraft.createMany({ data: draftRows });
-      if (changeRows.length > 0) {
-        await tx.extractionM1PassageDraftChange.createMany({ data: changeRows });
-      }
-      if (sourceMatchRows.length > 0) {
-        await tx.extractionM1PassageSourceMatch.createMany({
-          data: sourceMatchRows,
+    changeCount += changeRows.length;
+
+    await prisma.$transaction(
+      async (tx) => {
+        await tx.extractionM1PassageDraft.update({
+          where: { id: draftId },
+          data: {
+            restoredText: restoration.restoredText,
+            teacherText: restoration.restoredText,
+            restorationStatus: restoration.status,
+            confidence: restoration.confidence ?? extractionConfidence,
+            warnings:
+              mergedWarnings.length > 0
+                ? (mergedWarnings as Prisma.InputJsonValue)
+                : undefined,
+            metadata: mergedMetadata as Prisma.InputJsonValue,
+          },
         });
-      }
-    },
-    { timeout: 30_000, maxWait: 10_000 },
-  );
+        if (changeRows.length > 0) {
+          await tx.extractionM1PassageDraftChange.createMany({
+            data: changeRows,
+          });
+        }
+        if (sourceMatchRows.length > 0) {
+          await tx.extractionM1PassageSourceMatch.createMany({
+            data: sourceMatchRows,
+          });
+        }
+      },
+      { timeout: 30_000, maxWait: 10_000 },
+    );
+  };
+
+  if (restorationTargets.length > 0) {
+    await restoreM1PassageBatch(
+      restorationTargets.map((s) => ({
+        academyId: input.academyId,
+        rawText: s.rawText,
+        questions: s.questions,
+        problemEvidence: s.problemEvidence,
+      })),
+      {
+        onBatchComplete: async (inputIndices, batchResults) => {
+          for (let i = 0; i < inputIndices.length; i += 1) {
+            const target = restorationTargets[inputIndices[i]];
+            if (!target) continue;
+            try {
+              await applyRestorationResult(target.index, batchResults[i]);
+            } catch (err) {
+              logger.warn("m1 draft incremental update failed", {
+                jobId: input.jobId,
+                passageOrder: target.index,
+                err: err instanceof Error ? err.message : String(err),
+              });
+            }
+          }
+        },
+      },
+    );
+  }
 
   return { draftCount: groups.length, changeCount };
 }
@@ -1592,4 +1966,157 @@ async function ensureSourceMaterial(
   });
 
   return created.id;
+}
+
+/**
+ * Cluster-scoped SourceMaterial creation. Used when a single job contains
+ * multiple test booklets (cluster > 1) — each cluster gets its own fresh
+ * SourceMaterial, independent of the job-level `extractionJob.sourceMaterialId`
+ * link.
+ *
+ * Mirrors `ensureSourceMaterial`'s behaviour for cluster 1: each job's
+ * cluster gets its own row, with no cross-job dedup. Previously this helper
+ * matched existing SourceMaterials by `(academyId, contentHash)` so the same
+ * booklet uploaded across multiple jobs would collapse into a single row —
+ * but that asymmetry surprised users (cluster 1 = per-job, cluster 2 =
+ * shared) and made the "전체 자료" view show one cluster's drafts ballooning
+ * to N × per-job-count as more jobs piled up. Dedup removed; data
+ * deduplication is a teacher-side concern in the review UI.
+ */
+async function ensureClusterSourceMaterial(
+  input: EnsureSourceMaterialInput,
+): Promise<string | null> {
+  const joinedHeaderText = [
+    input.page1Text,
+    ...(input.examMetaSignals ?? []).map((s) => s.content),
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const parsed = parseSourceMeta({
+    filename: input.filename ?? undefined,
+    page1Text: joinedHeaderText,
+  });
+
+  const contentHash = computeContentHash(input.allTexts);
+
+  // The DB enforces a `(academyId, contentHash)` unique key on
+  // source_materials. Per-job suffix so this helper doesn't collide with
+  // the same booklet uploaded under a different job (= per-job
+  // SourceMaterials, no cross-job dedup).
+  const perJobContentHash = `${contentHash}:job:${input.jobId}`;
+
+  // Idempotent retry guard: trigger.dev may re-run extractionFinalizeTask
+  // (transient errors, leases). On the second run the cluster loop calls
+  // this helper again with the SAME perJobContentHash; if the first run
+  // already created the row, the INSERT below would throw
+  // `Unique constraint failed on (academyId, contentHash)` and the
+  // outer catch would mark the job as errored even though the row exists.
+  // findFirst → reuse on hit avoids that.
+  const existing = await prisma.sourceMaterial.findFirst({
+    where: { academyId: input.academyId, contentHash: perJobContentHash },
+    select: { id: true },
+  });
+  if (existing) return existing.id;
+
+  const materialType =
+    parsed.type ?? (input.mode === "FULL_EXAM" ? "EXAM" : "OTHER");
+  const created = await prisma.sourceMaterial.create({
+    data: {
+      academyId: input.academyId,
+      createdById: input.createdById,
+      type: materialType,
+      title: parsed.title,
+      subject: parsed.subject ?? "ENGLISH",
+      grade: parsed.grade ?? null,
+      semester: parsed.semester ?? null,
+      year: parsed.year ?? null,
+      round: parsed.round ?? null,
+      examType: parsed.examType ?? null,
+      publisher: parsed.publisher ?? null,
+      contentHash: perJobContentHash,
+    },
+    select: { id: true },
+  });
+  return created.id;
+}
+
+/**
+ * Group snapshotItems by their cluster assignment from page-ordering.
+ * Items are sorted within each cluster by `(orderRank, item.order)` so
+ * downstream STEM-led grouping sees pages in their corrected order.
+ */
+function groupSnapshotItemsByCluster(
+  snapshotItems: ExtractionItemSnapshot[],
+  ordering: { clusterIdByPageIndex: Map<number, string>; orderRank: Map<number, number> },
+): Map<string, ExtractionItemSnapshot[]> {
+  const byCluster = new Map<string, ExtractionItemSnapshot[]>();
+  for (const item of snapshotItems) {
+    const pIdx = item.sourcePageIndex[0] ?? 0;
+    const clusterId = ordering.clusterIdByPageIndex.get(pIdx);
+    if (!clusterId) continue;
+    const list = byCluster.get(clusterId);
+    if (list) list.push(item);
+    else byCluster.set(clusterId, [item]);
+  }
+  // Sort each cluster's items by orderRank (page-level) then original order
+  // (in-page sequence). This is what the STEM-led grouping needs.
+  for (const [, list] of byCluster) {
+    list.sort((a, b) => {
+      const pa = ordering.orderRank.get(a.sourcePageIndex[0] ?? 0) ?? 0;
+      const pb = ordering.orderRank.get(b.sourcePageIndex[0] ?? 0) ?? 0;
+      if (pa !== pb) return pa - pb;
+      return a.order - b.order;
+    });
+  }
+  return byCluster;
+}
+
+/**
+ * Build the per-page meta summaries that page-ordering needs. Reads from
+ * the snapshot items (post-snapshot, so it sees every item's `examMeta`
+ * unioned per page) and from the original ExtractionPage rows when those
+ * carry a structured pageMeta column.
+ */
+function collectPageMetaSummaries(
+  snapshotItems: ExtractionItemSnapshot[],
+  pageRows: Array<{ pageIndex: number; pageMeta?: unknown }>,
+): PageMetaSummary[] {
+  const itemsByPage = new Map<number, ExtractionItemSnapshot[]>();
+  for (const item of snapshotItems) {
+    const pIdx = item.sourcePageIndex[0] ?? 0;
+    const list = itemsByPage.get(pIdx);
+    if (list) list.push(item);
+    else itemsByPage.set(pIdx, [item]);
+  }
+  const pageMetaByPage = new Map<number, unknown>();
+  for (const row of pageRows) {
+    if (row.pageMeta) pageMetaByPage.set(row.pageIndex, row.pageMeta);
+  }
+  // Union all `examMeta` carriers on a page into one merged object —
+  // EXAM_META blocks plus the first-item carrier we stamp on EXAM-META-less
+  // pages in extraction-page.ts.
+  const allPageIndexes = new Set<number>([
+    ...itemsByPage.keys(),
+    ...pageMetaByPage.keys(),
+  ]);
+  const summaries: PageMetaSummary[] = [];
+  for (const pageIndex of allPageIndexes) {
+    const items = itemsByPage.get(pageIndex) ?? [];
+    const examMetaMerge: Record<string, unknown> = {};
+    for (const item of items) {
+      if (item.examMeta && typeof item.examMeta === "object" && !Array.isArray(item.examMeta)) {
+        Object.assign(examMetaMerge, item.examMeta as Record<string, unknown>);
+      }
+    }
+    summaries.push(
+      summarisePageMeta({
+        pageIndex,
+        pageMeta: pageMetaByPage.get(pageIndex) ?? null,
+        examMetaFromItems: examMetaMerge,
+        items,
+      }),
+    );
+  }
+  summaries.sort((a, b) => a.pageIndex - b.pageIndex);
+  return summaries;
 }

@@ -19,6 +19,7 @@ import {
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { generateGroundedStructuredTextWithTriggerFetch } from "./gemini-ocr";
 import { findPassageSourceMatches } from "./m2-source-match";
+import { checkRestorationQuality } from "./m1-restoration-quality";
 
 // 통합 호출 — google_search + 별도 AI 복원 + 비교까지 한 번에 하므로 평소
 // passage-restoration(120s)보다 여유를 둔다.
@@ -63,10 +64,13 @@ function normalizeComparableText(text: string): string {
 function stripProblemMarkers(text: string): string {
   if (!text) return text;
   let cleaned = text;
-  // 1) Chunk labels at paragraph starts: `(A)`, `(A) `, `(A)\n` — only
-  //    uppercase A~D, only at line start, with optional surrounding spaces.
-  //    Doesn't touch `(A)` mid-sentence (rare but possible — e.g. "Group (A)").
-  cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-D])\)[ \t]*/g, "$1");
+  // 1) Chunk labels at paragraph starts: `(A)`, `(A) `, `(A)\n` — uppercase
+  //    single letters at line start with optional surrounding spaces. Originally
+  //    capped at A~D (4-chunk ordering questions) but vocabulary-choice 동의어
+  //    questions can list (A)~(I) boxed sentences, and a few outliers go up to
+  //    (J). [A-Z] is the safe upper bound; the line-start anchor + paren shape
+  //    prevents collisions with mid-sentence parentheticals like "Group (A)".
+  cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-Z])\)[ \t]*/g, "$1");
   // 2) Inline referent markers `(a) word` → `word`. Only lowercase a~e in
   //    parens. We do NOT require a preceding space so it also catches the
   //    "...has(a) been..." style that sometimes shows up. But we DO require
@@ -304,9 +308,17 @@ export async function restoreM1Passage(input: {
     );
 
     const unresolvedArtifacts = hasUnresolvedM1ProblemArtifacts(restoredText);
-    const status: M1RestorationStatus = unresolvedArtifacts
-      ? "PARTIAL"
-      : mapFinalStatus(result.finalStatus);
+    const quality = checkRestorationQuality({
+      rawText: input.rawText,
+      restoredText,
+      questionTypes: (input.problemEvidence?.questions ?? []).map(
+        (q) => q.questionType,
+      ),
+    });
+    const status: M1RestorationStatus =
+      unresolvedArtifacts || quality.shouldDowngradeStatus
+        ? "PARTIAL"
+        : mapFinalStatus(result.finalStatus);
 
     const aiChanges: M1RestorationChangeInput[] =
       result.aiRestoration.changes.map((change) => ({
@@ -325,6 +337,7 @@ export async function restoreM1Passage(input: {
             "Restored text still contains problem-sheet markers; teacher review is required.",
           ]
         : []),
+      ...quality.warnings.map((code) => `restoration_quality:${code}`),
     ];
 
     const finalMethodLabel =
@@ -439,6 +452,19 @@ export async function restoreM1Passage(input: {
 // 5 drafts 로 줄이면 평균 ~4.5K 출력 토큰으로 안전 마진 (~8K 한계 대비).
 // 호출 수는 25 → 5 회로 늘지만 여전히 single-call 대비 80% 감소.
 const BATCH_SIZE = 5;
+/**
+ * Retry split size when a full BATCH_SIZE call returns empty/failed grounded
+ * output. The Gemini 3 Flash Preview per-candidate output cap is 8K tokens —
+ * with the AI-primary + variant-classification prompt the full batch can
+ * occasionally bump into that cap and return EMPTY_OUTPUT (finishReason
+ * unknown / MAX_TOKENS). Splitting the failed batch into chunks of this size
+ * roughly halves the per-call output budget and recovers reliably.
+ *
+ * 3 = empirically safe under the current prompt: a 5-batch split yields 3+2,
+ * both well under the cap. One retry layer only — sub-batches that still
+ * fail fall through to the per-task fallback.
+ */
+const BATCH_RETRY_SPLIT_SIZE = 3;
 const BATCH_GROUNDED_CALL_TIMEOUT_MS = 300_000;
 
 interface RestoreBatchInput {
@@ -446,6 +472,24 @@ interface RestoreBatchInput {
   rawText: string;
   questions?: RestorationQuestionInput[];
   problemEvidence?: ProblemEvidenceResponse | null;
+}
+
+/**
+ * Progressive-disclosure hook. Fired as soon as a chunk of results becomes
+ * ready — Stage-1 LocalDB hits arrive together, then each Stage-2 grounded
+ * batch resolves on its own schedule (parallel). Used by `persistM1PassageDrafts`
+ * to UPDATE per-passage draft rows the moment their restoration lands, so the
+ * teacher UI fills in passages as they complete instead of waiting for the
+ * slowest batch.
+ *
+ * `inputIndices` are positions in the original `inputs` array passed to
+ * `restoreM1PassageBatch`; `results[i]` corresponds to `inputs[inputIndices[i]]`.
+ */
+export interface RestoreBatchCallbacks {
+  onBatchComplete?: (
+    inputIndices: number[],
+    results: M1PassageRestorationResult[],
+  ) => void | Promise<void>;
 }
 
 interface PendingGroundedTask {
@@ -488,9 +532,17 @@ function projectFromBatchItem(
   );
 
   const unresolvedArtifacts = hasUnresolvedM1ProblemArtifacts(restoredText);
-  const status: M1RestorationStatus = unresolvedArtifacts
-    ? "PARTIAL"
-    : mapFinalStatus(item.finalStatus);
+  const quality = checkRestorationQuality({
+    rawText: task.input.rawText,
+    restoredText,
+    questionTypes: (task.input.problemEvidence?.questions ?? []).map(
+      (q) => q.questionType,
+    ),
+  });
+  const status: M1RestorationStatus =
+    unresolvedArtifacts || quality.shouldDowngradeStatus
+      ? "PARTIAL"
+      : mapFinalStatus(item.finalStatus);
 
   const aiChanges: M1RestorationChangeInput[] =
     item.aiRestoration.changes.map((change) => ({
@@ -509,6 +561,7 @@ function projectFromBatchItem(
           "Restored text still contains problem-sheet markers; teacher review is required.",
         ]
       : []),
+    ...quality.warnings.map((code) => `restoration_quality:${code}`),
   ];
 
   const finalMethodLabel =
@@ -620,8 +673,21 @@ function buildFallbackResult(
 
 export async function restoreM1PassageBatch(
   inputs: RestoreBatchInput[],
+  callbacks?: RestoreBatchCallbacks,
 ): Promise<M1PassageRestorationResult[]> {
   if (inputs.length === 0) return [];
+
+  const notify = async (
+    inputIndices: number[],
+    batchResults: M1PassageRestorationResult[],
+  ) => {
+    if (!callbacks?.onBatchComplete || inputIndices.length === 0) return;
+    try {
+      await callbacks.onBatchComplete(inputIndices, batchResults);
+    } catch {
+      /* callback failures must not abort the rest of the pipeline */
+    }
+  };
 
   // Stage 1: per-input localDb 매칭을 병렬로 실행.
   const stageOne = await Promise.all(
@@ -700,13 +766,20 @@ export async function restoreM1PassageBatch(
     inputs.length,
   ).fill(null);
   const pendingTasks: PendingGroundedTask[] = [];
+  // Stage-1 LocalDB hits — surface them right away so callers can flush the
+  // matching draft rows out of "PENDING" state before grounded calls finish.
+  const immediateIndices: number[] = [];
+  const immediateResults: M1PassageRestorationResult[] = [];
   for (const row of stageOne) {
     if (row.immediate) {
       results[row.index] = row.immediate;
+      immediateIndices.push(row.index);
+      immediateResults.push(row.immediate);
     } else if (row.pending) {
       pendingTasks.push(row.pending);
     }
   }
+  await notify(immediateIndices, immediateResults);
 
   if (pendingTasks.length === 0) {
     return results.map(
@@ -726,78 +799,156 @@ export async function restoreM1PassageBatch(
     );
   }
 
-  // Stage 2: 남은 task 들을 BATCH_SIZE 단위로 묶어서 grounded 호출.
+  // Stage 2: 남은 task 들을 BATCH_SIZE 단위로 묶어서 grounded 호출. Each batch
+  // is dispatched in parallel but its onBatchComplete callback fires as soon
+  // as that single batch resolves — so the teacher UI sees passages fill in
+  // batch-by-batch rather than waiting for the slowest batch.
   const batches = chunkArray(pendingTasks, BATCH_SIZE);
 
-  const batchResultsList: GroundedRestorationBatchItem[][] = await Promise.all(
-    batches.map(async (batch) => {
-      try {
-        const prompts = buildGroundedRestorationBatchPrompts({
-          tasks: batch.map((t) => ({
-            id: t.taskId,
-            problemText: t.input.rawText,
-            questions: t.questions,
-            problemEvidence: t.problemEvidence,
-            localSourceMatches: t.usableLocalMatches,
-          })),
-        });
-        const grounded = await generateGroundedStructuredTextWithTriggerFetch({
-          stage: "passage-restoration",
-          systemPrompt: prompts.systemPrompt,
-          userPrompt: prompts.userPrompt,
-          timeoutInMs: BATCH_GROUNDED_CALL_TIMEOUT_MS,
-          schema: groundedRestorationBatchResponseSchema,
-        });
-        return grounded.object.results;
-      } catch (err) {
-        // 이 배치 전체 실패 — 호출자 쪽에서 batch 별로 fallback 처리.
-        const message = err instanceof Error ? err.message : String(err);
-        return batch.map(
-          (): GroundedRestorationBatchItem => ({
-            id: "__FAILED__",
-            sourceMatch: null,
-            aiRestoration: {
-              status: "FAILED",
-              method: "FAILED",
-              restoredText: "",
-              confidence: 0,
-              sentences: [],
-              changes: [],
-              unresolvedMarkers: [],
-            },
-            comparison: null,
-            finalRestoredText: "",
-            finalStatus: "FAILED",
-            finalMethod: "FAILED",
-            warnings: [`batch_call_failed: ${message}`],
-          }),
-        );
-      }
-    }),
-  );
+  /**
+   * Attempt a single grounded call for `batch`. Returns the parsed items on
+   * success, or `null` to signal the caller it should retry. Network / model
+   * failures and empty-output (EMPTY_OUTPUT) both return null so the caller
+   * can choose to split-retry. Note: a successful call may still return
+   * task-level FAILED items inside `batchItems` — those are NOT retried.
+   */
+  const tryGroundedCall = async (
+    batch: PendingGroundedTask[],
+  ): Promise<{ items: GroundedRestorationBatchItem[] } | { error: string }> => {
+    try {
+      const prompts = buildGroundedRestorationBatchPrompts({
+        tasks: batch.map((t) => ({
+          id: t.taskId,
+          problemText: t.input.rawText,
+          questions: t.questions,
+          problemEvidence: t.problemEvidence,
+          localSourceMatches: t.usableLocalMatches,
+        })),
+      });
+      const grounded = await generateGroundedStructuredTextWithTriggerFetch({
+        stage: "passage-restoration",
+        systemPrompt: prompts.systemPrompt,
+        userPrompt: prompts.userPrompt,
+        timeoutInMs: BATCH_GROUNDED_CALL_TIMEOUT_MS,
+        schema: groundedRestorationBatchResponseSchema,
+      });
+      return { items: grounded.object.results };
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : String(err) };
+    }
+  };
 
-  // batch item 들을 task id 로 매핑. 모델이 순서를 어겼거나 id 가 빠진 경우엔
-  // 순서 기준 fallback (batch 내 순서).
-  for (let bi = 0; bi < batches.length; bi += 1) {
-    const batch = batches[bi];
-    const batchItems = batchResultsList[bi];
+  /**
+   * Apply a batch's items to `results` and notify the caller. Items missing
+   * or marked `__FAILED__` fall through to per-task `buildFallbackResult`.
+   */
+  const applyBatchItems = async (
+    batch: PendingGroundedTask[],
+    batchItems: GroundedRestorationBatchItem[],
+  ) => {
     const itemsById = new Map<string, GroundedRestorationBatchItem>();
     for (const item of batchItems) {
       if (item.id && item.id !== "__FAILED__") itemsById.set(item.id, item);
     }
+    const batchIndices: number[] = [];
+    const batchResults: M1PassageRestorationResult[] = [];
     for (let ti = 0; ti < batch.length; ti += 1) {
       const task = batch[ti];
       const item = itemsById.get(task.taskId) ?? batchItems[ti] ?? null;
+      let projected: M1PassageRestorationResult;
       if (!item || item.id === "__FAILED__") {
         const reason =
           item?.warnings.find((w) => w.startsWith("batch_call_failed")) ??
           "batch_item_missing";
-        results[task.index] = buildFallbackResult(task, reason);
-        continue;
+        projected = buildFallbackResult(task, reason);
+      } else {
+        projected = projectFromBatchItem(task, item);
       }
-      results[task.index] = projectFromBatchItem(task, item);
+      results[task.index] = projected;
+      batchIndices.push(task.index);
+      batchResults.push(projected);
     }
-  }
+    await notify(batchIndices, batchResults);
+  };
+
+  const runBatch = async (batch: PendingGroundedTask[]) => {
+    const outcome = await tryGroundedCall(batch);
+    if ("items" in outcome) {
+      await applyBatchItems(batch, outcome.items);
+      return;
+    }
+
+    // First call failed (network error / EMPTY_OUTPUT / parse error).
+    // If the batch is larger than the retry split size, halve the output
+    // budget pressure by splitting and retrying each sub-batch ONCE.
+    // 5-task batches become 3+2; sub-batches that still fail fall through
+    // to per-task buildFallbackResult below.
+    if (batch.length > BATCH_RETRY_SPLIT_SIZE) {
+      const subBatches = chunkArray(batch, BATCH_RETRY_SPLIT_SIZE);
+      await Promise.all(
+        subBatches.map(async (sub) => {
+          const subOutcome = await tryGroundedCall(sub);
+          if ("items" in subOutcome) {
+            await applyBatchItems(sub, subOutcome.items);
+            return;
+          }
+          await applyBatchItems(
+            sub,
+            sub.map(
+              (): GroundedRestorationBatchItem => ({
+                id: "__FAILED__",
+                sourceMatch: null,
+                aiRestoration: {
+                  status: "FAILED",
+                  method: "FAILED",
+                  restoredText: "",
+                  confidence: 0,
+                  sentences: [],
+                  changes: [],
+                  unresolvedMarkers: [],
+                },
+                comparison: null,
+                finalRestoredText: "",
+                finalStatus: "FAILED",
+                finalMethod: "FAILED",
+                warnings: [
+                  `batch_call_failed: ${subOutcome.error} (after split retry)`,
+                ],
+              }),
+            ),
+          );
+        }),
+      );
+      return;
+    }
+
+    // Batch already at/under split size — fall through to per-task fallback.
+    await applyBatchItems(
+      batch,
+      batch.map(
+        (): GroundedRestorationBatchItem => ({
+          id: "__FAILED__",
+          sourceMatch: null,
+          aiRestoration: {
+            status: "FAILED",
+            method: "FAILED",
+            restoredText: "",
+            confidence: 0,
+            sentences: [],
+            changes: [],
+            unresolvedMarkers: [],
+          },
+          comparison: null,
+          finalRestoredText: "",
+          finalStatus: "FAILED",
+          finalMethod: "FAILED",
+          warnings: [`batch_call_failed: ${outcome.error}`],
+        }),
+      ),
+    );
+  };
+
+  await Promise.all(batches.map(runBatch));
 
   return results.map((r, i) =>
     r ??

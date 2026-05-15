@@ -72,6 +72,10 @@ import {
   generateStructuredTextWithTriggerFetch,
 } from "./_lib/gemini-ocr";
 import { runDocumentAiOcr } from "./_lib/google-document-ai";
+import {
+  parsePageMetaFromDocumentAiText,
+  mergePageMeta,
+} from "./_lib/page-meta-parser";
 
 type Input = { jobId: string; pageIndex: number; mode?: ExtractionMode };
 
@@ -170,6 +174,18 @@ function buildExtractionItemRows(params: {
 }): Prisma.ExtractionItemCreateManyInput[] {
   const { jobId, pageId, pageIndex, structured } = params;
 
+  // The page-level meta (pageNumber / pageTotal / examCode / subject / etc.)
+  // is needed on EVERY page so finalize can reorder mixed uploads and cluster
+  // multi-test jobs. OCR only outputs an EXAM_META block on page 1, so on
+  // pages without one we stamp `structured.pageMeta` onto the FIRST item's
+  // `examMeta`. Finalize's page-ordering reader picks up either source.
+  const pageMetaJson = structured.pageMeta
+    ? ((structured.pageMeta as unknown) as Prisma.InputJsonValue)
+    : null;
+  const hasExamMetaBlock = structured.blocks.some(
+    (b) => b.blockType === "EXAM_META",
+  );
+
   return structured.blocks.map((b: StructuredOcrBlock, i: number) => {
     const sharedPassageRange =
       typeof b.sharedPassageRange === "string" &&
@@ -214,7 +230,9 @@ function buildExtractionItemRows(params: {
     const examMeta: Prisma.InputJsonValue | undefined =
       b.blockType === "EXAM_META"
         ? ((structured.pageMeta ?? {}) as Prisma.InputJsonValue)
-        : undefined;
+        : !hasExamMetaBlock && i === 0 && pageMetaJson !== null
+          ? pageMetaJson
+          : undefined;
 
     // 1차 호출에서는 더 이상 본문 복원을 시도하지 않는다 — 복원은 2차의
     // grounded restoration 호출이 담당. 페이지 경계 메타(continues*)는 그대로
@@ -558,10 +576,31 @@ export const extractionPageTask = task({
           userPrompt: textUserPrompt,
           schema: structuredOcrResponseSchema,
           timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
+          image: { mimeType, base64 },
         });
         structured = classified.object;
         inputTokens = classified.usage?.inputTokens;
         outputTokens = classified.usage?.outputTokens;
+
+        // pageMeta is needed by finalize for cluster fingerprinting and
+        // page reordering. Gemini sometimes drops these fields in
+        // multimodal mode — override with deterministic regex parsing of
+        // the Document AI raw text, which always has the markup intact.
+        const parsedMeta = parsePageMetaFromDocumentAiText(ocrText);
+        structured = {
+          ...structured,
+          pageMeta: mergePageMeta(
+            structured.pageMeta,
+            parsedMeta,
+          ) as typeof structured.pageMeta,
+        };
+        logger.info("page_meta_parsed", {
+          idempotencyKey,
+          pageIndex,
+          parsed: parsedMeta,
+          merged: structured.pageMeta,
+        });
+
         extractedText = structured.blocks
           .map((b) => b.content)
           .filter((c) => c && c.length > 0)

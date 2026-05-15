@@ -11,6 +11,7 @@ import {
 
 import { getStaffSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { TaskQueueHost } from "@/components/workbench/task-queue";
 
 interface StageAction {
   label: string;
@@ -121,15 +122,17 @@ export default async function DirectorDashboardPage() {
   if (!staff) redirect("/login?callbackUrl=/director");
 
   return (
-    <div className="w-full space-y-4">
-      <WorkflowOverview />
+    <TaskQueueHost defaultDomain="all">
+      <div className="w-full space-y-4">
+        <WorkflowOverview />
 
-      <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
-        {workflowStages.map((stage) => (
-          <WorkflowStageCard key={stage.step} {...stage} />
-        ))}
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
+          {workflowStages.map((stage) => (
+            <WorkflowStageCard key={stage.step} {...stage} />
+          ))}
+        </div>
       </div>
-    </div>
+    </TaskQueueHost>
   );
 }
 

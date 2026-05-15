@@ -33,40 +33,41 @@ model Academy {
   updatedAt DateTime @updatedAt
 
   // Relations
-  staff               Staff[]
-  students            Student[]
-  parents             Parent[]
-  schools             School[]
-  classes             Class[]
-  attendances         Attendance[]
-  invoices            Invoice[]
-  expenses            Expense[]
-  salaries            Salary[]
-  notices             Notice[]
-  calendarEvents      CalendarEvent[]
-  consultations       Consultation[]
-  assignments         Assignment[]
-  passages            Passage[]
-  questions           Question[]
-  questionCollections QuestionCollection[]
-  passageCollections  PassageCollection[]
-  examCollections     ExamCollection[]
-  exams               Exam[]
-  vocabLists          VocabularyList[]
-  teacherPrompts      TeacherPrompt[]
-  textbooks           Textbook[]
-  achievements        Achievement[]
-  studySeasons        StudySeason[]
-  naeshinQuestions    NaeshinQuestion[]
-  learningSets        LearningSet[]
-  subscriptions       AcademySubscription[]
-  creditBalance       CreditBalance?
-  creditTransactions  CreditTransaction[]
-  creditTopUps        CreditTopUp[]
-  extractionJobs      ExtractionJob[]
-  sourceMaterials     SourceMaterial[]
-  webtoons            Webtoon[]
-  classMaterials      ClassMaterial[]
+  staff                     Staff[]
+  students                  Student[]
+  parents                   Parent[]
+  schools                   School[]
+  classes                   Class[]
+  attendances               Attendance[]
+  invoices                  Invoice[]
+  expenses                  Expense[]
+  salaries                  Salary[]
+  notices                   Notice[]
+  calendarEvents            CalendarEvent[]
+  consultations             Consultation[]
+  assignments               Assignment[]
+  passages                  Passage[]
+  questions                 Question[]
+  questionCollections       QuestionCollection[]
+  passageCollections        PassageCollection[]
+  examCollections           ExamCollection[]
+  m1PassageDraftCollections M1PassageDraftCollection[]
+  exams                     Exam[]
+  vocabLists                VocabularyList[]
+  teacherPrompts            TeacherPrompt[]
+  textbooks                 Textbook[]
+  achievements              Achievement[]
+  studySeasons              StudySeason[]
+  naeshinQuestions          NaeshinQuestion[]
+  learningSets              LearningSet[]
+  subscriptions             AcademySubscription[]
+  creditBalance             CreditBalance?
+  creditTransactions        CreditTransaction[]
+  creditTopUps              CreditTopUp[]
+  extractionJobs            ExtractionJob[]
+  sourceMaterials           SourceMaterial[]
+  webtoons                  Webtoon[]
+  classMaterials            ClassMaterial[]
 
   @@map("academies")
 }
@@ -1211,12 +1212,12 @@ model LessonProgress {
   session4Done Boolean @default(false) // 선택: 문법 집중
   session5Done Boolean @default(false) // 선택: 약점 집중
 
-  vocabDone     Int     @default(0)
-  interpDone    Int     @default(0)
-  grammarDone   Int     @default(0)
-  compDone      Int     @default(0)
-  masteryPassed Boolean @default(false)
-  masteryAttempts Int   @default(0)
+  vocabDone       Int     @default(0)
+  interpDone      Int     @default(0)
+  grammarDone     Int     @default(0)
+  compDone        Int     @default(0)
+  masteryPassed   Boolean @default(false)
+  masteryAttempts Int     @default(0)
 
   masteryScore Float    @default(0) // 숙달도 0-100
   createdAt    DateTime @default(now())
@@ -1606,6 +1607,44 @@ model ExamCollectionItem {
 }
 
 // ============================================================================
+// M1 PASSAGE DRAFT COLLECTIONS — Folder organization for extraction drafts
+// ============================================================================
+
+model M1PassageDraftCollection {
+  id          String   @id @default(cuid())
+  academyId   String
+  parentId    String? // Self-reference for nested folders (null = root)
+  name        String
+  description String?  @db.Text
+  color       String? // Hex color for visual distinction
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy  Academy                        @relation(fields: [academyId], references: [id])
+  parent   M1PassageDraftCollection?      @relation("M1DraftFolderTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children M1PassageDraftCollection[]     @relation("M1DraftFolderTree")
+  items    M1PassageDraftCollectionItem[]
+
+  @@index([academyId])
+  @@index([parentId])
+  @@map("extraction_m1_passage_draft_collections")
+}
+
+model M1PassageDraftCollectionItem {
+  id           String @id @default(cuid())
+  collectionId String
+  draftId      String
+  orderNum     Int    @default(0)
+
+  collection M1PassageDraftCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  draft      ExtractionM1PassageDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, draftId])
+  @@index([collectionId])
+  @@map("extraction_m1_passage_draft_collection_items")
+}
+
+// ============================================================================
 // 20. PLATFORM ADMINISTRATION
 // ============================================================================
 
@@ -1843,6 +1882,11 @@ model ExtractionJob {
   originalFileUrl  String? @db.Text // Supabase Storage path for source PDF
   originalFileName String?
 
+  /// Teacher-editable label for the job ("5월 모의고사" 등). Null = fall back
+  /// to `originalFileName` in the UI. Original file name is preserved for
+  /// audit / debugging.
+  displayName String?
+
   // Upstream "a single exam / worksheet" it materialises into.
   // Populated by extraction-finalize when the job reaches a terminal state.
   sourceMaterialId String?
@@ -1867,15 +1911,15 @@ model ExtractionJob {
   completedAt DateTime?
   updatedAt   DateTime  @updatedAt
 
-  academy        Academy                   @relation(fields: [academyId], references: [id])
-  createdBy      Staff                     @relation("ExtractionJobCreator", fields: [createdById], references: [id])
-  sourceMaterial SourceMaterial?           @relation(fields: [sourceMaterialId], references: [id])
-  pages          ExtractionPage[]
-  results        ExtractionResult[]
-  items          ExtractionItem[]
+  academy         Academy                    @relation(fields: [academyId], references: [id])
+  createdBy       Staff                      @relation("ExtractionJobCreator", fields: [createdById], references: [id])
+  sourceMaterial  SourceMaterial?            @relation(fields: [sourceMaterialId], references: [id])
+  pages           ExtractionPage[]
+  results         ExtractionResult[]
+  items           ExtractionItem[]
   m1PassageDrafts ExtractionM1PassageDraft[]
-  passageDrafts  ExtractionPassageDraft[]
-  questionDrafts ExtractionQuestionDraft[]
+  passageDrafts   ExtractionPassageDraft[]
+  questionDrafts  ExtractionQuestionDraft[]
 
   @@index([academyId, status])
   @@index([academyId, createdAt])
@@ -1888,11 +1932,11 @@ model ExtractionJob {
 /// status: "PENDING" | "PROCESSING" | "SUCCESS" | "FAILED" | "DEAD" | "SKIPPED"
 /// idempotencyKey = `${jobId}:${pageIndex}` — UNIQUE로 3중 방어선의 2차 방벽 역할
 model ExtractionPage {
-  id         String @id @default(cuid())
-  jobId      String
-  pageIndex  Int // 0-based 순서
-  imageUrl   String @db.Text // Supabase Storage key (not public URL)
-  imageBytes Int?
+  id             String  @id @default(cuid())
+  jobId          String
+  pageIndex      Int // 0-based 순서
+  imageUrl       String  @db.Text // Supabase Storage key (not public URL)
+  imageBytes     Int?
   sourceFileName String?
 
   status       String @default("PENDING")
@@ -1911,6 +1955,17 @@ model ExtractionPage {
   inputTokens   Int?
   outputTokens  Int?
   latencyMs     Int?
+
+  /// Per-page metadata captured by the structured OCR call (pageNumber /
+  /// pageTotal / examCode / subject / etc.). Used by finalize to reorder
+  /// mixed-up uploads and to cluster pages by exam fingerprint.
+  pageMeta Json?
+
+  /// Raw OCR text returned by Document AI BEFORE Gemini classification.
+  /// Stored for debugging: lets us tell whether a missing marker / word
+  /// was lost in Document AI (vision limit) or stripped by Gemini classify
+  /// (LLM tendency overriding prompt). Null when Document AI was not used.
+  documentAiRawText String? @db.Text
 
   // ─── 크레딧 연결 ──────────────────────────────
   creditTxId String? // CreditTransaction.id for dedup on retry
@@ -2045,6 +2100,11 @@ model SourceMaterial {
 
   type     String
   title    String
+  /// Teacher-set override displayed in the 자료 관리 (extraction-manage) page.
+  /// Auto-set `title` (extraction AI guess) is unreliable, so the manage UI
+  /// reads `customLabel` first and falls back to a derived "{job name} 시험지 N"
+  /// label. Other pages keep using `title`.
+  customLabel String?
   subtitle String?
 
   // Common metadata (first-class columns for fast filtering)
@@ -2070,13 +2130,13 @@ model SourceMaterial {
   school    School? @relation(fields: [schoolId], references: [id])
   createdBy Staff?  @relation("SourceMaterialCreator", fields: [createdById], references: [id])
 
-  bundles        PassageBundle[]
-  passages       Passage[]
-  questions      Question[]
-  exams          Exam[]
-  extractionJobs ExtractionJob[]
+  bundles         PassageBundle[]
+  passages        Passage[]
+  questions       Question[]
+  exams           Exam[]
+  extractionJobs  ExtractionJob[]
   m1PassageDrafts ExtractionM1PassageDraft[]
-  passageDrafts  ExtractionPassageDraft[]
+  passageDrafts   ExtractionPassageDraft[]
 
   @@unique([academyId, contentHash], name: "academy_content_hash_unique")
   @@index([academyId, type])
@@ -2143,10 +2203,11 @@ model ExtractionM1PassageDraft {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  job            ExtractionJob                   @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  sourceMaterial SourceMaterial?                 @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
-  changes        ExtractionM1PassageDraftChange[]
-  sourceMatches  ExtractionM1PassageSourceMatch[]
+  job             ExtractionJob                    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  sourceMaterial  SourceMaterial?                  @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
+  changes         ExtractionM1PassageDraftChange[]
+  sourceMatches   ExtractionM1PassageSourceMatch[]
+  collectionItems M1PassageDraftCollectionItem[]
 
   @@unique([jobId, passageOrder])
   @@index([jobId])
@@ -2161,8 +2222,8 @@ model ExtractionM1PassageDraftChange {
   passageDraftId String
 
   sentenceOrder Int?
-  before        String @db.Text
-  after         String @db.Text
+  before        String  @db.Text
+  after         String  @db.Text
   changeType    String?
   reason        String? @db.Text
   confidence    Float?

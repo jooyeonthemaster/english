@@ -67,6 +67,7 @@ interface GeminiTextParams {
   systemPrompt: string;
   userPrompt: string;
   timeoutInMs: number;
+  image?: { mimeType: string; base64: string };
 }
 
 export class StructuredParseError extends Error {
@@ -181,6 +182,19 @@ async function postGeminiText(
   params: GeminiTextParams & { responseMimeType?: "application/json" },
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig(params.stage);
+  const userParts: Array<
+    | { text: string }
+    | { inlineData: { mimeType: string; data: string } }
+  > = [];
+  if (params.image) {
+    userParts.push({
+      inlineData: {
+        mimeType: params.image.mimeType,
+        data: params.image.base64,
+      },
+    });
+  }
+  userParts.push({ text: params.userPrompt });
   const response = await retry.fetch(geminiUrl(cfg.model), {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -192,7 +206,7 @@ async function postGeminiText(
       contents: [
         {
           role: "user",
-          parts: [{ text: params.userPrompt }],
+          parts: userParts,
         },
       ],
       generationConfig: {

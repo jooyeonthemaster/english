@@ -161,6 +161,7 @@ export async function GET(req: NextRequest) {
       mode: true,
       sourceMaterialId: true,
       originalFileName: true,
+      displayName: true,
       status: true,
       totalPages: true,
       successPages: true,
