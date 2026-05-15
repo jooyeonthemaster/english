@@ -4,10 +4,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 
-import { DOMAIN_LABELS, TERMINAL_STATUSES } from "../constants";
-import type { BaseTask } from "../types";
+import { DOMAIN_LABELS } from "../constants";
+import type { BaseTask, TaskStatus } from "../types";
 import { formatTaskDate } from "../utils/format";
 import { TaskStatusBadge } from "./task-status-badge";
+
+function deleteConfirmMessage(status: TaskStatus): string {
+  if (status === "processing") {
+    return "진행 중인 작업입니다. 취소하고 삭제할까요?";
+  }
+  if (status === "pending") {
+    return "아직 시작되지 않은 작업입니다. 삭제할까요?";
+  }
+  return "이 작업과 결과를 삭제할까요?";
+}
 
 export function TaskRow({
   task,
@@ -34,7 +44,7 @@ export function TaskRow({
     const ok =
       typeof window === "undefined"
         ? true
-        : window.confirm("이 작업과 결과를 삭제할까요?");
+        : window.confirm(deleteConfirmMessage(task.status));
     if (!ok) return;
     setDeleting(true);
     try {
@@ -62,13 +72,22 @@ export function TaskRow({
             </span>
           ) : null}
           <TaskStatusBadge status={task.status} />
-          {task.onDelete && TERMINAL_STATUSES.has(task.status) ? (
+          {task.onDelete ? (
             <button
               type="button"
               onClick={handleDelete}
               disabled={deleting}
               className="cursor-pointer rounded p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-              aria-label="작업 삭제"
+              aria-label={
+                task.status === "processing" || task.status === "pending"
+                  ? "작업 취소 후 삭제"
+                  : "작업 삭제"
+              }
+              title={
+                task.status === "processing" || task.status === "pending"
+                  ? "작업 취소 후 삭제"
+                  : "작업 삭제"
+              }
             >
               {deleting ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />

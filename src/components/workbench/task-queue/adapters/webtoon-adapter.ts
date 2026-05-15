@@ -49,22 +49,31 @@ export const webtoonAdapter: TaskAdapter = {
     const data = (await res.json()) as { items?: WebtoonRow[] };
     const items = data.items ?? [];
 
-    return items.map<BaseTask>((row) => ({
-      id: row.id,
-      domain: "webtoon",
-      title: buildTitle(row),
-      subtitle: buildSubtitle(row),
-      status: mapStatus(row.status),
-      createdAt: row.createdAt,
-      href: row.passageId
-        ? `/director/workbench/webtoon?passageId=${row.passageId}`
-        : "/director/workbench/webtoon",
-      onDelete: async () => {
-        await fetch(`/api/webtoons/${row.id}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-      },
-    }));
+    return items.map<BaseTask>((row) => {
+      const status = mapStatus(row.status);
+      // Webtoon DELETE endpoint refuses in-flight rows (PENDING/GENERATING)
+      // and there is no cancel endpoint, so we omit onDelete entirely for
+      // those — the trash icon will be hidden until the row terminalizes.
+      const canDelete = status !== "pending" && status !== "processing";
+      return {
+        id: row.id,
+        domain: "webtoon",
+        title: buildTitle(row),
+        subtitle: buildSubtitle(row),
+        status,
+        createdAt: row.createdAt,
+        href: row.passageId
+          ? `/director/workbench/webtoon?passageId=${row.passageId}`
+          : "/director/workbench/webtoon",
+        onDelete: canDelete
+          ? async () => {
+              await fetch(`/api/webtoons/${row.id}`, {
+                method: "DELETE",
+                credentials: "include",
+              });
+            }
+          : undefined,
+      };
+    });
   },
 };
