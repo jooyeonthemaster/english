@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
 import { useRouter } from "next/navigation";
@@ -901,10 +901,22 @@ function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): Pag
   for (const group of groups) {
     if (group.includePassage && group.passageContent) {
       const lines = passageToLines(group.passageContent, settings);
-      // Only split passage into per-line blocks when the group's first item is force-placed
-      // (keepWithPrev). Otherwise treat the passage as an atomic block (legacy behavior).
-      const splitPassage = Boolean(group.items[0]?.keepWithPrev);
-      if (splitPassage) {
+      // Default: passage flows naturally line-by-line so it fills empty column space.
+      // When keepTogether is true (currently keepWithPrev=true), treat passage as atomic
+      // so the whole question moves cleanly to the next column / page.
+      const keepTogether = Boolean(group.items[0]?.keepWithPrev);
+      if (keepTogether) {
+        const lineH = passageLineHeight(settings);
+        const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
+        const chrome = passageChromeHeight(group, settings, includeTitle);
+        const atomHeight = chrome + lines.length * lineH;
+        blocks.push({
+          kind: "passage-atom",
+          group,
+          allLines: lines,
+          height: atomHeight,
+        });
+      } else {
         const lineH = passageLineHeight(settings);
         lines.forEach((line, idx) => {
           blocks.push({
@@ -915,17 +927,6 @@ function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): Pag
             totalLines: lines.length,
             height: lineH,
           });
-        });
-      } else {
-        const lineH = passageLineHeight(settings);
-        const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
-        const chrome = passageChromeHeight(group, settings, includeTitle);
-        const atomHeight = chrome + lines.length * lineH;
-        blocks.push({
-          kind: "passage-atom",
-          group,
-          allLines: lines,
-          height: atomHeight,
         });
       }
     }
@@ -1112,7 +1113,7 @@ export function ExamPaperBuilderClient({
   const [columns, setColumns] = useState<1 | 2>(2);
   const [density, setDensity] = useState<Density>("comfortable");
   const [passageStyle, setPassageStyle] = useState<PassageStyle>("boxed");
-  const [showAnswerSpace, setShowAnswerSpace] = useState(true);
+  const showAnswerSpace = true;
   const [showPassageTitle, setShowPassageTitle] = useState(true);
   const [showQuestionMeta, setShowQuestionMeta] = useState(true);
   const [paperItems, setPaperItems] = useState<PaperItem[]>([]);
@@ -1484,6 +1485,67 @@ export function ExamPaperBuilderClient({
     window.setTimeout(() => window.print(), 50);
   }
 
+  useEffect(() => {
+    const PRINT_BODY_CLASS = "exam-print-active";
+    let originalParent: HTMLElement | null = null;
+    let originalNextSibling: Node | null = null;
+    let originalRootInlineStyle = "";
+    let printHost: HTMLDivElement | null = null;
+
+    function beforePrint() {
+      const root = document.getElementById("exam-paper-print-root");
+      if (!root || !root.parentElement) return;
+
+      originalParent = root.parentElement;
+      originalNextSibling = root.nextSibling;
+      originalRootInlineStyle = root.getAttribute("style") || "";
+
+      printHost = document.createElement("div");
+      printHost.id = "exam-print-host";
+      printHost.style.cssText =
+        "position:fixed;left:0;top:0;width:210mm;height:auto;z-index:2147483647;background:white;margin:0;padding:0;";
+
+      document.body.appendChild(printHost);
+      printHost.appendChild(root);
+
+      root.setAttribute(
+        "style",
+        "width:210mm;max-width:210mm;height:auto;padding:0;margin:0;overflow:visible;background:white;display:block;",
+      );
+
+      document.body.classList.add(PRINT_BODY_CLASS);
+    }
+
+    function afterPrint() {
+      const root = document.getElementById("exam-paper-print-root");
+      if (root && originalParent) {
+        if (originalRootInlineStyle) root.setAttribute("style", originalRootInlineStyle);
+        else root.removeAttribute("style");
+
+        if (originalNextSibling && originalNextSibling.parentNode === originalParent) {
+          originalParent.insertBefore(root, originalNextSibling);
+        } else {
+          originalParent.appendChild(root);
+        }
+      }
+      if (printHost && printHost.parentElement) {
+        printHost.parentElement.removeChild(printHost);
+      }
+      document.body.classList.remove(PRINT_BODY_CLASS);
+      originalParent = null;
+      originalNextSibling = null;
+      originalRootInlineStyle = "";
+      printHost = null;
+    }
+
+    window.addEventListener("beforeprint", beforePrint);
+    window.addEventListener("afterprint", afterPrint);
+    return () => {
+      window.removeEventListener("beforeprint", beforePrint);
+      window.removeEventListener("afterprint", afterPrint);
+    };
+  }, []);
+
   function handleDownloadDocx() {
     startTransition(async () => {
       const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
@@ -1768,7 +1830,6 @@ export function ExamPaperBuilderClient({
         <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">표시 옵션</p>
         <div className="grid grid-cols-1 gap-2">
           {[
-            { checked: showAnswerSpace, set: setShowAnswerSpace, label: "풀이 공간" },
             { checked: showPassageTitle, set: setShowPassageTitle, label: "지문 제목" },
             { checked: showQuestionMeta, set: setShowQuestionMeta, label: "문항 메타" },
           ].map((item) => (
@@ -2589,47 +2650,87 @@ export function ExamPaperBuilderClient({
         }
 
         @media print {
+          html,
           body {
             background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 210mm !important;
           }
 
-          body * {
-            visibility: hidden;
+          /* During print, the JS handler moves the print root into #exam-print-host
+             and hides everything else by class. */
+          body.exam-print-active > *:not(#exam-print-host) {
+            display: none !important;
           }
 
-          #exam-paper-print-root,
-          #exam-paper-print-root * {
-            visibility: visible;
-          }
-
-          #exam-paper-print-root {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: auto;
-            overflow: visible !important;
+          #exam-print-host {
+            position: static !important;
+            width: 210mm !important;
+            margin: 0 !important;
             padding: 0 !important;
             background: white !important;
           }
 
-          .no-print {
+          #exam-paper-print-root {
+            width: 210mm !important;
+            max-width: 210mm !important;
+            height: auto !important;
+            overflow: visible !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: white !important;
+            display: block !important;
+          }
+
+          /* Inner pages container — wipe gap, max-width, alignment */
+          #exam-paper-print-root > div {
+            max-width: none !important;
+            width: 210mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            gap: 0 !important;
+            display: block !important;
+          }
+
+          .no-print,
+          .no-print * {
             display: none !important;
+            visibility: hidden !important;
           }
 
           .exam-a4-page {
             width: 210mm !important;
+            height: 297mm !important;
             min-height: 297mm !important;
+            max-height: 297mm !important;
             margin: 0 !important;
             box-shadow: none !important;
             border: none !important;
-            page-break-after: always;
-            break-after: page;
+            outline: none !important;
+            overflow: hidden !important;
+            page-break-after: always !important;
+            break-after: page !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            aspect-ratio: auto !important;
+            box-sizing: border-box !important;
+            border-radius: 0 !important;
+            display: block !important;
+          }
+
+          /* Tailwind ring utilities use box-shadow — neutralize */
+          .exam-a4-page,
+          .exam-a4-page * {
+            --tw-ring-shadow: 0 0 #0000 !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+            --tw-shadow: 0 0 #0000 !important;
+            box-shadow: none !important;
           }
 
           .exam-a4-page:last-child {
-            page-break-after: auto;
-            break-after: auto;
+            page-break-after: auto !important;
+            break-after: auto !important;
           }
         }
       `}</style>
@@ -2952,7 +3053,7 @@ function A4PaperPage({
                           </p>
                         )}
                         {!isPassageStart && (
-                          <p className={cn("mb-1 text-[9px] italic", visual.passageTitleClass)}>
+                          <p className={cn("no-print mb-1 text-[9px] italic", visual.passageTitleClass)}>
                             (지문 계속)
                           </p>
                         )}
@@ -2970,7 +3071,7 @@ function A4PaperPage({
                           )}
                         </p>
                         {isSplit && !isPassageEnd && (
-                          <p className={cn("mt-1 text-[9px] italic text-slate-400", visual.passageTitleClass)}>
+                          <p className={cn("no-print mt-1 text-[9px] italic text-slate-400", visual.passageTitleClass)}>
                             (다음 칸으로 이어짐 →)
                           </p>
                         )}
@@ -3066,14 +3167,11 @@ function A4PaperPage({
                                 className={cn(
                                   "flex h-6 w-6 items-center justify-center rounded-md hover:bg-blue-50",
                                   item.keepWithPrev ? "text-blue-600" : "text-slate-400 hover:text-slate-700",
-                                  overflowItemIds.has(item.localId) && "ring-1 ring-rose-400",
                                 )}
                                 title={
-                                  overflowItemIds.has(item.localId)
-                                    ? "공간 부족 — 앞 문항 칸 경계를 넘쳤습니다"
-                                    : item.keepWithPrev
-                                      ? "앞 문항 바로 아래에 강제 배치 (켜짐)"
-                                      : "앞 문항 바로 아래에 강제 배치"
+                                  item.keepWithPrev
+                                    ? "한 덩어리로 유지 — 분할 안 함 (켜짐, 클릭 → 자연 흐름)"
+                                    : "한 덩어리로 유지 — 다음 칸/페이지로 통째 이동 (클릭 → 켜짐)"
                                 }
                               >
                                 <ArrowDownToLine className="h-3 w-3" />
@@ -3081,31 +3179,38 @@ function A4PaperPage({
                               <button
                                 onClick={(event) => {
                                   event.stopPropagation();
-                                  const next: BreakBefore =
-                                    item.breakBefore === "auto" ? "column" : item.breakBefore === "column" ? "page" : "auto";
+                                  const next: BreakBefore = item.breakBefore === "column" ? "auto" : "column";
+                                  onUpdateItem(item.localId, { breakBefore: next });
+                                }}
+                                className={cn(
+                                  "flex h-6 w-6 items-center justify-center rounded-md hover:bg-emerald-50",
+                                  item.breakBefore === "column" ? "text-emerald-600" : "text-slate-400 hover:text-slate-700",
+                                )}
+                                title={
+                                  item.breakBefore === "column"
+                                    ? "다음 칸으로 강제 줄바꿈 (켜짐)"
+                                    : "다음 칸으로 강제 줄바꿈"
+                                }
+                              >
+                                <Columns2 className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  const next: BreakBefore = item.breakBefore === "page" ? "auto" : "page";
                                   onUpdateItem(item.localId, { breakBefore: next });
                                 }}
                                 className={cn(
                                   "flex h-6 w-6 items-center justify-center rounded-md hover:bg-blue-50",
-                                  item.breakBefore === "column" && "text-emerald-600",
-                                  item.breakBefore === "page" && "text-blue-700",
-                                  item.breakBefore === "auto" && "text-slate-400 hover:text-slate-700",
+                                  item.breakBefore === "page" ? "text-blue-700" : "text-slate-400 hover:text-slate-700",
                                 )}
                                 title={
-                                  item.breakBefore === "auto"
-                                    ? "앞에서 줄바꿈: 자동 (클릭 → 다음 칸으로)"
-                                    : item.breakBefore === "column"
-                                      ? "앞에서 줄바꿈: 다음 칸으로 (클릭 → 다음 페이지로)"
-                                      : "앞에서 줄바꿈: 다음 페이지로 (클릭 → 자동으로 되돌림)"
+                                  item.breakBefore === "page"
+                                    ? "다음 페이지로 강제 줄바꿈 (켜짐)"
+                                    : "다음 페이지로 강제 줄바꿈"
                                 }
                               >
-                                {item.breakBefore === "page" ? (
-                                  <FileText className="h-3 w-3" />
-                                ) : item.breakBefore === "column" ? (
-                                  <Columns2 className="h-3 w-3" />
-                                ) : (
-                                  <CornerDownRight className="h-3 w-3" />
-                                )}
+                                <FileText className="h-3 w-3" />
                               </button>
                               <button
                                 onClick={(event) => {
@@ -3163,7 +3268,7 @@ function A4PaperPage({
                             </>
                           )}
                           {part.isContinuation && part.options.length > 0 && (
-                            <p className={cn("mb-1 text-[9px] font-semibold italic", visual.metaClass)}>
+                            <p className={cn("no-print mb-1 text-[9px] font-semibold italic", visual.metaClass)}>
                               ({item.orderNum}번 계속)
                             </p>
                           )}
