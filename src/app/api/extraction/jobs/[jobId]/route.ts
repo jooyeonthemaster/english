@@ -110,6 +110,9 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
           sourceMatches: {
             orderBy: [{ selected: "desc" }, { confidence: "desc" }],
           },
+          sourceMaterial: {
+            select: { id: true, customLabel: true },
+          },
         },
       }),
     ]);

@@ -19,6 +19,7 @@ import {
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { generateGroundedStructuredTextWithTriggerFetch } from "./gemini-ocr";
 import { findPassageSourceMatches } from "./m2-source-match";
+import { checkRestorationQuality } from "./m1-restoration-quality";
 
 // 통합 호출 — google_search + 별도 AI 복원 + 비교까지 한 번에 하므로 평소
 // passage-restoration(120s)보다 여유를 둔다.
@@ -63,10 +64,13 @@ function normalizeComparableText(text: string): string {
 function stripProblemMarkers(text: string): string {
   if (!text) return text;
   let cleaned = text;
-  // 1) Chunk labels at paragraph starts: `(A)`, `(A) `, `(A)\n` — only
-  //    uppercase A~D, only at line start, with optional surrounding spaces.
-  //    Doesn't touch `(A)` mid-sentence (rare but possible — e.g. "Group (A)").
-  cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-D])\)[ \t]*/g, "$1");
+  // 1) Chunk labels at paragraph starts: `(A)`, `(A) `, `(A)\n` — uppercase
+  //    single letters at line start with optional surrounding spaces. Originally
+  //    capped at A~D (4-chunk ordering questions) but vocabulary-choice 동의어
+  //    questions can list (A)~(I) boxed sentences, and a few outliers go up to
+  //    (J). [A-Z] is the safe upper bound; the line-start anchor + paren shape
+  //    prevents collisions with mid-sentence parentheticals like "Group (A)".
+  cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-Z])\)[ \t]*/g, "$1");
   // 2) Inline referent markers `(a) word` → `word`. Only lowercase a~e in
   //    parens. We do NOT require a preceding space so it also catches the
   //    "...has(a) been..." style that sometimes shows up. But we DO require
@@ -304,9 +308,17 @@ export async function restoreM1Passage(input: {
     );
 
     const unresolvedArtifacts = hasUnresolvedM1ProblemArtifacts(restoredText);
-    const status: M1RestorationStatus = unresolvedArtifacts
-      ? "PARTIAL"
-      : mapFinalStatus(result.finalStatus);
+    const quality = checkRestorationQuality({
+      rawText: input.rawText,
+      restoredText,
+      questionTypes: (input.problemEvidence?.questions ?? []).map(
+        (q) => q.questionType,
+      ),
+    });
+    const status: M1RestorationStatus =
+      unresolvedArtifacts || quality.shouldDowngradeStatus
+        ? "PARTIAL"
+        : mapFinalStatus(result.finalStatus);
 
     const aiChanges: M1RestorationChangeInput[] =
       result.aiRestoration.changes.map((change) => ({
@@ -325,6 +337,7 @@ export async function restoreM1Passage(input: {
             "Restored text still contains problem-sheet markers; teacher review is required.",
           ]
         : []),
+      ...quality.warnings.map((code) => `restoration_quality:${code}`),
     ];
 
     const finalMethodLabel =
@@ -519,9 +532,17 @@ function projectFromBatchItem(
   );
 
   const unresolvedArtifacts = hasUnresolvedM1ProblemArtifacts(restoredText);
-  const status: M1RestorationStatus = unresolvedArtifacts
-    ? "PARTIAL"
-    : mapFinalStatus(item.finalStatus);
+  const quality = checkRestorationQuality({
+    rawText: task.input.rawText,
+    restoredText,
+    questionTypes: (task.input.problemEvidence?.questions ?? []).map(
+      (q) => q.questionType,
+    ),
+  });
+  const status: M1RestorationStatus =
+    unresolvedArtifacts || quality.shouldDowngradeStatus
+      ? "PARTIAL"
+      : mapFinalStatus(item.finalStatus);
 
   const aiChanges: M1RestorationChangeInput[] =
     item.aiRestoration.changes.map((change) => ({
@@ -540,6 +561,7 @@ function projectFromBatchItem(
           "Restored text still contains problem-sheet markers; teacher review is required.",
         ]
       : []),
+    ...quality.warnings.map((code) => `restoration_quality:${code}`),
   ];
 
   const finalMethodLabel =

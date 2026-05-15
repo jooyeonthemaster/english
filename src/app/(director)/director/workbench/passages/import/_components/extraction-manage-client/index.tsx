@@ -349,6 +349,83 @@ export function ExtractionManageClient({
     [queueDrawer],
   );
 
+  const renameSourceMaterial = useCallback(
+    async (sourceMaterialId: string, customLabel: string) => {
+      const trimmed = customLabel.trim();
+      const next = trimmed.length > 0 ? trimmed : null;
+
+      let previousLabel: string | null = null;
+      setDrafts((current) => {
+        const probe = current.find(
+          (d) => d.sourceMaterial?.id === sourceMaterialId,
+        );
+        if (probe?.sourceMaterial) {
+          previousLabel = probe.sourceMaterial.customLabel ?? null;
+        }
+        return current.map((d) =>
+          d.sourceMaterial?.id === sourceMaterialId
+            ? {
+                ...d,
+                sourceMaterial: { ...d.sourceMaterial, customLabel: next },
+              }
+            : d,
+        );
+      });
+
+      if (next === previousLabel) return;
+
+      try {
+        const res = await fetch(
+          "/api/extraction/source-materials/" + sourceMaterialId,
+          {
+            method: "PATCH",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ customLabel: next }),
+          },
+        );
+        if (!res.ok) throw new Error("시험지 이름을 저장하지 못했습니다.");
+        const data = (await res.json()) as {
+          sourceMaterial: { id: string; customLabel: string | null };
+        };
+        setDrafts((current) =>
+          current.map((d) =>
+            d.sourceMaterial?.id === data.sourceMaterial.id
+              ? {
+                  ...d,
+                  sourceMaterial: {
+                    id: data.sourceMaterial.id,
+                    customLabel: data.sourceMaterial.customLabel,
+                  },
+                }
+              : d,
+          ),
+        );
+        toast.success("시험지 이름이 저장되었습니다.");
+      } catch (err) {
+        setDrafts((current) =>
+          current.map((d) =>
+            d.sourceMaterial?.id === sourceMaterialId
+              ? {
+                  ...d,
+                  sourceMaterial: {
+                    ...d.sourceMaterial,
+                    customLabel: previousLabel,
+                  },
+                }
+              : d,
+          ),
+        );
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "시험지 이름을 저장하지 못했습니다.",
+        );
+      }
+    },
+    [],
+  );
+
   const updateDraftText = useCallback((id: string, teacherText: string) => {
     setDrafts((current) =>
       current.map((draft) => (draft.id === id ? { ...draft, teacherText } : draft)),
@@ -622,6 +699,31 @@ export function ExtractionManageClient({
       count: j.count,
     }));
   }, [draftsInActiveFolder]);
+
+  // Per-job absolute "시험지 N" numbering. Computed from the full `drafts`
+  // state (not the filtered/sorted view) so the number assigned to a given
+  // SourceMaterial never changes regardless of which filter/sort is active.
+  // First occurrence of each `sourceMaterialId` within a job (in the API's
+  // passageOrder) gets index 1, second gets 2, etc.
+  const groupIndexBySourceMaterialId = useMemo(() => {
+    const map = new Map<string, number>();
+    const orderByJob = new Map<string, string[]>();
+    for (const d of drafts) {
+      const smId = d.sourceMaterialId;
+      const jobId = d.job?.id;
+      if (!smId || !jobId) continue;
+      let arr = orderByJob.get(jobId);
+      if (!arr) {
+        arr = [];
+        orderByJob.set(jobId, arr);
+      }
+      if (!arr.includes(smId)) arr.push(smId);
+    }
+    for (const arr of orderByJob.values()) {
+      arr.forEach((smId, i) => map.set(smId, i + 1));
+    }
+    return map;
+  }, [drafts]);
 
   const selectedDraft = useMemo(
     () =>
@@ -1043,6 +1145,8 @@ export function ExtractionManageClient({
             totalDraftCount={draftsInActiveFolder.length}
             onSelectJob={setJobFilter}
             onRenameJob={renameJob}
+            onRenameSourceMaterial={renameSourceMaterial}
+            groupIndexBySourceMaterialId={groupIndexBySourceMaterialId}
             selectionBar={
               <DraftSelectionToolbar
                 selectedCount={selectedIds.size}

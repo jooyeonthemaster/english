@@ -52,6 +52,13 @@ interface DraftGridProps {
 
   // Job rename (jobId, newName | null)
   onRenameJob: (jobId: string, name: string | null) => void;
+
+  // SourceMaterial (시험지) rename (sourceMaterialId, newTitle)
+  onRenameSourceMaterial: (sourceMaterialId: string, title: string) => void;
+
+  /** SourceMaterialId → per-job absolute 1-based index. Stable across filter
+   *  changes so each 시험지 keeps its own number within its job. */
+  groupIndexBySourceMaterialId: Map<string, number>;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
@@ -80,6 +87,8 @@ export function DraftGrid({
   onSelectJob,
   selectionBar,
   onRenameJob,
+  onRenameSourceMaterial,
+  groupIndexBySourceMaterialId,
 }: DraftGridProps) {
   const showJobFilter = jobs.length > 1;
 
@@ -222,11 +231,30 @@ export function DraftGrid({
                 {allExpanded ? "전체 접기" : "전체 펼치기"}
               </button>
             </div>
-            {draftGroups.map((group, groupIdx) => {
+            {draftGroups.map((group) => {
               const isUnlinked = group.key === "__unlinked__";
-              const label = isUnlinked
+              // Per-job absolute index lookup (passed from parent so the
+              // number is stable regardless of UI filter/sort).
+              const absoluteIndex = isUnlinked
+                ? 0
+                : groupIndexBySourceMaterialId.get(group.key) ?? 0;
+              const firstJob = group.drafts[0]?.job;
+              const jobName =
+                (firstJob?.displayName?.trim() && firstJob.displayName) ||
+                firstJob?.originalFileName ||
+                "";
+              const derivedLabel = isUnlinked
                 ? "출처 미연결"
-                : `시험지 ${groupIdx + 1}`;
+                : `${jobName ? jobName + " " : ""}시험지 ${absoluteIndex || "?"}`;
+              // Teacher-set customLabel takes precedence over the derived
+              // label. (Auto-set `title` is intentionally not consulted —
+              // extraction AI fills it with unreliable guesses.)
+              const sourceMaterial = group.drafts.find(
+                (d) => d.sourceMaterial,
+              )?.sourceMaterial;
+              const label = sourceMaterial?.customLabel?.trim()
+                ? sourceMaterial.customLabel
+                : derivedLabel;
               const expanded = expandedGroups.has(group.key);
               const groupIds = group.drafts.map((d) => d.id);
               const allChecked =
@@ -237,6 +265,7 @@ export function DraftGrid({
                 <GroupSection
                   key={group.key}
                   label={label}
+                  derivedLabel={derivedLabel}
                   count={group.drafts.length}
                   tone={isUnlinked ? "amber" : "blue"}
                   expanded={expanded}
@@ -246,6 +275,8 @@ export function DraftGrid({
                   onToggleAllInGroup={(select) =>
                     onToggleGroupCheck(groupIds, select)
                   }
+                  sourceMaterialId={sourceMaterial?.id ?? null}
+                  onRenameSourceMaterial={onRenameSourceMaterial}
                 >
                   <div className={`grid gap-3 ${COL_CLASS[gridCols]}`}>
                     {group.drafts.map((draft, index) => (
@@ -288,6 +319,7 @@ export function DraftGrid({
 
 function GroupSection({
   label,
+  derivedLabel,
   count,
   tone,
   expanded,
@@ -295,9 +327,15 @@ function GroupSection({
   someChecked,
   onToggle,
   onToggleAllInGroup,
+  sourceMaterialId,
+  onRenameSourceMaterial,
   children,
 }: {
   label: string;
+  /** Auto-derived label used when there is no teacher-set title. Shown as
+   *  the input placeholder so the teacher can see what the default would
+   *  revert to if they clear the field. */
+  derivedLabel: string;
   count: number;
   tone: "blue" | "amber";
   expanded: boolean;
@@ -305,6 +343,8 @@ function GroupSection({
   someChecked: boolean;
   onToggle: () => void;
   onToggleAllInGroup: (select: boolean) => void;
+  sourceMaterialId: string | null;
+  onRenameSourceMaterial: (id: string, title: string) => void;
   children: React.ReactNode;
 }) {
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -313,6 +353,34 @@ function GroupSection({
       checkboxRef.current.indeterminate = someChecked && !allChecked;
     }
   }, [someChecked, allChecked]);
+
+  const editable = sourceMaterialId !== null;
+  const [editing, setEditing] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(label);
+
+  useEffect(() => {
+    if (!editing) setTitleDraft(label);
+  }, [label, editing]);
+
+  const commit = useCallback(() => {
+    if (!sourceMaterialId) {
+      setEditing(false);
+      return;
+    }
+    const trimmed = titleDraft.trim();
+    if (trimmed.length === 0 || trimmed === label) {
+      setEditing(false);
+      setTitleDraft(label);
+      return;
+    }
+    onRenameSourceMaterial(sourceMaterialId, trimmed);
+    setEditing(false);
+  }, [sourceMaterialId, titleDraft, label, onRenameSourceMaterial]);
+
+  const cancel = useCallback(() => {
+    setTitleDraft(label);
+    setEditing(false);
+  }, [label]);
 
   const accent =
     tone === "blue"
@@ -349,38 +417,94 @@ function GroupSection({
             aria-label={`${label} 전체 선택`}
           />
         </div>
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-expanded={expanded}
-          className="flex flex-1 cursor-pointer items-center gap-2.5 py-3 text-left transition-colors hover:opacity-90"
-        >
-          <ChevronRight
-            className={
-              "size-4 shrink-0 text-slate-400 motion-safe:transition-transform motion-safe:duration-150 " +
-              (expanded ? "rotate-90" : "")
-            }
-            aria-hidden="true"
-          />
+        <div className="flex flex-1 items-center gap-2.5 py-3">
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={expanded}
+            aria-label={expanded ? "그룹 접기" : "그룹 펼치기"}
+            className="flex shrink-0 cursor-pointer items-center"
+          >
+            <ChevronRight
+              className={
+                "size-4 text-slate-400 motion-safe:transition-transform motion-safe:duration-150 " +
+                (expanded ? "rotate-90" : "")
+              }
+              aria-hidden="true"
+            />
+          </button>
           <span
             className={`flex size-7 shrink-0 items-center justify-center rounded-md ${iconBg}`}
           >
             <ClipboardList className="size-4" aria-hidden="true" />
           </span>
-          <h4 className="text-sm font-bold tracking-tight text-slate-900">
-            {label}
-          </h4>
-          <span
-            className={`rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ring-1 ${badgeBg}`}
-          >
-            {count}개
-          </span>
-          {!expanded ? (
-            <span className="ml-auto text-[11px] font-medium text-slate-400">
-              클릭해서 펼치기
-            </span>
-          ) : null}
-        </button>
+          {editing ? (
+            <input
+              autoFocus
+              value={titleDraft}
+              maxLength={200}
+              onChange={(e) => setTitleDraft(e.target.value)}
+              onBlur={commit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  commit();
+                } else if (e.key === "Escape") {
+                  e.preventDefault();
+                  cancel();
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              placeholder={derivedLabel}
+              className="min-w-0 flex-1 max-w-md rounded-md border border-blue-300 bg-white px-2 py-0.5 text-sm font-bold text-slate-900 outline-none ring-2 ring-blue-100"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-expanded={expanded}
+              className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left transition-colors hover:opacity-90"
+            >
+              <h4 className="truncate text-sm font-bold tracking-tight text-slate-900">
+                {label}
+              </h4>
+              <span
+                className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ring-1 ${badgeBg}`}
+              >
+                {count}개
+              </span>
+              {editable ? (
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTitleDraft(label);
+                    setEditing(true);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setTitleDraft(label);
+                      setEditing(true);
+                    }
+                  }}
+                  className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:bg-slate-100 focus-visible:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  aria-label="시험지 이름 편집"
+                  title="이름 편집"
+                >
+                  <Pencil className="size-3.5" />
+                </span>
+              ) : null}
+              {!expanded ? (
+                <span className="ml-auto text-[11px] font-medium text-slate-400">
+                  클릭해서 펼치기
+                </span>
+              ) : null}
+            </button>
+          )}
+        </div>
       </header>
       {expanded ? <div className="px-3 py-3">{children}</div> : null}
     </section>

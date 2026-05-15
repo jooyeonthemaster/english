@@ -55,6 +55,7 @@ import {
   type PageCluster,
   type PageMetaSummary,
 } from "./_lib/page-ordering";
+import { buildRestorationActions } from "./_lib/m1-restoration-actions";
 
 type Input = { jobId: string };
 
@@ -580,6 +581,14 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
           };
         });
 
+  // For PASSAGE_ONLY jobs the cluster loop below also persists drafts, so
+  // we delay the COMPLETED status flip until after that finishes. Otherwise
+  // the UI polling sees `status=COMPLETED` and stops fetching before any
+  // cluster's drafts have been INSERTed — the teacher sees an empty result
+  // until they refresh manually. (Non-PASSAGE_ONLY modes have no cluster
+  // loop, so they flip status here in the same transaction.)
+  const isPassageOnly = input.mode === "PASSAGE_ONLY";
+
   const persistOps: Prisma.PrismaPromise<unknown>[] = [
     ...itemUpdateOps,
     prisma.extractionResult.deleteMany({
@@ -593,8 +602,9 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
     prisma.extractionJob.update({
       where: { id: jobId },
       data: {
-        status: finalStatus,
-        completedAt: new Date(),
+        ...(isPassageOnly
+          ? {}
+          : { status: finalStatus, completedAt: new Date() }),
         ...(sourceMaterialId ? { sourceMaterialId } : {}),
       },
     }),
@@ -711,6 +721,20 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
         },
       });
     }
+
+    // PASSAGE_ONLY status flip — done HERE so the UI polling that watches
+    // `status === "COMPLETED"` doesn't unsubscribe before any cluster's
+    // drafts have been INSERTed. cluster loop above appends drafts in
+    // order (cluster 1 → cluster 2 → …), each visible to subsequent
+    // polls; flipping COMPLETED last keeps the polling alive until every
+    // cluster has surfaced.
+    await prisma.extractionJob.update({
+      where: { id: jobId },
+      data: {
+        status: finalStatus,
+        completedAt: new Date(),
+      },
+    });
   }
 
   if (input.mode === "QUESTION_SET") {
@@ -1113,7 +1137,7 @@ function buildProblemEvidenceFromItems(
     .sort((a, b) => a.order - b.order);
   if (questionItems.length === 0) return null;
 
-  const questions = questionItems.map((q) => {
+  const questions = questionItems.map((q, qIndex) => {
     const meta =
       q.questionMeta && typeof q.questionMeta === "object"
         ? (q.questionMeta as Record<string, unknown>)
@@ -1142,6 +1166,43 @@ function buildProblemEvidenceFromItems(
     const warnings = Array.isArray(analysis?.warnings)
       ? analysis.warnings.filter((w): w is string => typeof w === "string")
       : [];
+
+    // Map each STEM to its CHOICE blocks (same logic as
+    // buildRestorationQuestions) so we can synthesize concrete
+    // restoration actions from the classify answer.
+    const nextStemOrder =
+      questionItems[qIndex + 1]?.order ?? Number.POSITIVE_INFINITY;
+    const stemChoices = groupItems
+      .filter((item) => {
+        if (item.blockType !== "CHOICE") return false;
+        if (item.parentItemId === q.id) return true;
+        return item.order > q.order && item.order < nextStemOrder;
+      })
+      .sort((a, b) => a.order - b.order)
+      .map((choice, choiceIndex) => {
+        const choiceMeta =
+          choice.choiceMeta && typeof choice.choiceMeta === "object"
+            ? (choice.choiceMeta as Record<string, unknown>)
+            : null;
+        return {
+          label:
+            typeof choiceMeta?.label === "string"
+              ? choiceMeta.label
+              : String(choiceIndex + 1),
+          content: choice.content,
+          isAnswer: choiceMeta?.isAnswer === true,
+        };
+      });
+    const restorationActions = buildRestorationActions(
+      {
+        questionType,
+        answer,
+        answerConfidence,
+        evidence,
+      },
+      stemChoices,
+    );
+
     return {
       questionNumber,
       questionType: questionType as
@@ -1179,7 +1240,7 @@ function buildProblemEvidenceFromItems(
       answer,
       answerConfidence,
       evidence,
-      restorationActions: [],
+      restorationActions,
       warnings,
     };
   });
@@ -1909,13 +1970,18 @@ async function ensureSourceMaterial(
 
 /**
  * Cluster-scoped SourceMaterial creation. Used when a single job contains
- * multiple test booklets (cluster > 1) — each cluster gets its own
+ * multiple test booklets (cluster > 1) — each cluster gets its own fresh
  * SourceMaterial, independent of the job-level `extractionJob.sourceMaterialId`
- * link that `ensureSourceMaterial` would short-circuit on. Behaviour:
- *   1. De-dupe by (academyId, contentHash) — same booklet uploaded again
- *      in a different job still points to the existing row.
- *   2. Otherwise create a fresh SourceMaterial row.
- * Does NOT touch the parent ExtractionJob.
+ * link.
+ *
+ * Mirrors `ensureSourceMaterial`'s behaviour for cluster 1: each job's
+ * cluster gets its own row, with no cross-job dedup. Previously this helper
+ * matched existing SourceMaterials by `(academyId, contentHash)` so the same
+ * booklet uploaded across multiple jobs would collapse into a single row —
+ * but that asymmetry surprised users (cluster 1 = per-job, cluster 2 =
+ * shared) and made the "전체 자료" view show one cluster's drafts ballooning
+ * to N × per-job-count as more jobs piled up. Dedup removed; data
+ * deduplication is a teacher-side concern in the review UI.
  */
 async function ensureClusterSourceMaterial(
   input: EnsureSourceMaterialInput,
@@ -1933,11 +1999,24 @@ async function ensureClusterSourceMaterial(
 
   const contentHash = computeContentHash(input.allTexts);
 
-  const dup = await prisma.sourceMaterial.findFirst({
-    where: { academyId: input.academyId, contentHash },
+  // The DB enforces a `(academyId, contentHash)` unique key on
+  // source_materials. Per-job suffix so this helper doesn't collide with
+  // the same booklet uploaded under a different job (= per-job
+  // SourceMaterials, no cross-job dedup).
+  const perJobContentHash = `${contentHash}:job:${input.jobId}`;
+
+  // Idempotent retry guard: trigger.dev may re-run extractionFinalizeTask
+  // (transient errors, leases). On the second run the cluster loop calls
+  // this helper again with the SAME perJobContentHash; if the first run
+  // already created the row, the INSERT below would throw
+  // `Unique constraint failed on (academyId, contentHash)` and the
+  // outer catch would mark the job as errored even though the row exists.
+  // findFirst → reuse on hit avoids that.
+  const existing = await prisma.sourceMaterial.findFirst({
+    where: { academyId: input.academyId, contentHash: perJobContentHash },
     select: { id: true },
   });
-  if (dup) return dup.id;
+  if (existing) return existing.id;
 
   const materialType =
     parsed.type ?? (input.mode === "FULL_EXAM" ? "EXAM" : "OTHER");
@@ -1954,7 +2033,7 @@ async function ensureClusterSourceMaterial(
       round: parsed.round ?? null,
       examType: parsed.examType ?? null,
       publisher: parsed.publisher ?? null,
-      contentHash,
+      contentHash: perJobContentHash,
     },
     select: { id: true },
   });

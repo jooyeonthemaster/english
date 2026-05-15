@@ -539,13 +539,88 @@ const PASSAGE_ONLY_STRUCTURED_ADDON = `
 
 2) 문제별 풀이 + 유형 분류
    - 각 QUESTION_STEM 블록에 \`questionAnalysis\` 필드를 채운다.
-     * questionType: 28종 중 하나 (BLANK_INFERENCE / SENTENCE_ORDER / SENTENCE_INSERT / IRRELEVANT / GRAMMAR_ERROR / VOCAB_CHOICE / TOPIC_MAIN_IDEA / TITLE / SUMMARY_COMPLETE / WORD_ORDER / DIALOGUE_RESPONSE 등). 모르면 "UNKNOWN".
-     * typeLabel: 한국어 라벨 ("주제", "제목", "빈칸 추론", "글의 순서", "문장 삽입", "무관한 문장", "어법", "어휘", "요약" 등).
+     * questionType: 아래 [유형 매핑 표] 의 한국어 stem 키워드를 보고 enum 값을 결정한다. 키워드가 명확하면 반드시 그 type을 사용 — UNKNOWN으로 도피하지 말 것. 진짜로 어느 패턴도 매칭 안 되는 드문 케이스만 "UNKNOWN".
+     * typeLabel: 그 type에 대응되는 한국어 라벨 (아래 표 참고).
      * answer: 본문/선지로부터 추론한 정답 ("③", "(B)-(A)-(C)", "after the third sentence" 등). 자신 없으면 null.
      * answerConfidence: 0.0~1.0. 자신 없으면 null.
      * evidence: 풀이의 근거가 된 본문/선지 발췌 (string[]).
      * warnings: 풀이 시 주의사항 (string[]).
    - 페이지 전체에 걸친 출처 단서(인용 표시, 대표 문장)는 pageMeta.problemEvidence.sourceHints 에 담는다.
+
+[유형 매핑 표 — 한국어 stem 키워드 → questionType]
+
+같은 의미의 변형 (띄어쓰기·조사·문장부호 차이)도 모두 동일 type 으로 매핑하라. 두 패턴이 동시 매칭하면 더 구체적인 (= 본문 수정이 더 명확한) type 을 우선 선택.
+
+A. 본문 수정 / 보강이 필요한 유형 ← 복원 단계에서 본문 자체를 손봐야
+  * "빈칸에 들어갈 말로 가장 적절한" + 빈칸이 1개 단어 후보 → BLANK_WORD ("빈칸 단어")
+  * "빈칸에 들어갈 말로 가장 적절한" + 빈칸이 1개 문장 후보 → BLANK_SENTENCE ("빈칸 문장")
+  * "빈칸에 들어갈 말로 가장 적절한" + 빈칸이 2개~3개 ((A)(B) / (A)(B)(C)) → BLANK_WORD ("빈칸 단어·어구", 복수 빈칸)
+  * "빈칸에 들어갈 말로 가장 적절한" + 단순 추론 (위 세 가지 어디에도 명확히 안 들어가는 일반 빈칸) → BLANK_INFERENCE ("빈칸 추론")
+  * "빈칸에 들어갈 연결사" / "빈칸에 들어갈 연결어" → CONNECTOR ("연결사")
+  * "주어진 글 다음에 이어질 글의 순서로 가장 적절한" → PARAGRAPH_ORDER ("단락 순서")
+  * "다음 글의 (A), (B), (C)의 순서로 가장 적절한" / "글의 순서로 가장 적절한" → SENTENCE_ORDER ("글의 순서")
+  * "흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳" → SENTENCE_INSERT ("문장 삽입")
+  * "전체 흐름과 관계 없는 문장" / "전체 흐름과 무관한 문장" → IRRELEVANT ("무관한 문장")
+  * "어법상 적절하지 않은" / "어법상 틀린" / "어법상 어색한" → GRAMMAR_ERROR ("어법")
+  * "어법상 올바른 형태로 쓰시오" / "어법에 맞게 고치시오" (서답형) → GRAMMAR_CORRECTION ("어법 수정")
+  * "문맥상 낱말의 쓰임이 적절하지 않은" / "문맥상 어색한 단어" → VOCAB_CHOICE ("어휘")
+  * "보기의 (A)~(I) 중 밑줄 친 단어의 동의어가 문맥상 적절하지 않은 것" / "동의어/유의어가 적절하지 않은" → VOCAB_CHOICE ("어휘 — 동의어 적합성")
+  * "요약문의 빈칸에 들어갈 말로 가장 적절한 것끼리 짝지어진 것" → SUMMARY_COMPLETE ("요약문 완성")
+  * "한 문장으로 요약하고자 한다. 빈칸 (A), (B) ... 에 들어갈 말" (서답형) → SUMMARY_COMPLETE ("서답형 요약")
+  * "박스 안에 주어진 단어를 모두 이용하여 의미와 어순에 맞게" / "단어들을 의미에 맞게 배열" → WORD_ORDER ("어순 배열")
+  * "문장을 ~로 바꿔 쓰시오" / "문장을 ~ 형태로 변환하시오" → SENTENCE_TRANSFORM ("문장 변환")
+  * "조건에 맞게 영작하시오" / "조건에 맞게 서술하시오" → CONDITIONAL_WRITING ("조건 작문")
+  * "다음 글을 읽고, 밑의 질문에 대한 답으로 가장 적절한 '완전한 한 문장'을 본문에서 찾아 그대로 쓰시오" → TEXTBOOK_DETAIL ("본문 문장 찾기 — 서답형")
+  * "다음 대화의 순서로 가장 적절한" → DIALOGUE_ORDER ("대화 순서")
+
+B. 본문 수정 불필요 유형 ← 복원 단계에서 본문 그대로 emit + 마커만 strip
+  * "글의 제목으로 가장 적절한" → TITLE ("제목")
+  * "글의 주제로 가장 적절한" → TOPIC_MAIN_IDEA ("주제")
+  * "글의 요지로 가장 적절한" → TOPIC_MAIN_IDEA ("요지")
+  * "글의 목적으로 가장 적절한" → PURPOSE ("글의 목적")
+  * "필자의 심경 / 분위기로 가장 적절한" / "I'의 심경 변화" → MOOD_TONE ("심경 / 분위기")
+  * "글의 내용과 일치하지 않는" / "글의 내용과 일치하는" → CONTENT_MATCH ("내용 일치")
+  * "도표의 내용과 일치하지 않는" / "표의 내용과 일치하지 않는" → CONTENT_MATCH ("도표 일치", 본문이 도표)
+  * "안내문의 내용과 일치하지 않는" / "안내문에 관한 설명으로 일치하지 않는" → CONTENT_MATCH ("안내문 일치")
+  * "밑줄 친 ~ 가 다음 글에서 의미하는 바로 가장 적절한" → CONTEXT_MEANING ("함축적 의미")
+  * "밑줄 친 ~ 가 가리키는 대상이 / 지칭하는 것이 다른" → REFERENCE ("지칭 추론")
+  * "다음 대화의 빈칸에 들어갈 응답으로 가장 적절한" → DIALOGUE_RESPONSE ("대화 응답")
+  * 영어 단어의 의미를 한국어로 번역하는 문제 → KOREAN_TRANSLATION ("한국어 번역")
+  * 영어 단어의 영영풀이 (definition) 선택 → ENGLISH_DEFINITION ("영영풀이")
+
+C. 매핑 안 되는 경우만 → UNKNOWN
+  * 위 어느 패턴에도 매칭 안 됨 — 새로운 형태이거나 stem 이 너무 짧아서 판별 불가
+  * UNKNOWN 으로 분류했어도 evidence 와 answer 는 가능한 한 채워야 한다
+
+[정밀도 규칙]
+  * 비슷한 두 type 중 헷갈리면 본문 수정이 더 명확한 쪽 선택 (A 그룹 우선)
+  * "빈칸" + "연결사" 동시 매칭 → CONNECTOR 우선
+  * "빈칸" + "요약문" 동시 매칭 → SUMMARY_COMPLETE 우선
+  * UNKNOWN 으로 도피하지 말 것. 위 매핑 표의 키워드가 stem 에 부분이라도 나타나면 그 type 으로 결정.
+    UNKNOWN 은 "[N~M] 다음 글을 읽고 물음에 답하시오" 같은 ANCHOR-only stem 처럼 본문 수정 지시 자체가 없는 케이스에만 사용한다.
+
+[공유 지문 stem 처리 (CRITICAL — 그루핑에 영향)]
+  하나의 공유 지문에 N번 ~ M번 문제가 묶이는 시험지 패턴 ("[N~M] 다음 글을 읽고 물음에 답하시오" + 그 아래 "N. [...점]", "N+1. [...점]" 같은 개별 stem) 처리는 다음과 같이 통일한다.
+
+  1) ANCHOR stem (공유 지시문) 출력:
+     - 별도 QUESTION_STEM 블록으로 출력하되 questionNumber 는 비운다 (number=null).
+     - sharedPassageRange="N~M" 으로 명시.
+     - questionAnalysis 는 비운다 (questionType=null, answer=null). 이 stem 자체는 지시문일 뿐 풀이 대상이 아님.
+
+  2) 개별 numbered stem 출력:
+     - 각 번호 (N, N+1, ..., M) 마다 별도 QUESTION_STEM 블록으로 출력.
+     - questionNumber=정수.
+     - sharedPassageRange="N~M" 동일하게 명시.
+     - questionAnalysis 는 그 번호 stem 의 한국어 키워드를 매핑 표에 따라 채운다 (TITLE / VOCAB_CHOICE / BLANK_* / IRRELEVANT / SENTENCE_INSERT 등). UNKNOWN 금지.
+
+  3) 한 번호가 두 ANCHOR 그룹에 동시 등장 금지:
+     - 시험지 page-break 등으로 N번이 "[8~9]" ANCHOR 와 "[9~10]" ANCHOR 둘 다 가깝게 보여도, N번 stem 블록은 한 번만 출력한다 (가장 가까운 ANCHOR 한 곳에 sharedPassageRange 매핑).
+     - 두 ANCHOR 가 실제 시험지에 둘 다 인쇄되어 있어도 stem 본문 (예: "9. [3.1점] ...") 자체는 시험지에서 한 번만 등장하므로 한 블록만 출력하면 된다.
+
+  4) ANCHOR 없이 sub-passage 라벨 ([I], [II], (A), (B) 등) 로 묶이는 케이스:
+     - 한 numbered stem 안의 sub-passage 표지는 PASSAGE_BODY 블록의 일부로 처리. 별도 stem 블록 만들지 말 것.
+
+  이 규칙을 위반하면 후속 그루핑이 한 문제를 두 draft 로 분리하거나 그 반대로 합치는 오류가 발생한다.
 
 [블록 분리 원칙]
 - 한 문항 = QUESTION_STEM + (필요하면 박스 sentence 같은 보조 블록) + (있으면) PASSAGE_BODY + CHOICE×N.

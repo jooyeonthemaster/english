@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
         select: {
           id: true,
           originalFileName: true,
+          displayName: true,
           totalPages: true,
           createdAt: true,
           completedAt: true,
@@ -46,9 +47,13 @@ export async function GET(req: NextRequest) {
             select: {
               pageIndex: true,
               sourceFileName: true,
+              pageMeta: true,
             },
           },
         },
+      },
+      sourceMaterial: {
+        select: { id: true, customLabel: true },
       },
       changes: {
         orderBy: [{ sentenceOrder: "asc" }, { createdAt: "asc" }],
@@ -60,5 +65,51 @@ export async function GET(req: NextRequest) {
   });
 
   const visibleDrafts = drafts.filter(isM1DraftVisible);
-  return NextResponse.json({ drafts: visibleDrafts });
+
+  // Server-side merge: stamp `examPageNumber` (booklet's own page number)
+  // onto each job's pages so the review UI can show "시험지 7쪽" instead of
+  // "input file 6번째". Finalize stamps `examMeta` onto the first item per
+  // page (and onto EXAM_META blocks when present), so we pull those items
+  // in one query per response, build a {jobId, pageIndex} → pageNumber
+  // map, and merge.
+  const uniqueJobIds = Array.from(new Set(visibleDrafts.map((d) => d.jobId)));
+  type ExamMetaShape = { pageNumber?: number | null };
+  const examPageNumberByJobPageIndex = new Map<string, number>();
+  if (uniqueJobIds.length > 0) {
+    const itemsWithExamMeta = await prisma.extractionItem.findMany({
+      where: {
+        jobId: { in: uniqueJobIds },
+        examMeta: { not: { equals: null as never } },
+      },
+      orderBy: { order: "asc" },
+      select: { jobId: true, sourcePageIndex: true, examMeta: true },
+    });
+    for (const item of itemsWithExamMeta) {
+      const meta = item.examMeta as ExamMetaShape | null;
+      const pn = typeof meta?.pageNumber === "number" ? meta.pageNumber : null;
+      if (pn === null) continue;
+      const pIdx = item.sourcePageIndex?.[0];
+      if (typeof pIdx !== "number") continue;
+      const key = `${item.jobId}:${pIdx}`;
+      if (!examPageNumberByJobPageIndex.has(key)) {
+        examPageNumberByJobPageIndex.set(key, pn);
+      }
+    }
+  }
+
+  const enriched = visibleDrafts.map((d) => ({
+    ...d,
+    job: d.job
+      ? {
+          ...d.job,
+          pages: d.job.pages.map((p) => ({
+            ...p,
+            examPageNumber:
+              examPageNumberByJobPageIndex.get(`${d.jobId}:${p.pageIndex}`) ?? null,
+          })),
+        }
+      : d.job,
+  }));
+
+  return NextResponse.json({ drafts: enriched });
 }

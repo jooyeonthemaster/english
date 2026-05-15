@@ -1,30 +1,28 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { useTaskQueue } from "@/components/workbench/task-queue";
 
+/**
+ * Backward-compat shim for the original extraction-only queue context. The
+ * real implementation now lives in `@/components/workbench/task-queue` and
+ * is shared across every workbench domain. Existing callers continue using
+ * `useQueueDrawer()` — this hook just forwards to `useTaskQueue()`.
+ */
 export interface QueueDrawerContextValue {
-  /** Whether the drawer is currently shown. */
   open: boolean;
-  /** Set the drawer's open/closed state explicitly. */
   setOpen: (next: boolean) => void;
-  /** Flip the drawer's open/closed state. */
   toggle: () => void;
-  /** Monotonic key for forcing QueuePanel to re-fetch (e.g. after CRUD). */
   refreshKey: number;
-  /** Bump `refreshKey`, causing QueuePanel to re-fetch its jobs list. */
   triggerRefresh: () => void;
 }
 
-export const QueueDrawerContext = createContext<QueueDrawerContextValue | null>(
-  null,
-);
-
 export function useQueueDrawer(): QueueDrawerContextValue {
-  const ctx = useContext(QueueDrawerContext);
-  if (!ctx) {
-    throw new Error(
-      "useQueueDrawer must be used inside the /import layout's QueueDrawerProvider.",
-    );
-  }
-  return ctx;
+  const ctx = useTaskQueue();
+  return {
+    open: ctx.open,
+    setOpen: ctx.setOpen,
+    toggle: ctx.toggle,
+    refreshKey: ctx.refreshKey,
+    triggerRefresh: ctx.triggerRefresh,
+  };
 }

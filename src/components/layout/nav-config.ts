@@ -72,37 +72,37 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         {
           label: "자료 추출",
           icon: ClipboardCheck,
-          href: `${basePath}/workbench/passages/import`,
+          href: `${basePath}/workbench/extraction`,
           children: [
-            { label: "자료 추출", href: `${basePath}/workbench/passages/import` },
-            { label: "자료 관리", href: `${basePath}/workbench/passages/import/jobs` },
+            { label: "자료 추출", href: `${basePath}/workbench/extraction` },
+            { label: "자료 관리", href: `${basePath}/workbench/extraction/jobs` },
           ],
         },
         {
-          label: "지문 관리",
+          label: "지문 분석",
           icon: FileText,
           href: `${basePath}/workbench/passages`,
           children: [
             { label: "지문 분석", href: `${basePath}/workbench/passages/create` },
-            { label: "지문 은행", href: `${basePath}/workbench/passages` },
+            { label: "지문 관리", href: `${basePath}/workbench/passages` },
           ],
         },
         {
-          label: "문제 관리",
+          label: "문제 생성",
           icon: Layers,
-          href: `${basePath}/workbench/generate`,
+          href: `${basePath}/workbench/questions`,
           children: [
-            { label: "문제 생성", href: `${basePath}/workbench/generate` },
-            { label: "문제 관리", href: `${basePath}/questions` },
+            { label: "문제 생성", href: `${basePath}/workbench/questions/generate` },
+            { label: "문제 관리", href: `${basePath}/workbench/questions` },
           ],
         },
         {
-          label: "시험지 관리",
+          label: "시험지 생성",
           icon: GraduationCap,
-          href: `${basePath}/exams`,
+          href: `${basePath}/workbench/exams`,
           children: [
-            { label: "시험지 생성", href: `${basePath}/exams/create` },
-            { label: "시험지 관리", href: `${basePath}/exams` },
+            { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
+            { label: "시험지 관리", href: `${basePath}/workbench/exams` },
           ],
         },
         {

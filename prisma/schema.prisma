@@ -2100,6 +2100,11 @@ model SourceMaterial {
 
   type     String
   title    String
+  /// Teacher-set override displayed in the 자료 관리 (extraction-manage) page.
+  /// Auto-set `title` (extraction AI guess) is unreliable, so the manage UI
+  /// reads `customLabel` first and falls back to a derived "{job name} 시험지 N"
+  /// label. Other pages keep using `title`.
+  customLabel String?
   subtitle String?
 
   // Common metadata (first-class columns for fast filtering)

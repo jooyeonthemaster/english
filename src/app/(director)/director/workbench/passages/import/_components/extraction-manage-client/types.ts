@@ -50,8 +50,18 @@ export interface M1DraftJobSummary {
   }>;
 }
 
+export interface SourceMaterialSummary {
+  id: string;
+  /** Teacher-set override displayed in 자료 관리 only. Empty/null → derived
+   *  `"{job name} 시험지 N"` label is used. `SourceMaterial.title` (auto-set
+   *  by extraction AI) is intentionally NOT surfaced here because it's
+   *  unreliable; that field is still read by other pages. */
+  customLabel: string | null;
+}
+
 export type M1PassageDraftWithJob = M1PassageDraftSnapshot & {
   job?: M1DraftJobSummary;
+  sourceMaterial?: SourceMaterialSummary | null;
 };
 
 export interface DraftProblemEvidenceAction {
