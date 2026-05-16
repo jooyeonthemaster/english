@@ -21,10 +21,11 @@ interface DraftFolderCardProps {
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
-  onFileDrop: (itemId: string, folderId: string, copy: boolean) => void;
+  onFileDrop: (itemId: string | string[], folderId: string, copy: boolean) => void;
 }
 
 const DRAG_TYPE = "draft" as const;
+const BULK_DRAG_TYPE = "draft-bulk" as const;
 
 export function DraftFolderCard({
   collection,
@@ -65,12 +66,16 @@ export function DraftFolderCard({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === DRAG_TYPE,
+      canDrop: ({ source }) =>
+        source.data.type === DRAG_TYPE || source.data.type === BULK_DRAG_TYPE,
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        const itemId =
+          source.data.type === BULK_DRAG_TYPE
+            ? (source.data.draftIds as string[])
+            : (source.data[dragItemIdKey] as string);
         const isCopy =
           (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, collection.id, isCopy);

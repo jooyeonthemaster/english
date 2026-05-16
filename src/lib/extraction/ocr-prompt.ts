@@ -588,7 +588,10 @@ B. 본문 수정 불필요 유형 ← 복원 단계에서 본문 그대로 emit 
   * 영어 단어의 의미를 한국어로 번역하는 문제 → KOREAN_TRANSLATION ("한국어 번역")
   * 영어 단어의 영영풀이 (definition) 선택 → ENGLISH_DEFINITION ("영영풀이")
 
-C. 매핑 안 되는 경우만 → UNKNOWN
+C. 한국어 지시문 없는 영어 어휘 빈칸 워크시트
+  * 이 페이지는 QUESTION_STEM 자체를 만들지 않으므로 매핑 표가 적용되지 않는다. 페이지 전체를 PASSAGE_BODY 1개로 출력 — 자세한 규칙은 [빈칸 어휘 워크시트 처리] 섹션 참고.
+
+D. 매핑 안 되는 경우만 → UNKNOWN
   * 위 어느 패턴에도 매칭 안 됨 — 새로운 형태이거나 stem 이 너무 짧아서 판별 불가
   * UNKNOWN 으로 분류했어도 evidence 와 answer 는 가능한 한 채워야 한다
 
@@ -598,6 +601,47 @@ C. 매핑 안 되는 경우만 → UNKNOWN
   * "빈칸" + "요약문" 동시 매칭 → SUMMARY_COMPLETE 우선
   * UNKNOWN 으로 도피하지 말 것. 위 매핑 표의 키워드가 stem 에 부분이라도 나타나면 그 type 으로 결정.
     UNKNOWN 은 "[N~M] 다음 글을 읽고 물음에 답하시오" 같은 ANCHOR-only stem 처럼 본문 수정 지시 자체가 없는 케이스에만 사용한다.
+
+[빈칸 어휘 워크시트 처리 (CRITICAL — 한국어 stem 없는 어휘 빈칸 자료)]
+  강사가 어휘 빈칸 채우기 워크시트를 업로드하는 케이스. 페이지에 한국어 지시문 (예: "다음 빈칸에 알맞은 말을 고르시오") 이 없고, 각 줄이 다음 패턴을 따른다:
+  - 글머리표 (-, •, ·) 로 시작
+  - 영어 한 문장
+  - 그 문장 안에 "(A) ___", "(B) ___" 형태의 letter-라벨 빈칸 1개 이상
+  - 선지 (① ② ③ ④ ⑤) 없음 (free-response)
+  - 학생이 손글씨/연필로 빈칸 옆 또는 위에 정답 후보를 적어둔 경우도 있음
+
+  예시:
+    -There is a strong (A) ______ between income and education level.
+    -Reading classical texts often (B) ______ moments of self-reflection.
+    -Our perceptions can be (C) misleading because our senses sometimes make mistakes.
+
+  처리 규칙 (한 워크시트 = 한 자료):
+  1) 페이지 전체를 **하나의 PASSAGE_BODY 블록** 으로 출력. 12줄이면 12줄 모두 동일 블록 안에 담는다.
+  2) PASSAGE_BODY.content = 줄바꿈으로 연결된 영어 본문. 글머리표 (-, •, ·) 는 제거, 빈칸 마커 "(A) ______" 는 유지.
+     - 손글씨 정답이 빈칸 위에 적혀 있어도 content 에는 절대 포함하지 말 것. 빈칸 마커 그대로.
+  3) QUESTION_STEM 블록을 만들지 말 것. (한국어 지시문 부재 = 풀이 대상 stem 없음. 각 줄을 별도 stem 으로 분해하지 마라 — 워크시트 한 장이 한 자료다.)
+  4) CHOICE 블록을 만들지 말 것. (free-response 라 선지 없음.)
+  5) confidence: 일반 PASSAGE_BODY 와 동일 기준으로 0~1.
+
+  [순수 지문 페이지 처리] 와의 구분:
+  - 글머리표 + (Letter) ___ 빈칸 패턴이 1줄이라도 보이면 vocab blank worksheet 로 처리 (위 규칙).
+  - 그렇지 않고 영어 문단만 있으면 [순수 지문 페이지 처리] 로.
+
+[순수 지문 페이지 처리 (CRITICAL — 문제 stem 없는 자료)]
+  강사가 시험지가 아닌 "지문만 모아둔 자료" (학원 reading 자료, 교과서 단원 본문 모음, EBS 본문 발췌 등) 를 업로드하는 경우가 있다. 이 페이지에는 QUESTION_STEM (문제 번호 + 한국어 지시문) 이 전혀 없다. 처리 원칙:
+
+  1) 페이지에 QUESTION_STEM 블록을 하나도 만들지 않을 것 (없는 stem 을 억지로 만들지 말 것).
+  2) 본문을 의미 단위 (passage 단위) 로 분리해서 각각 별도 PASSAGE_BODY 블록으로 출력:
+     - 문서 안에 명시적 헤더 ("PASSAGE 01", "Passage 1", "지문 1", "## Title", 큰 fonts 의 단락 제목 등) 가 있으면 각 헤더가 새 passage 의 시작.
+     - 헤더가 없으면 큰 단락 break (빈 줄 2개 이상, 혹은 명확한 구분선) 를 passage 경계로 사용.
+     - 헤더도 없고 큰 단락 break 도 없으면 페이지 전체를 하나의 PASSAGE_BODY 로.
+  3) 각 PASSAGE_BODY 블록의 passageMeta.title 에 passage 의 제목을 채운다 (있으면).
+     - 예: "PASSAGE 01 / The Architecture of Attention" → title="The Architecture of Attention"
+     - 제목 없으면 첫 문장의 첫 5~10 단어를 title 로.
+  4) PASSAGE_BODY 의 content 에는 본문만 담는다 ("PASSAGE 01" 같은 navigation 라벨은 빼되, 제목 자체 ("The Architecture of Attention") 는 본문 앞 줄에 포함 가능).
+  5) 같은 페이지에 일부 영역은 stem + 본문 묶음이고 다른 영역은 stem 없는 순수 passage 인 hybrid 케이스도 가능. 그 경우 두 영역 모두 위 규칙에 따라 출력 (한 페이지 안에 STEM 묶음 + orphan PASSAGE_BODY 혼재).
+
+  Downstream 그루핑이 이 PASSAGE_BODY 들을 자동으로 단독 draft 로 만든다 — stem 없이도 자료 라이브러리에 적재 가능하다.
 
 [공유 지문 stem 처리 (CRITICAL — 그루핑에 영향)]
   하나의 공유 지문에 N번 ~ M번 문제가 묶이는 시험지 패턴 ("[N~M] 다음 글을 읽고 물음에 답하시오" + 그 아래 "N. [...점]", "N+1. [...점]" 같은 개별 stem) 처리는 다음과 같이 통일한다.

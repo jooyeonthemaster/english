@@ -24,6 +24,8 @@ export interface BaseTask {
   errorBadge?: string;
   createdAt: string;
   href?: string;
+  /** Optional thumbnail URL (e.g. first-page preview for an extraction job). */
+  thumbnailUrl?: string | null;
   onDelete?: () => Promise<void>;
 }
 

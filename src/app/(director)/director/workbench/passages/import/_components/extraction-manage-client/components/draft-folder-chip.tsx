@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Folder, FolderOpen, Pencil, Trash2 } from "lucide-react";
+import { Folder, FolderOpen, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -21,10 +21,11 @@ interface DraftFolderChipProps {
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
-  onFileDrop: (itemId: string, folderId: string, copy: boolean) => void;
+  onFileDrop: (itemId: string | string[], folderId: string, copy: boolean) => void;
 }
 
 const DRAG_TYPE = "draft" as const;
+const BULK_DRAG_TYPE = "draft-bulk" as const;
 
 export function DraftFolderChip({
   collection,
@@ -50,12 +51,16 @@ export function DraftFolderChip({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === DRAG_TYPE,
+      canDrop: ({ source }) =>
+        source.data.type === DRAG_TYPE || source.data.type === BULK_DRAG_TYPE,
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        const itemId =
+          source.data.type === BULK_DRAG_TYPE
+            ? (source.data.draftIds as string[])
+            : (source.data[dragItemIdKey] as string);
         const isCopy =
           (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, collection.id, isCopy);
@@ -114,63 +119,62 @@ export function DraftFolderChip({
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div
-          ref={dropRef}
-          onClick={onClick}
-          onDoubleClick={startEditing}
-          className={
-            "group flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
-            (isDragOver
-              ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
-              : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md")
-          }
-        >
-          {isDragOver ? (
-            <FolderOpen className="mb-0.5 size-5" style={{ color }} />
-          ) : (
-            <Folder className="mb-0.5 size-5" style={{ color }} />
-          )}
-          <span className="max-w-[84px] truncate text-center text-[11px] font-bold leading-tight text-slate-800">
-            {collection.name}
-          </span>
-          <span className="text-[10px] tabular-nums text-slate-400">
-            {collection._count.items}개
-          </span>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick();
-          }}
-        >
-          <FolderOpen className="mr-2 size-4" />
-          열기
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            startEditing();
-          }}
-        >
-          <Pencil className="mr-2 size-4" />
-          이름 변경
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(collection.id);
-          }}
-          className="text-red-600"
-        >
-          <Trash2 className="mr-2 size-4" />
-          삭제
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div
+      ref={dropRef}
+      onClick={onClick}
+      onDoubleClick={startEditing}
+      className={
+        "group relative flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
+        (isDragOver
+          ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
+          : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md")
+      }
+    >
+      {isDragOver ? (
+        <FolderOpen className="mb-0.5 size-5" style={{ color }} />
+      ) : (
+        <Folder className="mb-0.5 size-5" style={{ color }} />
+      )}
+      <span className="max-w-[84px] truncate text-center text-[11px] font-bold leading-tight text-slate-800">
+        {collection.name}
+      </span>
+      <span className="text-[10px] tabular-nums text-slate-400">
+        {collection._count.items}개
+      </span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className="absolute right-1 top-1 inline-flex size-5 cursor-pointer items-center justify-center rounded-md bg-white/90 text-slate-400 opacity-0 shadow-sm ring-1 ring-slate-200 transition-opacity hover:text-slate-700 group-hover:opacity-100"
+            aria-label="폴더 메뉴"
+          >
+            <MoreHorizontal className="size-3.5" aria-hidden="true" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              startEditing();
+            }}
+          >
+            <Pencil className="mr-2 size-4" />
+            이름 변경
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(collection.id);
+            }}
+            className="text-red-600"
+          >
+            <Trash2 className="mr-2 size-4" />
+            삭제
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

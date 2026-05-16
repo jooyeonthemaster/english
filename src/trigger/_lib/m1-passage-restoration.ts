@@ -17,7 +17,13 @@ import {
   type M1RestorationStatus,
 } from "@/lib/extraction/m1-restoration";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
-import { generateGroundedStructuredTextWithTriggerFetch } from "./gemini-ocr";
+import {
+  generateStructuredTextWithTriggerFetch,
+  // Grounded variant retained in the codebase but no longer invoked.
+  // See _archive/grounded-restoration/README.md for revival instructions.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  generateGroundedStructuredTextWithTriggerFetch as _grounded_unused,
+} from "./gemini-ocr";
 import { findPassageSourceMatches } from "./m2-source-match";
 import { checkRestorationQuality } from "./m1-restoration-quality";
 
@@ -280,7 +286,15 @@ export async function restoreM1Passage(input: {
       localSourceMatches: usableLocalMatches,
     });
 
-    const grounded = await generateGroundedStructuredTextWithTriggerFetch({
+    // AI-only restoration (no google_search tool). The grounded variant +
+    // source matching pipeline lives in _archive/grounded-restoration/. The
+    // existing prompt still mentions Investigation A (source lookup) — the
+    // model cannot ground without the tool, so it sets sourceMatch=null
+    // naturally and Investigation C falls through to "no source" path
+    // (emits aiRestoration unchanged, finalMethod=QUESTION_EVIDENCE). Same
+    // response schema, simpler downstream — and zero grounding fee / zero
+    // RECITATION risk.
+    const grounded = await generateStructuredTextWithTriggerFetch({
       stage: "passage-restoration",
       systemPrompt: prompts.systemPrompt,
       userPrompt: prompts.userPrompt,
@@ -825,7 +839,9 @@ export async function restoreM1PassageBatch(
           localSourceMatches: t.usableLocalMatches,
         })),
       });
-      const grounded = await generateGroundedStructuredTextWithTriggerFetch({
+      // AI-only batched restoration (no google_search tool). Mirrors the
+      // single-call swap above — see _archive/grounded-restoration/README.md.
+      const grounded = await generateStructuredTextWithTriggerFetch({
         stage: "passage-restoration",
         systemPrompt: prompts.systemPrompt,
         userPrompt: prompts.userPrompt,

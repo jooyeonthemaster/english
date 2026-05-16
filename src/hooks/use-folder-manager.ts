@@ -86,6 +86,21 @@ export function useFolderManager({
     ? collections.find((c) => c.id === activeFolder)?.name || "폴더"
     : null;
 
+  const syncCollectionCounts = useCallback(
+    (nextMembership: Record<string, Set<string>>) => {
+      setCollections((prev) =>
+        prev.map((c) => ({
+          ...c,
+          _count: {
+            ...c._count,
+            items: nextMembership[c.id]?.size ?? 0,
+          },
+        })),
+      );
+    },
+    [],
+  );
+
   // ─── CRUD handlers ───
 
   const handleCreateFolder = useCallback(async () => {
@@ -154,39 +169,31 @@ export function useFolderManager({
     async (collectionId: string, selectedIds: Set<string>) => {
       if (selectedIds.size === 0) return;
       const ids = [...selectedIds];
-      const result = await actions.addToCollection(collectionId, ids);
+      const existingIds = membership[collectionId] ?? new Set<string>();
+      const idsToAdd = ids.filter((id) => !existingIds.has(id));
+      if (idsToAdd.length === 0) {
+        toast.info("이미 이 폴더에 들어있는 자료입니다.");
+        return false;
+      }
+
+      const result = await actions.addToCollection(collectionId, idsToAdd);
       if (result.success) {
-        setMembership((prev) => {
-          const next = { ...prev };
-          const existing = next[collectionId]
-            ? new Set(next[collectionId])
-            : new Set<string>();
-          ids.forEach((id) => existing.add(id));
-          next[collectionId] = existing;
-          return next;
-        });
-        setCollections((prev) =>
-          prev.map((c) =>
-            c.id === collectionId
-              ? {
-                  ...c,
-                  _count: {
-                    ...c._count,
-                    items:
-                      (membership[collectionId]?.size || 0) + ids.length,
-                  },
-                }
-              : c,
-          ),
-        );
+        const nextMembership = { ...membership };
+        const existing = nextMembership[collectionId]
+          ? new Set(nextMembership[collectionId])
+          : new Set<string>();
+        idsToAdd.forEach((id) => existing.add(id));
+        nextMembership[collectionId] = existing;
+        setMembership(nextMembership);
+        syncCollectionCounts(nextMembership);
         toast.success(
-          `${ids.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
+          `${idsToAdd.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
         );
         return true;
       }
       return false;
     },
-    [actions, membership, itemLabel],
+    [actions, membership, itemLabel, syncCollectionCounts],
   );
 
   const handleRemoveFromFolder = useCallback(
@@ -216,17 +223,48 @@ export function useFolderManager({
 
   const handleDragToFolder = useCallback(
     async (
-      itemId: string,
+      itemId: string | string[],
       folderId: string,
       copy: boolean,
       selectedIds: Set<string>,
     ) => {
       // If dragged item is part of selection, move ALL selected items
-      const idsToMove = selectedIds.has(itemId)
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const shouldUseSelection = draggedIds.some((id) => selectedIds.has(id));
+      const idsToMove = shouldUseSelection
         ? [...selectedIds]
-        : [itemId];
+        : Array.from(new Set(draggedIds));
+      if (idsToMove.length === 0) return false;
+
+      const targetExisting = membership[folderId] ?? new Set<string>();
+      const idsToAdd = idsToMove.filter((id) => !targetExisting.has(id));
+      const hasFolderChanges =
+        idsToAdd.length > 0 ||
+        (!copy &&
+          Object.entries(membership).some(
+            ([colId, ids]) => colId !== folderId && idsToMove.some((id) => ids.has(id)),
+          ));
+
+      if (!hasFolderChanges) {
+        toast.info("이미 이 폴더에 들어있는 자료입니다.");
+        return false;
+      }
 
       try {
+        const nextMembership: Record<string, Set<string>> = {};
+        for (const [colId, ids] of Object.entries(membership)) {
+          const nextIds = new Set(ids);
+          if (!copy && colId !== folderId) {
+            idsToMove.forEach((id) => nextIds.delete(id));
+          }
+          nextMembership[colId] = nextIds;
+        }
+        const targetNext = nextMembership[folderId]
+          ? new Set(nextMembership[folderId])
+          : new Set<string>();
+        (copy ? idsToAdd : idsToMove).forEach((id) => targetNext.add(id));
+        nextMembership[folderId] = targetNext;
+
         if (!copy) {
           // Remove from all current folders first
           const removePromises: Promise<unknown>[] = [];
@@ -241,65 +279,26 @@ export function useFolderManager({
             }
           }
           await Promise.all(removePromises);
-
-          // Update local membership: remove from all others, add to target
-          setMembership((prev) => {
-            const next: Record<string, Set<string>> = {};
-            for (const [colId, ids] of Object.entries(prev)) {
-              if (colId === folderId) {
-                next[colId] = new Set(ids);
-                idsToMove.forEach((id) => next[colId].add(id));
-              } else {
-                const updated = new Set(ids);
-                idsToMove.forEach((id) => updated.delete(id));
-                next[colId] = updated;
-              }
-            }
-            if (!next[folderId]) next[folderId] = new Set(idsToMove);
-            return next;
-          });
-        } else {
-          // Copy: just add to target
-          setMembership((prev) => {
-            const next = { ...prev };
-            const existing = next[folderId]
-              ? new Set(next[folderId])
-              : new Set<string>();
-            idsToMove.forEach((id) => existing.add(id));
-            next[folderId] = existing;
-            return next;
-          });
         }
 
-        await actions.addToCollection(folderId, idsToMove);
+        if (idsToAdd.length > 0) {
+          await actions.addToCollection(folderId, idsToAdd);
+        }
+
+        setMembership(nextMembership);
+        syncCollectionCounts(nextMembership);
 
         const folderName =
           collections.find((c) => c.id === folderId)?.name || "폴더";
+        const toastCount = copy ? idsToAdd.length : idsToMove.length;
         const countLabel =
-          idsToMove.length > 1
-            ? `${idsToMove.length}개 ${itemLabel}이(가)`
+          toastCount > 1
+            ? `${toastCount}개 ${itemLabel}이(가)`
             : `${itemLabel}이(가)`;
         toast.success(
           copy
             ? `${countLabel} "${folderName}"에 복사되었습니다`
             : `${countLabel} "${folderName}"(으)로 이동되었습니다`,
-        );
-
-        // Update collection counts
-        setCollections((prev) =>
-          prev.map((c) => {
-            const newCount = membership[c.id]?.size || 0;
-            return {
-              ...c,
-              _count: {
-                ...c._count,
-                items:
-                  c.id === folderId
-                    ? newCount + idsToMove.length
-                    : newCount,
-              },
-            };
-          }),
         );
 
         return true;
@@ -308,7 +307,7 @@ export function useFolderManager({
         return false;
       }
     },
-    [membership, collections, actions, itemLabel],
+    [membership, collections, actions, itemLabel, syncCollectionCounts],
   );
 
   // ─── Navigation ───

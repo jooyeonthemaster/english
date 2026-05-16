@@ -12,6 +12,7 @@ interface ExtractionJobRow {
   draftResultCount?: number;
   createdAt: string;
   m1DraftPipelineError?: boolean;
+  firstPageImageUrl?: string | null;
 }
 
 function mapStatus(raw: string): TaskStatus {
@@ -93,6 +94,7 @@ export const extractionAdapter: TaskAdapter = {
         errorBadge: job.m1DraftPipelineError ? "저장 실패" : undefined,
         createdAt: job.createdAt,
         href: `/director/workbench/extraction/jobs?jobId=${job.id}`,
+        thumbnailUrl: job.firstPageImageUrl ?? null,
         onDelete: () => deleteExtractionJob(job.id, status),
       };
     });

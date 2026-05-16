@@ -1,21 +1,48 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   ChevronRight,
+  CheckCircle2,
   ClipboardList,
   FileText,
   Grid2X2,
   Grid3X3,
   Layers,
   LayoutGrid,
+  Loader2,
   Pencil,
 } from "lucide-react";
+
+import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
+import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
+import { formatTaskDateParts } from "@/components/workbench/task-queue/utils/format";
+import type { TaskStatus } from "@/components/workbench/task-queue/types";
 
 import type { M1PassageDraftWithJob } from "../types";
 import { DraftCard } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
+
+function mapJobStatusToTaskStatus(status: string | null | undefined): TaskStatus {
+  switch (status) {
+    case "PENDING":
+      return "pending";
+    case "PROCESSING":
+      return "processing";
+    case "COMPLETED":
+      return "completed";
+    case "PARTIAL":
+      return "partial";
+    case "FAILED":
+      return "failed";
+    case "CANCELLED":
+      return "cancelled";
+    default:
+      return "completed";
+  }
+}
 
 export type GridCols = 2 | 3 | 4;
 
@@ -24,6 +51,10 @@ export interface JobFilterOption {
   label: string;
   subLabel?: string;
   count: number;
+  draftIds: string[];
+  createdAt?: number | null;
+  thumbnailUrl?: string | null;
+  status?: string | null;
 }
 
 interface DraftGridProps {
@@ -43,7 +74,7 @@ interface DraftGridProps {
 
   // Job filter
   jobs: JobFilterOption[];
-  selectedJobId: string | null;
+  selectedJobIds: Set<string>;
   totalDraftCount: number;
   onSelectJob: (jobId: string | null) => void;
 
@@ -82,7 +113,7 @@ export function DraftGrid({
   onToggleGroupCheck,
   onResetFilters,
   jobs,
-  selectedJobId,
+  selectedJobIds,
   totalDraftCount,
   onSelectJob,
   selectionBar,
@@ -126,38 +157,44 @@ export function DraftGrid({
       setExpandedGroups(new Set(draftGroups.map((g) => g.key)));
     }
   }, [allExpanded, draftGroups]);
+  const allJobDraftIds = useMemo(() => drafts.map((draft) => draft.id), [drafts]);
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       {showJobFilter ? (
-        <div className="mb-4 flex shrink-0 items-stretch gap-3 overflow-x-auto pb-2">
+        <div className="mb-4 flex min-w-0 shrink-0 items-stretch gap-3 overflow-x-auto pb-2">
           <JobFilterCard
-            active={selectedJobId === null}
+            active={selectedJobIds.size === 0}
             label="전체"
             subLabel="모든 작업"
             count={totalDraftCount}
+            draftIds={allJobDraftIds}
             tone="emerald"
             onClick={() => onSelectJob(null)}
           />
-          {jobs.map((job) => (
-            <JobFilterCard
-              key={job.jobId}
-              active={selectedJobId === job.jobId}
-              label={job.label}
-              subLabel={job.subLabel}
-              count={job.count}
-              tone="blue"
-              editable
-              onClick={() =>
-                onSelectJob(selectedJobId === job.jobId ? null : job.jobId)
-              }
-              onRename={(next) => onRenameJob(job.jobId, next)}
-            />
-          ))}
+          {jobs.map((job) => {
+            return (
+              <JobFilterCard
+                key={job.jobId}
+                active={selectedJobIds.has(job.jobId)}
+                label={job.label}
+                subLabel={job.subLabel}
+                count={job.count}
+                draftIds={job.draftIds}
+                tone="blue"
+                editable
+                createdAt={job.createdAt ?? null}
+                thumbnailUrl={job.thumbnailUrl ?? null}
+                status={job.status ?? null}
+                onClick={() => onSelectJob(job.jobId)}
+                onRename={(next) => onRenameJob(job.jobId, next)}
+              />
+            );
+          })}
         </div>
       ) : null}
 
-      <div className="mb-3 flex min-h-9 shrink-0 items-center gap-3">
+      <div className="mb-3 flex min-h-9 shrink-0 flex-wrap items-center gap-x-3 gap-y-2">
         <h3 className="shrink-0 text-sm font-bold tracking-tight text-slate-700">
           자료
           <span className="ml-1.5 text-xs font-normal tabular-nums text-slate-400">
@@ -199,9 +236,32 @@ export function DraftGrid({
 
       <div className="min-h-0 flex-1 overflow-y-auto pr-1">
         {loading ? (
-          <div className={`grid gap-3 ${COL_CLASS[gridCols]}`}>
-            {Array.from({ length: 8 }, (_, i) => (
-              <DraftCardSkeleton key={i} />
+          <div className="space-y-4 pb-2">
+            {/* Mirror the live "{N}개 시험지 감지됨" header */}
+            <div className="flex items-center justify-between gap-2 pb-1">
+              <span className="block h-3 w-32 animate-pulse rounded bg-slate-200" />
+              <span className="block h-7 w-20 animate-pulse rounded-md bg-slate-200" />
+            </div>
+            {Array.from({ length: 2 }, (_, gi) => (
+              <section
+                key={gi}
+                className="overflow-hidden rounded-xl border-l-4 border-slate-200 bg-slate-50/50"
+              >
+                <header className="flex w-full items-center gap-2.5 border-b border-slate-100 bg-white px-4 py-3">
+                  <span className="size-4 shrink-0 animate-pulse rounded bg-slate-200" />
+                  <span className="size-4 shrink-0 animate-pulse rounded bg-slate-200" />
+                  <span className="size-7 shrink-0 animate-pulse rounded-md bg-slate-200" />
+                  <span className="h-4 w-48 animate-pulse rounded bg-slate-200" />
+                  <span className="ml-1 h-5 w-12 animate-pulse rounded-full bg-slate-200" />
+                </header>
+                <div className="px-3 py-3">
+                  <div className={`grid gap-3 ${COL_CLASS[gridCols]}`}>
+                    {Array.from({ length: 3 }, (_, ci) => (
+                      <DraftCardSkeleton key={ci} />
+                    ))}
+                  </div>
+                </div>
+              </section>
             ))}
           </div>
         ) : drafts.length === 0 ? (
@@ -276,6 +336,7 @@ export function DraftGrid({
                     onToggleGroupCheck(groupIds, select)
                   }
                   sourceMaterialId={sourceMaterial?.id ?? null}
+                  dragIds={groupIds}
                   onRenameSourceMaterial={onRenameSourceMaterial}
                 >
                   <div className={`grid gap-3 ${COL_CLASS[gridCols]}`}>
@@ -328,6 +389,7 @@ function GroupSection({
   onToggle,
   onToggleAllInGroup,
   sourceMaterialId,
+  dragIds,
   onRenameSourceMaterial,
   children,
 }: {
@@ -344,10 +406,25 @@ function GroupSection({
   onToggle: () => void;
   onToggleAllInGroup: (select: boolean) => void;
   sourceMaterialId: string | null;
+  dragIds: string[];
   onRenameSourceMaterial: (id: string, title: string) => void;
   children: React.ReactNode;
 }) {
+  const dragRef = useRef<HTMLElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    const el = dragRef.current;
+    if (!el || dragIds.length === 0) return;
+    return draggable({
+      element: el,
+      getInitialData: () => ({ type: "draft-bulk", draftIds: dragIds }),
+      onDragStart: () => setIsDragging(true),
+      onDrop: () => setIsDragging(false),
+    });
+  }, [dragIds]);
+
   useEffect(() => {
     if (checkboxRef.current) {
       checkboxRef.current.indeterminate = someChecked && !allChecked;
@@ -357,10 +434,6 @@ function GroupSection({
   const editable = sourceMaterialId !== null;
   const [editing, setEditing] = useState(false);
   const [titleDraft, setTitleDraft] = useState(label);
-
-  useEffect(() => {
-    if (!editing) setTitleDraft(label);
-  }, [label, editing]);
 
   const commit = useCallback(() => {
     if (!sourceMaterialId) {
@@ -396,7 +469,14 @@ function GroupSection({
       : "bg-white text-amber-700 ring-amber-200";
 
   return (
-    <section className={`overflow-hidden rounded-xl border-l-4 ${accent}`}>
+    <section
+      ref={dragRef}
+      className={
+        "overflow-hidden rounded-xl border-l-4 motion-safe:transition-opacity " +
+        (isDragging ? "cursor-grabbing opacity-60 " : "cursor-grab active:cursor-grabbing ") +
+        accent
+      }
+    >
       <header className="sticky top-0 z-10 flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white/95 px-4 backdrop-blur-sm">
         <div
           className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
@@ -516,8 +596,12 @@ function JobFilterCard({
   label,
   subLabel,
   count,
+  draftIds,
   tone,
   editable,
+  createdAt,
+  thumbnailUrl,
+  status,
   onClick,
   onRename,
 }: {
@@ -525,35 +609,43 @@ function JobFilterCard({
   label: string;
   subLabel?: string;
   count: number;
+  draftIds: string[];
   tone: "blue" | "emerald";
   editable?: boolean;
+  createdAt?: number | null;
+  thumbnailUrl?: string | null;
+  status?: string | null;
   onClick: () => void;
   onRename?: (next: string | null) => void;
 }) {
+  const dragRef = useRef<HTMLElement>(null);
   const Icon = tone === "emerald" ? Layers : FileText;
-  const iconBg =
-    active
-      ? tone === "emerald"
-        ? "bg-emerald-100 text-emerald-700"
-        : "bg-blue-100 text-blue-700"
-      : "bg-slate-100 text-slate-500";
+  const activeRing =
+    tone === "emerald"
+      ? "border-emerald-400 ring-2 ring-emerald-200"
+      : "border-blue-500 ring-2 ring-blue-200";
+  const activeSurface =
+    tone === "emerald"
+      ? "bg-emerald-50 shadow-emerald-100/70"
+      : "bg-blue-50 shadow-blue-100/70";
   const cardClass = active
-    ? tone === "emerald"
-      ? "border-emerald-300 bg-emerald-50/60 ring-1 ring-emerald-200/60 shadow-md"
-      : "border-blue-300 bg-blue-50/60 ring-1 ring-blue-200/60 shadow-md"
-    : "border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:bg-slate-50/60";
-  const countClass = active
-    ? tone === "emerald"
-      ? "text-emerald-700"
-      : "text-blue-700"
-    : "text-slate-700";
+    ? `${activeRing} ${activeSurface} shadow-md`
+    : "border-slate-200 shadow-sm hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md";
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(label);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    if (!editing) setDraft(label);
-  }, [label, editing]);
+    const el = dragRef.current;
+    if (!el || draftIds.length === 0) return;
+    return draggable({
+      element: el,
+      getInitialData: () => ({ type: "draft-bulk", draftIds }),
+      onDragStart: () => setIsDragging(true),
+      onDrop: () => setIsDragging(false),
+    });
+  }, [draftIds]);
 
   const commit = useCallback(() => {
     if (!onRename) {
@@ -571,80 +663,131 @@ function JobFilterCard({
     setEditing(false);
   }, [label]);
 
+  const taskStatus = mapJobStatusToTaskStatus(status);
+  const isActiveJob =
+    status != null && ACTIVE_STATUSES.has(taskStatus);
+
+  const dateParts =
+    createdAt != null
+      ? formatTaskDateParts(new Date(createdAt).toISOString())
+      : null;
+
   return (
-    <div
+    <article
+      ref={dragRef}
+      role="button"
+      tabIndex={0}
+      onClick={editing ? undefined : onClick}
+      onKeyDown={(e) => {
+        if (editing) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      aria-pressed={active}
+      title={label}
       className={
-        "group relative flex w-[220px] shrink-0 items-center gap-3 rounded-xl border px-3.5 py-3 motion-safe:transition-all motion-safe:duration-150 " +
+        "group relative flex w-[150px] shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        (isDragging ? "cursor-grabbing opacity-60 " : "cursor-grab active:cursor-grabbing ") +
         cardClass
       }
     >
-      <span
-        className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${iconBg}`}
-      >
-        <Icon className="size-5" aria-hidden="true" />
-      </span>
-      <button
-        type="button"
-        onClick={editing ? undefined : onClick}
-        aria-pressed={active}
-        title={label}
-        className="min-w-0 flex-1 cursor-pointer text-left"
-      >
-        {editing ? (
-          <input
-            autoFocus
-            value={draft}
-            maxLength={200}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={commit}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                commit();
-              } else if (e.key === "Escape") {
-                e.preventDefault();
-                cancel();
-              }
-            }}
-            onClick={(e) => e.stopPropagation()}
-            placeholder={label}
-            className="block w-full rounded-md border border-blue-300 bg-white px-1.5 py-0.5 text-sm font-bold text-slate-900 outline-none ring-2 ring-blue-100"
+      <div className="relative h-[100px] w-[150px] shrink-0 overflow-hidden bg-slate-50">
+        {thumbnailUrl ? (
+          // Signed URLs change per fetch; no point in next/image optimization
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={thumbnailUrl}
+            alt=""
+            loading="lazy"
+            className="size-full object-cover object-top"
           />
         ) : (
-          <div className="truncate text-sm font-bold tracking-tight text-slate-900">
-            {label}
+          <div className="flex size-full items-center justify-center text-slate-300">
+            <Icon className="size-7" aria-hidden="true" />
           </div>
         )}
-        <div className="mt-0.5 flex items-baseline gap-1.5">
-          <span
-            className={`text-[15px] font-extrabold tabular-nums leading-none ${countClass}`}
-          >
-            {count.toLocaleString()}
+        {/* Count badge — always visible on the thumbnail, top-left */}
+        <span className="absolute left-1 top-1 rounded-full bg-slate-900/75 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm">
+          {count.toLocaleString()}개
+        </span>
+        {active ? (
+          <span className="absolute bottom-1 left-1 inline-flex items-center gap-1 rounded-full bg-blue-600 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm ring-1 ring-white/70">
+            <CheckCircle2 className="size-3" aria-hidden="true" />
+            선택됨
           </span>
-          <span className="text-[10.5px] font-semibold text-slate-400">개</span>
-          {subLabel ? (
-            <span className="truncate text-[10.5px] font-medium text-slate-400">
-              · {subLabel}
+        ) : null}
+        {isActiveJob ? (
+          <span
+            className="absolute inset-0 flex items-center justify-center bg-slate-900/30"
+            aria-label="진행 중"
+          >
+            <span className="inline-flex size-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-md ring-4 ring-white/70">
+              <Loader2 className="size-7 animate-spin" aria-hidden="true" />
             </span>
+          </span>
+        ) : status ? (
+          <span className="absolute right-1 top-1">
+            <TaskStatusBadge status={taskStatus} />
+          </span>
+        ) : null}
+      </div>
+      <div className="min-w-0 px-2 py-1.5">
+        <div className="flex min-w-0 items-start gap-1">
+          {editing ? (
+            <input
+              autoFocus
+              value={draft}
+              maxLength={200}
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={commit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  commit();
+                } else if (e.key === "Escape") {
+                  e.preventDefault();
+                  cancel();
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              placeholder={label}
+              className="block w-full min-w-0 rounded-md border border-blue-300 bg-white px-1.5 py-0.5 text-[13px] font-bold text-slate-900 outline-none ring-2 ring-blue-100"
+            />
+          ) : (
+            <h4 className="min-w-0 flex-1 truncate text-[13px] font-bold text-slate-900">
+              {label}
+            </h4>
+          )}
+          {editable && !editing && onRename ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDraft(label);
+                setEditing(true);
+              }}
+              className="-mr-0.5 inline-flex size-4 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:bg-slate-100 focus-visible:text-slate-700"
+              aria-label="작업 이름 편집"
+              title="이름 편집"
+            >
+              <Pencil className="size-2.5" />
+            </button>
           ) : null}
         </div>
-      </button>
-      {editable && !editing && onRename ? (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setDraft(label);
-            setEditing(true);
-          }}
-          className="absolute right-2 top-2 inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-slate-300 opacity-0 transition-opacity hover:bg-slate-100 hover:text-slate-600 group-hover:opacity-100"
-          aria-label="작업 이름 편집"
-          title="이름 편집"
-        >
-          <Pencil className="size-3.5" />
-        </button>
-      ) : null}
-    </div>
+        {dateParts ? (
+          <div className="mt-0.5 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-900">
+            <span className="truncate">{dateParts.day}</span>
+            <span className="shrink-0 tabular-nums">{dateParts.time}</span>
+          </div>
+        ) : subLabel ? (
+          <p className="mt-0.5 truncate text-[12px] font-medium text-slate-900">
+            {subLabel}
+          </p>
+        ) : null}
+      </div>
+    </article>
   );
 }
 

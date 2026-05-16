@@ -646,6 +646,14 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
       let totalDraftCount = 0;
       let totalChangeCount = 0;
       let clearedOnce = false;
+      // Phase A is serial per cluster (deleteMany on cluster 0 must complete
+      // before cluster 1's INSERTs; offsets accumulate from prior cluster's
+      // exact draftCount so passageOrder stays contiguous). Phase B (grounded
+      // restoration — the slow part, ~60–180s per batch) detaches via
+      // `deferRestoration` and runs in parallel across clusters. For a
+      // 3-cluster job this collapses 3× serial restoration into a single
+      // wall-clock window bounded by the slowest cluster.
+      const restorationPromises: Promise<number>[] = [];
       for (let clusterIdx = 0; clusterIdx < clusters.length; clusterIdx += 1) {
         const cluster = clusters[clusterIdx];
         const clusterItems = itemsByCluster.get(cluster.clusterId) ?? [];
@@ -695,10 +703,38 @@ async function finalizeStructured(input: StructuredFinalizeInput): Promise<{
           // Subsequent clusters append to the same job's draft list so
           // earlier-cluster results aren't clobbered.
           clearExistingDrafts: !clearedOnce,
+          deferRestoration: true,
         });
         clearedOnce = true;
         totalDraftCount += result.draftCount;
         totalChangeCount += result.changeCount;
+        if (result.restorationPromise) {
+          restorationPromises.push(result.restorationPromise);
+        }
+      }
+
+      // Phase B join: wait for every cluster's restoration to finish. Each
+      // cluster's promise resolves to its changeCount so we can accumulate.
+      // Use `allSettled` rather than `all` so a single cluster's restoration
+      // failure (network, model error, etc.) doesn't poison the others — the
+      // surviving clusters still get their drafts updated and the failure is
+      // logged. The cluster-level retry path inside restoreM1PassageBatch
+      // already handles per-batch fallbacks, so reaching this catch means
+      // the entire batch dispatch threw, which is rare.
+      if (restorationPromises.length > 0) {
+        const settled = await Promise.allSettled(restorationPromises);
+        for (let i = 0; i < settled.length; i += 1) {
+          const r = settled[i];
+          if (r.status === "fulfilled") {
+            totalChangeCount += r.value;
+          } else {
+            logger.error("m1 cluster restoration failed", {
+              jobId,
+              clusterIndex: i,
+              err: r.reason instanceof Error ? r.reason.message : String(r.reason),
+            });
+          }
+        }
       }
 
       logger.info("m1 draft pipeline done", {
@@ -1091,9 +1127,16 @@ function normalizeAnalysisQuestionType(value: unknown): string {
  * PASSAGE_BODY block contents, then strip problem-sheet markers that the
  * teacher will not want in the saved passage. Returns empty string when
  * no PASSAGE_BODY block was classified — caller falls back to rawText.
+ *
+ * `isPurePassage`: when the source page has no question stems at all
+ * (teacher uploaded a reading-passage anthology), additionally scrub
+ * navigation labels like "PASSAGE 03" that the OCR keeps in the body.
+ * Exam-sheet bodies (where this is false) never carry such labels, so
+ * the extra strip is gated to avoid touching them.
  */
 function buildCleanBodyForSkippedGroup(
   groupItems: ExtractionItemSnapshot[],
+  options: { isPurePassage?: boolean } = {},
 ): string {
   const bodies = groupItems
     .filter((item) => item.blockType === "PASSAGE_BODY")
@@ -1111,6 +1154,18 @@ function buildCleanBodyForSkippedGroup(
   cleaned = cleaned.replace(/(^|\n)[ \t]*\(([A-D])\)[ \t]*/g, "$1");
   // (a)~(e) inline referent markers placed in front of words.
   cleaned = cleaned.replace(/\(([a-e])\)(?=\s|[,.!?:;])/g, "");
+
+  // Pure-passage anthologies only: scrub passage-index navigation
+  // labels that appear as their own line (PASSAGE 03, Passage 1,
+  // Passage One). Exam sheets never look like this, so we keep this
+  // gated to avoid eating a legitimate exam-body fragment.
+  if (options.isPurePassage) {
+    cleaned = cleaned.replace(
+      /(^|\n)\s*PASSAGE\s+(?:\d+|[A-Z][a-z]+)\s*(?=\n|$)/gi,
+      "$1",
+    );
+  }
+
   // Safety net: PASSAGE_BODY classified by OCR may absorb a Korean
   // question stem fragment. Drop any line that is mostly Korean.
   cleaned = cleaned
@@ -1127,6 +1182,27 @@ function buildCleanBodyForSkippedGroup(
   cleaned = cleaned.replace(/ +(?=\n)/g, "");
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
   return cleaned.trim();
+}
+
+/**
+ * Pure-passage drafts (no question stems, just reading material) need a
+ * title in the library view. Read it from the first PASSAGE_BODY's
+ * `passageMeta.title` if the OCR prompt produced one. Returns null when
+ * no usable title is present — the caller leaves `title` as null.
+ */
+function extractPurePassageTitle(
+  groupItems: ExtractionItemSnapshot[],
+): string | null {
+  const anchor = groupItems
+    .filter((item) => item.blockType === "PASSAGE_BODY")
+    .sort((a, b) => a.order - b.order)[0];
+  if (!anchor) return null;
+  const meta = anchor.passageMeta;
+  if (!meta || typeof meta !== "object" || Array.isArray(meta)) return null;
+  const title = (meta as Record<string, unknown>).title;
+  if (typeof title !== "string") return null;
+  const trimmed = title.trim();
+  return trimmed.length > 0 ? trimmed : null;
 }
 
 function buildProblemEvidenceFromItems(
@@ -1285,9 +1361,27 @@ async function persistM1PassageDrafts(input: {
    * clusters append instead of clobbering earlier clusters' drafts.
    */
   clearExistingDrafts?: boolean;
-}): Promise<{ draftCount: number; changeCount: number }> {
+  /**
+   * When true, the grounded-restoration phase (Phase B) is returned as a
+   * detached Promise instead of being awaited inside this function. The
+   * caller is responsible for awaiting it. Use this to run multiple
+   * clusters' restorations in parallel: keep Phase A (deleteMany + initial
+   * INSERTs) serial per cluster, but fan out Phase B.
+   *
+   * `restorationPromise` resolves with the changeCount contributed by that
+   * cluster's restoration so the caller can accumulate it after the join.
+   * When restoration is deferred, the synchronous `changeCount` returned
+   * here is 0 (no batches have completed yet).
+   */
+  deferRestoration?: boolean;
+}): Promise<{
+  draftCount: number;
+  changeCount: number;
+  restorationPromise: Promise<number> | null;
+}> {
   const passageOrderOffset = input.passageOrderOffset ?? 0;
   const clearExistingDrafts = input.clearExistingDrafts ?? true;
+  const deferRestoration = input.deferRestoration ?? false;
   // STEM-led grouping (new in 20260512.3).
   //
   // The previous PASSAGE-led approach (using `assignGroupIds`'s `groupId`)
@@ -1351,9 +1445,26 @@ async function persistM1PassageDrafts(input: {
   ): number | null => {
     if (item.blockType !== "QUESTION_STEM") return null;
     const meta = item.questionMeta as Record<string, unknown> | null;
-    if (!meta || typeof meta !== "object" || Array.isArray(meta)) return null;
-    const num = meta.number;
-    return typeof num === "number" && Number.isFinite(num) ? num : null;
+    if (meta && typeof meta === "object" && !Array.isArray(meta)) {
+      const num = meta.number;
+      if (typeof num === "number" && Number.isFinite(num)) return num;
+    }
+    // Fallback: parse "[서답형N]" out of the stem content. OCR
+    // occasionally drops the questionNumber for free-response (서답형)
+    // stems even though the bracket-label is right there. Without a
+    // number these stems get treated as shared-instruction anchors by
+    // the STEM-led grouping and silently merge into the previous
+    // bucket, dragging their bodies into the next numbered stem's
+    // bucket as orphans. Offset by 1000 so the namespace doesn't
+    // collide with regular question numbers — sortCluster's
+    // pageNumberPartial path already handles fractional/odd numbers
+    // by anchoring to known pageNumbers when available.
+    const seodapMatch = item.content.match(/\[서답형\s*(\d+)\]/);
+    if (seodapMatch) {
+      const n = Number.parseInt(seodapMatch[1], 10);
+      if (Number.isFinite(n) && n >= 1) return 1000 + n;
+    }
+    return null;
   };
 
   // STEM-led grouping with PASSAGE-before-STEM support.
@@ -1481,8 +1592,40 @@ async function persistM1PassageDrafts(input: {
       // Reverted to the legacy has-choice-only heuristic until we can
       // restrict the flag's effect to genuine page-boundary first passages.
       if (currentBucket && !currentBucketHasChoice) {
+        // Fix 1B: shared-INSTRUCTION cases with no CHOICE blocks between
+        // stems (Q[12~13] SENTENCE_INSERT — each stem has its own body,
+        // selections are inline ①~⑤ position markers in body, not CHOICE
+        // blocks). When a BODY arrives in the current bucket carrying the
+        // same shared range as the current bucket AND the bucket is
+        // already in shared-passage mode, this BODY is a per-stem body,
+        // not a case-A continuation. Disarm the shared flag so the next
+        // matching-range stem opens its own bucket instead of being
+        // absorbed.
+        //
+        // Genuine case-A (Q[6~7] / Q[8~9] / Q[18~19] — single shared body
+        // for multiple stems) is unaffected: the anchor body is already
+        // in pendingBlocks when openBucketWithStem fires and no second
+        // PASSAGE_BODY arrives in the bucket between stems (only CHOICEs).
+        if (currentBucketIsSharedPassage) {
+          const bodyRange = readSharedRange(item);
+          if (bodyRange !== null && bodyRange === currentSharedRange) {
+            currentBucketIsSharedPassage = false;
+          }
+        }
         currentBucket.push(item);
       } else {
+        // BODY arrived after the current bucket already emitted choices —
+        // i.e., the previous problem is fully closed and a NEW passage is
+        // starting. Disarm the case-A "shared passage" continuation flag
+        // so that a subsequent numbered stem with the same sharedRange
+        // opens a fresh bucket instead of being absorbed into the current
+        // one. Without this reset, "[9~11] 다음 빈칸에 들어갈 말로…" style
+        // shared-INSTRUCTION sets (each numbered stem has its own
+        // passage, only the instruction is shared) get mis-merged: Q10
+        // and Q11 stems get pushed into Q9's bucket, while their bodies
+        // get stuck in pendingBlocks until the next non-matching stem
+        // (e.g. Q12) prepends them as orphans.
+        currentBucketIsSharedPassage = false;
         pendingBlocks.push(item);
       }
       continue;
@@ -1507,10 +1650,34 @@ async function persistM1PassageDrafts(input: {
     }
   }
   // Trailing pending blocks (passage / shared instructions / orphan content)
-  // with no following stem — append to the last bucket if any, otherwise
-  // drop. Rare: usually a footer/header at end that already got filtered.
-  if (pendingBlocks.length > 0 && buckets.length > 0) {
-    buckets[buckets.length - 1].push(...pendingBlocks);
+  // with no following stem.
+  //
+  // PASSAGE_BODY blocks here are "pure passage" — the teacher uploaded a
+  // page (or a whole document) with reading passages but no problem stems
+  // (e.g. textbook unit text, EBS passage compilation). Each such body
+  // must become its own draft so the teacher can still ingest the
+  // material; absorbing them into the previous STEM bucket would shove
+  // unrelated passages into someone else's question, and dropping them
+  // when no bucket exists would silently lose the upload entirely.
+  //
+  // Non-PASSAGE_BODY trailing items (orphan shared instructions, footer
+  // fragments, etc) still ride along on the previous bucket.
+  if (pendingBlocks.length > 0) {
+    const trailingPassageBodies: ExtractionItemSnapshot[] = [];
+    const trailingOther: ExtractionItemSnapshot[] = [];
+    for (const block of pendingBlocks) {
+      if (block.blockType === "PASSAGE_BODY") {
+        trailingPassageBodies.push(block);
+      } else {
+        trailingOther.push(block);
+      }
+    }
+    if (trailingOther.length > 0 && buckets.length > 0) {
+      buckets[buckets.length - 1].push(...trailingOther);
+    }
+    for (const body of trailingPassageBodies) {
+      buckets.push([body]);
+    }
     pendingBlocks = [];
   }
 
@@ -1527,7 +1694,7 @@ async function persistM1PassageDrafts(input: {
         where: { jobId: input.jobId, reviewStatus: "DRAFT" },
       });
     }
-    return { draftCount: 0, changeCount: 0 };
+    return { draftCount: 0, changeCount: 0, restorationPromise: null };
   }
 
   // STEM-led grouping (the bucket-builder above) already keeps a single
@@ -1571,6 +1738,10 @@ async function persistM1PassageDrafts(input: {
     /** Question types observed in the group (UNKNOWN included). Recorded
      *  in metadata so the teacher can see why restoration was skipped. */
     questionTypes: string[];
+    /** When the group is a pure passage (no STEM, just reading material),
+     *  the OCR-derived passage title from passageMeta.title. Surfaces in
+     *  the library view as the draft's title. Null otherwise. */
+    purePassageTitle: string | null;
   }
   const stage1: PrepStage1[] = groups.map((group, index) => {
     const rawText = group.map((chunk) => chunk.rawText).join("\n\n").trim();
@@ -1605,29 +1776,45 @@ async function persistM1PassageDrafts(input: {
             : null;
         return normalizeAnalysisQuestionType(analysis?.questionType);
       });
+
+    // Pure-passage group: PASSAGE_BODY blocks with no STEM at all. Used
+    // for textbook-style reading material the teacher uploads as source
+    // (no questions to solve). We never call grounded restoration on
+    // these — the body is the deliverable — but we still emit a clean
+    // body so the draft is displayable.
+    const isPurePassage = questionTypes.length === 0 && groupHasPassage;
+
     // Restoration is required if ANY question in the group is on the
     // whitelist. UNKNOWN is treated as "required" to avoid false
     // negatives when the classifier failed. Empty list (no STEM detected
-    // in this group at all) → also required, fall back to legacy path.
-    const hasRestorationRequiredType =
-      questionTypes.length === 0 ||
-      questionTypes.some(
-        (t) => RESTORATION_REQUIRED_TYPES.has(t) || t === "UNKNOWN",
-      );
+    // in this group at all):
+    //   - with a passage body → pure passage, skip restoration
+    //   - without any passage body either → conservative fallback (restore)
+    const hasRestorationRequiredType = isPurePassage
+      ? false
+      : questionTypes.length === 0 ||
+        questionTypes.some(
+          (t) => RESTORATION_REQUIRED_TYPES.has(t) || t === "UNKNOWN",
+        );
 
     const shouldRestore = TYPE_FILTERED_RESTORATION_ENABLED
       ? baseShouldRestore && hasRestorationRequiredType
-      : baseShouldRestore;
+      : baseShouldRestore && !isPurePassage;
 
-    // If the type filter is the reason we're skipping, produce the
-    // clean body locally so the draft is still useful in the UI.
+    // If we're skipping restoration (type filter OR pure-passage), build
+    // the clean body locally so the draft is still useful in the UI.
     const skippedByTypeFilter =
-      TYPE_FILTERED_RESTORATION_ENABLED &&
-      baseShouldRestore &&
-      !hasRestorationRequiredType;
+      (TYPE_FILTERED_RESTORATION_ENABLED &&
+        baseShouldRestore &&
+        !hasRestorationRequiredType) ||
+      isPurePassage;
     const typeSkipBody = skippedByTypeFilter
-      ? buildCleanBodyForSkippedGroup(groupItems)
+      ? buildCleanBodyForSkippedGroup(groupItems, { isPurePassage })
       : "";
+
+    const purePassageTitle = isPurePassage
+      ? extractPurePassageTitle(groupItems)
+      : null;
 
     return {
       index,
@@ -1640,6 +1827,7 @@ async function persistM1PassageDrafts(input: {
       shouldRestore,
       typeSkipBody,
       questionTypes,
+      purePassageTitle,
     };
   });
 
@@ -1715,7 +1903,7 @@ async function persistM1PassageDrafts(input: {
         sourceMaterialId: input.sourceMaterialId,
         passageOrder: s.index + passageOrderOffset,
         sourcePageIndex: s.sourcePageIndex,
-        title: null,
+        title: s.purePassageTitle,
         rawText: s.rawText,
         restoredText: displayedText,
         teacherText: displayedText,
@@ -1863,35 +2051,51 @@ async function persistM1PassageDrafts(input: {
     );
   };
 
+  let restorationPromise: Promise<number> | null = null;
   if (restorationTargets.length > 0) {
-    await restoreM1PassageBatch(
-      restorationTargets.map((s) => ({
-        academyId: input.academyId,
-        rawText: s.rawText,
-        questions: s.questions,
-        problemEvidence: s.problemEvidence,
-      })),
-      {
-        onBatchComplete: async (inputIndices, batchResults) => {
-          for (let i = 0; i < inputIndices.length; i += 1) {
-            const target = restorationTargets[inputIndices[i]];
-            if (!target) continue;
-            try {
-              await applyRestorationResult(target.index, batchResults[i]);
-            } catch (err) {
-              logger.warn("m1 draft incremental update failed", {
-                jobId: input.jobId,
-                passageOrder: target.index,
-                err: err instanceof Error ? err.message : String(err),
-              });
+    // Phase B: grounded restoration. Wrapped in an async IIFE so the caller
+    // can either await it inline (single-cluster legacy) or detach it for
+    // parallel execution across clusters (`deferRestoration=true`).
+    const work = (async (): Promise<number> => {
+      await restoreM1PassageBatch(
+        restorationTargets.map((s) => ({
+          academyId: input.academyId,
+          rawText: s.rawText,
+          questions: s.questions,
+          problemEvidence: s.problemEvidence,
+        })),
+        {
+          onBatchComplete: async (inputIndices, batchResults) => {
+            for (let i = 0; i < inputIndices.length; i += 1) {
+              const target = restorationTargets[inputIndices[i]];
+              if (!target) continue;
+              try {
+                await applyRestorationResult(target.index, batchResults[i]);
+              } catch (err) {
+                logger.warn("m1 draft incremental update failed", {
+                  jobId: input.jobId,
+                  passageOrder: target.index,
+                  err: err instanceof Error ? err.message : String(err),
+                });
+              }
             }
-          }
+          },
         },
-      },
-    );
+      );
+      return changeCount;
+    })();
+    if (deferRestoration) {
+      restorationPromise = work;
+    } else {
+      await work;
+    }
   }
 
-  return { draftCount: groups.length, changeCount };
+  return {
+    draftCount: groups.length,
+    changeCount: deferRestoration ? 0 : changeCount,
+    restorationPromise,
+  };
 }
 
 interface EnsureSourceMaterialInput {

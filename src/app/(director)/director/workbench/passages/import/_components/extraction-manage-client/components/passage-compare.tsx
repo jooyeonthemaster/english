@@ -109,7 +109,7 @@ export function PassageCompare({
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 gap-4 2xl:grid-cols-2">
+      <div className="grid min-h-0 flex-1 gap-4 [grid-auto-rows:minmax(0,1fr)] 2xl:grid-cols-2">
         <OriginalProblemBox draft={draft} />
         <EditableRestoredTextBox
           value={draft.teacherText}

@@ -13,7 +13,12 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { checkBalance } from "@/lib/credits";
-import { createUploadTarget, pageImageKey, originalPdfKey } from "@/lib/supabase-storage";
+import {
+  createSignedDownloadUrl,
+  createUploadTarget,
+  pageImageKey,
+  originalPdfKey,
+} from "@/lib/supabase-storage";
 import { createJobRequestSchema } from "@/lib/extraction/zod-schemas";
 import { requireStaff, errorResponse } from "@/lib/extraction/api-utils";
 
@@ -231,12 +236,46 @@ export async function GET(req: NextRequest) {
     m1CountsByJob.set(row.jobId, current);
   }
 
-  const visibleJobs = jobs.filter((job) => {
-    if (job.mode !== "PASSAGE_ONLY") return true;
-    if (ACTIVE_M1_JOB_STATUSES.has(job.status)) return true;
-    if (hasM1DraftPipelineError(job.errorSummary)) return true;
-    return (m1CountsByJob.get(job.id)?.resultCount ?? 0) > 0;
-  });
+  // First-page thumbnail per job — used by inline task lists / drawer cards
+  // to show a preview without an extra round-trip. Signed URLs expire in 1h,
+  // which is comfortably longer than the 10s client polling interval.
+  const firstPages =
+    jobIds.length > 0
+      ? await prisma.extractionPage.findMany({
+          where: { jobId: { in: jobIds }, pageIndex: 0 },
+          select: { jobId: true, imageUrl: true },
+        })
+      : [];
+  const firstPageKeyByJob = new Map<string, string>();
+  for (const p of firstPages) {
+    if (p.imageUrl) firstPageKeyByJob.set(p.jobId, p.imageUrl);
+  }
+  const signedEntries = await Promise.all(
+    jobIds.map(async (id) => {
+      const key = firstPageKeyByJob.get(id);
+      if (!key) return [id, null] as const;
+      try {
+        // Server-side resize: 320px long edge is plenty for a 220px card
+        // thumbnail at 2x DPR. Cuts payload from ~MB-scale OCR scans to
+        // ~30-60KB JPEGs, eliminating the slow page-nav image load.
+        const url = await createSignedDownloadUrl(key, 60 * 60, {
+          transform: { width: 320, resize: "contain", quality: 70 },
+        });
+        return [id, url] as const;
+      } catch {
+        return [id, null] as const;
+      }
+    }),
+  );
+  const firstPageUrlByJob = new Map(signedEntries);
+
+  // Every PASSAGE_ONLY job stays visible — including COMPLETED rows
+  // whose grouping produced zero drafts (pure-passage PDFs, single-photo
+  // uploads, OCR-failed sheets, etc). Teachers need to see the row to
+  // diagnose / retry / delete. The earlier filter pruned anything with
+  // 0 drafts, which silently hid every "I uploaded a textbook page with
+  // no problem stems" case. `limit=50` keeps the list bounded.
+  const visibleJobs = jobs;
 
   return NextResponse.json({
     jobs: visibleJobs.map((job) => {
@@ -247,6 +286,7 @@ export async function GET(req: NextRequest) {
       return {
         ...job,
         m1DraftPipelineError: hasM1DraftPipelineError(job.errorSummary),
+        firstPageImageUrl: firstPageUrlByJob.get(job.id) ?? null,
         ...(counts ?? {
           draftResultCount: 0,
           savedResultCount: 0,

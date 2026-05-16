@@ -90,7 +90,7 @@ export function DraftDetailModal({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-4 my-4 flex w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl">
+      <div className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-3.5 shrink-0 xl:px-6">
           <div className="flex min-w-0 items-center gap-3">
@@ -156,8 +156,9 @@ export function DraftDetailModal({
           </button>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto p-5 xl:p-6">
+        {/* Body — min-h-0 lets the inner panels claim their own scroll
+            container instead of overflowing the modal as a whole. */}
+        <div className="flex min-h-0 flex-1 flex-col p-5 xl:p-6">
           <PassageCompare
             draft={draft}
             saving={savingId === draft.id}

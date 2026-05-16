@@ -18,7 +18,6 @@ import type { ClientPageSlot } from "@/lib/extraction/types";
 import { ACCEPTED, SLOT_DRAG_MIME, TEXT_EXTRACTION_MIN_LENGTH } from "../constants";
 import type { InputMode } from "../types";
 import { formatBytes } from "../utils";
-import { ProgressLine } from "./progress-line";
 import { UploadMetaChip } from "./upload-meta-chip";
 
 export function UploadPanel({
@@ -73,6 +72,17 @@ export function UploadPanel({
     inputMode === "file"
       ? "PDF와 이미지를 계속 추가할 수 있습니다."
       : "지문 원문이나 문제 형식 텍스트를 붙여넣을 수 있습니다.";
+  const fileProgressRatio = uploadProgress
+    ? uploadProgress.uploaded / Math.max(1, uploadProgress.total)
+    : splitProgress
+      ? (splitProgress.pageIndex ?? 0) / Math.max(1, splitProgress.totalPages ?? 1)
+      : 0;
+  const fileProgressPercent = Math.min(100, Math.max(0, fileProgressRatio * 100));
+  const fileBusyLabel = uploadProgress
+    ? `업로드 중 ${uploadProgress.uploaded}/${uploadProgress.total}`
+    : splitProgress
+      ? "PDF 페이지 분리 중"
+      : "작업 중";
 
   return (
     <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -263,7 +273,6 @@ export function UploadPanel({
             className="sr-only"
             accept={ACCEPTED.join(",")}
             multiple
-            disabled={busy}
             onChange={(event) => {
               if (event.target.files) onFiles(event.target.files);
               event.currentTarget.value = "";
@@ -303,7 +312,7 @@ export function UploadPanel({
                   {slots.length}페이지
                 </span>
               </div>
-              <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-2 overflow-y-auto pr-1 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+              <div className="flex min-h-0 flex-1 items-stretch gap-2 overflow-x-auto pb-2">
                 {slots.map((slot, index) => {
                   const isDragging = dragSlotIndex === index;
                   const isDropTarget =
@@ -351,7 +360,7 @@ export function UploadPanel({
                         setDropTargetIndex(null);
                       }}
                       className={
-                        "min-w-0 rounded-md border bg-white p-2 transition-all " +
+                        "flex h-full shrink-0 flex-col rounded-md border bg-white p-2 transition-all " +
                         (isDragging
                           ? "border-blue-400 opacity-40"
                           : isDropTarget
@@ -361,19 +370,19 @@ export function UploadPanel({
                       }
                       title={slot.sourceFileName ?? slot.pageIndex + 1 + '페이지'}
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden rounded border border-slate-200 bg-slate-50">
+                      <div className="relative min-h-0 flex-1 aspect-[4/3] overflow-hidden rounded border border-slate-200 bg-slate-50">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={slot.previewUrl}
                           alt={slot.pageIndex + 1 + '페이지'}
-                          className="h-full w-full object-cover"
+                          className="absolute inset-0 h-full w-full object-cover object-top"
                           draggable={false}
                         />
                         <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
                           {slot.pageIndex + 1}
                         </span>
                       </div>
-                      <div className="mt-1 truncate text-[11px] font-bold text-slate-800">
+                      <div className="mt-1.5 truncate text-[11px] font-bold text-slate-800">
                         {slot.sourceFileName ?? slot.pageIndex + 1 + '페이지 이미지'}
                       </div>
                       <div className="mt-0.5 flex items-center justify-between gap-1 text-[10.5px] text-slate-500">
@@ -388,38 +397,44 @@ export function UploadPanel({
           )}
         </label>
 
-        {splitProgress ? (
-          <ProgressLine
-            label="PDF 페이지 분리 중"
-            value={splitProgress.pageIndex ?? 0}
-            max={Math.max(1, splitProgress.totalPages ?? 1)}
-          />
-        ) : null}
-        {uploadProgress ? (
-          <ProgressLine
-            label="업로드 중"
-            value={uploadProgress.uploaded}
-            max={Math.max(1, uploadProgress.total)}
-          />
-        ) : null}
-
         <button
           type="button"
           onClick={onStart}
           disabled={busy || slots.length === 0}
-          className="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-blue-600 px-5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
+          className={
+            "relative inline-flex h-10 w-full items-center justify-center overflow-hidden rounded-md border px-5 text-sm font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
+            (busy
+              ? "cursor-wait border-blue-200 bg-white text-blue-700"
+              : slots.length === 0
+                ? "cursor-not-allowed border-blue-200 bg-transparent text-blue-500/75"
+                : "cursor-pointer border-blue-500 bg-transparent text-blue-700 hover:bg-blue-50")
+          }
         >
           {busy ? (
-            <>
-              <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
-              작업 중
-            </>
-          ) : (
-            <>
-              <PlayCircle className="mr-2 size-4" aria-hidden="true" />
-              추출 시작
-            </>
-          )}
+            <span
+              className="absolute inset-y-0 left-0 bg-blue-600 transition-[width] duration-200 ease-out"
+              style={{ width: `${fileProgressPercent}%` }}
+              aria-hidden="true"
+            />
+          ) : null}
+          <span
+            className={
+              "relative z-10 inline-flex items-center transition-colors " +
+              (busy && fileProgressPercent >= 54 ? "text-white" : "")
+            }
+          >
+            {busy ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
+                {fileBusyLabel}
+              </>
+            ) : (
+              <>
+                <PlayCircle className="mr-2 size-4" aria-hidden="true" />
+                추출 시작
+              </>
+            )}
+          </span>
         </button>
       </div>
       )}

@@ -15,14 +15,14 @@ export function EditableRestoredTextBox({
   const highlightRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="flex min-h-[260px] flex-col rounded-lg border border-slate-200 bg-white">
+    <div className="flex h-full min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
         <span className="text-[13px] font-bold text-slate-900">복원문</span>
         <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
           RESTORED
         </span>
       </div>
-      <div className="relative min-h-[260px] flex-1">
+      <div className="relative min-h-0 flex-1">
         <div
           ref={highlightRef}
           aria-hidden="true"

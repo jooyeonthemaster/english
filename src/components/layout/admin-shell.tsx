@@ -444,7 +444,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
         {/* ─── Main area ─── */}
         <div
           className={cn(
-            "flex-1 flex flex-col min-h-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
+            "flex-1 flex flex-col min-h-0 min-w-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
             collapsed ? "ml-[72px]" : "ml-[220px]"
           )}
         >
@@ -543,7 +543,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           </header>
 
           {/* Page content */}
-          <main className="flex-1 overflow-y-auto p-6 relative">
+          <main className="flex-1 min-w-0 overflow-y-auto p-6 relative">
             {isPending && (
               <div className="absolute inset-0 z-10 bg-[#F4F6F9]/60 flex items-start justify-center pt-32">
                 <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border">

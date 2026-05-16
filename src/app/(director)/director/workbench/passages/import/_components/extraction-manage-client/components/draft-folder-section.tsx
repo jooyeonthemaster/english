@@ -20,7 +20,7 @@ interface DraftFolderSectionProps {
   onNavigateToFolder: (id: string) => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string, folderId: string, copy: boolean) => void;
+  onDragToFolder: (itemId: string | string[], folderId: string, copy: boolean) => void;
   breadcrumbPath?: CollectionItem[];
   onNavigateToRoot?: () => void;
   /** If true, use full FolderCard inside folders, FolderChip at root */
@@ -50,7 +50,7 @@ export function DraftFolderSection({
 
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100/50">
-        <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-2.5">
+        <div className="flex flex-col gap-2 border-b border-slate-100 px-3 py-2.5 sm:px-5">
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
               <FolderOpen className="size-4" />
@@ -106,7 +106,7 @@ export function DraftFolderSection({
           ) : null}
         </div>
 
-        <div className="bg-gradient-to-b from-slate-50/80 to-slate-50/40 px-5 py-3">
+        <div className="bg-gradient-to-b from-slate-50/80 to-slate-50/40 px-3 py-3 sm:px-5">
           <div className="flex flex-wrap items-center gap-2.5">
             {useCards
               ? childFolders.map((c) => (
@@ -135,7 +135,7 @@ export function DraftFolderSection({
                   />
                 ))}
             {showNewFolder ? (
-              <div className="flex w-[176px] items-center gap-2.5 rounded-xl border border-blue-200 bg-white px-2.5 py-2 shadow-sm ring-2 ring-blue-100/70">
+              <div className="flex w-full min-w-[160px] max-w-[200px] items-center gap-2.5 rounded-xl border border-blue-200 bg-white px-2.5 py-2 shadow-sm ring-2 ring-blue-100/70 sm:w-[176px]">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                   <FolderPlus className="size-4" />
                 </span>

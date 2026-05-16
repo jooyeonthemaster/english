@@ -111,15 +111,31 @@ export async function downloadAsBuffer(path: string): Promise<Buffer> {
   return Buffer.from(arrayBuffer);
 }
 
+interface SignedDownloadOptions {
+  /**
+   * Supabase image transform — server-side resize for previews/thumbnails.
+   * Requires the project's Storage Image Transformations to be enabled.
+   * `width` is the long edge; `resize: "contain"` preserves aspect ratio.
+   * `quality` is JPEG quality (20-100, default 80).
+   */
+  transform?: {
+    width?: number;
+    height?: number;
+    resize?: "cover" | "contain" | "fill";
+    quality?: number;
+  };
+}
+
 /** Signed download URL — used by the review UI to display the page image. */
 export async function createSignedDownloadUrl(
   path: string,
   expiresInSeconds = 60 * 30,
+  options?: SignedDownloadOptions,
 ): Promise<string> {
   const supabase = getServiceSupabase();
   const { data, error } = await supabase.storage
     .from(STORAGE_BUCKET)
-    .createSignedUrl(path, expiresInSeconds);
+    .createSignedUrl(path, expiresInSeconds, options);
   if (error || !data) {
     throw new Error(`createSignedUrl failed: ${error?.message ?? "unknown"}`);
   }

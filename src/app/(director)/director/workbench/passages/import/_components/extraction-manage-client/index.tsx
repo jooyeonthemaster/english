@@ -3,14 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
-  ArrowRightLeft,
   CheckCircle2,
-  ChevronRight,
-  Copy,
-  Folder,
+  FolderPlus,
   Loader2,
   RefreshCw,
-  Scissors,
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -33,6 +29,7 @@ import { DraftDetailModal } from "./components/draft-detail-modal";
 import { DraftFolderSection } from "./components/draft-folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
+import { ManageFiltersBar } from "./components/manage-filters-bar";
 import {
   ManageHeader,
   type SortOrder,
@@ -62,6 +59,22 @@ function formatShortTimestamp(ms: number): string {
   });
 }
 
+/**
+ * Module-level cache so the manage page can repaint instantly on nav
+ * (e.g. coming back from a draft detail / extraction page) while the
+ * background fetch refreshes the snapshot. Cleared on full reload.
+ */
+let cachedDrafts: M1PassageDraftWithJob[] | null = null;
+interface JobMetaSnapshot {
+  thumbnailUrl: string | null;
+  status: string;
+  displayName: string | null;
+  originalFileName: string | null;
+  createdAt: string;
+}
+
+let cachedJobMeta: Map<string, JobMetaSnapshot> | null = null;
+
 export function ExtractionManageClient({
   academyId,
   initialCollections,
@@ -70,9 +83,13 @@ export function ExtractionManageClient({
   void academyId;
 
   // ─── Data state ───
-  const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>([]);
+  const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>(
+    () => cachedDrafts ?? [],
+  );
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
-  const [loadingDetails, setLoadingDetails] = useState(true);
+  const [loadingDetails, setLoadingDetails] = useState(
+    () => cachedDrafts === null,
+  );
   const [savingId, setSavingId] = useState<string | null>(null);
   const [rerestoringId, setRerestoringId] = useState<string | null>(null);
   const [deletingDraftId, setDeletingDraftId] = useState<string | null>(null);
@@ -90,12 +107,11 @@ export function ExtractionManageClient({
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [gridCols, setGridCols] = useState<GridCols>(3);
-  const [jobFilter, setJobFilter] = useState<string | null>(null);
+  const [jobFilter, setJobFilter] = useState<Set<string>>(() => new Set());
+  const [jobMetaByJobId, setJobMetaByJobId] = useState<
+    Map<string, JobMetaSnapshot>
+  >(() => cachedJobMeta ?? new Map());
   const [addToFolderOpen, setAddToFolderOpen] = useState(false);
-  const [folderActionMode, setFolderActionMode] = useState<"copy" | "move">(
-    "copy",
-  );
-  const [folderSearchQuery, setFolderSearchQuery] = useState("");
   const addToFolderRef = useRef<HTMLDivElement>(null);
 
   // ─── Folder manager ───
@@ -155,7 +171,10 @@ export function ExtractionManageClient({
   }, []);
 
   const loadAllDrafts = useCallback(async () => {
-    setLoadingDetails(true);
+    // If we already have a cached snapshot, repaint instantly and fetch in
+    // the background so the user sees the list right away on nav. The
+    // initial first-load (no cache) still shows the skeleton.
+    if (cachedDrafts === null) setLoadingDetails(true);
     setError(null);
     try {
       const res = await fetch("/api/extraction/m1-passages?limit=200", {
@@ -165,6 +184,7 @@ export function ExtractionManageClient({
       if (!res.ok) throw new Error("자료 목록을 불러오지 못했습니다.");
 
       const data = (await res.json()) as { drafts: M1PassageDraftWithJob[] };
+      cachedDrafts = data.drafts;
       setDrafts(data.drafts);
       setSelectedDraftId(null);
       setResultScope("all");
@@ -187,7 +207,7 @@ export function ExtractionManageClient({
     void (async () => {
       await loadAllDrafts();
       if (nextJobId) {
-        setJobFilter(nextJobId);
+        setJobFilter(new Set([nextJobId]));
         setJobId(nextJobId);
       }
     })();
@@ -252,12 +272,65 @@ export function ExtractionManageClient({
     return () => window.clearInterval(id);
   }, [hasPendingDrafts, resultScope, jobId, pollJobSilent, pollAllSilent]);
 
+  // Job thumbnails + status — used by the job filter cards to render
+  // task-card-style previews with status spinners. Reuses the existing
+  // /api/extraction/jobs payload (firstPageImageUrl, status).
+  useEffect(() => {
+    let cancelled = false;
+    const controller = new AbortController();
+    const load = async () => {
+      try {
+        const res = await fetch("/api/extraction/jobs?limit=50", {
+          credentials: "include",
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!res.ok || cancelled) return;
+        const data = (await res.json()) as {
+          jobs?: Array<{
+            id: string;
+            mode: string;
+            status: string;
+            displayName?: string | null;
+            originalFileName?: string | null;
+            createdAt: string;
+            firstPageImageUrl?: string | null;
+          }>;
+        };
+        if (cancelled) return;
+        const m = new Map<string, JobMetaSnapshot>();
+        for (const j of data.jobs ?? []) {
+          // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
+          if (j.mode !== "PASSAGE_ONLY") continue;
+          m.set(j.id, {
+            thumbnailUrl: j.firstPageImageUrl ?? null,
+            status: j.status,
+            displayName: j.displayName ?? null,
+            originalFileName: j.originalFileName ?? null,
+            createdAt: j.createdAt,
+          });
+        }
+        cachedJobMeta = m;
+        setJobMetaByJobId(m);
+      } catch {
+        // Best-effort enrichment; cards still render without thumbnails.
+      }
+    };
+    void load();
+    const timer = window.setInterval(load, 30_000);
+    return () => {
+      cancelled = true;
+      controller.abort();
+      window.clearInterval(timer);
+    };
+  }, []);
+
   // ─── Navigation actions ───
   const showAllResults = useCallback(() => {
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", window.location.pathname);
     }
-    setJobFilter(null);
+    setJobFilter(new Set());
     void loadAllDrafts();
   }, [loadAllDrafts]);
 
@@ -277,7 +350,7 @@ export function ExtractionManageClient({
       // Order matters: loadAllDrafts resets jobId/scope internally, so we
       // set the filter AFTER the await.
       await loadAllDrafts();
-      setJobFilter(nextJobId);
+      setJobFilter(new Set([nextJobId]));
       setJobId(nextJobId);
     },
     [loadAllDrafts],
@@ -622,8 +695,11 @@ export function ExtractionManageClient({
   const displayedDrafts = useMemo(() => {
     let result = draftsInActiveFolder;
 
-    if (jobFilter) {
-      result = result.filter((d) => d.job?.id === jobFilter);
+    if (jobFilter.size > 0) {
+      result = result.filter((d) => {
+        const jobId = d.job?.id;
+        return Boolean(jobId && jobFilter.has(jobId));
+      });
     }
 
     if (appliedSearch.trim()) {
@@ -664,49 +740,61 @@ export function ExtractionManageClient({
   }, [draftsInActiveFolder, jobFilter, appliedSearch, statusFilter, sortOrder]);
 
   const availableJobs = useMemo(() => {
-    type JobAccumulator = {
-      jobId: string;
-      name: string;
-      count: number;
-      createdAt: number | null;
-    };
-    const map = new Map<string, JobAccumulator>();
+    // Count drafts per job from the currently-visible drafts. Jobs without
+    // any drafts (PENDING / PROCESSING) still appear in the chip row so
+    // teachers can see them running — count is 0 in that case.
+    const countByJob = new Map<string, number>();
+    const draftIdsByJob = new Map<string, string[]>();
     for (const d of draftsInActiveFolder) {
       const jobId = d.job?.id;
       if (!jobId) continue;
-      const name =
-        (d.job?.displayName?.trim() && d.job.displayName) ||
-        d.job?.originalFileName ||
-        "이름 없는 작업";
-      const createdAtRaw = d.job?.createdAt;
-      const createdAt =
-        createdAtRaw instanceof Date
-          ? createdAtRaw.getTime()
-          : typeof createdAtRaw === "string"
-            ? new Date(createdAtRaw).getTime()
-            : null;
-      const existing = map.get(jobId);
-      if (existing) {
-        existing.count += 1;
-      } else {
-        map.set(jobId, { jobId, name, count: 1, createdAt });
-      }
+      countByJob.set(jobId, (countByJob.get(jobId) ?? 0) + 1);
+      const ids = draftIdsByJob.get(jobId) ?? [];
+      ids.push(d.id);
+      draftIdsByJob.set(jobId, ids);
     }
-    const all = Array.from(map.values()).sort((a, b) => {
-      // Most recent first
+
+    // Authoritative job list comes from the /api/extraction/jobs response
+    // (jobMetaByJobId). This includes in-flight jobs that have no drafts
+    // yet, which the previous drafts-only aggregation was hiding.
+    const entries = Array.from(jobMetaByJobId.entries()).map(
+      ([jobId, meta]) => {
+        const createdAtMs = new Date(meta.createdAt).getTime();
+        const label =
+          (meta.displayName?.trim() && meta.displayName) ||
+          meta.originalFileName ||
+          "이름 없는 작업";
+        return {
+          jobId,
+          label,
+          count: countByJob.get(jobId) ?? 0,
+          draftIds: draftIdsByJob.get(jobId) ?? [],
+          createdAt: Number.isFinite(createdAtMs) ? createdAtMs : null,
+          thumbnailUrl: meta.thumbnailUrl,
+          status: meta.status,
+        };
+      },
+    );
+
+    entries.sort((a, b) => {
       if (a.createdAt === null && b.createdAt === null) return 0;
       if (a.createdAt === null) return 1;
       if (b.createdAt === null) return -1;
       return b.createdAt - a.createdAt;
     });
 
-    return all.map((j) => ({
+    return entries.map((j) => ({
       jobId: j.jobId,
-      label: j.name,
-      subLabel: j.createdAt !== null ? formatShortTimestamp(j.createdAt) : undefined,
+      label: j.label,
+      subLabel:
+        j.createdAt !== null ? formatShortTimestamp(j.createdAt) : undefined,
       count: j.count,
+      draftIds: j.draftIds,
+      createdAt: j.createdAt,
+      thumbnailUrl: j.thumbnailUrl,
+      status: j.status,
     }));
-  }, [draftsInActiveFolder]);
+  }, [draftsInActiveFolder, jobMetaByJobId]);
 
   // Per-job absolute "시험지 N" numbering. Computed from the full `drafts`
   // state (not the filtered/sorted view) so the number assigned to a given
@@ -946,63 +1034,8 @@ export function ExtractionManageClient({
     [folders, selectedIds, clearSelection],
   );
 
-  /** Move (cut + paste) selected drafts to target collection — removes them
-   *  from all other collections first, then adds to target. Implemented by
-   *  reusing handleDragToFolder with copy=false: it requires an item id and
-   *  expands to the full selection when that id is part of it. */
-  const handleMoveToFolderClick = useCallback(
-    async (collectionId: string) => {
-      if (selectedIds.size === 0) return;
-      const anyId = selectedIds.values().next().value as string | undefined;
-      if (!anyId) return;
-      await folders.handleDragToFolder(anyId, collectionId, false, selectedIds);
-      clearSelection();
-      setAddToFolderOpen(false);
-    },
-    [folders, selectedIds, clearSelection],
-  );
-
-  /** Resolve a collection's display path "한영고 > 심화". Walks parentId
-   *  up to root; if a parent is missing from the array (data integrity),
-   *  stops gracefully. */
-  const folderPathLabel = useCallback(
-    (collectionId: string): string => {
-      const byId = new Map(folders.collections.map((c) => [c.id, c]));
-      const segments: string[] = [];
-      let current = byId.get(collectionId);
-      const guard = new Set<string>();
-      while (current && !guard.has(current.id)) {
-        guard.add(current.id);
-        segments.unshift(current.name);
-        current = current.parentId ? byId.get(current.parentId) : undefined;
-      }
-      return segments.join(" › ");
-    },
-    [folders.collections],
-  );
-
-  /** Folders sorted by path label so children visually nest under parents
-   *  in the picker. Filters by search query (case-insensitive substring on
-   *  the full path). */
-  const sortedFoldersWithPath = useMemo(() => {
-    const list = folders.collections.map((c) => ({
-      id: c.id,
-      name: c.name,
-      parentId: c.parentId,
-      path: folderPathLabel(c.id),
-      depth: folderPathLabel(c.id).split(" › ").length - 1,
-      itemCount: c._count.items,
-      isActiveFolder: c.id === folders.activeFolder,
-    }));
-    const q = folderSearchQuery.trim().toLowerCase();
-    const filtered = q
-      ? list.filter((c) => c.path.toLowerCase().includes(q))
-      : list;
-    return filtered.sort((a, b) => a.path.localeCompare(b.path, "ko"));
-  }, [folders.collections, folders.activeFolder, folderPathLabel, folderSearchQuery]);
-
   const handleDragToFolder = useCallback(
-    async (itemId: string, folderId: string, copy: boolean) => {
+    async (itemId: string | string[], folderId: string, copy: boolean) => {
       await folders.handleDragToFolder(itemId, folderId, copy, selectedIds);
     },
     [folders, selectedIds],
@@ -1010,10 +1043,7 @@ export function ExtractionManageClient({
 
   // ─── Close "Add to folder" dropdown on outside click ───
   useEffect(() => {
-    if (!addToFolderOpen) {
-      setFolderSearchQuery("");
-      return;
-    }
+    if (!addToFolderOpen) return;
     function handleClick(e: MouseEvent) {
       if (addToFolderRef.current && !addToFolderRef.current.contains(e.target as Node)) {
         setAddToFolderOpen(false);
@@ -1033,7 +1063,7 @@ export function ExtractionManageClient({
     setAppliedSearch("");
     setStatusFilter("ALL");
     setSortOrder("newest");
-    setJobFilter(null);
+    setJobFilter(new Set());
   }, []);
 
   // ─── Selection toolbar extra actions ───
@@ -1042,142 +1072,37 @@ export function ExtractionManageClient({
   const isPromoting = bulkActionRunning === "promote";
   const anyBulkRunning = bulkActionRunning !== null;
 
+  const noSelection = selectedIds.size === 0;
   const selectionExtraActions = (
     <>
       <div ref={addToFolderRef} className="relative">
         <button
           type="button"
           onClick={() => setAddToFolderOpen((v) => !v)}
-          disabled={anyBulkRunning}
-          className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-xs font-bold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={anyBulkRunning || noSelection}
+          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-white px-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50"
         >
-          <ArrowRightLeft className="size-3.5" />
-          이동 / 복사
+          <FolderPlus className="size-4" />
+          폴더에 추가
         </button>
         {addToFolderOpen ? (
-          <div className="absolute left-0 top-full z-30 mt-1 w-[320px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl">
-            {/* Mode toggle */}
-            <div className="flex gap-1 p-1.5 border-b border-slate-100 bg-slate-50/80">
-              <button
-                type="button"
-                onClick={() => setFolderActionMode("copy")}
-                className={
-                  "flex-1 flex items-center justify-center gap-1.5 h-7 rounded text-[11.5px] font-bold transition-all " +
-                  (folderActionMode === "copy"
-                    ? "bg-white text-blue-700 shadow-sm border border-blue-200"
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-100")
-                }
-              >
-                <Copy className="size-3" />
-                복사
-              </button>
-              <button
-                type="button"
-                onClick={() => setFolderActionMode("move")}
-                className={
-                  "flex-1 flex items-center justify-center gap-1.5 h-7 rounded text-[11.5px] font-bold transition-all " +
-                  (folderActionMode === "move"
-                    ? "bg-white text-blue-700 shadow-sm border border-blue-200"
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-100")
-                }
-              >
-                <Scissors className="size-3" />
-                이동
-              </button>
-            </div>
-
-            {/* Mode description */}
-            <p className="px-3 py-2 text-[10.5px] text-slate-500 leading-relaxed bg-blue-50/30 border-b border-blue-100/40">
-              {folderActionMode === "copy"
-                ? "선택한 자료를 대상 폴더에도 추가합니다. 다른 폴더에 그대로 남습니다."
-                : "선택한 자료를 대상 폴더로 이동합니다. 현재 속한 다른 폴더에서는 제거됩니다."}
-            </p>
-
-            {/* Search */}
-            {folders.collections.length > 4 ? (
-              <div className="px-2 pt-2">
-                <input
-                  type="text"
-                  placeholder="폴더 검색..."
-                  value={folderSearchQuery}
-                  onChange={(e) => setFolderSearchQuery(e.target.value)}
-                  className="w-full h-7 px-2.5 text-[11px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-400"
-                />
+          <div className="absolute left-0 top-full z-20 mt-1 w-60 max-h-72 overflow-y-auto rounded-md border border-slate-200 bg-white p-1 shadow-lg">
+            {folders.collections.length === 0 ? (
+              <div className="px-3 py-2 text-xs text-slate-400">
+                먼저 폴더를 만들어주세요.
               </div>
-            ) : null}
-
-            {/* Folder list */}
-            <div className="max-h-64 overflow-y-auto p-1">
-              {folders.collections.length === 0 ? (
-                <div className="px-3 py-4 text-xs text-slate-400 text-center">
-                  먼저 폴더를 만들어주세요.
-                </div>
-              ) : sortedFoldersWithPath.length === 0 ? (
-                <div className="px-3 py-4 text-xs text-slate-400 text-center">
-                  검색 결과가 없습니다.
-                </div>
-              ) : (
-                sortedFoldersWithPath.map((c) => {
-                  const segments = c.path.split(" › ");
-                  const leafName = segments[segments.length - 1];
-                  const parentPath = segments.slice(0, -1).join(" › ");
-                  const disabled =
-                    folderActionMode === "move" && c.isActiveFolder;
-                  return (
-                    <button
-                      key={c.id}
-                      type="button"
-                      disabled={disabled}
-                      onClick={() => {
-                        if (folderActionMode === "copy") {
-                          void handleAddToFolder(c.id);
-                        } else {
-                          void handleMoveToFolderClick(c.id);
-                        }
-                      }}
-                      className={
-                        "flex w-full items-center gap-2 rounded px-2 py-1.5 text-left transition-colors " +
-                        (disabled
-                          ? "cursor-not-allowed opacity-40"
-                          : "cursor-pointer hover:bg-blue-50")
-                      }
-                      title={c.path}
-                    >
-                      <Folder
-                        className="size-3.5 shrink-0 text-slate-400"
-                        style={{ marginLeft: c.depth * 8 }}
-                      />
-                      <div className="min-w-0 flex-1">
-                        {parentPath ? (
-                          <div className="flex items-center gap-0.5 text-[10px] text-slate-400 truncate leading-tight">
-                            <span className="truncate">{parentPath}</span>
-                          </div>
-                        ) : null}
-                        <div className="flex items-center gap-1.5 truncate">
-                          <span className="text-[12px] text-slate-700 font-semibold truncate">
-                            {leafName}
-                          </span>
-                          {c.isActiveFolder ? (
-                            <span className="shrink-0 rounded bg-blue-100 px-1 py-0.5 text-[9px] font-bold text-blue-700">
-                              현재
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                      <span className="shrink-0 text-[10px] tabular-nums text-slate-400">
-                        {c.itemCount}
-                      </span>
-                      <ChevronRight className="size-3 shrink-0 text-slate-300" />
-                    </button>
-                  );
-                })
-              )}
-            </div>
-
-            {/* Footer hint */}
-            <div className="px-3 py-1.5 text-[10px] text-slate-400 bg-slate-50 border-t border-slate-100">
-              팁: 자료를 폴더 카드로 직접 드래그하면 이동, <kbd className="px-1 py-0.5 bg-white border border-slate-200 rounded text-[9px]">Shift</kbd> + 드래그는 복사입니다.
-            </div>
+            ) : (
+              folders.collections.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => handleAddToFolder(c.id)}
+                  className="block w-full cursor-pointer truncate rounded px-2 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  {c.name}
+                </button>
+              ))
+            )}
           </div>
         ) : null}
       </div>
@@ -1185,13 +1110,13 @@ export function ExtractionManageClient({
       <button
         type="button"
         onClick={bulkRerestore}
-        disabled={anyBulkRunning}
-        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-xs font-bold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={anyBulkRunning || noSelection}
+        className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
       >
         {isRerestoring ? (
-          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         ) : (
-          <RefreshCw className="size-3.5" aria-hidden="true" />
+          <RefreshCw className="size-4" aria-hidden="true" />
         )}
         AI 복원 다시
       </button>
@@ -1199,13 +1124,13 @@ export function ExtractionManageClient({
       <button
         type="button"
         onClick={bulkPromote}
-        disabled={anyBulkRunning}
-        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={anyBulkRunning || noSelection}
+        className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
       >
         {isPromoting ? (
-          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         ) : (
-          <CheckCircle2 className="size-3.5" aria-hidden="true" />
+          <CheckCircle2 className="size-4" aria-hidden="true" />
         )}
         지문 등록
       </button>
@@ -1213,13 +1138,13 @@ export function ExtractionManageClient({
       <button
         type="button"
         onClick={bulkDelete}
-        disabled={anyBulkRunning}
-        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-xs font-bold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={anyBulkRunning || noSelection}
+        className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
       >
         {isDeleting ? (
-          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         ) : (
-          <Trash2 className="size-3.5" aria-hidden="true" />
+          <Trash2 className="size-4" aria-hidden="true" />
         )}
         삭제
       </button>
@@ -1229,29 +1154,18 @@ export function ExtractionManageClient({
   const hasActiveSearchOrFilter =
     appliedSearch.trim().length > 0 ||
     statusFilter !== "ALL" ||
-    jobFilter !== null;
+    jobFilter.size > 0;
   const isAllSelected =
     selectedIds.size > 0 && selectedIds.size === displayedDrafts.length;
 
   return (
-    <div className="-m-6 flex h-[calc(100vh-56px)] flex-col bg-[#F4F6F9]">
-      <div className="mx-auto flex h-full w-full max-w-[1680px] flex-col">
+    <div className="-m-6 flex h-[calc(100vh-56px)] min-w-0 flex-col bg-[#F4F6F9]">
+      <div className="mx-auto flex h-full w-full min-w-0 max-w-[1680px] flex-col">
       <ManageHeader
         totalCount={drafts.length}
-        selectedJobId={jobId}
         resultScope={resultScope}
         activeFolder={folders.activeFolder}
         breadcrumbPath={folders.breadcrumbPath}
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        onSearchSubmit={handleSearchSubmit}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
-        sortOrder={sortOrder}
-        onSortOrderChange={setSortOrder}
-        queueOpen={queueDrawer.open}
-        onToggleQueue={queueDrawer.toggle}
-        onRefresh={refreshResults}
         onBackToAllResults={showAllResults}
         onNavigateUp={() => {
           folders.navigateUp();
@@ -1261,6 +1175,16 @@ export function ExtractionManageClient({
           folders.navigateToFolder(id);
           clearSelection();
         }}
+        rightArea={
+          <DraftSelectionToolbar
+            selectedCount={selectedIds.size}
+            isAllSelected={isAllSelected}
+            onSelectAll={selectAll}
+            activeFolder={folders.activeFolder}
+            onRemoveFromFolder={handleRemoveFromFolderClick}
+            extraActions={selectionExtraActions}
+          />
+        }
       />
 
       {error ? (
@@ -1270,7 +1194,7 @@ export function ExtractionManageClient({
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <div className="shrink-0 px-6 pt-3 pb-2.5 sm:px-8">
           <DraftFolderSection
             childFolders={folders.childFolders}
@@ -1297,7 +1221,7 @@ export function ExtractionManageClient({
           />
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col px-6 pb-5 sm:px-8 sm:pb-6">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col px-6 pb-5 sm:px-8 sm:pb-6">
           <DraftGrid
             drafts={displayedDrafts}
             loading={loadingDetails && drafts.length === 0}
@@ -1313,22 +1237,32 @@ export function ExtractionManageClient({
             onToggleGroupCheck={toggleGroupCheck}
             onResetFilters={resetFilters}
             jobs={availableJobs}
-            selectedJobId={jobFilter}
+            selectedJobIds={jobFilter}
             totalDraftCount={draftsInActiveFolder.length}
-            onSelectJob={setJobFilter}
+            onSelectJob={(jobId) => {
+              setJobFilter((prev) => {
+                if (jobId === null) return new Set();
+                const next = new Set(prev);
+                if (next.has(jobId)) next.delete(jobId);
+                else next.add(jobId);
+                return next;
+              });
+            }}
             onRenameJob={renameJob}
             onRenameSourceMaterial={renameSourceMaterial}
             groupIndexBySourceMaterialId={groupIndexBySourceMaterialId}
             selectionBar={
-              <DraftSelectionToolbar
-                selectedCount={selectedIds.size}
-                totalCount={displayedDrafts.length}
-                isAllSelected={isAllSelected}
-                onSelectAll={selectAll}
-                onClearSelection={clearSelection}
-                activeFolder={folders.activeFolder}
-                onRemoveFromFolder={handleRemoveFromFolderClick}
-                extraActions={selectionExtraActions}
+              <ManageFiltersBar
+                searchValue={searchValue}
+                onSearchChange={setSearchValue}
+                onSearchSubmit={handleSearchSubmit}
+                statusFilter={statusFilter}
+                onStatusFilterChange={setStatusFilter}
+                sortOrder={sortOrder}
+                onSortOrderChange={setSortOrder}
+                queueOpen={queueDrawer.open}
+                onToggleQueue={queueDrawer.toggle}
+                onRefresh={refreshResults}
               />
             }
           />

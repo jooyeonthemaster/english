@@ -9,6 +9,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 
+import { TaskQueueInlineList } from "@/components/workbench/task-queue";
 import { useExtractionUpload } from "@/hooks/use-extraction-upload";
 import { useExtractionStream } from "@/hooks/use-extraction-stream";
 import {
@@ -326,16 +327,18 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     setError(null);
   }, [setError]);
 
-  const busy =
+  const inputBusy =
     phase === "preparing" ||
     phase === "uploading" ||
-    phase === "starting" ||
+    phase === "starting";
+  const runBusy =
+    inputBusy ||
     phase === "processing";
 
   return (
-    <div className="-m-6 flex h-[calc(100vh-56px)] bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
-      <main className="mx-auto flex h-full w-full max-w-[1680px] flex-col gap-4">
-        <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="-m-6 flex h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <main className="mx-auto flex h-full w-full min-w-0 max-w-[1680px] flex-col gap-4">
+        <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-3 xl:px-6">
             <div className="flex items-center gap-3">
               <span className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
@@ -381,9 +384,9 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             </div>
           ) : null}
 
-          <div className="grid min-h-0 flex-1 gap-4 p-4 sm:p-5 xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px] xl:p-6">
+          <div className="grid min-h-0 flex-1 gap-4 p-4 pb-3 sm:p-5 sm:pb-3 xl:grid-cols-[minmax(0,1fr)_320px] xl:p-6 xl:pb-3 2xl:grid-cols-[minmax(0,1fr)_340px]">
             <UploadPanel
-              busy={busy}
+              busy={inputBusy}
               dragActive={dragActive}
               fileInputId={fileInputId}
               inputMode={inputMode}
@@ -404,12 +407,20 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
               onReorderSlots={reorderSlots}
             />
             <ExtractionRunPanel
-              busy={busy}
+              busy={runBusy}
               inputMode={inputMode}
               pageCount={slots.length}
               textLength={textValue.trim().length}
               activeJobId={jobId}
               onOpenManage={() => router.push("/director/workbench/passages/import/jobs")}
+            />
+          </div>
+
+          <div className="flex shrink-0 flex-col px-4 pb-4 sm:px-5 sm:pb-5 xl:px-6 xl:pb-6">
+            <TaskQueueInlineList
+              domain="extraction"
+              title="추출 작업 목록"
+              emptyMessage="아직 추출 작업이 없습니다."
             />
           </div>
         </section>
