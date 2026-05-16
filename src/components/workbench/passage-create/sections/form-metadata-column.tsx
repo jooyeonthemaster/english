@@ -67,7 +67,10 @@ export function FormMetadataColumn({
         {/* 학교 */}
         <div>
           <Label className="text-[11px] text-slate-500 mb-1 block">학교</Label>
-          <Select value={schoolId} onValueChange={setSchoolId}>
+          <Select
+            value={schoolId || "NONE"}
+            onValueChange={(value) => setSchoolId(value === "NONE" ? "" : value)}
+          >
             <SelectTrigger className="w-full h-9"><SelectValue placeholder="학교 선택" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="NONE">선택 안함</SelectItem>

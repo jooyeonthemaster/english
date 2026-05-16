@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 
+import { useMemo, useState } from "react";
 import {
   Coins,
   Cpu,
@@ -10,6 +11,9 @@ import {
   Target,
   Zap,
   Settings2,
+  ChevronDown,
+  CheckCircle2,
+  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
@@ -94,6 +98,13 @@ export function GenerationConfigPanel({
   selectedIds,
   handleBatchGenerate,
 }: GenerationConfigPanelProps) {
+  const [expandedTypeId, setExpandedTypeId] = useState<string | null>("BLANK_INFERENCE");
+  const activeTypeItems = useMemo(() => {
+    return EXAM_TYPE_GROUPS
+      .flatMap((group) => group.items)
+      .filter((item) => (typeCounts[item.id] || 0) > 0);
+  }, [typeCounts]);
+
   return (
     <div className="flex flex-col bg-white overflow-hidden w-full lg:w-[340px] xl:w-[420px] shrink-0 border-l border-slate-200/80">
       <div className="flex-1 overflow-y-auto">
@@ -198,36 +209,116 @@ export function GenerationConfigPanel({
         {genMode === "manual" && (
           <div className="px-5 py-3 space-y-4">
             {/* Type selection groups */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               {EXAM_TYPE_GROUPS.map((group) => (
-                <div key={group.group}>
-                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 block">{group.group}</span>
-                  <div className="flex flex-wrap gap-1.5">
+                <div key={group.group} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{group.group}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      {group.items.filter((item) => (typeCounts[item.id] || 0) > 0).length}/{group.items.length}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
                     {group.items.map((item) => {
                       const count = typeCounts[item.id] || 0;
                       const active = count > 0;
+                      const expanded = expandedTypeId === item.id || active;
                       return (
                         <div key={item.id}
-                          className={`inline-flex items-center h-8 rounded-lg border transition-all duration-150 ${
+                          className={`rounded-xl border transition-all duration-150 overflow-hidden ${
                             active
-                              ? "bg-blue-50 border-blue-300 shadow-sm shadow-blue-50"
+                              ? "bg-blue-50/70 border-blue-300 shadow-sm shadow-blue-50"
                               : "bg-white border-slate-200 hover:border-slate-300"
                           }`}>
-                          <button type="button" onClick={() => setTypeCount(item.id, count + 1)}
-                            className={`h-full px-2.5 text-[11px] font-semibold transition-colors ${
-                              active ? "text-blue-700" : "text-slate-500 hover:text-blue-600"
-                            }`}>
-                            {item.label}
-                          </button>
-                          {active && (
-                            <div className="flex items-center gap-0 pr-0.5 border-l border-blue-200/80">
-                              <button onClick={() => setTypeCount(item.id, count - 1)} className="w-6 h-6 flex items-center justify-center text-blue-400 hover:text-blue-600 transition-colors">
+                          <div className="flex items-center gap-2 px-3 py-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setExpandedTypeId(item.id);
+                                setTypeCount(item.id, count + 1);
+                              }}
+                              className="flex-1 min-w-0 text-left"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className={`text-[12px] font-bold truncate ${active ? "text-blue-800" : "text-slate-700"}`}>
+                                  {item.label}
+                                </span>
+                                {active && <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                              </div>
+                              <p className="text-[10px] text-slate-500 leading-snug mt-0.5">
+                                {item.studentTask}
+                              </p>
+                            </button>
+
+                            <div className="flex items-center gap-0.5 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => setExpandedTypeId(expandedTypeId === item.id ? null : item.id)}
+                                className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                                aria-label={`${item.label} 상세 보기`}
+                                aria-expanded={expanded}
+                              >
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setTypeCount(item.id, Math.max(0, count - 1))}
+                                disabled={!active}
+                                className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                aria-label={`${item.label} 개수 줄이기`}
+                              >
                                 <Minus className="w-3 h-3" />
                               </button>
-                              <span className="w-4 text-center text-[12px] font-bold text-blue-700 tabular-nums">{count}</span>
-                              <button onClick={() => setTypeCount(item.id, count + 1)} className="w-6 h-6 flex items-center justify-center text-blue-400 hover:text-blue-600 transition-colors">
+                              <span className={`w-5 text-center text-[12px] font-bold tabular-nums ${active ? "text-blue-700" : "text-slate-300"}`}>
+                                {count}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setExpandedTypeId(item.id);
+                                  setTypeCount(item.id, count + 1);
+                                }}
+                                className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 transition-colors"
+                                aria-label={`${item.label} 개수 늘리기`}
+                              >
                                 <Plus className="w-3 h-3" />
                               </button>
+                            </div>
+                          </div>
+
+                          {expanded && (
+                            <div className={`px-3 pb-3 space-y-3 ${active ? "border-t border-blue-200/70" : "border-t border-slate-100"}`}>
+                              <p className="pt-3 text-[11px] text-slate-600 leading-relaxed">
+                                {item.description}
+                              </p>
+
+                              <div className="grid grid-cols-1 gap-2">
+                                <div className="space-y-1.5">
+                                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    <Eye className="w-3 h-3" />
+                                    학생 화면
+                                  </div>
+                                  <div className="flex flex-wrap gap-1">
+                                    {item.outputUi.map((piece) => (
+                                      <span key={piece} className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                                        {piece}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <div>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">좋은 출제 포인트</span>
+                                <div className="flex flex-wrap gap-1 mt-1.5">
+                                  {item.bestFor.map((point) => (
+                                    <span key={point} className="px-1.5 py-0.5 rounded-full bg-emerald-50 text-[10px] font-medium text-emerald-700 border border-emerald-100">
+                                      {point}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
                           )}
                         </div>
@@ -241,7 +332,12 @@ export function GenerationConfigPanel({
                 <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-blue-50 border border-blue-200/60">
                   <div className="flex items-center gap-2">
                     <Target className="w-3.5 h-3.5 text-blue-600" />
-                    <span className="text-[12px] font-semibold text-blue-800">총 <strong className="text-blue-700">{totalQuestions}</strong>문제</span>
+                    <span className="text-[12px] font-semibold text-blue-800">
+                      총 <strong className="text-blue-700">{totalQuestions}</strong>문제
+                      <span className="text-blue-500 font-medium ml-1">
+                        ({activeTypeItems.length}개 유형)
+                      </span>
+                    </span>
                   </div>
                   <button onClick={() => setTypeCounts({})} className="text-[11px] text-blue-500 hover:text-blue-700 font-medium transition-colors">초기화</button>
                 </div>

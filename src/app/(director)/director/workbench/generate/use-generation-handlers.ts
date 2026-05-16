@@ -51,6 +51,15 @@ export function useGenerationHandlers({
   setReviewModalId,
   loadSavedQuestions,
 }: UseGenerationHandlersParams) {
+  const toStructuredData = useCallback((q: any) => {
+    const typeId = q._typeId || q.subType;
+    if (!typeId) return undefined;
+    return {
+      ...q,
+      _typeId: typeId,
+      _typeLabel: q._typeLabel || typeLabel(typeId),
+    };
+  }, []);
 
   // ── Auto-save generated questions to DB ──
   const autoSave = useCallback(async (passageId: string, questions: any[]) => {
@@ -62,6 +71,7 @@ export function useGenerationHandlers({
         type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
         subType: q._typeId || q.subType || null,
         questionText: buildQuestionText(q),
+        structuredData: toStructuredData(q),
         options: q.options ? JSON.stringify(q.options) : null,
         correctAnswer: q.correctAnswer || q.modelAnswer || "",
         points: 1,
@@ -76,7 +86,7 @@ export function useGenerationHandlers({
     } catch (err) {
       console.error("[AUTO-SAVE] Failed:", err);
     }
-  }, [loadSavedQuestions]);
+  }, [loadSavedQuestions, toStructuredData]);
 
   // ── Batch generate for selected passages ──
   const handleBatchGenerate = useCallback(async () => {
@@ -184,7 +194,7 @@ export function useGenerationHandlers({
 
     setSelectedIds(new Set());
     toast.info(`${selectedPassages.length}개 지문 일괄 생성 시작`);
-  }, [selectedIds, passages, genMode, typeCounts, activeTypes, difficulty, customPrompt, autoCount]);
+  }, [selectedIds, passages, genMode, typeCounts, activeTypes, difficulty, customPrompt, autoCount, autoSave, setSelectedIds, setSessionQueue]);
 
   // ── Generate (auto or manual) ──
   const handleGenerate = useCallback(async () => {
@@ -305,7 +315,7 @@ export function useGenerationHandlers({
         })();
       }
     }
-  }, [selectedPassage, genMode, totalQuestions, activeTypes, typeCounts, difficulty, customPrompt, autoCount]);
+  }, [selectedPassage, genMode, totalQuestions, activeTypes, typeCounts, difficulty, customPrompt, autoCount, analysisData, autoSave, setSessionQueue]);
 
   // ── Save to question bank ──
   const handleSaveQuestions = useCallback(async (questions: any[]) => {
@@ -317,6 +327,7 @@ export function useGenerationHandlers({
         type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
         subType: q._typeId || q.subType || null,
         questionText: buildQuestionText(q),
+        structuredData: toStructuredData(q),
         options: q.options ? JSON.stringify(q.options) : null,
         correctAnswer: q.correctAnswer || q.modelAnswer || "",
         points: 1,
@@ -342,7 +353,7 @@ export function useGenerationHandlers({
     } catch {
       toast.error("저장 중 오류가 발생했습니다.");
     }
-  }, [reviewItem]);
+  }, [reviewItem, toStructuredData, setSessionQueue, setReviewModalId, loadSavedQuestions]);
 
   return { handleBatchGenerate, handleGenerate, handleSaveQuestions };
 }

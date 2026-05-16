@@ -109,6 +109,7 @@ export async function handleSave({
 
   setSaving(true);
   try {
+    const normalizedSchoolId = schoolId && schoolId !== "NONE" ? schoolId : "";
     let finalContent = content.trim();
     if (imageFile && !finalContent) {
       const extracted = await extractTextFromImage(imageFile);
@@ -125,7 +126,7 @@ export async function handleSave({
     const result = await createWorkbenchPassage({
       title: finalTitle,
       content: finalContent,
-      schoolId: schoolId || undefined,
+      schoolId: normalizedSchoolId || undefined,
       grade: grade ? parseInt(grade) : undefined,
       semester: semester || undefined,
       unit: unit.trim() || undefined,
@@ -150,7 +151,7 @@ export async function handleSave({
     if (result.success && result.id) {
       // Build prompt config
       const combinedPrompt = buildAnalysisPrompt(analysisPrompt, annotations);
-      const schoolName = schools.find((s) => s.id === schoolId)?.name;
+      const schoolName = schools.find((s) => s.id === normalizedSchoolId)?.name;
 
       // Add to queue
       addToQueue(
@@ -158,7 +159,7 @@ export async function handleSave({
           id: result.id,
           title: finalTitle,
           content: finalContent,
-          schoolId: schoolId || undefined,
+          schoolId: normalizedSchoolId || undefined,
           schoolName,
           grade: grade ? parseInt(grade) : undefined,
           semester: semester || undefined,

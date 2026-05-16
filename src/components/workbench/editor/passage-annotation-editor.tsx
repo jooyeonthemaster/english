@@ -404,11 +404,80 @@ export function PassageAnnotationEditor({
 
       {/* Onboarding hint */}
       {hasText && annotations.length === 0 && !popup && (
-        <div className="shrink-0 flex items-center gap-2.5 px-4 py-2.5 border-t border-blue-100 bg-blue-50/40">
-          <MousePointerClick className="w-4 h-4 text-blue-400 shrink-0" />
-          <p className="text-[12px] text-blue-600/80">
-            텍스트를 <span className="font-semibold text-blue-700">드래그(터치 길게 누르기)</span>하면 핵심 어휘, 문법 포인트, 출제 포인트 등을 마킹할 수 있습니다
+        <div
+          className="shrink-0 relative flex items-center gap-2.5 px-4 py-2.5 border-t border-blue-200/80 overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(110deg, rgba(219,234,254,0.55) 0%, rgba(191,219,254,0.7) 35%, rgba(165,180,252,0.55) 70%, rgba(219,234,254,0.55) 100%)",
+            backgroundSize: "200% 100%",
+            animation: "annotationHintShimmer 3.6s ease-in-out infinite",
+            boxShadow:
+              "inset 0 0 0 1px rgba(96,165,250,0.25), 0 0 16px rgba(96,165,250,0.35), 0 0 28px rgba(99,102,241,0.18)",
+          }}
+        >
+          <span
+            aria-hidden="true"
+            className="absolute -left-10 -top-8 w-28 h-28 rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(147,197,253,0.55) 0%, rgba(147,197,253,0) 70%)",
+              filter: "blur(8px)",
+              animation: "annotationHintPulse 2.4s ease-in-out infinite",
+            }}
+          />
+          <span
+            aria-hidden="true"
+            className="absolute -right-10 -bottom-10 w-32 h-32 rounded-full pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(165,180,252,0.5) 0%, rgba(165,180,252,0) 70%)",
+              filter: "blur(10px)",
+              animation: "annotationHintPulse 2.4s ease-in-out infinite 1.2s",
+            }}
+          />
+          <span
+            aria-hidden="true"
+            className="relative flex items-center justify-center w-6 h-6 rounded-md shrink-0"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(59,130,246,0.95) 0%, rgba(99,102,241,0.95) 100%)",
+              boxShadow:
+                "0 0 12px rgba(59,130,246,0.55), 0 0 22px rgba(99,102,241,0.35)",
+            }}
+          >
+            <MousePointerClick className="w-3.5 h-3.5 text-white" />
+          </span>
+          <p className="relative text-[12px] text-blue-800 font-medium tracking-tight leading-snug">
+            텍스트를{" "}
+            <span className="font-bold text-blue-900 px-1 py-0.5 rounded bg-white/70 shadow-[0_0_8px_rgba(59,130,246,0.35)]">
+              드래그(터치 길게 누르기)
+            </span>
+            하면 핵심 어휘, 문법 포인트, 출제 포인트 등을 마킹할 수 있습니다
           </p>
+          <style jsx>{`
+            @keyframes annotationHintShimmer {
+              0% {
+                background-position: 0% 50%;
+              }
+              50% {
+                background-position: 100% 50%;
+              }
+              100% {
+                background-position: 0% 50%;
+              }
+            }
+            @keyframes annotationHintPulse {
+              0%,
+              100% {
+                opacity: 0.45;
+                transform: scale(1);
+              }
+              50% {
+                opacity: 0.85;
+                transform: scale(1.15);
+              }
+            }
+          `}</style>
         </div>
       )}
     </div>

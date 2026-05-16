@@ -7,6 +7,8 @@ import { getCustomPrompts } from "@/actions/custom-prompts";
 import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
+import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
 import type { PassageCreateProps, SavedPrompt } from "./passage-create/types";
 import { mapRecentPassagesToQueueItems } from "./passage-create/utils";
 import { usePassageFormState } from "./passage-create/use-passage-form-state";
@@ -18,7 +20,13 @@ import { QueueSectionContainer } from "./passage-create/sections/queue-section-c
 
 export type { PassageCreateProps } from "./passage-create/types";
 
-export function PassageCreateClient({ schools, recentPassages, initialCollections }: PassageCreateProps) {
+export function PassageCreateClient({
+  schools,
+  recentPassages,
+  initialCollections,
+  draftCollections,
+  draftMembership,
+}: PassageCreateProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
@@ -78,6 +86,27 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
   // ─── Selection ───
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
+
+  // ─── Selected extraction draft (left grid → editor) ───
+  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const handleSelectDraft = useCallback((draft: M1PassageDraftWithJob) => {
+    const text =
+      draft.teacherText?.trim() ||
+      draft.restoredText?.trim() ||
+      draft.rawText?.trim() ||
+      "";
+    const draftTitle = draft.title?.trim() || getDraftDisplayTitle(draft);
+    setSelectedDraftId(draft.id);
+    setTitle(draftTitle);
+    setContent(text);
+    setAnnotations([]);
+    setImageFile(null);
+    setImagePreview(null);
+    const fileName =
+      draft.job?.displayName?.trim() || draft.job?.originalFileName?.trim() || "";
+    if (fileName) setSource(fileName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ─── Collections (folders) ─── grouped useStates + effects in one custom hook to preserve the original contiguous hook order.
   const {
@@ -234,6 +263,10 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
             newPromptName={newPromptName} setNewPromptName={setNewPromptName}
             savingPrompt={savingPrompt} setSavingPrompt={setSavingPrompt}
             addToQueue={addToQueue}
+            selectedDraftId={selectedDraftId}
+            onSelectDraft={handleSelectDraft}
+            draftCollections={draftCollections ?? []}
+            draftMembership={draftMembership ?? {}}
           />
 
           {/* ─── Toolbar + Card Grid ─── */}
@@ -254,6 +287,7 @@ export function PassageCreateClient({ schools, recentPassages, initialCollection
             newFolderName={newFolderName} setNewFolderName={setNewFolderName}
             showAddToFolder={showAddToFolder} setShowAddToFolder={setShowAddToFolder}
             addingToFolder={addingToFolder} setAddingToFolder={setAddingToFolder}
+            collectionPassageIds={collectionPassageIds}
             setCollectionPassageIds={setCollectionPassageIds}
             selectedIds={selectedIds} toggleSelect={toggleSelect}
             selectAll={selectAll} clearSelection={clearSelection}

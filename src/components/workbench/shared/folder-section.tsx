@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 
+import type { ReactNode } from "react";
 import { ChevronRight, FolderOpen, FolderPlus, Check, X } from "lucide-react";
 import type { CollectionItem } from "./types";
 import { FolderChip } from "./folder-chip";
@@ -25,6 +26,26 @@ interface FolderSectionProps {
   onNavigateToRoot?: () => void;
   /** If true, use full FolderCard inside folders, FolderChip at root */
   useCardInsideFolder?: boolean;
+  /** Bulk-selection toolbar rendered as the last row of the section. Since
+   *  FolderSection is `sticky -top-4`, anything rendered here gets pinned
+   *  along with the breadcrumb + folder chips when the user scrolls. Pass
+   *  `<SelectionToolbar embedded />` so it inherits the section's chrome. */
+  selectionBar?: ReactNode;
+  /** Page-specific filters/actions rendered to the right of the folder
+   *  title in the header row. Pages should pass their search input + filter
+   *  selects + view toggles here so the page-level chrome can stay minimal
+   *  (just title + count + primary CTA). */
+  toolbar?: ReactNode;
+  /** Page-level identity rendered in the FolderSection header — replaces
+   *  the default "폴더 관리" label. Pass `{ icon, title, totalCount }` so
+   *  the page can drop its top header bar entirely and let this card serve
+   *  as the single chrome surface. */
+  pageHeader?: {
+    icon: ReactNode;
+    title: string;
+    totalCount: number;
+    itemLabel: string;
+  };
 }
 
 export function FolderSection({
@@ -45,36 +66,70 @@ export function FolderSection({
   breadcrumbPath = [],
   onNavigateToRoot,
   useCardInsideFolder = false,
+  selectionBar,
+  toolbar,
+  pageHeader,
 }: FolderSectionProps) {
   const useCards = useCardInsideFolder && activeFolder;
   const currentFolder = activeFolder ? breadcrumbPath[breadcrumbPath.length - 1] : null;
 
   return (
     <div
-      className="sticky -top-4 z-10 -mx-6 px-6 pt-4 pb-3"
+      className="sticky top-0 z-10 -mx-6 px-6 pt-2 pb-2.5"
       style={{ background: "rgba(244, 246, 249, 0.92)", backdropFilter: "blur(16px) saturate(180%)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}
     >
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-col gap-2 border-b border-slate-100 px-4 py-3">
+        <div className="flex flex-col gap-2 border-b border-slate-100 px-4 py-2.5">
+          {/* Header row: page/folder identity (left) + page-specific filters/actions (right) */}
           <div className="flex items-center gap-3 min-w-0">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-              <FolderOpen className="h-4 w-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="truncate text-[13px] font-bold text-slate-800">
-                  {currentFolder ? currentFolder.name : "폴더 관리"}
-                </h3>
-                {currentFolder && (
-                  <span className="shrink-0 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
-                    현재 폴더
+            {pageHeader ? (
+              <>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  {pageHeader.icon}
+                </span>
+                <div className="min-w-0 flex items-center gap-2">
+                  <h3 className="truncate text-[13px] font-bold text-slate-900">
+                    {currentFolder ? currentFolder.name : pageHeader.title}
+                  </h3>
+                  {currentFolder ? (
+                    <span className="shrink-0 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
+                      현재 폴더
+                    </span>
+                  ) : null}
+                  <span className="shrink-0 text-[11px] font-medium text-slate-400 tabular-nums">
+                    · {pageHeader.itemLabel} {pageHeader.totalCount}개
+                    {childFolders.length > 0
+                      ? ` · 폴더 ${childFolders.length}개`
+                      : ""}
                   </span>
-                )}
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <FolderOpen className="h-3.5 w-3.5" />
+                </span>
+                <div className="min-w-0 flex items-center gap-2">
+                  <h3 className="truncate text-[12px] font-bold text-slate-800">
+                    {currentFolder ? currentFolder.name : "폴더 관리"}
+                  </h3>
+                  {currentFolder ? (
+                    <span className="shrink-0 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
+                      현재 폴더
+                    </span>
+                  ) : null}
+                  <span className="shrink-0 text-[10.5px] font-medium text-slate-400">
+                    · 하위 폴더 {childFolders.length}개
+                  </span>
+                </div>
+              </>
+            )}
+
+            {toolbar ? (
+              <div className="ml-auto flex items-center gap-2 shrink-0">
+                {toolbar}
               </div>
-              <p className="text-[11px] font-medium text-slate-400">
-                {currentFolder ? "이 폴더 안" : "루트"} · 하위 폴더 {childFolders.length}개
-              </p>
-            </div>
+            ) : null}
           </div>
 
           {currentFolder && (
@@ -189,6 +244,12 @@ export function FolderSection({
             )}
           </div>
         </div>
+
+        {selectionBar ? (
+          <div className="border-t border-slate-100 bg-white px-2 py-1.5">
+            {selectionBar}
+          </div>
+        ) : null}
       </section>
     </div>
   );

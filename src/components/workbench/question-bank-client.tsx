@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
@@ -13,9 +13,7 @@ import {
   Grid2X2,
   Grid3X3,
   LayoutGrid,
-  Folder,
   Layers,
-  ArrowLeft,
   Star,
   ArrowUpDown,
   Loader2,
@@ -55,7 +53,7 @@ import type { CollectionItem } from "./shared/types";
 import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { SelectionToolbar } from "./shared/selection-toolbar";
-import { BreadcrumbNav } from "./shared/breadcrumb-nav";
+import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 import {
   TypeFilterPopover,
   TYPE_SUBTYPE_MAP,
@@ -77,6 +75,7 @@ interface QuestionItem {
   type: string;
   subType: string | null;
   questionText: string;
+  structuredData?: unknown;
   options: string | null;
   correctAnswer: string;
   difficulty: string;
@@ -184,20 +183,6 @@ export function QuestionBankClient({
   );
   const { selectedIds, setSelectedIds, toggleSelect, selectAll, clearSelection } = useSelection(getDisplayedIds);
 
-  // "Add to folder" dropdown (question-specific)
-  const [showAddToFolder, setShowAddToFolder] = useState(false);
-  const addToFolderRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!showAddToFolder) return;
-    function handleClick(e: MouseEvent) {
-      if (addToFolderRef.current && !addToFolderRef.current.contains(e.target as Node)) {
-        setShowAddToFolder(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showAddToFolder]);
 
   // Exam dialog
   const [createExamOpen, setCreateExamOpen] = useState(false);
@@ -289,6 +274,18 @@ export function QuestionBankClient({
       const success = await folders.handleDragToFolder(itemId, folderId, copy, selectedIds);
       if (success) clearSelection();
     },
+    [folders, selectedIds, clearSelection],
+  );
+
+  // ─── Move (cut + paste) — removes from all current folders, adds to target ───
+  const handleMoveToFolder = useCallback(
+    async (collectionId: string) => {
+      if (selectedIds.size === 0) return;
+      const anyId = selectedIds.values().next().value as string | undefined;
+      if (!anyId) return;
+      const success = await folders.handleDragToFolder(anyId, collectionId, false, selectedIds);
+      if (success) clearSelection();
+    },
     [folders.handleDragToFolder, selectedIds, clearSelection],
   );
 
@@ -297,7 +294,6 @@ export function QuestionBankClient({
     const success = await folders.handleAddToFolder(collectionId, selectedIds);
     if (success) {
       clearSelection();
-      setShowAddToFolder(false);
     }
   }
 
@@ -332,37 +328,118 @@ export function QuestionBankClient({
   }
 
   // ─── Extra actions for selection toolbar (question-specific) ───
+  // ─── Filter bar (rendered inside FolderSection.toolbar) ───
+  const filtersToolbar = (
+    <>
+      <div className="relative">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
+        <input
+          placeholder="검색..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          className="w-40 h-7 pl-7 pr-2.5 text-[11.5px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+        />
+      </div>
+
+      <TypeFilterPopover
+        currentSubTypes={filters.subType?.split(",").filter(Boolean) || []}
+        onApply={(selectedSubs) => {
+          if (selectedSubs.length === 0) {
+            updateFilters({ type: "ALL", subType: "ALL" });
+          } else {
+            const types = new Set<string>();
+            for (const sub of selectedSubs) {
+              const group = TYPE_SUBTYPE_MAP.find((g) => g.subtypes.some((s) => s.value === sub));
+              if (group) types.add(group.type);
+            }
+            updateFilters({
+              type: types.size > 0 ? [...types].join(",") : "ALL",
+              subType: selectedSubs.join(","),
+            });
+          }
+        }}
+      />
+
+      <Select value={filters.difficulty || "ALL"} onValueChange={(v) => updateFilter("difficulty", v)}>
+        <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="난이도" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체 난이도</SelectItem>
+          <SelectItem value="BASIC">기본</SelectItem>
+          <SelectItem value="INTERMEDIATE">중급</SelectItem>
+          <SelectItem value="KILLER">킬러</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={filters.approved === true ? "true" : filters.approved === false ? "false" : "ALL"}
+        onValueChange={(v) => updateFilter("approved", v)}
+      >
+        <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="상태" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체 상태</SelectItem>
+          <SelectItem value="true">승인 완료</SelectItem>
+          <SelectItem value="false">미승인</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <button
+        onClick={() => {
+          if (filters.starred === true) updateFilter("starred", "ALL");
+          else updateFilter("starred", "true");
+        }}
+        className={`flex items-center gap-1 h-7 px-2 text-[11.5px] font-medium rounded-md border transition-colors ${
+          filters.starred === true
+            ? "bg-yellow-50 border-yellow-300 text-yellow-700"
+            : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+        }`}
+        aria-label="중요 문제 필터"
+        aria-pressed={filters.starred === true}
+      >
+        <Star className={`w-3 h-3 ${filters.starred === true ? "fill-yellow-400 text-yellow-500" : ""}`} />
+        중요
+      </button>
+
+      <Select value={filters.sort || "newest"} onValueChange={(v) => updateFilter("sort", v === "newest" ? "ALL" : v)}>
+        <SelectTrigger className="w-[108px] h-7 text-[11.5px] px-2.5">
+          <ArrowUpDown className="w-3 h-3 mr-1 shrink-0" />
+          <SelectValue placeholder="정렬" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="newest">최신순</SelectItem>
+          <SelectItem value="oldest">오래된순</SelectItem>
+          <SelectItem value="difficulty_desc">난이도 높은순</SelectItem>
+          <SelectItem value="difficulty_asc">난이도 낮은순</SelectItem>
+          <SelectItem value="starred">중요 문제 먼저</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <span className="h-5 w-px bg-slate-200" />
+
+      <Button
+        className="bg-blue-600 hover:bg-blue-700 h-7 text-[11.5px] px-2.5"
+        size="sm"
+        onClick={() => setGenerateDialogOpen(true)}
+      >
+        <Layers className="w-3 h-3 mr-1" />
+        AI 문제 생성
+      </Button>
+    </>
+  );
+
   const selectionExtraActions = (
     <>
-      {/* Add to folder */}
-      <div ref={addToFolderRef} className="relative">
-        <button
-          onClick={() => setShowAddToFolder(!showAddToFolder)}
-          className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
-        >
-          <FolderPlus className="w-3.5 h-3.5" />
-          폴더에 추가
-        </button>
-        {showAddToFolder && (
-          <div className="absolute left-0 top-8 z-20 w-56 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
-            {folders.collections.length === 0 ? (
-              <p className="px-3 py-2 text-[12px] text-slate-400">폴더가 없습니다.</p>
-            ) : (
-              folders.collections.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => handleAddToFolder(c.id)}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-slate-700 hover:bg-blue-50 text-left"
-                >
-                  <Folder className="w-3.5 h-3.5 text-slate-400" />
-                  {c.name}
-                  <span className="ml-auto text-[10px] text-slate-400">{c._count.items}개</span>
-                </button>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+      <MoveOrCopyFolderPicker
+        collections={folders.collections}
+        activeFolder={folders.activeFolder}
+        selectedCount={selectedIds.size}
+        onCopy={handleAddToFolder}
+        onMove={handleMoveToFolder}
+      />
 
       <span className="text-slate-300">|</span>
 
@@ -379,152 +456,11 @@ export function QuestionBankClient({
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
-      {/* ─── Unified Header: title + breadcrumb + search + filters + AI button ─── */}
-      <div className="px-6 py-2.5 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-        {/* Left: back/icon + title + breadcrumb */}
-        <div className="flex items-center gap-2 shrink-0">
-          {folders.activeFolder ? (
-            <button
-              onClick={() => {
-                folders.navigateUp();
-                clearSelection();
-              }}
-              className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 text-slate-500" />
-            </button>
-          ) : (
-            <Database className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
-          )}
-          <h1 className="text-[15px] font-bold text-slate-900">문제 관리</h1>
-          <span className="text-[12px] text-slate-400">{totalCount}개</span>
-          <BreadcrumbNav
-            activeFolder={folders.activeFolder}
-            breadcrumbPath={folders.breadcrumbPath}
-            onNavigateToFolder={(id) => { folders.navigateToFolder(id); clearSelection(); }}
-            rootLabel="전체 문제"
-          />
-        </div>
-
-        <div className="flex-1" />
-
-        {/* Right: search + filters + AI button */}
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-            <input
-              placeholder="검색..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              className="w-44 h-8 pl-8 pr-3 text-[12px] rounded-lg border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-            />
-          </div>
-
-          {/* Multi-select hierarchical type filter */}
-          <TypeFilterPopover
-            currentSubTypes={filters.subType?.split(",").filter(Boolean) || []}
-            onApply={(selectedSubs) => {
-              if (selectedSubs.length === 0) {
-                updateFilters({ type: "ALL", subType: "ALL" });
-              } else {
-                // Infer types from selected subtypes
-                const types = new Set<string>();
-                for (const sub of selectedSubs) {
-                  const group = TYPE_SUBTYPE_MAP.find((g) => g.subtypes.some((s) => s.value === sub));
-                  if (group) types.add(group.type);
-                }
-                updateFilters({
-                  type: types.size > 0 ? [...types].join(",") : "ALL",
-                  subType: selectedSubs.join(","),
-                });
-              }
-            }}
-          />
-
-          <Select value={filters.difficulty || "ALL"} onValueChange={(v) => updateFilter("difficulty", v)}>
-            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="난이도" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체 난이도</SelectItem>
-              <SelectItem value="BASIC">기본</SelectItem>
-              <SelectItem value="INTERMEDIATE">중급</SelectItem>
-              <SelectItem value="KILLER">킬러</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={filters.approved === true ? "true" : filters.approved === false ? "false" : "ALL"}
-            onValueChange={(v) => updateFilter("approved", v)}
-          >
-            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="상태" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체 상태</SelectItem>
-              <SelectItem value="true">승인 완료</SelectItem>
-              <SelectItem value="false">미승인</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Starred filter */}
-          <button
-            onClick={() => {
-              if (filters.starred === true) {
-                updateFilter("starred", "ALL");
-              } else {
-                updateFilter("starred", "true");
-              }
-            }}
-            className={`flex items-center gap-1 h-8 px-2.5 text-[12px] font-medium rounded-lg border transition-colors ${
-              filters.starred === true
-                ? "bg-yellow-50 border-yellow-300 text-yellow-700"
-                : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-            }`}
-            aria-label="중요 문제 필터"
-            aria-pressed={filters.starred === true}
-          >
-            <Star className={`w-3.5 h-3.5 ${filters.starred === true ? "fill-yellow-400 text-yellow-500" : ""}`} />
-            중요
-          </button>
-
-          {/* Sort dropdown */}
-          <Select value={filters.sort || "newest"} onValueChange={(v) => updateFilter("sort", v === "newest" ? "ALL" : v)}>
-            <SelectTrigger className="w-32 h-8 text-[12px]">
-              <ArrowUpDown className="w-3 h-3 mr-1 shrink-0" />
-              <SelectValue placeholder="정렬" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">최신순</SelectItem>
-              <SelectItem value="oldest">오래된순</SelectItem>
-              <SelectItem value="difficulty_desc">난이도 높은순</SelectItem>
-              <SelectItem value="difficulty_asc">난이도 낮은순</SelectItem>
-              <SelectItem value="starred">중요 문제 먼저</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button
-            className="bg-blue-600 hover:bg-blue-700 h-8"
-            size="sm"
-            onClick={() => setGenerateDialogOpen(true)}
-          >
-            <Layers className="w-3.5 h-3.5 mr-1" />
-            AI 문제 생성
-          </Button>
-        </div>
-      </div>
-
-      {/* ─── Selection toolbar ─── */}
-      <SelectionToolbar
-        selectedCount={selectedIds.size}
-        totalCount={displayedQuestions.length}
-        isAllSelected={selectedIds.size === displayedQuestions.length && displayedQuestions.length > 0}
-        onSelectAll={selectAll}
-        onClearSelection={clearSelection}
-        activeFolder={folders.activeFolder}
-        onRemoveFromFolder={handleRemoveFromFolder}
-        extraActions={selectionExtraActions}
-      />
+      {/* Page header bar removed — identity + CTAs now live inside the
+          sticky FolderSection card. */}
 
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 py-4">
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
         {questionsData.questions.length === 0 && !folders.activeFolder ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -533,7 +469,8 @@ export function QuestionBankClient({
           </div>
         ) : (
           <>
-          {/* Folders section -- sticky below header */}
+          {/* Folders section -- sticky below header. Selection toolbar is
+              embedded inside so it shares the sticky pinning. */}
           <FolderSection
             childFolders={folders.childFolders}
             activeFolder={folders.activeFolder}
@@ -551,6 +488,26 @@ export function QuestionBankClient({
             onDragToFolder={handleDragToFolder}
             breadcrumbPath={folders.breadcrumbPath}
             onNavigateToRoot={() => { folders.setActiveFolder(null); clearSelection(); }}
+            toolbar={filtersToolbar}
+            pageHeader={{
+              icon: <Database className="h-3.5 w-3.5" />,
+              title: "문제 관리",
+              totalCount,
+              itemLabel: "문제",
+            }}
+            selectionBar={
+              <SelectionToolbar
+                embedded
+                selectedCount={selectedIds.size}
+                totalCount={displayedQuestions.length}
+                isAllSelected={selectedIds.size === displayedQuestions.length && displayedQuestions.length > 0}
+                onSelectAll={selectAll}
+                onClearSelection={clearSelection}
+                activeFolder={folders.activeFolder}
+                onRemoveFromFolder={handleRemoveFromFolder}
+                extraActions={selectionExtraActions}
+              />
+            }
           />
 
             {/* Questions section */}

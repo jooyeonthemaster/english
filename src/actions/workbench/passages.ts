@@ -83,6 +83,21 @@ export async function createWorkbenchPassage(
   try {
     const session = await requireAuth();
     const academyId = getAcademyId(session);
+    const schoolId = data.schoolId && data.schoolId !== "NONE" ? data.schoolId : null;
+
+    if (schoolId) {
+      const school = await prisma.school.findFirst({
+        where: { id: schoolId, academyId },
+        select: { id: true },
+      });
+
+      if (!school) {
+        return {
+          success: false,
+          error: "선택한 학교를 찾을 수 없습니다. 학교 선택을 다시 확인해주세요.",
+        };
+      }
+    }
 
     const annotationRows = (data.annotations ?? []).map((a, index) => ({
       annotationId: a.id,
@@ -97,7 +112,7 @@ export async function createWorkbenchPassage(
     const passage = await prisma.passage.create({
       data: {
         academyId,
-        schoolId: data.schoolId || null,
+        schoolId,
         title: data.title,
         content: data.content,
         source: data.source || null,
@@ -127,14 +142,30 @@ export async function updateWorkbenchPassage(
   data: Partial<CreatePassageData>
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
+    const session = await requireAuth();
+    const academyId = getAcademyId(session);
+    const schoolId = data.schoolId && data.schoolId !== "NONE" ? data.schoolId : null;
+
+    if (schoolId) {
+      const school = await prisma.school.findFirst({
+        where: { id: schoolId, academyId },
+        select: { id: true },
+      });
+
+      if (!school) {
+        return {
+          success: false,
+          error: "선택한 학교를 찾을 수 없습니다. 학교 선택을 다시 확인해주세요.",
+        };
+      }
+    }
 
     await prisma.passage.update({
       where: { id: passageId },
       data: {
         title: data.title,
         content: data.content,
-        schoolId: data.schoolId || null,
+        schoolId,
         source: data.source,
         grade: data.grade,
         semester: data.semester,

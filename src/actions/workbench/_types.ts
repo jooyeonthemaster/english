@@ -65,6 +65,7 @@ export interface SaveQuestionData {
   type: string;
   subType?: string;
   questionText: string;
+  structuredData?: unknown;
   options?: { label: string; text: string }[];
   correctAnswer: string;
   points?: number;

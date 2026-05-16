@@ -23,6 +23,15 @@ export interface PassageCollection {
   _count: { items: number };
 }
 
+export interface DraftCollectionItem {
+  id: string;
+  parentId: string | null;
+  name: string;
+  description: string | null;
+  color: string | null;
+  _count: { items: number; children: number };
+}
+
 export interface PassageCreateProps {
   schools: Array<{
     id: string;
@@ -32,6 +41,8 @@ export interface PassageCreateProps {
   }>;
   recentPassages?: RecentPassage[];
   initialCollections?: PassageCollection[];
+  draftCollections?: DraftCollectionItem[];
+  draftMembership?: Record<string, string[]>;
 }
 
 export interface SavedPrompt {

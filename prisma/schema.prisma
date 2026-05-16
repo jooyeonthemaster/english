@@ -692,6 +692,7 @@ model Question {
   type             String // "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "ESSAY" | "FILL_BLANK" | "ORDERING" | "VOCAB"
   subType          String? // Specific pattern within type
   questionText     String  @db.Text
+  structuredData   Json? // Original structured AI output for type-specific rendering
   questionImage    String? // Image URL
   options          String? @db.Text // JSON: [{ label: "①", text: "..." }, ...] for MC
   correctAnswer    String  @db.Text // Answer text or JSON for complex answers

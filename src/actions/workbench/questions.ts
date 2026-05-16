@@ -10,6 +10,11 @@ import type {
   SaveQuestionData,
 } from "./_types";
 
+function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
+  if (value === undefined || value === null) return undefined;
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
+
 // ---------------------------------------------------------------------------
 // Question Bank CRUD
 // ---------------------------------------------------------------------------
@@ -134,6 +139,7 @@ export async function saveGeneratedQuestions(
             type: q.type,
             subType: q.subType || null,
             questionText: q.questionText || "",
+            structuredData: toPrismaJson(q.structuredData),
             options: typeof q.options === "string" ? q.options : q.options ? JSON.stringify(q.options) : null,
             correctAnswer: q.correctAnswer || "",
             points: q.points || 1,
@@ -183,6 +189,7 @@ export async function updateWorkbenchQuestion(
         type: data.type,
         subType: data.subType,
         questionText: data.questionText,
+        structuredData: toPrismaJson(data.structuredData),
         options: data.options ? JSON.stringify(data.options) : undefined,
         correctAnswer: data.correctAnswer,
         points: data.points,

@@ -28,48 +28,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StructuredQuestionRenderer } from "./question-renderers";
+import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
 import {
   getCustomPrompts,
   createCustomPrompt,
   deleteCustomPrompt,
 } from "@/actions/custom-prompts";
-
-const EXAM_TYPE_GROUPS = [
-  {
-    group: "수능/모의고사 객관식",
-    items: [
-      { id: "BLANK_INFERENCE", label: "빈칸 추론" },
-      { id: "GRAMMAR_ERROR", label: "어법 판단" },
-      { id: "VOCAB_CHOICE", label: "어휘 적절성" },
-      { id: "SENTENCE_ORDER", label: "글의 순서" },
-      { id: "SENTENCE_INSERT", label: "문장 삽입" },
-      { id: "TOPIC_MAIN_IDEA", label: "주제/요지" },
-      { id: "TITLE", label: "제목 추론" },
-      { id: "REFERENCE", label: "지칭 추론" },
-      { id: "CONTENT_MATCH", label: "내용 일치" },
-      { id: "IRRELEVANT", label: "무관한 문장" },
-    ],
-  },
-  {
-    group: "내신 서술형",
-    items: [
-      { id: "CONDITIONAL_WRITING", label: "조건부 영작" },
-      { id: "SENTENCE_TRANSFORM", label: "문장 전환" },
-      { id: "FILL_BLANK_KEY", label: "핵심 표현 빈칸" },
-      { id: "SUMMARY_COMPLETE", label: "요약문 완성" },
-      { id: "WORD_ORDER", label: "배열 영작" },
-      { id: "GRAMMAR_CORRECTION", label: "문법 오류 수정" },
-    ],
-  },
-  {
-    group: "어휘",
-    items: [
-      { id: "CONTEXT_MEANING", label: "문맥 속 의미" },
-      { id: "SYNONYM", label: "동의어" },
-      { id: "ANTONYM", label: "반의어" },
-    ],
-  },
-];
 
 interface PassageItem {
   id: string;
@@ -257,9 +221,23 @@ export function GenerateQuestionsDialog({
         const parts: string[] = [];
         if (q.direction) parts.push(q.direction);
         if (q.passageWithBlank) parts.push(q.passageWithBlank);
-        if (q.passageWithMarks) parts.push(q.passageWithMarks);
+        if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
+        if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
+        if (q.passageWithNumbers) parts.push(q.passageWithNumbers);
+        if (q.matchType) parts.push(`[유형: ${q.matchType}]`);
+        if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);
+        if (q.paragraphs) parts.push(q.paragraphs.map((p: any) => `${p.label} ${p.text}`).join("\n"));
+        if (q.referenceSentence) parts.push(`[영작할 우리말] ${q.referenceSentence}`);
         if (q.originalSentence) parts.push(`[원문] ${q.originalSentence}`);
         if (q.conditions) parts.push(`[조건] ${q.conditions.join(" / ")}`);
+        if (q.sentenceWithBlank) parts.push(q.sentenceWithBlank);
+        if (q.summaryWithBlanks) parts.push(`[요약문] ${q.summaryWithBlanks}`);
+        if (q.blanks?.length) parts.push(`[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`);
+        if (q.scrambledWords?.length) parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
+        if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);
+        if (q.sentenceWithError) parts.push(`[오류 문장] ${q.sentenceWithError}`);
+        if (q.targetWord) parts.push(`[대상 단어] ${q.targetWord}`);
+        if (q.contextSentence) parts.push(`[문맥] ${q.contextSentence}`);
         if (q.questionText) parts.push(q.questionText);
         return parts.join("\n\n") || "";
       };
@@ -269,6 +247,7 @@ export function GenerateQuestionsDialog({
         type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
         subType: q._typeId || null,
         questionText: buildQuestionText(q),
+        structuredData: q._typeId ? q : undefined,
         options: q.options ? JSON.stringify(q.options) : null,
         correctAnswer: q.correctAnswer || q.modelAnswer || "",
         points: 1,

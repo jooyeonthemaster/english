@@ -6,6 +6,7 @@ import {
   updatePassageCollection,
   deletePassageCollection,
   addPassagesToCollection,
+  removePassagesFromCollection,
 } from "@/actions/workbench";
 import type { PassageCollection } from "./types";
 
@@ -85,7 +86,6 @@ interface AddToFolderArgs {
   setCollections: React.Dispatch<React.SetStateAction<PassageCollection[]>>;
   setCollectionPassageIds: React.Dispatch<React.SetStateAction<Map<string, Set<string>>>>;
   clearSelection: () => void;
-  setShowAddToFolder: (v: boolean) => void;
 }
 
 export async function handleAddToFolder({
@@ -95,7 +95,6 @@ export async function handleAddToFolder({
   setCollections,
   setCollectionPassageIds,
   clearSelection,
-  setShowAddToFolder,
 }: AddToFolderArgs) {
   if (selectedIds.size === 0) return;
   setAddingToFolder(true);
@@ -108,9 +107,101 @@ export async function handleAddToFolder({
     setCollectionPassageIds((prev) => { const next = new Map(prev); next.delete(collectionId); return next; });
     toast.success(`${selectedIds.size}개 지문이 폴더에 추가되었습니다.`);
     clearSelection();
-    setShowAddToFolder(false);
   } else {
     toast.error(result.error || "추가 실패");
   }
   setAddingToFolder(false);
+}
+
+interface MoveToFolderArgs {
+  collectionId: string;
+  selectedIds: Set<string>;
+  collections: PassageCollection[];
+  collectionPassageIds: Map<string, Set<string>>;
+  setAddingToFolder: (v: boolean) => void;
+  setCollections: React.Dispatch<React.SetStateAction<PassageCollection[]>>;
+  setCollectionPassageIds: React.Dispatch<React.SetStateAction<Map<string, Set<string>>>>;
+  clearSelection: () => void;
+}
+
+/**
+ * Cut + paste semantics: removes the selected passages from any collection
+ * we know they're currently in (via the cached membership map), then adds
+ * them to the target. `removePassagesFromCollection` is idempotent so we
+ * can safely fire it for every cached collection without worrying about
+ * partial membership data.
+ */
+export async function handleMoveToFolder({
+  collectionId,
+  selectedIds,
+  collections,
+  collectionPassageIds,
+  setAddingToFolder,
+  setCollections,
+  setCollectionPassageIds,
+  clearSelection,
+}: MoveToFolderArgs) {
+  if (selectedIds.size === 0) return;
+  setAddingToFolder(true);
+
+  const ids = [...selectedIds];
+  const idSet = new Set(ids);
+  const sourceCollectionIds: string[] = [];
+  for (const [colId, memberIds] of collectionPassageIds.entries()) {
+    if (colId === collectionId) continue;
+    const hasAny = ids.some((id) => memberIds.has(id));
+    if (hasAny) sourceCollectionIds.push(colId);
+  }
+
+  try {
+    await Promise.all(
+      sourceCollectionIds.map((colId) => removePassagesFromCollection(colId, ids)),
+    );
+    const result = await addPassagesToCollection(collectionId, ids);
+    if (!result.success) {
+      throw new Error(result.error || "이동 실패");
+    }
+
+    // Update counts: subtract from each source, add to target.
+    setCollections((prev) =>
+      prev.map((c) => {
+        if (c.id === collectionId) {
+          return { ...c, _count: { items: c._count.items + ids.length } };
+        }
+        if (sourceCollectionIds.includes(c.id)) {
+          const sourceSet = collectionPassageIds.get(c.id);
+          const overlap = sourceSet
+            ? ids.filter((id) => sourceSet.has(id)).length
+            : 0;
+          return {
+            ...c,
+            _count: { items: Math.max(0, c._count.items - overlap) },
+          };
+        }
+        return c;
+      }),
+    );
+
+    // Invalidate cached membership for affected collections so the next
+    // filter refetches authoritative IDs.
+    setCollectionPassageIds((prev) => {
+      const next = new Map(prev);
+      next.delete(collectionId);
+      sourceCollectionIds.forEach((id) => next.delete(id));
+      return next;
+    });
+
+    const sourceCount = sourceCollectionIds.length;
+    toast.success(
+      sourceCount > 0
+        ? `${ids.length}개 지문을 폴더로 이동했습니다 (이전 폴더에서 제거됨).`
+        : `${ids.length}개 지문이 폴더에 추가되었습니다.`,
+    );
+    clearSelection();
+    void collections;
+  } catch (err) {
+    toast.error(err instanceof Error ? err.message : "이동 실패");
+  } finally {
+    setAddingToFolder(false);
+  }
 }

@@ -8,7 +8,7 @@ export function buildQuestionText(q: any): string {
   const parts: string[] = [];
   if (q.direction) parts.push(q.direction);
   if (q.passageWithBlank) parts.push(q.passageWithBlank);
-  if (q.passageWithMarks) parts.push(q.passageWithMarks);
+  if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
   if (q.passageWithNumbers) parts.push(q.passageWithNumbers);
   if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
   if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);
@@ -135,6 +135,7 @@ export async function saveGeneratedQuestionsToBank(args: SaveGeneratedQuestionsA
       type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
       subType: q._typeId || q.subType || null,
       questionText: buildQuestionText(q),
+      structuredData: q._typeId ? q : undefined,
       options: q.options ? JSON.stringify(q.options) : null,
       correctAnswer: q.correctAnswer || q.modelAnswer || "",
       points: 1,

@@ -8,6 +8,7 @@ import {
   handleRenameFolder as renameFolder,
   handleDeleteFolder as deleteFolder,
   handleAddToFolder as addToFolder,
+  handleMoveToFolder as moveToFolder,
 } from "../folder-actions";
 import { QueueEmpty } from "./queue-empty";
 import { QueueToolbar } from "./queue-toolbar";
@@ -57,6 +58,7 @@ interface QueueSectionContainerProps {
   setShowAddToFolder: (v: boolean | ((prev: boolean) => boolean)) => void;
   addingToFolder: boolean;
   setAddingToFolder: (v: boolean) => void;
+  collectionPassageIds: Map<string, Set<string>>;
   setCollectionPassageIds: Dispatch<SetStateAction<Map<string, Set<string>>>>;
 
   // Selection
@@ -150,10 +152,8 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
               filteredLength={p.filteredQueue.length}
               onSelectAll={p.selectAll}
               onClearSelection={p.clearSelection}
-              showAddToFolder={p.showAddToFolder}
-              setShowAddToFolder={p.setShowAddToFolder}
               collections={p.collections}
-              addingToFolder={p.addingToFolder}
+              activeCollectionId={p.filterCollection || null}
               onAddToFolder={(collectionId) =>
                 addToFolder({
                   collectionId,
@@ -162,7 +162,18 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
                   setCollections: p.setCollections,
                   setCollectionPassageIds: p.setCollectionPassageIds,
                   clearSelection: p.clearSelection,
-                  setShowAddToFolder: p.setShowAddToFolder,
+                })
+              }
+              onMoveToFolder={(collectionId) =>
+                moveToFolder({
+                  collectionId,
+                  selectedIds: p.selectedIds,
+                  collections: p.collections,
+                  collectionPassageIds: p.collectionPassageIds,
+                  setAddingToFolder: p.setAddingToFolder,
+                  setCollections: p.setCollections,
+                  setCollectionPassageIds: p.setCollectionPassageIds,
+                  clearSelection: p.clearSelection,
                 })
               }
             />

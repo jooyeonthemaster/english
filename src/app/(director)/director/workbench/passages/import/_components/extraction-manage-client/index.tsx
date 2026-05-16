@@ -3,10 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
+  ArrowRightLeft,
   CheckCircle2,
-  FolderPlus,
+  ChevronRight,
+  Copy,
+  Folder,
   Loader2,
   RefreshCw,
+  Scissors,
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -88,6 +92,10 @@ export function ExtractionManageClient({
   const [gridCols, setGridCols] = useState<GridCols>(3);
   const [jobFilter, setJobFilter] = useState<string | null>(null);
   const [addToFolderOpen, setAddToFolderOpen] = useState(false);
+  const [folderActionMode, setFolderActionMode] = useState<"copy" | "move">(
+    "copy",
+  );
+  const [folderSearchQuery, setFolderSearchQuery] = useState("");
   const addToFolderRef = useRef<HTMLDivElement>(null);
 
   // ─── Folder manager ───
@@ -938,6 +946,61 @@ export function ExtractionManageClient({
     [folders, selectedIds, clearSelection],
   );
 
+  /** Move (cut + paste) selected drafts to target collection — removes them
+   *  from all other collections first, then adds to target. Implemented by
+   *  reusing handleDragToFolder with copy=false: it requires an item id and
+   *  expands to the full selection when that id is part of it. */
+  const handleMoveToFolderClick = useCallback(
+    async (collectionId: string) => {
+      if (selectedIds.size === 0) return;
+      const anyId = selectedIds.values().next().value as string | undefined;
+      if (!anyId) return;
+      await folders.handleDragToFolder(anyId, collectionId, false, selectedIds);
+      clearSelection();
+      setAddToFolderOpen(false);
+    },
+    [folders, selectedIds, clearSelection],
+  );
+
+  /** Resolve a collection's display path "한영고 > 심화". Walks parentId
+   *  up to root; if a parent is missing from the array (data integrity),
+   *  stops gracefully. */
+  const folderPathLabel = useCallback(
+    (collectionId: string): string => {
+      const byId = new Map(folders.collections.map((c) => [c.id, c]));
+      const segments: string[] = [];
+      let current = byId.get(collectionId);
+      const guard = new Set<string>();
+      while (current && !guard.has(current.id)) {
+        guard.add(current.id);
+        segments.unshift(current.name);
+        current = current.parentId ? byId.get(current.parentId) : undefined;
+      }
+      return segments.join(" › ");
+    },
+    [folders.collections],
+  );
+
+  /** Folders sorted by path label so children visually nest under parents
+   *  in the picker. Filters by search query (case-insensitive substring on
+   *  the full path). */
+  const sortedFoldersWithPath = useMemo(() => {
+    const list = folders.collections.map((c) => ({
+      id: c.id,
+      name: c.name,
+      parentId: c.parentId,
+      path: folderPathLabel(c.id),
+      depth: folderPathLabel(c.id).split(" › ").length - 1,
+      itemCount: c._count.items,
+      isActiveFolder: c.id === folders.activeFolder,
+    }));
+    const q = folderSearchQuery.trim().toLowerCase();
+    const filtered = q
+      ? list.filter((c) => c.path.toLowerCase().includes(q))
+      : list;
+    return filtered.sort((a, b) => a.path.localeCompare(b.path, "ko"));
+  }, [folders.collections, folders.activeFolder, folderPathLabel, folderSearchQuery]);
+
   const handleDragToFolder = useCallback(
     async (itemId: string, folderId: string, copy: boolean) => {
       await folders.handleDragToFolder(itemId, folderId, copy, selectedIds);
@@ -947,7 +1010,10 @@ export function ExtractionManageClient({
 
   // ─── Close "Add to folder" dropdown on outside click ───
   useEffect(() => {
-    if (!addToFolderOpen) return;
+    if (!addToFolderOpen) {
+      setFolderSearchQuery("");
+      return;
+    }
     function handleClick(e: MouseEvent) {
       if (addToFolderRef.current && !addToFolderRef.current.contains(e.target as Node)) {
         setAddToFolderOpen(false);
@@ -985,27 +1051,133 @@ export function ExtractionManageClient({
           disabled={anyBulkRunning}
           className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-xs font-bold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <FolderPlus className="size-3.5" />
-          폴더에 추가
+          <ArrowRightLeft className="size-3.5" />
+          이동 / 복사
         </button>
         {addToFolderOpen ? (
-          <div className="absolute left-0 top-full z-20 mt-1 w-60 max-h-72 overflow-y-auto rounded-md border border-slate-200 bg-white p-1 shadow-lg">
-            {folders.collections.length === 0 ? (
-              <div className="px-3 py-2 text-xs text-slate-400">
-                먼저 폴더를 만들어주세요.
+          <div className="absolute left-0 top-full z-30 mt-1 w-[320px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl">
+            {/* Mode toggle */}
+            <div className="flex gap-1 p-1.5 border-b border-slate-100 bg-slate-50/80">
+              <button
+                type="button"
+                onClick={() => setFolderActionMode("copy")}
+                className={
+                  "flex-1 flex items-center justify-center gap-1.5 h-7 rounded text-[11.5px] font-bold transition-all " +
+                  (folderActionMode === "copy"
+                    ? "bg-white text-blue-700 shadow-sm border border-blue-200"
+                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-100")
+                }
+              >
+                <Copy className="size-3" />
+                복사
+              </button>
+              <button
+                type="button"
+                onClick={() => setFolderActionMode("move")}
+                className={
+                  "flex-1 flex items-center justify-center gap-1.5 h-7 rounded text-[11.5px] font-bold transition-all " +
+                  (folderActionMode === "move"
+                    ? "bg-white text-blue-700 shadow-sm border border-blue-200"
+                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-100")
+                }
+              >
+                <Scissors className="size-3" />
+                이동
+              </button>
+            </div>
+
+            {/* Mode description */}
+            <p className="px-3 py-2 text-[10.5px] text-slate-500 leading-relaxed bg-blue-50/30 border-b border-blue-100/40">
+              {folderActionMode === "copy"
+                ? "선택한 자료를 대상 폴더에도 추가합니다. 다른 폴더에 그대로 남습니다."
+                : "선택한 자료를 대상 폴더로 이동합니다. 현재 속한 다른 폴더에서는 제거됩니다."}
+            </p>
+
+            {/* Search */}
+            {folders.collections.length > 4 ? (
+              <div className="px-2 pt-2">
+                <input
+                  type="text"
+                  placeholder="폴더 검색..."
+                  value={folderSearchQuery}
+                  onChange={(e) => setFolderSearchQuery(e.target.value)}
+                  className="w-full h-7 px-2.5 text-[11px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-400"
+                />
               </div>
-            ) : (
-              folders.collections.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => handleAddToFolder(c.id)}
-                  className="block w-full cursor-pointer truncate rounded px-2 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  {c.name}
-                </button>
-              ))
-            )}
+            ) : null}
+
+            {/* Folder list */}
+            <div className="max-h-64 overflow-y-auto p-1">
+              {folders.collections.length === 0 ? (
+                <div className="px-3 py-4 text-xs text-slate-400 text-center">
+                  먼저 폴더를 만들어주세요.
+                </div>
+              ) : sortedFoldersWithPath.length === 0 ? (
+                <div className="px-3 py-4 text-xs text-slate-400 text-center">
+                  검색 결과가 없습니다.
+                </div>
+              ) : (
+                sortedFoldersWithPath.map((c) => {
+                  const segments = c.path.split(" › ");
+                  const leafName = segments[segments.length - 1];
+                  const parentPath = segments.slice(0, -1).join(" › ");
+                  const disabled =
+                    folderActionMode === "move" && c.isActiveFolder;
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        if (folderActionMode === "copy") {
+                          void handleAddToFolder(c.id);
+                        } else {
+                          void handleMoveToFolderClick(c.id);
+                        }
+                      }}
+                      className={
+                        "flex w-full items-center gap-2 rounded px-2 py-1.5 text-left transition-colors " +
+                        (disabled
+                          ? "cursor-not-allowed opacity-40"
+                          : "cursor-pointer hover:bg-blue-50")
+                      }
+                      title={c.path}
+                    >
+                      <Folder
+                        className="size-3.5 shrink-0 text-slate-400"
+                        style={{ marginLeft: c.depth * 8 }}
+                      />
+                      <div className="min-w-0 flex-1">
+                        {parentPath ? (
+                          <div className="flex items-center gap-0.5 text-[10px] text-slate-400 truncate leading-tight">
+                            <span className="truncate">{parentPath}</span>
+                          </div>
+                        ) : null}
+                        <div className="flex items-center gap-1.5 truncate">
+                          <span className="text-[12px] text-slate-700 font-semibold truncate">
+                            {leafName}
+                          </span>
+                          {c.isActiveFolder ? (
+                            <span className="shrink-0 rounded bg-blue-100 px-1 py-0.5 text-[9px] font-bold text-blue-700">
+                              현재
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                      <span className="shrink-0 text-[10px] tabular-nums text-slate-400">
+                        {c.itemCount}
+                      </span>
+                      <ChevronRight className="size-3 shrink-0 text-slate-300" />
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Footer hint */}
+            <div className="px-3 py-1.5 text-[10px] text-slate-400 bg-slate-50 border-t border-slate-100">
+              팁: 자료를 폴더 카드로 직접 드래그하면 이동, <kbd className="px-1 py-0.5 bg-white border border-slate-200 rounded text-[9px]">Shift</kbd> + 드래그는 복사입니다.
+            </div>
           </div>
         ) : null}
       </div>

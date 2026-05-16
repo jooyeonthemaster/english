@@ -90,7 +90,7 @@ export interface QuestionCardItem {
   } | null;
   _count?: { examLinks: number };
   /** AI 생성 시 원본 구조화 데이터 (StructuredQuestionRenderer용) */
-  structuredData?: Record<string, any>;
+  structuredData?: unknown;
 }
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -251,6 +251,7 @@ export function QuestionCard({
 }: QuestionCardProps) {
   const [passageOpen, setPassageOpen] = useState(false);
   const [explanationOpen, setExplanationOpen] = useState(false);
+  const [compactExpanded, setCompactExpanded] = useState(false);
   const router = useRouter();
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
@@ -265,11 +266,16 @@ export function QuestionCard({
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
 
   // 구조화 데이터가 있으면 해당 유형의 전용 렌더러 사용 (compact 아닐 때)
-  const hasStructured = !!q.structuredData?._typeId;
+  const structuredData =
+    q.structuredData && typeof q.structuredData === "object" && "_typeId" in q.structuredData
+      ? (q.structuredData as Record<string, unknown>)
+      : null;
+  const hasStructured = !!structuredData;
   // 유형이 자체 지문을 포함하면 원본 지문 블록 숨김 (중복 방지)
   const typeMeta = sub ? QUESTION_TYPE_META[sub] : undefined;
   const typeIncludesPassage = typeMeta?.includesPassage ?? false;
   const hidePassageBlock = hasStructured && typeIncludesPassage;
+  const showStructured = hasStructured && (!compact || compactExpanded);
 
   return (
     <Card className={`transition-all ${selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"}`}>
@@ -298,6 +304,35 @@ export function QuestionCard({
               </div>
             )}
           </div>
+          {compact && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCompactExpanded((prev) => !prev);
+                if (compactExpanded) setPassageOpen(false);
+              }}
+              aria-expanded={compactExpanded}
+              title={compactExpanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
+              className={`group/expand h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-colors border shrink-0 ${
+                compactExpanded
+                  ? "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
+                  : "text-blue-600 bg-blue-50/70 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
+              }`}
+            >
+              {compactExpanded ? (
+                <>
+                  <ChevronUp className="w-3.5 h-3.5" />
+                  접기
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover/expand:translate-y-0.5" />
+                  펼치기
+                </>
+              )}
+            </button>
+          )}
           {!readonly && (
             <div className="flex items-center gap-1 shrink-0">
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => router.push(`/director/questions/${q.id}`)}>
@@ -331,7 +366,7 @@ export function QuestionCard({
         </div>
 
         {/* ── 구조화 데이터가 있고 compact가 아닐 때: StructuredQuestionRenderer 사용 ── */}
-        {hasStructured && !compact ? (
+        {showStructured ? (
           <>
             {/* 원본 지문: 유형이 자체 지문을 포함하지 않는 경우에만 표시 */}
             {q.passage && !hidePassageBlock && (
@@ -348,14 +383,14 @@ export function QuestionCard({
                 )}
               </div>
             )}
-            <StructuredQuestionRenderer question={q.structuredData} index={num - 1} hideHeader />
+            <StructuredQuestionRenderer question={structuredData} index={num - 1} hideHeader />
           </>
         ) : (
           <>
             {/* ── Flat 렌더링 (DB 저장 문제 또는 compact 모드) ── */}
 
             {/* Passage — structuredData가 있고 includesPassage인 유형만 지문 숨김 (DB 로드 문제는 항상 지문 표시) */}
-            {q.passage && !compact && !(q.structuredData && typeIncludesPassage) && (
+            {q.passage && (!compact || compactExpanded) && !(q.structuredData && typeIncludesPassage) && (
               <div className="bg-slate-50 rounded-md px-3 py-2">
                 <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
                   <FileText className="w-3 h-3 shrink-0" />
@@ -369,14 +404,23 @@ export function QuestionCard({
             )}
 
             {/* Question text */}
-            <div className={`text-slate-800 leading-relaxed font-medium whitespace-pre-line ${compact ? "text-[12px] line-clamp-3" : "text-[13px]"}`}>
+            <div className={`text-slate-800 leading-relaxed font-medium whitespace-pre-line ${
+              compact
+                ? compactExpanded
+                  ? "text-[12px]"
+                  : "text-[12px] line-clamp-3"
+                : "text-[13px]"
+            }`}>
               {renderFormatted(q.questionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
             </div>
 
             {/* Options */}
             {options.length > 0 && (
               <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
-                {(compact ? options.filter(o => o.label === q.correctAnswer) : options).map((opt, idx) => {
+                {options
+                  .map((opt, idx) => ({ opt, idx }))
+                  .filter(({ opt }) => !compact || compactExpanded || opt.label === q.correctAnswer)
+                  .map(({ opt, idx }) => {
                   const isCorrect = opt.label === q.correctAnswer;
                   const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
                   return (
@@ -388,7 +432,7 @@ export function QuestionCard({
                     </div>
                   );
                 })}
-                {compact && options.length > 1 && (
+                {compact && !compactExpanded && options.length > 1 && (
                   <span className="text-[10px] text-slate-400 pl-2">외 {options.length - 1}개 선택지</span>
                 )}
               </div>

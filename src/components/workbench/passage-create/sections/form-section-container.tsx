@@ -2,7 +2,8 @@
 
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import type { Annotation } from "@/components/workbench/editor";
-import type { SavedPrompt } from "../types";
+import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import type { DraftCollectionItem, SavedPrompt } from "../types";
 import {
   removeImage as removeImageFn,
   handlePaste as onPasteFn,
@@ -79,6 +80,12 @@ interface FormSectionContainerProps {
 
   // Queue wiring
   addToQueue: Parameters<typeof handleSaveFn>[0]["addToQueue"];
+
+  // Draft selection (left grid)
+  selectedDraftId: string | null;
+  onSelectDraft: (draft: M1PassageDraftWithJob) => void;
+  draftCollections: DraftCollectionItem[];
+  draftMembership: Record<string, string[]>;
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
@@ -174,6 +181,10 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
         })
       }
       onDeletePrompt={(id) => deletePrompt({ id, setSavedPrompts: p.setSavedPrompts })}
+      selectedDraftId={p.selectedDraftId}
+      onSelectDraft={p.onSelectDraft}
+      draftCollections={p.draftCollections}
+      draftMembership={p.draftMembership}
     />
   );
 }

@@ -7,9 +7,7 @@ import {
   FileText,
   Plus,
   Search,
-  ArrowLeft,
   Folder,
-  FolderPlus,
   Grid2x2,
   List,
   Upload,
@@ -43,7 +41,7 @@ import type { CollectionItem, CollectionActions } from "./shared/types";
 import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { SelectionToolbar } from "./shared/selection-toolbar";
-import { BreadcrumbNav } from "./shared/breadcrumb-nav";
+import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 
 // Hooks
 import { useFolderManager } from "./hooks/use-folder-manager";
@@ -121,7 +119,6 @@ export function PassageListClient({
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [importOpen, setImportOpen] = useState(false);
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
-  const [showAddToFolder, setShowAddToFolder] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
   const [studyNoteOpen, setStudyNoteOpen] = useState(false);
 
@@ -162,8 +159,23 @@ export function PassageListClient({
       const result = await folder.handleAddToFolder(collectionId, [...selection.selectedIds]);
       if (result?.success) {
         selection.clearSelection();
-        setShowAddToFolder(false);
       }
+    },
+    [folder, selection],
+  );
+
+  const onMoveToFolder = useCallback(
+    async (collectionId: string) => {
+      if (selection.selectedIds.size === 0) return;
+      const anyId = selection.selectedIds.values().next().value as string | undefined;
+      if (!anyId) return;
+      const result = await folder.handleDragToFolder(
+        anyId,
+        collectionId,
+        false,
+        selection.selectedIds,
+      );
+      if (result?.success) selection.clearSelection();
     },
     [folder, selection],
   );
@@ -190,48 +202,102 @@ export function PassageListClient({
     [folder, selection],
   );
 
-  const onNavigateUp = useCallback(() => {
-    if (!folder.activeFolder) return;
-    const currentFolder = folder.collections.find((c) => c.id === folder.activeFolder);
-    folder.setActiveFolder(currentFolder?.parentId || null);
-    selection.clearSelection();
-  }, [folder, selection]);
 
   const handleSearch = useCallback(
     (value: string) => updateFilter("search", value),
     [updateFilter],
   );
 
+  // ─── Filter + view-toggle bar (rendered inside FolderSection.toolbar) ───
+  const filtersToolbar = (
+    <>
+      <div className="relative">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
+        <input
+          placeholder="검색..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch(searchValue)}
+          className="w-40 h-7 pl-7 pr-2.5 text-[11.5px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+        />
+      </div>
+
+      <Select value={filters.schoolId || "ALL"} onValueChange={(v) => updateFilter("schoolId", v)}>
+        <SelectTrigger className="w-[112px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="학교" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체 학교</SelectItem>
+          {schools.map((s) => (
+            <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select value={filters.grade ? String(filters.grade) : "ALL"} onValueChange={(v) => updateFilter("grade", v)}>
+        <SelectTrigger className="w-[80px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="학년" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체</SelectItem>
+          <SelectItem value="1">1학년</SelectItem>
+          <SelectItem value="2">2학년</SelectItem>
+          <SelectItem value="3">3학년</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 rounded-md">
+        <button
+          onClick={() => setViewType("grid")}
+          className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${
+            viewType === "grid"
+              ? "bg-white shadow-sm"
+              : "text-slate-400 hover:text-slate-600"
+          }`}
+          aria-label="그리드 보기"
+        >
+          <Grid2x2 className="w-3 h-3" />
+        </button>
+        <button
+          onClick={() => setViewType("list")}
+          className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${
+            viewType === "list"
+              ? "bg-white shadow-sm"
+              : "text-slate-400 hover:text-slate-600"
+          }`}
+          aria-label="목록 보기"
+        >
+          <List className="w-3 h-3" />
+        </button>
+      </div>
+
+      <span className="h-5 w-px bg-slate-200" />
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setImportOpen(true)}
+        className="h-7 text-[11.5px] px-2.5"
+      >
+        <Upload className="w-3 h-3 mr-1" />일괄 등록
+      </Button>
+      <Link href="/director/workbench/passages/create">
+        <Button size="sm" className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700">
+          <Plus className="w-3 h-3 mr-1" />지문 등록
+        </Button>
+      </Link>
+    </>
+  );
+
   // ─── "Add to folder" extra action for SelectionToolbar ───
   const addToFolderAction = (
-    <div className="relative">
-      <button
-        onClick={() => setShowAddToFolder(!showAddToFolder)}
-        className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
-      >
-        <FolderPlus className="w-3.5 h-3.5" />
-        폴더에 추가
-      </button>
-      {showAddToFolder && (
-        <div className="absolute left-0 top-8 z-20 w-56 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
-          {folder.collections.length === 0 ? (
-            <p className="px-3 py-2 text-[12px] text-slate-400">폴더가 없습니다.</p>
-          ) : (
-            folder.collections.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => onAddToFolder(c.id)}
-                className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-slate-700 hover:bg-blue-50 text-left"
-              >
-                <Folder className="w-3.5 h-3.5 text-slate-400" />
-                {c.name}
-                <span className="ml-auto text-[10px] text-slate-400">{c._count.items}개</span>
-              </button>
-            ))
-          )}
-        </div>
-      )}
-    </div>
+    <MoveOrCopyFolderPicker
+      collections={folder.collections}
+      activeFolder={folder.activeFolder}
+      selectedCount={selection.selectedIds.size}
+      onCopy={onAddToFolder}
+      onMove={onMoveToFolder}
+    />
   );
 
   const studyNoteAction = (
@@ -253,91 +319,6 @@ export function PassageListClient({
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
-      {/* ─── Unified Header ─── */}
-      <div className="px-6 py-2.5 bg-white border-b border-slate-200 flex items-center gap-3 shrink-0">
-        <div className="flex items-center gap-2 shrink-0">
-          {folder.activeFolder ? (
-            <button
-              onClick={onNavigateUp}
-              className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 text-slate-500" />
-            </button>
-          ) : (
-            <Link href="/director/workbench">
-              <button className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">
-                <ArrowLeft className="w-4 h-4 text-slate-500" />
-              </button>
-            </Link>
-          )}
-          <FileText className="w-4.5 h-4.5 text-blue-600 shrink-0" />
-          <h1 className="text-[15px] font-bold text-slate-900">지문 관리</h1>
-          <span className="text-[12px] text-slate-400">{totalCount}개</span>
-          <BreadcrumbNav
-            activeFolder={folder.activeFolder}
-            breadcrumbPath={folder.breadcrumbPath}
-            onNavigateToFolder={folder.setActiveFolder}
-            rootLabel="내 지문"
-          />
-        </div>
-
-        <div className="flex-1" />
-
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-            <input
-              placeholder="검색..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch(searchValue)}
-              className="w-44 h-8 pl-8 pr-3 text-[12px] rounded-lg border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-            />
-          </div>
-
-          <Select value={filters.schoolId || "ALL"} onValueChange={(v) => updateFilter("schoolId", v)}>
-            <SelectTrigger className="w-32 h-8 text-[12px]"><SelectValue placeholder="학교" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체 학교</SelectItem>
-              {schools.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
-            </SelectContent>
-          </Select>
-          <Select value={filters.grade ? String(filters.grade) : "ALL"} onValueChange={(v) => updateFilter("grade", v)}>
-            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="학년" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체</SelectItem>
-              <SelectItem value="1">1학년</SelectItem>
-              <SelectItem value="2">2학년</SelectItem>
-              <SelectItem value="3">3학년</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 rounded-lg">
-            <button
-              onClick={() => setViewType("grid")}
-              className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${viewType === "grid" ? "bg-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
-            >
-              <Grid2x2 className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => setViewType("list")}
-              className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${viewType === "list" ? "bg-white shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
-            >
-              <List className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)} className="h-8 text-[12px]">
-            <Upload className="w-3.5 h-3.5 mr-1" />일괄 등록
-          </Button>
-          <Link href="/director/workbench/passages/create">
-            <Button size="sm" className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-3.5 h-3.5 mr-1" />지문 등록
-            </Button>
-          </Link>
-        </div>
-      </div>
-
       {/* ─── Deep-link filter badges (sourceMaterial / collection) ─── */}
       {(sourceMaterialBadge || collectionBadge) && (
         <div className="px-6 py-2 bg-sky-50/70 border-b border-sky-100 flex items-center gap-2 shrink-0">
@@ -371,20 +352,8 @@ export function PassageListClient({
         </div>
       )}
 
-      {/* ─── Selection toolbar ─── */}
-      <SelectionToolbar
-        selectedCount={selection.selectedIds.size}
-        totalCount={displayedPassages.length}
-        isAllSelected={selection.isAllSelected}
-        onSelectAll={selection.selectAll}
-        onClearSelection={selection.clearSelection}
-        activeFolder={folder.activeFolder}
-        onRemoveFromFolder={onRemoveFromFolder}
-        extraActions={selectionActions}
-      />
-
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 py-4">
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
         {passagesData.passages.length === 0 ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -400,7 +369,8 @@ export function PassageListClient({
           </div>
         ) : (
           <>
-          {/* Folders section */}
+          {/* Folders section — selection toolbar embedded inside so it
+              inherits the sticky pinning. */}
           <FolderSection
             childFolders={folder.childFolders}
             activeFolder={folder.activeFolder}
@@ -417,6 +387,26 @@ export function PassageListClient({
             onDeleteFolder={folder.handleDeleteFolder}
             onDragToFolder={onDragToFolder}
             useCardInsideFolder={true}
+            toolbar={filtersToolbar}
+            pageHeader={{
+              icon: <FileText className="h-3.5 w-3.5" />,
+              title: "지문 관리",
+              totalCount,
+              itemLabel: "지문",
+            }}
+            selectionBar={
+              <SelectionToolbar
+                embedded
+                selectedCount={selection.selectedIds.size}
+                totalCount={displayedPassages.length}
+                isAllSelected={selection.isAllSelected}
+                onSelectAll={selection.selectAll}
+                onClearSelection={selection.clearSelection}
+                activeFolder={folder.activeFolder}
+                onRemoveFromFolder={onRemoveFromFolder}
+                extraActions={selectionActions}
+              />
+            }
           />
 
             {/* Files section */}

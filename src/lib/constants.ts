@@ -113,14 +113,15 @@ export const QUESTION_TYPES = [
 export const QUESTION_SUBTYPES = {
   MULTIPLE_CHOICE: [
     { value: "BLANK_INFERENCE", label: "빈칸 추론" },
-    { value: "GRAMMAR_ERROR", label: "어법 오류 선택" },
-    { value: "VOCAB_CHOICE", label: "어휘 선택" },
+    { value: "GRAMMAR_ERROR", label: "어법 판단" },
+    { value: "VOCAB_CHOICE", label: "어휘 적절성" },
     { value: "SENTENCE_ORDER", label: "글의 순서" },
     { value: "SENTENCE_INSERT", label: "문장 삽입" },
     { value: "TOPIC_MAIN_IDEA", label: "주제/요지" },
+    { value: "TITLE", label: "제목 추론" },
     { value: "REFERENCE", label: "지칭 추론" },
-    { value: "CONTENT_MATCH", label: "내용 일치/불일치" },
-    { value: "TITLE", label: "제목 선택" },
+    { value: "CONTENT_MATCH", label: "내용 일치" },
+    { value: "IRRELEVANT", label: "무관한 문장" },
   ],
   SHORT_ANSWER: [
     { value: "CONDITIONAL_WRITING", label: "조건부 영작" },
@@ -131,11 +132,9 @@ export const QUESTION_SUBTYPES = {
     { value: "GRAMMAR_CORRECTION", label: "문법 오류 수정" },
   ],
   VOCAB: [
-    { value: "EN_TO_KR", label: "영→한" },
-    { value: "KR_TO_EN", label: "한→영" },
+    { value: "CONTEXT_MEANING", label: "문맥 속 의미" },
     { value: "SYNONYM", label: "동의어" },
     { value: "ANTONYM", label: "반의어" },
-    { value: "CONTEXT_MEANING", label: "문맥 속 의미" },
   ],
 } as const;
 

@@ -35,6 +35,29 @@ type ClassifiedAnalysisError = {
   log: Record<string, unknown>;
 };
 
+class AnalysisJsonParseError extends Error {
+  readonly finishReason?: string;
+  readonly rawFinishReason?: string;
+  readonly rawLength: number;
+  readonly previewStart: string;
+  readonly previewEnd: string;
+
+  constructor(
+    cause: unknown,
+    raw: string,
+    meta: { finishReason?: string; rawFinishReason?: string } = {},
+  ) {
+    super(cause instanceof Error ? cause.message : "AI response JSON parse failed");
+    this.name = "AnalysisJsonParseError";
+    this.cause = cause;
+    this.finishReason = meta.finishReason;
+    this.rawFinishReason = meta.rawFinishReason;
+    this.rawLength = raw.length;
+    this.previewStart = raw.slice(0, 500);
+    this.previewEnd = raw.slice(-500);
+  }
+}
+
 function getErrorField(error: unknown, field: string): unknown {
   if (!error || typeof error !== "object") return undefined;
   return (error as Record<string, unknown>)[field];
@@ -118,6 +141,29 @@ function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
       message:
         "Google Gemini API 사용량 한도에 걸렸습니다. 잠시 후 다시 시도해주세요.",
       log,
+    };
+  }
+
+  if (error instanceof AnalysisJsonParseError) {
+    const truncated =
+      error.finishReason === "length" ||
+      error.rawFinishReason === "MAX_TOKENS" ||
+      /Unexpected end of JSON input/i.test(error.message);
+
+    return {
+      status: 502,
+      code: truncated ? "AI_RESPONSE_TRUNCATED" : "AI_RESPONSE_JSON_PARSE_FAILED",
+      message: truncated
+        ? "AI 응답이 중간에 끊겨 분석을 저장하지 못했습니다. 출력 길이를 늘려두었으니 다시 시도해주세요."
+        : "AI 응답 형식이 일부 깨져 분석을 저장하지 못했습니다. 다시 시도해주세요.",
+      log: {
+        ...log,
+        finishReason: error.finishReason,
+        rawFinishReason: error.rawFinishReason,
+        rawLength: error.rawLength,
+        previewStart: error.previewStart,
+        previewEnd: error.previewEnd,
+      },
     };
   }
 
@@ -370,6 +416,128 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
 // ---------------------------------------------------------------------------
 // 5-Layer Full Analysis
 // ---------------------------------------------------------------------------
+function findFirstBalancedJson(text: string): { start: number; end: number } | null {
+  let depth = 0;
+  let start = -1;
+  let inString = false;
+  let escaping = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+
+    if (escaping) {
+      escaping = false;
+      continue;
+    }
+
+    if (char === "\\") {
+      escaping = true;
+      continue;
+    }
+
+    if (inString) {
+      if (char === "\"") inString = false;
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = true;
+      continue;
+    }
+
+    if (char === "{" || char === "[") {
+      if (depth === 0) start = i;
+      depth += 1;
+      continue;
+    }
+
+    if (char === "}" || char === "]") {
+      if (depth === 0) continue;
+      depth -= 1;
+      if (depth === 0 && start >= 0) {
+        return { start, end: i + 1 };
+      }
+    }
+  }
+
+  return null;
+}
+
+function repairInvalidJsonEscapes(text: string): string {
+  const validEscapes = new Set(['"', "\\", "/", "b", "f", "n", "r", "t"]);
+  const out: string[] = [];
+  let inString = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+
+    if (!inString) {
+      if (char === "\"") inString = true;
+      out.push(char);
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = false;
+      out.push(char);
+      continue;
+    }
+
+    if (char !== "\\") {
+      out.push(char);
+      continue;
+    }
+
+    const next = text[i + 1];
+    if (next === undefined) continue;
+
+    if (next === "u") {
+      const hex = text.slice(i + 2, i + 6);
+      if (/^[0-9a-fA-F]{4}$/.test(hex)) {
+        out.push(text.slice(i, i + 6));
+        i += 5;
+      } else {
+        out.push("u");
+        i += 1;
+      }
+      continue;
+    }
+
+    if (validEscapes.has(next)) {
+      out.push("\\" + next);
+      i += 1;
+      continue;
+    }
+
+    out.push(next);
+    i += 1;
+  }
+
+  return out.join("");
+}
+
+function extractJsonFromModelResponse(raw: string): string {
+  let text = raw.trim();
+
+  for (let guard = 0; guard < 3; guard += 1) {
+    const before = text;
+    text = text
+      .replace(/^```[ \t]*[a-zA-Z0-9_-]*[ \t]*\r?\n?/, "")
+      .replace(/\r?\n?[ \t]*```[ \t]*$/, "")
+      .trim();
+    if (text === before) break;
+  }
+
+  text = text.replace(/^json\s*\r?\n/i, "").trim();
+
+  const region = findFirstBalancedJson(text);
+  if (!region) {
+    throw new Error("NO_BALANCED_JSON_OBJECT");
+  }
+
+  return repairInvalidJsonEscapes(text.slice(region.start, region.end).trim());
+}
+
 async function runFullAnalysis(
   passage: {
     content: string;
@@ -390,8 +558,10 @@ async function runFullAnalysis(
   const startTime = Date.now();
   console.log("[ANALYSIS] Starting generateText (JSON mode)...");
 
-  const { text: rawJson } = await generateText({
+  const analysisResult = await generateText({
     model,
+    maxOutputTokens: 20000,
+    temperature: 0.1,
     prompt: `당신은 한국 중고등학교 영어 내신 시험 대비 전문 분석가입니다.
 아래 지문을 내신 시험 출제 관점에서 분석하고, 결과를 **JSON만** 출력하세요.
 JSON 외에 다른 텍스트는 절대 출력하지 마세요.
@@ -477,21 +647,31 @@ ${passage.content}
 - JSON만 출력, 다른 텍스트 없이`,
   });
 
-  console.log(`[ANALYSIS] generateText completed in ${((Date.now() - startTime) / 1000).toFixed(1)}s`);
+  const { text: rawJson, finishReason, rawFinishReason, usage } = analysisResult;
+  console.log("[ANALYSIS] generateText completed", {
+    seconds: ((Date.now() - startTime) / 1000).toFixed(1),
+    finishReason,
+    rawFinishReason,
+    usage,
+    rawLength: rawJson.length,
+  });
 
   // Parse JSON from response
-  let jsonStr = rawJson.trim();
-  // Strip markdown code fences if present
-  if (jsonStr.startsWith("```")) {
-    jsonStr = jsonStr.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+  let parsed: unknown;
+  try {
+    const jsonStr = extractJsonFromModelResponse(rawJson);
+    parsed = JSON.parse(jsonStr);
+  } catch (error) {
+    throw new AnalysisJsonParseError(error, rawJson, { finishReason, rawFinishReason });
   }
-
-  const parsed = JSON.parse(jsonStr);
 
   // Validate with Zod — use safeParse so we can fallback to raw data on validation errors
   const validation = passageAnalysisSchema.safeParse(parsed);
   const analysisData = validation.success ? validation.data : parsed;
 
-  console.log("[ANALYSIS] Keys:", Object.keys(analysisData));
+  console.log(
+    "[ANALYSIS] Keys:",
+    analysisData && typeof analysisData === "object" ? Object.keys(analysisData) : [],
+  );
   return analysisData;
 }

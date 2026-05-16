@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  CheckSquare,
-  MinusSquare,
-  FolderPlus,
-  FolderOpen,
-} from "lucide-react";
+import { CheckSquare, MinusSquare } from "lucide-react";
+import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 import type { PassageCollection } from "../types";
 
 interface QueueSelectionBarProps {
@@ -13,11 +10,27 @@ interface QueueSelectionBarProps {
   filteredLength: number;
   onSelectAll: () => void;
   onClearSelection: () => void;
-  showAddToFolder: boolean;
-  setShowAddToFolder: (v: boolean | ((prev: boolean) => boolean)) => void;
   collections: PassageCollection[];
-  addingToFolder: boolean;
+  /** Filter currently applied (which folder is "active") — gates the
+   *  "현재" badge inside the picker so we don't offer to move items into
+   *  the folder they're already in. */
+  activeCollectionId: string | null;
   onAddToFolder: (collectionId: string) => void;
+  onMoveToFolder: (collectionId: string) => void;
+}
+
+// Bridge the slim PassageCollection (no parentId / no children count) into
+// the shared picker's CollectionItem shape. Passage-create collections are
+// flat, so parentId is always null.
+function adaptCollections(list: PassageCollection[]): CollectionItem[] {
+  return list.map((c) => ({
+    id: c.id,
+    parentId: null,
+    name: c.name,
+    description: c.description,
+    color: c.color,
+    _count: { items: c._count.items, children: 0 },
+  }));
 }
 
 export function QueueSelectionBar({
@@ -25,16 +38,21 @@ export function QueueSelectionBar({
   filteredLength,
   onSelectAll,
   onClearSelection,
-  showAddToFolder,
-  setShowAddToFolder,
   collections,
-  addingToFolder,
+  activeCollectionId,
   onAddToFolder,
+  onMoveToFolder,
 }: QueueSelectionBarProps) {
+  const adapted = adaptCollections(collections);
+  const isAllSelected = selectedCount === filteredLength && filteredLength > 0;
+
   return (
     <div className="flex items-center gap-3 mb-3 px-4 py-2.5 rounded-lg bg-blue-50 border border-blue-200">
-      <button onClick={onSelectAll} className="flex items-center gap-1.5 text-[12px] font-medium text-blue-700">
-        {selectedCount === filteredLength ? (
+      <button
+        onClick={onSelectAll}
+        className="flex items-center gap-1.5 text-[12px] font-medium text-blue-700"
+      >
+        {isAllSelected ? (
           <CheckSquare className="w-4 h-4" />
         ) : (
           <MinusSquare className="w-4 h-4" />
@@ -42,44 +60,27 @@ export function QueueSelectionBar({
         {selectedCount}개 선택
       </button>
       <span className="text-slate-300">|</span>
-      <button onClick={onSelectAll} className="text-[11px] text-blue-600 font-medium hover:text-blue-700">
-        {selectedCount === filteredLength ? "선택 해제" : "전체 선택"}
+      <button
+        onClick={onSelectAll}
+        className="text-[11px] text-blue-600 font-medium hover:text-blue-700"
+      >
+        {isAllSelected ? "선택 해제" : "전체 선택"}
       </button>
       <span className="text-slate-300">|</span>
 
-      {/* Add to folder */}
-      <div className="relative">
-        <button
-          onClick={() => setShowAddToFolder(!showAddToFolder)}
-          className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50 transition-colors"
-        >
-          <FolderPlus className="w-3.5 h-3.5" />
-          폴더에 추가
-        </button>
-        {showAddToFolder && (
-          <div className="absolute left-0 top-8 z-20 w-56 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
-            {collections.length === 0 ? (
-              <p className="px-3 py-2 text-[12px] text-slate-400">폴더가 없습니다. 먼저 폴더를 만들어주세요.</p>
-            ) : (
-              collections.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => onAddToFolder(c.id)}
-                  disabled={addingToFolder}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-slate-700 hover:bg-blue-50 transition-colors text-left"
-                >
-                  <FolderOpen className="w-3.5 h-3.5 text-slate-400" />
-                  {c.name}
-                  <span className="ml-auto text-[10px] text-slate-400">{c._count.items}개</span>
-                </button>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+      <MoveOrCopyFolderPicker
+        collections={adapted}
+        activeFolder={activeCollectionId}
+        selectedCount={selectedCount}
+        onCopy={onAddToFolder}
+        onMove={onMoveToFolder}
+      />
 
       <div className="flex-1" />
-      <button onClick={onClearSelection} className="text-[11px] text-slate-500 hover:text-slate-700">
+      <button
+        onClick={onClearSelection}
+        className="text-[11px] text-slate-500 hover:text-slate-700"
+      >
         선택 취소
       </button>
     </div>

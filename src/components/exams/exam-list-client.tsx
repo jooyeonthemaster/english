@@ -9,9 +9,6 @@ import {
   GraduationCap,
   Search,
   Plus,
-  ArrowLeft,
-  Folder,
-  FolderPlus,
   Grid2x2,
   List,
   Trash2,
@@ -54,7 +51,7 @@ import {
 import type { CollectionItem, CollectionActions } from "@/components/workbench/shared/types";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { SelectionToolbar } from "@/components/workbench/shared/selection-toolbar";
-import { BreadcrumbNav } from "@/components/workbench/shared/breadcrumb-nav";
+import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 
 // Hooks (use the workbench/hooks versions that support CollectionActions interface)
 import { useFolderManager } from "@/components/workbench/hooks/use-folder-manager";
@@ -267,21 +264,6 @@ export function ExamListClient({
   const [classFilter, setClassFilter] = useState("ALL");
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [showAddToFolder, setShowAddToFolder] = useState(false);
-  const addToFolderRef = useRef<HTMLDivElement>(null);
-
-  // ─── Click-outside handler for "add to folder" dropdown ───
-  useEffect(() => {
-    if (!showAddToFolder) return;
-    function handleClick(e: MouseEvent) {
-      if (addToFolderRef.current && !addToFolderRef.current.contains(e.target as Node)) {
-        setShowAddToFolder(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showAddToFolder]);
-
   // ─── Folder manager ───
   const folder = useFolderManager({
     initialCollections,
@@ -316,8 +298,23 @@ export function ExamListClient({
       const result = await folder.handleAddToFolder(collectionId, [...selection.selectedIds]);
       if (result?.success) {
         selection.clearSelection();
-        setShowAddToFolder(false);
       }
+    },
+    [folder, selection],
+  );
+
+  const onMoveToFolder = useCallback(
+    async (collectionId: string) => {
+      if (selection.selectedIds.size === 0) return;
+      const anyId = selection.selectedIds.values().next().value as string | undefined;
+      if (!anyId) return;
+      const result = await folder.handleDragToFolder(
+        anyId,
+        collectionId,
+        false,
+        selection.selectedIds,
+      );
+      if (result?.success) selection.clearSelection();
     },
     [folder, selection],
   );
@@ -344,12 +341,6 @@ export function ExamListClient({
     [folder, selection],
   );
 
-  const onNavigateUp = useCallback(() => {
-    if (!folder.activeFolder) return;
-    const currentFolder = folder.collections.find((c) => c.id === folder.activeFolder);
-    folder.setActiveFolder(currentFolder?.parentId || null);
-    selection.clearSelection();
-  }, [folder, selection]);
 
   // ─── Delete handler ───
   async function handleDelete() {
@@ -364,37 +355,108 @@ export function ExamListClient({
     setDeleteId(null);
   }
 
+  // ─── Filter + view-toggle bar (rendered inside FolderSection.toolbar) ───
+  const filtersToolbar = (
+    <>
+      <div className="relative">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
+        <input
+          placeholder="검색..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => e.key === "Escape" && setSearch("")}
+          className="w-40 h-7 pl-7 pr-2.5 text-[11.5px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+        />
+      </div>
+
+      <Select value={typeFilter} onValueChange={setTypeFilter}>
+        <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="유형" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체 유형</SelectItem>
+          <SelectItem value="OFFLINE">오프라인</SelectItem>
+          <SelectItem value="ONLINE">온라인</SelectItem>
+          <SelectItem value="VOCAB">단어</SelectItem>
+          <SelectItem value="MOCK">모의</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="상태" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체 상태</SelectItem>
+          <SelectItem value="DRAFT">초안</SelectItem>
+          <SelectItem value="PUBLISHED">배포됨</SelectItem>
+          <SelectItem value="IN_PROGRESS">진행중</SelectItem>
+          <SelectItem value="COMPLETED">완료</SelectItem>
+          <SelectItem value="ARCHIVED">보관</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select value={classFilter} onValueChange={setClassFilter}>
+        <SelectTrigger className="w-[96px] h-7 text-[11.5px] px-2.5">
+          <SelectValue placeholder="반" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">전체 반</SelectItem>
+          {classes.map((c) => (
+            <SelectItem key={c.id} value={c.id}>
+              {c.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 rounded-md">
+        <button
+          onClick={() => setViewType("grid")}
+          className={cn(
+            "w-6 h-6 rounded flex items-center justify-center transition-colors",
+            viewType === "grid"
+              ? "bg-white shadow-sm"
+              : "text-slate-400 hover:text-slate-600",
+          )}
+          aria-label="그리드 보기"
+        >
+          <Grid2x2 className="w-3 h-3" />
+        </button>
+        <button
+          onClick={() => setViewType("list")}
+          className={cn(
+            "w-6 h-6 rounded flex items-center justify-center transition-colors",
+            viewType === "list"
+              ? "bg-white shadow-sm"
+              : "text-slate-400 hover:text-slate-600",
+          )}
+          aria-label="목록 보기"
+        >
+          <List className="w-3 h-3" />
+        </button>
+      </div>
+
+      <span className="h-5 w-px bg-slate-200" />
+
+      <Link href="/director/exams/create">
+        <Button size="sm" className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700">
+          <Plus className="w-3 h-3 mr-1" />시험 만들기
+        </Button>
+      </Link>
+    </>
+  );
+
   // ─── "Add to folder" extra action for SelectionToolbar ───
   const addToFolderAction = (
     <>
-      <div ref={addToFolderRef} className="relative">
-        <button
-          onClick={() => setShowAddToFolder(!showAddToFolder)}
-          className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
-        >
-          <FolderPlus className="w-3.5 h-3.5" />
-          폴더에 추가
-        </button>
-        {showAddToFolder && (
-          <div className="absolute left-0 top-8 z-20 w-56 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
-            {folder.collections.length === 0 ? (
-              <p className="px-3 py-2 text-[12px] text-slate-400">폴더가 없습니다.</p>
-            ) : (
-              folder.collections.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => onAddToFolder(c.id)}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-slate-700 hover:bg-blue-50 text-left"
-                >
-                  <Folder className="w-3.5 h-3.5 text-slate-400" />
-                  {c.name}
-                  <span className="ml-auto text-[10px] text-slate-400">{c._count.items}개</span>
-                </button>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+      <MoveOrCopyFolderPicker
+        collections={folder.collections}
+        activeFolder={folder.activeFolder}
+        selectedCount={selection.selectedIds.size}
+        onCopy={onAddToFolder}
+        onMove={onMoveToFolder}
+      />
 
       <span className="text-slate-300">|</span>
 
@@ -419,118 +481,11 @@ export function ExamListClient({
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
-      {/* ─── Unified Header ─── */}
-      <div className="px-6 py-2.5 bg-white border-b border-slate-200 flex items-center gap-3 shrink-0">
-        <div className="flex items-center gap-2 shrink-0">
-          {folder.activeFolder && (
-            <button
-              onClick={onNavigateUp}
-              className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 text-slate-500" />
-            </button>
-          )}
-          <GraduationCap className="w-4.5 h-4.5 text-blue-600 shrink-0" />
-          <h1 className="text-[15px] font-bold text-slate-900">시험 관리</h1>
-          <span className="text-[12px] text-slate-400">{totalCount}개</span>
-          <BreadcrumbNav
-            activeFolder={folder.activeFolder}
-            breadcrumbPath={folder.breadcrumbPath}
-            onNavigateToFolder={folder.setActiveFolder}
-            rootLabel="전체 시험"
-          />
-        </div>
-
-        <div className="flex-1" />
-
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-            <input
-              placeholder="검색..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Escape" && setSearch("")}
-              className="w-44 h-8 pl-8 pr-3 text-[12px] rounded-lg border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-            />
-          </div>
-
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="유형" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체 유형</SelectItem>
-              <SelectItem value="OFFLINE">오프라인</SelectItem>
-              <SelectItem value="ONLINE">온라인</SelectItem>
-              <SelectItem value="VOCAB">단어</SelectItem>
-              <SelectItem value="MOCK">모의</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-24 h-8 text-[12px]"><SelectValue placeholder="상태" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체 상태</SelectItem>
-              <SelectItem value="DRAFT">초안</SelectItem>
-              <SelectItem value="PUBLISHED">배포됨</SelectItem>
-              <SelectItem value="IN_PROGRESS">진행중</SelectItem>
-              <SelectItem value="COMPLETED">완료</SelectItem>
-              <SelectItem value="ARCHIVED">보관</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={classFilter} onValueChange={setClassFilter}>
-            <SelectTrigger className="w-28 h-8 text-[12px]"><SelectValue placeholder="반" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">전체 반</SelectItem>
-              {classes.map((c) => (
-                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 rounded-lg">
-            <button
-              onClick={() => setViewType("grid")}
-              className={cn(
-                "w-7 h-7 rounded flex items-center justify-center transition-colors",
-                viewType === "grid" ? "bg-white shadow-sm" : "text-slate-400 hover:text-slate-600",
-              )}
-            >
-              <Grid2x2 className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => setViewType("list")}
-              className={cn(
-                "w-7 h-7 rounded flex items-center justify-center transition-colors",
-                viewType === "list" ? "bg-white shadow-sm" : "text-slate-400 hover:text-slate-600",
-              )}
-            >
-              <List className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <Link href="/director/exams/create">
-            <Button size="sm" className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-3.5 h-3.5 mr-1" />시험 만들기
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* ─── Selection toolbar ─── */}
-      <SelectionToolbar
-        selectedCount={selection.selectedIds.size}
-        totalCount={displayedExams.length}
-        isAllSelected={selection.isAllSelected}
-        onSelectAll={selection.selectAll}
-        onClearSelection={selection.clearSelection}
-        activeFolder={folder.activeFolder}
-        onRemoveFromFolder={onRemoveFromFolder}
-        extraActions={addToFolderAction}
-      />
+      {/* Page header bar removed — identity + CTAs now live inside the
+          sticky FolderSection card. */}
 
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 py-4">
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
         {exams.length === 0 ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <GraduationCap className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -546,7 +501,9 @@ export function ExamListClient({
           </div>
         ) : (
           <>
-            {/* Folders section */}
+            {/* Folders section — selection toolbar is embedded inside so it
+                inherits the section's sticky positioning and stays pinned
+                while the grid below scrolls. */}
             <FolderSection
               childFolders={folder.childFolders}
               activeFolder={folder.activeFolder}
@@ -563,6 +520,26 @@ export function ExamListClient({
               onDeleteFolder={folder.handleDeleteFolder}
               onDragToFolder={onDragToFolder}
               useCardInsideFolder={true}
+              toolbar={filtersToolbar}
+              pageHeader={{
+                icon: <GraduationCap className="h-3.5 w-3.5" />,
+                title: "시험 관리",
+                totalCount,
+                itemLabel: "시험",
+              }}
+              selectionBar={
+                <SelectionToolbar
+                  embedded
+                  selectedCount={selection.selectedIds.size}
+                  totalCount={displayedExams.length}
+                  isAllSelected={selection.isAllSelected}
+                  onSelectAll={selection.selectAll}
+                  onClearSelection={selection.clearSelection}
+                  activeFolder={folder.activeFolder}
+                  onRemoveFromFolder={onRemoveFromFolder}
+                  extraActions={addToFolderAction}
+                />
+              }
             />
 
             {/* Exams section */}

@@ -34,6 +34,7 @@ import {
   DIFFICULTY_CONFIG,
 } from "./question-type-filter";
 import { parseJSON } from "./shared/helpers";
+import { StructuredQuestionRenderer } from "./question-renderers";
 
 // ---------------------------------------------------------------------------
 // Render text with __word__ -> underline, _____ -> blank line, markers
@@ -456,6 +457,7 @@ export interface QuestionBankItem {
     wrongOptionExplanations: string | null;
   } | null;
   _count: { examLinks: number };
+  structuredData?: unknown;
 }
 
 // ---------------------------------------------------------------------------
@@ -495,6 +497,10 @@ export function QuestionBankCard({
     ? q.tags
     : parseJSON<string[]>(q.tags, []);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
+  const structuredQuestion =
+    q.structuredData && typeof q.structuredData === "object" && "_typeId" in q.structuredData
+      ? (q.structuredData as Record<string, unknown>)
+      : null;
 
   // Parse questionText into structured sections
   const sections = useMemo(
@@ -686,10 +692,14 @@ export function QuestionBankCard({
         {expanded ? (
           <>
             {/* Expanded: full structured rendering */}
-            <RenderedSections sections={sections} expanded />
+            {structuredQuestion ? (
+              <StructuredQuestionRenderer question={structuredQuestion} index={num - 1} hideHeader />
+            ) : (
+              <RenderedSections sections={sections} expanded />
+            )}
 
             {/* Options (MC) */}
-            {options.length > 0 && (
+            {!structuredQuestion && options.length > 0 && (
               <div className="space-y-1 pl-1">
                 {options.map((opt) => {
                   const isCorrect = opt.label === q.correctAnswer;
@@ -719,7 +729,7 @@ export function QuestionBankCard({
             )}
 
             {/* Non-MC correct answer */}
-            {options.length === 0 && q.correctAnswer && (
+            {!structuredQuestion && options.length === 0 && q.correctAnswer && (
               <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
                 <span className="font-medium">정답:</span> {renderFormatted(q.correctAnswer)}
               </div>

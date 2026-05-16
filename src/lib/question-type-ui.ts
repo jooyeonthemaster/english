@@ -1,0 +1,247 @@
+// ============================================================================
+// Question type UI metadata
+// ============================================================================
+
+export type QuestionTypeCategory = "수능/모의고사 객관식" | "내신 서술형" | "어휘";
+
+export interface QuestionTypeUiMeta {
+  id: string;
+  label: string;
+  category: QuestionTypeCategory;
+  description: string;
+  studentTask: string;
+  bestFor: string[];
+  outputUi: string[];
+  requiredFields: string[];
+}
+
+export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
+  BLANK_INFERENCE: {
+    id: "BLANK_INFERENCE",
+    label: "빈칸 추론",
+    category: "수능/모의고사 객관식",
+    description: "지문의 핵심 표현을 빈칸으로 비워 문맥 추론력을 묻습니다.",
+    studentTask: "빈칸에 들어갈 원문 표현과 가장 가까운 영어 선택지를 고릅니다.",
+    bestFor: ["주제 문장", "대조/인과 연결부", "핵심 주장 표현"],
+    outputUi: ["빈칸 삽입 지문", "5지선다", "오답별 해설"],
+    requiredFields: ["originalExpression", "passageWithBlank", "options"],
+  },
+  GRAMMAR_ERROR: {
+    id: "GRAMMAR_ERROR",
+    label: "어법 판단",
+    category: "수능/모의고사 객관식",
+    description: "지문 속 5개 표현 중 어법상 어색한 부분을 찾게 합니다.",
+    studentTask: "밑줄 친 (A)~(E) 중 어법상 틀린 표현을 고릅니다.",
+    bestFor: ["시제/수일치", "분사/관계사", "병렬 구조"],
+    outputUi: ["밑줄 마커 지문", "표현별 오류 분석", "5지선다"],
+    requiredFields: ["markedExpressions", "passageWithMarkers", "correction"],
+  },
+  VOCAB_CHOICE: {
+    id: "VOCAB_CHOICE",
+    label: "어휘 적절성",
+    category: "수능/모의고사 객관식",
+    description: "문맥상 부적절하게 바뀐 어휘를 찾게 합니다.",
+    studentTask: "밑줄 친 (a)~(e) 중 문맥상 어색한 단어를 고릅니다.",
+    bestFor: ["핵심 동사", "추상 명사", "문맥 반전 어휘"],
+    outputUi: ["밑줄 어휘 지문", "어휘별 적절성 분석", "5지선다"],
+    requiredFields: ["markedWords", "passageWithMarkers", "betterWord"],
+  },
+  SENTENCE_ORDER: {
+    id: "SENTENCE_ORDER",
+    label: "글의 순서",
+    category: "수능/모의고사 객관식",
+    description: "문장/단락의 논리적 연결 순서를 재구성하게 합니다.",
+    studentTask: "주어진 글 다음에 이어질 (A)(B)(C)의 순서를 고릅니다.",
+    bestFor: ["담화 표지", "대명사 연결", "시간/원인 흐름"],
+    outputUi: ["주어진 문장 박스", "A/B/C 단락 카드", "순서 선택지"],
+    requiredFields: ["givenSentence", "paragraphs", "options"],
+  },
+  SENTENCE_INSERT: {
+    id: "SENTENCE_INSERT",
+    label: "문장 삽입",
+    category: "수능/모의고사 객관식",
+    description: "삽입 문장이 들어갈 가장 자연스러운 위치를 찾게 합니다.",
+    studentTask: "주어진 문장이 들어갈 ①~⑤ 위치를 고릅니다.",
+    bestFor: ["지시어가 있는 문장", "전환 문장", "예시/결론 문장"],
+    outputUi: ["삽입 문장 박스", "위치 마커 지문", "5지선다"],
+    requiredFields: ["givenSentence", "passageWithMarkers", "options"],
+  },
+  TOPIC_MAIN_IDEA: {
+    id: "TOPIC_MAIN_IDEA",
+    label: "주제/요지",
+    category: "수능/모의고사 객관식",
+    description: "글 전체의 중심 생각을 파악하게 합니다.",
+    studentTask: "지문을 읽고 가장 적절한 주제 또는 요지를 고릅니다.",
+    bestFor: ["명확한 주장문", "설명문", "대조 구조"],
+    outputUi: ["지문 참조 안내", "한국어 선택지", "오답별 해설"],
+    requiredFields: ["direction", "options", "wrongOptionExplanations"],
+  },
+  TITLE: {
+    id: "TITLE",
+    label: "제목 추론",
+    category: "수능/모의고사 객관식",
+    description: "글의 핵심을 가장 잘 압축한 제목을 고르게 합니다.",
+    studentTask: "지문 전체를 대표하는 영어 제목을 고릅니다.",
+    bestFor: ["명확한 주제", "비유/문제 해결 구조", "설명문"],
+    outputUi: ["지문 참조 안내", "영어 제목 선택지", "정답 해설"],
+    requiredFields: ["direction", "options", "correctAnswer"],
+  },
+  REFERENCE: {
+    id: "REFERENCE",
+    label: "지칭 추론",
+    category: "수능/모의고사 객관식",
+    description: "밑줄 친 대명사나 지시어가 가리키는 대상을 묻습니다.",
+    studentTask: "밑줄 친 표현의 실제 지칭 대상을 고릅니다.",
+    bestFor: ["대명사가 많은 문단", "앞뒤 문맥 연결", "복수 대상 비교"],
+    outputUi: ["밑줄 대명사 박스", "밑줄 지문", "한국어 선택지"],
+    requiredFields: ["underlinedPronoun", "passageWithUnderline", "options"],
+  },
+  CONTENT_MATCH: {
+    id: "CONTENT_MATCH",
+    label: "내용 일치",
+    category: "수능/모의고사 객관식",
+    description: "세부 정보가 지문과 일치하는지 판단하게 합니다.",
+    studentTask: "지문 내용과 일치하거나 일치하지 않는 진술을 고릅니다.",
+    bestFor: ["세부 정보가 많은 글", "비교/조건", "인물/사건 설명"],
+    outputUi: ["일치/불일치 배지", "한국어 진술 선택지", "오답 근거"],
+    requiredFields: ["matchType", "options", "wrongOptionExplanations"],
+  },
+  IRRELEVANT: {
+    id: "IRRELEVANT",
+    label: "무관한 문장",
+    category: "수능/모의고사 객관식",
+    description: "글의 흐름에서 벗어난 문장을 찾게 합니다.",
+    studentTask: "①~⑤ 중 전체 흐름과 관계없는 문장을 고릅니다.",
+    bestFor: ["문장 간 논리 흐름", "한 문장 삽입 변형", "주제 일관성"],
+    outputUi: ["번호 매김 지문", "5지선다", "문장별 흐름 해설"],
+    requiredFields: ["passageWithNumbers", "options", "irrelevantIndex"],
+  },
+  CONDITIONAL_WRITING: {
+    id: "CONDITIONAL_WRITING",
+    label: "조건부 영작",
+    category: "내신 서술형",
+    description: "우리말 문장을 조건에 맞게 영어로 쓰게 합니다.",
+    studentTask: "제시된 우리말과 조건을 반영해 완성 영어 문장을 씁니다.",
+    bestFor: ["핵심 문장 암기", "문법 조건", "내신 서술형 대비"],
+    outputUi: ["영작할 우리말 박스", "조건 박스", "모범 답안"],
+    requiredFields: ["referenceSentence", "conditions", "modelAnswer"],
+  },
+  SENTENCE_TRANSFORM: {
+    id: "SENTENCE_TRANSFORM",
+    label: "문장 전환",
+    category: "내신 서술형",
+    description: "원문 문장을 주어진 문법 조건에 맞게 변환하게 합니다.",
+    studentTask: "원래 문장을 조건에 맞는 다른 구조로 바꿔 씁니다.",
+    bestFor: ["능동/수동", "관계사/분사구문", "접속사 전환"],
+    outputUi: ["원래 문장 박스", "전환 조건", "모범 답안"],
+    requiredFields: ["originalSentence", "conditions", "modelAnswer"],
+  },
+  FILL_BLANK_KEY: {
+    id: "FILL_BLANK_KEY",
+    label: "핵심 표현 빈칸",
+    category: "내신 서술형",
+    description: "본문 핵심 표현을 빈칸으로 두고 정확히 쓰게 합니다.",
+    studentTask: "빈칸에 들어갈 본문 핵심 표현을 직접 씁니다.",
+    bestFor: ["암기 표현", "숙어/구문", "시험 빈출 문장"],
+    outputUi: ["빈칸 문장", "정답 공개", "핵심 포인트"],
+    requiredFields: ["sentenceWithBlank", "answer", "correctAnswer"],
+  },
+  SUMMARY_COMPLETE: {
+    id: "SUMMARY_COMPLETE",
+    label: "요약문 완성",
+    category: "내신 서술형",
+    description: "글의 요약문 빈칸을 핵심어로 완성하게 합니다.",
+    studentTask: "요약문의 (A)(B) 빈칸에 들어갈 표현을 씁니다.",
+    bestFor: ["글 전체 이해", "핵심어 추출", "요약형 내신"],
+    outputUi: ["요약문 박스", "빈칸별 정답", "해설"],
+    requiredFields: ["summaryWithBlanks", "blanks", "correctAnswer"],
+  },
+  WORD_ORDER: {
+    id: "WORD_ORDER",
+    label: "배열 영작",
+    category: "내신 서술형",
+    description: "흩어진 단어/구를 올바른 영어 문장으로 배열하게 합니다.",
+    studentTask: "제시된 단어를 의미와 어법에 맞게 배열합니다.",
+    bestFor: ["어순 훈련", "핵심 문장 복원", "문법 구조 확인"],
+    outputUi: ["단어 칩", "문맥 힌트", "모범 답안"],
+    requiredFields: ["scrambledWords", "contextHint", "modelAnswer"],
+  },
+  GRAMMAR_CORRECTION: {
+    id: "GRAMMAR_CORRECTION",
+    label: "문법 오류 수정",
+    category: "내신 서술형",
+    description: "오류가 있는 문장을 보고 틀린 부분을 바르게 고치게 합니다.",
+    studentTask: "오류 부분을 찾아 올바른 표현으로 수정합니다.",
+    bestFor: ["어법 포인트", "실수 교정", "서술형 부분 점수"],
+    outputUi: ["오류 문장 박스", "수정 전/후", "해설"],
+    requiredFields: ["sentenceWithError", "errorPart", "correctedPart"],
+  },
+  CONTEXT_MEANING: {
+    id: "CONTEXT_MEANING",
+    label: "문맥 속 의미",
+    category: "어휘",
+    description: "밑줄 친 단어의 문맥상 의미를 고르게 합니다.",
+    studentTask: "지문 속 밑줄 단어와 가장 가까운 의미를 고릅니다.",
+    bestFor: ["다의어", "문맥 의존 어휘", "추상 어휘"],
+    outputUi: ["밑줄 단어 박스", "밑줄 지문", "영어 선택지"],
+    requiredFields: ["underlinedWord", "passageWithUnderline", "options"],
+  },
+  SYNONYM: {
+    id: "SYNONYM",
+    label: "동의어",
+    category: "어휘",
+    description: "핵심 단어와 의미가 가장 가까운 단어를 고르게 합니다.",
+    studentTask: "문맥 문장을 참고해 대상 단어의 동의어를 고릅니다.",
+    bestFor: ["핵심 어휘", "유의어 확장", "단어장 기반 출제"],
+    outputUi: ["대상 단어 박스", "문맥 문장", "영어 선택지"],
+    requiredFields: ["targetWord", "contextSentence", "options"],
+  },
+  ANTONYM: {
+    id: "ANTONYM",
+    label: "반의어",
+    category: "어휘",
+    description: "지문 속 핵심 어휘와 반대 의미의 단어를 연결하게 합니다.",
+    studentTask: "밑줄 친 단어와 반의어 관계가 바른 선택지를 고릅니다.",
+    bestFor: ["대조 구조", "형용사/동사 어휘", "어휘 관계"],
+    outputUi: ["밑줄 어휘 지문", "단어-반의어 분석", "5지선다"],
+    requiredFields: ["markedWords", "passageWithMarkers", "options"],
+  },
+};
+
+export const QUESTION_TYPE_GROUPS = [
+  {
+    group: "수능/모의고사 객관식" as const,
+    items: [
+      QUESTION_TYPE_UI.BLANK_INFERENCE,
+      QUESTION_TYPE_UI.GRAMMAR_ERROR,
+      QUESTION_TYPE_UI.VOCAB_CHOICE,
+      QUESTION_TYPE_UI.SENTENCE_ORDER,
+      QUESTION_TYPE_UI.SENTENCE_INSERT,
+      QUESTION_TYPE_UI.TOPIC_MAIN_IDEA,
+      QUESTION_TYPE_UI.TITLE,
+      QUESTION_TYPE_UI.REFERENCE,
+      QUESTION_TYPE_UI.CONTENT_MATCH,
+      QUESTION_TYPE_UI.IRRELEVANT,
+    ],
+  },
+  {
+    group: "내신 서술형" as const,
+    items: [
+      QUESTION_TYPE_UI.CONDITIONAL_WRITING,
+      QUESTION_TYPE_UI.SENTENCE_TRANSFORM,
+      QUESTION_TYPE_UI.FILL_BLANK_KEY,
+      QUESTION_TYPE_UI.SUMMARY_COMPLETE,
+      QUESTION_TYPE_UI.WORD_ORDER,
+      QUESTION_TYPE_UI.GRAMMAR_CORRECTION,
+    ],
+  },
+  {
+    group: "어휘" as const,
+    items: [
+      QUESTION_TYPE_UI.CONTEXT_MEANING,
+      QUESTION_TYPE_UI.SYNONYM,
+      QUESTION_TYPE_UI.ANTONYM,
+    ],
+  },
+];
+
