@@ -39,6 +39,10 @@ export async function getWorkbenchPassages(
       { content: { contains: filters.search, mode: "insensitive" } },
     ];
   }
+  // The "분석된 지문 관리하기" page (/passages) opts in here. The analysis
+  // queue at /create deliberately omits this so unanalyzed entries still
+  // appear in its workbench queue (as "분석 가능" cards).
+  if (filters?.analyzedOnly) where.analysis = { isNot: null };
 
   const [passages, total] = await Promise.all([
     prisma.passage.findMany({

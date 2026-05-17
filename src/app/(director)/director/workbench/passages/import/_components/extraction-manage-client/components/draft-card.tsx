@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { FileText, Layers } from "lucide-react";
+import { CheckCircle2, FileText, Layers } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -49,6 +49,9 @@ export function DraftCard({
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 140);
+
+  const isPromoted =
+    draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
 
   const fileNames = getDraftSourceFileNames(draft);
   const primaryFile =
@@ -153,6 +156,12 @@ export function DraftCard({
           <Layers className="size-3" aria-hidden="true" />
           {draft.sourcePageIndex.length}p
         </span>
+        {isPromoted ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
+            <CheckCircle2 className="size-3" aria-hidden="true" />
+            지문 등록 완료
+          </span>
+        ) : null}
       </div>
 
       <p className="line-clamp-3 text-[13px] leading-6 text-slate-600">

@@ -9,6 +9,7 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -26,8 +27,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const ACTIVE_M1_JOB_STATUSES = new Set(["PENDING", "PROCESSING"]);
-const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED"];
+const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED", "COMMITTED"];
 
 function hasM1DraftPipelineError(errorSummary: string | null): boolean {
   if (!errorSummary) return false;
@@ -155,6 +155,7 @@ export async function GET(req: NextRequest) {
   if (staff instanceof NextResponse) return staff;
 
   const limit = Math.min(200, Math.max(1, Number(req.nextUrl.searchParams.get("limit") ?? 20)));
+  const includeThumbnails = req.nextUrl.searchParams.get("thumbnails") !== "0";
 
   const jobs = await prisma.extractionJob.findMany({
     where: { academyId: staff.academyId },
@@ -190,16 +191,38 @@ export async function GET(req: NextRequest) {
           _count: { _all: true },
         })
       : [];
+  // m1DraftCounts must mirror `isM1DraftVisible` exactly so the task-queue
+  // drawer and the 자료 관리 card grid never disagree. Prisma's `groupBy`
+  // can't combine the `restorationStatus`/`rawText.length`/`metadata.reason`
+  // gate that drives client-side visibility, so we drop to raw SQL — same
+  // rules transcribed into Postgres predicates. Keep this WHERE clause in
+  // sync with `src/lib/extraction/m1-draft-visibility.ts`.
   const m1DraftCounts =
     jobIds.length > 0
-      ? await prisma.extractionM1PassageDraft.groupBy({
-          by: ["jobId", "reviewStatus"],
-          where: {
-            jobId: { in: jobIds },
-            reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
-          },
-          _count: { _all: true },
-        })
+      ? await prisma.$queryRaw<
+          Array<{ jobId: string; reviewStatus: string; cnt: bigint }>
+        >(
+          Prisma.sql`
+            SELECT
+              d."jobId"        AS "jobId",
+              d."reviewStatus" AS "reviewStatus",
+              COUNT(*)::bigint AS cnt
+            FROM "extraction_m1_passage_drafts" d
+            WHERE d."jobId" IN (${Prisma.join(jobIds)})
+              AND d."reviewStatus" IN (${Prisma.join(VISIBLE_M1_DRAFT_STATUSES)})
+              AND (
+                d."restorationStatus" != 'NO_RESTORATION_NEEDED'
+                OR (
+                  LENGTH(d."rawText") >= 400
+                  AND (
+                    d.metadata->>'reason' IS NULL
+                    OR d.metadata->>'reason' NOT LIKE 'no_passage_body%'
+                  )
+                )
+              )
+            GROUP BY d."jobId", d."reviewStatus"
+          `,
+        )
       : [];
   const countsByJob = new Map<
     string,
@@ -226,12 +249,14 @@ export async function GET(req: NextRequest) {
     const current =
       m1CountsByJob.get(row.jobId) ??
       { draftResultCount: 0, savedResultCount: 0, resultCount: 0 };
-    current.resultCount += row._count._all;
+    // raw SQL returns counts as bigint — coerce once on the way in.
+    const count = Number(row.cnt);
+    current.resultCount += count;
     if (row.reviewStatus === "DRAFT" || row.reviewStatus === "REVIEWED") {
-      current.draftResultCount += row._count._all;
+      current.draftResultCount += count;
     }
-    if (row.reviewStatus === "SAVED") {
-      current.savedResultCount += row._count._all;
+    if (row.reviewStatus === "SAVED" || row.reviewStatus === "COMMITTED") {
+      current.savedResultCount += count;
     }
     m1CountsByJob.set(row.jobId, current);
   }
@@ -240,7 +265,7 @@ export async function GET(req: NextRequest) {
   // to show a preview without an extra round-trip. Signed URLs expire in 1h,
   // which is comfortably longer than the 10s client polling interval.
   const firstPages =
-    jobIds.length > 0
+    includeThumbnails && jobIds.length > 0
       ? await prisma.extractionPage.findMany({
           where: { jobId: { in: jobIds }, pageIndex: 0 },
           select: { jobId: true, imageUrl: true },
@@ -250,23 +275,25 @@ export async function GET(req: NextRequest) {
   for (const p of firstPages) {
     if (p.imageUrl) firstPageKeyByJob.set(p.jobId, p.imageUrl);
   }
-  const signedEntries = await Promise.all(
-    jobIds.map(async (id) => {
-      const key = firstPageKeyByJob.get(id);
-      if (!key) return [id, null] as const;
-      try {
-        // Server-side resize: 320px long edge is plenty for a 220px card
-        // thumbnail at 2x DPR. Cuts payload from ~MB-scale OCR scans to
-        // ~30-60KB JPEGs, eliminating the slow page-nav image load.
-        const url = await createSignedDownloadUrl(key, 60 * 60, {
-          transform: { width: 320, resize: "contain", quality: 70 },
-        });
-        return [id, url] as const;
-      } catch {
-        return [id, null] as const;
-      }
-    }),
-  );
+  const signedEntries = includeThumbnails
+    ? await Promise.all(
+        jobIds.map(async (id) => {
+          const key = firstPageKeyByJob.get(id);
+          if (!key) return [id, null] as const;
+          try {
+            // Server-side resize: 320px long edge is plenty for a 220px card
+            // thumbnail at 2x DPR. Cuts payload from ~MB-scale OCR scans to
+            // ~30-60KB JPEGs, eliminating the slow page-nav image load.
+            const url = await createSignedDownloadUrl(key, 60 * 60, {
+              transform: { width: 320, resize: "contain", quality: 70 },
+            });
+            return [id, url] as const;
+          } catch {
+            return [id, null] as const;
+          }
+        }),
+      )
+    : [];
   const firstPageUrlByJob = new Map(signedEntries);
 
   // Every PASSAGE_ONLY job stays visible — including COMPLETED rows

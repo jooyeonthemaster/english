@@ -37,14 +37,14 @@ import {
 } from "@/actions/workbench";
 
 // Shared modules
-import type { CollectionItem, CollectionActions } from "./shared/types";
+import type { CollectionItem } from "./shared/types";
 import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { SelectionToolbar } from "./shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 
 // Hooks
-import { useFolderManager } from "./hooks/use-folder-manager";
+import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "./hooks/use-selection";
 import { useUrlFilters } from "./hooks/use-url-filters";
 
@@ -61,7 +61,11 @@ interface PassageItem {
   tags: string | null;
   createdAt: Date;
   school: { id: string; name: string; type: string } | null;
-  analysis: { id: string; updatedAt: Date; analysisData?: string | null } | null;
+  analysis: {
+    id: string;
+    updatedAt: Date;
+    analysisData?: string | null;
+  } | null;
   _count: { questions: number; notes: number };
 }
 
@@ -98,12 +102,12 @@ interface PassageListProps {
 }
 
 // ─── Server action adapters ──────────────────────────────
-const folderActions: CollectionActions = {
-  create: createPassageCollection,
-  update: updatePassageCollection,
-  delete: deletePassageCollection,
-  addItems: addPassagesToCollection,
-  removeItems: removePassagesFromCollection,
+const folderActions = {
+  createCollection: createPassageCollection,
+  updateCollection: updatePassageCollection,
+  deleteCollection: deletePassageCollection,
+  addToCollection: addPassagesToCollection,
+  removeFromCollection: removePassagesFromCollection,
 };
 
 // ─── Main Component ──────────────────────────────────────
@@ -123,19 +127,22 @@ export function PassageListClient({
   const [studyNoteOpen, setStudyNoteOpen] = useState(false);
 
   // ─── Shared hooks ───
-  const { updateFilter, goToPage } = useUrlFilters("/director/workbench/passages");
+  const { updateFilter, goToPage } = useUrlFilters(
+    "/director/workbench/passages",
+  );
 
   const folder = useFolderManager({
     initialCollections,
     initialMembership,
     actions: folderActions,
-    entityLabel: "지문",
+    itemLabel: "지문",
   });
+  const { filterByActiveFolder } = folder;
 
   // Filter passages by active folder
   const displayedPassages = useMemo(
-    () => folder.filterByActiveFolder(passagesData.passages),
-    [folder.filterByActiveFolder, passagesData.passages],
+    () => filterByActiveFolder(passagesData.passages),
+    [filterByActiveFolder, passagesData.passages],
   );
 
   const passageIds = useMemo(
@@ -156,8 +163,11 @@ export function PassageListClient({
   // ─── Folder action wrappers (pass selectedIds from selection hook) ───
   const onAddToFolder = useCallback(
     async (collectionId: string) => {
-      const result = await folder.handleAddToFolder(collectionId, [...selection.selectedIds]);
-      if (result?.success) {
+      const success = await folder.handleAddToFolder(
+        collectionId,
+        selection.selectedIds,
+      );
+      if (success) {
         selection.clearSelection();
       }
     },
@@ -167,28 +177,45 @@ export function PassageListClient({
   const onMoveToFolder = useCallback(
     async (collectionId: string) => {
       if (selection.selectedIds.size === 0) return;
-      const anyId = selection.selectedIds.values().next().value as string | undefined;
+      const anyId = selection.selectedIds.values().next().value as
+        | string
+        | undefined;
       if (!anyId) return;
-      const result = await folder.handleDragToFolder(
+      const success = await folder.handleDragToFolder(
         anyId,
         collectionId,
         false,
         selection.selectedIds,
       );
-      if (result?.success) selection.clearSelection();
+      if (success) selection.clearSelection();
     },
     [folder, selection],
   );
 
   const onRemoveFromFolder = useCallback(async () => {
-    const result = await folder.handleRemoveFromFolder([...selection.selectedIds]);
-    if (result?.success) selection.clearSelection();
+    const success = await folder.handleRemoveFromFolder(selection.selectedIds);
+    if (success) selection.clearSelection();
   }, [folder, selection]);
 
   const onDragToFolder = useCallback(
     (itemId: string, folderId: string, copy: boolean) => {
-      folder.handleDragToFolder(itemId, folderId, copy, selection.selectedIds).then((result) => {
-        if (result?.success) selection.clearSelection();
+      folder
+        .handleDragToFolder(itemId, folderId, copy, selection.selectedIds)
+        .then((success) => {
+          if (success) selection.clearSelection();
+        });
+    },
+    [folder, selection],
+  );
+
+  const onDragToRoot = useCallback(
+    (itemId: string, copy: boolean) => {
+      if (copy || !folder.activeFolder) return;
+      const ids = selection.selectedIds.has(itemId)
+        ? selection.selectedIds
+        : new Set([itemId]);
+      folder.handleRemoveFromFolder(ids).then((success) => {
+        if (success) selection.clearSelection();
       });
     },
     [folder, selection],
@@ -201,7 +228,6 @@ export function PassageListClient({
     },
     [folder, selection],
   );
-
 
   const handleSearch = useCallback(
     (value: string) => updateFilter("search", value),
@@ -222,19 +248,27 @@ export function PassageListClient({
         />
       </div>
 
-      <Select value={filters.schoolId || "ALL"} onValueChange={(v) => updateFilter("schoolId", v)}>
+      <Select
+        value={filters.schoolId || "ALL"}
+        onValueChange={(v) => updateFilter("schoolId", v)}
+      >
         <SelectTrigger className="w-[112px] h-7 text-[11.5px] px-2.5">
           <SelectValue placeholder="학교" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">전체 학교</SelectItem>
           {schools.map((s) => (
-            <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+            <SelectItem key={s.id} value={s.id}>
+              {s.name}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
 
-      <Select value={filters.grade ? String(filters.grade) : "ALL"} onValueChange={(v) => updateFilter("grade", v)}>
+      <Select
+        value={filters.grade ? String(filters.grade) : "ALL"}
+        onValueChange={(v) => updateFilter("grade", v)}
+      >
         <SelectTrigger className="w-[80px] h-7 text-[11.5px] px-2.5">
           <SelectValue placeholder="학년" />
         </SelectTrigger>
@@ -279,11 +313,16 @@ export function PassageListClient({
         onClick={() => setImportOpen(true)}
         className="h-7 text-[11.5px] px-2.5"
       >
-        <Upload className="w-3 h-3 mr-1" />일괄 등록
+        <Upload className="w-3 h-3 mr-1" />
+        일괄 등록
       </Button>
       <Link href="/director/workbench/passages/create">
-        <Button size="sm" className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-3 h-3 mr-1" />지문 등록
+        <Button
+          size="sm"
+          className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700"
+        >
+          <Plus className="w-3 h-3 mr-1" />
+          지문 등록
         </Button>
       </Link>
     </>
@@ -333,7 +372,9 @@ export function PassageListClient({
               title="이 시험지 필터 해제"
             >
               <BookMarked className="w-3 h-3" />
-              <span className="truncate max-w-[220px]">{sourceMaterialBadge.label}</span>
+              <span className="truncate max-w-[220px]">
+                {sourceMaterialBadge.label}
+              </span>
               <X className="w-3 h-3 text-slate-400 group-hover:text-sky-700" />
             </button>
           )}
@@ -345,7 +386,9 @@ export function PassageListClient({
               title="이 폴더 필터 해제"
             >
               <Folder className="w-3 h-3" />
-              <span className="truncate max-w-[180px]">{collectionBadge.label}</span>
+              <span className="truncate max-w-[180px]">
+                {collectionBadge.label}
+              </span>
               <X className="w-3 h-3 text-slate-400 group-hover:text-sky-700" />
             </button>
           )}
@@ -358,88 +401,113 @@ export function PassageListClient({
           <div className="bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">등록된 지문이 없습니다</p>
-            <p className="text-sm text-slate-400 mt-1">지문을 등록하여 AI 문제 생성을 시작하세요</p>
+            <p className="text-sm text-slate-400 mt-1">
+              지문을 등록하여 AI 문제 생성을 시작하세요
+            </p>
             <div className="flex items-center justify-center gap-2 mt-4">
               <Link href="/director/workbench/passages/create">
                 <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
-                  <Plus className="w-3.5 h-3.5 mr-1.5" />지문 등록
+                  <Plus className="w-3.5 h-3.5 mr-1.5" />
+                  지문 등록
                 </Button>
               </Link>
             </div>
           </div>
         ) : (
           <>
-          {/* Folders section — selection toolbar embedded inside so it
+            {/* Folders section — selection toolbar embedded inside so it
               inherits the sticky pinning. */}
-          <FolderSection
-            childFolders={folder.childFolders}
-            activeFolder={folder.activeFolder}
-            dragItemType="passage"
-            dragItemIdKey="passageId"
-            itemCountLabel="지문"
-            showNewFolder={folder.showNewFolder}
-            newFolderName={folder.newFolderName}
-            onNewFolderNameChange={folder.setNewFolderName}
-            onShowNewFolder={folder.setShowNewFolder}
-            onCreateFolder={folder.handleCreateFolder}
-            onNavigateToFolder={onFolderClick}
-            onRenameFolder={folder.handleRenameFolder}
-            onDeleteFolder={folder.handleDeleteFolder}
-            onDragToFolder={onDragToFolder}
-            breadcrumbPath={folder.breadcrumbPath}
-            onNavigateToRoot={() => { folder.setActiveFolder(null); selection.clearSelection(); }}
-            useCardInsideFolder={true}
-            rootLabel="전체 지문"
-            toolbar={filtersToolbar}
-            pageHeader={{
-              icon: <FileText className="h-3.5 w-3.5" />,
-              title: "지문 관리",
-              totalCount,
-              itemLabel: "지문",
-            }}
-            selectionBar={
-              <SelectionToolbar
-                embedded
-                selectedCount={selection.selectedIds.size}
-                totalCount={displayedPassages.length}
-                isAllSelected={selection.isAllSelected}
-                onSelectAll={selection.selectAll}
-                onClearSelection={selection.clearSelection}
-                activeFolder={folder.activeFolder}
-                onRemoveFromFolder={onRemoveFromFolder}
-                extraActions={selectionActions}
-              />
-            }
-          />
+            <FolderSection
+              childFolders={folder.childFolders}
+              activeFolder={folder.activeFolder}
+              dragItemType="passage"
+              dragItemIdKey="passageId"
+              itemCountLabel="지문"
+              showNewFolder={folder.showNewFolder}
+              newFolderName={folder.newFolderName}
+              onNewFolderNameChange={folder.setNewFolderName}
+              onShowNewFolder={folder.setShowNewFolder}
+              onCreateFolder={folder.handleCreateFolder}
+              onNavigateToFolder={onFolderClick}
+              onRenameFolder={folder.handleRenameFolder}
+              onDeleteFolder={folder.handleDeleteFolder}
+              onDragToFolder={onDragToFolder}
+              onDragToRoot={onDragToRoot}
+              breadcrumbPath={folder.breadcrumbPath}
+              onNavigateToRoot={() => {
+                folder.setActiveFolder(null);
+                selection.clearSelection();
+              }}
+              useCardInsideFolder={true}
+              rootLabel="전체 지문"
+              toolbar={filtersToolbar}
+              pageHeader={{
+                icon: <FileText className="h-3.5 w-3.5" />,
+                title: "지문 관리",
+                totalCount,
+                itemLabel: "지문",
+              }}
+              selectionBar={
+                <SelectionToolbar
+                  embedded
+                  selectedCount={selection.selectedIds.size}
+                  totalCount={displayedPassages.length}
+                  isAllSelected={selection.isAllSelected}
+                  onSelectAll={selection.selectAll}
+                  onClearSelection={selection.clearSelection}
+                  activeFolder={folder.activeFolder}
+                  onRemoveFromFolder={onRemoveFromFolder}
+                  extraActions={selectionActions}
+                />
+              }
+            />
 
             {/* Files section */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[13px] font-semibold text-slate-600">
                   파일
-                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">{displayedPassages.length}개</span>
+                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">
+                    {displayedPassages.length}개
+                  </span>
                 </h3>
               </div>
               {displayedPassages.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
-                    {folder.activeFolder ? "이 폴더에 지문이 없습니다." : "등록된 지문이 없습니다."}
+                    {folder.activeFolder
+                      ? "이 폴더에 지문이 없습니다."
+                      : "등록된 지문이 없습니다."}
                   </p>
                   {folder.activeFolder && (
-                    <p className="text-[12px] text-slate-400 mt-1">지문을 드래그하거나 선택 후 &quot;폴더에 추가&quot;를 사용하세요.</p>
+                    <p className="text-[12px] text-slate-400 mt-1">
+                      지문을 드래그하거나 선택 후 &quot;폴더에 추가&quot;를
+                      사용하세요.
+                    </p>
                   )}
                 </div>
               ) : viewType === "grid" ? (
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
                   {displayedPassages.map((p) => (
-                    <PassageFileCard key={p.id} passage={p} selected={selection.selectedIds.has(p.id)} onToggleSelect={selection.toggleSelect} onViewDetail={setModalPassageId} />
+                    <PassageFileCard
+                      key={p.id}
+                      passage={p}
+                      selected={selection.selectedIds.has(p.id)}
+                      onToggleSelect={selection.toggleSelect}
+                      onViewDetail={setModalPassageId}
+                    />
                   ))}
                 </div>
               ) : (
                 <div className="space-y-1.5">
                   {displayedPassages.map((p) => (
-                    <PassageFileRow key={p.id} passage={p} selected={selection.selectedIds.has(p.id)} onToggleSelect={selection.toggleSelect} />
+                    <PassageFileRow
+                      key={p.id}
+                      passage={p}
+                      selected={selection.selectedIds.has(p.id)}
+                      onToggleSelect={selection.toggleSelect}
+                    />
                   ))}
                 </div>
               )}
@@ -465,36 +533,47 @@ export function PassageListClient({
       />
 
       {/* ─── Analysis Modal ─── */}
-      {modalPassageId && (() => {
-        const p = passagesData.passages.find((x) => x.id === modalPassageId);
-        if (!p) return null;
-        let analysisData: PassageAnalysisData | null = null;
-        try { if (p.analysis?.analysisData) analysisData = JSON.parse(p.analysis.analysisData as string); } catch {}
-        return (
-          <PassageAnalysisModal
-            open={true}
-            onClose={() => setModalPassageId(null)}
-            passage={{
-              id: p.id,
-              title: p.title,
-              content: p.content,
-              grade: p.grade,
-              semester: p.semester,
-              unit: p.unit,
-              publisher: p.publisher,
-              difficulty: p.difficulty,
-              tags: p.tags,
-              source: null,
-              createdAt: p.createdAt,
-              school: p.school,
-              analysis: p.analysis ? { id: p.analysis.id, analysisData: p.analysis.analysisData as string, contentHash: "", updatedAt: p.analysis.updatedAt } : null,
-              notes: [],
-              questions: [],
-            }}
-            initialAnalysis={analysisData}
-          />
-        );
-      })()}
+      {modalPassageId &&
+        (() => {
+          const p = passagesData.passages.find((x) => x.id === modalPassageId);
+          if (!p) return null;
+          let analysisData: PassageAnalysisData | null = null;
+          try {
+            if (p.analysis?.analysisData)
+              analysisData = JSON.parse(p.analysis.analysisData as string);
+          } catch {}
+          return (
+            <PassageAnalysisModal
+              open={true}
+              onClose={() => setModalPassageId(null)}
+              passage={{
+                id: p.id,
+                title: p.title,
+                content: p.content,
+                grade: p.grade,
+                semester: p.semester,
+                unit: p.unit,
+                publisher: p.publisher,
+                difficulty: p.difficulty,
+                tags: p.tags,
+                source: null,
+                createdAt: p.createdAt,
+                school: p.school,
+                analysis: p.analysis
+                  ? {
+                      id: p.analysis.id,
+                      analysisData: p.analysis.analysisData as string,
+                      contentHash: "",
+                      updatedAt: p.analysis.updatedAt,
+                    }
+                  : null,
+                notes: [],
+                questions: [],
+              }}
+              initialAnalysis={analysisData}
+            />
+          );
+        })()}
     </div>
   );
 }

@@ -10,7 +10,12 @@ export interface AnalysisPromptConfig {
   targetLevel: string;
 }
 
-export type QueuedPassageStatus = "pending" | "analyzing" | "done" | "error";
+export type QueuedPassageStatus =
+  | "not_analyzed" // server-loaded passage with no PassageAnalysis row yet
+  | "pending" // queued for analysis, will auto-start when a slot opens
+  | "analyzing"
+  | "done"
+  | "error";
 
 export interface QueuedPassage {
   id: string;

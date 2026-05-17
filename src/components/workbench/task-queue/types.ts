@@ -22,6 +22,12 @@ export interface BaseTask {
   subtitle: string;
   status: TaskStatus;
   errorBadge?: string;
+  description?: string;
+  stats?: Array<{
+    label: string;
+    value: string;
+    tone?: "slate" | "blue" | "emerald" | "amber" | "red";
+  }>;
   createdAt: string;
   href?: string;
   /** Optional thumbnail URL (e.g. first-page preview for an extraction job). */

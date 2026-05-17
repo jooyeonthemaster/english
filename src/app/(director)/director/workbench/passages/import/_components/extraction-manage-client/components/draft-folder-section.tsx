@@ -1,19 +1,24 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
-  ArrowLeft,
-  Check,
   ChevronRight,
-  Database,
+  FolderOpen,
   FolderPlus,
+  Check,
   X,
+  CornerUpLeft,
 } from "lucide-react";
 
 import type { CollectionItem } from "@/components/workbench/shared/types";
 
 import { DraftFolderCard } from "./draft-folder-card";
 import { DraftFolderChip } from "./draft-folder-chip";
+
+const DRAG_TYPE = "draft" as const;
+const BULK_DRAG_TYPE = "draft-bulk" as const;
 
 interface DraftFolderSectionProps {
   childFolders: CollectionItem[];
@@ -28,22 +33,80 @@ interface DraftFolderSectionProps {
   onNavigateToFolder: (id: string) => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string | string[], folderId: string, copy: boolean) => void;
+  onDragToFolder: (
+    itemId: string | string[],
+    folderId: string,
+    copy: boolean,
+  ) => void;
+  onDragToRoot?: (itemId: string | string[], copy: boolean) => void;
   breadcrumbPath?: CollectionItem[];
   onNavigateToRoot?: () => void;
-  onNavigateUp?: () => void;
   /** If true, use full FolderCard inside folders, FolderChip at root */
   useCardInsideFolder?: boolean;
+  selectionBar?: ReactNode;
+  toolbar?: ReactNode;
+  pageHeader?: {
+    icon: ReactNode;
+    title: string;
+    totalCount: number;
+    itemLabel: string;
+    description?: string;
+  };
+  resultScope?: "all" | "job";
+  onBackToAllResults?: () => void;
+}
 
-  /** Total draft count (across current scope) shown next to the title. */
-  totalCount: number;
-  /** When 'job', shows a "전체 결과로" button to clear the job scope. */
-  resultScope: "all" | "job";
-  onBackToAllResults: () => void;
-  /** Filter / refresh / queue / upload row rendered on the right of the title. */
-  rightArea?: ReactNode;
-  /** Compact selection / bulk-action bar rendered at the bottom of the section. */
-  selectionToolbar?: ReactNode;
+interface ParentFolderButtonProps {
+  dragItemIdKey: string;
+  onClick: () => void;
+  onFileDrop: (itemId: string | string[], copy: boolean) => void;
+}
+
+function ParentFolderButton({
+  dragItemIdKey,
+  onClick,
+  onFileDrop,
+}: ParentFolderButtonProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const dropRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const el = dropRef.current;
+    if (!el) return;
+    return dropTargetForElements({
+      element: el,
+      canDrop: ({ source }) =>
+        source.data.type === DRAG_TYPE || source.data.type === BULK_DRAG_TYPE,
+      onDragEnter: () => setIsDragOver(true),
+      onDragLeave: () => setIsDragOver(false),
+      onDrop: ({ source }) => {
+        setIsDragOver(false);
+        const itemId =
+          source.data.type === BULK_DRAG_TYPE
+            ? (source.data.draftIds as string[])
+            : (source.data[dragItemIdKey] as string);
+        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
+        onFileDrop(itemId, isCopy);
+      },
+    });
+  }, [dragItemIdKey, onFileDrop]);
+
+  return (
+    <button
+      ref={dropRef}
+      type="button"
+      onClick={onClick}
+      className={
+        "flex size-[72px] cursor-pointer flex-col items-center justify-center rounded-xl border bg-white text-slate-500 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:text-blue-600 hover:shadow-md " +
+        (isDragOver
+          ? "scale-105 border-blue-400 bg-blue-50 text-blue-700 shadow-md ring-2 ring-blue-200/60"
+          : "border-slate-200")
+      }
+    >
+      <CornerUpLeft className="mb-0.5 size-5" aria-hidden="true" />
+      <span className="text-[10.5px] font-semibold">상위</span>
+    </button>
+  );
 }
 
 export function DraftFolderSection({
@@ -60,98 +123,136 @@ export function DraftFolderSection({
   onRenameFolder,
   onDeleteFolder,
   onDragToFolder,
+  onDragToRoot,
   breadcrumbPath = [],
   onNavigateToRoot,
-  onNavigateUp,
   useCardInsideFolder = false,
-  totalCount,
-  resultScope,
+  selectionBar,
+  toolbar,
+  pageHeader,
+  resultScope = "all",
   onBackToAllResults,
-  rightArea,
-  selectionToolbar,
 }: DraftFolderSectionProps) {
   const useCards = useCardInsideFolder && activeFolder;
-  const inFolder = Boolean(activeFolder);
+  const currentFolder = activeFolder
+    ? breadcrumbPath[breadcrumbPath.length - 1]
+    : null;
+  const title = currentFolder?.name ?? pageHeader?.title ?? "폴더 관리";
+  const description = currentFolder
+    ? "현재 폴더 안의 자료를 정리하고 검수합니다."
+    : pageHeader?.description;
+  const parentFolderId = currentFolder?.parentId ?? null;
+  const navigateToParent = () => {
+    if (parentFolderId) onNavigateToFolder(parentFolderId);
+    else onNavigateToRoot?.();
+  };
+  const handleDropToParent = (itemId: string | string[], copy: boolean) => {
+    if (parentFolderId) onDragToFolder(itemId, parentFolderId, copy);
+    else onDragToRoot?.(itemId, copy);
+  };
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100/50">
-      {/* Top: page header — title, count, breadcrumb, right action area */}
-      <div className="flex flex-col gap-2 border-b border-slate-100 px-3 py-2.5 sm:px-5">
-        <div className="flex min-w-0 items-center gap-2.5">
-          {inFolder ? (
-            <button
-              type="button"
-              onClick={onNavigateUp}
-              className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-slate-100"
-              aria-label="상위 폴더로"
-            >
-              <ArrowLeft className="size-3.5" />
-            </button>
-          ) : (
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
-              <Database className="size-3.5" aria-hidden="true" />
-            </span>
-          )}
-
-          <div className="flex min-w-0 items-center gap-2">
-            <h3 className="truncate text-[13px] font-bold text-slate-900">자료 관리</h3>
-            <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
-              · {totalCount}개 · 하위 폴더 {childFolders.length}개
-            </span>
-
-            {breadcrumbPath.length > 0 ? (
-              <div className="ml-1 flex min-w-0 items-center gap-0.5">
-                <button
-                  type="button"
-                  onClick={onNavigateToRoot}
-                  className="shrink-0 cursor-pointer rounded px-1 text-[11px] font-medium text-slate-400 hover:text-blue-700"
-                >
-                  전체 자료
-                </button>
-                {breadcrumbPath.map((folder, index) => {
-                  const isLast = index === breadcrumbPath.length - 1;
-                  return (
-                    <span key={folder.id} className="flex min-w-0 items-center gap-0.5">
-                      <ChevronRight className="size-3 shrink-0 text-slate-300" />
-                      {isLast ? (
-                        <span className="truncate rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-bold text-blue-700">
-                          {folder.name}
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => onNavigateToFolder(folder.id)}
-                          className="shrink-0 cursor-pointer rounded px-1 text-[11px] font-medium text-slate-500 hover:text-blue-700"
-                        >
-                          {folder.name}
-                        </button>
-                      )}
-                    </span>
-                  );
-                })}
-              </div>
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex flex-col gap-2 border-b border-slate-100 px-4 py-2.5">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            {pageHeader?.icon ?? <FolderOpen className="h-3.5 w-3.5" />}
+          </span>
+          <div className="min-w-0 flex items-center gap-2">
+            <h3 className="truncate text-[13px] font-bold text-slate-900">
+              {title}
+            </h3>
+            {pageHeader ? (
+              <span className="shrink-0 text-[11px] font-medium text-slate-400 tabular-nums">
+                · {pageHeader.itemLabel} {pageHeader.totalCount}개
+                {childFolders.length > 0
+                  ? ` · 폴더 ${childFolders.length}개`
+                  : ""}
+              </span>
+            ) : (
+              <span className="shrink-0 text-[10.5px] font-medium text-slate-400">
+                · 하위 폴더 {childFolders.length}개
+              </span>
+            )}
+            {currentFolder ? (
+              <span className="shrink-0 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
+                현재 폴더
+              </span>
             ) : null}
-
-            {resultScope === "job" ? (
+            {resultScope === "job" && onBackToAllResults ? (
               <button
                 type="button"
                 onClick={onBackToAllResults}
-                className="ml-1 shrink-0 cursor-pointer rounded-md border border-slate-200 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
+                className="shrink-0 cursor-pointer rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
               >
                 전체 결과로
               </button>
             ) : null}
           </div>
-
-          {rightArea ? (
-            <div className="ml-auto flex shrink-0 items-center">{rightArea}</div>
+          {description ? (
+            <span className="hidden min-w-0 truncate text-[11px] text-slate-400 xl:block">
+              {description}
+            </span>
           ) : null}
+          {toolbar ? (
+            <div className="ml-auto flex shrink-0 items-center gap-2">
+              {toolbar}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex min-h-7 min-w-0 items-center gap-1.5 rounded-lg border border-blue-100 bg-blue-50/60 px-2.5 py-1.5 text-[11px]">
+          <span className="shrink-0 font-semibold text-blue-500">
+            현재 위치
+          </span>
+          <span className="h-3 w-px shrink-0 bg-blue-200" />
+          {currentFolder ? (
+            <button
+              type="button"
+              onClick={onNavigateToRoot}
+              className="shrink-0 cursor-pointer font-medium text-slate-500 hover:text-blue-700"
+            >
+              전체 자료
+            </button>
+          ) : (
+            <span className="shrink-0 font-bold text-blue-700">전체 자료</span>
+          )}
+          {breadcrumbPath.map((folder, index) => {
+            const isLast = index === breadcrumbPath.length - 1;
+            return (
+              <span
+                key={folder.id}
+                className="flex min-w-0 items-center gap-1"
+              >
+                <ChevronRight className="size-3 shrink-0 text-blue-300" />
+                {isLast ? (
+                  <span className="truncate font-bold text-blue-700">
+                    {folder.name}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => onNavigateToFolder(folder.id)}
+                    className="truncate cursor-pointer font-medium text-slate-500 hover:text-blue-700"
+                  >
+                    {folder.name}
+                  </button>
+                )}
+              </span>
+            );
+          })}
         </div>
       </div>
 
-      {/* Middle: folder strip */}
-      <div className="bg-gradient-to-b from-slate-50/80 to-slate-50/40 px-3 py-3 sm:px-5">
+      <div className="bg-slate-50/70 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2.5">
+          {currentFolder ? (
+            <ParentFolderButton
+              dragItemIdKey={dragItemIdKey}
+              onClick={navigateToParent}
+              onFileDrop={handleDropToParent}
+            />
+          ) : null}
           {useCards
             ? childFolders.map((c) => (
                 <DraftFolderCard
@@ -190,14 +291,14 @@ export function DraftFolderSection({
                   value={newFolderName}
                   onChange={(e) => onNewFolderNameChange(e.target.value)}
                   onKeyDown={(e) => {
-                    const nativeEvent = e.nativeEvent as KeyboardEvent;
                     if (e.key === "Enter") {
-                      if (nativeEvent.isComposing || nativeEvent.keyCode === 229 || e.repeat) return;
+                      if (e.nativeEvent.isComposing) return;
                       e.preventDefault();
                       e.stopPropagation();
                       onCreateFolder();
                     }
                     if (e.key === "Escape") {
+                      e.preventDefault();
                       onShowNewFolder(false);
                       onNewFolderNameChange("");
                     }
@@ -240,10 +341,9 @@ export function DraftFolderSection({
         </div>
       </div>
 
-      {/* Bottom: selection / bulk action toolbar */}
-      {selectionToolbar ? (
+      {selectionBar ? (
         <div className="border-t border-slate-100 bg-white px-2 py-1.5">
-          {selectionToolbar}
+          {selectionBar}
         </div>
       ) : null}
     </section>

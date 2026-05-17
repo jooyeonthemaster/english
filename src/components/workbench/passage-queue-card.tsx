@@ -17,6 +17,7 @@ import {
   MessageSquare,
   Target,
   LayoutList,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,13 @@ const STATUS_CONFIG: Record<
   QueuedPassageStatus,
   { label: string; icon: React.ElementType; color: string; bgColor: string; borderColor: string; pulseRing?: boolean }
 > = {
+  not_analyzed: {
+    label: "분석 가능",
+    icon: Sparkles,
+    color: "text-amber-700",
+    bgColor: "bg-amber-50/40",
+    borderColor: "border-amber-200",
+  },
   pending: {
     label: "대기 중",
     icon: Clock,
@@ -149,7 +157,11 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         selected ? "ring-2 ring-blue-400" : ""
       }`}
       onClick={() => {
-        if (passage.status === "done" || passage.status === "error") {
+        if (
+          passage.status === "done" ||
+          passage.status === "error" ||
+          passage.status === "not_analyzed"
+        ) {
           onViewDetail(passage.id);
         }
       }}
@@ -158,7 +170,11 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          if (passage.status === "done" || passage.status === "error") {
+          if (
+            passage.status === "done" ||
+            passage.status === "error" ||
+            passage.status === "not_analyzed"
+          ) {
             onViewDetail(passage.id);
           }
         }
@@ -223,6 +239,21 @@ export const PassageQueueCard = memo(function PassageQueueCard({
               </TooltipTrigger>
               <TooltipContent side="top" className="text-xs">
                 분석 결과 보기
+              </TooltipContent>
+            </Tooltip>
+          )}
+          {passage.status === "not_analyzed" && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => onRetry(passage.id)}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-amber-50 transition-colors"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs">
+                AI 분석 시작
               </TooltipContent>
             </Tooltip>
           )}

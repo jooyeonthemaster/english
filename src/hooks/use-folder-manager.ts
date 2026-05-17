@@ -17,9 +17,7 @@ interface FolderActions {
     id: string,
     data: { name: string },
   ) => Promise<{ success?: boolean }>;
-  deleteCollection: (
-    id: string,
-  ) => Promise<{ success: boolean }>;
+  deleteCollection: (id: string) => Promise<{ success: boolean }>;
   addToCollection: (
     collectionId: string,
     itemIds: string[],
@@ -87,6 +85,16 @@ export function useFolderManager({
     ? collections.find((c) => c.id === activeFolder)?.name || "폴더"
     : null;
 
+  const filterByActiveFolder = useCallback(
+    <T extends { id: string }>(items: T[]): T[] => {
+      if (!activeFolder) return items;
+      const ids = membership[activeFolder];
+      if (!ids) return [];
+      return items.filter((item) => ids.has(item.id));
+    },
+    [activeFolder, membership],
+  );
+
   const syncCollectionCounts = useCallback(
     (nextMembership: Record<string, Set<string>>) => {
       setCollections((prev) =>
@@ -140,9 +148,7 @@ export function useFolderManager({
       if (!name.trim()) return;
       await actions.updateCollection(id, { name: name.trim() });
       setCollections((prev) =>
-        prev.map((c) =>
-          c.id === id ? { ...c, name: name.trim() } : c,
-        ),
+        prev.map((c) => (c.id === id ? { ...c, name: name.trim() } : c)),
       );
     },
     [actions],
@@ -250,7 +256,8 @@ export function useFolderManager({
         idsToAdd.length > 0 ||
         (!copy &&
           Object.entries(membership).some(
-            ([colId, ids]) => colId !== folderId && idsToMove.some((id) => ids.has(id)),
+            ([colId, ids]) =>
+              colId !== folderId && idsToMove.some((id) => ids.has(id)),
           ));
 
       if (!hasFolderChanges) {
@@ -351,6 +358,7 @@ export function useFolderManager({
     childFolders,
     breadcrumbPath,
     activeFolderName,
+    filterByActiveFolder,
 
     // Actions
     handleCreateFolder,

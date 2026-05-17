@@ -51,10 +51,7 @@ import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { SelectionToolbar } from "./shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
-import {
-  TypeFilterPopover,
-  TYPE_SUBTYPE_MAP,
-} from "./question-type-filter";
+import { TypeFilterPopover, TYPE_SUBTYPE_MAP } from "./question-type-filter";
 import { QuestionBankCard } from "./question-bank-card";
 import { QuestionEditClient } from "./question-edit-client";
 
@@ -82,8 +79,12 @@ interface QuestionItem {
   starred: boolean;
   createdAt: Date;
   passage: {
-    id: string; title: string; content: string;
-    grade?: number | null; semester?: string | null; publisher?: string | null;
+    id: string;
+    title: string;
+    content: string;
+    grade?: number | null;
+    semester?: string | null;
+    publisher?: string | null;
     school?: { id: string; name: string } | null;
   } | null;
   explanation: {
@@ -134,16 +135,29 @@ export function QuestionBankClient({
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
-  const [editingQuestion, setEditingQuestion] = useState<Awaited<ReturnType<typeof getWorkbenchQuestion>> | null>(null);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
+    null,
+  );
+  const [editingQuestion, setEditingQuestion] = useState<Awaited<
+    ReturnType<typeof getWorkbenchQuestion>
+  > | null>(null);
   const [questionLoading, setQuestionLoading] = useState(false);
-  const [questionLoadError, setQuestionLoadError] = useState<string | null>(null);
+  const [questionLoadError, setQuestionLoadError] = useState<string | null>(
+    null,
+  );
   const editLoadTokenRef = useRef(0);
 
   // URL filters
-  const { updateFilter, updateFilters, handleSearch: urlSearch, goToPage } = useUrlFilters("/director/questions");
+  const {
+    updateFilter,
+    updateFilters,
+    handleSearch: urlSearch,
+    goToPage,
+  } = useUrlFilters("/director/questions");
 
-  function handleSearch() { urlSearch(searchValue); }
+  function handleSearch() {
+    urlSearch(searchValue);
+  }
 
   // Folder manager
   const folders = useFolderManager({
@@ -161,7 +175,8 @@ export function QuestionBankClient({
 
   // Grid view mode
   const [gridCols, setGridCols] = useState<2 | 3 | 4>(2);
-  const viewSize: "lg" | "md" | "sm" = gridCols === 2 ? "lg" : gridCols === 3 ? "md" : "sm";
+  const viewSize: "lg" | "md" | "sm" =
+    gridCols === 2 ? "lg" : gridCols === 3 ? "md" : "sm";
 
   // Questions in active folder
   const questionsInActiveFolder = useMemo(() => {
@@ -171,15 +186,23 @@ export function QuestionBankClient({
     return questionsData.questions.filter((q) => ids.has(q.id));
   }, [questionsData.questions, folders.activeFolder, folders.membership]);
 
-  const displayedQuestions = folders.activeFolder === null ? questionsData.questions : questionsInActiveFolder;
+  const displayedQuestions =
+    folders.activeFolder === null
+      ? questionsData.questions
+      : questionsInActiveFolder;
 
   // Selection
   const getDisplayedIds = useCallback(
     () => displayedQuestions.map((q) => q.id),
     [displayedQuestions],
   );
-  const { selectedIds, setSelectedIds, toggleSelect, selectAll, clearSelection } = useSelection(getDisplayedIds);
-
+  const {
+    selectedIds,
+    setSelectedIds,
+    toggleSelect,
+    selectAll,
+    clearSelection,
+  } = useSelection(getDisplayedIds);
 
   // Exam dialog
   const [createExamOpen, setCreateExamOpen] = useState(false);
@@ -268,7 +291,22 @@ export function QuestionBankClient({
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
     async (itemId: string, folderId: string, copy: boolean) => {
-      const success = await folders.handleDragToFolder(itemId, folderId, copy, selectedIds);
+      const success = await folders.handleDragToFolder(
+        itemId,
+        folderId,
+        copy,
+        selectedIds,
+      );
+      if (success) clearSelection();
+    },
+    [folders, selectedIds, clearSelection],
+  );
+
+  const handleDragToRoot = useCallback(
+    async (itemId: string, copy: boolean) => {
+      if (copy || !folders.activeFolder) return;
+      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      const success = await folders.handleRemoveFromFolder(ids);
       if (success) clearSelection();
     },
     [folders, selectedIds, clearSelection],
@@ -280,10 +318,15 @@ export function QuestionBankClient({
       if (selectedIds.size === 0) return;
       const anyId = selectedIds.values().next().value as string | undefined;
       if (!anyId) return;
-      const success = await folders.handleDragToFolder(anyId, collectionId, false, selectedIds);
+      const success = await folders.handleDragToFolder(
+        anyId,
+        collectionId,
+        false,
+        selectedIds,
+      );
       if (success) clearSelection();
     },
-    [folders.handleDragToFolder, selectedIds, clearSelection],
+    [folders, selectedIds, clearSelection],
   );
 
   // ─── Add to folder (wraps hook's handler) ───
@@ -347,7 +390,9 @@ export function QuestionBankClient({
           } else {
             const types = new Set<string>();
             for (const sub of selectedSubs) {
-              const group = TYPE_SUBTYPE_MAP.find((g) => g.subtypes.some((s) => s.value === sub));
+              const group = TYPE_SUBTYPE_MAP.find((g) =>
+                g.subtypes.some((s) => s.value === sub),
+              );
               if (group) types.add(group.type);
             }
             updateFilters({
@@ -358,7 +403,10 @@ export function QuestionBankClient({
         }}
       />
 
-      <Select value={filters.difficulty || "ALL"} onValueChange={(v) => updateFilter("difficulty", v)}>
+      <Select
+        value={filters.difficulty || "ALL"}
+        onValueChange={(v) => updateFilter("difficulty", v)}
+      >
         <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
           <SelectValue placeholder="난이도" />
         </SelectTrigger>
@@ -371,7 +419,13 @@ export function QuestionBankClient({
       </Select>
 
       <Select
-        value={filters.approved === true ? "true" : filters.approved === false ? "false" : "ALL"}
+        value={
+          filters.approved === true
+            ? "true"
+            : filters.approved === false
+              ? "false"
+              : "ALL"
+        }
         onValueChange={(v) => updateFilter("approved", v)}
       >
         <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
@@ -397,11 +451,16 @@ export function QuestionBankClient({
         aria-label="중요 문제 필터"
         aria-pressed={filters.starred === true}
       >
-        <Star className={`w-3 h-3 ${filters.starred === true ? "fill-yellow-400 text-yellow-500" : ""}`} />
+        <Star
+          className={`w-3 h-3 ${filters.starred === true ? "fill-yellow-400 text-yellow-500" : ""}`}
+        />
         중요
       </button>
 
-      <Select value={filters.sort || "newest"} onValueChange={(v) => updateFilter("sort", v === "newest" ? "ALL" : v)}>
+      <Select
+        value={filters.sort || "newest"}
+        onValueChange={(v) => updateFilter("sort", v === "newest" ? "ALL" : v)}
+      >
         <SelectTrigger className="w-[108px] h-7 text-[11.5px] px-2.5">
           <ArrowUpDown className="w-3 h-3 mr-1 shrink-0" />
           <SelectValue placeholder="정렬" />
@@ -431,7 +490,10 @@ export function QuestionBankClient({
 
       {/* Create exam */}
       <button
-        onClick={() => { setExamTitle(""); setCreateExamOpen(true); }}
+        onClick={() => {
+          setExamTitle("");
+          setCreateExamOpen(true);
+        }}
         className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
       >
         <ClipboardList className="w-3.5 h-3.5" />
@@ -480,51 +542,63 @@ export function QuestionBankClient({
           <div className="bg-white rounded-xl border text-center py-20">
             <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">문제가 없습니다</p>
-            <p className="text-sm text-slate-400 mt-1">AI 워크벤치에서 문제를 생성해보세요</p>
+            <p className="text-sm text-slate-400 mt-1">
+              AI 워크벤치에서 문제를 생성해보세요
+            </p>
           </div>
         ) : (
           <>
-          {/* Folders section -- sticky below header. Selection toolbar is
+            {/* Folders section -- sticky below header. Selection toolbar is
               embedded inside so it shares the sticky pinning. */}
-          <FolderSection
-            childFolders={folders.childFolders}
-            activeFolder={folders.activeFolder}
-            dragItemType="question"
-            dragItemIdKey="questionId"
-            itemCountLabel="문제"
-            showNewFolder={folders.showNewFolder}
-            newFolderName={folders.newFolderName}
-            onNewFolderNameChange={folders.setNewFolderName}
-            onShowNewFolder={folders.setShowNewFolder}
-            onCreateFolder={folders.handleCreateFolder}
-            onNavigateToFolder={(id) => { folders.navigateToFolder(id); clearSelection(); }}
-            onRenameFolder={folders.handleRenameFolder}
-            onDeleteFolder={folders.handleDeleteFolder}
-            onDragToFolder={handleDragToFolder}
-            breadcrumbPath={folders.breadcrumbPath}
-            onNavigateToRoot={() => { folders.setActiveFolder(null); clearSelection(); }}
-            toolbar={filtersToolbar}
-            pageHeader={{
-              icon: <Database className="h-3.5 w-3.5" />,
-              title: "문제 관리",
-              totalCount,
-              itemLabel: "문제",
-            }}
-            selectionBar={
-              <SelectionToolbar
-                embedded
-                selectedCount={selectedIds.size}
-                totalCount={displayedQuestions.length}
-                isAllSelected={selectedIds.size === displayedQuestions.length && displayedQuestions.length > 0}
-                onSelectAll={selectAll}
-                onClearSelection={clearSelection}
-                activeFolder={folders.activeFolder}
-                onRemoveFromFolder={handleRemoveFromFolder}
-                extraActions={selectionExtraActions}
-                rightSlot={gridToggle}
-              />
-            }
-          />
+            <FolderSection
+              childFolders={folders.childFolders}
+              activeFolder={folders.activeFolder}
+              dragItemType="question"
+              dragItemIdKey="questionId"
+              itemCountLabel="문제"
+              showNewFolder={folders.showNewFolder}
+              newFolderName={folders.newFolderName}
+              onNewFolderNameChange={folders.setNewFolderName}
+              onShowNewFolder={folders.setShowNewFolder}
+              onCreateFolder={folders.handleCreateFolder}
+              onNavigateToFolder={(id) => {
+                folders.navigateToFolder(id);
+                clearSelection();
+              }}
+              onRenameFolder={folders.handleRenameFolder}
+              onDeleteFolder={folders.handleDeleteFolder}
+              onDragToFolder={handleDragToFolder}
+              onDragToRoot={handleDragToRoot}
+              breadcrumbPath={folders.breadcrumbPath}
+              onNavigateToRoot={() => {
+                folders.setActiveFolder(null);
+                clearSelection();
+              }}
+              toolbar={filtersToolbar}
+              pageHeader={{
+                icon: <Database className="h-3.5 w-3.5" />,
+                title: "문제 관리",
+                totalCount,
+                itemLabel: "문제",
+              }}
+              selectionBar={
+                <SelectionToolbar
+                  embedded
+                  selectedCount={selectedIds.size}
+                  totalCount={displayedQuestions.length}
+                  isAllSelected={
+                    selectedIds.size === displayedQuestions.length &&
+                    displayedQuestions.length > 0
+                  }
+                  onSelectAll={selectAll}
+                  onClearSelection={clearSelection}
+                  activeFolder={folders.activeFolder}
+                  onRemoveFromFolder={handleRemoveFromFolder}
+                  extraActions={selectionExtraActions}
+                  rightSlot={gridToggle}
+                />
+              }
+            />
 
             {/* Questions section */}
             <div>
@@ -532,20 +606,26 @@ export function QuestionBankClient({
                 <div className="text-center py-12">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
-                    {folders.activeFolder ? "이 폴더에 문제가 없습니다." : "등록된 문제가 없습니다."}
+                    {folders.activeFolder
+                      ? "이 폴더에 문제가 없습니다."
+                      : "등록된 문제가 없습니다."}
                   </p>
                   {folders.activeFolder && (
-                    <p className="text-[12px] text-slate-400 mt-1">문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.</p>
+                    <p className="text-[12px] text-slate-400 mt-1">
+                      문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.
+                    </p>
                   )}
                 </div>
               ) : (
-                <div className={`grid gap-3 ${
-                  gridCols === 2
-                    ? "grid-cols-1 md:grid-cols-2"
-                    : gridCols === 3
-                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                    : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                }`}>
+                <div
+                  className={`grid gap-3 ${
+                    gridCols === 2
+                      ? "grid-cols-1 md:grid-cols-2"
+                      : gridCols === 3
+                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                        : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  }`}
+                >
                   {displayedQuestions.map((q, idx) => {
                     const startIdx = (questionsData.page - 1) * 20;
                     return (
@@ -600,8 +680,9 @@ export function QuestionBankClient({
               autoFocus
             />
             <p className="text-xs text-slate-500">
-              선택한 {selectedIds.size}개 문제로 초안(DRAFT) 시험지를 생성합니다.
-              생성 후 상세 페이지에서 순서, 배점 등을 편집할 수 있습니다.
+              선택한 {selectedIds.size}개 문제로 초안(DRAFT) 시험지를
+              생성합니다. 생성 후 상세 페이지에서 순서, 배점 등을 편집할 수
+              있습니다.
             </p>
           </div>
           <DialogFooter>
@@ -648,13 +729,24 @@ export function QuestionBankClient({
           ) : questionLoadError ? (
             <div className="flex h-full items-center justify-center bg-white">
               <div className="space-y-3 text-center">
-                <p className="text-sm font-medium text-slate-700">{questionLoadError}</p>
+                <p className="text-sm font-medium text-slate-700">
+                  {questionLoadError}
+                </p>
                 <div className="flex justify-center gap-2">
-                  <Button variant="outline" size="sm" onClick={closeQuestionEditor}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={closeQuestionEditor}
+                  >
                     닫기
                   </Button>
                   {editingQuestionId && (
-                    <Button size="sm" onClick={() => handleOpenQuestionEditor(editingQuestionId)}>
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        handleOpenQuestionEditor(editingQuestionId)
+                      }
+                    >
                       다시 불러오기
                     </Button>
                   )}

@@ -32,7 +32,7 @@ export interface DraftCollectionItem {
   _count: { items: number; children: number };
 }
 
-export interface PassageCreateProps {
+export interface PassageRegistrationProps {
   schools: Array<{
     id: string;
     name: string;

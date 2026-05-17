@@ -78,7 +78,10 @@ export function QueueToolbar(props: QueueToolbarProps) {
           className="w-full h-9 pl-9 pr-3 text-[13px] rounded-lg border border-slate-200 bg-white outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-300"
         />
         {filterSearch && (
-          <button onClick={() => setFilterSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2">
+          <button
+            onClick={() => setFilterSearch("")}
+            className="absolute right-2 top-1/2 -translate-y-1/2"
+          >
             <X className="w-3.5 h-3.5 text-slate-400" />
           </button>
         )}
@@ -88,7 +91,9 @@ export function QueueToolbar(props: QueueToolbarProps) {
       <button
         onClick={() => setShowFilters(!showFilters)}
         className={`h-9 px-3 flex items-center gap-1.5 text-[12px] font-medium rounded-lg border transition-colors ${
-          hasActiveFilters ? "bg-blue-50 border-blue-200 text-blue-600" : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+          hasActiveFilters
+            ? "bg-blue-50 border-blue-200 text-blue-600"
+            : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
         }`}
       >
         <Filter className="w-3.5 h-3.5" />
@@ -105,8 +110,13 @@ export function QueueToolbar(props: QueueToolbarProps) {
         {collections.map((c) => (
           <button
             key={c.id}
-            onClick={() => setFilterCollection(filterCollection === c.id ? "" : c.id)}
-            onDoubleClick={() => { setEditingFolderId(c.id); setEditingFolderName(c.name); }}
+            onClick={() =>
+              setFilterCollection(filterCollection === c.id ? "" : c.id)
+            }
+            onDoubleClick={() => {
+              setEditingFolderId(c.id);
+              setEditingFolderName(c.name);
+            }}
             className={`h-9 px-3 flex items-center gap-1.5 text-[12px] font-medium rounded-lg border transition-colors ${
               filterCollection === c.id
                 ? "bg-blue-50 border-blue-200 text-blue-600"
@@ -131,15 +141,25 @@ export function QueueToolbar(props: QueueToolbarProps) {
             ) : (
               <>
                 {c.name}
-                <span className="text-[10px] text-slate-400">{c._count.items}</span>
+                <span className="text-[10px] text-slate-400">
+                  {c._count.items}
+                </span>
               </>
             )}
             {filterCollection === c.id && (
               <span
                 role="button"
                 tabIndex={0}
-                onClick={(e) => { e.stopPropagation(); onDeleteFolder(c.id); }}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onDeleteFolder(c.id); } }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteFolder(c.id);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.stopPropagation();
+                    onDeleteFolder(c.id);
+                  }
+                }}
                 className="ml-0.5 p-0.5 rounded hover:bg-red-50 cursor-pointer"
                 title="폴더 삭제"
               >
@@ -157,15 +177,34 @@ export function QueueToolbar(props: QueueToolbarProps) {
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") onCreateFolder();
-                if (e.key === "Escape") { setShowNewFolder(false); setNewFolderName(""); }
+                if (e.key === "Enter") {
+                  if (e.nativeEvent.isComposing) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onCreateFolder();
+                }
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowNewFolder(false);
+                  setNewFolderName("");
+                }
               }}
               className="h-9 w-32 px-3 text-[12px] rounded-lg border border-blue-300 outline-none focus:ring-2 focus:ring-blue-500/10"
             />
-            <button onClick={onCreateFolder} className="h-9 px-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+            <button
+              onClick={onCreateFolder}
+              className="h-9 px-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+            >
               <Check className="w-3.5 h-3.5" />
             </button>
-            <button onClick={() => { setShowNewFolder(false); setNewFolderName(""); }} className="h-9 px-2 rounded-lg border border-slate-200 hover:bg-slate-50">
+            <button
+              onClick={() => {
+                setShowNewFolder(false);
+                setNewFolderName("");
+              }}
+              className="h-9 px-2 rounded-lg border border-slate-200 hover:bg-slate-50"
+            >
               <X className="w-3.5 h-3.5 text-slate-400" />
             </button>
           </div>
@@ -174,8 +213,7 @@ export function QueueToolbar(props: QueueToolbarProps) {
             onClick={() => setShowNewFolder(true)}
             className="h-9 px-3 flex items-center gap-1.5 text-[12px] font-medium rounded-lg border border-dashed border-slate-300 text-slate-400 hover:text-blue-600 hover:border-blue-300 transition-colors"
           >
-            <FolderPlus className="w-3.5 h-3.5" />
-            새 폴더
+            <FolderPlus className="w-3.5 h-3.5" />새 폴더
           </button>
         )}
       </div>

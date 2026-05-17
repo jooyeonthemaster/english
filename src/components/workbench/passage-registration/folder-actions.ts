@@ -17,21 +17,39 @@ interface CreateFolderArgs {
   setShowNewFolder: (v: boolean) => void;
 }
 
+let createFolderInFlight = false;
+
 export async function handleCreateFolder({
   newFolderName,
   setCollections,
   setNewFolderName,
   setShowNewFolder,
 }: CreateFolderArgs) {
-  if (!newFolderName.trim()) return;
-  const result = await createPassageCollection({ name: newFolderName.trim() });
-  if (result.success) {
-    setCollections((prev) => [{ id: result.id!, name: newFolderName.trim(), description: null, color: null, _count: { items: 0 } }, ...prev]);
-    setNewFolderName("");
-    setShowNewFolder(false);
-    toast.success("폴더가 생성되었습니다.");
-  } else {
-    toast.error(result.error || "폴더 생성 실패");
+  const name = newFolderName.trim();
+  if (!name || createFolderInFlight) return;
+
+  createFolderInFlight = true;
+  try {
+    const result = await createPassageCollection({ name });
+    if (result.success) {
+      setCollections((prev) => [
+        {
+          id: result.id!,
+          name,
+          description: null,
+          color: null,
+          _count: { items: 0 },
+        },
+        ...prev,
+      ]);
+      setNewFolderName("");
+      setShowNewFolder(false);
+      toast.success("폴더가 생성되었습니다.");
+    } else {
+      toast.error(result.error || "폴더 생성 실패");
+    }
+  } finally {
+    createFolderInFlight = false;
   }
 }
 
@@ -49,9 +67,15 @@ export async function handleRenameFolder({
   setEditingFolderId,
 }: RenameFolderArgs) {
   if (!editingFolderName.trim()) return;
-  const result = await updatePassageCollection(id, { name: editingFolderName.trim() });
+  const result = await updatePassageCollection(id, {
+    name: editingFolderName.trim(),
+  });
   if (result.success) {
-    setCollections((prev) => prev.map((c) => c.id === id ? { ...c, name: editingFolderName.trim() } : c));
+    setCollections((prev) =>
+      prev.map((c) =>
+        c.id === id ? { ...c, name: editingFolderName.trim() } : c,
+      ),
+    );
     setEditingFolderId(null);
     toast.success("폴더 이름이 변경되었습니다.");
   }
@@ -70,7 +94,8 @@ export async function handleDeleteFolder({
   setCollections,
   setFilterCollection,
 }: DeleteFolderArgs) {
-  if (!confirm("이 폴더를 삭제하시겠습니까? (지문은 삭제되지 않습니다)")) return;
+  if (!confirm("이 폴더를 삭제하시겠습니까? (지문은 삭제되지 않습니다)"))
+    return;
   const result = await deletePassageCollection(id);
   if (result.success) {
     setCollections((prev) => prev.filter((c) => c.id !== id));
@@ -84,7 +109,9 @@ interface AddToFolderArgs {
   selectedIds: Set<string>;
   setAddingToFolder: (v: boolean) => void;
   setCollections: React.Dispatch<React.SetStateAction<PassageCollection[]>>;
-  setCollectionPassageIds: React.Dispatch<React.SetStateAction<Map<string, Set<string>>>>;
+  setCollectionPassageIds: React.Dispatch<
+    React.SetStateAction<Map<string, Set<string>>>
+  >;
   clearSelection: () => void;
 }
 
@@ -100,11 +127,19 @@ export async function handleAddToFolder({
   setAddingToFolder(true);
   const result = await addPassagesToCollection(collectionId, [...selectedIds]);
   if (result.success) {
-    setCollections((prev) => prev.map((c) =>
-      c.id === collectionId ? { ...c, _count: { items: c._count.items + selectedIds.size } } : c
-    ));
+    setCollections((prev) =>
+      prev.map((c) =>
+        c.id === collectionId
+          ? { ...c, _count: { items: c._count.items + selectedIds.size } }
+          : c,
+      ),
+    );
     // Invalidate cached IDs for this collection so next filter refetches
-    setCollectionPassageIds((prev) => { const next = new Map(prev); next.delete(collectionId); return next; });
+    setCollectionPassageIds((prev) => {
+      const next = new Map(prev);
+      next.delete(collectionId);
+      return next;
+    });
     toast.success(`${selectedIds.size}개 지문이 폴더에 추가되었습니다.`);
     clearSelection();
   } else {
@@ -120,7 +155,9 @@ interface MoveToFolderArgs {
   collectionPassageIds: Map<string, Set<string>>;
   setAddingToFolder: (v: boolean) => void;
   setCollections: React.Dispatch<React.SetStateAction<PassageCollection[]>>;
-  setCollectionPassageIds: React.Dispatch<React.SetStateAction<Map<string, Set<string>>>>;
+  setCollectionPassageIds: React.Dispatch<
+    React.SetStateAction<Map<string, Set<string>>>
+  >;
   clearSelection: () => void;
 }
 
@@ -145,7 +182,6 @@ export async function handleMoveToFolder({
   setAddingToFolder(true);
 
   const ids = [...selectedIds];
-  const idSet = new Set(ids);
   const sourceCollectionIds: string[] = [];
   for (const [colId, memberIds] of collectionPassageIds.entries()) {
     if (colId === collectionId) continue;
@@ -155,7 +191,9 @@ export async function handleMoveToFolder({
 
   try {
     await Promise.all(
-      sourceCollectionIds.map((colId) => removePassagesFromCollection(colId, ids)),
+      sourceCollectionIds.map((colId) =>
+        removePassagesFromCollection(colId, ids),
+      ),
     );
     const result = await addPassagesToCollection(collectionId, ids);
     if (!result.success) {

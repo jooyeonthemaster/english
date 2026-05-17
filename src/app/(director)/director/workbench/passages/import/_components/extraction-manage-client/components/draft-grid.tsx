@@ -25,7 +25,9 @@ import { DraftCard } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 
-function mapJobStatusToTaskStatus(status: string | null | undefined): TaskStatus {
+function mapJobStatusToTaskStatus(
+  status: string | null | undefined,
+): TaskStatus {
   switch (status) {
     case "PENDING":
       return "pending";
@@ -117,7 +119,7 @@ export function DraftGrid({
   onRenameSourceMaterial,
   groupIndexBySourceMaterialId,
 }: DraftGridProps) {
-  const showJobFilter = jobs.length > 1;
+  const showJobFilter = !inFolder && jobs.length > 1;
 
   const draftGroups = useMemo(() => {
     const map = new Map<string, M1PassageDraftWithJob[]>();
@@ -153,10 +155,13 @@ export function DraftGrid({
       setExpandedGroups(new Set(draftGroups.map((g) => g.key)));
     }
   }, [allExpanded, draftGroups]);
-  const allJobDraftIds = useMemo(() => drafts.map((draft) => draft.id), [drafts]);
+  const allJobDraftIds = useMemo(
+    () => drafts.map((draft) => draft.id),
+    [drafts],
+  );
 
   return (
-    <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+    <section className="min-w-0 pb-1">
       {showJobFilter ? (
         <div className="mb-4 flex min-w-0 shrink-0 items-stretch gap-3 overflow-x-auto pb-2">
           <JobFilterCard
@@ -226,7 +231,7 @@ export function DraftGrid({
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+      <div className="pr-1">
         {loading ? (
           <div className="space-y-4 pb-2">
             {/* Mirror the live "{N}개 시험지 감지됨" header */}
@@ -289,7 +294,7 @@ export function DraftGrid({
               // number is stable regardless of UI filter/sort).
               const absoluteIndex = isUnlinked
                 ? 0
-                : groupIndexBySourceMaterialId.get(group.key) ?? 0;
+                : (groupIndexBySourceMaterialId.get(group.key) ?? 0);
               const firstJob = group.drafts[0]?.job;
               const jobName =
                 (firstJob?.displayName?.trim() && firstJob.displayName) ||
@@ -465,7 +470,9 @@ function GroupSection({
       ref={dragRef}
       className={
         "overflow-hidden rounded-xl border-l-4 motion-safe:transition-opacity " +
-        (isDragging ? "cursor-grabbing opacity-60 " : "cursor-grab active:cursor-grabbing ") +
+        (isDragging
+          ? "cursor-grabbing opacity-60 "
+          : "cursor-grab active:cursor-grabbing ") +
         accent
       }
     >
@@ -656,8 +663,7 @@ function JobFilterCard({
   }, [label]);
 
   const taskStatus = mapJobStatusToTaskStatus(status);
-  const isActiveJob =
-    status != null && ACTIVE_STATUSES.has(taskStatus);
+  const isActiveJob = status != null && ACTIVE_STATUSES.has(taskStatus);
 
   const dateParts =
     createdAt != null
@@ -681,7 +687,9 @@ function JobFilterCard({
       title={label}
       className={
         "group relative flex w-[150px] shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-        (isDragging ? "cursor-grabbing opacity-60 " : "cursor-grab active:cursor-grabbing ") +
+        (isDragging
+          ? "cursor-grabbing opacity-60 "
+          : "cursor-grab active:cursor-grabbing ") +
         cardClass
       }
     >

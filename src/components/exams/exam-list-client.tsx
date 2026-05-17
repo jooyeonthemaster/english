@@ -48,13 +48,13 @@ import {
 } from "@/actions/exams";
 
 // Shared folder modules
-import type { CollectionItem, CollectionActions } from "@/components/workbench/shared/types";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { SelectionToolbar } from "@/components/workbench/shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 
-// Hooks (use the workbench/hooks versions that support CollectionActions interface)
-import { useFolderManager } from "@/components/workbench/hooks/use-folder-manager";
+// Hooks
+import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "@/components/workbench/hooks/use-selection";
 
 // Exam card
@@ -123,15 +123,15 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Server action adapters (match CollectionActions interface)
+// Server action adapters
 // ---------------------------------------------------------------------------
 
-const folderActions: CollectionActions = {
-  create: createExamCollection,
-  update: updateExamCollection,
-  delete: deleteExamCollection,
-  addItems: addExamsToCollection,
-  removeItems: removeExamsFromCollection,
+const folderActions = {
+  createCollection: createExamCollection,
+  updateCollection: updateExamCollection,
+  deleteCollection: deleteExamCollection,
+  addToCollection: addExamsToCollection,
+  removeFromCollection: removeExamsFromCollection,
 };
 
 // ---------------------------------------------------------------------------
@@ -159,7 +159,11 @@ function ExamListRow({
     if (!el) return;
     return draggable({
       element: el,
-      getInitialData: () => ({ examId: exam.id, title: exam.title, type: "exam" }),
+      getInitialData: () => ({
+        examId: exam.id,
+        title: exam.title,
+        type: "exam",
+      }),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -171,13 +175,18 @@ function ExamListRow({
       onClick={() => onClick(exam.id)}
       className={cn(
         "group flex items-center gap-3 px-4 py-3 rounded-lg bg-white border cursor-pointer transition-all hover:shadow-sm",
-        selected ? "ring-2 ring-blue-400 border-blue-300" : "border-slate-200 hover:border-slate-300",
+        selected
+          ? "ring-2 ring-blue-400 border-blue-300"
+          : "border-slate-200 hover:border-slate-300",
         isDragging && "opacity-40 scale-95",
       )}
     >
       {/* Checkbox */}
       <button
-        onClick={(e) => { e.stopPropagation(); onToggleSelect(exam.id, e.shiftKey); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleSelect(exam.id, e.shiftKey);
+        }}
         className={cn(
           "w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 transition-all",
           selected
@@ -196,15 +205,19 @@ function ExamListRow({
       </div>
 
       {/* Type */}
-      <span className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0",
-        TYPE_COLORS[exam.type] || "bg-slate-100 text-slate-600",
-      )}>
+      <span
+        className={cn(
+          "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0",
+          TYPE_COLORS[exam.type] || "bg-slate-100 text-slate-600",
+        )}
+      >
         {TYPE_LABELS[exam.type] || exam.type}
       </span>
 
       {/* Class */}
-      <span className="text-[11px] text-slate-500 w-16 truncate shrink-0">{exam.class?.name || "-"}</span>
+      <span className="text-[11px] text-slate-500 w-16 truncate shrink-0">
+        {exam.class?.name || "-"}
+      </span>
 
       {/* Date */}
       <span className="inline-flex items-center gap-1 text-[11px] text-slate-500 w-20 shrink-0">
@@ -213,21 +226,30 @@ function ExamListRow({
       </span>
 
       {/* Questions */}
-      <span className="text-[11px] text-slate-500 w-14 text-center shrink-0">{exam._count.questions}문제</span>
+      <span className="text-[11px] text-slate-500 w-14 text-center shrink-0">
+        {exam._count.questions}문제
+      </span>
 
       {/* Status */}
-      <span className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0",
-        STATUS_COLORS[exam.status] || "bg-gray-100 text-gray-600",
-      )}>
+      <span
+        className={cn(
+          "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0",
+          STATUS_COLORS[exam.status] || "bg-gray-100 text-gray-600",
+        )}
+      >
         {STATUS_LABELS[exam.status] || exam.status}
       </span>
 
       {/* Submissions */}
-      <span className="text-[11px] text-slate-500 w-12 text-center shrink-0">{exam._count.submissions}명</span>
+      <span className="text-[11px] text-slate-500 w-12 text-center shrink-0">
+        {exam._count.submissions}명
+      </span>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="flex items-center gap-1 shrink-0"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={() => onClick(exam.id)}
           className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-slate-100 transition-colors"
@@ -269,13 +291,15 @@ export function ExamListClient({
     initialCollections,
     initialMembership,
     actions: folderActions,
-    entityLabel: "시험",
+    itemLabel: "시험",
   });
+  const { filterByActiveFolder } = folder;
 
   // ─── Client-side filtering ───
   const filteredExams = useMemo(() => {
     return exams.filter((exam) => {
-      if (search && !exam.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (search && !exam.title.toLowerCase().includes(search.toLowerCase()))
+        return false;
       if (typeFilter !== "ALL" && exam.type !== typeFilter) return false;
       if (statusFilter !== "ALL" && exam.status !== statusFilter) return false;
       if (classFilter !== "ALL" && exam.class?.id !== classFilter) return false;
@@ -285,18 +309,24 @@ export function ExamListClient({
 
   // ─── Filter by active folder ───
   const displayedExams = useMemo(
-    () => folder.filterByActiveFolder(filteredExams),
-    [folder.filterByActiveFolder, filteredExams],
+    () => filterByActiveFolder(filteredExams),
+    [filterByActiveFolder, filteredExams],
   );
 
-  const examIds = useMemo(() => displayedExams.map((e) => e.id), [displayedExams]);
+  const examIds = useMemo(
+    () => displayedExams.map((e) => e.id),
+    [displayedExams],
+  );
   const selection = useSelection(examIds);
 
   // ─── Folder action wrappers ───
   const onAddToFolder = useCallback(
     async (collectionId: string) => {
-      const result = await folder.handleAddToFolder(collectionId, [...selection.selectedIds]);
-      if (result?.success) {
+      const success = await folder.handleAddToFolder(
+        collectionId,
+        selection.selectedIds,
+      );
+      if (success) {
         selection.clearSelection();
       }
     },
@@ -306,28 +336,45 @@ export function ExamListClient({
   const onMoveToFolder = useCallback(
     async (collectionId: string) => {
       if (selection.selectedIds.size === 0) return;
-      const anyId = selection.selectedIds.values().next().value as string | undefined;
+      const anyId = selection.selectedIds.values().next().value as
+        | string
+        | undefined;
       if (!anyId) return;
-      const result = await folder.handleDragToFolder(
+      const success = await folder.handleDragToFolder(
         anyId,
         collectionId,
         false,
         selection.selectedIds,
       );
-      if (result?.success) selection.clearSelection();
+      if (success) selection.clearSelection();
     },
     [folder, selection],
   );
 
   const onRemoveFromFolder = useCallback(async () => {
-    const result = await folder.handleRemoveFromFolder([...selection.selectedIds]);
-    if (result?.success) selection.clearSelection();
+    const success = await folder.handleRemoveFromFolder(selection.selectedIds);
+    if (success) selection.clearSelection();
   }, [folder, selection]);
 
   const onDragToFolder = useCallback(
     (itemId: string, folderId: string, copy: boolean) => {
-      folder.handleDragToFolder(itemId, folderId, copy, selection.selectedIds).then((result) => {
-        if (result?.success) selection.clearSelection();
+      folder
+        .handleDragToFolder(itemId, folderId, copy, selection.selectedIds)
+        .then((success) => {
+          if (success) selection.clearSelection();
+        });
+    },
+    [folder, selection],
+  );
+
+  const onDragToRoot = useCallback(
+    (itemId: string, copy: boolean) => {
+      if (copy || !folder.activeFolder) return;
+      const ids = selection.selectedIds.has(itemId)
+        ? selection.selectedIds
+        : new Set([itemId]);
+      folder.handleRemoveFromFolder(ids).then((success) => {
+        if (success) selection.clearSelection();
       });
     },
     [folder, selection],
@@ -340,7 +387,6 @@ export function ExamListClient({
     },
     [folder, selection],
   );
-
 
   // ─── Delete handler ───
   async function handleDelete() {
@@ -440,8 +486,12 @@ export function ExamListClient({
       <span className="h-5 w-px bg-slate-200" />
 
       <Link href="/director/exams/create">
-        <Button size="sm" className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-3 h-3 mr-1" />시험 만들기
+        <Button
+          size="sm"
+          className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700"
+        >
+          <Plus className="w-3 h-3 mr-1" />
+          시험 만들기
         </Button>
       </Link>
     </>
@@ -490,11 +540,14 @@ export function ExamListClient({
           <div className="bg-white rounded-xl border text-center py-20">
             <GraduationCap className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">등록된 시험이 없습니다</p>
-            <p className="text-sm text-slate-400 mt-1">시험을 만들어 문제를 관리하세요</p>
+            <p className="text-sm text-slate-400 mt-1">
+              시험을 만들어 문제를 관리하세요
+            </p>
             <div className="flex items-center justify-center gap-2 mt-4">
               <Link href="/director/exams/create">
                 <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
-                  <Plus className="w-3.5 h-3.5 mr-1.5" />시험 만들기
+                  <Plus className="w-3.5 h-3.5 mr-1.5" />
+                  시험 만들기
                 </Button>
               </Link>
             </div>
@@ -519,8 +572,12 @@ export function ExamListClient({
               onRenameFolder={folder.handleRenameFolder}
               onDeleteFolder={folder.handleDeleteFolder}
               onDragToFolder={onDragToFolder}
+              onDragToRoot={onDragToRoot}
               breadcrumbPath={folder.breadcrumbPath}
-              onNavigateToRoot={() => { folder.setActiveFolder(null); selection.clearSelection(); }}
+              onNavigateToRoot={() => {
+                folder.setActiveFolder(null);
+                selection.clearSelection();
+              }}
               useCardInsideFolder={true}
               rootLabel="전체 시험"
               toolbar={filtersToolbar}
@@ -550,7 +607,9 @@ export function ExamListClient({
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[13px] font-semibold text-slate-600">
                   시험지
-                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">{displayedExams.length}개</span>
+                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">
+                    {displayedExams.length}개
+                  </span>
                 </h3>
               </div>
 
@@ -558,10 +617,15 @@ export function ExamListClient({
                 <div className="text-center py-12">
                   <ClipboardList className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
-                    {folder.activeFolder ? "이 폴더에 시험이 없습니다." : "조건에 맞는 시험이 없습니다."}
+                    {folder.activeFolder
+                      ? "이 폴더에 시험이 없습니다."
+                      : "조건에 맞는 시험이 없습니다."}
                   </p>
                   {folder.activeFolder && (
-                    <p className="text-[12px] text-slate-400 mt-1">시험을 드래그하거나 선택 후 &quot;폴더에 추가&quot;를 사용하세요.</p>
+                    <p className="text-[12px] text-slate-400 mt-1">
+                      시험을 드래그하거나 선택 후 &quot;폴더에 추가&quot;를
+                      사용하세요.
+                    </p>
                   )}
                 </div>
               ) : viewType === "grid" ? (
@@ -597,17 +661,24 @@ export function ExamListClient({
       </div>
 
       {/* Delete Dialog */}
-      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(open) => !open && setDeleteId(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>시험을 삭제하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 시험과 관련된 모든 데이터가 삭제됩니다.
+              이 작업은 되돌릴 수 없습니다. 시험과 관련된 모든 데이터가
+              삭제됩니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
               삭제
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -52,6 +52,68 @@ export function hasUnresolvedM1ProblemArtifacts(text: string): boolean {
   return hasM1ProblemArtifacts(text);
 }
 
+/** Whitespace-tolerant equality. Returns true when the only differences
+ *  between raw and restored are line-break / spacing changes — i.e. the
+ *  pipeline produced no semantic restoration. */
+export function isEffectivelyUnchanged(raw: string, restored: string): boolean {
+  const normalize = (s: string) => s.replace(/\s+/g, " ").trim();
+  return normalize(raw) === normalize(restored);
+}
+
+export interface RestorationDecisionInput {
+  rawText: string;
+  restoredText: string;
+  /** Set when the AI grounded call (single or batched) failed outright
+   *  (network, parse, EMPTY_OUTPUT) and we fell through to code-fallback. */
+  aiCallFailed?: boolean;
+  /** The model's own evaluation of its output. Ignored when aiCallFailed. */
+  aiFinalStatus?: "RESTORED" | "PARTIAL" | "FAILED" | null;
+  /** `checkRestorationQuality` requested a downgrade — used to keep the
+   *  existing safety net intact. */
+  qualityShouldDowngrade?: boolean;
+}
+
+/** Centralised post-hoc status decision.
+ *
+ *  Algorithm (matches the teacher-facing semantic):
+ *    1. restored still contains problem-sheet markers → FAILED
+ *    2. restored is whitespace-equal to raw:
+ *         - raw was already clean → NO_RESTORATION_NEEDED (nothing to do)
+ *         - raw had markers       → FAILED (markers weren't even stripped)
+ *    3. AI call failed (only marker-strip happened) → PARTIAL
+ *    4. quality check requests a downgrade → PARTIAL
+ *    5. AI said "RESTORED" → RESTORED
+ *    6. AI said anything else (PARTIAL / FAILED / null) → PARTIAL
+ *
+ *  Crucially: the model's self-reported finalStatus never overrides the
+ *  post-hoc text checks. An AI claiming "RESTORED" while emitting raw-equal
+ *  output is still downgraded.
+ */
+export function decideRestorationStatus(
+  input: RestorationDecisionInput,
+): M1RestorationStatus {
+  const {
+    rawText,
+    restoredText,
+    aiCallFailed = false,
+    aiFinalStatus = null,
+    qualityShouldDowngrade = false,
+  } = input;
+
+  if (hasUnresolvedM1ProblemArtifacts(restoredText)) return "FAILED";
+
+  if (isEffectivelyUnchanged(rawText, restoredText)) {
+    return hasUnresolvedM1ProblemArtifacts(rawText)
+      ? "FAILED"
+      : "NO_RESTORATION_NEEDED";
+  }
+
+  if (aiCallFailed) return "PARTIAL";
+  if (qualityShouldDowngrade) return "PARTIAL";
+  if (aiFinalStatus === "RESTORED") return "RESTORED";
+  return "PARTIAL";
+}
+
 export function buildFallbackM1Restoration(raw: string): M1RestorationFallback {
   const normalizedRaw = normalizePassageWhitespace(raw);
   const changes: M1RestorationChangeInput[] = [];

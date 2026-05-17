@@ -875,7 +875,11 @@ function readM1RestorationStatus(value: unknown): M1RestorationStatus {
   ) {
     return value;
   }
-  return "RESTORED";
+  // Conservative default: pre-restoration draft rows enter the pipeline as
+  // PENDING so the actual restoration result later overwrites this. Never
+  // silently claim "RESTORED" — that was the source of the false-positive
+  // "복원됨" badges teachers were seeing.
+  return "PENDING";
 }
 
 /**

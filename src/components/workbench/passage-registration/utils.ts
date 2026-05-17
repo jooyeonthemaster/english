@@ -15,7 +15,11 @@ export function mapRecentPassagesToQueueItems(
       title: p.title,
       contentPreview: p.content.length > 120 ? p.content.slice(0, 120) + "..." : p.content,
       wordCount: words,
-      status: "done" as const, // Server-loaded items are always shown as completed (no auto-analysis)
+      // "done" = has a PassageAnalysis row; "not_analyzed" = registered but
+      // analysis hasn't been run yet (e.g. newly promoted from 자료 관리).
+      // Never auto-trigger analysis for server-loaded items — that's a user
+      // action only.
+      status: p.analysis ? ("done" as const) : ("not_analyzed" as const),
       analysisData,
       error: null,
       promptConfig: { customPrompt: "", focusAreas: [], targetLevel: "" },

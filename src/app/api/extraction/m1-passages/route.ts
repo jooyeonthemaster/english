@@ -6,7 +6,7 @@ import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED"];
+const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED", "COMMITTED"];
 
 export async function GET(req: NextRequest) {
   const staff = await requireStaff();
@@ -17,6 +17,117 @@ export async function GET(req: NextRequest) {
     Math.max(1, Number(req.nextUrl.searchParams.get("limit") ?? 200)),
   );
   const jobId = req.nextUrl.searchParams.get("jobId");
+  const view = req.nextUrl.searchParams.get("view");
+
+  if (view === "list") {
+    const drafts = await prisma.extractionM1PassageDraft.findMany({
+      where: {
+        ...(jobId ? { jobId } : {}),
+        reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
+        job: {
+          academyId: staff.academyId,
+          mode: "PASSAGE_ONLY",
+        },
+      },
+      orderBy: [{ job: { createdAt: "desc" } }, { passageOrder: "asc" }],
+      take: limit,
+      select: {
+        id: true,
+        jobId: true,
+        sourceMaterialId: true,
+        passageOrder: true,
+        sourcePageIndex: true,
+        title: true,
+        rawText: true,
+        teacherText: true,
+        restorationStatus: true,
+        reviewStatus: true,
+        confidence: true,
+        warnings: true,
+        metadata: true,
+        confirmedAt: true,
+        savedPassageId: true,
+        createdAt: true,
+        updatedAt: true,
+        job: {
+          select: {
+            id: true,
+            originalFileName: true,
+            displayName: true,
+            totalPages: true,
+            createdAt: true,
+            completedAt: true,
+            status: true,
+            pages: {
+              orderBy: { pageIndex: "asc" },
+              select: {
+                pageIndex: true,
+                sourceFileName: true,
+              },
+            },
+          },
+        },
+        sourceMaterial: {
+          select: { id: true, customLabel: true },
+        },
+        // `changes` powers the per-edit evidence panel in the detail modal —
+        // each row carries the AI's reason / evidenceType / confidence the
+        // teacher needs to evaluate a restoration. Source matches stay out
+        // of the list payload (they're loaded lazily by the source-match
+        // panel when expanded); `restoredText` is the heavy field we keep
+        // empty in this view because the UI renders teacherText anyway.
+        changes: {
+          orderBy: [{ sentenceOrder: "asc" }, { createdAt: "asc" }],
+        },
+      },
+    });
+
+    const visibleDrafts = drafts.filter(isM1DraftVisible);
+    const uniqueJobIds = Array.from(new Set(visibleDrafts.map((d) => d.jobId)));
+    type ExamMetaShape = { pageNumber?: number | null };
+    const examPageNumberByJobPageIndex = new Map<string, number>();
+    if (uniqueJobIds.length > 0) {
+      const itemsWithExamMeta = await prisma.extractionItem.findMany({
+        where: {
+          jobId: { in: uniqueJobIds },
+          examMeta: { not: { equals: null as never } },
+        },
+        orderBy: { order: "asc" },
+        select: { jobId: true, sourcePageIndex: true, examMeta: true },
+      });
+      for (const item of itemsWithExamMeta) {
+        const meta = item.examMeta as ExamMetaShape | null;
+        const pn =
+          typeof meta?.pageNumber === "number" ? meta.pageNumber : null;
+        if (pn === null) continue;
+        const pIdx = item.sourcePageIndex?.[0];
+        if (typeof pIdx !== "number") continue;
+        const key = `${item.jobId}:${pIdx}`;
+        if (!examPageNumberByJobPageIndex.has(key)) {
+          examPageNumberByJobPageIndex.set(key, pn);
+        }
+      }
+    }
+
+    const enriched = visibleDrafts.map((d) => ({
+      ...d,
+      restoredText: "",
+      sourceMatches: [],
+      job: d.job
+        ? {
+            ...d.job,
+            pages: d.job.pages.map((p) => ({
+              ...p,
+              examPageNumber:
+                examPageNumberByJobPageIndex.get(`${d.jobId}:${p.pageIndex}`) ??
+                null,
+            })),
+          }
+        : d.job,
+    }));
+
+    return NextResponse.json({ drafts: enriched });
+  }
 
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
@@ -27,10 +138,7 @@ export async function GET(req: NextRequest) {
         mode: "PASSAGE_ONLY",
       },
     },
-    orderBy: [
-      { job: { createdAt: "desc" } },
-      { passageOrder: "asc" },
-    ],
+    orderBy: [{ job: { createdAt: "desc" } }, { passageOrder: "asc" }],
     take: limit,
     include: {
       job: {
@@ -105,7 +213,8 @@ export async function GET(req: NextRequest) {
           pages: d.job.pages.map((p) => ({
             ...p,
             examPageNumber:
-              examPageNumberByJobPageIndex.get(`${d.jobId}:${p.pageIndex}`) ?? null,
+              examPageNumberByJobPageIndex.get(`${d.jobId}:${p.pageIndex}`) ??
+              null,
           })),
         }
       : d.job,

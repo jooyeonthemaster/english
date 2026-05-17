@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
-  FolderPlus,
+  Database,
   Loader2,
   RefreshCw,
   Trash2,
@@ -20,6 +20,7 @@ import {
   updateM1DraftCollection,
 } from "@/actions/workbench";
 import type { CollectionItem } from "@/components/workbench/shared/types";
+import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "@/hooks/use-selection";
 
@@ -29,11 +30,8 @@ import { DraftDetailModal } from "./components/draft-detail-modal";
 import { DraftFolderSection } from "./components/draft-folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
-import {
-  ManageFiltersBar,
-  type SortOrder,
-  type StatusFilter,
-} from "./components/manage-filters-bar";
+import { ManageFiltersBar } from "./components/manage-filters-bar";
+import type { SortOrder, StatusFilter } from "./components/manage-header";
 import type {
   JobDetailResponse,
   M1DraftJobSummary,
@@ -70,6 +68,9 @@ interface JobMetaSnapshot {
   displayName: string | null;
   originalFileName: string | null;
   createdAt: string;
+  resultCount: number;
+  draftResultCount: number;
+  savedResultCount: number;
 }
 
 let cachedJobMeta: Map<string, JobMetaSnapshot> | null = null;
@@ -86,6 +87,9 @@ export function ExtractionManageClient({
     () => cachedDrafts ?? [],
   );
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const [selectedDraftDetail, setSelectedDraftDetail] =
+    useState<M1PassageDraftWithJob | null>(null);
+  const [detailLoadingId, setDetailLoadingId] = useState<string | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(
     () => cachedDrafts === null,
   );
@@ -97,6 +101,7 @@ export function ExtractionManageClient({
   const [jobId, setJobId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const bootstrapped = useRef(false);
+  const detailRequestSeq = useRef(0);
 
   const queueDrawer = useQueueDrawer();
 
@@ -110,8 +115,6 @@ export function ExtractionManageClient({
   const [jobMetaByJobId, setJobMetaByJobId] = useState<
     Map<string, JobMetaSnapshot>
   >(() => cachedJobMeta ?? new Map());
-  const [addToFolderOpen, setAddToFolderOpen] = useState(false);
-  const addToFolderRef = useRef<HTMLDivElement>(null);
 
   // ─── Folder manager ───
   const folders = useFolderManager({
@@ -163,7 +166,61 @@ export function ExtractionManageClient({
       setResultScope("job");
       setJobId(nextJobId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "작업 정보를 불러오지 못했습니다.");
+      setError(
+        err instanceof Error ? err.message : "작업 정보를 불러오지 못했습니다.",
+      );
+    } finally {
+      setLoadingDetails(false);
+    }
+  }, []);
+  const loadJobsDetails = useCallback(async (nextJobIds: Set<string>) => {
+    if (nextJobIds.size === 0) return;
+    setLoadingDetails(true);
+    setError(null);
+    try {
+      const responses = await Promise.all(
+        Array.from(nextJobIds).map(async (nextJobId) => {
+          const res = await fetch("/api/extraction/jobs/" + nextJobId, {
+            credentials: "include",
+            cache: "no-store",
+          });
+          if (!res.ok) {
+            throw new Error("작업 정보를 불러오지 못했습니다.");
+          }
+          return (await res.json()) as JobDetailResponse;
+        }),
+      );
+
+      const nextDrafts = responses.flatMap((data) => {
+        const examPageNumberByPageIndex = buildExamPageNumberMap(data.items);
+        const jobSummary: M1DraftJobSummary = {
+          id: data.job.id,
+          originalFileName: data.job.originalFileName,
+          displayName: data.job.displayName ?? null,
+          totalPages: data.job.totalPages,
+          status: data.job.status,
+          createdAt: data.job.createdAt,
+          completedAt: data.job.completedAt,
+          pages: (data.pages ?? []).map((page) => ({
+            pageIndex: page.pageIndex,
+            sourceFileName: page.sourceFileName ?? null,
+            examPageNumber: examPageNumberByPageIndex.get(page.pageIndex) ?? null,
+          })),
+        };
+        return data.m1PassageDrafts.map((draft) => ({
+          ...draft,
+          job: jobSummary,
+        }));
+      });
+
+      setDrafts(nextDrafts);
+      setSelectedDraftId(null);
+      setResultScope("job");
+      setJobId(nextJobIds.size === 1 ? Array.from(nextJobIds)[0] : null);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "?묒뾽 ?뺣낫瑜?遺덈윭?ㅼ? 紐삵뻽?듬땲??",
+      );
     } finally {
       setLoadingDetails(false);
     }
@@ -176,10 +233,13 @@ export function ExtractionManageClient({
     if (cachedDrafts === null) setLoadingDetails(true);
     setError(null);
     try {
-      const res = await fetch("/api/extraction/m1-passages?limit=200", {
-        credentials: "include",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        "/api/extraction/m1-passages?limit=200&view=list",
+        {
+          credentials: "include",
+          cache: "no-store",
+        },
+      );
       if (!res.ok) throw new Error("자료 목록을 불러오지 못했습니다.");
 
       const data = (await res.json()) as { drafts: M1PassageDraftWithJob[] };
@@ -189,7 +249,9 @@ export function ExtractionManageClient({
       setResultScope("all");
       setJobId(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "자료 목록을 불러오지 못했습니다.");
+      setError(
+        err instanceof Error ? err.message : "자료 목록을 불러오지 못했습니다.",
+      );
     } finally {
       setLoadingDetails(false);
     }
@@ -206,11 +268,12 @@ export function ExtractionManageClient({
     void (async () => {
       await loadAllDrafts();
       if (nextJobId) {
-        setJobFilter(new Set([nextJobId]));
-        setJobId(nextJobId);
+        const next = new Set([nextJobId]);
+        setJobFilter(next);
+        await loadJobDetails(nextJobId);
       }
     })();
-  }, [loadAllDrafts]);
+  }, [loadAllDrafts, loadJobDetails]);
 
   // ─── Silent polling for PENDING restoration ───
   const pollJobSilent = useCallback(async (nextJobId: string) => {
@@ -236,7 +299,9 @@ export function ExtractionManageClient({
           examPageNumber: examPageNumberByPageIndex.get(page.pageIndex) ?? null,
         })),
       };
-      setDrafts(data.m1PassageDrafts.map((draft) => ({ ...draft, job: jobSummary })));
+      setDrafts(
+        data.m1PassageDrafts.map((draft) => ({ ...draft, job: jobSummary })),
+      );
     } catch {
       /* polling errors are non-fatal */
     }
@@ -244,10 +309,13 @@ export function ExtractionManageClient({
 
   const pollAllSilent = useCallback(async () => {
     try {
-      const res = await fetch("/api/extraction/m1-passages?limit=200", {
-        credentials: "include",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        "/api/extraction/m1-passages?limit=200&view=list",
+        {
+          credentials: "include",
+          cache: "no-store",
+        },
+      );
       if (!res.ok) return;
       const data = (await res.json()) as { drafts: M1PassageDraftWithJob[] };
       setDrafts(data.drafts);
@@ -274,12 +342,20 @@ export function ExtractionManageClient({
   // Job thumbnails + status — used by the job filter cards to render
   // task-card-style previews with status spinners. Reuses the existing
   // /api/extraction/jobs payload (firstPageImageUrl, status).
+  //
+  // Doubles as the "new completion detector": when this poll sees a job
+  // newly enter a terminal state (COMPLETED/PARTIAL/FAILED) we kick off a
+  // silent drafts refetch. Without this, finishing an extraction while the
+  // 자료 관리 page is already open leaves the card grid stuck on the old
+  // snapshot — `loadAllDrafts` only runs at bootstrap, and the PENDING
+  // poll loop quits the moment all PENDING drafts resolve.
+  const TERMINAL_JOB_STATUSES = ["COMPLETED", "PARTIAL", "FAILED"];
   useEffect(() => {
     let cancelled = false;
     const controller = new AbortController();
     const load = async () => {
       try {
-        const res = await fetch("/api/extraction/jobs?limit=50", {
+        const res = await fetch("/api/extraction/jobs?limit=200", {
           credentials: "include",
           cache: "no-store",
           signal: controller.signal,
@@ -294,6 +370,9 @@ export function ExtractionManageClient({
             originalFileName?: string | null;
             createdAt: string;
             firstPageImageUrl?: string | null;
+            resultCount?: number;
+            draftResultCount?: number;
+            savedResultCount?: number;
           }>;
         };
         if (cancelled) return;
@@ -307,10 +386,32 @@ export function ExtractionManageClient({
             displayName: j.displayName ?? null,
             originalFileName: j.originalFileName ?? null,
             createdAt: j.createdAt,
+            resultCount: j.resultCount ?? 0,
+            draftResultCount: j.draftResultCount ?? 0,
+            savedResultCount: j.savedResultCount ?? 0,
           });
+        }
+        // Detect a fresh terminal transition vs the previous poll's
+        // snapshot. Skip the first run (prev === null) to avoid duplicating
+        // the bootstrap `loadAllDrafts` call.
+        const prev = cachedJobMeta;
+        let shouldRefetchDrafts = false;
+        if (prev) {
+          for (const [id, meta] of m) {
+            if (!TERMINAL_JOB_STATUSES.includes(meta.status)) continue;
+            const prevMeta = prev.get(id);
+            if (
+              !prevMeta ||
+              !TERMINAL_JOB_STATUSES.includes(prevMeta.status)
+            ) {
+              shouldRefetchDrafts = true;
+              break;
+            }
+          }
         }
         cachedJobMeta = m;
         setJobMetaByJobId(m);
+        if (shouldRefetchDrafts) void pollAllSilent();
       } catch {
         // Best-effort enrichment; cards still render without thumbnails.
       }
@@ -335,25 +436,67 @@ export function ExtractionManageClient({
 
   const refreshResults = useCallback(() => {
     queueDrawer.triggerRefresh();
-    // jobFilter (if any) stays applied to the freshly loaded drafts.
-    void loadAllDrafts();
-  }, [loadAllDrafts]);
+    if (jobFilter.size === 1) {
+      const [nextJobId] = Array.from(jobFilter);
+      void loadJobDetails(nextJobId);
+    } else if (jobFilter.size > 1) void loadJobsDetails(jobFilter);
+    else void loadAllDrafts();
+  }, [jobFilter, loadAllDrafts, loadJobDetails, loadJobsDetails, queueDrawer]);
 
-  const openJob = useCallback(
-    async (nextJobId: string) => {
-      if (typeof window !== "undefined") {
-        window.history.replaceState(null, "", "?jobId=" + nextJobId);
+  const openDraftDetail = useCallback(
+    async (id: string) => {
+      const seq = detailRequestSeq.current + 1;
+      detailRequestSeq.current = seq;
+      const optimisticDraft = drafts.find((draft) => draft.id === id) ?? null;
+      setSelectedDraftId(id);
+      setSelectedDraftDetail(optimisticDraft);
+      setDetailLoadingId(id);
+      setError(null);
+      try {
+        const res = await fetch("/api/extraction/m1-passages/" + id, {
+          credentials: "include",
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error("자료 상세를 불러오지 못했습니다.");
+        const data = (await res.json()) as { draft: M1PassageDraftWithJob };
+        if (detailRequestSeq.current !== seq) return;
+        setSelectedDraftDetail(data.draft);
+        setDrafts((current) =>
+          current.map((draft) =>
+            draft.id === data.draft.id ? { ...draft, ...data.draft } : draft,
+          ),
+        );
+        if (cachedDrafts) {
+          cachedDrafts = cachedDrafts.map((draft) =>
+            draft.id === data.draft.id ? { ...draft, ...data.draft } : draft,
+          );
+        }
+      } catch (err) {
+        if (detailRequestSeq.current !== seq) return;
+        if (!optimisticDraft) {
+          setSelectedDraftId(null);
+          setSelectedDraftDetail(null);
+        }
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "자료 상세를 불러오지 못했습니다.",
+        );
+      } finally {
+        if (detailRequestSeq.current === seq) {
+          setDetailLoadingId(null);
+        }
       }
-      // Reload all drafts so the job filter cards row stays visible with
-      // every job represented. Then apply the chosen jobId as a filter.
-      // Order matters: loadAllDrafts resets jobId/scope internally, so we
-      // set the filter AFTER the await.
-      await loadAllDrafts();
-      setJobFilter(new Set([nextJobId]));
-      setJobId(nextJobId);
     },
-    [loadAllDrafts],
+    [drafts],
   );
+
+  const closeDraftDetail = useCallback(() => {
+    detailRequestSeq.current += 1;
+    setSelectedDraftId(null);
+    setSelectedDraftDetail(null);
+    setDetailLoadingId(null);
+  }, []);
 
   // ─── CRUD ───
   const renameJob = useCallback(
@@ -386,7 +529,11 @@ export function ExtractionManageClient({
         });
         if (!res.ok) throw new Error("작업 이름을 저장하지 못했습니다.");
         const data = (await res.json()) as {
-          job: { id: string; displayName: string | null; originalFileName: string | null };
+          job: {
+            id: string;
+            displayName: string | null;
+            originalFileName: string | null;
+          };
         };
         // Sync from server response (covers max-length truncation etc.)
         setDrafts((current) =>
@@ -422,7 +569,9 @@ export function ExtractionManageClient({
           ),
         );
         toast.error(
-          err instanceof Error ? err.message : "작업 이름을 저장하지 못했습니다.",
+          err instanceof Error
+            ? err.message
+            : "작업 이름을 저장하지 못했습니다.",
         );
       }
     },
@@ -508,7 +657,12 @@ export function ExtractionManageClient({
 
   const updateDraftText = useCallback((id: string, teacherText: string) => {
     setDrafts((current) =>
-      current.map((draft) => (draft.id === id ? { ...draft, teacherText } : draft)),
+      current.map((draft) =>
+        draft.id === id ? { ...draft, teacherText } : draft,
+      ),
+    );
+    setSelectedDraftDetail((current) =>
+      current?.id === id ? { ...current, teacherText } : current,
     );
   }, []);
 
@@ -522,7 +676,9 @@ export function ExtractionManageClient({
         previousTitle = target.title ?? null;
         teacherText = target.teacherText;
         if ((target.title ?? null) === newTitle) return current;
-        return current.map((d) => (d.id === id ? { ...d, title: newTitle } : d));
+        return current.map((d) =>
+          d.id === id ? { ...d, title: newTitle } : d,
+        );
       });
       if (teacherText === undefined) return;
       if (previousTitle === newTitle) return;
@@ -541,12 +697,22 @@ export function ExtractionManageClient({
             d.id === data.draft.id ? { ...d, ...data.draft } : d,
           ),
         );
+        setSelectedDraftDetail((current) =>
+          current?.id === data.draft.id
+            ? { ...current, ...data.draft }
+            : current,
+        );
       } catch (err) {
         // Rollback
         setDrafts((current) =>
           current.map((d) =>
             d.id === id ? { ...d, title: previousTitle ?? null } : d,
           ),
+        );
+        setSelectedDraftDetail((current) =>
+          current?.id === id
+            ? { ...current, title: previousTitle ?? null }
+            : current,
         );
         toast.error(
           err instanceof Error ? err.message : "제목 저장에 실패했습니다.",
@@ -576,9 +742,14 @@ export function ExtractionManageClient({
           item.id === data.draft.id ? { ...item, ...data.draft } : item,
         ),
       );
+      setSelectedDraftDetail((current) =>
+        current?.id === data.draft.id ? { ...current, ...data.draft } : current,
+      );
       toast.success("저장되었습니다.");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "수정 내용을 저장하지 못했습니다.");
+      setError(
+        err instanceof Error ? err.message : "수정 내용을 저장하지 못했습니다.",
+      );
     } finally {
       setSavingId(null);
     }
@@ -602,9 +773,16 @@ export function ExtractionManageClient({
           item.id === data.draft.id ? { ...item, ...data.draft } : item,
         ),
       );
+      setSelectedDraftDetail((current) =>
+        current?.id === data.draft.id ? { ...current, ...data.draft } : current,
+      );
       queueDrawer.triggerRefresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "AI 복원을 다시 실행하지 못했습니다.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "AI 복원을 다시 실행하지 못했습니다.",
+      );
     } finally {
       setRerestoringId(null);
     }
@@ -626,14 +804,40 @@ export function ExtractionManageClient({
       }
       const data = (await res.json()) as {
         summary: { promoted: number; skipped: number; failed: number };
-        outcomes: Array<{ draftId: string; status: string; reason?: string }>;
+        outcomes: Array<{
+          draftId: string;
+          status: string;
+          reason?: string;
+          passageId?: string;
+        }>;
       };
       const outcome = data.outcomes.find((o) => o.draftId === draft.id);
       if (outcome?.status === "promoted") {
-        // Remove from local list — committed drafts are filtered out of the
-        // server response on next fetch as well.
-        setDrafts((current) => current.filter((d) => d.id !== draft.id));
-        setSelectedDraftId(null);
+        // Keep the draft visible in 자료 관리; flip it to COMMITTED so the
+        // card shows a "지문 등록 완료" badge and the promote button disables.
+        // Server fetch returns COMMITTED rows too.
+        setDrafts((current) =>
+          current.map((d) =>
+            d.id === draft.id
+              ? {
+                  ...d,
+                  reviewStatus: "COMMITTED",
+                  savedPassageId: outcome.passageId ?? d.savedPassageId,
+                  confirmedAt: d.confirmedAt ?? new Date().toISOString(),
+                }
+              : d,
+          ),
+        );
+        setSelectedDraftDetail((current) =>
+          current?.id === draft.id
+            ? {
+                ...current,
+                reviewStatus: "COMMITTED",
+                savedPassageId: outcome.passageId ?? current.savedPassageId,
+                confirmedAt: current.confirmedAt ?? new Date().toISOString(),
+              }
+            : current,
+        );
         queueDrawer.triggerRefresh();
         toast.success("지문 관리로 등록되었습니다.");
       } else {
@@ -654,34 +858,33 @@ export function ExtractionManageClient({
     }
   }, []);
 
-  const deleteDraft = useCallback(
-    async (draft: M1PassageDraftSnapshot) => {
-      const ok =
-        typeof window === "undefined"
-          ? true
-          : window.confirm("이 추출 지문을 삭제할까요?");
-      if (!ok) return;
+  const deleteDraft = useCallback(async (draft: M1PassageDraftSnapshot) => {
+    const ok =
+      typeof window === "undefined"
+        ? true
+        : window.confirm("이 추출 지문을 삭제할까요?");
+    if (!ok) return;
 
-      setDeletingDraftId(draft.id);
-      setError(null);
-      try {
-        const res = await fetch("/api/extraction/m1-passages/" + draft.id, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("지문을 삭제하지 못했습니다.");
-        setDrafts((current) => current.filter((item) => item.id !== draft.id));
-        setSelectedDraftId(null);
-        queueDrawer.triggerRefresh();
-        toast.success("삭제되었습니다.");
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "지문을 삭제하지 못했습니다.");
-      } finally {
-        setDeletingDraftId(null);
-      }
-    },
-    [],
-  );
+    setDeletingDraftId(draft.id);
+    setError(null);
+    try {
+      const res = await fetch("/api/extraction/m1-passages/" + draft.id, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("지문을 삭제하지 못했습니다.");
+      setDrafts((current) => current.filter((item) => item.id !== draft.id));
+      closeDraftDetail();
+      queueDrawer.triggerRefresh();
+      toast.success("삭제되었습니다.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "지문을 삭제하지 못했습니다.",
+      );
+    } finally {
+      setDeletingDraftId(null);
+    }
+  }, []);
 
   // ─── Folder filtering + search/filter/sort ───
   const draftsInActiveFolder = useMemo(() => {
@@ -694,7 +897,7 @@ export function ExtractionManageClient({
   const displayedDrafts = useMemo(() => {
     let result = draftsInActiveFolder;
 
-    if (jobFilter.size > 0) {
+    if (folders.activeFolder === null && jobFilter.size > 0) {
       result = result.filter((d) => {
         const jobId = d.job?.id;
         return Boolean(jobId && jobFilter.has(jobId));
@@ -736,7 +939,14 @@ export function ExtractionManageClient({
       });
     }
     return sorted;
-  }, [draftsInActiveFolder, jobFilter, appliedSearch, statusFilter, sortOrder]);
+  }, [
+    draftsInActiveFolder,
+    folders.activeFolder,
+    jobFilter,
+    appliedSearch,
+    statusFilter,
+    sortOrder,
+  ]);
 
   const availableJobs = useMemo(() => {
     // Count drafts per job from the currently-visible drafts. Jobs without
@@ -763,10 +973,11 @@ export function ExtractionManageClient({
           (meta.displayName?.trim() && meta.displayName) ||
           meta.originalFileName ||
           "이름 없는 작업";
+        const localCount = countByJob.get(jobId);
         return {
           jobId,
           label,
-          count: countByJob.get(jobId) ?? 0,
+          count: localCount ?? meta.resultCount,
           draftIds: draftIdsByJob.get(jobId) ?? [],
           createdAt: Number.isFinite(createdAtMs) ? createdAtMs : null,
           thumbnailUrl: meta.thumbnailUrl,
@@ -795,6 +1006,15 @@ export function ExtractionManageClient({
     }));
   }, [draftsInActiveFolder, jobMetaByJobId]);
 
+  const serverVisibleDraftTotal = useMemo(
+    () =>
+      Array.from(jobMetaByJobId.values()).reduce(
+        (sum, meta) => sum + meta.resultCount,
+        0,
+      ),
+    [jobMetaByJobId],
+  );
+
   // Per-job absolute "시험지 N" numbering. Computed from the full `drafts`
   // state (not the filtered/sorted view) so the number assigned to a given
   // SourceMaterial never changes regardless of which filter/sort is active.
@@ -820,19 +1040,23 @@ export function ExtractionManageClient({
     return map;
   }, [drafts]);
 
-  const selectedDraft = useMemo(
-    () =>
-      drafts.find((d) => d.id === selectedDraftId) ?? null,
-    [drafts, selectedDraftId],
-  );
+  const selectedDraft =
+    selectedDraftDetail ??
+    drafts.find((draft) => draft.id === selectedDraftId) ??
+    null;
 
   // ─── Selection ───
   const getDisplayedIds = useCallback(
     () => displayedDrafts.map((d) => d.id),
     [displayedDrafts],
   );
-  const { selectedIds, setSelectedIds, toggleSelect, selectAll, clearSelection } =
-    useSelection(getDisplayedIds);
+  const {
+    selectedIds,
+    setSelectedIds,
+    toggleSelect,
+    selectAll,
+    clearSelection,
+  } = useSelection(getDisplayedIds);
 
   const toggleGroupCheck = useCallback(
     (ids: string[], select: boolean) => {
@@ -853,7 +1077,9 @@ export function ExtractionManageClient({
     if (ok) clearSelection();
   }, [folders, selectedIds, clearSelection]);
 
-  const [bulkActionRunning, setBulkActionRunning] = useState<"delete" | "rerestore" | "promote" | null>(null);
+  const [bulkActionRunning, setBulkActionRunning] = useState<
+    "delete" | "rerestore" | "promote" | null
+  >(null);
 
   const bulkDelete = useCallback(async () => {
     if (selectedIds.size === 0 || bulkActionRunning) return;
@@ -861,7 +1087,9 @@ export function ExtractionManageClient({
     const ok =
       typeof window === "undefined"
         ? true
-        : window.confirm(`선택한 ${ids.length}개 자료를 삭제할까요? 되돌릴 수 없습니다.`);
+        : window.confirm(
+            `선택한 ${ids.length}개 자료를 삭제할까요? 되돌릴 수 없습니다.`,
+          );
     if (!ok) return;
 
     setBulkActionRunning("delete");
@@ -906,7 +1134,9 @@ export function ExtractionManageClient({
         );
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "삭제 요청에 실패했습니다.");
+      toast.error(
+        err instanceof Error ? err.message : "삭제 요청에 실패했습니다.",
+      );
     } finally {
       setBulkActionRunning(null);
     }
@@ -994,13 +1224,31 @@ export function ExtractionManageClient({
       if (!res.ok) throw new Error("등록 요청이 실패했습니다.");
       const data = (await res.json()) as {
         summary: { promoted: number; skipped: number; failed: number };
-        outcomes: Array<{ draftId: string; status: string }>;
+        outcomes: Array<{
+          draftId: string;
+          status: string;
+          passageId?: string;
+        }>;
       };
-      const promotedIds = new Set(
-        data.outcomes.filter((o) => o.status === "promoted").map((o) => o.draftId),
-      );
-      if (promotedIds.size > 0) {
-        setDrafts((current) => current.filter((d) => !promotedIds.has(d.id)));
+      const promotedPassageByDraft = new Map<string, string | undefined>();
+      for (const o of data.outcomes) {
+        if (o.status === "promoted")
+          promotedPassageByDraft.set(o.draftId, o.passageId);
+      }
+      if (promotedPassageByDraft.size > 0) {
+        const nowIso = new Date().toISOString();
+        setDrafts((current) =>
+          current.map((d) => {
+            if (!promotedPassageByDraft.has(d.id)) return d;
+            const passageId = promotedPassageByDraft.get(d.id);
+            return {
+              ...d,
+              reviewStatus: "COMMITTED",
+              savedPassageId: passageId ?? d.savedPassageId,
+              confirmedAt: d.confirmedAt ?? nowIso,
+            };
+          }),
+        );
       }
       clearSelection();
       queueDrawer.triggerRefresh();
@@ -1009,14 +1257,16 @@ export function ExtractionManageClient({
       if (failed === 0 && skipped === 0) {
         toast.success(`${promoted}개 자료를 지문으로 등록했습니다.`);
       } else if (promoted === 0) {
-        toast.error("등록된 자료가 없습니다. (이미 등록되었거나 출처/본문이 없는 자료)");
-      } else {
-        toast.warning(
-          `${promoted}개 등록, ${skipped + failed}개 건너뜀/실패`,
+        toast.error(
+          "등록된 자료가 없습니다. (이미 등록되었거나 출처/본문이 없는 자료)",
         );
+      } else {
+        toast.warning(`${promoted}개 등록, ${skipped + failed}개 건너뜀/실패`);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "등록 요청에 실패했습니다.");
+      toast.error(
+        err instanceof Error ? err.message : "등록 요청에 실패했습니다.",
+      );
     } finally {
       setBulkActionRunning(null);
     }
@@ -1025,10 +1275,20 @@ export function ExtractionManageClient({
   const handleAddToFolder = useCallback(
     async (collectionId: string) => {
       const ok = await folders.handleAddToFolder(collectionId, selectedIds);
-      if (ok) {
-        clearSelection();
-        setAddToFolderOpen(false);
-      }
+      if (ok) clearSelection();
+    },
+    [folders, selectedIds, clearSelection],
+  );
+
+  const handleMoveToFolder = useCallback(
+    async (collectionId: string) => {
+      const ok = await folders.handleDragToFolder(
+        [...selectedIds],
+        collectionId,
+        false,
+        selectedIds,
+      );
+      if (ok) clearSelection();
     },
     [folders, selectedIds, clearSelection],
   );
@@ -1040,19 +1300,39 @@ export function ExtractionManageClient({
     [folders, selectedIds],
   );
 
-  // ─── Close "Add to folder" dropdown on outside click ───
-  useEffect(() => {
-    if (!addToFolderOpen) return;
-    function handleClick(e: MouseEvent) {
-      if (addToFolderRef.current && !addToFolderRef.current.contains(e.target as Node)) {
-        setAddToFolderOpen(false);
+  const handleDragToRoot = useCallback(
+    async (itemId: string | string[], copy: boolean) => {
+      if (copy) {
+        toast.info("전체 자료에는 이미 포함되어 있습니다.");
+        return;
       }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [addToFolderOpen]);
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const shouldUseSelection = draggedIds.some((id) => selectedIds.has(id));
+      const idsToMove = shouldUseSelection
+        ? [...selectedIds]
+        : Array.from(new Set(draggedIds));
+      if (idsToMove.length === 0) return;
+      const ok = await folders.handleRemoveFromFolder(new Set(idsToMove));
+      if (ok) clearSelection();
+    },
+    [folders, selectedIds, clearSelection],
+  );
 
   // ─── Search submission ───
+  const navigateToFolderView = useCallback(
+    (folderId: string | null) => {
+      folders.navigateToFolder(folderId);
+      setJobFilter(new Set());
+      setResultScope("all");
+      setJobId(null);
+      if (typeof window !== "undefined") {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+      clearSelection();
+    },
+    [folders, clearSelection],
+  );
+
   const handleSearchSubmit = useCallback(() => {
     setAppliedSearch(searchValue);
   }, [searchValue]);
@@ -1074,48 +1354,25 @@ export function ExtractionManageClient({
   const noSelection = selectedIds.size === 0;
   const selectionExtraActions = (
     <>
-      <div ref={addToFolderRef} className="relative">
-        <button
-          type="button"
-          onClick={() => setAddToFolderOpen((v) => !v)}
-          disabled={anyBulkRunning || noSelection}
-          className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-blue-200 bg-white px-2.5 text-[11px] font-bold text-blue-700 transition-colors hover:bg-blue-50"
-        >
-          <FolderPlus className="size-3.5" />
-          폴더에 추가
-        </button>
-        {addToFolderOpen ? (
-          <div className="absolute left-0 top-full z-20 mt-1 w-60 max-h-72 overflow-y-auto rounded-md border border-slate-200 bg-white p-1 shadow-lg">
-            {folders.collections.length === 0 ? (
-              <div className="px-3 py-2 text-xs text-slate-400">
-                먼저 폴더를 만들어주세요.
-              </div>
-            ) : (
-              folders.collections.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => handleAddToFolder(c.id)}
-                  className="block w-full cursor-pointer truncate rounded px-2 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  {c.name}
-                </button>
-              ))
-            )}
-          </div>
-        ) : null}
-      </div>
+      <MoveOrCopyFolderPicker
+        collections={folders.collections}
+        activeFolder={folders.activeFolder}
+        selectedCount={selectedIds.size}
+        onCopy={handleAddToFolder}
+        onMove={handleMoveToFolder}
+        disabled={anyBulkRunning || noSelection}
+      />
 
       <button
         type="button"
         onClick={bulkRerestore}
         disabled={anyBulkRunning || noSelection}
-        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-bold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isRerestoring ? (
-          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
         ) : (
-          <RefreshCw className="size-3.5" aria-hidden="true" />
+          <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
         )}
         AI 복원 다시
       </button>
@@ -1124,12 +1381,12 @@ export function ExtractionManageClient({
         type="button"
         onClick={bulkPromote}
         disabled={anyBulkRunning || noSelection}
-        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md bg-blue-600 px-2.5 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isPromoting ? (
-          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
         ) : (
-          <CheckCircle2 className="size-3.5" aria-hidden="true" />
+          <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
         )}
         지문 등록
       </button>
@@ -1138,143 +1395,187 @@ export function ExtractionManageClient({
         type="button"
         onClick={bulkDelete}
         disabled={anyBulkRunning || noSelection}
-        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-bold text-red-600 transition-colors hover:bg-red-50"
+        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isDeleting ? (
-          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
         ) : (
-          <Trash2 className="size-3.5" aria-hidden="true" />
+          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
         )}
         삭제
       </button>
     </>
   );
 
+  const filtersToolbar = (
+    <ManageFiltersBar
+      searchValue={searchValue}
+      onSearchChange={setSearchValue}
+      onSearchSubmit={handleSearchSubmit}
+      statusFilter={statusFilter}
+      onStatusFilterChange={setStatusFilter}
+      sortOrder={sortOrder}
+      onSortOrderChange={setSortOrder}
+      queueOpen={queueDrawer.open}
+      onToggleQueue={queueDrawer.toggle}
+      onRefresh={refreshResults}
+    />
+  );
+
   const hasActiveSearchOrFilter =
     appliedSearch.trim().length > 0 ||
     statusFilter !== "ALL" ||
-    jobFilter.size > 0;
+    (folders.activeFolder === null && jobFilter.size > 0);
   const isAllSelected =
     selectedIds.size > 0 && selectedIds.size === displayedDrafts.length;
 
   return (
     <div className="-m-6 flex h-[calc(100vh-56px)] min-w-0 flex-col bg-[#F4F6F9]">
       <div className="mx-auto flex h-full w-full min-w-0 max-w-[1680px] flex-col">
-      {error ? (
-        <div className="mx-6 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-          <span>{error}</span>
-        </div>
-      ) : null}
+        {error ? (
+          <div className="mx-6 mt-3 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700 sm:mx-8">
+            <AlertCircle
+              className="mt-0.5 size-4 shrink-0"
+              aria-hidden="true"
+            />
+            <span>{error}</span>
+          </div>
+        ) : null}
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-        <div className="shrink-0 px-6 pt-4 pb-2.5 sm:px-8">
-          <DraftFolderSection
-            childFolders={folders.childFolders}
-            activeFolder={folders.activeFolder}
-            dragItemIdKey="draftId"
-            itemCountLabel="자료"
-            showNewFolder={folders.showNewFolder}
-            newFolderName={folders.newFolderName}
-            onNewFolderNameChange={folders.setNewFolderName}
-            onShowNewFolder={folders.setShowNewFolder}
-            onCreateFolder={folders.handleCreateFolder}
-            onNavigateToFolder={(id) => {
-              folders.navigateToFolder(id);
-              clearSelection();
-            }}
-            onRenameFolder={folders.handleRenameFolder}
-            onDeleteFolder={folders.handleDeleteFolder}
-            onDragToFolder={handleDragToFolder}
-            breadcrumbPath={folders.breadcrumbPath}
-            onNavigateToRoot={() => {
-              folders.setActiveFolder(null);
-              clearSelection();
-            }}
-            onNavigateUp={() => {
-              folders.navigateUp();
-              clearSelection();
-            }}
-            totalCount={drafts.length}
-            resultScope={resultScope}
-            onBackToAllResults={showAllResults}
-            rightArea={
-              <ManageFiltersBar
-                searchValue={searchValue}
-                onSearchChange={setSearchValue}
-                onSearchSubmit={handleSearchSubmit}
-                statusFilter={statusFilter}
-                onStatusFilterChange={setStatusFilter}
-                sortOrder={sortOrder}
-                onSortOrderChange={setSortOrder}
-                queueOpen={queueDrawer.open}
-                onToggleQueue={queueDrawer.toggle}
-                onRefresh={refreshResults}
-              />
-            }
-            selectionToolbar={
-              <DraftSelectionToolbar
-                selectedCount={selectedIds.size}
-                isAllSelected={isAllSelected}
-                onSelectAll={selectAll}
-                activeFolder={folders.activeFolder}
-                onRemoveFromFolder={handleRemoveFromFolderClick}
-                extraActions={selectionExtraActions}
-              />
-            }
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          <div className="shrink-0 px-6 pt-3 pb-2 sm:px-8">
+            <DraftFolderSection
+              childFolders={folders.childFolders}
+              activeFolder={folders.activeFolder}
+              dragItemIdKey="draftId"
+              itemCountLabel="자료"
+              showNewFolder={folders.showNewFolder}
+              newFolderName={folders.newFolderName}
+              onNewFolderNameChange={folders.setNewFolderName}
+              onShowNewFolder={folders.setShowNewFolder}
+              onCreateFolder={folders.handleCreateFolder}
+              onNavigateToFolder={(id) => {
+                navigateToFolderView(id);
+              }}
+              onRenameFolder={folders.handleRenameFolder}
+              onDeleteFolder={folders.handleDeleteFolder}
+              onDragToFolder={handleDragToFolder}
+              onDragToRoot={handleDragToRoot}
+              breadcrumbPath={folders.breadcrumbPath}
+              onNavigateToRoot={() => {
+                navigateToFolderView(null);
+              }}
+              toolbar={filtersToolbar}
+              selectionBar={
+                <DraftSelectionToolbar
+                  embedded
+                  selectedCount={selectedIds.size}
+                  totalCount={displayedDrafts.length}
+                  isAllSelected={isAllSelected}
+                  onSelectAll={selectAll}
+                  onClearSelection={clearSelection}
+                  activeFolder={folders.activeFolder}
+                  onRemoveFromFolder={handleRemoveFromFolderClick}
+                  extraActions={selectionExtraActions}
+                />
+              }
+              pageHeader={{
+                icon: <Database className="h-3.5 w-3.5" aria-hidden="true" />,
+                title: "자료 관리",
+                totalCount:
+                  resultScope === "all" && folders.activeFolder === null
+                    ? serverVisibleDraftTotal || drafts.length
+                    : draftsInActiveFolder.length,
+                itemLabel: "자료",
+                description:
+                  "추출한 지문을 폴더로 정리하고 복원문을 검수합니다.",
+              }}
+              resultScope={resultScope}
+              onBackToAllResults={showAllResults}
+            />
+          </div>
+
+          <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-6 pb-5 sm:px-8 sm:pb-6">
+            <DraftGrid
+              drafts={displayedDrafts}
+              loading={loadingDetails && drafts.length === 0}
+              hasAnyDraft={drafts.length > 0}
+              inFolder={folders.activeFolder !== null}
+              hasActiveSearchOrFilter={hasActiveSearchOrFilter}
+              selectedDraftId={selectedDraftId}
+              checkedIds={selectedIds}
+              gridCols={gridCols}
+              onGridColsChange={setGridCols}
+              onSelectDraft={openDraftDetail}
+              onToggleCheck={toggleSelect}
+              onToggleGroupCheck={toggleGroupCheck}
+              onResetFilters={resetFilters}
+              jobs={availableJobs}
+              selectedJobIds={jobFilter}
+              totalDraftCount={
+                folders.activeFolder === null
+                  ? serverVisibleDraftTotal || draftsInActiveFolder.length
+                  : draftsInActiveFolder.length
+              }
+              onSelectJob={(nextJobId) => {
+                void (async () => {
+                  if (nextJobId === null) {
+                    setJobFilter(new Set());
+                    await loadAllDrafts();
+                    return;
+                  }
+
+                  const next = new Set(jobFilter);
+                  if (next.has(nextJobId)) next.delete(nextJobId);
+                  else next.add(nextJobId);
+
+                  setJobFilter(next);
+                  if (typeof window !== "undefined") {
+                    const nextUrl =
+                      next.size === 1
+                        ? "?jobId=" + Array.from(next)[0]
+                        : window.location.pathname;
+                    window.history.replaceState(null, "", nextUrl);
+                  }
+                  if (next.size === 0) await loadAllDrafts();
+                  else if (next.size === 1) {
+                    const [targetJobId] = Array.from(next);
+                    await loadJobDetails(targetJobId);
+                  } else await loadJobsDetails(next);
+                })();
+              }}
+              onRenameJob={renameJob}
+              onRenameSourceMaterial={renameSourceMaterial}
+              groupIndexBySourceMaterialId={groupIndexBySourceMaterialId}
+            />
+          </div>
+        </div>
+
+        {detailLoadingId && !selectedDraft ? (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-[1px]">
+            <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-xl">
+              <Loader2 className="size-4 animate-spin text-blue-600" />
+              자료 상세를 불러오는 중
+            </div>
+          </div>
+        ) : null}
+
+        {selectedDraft ? (
+          <DraftDetailModal
+            draft={selectedDraft}
+            savingId={savingId}
+            rerestoringId={rerestoringId}
+            deletingDraftId={deletingDraftId}
+            promotingId={promotingId}
+            onClose={closeDraftDetail}
+            onDelete={deleteDraft}
+            onRerestore={rerestoreDraft}
+            onSave={saveDraft}
+            onPromote={promoteDraft}
+            onTextChange={updateDraftText}
+            onTitleChange={updateDraftTitle}
           />
-        </div>
-
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col px-6 pb-5 sm:px-8 sm:pb-6">
-          <DraftGrid
-            drafts={displayedDrafts}
-            loading={loadingDetails && drafts.length === 0}
-            hasAnyDraft={drafts.length > 0}
-            inFolder={folders.activeFolder !== null}
-            hasActiveSearchOrFilter={hasActiveSearchOrFilter}
-            selectedDraftId={selectedDraft?.id ?? null}
-            checkedIds={selectedIds}
-            gridCols={gridCols}
-            onGridColsChange={setGridCols}
-            onSelectDraft={setSelectedDraftId}
-            onToggleCheck={toggleSelect}
-            onToggleGroupCheck={toggleGroupCheck}
-            onResetFilters={resetFilters}
-            jobs={availableJobs}
-            selectedJobIds={jobFilter}
-            totalDraftCount={draftsInActiveFolder.length}
-            onSelectJob={(jobId) => {
-              setJobFilter((prev) => {
-                if (jobId === null) return new Set();
-                const next = new Set(prev);
-                if (next.has(jobId)) next.delete(jobId);
-                else next.add(jobId);
-                return next;
-              });
-            }}
-            onRenameJob={renameJob}
-            onRenameSourceMaterial={renameSourceMaterial}
-            groupIndexBySourceMaterialId={groupIndexBySourceMaterialId}
-          />
-        </div>
-      </div>
-
-      {selectedDraft ? (
-        <DraftDetailModal
-          draft={selectedDraft}
-          savingId={savingId}
-          rerestoringId={rerestoringId}
-          deletingDraftId={deletingDraftId}
-          promotingId={promotingId}
-          onClose={() => setSelectedDraftId(null)}
-          onDelete={deleteDraft}
-          onRerestore={rerestoreDraft}
-          onSave={saveDraft}
-          onPromote={promoteDraft}
-          onTextChange={updateDraftText}
-          onTitleChange={updateDraftTitle}
-        />
-      ) : null}
+        ) : null}
       </div>
     </div>
   );

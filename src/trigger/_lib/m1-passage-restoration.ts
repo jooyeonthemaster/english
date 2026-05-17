@@ -12,6 +12,7 @@ import {
 } from "@/lib/extraction/m2-restoration";
 import {
   buildFallbackM1Restoration,
+  decideRestorationStatus,
   hasUnresolvedM1ProblemArtifacts,
   type M1RestorationChangeInput,
   type M1RestorationStatus,
@@ -135,14 +136,6 @@ function readSelectedSourceMatch(matches: SourceMatchInput[]): SourceMatchInput 
   return top;
 }
 
-function mapFinalStatus(
-  status: GroundedRestorationResponse["finalStatus"],
-): M1RestorationStatus {
-  if (status === "RESTORED") return "RESTORED";
-  if (status === "PARTIAL") return "PARTIAL";
-  return "FAILED";
-}
-
 function buildSourceMatchInputFromGrounded(
   match: GroundedRestorationResponse["sourceMatch"],
 ): SourceMatchInput | null {
@@ -243,9 +236,18 @@ export async function restoreM1Passage(input: {
     !hasUnresolvedM1ProblemArtifacts(selectedLocal.content)
   ) {
     const restoredText = selectedLocal.content.trim();
+    // DB match is treated as the model's authoritative output. Still run the
+    // post-hoc decision so DB rows that happen to equal raw (re-imported
+    // identical material) downgrade to NO_RESTORATION_NEEDED instead of
+    // being marked as restored.
+    const status = decideRestorationStatus({
+      rawText: input.rawText,
+      restoredText,
+      aiFinalStatus: "RESTORED",
+    });
     return {
       restoredText,
-      status: "RESTORED",
+      status,
       confidence: selectedLocal.confidence,
       changes: createWholePassageChange({
         rawText: input.rawText,
@@ -329,10 +331,12 @@ export async function restoreM1Passage(input: {
         (q) => q.questionType,
       ),
     });
-    const status: M1RestorationStatus =
-      unresolvedArtifacts || quality.shouldDowngradeStatus
-        ? "PARTIAL"
-        : mapFinalStatus(result.finalStatus);
+    const status = decideRestorationStatus({
+      rawText: input.rawText,
+      restoredText,
+      aiFinalStatus: result.finalStatus,
+      qualityShouldDowngrade: quality.shouldDowngradeStatus,
+    });
 
     const aiChanges: M1RestorationChangeInput[] =
       result.aiRestoration.changes.map((change) => ({
@@ -405,15 +409,20 @@ export async function restoreM1Passage(input: {
     };
   } catch (err) {
     const fallback = buildFallbackM1Restoration(input.rawText);
-    const status: M1RestorationStatus =
-      fallback.status === "NO_RESTORATION_NEEDED" &&
-      hasUnresolvedM1ProblemArtifacts(input.rawText)
-        ? "FAILED"
-        : fallback.status;
+    const status = decideRestorationStatus({
+      rawText: input.rawText,
+      restoredText: fallback.restoredText,
+      aiCallFailed: true,
+    });
     return {
       restoredText: fallback.restoredText,
       status,
-      confidence: status === "FAILED" ? 0 : 0.5,
+      confidence:
+        status === "FAILED"
+          ? 0
+          : status === "NO_RESTORATION_NEEDED"
+            ? 0.6
+            : 0.5,
       changes: fallback.changes,
       warnings: [
         `Grounded restoration failed: ${
@@ -426,7 +435,12 @@ export async function restoreM1Passage(input: {
           : []),
       ],
       metadata: baseMetadata({
-        method: status === "FAILED" ? "FAILED" : "CODE_FALLBACK",
+        method:
+          status === "FAILED"
+            ? "FAILED"
+            : status === "NO_RESTORATION_NEEDED"
+              ? "NO_RESTORATION_NEEDED"
+              : "CODE_FALLBACK",
         stages: {
           localDb:
             usableLocalMatches.length > 0
@@ -553,10 +567,12 @@ function projectFromBatchItem(
       (q) => q.questionType,
     ),
   });
-  const status: M1RestorationStatus =
-    unresolvedArtifacts || quality.shouldDowngradeStatus
-      ? "PARTIAL"
-      : mapFinalStatus(item.finalStatus);
+  const status = decideRestorationStatus({
+    rawText: task.input.rawText,
+    restoredText,
+    aiFinalStatus: item.finalStatus,
+    qualityShouldDowngrade: quality.shouldDowngradeStatus,
+  });
 
   const aiChanges: M1RestorationChangeInput[] =
     item.aiRestoration.changes.map((change) => ({
@@ -647,15 +663,20 @@ function buildFallbackResult(
   reason: string,
 ): M1PassageRestorationResult {
   const fallback = buildFallbackM1Restoration(task.input.rawText);
-  const status: M1RestorationStatus =
-    fallback.status === "NO_RESTORATION_NEEDED" &&
-    hasUnresolvedM1ProblemArtifacts(task.input.rawText)
-      ? "FAILED"
-      : fallback.status;
+  const status = decideRestorationStatus({
+    rawText: task.input.rawText,
+    restoredText: fallback.restoredText,
+    aiCallFailed: true,
+  });
   return {
     restoredText: fallback.restoredText,
     status,
-    confidence: status === "FAILED" ? 0 : 0.5,
+    confidence:
+      status === "FAILED"
+        ? 0
+        : status === "NO_RESTORATION_NEEDED"
+          ? 0.6
+          : 0.5,
     changes: fallback.changes,
     warnings: [
       `Batched grounded restoration failed: ${reason}`,
@@ -666,7 +687,12 @@ function buildFallbackResult(
         : []),
     ],
     metadata: baseMetadata({
-      method: status === "FAILED" ? "FAILED" : "CODE_FALLBACK",
+      method:
+        status === "FAILED"
+          ? "FAILED"
+          : status === "NO_RESTORATION_NEEDED"
+            ? "NO_RESTORATION_NEEDED"
+            : "CODE_FALLBACK",
       stages: {
         localDb:
           task.usableLocalMatches.length > 0
@@ -727,9 +753,17 @@ export async function restoreM1PassageBatch(
         !hasUnresolvedM1ProblemArtifacts(selectedLocal.content)
       ) {
         const restoredText = selectedLocal.content.trim();
+        // Same post-hoc check as the single-call LOCAL_DB hit path: when DB
+        // content is whitespace-equal to the raw OCR text we shouldn't claim
+        // a restoration happened.
+        const localHitStatus = decideRestorationStatus({
+          rawText: input.rawText,
+          restoredText,
+          aiFinalStatus: "RESTORED",
+        });
         immediate = {
           restoredText,
-          status: "RESTORED",
+          status: localHitStatus,
           confidence: selectedLocal.confidence,
           changes: createWholePassageChange({
             rawText: input.rawText,

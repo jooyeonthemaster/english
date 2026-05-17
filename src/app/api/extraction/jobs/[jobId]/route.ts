@@ -27,7 +27,7 @@ const updateJobSchema = z.object({
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED"];
+const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED", "COMMITTED"];
 
 interface RouteContext {
   params: Promise<{ jobId: string }>;

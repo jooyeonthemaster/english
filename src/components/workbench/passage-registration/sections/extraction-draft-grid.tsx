@@ -106,7 +106,9 @@ export function ExtractionDraftGrid({
       setDrafts(data.drafts);
       setState("ready");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "자료 목록을 불러오지 못했습니다.");
+      setError(
+        err instanceof Error ? err.message : "자료 목록을 불러오지 못했습니다.",
+      );
       setState("error");
     }
   };
@@ -140,7 +142,9 @@ export function ExtractionDraftGrid({
     while (current) {
       path.unshift(current);
       const parentId: string | null = current.parentId;
-      current = parentId ? collections.find((c) => c.id === parentId) : undefined;
+      current = parentId
+        ? collections.find((c) => c.id === parentId)
+        : undefined;
     }
     return path;
   }, [activeFolder, collections]);
@@ -191,7 +195,7 @@ export function ExtractionDraftGrid({
   const allFolderCount = drafts.length;
   const activeFolderName =
     activeFolder !== null
-      ? collections.find((c) => c.id === activeFolder)?.name ?? "폴더"
+      ? (collections.find((c) => c.id === activeFolder)?.name ?? "폴더")
       : null;
 
   return (
@@ -210,15 +214,24 @@ export function ExtractionDraftGrid({
             />
           </div>
 
-          <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as SortOrder)}>
+          <Select
+            value={sortOrder}
+            onValueChange={(v) => setSortOrder(v as SortOrder)}
+          >
             <SelectTrigger className="h-8 w-[108px] text-[11px] shrink-0 px-2.5">
               <ArrowUpDown className="w-3 h-3 mr-1 shrink-0" />
               <SelectValue placeholder="정렬" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest" className="text-[12px]">최신순</SelectItem>
-              <SelectItem value="oldest" className="text-[12px]">오래된순</SelectItem>
-              <SelectItem value="page_asc" className="text-[12px]">페이지 순</SelectItem>
+              <SelectItem value="newest" className="text-[12px]">
+                최신순
+              </SelectItem>
+              <SelectItem value="oldest" className="text-[12px]">
+                오래된순
+              </SelectItem>
+              <SelectItem value="page_asc" className="text-[12px]">
+                페이지 순
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -229,13 +242,19 @@ export function ExtractionDraftGrid({
             disabled={state === "loading"}
             title="새로고침"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${state === "loading" ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${state === "loading" ? "animate-spin" : ""}`}
+            />
           </button>
 
           <div className="flex items-center gap-1 px-2 h-8 rounded-lg bg-slate-50 border border-slate-200 shrink-0">
             <Layers className="w-3 h-3 text-slate-400" />
-            <span className="text-[11px] font-semibold text-slate-600 tabular-nums">{filtered.length}</span>
-            <span className="text-[10px] text-slate-400">/{allFolderCount}</span>
+            <span className="text-[11px] font-semibold text-slate-600 tabular-nums">
+              {filtered.length}
+            </span>
+            <span className="text-[10px] text-slate-400">
+              /{allFolderCount}
+            </span>
           </div>
         </div>
 
@@ -281,7 +300,8 @@ export function ExtractionDraftGrid({
               {activeFolder === null ? "폴더" : "하위 폴더"}
             </span>
             {childFolders.map((folder) => {
-              const count = membershipSets.get(folder.id)?.size ?? folder._count.items;
+              const count =
+                membershipSets.get(folder.id)?.size ?? folder._count.items;
               const hasChildren = folder._count.children > 0;
               return (
                 <button
@@ -297,7 +317,9 @@ export function ExtractionDraftGrid({
                 >
                   <Folder className="w-3 h-3 shrink-0 text-slate-400" />
                   <span className="max-w-[140px] truncate">{folder.name}</span>
-                  <span className="tabular-nums text-[10px] text-slate-400">{count}</span>
+                  <span className="tabular-nums text-[10px] text-slate-400">
+                    {count}
+                  </span>
                   {hasChildren ? (
                     <ChevronRight className="w-2.5 h-2.5 shrink-0 text-slate-300" />
                   ) : null}
@@ -337,7 +359,8 @@ export function ExtractionDraftGrid({
             </p>
             {activeFolderName && childFolders.length > 0 ? (
               <p className="text-[11px] text-slate-400">
-                "{activeFolderName}"에 직접 담긴 자료가 없습니다 · 하위 폴더를 확인하세요
+                &quot;{activeFolderName}&quot;에 직접 담긴 자료가 없습니다 ·
+                하위 폴더를 확인하세요
               </p>
             ) : activeFolderName ? (
               <p className="text-[11px] text-slate-400">
@@ -406,7 +429,9 @@ export function ExtractionDraftGrid({
                           {status.text}
                         </span>
                         {w > 0 ? (
-                          <span className="text-[10px] text-slate-400 tabular-nums">{w} words</span>
+                          <span className="text-[10px] text-slate-400 tabular-nums">
+                            {w} words
+                          </span>
                         ) : null}
                       </div>
                     </div>

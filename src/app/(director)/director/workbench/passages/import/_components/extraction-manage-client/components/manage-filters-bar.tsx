@@ -17,14 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type StatusFilter =
-  | "ALL"
-  | "RESTORED"
-  | "PENDING"
-  | "PARTIAL"
-  | "FAILED"
-  | "NO_RESTORATION_NEEDED";
-export type SortOrder = "newest" | "oldest" | "page_asc";
+import type { SortOrder, StatusFilter } from "./manage-header";
 
 interface ManageFiltersBarProps {
   searchValue: string;
@@ -57,9 +50,9 @@ export function ManageFiltersBar({
   const router = useRouter();
 
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+    <div className="flex min-w-0 items-center gap-2">
       <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />
+        <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-300" />
         <input
           placeholder="검색..."
           value={searchValue}
@@ -73,7 +66,7 @@ export function ManageFiltersBar({
         value={statusFilter}
         onValueChange={(v) => onStatusFilterChange(v as StatusFilter)}
       >
-        <SelectTrigger className="h-7 w-[112px] px-2.5 text-[11.5px]">
+        <SelectTrigger className="h-7 w-[88px] px-2.5 text-[11.5px]">
           <SelectValue placeholder="상태" />
         </SelectTrigger>
         <SelectContent>
@@ -90,7 +83,7 @@ export function ManageFiltersBar({
         value={sortOrder}
         onValueChange={(v) => onSortOrderChange(v as SortOrder)}
       >
-        <SelectTrigger className="h-7 w-[104px] px-2.5 text-[11.5px]">
+        <SelectTrigger className="h-7 w-[108px] px-2.5 text-[11.5px]">
           <ArrowUpDown className="mr-1 size-3 shrink-0" />
           <SelectValue placeholder="정렬" />
         </SelectTrigger>
@@ -101,14 +94,12 @@ export function ManageFiltersBar({
         </SelectContent>
       </Select>
 
-      <span className="mx-0.5 hidden h-4 w-px bg-slate-200 sm:inline-block" />
-
       <button
         type="button"
         onClick={onRefresh}
-        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-medium text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
-        <RefreshCw className="size-3" aria-hidden="true" />
+        <RefreshCw className="size-3.5" aria-hidden="true" />
         새로고침
       </button>
 
@@ -117,22 +108,22 @@ export function ManageFiltersBar({
         onClick={onToggleQueue}
         aria-pressed={queueOpen}
         className={
-          "inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+          "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
           (queueOpen
             ? "border-blue-300 bg-blue-50 text-blue-700"
             : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
         }
       >
-        <PanelBottomOpen className="size-3" aria-hidden="true" />
+        <PanelBottomOpen className="size-3.5" aria-hidden="true" />
         작업 목록
       </button>
 
       <button
         type="button"
         onClick={() => router.push("/director/workbench/extraction")}
-        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md bg-blue-600 px-2.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
       >
-        <UploadCloud className="size-3" aria-hidden="true" />
+        <UploadCloud className="size-3.5" aria-hidden="true" />
         자료 추출
       </button>
     </div>

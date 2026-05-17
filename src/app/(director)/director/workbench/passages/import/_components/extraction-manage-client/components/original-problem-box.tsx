@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { diffWords } from "diff";
 import {
@@ -15,6 +15,11 @@ import {
 } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
+import {
+  mapChangesToOffsets,
+  segmentText,
+  type InlineRestorationChange,
+} from "../utils/restoration-changes";
 
 type ViewMode = "text" | "image";
 
@@ -24,7 +29,23 @@ interface PageImage {
   sourceFileName: string | null;
 }
 
-export function OriginalProblemBox({ draft }: { draft: M1PassageDraftWithJob }) {
+interface OriginalProblemBoxProps {
+  draft: M1PassageDraftWithJob;
+  changes: InlineRestorationChange[];
+  hoveredChangeId: string | null;
+  activeChangeId: string | null;
+  onHoverChange: (id: string | null) => void;
+  onSelectChange: (id: string | null) => void;
+}
+
+export function OriginalProblemBox({
+  draft,
+  changes,
+  hoveredChangeId,
+  activeChangeId,
+  onHoverChange,
+  onSelectChange,
+}: OriginalProblemBoxProps) {
   const [mode, setMode] = useState<ViewMode>("text");
   const [pages, setPages] = useState<PageImage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -42,14 +63,15 @@ export function OriginalProblemBox({ draft }: { draft: M1PassageDraftWithJob }) 
     [draft.sourcePageIndex],
   );
 
-  // Fetch eagerly on mount (regardless of current mode) so the image
-  // toggle shows up instantly when the user clicks into image mode.
-  // Each signed URL is also passed through `new Image()` to warm the
-  // browser cache — by the time the teacher actually switches modes the
-  // bytes are usually already on disk.
+  // Fetch image URLs only when the teacher actually switches to image mode.
+  // Keeping this lazy lets the detail modal open immediately on text mode;
+  // signed URL generation and image preloading otherwise compete with the
+  // first paint of the popup.
   useEffect(() => {
+    if (mode !== "image") return;
     if (!draft.jobId) return;
     if (!indicesKey) return;
+    if (pages.length > 0) return;
     let cancelled = false;
     setLoading(true);
     setFetchError(null);
@@ -86,13 +108,15 @@ export function OriginalProblemBox({ draft }: { draft: M1PassageDraftWithJob }) 
     return () => {
       cancelled = true;
     };
-  }, [draft.jobId, indicesKey]);
+  }, [draft.jobId, indicesKey, mode, pages.length]);
 
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col rounded-lg border border-slate-200 bg-white">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="text-[13px] font-bold text-slate-900">문제 원문</span>
+          <span className="text-[13px] font-bold text-slate-900">
+            문제 원문
+          </span>
           <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-bold text-slate-600">
             RAW
           </span>
@@ -126,6 +150,11 @@ export function OriginalProblemBox({ draft }: { draft: M1PassageDraftWithJob }) 
               <HighlightedRawText
                 rawText={draft.rawText}
                 teacherText={draft.teacherText}
+                changes={changes}
+                hoveredChangeId={hoveredChangeId}
+                activeChangeId={activeChangeId}
+                onHoverChange={onHoverChange}
+                onSelectChange={onSelectChange}
               />
             </div>
           ) : (
@@ -251,9 +280,10 @@ function ImageCarousel({
   // Controls panel position — measured from the overlay layer (which sits
   // outside the scroll container), so the controls stay fixed in place no
   // matter how far the image is scrolled. Drag the grip handle to move.
-  const [controlsPos, setControlsPos] = useState<{ top: number; right: number }>(
-    { top: 8, right: 8 },
-  );
+  const [controlsPos, setControlsPos] = useState<{
+    top: number;
+    right: number;
+  }>({ top: 8, right: 8 });
 
   // Clamp when the underlying page array shrinks (e.g. on draft switch).
   const safeIndex = Math.min(activeIndex, pages.length - 1);
@@ -262,16 +292,15 @@ function ImageCarousel({
   const hasNext = safeIndex < pages.length - 1;
 
   const goPrev = () => {
-    if (hasPrev) setActiveIndex(safeIndex - 1);
+    if (!hasPrev) return;
+    setActiveIndex(safeIndex - 1);
+    setZoom(1);
   };
   const goNext = () => {
-    if (hasNext) setActiveIndex(safeIndex + 1);
-  };
-
-  // Reset zoom whenever the active page changes — fresh page starts at 100%.
-  useEffect(() => {
+    if (!hasNext) return;
+    setActiveIndex(safeIndex + 1);
     setZoom(1);
-  }, [safeIndex]);
+  };
 
   const zoomIn = () =>
     setZoom((z) => Math.min(ZOOM_MAX, Math.round((z + ZOOM_STEP) * 100) / 100));
@@ -345,52 +374,48 @@ function ImageCarousel({
       className="pointer-events-auto absolute inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white/95 p-1 shadow-md backdrop-blur-sm"
       style={{ top: controlsPos.top, right: controlsPos.right }}
     >
-        <span
-          onMouseDown={handleControlsDragStart}
-          className="inline-flex size-6 cursor-grab items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing"
-          title="드래그해서 이동"
-          aria-label="컨트롤 이동"
-        >
-          <GripVertical className="size-4" aria-hidden="true" />
-        </span>
-        <span className="h-4 w-px bg-slate-200" />
-        {pages.length > 1 ? (
-          <>
-            <ZoomButton
-              onClick={goPrev}
-              disabled={!hasPrev}
-              label="이전 페이지"
-            >
-              <ChevronLeft className="size-4" aria-hidden="true" />
-            </ZoomButton>
-            <span className="min-w-[40px] text-center text-[11px] font-bold tabular-nums text-slate-700">
-              {safeIndex + 1} / {pages.length}
-            </span>
-            <ZoomButton onClick={goNext} disabled={!hasNext} label="다음 페이지">
-              <ChevronRight className="size-4" aria-hidden="true" />
-            </ZoomButton>
-            <span className="h-4 w-px bg-slate-200" />
-          </>
-        ) : null}
-        <ZoomButton onClick={zoomOut} disabled={zoom <= ZOOM_MIN} label="축소">
-          <Minus className="size-3.5" aria-hidden="true" />
-        </ZoomButton>
-        <button
-          type="button"
-          onClick={reset}
-          disabled={zoom === 1}
-          className="inline-flex h-6 min-w-[42px] cursor-pointer items-center justify-center rounded px-1.5 text-[11px] font-bold tabular-nums text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-default disabled:text-slate-400 disabled:hover:bg-transparent"
-          title="원래 크기"
-        >
-          {Math.round(zoom * 100)}%
-        </button>
-        <ZoomButton onClick={zoomIn} disabled={zoom >= ZOOM_MAX} label="확대">
-          <Plus className="size-3.5" aria-hidden="true" />
-        </ZoomButton>
-        <ZoomButton onClick={reset} disabled={zoom === 1} label="화면에 맞추기">
-          <Maximize2 className="size-3.5" aria-hidden="true" />
-        </ZoomButton>
-      </div>
+      <span
+        onMouseDown={handleControlsDragStart}
+        className="inline-flex size-6 cursor-grab items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing"
+        title="드래그해서 이동"
+        aria-label="컨트롤 이동"
+      >
+        <GripVertical className="size-4" aria-hidden="true" />
+      </span>
+      <span className="h-4 w-px bg-slate-200" />
+      {pages.length > 1 ? (
+        <>
+          <ZoomButton onClick={goPrev} disabled={!hasPrev} label="이전 페이지">
+            <ChevronLeft className="size-4" aria-hidden="true" />
+          </ZoomButton>
+          <span className="min-w-[40px] text-center text-[11px] font-bold tabular-nums text-slate-700">
+            {safeIndex + 1} / {pages.length}
+          </span>
+          <ZoomButton onClick={goNext} disabled={!hasNext} label="다음 페이지">
+            <ChevronRight className="size-4" aria-hidden="true" />
+          </ZoomButton>
+          <span className="h-4 w-px bg-slate-200" />
+        </>
+      ) : null}
+      <ZoomButton onClick={zoomOut} disabled={zoom <= ZOOM_MIN} label="축소">
+        <Minus className="size-3.5" aria-hidden="true" />
+      </ZoomButton>
+      <button
+        type="button"
+        onClick={reset}
+        disabled={zoom === 1}
+        className="inline-flex h-6 min-w-[42px] cursor-pointer items-center justify-center rounded px-1.5 text-[11px] font-bold tabular-nums text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-default disabled:text-slate-400 disabled:hover:bg-transparent"
+        title="원래 크기"
+      >
+        {Math.round(zoom * 100)}%
+      </button>
+      <ZoomButton onClick={zoomIn} disabled={zoom >= ZOOM_MAX} label="확대">
+        <Plus className="size-3.5" aria-hidden="true" />
+      </ZoomButton>
+      <ZoomButton onClick={reset} disabled={zoom === 1} label="화면에 맞추기">
+        <Maximize2 className="size-3.5" aria-hidden="true" />
+      </ZoomButton>
+    </div>
   );
 
   return (
@@ -468,33 +493,98 @@ function ZoomButton({
 function HighlightedRawText({
   rawText,
   teacherText,
+  changes,
+  hoveredChangeId,
+  activeChangeId,
+  onHoverChange,
+  onSelectChange,
 }: {
   rawText: string;
   teacherText: string;
+  changes: InlineRestorationChange[];
+  hoveredChangeId: string | null;
+  activeChangeId: string | null;
+  onHoverChange: (id: string | null) => void;
+  onSelectChange: (id: string | null) => void;
 }) {
-  const parts = useMemo(() => {
-    if (!rawText) return [] as Array<{ text: string; removed: boolean }>;
-    if (!teacherText) return [{ text: rawText, removed: false }];
-    const diff = diffWords(rawText, teacherText);
-    return diff
-      .filter((part) => !part.added)
-      .map((part) => ({
-        text: part.value,
-        removed: Boolean(part.removed) && part.value.trim().length > 0,
-      }));
-  }, [rawText, teacherText]);
+  const segments = useMemo(() => {
+    if (!rawText) return [];
+    if (changes.length === 0) {
+      // Legacy fallback for drafts without inline-evidence changes —
+      // word-diff against the teacher text. Marks here are non-interactive.
+      if (!teacherText) return [{ text: rawText, changeId: null as string | null }];
+      const diff = diffWords(rawText, teacherText);
+      return diff
+        .filter((part) => !part.added)
+        .map((part) => ({
+          text: part.value,
+          changeId:
+            part.removed && part.value.trim().length > 0 ? "__diff__" : null,
+        }));
+    }
+    const spans = mapChangesToOffsets(
+      rawText,
+      changes.map((c) => ({ id: c.id, text: c.before })),
+    );
+    return segmentText(rawText, spans);
+  }, [rawText, teacherText, changes]);
+
+  const containerRef = useRef<HTMLSpanElement | null>(null);
+  useEffect(() => {
+    if (!activeChangeId) return;
+    const root = containerRef.current;
+    if (!root) return;
+    const target = root.querySelector<HTMLElement>(
+      `[data-change-id="${cssEscape(activeChangeId)}"]`,
+    );
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [activeChangeId]);
 
   return (
-    <>
-      {parts.map((part, index) =>
-        part.removed ? (
-          <mark key={index} className="rounded bg-rose-100 text-rose-900">
-            {part.text}
+    <span ref={containerRef}>
+      {segments.map((segment, index) => {
+        if (!segment.changeId) {
+          return <span key={index}>{segment.text}</span>;
+        }
+        if (segment.changeId === "__diff__") {
+          return (
+            <mark key={index} className="rounded bg-rose-100 text-rose-900">
+              {segment.text}
+            </mark>
+          );
+        }
+        const isActive = activeChangeId === segment.changeId;
+        const isHovered = hoveredChangeId === segment.changeId;
+        return (
+          <mark
+            key={index}
+            data-change-id={segment.changeId}
+            onMouseEnter={() => onHoverChange(segment.changeId)}
+            onMouseLeave={() => onHoverChange(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelectChange(isActive ? null : segment.changeId);
+            }}
+            className={
+              "cursor-pointer rounded px-0.5 transition-colors " +
+              (isActive
+                ? "bg-violet-200 text-violet-950 ring-1 ring-violet-400"
+                : isHovered
+                  ? "bg-rose-200 text-rose-950 ring-1 ring-rose-300"
+                  : "bg-rose-100 text-rose-900")
+            }
+          >
+            {segment.text}
           </mark>
-        ) : (
-          <span key={index}>{part.text}</span>
-        ),
-      )}
-    </>
+        );
+      })}
+    </span>
   );
+}
+
+function cssEscape(value: string): string {
+  if (typeof window !== "undefined" && typeof window.CSS?.escape === "function") {
+    return window.CSS.escape(value);
+  }
+  return value.replace(/["\\]/g, "\\$&");
 }
