@@ -444,7 +444,7 @@ export interface QuestionBankItem {
   aiGenerated: boolean;
   approved: boolean;
   starred: boolean;
-  createdAt: Date;
+  createdAt: Date | string;
   passage: {
     id: string; title: string; content: string;
     grade?: number | null; semester?: string | null; publisher?: string | null;
@@ -474,16 +474,22 @@ export function QuestionBankCard({
   onToggleStar,
   onEdit,
   viewSize = "lg",
+  showManagementActions = true,
+  showStar = true,
+  enableDrag = true,
 }: {
   q: QuestionBankItem;
   num: number;
   selected: boolean;
   onToggle: () => void;
-  onDelete: () => void;
-  onApprove: () => void;
+  onDelete?: () => void;
+  onApprove?: () => void;
   onToggleStar?: () => void;
   onEdit?: () => void;
   viewSize?: "lg" | "md" | "sm";
+  showManagementActions?: boolean;
+  showStar?: boolean;
+  enableDrag?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -510,6 +516,7 @@ export function QuestionBankCard({
 
   // Make card draggable
   useEffect(() => {
+    if (!enableDrag) return;
     const el = dragRef.current;
     if (!el) return;
     return draggable({
@@ -518,7 +525,7 @@ export function QuestionBankCard({
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [q.id]);
+  }, [enableDrag, q.id]);
 
   const collapsedPx =
     viewSize === "lg" ? 280 : viewSize === "md" ? 240 : 200;
@@ -531,7 +538,7 @@ export function QuestionBankCard({
   return (
     <Card
       ref={dragRef}
-      className={`cursor-grab active:cursor-grabbing flex flex-col ${
+      className={`${enableDrag ? "cursor-grab active:cursor-grabbing" : ""} flex flex-col ${
         expanded ? "" : "overflow-hidden"
       } ${
         isDragging ? "opacity-40 scale-95" : ""
@@ -544,26 +551,38 @@ export function QuestionBankCard({
     >
       <CardContent ref={contentRef} className={`p-3 flex flex-col gap-1.5 ${expanded ? "space-y-2" : ""}`}>
         {/* Header row */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
           <Checkbox
             checked={selected}
             onCheckedChange={onToggle}
             className="shrink-0"
           />
-          <button
-            onClick={(e) => { e.stopPropagation(); onToggleStar?.(); }}
-            className="shrink-0 p-0.5 rounded hover:bg-yellow-50 transition-colors"
-            aria-label={q.starred ? "중요 해제" : "중요 표시"}
-            aria-pressed={q.starred}
-          >
-            <Star
-              className={`w-3.5 h-3.5 transition-colors ${
-                q.starred
-                  ? "fill-yellow-400 text-yellow-500"
-                  : "text-slate-300 hover:text-yellow-400"
-              }`}
-            />
-          </button>
+          {showStar && (
+            onToggleStar ? (
+              <button
+                onClick={(e) => { e.stopPropagation(); onToggleStar(); }}
+                className="shrink-0 p-0.5 rounded hover:bg-yellow-50 transition-colors"
+                aria-label={q.starred ? "중요 해제" : "중요 표시"}
+                aria-pressed={q.starred}
+              >
+                <Star
+                  className={`w-3.5 h-3.5 transition-colors ${
+                    q.starred
+                      ? "fill-yellow-400 text-yellow-500"
+                      : "text-slate-300 hover:text-yellow-400"
+                  }`}
+                />
+              </button>
+            ) : (
+              <span className="shrink-0 p-0.5" aria-hidden="true">
+                <Star
+                  className={`w-3.5 h-3.5 ${
+                    q.starred ? "fill-yellow-400 text-yellow-500" : "text-slate-300"
+                  }`}
+                />
+              </span>
+            )
+          )}
           <span className="text-[13px] font-bold text-slate-500 shrink-0">
             {num}.
           </span>
@@ -591,7 +610,7 @@ export function QuestionBankCard({
           ) : (
             <Clock className="w-3.5 h-3.5 text-slate-300 shrink-0" />
           )}
-          <div className="flex items-center gap-1 ml-auto shrink-0">
+          <div className="ml-auto flex items-center gap-1 shrink-0">
             {/* Expand/Collapse toggle */}
             <button
               onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); if (!expanded) setPassageOpen(false); }}
@@ -609,43 +628,47 @@ export function QuestionBankCard({
                 <><ChevronDown className="w-3.5 h-3.5 transition-transform group-hover/expand:translate-y-0.5" />펼치기</>
               )}
             </button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit?.();
-              }}
-            >
-              <Pencil className="w-3 h-3" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <MoreHorizontal className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={onEdit}
+            {showManagementActions && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit?.();
+                  }}
                 >
-                  <Eye className="w-3.5 h-3.5 mr-2" />
-                  상세 보기
-                </DropdownMenuItem>
-                {!q.approved && (
-                  <DropdownMenuItem onClick={onApprove}>
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-2" />
-                    승인
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={onDelete} className="text-red-600">
-                  <Trash2 className="w-3.5 h-3.5 mr-2" />
-                  삭제
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <Pencil className="w-3 h-3" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                      <MoreHorizontal className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={onEdit}
+                    >
+                      <Eye className="w-3.5 h-3.5 mr-2" />
+                      상세 보기
+                    </DropdownMenuItem>
+                    {!q.approved && (
+                      <DropdownMenuItem onClick={onApprove}>
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-2" />
+                        승인
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={onDelete} className="text-red-600">
+                      <Trash2 className="w-3.5 h-3.5 mr-2" />
+                      삭제
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            )}
           </div>
         </div>
 

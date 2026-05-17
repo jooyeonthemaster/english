@@ -386,7 +386,10 @@ export function PassageListClient({
             onRenameFolder={folder.handleRenameFolder}
             onDeleteFolder={folder.handleDeleteFolder}
             onDragToFolder={onDragToFolder}
+            breadcrumbPath={folder.breadcrumbPath}
+            onNavigateToRoot={() => { folder.setActiveFolder(null); selection.clearSelection(); }}
             useCardInsideFolder={true}
+            rootLabel="전체 지문"
             toolbar={filtersToolbar}
             pageHeader={{
               icon: <FileText className="h-3.5 w-3.5" />,

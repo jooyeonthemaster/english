@@ -13,6 +13,9 @@ interface SelectionToolbarProps {
   activeFolder: string | null;
   onRemoveFromFolder?: () => void;
   extraActions?: React.ReactNode;
+  /** Optional content rendered on the right side of the toolbar, before the
+   *  selection hint / cancel button. Always enabled regardless of selection. */
+  rightSlot?: React.ReactNode;
   /** When true, drops the card chrome (border, shadow, rounded, background)
    *  so the toolbar can be embedded inside another card without competing
    *  for visual weight. Used by FolderSection.selectionBar. */
@@ -28,6 +31,7 @@ export function SelectionToolbar({
   activeFolder,
   onRemoveFromFolder,
   extraActions,
+  rightSlot,
   embedded = false,
 }: SelectionToolbarProps) {
   const hasSelection = selectedCount > 0;
@@ -86,6 +90,12 @@ export function SelectionToolbar({
       </div>
 
       <div className="flex-1" />
+      {rightSlot && (
+        <>
+          {rightSlot}
+          <span className="text-slate-300">|</span>
+        </>
+      )}
       {hasSelection ? (
         <button onClick={onClearSelection} className="text-[11px] text-slate-500 hover:text-slate-700">
           선택 취소

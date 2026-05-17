@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -6,10 +5,9 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import {
   Folder,
   FolderOpen,
+  MoreHorizontal,
   Pencil,
   Trash2,
-  Check,
-  X,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -42,6 +40,7 @@ export function FolderChip({
   onDelete,
   onFileDrop,
 }: FolderChipProps) {
+  void itemCountLabel;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(collection.name);
@@ -121,61 +120,60 @@ export function FolderChip({
     );
   }
 
-  // ─── Normal mode ───
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div
-          ref={dropRef}
-          onClick={onClick}
-          onDoubleClick={startEditing}
-          className={`group flex flex-col items-center justify-center w-[100px] h-[72px] rounded-xl border cursor-pointer transition-all ${
-            isDragOver
-              ? "bg-blue-50 border-blue-400 scale-105 shadow-md"
-              : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
-          }`}
-        >
-          {isDragOver ? (
-            <FolderOpen className="w-6 h-6 mb-1" style={{ color }} />
-          ) : (
-            <Folder className="w-6 h-6 mb-1" style={{ color }} />
-          )}
-          <span className="text-[11px] font-semibold text-slate-700 truncate max-w-[80px] text-center leading-tight">
-            {collection.name}
-          </span>
-          <span className="text-[9px] text-slate-400">
-            {collection._count.items}개
-          </span>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick();
-          }}
-        >
-          <FolderOpen className="w-3.5 h-3.5 mr-2" />열기
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            startEditing();
-          }}
-        >
-          <Pencil className="w-3.5 h-3.5 mr-2" />이름 변경
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(collection.id);
-          }}
-          className="text-red-600"
-        >
-          <Trash2 className="w-3.5 h-3.5 mr-2" />삭제
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div
+      ref={dropRef}
+      onClick={onClick}
+      onDoubleClick={startEditing}
+      className={`group relative flex w-[100px] h-[72px] cursor-pointer flex-col items-center justify-center rounded-xl border transition-all ${
+        isDragOver
+          ? "bg-blue-50 border-blue-400 scale-105 shadow-md"
+          : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
+      }`}
+    >
+      {isDragOver ? (
+        <FolderOpen className="w-6 h-6 mb-1" style={{ color }} />
+      ) : (
+        <Folder className="w-6 h-6 mb-1" style={{ color }} />
+      )}
+      <span className="text-[11px] font-semibold text-slate-700 truncate max-w-[80px] text-center leading-tight">
+        {collection.name}
+      </span>
+      <span className="text-[9px] text-slate-400">
+        {collection._count.items}개
+      </span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className="absolute right-1 top-1 inline-flex size-5 cursor-pointer items-center justify-center rounded-md bg-white/90 text-slate-400 opacity-0 shadow-sm ring-1 ring-slate-200 transition-opacity hover:text-slate-700 group-hover:opacity-100"
+            aria-label="폴더 메뉴"
+          >
+            <MoreHorizontal className="size-3.5" aria-hidden="true" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              startEditing();
+            }}
+          >
+            <Pencil className="w-3.5 h-3.5 mr-2" />이름 변경
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(collection.id);
+            }}
+            className="text-red-600"
+          >
+            <Trash2 className="w-3.5 h-3.5 mr-2" />삭제
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

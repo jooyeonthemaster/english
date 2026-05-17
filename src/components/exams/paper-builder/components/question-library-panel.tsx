@@ -1,20 +1,18 @@
+import { useState } from "react";
 import {
-  BookOpen,
-  Check,
-  CheckCircle2,
-  Clock,
-  Eye,
+  Columns2,
   FileText,
   Filter,
   FolderOpen,
   Group,
+  List,
   Search,
   Star,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DIFFICULTY_META, SUBTYPE_LABELS, TYPE_LABELS } from "../constants";
-import { countWords, parseOptions, parseTags, questionPreview } from "../paper-item-utils";
+import { QuestionBankCard } from "@/components/workbench/question-bank-card";
+import { TYPE_LABELS } from "../constants";
 import type { BuilderQuestion, QuestionCollection } from "../types";
 
 interface QuestionLibraryPanelProps {
@@ -68,6 +66,8 @@ export function QuestionLibraryPanel({
   onClearPaper,
   onShowDetail,
 }: QuestionLibraryPanelProps) {
+  const [gridColumns, setGridColumns] = useState<1 | 2>(2);
+
   return (
     <section className="flex min-w-0 flex-col overflow-hidden border-r border-slate-200/80 bg-white">
       {paperItemsCount > 0 && (
@@ -111,6 +111,38 @@ export function QuestionLibraryPanel({
             <Filter className="h-3.5 w-3.5" />
             필터
           </button>
+          <div className="flex h-9 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+            <button
+              type="button"
+              onClick={() => setGridColumns(1)}
+              aria-pressed={gridColumns === 1}
+              title="1열 보기"
+              className={cn(
+                "flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-semibold transition-colors",
+                gridColumns === 1
+                  ? "bg-white text-blue-700 shadow-sm"
+                  : "text-slate-500 hover:bg-white/70 hover:text-slate-700",
+              )}
+            >
+              <List className="h-3.5 w-3.5" />
+              1열
+            </button>
+            <button
+              type="button"
+              onClick={() => setGridColumns(2)}
+              aria-pressed={gridColumns === 2}
+              title="2열 보기"
+              className={cn(
+                "flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-semibold transition-colors",
+                gridColumns === 2
+                  ? "bg-white text-blue-700 shadow-sm"
+                  : "text-slate-500 hover:bg-white/70 hover:text-slate-700",
+              )}
+            >
+              <Columns2 className="h-3.5 w-3.5" />
+              2열
+            </button>
+          </div>
           <div className="flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5">
             <FileText className="h-3.5 w-3.5 text-slate-400" />
             <span className="text-[12px] font-semibold text-slate-600">{filteredQuestions.length}</span>
@@ -215,130 +247,21 @@ export function QuestionLibraryPanel({
             <p className="text-[12px] text-slate-400">문제 생성 탭에서 먼저 문제를 만들거나 필터를 조정해주세요.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-3">
-            {filteredQuestions.map((question) => {
+          <div className={cn("grid gap-3", gridColumns === 2 ? "grid-cols-1 xl:grid-cols-2" : "grid-cols-1")}>
+            {filteredQuestions.map((question, index) => {
               const selected = selectedQuestionIds.has(question.id);
-              const diff = DIFFICULTY_META[question.difficulty];
-              const tags = parseTags(question.tags);
-              const options = parseOptions(question.options);
               return (
-                <article
+                <QuestionBankCard
                   key={question.id}
-                  className={cn(
-                    "group relative flex min-h-[250px] flex-col rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md",
-                    selected ? "border-blue-400 bg-blue-50/20 ring-1 ring-blue-300/30" : "border-slate-200",
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex min-w-0 flex-1 items-start gap-2.5">
-                      <button
-                        onClick={() => onToggleQuestion(question)}
-                        className={cn(
-                          "mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded transition-all",
-                          selected
-                            ? "border border-blue-600 bg-blue-600 text-white"
-                            : "border border-slate-300 bg-white text-transparent hover:border-blue-400 hover:text-blue-400",
-                        )}
-                        aria-label={selected ? "문제 선택 해제" : "문제 선택"}
-                      >
-                        <Check className="h-3 w-3" />
-                      </button>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="truncate text-[13px] font-semibold text-slate-800">
-                            {question.passage?.title || SUBTYPE_LABELS[question.subType || ""] || "독립 문제"}
-                          </h3>
-                          {question.starred && <Star className="h-3 w-3 shrink-0 fill-yellow-400 text-yellow-500" />}
-                        </div>
-                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600">
-                            {TYPE_LABELS[question.type] || question.type}
-                          </span>
-                          {question.subType && (
-                            <span className="text-[10px] font-medium text-blue-600">
-                              {SUBTYPE_LABELS[question.subType] || question.subType}
-                            </span>
-                          )}
-                          {diff && (
-                            <span className={cn("rounded border px-1.5 py-0.5 text-[10px] font-medium", diff.className)}>
-                              {diff.label}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => onShowDetail(question)}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg opacity-0 transition-opacity hover:bg-slate-100 group-hover:opacity-100"
-                      title="상세 보기"
-                    >
-                      <Eye className="h-3.5 w-3.5 text-slate-500" />
-                    </button>
-                  </div>
-
-                  {question.passage && (
-                    <p className="mt-2.5 line-clamp-2 text-[11px] leading-relaxed text-slate-500">
-                      {question.passage.content}
-                    </p>
-                  )}
-
-                  <p className="mt-2.5 line-clamp-4 whitespace-pre-line text-[12px] font-medium leading-relaxed text-slate-700">
-                    {questionPreview(question.questionText)}
-                  </p>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                    {question.approved ? (
-                      <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
-                        <CheckCircle2 className="h-3 w-3" />
-                        승인
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
-                        <Clock className="h-3 w-3" />
-                        검토 전
-                      </span>
-                    )}
-                    {question.passage && (
-                      <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-600">
-                        <BookOpen className="h-3 w-3" />
-                        {countWords(question.passage.content)} words
-                      </span>
-                    )}
-                    {options.length > 0 && (
-                      <span className="rounded bg-violet-50 px-1.5 py-0.5 text-[10px] font-medium text-violet-600">
-                        선택지 {options.length}
-                      </span>
-                    )}
-                    {question._count.examLinks > 0 && (
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
-                        사용 {question._count.examLinks}
-                      </span>
-                    )}
-                  </div>
-
-                  {tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {tags.map((tag) => (
-                        <span key={tag} className="rounded bg-slate-50 px-1.5 py-0.5 text-[10px] text-slate-400">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex-1" />
-                  <button
-                    onClick={() => onToggleQuestion(question)}
-                    className={cn(
-                      "mt-3 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border text-[11px] font-semibold transition-colors",
-                      selected
-                        ? "border-blue-300 bg-blue-600 text-white hover:bg-blue-700"
-                        : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100",
-                    )}
-                  >
-                    {selected ? "선택됨" : "시험지에 추가"}
-                  </button>
-                </article>
+                  q={question}
+                  num={index + 1}
+                  selected={selected}
+                  onToggle={() => onToggleQuestion(question)}
+                  onEdit={() => onShowDetail(question)}
+                  viewSize="lg"
+                  showManagementActions={false}
+                  enableDrag={false}
+                />
               );
             })}
           </div>

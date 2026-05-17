@@ -22,7 +22,17 @@ interface CreditSummary {
   planTier?: string;
 }
 
-export function CreditBadge() {
+interface CreditBadgeProps {
+  collapsed?: boolean;
+  popoverSide?: "top" | "right" | "bottom" | "left";
+  popoverAlign?: "start" | "center" | "end";
+}
+
+export function CreditBadge({
+  collapsed = false,
+  popoverSide,
+  popoverAlign = "end",
+}: CreditBadgeProps = {}) {
   const [summary, setSummary] = useState<CreditSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,9 +60,16 @@ export function CreditBadge() {
 
   if (loading || !summary) {
     return (
-      <div className="flex items-center gap-1.5 h-9 px-2.5 rounded-xl text-gray-300">
+      <div
+        className={cn(
+          "flex items-center gap-1.5 h-9 rounded-xl text-gray-300",
+          collapsed ? "w-10 justify-center px-0 mx-auto" : "px-2.5",
+        )}
+      >
         <Coins className="size-[15px]" strokeWidth={1.7} />
-        <span className="text-[13px] font-medium tabular-nums">--</span>
+        {!collapsed && (
+          <span className="text-[13px] font-medium tabular-nums">--</span>
+        )}
       </div>
     );
   }
@@ -71,23 +88,31 @@ export function CreditBadge() {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex items-center gap-1.5 h-9 px-2.5 rounded-xl transition-all duration-200 hover:bg-black/[0.03] outline-none",
+            "flex items-center h-9 rounded-xl transition-all duration-200 hover:bg-black/[0.03] outline-none",
+            collapsed
+              ? "w-10 justify-center px-0 mx-auto"
+              : "gap-1.5 px-2.5",
             summary.isLow ? "text-red-500" : "text-emerald-600",
           )}
           aria-label={`크레딧 잔액: ${summary.balance.toLocaleString()}`}
         >
           <Coins className="size-[15px]" strokeWidth={1.7} />
-          <span className="text-[13px] font-semibold tabular-nums">
-            {summary.balance.toLocaleString()}
-          </span>
-          {summary.isLow && (
-            <TrendingDown className="size-3 text-red-400" strokeWidth={2} />
+          {!collapsed && (
+            <>
+              <span className="text-[13px] font-semibold tabular-nums">
+                {summary.balance.toLocaleString()}
+              </span>
+              {summary.isLow && (
+                <TrendingDown className="size-3 text-red-400" strokeWidth={2} />
+              )}
+            </>
           )}
         </button>
       </PopoverTrigger>
 
       <PopoverContent
-        align="end"
+        side={popoverSide}
+        align={popoverAlign}
         sideOffset={8}
         className="w-[280px] rounded-xl p-0 shadow-lg border-gray-200/60"
       >

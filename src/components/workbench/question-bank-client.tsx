@@ -7,13 +7,10 @@ import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
   Database,
   Search,
-  FolderPlus,
   ClipboardList,
-  Square,
   Grid2X2,
   Grid3X3,
   LayoutGrid,
-  Layers,
   Star,
   ArrowUpDown,
   Loader2,
@@ -417,17 +414,6 @@ export function QuestionBankClient({
           <SelectItem value="starred">중요 문제 먼저</SelectItem>
         </SelectContent>
       </Select>
-
-      <span className="h-5 w-px bg-slate-200" />
-
-      <Button
-        className="bg-blue-600 hover:bg-blue-700 h-7 text-[11.5px] px-2.5"
-        size="sm"
-        onClick={() => setGenerateDialogOpen(true)}
-      >
-        <Layers className="w-3 h-3 mr-1" />
-        AI 문제 생성
-      </Button>
     </>
   );
 
@@ -452,6 +438,35 @@ export function QuestionBankClient({
         시험지 만들기
       </button>
     </>
+  );
+
+  const gridToggle = (
+    <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
+      <button
+        onClick={() => setGridCols(2)}
+        className={`p-1 transition-colors ${gridCols === 2 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+        aria-label="2열 보기"
+        aria-pressed={gridCols === 2}
+      >
+        <Grid2X2 className="w-3.5 h-3.5" />
+      </button>
+      <button
+        onClick={() => setGridCols(3)}
+        className={`p-1 transition-colors border-x border-slate-200 ${gridCols === 3 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+        aria-label="3열 보기"
+        aria-pressed={gridCols === 3}
+      >
+        <Grid3X3 className="w-3.5 h-3.5" />
+      </button>
+      <button
+        onClick={() => setGridCols(4)}
+        className={`p-1 transition-colors ${gridCols === 4 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+        aria-label="4열 보기"
+        aria-pressed={gridCols === 4}
+      >
+        <LayoutGrid className="w-3.5 h-3.5" />
+      </button>
+    </div>
   );
 
   return (
@@ -506,69 +521,13 @@ export function QuestionBankClient({
                 activeFolder={folders.activeFolder}
                 onRemoveFromFolder={handleRemoveFromFolder}
                 extraActions={selectionExtraActions}
+                rightSlot={gridToggle}
               />
             }
           />
 
             {/* Questions section */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-[13px] font-semibold text-slate-600">
-                  문제
-                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">{displayedQuestions.length}개</span>
-                </h3>
-                <div className="flex items-center gap-2">
-                  {/* Grid view toggle */}
-                  <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => setGridCols(2)}
-                      className={`p-1.5 transition-colors ${gridCols === 2 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-                      aria-label="2열 보기"
-                      aria-pressed={gridCols === 2}
-                    >
-                      <Grid2X2 className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setGridCols(3)}
-                      className={`p-1.5 transition-colors border-x border-slate-200 ${gridCols === 3 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-                      aria-label="3열 보기"
-                      aria-pressed={gridCols === 3}
-                    >
-                      <Grid3X3 className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setGridCols(4)}
-                      className={`p-1.5 transition-colors ${gridCols === 4 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-                      aria-label="4열 보기"
-                      aria-pressed={gridCols === 4}
-                    >
-                      <LayoutGrid className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                  {folders.childFolders.length === 0 && !folders.showNewFolder && (
-                    <button
-                      onClick={() => folders.setShowNewFolder(true)}
-                      className="flex items-center gap-1 text-[11px] text-blue-600 font-medium hover:text-blue-700"
-                    >
-                      <FolderPlus className="w-3.5 h-3.5" />새 폴더
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Select all toggle */}
-              {displayedQuestions.length > 0 && selectedIds.size === 0 && (
-                <div className="flex items-center gap-2 mb-3">
-                  <button
-                    onClick={selectAll}
-                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700"
-                  >
-                    <Square className="w-3.5 h-3.5" />
-                    전체 선택
-                  </button>
-                </div>
-              )}
-
               {displayedQuestions.length === 0 ? (
                 <div className="text-center py-12">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />

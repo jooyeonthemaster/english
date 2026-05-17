@@ -78,9 +78,6 @@ interface DraftGridProps {
   totalDraftCount: number;
   onSelectJob: (jobId: string | null) => void;
 
-  // Selection toolbar (shown above "자료 N개" row when active)
-  selectionBar?: React.ReactNode;
-
   // Job rename (jobId, newName | null)
   onRenameJob: (jobId: string, name: string | null) => void;
 
@@ -116,7 +113,6 @@ export function DraftGrid({
   selectedJobIds,
   totalDraftCount,
   onSelectJob,
-  selectionBar,
   onRenameJob,
   onRenameSourceMaterial,
   groupIndexBySourceMaterialId,
@@ -201,11 +197,7 @@ export function DraftGrid({
             {drafts.length}개
           </span>
         </h3>
-        {selectionBar ? (
-          <div className="min-w-0 flex-1">{selectionBar}</div>
-        ) : (
-          <div className="flex-1" />
-        )}
+        <div className="flex-1" />
         <div className="flex shrink-0 items-center gap-2">
           <div className="flex items-center overflow-hidden rounded-md border border-slate-200">
             <ViewToggleButton

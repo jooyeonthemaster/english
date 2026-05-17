@@ -8,7 +8,6 @@ import {
   Loader2,
   Trash2,
   RefreshCw,
-  ExternalLink,
   Lightbulb,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,6 @@ import type { PassageAnalysisData } from "@/types/passage-analysis";
 import type { AnalysisPromptConfig } from "./analysis-prompt-panel";
 import { InteractivePassageView } from "./interactive-passage-view";
 import { AnalysisLoadingOverlay } from "./analysis-loading-overlay";
-import Link from "next/link";
 
 // ─── Types ───────────────────────────────────────────────
 interface PassageData {
@@ -301,19 +299,6 @@ export function PassageAnalysisModal({
                   저장
                 </Button>
               )}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={`/director/workbench/passages/${passage.id}`}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  상세 페이지로 이동
-                </TooltipContent>
-              </Tooltip>
               <Button
                 variant="ghost"
                 size="sm"

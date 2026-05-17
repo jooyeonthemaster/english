@@ -4,9 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
-  PanelBottomOpen,
-  RefreshCw,
-  UploadCloud,
 } from "lucide-react";
 
 import { TaskQueueInlineList } from "@/components/workbench/task-queue";
@@ -272,6 +269,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     slots,
     sourceName,
     sourceType,
+    queueDrawer,
     startUpload,
   ]);
 
@@ -312,7 +310,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
       setError(err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.");
       setPhase("idle");
     }
-  }, [setError, setJobId, setPhase, textTitle, textValue]);
+  }, [queueDrawer, setError, setJobId, setPhase, textTitle, textValue]);
 
   const clearFiles = useCallback(() => {
     setSlots([]);
@@ -339,44 +337,6 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     <div className="-m-6 flex h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
       <main className="mx-auto flex h-full w-full min-w-0 max-w-[1680px] flex-col gap-4">
         <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-3 xl:px-6">
-            <div className="flex items-center gap-3">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-                <UploadCloud className="size-4" aria-hidden="true" />
-              </span>
-              <div>
-                <h1 className="text-xl font-bold text-slate-950">자료 추출</h1>
-                <p className="mt-0.5 text-sm text-slate-500">
-                  PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={queueDrawer.triggerRefresh}
-                className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                <RefreshCw className="size-3.5" aria-hidden="true" />
-                새로고침
-              </button>
-              <button
-                type="button"
-                onClick={queueDrawer.toggle}
-                className={
-                  "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-                  (queueDrawer.open
-                    ? "border-blue-300 bg-blue-50 text-blue-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
-                }
-              >
-                <PanelBottomOpen className="size-3.5" aria-hidden="true" />
-                작업 목록
-              </button>
-            </div>
-          </div>
-
           {error ? (
             <div className="mx-6 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
               <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />

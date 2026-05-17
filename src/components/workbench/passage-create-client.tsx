@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
-import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
@@ -14,7 +12,6 @@ import { mapRecentPassagesToQueueItems } from "./passage-create/utils";
 import { usePassageFormState } from "./passage-create/use-passage-form-state";
 import { useFilterState } from "./passage-create/use-filter-state";
 import { useCollectionsState } from "./passage-create/use-collections-state";
-import { Header } from "./passage-create/sections/header";
 import { FormSectionContainer } from "./passage-create/sections/form-section-container";
 import { QueueSectionContainer } from "./passage-create/sections/queue-section-container";
 
@@ -27,9 +24,7 @@ export function PassageCreateClient({
   draftCollections,
   draftMembership,
 }: PassageCreateProps) {
-  const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [importOpen, setImportOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form collapse state
@@ -118,7 +113,6 @@ export function PassageCreateClient({
     showAddToFolder, setShowAddToFolder,
     addingToFolder, setAddingToFolder,
     collectionPassageIds, setCollectionPassageIds,
-    loadingCollection,
   } = useCollectionsState({ initialCollections, filterCollection });
 
   // ─── Filtered queue ───
@@ -190,17 +184,12 @@ export function PassageCreateClient({
   const hasContent = content.trim().length > 0 || imageFile !== null;
   const effectivePublisher = publisher === "__CUSTOM__" ? publisherCustom : publisher;
 
-  // Counts
-  const doneCount = queue.filter((p) => p.status === "done").length;
-  const errorCount = queue.filter((p) => p.status === "error").length;
-  const pendingCount = queue.filter((p) => p.status === "pending" || p.status === "analyzing").length;
-
   // Load saved prompts
   useEffect(() => {
     getCustomPrompts("PASSAGE_ANALYSIS").then((prompts) => {
       setSavedPrompts(prompts as SavedPrompt[]);
     });
-  }, []);
+  }, [setSavedPrompts]);
 
   // beforeunload warning
   useEffect(() => {
@@ -219,19 +208,13 @@ export function PassageCreateClient({
       setTags((prev) => [...prev, tag]);
       setTagInput("");
     }
-  }, [tagInput, tags]);
+  }, [setTagInput, setTags, tagInput, tags]);
 
   const removeTag = (tag: string) => setTags((prev) => prev.filter((t) => t !== tag));
 
   return (
     <TooltipProvider>
       <div className="flex flex-col min-h-[calc(100vh-64px)]">
-        {/* ─── Header ─── */}
-        <Header
-          queueLength={queue.length} pendingCount={pendingCount} doneCount={doneCount}
-          errorCount={errorCount} onOpenImport={() => setImportOpen(true)}
-        />
-
         {/* ─── Main Content Area ─── */}
         <div className="flex-1 overflow-y-auto bg-[#F4F6F9]">
           {/* ─── Collapsible Form Section ─── */}
@@ -316,8 +299,6 @@ export function PassageCreateClient({
             }}
           />
         )}
-
-        <PassageImportDialog open={importOpen} onOpenChange={setImportOpen} />
       </div>
     </TooltipProvider>
   );

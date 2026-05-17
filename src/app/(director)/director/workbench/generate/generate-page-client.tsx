@@ -2,16 +2,11 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import {
   Loader2,
-  ArrowLeft,
   X,
-  Cpu,
-  CheckCircle2,
-  Eye,
 } from "lucide-react";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
@@ -31,7 +26,6 @@ import { useGenerationHandlers } from "./use-generation-handlers";
 // ─── Component ───────────────────────────────────────────
 
 export function GeneratePageClient({ academyId }: { academyId: string }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   // ── Deep-link context (from /import or detail page) ──
@@ -170,7 +164,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   // ── Load passages ──
   useEffect(() => {
     setLoadingPassages(true);
-    fetch(`/api/passages/list?academyId=${academyId}`)
+    fetch(`/api/passages/list?academyId=${academyId}&onlyAnalyzed=true`)
       .then((r) => r.json())
       .then((data) => {
         setPassages(data.passages || []);
@@ -349,38 +343,6 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50">
-      {/* ─── Header ─── */}
-      <div className="flex items-center gap-4 px-8 py-4 bg-white border-b border-slate-200/80 shrink-0">
-        <Link
-          href="/director/workbench"
-          className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all"
-        >
-          <ArrowLeft className="w-4.5 h-4.5 text-slate-600" />
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-[18px] font-bold text-slate-800 tracking-tight flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 border border-blue-100">
-              <Cpu className="w-4.5 h-4.5 text-blue-600" />
-            </div>
-            AI 문제 생성
-          </h1>
-        </div>
-        <div className="flex items-center gap-2.5">
-          {queueCounts.generating > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-blue-50 border border-blue-200/60">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />
-              <span className="text-[12px] font-semibold text-blue-700">생성중 {queueCounts.generating}</span>
-            </div>
-          )}
-          {queueCounts.done > 0 && (
-            <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-sky-50 border border-sky-200/60">
-              <CheckCircle2 className="w-3.5 h-3.5 text-sky-600" />
-              <span className="text-[12px] font-semibold text-sky-700">완료 {queueCounts.done}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* ─── Main ─── */}
       <div className="flex flex-col">
 

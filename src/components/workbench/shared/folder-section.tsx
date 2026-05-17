@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import type { ReactNode } from "react";
@@ -46,6 +45,7 @@ interface FolderSectionProps {
     totalCount: number;
     itemLabel: string;
   };
+  rootLabel?: string;
 }
 
 export function FolderSection({
@@ -69,6 +69,7 @@ export function FolderSection({
   selectionBar,
   toolbar,
   pageHeader,
+  rootLabel = "전체 문제",
 }: FolderSectionProps) {
   const useCards = useCardInsideFolder && activeFolder;
   const currentFolder = activeFolder ? breadcrumbPath[breadcrumbPath.length - 1] : null;
@@ -141,7 +142,7 @@ export function FolderSection({
                 onClick={onNavigateToRoot}
                 className="shrink-0 font-medium text-slate-500 hover:text-blue-700"
               >
-                전체 문제
+                {rootLabel}
               </button>
               {breadcrumbPath.map((folder, index) => {
                 const isLast = index === breadcrumbPath.length - 1;
@@ -208,8 +209,17 @@ export function FolderSection({
                     value={newFolderName}
                     onChange={(e) => onNewFolderNameChange(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") onCreateFolder();
-                      if (e.key === "Escape") { onShowNewFolder(false); onNewFolderNameChange(""); }
+                      const nativeEvent = e.nativeEvent as KeyboardEvent;
+                      if (e.key === "Enter") {
+                        if (nativeEvent.isComposing || nativeEvent.keyCode === 229 || e.repeat) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onCreateFolder();
+                      }
+                      if (e.key === "Escape") {
+                        onShowNewFolder(false);
+                        onNewFolderNameChange("");
+                      }
                     }}
                     className="h-7 w-full rounded-md border border-blue-200 bg-blue-50/40 px-2 text-[12px] font-semibold text-slate-700 outline-none transition-all placeholder:text-blue-300 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
                   />

@@ -44,10 +44,23 @@ export function PrintStyles() {
         #exam-paper-print-root > div {
           max-width: none !important;
           width: 210mm !important;
+          height: auto !important;
           margin: 0 !important;
           padding: 0 !important;
           gap: 0 !important;
           display: block !important;
+        }
+
+        .exam-preview-zoom-spacer,
+        .exam-preview-zoom-content {
+          max-width: none !important;
+          width: 210mm !important;
+          height: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          gap: 0 !important;
+          display: block !important;
+          transform: none !important;
         }
 
         .no-print,

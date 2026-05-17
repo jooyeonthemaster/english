@@ -519,7 +519,10 @@ export function ExamListClient({
               onRenameFolder={folder.handleRenameFolder}
               onDeleteFolder={folder.handleDeleteFolder}
               onDragToFolder={onDragToFolder}
+              breadcrumbPath={folder.breadcrumbPath}
+              onNavigateToRoot={() => { folder.setActiveFolder(null); selection.clearSelection(); }}
               useCardInsideFolder={true}
+              rootLabel="전체 시험"
               toolbar={filtersToolbar}
               pageHeader={{
                 icon: <GraduationCap className="h-3.5 w-3.5" />,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 
@@ -58,6 +58,7 @@ export function useFolderManager({
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [showNewFolder, setShowNewFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+  const creatingFolderRef = useRef(false);
 
   // ─── Derived state ───
 
@@ -104,26 +105,33 @@ export function useFolderManager({
   // ─── CRUD handlers ───
 
   const handleCreateFolder = useCallback(async () => {
-    if (!newFolderName.trim()) return;
-    const result = await actions.createCollection({
-      name: newFolderName.trim(),
-      parentId: activeFolder || undefined,
-    });
-    if (result.success) {
-      setCollections((prev) => [
-        ...prev,
-        {
-          id: result.id!,
-          parentId: activeFolder,
-          name: newFolderName.trim(),
-          description: null,
-          color: null,
-          _count: { items: 0, children: 0 },
-        },
-      ]);
-      setNewFolderName("");
-      setShowNewFolder(false);
-      toast.success("폴더가 생성되었습니다.");
+    const trimmedName = newFolderName.trim();
+    if (!trimmedName || creatingFolderRef.current) return false;
+    creatingFolderRef.current = true;
+    try {
+      const result = await actions.createCollection({
+        name: trimmedName,
+        parentId: activeFolder || undefined,
+      });
+      if (result.success) {
+        setCollections((prev) => [
+          ...prev,
+          {
+            id: result.id!,
+            parentId: activeFolder,
+            name: trimmedName,
+            description: null,
+            color: null,
+            _count: { items: 0, children: 0 },
+          },
+        ]);
+        setNewFolderName("");
+        setShowNewFolder(false);
+        toast.success("폴더가 생성되었습니다.");
+      }
+      return result.success;
+    } finally {
+      creatingFolderRef.current = false;
     }
   }, [newFolderName, activeFolder, actions]);
 

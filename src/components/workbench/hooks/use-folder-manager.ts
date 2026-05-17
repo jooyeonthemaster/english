@@ -1,7 +1,5 @@
-// @ts-nocheck
 "use client";
-import { useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import type { CollectionItem, CollectionActions } from "../shared/types";
 
@@ -18,14 +16,13 @@ export function useFolderManager({
   actions,
   entityLabel,
 }: UseFolderManagerOptions) {
-  const router = useRouter();
-
   // ─── Core state ───
   const [collections, setCollections] = useState<CollectionItem[]>(initialCollections || []);
   const [membership, setMembership] = useState<Record<string, Set<string>>>(initialMembership || {});
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [showNewFolder, setShowNewFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+  const creatingFolderRef = useRef(false);
 
   // ─── Derived: child folders of current active folder ───
   const childFolders = useMemo(() => {
@@ -59,20 +56,27 @@ export function useFolderManager({
 
   // ─── CRUD: Create folder ───
   const handleCreateFolder = useCallback(async () => {
-    if (!newFolderName.trim()) return;
-    const result = await actions.create({ name: newFolderName.trim(), parentId: activeFolder || undefined });
-    if (result.success) {
-      setCollections((prev) => [...prev, {
-        id: result.id!,
-        parentId: activeFolder,
-        name: newFolderName.trim(),
-        description: null,
-        color: null,
-        _count: { items: 0, children: 0 },
-      }]);
-      setNewFolderName("");
-      setShowNewFolder(false);
-      toast.success("폴더가 생성되었습니다.");
+    const trimmedName = newFolderName.trim();
+    if (!trimmedName || creatingFolderRef.current) return false;
+    creatingFolderRef.current = true;
+    try {
+      const result = await actions.create({ name: trimmedName, parentId: activeFolder || undefined });
+      if (result.success) {
+        setCollections((prev) => [...prev, {
+          id: result.id!,
+          parentId: activeFolder,
+          name: trimmedName,
+          description: null,
+          color: null,
+          _count: { items: 0, children: 0 },
+        }]);
+        setNewFolderName("");
+        setShowNewFolder(false);
+        toast.success("폴더가 생성되었습니다.");
+      }
+      return result.success;
+    } finally {
+      creatingFolderRef.current = false;
     }
   }, [newFolderName, activeFolder, actions]);
 
@@ -140,7 +144,7 @@ export function useFolderManager({
     try {
       if (!copy) {
         // Remove from all current folders first
-        const removePromises: Promise<any>[] = [];
+        const removePromises: Promise<unknown>[] = [];
         for (const [colId, ids] of Object.entries(membership)) {
           if (colId !== folderId) {
             const toRemove = idsToMove.filter((id) => ids.has(id));

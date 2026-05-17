@@ -137,7 +137,7 @@ export function FormSection(props: FormSectionProps) {
       {!formCollapsed ? (
         <div className="px-6 pb-5">
           {/* ─── 2-Pane Layout: Extraction Grid | Editor + Compact Bottom ─── */}
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(360px,1fr)_minmax(560px,1.3fr)] gap-4 h-[640px]">
+          <div className="grid grid-cols-1 xl:grid-cols-[minmax(300px,0.75fr)_minmax(720px,1.75fr)] gap-4 h-[700px]">
             {/* LEFT: Extraction draft grid */}
             <ExtractionDraftGrid
               selectedDraftId={props.selectedDraftId}

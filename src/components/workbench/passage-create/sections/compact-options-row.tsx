@@ -53,13 +53,13 @@ interface CompactOptionsRowProps {
 
 export function CompactOptionsRow(props: CompactOptionsRowProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 shrink-0">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,0.72fr)_minmax(0,1.38fr)] gap-2 shrink-0 items-start">
       {/* ─── 선생님의 노하우 (compact) ─── */}
       <div
-        className="rounded-xl border border-blue-200/60 p-3 flex flex-col min-h-0"
+        className="rounded-lg border border-blue-200/60 p-2.5 flex flex-col min-h-0"
         style={{ background: "linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)" }}
       >
-        <div className="flex items-center justify-between mb-1.5 shrink-0">
+        <div className="flex items-center justify-between mb-1 shrink-0">
           <h3 className="text-[12px] font-bold text-slate-800 flex items-center gap-1.5">
             선생님의 노하우
             <span className="text-[9px] font-medium text-blue-500 bg-blue-100 px-1.5 py-0.5 rounded">
@@ -121,12 +121,12 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
           placeholder="예: 핵심 단어: contribute, responsible / 관계대명사, to부정사 / 3번째 문장 구문 분석"
           value={props.analysisPrompt}
           onChange={(e) => props.setAnalysisPrompt(e.target.value)}
-          className="flex-1 min-h-[68px] text-[11px] leading-relaxed bg-white border-blue-200/60 placeholder:text-slate-300 resize-none focus:border-blue-300 py-2 px-2.5"
+          className="min-h-[48px] max-h-[70px] text-[11px] leading-relaxed bg-white border-blue-200/60 placeholder:text-slate-300 resize-none focus:border-blue-300 py-1.5 px-2.5"
           spellCheck={false}
         />
 
         {props.analysisPrompt.trim() ? (
-          <div className="flex items-center gap-1.5 mt-1.5 shrink-0">
+          <div className="flex items-center gap-1.5 mt-1 shrink-0">
             <Input
               placeholder="노트 이름"
               value={props.newPromptName}
@@ -158,17 +158,17 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
       </div>
 
       {/* ─── 지문 정보 (compact, dense grid) ─── */}
-      <div className="bg-slate-50/70 rounded-xl border border-slate-200 p-3 flex flex-col min-h-0">
-        <h3 className="text-[12px] font-bold text-slate-700 mb-2 shrink-0">지문 정보</h3>
+      <div className="bg-slate-50/70 rounded-lg border border-slate-200 p-2.5 flex flex-col min-h-0">
+        <h3 className="text-[12px] font-bold text-slate-700 mb-1.5 shrink-0">지문 정보</h3>
 
-        <div className="grid grid-cols-12 gap-2">
+        <div className="grid grid-cols-12 gap-1.5">
           {/* 학교 — full row */}
-          <div className="col-span-12">
+          <div className="col-span-12 md:col-span-5">
             <Select
               value={props.schoolId || "NONE"}
               onValueChange={(value) => props.setSchoolId(value === "NONE" ? "" : value)}
             >
-              <SelectTrigger className="w-full h-8 text-[12px]">
+              <SelectTrigger className="w-full h-7 text-[11px] px-2">
                 <SelectValue placeholder="학교 선택" />
               </SelectTrigger>
               <SelectContent>
@@ -183,9 +183,9 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
           </div>
 
           {/* 학년 | 학기 — 4 + 4 */}
-          <div className="col-span-6">
+          <div className="col-span-6 md:col-span-2">
             <Select value={props.grade} onValueChange={props.setGrade}>
-              <SelectTrigger className="w-full h-8 text-[12px]">
+              <SelectTrigger className="w-full h-7 text-[11px] px-2">
                 <SelectValue placeholder="학년" />
               </SelectTrigger>
               <SelectContent>
@@ -195,9 +195,9 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
               </SelectContent>
             </Select>
           </div>
-          <div className="col-span-6">
+          <div className="col-span-6 md:col-span-2">
             <Select value={props.semester} onValueChange={props.setSemester}>
-              <SelectTrigger className="w-full h-8 text-[12px]">
+              <SelectTrigger className="w-full h-7 text-[11px] px-2">
                 <SelectValue placeholder="학기" />
               </SelectTrigger>
               <SelectContent>
@@ -208,27 +208,27 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
           </div>
 
           {/* 단원 | 출처 */}
-          <div className="col-span-6">
+          <div className="col-span-6 md:col-span-3">
             <Input
               placeholder="단원 (Lesson 3)"
               value={props.unit}
               onChange={(e) => props.setUnit(e.target.value)}
-              className="h-8 text-[12px]"
+              className="h-7 text-[11px] px-2"
             />
           </div>
-          <div className="col-span-6">
+          <div className="col-span-6 md:col-span-5">
             <Input
               placeholder="출처 (2025 기말)"
               value={props.source}
               onChange={(e) => props.setSource(e.target.value)}
-              className="h-8 text-[12px]"
+              className="h-7 text-[11px] px-2"
             />
           </div>
 
           {/* 출판사 — full */}
-          <div className="col-span-12">
+          <div className={props.publisher === "__CUSTOM__" ? "col-span-12 md:col-span-7" : "col-span-6 md:col-span-3"}>
             <Select value={props.publisher} onValueChange={props.setPublisher}>
-              <SelectTrigger className="w-full h-8 text-[12px]">
+              <SelectTrigger className="w-full h-7 text-[11px] px-2">
                 <SelectValue placeholder="출판사" />
               </SelectTrigger>
               <SelectContent>
@@ -245,13 +245,13 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
                 placeholder="출판사명 입력"
                 value={props.publisherCustom}
                 onChange={(e) => props.setPublisherCustom(e.target.value)}
-                className="mt-1.5 h-8 text-[12px]"
+                className="mt-1 h-7 text-[11px] px-2"
               />
             ) : null}
           </div>
 
           {/* 태그 */}
-          <div className="col-span-12">
+          <div className="col-span-12 md:col-span-4">
             <div className="flex gap-1.5">
               <Input
                 placeholder="태그 입력 후 Enter"
@@ -263,13 +263,13 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
                     props.addTag();
                   }
                 }}
-                className="flex-1 h-8 text-[12px]"
+                className="flex-1 h-7 text-[11px] px-2"
               />
               <Button
                 variant="outline"
                 size="icon"
                 onClick={props.addTag}
-                className="shrink-0 h-8 w-8"
+                className="shrink-0 h-7 w-7"
               >
                 <Plus className="w-3 h-3" />
               </Button>

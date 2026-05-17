@@ -375,7 +375,7 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
   const [activeDetail, setActiveDetail] = useState<ActiveDetail>(null);
   const [activeCollection, setActiveCollection] = useState<NoteCategory | null>(null);
   const [focusedNote, setFocusedNote] = useState<FocusedNote | null>(null);
-  const [summaryOpen, setSummaryOpen] = useState(true);
+  const [summaryOpen, setSummaryOpen] = useState(false);
   // Track last clicked segment for cycling through overlapping highlights
   const lastClickRef = React.useRef<{ key: string; index: number }>({ key: "", index: -1 });
 
@@ -802,7 +802,7 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
           {/* 분석 요약 — 항상 상단 */}
           {hasAnalysis && !activeCollection && (
             <div className={`overflow-hidden rounded-xl border bg-white shadow-sm transition-colors ${
-              summaryOpen ? "border-blue-200 ring-1 ring-blue-100" : "border-slate-200"
+              summaryOpen ? "border-blue-200 ring-1 ring-blue-100" : "border-blue-200 ring-1 ring-blue-100/70"
             }`}>
               <button
                 type="button"
@@ -811,30 +811,30 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
                 className={`group/summary flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors ${
                   summaryOpen
                     ? "bg-blue-50/90 hover:bg-blue-100/90"
-                    : "bg-slate-50/70 hover:bg-blue-50/80"
+                    : "bg-blue-50/80 hover:bg-blue-100/80"
                 }`}
               >
                 <span className="flex min-w-0 items-center gap-2">
                   <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 transition-colors ${
                     summaryOpen
                       ? "bg-blue-600 text-white ring-blue-500"
-                      : "bg-white text-slate-500 ring-slate-200 group-hover/summary:text-blue-600"
+                      : "bg-blue-600 text-white ring-blue-500"
                   }`}>
                     <ChevronUp className={`h-4 w-4 transition-transform duration-200 ease-out ${summaryOpen ? "rotate-0" : "rotate-180"}`} />
                   </span>
                   <span className="min-w-0">
-                    <span className={`block text-[13px] font-bold ${summaryOpen ? "text-blue-950" : "text-slate-800"}`}>분석 요약</span>
-                    <span className={`block text-[11px] font-medium ${summaryOpen ? "text-blue-600" : "text-slate-400"}`}>
-                      {summaryOpen ? "클릭해서 접기" : "클릭해서 펼치기"}
+                    <span className="block text-[13px] font-bold text-blue-950">분석 요약</span>
+                    <span className="block text-[11px] font-medium text-blue-600">
+                      {summaryOpen ? "주제, 논리 흐름, 출제 핵심을 확인 중" : "접혀 있음 · 클릭하면 분석 요약이 펼쳐집니다"}
                     </span>
                   </span>
                 </span>
-                <span className={`shrink-0 rounded-md border px-2 py-1 text-[11px] font-bold shadow-sm transition-colors ${
+                <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-bold shadow-sm transition-colors ${
                   summaryOpen
                     ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-slate-200 bg-white text-slate-500 group-hover/summary:border-blue-200 group-hover/summary:text-blue-600"
+                    : "border-blue-200 bg-white text-blue-700 group-hover/summary:border-blue-300"
                 }`}>
-                  {summaryOpen ? "접기" : "펼치기"}
+                  {summaryOpen ? "접기" : "요약 펼치기"}
                 </span>
               </button>
               <div className={`grid transition-[grid-template-rows] duration-200 ease-out ${

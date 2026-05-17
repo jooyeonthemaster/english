@@ -1,17 +1,26 @@
 import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const staff = await getStaffSession();
     if (!staff) {
       return NextResponse.json({ error: "인증 필요" }, { status: 401 });
     }
 
+    const onlyAnalyzed = request.nextUrl.searchParams.get("onlyAnalyzed") === "true";
+    const passageWhere = {
+      academyId: staff.academyId,
+      ...(onlyAnalyzed ? { analysis: { isNot: null } } : {}),
+    };
+    const collectionItemCount = onlyAnalyzed
+      ? { where: { passage: { is: passageWhere } } }
+      : true;
+
     const [passages, schools, collections] = await Promise.all([
       prisma.passage.findMany({
-        where: { academyId: staff.academyId },
+        where: passageWhere,
         select: {
           id: true,
           title: true,
@@ -35,7 +44,11 @@ export async function GET() {
       }),
       prisma.passageCollection.findMany({
         where: { academyId: staff.academyId },
-        select: { id: true, name: true, _count: { select: { items: true } } },
+        select: {
+          id: true,
+          name: true,
+          _count: { select: { items: collectionItemCount } },
+        },
         orderBy: { name: "asc" },
       }),
     ]);

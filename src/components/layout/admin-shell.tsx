@@ -189,6 +189,157 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </Link>
           </div>
 
+          {/* Top user actions */}
+          <div
+            className={cn(
+              "shrink-0 border-b border-gray-200/50 transition-all duration-300",
+              collapsed ? "px-2 pb-2 space-y-1" : "px-3 pb-3 space-y-1.5"
+            )}
+          >
+            {/* User dropdown (merged with academy/role) */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                {collapsed ? (
+                  <button
+                    className="flex items-center justify-center h-10 w-10 mx-auto rounded-xl hover:bg-black/[0.04] transition-all duration-200 outline-none"
+                    aria-label={`${staff.name} · ${staff.academyName}`}
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-900 text-white text-[11px] font-bold">
+                      {getInitials(staff.name)}
+                    </div>
+                  </button>
+                ) : (
+                  <button className="flex items-center gap-2.5 w-full h-[46px] px-2.5 rounded-xl bg-white/60 border border-gray-200/60 hover:border-gray-300/70 hover:bg-white transition-all duration-200 outline-none">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-900 text-white text-[11px] font-bold shrink-0">
+                      {getInitials(staff.name)}
+                    </div>
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[12.5px] font-semibold text-gray-800 truncate">
+                          {staff.name}
+                        </span>
+                        <span className="inline-flex items-center h-[15px] px-1 text-[9.5px] font-semibold rounded text-blue-500 bg-blue-500/[0.08] shrink-0">
+                          {staff.role === "DIRECTOR" ? "원장" : "강사"}
+                        </span>
+                      </div>
+                      <span className="block text-[10.5px] text-gray-400 truncate mt-0.5">
+                        {staff.academyName}
+                      </span>
+                    </div>
+                    <ChevronDown className="size-3 text-gray-300 shrink-0" />
+                  </button>
+                )}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="right"
+                align="start"
+                sideOffset={12}
+                className="w-56 rounded-xl p-1.5"
+              >
+                <DropdownMenuLabel className="font-normal px-3 py-2">
+                  <div className="flex flex-col gap-0.5">
+                    <p className="text-[13px] font-semibold text-gray-900">
+                      {staff.name}
+                    </p>
+                    <p className="text-[11px] text-gray-400">{staff.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="rounded-lg h-9 text-[13px]">
+                  <Link href={`${basePath}/profile`} className="cursor-pointer">
+                    <User className="size-4" />
+                    내 프로필
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="cursor-pointer rounded-lg h-9 text-[13px]"
+                >
+                  <LogOut className="size-4" />
+                  로그아웃
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* 공지사항 */}
+            {isDirector && (
+              collapsed ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href="/director/notices"
+                      onClick={(e) => handleNavClick("/director/notices", e)}
+                      className={cn(
+                        "flex items-center justify-center h-9 w-10 mx-auto rounded-xl transition-all duration-200",
+                        pathname.startsWith("/director/notices")
+                          ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.18)]"
+                          : "text-blue-600 bg-blue-50/70 hover:bg-blue-100/70"
+                      )}
+                      aria-label="공지사항"
+                    >
+                      <Megaphone className="size-[16px]" strokeWidth={1.8} />
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
+                    공지사항
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <Link
+                  href="/director/notices"
+                  onClick={(e) => handleNavClick("/director/notices", e)}
+                  className={cn(
+                    "flex items-center gap-2 h-9 px-3 rounded-xl text-[12.5px] font-semibold transition-all duration-200",
+                    pathname.startsWith("/director/notices")
+                      ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.18)]"
+                      : "text-blue-600 bg-blue-50/70 hover:bg-blue-100/70"
+                  )}
+                >
+                  <Megaphone className="size-[15px]" strokeWidth={1.8} />
+                  <span>공지사항</span>
+                </Link>
+              )
+            )}
+
+            {/* Credit + Notification */}
+            <div
+              className={cn(
+                "flex items-center",
+                collapsed ? "flex-col gap-1" : "justify-between gap-1"
+              )}
+            >
+              <CreditBadge
+                collapsed={collapsed}
+                popoverSide="right"
+                popoverAlign="start"
+              />
+              {collapsed ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      className="flex items-center justify-center h-9 w-10 mx-auto rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-all duration-200"
+                      aria-label="알림"
+                    >
+                      <Bell className="size-[16px]" strokeWidth={1.7} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
+                    알림
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <button
+                  className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-all duration-200"
+                  aria-label="알림"
+                >
+                  <Bell className="size-[16px]" strokeWidth={1.7} />
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto sidebar-scroll py-3 px-3">
             {filteredGroups.map((group, gi) => (
@@ -420,24 +571,37 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           </nav>
 
           {/* Collapse toggle */}
-          <div className="shrink-0 p-3">
-            <button
-              onClick={toggleSidebar}
-              className={cn(
-                "flex items-center justify-center w-full h-9 rounded-xl text-gray-300 hover:text-gray-500 hover:bg-black/[0.03] transition-all duration-200",
-                collapsed && "w-10 mx-auto"
-              )}
-              aria-label={collapsed ? "사이드바 열기" : "사이드바 접기"}
-            >
-              {collapsed ? (
-                <PanelLeftOpen className="size-[17px]" />
-              ) : (
-                <>
-                  <PanelLeftClose className="size-[17px]" />
-                  <span className="ml-2 text-[11px] font-medium">접기</span>
-                </>
-              )}
-            </button>
+          <div
+            className={cn(
+              "shrink-0 border-t border-gray-200/50 transition-all duration-300",
+              collapsed ? "px-2 py-2" : "px-3 py-2.5"
+            )}
+          >
+            {collapsed ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={toggleSidebar}
+                    className="flex items-center justify-center h-10 w-10 mx-auto rounded-xl text-white bg-blue-600 border border-blue-600 hover:bg-blue-700 hover:border-blue-700 shadow-[0_4px_12px_rgba(37,99,235,0.25)] hover:shadow-[0_6px_16px_rgba(37,99,235,0.35)] transition-all duration-200"
+                    aria-label="사이드바 열기"
+                  >
+                    <PanelLeftOpen className="size-[18px]" strokeWidth={1.9} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
+                  사이드바 열기
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <button
+                onClick={toggleSidebar}
+                className="group flex items-center justify-center gap-2 w-full h-10 rounded-xl text-white bg-blue-600 border border-blue-600 hover:bg-blue-700 hover:border-blue-700 shadow-[0_4px_12px_rgba(37,99,235,0.25)] hover:shadow-[0_6px_16px_rgba(37,99,235,0.35)] transition-all duration-200"
+                aria-label="사이드바 접기"
+              >
+                <PanelLeftClose className="size-[17px] text-white/90 group-hover:text-white transition-colors" strokeWidth={1.9} />
+                <span className="text-[12px] font-semibold tracking-tight">사이드바 접기</span>
+              </button>
+            )}
           </div>
         </aside>
 
@@ -448,100 +612,6 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             collapsed ? "ml-[72px]" : "ml-[220px]"
           )}
         >
-          {/* Top header */}
-          <header
-            className="sticky top-0 z-20 flex items-center justify-between h-[56px] px-6"
-            style={{
-              background: "rgba(244,246,249,0.75)",
-              backdropFilter: "blur(20px) saturate(180%)",
-              WebkitBackdropFilter: "blur(20px) saturate(180%)",
-              borderBottom: "1px solid rgba(0,0,0,0.04)",
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <h2 className="text-[13px] font-semibold text-gray-600">
-                {staff.academyName}
-              </h2>
-              <span className="inline-flex items-center h-[20px] px-2 text-[10px] font-semibold rounded-md text-blue-500 bg-blue-500/[0.08]">
-                {staff.role === "DIRECTOR" ? "원장" : "강사"}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1">
-              {isDirector && (
-                <Link
-                  href="/director/notices"
-                  onClick={(e) => handleNavClick("/director/notices", e)}
-                  className={cn(
-                    "hidden sm:inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[12px] font-semibold transition-all duration-200",
-                    pathname.startsWith("/director/notices")
-                      ? "border-blue-600 bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.18)]"
-                      : "border-blue-100 bg-blue-50/70 text-blue-600 hover:border-blue-200 hover:bg-white"
-                  )}
-                >
-                  <Megaphone className="size-3.5" />
-                  <span>공지사항</span>
-                </Link>
-              )}
-
-              {/* Credit badge */}
-              <CreditBadge />
-
-              {/* Notification */}
-              <button
-                className="relative flex items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.03] transition-all duration-200"
-                aria-label="알림"
-              >
-                <Bell className="size-[17px]" strokeWidth={1.7} />
-              </button>
-
-              {/* User dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 h-9 pl-2 pr-2.5 rounded-xl hover:bg-black/[0.03] transition-all duration-200 outline-none">
-                    <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gray-900 text-white text-[11px] font-bold">
-                      {getInitials(staff.name)}
-                    </div>
-                    {!collapsed && (
-                      <>
-                        <span className="text-[13px] font-medium text-gray-600 hidden sm:block">
-                          {staff.name}
-                        </span>
-                        <ChevronDown className="size-3 text-gray-300 hidden sm:block" />
-                      </>
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 rounded-xl p-1.5">
-                  <DropdownMenuLabel className="font-normal px-3 py-2">
-                    <div className="flex flex-col gap-0.5">
-                      <p className="text-[13px] font-semibold text-gray-900">
-                        {staff.name}
-                      </p>
-                      <p className="text-[11px] text-gray-400">{staff.email}</p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild className="rounded-lg h-9 text-[13px]">
-                    <Link href={`${basePath}/profile`} className="cursor-pointer">
-                      <User className="size-4" />
-                      내 프로필
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={() => signOut({ callbackUrl: "/login" })}
-                    className="cursor-pointer rounded-lg h-9 text-[13px]"
-                  >
-                    <LogOut className="size-4" />
-                    로그아웃
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </header>
-
           {/* Page content */}
           <main className="flex-1 min-w-0 overflow-y-auto p-6 relative">
             {isPending && (

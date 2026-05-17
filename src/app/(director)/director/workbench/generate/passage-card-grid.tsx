@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import {
@@ -18,6 +17,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { type PassageItem, type FilterOptions, countWords } from "./generate-page-types";
+
+type ParsedAnalysisSummary = {
+  vocabulary?: unknown[];
+  grammarPoints?: unknown[];
+  syntaxAnalysis?: unknown[];
+  structure?: {
+    topicSentenceIndex?: number | null;
+    mainIdea?: string | null;
+  };
+  examDesign?: {
+    paraphrasableSegments?: unknown[];
+    structureTransformPoints?: unknown[];
+  };
+};
 
 // ─── Props ───────────────────────────────────────────
 
@@ -234,7 +247,7 @@ export function PassageCardGrid({
           <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
             {filteredPassages.map((p) => {
               // Parse analysis
-              let aData: any = null;
+              let aData: ParsedAnalysisSummary | null = null;
               if (p.analysis?.analysisData) {
                 try { aData = typeof p.analysis.analysisData === "string" ? JSON.parse(p.analysis.analysisData) : p.analysis.analysisData; } catch {}
               }
@@ -341,15 +354,7 @@ export function PassageCardGrid({
                     )}
                   </div>
 
-                  {/* Detail view button -- pinned to bottom */}
                   <div className="flex-1" />
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleOpenAnalysisModal(p.id); }}
-                    className="w-full mt-3 h-8 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-[11px] font-medium text-blue-700 hover:text-blue-800 transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <Eye className="w-3 h-3" />
-                    상세 보기
-                  </button>
                 </div>
               );
             })}

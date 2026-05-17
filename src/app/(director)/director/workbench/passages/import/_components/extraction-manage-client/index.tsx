@@ -29,12 +29,11 @@ import { DraftDetailModal } from "./components/draft-detail-modal";
 import { DraftFolderSection } from "./components/draft-folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
-import { ManageFiltersBar } from "./components/manage-filters-bar";
 import {
-  ManageHeader,
+  ManageFiltersBar,
   type SortOrder,
   type StatusFilter,
-} from "./components/manage-header";
+} from "./components/manage-filters-bar";
 import type {
   JobDetailResponse,
   M1DraftJobSummary,
@@ -1080,9 +1079,9 @@ export function ExtractionManageClient({
           type="button"
           onClick={() => setAddToFolderOpen((v) => !v)}
           disabled={anyBulkRunning || noSelection}
-          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-white px-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50"
+          className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-blue-200 bg-white px-2.5 text-[11px] font-bold text-blue-700 transition-colors hover:bg-blue-50"
         >
-          <FolderPlus className="size-4" />
+          <FolderPlus className="size-3.5" />
           폴더에 추가
         </button>
         {addToFolderOpen ? (
@@ -1111,12 +1110,12 @@ export function ExtractionManageClient({
         type="button"
         onClick={bulkRerestore}
         disabled={anyBulkRunning || noSelection}
-        className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-bold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
       >
         {isRerestoring ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
         ) : (
-          <RefreshCw className="size-4" aria-hidden="true" />
+          <RefreshCw className="size-3.5" aria-hidden="true" />
         )}
         AI 복원 다시
       </button>
@@ -1125,12 +1124,12 @@ export function ExtractionManageClient({
         type="button"
         onClick={bulkPromote}
         disabled={anyBulkRunning || noSelection}
-        className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md bg-blue-600 px-2.5 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
       >
         {isPromoting ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
         ) : (
-          <CheckCircle2 className="size-4" aria-hidden="true" />
+          <CheckCircle2 className="size-3.5" aria-hidden="true" />
         )}
         지문 등록
       </button>
@@ -1139,12 +1138,12 @@ export function ExtractionManageClient({
         type="button"
         onClick={bulkDelete}
         disabled={anyBulkRunning || noSelection}
-        className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+        className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-bold text-red-600 transition-colors hover:bg-red-50"
       >
         {isDeleting ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
         ) : (
-          <Trash2 className="size-4" aria-hidden="true" />
+          <Trash2 className="size-3.5" aria-hidden="true" />
         )}
         삭제
       </button>
@@ -1161,32 +1160,6 @@ export function ExtractionManageClient({
   return (
     <div className="-m-6 flex h-[calc(100vh-56px)] min-w-0 flex-col bg-[#F4F6F9]">
       <div className="mx-auto flex h-full w-full min-w-0 max-w-[1680px] flex-col">
-      <ManageHeader
-        totalCount={drafts.length}
-        resultScope={resultScope}
-        activeFolder={folders.activeFolder}
-        breadcrumbPath={folders.breadcrumbPath}
-        onBackToAllResults={showAllResults}
-        onNavigateUp={() => {
-          folders.navigateUp();
-          clearSelection();
-        }}
-        onNavigateToFolder={(id) => {
-          folders.navigateToFolder(id);
-          clearSelection();
-        }}
-        rightArea={
-          <DraftSelectionToolbar
-            selectedCount={selectedIds.size}
-            isAllSelected={isAllSelected}
-            onSelectAll={selectAll}
-            activeFolder={folders.activeFolder}
-            onRemoveFromFolder={handleRemoveFromFolderClick}
-            extraActions={selectionExtraActions}
-          />
-        }
-      />
-
       {error ? (
         <div className="mx-6 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
@@ -1195,7 +1168,7 @@ export function ExtractionManageClient({
       ) : null}
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-        <div className="shrink-0 px-6 pt-3 pb-2.5 sm:px-8">
+        <div className="shrink-0 px-6 pt-4 pb-2.5 sm:px-8">
           <DraftFolderSection
             childFolders={folders.childFolders}
             activeFolder={folders.activeFolder}
@@ -1218,6 +1191,37 @@ export function ExtractionManageClient({
               folders.setActiveFolder(null);
               clearSelection();
             }}
+            onNavigateUp={() => {
+              folders.navigateUp();
+              clearSelection();
+            }}
+            totalCount={drafts.length}
+            resultScope={resultScope}
+            onBackToAllResults={showAllResults}
+            rightArea={
+              <ManageFiltersBar
+                searchValue={searchValue}
+                onSearchChange={setSearchValue}
+                onSearchSubmit={handleSearchSubmit}
+                statusFilter={statusFilter}
+                onStatusFilterChange={setStatusFilter}
+                sortOrder={sortOrder}
+                onSortOrderChange={setSortOrder}
+                queueOpen={queueDrawer.open}
+                onToggleQueue={queueDrawer.toggle}
+                onRefresh={refreshResults}
+              />
+            }
+            selectionToolbar={
+              <DraftSelectionToolbar
+                selectedCount={selectedIds.size}
+                isAllSelected={isAllSelected}
+                onSelectAll={selectAll}
+                activeFolder={folders.activeFolder}
+                onRemoveFromFolder={handleRemoveFromFolderClick}
+                extraActions={selectionExtraActions}
+              />
+            }
           />
         </div>
 
@@ -1251,20 +1255,6 @@ export function ExtractionManageClient({
             onRenameJob={renameJob}
             onRenameSourceMaterial={renameSourceMaterial}
             groupIndexBySourceMaterialId={groupIndexBySourceMaterialId}
-            selectionBar={
-              <ManageFiltersBar
-                searchValue={searchValue}
-                onSearchChange={setSearchValue}
-                onSearchSubmit={handleSearchSubmit}
-                statusFilter={statusFilter}
-                onStatusFilterChange={setStatusFilter}
-                sortOrder={sortOrder}
-                onSortOrderChange={setSortOrder}
-                queueOpen={queueDrawer.open}
-                onToggleQueue={queueDrawer.toggle}
-                onRefresh={refreshResults}
-              />
-            }
           />
         </div>
       </div>
