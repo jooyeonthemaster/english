@@ -1075,6 +1075,24 @@ export function ExtractionManageClient({
     clearSelection,
   } = useSelection(getDisplayedIds);
 
+  const actionTargetIds = useMemo(() => {
+    if (selectedIds.size > 0) return selectedIds;
+    if (folders.activeFolder === null && jobFilter.size > 0) {
+      return new Set(displayedDrafts.map((draft) => draft.id));
+    }
+    return new Set<string>();
+  }, [displayedDrafts, folders.activeFolder, jobFilter.size, selectedIds]);
+
+  const clearActionSelection = useCallback(() => {
+    if (selectedIds.size > 0) {
+      clearSelection();
+      return;
+    }
+    if (jobFilter.size > 0) {
+      setJobFilter(new Set());
+    }
+  }, [clearSelection, jobFilter.size, selectedIds.size]);
+
   const toggleGroupCheck = useCallback(
     (ids: string[], select: boolean) => {
       setSelectedIds((prev) => {
@@ -1090,17 +1108,17 @@ export function ExtractionManageClient({
   );
 
   const handleRemoveFromFolderClick = useCallback(async () => {
-    const ok = await folders.handleRemoveFromFolder(selectedIds);
-    if (ok) clearSelection();
-  }, [folders, selectedIds, clearSelection]);
+    const ok = await folders.handleRemoveFromFolder(actionTargetIds);
+    if (ok) clearActionSelection();
+  }, [actionTargetIds, clearActionSelection, folders]);
 
   const [bulkActionRunning, setBulkActionRunning] = useState<
     "delete" | "rerestore" | "promote" | null
   >(null);
 
   const bulkDelete = useCallback(async () => {
-    if (selectedIds.size === 0 || bulkActionRunning) return;
-    const ids = [...selectedIds];
+    if (actionTargetIds.size === 0 || bulkActionRunning) return;
+    const ids = [...actionTargetIds];
     const ok =
       typeof window === "undefined"
         ? true
@@ -1138,7 +1156,7 @@ export function ExtractionManageClient({
         // state, but flag the discrepancy.
         setDrafts((current) => current.filter((d) => !idSet.has(d.id)));
       }
-      clearSelection();
+      clearActionSelection();
       queueDrawer.triggerRefresh();
 
       if (data.deleted === data.requested) {
@@ -1157,11 +1175,11 @@ export function ExtractionManageClient({
     } finally {
       setBulkActionRunning(null);
     }
-  }, [selectedIds, bulkActionRunning, clearSelection]);
+  }, [actionTargetIds, bulkActionRunning, clearActionSelection]);
 
   const bulkRerestore = useCallback(async () => {
-    if (selectedIds.size === 0 || bulkActionRunning) return;
-    const ids = [...selectedIds];
+    if (actionTargetIds.size === 0 || bulkActionRunning) return;
+    const ids = [...actionTargetIds];
     const ok =
       typeof window === "undefined"
         ? true
@@ -1206,7 +1224,7 @@ export function ExtractionManageClient({
       );
     }
 
-    clearSelection();
+    clearActionSelection();
     queueDrawer.triggerRefresh();
     setBulkActionRunning(null);
 
@@ -1217,11 +1235,11 @@ export function ExtractionManageClient({
     } else {
       toast.warning(`${success}개 성공, ${failed}개 실패`);
     }
-  }, [selectedIds, bulkActionRunning, clearSelection]);
+  }, [actionTargetIds, bulkActionRunning, clearActionSelection]);
 
   const bulkPromote = useCallback(async () => {
-    if (selectedIds.size === 0 || bulkActionRunning) return;
-    const ids = [...selectedIds];
+    if (actionTargetIds.size === 0 || bulkActionRunning) return;
+    const ids = [...actionTargetIds];
     const ok =
       typeof window === "undefined"
         ? true
@@ -1267,7 +1285,7 @@ export function ExtractionManageClient({
           }),
         );
       }
-      clearSelection();
+      clearActionSelection();
       queueDrawer.triggerRefresh();
 
       const { promoted, skipped, failed } = data.summary;
@@ -1287,27 +1305,27 @@ export function ExtractionManageClient({
     } finally {
       setBulkActionRunning(null);
     }
-  }, [selectedIds, bulkActionRunning, clearSelection]);
+  }, [actionTargetIds, bulkActionRunning, clearActionSelection]);
 
   const handleAddToFolder = useCallback(
     async (collectionId: string) => {
-      const ok = await folders.handleAddToFolder(collectionId, selectedIds);
-      if (ok) clearSelection();
+      const ok = await folders.handleAddToFolder(collectionId, actionTargetIds);
+      if (ok) clearActionSelection();
     },
-    [folders, selectedIds, clearSelection],
+    [actionTargetIds, clearActionSelection, folders],
   );
 
   const handleMoveToFolder = useCallback(
     async (collectionId: string) => {
       const ok = await folders.handleDragToFolder(
-        [...selectedIds],
+        [...actionTargetIds],
         collectionId,
         false,
-        selectedIds,
+        actionTargetIds,
       );
-      if (ok) clearSelection();
+      if (ok) clearActionSelection();
     },
-    [folders, selectedIds, clearSelection],
+    [actionTargetIds, clearActionSelection, folders],
   );
 
   const handleDragToFolder = useCallback(
@@ -1368,13 +1386,13 @@ export function ExtractionManageClient({
   const isPromoting = bulkActionRunning === "promote";
   const anyBulkRunning = bulkActionRunning !== null;
 
-  const noSelection = selectedIds.size === 0;
+  const noSelection = actionTargetIds.size === 0;
   const selectionExtraActions = (
     <>
       <MoveOrCopyFolderPicker
         collections={folders.collections}
         activeFolder={folders.activeFolder}
-        selectedCount={selectedIds.size}
+        selectedCount={actionTargetIds.size}
         onCopy={handleAddToFolder}
         onMove={handleMoveToFolder}
         disabled={anyBulkRunning || noSelection}
@@ -1444,7 +1462,7 @@ export function ExtractionManageClient({
     statusFilter !== "ALL" ||
     (folders.activeFolder === null && jobFilter.size > 0);
   const isAllSelected =
-    selectedIds.size > 0 && selectedIds.size === displayedDrafts.length;
+    actionTargetIds.size > 0 && actionTargetIds.size === displayedDrafts.length;
 
   return (
     <div className="-m-6 flex h-[calc(100vh-56px)] min-w-0 flex-col bg-[#F4F6F9]">
@@ -1486,11 +1504,11 @@ export function ExtractionManageClient({
               selectionBar={
                 <DraftSelectionToolbar
                   embedded
-                  selectedCount={selectedIds.size}
+                  selectedCount={actionTargetIds.size}
                   totalCount={displayedDrafts.length}
                   isAllSelected={isAllSelected}
                   onSelectAll={selectAll}
-                  onClearSelection={clearSelection}
+                  onClearSelection={clearActionSelection}
                   activeFolder={folders.activeFolder}
                   onRemoveFromFolder={handleRemoveFromFolderClick}
                   extraActions={selectionExtraActions}
