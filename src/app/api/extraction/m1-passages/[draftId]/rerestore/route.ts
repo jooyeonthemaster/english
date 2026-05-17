@@ -21,7 +21,8 @@ export async function POST(_req: Request, ctx: RouteContext) {
   const draft = await prisma.extractionM1PassageDraft.findFirst({
     where: {
       id: draftId,
-      job: { academyId: staff.academyId },
+      deletedAt: null,
+      job: { academyId: staff.academyId, deletedAt: null },
     },
     select: {
       id: true,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
 
@@ -23,9 +24,11 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const draft = await prisma.extractionM1PassageDraft.findFirst({
     where: {
       id: draftId,
+      deletedAt: null,
       job: {
         academyId: staff.academyId,
         mode: "PASSAGE_ONLY",
+        deletedAt: null,
       },
     },
     include: {
@@ -67,10 +70,15 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   }
 
   type ExamMetaShape = { pageNumber?: number | null };
+  // Prisma's JSON-null filter needs the explicit `Prisma.DbNull` sentinel —
+  // `{ not: { equals: null } }` on a JSONB column compiles to a runtime
+  // validation error in the client. Without this, every detail GET threw
+  // and the manage UI showed "자료 상세를 불러오지 못했습니다." despite
+  // the optimistic draft rendering fine from the list payload.
   const itemsWithExamMeta = await prisma.extractionItem.findMany({
     where: {
       jobId: draft.jobId,
-      examMeta: { not: { equals: null as never } },
+      examMeta: { not: Prisma.DbNull },
     },
     orderBy: { order: "asc" },
     select: { sourcePageIndex: true, examMeta: true },
@@ -121,9 +129,21 @@ export async function PATCH(req: NextRequest, ctx: RouteContext) {
   const draft = await prisma.extractionM1PassageDraft.findFirst({
     where: {
       id: draftId,
-      job: { academyId: staff.academyId },
+      deletedAt: null,
+      job: { academyId: staff.academyId, deletedAt: null },
     },
-    select: { id: true },
+    select: {
+      id: true,
+      jobId: true,
+      passageOrder: true,
+      title: true,
+      job: {
+        select: {
+          displayName: true,
+          originalFileName: true,
+        },
+      },
+    },
   });
   if (!draft) {
     return errorResponse(
@@ -161,9 +181,21 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
   const draft = await prisma.extractionM1PassageDraft.findFirst({
     where: {
       id: draftId,
-      job: { academyId: staff.academyId },
+      deletedAt: null,
+      job: { academyId: staff.academyId, deletedAt: null },
     },
-    select: { id: true },
+    select: {
+      id: true,
+      jobId: true,
+      passageOrder: true,
+      title: true,
+      job: {
+        select: {
+          displayName: true,
+          originalFileName: true,
+        },
+      },
+    },
   });
   if (!draft) {
     return errorResponse(
@@ -173,7 +205,30 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
     );
   }
 
-  await prisma.extractionM1PassageDraft.delete({ where: { id: draftId } });
+  await prisma.$transaction([
+    prisma.extractionAuditLog.create({
+      data: {
+        academyId: staff.academyId,
+        actorStaffId: staff.id,
+        action: "M1_DRAFT_DELETE",
+        targetType: "EXTRACTION_M1_PASSAGE_DRAFT",
+        targetId: draft.id,
+        targetLabel:
+          draft.title || draft.job.displayName || draft.job.originalFileName,
+        metadata: {
+          jobId: draft.jobId,
+          passageOrder: draft.passageOrder,
+        },
+      },
+    }),
+    prisma.extractionM1PassageDraft.update({
+      where: { id: draftId },
+      data: {
+        deletedAt: new Date(),
+        deletedById: staff.id,
+      },
+    }),
+  ]);
 
   return NextResponse.json({ draftId, deleted: true });
 }

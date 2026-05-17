@@ -17,7 +17,19 @@ export async function getM1DraftCollections(academyId: string) {
   return prisma.m1PassageDraftCollection.findMany({
     where: { academyId },
     include: {
-      _count: { select: { items: true, children: true } },
+      _count: {
+        select: {
+          items: {
+            where: {
+              draft: {
+                deletedAt: null,
+                job: { deletedAt: null },
+              },
+            },
+          },
+          children: true,
+        },
+      },
     },
     orderBy: { name: "asc" },
   });
@@ -32,7 +44,13 @@ export async function getAcademyM1DraftCollectionMembership(
     return {};
   }
   const items = await prisma.m1PassageDraftCollectionItem.findMany({
-    where: { collection: { academyId } },
+    where: {
+      collection: { academyId },
+      draft: {
+        deletedAt: null,
+        job: { deletedAt: null },
+      },
+    },
     select: { collectionId: true, draftId: true },
   });
   const membership: Record<string, string[]> = {};
@@ -107,8 +125,33 @@ export async function addDraftsToCollection(
   collectionId: string,
   draftIds: string[],
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
+    const collection = await prisma.m1PassageDraftCollection.findFirst({
+      where: { id: collectionId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!collection) {
+      return { success: false as const, error: "?대뜑瑜?李얠쓣 ???놁뒿?덈떎." };
+    }
+
+    const drafts = await prisma.extractionM1PassageDraft.findMany({
+      where: {
+        id: { in: draftIds },
+        deletedAt: null,
+        job: { academyId: staff.academyId, deletedAt: null },
+      },
+      select: { id: true },
+    });
+    const allowedDraftIdSet = new Set(drafts.map((draft) => draft.id));
+    const allowedDraftIds = draftIds.filter((draftId) =>
+      allowedDraftIdSet.has(draftId),
+    );
+    if (allowedDraftIds.length === 0) {
+      revalidatePath(MANAGE_PATH);
+      return { success: true as const };
+    }
+
     const maxItem = await prisma.m1PassageDraftCollectionItem.findFirst({
       where: { collectionId },
       orderBy: { orderNum: "desc" },
@@ -117,7 +160,7 @@ export async function addDraftsToCollection(
     const startOrder = (maxItem?.orderNum ?? -1) + 1;
 
     await prisma.m1PassageDraftCollectionItem.createMany({
-      data: draftIds.map((draftId, idx) => ({
+      data: allowedDraftIds.map((draftId, idx) => ({
         collectionId,
         draftId,
         orderNum: startOrder + idx,
@@ -138,14 +181,74 @@ export async function removeDraftsFromCollection(
   collectionId: string,
   draftIds: string[],
 ) {
-  await requireAuth();
+  const staff = await requireAuth();
   try {
-    await prisma.m1PassageDraftCollectionItem.deleteMany({
+    const collection = await prisma.m1PassageDraftCollection.findFirst({
+      where: { id: collectionId, academyId: staff.academyId },
+      select: { id: true, name: true },
+    });
+    if (!collection) {
+      return { success: false as const, error: "폴더를 찾을 수 없습니다." };
+    }
+
+    const existingItems = await prisma.m1PassageDraftCollectionItem.findMany({
       where: {
         collectionId,
         draftId: { in: draftIds },
+        draft: {
+          deletedAt: null,
+          job: { deletedAt: null },
+        },
+      },
+      select: {
+        draftId: true,
+        draft: {
+          select: {
+            title: true,
+            jobId: true,
+            passageOrder: true,
+            job: {
+              select: {
+                displayName: true,
+                originalFileName: true,
+              },
+            },
+          },
+        },
       },
     });
+    if (existingItems.length === 0) {
+      revalidatePath(MANAGE_PATH);
+      return { success: true as const };
+    }
+
+    await prisma.$transaction([
+      prisma.extractionAuditLog.createMany({
+        data: existingItems.map((item) => ({
+          academyId: staff.academyId,
+          actorStaffId: staff.id,
+          action: "M1_DRAFT_REMOVE_FROM_COLLECTION",
+          targetType: "EXTRACTION_M1_PASSAGE_DRAFT",
+          targetId: item.draftId,
+          targetLabel:
+            item.draft.title ||
+            item.draft.job.displayName ||
+            item.draft.job.originalFileName,
+          metadata: {
+            collectionId: collection.id,
+            collectionName: collection.name,
+            jobId: item.draft.jobId,
+            passageOrder: item.draft.passageOrder,
+          },
+        })),
+      }),
+      prisma.m1PassageDraftCollectionItem.deleteMany({
+        where: {
+          collectionId,
+          draftId: { in: existingItems.map((item) => item.draftId) },
+        },
+      }),
+    ]);
     revalidatePath(MANAGE_PATH);
     return { success: true as const };
   } catch (error) {

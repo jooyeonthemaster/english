@@ -62,6 +62,39 @@ function formatShortTimestamp(ms: number): string {
  * background fetch refreshes the snapshot. Cleared on full reload.
  */
 let cachedDrafts: M1PassageDraftWithJob[] | null = null;
+const ALL_DRAFT_PAGE_SIZE = 300;
+
+interface M1DraftListResponse {
+  drafts: M1PassageDraftWithJob[];
+  nextCursor?: string | null;
+  hasMore?: boolean;
+}
+
+async function fetchAllDraftPages(): Promise<M1PassageDraftWithJob[]> {
+  const allDrafts: M1PassageDraftWithJob[] = [];
+  let cursor: string | null = null;
+
+  do {
+    const params = new URLSearchParams({
+      limit: String(ALL_DRAFT_PAGE_SIZE),
+      view: "list",
+    });
+    if (cursor) params.set("cursor", cursor);
+
+    const res = await fetch(`/api/extraction/m1-passages?${params}`, {
+      credentials: "include",
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("자료 목록을 불러오지 못했습니다.");
+
+    const data = (await res.json()) as M1DraftListResponse;
+    allDrafts.push(...data.drafts);
+    cursor = data.nextCursor ?? null;
+  } while (cursor);
+
+  return allDrafts;
+}
+
 interface JobMetaSnapshot {
   thumbnailUrl: string | null;
   status: string;
@@ -233,18 +266,9 @@ export function ExtractionManageClient({
     if (cachedDrafts === null) setLoadingDetails(true);
     setError(null);
     try {
-      const res = await fetch(
-        "/api/extraction/m1-passages?limit=200&view=list",
-        {
-          credentials: "include",
-          cache: "no-store",
-        },
-      );
-      if (!res.ok) throw new Error("자료 목록을 불러오지 못했습니다.");
-
-      const data = (await res.json()) as { drafts: M1PassageDraftWithJob[] };
-      cachedDrafts = data.drafts;
-      setDrafts(data.drafts);
+      const nextDrafts = await fetchAllDraftPages();
+      cachedDrafts = nextDrafts;
+      setDrafts(nextDrafts);
       setSelectedDraftId(null);
       setResultScope("all");
       setJobId(null);
@@ -309,16 +333,9 @@ export function ExtractionManageClient({
 
   const pollAllSilent = useCallback(async () => {
     try {
-      const res = await fetch(
-        "/api/extraction/m1-passages?limit=200&view=list",
-        {
-          credentials: "include",
-          cache: "no-store",
-        },
-      );
-      if (!res.ok) return;
-      const data = (await res.json()) as { drafts: M1PassageDraftWithJob[] };
-      setDrafts(data.drafts);
+      const nextDrafts = await fetchAllDraftPages();
+      cachedDrafts = nextDrafts;
+      setDrafts(nextDrafts);
     } catch {
       /* polling errors are non-fatal */
     }

@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import type { ProblemEvidenceResponse } from "@/lib/extraction/problem-evidence";
 import {
   buildGroundedRestorationPrompts,
@@ -103,6 +104,45 @@ function isPollutedExactSourceMatch(input: {
     normalizeComparableText(input.rawText) ===
     normalizeComparableText(input.sourceText)
   );
+}
+
+/**
+ * Copy the change rows from a previously-committed M1 draft into the
+ * current restoration result. Used by the LOCAL_DB hit path: when the new
+ * draft matches a committed draft raw-vs-raw, we inherit the prior draft's
+ * restoration evidence (sentence-level changes) so the review side-panel
+ * shows the same cards as the original. Returns [] when the source draft
+ * had no inline change rows (e.g. a NO_RESTORATION_NEEDED type) — caller
+ * still adds a "source-match" whole-passage card on top so the teacher
+ * sees *something*.
+ *
+ * `sourcePageIndex` is intentionally omitted — it points at the OLD draft's
+ * page indices, not the current job's. The persist layer fills in the
+ * current draft's `sourcePageIndex` for newly-created changes.
+ */
+async function copyCommittedDraftChanges(
+  sourceDraftId: string,
+): Promise<M1RestorationChangeInput[]> {
+  const rows = await prisma.extractionM1PassageDraftChange.findMany({
+    where: { passageDraftId: sourceDraftId },
+    select: {
+      sentenceOrder: true,
+      before: true,
+      after: true,
+      changeType: true,
+      reason: true,
+      confidence: true,
+    },
+    orderBy: { createdAt: "asc" },
+  });
+  return rows.map((row) => ({
+    sentenceOrder: row.sentenceOrder,
+    before: row.before,
+    after: row.after,
+    changeType: row.changeType,
+    reason: row.reason,
+    confidence: row.confidence,
+  }));
 }
 
 function createWholePassageChange(input: {
@@ -245,17 +285,26 @@ export async function restoreM1Passage(input: {
       restoredText,
       aiFinalStatus: "RESTORED",
     });
+    const sourceMatchCard = createWholePassageChange({
+      rawText: input.rawText,
+      restoredText,
+      changeType: "source-match",
+      reason: "Restored from a near-exact same-academy committed draft (DB 원본 매칭).",
+      confidence: selectedLocal.confidence,
+    });
+    // Inherit the matched draft's inline change rows so the review side-panel
+    // shows the same evidence cards the teacher already vetted on that prior
+    // run. sourceId on the SourceMatchInput holds the draft id.
+    const sourceDraftId =
+      typeof selectedLocal.sourceId === "string" ? selectedLocal.sourceId : null;
+    const copiedChanges = sourceDraftId
+      ? await copyCommittedDraftChanges(sourceDraftId)
+      : [];
     return {
       restoredText,
       status,
       confidence: selectedLocal.confidence,
-      changes: createWholePassageChange({
-        rawText: input.rawText,
-        restoredText,
-        changeType: "source-match",
-        reason: "Restored from a near-exact same-academy Passage database match.",
-        confidence: selectedLocal.confidence,
-      }),
+      changes: [...sourceMatchCard, ...copiedChanges],
       warnings: [],
       metadata: baseMetadata({
         method: "LOCAL_DB",
@@ -761,18 +810,26 @@ export async function restoreM1PassageBatch(
           restoredText,
           aiFinalStatus: "RESTORED",
         });
+        const sourceMatchCard = createWholePassageChange({
+          rawText: input.rawText,
+          restoredText,
+          changeType: "source-match",
+          reason:
+            "Restored from a near-exact same-academy committed draft (DB 원본 매칭).",
+          confidence: selectedLocal.confidence,
+        });
+        const sourceDraftId =
+          typeof selectedLocal.sourceId === "string"
+            ? selectedLocal.sourceId
+            : null;
+        const copiedChanges = sourceDraftId
+          ? await copyCommittedDraftChanges(sourceDraftId)
+          : [];
         immediate = {
           restoredText,
           status: localHitStatus,
           confidence: selectedLocal.confidence,
-          changes: createWholePassageChange({
-            rawText: input.rawText,
-            restoredText,
-            changeType: "source-match",
-            reason:
-              "Restored from a near-exact same-academy Passage database match.",
-            confidence: selectedLocal.confidence,
-          }),
+          changes: [...sourceMatchCard, ...copiedChanges],
           warnings: [],
           metadata: baseMetadata({
             method: "LOCAL_DB",

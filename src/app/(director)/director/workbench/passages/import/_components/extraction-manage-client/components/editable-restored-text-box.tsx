@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { diffWords } from "diff";
 
 import {
-  mapChangesToOffsets,
-  segmentText,
+  buildHighlightedSegments,
   type InlineRestorationChange,
 } from "../utils/restoration-changes";
 
@@ -98,27 +96,16 @@ function HighlightedText({
   onHoverChange: (id: string | null) => void;
   onSelectChange: (id: string | null) => void;
 }) {
-  const segments = useMemo(() => {
-    if (!value) return [];
-    if (changes.length === 0) {
-      // Legacy fallback: word-diff against raw. No change ids to anchor to,
-      // so highlights here are non-interactive.
-      if (!rawText) return [{ text: value, changeId: null as string | null }];
-      const diff = diffWords(rawText, value);
-      return diff
-        .filter((part) => !part.removed)
-        .map((part) => ({
-          text: part.value,
-          changeId:
-            part.added && part.value.trim().length > 0 ? "__diff__" : null,
-        }));
-    }
-    const spans = mapChangesToOffsets(
-      value,
-      changes.map((c) => ({ id: c.id, text: c.after })),
-    );
-    return segmentText(value, spans);
-  }, [rawText, value, changes]);
+  const segments = useMemo(
+    () =>
+      buildHighlightedSegments({
+        hostText: value,
+        otherText: rawText,
+        changes,
+        side: "restored",
+      }),
+    [rawText, value, changes],
+  );
 
   // Scroll the active mark into view when selection is driven by the
   // sidebar (the user clicks a card). The textarea overlays the highlight
@@ -137,18 +124,18 @@ function HighlightedText({
   return (
     <span ref={containerRef}>
       {segments.map((segment, index) => {
-        if (!segment.changeId) {
-          return <span key={index}>{segment.text}</span>;
-        }
-        if (segment.changeId === "__diff__") {
+        if (segment.diffOverlay) {
           return (
             <mark
               key={index}
-              className="rounded bg-amber-100 text-slate-900"
+              className="rounded bg-amber-100/70 text-slate-900"
             >
               {segment.text}
             </mark>
           );
+        }
+        if (!segment.changeId) {
+          return <span key={index}>{segment.text}</span>;
         }
         const isActive = activeChangeId === segment.changeId;
         const isHovered = hoveredChangeId === segment.changeId;

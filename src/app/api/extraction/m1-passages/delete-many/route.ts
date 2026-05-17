@@ -25,15 +25,62 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Single SQL DELETE with academy-scoped filter.
-  // The cascade chain (changes, sourceMatches, collectionItems) is handled
-  // by the foreign-key onDelete: Cascade declarations in the schema.
-  const result = await prisma.extractionM1PassageDraft.deleteMany({
+  const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
       id: { in: parsed.data.draftIds },
-      job: { academyId: staff.academyId },
+      deletedAt: null,
+      job: { academyId: staff.academyId, deletedAt: null },
+    },
+    select: {
+      id: true,
+      jobId: true,
+      passageOrder: true,
+      title: true,
+      job: {
+        select: {
+          displayName: true,
+          originalFileName: true,
+        },
+      },
     },
   });
+  const draftIds = drafts.map((draft) => draft.id);
+  if (draftIds.length === 0) {
+    return NextResponse.json({
+      requested: parsed.data.draftIds.length,
+      deleted: 0,
+    });
+  }
+
+  const [, result] = await prisma.$transaction([
+    prisma.extractionAuditLog.createMany({
+      data: drafts.map((draft) => ({
+        academyId: staff.academyId,
+        actorStaffId: staff.id,
+        action: "M1_DRAFT_BULK_DELETE",
+        targetType: "EXTRACTION_M1_PASSAGE_DRAFT",
+        targetId: draft.id,
+        targetLabel:
+          draft.title || draft.job.displayName || draft.job.originalFileName,
+        metadata: {
+          jobId: draft.jobId,
+          passageOrder: draft.passageOrder,
+          requestedCount: parsed.data.draftIds.length,
+        },
+      })),
+    }),
+    prisma.extractionM1PassageDraft.updateMany({
+      where: {
+        id: { in: draftIds },
+        deletedAt: null,
+        job: { academyId: staff.academyId, deletedAt: null },
+      },
+      data: {
+        deletedAt: new Date(),
+        deletedById: staff.id,
+      },
+    }),
+  ]);
 
   return NextResponse.json({
     requested: parsed.data.draftIds.length,

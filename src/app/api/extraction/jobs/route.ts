@@ -158,7 +158,7 @@ export async function GET(req: NextRequest) {
   const includeThumbnails = req.nextUrl.searchParams.get("thumbnails") !== "0";
 
   const jobs = await prisma.extractionJob.findMany({
-    where: { academyId: staff.academyId },
+    where: { academyId: staff.academyId, deletedAt: null },
     orderBy: { createdAt: "desc" },
     take: limit,
     select: {
@@ -209,6 +209,7 @@ export async function GET(req: NextRequest) {
               COUNT(*)::bigint AS cnt
             FROM "extraction_m1_passage_drafts" d
             WHERE d."jobId" IN (${Prisma.join(jobIds)})
+              AND d."deletedAt" IS NULL
               AND d."reviewStatus" IN (${Prisma.join(VISIBLE_M1_DRAFT_STATUSES)})
               AND (
                 d."restorationStatus" != 'NO_RESTORATION_NEEDED'
@@ -308,7 +309,7 @@ export async function GET(req: NextRequest) {
     jobs: visibleJobs.map((job) => {
       const counts =
         job.mode === "PASSAGE_ONLY"
-          ? m1CountsByJob.get(job.id)
+          ? (m1CountsByJob.get(job.id) ?? countsByJob.get(job.id))
           : countsByJob.get(job.id);
       return {
         ...job,

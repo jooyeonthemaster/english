@@ -1,10 +1,19 @@
+import { diffWords } from "diff";
+
 import type { M1PassageDraftChangeSnapshot } from "@/lib/extraction/types";
 
 /** evidenceType values used by the AI restoration prompt — see
  *  m2-restoration.ts `restorationChangeSchema`. These tag *sentence-level*
  *  edits that are meaningful to surface as individual cards. Whole-passage
- *  changes ("source-match", "grounded-restoration", "exam-annotation",
- *  "whitespace") cover the entire body and aren't useful as inline cards. */
+ *  changes ("grounded-restoration", "exam-annotation", "whitespace") cover
+ *  the entire body and aren't useful as inline cards.
+ *
+ *  "source-match" is a whole-body change but we *do* surface it as a card —
+ *  it tells the teacher the passage was matched against a previously
+ *  approved version in the academy's DB, which is high-signal context they
+ *  shouldn't have to dig through audit logs for. It's filtered out of the
+ *  inline body highlight (see `isHighlightableChange`) so it doesn't paint
+ *  the whole passage rose. */
 const INLINE_EVIDENCE_TYPES = new Set([
   "VOCAB",
   "GRAMMAR",
@@ -13,7 +22,17 @@ const INLINE_EVIDENCE_TYPES = new Set([
   "ORDERING",
   "SUMMARY",
   "OTHER",
+  "source-match",
 ]);
+
+/** Whole-body change types that get a card but no inline body highlight —
+ *  highlighting the entire passage is visually noisy and overwhelms the real
+ *  sentence-level edits. */
+const WHOLE_BODY_EVIDENCE_TYPES = new Set(["source-match"]);
+
+export function isHighlightableChange(change: InlineRestorationChange) {
+  return !WHOLE_BODY_EVIDENCE_TYPES.has(change.changeType ?? "");
+}
 
 export interface InlineRestorationChange {
   id: string;
@@ -43,6 +62,10 @@ export function selectInlineChanges(
     .filter((c) => {
       const ct = c.changeType ?? "";
       if (!INLINE_EVIDENCE_TYPES.has(ct)) return false;
+      // Whole-body cards (source-match) are intentionally allowed to span
+      // the entire passage — they tell the teacher the draft was matched
+      // against a known DB record. Skip the size guard.
+      if (WHOLE_BODY_EVIDENCE_TYPES.has(ct)) return true;
       const beforeRatio = rawLen > 0 ? c.before.length / rawLen : 0;
       const afterRatio = restoredLen > 0 ? c.after.length / restoredLen : 0;
       if (beforeRatio >= wholePassageThreshold) return false;
@@ -135,6 +158,122 @@ export function segmentText(
   return segments;
 }
 
+export interface HighlightedSegment {
+  text: string;
+  /** Set for change-based marks (interactive — drives hover/click sync with
+   *  the side panel). null for plain text and word-diff overlay segments. */
+  changeId: string | null;
+  /** True for word-diff overlay marks that fill in around change-based spans
+   *  (non-interactive). Surfaces raw-only stems / restored-only inserts the
+   *  AI prompt didn't bother to emit as individual change rows — keeps raw
+   *  and restored views visually parity even without inline changes. */
+  diffOverlay: boolean;
+}
+
+/** Combine change-based highlights with a word-diff overlay so the two
+ *  comparison panes always show the user where raw and restored differ —
+ *  even in regions the AI didn't emit a sentence-level change for.
+ *
+ *  Priority order (highest first):
+ *    1. Change-based spans (from `mapChangesToOffsets`) — interactive marks.
+ *    2. Word-diff overlay (non-interactive) for host-only words (raw side =
+ *       raw-only stems / Korean instructions, restored side = AI-inserted
+ *       content). Filtered against (1) so we never double-highlight.
+ *    3. Plain text in the gaps.
+ *
+ *  This keeps the prior "fallback to word-diff when no changes exist" behavior
+ *  intact (callers pass `changes: []` and still get the same result) and
+ *  *also* augments the change-based path so the raw pane's Korean stems and
+ *  options light up the way they do in NO_RESTORATION drafts. */
+export function buildHighlightedSegments({
+  hostText,
+  otherText,
+  changes,
+  side,
+}: {
+  hostText: string;
+  otherText: string;
+  changes: InlineRestorationChange[];
+  /** "raw" → hostText is rawText, mark host-only spans rose.
+   *  "restored" → hostText is teacherText, mark host-only spans amber. */
+  side: "raw" | "restored";
+}): HighlightedSegment[] {
+  if (!hostText) return [];
+
+  // 1. Change-based spans (interactive).
+  const changeKey = side === "raw" ? "before" : "after";
+  const changeSpans = mapChangesToOffsets(
+    hostText,
+    changes.map((c) => ({ id: c.id, text: c[changeKey] })),
+  );
+
+  // 2. Word-diff overlay — host-only words (rendered non-interactive).
+  // diffWords(base, target) → added = target-only, removed = base-only.
+  // We always want host-only segments highlighted, so base = otherText.
+  const diffSpans: ChangeOffsetSpan[] = [];
+  if (otherText) {
+    const diff = diffWords(otherText, hostText);
+    let offset = 0;
+    for (const part of diff) {
+      // Parts marked `removed` exist only in `otherText` and don't appear in
+      // hostText, so they contribute no host offset.
+      if (part.removed) continue;
+      const length = part.value.length;
+      if (part.added && part.value.trim().length > 0) {
+        diffSpans.push({
+          changeId: "__diff__",
+          start: offset,
+          end: offset + length,
+        });
+      }
+      offset += length;
+    }
+  }
+
+  // 3. Drop diff overlays that overlap an interactive change span — change-
+  //    based marks always win, and we don't want a visual stutter at the
+  //    boundary.
+  const filteredDiffSpans = diffSpans.filter((d) => {
+    for (const c of changeSpans) {
+      if (c.start < d.end && c.end > d.start) return false;
+    }
+    return true;
+  });
+
+  // 4. Merge + sort all spans, then walk hostText turning into segments.
+  type Span = ChangeOffsetSpan & { kind: "change" | "diff" };
+  const allSpans: Span[] = [
+    ...changeSpans.map((s) => ({ ...s, kind: "change" as const })),
+    ...filteredDiffSpans.map((s) => ({ ...s, kind: "diff" as const })),
+  ].sort((a, b) => a.start - b.start);
+
+  const segments: HighlightedSegment[] = [];
+  let cursor = 0;
+  for (const span of allSpans) {
+    if (span.start > cursor) {
+      segments.push({
+        text: hostText.slice(cursor, span.start),
+        changeId: null,
+        diffOverlay: false,
+      });
+    }
+    segments.push({
+      text: hostText.slice(span.start, span.end),
+      changeId: span.kind === "change" ? span.changeId : null,
+      diffOverlay: span.kind === "diff",
+    });
+    cursor = span.end;
+  }
+  if (cursor < hostText.length) {
+    segments.push({
+      text: hostText.slice(cursor),
+      changeId: null,
+      diffOverlay: false,
+    });
+  }
+  return segments;
+}
+
 const EVIDENCE_TYPE_LABELS: Record<string, { label: string; className: string }> = {
   VOCAB: {
     label: "어휘",
@@ -163,6 +302,10 @@ const EVIDENCE_TYPE_LABELS: Record<string, { label: string; className: string }>
   OTHER: {
     label: "기타",
     className: "bg-slate-50 text-slate-700 ring-slate-200",
+  },
+  "source-match": {
+    label: "DB 원본 매칭",
+    className: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   },
 };
 

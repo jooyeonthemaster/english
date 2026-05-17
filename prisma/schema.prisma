@@ -65,6 +65,7 @@ model Academy {
   creditTransactions        CreditTransaction[]
   creditTopUps              CreditTopUp[]
   extractionJobs            ExtractionJob[]
+  extractionAuditLogs       ExtractionAuditLog[]
   sourceMaterials           SourceMaterial[]
   webtoons                  Webtoon[]
   classMaterials            ClassMaterial[]
@@ -100,6 +101,7 @@ model Staff {
   messages               Message[]         @relation("SentMessages")
   receivedMessages       Message[]         @relation("ReceivedStaffMessages")
   extractionJobs         ExtractionJob[]   @relation("ExtractionJobCreator")
+  extractionAuditLogs    ExtractionAuditLog[] @relation("ExtractionAuditActor")
   createdSourceMaterials SourceMaterial[]  @relation("SourceMaterialCreator")
   webtoons               Webtoon[]         @relation("WebtoonCreator")
   uploadedMaterials      ClassMaterial[]   @relation("ClassMaterialUploader")
@@ -1910,6 +1912,8 @@ model ExtractionJob {
   createdAt   DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?
+  deletedAt   DateTime?
+  deletedById String?
   updatedAt   DateTime  @updatedAt
 
   academy         Academy                    @relation(fields: [academyId], references: [id])
@@ -1924,6 +1928,8 @@ model ExtractionJob {
 
   @@index([academyId, status])
   @@index([academyId, createdAt])
+  @@index([academyId, deletedAt, createdAt])
+  @@index([deletedAt])
   @@index([status, createdAt])
   @@index([sourceMaterialId])
   @@map("extraction_jobs")
@@ -2202,6 +2208,8 @@ model ExtractionM1PassageDraft {
   confirmedAt    DateTime?
   savedPassageId String?
   createdAt      DateTime  @default(now())
+  deletedAt      DateTime?
+  deletedById    String?
   updatedAt      DateTime  @updatedAt
 
   job             ExtractionJob                    @relation(fields: [jobId], references: [id], onDelete: Cascade)
@@ -2212,8 +2220,10 @@ model ExtractionM1PassageDraft {
 
   @@unique([jobId, passageOrder])
   @@index([jobId])
+  @@index([jobId, deletedAt])
   @@index([sourceMaterialId])
   @@index([reviewStatus])
+  @@index([deletedAt])
   @@map("extraction_m1_passage_drafts")
 }
 
@@ -2236,6 +2246,33 @@ model ExtractionM1PassageDraftChange {
 
   @@index([passageDraftId])
   @@map("extraction_m1_passage_draft_changes")
+}
+
+/// ExtractionAuditLog — Append-only audit trail for destructive or
+/// membership-changing extraction review actions.
+/// action: "M1_DRAFT_DELETE" | "M1_DRAFT_BULK_DELETE" |
+///         "M1_DRAFT_REMOVE_FROM_COLLECTION" | "EXTRACTION_JOB_DELETE"
+model ExtractionAuditLog {
+  id           String   @id @default(cuid())
+  academyId    String
+  actorStaffId String?
+
+  action     String
+  targetType String
+  targetId   String
+  targetLabel String?
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  actor   Staff?  @relation("ExtractionAuditActor", fields: [actorStaffId], references: [id], onDelete: SetNull)
+
+  @@index([academyId, createdAt])
+  @@index([actorStaffId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetType, targetId, createdAt])
+  @@map("extraction_audit_logs")
 }
 
 model ExtractionM1PassageSourceMatch {

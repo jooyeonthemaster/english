@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { diffWords } from "diff";
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,8 +15,7 @@ import {
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
-  mapChangesToOffsets,
-  segmentText,
+  buildHighlightedSegments,
   type InlineRestorationChange,
 } from "../utils/restoration-changes";
 
@@ -507,27 +505,16 @@ function HighlightedRawText({
   onHoverChange: (id: string | null) => void;
   onSelectChange: (id: string | null) => void;
 }) {
-  const segments = useMemo(() => {
-    if (!rawText) return [];
-    if (changes.length === 0) {
-      // Legacy fallback for drafts without inline-evidence changes —
-      // word-diff against the teacher text. Marks here are non-interactive.
-      if (!teacherText) return [{ text: rawText, changeId: null as string | null }];
-      const diff = diffWords(rawText, teacherText);
-      return diff
-        .filter((part) => !part.added)
-        .map((part) => ({
-          text: part.value,
-          changeId:
-            part.removed && part.value.trim().length > 0 ? "__diff__" : null,
-        }));
-    }
-    const spans = mapChangesToOffsets(
-      rawText,
-      changes.map((c) => ({ id: c.id, text: c.before })),
-    );
-    return segmentText(rawText, spans);
-  }, [rawText, teacherText, changes]);
+  const segments = useMemo(
+    () =>
+      buildHighlightedSegments({
+        hostText: rawText,
+        otherText: teacherText,
+        changes,
+        side: "raw",
+      }),
+    [rawText, teacherText, changes],
+  );
 
   const containerRef = useRef<HTMLSpanElement | null>(null);
   useEffect(() => {
@@ -543,15 +530,18 @@ function HighlightedRawText({
   return (
     <span ref={containerRef}>
       {segments.map((segment, index) => {
-        if (!segment.changeId) {
-          return <span key={index}>{segment.text}</span>;
-        }
-        if (segment.changeId === "__diff__") {
+        if (segment.diffOverlay) {
           return (
-            <mark key={index} className="rounded bg-rose-100 text-rose-900">
+            <mark
+              key={index}
+              className="rounded bg-rose-100/70 text-rose-900"
+            >
               {segment.text}
             </mark>
           );
+        }
+        if (!segment.changeId) {
+          return <span key={index}>{segment.text}</span>;
         }
         const isActive = activeChangeId === segment.changeId;
         const isHovered = hoveredChangeId === segment.changeId;

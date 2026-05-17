@@ -42,6 +42,25 @@ function scoreCandidate(candidate: string, target: string): number {
   );
 }
 
+/**
+ * Find an already-extracted draft from the same academy whose raw OCR text
+ * matches the current draft's raw OCR text. Used to short-circuit the AI
+ * restoration call when the teacher has previously extracted (and committed)
+ * the same problem-sheet — we return that draft's `teacherText` as the
+ * restored content and let the caller copy across the original draft's
+ * `changes` rows so the side-panel evidence cards are preserved verbatim.
+ *
+ * **Why match against drafts rather than the Passage table?** A `Passage`
+ * row is normalized/clean content with no rawText — there's nothing to
+ * compare against the current OCR output. Drafts keep both `rawText` (the
+ * OCR snapshot — same OCR engine as the current job, so apples-to-apples)
+ * and `teacherText` (the curated restoration, what we want to surface).
+ * Raw-vs-raw matching is far more stable than raw-vs-clean-content.
+ *
+ * Filter: only consider drafts whose teacher review reached COMMITTED state
+ * (i.e. promote into the Passage table happened), so we don't propagate
+ * unverified content.
+ */
 export async function findPassageSourceMatches(input: {
   academyId: string;
   problemText: string;
@@ -54,72 +73,55 @@ export async function findPassageSourceMatches(input: {
     .filter((token) => token.length > 5)
     .slice(0, 8);
 
-  const passages = await prisma.passage.findMany({
+  const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
-      academyId: input.academyId,
-      OR:
-        keywords.length > 0
-          ? keywords.map((keyword) => ({
-              content: { contains: keyword, mode: "insensitive" as const },
-            }))
-          : undefined,
+      job: { academyId: input.academyId },
+      savedPassageId: { not: null },
+      reviewStatus: "COMMITTED",
+      deletedAt: null,
+      ...(keywords.length > 0
+        ? {
+            OR: keywords.map((keyword) => ({
+              rawText: { contains: keyword, mode: "insensitive" as const },
+            })),
+          }
+        : {}),
     },
     take: 40,
     select: {
       id: true,
       title: true,
-      content: true,
-      source: true,
-      publisher: true,
-      unit: true,
-      grade: true,
-      sourceMaterialId: true,
-      semester: true,
-      school: { select: { name: true } },
-      sourceMaterial: {
-        select: {
-          type: true,
-          title: true,
-          subject: true,
-          grade: true,
-          semester: true,
-          year: true,
-          round: true,
-          examType: true,
-          publisher: true,
-          school: { select: { name: true } },
-        },
-      },
+      rawText: true,
+      teacherText: true,
+      savedPassageId: true,
     },
   });
 
-  return passages
-    .map((passage) => {
-      const confidence = scoreCandidate(passage.content, input.problemText);
+  return drafts
+    .map((draft) => {
+      // Raw-vs-raw matching — both sides came out of the same OCR pipeline
+      // so character-level noise is comparable. Compare against teacherText
+      // additionally is unnecessary (and would weaken the score, since
+      // teacher fixes diverge from raw deliberately).
+      const confidence = scoreCandidate(draft.rawText, input.problemText);
       return {
-        title: passage.sourceMaterial?.title ?? passage.title,
-        sourceType: "PASSAGE",
+        title: draft.title ?? "(committed draft)",
+        sourceType: "M1_DRAFT" as const,
         confidence,
         reason:
           confidence >= 0.9
-            ? "Same-academy passage text is a near exact match."
-            : "Same-academy passage shares meaningful text with the extracted passage.",
-        content: passage.content,
-        sourceId: passage.id,
-        sourceRef: passage.source ?? passage.sourceMaterialId ?? undefined,
-        publisher:
-          passage.publisher ?? passage.sourceMaterial?.publisher ?? undefined,
-        unit: passage.unit ?? undefined,
-        year: passage.sourceMaterial?.year ?? undefined,
+            ? "Raw text near-exact match against a previously committed draft."
+            : "Raw text overlaps with a previously committed draft.",
+        // The restored content surfaced to the caller is the curated
+        // teacher text — that's what the AI restoration is approximating.
+        content: draft.teacherText,
+        // sourceId carries the draft id so the caller can fetch & copy
+        // the original change rows for the side-panel evidence cards.
+        sourceId: draft.id,
+        sourceRef: draft.savedPassageId ?? undefined,
         metadata: {
-          grade: passage.grade ?? passage.sourceMaterial?.grade,
-          semester: passage.semester ?? passage.sourceMaterial?.semester,
-          type: passage.sourceMaterial?.type,
-          subject: passage.sourceMaterial?.subject,
-          round: passage.sourceMaterial?.round,
-          examType: passage.sourceMaterial?.examType,
-          schoolName:
-            passage.school?.name ?? passage.sourceMaterial?.school?.name,
+          sourceDraftId: draft.id,
+          savedPassageId: draft.savedPassageId,
         },
       };
     })
@@ -134,9 +136,6 @@ export async function findPassageSourceMatches(input: {
       content: match.content,
       sourceId: match.sourceId,
       sourceRef: match.sourceRef,
-      publisher: match.publisher,
-      unit: match.unit,
-      year: match.year,
       metadata: match.metadata,
     }));
 }

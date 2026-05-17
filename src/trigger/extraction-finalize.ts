@@ -1170,17 +1170,68 @@ function buildCleanBodyForSkippedGroup(
     );
   }
 
-  // Safety net: PASSAGE_BODY classified by OCR may absorb a Korean
-  // question stem fragment. Drop any line that is mostly Korean.
-  cleaned = cleaned
-    .split(/\n/)
-    .filter((line) => {
-      const koreanChars = (line.match(/[가-힣]/g) ?? []).length;
-      const totalChars = line.replace(/\s/g, "").length;
-      if (totalChars === 0) return true;
-      return koreanChars / totalChars < 0.3;
-    })
-    .join("\n");
+  // Score tags `[3점]` / `[1.5점]` that the OCR sometimes folds into the
+  // body next to a question stem.
+  cleaned = cleaned.replace(/\[[0-9.]+점\]/g, "");
+
+  // Safety net: PASSAGE_BODY classified by OCR may absorb question stems,
+  // multiple-choice options, and Korean meta instructions. Walk line by
+  // line and drop anything that looks problem-sheet not body. Word-gloss
+  // footnotes (`*word 한글뜻`) ARE legitimate body content — preserve them.
+  //
+  // `inSkipRegion` is a one-way latch — once a `<보기>` / `<조건>` block
+  // marker appears, every subsequent line is teacher-annotation metadata
+  // (numbered English-option grid, Korean scoring rules, etc) and is
+  // dropped. This catches the case where the OCR lumps the `<보기>` lookup
+  // grid into the PASSAGE_BODY block and the numbered options have 0%
+  // Korean so the ratio fallback can't filter them out (issue 3 / #27).
+  const lines = cleaned.split(/\n/);
+  const kept: string[] = [];
+  let inSkipRegion = false;
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (inSkipRegion) continue;
+    if (trimmed.length === 0) {
+      kept.push(line);
+      continue;
+    }
+    // Word-gloss footnote: `*scapegoat 희생양`, `*resilience 회복력` etc.
+    // Lines starting with `*` followed by a word are teacher glossary
+    // entries — keep them even though they contain Korean.
+    if (/^\*\s*[A-Za-z]/.test(trimmed)) {
+      kept.push(line);
+      continue;
+    }
+    // `<보기>` / `<조건>` block markers — open a skip region for the
+    // remainder of the body. Anything after is the option grid /
+    // condition list, never body prose.
+    if (/^[<＜][\s]*(보기|조건)[\s]*[>＞]/.test(trimmed) || /^(<\s*보기\s*>|＜\s*보기\s*＞)/.test(trimmed)) {
+      inSkipRegion = true;
+      continue;
+    }
+    // Multiple-choice option line: `① happiness`, `①happiness` etc.
+    // Body inferences sometimes embed circled numbers inline but never
+    // lead a line with one — leading position = option list.
+    if (/^[①②③④⑤⑥⑦⑧⑨⑩]/.test(trimmed)) continue;
+    // Korean instruction stem (e.g. "다음 글의 빈칸에 …", "윗글의 …").
+    // These can have <30% Korean by char ratio when laced with English
+    // markers, so match the leading head explicitly.
+    if (/^(다음|윗글|위 글|이 글|아래|보기|<보기>|＜보기＞)/.test(trimmed)) continue;
+    // Korean meta annotation line — `※`, `*`, `‣` etc. teacher footers
+    // that the OCR sometimes folds into the body.
+    if (/^[※‣▶▷]/.test(trimmed)) continue;
+    // Fall back to the original ratio check for any other Korean-heavy
+    // line that slipped past the explicit patterns.
+    const koreanChars = (line.match(/[가-힣]/g) ?? []).length;
+    const totalChars = line.replace(/\s/g, "").length;
+    if (totalChars === 0) {
+      kept.push(line);
+      continue;
+    }
+    if (koreanChars / totalChars >= 0.3) continue;
+    kept.push(line);
+  }
+  cleaned = kept.join("\n");
   // Collapse the gaps introduced by the strips above.
   cleaned = cleaned.replace(/[ \t]{2,}/g, " ");
   cleaned = cleaned.replace(/ +(?=\n)/g, "");
@@ -1596,6 +1647,35 @@ async function persistM1PassageDrafts(input: {
       // Reverted to the legacy has-choice-only heuristic until we can
       // restrict the flag's effect to genuine page-boundary first passages.
       if (currentBucket && !currentBucketHasChoice) {
+        // Job A 케이스 fix: when the current bucket already holds a
+        // PASSAGE_BODY on the SAME source page, a second PASSAGE arriving
+        // before any CHOICE is the NEXT problem's body, not a continuation.
+        //
+        // The legacy "no-choice-yet → continuation" heuristic
+        // mis-attributes those bodies to the previous stem's bucket, which
+        // then pushes everything downstream by one (Q9 bucket eats Q10's
+        // body, Q10 bucket eats Q11's body, etc).
+        //
+        // Genuine page-boundary continuation (same passage spilling onto
+        // the next page) only happens when the new PASSAGE's
+        // sourcePageIndex doesn't overlap with the last body's — those we
+        // still append (single body split across pages stays whole).
+        const existingBodies = currentBucket.filter(
+          (b) => b.blockType === "PASSAGE_BODY",
+        );
+        if (existingBodies.length > 0) {
+          const lastBody = existingBodies[existingBodies.length - 1];
+          const samePage = lastBody.sourcePageIndex.some((p) =>
+            item.sourcePageIndex.includes(p),
+          );
+          if (samePage) {
+            currentBucketIsSharedPassage = false;
+            pendingBlocks.push(item);
+            continue;
+          }
+          // Different page → genuine cross-page continuation; fall through
+          // to the append branch.
+        }
         // Fix 1B: shared-INSTRUCTION cases with no CHOICE blocks between
         // stems (Q[12~13] SENTENCE_INSERT — each stem has its own body,
         // selections are inline ①~⑤ position markers in body, not CHOICE
