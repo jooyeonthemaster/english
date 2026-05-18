@@ -6,6 +6,7 @@ import { CheckCircle2, Loader2, RefreshCw, Save, Trash2 } from "lucide-react";
 import type { M1PassageDraftWithJob } from "../types";
 import { getDraftSourceLabel } from "../utils/draft-source";
 import {
+  isHighlightableChange,
   mapChangesToOffsets,
   selectInlineChanges,
 } from "../utils/restoration-changes";
@@ -52,23 +53,31 @@ export function PassageCompare({
     () => selectInlineChanges(draft.changes ?? [], draft.rawText, draft.teacherText),
     [draft.changes, draft.rawText, draft.teacherText],
   );
+  // Whole-body cards (source-match) get a side panel card but no inline
+  // body highlight. Strip them before handing changes to the comparison
+  // panes so the whole passage doesn't paint rose/amber, and skip them in
+  // orphan detection so they aren't misclassified as teacher-edited.
+  const highlightableChanges = useMemo(
+    () => inlineChanges.filter(isHighlightableChange),
+    [inlineChanges],
+  );
   // Orphan = a change whose `after` string can't be located in the current
   // teacherText. Happens when the teacher overrides AI restoration with
   // their own wording — the side card still surfaces the original AI reason
   // (so the teacher can revert), but the body highlight is gone.
   const orphanChangeIds = useMemo(() => {
-    if (inlineChanges.length === 0) return new Set<string>();
+    if (highlightableChanges.length === 0) return new Set<string>();
     const spans = mapChangesToOffsets(
       draft.teacherText,
-      inlineChanges.map((c) => ({ id: c.id, text: c.after })),
+      highlightableChanges.map((c) => ({ id: c.id, text: c.after })),
     );
     const matched = new Set(spans.map((s) => s.changeId));
     const orphans = new Set<string>();
-    for (const change of inlineChanges) {
+    for (const change of highlightableChanges) {
       if (!matched.has(change.id)) orphans.add(change.id);
     }
     return orphans;
-  }, [inlineChanges, draft.teacherText]);
+  }, [highlightableChanges, draft.teacherText]);
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
   const [activeChangeId, setActiveChangeId] = useState<string | null>(null);
   // Show the side panel whenever we have something meaningful to surface,
@@ -169,7 +178,7 @@ export function PassageCompare({
       >
         <OriginalProblemBox
           draft={draft}
-          changes={inlineChanges}
+          changes={highlightableChanges}
           hoveredChangeId={hoveredChangeId}
           activeChangeId={activeChangeId}
           onHoverChange={setHoveredChangeId}
@@ -179,7 +188,7 @@ export function PassageCompare({
           value={draft.teacherText}
           rawText={draft.rawText}
           onChange={onTextChange}
-          changes={inlineChanges}
+          changes={highlightableChanges}
           hoveredChangeId={hoveredChangeId}
           activeChangeId={activeChangeId}
           onHoverChange={setHoveredChangeId}

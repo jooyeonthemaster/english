@@ -252,7 +252,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
             ? passage.content.slice(0, 120) + "..."
             : passage.content,
         wordCount: words,
-        status: runAnalysisNow ? "pending" : "done",
+        status: runAnalysisNow ? "pending" : "not_analyzed",
         analysisData: null,
         error: null,
         promptConfig: {

@@ -5,7 +5,7 @@ import {
   problemEvidenceResponseSchema,
   type ProblemEvidenceResponse,
 } from "@/lib/extraction/problem-evidence";
-import type { RestorationQuestionInput } from "@/lib/extraction/m2-restoration";
+import type { RestorationQuestionInput } from "@/lib/extraction/restoration";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { generateStructuredTextWithTriggerFetch } from "./gemini-ocr";
 

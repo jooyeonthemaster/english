@@ -169,9 +169,14 @@ export function PassageRegistrationClient({
     setCollectionPassageIds,
   } = useCollectionsState({ initialCollections, filterCollection });
 
+  const visibleQueue = useMemo(
+    () => queue.filter((p) => p.status !== "not_analyzed"),
+    [queue],
+  );
+
   // ─── Filtered queue ───
   const filteredQueue = useMemo(() => {
-    let items = queue;
+    let items = visibleQueue;
     if (filterSearch) {
       const q = filterSearch.toLowerCase();
       items = items.filter(
@@ -195,7 +200,6 @@ export function PassageRegistrationClient({
     }
     return items;
   }, [
-    queue,
     filterSearch,
     filterSchool,
     filterGrade,
@@ -203,21 +207,26 @@ export function PassageRegistrationClient({
     filterPublisher,
     filterCollection,
     collectionPassageIds,
+    visibleQueue,
   ]);
 
   // ─── Unique filter options from queue ───
   const filterOptions = useMemo(() => {
     const schoolNames = [
-      ...new Set(queue.filter((p) => p.schoolName).map((p) => p.schoolName!)),
+      ...new Set(
+        visibleQueue.filter((p) => p.schoolName).map((p) => p.schoolName!),
+      ),
     ];
     const grades = [
-      ...new Set(queue.filter((p) => p.grade).map((p) => p.grade!)),
+      ...new Set(visibleQueue.filter((p) => p.grade).map((p) => p.grade!)),
     ].sort();
     const publishers = [
-      ...new Set(queue.filter((p) => p.publisher).map((p) => p.publisher!)),
+      ...new Set(
+        visibleQueue.filter((p) => p.publisher).map((p) => p.publisher!),
+      ),
     ];
     return { schoolNames, grades, publishers };
-  }, [queue]);
+  }, [visibleQueue]);
 
   const hasActiveFilters = !!(
     filterSearch ||
@@ -475,7 +484,7 @@ export function PassageRegistrationClient({
 
           {/* ─── Toolbar + Card Grid ─── */}
           <QueueSectionContainer
-            queue={queue}
+            queue={visibleQueue}
             filteredQueue={filteredQueue}
             activeCount={activeCount}
             filterSearch={filterSearch}

@@ -40,7 +40,8 @@ export async function POST(req: NextRequest) {
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
       id: { in: parsed.data.draftIds },
-      job: { academyId: staff.academyId },
+      deletedAt: null,
+      job: { academyId: staff.academyId, deletedAt: null },
     },
     include: {
       job: {

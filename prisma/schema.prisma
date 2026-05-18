@@ -1982,27 +1982,6 @@ model ExtractionJob {
   @@map("extraction_jobs")
 }
 
-model ExtractionAuditLog {
-  id           String   @id @default(cuid())
-  academyId    String
-  actorStaffId String?
-  action       String
-  targetType   String
-  targetId     String
-  targetLabel  String?
-  metadata     Json?
-  createdAt    DateTime @default(now())
-
-  academy    Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
-  actorStaff Staff?  @relation("ExtractionAuditActor", fields: [actorStaffId], references: [id], onDelete: SetNull)
-
-  @@index([academyId, createdAt])
-  @@index([actorStaffId, createdAt])
-  @@index([action, createdAt])
-  @@index([targetType, targetId, createdAt])
-  @@map("extraction_audit_logs")
-}
-
 /// ExtractionPage — 페이지 1장 = Gemini 호출 1회 단위 (원자 단위)
 /// status: "PENDING" | "PROCESSING" | "SUCCESS" | "FAILED" | "DEAD" | "SKIPPED"
 /// idempotencyKey = `${jobId}:${pageIndex}` — UNIQUE로 3중 방어선의 2차 방벽 역할
@@ -2314,6 +2293,33 @@ model ExtractionM1PassageDraftChange {
 
   @@index([passageDraftId])
   @@map("extraction_m1_passage_draft_changes")
+}
+
+/// ExtractionAuditLog — Append-only audit trail for destructive or
+/// membership-changing extraction review actions.
+/// action: "M1_DRAFT_DELETE" | "M1_DRAFT_BULK_DELETE" |
+///         "M1_DRAFT_REMOVE_FROM_COLLECTION" | "EXTRACTION_JOB_DELETE"
+model ExtractionAuditLog {
+  id           String   @id @default(cuid())
+  academyId    String
+  actorStaffId String?
+
+  action     String
+  targetType String
+  targetId   String
+  targetLabel String?
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  actor   Staff?  @relation("ExtractionAuditActor", fields: [actorStaffId], references: [id], onDelete: SetNull)
+
+  @@index([academyId, createdAt])
+  @@index([actorStaffId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetType, targetId, createdAt])
+  @@map("extraction_audit_logs")
 }
 
 model ExtractionM1PassageSourceMatch {

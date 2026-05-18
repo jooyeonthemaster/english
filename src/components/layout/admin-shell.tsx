@@ -4,26 +4,8 @@
 import React, { useState, useEffect, useCallback, useMemo, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  Bell,
-  LogOut,
-  User,
-  ChevronDown,
-  Megaphone,
-} from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getInitials } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -31,8 +13,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getNavGroups, type NavGroup } from "./nav-config";
-import { CreditBadge } from "@/components/credits/credit-badge";
 import { MaybeComingSoon } from "./maybe-coming-soon";
+import { SidebarTopActions } from "./admin-shell/sidebar-top-actions";
+import { NavItem } from "./admin-shell/nav-item";
 
 interface StaffSession {
   id: string;
@@ -113,14 +96,17 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     return routeMatches(href, effectivePath);
   }
 
-  function handleNavClick(href: string, e: React.MouseEvent) {
-    e.preventDefault();
-    if (href === pathname) return;
-    setNavigatingTo(href);
-    startTransition(() => {
-      router.push(href);
-    });
-  }
+  const handleNavClick = useCallback(
+    (href: string, e: React.MouseEvent) => {
+      e.preventDefault();
+      if (href === pathname) return;
+      setNavigatingTo(href);
+      startTransition(() => {
+        router.push(href);
+      });
+    },
+    [pathname, router],
+  );
 
   // Auto-open menus whose children match current path
   useEffect(() => {
@@ -139,6 +125,10 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     setOpenMenus((prev) => ({ ...prev, [href]: !prev[href] }));
   }, []);
 
+  const setOpenMenu = useCallback((href: string, open: boolean) => {
+    setOpenMenus((prev) => ({ ...prev, [href]: open }));
+  }, []);
+
   if (!mounted) {
     return (
       <div className="flex h-screen bg-[#F4F6F9]">
@@ -147,6 +137,8 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
       </div>
     );
   }
+
+  const effectivePath = navigatingTo || pathname;
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -190,155 +182,14 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           </div>
 
           {/* Top user actions */}
-          <div
-            className={cn(
-              "shrink-0 border-b border-gray-200/50 transition-all duration-300",
-              collapsed ? "px-2 pb-2 space-y-1" : "px-3 pb-3 space-y-1.5"
-            )}
-          >
-            {/* User dropdown (merged with academy/role) */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                {collapsed ? (
-                  <button
-                    className="flex items-center justify-center h-10 w-10 mx-auto rounded-xl hover:bg-black/[0.04] transition-all duration-200 outline-none"
-                    aria-label={`${staff.name} · ${staff.academyName}`}
-                  >
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-900 text-white text-[11px] font-bold">
-                      {getInitials(staff.name)}
-                    </div>
-                  </button>
-                ) : (
-                  <button className="flex items-center gap-2.5 w-full h-[46px] px-2.5 rounded-xl bg-white/60 border border-gray-200/60 hover:border-gray-300/70 hover:bg-white transition-all duration-200 outline-none">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-900 text-white text-[11px] font-bold shrink-0">
-                      {getInitials(staff.name)}
-                    </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[12.5px] font-semibold text-gray-800 truncate">
-                          {staff.name}
-                        </span>
-                        <span className="inline-flex items-center h-[15px] px-1 text-[9.5px] font-semibold rounded text-blue-500 bg-blue-500/[0.08] shrink-0">
-                          {staff.role === "DIRECTOR" ? "원장" : "강사"}
-                        </span>
-                      </div>
-                      <span className="block text-[10.5px] text-gray-400 truncate mt-0.5">
-                        {staff.academyName}
-                      </span>
-                    </div>
-                    <ChevronDown className="size-3 text-gray-300 shrink-0" />
-                  </button>
-                )}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="right"
-                align="start"
-                sideOffset={12}
-                className="w-56 rounded-xl p-1.5"
-              >
-                <DropdownMenuLabel className="font-normal px-3 py-2">
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-[13px] font-semibold text-gray-900">
-                      {staff.name}
-                    </p>
-                    <p className="text-[11px] text-gray-400">{staff.email}</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="rounded-lg h-9 text-[13px]">
-                  <Link href={`${basePath}/profile`} className="cursor-pointer">
-                    <User className="size-4" />
-                    내 프로필
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="cursor-pointer rounded-lg h-9 text-[13px]"
-                >
-                  <LogOut className="size-4" />
-                  로그아웃
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* 공지사항 */}
-            {isDirector && (
-              collapsed ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href="/director/notices"
-                      onClick={(e) => handleNavClick("/director/notices", e)}
-                      className={cn(
-                        "flex items-center justify-center h-9 w-10 mx-auto rounded-xl transition-all duration-200",
-                        pathname.startsWith("/director/notices")
-                          ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.18)]"
-                          : "text-blue-600 bg-blue-50/70 hover:bg-blue-100/70"
-                      )}
-                      aria-label="공지사항"
-                    >
-                      <Megaphone className="size-[16px]" strokeWidth={1.8} />
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
-                    공지사항
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Link
-                  href="/director/notices"
-                  onClick={(e) => handleNavClick("/director/notices", e)}
-                  className={cn(
-                    "flex items-center gap-2 h-9 px-3 rounded-xl text-[12.5px] font-semibold transition-all duration-200",
-                    pathname.startsWith("/director/notices")
-                      ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.18)]"
-                      : "text-blue-600 bg-blue-50/70 hover:bg-blue-100/70"
-                  )}
-                >
-                  <Megaphone className="size-[15px]" strokeWidth={1.8} />
-                  <span>공지사항</span>
-                </Link>
-              )
-            )}
-
-            {/* Credit + Notification */}
-            <div
-              className={cn(
-                "flex items-center",
-                collapsed ? "flex-col gap-1" : "justify-between gap-1"
-              )}
-            >
-              <CreditBadge
-                collapsed={collapsed}
-                popoverSide="right"
-                popoverAlign="start"
-              />
-              {collapsed ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      className="flex items-center justify-center h-9 w-10 mx-auto rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-all duration-200"
-                      aria-label="알림"
-                    >
-                      <Bell className="size-[16px]" strokeWidth={1.7} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
-                    알림
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <button
-                  className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-all duration-200"
-                  aria-label="알림"
-                >
-                  <Bell className="size-[16px]" strokeWidth={1.7} />
-                </button>
-              )}
-            </div>
-          </div>
+          <SidebarTopActions
+            staff={staff}
+            basePath={basePath}
+            collapsed={collapsed}
+            pathname={pathname}
+            isDirector={isDirector}
+            onNavClick={handleNavClick}
+          />
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto sidebar-scroll py-3 px-3">
@@ -380,191 +231,20 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                   <div className="mx-auto mb-3 w-5 border-t border-gray-200/50" />
                 )}
                 <ul className="space-y-0.5">
-                  {group.items.map((item) => {
-                    const active = isActive(item.href);
-                    const Icon = item.icon;
-                    const hasChildren = item.children && item.children.length > 0;
-                    const isOpen = openMenus[item.href];
-                    const effectivePath = navigatingTo || pathname;
-                    const childActive = hasChildren && item.children!.some((c) => routeMatches(c.href, effectivePath));
-
-                    // Parent button for items with children (expanded sidebar)
-                    if (hasChildren && !collapsed) {
-                      return (
-                        <li key={item.href}>
-                          <div
-                            className={cn(
-                              "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200 w-full h-[38px] px-3",
-                              active || childActive
-                                ? "text-blue-600"
-                                : "text-gray-400 hover:text-gray-700"
-                            )}
-                            style={(active || childActive) ? {
-                              background: "rgba(59, 130, 246, 0.08)",
-                              boxShadow: "0 1px 3px rgba(59, 130, 246, 0.06)",
-                            } : undefined}
-                          >
-                            {/* Clickable label area → navigates to page + opens submenu */}
-                            <Link
-                              href={item.href}
-                              onClick={(e) => {
-                                if (!isOpen) setOpenMenus((prev) => ({ ...prev, [item.href]: true }));
-                                handleNavClick(item.href, e);
-                              }}
-                              className="flex items-center gap-3 flex-1 min-w-0"
-                            >
-                              <Icon
-                                className={cn(
-                                  "shrink-0 transition-colors duration-200 size-[17px]",
-                                  active || childActive ? "text-blue-500" : "text-gray-350 group-hover/item:text-gray-500"
-                                )}
-                                strokeWidth={active || childActive ? 2 : 1.7}
-                              />
-                              <span className="truncate">{item.label}</span>
-                            </Link>
-                            {/* Toggle button → only toggles submenu */}
-                            <button
-                              onClick={(e) => { e.stopPropagation(); toggleMenu(item.href); }}
-                              className="p-1 -mr-1 rounded hover:bg-black/[0.04] transition-colors"
-                            >
-                              <ChevronDown
-                                className={cn(
-                                  "size-3.5 shrink-0 transition-transform duration-200",
-                                  active || childActive ? "text-blue-400" : "text-gray-300 group-hover/item:text-gray-400",
-                                  isOpen ? "rotate-0" : "-rotate-90"
-                                )}
-                              />
-                            </button>
-                          </div>
-                          {/* Sub-menu */}
-                          <div
-                            className={cn(
-                              "overflow-hidden transition-all duration-200",
-                              isOpen ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0"
-                            )}
-                          >
-                            <div className="ml-2 mr-1 mt-1 bg-gray-50/80 rounded-lg py-1.5 px-2 space-y-0.5">
-                              {item.children!.map((child, ci) => {
-                                const exactMatch = effectivePath === child.href;
-                                const prefixMatch = routeMatches(child.href, effectivePath) && !exactMatch;
-                                const siblingHasExactOrBetterMatch = item.children!.some(
-                                  (other, oi) => oi !== ci && routeMatches(other.href, effectivePath)
-                                    && other.href.length > child.href.length
-                                );
-                                const childIsActive = exactMatch || (prefixMatch && !siblingHasExactOrBetterMatch);
-                                return (
-                                  <Link
-                                    key={child.href}
-                                    href={child.href}
-                                    onClick={(e) => handleNavClick(child.href, e)}
-                                    className={cn(
-                                      "block px-3 py-1.5 text-[12px] rounded-md transition-colors",
-                                      childIsActive
-                                        ? "text-blue-600 font-semibold bg-white shadow-sm"
-                                        : "text-gray-500 hover:text-blue-600 hover:font-medium hover:bg-white"
-                                    )}
-                                  >
-                                    {child.label}
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </li>
-                      );
-                    }
-
-                    // Regular link (no children, or collapsed mode)
-                    const isComingSoon = !!item.comingSoon;
-                    const linkContent = (
-                      <Link
-                        href={item.href}
-                        onClick={(e) => handleNavClick(item.href, e)}
-                        className={cn(
-                          "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200",
-                          collapsed
-                            ? "justify-center h-10 w-10 mx-auto"
-                            : "h-[38px] px-3",
-                          isComingSoon
-                            ? active
-                              ? "text-sky-700"
-                              : "text-slate-500 hover:text-sky-700"
-                            : active
-                              ? "text-blue-600"
-                              : "text-gray-400 hover:text-gray-700",
-                        )}
-                        style={
-                          active && !isComingSoon
-                            ? {
-                                background: "rgba(59, 130, 246, 0.08)",
-                                boxShadow: "0 1px 3px rgba(59, 130, 246, 0.06)",
-                              }
-                            : active && isComingSoon
-                              ? {
-                                  background: "rgba(56, 189, 248, 0.1)",
-                                  boxShadow: "0 1px 3px rgba(56, 189, 248, 0.08)",
-                                }
-                              : undefined
-                        }
-                      >
-                        <Icon
-                          className={cn(
-                            "shrink-0 transition-colors duration-200",
-                            isComingSoon
-                              ? active
-                                ? "text-sky-500"
-                                : "text-slate-400 group-hover/item:text-sky-500"
-                              : active
-                                ? "text-blue-500"
-                                : "text-gray-350 group-hover/item:text-gray-500",
-                            collapsed ? "size-[20px]" : "size-[17px]",
-                          )}
-                          strokeWidth={active ? 2 : 1.7}
-                        />
-                        {!collapsed && (
-                          <>
-                            <span className="truncate flex-1">{item.label}</span>
-                            {isComingSoon && (
-                              <span
-                                className={cn(
-                                  "size-1.5 rounded-full shrink-0 transition-all",
-                                  active
-                                    ? "bg-sky-500"
-                                    : "bg-sky-300 group-hover/item:bg-sky-500",
-                                )}
-                                style={{
-                                  boxShadow: active
-                                    ? "0 0 8px rgba(56, 189, 248, 0.6)"
-                                    : undefined,
-                                }}
-                              />
-                            )}
-                          </>
-                        )}
-                      </Link>
-                    );
-
-                    if (collapsed) {
-                      return (
-                        <li key={item.href}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              {linkContent}
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="right"
-                              sideOffset={12}
-                              className="text-[12px] font-medium"
-                            >
-                              {item.label}
-                            </TooltipContent>
-                          </Tooltip>
-                        </li>
-                      );
-                    }
-
-                    return <li key={item.href}>{linkContent}</li>;
-                  })}
+                  {group.items.map((item) => (
+                    <NavItem
+                      key={item.href}
+                      item={item}
+                      active={isActive(item.href)}
+                      collapsed={collapsed}
+                      isOpen={!!openMenus[item.href]}
+                      effectivePath={effectivePath}
+                      routeMatches={routeMatches}
+                      onNavClick={handleNavClick}
+                      onToggleMenu={toggleMenu}
+                      onSetOpenMenu={setOpenMenu}
+                    />
+                  ))}
                 </ul>
               </div>
             ))}

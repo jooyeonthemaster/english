@@ -229,8 +229,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 1. 지문 + 분석 데이터 로드
-    const passage = await prisma.passage.findUnique({
-      where: { id: passageId },
+    const passage = await prisma.passage.findFirst({
+      where: { id: passageId, academyId: staff.academyId },
       include: { analysis: { select: { analysisData: true } } },
     });
 

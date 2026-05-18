@@ -78,6 +78,20 @@ function englishBodyOnly(text: string): string {
     .trim();
 }
 
+/** Drop word-gloss footnote lines (`*word 한글뜻`, `**term 정의`, ...).
+ *
+ *  The Round 2 prompt change explicitly preserves these glossary lines in
+ *  the restored body — they're teacher annotations, not problem-sheet
+ *  artifacts. Without this strip, the KOREAN_LEFTOVER check fires on every
+ *  draft that carries a footnote (e.g. `*compost 퇴비`), downgrading clean
+ *  restorations to PARTIAL ("확인 필요") for no real reason. */
+function stripFootnoteLines(text: string): string {
+  return text
+    .split("\n")
+    .filter((line) => !/^\*+\s*[A-Za-z]/.test(line.trim()))
+    .join("\n");
+}
+
 // ─── Type-specific checks ──────────────────────────────────────────────────
 
 function hasType(types: Set<string>, ...names: string[]): boolean {
@@ -129,7 +143,9 @@ export function checkRestorationQuality(
   const restored = input.restoredText;
   const types = new Set(input.questionTypes);
 
-  if (HANGUL_RE.test(restored)) warnings.push("KOREAN_LEFTOVER");
+  if (HANGUL_RE.test(stripFootnoteLines(restored))) {
+    warnings.push("KOREAN_LEFTOVER");
+  }
   if (BLANK_RE.test(restored)) warnings.push("BLANK_LEFTOVER");
   if (CIRCLED_RE.test(restored)) warnings.push("CIRCLED_MARKER_LEFTOVER");
   if (ABCD_LABEL_RE.test(restored)) warnings.push("ABCD_LABEL_LEFTOVER");

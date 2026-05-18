@@ -4,7 +4,7 @@
 // ============================================================================
 
 import type { BlockType } from "../types";
-import type { StructuredOcrResponse } from "../ocr-prompt";
+import type { StructuredOcrResponse } from "../ocr";
 
 // ════════════════════════════════════════════════════════════════════════════
 // SECTION 2 — STRUCTURED per-block pipeline (M2 / M4 and beyond)

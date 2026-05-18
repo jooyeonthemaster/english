@@ -24,314 +24,35 @@
 // Billing-idempotency invariant (critical):
 //   Between `deductCredits` returning and `extractionPage.creditTxId` being
 //   persisted there is a WRITE-WRITE gap. A crash in that gap would otherwise
-//   leak a charge on retry. We defend with a two-step pre-check:
-//     (1) scan CreditTransaction for `metadata.idempotencyKey = jobId:pageIndex`
-//         on CONSUMPTION rows before calling deductCredits;
-//     (2) if found, reuse that transactionId and skip deduction entirely.
-//   We additionally stamp `metadata.idempotencyKey` on every deduction so the
-//   scan is reliable even if the page row was wiped and re-created.
+//   leak a charge on retry. We defend with a two-step pre-check in
+//   `ensurePageCharged`: scan CreditTransaction for `metadata.idempotencyKey`
+//   on CONSUMPTION rows before calling deductCredits, and reuse the prior
+//   transactionId when found.
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
-import type { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { refundCredits } from "@/lib/credits";
 import {
-  deductCredits,
-  refundCredits,
-  InsufficientCreditsError,
-} from "@/lib/credits";
-import { classifyGeminiError } from "@/lib/extraction/error-classifier";
-import {
-  OCR_SYSTEM_PROMPT,
-  OCR_USER_PROMPT,
-  buildStructuredOcrSystemPrompt,
-  buildStructuredOcrSystemPromptForText,
-  buildStructuredOcrUserPromptForText,
-  buildOcrSystemPrompt,
-  buildOcrUserPrompt,
-  structuredOcrResponseSchema,
-  type StructuredOcrResponse,
-} from "@/lib/extraction/ocr-prompt";
-import { downloadAsBuffer } from "@/lib/supabase-storage";
-import {
-  PAGE_LEASE_DURATION_MS,
   GEMINI_CONCURRENCY_LIMIT,
   MAX_PAGE_ATTEMPTS,
 } from "@/lib/extraction/constants";
+import { classifyGeminiError } from "@/lib/extraction/error-classifier";
 import type { ExtractionMode } from "@/lib/extraction/types";
-import { usesStructuredExtraction } from "@/lib/extraction/modes";
+import { prisma } from "@/lib/prisma";
 import {
-  buildFallbackM1Restoration,
-  hasUnresolvedM1ProblemArtifacts,
-} from "@/lib/extraction/m1-restoration";
-import { extractionFinalizeTask } from "./extraction-finalize";
+  PageOutOfCreditsError,
+  ensurePageCharged,
+} from "./_lib/extraction-page/charge-credits";
+import { claimPageLease } from "./_lib/extraction-page/claim-lease";
 import {
-  generatePlainOcrWithTriggerFetch,
-  generateStructuredOcrWithTriggerFetch,
-  generateStructuredTextWithTriggerFetch,
-} from "./_lib/gemini-ocr";
-import { runDocumentAiOcr } from "./_lib/google-document-ai";
-import {
-  parsePageMetaFromDocumentAiText,
-  mergePageMeta,
-} from "./_lib/page-meta-parser";
+  getErrorDebugMessage,
+} from "./_lib/extraction-page/helpers";
+import { maybeTriggerFinalize } from "./_lib/extraction-page/maybe-finalize";
+import { runOcrForPage } from "./_lib/extraction-page/ocr-dispatch";
+import { persistPageSuccess } from "./_lib/extraction-page/persist-success";
 
 type Input = { jobId: string; pageIndex: number; mode?: ExtractionMode };
-
-const GEMINI_CALL_TIMEOUT_MS = 90_000;
-const DOCUMENT_AI_CALL_TIMEOUT_MS = 60_000;
-const STORAGE_DOWNLOAD_TIMEOUT_MS = 30_000;
-
-// Feature flag — when true, route structured-mode OCR through Document AI for
-// the raw text extraction step, then send the text to Gemini for block
-// classification + question analysis. This bypasses Gemini's RECITATION filter
-// which blocks certain 평가원 PDF pages. Disable by setting env to "false".
-function isDocumentAiOcrEnabled(): boolean {
-  const v = process.env.EXTRACTION_USE_DOCUMENT_AI;
-  if (v == null) return true;
-  return v.toLowerCase() !== "false" && v !== "0";
-}
-
-// Gemini HTTP calls are delegated to ./_lib/gemini-ocr. That module uses
-// Trigger.dev's retry.fetch timeout support so page workers do not depend on
-// native fetch abort behaviour in the managed runtime.
-
-/** Convert 1..5 → ①..⑤. Returns null for out-of-range or null input. */
-function encodeCircled(index: number | null | undefined): string | null {
-  if (index == null) return null;
-  const map: Record<number, string> = {
-    1: "①",
-    2: "②",
-    3: "③",
-    4: "④",
-    5: "⑤",
-    6: "⑥",
-    7: "⑦",
-    8: "⑧",
-    9: "⑨",
-  };
-  return map[index] ?? null;
-}
-
-class OperationTimeoutError extends Error {
-  constructor(operationName: string, timeoutMs: number) {
-    super(`${operationName} timed out after ${timeoutMs}ms`);
-    this.name = "OperationTimeoutError";
-  }
-}
-
-async function withTimeout<T>(
-  operationName: string,
-  timeoutMs: number,
-  operation: () => Promise<T>,
-): Promise<T> {
-  let timeout: ReturnType<typeof setTimeout> | undefined;
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    timeout = setTimeout(() => {
-      reject(new OperationTimeoutError(operationName, timeoutMs));
-    }, timeoutMs);
-  });
-  try {
-    return await Promise.race([operation(), timeoutPromise]);
-  } finally {
-    if (timeout) clearTimeout(timeout);
-  }
-}
-
-async function markProcessingPhase(
-  idempotencyKey: string,
-  phase: string,
-): Promise<void> {
-  try {
-    await prisma.extractionPage.update({
-      where: { idempotencyKey },
-      data: { errorMessage: `[processing] ${phase}` },
-    });
-  } catch (err) {
-    logger.warn("failed to mark extraction phase", {
-      idempotencyKey,
-      phase,
-      err: String(err),
-    });
-  }
-}
-
-function getErrorDebugMessage(err: unknown): string {
-  if (err instanceof Error) {
-    return `${err.name}: ${err.message}`.slice(0, 500);
-  }
-  return String(err).slice(0, 500);
-}
-
-type StructuredOcrBlock = StructuredOcrResponse["blocks"][number];
-
-function buildExtractionItemRows(params: {
-  jobId: string;
-  pageId: string;
-  pageIndex: number;
-  structured: StructuredOcrResponse;
-}): Prisma.ExtractionItemCreateManyInput[] {
-  const { jobId, pageId, pageIndex, structured } = params;
-
-  // The page-level meta (pageNumber / pageTotal / examCode / subject / etc.)
-  // is needed on EVERY page so finalize can reorder mixed uploads and cluster
-  // multi-test jobs. OCR only outputs an EXAM_META block on page 1, so on
-  // pages without one we stamp `structured.pageMeta` onto the FIRST item's
-  // `examMeta`. Finalize's page-ordering reader picks up either source.
-  const pageMetaJson = structured.pageMeta
-    ? ((structured.pageMeta as unknown) as Prisma.InputJsonValue)
-    : null;
-  const hasExamMetaBlock = structured.blocks.some(
-    (b) => b.blockType === "EXAM_META",
-  );
-
-  return structured.blocks.map((b: StructuredOcrBlock, i: number) => {
-    const sharedPassageRange =
-      typeof b.sharedPassageRange === "string" &&
-      b.sharedPassageRange.trim().length > 0
-        ? b.sharedPassageRange.trim()
-        : null;
-
-    // 1st-pass question analysis (풀이 + 유형 분류) — 2차 grounded restoration
-    // 호출이 별도 problem-evidence 호출 없이 이 정보를 그대로 활용한다.
-    const questionAnalysis =
-      b.blockType === "QUESTION_STEM" && b.questionAnalysis
-        ? {
-            questionType: b.questionAnalysis.questionType ?? null,
-            typeLabel: b.questionAnalysis.typeLabel ?? null,
-            answer: b.questionAnalysis.answer ?? null,
-            answerConfidence: b.questionAnalysis.answerConfidence ?? null,
-            evidence: Array.isArray(b.questionAnalysis.evidence)
-              ? b.questionAnalysis.evidence
-              : [],
-            warnings: Array.isArray(b.questionAnalysis.warnings)
-              ? b.questionAnalysis.warnings
-              : [],
-          }
-        : null;
-
-    const questionMeta: Prisma.InputJsonValue | undefined =
-      b.blockType === "QUESTION_STEM"
-        ? ({
-            number: b.questionNumber ?? null,
-            sharedPassageRange,
-            ...(questionAnalysis ? { analysis: questionAnalysis } : {}),
-          } as Prisma.InputJsonValue)
-        : undefined;
-    const choiceMeta: Prisma.InputJsonValue | undefined =
-      b.blockType === "CHOICE"
-        ? {
-            index: b.choiceIndex ?? null,
-            label: encodeCircled(b.choiceIndex ?? undefined),
-            isAnswer: b.isAnswer ?? false,
-          }
-        : undefined;
-    const examMeta: Prisma.InputJsonValue | undefined =
-      b.blockType === "EXAM_META"
-        ? ((structured.pageMeta ?? {}) as Prisma.InputJsonValue)
-        : !hasExamMetaBlock && i === 0 && pageMetaJson !== null
-          ? pageMetaJson
-          : undefined;
-
-    // 1차 호출에서는 더 이상 본문 복원을 시도하지 않는다 — 복원은 2차의
-    // grounded restoration 호출이 담당. 페이지 경계 메타(continues*)는 그대로
-    // PASSAGE_BODY passageMeta에 보존해 finalize 의 그룹 빌더가 사용한다.
-    const passageMeta: Prisma.InputJsonValue | undefined =
-      b.blockType === "PASSAGE_BODY"
-        ? {
-            wordCount: b.content.split(/\s+/).filter(Boolean).length,
-            markerDetected: sharedPassageRange !== null,
-            questionRange: sharedPassageRange,
-            continuesFromPrevious: b.continuesFromPrevious === true,
-            continuesToNext: b.continuesToNext === true,
-            boundaryConfidence: b.boundaryConfidence ?? null,
-          }
-        : undefined;
-
-    return {
-      jobId,
-      pageId,
-      sourcePageIndex: [pageIndex],
-      blockType: b.blockType,
-      content: b.content,
-      rawText: b.content,
-      confidence: b.confidence ?? null,
-      order: pageIndex * 1000 + i,
-      localOrder: null,
-      questionMeta,
-      choiceMeta,
-      examMeta,
-      passageMeta,
-      needsReview: (b.confidence ?? 1) < 0.7,
-      status: "DRAFT",
-      groupId: null,
-      parentItemId: null,
-    };
-  });
-}
-
-async function persistPageSuccess(params: {
-  idempotencyKey: string;
-  jobId: string;
-  pageId: string;
-  pageIndex: number;
-  extractedText: string;
-  inputTokens: number | undefined;
-  outputTokens: number | undefined;
-  latencyMs: number;
-  structured: StructuredOcrResponse | undefined;
-}): Promise<void> {
-  const {
-    idempotencyKey,
-    jobId,
-    pageId,
-    pageIndex,
-    extractedText,
-    inputTokens,
-    outputTokens,
-    latencyMs,
-    structured,
-  } = params;
-  const itemRows = structured
-    ? buildExtractionItemRows({ jobId, pageId, pageIndex, structured })
-    : [];
-  const operations: Prisma.PrismaPromise<unknown>[] = [
-    prisma.extractionPage.update({
-      where: { idempotencyKey },
-      data: {
-        status: "SUCCESS",
-        extractedText,
-        modelUsed: "gemini-3-flash-preview",
-        inputTokens: inputTokens ?? null,
-        outputTokens: outputTokens ?? null,
-        latencyMs,
-        completedAt: new Date(),
-        leaseOwner: null,
-        leaseExpiresAt: null,
-        errorCode: null,
-        errorMessage: null,
-      },
-    }),
-  ];
-
-  if (itemRows.length > 0) {
-    operations.push(prisma.extractionItem.createMany({ data: itemRows }));
-  }
-
-  operations.push(
-    prisma.extractionJob.update({
-      where: { id: jobId },
-      data: {
-        successPages: { increment: 1 },
-        pendingPages: { decrement: 1 },
-        creditsConsumed: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
-      },
-    }),
-  );
-
-  await prisma.$transaction(operations);
-}
 
 export const extractionPageTask = task({
   id: "extraction-page",
@@ -347,315 +68,77 @@ export const extractionPageTask = task({
     const { jobId, pageIndex } = payload;
     const idempotencyKey = `${jobId}:${pageIndex}`;
     const leaseOwner = ctx.run.id;
-    const leaseExpiresAt = new Date(Date.now() + PAGE_LEASE_DURATION_MS);
 
-    // ─── (A) Acquire lease + wipe retry crumbs in ONE transaction ─────────
-    // Conditional UPDATE: only succeed if the row is PENDING, FAILED (for
-    // retries), PROCESSING by this same Trigger run (attempt retry), or
-    // PROCESSING with an expired lease (crashed worker).
-    //
-    // (A-fix P0-3) We MUST wipe leftover ExtractionItem rows from a prior
-    // attempt in the SAME transaction as the lease claim. Splitting them
-    // across two calls opened a crash window where a retry could end up with
-    // duplicate blocks (claim succeeds → crash → retry re-claims after lease
-    // expiry → deleteMany still needed because original attempt wrote
-    // partial blocks between lease-claim #1 and crash). Atomic now.
-    //
-    // ReturnType: the tx returns the post-claim page row so we avoid a
-    // separate SELECT on the hot path. If claim failed → returns null.
-    const pageAfterClaim = await prisma.$transaction(async (tx) => {
-      const claimed = await tx.extractionPage.updateMany({
-        where: {
-          idempotencyKey,
-          OR: [
-            { status: "PENDING" },
-            { status: "FAILED" },
-            { status: "PROCESSING", leaseOwner },
-            { status: "PROCESSING", leaseExpiresAt: { lt: new Date() } },
-          ],
-        },
-        data: {
-          status: "PROCESSING",
-          leaseOwner,
-          leaseExpiresAt,
-          startedAt: new Date(),
-          attemptCount: { increment: 1 },
-        },
-      });
-      if (claimed.count === 0) return null;
-
-      const row = await tx.extractionPage.findUnique({
-        where: { idempotencyKey },
-        include: {
-          job: {
-            select: {
-              academyId: true,
-              createdById: true,
-              mode: true,
-              totalPages: true,
-            },
-          },
-        },
-      });
-      if (!row) {
-        throw new Error(`page row missing after claim: ${idempotencyKey}`);
-      }
-
-      // Retry-safety: wipe any ExtractionItem rows left over from an earlier
-      // attempt on THIS page. Plain-text M1 never writes items so this is a
-      // no-op for M1 jobs; for M2/M4 it's what prevents duplicate blocks on
-      // retry. Atomic with the lease claim → zero-gap.
-      await tx.extractionItem.deleteMany({ where: { pageId: row.id } });
-
-      return row;
-    });
-
-    if (!pageAfterClaim) {
-      const current = await prisma.extractionPage.findUnique({
-        where: { idempotencyKey },
-        select: { status: true },
-      });
-      logger.info("page skipped (not claimable)", {
-        idempotencyKey,
-        currentStatus: current?.status,
-      });
-      return { skipped: true, status: current?.status };
+    // ─── (A) Acquire lease + wipe retry crumbs ────────────────────────────
+    const claim = await claimPageLease({ idempotencyKey, leaseOwner });
+    if (claim.skipped) {
+      return { skipped: true, status: claim.currentStatus };
     }
-
-    const page = pageAfterClaim;
+    const page = claim.page;
 
     // (P1-1) Prefer mode from payload (populated by orchestrator). Only fall
     // back to the per-page job.mode join if the orchestrator predates this
     // change and left mode undefined. Saves one SELECT per page at scale.
     const mode: ExtractionMode =
       payload.mode ?? (page.job.mode as ExtractionMode) ?? "PASSAGE_ONLY";
-    const isStructured = usesStructuredExtraction(mode);
 
-    // ─── (B) Deduct credits (skip if already charged) ─────────────────────
-    //
-    // (P0-4) Race-hardening: there is still a narrow crash window between a
-    // successful deductCredits() and `page.creditTxId = <tx.id>` landing on
-    // disk. If we retried after that crash, we would re-charge. Defend with
-    // a pre-scan of CreditTransaction rows whose metadata JSON string
-    // contains our idempotencyKey marker. If found, reuse. Scan is O(log n)
-    // via (academyId, operationType) index + filter on the text field.
-    //
-    // metadata is stored as `String? @db.Text` holding JSON.stringify(), so
-    // we match against the serialized form directly. Unique per-page
-    // because idempotencyKey = `${jobId}:${pageIndex}`.
-    let creditTxId = page.creditTxId;
-    if (!creditTxId) {
-      const priorCharge = await prisma.creditTransaction.findFirst({
-        where: {
-          academyId: page.job.academyId,
-          type: "CONSUMPTION",
-          operationType: "TEXT_EXTRACTION",
-          metadata: { contains: `"idempotencyKey":"${idempotencyKey}"` },
-        },
-        select: { id: true },
-        orderBy: { createdAt: "asc" },
+    // ─── (B) Deduct credits (idempotent, skip if already charged) ─────────
+    let creditTxId: string;
+    try {
+      creditTxId = await ensurePageCharged({
+        page,
+        idempotencyKey,
+        jobId,
+        pageIndex,
+        mode,
       });
-      if (priorCharge) {
-        creditTxId = priorCharge.id;
-        await prisma.extractionPage.update({
-          where: { idempotencyKey },
-          data: { creditTxId },
-        });
-        logger.info("credit deduction recovered from prior crash", {
-          idempotencyKey,
-          creditTxId,
-        });
-      }
-    }
-    if (!creditTxId) {
-      try {
-        const r = await deductCredits(
-          page.job.academyId,
-          "TEXT_EXTRACTION",
-          page.job.createdById,
-          {
-            jobId,
-            pageIndex,
-            bulkExtractionJob: true,
-            mode,
-            // (P0-4) Stamp the idempotency marker INSIDE metadata so the
-            // pre-scan above can find it next time.
-            idempotencyKey,
-          },
-        );
-        creditTxId = r.transactionId;
-        await prisma.extractionPage.update({
-          where: { idempotencyKey },
-          data: { creditTxId },
-        });
-      } catch (err) {
-        if (err instanceof InsufficientCreditsError) {
-          await prisma.$transaction(async (tx) => {
-            await tx.extractionPage.update({
-              where: { idempotencyKey },
-              data: {
-                status: "DEAD",
-                errorCode: "INSUFFICIENT_CREDITS",
-                errorMessage: err.message,
-                leaseOwner: null,
-                leaseExpiresAt: null,
-                completedAt: new Date(),
-              },
-            });
-            await tx.extractionJob.update({
-              where: { id: jobId },
-              data: {
-                failedPages: { increment: 1 },
-                pendingPages: { decrement: 1 },
-              },
-            });
+    } catch (err) {
+      if (err instanceof PageOutOfCreditsError) {
+        await prisma.$transaction(async (tx) => {
+          await tx.extractionPage.update({
+            where: { idempotencyKey },
+            data: {
+              status: "DEAD",
+              errorCode: "INSUFFICIENT_CREDITS",
+              errorMessage: err.message,
+              leaseOwner: null,
+              leaseExpiresAt: null,
+              completedAt: new Date(),
+            },
           });
-          await maybeTriggerFinalize(jobId);
-          return { error: "INSUFFICIENT_CREDITS" as const };
-        }
-        throw err;
+          await tx.extractionJob.update({
+            where: { id: jobId },
+            data: {
+              failedPages: { increment: 1 },
+              pendingPages: { decrement: 1 },
+            },
+          });
+        });
+        await maybeTriggerFinalize(jobId);
+        return { error: "INSUFFICIENT_CREDITS" as const };
       }
+      throw err;
     }
 
-    // ─── (C) Fetch image + call Gemini ───────────────────────────────────
+    // ─── (C) Fetch image + call OCR ───────────────────────────────────────
     const startTs = Date.now();
-    let extractedText = "";
-    let structured: StructuredOcrResponse | null = null;
+    let extractedText: string;
+    let structured: Awaited<ReturnType<typeof runOcrForPage>>["structured"] = null;
     let inputTokens: number | undefined;
     let outputTokens: number | undefined;
 
     try {
-      await markProcessingPhase(idempotencyKey, "storage_download");
-      const bytes = await withTimeout(
-        "storage download",
-        STORAGE_DOWNLOAD_TIMEOUT_MS,
-        () => downloadAsBuffer(page.imageUrl),
-      );
-      const base64 = bytes.toString("base64");
-      const mimeType = "image/jpeg";
-
-      const systemPrompt = isStructured
-        ? buildStructuredOcrSystemPrompt(mode)
-        : mode === "PASSAGE_ONLY"
-          ? OCR_SYSTEM_PROMPT
-          : buildOcrSystemPrompt(mode);
-      const userPrompt = isStructured
-        ? buildOcrUserPrompt(mode, pageIndex, page.job.totalPages)
-        : mode === "PASSAGE_ONLY"
-          ? OCR_USER_PROMPT
-          : buildOcrUserPrompt(mode, pageIndex, page.job.totalPages);
-
-      if (isStructured && isDocumentAiOcrEnabled()) {
-        // ─── Two-step OCR: Document AI extracts text, Gemini classifies ──
-        // Step 1: Document AI raw OCR (no RECITATION filter).
-        await markProcessingPhase(idempotencyKey, "document_ai_ocr");
-        const docAi = await runDocumentAiOcr({
-          base64,
-          mimeType,
-          timeoutInMs: DOCUMENT_AI_CALL_TIMEOUT_MS,
-        });
-        const ocrText = docAi.text.trim();
-        if (!ocrText) {
-          const emptyErr = new Error("Document AI returned empty text");
-          (emptyErr as Error & { code?: string }).code = "EMPTY_OUTPUT";
-          throw emptyErr;
-        }
-
-        // Step 2: Gemini classification + question analysis on the text.
-        await markProcessingPhase(idempotencyKey, "gemini_classify");
-        const textSystemPrompt = buildStructuredOcrSystemPromptForText(mode);
-        const textUserPrompt = buildStructuredOcrUserPromptForText(
-          mode,
-          pageIndex,
-          page.job.totalPages,
-          ocrText,
-        );
-        const classified = await generateStructuredTextWithTriggerFetch({
-          stage: "ocr",
-          systemPrompt: textSystemPrompt,
-          userPrompt: textUserPrompt,
-          schema: structuredOcrResponseSchema,
-          timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
-          image: { mimeType, base64 },
-        });
-        structured = classified.object;
-        inputTokens = classified.usage?.inputTokens;
-        outputTokens = classified.usage?.outputTokens;
-
-        // pageMeta is needed by finalize for cluster fingerprinting and
-        // page reordering. Gemini sometimes drops these fields in
-        // multimodal mode — override with deterministic regex parsing of
-        // the Document AI raw text, which always has the markup intact.
-        const parsedMeta = parsePageMetaFromDocumentAiText(ocrText);
-        structured = {
-          ...structured,
-          pageMeta: mergePageMeta(
-            structured.pageMeta,
-            parsedMeta,
-          ) as typeof structured.pageMeta,
-        };
-        logger.info("page_meta_parsed", {
-          idempotencyKey,
-          pageIndex,
-          parsed: parsedMeta,
-          merged: structured.pageMeta,
-        });
-
-        extractedText = structured.blocks
-          .map((b) => b.content)
-          .filter((c) => c && c.length > 0)
-          .join("\n\n");
-        if (structured.blocks.length === 0) {
-          // Gemini classification returned no blocks but Document AI did get
-          // text. Synthesize a single PASSAGE_BODY block so finalize can still
-          // produce a draft from this page instead of losing it entirely.
-          structured = {
-            ...structured,
-            blocks: [
-              {
-                blockType: "PASSAGE_BODY",
-                content: ocrText,
-                confidence: 0.5,
-              },
-            ],
-          };
-          extractedText = ocrText;
-        }
-      } else if (isStructured) {
-        await markProcessingPhase(idempotencyKey, "gemini_call");
-        const result = await generateStructuredOcrWithTriggerFetch({
-          systemPrompt,
-          userPrompt,
-          mimeType,
-          base64,
-          timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
-        });
-        structured = result.object;
-        const usage = result.usage;
-        inputTokens = usage?.inputTokens;
-        outputTokens = usage?.outputTokens;
-        extractedText = structured.blocks
-          .map((b) => b.content)
-          .filter((c) => c && c.length > 0)
-          .join("\n\n");
-        if (structured.blocks.length === 0) {
-          const emptyErr = new Error("Structured OCR returned 0 blocks");
-          (emptyErr as Error & { code?: string }).code = "EMPTY_OUTPUT";
-          throw emptyErr;
-        }
-      } else {
-        await markProcessingPhase(idempotencyKey, "gemini_call");
-        const result = await generatePlainOcrWithTriggerFetch({
-          systemPrompt,
-          userPrompt,
-          mimeType,
-          base64,
-          timeoutInMs: GEMINI_CALL_TIMEOUT_MS,
-        });
-        inputTokens = result.usage?.inputTokens;
-        outputTokens = result.usage?.outputTokens;
-        extractedText = result.text;
-      }
+      const ocrResult = await runOcrForPage({
+        idempotencyKey,
+        imageUrl: page.imageUrl,
+        mode,
+        pageIndex,
+        totalPages: page.job.totalPages,
+      });
+      extractedText = ocrResult.extractedText;
+      structured = ocrResult.structured;
+      inputTokens = ocrResult.inputTokens;
+      outputTokens = ocrResult.outputTokens;
     } catch (err) {
       const classified = classifyGeminiError(err);
       const debugMessage = getErrorDebugMessage(err);
@@ -721,7 +204,10 @@ export const extractionPageTask = task({
             },
           });
         } catch (refundErr) {
-          logger.error("refund failed", { idempotencyKey, err: String(refundErr) });
+          logger.error("refund failed", {
+            idempotencyKey,
+            err: String(refundErr),
+          });
         }
       }
       await maybeTriggerFinalize(jobId);
@@ -739,9 +225,8 @@ export const extractionPageTask = task({
       inputTokens,
       outputTokens,
       latencyMs,
-      structured: isStructured && structured ? structured : undefined,
+      structured: structured ?? undefined,
     });
-
 
     logger.info("page success", {
       idempotencyKey,
@@ -760,20 +245,3 @@ export const extractionPageTask = task({
     };
   },
 });
-
-/** If every page is terminal, fire the finalize task.
- *  `extractionFinalizeTask` is itself idempotent — double-triggering is safe. */
-async function maybeTriggerFinalize(jobId: string): Promise<void> {
-  const job = await prisma.extractionJob.findUnique({
-    where: { id: jobId },
-    select: { status: true, pendingPages: true, totalPages: true, successPages: true, failedPages: true },
-  });
-  if (!job) return;
-  if (job.status !== "PROCESSING") return;
-  if (job.pendingPages > 0) return;
-
-  await extractionFinalizeTask.trigger(
-    { jobId },
-    { idempotencyKey: `finalize:${jobId}:${job.successPages}:${job.failedPages}` },
-  );
-}

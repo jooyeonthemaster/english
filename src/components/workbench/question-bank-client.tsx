@@ -4,39 +4,10 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
-import {
-  Database,
-  Search,
-  ClipboardList,
-  Grid2X2,
-  Grid3X3,
-  LayoutGrid,
-  Star,
-  ArrowUpDown,
-  Loader2,
-  Rows3,
-  FileText,
-} from "lucide-react";
+import { Database, ClipboardList, Rows3, FileText } from "lucide-react";
 import { PassageGroupedView } from "./question-bank-passage-view";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
-  getWorkbenchQuestion,
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
   toggleQuestionStar,
@@ -54,9 +25,12 @@ import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { SelectionToolbar } from "./shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
-import { TypeFilterPopover, TYPE_SUBTYPE_MAP } from "./question-type-filter";
 import { QuestionBankCard } from "./question-bank-card";
-import { QuestionEditClient } from "./question-edit-client";
+import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
+import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
+import { GridToggle } from "./question-bank-client/grid-toggle";
+import { QuestionFiltersToolbar } from "./question-bank-client/filters-toolbar";
+import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 
 // Hooks
 import { useUrlFilters } from "@/hooks/use-url-filters";
@@ -160,18 +134,6 @@ export function QuestionBankClient({
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
-    null,
-  );
-  const [editingQuestion, setEditingQuestion] = useState<Awaited<
-    ReturnType<typeof getWorkbenchQuestion>
-  > | null>(null);
-  const [questionLoading, setQuestionLoading] = useState(false);
-  const [questionLoadError, setQuestionLoadError] = useState<string | null>(
-    null,
-  );
-  const editLoadTokenRef = useRef(0);
 
   // URL filters
   const {
@@ -260,48 +222,10 @@ export function QuestionBankClient({
     ? (groupedData?.totalPages ?? 1)
     : (questionsData?.totalPages ?? 1);
 
-  async function handleOpenQuestionEditor(id: string) {
-    const token = editLoadTokenRef.current + 1;
-    editLoadTokenRef.current = token;
-    setEditDialogOpen(true);
-    setEditingQuestionId(id);
-    setEditingQuestion(null);
-    setQuestionLoadError(null);
-    setQuestionLoading(true);
-
-    try {
-      const question = await getWorkbenchQuestion(id);
-      if (editLoadTokenRef.current !== token) return;
-      if (!question) {
-        setQuestionLoadError("문제를 찾을 수 없습니다.");
-        toast.error("문제를 찾을 수 없습니다.");
-        return;
-      }
-      setEditingQuestion(question);
-    } catch {
-      if (editLoadTokenRef.current !== token) return;
-      setQuestionLoadError("문제를 불러오는 중 오류가 발생했습니다.");
-      toast.error("문제를 불러오지 못했습니다.");
-    } finally {
-      if (editLoadTokenRef.current === token) setQuestionLoading(false);
-    }
-  }
-
-  function closeQuestionEditor() {
-    editLoadTokenRef.current += 1;
-    setEditDialogOpen(false);
-    setEditingQuestionId(null);
-    setEditingQuestion(null);
-    setQuestionLoadError(null);
-    setQuestionLoading(false);
-  }
-
-  function handleEditorDeleted(id: string) {
+  const editor = useQuestionEditor((id) => {
     selectedIds.delete(id);
     setSelectedIds(new Set(selectedIds));
-    closeQuestionEditor();
-    router.refresh();
-  }
+  });
 
   // ─── Question Actions ───
   async function handleDelete(id: string) {
@@ -437,7 +361,6 @@ export function QuestionBankClient({
     setCreatingExam(false);
   }
 
-  // ─── Extra actions for selection toolbar (question-specific) ───
   // ─── Filter bar (rendered inside FolderSection.toolbar) ───
   const viewModeToggle = (
     <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
@@ -474,110 +397,14 @@ export function QuestionBankClient({
   );
 
   const filtersToolbar = (
-    <>
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-        <input
-          placeholder="검색..."
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          className="w-40 h-7 pl-7 pr-2.5 text-[11.5px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-        />
-      </div>
-
-      <TypeFilterPopover
-        currentSubTypes={filters.subType?.split(",").filter(Boolean) || []}
-        onApply={(selectedSubs) => {
-          if (selectedSubs.length === 0) {
-            updateFilters({ type: "ALL", subType: "ALL" });
-          } else {
-            const types = new Set<string>();
-            for (const sub of selectedSubs) {
-              const group = TYPE_SUBTYPE_MAP.find((g) =>
-                g.subtypes.some((s) => s.value === sub),
-              );
-              if (group) types.add(group.type);
-            }
-            updateFilters({
-              type: types.size > 0 ? [...types].join(",") : "ALL",
-              subType: selectedSubs.join(","),
-            });
-          }
-        }}
-      />
-
-      <Select
-        value={filters.difficulty || "ALL"}
-        onValueChange={(v) => updateFilter("difficulty", v)}
-      >
-        <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
-          <SelectValue placeholder="난이도" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">전체 난이도</SelectItem>
-          <SelectItem value="BASIC">기본</SelectItem>
-          <SelectItem value="INTERMEDIATE">중급</SelectItem>
-          <SelectItem value="KILLER">킬러</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <Select
-        value={
-          filters.approved === true
-            ? "true"
-            : filters.approved === false
-              ? "false"
-              : "ALL"
-        }
-        onValueChange={(v) => updateFilter("approved", v)}
-      >
-        <SelectTrigger className="w-[88px] h-7 text-[11.5px] px-2.5">
-          <SelectValue placeholder="상태" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">전체 상태</SelectItem>
-          <SelectItem value="true">승인 완료</SelectItem>
-          <SelectItem value="false">미승인</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <button
-        onClick={() => {
-          if (filters.starred === true) updateFilter("starred", "ALL");
-          else updateFilter("starred", "true");
-        }}
-        className={`flex items-center gap-1 h-7 px-2 text-[11.5px] font-medium rounded-md border transition-colors ${
-          filters.starred === true
-            ? "bg-yellow-50 border-yellow-300 text-yellow-700"
-            : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-        }`}
-        aria-label="중요 문제 필터"
-        aria-pressed={filters.starred === true}
-      >
-        <Star
-          className={`w-3 h-3 ${filters.starred === true ? "fill-yellow-400 text-yellow-500" : ""}`}
-        />
-        중요
-      </button>
-
-      <Select
-        value={filters.sort || "newest"}
-        onValueChange={(v) => updateFilter("sort", v === "newest" ? "ALL" : v)}
-      >
-        <SelectTrigger className="w-[108px] h-7 text-[11.5px] px-2.5">
-          <ArrowUpDown className="w-3 h-3 mr-1 shrink-0" />
-          <SelectValue placeholder="정렬" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="newest">최신순</SelectItem>
-          <SelectItem value="oldest">오래된순</SelectItem>
-          <SelectItem value="difficulty_desc">난이도 높은순</SelectItem>
-          <SelectItem value="difficulty_asc">난이도 낮은순</SelectItem>
-          <SelectItem value="starred">중요 문제 먼저</SelectItem>
-        </SelectContent>
-      </Select>
-    </>
+    <QuestionFiltersToolbar
+      filters={filters}
+      searchValue={searchValue}
+      onSearchChange={setSearchValue}
+      onSearchSubmit={handleSearch}
+      updateFilter={updateFilter}
+      updateFilters={updateFilters}
+    />
   );
 
   const selectionExtraActions = (
@@ -606,34 +433,7 @@ export function QuestionBankClient({
     </>
   );
 
-  const gridToggle = (
-    <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
-      <button
-        onClick={() => setGridCols(2)}
-        className={`p-1 transition-colors ${gridCols === 2 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-        aria-label="2열 보기"
-        aria-pressed={gridCols === 2}
-      >
-        <Grid2X2 className="w-3.5 h-3.5" />
-      </button>
-      <button
-        onClick={() => setGridCols(3)}
-        className={`p-1 transition-colors border-x border-slate-200 ${gridCols === 3 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-        aria-label="3열 보기"
-        aria-pressed={gridCols === 3}
-      >
-        <Grid3X3 className="w-3.5 h-3.5" />
-      </button>
-      <button
-        onClick={() => setGridCols(4)}
-        className={`p-1 transition-colors ${gridCols === 4 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-        aria-label="4열 보기"
-        aria-pressed={gridCols === 4}
-      >
-        <LayoutGrid className="w-3.5 h-3.5" />
-      </button>
-    </div>
-  );
+  const gridToggle = <GridToggle gridCols={gridCols} setGridCols={setGridCols} />;
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
@@ -760,7 +560,7 @@ export function QuestionBankClient({
                         onDelete={() => handleDelete(q.id)}
                         onApprove={() => handleApprove(q.id)}
                         onToggleStar={() => handleToggleStar(q.id)}
-                        onEdit={() => handleOpenQuestionEditor(q.id)}
+                        onEdit={() => editor.openEditor(q.id)}
                         viewSize={viewSize}
                       />
                     );
@@ -784,42 +584,15 @@ export function QuestionBankClient({
 
       {/* ─── Dialogs ─── */}
 
-      {/* Create exam dialog */}
-      <Dialog open={createExamOpen} onOpenChange={setCreateExamOpen}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogHeader>
-            <DialogTitle className="text-sm">
-              시험지 만들기 ({selectedIds.size}문제)
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
-            <Input
-              placeholder="시험지 제목"
-              value={examTitle}
-              onChange={(e) => setExamTitle(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleCreateExam();
-              }}
-              autoFocus
-            />
-            <p className="text-xs text-slate-500">
-              선택한 {selectedIds.size}개 문제로 초안(DRAFT) 시험지를
-              생성합니다. 생성 후 상세 페이지에서 순서, 배점 등을 편집할 수
-              있습니다.
-            </p>
-          </div>
-          <DialogFooter>
-            <Button
-              size="sm"
-              onClick={handleCreateExam}
-              disabled={!examTitle.trim() || creatingExam}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              {creatingExam ? "생성 중..." : "시험지 생성"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <CreateExamDialog
+        open={createExamOpen}
+        onOpenChange={setCreateExamOpen}
+        examTitle={examTitle}
+        setExamTitle={setExamTitle}
+        selectedCount={selectedIds.size}
+        creating={creatingExam}
+        onCreate={handleCreateExam}
+      />
 
       <GenerateQuestionsDialog
         open={generateDialogOpen}
@@ -827,66 +600,20 @@ export function QuestionBankClient({
         academyId={academyId}
       />
 
-      <Dialog
-        open={editDialogOpen}
+      <EditQuestionDialog
+        open={editor.editDialogOpen}
         onOpenChange={(open) => {
-          if (!open) closeQuestionEditor();
-          else setEditDialogOpen(true);
+          if (!open) editor.closeEditor();
+          else editor.setEditDialogOpen(true);
         }}
-      >
-        <DialogContent
-          className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1440px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1440px]"
-          showCloseButton={false}
-        >
-          <DialogHeader className="sr-only">
-            <DialogTitle>문제 수정</DialogTitle>
-          </DialogHeader>
-
-          {questionLoading ? (
-            <div className="flex h-full items-center justify-center bg-white">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                문제를 불러오는 중
-              </div>
-            </div>
-          ) : questionLoadError ? (
-            <div className="flex h-full items-center justify-center bg-white">
-              <div className="space-y-3 text-center">
-                <p className="text-sm font-medium text-slate-700">
-                  {questionLoadError}
-                </p>
-                <div className="flex justify-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={closeQuestionEditor}
-                  >
-                    닫기
-                  </Button>
-                  {editingQuestionId && (
-                    <Button
-                      size="sm"
-                      onClick={() =>
-                        handleOpenQuestionEditor(editingQuestionId)
-                      }
-                    >
-                      다시 불러오기
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : editingQuestion ? (
-            <QuestionEditClient
-              key={editingQuestion.id}
-              question={editingQuestion}
-              mode="modal"
-              onClose={closeQuestionEditor}
-              onDeleted={handleEditorDeleted}
-            />
-          ) : null}
-        </DialogContent>
-      </Dialog>
+        loading={editor.questionLoading}
+        loadError={editor.questionLoadError}
+        editingQuestion={editor.editingQuestion}
+        editingQuestionId={editor.editingQuestionId}
+        onClose={editor.closeEditor}
+        onDeleted={editor.handleEditorDeleted}
+        onRetry={editor.openEditor}
+      />
     </div>
   );
 }

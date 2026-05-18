@@ -8,6 +8,54 @@ export const dynamic = "force-dynamic";
 
 const VISIBLE_M1_DRAFT_STATUSES = ["DRAFT", "REVIEWED", "COMMITTED"];
 
+interface ListCursor {
+  jobCreatedAt: string;
+  passageOrder: number;
+  id: string;
+}
+
+function decodeListCursor(value: string | null): ListCursor | null {
+  if (!value) return null;
+  try {
+    const decoded = JSON.parse(
+      Buffer.from(value, "base64url").toString("utf8"),
+    ) as Partial<ListCursor>;
+    if (
+      typeof decoded.jobCreatedAt !== "string" ||
+      typeof decoded.passageOrder !== "number" ||
+      typeof decoded.id !== "string"
+    ) {
+      return null;
+    }
+    return {
+      jobCreatedAt: decoded.jobCreatedAt,
+      passageOrder: decoded.passageOrder,
+      id: decoded.id,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function encodeListCursor(draft: {
+  id: string;
+  passageOrder: number;
+  job: { createdAt: Date | string };
+}): string {
+  const jobCreatedAt =
+    draft.job.createdAt instanceof Date
+      ? draft.job.createdAt.toISOString()
+      : new Date(draft.job.createdAt).toISOString();
+  return Buffer.from(
+    JSON.stringify({
+      jobCreatedAt,
+      passageOrder: draft.passageOrder,
+      id: draft.id,
+    } satisfies ListCursor),
+    "utf8",
+  ).toString("base64url");
+}
+
 export async function GET(req: NextRequest) {
   const staff = await requireStaff();
   if (staff instanceof NextResponse) return staff;
@@ -18,19 +66,43 @@ export async function GET(req: NextRequest) {
   );
   const jobId = req.nextUrl.searchParams.get("jobId");
   const view = req.nextUrl.searchParams.get("view");
+  const cursor = decodeListCursor(req.nextUrl.searchParams.get("cursor"));
 
   if (view === "list") {
+    const cursorDate = cursor ? new Date(cursor.jobCreatedAt) : null;
     const drafts = await prisma.extractionM1PassageDraft.findMany({
       where: {
         ...(jobId ? { jobId } : {}),
+        deletedAt: null,
+        ...(cursor && cursorDate && !Number.isNaN(cursorDate.getTime())
+          ? {
+              OR: [
+                { job: { createdAt: { lt: cursorDate } } },
+                {
+                  job: { createdAt: cursorDate },
+                  passageOrder: { gt: cursor.passageOrder },
+                },
+                {
+                  job: { createdAt: cursorDate },
+                  passageOrder: cursor.passageOrder,
+                  id: { gt: cursor.id },
+                },
+              ],
+            }
+          : {}),
         reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
         job: {
           academyId: staff.academyId,
           mode: "PASSAGE_ONLY",
+          deletedAt: null,
         },
       },
-      orderBy: [{ job: { createdAt: "desc" } }, { passageOrder: "asc" }],
-      take: limit,
+      orderBy: [
+        { job: { createdAt: "desc" } },
+        { passageOrder: "asc" },
+        { id: "asc" },
+      ],
+      take: limit + 1,
       select: {
         id: true,
         jobId: true,
@@ -82,7 +154,12 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const visibleDrafts = drafts.filter(isM1DraftVisible);
+    const pageDrafts = drafts.slice(0, limit);
+    const visibleDrafts = pageDrafts.filter(isM1DraftVisible);
+    const nextCursor =
+      drafts.length > limit && pageDrafts.length > 0
+        ? encodeListCursor(pageDrafts[pageDrafts.length - 1])
+        : null;
     const uniqueJobIds = Array.from(new Set(visibleDrafts.map((d) => d.jobId)));
     type ExamMetaShape = { pageNumber?: number | null };
     const examPageNumberByJobPageIndex = new Map<string, number>();
@@ -126,16 +203,22 @@ export async function GET(req: NextRequest) {
         : d.job,
     }));
 
-    return NextResponse.json({ drafts: enriched });
+    return NextResponse.json({
+      drafts: enriched,
+      nextCursor,
+      hasMore: nextCursor !== null,
+    });
   }
 
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
       ...(jobId ? { jobId } : {}),
+      deletedAt: null,
       reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
       job: {
         academyId: staff.academyId,
         mode: "PASSAGE_ONLY",
+        deletedAt: null,
       },
     },
     orderBy: [{ job: { createdAt: "desc" } }, { passageOrder: "asc" }],

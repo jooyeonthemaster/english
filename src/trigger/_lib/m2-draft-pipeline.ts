@@ -11,7 +11,7 @@ import {
   type PassageVerificationResponse,
   type RestorationQuestionInput,
   type SourceMatchInput,
-} from "@/lib/extraction/m2-restoration";
+} from "@/lib/extraction/restoration";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { generateStructuredTextWithTriggerFetch } from "./gemini-ocr";
 import { findM2SourceMatches } from "./m2-source-match";

@@ -247,6 +247,30 @@ export async function saveGeneratedQuestions(
     const session = await requireAuth();
     const academyId = getAcademyId(session);
 
+    const passageIds = [
+      ...new Set(
+        questions
+          .map((q) => q.passageId)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ];
+    if (passageIds.length > 0) {
+      const eligiblePassages = await prisma.passage.findMany({
+        where: {
+          id: { in: passageIds },
+          academyId,
+          analysis: { isNot: null },
+        },
+        select: { id: true },
+      });
+      if (eligiblePassages.length !== passageIds.length) {
+        return {
+          success: false,
+          error: "지문 분석이 완료된 지문만 문제 저장에 사용할 수 있습니다.",
+        };
+      }
+    }
+
     // Use $transaction to batch all question + explanation creates in one roundtrip
     await prisma.$transaction(async (tx) => {
       for (const q of questions) {

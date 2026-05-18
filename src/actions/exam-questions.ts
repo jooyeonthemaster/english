@@ -23,8 +23,21 @@ export async function addQuestionsToExam(
   questionIds: string[]
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth();
+    const staff = await requireStaffAuth();
 
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!exam) return { success: false, error: "?쒗뿕??李얠쓣 ???놁뒿?덈떎." };
+
+    const questions = await prisma.question.findMany({
+      where: { id: { in: questionIds }, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (questions.length !== new Set(questionIds).size) {
+      return { success: false, error: "일부 문제가 현재 학원에 속하지 않습니다." };
+    }
     // Get current max order
     const maxOrder = await prisma.examQuestion.findFirst({
       where: { examId },
@@ -181,7 +194,9 @@ export async function createQuestion(
 ): Promise<ActionResult> {
   try {
     const staff = await requireStaffAuth();
-    const exam = await prisma.exam.findUnique({ where: { id: examId } });
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
+    });
     if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
 
     const question = await prisma.question.create({

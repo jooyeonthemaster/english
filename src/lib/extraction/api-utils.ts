@@ -42,6 +42,15 @@ export async function loadJobWithAuth(
       ),
     };
   }
+  if (job.deletedAt) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "異붿텧 ?묒뾽??李얠쓣 ???놁뒿?덈떎.", code: "JOB_NOT_FOUND" },
+        { status: 404 },
+      ),
+    };
+  }
   if (job.academyId !== academyId) {
     return {
       ok: false,

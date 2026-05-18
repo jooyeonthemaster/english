@@ -13,11 +13,7 @@ import {
   loadJobWithAuth,
   errorResponse,
 } from "@/lib/extraction/api-utils";
-import {
-  createSignedDownloadUrl,
-  pageImageKey,
-  removeJobAssets,
-} from "@/lib/supabase-storage";
+import { createSignedDownloadUrl } from "@/lib/supabase-storage";
 import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
 
 const updateJobSchema = z.object({
@@ -100,6 +96,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
       prisma.extractionM1PassageDraft.findMany({
         where: {
           jobId,
+          deletedAt: null,
           reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
         },
         orderBy: { passageOrder: "asc" },
@@ -234,18 +231,34 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
     );
   }
 
-  // Storage first (best-effort — DB is source of truth).
-  try {
-    await removeJobAssets(auth.job.academyId, auth.job.id);
-  } catch (e) {
-    // non-fatal
-    void e;
-  }
-
-  await prisma.extractionJob.delete({ where: { id: jobId } });
-
-  // Silence unused-import lint
-  void pageImageKey;
+  // Soft-delete only; storage remains available for future recovery.
+  await prisma.$transaction([
+    prisma.extractionAuditLog.create({
+      data: {
+        academyId: staff.academyId,
+        actorStaffId: staff.id,
+        action: "EXTRACTION_JOB_DELETE",
+        targetType: "EXTRACTION_JOB",
+        targetId: auth.job.id,
+        targetLabel: auth.job.displayName || auth.job.originalFileName,
+        metadata: {
+          mode: auth.job.mode,
+          status: auth.job.status,
+          totalPages: auth.job.totalPages,
+          successPages: auth.job.successPages,
+          failedPages: auth.job.failedPages,
+          pendingPages: auth.job.pendingPages,
+        },
+      },
+    }),
+    prisma.extractionJob.update({
+      where: { id: jobId },
+      data: {
+        deletedAt: new Date(),
+        deletedById: staff.id,
+      },
+    }),
+  ]);
 
   return NextResponse.json({ jobId, deleted: true });
 }
