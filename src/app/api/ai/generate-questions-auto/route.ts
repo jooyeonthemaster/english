@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
       throw err;
     }
 
-    const passage = await prisma.passage.findUnique({
-      where: { id: passageId },
+    const passage = await prisma.passage.findFirst({
+      where: { id: passageId, academyId: staff.academyId },
       include: {
         school: { select: { type: true, name: true } },
         analysis: { select: { analysisData: true } },
@@ -82,6 +82,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "지문을 찾을 수 없습니다." },
         { status: 404 },
+      );
+    }
+
+    if (!passage.analysis) {
+      await refundCredits(
+        staff.academyId,
+        "AUTO_GEN_BATCH",
+        creditResult.transactionId,
+        "Passage analysis required",
+      );
+      return NextResponse.json(
+        { error: "지문 분석이 완료된 지문만 문제 생성에 사용할 수 있습니다." },
+        { status: 400 },
       );
     }
 

@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, BookMarked, CheckCircle2, Printer, X } from "lucide-react";
+import {
+  AlertCircle,
+  BookMarked,
+  CheckCircle2,
+  GripVertical,
+  Maximize2,
+  Minus,
+  Plus,
+  Printer,
+  X,
+} from "lucide-react";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { buildStudyNoteBlocks } from "./passage-study-note-print-dialog/block-builder";
 import { safeParseAnalysis } from "./passage-study-note-print-dialog/helpers";
@@ -15,6 +25,10 @@ import type {
   PaginatedStudyPage,
   StudyNotePassage,
 } from "./passage-study-note-print-dialog/types";
+
+const ZOOM_MIN = 0.5;
+const ZOOM_MAX = 3;
+const ZOOM_STEP = 0.25;
 
 interface PassageStudyNotePrintDialogProps {
   open: boolean;
@@ -44,6 +58,12 @@ export function PassageStudyNotePrintDialog({
   });
   const paginationReady = analyzedPassages.length === 0 || paginationResult.key === blocksKey;
   const pages = paginationReady ? paginationResult.pages : [];
+
+  const [zoom, setZoom] = useState(1);
+  const [controlsPos, setControlsPos] = useState<{ top: number; right: number }>({
+    top: 12,
+    right: 12,
+  });
 
   const measureAndPaginate = useCallback(() => {
     const contentEl = measureContentRef.current;
@@ -100,7 +120,77 @@ export function PassageStudyNotePrintDialog({
     };
   }, [open, measureAndPaginate]);
 
+  const zoomIn = useCallback(
+    () => setZoom((z) => Math.min(ZOOM_MAX, Math.round((z + ZOOM_STEP) * 100) / 100)),
+    [],
+  );
+  const zoomOut = useCallback(
+    () => setZoom((z) => Math.max(ZOOM_MIN, Math.round((z - ZOOM_STEP) * 100) / 100)),
+    [],
+  );
+  const resetZoom = useCallback(() => setZoom(1), []);
+
+  const handlePanStart = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const scroller = (e.currentTarget as HTMLElement).closest<HTMLElement>(
+      "[data-pannable-scroll]",
+    );
+    if (!scroller) return;
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startScrollLeft = scroller.scrollLeft;
+    const startScrollTop = scroller.scrollTop;
+    document.body.style.cursor = "grabbing";
+    document.body.style.userSelect = "none";
+
+    const onMove = (ev: MouseEvent) => {
+      scroller.scrollLeft = startScrollLeft - (ev.clientX - startX);
+      scroller.scrollTop = startScrollTop - (ev.clientY - startY);
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }, []);
+
+  const handleControlsDragStart = useCallback(
+    (e: React.MouseEvent<HTMLSpanElement>) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const startMouseX = e.clientX;
+      const startMouseY = e.clientY;
+      const startTop = controlsPos.top;
+      const startRight = controlsPos.right;
+      document.body.style.cursor = "grabbing";
+      document.body.style.userSelect = "none";
+
+      const onMove = (ev: MouseEvent) => {
+        setControlsPos({
+          top: Math.max(0, startTop + (ev.clientY - startMouseY)),
+          right: Math.max(0, startRight - (ev.clientX - startMouseX)),
+        });
+      };
+      const onUp = () => {
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onUp);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      };
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    },
+    [controlsPos],
+  );
+
   if (!open) return null;
+
+  const showControls = paginationReady && pages.length > 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center">
@@ -161,33 +251,131 @@ export function PassageStudyNotePrintDialog({
           </div>
         </div>
 
-        <div className="print-scroll flex-1 bg-[#E8ECF2] px-6 py-5">
-          <StudyNoteMeasurementLayer blocks={blocks} contentRef={measureContentRef} />
-          {analyzedPassages.length === 0 ? (
-            <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center">
-              <BookMarked className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-              <p className="text-[14px] font-semibold text-slate-700">출력할 분석 자료가 없습니다.</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
-                AI 분석이 완료된 지문을 선택하면 필기노트를 만들 수 있습니다.
-              </p>
-            </div>
-          ) : !paginationReady ? (
-            <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
-              <BookMarked className="mx-auto mb-3 h-10 w-10 text-blue-400" />
-              <p className="text-[14px] font-semibold text-slate-700">A4 페이지를 계산하고 있습니다.</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
-                요약/본문/어휘/어법/구문/출제 포인트를 실제 A4 높이에 맞춰 재배치합니다.
-              </p>
-            </div>
-          ) : (
-            <div className="study-note-paper-stack">
-              {pages.map((page, index) => (
-                <StudyNotePageFrame key={page.id} page={page} pageIndex={index} totalPages={pages.length} />
-              ))}
+        <div className="relative min-h-0 flex-1">
+          <div
+            data-pannable-scroll
+            className="print-scroll absolute inset-0 bg-[#E8ECF2] px-6 py-5"
+          >
+            <StudyNoteMeasurementLayer blocks={blocks} contentRef={measureContentRef} />
+            {analyzedPassages.length === 0 ? (
+              <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center">
+                <BookMarked className="mx-auto mb-3 h-10 w-10 text-slate-300" />
+                <p className="text-[14px] font-semibold text-slate-700">출력할 분석 자료가 없습니다.</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
+                  AI 분석이 완료된 지문을 선택하면 필기노트를 만들 수 있습니다.
+                </p>
+              </div>
+            ) : !paginationReady ? (
+              <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
+                <BookMarked className="mx-auto mb-3 h-10 w-10 text-blue-400" />
+                <p className="text-[14px] font-semibold text-slate-700">A4 페이지를 계산하고 있습니다.</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
+                  요약/본문/어휘/어법/구문/출제 포인트를 실제 A4 높이에 맞춰 재배치합니다.
+                </p>
+              </div>
+            ) : (
+              <div
+                className="study-note-paper-stack"
+                style={{ zoom }}
+                onMouseDown={handlePanStart}
+              >
+                {pages.map((page, index) => (
+                  <StudyNotePageFrame key={page.id} page={page} pageIndex={index} totalPages={pages.length} />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {showControls && (
+            <div className="study-note-no-print pointer-events-none absolute inset-0 z-10">
+              <FloatingZoomControls
+                pos={controlsPos}
+                zoom={zoom}
+                onDragStart={handleControlsDragStart}
+                onZoomIn={zoomIn}
+                onZoomOut={zoomOut}
+                onReset={resetZoom}
+              />
             </div>
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+function FloatingZoomControls({
+  pos,
+  zoom,
+  onDragStart,
+  onZoomIn,
+  onZoomOut,
+  onReset,
+}: {
+  pos: { top: number; right: number };
+  zoom: number;
+  onDragStart: (e: React.MouseEvent<HTMLSpanElement>) => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onReset: () => void;
+}) {
+  return (
+    <div
+      className="pointer-events-auto absolute inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white/95 p-1 shadow-md backdrop-blur-sm"
+      style={{ top: pos.top, right: pos.right }}
+    >
+      <span
+        onMouseDown={onDragStart}
+        className="inline-flex size-6 cursor-grab items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing"
+        title="드래그해서 이동"
+        aria-label="컨트롤 이동"
+      >
+        <GripVertical className="size-4" aria-hidden="true" />
+      </span>
+      <span className="h-4 w-px bg-slate-200" />
+      <ZoomButton onClick={onZoomOut} disabled={zoom <= ZOOM_MIN} label="축소">
+        <Minus className="size-3.5" aria-hidden="true" />
+      </ZoomButton>
+      <button
+        type="button"
+        onClick={onReset}
+        disabled={zoom === 1}
+        className="inline-flex h-6 min-w-[42px] cursor-pointer items-center justify-center rounded px-1.5 text-[11px] font-bold tabular-nums text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-default disabled:text-slate-400 disabled:hover:bg-transparent"
+        title="원래 크기"
+      >
+        {Math.round(zoom * 100)}%
+      </button>
+      <ZoomButton onClick={onZoomIn} disabled={zoom >= ZOOM_MAX} label="확대">
+        <Plus className="size-3.5" aria-hidden="true" />
+      </ZoomButton>
+      <ZoomButton onClick={onReset} disabled={zoom === 1} label="원래 크기">
+        <Maximize2 className="size-3.5" aria-hidden="true" />
+      </ZoomButton>
+    </div>
+  );
+}
+
+function ZoomButton({
+  onClick,
+  disabled,
+  label,
+  children,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      className="inline-flex size-6 cursor-pointer items-center justify-center rounded text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-default disabled:text-slate-300 disabled:hover:bg-transparent"
+    >
+      {children}
+    </button>
   );
 }

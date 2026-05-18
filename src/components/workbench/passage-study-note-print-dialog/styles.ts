@@ -6,7 +6,10 @@ export const STUDY_NOTE_PRINT_STYLES = `
           align-items: center;
           gap: 22px;
           min-width: min-content;
+          cursor: grab;
+          user-select: none;
         }
+        #passage-study-note-print-root .study-note-paper-stack:active { cursor: grabbing; }
         #passage-study-note-print-root .study-note-page {
           position: relative;
           box-sizing: border-box;
@@ -346,10 +349,17 @@ export const STUDY_NOTE_PRINT_STYLES = `
             box-shadow: none !important;
           }
           #passage-study-note-print-root .print-scroll {
+            position: static !important;
+            inset: auto !important;
             height: auto !important;
             overflow: visible !important;
             padding: 0 !important;
             background: white !important;
+          }
+          #passage-study-note-print-root .study-note-paper-stack {
+            zoom: 1 !important;
+            cursor: default !important;
+            user-select: auto !important;
           }
           #passage-study-note-print-root .study-note-paper-stack {
             display: block !important;

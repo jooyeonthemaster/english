@@ -66,7 +66,6 @@ export function buildStudyNoteBlocks(
     if (vocabulary.length > 0) {
       pushBlock(blocks, passage, "vocab", "어휘", 0, <DenseSectionTitle category="vocab" title="어휘 정리" count={vocabulary.length} />, {
         id: `${passage.id}-vocab-title`,
-        forceNewPage: true,
         keepWithNext: true,
       });
       chunkArray(vocabulary, 9).forEach((chunk, index) => {
@@ -80,7 +79,6 @@ export function buildStudyNoteBlocks(
     if (grammar.length > 0) {
       pushBlock(blocks, passage, "grammar", "어법", 0, <DenseSectionTitle category="grammar" title="어법/문법 정리" count={grammar.length} />, {
         id: `${passage.id}-grammar-title`,
-        forceNewPage: true,
         keepWithNext: true,
       });
       chunkArray(grammar, 4).forEach((chunk, index) => {
@@ -94,7 +92,6 @@ export function buildStudyNoteBlocks(
     if (syntax.length > 0) {
       pushBlock(blocks, passage, "syntax", "구문", 0, <DenseSectionTitle category="syntax" title="구문 정리" count={syntax.length} />, {
         id: `${passage.id}-syntax-title`,
-        forceNewPage: true,
         keepWithNext: true,
       });
       chunkArray(syntax, 4).forEach((chunk, index) => {
@@ -109,7 +106,6 @@ export function buildStudyNoteBlocks(
     if (examEntries.length > 0 || hasExamSummary) {
       pushBlock(blocks, passage, "exam", "출제", 0, <DenseSectionTitle category="exam" title="출제 포인트 정리" count={examEntries.length} />, {
         id: `${passage.id}-exam-title`,
-        forceNewPage: true,
         keepWithNext: true,
       });
       if (hasExamSummary) {

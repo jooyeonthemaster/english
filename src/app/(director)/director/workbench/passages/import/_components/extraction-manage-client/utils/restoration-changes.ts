@@ -18,6 +18,7 @@ const INLINE_EVIDENCE_TYPES = new Set([
   "VOCAB",
   "GRAMMAR",
   "BLANK",
+  "WORD_ORDER",
   "INSERTION",
   "ORDERING",
   "SUMMARY",
@@ -286,6 +287,10 @@ const EVIDENCE_TYPE_LABELS: Record<string, { label: string; className: string }>
   BLANK: {
     label: "빈칸",
     className: "bg-rose-50 text-rose-700 ring-rose-200",
+  },
+  WORD_ORDER: {
+    label: "어순 배열",
+    className: "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200",
   },
   INSERTION: {
     label: "문장삽입",

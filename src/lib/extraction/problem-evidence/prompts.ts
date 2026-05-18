@@ -25,7 +25,7 @@ export function buildProblemEvidencePrompts(input: {
       "- Irrelevant sentence questions: identify the removable sentence and emit REMOVE_IRRELEVANT_SENTENCE. Put the numbered sentence in action.target.",
       "- Blank questions: infer the filled expression only when supported by choices/context and emit RESTORE_BLANK. Put the restored expression in action.value.",
       "- Grammar/vocabulary questions: identify the corrected original expression and emit RESTORE_GRAMMAR or RESTORE_VOCAB. Put the mutated expression in action.target and corrected expression in action.value.",
-      "- Word order/writing questions: recover the model sentence and emit RESTORE_WORD_ORDER. Put the model answer in action.value.",
+      "- Word order/writing questions: recover the model sentence and emit RESTORE_WORD_ORDER. Put the model answer in action.value. **Read the stem's usage directive before deciding the answer length:** if the stem says '모두 이용' / '모든 단어를 (반드시) 사용' / 'all the words' / 'use every word', the answer MUST use every box item — never drop any. If the stem says '필요한 것만' / '적절히 선택' / 'use only the necessary words', partial use is fine. With no explicit directive, derive the answer from context alone — do NOT pad and do NOT silently drop items. When the stem requires using all words but the answer you can derive is partial, lower confidence and set the question status accordingly so the restorer falls back to PARTIAL.",
       "- If no question evidence exists and the passage is clean, return NO_QUESTIONS with SOURCE_MATCH_ONLY or no actions.",
       "- Mark low-confidence or unsupported recovery with TEACHER_REVIEW_REQUIRED.",
       "",
