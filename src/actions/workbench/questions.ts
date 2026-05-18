@@ -46,6 +46,7 @@ export async function getWorkbenchQuestions(
   if (filters?.collectionId) {
     where.collectionItems = { some: { collectionId: filters.collectionId } };
   }
+  if (filters?.tags) where.tags = { contains: filters.tags };
   if (filters?.aiGenerated !== undefined) where.aiGenerated = filters.aiGenerated;
   if (filters?.approved !== undefined) where.approved = filters.approved;
   if (filters?.starred !== undefined) where.starred = filters.starred;
@@ -99,6 +100,123 @@ export async function getWorkbenchQuestions(
   }
 
   return { questions, total, page, limit, totalPages: Math.ceil(total / limit) };
+}
+
+/**
+ * Returns analyzed passages (passages with a PassageAnalysis row) that have
+ * at least one question matching the filters, paginated by passage. Each
+ * passage carries its matching questions inline. Used by the "지문별" view
+ * on /director/workbench/questions.
+ */
+export async function getWorkbenchQuestionsGroupedByPassage(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters
+) {
+  await requireAuth();
+
+  const page = filters?.page || 1;
+  const limit = filters?.limit || 10; // passages per page
+  const skip = (page - 1) * limit;
+
+  const questionWhere: Record<string, unknown> = {};
+
+  if (filters?.type) {
+    const types = filters.type.split(",").filter(Boolean);
+    questionWhere.type = types.length > 1 ? { in: types } : types[0];
+  }
+  if (filters?.subType) {
+    const subs = filters.subType.split(",").filter(Boolean);
+    questionWhere.subType = subs.length > 1 ? { in: subs } : subs[0];
+  }
+  if (filters?.difficulty) questionWhere.difficulty = filters.difficulty;
+  if (filters?.aiGenerated !== undefined)
+    questionWhere.aiGenerated = filters.aiGenerated;
+  if (filters?.approved !== undefined) questionWhere.approved = filters.approved;
+  if (filters?.starred !== undefined) questionWhere.starred = filters.starred;
+  if (filters?.search) {
+    questionWhere.questionText = {
+      contains: filters.search,
+      mode: "insensitive",
+    };
+  }
+  if (filters?.collectionId) {
+    questionWhere.collectionItems = {
+      some: { collectionId: filters.collectionId },
+    };
+  }
+  if (filters?.tags) {
+    questionWhere.tags = { contains: filters.tags };
+  }
+
+  const passageWhere: Record<string, unknown> = {
+    academyId,
+    analysis: { isNot: null },
+    questions: { some: questionWhere },
+  };
+
+  const [rawPassages, total] = await Promise.all([
+    prisma.passage.findMany({
+      where: passageWhere,
+      select: {
+        id: true,
+        title: true,
+        grade: true,
+        semester: true,
+        unit: true,
+        publisher: true,
+        updatedAt: true,
+        school: { select: { id: true, name: true } },
+        analysis: { select: { id: true, updatedAt: true } },
+        _count: { select: { questions: true } },
+        questions: {
+          where: questionWhere,
+          include: {
+            explanation: true,
+            _count: { select: { examLinks: true } },
+          },
+          orderBy: { createdAt: "desc" },
+        },
+      },
+      orderBy: { updatedAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    prisma.passage.count({ where: passageWhere }),
+  ]);
+
+  // Re-shape so each question has a `passage` field (mirroring the flat-mode
+  // QuestionItem shape that QuestionBankCard expects).
+  const passages = rawPassages.map((p) => {
+    const passageSummary = {
+      id: p.id,
+      title: p.title,
+      content: "",
+      grade: p.grade,
+      semester: p.semester,
+      publisher: p.publisher,
+      school: p.school,
+    };
+    return {
+      id: p.id,
+      title: p.title,
+      grade: p.grade,
+      semester: p.semester,
+      unit: p.unit,
+      publisher: p.publisher,
+      school: p.school,
+      analysis: p.analysis,
+      totalQuestionCount: p._count.questions,
+      questions: p.questions.map((q) => ({ ...q, passage: passageSummary })),
+    };
+  });
+
+  return {
+    passages,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
 }
 
 export async function getWorkbenchQuestion(questionId: string) {

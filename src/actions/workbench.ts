@@ -16,6 +16,7 @@ export type {
 
 export {
   getWorkbenchPassages,
+  findWorkbenchPassageDuplicates,
   getWorkbenchPassage,
   createWorkbenchPassage,
   updateWorkbenchPassage,
@@ -39,6 +40,7 @@ export {
 
 export {
   getWorkbenchQuestions,
+  getWorkbenchQuestionsGroupedByPassage,
   getWorkbenchQuestion,
   saveGeneratedQuestions,
   updateWorkbenchQuestion,

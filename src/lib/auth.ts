@@ -25,7 +25,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const staff = await prisma.staff.findFirst({
           where: { email: { equals: staffEmail, mode: "insensitive" } },
-          include: { academy: true },
+          include: { academy: { select: { name: true, slug: true } } },
         });
 
         if (!staff || !staff.isActive) {
@@ -69,7 +69,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const staff = await prisma.staff.findUnique({
           where: { id: payload.staffId },
-          include: { academy: true },
+          include: { academy: { select: { name: true, slug: true } } },
         });
 
         if (!staff || !staff.isActive) return null;

@@ -49,8 +49,8 @@ export async function loginStudent(
   academyId: string,
   studentCode: string
 ): Promise<StudentTokenPayload> {
-  const student = await prisma.student.findUnique({
-    where: { studentCode },
+  const student = await prisma.student.findFirst({
+    where: { academyId, studentCode },
     include: { academy: true, school: true },
   });
 

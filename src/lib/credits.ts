@@ -67,9 +67,11 @@ export async function deductCredits(
   operationType: OperationType,
   staffId?: string,
   metadata?: Record<string, unknown>,
+  costOverride?: number,
 ): Promise<DeductResult> {
-  const cost = CREDIT_COSTS[operationType];
-  if (!cost) throw new Error(`Unknown operation type: ${operationType}`);
+  const cost = costOverride ?? CREDIT_COSTS[operationType];
+  if (CREDIT_COSTS[operationType] === undefined) throw new Error(`Unknown operation type: ${operationType}`);
+  if (!Number.isFinite(cost) || cost <= 0) throw new Error(`Invalid credit cost: ${cost}`);
 
   // Wrap in transaction for atomic deduction + audit log
   return await prisma.$transaction(async (tx) => {
@@ -127,9 +129,9 @@ export async function refundCredits(
   operationType: OperationType,
   originalTransactionId: string,
   reason?: string,
+  costOverride?: number,
 ): Promise<void> {
-  const cost = CREDIT_COSTS[operationType];
-  if (!cost) throw new Error(`Unknown operation type: ${operationType}`);
+  if (CREDIT_COSTS[operationType] === undefined) throw new Error(`Unknown operation type: ${operationType}`);
 
   await prisma.$transaction(async (tx) => {
     // Verify original transaction exists and belongs to this academy
@@ -139,6 +141,9 @@ export async function refundCredits(
     if (!original || original.academyId !== academyId || original.type !== "CONSUMPTION") {
       throw new Error("Invalid refund: original transaction not found or mismatched");
     }
+
+    const cost = costOverride ?? Math.abs(original.amount);
+    if (!Number.isFinite(cost) || cost <= 0) throw new Error(`Invalid refund cost: ${cost}`);
 
     // Check for duplicate refund
     const existingRefund = await tx.creditTransaction.findFirst({

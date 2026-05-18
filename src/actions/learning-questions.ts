@@ -5,6 +5,10 @@ import { getStaffSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { SUBTYPE_TO_CATEGORY } from "@/lib/learning-constants";
 import {
+  getQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
+import {
   wordMeaningItemSchema,
   wordMeaningReverseItemSchema,
   wordFillItemSchema,
@@ -433,6 +437,7 @@ export interface LearningQuestionFilters {
   learningCategory?: string;
   subType?: string;
   difficulty?: string;
+  generationPlan?: string;
   passageId?: string;
   approved?: boolean;
   search?: string;
@@ -454,6 +459,13 @@ export async function getNaeshinQuestions(
   if (filters?.learningCategory) where.learningCategory = filters.learningCategory;
   if (filters?.subType) where.subType = filters.subType;
   if (filters?.difficulty) where.difficulty = filters.difficulty;
+  if (filters?.generationPlan) {
+    where.tags = {
+      contains: getQuestionGenerationPlanTag(
+        normalizeQuestionGenerationPlan(filters.generationPlan),
+      ),
+    };
+  }
   if (filters?.passageId) where.passageId = filters.passageId;
   if (filters?.approved !== undefined) where.approved = filters.approved;
   if (filters?.search) {

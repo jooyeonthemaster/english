@@ -10,6 +10,8 @@ import {
   Plus,
   Target,
   Zap,
+  Gem,
+  Sparkles,
   Settings2,
   ChevronDown,
   CheckCircle2,
@@ -19,6 +21,13 @@ import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import {
+  QUESTION_GENERATION_PLANS,
+  getQuestionGenerationCreditCost,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
+
+const VOCAB_GENERATION_TYPE_IDS = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
 // ─── Props ───────────────────────────────────────────
 
@@ -26,6 +35,8 @@ interface GenerationConfigPanelProps {
   // Mode
   genMode: "auto" | "manual";
   setGenMode: (v: "auto" | "manual") => void;
+  generationPlan: QuestionGenerationPlan;
+  setGenerationPlan: (v: QuestionGenerationPlan) => void;
 
   // Auto config
   autoCount: number;
@@ -70,6 +81,8 @@ interface GenerationConfigPanelProps {
 export function GenerationConfigPanel({
   genMode,
   setGenMode,
+  generationPlan,
+  setGenerationPlan,
   autoCount,
   setAutoCount,
   typeCounts,
@@ -134,6 +147,41 @@ export function GenerationConfigPanel({
               <Settings2 className="w-4 h-4" />
               유형 지정
             </button>
+          </div>
+        </div>
+
+        <div className="px-5 pb-3">
+          <div className="grid grid-cols-2 gap-2">
+            {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+              const plan = QUESTION_GENERATION_PLANS[planId];
+              const active = generationPlan === planId;
+              const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+              return (
+                <button
+                  key={planId}
+                  type="button"
+                  onClick={() => setGenerationPlan(planId)}
+                  className={`min-h-[72px] rounded-xl border p-3 text-left transition-all duration-150 ${
+                    active
+                      ? "border-blue-300 bg-blue-50 text-blue-800 shadow-sm shadow-blue-50"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`} />
+                      <span className="text-[12px] font-bold truncate">{plan.shortLabel}</span>
+                    </div>
+                    <span className={`text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}>
+                      {plan.creditMultiplier}x
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[10px] font-medium leading-snug text-slate-500">
+                    {plan.modelLabel}
+                  </p>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -299,8 +347,8 @@ export function GenerationConfigPanel({
                                     학생 화면
                                   </div>
                                   <div className="flex flex-wrap gap-1">
-                                    {item.outputUi.map((piece) => (
-                                      <span key={piece} className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                                    {item.outputUi.map((piece, pieceIndex) => (
+                                      <span key={`${piece}-${pieceIndex}`} className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
                                         {piece}
                                       </span>
                                     ))}
@@ -312,8 +360,8 @@ export function GenerationConfigPanel({
                               <div>
                                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">좋은 출제 포인트</span>
                                 <div className="flex flex-wrap gap-1 mt-1.5">
-                                  {item.bestFor.map((point) => (
-                                    <span key={point} className="px-1.5 py-0.5 rounded-full bg-emerald-50 text-[10px] font-medium text-emerald-700 border border-emerald-100">
+                                  {item.bestFor.map((point, pointIndex) => (
+                                    <span key={`${point}-${pointIndex}`} className="px-1.5 py-0.5 rounded-full bg-emerald-50 text-[10px] font-medium text-emerald-700 border border-emerald-100">
                                       {point}
                                     </span>
                                   ))}
@@ -386,9 +434,13 @@ export function GenerationConfigPanel({
       <div className="px-5 py-4 border-t border-slate-100 bg-white shrink-0">
         {(() => {
           // 크레딧 비용 계산
-          const creditCost = genMode === "auto"
+          const baseCreditCost = genMode === "auto"
             ? CREDIT_COSTS.AUTO_GEN_BATCH * selectedIds.size
-            : CREDIT_COSTS.QUESTION_GEN_SINGLE * Object.values(typeCounts).filter(v => v > 0).length * selectedIds.size;
+            : selectedIds.size * Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
+              if (value <= 0) return sum;
+              return sum + (VOCAB_GENERATION_TYPE_IDS.has(typeId) ? CREDIT_COSTS.QUESTION_GEN_VOCAB : CREDIT_COSTS.QUESTION_GEN_SINGLE);
+            }, 0);
+          const creditCost = getQuestionGenerationCreditCost(baseCreditCost, generationPlan);
           return (
             <>
               <Button

@@ -22,6 +22,7 @@ import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
 import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 // ─── Component ───────────────────────────────────────────
 
@@ -86,6 +87,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   // ── Mode: auto vs manual (seeded from ?mode= URL param) ──
   const [genMode, setGenMode] = useState<"auto" | "manual">(initialModeRef.current);
+  const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>("STANDARD");
 
   // ── Auto mode config ──
   const [autoCount, setAutoCount] = useState(1);
@@ -205,7 +207,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   const loadSavedQuestions = useCallback(async () => {
     try {
       const { getWorkbenchQuestions } = await import("@/actions/workbench");
-      const result = await getWorkbenchQuestions(academyId, { page: 1, aiGenerated: true });
+      const result = await getWorkbenchQuestions(academyId, { page: 1, limit: 100, aiGenerated: true });
       if (result?.questions) {
         setSavedQuestions(result.questions as QuestionCardItem[]);
       }
@@ -324,6 +326,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
     selectedIds,
     setSelectedIds,
     genMode,
+    generationPlan,
     typeCounts,
     activeTypes,
     difficulty,
@@ -383,6 +386,8 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
         <GenerationConfigPanel
           genMode={genMode}
           setGenMode={setGenMode}
+          generationPlan={generationPlan}
+          setGenerationPlan={setGenerationPlan}
           autoCount={autoCount}
           setAutoCount={setAutoCount}
           typeCounts={typeCounts}
@@ -453,6 +458,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
               } else {
                 setGenMode("auto");
               }
+              setGenerationPlan(reviewItem.config.generationPlan || "STANDARD");
               setDifficulty(reviewItem.config.difficulty as any);
               setCustomPrompt(reviewItem.config.prompt);
             }

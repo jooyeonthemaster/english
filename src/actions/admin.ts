@@ -3,6 +3,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
+import { createUniqueAcademyCode } from "@/lib/tutor/academy-code";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -153,6 +154,7 @@ export async function approveRegistration(
         data: {
           name: registration.academyName,
           slug,
+          code: await createUniqueAcademyCode(tx),
           phone: registration.phone,
           address: registration.address ?? undefined,
           status: "ACTIVE",

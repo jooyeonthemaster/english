@@ -1,0 +1,197 @@
+{
+  "model": "qwen/qwen3.6-plus",
+  "passage": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.",
+  "results": [
+    {
+      "typeId": "ANTONYM",
+      "ok": true,
+      "usage": {
+        "prompt_tokens": 912,
+        "completion_tokens": 5053,
+        "total_tokens": 5965,
+        "completion_tokens_details": {
+          "reasoning_tokens": 4096,
+          "text_tokens": 5053
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 912
+        }
+      },
+      "ms": 96067,
+      "items": [
+        {
+          "raw": {
+            "markedWords": [
+              {
+                "label": "(A)",
+                "word": "justify",
+                "surroundingText": "past investments justify future commitments, even when",
+                "antonym": "undermine"
+              },
+              {
+                "label": "(B)",
+                "word": "dim",
+                "surroundingText": "commitments, even when the future looks dim. A factory that",
+                "antonym": "promising"
+              },
+              {
+                "label": "(C)",
+                "word": "unproductive",
+                "surroundingText": "ticket, stay in unproductive relationships because of the",
+                "antonym": "fruitful"
+              },
+              {
+                "label": "(D)",
+                "word": "persist",
+                "surroundingText": "invested, and persist in failing careers because turning",
+                "antonym": "abandon"
+              },
+              {
+                "label": "(E)",
+                "word": "rational",
+                "surroundingText": "defeat. Rational decision-making, by contrast, requires",
+                "antonym": "irrational"
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A) justify - excuse"
+              },
+              {
+                "label": "2",
+                "text": "(B) dim - clear"
+              },
+              {
+                "label": "3",
+                "text": "(C) unproductive - passive"
+              },
+              {
+                "label": "4",
+                "text": "(D) persist - abandon"
+              },
+              {
+                "label": "5",
+                "text": "(E) rational - emotional"
+              }
+            ],
+            "direction": "지문의 밑줄 친 단어와 반의어 관계가 바르게 짝지어진 것은?",
+            "correctAnswer": "4",
+            "difficulty": "KILLER",
+            "explanation": "지문에서 persist는 실패가 명백한 상황임에도 불구하고 계속 고수하는 행위를 나타내므로, 중단하거나 포기한다는 abandon이 문맥상 정확한 반의어이다. justify는 과거의 투자를 근거로 미래의 선택을 타당하게 만드는 맥락이므로 excuse가 아닌 undermine이 적합하며, dim은 물리적 밝기가 아닌 미래의 전망을 의미하므로 promising이 clear보다 정확하다. unproductive는 관계의 결과나 효용이 없음을 뜻하므로 idle이나 passive가 아닌 fruitful이 반의어이며, rational은 감정이 아닌 논리와 이성에 기반한 판단을 의미하므로 irrational이 정확한 반의어이다.",
+            "keyPoints": [
+              "문맥에 따른 단어의 뉘앙스 파악이 반의어 문제의 핵심이다.",
+              "동작의 지속(persist)과 중단(abandon)은 상황적 대립 관계로 자주 출제된다.",
+              "형용사의 반의어는 물리적 속성보다 추상적 의미나 결과 지향적 의미를 고려해야 한다."
+            ],
+            "wrongOptionExplanations": {
+              "1": "justify는 '타당성을 부여하다'는 의미로, excuse('변명하다')는 반의어가 아닌 관련어에 가깝다. 문맥상 정당성을 약화시키는 undermine이 적절하다.",
+              "2": "dim은 지문에서 '미래 전망이 어둡다'는 추상적 의미로 쓰였으므로, 시야나 빛의 밝기를 뜻하는 clear는 문맥적 반의어로 부적절하다.",
+              "3": "unproductive는 관계나 활동이 '생산적이지 못함'을 의미하므로, 행동의 유무를 나타내는 passive는 정확한 반의어가 아니다.",
+              "5": "rational은 '이성적·합리적' 판단을 의미하므로, 감정을 뜻하는 emotional은 대조적이지만 경제학 및 의사결정 문맥에서 정확한 반의어는 irrational이다."
+            },
+            "tags": [
+              "어휘",
+              "반의어",
+              "문맥 추론",
+              "고난도"
+            ]
+          },
+          "processed": {
+            "markedWords": [
+              {
+                "label": "(A)",
+                "word": "justify",
+                "surroundingText": "past investments justify future commitments, even when",
+                "antonym": "undermine"
+              },
+              {
+                "label": "(B)",
+                "word": "dim",
+                "surroundingText": "commitments, even when the future looks dim. A factory that",
+                "antonym": "promising"
+              },
+              {
+                "label": "(C)",
+                "word": "unproductive",
+                "surroundingText": "ticket, stay in unproductive relationships because of the",
+                "antonym": "fruitful"
+              },
+              {
+                "label": "(D)",
+                "word": "persist",
+                "surroundingText": "invested, and persist in failing careers because turning",
+                "antonym": "abandon"
+              },
+              {
+                "label": "(E)",
+                "word": "rational",
+                "surroundingText": "defeat. Rational decision-making, by contrast, requires",
+                "antonym": "irrational"
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A) justify - excuse"
+              },
+              {
+                "label": "2",
+                "text": "(B) dim - clear"
+              },
+              {
+                "label": "3",
+                "text": "(C) unproductive - passive"
+              },
+              {
+                "label": "4",
+                "text": "(D) persist - abandon"
+              },
+              {
+                "label": "5",
+                "text": "(E) rational - emotional"
+              }
+            ],
+            "direction": "지문의 밑줄 친 단어와 반의어 관계가 바르게 짝지어진 것은?",
+            "correctAnswer": "4",
+            "difficulty": "KILLER",
+            "explanation": "지문에서 persist는 실패가 명백한 상황임에도 불구하고 계속 고수하는 행위를 나타내므로, 중단하거나 포기한다는 abandon이 문맥상 정확한 반의어이다. justify는 과거의 투자를 근거로 미래의 선택을 타당하게 만드는 맥락이므로 excuse가 아닌 undermine이 적합하며, dim은 물리적 밝기가 아닌 미래의 전망을 의미하므로 promising이 clear보다 정확하다. unproductive는 관계의 결과나 효용이 없음을 뜻하므로 idle이나 passive가 아닌 fruitful이 반의어이며, rational은 감정이 아닌 논리와 이성에 기반한 판단을 의미하므로 irrational이 정확한 반의어이다.",
+            "keyPoints": [
+              "문맥에 따른 단어의 뉘앙스 파악이 반의어 문제의 핵심이다.",
+              "동작의 지속(persist)과 중단(abandon)은 상황적 대립 관계로 자주 출제된다.",
+              "형용사의 반의어는 물리적 속성보다 추상적 의미나 결과 지향적 의미를 고려해야 한다."
+            ],
+            "wrongOptionExplanations": {
+              "1": "justify는 '타당성을 부여하다'는 의미로, excuse('변명하다')는 반의어가 아닌 관련어에 가깝다. 문맥상 정당성을 약화시키는 undermine이 적절하다.",
+              "2": "dim은 지문에서 '미래 전망이 어둡다'는 추상적 의미로 쓰였으므로, 시야나 빛의 밝기를 뜻하는 clear는 문맥적 반의어로 부적절하다.",
+              "3": "unproductive는 관계나 활동이 '생산적이지 못함'을 의미하므로, 행동의 유무를 나타내는 passive는 정확한 반의어가 아니다.",
+              "5": "rational은 '이성적·합리적' 판단을 의미하므로, 감정을 뜻하는 emotional은 대조적이지만 경제학 및 의사결정 문맥에서 정확한 반의어는 irrational이다."
+            },
+            "tags": [
+              "어휘",
+              "반의어",
+              "문맥 추론",
+              "고난도"
+            ],
+            "passageWithMarkers": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments __(A) justify__ future commitments, even when the future looks __(B) dim__. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in __(C) unproductive__ relationships because of the years already invested, and __(D) persist__ in failing careers because turning back would feel like an admission of defeat. __(E) rational__ decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "typeId": "ANTONYM",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    }
+  ]
+}

@@ -90,6 +90,7 @@ export default async function PassagesPage({ searchParams }: PageProps) {
 
   return (
     <PassageListClient
+      academyId={staff.academyId}
       passagesData={passagesData}
       schools={schools}
       filters={effectiveFilters}

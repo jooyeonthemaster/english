@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
@@ -14,7 +14,10 @@ import {
   Star,
   ArrowUpDown,
   Loader2,
+  Rows3,
+  FileText,
 } from "lucide-react";
+import { PassageGroupedView } from "./question-bank-passage-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -96,14 +99,34 @@ interface QuestionItem {
   _count: { examLinks: number };
 }
 
+interface GroupedPassage {
+  id: string;
+  title: string;
+  grade: number | null;
+  semester: string | null;
+  unit: string | null;
+  publisher: string | null;
+  school: { id: string; name: string } | null;
+  analysis: { id: string; updatedAt: Date } | null;
+  totalQuestionCount: number;
+  questions: QuestionItem[];
+}
+
 interface QuestionBankProps {
   academyId: string;
+  view: "flat" | "passage";
   questionsData: {
     questions: QuestionItem[];
     total: number;
     page: number;
     totalPages: number;
-  };
+  } | null;
+  groupedData: {
+    passages: GroupedPassage[];
+    total: number;
+    page: number;
+    totalPages: number;
+  } | null;
   filters: {
     page: number;
     type?: string;
@@ -126,11 +149,14 @@ interface QuestionBankProps {
 
 export function QuestionBankClient({
   academyId,
+  view,
   questionsData,
+  groupedData,
   filters,
   collections: initialCollections,
   collectionMembership: initialMembership,
 }: QuestionBankProps) {
+  const isGrouped = view === "passage";
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
@@ -178,17 +204,31 @@ export function QuestionBankClient({
   const viewSize: "lg" | "md" | "sm" =
     gridCols === 2 ? "lg" : gridCols === 3 ? "md" : "sm";
 
-  // Questions in active folder
+  // Initial folder from URL in grouped mode (collectionId is server-driven)
+  useEffect(() => {
+    if (isGrouped && filters.collectionId && !folders.activeFolder) {
+      folders.setActiveFolder(filters.collectionId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Flattened list of question objects currently being displayed.
+  // In flat mode: questionsData.questions filtered by activeFolder (client-side).
+  // In grouped mode: every question across all visible passages (server-filtered).
+  const flatQuestions = questionsData?.questions ?? [];
   const questionsInActiveFolder = useMemo(() => {
-    if (folders.activeFolder === null) return questionsData.questions;
+    if (folders.activeFolder === null) return flatQuestions;
     const ids = folders.membership[folders.activeFolder];
     if (!ids) return [];
-    return questionsData.questions.filter((q) => ids.has(q.id));
-  }, [questionsData.questions, folders.activeFolder, folders.membership]);
+    return flatQuestions.filter((q) => ids.has(q.id));
+  }, [flatQuestions, folders.activeFolder, folders.membership]);
 
-  const displayedQuestions =
-    folders.activeFolder === null
-      ? questionsData.questions
+  const groupedPassages = groupedData?.passages ?? [];
+
+  const displayedQuestions = isGrouped
+    ? groupedPassages.flatMap((p) => p.questions)
+    : folders.activeFolder === null
+      ? flatQuestions
       : questionsInActiveFolder;
 
   // Selection
@@ -210,7 +250,15 @@ export function QuestionBankClient({
   const [creatingExam, setCreatingExam] = useState(false);
 
   // Stats
-  const totalCount = questionsData.total;
+  const totalCount = isGrouped
+    ? (groupedData?.total ?? 0)
+    : (questionsData?.total ?? 0);
+  const currentPage = isGrouped
+    ? (groupedData?.page ?? 1)
+    : (questionsData?.page ?? 1);
+  const totalPages = isGrouped
+    ? (groupedData?.totalPages ?? 1)
+    : (questionsData?.totalPages ?? 1);
 
   async function handleOpenQuestionEditor(id: string) {
     const token = editLoadTokenRef.current + 1;
@@ -287,6 +335,28 @@ export function QuestionBankClient({
       toast.error(result.error || "중요 표시 변경 실패");
     }
   }
+
+  // In grouped mode the server filters by collectionId, so folder navigation
+  // must also push to the URL. Flat mode keeps the existing client-side
+  // filter behavior.
+  const handleNavigateFolder = useCallback(
+    (id: string | null) => {
+      folders.navigateToFolder(id);
+      clearSelection();
+      if (isGrouped) {
+        updateFilter("collectionId", id || "ALL");
+      }
+    },
+    [folders, clearSelection, isGrouped, updateFilter],
+  );
+
+  const handleNavigateToRoot = useCallback(() => {
+    folders.setActiveFolder(null);
+    clearSelection();
+    if (isGrouped) {
+      updateFilter("collectionId", "ALL");
+    }
+  }, [folders, clearSelection, isGrouped, updateFilter]);
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
@@ -369,6 +439,40 @@ export function QuestionBankClient({
 
   // ─── Extra actions for selection toolbar (question-specific) ───
   // ─── Filter bar (rendered inside FolderSection.toolbar) ───
+  const viewModeToggle = (
+    <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
+      <button
+        onClick={() => updateFilters({ view: "ALL", collectionId: "ALL" })}
+        className={`flex items-center gap-1 px-2 h-7 text-[11px] font-medium transition-colors ${
+          !isGrouped
+            ? "bg-slate-800 text-white"
+            : "text-slate-500 hover:bg-slate-50"
+        }`}
+        aria-pressed={!isGrouped}
+      >
+        <Rows3 className="w-3 h-3" />
+        문제별
+      </button>
+      <button
+        onClick={() =>
+          updateFilters({
+            view: "passage",
+            collectionId: folders.activeFolder || "ALL",
+          })
+        }
+        className={`flex items-center gap-1 px-2 h-7 text-[11px] font-medium transition-colors border-l border-slate-200 ${
+          isGrouped
+            ? "bg-slate-800 text-white"
+            : "text-slate-500 hover:bg-slate-50"
+        }`}
+        aria-pressed={isGrouped}
+      >
+        <FileText className="w-3 h-3" />
+        지문별
+      </button>
+    </div>
+  );
+
   const filtersToolbar = (
     <>
       <div className="relative">
@@ -538,12 +642,18 @@ export function QuestionBankClient({
 
       {/* ─── Content ─── */}
       <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
-        {questionsData.questions.length === 0 && !folders.activeFolder ? (
+        {(isGrouped
+          ? groupedPassages.length === 0
+          : flatQuestions.length === 0) && !folders.activeFolder ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">문제가 없습니다</p>
+            <p className="text-slate-500 font-medium">
+              {isGrouped ? "분석된 지문이 없습니다" : "문제가 없습니다"}
+            </p>
             <p className="text-sm text-slate-400 mt-1">
-              AI 워크벤치에서 문제를 생성해보세요
+              {isGrouped
+                ? "지문 분석을 거친 지문에서 생성된 문제만 표시됩니다."
+                : "AI 워크벤치에서 문제를 생성해보세요"}
             </p>
           </div>
         ) : (
@@ -555,31 +665,25 @@ export function QuestionBankClient({
               activeFolder={folders.activeFolder}
               dragItemType="question"
               dragItemIdKey="questionId"
-              itemCountLabel="문제"
+              itemCountLabel={isGrouped ? "지문" : "문제"}
               showNewFolder={folders.showNewFolder}
               newFolderName={folders.newFolderName}
               onNewFolderNameChange={folders.setNewFolderName}
               onShowNewFolder={folders.setShowNewFolder}
               onCreateFolder={folders.handleCreateFolder}
-              onNavigateToFolder={(id) => {
-                folders.navigateToFolder(id);
-                clearSelection();
-              }}
+              onNavigateToFolder={handleNavigateFolder}
               onRenameFolder={folders.handleRenameFolder}
               onDeleteFolder={folders.handleDeleteFolder}
               onDragToFolder={handleDragToFolder}
               onDragToRoot={handleDragToRoot}
               breadcrumbPath={folders.breadcrumbPath}
-              onNavigateToRoot={() => {
-                folders.setActiveFolder(null);
-                clearSelection();
-              }}
+              onNavigateToRoot={handleNavigateToRoot}
               toolbar={filtersToolbar}
               pageHeader={{
                 icon: <Database className="h-3.5 w-3.5" />,
                 title: "문제 관리",
                 totalCount,
-                itemLabel: "문제",
+                itemLabel: isGrouped ? "지문" : "문제",
               }}
               selectionBar={
                 <SelectionToolbar
@@ -595,14 +699,32 @@ export function QuestionBankClient({
                   activeFolder={folders.activeFolder}
                   onRemoveFromFolder={handleRemoveFromFolder}
                   extraActions={selectionExtraActions}
-                  rightSlot={gridToggle}
+                  rightSlot={
+                    <div className="flex items-center gap-1.5">
+                      {viewModeToggle}
+                      {gridToggle}
+                    </div>
+                  }
                 />
               }
             />
 
-            {/* Questions section */}
+            {/* Questions / Passages section */}
             <div>
-              {displayedQuestions.length === 0 ? (
+              {isGrouped ? (
+                <PassageGroupedView
+                  passages={groupedPassages}
+                  gridCols={gridCols}
+                  viewSize={viewSize}
+                  selectedIds={selectedIds}
+                  setSelectedIds={setSelectedIds}
+                  onToggleSelect={toggleSelect}
+                  onDelete={handleDelete}
+                  onApprove={handleApprove}
+                  onToggleStar={handleToggleStar}
+                  onEdit={handleOpenQuestionEditor}
+                />
+              ) : displayedQuestions.length === 0 ? (
                 <div className="text-center py-12">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
@@ -627,7 +749,7 @@ export function QuestionBankClient({
                   }`}
                 >
                   {displayedQuestions.map((q, idx) => {
-                    const startIdx = (questionsData.page - 1) * 20;
+                    const startIdx = (currentPage - 1) * 20;
                     return (
                       <QuestionBankCard
                         key={q.id}
@@ -649,11 +771,12 @@ export function QuestionBankClient({
           </>
         )}
 
-        {/* Pagination */}
-        {!folders.activeFolder && (
+        {/* Pagination — flat mode: hidden when folder active.
+            Grouped mode: always shown (folder filter is server-side). */}
+        {(isGrouped || !folders.activeFolder) && (
           <Pagination
-            page={questionsData.page}
-            totalPages={questionsData.totalPages}
+            page={currentPage}
+            totalPages={totalPages}
             onGoToPage={goToPage}
           />
         )}

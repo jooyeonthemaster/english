@@ -9,17 +9,16 @@ function CompleteInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() =>
+    token ? null : "missing_token",
+  );
   const ranRef = useRef(false);
 
   useEffect(() => {
     if (ranRef.current) return;
     ranRef.current = true;
 
-    if (!token) {
-      setError("missing_token");
-      return;
-    }
+    if (!token) return;
 
     (async () => {
       const result = await signIn("social-bridge", {
@@ -38,17 +37,17 @@ function CompleteInner() {
   if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
-        <div className="max-w-sm w-full rounded-2xl border border-rose-100 bg-white p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <ShieldCheck className="w-5 h-5 text-rose-500" />
+        <div className="w-full max-w-sm rounded-2xl border border-rose-100 bg-white p-8 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 text-rose-500" />
             <h1 className="text-lg font-bold text-slate-900">로그인 실패</h1>
           </div>
-          <p className="text-sm text-slate-600 mb-6">
+          <p className="mb-6 text-sm text-slate-600">
             소셜 로그인 처리 중 오류가 발생했어요. 다시 시도해주세요.
           </p>
           <button
             onClick={() => router.replace(`/login?error=${error}`)}
-            className="w-full h-11 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors"
+            className="h-11 w-full rounded-xl bg-blue-600 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             로그인 화면으로
           </button>
@@ -60,7 +59,7 @@ function CompleteInner() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         <p className="text-sm font-medium text-slate-600">
           로그인 정보를 확인하고 있습니다...
         </p>
@@ -74,7 +73,7 @@ export default function AuthCompletePage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-slate-50">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       }
     >

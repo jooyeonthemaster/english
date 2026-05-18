@@ -10,11 +10,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 export interface AnalysisPromptConfig {
   customPrompt: string;
   focusAreas: string[];
   targetLevel: string;
+  generationPlan?: QuestionGenerationPlan;
 }
 
 interface AnalysisPromptPanelProps {
@@ -27,20 +30,19 @@ interface AnalysisPromptPanelProps {
 export function AnalysisPromptPanel({
   onRunAnalysis,
   analyzing,
-  hasExistingAnalysis,
   initialConfig,
 }: AnalysisPromptPanelProps) {
   const [expanded, setExpanded] = useState(false);
   const [customPrompt, setCustomPrompt] = useState(
     initialConfig?.customPrompt || ""
   );
+  const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>(
+    initialConfig?.generationPlan || "STANDARD"
+  );
 
   function handleRun() {
-    onRunAnalysis({ customPrompt, focusAreas: [], targetLevel: "" });
+    onRunAnalysis({ customPrompt, focusAreas: [], targetLevel: "", generationPlan });
   }
-
-  // Don't show during initial analysis
-  if (!hasExistingAnalysis) return null;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
@@ -60,6 +62,11 @@ export function AnalysisPromptPanel({
 
       {expanded && (
         <div className="px-5 pb-5 border-t border-slate-100 pt-4 space-y-3">
+          <GenerationPlanSelector
+            value={generationPlan}
+            onChange={setGenerationPlan}
+            compact
+          />
           <div>
             <Label className="text-[12px] text-slate-500 mb-1.5 block">
               추가 지시사항

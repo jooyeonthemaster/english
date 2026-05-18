@@ -1,0 +1,245 @@
+{
+  "model": "claude-sonnet-4-6",
+  "passage": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.",
+  "results": [
+    {
+      "typeId": "TITLE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1858,
+        "inputTokenDetails": {
+          "noCacheTokens": 1858,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1513,
+        "outputTokenDetails": {},
+        "totalTokens": 3371,
+        "raw": {
+          "input_tokens": 1858,
+          "output_tokens": 1513,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 46283,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 제목으로 가장 적절한 것은?",
+            "correctAnswer": "2",
+            "explanation": "이 글의 핵심 논지는 '매몰 비용의 오류(sunk cost fallacy)'가 경제적 의사결정뿐 아니라 일상생활 전반에서 미래의 합리적 선택을 왜곡한다는 것이다. 글은 단순히 매몰 비용이라는 개념을 소개하는 데 그치지 않고, 그것이 어떻게 미래 행동을 잘못 이끄는 '덫(trap)'으로 작용하는지를 공장·영화·인간관계·직업의 구체적 사례를 통해 전개한다. 따라서 '과거 투자가 미래 선택을 왜곡하는 보이지 않는 덫'이라는 표현이 글 전체의 중심 긴장과 결론을 가장 정확히 포착한다. 선택지 2는 'Invisible Trap(눈에 보이지 않으나 강력한 함정)'과 'Distorts Future Choices(미래 선택을 왜곡한다)'라는 표현으로 글의 핵심 대립 구조—과거 집착 vs. 합리적 미래 판단—를 담아낸다.",
+            "keyPoints": [
+              "제목은 글의 '주제(topic)'만이 아니라 필자가 전달하고자 하는 '핵심 주장(controlling idea)'을 반영해야 한다: 매몰 비용이 미래 선택을 왜곡한다는 인과 관계가 핵심이다.",
+              "글의 논리 전개 방식을 파악하는 것이 중요하다: 경제학 개념 도입 → 일상 사례 확장 → 합리적 의사결정 원칙 제시의 3단 구조가 제목 선택의 근거가 된다.",
+              "'sunk cost fallacy'가 단순한 경제 용어 설명이 아니라 인간 심리의 보편적 오류를 지적하는 개념임을 이해해야 매력적인 오답(선택지 3·4·5)에 속지 않을 수 있다."
+            ],
+            "tags": [
+              "제목 추론",
+              "매몰 비용의 오류",
+              "논리적 사고",
+              "의사결정",
+              "경제학 개념",
+              "중심 주제"
+            ],
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "Sunk Costs: Why Economists Disagree on Past Investments"
+              },
+              {
+                "label": "2",
+                "text": "The Invisible Trap: How Past Investment Distorts Future Choices"
+              },
+              {
+                "label": "3",
+                "text": "Rational Thinking: The Key to Financial Success"
+              },
+              {
+                "label": "4",
+                "text": "From Economics to Life: The Value of Learning from Mistakes"
+              },
+              {
+                "label": "5",
+                "text": "Commitment and Perseverance: Virtues Worth Protecting"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "경제학자들 사이의 '의견 불일치(disagree)'는 글에 전혀 언급되지 않는다. 글은 매몰 비용의 오류를 반박 없이 비판적으로 제시하므로, 논쟁 구도를 암시하는 이 제목은 글의 내용과 맞지 않는다.",
+              "3": "합리적 사고가 해결책으로 언급되기는 하나, 글의 초점은 '금전적 성공(financial success)'이 아니라 과거 투자에 집착하는 오류를 극복하는 것이다. 결론부를 과도하게 단순화하고 주제를 경제적 성과로 좁혀버린 오답이다.",
+              "4": "'실수로부터 배운다(learning from mistakes)'는 글의 요지를 일부 반영하지만, 핵심인 '과거 투자가 미래 선택을 왜곡한다'는 인과 메커니즘을 담아내지 못한다. 또한 'from Economics to Life'는 글의 방향(경제→삶)을 표면적으로만 따른 것으로, 글의 중심 긴장을 포착하지 못한다.",
+              "5": "글은 집착과 인내를 미덕으로 옹호하는 것이 아니라, 오히려 그것이 매몰 비용 오류에서 비롯된 비합리적 행동임을 비판한다. 글의 논지와 정반대 방향을 가리키는 오답으로, 내용을 표면적으로만 읽었을 때 그럴듯하게 보이는 함정이다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 제목으로 가장 적절한 것은?",
+            "correctAnswer": "2",
+            "explanation": "이 글의 핵심 논지는 '매몰 비용의 오류(sunk cost fallacy)'가 경제적 의사결정뿐 아니라 일상생활 전반에서 미래의 합리적 선택을 왜곡한다는 것이다. 글은 단순히 매몰 비용이라는 개념을 소개하는 데 그치지 않고, 그것이 어떻게 미래 행동을 잘못 이끄는 '덫(trap)'으로 작용하는지를 공장·영화·인간관계·직업의 구체적 사례를 통해 전개한다. 따라서 '과거 투자가 미래 선택을 왜곡하는 보이지 않는 덫'이라는 표현이 글 전체의 중심 긴장과 결론을 가장 정확히 포착한다. 선택지 2는 'Invisible Trap(눈에 보이지 않으나 강력한 함정)'과 'Distorts Future Choices(미래 선택을 왜곡한다)'라는 표현으로 글의 핵심 대립 구조—과거 집착 vs. 합리적 미래 판단—를 담아낸다.",
+            "keyPoints": [
+              "제목은 글의 '주제(topic)'만이 아니라 필자가 전달하고자 하는 '핵심 주장(controlling idea)'을 반영해야 한다: 매몰 비용이 미래 선택을 왜곡한다는 인과 관계가 핵심이다.",
+              "글의 논리 전개 방식을 파악하는 것이 중요하다: 경제학 개념 도입 → 일상 사례 확장 → 합리적 의사결정 원칙 제시의 3단 구조가 제목 선택의 근거가 된다.",
+              "'sunk cost fallacy'가 단순한 경제 용어 설명이 아니라 인간 심리의 보편적 오류를 지적하는 개념임을 이해해야 매력적인 오답(선택지 3·4·5)에 속지 않을 수 있다."
+            ],
+            "tags": [
+              "제목 추론",
+              "매몰 비용의 오류",
+              "논리적 사고",
+              "의사결정",
+              "경제학 개념",
+              "중심 주제"
+            ],
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "Sunk Costs: Why Economists Disagree on Past Investments"
+              },
+              {
+                "label": "2",
+                "text": "The Invisible Trap: How Past Investment Distorts Future Choices"
+              },
+              {
+                "label": "3",
+                "text": "Rational Thinking: The Key to Financial Success"
+              },
+              {
+                "label": "4",
+                "text": "From Economics to Life: The Value of Learning from Mistakes"
+              },
+              {
+                "label": "5",
+                "text": "Commitment and Perseverance: Virtues Worth Protecting"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "경제학자들 사이의 '의견 불일치(disagree)'는 글에 전혀 언급되지 않는다. 글은 매몰 비용의 오류를 반박 없이 비판적으로 제시하므로, 논쟁 구도를 암시하는 이 제목은 글의 내용과 맞지 않는다.",
+              "3": "합리적 사고가 해결책으로 언급되기는 하나, 글의 초점은 '금전적 성공(financial success)'이 아니라 과거 투자에 집착하는 오류를 극복하는 것이다. 결론부를 과도하게 단순화하고 주제를 경제적 성과로 좁혀버린 오답이다.",
+              "4": "'실수로부터 배운다(learning from mistakes)'는 글의 요지를 일부 반영하지만, 핵심인 '과거 투자가 미래 선택을 왜곡한다'는 인과 메커니즘을 담아내지 못한다. 또한 'from Economics to Life'는 글의 방향(경제→삶)을 표면적으로만 따른 것으로, 글의 중심 긴장을 포착하지 못한다.",
+              "5": "글은 집착과 인내를 미덕으로 옹호하는 것이 아니라, 오히려 그것이 매몰 비용 오류에서 비롯된 비합리적 행동임을 비판한다. 글의 논지와 정반대 방향을 가리키는 오답으로, 내용을 표면적으로만 읽었을 때 그럴듯하게 보이는 함정이다."
+            }
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2219,
+        "inputTokenDetails": {
+          "noCacheTokens": 2219,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1537,
+        "outputTokenDetails": {},
+        "totalTokens": 3756,
+        "raw": {
+          "input_tokens": 2219,
+          "output_tokens": 1537,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 25513,
+      "items": [
+        {
+          "raw": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "③",
+            "explanation": "지문 첫 두 문장에서 필자는 '매몰비용의 오류(the sunk cost fallacy)'를 'the belief that past investments justify future commitments, even when the future looks dim'으로 정의한다. 이어지는 공장 사례 문장에서 'The same logic'은 바로 이 매몰비용 논리를 가리키며, 'it'은 그 앞 문장 'they paid for the ticket'의 행위가 아니라 그 행위를 유발하는 논리, 즉 매몰비용의 오류 자체를 지칭한다. 선지 ①의 '나쁜 영화를 보는 행위'는 그 논리가 일상에서 나타나는 구체적 예시일 뿐이고, ④의 '공장의 자원 낭비 현상'은 앞 문단의 사례에 불과하다. 'it'이 위치한 절 'because they paid for the ticket'에서 'they paid for the ticket'은 매몰비용의 오류가 작동한 결과(티켓 비용)를 언급하는 것으로, 이 티켓값이 바로 '과거 투자'이며 영화를 끝까지 보게 만드는 믿음(매몰비용의 오류)을 가리킨다. 따라서 'it'의 정확한 지시 대상은 경제학자들이 명명한 매몰비용의 오류, 즉 '과거의 투자가 미래의 헌신을 정당화한다는 믿음'이다.",
+            "keyPoints": [
+              "대명사 'it'의 지시 대상을 찾을 때, 해당 절의 의미와 앞 문장의 논리 구조를 함께 고려해야 한다.",
+              "'The same logic'이라는 연결 표현이 어떤 개념을 이어받는지 파악하면, 그 논리가 일상에 침투한 결과로 제시된 예시들과 지시 대상을 구별할 수 있다.",
+              "매몰비용의 오류(sunk cost fallacy)처럼 지문 앞부분에서 정의된 개념은 이후 대명사나 지시어로 반복 지칭될 수 있으므로, 정의 문장을 정확히 파악하는 것이 중요하다."
+            ],
+            "tags": [
+              "대명사 지칭",
+              "매몰비용의 오류",
+              "논리 구조 파악",
+              "지칭 추론",
+              "경제 개념",
+              "담화 분석"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "The same logic infects everyday life: people sit through bad films because they paid for the ticket",
+            "options": [
+              {
+                "label": "①",
+                "text": "나쁜 영화를 끝까지 보는 행위"
+              },
+              {
+                "label": "②",
+                "text": "합리적 의사결정의 원칙"
+              },
+              {
+                "label": "③",
+                "text": "과거의 투자가 미래의 헌신을 정당화한다는 믿음(매몰비용의 오류)"
+              },
+              {
+                "label": "④",
+                "text": "경제학자들이 분석하는 공장의 자원 낭비 현상"
+              },
+              {
+                "label": "⑤",
+                "text": "패배를 인정하는 것처럼 느껴지는 심리적 부담"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "'나쁜 영화를 끝까지 보는 행위'는 매몰비용의 오류가 일상에서 드러나는 하나의 사례일 뿐, 'it'이 직접 지칭하는 대상(그 행위를 유발하는 논리/믿음)이 아니다.",
+              "②": "'합리적 의사결정의 원칙'은 지문 후반부에서 매몰비용의 오류와 대조적으로 제시되는 개념으로, 문맥상 'it'이 지칭하는 방향과 정반대이다.",
+              "④": "'공장의 자원 낭비 현상'은 앞 문단에서 매몰비용의 오류가 기업 차원에서 나타난 예시이며, 'it'이 속한 일상생활 사례 문장의 지시 대상으로 보기에는 범위가 지나치게 좁고 구체적이다.",
+              "⑤": "'패배를 인정하는 것처럼 느껴지는 심리적 부담'은 지문 후반부에서 경력 문제와 관련해 언급된 부가적 묘사이며, 'it'이 위치한 영화 관람 절과 직접 연결되지 않는다."
+            }
+          },
+          "processed": null,
+          "postProcess": {
+            "success": false,
+            "error": "Pronoun not found in passage: \"it\"",
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "typeId": "TITLE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 0,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    }
+  ]
+}

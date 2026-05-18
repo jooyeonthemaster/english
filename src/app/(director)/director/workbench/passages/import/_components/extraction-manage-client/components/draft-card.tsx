@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { CheckCircle2, FileText, Layers } from "lucide-react";
+import { CheckCircle2, Copy, FileText, Layers } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -21,6 +21,9 @@ interface DraftCardProps {
   checked: boolean;
   onClick: () => void;
   onToggleCheck: () => void;
+  /** Optional. When this draft is part of a duplicate cluster, the number
+   *  of *other* drafts that share its normalized content. */
+  dupCount?: number;
 }
 
 export function DraftCard({
@@ -30,6 +33,7 @@ export function DraftCard({
   checked,
   onClick,
   onToggleCheck,
+  dupCount,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -156,6 +160,15 @@ export function DraftCard({
           <Layers className="size-3" aria-hidden="true" />
           {draft.sourcePageIndex.length}p
         </span>
+        {dupCount && dupCount > 0 ? (
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 ring-1 ring-slate-200"
+            title={`동일한 내용의 자료 ${dupCount}개가 더 존재합니다`}
+          >
+            <Copy className="size-3" aria-hidden="true" />
+            {dupCount} 중복
+          </span>
+        ) : null}
         {isPromoted ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
             <CheckCircle2 className="size-3" aria-hidden="true" />

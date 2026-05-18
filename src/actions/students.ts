@@ -157,8 +157,8 @@ export async function createStudent(
     let code = generateStudentCode();
     let attempts = 0;
     while (attempts < 10) {
-      const existing = await prisma.student.findUnique({
-        where: { studentCode: code },
+      const existing = await prisma.student.findFirst({
+        where: { academyId, studentCode: code },
       });
       if (!existing) break;
       code = generateStudentCode();

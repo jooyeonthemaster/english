@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import {
   FileText,
@@ -13,6 +13,11 @@ import {
   Upload,
   X,
   BookMarked,
+  Copy,
+  CopyMinus,
+  Layers3,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +39,7 @@ import {
   deletePassageCollection,
   addPassagesToCollection,
   removePassagesFromCollection,
+  findWorkbenchPassageDuplicates,
 } from "@/actions/workbench";
 
 // Shared modules
@@ -69,7 +75,32 @@ interface PassageItem {
   _count: { questions: number; notes: number };
 }
 
+interface DupGroupPassage {
+  id: string;
+  title: string;
+  contentPreview: string;
+  wordCount: number;
+  grade: number | null;
+  semester: string | null;
+  unit: string | null;
+  publisher: string | null;
+  difficulty: string | null;
+  tags: string | null;
+  createdAt: Date | string;
+  school: { id: string; name: string; type: string } | null;
+  analysis: { id: string; updatedAt: Date | string } | null;
+  _count: { questions: number; notes: number };
+}
+
+interface DupSummary {
+  groups: Array<{ key: string; items: DupGroupPassage[] }>;
+  groupCount: number;
+  totalDuplicateCount: number;
+  totalScanned: number;
+}
+
 interface PassageListProps {
+  academyId: string;
   passagesData: {
     passages: PassageItem[];
     total: number;
@@ -112,6 +143,7 @@ const folderActions = {
 
 // ─── Main Component ──────────────────────────────────────
 export function PassageListClient({
+  academyId,
   passagesData,
   schools,
   filters,
@@ -125,6 +157,49 @@ export function PassageListClient({
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
   const [studyNoteOpen, setStudyNoteOpen] = useState(false);
+
+  // ─── Duplicate detection (academy-wide) ───
+  const [dupSummary, setDupSummary] = useState<DupSummary | null>(null);
+  const [dupLoading, setDupLoading] = useState(false);
+  const [dupError, setDupError] = useState<string | null>(null);
+  // View mode: "list" = paginated grid (default); "duplicates" = cluster view
+  const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
+
+  const loadDuplicates = useCallback(async () => {
+    setDupLoading(true);
+    setDupError(null);
+    try {
+      const result = await findWorkbenchPassageDuplicates(academyId, {
+        analyzedOnly: true,
+      });
+      setDupSummary(result as DupSummary);
+    } catch (err) {
+      setDupError(
+        err instanceof Error
+          ? err.message
+          : "중복 자료를 조회하지 못했습니다.",
+      );
+    } finally {
+      setDupLoading(false);
+    }
+  }, [academyId]);
+
+  // Fetch duplicates once on mount so the toolbar can show a live count + the
+  // flat-list cards can render "+N 중복" badges without per-card round-trips.
+  useEffect(() => {
+    void loadDuplicates();
+  }, [loadDuplicates]);
+
+  // O(1) lookup: passageId → number of other passages sharing its content.
+  const dupCountById = useMemo(() => {
+    const m = new Map<string, number>();
+    if (!dupSummary) return m;
+    for (const g of dupSummary.groups) {
+      const siblings = g.items.length - 1;
+      for (const it of g.items) m.set(it.id, siblings);
+    }
+    return m;
+  }, [dupSummary]);
 
   // ─── Shared hooks ───
   const { updateFilter, goToPage } = useUrlFilters(
@@ -307,6 +382,55 @@ export function PassageListClient({
 
       <span className="h-5 w-px bg-slate-200" />
 
+      {/* ─── Duplicate-cluster toggle ─── */}
+      <button
+        type="button"
+        onClick={() => setPageMode((m) => (m === "duplicates" ? "list" : "duplicates"))}
+        disabled={dupLoading || (dupSummary?.groupCount ?? 0) === 0}
+        className={
+          "h-7 px-2.5 rounded-md flex items-center gap-1 text-[11.5px] font-medium border transition-all " +
+          (pageMode === "duplicates"
+            ? "border-blue-300 bg-blue-50 text-blue-700"
+            : (dupSummary?.groupCount ?? 0) === 0 && !dupLoading
+              ? "border-slate-200 text-slate-300 cursor-not-allowed"
+              : "border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300")
+        }
+        title={
+          dupLoading
+            ? "중복 자료 분석 중"
+            : (dupSummary?.groupCount ?? 0) === 0
+              ? "중복 자료가 없습니다"
+              : pageMode === "duplicates"
+                ? "목록으로 돌아가기"
+                : "중복 그룹 모아보기"
+        }
+        aria-pressed={pageMode === "duplicates"}
+      >
+        {dupLoading ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : pageMode === "duplicates" ? (
+          <CopyMinus className="w-3.5 h-3.5" />
+        ) : (
+          <Copy className="w-3.5 h-3.5" />
+        )}
+        <span>{pageMode === "duplicates" ? "목록 보기" : "중복 모아보기"}</span>
+        {dupSummary && dupSummary.groupCount > 0 ? (
+          <span
+            className={
+              "tabular-nums text-[10px] font-semibold px-1 rounded " +
+              (pageMode === "duplicates"
+                ? "bg-blue-100 text-blue-700"
+                : "bg-slate-100 text-slate-500")
+            }
+            title={`중복 그룹 ${dupSummary.groupCount}개 · 중복 자료 ${dupSummary.totalDuplicateCount}개`}
+          >
+            {dupSummary.groupCount}
+          </span>
+        ) : null}
+      </button>
+
+      <span className="h-5 w-px bg-slate-200" />
+
       <Button
         variant="outline"
         size="sm"
@@ -462,7 +586,122 @@ export function PassageListClient({
               }
             />
 
-            {/* Files section */}
+            {/* ─── Duplicate cluster view (pageMode === "duplicates") ─── */}
+            {pageMode === "duplicates" ? (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[13px] font-semibold text-slate-600 flex items-center gap-1.5">
+                    <Layers3 className="w-3.5 h-3.5 text-slate-400" />
+                    중복 그룹 모아보기
+                    {dupSummary ? (
+                      <span className="ml-1.5 text-[11px] text-slate-400 font-normal">
+                        그룹 {dupSummary.groupCount}개 · 중복 자료 {dupSummary.totalDuplicateCount}개
+                      </span>
+                    ) : null}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setPageMode("list")}
+                    className="text-[11px] font-medium text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    목록으로
+                  </button>
+                </div>
+
+                {dupLoading ? (
+                  <div className="flex items-center justify-center py-16 text-slate-400 gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-[13px]">중복 자료 분석 중...</span>
+                  </div>
+                ) : dupError ? (
+                  <div className="flex flex-col items-center justify-center py-16 gap-2">
+                    <AlertCircle className="w-5 h-5 text-red-400" />
+                    <p className="text-[12px] text-red-600">{dupError}</p>
+                    <button
+                      type="button"
+                      onClick={() => void loadDuplicates()}
+                      className="mt-1 h-8 px-3 rounded-lg text-[12px] font-medium border border-slate-200 hover:bg-slate-50 text-slate-600"
+                    >
+                      다시 시도
+                    </button>
+                  </div>
+                ) : !dupSummary || dupSummary.groups.length === 0 ? (
+                  <div className="bg-white rounded-xl border text-center py-16">
+                    <CopyMinus className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                    <p className="text-slate-500 font-medium">중복 자료가 없습니다</p>
+                    <p className="text-sm text-slate-400 mt-1">
+                      총 {dupSummary?.totalScanned ?? 0}개 지문을 검사했습니다.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {dupSummary.groups.map((group, gi) => (
+                      <section
+                        key={group.key}
+                        className="bg-white rounded-xl border border-slate-200 overflow-hidden"
+                      >
+                        <header className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/40">
+                          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700">
+                            <Copy className="w-3 h-3" />
+                          </span>
+                          <h4 className="text-[12.5px] font-bold text-slate-800">
+                            그룹 {gi + 1}
+                          </h4>
+                          <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-100 rounded-full px-2 py-0.5 tabular-nums">
+                            {group.items.length}개 동일
+                          </span>
+                          <span className="ml-auto text-[10.5px] text-slate-400 font-mono truncate max-w-[400px]">
+                            {group.items[0]?.title ?? "(제목 없음)"}
+                          </span>
+                        </header>
+                        <div className="p-3">
+                          <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
+                            {group.items.map((p) => {
+                              // The cluster view uses the lightweight payload
+                              // from the server action — adapt to the shape
+                              // PassageFileCard expects.
+                              const adapted = {
+                                id: p.id,
+                                title: p.title,
+                                content: p.contentPreview,
+                                grade: p.grade,
+                                semester: p.semester,
+                                unit: p.unit,
+                                publisher: p.publisher,
+                                difficulty: p.difficulty,
+                                tags: p.tags,
+                                createdAt: new Date(p.createdAt as any),
+                                school: p.school,
+                                analysis: p.analysis
+                                  ? {
+                                      id: p.analysis.id,
+                                      updatedAt: new Date(p.analysis.updatedAt as any),
+                                      analysisData: null,
+                                    }
+                                  : null,
+                                _count: p._count,
+                              };
+                              return (
+                                <PassageFileCard
+                                  key={p.id}
+                                  passage={adapted}
+                                  selected={selection.selectedIds.has(p.id)}
+                                  onToggleSelect={selection.toggleSelect}
+                                  onViewDetail={setModalPassageId}
+                                  dupCount={group.items.length - 1}
+                                />
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </section>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+            /* ─── Default flat list ─── */
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[13px] font-semibold text-slate-600">
@@ -496,6 +735,7 @@ export function PassageListClient({
                       selected={selection.selectedIds.has(p.id)}
                       onToggleSelect={selection.toggleSelect}
                       onViewDetail={setModalPassageId}
+                      dupCount={dupCountById.get(p.id) ?? 0}
                     />
                   ))}
                 </div>
@@ -512,11 +752,12 @@ export function PassageListClient({
                 </div>
               )}
             </div>
+            )}
           </>
         )}
 
-        {/* Pagination */}
-        {!folder.activeFolder && (
+        {/* Pagination — only in flat list mode */}
+        {pageMode === "list" && !folder.activeFolder && (
           <Pagination
             page={passagesData.page}
             totalPages={passagesData.totalPages}

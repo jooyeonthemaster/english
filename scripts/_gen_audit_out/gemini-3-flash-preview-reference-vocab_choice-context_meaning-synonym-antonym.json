@@ -1,0 +1,815 @@
+{
+  "model": "gemini-3-flash-preview",
+  "passage": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.",
+  "results": [
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1110,
+        "inputTokenDetails": {
+          "noCacheTokens": 1110,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 2288,
+        "outputTokenDetails": {
+          "textTokens": 480,
+          "reasoningTokens": 1808
+        },
+        "totalTokens": 3398,
+        "raw": {
+          "thoughtsTokenCount": 1808,
+          "promptTokenCount": 1110,
+          "candidatesTokenCount": 480,
+          "totalTokenCount": 3398
+        },
+        "reasoningTokens": 1808,
+        "cachedInputTokens": 0
+      },
+      "ms": 71836,
+      "items": [
+        {
+          "raw": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "③",
+            "explanation": "이 문장에서 주어는 'A factory'이며, 이 공장이 수백만 달러를 들여 개발하고 있는 대상은 'a doomed product(운이 다한 제품)'입니다. 문맥상 공장이 자원(resources)을 계속해서 쏟아붓는(pouring) 대상은 이미 많은 비용이 투자된 바로 그 '실패할 운명의 제품'을 의미하므로, it이 지칭하는 대상은 'a doomed product'가 가장 적절합니다.",
+            "keyPoints": [
+              "대명사 'it'이 지칭하는 단수 명사를 앞선 관계절 및 주절에서 식별한다.",
+              "동사 'pouring'의 목적어와 전치사 'into'의 목적어 사이의 논리적 관계를 분석한다.",
+              "매몰 비용의 오류(sunk cost fallacy)라는 주제 안에서 자원이 낭비되는 구체적 대상을 파악한다."
+            ],
+            "tags": [
+              "지칭 추론",
+              "매몰 비용",
+              "대명사",
+              "문맥 파악"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "often keep pouring resources into it, simply because so much has",
+            "options": [
+              {
+                "label": "①",
+                "text": "A factory"
+              },
+              {
+                "label": "②",
+                "text": "millions"
+              },
+              {
+                "label": "③",
+                "text": "a doomed product"
+              },
+              {
+                "label": "④",
+                "text": "resources"
+              },
+              {
+                "label": "⑤",
+                "text": "the future"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "processed": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "③",
+            "explanation": "이 문장에서 주어는 'A factory'이며, 이 공장이 수백만 달러를 들여 개발하고 있는 대상은 'a doomed product(운이 다한 제품)'입니다. 문맥상 공장이 자원(resources)을 계속해서 쏟아붓는(pouring) 대상은 이미 많은 비용이 투자된 바로 그 '실패할 운명의 제품'을 의미하므로, it이 지칭하는 대상은 'a doomed product'가 가장 적절합니다.",
+            "keyPoints": [
+              "대명사 'it'이 지칭하는 단수 명사를 앞선 관계절 및 주절에서 식별한다.",
+              "동사 'pouring'의 목적어와 전치사 'into'의 목적어 사이의 논리적 관계를 분석한다.",
+              "매몰 비용의 오류(sunk cost fallacy)라는 주제 안에서 자원이 낭비되는 구체적 대상을 파악한다."
+            ],
+            "tags": [
+              "지칭 추론",
+              "매몰 비용",
+              "대명사",
+              "문맥 파악"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "often keep pouring resources into it, simply because so much has",
+            "options": [
+              {
+                "label": "①",
+                "text": "A factory"
+              },
+              {
+                "label": "②",
+                "text": "millions"
+              },
+              {
+                "label": "③",
+                "text": "a doomed product"
+              },
+              {
+                "label": "④",
+                "text": "resources"
+              },
+              {
+                "label": "⑤",
+                "text": "the future"
+              }
+            ],
+            "wrongOptionExplanations": {},
+            "passageWithUnderline": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into __it__, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": [
+            {
+              "severity": "warning",
+              "code": "thin-wrong-option-explanations",
+              "message": "KILLER item should explain every wrong option."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "typeId": "VOCAB_CHOICE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 969,
+        "inputTokenDetails": {
+          "noCacheTokens": 969,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 6723,
+        "outputTokenDetails": {
+          "textTokens": 2782,
+          "reasoningTokens": 3941
+        },
+        "totalTokens": 7692,
+        "raw": {
+          "thoughtsTokenCount": 3941,
+          "promptTokenCount": 969,
+          "candidatesTokenCount": 2782,
+          "totalTokenCount": 7692
+        },
+        "reasoningTokens": 3941,
+        "cachedInputTokens": 0
+      },
+      "ms": 332554,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+            "correctAnswer": "③",
+            "explanation": "이 글은 이미 투입한 비용에 집착하여 비합리적인 결정을 내리는 '매몰 비용 오류(sunk cost fallacy)'에 대해 설명하고 있습니다. 매몰 비용 오류란 과거의 투자가 미래의 결정을 정당화한다고 믿는 것인데, 이는 미래의 전망이 '밝을(bright)' 때가 아니라 '어두울(dim)' 때조차도 과거에 들인 비용 때문에 그만두지 못하는 상황을 가리키는 것입니다. 따라서 (c)의 bright는 문맥상 dim이나 bleak와 같은 단어로 고쳐야 합니다.",
+            "keyPoints": [
+              "매몰 비용 오류(Sunk Cost Fallacy)의 정의와 사례 이해",
+              "글 전체의 논리적 흐름에 따른 어휘의 정반대 개념 파악",
+              "합리적 의사결정의 기준으로서 '미래 가치'와 '과거 비용'의 대조 이해"
+            ],
+            "tags": [
+              "어휘 적절성",
+              "매몰 비용 오류",
+              "논리적 추론",
+              "수능 영어",
+              "경제 심리학"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(a)",
+                "originalWord": "common",
+                "isInappropriate": false,
+                "substituteWord": "common",
+                "surroundingText": "reasoning are as common as the tendency to throw"
+              },
+              {
+                "label": "(b)",
+                "originalWord": "justify",
+                "isInappropriate": false,
+                "substituteWord": "justify",
+                "surroundingText": "belief that past investments justify future commitments"
+              },
+              {
+                "label": "(c)",
+                "originalWord": "dim",
+                "isInappropriate": true,
+                "betterWord": "dim",
+                "substituteWord": "bright",
+                "surroundingText": "commitments, even when the future looks bright. A"
+              },
+              {
+                "label": "(d)",
+                "originalWord": "unproductive",
+                "isInappropriate": false,
+                "substituteWord": "unproductive",
+                "surroundingText": "the ticket, stay in unproductive relationships because"
+              },
+              {
+                "label": "(e)",
+                "originalWord": "merits",
+                "isInappropriate": false,
+                "substituteWord": "merits",
+                "surroundingText": "evaluating each new choice on its own merits, asking"
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "common"
+              },
+              {
+                "label": "②",
+                "text": "justify"
+              },
+              {
+                "label": "③",
+                "text": "bright"
+              },
+              {
+                "label": "④",
+                "text": "unproductive"
+              },
+              {
+                "label": "⑤",
+                "text": "merits"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "processed": {
+            "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+            "correctAnswer": "③",
+            "explanation": "이 글은 이미 투입한 비용에 집착하여 비합리적인 결정을 내리는 '매몰 비용 오류(sunk cost fallacy)'에 대해 설명하고 있습니다. 매몰 비용 오류란 과거의 투자가 미래의 결정을 정당화한다고 믿는 것인데, 이는 미래의 전망이 '밝을(bright)' 때가 아니라 '어두울(dim)' 때조차도 과거에 들인 비용 때문에 그만두지 못하는 상황을 가리키는 것입니다. 따라서 (c)의 bright는 문맥상 dim이나 bleak와 같은 단어로 고쳐야 합니다.",
+            "keyPoints": [
+              "매몰 비용 오류(Sunk Cost Fallacy)의 정의와 사례 이해",
+              "글 전체의 논리적 흐름에 따른 어휘의 정반대 개념 파악",
+              "합리적 의사결정의 기준으로서 '미래 가치'와 '과거 비용'의 대조 이해"
+            ],
+            "tags": [
+              "어휘 적절성",
+              "매몰 비용 오류",
+              "논리적 추론",
+              "수능 영어",
+              "경제 심리학"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(a)",
+                "word": "common",
+                "isInappropriate": false
+              },
+              {
+                "label": "(b)",
+                "word": "justify",
+                "isInappropriate": false
+              },
+              {
+                "label": "(c)",
+                "word": "bright",
+                "isInappropriate": true,
+                "betterWord": "dim"
+              },
+              {
+                "label": "(d)",
+                "word": "unproductive",
+                "isInappropriate": false
+              },
+              {
+                "label": "(e)",
+                "word": "merits",
+                "isInappropriate": false
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "common"
+              },
+              {
+                "label": "②",
+                "text": "justify"
+              },
+              {
+                "label": "③",
+                "text": "bright"
+              },
+              {
+                "label": "④",
+                "text": "unproductive"
+              },
+              {
+                "label": "⑤",
+                "text": "merits"
+              }
+            ],
+            "wrongOptionExplanations": {},
+            "passageWithMarkers": "Few mistakes in reasoning are as __(a) common__ as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments __(b) justify__ future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in __(d) unproductive__ relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own __(e) merits__, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": [
+              "Word not found for label (c): \"dim\""
+            ]
+          },
+          "qualityIssues": [
+            {
+              "severity": "warning",
+              "code": "thin-wrong-option-explanations",
+              "message": "KILLER item should explain every wrong option."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "typeId": "CONTEXT_MEANING",
+      "ok": true,
+      "usage": {
+        "inputTokens": 814,
+        "inputTokenDetails": {
+          "noCacheTokens": 814,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 8009,
+        "outputTokenDetails": {
+          "textTokens": 364,
+          "reasoningTokens": 7645
+        },
+        "totalTokens": 8823,
+        "raw": {
+          "thoughtsTokenCount": 7645,
+          "promptTokenCount": 814,
+          "candidatesTokenCount": 364,
+          "totalTokenCount": 8823
+        },
+        "reasoningTokens": 7645,
+        "cachedInputTokens": 0
+      },
+      "ms": 39988,
+      "items": [
+        {
+          "raw": {
+            "direction": "밑줄 친 단어의 문맥상 의미와 가장 가까운 것은?",
+            "correctAnswer": "1",
+            "explanation": "이 글에서 'infects'는 질병이 퍼지듯 잘못된 경제적 논리인 '매몰 비용 오류'가 우리의 일상적인 사고방식과 행동 양식에 깊숙이 스며드는 현상을 비유적으로 표현합니다. 이는 단순히 한 영역에 머물지 않고 삶의 전반에 걸쳐 퍼져나가 부정적인 영향을 미친다는 뉘앙스를 담고 있습니다. 선택지 1번 'permeates'는 어떤 사상이나 기운이 전체에 퍼져 스며든다는 의미를 지니고 있어 문맥상 가장 적절한 동의어입니다. 반면 'legitimizes'와 같은 단어는 오류가 지닌 허구적 정당성을 실제 정당성으로 오인하게 할 수 있는 함정 선택지입니다.",
+            "keyPoints": [
+              "비유적 표현 'infects'의 문맥 내 기능 파악",
+              "매몰 비용 오류가 일상으로 전이되는 과정의 이해",
+              "추상적 논리의 확산과 영향을 나타내는 어휘(permeate) 학습"
+            ],
+            "tags": [
+              "어휘",
+              "문맥상 의미",
+              "비유적 표현",
+              "매몰 비용 오류"
+            ],
+            "difficulty": "KILLER",
+            "underlinedWord": "infects",
+            "surroundingText": "The same logic infects everyday life: people sit through",
+            "options": [
+              {
+                "label": "1",
+                "text": "permeates"
+              },
+              {
+                "label": "2",
+                "text": "legitimizes"
+              },
+              {
+                "label": "3",
+                "text": "streamlines"
+              },
+              {
+                "label": "4",
+                "text": "counteracts"
+              },
+              {
+                "label": "5",
+                "text": "transcends"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "processed": {
+            "direction": "밑줄 친 단어의 문맥상 의미와 가장 가까운 것은?",
+            "correctAnswer": "1",
+            "explanation": "이 글에서 'infects'는 질병이 퍼지듯 잘못된 경제적 논리인 '매몰 비용 오류'가 우리의 일상적인 사고방식과 행동 양식에 깊숙이 스며드는 현상을 비유적으로 표현합니다. 이는 단순히 한 영역에 머물지 않고 삶의 전반에 걸쳐 퍼져나가 부정적인 영향을 미친다는 뉘앙스를 담고 있습니다. 선택지 1번 'permeates'는 어떤 사상이나 기운이 전체에 퍼져 스며든다는 의미를 지니고 있어 문맥상 가장 적절한 동의어입니다. 반면 'legitimizes'와 같은 단어는 오류가 지닌 허구적 정당성을 실제 정당성으로 오인하게 할 수 있는 함정 선택지입니다.",
+            "keyPoints": [
+              "비유적 표현 'infects'의 문맥 내 기능 파악",
+              "매몰 비용 오류가 일상으로 전이되는 과정의 이해",
+              "추상적 논리의 확산과 영향을 나타내는 어휘(permeate) 학습"
+            ],
+            "tags": [
+              "어휘",
+              "문맥상 의미",
+              "비유적 표현",
+              "매몰 비용 오류"
+            ],
+            "difficulty": "KILLER",
+            "underlinedWord": "infects",
+            "surroundingText": "The same logic infects everyday life: people sit through",
+            "options": [
+              {
+                "label": "1",
+                "text": "permeates"
+              },
+              {
+                "label": "2",
+                "text": "legitimizes"
+              },
+              {
+                "label": "3",
+                "text": "streamlines"
+              },
+              {
+                "label": "4",
+                "text": "counteracts"
+              },
+              {
+                "label": "5",
+                "text": "transcends"
+              }
+            ],
+            "wrongOptionExplanations": {},
+            "passageWithUnderline": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic __infects__ everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": [
+            {
+              "severity": "warning",
+              "code": "thin-wrong-option-explanations",
+              "message": "KILLER item should explain every wrong option."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "typeId": "SYNONYM",
+      "ok": true,
+      "usage": {
+        "inputTokens": 758,
+        "inputTokenDetails": {
+          "noCacheTokens": 758,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 10329,
+        "outputTokenDetails": {
+          "textTokens": 393,
+          "reasoningTokens": 9936
+        },
+        "totalTokens": 11087,
+        "raw": {
+          "thoughtsTokenCount": 9936,
+          "promptTokenCount": 758,
+          "candidatesTokenCount": 393,
+          "totalTokenCount": 11087
+        },
+        "reasoningTokens": 9936,
+        "cachedInputTokens": 0
+      },
+      "ms": 52568,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 밑줄 친 단어의 의미와 가장 유사한 것은?",
+            "correctAnswer": "1",
+            "explanation": "본문에서 'justify'는 '과거의 투자가 미래의 약속(투자 지속)을 정당화한다'는 의미로, 어떤 행위의 타당한 근거가 된다는 뜻입니다. 'warrant'는 학술적으로 '특정 조치나 결정을 정당화하다' 또는 '필요로 할 만큼의 타당한 근거를 제공하다'는 의미를 지니고 있어 문맥상 가장 적절한 동의어입니다. 'rationalize'는 주로 잘못된 행동을 사후에 '합리화하다'라는 의미로 쓰여 문맥상 매력적인 오답일 수 있으나, 사물 주어인 'past investments'가 미래의 행동을 정당화한다는 인과관계를 나타내는 데는 'warrant'가 더 정확합니다.",
+            "keyPoints": [
+              "매몰 비용 오류(Sunk Cost Fallacy) 문맥 내 어휘 의미 파악",
+              "학술적 문맥에서 'justify'와 'warrant'의 동의어 관계 이해",
+              "사물 주어와의 호응 및 논리적 인과관계를 고려한 어휘 선택"
+            ],
+            "tags": [
+              "어휘",
+              "동의어",
+              "문맥 추론",
+              "매몰 비용 오류",
+              "학술 어휘"
+            ],
+            "difficulty": "KILLER",
+            "targetWord": "justify",
+            "contextSentence": "Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
+            "options": [
+              {
+                "label": "1",
+                "text": "warrant"
+              },
+              {
+                "label": "2",
+                "text": "rationalize"
+              },
+              {
+                "label": "3",
+                "text": "vindicate"
+              },
+              {
+                "label": "4",
+                "text": "authorize"
+              },
+              {
+                "label": "5",
+                "text": "advocate"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "processed": {
+            "direction": "다음 밑줄 친 단어의 의미와 가장 유사한 것은?",
+            "correctAnswer": "1",
+            "explanation": "본문에서 'justify'는 '과거의 투자가 미래의 약속(투자 지속)을 정당화한다'는 의미로, 어떤 행위의 타당한 근거가 된다는 뜻입니다. 'warrant'는 학술적으로 '특정 조치나 결정을 정당화하다' 또는 '필요로 할 만큼의 타당한 근거를 제공하다'는 의미를 지니고 있어 문맥상 가장 적절한 동의어입니다. 'rationalize'는 주로 잘못된 행동을 사후에 '합리화하다'라는 의미로 쓰여 문맥상 매력적인 오답일 수 있으나, 사물 주어인 'past investments'가 미래의 행동을 정당화한다는 인과관계를 나타내는 데는 'warrant'가 더 정확합니다.",
+            "keyPoints": [
+              "매몰 비용 오류(Sunk Cost Fallacy) 문맥 내 어휘 의미 파악",
+              "학술적 문맥에서 'justify'와 'warrant'의 동의어 관계 이해",
+              "사물 주어와의 호응 및 논리적 인과관계를 고려한 어휘 선택"
+            ],
+            "tags": [
+              "어휘",
+              "동의어",
+              "문맥 추론",
+              "매몰 비용 오류",
+              "학술 어휘"
+            ],
+            "difficulty": "KILLER",
+            "targetWord": "justify",
+            "contextSentence": "Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
+            "options": [
+              {
+                "label": "1",
+                "text": "warrant"
+              },
+              {
+                "label": "2",
+                "text": "rationalize"
+              },
+              {
+                "label": "3",
+                "text": "vindicate"
+              },
+              {
+                "label": "4",
+                "text": "authorize"
+              },
+              {
+                "label": "5",
+                "text": "advocate"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": [
+            {
+              "severity": "warning",
+              "code": "thin-wrong-option-explanations",
+              "message": "KILLER item should explain every wrong option."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "typeId": "ANTONYM",
+      "ok": true,
+      "usage": {
+        "inputTokens": 842,
+        "inputTokenDetails": {
+          "noCacheTokens": 842,
+          "cacheReadTokens": 0
+        },
+        "outputTokens": 27810,
+        "outputTokenDetails": {
+          "textTokens": 24081,
+          "reasoningTokens": 3729
+        },
+        "totalTokens": 28652,
+        "raw": {
+          "thoughtsTokenCount": 3729,
+          "promptTokenCount": 842,
+          "candidatesTokenCount": 24081,
+          "totalTokenCount": 28652
+        },
+        "reasoningTokens": 3729,
+        "cachedInputTokens": 0
+      },
+      "ms": 137086,
+      "items": [
+        {
+          "raw": {
+            "direction": "지문의 밑줄 친 (A)~(E) 중, 단어의 문맥상 의미와 반의어 관계가 바르게 짝지어진 것은?",
+            "correctAnswer": "2",
+            "explanation": "이 지문은 '매몰 비용 오류(sunk cost fallacy)'를 설명하며, 과거의 투자가 미래의 결정을 방해하는 비합리성을 지적합니다. (B)의 'dim'은 문맥상 미래의 전망이 '어둡거나 희망이 없는' 상태를 의미합니다. 따라서 이와 반대되는 의미를 가진 'promising(유망한, 밝은)'이 반의어로서 가장 적절합니다. 반면 (A), (C), (D), (E)에 제시된 단어들은 문맥상 밑줄 친 단어와 비슷하거나 밀접하게 관련된 의미(유의어)를 지니고 있어 반의어 관계가 성립하지 않습니다.",
+            "keyPoints": [
+              "지문 내 'sunk cost fallacy'의 문맥적 흐름 파악",
+              "다의어인 'dim'의 비유적 의미(희망 없는)와 그 반의어 도출",
+              "유의어와 반의어를 혼동하지 않도록 각 선지의 어휘 관계 분석"
+            ],
+            "tags": [
+              "어휘",
+              "반의어",
+              "매몰 비용 오류",
+              "문맥적 의미 파악"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(A)",
+                "word": "common",
+                "antonym": "rare",
+                "surroundingText": "Few mistakes in reasoning are as common as the tendency to throw"
+              },
+              {
+                "label": "(B)",
+                "word": "dim",
+                "antonym": "promising",
+                "surroundingText": "future commitments, even when the future looks dim. A factory that has"
+              },
+              {
+                "label": "(C)",
+                "word": "unproductive",
+                "antonym": "fruitful",
+                "surroundingText": "paid for the ticket, stay in unproductive relationships because of"
+              },
+              {
+                "label": "(D)",
+                "word": "defeat",
+                "antonym": "triumph",
+                "surroundingText": "failing careers because turning back would feel like an admission of defeat."
+              },
+              {
+                "label": "(E)",
+                "word": "merits",
+                "antonym": "faults",
+                "surroundingText": "requires evaluating each new choice on its own merits, asking not what"
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A) common - ubiquitous"
+              },
+              {
+                "label": "2",
+                "text": "(B) dim - promising"
+              },
+              {
+                "label": "3",
+                "text": "(C) unproductive - futile"
+              },
+              {
+                "label": "4",
+                "text": "(D) defeat - submission"
+              },
+              {
+                "label": "5",
+                "text": "(E) merits - attributes"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "processed": {
+            "direction": "지문의 밑줄 친 (A)~(E) 중, 단어의 문맥상 의미와 반의어 관계가 바르게 짝지어진 것은?",
+            "correctAnswer": "2",
+            "explanation": "이 지문은 '매몰 비용 오류(sunk cost fallacy)'를 설명하며, 과거의 투자가 미래의 결정을 방해하는 비합리성을 지적합니다. (B)의 'dim'은 문맥상 미래의 전망이 '어둡거나 희망이 없는' 상태를 의미합니다. 따라서 이와 반대되는 의미를 가진 'promising(유망한, 밝은)'이 반의어로서 가장 적절합니다. 반면 (A), (C), (D), (E)에 제시된 단어들은 문맥상 밑줄 친 단어와 비슷하거나 밀접하게 관련된 의미(유의어)를 지니고 있어 반의어 관계가 성립하지 않습니다.",
+            "keyPoints": [
+              "지문 내 'sunk cost fallacy'의 문맥적 흐름 파악",
+              "다의어인 'dim'의 비유적 의미(희망 없는)와 그 반의어 도출",
+              "유의어와 반의어를 혼동하지 않도록 각 선지의 어휘 관계 분석"
+            ],
+            "tags": [
+              "어휘",
+              "반의어",
+              "매몰 비용 오류",
+              "문맥적 의미 파악"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(A)",
+                "word": "common",
+                "antonym": "rare",
+                "surroundingText": "Few mistakes in reasoning are as common as the tendency to throw"
+              },
+              {
+                "label": "(B)",
+                "word": "dim",
+                "antonym": "promising",
+                "surroundingText": "future commitments, even when the future looks dim. A factory that has"
+              },
+              {
+                "label": "(C)",
+                "word": "unproductive",
+                "antonym": "fruitful",
+                "surroundingText": "paid for the ticket, stay in unproductive relationships because of"
+              },
+              {
+                "label": "(D)",
+                "word": "defeat",
+                "antonym": "triumph",
+                "surroundingText": "failing careers because turning back would feel like an admission of defeat."
+              },
+              {
+                "label": "(E)",
+                "word": "merits",
+                "antonym": "faults",
+                "surroundingText": "requires evaluating each new choice on its own merits, asking not what"
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A) common - ubiquitous"
+              },
+              {
+                "label": "2",
+                "text": "(B) dim - promising"
+              },
+              {
+                "label": "3",
+                "text": "(C) unproductive - futile"
+              },
+              {
+                "label": "4",
+                "text": "(D) defeat - submission"
+              },
+              {
+                "label": "5",
+                "text": "(E) merits - attributes"
+              }
+            ],
+            "wrongOptionExplanations": {},
+            "passageWithMarkers": "Few mistakes in reasoning are as __(A) common__ as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks __(B) dim__. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in __(C) unproductive__ relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of __(D) defeat__. Rational decision-making, by contrast, requires evaluating each new choice on its own __(E) merits__, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": [
+            {
+              "severity": "warning",
+              "code": "thin-wrong-option-explanations",
+              "message": "KILLER item should explain every wrong option."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": [
+        "thin-wrong-option-explanations"
+      ]
+    },
+    {
+      "typeId": "VOCAB_CHOICE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": [
+        "thin-wrong-option-explanations"
+      ]
+    },
+    {
+      "typeId": "CONTEXT_MEANING",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": [
+        "thin-wrong-option-explanations"
+      ]
+    },
+    {
+      "typeId": "SYNONYM",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": [
+        "thin-wrong-option-explanations"
+      ]
+    },
+    {
+      "typeId": "ANTONYM",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": [
+        "thin-wrong-option-explanations"
+      ]
+    }
+  ]
+}

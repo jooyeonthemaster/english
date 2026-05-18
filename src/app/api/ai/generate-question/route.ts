@@ -1,5 +1,3 @@
-import { generateObject } from "ai";
-import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,13 +10,45 @@ import {
   getAiResponseSchema,
 } from "@/lib/question-ai-schemas-mc";
 import { postProcessQuestion } from "@/lib/question-postprocess";
+import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, validateQuestionQuality } from "@/lib/question-quality";
+import { generateQuestionObject } from "@/lib/question-generation-llm";
+import {
+  getQuestionGenerationCreditCost,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
-import type { OperationType } from "@/lib/credit-costs";
+import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
 const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
+
+const DIFFICULTY_RUBRIC: Record<string, string> = {
+  BASIC: `## 난이도 품질 기준
+- BASIC은 원문 근거가 직접 드러나는 확인형 문제로 만드세요.
+- 함정 선지는 명백히 구분되게 하되, 정답 근거는 반드시 지문에 있어야 합니다.`,
+  INTERMEDIATE: `## 난이도 품질 기준
+- INTERMEDIATE는 원문 한 문장 복사가 아니라 문맥 연결, 쉬운 패러프레이즈, 원인-결과 추론을 요구해야 합니다.
+- 오답은 지문 일부와 연결되지만 핵심 논리에서 어긋나게 구성하세요.`,
+  KILLER: `## 난이도 품질 기준 - KILLER
+- "KILLER" 라벨만 붙이지 말고, 실제 상위권 변별 문제로 만드세요.
+- 정답은 최소 2단계 사고가 필요해야 합니다: 지문 근거 확인 → 문맥/논리/함축 해석 → 선지 간 미세 차이 판별.
+- 오답 4개는 전부 그럴듯해야 하며, 단순 반대말/무관 단어/길이 차이로 쉽게 지워지면 안 됩니다.
+- 해설은 왜 정답인지뿐 아니라 매력적인 오답이 왜 틀렸는지 핵심 함정을 짚어야 합니다.
+- 어휘형 KILLER는 단순 사전식 synonym/antonym을 피하고, 문맥상 뉘앙스/평가/논리 역할까지 보게 하세요.
+- 지칭 추론은 대명사의 문법적 수/의미 역할/앞뒤 논리를 모두 확인해야 풀리게 하세요.
+- 서술형 KILLER는 한 개 문법 포인트가 아니라 2개 이상의 조건을 동시에 만족하게 하세요.
+- 요약문/영작/배열 문제의 정답은 자연스러운 영어 collocation이어야 하며, 어색한 조합은 금지합니다.
+- 배열 영작의 scrambledWords는 정답 순서 그대로 두지 말고, punctuation-only 조각이 생기지 않게 의미 단위로 나누세요.`,
+};
+
+const MARKING_RUBRIC = `## 표시/위치 정확도 필수 규칙
+- underlinedPronoun/underlinedWord/originalExpression/markedWords/markedExpressions는 원문에 실제로 존재하는 표현만 쓰세요.
+- 특히 "it", "is", "in", "as" 같은 짧은 단어는 반드시 독립 단어로 존재하는 위치만 선택하세요. digital, commitments, within 같은 단어 내부의 일부를 선택하면 실패입니다.
+- surroundingText는 선택한 표현을 포함하는 원문 그대로의 40~80자여야 하며, 철자/공백/문장부호를 바꾸지 마세요.
+- passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers 같은 지문 전체 복사 필드는 생성하지 마세요.`;
 
 /**
  * Pick annotation types that are most relevant for a given questionType so we
@@ -68,35 +98,27 @@ const fallbackResponseSchema = z.object({
   questions: z.array(fallbackQuestionSchema),
 });
 
-// ─── Helper: generateObject with retry ───
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+// ─── Helper: model generation with retry ───
 async function generateWithRetry(
   schema: z.ZodType,
   prompt: string,
+  generationPlan: QuestionGenerationPlan,
+  maxTokens: number,
   maxRetries = 2,
 ) {
-  let lastError: unknown;
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      if (attempt > 0) console.log(`[SINGLE-GEN] Retry attempt ${attempt}...`);
-      const { object } = await generateObject({
-        model,
-        schema,
-        prompt,
-        providerOptions: {
-          google: { thinkingConfig: { thinkingBudget: 4096 } },
-        },
-      });
-      return object;
-    } catch (err: any) {
-      lastError = err;
-      const msg = err instanceof Error ? err.message : String(err);
-      console.warn(`[SINGLE-GEN] Attempt ${attempt} failed:`, msg);
-      if (err.finishReason) console.warn(`[SINGLE-GEN]   finishReason: ${err.finishReason}`);
-      if (err.usage) console.warn(`[SINGLE-GEN]   tokens: input=${err.usage.inputTokens}, output=${err.usage.outputTokens}`);
-      if (err.text) console.warn(`[SINGLE-GEN]   rawText (first 300): ${err.text.slice(0, 300)}`);
-    }
-  }
-  throw lastError;
+  const result = await generateQuestionObject({
+    schema,
+    prompt,
+    generationPlan,
+    logPrefix: "SINGLE-GEN",
+    maxRetries,
+    maxTokens,
+  });
+  return result.object;
 }
 
 // ─── Single-type question generation (called in parallel) ───
@@ -109,17 +131,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { passageId, questionType, count, difficulty, customPrompt } = body as {
+    const { passageId, questionType, count, difficulty, customPrompt, generationPlan: rawGenerationPlan } = body as {
       passageId: string;
       questionType: string;
       count: number;
       difficulty: string;
       customPrompt?: string;
+      generationPlan?: unknown;
     };
+    const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
 
     const operationType: OperationType = VOCAB_TYPES.has(questionType)
       ? "QUESTION_GEN_VOCAB"
       : "QUESTION_GEN_SINGLE";
+    const creditCost = getQuestionGenerationCreditCost(CREDIT_COSTS[operationType], generationPlan);
 
     let creditResult: { balanceAfter: number; transactionId: string };
     try {
@@ -127,7 +152,9 @@ export async function POST(request: NextRequest) {
         questionType,
         count,
         passageId,
-      });
+        generationPlan,
+        creditCost,
+      }, creditCost);
     } catch (err) {
       if (err instanceof InsufficientCreditsError) {
         return NextResponse.json(
@@ -148,7 +175,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!passage) {
-      await refundCredits(staff.academyId, operationType, creditResult.transactionId, "Passage not found");
+      await refundCredits(staff.academyId, operationType, creditResult.transactionId, "Passage not found", creditCost);
       return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
@@ -157,6 +184,8 @@ export async function POST(request: NextRequest) {
 
     // Use structured type prompt if available, otherwise fall back
     const typePrompt = STRUCTURED_TYPE_PROMPTS[questionType] || `${questionType} 유형의 문제를 만드세요.`;
+    const typeQualityRubric = getTypeQualityRubric(questionType, difficulty);
+    const targetCandidateBlock = buildQuestionTargetCandidateBlock(questionType, passage.content);
 
     // Use AI-minimal schema if available, otherwise fall back to full schema
     const hasAiSchema = !!AI_QUESTION_SCHEMAS[questionType];
@@ -213,7 +242,7 @@ export async function POST(request: NextRequest) {
 - 밑줄 친 표현은 __단어__ 형태로 감쌉니다
 - 빈칸은 _____(5개 이상)으로 표시합니다`;
 
-    console.log(`[SINGLE-GEN] Generating ${questionType} x${count}...`);
+    console.log(`[SINGLE-GEN] Generating ${questionType} x${count} via ${generationPlan} plan...`);
 
     let object: unknown;
     const startTime = Date.now();
@@ -224,35 +253,45 @@ export async function POST(request: NextRequest) {
 
 ## 지문
 ${passage.content}
+${targetCandidateBlock ? `\n${targetCandidateBlock}\n` : ""}
 ${annotationBlock ? `\n${annotationBlock}\n` : ""}${analysisContext}
 
 ## 출제 유형 지시사항
 ${typePrompt}
+${typeQualityRubric ? `\n${typeQualityRubric}` : ""}
 ${structuredInstructions}
 
 ## 생성 조건
 - 문제 수: ${count}문제
 - 난이도: ${difficulty}
+${DIFFICULTY_RUBRIC[difficulty] || DIFFICULTY_RUBRIC.INTERMEDIATE}
+${MARKING_RUBRIC}
 - difficulty 필드에 반드시 "${difficulty}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지 (options 배열에 {label, text} 형태)
 - 해설(explanation): 왜 정답인지 지문 근거와 함께 한국어로 작성 (3~5문장, 300자 이내로 간결하게)
 - keyPoints: 3개의 학습 포인트 (각 1문장)
 - wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 간결하게 (각 1~2문장)
+- wrongOptionExplanations is REQUIRED for every multiple-choice item: include exactly four entries keyed by the wrong option labels. Never return an empty object.
 - tags: 관련 문법/어휘/유형 태그를 한국어로
 ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
 
 정확히 ${count}문제를 생성하세요.`,
+      generationPlan,
+      Math.min(20_000, Math.max(4_096, (Number(count) || 1) * 4_096)),
     );
     } catch (aiError) {
       // Refund credits on AI failure
-      await refundCredits(staff.academyId, operationType, creditResult.transactionId, "AI generation failed");
+      await refundCredits(staff.academyId, operationType, creditResult.transactionId, "AI generation failed", creditCost);
       throw aiError;
     }
     const duration = Date.now() - startTime;
 
     // Post-process + WORD_ORDER shuffle
-    const questions: any[] = [];
-    for (const q of ((object as any).questions || [])) {
+    const generatedQuestions = isRecord(object) && Array.isArray(object.questions)
+      ? object.questions.filter(isRecord)
+      : [];
+    const questions: Record<string, unknown>[] = [];
+    for (const q of generatedQuestions) {
       // Post-process: reconstruct passage fields from AI minimal output
       const ppResult = postProcessQuestion(questionType, passage.content, q);
       if (!ppResult.success) {
@@ -263,7 +302,7 @@ ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
         console.warn(`[SINGLE-GEN] Post-process warnings for ${questionType}:`, ppResult.warnings);
       }
 
-      const mapped: any = { ...ppResult.data };
+      const mapped: Record<string, unknown> = { ...(ppResult.data as Record<string, unknown>) };
 
       // WORD_ORDER: 강제 셔플 — AI가 정답 순서로 넣는 경우 방지
       if (questionType === "WORD_ORDER" && Array.isArray(mapped.scrambledWords) && mapped.scrambledWords.length > 1) {
@@ -278,14 +317,31 @@ ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
         mapped.scrambledWords = arr;
       }
 
+      const qualityIssues = validateQuestionQuality({
+        typeId: questionType,
+        question: mapped,
+        passage: passage.content,
+        requestedDifficulty: difficulty,
+      });
+      const qualityErrors = qualityIssues.filter((issue) => issue.severity === "error");
+      const qualityWarnings = qualityIssues.filter((issue) => issue.severity === "warning");
+      if (qualityErrors.length > 0) {
+        console.warn(`[SINGLE-GEN] Quality errors for ${questionType}:`, qualityErrors);
+        continue;
+      }
+      if (qualityWarnings.length > 0) {
+        console.warn(`[SINGLE-GEN] Quality warnings for ${questionType}:`, qualityWarnings);
+      }
+
       questions.push(mapped);
     }
 
-    console.log(`[SINGLE-GEN] ${questionType} done: ${questions.length}/${count} questions`);
+    console.log(`[SINGLE-GEN] ${questionType} done: ${questions.length}/${count} questions (${duration}ms)`);
 
     return NextResponse.json({
       questionType,
       difficulty,
+      generationPlan,
       questions,
       creditsRemaining: creditResult.balanceAfter,
     });

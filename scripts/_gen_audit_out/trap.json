@@ -1,0 +1,443 @@
+{
+  "passage": "In cities around the world, a digital revolution is reshaping daily life. Smart sensors monitor traffic and air quality, and the data they collect feeds algorithms that quietly optimize the urban environment. Many people welcome this shift, but a growing number worry that it threatens privacy in ways residents do not fully understand. When a phone tracks your movements, it is not just storing a coordinate — it is building a behavioral profile that companies and governments may later access. Critics argue that without clear consent rules, the city itself becomes a surveillance device. Supporters reply that the benefits, from reduced congestion to faster emergency response, outweigh the risks, provided that strong oversight is in place.",
+  "tests": [
+    {
+      "type": "REFERENCE",
+      "inspected": [
+        {
+          "ai": {
+            "underlinedPronoun": "they",
+            "surroundingText": "Smart sensors monitor traffic and air quality, and the data they collect feeds algorithms",
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "①",
+                "text": "cities"
+              },
+              {
+                "label": "②",
+                "text": "Smart sensors"
+              },
+              {
+                "label": "③",
+                "text": "traffic and air quality"
+              },
+              {
+                "label": "④",
+                "text": "algorithms"
+              },
+              {
+                "label": "⑤",
+                "text": "urban environment"
+              }
+            ],
+            "correctAnswer": "②",
+            "explanation": "문맥상 '데이터를 수집하는 주체'를 찾아야 합니다. 문장 앞부분에서 'Smart sensors'가 교통과 대기 질을 모니터링한다고 언급되었으며, 이 센서들이 수집한(they collect) 데이터가 알고리즘에 공급되는 구조이므로 'they'는 'Smart sensors'를 지칭합니다."
+          },
+          "passageWithUnderline": "In cities around the world, a digital revolution is reshaping daily life. Smart sensors monitor traffic and air quality, and the data __they__ collect feeds algorithms that quietly optimize the urban environment. Many people welcome this shift, but a growing number worry that it threatens privacy in ways residents do not fully understand. When a phone tracks your movements, it is not just storing a coordinate — it is building a behavioral profile that companies and governments may later access. Critics argue that without clear consent rules, the city itself becomes a surveillance device. Supporters reply that the benefits, from reduced congestion to faster emergency response, outweigh the risks, provided that strong oversight is in place.",
+          "markerInspection": {
+            "label": "REFERENCE",
+            "findings": [
+              {
+                "markerText": "they",
+                "contextSnippet": "nd the data __they__ collect fee",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              }
+            ]
+          },
+          "killerInspection": {
+            "score": -0.3,
+            "assessed": "BASIC",
+            "signals": [
+              "avg option length 14 (short → basic signal)"
+            ]
+          },
+          "warnings": []
+        }
+      ],
+      "ppFailures": []
+    },
+    {
+      "type": "CONTEXT_MEANING",
+      "inspected": [
+        {
+          "ai": {
+            "underlinedWord": "reshaping",
+            "surroundingText": "In cities around the world, a digital revolution is reshaping daily life. Smart sensors",
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "simulating"
+              },
+              {
+                "label": "2",
+                "text": "perpetuating"
+              },
+              {
+                "label": "3",
+                "text": "reconfiguring"
+              },
+              {
+                "label": "4",
+                "text": "consolidating"
+              },
+              {
+                "label": "5",
+                "text": "deteriorating"
+              }
+            ],
+            "correctAnswer": "3"
+          },
+          "passageWithUnderline": "In cities around the world, a digital revolution is __reshaping__ daily life. Smart sensors monitor traffic and air quality, and the data they collect feeds algorithms that quietly optimize the urban environment. Many people welcome this shift, but a growing number worry that it threatens privacy in ways residents do not fully understand. When a phone tracks your movements, it is not just storing a coordinate — it is building a behavioral profile that companies and governments may later access. Critics argue that without clear consent rules, the city itself becomes a surveillance device. Supporters reply that the benefits, from reduced congestion to faster emergency response, outweigh the risks, provided that strong oversight is in place.",
+          "markerInspection": {
+            "label": "CONTEXT_MEANING",
+            "findings": [
+              {
+                "markerText": "reshaping",
+                "contextSnippet": "volution is __reshaping__ daily life.",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              }
+            ]
+          },
+          "killerInspection": {
+            "score": -0.1,
+            "assessed": "INTERMEDIATE",
+            "signals": [
+              "avg option length 12 (short → basic signal)",
+              "options have similar lengths (good distractors)"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "ai": {
+            "underlinedWord": "outweigh",
+            "surroundingText": "emergency response, outweigh the risks, provided that strong oversight is in place",
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "underscore"
+              },
+              {
+                "label": "2",
+                "text": "exacerbate"
+              },
+              {
+                "label": "3",
+                "text": "eclipse"
+              },
+              {
+                "label": "4",
+                "text": "circumvent"
+              },
+              {
+                "label": "5",
+                "text": "jeopardize"
+              }
+            ],
+            "correctAnswer": "3"
+          },
+          "passageWithUnderline": "In cities around the world, a digital revolution is reshaping daily life. Smart sensors monitor traffic and air quality, and the data they collect feeds algorithms that quietly optimize the urban environment. Many people welcome this shift, but a growing number worry that it threatens privacy in ways residents do not fully understand. When a phone tracks your movements, it is not just storing a coordinate — it is building a behavioral profile that companies and governments may later access. Critics argue that without clear consent rules, the city itself becomes a surveillance device. Supporters reply that the benefits, from reduced congestion to faster emergency response, __outweigh__ the risks, provided that strong oversight is in place.",
+          "markerInspection": {
+            "label": "CONTEXT_MEANING",
+            "findings": [
+              {
+                "markerText": "outweigh",
+                "contextSnippet": "y response, __outweigh__ the risks, ",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              }
+            ]
+          },
+          "killerInspection": {
+            "score": -0.3,
+            "assessed": "BASIC",
+            "signals": [
+              "avg option length 9 (short → basic signal)"
+            ]
+          },
+          "warnings": []
+        }
+      ],
+      "ppFailures": []
+    },
+    {
+      "type": "VOCAB_CHOICE",
+      "inspected": [
+        {
+          "ai": {
+            "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+            "correctAnswer": "②",
+            "explanation": "지문의 문맥상 많은 사람들이 스마트 시티 기술이 거주자들이 충분히 이해하지 못하는 방식으로 사생활을 침해하거나 '위협'하는 것을 걱정하고(worry) 있다는 내용이 이어지므로, '보호하다'라는 뜻의 protects는 흐름상 정반대되는 부적절한 단어입니다. 따라서 '위협하다'라는 의미의 threatens가 오는 것이 문맥상 적절합니다.",
+            "keyPoints": [
+              "'worry'와 'threatens'의 인과 관계를 통해 문맥적 일관성을 파악합니다.",
+              "디지털 혁명의 긍정적 측면(optimize, outweigh)과 부정적 우려(surveillance) 사이의 대조적 구조를 이해합니다.",
+              "'without clear consent rules'와 같은 조건절이 뒤따르는 명사의 의미를 결정하는 방식을 익힙니다."
+            ],
+            "tags": [
+              "어휘 적절성",
+              "스마트 시티",
+              "문맥 유추",
+              "수능 유형"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(a)",
+                "originalWord": "optimize",
+                "isInappropriate": false,
+                "substituteWord": "optimize",
+                "surroundingText": "algorithms that quietly optimize the urban environment. Many"
+              },
+              {
+                "label": "(b)",
+                "originalWord": "threatens",
+                "isInappropriate": true,
+                "betterWord": "threatens",
+                "substituteWord": "protects",
+                "surroundingText": "number worry that it protects privacy in ways residents do"
+              },
+              {
+                "label": "(c)",
+                "originalWord": "consent",
+                "isInappropriate": false,
+                "substituteWord": "consent",
+                "surroundingText": "argue that without clear consent rules, the city itself"
+              },
+              {
+                "label": "(d)",
+                "originalWord": "surveillance",
+                "isInappropriate": false,
+                "substituteWord": "surveillance",
+                "surroundingText": "the city itself becomes a surveillance device. Supporters"
+              },
+              {
+                "label": "(e)",
+                "originalWord": "outweigh",
+                "isInappropriate": false,
+                "substituteWord": "outweigh",
+                "surroundingText": "response, outweigh the risks, provided that strong oversight"
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "optimize"
+              },
+              {
+                "label": "②",
+                "text": "protects"
+              },
+              {
+                "label": "③",
+                "text": "consent"
+              },
+              {
+                "label": "④",
+                "text": "surveillance"
+              },
+              {
+                "label": "⑤",
+                "text": "outweigh"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "passageWithMarkers": "In cities around the world, a digital revolution is reshaping daily life. Smart sensors monitor traffic and air quality, and the data they collect feeds algorithms that quietly __(a) optimize__ the urban environment. Many people welcome this shift, but a growing number worry that it __(b) protects__ privacy in ways residents do not fully understand. When a phone tracks your movements, it is not just storing a coordinate — it is building a behavioral profile that companies and governments may later access. Critics argue that without clear __(c) consent__ rules, the city itself becomes a __(d) surveillance__ device. Supporters reply that the benefits, from reduced congestion to faster emergency response, __(e) outweigh__ the risks, provided that strong oversight is in place.",
+          "markerInspection": {
+            "label": "VOCAB_CHOICE",
+            "findings": [
+              {
+                "markerText": "(a) optimize",
+                "contextSnippet": "hat quietly __(a) optimize__ the urban e",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(b) protects",
+                "contextSnippet": "rry that it __(b) protects__ privacy in ",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(c) consent",
+                "contextSnippet": "thout clear __(c) consent__ rules, the ",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(d) surveillance",
+                "contextSnippet": "f becomes a __(d) surveillance__ device. Sup",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(e) outweigh",
+                "contextSnippet": "y response, __(e) outweigh__ the risks, ",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              }
+            ]
+          },
+          "killerInspection": {
+            "score": -0.3,
+            "assessed": "BASIC",
+            "signals": [
+              "avg option length 9 (short → basic signal)"
+            ]
+          },
+          "warnings": []
+        }
+      ],
+      "ppFailures": []
+    },
+    {
+      "type": "GRAMMAR_ERROR",
+      "inspected": [
+        {
+          "ai": {
+            "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+            "correctAnswer": "⑤",
+            "explanation": "정답은 ⑤번입니다. 문장의 주어는 'the benefits'로 복수 명사입니다. 주어와 동사 사이에 'from reduced congestion to faster emergency response'라는 긴 전치사구가 삽입되어 주어와 동사가 멀리 떨어져 있습니다. 따라서 복수 주어인 'the benefits'에 호응하기 위해서는 단수 동사 형태인 'outweighs'가 아니라 복수 동사 형태인 'outweigh'를 사용해야 합니다. 이 문항은 복잡한 문장 구조 속에서 주어를 정확히 찾아 동사와 수를 일치시킬 수 있는지를 평가하는 고난도 문제입니다.",
+            "keyPoints": [
+              "주어와 동사 사이에 긴 수식어구가 삽입된 경우의 수 일치 확인",
+              "명사절을 이끄는 접속사 'that'의 쓰임과 문장 구조 파악",
+              "진행형 문장에서 현재분사의 병렬 구조 및 재귀대명사의 강조 용법 이해"
+            ],
+            "tags": [
+              "어법",
+              "수 일치",
+              "병렬 구조",
+              "명사절 접속사",
+              "재귀대명사"
+            ],
+            "difficulty": "KILLER",
+            "markedExpressions": [
+              {
+                "label": "(A)",
+                "expression": "monitor",
+                "isError": false,
+                "errorExpression": "monitor",
+                "surroundingText": "Smart sensors monitor traffic and air quality, and the data"
+              },
+              {
+                "label": "(B)",
+                "expression": "that",
+                "isError": false,
+                "errorExpression": "that",
+                "surroundingText": "number worry that it threatens privacy in ways residents"
+              },
+              {
+                "label": "(C)",
+                "expression": "storing",
+                "isError": false,
+                "errorExpression": "storing",
+                "surroundingText": "it is not just storing a coordinate — it is building a"
+              },
+              {
+                "label": "(D)",
+                "expression": "itself",
+                "isError": false,
+                "errorExpression": "itself",
+                "surroundingText": "rules, the city itself becomes a surveillance device."
+              },
+              {
+                "label": "(E)",
+                "expression": "outweigh",
+                "isError": true,
+                "correction": "outweigh",
+                "errorExpression": "outweighs",
+                "surroundingText": "emergency response, outweighs the risks, provided that strong"
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "monitor"
+              },
+              {
+                "label": "②",
+                "text": "that"
+              },
+              {
+                "label": "③",
+                "text": "storing"
+              },
+              {
+                "label": "④",
+                "text": "itself"
+              },
+              {
+                "label": "⑤",
+                "text": "outweighs"
+              }
+            ],
+            "wrongOptionExplanations": {}
+          },
+          "passageWithMarkers": "In cities around the world, a digital revolution is reshaping daily life. Smart sensors __(A) monitor__ traffic and air quality, and the data they collect feeds algorithms that quietly optimize the urban environment. Many people welcome this shift, but a growing number worry __(B) that__ it threatens privacy in ways residents do not fully understand. When a phone tracks your movements, it is not just __(C) storing__ a coordinate — it is building a behavioral profile that companies and governments may later access. Critics argue that without clear consent rules, the city __(D) itself__ becomes a surveillance device. Supporters reply that the benefits, from reduced congestion to faster emergency response, __(E) outweighs__ the risks, provided that strong oversight is in place.",
+          "markerInspection": {
+            "label": "GRAMMAR_ERROR",
+            "findings": [
+              {
+                "markerText": "(A) monitor",
+                "contextSnippet": "art sensors __(A) monitor__ traffic and",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(B) that",
+                "contextSnippet": "umber worry __(B) that__ it threaten",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(C) storing",
+                "contextSnippet": "is not just __(C) storing__ a coordinat",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(D) itself",
+                "contextSnippet": "s, the city __(D) itself__ becomes a s",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              },
+              {
+                "markerText": "(E) outweighs",
+                "contextSnippet": "y response, __(E) outweighs__ the risks, ",
+                "leftBoundary": true,
+                "rightBoundary": true,
+                "isSubstringInWord": false
+              }
+            ]
+          },
+          "killerInspection": {
+            "score": -0.3,
+            "assessed": "BASIC",
+            "signals": [
+              "avg option length 7 (short → basic signal)"
+            ]
+          },
+          "warnings": []
+        }
+      ],
+      "ppFailures": []
+    }
+  ]
+}

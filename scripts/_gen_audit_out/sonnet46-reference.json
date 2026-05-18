@@ -1,0 +1,153 @@
+{
+  "model": "claude-sonnet-4-6",
+  "passage": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.",
+  "results": [
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2477,
+        "inputTokenDetails": {
+          "noCacheTokens": 2477,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1224,
+        "outputTokenDetails": {},
+        "totalTokens": 3701,
+        "raw": {
+          "input_tokens": 2477,
+          "output_tokens": 1224,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 19509,
+      "items": [
+        {
+          "raw": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "①",
+            "explanation": "해당 문장은 '파멸이 예정된 제품을 개발하는 데 수백만 달러를 이미 쏟아부은 공장이 그것(it)에 계속 자원을 투입하곤 한다'는 내용이다. 문법적으로 'pouring resources into it'에서 'it'은 자원을 '투입하는 대상'이어야 하므로, 추상적 개념인 'the sunk cost fallacy'나 'future commitments'는 전치사 'into'의 목적어로 의미상 부적절하다. 또한 직전 문장의 핵심 명사구 'a doomed product'가 단수이고, 공장이 지속적으로 자원을 퍼붓는 구체적 대상으로 가장 자연스럽다. 'the factory'는 자원을 '투입받는' 곳이 아니라 투입하는 주체이므로 오답이며, 'millions spent'는 이미 지출된 비용으로 새로 자원을 투입할 대상이 될 수 없다.",
+            "keyPoints": [
+              "대명사 'it'의 선행사는 문법적으로 전치사 'into'의 목적어 자리를 채울 수 있는 구체적 명사(구)여야 한다.",
+              "지칭 추론 시 대명사의 수(단/복수)와 문장 내 의미역(행위 주체 vs. 행위 대상)을 반드시 구분해야 한다.",
+              "매몰 비용 오류(sunk cost fallacy)와 그 예시(doomed product)를 구분하여 지칭 대상을 정확히 파악해야 한다."
+            ],
+            "tags": [
+              "대명사 지칭 추론",
+              "매몰 비용 오류",
+              "선행사 파악",
+              "전치사 목적어",
+              "논리적 독해",
+              "경제 소재"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "often keep pouring resources into it, simply because so much has",
+            "options": [
+              {
+                "label": "①",
+                "text": "파멸이 예정된 제품 (a doomed product)"
+              },
+              {
+                "label": "②",
+                "text": "공장 자체 (the factory)"
+              },
+              {
+                "label": "③",
+                "text": "매몰 비용 오류 (the sunk cost fallacy)"
+              },
+              {
+                "label": "④",
+                "text": "미래의 투자 (future commitments)"
+              },
+              {
+                "label": "⑤",
+                "text": "수백만 달러의 개발 비용 (millions of dollars spent on development)"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "②": "'the factory'는 자원을 투입하는 행위의 주어(주체)이지, 자원이 투입되는 대상이 아니므로 'into it'의 'it'으로 볼 수 없다.",
+              "③": "'the sunk cost fallacy'는 이 단락 전체의 핵심 개념이지만, 전치사 'into'의 목적어로 '자원을 쏟아붓는 구체적 대상'이 되기에는 의미상 어색하다. 오류는 자원을 투입받는 대상이 아니라 사고방식이다.",
+              "④": "'future commitments'는 앞 문장에 등장하지만 복수형이고, 'pouring resources into'의 대상으로는 'a doomed product'보다 문맥상 거리가 멀다.",
+              "⑤": "'millions of dollars'는 이미 지출된 매몰 비용으로, 새로 자원을 '투입하는 대상'이 아니라 투입을 정당화하는 '이유'로 기능하므로 오답이다."
+            }
+          },
+          "processed": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "①",
+            "explanation": "해당 문장은 '파멸이 예정된 제품을 개발하는 데 수백만 달러를 이미 쏟아부은 공장이 그것(it)에 계속 자원을 투입하곤 한다'는 내용이다. 문법적으로 'pouring resources into it'에서 'it'은 자원을 '투입하는 대상'이어야 하므로, 추상적 개념인 'the sunk cost fallacy'나 'future commitments'는 전치사 'into'의 목적어로 의미상 부적절하다. 또한 직전 문장의 핵심 명사구 'a doomed product'가 단수이고, 공장이 지속적으로 자원을 퍼붓는 구체적 대상으로 가장 자연스럽다. 'the factory'는 자원을 '투입받는' 곳이 아니라 투입하는 주체이므로 오답이며, 'millions spent'는 이미 지출된 비용으로 새로 자원을 투입할 대상이 될 수 없다.",
+            "keyPoints": [
+              "대명사 'it'의 선행사는 문법적으로 전치사 'into'의 목적어 자리를 채울 수 있는 구체적 명사(구)여야 한다.",
+              "지칭 추론 시 대명사의 수(단/복수)와 문장 내 의미역(행위 주체 vs. 행위 대상)을 반드시 구분해야 한다.",
+              "매몰 비용 오류(sunk cost fallacy)와 그 예시(doomed product)를 구분하여 지칭 대상을 정확히 파악해야 한다."
+            ],
+            "tags": [
+              "대명사 지칭 추론",
+              "매몰 비용 오류",
+              "선행사 파악",
+              "전치사 목적어",
+              "논리적 독해",
+              "경제 소재"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "often keep pouring resources into it, simply because so much has",
+            "options": [
+              {
+                "label": "①",
+                "text": "파멸이 예정된 제품 (a doomed product)"
+              },
+              {
+                "label": "②",
+                "text": "공장 자체 (the factory)"
+              },
+              {
+                "label": "③",
+                "text": "매몰 비용 오류 (the sunk cost fallacy)"
+              },
+              {
+                "label": "④",
+                "text": "미래의 투자 (future commitments)"
+              },
+              {
+                "label": "⑤",
+                "text": "수백만 달러의 개발 비용 (millions of dollars spent on development)"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "②": "'the factory'는 자원을 투입하는 행위의 주어(주체)이지, 자원이 투입되는 대상이 아니므로 'into it'의 'it'으로 볼 수 없다.",
+              "③": "'the sunk cost fallacy'는 이 단락 전체의 핵심 개념이지만, 전치사 'into'의 목적어로 '자원을 쏟아붓는 구체적 대상'이 되기에는 의미상 어색하다. 오류는 자원을 투입받는 대상이 아니라 사고방식이다.",
+              "④": "'future commitments'는 앞 문장에 등장하지만 복수형이고, 'pouring resources into'의 대상으로는 'a doomed product'보다 문맥상 거리가 멀다.",
+              "⑤": "'millions of dollars'는 이미 지출된 매몰 비용으로, 새로 자원을 '투입하는 대상'이 아니라 투입을 정당화하는 '이유'로 기능하므로 오답이다."
+            },
+            "passageWithUnderline": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into __it__, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    }
+  ]
+}

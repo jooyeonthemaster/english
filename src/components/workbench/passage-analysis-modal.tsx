@@ -27,6 +27,8 @@ import type { PassageAnalysisData } from "@/types/passage-analysis";
 import type { AnalysisPromptConfig } from "./analysis-prompt-panel";
 import { InteractivePassageView } from "./interactive-passage-view";
 import { AnalysisLoadingOverlay } from "./analysis-loading-overlay";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 // ─── Types ───────────────────────────────────────────────
 interface PassageData {
@@ -112,7 +114,10 @@ export function PassageAnalysisModal({
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastPromptConfig, setLastPromptConfig] = useState<AnalysisPromptConfig>(
-    initialPromptConfig || { customPrompt: "", focusAreas: [], targetLevel: "" }
+    initialPromptConfig || { customPrompt: "", focusAreas: [], targetLevel: "", generationPlan: "STANDARD" }
+  );
+  const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>(
+    lastPromptConfig.generationPlan || "STANDARD"
   );
 
   const tags: string[] = passage.tags ? safeParseJSON(passage.tags, []) : [];
@@ -121,7 +126,15 @@ export function PassageAnalysisModal({
   useEffect(() => {
     setAnalysisData(initialAnalysis);
     setHasUnsavedChanges(false);
-  }, [initialAnalysis, passage.id]);
+    const nextConfig = initialPromptConfig || {
+      customPrompt: "",
+      focusAreas: [],
+      targetLevel: "",
+      generationPlan: "STANDARD" as const,
+    };
+    setLastPromptConfig(nextConfig);
+    setGenerationPlan(nextConfig.generationPlan || "STANDARD");
+  }, [initialAnalysis, initialPromptConfig, passage.id]);
 
   // Close on Escape
   useEffect(() => {
@@ -154,7 +167,9 @@ export function PassageAnalysisModal({
   // ─── Analysis ────────────────────────────────────────
   const runAnalysisWithConfig = async (config: AnalysisPromptConfig) => {
     setAnalyzing(true);
-    setLastPromptConfig(config);
+    const selectedPlan = config.generationPlan || generationPlan;
+    setGenerationPlan(selectedPlan);
+    setLastPromptConfig({ ...config, generationPlan: selectedPlan });
     try {
       const hasConfig = config.customPrompt || config.focusAreas.length > 0 || config.targetLevel;
       let res: Response;
@@ -166,10 +181,11 @@ export function PassageAnalysisModal({
             customPrompt: config.customPrompt,
             focusAreas: config.focusAreas,
             targetLevel: config.targetLevel,
+            generationPlan: selectedPlan,
           }),
         });
       } else {
-        res = await fetch(`/api/ai/passage-analysis/${passage.id}`);
+        res = await fetch(`/api/ai/passage-analysis/${passage.id}?generationPlan=${selectedPlan}`);
       }
       const json = await res.json();
       if (json.error) {
@@ -345,10 +361,19 @@ export function PassageAnalysisModal({
                   <p className="text-[13px] text-slate-400 mb-5 max-w-sm">
                     AI 분석을 실행하면 어휘, 문법, 구문, 출제 포인트 등을 자동으로 분석합니다.
                   </p>
+                  <GenerationPlanSelector
+                    value={generationPlan}
+                    onChange={setGenerationPlan}
+                    compact
+                    className="w-full max-w-sm mb-4"
+                  />
                   <Button
                     className="bg-blue-600 hover:bg-blue-700"
                     onClick={() =>
-                      runAnalysisWithConfig(lastPromptConfig)
+                      runAnalysisWithConfig({
+                        ...lastPromptConfig,
+                        generationPlan,
+                      })
                     }
                     disabled={analyzing}
                   >

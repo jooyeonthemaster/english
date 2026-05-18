@@ -15,6 +15,10 @@ import {
 import { cn } from "@/lib/utils";
 import { LEARNING_SUBTYPE_LABELS } from "@/lib/learning-constants";
 import { GRADE_LEVELS } from "@/lib/learning-constants";
+import {
+  getQuestionGenerationPlanConfig,
+  normalizeQuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import type { QueueItem } from "./generate-learning-client";
 
 // ---------------------------------------------------------------------------
@@ -156,6 +160,9 @@ function QueueCard({
   onRemove: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const planConfig = getQuestionGenerationPlanConfig(
+    normalizeQuestionGenerationPlan(item.generationPlan)
+  );
 
   // 서브타입별 그룹핑
   const bySubType: Record<string, number> = {};
@@ -191,6 +198,9 @@ function QueueCard({
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[11px] text-slate-500">
               {CATEGORY_LABELS[item.category] || item.category}
+            </span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
+              {planConfig.shortLabel}
             </span>
             {item.status === "done" && (
               <span className="text-[11px] text-emerald-600 font-medium">

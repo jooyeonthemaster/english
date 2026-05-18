@@ -35,6 +35,7 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
       customPrompt: initialPrompt || "",
       focusAreas: initialFocus || [],
       targetLevel: initialLevel || "",
+      generationPlan: "STANDARD",
     });
   const autoAnalyzeTriggered = useRef(false);
 
@@ -51,6 +52,7 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
           config.focusAreas.length > 0 ||
           config.targetLevel;
 
+        const generationPlan = config.generationPlan || "STANDARD";
         let res: Response;
         if (hasConfig) {
           // POST with custom parameters — always fresh
@@ -61,11 +63,12 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
               customPrompt: config.customPrompt,
               focusAreas: config.focusAreas,
               targetLevel: config.targetLevel,
+              generationPlan,
             }),
           });
         } else {
           // GET — uses cache
-          res = await fetch(`/api/ai/passage-analysis/${passage.id}`);
+          res = await fetch(`/api/ai/passage-analysis/${passage.id}?generationPlan=${generationPlan}`);
         }
 
         const json = await res.json();

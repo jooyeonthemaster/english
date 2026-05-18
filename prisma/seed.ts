@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { createUniqueAcademyCode } from "../src/lib/tutor/academy-code";
 
 const prisma = new PrismaClient();
 
@@ -51,6 +52,7 @@ async function main() {
     create: {
       name: "다른 영어 학원",
       slug: "darun",
+      code: await createUniqueAcademyCode(prisma),
       phone: "02-1234-5678",
       address: "서울특별시 강동구",
       color: "#3B82F6",
@@ -133,7 +135,7 @@ async function main() {
 
   for (const s of students) {
     const student = await prisma.student.upsert({
-      where: { studentCode: s.studentCode },
+      where: { academyId_studentCode: { academyId: academy.id, studentCode: s.studentCode } },
       update: {},
       create: {
         academyId: academy.id,
@@ -164,7 +166,9 @@ async function main() {
       loginToken: "demo-parent-token-12345",
     },
   });
-  const hongStudent = await prisma.student.findUnique({ where: { studentCode: "NAR001" } });
+  const hongStudent = await prisma.student.findFirst({
+    where: { academyId: academy.id, studentCode: "NAR001" },
+  });
   if (hongStudent) {
     await prisma.parentStudent.create({
       data: { parentId: parent.id, studentId: hongStudent.id },

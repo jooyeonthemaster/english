@@ -14,19 +14,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const student = await prisma.student.findUnique({
+    const students = await prisma.student.findMany({
       where: { studentCode: code.trim() },
       select: { academyId: true },
+      take: 2,
     });
 
-    if (!student) {
+    if (students.length !== 1) {
       return NextResponse.json(
         { error: "등록되지 않은 학생 코드입니다" },
         { status: 404 }
       );
     }
 
-    const session = await loginStudent(student.academyId, code.trim());
+    const session = await loginStudent(students[0].academyId, code.trim());
     return NextResponse.json({ success: true, studentId: session.studentId });
   } catch (error) {
     const message =

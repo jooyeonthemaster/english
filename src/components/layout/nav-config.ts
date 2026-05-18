@@ -18,6 +18,9 @@ import {
   Settings,
   Layers,
   Palette,
+  Smartphone,
+  Send,
+  Activity,
   type LucideIcon,
 } from "lucide-react";
 
@@ -44,8 +47,6 @@ export interface NavGroup {
 }
 
 export const COMING_SOON_FEATURE_BY_PATH: Record<string, { feature: string; label: string }> = {
-  students: { feature: "students", label: "학생 관리" },
-  classes: { feature: "classes", label: "반 관리" },
   attendance: { feature: "attendance", label: "출결 관리" },
   assignments: { feature: "assignments", label: "과제 관리" },
   billing: { feature: "billing", label: "수납 관리" },
@@ -120,6 +121,21 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "운영",
       directorOnly: true,
       items: [
+        { label: "학생 관리", icon: Users, href: `${basePath}/students`, directorOnly: true },
+        { label: "반 관리", icon: BookOpen, href: `${basePath}/classes`, directorOnly: true },
+        {
+          label: "모바일 학습",
+          icon: Smartphone,
+          href: `${basePath}/tutor`,
+          children: [
+            { label: "튜터 홈", href: `${basePath}/tutor` },
+            { label: "프로그램", href: `${basePath}/tutor/programs` },
+            { label: "새 프로그램", href: `${basePath}/tutor/programs/new` },
+            { label: "수강 현황", href: `${basePath}/tutor/monitor` },
+          ],
+        },
+        { label: "배포 관리", icon: Send, href: `${basePath}/tutor/distributions`, directorOnly: true },
+        { label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true },
         { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
         { label: "공지사항", icon: Megaphone, href: `${basePath}/notices` },
       ],
@@ -135,8 +151,6 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "Coming Soon",
       comingSoon: true,
       items: [
-        { label: "학생 관리", icon: Users, href: `${basePath}/students`, comingSoon: true, feature: "students" },
-        { label: "반 관리", icon: BookOpen, href: `${basePath}/classes`, comingSoon: true, feature: "classes" },
         { label: "출결 관리", icon: ClipboardCheck, href: `${basePath}/attendance`, comingSoon: true, feature: "attendance" },
         { label: "과제 관리", icon: FileText, href: `${basePath}/assignments`, comingSoon: true, feature: "assignments" },
         { label: "수납 관리", icon: CreditCard, href: `${basePath}/billing`, comingSoon: true, feature: "billing", directorOnly: true },

@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { QUESTION_TYPE_GROUPS } from "@/lib/question-type-ui";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -41,7 +42,7 @@ export interface QueueItem {
   status: QueueStatus;
   progress: Record<string, "pending" | "done" | "error">;
   questions: any[];
-  config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual" };
+  config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual"; generationPlan?: QuestionGenerationPlan };
 }
 
 // ─── Helpers ─────────────────────────────────────────────

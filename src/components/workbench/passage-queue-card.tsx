@@ -26,6 +26,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  getQuestionGenerationPlanConfig,
+  normalizeQuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
 
 // ─── Status Config ───────────────────────────────────────
@@ -148,6 +152,12 @@ export const PassageQueueCard = memo(function PassageQueueCard({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const config = STATUS_CONFIG[passage.status];
   const StatusIcon = config.icon;
+  const analysisMeta = passage.analysisData as Record<string, unknown> | null;
+  const planConfig = analysisMeta
+    ? getQuestionGenerationPlanConfig(
+        normalizeQuestionGenerationPlan(analysisMeta._generationPlan)
+      )
+    : null;
 
   const questionsCount = passage.passageData.questions.length;
 
@@ -215,6 +225,11 @@ export const PassageQueueCard = memo(function PassageQueueCard({
               <span className={`text-[10px] font-medium ${config.color}`}>
                 {config.label}
               </span>
+              {planConfig && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
+                  {planConfig.shortLabel}
+                </span>
+              )}
               <span className="text-[10px] text-slate-400">
                 {passage.wordCount} words
               </span>

@@ -2,6 +2,7 @@
 
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import type { Annotation } from "@/components/workbench/editor";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
 import {
@@ -69,6 +70,8 @@ interface FormSectionContainerProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
+  analysisGenerationPlan: QuestionGenerationPlan;
+  setAnalysisGenerationPlan: (v: QuestionGenerationPlan) => void;
   savedPrompts: SavedPrompt[];
   setSavedPrompts: Dispatch<SetStateAction<SavedPrompt[]>>;
   showSavedPrompts: boolean;
@@ -86,6 +89,8 @@ interface FormSectionContainerProps {
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
+  onBulkAnalyze: (drafts: M1PassageDraftWithJob[]) => Promise<void>;
+  bulkAnalyzing: boolean;
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
@@ -113,6 +118,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
           source: p.source,
           tags: p.tags,
           analysisPrompt: p.analysisPrompt,
+          analysisGenerationPlan: p.analysisGenerationPlan,
           schools: p.schools,
           setSaving: p.setSaving,
           addToQueue: p.addToQueue,
@@ -165,6 +171,8 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       removeTag={p.removeTag}
       analysisPrompt={p.analysisPrompt}
       setAnalysisPrompt={p.setAnalysisPrompt}
+      analysisGenerationPlan={p.analysisGenerationPlan}
+      setAnalysisGenerationPlan={p.setAnalysisGenerationPlan}
       savedPrompts={p.savedPrompts}
       showSavedPrompts={p.showSavedPrompts}
       setShowSavedPrompts={p.setShowSavedPrompts}
@@ -185,6 +193,8 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       onSelectDraft={p.onSelectDraft}
       draftCollections={p.draftCollections}
       draftMembership={p.draftMembership}
+      onBulkAnalyze={p.onBulkAnalyze}
+      bulkAnalyzing={p.bulkAnalyzing}
     />
   );
 }

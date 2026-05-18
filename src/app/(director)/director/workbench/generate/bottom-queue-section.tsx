@@ -1,14 +1,23 @@
 // @ts-nocheck
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Loader2,
   AlertTriangle,
   Braces,
+  Gem,
+  Sparkles,
 } from "lucide-react";
 import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
 import { type QueueItem, buildQuestionText } from "./generate-page-types";
+import {
+  getQuestionGenerationPlanFromTags,
+  mergeQuestionGenerationPlanTag,
+  QUESTION_GENERATION_PLAN_TAGS,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // ─── Props ───────────────────────────────────────────
 
@@ -29,6 +38,46 @@ interface BottomQueueSectionProps {
   setDetailQuestion: (q: QuestionCardItem | null) => void;
 }
 
+type SavedQuestionPlanFilter = "ALL" | QuestionGenerationPlan;
+
+function parseQuestionTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) return rawTags.filter((tag): tag is string => typeof tag === "string");
+  if (typeof rawTags !== "string") return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string") : [];
+  } catch {
+    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+  }
+}
+
+function getQuestionPlan(q: QuestionCardItem): QuestionGenerationPlan | null {
+  const tagPlan = getQuestionGenerationPlanFromTags(parseQuestionTags(q.tags));
+  if (tagPlan) return tagPlan;
+
+  if (q.structuredData && typeof q.structuredData === "object" && "_generationPlan" in q.structuredData) {
+    const plan = (q.structuredData as { _generationPlan?: unknown })._generationPlan;
+    if (plan === "STANDARD" || plan === "PREMIUM") return plan;
+  }
+
+  return null;
+}
+
+function matchesPlanFilter(q: QuestionCardItem, filter: SavedQuestionPlanFilter): boolean {
+  if (filter === "ALL") return true;
+  const plan = getQuestionPlan(q);
+  if (filter === "PREMIUM") return plan === "PREMIUM";
+  return plan !== "PREMIUM";
+}
+
+function withVisiblePlanTag(q: QuestionCardItem): QuestionCardItem {
+  const plan = getQuestionPlan(q) ?? "STANDARD";
+  return {
+    ...q,
+    tags: JSON.stringify(mergeQuestionGenerationPlanTag(parseQuestionTags(q.tags), plan)),
+  };
+}
+
 // ─── Component ───────────────────────────────────────
 
 export function BottomQueueSection({
@@ -42,6 +91,20 @@ export function BottomQueueSection({
   loadingSavedQuestions,
   setDetailQuestion,
 }: BottomQueueSectionProps) {
+  const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
+  const savedPlanCounts = useMemo(() => {
+    const premium = savedQuestions.filter((q) => getQuestionPlan(q) === "PREMIUM").length;
+    return {
+      ALL: savedQuestions.length,
+      STANDARD: savedQuestions.length - premium,
+      PREMIUM: premium,
+    };
+  }, [savedQuestions]);
+  const visibleSavedQuestions = useMemo(
+    () => savedQuestions.filter((q) => matchesPlanFilter(q, savedPlanFilter)),
+    [savedQuestions, savedPlanFilter],
+  );
+
   return (
     <div className="bg-[#F0F2F5]">
       <div className="px-8 pt-5 pb-8 space-y-5">
@@ -118,7 +181,7 @@ export function BottomQueueSection({
                     options: q.options ? JSON.stringify(q.options) : null,
                     correctAnswer: q.correctAnswer || q.modelAnswer || "",
                     difficulty: q.difficulty || "INTERMEDIATE",
-                    tags: q.tags ? JSON.stringify(q.tags) : null,
+                    tags: Array.isArray(q.tags) ? JSON.stringify(q.tags) : q.tags ? String(q.tags) : null,
                     aiGenerated: true,
                     approved: true,
                     createdAt: new Date(),
@@ -148,15 +211,39 @@ export function BottomQueueSection({
 
         {/* -- Saved questions from DB -- */}
         <div>
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="text-[14px] font-bold text-slate-800">
-              저장된 문제 {savedQuestions.length > 0 && <span className="text-slate-400 font-normal ml-1">{savedQuestions.length}개</span>}
+              저장된 문제 {savedQuestions.length > 0 && <span className="text-slate-400 font-normal ml-1">{visibleSavedQuestions.length}/{savedQuestions.length}개</span>}
             </h3>
-            {savedQuestions.length > 0 && (
-              <Link href="/director/questions" className="text-[12px] text-blue-600 hover:text-blue-700 font-medium">
-                문제은행 전체 보기 →
-              </Link>
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex max-w-full items-center gap-1 overflow-x-auto p-0.5 rounded-lg bg-white border border-slate-200">
+                {([
+                  { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },
+                  { id: "STANDARD", label: QUESTION_GENERATION_PLAN_TAGS.STANDARD, count: savedPlanCounts.STANDARD, Icon: Sparkles },
+                  { id: "PREMIUM", label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM, count: savedPlanCounts.PREMIUM, Icon: Gem },
+                ] as const).map(({ id, label, count, Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setSavedPlanFilter(id)}
+                    className={`h-7 px-2.5 rounded-md inline-flex items-center gap-1.5 text-[11px] font-semibold transition-all ${
+                      savedPlanFilter === id
+                        ? "bg-blue-50 text-blue-700 shadow-sm"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                    }`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    <span>{label}</span>
+                    <span className={savedPlanFilter === id ? "text-blue-500" : "text-slate-400"}>{count}</span>
+                  </button>
+                ))}
+              </div>
+              {savedQuestions.length > 0 && (
+                <Link href="/director/questions" className="text-[12px] text-blue-600 hover:text-blue-700 font-medium">
+                  문제은행 전체 보기 →
+                </Link>
+              )}
+            </div>
           </div>
           {loadingSavedQuestions ? (
             <div className="flex items-center justify-center py-8">
@@ -167,17 +254,25 @@ export function BottomQueueSection({
               <Braces className="w-8 h-8 text-slate-300 mb-2" />
               <p className="text-[13px] text-slate-400">아직 저장된 문제가 없습니다</p>
             </div>
+          ) : visibleSavedQuestions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 opacity-60">
+              <Braces className="w-8 h-8 text-slate-300 mb-2" />
+              <p className="text-[13px] text-slate-400">선택한 생성 태그에 해당하는 문제가 없습니다</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-              {savedQuestions.slice(0, 30).map((q, i) => (
+              {visibleSavedQuestions.slice(0, 30).map((q, i) => {
+                const cardQuestion = withVisiblePlanTag(q);
+                return (
                 <div key={q.id} onClick={(e) => {
                   const target = e.target as HTMLElement;
                   if (target.closest('button') || target.closest('a') || target.closest('input')) return;
-                  setDetailQuestion(q);
+                  setDetailQuestion(cardQuestion);
                 }} className="cursor-pointer">
-                  <QuestionCard q={q} num={i + 1} readonly compact />
+                  <QuestionCard q={cardQuestion} num={i + 1} readonly compact />
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

@@ -1,0 +1,23 @@
+{
+  "model": "gemini-3-flash-preview",
+  "passage": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.",
+  "results": [
+    {
+      "typeId": "REFERENCE",
+      "ok": false,
+      "error": "The operation was aborted due to timeout",
+      "ms": 360063
+    }
+  ],
+  "summary": [
+    {
+      "typeId": "REFERENCE",
+      "ok": false,
+      "generated": 0,
+      "postProcessOk": 0,
+      "qualityErrors": [],
+      "qualityWarnings": [],
+      "error": "The operation was aborted due to timeout"
+    }
+  ]
+}

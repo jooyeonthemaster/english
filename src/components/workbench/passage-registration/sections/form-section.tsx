@@ -18,6 +18,7 @@ import {
   type Annotation,
 } from "@/components/workbench/editor";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
 import { ExtractionDraftGrid } from "./extraction-draft-grid";
 import { CompactOptionsRow } from "./compact-options-row";
@@ -50,6 +51,8 @@ interface FormSectionProps {
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
+  onBulkAnalyze: (drafts: M1PassageDraftWithJob[]) => Promise<void>;
+  bulkAnalyzing: boolean;
 
   // Metadata
   schools: Array<{ id: string; name: string; type: string; publisher: string | null }>;
@@ -76,6 +79,8 @@ interface FormSectionProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
+  analysisGenerationPlan: QuestionGenerationPlan;
+  setAnalysisGenerationPlan: (v: QuestionGenerationPlan) => void;
   savedPrompts: SavedPrompt[];
   showSavedPrompts: boolean;
   setShowSavedPrompts: (v: boolean | ((prev: boolean) => boolean)) => void;
@@ -144,6 +149,8 @@ export function FormSection(props: FormSectionProps) {
               onSelectDraft={props.onSelectDraft}
               collections={props.draftCollections}
               membership={props.draftMembership}
+              onBulkAnalyze={props.onBulkAnalyze}
+              bulkAnalyzing={props.bulkAnalyzing}
             />
 
             {/* RIGHT: Editor + Compact options row */}
@@ -256,6 +263,8 @@ export function FormSection(props: FormSectionProps) {
                 removeTag={props.removeTag}
                 analysisPrompt={props.analysisPrompt}
                 setAnalysisPrompt={props.setAnalysisPrompt}
+                analysisGenerationPlan={props.analysisGenerationPlan}
+                setAnalysisGenerationPlan={props.setAnalysisGenerationPlan}
                 savedPrompts={props.savedPrompts}
                 showSavedPrompts={props.showSavedPrompts}
                 setShowSavedPrompts={props.setShowSavedPrompts}

@@ -9,6 +9,11 @@ import {
   typeLabel,
   buildQuestionText,
 } from "./generate-page-types";
+import {
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // ─── Types ───────────────────────────────────────────
 
@@ -17,6 +22,7 @@ interface UseGenerationHandlersParams {
   selectedIds: Set<string>;
   setSelectedIds: (v: Set<string>) => void;
   genMode: "auto" | "manual";
+  generationPlan: QuestionGenerationPlan;
   typeCounts: Record<string, number>;
   activeTypes: string[];
   difficulty: string;
@@ -31,6 +37,31 @@ interface UseGenerationHandlersParams {
   loadSavedQuestions: () => void;
 }
 
+function readQuestionTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) return rawTags.filter((tag): tag is string => typeof tag === "string");
+  if (typeof rawTags !== "string") return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string") : [];
+  } catch {
+    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+  }
+}
+
+function withGenerationMetadata(
+  questions: any[],
+  fallbackPlan: QuestionGenerationPlan,
+): any[] {
+  return questions.map((q) => {
+    const plan = normalizeQuestionGenerationPlan(q?._generationPlan ?? fallbackPlan);
+    return {
+      ...q,
+      _generationPlan: plan,
+      tags: mergeQuestionGenerationPlanTag(readQuestionTags(q?.tags), plan),
+    };
+  });
+}
+
 // ─── Hook ────────────────────────────────────────────
 
 export function useGenerationHandlers({
@@ -38,6 +69,7 @@ export function useGenerationHandlers({
   selectedIds,
   setSelectedIds,
   genMode,
+  generationPlan,
   typeCounts,
   activeTypes,
   difficulty,
@@ -62,31 +94,36 @@ export function useGenerationHandlers({
   }, []);
 
   // ── Auto-save generated questions to DB ──
-  const autoSave = useCallback(async (passageId: string, questions: any[]) => {
+  const autoSave = useCallback(async (passageId: string, questions: any[], fallbackPlan = generationPlan) => {
     if (!questions.length) return;
     try {
       const { saveGeneratedQuestions } = await import("@/actions/workbench");
-      const questionsToSave = questions.map((q: any) => ({
-        passageId,
-        type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-        subType: q._typeId || q.subType || null,
-        questionText: buildQuestionText(q),
-        structuredData: toStructuredData(q),
-        options: q.options ? JSON.stringify(q.options) : null,
-        correctAnswer: q.correctAnswer || q.modelAnswer || "",
-        points: 1,
-        difficulty: q.difficulty || "INTERMEDIATE",
-        tags: q.tags ? JSON.stringify(q.tags) : null,
-        explanation: q.explanation || null,
-        keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
-        wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
-      }));
+      const questionsToSave = questions.map((q: any) => {
+        const plan = normalizeQuestionGenerationPlan(q?._generationPlan ?? fallbackPlan);
+        const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q?.tags), plan);
+        const enriched = { ...q, _generationPlan: plan, tags };
+        return {
+          passageId,
+          type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+          subType: q._typeId || q.subType || null,
+          questionText: buildQuestionText(q),
+          structuredData: toStructuredData(enriched),
+          options: q.options ? JSON.stringify(q.options) : null,
+          correctAnswer: q.correctAnswer || q.modelAnswer || "",
+          points: 1,
+          difficulty: q.difficulty || "INTERMEDIATE",
+          tags,
+          explanation: q.explanation || null,
+          keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
+          wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
+        };
+      });
       await saveGeneratedQuestions(questionsToSave);
       loadSavedQuestions();
     } catch (err) {
       console.error("[AUTO-SAVE] Failed:", err);
     }
-  }, [loadSavedQuestions, toStructuredData]);
+  }, [generationPlan, loadSavedQuestions, toStructuredData]);
 
   // ── Batch generate for selected passages ──
   const handleBatchGenerate = useCallback(async () => {
@@ -105,6 +142,7 @@ export function useGenerationHandlers({
         difficulty,
         prompt: customPrompt.trim(),
         mode: genMode,
+        generationPlan,
       };
 
       // Fire generation (don't await -- run in background)
@@ -129,16 +167,17 @@ export function useGenerationHandlers({
             const res = await fetch("/api/ai/generate-questions-auto", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ passageId: p.id, count: autoCount, difficulty, customPrompt: config.prompt || undefined }),
+              body: JSON.stringify({ passageId: p.id, count: autoCount, difficulty, customPrompt: config.prompt || undefined, generationPlan }),
             });
             const data = await res.json();
             if (data.error || !data.questions?.length) {
               setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { auto: "error" } } : item));
               toast.error(`${p.title.slice(0, 20)}... — 생성 실패`);
             } else {
-              setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "done", progress: { auto: "done" }, questions: data.questions } : item));
-              toast.success(`${p.title.slice(0, 20)}... — ${data.questions.length}문제 생성`);
-              autoSave(p.id, data.questions);
+              const questions = withGenerationMetadata(data.questions, data.generationPlan || generationPlan);
+              setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "done", progress: { auto: "done" }, questions } : item));
+              toast.success(`${p.title.slice(0, 20)}... — ${questions.length}문제 생성`);
+              autoSave(p.id, questions, generationPlan);
             }
           } catch (err) {
             console.error(`[BATCH] Failed for ${p.title.slice(0, 30)}:`, err);
@@ -171,17 +210,20 @@ export function useGenerationHandlers({
               const res = await fetch("/api/ai/generate-question", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ passageId: p.id, questionType: typeId, count: typeCounts[typeId], difficulty, customPrompt: config.prompt || undefined }),
+                body: JSON.stringify({ passageId: p.id, questionType: typeId, count: typeCounts[typeId], difficulty, customPrompt: config.prompt || undefined, generationPlan }),
               });
               const data = await res.json();
               if (data.error || !data.questions?.length) {
                 setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
                 toast.error(`${typeLabel(typeId)} 생성 실패`);
               } else {
-                const questions = data.questions.map((q: any) => ({ ...q, _typeId: typeId, _typeLabel: typeLabel(typeId) }));
+                const questions = withGenerationMetadata(
+                  data.questions.map((q: any) => ({ ...q, _typeId: typeId, _typeLabel: typeLabel(typeId) })),
+                  data.generationPlan || generationPlan,
+                );
                 setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "done", progress: { [typeId]: "done" }, questions } : item));
                 toast.success(`${typeLabel(typeId)} ${questions.length}문제 생성`);
-                autoSave(p.id, questions);
+                autoSave(p.id, questions, generationPlan);
               }
             } catch {
               setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
@@ -194,7 +236,7 @@ export function useGenerationHandlers({
 
     setSelectedIds(new Set());
     toast.info(`${selectedPassages.length}개 지문 일괄 생성 시작`);
-  }, [selectedIds, passages, genMode, typeCounts, activeTypes, difficulty, customPrompt, autoCount, autoSave, setSelectedIds, setSessionQueue]);
+  }, [selectedIds, passages, genMode, generationPlan, typeCounts, activeTypes, difficulty, customPrompt, autoCount, autoSave, setSelectedIds, setSessionQueue]);
 
   // ── Generate (auto or manual) ──
   const handleGenerate = useCallback(async () => {
@@ -206,6 +248,7 @@ export function useGenerationHandlers({
       difficulty,
       prompt: customPrompt.trim(),
       mode: genMode,
+      generationPlan,
     };
 
     if (genMode === "auto") {
@@ -238,6 +281,7 @@ export function useGenerationHandlers({
             count: autoCount,
             difficulty,
             customPrompt: config.prompt || undefined,
+            generationPlan,
           }),
         });
         const data = await res.json();
@@ -248,11 +292,12 @@ export function useGenerationHandlers({
           );
           toast.error(data.error || "자동 생성 실패");
         } else {
+          const questions = withGenerationMetadata(data.questions, data.generationPlan || generationPlan);
           setSessionQueue((prev) =>
-            prev.map((item) => item.id === queueId ? { ...item, status: "done", progress: { auto: "done" }, questions: data.questions } : item)
+            prev.map((item) => item.id === queueId ? { ...item, status: "done", progress: { auto: "done" }, questions } : item)
           );
-          toast.success(`${data.questions.length}개 문제 자동 생성 완료`);
-          autoSave(selectedPassage.id, data.questions);
+          toast.success(`${questions.length}개 문제 자동 생성 완료`);
+          autoSave(selectedPassage.id, questions, generationPlan);
         }
       } catch {
         setSessionQueue((prev) =>
@@ -296,6 +341,7 @@ export function useGenerationHandlers({
                 count: typeCounts[typeId],
                 difficulty,
                 customPrompt: config.prompt || undefined,
+                generationPlan,
               }),
             });
             const data = await res.json();
@@ -303,10 +349,13 @@ export function useGenerationHandlers({
               setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
               toast.error(`${typeLabel(typeId)} 생성 실패`);
             } else {
-              const questions = data.questions.map((q: any) => ({ ...q, _typeId: typeId, _typeLabel: typeLabel(typeId) }));
+              const questions = withGenerationMetadata(
+                data.questions.map((q: any) => ({ ...q, _typeId: typeId, _typeLabel: typeLabel(typeId) })),
+                data.generationPlan || generationPlan,
+              );
               setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "done", progress: { [typeId]: "done" }, questions } : item));
               toast.success(`${typeLabel(typeId)} ${questions.length}문제 생성`);
-              autoSave(selectedPassage.id, questions);
+              autoSave(selectedPassage.id, questions, generationPlan);
             }
           } catch {
             setSessionQueue((prev) => prev.map((item) => item.id === id ? { ...item, status: "error", progress: { [typeId]: "error" } } : item));
@@ -315,28 +364,33 @@ export function useGenerationHandlers({
         })();
       }
     }
-  }, [selectedPassage, genMode, totalQuestions, activeTypes, typeCounts, difficulty, customPrompt, autoCount, analysisData, autoSave, setSessionQueue]);
+  }, [selectedPassage, genMode, generationPlan, totalQuestions, activeTypes, typeCounts, difficulty, customPrompt, autoCount, analysisData, autoSave, setSessionQueue]);
 
   // ── Save to question bank ──
   const handleSaveQuestions = useCallback(async (questions: any[]) => {
     if (!reviewItem) return;
     try {
       const { saveGeneratedQuestions } = await import("@/actions/workbench");
-      const questionsToSave = questions.map((q: any) => ({
-        passageId: reviewItem.passageId,
-        type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-        subType: q._typeId || q.subType || null,
-        questionText: buildQuestionText(q),
-        structuredData: toStructuredData(q),
-        options: q.options ? JSON.stringify(q.options) : null,
-        correctAnswer: q.correctAnswer || q.modelAnswer || "",
-        points: 1,
-        difficulty: q.difficulty || "INTERMEDIATE",
-        tags: q.tags ? JSON.stringify(q.tags) : null,
-        explanation: q.explanation || null,
-        keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
-        wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
-      }));
+      const questionsToSave = questions.map((q: any) => {
+        const plan = normalizeQuestionGenerationPlan(q?._generationPlan ?? reviewItem.config.generationPlan ?? generationPlan);
+        const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q?.tags), plan);
+        const enriched = { ...q, _generationPlan: plan, tags };
+        return {
+          passageId: reviewItem.passageId,
+          type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+          subType: q._typeId || q.subType || null,
+          questionText: buildQuestionText(q),
+          structuredData: toStructuredData(enriched),
+          options: q.options ? JSON.stringify(q.options) : null,
+          correctAnswer: q.correctAnswer || q.modelAnswer || "",
+          points: 1,
+          difficulty: q.difficulty || "INTERMEDIATE",
+          tags,
+          explanation: q.explanation || null,
+          keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
+          wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
+        };
+      });
 
       const result = await saveGeneratedQuestions(questionsToSave);
       if (result.success) {
@@ -353,7 +407,7 @@ export function useGenerationHandlers({
     } catch {
       toast.error("저장 중 오류가 발생했습니다.");
     }
-  }, [reviewItem, toStructuredData, setSessionQueue, setReviewModalId, loadSavedQuestions]);
+  }, [generationPlan, reviewItem, toStructuredData, setSessionQueue, setReviewModalId, loadSavedQuestions]);
 
   return { handleBatchGenerate, handleGenerate, handleSaveQuestions };
 }

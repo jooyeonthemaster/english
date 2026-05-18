@@ -2,12 +2,17 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
+import {
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // ─── Types ───────────────────────────────────────────────
 export interface AnalysisPromptConfig {
   customPrompt: string;
   focusAreas: string[];
   targetLevel: string;
+  generationPlan?: QuestionGenerationPlan;
 }
 
 export type QueuedPassageStatus =
@@ -132,6 +137,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
       abortControllers.current.set(passageId, controller);
 
       try {
+        const generationPlan = normalizeQuestionGenerationPlan(config.generationPlan);
         const hasConfig =
           config.customPrompt || config.focusAreas.length > 0 || config.targetLevel;
 
@@ -146,11 +152,12 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
               customPrompt: config.customPrompt,
               focusAreas: config.focusAreas,
               targetLevel: config.targetLevel,
+              generationPlan,
             }),
             signal: controller.signal,
           });
         } else {
-          res = await fetch(url, { signal: controller.signal });
+          res = await fetch(`${url}?generationPlan=${generationPlan}`, { signal: controller.signal });
         }
 
         const json = await res.json();
@@ -248,7 +255,10 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         status: runAnalysisNow ? "pending" : "done",
         analysisData: null,
         error: null,
-        promptConfig,
+        promptConfig: {
+          ...promptConfig,
+          generationPlan: normalizeQuestionGenerationPlan(promptConfig.generationPlan),
+        },
         createdAt: new Date(),
         schoolName: passage.schoolName,
         grade: passage.grade,

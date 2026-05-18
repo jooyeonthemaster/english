@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Annotation } from "@/components/workbench/editor";
 import type { SavedPrompt } from "./types";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 /**
  * Groups the 19 contiguous useState calls for the passage input form
@@ -35,6 +36,8 @@ export function usePassageFormState() {
 
   // Analysis prompt
   const [analysisPrompt, setAnalysisPrompt] = useState("");
+  const [analysisGenerationPlan, setAnalysisGenerationPlan] =
+    useState<QuestionGenerationPlan>("STANDARD");
   const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([]);
   const [showSavedPrompts, setShowSavedPrompts] = useState(false);
   const [newPromptName, setNewPromptName] = useState("");
@@ -56,6 +59,7 @@ export function usePassageFormState() {
     tagInput, setTagInput,
     tags, setTags,
     analysisPrompt, setAnalysisPrompt,
+    analysisGenerationPlan, setAnalysisGenerationPlan,
     savedPrompts, setSavedPrompts,
     showSavedPrompts, setShowSavedPrompts,
     newPromptName, setNewPromptName,

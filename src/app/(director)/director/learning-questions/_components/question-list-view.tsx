@@ -18,6 +18,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
+  QUESTION_GENERATION_PLANS,
+  getQuestionGenerationPlanFromTags,
+} from "@/lib/question-generation-plans";
+import {
   approveNaeshinQuestion,
   deleteNaeshinQuestion,
   bulkApproveNaeshinQuestions,
@@ -34,6 +38,18 @@ import {
   type SetItem,
   getPreviewText,
 } from "./question-constants";
+
+function parseQuestionTags(rawTags: string | null | undefined): string[] {
+  if (!rawTags) return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : [];
+  } catch {
+    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -197,6 +213,25 @@ export function QuestionListView({
           </button>
         ))}
         {/* 승인 필터 */}
+        {Object.entries(QUESTION_GENERATION_PLANS).map(([planId, plan]) => (
+          <button
+            key={planId}
+            onClick={() =>
+              onUpdateParam(
+                "generationPlan",
+                filters.generationPlan === planId ? "" : planId
+              )
+            }
+            className={cn(
+              "text-[11px] px-2.5 py-1 rounded-lg border font-medium transition-all",
+              filters.generationPlan === planId
+                ? "bg-blue-50 border-blue-300 text-blue-700"
+                : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+            )}
+          >
+            {plan.shortLabel}
+          </button>
+        ))}
         <button
           onClick={() =>
             onUpdateParam(
@@ -396,6 +431,8 @@ function QuestionCard({
     bg: "border-l-slate-300",
   };
   const preview = getPreviewText(q.subType, q.questionText);
+  const tags = parseQuestionTags(q.tags);
+  const plan = getQuestionGenerationPlanFromTags(tags);
 
   return (
     <div
@@ -432,6 +469,11 @@ function QuestionCard({
           <span className="text-[10px] px-1.5 py-0.5 rounded-lg bg-slate-100 text-slate-500 font-medium">
             {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
           </span>
+          {plan && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded-lg bg-blue-50 text-blue-600 font-semibold">
+              {QUESTION_GENERATION_PLANS[plan].shortLabel}
+            </span>
+          )}
           {q.approved ? (
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
           ) : (

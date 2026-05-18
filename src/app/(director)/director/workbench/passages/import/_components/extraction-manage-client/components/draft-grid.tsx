@@ -89,6 +89,10 @@ interface DraftGridProps {
   /** SourceMaterialId → per-job absolute 1-based index. Stable across filter
    *  changes so each 시험지 keeps its own number within its job. */
   groupIndexBySourceMaterialId: Map<string, number>;
+
+  /** Optional. Per-draft-id, number of other drafts that share its
+   *  normalized content. Used to render a "+N 중복" badge on cards. */
+  dupCountById?: Map<string, number>;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
@@ -118,6 +122,7 @@ export function DraftGrid({
   onRenameJob,
   onRenameSourceMaterial,
   groupIndexBySourceMaterialId,
+  dupCountById,
 }: DraftGridProps) {
   const showJobFilter = !inFolder && jobs.length > 1;
 
@@ -347,6 +352,7 @@ export function DraftGrid({
                         checked={checkedIds.has(draft.id)}
                         onClick={() => onSelectDraft(draft.id)}
                         onToggleCheck={() => onToggleCheck(draft.id)}
+                        dupCount={dupCountById?.get(draft.id) ?? 0}
                       />
                     ))}
                   </div>
@@ -366,6 +372,7 @@ export function DraftGrid({
                 checked={checkedIds.has(draft.id)}
                 onClick={() => onSelectDraft(draft.id)}
                 onToggleCheck={() => onToggleCheck(draft.id)}
+                dupCount={dupCountById?.get(draft.id) ?? 0}
               />
             ))}
           </div>

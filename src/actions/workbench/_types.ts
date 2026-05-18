@@ -12,9 +12,7 @@ export interface WorkbenchPassageFilters {
   sourceMaterialId?: string;
   collectionId?: string;
   /** When true, only passages that already have a PassageAnalysis row are
-   *  returned. Drives the "분석된 지문 관리하기" page (/passages) — the
-   *  분석 작업 창 (/passages/create) keeps the default false so it can show
-   *  not-yet-analyzed entries in its queue. */
+   *  returned. */
   analyzedOnly?: boolean;
 }
 

@@ -10,6 +10,7 @@ interface PageProps {
     learningCategory?: string;
     subType?: string;
     difficulty?: string;
+    generationPlan?: string;
     approved?: string;
     search?: string;
     publisher?: string;
@@ -37,6 +38,7 @@ export default async function LearningQuestionsPage({ searchParams }: PageProps)
           learningCategory: params.learningCategory || undefined,
           subType: params.subType || undefined,
           difficulty: params.difficulty || undefined,
+          generationPlan: params.generationPlan || undefined,
           approved: params.approved === "true" ? true : params.approved === "false" ? false : undefined,
           search: params.search || undefined,
           page: params.page ? parseInt(params.page) : 1,

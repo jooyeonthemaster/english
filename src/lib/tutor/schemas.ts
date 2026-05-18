@@ -1,0 +1,75 @@
+import { z } from "zod";
+
+export const TutorActivityModeSchema = z.enum([
+  "interpret",
+  "memorize",
+  "order",
+  "vocab",
+  "grammar",
+  "transfer",
+  "mastery",
+]);
+
+export const TutorActivityTypeSchema = z.enum([
+  "sentence_translate",
+  "gist_select",
+  "paraphrase_mc",
+  "first_letter_recall",
+  "progressive_cloze",
+  "sentence_rebuild",
+  "chunk_rebuild",
+  "back_translation",
+  "dictogloss",
+  "sentence_order",
+  "insertion_point",
+  "irrelevant_sentence",
+  "vocab_choice",
+  "vocab_spell",
+  "vocab_match",
+  "contextual_meaning",
+  "collocation_select",
+  "grammar_binary",
+  "grammar_find",
+  "grammar_correct",
+  "structure_transform",
+  "transfer_mini_passage",
+  "mastery_test",
+]);
+
+export const TutorActivityDraftSchema = z.object({
+  mode: TutorActivityModeSchema,
+  type: TutorActivityTypeSchema,
+  title: z.string().min(1),
+  instructions: z.string().optional(),
+  payload: z.record(z.string(), z.unknown()),
+  itemCount: z.number().int().min(1).default(1),
+  maxScore: z.number().int().min(1).default(10),
+  estimatedSec: z.number().int().min(10).default(60),
+  coverageRefs: z.array(
+    z.object({
+      sentenceIndex: z.number().int().min(0),
+      dimension: z.enum(["interpret", "memorize", "order", "vocab", "grammar", "transfer"]),
+      weight: z.number().min(0).max(1),
+    }),
+  ),
+});
+
+export const TutorDraftResponseSchema = z.object({
+  activities: z.array(TutorActivityDraftSchema).min(1),
+});
+
+export type TutorActivityDraft = z.infer<typeof TutorActivityDraftSchema>;
+
+export const CreateTutorProgramSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  templateKey: z.string().default("basic_interpret"),
+  passageIds: z.array(z.string()).min(1).max(12),
+});
+
+export const PublishTutorProgramSchema = z.object({
+  programId: z.string().min(1),
+  targetType: z.enum(["ALL_ACTIVE", "CLASS", "STUDENT", "SCHOOL_GRADE", "SCHOOL"]),
+  targetId: z.string().optional(),
+  dueAt: z.string().optional(),
+});

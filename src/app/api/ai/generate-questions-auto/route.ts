@@ -1,5 +1,3 @@
-import { generateObject } from "ai";
-import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,12 +10,44 @@ import {
   getAiResponseSchema,
 } from "@/lib/question-ai-schemas-mc";
 import { postProcessQuestion } from "@/lib/question-postprocess";
+import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, validateQuestionQuality } from "@/lib/question-quality";
+import { generateQuestionObject } from "@/lib/question-generation-llm";
+import {
+  getQuestionGenerationCreditCost,
+  normalizeQuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
 export const maxDuration = 300;
+
+const DIFFICULTY_RUBRIC: Record<string, string> = {
+  BASIC: `## 난이도 품질 기준
+- BASIC은 원문 근거가 직접 드러나는 확인형 문제로 만드세요.
+- 함정 선지는 명백히 구분되게 하되, 정답 근거는 반드시 지문에 있어야 합니다.`,
+  INTERMEDIATE: `## 난이도 품질 기준
+- INTERMEDIATE는 원문 한 문장 복사가 아니라 문맥 연결, 쉬운 패러프레이즈, 원인-결과 추론을 요구해야 합니다.
+- 오답은 지문 일부와 연결되지만 핵심 논리에서 어긋나게 구성하세요.`,
+  KILLER: `## 난이도 품질 기준 - KILLER
+- "KILLER" 라벨만 붙이지 말고, 실제 상위권 변별 문제로 만드세요.
+- 정답은 최소 2단계 사고가 필요해야 합니다: 지문 근거 확인 → 문맥/논리/함축 해석 → 선지 간 미세 차이 판별.
+- 오답 4개는 전부 그럴듯해야 하며, 단순 반대말/무관 단어/길이 차이로 쉽게 지워지면 안 됩니다.
+- 해설은 왜 정답인지뿐 아니라 매력적인 오답이 왜 틀렸는지 핵심 함정을 짚어야 합니다.
+- 어휘형 KILLER는 단순 사전식 synonym/antonym을 피하고, 문맥상 뉘앙스/평가/논리 역할까지 보게 하세요.
+- 지칭 추론은 대명사의 문법적 수/의미 역할/앞뒤 논리를 모두 확인해야 풀리게 하세요.
+- 서술형 KILLER는 한 개 문법 포인트가 아니라 2개 이상의 조건을 동시에 만족하게 하세요.
+- 요약문/영작/배열 문제의 정답은 자연스러운 영어 collocation이어야 하며, 어색한 조합은 금지합니다.
+- 배열 영작의 scrambledWords는 정답 순서 그대로 두지 말고, punctuation-only 조각이 생기지 않게 의미 단위로 나누세요.`,
+};
+
+const MARKING_RUBRIC = `## 표시/위치 정확도 필수 규칙
+- underlinedPronoun/underlinedWord/originalExpression/markedWords/markedExpressions는 원문에 실제로 존재하는 표현만 쓰세요.
+- 특히 "it", "is", "in", "as" 같은 짧은 단어는 반드시 독립 단어로 존재하는 위치만 선택하세요. digital, commitments, within 같은 단어 내부의 일부를 선택하면 실패입니다.
+- surroundingText는 선택한 표현을 포함하는 원문 그대로의 40~80자여야 하며, 철자/공백/문장부호를 바꾸지 마세요.
+- passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers 같은 지문 전체 복사 필드는 생성하지 마세요.`;
 
 // ─── Step 1 Schema: AI plans which types to use ───
 const planSchema = z.object({
@@ -49,6 +79,10 @@ const fallbackResponseSchema = z.object({
   questions: z.array(fallbackQuestionSchema),
 });
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
 export async function POST(request: NextRequest) {
   try {
     // ── Auth + Credit deduction ──
@@ -58,19 +92,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { passageId, count, difficulty, customPrompt } = body as {
+    const { passageId, count, difficulty, customPrompt, generationPlan: rawGenerationPlan } = body as {
       passageId: string;
       count: number;
       difficulty?: string;
       customPrompt?: string;
+      generationPlan?: unknown;
     };
+    const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    const creditCost = getQuestionGenerationCreditCost(CREDIT_COSTS.AUTO_GEN_BATCH, generationPlan);
 
     let creditResult: { balanceAfter: number; transactionId: string };
     try {
       creditResult = await deductCredits(staff.academyId, "AUTO_GEN_BATCH", staff.id, {
         passageId,
         count,
-      });
+        generationPlan,
+        creditCost,
+      }, creditCost);
     } catch (err) {
       if (err instanceof InsufficientCreditsError) {
         return NextResponse.json(
@@ -91,7 +130,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!passage) {
-      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "Passage not found");
+      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "Passage not found", creditCost);
       return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
@@ -187,10 +226,9 @@ export async function POST(request: NextRequest) {
     // ═══ STEP 1: AI plans question type distribution ═══
     console.log("[AUTO-GEN] Step 1: Planning started for passage:", passage.title?.slice(0, 30));
     let planResult: z.infer<typeof planSchema>;
-    let allQuestions: any[];
+    let allQuestions: Record<string, unknown>[];
     try {
-    const { object: _planResult } = await generateObject({
-      model,
+    const { object: _planResult } = await generateQuestionObject({
       schema: planSchema,
       prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제위원입니다.
 
@@ -211,7 +249,12 @@ ${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
 서술형: CONDITIONAL_WRITING, SENTENCE_TRANSFORM, FILL_BLANK_KEY, SUMMARY_COMPLETE, WORD_ORDER, GRAMMAR_CORRECTION
 어휘: CONTEXT_MEANING, SYNONYM, ANTONYM
 
+${DIFFICULTY_RUBRIC[diffLabel] || DIFFICULTY_RUBRIC.INTERMEDIATE}
+
 총 ${count}문제의 배분 계획을 세우세요.${customPrompt ? `\n\n## 선생님 추가 지시\n${customPrompt}` : ""}`,
+      generationPlan,
+      logPrefix: "AUTO-GEN-PLAN",
+      maxTokens: 4_096,
     });
     planResult = _planResult;
 
@@ -229,46 +272,34 @@ ${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
 
     allQuestions = [];
 
-    // ── Helper: generateObject with retry ──
+    // ── Helper: model generation with retry ──
     async function generateWithRetry(
       schema: z.ZodType,
       prompt: string,
+      maxTokens: number,
       maxRetries = 2,
     ) {
-      let lastError: unknown;
-      for (let attempt = 0; attempt <= maxRetries; attempt++) {
-        try {
-          if (attempt > 0) console.log(`[AUTO-GEN] Retry attempt ${attempt}...`);
-          const { object } = await generateObject({
-            model,
-            schema,
-            prompt,
-            providerOptions: {
-              google: { thinkingConfig: { thinkingBudget: 4096 } },
-            },
-          });
-          return object;
-        } catch (err: any) {
-          lastError = err;
-          const msg = err instanceof Error ? err.message : String(err);
-          console.warn(`[AUTO-GEN] Attempt ${attempt} failed:`, msg);
-          // Log diagnostic info for debugging
-          if (err.finishReason) console.warn(`[AUTO-GEN]   finishReason: ${err.finishReason}`);
-          if (err.usage) console.warn(`[AUTO-GEN]   tokens: input=${err.usage.inputTokens}, output=${err.usage.outputTokens}`);
-          if (err.text) console.warn(`[AUTO-GEN]   rawText (first 300): ${err.text.slice(0, 300)}`);
-        }
-      }
-      throw lastError;
+      const result = await generateQuestionObject({
+        schema,
+        prompt,
+        generationPlan,
+        logPrefix: "AUTO-GEN",
+        maxRetries,
+        maxTokens,
+      });
+      return result.object;
     }
 
-    // Generate each type SEQUENTIALLY
-    for (const item of planResult.plan) {
+    // Generate each planned type in parallel; each item still has its own retry path.
+    const generatedGroups = await Promise.all(planResult.plan.map(async (item) => {
       const { subType, count: typeCount, targetPoints } = item;
-      if (typeCount <= 0) continue;
+      if (typeCount <= 0) return [];
 
-      console.log(`[AUTO-GEN] Step 2: Generating ${subType} x${typeCount}...`);
+      console.log(`[AUTO-GEN] Step 2: Generating ${subType} x${typeCount} via ${generationPlan} plan...`);
 
       const typePrompt = STRUCTURED_TYPE_PROMPTS[subType] || `${subType} 유형의 문제를 만드세요.`;
+      const typeQualityRubric = getTypeQualityRubric(subType, diffLabel);
+      const targetCandidateBlock = buildQuestionTargetCandidateBlock(subType, passage.content);
       // Use AI-minimal schema if available, otherwise fall back to full schema
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
       const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
@@ -300,29 +331,38 @@ ${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
 
 ## 지문
 ${passage.content}
+${targetCandidateBlock ? `\n${targetCandidateBlock}\n` : ""}
 ${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
 ${targetContext}
 
 ## 출제 유형 지시사항
 ${typePrompt}
+${typeQualityRubric ? `\n${typeQualityRubric}` : ""}
 ${structuredInstructions}
 
 ## 생성 조건
 - 문제 수: ${typeCount}문제
 - **난이도: ${diffLabel} (${diffInstruction})**
+${DIFFICULTY_RUBRIC[diffLabel] || DIFFICULTY_RUBRIC.INTERMEDIATE}
+${MARKING_RUBRIC}
 - difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지 (options 배열에 {label, text} 형태)
 - 해설(explanation): 왜 정답인지 지문 근거와 함께 한국어로 작성 (3~5문장, 300자 이내로 간결하게)
 - keyPoints: 3개의 학습 포인트 (각 1문장)
 - wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 간결하게 (각 1~2문장)
+- wrongOptionExplanations is REQUIRED for every multiple-choice item: include exactly four entries keyed by the wrong option labels. Never return an empty object.
 - tags: 관련 문법/어휘/유형 태그를 한국어로
 
 위의 "활용할 분석 포인트"에 명시된 어휘/문법/출제포인트를 반드시 문제에 반영하세요.
 정확히 ${typeCount}문제를 생성하세요.`,
+          Math.min(20_000, Math.max(4_096, (Number(typeCount) || 1) * 4_096)),
         );
 
-        const qs: any[] = [];
-        for (const q of ((object as any).questions || [])) {
+        const generatedQuestions = isRecord(object) && Array.isArray(object.questions)
+          ? object.questions.filter(isRecord)
+          : [];
+        const qs: Record<string, unknown>[] = [];
+        for (const q of generatedQuestions) {
           // Post-process: reconstruct passage fields from AI minimal output
           const ppResult = postProcessQuestion(subType, passage.content, q);
           if (!ppResult.success) {
@@ -333,7 +373,11 @@ ${structuredInstructions}
             console.warn(`[AUTO-GEN] Post-process warnings for ${subType}:`, ppResult.warnings);
           }
 
-          const mapped: any = { ...ppResult.data, _typeId: subType, _typeLabel: TYPE_LABELS[subType] || subType };
+          const mapped: Record<string, unknown> = {
+            ...(ppResult.data as Record<string, unknown>),
+            _typeId: subType,
+            _typeLabel: TYPE_LABELS[subType] || subType,
+          };
 
           // WORD_ORDER: 강제 셔플 — AI가 정답 순서로 넣는 경우 방지
           if (subType === "WORD_ORDER" && Array.isArray(mapped.scrambledWords) && mapped.scrambledWords.length > 1) {
@@ -347,24 +391,41 @@ ${structuredInstructions}
             }
             mapped.scrambledWords = arr;
           }
+          const qualityIssues = validateQuestionQuality({
+            typeId: subType,
+            question: mapped,
+            passage: passage.content,
+            requestedDifficulty: diffLabel,
+          });
+          const qualityErrors = qualityIssues.filter((issue) => issue.severity === "error");
+          const qualityWarnings = qualityIssues.filter((issue) => issue.severity === "warning");
+          if (qualityErrors.length > 0) {
+            console.warn(`[AUTO-GEN] Quality errors for ${subType}:`, qualityErrors);
+            continue;
+          }
+          if (qualityWarnings.length > 0) {
+            console.warn(`[AUTO-GEN] Quality warnings for ${subType}:`, qualityWarnings);
+          }
           qs.push(mapped);
         }
-        allQuestions.push(...qs);
         console.log(`[AUTO-GEN] ${subType} done: ${qs.length} questions`);
+        return qs;
       } catch (err) {
         console.error(`[AUTO-GEN] Failed ${subType}:`, err instanceof Error ? err.message : err);
+        return [];
       }
-    }
+    }));
+    allQuestions = generatedGroups.flat();
 
     } catch (aiError) {
       // Refund credits on AI failure
-      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "Auto generation failed");
+      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "Auto generation failed", creditCost);
       throw aiError;
     }
 
     if (allQuestions.length === 0) {
       // Refund if no questions were produced
-      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "No questions generated");
+      await refundCredits(staff.academyId, "AUTO_GEN_BATCH", creditResult.transactionId, "No questions generated", creditCost);
       return NextResponse.json({ error: "문제 생성에 실패했습니다.", questions: [], creditsRemaining: creditResult.balanceAfter });
     }
 
@@ -372,6 +433,7 @@ ${structuredInstructions}
       questions: allQuestions,
       rationale: planResult.rationale,
       count: allQuestions.length,
+      generationPlan,
       creditsRemaining: creditResult.balanceAfter,
     });
   } catch (error) {

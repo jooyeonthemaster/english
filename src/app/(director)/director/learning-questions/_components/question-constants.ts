@@ -80,6 +80,7 @@ export interface QuestionItem {
   questionText: string;
   correctAnswer: string;
   difficulty: string;
+  tags: string | null;
   approved: boolean;
   createdAt: Date;
   passage: { id: string; title: string } | null;

@@ -27,6 +27,7 @@ model Academy {
   address   String?
   logoUrl   String?
   color     String?  @default("#3B82F6") // Brand color
+  code      String   @unique @db.Char(4) // Tutor academy login code
   status    String   @default("ACTIVE") // "ACTIVE" | "TRIAL" | "SUSPENDED" | "DEACTIVATED"
   settings  String?  @db.Text // JSON: business hours, notification prefs, etc.
   createdAt DateTime @default(now())
@@ -65,9 +66,35 @@ model Academy {
   creditTransactions        CreditTransaction[]
   creditTopUps              CreditTopUp[]
   extractionJobs            ExtractionJob[]
+  extractionAuditLogs       ExtractionAuditLog[]
   sourceMaterials           SourceMaterial[]
   webtoons                  Webtoon[]
   classMaterials            ClassMaterial[]
+  tutorStudentSessions      TutorStudentSession[]
+  parentConsents            ParentConsent[]
+  appEvents                 AppEvent[]
+  tutorPrograms             TutorProgram[]
+  tutorLessons              TutorLesson[]
+  tutorActivities           TutorActivity[]
+  tutorAssignments          TutorAssignment[]
+  tutorAssignmentTargets    TutorAssignmentTarget[]
+  tutorAssignmentRecipients TutorAssignmentRecipient[]
+  tutorProgress             TutorProgress[]
+  tutorAttempts             TutorAttempt[]
+  tutorAttemptItems         TutorAttemptItem[]
+  tutorConversations        TutorConversation[]
+  tutorMessages             TutorMessage[]
+  tutorMastery              TutorMastery[]
+  tutorReviewSchedules      TutorReviewSchedule[]
+  tutorCoverageSnapshots    TutorCoverageSnapshot[]
+  tutorWeaknessSnapshots    TutorWeaknessSnapshot[]
+  tutorAiLogs               TutorAiLog[]
+  moderationLogs            ModerationLog[]
+  tutorLearningEvents       TutorLearningEvent[]
+  tutorBillingPlan          BillingPlan?
+  tutorSeatBillingRuns      SeatBillingRun[]
+  academyTheme              AcademyTheme?
+  academyFeatureFlags       AcademyFeatureFlag[]
 
   @@map("academies")
 }
@@ -92,17 +119,20 @@ model Staff {
   updatedAt      DateTime  @updatedAt
 
   // Relations
-  academy                Academy           @relation(fields: [academyId], references: [id])
+  academy                Academy              @relation(fields: [academyId], references: [id])
   classes                Class[] // Classes taught
   staffAttendances       StaffAttendance[]
   salaries               Salary[]
   consultations          Consultation[]
-  messages               Message[]         @relation("SentMessages")
-  receivedMessages       Message[]         @relation("ReceivedStaffMessages")
-  extractionJobs         ExtractionJob[]   @relation("ExtractionJobCreator")
-  createdSourceMaterials SourceMaterial[]  @relation("SourceMaterialCreator")
-  webtoons               Webtoon[]         @relation("WebtoonCreator")
-  uploadedMaterials      ClassMaterial[]   @relation("ClassMaterialUploader")
+  messages               Message[]            @relation("SentMessages")
+  receivedMessages       Message[]            @relation("ReceivedStaffMessages")
+  extractionJobs         ExtractionJob[]      @relation("ExtractionJobCreator")
+  extractionAuditLogs    ExtractionAuditLog[] @relation("ExtractionAuditActor")
+  createdSourceMaterials SourceMaterial[]     @relation("SourceMaterialCreator")
+  webtoons               Webtoon[]            @relation("WebtoonCreator")
+  uploadedMaterials      ClassMaterial[]      @relation("ClassMaterialUploader")
+  tutorProgramsAuthored  TutorProgram[]       @relation("TutorProgramAuthor")
+  tutorLessonsAuthored   TutorLesson[]        @relation("TutorLessonAuthor")
 
   @@index([academyId])
   @@map("staff")
@@ -136,23 +166,25 @@ model School {
 /// status: "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
 /// gender: "MALE" | "FEMALE" | null
 model Student {
-  id           String    @id @default(cuid())
-  academyId    String
-  name         String
-  studentCode  String    @unique // 4-digit login code
-  birthDate    DateTime?
-  gender       String? // "MALE" | "FEMALE"
-  phone        String?
-  schoolId     String?
-  grade        Int
-  status       String    @default("ACTIVE") // "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
-  enrollDate   DateTime  @default(now())
-  withdrawDate DateTime?
-  pauseDate    DateTime?
-  memo         String?   @db.Text // Special notes (allergies, personality, etc.)
-  avatarUrl    String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                    String    @id @default(cuid())
+  academyId             String
+  name                  String
+  studentCode           String // legacy login code; tutor auth uses academy-scoped HMAC/hash fields
+  studentCodeLookupHmac String?
+  studentCodeHash       String?
+  birthDate             DateTime?
+  gender                String? // "MALE" | "FEMALE"
+  phone                 String?
+  schoolId              String?
+  grade                 Int
+  status                String    @default("ACTIVE") // "ACTIVE" | "PAUSED" | "WITHDRAWN" | "WAITING"
+  enrollDate            DateTime  @default(now())
+  withdrawDate          DateTime?
+  pauseDate             DateTime?
+  memo                  String?   @db.Text // Special notes (allergies, personality, etc.)
+  avatarUrl             String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   // Gamification
   xp                Int       @default(0)
@@ -162,29 +194,43 @@ model Student {
   lastStudyDate     DateTime?
 
   // Relations
-  academy                Academy                 @relation(fields: [academyId], references: [id])
-  school                 School?                 @relation(fields: [schoolId], references: [id])
-  parentLinks            ParentStudent[]
-  classEnrollments       ClassEnrollment[]
-  attendances            Attendance[]
-  invoices               Invoice[]
-  consultations          Consultation[]
-  assignmentSubs         AssignmentSubmission[]
-  examSubmissions        ExamSubmission[]
-  vocabTestResults       VocabTestResult[]
-  wrongVocabAnswers      WrongVocabAnswer[]
-  aiConversations        AIConversation[]
-  studyProgress          StudyProgress[]
-  studentAchievements    StudentAchievement[]
-  studentAnalytics       StudentAnalytics?
-  parentReports          ParentReport[]
-  wrongAnswerLogs        WrongAnswerLog[]
-  lessonProgress         LessonProgress[]
-  sessionRecords         SessionRecord[]
-  dailyMissions          StudentDailyMission[]
-  naeshinWrongAnswerLogs NaeshinWrongAnswerLog[]
-  suneungWrongAnswerLogs SuneungWrongAnswerLog[]
+  academy                   Academy                    @relation(fields: [academyId], references: [id])
+  school                    School?                    @relation(fields: [schoolId], references: [id])
+  parentLinks               ParentStudent[]
+  classEnrollments          ClassEnrollment[]
+  attendances               Attendance[]
+  invoices                  Invoice[]
+  consultations             Consultation[]
+  assignmentSubs            AssignmentSubmission[]
+  examSubmissions           ExamSubmission[]
+  vocabTestResults          VocabTestResult[]
+  wrongVocabAnswers         WrongVocabAnswer[]
+  aiConversations           AIConversation[]
+  studyProgress             StudyProgress[]
+  studentAchievements       StudentAchievement[]
+  studentAnalytics          StudentAnalytics?
+  parentReports             ParentReport[]
+  wrongAnswerLogs           WrongAnswerLog[]
+  lessonProgress            LessonProgress[]
+  sessionRecords            SessionRecord[]
+  dailyMissions             StudentDailyMission[]
+  naeshinWrongAnswerLogs    NaeshinWrongAnswerLog[]
+  suneungWrongAnswerLogs    SuneungWrongAnswerLog[]
+  tutorStudentSessions      TutorStudentSession[]
+  parentConsents            ParentConsent[]
+  tutorAssignmentRecipients TutorAssignmentRecipient[] @relation("TutorAssignmentRecipientStudent")
+  tutorProgress             TutorProgress[]            @relation("TutorProgressStudent")
+  tutorAttempts             TutorAttempt[]             @relation("TutorAttemptStudent")
+  tutorConversations        TutorConversation[]        @relation("TutorConversationStudent")
+  tutorMessages             TutorMessage[]             @relation("TutorMessageStudent")
+  tutorMastery              TutorMastery[]             @relation("TutorMasteryStudent")
+  tutorReviewSchedules      TutorReviewSchedule[]      @relation("TutorReviewScheduleStudent")
+  tutorWeaknessSnapshots    TutorWeaknessSnapshot[]    @relation("TutorWeaknessSnapshotStudent")
+  tutorLearningEvents       TutorLearningEvent[]       @relation("TutorLearningEventStudent")
+  tutorModerationLogs       ModerationLog[]            @relation("TutorModerationStudent")
 
+  @@unique([academyId, studentCode])
+  @@index([academyId, studentCodeLookupHmac])
   @@index([academyId])
   @@index([schoolId])
   @@index([academyId, status])
@@ -610,22 +656,25 @@ model Passage {
   updatedAt DateTime @updatedAt
 
   // Relations
-  academy          Academy                 @relation(fields: [academyId], references: [id])
-  school           School?                 @relation(fields: [schoolId], references: [id])
-  sourceMaterial   SourceMaterial?         @relation(fields: [sourceMaterialId], references: [id])
-  notes            PassageNote[]
-  analysis         PassageAnalysis?
-  questions        Question[]
-  teacherPrompts   TeacherPrompt[]
-  seasonLinks      SeasonPassage[]
-  lessonProgress   LessonProgress[]
-  sessionRecords   SessionRecord[]
-  naeshinQuestions NaeshinQuestion[]
-  prebuiltSessions PrebuiltSession[]
-  learningSets     LearningSet[]
-  collectionItems  PassageCollectionItem[]
-  bundles          PassageBundle[]
-  webtoons         Webtoon[]
+  academy            Academy                 @relation(fields: [academyId], references: [id])
+  school             School?                 @relation(fields: [schoolId], references: [id])
+  sourceMaterial     SourceMaterial?         @relation(fields: [sourceMaterialId], references: [id])
+  notes              PassageNote[]
+  analysis           PassageAnalysis?
+  questions          Question[]
+  teacherPrompts     TeacherPrompt[]
+  seasonLinks        SeasonPassage[]
+  lessonProgress     LessonProgress[]
+  sessionRecords     SessionRecord[]
+  naeshinQuestions   NaeshinQuestion[]
+  prebuiltSessions   PrebuiltSession[]
+  learningSets       LearningSet[]
+  collectionItems    PassageCollectionItem[]
+  bundles            PassageBundle[]
+  webtoons           Webtoon[]
+  tutorLessons       TutorLesson[]
+  tutorConversations TutorConversation[]
+  tutorAiLogs        TutorAiLog[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -1911,6 +1960,8 @@ model ExtractionJob {
   startedAt   DateTime?
   completedAt DateTime?
   updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  deletedById String?
 
   academy         Academy                    @relation(fields: [academyId], references: [id])
   createdBy       Staff                      @relation("ExtractionJobCreator", fields: [createdById], references: [id])
@@ -1924,9 +1975,32 @@ model ExtractionJob {
 
   @@index([academyId, status])
   @@index([academyId, createdAt])
+  @@index([academyId, deletedAt, createdAt])
+  @@index([deletedAt])
   @@index([status, createdAt])
   @@index([sourceMaterialId])
   @@map("extraction_jobs")
+}
+
+model ExtractionAuditLog {
+  id           String   @id @default(cuid())
+  academyId    String
+  actorStaffId String?
+  action       String
+  targetType   String
+  targetId     String
+  targetLabel  String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  academy    Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  actorStaff Staff?  @relation("ExtractionAuditActor", fields: [actorStaffId], references: [id], onDelete: SetNull)
+
+  @@index([academyId, createdAt])
+  @@index([actorStaffId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetType, targetId, createdAt])
+  @@map("extraction_audit_logs")
 }
 
 /// ExtractionPage — 페이지 1장 = Gemini 호출 1회 단위 (원자 단위)
@@ -2099,14 +2173,14 @@ model SourceMaterial {
   academyId String
   schoolId  String?
 
-  type     String
-  title    String
+  type        String
+  title       String
   /// Teacher-set override displayed in the 자료 관리 (extraction-manage) page.
   /// Auto-set `title` (extraction AI guess) is unreliable, so the manage UI
   /// reads `customLabel` first and falls back to a derived "{job name} 시험지 N"
   /// label. Other pages keep using `title`.
   customLabel String?
-  subtitle String?
+  subtitle    String?
 
   // Common metadata (first-class columns for fast filtering)
   subject   String? @default("ENGLISH")
@@ -2203,6 +2277,8 @@ model ExtractionM1PassageDraft {
   savedPassageId String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  deletedById    String?
 
   job             ExtractionJob                    @relation(fields: [jobId], references: [id], onDelete: Cascade)
   sourceMaterial  SourceMaterial?                  @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
@@ -2212,8 +2288,10 @@ model ExtractionM1PassageDraft {
 
   @@unique([jobId, passageOrder])
   @@index([jobId])
+  @@index([jobId, deletedAt])
   @@index([sourceMaterialId])
   @@index([reviewStatus])
+  @@index([deletedAt])
   @@map("extraction_m1_passage_drafts")
 }
 
@@ -2491,4 +2569,725 @@ model Webtoon {
   @@index([academyId, status])
   @@index([createdAt])
   @@map("webtoons")
+}
+
+// ============================================================================
+// 26. TUTOR — Mobile/tablet 내신 learning system (isolated from legacy learning)
+// ============================================================================
+
+model TutorStudentSession {
+  id                String    @id @default(cuid())
+  academyId         String
+  studentId         String
+  deviceFingerprint String
+  userAgent         String    @db.Text
+  ip                String    @db.VarChar(45)
+  issuedAt          DateTime  @default(now())
+  lastSeenAt        DateTime  @default(now())
+  expiresAt         DateTime
+  revokedAt         DateTime?
+  revokedReason     String?
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, deviceFingerprint])
+  @@index([academyId, studentId, expiresAt])
+  @@map("tutor_student_sessions")
+}
+
+model TutorLoginRateLimit {
+  id          String   @id @default(cuid())
+  academySlug String
+  ip          String   @db.Char(45)
+  windowStart DateTime
+  count       Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([academySlug, ip, windowStart])
+  @@index([academySlug, windowStart])
+  @@map("tutor_login_rate_limits")
+}
+
+model ParentConsent {
+  id                 String    @id @default(cuid())
+  academyId          String
+  studentId          String
+  consentType        String    @default("TUTOR_CROSS_BORDER")
+  status             String    @default("GRANTED")
+  consentTextVersion String    @default("v1")
+  parentName         String
+  parentPhone        String
+  consentGivenAt     DateTime
+  consentMethod      String
+  crossBorderAck     Boolean   @default(false)
+  retentionAck       Boolean   @default(false)
+  withdrawnAt        DateTime?
+  ipHash             String?
+  userAgentHash      String?
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([academyId, studentId])
+  @@index([academyId, status, consentType])
+  @@map("parent_consents")
+}
+
+model AppEvent {
+  id            String   @id @default(cuid())
+  academyId     String
+  actorType     String
+  actorId       String?
+  eventType     String
+  resourceType  String?
+  resourceId    String?
+  metadata      Json?
+  correlationId String?
+  createdAt     DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@index([academyId, eventType, createdAt])
+  @@index([academyId, actorType, actorId])
+  @@map("app_events")
+}
+
+model TutorProgram {
+  id            String    @id @default(cuid())
+  academyId     String
+  authorId      String
+  title         String
+  description   String?   @db.Text
+  templateKey   String    @default("basic_interpret")
+  targetSummary String?
+  status        String    @default("DRAFT")
+  estimatedMin  Int       @default(40)
+  difficulty    String    @default("INTERMEDIATE")
+  tags          String?   @db.Text
+  version       Int       @default(1)
+  publishedAt   DateTime?
+  archivedAt    DateTime?
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  academy           Academy                 @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  author            Staff                   @relation("TutorProgramAuthor", fields: [authorId], references: [id])
+  lessons           TutorProgramLesson[]
+  versions          TutorProgramVersion[]
+  assignments       TutorAssignment[]
+  progress          TutorProgress[]
+  conversations     TutorConversation[]
+  coverageSnapshots TutorCoverageSnapshot[]
+  weaknessSnapshots TutorWeaknessSnapshot[]
+
+  @@index([academyId, status, updatedAt])
+  @@map("tutor_programs")
+}
+
+model TutorProgramVersion {
+  id         String   @id @default(cuid())
+  academyId  String
+  programId  String
+  version    Int
+  snapshot   Json
+  editedById String
+  createdAt  DateTime @default(now())
+
+  program TutorProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, version])
+  @@index([academyId, programId, version])
+  @@map("tutor_program_versions")
+}
+
+model TutorProgramLesson {
+  id        String   @id @default(cuid())
+  academyId String
+  programId String
+  lessonId  String
+  orderNum  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  program TutorProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  lesson  TutorLesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, lessonId])
+  @@index([academyId, programId, orderNum])
+  @@map("tutor_program_lessons")
+}
+
+model TutorLesson {
+  id            String    @id @default(cuid())
+  academyId     String
+  passageId     String
+  authorId      String
+  title         String
+  description   String?   @db.Text
+  coverImage    String?
+  status        String    @default("DRAFT")
+  estimatedMin  Int       @default(15)
+  difficulty    String    @default("INTERMEDIATE")
+  tags          String?   @db.Text
+  aiContext     Json?
+  parentVisible Boolean   @default(false)
+  activityCount Int       @default(0)
+  totalMaxScore Int       @default(0)
+  version       Int       @default(1)
+  publishedAt   DateTime?
+  archivedAt    DateTime?
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  academy           Academy                 @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  passage           Passage                 @relation(fields: [passageId], references: [id], onDelete: Restrict)
+  author            Staff                   @relation("TutorLessonAuthor", fields: [authorId], references: [id])
+  activities        TutorActivity[]
+  programLinks      TutorProgramLesson[]
+  versions          TutorLessonVersion[]
+  conversations     TutorConversation[]
+  progress          TutorProgress[]
+  attempts          TutorAttempt[]
+  coverageSnapshots TutorCoverageSnapshot[]
+  weaknessSnapshots TutorWeaknessSnapshot[]
+
+  @@index([academyId, status, updatedAt])
+  @@index([academyId, passageId])
+  @@map("tutor_lessons")
+}
+
+model TutorLessonVersion {
+  id         String   @id @default(cuid())
+  academyId  String
+  lessonId   String
+  version    Int
+  snapshot   Json
+  editedById String
+  createdAt  DateTime @default(now())
+
+  lesson TutorLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, version])
+  @@index([academyId, lessonId, version])
+  @@map("tutor_lesson_versions")
+}
+
+model TutorActivity {
+  id                    String   @id @default(cuid())
+  academyId             String
+  lessonId              String
+  mode                  String
+  type                  String
+  orderNum              Int      @default(0)
+  title                 String
+  instructions          String?  @db.Text
+  payload               Json
+  payloadSchemaVersion  Int      @default(1)
+  payloadHash           String
+  analysisSnapshotHash  String?
+  itemCount             Int      @default(1)
+  maxScore              Int      @default(10)
+  estimatedSec          Int      @default(60)
+  requiresAiGrade       Boolean  @default(false)
+  coverageRefs          Json
+  sourceAnalysisVersion Int?
+  aiLogId               String?
+  createdBy             String   @default("system")
+  status                String   @default("DRAFT")
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  academy      Academy            @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  lesson       TutorLesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  attemptItems TutorAttemptItem[]
+  aiLog        TutorAiLog?        @relation(fields: [aiLogId], references: [id])
+
+  @@index([academyId, lessonId, orderNum])
+  @@index([academyId, mode, type])
+  @@map("tutor_activities")
+}
+
+model TutorAssignment {
+  id                     String    @id @default(cuid())
+  academyId              String
+  programId              String
+  assignedById           String
+  availableFrom          DateTime
+  dueAt                  DateTime?
+  closesAt               DateTime?
+  lockAfterClose         Boolean   @default(true)
+  allowRetake            Boolean   @default(true)
+  maxAttempts            Int       @default(3)
+  status                 String    @default("SCHEDULED")
+  titleSnapshot          String
+  programVersionAtAssign Int
+  notes                  String?   @db.Text
+  hintsAllowed           Boolean   @default(true)
+  tutorQuestionLimit     Int       @default(20)
+  reminderMessage        String?   @db.Text
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  academy    Academy                    @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  program    TutorProgram               @relation(fields: [programId], references: [id], onDelete: Restrict)
+  targets    TutorAssignmentTarget[]
+  recipients TutorAssignmentRecipient[]
+  progress   TutorProgress[]
+  attempts   TutorAttempt[]
+
+  @@index([academyId, status, availableFrom])
+  @@index([academyId, programId])
+  @@map("tutor_assignments")
+}
+
+model TutorAssignmentTarget {
+  id             String   @id @default(cuid())
+  academyId      String
+  assignmentId   String
+  targetType     String
+  targetId       String?
+  targetSnapshot Json
+  createdAt      DateTime @default(now())
+
+  academy    Academy                    @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  assignment TutorAssignment            @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  recipients TutorAssignmentRecipient[]
+
+  @@index([academyId, assignmentId])
+  @@index([academyId, targetType, targetId])
+  @@map("tutor_assignment_targets")
+}
+
+model TutorAssignmentRecipient {
+  id             String   @id @default(cuid())
+  academyId      String
+  assignmentId   String
+  studentId      String
+  sourceTargetId String?
+  targetSnapshot Json?
+  createdAt      DateTime @default(now())
+
+  academy      Academy                @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  assignment   TutorAssignment        @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  sourceTarget TutorAssignmentTarget? @relation(fields: [sourceTargetId], references: [id], onDelete: SetNull)
+  student      Student                @relation("TutorAssignmentRecipientStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  progress     TutorProgress[]
+
+  @@unique([assignmentId, studentId])
+  @@index([academyId, studentId])
+  @@index([academyId, assignmentId])
+  @@map("tutor_assignment_recipients")
+}
+
+model TutorProgress {
+  id                 String    @id @default(cuid())
+  academyId          String
+  assignmentId       String
+  recipientId        String?
+  programId          String
+  lessonId           String?
+  studentId          String
+  status             String    @default("NOT_STARTED")
+  startedAt          DateTime?
+  lastSeenAt         DateTime?
+  submittedAt        DateTime?
+  masteryPassedAt    DateTime?
+  bestScore          Int?
+  bestAttemptId      String?
+  attemptCount       Int       @default(0)
+  weaknessSnapshotId String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  academy          Academy                   @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  assignment       TutorAssignment           @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  recipient        TutorAssignmentRecipient? @relation(fields: [recipientId], references: [id], onDelete: SetNull)
+  program          TutorProgram              @relation(fields: [programId], references: [id], onDelete: Cascade)
+  lesson           TutorLesson?              @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student          Student                   @relation("TutorProgressStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  weaknessSnapshot TutorWeaknessSnapshot?    @relation(fields: [weaknessSnapshotId], references: [id], onDelete: SetNull)
+
+  @@index([academyId, studentId, status])
+  @@index([academyId, assignmentId, studentId])
+  @@map("tutor_progress")
+}
+
+model TutorAttempt {
+  id                    String    @id @default(cuid())
+  academyId             String
+  assignmentId          String
+  lessonId              String
+  studentId             String
+  lessonVersionSnapshot Int
+  attemptNum            Int
+  startedAt             DateTime  @default(now())
+  submittedAt           DateTime?
+  timeSpentSec          Int       @default(0)
+  rawScore              Int       @default(0)
+  maxScore              Int       @default(0)
+  percentScore          Int?
+  isMasteryAttempt      Boolean   @default(false)
+  aiSummary             String?   @db.Text
+  clientNonce           String?
+  status                String    @default("IN_PROGRESS")
+  deletedAt             DateTime?
+
+  academy    Academy            @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  assignment TutorAssignment    @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  lesson     TutorLesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student    Student            @relation("TutorAttemptStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  items      TutorAttemptItem[]
+
+  @@unique([assignmentId, studentId, lessonId, attemptNum])
+  @@unique([studentId, clientNonce])
+  @@index([academyId, studentId, submittedAt])
+  @@map("tutor_attempts")
+}
+
+model TutorAttemptItem {
+  id             String    @id @default(cuid())
+  academyId      String
+  attemptId      String
+  activityId     String
+  itemIndex      Int
+  itemRef        String?
+  responseText   String?   @db.Text
+  responseJson   Json?
+  isCorrect      Boolean?
+  scoreEarned    Int       @default(0)
+  scoreMax       Int       @default(1)
+  timeSpentMs    Int?
+  hintUsedCount  Int       @default(0)
+  pasteCount     Int       @default(0)
+  focusLossCount Int       @default(0)
+  clientFlags    Json?
+  aiGrade        Json?
+  aiGradeLogId   String?
+  overrideScore  Int?
+  overrideNote   String?   @db.Text
+  overriddenBy   String?
+  overriddenAt   DateTime?
+  createdAt      DateTime  @default(now())
+
+  academy  Academy       @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  attempt  TutorAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  activity TutorActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  aiLog    TutorAiLog?   @relation("AttemptItemGrade", fields: [aiGradeLogId], references: [id])
+
+  @@unique([attemptId, activityId, itemIndex])
+  @@index([academyId, activityId, isCorrect])
+  @@index([academyId, itemRef])
+  @@map("tutor_attempt_items")
+}
+
+model TutorConversation {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  programId     String?
+  lessonId      String
+  passageId     String
+  activityId    String?
+  title         String    @default("새 대화")
+  topicHint     String?
+  turnCount     Int       @default(0)
+  tokenInTotal  Int       @default(0)
+  tokenOutTotal Int       @default(0)
+  closedAt      DateTime?
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  academy  Academy        @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student  Student        @relation("TutorConversationStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  program  TutorProgram?  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  lesson   TutorLesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  passage  Passage        @relation(fields: [passageId], references: [id], onDelete: Cascade)
+  messages TutorMessage[]
+
+  @@index([academyId, studentId, updatedAt])
+  @@index([academyId, lessonId, updatedAt])
+  @@map("tutor_conversations")
+}
+
+model TutorMessage {
+  id                   String   @id @default(cuid())
+  academyId            String
+  conversationId       String
+  studentId            String?
+  role                 String
+  content              String   @db.Text
+  chunkIndex           Int      @default(0)
+  model                String?
+  tokensIn             Int?
+  tokensOut            Int?
+  latencyMs            Int?
+  moderation           String?  @default("OK")
+  containsPII          Boolean  @default(false)
+  refs                 Json?
+  studentStateSnapshot Json?
+  createdAt            DateTime @default(now())
+
+  academy      Academy           @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  conversation TutorConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  student      Student?          @relation("TutorMessageStudent", fields: [studentId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId, createdAt])
+  @@index([academyId, createdAt])
+  @@map("tutor_messages")
+}
+
+model TutorAiLogTag {
+  id             String   @id @default(cuid())
+  academyId      String
+  conversationId String?
+  messageId      String?
+  attemptItemId  String?
+  tag            String
+  note           String?  @db.Text
+  taggedById     String
+  createdAt      DateTime @default(now())
+
+  @@index([academyId, tag, createdAt])
+  @@map("tutor_ai_log_tags")
+}
+
+model TutorMastery {
+  id         String   @id @default(cuid())
+  academyId  String
+  studentId  String
+  scope      String
+  refKey     String
+  passageId  String?
+  attempts   Int      @default(0)
+  correct    Int      @default(0)
+  lastSeenAt DateTime
+  updatedAt  DateTime @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student Student @relation("TutorMasteryStudent", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([academyId, studentId, scope])
+  @@map("tutor_mastery")
+}
+
+model TutorReviewSchedule {
+  id             String    @id @default(cuid())
+  academyId      String
+  studentId      String
+  programId      String?
+  lessonId       String?
+  scope          String
+  refKey         String
+  masteryId      String?
+  dueAt          DateTime
+  lastReviewedAt DateTime?
+  intervalDays   Int       @default(1)
+  easeFactor     Decimal   @default(2.50) @db.Decimal(4, 2)
+  lapses         Int       @default(0)
+  status         String    @default("DUE")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student Student @relation("TutorReviewScheduleStudent", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([academyId, studentId, dueAt])
+  @@index([academyId, status, dueAt])
+  @@map("tutor_review_schedules")
+}
+
+model TutorCoverageSnapshot {
+  id                      String   @id @default(cuid())
+  academyId               String
+  programId               String
+  lessonId                String
+  sentenceIndex           Int
+  dimension               String
+  coveragePct             Int
+  contributingActivityIds Json
+  computedAt              DateTime @default(now())
+
+  academy Academy      @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  program TutorProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  lesson  TutorLesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, lessonId, sentenceIndex, dimension])
+  @@index([academyId, programId, lessonId])
+  @@map("tutor_coverage_snapshots")
+}
+
+model TutorWeaknessSnapshot {
+  id                      String   @id @default(cuid())
+  academyId               String
+  studentId               String
+  programId               String?
+  lessonId                String?
+  computedAt              DateTime @default(now())
+  scoreInterpret          Int
+  scoreMemorize           Int
+  scoreOrder              Int
+  scoreVocabDepth         Int
+  scoreGrammar            Int
+  scoreTransfer           Int
+  scoreRetention          Int
+  weakSentenceIndices     Json
+  weakVocab               Json
+  weakGrammarPoints       Json
+  remediationAssignmentId String?
+
+  academy      Academy         @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student      Student         @relation("TutorWeaknessSnapshotStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  program      TutorProgram?   @relation(fields: [programId], references: [id], onDelete: Cascade)
+  lesson       TutorLesson?    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  progressRows TutorProgress[]
+
+  @@index([academyId, studentId, computedAt])
+  @@map("tutor_weakness_snapshots")
+}
+
+model TutorAiLog {
+  id              String   @id @default(cuid())
+  academyId       String
+  kind            String
+  passageId       String?
+  programId       String?
+  lessonId        String?
+  activityId      String?
+  staffId         String?
+  studentId       String?
+  model           String
+  promptHash      String
+  tokensIn        Int
+  tokensOut       Int
+  costUsd         Decimal  @db.Decimal(10, 6)
+  latencyMs       Int
+  crossBorderFlag Boolean  @default(true)
+  status          String
+  errorCode       String?
+  promptPreview   String?  @db.VarChar(256)
+  outputPreview   String?  @db.VarChar(256)
+  correlationId   String?
+  createdAt       DateTime @default(now())
+
+  academy       Academy            @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  passage       Passage?           @relation(fields: [passageId], references: [id], onDelete: SetNull)
+  activities    TutorActivity[]
+  attemptGrades TutorAttemptItem[] @relation("AttemptItemGrade")
+
+  @@index([academyId, createdAt])
+  @@index([academyId, kind, status])
+  @@map("tutor_ai_logs")
+}
+
+model ModerationLog {
+  id           String    @id @default(cuid())
+  academyId    String
+  studentId    String
+  source       String
+  sourceId     String?
+  severity     String
+  rawSnippet   String    @db.Text
+  classifier   String
+  notifiedAt   DateTime?
+  reviewedById String?
+  reviewedAt   DateTime?
+  action       String?
+  createdAt    DateTime  @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student Student @relation("TutorModerationStudent", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([academyId, severity, createdAt])
+  @@map("moderation_logs")
+}
+
+model TutorLearningEvent {
+  id            String   @id @default(cuid())
+  academyId     String
+  studentId     String
+  programId     String?
+  lessonId      String?
+  activityId    String?
+  eventType     String
+  payload       Json?
+  correlationId String?
+  createdAt     DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student Student @relation("TutorLearningEventStudent", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([academyId, studentId, createdAt])
+  @@index([academyId, eventType, createdAt])
+  @@map("tutor_learning_events")
+}
+
+model BillingPlan {
+  id                    String    @id @default(cuid())
+  academyId             String    @unique
+  pricePerSeatKrw       Int
+  effectiveFrom         DateTime
+  effectiveTo           DateTime?
+  dailyAiCostCeilingUsd Decimal   @default(50.0) @db.Decimal(10, 2)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@map("billing_plans")
+}
+
+model SeatBillingRun {
+  id                 String    @id @default(cuid())
+  academyId          String
+  yearMonth          String
+  activeStudentCount Int
+  pricePerSeatKrw    Int
+  totalKrw           Int
+  status             String
+  invoicedAt         DateTime?
+  paidAt             DateTime?
+  createdAt          DateTime  @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@unique([academyId, yearMonth])
+  @@map("seat_billing_runs")
+}
+
+model AcademyTheme {
+  id           String   @id @default(cuid())
+  academyId    String   @unique
+  presetKey    String   @default("NEUTRAL")
+  tokens       Json?
+  fontStack    String?
+  logoUrl      String?
+  brandStrings Json?
+  updatedById  String?
+  updatedAt    DateTime @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@map("academy_themes")
+}
+
+model AcademyFeatureFlag {
+  id          String   @id @default(cuid())
+  academyId   String
+  key         String
+  enabled     Boolean  @default(false)
+  rolloutPct  Int      @default(100)
+  metadata    Json?
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@unique([academyId, key])
+  @@index([academyId, enabled])
+  @@map("academy_feature_flags")
 }

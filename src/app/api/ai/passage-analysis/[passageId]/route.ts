@@ -6,7 +6,15 @@ import { passageAnalysisSchema } from "@/lib/passage-analysis-schema";
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
+import { generateQuestionText } from "@/lib/question-generation-llm";
+import {
+  getQuestionGenerationCreditCost,
+  getQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
 async function loadPersistedAnnotations(
@@ -56,6 +64,47 @@ class AnalysisJsonParseError extends Error {
     this.previewStart = raw.slice(0, 500);
     this.previewEnd = raw.slice(-500);
   }
+}
+
+function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
+  if (!value || typeof value !== "object") return null;
+  const raw = (value as Record<string, unknown>)._generationPlan;
+  return raw === "PREMIUM" || raw === "STANDARD" ? raw : null;
+}
+
+function shouldUseCachedAnalysis(
+  cached: unknown,
+  requestedPlan: QuestionGenerationPlan,
+): boolean {
+  const cachedPlan = getAnalysisGenerationPlan(cached);
+  if (requestedPlan === "PREMIUM") return cachedPlan === "PREMIUM";
+  return true;
+}
+
+function withAnalysisGenerationMetadata(
+  analysisData: unknown,
+  generationPlan: QuestionGenerationPlan,
+) {
+  if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
+    return analysisData;
+  }
+
+  return {
+    ...(analysisData as Record<string, unknown>),
+    _generationPlan: generationPlan,
+    _generationTag: getQuestionGenerationPlanTag(generationPlan),
+  };
+}
+
+function stripModelMetadataFromAnalysis(analysisData: unknown) {
+  if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
+    return analysisData;
+  }
+  const { _modelUsed: _ignored, modelUsed: _ignoredModelUsed, ...rest } =
+    analysisData as Record<string, unknown>;
+  void _ignored;
+  void _ignoredModelUsed;
+  return rest;
 }
 
 function getErrorField(error: unknown, field: string): unknown {
@@ -200,6 +249,13 @@ export async function GET(
     }
 
     const { passageId } = await params;
+    const generationPlan = normalizeQuestionGenerationPlan(
+      _request.nextUrl.searchParams.get("generationPlan"),
+    );
+    const creditCost = getQuestionGenerationCreditCost(
+      CREDIT_COSTS.PASSAGE_ANALYSIS,
+      generationPlan,
+    );
 
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
@@ -215,16 +271,25 @@ export async function GET(
 
     const currentHash = hashContent(passage.content);
     if (passage.analysis && passage.analysis.contentHash === currentHash) {
-      return NextResponse.json({
-        data: JSON.parse(passage.analysis.analysisData),
-        cached: true,
-      });
+      const cachedAnalysis = JSON.parse(passage.analysis.analysisData);
+      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan)) {
+        return NextResponse.json({
+          data: stripModelMetadataFromAnalysis(cachedAnalysis),
+          cached: true,
+          generationPlan: getAnalysisGenerationPlan(cachedAnalysis) || generationPlan,
+        });
+      }
+      console.log("[ANALYSIS] Cache skipped because requested plan is premium and cached analysis is not premium.");
     }
 
     // Cache miss — deduct credits before running analysis
     let creditResult: { balanceAfter: number; transactionId: string };
     try {
-      creditResult = await deductCredits(staff.academyId, "PASSAGE_ANALYSIS", staff.id, { passageId });
+      creditResult = await deductCredits(staff.academyId, "PASSAGE_ANALYSIS", staff.id, {
+        passageId,
+        generationPlan,
+        creditCost,
+      }, creditCost);
     } catch (err) {
       if (err instanceof InsufficientCreditsError) {
         return NextResponse.json(
@@ -243,9 +308,10 @@ export async function GET(
       const autoPrompt = persistedAnns.length > 0
         ? buildAnalysisPrompt("", persistedAnns)
         : undefined;
-      analysisData = await runFullAnalysis(passage, autoPrompt);
+      const rawAnalysis = await runFullAnalysis(passage, autoPrompt, generationPlan);
+      analysisData = withAnalysisGenerationMetadata(rawAnalysis, generationPlan);
     } catch (aiError) {
-      await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", creditResult.transactionId, "Analysis failed");
+      await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", creditResult.transactionId, "Analysis failed", creditCost);
       throw aiError;
     }
 
@@ -255,7 +321,12 @@ export async function GET(
       create: { passageId, analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
     });
 
-    return NextResponse.json({ data: analysisData, cached: false, creditsRemaining: creditResult.balanceAfter });
+    return NextResponse.json({
+      data: analysisData,
+      cached: false,
+      creditsRemaining: creditResult.balanceAfter,
+      generationPlan,
+    });
   } catch (error) {
     const classified = classifyAnalysisError(error);
     console.error("Passage analysis error:", classified.log, error);
@@ -281,6 +352,11 @@ export async function POST(
 
     const { passageId } = await params;
     const body = await request.json();
+    const generationPlan = normalizeQuestionGenerationPlan(body.generationPlan);
+    const creditCost = getQuestionGenerationCreditCost(
+      CREDIT_COSTS.PASSAGE_ANALYSIS,
+      generationPlan,
+    );
 
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
@@ -363,7 +439,11 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
     // --- Action: full analysis with custom prompt ---
     let creditResult: { balanceAfter: number; transactionId: string };
     try {
-      creditResult = await deductCredits(staff.academyId, "PASSAGE_ANALYSIS", staff.id, { passageId });
+      creditResult = await deductCredits(staff.academyId, "PASSAGE_ANALYSIS", staff.id, {
+        passageId,
+        generationPlan,
+        creditCost,
+      }, creditCost);
     } catch (err) {
       if (err instanceof InsufficientCreditsError) {
         return NextResponse.json(
@@ -389,9 +469,10 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
 
     let analysisData: unknown;
     try {
-      analysisData = await runFullAnalysis(passage, mergedPrompt || undefined);
+      const rawAnalysis = await runFullAnalysis(passage, mergedPrompt || undefined, generationPlan);
+      analysisData = withAnalysisGenerationMetadata(rawAnalysis, generationPlan);
     } catch (aiError) {
-      await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", creditResult.transactionId, "Custom analysis failed");
+      await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", creditResult.transactionId, "Custom analysis failed", creditCost);
       throw aiError;
     }
 
@@ -402,7 +483,12 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
       create: { passageId, analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
     });
 
-    return NextResponse.json({ data: analysisData, cached: false, creditsRemaining: creditResult.balanceAfter });
+    return NextResponse.json({
+      data: analysisData,
+      cached: false,
+      creditsRemaining: creditResult.balanceAfter,
+      generationPlan,
+    });
   } catch (error) {
     const classified = classifyAnalysisError(error);
     console.error("Passage analysis POST error:", classified.log, error);
@@ -544,7 +630,8 @@ async function runFullAnalysis(
     grade: number | null;
     school: { type: string } | null;
   },
-  customPrompt?: string
+  customPrompt?: string,
+  generationPlan: QuestionGenerationPlan = "STANDARD",
 ) {
   const schoolType = passage.school?.type === "MIDDLE" ? "중학교" : "고등학교";
   const gradeLabel = passage.grade
@@ -556,11 +643,12 @@ async function runFullAnalysis(
     : "";
 
   const startTime = Date.now();
-  console.log("[ANALYSIS] Starting generateText (JSON mode)...");
+  console.log(`[ANALYSIS] Starting generateText (JSON mode) via ${generationPlan} plan...`);
 
-  const analysisResult = await generateText({
-    model,
-    maxOutputTokens: 20000,
+  const analysisResult = await generateQuestionText({
+    generationPlan,
+    logPrefix: "ANALYSIS",
+    maxTokens: 20000,
     temperature: 0.1,
     prompt: `당신은 한국 중고등학교 영어 내신 시험 대비 전문 분석가입니다.
 아래 지문을 내신 시험 출제 관점에서 분석하고, 결과를 **JSON만** 출력하세요.

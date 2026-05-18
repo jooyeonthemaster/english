@@ -42,6 +42,8 @@ import { useExtractionStore } from "@/lib/extraction/store";
 import { getModeConfig, type ExtractionMode } from "@/lib/extraction/modes";
 import { PassageAddToExamDialog } from "@/components/workbench/passage-add-to-exam-dialog";
 import { PassageAssignToClassDialog } from "@/components/workbench/passage-assign-to-class-dialog";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -124,6 +126,8 @@ export function DoneStep() {
   // ships; the UI contract stays identical.
   const [analysisRunning, setAnalysisRunning] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0); // 0.0 – 1.0
+  const [analysisGenerationPlan, setAnalysisGenerationPlan] =
+    useState<QuestionGenerationPlan>("STANDARD");
 
   // ── beforeUnload guard ───────────────────────────────────────────────────
   // The 5-layer batch is non-transactional and can run for minutes. If the
@@ -270,7 +274,7 @@ export function DoneStep() {
         const res = await fetch(`/api/ai/passage-analysis/${id}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
+          body: JSON.stringify({ generationPlan: analysisGenerationPlan }),
         });
         if (!res.ok) {
           failed += 1;
@@ -291,7 +295,7 @@ export function DoneStep() {
     } else {
       toast.warning(`${success}/${total}개 완료, ${failed}개 실패`);
     }
-  }, [hasPassageIds, analysisRunning, passageIds]);
+  }, [hasPassageIds, analysisRunning, passageIds, analysisGenerationPlan]);
 
   const onGoGenerate = useCallback(() => {
     if (generateDisabled) return;
@@ -414,6 +418,13 @@ export function DoneStep() {
               6개 액션 · 클릭하여 진행
             </span>
           </div>
+
+          <GenerationPlanSelector
+            value={analysisGenerationPlan}
+            onChange={setAnalysisGenerationPlan}
+            compact
+            className="mb-4 max-w-[380px]"
+          />
 
           <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-2 gap-3">
             <ActionCard

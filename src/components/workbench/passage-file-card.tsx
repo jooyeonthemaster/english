@@ -8,6 +8,7 @@ import {
   BookOpen,
   PenTool,
   Braces,
+  Copy,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
@@ -52,11 +53,15 @@ export function PassageFileCard({
   selected,
   onToggleSelect,
   onViewDetail,
+  dupCount,
 }: {
   passage: PassageItem;
   selected: boolean;
   onToggleSelect: (id: string, shift: boolean) => void;
   onViewDetail: (id: string) => void;
+  /** Optional. When this passage is part of a duplicate cluster, the number
+   *  of *other* passages that share its normalized content. */
+  dupCount?: number;
 }) {
   const data = parseAnalysis(passage.analysis);
   const isAnalyzed = !!passage.analysis;
@@ -105,13 +110,22 @@ export function PassageFileCard({
               <h4 className="text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
                 {passage.title}
               </h4>
-              <div className="flex items-center gap-1.5 mt-0.5">
+              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                 {isAnalyzed ? (
                   <span className="text-[10px] font-medium text-emerald-600">분석 완료</span>
                 ) : (
                   <span className="text-[10px] font-medium text-slate-400">분석 대기</span>
                 )}
                 <span className="text-[10px] text-slate-400">{wordCount} words</span>
+                {dupCount && dupCount > 0 ? (
+                  <span
+                    className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 tabular-nums"
+                    title={`동일한 내용의 지문 ${dupCount}개가 더 존재합니다`}
+                  >
+                    <Copy className="w-2.5 h-2.5" />
+                    {dupCount} 중복
+                  </span>
+                ) : null}
               </div>
             </div>
           </div>

@@ -140,6 +140,41 @@ function findWithSurroundingContext(
   surroundingText: string
 ): FoundPosition | null {
   // Find the surrounding text in the passage
+  const contextIdx = findSurroundingContextIndex(passage, surroundingText);
+  if (contextIdx === null) return null;
+
+  const preferWordBoundary = isSingleTokenExpression(expression);
+
+  // First search inside the matched surroundingText itself. This is the most
+  // reliable signal the model gives us; widening the window too early lets
+  // short targets such as "it" match inside words like "digital" or
+  // "commitments" before the intended pronoun.
+  const exactContext = passage.slice(contextIdx, contextIdx + surroundingText.length);
+  const inContext = findInSlice(exactContext, expression, preferWordBoundary);
+  if (inContext) {
+    return { index: contextIdx + inContext.index, length: inContext.length };
+  }
+
+  // Define a search window around the context: a generous margin
+  const margin = 50;
+  const windowStart = Math.max(0, contextIdx - margin);
+  const windowEnd = Math.min(passage.length, contextIdx + surroundingText.length + margin);
+  const window = passage.slice(windowStart, windowEnd);
+
+  // Find expression within this window, still respecting token boundaries for
+  // single-word/pronoun targets.
+  const inWindow = findInSlice(window, expression, preferWordBoundary);
+  if (inWindow) {
+    return { index: windowStart + inWindow.index, length: inWindow.length };
+  }
+
+  return null;
+}
+
+function findSurroundingContextIndex(
+  passage: string,
+  surroundingText: string
+): number | null {
   let contextIdx = passage.indexOf(surroundingText);
 
   // Fallback: case-insensitive
@@ -158,24 +193,49 @@ function findWithSurroundingContext(
     }
   }
 
-  if (contextIdx === -1) return null;
+  return contextIdx === -1 ? null : contextIdx;
+}
 
-  // Define a search window around the context: a generous margin
-  const margin = 50;
-  const windowStart = Math.max(0, contextIdx - margin);
-  const windowEnd = Math.min(passage.length, contextIdx + surroundingText.length + margin);
-  const window = passage.slice(windowStart, windowEnd);
+function isSingleTokenExpression(expression: string): boolean {
+  const trimmed = expression.trim();
+  return /^[A-Za-z][A-Za-z'-]*$/.test(trimmed);
+}
 
-  // Find expression within this window
-  const exprIdx = window.indexOf(expression);
-  if (exprIdx !== -1) {
-    return { index: windowStart + exprIdx, length: expression.length };
+function isWordChar(ch: string | undefined): boolean {
+  return !!ch && /[A-Za-z0-9_]/.test(ch);
+}
+
+function hasTokenBoundaries(text: string, index: number, length: number): boolean {
+  return !isWordChar(text[index - 1]) && !isWordChar(text[index + length]);
+}
+
+function findInSlice(
+  text: string,
+  expression: string,
+  requireTokenBoundaries: boolean
+): FoundPosition | null {
+  const candidates = [expression, expression.trim()].filter(Boolean);
+
+  for (const candidate of candidates) {
+    let idx = text.indexOf(candidate);
+    while (idx !== -1) {
+      if (!requireTokenBoundaries || hasTokenBoundaries(text, idx, candidate.length)) {
+        return { index: idx, length: candidate.length };
+      }
+      idx = text.indexOf(candidate, idx + 1);
+    }
   }
 
-  // Case-insensitive within window
-  const ciIdx = window.toLowerCase().indexOf(expression.toLowerCase());
-  if (ciIdx !== -1) {
-    return { index: windowStart + ciIdx, length: expression.length };
+  const lowerText = text.toLowerCase();
+  for (const candidate of candidates) {
+    const lowerCandidate = candidate.toLowerCase();
+    let idx = lowerText.indexOf(lowerCandidate);
+    while (idx !== -1) {
+      if (!requireTokenBoundaries || hasTokenBoundaries(text, idx, candidate.length)) {
+        return { index: idx, length: candidate.length };
+      }
+      idx = lowerText.indexOf(lowerCandidate, idx + 1);
+    }
   }
 
   return null;
@@ -224,7 +284,8 @@ function mapNormalizedIndexToOriginal(
 function findWordInPassage(
   passage: string,
   word: string,
-  surroundingText?: string
+  surroundingText?: string,
+  strictContext = false
 ): FoundPosition | null {
   if (!word || !passage) return null;
 
@@ -232,6 +293,11 @@ function findWordInPassage(
   if (surroundingText && surroundingText.trim().length > 0) {
     const result = findWithSurroundingContext(passage, word, surroundingText);
     if (result) return result;
+
+    // For REFERENCE, the context is the only safe disambiguator. When it is
+    // stale, too broad, or does not contain the token as a standalone word,
+    // failing is better than silently underlining a different pronoun elsewhere.
+    if (strictContext) return null;
   }
 
   // --- Strategy 2: Word-boundary regex ---
@@ -246,8 +312,21 @@ function findWordInPassage(
     // If regex fails, fall through
   }
 
-  // --- Strategy 3: Plain indexOf ---
-  return findExpressionInPassage(passage, word);
+  // --- Strategy 3: Case-insensitive word-boundary regex ---
+  try {
+    const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const wbRegex = new RegExp(`\\b${escaped}\\b`, "i");
+    const match = wbRegex.exec(passage);
+    if (match) {
+      return { index: match.index, length: match[0].length };
+    }
+  } catch {
+    // If regex fails, fall through
+  }
+
+  // Do not fall back to plain substring matching for word/pronoun targets.
+  // A failed lookup is safer than producing dig__it__al / comm__it__ments.
+  return null;
 }
 
 /**
@@ -704,7 +783,7 @@ function processReference(
     return { success: false, data: ai, warnings, error: "Missing underlinedPronoun field" };
   }
 
-  const found = findWordInPassage(passage, underlinedPronoun, surroundingText);
+  const found = findWordInPassage(passage, underlinedPronoun, surroundingText, true);
   if (!found) {
     return {
       success: false,

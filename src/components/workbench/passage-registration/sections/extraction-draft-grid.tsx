@@ -13,6 +13,10 @@ import {
   Folder,
   ChevronRight,
   Home,
+  CopyMinus,
+  Copy,
+  Check,
+  X,
 } from "lucide-react";
 import {
   Select,
@@ -21,8 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
+import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import type { DraftCollectionItem } from "../types";
 
 interface ExtractionDraftGridProps {
@@ -30,6 +36,8 @@ interface ExtractionDraftGridProps {
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   collections: DraftCollectionItem[];
   membership: Record<string, string[]>;
+  onBulkAnalyze: (drafts: M1PassageDraftWithJob[]) => Promise<void>;
+  bulkAnalyzing: boolean;
 }
 
 type FetchState = "idle" | "loading" | "ready" | "error";
@@ -80,11 +88,22 @@ function toMillis(d: string | Date): number {
   return Number.isNaN(parsed) ? 0 : parsed;
 }
 
+function getDraftCanonicalText(draft: M1PassageDraftWithJob): string {
+  return (
+    draft.teacherText?.trim() ||
+    draft.restoredText?.trim() ||
+    draft.rawText?.trim() ||
+    ""
+  );
+}
+
 export function ExtractionDraftGrid({
   selectedDraftId,
   onSelectDraft,
   collections,
   membership,
+  onBulkAnalyze,
+  bulkAnalyzing,
 }: ExtractionDraftGridProps) {
   const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>([]);
   const [state, setState] = useState<FetchState>("idle");
@@ -92,6 +111,18 @@ export function ExtractionDraftGrid({
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
+  const [hideDuplicates, setHideDuplicates] = useState(false);
+  const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<string>>(new Set());
+
+  const toggleBulkSelect = (id: string) => {
+    setBulkSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+  const clearBulkSelection = () => setBulkSelectedIds(new Set());
 
   const loadDrafts = async () => {
     setState("loading");
@@ -149,6 +180,19 @@ export function ExtractionDraftGrid({
     return path;
   }, [activeFolder, collections]);
 
+  // Per-draft dup info, computed via the shared util (consistent across
+  // every workbench page that exposes duplicate detection).
+  const dupInfo = useMemo(
+    () =>
+      buildDuplicateIndex(
+        drafts,
+        getDraftCanonicalText,
+        (d) => d.id,
+      ),
+    [drafts],
+  );
+  const totalDuplicateCount = dupInfo.totalDuplicateCount;
+
   const filtered = useMemo(() => {
     let result = drafts;
 
@@ -189,14 +233,56 @@ export function ExtractionDraftGrid({
       });
     }
 
+    if (hideDuplicates) {
+      const seen = new Set<string>();
+      return sorted.filter((d) => {
+        const key = dupInfo.keyById.get(d.id);
+        if (!key) return true; // not part of a dup group
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
     return sorted;
-  }, [drafts, search, sortOrder, activeFolder, membershipSets]);
+  }, [drafts, search, sortOrder, activeFolder, membershipSets, hideDuplicates, dupInfo]);
 
   const allFolderCount = drafts.length;
   const activeFolderName =
     activeFolder !== null
       ? (collections.find((c) => c.id === activeFolder)?.name ?? "폴더")
       : null;
+
+  const bulkSelectedDrafts = useMemo(
+    () => filtered.filter((d) => bulkSelectedIds.has(d.id)),
+    [filtered, bulkSelectedIds],
+  );
+
+  const allVisibleSelected =
+    filtered.length > 0 &&
+    filtered.every((d) => bulkSelectedIds.has(d.id));
+
+  const handleSelectAllVisible = () => {
+    if (allVisibleSelected) {
+      setBulkSelectedIds((prev) => {
+        const next = new Set(prev);
+        for (const d of filtered) next.delete(d.id);
+        return next;
+      });
+    } else {
+      setBulkSelectedIds((prev) => {
+        const next = new Set(prev);
+        for (const d of filtered) next.add(d.id);
+        return next;
+      });
+    }
+  };
+
+  const handleBulk = async () => {
+    if (bulkSelectedDrafts.length === 0 || bulkAnalyzing) return;
+    await onBulkAnalyze(bulkSelectedDrafts);
+    clearBulkSelection();
+  };
 
   return (
     <div className="flex flex-col min-h-0 h-full bg-white border border-slate-200/80 rounded-xl overflow-hidden">
@@ -237,6 +323,45 @@ export function ExtractionDraftGrid({
 
           <button
             type="button"
+            onClick={() => setHideDuplicates((v) => !v)}
+            disabled={totalDuplicateCount === 0}
+            className={
+              "h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-[11px] font-medium transition-all border shrink-0 " +
+              (hideDuplicates
+                ? "border-blue-300 bg-blue-50 text-blue-700"
+                : totalDuplicateCount === 0
+                  ? "border-slate-200 text-slate-300 cursor-not-allowed"
+                  : "border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300")
+            }
+            title={
+              totalDuplicateCount === 0
+                ? "중복 자료가 없습니다"
+                : hideDuplicates
+                  ? "중복 자료 숨김 해제"
+                  : "중복 자료 숨기기"
+            }
+            aria-pressed={hideDuplicates}
+          >
+            {hideDuplicates ? (
+              <CopyMinus className="w-3.5 h-3.5" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+            <span>{hideDuplicates ? "중복 숨김" : "중복 숨기기"}</span>
+            <span
+              className={
+                "tabular-nums text-[10px] font-semibold px-1 rounded " +
+                (hideDuplicates
+                  ? "bg-blue-100 text-blue-700"
+                  : "bg-slate-100 text-slate-500")
+              }
+            >
+              {totalDuplicateCount}
+            </span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => void loadDrafts()}
             className="h-8 w-8 rounded-lg flex items-center justify-center transition-all border text-slate-500 border-slate-200 hover:bg-slate-50 hover:border-slate-300 shrink-0"
             disabled={state === "loading"}
@@ -247,15 +372,6 @@ export function ExtractionDraftGrid({
             />
           </button>
 
-          <div className="flex items-center gap-1 px-2 h-8 rounded-lg bg-slate-50 border border-slate-200 shrink-0">
-            <Layers className="w-3 h-3 text-slate-400" />
-            <span className="text-[11px] font-semibold text-slate-600 tabular-nums">
-              {filtered.length}
-            </span>
-            <span className="text-[10px] text-slate-400">
-              /{allFolderCount}
-            </span>
-          </div>
         </div>
 
         {/* Row 2: breadcrumb (only when inside a folder) */}
@@ -290,6 +406,56 @@ export function ExtractionDraftGrid({
                 </Fragment>
               );
             })}
+          </div>
+        ) : null}
+
+        {/* Row 2b: bulk-action bar — only when something is checked */}
+        {bulkSelectedIds.size > 0 ? (
+          <div className="flex items-center gap-2 min-w-0 px-2 h-8 rounded-md bg-blue-50 border border-blue-200">
+            <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+            <span className="text-[11.5px] font-semibold text-blue-700 shrink-0">
+              {bulkSelectedIds.size}개 선택됨
+            </span>
+            <button
+              type="button"
+              onClick={handleSelectAllVisible}
+              className="text-[11px] font-medium text-blue-600 hover:text-blue-800 shrink-0"
+            >
+              {allVisibleSelected ? "현재 화면 해제" : "현재 화면 모두 선택"}
+            </button>
+            <div className="ml-auto flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={clearBulkSelection}
+                className="h-7 px-2 text-[11px] font-medium rounded-md text-slate-500 hover:bg-white"
+              >
+                <X className="w-3 h-3 inline mr-0.5" />
+                해제
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleBulk()}
+                disabled={bulkAnalyzing}
+                className={
+                  "h-7 px-2.5 text-[11.5px] font-bold rounded-md inline-flex items-center gap-1 transition-colors " +
+                  (bulkAnalyzing
+                    ? "bg-slate-300 text-white cursor-not-allowed"
+                    : "bg-blue-600 text-white hover:bg-blue-700")
+                }
+              >
+                {bulkAnalyzing ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    등록 중...
+                  </>
+                ) : (
+                  <>
+                    <Layers className="w-3 h-3" />
+                    {bulkSelectedIds.size}개 일괄 분석
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         ) : null}
 
@@ -387,13 +553,11 @@ export function ExtractionDraftGrid({
         ) : (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
             {filtered.map((draft, idx) => {
-              const text =
-                draft.teacherText?.trim() ||
-                draft.restoredText?.trim() ||
-                draft.rawText?.trim() ||
-                "";
+              const text = getDraftCanonicalText(draft);
               const w = wordCount(text);
               const status = getStatusBadge(draft.restorationStatus);
+              const dupCount = dupInfo.countById.get(draft.id) ?? 0;
+              const isBulkSelected = bulkSelectedIds.has(draft.id);
               const fileName =
                 draft.job?.displayName?.trim() ||
                 draft.job?.originalFileName ||
@@ -402,19 +566,39 @@ export function ExtractionDraftGrid({
               const active = draft.id === selectedDraftId;
 
               return (
-                <button
+                <div
                   key={draft.id}
-                  type="button"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => onSelectDraft(draft)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSelectDraft(draft);
+                    }
+                  }}
                   className={
-                    "group relative text-left rounded-xl border p-3.5 transition-all duration-150 flex flex-col gap-2.5 min-h-[160px] " +
-                    (active
-                      ? "border-blue-400 bg-blue-50/40 ring-2 ring-blue-500/20 shadow-sm"
-                      : "border-slate-200 bg-white hover:border-blue-200 hover:shadow-md")
+                    "group relative text-left rounded-xl border p-3.5 transition-all duration-150 flex flex-col gap-2.5 min-h-[160px] cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 " +
+                    (isBulkSelected
+                      ? "border-blue-500 bg-blue-50/60 ring-2 ring-blue-500/30 shadow-sm"
+                      : active
+                        ? "border-blue-400 bg-blue-50/40 ring-2 ring-blue-500/20 shadow-sm"
+                        : "border-slate-200 bg-white hover:border-blue-200 hover:shadow-md")
                   }
                 >
-                  {/* Top row: index + title + status */}
+                  {/* Top row: checkbox + index + title + status */}
                   <div className="flex items-start gap-2 min-w-0">
+                    <div
+                      className="shrink-0 mt-0.5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Checkbox
+                        checked={isBulkSelected}
+                        onCheckedChange={() => toggleBulkSelect(draft.id)}
+                        aria-label={`${getDraftDisplayTitle(draft)} 일괄 분석 선택`}
+                        className="size-4"
+                      />
+                    </div>
                     <span className="shrink-0 text-[10px] font-bold tabular-nums text-slate-400 mt-0.5">
                       #{idx + 1}
                     </span>
@@ -431,6 +615,24 @@ export function ExtractionDraftGrid({
                         {w > 0 ? (
                           <span className="text-[10px] text-slate-400 tabular-nums">
                             {w} words
+                          </span>
+                        ) : null}
+                        {dupCount > 0 ? (
+                          <span
+                            className={
+                              "inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded tabular-nums border " +
+                              (hideDuplicates
+                                ? "bg-blue-50 text-blue-700 border-blue-100"
+                                : "bg-slate-100 text-slate-600 border-slate-200")
+                            }
+                            title={
+                              hideDuplicates
+                                ? `중복된 자료 ${dupCount}개가 숨겨져 있습니다`
+                                : `동일한 자료 ${dupCount}개 존재`
+                            }
+                          >
+                            <Copy className="w-2.5 h-2.5" />
+                            {hideDuplicates ? `+${dupCount} 숨김` : `${dupCount} 중복`}
                           </span>
                         ) : null}
                       </div>
@@ -468,7 +670,7 @@ export function ExtractionDraftGrid({
                     <ArrowDownToLine className="w-2.5 h-2.5" />
                     불러오기
                   </span>
-                </button>
+                </div>
               );
             })}
           </div>

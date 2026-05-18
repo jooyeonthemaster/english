@@ -22,7 +22,7 @@ export function mapRecentPassagesToQueueItems(
       status: p.analysis ? ("done" as const) : ("not_analyzed" as const),
       analysisData,
       error: null,
-      promptConfig: { customPrompt: "", focusAreas: [], targetLevel: "" },
+      promptConfig: { customPrompt: "", focusAreas: [], targetLevel: "", generationPlan: "STANDARD" },
       createdAt: new Date(p.createdAt),
       schoolName: p.school?.name,
       grade: p.grade ?? undefined,

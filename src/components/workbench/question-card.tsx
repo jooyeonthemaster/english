@@ -298,8 +298,8 @@ export function QuestionCard({
             </div>
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
-                {tags.map((tag) => (
-                  <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">{tag}</span>
+                {tags.map((tag, tagIndex) => (
+                  <span key={`${tag}-${tagIndex}`} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">{tag}</span>
                 ))}
               </div>
             )}
@@ -424,7 +424,7 @@ export function QuestionCard({
                   const isCorrect = opt.label === q.correctAnswer;
                   const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
                   return (
-                    <div key={opt.label} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
+                    <div key={`${opt.label}-${idx}`} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
                       <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
                         {displayLabel}.
                       </span>

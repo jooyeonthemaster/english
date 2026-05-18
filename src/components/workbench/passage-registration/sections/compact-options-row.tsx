@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { PUBLISHERS } from "../constants";
 import type { SavedPrompt } from "../types";
 
@@ -41,6 +43,8 @@ interface CompactOptionsRowProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
+  analysisGenerationPlan: QuestionGenerationPlan;
+  setAnalysisGenerationPlan: (v: QuestionGenerationPlan) => void;
   savedPrompts: SavedPrompt[];
   showSavedPrompts: boolean;
   setShowSavedPrompts: (v: boolean | ((prev: boolean) => boolean)) => void;
@@ -123,6 +127,13 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
           onChange={(e) => props.setAnalysisPrompt(e.target.value)}
           className="min-h-[48px] max-h-[70px] text-[11px] leading-relaxed bg-white border-blue-200/60 placeholder:text-slate-300 resize-none focus:border-blue-300 py-1.5 px-2.5"
           spellCheck={false}
+        />
+
+        <GenerationPlanSelector
+          value={props.analysisGenerationPlan}
+          onChange={props.setAnalysisGenerationPlan}
+          compact
+          className="mt-1.5"
         />
 
         {props.analysisPrompt.trim() ? (

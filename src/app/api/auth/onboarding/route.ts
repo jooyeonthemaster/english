@@ -3,6 +3,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/prisma";
+import { createUniqueAcademyCode } from "@/lib/tutor/academy-code";
 import { verifyOnboardingToken } from "@/lib/onboarding-token";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
 
@@ -125,6 +126,7 @@ export async function POST(request: NextRequest) {
       data: {
         name: academyName,
         slug: academySlug,
+        code: await createUniqueAcademyCode(tx),
         phone: directorPhone || null,
         status: "ACTIVE",
       },

@@ -1,0 +1,2758 @@
+{
+  "model": "claude-sonnet-4-6",
+  "passage": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.",
+  "results": [
+    {
+      "typeId": "BLANK_INFERENCE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2396,
+        "inputTokenDetails": {
+          "noCacheTokens": 2396,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1478,
+        "outputTokenDetails": {},
+        "totalTokens": 3874,
+        "raw": {
+          "input_tokens": 2396,
+          "output_tokens": 1478,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 24483,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+            "correctAnswer": "③",
+            "explanation": "이 문장은 매몰 비용의 오류(sunk cost fallacy)와 대비(by contrast)되는 합리적 의사결정의 핵심 원리를 정의하는 핵심 문장이다. 필자는 앞에서 이미 투자한 것을 기준으로 미래를 결정하는 오류를 비판하고, 바로 이어 'asking not what has been spent but what is still to gain'이라는 구절로 빈칸의 내용을 부연 설명한다. 즉, 빈칸에는 과거 투자와 무관하게 '각 선택 자체의 장단점(merits)'만으로 판단해야 한다는 내용이 와야 한다. ①은 '누적된 총 비용을 따진다'는 뜻으로 오히려 매몰 비용의 오류와 동일한 사고를 반영한다. ②는 '과거 결정을 재검토한다'는 것으로 합리적 방향성처럼 보이나, 과거 실패에 초점을 두므로 'not what has been spent'라는 지문의 논리와 충돌한다. ④는 '과거 투자에 기반해 미래 약속을 최소화한다'는 뜻으로 여전히 과거 투자를 판단 기준으로 삼아 매몰 비용의 오류 범주에 속한다. ⑤는 '이미 투입된 자원을 고려한다'는 뜻으로 매몰 비용을 고려하는 행동 자체에 해당하여 정반대 개념이다.",
+            "keyPoints": [
+              "'by contrast'는 앞 내용(sunk cost fallacy)과의 명확한 대조를 신호하므로, 빈칸은 매몰 비용 오류와 반대되는 개념이어야 함을 파악해야 한다.",
+              "'asking not what has been spent but what is still to gain'이 빈칸 내용의 직접적 부연 설명임을 인식하여, 빈칸이 '과거 투자 무시, 미래 가치 중심 판단'을 의미해야 함을 추론해야 한다.",
+              "오답 선지들이 모두 '합리성'처럼 보이지만 실제로는 과거 비용을 판단 기준으로 삼는 미묘한 함정을 포함하고 있음을 구별하는 고차원적 독해 능력이 필요하다."
+            ],
+            "tags": [
+              "빈칸 추론",
+              "매몰 비용",
+              "대조 구조",
+              "합리적 의사결정",
+              "논리 흐름 파악",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "originalExpression": "evaluating each new choice on its own merits",
+            "surroundingText": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent",
+            "options": [
+              {
+                "label": "①",
+                "text": "weighing the total costs accumulated over time"
+              },
+              {
+                "label": "②",
+                "text": "revisiting past decisions to learn from prior failures"
+              },
+              {
+                "label": "③",
+                "text": "evaluating each new choice on its own merits"
+              },
+              {
+                "label": "④",
+                "text": "minimizing future commitments based on past investments"
+              },
+              {
+                "label": "⑤",
+                "text": "considering what resources have already been committed"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "'누적된 총 비용을 따진다'는 것은 매몰 비용을 기준으로 판단하는 행위이므로, 필자가 비판하는 sunk cost fallacy와 본질적으로 동일하다.",
+              "②": "'과거 실패에서 배우기 위해 과거 결정을 재검토한다'는 것은 여전히 과거에 초점을 두는 행위로, 'not what has been spent'를 강조하는 지문의 논리와 어긋난다.",
+              "④": "'과거 투자에 기반하여 미래 약속을 최소화한다'는 것은 여전히 과거 투자를 의사결정 기준으로 삼으므로 sunk cost fallacy와 동일한 오류를 범한다.",
+              "⑤": "'이미 투입된 자원을 고려한다'는 것은 매몰 비용을 의사결정에 포함시키는 행위로, 필자가 극복해야 한다고 주장하는 오류 자체에 해당한다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+            "correctAnswer": "③",
+            "explanation": "이 문장은 매몰 비용의 오류(sunk cost fallacy)와 대비(by contrast)되는 합리적 의사결정의 핵심 원리를 정의하는 핵심 문장이다. 필자는 앞에서 이미 투자한 것을 기준으로 미래를 결정하는 오류를 비판하고, 바로 이어 'asking not what has been spent but what is still to gain'이라는 구절로 빈칸의 내용을 부연 설명한다. 즉, 빈칸에는 과거 투자와 무관하게 '각 선택 자체의 장단점(merits)'만으로 판단해야 한다는 내용이 와야 한다. ①은 '누적된 총 비용을 따진다'는 뜻으로 오히려 매몰 비용의 오류와 동일한 사고를 반영한다. ②는 '과거 결정을 재검토한다'는 것으로 합리적 방향성처럼 보이나, 과거 실패에 초점을 두므로 'not what has been spent'라는 지문의 논리와 충돌한다. ④는 '과거 투자에 기반해 미래 약속을 최소화한다'는 뜻으로 여전히 과거 투자를 판단 기준으로 삼아 매몰 비용의 오류 범주에 속한다. ⑤는 '이미 투입된 자원을 고려한다'는 뜻으로 매몰 비용을 고려하는 행동 자체에 해당하여 정반대 개념이다.",
+            "keyPoints": [
+              "'by contrast'는 앞 내용(sunk cost fallacy)과의 명확한 대조를 신호하므로, 빈칸은 매몰 비용 오류와 반대되는 개념이어야 함을 파악해야 한다.",
+              "'asking not what has been spent but what is still to gain'이 빈칸 내용의 직접적 부연 설명임을 인식하여, 빈칸이 '과거 투자 무시, 미래 가치 중심 판단'을 의미해야 함을 추론해야 한다.",
+              "오답 선지들이 모두 '합리성'처럼 보이지만 실제로는 과거 비용을 판단 기준으로 삼는 미묘한 함정을 포함하고 있음을 구별하는 고차원적 독해 능력이 필요하다."
+            ],
+            "tags": [
+              "빈칸 추론",
+              "매몰 비용",
+              "대조 구조",
+              "합리적 의사결정",
+              "논리 흐름 파악",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "originalExpression": "evaluating each new choice on its own merits",
+            "surroundingText": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent",
+            "options": [
+              {
+                "label": "①",
+                "text": "weighing the total costs accumulated over time"
+              },
+              {
+                "label": "②",
+                "text": "revisiting past decisions to learn from prior failures"
+              },
+              {
+                "label": "③",
+                "text": "evaluating each new choice on its own merits"
+              },
+              {
+                "label": "④",
+                "text": "minimizing future commitments based on past investments"
+              },
+              {
+                "label": "⑤",
+                "text": "considering what resources have already been committed"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "'누적된 총 비용을 따진다'는 것은 매몰 비용을 기준으로 판단하는 행위이므로, 필자가 비판하는 sunk cost fallacy와 본질적으로 동일하다.",
+              "②": "'과거 실패에서 배우기 위해 과거 결정을 재검토한다'는 것은 여전히 과거에 초점을 두는 행위로, 'not what has been spent'를 강조하는 지문의 논리와 어긋난다.",
+              "④": "'과거 투자에 기반하여 미래 약속을 최소화한다'는 것은 여전히 과거 투자를 의사결정 기준으로 삼으므로 sunk cost fallacy와 동일한 오류를 범한다.",
+              "⑤": "'이미 투입된 자원을 고려한다'는 것은 매몰 비용을 의사결정에 포함시키는 행위로, 필자가 극복해야 한다고 주장하는 오류 자체에 해당한다."
+            },
+            "passageWithBlank": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires _____, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "GRAMMAR_ERROR",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2546,
+        "inputTokenDetails": {
+          "noCacheTokens": 2546,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1554,
+        "outputTokenDetails": {},
+        "totalTokens": 4100,
+        "raw": {
+          "input_tokens": 2546,
+          "output_tokens": 1554,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 48115,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+            "correctAnswer": "④",
+            "explanation": "(D)의 'turning back'은 접속사 'because' 뒤에 주어+동사 구조로 이어지는 절(because turning back would feel ~)을 이루고 있으므로, 이 자리는 동명사 주어로 쓰인 'turning back'이 문법적으로 정확하다. 그러나 문제에서는 이 표현을 'to turn back'(부정사)으로 교체하여 오류를 삽입하였다. 'because' 뒤에는 완전한 절이 와야 하므로 주어 자리에 to부정사구가 오는 것은 가능하지만, 본문 전체의 병렬 구조(stay in … because of, persist in … because)를 고려하면 동명사 주어가 자연스럽다. 핵심은 'because to turn back would feel'처럼 because절의 주어로 to부정사가 쓰이면, 형식적으로는 가능해 보이지만 수능 어법 기준에서 because 종속절 내 주어 자리에는 동명사가 훨씬 자연스러운 표현이며, 특히 앞의 병렬 구조인 'because they paid', 'because of the years'와의 일관성을 고려할 때 'to turn back'은 어색하다. 또한 이 지문 내에서 'because' + 절의 패턴이 반복되므로, 동명사 주어가 맞고 to부정사로 바꾼 형태가 오류이다.",
+            "keyPoints": [
+              "because 종속절의 주어 자리에서 동명사(구)와 to부정사(구)의 문법적 쓰임 차이를 구별할 수 있어야 한다.",
+              "'keep + -ing', 'require + -ing' 등 동명사를 목적어로 취하는 동사들을 정확히 파악해야 한다.",
+              "관계절(that has spent millions developing …)에서 분사 'developing'의 쓰임과, 문장 전체의 병렬 구조를 파악하는 능력이 필요하다."
+            ],
+            "tags": [
+              "어법 판단",
+              "동명사",
+              "to부정사",
+              "병렬 구조",
+              "because절",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "markedExpressions": [
+              {
+                "label": "(A)",
+                "expression": "justify",
+                "isError": false,
+                "errorExpression": "justify",
+                "surroundingText": "the belief that past investments justify future commitments, even when"
+              },
+              {
+                "label": "(B)",
+                "expression": "doomed",
+                "isError": false,
+                "errorExpression": "doomed",
+                "surroundingText": "A factory that has spent millions developing a doomed product will often keep"
+              },
+              {
+                "label": "(C)",
+                "expression": "pouring",
+                "isError": false,
+                "errorExpression": "pouring",
+                "surroundingText": "will often keep pouring resources into it, simply because so much has already"
+              },
+              {
+                "label": "(D)",
+                "expression": "turning back",
+                "isError": true,
+                "correction": "turning back",
+                "errorExpression": "to turn back",
+                "surroundingText": "persist in failing careers because turning back would feel like an admission of defeat"
+              },
+              {
+                "label": "(E)",
+                "expression": "evaluating",
+                "isError": false,
+                "errorExpression": "evaluating",
+                "surroundingText": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits"
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "(A) justify"
+              },
+              {
+                "label": "②",
+                "text": "(B) doomed"
+              },
+              {
+                "label": "③",
+                "text": "(C) pouring"
+              },
+              {
+                "label": "④",
+                "text": "(D) turning back"
+              },
+              {
+                "label": "⑤",
+                "text": "(E) evaluating"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "(A) 'justify'는 주어 'past investments'(복수)에 수일치한 동사원형으로 올바르다. 관계절 내의 동사이므로 현재시제 복수 동사 형태가 적절하다.",
+              "②": "(B) 'doomed'는 명사 'product'를 수식하는 과거분사 형용사로, '운명이 정해진(망할)' 제품이라는 의미를 나타내어 문법적으로 정확하다.",
+              "③": "(C) 'pouring'은 'keep + -ing' 구문에서 동명사로 쓰인 것으로, 'keep pouring resources'는 자원을 계속 쏟아붓는다는 의미의 올바른 표현이다.",
+              "⑤": "(E) 'evaluating'은 'require + -ing' 구문에서 동명사 목적어로 쓰인 것으로, 'requires evaluating'은 문법적으로 정확하다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+            "correctAnswer": "④",
+            "explanation": "(D)의 'turning back'은 접속사 'because' 뒤에 주어+동사 구조로 이어지는 절(because turning back would feel ~)을 이루고 있으므로, 이 자리는 동명사 주어로 쓰인 'turning back'이 문법적으로 정확하다. 그러나 문제에서는 이 표현을 'to turn back'(부정사)으로 교체하여 오류를 삽입하였다. 'because' 뒤에는 완전한 절이 와야 하므로 주어 자리에 to부정사구가 오는 것은 가능하지만, 본문 전체의 병렬 구조(stay in … because of, persist in … because)를 고려하면 동명사 주어가 자연스럽다. 핵심은 'because to turn back would feel'처럼 because절의 주어로 to부정사가 쓰이면, 형식적으로는 가능해 보이지만 수능 어법 기준에서 because 종속절 내 주어 자리에는 동명사가 훨씬 자연스러운 표현이며, 특히 앞의 병렬 구조인 'because they paid', 'because of the years'와의 일관성을 고려할 때 'to turn back'은 어색하다. 또한 이 지문 내에서 'because' + 절의 패턴이 반복되므로, 동명사 주어가 맞고 to부정사로 바꾼 형태가 오류이다.",
+            "keyPoints": [
+              "because 종속절의 주어 자리에서 동명사(구)와 to부정사(구)의 문법적 쓰임 차이를 구별할 수 있어야 한다.",
+              "'keep + -ing', 'require + -ing' 등 동명사를 목적어로 취하는 동사들을 정확히 파악해야 한다.",
+              "관계절(that has spent millions developing …)에서 분사 'developing'의 쓰임과, 문장 전체의 병렬 구조를 파악하는 능력이 필요하다."
+            ],
+            "tags": [
+              "어법 판단",
+              "동명사",
+              "to부정사",
+              "병렬 구조",
+              "because절",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "markedExpressions": [
+              {
+                "label": "(A)",
+                "expression": "justify",
+                "isError": false,
+                "errorExpression": "justify",
+                "surroundingText": "the belief that past investments justify future commitments, even when"
+              },
+              {
+                "label": "(B)",
+                "expression": "doomed",
+                "isError": false,
+                "errorExpression": "doomed",
+                "surroundingText": "A factory that has spent millions developing a doomed product will often keep"
+              },
+              {
+                "label": "(C)",
+                "expression": "pouring",
+                "isError": false,
+                "errorExpression": "pouring",
+                "surroundingText": "will often keep pouring resources into it, simply because so much has already"
+              },
+              {
+                "label": "(D)",
+                "expression": "turning back",
+                "isError": true,
+                "correction": "turning back",
+                "errorExpression": "to turn back",
+                "surroundingText": "persist in failing careers because turning back would feel like an admission of defeat"
+              },
+              {
+                "label": "(E)",
+                "expression": "evaluating",
+                "isError": false,
+                "errorExpression": "evaluating",
+                "surroundingText": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits"
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "(A) justify"
+              },
+              {
+                "label": "②",
+                "text": "(B) doomed"
+              },
+              {
+                "label": "③",
+                "text": "(C) pouring"
+              },
+              {
+                "label": "④",
+                "text": "(D) turning back"
+              },
+              {
+                "label": "⑤",
+                "text": "(E) evaluating"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "(A) 'justify'는 주어 'past investments'(복수)에 수일치한 동사원형으로 올바르다. 관계절 내의 동사이므로 현재시제 복수 동사 형태가 적절하다.",
+              "②": "(B) 'doomed'는 명사 'product'를 수식하는 과거분사 형용사로, '운명이 정해진(망할)' 제품이라는 의미를 나타내어 문법적으로 정확하다.",
+              "③": "(C) 'pouring'은 'keep + -ing' 구문에서 동명사로 쓰인 것으로, 'keep pouring resources'는 자원을 계속 쏟아붓는다는 의미의 올바른 표현이다.",
+              "⑤": "(E) 'evaluating'은 'require + -ing' 구문에서 동명사 목적어로 쓰인 것으로, 'requires evaluating'은 문법적으로 정확하다."
+            },
+            "passageWithMarkers": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments __(A) justify__ future commitments, even when the future looks dim. A factory that has spent millions developing a __(B) doomed__ product will often keep __(C) pouring__ resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because __(D) to turn back__ would feel like an admission of defeat. Rational decision-making, by contrast, requires __(E) evaluating__ each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "VOCAB_CHOICE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2581,
+        "inputTokenDetails": {
+          "noCacheTokens": 2581,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1525,
+        "outputTokenDetails": {},
+        "totalTokens": 4106,
+        "raw": {
+          "input_tokens": 2581,
+          "output_tokens": 1525,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 19109,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+            "correctAnswer": "④",
+            "explanation": "합리적 의사결정을 설명하는 문장에서 필자는 이미 지출된 것(what has been spent)이 아니라 앞으로 얻을 수 있는 것(what is still to gain)에 초점을 맞춰야 한다고 주장한다. 따라서 새로운 선택을 그 자체의 '가치/장점(merits)'에 근거하여 평가해야 한다는 맥락이므로, (d)의 costs(비용)는 문맥상 부적절하다. costs로 바꾸면 '각 선택을 그 자체의 비용으로 평가한다'는 의미가 되어, 매몰 비용 오류를 비판하는 글의 논리와 충돌한다. 나머지 (a) justify, (b) pouring, (c) persist, (e) admission은 모두 각각의 문맥에서 자연스럽고 적절하게 쓰였다.",
+            "keyPoints": [
+              "매몰 비용 오류(sunk cost fallacy) 개념: 이미 투자한 비용이 미래 결정을 정당화해서는 안 된다는 논리를 파악해야 한다.",
+              "합리적 의사결정의 기준: 'on its own merits(그 자체의 가치/장점으로)'라는 표현이 글 전체 주제와 어떻게 연결되는지 이해해야 한다.",
+              "의미상 유사해 보이는 단어(merits vs. costs)의 미묘한 차이: 두 단어 모두 경제적 맥락에서 쓰이지만, 문맥 내 담화 역할(discourse role)이 다름을 구별해야 한다."
+            ],
+            "tags": [
+              "어휘 적절성",
+              "매몰 비용 오류",
+              "합리적 의사결정",
+              "문맥 추론",
+              "담화 논리",
+              "고난도 어휘"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(a)",
+                "originalWord": "justify",
+                "isInappropriate": false,
+                "betterWord": "justify",
+                "substituteWord": "justify",
+                "surroundingText": "the belief that past investments justify future commitments, even when"
+              },
+              {
+                "label": "(b)",
+                "originalWord": "pouring",
+                "isInappropriate": false,
+                "betterWord": "pouring",
+                "substituteWord": "pouring",
+                "surroundingText": "will often keep pouring resources into it, simply because so much"
+              },
+              {
+                "label": "(c)",
+                "originalWord": "persist",
+                "isInappropriate": false,
+                "betterWord": "persist",
+                "substituteWord": "persist",
+                "surroundingText": "and persist in failing careers because turning back would feel like"
+              },
+              {
+                "label": "(d)",
+                "originalWord": "merits",
+                "isInappropriate": true,
+                "betterWord": "merits",
+                "substituteWord": "costs",
+                "surroundingText": "requires evaluating each new choice on its own merits, asking not"
+              },
+              {
+                "label": "(e)",
+                "originalWord": "admission",
+                "isInappropriate": false,
+                "betterWord": "admission",
+                "substituteWord": "admission",
+                "surroundingText": "turning back would feel like an admission of defeat"
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "(a) justify"
+              },
+              {
+                "label": "②",
+                "text": "(b) pouring"
+              },
+              {
+                "label": "③",
+                "text": "(c) persist"
+              },
+              {
+                "label": "④",
+                "text": "(d) costs"
+              },
+              {
+                "label": "⑤",
+                "text": "(e) admission"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "(a) justify는 '과거 투자가 미래 결정을 정당화한다'는 매몰 비용 오류의 핵심 내용을 정확히 표현하므로 적절하다.",
+              "②": "(b) pouring은 'keep pouring resources into it'에서 자원을 계속 '쏟아붓는다'는 의미로, 자원 낭비의 이미지를 강조하는 문맥에 정확히 부합한다.",
+              "③": "(c) persist는 'persist in failing careers'에서 실패하는 경력에 '계속 집착한다'는 뜻으로, 매몰 비용 오류의 구체적 예시에 자연스럽게 어울린다.",
+              "⑤": "(e) admission은 'an admission of defeat(패배의 인정)'이라는 관용적 연어(collocation)로 적절히 사용되었으며, 사람들이 실패한 길에서 돌아서지 못하는 심리적 이유를 잘 설명한다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+            "correctAnswer": "④",
+            "explanation": "합리적 의사결정을 설명하는 문장에서 필자는 이미 지출된 것(what has been spent)이 아니라 앞으로 얻을 수 있는 것(what is still to gain)에 초점을 맞춰야 한다고 주장한다. 따라서 새로운 선택을 그 자체의 '가치/장점(merits)'에 근거하여 평가해야 한다는 맥락이므로, (d)의 costs(비용)는 문맥상 부적절하다. costs로 바꾸면 '각 선택을 그 자체의 비용으로 평가한다'는 의미가 되어, 매몰 비용 오류를 비판하는 글의 논리와 충돌한다. 나머지 (a) justify, (b) pouring, (c) persist, (e) admission은 모두 각각의 문맥에서 자연스럽고 적절하게 쓰였다.",
+            "keyPoints": [
+              "매몰 비용 오류(sunk cost fallacy) 개념: 이미 투자한 비용이 미래 결정을 정당화해서는 안 된다는 논리를 파악해야 한다.",
+              "합리적 의사결정의 기준: 'on its own merits(그 자체의 가치/장점으로)'라는 표현이 글 전체 주제와 어떻게 연결되는지 이해해야 한다.",
+              "의미상 유사해 보이는 단어(merits vs. costs)의 미묘한 차이: 두 단어 모두 경제적 맥락에서 쓰이지만, 문맥 내 담화 역할(discourse role)이 다름을 구별해야 한다."
+            ],
+            "tags": [
+              "어휘 적절성",
+              "매몰 비용 오류",
+              "합리적 의사결정",
+              "문맥 추론",
+              "담화 논리",
+              "고난도 어휘"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(a)",
+                "word": "justify",
+                "isInappropriate": false
+              },
+              {
+                "label": "(b)",
+                "word": "pouring",
+                "isInappropriate": false
+              },
+              {
+                "label": "(c)",
+                "word": "persist",
+                "isInappropriate": false
+              },
+              {
+                "label": "(d)",
+                "word": "costs",
+                "isInappropriate": true,
+                "betterWord": "merits"
+              },
+              {
+                "label": "(e)",
+                "word": "admission",
+                "isInappropriate": false
+              }
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "(a) justify"
+              },
+              {
+                "label": "②",
+                "text": "(b) pouring"
+              },
+              {
+                "label": "③",
+                "text": "(c) persist"
+              },
+              {
+                "label": "④",
+                "text": "(d) costs"
+              },
+              {
+                "label": "⑤",
+                "text": "(e) admission"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "(a) justify는 '과거 투자가 미래 결정을 정당화한다'는 매몰 비용 오류의 핵심 내용을 정확히 표현하므로 적절하다.",
+              "②": "(b) pouring은 'keep pouring resources into it'에서 자원을 계속 '쏟아붓는다'는 의미로, 자원 낭비의 이미지를 강조하는 문맥에 정확히 부합한다.",
+              "③": "(c) persist는 'persist in failing careers'에서 실패하는 경력에 '계속 집착한다'는 뜻으로, 매몰 비용 오류의 구체적 예시에 자연스럽게 어울린다.",
+              "⑤": "(e) admission은 'an admission of defeat(패배의 인정)'이라는 관용적 연어(collocation)로 적절히 사용되었으며, 사람들이 실패한 길에서 돌아서지 못하는 심리적 이유를 잘 설명한다."
+            },
+            "passageWithMarkers": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments __(a) justify__ future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep __(b) pouring__ resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and __(c) persist__ in failing careers because turning back would feel like an __(e) admission__ of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own __(d) costs__, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "SENTENCE_ORDER",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2035,
+        "inputTokenDetails": {
+          "noCacheTokens": 2035,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1870,
+        "outputTokenDetails": {},
+        "totalTokens": 3905,
+        "raw": {
+          "input_tokens": 2035,
+          "output_tokens": 1870,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 27447,
+      "items": [
+        {
+          "raw": {
+            "direction": "주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+            "correctAnswer": "3",
+            "explanation": "주어진 문장에서 'the sunk cost fallacy'를 경제학적 개념으로 정의한 뒤, (C)는 그 정의를 즉각적으로 뒷받침하는 경제적 사례(공장)를 제시한다. (C)의 'it'은 'a doomed product'를 가리키며, 이는 주어진 문장의 개념 정의를 구체화한다. 이어서 (A)는 'The same logic'이라는 표현으로 (C)의 공장 사례에서 일상생활로 논리를 확장하며, 영화·관계·직업이라는 구체적 일상 사례를 열거한다. 마지막으로 (B)는 'by contrast'를 통해 앞선 (A)의 비합리적 행동 패턴과 대비되는 합리적 의사결정의 원칙을 제시하고, 'The hardest lesson'으로 글 전체를 마무리하는 결론 역할을 한다. (C)→(A)의 연결은 'The same logic'이 (C)의 공장 사례를 가리키는 것임을 확인해야 하고, (A)→(B)의 연결은 (B)의 'by contrast'가 (A)에서 열거된 비합리적 사례들과 대비됨을 파악해야 하므로, 정답 도출에 두 단계 이상의 담화 논리 추론이 필요하다.",
+            "keyPoints": [
+              "'The same logic'은 앞 단락의 특정 사례(경제적 사례)를 지시하는 담화 연결 표현으로, 단순히 '같은 논리'로 해석하는 것을 넘어 어떤 단락과 연결되는지를 정확히 파악해야 한다.",
+              "'by contrast'는 역접의 담화 표지로, 앞 문맥에 비합리적 행동의 나열이 선행되어야 자연스럽게 연결되므로 (A) 뒤에만 배치될 수 있다.",
+              "경제적 개념 정의 → 구체적 경제 사례 → 일상적 사례 확장 → 합리적 대안 제시의 논증 구조를 전체 흐름 속에서 파악하는 것이 핵심이다."
+            ],
+            "tags": [
+              "글의 순서",
+              "담화 연결어",
+              "지시어",
+              "논증 구조",
+              "sunk cost fallacy",
+              "대조"
+            ],
+            "difficulty": "KILLER",
+            "givenSentence": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
+            "paragraphs": [
+              {
+                "label": "(A)",
+                "text": "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat."
+              },
+              {
+                "label": "(B)",
+                "text": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+              },
+              {
+                "label": "(C)",
+                "text": "A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested."
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A)-(C)-(B)"
+              },
+              {
+                "label": "2",
+                "text": "(B)-(A)-(C)"
+              },
+              {
+                "label": "3",
+                "text": "(C)-(A)-(B)"
+              },
+              {
+                "label": "4",
+                "text": "(C)-(B)-(A)"
+              },
+              {
+                "label": "5",
+                "text": "(A)-(B)-(C)"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "(A)-(C)-(B) 순서는 'The same logic'이 주어진 문장의 추상적 개념 정의를 바로 가리키는 것처럼 보이게 하지만, (A)의 'The same logic'은 이미 구체적 경제 사례가 앞에 제시된 상황에서 '동일한 논리가 일상에도 적용된다'는 확장을 의미하므로, (C)의 공장 사례 없이 (A)가 먼저 오면 'The same logic'의 지시 대상이 불명확해진다.",
+              "2": "(B)-(A)-(C) 순서는 결론에 해당하는 합리적 의사결정 원칙이 가장 먼저 제시되어, 비합리적 사례를 열거하는 (A)·(C)보다 앞에 오게 된다. 'by contrast'가 대비할 선행 내용이 없어 담화적으로 어색하며 논증 흐름이 역전된다.",
+              "4": "(C)-(B)-(A) 순서는 (B)의 'by contrast'가 (C)의 공장 사례와만 대비되는 것으로 한정되어, (A)에서 일상 사례를 추가로 열거하는 문단이 결론 뒤에 위치하게 된다. 결론적 문장('The hardest lesson in life')이 중간에 오고 일상 사례가 사후에 제시되는 구조는 글의 논리적 완결성을 훼손한다.",
+              "5": "(A)-(B)-(C) 순서는 (A)의 'The same logic' 지시 대상이 주어진 문장의 개념 정의뿐이어서 (C)의 공장 사례가 필요 없어지고, (B)의 결론이 중간에 위치한 뒤 (C)의 공장 사례가 덧붙여지는 구조가 되어 논증의 귀납적 전개가 깨진다."
+            }
+          },
+          "processed": {
+            "direction": "주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+            "correctAnswer": "3",
+            "explanation": "주어진 문장에서 'the sunk cost fallacy'를 경제학적 개념으로 정의한 뒤, (C)는 그 정의를 즉각적으로 뒷받침하는 경제적 사례(공장)를 제시한다. (C)의 'it'은 'a doomed product'를 가리키며, 이는 주어진 문장의 개념 정의를 구체화한다. 이어서 (A)는 'The same logic'이라는 표현으로 (C)의 공장 사례에서 일상생활로 논리를 확장하며, 영화·관계·직업이라는 구체적 일상 사례를 열거한다. 마지막으로 (B)는 'by contrast'를 통해 앞선 (A)의 비합리적 행동 패턴과 대비되는 합리적 의사결정의 원칙을 제시하고, 'The hardest lesson'으로 글 전체를 마무리하는 결론 역할을 한다. (C)→(A)의 연결은 'The same logic'이 (C)의 공장 사례를 가리키는 것임을 확인해야 하고, (A)→(B)의 연결은 (B)의 'by contrast'가 (A)에서 열거된 비합리적 사례들과 대비됨을 파악해야 하므로, 정답 도출에 두 단계 이상의 담화 논리 추론이 필요하다.",
+            "keyPoints": [
+              "'The same logic'은 앞 단락의 특정 사례(경제적 사례)를 지시하는 담화 연결 표현으로, 단순히 '같은 논리'로 해석하는 것을 넘어 어떤 단락과 연결되는지를 정확히 파악해야 한다.",
+              "'by contrast'는 역접의 담화 표지로, 앞 문맥에 비합리적 행동의 나열이 선행되어야 자연스럽게 연결되므로 (A) 뒤에만 배치될 수 있다.",
+              "경제적 개념 정의 → 구체적 경제 사례 → 일상적 사례 확장 → 합리적 대안 제시의 논증 구조를 전체 흐름 속에서 파악하는 것이 핵심이다."
+            ],
+            "tags": [
+              "글의 순서",
+              "담화 연결어",
+              "지시어",
+              "논증 구조",
+              "sunk cost fallacy",
+              "대조"
+            ],
+            "difficulty": "KILLER",
+            "givenSentence": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
+            "paragraphs": [
+              {
+                "label": "(A)",
+                "text": "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat."
+              },
+              {
+                "label": "(B)",
+                "text": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+              },
+              {
+                "label": "(C)",
+                "text": "A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested."
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A)-(C)-(B)"
+              },
+              {
+                "label": "2",
+                "text": "(B)-(A)-(C)"
+              },
+              {
+                "label": "3",
+                "text": "(C)-(A)-(B)"
+              },
+              {
+                "label": "4",
+                "text": "(C)-(B)-(A)"
+              },
+              {
+                "label": "5",
+                "text": "(A)-(B)-(C)"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "(A)-(C)-(B) 순서는 'The same logic'이 주어진 문장의 추상적 개념 정의를 바로 가리키는 것처럼 보이게 하지만, (A)의 'The same logic'은 이미 구체적 경제 사례가 앞에 제시된 상황에서 '동일한 논리가 일상에도 적용된다'는 확장을 의미하므로, (C)의 공장 사례 없이 (A)가 먼저 오면 'The same logic'의 지시 대상이 불명확해진다.",
+              "2": "(B)-(A)-(C) 순서는 결론에 해당하는 합리적 의사결정 원칙이 가장 먼저 제시되어, 비합리적 사례를 열거하는 (A)·(C)보다 앞에 오게 된다. 'by contrast'가 대비할 선행 내용이 없어 담화적으로 어색하며 논증 흐름이 역전된다.",
+              "4": "(C)-(B)-(A) 순서는 (B)의 'by contrast'가 (C)의 공장 사례와만 대비되는 것으로 한정되어, (A)에서 일상 사례를 추가로 열거하는 문단이 결론 뒤에 위치하게 된다. 결론적 문장('The hardest lesson in life')이 중간에 오고 일상 사례가 사후에 제시되는 구조는 글의 논리적 완결성을 훼손한다.",
+              "5": "(A)-(B)-(C) 순서는 (A)의 'The same logic' 지시 대상이 주어진 문장의 개념 정의뿐이어서 (C)의 공장 사례가 필요 없어지고, (B)의 결론이 중간에 위치한 뒤 (C)의 공장 사례가 덧붙여지는 구조가 되어 논증의 귀납적 전개가 깨진다."
+            }
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "SENTENCE_INSERT",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2350,
+        "inputTokenDetails": {
+          "noCacheTokens": 2350,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1465,
+        "outputTokenDetails": {},
+        "totalTokens": 3815,
+        "raw": {
+          "input_tokens": 2350,
+          "output_tokens": 1465,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 24602,
+      "items": [
+        {
+          "raw": {
+            "direction": "글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳은?",
+            "correctAnswer": "③",
+            "explanation": "주어진 문장의 'Yet this tendency'는 앞에서 언급된 '매몰 비용의 오류'라는 경제적 개념을 받으면서, 이를 단순한 경제적 현상이 아닌 심리적 충동으로 확장하는 전환의 역할을 한다. ③ 위치는 매몰 비용 오류의 경제적 정의(②)와 공장 사례(③ 앞)를 제시한 직후로, 'this tendency'가 앞의 'the sunk cost fallacy'를 자연스럽게 지시할 수 있다. 또한 ③ 뒤에 이어지는 일상생활 속 사례들(영화, 관계, 직업)이 바로 '심리적 충동'의 구체적인 예시로 기능하므로, 논리적 흐름이 완벽하게 이어진다. 반면 ④ 이후에 삽입하면 이미 일상 사례 열거가 끝난 뒤라 'this tendency'의 지시 대상이 불분명해지고, ② 위치에 삽입하면 경제학적 정의만 나온 시점에서 'yet'의 대조 의미가 성립하기 어렵다.",
+            "keyPoints": [
+              "지시어(this tendency)가 가리키는 대상을 앞 문맥에서 정확히 파악하는 능력",
+              "'Yet'과 같은 역접 전환어가 글의 논리 구조(경제적 현상 → 심리적 원인으로의 확장)에서 수행하는 역할 이해",
+              "삽입 문장 뒤에 오는 구체적 사례들이 삽입 문장의 주장을 뒷받침하는지 확인하는 전후 맥락 검토 능력"
+            ],
+            "tags": [
+              "문장 삽입",
+              "매몰 비용의 오류",
+              "지시어",
+              "담화 구조",
+              "역접 전환",
+              "심리적 동기",
+              "논리적 흐름"
+            ],
+            "difficulty": "KILLER",
+            "givenSentence": "Yet this tendency is not merely an economic quirk; it reflects a deeper psychological impulse to avoid the emotional pain of acknowledging wasted effort.",
+            "markerAfterSentenceIndices": [
+              1,
+              2,
+              3,
+              5,
+              6
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "①"
+              },
+              {
+                "label": "②",
+                "text": "②"
+              },
+              {
+                "label": "③",
+                "text": "③"
+              },
+              {
+                "label": "④",
+                "text": "④"
+              },
+              {
+                "label": "⑤",
+                "text": "⑤"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "①은 글의 도입부('Few mistakes … as the tendency to throw good money after bad') 바로 뒤로, 아직 매몰 비용의 오류가 정의되기 전이다. 'this tendency'가 가리킬 수 있는 구체적인 개념이 충분히 확립되지 않은 시점이므로 지시어 연결이 부자연스럽다.",
+              "②": "②는 매몰 비용 오류의 정의 문장 바로 뒤다. 정의만 제시된 상태에서 'Yet'으로 시작하는 대조가 나오면 논리적 대조 관계가 불완전하다. 또한 바로 뒤에 공장 사례가 이어지는데, 삽입 문장과 사례 사이에 'this tendency'의 심리적 설명이 끼어들면 사례가 뜬금없이 느껴진다.",
+              "④": "④는 일상생활 사례(영화·관계·직업) 열거가 모두 끝난 직후다. 이미 심리적·일상적 예시가 충분히 제시된 뒤에 삽입 문장이 오면, 'this tendency'가 앞의 열거 전체를 중복 설명하는 불필요한 반복이 되어 흐름이 어색하다.",
+              "⑤": "⑤는 합리적 의사결정에 대한 처방('Rational decision-making … what is still to gain')이 나온 뒤로, 글이 해결책 제시 단계로 이미 전환된 시점이다. 이 위치에 삽입 문장을 넣으면 심리적 충동으로 다시 돌아가는 역행이 발생해 글의 논리적 진행을 방해한다."
+            }
+          },
+          "processed": {
+            "direction": "글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳은?",
+            "correctAnswer": "③",
+            "explanation": "주어진 문장의 'Yet this tendency'는 앞에서 언급된 '매몰 비용의 오류'라는 경제적 개념을 받으면서, 이를 단순한 경제적 현상이 아닌 심리적 충동으로 확장하는 전환의 역할을 한다. ③ 위치는 매몰 비용 오류의 경제적 정의(②)와 공장 사례(③ 앞)를 제시한 직후로, 'this tendency'가 앞의 'the sunk cost fallacy'를 자연스럽게 지시할 수 있다. 또한 ③ 뒤에 이어지는 일상생활 속 사례들(영화, 관계, 직업)이 바로 '심리적 충동'의 구체적인 예시로 기능하므로, 논리적 흐름이 완벽하게 이어진다. 반면 ④ 이후에 삽입하면 이미 일상 사례 열거가 끝난 뒤라 'this tendency'의 지시 대상이 불분명해지고, ② 위치에 삽입하면 경제학적 정의만 나온 시점에서 'yet'의 대조 의미가 성립하기 어렵다.",
+            "keyPoints": [
+              "지시어(this tendency)가 가리키는 대상을 앞 문맥에서 정확히 파악하는 능력",
+              "'Yet'과 같은 역접 전환어가 글의 논리 구조(경제적 현상 → 심리적 원인으로의 확장)에서 수행하는 역할 이해",
+              "삽입 문장 뒤에 오는 구체적 사례들이 삽입 문장의 주장을 뒷받침하는지 확인하는 전후 맥락 검토 능력"
+            ],
+            "tags": [
+              "문장 삽입",
+              "매몰 비용의 오류",
+              "지시어",
+              "담화 구조",
+              "역접 전환",
+              "심리적 동기",
+              "논리적 흐름"
+            ],
+            "difficulty": "KILLER",
+            "givenSentence": "Yet this tendency is not merely an economic quirk; it reflects a deeper psychological impulse to avoid the emotional pain of acknowledging wasted effort.",
+            "markerAfterSentenceIndices": [
+              1,
+              2,
+              3,
+              5,
+              6
+            ],
+            "options": [
+              {
+                "label": "①",
+                "text": "①"
+              },
+              {
+                "label": "②",
+                "text": "②"
+              },
+              {
+                "label": "③",
+                "text": "③"
+              },
+              {
+                "label": "④",
+                "text": "④"
+              },
+              {
+                "label": "⑤",
+                "text": "⑤"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "①은 글의 도입부('Few mistakes … as the tendency to throw good money after bad') 바로 뒤로, 아직 매몰 비용의 오류가 정의되기 전이다. 'this tendency'가 가리킬 수 있는 구체적인 개념이 충분히 확립되지 않은 시점이므로 지시어 연결이 부자연스럽다.",
+              "②": "②는 매몰 비용 오류의 정의 문장 바로 뒤다. 정의만 제시된 상태에서 'Yet'으로 시작하는 대조가 나오면 논리적 대조 관계가 불완전하다. 또한 바로 뒤에 공장 사례가 이어지는데, 삽입 문장과 사례 사이에 'this tendency'의 심리적 설명이 끼어들면 사례가 뜬금없이 느껴진다.",
+              "④": "④는 일상생활 사례(영화·관계·직업) 열거가 모두 끝난 직후다. 이미 심리적·일상적 예시가 충분히 제시된 뒤에 삽입 문장이 오면, 'this tendency'가 앞의 열거 전체를 중복 설명하는 불필요한 반복이 되어 흐름이 어색하다.",
+              "⑤": "⑤는 합리적 의사결정에 대한 처방('Rational decision-making … what is still to gain')이 나온 뒤로, 글이 해결책 제시 단계로 이미 전환된 시점이다. 이 위치에 삽입 문장을 넣으면 심리적 충동으로 다시 돌아가는 역행이 발생해 글의 논리적 진행을 방해한다."
+            },
+            "passageWithMarkers": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. ① A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. ② The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. ③ Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life. ④"
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "TOPIC_MAIN_IDEA",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1887,
+        "inputTokenDetails": {
+          "noCacheTokens": 1887,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1593,
+        "outputTokenDetails": {},
+        "totalTokens": 3480,
+        "raw": {
+          "input_tokens": 1887,
+          "output_tokens": 1593,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 26615,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 요지로 가장 적절한 것은?",
+            "correctAnswer": "2",
+            "explanation": "이 글의 핵심 논지는 두 가지 층위로 구성된다. 첫째, 매몰 비용의 오류(sunk cost fallacy)가 공장 경영, 영화 관람, 인간관계, 직업 유지 등 경제적 영역을 넘어 삶 전반에 걸쳐 나타난다는 것이다. 둘째, 이에 대한 해법으로 필자는 'evaluating each new choice on its own merits, asking not what has been spent but what is still to gain'이라고 명시하며, 과거가 아닌 미래 가치 기준의 합리적 판단을 촉구한다. 선지 2는 이 두 층위를 모두 포괄하는 유일한 선택지다. 나머지 선지들은 글의 일부 요소만 반영하거나 글에서 직접적으로 지지되지 않는 인과 관계를 설정하고 있어 글 전체의 요지로 보기 어렵다.",
+            "keyPoints": [
+              "매몰 비용의 오류(sunk cost fallacy)의 정의와 적용 범위: 경제적 맥락에서 출발하여 일상 전반으로 확장됨을 파악해야 한다.",
+              "글의 해결책 문장('asking not what has been spent but what is still to gain')이 필자의 핵심 주장을 담고 있음을 식별해야 한다.",
+              "요지 문제에서 정답은 글의 특정 예시나 부분적 사실이 아니라 전체 논지를 포괄적으로 재진술한 선지임을 구별하는 능력이 필요하다."
+            ],
+            "tags": [
+              "요지 파악",
+              "매몰 비용",
+              "합리적 의사결정",
+              "논지 전개",
+              "추론"
+            ],
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "과거의 투자 규모가 클수록 미래의 의사결정에서 더 신중한 판단이 요구된다."
+              },
+              {
+                "label": "2",
+                "text": "매몰 비용의 오류는 경제적 맥락에 국한되지 않으며, 합리적 선택은 과거 투자가 아닌 미래 가치를 기준으로 이루어져야 한다."
+              },
+              {
+                "label": "3",
+                "text": "일상생활에서의 비합리적 결정은 경제적 손실보다 심리적 패배감에서 비롯되는 경우가 더 많다."
+              },
+              {
+                "label": "4",
+                "text": "경제학의 핵심 원리를 일상에 적용하면 반복되는 실수와 잘못된 습관을 효과적으로 개선할 수 있다."
+              },
+              {
+                "label": "5",
+                "text": "매몰 비용의 오류는 인간의 손실 회피 성향에서 비롯되며, 이를 극복하려면 감정보다 논리를 우선해야 한다."
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "과거 투자 규모가 클수록 신중한 판단이 필요하다는 내용은 글에 없다. 오히려 글은 과거 투자의 규모와 무관하게 미래 가치로만 판단해야 한다고 주장한다. 매몰 비용을 의사결정에 반영하는 것 자체가 오류임을 간과한 선지다.",
+              "3": "글에서 '패배의 인정처럼 느껴진다(feel like an admission of defeat)'는 심리적 요인을 언급하지만, 이것이 경제적 손실보다 더 큰 원인이라는 비교는 글에서 지지되지 않는다. 글의 부분적 예시를 과도하게 일반화한 오답이다.",
+              "4": "경제학 원리를 일상에 '적용하면 실수와 습관을 개선할 수 있다'는 낙관적 처방은 글에서 제시되지 않는다. 글은 합리적 판단의 원칙을 제시할 뿐, 그 적용의 효과나 방법론적 개선을 주장하지 않는다. 글의 결론부를 지나치게 확장·변형한 오답이다.",
+              "5": "손실 회피 성향(loss aversion)이 매몰 비용 오류의 원인이라는 설명은 글에 명시되지 않은 심리학적 개념이다. 또한 '감정보다 논리 우선'이라는 처방도 글의 표현('evaluating on its own merits')과 다소 다른 프레임이다. 그럴듯하게 보이지만 글 밖의 내용을 끌어들인 오답이다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 요지로 가장 적절한 것은?",
+            "correctAnswer": "2",
+            "explanation": "이 글의 핵심 논지는 두 가지 층위로 구성된다. 첫째, 매몰 비용의 오류(sunk cost fallacy)가 공장 경영, 영화 관람, 인간관계, 직업 유지 등 경제적 영역을 넘어 삶 전반에 걸쳐 나타난다는 것이다. 둘째, 이에 대한 해법으로 필자는 'evaluating each new choice on its own merits, asking not what has been spent but what is still to gain'이라고 명시하며, 과거가 아닌 미래 가치 기준의 합리적 판단을 촉구한다. 선지 2는 이 두 층위를 모두 포괄하는 유일한 선택지다. 나머지 선지들은 글의 일부 요소만 반영하거나 글에서 직접적으로 지지되지 않는 인과 관계를 설정하고 있어 글 전체의 요지로 보기 어렵다.",
+            "keyPoints": [
+              "매몰 비용의 오류(sunk cost fallacy)의 정의와 적용 범위: 경제적 맥락에서 출발하여 일상 전반으로 확장됨을 파악해야 한다.",
+              "글의 해결책 문장('asking not what has been spent but what is still to gain')이 필자의 핵심 주장을 담고 있음을 식별해야 한다.",
+              "요지 문제에서 정답은 글의 특정 예시나 부분적 사실이 아니라 전체 논지를 포괄적으로 재진술한 선지임을 구별하는 능력이 필요하다."
+            ],
+            "tags": [
+              "요지 파악",
+              "매몰 비용",
+              "합리적 의사결정",
+              "논지 전개",
+              "추론"
+            ],
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "과거의 투자 규모가 클수록 미래의 의사결정에서 더 신중한 판단이 요구된다."
+              },
+              {
+                "label": "2",
+                "text": "매몰 비용의 오류는 경제적 맥락에 국한되지 않으며, 합리적 선택은 과거 투자가 아닌 미래 가치를 기준으로 이루어져야 한다."
+              },
+              {
+                "label": "3",
+                "text": "일상생활에서의 비합리적 결정은 경제적 손실보다 심리적 패배감에서 비롯되는 경우가 더 많다."
+              },
+              {
+                "label": "4",
+                "text": "경제학의 핵심 원리를 일상에 적용하면 반복되는 실수와 잘못된 습관을 효과적으로 개선할 수 있다."
+              },
+              {
+                "label": "5",
+                "text": "매몰 비용의 오류는 인간의 손실 회피 성향에서 비롯되며, 이를 극복하려면 감정보다 논리를 우선해야 한다."
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "과거 투자 규모가 클수록 신중한 판단이 필요하다는 내용은 글에 없다. 오히려 글은 과거 투자의 규모와 무관하게 미래 가치로만 판단해야 한다고 주장한다. 매몰 비용을 의사결정에 반영하는 것 자체가 오류임을 간과한 선지다.",
+              "3": "글에서 '패배의 인정처럼 느껴진다(feel like an admission of defeat)'는 심리적 요인을 언급하지만, 이것이 경제적 손실보다 더 큰 원인이라는 비교는 글에서 지지되지 않는다. 글의 부분적 예시를 과도하게 일반화한 오답이다.",
+              "4": "경제학 원리를 일상에 '적용하면 실수와 습관을 개선할 수 있다'는 낙관적 처방은 글에서 제시되지 않는다. 글은 합리적 판단의 원칙을 제시할 뿐, 그 적용의 효과나 방법론적 개선을 주장하지 않는다. 글의 결론부를 지나치게 확장·변형한 오답이다.",
+              "5": "손실 회피 성향(loss aversion)이 매몰 비용 오류의 원인이라는 설명은 글에 명시되지 않은 심리학적 개념이다. 또한 '감정보다 논리 우선'이라는 처방도 글의 표현('evaluating on its own merits')과 다소 다른 프레임이다. 그럴듯하게 보이지만 글 밖의 내용을 끌어들인 오답이다."
+            }
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "TITLE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1858,
+        "inputTokenDetails": {
+          "noCacheTokens": 1858,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1346,
+        "outputTokenDetails": {},
+        "totalTokens": 3204,
+        "raw": {
+          "input_tokens": 1858,
+          "output_tokens": 1346,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 21217,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 제목으로 가장 적절한 것은?",
+            "correctAnswer": "4",
+            "explanation": "이 글의 핵심 논지는 '매몰비용의 오류', 즉 이미 투자한 것이 미래의 합리적 판단을 흐린다는 것이다. 글은 공장의 예시에서 출발해 영화·인간관계·직업 등 일상으로 확장하지만, 그 모든 예시를 관통하는 핵심 메커니즘은 '과거 투자가 미래 결정을 왜곡한다'는 점이다. 선택지 4번은 'sunk cost fallacy(매몰비용의 오류)'라는 핵심 개념과 '과거 투자가 미래 판단을 흐린다(past investment clouds future judgment)'는 글의 중심 긴장을 동시에 포착한다. 단순히 주제어만 나열하지 않고 글의 인과적 구조(원인→결과)를 제목에 반영했다는 점에서 가장 적절하다.",
+            "keyPoints": [
+              "제목은 글의 중심 소재(sunk cost fallacy)만이 아니라 글이 주장하는 핵심 인과 구조(과거 투자 → 미래 판단 왜곡)를 담아야 한다.",
+              "글이 일상적 사례(영화, 관계, 직업)로 확장되더라도 그 사례들은 모두 매몰비용 오류를 예증하는 것이므로, 제목은 그 상위 개념을 포착해야 한다.",
+              "'rational decision-making requires evaluating each new choice on its own merits'라는 대조적 진술은 글의 처방적 결론으로, 제목이 이 긴장(fallacy vs. rationality)을 암시할수록 더 적절하다."
+            ],
+            "tags": [
+              "제목 추론",
+              "매몰비용의 오류",
+              "논리적 구조 파악",
+              "중심 개념",
+              "고난도 추론"
+            ],
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "The Hidden Costs of Economic Decision-Making"
+              },
+              {
+                "label": "2",
+                "text": "Why We Must Account for Every Investment We Make"
+              },
+              {
+                "label": "3",
+                "text": "Let Go of the Past: How Sunk Costs Trap Rational Thinkers"
+              },
+              {
+                "label": "4",
+                "text": "The Sunk Cost Fallacy: When Past Investment Clouds Future Judgment"
+              },
+              {
+                "label": "5",
+                "text": "From Economics to Everyday Life: The Trouble with Turning Back"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "'Hidden Costs(숨겨진 비용)'는 글의 핵심어가 아니다. 이 글은 비용이 얼마나 숨겨져 있는지를 다루는 것이 아니라, 이미 지불된 비용이 미래 판단에 미치는 심리적 왜곡을 다루므로 초점이 빗나간다.",
+              "2": "'Account for every investment(모든 투자를 따져야 한다)'는 글의 주장과 정반대이다. 글은 오히려 이미 투자한 것은 무시하고 미래 가치만으로 결정해야 한다고 말하므로, 이 제목은 글의 논지를 역전시킨다.",
+              "3": "'Let Go of the Past(과거를 놓아라)'는 글의 처방적 결론을 부분적으로 반영하지만, 'Rational Thinkers(합리적 사고자)'가 함정에 빠진다는 뉘앙스는 글에 없다. 글은 모든 사람이 이 오류에 빠진다고 말하며, 제목이 글의 진단보다 처방에만 편중되어 중심 개념인 'sunk cost fallacy'를 명시하지 않는다.",
+              "5": "'The Trouble with Turning Back(되돌아가기의 어려움)'은 글에서 언급된 'admission of defeat'와 연결되는 소재이지만, 이는 사례 중 하나일 뿐이다. 글 전체의 지배 개념인 매몰비용의 오류를 포착하지 못하고 지엽적 표현에 머무른다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 제목으로 가장 적절한 것은?",
+            "correctAnswer": "4",
+            "explanation": "이 글의 핵심 논지는 '매몰비용의 오류', 즉 이미 투자한 것이 미래의 합리적 판단을 흐린다는 것이다. 글은 공장의 예시에서 출발해 영화·인간관계·직업 등 일상으로 확장하지만, 그 모든 예시를 관통하는 핵심 메커니즘은 '과거 투자가 미래 결정을 왜곡한다'는 점이다. 선택지 4번은 'sunk cost fallacy(매몰비용의 오류)'라는 핵심 개념과 '과거 투자가 미래 판단을 흐린다(past investment clouds future judgment)'는 글의 중심 긴장을 동시에 포착한다. 단순히 주제어만 나열하지 않고 글의 인과적 구조(원인→결과)를 제목에 반영했다는 점에서 가장 적절하다.",
+            "keyPoints": [
+              "제목은 글의 중심 소재(sunk cost fallacy)만이 아니라 글이 주장하는 핵심 인과 구조(과거 투자 → 미래 판단 왜곡)를 담아야 한다.",
+              "글이 일상적 사례(영화, 관계, 직업)로 확장되더라도 그 사례들은 모두 매몰비용 오류를 예증하는 것이므로, 제목은 그 상위 개념을 포착해야 한다.",
+              "'rational decision-making requires evaluating each new choice on its own merits'라는 대조적 진술은 글의 처방적 결론으로, 제목이 이 긴장(fallacy vs. rationality)을 암시할수록 더 적절하다."
+            ],
+            "tags": [
+              "제목 추론",
+              "매몰비용의 오류",
+              "논리적 구조 파악",
+              "중심 개념",
+              "고난도 추론"
+            ],
+            "difficulty": "KILLER",
+            "options": [
+              {
+                "label": "1",
+                "text": "The Hidden Costs of Economic Decision-Making"
+              },
+              {
+                "label": "2",
+                "text": "Why We Must Account for Every Investment We Make"
+              },
+              {
+                "label": "3",
+                "text": "Let Go of the Past: How Sunk Costs Trap Rational Thinkers"
+              },
+              {
+                "label": "4",
+                "text": "The Sunk Cost Fallacy: When Past Investment Clouds Future Judgment"
+              },
+              {
+                "label": "5",
+                "text": "From Economics to Everyday Life: The Trouble with Turning Back"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "'Hidden Costs(숨겨진 비용)'는 글의 핵심어가 아니다. 이 글은 비용이 얼마나 숨겨져 있는지를 다루는 것이 아니라, 이미 지불된 비용이 미래 판단에 미치는 심리적 왜곡을 다루므로 초점이 빗나간다.",
+              "2": "'Account for every investment(모든 투자를 따져야 한다)'는 글의 주장과 정반대이다. 글은 오히려 이미 투자한 것은 무시하고 미래 가치만으로 결정해야 한다고 말하므로, 이 제목은 글의 논지를 역전시킨다.",
+              "3": "'Let Go of the Past(과거를 놓아라)'는 글의 처방적 결론을 부분적으로 반영하지만, 'Rational Thinkers(합리적 사고자)'가 함정에 빠진다는 뉘앙스는 글에 없다. 글은 모든 사람이 이 오류에 빠진다고 말하며, 제목이 글의 진단보다 처방에만 편중되어 중심 개념인 'sunk cost fallacy'를 명시하지 않는다.",
+              "5": "'The Trouble with Turning Back(되돌아가기의 어려움)'은 글에서 언급된 'admission of defeat'와 연결되는 소재이지만, 이는 사례 중 하나일 뿐이다. 글 전체의 지배 개념인 매몰비용의 오류를 포착하지 못하고 지엽적 표현에 머무른다."
+            }
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2477,
+        "inputTokenDetails": {
+          "noCacheTokens": 2477,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1220,
+        "outputTokenDetails": {},
+        "totalTokens": 3697,
+        "raw": {
+          "input_tokens": 2477,
+          "output_tokens": 1220,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 23706,
+      "items": [
+        {
+          "raw": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "①",
+            "explanation": "해당 문장 'A factory that has spent millions developing a doomed product will often keep pouring resources into it'에서 'it'은 앞 절의 목적어인 'a doomed product'를 가리킨다. 동사구 'keep pouring resources into'의 목적어로서 'it'이 지칭하는 대상은 공장이 수백만 달러를 들여 개발해 온 '실패가 예정된 제품'이다. ②는 앞 단락에서 언급된 개념으로 문맥상 멀리 있으며, 'pouring resources into a concept'는 의미적으로 어색하다. ④의 '비용 자체'는 resources가 투입되는 대상이 될 수 없고, ⑤의 '경영 방침'은 본문에 직접 등장하지 않는 추상적 개념이다.",
+            "keyPoints": [
+              "대명사 'it'의 선행사를 찾을 때, 가장 가까운 명사(구)와의 문법적·의미적 일치를 동시에 검토해야 한다.",
+              "'pour resources into + 목적어' 구조에서 목적어 자리에 올 수 있는 것은 구체적 대상(제품, 프로젝트 등)이며, 추상적 개념이나 이미 소비된 비용은 올 수 없다.",
+              "매몰 비용의 오류 맥락에서 '계속 투입되는 자원'의 방향은 '실패가 예정된 제품'임을 지문 전체 논리로 파악해야 한다."
+            ],
+            "tags": [
+              "지칭 추론",
+              "대명사",
+              "선행사",
+              "매몰 비용의 오류",
+              "논리 독해",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "often keep pouring resources into it, simply because so much has",
+            "options": [
+              {
+                "label": "①",
+                "text": "막대한 자금이 투입된 실패가 예정된 제품"
+              },
+              {
+                "label": "②",
+                "text": "매몰 비용의 오류(sunk cost fallacy)라는 개념"
+              },
+              {
+                "label": "③",
+                "text": "미래 투자에 대한 합리적 판단 기준"
+              },
+              {
+                "label": "④",
+                "text": "공장이 이미 지불한 수백만 달러의 비용 자체"
+              },
+              {
+                "label": "⑤",
+                "text": "자원을 계속 쏟아붓는 공장의 경영 방침"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "②": "'sunk cost fallacy'는 이 문장보다 앞 문장에서 소개된 개념적 용어이며, 'pouring resources into a fallacy(오류 속에 자원을 쏟아붓는다)'는 의미상 성립하지 않는다.",
+              "③": "'합리적 판단 기준'은 지문 후반부에 등장하며, 해당 문장의 맥락(실패한 제품에 자원을 계속 투입하는 상황)과 정반대되는 내용이다.",
+              "④": "'수백만 달러의 비용 자체'는 'spent millions'에서 언급된 것으로, 자원을 '쏟아붓는' 대상(into)이 될 수 없다. 비용은 이미 지출된 것이지 추가로 투입되는 대상이 아니다.",
+              "⑤": "'공장의 경영 방침'은 본문에 명시적으로 등장하지 않는 추상적 개념으로, 'it'의 선행사로 볼 수 있는 근거가 문법·의미 양면에서 모두 부족하다."
+            }
+          },
+          "processed": {
+            "direction": "밑줄 친 'it'이 가리키는 것으로 가장 적절한 것은?",
+            "correctAnswer": "①",
+            "explanation": "해당 문장 'A factory that has spent millions developing a doomed product will often keep pouring resources into it'에서 'it'은 앞 절의 목적어인 'a doomed product'를 가리킨다. 동사구 'keep pouring resources into'의 목적어로서 'it'이 지칭하는 대상은 공장이 수백만 달러를 들여 개발해 온 '실패가 예정된 제품'이다. ②는 앞 단락에서 언급된 개념으로 문맥상 멀리 있으며, 'pouring resources into a concept'는 의미적으로 어색하다. ④의 '비용 자체'는 resources가 투입되는 대상이 될 수 없고, ⑤의 '경영 방침'은 본문에 직접 등장하지 않는 추상적 개념이다.",
+            "keyPoints": [
+              "대명사 'it'의 선행사를 찾을 때, 가장 가까운 명사(구)와의 문법적·의미적 일치를 동시에 검토해야 한다.",
+              "'pour resources into + 목적어' 구조에서 목적어 자리에 올 수 있는 것은 구체적 대상(제품, 프로젝트 등)이며, 추상적 개념이나 이미 소비된 비용은 올 수 없다.",
+              "매몰 비용의 오류 맥락에서 '계속 투입되는 자원'의 방향은 '실패가 예정된 제품'임을 지문 전체 논리로 파악해야 한다."
+            ],
+            "tags": [
+              "지칭 추론",
+              "대명사",
+              "선행사",
+              "매몰 비용의 오류",
+              "논리 독해",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "underlinedPronoun": "it",
+            "surroundingText": "often keep pouring resources into it, simply because so much has",
+            "options": [
+              {
+                "label": "①",
+                "text": "막대한 자금이 투입된 실패가 예정된 제품"
+              },
+              {
+                "label": "②",
+                "text": "매몰 비용의 오류(sunk cost fallacy)라는 개념"
+              },
+              {
+                "label": "③",
+                "text": "미래 투자에 대한 합리적 판단 기준"
+              },
+              {
+                "label": "④",
+                "text": "공장이 이미 지불한 수백만 달러의 비용 자체"
+              },
+              {
+                "label": "⑤",
+                "text": "자원을 계속 쏟아붓는 공장의 경영 방침"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "②": "'sunk cost fallacy'는 이 문장보다 앞 문장에서 소개된 개념적 용어이며, 'pouring resources into a fallacy(오류 속에 자원을 쏟아붓는다)'는 의미상 성립하지 않는다.",
+              "③": "'합리적 판단 기준'은 지문 후반부에 등장하며, 해당 문장의 맥락(실패한 제품에 자원을 계속 투입하는 상황)과 정반대되는 내용이다.",
+              "④": "'수백만 달러의 비용 자체'는 'spent millions'에서 언급된 것으로, 자원을 '쏟아붓는' 대상(into)이 될 수 없다. 비용은 이미 지출된 것이지 추가로 투입되는 대상이 아니다.",
+              "⑤": "'공장의 경영 방침'은 본문에 명시적으로 등장하지 않는 추상적 개념으로, 'it'의 선행사로 볼 수 있는 근거가 문법·의미 양면에서 모두 부족하다."
+            },
+            "passageWithUnderline": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into __it__, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "CONTENT_MATCH",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1899,
+        "inputTokenDetails": {
+          "noCacheTokens": 1899,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1210,
+        "outputTokenDetails": {},
+        "totalTokens": 3109,
+        "raw": {
+          "input_tokens": 1899,
+          "output_tokens": 1210,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 18768,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 내용과 일치하지 않는 것은?",
+            "correctAnswer": "4",
+            "explanation": "지문에서 합리적 의사결정(Rational decision-making)은 '각각의 새로운 선택을 그 자체의 장점으로 평가하고, 이미 지출한 것이 아니라 앞으로 얻을 수 있는 것을 물어보는 것'이라고 명시되어 있다(asking not what has been spent but what is still to gain). 선택지 ④는 이를 정반대로 서술하여 '앞으로 얻을 것보다 지금까지 지출한 비용을 중심으로 평가한다'고 했으므로 지문의 내용과 불일치한다. 이 선택지는 합리적 의사결정의 정의를 매몰 비용의 오류와 혼동하도록 교묘하게 뒤바꾼 것으로, 빠르게 읽으면 그럴듯하게 보일 수 있어 주의가 필요하다.",
+            "keyPoints": [
+              "합리적 의사결정의 핵심은 과거 비용이 아닌 미래의 이익을 기준으로 평가하는 것임을 파악해야 한다.",
+              "'not A but B' 구문의 의미를 정확히 이해하여 선택지의 뒤바꿈 왜곡을 감지하는 능력이 필요하다.",
+              "매몰 비용의 오류와 합리적 의사결정의 개념을 대조적으로 파악하는 논리적 독해 능력이 요구된다."
+            ],
+            "tags": [
+              "내용 불일치",
+              "매몰 비용의 오류",
+              "합리적 의사결정",
+              "개념 대조",
+              "not A but B 구문",
+              "논리적 독해",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "matchType": "불일치",
+            "options": [
+              {
+                "label": "1",
+                "text": "매몰 비용의 오류는 과거의 투자가 미래의 선택을 정당화한다는 믿음에서 비롯된다."
+              },
+              {
+                "label": "2",
+                "text": "실패가 예정된 제품을 개발한 공장도 이미 투자한 금액 때문에 자원을 계속 쏟아붓는 경향이 있다."
+              },
+              {
+                "label": "3",
+                "text": "사람들이 나쁜 영화를 끝까지 보는 것은 입장권 구매라는 과거의 지출 때문이다."
+              },
+              {
+                "label": "4",
+                "text": "합리적 의사결정은 앞으로 얻을 것보다 지금까지 지출한 비용을 중심으로 선택을 평가하는 것이다."
+              },
+              {
+                "label": "5",
+                "text": "실패한 경력에서 물러나는 것을 패배의 인정처럼 느끼기 때문에 사람들은 그 길을 고집한다."
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "지문 첫 문단에서 'the belief that past investments justify future commitments'라고 직접 정의하고 있으므로 일치한다.",
+              "2": "지문에서 'A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested'라고 명시되어 있으므로 일치한다.",
+              "3": "지문에서 'people sit through bad films because they paid for the ticket'이라고 직접 언급하고 있으므로 일치한다.",
+              "5": "지문에서 'persist in failing careers because turning back would feel like an admission of defeat'라고 서술하고 있으므로 일치한다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글의 내용과 일치하지 않는 것은?",
+            "correctAnswer": "4",
+            "explanation": "지문에서 합리적 의사결정(Rational decision-making)은 '각각의 새로운 선택을 그 자체의 장점으로 평가하고, 이미 지출한 것이 아니라 앞으로 얻을 수 있는 것을 물어보는 것'이라고 명시되어 있다(asking not what has been spent but what is still to gain). 선택지 ④는 이를 정반대로 서술하여 '앞으로 얻을 것보다 지금까지 지출한 비용을 중심으로 평가한다'고 했으므로 지문의 내용과 불일치한다. 이 선택지는 합리적 의사결정의 정의를 매몰 비용의 오류와 혼동하도록 교묘하게 뒤바꾼 것으로, 빠르게 읽으면 그럴듯하게 보일 수 있어 주의가 필요하다.",
+            "keyPoints": [
+              "합리적 의사결정의 핵심은 과거 비용이 아닌 미래의 이익을 기준으로 평가하는 것임을 파악해야 한다.",
+              "'not A but B' 구문의 의미를 정확히 이해하여 선택지의 뒤바꿈 왜곡을 감지하는 능력이 필요하다.",
+              "매몰 비용의 오류와 합리적 의사결정의 개념을 대조적으로 파악하는 논리적 독해 능력이 요구된다."
+            ],
+            "tags": [
+              "내용 불일치",
+              "매몰 비용의 오류",
+              "합리적 의사결정",
+              "개념 대조",
+              "not A but B 구문",
+              "논리적 독해",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "matchType": "불일치",
+            "options": [
+              {
+                "label": "1",
+                "text": "매몰 비용의 오류는 과거의 투자가 미래의 선택을 정당화한다는 믿음에서 비롯된다."
+              },
+              {
+                "label": "2",
+                "text": "실패가 예정된 제품을 개발한 공장도 이미 투자한 금액 때문에 자원을 계속 쏟아붓는 경향이 있다."
+              },
+              {
+                "label": "3",
+                "text": "사람들이 나쁜 영화를 끝까지 보는 것은 입장권 구매라는 과거의 지출 때문이다."
+              },
+              {
+                "label": "4",
+                "text": "합리적 의사결정은 앞으로 얻을 것보다 지금까지 지출한 비용을 중심으로 선택을 평가하는 것이다."
+              },
+              {
+                "label": "5",
+                "text": "실패한 경력에서 물러나는 것을 패배의 인정처럼 느끼기 때문에 사람들은 그 길을 고집한다."
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "지문 첫 문단에서 'the belief that past investments justify future commitments'라고 직접 정의하고 있으므로 일치한다.",
+              "2": "지문에서 'A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested'라고 명시되어 있으므로 일치한다.",
+              "3": "지문에서 'people sit through bad films because they paid for the ticket'이라고 직접 언급하고 있으므로 일치한다.",
+              "5": "지문에서 'persist in failing careers because turning back would feel like an admission of defeat'라고 서술하고 있으므로 일치한다."
+            }
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "IRRELEVANT",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2269,
+        "inputTokenDetails": {
+          "noCacheTokens": 2269,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1385,
+        "outputTokenDetails": {},
+        "totalTokens": 3654,
+        "raw": {
+          "input_tokens": 2269,
+          "output_tokens": 1385,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 22613,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글에서 전체 흐름과 관계 없는 문장은?",
+            "correctAnswer": "③",
+            "explanation": "③번 문장('Measuring the true return on investment requires accounting for opportunity costs, not just the capital already deployed.')은 '기회비용'이라는 개념을 새롭게 도입하며 투자 수익 측정 방법론을 논하고 있다. 그러나 이 글의 핵심 논지는 이미 투자한 비용(매몰비용)을 미래 결정의 근거로 삼는 오류를 경계하고, 각 선택을 독립적으로 평가해야 한다는 것이다. ③번은 '기회비용(opportunity costs)'과 '투자 자본(capital)'이라는 경제 용어를 사용해 표면적으로는 어울려 보이지만, 글 전체가 '이미 쓴 비용을 어떻게 측정할 것인가'가 아니라 '이미 쓴 비용을 미래 판단 근거로 삼지 말아야 한다'는 행동 경제학적 교훈을 다루고 있으므로 논리적 흐름에서 벗어난다. 나머지 ①②④⑤는 매몰비용 오류의 정의, 사례(공장), 일상 사례, 합리적 의사결정이라는 단일 논리 흐름을 형성한다.",
+            "keyPoints": [
+              "매몰비용 오류(sunk cost fallacy)의 개념과 그것이 일상·경제적 의사결정에 미치는 영향을 파악한다.",
+              "글의 논리 흐름(정의 → 경제적 사례 → 일상 사례 → 합리적 대안)을 추적하여 이탈 문장을 식별하는 능력을 기른다.",
+              "표면적으로 관련 어휘(investment, capital, cost)를 공유하더라도 담화 기능이 다르면 무관한 문장이 될 수 있음을 이해한다."
+            ],
+            "tags": [
+              "매몰비용",
+              "무관한 문장 찾기",
+              "논리적 흐름",
+              "행동경제학",
+              "담화 기능",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "sentences": [
+              "Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
+              "A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested.",
+              "Measuring the true return on investment requires accounting for opportunity costs, not just the capital already deployed.",
+              "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat.",
+              "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain."
+            ],
+            "irrelevantIndex": 2,
+            "options": [
+              {
+                "label": "①",
+                "text": "①"
+              },
+              {
+                "label": "②",
+                "text": "②"
+              },
+              {
+                "label": "③",
+                "text": "③"
+              },
+              {
+                "label": "④",
+                "text": "④"
+              },
+              {
+                "label": "⑤",
+                "text": "⑤"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "①번은 매몰비용 오류의 핵심 정의를 제시하는 문장으로, 글 전체의 주제를 도입하는 핵심 역할을 한다. 무관한 문장이 아니다.",
+              "②": "②번은 공장이 실패한 제품에 계속 자원을 투입하는 경제적 사례로, 매몰비용 오류의 구체적 예시에 해당한다. 흐름에 부합한다.",
+              "④": "④번은 영화, 관계, 직업 등 일상 속 매몰비용 오류 사례를 나열하며 글의 논지를 풍부하게 뒷받침한다. 흐름에 부합한다.",
+              "⑤": "⑤번은 합리적 의사결정의 대안적 기준을 제시하며 글의 결론부에 해당한다. '이미 쓴 비용이 아닌 앞으로의 이득을 물어야 한다'는 메시지는 전체 주장의 귀결이므로 무관한 문장이 아니다."
+            }
+          },
+          "processed": {
+            "direction": "다음 글에서 전체 흐름과 관계 없는 문장은?",
+            "correctAnswer": "③",
+            "explanation": "③번 문장('Measuring the true return on investment requires accounting for opportunity costs, not just the capital already deployed.')은 '기회비용'이라는 개념을 새롭게 도입하며 투자 수익 측정 방법론을 논하고 있다. 그러나 이 글의 핵심 논지는 이미 투자한 비용(매몰비용)을 미래 결정의 근거로 삼는 오류를 경계하고, 각 선택을 독립적으로 평가해야 한다는 것이다. ③번은 '기회비용(opportunity costs)'과 '투자 자본(capital)'이라는 경제 용어를 사용해 표면적으로는 어울려 보이지만, 글 전체가 '이미 쓴 비용을 어떻게 측정할 것인가'가 아니라 '이미 쓴 비용을 미래 판단 근거로 삼지 말아야 한다'는 행동 경제학적 교훈을 다루고 있으므로 논리적 흐름에서 벗어난다. 나머지 ①②④⑤는 매몰비용 오류의 정의, 사례(공장), 일상 사례, 합리적 의사결정이라는 단일 논리 흐름을 형성한다.",
+            "keyPoints": [
+              "매몰비용 오류(sunk cost fallacy)의 개념과 그것이 일상·경제적 의사결정에 미치는 영향을 파악한다.",
+              "글의 논리 흐름(정의 → 경제적 사례 → 일상 사례 → 합리적 대안)을 추적하여 이탈 문장을 식별하는 능력을 기른다.",
+              "표면적으로 관련 어휘(investment, capital, cost)를 공유하더라도 담화 기능이 다르면 무관한 문장이 될 수 있음을 이해한다."
+            ],
+            "tags": [
+              "매몰비용",
+              "무관한 문장 찾기",
+              "논리적 흐름",
+              "행동경제학",
+              "담화 기능",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "sentences": [
+              "Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
+              "A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested.",
+              "Measuring the true return on investment requires accounting for opportunity costs, not just the capital already deployed.",
+              "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat.",
+              "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain."
+            ],
+            "irrelevantIndex": 2,
+            "options": [
+              {
+                "label": "①",
+                "text": "①"
+              },
+              {
+                "label": "②",
+                "text": "②"
+              },
+              {
+                "label": "③",
+                "text": "③"
+              },
+              {
+                "label": "④",
+                "text": "④"
+              },
+              {
+                "label": "⑤",
+                "text": "⑤"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "①": "①번은 매몰비용 오류의 핵심 정의를 제시하는 문장으로, 글 전체의 주제를 도입하는 핵심 역할을 한다. 무관한 문장이 아니다.",
+              "②": "②번은 공장이 실패한 제품에 계속 자원을 투입하는 경제적 사례로, 매몰비용 오류의 구체적 예시에 해당한다. 흐름에 부합한다.",
+              "④": "④번은 영화, 관계, 직업 등 일상 속 매몰비용 오류 사례를 나열하며 글의 논지를 풍부하게 뒷받침한다. 흐름에 부합한다.",
+              "⑤": "⑤번은 합리적 의사결정의 대안적 기준을 제시하며 글의 결론부에 해당한다. '이미 쓴 비용이 아닌 앞으로의 이득을 물어야 한다'는 메시지는 전체 주장의 귀결이므로 무관한 문장이 아니다."
+            },
+            "passageWithNumbers": "① Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. ② A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. ③ Measuring the true return on investment requires accounting for opportunity costs, not just the capital already deployed. ④ The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. ⑤ Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "CONDITIONAL_WRITING",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2101,
+        "inputTokenDetails": {
+          "noCacheTokens": 2101,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1238,
+        "outputTokenDetails": {},
+        "totalTokens": 3339,
+        "raw": {
+          "input_tokens": 2101,
+          "output_tokens": 1238,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 36523,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 우리말을 주어진 조건에 맞게 영작하시오.",
+            "correctAnswer": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "explanation": "이 문장은 지문의 핵심 논지를 직접 담고 있는 문장으로, 여러 복잡한 문법 요소가 상호작용한다. 'requires' 뒤에는 동명사 'evaluating'이 목적어로 오고, 그 뒤에 분사구문 'asking not what has been spent but what is still to gain'이 이어져 합리적 의사결정의 방식을 구체화한다. 'not ~ but ~' 구문은 '지출된 것'과 '여전히 얻을 것'을 대조시켜 매몰비용 오류와 합리적 판단의 차이를 언어적으로 구현하며, 'what is still to gain'은 'be to 부정사'의 가능·예정 용법을 활용한 구조로 단순 미래나 조동사로 대체하면 오답이 된다. 또한 'by contrast'의 삽입 위치와 'on its own merits'라는 숙어적 표현도 정확히 재현해야 하므로, 단순 암기나 직역으로는 완전한 정답 도출이 어렵다.",
+            "keyPoints": [
+              "'requires + 동명사' 구문: 동사 'require'는 목적어로 동명사를 취하며, 여기서 'evaluating each new choice on its own merits'가 동명사구 목적어로 기능한다.",
+              "'not A but B' 대조 구문: 'not what has been spent but what is still to gain'처럼 명사절 두 개를 대조시키는 고급 구문으로, 매몰비용(과거)과 미래 이익의 대비를 문법적으로 표현한다.",
+              "'be to 부정사'의 용법: 'what is still to gain'에서 'be to + 동사원형'은 가능·예정의 의미를 나타내며, 'can gain' 또는 'will gain'과는 미묘하게 의미와 격식 수준이 다르다."
+            ],
+            "tags": [
+              "동명사",
+              "not A but B 구문",
+              "be to 부정사",
+              "분사구문",
+              "매몰비용",
+              "합리적 의사결정",
+              "조건부 영작",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "referenceSentence": "반면에, 합리적인 의사 결정은 지출된 것이 무엇인지가 아니라 여전히 얻을 것이 무엇인지를 물으며, 각각의 새로운 선택을 그 자체의 장점에 따라 평가하는 것을 요구한다.",
+            "conditions": [
+              "'Rational decision-making'으로 시작할 것",
+              "동명사구를 주어 보어(주격 보어)로 사용하여 'requires' 뒤에 위치시킬 것",
+              "'not ~ but ~' 구문을 사용하여 대조를 나타낼 것",
+              "'what has been spent'와 'what is still to gain'을 각각 포함할 것"
+            ],
+            "modelAnswer": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "scoringCriteria": [
+              "'Rational decision-making'으로 문장을 시작한 경우 (1점)",
+              "'requires evaluating'으로 동명사 목적어를 올바르게 사용한 경우 (2점)",
+              "'each new choice on its own merits'를 정확히 포함한 경우 (1점)",
+              "'not what has been spent but what is still to gain' 구문을 정확히 사용한 경우 (2점)",
+              "'by contrast' 삽입구를 포함한 경우 (1점)"
+            ]
+          },
+          "processed": {
+            "direction": "다음 우리말을 주어진 조건에 맞게 영작하시오.",
+            "correctAnswer": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "explanation": "이 문장은 지문의 핵심 논지를 직접 담고 있는 문장으로, 여러 복잡한 문법 요소가 상호작용한다. 'requires' 뒤에는 동명사 'evaluating'이 목적어로 오고, 그 뒤에 분사구문 'asking not what has been spent but what is still to gain'이 이어져 합리적 의사결정의 방식을 구체화한다. 'not ~ but ~' 구문은 '지출된 것'과 '여전히 얻을 것'을 대조시켜 매몰비용 오류와 합리적 판단의 차이를 언어적으로 구현하며, 'what is still to gain'은 'be to 부정사'의 가능·예정 용법을 활용한 구조로 단순 미래나 조동사로 대체하면 오답이 된다. 또한 'by contrast'의 삽입 위치와 'on its own merits'라는 숙어적 표현도 정확히 재현해야 하므로, 단순 암기나 직역으로는 완전한 정답 도출이 어렵다.",
+            "keyPoints": [
+              "'requires + 동명사' 구문: 동사 'require'는 목적어로 동명사를 취하며, 여기서 'evaluating each new choice on its own merits'가 동명사구 목적어로 기능한다.",
+              "'not A but B' 대조 구문: 'not what has been spent but what is still to gain'처럼 명사절 두 개를 대조시키는 고급 구문으로, 매몰비용(과거)과 미래 이익의 대비를 문법적으로 표현한다.",
+              "'be to 부정사'의 용법: 'what is still to gain'에서 'be to + 동사원형'은 가능·예정의 의미를 나타내며, 'can gain' 또는 'will gain'과는 미묘하게 의미와 격식 수준이 다르다."
+            ],
+            "tags": [
+              "동명사",
+              "not A but B 구문",
+              "be to 부정사",
+              "분사구문",
+              "매몰비용",
+              "합리적 의사결정",
+              "조건부 영작",
+              "KILLER"
+            ],
+            "difficulty": "KILLER",
+            "referenceSentence": "반면에, 합리적인 의사 결정은 지출된 것이 무엇인지가 아니라 여전히 얻을 것이 무엇인지를 물으며, 각각의 새로운 선택을 그 자체의 장점에 따라 평가하는 것을 요구한다.",
+            "conditions": [
+              "'Rational decision-making'으로 시작할 것",
+              "동명사구를 주어 보어(주격 보어)로 사용하여 'requires' 뒤에 위치시킬 것",
+              "'not ~ but ~' 구문을 사용하여 대조를 나타낼 것",
+              "'what has been spent'와 'what is still to gain'을 각각 포함할 것"
+            ],
+            "modelAnswer": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "scoringCriteria": [
+              "'Rational decision-making'으로 문장을 시작한 경우 (1점)",
+              "'requires evaluating'으로 동명사 목적어를 올바르게 사용한 경우 (2점)",
+              "'each new choice on its own merits'를 정확히 포함한 경우 (1점)",
+              "'not what has been spent but what is still to gain' 구문을 정확히 사용한 경우 (2점)",
+              "'by contrast' 삽입구를 포함한 경우 (1점)"
+            ]
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "SENTENCE_TRANSFORM",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1898,
+        "inputTokenDetails": {
+          "noCacheTokens": 1898,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1181,
+        "outputTokenDetails": {},
+        "totalTokens": 3079,
+        "raw": {
+          "input_tokens": 1898,
+          "output_tokens": 1181,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 17731,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 문장을 아래의 조건을 모두 충족하도록 바꾸어 쓰시오.",
+            "correctAnswer": "What rational decision-making requires is the evaluation of each new choice on its own merits, not asking what has been spent but asking what is still to gain.",
+            "explanation": "원문은 'Rational decision-making ... requires evaluating ..., asking not A but B' 구조로 되어 있다. 조건 1에 따라 주어 전체를 'What rational decision-making requires'라는 명사절(의문사절)로 전환하고, 조건 2에 따라 동사를 'is the evaluation of'로 바꾸어 명사절 주어에 맞는 보어 구조를 완성해야 한다. 조건 3에서는 원문의 'asking not A but B'를 'not asking A but asking B'로 재배열하여 병렬성을 명시적으로 드러내야 하며, 두 asking 절의 시제(현재완료 has been spent / 현재 is still to gain)는 반드시 그대로 유지해야 한다. 이 세 가지 변환을 동시에 정확히 수행하고 의미의 대조적 강조를 보존하는 것이 핵심이다.",
+            "keyPoints": [
+              "의문사절(what-절)을 문장 주어로 활용하는 명사절 전환 능력: 'What + S + V + is ...' 구조에서 단수 동사 'is'를 정확히 써야 한다.",
+              "동명사구에서 'the evaluation of + 명사' 형태의 명사구로의 전환: 'evaluating each new choice' → 'the evaluation of each new choice'에서 관사 the와 전치사 of를 빠뜨리지 않아야 한다.",
+              "'not A but B' 병렬 구조를 'not asking A but asking B'로 재배열할 때 두 분사(asking)를 명시적으로 반복해야 하며, 각 절 내부의 시제(현재완료 vs. 현재 부정사 구문)를 원문 그대로 유지해야 한다."
+            ],
+            "tags": [
+              "명사절 주어",
+              "what절 전환",
+              "병렬 구조",
+              "분사구문",
+              "동명사-명사 전환",
+              "문장 전환 서술형",
+              "KILLER",
+              "sunk cost fallacy",
+              "의미 보존"
+            ],
+            "difficulty": "KILLER",
+            "originalSentence": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "conditions": [
+              "문장의 주어를 'What rational decision-making requires'로 시작하는 명사절로 바꾸어 전체 문장의 주어로 쓸 것",
+              "동사구 'requires evaluating'을 'is the evaluation of'로 바꿀 것",
+              "'asking not what has been spent but what is still to gain' 부분을 'not asking ... but asking ...' 구조의 병렬 분사구문으로 전환할 것",
+              "원문의 의미와 논리적 강조점(대조)을 그대로 유지할 것"
+            ],
+            "modelAnswer": "What rational decision-making requires is the evaluation of each new choice on its own merits, not asking what has been spent but asking what is still to gain.",
+            "scoringCriteria": [
+              "What rational decision-making requires를 주어로 정확히 사용한 경우 (1점)",
+              "is the evaluation of each new choice on its own merits를 정확히 쓴 경우 (1점)",
+              "not asking what has been spent but asking what is still to gain 구조가 병렬로 정확히 쓰인 경우 (1점)",
+              "시제 오류(has been spent, is still to gain) 없이 전체 문장이 완성된 경우 (1점)"
+            ]
+          },
+          "processed": {
+            "direction": "다음 문장을 아래의 조건을 모두 충족하도록 바꾸어 쓰시오.",
+            "correctAnswer": "What rational decision-making requires is the evaluation of each new choice on its own merits, not asking what has been spent but asking what is still to gain.",
+            "explanation": "원문은 'Rational decision-making ... requires evaluating ..., asking not A but B' 구조로 되어 있다. 조건 1에 따라 주어 전체를 'What rational decision-making requires'라는 명사절(의문사절)로 전환하고, 조건 2에 따라 동사를 'is the evaluation of'로 바꾸어 명사절 주어에 맞는 보어 구조를 완성해야 한다. 조건 3에서는 원문의 'asking not A but B'를 'not asking A but asking B'로 재배열하여 병렬성을 명시적으로 드러내야 하며, 두 asking 절의 시제(현재완료 has been spent / 현재 is still to gain)는 반드시 그대로 유지해야 한다. 이 세 가지 변환을 동시에 정확히 수행하고 의미의 대조적 강조를 보존하는 것이 핵심이다.",
+            "keyPoints": [
+              "의문사절(what-절)을 문장 주어로 활용하는 명사절 전환 능력: 'What + S + V + is ...' 구조에서 단수 동사 'is'를 정확히 써야 한다.",
+              "동명사구에서 'the evaluation of + 명사' 형태의 명사구로의 전환: 'evaluating each new choice' → 'the evaluation of each new choice'에서 관사 the와 전치사 of를 빠뜨리지 않아야 한다.",
+              "'not A but B' 병렬 구조를 'not asking A but asking B'로 재배열할 때 두 분사(asking)를 명시적으로 반복해야 하며, 각 절 내부의 시제(현재완료 vs. 현재 부정사 구문)를 원문 그대로 유지해야 한다."
+            ],
+            "tags": [
+              "명사절 주어",
+              "what절 전환",
+              "병렬 구조",
+              "분사구문",
+              "동명사-명사 전환",
+              "문장 전환 서술형",
+              "KILLER",
+              "sunk cost fallacy",
+              "의미 보존"
+            ],
+            "difficulty": "KILLER",
+            "originalSentence": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "conditions": [
+              "문장의 주어를 'What rational decision-making requires'로 시작하는 명사절로 바꾸어 전체 문장의 주어로 쓸 것",
+              "동사구 'requires evaluating'을 'is the evaluation of'로 바꿀 것",
+              "'asking not what has been spent but what is still to gain' 부분을 'not asking ... but asking ...' 구조의 병렬 분사구문으로 전환할 것",
+              "원문의 의미와 논리적 강조점(대조)을 그대로 유지할 것"
+            ],
+            "modelAnswer": "What rational decision-making requires is the evaluation of each new choice on its own merits, not asking what has been spent but asking what is still to gain.",
+            "scoringCriteria": [
+              "What rational decision-making requires를 주어로 정확히 사용한 경우 (1점)",
+              "is the evaluation of each new choice on its own merits를 정확히 쓴 경우 (1점)",
+              "not asking what has been spent but asking what is still to gain 구조가 병렬로 정확히 쓰인 경우 (1점)",
+              "시제 오류(has been spent, is still to gain) 없이 전체 문장이 완성된 경우 (1점)"
+            ]
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "FILL_BLANK_KEY",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1836,
+        "inputTokenDetails": {
+          "noCacheTokens": 1836,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 687,
+        "outputTokenDetails": {},
+        "totalTokens": 2523,
+        "raw": {
+          "input_tokens": 1836,
+          "output_tokens": 687,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 11143,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 빈칸에 들어갈 알맞은 말을 본문에서 찾아 쓰시오. (3단어)",
+            "correctAnswer": "what is still to gain",
+            "explanation": "본문 마지막 단락에서 합리적 의사결정의 핵심 원칙은 '이미 지출된 것(what has been spent)'이 아니라 '앞으로 얻을 수 있는 것(what is still to gain)'을 묻는 데 있다고 명시되어 있다. 이 표현은 매몰 비용 오류와 대비되는 논리적 귀결로, 단순히 문법적 빈칸 채우기가 아니라 지문 전체의 주제인 '미래 가치 중심의 판단'을 압축한 핵심 구절이다. 앞 절의 'not what has been spent'와 병렬 대조 구조(not A but B)를 이루므로, 'what has already been invested'나 'how much was lost' 등 과거 지향적 표현은 문맥상 오답이다. 정확히 본문의 어구를 재현해야 하므로 추측이나 paraphrase로는 정답을 쓸 수 없다.",
+            "keyPoints": [
+              "매몰 비용 오류(sunk cost fallacy)와 대비되는 합리적 의사결정의 원칙을 파악한다.",
+              "'not A but B' 병렬 대조 구조를 통해 빈칸에 들어갈 표현의 의미 방향(미래 지향)을 추론한다.",
+              "본문의 핵심 어구를 정확히 찾아 철자·어순까지 올바르게 재현하는 능력을 기른다."
+            ],
+            "tags": [
+              "빈칸 완성",
+              "핵심 표현",
+              "병렬 구조",
+              "매몰 비용 오류",
+              "추론",
+              "서술형"
+            ],
+            "difficulty": "KILLER",
+            "sentenceWithBlank": "Rational decision-making requires evaluating each new choice on its own merits, asking not what has been spent but _____________________.",
+            "answer": "what is still to gain"
+          },
+          "processed": {
+            "direction": "다음 빈칸에 들어갈 알맞은 말을 본문에서 찾아 쓰시오. (3단어)",
+            "correctAnswer": "what is still to gain",
+            "explanation": "본문 마지막 단락에서 합리적 의사결정의 핵심 원칙은 '이미 지출된 것(what has been spent)'이 아니라 '앞으로 얻을 수 있는 것(what is still to gain)'을 묻는 데 있다고 명시되어 있다. 이 표현은 매몰 비용 오류와 대비되는 논리적 귀결로, 단순히 문법적 빈칸 채우기가 아니라 지문 전체의 주제인 '미래 가치 중심의 판단'을 압축한 핵심 구절이다. 앞 절의 'not what has been spent'와 병렬 대조 구조(not A but B)를 이루므로, 'what has already been invested'나 'how much was lost' 등 과거 지향적 표현은 문맥상 오답이다. 정확히 본문의 어구를 재현해야 하므로 추측이나 paraphrase로는 정답을 쓸 수 없다.",
+            "keyPoints": [
+              "매몰 비용 오류(sunk cost fallacy)와 대비되는 합리적 의사결정의 원칙을 파악한다.",
+              "'not A but B' 병렬 대조 구조를 통해 빈칸에 들어갈 표현의 의미 방향(미래 지향)을 추론한다.",
+              "본문의 핵심 어구를 정확히 찾아 철자·어순까지 올바르게 재현하는 능력을 기른다."
+            ],
+            "tags": [
+              "빈칸 완성",
+              "핵심 표현",
+              "병렬 구조",
+              "매몰 비용 오류",
+              "추론",
+              "서술형"
+            ],
+            "difficulty": "KILLER",
+            "sentenceWithBlank": "Rational decision-making requires evaluating each new choice on its own merits, asking not what has been spent but _____________________.",
+            "answer": "what is still to gain"
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "SUMMARY_COMPLETE",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1905,
+        "inputTokenDetails": {
+          "noCacheTokens": 1905,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 897,
+        "outputTokenDetails": {},
+        "totalTokens": 2802,
+        "raw": {
+          "input_tokens": 1905,
+          "output_tokens": 897,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 33909,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것을 쓰시오.",
+            "correctAnswer": "(A) past, (B) future",
+            "explanation": "지문은 매몰 비용의 오류(sunk cost fallacy)를 핵심 개념으로 제시하며, 이미 투입된 과거의 자원이 미래의 의사결정을 왜곡한다고 설명한다. (A)에는 'past investments'(과거 투자)를 추상화한 표현이 필요하며, 지문의 'past investments'·'already invested'·'has been spent' 등의 반복적 증거가 이를 뒷받침한다. (B)에는 이와 대비되는 개념으로, 지문 마지막 문장의 'what is still to gain'을 추상화한 표현이 요구된다. 단순히 지문 표현을 그대로 옮기는 것으로는 불충분하며, 두 빈칸이 서로 대조적 관계(과거 vs. 미래 지향)임을 파악해야 하는 이중 추론이 필요하다. 'irreversible'(A)나 'rational'(B)처럼 부분적으로 그럴듯한 단어를 고르지 않으려면 요약문 전체의 논리 구조를 정확히 이해해야 한다.",
+            "keyPoints": [
+              "매몰 비용의 오류(sunk cost fallacy)란 이미 투입된 비용이 미래 결정을 좌우하는 비합리적 사고방식임을 파악한다.",
+              "지문의 대조 구조(과거 투자에 집착 vs. 미래 이익 중심 합리적 판단)를 요약문의 빈칸 관계로 매핑하는 능력을 기른다.",
+              "요약문 완성 문제에서 빈칸 어휘는 지문의 특정 표현을 그대로 옮기는 것이 아니라 핵심 개념을 추상화·재표현해야 함을 이해한다."
+            ],
+            "tags": [
+              "매몰 비용",
+              "요약문 완성",
+              "대조 구조",
+              "추상화",
+              "서술형",
+              "경제심리",
+              "합리적 의사결정"
+            ],
+            "difficulty": "KILLER",
+            "summaryWithBlanks": "The sunk cost fallacy leads people to make future decisions based on (A) investments rather than forward-looking prospects, whereas sound reasoning demands evaluating each choice by its (B) potential.",
+            "blanks": [
+              {
+                "label": "(A)",
+                "answer": "past / prior / previous / historical"
+              },
+              {
+                "label": "(B)",
+                "answer": "future / prospective / remaining / net"
+              }
+            ]
+          },
+          "processed": {
+            "direction": "다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것을 쓰시오.",
+            "correctAnswer": "(A) past, (B) future",
+            "explanation": "지문은 매몰 비용의 오류(sunk cost fallacy)를 핵심 개념으로 제시하며, 이미 투입된 과거의 자원이 미래의 의사결정을 왜곡한다고 설명한다. (A)에는 'past investments'(과거 투자)를 추상화한 표현이 필요하며, 지문의 'past investments'·'already invested'·'has been spent' 등의 반복적 증거가 이를 뒷받침한다. (B)에는 이와 대비되는 개념으로, 지문 마지막 문장의 'what is still to gain'을 추상화한 표현이 요구된다. 단순히 지문 표현을 그대로 옮기는 것으로는 불충분하며, 두 빈칸이 서로 대조적 관계(과거 vs. 미래 지향)임을 파악해야 하는 이중 추론이 필요하다. 'irreversible'(A)나 'rational'(B)처럼 부분적으로 그럴듯한 단어를 고르지 않으려면 요약문 전체의 논리 구조를 정확히 이해해야 한다.",
+            "keyPoints": [
+              "매몰 비용의 오류(sunk cost fallacy)란 이미 투입된 비용이 미래 결정을 좌우하는 비합리적 사고방식임을 파악한다.",
+              "지문의 대조 구조(과거 투자에 집착 vs. 미래 이익 중심 합리적 판단)를 요약문의 빈칸 관계로 매핑하는 능력을 기른다.",
+              "요약문 완성 문제에서 빈칸 어휘는 지문의 특정 표현을 그대로 옮기는 것이 아니라 핵심 개념을 추상화·재표현해야 함을 이해한다."
+            ],
+            "tags": [
+              "매몰 비용",
+              "요약문 완성",
+              "대조 구조",
+              "추상화",
+              "서술형",
+              "경제심리",
+              "합리적 의사결정"
+            ],
+            "difficulty": "KILLER",
+            "summaryWithBlanks": "The sunk cost fallacy leads people to make future decisions based on (A) investments rather than forward-looking prospects, whereas sound reasoning demands evaluating each choice by its (B) potential.",
+            "blanks": [
+              {
+                "label": "(A)",
+                "answer": "past / prior / previous / historical"
+              },
+              {
+                "label": "(B)",
+                "answer": "future / prospective / remaining / net"
+              }
+            ]
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "WORD_ORDER",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1973,
+        "inputTokenDetails": {
+          "noCacheTokens": 1973,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 967,
+        "outputTokenDetails": {},
+        "totalTokens": 2940,
+        "raw": {
+          "input_tokens": 1973,
+          "output_tokens": 967,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 15053,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 글의 내용을 바탕으로, 주어진 단어/구를 올바른 순서로 배열하여 문장을 완성하시오.",
+            "correctAnswer": "Rational decision-making, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "explanation": "이 문장은 지문의 핵심 논지를 직접 담고 있는 문장으로, 'Rational decision-making'이 주어, 'requires evaluating each new choice on its own merits'가 술부 역할을 한다. 이어지는 'asking not what has been spent but what is still to gain'은 분사구문(asking)으로 앞 절의 내용을 구체화하며 'not A but B' 병렬 구조를 형성한다. 'on its own merits'는 'each new choice'를 수식하는 전치사구이므로 'evaluating each new choice' 바로 뒤에 위치해야 하며, 이를 다른 위치에 배치하면 의미가 왜곡된다. 'asking'을 문장 앞에 두거나 동사 앞에 배치하면 분사구문의 문법적 역할이 성립하지 않으므로 반드시 merits 뒤에 위치해야 한다. 'not ~ but ~' 구조에서 두 절의 순서를 바꾸면 지문의 논리적 대비(과거 지출 vs. 미래 이익)가 훼손된다.",
+            "keyPoints": [
+              "'Rational decision-making requires -ing' 구조: 주어+동사+목적어(동명사구)의 올바른 배열을 파악해야 한다.",
+              "분사구문 'asking ~'은 주절 전체를 수식하며 주절 뒤에 쉼표 없이 이어지는 위치에 고정된다.",
+              "'not A but B' 병렬 구조에서 A(과거 지출)와 B(미래 이익)의 순서는 지문의 논리적 흐름(sunk cost 비판 → 합리적 대안)을 반영하므로 순서를 바꿀 수 없다."
+            ],
+            "tags": [
+              "배열영작",
+              "분사구문",
+              "병렬구조",
+              "합리적의사결정",
+              "매몰비용의오류",
+              "KILLER",
+              "고난도서술형"
+            ],
+            "difficulty": "KILLER",
+            "scrambledWords": [
+              "on its own merits,",
+              "each new choice",
+              "requires evaluating",
+              "not what has been spent",
+              "asking",
+              "but what is still to gain",
+              "Rational decision-making,"
+            ],
+            "contextHint": "지문에서 '합리적 의사결정'이 요구하는 바를 설명하는 핵심 문장을 완성하시오. 과거에 지출된 비용이 아니라 무엇을 기준으로 선택을 평가해야 하는지에 주목하세요.",
+            "modelAnswer": "Rational decision-making, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain."
+          },
+          "processed": {
+            "direction": "다음 글의 내용을 바탕으로, 주어진 단어/구를 올바른 순서로 배열하여 문장을 완성하시오.",
+            "correctAnswer": "Rational decision-making, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "explanation": "이 문장은 지문의 핵심 논지를 직접 담고 있는 문장으로, 'Rational decision-making'이 주어, 'requires evaluating each new choice on its own merits'가 술부 역할을 한다. 이어지는 'asking not what has been spent but what is still to gain'은 분사구문(asking)으로 앞 절의 내용을 구체화하며 'not A but B' 병렬 구조를 형성한다. 'on its own merits'는 'each new choice'를 수식하는 전치사구이므로 'evaluating each new choice' 바로 뒤에 위치해야 하며, 이를 다른 위치에 배치하면 의미가 왜곡된다. 'asking'을 문장 앞에 두거나 동사 앞에 배치하면 분사구문의 문법적 역할이 성립하지 않으므로 반드시 merits 뒤에 위치해야 한다. 'not ~ but ~' 구조에서 두 절의 순서를 바꾸면 지문의 논리적 대비(과거 지출 vs. 미래 이익)가 훼손된다.",
+            "keyPoints": [
+              "'Rational decision-making requires -ing' 구조: 주어+동사+목적어(동명사구)의 올바른 배열을 파악해야 한다.",
+              "분사구문 'asking ~'은 주절 전체를 수식하며 주절 뒤에 쉼표 없이 이어지는 위치에 고정된다.",
+              "'not A but B' 병렬 구조에서 A(과거 지출)와 B(미래 이익)의 순서는 지문의 논리적 흐름(sunk cost 비판 → 합리적 대안)을 반영하므로 순서를 바꿀 수 없다."
+            ],
+            "tags": [
+              "배열영작",
+              "분사구문",
+              "병렬구조",
+              "합리적의사결정",
+              "매몰비용의오류",
+              "KILLER",
+              "고난도서술형"
+            ],
+            "difficulty": "KILLER",
+            "scrambledWords": [
+              "on its own merits,",
+              "each new choice",
+              "requires evaluating",
+              "not what has been spent",
+              "asking",
+              "but what is still to gain",
+              "Rational decision-making,"
+            ],
+            "contextHint": "지문에서 '합리적 의사결정'이 요구하는 바를 설명하는 핵심 문장을 완성하시오. 과거에 지출된 비용이 아니라 무엇을 기준으로 선택을 평가해야 하는지에 주목하세요.",
+            "modelAnswer": "Rational decision-making, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "GRAMMAR_CORRECTION",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1893,
+        "inputTokenDetails": {
+          "noCacheTokens": 1893,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 926,
+        "outputTokenDetails": {},
+        "totalTokens": 2819,
+        "raw": {
+          "input_tokens": 1893,
+          "output_tokens": 926,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 15590,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.",
+            "correctAnswer": "what was spent",
+            "explanation": "이 문장의 핵심은 'asking not A but B'의 병렬 구조 안에서 A와 B의 시제 논리가 일치해야 한다는 점이다. B에 해당하는 'what is still to gain'은 현재 시제로, 앞으로 얻을 수 있는 것(미래 지향적 판단)을 나타낸다. 반면 A에 해당하는 부분은 이미 지출된 과거의 비용을 가리키므로, 완료시제(what has been spent)보다 단순 과거(what was spent)가 맥락상 더 정확하다. 'what has been spent'는 '지금까지 써온 돈'이라는 현재와의 연결을 암시하는 현재완료인데, 이는 매몰비용(sunk cost)을 합리적 의사결정의 고려 대상으로 포함시키는 뉘앙스를 주어 본문의 논지(매몰비용은 무시해야 한다)와 충돌한다. 단순 과거 'what was spent'는 그 비용이 이미 완전히 종료된 과거의 사실임을 명확히 하여 현재의 판단과 단절시키므로, 지문의 논리와 문법 모두에 부합한다.",
+            "keyPoints": [
+              "'not A but B' 병렬 구조에서 각 절의 시제는 의미적 맥락에 따라 구별되어야 하며, 기계적으로 동일하게 맞출 필요는 없다.",
+              "현재완료(has been spent)는 과거 행위가 현재까지 영향을 미침을 함의하므로, 매몰비용처럼 '현재 판단에서 완전히 배제되어야 할 과거'를 표현할 때는 단순 과거가 더 정확하다.",
+              "문법 오류 판단 시 형태적 정확성뿐 아니라 담화(discourse) 논리와 필자의 주장에 부합하는 시제 선택인지를 함께 검토해야 한다."
+            ],
+            "tags": [
+              "시제",
+              "현재완료 vs 단순과거",
+              "병렬구조",
+              "담화논리",
+              "매몰비용",
+              "문법 오류 수정",
+              "서술형"
+            ],
+            "difficulty": "KILLER",
+            "sentenceWithError": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "errorPart": "what has been spent",
+            "correctedPart": "what was spent",
+            "correctedSentence": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what was spent but what is still to gain."
+          },
+          "processed": {
+            "direction": "다음 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.",
+            "correctAnswer": "what was spent",
+            "explanation": "이 문장의 핵심은 'asking not A but B'의 병렬 구조 안에서 A와 B의 시제 논리가 일치해야 한다는 점이다. B에 해당하는 'what is still to gain'은 현재 시제로, 앞으로 얻을 수 있는 것(미래 지향적 판단)을 나타낸다. 반면 A에 해당하는 부분은 이미 지출된 과거의 비용을 가리키므로, 완료시제(what has been spent)보다 단순 과거(what was spent)가 맥락상 더 정확하다. 'what has been spent'는 '지금까지 써온 돈'이라는 현재와의 연결을 암시하는 현재완료인데, 이는 매몰비용(sunk cost)을 합리적 의사결정의 고려 대상으로 포함시키는 뉘앙스를 주어 본문의 논지(매몰비용은 무시해야 한다)와 충돌한다. 단순 과거 'what was spent'는 그 비용이 이미 완전히 종료된 과거의 사실임을 명확히 하여 현재의 판단과 단절시키므로, 지문의 논리와 문법 모두에 부합한다.",
+            "keyPoints": [
+              "'not A but B' 병렬 구조에서 각 절의 시제는 의미적 맥락에 따라 구별되어야 하며, 기계적으로 동일하게 맞출 필요는 없다.",
+              "현재완료(has been spent)는 과거 행위가 현재까지 영향을 미침을 함의하므로, 매몰비용처럼 '현재 판단에서 완전히 배제되어야 할 과거'를 표현할 때는 단순 과거가 더 정확하다.",
+              "문법 오류 판단 시 형태적 정확성뿐 아니라 담화(discourse) 논리와 필자의 주장에 부합하는 시제 선택인지를 함께 검토해야 한다."
+            ],
+            "tags": [
+              "시제",
+              "현재완료 vs 단순과거",
+              "병렬구조",
+              "담화논리",
+              "매몰비용",
+              "문법 오류 수정",
+              "서술형"
+            ],
+            "difficulty": "KILLER",
+            "sentenceWithError": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
+            "errorPart": "what has been spent",
+            "correctedPart": "what was spent",
+            "correctedSentence": "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what was spent but what is still to gain."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "CONTEXT_MEANING",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2099,
+        "inputTokenDetails": {
+          "noCacheTokens": 2099,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1458,
+        "outputTokenDetails": {},
+        "totalTokens": 3557,
+        "raw": {
+          "input_tokens": 2099,
+          "output_tokens": 1458,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 22509,
+      "items": [
+        {
+          "raw": {
+            "direction": "밑줄 친 단어의 문맥상 의미와 가장 가까운 것은?",
+            "correctAnswer": "2",
+            "explanation": "지문에서 'infects'는 매몰 비용의 오류가 경제학 영역을 넘어 일상생활 전반에 '만연하게 퍼진다'는 의미로 쓰였다. 즉 특정 대상 하나를 병적으로 손상시키는 것이 아니라, 동일한 논리가 일상 전체에 '스며들어 퍼져 있다'는 범위·확산의 뉘앙스가 핵심이다. 'pervades'는 '(공간·영역 전체에) 널리 퍼지다'는 의미로, 이 확산의 범위를 가장 잘 포착한다. 'contaminates'는 오염이라는 부정적 방향은 맞지만, 특정 물질이나 대상을 직접 오염시킨다는 물리적·국소적 뉘앙스가 강해 일상 '전반'에 퍼지는 논리의 확산을 표현하기엔 부족하다. 'corrupts'는 도덕적 타락이나 데이터 손상처럼 내부 구조를 변질시킨다는 의미가 강하여, 논리가 삶 전반에 스며든다는 문맥과는 거리가 있다. 'afflicts'는 고통·질병이 특정 개인이나 집단을 괴롭힌다는 의미로, 주어인 'logic(논리)'과 어울리는 목적어 범위가 제한적이다. 'triggers'는 어떤 사건·반응을 '촉발한다'는 의미로, 단발적 인과관계를 나타내며 일상에 지속적으로 배어든다는 뜻과 맞지 않는다.",
+            "keyPoints": [
+              "동사의 문맥상 의미는 사전적 뜻보다 해당 주어·목적어와의 관계 및 문단 전체의 논리적 흐름으로 파악해야 한다.",
+              "'infects'는 병원체 비유(metaphor)로 쓰여 '퍼뜨린다'는 확산(spread/permeation)의 의미를 수행하며, 부정적 함의뿐 아니라 범위의 포괄성이 핵심이다.",
+              "오답 선지들은 모두 부정적 뉘앙스를 공유하지만, '범위의 전면성(pervasiveness)'을 담는 단어는 'pervades'뿐임을 콜로케이션과 의미 영역 분석으로 구별해야 한다."
+            ],
+            "tags": [
+              "어휘",
+              "문맥상 의미",
+              "은유적 표현",
+              "동사 뉘앙스",
+              "매몰비용의 오류"
+            ],
+            "difficulty": "KILLER",
+            "underlinedWord": "infects",
+            "surroundingText": "The same logic infects everyday life: people sit through bad films",
+            "options": [
+              {
+                "label": "1",
+                "text": "contaminates"
+              },
+              {
+                "label": "2",
+                "text": "pervades"
+              },
+              {
+                "label": "3",
+                "text": "corrupts"
+              },
+              {
+                "label": "4",
+                "text": "afflicts"
+              },
+              {
+                "label": "5",
+                "text": "triggers"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "'contaminates'는 오염의 부정성은 공유하지만 특정 대상을 국소적으로 오염시킨다는 물리적 뉘앙스가 강하며, 논리가 일상 전반에 '퍼진다'는 확산의 범위를 충분히 담지 못한다.",
+              "3": "'corrupts'는 내부 구조나 도덕성을 변질·타락시킨다는 의미로, 'logic'이 주어가 되어 'everyday life'에 스며드는 확산의 맥락과 어울리지 않는다.",
+              "4": "'afflicts'는 고통이 특정 개인·집단을 괴롭힌다는 의미로 범위가 제한적이며, 논리(logic)가 주어인 문장에서 일상 전체를 목적어로 취하는 데 의미적 어색함이 있다.",
+              "5": "'triggers'는 어떤 반응이나 사건을 단발적으로 촉발한다는 의미로, 논리가 일상 전반에 지속적·만연하게 퍼져 있다는 문맥의 지속성·범위와 맞지 않는다."
+            }
+          },
+          "processed": {
+            "direction": "밑줄 친 단어의 문맥상 의미와 가장 가까운 것은?",
+            "correctAnswer": "2",
+            "explanation": "지문에서 'infects'는 매몰 비용의 오류가 경제학 영역을 넘어 일상생활 전반에 '만연하게 퍼진다'는 의미로 쓰였다. 즉 특정 대상 하나를 병적으로 손상시키는 것이 아니라, 동일한 논리가 일상 전체에 '스며들어 퍼져 있다'는 범위·확산의 뉘앙스가 핵심이다. 'pervades'는 '(공간·영역 전체에) 널리 퍼지다'는 의미로, 이 확산의 범위를 가장 잘 포착한다. 'contaminates'는 오염이라는 부정적 방향은 맞지만, 특정 물질이나 대상을 직접 오염시킨다는 물리적·국소적 뉘앙스가 강해 일상 '전반'에 퍼지는 논리의 확산을 표현하기엔 부족하다. 'corrupts'는 도덕적 타락이나 데이터 손상처럼 내부 구조를 변질시킨다는 의미가 강하여, 논리가 삶 전반에 스며든다는 문맥과는 거리가 있다. 'afflicts'는 고통·질병이 특정 개인이나 집단을 괴롭힌다는 의미로, 주어인 'logic(논리)'과 어울리는 목적어 범위가 제한적이다. 'triggers'는 어떤 사건·반응을 '촉발한다'는 의미로, 단발적 인과관계를 나타내며 일상에 지속적으로 배어든다는 뜻과 맞지 않는다.",
+            "keyPoints": [
+              "동사의 문맥상 의미는 사전적 뜻보다 해당 주어·목적어와의 관계 및 문단 전체의 논리적 흐름으로 파악해야 한다.",
+              "'infects'는 병원체 비유(metaphor)로 쓰여 '퍼뜨린다'는 확산(spread/permeation)의 의미를 수행하며, 부정적 함의뿐 아니라 범위의 포괄성이 핵심이다.",
+              "오답 선지들은 모두 부정적 뉘앙스를 공유하지만, '범위의 전면성(pervasiveness)'을 담는 단어는 'pervades'뿐임을 콜로케이션과 의미 영역 분석으로 구별해야 한다."
+            ],
+            "tags": [
+              "어휘",
+              "문맥상 의미",
+              "은유적 표현",
+              "동사 뉘앙스",
+              "매몰비용의 오류"
+            ],
+            "difficulty": "KILLER",
+            "underlinedWord": "infects",
+            "surroundingText": "The same logic infects everyday life: people sit through bad films",
+            "options": [
+              {
+                "label": "1",
+                "text": "contaminates"
+              },
+              {
+                "label": "2",
+                "text": "pervades"
+              },
+              {
+                "label": "3",
+                "text": "corrupts"
+              },
+              {
+                "label": "4",
+                "text": "afflicts"
+              },
+              {
+                "label": "5",
+                "text": "triggers"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "'contaminates'는 오염의 부정성은 공유하지만 특정 대상을 국소적으로 오염시킨다는 물리적 뉘앙스가 강하며, 논리가 일상 전반에 '퍼진다'는 확산의 범위를 충분히 담지 못한다.",
+              "3": "'corrupts'는 내부 구조나 도덕성을 변질·타락시킨다는 의미로, 'logic'이 주어가 되어 'everyday life'에 스며드는 확산의 맥락과 어울리지 않는다.",
+              "4": "'afflicts'는 고통이 특정 개인·집단을 괴롭힌다는 의미로 범위가 제한적이며, 논리(logic)가 주어인 문장에서 일상 전체를 목적어로 취하는 데 의미적 어색함이 있다.",
+              "5": "'triggers'는 어떤 반응이나 사건을 단발적으로 촉발한다는 의미로, 논리가 일상 전반에 지속적·만연하게 퍼져 있다는 문맥의 지속성·범위와 맞지 않는다."
+            },
+            "passageWithUnderline": "Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic __infects__ everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "SYNONYM",
+      "ok": true,
+      "usage": {
+        "inputTokens": 1938,
+        "inputTokenDetails": {
+          "noCacheTokens": 1938,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1321,
+        "outputTokenDetails": {},
+        "totalTokens": 3259,
+        "raw": {
+          "input_tokens": 1938,
+          "output_tokens": 1321,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 20608,
+      "items": [
+        {
+          "raw": {
+            "direction": "다음 밑줄 친 단어의 의미와 가장 유사한 것은?",
+            "correctAnswer": "2",
+            "explanation": "문맥에서 'infects'는 매몰 비용의 오류라는 '동일한 논리'가 일상생활 전반에 스며들어 퍼져 있음을 의미한다. 이는 단순히 오염시킨다는 물리적 의미(contaminates)나 부식시킨다는 점진적 손상(corrodes)이 아니라, 어떤 사고방식이나 논리가 광범위하게 침투하여 영향을 미친다는 뜻이다. 'pervades'는 '(사상·분위기 등이) 어디에나 스며들다·만연하다'는 의미로, 추상적 개념이 삶의 전 영역에 퍼져 있다는 문맥의 뉘앙스를 가장 정확하게 반영한다. 지문은 이후 영화관, 인간관계, 직업 등 다양한 일상 사례를 나열함으로써, 이 논리가 삶 전반에 넓게 '만연해 있음'을 뒷받침한다.",
+            "keyPoints": [
+              "'infects'는 의학적 '감염' 외에 사상·논리 등이 광범위하게 '만연하다, 침투하다'는 비유적 의미로 사용될 수 있다.",
+              "'pervades'(만연하다, 도처에 스며들다)는 추상적 개념이 전반적으로 퍼져 있음을 나타내며, 'infects'의 비유적 문맥과 의미상 가장 가깝다.",
+              "'contaminates'(오염시키다)는 부정적 외부 물질에 의한 오염을 함의하여 구체적·물리적 뉘앙스가 강하므로, 논리나 사고방식의 '만연'을 표현하는 이 문맥에는 적합하지 않다."
+            ],
+            "tags": [
+              "어휘",
+              "동의어",
+              "비유적 표현",
+              "문맥적 의미 추론",
+              "KILLER",
+              "경제·논리 관련 어휘"
+            ],
+            "difficulty": "KILLER",
+            "targetWord": "infects",
+            "contextSentence": "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat.",
+            "options": [
+              {
+                "label": "1",
+                "text": "contaminates"
+              },
+              {
+                "label": "2",
+                "text": "pervades"
+              },
+              {
+                "label": "3",
+                "text": "stimulates"
+              },
+              {
+                "label": "4",
+                "text": "corrodes"
+              },
+              {
+                "label": "5",
+                "text": "disrupts"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "'contaminates'는 '(병균·독소 등으로) 오염시키다'는 의미로 물리적·외부적 오염의 뉘앙스가 강하다. 'infects'의 비유적 용법(논리가 삶에 퍼진다)과 달리 사고방식의 확산을 나타내기에는 어색하다.",
+              "3": "'stimulates'는 '자극하다, 촉진하다'는 긍정적 활성화의 의미를 가지므로, 부정적 논리가 삶에 스며든다는 문맥과 의미상 반대 방향이다.",
+              "4": "'corrodes'는 '(산화·부식으로) 서서히 손상시키다'는 의미로, 점진적 물리적 파괴를 함의한다. 논리가 삶 전반에 '퍼져 있다'는 확산·침투의 의미와는 다르다.",
+              "5": "'disrupts'는 '방해하다, 혼란을 일으키다'는 의미로 기존 질서를 깨뜨리는 뉘앙스이다. 이 문맥은 혼란을 야기하는 것이 아니라 논리가 삶에 폭넓게 스며들어 있음을 나타내므로 적절하지 않다."
+            }
+          },
+          "processed": {
+            "direction": "다음 밑줄 친 단어의 의미와 가장 유사한 것은?",
+            "correctAnswer": "2",
+            "explanation": "문맥에서 'infects'는 매몰 비용의 오류라는 '동일한 논리'가 일상생활 전반에 스며들어 퍼져 있음을 의미한다. 이는 단순히 오염시킨다는 물리적 의미(contaminates)나 부식시킨다는 점진적 손상(corrodes)이 아니라, 어떤 사고방식이나 논리가 광범위하게 침투하여 영향을 미친다는 뜻이다. 'pervades'는 '(사상·분위기 등이) 어디에나 스며들다·만연하다'는 의미로, 추상적 개념이 삶의 전 영역에 퍼져 있다는 문맥의 뉘앙스를 가장 정확하게 반영한다. 지문은 이후 영화관, 인간관계, 직업 등 다양한 일상 사례를 나열함으로써, 이 논리가 삶 전반에 넓게 '만연해 있음'을 뒷받침한다.",
+            "keyPoints": [
+              "'infects'는 의학적 '감염' 외에 사상·논리 등이 광범위하게 '만연하다, 침투하다'는 비유적 의미로 사용될 수 있다.",
+              "'pervades'(만연하다, 도처에 스며들다)는 추상적 개념이 전반적으로 퍼져 있음을 나타내며, 'infects'의 비유적 문맥과 의미상 가장 가깝다.",
+              "'contaminates'(오염시키다)는 부정적 외부 물질에 의한 오염을 함의하여 구체적·물리적 뉘앙스가 강하므로, 논리나 사고방식의 '만연'을 표현하는 이 문맥에는 적합하지 않다."
+            ],
+            "tags": [
+              "어휘",
+              "동의어",
+              "비유적 표현",
+              "문맥적 의미 추론",
+              "KILLER",
+              "경제·논리 관련 어휘"
+            ],
+            "difficulty": "KILLER",
+            "targetWord": "infects",
+            "contextSentence": "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat.",
+            "options": [
+              {
+                "label": "1",
+                "text": "contaminates"
+              },
+              {
+                "label": "2",
+                "text": "pervades"
+              },
+              {
+                "label": "3",
+                "text": "stimulates"
+              },
+              {
+                "label": "4",
+                "text": "corrodes"
+              },
+              {
+                "label": "5",
+                "text": "disrupts"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "1": "'contaminates'는 '(병균·독소 등으로) 오염시키다'는 의미로 물리적·외부적 오염의 뉘앙스가 강하다. 'infects'의 비유적 용법(논리가 삶에 퍼진다)과 달리 사고방식의 확산을 나타내기에는 어색하다.",
+              "3": "'stimulates'는 '자극하다, 촉진하다'는 긍정적 활성화의 의미를 가지므로, 부정적 논리가 삶에 스며든다는 문맥과 의미상 반대 방향이다.",
+              "4": "'corrodes'는 '(산화·부식으로) 서서히 손상시키다'는 의미로, 점진적 물리적 파괴를 함의한다. 논리가 삶 전반에 '퍼져 있다'는 확산·침투의 의미와는 다르다.",
+              "5": "'disrupts'는 '방해하다, 혼란을 일으키다'는 의미로 기존 질서를 깨뜨리는 뉘앙스이다. 이 문맥은 혼란을 야기하는 것이 아니라 논리가 삶에 폭넓게 스며들어 있음을 나타내므로 적절하지 않다."
+            }
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    },
+    {
+      "typeId": "ANTONYM",
+      "ok": true,
+      "usage": {
+        "inputTokens": 2253,
+        "inputTokenDetails": {
+          "noCacheTokens": 2253,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0
+        },
+        "outputTokens": 1687,
+        "outputTokenDetails": {},
+        "totalTokens": 3940,
+        "raw": {
+          "input_tokens": 2253,
+          "output_tokens": 1687,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        "cachedInputTokens": 0
+      },
+      "ms": 21757,
+      "items": [
+        {
+          "raw": {
+            "direction": "지문의 밑줄 친 (A)~(E) 단어와 반의어 관계가 바르게 짝지어진 것은?",
+            "correctAnswer": "1",
+            "explanation": "(A) 'common'은 지문에서 '흔한, 빈번한'의 의미로 쓰였으며, 그 반의어는 'rare(드문)'이 적절하다. (B) 'dim'은 '(전망이) 어두운, 희망이 없는'의 맥락적 의미를 가지므로 반의어는 'bright' 또는 'promising'이어야 하는데, 선지의 'obscure(불분명한, 무명의)'는 반의어가 아니라 유사어에 가깝다. (C) 'doomed'는 '실패할 운명인'을 뜻하므로 반의어는 'viable(생존 가능한)' 또는 'promising'이 되어야 하며, 'abandoned(버려진)'는 반의어 관계가 성립하지 않는다. (D) 'persist'는 '(어떤 행동을) 계속하다'의 의미로 쓰였으므로, 그 반의어로는 'quit' 또는 'abandon'이 적절하나 'withdraw(철수하다)'는 주로 물리적·공식적 철수를 뜻해 문맥상 반의어로 다소 어색하다. (E) 'unproductive'의 반의어는 'productive' 또는 'fruitful'이어야 하는데, 'passive(수동적인)'는 반의어가 아니라 전혀 다른 의미 축의 단어이다. 따라서 반의어 관계가 가장 명확하고 정확하게 성립하는 것은 (A) common — rare이다.",
+            "keyPoints": [
+              "'dim'이 지문에서 '어두운(색깔)'이 아닌 '(미래 전망이) 암울한'이라는 맥락적 의미로 쓰인다는 점을 파악해야 한다.",
+              "'doomed'와 'abandoned'는 둘 다 부정적 어감을 가지지만 의미 축이 달라 반의어 관계가 성립하지 않음을 구별해야 한다.",
+              "반의어 문제에서 '단어 자체의 사전적 반의어'보다 '지문 내 문맥상 반의어'를 선택하는 것이 핵심이다."
+            ],
+            "tags": [
+              "반의어",
+              "문맥적 의미",
+              "어휘",
+              "고난도 어휘 추론",
+              "sunk cost fallacy",
+              "경제 지문"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(A)",
+                "word": "common",
+                "antonym": "rare",
+                "surroundingText": "Few mistakes in reasoning are as common as the tendency to throw"
+              },
+              {
+                "label": "(B)",
+                "word": "dim",
+                "antonym": "promising",
+                "surroundingText": "past investments justify future commitments, even when the future looks dim"
+              },
+              {
+                "label": "(C)",
+                "word": "doomed",
+                "antonym": "viable",
+                "surroundingText": "A factory that has spent millions developing a doomed product will often"
+              },
+              {
+                "label": "(D)",
+                "word": "persist",
+                "antonym": "abandon",
+                "surroundingText": "stay in unproductive relationships because of the years already invested, and persist in failing"
+              },
+              {
+                "label": "(E)",
+                "word": "unproductive",
+                "antonym": "fruitful",
+                "surroundingText": "stay in unproductive relationships because of the years already invested, and persist"
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A) common — rare"
+              },
+              {
+                "label": "2",
+                "text": "(B) dim — obscure"
+              },
+              {
+                "label": "3",
+                "text": "(C) doomed — abandoned"
+              },
+              {
+                "label": "4",
+                "text": "(D) persist — withdraw"
+              },
+              {
+                "label": "5",
+                "text": "(E) unproductive — passive"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "2": "(B) 'dim'은 문맥상 '(미래가) 암울한'의 의미이므로 반의어는 'bright' 또는 'promising'이어야 한다. 'obscure'는 '불분명한, 잘 알려지지 않은'의 뜻으로 dim의 반의어가 아니다.",
+              "3": "(C) 'doomed'의 반의어는 '성공 가능성이 있는(viable/promising)' 등이 되어야 한다. 'abandoned(버려진)'는 doomed와 의미 축이 달라 반의어 관계가 성립하지 않는다.",
+              "4": "(D) 'persist'의 반의어로 'abandon' 또는 'quit'이 더 자연스럽다. 'withdraw'는 물리적 철수나 공식적 탈퇴를 주로 의미하여 문맥상 완전한 반의어로 보기 어렵다.",
+              "5": "(E) 'unproductive'의 반의어는 'productive' 또는 'fruitful'이다. 'passive(수동적인)'는 능동·수동의 축에 해당하는 단어로, 생산성의 축에 있는 unproductive와 반의어 관계가 성립하지 않는다."
+            }
+          },
+          "processed": {
+            "direction": "지문의 밑줄 친 (A)~(E) 단어와 반의어 관계가 바르게 짝지어진 것은?",
+            "correctAnswer": "1",
+            "explanation": "(A) 'common'은 지문에서 '흔한, 빈번한'의 의미로 쓰였으며, 그 반의어는 'rare(드문)'이 적절하다. (B) 'dim'은 '(전망이) 어두운, 희망이 없는'의 맥락적 의미를 가지므로 반의어는 'bright' 또는 'promising'이어야 하는데, 선지의 'obscure(불분명한, 무명의)'는 반의어가 아니라 유사어에 가깝다. (C) 'doomed'는 '실패할 운명인'을 뜻하므로 반의어는 'viable(생존 가능한)' 또는 'promising'이 되어야 하며, 'abandoned(버려진)'는 반의어 관계가 성립하지 않는다. (D) 'persist'는 '(어떤 행동을) 계속하다'의 의미로 쓰였으므로, 그 반의어로는 'quit' 또는 'abandon'이 적절하나 'withdraw(철수하다)'는 주로 물리적·공식적 철수를 뜻해 문맥상 반의어로 다소 어색하다. (E) 'unproductive'의 반의어는 'productive' 또는 'fruitful'이어야 하는데, 'passive(수동적인)'는 반의어가 아니라 전혀 다른 의미 축의 단어이다. 따라서 반의어 관계가 가장 명확하고 정확하게 성립하는 것은 (A) common — rare이다.",
+            "keyPoints": [
+              "'dim'이 지문에서 '어두운(색깔)'이 아닌 '(미래 전망이) 암울한'이라는 맥락적 의미로 쓰인다는 점을 파악해야 한다.",
+              "'doomed'와 'abandoned'는 둘 다 부정적 어감을 가지지만 의미 축이 달라 반의어 관계가 성립하지 않음을 구별해야 한다.",
+              "반의어 문제에서 '단어 자체의 사전적 반의어'보다 '지문 내 문맥상 반의어'를 선택하는 것이 핵심이다."
+            ],
+            "tags": [
+              "반의어",
+              "문맥적 의미",
+              "어휘",
+              "고난도 어휘 추론",
+              "sunk cost fallacy",
+              "경제 지문"
+            ],
+            "difficulty": "KILLER",
+            "markedWords": [
+              {
+                "label": "(A)",
+                "word": "common",
+                "antonym": "rare",
+                "surroundingText": "Few mistakes in reasoning are as common as the tendency to throw"
+              },
+              {
+                "label": "(B)",
+                "word": "dim",
+                "antonym": "promising",
+                "surroundingText": "past investments justify future commitments, even when the future looks dim"
+              },
+              {
+                "label": "(C)",
+                "word": "doomed",
+                "antonym": "viable",
+                "surroundingText": "A factory that has spent millions developing a doomed product will often"
+              },
+              {
+                "label": "(D)",
+                "word": "persist",
+                "antonym": "abandon",
+                "surroundingText": "stay in unproductive relationships because of the years already invested, and persist in failing"
+              },
+              {
+                "label": "(E)",
+                "word": "unproductive",
+                "antonym": "fruitful",
+                "surroundingText": "stay in unproductive relationships because of the years already invested, and persist"
+              }
+            ],
+            "options": [
+              {
+                "label": "1",
+                "text": "(A) common — rare"
+              },
+              {
+                "label": "2",
+                "text": "(B) dim — obscure"
+              },
+              {
+                "label": "3",
+                "text": "(C) doomed — abandoned"
+              },
+              {
+                "label": "4",
+                "text": "(D) persist — withdraw"
+              },
+              {
+                "label": "5",
+                "text": "(E) unproductive — passive"
+              }
+            ],
+            "wrongOptionExplanations": {
+              "2": "(B) 'dim'은 문맥상 '(미래가) 암울한'의 의미이므로 반의어는 'bright' 또는 'promising'이어야 한다. 'obscure'는 '불분명한, 잘 알려지지 않은'의 뜻으로 dim의 반의어가 아니다.",
+              "3": "(C) 'doomed'의 반의어는 '성공 가능성이 있는(viable/promising)' 등이 되어야 한다. 'abandoned(버려진)'는 doomed와 의미 축이 달라 반의어 관계가 성립하지 않는다.",
+              "4": "(D) 'persist'의 반의어로 'abandon' 또는 'quit'이 더 자연스럽다. 'withdraw'는 물리적 철수나 공식적 탈퇴를 주로 의미하여 문맥상 완전한 반의어로 보기 어렵다.",
+              "5": "(E) 'unproductive'의 반의어는 'productive' 또는 'fruitful'이다. 'passive(수동적인)'는 능동·수동의 축에 해당하는 단어로, 생산성의 축에 있는 unproductive와 반의어 관계가 성립하지 않는다."
+            },
+            "passageWithMarkers": "Few mistakes in reasoning are as __(A) common__ as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks __(B) dim__. A factory that has spent millions developing a __(C) doomed__ product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in __(E) unproductive__ relationships because of the years already invested, and __(D) persist__ in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life."
+          },
+          "postProcess": {
+            "success": true,
+            "warnings": []
+          },
+          "qualityIssues": []
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "typeId": "BLANK_INFERENCE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "GRAMMAR_ERROR",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "VOCAB_CHOICE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "SENTENCE_ORDER",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "SENTENCE_INSERT",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "TOPIC_MAIN_IDEA",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "TITLE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "REFERENCE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "CONTENT_MATCH",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "IRRELEVANT",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "CONDITIONAL_WRITING",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "SENTENCE_TRANSFORM",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "FILL_BLANK_KEY",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "SUMMARY_COMPLETE",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "WORD_ORDER",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "GRAMMAR_CORRECTION",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "CONTEXT_MEANING",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "SYNONYM",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    },
+    {
+      "typeId": "ANTONYM",
+      "ok": true,
+      "generated": 1,
+      "postProcessOk": 1,
+      "qualityErrors": [],
+      "qualityWarnings": []
+    }
+  ]
+}

@@ -3,6 +3,8 @@
 import { Zap, Settings2, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QUESTION_GENERATION_TARGET } from "@/lib/learning-constants";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 // ---------------------------------------------------------------------------
 // Category groups (23 subtypes)
@@ -76,6 +78,8 @@ interface Props {
   typeCounts: Record<string, number>;
   setTypeCount: (id: string, count: number) => void;
   setTypeCounts: (v: Record<string, number>) => void;
+  generationPlan: QuestionGenerationPlan;
+  setGenerationPlan: (v: QuestionGenerationPlan) => void;
   totalQuestions: number;
   canGenerate: boolean;
   selectedIds: Set<string>;
@@ -93,6 +97,8 @@ export function LearningConfigPanel({
   typeCounts,
   setTypeCount,
   setTypeCounts,
+  generationPlan,
+  setGenerationPlan,
   totalQuestions,
   canGenerate,
   selectedIds,
@@ -141,6 +147,12 @@ export function LearningConfigPanel({
         </div>
 
         {/* 자동 모드 */}
+        <GenerationPlanSelector
+          value={generationPlan}
+          onChange={setGenerationPlan}
+          compact
+        />
+
         {genMode === "auto" && (
           <div className="space-y-4">
             <div className="bg-blue-50/80 rounded-xl p-4 border border-blue-100">

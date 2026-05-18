@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { toast } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
+import { createWorkbenchPassage } from "@/actions/workbench";
+import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
@@ -28,6 +31,7 @@ export function PassageRegistrationClient({
   draftMembership,
 }: PassageRegistrationProps) {
   const [saving, setSaving] = useState(false);
+  const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form collapse state
@@ -66,6 +70,8 @@ export function PassageRegistrationClient({
     setTags,
     analysisPrompt,
     setAnalysisPrompt,
+    analysisGenerationPlan,
+    setAnalysisGenerationPlan,
     savedPrompts,
     setSavedPrompts,
     showSavedPrompts,
@@ -284,6 +290,111 @@ export function PassageRegistrationClient({
     return () => window.removeEventListener("beforeunload", handler);
   }, [hasActiveAnalysis]);
 
+  // ─── Bulk-analyze selected extraction drafts ───
+  // Fire all createWorkbenchPassage writes in parallel so the queue cards
+  // appear together within ~one DB roundtrip rather than drip-feeding one at
+  // a time. The analysis step itself is still throttled to 3-at-a-time by
+  // usePassageQueue's processPending.
+  const handleBulkAnalyzeDrafts = useCallback(
+    async (drafts: M1PassageDraftWithJob[]) => {
+      if (drafts.length === 0 || bulkAnalyzing) return;
+      setBulkAnalyzing(true);
+
+      const normalizedSchoolId =
+        schoolId && schoolId !== "NONE" ? schoolId : "";
+      const schoolName = schools.find((s) => s.id === normalizedSchoolId)?.name;
+      const combinedPrompt = buildAnalysisPrompt(analysisPrompt, []);
+      const parsedGrade = grade ? parseInt(grade) : undefined;
+      const trimmedUnit = unit.trim();
+      const sharedTags = tags.length > 0 ? tags : undefined;
+
+      const results = await Promise.allSettled(
+        drafts.map(async (draft) => {
+          const text =
+            draft.teacherText?.trim() ||
+            draft.restoredText?.trim() ||
+            draft.rawText?.trim() ||
+            "";
+          if (!text) throw new Error("EMPTY_CONTENT");
+
+          const draftTitle =
+            draft.title?.trim() || getDraftDisplayTitle(draft);
+          const fileName =
+            draft.job?.displayName?.trim() ||
+            draft.job?.originalFileName?.trim() ||
+            "";
+
+          const result = await createWorkbenchPassage({
+            title: draftTitle,
+            content: text,
+            schoolId: normalizedSchoolId || undefined,
+            grade: parsedGrade,
+            semester: semester || undefined,
+            unit: trimmedUnit || undefined,
+            publisher: effectivePublisher || undefined,
+            source: fileName || undefined,
+            tags: sharedTags,
+          });
+
+          if (!result.success || !result.id) {
+            throw new Error(result.error || "CREATE_FAILED");
+          }
+
+          addToQueue(
+            {
+              id: result.id,
+              title: draftTitle,
+              content: text,
+              schoolId: normalizedSchoolId || undefined,
+              schoolName,
+              grade: parsedGrade,
+              semester: semester || undefined,
+              unit: trimmedUnit || undefined,
+              publisher: effectivePublisher || undefined,
+              tags: sharedTags,
+              source: fileName || undefined,
+            },
+            {
+              customPrompt: combinedPrompt,
+              focusAreas: [],
+              targetLevel: "",
+              generationPlan: analysisGenerationPlan,
+            },
+            true,
+          );
+          return result.id;
+        }),
+      );
+
+      const success = results.filter((r) => r.status === "fulfilled").length;
+      const failed = results.length - success;
+
+      setBulkAnalyzing(false);
+
+      if (success > 0) {
+        toast.success(
+          `${success}개 지문이 등록되었습니다. 백그라운드에서 분석 진행 중 (동시 3개씩).`,
+        );
+      }
+      if (failed > 0) {
+        toast.error(`${failed}개 지문 등록에 실패했습니다.`);
+      }
+    },
+    [
+      bulkAnalyzing,
+      schoolId,
+      schools,
+      grade,
+      semester,
+      unit,
+      effectivePublisher,
+      tags,
+      analysisPrompt,
+      analysisGenerationPlan,
+      addToQueue,
+    ],
+  );
+
   const addTag = useCallback(() => {
     const tag = tagInput.trim();
     if (tag && !tags.includes(tag)) {
@@ -343,6 +454,8 @@ export function PassageRegistrationClient({
             removeTag={removeTag}
             analysisPrompt={analysisPrompt}
             setAnalysisPrompt={setAnalysisPrompt}
+            analysisGenerationPlan={analysisGenerationPlan}
+            setAnalysisGenerationPlan={setAnalysisGenerationPlan}
             savedPrompts={savedPrompts}
             setSavedPrompts={setSavedPrompts}
             showSavedPrompts={showSavedPrompts}
@@ -356,6 +469,8 @@ export function PassageRegistrationClient({
             onSelectDraft={handleSelectDraft}
             draftCollections={draftCollections ?? []}
             draftMembership={draftMembership ?? {}}
+            onBulkAnalyze={handleBulkAnalyzeDrafts}
+            bulkAnalyzing={bulkAnalyzing}
           />
 
           {/* ─── Toolbar + Card Grid ─── */}

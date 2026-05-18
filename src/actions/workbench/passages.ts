@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAuth, getAcademyId } from "./_helpers";
+import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import type {
   WorkbenchPassageFilters,
   ActionResult,
@@ -39,9 +40,6 @@ export async function getWorkbenchPassages(
       { content: { contains: filters.search, mode: "insensitive" } },
     ];
   }
-  // The "분석된 지문 관리하기" page (/passages) opts in here. The analysis
-  // queue at /create deliberately omits this so unanalyzed entries still
-  // appear in its workbench queue (as "분석 가능" cards).
   if (filters?.analyzedOnly) where.analysis = { isNot: null };
 
   const [passages, total] = await Promise.all([
@@ -60,6 +58,91 @@ export async function getWorkbenchPassages(
   ]);
 
   return { passages, total, page, limit, totalPages: Math.ceil(total / limit) };
+}
+
+/**
+ * Scan the entire academy's passages and group exact-text duplicates.
+ *
+ * Used by `/director/workbench/passages` to provide a "중복 그룹 보기"
+ * dedicated view. Unlike the paginated list, this returns *all* passages
+ * that participate in a duplicate group (size ≥ 2) so the user can see every
+ * cluster in one screen.
+ *
+ * The normalization is intentionally the same as the client-side helper
+ * (`buildDuplicateIndex` from `@/lib/duplicate-detection`) — punctuation/case
+ * insensitive, robust to OCR/whitespace noise.
+ *
+ * Heavy queries are mitigated by only selecting the minimal fields needed
+ * for rendering the cluster cards. We do NOT return analysisData here; the
+ * detail modal still fetches it separately on demand.
+ */
+export async function findWorkbenchPassageDuplicates(
+  academyId: string,
+  filters?: { analyzedOnly?: boolean },
+) {
+  await requireAuth();
+
+  const where: Record<string, unknown> = { academyId };
+  if (filters?.analyzedOnly) where.analysis = { isNot: null };
+
+  // Pull the minimum fields needed for grouping + cluster card render.
+  // `content` is required for normalization; everything else is presentational.
+  const passages = await prisma.passage.findMany({
+    where,
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      grade: true,
+      semester: true,
+      unit: true,
+      publisher: true,
+      difficulty: true,
+      tags: true,
+      createdAt: true,
+      school: { select: { id: true, name: true, type: true } },
+      analysis: { select: { id: true, updatedAt: true } },
+      _count: { select: { questions: true, notes: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const index = buildDuplicateIndex(
+    passages,
+    (p) => p.content,
+    (p) => p.id,
+  );
+
+  // Drop `content` from groups before returning (network-friendly): the
+  // cluster view doesn't need full content text, only the preview that the
+  // card derives. Keep a short preview slice so the client can show context
+  // without re-fetching.
+  const groups = index.groups.map((g) => ({
+    key: g.key,
+    items: g.items.map((p) => ({
+      id: p.id,
+      title: p.title,
+      contentPreview: p.content.length > 240 ? p.content.slice(0, 240) + "…" : p.content,
+      wordCount: p.content.trim().split(/\s+/).filter(Boolean).length,
+      grade: p.grade,
+      semester: p.semester,
+      unit: p.unit,
+      publisher: p.publisher,
+      difficulty: p.difficulty,
+      tags: p.tags,
+      createdAt: p.createdAt,
+      school: p.school,
+      analysis: p.analysis,
+      _count: p._count,
+    })),
+  }));
+
+  return {
+    groups,
+    groupCount: index.groupCount,
+    totalDuplicateCount: index.totalDuplicateCount,
+    totalScanned: passages.length,
+  };
 }
 
 export async function getWorkbenchPassage(passageId: string) {

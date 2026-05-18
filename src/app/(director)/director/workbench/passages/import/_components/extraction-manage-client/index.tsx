@@ -4,10 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
+  Copy,
+  CopyMinus,
   Database,
   Loader2,
   RefreshCw,
   Trash2,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,9 +26,11 @@ import type { CollectionItem } from "@/components/workbench/shared/types";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "@/hooks/use-selection";
+import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 
 import { useQueueDrawer } from "../queue-drawer-context";
 
+import { DraftCard } from "./components/draft-card";
 import { DraftDetailModal } from "./components/draft-detail-modal";
 import { DraftFolderSection } from "./components/draft-folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
@@ -894,6 +899,32 @@ export function ExtractionManageClient({
     return drafts.filter((d) => ids.has(d.id));
   }, [drafts, folders.activeFolder, folders.membership]);
 
+  // ─── Duplicate detection across all drafts (academy-loaded) ───
+  // Computed once over the entire fetched set so the count is stable across
+  // search/filter/folder navigation — duplicate context belongs to the whole
+  // dataset, not the currently-visible slice.
+  const dupInfo = useMemo(
+    () =>
+      buildDuplicateIndex(
+        drafts,
+        (d) =>
+          d.teacherText?.trim() ||
+          d.restoredText?.trim() ||
+          d.rawText?.trim() ||
+          "",
+        (d) => d.id,
+      ),
+    [drafts],
+  );
+
+  // UI state for the duplicate features.
+  // - hideDuplicates: collapse the flat-list view, keeping only the first
+  //   occurrence per cluster.
+  // - pageMode: "duplicates" replaces the flat grid with a cluster section
+  //   view (FolderSection toolbar still shows).
+  const [hideDuplicates, setHideDuplicates] = useState(false);
+  const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
+
   const displayedDrafts = useMemo(() => {
     let result = draftsInActiveFolder;
 
@@ -938,6 +969,20 @@ export function ExtractionManageClient({
         return aPage - bPage;
       });
     }
+
+    // Apply duplicate hiding AFTER sort so the "first" item kept per cluster
+    // is the one the user would naturally see first in the current order.
+    if (hideDuplicates && dupInfo.keyById.size > 0) {
+      const seen = new Set<string>();
+      return sorted.filter((d) => {
+        const key = dupInfo.keyById.get(d.id);
+        if (!key) return true; // not part of a dup cluster — always show
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
     return sorted;
   }, [
     draftsInActiveFolder,
@@ -946,6 +991,8 @@ export function ExtractionManageClient({
     appliedSearch,
     statusFilter,
     sortOrder,
+    hideDuplicates,
+    dupInfo,
   ]);
 
   const availableJobs = useMemo(() => {
@@ -1419,6 +1466,14 @@ export function ExtractionManageClient({
       queueOpen={queueDrawer.open}
       onToggleQueue={queueDrawer.toggle}
       onRefresh={refreshResults}
+      pageMode={pageMode}
+      onTogglePageMode={() =>
+        setPageMode((m) => (m === "duplicates" ? "list" : "duplicates"))
+      }
+      hideDuplicates={hideDuplicates}
+      onToggleHideDuplicates={() => setHideDuplicates((v) => !v)}
+      duplicateGroupCount={dupInfo.groupCount}
+      totalDuplicateCount={dupInfo.totalDuplicateCount}
     />
   );
 
@@ -1496,6 +1551,80 @@ export function ExtractionManageClient({
           </div>
 
           <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-6 pb-5 sm:px-8 sm:pb-6">
+            {pageMode === "duplicates" ? (
+              <section className="space-y-4 pt-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-[13px] font-semibold text-slate-600 flex items-center gap-1.5">
+                    <Copy className="w-3.5 h-3.5 text-slate-400" />
+                    중복 그룹 모아보기
+                    <span className="ml-1.5 text-[11px] text-slate-400 font-normal">
+                      그룹 {dupInfo.groupCount}개 · 중복 자료 {dupInfo.totalDuplicateCount}개
+                    </span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setPageMode("list")}
+                    className="ml-auto text-[11px] font-medium text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    목록으로
+                  </button>
+                </div>
+
+                {dupInfo.groups.length === 0 ? (
+                  <div className="bg-white rounded-xl border text-center py-16">
+                    <CopyMinus className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                    <p className="text-slate-500 font-medium">
+                      중복 자료가 없습니다
+                    </p>
+                    <p className="text-sm text-slate-400 mt-1">
+                      총 {drafts.length}개 자료를 검사했습니다.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {dupInfo.groups.map((group, gi) => (
+                      <section
+                        key={group.key}
+                        className="bg-white rounded-xl border border-slate-200 overflow-hidden"
+                      >
+                        <header className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 bg-slate-50/40">
+                          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700">
+                            <Copy className="w-3 h-3" />
+                          </span>
+                          <h4 className="text-[12.5px] font-bold text-slate-800">
+                            그룹 {gi + 1}
+                          </h4>
+                          <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-100 rounded-full px-2 py-0.5 tabular-nums">
+                            {group.items.length}개 동일
+                          </span>
+                          <span className="ml-auto text-[10.5px] text-slate-400 truncate max-w-[400px]">
+                            {group.items[0]?.title ?? "(제목 없음)"}
+                          </span>
+                        </header>
+                        <div className="p-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                            {group.items.map((d, idx) => (
+                              <DraftCard
+                                key={d.id}
+                                draft={d}
+                                index={idx}
+                                selected={false}
+                                active={selectedDraftId === d.id}
+                                checked={selectedIds.has(d.id)}
+                                onClick={() => openDraftDetail(d.id)}
+                                onToggleCheck={() => toggleSelect(d.id)}
+                                dupCount={group.items.length - 1}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </section>
+                    ))}
+                  </div>
+                )}
+              </section>
+            ) : (
             <DraftGrid
               drafts={displayedDrafts}
               loading={loadingDetails && drafts.length === 0}
@@ -1547,7 +1676,9 @@ export function ExtractionManageClient({
               onRenameJob={renameJob}
               onRenameSourceMaterial={renameSourceMaterial}
               groupIndexBySourceMaterialId={groupIndexBySourceMaterialId}
+              dupCountById={dupInfo.countById}
             />
+            )}
           </div>
         </div>
 

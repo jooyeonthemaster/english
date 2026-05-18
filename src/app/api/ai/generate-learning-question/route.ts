@@ -1,11 +1,17 @@
-import { generateText } from "ai";
-import { model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { buildCategoryPrompt } from "@/lib/learning-question-prompts";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { generateQuestionText } from "@/lib/question-generation-llm";
+import {
+  getQuestionGenerationCreditCost,
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // ---------------------------------------------------------------------------
 // 후처리 — AI 출력 필드명 정규화 + 셔플
@@ -135,6 +141,44 @@ function normalizeResults(parsed: Record<string, unknown>): Record<string, unkno
   return result;
 }
 
+function readTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) {
+    return rawTags.filter((tag): tag is string => typeof tag === "string");
+  }
+  if (typeof rawTags !== "string") return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : [];
+  } catch {
+    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+  }
+}
+
+function attachGenerationMetadata(
+  results: Record<string, unknown>,
+  generationPlan: QuestionGenerationPlan,
+): Record<string, unknown> {
+  const tagged: Record<string, unknown> = {};
+  for (const [subType, items] of Object.entries(results)) {
+    if (!Array.isArray(items)) {
+      tagged[subType] = items;
+      continue;
+    }
+    tagged[subType] = items.map((item) => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+      const record = item as Record<string, unknown>;
+      return {
+        ...record,
+        _generationPlan: generationPlan,
+        tags: mergeQuestionGenerationPlanTag(readTags(record.tags), generationPlan),
+      };
+    });
+  }
+  return tagged;
+}
+
 // ---------------------------------------------------------------------------
 // POST — 카테고리 단위 학습 문제 생성
 // ---------------------------------------------------------------------------
@@ -147,11 +191,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { passageId, category, counts } = body as {
+    const { passageId, category, counts, generationPlan: rawGenerationPlan } = body as {
       passageId: string;
       category: string;
       counts: Record<string, number>;
+      generationPlan?: unknown;
     };
+    const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    const creditCost = getQuestionGenerationCreditCost(
+      CREDIT_COSTS.LEARNING_QUESTION_GEN,
+      generationPlan,
+    );
 
     if (!passageId || !category || !counts) {
       return NextResponse.json(
@@ -165,7 +215,9 @@ export async function POST(request: NextRequest) {
       creditResult = await deductCredits(staff.academyId, "LEARNING_QUESTION_GEN", staff.id, {
         passageId,
         category,
-      });
+        generationPlan,
+        creditCost,
+      }, creditCost);
     } catch (err) {
       if (err instanceof InsufficientCreditsError) {
         return NextResponse.json(
@@ -183,12 +235,12 @@ export async function POST(request: NextRequest) {
     });
 
     if (!passage) {
-      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Passage not found");
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Passage not found", creditCost);
       return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
     }
 
     if (!passage.analysis?.analysisData) {
-      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Analysis data missing");
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Analysis data missing", creditCost);
       return NextResponse.json(
         { error: "지문 분석을 먼저 완료해주세요." },
         { status: 400 },
@@ -212,10 +264,16 @@ export async function POST(request: NextRequest) {
 
     let text: string;
     try {
-      const result = await generateText({ model, prompt, maxOutputTokens: 128000 });
+      const result = await generateQuestionText({
+        prompt,
+        generationPlan,
+        logPrefix: "LEARNING-GEN",
+        maxTokens: generationPlan === "PREMIUM" ? 128000 : 65000,
+        temperature: 0.35,
+      });
       text = result.text;
     } catch (aiError) {
-      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Learning question generation failed");
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Learning question generation failed", creditCost);
       throw aiError;
     }
 
@@ -224,10 +282,16 @@ export async function POST(request: NextRequest) {
     try {
       const parsed = JSON.parse(jsonStr);
       const normalized = normalizeResults(parsed);
-      return NextResponse.json({ category, results: normalized, creditsRemaining: creditResult.balanceAfter });
+      const tagged = attachGenerationMetadata(normalized, generationPlan);
+      return NextResponse.json({
+        category,
+        results: tagged,
+        creditsRemaining: creditResult.balanceAfter,
+        generationPlan,
+      });
     } catch (parseErr) {
       console.error(`JSON parse failed for ${category}:`, parseErr, "\nRaw text:", text.slice(0, 1000));
-      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "JSON parse failed");
+      await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "JSON parse failed", creditCost);
       return NextResponse.json(
         { error: `${category} JSON 파싱 실패` },
         { status: 500 },

@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
-import { getWorkbenchQuestions, getQuestionCollections } from "@/actions/workbench";
+import {
+  getWorkbenchQuestions,
+  getWorkbenchQuestionsGroupedByPassage,
+  getQuestionCollections,
+} from "@/actions/workbench";
 import { prisma } from "@/lib/prisma";
 import { QuestionBankClient } from "@/components/workbench/question-bank-client";
 
@@ -17,6 +21,7 @@ interface PageProps {
     starred?: string;
     sort?: string;
     search?: string;
+    view?: string;
   }>;
 }
 
@@ -25,6 +30,7 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
   if (!staff) redirect("/login");
 
   const params = await searchParams;
+  const view: "flat" | "passage" = params.view === "passage" ? "passage" : "flat";
   const filters = {
     page: params.page ? parseInt(params.page) : 1,
     type: params.type || undefined,
@@ -54,8 +60,13 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
     search: params.search || undefined,
   };
 
-  const [questionsData, collections, collectionItems] = await Promise.all([
-    getWorkbenchQuestions(staff.academyId, filters),
+  const [questionsData, groupedData, collections, collectionItems] = await Promise.all([
+    view === "flat"
+      ? getWorkbenchQuestions(staff.academyId, filters)
+      : Promise.resolve(null),
+    view === "passage"
+      ? getWorkbenchQuestionsGroupedByPassage(staff.academyId, filters)
+      : Promise.resolve(null),
     getQuestionCollections(staff.academyId),
     prisma.questionCollectionItem.findMany({
       where: { collection: { academyId: staff.academyId } },
@@ -73,7 +84,9 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
   return (
     <QuestionBankClient
       academyId={staff.academyId}
+      view={view}
       questionsData={questionsData}
+      groupedData={groupedData}
       filters={filters}
       collections={collections as any}
       collectionMembership={Object.fromEntries(

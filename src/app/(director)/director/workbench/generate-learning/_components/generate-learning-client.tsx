@@ -21,6 +21,11 @@ import {
   LEARNING_SUBTYPE_LABELS,
   GRADE_LEVELS,
 } from "@/lib/learning-constants";
+import {
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import { LearningPassageGrid } from "./learning-passage-grid";
 import { LearningConfigPanel } from "./learning-config-panel";
 import { LearningQueueSection } from "./learning-queue-section";
@@ -48,12 +53,28 @@ export interface QueueItem {
   status: "generating" | "done" | "error";
   questions: GeneratedQuestion[];
   error?: string;
+  generationPlan?: QuestionGenerationPlan;
 }
 
 export interface GeneratedQuestion {
   _typeId: string;
   _typeLabel: string;
   [key: string]: unknown;
+}
+
+function readLearningTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) {
+    return rawTags.filter((tag): tag is string => typeof tag === "string");
+  }
+  if (typeof rawTags !== "string") return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : [];
+  } catch {
+    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -90,6 +111,8 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
 
   // ── Generation config ──
   const [genMode, setGenMode] = useState<"auto" | "manual">("auto");
+  const [generationPlan, setGenerationPlan] =
+    useState<QuestionGenerationPlan>("STANDARD");
   const [autoCount, setAutoCount] = useState(10);
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
 
@@ -185,14 +208,18 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
     data: Record<string, unknown>
   ): GeneratedQuestion[] => {
     const questions: GeneratedQuestion[] = [];
+    const responsePlan = normalizeQuestionGenerationPlan(data.generationPlan || generationPlan);
     for (const [typeId, items] of Object.entries(
       (data.results as Record<string, unknown[]>) || {}
     )) {
       for (const item of items as Record<string, unknown>[]) {
+        const itemPlan = normalizeQuestionGenerationPlan(item._generationPlan || responsePlan);
         questions.push({
           ...item,
           _typeId: typeId,
           _typeLabel: LEARNING_SUBTYPE_LABELS[typeId] || typeId,
+          _generationPlan: itemPlan,
+          tags: mergeQuestionGenerationPlanTag(readLearningTags(item.tags), itemPlan),
         });
       }
     }
@@ -247,6 +274,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           category,
           status: "generating",
           questions: [],
+          generationPlan,
         };
 
         setSessionQueue((prev) => [...prev, queueItem]);
@@ -257,7 +285,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
             const res = await fetch("/api/ai/generate-learning-question", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ passageId, category, counts }),
+              body: JSON.stringify({ passageId, category, counts, generationPlan }),
             });
             const data = await res.json();
             if (data.error) {
@@ -274,7 +302,12 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
             setSessionQueue((prev) =>
               prev.map((q) =>
                 q.id === queueId
-                  ? { ...q, status: "done", questions }
+                  ? {
+                      ...q,
+                      status: "done",
+                      questions,
+                      generationPlan: normalizeQuestionGenerationPlan(data.generationPlan || generationPlan),
+                    }
                   : q
               )
             );
@@ -316,6 +349,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
             Object.entries(q).filter(
               ([k]) =>
                 !k.startsWith("_") &&
+                k !== "tags" &&
                 k !== "explanation" &&
                 k !== "correctAnswer"
             )
@@ -326,7 +360,12 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           q.correctAnswer ?? q.isTrue ?? q.isCorrect ?? ""
         ),
         difficulty: "INTERMEDIATE",
-        tags: null,
+        tags: JSON.stringify(
+          mergeQuestionGenerationPlanTag(
+            readLearningTags(q.tags),
+            normalizeQuestionGenerationPlan(q._generationPlan || queueItem.generationPlan || generationPlan),
+          )
+        ),
         explanation:
           typeof q.explanation === "string" ? q.explanation : null,
         keyPoints: null,
@@ -455,6 +494,8 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           typeCounts={typeCounts}
           setTypeCount={setTypeCount}
           setTypeCounts={setTypeCounts}
+          generationPlan={generationPlan}
+          setGenerationPlan={setGenerationPlan}
           totalQuestions={totalQuestions}
           canGenerate={canGenerate}
           selectedIds={selectedIds}

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { createWorkbenchPassage } from "@/actions/workbench";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import type { Annotation } from "@/components/workbench/editor";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { extractTextFromImage } from "./image-handlers";
 
 interface ResetFormArgs {
@@ -57,6 +58,7 @@ interface HandleSaveArgs {
   source: string;
   tags: string[];
   analysisPrompt: string;
+  analysisGenerationPlan: QuestionGenerationPlan;
 
   // External
   schools: Array<{ id: string; name: string; type: string; publisher: string | null }>;
@@ -77,7 +79,7 @@ interface HandleSaveArgs {
       tags?: string[];
       source?: string;
     },
-    promptConfig: { customPrompt: string; focusAreas: string[]; targetLevel: string },
+    promptConfig: { customPrompt: string; focusAreas: string[]; targetLevel: string; generationPlan?: QuestionGenerationPlan },
     runAnalysis: boolean
   ) => void;
   resetForm: () => void;
@@ -97,6 +99,7 @@ export async function handleSave({
   source,
   tags,
   analysisPrompt,
+  analysisGenerationPlan,
   schools,
   setSaving,
   addToQueue,
@@ -172,6 +175,7 @@ export async function handleSave({
           customPrompt: combinedPrompt,
           focusAreas: [],
           targetLevel: "",
+          generationPlan: analysisGenerationPlan,
         },
         runAnalysis
       );
