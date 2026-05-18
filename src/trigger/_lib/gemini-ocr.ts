@@ -5,7 +5,7 @@ import {
   sanitizeStructuredJson,
   structuredOcrResponseSchema,
   type StructuredOcrResponse,
-} from "@/lib/extraction/ocr-prompt";
+} from "@/lib/extraction/ocr";
 import {
   getExtractionAiConfig,
   type ExtractionAiStage,

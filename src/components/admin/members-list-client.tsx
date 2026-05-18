@@ -1,31 +1,17 @@
 "use client";
 
-import { useCallback, useDeferredValue, useMemo, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  Search,
-  ArrowUpDown,
-  ArrowDown,
-  ArrowUp,
-  ChevronRight,
-  CircleSlash,
-  Users,
-  AlertTriangle,
-} from "lucide-react";
+import { useDeferredValue, useMemo, useState } from "react";
+import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ProviderBadge } from "@/components/admin/provider-badge";
 import type {
   MemberListItem,
   ProviderFilter,
@@ -33,6 +19,13 @@ import type {
   MemberSortKey,
   SortOrder,
 } from "@/actions/admin-members";
+import { MemberRow } from "./members-list-client/member-row";
+import {
+  EmptyState,
+  SegmentedTabs,
+  SortHeader,
+  StatChip,
+} from "./members-list-client/subcomponents";
 
 interface MembersListClientProps {
   members: MemberListItem[];
@@ -59,8 +52,6 @@ const SORT_DEFAULT_DIRECTION: Record<MemberSortKey, SortOrder> = {
   balance: "asc",
 };
 
-const LOW_BALANCE_THRESHOLD = 50;
-
 interface ClientFilters {
   provider: ProviderFilter;
   active: ActiveFilter;
@@ -76,49 +67,6 @@ const INITIAL_FILTERS: ClientFilters = {
   sortKey: "createdAt",
   sortOrder: "desc",
 };
-
-// ─── Formatters ─────────────────────────────────────────────────────────────
-
-function formatDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-}
-
-function formatRelative(
-  d: Date | string | null | undefined,
-  now: number,
-): string {
-  if (!d) return "—";
-  const date = typeof d === "string" ? new Date(d) : d;
-  const diffMs = now - date.getTime();
-  const min = Math.floor(diffMs / 60000);
-  if (min < 1) return "방금 전";
-  if (min < 60) return `${min}분 전`;
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}시간 전`;
-  const day = Math.floor(hr / 24);
-  if (day < 7) return `${day}일 전`;
-  if (day < 30) return `${Math.floor(day / 7)}주 전`;
-  if (day < 365) return `${Math.floor(day / 30)}개월 전`;
-  return `${Math.floor(day / 365)}년 전`;
-}
-
-function getInitials(name: string): string {
-  if (!name) return "?";
-  const trimmed = name.trim();
-  if (/^[A-Za-z]/.test(trimmed)) {
-    const parts = trimmed.split(/\s+/).slice(0, 2);
-    return parts.map((p) => p[0]?.toUpperCase() ?? "").join("");
-  }
-  return trimmed.slice(0, 1);
-}
-
-// ─── Main component ─────────────────────────────────────────────────────────
 
 export function MembersListClient({ members }: MembersListClientProps) {
   const [filters, setFilters] = useState<ClientFilters>(INITIAL_FILTERS);
@@ -357,320 +305,6 @@ export function MembersListClient({ members }: MembersListClientProps) {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-// ─── Subcomponents ──────────────────────────────────────────────────────────
-
-function MemberRow({ member, now }: { member: MemberListItem; now: number }) {
-  const router = useRouter();
-  const href = `/admin/members/${member.id}`;
-
-  // Row-level click navigation: matches enterprise SaaS row affordance while
-  // the first-cell <Link> remains the keyboard/SR entry point. Guards against
-  // hijacking when the user is selecting text or clicking on an inner link.
-  const handleRowClick = useCallback(
-    (e: React.MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button")) return;
-      if (window.getSelection()?.toString()) return;
-      router.push(href);
-    },
-    [router, href],
-  );
-
-  return (
-    <TableRow
-      onClick={handleRowClick}
-      className="group hover:bg-gray-50/60 border-b border-gray-50/60 last:border-0 cursor-pointer"
-    >
-      <TableCell className="py-3 pl-5">
-        <Link
-          href={href}
-          className="flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md -m-1 p-1"
-        >
-          <Avatar name={member.name} avatarUrl={member.avatarUrl} />
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-[13px] font-medium text-gray-900 truncate">
-                {member.name}
-              </span>
-              {!member.isActive && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-100 text-gray-500 border-0 text-[11px] px-1.5 h-4 font-medium shrink-0"
-                >
-                  비활성
-                </Badge>
-              )}
-            </div>
-            <div className="text-[11px] text-gray-400 truncate">
-              {member.email}
-            </div>
-          </div>
-        </Link>
-      </TableCell>
-      <TableCell>
-        <ProviderBadge provider={member.authProvider} size="sm" />
-      </TableCell>
-      <TableCell>
-        <div className="min-w-0">
-          <div className="text-[12px] text-gray-700 truncate">
-            {member.academy.name}
-          </div>
-          <div className="text-[11px] text-gray-400 truncate">
-            /{member.academy.slug}
-          </div>
-        </div>
-      </TableCell>
-      <TableCell>
-        {member.subscription ? (
-          <Badge
-            variant="secondary"
-            className={cn(
-              "text-[11px] font-medium border-0 px-2",
-              tierBadgeClass(member.subscription.planTier),
-            )}
-          >
-            {member.subscription.planName}
-          </Badge>
-        ) : (
-          <span className="text-[11px] text-gray-300">—</span>
-        )}
-      </TableCell>
-      <TableCell className="text-right">
-        <BalanceCell balance={member.creditBalance?.balance ?? null} />
-      </TableCell>
-      <TableCell className="text-[12px] text-gray-600 tabular-nums">
-        {formatDate(member.createdAt)}
-      </TableCell>
-      <TableCell className="text-[12px] text-gray-600 tabular-nums">
-        {member.lastLoginAt ? (
-          <span title={formatDate(member.lastLoginAt)}>
-            {formatRelative(member.lastLoginAt, now)}
-          </span>
-        ) : (
-          <span className="text-gray-300">로그인 없음</span>
-        )}
-      </TableCell>
-      <TableCell className="pr-5 text-right">
-        <ChevronRight
-          className="size-4 text-gray-300 group-hover:text-gray-500 transition-colors inline-block"
-          strokeWidth={2}
-          aria-hidden="true"
-        />
-      </TableCell>
-    </TableRow>
-  );
-}
-
-function Avatar({
-  name,
-  avatarUrl,
-}: {
-  name: string;
-  avatarUrl: string | null | undefined;
-}) {
-  if (avatarUrl) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={avatarUrl}
-        alt=""
-        className="size-9 rounded-full object-cover bg-gray-100 shrink-0"
-      />
-    );
-  }
-  return (
-    <div
-      className="size-9 rounded-full bg-blue-50 text-blue-700 text-[13px] font-semibold flex items-center justify-center shrink-0"
-      aria-hidden="true"
-    >
-      {getInitials(name)}
-    </div>
-  );
-}
-
-function BalanceCell({ balance }: { balance: number | null }) {
-  if (balance === null) {
-    return <span className="text-[11px] text-gray-300">미생성</span>;
-  }
-  const isLow = balance < LOW_BALANCE_THRESHOLD;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center justify-end gap-1 tabular-nums",
-        isLow ? "text-rose-600" : "text-gray-800",
-      )}
-      title={isLow ? "잔고가 낮습니다" : undefined}
-    >
-      {isLow && (
-        <AlertTriangle
-          className="size-3 text-rose-500 shrink-0"
-          strokeWidth={2}
-          aria-hidden="true"
-        />
-      )}
-      <span className="text-[14px] font-semibold leading-none">
-        {balance.toLocaleString("ko-KR")}
-      </span>
-      <span className="text-[11px] text-gray-400 font-normal">C</span>
-    </span>
-  );
-}
-
-function tierBadgeClass(tier: string): string {
-  switch (tier) {
-    case "ENTERPRISE":
-      return "bg-slate-900 text-white";
-    case "PREMIUM":
-      return "bg-blue-600 text-white";
-    case "STANDARD":
-      return "bg-blue-100 text-blue-800";
-    case "STARTER":
-      return "bg-slate-100 text-slate-700";
-    default:
-      return "bg-gray-100 text-gray-600";
-  }
-}
-
-function SortHeader({
-  label,
-  active,
-  order,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  order: SortOrder;
-  onClick: () => void;
-}) {
-  const Icon = !active ? ArrowUpDown : order === "desc" ? ArrowDown : ArrowUp;
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 rounded px-1 -mx-1 transition-colors",
-        active ? "text-gray-700" : "text-gray-400 hover:text-gray-600",
-      )}
-    >
-      {label}
-      <Icon className="size-3" strokeWidth={2} aria-hidden="true" />
-    </button>
-  );
-}
-
-function SegmentedTabs<T extends string>({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: Array<{ key: T; label: string }>;
-  value: T;
-  onChange: (v: T) => void;
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-        {label}
-      </span>
-      <div
-        role="tablist"
-        aria-label={label}
-        className="inline-flex items-center bg-gray-100 rounded-lg p-0.5 gap-0.5"
-      >
-        {options.map((opt) => (
-          <button
-            key={opt.key}
-            type="button"
-            role="tab"
-            aria-selected={value === opt.key}
-            onClick={() => onChange(opt.key)}
-            className={cn(
-              "px-2.5 py-1 rounded-md text-[12px] font-medium transition-all outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40",
-              value === opt.key
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-800",
-            )}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function StatChip({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: number;
-  accent: "slate" | "blue" | "emerald" | "slate-dark";
-}) {
-  const dot =
-    accent === "blue"
-      ? "bg-blue-500"
-      : accent === "emerald"
-        ? "bg-emerald-500"
-        : accent === "slate-dark"
-          ? "bg-slate-800"
-          : "bg-slate-400";
-
-  return (
-    <div className="bg-white rounded-lg border border-gray-100 px-3 py-2.5 flex items-center justify-between">
-      <div className="flex items-center gap-2 min-w-0">
-        <span className={cn("size-1.5 rounded-full shrink-0", dot)} aria-hidden />
-        <span className="text-[11px] text-gray-500 truncate">{label}</span>
-      </div>
-      <span className="text-[14px] font-semibold text-gray-900 tabular-nums shrink-0">
-        {value.toLocaleString("ko-KR")}
-      </span>
-    </div>
-  );
-}
-
-function EmptyState({ hasFilters }: { hasFilters: boolean }) {
-  if (hasFilters) {
-    return (
-      <div className="px-5 py-16 flex flex-col items-center justify-center text-center">
-        <div className="size-10 rounded-full bg-gray-50 flex items-center justify-center mb-3">
-          <CircleSlash
-            className="size-5 text-gray-300"
-            strokeWidth={1.8}
-            aria-hidden="true"
-          />
-        </div>
-        <p className="text-[13px] text-gray-500 font-medium">
-          조건에 맞는 회원이 없습니다
-        </p>
-        <p className="text-[11px] text-gray-400 mt-1">
-          필터나 검색어를 조정해 보세요
-        </p>
-      </div>
-    );
-  }
-  return (
-    <div className="px-5 py-16 flex flex-col items-center justify-center text-center">
-      <div className="size-10 rounded-full bg-gray-50 flex items-center justify-center mb-3">
-        <Users
-          className="size-5 text-gray-300"
-          strokeWidth={1.8}
-          aria-hidden="true"
-        />
-      </div>
-      <p className="text-[13px] text-gray-500 font-medium">
-        아직 가입한 회원이 없습니다
-      </p>
-      <p className="text-[11px] text-gray-400 mt-1">
-        첫 가입이 발생하면 여기에 표시됩니다
-      </p>
     </div>
   );
 }

@@ -6,28 +6,14 @@ import Link from "next/link";
 import {
   FileText,
   Plus,
-  Search,
   Folder,
-  Grid2x2,
-  List,
-  Upload,
-  X,
   BookMarked,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
-import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { PassageStudyNotePrintDialog } from "@/components/workbench/passage-study-note-print-dialog";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
-import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
   createPassageCollection,
   updatePassageCollection,
@@ -47,6 +33,11 @@ import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "./hooks/use-selection";
 import { useUrlFilters } from "./hooks/use-url-filters";
+
+// Local sub-components
+import { PassageAnalysisModalWrapper } from "./passage-list-client/analysis-modal-wrapper";
+import { DeepLinkBadges } from "./passage-list-client/deep-link-badges";
+import { PassageFiltersToolbar } from "./passage-list-client/filters-toolbar";
 
 // ─── Types ───────────────────────────────────────────────
 interface PassageItem {
@@ -236,96 +227,17 @@ export function PassageListClient({
 
   // ─── Filter + view-toggle bar (rendered inside FolderSection.toolbar) ───
   const filtersToolbar = (
-    <>
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-        <input
-          placeholder="검색..."
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch(searchValue)}
-          className="w-40 h-7 pl-7 pr-2.5 text-[11.5px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-        />
-      </div>
-
-      <Select
-        value={filters.schoolId || "ALL"}
-        onValueChange={(v) => updateFilter("schoolId", v)}
-      >
-        <SelectTrigger className="w-[112px] h-7 text-[11.5px] px-2.5">
-          <SelectValue placeholder="학교" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">전체 학교</SelectItem>
-          {schools.map((s) => (
-            <SelectItem key={s.id} value={s.id}>
-              {s.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <Select
-        value={filters.grade ? String(filters.grade) : "ALL"}
-        onValueChange={(v) => updateFilter("grade", v)}
-      >
-        <SelectTrigger className="w-[80px] h-7 text-[11.5px] px-2.5">
-          <SelectValue placeholder="학년" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">전체</SelectItem>
-          <SelectItem value="1">1학년</SelectItem>
-          <SelectItem value="2">2학년</SelectItem>
-          <SelectItem value="3">3학년</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <div className="flex items-center gap-0.5 p-0.5 bg-slate-100 rounded-md">
-        <button
-          onClick={() => setViewType("grid")}
-          className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${
-            viewType === "grid"
-              ? "bg-white shadow-sm"
-              : "text-slate-400 hover:text-slate-600"
-          }`}
-          aria-label="그리드 보기"
-        >
-          <Grid2x2 className="w-3 h-3" />
-        </button>
-        <button
-          onClick={() => setViewType("list")}
-          className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${
-            viewType === "list"
-              ? "bg-white shadow-sm"
-              : "text-slate-400 hover:text-slate-600"
-          }`}
-          aria-label="목록 보기"
-        >
-          <List className="w-3 h-3" />
-        </button>
-      </div>
-
-      <span className="h-5 w-px bg-slate-200" />
-
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setImportOpen(true)}
-        className="h-7 text-[11.5px] px-2.5"
-      >
-        <Upload className="w-3 h-3 mr-1" />
-        일괄 등록
-      </Button>
-      <Link href="/director/workbench/passages/create">
-        <Button
-          size="sm"
-          className="h-7 text-[11.5px] px-2.5 bg-blue-600 hover:bg-blue-700"
-        >
-          <Plus className="w-3 h-3 mr-1" />
-          지문 등록
-        </Button>
-      </Link>
-    </>
+    <PassageFiltersToolbar
+      filters={filters}
+      schools={schools}
+      searchValue={searchValue}
+      onSearchChange={setSearchValue}
+      onSearchSubmit={() => handleSearch(searchValue)}
+      updateFilter={updateFilter}
+      viewType={viewType}
+      setViewType={setViewType}
+      onImportClick={() => setImportOpen(true)}
+    />
   );
 
   // ─── "Add to folder" extra action for SelectionToolbar ───
@@ -356,44 +268,18 @@ export function PassageListClient({
     </>
   );
 
+  const modalPassage = modalPassageId
+    ? passagesData.passages.find((x) => x.id === modalPassageId)
+    : null;
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
       {/* ─── Deep-link filter badges (sourceMaterial / collection) ─── */}
-      {(sourceMaterialBadge || collectionBadge) && (
-        <div className="px-6 py-2 bg-sky-50/70 border-b border-sky-100 flex items-center gap-2 shrink-0">
-          <span className="text-[11px] font-semibold text-slate-500 mr-1">
-            필터 고정됨
-          </span>
-          {sourceMaterialBadge && (
-            <button
-              type="button"
-              onClick={() => updateFilter("sourceMaterialId", "")}
-              className="group inline-flex items-center gap-1.5 h-7 pl-2.5 pr-1.5 rounded-full bg-white text-[11px] font-medium text-sky-700 border border-sky-200 hover:bg-sky-100 transition-colors"
-              title="이 시험지 필터 해제"
-            >
-              <BookMarked className="w-3 h-3" />
-              <span className="truncate max-w-[220px]">
-                {sourceMaterialBadge.label}
-              </span>
-              <X className="w-3 h-3 text-slate-400 group-hover:text-sky-700" />
-            </button>
-          )}
-          {collectionBadge && (
-            <button
-              type="button"
-              onClick={() => updateFilter("collectionId", "")}
-              className="group inline-flex items-center gap-1.5 h-7 pl-2.5 pr-1.5 rounded-full bg-white text-[11px] font-medium text-sky-700 border border-sky-200 hover:bg-sky-100 transition-colors"
-              title="이 폴더 필터 해제"
-            >
-              <Folder className="w-3 h-3" />
-              <span className="truncate max-w-[180px]">
-                {collectionBadge.label}
-              </span>
-              <X className="w-3 h-3 text-slate-400 group-hover:text-sky-700" />
-            </button>
-          )}
-        </div>
-      )}
+      <DeepLinkBadges
+        sourceMaterialBadge={sourceMaterialBadge}
+        collectionBadge={collectionBadge}
+        updateFilter={updateFilter}
+      />
 
       {/* ─── Content ─── */}
       <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
@@ -533,47 +419,12 @@ export function PassageListClient({
       />
 
       {/* ─── Analysis Modal ─── */}
-      {modalPassageId &&
-        (() => {
-          const p = passagesData.passages.find((x) => x.id === modalPassageId);
-          if (!p) return null;
-          let analysisData: PassageAnalysisData | null = null;
-          try {
-            if (p.analysis?.analysisData)
-              analysisData = JSON.parse(p.analysis.analysisData as string);
-          } catch {}
-          return (
-            <PassageAnalysisModal
-              open={true}
-              onClose={() => setModalPassageId(null)}
-              passage={{
-                id: p.id,
-                title: p.title,
-                content: p.content,
-                grade: p.grade,
-                semester: p.semester,
-                unit: p.unit,
-                publisher: p.publisher,
-                difficulty: p.difficulty,
-                tags: p.tags,
-                source: null,
-                createdAt: p.createdAt,
-                school: p.school,
-                analysis: p.analysis
-                  ? {
-                      id: p.analysis.id,
-                      analysisData: p.analysis.analysisData as string,
-                      contentHash: "",
-                      updatedAt: p.analysis.updatedAt,
-                    }
-                  : null,
-                notes: [],
-                questions: [],
-              }}
-              initialAnalysis={analysisData}
-            />
-          );
-        })()}
+      {modalPassage && (
+        <PassageAnalysisModalWrapper
+          passage={modalPassage}
+          onClose={() => setModalPassageId(null)}
+        />
+      )}
     </div>
   );
 }

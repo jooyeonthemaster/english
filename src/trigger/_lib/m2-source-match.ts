@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { SourceMatchInput } from "@/lib/extraction/m2-restoration";
+import type { SourceMatchInput } from "@/lib/extraction/restoration";
 
 function normalizeText(value: string): string {
   return value

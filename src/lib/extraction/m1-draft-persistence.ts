@@ -1,5 +1,5 @@
 import type { Prisma } from "@prisma/client";
-import type { SourceMatchInput } from "./m2-restoration";
+import type { SourceMatchInput } from "./restoration";
 
 const LOCAL_DB_EXACT_THRESHOLD = 0.9;
 

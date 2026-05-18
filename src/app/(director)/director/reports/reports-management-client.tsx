@@ -1,39 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import {
-  FileText,
-  Send,
-  Eye,
-  Clock,
-  Users,
-  Plus,
-  Search,
-  CheckCircle2,
-  AlertCircle,
-  Filter,
-  Loader2,
-  Trash2,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
-import { cn, formatDate, formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import {
   generateWeeklyReport,
   generateMonthlyReport,
@@ -44,25 +14,13 @@ import {
   deleteReport,
 } from "@/actions/reports";
 import type { ReportListItem } from "@/actions/reports";
-
-const TYPE_LABELS: Record<string, string> = {
-  WEEKLY: "주간",
-  MONTHLY: "월간",
-  CUSTOM: "특별",
-};
-
-const STATUS_CONFIG: Record<
-  string,
-  { label: string; color: string; icon: React.ElementType }
-> = {
-  DRAFT: { label: "초안", color: "bg-gray-100 text-gray-600", icon: Clock },
-  SENT: { label: "발송됨", color: "bg-blue-100 text-blue-700", icon: Send },
-  VIEWED: {
-    label: "열람",
-    color: "bg-emerald-100 text-emerald-700",
-    icon: Eye,
-  },
-};
+import { ReportsFiltersBar } from "./_components/reports-filters-bar";
+import { ReportsTable } from "./_components/reports-table";
+import {
+  GenerateReportDialog,
+  type GenerateReportPayload,
+} from "./_components/generate-report-dialog";
+import { ReportCommentDialog } from "./_components/report-comment-dialog";
 
 export function ReportsManagementClient({
   reports: initialReports,
@@ -82,12 +40,6 @@ export function ReportsManagementClient({
   const [showCommentDialog, setShowCommentDialog] = useState(false);
   const [commentReportId, setCommentReportId] = useState("");
   const [commentText, setCommentText] = useState("");
-  const [generateType, setGenerateType] = useState<"WEEKLY" | "MONTHLY">(
-    "WEEKLY"
-  );
-  const [generateScope, setGenerateScope] = useState("ALL");
-  const [generateClassId, setGenerateClassId] = useState("");
-  const [generateStudentId, setGenerateStudentId] = useState("");
   const [isPending, startTransition] = useTransition();
 
   // Filter reports
@@ -119,20 +71,20 @@ export function ReportsManagementClient({
     }
   }
 
-  async function handleGenerate() {
+  function handleGenerate(payload: GenerateReportPayload) {
     startTransition(async () => {
       try {
-        if (generateScope === "STUDENT" && generateStudentId) {
-          if (generateType === "WEEKLY") {
-            await generateWeeklyReport(generateStudentId);
+        if (payload.scope === "STUDENT" && payload.studentId) {
+          if (payload.type === "WEEKLY") {
+            await generateWeeklyReport(payload.studentId);
           } else {
-            await generateMonthlyReport(generateStudentId);
+            await generateMonthlyReport(payload.studentId);
           }
           toast.success("리포트가 생성되었습니다");
         } else {
           const classId =
-            generateScope === "CLASS" ? generateClassId : undefined;
-          const result = await bulkGenerateReports(generateType, classId);
+            payload.scope === "CLASS" ? payload.classId : undefined;
+          const result = await bulkGenerateReports(payload.type, classId);
           toast.success(
             `${result.studentCount}명의 학생 리포트 ${result.totalGenerated}건 생성`
           );
@@ -221,6 +173,12 @@ export function ReportsManagementClient({
     });
   }
 
+  function handleOpenComment(reportId: string) {
+    setCommentReportId(reportId);
+    setCommentText("");
+    setShowCommentDialog(true);
+  }
+
   const draftCount = reports.filter((r) => r.status === "DRAFT").length;
 
   return (
@@ -254,9 +212,7 @@ export function ReportsManagementClient({
         </div>
         <div className="rounded-xl bg-gray-50 p-4">
           <p className="text-xs text-gray-500">초안</p>
-          <p className="text-2xl font-bold text-gray-600 mt-1">
-            {draftCount}
-          </p>
+          <p className="text-2xl font-bold text-gray-600 mt-1">{draftCount}</p>
         </div>
         <div className="rounded-xl bg-blue-50 p-4">
           <p className="text-xs text-blue-600">발송됨</p>
@@ -272,324 +228,46 @@ export function ReportsManagementClient({
         </div>
       </div>
 
-      {/* Filters & Bulk Actions */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="학생 이름으로 검색"
-            className="pl-9"
-          />
-        </div>
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-[120px]">
-            <SelectValue placeholder="유형" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">전체 유형</SelectItem>
-            <SelectItem value="WEEKLY">주간</SelectItem>
-            <SelectItem value="MONTHLY">월간</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[120px]">
-            <SelectValue placeholder="상태" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">전체 상태</SelectItem>
-            <SelectItem value="DRAFT">초안</SelectItem>
-            <SelectItem value="SENT">발송됨</SelectItem>
-            <SelectItem value="VIEWED">열람</SelectItem>
-          </SelectContent>
-        </Select>
-        {selectedIds.size > 0 && (
-          <Button
-            onClick={handleBulkSend}
-            disabled={isPending}
-            size="sm"
-            className="bg-blue-500 text-white hover:bg-blue-600"
-          >
-            {isPending ? (
-              <Loader2 className="size-4 animate-spin mr-1.5" />
-            ) : (
-              <Send className="size-4 mr-1.5" />
-            )}
-            선택 발송 ({selectedIds.size}건)
-          </Button>
-        )}
-      </div>
+      <ReportsFiltersBar
+        search={search}
+        typeFilter={typeFilter}
+        statusFilter={statusFilter}
+        selectedCount={selectedIds.size}
+        isPending={isPending}
+        onSearchChange={setSearch}
+        onTypeChange={setTypeFilter}
+        onStatusChange={setStatusFilter}
+        onBulkSend={handleBulkSend}
+      />
 
-      {/* Report List */}
-      <div className="border border-gray-200 rounded-xl overflow-hidden">
-        {/* Table Header */}
-        <div className="grid grid-cols-[40px_1fr_80px_80px_100px_120px] gap-2 px-4 py-3 bg-gray-50 text-xs font-semibold text-gray-500">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={
-                selectedIds.size > 0 &&
-                selectedIds.size === filtered.length
-              }
-              onChange={toggleSelectAll}
-              className="rounded border-gray-300"
-              aria-label="전체 선택"
-            />
-          </div>
-          <div>학생 / 학부모</div>
-          <div className="text-center">유형</div>
-          <div className="text-center">상태</div>
-          <div className="text-center">생성일</div>
-          <div className="text-center">작업</div>
-        </div>
+      <ReportsTable
+        reports={filtered}
+        selectedIds={selectedIds}
+        isPending={isPending}
+        onToggleSelect={toggleSelect}
+        onToggleSelectAll={toggleSelectAll}
+        onOpenComment={handleOpenComment}
+        onSend={handleSend}
+        onDelete={handleDelete}
+      />
 
-        {/* Rows */}
-        {filtered.length === 0 ? (
-          <div className="text-center py-12 text-sm text-gray-400">
-            리포트가 없습니다
-          </div>
-        ) : (
-          filtered.map((report) => {
-            const statusInfo =
-              STATUS_CONFIG[report.status] || STATUS_CONFIG.DRAFT;
-            const StatusIcon = statusInfo.icon;
+      <GenerateReportDialog
+        open={showGenerateDialog}
+        isPending={isPending}
+        classes={classes}
+        students={students}
+        onOpenChange={setShowGenerateDialog}
+        onSubmit={handleGenerate}
+      />
 
-            return (
-              <div
-                key={report.id}
-                className="grid grid-cols-[40px_1fr_80px_80px_100px_120px] gap-2 px-4 py-3 border-t border-gray-100 items-center text-sm hover:bg-gray-50 transition-colors"
-              >
-                <div>
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.has(report.id)}
-                    onChange={() => toggleSelect(report.id)}
-                    className="rounded border-gray-300"
-                    aria-label={`${report.studentName} 리포트 선택`}
-                  />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-medium text-gray-800 truncate">
-                    {report.studentName}
-                  </p>
-                  {report.parentName && (
-                    <p className="text-xs text-gray-400 truncate">
-                      {report.parentName} 학부모
-                    </p>
-                  )}
-                </div>
-                <div className="text-center">
-                  <Badge variant="secondary" className="text-[10px]">
-                    {TYPE_LABELS[report.type] || report.type}
-                  </Badge>
-                </div>
-                <div className="text-center">
-                  <Badge
-                    className={cn(
-                      "text-[10px] font-semibold",
-                      statusInfo.color
-                    )}
-                  >
-                    {statusInfo.label}
-                  </Badge>
-                </div>
-                <div className="text-center text-xs text-gray-500">
-                  {formatDate(report.createdAt)}
-                </div>
-                <div className="flex items-center justify-center gap-1">
-                  {report.status === "DRAFT" && (
-                    <>
-                      <button
-                        onClick={() => {
-                          setCommentReportId(report.id);
-                          setCommentText("");
-                          setShowCommentDialog(true);
-                        }}
-                        className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
-                        title="코멘트 추가"
-                        aria-label="코멘트 추가"
-                      >
-                        <FileText className="size-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleSend(report.id)}
-                        disabled={isPending}
-                        className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-500 hover:text-blue-600 transition-colors"
-                        title="발송"
-                        aria-label="발송"
-                      >
-                        <Send className="size-3.5" />
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDelete(report.id)}
-                    disabled={isPending}
-                    className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
-                    title="삭제"
-                    aria-label="삭제"
-                  >
-                    <Trash2 className="size-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* Generate Dialog */}
-      <Dialog open={showGenerateDialog} onOpenChange={setShowGenerateDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>리포트 생성</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                리포트 유형
-              </label>
-              <Select
-                value={generateType}
-                onValueChange={(v) =>
-                  setGenerateType(v as "WEEKLY" | "MONTHLY")
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="WEEKLY">주간 리포트</SelectItem>
-                  <SelectItem value="MONTHLY">월간 리포트</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                대상
-              </label>
-              <Select
-                value={generateScope}
-                onValueChange={setGenerateScope}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ALL">전체 학생</SelectItem>
-                  <SelectItem value="CLASS">반별</SelectItem>
-                  <SelectItem value="STUDENT">개별 학생</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {generateScope === "CLASS" && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  반 선택
-                </label>
-                <Select
-                  value={generateClassId}
-                  onValueChange={setGenerateClassId}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="반을 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {classes.map((cls) => (
-                      <SelectItem key={cls.id} value={cls.id}>
-                        {cls.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {generateScope === "STUDENT" && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  학생 선택
-                </label>
-                <Select
-                  value={generateStudentId}
-                  onValueChange={setGenerateStudentId}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="학생을 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {students.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>
-                        {s.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowGenerateDialog(false)}
-            >
-              취소
-            </Button>
-            <Button
-              onClick={handleGenerate}
-              disabled={isPending}
-              className="gradient-primary text-white"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="size-4 animate-spin mr-1.5" />
-                  생성 중...
-                </>
-              ) : (
-                "생성하기"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Comment Dialog */}
-      <Dialog open={showCommentDialog} onOpenChange={setShowCommentDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>강사 코멘트 추가</DialogTitle>
-          </DialogHeader>
-          <div className="py-2">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="학생에 대한 개인적인 코멘트를 작성하세요..."
-              className="w-full min-h-[120px] px-3 py-2 text-sm border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowCommentDialog(false)}
-            >
-              취소
-            </Button>
-            <Button
-              onClick={handleSaveComment}
-              disabled={isPending}
-              className="gradient-primary text-white"
-            >
-              {isPending ? (
-                <Loader2 className="size-4 animate-spin mr-1.5" />
-              ) : null}
-              저장
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ReportCommentDialog
+        open={showCommentDialog}
+        commentText={commentText}
+        isPending={isPending}
+        onOpenChange={setShowCommentDialog}
+        onCommentChange={setCommentText}
+        onSave={handleSaveComment}
+      />
     </div>
   );
 }
