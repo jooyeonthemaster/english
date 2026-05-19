@@ -1,5 +1,6 @@
 "use server";
 
+import { getTodayRangeKST } from "@/lib/date-utils";
 import { prisma } from "@/lib/prisma";
 import { getTodaySchedule, getClassStatus } from "./_helpers";
 import type {
@@ -86,7 +87,6 @@ export async function getTeacherTodayClasses(
   staffId: string
 ): Promise<TeacherClassItem[]> {
   try {
-    const { getTodayRangeKST } = require("@/lib/date-utils");
     const { today: todayStart, tomorrow: todayEnd } = getTodayRangeKST();
 
     const classes = await prisma.class.findMany({

@@ -21,6 +21,7 @@ export {
   createWorkbenchPassage,
   updateWorkbenchPassage,
   deleteWorkbenchPassage,
+  bulkDeleteWorkbenchPassages,
   bulkUpdatePassageTags,
 } from "./workbench/passages";
 
@@ -45,6 +46,7 @@ export {
   saveGeneratedQuestions,
   updateWorkbenchQuestion,
   deleteWorkbenchQuestion,
+  bulkDeleteWorkbenchQuestions,
   approveWorkbenchQuestion,
   toggleQuestionStar,
 } from "./workbench/questions";

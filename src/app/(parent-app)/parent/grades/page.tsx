@@ -16,7 +16,7 @@ export default async function ParentGradesPage() {
 
   return (
     <GradesClient
-      children={children}
+      childSummaries={children}
       initialGrades={firstChildGrades}
     />
   );

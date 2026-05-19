@@ -230,6 +230,67 @@ export async function deleteExam(examId: string): Promise<ActionResult> {
   }
 }
 
+// Bulk delete: scoped to caller's academy, only DRAFT exams. Returns counts so
+// the UI can communicate how many were actually removed (vs cross-tenant or
+// non-DRAFT ids that were silently skipped).
+export async function bulkDeleteExams(examIds: string[]): Promise<{
+  success: boolean;
+  requested: number;
+  deleted: number;
+  skippedNonDraft: number;
+  error?: string;
+}> {
+  try {
+    const staff = await requireStaffAuth();
+    if (examIds.length === 0) {
+      return {
+        success: true,
+        requested: 0,
+        deleted: 0,
+        skippedNonDraft: 0,
+      };
+    }
+
+    // Pre-filter to DRAFT exams owned by this academy so we can report a
+    // skipped count for non-DRAFT items the user picked.
+    const eligible = await prisma.exam.findMany({
+      where: {
+        id: { in: examIds },
+        academyId: staff.academyId,
+        status: "DRAFT",
+      },
+      select: { id: true },
+    });
+    const eligibleIds = eligible.map((e) => e.id);
+
+    const result = eligibleIds.length
+      ? await prisma.exam.deleteMany({
+          where: { id: { in: eligibleIds }, academyId: staff.academyId },
+        })
+      : { count: 0 };
+
+    revalidatePath("/director/exams");
+    return {
+      success: true,
+      requested: examIds.length,
+      deleted: result.count,
+      skippedNonDraft: examIds.length - eligibleIds.length,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "시험 삭제 중 오류가 발생했습니다.";
+    return {
+      success: false,
+      requested: examIds.length,
+      deleted: 0,
+      skippedNonDraft: 0,
+      error: message,
+    };
+  }
+}
+
 export async function publishExam(examId: string): Promise<ActionResult> {
   try {
     const staff = await requireStaffAuth();

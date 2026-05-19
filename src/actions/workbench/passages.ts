@@ -289,6 +289,42 @@ export async function deleteWorkbenchPassage(
   }
 }
 
+// Bulk delete: scoped to caller's academy so cross-tenant ids silently no-op
+// instead of erroring out the whole batch.
+export async function bulkDeleteWorkbenchPassages(
+  passageIds: string[],
+): Promise<{
+  success: boolean;
+  requested: number;
+  deleted: number;
+  error?: string;
+}> {
+  try {
+    const staff = await requireAuth();
+    if (passageIds.length === 0) {
+      return { success: true, requested: 0, deleted: 0 };
+    }
+    const result = await prisma.passage.deleteMany({
+      where: { id: { in: passageIds }, academyId: staff.academyId },
+    });
+    revalidatePath("/director/workbench/passages");
+    return {
+      success: true,
+      requested: passageIds.length,
+      deleted: result.count,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "지문 삭제 중 오류가 발생했습니다.";
+    return {
+      success: false,
+      requested: passageIds.length,
+      deleted: 0,
+      error: message,
+    };
+  }
+}
+
 export async function bulkUpdatePassageTags(
   passageIds: string[],
   tags: string[]

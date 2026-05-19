@@ -10,6 +10,7 @@ import { Calendar, X } from "lucide-react";
 import { SetListView } from "./_components/set-list-view";
 import { CategoryDashboard } from "./_components/category-dashboard";
 import { QuestionListView } from "./_components/question-list-view";
+import { SeasonManager } from "./season-manager";
 import type { SetItem, QuestionItem } from "./_components/question-constants";
 
 // ---------------------------------------------------------------------------
@@ -79,7 +80,6 @@ export function LearningQuestionBankClient({
 
   // 시즌 관리 탭
   if (activeTab === "seasons" && !currentSetId) {
-    const { SeasonManager } = require("./season-manager");
     return (
       <div className="p-6 max-w-4xl">
         <div className="flex items-center justify-between mb-6">

@@ -39,19 +39,19 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 function ChildSwitcher({
-  children,
+  items,
   selectedId,
   onSelect,
 }: {
-  children: { id: string; name: string }[];
+  items: { id: string; name: string }[];
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  if (children.length <= 1) return null;
+  if (items.length <= 1) return null;
 
   return (
     <div className="flex gap-2 px-1 py-1 bg-gray-100 rounded-xl" role="tablist" aria-label="자녀 선택">
-      {children.map((child) => (
+      {items.map((child) => (
         <button
           key={child.id}
           onClick={() => onSelect(child.id)}
@@ -72,14 +72,14 @@ function ChildSwitcher({
 }
 
 export function GradesClient({
-  children,
+  childSummaries,
   initialGrades,
 }: {
-  children: ChildSummary[];
+  childSummaries: ChildSummary[];
   initialGrades: ChildGradesData | null;
 }) {
   const [selectedChildId, setSelectedChildId] = useState(
-    children[0]?.id || ""
+    childSummaries[0]?.id || ""
   );
   const [grades, setGrades] = useState<ChildGradesData | null>(initialGrades);
   const [loading, setLoading] = useState(false);
@@ -99,16 +99,16 @@ export function GradesClient({
   }, []);
 
   useEffect(() => {
-    if (selectedChildId && selectedChildId !== children[0]?.id) {
+    if (selectedChildId && selectedChildId !== childSummaries[0]?.id) {
       fetchGrades(selectedChildId);
     }
-  }, [selectedChildId, children, fetchGrades]);
+  }, [selectedChildId, childSummaries, fetchGrades]);
 
   function handleChildSwitch(id: string) {
     setSelectedChildId(id);
     setShowAllExams(false);
     setShowAllVocab(false);
-    if (id !== children[0]?.id || !initialGrades) {
+    if (id !== childSummaries[0]?.id || !initialGrades) {
       fetchGrades(id);
     } else {
       setGrades(initialGrades);
@@ -119,7 +119,7 @@ export function GradesClient({
     return (
       <div className="px-5 pt-6 space-y-6">
         <ChildSwitcher
-          children={children.map((c) => ({ id: c.id, name: c.name }))}
+          items={childSummaries.map((c) => ({ id: c.id, name: c.name }))}
           selectedId={selectedChildId}
           onSelect={handleChildSwitch}
         />
@@ -134,7 +134,7 @@ export function GradesClient({
     return (
       <div className="px-5 pt-6 space-y-6">
         <ChildSwitcher
-          children={children.map((c) => ({ id: c.id, name: c.name }))}
+          items={childSummaries.map((c) => ({ id: c.id, name: c.name }))}
           selectedId={selectedChildId}
           onSelect={handleChildSwitch}
         />
@@ -156,7 +156,7 @@ export function GradesClient({
     <div className="px-5 pt-6 pb-4 space-y-6">
       {/* Child Switcher */}
       <ChildSwitcher
-        children={children.map((c) => ({ id: c.id, name: c.name }))}
+        items={childSummaries.map((c) => ({ id: c.id, name: c.name }))}
         selectedId={selectedChildId}
         onSelect={handleChildSwitch}
       />
@@ -165,7 +165,7 @@ export function GradesClient({
       <div>
         <h1 className="text-xl font-bold text-gray-900">성적 현황</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          {children.find((c) => c.id === selectedChildId)?.name}의 학습 분석
+          {childSummaries.find((c) => c.id === selectedChildId)?.name}의 학습 분석
         </p>
       </div>
 

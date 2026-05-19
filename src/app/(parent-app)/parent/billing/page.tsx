@@ -15,7 +15,7 @@ export default async function ParentBillingPage() {
 
   return (
     <BillingClient
-      children={children}
+      childSummaries={children}
       initialBilling={initialBilling}
     />
   );

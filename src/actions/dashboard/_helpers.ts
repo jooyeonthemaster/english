@@ -2,6 +2,8 @@
 // Internal helpers shared between director / teacher dashboard actions.
 // ============================================================================
 
+import { getDayOfWeekKST } from "@/lib/date-utils";
+
 export function getConsultationTypeLabel(type: string): string {
   switch (type) {
     case "NEW_INQUIRY": return "신규 문의";
@@ -26,7 +28,6 @@ export function getTodaySchedule(scheduleJson: string | null): ScheduleSlot | nu
   if (!scheduleJson) return null;
   try {
     const slots: ScheduleSlot[] = JSON.parse(scheduleJson);
-    const { getDayOfWeekKST } = require("@/lib/date-utils");
     const todayDay = DAY_MAP[getDayOfWeekKST()];
     return slots.find((s) => s.day === todayDay) || null;
   } catch {

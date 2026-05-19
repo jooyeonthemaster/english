@@ -16,6 +16,7 @@ export {
   createExam,
   updateExam,
   deleteExam,
+  bulkDeleteExams,
   publishExam,
 } from "./crud";
 

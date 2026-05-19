@@ -4,11 +4,19 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
-import { Database, ClipboardList, Rows3, FileText } from "lucide-react";
+import {
+  Database,
+  ClipboardList,
+  Rows3,
+  FileText,
+  Loader2,
+  Trash2,
+} from "lucide-react";
 import { PassageGroupedView } from "./question-bank-passage-view";
 import { toast } from "sonner";
 import {
   deleteWorkbenchQuestion,
+  bulkDeleteWorkbenchQuestions,
   approveWorkbenchQuestion,
   toggleQuestionStar,
   createQuestionCollection,
@@ -18,6 +26,16 @@ import {
   updateQuestionCollection,
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Shared modules
 import type { CollectionItem } from "./shared/types";
@@ -166,6 +184,11 @@ export function QuestionBankClient({
   const viewSize: "lg" | "md" | "sm" =
     gridCols === 2 ? "lg" : gridCols === 3 ? "md" : "sm";
 
+  // Optimistically hide deleted questions until router.refresh() reaches the
+  // page. Declared up here because the displayed-questions useMemo below
+  // depends on it.
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
+
   // Initial folder from URL in grouped mode (collectionId is server-driven)
   useEffect(() => {
     if (isGrouped && filters.collectionId && !folders.activeFolder) {
@@ -177,7 +200,14 @@ export function QuestionBankClient({
   // Flattened list of question objects currently being displayed.
   // In flat mode: questionsData.questions filtered by activeFolder (client-side).
   // In grouped mode: every question across all visible passages (server-filtered).
-  const flatQuestions = questionsData?.questions ?? [];
+  const rawFlatQuestions = questionsData?.questions ?? [];
+  const flatQuestions = useMemo(
+    () =>
+      removedIds.size === 0
+        ? rawFlatQuestions
+        : rawFlatQuestions.filter((q) => !removedIds.has(q.id)),
+    [rawFlatQuestions, removedIds],
+  );
   const questionsInActiveFolder = useMemo(() => {
     if (folders.activeFolder === null) return flatQuestions;
     const ids = folders.membership[folders.activeFolder];
@@ -185,7 +215,18 @@ export function QuestionBankClient({
     return flatQuestions.filter((q) => ids.has(q.id));
   }, [flatQuestions, folders.activeFolder, folders.membership]);
 
-  const groupedPassages = groupedData?.passages ?? [];
+  const rawGroupedPassages = groupedData?.passages ?? [];
+  const groupedPassages = useMemo(() => {
+    if (removedIds.size === 0) return rawGroupedPassages;
+    return rawGroupedPassages
+      .map((p) => ({
+        ...p,
+        questions: p.questions.filter((q) => !removedIds.has(q.id)),
+      }))
+      // Hide passages whose questions are all removed so the grouped grid
+      // doesn't render empty cards.
+      .filter((p) => p.questions.length > 0);
+  }, [rawGroupedPassages, removedIds]);
 
   const displayedQuestions = isGrouped
     ? groupedPassages.flatMap((p) => p.questions)
@@ -211,6 +252,10 @@ export function QuestionBankClient({
   const [examTitle, setExamTitle] = useState("");
   const [creatingExam, setCreatingExam] = useState(false);
 
+  // Bulk delete
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
   // Stats
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
@@ -233,6 +278,11 @@ export function QuestionBankClient({
     const result = await deleteWorkbenchQuestion(id);
     if (result.success) {
       toast.success("삭제됨");
+      setRemovedIds((prev) => {
+        const next = new Set(prev);
+        next.add(id);
+        return next;
+      });
       selectedIds.delete(id);
       setSelectedIds(new Set(selectedIds));
       router.refresh();
@@ -337,6 +387,40 @@ export function QuestionBankClient({
     if (success) clearSelection();
   }
 
+  async function handleBulkDelete() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0 || bulkDeleting) return;
+    setBulkDeleting(true);
+    try {
+      const result = await bulkDeleteWorkbenchQuestions(ids);
+      if (!result.success) {
+        toast.error(result.error || "삭제에 실패했습니다.");
+        return;
+      }
+      if (result.deleted === result.requested) {
+        toast.success(`${result.deleted}개 문제를 삭제했습니다.`);
+      } else if (result.deleted === 0) {
+        toast.error("삭제된 문제가 없습니다.");
+      } else {
+        toast.warning(
+          `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+        );
+      }
+      setRemovedIds((prev) => {
+        const next = new Set(prev);
+        for (const id of ids) next.add(id);
+        return next;
+      });
+      clearSelection();
+      setBulkDeleteOpen(false);
+      router.refresh();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
+    } finally {
+      setBulkDeleting(false);
+    }
+  }
+
   async function handleCreateExam() {
     if (!examTitle.trim() || selectedIds.size === 0) return;
     setCreatingExam(true);
@@ -430,6 +514,21 @@ export function QuestionBankClient({
         <ClipboardList className="w-3.5 h-3.5" />
         시험지 만들기
       </button>
+
+      {/* Bulk delete */}
+      <button
+        type="button"
+        onClick={() => setBulkDeleteOpen(true)}
+        disabled={selectedIds.size === 0 || bulkDeleting}
+        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {bulkDeleting ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : (
+          <Trash2 className="w-3.5 h-3.5" />
+        )}
+        삭제
+      </button>
     </>
   );
 
@@ -522,7 +621,7 @@ export function QuestionBankClient({
                   onDelete={handleDelete}
                   onApprove={handleApprove}
                   onToggleStar={handleToggleStar}
-                  onEdit={handleOpenQuestionEditor}
+                  onEdit={editor.openEditor}
                 />
               ) : displayedQuestions.length === 0 ? (
                 <div className="text-center py-12">
@@ -614,6 +713,38 @@ export function QuestionBankClient({
         onDeleted={editor.handleEditorDeleted}
         onRetry={editor.openEditor}
       />
+
+      <AlertDialog
+        open={bulkDeleteOpen}
+        onOpenChange={(open) => {
+          if (!bulkDeleting) setBulkDeleteOpen(open);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              선택한 문제 {selectedIds.size}개를 삭제하시겠습니까?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께
+              삭제됩니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void handleBulkDelete();
+              }}
+              disabled={bulkDeleting}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {bulkDeleting ? "삭제 중..." : "삭제"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -52,19 +52,19 @@ const PAYMENT_METHOD_MAP: Record<string, string> = {
 };
 
 function ChildSwitcher({
-  children,
+  items,
   selectedId,
   onSelect,
 }: {
-  children: { id: string; name: string }[];
+  items: { id: string; name: string }[];
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  if (children.length <= 1) return null;
+  if (items.length <= 1) return null;
 
   return (
     <div className="flex gap-2 px-1 py-1 bg-gray-100 rounded-xl" role="tablist" aria-label="자녀 선택">
-      {children.map((child) => (
+      {items.map((child) => (
         <button
           key={child.id}
           onClick={() => onSelect(child.id)}
@@ -85,14 +85,14 @@ function ChildSwitcher({
 }
 
 export function BillingClient({
-  children,
+  childSummaries,
   initialBilling,
 }: {
-  children: ChildSummary[];
+  childSummaries: ChildSummary[];
   initialBilling: ChildBillingData | null;
 }) {
   const [selectedChildId, setSelectedChildId] = useState(
-    children[0]?.id || ""
+    childSummaries[0]?.id || ""
   );
   const [billing, setBilling] = useState<ChildBillingData | null>(
     initialBilling
@@ -113,15 +113,15 @@ export function BillingClient({
   }, []);
 
   useEffect(() => {
-    if (selectedChildId && selectedChildId !== children[0]?.id) {
+    if (selectedChildId && selectedChildId !== childSummaries[0]?.id) {
       fetchBilling(selectedChildId);
     }
-  }, [selectedChildId, children, fetchBilling]);
+  }, [selectedChildId, childSummaries, fetchBilling]);
 
   function handleChildSwitch(id: string) {
     setSelectedChildId(id);
     setShowAllPayments(false);
-    if (id !== children[0]?.id || !initialBilling) {
+    if (id !== childSummaries[0]?.id || !initialBilling) {
       fetchBilling(id);
     } else {
       setBilling(initialBilling);
@@ -132,7 +132,7 @@ export function BillingClient({
     return (
       <div className="px-5 pt-6 space-y-6">
         <ChildSwitcher
-          children={children.map((c) => ({ id: c.id, name: c.name }))}
+          items={childSummaries.map((c) => ({ id: c.id, name: c.name }))}
           selectedId={selectedChildId}
           onSelect={handleChildSwitch}
         />
@@ -147,7 +147,7 @@ export function BillingClient({
     return (
       <div className="px-5 pt-6 space-y-6">
         <ChildSwitcher
-          children={children.map((c) => ({ id: c.id, name: c.name }))}
+          items={childSummaries.map((c) => ({ id: c.id, name: c.name }))}
           selectedId={selectedChildId}
           onSelect={handleChildSwitch}
         />
@@ -166,7 +166,7 @@ export function BillingClient({
     <div className="px-5 pt-6 pb-4 space-y-6">
       {/* Child Switcher */}
       <ChildSwitcher
-        children={children.map((c) => ({ id: c.id, name: c.name }))}
+        items={childSummaries.map((c) => ({ id: c.id, name: c.name }))}
         selectedId={selectedChildId}
         onSelect={handleChildSwitch}
       />
@@ -175,7 +175,7 @@ export function BillingClient({
       <div>
         <h1 className="text-xl font-bold text-gray-900">수납 현황</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          {children.find((c) => c.id === selectedChildId)?.name}의 청구/결제 내역
+          {childSummaries.find((c) => c.id === selectedChildId)?.name}의 청구/결제 내역
         </p>
       </div>
 

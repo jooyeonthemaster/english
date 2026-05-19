@@ -4,10 +4,11 @@
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ClipboardList, GraduationCap, Plus, Trash2 } from "lucide-react";
+import { ClipboardList, GraduationCap, Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   addExamsToCollection,
+  bulkDeleteExams,
   createExamCollection,
   deleteExam,
   deleteExamCollection,
@@ -77,6 +78,11 @@ export function ExamListClient({
   const [classFilter, setClassFilter] = useState("ALL");
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+  // Optimistically hide deleted exams until router.refresh() updates props —
+  // same pattern as passage-list-client / question-bank-client.
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
 
   // ─── Folder manager ───
   const folder = useFolderManager({
@@ -90,13 +96,14 @@ export function ExamListClient({
   // ─── Client-side filtering ───
   const filteredExams = useMemo(() => {
     return exams.filter((exam) => {
+      if (removedIds.has(exam.id)) return false;
       if (search && !exam.title.toLowerCase().includes(search.toLowerCase())) return false;
       if (typeFilter !== "ALL" && exam.type !== typeFilter) return false;
       if (statusFilter !== "ALL" && exam.status !== statusFilter) return false;
       if (classFilter !== "ALL" && exam.class?.id !== classFilter) return false;
       return true;
     });
-  }, [exams, search, typeFilter, statusFilter, classFilter]);
+  }, [exams, removedIds, search, typeFilter, statusFilter, classFilter]);
 
   // ─── Filter by active folder ───
   const displayedExams = useMemo(
@@ -174,15 +181,78 @@ export function ExamListClient({
   // ─── Delete handler ───
   async function handleDelete() {
     if (!deleteId) return;
-    const result = await deleteExam(deleteId);
+    const targetId = deleteId;
+    const result = await deleteExam(targetId);
     if (result.success) {
       toast.success("시험이 삭제되었습니다.");
+      setRemovedIds((prev) => {
+        const next = new Set(prev);
+        next.add(targetId);
+        return next;
+      });
       router.refresh();
     } else {
       toast.error(result.error || "삭제에 실패했습니다.");
     }
     setDeleteId(null);
   }
+
+  // ─── Bulk delete handler ───
+  const handleBulkDelete = useCallback(async () => {
+    const ids = Array.from(selection.selectedIds);
+    if (ids.length === 0 || bulkDeleting) return;
+    setBulkDeleting(true);
+    try {
+      const result = await bulkDeleteExams(ids);
+      if (!result.success) {
+        toast.error(result.error || "삭제에 실패했습니다.");
+        return;
+      }
+      if (result.deleted === result.requested) {
+        toast.success(`${result.deleted}개 시험을 삭제했습니다.`);
+      } else if (result.deleted === 0) {
+        // Only DRAFT exams are deletable — surface that as a more helpful
+        // message than the generic "no rows" path.
+        if (result.skippedNonDraft > 0) {
+          toast.error("초안 상태의 시험만 삭제할 수 있습니다.");
+        } else {
+          toast.error("삭제된 시험이 없습니다.");
+        }
+      } else {
+        const missing = result.requested - result.deleted;
+        const reason =
+          result.skippedNonDraft > 0
+            ? `(${result.skippedNonDraft}개는 초안이 아니어서 제외됨)`
+            : "";
+        toast.warning(
+          `${result.deleted}개 삭제됨, ${missing}개 누락 ${reason}`.trim(),
+        );
+      }
+      // Hide only the ids that the server confirmed it could delete. If the
+      // server skipped non-DRAFT exams, leave them visible since they're
+      // still real rows the user might still want to act on.
+      if (result.deleted > 0) {
+        // We don't know exactly which subset got deleted when deleted <
+        // requested. In that rare case fall back to optimistically hiding
+        // every requested id; router.refresh() restores anything the server
+        // actually kept.
+        const idsToHide =
+          result.deleted === result.requested ? ids : ids;
+        setRemovedIds((prev) => {
+          const next = new Set(prev);
+          for (const id of idsToHide) next.add(id);
+          return next;
+        });
+      }
+      selection.clearSelection();
+      setBulkDeleteOpen(false);
+      router.refresh();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
+    } finally {
+      setBulkDeleting(false);
+    }
+  }, [selection, bulkDeleting, router]);
 
   // ─── "Add to folder" extra action for SelectionToolbar ───
   const addToFolderAction = (
@@ -199,16 +269,16 @@ export function ExamListClient({
 
       {/* Bulk delete */}
       <button
-        onClick={() => {
-          if (selection.selectedIds.size === 1) {
-            setDeleteId([...selection.selectedIds][0]);
-          } else {
-            toast.info("삭제는 한 번에 하나의 시험만 가능합니다.");
-          }
-        }}
-        className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50"
+        type="button"
+        onClick={() => setBulkDeleteOpen(true)}
+        disabled={selection.selectedIds.size === 0 || bulkDeleting}
+        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <Trash2 className="w-3.5 h-3.5" />
+        {bulkDeleting ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : (
+          <Trash2 className="w-3.5 h-3.5" />
+        )}
         삭제
       </button>
     </>
@@ -379,6 +449,39 @@ export function ExamListClient({
               className="bg-red-500 hover:bg-red-600"
             >
               삭제
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Bulk Delete Dialog */}
+      <AlertDialog
+        open={bulkDeleteOpen}
+        onOpenChange={(open) => {
+          if (!bulkDeleting) setBulkDeleteOpen(open);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              선택한 시험 {selection.selectedIds.size}개를 삭제하시겠습니까?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              이 작업은 되돌릴 수 없습니다. 초안 상태의 시험만 삭제되며,
+              배포된 시험은 자동으로 건너뜁니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void handleBulkDelete();
+              }}
+              disabled={bulkDeleting}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {bulkDeleting ? "삭제 중..." : "삭제"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

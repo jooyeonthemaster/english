@@ -235,7 +235,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       if (!passage) continue;
 
       // 카테고리별 counts 계산
-      let byCategory: Record<string, Record<string, number>> = {};
+      const byCategory: Record<string, Record<string, number>> = {};
 
       if (genMode === "auto") {
         // 자동: 카테고리별 서브타입 균등 분배

@@ -1,5 +1,10 @@
 "use server";
 
+import {
+  getLastMonthStartKST,
+  getMonthStartKST,
+  getTodayRangeKST,
+} from "@/lib/date-utils";
 import { prisma } from "@/lib/prisma";
 import { getConsultationTypeLabel, getTodaySchedule, getClassStatus } from "./_helpers";
 import type {
@@ -17,7 +22,6 @@ import type {
 
 export async function getDashboardKPIs(academyId: string): Promise<KPIData> {
   try {
-    const { getMonthStartKST, getLastMonthStartKST, getTodayRangeKST } = require("@/lib/date-utils");
     const startOfMonth = getMonthStartKST();
     const startOfLastMonth = getLastMonthStartKST();
     const endOfLastMonth = new Date(startOfMonth.getTime() - 1);
@@ -188,7 +192,6 @@ export async function getStudentTrend(academyId: string): Promise<StudentTrendPo
 
 export async function getPaymentSummary(academyId: string): Promise<PaymentSummaryItem[]> {
   try {
-    const { getMonthStartKST } = require("@/lib/date-utils");
     const startOfMonth = getMonthStartKST();
     const KST2 = 9 * 60 * 60 * 1000;
     const kst2 = new Date(Date.now() + KST2);

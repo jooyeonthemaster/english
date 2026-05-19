@@ -459,9 +459,10 @@ export async function getPassageTranslations(passageId: string): Promise<Record<
     // analysisData.sentences 배열에서 translation 추출
     if (parsed.sentences && Array.isArray(parsed.sentences)) {
       const translations: Record<number, string> = {};
-      parsed.sentences.forEach((s: { index?: number; translation?: string }, i: number) => {
+      parsed.sentences.forEach((s: { index?: number; korean?: string; translation?: string }, i: number) => {
         const idx = s.index ?? i;
-        if (s.translation) translations[idx] = s.translation;
+        const text = s.korean ?? s.translation;
+        if (text) translations[idx] = text;
       });
       return translations;
     }

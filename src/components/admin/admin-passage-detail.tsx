@@ -41,7 +41,7 @@ export function AdminPassageDetail({ passage, academyId }: Props) {
     } catch {
       return null;
     }
-  }, [passage.analysis?.analysisData]);
+  }, [passage.analysis]);
 
   const tags = parseJSON<string[]>(passage.tags, []);
 

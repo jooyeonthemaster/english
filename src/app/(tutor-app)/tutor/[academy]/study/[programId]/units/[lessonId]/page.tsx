@@ -99,19 +99,7 @@ export default async function TutorLessonLabPage({
       title={lesson.title}
       passage={lesson.passage.content}
       sentences={sentences}
-      analysis={{
-        mainIdea: analysis?.structure?.mainIdea ?? "",
-        purpose: analysis?.structure?.purpose ?? "",
-        keyPoints: analysis?.structure?.keyPoints ?? [],
-        flow:
-          analysis?.structure?.logicFlow?.map((item) => ({
-            role: item.role,
-            summary: item.summary,
-            sentenceIndices: item.sentenceIndices,
-          })) ?? [],
-        vocabCount: analysis?.vocabulary.length ?? 0,
-        grammarCount: analysis?.grammarPoints.length ?? 0,
-      }}
+      analysisData={analysis}
       activities={lesson.activities.map((activity) => {
         const attemptItem = bestByActivity.get(activity.id);
         return {

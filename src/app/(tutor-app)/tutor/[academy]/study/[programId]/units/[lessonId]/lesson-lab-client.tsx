@@ -8,12 +8,10 @@ import {
   ChevronRight,
   Circle,
   Grid3X3,
-  ListChecks,
   MessageCircleQuestion,
   Play,
-  Sparkles,
-  Target,
 } from "lucide-react";
+import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -26,6 +24,7 @@ import {
   tutorModeLabels,
 } from "@/lib/tutor/activity-labels";
 import { cn } from "@/lib/utils";
+import { StudentAnalysisReader } from "./student-analysis-reader";
 
 type CoverageDimension = "interpret" | "memorize" | "order" | "vocab" | "grammar" | "transfer";
 
@@ -57,15 +56,6 @@ type SentenceRow = {
   korean: string;
 };
 
-type AnalysisSummary = {
-  mainIdea: string;
-  purpose: string;
-  keyPoints: string[];
-  flow: Array<{ role: string; summary: string; sentenceIndices: number[] }>;
-  vocabCount: number;
-  grammarCount: number;
-};
-
 const dimensions: CoverageDimension[] = ["interpret", "memorize", "order", "vocab", "grammar", "transfer"];
 const tabs = [
   { key: "overview", label: "분석" },
@@ -80,7 +70,7 @@ export function LessonLabClient({
   title,
   passage,
   sentences,
-  analysis,
+  analysisData,
   activities,
 }: {
   academy: string;
@@ -89,7 +79,7 @@ export function LessonLabClient({
   title: string;
   passage: string;
   sentences: SentenceRow[];
-  analysis: AnalysisSummary;
+  analysisData: PassageAnalysisData | null;
   activities: LessonLabActivity[];
 }) {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["key"]>("overview");
@@ -135,7 +125,7 @@ export function LessonLabClient({
         </div>
       </header>
 
-      <div className="space-y-5 px-4 py-5 sm:px-6 md:px-8">
+      <div className="space-y-5 px-4 pb-28 pt-5 sm:px-6 md:px-8 lg:pb-8">
         <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_330px]">
           <div className="rounded-[28px] bg-slate-950 p-5 text-white shadow-xl shadow-slate-200">
             <div className="flex items-start justify-between gap-4">
@@ -194,79 +184,12 @@ export function LessonLabClient({
         </div>
 
         {activeTab === "overview" && (
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_330px]">
-            <div className="space-y-4">
-              <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="mb-4 flex items-center gap-2">
-                  <Target className="size-5 text-blue-600" />
-                  <p className="text-base font-black text-slate-950">핵심 분석</p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <InfoBlock label="주제" value={analysis.mainIdea || "지문의 중심 생각을 먼저 확인하세요."} />
-                  <InfoBlock label="목적" value={analysis.purpose || "글쓴이가 왜 이 흐름으로 말하는지 확인하세요."} />
-                </div>
-                {analysis.keyPoints.length > 0 && (
-                  <div className="mt-4 rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs font-black text-slate-500">암기할 핵심 포인트</p>
-                    <div className="mt-3 space-y-2">
-                      {analysis.keyPoints.slice(0, 4).map((point, index) => (
-                        <div key={`${point}-${index}`} className="flex gap-2 text-sm font-semibold leading-6 text-slate-700">
-                          <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-black text-white">
-                            {index + 1}
-                          </span>
-                          <span>{point}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </section>
-
-              <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="mb-4 flex items-center gap-2">
-                  <ListChecks className="size-5 text-blue-600" />
-                  <p className="text-base font-black text-slate-950">문장별 직독직해</p>
-                </div>
-                <div className="space-y-3">
-                  {sentences.map((sentence) => (
-                    <div key={sentence.index} className="rounded-2xl bg-slate-50 p-4">
-                      <p className="mb-2 text-[11px] font-black text-blue-600">Sentence {sentence.index + 1}</p>
-                      <p className="text-sm font-bold leading-7 text-slate-950">{sentence.english}</p>
-                      {sentence.korean && <p className="mt-2 border-l-2 border-blue-500 pl-3 text-sm font-semibold leading-6 text-slate-600">{sentence.korean}</p>}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-
-            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="mb-4 flex items-center gap-2">
-                <Sparkles className="size-5 text-blue-600" />
-                <p className="text-base font-black text-slate-950">논리 흐름</p>
-              </div>
-              {analysis.flow.length > 0 ? (
-                <div className="space-y-3">
-                  {analysis.flow.map((item, index) => (
-                    <div key={`${item.role}-${index}`} className="relative rounded-2xl bg-blue-50 p-4">
-                      <p className="text-xs font-black text-blue-700">{item.role}</p>
-                      <p className="mt-2 text-sm font-semibold leading-6 text-slate-700">{item.summary}</p>
-                      <p className="mt-2 text-[11px] font-bold text-slate-500">
-                        {item.sentenceIndices.map((sentenceIndex) => `문장 ${sentenceIndex + 1}`).join(", ")}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="rounded-2xl bg-slate-50 p-4 text-sm font-medium text-slate-500">
-                  분석 흐름이 아직 충분하지 않습니다. 훈련을 먼저 진행해도 됩니다.
-                </p>
-              )}
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                <MiniMetric label="어휘 포인트" value={`${analysis.vocabCount}개`} />
-                <MiniMetric label="어법 포인트" value={`${analysis.grammarCount}개`} />
-              </div>
-            </section>
-          </div>
+          <StudentAnalysisReader
+            title={title}
+            passage={passage}
+            sentences={sentences}
+            analysisData={analysisData}
+          />
         )}
 
         {activeTab === "activities" && (

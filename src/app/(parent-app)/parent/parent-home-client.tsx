@@ -14,19 +14,19 @@ import { cn, formatPercent, formatKoreanDate } from "@/lib/utils";
 import type { ParentDashboardData } from "@/actions/parent";
 
 function ChildSwitcher({
-  children,
+  items,
   selectedId,
   onSelect,
 }: {
-  children: { id: string; name: string }[];
+  items: { id: string; name: string }[];
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  if (children.length <= 1) return null;
+  if (items.length <= 1) return null;
 
   return (
     <div className="flex gap-2 px-1 py-1 bg-gray-100 rounded-xl" role="tablist" aria-label="자녀 선택">
-      {children.map((child) => (
+      {items.map((child) => (
         <button
           key={child.id}
           onClick={() => onSelect(child.id)}
@@ -133,7 +133,7 @@ export function ParentHomeClient({ data }: { data: ParentDashboardData }) {
     <div className="px-5 pt-6 pb-4 space-y-6">
       {/* Child Switcher */}
       <ChildSwitcher
-        children={data.children.map((c) => ({ id: c.id, name: c.name }))}
+        items={data.children.map((c) => ({ id: c.id, name: c.name }))}
         selectedId={selectedChildId}
         onSelect={setSelectedChildId}
       />

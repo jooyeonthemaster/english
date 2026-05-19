@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -13,9 +14,21 @@ import {
   BookMarked,
   Layers3,
   Loader2,
+  Trash2,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
 import { PassageStudyNotePrintDialog } from "@/components/workbench/passage-study-note-print-dialog";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
@@ -27,6 +40,7 @@ import {
   addPassagesToCollection,
   removePassagesFromCollection,
   findWorkbenchPassageDuplicates,
+  bulkDeleteWorkbenchPassages,
 } from "@/actions/workbench";
 
 // Shared modules
@@ -144,6 +158,7 @@ export function PassageListClient({
   sourceMaterialBadge = null,
   collectionBadge = null,
 }: PassageListProps) {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [importOpen, setImportOpen] = useState(false);
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
@@ -153,6 +168,13 @@ export function PassageListClient({
   const [dupLoading, setDupLoading] = useState(false);
   const [dupError, setDupError] = useState<string | null>(null);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+  // Optimistic local removal — router.refresh() updates server-side props
+  // eventually, but we hide deleted rows immediately so the user doesn't have
+  // to wait (and so the duplicates view, which has its own client-side cache,
+  // doesn't keep showing already-deleted items).
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
 
   const loadDuplicates = useCallback(async () => {
     setDupLoading(true);
@@ -177,15 +199,39 @@ export function PassageListClient({
     void loadDuplicates();
   }, [loadDuplicates]);
 
+  // Hide optimistically-removed items from the cached duplicates summary so
+  // the "중복 모아보기" view updates instantly after a delete. Groups that
+  // shrink below 2 members are no longer duplicates and drop off too.
+  const visibleDupSummary = useMemo<DupSummary | null>(() => {
+    if (!dupSummary) return null;
+    if (removedIds.size === 0) return dupSummary;
+    const groups = dupSummary.groups
+      .map((g) => ({
+        ...g,
+        items: g.items.filter((it) => !removedIds.has(it.id)),
+      }))
+      .filter((g) => g.items.length >= 2);
+    const totalDuplicateCount = groups.reduce(
+      (sum, g) => sum + (g.items.length - 1),
+      0,
+    );
+    return {
+      ...dupSummary,
+      groups,
+      groupCount: groups.length,
+      totalDuplicateCount,
+    };
+  }, [dupSummary, removedIds]);
+
   const dupCountById = useMemo(() => {
     const map = new Map<string, number>();
-    if (!dupSummary) return map;
-    for (const group of dupSummary.groups) {
+    if (!visibleDupSummary) return map;
+    for (const group of visibleDupSummary.groups) {
       const siblings = group.items.length - 1;
       for (const item of group.items) map.set(item.id, siblings);
     }
     return map;
-  }, [dupSummary]);
+  }, [visibleDupSummary]);
 
   // ─── Shared hooks ───
   const { updateFilter, goToPage } = useUrlFilters(
@@ -200,10 +246,13 @@ export function PassageListClient({
   });
   const { filterByActiveFolder } = folder;
 
-  // Filter passages by active folder
+  // Filter passages by active folder and hide optimistically-removed rows.
   const displayedPassages = useMemo(
-    () => filterByActiveFolder(passagesData.passages),
-    [filterByActiveFolder, passagesData.passages],
+    () =>
+      filterByActiveFolder(passagesData.passages).filter(
+        (p) => !removedIds.has(p.id),
+      ),
+    [filterByActiveFolder, passagesData.passages, removedIds],
   );
 
   const passageIds = useMemo(
@@ -317,19 +366,19 @@ export function PassageListClient({
             mode === "duplicates" ? "list" : "duplicates",
           )
         }
-        disabled={dupLoading || (dupSummary?.groupCount ?? 0) === 0}
+        disabled={dupLoading || (visibleDupSummary?.groupCount ?? 0) === 0}
         className={
           "flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11.5px] font-medium transition-all " +
           (pageMode === "duplicates"
             ? "border-blue-300 bg-blue-50 text-blue-700"
-            : (dupSummary?.groupCount ?? 0) === 0 && !dupLoading
+            : (visibleDupSummary?.groupCount ?? 0) === 0 && !dupLoading
               ? "cursor-not-allowed border-slate-200 text-slate-300"
               : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50")
         }
         title={
           dupLoading
             ? "중복 자료 분석 중"
-            : (dupSummary?.groupCount ?? 0) === 0
+            : (visibleDupSummary?.groupCount ?? 0) === 0
               ? "중복 자료가 없습니다"
               : pageMode === "duplicates"
                 ? "목록으로 돌아가기"
@@ -345,7 +394,7 @@ export function PassageListClient({
           <Copy className="h-3.5 w-3.5" />
         )}
         <span>{pageMode === "duplicates" ? "목록 보기" : "중복 모아보기"}</span>
-        {dupSummary && dupSummary.groupCount > 0 ? (
+        {visibleDupSummary && visibleDupSummary.groupCount > 0 ? (
           <span
             className={
               "rounded px-1 text-[10px] font-semibold tabular-nums " +
@@ -354,7 +403,7 @@ export function PassageListClient({
                 : "bg-slate-100 text-slate-500")
             }
           >
-            {dupSummary.groupCount}
+            {visibleDupSummary.groupCount}
           </span>
         ) : null}
       </button>
@@ -382,10 +431,63 @@ export function PassageListClient({
     </button>
   );
 
+  const handleBulkDelete = useCallback(async () => {
+    const ids = Array.from(selection.selectedIds);
+    if (ids.length === 0 || bulkDeleting) return;
+    setBulkDeleting(true);
+    try {
+      const result = await bulkDeleteWorkbenchPassages(ids);
+      if (!result.success) {
+        toast.error(result.error || "삭제에 실패했습니다.");
+        return;
+      }
+      if (result.deleted === result.requested) {
+        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
+      } else if (result.deleted === 0) {
+        toast.error("삭제된 지문이 없습니다.");
+      } else {
+        toast.warning(
+          `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+        );
+      }
+      // Mark as removed immediately so the grid and duplicates view update
+      // without waiting for router.refresh() to round-trip.
+      setRemovedIds((prev) => {
+        const next = new Set(prev);
+        for (const id of ids) next.add(id);
+        return next;
+      });
+      selection.clearSelection();
+      setBulkDeleteOpen(false);
+      router.refresh();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
+    } finally {
+      setBulkDeleting(false);
+    }
+  }, [selection, bulkDeleting, router]);
+
+  const bulkDeleteAction = (
+    <button
+      type="button"
+      onClick={() => setBulkDeleteOpen(true)}
+      disabled={selection.selectedIds.size === 0 || bulkDeleting}
+      className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {bulkDeleting ? (
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+      ) : (
+        <Trash2 className="w-3.5 h-3.5" />
+      )}
+      삭제
+    </button>
+  );
+
   const selectionActions = (
     <>
       {studyNoteAction}
       {addToFolderAction}
+      {bulkDeleteAction}
     </>
   );
 
@@ -475,10 +577,10 @@ export function PassageListClient({
                   <h3 className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-600">
                     <Layers3 className="h-3.5 w-3.5 text-slate-400" />
                     중복 그룹 모아보기
-                    {dupSummary ? (
+                    {visibleDupSummary ? (
                       <span className="ml-1.5 text-[11px] font-normal text-slate-400">
-                        그룹 {dupSummary.groupCount}개 · 중복 자료{" "}
-                        {dupSummary.totalDuplicateCount}개
+                        그룹 {visibleDupSummary.groupCount}개 · 중복 자료{" "}
+                        {visibleDupSummary.totalDuplicateCount}개
                       </span>
                     ) : null}
                   </h3>
@@ -509,19 +611,21 @@ export function PassageListClient({
                       다시 시도
                     </button>
                   </div>
-                ) : !dupSummary || dupSummary.groups.length === 0 ? (
+                ) : !visibleDupSummary ||
+                  visibleDupSummary.groups.length === 0 ? (
                   <div className="rounded-xl border bg-white py-16 text-center">
                     <CopyMinus className="mx-auto mb-3 h-10 w-10 text-slate-200" />
                     <p className="font-medium text-slate-500">
                       중복 자료가 없습니다
                     </p>
                     <p className="mt-1 text-sm text-slate-400">
-                      총 {dupSummary?.totalScanned ?? 0}개 지문을 검사했습니다.
+                      총 {visibleDupSummary?.totalScanned ?? 0}개 지문을
+                      검사했습니다.
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {dupSummary.groups.map((group, groupIndex) => (
+                    {visibleDupSummary.groups.map((group, groupIndex) => (
                       <section
                         key={group.key}
                         className="overflow-hidden rounded-xl border border-slate-200 bg-white"
@@ -655,6 +759,39 @@ export function PassageListClient({
         onOpenChange={setStudyNoteOpen}
         passages={selectedPassages}
       />
+
+      {/* ─── Bulk Delete Confirmation ─── */}
+      <AlertDialog
+        open={bulkDeleteOpen}
+        onOpenChange={(open) => {
+          if (!bulkDeleting) setBulkDeleteOpen(open);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              선택한 지문 {selection.selectedIds.size}개를 삭제하시겠습니까?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              이 작업은 되돌릴 수 없습니다. 지문에 연결된 분석/문제 데이터도
+              함께 삭제될 수 있습니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void handleBulkDelete();
+              }}
+              disabled={bulkDeleting}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {bulkDeleting ? "삭제 중..." : "삭제"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* ─── Analysis Modal ─── */}
       {modalPassage && (

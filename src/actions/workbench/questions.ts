@@ -401,6 +401,44 @@ export async function deleteWorkbenchQuestion(
   }
 }
 
+// Bulk delete: scoped to caller's academy so cross-tenant ids silently no-op
+// instead of erroring out the whole batch.
+export async function bulkDeleteWorkbenchQuestions(
+  questionIds: string[],
+): Promise<{
+  success: boolean;
+  requested: number;
+  deleted: number;
+  error?: string;
+}> {
+  try {
+    const staff = await requireAuth();
+    if (questionIds.length === 0) {
+      return { success: true, requested: 0, deleted: 0 };
+    }
+    const result = await prisma.question.deleteMany({
+      where: { id: { in: questionIds }, academyId: staff.academyId },
+    });
+    revalidatePath("/director/questions");
+    return {
+      success: true,
+      requested: questionIds.length,
+      deleted: result.count,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "문제 삭제 중 오류가 발생했습니다.";
+    return {
+      success: false,
+      requested: questionIds.length,
+      deleted: 0,
+      error: message,
+    };
+  }
+}
+
 export async function approveWorkbenchQuestion(
   questionId: string
 ): Promise<ActionResult> {
