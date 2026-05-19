@@ -54,19 +54,28 @@ export function getQuestionGenerationPlanTag(plan: QuestionGenerationPlan): stri
   return QUESTION_GENERATION_PLAN_TAGS[plan];
 }
 
+function normalizePlanTag(value: unknown): string {
+  return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
 export function getQuestionGenerationPlanFromTags(tags: readonly string[]): QuestionGenerationPlan | null {
-  if (tags.includes(QUESTION_GENERATION_PLAN_TAGS.PREMIUM)) return "PREMIUM";
-  if (tags.includes(QUESTION_GENERATION_PLAN_TAGS.STANDARD)) return "STANDARD";
+  const normalized = new Set(tags.map(normalizePlanTag));
+  if (normalized.has(QUESTION_GENERATION_PLAN_TAGS.PREMIUM)) return "PREMIUM";
+  if (normalized.has(QUESTION_GENERATION_PLAN_TAGS.STANDARD)) return "STANDARD";
   return null;
+}
+
+export function isQuestionGenerationPlanTag(tag: unknown): boolean {
+  const normalizedTag = normalizePlanTag(tag);
+  return Object.values(QUESTION_GENERATION_PLAN_TAGS).some((planTag) => planTag === normalizedTag);
 }
 
 export function mergeQuestionGenerationPlanTag(
   tags: readonly string[] | null | undefined,
   plan: QuestionGenerationPlan,
 ): string[] {
-  const generationTags = new Set(Object.values(QUESTION_GENERATION_PLAN_TAGS));
   const merged = (tags ?? [])
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0 && !generationTags.has(tag));
+    .map(normalizePlanTag)
+    .filter((tag) => tag.length > 0 && !isQuestionGenerationPlanTag(tag));
   return [getQuestionGenerationPlanTag(plan), ...merged];
 }

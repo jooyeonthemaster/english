@@ -61,6 +61,7 @@ export interface CreatePassageData {
   tags?: string[];
   source?: string;
   annotations?: PassageAnnotationInput[];
+  sourceDraftId?: string;
 }
 
 export interface SaveQuestionData {

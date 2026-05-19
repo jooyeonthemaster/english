@@ -210,6 +210,8 @@ export interface M1PassageDraftSnapshot {
   metadata: unknown;
   confirmedAt: string | Date | null;
   savedPassageId: string | null;
+  analysisStatus?: "not_analyzed" | "analyzed";
+  savedPassageAnalysisId?: string | null;
   createdAt: string | Date;
   updatedAt: string | Date;
   changes: M1PassageDraftChangeSnapshot[];

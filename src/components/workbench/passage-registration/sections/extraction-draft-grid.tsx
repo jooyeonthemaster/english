@@ -17,6 +17,8 @@ import {
   Copy,
   Check,
   X,
+  Crown,
+  Filter,
 } from "lucide-react";
 import {
   Select,
@@ -29,19 +31,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { DraftCollectionItem } from "../types";
 
 interface ExtractionDraftGridProps {
   selectedDraftId: string | null;
+  refreshToken?: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   collections: DraftCollectionItem[];
   membership: Record<string, string[]>;
-  onBulkAnalyze: (drafts: M1PassageDraftWithJob[]) => Promise<void>;
+  onBulkAnalyze: (
+    drafts: M1PassageDraftWithJob[],
+    generationPlan: QuestionGenerationPlan,
+  ) => Promise<void>;
   bulkAnalyzing: boolean;
 }
 
 type FetchState = "idle" | "loading" | "ready" | "error";
 type SortOrder = "newest" | "oldest" | "page_asc";
+type AnalysisFilter = "all" | "unanalyzed";
 
 const STATUS_LABEL: Record<string, { text: string; tone: string }> = {
   AI_RESTORED: { text: "AI 복원", tone: "text-emerald-600 bg-emerald-50" },
@@ -55,6 +63,41 @@ const STATUS_LABEL: Record<string, { text: string; tone: string }> = {
 function getStatusBadge(status: string | null | undefined) {
   if (!status) return STATUS_LABEL.NONE;
   return STATUS_LABEL[status] ?? STATUS_LABEL.NONE;
+}
+
+const ANALYSIS_STATUS_LABEL: Record<
+  NonNullable<M1PassageDraftWithJob["analysisStatus"]>,
+  { text: string; tone: string }
+> = {
+  not_analyzed: { text: "미분석", tone: "text-rose-700 bg-rose-50" },
+  analyzed: { text: "분석완료", tone: "text-emerald-700 bg-emerald-50" },
+};
+
+function getDraftAnalysisStatus(
+  draft: M1PassageDraftWithJob,
+): NonNullable<M1PassageDraftWithJob["analysisStatus"]> {
+  return draft.analysisStatus ?? "not_analyzed";
+}
+
+function isDraftUnanalyzed(draft: M1PassageDraftWithJob): boolean {
+  return getDraftAnalysisStatus(draft) !== "analyzed";
+}
+
+function getDuplicateCountForDrafts(
+  drafts: M1PassageDraftWithJob[],
+  keyById: Map<string, string>,
+): number {
+  const counts = new Map<string, number>();
+  for (const draft of drafts) {
+    const key = keyById.get(draft.id);
+    if (!key) continue;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  let total = 0;
+  for (const count of counts.values()) {
+    if (count > 1) total += count - 1;
+  }
+  return total;
 }
 
 function wordCount(text: string): number {
@@ -99,6 +142,7 @@ function getDraftCanonicalText(draft: M1PassageDraftWithJob): string {
 
 export function ExtractionDraftGrid({
   selectedDraftId,
+  refreshToken = 0,
   onSelectDraft,
   collections,
   membership,
@@ -110,6 +154,7 @@ export function ExtractionDraftGrid({
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [analysisFilter, setAnalysisFilter] = useState<AnalysisFilter>("all");
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<string>>(new Set());
@@ -147,6 +192,14 @@ export function ExtractionDraftGrid({
   useEffect(() => {
     void loadDrafts();
   }, []);
+
+  useEffect(() => {
+    if (refreshToken > 0) void loadDrafts();
+  }, [refreshToken]);
+
+  useEffect(() => {
+    setBulkSelectedIds(new Set());
+  }, [analysisFilter, activeFolder, search, hideDuplicates]);
 
   // Folder membership lookup — Set per collection for O(1) inclusion test
   const membershipSets = useMemo(() => {
@@ -191,9 +244,8 @@ export function ExtractionDraftGrid({
       ),
     [drafts],
   );
-  const totalDuplicateCount = dupInfo.totalDuplicateCount;
 
-  const filtered = useMemo(() => {
+  const scopedDrafts = useMemo(() => {
     let result = drafts;
 
     if (activeFolder) {
@@ -220,7 +272,29 @@ export function ExtractionDraftGrid({
       });
     }
 
-    const sorted = [...result];
+    return result;
+  }, [drafts, search, activeFolder, membershipSets]);
+
+  const scopedUnanalyzedCount = useMemo(
+    () => scopedDrafts.filter(isDraftUnanalyzed).length,
+    [scopedDrafts],
+  );
+
+  const analysisFilteredDrafts = useMemo(
+    () =>
+      analysisFilter === "unanalyzed"
+        ? scopedDrafts.filter(isDraftUnanalyzed)
+        : scopedDrafts,
+    [analysisFilter, scopedDrafts],
+  );
+
+  const currentDuplicateCount = useMemo(
+    () => getDuplicateCountForDrafts(analysisFilteredDrafts, dupInfo.keyById),
+    [analysisFilteredDrafts, dupInfo.keyById],
+  );
+
+  const filtered = useMemo(() => {
+    const sorted = [...analysisFilteredDrafts];
     if (sortOrder === "newest") {
       sorted.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
     } else if (sortOrder === "oldest") {
@@ -245,9 +319,13 @@ export function ExtractionDraftGrid({
     }
 
     return sorted;
-  }, [drafts, search, sortOrder, activeFolder, membershipSets, hideDuplicates, dupInfo]);
+  }, [analysisFilteredDrafts, sortOrder, hideDuplicates, dupInfo]);
 
-  const allFolderCount = drafts.length;
+  const hasActiveListFilter =
+    search.trim().length > 0 ||
+    activeFolder !== null ||
+    analysisFilter !== "all" ||
+    hideDuplicates;
   const activeFolderName =
     activeFolder !== null
       ? (collections.find((c) => c.id === activeFolder)?.name ?? "폴더")
@@ -278,10 +356,11 @@ export function ExtractionDraftGrid({
     }
   };
 
-  const handleBulk = async () => {
+  const handleBulk = async (generationPlan: QuestionGenerationPlan) => {
     if (bulkSelectedDrafts.length === 0 || bulkAnalyzing) return;
-    await onBulkAnalyze(bulkSelectedDrafts);
+    await onBulkAnalyze(bulkSelectedDrafts, generationPlan);
     clearBulkSelection();
+    await loadDrafts();
   };
 
   return (
@@ -324,17 +403,17 @@ export function ExtractionDraftGrid({
           <button
             type="button"
             onClick={() => setHideDuplicates((v) => !v)}
-            disabled={totalDuplicateCount === 0}
+            disabled={currentDuplicateCount === 0}
             className={
               "h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-[11px] font-medium transition-all border shrink-0 " +
               (hideDuplicates
                 ? "border-blue-300 bg-blue-50 text-blue-700"
-                : totalDuplicateCount === 0
+                : currentDuplicateCount === 0
                   ? "border-slate-200 text-slate-300 cursor-not-allowed"
                   : "border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300")
             }
             title={
-              totalDuplicateCount === 0
+              currentDuplicateCount === 0
                 ? "중복 자료가 없습니다"
                 : hideDuplicates
                   ? "중복 자료 숨김 해제"
@@ -356,7 +435,7 @@ export function ExtractionDraftGrid({
                   : "bg-slate-100 text-slate-500")
               }
             >
-              {totalDuplicateCount}
+              {currentDuplicateCount}
             </span>
           </button>
 
@@ -372,6 +451,56 @@ export function ExtractionDraftGrid({
             />
           </button>
 
+        </div>
+
+        <div className="flex items-center gap-1.5 overflow-x-auto -mx-1 px-1 pb-0.5">
+          <button
+            type="button"
+            onClick={() => setAnalysisFilter("all")}
+            aria-pressed={analysisFilter === "all"}
+            className={
+              "shrink-0 h-7 px-2.5 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5 transition-all border " +
+              (analysisFilter === "all"
+                ? "bg-slate-900 text-white border-slate-900"
+                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50")
+            }
+          >
+            <Filter className="w-3 h-3" />
+            전체
+            <span
+              className={
+                "tabular-nums text-[10px] px-1 rounded " +
+                (analysisFilter === "all"
+                  ? "bg-white/20 text-white"
+                  : "bg-slate-100 text-slate-500")
+              }
+            >
+              {scopedDrafts.length}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setAnalysisFilter("unanalyzed")}
+            aria-pressed={analysisFilter === "unanalyzed"}
+            className={
+              "shrink-0 h-7 px-2.5 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5 transition-all border " +
+              (analysisFilter === "unanalyzed"
+                ? "bg-rose-600 text-white border-rose-600"
+                : "bg-white text-slate-600 border-slate-200 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700")
+            }
+          >
+            미분석
+            <span
+              className={
+                "tabular-nums text-[10px] px-1 rounded " +
+                (analysisFilter === "unanalyzed"
+                  ? "bg-white/20 text-white"
+                  : "bg-rose-50 text-rose-600")
+              }
+            >
+              {scopedUnanalyzedCount}
+            </span>
+          </button>
         </div>
 
         {/* Row 2: breadcrumb (only when inside a folder) */}
@@ -411,33 +540,35 @@ export function ExtractionDraftGrid({
 
         {/* Row 2b: bulk-action bar — only when something is checked */}
         {bulkSelectedIds.size > 0 ? (
-          <div className="flex items-center gap-2 min-w-0 px-2 h-8 rounded-md bg-blue-50 border border-blue-200">
-            <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-            <span className="text-[11.5px] font-semibold text-blue-700 shrink-0">
-              {bulkSelectedIds.size}개 선택됨
-            </span>
-            <button
-              type="button"
-              onClick={handleSelectAllVisible}
-              className="text-[11px] font-medium text-blue-600 hover:text-blue-800 shrink-0"
-            >
-              {allVisibleSelected ? "현재 화면 해제" : "현재 화면 모두 선택"}
-            </button>
-            <div className="ml-auto flex items-center gap-1.5 shrink-0">
+          <div className="grid gap-2 min-w-0 px-2 py-2 rounded-md bg-blue-50 border border-blue-200">
+            <div className="flex items-center gap-2 min-w-0">
+              <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+              <span className="text-[11.5px] font-semibold text-blue-700 shrink-0">
+                {bulkSelectedIds.size}개 선택됨
+              </span>
+              <button
+                type="button"
+                onClick={handleSelectAllVisible}
+                className="text-[11px] font-medium text-blue-600 hover:text-blue-800 truncate"
+              >
+                {allVisibleSelected ? "현재 화면 해제" : "현재 화면 모두 선택"}
+              </button>
               <button
                 type="button"
                 onClick={clearBulkSelection}
-                className="h-7 px-2 text-[11px] font-medium rounded-md text-slate-500 hover:bg-white"
+                className="ml-auto h-7 px-2 text-[11px] font-medium rounded-md text-slate-500 hover:bg-white shrink-0"
               >
                 <X className="w-3 h-3 inline mr-0.5" />
                 해제
               </button>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5 min-w-0">
               <button
                 type="button"
-                onClick={() => void handleBulk()}
+                onClick={() => void handleBulk("STANDARD")}
                 disabled={bulkAnalyzing}
                 className={
-                  "h-7 px-2.5 text-[11.5px] font-bold rounded-md inline-flex items-center gap-1 transition-colors " +
+                  "h-8 min-w-0 px-2 text-[11.5px] font-bold rounded-md inline-flex items-center justify-center gap-1 transition-colors whitespace-nowrap " +
                   (bulkAnalyzing
                     ? "bg-slate-300 text-white cursor-not-allowed"
                     : "bg-blue-600 text-white hover:bg-blue-700")
@@ -451,7 +582,36 @@ export function ExtractionDraftGrid({
                 ) : (
                   <>
                     <Layers className="w-3 h-3" />
-                    {bulkSelectedIds.size}개 일괄 분석
+                    일반 {bulkSelectedIds.size}개
+                    <span className="text-[10px] font-semibold bg-white/20 px-1 py-0.5 rounded">
+                      5
+                    </span>
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleBulk("PREMIUM")}
+                disabled={bulkAnalyzing}
+                className={
+                  "h-8 min-w-0 px-2 text-[11.5px] font-bold rounded-md inline-flex items-center justify-center gap-1 transition-colors whitespace-nowrap " +
+                  (bulkAnalyzing
+                    ? "bg-slate-300 text-white cursor-not-allowed"
+                    : "bg-violet-600 text-white hover:bg-violet-700")
+                }
+              >
+                {bulkAnalyzing ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    등록 중...
+                  </>
+                ) : (
+                  <>
+                    <Crown className="w-3 h-3" />
+                    프리미엄 {bulkSelectedIds.size}개
+                    <span className="text-[10px] font-semibold bg-white/20 px-1 py-0.5 rounded">
+                      10
+                    </span>
                   </>
                 )}
               </button>
@@ -519,7 +679,7 @@ export function ExtractionDraftGrid({
           <div className="h-full flex flex-col items-center justify-center gap-1.5 text-center">
             <FileText className="w-5 h-5 text-slate-300" />
             <p className="text-[12px] text-slate-400">
-              {search.trim() || activeFolder
+              {hasActiveListFilter
                 ? "조건에 맞는 자료가 없습니다."
                 : "추출된 자료가 없습니다."}
             </p>
@@ -533,12 +693,14 @@ export function ExtractionDraftGrid({
                 현재 폴더: {activeFolderName}
               </p>
             ) : null}
-            {search.trim() || activeFolder ? (
+            {hasActiveListFilter ? (
               <button
                 type="button"
                 onClick={() => {
                   setSearch("");
                   setActiveFolder(null);
+                  setAnalysisFilter("all");
+                  setHideDuplicates(false);
                 }}
                 className="mt-1 h-7 px-2.5 rounded-md text-[11px] font-medium text-slate-500 border border-slate-200 hover:bg-slate-50"
               >
@@ -556,6 +718,8 @@ export function ExtractionDraftGrid({
               const text = getDraftCanonicalText(draft);
               const w = wordCount(text);
               const status = getStatusBadge(draft.restorationStatus);
+              const analysisStatus = getDraftAnalysisStatus(draft);
+              const analysisBadge = ANALYSIS_STATUS_LABEL[analysisStatus];
               const dupCount = dupInfo.countById.get(draft.id) ?? 0;
               const isBulkSelected = bulkSelectedIds.has(draft.id);
               const fileName =
@@ -569,6 +733,7 @@ export function ExtractionDraftGrid({
                 <div
                   key={draft.id}
                   role="button"
+                  aria-pressed={active}
                   tabIndex={0}
                   onClick={() => onSelectDraft(draft)}
                   onKeyDown={(e) => {
@@ -606,11 +771,16 @@ export function ExtractionDraftGrid({
                       <h4 className="text-[13px] font-semibold text-slate-800 truncate leading-tight">
                         {getDraftDisplayTitle(draft)}
                       </h4>
-                      <div className="flex items-center gap-1.5 mt-1">
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
                         <span
                           className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${status.tone}`}
                         >
                           {status.text}
+                        </span>
+                        <span
+                          className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${analysisBadge.tone}`}
+                        >
+                          {analysisBadge.text}
                         </span>
                         {w > 0 ? (
                           <span className="text-[10px] text-slate-400 tabular-nums">

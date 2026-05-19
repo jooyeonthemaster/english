@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/extraction/api-utils";
 import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
+import { normalizeForDup } from "@/lib/duplicate-detection";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -54,6 +55,131 @@ function encodeListCursor(draft: {
     } satisfies ListCursor),
     "utf8",
   ).toString("base64url");
+}
+
+type DraftForAnalysisStatus = {
+  id: string;
+  savedPassageId: string | null;
+  rawText: string;
+  restoredText?: string | null;
+  teacherText: string;
+};
+type SavedPassageAnalysis = {
+  id: string;
+  createdAt: Date;
+  analysis: { id: string } | null;
+};
+
+function getDraftAnalysisKey(draft: DraftForAnalysisStatus): string {
+  return normalizeForDup(
+    draft.teacherText?.trim() ||
+      draft.restoredText?.trim() ||
+      draft.rawText?.trim() ||
+      "",
+  );
+}
+
+function preferPassageMatch(
+  current: SavedPassageAnalysis | undefined,
+  next: SavedPassageAnalysis,
+): SavedPassageAnalysis {
+  if (!current) return next;
+  if (!current.analysis && next.analysis) return next;
+  if (!!current.analysis === !!next.analysis && next.createdAt > current.createdAt) {
+    return next;
+  }
+  return current;
+}
+
+async function getSavedPassageAnalysisByDraftId(
+  academyId: string,
+  drafts: DraftForAnalysisStatus[],
+): Promise<Map<string, SavedPassageAnalysis>> {
+  const savedPassageIds = Array.from(
+    new Set(drafts.map((d) => d.savedPassageId).filter(Boolean)),
+  ) as string[];
+  const matchByDraftId = new Map<string, SavedPassageAnalysis>();
+
+  if (savedPassageIds.length > 0) {
+    const linkedPassages = await prisma.passage.findMany({
+      where: {
+        academyId,
+        id: { in: savedPassageIds },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        analysis: { select: { id: true } },
+      },
+    });
+    const linkedById = new Map(linkedPassages.map((p) => [p.id, p]));
+    for (const draft of drafts) {
+      if (!draft.savedPassageId) continue;
+      const linked = linkedById.get(draft.savedPassageId);
+      if (linked) matchByDraftId.set(draft.id, linked);
+    }
+  }
+
+  const draftKeys = new Map<string, string>();
+  const keysToMatch = new Set<string>();
+  for (const draft of drafts) {
+    const key = getDraftAnalysisKey(draft);
+    if (!key) continue;
+    draftKeys.set(draft.id, key);
+    keysToMatch.add(key);
+  }
+
+  if (keysToMatch.size === 0) {
+    return matchByDraftId;
+  }
+
+  const passageCandidates = await prisma.passage.findMany({
+    where: { academyId },
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      analysis: { select: { id: true } },
+    },
+  });
+
+  const bestPassageByContentKey = new Map<string, SavedPassageAnalysis>();
+  for (const passage of passageCandidates) {
+    const key = normalizeForDup(passage.content);
+    if (!keysToMatch.has(key)) continue;
+    bestPassageByContentKey.set(
+      key,
+      preferPassageMatch(bestPassageByContentKey.get(key), passage),
+    );
+  }
+
+  for (const draft of drafts) {
+    const key = draftKeys.get(draft.id);
+    if (!key) continue;
+    const contentMatch = bestPassageByContentKey.get(key);
+    if (!contentMatch) continue;
+    matchByDraftId.set(
+      draft.id,
+      preferPassageMatch(matchByDraftId.get(draft.id), contentMatch),
+    );
+  }
+
+  return matchByDraftId;
+}
+
+function withDraftAnalysisStatus<T extends DraftForAnalysisStatus>(
+  draft: T,
+  savedPassageAnalysisByDraftId: Map<string, SavedPassageAnalysis>,
+) {
+  const savedPassage = savedPassageAnalysisByDraftId.get(draft.id) ?? null;
+  const analysisStatus = savedPassage?.analysis ? "analyzed" : "not_analyzed";
+
+  return {
+    ...draft,
+    savedPassageId: draft.savedPassageId ?? savedPassage?.id ?? null,
+    analysisStatus,
+    savedPassageAnalysisId: savedPassage?.analysis?.id ?? null,
+  };
 }
 
 export async function GET(req: NextRequest) {
@@ -186,8 +312,13 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    const savedPassageAnalysisByDraftId = await getSavedPassageAnalysisByDraftId(
+      staff.academyId,
+      visibleDrafts,
+    );
+
     const enriched = visibleDrafts.map((d) => ({
-      ...d,
+      ...withDraftAnalysisStatus(d, savedPassageAnalysisByDraftId),
       restoredText: "",
       sourceMatches: [],
       job: d.job
@@ -288,8 +419,13 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  const savedPassageAnalysisByDraftId = await getSavedPassageAnalysisByDraftId(
+    staff.academyId,
+    visibleDrafts,
+  );
+
   const enriched = visibleDrafts.map((d) => ({
-    ...d,
+    ...withDraftAnalysisStatus(d, savedPassageAnalysisByDraftId),
     job: d.job
       ? {
           ...d.job,

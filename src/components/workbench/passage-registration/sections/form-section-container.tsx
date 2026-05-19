@@ -70,8 +70,6 @@ interface FormSectionContainerProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
-  analysisGenerationPlan: QuestionGenerationPlan;
-  setAnalysisGenerationPlan: (v: QuestionGenerationPlan) => void;
   savedPrompts: SavedPrompt[];
   setSavedPrompts: Dispatch<SetStateAction<SavedPrompt[]>>;
   showSavedPrompts: boolean;
@@ -86,10 +84,15 @@ interface FormSectionContainerProps {
 
   // Draft selection (left grid)
   selectedDraftId: string | null;
+  draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
+  onSelectedDraftSaved: () => void;
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
-  onBulkAnalyze: (drafts: M1PassageDraftWithJob[]) => Promise<void>;
+  onBulkAnalyze: (
+    drafts: M1PassageDraftWithJob[],
+    generationPlan: QuestionGenerationPlan,
+  ) => Promise<void>;
   bulkAnalyzing: boolean;
 }
 
@@ -103,9 +106,9 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       hasContent={p.hasContent}
       wordCount={p.wordCount}
       saving={p.saving}
-      onSave={(runAnalysis) =>
+      onSave={(analysisGenerationPlan) =>
         handleSaveFn({
-          runAnalysis,
+          runAnalysis: true,
           content: p.content,
           imageFile: p.imageFile,
           title: p.title,
@@ -118,10 +121,14 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
           source: p.source,
           tags: p.tags,
           analysisPrompt: p.analysisPrompt,
-          analysisGenerationPlan: p.analysisGenerationPlan,
+          analysisGenerationPlan,
+          sourceDraftId: p.selectedDraftId,
           schools: p.schools,
           setSaving: p.setSaving,
           addToQueue: p.addToQueue,
+          onSaved: () => {
+            if (p.selectedDraftId) p.onSelectedDraftSaved();
+          },
           resetForm: () =>
             resetFormFn({
               setTitle: p.setTitle,
@@ -149,6 +156,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       onRemoveImage={() => removeImageFn(imageSetters)}
       onPaste={(e) => onPasteFn(e, imageSetters)}
       onDrop={(e) => onDropFn(e, imageSetters)}
+      draftRefreshToken={p.draftRefreshToken}
       schools={p.schools}
       schoolId={p.schoolId}
       setSchoolId={p.setSchoolId}
@@ -171,8 +179,6 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       removeTag={p.removeTag}
       analysisPrompt={p.analysisPrompt}
       setAnalysisPrompt={p.setAnalysisPrompt}
-      analysisGenerationPlan={p.analysisGenerationPlan}
-      setAnalysisGenerationPlan={p.setAnalysisGenerationPlan}
       savedPrompts={p.savedPrompts}
       showSavedPrompts={p.showSavedPrompts}
       setShowSavedPrompts={p.setShowSavedPrompts}

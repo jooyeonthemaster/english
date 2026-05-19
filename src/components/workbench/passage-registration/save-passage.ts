@@ -59,6 +59,7 @@ interface HandleSaveArgs {
   tags: string[];
   analysisPrompt: string;
   analysisGenerationPlan: QuestionGenerationPlan;
+  sourceDraftId?: string | null;
 
   // External
   schools: Array<{ id: string; name: string; type: string; publisher: string | null }>;
@@ -83,6 +84,7 @@ interface HandleSaveArgs {
     runAnalysis: boolean
   ) => void;
   resetForm: () => void;
+  onSaved?: () => void;
 }
 
 export async function handleSave({
@@ -100,10 +102,12 @@ export async function handleSave({
   tags,
   analysisPrompt,
   analysisGenerationPlan,
+  sourceDraftId,
   schools,
   setSaving,
   addToQueue,
   resetForm: resetFormFn,
+  onSaved,
 }: HandleSaveArgs) {
   if (!content.trim() && !imageFile) {
     toast.error("지문 내용을 입력하거나 이미지를 업로드해주세요.");
@@ -136,6 +140,7 @@ export async function handleSave({
       publisher: effectivePublisher || undefined,
       source: source.trim() || undefined,
       tags: tags.length > 0 ? tags : undefined,
+      sourceDraftId: sourceDraftId ?? undefined,
       // Persist teacher markings alongside the passage so they survive
       // reloads, flow into future re-analyses, and can be injected into
       // question generation prompts.
@@ -188,6 +193,7 @@ export async function handleSave({
 
       // Reset form for next entry
       resetFormFn();
+      onSaved?.();
 
       // Form stays open for continuous entry — no auto-collapse
     } else {

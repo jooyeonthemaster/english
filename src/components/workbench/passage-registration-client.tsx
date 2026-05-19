@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
 import { createWorkbenchPassage } from "@/actions/workbench";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
@@ -70,8 +71,6 @@ export function PassageRegistrationClient({
     setTags,
     analysisPrompt,
     setAnalysisPrompt,
-    analysisGenerationPlan,
-    setAnalysisGenerationPlan,
     savedPrompts,
     setSavedPrompts,
     showSavedPrompts,
@@ -128,7 +127,19 @@ export function PassageRegistrationClient({
 
   // ─── Selected extraction draft (left grid → editor) ───
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const [draftRefreshToken, setDraftRefreshToken] = useState(0);
   const handleSelectDraft = useCallback((draft: M1PassageDraftWithJob) => {
+    if (selectedDraftId === draft.id) {
+      setSelectedDraftId(null);
+      setTitle("");
+      setContent("");
+      setAnnotations([]);
+      setImageFile(null);
+      setImagePreview(null);
+      setSource("");
+      return;
+    }
+
     const text =
       draft.teacherText?.trim() ||
       draft.restoredText?.trim() ||
@@ -146,7 +157,18 @@ export function PassageRegistrationClient({
       draft.job?.originalFileName?.trim() ||
       "";
     if (fileName) setSource(fileName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    selectedDraftId,
+    setAnnotations,
+    setContent,
+    setImageFile,
+    setImagePreview,
+    setSource,
+    setTitle,
+  ]);
+  const handleSelectedDraftSaved = useCallback(() => {
+    setSelectedDraftId(null);
+    setDraftRefreshToken((v) => v + 1);
   }, []);
 
   // ─── Collections (folders) ─── grouped useStates + effects in one custom hook to preserve the original contiguous hook order.
@@ -305,7 +327,10 @@ export function PassageRegistrationClient({
   // a time. The analysis step itself is still throttled to 3-at-a-time by
   // usePassageQueue's processPending.
   const handleBulkAnalyzeDrafts = useCallback(
-    async (drafts: M1PassageDraftWithJob[]) => {
+    async (
+      drafts: M1PassageDraftWithJob[],
+      generationPlan: QuestionGenerationPlan,
+    ) => {
       if (drafts.length === 0 || bulkAnalyzing) return;
       setBulkAnalyzing(true);
 
@@ -343,6 +368,7 @@ export function PassageRegistrationClient({
             publisher: effectivePublisher || undefined,
             source: fileName || undefined,
             tags: sharedTags,
+            sourceDraftId: draft.id,
           });
 
           if (!result.success || !result.id) {
@@ -367,7 +393,7 @@ export function PassageRegistrationClient({
               customPrompt: combinedPrompt,
               focusAreas: [],
               targetLevel: "",
-              generationPlan: analysisGenerationPlan,
+              generationPlan,
             },
             true,
           );
@@ -399,7 +425,6 @@ export function PassageRegistrationClient({
       effectivePublisher,
       tags,
       analysisPrompt,
-      analysisGenerationPlan,
       addToQueue,
     ],
   );
@@ -463,8 +488,6 @@ export function PassageRegistrationClient({
             removeTag={removeTag}
             analysisPrompt={analysisPrompt}
             setAnalysisPrompt={setAnalysisPrompt}
-            analysisGenerationPlan={analysisGenerationPlan}
-            setAnalysisGenerationPlan={setAnalysisGenerationPlan}
             savedPrompts={savedPrompts}
             setSavedPrompts={setSavedPrompts}
             showSavedPrompts={showSavedPrompts}
@@ -475,7 +498,9 @@ export function PassageRegistrationClient({
             setSavingPrompt={setSavingPrompt}
             addToQueue={addToQueue}
             selectedDraftId={selectedDraftId}
+            draftRefreshToken={draftRefreshToken}
             onSelectDraft={handleSelectDraft}
+            onSelectedDraftSaved={handleSelectedDraftSaved}
             draftCollections={draftCollections ?? []}
             draftMembership={draftMembership ?? {}}
             onBulkAnalyze={handleBulkAnalyzeDrafts}

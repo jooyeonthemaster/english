@@ -196,23 +196,49 @@ export async function createWorkbenchPassage(
       order: index,
     }));
 
-    const passage = await prisma.passage.create({
-      data: {
-        academyId,
-        schoolId,
-        title: data.title,
-        content: data.content,
-        source: data.source || null,
-        grade: data.grade || null,
-        semester: data.semester || null,
-        unit: data.unit || null,
-        publisher: data.publisher || null,
-        difficulty: data.difficulty || null,
-        tags: data.tags ? JSON.stringify(data.tags) : null,
-        ...(annotationRows.length > 0
-          ? { notes: { create: annotationRows } }
-          : {}),
-      },
+    const passage = await prisma.$transaction(async (tx) => {
+      const created = await tx.passage.create({
+        data: {
+          academyId,
+          schoolId,
+          title: data.title,
+          content: data.content,
+          source: data.source || null,
+          grade: data.grade || null,
+          semester: data.semester || null,
+          unit: data.unit || null,
+          publisher: data.publisher || null,
+          difficulty: data.difficulty || null,
+          tags: data.tags ? JSON.stringify(data.tags) : null,
+          ...(annotationRows.length > 0
+            ? { notes: { create: annotationRows } }
+            : {}),
+        },
+      });
+
+      if (data.sourceDraftId) {
+        const sourceDraft = await tx.extractionM1PassageDraft.findFirst({
+          where: {
+            id: data.sourceDraftId,
+            deletedAt: null,
+            job: { academyId, deletedAt: null },
+          },
+          select: { id: true },
+        });
+
+        if (sourceDraft) {
+          await tx.extractionM1PassageDraft.update({
+            where: { id: sourceDraft.id },
+            data: {
+              savedPassageId: created.id,
+              reviewStatus: "COMMITTED",
+              confirmedAt: new Date(),
+            },
+          });
+        }
+      }
+
+      return created;
     });
 
     revalidatePath("/director/workbench/passages");

@@ -2,9 +2,9 @@
 
 import type { RefObject } from "react";
 import {
-  Save,
   Loader2,
   Wand2,
+  Crown,
   Check,
   ChevronDown,
   ChevronUp,
@@ -29,7 +29,7 @@ interface FormSectionProps {
   hasContent: boolean;
   wordCount: number;
   saving: boolean;
-  onSave: (runAnalysis: boolean) => void;
+  onSave: (analysisGenerationPlan: QuestionGenerationPlan) => void;
 
   // Editor
   title: string;
@@ -48,10 +48,14 @@ interface FormSectionProps {
 
   // Draft selection (left grid)
   selectedDraftId: string | null;
+  draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
-  onBulkAnalyze: (drafts: M1PassageDraftWithJob[]) => Promise<void>;
+  onBulkAnalyze: (
+    drafts: M1PassageDraftWithJob[],
+    generationPlan: QuestionGenerationPlan,
+  ) => Promise<void>;
   bulkAnalyzing: boolean;
 
   // Metadata
@@ -79,8 +83,6 @@ interface FormSectionProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
-  analysisGenerationPlan: QuestionGenerationPlan;
-  setAnalysisGenerationPlan: (v: QuestionGenerationPlan) => void;
   savedPrompts: SavedPrompt[];
   showSavedPrompts: boolean;
   setShowSavedPrompts: (v: boolean | ((prev: boolean) => boolean)) => void;
@@ -142,10 +144,11 @@ export function FormSection(props: FormSectionProps) {
       {!formCollapsed ? (
         <div className="px-6 pb-5">
           {/* ─── 2-Pane Layout: Extraction Grid | Editor + Compact Bottom ─── */}
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(300px,0.75fr)_minmax(720px,1.75fr)] gap-4 h-[700px]">
+          <div className="grid grid-cols-1 xl:grid-cols-[minmax(360px,0.9fr)_minmax(620px,1.6fr)] gap-4 h-[700px]">
             {/* LEFT: Extraction draft grid */}
             <ExtractionDraftGrid
               selectedDraftId={props.selectedDraftId}
+              refreshToken={props.draftRefreshToken}
               onSelectDraft={props.onSelectDraft}
               collections={props.draftCollections}
               membership={props.draftMembership}
@@ -263,8 +266,6 @@ export function FormSection(props: FormSectionProps) {
                 removeTag={props.removeTag}
                 analysisPrompt={props.analysisPrompt}
                 setAnalysisPrompt={props.setAnalysisPrompt}
-                analysisGenerationPlan={props.analysisGenerationPlan}
-                setAnalysisGenerationPlan={props.setAnalysisGenerationPlan}
                 savedPrompts={props.savedPrompts}
                 showSavedPrompts={props.showSavedPrompts}
                 setShowSavedPrompts={props.setShowSavedPrompts}
@@ -294,30 +295,33 @@ export function FormSection(props: FormSectionProps) {
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
-                onClick={() => onSave(false)}
+                onClick={() => onSave("STANDARD")}
                 disabled={saving || !hasContent}
-                className="h-9"
-              >
-                {saving ? (
-                  <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4 mr-1.5" />
-                )}
-                저장만 하기
-              </Button>
-              <Button
-                className="bg-blue-600 hover:bg-blue-700 h-9"
-                onClick={() => onSave(true)}
-                disabled={saving || !hasContent}
+                className="h-9 border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
               >
                 {saving ? (
                   <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
                 ) : (
                   <Wand2 className="w-4 h-4 mr-1.5" />
                 )}
-                등록 + AI 분석 실행
-                <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">
+                일반 분석 등록
+                <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-semibold bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
                   5 크레딧
+                </span>
+              </Button>
+              <Button
+                className="bg-violet-600 hover:bg-violet-700 h-9"
+                onClick={() => onSave("PREMIUM")}
+                disabled={saving || !hasContent}
+              >
+                {saving ? (
+                  <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
+                ) : (
+                  <Crown className="w-4 h-4 mr-1.5" />
+                )}
+                프리미엄 분석 등록
+                <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">
+                  10 크레딧
                 </span>
               </Button>
             </div>

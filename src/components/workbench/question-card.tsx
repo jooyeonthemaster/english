@@ -10,8 +10,10 @@ import {
   Trash2,
   Eye,
   FileText,
+  Gem,
   Pencil,
   Layers,
+  Sparkles,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +29,12 @@ import {
 import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
+import {
+  getQuestionGenerationPlanFromTags,
+  isQuestionGenerationPlanTag,
+  QUESTION_GENERATION_PLAN_TAGS,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -112,6 +120,12 @@ function parseJSON<T>(str: unknown, fallback: T): T {
 }
 
 // Detect what marking pattern the passage uses: (a)(b)(c), (A)(B)(C), ①②③, or none
+function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
+  if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
+  const plan = (value as { _generationPlan?: unknown })._generationPlan;
+  return plan === "PREMIUM" || plan === "STANDARD" ? plan : null;
+}
+
 function detectPassageMarking(passageContent?: string): "lowercase" | "uppercase" | "circled" | "none" {
   if (!passageContent) return "none";
   if (/\(a\)/.test(passageContent)) return "lowercase";
@@ -262,6 +276,9 @@ export function QuestionCard({
   const needsUnderline = UNDERLINE_TYPES.includes(sub);
   const showMarkers = UNDERLINE_TYPES.includes(sub) || MARKER_ONLY_TYPES.includes(sub);
   const tags: string[] = Array.isArray(q.tags) ? q.tags : parseJSON<string[]>(q.tags, []);
+  const generationPlan =
+    getQuestionGenerationPlanFromTags(tags) ?? readGenerationPlanFromStructuredData(q.structuredData);
+  const visibleTags = tags.filter((tag) => !isQuestionGenerationPlanTag(tag));
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
 
@@ -293,12 +310,25 @@ export function QuestionCard({
               <Badge variant="outline" className="text-[10px]">{TYPE_LABELS[q.type] || q.type}</Badge>
               {q.subType && <span className="text-[10px] text-slate-500">{SUBTYPE_LABELS[q.subType] || q.subType}</span>}
               {diffConfig && <Badge variant="outline" className={`text-[10px] ${diffConfig.className}`}>{diffConfig.label}</Badge>}
+              {generationPlan && (
+                <Badge
+                  variant="outline"
+                  className={`gap-1 text-[10px] font-bold ${
+                    generationPlan === "PREMIUM"
+                      ? "bg-violet-50 text-violet-700 border-violet-200"
+                      : "bg-sky-50 text-sky-700 border-sky-200"
+                  }`}
+                >
+                  {generationPlan === "PREMIUM" ? <Gem className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+                  {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+                </Badge>
+              )}
               {q.aiGenerated && <Layers className="w-3 h-3 text-blue-400" />}
               {q.approved ? <CheckCircle2 className="w-3 h-3 text-emerald-500" /> : <Clock className="w-3 h-3 text-slate-300" />}
             </div>
-            {tags.length > 0 && (
+            {visibleTags.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
-                {tags.map((tag, tagIndex) => (
+                {visibleTags.map((tag, tagIndex) => (
                   <span key={`${tag}-${tagIndex}`} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">{tag}</span>
                 ))}
               </div>

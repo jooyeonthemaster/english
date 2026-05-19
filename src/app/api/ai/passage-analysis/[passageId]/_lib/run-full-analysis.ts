@@ -36,7 +36,12 @@ export async function runFullAnalysis(
   const analysisResult = await generateQuestionText({
     generationPlan,
     logPrefix: "ANALYSIS",
+    maxRetries: 0,
     maxTokens: 20000,
+    omitMaxTokens: generationPlan === "STANDARD",
+    responseFormat: generationPlan === "STANDARD" ? "json_object" : undefined,
+    thinkingBudget: generationPlan === "STANDARD" ? 500 : undefined,
+    timeoutMs: 110_000,
     temperature: 0.1,
     prompt,
   });
