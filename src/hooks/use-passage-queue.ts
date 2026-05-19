@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import type { PassageAnalysisData } from "@/types/passage-analysis";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import type { PassageAnalysisData } from "@/types/passage-analysis";
 
-// ─── Types ───────────────────────────────────────────────
 export interface AnalysisPromptConfig {
   customPrompt: string;
   focusAreas: string[];
@@ -16,8 +16,8 @@ export interface AnalysisPromptConfig {
 }
 
 export type QueuedPassageStatus =
-  | "not_analyzed" // server-loaded passage with no PassageAnalysis row yet
-  | "pending" // queued for analysis, will auto-start when a slot opens
+  | "not_analyzed"
+  | "pending"
   | "analyzing"
   | "done"
   | "error";
@@ -38,7 +38,6 @@ export interface QueuedPassage {
   unit?: string;
   publisher?: string;
   tags?: string[];
-  // Full passage data for modal
   passageData: {
     id: string;
     title: string;
@@ -87,141 +86,167 @@ export interface QueuedPassage {
   };
 }
 
-const MAX_CONCURRENT_ANALYSIS = 3;
+interface AiJobRow {
+  id: string;
+  status: string;
+  title: string;
+  errorMessage: string | null;
+  config: unknown;
+  createdAt: string;
+  passage: QueuedPassage["passageData"] | null;
+}
 
-// ─── Hook ────────────────────────────────────────────────
+function wordCount(content: string) {
+  return content.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function parseAnalysis(raw: string | null | undefined): PassageAnalysisData | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as PassageAnalysisData;
+  } catch {
+    return null;
+  }
+}
+
+function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
+  if (!config || typeof config !== "object" || Array.isArray(config)) {
+    return { customPrompt: "", focusAreas: [], targetLevel: "" };
+  }
+  const raw = config as Record<string, unknown>;
+  return {
+    customPrompt: typeof raw.customPrompt === "string" ? raw.customPrompt : "",
+    focusAreas: Array.isArray(raw.focusAreas)
+      ? raw.focusAreas.filter((v): v is string => typeof v === "string")
+      : [],
+    targetLevel: typeof raw.targetLevel === "string" ? raw.targetLevel : "",
+    generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
+  };
+}
+
+function statusFromJob(job: AiJobRow): QueuedPassageStatus {
+  if (job.status === "PENDING") return "pending";
+  if (job.status === "PROCESSING") return "analyzing";
+  if (job.status === "COMPLETED" || job.status === "PARTIAL") return "done";
+  return "error";
+}
+
+function queueItemFromJob(job: AiJobRow): QueuedPassage | null {
+  const passage = job.passage;
+  if (!passage) return null;
+  const analysisData = parseAnalysis(passage.analysis?.analysisData);
+  return {
+    id: passage.id,
+    title: passage.title || job.title,
+    contentPreview:
+      passage.content.length > 120
+        ? passage.content.slice(0, 120) + "..."
+        : passage.content,
+    wordCount: wordCount(passage.content),
+    status: statusFromJob(job),
+    analysisData,
+    error: job.errorMessage,
+    promptConfig: promptConfigFromJobConfig(job.config),
+    createdAt: new Date(job.createdAt),
+    schoolName: passage.school?.name,
+    grade: passage.grade ?? undefined,
+    semester: passage.semester ?? undefined,
+    unit: passage.unit ?? undefined,
+    publisher: passage.publisher ?? undefined,
+    tags: typeof passage.tags === "string" ? safeParseTags(passage.tags) : undefined,
+    passageData: {
+      ...passage,
+      createdAt: new Date(passage.createdAt),
+      analysis: passage.analysis
+        ? { ...passage.analysis, updatedAt: new Date(passage.analysis.updatedAt) }
+        : null,
+      questions: passage.questions.map((q) => ({
+        ...q,
+        createdAt: new Date(q.createdAt),
+      })),
+    },
+  };
+}
+
+function safeParseTags(raw: string): string[] | undefined {
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+async function startPassageAnalysisJob(
+  passageId: string,
+  promptConfig: AnalysisPromptConfig,
+) {
+  const res = await fetch("/api/workbench/ai-jobs/passage-analysis", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      passageId,
+      customPrompt: promptConfig.customPrompt,
+      focusAreas: promptConfig.focusAreas,
+      targetLevel: promptConfig.targetLevel,
+      generationPlan: promptConfig.generationPlan,
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as { error?: string };
+  if (!res.ok || data.error) {
+    throw new Error(data.error || "Failed to start passage analysis job.");
+  }
+}
+
 export function usePassageQueue(initialItems?: QueuedPassage[]) {
-  const [queue, setQueue] = useState<QueuedPassage[]>(initialItems || []);
-  const abortControllers = useRef<Map<string, AbortController>>(new Map());
-  const analysisInProgress = useRef<Set<string>>(new Set());
+  const [localQueue, setLocalQueue] = useState<QueuedPassage[]>(() => initialItems || []);
+  const [jobQueue, setJobQueue] = useState<QueuedPassage[]>([]);
 
-  // Count active analysis
-  const activeCount = queue.filter((p) => p.status === "analyzing").length;
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch(
+          "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100",
+          { credentials: "include", cache: "no-store" },
+        );
+        if (!res.ok) return;
+        const data = (await res.json()) as { jobs?: AiJobRow[] };
+        if (cancelled) return;
+        setJobQueue((data.jobs ?? []).map(queueItemFromJob).filter(Boolean) as QueuedPassage[]);
+      } catch {
+        // Best-effort polling; the local queue remains visible on transient errors.
+      }
+    };
 
-  // Process pending items when slots open
-  const processPending = useCallback(() => {
-    setQueue((prev) => {
-      const active = prev.filter((p) => p.status === "analyzing").length;
-      if (active >= MAX_CONCURRENT_ANALYSIS) return prev;
-
-      const slotsAvailable = MAX_CONCURRENT_ANALYSIS - active;
-      const pending = prev.filter(
-        (p) => p.status === "pending" && !analysisInProgress.current.has(p.id)
-      );
-
-      if (pending.length === 0) return prev;
-
-      const toStart = pending.slice(0, slotsAvailable);
-      const toStartIds = new Set(toStart.map((p) => p.id));
-
-      // Mark as analyzing
-      const updated = prev.map((p) =>
-        toStartIds.has(p.id) ? { ...p, status: "analyzing" as const } : p
-      );
-
-      // Fire off analysis for each
-      toStart.forEach((p) => {
-        analysisInProgress.current.add(p.id);
-        runAnalysis(p.id, p.promptConfig);
-      });
-
-      return updated;
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    void load();
+    const timer = window.setInterval(load, 5_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
   }, []);
 
-  // Run analysis for a single passage (fire-and-forget)
-  const runAnalysis = useCallback(
-    async (passageId: string, config: AnalysisPromptConfig) => {
-      const controller = new AbortController();
-      abortControllers.current.set(passageId, controller);
+  const queue = useMemo(() => {
+    const seen = new Set<string>();
+    const merged: QueuedPassage[] = [];
+    for (const item of [...jobQueue, ...localQueue]) {
+      if (seen.has(item.id)) continue;
+      seen.add(item.id);
+      merged.push(item);
+    }
+    return merged;
+  }, [jobQueue, localQueue]);
 
-      try {
-        const generationPlan = normalizeQuestionGenerationPlan(config.generationPlan);
-        const hasConfig =
-          config.customPrompt || config.focusAreas.length > 0 || config.targetLevel;
+  const activeCount = queue.filter(
+    (p) => p.status === "analyzing" || p.status === "pending",
+  ).length;
 
-        const url = `/api/ai/passage-analysis/${passageId}`;
-        let res: Response;
-
-        if (hasConfig) {
-          res = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              customPrompt: config.customPrompt,
-              focusAreas: config.focusAreas,
-              targetLevel: config.targetLevel,
-              generationPlan,
-            }),
-            signal: controller.signal,
-          });
-        } else {
-          res = await fetch(`${url}?generationPlan=${generationPlan}`, { signal: controller.signal });
-        }
-
-        const json = await res.json();
-
-        if (json.error) {
-          setQueue((prev) =>
-            prev.map((p) =>
-              p.id === passageId
-                ? { ...p, status: "error" as const, error: json.error }
-                : p
-            )
-          );
-        } else {
-          setQueue((prev) =>
-            prev.map((p) =>
-              p.id === passageId
-                ? {
-                    ...p,
-                    status: "done" as const,
-                    analysisData: json.data,
-                    passageData: {
-                      ...p.passageData,
-                      analysis: {
-                        id: passageId,
-                        analysisData: JSON.stringify(json.data),
-                        contentHash: "",
-                        updatedAt: new Date(),
-                      },
-                    },
-                  }
-                : p
-            )
-          );
-        }
-      } catch (err) {
-        if ((err as Error).name === "AbortError") return;
-        setQueue((prev) =>
-          prev.map((p) =>
-            p.id === passageId
-              ? {
-                  ...p,
-                  status: "error" as const,
-                  error: err instanceof Error ? err.message : "분석 중 오류가 발생했습니다.",
-                }
-              : p
-          )
-        );
-      } finally {
-        abortControllers.current.delete(passageId);
-        analysisInProgress.current.delete(passageId);
-      }
-    },
-    []
-  );
-
-  // Process pending whenever queue changes
-  useEffect(() => {
-    const timer = setTimeout(processPending, 100);
-    return () => clearTimeout(timer);
-  }, [queue, processPending]);
-
-  // Add passage to queue
   const addToQueue = useCallback(
-    (
+    async (
       passage: {
         id: string;
         title: string;
@@ -237,13 +262,12 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         difficulty?: string;
       },
       promptConfig: AnalysisPromptConfig,
-      runAnalysisNow: boolean = true
+      runAnalysisNow: boolean = true,
     ) => {
-      const words = passage.content
-        .trim()
-        .split(/\s+/)
-        .filter((w) => w.length > 0).length;
-
+      const normalizedPromptConfig = {
+        ...promptConfig,
+        generationPlan: normalizeQuestionGenerationPlan(promptConfig.generationPlan),
+      };
       const newItem: QueuedPassage = {
         id: passage.id,
         title: passage.title,
@@ -251,14 +275,11 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
           passage.content.length > 120
             ? passage.content.slice(0, 120) + "..."
             : passage.content,
-        wordCount: words,
+        wordCount: wordCount(passage.content),
         status: runAnalysisNow ? "pending" : "not_analyzed",
         analysisData: null,
         error: null,
-        promptConfig: {
-          ...promptConfig,
-          generationPlan: normalizeQuestionGenerationPlan(promptConfig.generationPlan),
-        },
+        promptConfig: normalizedPromptConfig,
         createdAt: new Date(),
         schoolName: passage.schoolName,
         grade: passage.grade,
@@ -287,40 +308,72 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         },
       };
 
-      setQueue((prev) => [newItem, ...prev]);
+      setLocalQueue((prev) => [newItem, ...prev.filter((p) => p.id !== passage.id)]);
+
+      if (!runAnalysisNow) return;
+
+      try {
+        await startPassageAnalysisJob(passage.id, normalizedPromptConfig);
+      } catch (err) {
+        setLocalQueue((prev) =>
+          prev.map((p) =>
+            p.id === passage.id
+              ? {
+                  ...p,
+                  status: "error" as const,
+                  error:
+                    err instanceof Error
+                      ? err.message
+                      : "Failed to start passage analysis job.",
+                }
+              : p,
+          ),
+        );
+        throw err;
+      }
     },
-    []
+    [],
   );
 
-  // Retry failed analysis
   const retryAnalysis = useCallback(
     (passageId: string) => {
-      setQueue((prev) =>
+      const target = queue.find((p) => p.id === passageId);
+      if (!target) return;
+      setLocalQueue((prev) =>
         prev.map((p) =>
           p.id === passageId
             ? { ...p, status: "pending" as const, error: null }
-            : p
-        )
+            : p,
+        ),
       );
+      void startPassageAnalysisJob(passageId, target.promptConfig).catch((err) => {
+        setLocalQueue((prev) =>
+          prev.map((p) =>
+            p.id === passageId
+              ? {
+                  ...p,
+                  status: "error" as const,
+                  error:
+                    err instanceof Error
+                      ? err.message
+                      : "Failed to start passage analysis job.",
+                }
+              : p,
+          ),
+        );
+      });
     },
-    []
+    [queue],
   );
 
-  // Remove from queue
   const removeFromQueue = useCallback((passageId: string) => {
-    const controller = abortControllers.current.get(passageId);
-    if (controller) {
-      controller.abort();
-      abortControllers.current.delete(passageId);
-    }
-    analysisInProgress.current.delete(passageId);
-    setQueue((prev) => prev.filter((p) => p.id !== passageId));
+    setLocalQueue((prev) => prev.filter((p) => p.id !== passageId));
+    setJobQueue((prev) => prev.filter((p) => p.id !== passageId));
   }, []);
 
-  // Update analysis data after modal edit
   const updateAnalysisData = useCallback(
     (passageId: string, data: PassageAnalysisData) => {
-      setQueue((prev) =>
+      const update = (prev: QueuedPassage[]) =>
         prev.map((p) =>
           p.id === passageId
             ? {
@@ -336,42 +389,37 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
                   },
                 },
               }
-            : p
-        )
-      );
+            : p,
+        );
+      setLocalQueue(update);
+      setJobQueue(update);
     },
-    []
+    [],
   );
 
-  // Update questions list after generation
   const updateQuestions = useCallback(
-    (passageId: string, questions: QueuedPassage["passageData"]["questions"]) => {
-      setQueue((prev) =>
+    (
+      passageId: string,
+      questions: QueuedPassage["passageData"]["questions"],
+    ) => {
+      const update = (prev: QueuedPassage[]) =>
         prev.map((p) =>
           p.id === passageId
             ? {
                 ...p,
                 passageData: { ...p.passageData, questions },
               }
-            : p
-        )
-      );
+            : p,
+        );
+      setLocalQueue(update);
+      setJobQueue(update);
     },
-    []
+    [],
   );
 
-  // Check if any analysis is active (for beforeunload)
   const hasActiveAnalysis = queue.some(
-    (p) => p.status === "analyzing" || p.status === "pending"
+    (p) => p.status === "analyzing" || p.status === "pending",
   );
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      abortControllers.current.forEach((c) => c.abort());
-      abortControllers.current.clear();
-    };
-  }, []);
 
   return {
     queue,

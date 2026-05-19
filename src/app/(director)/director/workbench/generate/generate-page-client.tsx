@@ -16,12 +16,12 @@ import { getCustomPrompts } from "@/actions/custom-prompts";
 import {
   type PassageItem,
   type FilterOptions,
-  type QueueItem,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
 import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
+import { useGenerationSessionQueue } from "./generation-session-store";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 // ─── Component ───────────────────────────────────────────
@@ -107,7 +107,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   const [editingName, setEditingName] = useState("");
 
   // ── Session queue ──
-  const [sessionQueue, setSessionQueue] = useState<QueueItem[]>([]);
+  const [sessionQueue, setSessionQueue] = useGenerationSessionQueue();
   const [queueFilter, setQueueFilter] = useState<"all" | "error">("all");
 
   // ── Review modal ──
@@ -237,6 +237,10 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       }
     };
   }, [loadingPassages, loadSavedQuestions]);
+
+  useEffect(() => {
+    if (queueCounts.done > 0) loadSavedQuestions();
+  }, [queueCounts.done, loadSavedQuestions]);
 
   // ── Load saved prompts ──
   const loadSavedPrompts = useCallback(async () => {

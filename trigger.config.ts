@@ -37,7 +37,11 @@ export default defineConfig({
         const keys = [
           "DATABASE_URL",
           "DIRECT_URL",
+          "ANTHROPIC_API_KEY",
           "GOOGLE_GENERATIVE_AI_API_KEY",
+          "GEMINI_API_KEY",
+          "GEMINI_MODEL",
+          "GOOGLE_API_KEY",
           "SUPABASE_URL",
           "SUPABASE_ANON_KEY",
           "SUPABASE_SERVICE_ROLE_KEY",

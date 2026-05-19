@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen, Home, MessageCircleQuestion, User } from "lucide-react";
+import { useTutorModalOpen } from "./tutor-modal-context";
 
 const items = [
   { key: "study", icon: Home, label: "홈" },
@@ -15,7 +16,9 @@ export function TutorBottomNav({ academy }: { academy: string }) {
   const pathname = usePathname();
   const decodedPathname = safeDecode(pathname);
   const isLogin = decodedPathname === `/tutor/${academy}`;
+  const isModalOpen = useTutorModalOpen();
   if (isLogin) return null;
+  if (isModalOpen) return null;
 
   return (
     <nav

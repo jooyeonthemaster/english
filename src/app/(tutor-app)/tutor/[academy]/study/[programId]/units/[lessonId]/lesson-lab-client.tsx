@@ -4,27 +4,23 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  BookOpen,
   CheckCircle2,
-  ChevronRight,
   Circle,
-  Grid3X3,
-  MessageCircleQuestion,
+  HelpCircle,
+  NotebookPen,
   Play,
+  Target,
 } from "lucide-react";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import {
   labelTutorActivityType,
   studentActivityInstruction,
   studentActivityTitle,
-  tutorDimensionLabels,
-  tutorModeDescriptions,
   tutorModeLabels,
 } from "@/lib/tutor/activity-labels";
 import { cn } from "@/lib/utils";
-import { StudentAnalysisReader } from "./student-analysis-reader";
+import { LessonReader } from "./lesson-reader";
 
 type CoverageDimension = "interpret" | "memorize" | "order" | "vocab" | "grammar" | "transfer";
 
@@ -56,12 +52,13 @@ type SentenceRow = {
   korean: string;
 };
 
-const dimensions: CoverageDimension[] = ["interpret", "memorize", "order", "vocab", "grammar", "transfer"];
-const tabs = [
-  { key: "overview", label: "분석" },
-  { key: "activities", label: "훈련" },
-  { key: "coverage", label: "커버리지" },
-] as const;
+type LabMode = "passage" | "annotated" | "training";
+
+const MODES: Array<{ key: LabMode; label: string; Icon: typeof BookOpen }> = [
+  { key: "passage", label: "본문", Icon: BookOpen },
+  { key: "annotated", label: "필기", Icon: NotebookPen },
+  { key: "training", label: "훈련", Icon: Target },
+];
 
 export function LessonLabClient({
   academy,
@@ -82,14 +79,191 @@ export function LessonLabClient({
   analysisData: PassageAnalysisData | null;
   activities: LessonLabActivity[];
 }) {
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["key"]>("overview");
+  const [mode, setMode] = useState<LabMode>("passage");
+
   const answeredCount = activities.filter((activity) => activity.answered).length;
   const correctCount = activities.filter((activity) => activity.isCorrect).length;
   const completion = activities.length ? Math.round((answeredCount / activities.length) * 100) : 0;
-  const earnedScore = activities.reduce((sum, activity) => sum + activity.scoreEarned, 0);
-  const maxScore = activities.reduce((sum, activity) => sum + activity.scoreMax, 0);
   const firstTodo = activities.find((activity) => !activity.answered) ?? activities[0];
 
+  const wordCount = useMemo(
+    () => passage.trim().split(/\s+/).filter(Boolean).length,
+    [passage],
+  );
+
+  return (
+    <div className="flex min-h-dvh flex-col bg-white">
+      <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/95 backdrop-blur">
+        <div className="flex h-12 items-center gap-2 px-3">
+          <Link
+            href={`/tutor/${academy}/study/${programId}`}
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-700 active:bg-slate-100"
+            aria-label="프로그램으로 돌아가기"
+          >
+            <ArrowLeft className="size-5" />
+          </Link>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-bold text-blue-600">지문 학습</p>
+            <h1 className="line-clamp-1 text-[13px] font-bold text-slate-900">{title}</h1>
+          </div>
+          <Link
+            href={`/tutor/${academy}/study/${programId}/units/${lessonId}/ask`}
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700 active:bg-blue-100"
+            aria-label="질문하기"
+          >
+            <HelpCircle className="size-4.5" />
+          </Link>
+        </div>
+        <div className="flex border-t border-slate-100">
+          {MODES.map(({ key, label, Icon }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setMode(key)}
+              className={cn(
+                "inline-flex h-11 flex-1 items-center justify-center gap-1.5 border-b-2 text-xs font-bold transition",
+                mode === key
+                  ? "border-blue-600 text-blue-700"
+                  : "border-transparent text-slate-400 active:text-slate-700",
+              )}
+              aria-pressed={mode === key}
+            >
+              <Icon className="size-3.5" />
+              {label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <main className="flex-1">
+        {mode === "passage" && (
+          <PassageMode
+            sentences={sentences}
+            wordCount={wordCount}
+            completion={completion}
+            correctCount={correctCount}
+            totalActivities={activities.length}
+          />
+        )}
+        {mode === "annotated" && (
+          <LessonReader sentences={sentences} analysisData={analysisData} />
+        )}
+        {mode === "training" && (
+          <TrainingMode
+            academy={academy}
+            programId={programId}
+            lessonId={lessonId}
+            activities={activities}
+            completion={completion}
+            answeredCount={answeredCount}
+            correctCount={correctCount}
+          />
+        )}
+      </main>
+
+      {mode !== "training" && firstTodo && (
+        <div className="sticky bottom-0 z-20 border-t border-slate-100 bg-white/95 px-3 py-2.5 backdrop-blur">
+          <Link
+            href={`/tutor/${academy}/study/${programId}/units/${lessonId}/activity/${firstTodo.id}`}
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-[13px] font-bold text-white active:bg-blue-700"
+          >
+            <Play className="size-4" />
+            {firstTodo.answered ? "다시 훈련하기" : "이어서 훈련하기"}
+            <span className="ml-2 inline-flex h-5 items-center rounded-full bg-blue-500/60 px-2 text-[10px] font-bold">
+              {answeredCount}/{activities.length}
+            </span>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PassageMode({
+  sentences,
+  wordCount,
+  completion,
+  correctCount,
+  totalActivities,
+}: {
+  sentences: SentenceRow[];
+  wordCount: number;
+  completion: number;
+  correctCount: number;
+  totalActivities: number;
+}) {
+  const [showKo, setShowKo] = useState(false);
+
+  return (
+    <div className="px-4 pb-6 pt-3">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+          <span>{sentences.length}문장</span>
+          <span className="text-slate-200">·</span>
+          <span>{wordCount} words</span>
+          {totalActivities > 0 && (
+            <>
+              <span className="text-slate-200">·</span>
+              <span className="text-blue-600">진도 {completion}%</span>
+              <span className="text-slate-200">·</span>
+              <span className="text-slate-500">정답 {correctCount}/{totalActivities}</span>
+            </>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowKo((value) => !value)}
+          className={cn(
+            "inline-flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-bold transition",
+            showKo
+              ? "bg-blue-600 text-white"
+              : "bg-slate-100 text-slate-500 active:bg-slate-200",
+          )}
+        >
+          해석 {showKo ? "ON" : "OFF"}
+        </button>
+      </div>
+
+      <div className="space-y-3.5">
+        {sentences.map((sentence) => (
+          <div key={sentence.index}>
+            <div className="flex gap-2">
+              <span className="w-5 shrink-0 pt-[3px] text-right text-[10px] font-bold text-slate-300">
+                {sentence.index + 1}
+              </span>
+              <p className="flex-1 font-mono text-[14.5px] font-medium leading-7 text-slate-900">
+                {sentence.english}
+              </p>
+            </div>
+            {showKo && sentence.korean && (
+              <p className="ml-7 mt-1 text-[12px] font-medium leading-6 text-slate-500">
+                {sentence.korean}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TrainingMode({
+  academy,
+  programId,
+  lessonId,
+  activities,
+  completion,
+  answeredCount,
+  correctCount,
+}: {
+  academy: string;
+  programId: string;
+  lessonId: string;
+  activities: LessonLabActivity[];
+  completion: number;
+  answeredCount: number;
+  correctCount: number;
+}) {
   const grouped = useMemo(() => {
     const map = new Map<string, LessonLabActivity[]>();
     for (const activity of activities) {
@@ -101,233 +275,86 @@ export function LessonLabClient({
   }, [activities]);
 
   return (
-    <div className="min-h-dvh bg-white">
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 md:px-8">
-        <div className="flex items-center justify-between gap-3">
-          <Link
-            href={`/tutor/${academy}/study/${programId}`}
-            className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 text-slate-600"
-            aria-label="프로그램으로 돌아가기"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-black text-blue-600">지문 학습 랩</p>
-            <h1 className="mt-0.5 line-clamp-1 text-lg font-black text-slate-950">{title}</h1>
-          </div>
-          <Link
-            href={`/tutor/${academy}/study/${programId}/units/${lessonId}/ask`}
-            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-2xl border border-blue-100 bg-blue-50 px-3 text-xs font-black text-blue-700"
-          >
-            <MessageCircleQuestion className="size-4" />
-            질문
-          </Link>
+    <div className="px-4 pb-8 pt-3">
+      <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+        <div>
+          <p className="text-[10px] font-bold text-slate-400">전체 진도</p>
+          <p className="mt-0.5 text-2xl font-bold text-slate-900">
+            {completion}
+            <span className="ml-0.5 text-base font-bold text-slate-400">%</span>
+          </p>
         </div>
-      </header>
-
-      <div className="space-y-5 px-4 pb-28 pt-5 sm:px-6 md:px-8 lg:pb-8">
-        <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_330px]">
-          <div className="rounded-[28px] bg-slate-950 p-5 text-white shadow-xl shadow-slate-200">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-black uppercase text-blue-200">Current Passage</p>
-                <h2 className="mt-2 text-2xl font-black leading-8">{title}</h2>
-              </div>
-              <Badge className="rounded-full bg-white text-slate-950 hover:bg-white">{sentences.length}문장</Badge>
-            </div>
-            <p className="mt-4 max-h-48 overflow-y-auto whitespace-pre-wrap rounded-2xl bg-white/10 p-4 text-sm font-medium leading-7 text-slate-100">
-              {passage}
-            </p>
-          </div>
-
-          <div className="rounded-[28px] border border-blue-100 bg-blue-50 p-5 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-black text-blue-700">나의 진행률</p>
-                <p className="mt-1 text-4xl font-black text-slate-950">{completion}%</p>
-              </div>
-              <div className="rounded-2xl bg-white px-3 py-2 text-right shadow-sm">
-                <p className="text-[11px] font-bold text-slate-500">정답</p>
-                <p className="text-lg font-black text-blue-700">{correctCount}개</p>
-              </div>
-            </div>
-            <Progress value={completion} className="mt-4 h-2.5" />
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <MiniMetric label="푼 활동" value={`${answeredCount}/${activities.length}`} />
-              <MiniMetric label="점수" value={`${earnedScore}/${maxScore || 0}`} />
-            </div>
-            {firstTodo && (
-              <Button asChild className="mt-4 h-12 w-full rounded-2xl bg-blue-600 text-sm font-black hover:bg-blue-700">
-                <Link href={`/tutor/${academy}/study/${programId}/units/${lessonId}/activity/${firstTodo.id}`}>
-                  <Play className="mr-2 size-4" />
-                  {firstTodo.answered ? "다시 훈련하기" : "이어서 훈련하기"}
-                </Link>
-              </Button>
-            )}
-          </div>
-        </section>
-
-        <div className="grid grid-cols-3 rounded-2xl bg-slate-100 p-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "h-11 rounded-xl text-sm font-black transition",
-                activeTab === tab.key ? "bg-white text-blue-700 shadow-sm" : "text-slate-500",
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="flex gap-2 text-center">
+          <Stat label="푼 활동" value={`${answeredCount}/${activities.length}`} />
+          <Stat label="정답" value={`${correctCount}`} tone="blue" />
         </div>
+      </div>
 
-        {activeTab === "overview" && (
-          <StudentAnalysisReader
-            title={title}
-            passage={passage}
-            sentences={sentences}
-            analysisData={analysisData}
-          />
-        )}
-
-        {activeTab === "activities" && (
-          <div className="space-y-4">
-            {grouped.map(([mode, modeActivities]) => {
-              const done = modeActivities.filter((activity) => activity.answered).length;
-              const pct = modeActivities.length ? Math.round((done / modeActivities.length) * 100) : 0;
-              return (
-                <section key={mode} className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-                  <div className="mb-4 flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-base font-black text-slate-950">{tutorModeLabels[mode] ?? mode}</p>
-                      <p className="mt-1 text-sm font-medium text-slate-500">{tutorModeDescriptions[mode] ?? "지문 기반 반복 훈련"}</p>
+      <div className="space-y-5">
+        {grouped.map(([mode, modeActivities]) => {
+          const done = modeActivities.filter((activity) => activity.answered).length;
+          return (
+            <section key={mode}>
+              <div className="mb-2 flex items-center justify-between px-1">
+                <p className="text-[13px] font-bold text-slate-900">
+                  {tutorModeLabels[mode] ?? mode}
+                </p>
+                <span className="text-[11px] font-bold text-slate-400">
+                  {done}/{modeActivities.length}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {modeActivities.map((activity) => (
+                  <Link
+                    key={activity.id}
+                    href={`/tutor/${academy}/study/${programId}/units/${lessonId}/activity/${activity.id}`}
+                    className="flex items-start gap-3 rounded-xl border border-slate-100 bg-white p-3 active:bg-slate-50"
+                  >
+                    {activity.isCorrect ? (
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-blue-600" />
+                    ) : activity.answered ? (
+                      <Circle className="mt-0.5 size-4 shrink-0 fill-slate-300 text-slate-300" />
+                    ) : (
+                      <Circle className="mt-0.5 size-4 shrink-0 text-slate-300" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-bold text-blue-600">
+                        {labelTutorActivityType(activity.type)}
+                      </p>
+                      <p className="mt-0.5 line-clamp-2 text-[13px] font-bold leading-5 text-slate-900">
+                        {studentActivityTitle(activity.type, activity.title, activity.payload)}
+                      </p>
+                      <p className="mt-0.5 line-clamp-1 text-[11px] font-medium text-slate-400">
+                        {studentActivityInstruction(activity.type, activity.instructions, activity.payload)}
+                      </p>
                     </div>
-                    <Badge variant="outline" className="rounded-full border-blue-100 bg-blue-50 text-blue-700">
-                      {done}/{modeActivities.length}
-                    </Badge>
-                  </div>
-                  <Progress value={pct} className="mb-3 h-2" />
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {modeActivities.map((activity) => (
-                      <Link
-                        key={activity.id}
-                        href={`/tutor/${academy}/study/${programId}/units/${lessonId}/activity/${activity.id}`}
-                        className="rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:border-blue-200 hover:bg-blue-50"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className="text-[11px] font-black text-blue-600">{labelTutorActivityType(activity.type)}</p>
-                            <p className="mt-1 line-clamp-2 text-sm font-black leading-6 text-slate-950">
-                              {studentActivityTitle(activity.type, activity.title, activity.payload)}
-                            </p>
-                          </div>
-                          {activity.isCorrect ? <CheckCircle2 className="size-5 shrink-0 text-blue-600" /> : <Circle className="size-5 shrink-0 text-slate-300" />}
-                        </div>
-                        <p className="mt-2 line-clamp-2 text-xs font-medium leading-5 text-slate-500">
-                          {studentActivityInstruction(activity.type, activity.instructions, activity.payload)}
-                        </p>
-                        <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-slate-500">
-                          <span>{Math.ceil(activity.estimatedSec / 60)}분</span>
-                          <span>{activity.maxScore}점</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
-        )}
-
-        {activeTab === "coverage" && (
-          <section className="rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 px-4 py-4 sm:px-5">
-              <div className="flex items-center gap-2">
-                <Grid3X3 className="size-5 text-blue-600" />
-                <p className="text-base font-black text-slate-950">학습 커버리지</p>
-              </div>
-              <p className="mt-1 text-sm font-medium text-slate-500">문장별로 어떤 유형의 훈련이 준비되어 있고 완료됐는지 확인합니다.</p>
-            </div>
-            <div className="overflow-x-auto p-3 sm:p-4">
-              <div className="grid min-w-[720px] gap-1" style={{ gridTemplateColumns: "82px repeat(6, 1fr)" }}>
-                <div />
-                {dimensions.map((dimension) => (
-                  <div key={dimension} className="rounded-xl bg-slate-50 px-2 py-2 text-center text-xs font-black text-slate-500">
-                    {tutorDimensionLabels[dimension]}
-                  </div>
-                ))}
-                {sentences.map((sentence) => (
-                  <CoverageRow key={sentence.index} sentence={sentence} activities={activities} />
+                    <div className="shrink-0 text-right text-[10px] font-bold text-slate-400">
+                      <p>{Math.max(1, Math.ceil(activity.estimatedSec / 60))}분</p>
+                      <p className="mt-0.5 text-blue-600">{activity.maxScore}점</p>
+                    </div>
+                  </Link>
                 ))}
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function InfoBlock({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, tone }: { label: string; value: string; tone?: "blue" }) {
   return (
-    <div className="rounded-2xl bg-slate-50 p-4">
-      <p className="mb-1 text-xs font-black text-slate-400">{label}</p>
-      <p className="text-sm font-bold leading-6 text-slate-800">{value}</p>
+    <div className="rounded-xl bg-white px-3 py-1.5">
+      <p className="text-[10px] font-bold text-slate-400">{label}</p>
+      <p
+        className={cn(
+          "text-[13px] font-bold",
+          tone === "blue" ? "text-blue-600" : "text-slate-900",
+        )}
+      >
+        {value}
+      </p>
     </div>
-  );
-}
-
-function MiniMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-white px-3 py-3 shadow-sm ring-1 ring-slate-100">
-      <p className="text-[11px] font-black text-slate-400">{label}</p>
-      <p className="mt-1 text-lg font-black text-slate-950">{value}</p>
-    </div>
-  );
-}
-
-function CoverageRow({
-  sentence,
-  activities,
-}: {
-  sentence: SentenceRow;
-  activities: LessonLabActivity[];
-}) {
-  return (
-    <>
-      <div className="rounded-xl bg-slate-50 px-2 py-3 text-xs font-black text-slate-600">문장 {sentence.index + 1}</div>
-      {dimensions.map((dimension) => {
-        const linked = activities.filter((activity) =>
-          activity.coverageRefs.some((ref) => ref.sentenceIndex === sentence.index && ref.dimension === dimension),
-        );
-        const pct = Math.min(
-          100,
-          Math.round(
-            linked.reduce((sum, activity) => {
-              return (
-                sum +
-                activity.coverageRefs
-                  .filter((ref) => ref.sentenceIndex === sentence.index && ref.dimension === dimension)
-                  .reduce((refSum, ref) => refSum + (ref.weight ?? 0.5), 0)
-              );
-            }, 0) * 100,
-          ),
-        );
-        const completed = linked.length > 0 && linked.every((activity) => activity.answered);
-        return (
-          <div key={`${sentence.index}-${dimension}`} className="rounded-xl bg-slate-50 p-2">
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-slate-400">{linked.length}개</span>
-              {completed && <CheckCircle2 className="size-3.5 text-blue-600" />}
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white">
-              <div className={cn("h-full rounded-full", completed ? "bg-blue-600" : "bg-blue-200")} style={{ width: `${pct}%` }} />
-            </div>
-          </div>
-        );
-      })}
-    </>
   );
 }

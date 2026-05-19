@@ -37,11 +37,13 @@ export interface QueueItem {
   passageId: string;
   passageTitle: string;
   passageContent: string;
+  createdAt?: string;
   passageMeta: { school?: string; grade?: number | null; semester?: string | null; unit?: string | null };
   analysisData: any;
   status: QueueStatus;
   progress: Record<string, "pending" | "done" | "error">;
   questions: any[];
+  error?: string;
   config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual"; generationPlan?: QuestionGenerationPlan };
 }
 

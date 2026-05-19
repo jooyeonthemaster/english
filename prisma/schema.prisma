@@ -66,6 +66,7 @@ model Academy {
   creditTransactions        CreditTransaction[]
   creditTopUps              CreditTopUp[]
   extractionJobs            ExtractionJob[]
+  workbenchAiJobs           WorkbenchAiJob[]
   extractionAuditLogs       ExtractionAuditLog[]
   sourceMaterials           SourceMaterial[]
   webtoons                  Webtoon[]
@@ -127,6 +128,7 @@ model Staff {
   messages               Message[]            @relation("SentMessages")
   receivedMessages       Message[]            @relation("ReceivedStaffMessages")
   extractionJobs         ExtractionJob[]      @relation("ExtractionJobCreator")
+  workbenchAiJobs        WorkbenchAiJob[]     @relation("WorkbenchAiJobCreator")
   extractionAuditLogs    ExtractionAuditLog[] @relation("ExtractionAuditActor")
   createdSourceMaterials SourceMaterial[]     @relation("SourceMaterialCreator")
   webtoons               Webtoon[]            @relation("WebtoonCreator")
@@ -675,6 +677,7 @@ model Passage {
   tutorLessons       TutorLesson[]
   tutorConversations TutorConversation[]
   tutorAiLogs        TutorAiLog[]
+  workbenchAiJobs    WorkbenchAiJob[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -799,6 +802,55 @@ model QuestionExplanation {
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@map("question_explanations")
+}
+
+/// WorkbenchAiJob — persistent background jobs for passage analysis and
+/// question generation. These are Trigger.dev-owned jobs so refreshes,
+/// navigation, and browser restarts do not lose progress.
+/// domain: "PASSAGE_ANALYSIS" | "QUESTION_GENERATION"
+/// status: "PENDING" | "PROCESSING" | "COMPLETED" | "PARTIAL" | "FAILED" | "CANCELLED"
+/// mode: for question generation, "AUTO" | "MANUAL"; for analysis, "FULL"
+model WorkbenchAiJob {
+  id          String @id @default(cuid())
+  academyId   String
+  createdById String
+
+  domain String
+  status String @default("PENDING")
+  title  String
+
+  passageId      String?
+  mode           String?
+  questionType   String?
+  generationPlan String  @default("STANDARD")
+  difficulty     String?
+
+  requestedCount Int @default(1)
+  successCount   Int @default(0)
+  failedCount    Int @default(0)
+  resultCount    Int @default(0)
+
+  config       Json?
+  result       Json?
+  errorMessage String? @db.Text
+  triggerRunId String? @db.Text
+  creditTxId   String?
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  academy   Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  createdBy Staff   @relation("WorkbenchAiJobCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  passage   Passage? @relation(fields: [passageId], references: [id], onDelete: SetNull)
+
+  @@index([academyId, domain, status])
+  @@index([academyId, createdAt])
+  @@index([passageId])
+  @@index([status, createdAt])
+  @@map("workbench_ai_jobs")
 }
 
 // ============================================================================

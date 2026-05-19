@@ -59,6 +59,7 @@ interface GenerationPromptInput {
   typeCount: number;
   diffLabel: string;
   diffInstruction: string;
+  customPrompt?: string;
 }
 
 export function buildGenerationPrompt({
@@ -75,6 +76,7 @@ export function buildGenerationPrompt({
   typeCount,
   diffLabel,
   diffInstruction,
+  customPrompt,
 }: GenerationPromptInput): string {
   const targetContext =
     targetPoints.length > 0
@@ -101,6 +103,7 @@ ${structuredInstructions}
 - 난이도: ${diffLabel} (${diffInstruction})
 ${DIFFICULTY_RUBRIC[diffLabel] || DIFFICULTY_RUBRIC.INTERMEDIATE}
 ${MARKING_RUBRIC}
+${customPrompt ? `\n## Teacher instructions\n${customPrompt}` : ""}
 - difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지(options 배열에 {label, text} 형태)를 만드세요.
 - 해설(explanation)은 왜 정답인지 지문 근거와 함께 한국어로 작성하세요.

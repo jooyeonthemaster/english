@@ -82,7 +82,7 @@ interface HandleSaveArgs {
     },
     promptConfig: { customPrompt: string; focusAreas: string[]; targetLevel: string; generationPlan?: QuestionGenerationPlan },
     runAnalysis: boolean
-  ) => void;
+  ) => void | Promise<void>;
   resetForm: () => void;
   onSaved?: () => void;
 }
@@ -162,7 +162,7 @@ export async function handleSave({
       const schoolName = schools.find((s) => s.id === normalizedSchoolId)?.name;
 
       // Add to queue
-      addToQueue(
+      await addToQueue(
         {
           id: result.id,
           title: finalTitle,

@@ -12,6 +12,4 @@ function createStubAdapter(domain: TaskDomain): TaskAdapter {
   };
 }
 
-export const passageAnalysisAdapter = createStubAdapter("passage-analysis");
-export const questionGenerationAdapter = createStubAdapter("question-generation");
 export const examGenerationAdapter = createStubAdapter("exam-generation");

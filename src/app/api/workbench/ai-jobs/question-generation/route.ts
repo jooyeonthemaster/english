@@ -1,0 +1,118 @@
+import { tasks } from "@trigger.dev/sdk/v3";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+import { getStaffSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const requestSchema = z.object({
+  passageId: z.string().min(1),
+  mode: z.enum(["AUTO", "MANUAL"]).default("AUTO"),
+  count: z.number().int().min(1).max(50).default(1),
+  questionType: z.string().optional(),
+  difficulty: z.string().default("INTERMEDIATE"),
+  customPrompt: z.string().optional(),
+  generationPlan: z.unknown().optional(),
+});
+
+export async function POST(req: NextRequest) {
+  const staff = await getStaffSession();
+  if (!staff) {
+    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+  }
+
+  const parsed = requestSchema.safeParse(await req.json().catch(() => ({})));
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid payload", details: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+
+  if (parsed.data.mode === "MANUAL" && !parsed.data.questionType) {
+    return NextResponse.json(
+      { error: "questionType is required for manual generation" },
+      { status: 400 },
+    );
+  }
+
+  const passage = await prisma.passage.findFirst({
+    where: { id: parsed.data.passageId, academyId: staff.academyId },
+    select: {
+      id: true,
+      title: true,
+      analysis: { select: { id: true } },
+    },
+  });
+  if (!passage) {
+    return NextResponse.json({ error: "Passage not found" }, { status: 404 });
+  }
+  if (!passage.analysis) {
+    return NextResponse.json(
+      { error: "Passage analysis is required before question generation" },
+      { status: 400 },
+    );
+  }
+
+  const generationPlan = normalizeQuestionGenerationPlan(
+    parsed.data.generationPlan,
+  );
+  const job = await prisma.workbenchAiJob.create({
+    data: {
+      academyId: staff.academyId,
+      createdById: staff.id,
+      domain: "QUESTION_GENERATION",
+      status: "PENDING",
+      title: passage.title,
+      passageId: passage.id,
+      mode: parsed.data.mode,
+      questionType: parsed.data.questionType ?? null,
+      generationPlan,
+      difficulty: parsed.data.difficulty,
+      requestedCount: parsed.data.count,
+      config: {
+        mode: parsed.data.mode,
+        count: parsed.data.count,
+        questionType: parsed.data.questionType ?? null,
+        difficulty: parsed.data.difficulty,
+        customPrompt: parsed.data.customPrompt ?? "",
+        generationPlan,
+      },
+    },
+  });
+
+  try {
+    const handle = await tasks.trigger(
+      "workbench-question-generation",
+      { jobId: job.id },
+      { idempotencyKey: `workbench-question-generation:${job.id}` },
+    );
+
+    await prisma.workbenchAiJob.update({
+      where: { id: job.id },
+      data: { triggerRunId: handle.id },
+    });
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Failed to enqueue Trigger.dev task.";
+    await prisma.workbenchAiJob.update({
+      where: { id: job.id },
+      data: {
+        status: "FAILED",
+        failedCount: 1,
+        errorMessage: message,
+        completedAt: new Date(),
+      },
+    });
+    return NextResponse.json(
+      { error: "Failed to enqueue question generation job", details: message },
+      { status: 502 },
+    );
+  }
+
+  return NextResponse.json({ jobId: job.id, status: "PENDING" });
+}

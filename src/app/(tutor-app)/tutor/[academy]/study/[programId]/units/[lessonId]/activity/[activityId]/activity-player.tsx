@@ -9,7 +9,7 @@ import {
   ChevronRight,
   Eye,
   EyeOff,
-  MessageCircleQuestion,
+  HelpCircle,
   RotateCcw,
   XCircle,
 } from "lucide-react";
@@ -204,260 +204,146 @@ export function ActivityPlayer({
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 md:px-8">
-        <div className="flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/95 backdrop-blur">
+        <div className="flex h-12 items-center gap-2 px-3">
           <Link
             href={`/tutor/${academy}/study/${programId}/units/${activity.lessonId}`}
-            className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 text-slate-600"
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-700 active:bg-slate-100"
             aria-label="학습 랩으로 돌아가기"
           >
             <ArrowLeft className="size-5" />
           </Link>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-black text-blue-600">
+            <p className="text-[10px] font-bold text-blue-600">
               {modeLabel} · {typeLabel}
             </p>
-            <h1 className="mt-0.5 line-clamp-1 text-lg font-black text-slate-950">{displayTitle}</h1>
+            <h1 className="line-clamp-1 text-[13px] font-bold text-slate-900">{displayTitle}</h1>
           </div>
           <Link
             href={`/tutor/${academy}/study/${programId}/units/${activity.lessonId}/ask`}
-            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-2xl border border-blue-100 bg-blue-50 px-3 text-xs font-black text-blue-700"
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700 active:bg-blue-100"
+            aria-label="질문하기"
           >
-            <MessageCircleQuestion className="size-4" />
-            질문
+            <HelpCircle className="size-4.5" />
           </Link>
         </div>
       </header>
 
-      <div className="flex-1 space-y-4 overflow-y-auto px-4 pb-48 pt-5 sm:px-6 md:px-8 md:pb-56">
-        <section className="rounded-[28px] border border-slate-200 bg-slate-50 p-4 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-[11px] font-black uppercase text-slate-500">Passage</p>
-              <p className="mt-1 line-clamp-1 text-sm font-black text-slate-950">{passage.title}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowPassage((value) => !value)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-2xl bg-white px-3 text-xs font-black text-slate-700 ring-1 ring-slate-200"
-            >
-              {showPassage ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              {showPassage ? "가리기" : "원문 보기"}
-            </button>
-          </div>
-          {showPassage ? (
-            <p className="mt-3 max-h-44 overflow-y-auto whitespace-pre-wrap rounded-2xl bg-white p-4 text-sm font-medium leading-7 text-slate-700 ring-1 ring-slate-100">
-              {passage.content}
+      <div className="flex-1 space-y-5 px-4 pb-44 pt-4 md:pb-48">
+        <PassageStrip
+          title={passage.title}
+          content={passage.content}
+          showPassage={showPassage}
+          onToggle={() => setShowPassage((value) => !value)}
+        />
+
+        <section className="space-y-1.5">
+          <p className="text-[10px] font-bold tracking-wide text-blue-600">해야 할 일</p>
+          <p className="text-[13px] font-bold leading-6 text-slate-900">{displayInstructions}</p>
+          {hint && (
+            <p className="border-l-2 border-blue-200 pl-2 text-[12px] font-medium leading-6 text-blue-700">
+              {hint}
             </p>
-          ) : (
-            <div className="mt-3 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-8 text-center text-sm font-bold text-slate-500">
-              원문을 가리고 기억으로 풀어보는 모드입니다.
-            </div>
           )}
         </section>
 
-        <section className="rounded-[28px] border border-blue-100 bg-blue-50 p-4 shadow-sm sm:p-5">
-          <p className="text-xs font-black text-blue-700">해야 할 일</p>
-          <p className="mt-2 text-base font-black leading-7 text-slate-950">
-            {displayInstructions}
-          </p>
-          {hint && <p className="mt-3 rounded-2xl bg-white px-4 py-3 text-sm font-bold leading-6 text-blue-800 shadow-sm">{hint}</p>}
-        </section>
-
-        <section className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+        <section className="space-y-3">
           {multipleChoiceTypes.has(activity.type) && options.length > 0 ? (
-            <div className="space-y-4">
-              <QuestionPrompt activityType={activity.type} prompt={prompt} payload={payload} />
-              <div className="grid gap-2">
-                {options.map((option, index) => {
-                  const detail = optionDetail(option);
-                  return (
-                    <button
-                      key={`${optionLabel(option, index)}-${index}`}
-                      type="button"
-                      data-testid="tutor-choice-option"
-                      onClick={() => !feedback && setSelected(index)}
-                      className={cn(
-                        "rounded-2xl border px-4 py-3 text-left text-sm font-bold leading-6 transition",
-                        selected === index
-                          ? "border-blue-500 bg-blue-50 text-blue-800 shadow-sm"
-                          : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50/50",
-                      )}
-                    >
-                      <span className="block">{optionLabel(option, index)}</span>
-                      {detail && (
-                        <span className="mt-2 block space-y-1 text-xs font-medium text-slate-500">
-                          <span className="block">앞: {detail.before}</span>
-                          <span className="block">뒤: {detail.after}</span>
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <ChoiceQuestion
+              activityType={activity.type}
+              prompt={prompt}
+              payload={payload}
+              options={options}
+              selected={selected}
+              feedback={Boolean(feedback)}
+              onSelect={(index) => !feedback && setSelected(index)}
+            />
           ) : activity.type === "sentence_order" ? (
-            <div className="space-y-4">
-              <div className="min-h-24 rounded-2xl border border-blue-100 bg-blue-50 p-3">
-                <p className="text-xs font-black text-blue-700">내가 만든 순서</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {selectedOrder.map((index, orderIndex) => (
-                    <button
-                      key={`${index}-${orderIndex}`}
-                      type="button"
-                      onClick={() => toggleOrder(index)}
-                      className="rounded-xl bg-white px-3 py-2 text-xs font-black text-blue-700 shadow-sm ring-1 ring-blue-100"
-                    >
-                      {orderIndex + 1}. 문장 {index + 1}
-                    </button>
-                  ))}
-                  {selectedOrder.length === 0 && <span className="text-sm font-bold text-blue-600">아래 문장을 순서대로 누르세요.</span>}
-                </div>
-              </div>
-              <div className="grid gap-2">
-                {orderItems.map((item) => {
-                  const pickedIndex = selectedOrder.indexOf(item.index);
-                  return (
-                    <button
-                      key={item.index}
-                      type="button"
-                      onClick={() => toggleOrder(item.index)}
-                      className={cn(
-                        "rounded-2xl border px-4 py-3 text-left text-sm font-semibold leading-6 transition",
-                        pickedIndex >= 0
-                          ? "border-blue-200 bg-blue-50 text-blue-800"
-                          : "border-slate-200 bg-white text-slate-700 hover:border-blue-200",
-                      )}
-                    >
-                      <span className="mb-1 block text-xs font-black text-slate-400">
-                        {pickedIndex >= 0 ? `${pickedIndex + 1}번째 선택` : "순서에 추가"}
-                      </span>
-                      {item.text}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <OrderQuestion
+              orderItems={orderItems}
+              selectedOrder={selectedOrder}
+              onToggle={toggleOrder}
+            />
           ) : activity.type === "vocab_match" ? (
-            <div className="space-y-4">
-              <p className="rounded-2xl bg-slate-50 p-4 text-sm font-black text-slate-900">영단어와 한국어 뜻을 하나씩 연결하세요.</p>
-              <div className="space-y-3">
-                {leftItems.map((left) => (
-                  <div key={left} className="rounded-2xl border border-slate-200 p-3">
-                    <p className="mb-2 text-base font-black text-slate-950">{left}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {rightItems.map((right) => (
-                        <button
-                          key={`${left}-${right}`}
-                          type="button"
-                          onClick={() => !feedback && setMatches((current) => ({ ...current, [left]: right }))}
-                          className={cn(
-                            "rounded-xl border px-3 py-2 text-xs font-black transition",
-                            matches[left] === right
-                              ? "border-blue-500 bg-blue-50 text-blue-700"
-                              : "border-slate-200 bg-white text-slate-600 hover:border-blue-200",
-                          )}
-                        >
-                          {right}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <VocabMatchQuestion
+              leftItems={leftItems}
+              rightItems={rightItems}
+              matches={matches}
+              feedback={Boolean(feedback)}
+              onMatch={(left, right) =>
+                !feedback && setMatches((current) => ({ ...current, [left]: right }))
+              }
+            />
           ) : activity.type === "sentence_rebuild" || activity.type === "chunk_rebuild" ? (
-            <div className="space-y-4">
-              <div className="min-h-24 rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50 p-3">
-                <p className="mb-2 text-xs font-black text-blue-700">완성한 문장</p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedChunkIds.length === 0 ? (
-                    <span className="text-sm font-bold text-blue-600">아래 조각을 원문 순서대로 누르세요.</span>
-                  ) : (
-                    selectedChunkText.map((chunk, index) => (
-                      <button
-                        key={`${chunk}-${index}`}
-                        type="button"
-                        onClick={() => toggleChunk(selectedChunkIds[index])}
-                        className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-black text-white"
-                      >
-                        {chunk}
-                      </button>
-                    ))
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {chunks.map((chunk, index) => (
-                  <button
-                    key={`${chunk}-${index}`}
-                    type="button"
-                    disabled={selectedChunkIds.includes(index)}
-                    onClick={() => toggleChunk(index)}
-                    className={cn(
-                      "rounded-xl border px-3 py-2 text-sm font-black transition",
-                      selectedChunkIds.includes(index)
-                        ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-300"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50",
-                    )}
-                  >
-                    {chunk}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <ChunkQuestion
+              chunks={chunks}
+              selectedChunkIds={selectedChunkIds}
+              selectedChunkText={selectedChunkText}
+              onToggle={toggleChunk}
+            />
           ) : (
-            <div className="space-y-3">
-              <p className="break-words rounded-2xl bg-slate-50 p-4 text-base font-black leading-7 text-slate-900">{prompt}</p>
-              {activity.type === "sentence_translate" || activity.type === "structure_transform" ? (
-                <Textarea
-                  value={answer}
-                  onChange={(event) => setAnswer(event.target.value)}
-                  placeholder="답을 입력하세요."
-                  className="min-h-28 rounded-2xl border-slate-200 bg-white text-base"
-                  disabled={Boolean(feedback)}
-                />
-              ) : (
-                <Input
-                  value={answer}
-                  onChange={(event) => setAnswer(event.target.value)}
-                  placeholder="답 입력"
-                  className="h-12 rounded-2xl border-slate-200 text-base"
-                  disabled={Boolean(feedback)}
-                />
-              )}
-            </div>
+            <FreeFormQuestion
+              activityType={activity.type}
+              prompt={prompt}
+              answer={answer}
+              setAnswer={setAnswer}
+              disabled={Boolean(feedback)}
+            />
           )}
         </section>
 
-        {submitError && <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-black text-red-600">{submitError}</div>}
+        {submitError && (
+          <p className="border-l-2 border-rose-400 pl-2 text-[12px] font-bold text-rose-600">
+            {submitError}
+          </p>
+        )}
 
         {feedback && (
-          <div
+          <section
             ref={feedbackRef}
             className={cn(
-              "rounded-[28px] border px-4 py-4 shadow-sm",
-              feedback.isCorrect ? "border-blue-100 bg-blue-50 text-blue-900" : "border-amber-100 bg-amber-50 text-amber-950",
+              "space-y-2 border-l-2 pl-3",
+              feedback.isCorrect ? "border-blue-500" : "border-rose-400",
             )}
           >
-            <div className="flex items-center gap-2">
-              {feedback.isCorrect ? <CheckCircle2 className="size-6 text-blue-600" /> : <XCircle className="size-6 text-amber-600" />}
-              <p className="text-base font-black">
-                {feedback.isCorrect ? "정답입니다" : "다시 점검해요"} · {feedback.scoreEarned}/{feedback.scoreMax}점
+            <div className="flex items-center gap-1.5">
+              {feedback.isCorrect ? (
+                <CheckCircle2 className="size-4 text-blue-600" />
+              ) : (
+                <XCircle className="size-4 text-rose-500" />
+              )}
+              <p
+                className={cn(
+                  "text-[13px] font-bold",
+                  feedback.isCorrect ? "text-blue-700" : "text-rose-600",
+                )}
+              >
+                {feedback.isCorrect ? "정답입니다" : "다시 점검해요"} · {feedback.scoreEarned}/
+                {feedback.scoreMax}점
               </p>
             </div>
-            <p className="mt-3 whitespace-pre-wrap text-sm font-semibold leading-6">{feedback.explanation}</p>
-          </div>
+            <p className="whitespace-pre-wrap text-[12.5px] font-medium leading-6 text-slate-700">
+              {feedback.explanation}
+            </p>
+          </section>
         )}
       </div>
 
-      <footer className="sticky bottom-[86px] z-10 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 md:bottom-[120px] md:px-8">
+      <footer className="sticky bottom-[78px] z-20 border-t border-slate-100 bg-white/95 px-3 py-2.5 backdrop-blur md:bottom-[102px]">
         {feedback ? (
           <div className="grid grid-cols-[auto_1fr] gap-2">
-            <Button variant="outline" onClick={resetLocalAnswer} className="h-12 rounded-2xl px-4" aria-label="현재 활동 다시 풀기">
+            <Button
+              variant="outline"
+              onClick={resetLocalAnswer}
+              className="h-11 rounded-xl px-3"
+              aria-label="현재 활동 다시 풀기"
+            >
               <RotateCcw className="size-4" />
             </Button>
-            <Button onClick={goNext} className="h-12 rounded-2xl bg-blue-600 text-base font-black hover:bg-blue-700">
+            <Button
+              onClick={goNext}
+              className="h-11 rounded-xl bg-blue-600 text-[13px] font-bold hover:bg-blue-700"
+            >
               {nextActivityId ? "다음 활동" : "학습 랩으로"}
               <ChevronRight className="ml-1 size-4" />
             </Button>
@@ -467,12 +353,311 @@ export function ActivityPlayer({
             data-testid="tutor-activity-submit"
             onClick={submit}
             disabled={isPending || !canSubmit}
-            className="h-12 w-full rounded-2xl bg-blue-600 text-base font-black hover:bg-blue-700"
+            className="h-11 w-full rounded-xl bg-blue-600 text-[13px] font-bold hover:bg-blue-700"
           >
             {isPending ? "채점 중" : "채점하기"}
           </Button>
         )}
       </footer>
+    </div>
+  );
+}
+
+function PassageStrip({
+  title,
+  content,
+  showPassage,
+  onToggle,
+}: {
+  title: string;
+  content: string;
+  showPassage: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <section className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold tracking-wide text-slate-400">PASSAGE</p>
+          <p className="line-clamp-1 text-[12.5px] font-bold text-slate-900">{title}</p>
+        </div>
+        <button
+          type="button"
+          onClick={onToggle}
+          className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-slate-100 px-2.5 text-[11px] font-bold text-slate-600 active:bg-slate-200"
+        >
+          {showPassage ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+          {showPassage ? "가리기" : "원문 보기"}
+        </button>
+      </div>
+      {showPassage ? (
+        <p className="max-h-44 overflow-y-auto whitespace-pre-wrap border-l-2 border-slate-100 pl-3 font-mono text-[12.5px] font-medium leading-6 text-slate-700">
+          {content}
+        </p>
+      ) : (
+        <p className="border-l-2 border-dashed border-slate-200 pl-3 text-[11.5px] font-medium leading-6 text-slate-400">
+          원문을 가리고 기억으로 풀어보는 모드입니다.
+        </p>
+      )}
+    </section>
+  );
+}
+
+function ChoiceQuestion({
+  activityType,
+  prompt,
+  payload,
+  options,
+  selected,
+  feedback,
+  onSelect,
+}: {
+  activityType: string;
+  prompt: string;
+  payload: ActivityPayload;
+  options: unknown[];
+  selected: number | null;
+  feedback: boolean;
+  onSelect: (index: number) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <QuestionPrompt activityType={activityType} prompt={prompt} payload={payload} />
+      <div className="grid gap-1.5">
+        {options.map((option, index) => {
+          const detail = optionDetail(option);
+          const active = selected === index;
+          return (
+            <button
+              key={`${optionLabel(option, index)}-${index}`}
+              type="button"
+              data-testid="tutor-choice-option"
+              disabled={feedback}
+              onClick={() => onSelect(index)}
+              className={cn(
+                "rounded-xl border px-3 py-2.5 text-left text-[13px] font-bold leading-5 transition",
+                active
+                  ? "border-blue-500 bg-blue-50/60 text-blue-800"
+                  : "border-slate-100 bg-white text-slate-700 active:border-blue-200",
+              )}
+            >
+              <span className="block">{optionLabel(option, index)}</span>
+              {detail && (
+                <span className="mt-1 block text-[11px] font-medium leading-5 text-slate-500">
+                  <span className="block">앞: {detail.before}</span>
+                  <span className="block">뒤: {detail.after}</span>
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function OrderQuestion({
+  orderItems,
+  selectedOrder,
+  onToggle,
+}: {
+  orderItems: Array<{ index: number; text: string }>;
+  selectedOrder: number[];
+  onToggle: (index: number) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="mb-1.5 text-[10px] font-bold tracking-wide text-blue-600">내가 만든 순서</p>
+        <div className="flex flex-wrap gap-1.5 border-l-2 border-blue-200 pl-2.5">
+          {selectedOrder.length === 0 ? (
+            <span className="text-[12px] font-medium text-slate-400">
+              아래 문장을 순서대로 누르세요.
+            </span>
+          ) : (
+            selectedOrder.map((index, orderIndex) => (
+              <button
+                key={`${index}-${orderIndex}`}
+                type="button"
+                onClick={() => onToggle(index)}
+                className="rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-700"
+              >
+                {orderIndex + 1}. 문장 {index + 1}
+              </button>
+            ))
+          )}
+        </div>
+      </div>
+      <div className="grid gap-1.5">
+        {orderItems.map((item) => {
+          const pickedIndex = selectedOrder.indexOf(item.index);
+          const active = pickedIndex >= 0;
+          return (
+            <button
+              key={item.index}
+              type="button"
+              onClick={() => onToggle(item.index)}
+              className={cn(
+                "rounded-xl border px-3 py-2.5 text-left transition",
+                active
+                  ? "border-blue-300 bg-blue-50/60"
+                  : "border-slate-100 bg-white active:border-blue-200",
+              )}
+            >
+              <span className="block text-[10px] font-bold text-slate-400">
+                {active ? `${pickedIndex + 1}번째 선택` : "순서에 추가"}
+              </span>
+              <span className="mt-0.5 block font-mono text-[12.5px] font-medium leading-6 text-slate-800">
+                {item.text}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function VocabMatchQuestion({
+  leftItems,
+  rightItems,
+  matches,
+  feedback,
+  onMatch,
+}: {
+  leftItems: string[];
+  rightItems: string[];
+  matches: Record<string, string>;
+  feedback: boolean;
+  onMatch: (left: string, right: string) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="text-[12px] font-medium text-slate-500">영단어와 한국어 뜻을 하나씩 연결하세요.</p>
+      <div className="space-y-3">
+        {leftItems.map((left) => (
+          <div key={left} className="border-l-2 border-slate-100 pl-3">
+            <p className="mb-1.5 font-mono text-[13.5px] font-bold text-slate-900">{left}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {rightItems.map((right) => (
+                <button
+                  key={`${left}-${right}`}
+                  type="button"
+                  disabled={feedback}
+                  onClick={() => onMatch(left, right)}
+                  className={cn(
+                    "rounded-md border px-2 py-1 text-[11px] font-bold transition",
+                    matches[left] === right
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-slate-100 bg-white text-slate-600 active:border-blue-200",
+                  )}
+                >
+                  {right}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ChunkQuestion({
+  chunks,
+  selectedChunkIds,
+  selectedChunkText,
+  onToggle,
+}: {
+  chunks: string[];
+  selectedChunkIds: number[];
+  selectedChunkText: string[];
+  onToggle: (index: number) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="mb-1.5 text-[10px] font-bold tracking-wide text-blue-600">완성한 문장</p>
+        <div className="flex flex-wrap gap-1.5 border-l-2 border-blue-200 pl-2.5">
+          {selectedChunkIds.length === 0 ? (
+            <span className="text-[12px] font-medium text-slate-400">
+              아래 조각을 원문 순서대로 누르세요.
+            </span>
+          ) : (
+            selectedChunkText.map((chunk, index) => (
+              <button
+                key={`${chunk}-${index}`}
+                type="button"
+                onClick={() => onToggle(selectedChunkIds[index])}
+                className="rounded-md bg-blue-600 px-2 py-1 font-mono text-[11px] font-bold text-white"
+              >
+                {chunk}
+              </button>
+            ))
+          )}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {chunks.map((chunk, index) => {
+          const picked = selectedChunkIds.includes(index);
+          return (
+            <button
+              key={`${chunk}-${index}`}
+              type="button"
+              disabled={picked}
+              onClick={() => onToggle(index)}
+              className={cn(
+                "rounded-md border px-2 py-1 font-mono text-[12px] font-bold transition",
+                picked
+                  ? "cursor-not-allowed border-slate-100 bg-slate-50 text-slate-300"
+                  : "border-slate-200 bg-white text-slate-700 active:border-blue-300 active:bg-blue-50",
+              )}
+            >
+              {chunk}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function FreeFormQuestion({
+  activityType,
+  prompt,
+  answer,
+  setAnswer,
+  disabled,
+}: {
+  activityType: string;
+  prompt: string;
+  answer: string;
+  setAnswer: (value: string) => void;
+  disabled: boolean;
+}) {
+  const isTextarea = activityType === "sentence_translate" || activityType === "structure_transform";
+  return (
+    <div className="space-y-2.5">
+      <p className="break-words border-l-2 border-slate-200 pl-3 font-mono text-[13.5px] font-bold leading-7 text-slate-900">
+        {prompt}
+      </p>
+      {isTextarea ? (
+        <Textarea
+          value={answer}
+          onChange={(event) => setAnswer(event.target.value)}
+          placeholder="답을 입력하세요."
+          className="min-h-24 rounded-xl border-slate-200 bg-white text-[13.5px] leading-6"
+          disabled={disabled}
+        />
+      ) : (
+        <Input
+          value={answer}
+          onChange={(event) => setAnswer(event.target.value)}
+          placeholder="답 입력"
+          className="h-11 rounded-xl border-slate-200 text-[13.5px]"
+          disabled={disabled}
+        />
+      )}
     </div>
   );
 }
@@ -486,23 +671,37 @@ function QuestionPrompt({
   prompt: string;
   payload: ActivityPayload;
 }) {
-  if (activityType === "vocab_choice" || activityType === "contextual_meaning" || activityType === "collocation_select") {
+  if (
+    activityType === "vocab_choice" ||
+    activityType === "contextual_meaning" ||
+    activityType === "collocation_select"
+  ) {
     return (
-      <div className="rounded-2xl bg-slate-50 p-5 text-center">
-        <p className="text-2xl font-black text-slate-950">{String(payload.stem ?? prompt)}</p>
+      <div className="border-l-2 border-slate-200 pl-3">
+        <p className="font-mono text-xl font-bold leading-7 text-slate-900">
+          {String(payload.stem ?? prompt)}
+        </p>
         {payload.sentenceIndex !== undefined && (
-          <p className="mt-2 text-xs font-black text-slate-400">문장 {Number(payload.sentenceIndex) + 1} 기반</p>
+          <p className="mt-1 text-[10px] font-bold text-slate-400">
+            문장 {Number(payload.sentenceIndex) + 1} 기반
+          </p>
         )}
       </div>
     );
   }
   if (activityType === "insertion_point") {
     return (
-      <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
-        <p className="mb-1 text-xs font-black text-blue-700">제시문</p>
-        <p className="text-sm font-black leading-7 text-slate-950">{String(payload.targetSentence ?? prompt)}</p>
+      <div className="border-l-2 border-blue-300 pl-3">
+        <p className="mb-1 text-[10px] font-bold text-blue-600">제시문</p>
+        <p className="font-mono text-[13.5px] font-bold leading-7 text-slate-900">
+          {String(payload.targetSentence ?? prompt)}
+        </p>
       </div>
     );
   }
-  return <p className="rounded-2xl bg-slate-50 p-4 text-sm font-black leading-7 text-slate-950">{prompt}</p>;
+  return (
+    <p className="break-words border-l-2 border-slate-200 pl-3 font-mono text-[13.5px] font-bold leading-7 text-slate-900">
+      {prompt}
+    </p>
+  );
 }

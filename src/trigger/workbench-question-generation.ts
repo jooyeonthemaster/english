@@ -1,0 +1,309 @@
+import { logger, task } from "@trigger.dev/sdk/v3";
+
+import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
+import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
+import {
+  InsufficientCreditsError,
+  refundCredits,
+} from "@/lib/credits";
+import { generateQuestionObject } from "@/lib/question-generation-llm";
+import {
+  getQuestionGenerationCreditCost,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
+import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
+import { prisma } from "@/lib/prisma";
+import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
+import {
+  buildAnalysisContext,
+  extractTeacherAnnotations,
+} from "@/app/api/ai/generate-questions-auto/_lib/build-analysis-context";
+import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
+import { buildPlanningPrompt } from "@/app/api/ai/generate-questions-auto/_lib/prompts";
+import { runQuestionGeneration } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
+import { planSchema, type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
+
+type Input = { jobId: string };
+
+const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
+
+interface QuestionJobConfig {
+  mode: "AUTO" | "MANUAL";
+  count: number;
+  questionType?: string;
+  difficulty: string;
+  customPrompt?: string;
+  generationPlan: QuestionGenerationPlan;
+}
+
+function parseConfig(value: unknown, fallbackPlan: unknown): QuestionJobConfig {
+  const raw =
+    value && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : {};
+  const mode = raw.mode === "MANUAL" ? "MANUAL" : "AUTO";
+  return {
+    mode,
+    count:
+      typeof raw.count === "number" && Number.isFinite(raw.count)
+        ? Math.max(1, Math.floor(raw.count))
+        : 1,
+    questionType:
+      typeof raw.questionType === "string" ? raw.questionType : undefined,
+    difficulty:
+      typeof raw.difficulty === "string" ? raw.difficulty : "INTERMEDIATE",
+    customPrompt:
+      typeof raw.customPrompt === "string" ? raw.customPrompt : undefined,
+    generationPlan: normalizeQuestionGenerationPlan(
+      raw.generationPlan ?? fallbackPlan,
+    ),
+  };
+}
+
+function getOperationType(config: QuestionJobConfig): OperationType {
+  if (config.mode === "AUTO") return "AUTO_GEN_BATCH";
+  return config.questionType && VOCAB_TYPES.has(config.questionType)
+    ? "QUESTION_GEN_VOCAB"
+    : "QUESTION_GEN_SINGLE";
+}
+
+function buildManualPlan(config: QuestionJobConfig): PlanResult["plan"] {
+  if (!config.questionType) {
+    throw new Error("Manual question generation requires questionType.");
+  }
+  return [
+    {
+      subType: config.questionType,
+      count: config.count,
+      reason: "Manual teacher-selected question type.",
+      targetPoints: [],
+    },
+  ];
+}
+
+export const workbenchQuestionGenerationTask = task({
+  id: "workbench-question-generation",
+  queue: { name: "workbench-ai", concurrencyLimit: 3 },
+  retry: {
+    maxAttempts: 2,
+    minTimeoutInMs: 2000,
+    maxTimeoutInMs: 30000,
+    factor: 2,
+    randomize: true,
+  },
+  maxDuration: 600,
+  async run(payload: Input, { ctx }) {
+    const { jobId } = payload;
+    const now = new Date();
+
+    const job = await prisma.workbenchAiJob.findUnique({
+      where: { id: jobId },
+      include: {
+        passage: {
+          include: {
+            school: { select: { type: true, name: true } },
+            analysis: { select: { analysisData: true } },
+            notes: { orderBy: { order: "asc" } },
+          },
+        },
+      },
+    });
+
+    if (!job || job.domain !== "QUESTION_GENERATION") {
+      return { skipped: true as const, reason: "JOB_NOT_FOUND" };
+    }
+    if (["COMPLETED", "PARTIAL", "FAILED", "CANCELLED"].includes(job.status)) {
+      return { skipped: true as const, status: job.status };
+    }
+    if (!job.passage) {
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage: "Passage not found.",
+          completedAt: now,
+        },
+      });
+      return { error: "PASSAGE_NOT_FOUND" as const };
+    }
+    if (!job.passage.analysis) {
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage: "Passage analysis is required before generating questions.",
+          completedAt: now,
+        },
+      });
+      return { error: "ANALYSIS_REQUIRED" as const };
+    }
+
+    const config = parseConfig(job.config, job.generationPlan);
+    const operationType = getOperationType(config);
+    const baseCost = CREDIT_COSTS[operationType];
+    const creditCost = getQuestionGenerationCreditCost(
+      baseCost,
+      config.generationPlan,
+    );
+
+    await prisma.workbenchAiJob.update({
+      where: { id: jobId },
+      data: {
+        status: "PROCESSING",
+        startedAt: job.startedAt ?? now,
+        triggerRunId: ctx.run.id,
+      },
+    });
+
+    let creditTxId: string | null = null;
+    try {
+      const credit = await ensureWorkbenchAiJobCharged({
+        jobId,
+        academyId: job.academyId,
+        staffId: job.createdById,
+        operationType,
+        metadata: {
+          passageId: job.passage.id,
+          mode: config.mode,
+          questionType: config.questionType,
+          count: config.count,
+          generationPlan: config.generationPlan,
+          creditCost,
+        },
+        creditCost,
+      });
+      creditTxId = credit.transactionId;
+
+      const schoolType =
+        job.passage.school?.type === "MIDDLE" ? "중학교" : "고등학교";
+      const gradeInfo = job.passage.grade ? `${job.passage.grade}학년` : "";
+      const teacherAnnotations = extractTeacherAnnotations(job.passage);
+      const teacherIntentBlock = buildQuestionAnnotationBlock(teacherAnnotations);
+      const analysisContext = buildAnalysisContext(job.passage);
+      const diffLabel = config.difficulty || "INTERMEDIATE";
+      const diffInstruction =
+        DIFF_DESCRIPTION[diffLabel] || DIFF_DESCRIPTION.INTERMEDIATE;
+
+      let plan: PlanResult["plan"];
+      let rationale = "";
+      if (config.mode === "AUTO") {
+        const { object: planResult } = await generateQuestionObject({
+          schema: planSchema,
+          prompt: buildPlanningPrompt({
+            schoolType,
+            gradeInfo,
+            count: config.count,
+            passageContent: job.passage.content,
+            teacherIntentBlock,
+            analysisContext,
+            customPrompt: config.customPrompt,
+            diffLabel,
+          }),
+          generationPlan: config.generationPlan,
+          logPrefix: "WORKBENCH-AUTO-GEN-PLAN",
+          maxTokens: 4_096,
+        });
+        plan = planResult.plan;
+        rationale = planResult.rationale;
+      } else {
+        plan = buildManualPlan(config);
+      }
+
+      const questions = await runQuestionGeneration({
+        plan,
+        schoolType,
+        gradeInfo,
+        passageContent: job.passage.content,
+        teacherIntentBlock,
+        analysisContext,
+        diffLabel,
+        diffInstruction,
+        generationPlan: config.generationPlan,
+        customPrompt: config.customPrompt,
+      });
+
+      if (questions.length === 0) {
+        throw new Error("No questions generated.");
+      }
+
+      const createdQuestionIds = await saveGeneratedQuestionsForJob({
+        academyId: job.academyId,
+        passageId: job.passage.id,
+        questions,
+        generationPlan: config.generationPlan,
+      });
+
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          status: "COMPLETED",
+          successCount: questions.length,
+          failedCount: 0,
+          resultCount: questions.length,
+          result: JSON.parse(JSON.stringify({
+            passageId: job.passage.id,
+            questions,
+            questionIds: createdQuestionIds,
+            rationale,
+            generationPlan: config.generationPlan,
+          })),
+          completedAt: new Date(),
+        },
+      });
+
+      logger.info("question generation job completed", {
+        jobId,
+        passageId: job.passage.id,
+        count: questions.length,
+      });
+
+      return { success: true as const, count: questions.length };
+    } catch (err) {
+      if (err instanceof InsufficientCreditsError) {
+        await prisma.workbenchAiJob.update({
+          where: { id: jobId },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage: `Insufficient credits: have ${err.currentBalance}, need ${err.requiredCredits}`,
+            completedAt: new Date(),
+          },
+        });
+        return { error: "INSUFFICIENT_CREDITS" as const };
+      }
+
+      if (creditTxId) {
+        await refundCredits(
+          job.academyId,
+          operationType,
+          creditTxId,
+          "Workbench question generation failed",
+          creditCost,
+        ).catch((refundErr) => {
+          logger.error("question generation refund failed", {
+            jobId,
+            error: String(refundErr),
+          });
+        });
+      }
+
+      const message =
+        err instanceof Error ? err.message : "Question generation failed.";
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage: message,
+          completedAt: new Date(),
+        },
+      });
+
+      logger.error("question generation job failed", { jobId, error: message });
+      throw err;
+    }
+  },
+});

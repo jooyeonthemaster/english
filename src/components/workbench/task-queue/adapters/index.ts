@@ -1,16 +1,16 @@
 import type { TaskAdapter } from "../types";
 import { extractionAdapter } from "./extraction-adapter";
 import { webtoonAdapter } from "./webtoon-adapter";
+import { examGenerationAdapter } from "./stub-adapters";
 import {
-  passageAnalysisAdapter,
-  questionGenerationAdapter,
-  examGenerationAdapter,
-} from "./stub-adapters";
+  workbenchPassageAnalysisAdapter,
+  workbenchQuestionGenerationAdapter,
+} from "./workbench-ai-adapter";
 
 export const ALL_ADAPTERS: TaskAdapter[] = [
   extractionAdapter,
-  passageAnalysisAdapter,
-  questionGenerationAdapter,
+  workbenchPassageAnalysisAdapter,
+  workbenchQuestionGenerationAdapter,
   examGenerationAdapter,
   webtoonAdapter,
 ];

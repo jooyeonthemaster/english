@@ -375,7 +375,7 @@ export function PassageRegistrationClient({
             throw new Error(result.error || "CREATE_FAILED");
           }
 
-          addToQueue(
+          await addToQueue(
             {
               id: result.id,
               title: draftTitle,

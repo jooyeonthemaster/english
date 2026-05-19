@@ -2,7 +2,6 @@
 
 import { useState, memo } from "react";
 import {
-  FileText,
   Loader2,
   CheckCircle2,
   AlertTriangle,
@@ -20,7 +19,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -160,10 +158,16 @@ export const PassageQueueCard = memo(function PassageQueueCard({
     : null;
 
   const questionsCount = passage.passageData.questions.length;
+  const isLoading = passage.status === "pending" || passage.status === "analyzing";
+  const loadingClass = isLoading
+    ? passage.status === "analyzing"
+      ? "workbench-loading-card workbench-loading-card--analyzing"
+      : "workbench-loading-card workbench-loading-card--pending"
+    : "";
 
   return (
     <div
-      className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+      className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
       }`}
       onClick={() => {
@@ -191,11 +195,6 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       }}
       aria-label={`${passage.title} - ${config.label}`}
     >
-      {/* Analyzing pulse ring */}
-      {config.pulseRing && (
-        <div className="absolute -inset-px rounded-xl border-2 border-blue-300 animate-pulse pointer-events-none" />
-      )}
-
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-start gap-2.5 min-w-0 flex-1">
@@ -225,6 +224,13 @@ export const PassageQueueCard = memo(function PassageQueueCard({
               <span className={`text-[10px] font-medium ${config.color}`}>
                 {config.label}
               </span>
+              {isLoading && (
+                <span className="ml-0.5 inline-flex items-center gap-0.5" aria-hidden="true">
+                  <span className="workbench-loading-dot h-1 w-1 rounded-full bg-blue-400" />
+                  <span className="workbench-loading-dot h-1 w-1 rounded-full bg-sky-400 [animation-delay:0.16s]" />
+                  <span className="workbench-loading-dot h-1 w-1 rounded-full bg-teal-400 [animation-delay:0.32s]" />
+                </span>
+              )}
               {planConfig && (
                 <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
                   {planConfig.shortLabel}
@@ -374,16 +380,21 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       )}
 
       {/* Analysis progress indicator */}
-      {passage.status === "analyzing" && (
+      {isLoading && (
         <div className="mt-3">
-          <div className="h-1 bg-blue-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-white/75 rounded-full overflow-hidden ring-1 ring-blue-100/80">
             <div
-              className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse"
-              style={{ width: "65%", transition: "width 0.3s ease" }}
+              className={`workbench-loading-progress h-full rounded-full ${
+                passage.status === "analyzing"
+                  ? "workbench-loading-progress--analyzing"
+                  : "workbench-loading-progress--pending"
+              }`}
             />
           </div>
-          <p className="text-[10px] text-blue-500 mt-1.5">
-            AI가 5층 분석을 수행 중입니다...
+          <p className="text-[10px] text-blue-500 mt-1.5 font-medium">
+            {passage.status === "analyzing"
+              ? "AI가 5층 분석을 수행 중입니다..."
+              : "분석 작업 대기열에서 준비 중입니다..."}
           </p>
         </div>
       )}

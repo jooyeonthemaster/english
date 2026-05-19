@@ -35,6 +35,7 @@ interface RunGenerationInput {
   diffLabel: string;
   diffInstruction: string;
   generationPlan: QuestionGenerationPlan;
+  customPrompt?: string;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -51,6 +52,7 @@ export async function runQuestionGeneration({
   diffLabel,
   diffInstruction,
   generationPlan,
+  customPrompt,
 }: RunGenerationInput): Promise<Record<string, unknown>[]> {
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
@@ -98,6 +100,7 @@ export async function runQuestionGeneration({
             typeCount,
             diffLabel,
             diffInstruction,
+            customPrompt,
           }),
           generationPlan,
           Math.min(20_000, Math.max(4_096, (Number(typeCount) || 1) * 4_096)),
