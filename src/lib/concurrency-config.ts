@@ -98,6 +98,8 @@ export const GEMINI_QUESTION_MAX_RETRIES = readPositiveIntegerEnv(
 );
 export const GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS =
   readPositiveIntegerEnv("GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS", 2);
+export const QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS =
+  readPositiveIntegerEnv("QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS", 30_000);
 
 export function academyConcurrencyKey(academyId: string): string {
   return `academy:${academyId}`;

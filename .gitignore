@@ -94,3 +94,5 @@ google-credentials*.json
 /.agents/
 /.codex/
 /skills-lock.json
+
+.env*.local

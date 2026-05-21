@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
+import { QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS } from "@/lib/concurrency-config";
 import {
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
@@ -116,73 +117,80 @@ export async function saveGeneratedQuestionsForJob({
   }
 
   const createdIds: string[] = [];
-  await prisma.$transaction(async (tx) => {
-    for (const q of questions) {
-      const plan = normalizeQuestionGenerationPlan(
-        q._generationPlan ?? generationPlan,
-      );
-      const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q.tags), plan);
-      const enriched = { ...q, _generationPlan: plan, tags };
-      const options = q.options;
-      const explanation = q.explanation;
-      const keyPoints = q.keyPoints;
-      const wrongOptionExplanations = q.wrongOptionExplanations;
+  const createInputs = questions.map((q) => {
+    const plan = normalizeQuestionGenerationPlan(
+      q._generationPlan ?? generationPlan,
+    );
+    const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q.tags), plan);
+    const enriched = { ...q, _generationPlan: plan, tags };
+    const options = q.options;
+    const explanation = q.explanation;
+    const keyPoints = q.keyPoints;
+    const wrongOptionExplanations = q.wrongOptionExplanations;
 
-      const explanationCreate =
-        typeof explanation === "string" && explanation.trim()
-          ? {
-              create: {
-                content: explanation,
-                keyPoints:
-                  keyPoints === undefined || keyPoints === null
-                    ? null
-                    : typeof keyPoints === "string"
-                      ? keyPoints
-                      : JSON.stringify(keyPoints),
-                wrongOptionExplanations:
-                  wrongOptionExplanations === undefined ||
-                  wrongOptionExplanations === null
-                    ? null
-                    : typeof wrongOptionExplanations === "string"
-                      ? wrongOptionExplanations
-                      : JSON.stringify(wrongOptionExplanations),
-                aiGenerated: true,
-              },
-            }
-          : undefined;
+    const explanationCreate =
+      typeof explanation === "string" && explanation.trim()
+        ? {
+            create: {
+              content: explanation,
+              keyPoints:
+                keyPoints === undefined || keyPoints === null
+                  ? null
+                  : typeof keyPoints === "string"
+                    ? keyPoints
+                    : JSON.stringify(keyPoints),
+              wrongOptionExplanations:
+                wrongOptionExplanations === undefined ||
+                wrongOptionExplanations === null
+                  ? null
+                  : typeof wrongOptionExplanations === "string"
+                    ? wrongOptionExplanations
+                    : JSON.stringify(wrongOptionExplanations),
+              aiGenerated: true,
+            },
+          }
+        : undefined;
 
-      const question = await tx.question.create({
-        data: {
-          academyId,
-          passageId,
-          type: Array.isArray(options) ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-          subType:
-            typeof q._typeId === "string"
-              ? q._typeId
-              : typeof q.subType === "string"
-                ? q.subType
-                : null,
-          questionText: buildGeneratedQuestionText(q),
-          structuredData: toPrismaJson(enriched),
-          options: Array.isArray(options) ? JSON.stringify(options) : null,
-          correctAnswer:
-            typeof q.correctAnswer === "string"
-              ? q.correctAnswer
-              : typeof q.modelAnswer === "string"
-                ? q.modelAnswer
-                : "",
-          points: 1,
-          difficulty:
-            typeof q.difficulty === "string" ? q.difficulty : "INTERMEDIATE",
-          tags: JSON.stringify(tags),
-          aiGenerated: true,
-          approved: false,
-          explanation: explanationCreate,
-        },
-      });
-      createdIds.push(question.id);
-    }
+    return {
+      data: {
+        academyId,
+        passageId,
+        type: Array.isArray(options) ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+        subType:
+          typeof q._typeId === "string"
+            ? q._typeId
+            : typeof q.subType === "string"
+              ? q.subType
+              : null,
+        questionText: buildGeneratedQuestionText(q),
+        structuredData: toPrismaJson(enriched),
+        options: Array.isArray(options) ? JSON.stringify(options) : null,
+        correctAnswer:
+          typeof q.correctAnswer === "string"
+            ? q.correctAnswer
+            : typeof q.modelAnswer === "string"
+              ? q.modelAnswer
+              : "",
+        points: 1,
+        difficulty:
+          typeof q.difficulty === "string" ? q.difficulty : "INTERMEDIATE",
+        tags: JSON.stringify(tags),
+        aiGenerated: true,
+        approved: false,
+        explanation: explanationCreate,
+      },
+    };
   });
+
+  await prisma.$transaction(
+    async (tx) => {
+      for (const input of createInputs) {
+        const question = await tx.question.create(input);
+        createdIds.push(question.id);
+      }
+    },
+    { maxWait: 10_000, timeout: QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS },
+  );
 
   return createdIds;
 }
