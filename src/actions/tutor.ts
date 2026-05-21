@@ -447,6 +447,217 @@ export async function createTutorProgramAction(formData: FormData): Promise<Acti
   return { ok: true, id: result.id };
 }
 
+export async function addTutorProgramPassagesAction(
+  programId: string,
+  passageIds: string[],
+): Promise<ActionResult & { added?: number; skipped?: number }> {
+  const staff = await requireStaffAuth("DIRECTOR");
+  const cleanIds = Array.from(
+    new Set(
+      passageIds
+        .map((id) => String(id ?? "").trim())
+        .filter(Boolean),
+    ),
+  ).slice(0, 80);
+
+  if (!programId || cleanIds.length === 0) {
+    return { ok: false, error: "추가할 지문을 선택해주세요." };
+  }
+
+  const program = await prisma.tutorProgram.findFirst({
+    where: {
+      id: programId,
+      academyId: staff.academyId,
+      deletedAt: null,
+      status: { not: "ARCHIVED" },
+    },
+    include: {
+      lessons: {
+        select: {
+          orderNum: true,
+          lesson: { select: { passageId: true } },
+        },
+      },
+    },
+  });
+  if (!program) return { ok: false, error: "프로그램을 찾을 수 없어요." };
+
+  const existingPassageIds = new Set(program.lessons.map((link) => link.lesson.passageId));
+  const requestedNewIds = cleanIds.filter((id) => !existingPassageIds.has(id));
+  if (requestedNewIds.length === 0) {
+    return { ok: false, error: "선택한 지문이 이미 이 프로그램에 들어있어요.", skipped: cleanIds.length };
+  }
+
+  const passages = await prisma.passage.findMany({
+    where: { id: { in: requestedNewIds }, academyId: staff.academyId },
+    include: { analysis: true },
+  });
+  const passageById = new Map(passages.map((passage) => [passage.id, passage]));
+  const orderedPassages = requestedNewIds
+    .map((id) => passageById.get(id))
+    .filter((passage): passage is NonNullable<typeof passage> => Boolean(passage));
+
+  if (orderedPassages.length === 0) {
+    return { ok: false, error: "추가할 수 있는 지문을 찾지 못했어요." };
+  }
+  if (orderedPassages.some((passage) => !passage.analysis?.analysisData)) {
+    return { ok: false, error: "모바일 학습 생성은 분석 완료된 지문만 가능합니다." };
+  }
+
+  const prepared = await Promise.all(
+    orderedPassages.map(async (passage) => {
+      const analysis = parsePassageAnalysis(passage.analysis?.analysisData);
+      if (!analysis) return null;
+
+      let drafts = buildRuleBasedTutorDrafts(analysis);
+      let aiLogData: {
+        model: string;
+        tokensIn: number;
+        tokensOut: number;
+        latencyMs: number;
+        status: "ok" | "parse_fail";
+      } = {
+        model: "fallback",
+        tokensIn: 0,
+        tokensOut: 0,
+        latencyMs: 0,
+        status: "parse_fail",
+      };
+
+      try {
+        const generated = await generateTutorDraftsWithModel(analysis);
+        const valid = validateGroundedDrafts(generated.activities, analysis);
+        if (valid.length >= 8) {
+          const seen = new Set<string>();
+          drafts = [...drafts, ...valid].filter((draft) => {
+            const key = `${draft.type}:${draft.title}:${JSON.stringify(draft.coverageRefs)}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          });
+        }
+        const tokenUsage = readTokenUsage(generated.usage);
+        aiLogData = {
+          model: generated.model,
+          tokensIn: tokenUsage.input,
+          tokensOut: tokenUsage.output,
+          latencyMs: generated.latencyMs,
+          status: "ok",
+        };
+      } catch {}
+
+      return { passage, analysis, drafts, aiLogData };
+    }),
+  );
+
+  const validPrepared = prepared.filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+  if (validPrepared.length === 0) {
+    return { ok: false, error: "지문 분석 데이터를 학습 활동으로 변환하지 못했어요." };
+  }
+
+  await prisma.$transaction(
+    async (tx) => {
+      const maxOrder = program.lessons.reduce((max, link) => Math.max(max, link.orderNum), -1);
+
+      for (const [index, entry] of validPrepared.entries()) {
+        const { passage, analysis, drafts, aiLogData } = entry;
+
+        const lesson = await tx.tutorLesson.create({
+          data: {
+            academyId: staff.academyId,
+            passageId: passage.id,
+            authorId: staff.id,
+            title: passage.title,
+            description: passage.unit ?? null,
+            aiContext: {
+              passageContentHash: passage.contentHash,
+              analysisVersion: passage.analysis?.version,
+              builderAddedAt: new Date().toISOString(),
+            },
+          },
+        });
+
+        await tx.tutorProgramLesson.create({
+          data: {
+            academyId: staff.academyId,
+            programId: program.id,
+            lessonId: lesson.id,
+            orderNum: maxOrder + index + 1,
+          },
+        });
+
+        await tx.tutorAiLog.create({
+          data: {
+            academyId: staff.academyId,
+            kind: "activity_draft",
+            passageId: passage.id,
+            programId: program.id,
+            lessonId: lesson.id,
+            staffId: staff.id,
+            model: aiLogData.model,
+            promptHash: sha256Json({ passageId: passage.id, version: passage.analysis?.version, source: "builder_add" }),
+            tokensIn: aiLogData.tokensIn,
+            tokensOut: aiLogData.tokensOut,
+            costUsd: 0,
+            latencyMs: aiLogData.latencyMs,
+            status: aiLogData.status,
+          },
+        });
+
+        await tx.tutorActivity.createMany({
+          data: drafts.map((draft, orderNum) => ({
+            academyId: staff.academyId,
+            lessonId: lesson.id,
+            mode: draft.mode,
+            type: draft.type,
+            orderNum,
+            title: draft.title,
+            instructions: draft.instructions ?? null,
+            payload: asJsonInput(draft.payload),
+            payloadHash: sha256Json(draft.payload),
+            analysisSnapshotHash: sha256Json(analysis),
+            itemCount: draft.itemCount,
+            maxScore: draft.maxScore,
+            estimatedSec: draft.estimatedSec,
+            requiresAiGrade: ["back_translation", "dictogloss", "transfer_mini_passage"].includes(draft.type),
+            coverageRefs: asJsonInput(draft.coverageRefs),
+            sourceAnalysisVersion: passage.analysis?.version,
+            createdBy: "system",
+            status: "APPROVED",
+          })),
+        });
+
+        await tx.tutorLesson.update({
+          where: { id: lesson.id },
+          data: {
+            activityCount: drafts.length,
+            totalMaxScore: drafts.reduce((sum, draft) => sum + draft.maxScore, 0),
+          },
+        });
+      }
+
+      await tx.tutorProgram.update({
+        where: { id: program.id },
+        data: {
+          targetSummary: `${program.lessons.length + validPrepared.length}개 지문`,
+          estimatedMin: Math.max(10, program.estimatedMin + validPrepared.length * 15),
+        },
+      });
+    },
+    { timeout: 30_000, maxWait: 5_000 },
+  );
+
+  revalidatePath("/director/tutor");
+  revalidatePath("/director/tutor/programs");
+  revalidatePath(`/director/tutor/programs/${program.id}/builder`);
+  return {
+    ok: true,
+    id: program.id,
+    added: validPrepared.length,
+    skipped: cleanIds.length - validPrepared.length,
+  };
+}
+
 async function resolveRecipients(academyId: string, targetType: string, targetId?: string) {
   if (targetType === "ALL_ACTIVE") {
     return prisma.student.findMany({ where: { academyId, status: "ACTIVE" }, select: { id: true } });

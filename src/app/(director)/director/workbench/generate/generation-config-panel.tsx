@@ -260,6 +260,21 @@ export function GenerationConfigPanel({
         {/* Manual Mode Config */}
         {genMode === "manual" && (
           <div className="px-5 py-3 space-y-4">
+            {/* Difficulty */}
+            <div>
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">난이도</span>
+              <div className="flex gap-2">
+                {([{ value: "BASIC", label: "기본" }, { value: "INTERMEDIATE", label: "중급" }, { value: "KILLER", label: "킬러" }] as const).map((d) => (
+                  <button key={d.value} onClick={() => setDifficulty(d.value)}
+                    className={`flex-1 h-9 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
+                      difficulty === d.value
+                        ? "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50"
+                        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-600"
+                    }`}>{d.label}</button>
+                ))}
+              </div>
+            </div>
+
             {/* Type selection groups */}
             <div className="space-y-4">
               {EXAM_TYPE_GROUPS.map((group) => (
@@ -274,7 +289,7 @@ export function GenerationConfigPanel({
                     {group.items.map((item) => {
                       const count = typeCounts[item.id] || 0;
                       const active = count > 0;
-                      const expanded = expandedTypeId === item.id || active;
+                      const expanded = expandedTypeId === item.id;
                       return (
                         <div key={item.id}
                           className={`rounded-xl border transition-all duration-150 overflow-hidden ${
@@ -326,10 +341,7 @@ export function GenerationConfigPanel({
                               </span>
                               <button
                                 type="button"
-                                onClick={() => {
-                                  setExpandedTypeId(item.id);
-                                  setTypeCount(item.id, count + 1);
-                                }}
+                                onClick={() => setTypeCount(item.id, count + 1)}
                                 className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 transition-colors"
                                 aria-label={`${item.label} 개수 늘리기`}
                               >
@@ -394,21 +406,6 @@ export function GenerationConfigPanel({
                   <button onClick={() => setTypeCounts({})} className="text-[11px] text-blue-500 hover:text-blue-700 font-medium transition-colors">초기화</button>
                 </div>
               )}
-            </div>
-
-            {/* Difficulty */}
-            <div>
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">난이도</span>
-              <div className="flex gap-2">
-                {([{ value: "BASIC", label: "기본" }, { value: "INTERMEDIATE", label: "중급" }, { value: "KILLER", label: "킬러" }] as const).map((d) => (
-                  <button key={d.value} onClick={() => setDifficulty(d.value)}
-                    className={`flex-1 h-9 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
-                      difficulty === d.value
-                        ? "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50"
-                        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-600"
-                    }`}>{d.label}</button>
-                ))}
-              </div>
             </div>
 
             {/* Custom prompt */}

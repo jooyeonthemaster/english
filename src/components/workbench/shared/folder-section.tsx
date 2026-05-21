@@ -47,6 +47,9 @@ interface FolderSectionProps {
    *  selects + view toggles here so the page-level chrome can stay minimal
    *  (just title + count + primary CTA). */
   toolbar?: ReactNode;
+  /** Extra context row that remains pinned with the management bar. Used for
+   *  page-specific state such as the active passage in passage-grouped mode. */
+  contextBar?: ReactNode;
   /** Page-level identity rendered in the FolderSection header — replaces
    *  the default "폴더 관리" label. Pass `{ icon, title, totalCount }` so
    *  the page can drop its top header bar entirely and let this card serve
@@ -132,11 +135,11 @@ export function FolderSection({
   useCardInsideFolder = false,
   selectionBar,
   toolbar,
+  contextBar,
   pageHeader,
   rootLabel = "전체 문제",
 }: FolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const stickyRef = useRef<HTMLDivElement>(null);
   const useCards = useCardInsideFolder && activeFolder;
   const currentFolder = activeFolder
     ? breadcrumbPath[breadcrumbPath.length - 1]
@@ -151,33 +154,8 @@ export function FolderSection({
     else onDragToRoot?.(itemId, copy);
   };
 
-  useEffect(() => {
-    const el = stickyRef.current;
-    if (!el) return;
-
-    const root = document.documentElement;
-    const syncOffset = () => {
-      root.style.setProperty(
-        "--workbench-management-sticky-offset",
-        `${Math.ceil(el.getBoundingClientRect().height)}px`,
-      );
-    };
-
-    syncOffset();
-    const observer = new ResizeObserver(syncOffset);
-    observer.observe(el);
-    window.addEventListener("resize", syncOffset);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", syncOffset);
-      root.style.removeProperty("--workbench-management-sticky-offset");
-    };
-  }, []);
-
   return (
     <div
-      ref={stickyRef}
       className="sticky top-0 z-30 -mx-6 px-6 pt-2 pb-2.5"
       style={{
         background: "rgba(244, 246, 249, 0.92)",
@@ -252,6 +230,8 @@ export function FolderSection({
               <span>{collapsed ? "펼치기" : "접기"}</span>
             </button>
           </div>
+
+          {contextBar}
 
           {!collapsed ? <div className="flex min-h-7 min-w-0 items-center gap-1.5 rounded-lg border border-blue-100 bg-blue-50/60 px-2.5 py-1.5 text-[11px]">
             <span className="shrink-0 font-semibold text-blue-500">

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { tutorPath } from "@/lib/tutor/routes";
 
 export function TutorLoginForm({
   academySlug,
@@ -30,7 +31,7 @@ export function TutorLoginForm({
         setError("로그인 정보를 확인해주세요.");
         return;
       }
-      router.push(`/tutor/${academySlug}/study`);
+      router.push(tutorPath(academySlug, "/study"));
       router.refresh();
     });
   }

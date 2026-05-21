@@ -13,6 +13,9 @@
       "Read(//c/Users/jooye/Desktop/2026project/nara/**)"
     ]
   },
+  "enabledMcpjsonServers": [
+    "supabase"
+  ],
   "mcpServers": {
     "supabase": {
       "command": "npx",
@@ -23,5 +26,6 @@
         "sbp_85a5c55e5bc41a8ceaa0db7697f4c06e2bea1a13"
       ]
     }
-  }
+  },
+  "enableAllProjectMcpServers": true
 }

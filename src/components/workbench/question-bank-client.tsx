@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
   Database,
+  ChevronDown,
+  ChevronUp,
   ClipboardList,
   Rows3,
   FileText,
@@ -227,6 +229,30 @@ export function QuestionBankClient({
       // doesn't render empty cards.
       .filter((p) => p.questions.length > 0);
   }, [rawGroupedPassages, removedIds]);
+  const [activePassageContext, setActivePassageContext] = useState<{
+    id: string;
+    title: string;
+    visibleCount: number;
+    totalQuestionCount: number;
+    hasAnalysis: boolean;
+    isOpen: boolean;
+  } | null>(null);
+  const [expandedPassageIds, setExpandedPassageIds] = useState<
+    Record<string, boolean>
+  >({});
+
+  useEffect(() => {
+    if (!isGrouped) {
+      setActivePassageContext(null);
+      return;
+    }
+    if (
+      activePassageContext &&
+      !groupedPassages.some((passage) => passage.id === activePassageContext.id)
+    ) {
+      setActivePassageContext(null);
+    }
+  }, [activePassageContext, groupedPassages, isGrouped]);
 
   const displayedQuestions = isGrouped
     ? groupedPassages.flatMap((p) => p.questions)
@@ -533,6 +559,61 @@ export function QuestionBankClient({
   );
 
   const gridToggle = <GridToggle gridCols={gridCols} setGridCols={setGridCols} />;
+  const toggleActivePassage = useCallback(() => {
+    if (!activePassageContext) return;
+    if (activePassageContext.isOpen) {
+      setExpandedPassageIds((prev) => ({
+        ...prev,
+        [activePassageContext.id]: false,
+      }));
+      setActivePassageContext(null);
+      return;
+    }
+
+    const nextOpen = !activePassageContext.isOpen;
+    setExpandedPassageIds((prev) => ({
+      ...prev,
+      [activePassageContext.id]: nextOpen,
+    }));
+    setActivePassageContext((prev) =>
+      prev ? { ...prev, isOpen: nextOpen } : prev,
+    );
+  }, [activePassageContext]);
+
+  const activePassageBar =
+    isGrouped && activePassageContext ? (
+      <div className="flex min-h-7 min-w-0 items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/70 px-2.5 py-1.5 text-[11px]">
+        <span className="shrink-0 font-semibold text-blue-500">
+          현재 지문
+        </span>
+        <span className="h-3 w-px shrink-0 bg-blue-200" />
+        <FileText className="h-3.5 w-3.5 shrink-0 text-blue-600" />
+        <span className="min-w-0 flex-1 truncate font-bold text-blue-800">
+          {activePassageContext.title}
+        </span>
+        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10.5px] font-bold text-blue-700 ring-1 ring-blue-200">
+          {activePassageContext.visibleCount}개
+        </span>
+        {activePassageContext.hasAnalysis ? (
+          <span className="shrink-0 rounded-md border border-blue-100 bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-blue-700">
+            분석 완료
+          </span>
+        ) : null}
+        <button
+          type="button"
+          onClick={toggleActivePassage}
+          aria-expanded={activePassageContext.isOpen}
+          className="ml-auto inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded-md border border-blue-200 bg-white px-2 text-[10.5px] font-bold text-blue-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          {activePassageContext.isOpen ? (
+            <ChevronUp className="h-3 w-3" aria-hidden="true" />
+          ) : (
+            <ChevronDown className="h-3 w-3" aria-hidden="true" />
+          )}
+          {activePassageContext.isOpen ? "접기" : "펼치기"}
+        </button>
+      </div>
+    ) : null;
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
@@ -578,6 +659,7 @@ export function QuestionBankClient({
               breadcrumbPath={folders.breadcrumbPath}
               onNavigateToRoot={handleNavigateToRoot}
               toolbar={filtersToolbar}
+              contextBar={activePassageBar}
               pageHeader={{
                 icon: <Database className="h-3.5 w-3.5" />,
                 title: "문제 관리",
@@ -622,6 +704,9 @@ export function QuestionBankClient({
                   onApprove={handleApprove}
                   onToggleStar={handleToggleStar}
                   onEdit={editor.openEditor}
+                  expandedPassageIds={expandedPassageIds}
+                  setExpandedPassageIds={setExpandedPassageIds}
+                  onActivePassageChange={setActivePassageContext}
                 />
               ) : displayedQuestions.length === 0 ? (
                 <div className="text-center py-12">

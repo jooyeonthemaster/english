@@ -53,6 +53,18 @@ function explanation(payload: JsonRecord, fallback: string) {
   return String(payload.explanation ?? payload.reason ?? fallback);
 }
 
+function optionLabel(value: unknown) {
+  const record = asRecord(value);
+  return String(record.text ?? record.label ?? record.value ?? value ?? "").trim();
+}
+
+function appendAnswerHint(base: string, answerHint: string, isCorrect: boolean) {
+  const trimmedHint = answerHint.trim();
+  if (isCorrect || !trimmedHint) return base;
+  if (base.includes(trimmedHint)) return base;
+  return `${base} 정답: ${trimmedHint}`;
+}
+
 function expectedTexts(payload: JsonRecord) {
   const values = [
     payload.answerText,
@@ -91,11 +103,17 @@ function gradeMultipleChoice(payload: JsonRecord, responseRecord: JsonRecord, re
   const selected = Number(responseRecord.selectedIndex ?? responseRecord.index ?? response);
   const expected = Number(payload.correctIndex ?? payload.answerIndex ?? payload.correctOptionIndex);
   const isCorrect = Number.isFinite(selected) && Number.isFinite(expected) && selected === expected;
+  const options = Array.isArray(payload.options) ? payload.options : [];
+  const answerHint = Number.isFinite(expected) ? optionLabel(options[expected]) : "";
   return {
     isCorrect,
     scoreEarned: isCorrect ? scoreMax : 0,
     scoreMax,
-    explanation: explanation(payload, "선택한 답과 지문 근거를 다시 연결해 보세요."),
+    explanation: appendAnswerHint(
+      explanation(payload, "선택한 답과 지문 근거를 다시 연결해 보세요."),
+      answerHint,
+      isCorrect,
+    ),
   };
 }
 
@@ -117,7 +135,7 @@ function gradeTextAnswer(
     isCorrect,
     scoreEarned: isCorrect ? scoreMax : 0,
     scoreMax,
-    explanation: explanation(payload, fallback),
+    explanation: appendAnswerHint(explanation(payload, fallback), expected[0] ?? "", isCorrect),
   };
 }
 
@@ -128,11 +146,23 @@ function gradeSentenceOrder(payload: JsonRecord, responseRecord: JsonRecord, res
     Array.isArray(submitted) &&
     submitted.length === expected.length &&
     submitted.every((item, index) => Number(item) === Number(expected[index]));
+  const shuffled = Array.isArray(payload.shuffled) ? payload.shuffled : [];
+  const answerHint = expected
+    .map((expectedIndex) => {
+      const matched = shuffled.find((item, index) => Number(asRecord(item).index ?? index) === Number(expectedIndex));
+      return optionLabel(matched ?? shuffled[Number(expectedIndex)]);
+    })
+    .filter(Boolean)
+    .join(" → ");
   return {
     isCorrect,
     scoreEarned: isCorrect ? scoreMax : 0,
     scoreMax,
-    explanation: explanation(payload, "연결어, 지시어, 예시와 결론의 위치를 기준으로 순서를 다시 확인하세요."),
+    explanation: appendAnswerHint(
+      explanation(payload, "연결어, 지시어, 예시와 결론의 위치를 기준으로 순서를 다시 확인하세요."),
+      answerHint,
+      isCorrect,
+    ),
   };
 }
 

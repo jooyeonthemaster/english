@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { openTutorAssignmentWhere } from "@/lib/tutor/access";
 import { requireTutorRouteSession } from "@/lib/tutor/route-auth";
+import { sanitizeTutorActivityPayload } from "@/lib/tutor/sanitize-activity";
 import { TutorLessonAskClient } from "./tutor-lesson-ask-client";
 
 export default async function TutorLessonAskPage({
@@ -47,6 +48,16 @@ export default async function TutorLessonAskPage({
       lessonId={lesson.id}
       title={lesson.title}
       passage={lesson.passage.content}
+      activities={lesson.activities.map((activity) => ({
+        id: activity.id,
+        mode: activity.mode,
+        type: activity.type,
+        title: activity.title,
+        instructions: activity.instructions,
+        payload: sanitizeTutorActivityPayload(activity.payload),
+        maxScore: activity.maxScore,
+        estimatedSec: activity.estimatedSec,
+      }))}
       initialMessages={lesson.conversations[0]?.messages.map((message) => ({
         id: message.id,
         role: message.role === "user" ? "user" : "assistant",

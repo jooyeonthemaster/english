@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ChevronRight, FileText, BadgeCheck } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { QuestionBankCard } from "./question-bank-card";
@@ -30,6 +30,20 @@ interface PassageGroupedViewProps {
   onApprove: (id: string) => void;
   onToggleStar: (id: string) => void;
   onEdit: (id: string) => void;
+  expandedPassageIds: Record<string, boolean>;
+  setExpandedPassageIds: (
+    next:
+      | Record<string, boolean>
+      | ((prev: Record<string, boolean>) => Record<string, boolean>),
+  ) => void;
+  onActivePassageChange?: (passage: {
+    id: string;
+    title: string;
+    visibleCount: number;
+    totalQuestionCount: number;
+    hasAnalysis: boolean;
+    isOpen: boolean;
+  } | null) => void;
 }
 
 const SEMESTER_LABELS: Record<string, string> = {
@@ -40,6 +54,16 @@ const SEMESTER_LABELS: Record<string, string> = {
 function semesterLabel(value?: string | null) {
   if (!value) return null;
   return SEMESTER_LABELS[value] || value;
+}
+
+function findScrollParent(el: HTMLElement): HTMLElement | Window {
+  let parent = el.parentElement;
+  while (parent) {
+    const style = window.getComputedStyle(parent);
+    if (/(auto|scroll|overlay)/.test(style.overflowY)) return parent;
+    parent = parent.parentElement;
+  }
+  return window;
 }
 
 export function PassageGroupedView({
@@ -53,9 +77,93 @@ export function PassageGroupedView({
   onApprove,
   onToggleStar,
   onEdit,
+  expandedPassageIds,
+  setExpandedPassageIds,
+  onActivePassageChange,
 }: PassageGroupedViewProps) {
-  // Default collapsed — `expanded[id] === true` means open.
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const activePassageIdRef = useRef<string | null>(null);
+
+  const passageSummaries = useMemo(() => {
+    return new Map(
+      passages.map((passage) => [
+        passage.id,
+        {
+          id: passage.id,
+          title: passage.title || "(제목 없음)",
+          visibleCount: passage.questions.length,
+          totalQuestionCount: passage.totalQuestionCount,
+          hasAnalysis: Boolean(passage.analysis),
+          isOpen: expandedPassageIds[passage.id] === true,
+        },
+      ]),
+    );
+  }, [expandedPassageIds, passages]);
+
+  const reportActivePassage = useCallback(
+    (passageId: string | null) => {
+      if (!onActivePassageChange) return;
+      activePassageIdRef.current = passageId;
+      onActivePassageChange(passageId ? passageSummaries.get(passageId) ?? null : null);
+    },
+    [onActivePassageChange, passageSummaries],
+  );
+
+  useEffect(() => {
+    if (!onActivePassageChange) return;
+    const firstSection = passages
+      .map((passage) => sectionRefs.current[passage.id])
+      .find(Boolean);
+
+    if (!firstSection) {
+      reportActivePassage(null);
+      return;
+    }
+
+    const scrollParent = findScrollParent(firstSection);
+    const scrollTarget: HTMLElement | Window = scrollParent;
+
+    const updateActivePassage = () => {
+      const rootTop =
+        scrollParent === window
+          ? 0
+          : (scrollParent as HTMLElement).getBoundingClientRect().top;
+      const anchorTop = rootTop + 12;
+      let nextActiveId: string | null = null;
+
+      for (const passage of passages) {
+        if (expandedPassageIds[passage.id] !== true) continue;
+        const el = sectionRefs.current[passage.id];
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= anchorTop && rect.bottom > anchorTop) {
+          nextActiveId = passage.id;
+          break;
+        }
+        if (!nextActiveId && rect.top > anchorTop) {
+          nextActiveId = passage.id;
+        }
+      }
+
+      if (nextActiveId && activePassageIdRef.current !== nextActiveId) {
+        reportActivePassage(nextActiveId);
+      }
+    };
+
+    const frame = window.requestAnimationFrame(updateActivePassage);
+    scrollTarget.addEventListener("scroll", updateActivePassage, { passive: true });
+    window.addEventListener("resize", updateActivePassage);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      scrollTarget.removeEventListener("scroll", updateActivePassage);
+      window.removeEventListener("resize", updateActivePassage);
+    };
+  }, [expandedPassageIds, onActivePassageChange, passages, reportActivePassage]);
+
+  useEffect(() => {
+    if (passages.length === 0) reportActivePassage(null);
+  }, [passages.length, reportActivePassage]);
 
   if (passages.length === 0) {
     return (
@@ -92,7 +200,7 @@ export function PassageGroupedView({
   return (
     <div className="space-y-3">
       {passages.map((passage) => {
-        const isOpen = expanded[passage.id] === true;
+        const isOpen = expandedPassageIds[passage.id] === true;
         const visibleCount = passage.questions.length;
         const hidden =
           passage.totalQuestionCount > visibleCount
@@ -119,6 +227,9 @@ export function PassageGroupedView({
         return (
           <section
             key={passage.id}
+            ref={(el) => {
+              sectionRefs.current[passage.id] = el;
+            }}
             className={`overflow-hidden rounded-xl border bg-white shadow-sm transition-colors ${
               isOpen
                 ? "border-blue-200 ring-1 ring-blue-100"
@@ -126,12 +237,11 @@ export function PassageGroupedView({
             }`}
           >
             <header
-              className={`sticky z-20 flex w-full items-center gap-2.5 border-b px-4 transition-colors ${
+              className={`flex w-full items-center gap-2.5 border-b px-4 transition-colors ${
                 isOpen
                   ? "border-blue-100 bg-blue-50/60"
                   : "border-slate-100/70 bg-white hover:bg-slate-50/70"
               }`}
-              style={{ top: "var(--workbench-management-sticky-offset, 0px)" }}
             >
               <div
                 className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
@@ -155,9 +265,27 @@ export function PassageGroupedView({
                   type="button"
                   aria-expanded={isOpen}
                   aria-label={isOpen ? "그룹 접기" : "그룹 펼치기"}
-                  onClick={() =>
-                    setExpanded((prev) => ({ ...prev, [passage.id]: !isOpen }))
-                  }
+                  onClick={() => {
+                    const willOpen = !isOpen;
+                    setExpandedPassageIds((prev) => ({
+                      ...prev,
+                      [passage.id]: willOpen,
+                    }));
+                    if (willOpen) {
+                      activePassageIdRef.current = passage.id;
+                      onActivePassageChange?.({
+                        id: passage.id,
+                        title: passage.title || "(제목 없음)",
+                        visibleCount,
+                        totalQuestionCount: passage.totalQuestionCount,
+                        hasAnalysis: Boolean(passage.analysis),
+                        isOpen: true,
+                      });
+                    } else if (activePassageIdRef.current === passage.id) {
+                      activePassageIdRef.current = null;
+                      onActivePassageChange?.(null);
+                    }
+                  }}
                   className="flex shrink-0 cursor-pointer items-center"
                 >
                   <ChevronRight
@@ -181,9 +309,27 @@ export function PassageGroupedView({
                 <button
                   type="button"
                   aria-expanded={isOpen}
-                  onClick={() =>
-                    setExpanded((prev) => ({ ...prev, [passage.id]: !isOpen }))
-                  }
+                  onClick={() => {
+                    const willOpen = !isOpen;
+                    setExpandedPassageIds((prev) => ({
+                      ...prev,
+                      [passage.id]: willOpen,
+                    }));
+                    if (willOpen) {
+                      activePassageIdRef.current = passage.id;
+                      onActivePassageChange?.({
+                        id: passage.id,
+                        title: passage.title || "(제목 없음)",
+                        visibleCount,
+                        totalQuestionCount: passage.totalQuestionCount,
+                        hasAnalysis: Boolean(passage.analysis),
+                        isOpen: true,
+                      });
+                    } else if (activePassageIdRef.current === passage.id) {
+                      activePassageIdRef.current = null;
+                      onActivePassageChange?.(null);
+                    }
+                  }}
                   className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left transition-colors hover:opacity-90"
                 >
                   <h4 className="truncate text-sm font-bold tracking-tight text-slate-900">

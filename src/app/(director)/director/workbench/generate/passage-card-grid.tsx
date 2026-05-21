@@ -77,6 +77,8 @@ interface PassageCardGridProps {
   genMode: "auto" | "manual";
   totalQuestions: number;
   handleBatchGenerate: () => void;
+  selectionActionText?: string;
+  selectionActionDisabled?: boolean;
 
   // Actions
   handleOpenAnalysisModal: (passageId: string) => void;
@@ -113,6 +115,8 @@ export function PassageCardGrid({
   genMode,
   totalQuestions,
   handleBatchGenerate,
+  selectionActionText,
+  selectionActionDisabled,
   handleOpenAnalysisModal,
 }: PassageCardGridProps) {
   return (
@@ -131,10 +135,10 @@ export function PassageCardGrid({
             size="sm"
             className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700 rounded-lg"
             onClick={handleBatchGenerate}
-            disabled={genMode === "manual" && totalQuestions === 0}
+            disabled={selectionActionDisabled ?? (genMode === "manual" && totalQuestions === 0)}
           >
             <Zap className="w-3.5 h-3.5 mr-1" />
-            {selectedIds.size}개 지문 일괄 생성
+            {selectionActionText ?? `${selectedIds.size}개 지문 일괄 생성`}
           </Button>
           <button onClick={deselectAll} className="text-[11px] text-blue-500 hover:text-blue-700 font-medium">취소</button>
         </div>

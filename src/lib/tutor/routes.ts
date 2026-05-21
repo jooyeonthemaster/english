@@ -5,3 +5,12 @@ export function normalizeAcademySlugParam(value: string) {
     return value;
   }
 }
+
+export function encodedAcademyPathSegment(value: string) {
+  return encodeURIComponent(normalizeAcademySlugParam(value));
+}
+
+export function tutorPath(academy: string, suffix = "") {
+  const normalizedSuffix = suffix ? (suffix.startsWith("/") ? suffix : `/${suffix}`) : "";
+  return `/tutor/${encodedAcademyPathSegment(academy)}${normalizedSuffix}`;
+}

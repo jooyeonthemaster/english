@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { GraduationCap } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getTutorStudentSession } from "@/lib/auth-tutor-student";
-import { normalizeAcademySlugParam } from "@/lib/tutor/routes";
+import { normalizeAcademySlugParam, tutorPath } from "@/lib/tutor/routes";
 import { TutorLoginForm } from "./_components/tutor-login-form";
 
 export default async function TutorLoginPage({
@@ -13,7 +13,7 @@ export default async function TutorLoginPage({
   const { academy: rawAcademy } = await params;
   const academy = normalizeAcademySlugParam(rawAcademy);
   const session = await getTutorStudentSession();
-  if (session?.academySlug === academy) redirect(`/tutor/${academy}/study`);
+  if (session?.academySlug === academy) redirect(tutorPath(academy, "/study"));
 
   const academyInfo = await prisma.academy.findUnique({
     where: { slug: academy },

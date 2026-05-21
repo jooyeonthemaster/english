@@ -12,14 +12,10 @@ type TargetOption = {
   count?: number;
 };
 
-type TargetType = "ALL_ACTIVE" | "CLASS" | "STUDENT" | "SCHOOL" | "SCHOOL_GRADE";
+type TargetType = "CLASS";
 
 const targetLabels: Record<TargetType, string> = {
-  ALL_ACTIVE: "전체 활성 학생",
   CLASS: "클래스",
-  STUDENT: "개별 학생",
-  SCHOOL: "학교",
-  SCHOOL_GRADE: "학교/학년",
 };
 
 export function TutorPublishForm({
@@ -27,42 +23,28 @@ export function TutorPublishForm({
   disabled,
   activeStudentCount,
   classes,
-  students,
-  schools,
-  schoolGrades,
 }: {
   programId: string;
   disabled: boolean;
   activeStudentCount: number;
   classes: TargetOption[];
-  students: TargetOption[];
-  schools: TargetOption[];
-  schoolGrades: TargetOption[];
 }) {
   const router = useRouter();
-  const [targetType, setTargetType] = useState<TargetType>("ALL_ACTIVE");
+  const [targetType, setTargetType] = useState<TargetType>("CLASS");
   const [targetId, setTargetId] = useState("");
   const [dueAt, setDueAt] = useState("");
-  const [confirmedAll, setConfirmedAll] = useState(false);
   const [message, setMessage] = useState<{ type: "ok" | "error"; text: string } | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const options = useMemo(() => {
-    if (targetType === "CLASS") return classes;
-    if (targetType === "STUDENT") return students;
-    if (targetType === "SCHOOL") return schools;
-    if (targetType === "SCHOOL_GRADE") return schoolGrades;
-    return [];
-  }, [classes, schoolGrades, schools, students, targetType]);
+    return classes;
+  }, [classes]);
 
-  const requiresTarget = targetType !== "ALL_ACTIVE";
-  const needsAllConfirm = targetType === "ALL_ACTIVE" && activeStudentCount > 0;
   const canSubmit =
     !disabled &&
     !isPending &&
     activeStudentCount > 0 &&
-    (!requiresTarget || Boolean(targetId)) &&
-    (!needsAllConfirm || confirmedAll);
+    Boolean(targetId);
 
   function submit() {
     const formData = new FormData();
@@ -70,7 +52,6 @@ export function TutorPublishForm({
     formData.set("targetType", targetType);
     if (targetId) formData.set("targetId", targetId);
     if (dueAt) formData.set("dueAt", dueAt);
-    if (confirmedAll) formData.set("confirmedAll", "true");
 
     setMessage(null);
     startTransition(async () => {
@@ -88,8 +69,8 @@ export function TutorPublishForm({
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-slate-950">학생에게 배포</p>
-          <p className="mt-1 text-xs text-slate-500">대상과 마감일을 정하면 바로 학생 화면에 열립니다.</p>
+          <p className="text-sm font-bold text-slate-950">클래스 단위 배포</p>
+          <p className="mt-1 text-xs text-slate-500">반을 지정해야 학생 모바일 화면에 학습이 열립니다.</p>
         </div>
         <span className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
           {activeStudentCount}명
@@ -122,7 +103,6 @@ export function TutorPublishForm({
             onChange={(event) => {
               setTargetType(event.target.value as TargetType);
               setTargetId("");
-              setConfirmedAll(false);
             }}
             className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-100"
           >
@@ -134,25 +114,23 @@ export function TutorPublishForm({
           </select>
         </label>
 
-        {requiresTarget && (
-          <label className="grid gap-1.5 text-xs font-bold text-slate-600">
-            세부 대상
-            <select
-              data-testid="tutor-publish-target-id"
-              value={targetId}
-              onChange={(event) => setTargetId(event.target.value)}
-              className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-100"
-            >
-              <option value="">선택하세요</option>
-              {options.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                  {typeof option.count === "number" ? ` · ${option.count}명` : ""}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
+        <label className="grid gap-1.5 text-xs font-bold text-slate-600">
+          세부 대상
+          <select
+            data-testid="tutor-publish-target-id"
+            value={targetId}
+            onChange={(event) => setTargetId(event.target.value)}
+            className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-100"
+          >
+            <option value="">클래스를 선택하세요</option>
+            {options.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+                {typeof option.count === "number" ? ` · ${option.count}명` : ""}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <label className="grid gap-1.5 text-xs font-bold text-slate-600">
           마감일
@@ -163,18 +141,6 @@ export function TutorPublishForm({
             className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-100"
           />
         </label>
-
-        {needsAllConfirm && (
-          <label className="flex items-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700">
-            <input
-              type="checkbox"
-              checked={confirmedAll}
-              onChange={(event) => setConfirmedAll(event.target.checked)}
-              className="size-4 rounded border-blue-200"
-            />
-            전체 활성 학생 {activeStudentCount}명에게 배포합니다.
-          </label>
-        )}
 
         {message && (
           <p className={`rounded-xl px-3 py-2 text-sm font-semibold ${message.type === "ok" ? "bg-blue-50 text-blue-700" : "bg-red-50 text-red-600"}`}>
