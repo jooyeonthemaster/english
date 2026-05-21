@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { buildStudyNoteBlocks } from "./passage-study-note-print-dialog/block-builder";
+import { EditingPanel } from "./passage-study-note-print-dialog/editing-panel";
+import { useEditingState } from "./passage-study-note-print-dialog/editing-state";
 import { safeParseAnalysis } from "./passage-study-note-print-dialog/helpers";
 import { paginateStudyBlocks } from "./passage-study-note-print-dialog/pagination";
 import {
@@ -50,14 +52,18 @@ export function PassageStudyNotePrintDialog({
   );
   const skippedCount = passages.length - analyzedPassages.length;
   const blocks = useMemo(() => buildStudyNoteBlocks(analyzedPassages), [analyzedPassages]);
-  const blocksKey = useMemo(() => blocks.map((block) => block.id).join("|"), [blocks]);
+  const { state: editingState, dispatch: editingDispatch, effectiveBlocks, hiddenBlocks } = useEditingState(blocks);
+  const effectiveBlocksKey = useMemo(
+    () => effectiveBlocks.map((block) => block.id).join("|"),
+    [effectiveBlocks],
+  );
   const measureContentRef = useRef<HTMLDivElement | null>(null);
   const [paginationResult, setPaginationResult] = useState<{ key: string; pages: PaginatedStudyPage[] }>({
     key: "",
     pages: [],
   });
-  const paginationReady = analyzedPassages.length === 0 || paginationResult.key === blocksKey;
-  const pages = paginationReady ? paginationResult.pages : [];
+  const hasPaginated = paginationResult.key !== "";
+  const pages = paginationResult.pages;
 
   const [zoom, setZoom] = useState(1);
   const [controlsPos, setControlsPos] = useState<{ top: number; right: number }>({
@@ -67,8 +73,8 @@ export function PassageStudyNotePrintDialog({
 
   const measureAndPaginate = useCallback(() => {
     const contentEl = measureContentRef.current;
-    if (!contentEl || blocks.length === 0) {
-      setPaginationResult({ key: blocksKey, pages: [] });
+    if (!contentEl || effectiveBlocks.length === 0) {
+      setPaginationResult({ key: effectiveBlocksKey, pages: [] });
       return;
     }
 
@@ -83,10 +89,10 @@ export function PassageStudyNotePrintDialog({
     });
 
     setPaginationResult({
-      key: blocksKey,
-      pages: paginateStudyBlocks(blocks, blockHeights, availableHeight),
+      key: effectiveBlocksKey,
+      pages: paginateStudyBlocks(effectiveBlocks, blockHeights, availableHeight),
     });
-  }, [blocks, blocksKey]);
+  }, [effectiveBlocks, effectiveBlocksKey]);
 
   useLayoutEffect(() => {
     if (!open) return;
@@ -190,7 +196,11 @@ export function PassageStudyNotePrintDialog({
 
   if (!open) return null;
 
-  const showControls = paginationReady && pages.length > 0;
+  const showControls = pages.length > 0;
+  const showInitialLoading =
+    analyzedPassages.length > 0 && effectiveBlocks.length > 0 && !hasPaginated;
+  const showNoBlocksMessage =
+    analyzedPassages.length > 0 && effectiveBlocks.length === 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center">
@@ -200,7 +210,7 @@ export function PassageStudyNotePrintDialog({
 
       <div
         id="passage-study-note-print-root"
-        className="relative z-10 my-4 flex w-full max-w-[1180px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F3F5F8] shadow-2xl"
+        className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl"
       >
         <div className="study-note-no-print flex shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-4">
           <div className="flex min-w-0 items-center gap-3">
@@ -217,7 +227,7 @@ export function PassageStudyNotePrintDialog({
                 {analyzedPassages.length > 0 && (
                   <span className="inline-flex items-center gap-1 text-blue-600">
                     <BookMarked className="h-3.5 w-3.5" />
-                    {paginationReady ? `${pages.length}쪽 구성` : "페이지 계산 중"}
+                    {hasPaginated ? `${pages.length}쪽 구성` : "페이지 계산 중"}
                   </span>
                 )}
                 {skippedCount > 0 && (
@@ -235,7 +245,7 @@ export function PassageStudyNotePrintDialog({
               type="button"
               className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-slate-900 px-3 text-[12px] font-bold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
               onClick={() => window.print()}
-              disabled={!paginationReady || pages.length === 0}
+              disabled={pages.length === 0}
             >
               <Printer className="h-3.5 w-3.5" />
               바로 출력
@@ -251,52 +261,71 @@ export function PassageStudyNotePrintDialog({
           </div>
         </div>
 
-        <div className="relative min-h-0 flex-1">
-          <div
-            data-pannable-scroll
-            className="print-scroll absolute inset-0 bg-[#E8ECF2] px-6 py-5"
-          >
-            <StudyNoteMeasurementLayer blocks={blocks} contentRef={measureContentRef} />
-            {analyzedPassages.length === 0 ? (
-              <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center">
-                <BookMarked className="mx-auto mb-3 h-10 w-10 text-slate-300" />
-                <p className="text-[14px] font-semibold text-slate-700">출력할 분석 자료가 없습니다.</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
-                  AI 분석이 완료된 지문을 선택하면 필기노트를 만들 수 있습니다.
-                </p>
-              </div>
-            ) : !paginationReady ? (
-              <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
-                <BookMarked className="mx-auto mb-3 h-10 w-10 text-blue-400" />
-                <p className="text-[14px] font-semibold text-slate-700">A4 페이지를 계산하고 있습니다.</p>
-                <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
-                  요약/본문/어휘/어법/구문/출제 포인트를 실제 A4 높이에 맞춰 재배치합니다.
-                </p>
-              </div>
-            ) : (
-              <div
-                className="study-note-paper-stack"
-                style={{ zoom }}
-                onMouseDown={handlePanStart}
-              >
-                {pages.map((page, index) => (
-                  <StudyNotePageFrame key={page.id} page={page} pageIndex={index} totalPages={pages.length} />
-                ))}
+        <div className="flex min-h-0 flex-1">
+          <div className="relative min-h-0 flex-1">
+            <div
+              data-pannable-scroll
+              className="print-scroll absolute inset-0 bg-[#E8ECF2] px-6 py-5"
+            >
+              <StudyNoteMeasurementLayer blocks={blocks} contentRef={measureContentRef} />
+              {analyzedPassages.length === 0 ? (
+                <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center">
+                  <BookMarked className="mx-auto mb-3 h-10 w-10 text-slate-300" />
+                  <p className="text-[14px] font-semibold text-slate-700">출력할 분석 자료가 없습니다.</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
+                    AI 분석이 완료된 지문을 선택하면 필기노트를 만들 수 있습니다.
+                  </p>
+                </div>
+              ) : showNoBlocksMessage ? (
+                <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center">
+                  <BookMarked className="mx-auto mb-3 h-10 w-10 text-slate-300" />
+                  <p className="text-[14px] font-semibold text-slate-700">표시할 블록이 없습니다.</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
+                    우측 편집 패널에서 카테고리를 켜거나 숨긴 블록을 복원하세요.
+                  </p>
+                </div>
+              ) : showInitialLoading ? (
+                <div className="study-note-no-print mx-auto mt-10 max-w-md rounded-xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
+                  <BookMarked className="mx-auto mb-3 h-10 w-10 text-blue-400" />
+                  <p className="text-[14px] font-semibold text-slate-700">A4 페이지를 계산하고 있습니다.</p>
+                  <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
+                    요약/본문/어휘/어법/구문/출제 포인트를 실제 A4 높이에 맞춰 재배치합니다.
+                  </p>
+                </div>
+              ) : (
+                <div
+                  className="study-note-paper-stack"
+                  style={{ zoom }}
+                  onMouseDown={handlePanStart}
+                >
+                  {pages.map((page, index) => (
+                    <StudyNotePageFrame key={page.id} page={page} pageIndex={index} totalPages={pages.length} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {showControls && (
+              <div className="study-note-no-print pointer-events-none absolute inset-0 z-10">
+                <FloatingZoomControls
+                  pos={controlsPos}
+                  zoom={zoom}
+                  onDragStart={handleControlsDragStart}
+                  onZoomIn={zoomIn}
+                  onZoomOut={zoomOut}
+                  onReset={resetZoom}
+                />
               </div>
             )}
           </div>
 
-          {showControls && (
-            <div className="study-note-no-print pointer-events-none absolute inset-0 z-10">
-              <FloatingZoomControls
-                pos={controlsPos}
-                zoom={zoom}
-                onDragStart={handleControlsDragStart}
-                onZoomIn={zoomIn}
-                onZoomOut={zoomOut}
-                onReset={resetZoom}
-              />
-            </div>
+          {analyzedPassages.length > 0 && (
+            <EditingPanel
+              state={editingState}
+              dispatch={editingDispatch}
+              effectiveBlocks={effectiveBlocks}
+              hiddenBlocks={hiddenBlocks}
+            />
           )}
         </div>
       </div>
