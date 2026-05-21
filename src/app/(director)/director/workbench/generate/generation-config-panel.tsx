@@ -442,7 +442,10 @@ export function GenerationConfigPanel({
             ? CREDIT_COSTS.AUTO_GEN_BATCH * selectedIds.size
             : selectedIds.size * Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
               if (value <= 0) return sum;
-              return sum + (VOCAB_GENERATION_TYPE_IDS.has(typeId) ? CREDIT_COSTS.QUESTION_GEN_VOCAB : CREDIT_COSTS.QUESTION_GEN_SINGLE);
+              const unitCost = VOCAB_GENERATION_TYPE_IDS.has(typeId)
+                ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+                : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+              return sum + unitCost * value;
             }, 0);
           const creditCost = getQuestionGenerationCreditCost(baseCreditCost, generationPlan);
           return (

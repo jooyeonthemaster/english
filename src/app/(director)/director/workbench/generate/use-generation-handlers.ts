@@ -202,6 +202,14 @@ function buildOptimisticItem({
   };
 }
 
+interface ManualGenerationUnit {
+  passage: PassageItem;
+  pAnalysis: any;
+  questionType: string;
+  tempId: string;
+  config: QueueItem["config"];
+}
+
 function parsePassageAnalysis(p: PassageItem) {
   if (!p.analysis?.analysisData) return null;
   try {
@@ -251,6 +259,88 @@ export function useGenerationHandlers({
     window.setTimeout(triggerRefresh, 4_000);
   }, [triggerRefresh]);
 
+  const runManualUnitsWithFastPath = useCallback(
+    async (units: ManualGenerationUnit[]) => {
+      if (units.length === 0) {
+        return { success: 0, failed: 0 };
+      }
+
+      setSessionQueue((prev) => [
+        ...units.map((unit) =>
+          buildOptimisticItem({
+            jobId: unit.tempId,
+            passage: unit.passage,
+            analysisData: unit.pAnalysis,
+            config: unit.config,
+            progressKey: unit.questionType,
+          }),
+        ),
+        ...prev,
+      ]);
+      refreshTaskQueueSoon();
+
+      const results = await runWithConcurrency(
+        units,
+        FAST_BATCH_CONCURRENCY,
+        async (unit) => {
+          try {
+            const result = await createFastQuestionGenerationJob({
+              passageId: unit.passage.id,
+              mode: "MANUAL",
+              count: 1,
+              questionType: unit.questionType,
+              difficulty,
+              customPrompt: unit.config.prompt || undefined,
+              generationPlan,
+            });
+            const doneItem = {
+              ...buildOptimisticItem({
+                jobId: result.jobId,
+                passage: unit.passage,
+                analysisData: unit.pAnalysis,
+                config: unit.config,
+                progressKey: unit.questionType,
+              }),
+              createdAt: result.createdAt || new Date().toISOString(),
+              status: "done" as const,
+              progress: { [unit.questionType]: "done" as const },
+              questions: Array.isArray(result.questions) ? result.questions : [],
+            };
+            setSessionQueue((prev) => [
+              doneItem,
+              ...prev.filter(
+                (item) => item.id !== unit.tempId && item.id !== result.jobId,
+              ),
+            ]);
+            return result;
+          } catch (err) {
+            const message =
+              err instanceof Error ? err.message : "Question generation failed.";
+            setSessionQueue((prev) =>
+              prev.map((item) =>
+                item.id === unit.tempId
+                  ? {
+                      ...item,
+                      status: "error" as const,
+                      progress: { [unit.questionType]: "error" as const },
+                      error: message,
+                    }
+                  : item,
+              ),
+            );
+            throw err;
+          }
+        },
+      );
+
+      return {
+        success: results.filter((r) => r.status === "fulfilled").length,
+        failed: results.filter((r) => r.status === "rejected").length,
+      };
+    },
+    [difficulty, generationPlan, refreshTaskQueueSoon, setSessionQueue],
+  );
+
   const enqueueJob = useCallback(
     async ({
       passage,
@@ -298,21 +388,55 @@ export function useGenerationHandlers({
     if (selectedIds.size === 0) return;
     const selectedPassages = passages.filter((p) => selectedIds.has(p.id));
 
-    const manualFastType =
-      genMode === "manual" &&
-      activeTypes.length === 1 &&
-      Number(typeCounts[activeTypes[0]]) === 1
-        ? activeTypes[0]
-        : null;
+    if (genMode === "manual") {
+      const units: ManualGenerationUnit[] = [];
+      const runId = Date.now();
+
+      for (const p of selectedPassages) {
+        const pAnalysis = parsePassageAnalysis(p);
+        for (const typeId of Object.keys(typeCounts).filter((k) => typeCounts[k] > 0)) {
+          const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
+          for (let index = 0; index < repeatCount; index += 1) {
+            units.push({
+              passage: p,
+              pAnalysis,
+              questionType: typeId,
+              tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
+              config: {
+                typeCounts: { [typeId]: 1 },
+                difficulty,
+                prompt: customPrompt.trim(),
+                mode: genMode,
+                generationPlan,
+              },
+            });
+          }
+        }
+      }
+
+      const { success, failed } = await runManualUnitsWithFastPath(units);
+
+      setSelectedIds(new Set());
+      triggerRefresh();
+      if (success > 0) {
+        loadSavedQuestions();
+        toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+      }
+      if (failed > 0) {
+        toast.error(`${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`);
+      }
+      return;
+    }
+
     const canUseFastPath =
       selectedPassages.length > 0 &&
-      ((genMode === "auto" && autoCount === 1) || Boolean(manualFastType));
+      genMode === "auto" &&
+      autoCount === 1;
 
     if (canUseFastPath) {
-      const progressKey = genMode === "auto" ? "auto" : manualFastType!;
+      const progressKey = "auto";
       const baseConfig = {
-        typeCounts:
-          genMode === "manual" ? { [progressKey]: 1 } : {},
+        typeCounts: {},
         difficulty,
         prompt: customPrompt.trim(),
         mode: genMode,
@@ -348,9 +472,9 @@ export function useGenerationHandlers({
           try {
             const result = await createFastQuestionGenerationJob({
               passageId: passage.id,
-              mode: genMode === "auto" ? "AUTO" : "MANUAL",
+              mode: "AUTO",
               count: 1,
-              questionType: manualFastType || undefined,
+              questionType: undefined,
               difficulty,
               customPrompt: baseConfig.prompt || undefined,
               generationPlan,
@@ -414,39 +538,23 @@ export function useGenerationHandlers({
     for (const p of selectedPassages) {
       const pAnalysis = parsePassageAnalysis(p);
       const baseConfig = {
-        typeCounts: genMode === "manual" ? { ...typeCounts } : {},
+        typeCounts: {},
         difficulty,
         prompt: customPrompt.trim(),
         mode: genMode,
         generationPlan,
       };
 
-      if (genMode === "auto") {
-        jobs.push(
-          enqueueJob({
-            passage: p,
-            mode: "AUTO",
-            count: autoCount,
-            pAnalysis,
-            config: baseConfig,
-            progressKey: "auto",
-          }),
-        );
-      } else {
-        for (const typeId of Object.keys(typeCounts).filter((k) => typeCounts[k] > 0)) {
-          jobs.push(
-            enqueueJob({
-              passage: p,
-              mode: "MANUAL",
-              count: typeCounts[typeId],
-              questionType: typeId,
-              pAnalysis,
-              config: { ...baseConfig, typeCounts: { [typeId]: typeCounts[typeId] } },
-              progressKey: typeId,
-            }),
-          );
-        }
-      }
+      jobs.push(
+        enqueueJob({
+          passage: p,
+          mode: "AUTO",
+          count: autoCount,
+          pAnalysis,
+          config: baseConfig,
+          progressKey: "auto",
+        }),
+      );
     }
 
     const results = await Promise.allSettled(jobs);
@@ -471,6 +579,7 @@ export function useGenerationHandlers({
     setSessionQueue,
     loadSavedQuestions,
     refreshTaskQueueSoon,
+    runManualUnitsWithFastPath,
     triggerRefresh,
   ]);
 
@@ -487,22 +596,47 @@ export function useGenerationHandlers({
     };
 
     try {
-      const manualFastType =
-        genMode === "manual" &&
-        activeTypes.length === 1 &&
-        Number(typeCounts[activeTypes[0]]) === 1
-          ? activeTypes[0]
-          : null;
-      const canUseFastPath =
-        (genMode === "auto" && autoCount === 1) || Boolean(manualFastType);
+      if (genMode === "manual") {
+        const units: ManualGenerationUnit[] = [];
+        const runId = Date.now();
+
+        for (const typeId of activeTypes) {
+          const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
+          for (let index = 0; index < repeatCount; index += 1) {
+            units.push({
+              passage: selectedPassage,
+              pAnalysis: analysisData,
+              questionType: typeId,
+              tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
+              config: {
+                ...baseConfig,
+                typeCounts: { [typeId]: 1 },
+              },
+            });
+          }
+        }
+
+        const { success, failed } = await runManualUnitsWithFastPath(units);
+        triggerRefresh();
+        if (success > 0) {
+          loadSavedQuestions();
+          toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+        }
+        if (failed > 0) {
+          toast.error(`${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`);
+        }
+        return;
+      }
+
+      const canUseFastPath = genMode === "auto" && autoCount === 1;
 
       if (canUseFastPath) {
-        const progressKey = genMode === "auto" ? "auto" : manualFastType!;
+        const progressKey = "auto";
         const result = await createFastQuestionGenerationJob({
           passageId: selectedPassage.id,
-          mode: genMode === "auto" ? "AUTO" : "MANUAL",
+          mode: "AUTO",
           count: 1,
-          questionType: manualFastType || undefined,
+          questionType: undefined,
           difficulty,
           customPrompt: baseConfig.prompt || undefined,
           generationPlan,
@@ -512,13 +646,7 @@ export function useGenerationHandlers({
             jobId: result.jobId,
             passage: selectedPassage,
             analysisData,
-            config:
-              genMode === "auto"
-                ? baseConfig
-                : {
-                    ...baseConfig,
-                    typeCounts: { [progressKey]: 1 },
-                  },
+            config: baseConfig,
             progressKey,
           }),
           createdAt: result.createdAt || new Date().toISOString(),
@@ -579,6 +707,7 @@ export function useGenerationHandlers({
     setSessionQueue,
     loadSavedQuestions,
     refreshTaskQueueSoon,
+    runManualUnitsWithFastPath,
     triggerRefresh,
   ]);
 
