@@ -412,14 +412,19 @@ export function ContextMeaningRenderer({ q }: { q: ContextMeaningQuestion }) {
 }
 
 export function SynonymRenderer({ q }: { q: SynonymQuestion }) {
+  const displayPassage =
+    q.passageWithUnderline ||
+    (q.contextSentence && q.targetWord
+      ? q.contextSentence.replace(
+          new RegExp(`\\b${q.targetWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i"),
+          (match) => `__${match}__`,
+        )
+      : q.contextSentence);
+
   return (
     <>
       <Direction text={q.direction} />
-      <div className="rounded-lg bg-violet-50 border border-violet-200 p-3 space-y-1">
-        <span className="text-[10px] font-bold text-violet-600 uppercase tracking-wider block mb-1">대상 단어</span>
-        <p className="text-[15px] font-bold text-violet-900">{q.targetWord}</p>
-        <p className="text-[12px] text-slate-600 italic leading-relaxed">{q.contextSentence}</p>
-      </div>
+      <PassageBlock>{renderUnderlinedText(displayPassage ?? "")}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />

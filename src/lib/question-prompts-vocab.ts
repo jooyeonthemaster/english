@@ -18,6 +18,7 @@ export const VOCAB_PROMPTS: Record<string, string> = {
 - targetWord: 대상 단어
 - contextSentence: 문맥 문장 (지문에서 발췌)
 - options: label "1"~"5", text는 영어 동의어 선택지
+- options.text에는 영어 단어/구만 쓰세요. 한국어 뜻풀이, 괄호 설명, "word (meaning)" 형식은 금지합니다.
 - direction 예시: "다음 밑줄 친 단어의 의미와 가장 유사한 것은?"`,
 
   ANTONYM: `반의어 문제를 만드세요.
@@ -29,6 +30,7 @@ export const VOCAB_PROMPTS: Record<string, string> = {
   - surroundingText: 해당 단어 주변 40~60자 (위치 식별용)
   - antonym: 반의어
 - options: label "1"~"5", text는 "단어 - 반의어" 쌍 선택지
+- options.text에는 "vagrant - resident"처럼 영어 단어쌍만 쓰세요. 한국어 뜻풀이, 괄호 설명, 해설성 문구는 금지합니다.
 - ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "지문의 밑줄 친 단어와 반의어 관계가 바르게 짝지어진 것은?"`,
 };

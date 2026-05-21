@@ -34,6 +34,7 @@ export type ContextMeaningQuestion = z.infer<typeof contextMeaningSchema>;
 
 export const synonymSchema = z.object({
   ...commonFields,
+  passageWithUnderline: z.string().optional().describe("밑줄 친 대상 단어가 포함된 지문. 서버에서 자동 생성"),
   targetWord: z.string().describe("대상 단어"),
   contextSentence: z.string().describe("문맥 문장"),
   options: z.array(optionSchema).length(5).describe("영어 동의어 선택지"),

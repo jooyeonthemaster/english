@@ -113,32 +113,163 @@ export function StructuredQuestionRenderer({
 function enrichQuestionForDisplay(question: any, sourcePassageContent?: string): any {
   const questionWithAlignedExplanations =
     alignWrongOptionExplanationsForDisplay(question);
+  const normalizedQuestion = normalizeVocabOptionsForDisplay(
+    questionWithAlignedExplanations,
+  );
 
   if (
-    questionWithAlignedExplanations?._typeId !== "FILL_BLANK_KEY" ||
-    questionWithAlignedExplanations.passageWithBlank ||
+    normalizedQuestion?._typeId === "SYNONYM" &&
+    !normalizedQuestion.passageWithUnderline &&
+    sourcePassageContent
+  ) {
+    const targetWord =
+      typeof normalizedQuestion.targetWord === "string"
+        ? normalizedQuestion.targetWord
+        : "";
+    const contextSentence =
+      typeof normalizedQuestion.contextSentence === "string"
+        ? normalizedQuestion.contextSentence
+        : undefined;
+    const passageWithUnderline = buildPassageWithUnderlineForDisplay(
+      sourcePassageContent,
+      targetWord,
+      contextSentence,
+    );
+
+    return passageWithUnderline
+      ? { ...normalizedQuestion, passageWithUnderline }
+      : normalizedQuestion;
+  }
+
+  if (
+    normalizedQuestion?._typeId !== "FILL_BLANK_KEY" ||
+    normalizedQuestion.passageWithBlank ||
     !sourcePassageContent
   ) {
-    return questionWithAlignedExplanations;
+    return normalizedQuestion;
   }
 
   const answer =
-    typeof questionWithAlignedExplanations.answer === "string"
-      ? questionWithAlignedExplanations.answer
-      : typeof questionWithAlignedExplanations.correctAnswer === "string"
-        ? questionWithAlignedExplanations.correctAnswer
+    typeof normalizedQuestion.answer === "string"
+      ? normalizedQuestion.answer
+      : typeof normalizedQuestion.correctAnswer === "string"
+        ? normalizedQuestion.correctAnswer
         : "";
   const passageWithBlank = buildPassageWithBlankForDisplay(
     sourcePassageContent,
     answer,
-    typeof questionWithAlignedExplanations.sentenceWithBlank === "string"
-      ? questionWithAlignedExplanations.sentenceWithBlank
+    typeof normalizedQuestion.sentenceWithBlank === "string"
+      ? normalizedQuestion.sentenceWithBlank
       : undefined,
   );
 
   return passageWithBlank
-    ? { ...questionWithAlignedExplanations, passageWithBlank }
-    : questionWithAlignedExplanations;
+    ? { ...normalizedQuestion, passageWithBlank }
+    : normalizedQuestion;
+}
+
+const VOCAB_OPTION_DISPLAY_TYPES = new Set([
+  "CONTEXT_MEANING",
+  "SYNONYM",
+  "ANTONYM",
+]);
+
+function normalizeVocabOptionsForDisplay(question: any): any {
+  if (!VOCAB_OPTION_DISPLAY_TYPES.has(question?._typeId)) return question;
+  if (!Array.isArray(question.options)) return question;
+
+  let changed = false;
+  const options = question.options.map((option: unknown) => {
+    if (!option || typeof option !== "object" || Array.isArray(option)) {
+      return option;
+    }
+    const record = option as Record<string, unknown>;
+    if (typeof record.text !== "string") return option;
+    const text =
+      question._typeId === "ANTONYM"
+        ? sanitizeAntonymOptionText(record.text)
+        : sanitizeSingleVocabOptionText(record.text);
+    if (text === record.text) return option;
+    changed = true;
+    return { ...record, text };
+  });
+
+  return changed ? { ...question, options } : question;
+}
+
+function stripOptionPrefix(text: string): string {
+  return text
+    .replace(/^\s*(?:[\u2460-\u2464]|\([A-Ea-e1-5]\)|[A-Ea-e1-5][.)]|[1-5][.)])\s*/, "")
+    .trim();
+}
+
+function stripDefinitions(text: string): string {
+  return text
+    .replace(/\s*[\(\[][^)\]]*[\)\]]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function sanitizeSingleVocabOptionText(text: string): string {
+  return stripDefinitions(stripOptionPrefix(text));
+}
+
+function sanitizeAntonymOptionText(text: string): string {
+  const withoutPrefix = stripOptionPrefix(text);
+  const parts = withoutPrefix.split(/\s+[-\u2013\u2014]\s+/);
+  if (parts.length >= 2) {
+    return parts
+      .slice(0, 2)
+      .map((part) => stripDefinitions(stripOptionPrefix(part)))
+      .join(" - ");
+  }
+  return stripDefinitions(withoutPrefix);
+}
+
+function buildPassageWithUnderlineForDisplay(
+  passage: string,
+  targetWord: string,
+  contextSentence?: string,
+): string | null {
+  const target = targetWord.trim();
+  if (!passage || !target) return null;
+
+  const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const findInText = (text: string): number => {
+    const regex = new RegExp(`\\b${escaped}\\b`, "i");
+    const match = regex.exec(text);
+    return match?.index ?? -1;
+  };
+
+  if (contextSentence) {
+    const normalizedPassage = passage.replace(/\s+/g, " ");
+    const normalizedContext = contextSentence.replace(/\s+/g, " ").trim();
+    const contextIndex = normalizedPassage.indexOf(normalizedContext);
+    const targetIndexInContext = findInText(normalizedContext);
+    if (contextIndex !== -1 && targetIndexInContext !== -1) {
+      const originalIndex = mapNormalizedIndexToOriginal(
+        passage,
+        contextIndex + targetIndexInContext,
+      );
+      if (originalIndex !== null) {
+        return replaceDisplaySlice(
+          passage,
+          originalIndex,
+          target.length,
+          `__${passage.slice(originalIndex, originalIndex + target.length)}__`,
+        );
+      }
+    }
+  }
+
+  const directIndex = findInText(passage);
+  if (directIndex === -1) return null;
+  return replaceDisplaySlice(
+    passage,
+    directIndex,
+    target.length,
+    `__${passage.slice(directIndex, directIndex + target.length)}__`,
+  );
 }
 
 const DISPLAY_KOREAN_OPTION_TYPES = new Set([

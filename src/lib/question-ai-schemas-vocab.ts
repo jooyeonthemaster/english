@@ -44,7 +44,7 @@ export const aiContextMeaningSchema = z.object({
   ...commonFields,
   underlinedWord: z.string().describe("밑줄 칠 단어"),
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
-  options: z.array(optionSchema).length(5).describe("영어 동의어 선택지"),
+  options: z.array(optionSchema).length(5).describe("영어 동의어 선택지. text에는 뜻풀이/괄호 설명 없이 단어 또는 짧은 구만 작성"),
   ...mcWrongExplanations,
 });
 export type AiContextMeaningQuestion = z.infer<typeof aiContextMeaningSchema>;
@@ -61,7 +61,7 @@ export const aiAntonymSchema = z.object({
     antonym: z.string().describe("반의어"),
     surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
   })).length(5).describe("밑줄 표시할 5개 어휘"),
-  options: z.array(optionSchema).length(5).describe("단어 - 반의어 쌍 선택지"),
+  options: z.array(optionSchema).length(5).describe("단어 - 반의어 쌍 선택지. text에는 영어 단어쌍만 작성하고 뜻풀이/괄호 설명 금지"),
   ...mcWrongExplanations,
 });
 export type AiAntonymQuestion = z.infer<typeof aiAntonymSchema>;

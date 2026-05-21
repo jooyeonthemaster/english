@@ -19,6 +19,7 @@ import { processGrammarError } from "./processors/grammar-error";
 import { processIrrelevant } from "./processors/irrelevant";
 import { processReference } from "./processors/reference";
 import { processSentenceInsert } from "./processors/sentence-insert";
+import { processSynonym } from "./processors/synonym";
 import { processVocabChoice } from "./processors/vocab-choice";
 import { normalizeWrongOptionExplanations } from "@/lib/question-wrong-option-explanations";
 import {
@@ -102,6 +103,9 @@ export function postProcessQuestion(
       case "CONTEXT_MEANING":
         return processContextMeaning(passageContent, aiOutput);
 
+      case "SYNONYM":
+        return processSynonym(passageContent, aiOutput);
+
       case "ANTONYM":
         return processAntonym(passageContent, aiOutput);
 
@@ -133,6 +137,10 @@ function normalizePostProcessResult(
   result: PostProcessResult,
   typeId?: string,
 ): PostProcessResult {
+  const normalizedOptions = normalizeOptionsForVisibleType(
+    typeId,
+    result.data?.options,
+  );
   const normalizedWrongOptionExplanations = normalizeWrongOptionExplanations(
     result.data?.wrongOptionExplanations,
   );
@@ -140,11 +148,12 @@ function normalizePostProcessResult(
     alignWrongOptionExplanationsWithVisibleOptions(
       typeId,
       normalizedWrongOptionExplanations,
-      result.data?.options,
+      normalizedOptions,
       result.data?.correctAnswer,
     );
   if (
-    alignedWrongOptionExplanations === result.data?.wrongOptionExplanations
+    alignedWrongOptionExplanations === result.data?.wrongOptionExplanations &&
+    normalizedOptions === result.data?.options
   ) {
     return result;
   }
@@ -152,9 +161,71 @@ function normalizePostProcessResult(
     ...result,
     data: {
       ...result.data,
+      options: normalizedOptions,
       wrongOptionExplanations: alignedWrongOptionExplanations,
     },
   };
+}
+
+const VOCAB_OPTION_TEXT_TYPES = new Set([
+  "CONTEXT_MEANING",
+  "SYNONYM",
+  "ANTONYM",
+]);
+
+function normalizeOptionsForVisibleType(
+  typeId: string | undefined,
+  options: unknown,
+): unknown {
+  if (!typeId || !VOCAB_OPTION_TEXT_TYPES.has(typeId)) return options;
+  if (!Array.isArray(options)) return options;
+
+  let changed = false;
+  const normalized = options.map((option) => {
+    if (!option || typeof option !== "object" || Array.isArray(option)) {
+      return option;
+    }
+    const record = option as Record<string, unknown>;
+    if (typeof record.text !== "string") return option;
+    const text =
+      typeId === "ANTONYM"
+        ? sanitizeAntonymOptionText(record.text)
+        : sanitizeSingleVocabOptionText(record.text);
+    if (text === record.text) return option;
+    changed = true;
+    return { ...record, text };
+  });
+
+  return changed ? normalized : options;
+}
+
+function stripOptionPrefix(text: string): string {
+  return text
+    .replace(/^\s*(?:[\u2460-\u2464]|\([A-Ea-e1-5]\)|[A-Ea-e1-5][.)]|[1-5][.)])\s*/, "")
+    .trim();
+}
+
+function stripDefinitions(text: string): string {
+  return text
+    .replace(/\s*[\(\[][^)\]]*[\)\]]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function sanitizeSingleVocabOptionText(text: string): string {
+  return stripDefinitions(stripOptionPrefix(text));
+}
+
+function sanitizeAntonymOptionText(text: string): string {
+  const withoutPrefix = stripOptionPrefix(text);
+  const parts = withoutPrefix.split(/\s+[-\u2013\u2014]\s+/);
+  if (parts.length >= 2) {
+    return parts
+      .slice(0, 2)
+      .map((part) => stripDefinitions(stripOptionPrefix(part)))
+      .join(" - ");
+  }
+  return stripDefinitions(withoutPrefix);
 }
 
 const VISIBLE_KOREAN_OPTION_TYPES = new Set([
