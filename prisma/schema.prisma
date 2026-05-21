@@ -911,7 +911,7 @@ model ExamQuestion {
   points     Int    @default(1)
 
   exam     Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
-  question Question @relation(fields: [questionId], references: [id])
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@unique([examId, orderNum])
   @@unique([examId, questionId])
@@ -1067,7 +1067,7 @@ model WrongAnswerLog {
   lastWrongAt DateTime @default(now())
 
   student  Student  @relation(fields: [studentId], references: [id])
-  question Question @relation(fields: [questionId], references: [id])
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, questionId])
   @@index([studentId, category])
@@ -1141,7 +1141,7 @@ model AIConversation {
   updatedAt  DateTime @updatedAt
 
   student  Student  @relation(fields: [studentId], references: [id])
-  question Question @relation(fields: [questionId], references: [id])
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, questionId])
   @@index([studentId])

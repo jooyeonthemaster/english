@@ -95,6 +95,10 @@ export const workbenchPassageAnalysisTask = task({
   async run(payload: Input, { ctx }) {
     const { jobId } = payload;
     const now = new Date();
+    const taskStartedAt = Date.now();
+    let creditMs = 0;
+    let generationMs = 0;
+    let persistenceMs = 0;
 
     const job = await prisma.workbenchAiJob.findUnique({
       where: { id: jobId },
@@ -145,6 +149,15 @@ export const workbenchPassageAnalysisTask = task({
     if (job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(job.passage.analysis.analysisData);
       if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan)) {
+        const debugTiming = {
+          queueWaitMs: now.getTime() - job.createdAt.getTime(),
+          creditMs: 0,
+          generationMs: 0,
+          persistenceMs: 0,
+          totalRunMs: Date.now() - taskStartedAt,
+          cached: true,
+          fastPath: false,
+        };
         await prisma.workbenchAiJob.update({
           where: { id: jobId },
           data: {
@@ -156,6 +169,8 @@ export const workbenchPassageAnalysisTask = task({
               cached: true,
               passageId: job.passage.id,
               generationPlan,
+              debugTiming,
+              fastPath: false,
             },
             completedAt: new Date(),
           },
@@ -171,6 +186,7 @@ export const workbenchPassageAnalysisTask = task({
     let creditTxId: string | null = null;
 
     try {
+      const creditStartedAt = Date.now();
       const credit = await ensureWorkbenchAiJobCharged({
         jobId,
         academyId: job.academyId,
@@ -183,6 +199,7 @@ export const workbenchPassageAnalysisTask = task({
         },
         creditCost,
       });
+      creditMs = Date.now() - creditStartedAt;
       creditTxId = credit.transactionId;
 
       const persistedAnns = await loadPersistedAnnotations(job.passage.id);
@@ -192,16 +209,19 @@ export const workbenchPassageAnalysisTask = task({
         .filter((v) => typeof v === "string" && v.trim().length > 0)
         .join("\n\n");
 
+      const generationStartedAt = Date.now();
       const rawAnalysis = await runFullAnalysis(
         job.passage,
         mergedPrompt || undefined,
         generationPlan,
       );
+      generationMs = Date.now() - generationStartedAt;
       const analysisData = withAnalysisGenerationMetadata(
         rawAnalysis,
         generationPlan,
       );
 
+      const persistenceStartedAt = Date.now();
       await prisma.$transaction(async (tx) => {
         await tx.passageAnalysis.upsert({
           where: { passageId: job.passage!.id },
@@ -233,11 +253,36 @@ export const workbenchPassageAnalysisTask = task({
           },
         });
       });
+      persistenceMs = Date.now() - persistenceStartedAt;
+
+      const debugTiming = {
+        queueWaitMs: now.getTime() - job.createdAt.getTime(),
+        creditMs,
+        generationMs,
+        persistenceMs,
+        totalRunMs: Date.now() - taskStartedAt,
+        cached: false,
+        fastPath: false,
+      };
+
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          result: {
+            cached: false,
+            passageId: job.passage!.id,
+            generationPlan,
+            debugTiming,
+            fastPath: false,
+          },
+        },
+      });
 
       logger.info("passage analysis job completed", {
         jobId,
         passageId: job.passage.id,
         generationPlan,
+        debugTiming,
       });
       return { success: true as const, passageId: job.passage.id };
     } catch (err) {
@@ -276,6 +321,16 @@ export const workbenchPassageAnalysisTask = task({
           status: "FAILED",
           failedCount: 1,
           errorMessage: classified.message,
+          result: {
+            debugTiming: {
+              queueWaitMs: now.getTime() - job.createdAt.getTime(),
+              creditMs,
+              generationMs,
+              persistenceMs,
+              totalRunMs: Date.now() - taskStartedAt,
+              fastPath: false,
+            },
+          },
           completedAt: new Date(),
         },
       });

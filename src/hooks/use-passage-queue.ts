@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 import {
   normalizeQuestionGenerationPlan,
@@ -96,6 +103,47 @@ interface AiJobRow {
   passage: QueuedPassage["passageData"] | null;
 }
 
+interface QueuePassageInput {
+  id: string;
+  title: string;
+  content: string;
+  schoolId?: string;
+  schoolName?: string;
+  grade?: number;
+  semester?: string;
+  unit?: string;
+  publisher?: string;
+  tags?: string[];
+  source?: string;
+  difficulty?: string;
+}
+
+interface PassageAnalysisJobResponse {
+  jobId?: string;
+  status?: string;
+  data?: PassageAnalysisData;
+  cached?: boolean;
+  createdAt?: string;
+  completedAt?: string;
+  generationPlan?: QuestionGenerationPlan;
+  error?: string;
+  details?: string;
+}
+
+interface QueueStartItem {
+  passage: QueuePassageInput;
+  promptConfig: AnalysisPromptConfig;
+}
+
+function readAnalysisFastBatchConcurrency(): number {
+  const raw = process.env.NEXT_PUBLIC_WORKBENCH_ANALYSIS_FAST_BATCH_CONCURRENCY;
+  const parsed = raw ? Number(raw) : NaN;
+  if (!Number.isFinite(parsed)) return 4;
+  return Math.max(1, Math.min(8, Math.floor(parsed)));
+}
+
+const ANALYSIS_FAST_BATCH_CONCURRENCY = readAnalysisFastBatchConcurrency();
+
 function wordCount(content: string) {
   return content.trim().split(/\s+/).filter(Boolean).length;
 }
@@ -125,10 +173,198 @@ function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
 }
 
 function statusFromJob(job: AiJobRow): QueuedPassageStatus {
-  if (job.status === "PENDING") return "pending";
-  if (job.status === "PROCESSING") return "analyzing";
-  if (job.status === "COMPLETED" || job.status === "PARTIAL") return "done";
-  return "error";
+  return statusFromRaw(job.status);
+}
+
+function statusFromRaw(status: string | null | undefined): QueuedPassageStatus {
+  if (status === "PENDING") return "pending";
+  if (status === "PROCESSING") return "analyzing";
+  if (status === "COMPLETED" || status === "PARTIAL") return "done";
+  if (status === "FAILED" || status === "CANCELLED") return "error";
+  return "pending";
+}
+
+function normalizePromptConfig(promptConfig: AnalysisPromptConfig): AnalysisPromptConfig {
+  return {
+    ...promptConfig,
+    focusAreas: Array.isArray(promptConfig.focusAreas)
+      ? promptConfig.focusAreas
+      : [],
+    targetLevel: promptConfig.targetLevel ?? "",
+    customPrompt: promptConfig.customPrompt ?? "",
+    generationPlan: normalizeQuestionGenerationPlan(promptConfig.generationPlan),
+  };
+}
+
+function buildQueueItem(
+  passage: QueuePassageInput,
+  promptConfig: AnalysisPromptConfig,
+  runAnalysisNow: boolean,
+): QueuedPassage {
+  return {
+    id: passage.id,
+    title: passage.title,
+    contentPreview:
+      passage.content.length > 120
+        ? passage.content.slice(0, 120) + "..."
+        : passage.content,
+    wordCount: wordCount(passage.content),
+    status: runAnalysisNow ? "pending" : "not_analyzed",
+    analysisData: null,
+    error: null,
+    promptConfig,
+    createdAt: new Date(),
+    schoolName: passage.schoolName,
+    grade: passage.grade,
+    semester: passage.semester,
+    unit: passage.unit,
+    publisher: passage.publisher,
+    tags: passage.tags,
+    passageData: {
+      id: passage.id,
+      title: passage.title,
+      content: passage.content,
+      grade: passage.grade ?? null,
+      semester: passage.semester ?? null,
+      unit: passage.unit ?? null,
+      publisher: passage.publisher ?? null,
+      difficulty: passage.difficulty ?? null,
+      tags: passage.tags ? JSON.stringify(passage.tags) : null,
+      source: passage.source ?? null,
+      createdAt: new Date(),
+      school: passage.schoolName
+        ? { id: passage.schoolId || "", name: passage.schoolName, type: "" }
+        : null,
+      analysis: null,
+      notes: [],
+      questions: [],
+    },
+  };
+}
+
+function mergeQueueItems(
+  localQueue: QueuedPassage[],
+  jobQueue: QueuedPassage[],
+): QueuedPassage[] {
+  const jobById = new Map(jobQueue.map((item) => [item.id, item]));
+  const seen = new Set<string>();
+  const merged: QueuedPassage[] = [];
+
+  for (const local of localQueue) {
+    seen.add(local.id);
+    const job = jobById.get(local.id);
+    if (!job) {
+      merged.push(local);
+      continue;
+    }
+    merged.push({
+      ...local,
+      ...job,
+      createdAt: local.createdAt,
+      promptConfig: local.promptConfig,
+      passageData: {
+        ...local.passageData,
+        ...job.passageData,
+      },
+    });
+  }
+
+  for (const job of jobQueue) {
+    if (seen.has(job.id)) continue;
+    merged.push(job);
+  }
+
+  return merged;
+}
+
+async function runWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  worker: (item: T) => Promise<R>,
+): Promise<PromiseSettledResult<R>[]> {
+  const results: PromiseSettledResult<R>[] = new Array(items.length);
+  let nextIndex = 0;
+
+  async function runNext() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      try {
+        results[currentIndex] = {
+          status: "fulfilled",
+          value: await worker(items[currentIndex]),
+        };
+      } catch (reason) {
+        results[currentIndex] = { status: "rejected", reason };
+      }
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(Math.max(1, limit), items.length) },
+    runNext,
+  );
+  await Promise.all(workers);
+  return results;
+}
+
+function applyAnalysisJobResponse(
+  item: QueuedPassage,
+  response: PassageAnalysisJobResponse,
+): QueuedPassage {
+  if (response.data) {
+    return {
+      ...item,
+      status: "done",
+      analysisData: response.data,
+      error: null,
+      promptConfig: {
+        ...item.promptConfig,
+        generationPlan: normalizeQuestionGenerationPlan(
+          response.generationPlan ?? item.promptConfig.generationPlan,
+        ),
+      },
+      passageData: {
+        ...item.passageData,
+        analysis: {
+          id: item.passageData.analysis?.id || response.jobId || item.id,
+          analysisData: JSON.stringify(response.data),
+          contentHash: item.passageData.analysis?.contentHash || "",
+          updatedAt: response.completedAt ? new Date(response.completedAt) : new Date(),
+        },
+      },
+    };
+  }
+
+  return {
+    ...item,
+    status: statusFromRaw(response.status),
+    error: null,
+  };
+}
+
+function applyAnalysisJobError(
+  item: QueuedPassage,
+  err: unknown,
+): QueuedPassage {
+  return {
+    ...item,
+    status: "error",
+    error:
+      err instanceof Error
+        ? err.message
+        : "Failed to start passage analysis job.",
+  };
+}
+
+function updateQueueItem(
+  setter: Dispatch<SetStateAction<QueuedPassage[]>>,
+  passageId: string,
+  updater: (item: QueuedPassage) => QueuedPassage,
+) {
+  setter((prev) =>
+    prev.map((item) => (item.id === passageId ? updater(item) : item)),
+  );
 }
 
 function queueItemFromJob(job: AiJobRow): QueuedPassage | null {
@@ -182,8 +418,12 @@ function safeParseTags(raw: string): string[] | undefined {
 async function startPassageAnalysisJob(
   passageId: string,
   promptConfig: AnalysisPromptConfig,
-) {
-  const res = await fetch("/api/workbench/ai-jobs/passage-analysis", {
+  options: { fast?: boolean } = { fast: true },
+): Promise<PassageAnalysisJobResponse> {
+  const endpoint = options.fast
+    ? "/api/workbench/ai-jobs/passage-analysis/fast"
+    : "/api/workbench/ai-jobs/passage-analysis";
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -195,10 +435,11 @@ async function startPassageAnalysisJob(
       generationPlan: promptConfig.generationPlan,
     }),
   });
-  const data = (await res.json().catch(() => ({}))) as { error?: string };
+  const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
   if (!res.ok || data.error) {
-    throw new Error(data.error || "Failed to start passage analysis job.");
+    throw new Error(data.details || data.error || "Failed to start passage analysis job.");
   }
+  return data;
 }
 
 export function usePassageQueue(initialItems?: QueuedPassage[]) {
@@ -231,14 +472,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
   }, []);
 
   const queue = useMemo(() => {
-    const seen = new Set<string>();
-    const merged: QueuedPassage[] = [];
-    for (const item of [...jobQueue, ...localQueue]) {
-      if (seen.has(item.id)) continue;
-      seen.add(item.id);
-      merged.push(item);
-    }
-    return merged;
+    return mergeQueueItems(localQueue, jobQueue);
   }, [jobQueue, localQueue]);
 
   const activeCount = queue.filter(
@@ -247,90 +481,90 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
 
   const addToQueue = useCallback(
     async (
-      passage: {
-        id: string;
-        title: string;
-        content: string;
-        schoolId?: string;
-        schoolName?: string;
-        grade?: number;
-        semester?: string;
-        unit?: string;
-        publisher?: string;
-        tags?: string[];
-        source?: string;
-        difficulty?: string;
-      },
+      passage: QueuePassageInput,
       promptConfig: AnalysisPromptConfig,
       runAnalysisNow: boolean = true,
     ) => {
-      const normalizedPromptConfig = {
-        ...promptConfig,
-        generationPlan: normalizeQuestionGenerationPlan(promptConfig.generationPlan),
-      };
-      const newItem: QueuedPassage = {
-        id: passage.id,
-        title: passage.title,
-        contentPreview:
-          passage.content.length > 120
-            ? passage.content.slice(0, 120) + "..."
-            : passage.content,
-        wordCount: wordCount(passage.content),
-        status: runAnalysisNow ? "pending" : "not_analyzed",
-        analysisData: null,
-        error: null,
-        promptConfig: normalizedPromptConfig,
-        createdAt: new Date(),
-        schoolName: passage.schoolName,
-        grade: passage.grade,
-        semester: passage.semester,
-        unit: passage.unit,
-        publisher: passage.publisher,
-        tags: passage.tags,
-        passageData: {
-          id: passage.id,
-          title: passage.title,
-          content: passage.content,
-          grade: passage.grade ?? null,
-          semester: passage.semester ?? null,
-          unit: passage.unit ?? null,
-          publisher: passage.publisher ?? null,
-          difficulty: passage.difficulty ?? null,
-          tags: passage.tags ? JSON.stringify(passage.tags) : null,
-          source: passage.source ?? null,
-          createdAt: new Date(),
-          school: passage.schoolName
-            ? { id: passage.schoolId || "", name: passage.schoolName, type: "" }
-            : null,
-          analysis: null,
-          notes: [],
-          questions: [],
-        },
-      };
+      const normalizedPromptConfig = normalizePromptConfig(promptConfig);
+      const newItem = buildQueueItem(
+        passage,
+        normalizedPromptConfig,
+        runAnalysisNow,
+      );
 
       setLocalQueue((prev) => [newItem, ...prev.filter((p) => p.id !== passage.id)]);
 
       if (!runAnalysisNow) return;
 
-      try {
-        await startPassageAnalysisJob(passage.id, normalizedPromptConfig);
-      } catch (err) {
-        setLocalQueue((prev) =>
-          prev.map((p) =>
-            p.id === passage.id
-              ? {
-                  ...p,
-                  status: "error" as const,
-                  error:
-                    err instanceof Error
-                      ? err.message
-                      : "Failed to start passage analysis job.",
-                }
-              : p,
-          ),
-        );
-        throw err;
+      void startPassageAnalysisJob(passage.id, normalizedPromptConfig)
+        .then((response) => {
+          updateQueueItem(setLocalQueue, passage.id, (item) =>
+            applyAnalysisJobResponse(item, response),
+          );
+          updateQueueItem(setJobQueue, passage.id, (item) =>
+            applyAnalysisJobResponse(item, response),
+          );
+        })
+        .catch((err) => {
+          updateQueueItem(setLocalQueue, passage.id, (item) =>
+            applyAnalysisJobError(item, err),
+          );
+        });
+    },
+    [],
+  );
+
+  const addManyToQueue = useCallback(
+    async (items: QueueStartItem[], runAnalysisNow: boolean = true) => {
+      if (items.length === 0) return { success: 0, failed: 0 };
+
+      const prepared = items.map((item) => ({
+        passage: item.passage,
+        promptConfig: normalizePromptConfig(item.promptConfig),
+      }));
+      const ids = new Set(prepared.map((item) => item.passage.id));
+      const newItems = prepared.map((item) =>
+        buildQueueItem(item.passage, item.promptConfig, runAnalysisNow),
+      );
+
+      setLocalQueue((prev) => [
+        ...newItems,
+        ...prev.filter((item) => !ids.has(item.id)),
+      ]);
+
+      if (!runAnalysisNow) {
+        return { success: prepared.length, failed: 0 };
       }
+
+      void runWithConcurrency(
+        prepared,
+        ANALYSIS_FAST_BATCH_CONCURRENCY,
+        async ({ passage, promptConfig }) => {
+          try {
+            const response = await startPassageAnalysisJob(
+              passage.id,
+              promptConfig,
+            );
+            updateQueueItem(setLocalQueue, passage.id, (item) =>
+              applyAnalysisJobResponse(item, response),
+            );
+            updateQueueItem(setJobQueue, passage.id, (item) =>
+              applyAnalysisJobResponse(item, response),
+            );
+            return response;
+          } catch (err) {
+            updateQueueItem(setLocalQueue, passage.id, (item) =>
+              applyAnalysisJobError(item, err),
+            );
+            throw err;
+          }
+        },
+      );
+
+      return {
+        success: prepared.length,
+        failed: 0,
+      };
     },
     [],
   );
@@ -346,22 +580,20 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
             : p,
         ),
       );
-      void startPassageAnalysisJob(passageId, target.promptConfig).catch((err) => {
-        setLocalQueue((prev) =>
-          prev.map((p) =>
-            p.id === passageId
-              ? {
-                  ...p,
-                  status: "error" as const,
-                  error:
-                    err instanceof Error
-                      ? err.message
-                      : "Failed to start passage analysis job.",
-                }
-              : p,
-          ),
-        );
-      });
+      void startPassageAnalysisJob(passageId, target.promptConfig)
+        .then((response) => {
+          updateQueueItem(setLocalQueue, passageId, (item) =>
+            applyAnalysisJobResponse(item, response),
+          );
+          updateQueueItem(setJobQueue, passageId, (item) =>
+            applyAnalysisJobResponse(item, response),
+          );
+        })
+        .catch((err) => {
+          updateQueueItem(setLocalQueue, passageId, (item) =>
+            applyAnalysisJobError(item, err),
+          );
+        });
     },
     [queue],
   );
@@ -378,7 +610,9 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
           p.id === passageId
             ? {
                 ...p,
+                status: "done" as const,
                 analysisData: data,
+                error: null,
                 passageData: {
                   ...p.passageData,
                   analysis: {
@@ -426,6 +660,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
     activeCount,
     hasActiveAnalysis,
     addToQueue,
+    addManyToQueue,
     retryAnalysis,
     removeFromQueue,
     updateAnalysisData,

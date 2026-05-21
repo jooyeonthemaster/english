@@ -2,13 +2,19 @@
 "use client";
 
 import React from "react";
-import { Check, Trash2 } from "lucide-react";
+import { Check, Loader2, Trash2 } from "lucide-react";
 
 interface SelectionToolbarProps {
   selectedCount: number;
   totalCount: number;
   isAllSelected: boolean;
   onSelectAll: () => void;
+  selectAllLabel?: string;
+  deselectAllLabel?: string;
+  onSelectAllPages?: () => void;
+  selectAllPagesLabel?: string;
+  isSelectingAllPages?: boolean;
+  isSelectAllPagesDisabled?: boolean;
   onClearSelection: () => void;
   activeFolder: string | null;
   onRemoveFromFolder?: () => void;
@@ -27,6 +33,12 @@ export function SelectionToolbar({
   totalCount,
   isAllSelected,
   onSelectAll,
+  selectAllLabel = "전체 선택",
+  deselectAllLabel = "선택 해제",
+  onSelectAllPages,
+  selectAllPagesLabel = "전체 페이지 선택",
+  isSelectingAllPages = false,
+  isSelectAllPagesDisabled,
   onClearSelection,
   activeFolder,
   onRemoveFromFolder,
@@ -65,8 +77,27 @@ export function SelectionToolbar({
           (hasSelection ? "text-blue-600 hover:text-blue-700" : "text-slate-600 hover:text-slate-800")
         }
       >
-        {isAllSelected && hasSelection ? "선택 해제" : "전체 선택"}
+        {isAllSelected && hasSelection ? deselectAllLabel : selectAllLabel}
       </button>
+      {onSelectAllPages && (
+        <>
+          <span className="text-slate-300">|</span>
+          <button
+            onClick={onSelectAllPages}
+            disabled={
+              (isSelectAllPagesDisabled ?? totalCount === 0) ||
+              isSelectingAllPages
+            }
+            className={
+              "inline-flex items-center gap-1 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+              (hasSelection ? "text-blue-600 hover:text-blue-700" : "text-slate-600 hover:text-slate-800")
+            }
+          >
+            {isSelectingAllPages && <Loader2 className="h-3 w-3 animate-spin" />}
+            {selectAllPagesLabel}
+          </button>
+        </>
+      )}
       <span className="text-slate-300">|</span>
 
       <div

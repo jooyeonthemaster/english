@@ -93,6 +93,7 @@ export function PassageRegistrationClient({
     activeCount,
     hasActiveAnalysis,
     addToQueue,
+    addManyToQueue,
     retryAnalysis,
     removeFromQueue,
     updateAnalysisData,
@@ -322,10 +323,10 @@ export function PassageRegistrationClient({
   }, [hasActiveAnalysis]);
 
   // ─── Bulk-analyze selected extraction drafts ───
-  // Fire all createWorkbenchPassage writes in parallel so the queue cards
-  // appear together within ~one DB roundtrip rather than drip-feeding one at
-  // a time. The analysis step itself is still throttled to 3-at-a-time by
-  // usePassageQueue's processPending.
+  // Fire all createWorkbenchPassage writes in parallel, then enqueue the
+  // successfully-created passages in the user's selected order. The analysis
+  // calls themselves are throttled inside usePassageQueue so cards appear
+  // together without swamping the model/API.
   const handleBulkAnalyzeDrafts = useCallback(
     async (
       drafts: M1PassageDraftWithJob[],
@@ -375,8 +376,8 @@ export function PassageRegistrationClient({
             throw new Error(result.error || "CREATE_FAILED");
           }
 
-          await addToQueue(
-            {
+          return {
+            passage: {
               id: result.id,
               title: draftTitle,
               content: text,
@@ -389,20 +390,23 @@ export function PassageRegistrationClient({
               tags: sharedTags,
               source: fileName || undefined,
             },
-            {
+            promptConfig: {
               customPrompt: combinedPrompt,
               focusAreas: [],
               targetLevel: "",
               generationPlan,
             },
-            true,
-          );
-          return result.id;
+          };
         }),
       );
 
-      const success = results.filter((r) => r.status === "fulfilled").length;
-      const failed = results.length - success;
+      const created = results.flatMap((r) =>
+        r.status === "fulfilled" ? [r.value] : [],
+      );
+      const createFailed = results.length - created.length;
+      const queued = await addManyToQueue(created, true);
+      const success = queued.success;
+      const failed = createFailed + queued.failed;
 
       setBulkAnalyzing(false);
 
@@ -425,7 +429,7 @@ export function PassageRegistrationClient({
       effectivePublisher,
       tags,
       analysisPrompt,
-      addToQueue,
+      addManyToQueue,
     ],
   );
 

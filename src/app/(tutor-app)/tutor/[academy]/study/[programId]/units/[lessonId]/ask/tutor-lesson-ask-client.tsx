@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -8,6 +9,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronRight,
+  Layers3,
   ListChecks,
   MessageCircleQuestion,
   Plus,
@@ -20,8 +22,19 @@ import {
   XCircle,
 } from "lucide-react";
 import { submitTutorActivityAction } from "@/actions/tutor";
+import { useTutorModalLock } from "@/app/(tutor-app)/tutor/[academy]/_components/tutor-modal-context";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  ArtifactInlineCard,
+  ArtifactPendingCard,
+  ArtifactsPanel,
+  deriveSvgTitle,
+  extractSvgBlock,
+  sanitizeSvg,
+  useArtifactStore,
+  type TutorArtifact,
+} from "./tutor-ask-artifacts";
 import {
   labelTutorActivityType,
   studentActivityInstruction,
@@ -187,6 +200,16 @@ function missionMatchesActivity(activity: QuizActivity, mission: MissionId) {
   return true;
 }
 
+function cleanProseAroundSvg(text: string) {
+  return text
+    .replace(/```\s*svg[\s\S]*?(?:```|$)/gi, "")
+    .replace(/<svg[\s\S]*?<\/svg>/gi, "")
+    .replace(/```/g, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 function missionPrompt(mission: MissionId) {
   switch (mission) {
     case "vocab":
@@ -240,6 +263,25 @@ export function TutorLessonAskClient({
   const solvedQuizIds = useMemo(() => new Set(quizResults.map((item) => item.id)), [quizResults]);
   const backHref = tutorPath(academy, `/study/${programId}/units/${lessonId}`);
 
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+  const artifactStore = useArtifactStore();
+  const questionForAnswerRef = useRef<Map<string, string>>(new Map());
+
+  useTutorModalLock(true);
+
+  useEffect(() => {
+    setPortalTarget(document.body);
+    const { body, documentElement: html } = document;
+    const previousBodyOverflow = body.style.overflow;
+    const previousHtmlOverflow = html.style.overflow;
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+    return () => {
+      body.style.overflow = previousBodyOverflow;
+      html.style.overflow = previousHtmlOverflow;
+    };
+  }, []);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
   }, [messages, isStreaming]);
@@ -257,6 +299,7 @@ export function TutorLessonAskClient({
       content: question,
     };
     const answerId = `local-answer-${Date.now()}-${answerIdRef.current++}`;
+    questionForAnswerRef.current.set(answerId, question);
     setMessages((current) => [...current, userMessage, { id: answerId, role: "assistant", content: "" }]);
     setIsStreaming(true);
 
@@ -283,13 +326,16 @@ export function TutorLessonAskClient({
         setForceNewConversation(false);
       }
       if (!res.ok || !res.body) throw new Error("답변을 불러오지 못했습니다.");
+      const isVisualizationMode = res.headers.get("x-response-mode") === "visualization";
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
+      let accumulated = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
+        accumulated += chunk;
         setMessages((current) =>
           current.map((message) =>
             message.id === answerId && message.role === "assistant"
@@ -297,6 +343,25 @@ export function TutorLessonAskClient({
               : message,
           ),
         );
+      }
+
+      if (isVisualizationMode) {
+        const extracted = extractSvgBlock(accumulated);
+        if (extracted.svg) {
+          const sanitized = sanitizeSvg(extracted.svg);
+          if (sanitized) {
+            const title = deriveSvgTitle(sanitized, question);
+            const userQuestion = questionForAnswerRef.current.get(answerId) ?? question;
+            const artifact: TutorArtifact = {
+              id: answerId,
+              title,
+              svg: sanitized,
+              question: userQuestion,
+              createdAt: Date.now(),
+            };
+            artifactStore.upsertArtifact(artifact);
+          }
+        }
       }
     } catch {
       setError("잠시 후 다시 질문해 주세요.");
@@ -352,6 +417,8 @@ export function TutorLessonAskClient({
     setConversationId(null);
     setForceNewConversation(true);
     setActiveMission("flow");
+    artifactStore.resetAll();
+    questionForAnswerRef.current.clear();
   }
 
   function completeQuiz(activity: QuizActivity, feedback: QuizFeedback) {
@@ -377,7 +444,9 @@ export function TutorLessonAskClient({
     ]);
   }
 
-  return (
+  if (!portalTarget) return null;
+
+  return createPortal(
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-white">
       <header className="sticky top-0 z-30 shrink-0 border-b border-slate-100 bg-white px-4 py-2 sm:px-6 md:px-8 shadow-sm">
         <div className="flex items-center justify-between gap-3">
@@ -399,14 +468,35 @@ export function TutorLessonAskClient({
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={createNewChat}
-            className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-2.5 text-[10px] font-black text-blue-700 hover:bg-blue-100/50 active:bg-blue-100 transition"
-          >
-            <Plus className="size-3" />
-            새 채팅
-          </button>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => artifactStore.setOpen(true)}
+              className={cn(
+                "relative inline-flex h-8 items-center gap-1 rounded-full border px-2.5 text-[10px] font-black transition",
+                artifactStore.artifacts.length > 0
+                  ? "border-blue-200 bg-white text-blue-700 hover:bg-blue-50"
+                  : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
+              )}
+              aria-label="시각 자료 모음 열기"
+            >
+              <Layers3 className="size-3.5" />
+              시각 자료
+              {artifactStore.artifacts.length > 0 && (
+                <span className="ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[9px] font-black text-white">
+                  {artifactStore.artifacts.length}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={createNewChat}
+              className="inline-flex h-8 items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-2.5 text-[10px] font-black text-blue-700 hover:bg-blue-100/50 active:bg-blue-100 transition"
+            >
+              <Plus className="size-3" />
+              새 채팅
+            </button>
+          </div>
         </div>
 
         <div className="mt-2 rounded-xl border border-blue-100 bg-blue-50 px-2.5 py-1.5">
@@ -460,7 +550,7 @@ export function TutorLessonAskClient({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-slate-50 px-4 pb-[108px] pt-4 sm:px-6 md:px-8">
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-slate-50 px-4 pb-20 pt-4 sm:px-6 md:px-8">
         {messages.length === 0 && (
           <div className="rounded-3xl border border-dashed border-blue-100 bg-white px-4 py-8 text-center">
             <Wand2 className="mx-auto size-6 text-blue-500" />
@@ -482,17 +572,36 @@ export function TutorLessonAskClient({
             );
           }
 
+          if (message.role === "assistant") {
+            const artifact = artifactStore.artifacts.find((item) => item.id === message.id);
+            const extracted = artifact ? null : extractSvgBlock(message.content);
+            const inlineText = artifact
+              ? cleanProseAroundSvg(message.content)
+              : extracted?.svg
+                ? cleanProseAroundSvg(`${extracted.before}\n${extracted.after}`)
+                : message.content;
+            const showPending = !artifact && (extracted?.isPartial ?? false);
+            return (
+              <div key={message.id} className="flex justify-start">
+                <div className="max-w-[88%] break-words rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold leading-6 text-slate-700 shadow-sm">
+                  <p className="mb-1 text-[10px] font-black uppercase text-blue-600">Tutor</p>
+                  {inlineText && (
+                    <span className="whitespace-pre-wrap">{inlineText}</span>
+                  )}
+                  {showPending && <ArtifactPendingCard />}
+                  {artifact && (
+                    <ArtifactInlineCard artifact={artifact} onOpen={artifactStore.openWith} />
+                  )}
+                  {!inlineText && !showPending && !artifact && isStreaming && <TutorTypingIndicator />}
+                </div>
+              </div>
+            );
+          }
+
           return (
-            <div key={message.id} className={message.role === "user" ? "flex justify-end" : "flex justify-start"}>
-              <div
-                className={
-                  message.role === "user"
-                    ? "max-w-[84%] break-words rounded-3xl bg-blue-600 px-4 py-3 text-sm font-bold leading-6 text-white shadow-sm"
-                    : "max-w-[88%] break-words rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold leading-6 text-slate-700 shadow-sm"
-                }
-              >
-                {message.role === "assistant" && <p className="mb-1 text-[10px] font-black uppercase text-blue-600">Tutor</p>}
-                {message.content || (isStreaming ? "바로 이어서 물어볼게요..." : "")}
+            <div key={message.id} className="flex justify-end">
+              <div className="max-w-[84%] break-words rounded-3xl bg-blue-600 px-4 py-3 text-sm font-bold leading-6 text-white shadow-sm">
+                <span className="whitespace-pre-wrap">{message.content}</span>
               </div>
             </div>
           );
@@ -500,13 +609,13 @@ export function TutorLessonAskClient({
         <div ref={bottomRef} />
       </div>
 
-      <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[1040px] -translate-x-1/2 border-t border-slate-100 bg-white px-4 pb-[54px] pt-1.5 sm:px-6 md:px-8">
+      <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[1040px] -translate-x-1/2 border-t border-slate-100 bg-white px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] pt-1.5 sm:px-6 md:px-8">
         <form onSubmit={(event) => void submitQuestion(event)} className="flex items-center gap-2">
           <Textarea
             data-testid="tutor-ask-input"
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            placeholder="질문하거나, '방금 틀린 단어로 다시 물어봐'라고 입력해 보세요."
+            placeholder="질문하거나, 끝에 '시각화 해줘'를 붙여 도식으로 받아보세요."
             className="min-h-10 h-10 py-2.5 resize-none rounded-xl border-slate-200 bg-slate-50 text-xs sm:text-sm focus-visible:ring-1 focus-visible:ring-blue-500 transition"
             disabled={isStreaming}
           />
@@ -521,7 +630,30 @@ export function TutorLessonAskClient({
         </form>
         {error && <p className="mt-1 text-xs font-bold text-red-500">{error}</p>}
       </div>
-    </div>
+      <ArtifactsPanel
+        open={artifactStore.open}
+        onClose={() => artifactStore.setOpen(false)}
+        artifacts={artifactStore.artifacts}
+        selectedId={artifactStore.selectedId}
+        onSelect={artifactStore.setSelectedId}
+        onDelete={artifactStore.deleteArtifact}
+      />
+    </div>,
+    portalTarget,
+  );
+}
+
+function TutorTypingIndicator() {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 py-1 align-middle"
+      role="status"
+      aria-label="AI가 답변을 작성하는 중"
+    >
+      <span className="block size-1.5 rounded-full bg-blue-500/80 animate-bounce [animation-delay:-0.32s]" />
+      <span className="block size-1.5 rounded-full bg-blue-500/80 animate-bounce [animation-delay:-0.16s]" />
+      <span className="block size-1.5 rounded-full bg-blue-500/80 animate-bounce" />
+    </span>
   );
 }
 

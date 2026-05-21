@@ -43,6 +43,7 @@ export {
   getWorkbenchQuestions,
   getWorkbenchQuestionsGroupedByPassage,
   getWorkbenchQuestion,
+  getWorkbenchQuestionIds,
   saveGeneratedQuestions,
   updateWorkbenchQuestion,
   deleteWorkbenchQuestion,

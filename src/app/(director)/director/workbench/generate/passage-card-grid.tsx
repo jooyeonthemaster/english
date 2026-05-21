@@ -119,6 +119,12 @@ export function PassageCardGrid({
   selectionActionDisabled,
   handleOpenAnalysisModal,
 }: PassageCardGridProps) {
+  const handleCardKeyDown = (id: string, event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    toggleCheckbox(id);
+  };
+
   return (
     <div className="flex flex-col overflow-hidden bg-white border-r lg:border-r-0 border-slate-200/80 flex-1 min-w-0">
       {/* Selection toolbar */}
@@ -298,19 +304,28 @@ export function PassageCardGrid({
               return (
                 <div
                   key={p.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isChecked}
+                  aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
+                  onClick={(e) => toggleCheckbox(p.id, e)}
+                  onKeyDown={(e) => handleCardKeyDown(p.id, e)}
                   className={`group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md flex flex-col ${
                     isChecked
                       ? "border-blue-400 bg-blue-50/20 ring-1 ring-blue-300/30"
                       : hasAnalysis
                         ? "border-emerald-200 bg-white"
                         : "border-slate-200 bg-white"
-                  }`}
+                  } cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 >
                   {/* Header with checkbox */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-2.5 min-w-0 flex-1">
                       {/* Checkbox */}
                       <button
+                        type="button"
+                        aria-pressed={isChecked}
+                        aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
                         onClick={(e) => toggleCheckbox(p.id, e)}
                         className={`w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-0.5 transition-all ${
                           isChecked
@@ -337,6 +352,7 @@ export function PassageCardGrid({
                     {/* Hover actions */}
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
                       <button
+                        type="button"
                         onClick={() => handleOpenAnalysisModal(p.id)}
                         className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"
                         title="상세 보기"

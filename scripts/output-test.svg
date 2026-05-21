@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 560" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Urban Farming Revolution Flowchart">
+  <title>도시 농업의 부상과 효과 (Urban Farming Revolution)</title>
+  <desc>도시 농업의 혁신적 기술과 환경적, 사회적 효과를 시각화한 구조도</desc>
+
+  <!-- Background -->
+  <rect width="880" height="560" fill="#FFFFFF" />
+
+  <!-- Grid / Design System Definitions -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#94A3B8" />
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <g transform="translate(40, 40)">
+    <text x="0" y="12" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="700" fill="#2563EB" letter-spacing="0.04em">STRUCTURE ANALYSIS</text>
+    <text x="0" y="38" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="22" font-weight="800" fill="#0F172A">도시 농업의 부상과 다각적 효과</text>
+  </g>
+
+  <!-- Core Concept (Top Node) -->
+  <g transform="translate(290, 110)">
+    <rect width="300" height="70" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5" />
+    <text x="150" y="26" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="12" font-weight="700" fill="#2563EB" text-anchor="middle" dominant-baseline="middle" letter-spacing="0.05em">CORE CONCEPT</text>
+    <text x="150" y="46" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="16" font-weight="800" fill="#0F172A" text-anchor="middle" dominant-baseline="middle">도시 농업 (Urban Farming)</text>
+  </g>
+
+  <!-- Connectors from Top to Left/Right Containers -->
+  <path d="M 440 180 L 440 200" fill="none" stroke="#94A3B8" stroke-width="1.5" />
+  <path d="M 440 200 L 230 200 L 230 212" fill="none" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrow)" />
+  <path d="M 440 200 L 650 200 L 650 212" fill="none" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrow)" />
+
+  <!-- LEFT COLUMN: Innovative Techniques -->
+  <g transform="translate(40, 220)">
+    <!-- Container -->
+    <rect width="380" height="240" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" />
+    <text x="20" y="25" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="700" fill="#2563EB" letter-spacing="0.04em">METHOD · 혁신적 기술</text>
+    
+    <!-- Sub Node 1: Vertical Farming -->
+    <g transform="translate(20, 50)">
+      <rect width="160" height="60" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+      <text x="80" y="20" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle" dominant-baseline="middle">수직 농업</text>
+      <text x="80" y="40" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="11" font-weight="500" fill="#64748B" text-anchor="middle" dominant-baseline="middle">Vertical Farming</text>
+    </g>
+
+    <!-- Sub Node 2: Hydroponics -->
+    <g transform="translate(200, 50)">
+      <rect width="160" height="60" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+      <text x="80" y="20" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle" dominant-baseline="middle">수경 재배</text>
+      <text x="80" y="40" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="11" font-weight="500" fill="#64748B" text-anchor="middle" dominant-baseline="middle">Hydroponics</text>
+    </g>
+
+    <!-- Feature Box -->
+    <g transform="translate(20, 130)">
+      <rect width="340" height="90" rx="10" fill="#E2E8F0" fill-opacity="0.4" stroke-width="0" />
+      <text x="20" y="25" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="700" fill="#334155">기술적 특징 및 장점</text>
+      <text x="20" y="50" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="500" fill="#475569">• 도심 속 한정된 공간의 한계 극복</text>
+      <text x="20" y="70" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="500" fill="#475569">• 흙 없이 재배 가능 및 물 소비량 급감</text>
+    </g>
+  </g>
+
+  <!-- RIGHT COLUMN: Multidimensional Effects -->
+  <g transform="translate(460, 220)">
+    <!-- Container -->
+    <rect width="380" height="240" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" />
+    <text x="20" y="25" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="700" fill="#047857" letter-spacing="0.04em">EFFECTS · 다차원적 효과</text>
+    
+    <!-- Sub Node 1: Environmental -->
+    <g transform="translate(20, 50)">
+      <rect width="160" height="60" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+      <text x="80" y="20" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle" dominant-baseline="middle">환경적 혜택</text>
+      <text x="80" y="40" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="11" font-weight="500" fill="#047857" text-anchor="middle" dominant-baseline="middle">Environmental</text>
+    </g>
+
+    <!-- Sub Node 2: Social -->
+    <g transform="translate(200, 50)">
+      <rect width="160" height="60" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+      <text x="80" y="20" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle" dominant-baseline="middle">사회적 혜택</text>
+      <text x="80" y="40" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="11" font-weight="500" fill="#2563EB" text-anchor="middle" dominant-baseline="middle">Social &amp; Community</text>
+    </g>
+
+    <!-- Feature Box -->
+    <g transform="translate(20, 130)">
+      <rect width="340" height="90" rx="10" fill="#E6F4EA" stroke-width="0" />
+      <text x="20" y="25" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="700" fill="#047857">도시 환경 및 공동체 개선</text>
+      <text x="20" y="50" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="500" fill="#065F46">• 녹지 조성, 공기 오염 감소, 도심 열섬 완화</text>
+      <text x="20" y="70" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="500" fill="#065F46">• 공동체 정원을 통한 이웃 간 소통·연대 강화</text>
+    </g>
+  </g>
+
+  <!-- Footer / Summary -->
+  <g transform="translate(40, 490)">
+    <rect width="800" height="40" rx="8" fill="#F1F5F9" />
+    <text x="400" y="20" font-family="Pretendard, 'Noto Sans KR', system-ui, sans-serif" font-size="13" font-weight="600" fill="#475569" text-anchor="middle" dominant-baseline="middle">
+      요약: 도시 농업은 <tspan fill="#2563EB" font-weight="700">혁신적 기술(수직/수경)</tspan>을 통해 공간 한계를 극복하고, <tspan fill="#047857" font-weight="700">환경 정화와 공동체 회복</tspan>이라는 다각적 가치를 창출합니다.
+    </text>
+  </g>
+</svg>

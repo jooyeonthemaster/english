@@ -1,5 +1,5 @@
 import { anthropic } from "@ai-sdk/anthropic";
-import { generateObject, generateText } from "ai";
+import { generateObject, generateText, Output } from "ai";
 import { z } from "zod";
 import { GEMINI_MODEL_ID, model as geminiModel } from "@/lib/ai";
 import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
@@ -181,7 +181,6 @@ export async function generateQuestionText({
 }: GenerateQuestionTextArgs): Promise<GenerateQuestionTextResult> {
   const config = getQuestionGenerationModelConfig(generationPlan);
   let lastError: unknown;
-  void responseFormat;
   const operationStartedAt = Date.now();
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -198,6 +197,9 @@ export async function generateQuestionText({
           maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
           temperature,
           abortSignal: AbortSignal.timeout(Math.min(timeoutMs, GEMINI_QUESTION_TIMEOUT_MS)),
+          ...(responseFormat === "json_object"
+            ? { output: Output.json() }
+            : {}),
           providerOptions: {
             google: {
               thinkingConfig: {
@@ -211,8 +213,13 @@ export async function generateQuestionText({
           `[${logPrefix}] ${generationPlan} ${config.modelId} text attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
         );
 
+        const jsonOutput =
+          responseFormat === "json_object" && "output" in result
+            ? JSON.stringify(result.output)
+            : undefined;
+
         return {
-          text: result.text,
+          text: jsonOutput ?? result.text,
           usage: "usage" in result ? result.usage : undefined,
           finishReason: "finishReason" in result && typeof result.finishReason === "string"
             ? result.finishReason

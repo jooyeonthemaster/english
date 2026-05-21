@@ -15,21 +15,11 @@ function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
-// ---------------------------------------------------------------------------
-// Question Bank CRUD
-// ---------------------------------------------------------------------------
-
-export async function getWorkbenchQuestions(
+function buildWorkbenchQuestionWhere(
   academyId: string,
-  filters?: WorkbenchQuestionFilters
-) {
-  await requireAuth();
-
-  const page = filters?.page || 1;
-  const limit = filters?.limit || 20;
-  const skip = (page - 1) * limit;
-
-  const where: Record<string, unknown> = { academyId };
+  filters?: WorkbenchQuestionFilters,
+): Prisma.QuestionWhereInput {
+  const where: Prisma.QuestionWhereInput = { academyId };
 
   if (filters?.type) {
     // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
@@ -53,6 +43,61 @@ export async function getWorkbenchQuestions(
   if (filters?.search) {
     where.questionText = { contains: filters.search, mode: "insensitive" };
   }
+
+  return where;
+}
+
+function revalidateQuestionBankPaths() {
+  revalidatePath("/director/questions");
+  revalidatePath("/director/workbench/questions");
+  revalidatePath("/director/workbench");
+}
+
+async function deleteQuestionsForAcademy(
+  questionIds: string[],
+  academyId: string,
+): Promise<number> {
+  const uniqueIds = [...new Set(questionIds.filter(Boolean))];
+  if (uniqueIds.length === 0) return 0;
+
+  const ownedQuestions = await prisma.question.findMany({
+    where: { id: { in: uniqueIds }, academyId },
+    select: { id: true },
+  });
+  const ownedIds = ownedQuestions.map((question) => question.id);
+  if (ownedIds.length === 0) return 0;
+
+  const questionIdWhere = { questionId: { in: ownedIds } };
+
+  const [, , , , , deleted] = await prisma.$transaction([
+    prisma.examQuestion.deleteMany({ where: questionIdWhere }),
+    prisma.wrongAnswerLog.deleteMany({ where: questionIdWhere }),
+    prisma.aIConversation.deleteMany({ where: questionIdWhere }),
+    prisma.questionCollectionItem.deleteMany({ where: questionIdWhere }),
+    prisma.questionExplanation.deleteMany({ where: questionIdWhere }),
+    prisma.question.deleteMany({
+      where: { id: { in: ownedIds }, academyId },
+    }),
+  ]);
+
+  return deleted.count;
+}
+
+// ---------------------------------------------------------------------------
+// Question Bank CRUD
+// ---------------------------------------------------------------------------
+
+export async function getWorkbenchQuestions(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters
+) {
+  await requireAuth();
+
+  const page = filters?.page || 1;
+  const limit = filters?.limit || 20;
+  const skip = (page - 1) * limit;
+
+  const where = buildWorkbenchQuestionWhere(academyId, filters);
 
   // Build orderBy based on sort param
   const DIFFICULTY_ORDER_DESC = ["KILLER", "INTERMEDIATE", "BASIC"];
@@ -118,35 +163,7 @@ export async function getWorkbenchQuestionsGroupedByPassage(
   const limit = filters?.limit || 10; // passages per page
   const skip = (page - 1) * limit;
 
-  const questionWhere: Record<string, unknown> = {};
-
-  if (filters?.type) {
-    const types = filters.type.split(",").filter(Boolean);
-    questionWhere.type = types.length > 1 ? { in: types } : types[0];
-  }
-  if (filters?.subType) {
-    const subs = filters.subType.split(",").filter(Boolean);
-    questionWhere.subType = subs.length > 1 ? { in: subs } : subs[0];
-  }
-  if (filters?.difficulty) questionWhere.difficulty = filters.difficulty;
-  if (filters?.aiGenerated !== undefined)
-    questionWhere.aiGenerated = filters.aiGenerated;
-  if (filters?.approved !== undefined) questionWhere.approved = filters.approved;
-  if (filters?.starred !== undefined) questionWhere.starred = filters.starred;
-  if (filters?.search) {
-    questionWhere.questionText = {
-      contains: filters.search,
-      mode: "insensitive",
-    };
-  }
-  if (filters?.collectionId) {
-    questionWhere.collectionItems = {
-      some: { collectionId: filters.collectionId },
-    };
-  }
-  if (filters?.tags) {
-    questionWhere.tags = { contains: filters.tags };
-  }
+  const questionWhere = buildWorkbenchQuestionWhere(academyId, filters);
 
   const passageWhere: Record<string, unknown> = {
     academyId,
@@ -239,6 +256,44 @@ export async function getWorkbenchQuestion(questionId: string) {
   return question;
 }
 
+export async function getWorkbenchQuestionIds(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+  options?: { passageOnly?: boolean },
+): Promise<{ success: boolean; ids: string[]; count: number; error?: string }> {
+  try {
+    const staff = await requireAuth();
+    if (staff.academyId !== academyId) {
+      return {
+        success: false,
+        ids: [],
+        count: 0,
+        error: "학원 정보가 일치하지 않습니다.",
+      };
+    }
+
+    const where = buildWorkbenchQuestionWhere(staff.academyId, filters);
+    if (options?.passageOnly && !filters?.passageId) {
+      where.passageId = { not: null };
+    }
+
+    const questions = await prisma.question.findMany({
+      where,
+      select: { id: true },
+      orderBy: { createdAt: "desc" },
+    });
+    const ids = questions.map((question) => question.id);
+
+    return { success: true, ids, count: ids.length };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "문제 목록을 불러오는 중 오류가 발생했습니다.";
+    return { success: false, ids: [], count: 0, error: message };
+  }
+}
+
 export async function saveGeneratedQuestions(
   questions: SaveQuestionData[]
 ): Promise<ActionResult> {
@@ -304,8 +359,7 @@ export async function saveGeneratedQuestions(
       }
     });
 
-    revalidatePath("/director/questions");
-    revalidatePath("/director/workbench");
+    revalidateQuestionBankPaths();
     return { success: true };
   } catch (error) {
     const message =
@@ -369,7 +423,7 @@ export async function updateWorkbenchQuestion(
       }
     }
 
-    revalidatePath("/director/questions");
+    revalidateQuestionBankPaths();
     return { success: true };
   } catch (error) {
     const message =
@@ -384,11 +438,14 @@ export async function deleteWorkbenchQuestion(
   questionId: string
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
+    const staff = await requireAuth();
 
-    await prisma.question.delete({ where: { id: questionId } });
+    const deleted = await deleteQuestionsForAcademy([questionId], staff.academyId);
+    if (deleted === 0) {
+      return { success: false, error: "문제를 찾을 수 없습니다." };
+    }
 
-    revalidatePath("/director/questions");
+    revalidateQuestionBankPaths();
     return { success: true };
   } catch (error) {
     const message =
@@ -414,14 +471,12 @@ export async function bulkDeleteWorkbenchQuestions(
     if (questionIds.length === 0) {
       return { success: true, requested: 0, deleted: 0 };
     }
-    const result = await prisma.question.deleteMany({
-      where: { id: { in: questionIds }, academyId: staff.academyId },
-    });
-    revalidatePath("/director/questions");
+    const deleted = await deleteQuestionsForAcademy(questionIds, staff.academyId);
+    revalidateQuestionBankPaths();
     return {
       success: true,
       requested: questionIds.length,
-      deleted: result.count,
+      deleted,
     };
   } catch (error) {
     const message =
@@ -448,7 +503,7 @@ export async function approveWorkbenchQuestion(
       data: { approved: true },
     });
 
-    revalidatePath("/director/questions");
+    revalidateQuestionBankPaths();
     return { success: true };
   } catch (error) {
     const message =
@@ -479,7 +534,7 @@ export async function toggleQuestionStar(
       data: { starred: !question.starred },
     });
 
-    revalidatePath("/director/questions");
+    revalidateQuestionBankPaths();
     return { success: true };
   } catch (error) {
     const message =

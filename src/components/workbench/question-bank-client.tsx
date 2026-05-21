@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import {
   deleteWorkbenchQuestion,
   bulkDeleteWorkbenchQuestions,
+  getWorkbenchQuestionIds,
   approveWorkbenchQuestion,
   toggleQuestionStar,
   createQuestionCollection,
@@ -261,17 +262,39 @@ export function QuestionBankClient({
       : questionsInActiveFolder;
 
   // Selection
-  const getDisplayedIds = useCallback(
+  const displayedQuestionIds = useMemo(
     () => displayedQuestions.map((q) => q.id),
     [displayedQuestions],
+  );
+  const getDisplayedIds = useCallback(
+    () => displayedQuestionIds,
+    [displayedQuestionIds],
   );
   const {
     selectedIds,
     setSelectedIds,
     toggleSelect,
-    selectAll,
     clearSelection,
   } = useSelection(getDisplayedIds);
+  const isCurrentPageSelected =
+    displayedQuestionIds.length > 0 &&
+    displayedQuestionIds.every((id) => selectedIds.has(id));
+
+  const handleSelectCurrentPage = useCallback(() => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      const shouldClearPage =
+        displayedQuestionIds.length > 0 &&
+        displayedQuestionIds.every((id) => next.has(id));
+
+      for (const id of displayedQuestionIds) {
+        if (shouldClearPage) next.delete(id);
+        else next.add(id);
+      }
+
+      return next;
+    });
+  }, [displayedQuestionIds, setSelectedIds]);
 
   // Exam dialog
   const [createExamOpen, setCreateExamOpen] = useState(false);
@@ -281,17 +304,68 @@ export function QuestionBankClient({
   // Bulk delete
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [selectingAllPages, setSelectingAllPages] = useState(false);
 
   // Stats
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
+  const allPagesSelectableCount = !isGrouped && folders.activeFolder
+    ? (folders.membership[folders.activeFolder]?.size ?? 0)
+    : totalCount;
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
   const totalPages = isGrouped
     ? (groupedData?.totalPages ?? 1)
     : (questionsData?.totalPages ?? 1);
+
+  const handleSelectAllPages = useCallback(async () => {
+    if (selectingAllPages) return;
+
+    setSelectingAllPages(true);
+    try {
+      const effectiveFilters = {
+        ...filters,
+        page: undefined,
+        limit: undefined,
+        collectionId: folders.activeFolder ?? filters.collectionId,
+      };
+      const result = await getWorkbenchQuestionIds(academyId, effectiveFilters, {
+        passageOnly: isGrouped,
+      });
+
+      if (!result.success) {
+        toast.error(result.error || "전체 문제 선택에 실패했습니다.");
+        return;
+      }
+
+      const ids = result.ids.filter((id) => !removedIds.has(id));
+      if (ids.length === 0) {
+        toast.error("선택할 문제가 없습니다.");
+        return;
+      }
+
+      setSelectedIds(new Set(ids));
+      toast.success(`${ids.length}개 문제를 전체 페이지에서 선택했습니다.`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "전체 문제 선택에 실패했습니다.",
+      );
+    } finally {
+      setSelectingAllPages(false);
+    }
+  }, [
+    academyId,
+    filters,
+    folders.activeFolder,
+    isGrouped,
+    removedIds,
+    selectingAllPages,
+    setSelectedIds,
+  ]);
 
   const editor = useQuestionEditor((id) => {
     selectedIds.delete(id);
@@ -671,11 +745,14 @@ export function QuestionBankClient({
                   embedded
                   selectedCount={selectedIds.size}
                   totalCount={displayedQuestions.length}
-                  isAllSelected={
-                    selectedIds.size === displayedQuestions.length &&
-                    displayedQuestions.length > 0
-                  }
-                  onSelectAll={selectAll}
+                  isAllSelected={isCurrentPageSelected}
+                  onSelectAll={handleSelectCurrentPage}
+                  selectAllLabel="현재 페이지 선택"
+                  deselectAllLabel="현재 페이지 해제"
+                  onSelectAllPages={handleSelectAllPages}
+                  selectAllPagesLabel="전체 페이지 선택"
+                  isSelectingAllPages={selectingAllPages}
+                  isSelectAllPagesDisabled={allPagesSelectableCount === 0}
                   onClearSelection={clearSelection}
                   activeFolder={folders.activeFolder}
                   onRemoveFromFolder={handleRemoveFromFolder}

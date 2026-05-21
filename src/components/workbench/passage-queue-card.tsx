@@ -153,11 +153,11 @@ export const PassageQueueCard = memo(function PassageQueueCard({
   const config = STATUS_CONFIG[passage.status];
   const StatusIcon = config.icon;
   const analysisMeta = passage.analysisData as Record<string, unknown> | null;
-  const planConfig = analysisMeta
-    ? getQuestionGenerationPlanConfig(
-        normalizeQuestionGenerationPlan(analysisMeta._generationPlan)
-      )
-    : null;
+  const planConfig = getQuestionGenerationPlanConfig(
+    normalizeQuestionGenerationPlan(
+      analysisMeta?._generationPlan ?? passage.promptConfig.generationPlan,
+    ),
+  );
 
   const questionsCount = passage.passageData.questions.length;
   const isLoading = passage.status === "pending" || passage.status === "analyzing";

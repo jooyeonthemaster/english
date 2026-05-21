@@ -51,7 +51,7 @@ export function TutorLoginForm({
         value={academyCode}
         onChange={(event) => setAcademyCode(event.target.value)}
         placeholder="학원코드"
-        inputMode="numeric"
+        inputMode="text"
         maxLength={8}
         className="h-12 rounded-2xl border-slate-200 text-base font-bold"
       />
