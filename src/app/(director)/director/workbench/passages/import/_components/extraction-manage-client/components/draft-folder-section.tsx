@@ -136,7 +136,6 @@ export function DraftFolderSection({
   onBackToAllResults,
 }: DraftFolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const stickyRef = useRef<HTMLElement>(null);
   const useCards = useCardInsideFolder && activeFolder;
   const currentFolder = activeFolder
     ? breadcrumbPath[breadcrumbPath.length - 1]
@@ -155,34 +154,8 @@ export function DraftFolderSection({
     else onDragToRoot?.(itemId, copy);
   };
 
-  useEffect(() => {
-    const el = stickyRef.current;
-    const parent = el?.parentElement;
-    if (!el || !parent) return;
-    const targets = [parent, parent.parentElement].filter(
-      (target): target is HTMLElement => target instanceof HTMLElement,
-    );
-
-    const syncOffset = () => {
-      const offset = `${Math.ceil(el.getBoundingClientRect().height)}px`;
-      targets.forEach((target) =>
-        target.style.setProperty("--workbench-management-sticky-offset", offset),
-      );
-    };
-
-    syncOffset();
-    const observer = new ResizeObserver(syncOffset);
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      targets.forEach((target) =>
-        target.style.removeProperty("--workbench-management-sticky-offset"),
-      );
-    };
-  }, []);
-
   return (
-    <section ref={stickyRef} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-col gap-2 border-b border-slate-100 px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-3">
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">

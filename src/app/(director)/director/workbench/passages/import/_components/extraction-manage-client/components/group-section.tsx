@@ -105,10 +105,7 @@ export function GroupSection({
         accent
       }
     >
-      <header
-        className="sticky z-10 flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white/95 px-4 backdrop-blur-sm"
-        style={{ top: "var(--workbench-management-sticky-offset, 0px)" }}
-      >
+      <header className="flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white px-4">
         <div
           className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
           onMouseDown={(e) => e.stopPropagation()}

@@ -119,11 +119,18 @@ export function PassageGroupedView({
         return (
           <section
             key={passage.id}
-            className="bg-white rounded-xl border border-slate-200 overflow-hidden"
+            className={`overflow-hidden rounded-xl border bg-white shadow-sm transition-colors ${
+              isOpen
+                ? "border-blue-200 ring-1 ring-blue-100"
+                : "border-slate-200 hover:border-slate-300 hover:shadow-md"
+            }`}
           >
             <header
-              className="sticky z-10 flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white/95 px-4 backdrop-blur-sm"
-              style={{ top: "var(--workbench-management-sticky-offset, 0px)" }}
+              className={`flex w-full items-center gap-2.5 border-b px-4 transition-colors ${
+                isOpen
+                  ? "border-blue-100 bg-blue-50/60"
+                  : "border-slate-100/70 bg-white hover:bg-slate-50/70"
+              }`}
             >
               <div
                 className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
@@ -160,7 +167,13 @@ export function PassageGroupedView({
                   />
                 </button>
 
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700">
+                <span
+                  className={`flex size-7 shrink-0 items-center justify-center rounded-md ${
+                    isOpen
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-slate-100 text-slate-500"
+                  }`}
+                >
                   <FileText className="size-4" aria-hidden="true" />
                 </span>
 
@@ -175,7 +188,13 @@ export function PassageGroupedView({
                   <h4 className="truncate text-sm font-bold tracking-tight text-slate-900">
                     {passage.title || "(제목 없음)"}
                   </h4>
-                  <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ring-1 bg-white text-blue-700 ring-blue-200">
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ring-1 ${
+                      isOpen
+                        ? "bg-white text-blue-700 ring-blue-200"
+                        : "bg-slate-50 text-slate-600 ring-slate-200"
+                    }`}
+                  >
                     {visibleCount}개
                   </span>
                   {hidden > 0 && (
