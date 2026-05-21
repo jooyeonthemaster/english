@@ -121,7 +121,10 @@ export function PassageGroupedView({
             key={passage.id}
             className="bg-white rounded-xl border border-slate-200 overflow-hidden"
           >
-            <header className="sticky top-0 z-10 flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white/95 px-4 backdrop-blur-sm">
+            <header
+              className="sticky z-10 flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white/95 px-4 backdrop-blur-sm"
+              style={{ top: "var(--workbench-management-sticky-offset, 0px)" }}
+            >
               <div
                 className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
                 title={`${passage.title} 전체 선택`}
