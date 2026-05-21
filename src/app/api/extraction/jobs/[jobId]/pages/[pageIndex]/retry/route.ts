@@ -6,6 +6,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { tasks } from "@trigger.dev/sdk/v3";
+import {
+  academyConcurrencyKey,
+  EXTRACTION_PAGE_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import {
   requireStaff,
@@ -117,7 +121,11 @@ export async function POST(_req: NextRequest, ctx: RouteContext) {
     handle = await tasks.trigger(
       "extraction-page",
       { jobId, pageIndex },
-      { idempotencyKey: retryKey },
+      {
+        idempotencyKey: retryKey,
+        queue: EXTRACTION_PAGE_QUEUE_NAME,
+        concurrencyKey: academyConcurrencyKey(staff.academyId),
+      },
     );
   } catch (err) {
     // Rollback: restore the page to a terminal-ish state so counters stay

@@ -155,6 +155,17 @@ function ProductDashboard() {
           animation: yshin-scan-line 3.6s ease-in-out infinite;
         }
 
+        @media (max-width: 1023px) {
+          @keyframes yshin-dashboard-float-mobile {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+          }
+          .yshin-dashboard-float {
+            animation: yshin-dashboard-float-mobile 6s ease-in-out infinite !important;
+            transform: none !important;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .yshin-dashboard-float,
           .yshin-scan-line {
@@ -194,7 +205,7 @@ function ProductDashboard() {
               <span className="size-2.5 rounded-full bg-amber-300" />
               <span className="size-2.5 rounded-full bg-emerald-300" />
               <span className="ml-3 hidden rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black text-slate-500 sm:block">
-                youngshin.ai/workbench
+                smoat.ai/workbench
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -208,13 +219,13 @@ function ProductDashboard() {
             </div>
           </div>
 
-          <div className="grid h-[calc(100%-48px)] grid-cols-[98px_minmax(0,1fr)] bg-slate-50 sm:grid-cols-[150px_minmax(0,1fr)] lg:grid-cols-[168px_minmax(0,1fr)_230px]">
-            <aside className="border-r border-slate-100 bg-white px-3 py-4 sm:px-4">
+          <div className="grid h-[calc(100%-48px)] grid-cols-1 sm:grid-cols-[150px_minmax(0,1fr)] lg:grid-cols-[168px_minmax(0,1fr)_230px]">
+            <aside className="hidden sm:block border-r border-slate-100 bg-white px-3 py-4 sm:px-4">
               <div className="mb-5 flex items-center gap-2">
                 <span className="flex size-8 items-center justify-center rounded-xl bg-slate-950 text-[12px] font-black text-white">
                   영
                 </span>
-                <span className="hidden text-[13px] font-black text-slate-950 sm:block">영신ai</span>
+                <span className="hidden text-[13px] font-black text-slate-950 sm:block">SMOAT</span>
               </div>
               <div className="space-y-2">
                 {["지문 분석", "문항 생성", "시험지", "보관함"].map((item, index) => (
@@ -362,7 +373,7 @@ function ProductDashboard() {
 
 export function HeroScene() {
   return (
-    <section className="relative isolate w-full h-[100svh] min-h-[850px] overflow-hidden bg-slate-50 pt-20 sm:pt-24 lg:pt-28">
+    <section className="relative isolate w-full h-auto min-h-0 md:h-[100svh] md:min-h-[850px] overflow-hidden bg-slate-50 pt-20 sm:pt-24 lg:pt-28 pb-12 md:pb-0">
       <div aria-hidden className="absolute inset-0 -z-10">
         <Image
           src="/landing/hero-sky-v2.png"
@@ -377,13 +388,13 @@ export function HeroScene() {
 
       <div className="relative z-10 mx-auto flex h-full max-w-[1220px] flex-col items-center justify-start px-5 sm:px-8">
         <div className="mx-auto max-w-[900px] text-center mt-4 sm:mt-6">
-          <h1 className="text-4xl font-black leading-[1.15] tracking-tight text-slate-950 sm:text-5xl lg:text-7xl drop-shadow-sm">
+          <h1 className="text-4xl font-black leading-[1.15] tracking-tight text-slate-950 sm:text-5xl lg:text-7xl drop-shadow-sm break-keep">
             지문 분석부터 시험지까지,
             <br className="hidden sm:block" />
-            <span className="text-blue-600">영신ai가 한 번에 완성</span>합니다
+            <span className="text-blue-600">SMOAT가 한 번에 완성</span>합니다
           </h1>
 
-          <p className="mx-auto mt-5 max-w-[760px] text-[15px] font-semibold leading-7 text-slate-600 sm:text-[17px]">
+          <p className="mx-auto mt-5 max-w-[760px] text-[15px] font-semibold leading-7 text-slate-600 sm:text-[17px] break-keep">
             선생님의 필기와 출제 의도를 읽고 핵심 어휘, 구문, 출제 포인트, 19유형 문항,
             <br className="hidden sm:block" />
             편집 가능한 Word 시험지까지 이어주는 AI 영어 콘텐츠 워크벤치입니다.

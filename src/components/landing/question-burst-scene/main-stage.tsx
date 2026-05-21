@@ -32,11 +32,10 @@ export function MainStage({
 
   return (
     <article
-      className="relative bg-white rounded-2xl border border-blue-100 overflow-hidden flex flex-col shadow-[0_25px_70px_-15px_rgba(59,130,246,0.12)]"
-      style={{ minHeight: "680px" }}
+      className="relative bg-white rounded-2xl border border-blue-100 overflow-hidden flex flex-col shadow-[0_25px_70px_-15px_rgba(59,130,246,0.12)] min-h-[500px] sm:min-h-[680px]"
     >
       {/* Top bar */}
-      <div className="flex items-center justify-between px-7 lg:px-9 pt-6 pb-4 border-b border-blue-50 bg-[#F8FAFC]">
+      <div className="flex items-center justify-between px-4 sm:px-7 lg:px-9 pt-5 sm:pt-6 pb-4 border-b border-blue-50 bg-[#F8FAFC]">
         <div role="status" aria-live="polite" aria-atomic="true">
           <AnimatePresence mode="wait">
             <motion.div
@@ -73,7 +72,7 @@ export function MainStage({
       <ConnectionBeam phase={generation.phase} reduced={reduced} />
 
       {/* Question theater body */}
-      <div className="px-7 lg:px-10 py-6 flex-1 flex flex-col justify-start overflow-hidden">
+      <div className="px-4 sm:px-7 lg:px-10 py-5 sm:py-6 flex-1 flex flex-col justify-start overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={`body-${sample.no}-${runKey}`}

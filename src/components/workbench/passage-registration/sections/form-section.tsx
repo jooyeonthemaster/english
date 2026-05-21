@@ -4,7 +4,6 @@ import type { RefObject } from "react";
 import {
   Loader2,
   Wand2,
-  Crown,
   Check,
   ChevronDown,
   ChevronUp,
@@ -18,6 +17,7 @@ import {
   type Annotation,
 } from "@/components/workbench/editor";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
 import { ExtractionDraftGrid } from "./extraction-draft-grid";
@@ -293,6 +293,8 @@ export function FormSection(props: FormSectionProps) {
               )}
             </p>
             <div className="flex items-center gap-2">
+              {/* TEMP: 모델 선택 UI 숨김 시 Gemini(STANDARD) 단일 버튼만 노출 */}
+              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
               <Button
                 variant="outline"
                 onClick={() => onSave("STANDARD")}
@@ -309,19 +311,22 @@ export function FormSection(props: FormSectionProps) {
                   5 크레딧
                 </span>
               </Button>
+              )}
               <Button
-                className="bg-violet-600 hover:bg-violet-700 h-9"
-                onClick={() => onSave("PREMIUM")}
+                className="bg-blue-600 hover:bg-blue-700 h-9"
+                onClick={() =>
+                  onSave(FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD")
+                }
                 disabled={saving || !hasContent}
               >
                 {saving ? (
                   <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
                 ) : (
-                  <Crown className="w-4 h-4 mr-1.5" />
+                  <Wand2 className="w-4 h-4 mr-1.5" />
                 )}
-                프리미엄 분석 등록
+                분석 등록
                 <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">
-                  10 크레딧
+                  {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "10" : "5"} 크레딧
                 </span>
               </Button>
             </div>

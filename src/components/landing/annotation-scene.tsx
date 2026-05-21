@@ -46,7 +46,7 @@ function AnalysisLine({ line, active, reduced }: { line: (typeof ANALYSIS_LINES)
         className="w-[4px] h-5 rounded-sm shrink-0 mt-0.5"
         style={{ background: ANNOTATION_COLORS[line.kind] }}
       />
-      <div className="w-[120px] shrink-0">
+      <div className="w-[90px] sm:w-[120px] shrink-0">
         <span className="text-[14px] font-bold text-gray-800">
           {line.label}
         </span>
@@ -100,7 +100,7 @@ export function AnnotationScene() {
           <h2 className="font-extrabold text-gray-900 leading-[1.3]" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
             AI가 아무거나 분석하는 것이 아닙니다. 선생님이 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">필기한 포인트</span>를 바탕으로 분석합니다.
           </h2>
-          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl">
+          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl break-keep">
             단순 텍스트 복붙으로 얻은 의미 없는 결과물은 이제 버리세요. 강사님이 지문에서 
             <strong className="text-gray-900 font-bold"> 강조하고 마킹한 필기 </strong> 그 자체가 AI의 나침반이 됩니다. 
             그 출제 의도와 포인트를 100% 이해하여, 가장 정확한 핵심 분석을 자동으로 도출합니다.
@@ -109,7 +109,7 @@ export function AnnotationScene() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_80px_1fr] gap-6 lg:gap-10 items-stretch">
           {/* Left — passage editor mock (Clean Light Mode) */}
-          <div className="rounded-2xl bg-white border border-blue-100/50 p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative overflow-hidden">
+          <div className="rounded-2xl bg-white border border-blue-100/50 p-5 sm:p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#60A5FA] to-transparent opacity-50" />
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-blue-50">
               <span className="text-[13px] uppercase tracking-[0.15em] text-blue-400 font-bold">
@@ -163,7 +163,7 @@ export function AnnotationScene() {
           </div>
 
           {/* Right — analysis output */}
-          <div className="rounded-2xl bg-white border border-blue-100/50 p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative">
+          <div className="rounded-2xl bg-white border border-blue-100/50 p-5 sm:p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.05)] relative">
             <div className="absolute top-0 right-0 w-1/2 h-1 bg-gradient-to-l from-[#60A5FA]/60 to-transparent" />
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-blue-50">
               <div className="flex items-center gap-3">

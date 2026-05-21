@@ -95,20 +95,24 @@ export async function saveGeneratedQuestionsForJob({
   passageId,
   questions,
   generationPlan,
+  skipPassageEligibilityCheck = false,
 }: {
   academyId: string;
   passageId: string;
   questions: Record<string, unknown>[];
   generationPlan: QuestionGenerationPlan;
+  skipPassageEligibilityCheck?: boolean;
 }): Promise<string[]> {
   if (questions.length === 0) return [];
 
-  const eligiblePassage = await prisma.passage.findFirst({
-    where: { id: passageId, academyId, analysis: { isNot: null } },
-    select: { id: true },
-  });
-  if (!eligiblePassage) {
-    throw new Error("Passage analysis is required before saving questions.");
+  if (!skipPassageEligibilityCheck) {
+    const eligiblePassage = await prisma.passage.findFirst({
+      where: { id: passageId, academyId },
+      select: { id: true },
+    });
+    if (!eligiblePassage) {
+      throw new Error("Passage not found before saving questions.");
+    }
   }
 
   const createdIds: string[] = [];
@@ -123,6 +127,29 @@ export async function saveGeneratedQuestionsForJob({
       const explanation = q.explanation;
       const keyPoints = q.keyPoints;
       const wrongOptionExplanations = q.wrongOptionExplanations;
+
+      const explanationCreate =
+        typeof explanation === "string" && explanation.trim()
+          ? {
+              create: {
+                content: explanation,
+                keyPoints:
+                  keyPoints === undefined || keyPoints === null
+                    ? null
+                    : typeof keyPoints === "string"
+                      ? keyPoints
+                      : JSON.stringify(keyPoints),
+                wrongOptionExplanations:
+                  wrongOptionExplanations === undefined ||
+                  wrongOptionExplanations === null
+                    ? null
+                    : typeof wrongOptionExplanations === "string"
+                      ? wrongOptionExplanations
+                      : JSON.stringify(wrongOptionExplanations),
+                aiGenerated: true,
+              },
+            }
+          : undefined;
 
       const question = await tx.question.create({
         data: {
@@ -150,32 +177,10 @@ export async function saveGeneratedQuestionsForJob({
           tags: JSON.stringify(tags),
           aiGenerated: true,
           approved: false,
+          explanation: explanationCreate,
         },
       });
       createdIds.push(question.id);
-
-      if (typeof explanation === "string" && explanation.trim()) {
-        await tx.questionExplanation.create({
-          data: {
-            questionId: question.id,
-            content: explanation,
-            keyPoints:
-              keyPoints === undefined || keyPoints === null
-                ? null
-                : typeof keyPoints === "string"
-                  ? keyPoints
-                  : JSON.stringify(keyPoints),
-            wrongOptionExplanations:
-              wrongOptionExplanations === undefined ||
-              wrongOptionExplanations === null
-                ? null
-                : typeof wrongOptionExplanations === "string"
-                  ? wrongOptionExplanations
-                  : JSON.stringify(wrongOptionExplanations),
-            aiGenerated: true,
-          },
-        });
-      }
     }
   });
 

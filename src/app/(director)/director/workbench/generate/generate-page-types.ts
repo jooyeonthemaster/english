@@ -30,6 +30,8 @@ export interface FilterOptions {
   publishers: string[];
 }
 
+export type PassageAnalysisStatusFilter = "all" | "analyzed" | "unanalyzed";
+
 export type QueueStatus = "generating" | "done" | "reviewed" | "error";
 
 export interface QueueItem {

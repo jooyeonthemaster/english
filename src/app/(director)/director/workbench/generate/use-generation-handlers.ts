@@ -14,6 +14,16 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import { useTaskQueue } from "@/components/workbench/task-queue";
+
+function readFastBatchConcurrency(): number {
+  const raw = process.env.NEXT_PUBLIC_WORKBENCH_FAST_BATCH_CONCURRENCY;
+  const parsed = raw ? Number(raw) : NaN;
+  if (!Number.isFinite(parsed)) return 8;
+  return Math.max(1, Math.min(20, Math.floor(parsed)));
+}
+
+const FAST_BATCH_CONCURRENCY = readFastBatchConcurrency();
 
 interface UseGenerationHandlersParams {
   passages: PassageItem[];
@@ -84,6 +94,81 @@ async function createQuestionGenerationJob({
   return data.jobId as string;
 }
 
+async function createFastQuestionGenerationJob({
+  passageId,
+  mode,
+  count,
+  questionType,
+  difficulty,
+  customPrompt,
+  generationPlan,
+}: {
+  passageId: string;
+  mode: "AUTO" | "MANUAL";
+  count: 1;
+  questionType?: string;
+  difficulty: string;
+  customPrompt?: string;
+  generationPlan: QuestionGenerationPlan;
+}) {
+  const res = await fetch("/api/workbench/ai-jobs/question-generation/fast", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      passageId,
+      mode,
+      count,
+      questionType,
+      difficulty,
+      customPrompt,
+      generationPlan,
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) {
+    throw new Error(data.details || data.error || "Question generation failed.");
+  }
+  return data as {
+    jobId: string;
+    status: "COMPLETED";
+    questions: any[];
+    createdAt?: string;
+    debugTiming?: Record<string, number>;
+  };
+}
+
+async function runWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  worker: (item: T) => Promise<R>,
+): Promise<PromiseSettledResult<R>[]> {
+  const results: PromiseSettledResult<R>[] = new Array(items.length);
+  let nextIndex = 0;
+
+  async function runNext() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      try {
+        results[currentIndex] = {
+          status: "fulfilled",
+          value: await worker(items[currentIndex]),
+        };
+      } catch (reason) {
+        results[currentIndex] = { status: "rejected", reason };
+      }
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(Math.max(1, limit), items.length) },
+    runNext,
+  );
+  await Promise.all(workers);
+  return results;
+}
+
 function buildOptimisticItem({
   jobId,
   passage,
@@ -147,6 +232,8 @@ export function useGenerationHandlers({
   setReviewModalId,
   loadSavedQuestions,
 }: UseGenerationHandlersParams) {
+  const { triggerRefresh } = useTaskQueue();
+
   const toStructuredData = useCallback((q: any) => {
     const typeId = q._typeId || q.subType;
     if (!typeId) return undefined;
@@ -156,6 +243,13 @@ export function useGenerationHandlers({
       _typeLabel: q._typeLabel || typeLabel(typeId),
     };
   }, []);
+
+  const refreshTaskQueueSoon = useCallback(() => {
+    triggerRefresh();
+    window.setTimeout(triggerRefresh, 750);
+    window.setTimeout(triggerRefresh, 2_000);
+    window.setTimeout(triggerRefresh, 4_000);
+  }, [triggerRefresh]);
 
   const enqueueJob = useCallback(
     async ({
@@ -194,14 +288,127 @@ export function useGenerationHandlers({
         }),
         ...prev,
       ]);
+      refreshTaskQueueSoon();
       return jobId;
     },
-    [difficulty, generationPlan, setSessionQueue],
+    [difficulty, generationPlan, refreshTaskQueueSoon, setSessionQueue],
   );
 
   const handleBatchGenerate = useCallback(async () => {
     if (selectedIds.size === 0) return;
     const selectedPassages = passages.filter((p) => selectedIds.has(p.id));
+
+    const manualFastType =
+      genMode === "manual" &&
+      activeTypes.length === 1 &&
+      Number(typeCounts[activeTypes[0]]) === 1
+        ? activeTypes[0]
+        : null;
+    const canUseFastPath =
+      selectedPassages.length > 0 &&
+      ((genMode === "auto" && autoCount === 1) || Boolean(manualFastType));
+
+    if (canUseFastPath) {
+      const progressKey = genMode === "auto" ? "auto" : manualFastType!;
+      const baseConfig = {
+        typeCounts:
+          genMode === "manual" ? { [progressKey]: 1 } : {},
+        difficulty,
+        prompt: customPrompt.trim(),
+        mode: genMode,
+        generationPlan,
+      };
+      const optimisticItems = selectedPassages.map((passage, index) => {
+        const tempId = `fast:${passage.id}:${Date.now()}:${index}`;
+        return {
+          tempId,
+          passage,
+          pAnalysis: parsePassageAnalysis(passage),
+        };
+      });
+
+      setSessionQueue((prev) => [
+        ...optimisticItems.map(({ tempId, passage, pAnalysis }) =>
+          buildOptimisticItem({
+            jobId: tempId,
+            passage,
+            analysisData: pAnalysis,
+            config: baseConfig,
+            progressKey,
+          }),
+        ),
+        ...prev,
+      ]);
+      refreshTaskQueueSoon();
+
+      const results = await runWithConcurrency(
+        optimisticItems,
+        FAST_BATCH_CONCURRENCY,
+        async ({ tempId, passage, pAnalysis }) => {
+          try {
+            const result = await createFastQuestionGenerationJob({
+              passageId: passage.id,
+              mode: genMode === "auto" ? "AUTO" : "MANUAL",
+              count: 1,
+              questionType: manualFastType || undefined,
+              difficulty,
+              customPrompt: baseConfig.prompt || undefined,
+              generationPlan,
+            });
+            const doneItem = {
+              ...buildOptimisticItem({
+                jobId: result.jobId,
+                passage,
+                analysisData: pAnalysis,
+                config: baseConfig,
+                progressKey,
+              }),
+              createdAt: result.createdAt || new Date().toISOString(),
+              status: "done" as const,
+              progress: { [progressKey]: "done" as const },
+              questions: Array.isArray(result.questions) ? result.questions : [],
+            };
+            setSessionQueue((prev) => [
+              doneItem,
+              ...prev.filter(
+                (item) => item.id !== tempId && item.id !== result.jobId,
+              ),
+            ]);
+            return result;
+          } catch (err) {
+            const message =
+              err instanceof Error ? err.message : "Question generation failed.";
+            setSessionQueue((prev) =>
+              prev.map((item) =>
+                item.id === tempId
+                  ? {
+                      ...item,
+                      status: "error" as const,
+                      progress: { [progressKey]: "error" as const },
+                      error: message,
+                    }
+                  : item,
+              ),
+            );
+            throw err;
+          }
+        },
+      );
+      const success = results.filter((r) => r.status === "fulfilled").length;
+      const failed = results.length - success;
+
+      setSelectedIds(new Set());
+      triggerRefresh();
+      if (success > 0) {
+        loadSavedQuestions();
+        toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+      }
+      if (failed > 0) {
+        toast.error(`${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`);
+      }
+      return;
+    }
+
     const jobs: Promise<unknown>[] = [];
 
     for (const p of selectedPassages) {
@@ -258,8 +465,13 @@ export function useGenerationHandlers({
     difficulty,
     customPrompt,
     autoCount,
+    activeTypes,
     enqueueJob,
     setSelectedIds,
+    setSessionQueue,
+    loadSavedQuestions,
+    refreshTaskQueueSoon,
+    triggerRefresh,
   ]);
 
   const handleGenerate = useCallback(async () => {
@@ -275,6 +487,55 @@ export function useGenerationHandlers({
     };
 
     try {
+      const manualFastType =
+        genMode === "manual" &&
+        activeTypes.length === 1 &&
+        Number(typeCounts[activeTypes[0]]) === 1
+          ? activeTypes[0]
+          : null;
+      const canUseFastPath =
+        (genMode === "auto" && autoCount === 1) || Boolean(manualFastType);
+
+      if (canUseFastPath) {
+        const progressKey = genMode === "auto" ? "auto" : manualFastType!;
+        const result = await createFastQuestionGenerationJob({
+          passageId: selectedPassage.id,
+          mode: genMode === "auto" ? "AUTO" : "MANUAL",
+          count: 1,
+          questionType: manualFastType || undefined,
+          difficulty,
+          customPrompt: baseConfig.prompt || undefined,
+          generationPlan,
+        });
+        const doneItem = {
+          ...buildOptimisticItem({
+            jobId: result.jobId,
+            passage: selectedPassage,
+            analysisData,
+            config:
+              genMode === "auto"
+                ? baseConfig
+                : {
+                    ...baseConfig,
+                    typeCounts: { [progressKey]: 1 },
+                  },
+            progressKey,
+          }),
+          createdAt: result.createdAt || new Date().toISOString(),
+          status: "done" as const,
+          progress: { [progressKey]: "done" as const },
+          questions: Array.isArray(result.questions) ? result.questions : [],
+        };
+        setSessionQueue((prev) => [
+          doneItem,
+          ...prev.filter((item) => item.id !== result.jobId),
+        ]);
+        triggerRefresh();
+        loadSavedQuestions();
+        toast.success("\ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+        return;
+      }
+
       if (genMode === "auto") {
         await enqueueJob({
           passage: selectedPassage,
@@ -315,6 +576,10 @@ export function useGenerationHandlers({
     autoCount,
     analysisData,
     enqueueJob,
+    setSessionQueue,
+    loadSavedQuestions,
+    refreshTaskQueueSoon,
+    triggerRefresh,
   ]);
 
   const handleSaveQuestions = useCallback(async (questions: any[]) => {

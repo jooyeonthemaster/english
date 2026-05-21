@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
+import {
+  academyConcurrencyKey,
+  WORKBENCH_QUESTION_GENERATION_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
 
@@ -45,17 +49,10 @@ export async function POST(req: NextRequest) {
     select: {
       id: true,
       title: true,
-      analysis: { select: { id: true } },
     },
   });
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
-  }
-  if (!passage.analysis) {
-    return NextResponse.json(
-      { error: "Passage analysis is required before question generation" },
-      { status: 400 },
-    );
   }
 
   const generationPlan = normalizeQuestionGenerationPlan(
@@ -89,7 +86,11 @@ export async function POST(req: NextRequest) {
     const handle = await tasks.trigger(
       "workbench-question-generation",
       { jobId: job.id },
-      { idempotencyKey: `workbench-question-generation:${job.id}` },
+      {
+        idempotencyKey: `workbench-question-generation:${job.id}`,
+        queue: WORKBENCH_QUESTION_GENERATION_QUEUE_NAME,
+        concurrencyKey: academyConcurrencyKey(staff.academyId),
+      },
     );
 
     await prisma.workbenchAiJob.update({

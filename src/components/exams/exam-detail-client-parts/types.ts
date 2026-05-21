@@ -9,11 +9,35 @@ export interface ExamQuestion {
   question: {
     id: string;
     type: string;
+    subType: string | null;
     questionText: string;
+    structuredData?: unknown;
     options: string | null;
     correctAnswer: string;
+    points: number;
     difficulty: string;
-    explanation: { content: string } | null;
+    tags: string | null;
+    aiGenerated: boolean;
+    approved: boolean;
+    starred: boolean;
+    createdAt: string | Date;
+    passage: {
+      id: string;
+      title: string;
+      content: string;
+      grade: number | null;
+      semester: string | null;
+      publisher: string | null;
+      school: { id: string; name: string } | null;
+    } | null;
+    explanation: {
+      id?: string;
+      content: string;
+      keyPoints?: string | null;
+      wrongOptionExplanations?: string | null;
+    } | null;
+    collectionItems: { collectionId: string }[];
+    _count: { examLinks: number };
   };
 }
 
@@ -43,6 +67,7 @@ export interface ExamDetail {
   shuffleQuestions: boolean;
   shuffleOptions: boolean;
   showResults: boolean;
+  settings: string | null;
   class: { id: string; name: string } | null;
   school: { id: string; name: string } | null;
   questions: ExamQuestion[];

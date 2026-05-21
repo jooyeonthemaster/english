@@ -1,4 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import {
+  academyConcurrencyKey,
+  EXTRACTION_FINALIZE_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { extractionFinalizeTask } from "../../extraction-finalize";
 
 /**
@@ -14,6 +18,7 @@ export async function maybeTriggerFinalize(jobId: string): Promise<void> {
       totalPages: true,
       successPages: true,
       failedPages: true,
+      academyId: true,
     },
   });
   if (!job) return;
@@ -24,6 +29,8 @@ export async function maybeTriggerFinalize(jobId: string): Promise<void> {
     { jobId },
     {
       idempotencyKey: `finalize:${jobId}:${job.successPages}:${job.failedPages}`,
+      queue: EXTRACTION_FINALIZE_QUEUE_NAME,
+      concurrencyKey: academyConcurrencyKey(job.academyId),
     },
   );
 }

@@ -39,7 +39,7 @@ import type {
 //   3. 응답의 각 result 를 id 로 매핑해서 원래 입력 순서대로 재조립.
 //   4. batch 가 실패하면 fallback 으로 각 입력별 regex 기반 복원 결과 반환.
 
-// Gemini 3 Flash Preview 의 per-candidate output token 한계는 generationConfig
+// Gemini Flash 의 per-candidate output token 한계는 generationConfig
 // 의 maxOutputTokens 설정과 별개로 8192 로 강제됨 (preview 단계 제약). 한 호출에
 // 10 drafts 를 묶으면 평균 ~900 tokens/draft × 10 = ~9K 로 한계 초과 → 응답이
 // 잘려서 candidates[0].finishReason="MAX_TOKENS" 로 전체 batch 실패.
@@ -48,7 +48,7 @@ import type {
 const BATCH_SIZE = 5;
 /**
  * Retry split size when a full BATCH_SIZE call returns empty/failed grounded
- * output. The Gemini 3 Flash Preview per-candidate output cap is 8K tokens —
+ * output. The Gemini Flash per-candidate output cap is model-specific —
  * with the AI-primary + variant-classification prompt the full batch can
  * occasionally bump into that cap and return EMPTY_OUTPUT (finishReason
  * unknown / MAX_TOKENS). Splitting the failed batch into chunks of this size

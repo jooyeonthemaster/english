@@ -40,9 +40,6 @@ const OPTION_HEAVY_TYPES = new Set([
   "TITLE",
   "CONTENT_MATCH",
   "REFERENCE",
-  "CONTEXT_MEANING",
-  "SYNONYM",
-  "ANTONYM",
 ]);
 
 const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
@@ -289,7 +286,12 @@ function validateOptions(
 
   const wrongExplanations = question.wrongOptionExplanations;
   if (question.difficulty === "KILLER" && wrongExplanations && typeof wrongExplanations === "object") {
-    const explanationCount = Object.values(wrongExplanations as Record<string, unknown>).filter((value) => normalizeText(value)).length;
+    const explanationValues = Array.isArray(wrongExplanations)
+      ? wrongExplanations.map((value) =>
+          isRecord(value) ? value.explanation : value,
+        )
+      : Object.values(wrongExplanations as Record<string, unknown>);
+    const explanationCount = explanationValues.filter((value) => normalizeText(value)).length;
     if (explanationCount < Math.max(0, options.length - 1)) {
       add("warning", "thin-wrong-option-explanations", "KILLER item should explain every wrong option.");
     }
@@ -345,6 +347,51 @@ function validateTypeSpecific(
     const scrambled = question.scrambledWords.map((part: unknown) => normalizeText(part)).join(" ");
     if (normalizeText(question.modelAnswer) && scrambled === normalizeText(question.modelAnswer)) {
       add("error", "scrambled-already-solved", "scrambledWords are already in answer order.");
+    }
+  }
+
+  if (typeId === "GRAMMAR_ERROR") {
+    const markedExpressions = Array.isArray(question.markedExpressions)
+      ? question.markedExpressions.filter(isRecord)
+      : [];
+    const passageWithMarkers = normalizeText(question.passageWithMarkers);
+    const markerCount = countUnderlineMarkers(passageWithMarkers);
+    if (markedExpressions.length !== 5) {
+      add("error", "grammar-marker-count", `Expected 5 grammar marked expressions, got ${markedExpressions.length}.`);
+    }
+    if (passageWithMarkers && markerCount !== 5) {
+      add("error", "grammar-render-marker-count", `Expected 5 rendered grammar markers, got ${markerCount}.`);
+    }
+    for (const markedExpression of markedExpressions) {
+      if (markedExpression.isError !== true) continue;
+      const expression = normalizeText(markedExpression.expression);
+      const correction = normalizeText(markedExpression.correction);
+      const errorExpression = normalizeText(markedExpression.errorExpression);
+      const combined = `${expression} ${correction} ${errorExpression}`.toLowerCase();
+      if (!errorExpression) {
+        add("error", "grammar-missing-error-expression", "The grammar error item is missing errorExpression.");
+      }
+      if (errorExpression && expression && errorExpression === expression) {
+        add("error", "grammar-error-not-mutated", "The grammar error surface matches the original expression.");
+      }
+      if (correction && expression && correction !== expression) {
+        add("warning", "grammar-correction-differs-from-source", "The correction differs from the original expression; verify the model did not rewrite acceptable source text.");
+      }
+      if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
+        add("error", "grammar-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-error target.");
+      }
+    }
+    const grammarExplanationText = [
+      question.explanation,
+      question.wrongOptionExplanations,
+    ]
+      .map((value) => JSON.stringify(value ?? ""))
+      .join(" ");
+    if (
+      /전치사(?:\s*\/\s*준동사|\s*\([^)]{0,40}\)|\s*(?:혹은|또는)\s*[^\s'"]{1,20})?\s*['"]?\s*(?:ask|asking|require|requires|spend|spent|developing)\b/i.test(grammarExplanationText) ||
+      /\b(?:ask|asking|require|requires|spend|spent|developing)\b\s*(?:은|는|이|가|을|를|도)?\s*전치사/i.test(grammarExplanationText)
+    ) {
+      add("error", "grammar-category-mislabel", "Grammar explanation mislabels a verb form as a preposition.");
     }
   }
 
@@ -419,6 +466,10 @@ function findMarkers(text: string): Array<{ start: number; end: number; inner: s
     });
   }
   return markers;
+}
+
+function countUnderlineMarkers(text: string): number {
+  return findMarkers(text).length;
 }
 
 function hasMarkerTokenBoundaries(text: string, start: number, end: number): boolean {

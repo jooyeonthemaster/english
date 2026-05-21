@@ -1,5 +1,11 @@
 import * as React from "react";
 import type { BuilderQuestion, OptionItem, PaperGroup, PaperItem } from "./types";
+import { shouldIncludeSourcePassageByDefault } from "./passage-policy";
+import {
+  normalizeInlineText,
+  normalizePassageText,
+  normalizeQuestionText,
+} from "./text-normalization";
 
 export function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -23,8 +29,8 @@ export function parseOptions(input: string | null): OptionItem[] {
   if (!Array.isArray(parsed)) return [];
   return parsed
     .map((option, index) => ({
-      label: String(option?.label || index + 1),
-      text: String(option?.text || ""),
+      label: normalizeInlineText(String(option?.label || index + 1)),
+      text: normalizeQuestionText(String(option?.text || "")),
     }))
     .filter((option) => option.text.trim().length > 0 || option.label.trim().length > 0);
 }
@@ -39,7 +45,7 @@ export function countWords(text: string): number {
 }
 
 export function questionPreview(questionText: string): string {
-  return questionText.replace(/\s+/g, " ").trim().slice(0, 180);
+  return normalizeQuestionText(questionText).replace(/\s+/g, " ").trim().slice(0, 180);
 }
 
 export function makeLocalId(questionId: string): string {
@@ -47,21 +53,31 @@ export function makeLocalId(questionId: string): string {
 }
 
 export function makePaperItem(question: BuilderQuestion, orderNum: number, _existingItems: PaperItem[]): PaperItem {
+  void _existingItems;
   const options = parseOptions(question.options);
   const localId = makeLocalId(question.id);
   const isSubjective = options.length === 0;
+  const normalizedQuestionText = normalizeQuestionText(question.questionText);
+  const passageContent = normalizePassageText(question.passage?.content || "");
+  const normalizedQuestion = {
+    ...question,
+    questionText: normalizedQuestionText,
+    passage: question.passage
+      ? { ...question.passage, content: passageContent }
+      : question.passage,
+  };
 
   return {
     localId,
     questionId: question.id,
-    sourceQuestion: question,
+    sourceQuestion: normalizedQuestion,
     orderNum,
     points: question.points || 1,
     groupId: `single:${localId}`,
-    includePassage: Boolean(question.passage),
-    passageTitle: question.passage?.title || "",
-    passageContent: question.passage?.content || "",
-    questionText: question.questionText,
+    includePassage: shouldIncludeSourcePassageByDefault(normalizedQuestion),
+    passageTitle: normalizeInlineText(question.passage?.title || ""),
+    passageContent,
+    questionText: normalizedQuestionText,
     options,
     correctAnswer: question.correctAnswer || "",
     answerSpaceLines: isSubjective ? 4 : 0,

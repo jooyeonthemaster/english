@@ -103,7 +103,7 @@ export async function getWorkbenchQuestions(
 }
 
 /**
- * Returns analyzed passages (passages with a PassageAnalysis row) that have
+ * Returns passages that have
  * at least one question matching the filters, paginated by passage. Each
  * passage carries its matching questions inline. Used by the "지문별" view
  * on /director/workbench/questions.
@@ -150,7 +150,6 @@ export async function getWorkbenchQuestionsGroupedByPassage(
 
   const passageWhere: Record<string, unknown> = {
     academyId,
-    analysis: { isNot: null },
     questions: { some: questionWhere },
   };
 
@@ -259,14 +258,13 @@ export async function saveGeneratedQuestions(
         where: {
           id: { in: passageIds },
           academyId,
-          analysis: { isNot: null },
         },
         select: { id: true },
       });
       if (eligiblePassages.length !== passageIds.length) {
         return {
           success: false,
-          error: "지문 분석이 완료된 지문만 문제 저장에 사용할 수 있습니다.",
+          error: "지문을 찾을 수 없어 문제 저장에 사용할 수 없습니다.",
         };
       }
     }

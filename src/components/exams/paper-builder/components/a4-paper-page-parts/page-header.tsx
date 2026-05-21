@@ -17,6 +17,7 @@ interface PageHeaderProps {
   className: string;
   examDate: string;
   onHeaderChange: (patch: HeaderPatch) => void;
+  readOnly?: boolean;
 }
 
 /**
@@ -36,6 +37,7 @@ export function PageHeader({
   className,
   examDate,
   onHeaderChange,
+  readOnly = false,
 }: PageHeaderProps) {
   const visual = TEMPLATE_VISUALS[template];
 
@@ -83,6 +85,7 @@ export function PageHeader({
                 <EditableText
                   value={subtitle}
                   onCommit={(next) => onHeaderChange({ subtitle: next })}
+                  readOnly={readOnly}
                 >
                   {subtitle}
                 </EditableText>
@@ -99,6 +102,7 @@ export function PageHeader({
                 value={title}
                 onCommit={(next) => onHeaderChange({ title: next })}
                 className="block"
+                readOnly={readOnly}
               >
                 {title}
               </EditableText>
@@ -136,6 +140,7 @@ export function PageHeader({
             value={instructions}
             onCommit={(next) => onHeaderChange({ instructions: next })}
             className="block truncate"
+            readOnly={readOnly}
           >
             {instructions}
           </EditableText>
@@ -152,6 +157,7 @@ interface ContinuedHeaderProps {
   title: string;
   template: PaperTemplate;
   onHeaderChange: (patch: HeaderPatch) => void;
+  readOnly?: boolean;
 }
 
 /**
@@ -164,6 +170,7 @@ export function ContinuedHeader({
   title,
   template,
   onHeaderChange,
+  readOnly = false,
 }: ContinuedHeaderProps) {
   const visual = TEMPLATE_VISUALS[template];
   return (
@@ -176,6 +183,7 @@ export function ContinuedHeader({
       <EditableText
         value={title}
         onCommit={(next) => onHeaderChange({ title: next })}
+        readOnly={readOnly}
       >
         {title}
       </EditableText>

@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
+import {
+  academyConcurrencyKey,
+  WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
 
@@ -80,7 +84,11 @@ export async function POST(req: NextRequest) {
     const handle = await tasks.trigger(
       "workbench-passage-analysis",
       { jobId: job.id },
-      { idempotencyKey: `workbench-passage-analysis:${job.id}` },
+      {
+        idempotencyKey: `workbench-passage-analysis:${job.id}`,
+        queue: WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME,
+        concurrencyKey: academyConcurrencyKey(staff.academyId),
+      },
     );
 
     await prisma.workbenchAiJob.update({

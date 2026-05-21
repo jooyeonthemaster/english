@@ -21,6 +21,11 @@
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
+import {
+  EXTRACTION_FINALIZE_MAX_ATTEMPTS,
+  EXTRACTION_FINALIZE_QUEUE_CONCURRENCY,
+  EXTRACTION_FINALIZE_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { usesStructuredExtraction } from "@/lib/extraction/modes";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
@@ -32,9 +37,12 @@ type Input = { jobId: string };
 
 export const extractionFinalizeTask = task({
   id: "extraction-finalize",
-  queue: { name: "extraction-finalize", concurrencyLimit: 5 },
+  queue: {
+    name: EXTRACTION_FINALIZE_QUEUE_NAME,
+    concurrencyLimit: EXTRACTION_FINALIZE_QUEUE_CONCURRENCY,
+  },
   retry: {
-    maxAttempts: 2,
+    maxAttempts: EXTRACTION_FINALIZE_MAX_ATTEMPTS,
     minTimeoutInMs: 2000,
     maxTimeoutInMs: 10000,
     factor: 2,

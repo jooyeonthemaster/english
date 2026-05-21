@@ -11,6 +11,8 @@ import {
   makePaperItem,
   reindexItems,
 } from "../paper-builder/paper-item-utils";
+import { shouldIncludeSourcePassageByDefault } from "../paper-builder/passage-policy";
+import { normalizePassageText } from "../paper-builder/text-normalization";
 
 // ---------------------------------------------------------------------------
 // 시험지 빌더의 paperItems 상태 + mutation 헬퍼들을 한 곳에 묶은 훅.
@@ -100,7 +102,18 @@ export function usePaperItems(markDirty: () => void) {
   ) {
     if (!groupId) return;
     setPaperItems((current) =>
-      current.map((item) => (item.groupId === groupId ? { ...item, ...patch } : item)),
+      current.map((item) =>
+        item.groupId === groupId
+          ? {
+              ...item,
+              ...patch,
+              passageContent:
+                patch.passageContent !== undefined
+                  ? normalizePassageText(patch.passageContent)
+                  : item.passageContent,
+            }
+          : item,
+      ),
     );
     markDirty();
   }
@@ -138,7 +151,7 @@ export function usePaperItems(markDirty: () => void) {
           ? {
             ...item,
             groupId: `single:${item.localId}`,
-            includePassage: Boolean(item.passageContent),
+            includePassage: shouldIncludeSourcePassageByDefault(item.sourceQuestion),
           }
           : item,
       ),
@@ -176,7 +189,7 @@ export function usePaperItems(markDirty: () => void) {
       const seen = new Set<string>();
       const grouped = sorted.map((item) => {
         const groupId = groupKey(item);
-        const includePassage = Boolean(item.sourceQuestion.passage && !seen.has(groupId));
+        const includePassage = !seen.has(groupId) && shouldIncludeSourcePassageByDefault(item.sourceQuestion);
         seen.add(groupId);
         return { ...item, groupId, includePassage };
       });

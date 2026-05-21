@@ -39,6 +39,7 @@ export type SentenceTransformQuestion = z.infer<typeof sentenceTransformSchema>;
 
 export const fillBlankKeySchema = z.object({
   ...commonFields,
+  passageWithBlank: z.string().optional().describe("Full passage with the target expression replaced by _____. Server-generated when possible."),
   sentenceWithBlank: z.string().describe("빈칸이 포함된 문장 또는 지문"),
   answer: z.string().describe("빈칸에 들어갈 핵심 표현"),
 });

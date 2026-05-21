@@ -17,7 +17,7 @@ import fitz
 from PIL import Image
 
 
-DEFAULT_MODEL = "gemini-3-flash-preview"
+DEFAULT_MODEL = "gemini-3.5-flash"
 DEFAULT_OUTPUT_DIR = Path("data/ocr/2024_suneung_english_questions")
 
 SYSTEM_PROMPT = """You are a high-accuracy OCR engine for Korean exam papers.

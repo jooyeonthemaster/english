@@ -107,6 +107,32 @@ function jobToQueueItem(job: AiJobRow): QueueItem | null {
   };
 }
 
+function isFastTempItem(item: QueueItem): boolean {
+  return item.id.startsWith("fast:");
+}
+
+function sameTypeCounts(
+  a: Record<string, number>,
+  b: Record<string, number>,
+): boolean {
+  const aKeys = Object.keys(a).sort();
+  const bKeys = Object.keys(b).sort();
+  if (aKeys.length !== bKeys.length) return false;
+  return aKeys.every((key, index) => key === bKeys[index] && Number(a[key]) === Number(b[key]));
+}
+
+function sameGenerationRequest(a: QueueItem, b: QueueItem): boolean {
+  return (
+    a.passageId === b.passageId &&
+    a.config.mode === b.config.mode &&
+    a.config.difficulty === b.config.difficulty &&
+    (a.config.generationPlan || "STANDARD") ===
+      (b.config.generationPlan || "STANDARD") &&
+    a.config.prompt === b.config.prompt &&
+    sameTypeCounts(a.config.typeCounts, b.config.typeCounts)
+  );
+}
+
 export function useGenerationSessionQueue(): [
   QueueItem[],
   Dispatch<SetStateAction<QueueItem[]>>,
@@ -140,14 +166,26 @@ export function useGenerationSessionQueue(): [
   }, []);
 
   const queue = useMemo(() => {
-    const seen = new Set<string>();
-    const merged: QueueItem[] = [];
-    for (const item of [...dbQueue, ...localQueue]) {
-      if (seen.has(item.id)) continue;
-      seen.add(item.id);
-      merged.push(item);
+    const byId = new Map<string, QueueItem>();
+    const activeFastTemps = localQueue.filter(
+      (item) => isFastTempItem(item) && item.status === "generating",
+    );
+    for (const item of localQueue) {
+      byId.set(item.id, item);
     }
-    return merged;
+    for (const item of dbQueue) {
+      if (
+        activeFastTemps.some((temp) => sameGenerationRequest(temp, item))
+      ) {
+        continue;
+      }
+      byId.set(item.id, item);
+    }
+    return Array.from(byId.values()).sort((a, b) => {
+      const aTime = a.createdAt ? Date.parse(a.createdAt) : 0;
+      const bTime = b.createdAt ? Date.parse(b.createdAt) : 0;
+      return bTime - aTime;
+    });
   }, [dbQueue, localQueue]);
 
   return [queue, setLocalQueue];

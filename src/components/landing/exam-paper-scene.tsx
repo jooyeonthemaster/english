@@ -14,7 +14,7 @@ export function ExamPaperScene() {
         {/* Left — A4 paper (White) */}
         <motion.div className="relative flex justify-center">
           <div className="absolute -inset-10 bg-blue-300/20 blur-[80px] rounded-full" />
-          <div className="bg-white relative z-10 w-full max-w-[560px]" style={{ aspectRatio: "210 / 297", boxShadow: "0 0 0 1px rgba(59,130,246,0.1), 0 30px 60px -10px rgba(59,130,246,0.15)", padding: "48px 42px", borderRadius: "4px" }}>
+          <div className="bg-white relative z-10 w-full max-w-[560px]" style={{ aspectRatio: "210 / 297", boxShadow: "0 0 0 1px rgba(59,130,246,0.1), 0 30px 60px -10px rgba(59,130,246,0.15)", padding: "clamp(20px, 5vw, 48px) clamp(16px, 4.5vw, 42px)", borderRadius: "4px" }}>
             <div className="border-b-[3px] border-[#1E3A8A] pb-3 mb-6">
               <div className="flex items-baseline justify-between">
                 <div>
@@ -51,9 +51,9 @@ export function ExamPaperScene() {
           <h2 className="font-extrabold text-gray-900 leading-[1.3]" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
             웹에서 보고 끝? 생성된 모든 문제는 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">실제 편집 가능한 Word 파일</span>로 떨어집니다.
           </h2>
-          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium">
+          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium break-keep">
             아무리 문제가 좋아도 결국 학원 포맷에 맞춰 편집해야 한다면 반쪽짜리입니다. <br/>
-            영신ai는 생성된 모든 문항을 폰트, 여백, 문항 간격, 표지 양식까지 완벽하게 조판하여
+            SMOAT는 생성된 모든 문항을 폰트, 여백, 문항 간격, 표지 양식까지 완벽하게 조판하여
             <strong className="text-[#1E3A8A] font-bold"> 즉시 인쇄하고 편집할 수 있는 Word(.docx) 파일 형태로 제공</strong>합니다.
           </p>
 

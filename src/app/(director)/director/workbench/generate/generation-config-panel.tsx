@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   QUESTION_GENERATION_PLANS,
   getQuestionGenerationCreditCost,
@@ -150,40 +151,43 @@ export function GenerationConfigPanel({
           </div>
         </div>
 
-        <div className="px-5 pb-3">
-          <div className="grid grid-cols-2 gap-2">
-            {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-              const plan = QUESTION_GENERATION_PLANS[planId];
-              const active = generationPlan === planId;
-              const Icon = planId === "PREMIUM" ? Gem : Sparkles;
-              return (
-                <button
-                  key={planId}
-                  type="button"
-                  onClick={() => setGenerationPlan(planId)}
-                  className={`min-h-[72px] rounded-xl border p-3 text-left transition-all duration-150 ${
-                    active
-                      ? "border-blue-300 bg-blue-50 text-blue-800 shadow-sm shadow-blue-50"
-                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <Icon className={`w-3.5 h-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`} />
-                      <span className="text-[12px] font-bold truncate">{plan.shortLabel}</span>
+        {/* Model selector */}
+        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+          <div className="px-5 pb-3">
+            <div className="grid grid-cols-2 gap-2">
+              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+                const plan = QUESTION_GENERATION_PLANS[planId];
+                const active = generationPlan === planId;
+                const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+                return (
+                  <button
+                    key={planId}
+                    type="button"
+                    onClick={() => setGenerationPlan(planId)}
+                    className={`min-h-[72px] rounded-xl border p-3 text-left transition-all duration-150 ${
+                      active
+                        ? "border-blue-300 bg-blue-50 text-blue-800 shadow-sm shadow-blue-50"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Icon className={`w-3.5 h-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`} />
+                        <span className="text-[12px] font-bold truncate">{plan.shortLabel}</span>
+                      </div>
+                      <span className={`text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}>
+                        {plan.creditMultiplier}x
+                      </span>
                     </div>
-                    <span className={`text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}>
-                      {plan.creditMultiplier}x
-                    </span>
-                  </div>
-                  <p className="mt-1.5 text-[10px] font-medium leading-snug text-slate-500">
-                    {plan.modelLabel}
-                  </p>
-                </button>
-              );
-            })}
+                    <p className="mt-1.5 text-[10px] font-medium leading-snug text-slate-500">
+                      {plan.modelLabel}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Auto Mode Config */}
         {genMode === "auto" && (

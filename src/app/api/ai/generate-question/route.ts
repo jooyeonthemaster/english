@@ -21,6 +21,10 @@ import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
+import {
+  buildGeminiCompactGenerationPrompt,
+  buildQuestionGenerationPromptContract,
+} from "@/lib/question-generation-prompt-contract";
 import type { PassageAnnotationInput, PassageAnnotationType } from "@/actions/workbench";
 
 const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
@@ -118,11 +122,12 @@ async function generateWithRetry(
     maxRetries,
     maxTokens,
   });
-  return result.object;
+  return result;
 }
 
 // ─── Single-type question generation (called in parallel) ───
 export async function POST(request: NextRequest) {
+  const requestStartedAt = Date.now();
   try {
     // ── Auth + Credit deduction ──
     const staff = await getStaffSession();
@@ -174,7 +179,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (passage && !passage.analysis) {
+    if (passage && request.nextUrl.searchParams.get("requireAnalysis") === "true" && !passage.analysis) {
       await refundCredits(
         staff.academyId,
         operationType,
@@ -254,14 +259,34 @@ export async function POST(request: NextRequest) {
 ## 출력 형식 안내
 - 밑줄 친 표현은 __단어__ 형태로 감쌉니다
 - 빈칸은 _____(5개 이상)으로 표시합니다`;
+    const providerQualityContract =
+      buildQuestionGenerationPromptContract(generationPlan);
+    const compactGenerationPrompt = buildGeminiCompactGenerationPrompt({
+      schoolType,
+      gradeInfo,
+      passageContent: passage.content,
+      teacherIntentBlock: annotationBlock,
+      analysisContext,
+      targetCandidateBlock,
+      typePrompt,
+      typeQualityRubric,
+      count,
+      difficulty,
+      customPrompt,
+    });
 
     console.log(`[SINGLE-GEN] Generating ${questionType} x${count} via ${generationPlan} plan...`);
 
     let object: unknown;
+    let generationAttempts = 0;
+    let generationDurationMs = 0;
     const startTime = Date.now();
     try {
-    object = await generateWithRetry(
+    const generationResult = await generateWithRetry(
       responseSchema,
+      generationPlan === "STANDARD"
+        ? compactGenerationPrompt
+        :
       `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신/수능 시험 출제 전문가입니다.
 
 ## 지문
@@ -279,12 +304,13 @@ ${structuredInstructions}
 - 난이도: ${difficulty}
 ${DIFFICULTY_RUBRIC[difficulty] || DIFFICULTY_RUBRIC.INTERMEDIATE}
 ${MARKING_RUBRIC}
+${providerQualityContract}
 - difficulty 필드에 반드시 "${difficulty}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지 (options 배열에 {label, text} 형태)
 - 해설(explanation): 왜 정답인지 지문 근거와 함께 한국어로 작성 (3~5문장, 300자 이내로 간결하게)
 - keyPoints: 3개의 학습 포인트 (각 1문장)
 - wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 간결하게 (각 1~2문장)
-- wrongOptionExplanations is REQUIRED for every multiple-choice item: include exactly four entries keyed by the wrong option labels. Never return an empty object.
+- wrongOptionExplanations is REQUIRED for every multiple-choice item: include exactly four entries, one for each wrong option. If the schema is an array, each entry must be {label, explanation}. Never return an empty object.
 - tags: 관련 문법/어휘/유형 태그를 한국어로
 ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
 
@@ -292,6 +318,9 @@ ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
       generationPlan,
       Math.min(20_000, Math.max(4_096, (Number(count) || 1) * 4_096)),
     );
+    object = generationResult.object;
+    generationAttempts = generationResult.attempts;
+    generationDurationMs = generationResult.durationMs;
     } catch (aiError) {
       // Refund credits on AI failure
       await refundCredits(staff.academyId, operationType, creditResult.transactionId, "AI generation failed", creditCost);
@@ -300,9 +329,16 @@ ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
     const duration = Date.now() - startTime;
 
     // Post-process + WORD_ORDER shuffle
-    const generatedQuestions = isRecord(object) && Array.isArray(object.questions)
+    const requestedCount = Math.max(1, Math.floor(Number(count) || 1));
+    const generatedQuestionsAll = isRecord(object) && Array.isArray(object.questions)
       ? object.questions.filter(isRecord)
       : [];
+    if (generatedQuestionsAll.length !== requestedCount) {
+      console.warn(
+        `[SINGLE-GEN] ${questionType} returned ${generatedQuestionsAll.length}/${requestedCount} questions; trimming to requested count.`,
+      );
+    }
+    const generatedQuestions = generatedQuestionsAll.slice(0, requestedCount);
     const questions: Record<string, unknown>[] = [];
     for (const q of generatedQuestions) {
       // Post-process: reconstruct passage fields from AI minimal output
@@ -357,6 +393,16 @@ ${customPrompt ? `\n## 선생님 추가 지시\n${customPrompt}` : ""}
       generationPlan,
       questions,
       creditsRemaining: creditResult.balanceAfter,
+      ...(request.nextUrl.searchParams.get("debugTiming") === "1"
+        ? {
+            debugTiming: {
+              aiCallMs: duration,
+              generationDurationMs,
+              generationAttempts,
+              totalMs: Date.now() - requestStartedAt,
+            },
+          }
+        : {}),
     });
   } catch (error) {
     console.error("Single question generation error:", error);

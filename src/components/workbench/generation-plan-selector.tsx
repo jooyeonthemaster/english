@@ -1,6 +1,7 @@
 "use client";
 
 import { Gem, Sparkles } from "lucide-react";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import {
   QUESTION_GENERATION_PLANS,
@@ -20,6 +21,10 @@ export function GenerationPlanSelector({
   className,
   compact = false,
 }: GenerationPlanSelectorProps) {
+  if (!FEATURE_FLAGS.SHOW_MODEL_SELECTOR) {
+    return null;
+  }
+
   return (
     <div className={cn("grid grid-cols-2 gap-2", className)}>
       {(["STANDARD", "PREMIUM"] as const).map((planId) => {

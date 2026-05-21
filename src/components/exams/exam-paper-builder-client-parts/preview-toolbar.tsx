@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Eye, Loader2, Printer, Save } from "lucide-react";
+import { BookOpen, Download, Eye, Loader2, Printer, Save } from "lucide-react";
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperTemplate } from "../paper-builder/types";
 
@@ -16,6 +16,7 @@ interface PreviewToolbarProps {
   onGoToManage: () => void;
   onPrint: () => void;
   onDownloadDocx: () => void;
+  onDownloadDocxWithAnswers: () => void;
   onSave: () => void;
 }
 
@@ -27,6 +28,7 @@ export function PreviewToolbar({
   onGoToManage,
   onPrint,
   onDownloadDocx,
+  onDownloadDocxWithAnswers,
   onSave,
 }: PreviewToolbarProps) {
   return (
@@ -64,6 +66,14 @@ export function PreviewToolbar({
         >
           {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
           DOCX
+        </button>
+        <button
+          onClick={onDownloadDocxWithAnswers}
+          disabled={isPending || paperItemsCount === 0}
+          className="flex h-8 items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 text-[11px] font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BookOpen className="h-3.5 w-3.5" />}
+          해설 포함
         </button>
         <button
           onClick={onSave}

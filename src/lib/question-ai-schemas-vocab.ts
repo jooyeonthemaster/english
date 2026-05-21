@@ -5,12 +5,12 @@
 // ============================================================================
 
 import { z } from "zod";
+import { aiWrongOptionExplanationsSchema } from "./question-wrong-option-explanations";
 
 // Re-export unchanged schema (지문 복사 없는 유형)
-export {
-  synonymSchema as aiSynonymSchema,
-  type SynonymQuestion as AiSynonymQuestion,
-} from "./question-schemas-vocab";
+import { synonymSchema } from "./question-schemas-vocab";
+
+export type { SynonymQuestion as AiSynonymQuestion } from "./question-schemas-vocab";
 
 // ---------------------------------------------------------------------------
 // Shared definitions
@@ -31,8 +31,10 @@ const commonFields = {
 };
 
 const mcWrongExplanations = {
-  wrongOptionExplanations: z.record(z.string(), z.string()).describe("오답별 해설, key는 선지 label"),
+  wrongOptionExplanations: aiWrongOptionExplanationsSchema,
 };
+
+export const aiSynonymSchema = synonymSchema.extend(mcWrongExplanations);
 
 // ---------------------------------------------------------------------------
 // 1. 문맥 속 의미 (CONTEXT_MEANING)
@@ -68,10 +70,8 @@ export type AiAntonymQuestion = z.infer<typeof aiAntonymSchema>;
 // Registry
 // ---------------------------------------------------------------------------
 
-import { synonymSchema } from "./question-schemas-vocab";
-
 export const AI_VOCAB_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   CONTEXT_MEANING: aiContextMeaningSchema,
-  SYNONYM: synonymSchema,
+  SYNONYM: aiSynonymSchema,
   ANTONYM: aiAntonymSchema,
 };

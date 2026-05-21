@@ -12,23 +12,28 @@ export interface QuestionGenerationPlanConfig {
 export const QUESTION_GENERATION_PLANS: Record<QuestionGenerationPlan, QuestionGenerationPlanConfig> = {
   STANDARD: {
     id: "STANDARD",
-    label: "일반 문제 생성",
-    shortLabel: "일반",
-    description: "빠르고 경제적인 표준 생성",
-    modelLabel: "표준 생성 엔진",
+    label: "Gemini 문제 생성",
+    shortLabel: "Gemini",
+    description: "Gemini 3.5 Flash 기반 문제 생성",
+    modelLabel: "Gemini 3.5 Flash",
     creditMultiplier: 1,
   },
   PREMIUM: {
     id: "PREMIUM",
-    label: "프리미엄 문제 생성",
-    shortLabel: "프리미엄",
-    description: "고난도 문항과 해설 품질을 강화한 생성",
-    modelLabel: "고급 생성 엔진",
+    label: "Claude 문제 생성",
+    shortLabel: "Claude",
+    description: "Claude Sonnet 4.6 기반 문제 생성",
+    modelLabel: "Claude Sonnet 4.6",
     creditMultiplier: 2,
   },
 };
 
 export const QUESTION_GENERATION_PLAN_TAGS: Record<QuestionGenerationPlan, string> = {
+  STANDARD: "Gemini 생성",
+  PREMIUM: "Claude 생성",
+};
+
+const LEGACY_QUESTION_GENERATION_PLAN_TAGS: Record<QuestionGenerationPlan, string> = {
   STANDARD: "일반 생성",
   PREMIUM: "프리미엄 생성",
 };
@@ -60,14 +65,23 @@ function normalizePlanTag(value: unknown): string {
 
 export function getQuestionGenerationPlanFromTags(tags: readonly string[]): QuestionGenerationPlan | null {
   const normalized = new Set(tags.map(normalizePlanTag));
-  if (normalized.has(QUESTION_GENERATION_PLAN_TAGS.PREMIUM)) return "PREMIUM";
-  if (normalized.has(QUESTION_GENERATION_PLAN_TAGS.STANDARD)) return "STANDARD";
+  if (
+    normalized.has(QUESTION_GENERATION_PLAN_TAGS.PREMIUM) ||
+    normalized.has(LEGACY_QUESTION_GENERATION_PLAN_TAGS.PREMIUM)
+  ) return "PREMIUM";
+  if (
+    normalized.has(QUESTION_GENERATION_PLAN_TAGS.STANDARD) ||
+    normalized.has(LEGACY_QUESTION_GENERATION_PLAN_TAGS.STANDARD)
+  ) return "STANDARD";
   return null;
 }
 
 export function isQuestionGenerationPlanTag(tag: unknown): boolean {
   const normalizedTag = normalizePlanTag(tag);
-  return Object.values(QUESTION_GENERATION_PLAN_TAGS).some((planTag) => planTag === normalizedTag);
+  return [
+    ...Object.values(QUESTION_GENERATION_PLAN_TAGS),
+    ...Object.values(LEGACY_QUESTION_GENERATION_PLAN_TAGS),
+  ].some((planTag) => planTag === normalizedTag);
 }
 
 export function mergeQuestionGenerationPlanTag(

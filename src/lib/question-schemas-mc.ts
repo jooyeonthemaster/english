@@ -37,9 +37,10 @@ export const grammarErrorSchema = z.object({
   passageWithMarkers: z.string().describe("(A)~(E) 밑줄 표시가 포함된 지문. 밑줄 부분은 __(A) expression__ 형태로 표시"),
   markedExpressions: z.array(z.object({
     label: z.string().describe("(A)~(E)"),
-    expression: z.string().describe("해당 밑줄 표현"),
+    expression: z.string().describe("원문에서의 올바른 표현"),
     isError: z.boolean().describe("이 표현이 오류인지"),
     correction: z.string().optional().describe("오류인 경우 올바른 표현"),
+    errorExpression: z.string().optional().describe("오류인 경우 지문/선지에 표시할 틀린 표현"),
   })).length(5),
   options: z.array(optionSchema).length(5),
   ...mcWrongExplanations,

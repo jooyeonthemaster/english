@@ -1895,6 +1895,7 @@ model CreditTransaction {
   @@index([academyId, createdAt])
   @@index([academyId, type])
   @@index([academyId, operationType])
+  @@index([referenceId, referenceType])
   @@index([staffId])
   @@index([createdAt])
   @@map("credit_transactions")

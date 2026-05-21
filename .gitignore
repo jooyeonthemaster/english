@@ -48,6 +48,7 @@ prisma/dev.db-journal
 
 # generated analysis files
 scripts/analyses/
+scripts/_gen_audit_out/
 scripts/*-passages.json
 scripts/passages-to-analyze.json
 nul
@@ -91,4 +92,5 @@ google-credentials*.json
 /data/
 /public/promo/
 /.agents/
+/.codex/
 /skills-lock.json

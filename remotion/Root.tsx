@@ -19,6 +19,7 @@ import AIFlowMobilePromo from './scenes/AIFlowMobilePromo';
 import PassageAnalysisDeepDive, { PASSAGE_DEEP_DIVE_TOTAL } from './scenes/PassageAnalysisDeepDive';
 import HiggsfieldPromo, { HIGGSFIELD_PROMO_TOTAL, HIGGSFIELD_PROMO_FPS, HIGGSFIELD_PROMO_WIDTH, HIGGSFIELD_PROMO_HEIGHT } from './scenes/HiggsfieldPromo';
 import OrderShuffleMeme, { ORDER_MEME_TOTAL, ORDER_MEME_FPS, ORDER_MEME_W, ORDER_MEME_H } from './scenes/OrderShuffleMeme';
+import SmoatNaeshinPromo, { SMOAT_PROMO_TOTAL, SMOAT_PROMO_FPS, SMOAT_PROMO_W, SMOAT_PROMO_H } from './scenes/SmoatNaeshinPromo';
 
 const NaraDemoVideo: React.FC = () => {
   return (
@@ -122,17 +123,15 @@ export const RemotionRoot: React.FC = () => {
         width={ORDER_MEME_W}
         height={ORDER_MEME_H}
       />
-    </>
-  );
-};
-<Composition
-  id="YoungshinNaeshinPromo"
-  component={YoungshinNaeshinPromo}
-  durationInFrames={YOUNGSHIN_PROMO_TOTAL}
-  fps={YOUNGSHIN_PROMO_FPS}
-  width={YOUNGSHIN_PROMO_W}
-  height={YOUNGSHIN_PROMO_H}
-/>
+
+      <Composition
+        id="SmoatNaeshinPromo"
+        component={SmoatNaeshinPromo}
+        durationInFrames={SMOAT_PROMO_TOTAL}
+        fps={SMOAT_PROMO_FPS}
+        width={SMOAT_PROMO_W}
+        height={SMOAT_PROMO_H}
+      />
     </>
   );
 };

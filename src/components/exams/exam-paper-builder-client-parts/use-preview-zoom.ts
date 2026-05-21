@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { PREVIEW_PAGE_WIDTH } from "../paper-builder/constants";
 import {
   PREVIEW_ZOOM_MAX,
@@ -15,37 +15,43 @@ import {
 
 export function usePreviewZoom() {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [zoom, setZoom] = useState(1);
-  const [baseWidth, setBaseWidth] = useState(PREVIEW_PAGE_WIDTH);
+  const [fitZoom, setFitZoom] = useState(1);
+  const [manualZoom, setManualZoom] = useState<number | null>(null);
   const [controlsPos, setControlsPos] = useState({ top: 12, right: 12 });
+  const zoom = useMemo(() => manualZoom ?? fitZoom, [fitZoom, manualZoom]);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
-    const updateBaseWidth = () => {
+    const updateFitZoom = () => {
       const styles = window.getComputedStyle(scroller);
       const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
       const availableWidth = Math.max(320, scroller.clientWidth - paddingX);
-      setBaseWidth(Math.min(PREVIEW_PAGE_WIDTH, availableWidth));
+      const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / PREVIEW_PAGE_WIDTH));
+      setFitZoom(Math.round(nextFit * 100) / 100);
     };
 
-    updateBaseWidth();
-    const observer = new ResizeObserver(updateBaseWidth);
+    updateFitZoom();
+    const observer = new ResizeObserver(updateFitZoom);
     observer.observe(scroller);
     return () => observer.disconnect();
   }, []);
 
   function zoomIn() {
-    setZoom((z) => Math.min(PREVIEW_ZOOM_MAX, Math.round((z + PREVIEW_ZOOM_STEP) * 100) / 100));
+    setManualZoom((current) =>
+      Math.min(PREVIEW_ZOOM_MAX, Math.round(((current ?? zoom) + PREVIEW_ZOOM_STEP) * 100) / 100),
+    );
   }
 
   function zoomOut() {
-    setZoom((z) => Math.max(PREVIEW_ZOOM_MIN, Math.round((z - PREVIEW_ZOOM_STEP) * 100) / 100));
+    setManualZoom((current) =>
+      Math.max(PREVIEW_ZOOM_MIN, Math.round(((current ?? zoom) - PREVIEW_ZOOM_STEP) * 100) / 100),
+    );
   }
 
   function reset() {
-    setZoom(1);
+    setManualZoom(null);
   }
 
   function handleControlsDragStart(event: ReactMouseEvent<HTMLSpanElement>) {
@@ -80,7 +86,7 @@ export function usePreviewZoom() {
   return {
     scrollerRef,
     zoom,
-    baseWidth,
+    baseWidth: PREVIEW_PAGE_WIDTH,
     controlsPos,
     zoomIn,
     zoomOut,

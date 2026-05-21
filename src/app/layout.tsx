@@ -10,8 +10,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "영신ai | 영어학원 AI ERP",
-  description: "영어학원 통합 관리 플랫폼 — 원생관리, 출결, 수납, AI 문제생성, 성적분석",
+  title: "SMOAT | 가장 스마트한 해자",
+  description: "SMOAT는 영어학원의 운영, 학습 데이터, AI 문제 생성을 하나로 묶어 가장 스마트한 해자를 만드는 AI ERP입니다.",
+  applicationName: "SMOAT",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
+  appleWebApp: {
+    title: "SMOAT",
+  },
+  openGraph: {
+    title: "SMOAT | 가장 스마트한 해자",
+    description: "영어학원을 위한 가장 스마트한 AI 운영 해자",
+    siteName: "SMOAT",
+  },
 };
 
 export const viewport: Viewport = {

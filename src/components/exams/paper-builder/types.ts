@@ -5,6 +5,7 @@ export type BuilderQuestion = {
   type: string;
   subType: string | null;
   questionText: string;
+  structuredData?: unknown;
   options: string | null;
   correctAnswer: string;
   points: number;
@@ -85,6 +86,9 @@ export type RenderItemPart = {
   partKey: string;
   showHeader: boolean;
   showAnswer: boolean;
+  questionRenderedLines: string[];
+  questionStartLineIndex: number;
+  questionTotalLines: number;
   options: RenderOption[];
   isStart: boolean;
   isContinuation: boolean;

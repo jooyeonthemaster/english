@@ -16,15 +16,21 @@ export function EditableText({
   className,
   children,
   placeholder = "",
+  readOnly = false,
 }: {
   value: string;
   onCommit: (value: string) => void;
   className?: string;
   children?: React.ReactNode;
   placeholder?: string;
+  readOnly?: boolean;
 }) {
   const [editing, setEditing] = useState(false);
   const isEmpty = !value.trim();
+
+  if (readOnly) {
+    return <span className={className}>{isEmpty ? placeholder : children ?? value}</span>;
+  }
 
   return (
     <span

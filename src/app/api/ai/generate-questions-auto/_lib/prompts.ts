@@ -1,4 +1,10 @@
 import { DIFFICULTY_RUBRIC, MARKING_RUBRIC } from "./constants";
+import {
+  buildGeminiCompactGenerationPrompt,
+  buildGeminiCompactPlanningPrompt,
+  buildQuestionGenerationPromptContract,
+} from "@/lib/question-generation-prompt-contract";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 interface PlanningPromptInput {
   schoolType: string;
@@ -9,6 +15,7 @@ interface PlanningPromptInput {
   analysisContext: string;
   customPrompt?: string;
   diffLabel: string;
+  generationPlan?: QuestionGenerationPlan;
 }
 
 export function buildPlanningPrompt({
@@ -20,7 +27,28 @@ export function buildPlanningPrompt({
   analysisContext,
   customPrompt,
   diffLabel,
+  generationPlan,
 }: PlanningPromptInput): string {
+  if (generationPlan === "STANDARD") {
+    return buildGeminiCompactPlanningPrompt({
+      schoolType,
+      gradeInfo,
+      count,
+      passageContent,
+      teacherIntentBlock,
+      analysisContext,
+      customPrompt,
+      diffLabel,
+    });
+  }
+
+  const hasAnalysisContext = analysisContext.trim().length > 0;
+  const analysisBlock = hasAnalysisContext
+    ? analysisContext
+    : "\n\n## Saved passage analysis\nNone. This passage has not been analyzed yet.";
+  const sourcePolicy = hasAnalysisContext
+    ? "Use the saved passage analysis as high-priority guidance, but keep every planned question grounded in the original passage."
+    : "No saved passage analysis is available. Plan from the original passage text and teacher annotations only. Do not reject any question type only because analysis data is missing; targetPoints should cite concrete words, sentences, logic, or exam-worthy spots from the passage itself.";
   return `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제위원입니다.
 
 아래 지문과 분석 데이터를 검토하고 ${count}문제를 출제할 최적의 유형 배분 계획을 세우세요.
@@ -33,7 +61,10 @@ export function buildPlanningPrompt({
 
 ## 지문
 ${passageContent}
-${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
+${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisBlock}
+
+## Source policy
+${sourcePolicy}
 
 ## 사용 가능한 유형
 객관식: BLANK_INFERENCE, GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_ORDER, SENTENCE_INSERT, TOPIC_MAIN_IDEA, TITLE, REFERENCE, CONTENT_MATCH, IRRELEVANT
@@ -59,6 +90,7 @@ interface GenerationPromptInput {
   typeCount: number;
   diffLabel: string;
   diffInstruction: string;
+  generationPlan: QuestionGenerationPlan;
   customPrompt?: string;
 }
 
@@ -76,21 +108,52 @@ export function buildGenerationPrompt({
   typeCount,
   diffLabel,
   diffInstruction,
+  generationPlan,
   customPrompt,
 }: GenerationPromptInput): string {
+  if (generationPlan === "STANDARD") {
+    return buildGeminiCompactGenerationPrompt({
+      schoolType,
+      gradeInfo,
+      passageContent,
+      teacherIntentBlock,
+      analysisContext,
+      targetPoints,
+      targetCandidateBlock,
+      typePrompt,
+      typeQualityRubric,
+      count: typeCount,
+      difficulty: diffLabel,
+      difficultyInstruction: diffInstruction,
+      customPrompt,
+    });
+  }
+
+  const hasAnalysisContext = analysisContext.trim().length > 0;
+  const analysisBlock = hasAnalysisContext
+    ? analysisContext
+    : "\n\n## Saved passage analysis\nNone. Generate directly from the original passage.";
+  const sourcePolicy = hasAnalysisContext
+    ? "Reflect the saved analysis points when they are relevant, while grounding the final question and explanation in the passage text."
+    : "No saved analysis exists. Do not invent analysis-only facts or require pre-analysis. Build the question from the original passage, teacher annotations, and concrete passage evidence.";
   const targetContext =
     targetPoints.length > 0
       ? `\n\n## 이 유형에서 반드시 사용할 분석 포인트\n${targetPoints
           .map((p) => `- ${p}`)
           .join("\n")}`
       : "";
+  const providerQualityContract =
+    buildQuestionGenerationPromptContract(generationPlan);
 
   return `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신/수능 시험 출제 전문가입니다.
 
 ## 지문
 ${passageContent}
 ${targetCandidateBlock ? `\n${targetCandidateBlock}\n` : ""}
-${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisContext}
+${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisBlock}
+
+## Source policy
+${sourcePolicy}
 ${targetContext}
 
 ## 출제 유형 지시사항
@@ -103,12 +166,15 @@ ${structuredInstructions}
 - 난이도: ${diffLabel} (${diffInstruction})
 ${DIFFICULTY_RUBRIC[diffLabel] || DIFFICULTY_RUBRIC.INTERMEDIATE}
 ${MARKING_RUBRIC}
+${providerQualityContract}
 ${customPrompt ? `\n## Teacher instructions\n${customPrompt}` : ""}
+- If saved passage analysis is "None", treat targetPoints as passage evidence rather than analysis items.
 - difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.
 - 객관식은 반드시 5개 선택지(options 배열에 {label, text} 형태)를 만드세요.
 - 해설(explanation)은 왜 정답인지 지문 근거와 함께 한국어로 작성하세요.
 - keyPoints는 3개의 학습 포인트로 작성하세요.
 - wrongOptionExplanations는 객관식 문제마다 반드시 오답 4개에 대해 작성하세요.
+- wrongOptionExplanations가 배열 스키마이면 각 항목은 {label, explanation} 형태로 작성하세요.
 - tags는 관련 문법/어휘/유형 태그를 한국어로 작성하세요.
 
 위의 분석 포인트를 반드시 문제에 반영하고, 정확히 ${typeCount}문제를 생성하세요.`;

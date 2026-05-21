@@ -66,6 +66,7 @@ interface PreviewPagesProps {
   schoolId: string;
   classId: string;
   examDate: string;
+  readOnly?: boolean;
 }
 
 export function PreviewPages(props: PreviewPagesProps) {
@@ -152,6 +153,7 @@ export function PreviewPages(props: PreviewPagesProps) {
             schoolName={schools.find((school) => school.id === schoolId)?.name || ""}
             className={classes.find((cls) => cls.id === classId)?.name || ""}
             examDate={props.examDate}
+            readOnly={props.readOnly}
           />
         ))}
       </div>

@@ -2,7 +2,7 @@
 
 2026-04 신규 구현, 2026-04-17 v2 리디자인 반영.
 
-PDF 또는 이미지 여러 장을 업로드하면 페이지별로 Gemini 3 Flash를 호출해
+PDF 또는 이미지 여러 장을 업로드하면 페이지별로 Gemini 3.5 Flash를 호출해
 블록(지문·문제·선지·해설·메타) 단위로 추출하고, 사용자가 검수한 뒤
 선택한 **모드(M1~M4)** 에 맞춰 Passage / Question / Exam / PassageBundle 등
 도메인 엔티티로 일괄 승급(commit)하는 기능.
@@ -133,7 +133,7 @@ lastQuestionNo   Int
 ## 3. 엔드투엔드 데이터 흐름
 
 ```
-[Browser]                [Next.js API]          [Supabase Storage]   [Trigger.dev]      [Gemini 3 Flash]
+[Browser]                [Next.js API]          [Supabase Storage]   [Trigger.dev]      [Gemini 3.5 Flash]
    │                          │                       │                   │                   │
    │ (mode-select → localStorage)                     │                   │                   │
    │ pdfjs-dist 분할(30장)    │                       │                   │                   │

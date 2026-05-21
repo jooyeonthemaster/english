@@ -6,6 +6,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { tasks } from "@trigger.dev/sdk/v3";
+import {
+  academyConcurrencyKey,
+  EXTRACTION_ORCHESTRATOR_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import {
   requireStaff,
@@ -60,6 +64,8 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
   // Trigger the orchestrator. Using idempotencyKey so replays are safe.
   const handle = await tasks.trigger("extraction-orchestrator", { jobId }, {
     idempotencyKey: `orchestrator:${jobId}`,
+    queue: EXTRACTION_ORCHESTRATOR_QUEUE_NAME,
+    concurrencyKey: academyConcurrencyKey(staff.academyId),
   });
 
   return NextResponse.json({

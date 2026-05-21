@@ -1,0 +1,1006 @@
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  Footer,
+  Header,
+  HeightRule,
+  ImageRun,
+  PageNumber,
+  Paragraph,
+  SectionType,
+  Table,
+  TableCell,
+  TableLayoutType,
+  TableRow,
+  TextRun,
+  VerticalAlign,
+  WidthType,
+} from "docx";
+import { bdr, noBorders, NONE, thinBox } from "./borders";
+import { COLOR, FONT, KR_FONT } from "./styles";
+import { parseFormattedText } from "./parse-formatted-text";
+import { buildAnswerKeyTable } from "./build-answer-key";
+import { safeParseJSON } from "./helpers";
+import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
+
+/*
+ * 빌더 미리보기(A4PaperPage)와 1:1로 매칭되는 시험지 DOCX 빌더.
+ * - 1페이지 상단: 로고 + (소제목/큰제목) | (학교/반/이름) 박스
+ * - 그 아래: 안내문(왼쪽) | 날짜(오른쪽)
+ * - 본문: 1단/2단 + 지문(boxed/underlined/plain) + 문항번호[점·유형] + 옵션 + 답란
+ * - 푸터: - N / M -
+ * - 2페이지 이후 상단 미니헤더: 제목 - N / M
+ */
+
+const SUBTYPE_LABELS_DOCX: Record<string, string> = {
+  BLANK_INFERENCE: "빈칸 추론",
+  GRAMMAR_ERROR: "어법 판단",
+  VOCAB_CHOICE: "어휘 적절성",
+  SENTENCE_ORDER: "글의 순서",
+  SENTENCE_INSERT: "문장 삽입",
+  TOPIC_MAIN_IDEA: "주제/요지",
+  TITLE: "제목 추론",
+  REFERENCE: "지칭 추론",
+  CONTENT_MATCH: "내용 일치",
+  IRRELEVANT: "무관한 문장",
+  CONDITIONAL_WRITING: "조건부 영작",
+  SENTENCE_TRANSFORM: "문장 전환",
+  FILL_BLANK_KEY: "핵심 표현 빈칸",
+  SUMMARY_COMPLETE: "요약문 완성",
+  WORD_ORDER: "배열 영작",
+  GRAMMAR_CORRECTION: "문법 오류 수정",
+  CONTEXT_MEANING: "문맥 속 의미",
+  SYNONYM: "동의어",
+  ANTONYM: "반의어",
+};
+
+// 미리보기 px 기준값 → docx half-point.
+// 미리보기 text-[11.5px] ≈ 본문 10pt, [10.5px] ≈ 9.5pt
+const SIZE_TITLE = 40;        // 20pt (h2 28px)
+const SIZE_TITLE_COMPACT = 32; // 16pt (compact 22px)
+const SIZE_SUBTITLE = 14;     // 7pt (subtitle 9px)
+const SIZE_INFO = 16;         // 8pt (학교/반/이름)
+const SIZE_INSTRUCTIONS = 16; // 8pt
+const SIZE_QNUM = 22;         // 11pt
+const SIZE_QNUM_COMPACT = 20; // 10pt
+const SIZE_META = 14;         // 7pt
+const SIZE_BODY = 20;         // 10pt
+const SIZE_BODY_COMPACT = 18; // 9pt
+const SIZE_PASSAGE_TITLE = 14; // 7pt
+const SIZE_CONTINUED = 16;    // 8pt
+const SIZE_FOOTER = 16;       // 8pt
+const SIZE_ANSWER_LABEL = 16; // 8pt
+const SIZE_ANSWER_VALUE = 22; // 11pt
+const SIZE_EXPLAIN_LABEL = 16; // 8pt
+const SIZE_EXPLAIN_BODY = 18; // 9pt
+
+export interface BuilderHeader {
+  subtitle?: string;
+  schoolName?: string;
+  className?: string;
+  studentNameLabel?: string;
+  instructions?: string;
+  academyLogoDataUrl?: string | null;
+}
+
+export interface BuilderLayout {
+  columns?: 1 | 2;
+  density?: "comfortable" | "compact";
+  showAnswerSpace?: boolean;
+  showPassageTitle?: boolean;
+  showQuestionMeta?: boolean;
+  passageStyle?: "boxed" | "underlined" | "plain";
+  pageNumberStyle?: "center" | "outside" | "none";
+}
+
+export interface BuilderItem {
+  questionId: string;
+  orderNum?: number;
+  points?: number;
+  groupId?: string | null;
+  includePassage?: boolean;
+  passageTitle?: string;
+  passageContent?: string;
+  questionText?: string;
+  options?: Array<{ label: string; text: string }>;
+  correctAnswer?: string;
+  answerSpaceLines?: number;
+  sectionTitle?: string;
+  teacherNote?: string;
+}
+
+export interface BuilderSettings {
+  source: string;
+  template?: string;
+  layout?: BuilderLayout;
+  header?: BuilderHeader;
+  items: BuilderItem[];
+}
+
+interface BuilderItemResolved extends BuilderItem {
+  sourceQuestion: ExamQuestionData["question"];
+}
+
+function dataUrlToImage(dataUrl: string | null | undefined):
+  | { buffer: Buffer; type: "png" | "jpg" | "gif" | "bmp"; width: number; height: number }
+  | null {
+  if (!dataUrl) return null;
+  const match = dataUrl.match(/^data:image\/(png|jpe?g|gif|bmp);base64,(.+)$/i);
+  if (!match) return null;
+  const mime = match[1].toLowerCase();
+  const buf = Buffer.from(match[2], "base64");
+  const type: "png" | "jpg" | "gif" | "bmp" =
+    mime === "png" ? "png" : mime === "gif" ? "gif" : mime === "bmp" ? "bmp" : "jpg";
+  return { buffer: buf, type, width: 64, height: 64 };
+}
+
+function emptyParagraph(): Paragraph {
+  return new Paragraph({ children: [new TextRun({ text: "" })] });
+}
+
+// =============================================================================
+// 페이지 헤더 (1페이지 상단)
+// =============================================================================
+
+function buildPage1Header(
+  header: BuilderHeader,
+  title: string,
+  compact: boolean,
+): DocChild[] {
+  const subtitle = header.subtitle?.trim() || "";
+  const studentNameLabel = header.studentNameLabel?.trim() || "이름";
+  const schoolName = header.schoolName?.trim() || "";
+  const className = header.className?.trim() || "";
+  const instructions = header.instructions?.trim() || "";
+  const logoImg = dataUrlToImage(header.academyLogoDataUrl ?? null);
+
+  const titleSize = compact ? SIZE_TITLE_COMPACT : SIZE_TITLE;
+
+  // 왼쪽: [로고] + [소제목 / 큰제목]
+  const leftCellChildren: Paragraph[] = [];
+  if (subtitle) {
+    leftCellChildren.push(
+      new Paragraph({
+        spacing: { after: 40 },
+        children: [
+          new TextRun({
+            text: subtitle.toUpperCase(),
+            font: KR_FONT,
+            size: SIZE_SUBTITLE,
+            bold: true,
+            color: COLOR.gray,
+            characterSpacing: 30,
+          }),
+        ],
+      }),
+    );
+  }
+  leftCellChildren.push(
+    new Paragraph({
+      spacing: { after: 0 },
+      children: [
+        new TextRun({
+          text: title,
+          font: KR_FONT,
+          size: titleSize,
+          bold: true,
+          color: COLOR.black,
+        }),
+      ],
+    }),
+  );
+
+  // 로고가 있으면 별도 셀로 분리하여 왼쪽 정렬
+  const leftCells: TableCell[] = [];
+  if (logoImg) {
+    leftCells.push(
+      new TableCell({
+        borders: noBorders(),
+        verticalAlign: VerticalAlign.TOP,
+        width: { size: 740, type: WidthType.DXA },
+        margins: { top: 0, bottom: 0, left: 0, right: 160 },
+        children: [
+          new Paragraph({
+            spacing: { after: 0 },
+            children: [
+              new ImageRun({
+                data: logoImg.buffer,
+                transformation: { width: 44, height: 44 },
+                type: logoImg.type,
+              }),
+            ],
+          }),
+        ],
+      }),
+    );
+  }
+  leftCells.push(
+    new TableCell({
+      borders: noBorders(),
+      verticalAlign: VerticalAlign.TOP,
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      children: leftCellChildren,
+    }),
+  );
+
+  const leftTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    layout: TableLayoutType.FIXED,
+    borders: {
+      top: NONE, bottom: NONE, left: NONE, right: NONE,
+      insideHorizontal: NONE, insideVertical: NONE,
+    },
+    rows: [new TableRow({ children: leftCells })],
+  });
+
+  // 오른쪽: 학교 / 반 / 이름 (각 줄에 하단 보더, 라벨 / 값)
+  const rightCellChildren = buildInfoBlock({
+    studentNameLabel,
+    schoolName,
+    className,
+  });
+
+  // 상단 박스: 좌측(소제목+제목) | 우측(학교/반/이름) — 가장 아래에 두꺼운 보더
+  const headerTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    layout: TableLayoutType.FIXED,
+    columnWidths: [6800, 2900],
+    borders: {
+      top: NONE, left: NONE, right: NONE,
+      insideHorizontal: NONE, insideVertical: NONE,
+      bottom: bdr(BorderStyle.SINGLE, 12, COLOR.black),
+    },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
+            verticalAlign: VerticalAlign.BOTTOM,
+            margins: { top: 60, bottom: 140, left: 0, right: 120 },
+            width: { size: 6800, type: WidthType.DXA },
+            children: [leftTable],
+          }),
+          new TableCell({
+            borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
+            verticalAlign: VerticalAlign.BOTTOM,
+            margins: { top: 60, bottom: 140, left: 120, right: 0 },
+            width: { size: 2900, type: WidthType.DXA },
+            children: rightCellChildren,
+          }),
+        ],
+      }),
+    ],
+  });
+
+  const result: DocChild[] = [headerTable];
+
+  // 안내문 + 날짜 줄
+  if (instructions) {
+    result.push(
+      new Paragraph({
+        spacing: { before: 120, after: 160 },
+        children: [
+          new TextRun({
+            text: instructions,
+            font: KR_FONT,
+            size: SIZE_INSTRUCTIONS,
+            color: COLOR.gray,
+          }),
+        ],
+      }),
+    );
+  } else {
+    result.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
+  }
+
+  return result;
+}
+
+function buildInfoBlock(opts: {
+  studentNameLabel: string;
+  schoolName: string;
+  className: string;
+}): DocChild[] {
+  const { studentNameLabel, schoolName, className } = opts;
+
+  const rowsData: Array<{ label: string; value: string }> = [
+    { label: "학교", value: schoolName },
+    { label: "반", value: className },
+    { label: studentNameLabel || "이름", value: "" },
+  ];
+
+  const rows = rowsData.map(
+    (row) =>
+      new TableRow({
+        height: { value: 280, rule: HeightRule.ATLEAST },
+        children: [
+          new TableCell({
+            borders: {
+              top: NONE, left: NONE, right: NONE,
+              bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
+            },
+            width: { size: 30, type: WidthType.PERCENTAGE },
+            verticalAlign: VerticalAlign.BOTTOM,
+            margins: { top: 20, bottom: 40, left: 0, right: 80 },
+            children: [
+              new Paragraph({
+                spacing: { after: 0 },
+                children: [
+                  new TextRun({
+                    text: row.label,
+                    font: KR_FONT,
+                    size: SIZE_INFO,
+                    color: COLOR.darkGray,
+                  }),
+                ],
+              }),
+            ],
+          }),
+          new TableCell({
+            borders: {
+              top: NONE, left: NONE, right: NONE,
+              bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
+            },
+            width: { size: 70, type: WidthType.PERCENTAGE },
+            verticalAlign: VerticalAlign.BOTTOM,
+            margins: { top: 20, bottom: 40, left: 0, right: 0 },
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.RIGHT,
+                spacing: { after: 0 },
+                children: [
+                  new TextRun({
+                    text: row.value || " ",
+                    font: KR_FONT,
+                    size: SIZE_INFO,
+                    bold: Boolean(row.value),
+                    color: COLOR.black,
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      }),
+  );
+
+  return [
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      layout: TableLayoutType.FIXED,
+      borders: {
+        top: NONE, bottom: NONE, left: NONE, right: NONE,
+        insideHorizontal: NONE, insideVertical: NONE,
+      },
+      rows,
+    }),
+  ];
+}
+
+// =============================================================================
+// 지문
+// =============================================================================
+
+function buildPassage(opts: {
+  passageTitle: string;
+  passageContent: string;
+  passageStyle: "boxed" | "underlined" | "plain";
+  showPassageTitle: boolean;
+  compact: boolean;
+}): DocChild[] {
+  const { passageTitle, passageContent, passageStyle, showPassageTitle, compact } = opts;
+  if (!passageContent.trim()) return [];
+
+  const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+
+  const titlePara: Paragraph | null =
+    showPassageTitle && passageTitle.trim()
+      ? new Paragraph({
+          spacing: { after: 60 },
+          children: [
+            new TextRun({
+              text: passageTitle.toUpperCase(),
+              font: KR_FONT,
+              size: SIZE_PASSAGE_TITLE,
+              bold: true,
+              color: COLOR.darkGray,
+              characterSpacing: 20,
+            }),
+          ],
+        })
+      : null;
+
+  const lines = passageContent.split("\n");
+  const bodyParas = lines.map((line, idx) => {
+    const trimmed = line.trim();
+    return new Paragraph({
+      alignment: AlignmentType.JUSTIFIED,
+      spacing: {
+        after: idx < lines.length - 1 ? 40 : 0,
+        line: 300,
+      },
+      children:
+        trimmed.length === 0
+          ? [new TextRun({ text: " ", font: FONT, size: bodySize })]
+          : parseFormattedText(trimmed, { font: FONT, size: bodySize }),
+    });
+  });
+
+  const innerChildren: Paragraph[] = [];
+  if (titlePara) innerChildren.push(titlePara);
+  innerChildren.push(...bodyParas);
+
+  if (passageStyle === "boxed") {
+    return [
+      new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        layout: TableLayoutType.FIXED,
+        rows: [
+          new TableRow({
+            children: [
+              new TableCell({
+                borders: thinBox(COLOR.darkGray, 4),
+                margins: { top: 120, bottom: 120, left: 160, right: 160 },
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                children: innerChildren,
+              }),
+            ],
+          }),
+        ],
+      }),
+      new Paragraph({ spacing: { after: 120 } }),
+    ];
+  }
+
+  if (passageStyle === "underlined") {
+    return [
+      new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        layout: TableLayoutType.FIXED,
+        rows: [
+          new TableRow({
+            children: [
+              new TableCell({
+                borders: {
+                  top: bdr(BorderStyle.SINGLE, 6, COLOR.darkGray),
+                  bottom: bdr(BorderStyle.SINGLE, 6, COLOR.darkGray),
+                  left: NONE,
+                  right: NONE,
+                },
+                margins: { top: 100, bottom: 100, left: 0, right: 0 },
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                children: innerChildren,
+              }),
+            ],
+          }),
+        ],
+      }),
+      new Paragraph({ spacing: { after: 120 } }),
+    ];
+  }
+
+  // plain
+  return [...innerChildren, new Paragraph({ spacing: { after: 120 } })];
+}
+
+// =============================================================================
+// 문항 (번호 + 메타 + 본문 + 옵션 + 답란)
+// =============================================================================
+
+function buildQuestionBlock(
+  item: BuilderItemResolved,
+  layout: BuilderLayout,
+  includeAnswers: boolean,
+): DocChild[] {
+  const result: DocChild[] = [];
+  const compact = layout.density === "compact";
+  const showMeta = layout.showQuestionMeta !== false;
+  const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
+
+  const orderNum = item.orderNum ?? 0;
+  const points = item.points ?? 1;
+  const subType = item.sourceQuestion.subType || "";
+  const subTypeLabel = subType ? SUBTYPE_LABELS_DOCX[subType] || subType : "";
+  const questionText = (item.questionText ?? item.sourceQuestion.questionText ?? "").trim();
+  const options = (item.options ?? safeParseOptions(item.sourceQuestion.options)).filter(
+    (o) => o && (o.text || "").length >= 0,
+  );
+
+  const qNumSize = compact ? SIZE_QNUM_COMPACT : SIZE_QNUM;
+  const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+
+  // 번호 + 메타 + 본문 한 단락 (번호 굵게, 메타 작게, 본문은 새 줄에서 시작)
+  const headerRuns: TextRun[] = [
+    new TextRun({
+      text: `${orderNum}. `,
+      font: KR_FONT,
+      size: qNumSize,
+      bold: true,
+      color: COLOR.black,
+    }),
+  ];
+  if (showMeta) {
+    const metaText = subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`;
+    headerRuns.push(
+      new TextRun({
+        text: metaText,
+        font: KR_FONT,
+        size: SIZE_META,
+        color: COLOR.gray,
+      }),
+    );
+  }
+
+  // 첫 단락에 번호 + 메타. 그 다음 단락에 본문(있는 경우).
+  result.push(
+    new Paragraph({
+      spacing: { before: 80, after: questionText ? 40 : 80 },
+      children: headerRuns,
+      keepNext: true,
+    }),
+  );
+
+  if (questionText) {
+    const lines = questionText.split("\n");
+    lines.forEach((line, idx) => {
+      const trimmed = line.trim();
+      result.push(
+        new Paragraph({
+          spacing: { after: idx === lines.length - 1 ? 100 : 30, line: 290 },
+          keepNext: idx === lines.length - 1 && options.length > 0,
+          children:
+            trimmed.length === 0
+              ? [new TextRun({ text: " ", font: KR_FONT, size: bodySize })]
+              : parseFormattedText(trimmed, { font: KR_FONT, size: bodySize, bold: true }),
+        }),
+      );
+    });
+  }
+
+  // 옵션 (preview 와 동일하게 1. 2. 3. … 평문 번호)
+  if (options.length > 0) {
+    options.forEach((opt, idx) => {
+      const useKR = /[가-힣]/.test(opt.text);
+      result.push(
+        new Paragraph({
+          spacing: { after: 40, line: 280 },
+          indent: { left: 360, hanging: 280 },
+          children: [
+            new TextRun({
+              text: `${idx + 1}.`,
+              font: KR_FONT,
+              size: bodySize,
+              bold: true,
+              color: COLOR.darkGray,
+            }),
+            new TextRun({ text: "  ", font: KR_FONT, size: bodySize }),
+            ...parseFormattedText(opt.text || "", {
+              font: useKR ? KR_FONT : FONT,
+              size: bodySize,
+            }),
+          ],
+        }),
+      );
+    });
+    result.push(new Paragraph({ spacing: { after: 60 } }));
+  }
+
+  // 답란
+  if (
+    showAnswerSpace &&
+    options.length === 0 &&
+    (item.answerSpaceLines ?? 0) > 0
+  ) {
+    const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 0));
+    for (let i = 0; i < lines; i++) {
+      result.push(
+        new Paragraph({
+          spacing: { before: i === 0 ? 40 : 80, after: 80 },
+          border: {
+            bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
+            top: NONE,
+            left: NONE,
+            right: NONE,
+          },
+          children: [new TextRun({ text: " " })],
+        }),
+      );
+    }
+  }
+
+  // 정답 + 해설 (해설 포함 다운로드)
+  if (includeAnswers) {
+    result.push(
+      ...buildAnswerBlock({
+        correctAnswer:
+          item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+        explanation: item.sourceQuestion.explanation,
+        hasOptions: options.length > 0,
+      }),
+    );
+  }
+
+  return result;
+}
+
+// =============================================================================
+// 정답·해설 블록 (해설 포함 모드)
+// =============================================================================
+
+function buildAnswerBlock(opts: {
+  correctAnswer: string;
+  explanation: ExamQuestionData["question"]["explanation"];
+  hasOptions: boolean;
+}): DocChild[] {
+  const result: DocChild[] = [];
+  const { correctAnswer, explanation, hasOptions } = opts;
+
+  const answerText = (correctAnswer || "").trim();
+  const answerLabel = hasOptions ? "정답" : "정답:";
+
+  // 정답 배지 (얇은 검정 박스, 약간 연한 배경)
+  result.push(
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      layout: TableLayoutType.FIXED,
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({
+              borders: thinBox(COLOR.darkGray, 4),
+              shading: { fill: "F5F5F5" },
+              margins: { top: 80, bottom: 80, left: 160, right: 160 },
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              children: [
+                new Paragraph({
+                  spacing: { after: 0 },
+                  children: [
+                    new TextRun({
+                      text: `${answerLabel}  `,
+                      font: KR_FONT,
+                      size: SIZE_ANSWER_LABEL,
+                      bold: true,
+                      color: COLOR.darkGray,
+                    }),
+                    new TextRun({
+                      text: answerText || " ",
+                      font: FONT,
+                      size: SIZE_ANSWER_VALUE,
+                      bold: true,
+                      color: COLOR.black,
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+  );
+  result.push(new Paragraph({ spacing: { after: 80 } }));
+
+  if (!explanation) return result;
+
+  // 해설
+  const explanationContent = (explanation.content || "").trim();
+  if (explanationContent) {
+    result.push(
+      new Paragraph({
+        spacing: { before: 40, after: 40 },
+        indent: { left: 80 },
+        children: [
+          new TextRun({
+            text: "해설",
+            font: KR_FONT,
+            size: SIZE_EXPLAIN_LABEL,
+            bold: true,
+            color: COLOR.darkGray,
+          }),
+        ],
+      }),
+    );
+    for (const line of explanationContent.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      result.push(
+        new Paragraph({
+          spacing: { after: 40, line: 290 },
+          indent: { left: 200 },
+          children: parseFormattedText(trimmed, {
+            font: KR_FONT,
+            size: SIZE_EXPLAIN_BODY,
+            color: COLOR.darkGray,
+          }),
+        }),
+      );
+    }
+  }
+
+  // 핵심 포인트
+  const keyPoints = safeParseJSON<string[]>(explanation.keyPoints, []);
+  if (keyPoints.length > 0) {
+    result.push(
+      new Paragraph({
+        spacing: { before: 60, after: 40 },
+        indent: { left: 80 },
+        children: [
+          new TextRun({
+            text: "핵심 포인트",
+            font: KR_FONT,
+            size: SIZE_EXPLAIN_LABEL,
+            bold: true,
+            color: COLOR.darkGray,
+          }),
+        ],
+      }),
+    );
+    for (const kp of keyPoints) {
+      const trimmed = (kp || "").trim();
+      if (!trimmed) continue;
+      result.push(
+        new Paragraph({
+          spacing: { after: 40, line: 280 },
+          indent: { left: 280, hanging: 160 },
+          children: [
+            new TextRun({
+              text: "• ",
+              font: KR_FONT,
+              size: SIZE_EXPLAIN_BODY,
+              color: COLOR.gray,
+            }),
+            ...parseFormattedText(trimmed, {
+              font: KR_FONT,
+              size: SIZE_EXPLAIN_BODY,
+              color: COLOR.darkGray,
+            }),
+          ],
+        }),
+      );
+    }
+  }
+
+  // 오답 분석
+  const wrongExplanations = safeParseJSON<Record<string, string>>(
+    explanation.wrongOptionExplanations,
+    {},
+  );
+  const wrongEntries = Object.entries(wrongExplanations).filter(
+    ([, v]) => typeof v === "string" && v.trim().length > 0,
+  );
+  if (wrongEntries.length > 0 && hasOptions) {
+    result.push(
+      new Paragraph({
+        spacing: { before: 60, after: 40 },
+        indent: { left: 80 },
+        children: [
+          new TextRun({
+            text: "오답 분석",
+            font: KR_FONT,
+            size: SIZE_EXPLAIN_LABEL,
+            bold: true,
+            color: COLOR.darkGray,
+          }),
+        ],
+      }),
+    );
+    for (const [label, exp] of wrongEntries) {
+      result.push(
+        new Paragraph({
+          spacing: { after: 40, line: 280 },
+          indent: { left: 280, hanging: 200 },
+          children: [
+            new TextRun({
+              text: `${label} `,
+              font: KR_FONT,
+              size: SIZE_EXPLAIN_BODY,
+              bold: true,
+              color: COLOR.darkGray,
+            }),
+            ...parseFormattedText(exp.trim(), {
+              font: KR_FONT,
+              size: SIZE_EXPLAIN_BODY,
+              color: COLOR.gray,
+            }),
+          ],
+        }),
+      );
+    }
+  }
+
+  result.push(new Paragraph({ spacing: { after: 120 } }));
+  return result;
+}
+
+function safeParseOptions(raw: string | null | undefined): ParsedOption[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((o, idx) => ({
+      label: String(o?.label ?? idx + 1),
+      text: String(o?.text ?? ""),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// =============================================================================
+// 그룹화: groupId 가 같으면 지문을 한 번만 출력 (미리보기와 동일)
+// =============================================================================
+
+function groupItems(
+  items: BuilderItemResolved[],
+): Array<{ groupKey: string; items: BuilderItemResolved[] }> {
+  const groups: Array<{ groupKey: string; items: BuilderItemResolved[] }> = [];
+  for (const item of items) {
+    const key = item.groupId || `single:${item.questionId}-${item.orderNum}`;
+    const last = groups[groups.length - 1];
+    if (last && last.groupKey === key) {
+      last.items.push(item);
+    } else {
+      groups.push({ groupKey: key, items: [item] });
+    }
+  }
+  return groups;
+}
+
+// =============================================================================
+// 메인: Document 빌드
+// =============================================================================
+
+export function buildBuilderExamDocument(opts: {
+  title: string;
+  settings: BuilderSettings;
+  resolvedItems: BuilderItemResolved[];
+  includeAnswers: boolean;
+  fullExamQuestions: ExamQuestionData[];
+}): Document {
+  const { title, settings, resolvedItems, includeAnswers, fullExamQuestions } = opts;
+  const header = settings.header || {};
+  const layout = settings.layout || {};
+  const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
+  const compact = layout.density === "compact";
+  const passageStyle = layout.passageStyle ?? "boxed";
+  const showPassageTitle = layout.showPassageTitle !== false;
+
+  // 페이지 마진: compact 살짝 작게
+  const margin = compact
+    ? { top: 560, bottom: 720, left: 720, right: 720 }
+    : { top: 720, bottom: 840, left: 900, right: 900 };
+
+  // ---- Section 1: 1페이지 상단 헤더 (단일 컬럼, 연속 섹션) ----
+  const section1Children: DocChild[] = buildPage1Header(header, title, compact);
+
+  // ---- Section 2: 본문 (1단/2단) ----
+  const section2Children: DocChild[] = [];
+  const groups = groupItems(resolvedItems);
+  for (const group of groups) {
+    const first = group.items[0];
+    const includePassage = first.includePassage !== false;
+    const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
+    if (includePassage && passageContent) {
+      const passageBlocks = buildPassage({
+        passageTitle: first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+        passageContent,
+        passageStyle,
+        showPassageTitle,
+        compact,
+      });
+      section2Children.push(...passageBlocks);
+    }
+    for (const item of group.items) {
+      section2Children.push(...buildQuestionBlock(item, layout, includeAnswers));
+    }
+  }
+
+  // 정답표 (정답포함 모드가 아닐 때만 추가)
+  if (!includeAnswers && fullExamQuestions.length > 0) {
+    section2Children.push(...buildAnswerKeyTable(fullExamQuestions));
+  }
+
+  // ---- 헤더/푸터 정의 ----
+  // 1페이지에는 본문 상단의 리치 헤더만 보이도록, titlePage + headers.first 를 비워둠
+  const continuedHeader = new Header({
+    children: [
+      new Paragraph({
+        alignment: AlignmentType.RIGHT,
+        spacing: { after: 0 },
+        border: {
+          bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
+          top: NONE, left: NONE, right: NONE,
+        },
+        children: [
+          new TextRun({
+            text: title,
+            font: KR_FONT,
+            size: SIZE_CONTINUED,
+            color: COLOR.gray,
+          }),
+        ],
+      }),
+    ],
+  });
+  const emptyHeader = new Header({ children: [emptyParagraph()] });
+
+  const pageFooter = new Footer({
+    children: [
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        children: [
+          new TextRun({
+            text: "- ",
+            font: KR_FONT,
+            size: SIZE_FOOTER,
+            color: COLOR.gray,
+          }),
+          new TextRun({
+            children: [PageNumber.CURRENT],
+            font: FONT,
+            size: SIZE_FOOTER,
+            color: COLOR.gray,
+          }),
+          new TextRun({
+            text: " / ",
+            font: KR_FONT,
+            size: SIZE_FOOTER,
+            color: COLOR.gray,
+          }),
+          new TextRun({
+            children: [PageNumber.TOTAL_PAGES],
+            font: FONT,
+            size: SIZE_FOOTER,
+            color: COLOR.gray,
+          }),
+          new TextRun({
+            text: " -",
+            font: KR_FONT,
+            size: SIZE_FOOTER,
+            color: COLOR.gray,
+          }),
+        ],
+      }),
+    ],
+  });
+
+  return new Document({
+    creator: "nara",
+    styles: {
+      default: {
+        document: {
+          run: { font: KR_FONT },
+        },
+      },
+    },
+    sections: [
+      {
+        properties: {
+          type: SectionType.CONTINUOUS,
+          page: { size: { width: 11906, height: 16838 }, margin },
+          column: { count: 1 },
+          titlePage: true,
+        },
+        headers: { first: emptyHeader, default: continuedHeader },
+        footers: { first: pageFooter, default: pageFooter },
+        children: section1Children,
+      },
+      {
+        properties: {
+          type: SectionType.CONTINUOUS,
+          page: { size: { width: 11906, height: 16838 }, margin },
+          column: {
+            count: columns,
+            space: columns === 2 ? 540 : 0,
+          },
+          titlePage: true,
+        },
+        headers: { first: emptyHeader, default: continuedHeader },
+        footers: { first: pageFooter, default: pageFooter },
+        children: section2Children,
+      },
+    ],
+  });
+}

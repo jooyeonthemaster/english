@@ -211,8 +211,8 @@ export function QuestionBurstScene() {
             </span>
             를 기반으로 문제를 생성합니다.
           </h2>
-          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl">
-            흔한 자동 생성기와 다릅니다. 선생님이 설계한 의도와 영신ai가
+          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl break-keep">
+            흔한 자동 생성기와 다릅니다. 선생님이 설계한 의도와 SMOAT가
             딥다이브한 분석 결과를 바탕으로, 실제 내신과 수능에 직결되는
             고퀄리티 문항을 단 1초 만에{" "}
             <strong className="text-gray-900 font-bold">19개 전 유형</strong>

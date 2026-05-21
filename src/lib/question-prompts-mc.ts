@@ -31,12 +31,13 @@ export const MC_PROMPTS: Record<string, string> = {
 ## 출력 필드
 - markedExpressions: 5개 배열. 각 항목:
   - label: "(A)"~"(E)"
-  - expression: 원문에 있는 정확한 표현
+  - expression: 원문에 있는 올바른 표현. 서버가 원문에서 위치를 찾을 때 쓰므로 원문과 한 글자도 다르면 안 됩니다.
   - surroundingText: 해당 표현 주변 40~60자 (위치 식별용)
   - isError: true/false
-  - errorExpression: isError가 true인 경우, 어법상 틀린 형태 (예: "have" → "has")
-  - correction: isError가 true인 경우, 올바른 표현 (= expression과 동일)
-- options: label "(A)"~"(E)", text는 해당 표현
+  - errorExpression: isError가 true인 경우, 지문과 선지에 표시할 어법상 틀린 형태. isError가 false이면 expression과 동일하게 둡니다.
+  - correction: isError가 true인 경우, 학생 해설에 표시할 올바른 표현. 반드시 expression과 동일해야 합니다.
+- options: label "(A)"~"(E)", text는 학생에게 보이는 밑줄 표현입니다. 오류 선지는 반드시 errorExpression을 넣고, 나머지는 expression을 넣으세요.
+- correctAnswer: 반드시 틀린 표현의 label만 쓰세요. correction이나 표현 텍스트를 쓰지 마세요.
 - ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?"`,
 

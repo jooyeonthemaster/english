@@ -39,18 +39,21 @@ export function StructuredQuestionRenderer({
   question,
   index,
   hideHeader = false,
+  sourcePassageContent,
 }: {
   question: any;
   index: number;
   /** QuestionCard 내부에서 호출될 때 true — 외부 카드가 이미 헤더를 표시하므로 중복 방지 */
   hideHeader?: boolean;
+  sourcePassageContent?: string;
 }) {
-  const typeId = question._typeId as string | undefined;
-  const typeLabel = question._typeLabel as string | undefined;
+  const questionForRender = enrichQuestionForDisplay(question, sourcePassageContent);
+  const typeId = questionForRender._typeId as string | undefined;
+  const typeLabel = questionForRender._typeLabel as string | undefined;
   const meta = typeId ? QUESTION_TYPE_META[typeId] : undefined;
 
   // Determine if this is a structured question by checking for type-specific fields
-  const isStructured = typeId && hasStructuredFields(typeId, question);
+  const isStructured = typeId && hasStructuredFields(typeId, questionForRender);
 
   return (
     <div className={hideHeader ? "space-y-3" : "p-4 rounded-lg border border-slate-200 bg-white space-y-3"}>
@@ -79,12 +82,12 @@ export function StructuredQuestionRenderer({
             {typeLabel || meta?.label || typeId || ""}
           </span>
           <span className="text-[10px] font-medium text-slate-400">
-            {question.difficulty || "INTERMEDIATE"}
+            {questionForRender.difficulty || "INTERMEDIATE"}
           </span>
         </div>
-        {question.tags && question.tags.length > 0 && (
+        {questionForRender.tags && questionForRender.tags.length > 0 && (
           <div className="flex gap-1">
-            {question.tags.slice(0, 3).map((tag: string, ti: number) => (
+            {questionForRender.tags.slice(0, 3).map((tag: string, ti: number) => (
               <span
                 key={ti}
                 className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500 font-medium"
@@ -99,12 +102,183 @@ export function StructuredQuestionRenderer({
 
       {/* Type-specific content */}
       {isStructured ? (
-        renderTypedQuestion(typeId!, question)
+        renderTypedQuestion(typeId!, questionForRender)
       ) : (
-        <FallbackRenderer question={question} />
+        <FallbackRenderer question={questionForRender} />
       )}
     </div>
   );
+}
+
+function enrichQuestionForDisplay(question: any, sourcePassageContent?: string): any {
+  const questionWithAlignedExplanations =
+    alignWrongOptionExplanationsForDisplay(question);
+
+  if (
+    questionWithAlignedExplanations?._typeId !== "FILL_BLANK_KEY" ||
+    questionWithAlignedExplanations.passageWithBlank ||
+    !sourcePassageContent
+  ) {
+    return questionWithAlignedExplanations;
+  }
+
+  const answer =
+    typeof questionWithAlignedExplanations.answer === "string"
+      ? questionWithAlignedExplanations.answer
+      : typeof questionWithAlignedExplanations.correctAnswer === "string"
+        ? questionWithAlignedExplanations.correctAnswer
+        : "";
+  const passageWithBlank = buildPassageWithBlankForDisplay(
+    sourcePassageContent,
+    answer,
+    typeof questionWithAlignedExplanations.sentenceWithBlank === "string"
+      ? questionWithAlignedExplanations.sentenceWithBlank
+      : undefined,
+  );
+
+  return passageWithBlank
+    ? { ...questionWithAlignedExplanations, passageWithBlank }
+    : questionWithAlignedExplanations;
+}
+
+const DISPLAY_KOREAN_OPTION_TYPES = new Set([
+  "REFERENCE",
+  "TOPIC_MAIN_IDEA",
+  "CONTENT_MATCH",
+]);
+
+function alignWrongOptionExplanationsForDisplay(question: any): any {
+  if (!DISPLAY_KOREAN_OPTION_TYPES.has(question?._typeId)) return question;
+  if (
+    !question.wrongOptionExplanations ||
+    typeof question.wrongOptionExplanations !== "object" ||
+    Array.isArray(question.wrongOptionExplanations) ||
+    !Array.isArray(question.options)
+  ) {
+    return question;
+  }
+
+  const optionByLabel = new Map<string, string>();
+  for (const option of question.options) {
+    if (!option || typeof option !== "object") continue;
+    const record = option as Record<string, unknown>;
+    const label = normalizeDisplayLabel(record.label);
+    const text = normalizeDisplayText(record.text);
+    if (label && text) optionByLabel.set(label, text);
+  }
+
+  const correctLabel = normalizeDisplayLabel(question.correctAnswer);
+  const aligned: Record<string, string> = {};
+  let changed = false;
+
+  for (const [rawLabel, rawExplanation] of Object.entries(
+    question.wrongOptionExplanations as Record<string, unknown>,
+  )) {
+    const explanation = normalizeDisplayText(rawExplanation);
+    const optionText = optionByLabel.get(normalizeDisplayLabel(rawLabel));
+    if (
+      !optionText ||
+      !explanation ||
+      normalizeDisplayLabel(rawLabel) === correctLabel ||
+      explanation.includes(optionText)
+    ) {
+      aligned[rawLabel] = explanation;
+      continue;
+    }
+
+    aligned[rawLabel] = `'${optionText}' 선택지는 ${explanation}`;
+    changed = true;
+  }
+
+  return changed ? { ...question, wrongOptionExplanations: aligned } : question;
+}
+
+function normalizeDisplayLabel(value: unknown): string {
+  const text = normalizeDisplayText(value);
+  const circledMap: Record<string, string> = {
+    "\u2460": "1",
+    "\u2461": "2",
+    "\u2462": "3",
+    "\u2463": "4",
+    "\u2464": "5",
+  };
+  return (circledMap[text] ?? text)
+    .replace(/^[\(\[]?([A-Ea-e1-5])[\)\].]?\s*$/, "$1")
+    .toLowerCase();
+}
+
+function normalizeDisplayText(value: unknown): string {
+  return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
+function buildPassageWithBlankForDisplay(
+  passage: string,
+  answer: string,
+  sentenceWithBlank?: string,
+): string | null {
+  const trimmedAnswer = answer.trim();
+  if (!passage || !trimmedAnswer) return null;
+
+  const filledSentence = sentenceWithBlank
+    ?.replace(/_{3,}/g, trimmedAnswer)
+    .replace(/\s+/g, " ")
+    .trim();
+  if (filledSentence) {
+    const normalizedPassage = passage.replace(/\s+/g, " ");
+    const sentenceIndex = normalizedPassage.indexOf(filledSentence);
+    if (sentenceIndex !== -1) {
+      const answerIndexInSentence = filledSentence.indexOf(trimmedAnswer);
+      if (answerIndexInSentence !== -1) {
+        const originalIndex = mapNormalizedIndexToOriginal(
+          passage,
+          sentenceIndex + answerIndexInSentence,
+        );
+        if (originalIndex !== null) {
+          return replaceDisplaySlice(
+            passage,
+            originalIndex,
+            trimmedAnswer.length,
+            "_____",
+          );
+        }
+      }
+    }
+  }
+
+  const directIndex = passage.indexOf(trimmedAnswer);
+  if (directIndex === -1) return null;
+  return replaceDisplaySlice(passage, directIndex, trimmedAnswer.length, "_____");
+}
+
+function mapNormalizedIndexToOriginal(
+  original: string,
+  normalizedIndex: number,
+): number | null {
+  let normalizedPosition = 0;
+  for (let originalIndex = 0; originalIndex < original.length; originalIndex++) {
+    if (normalizedPosition === normalizedIndex) return originalIndex;
+    if (/\s/.test(original[originalIndex])) {
+      while (
+        originalIndex + 1 < original.length &&
+        /\s/.test(original[originalIndex + 1])
+      ) {
+        originalIndex++;
+      }
+      normalizedPosition++;
+    } else {
+      normalizedPosition++;
+    }
+  }
+  return normalizedPosition === normalizedIndex ? original.length : null;
+}
+
+function replaceDisplaySlice(
+  text: string,
+  start: number,
+  length: number,
+  replacement: string,
+): string {
+  return text.slice(0, start) + replacement + text.slice(start + length);
 }
 
 /** Check if a question has the expected structured fields for its type */

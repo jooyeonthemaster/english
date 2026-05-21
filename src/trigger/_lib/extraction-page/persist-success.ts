@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import type { StructuredOcrResponse } from "@/lib/extraction/ocr";
+import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { prisma } from "@/lib/prisma";
 import { buildExtractionItemRows } from "./build-item-rows";
 
@@ -35,7 +36,7 @@ export async function persistPageSuccess(params: {
       data: {
         status: "SUCCESS",
         extractedText,
-        modelUsed: "gemini-3-flash-preview",
+        modelUsed: getExtractionAiModelName("ocr"),
         inputTokens: inputTokens ?? null,
         outputTokens: outputTokens ?? null,
         latencyMs,

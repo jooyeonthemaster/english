@@ -5,6 +5,7 @@ import {
   PREVIEW_PAGE_WIDTH,
   TWO_COLUMN_GAP,
 } from "./constants";
+import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type {
   OptionItem,
   PaginationSettings,
@@ -14,6 +15,9 @@ import type {
   RenderFragment,
   RenderItemPart,
 } from "./types";
+
+const LINE_WIDTH_FUDGE = 0.9;
+const CAPACITY_FUDGE = 0.82;
 
 export function isWideGlyph(char: string): boolean {
   const code = char.charCodeAt(0);
@@ -35,15 +39,80 @@ export function glyphUnits(char: string): number {
   return 0.72;
 }
 
-export function estimateTextLines(text: string, columnWidth: number, fontSize: number): number {
-  const maxUnitsPerLine = Math.max(12, columnWidth / fontSize);
-  const lines = text.replace(/\r/g, "").split("\n");
+function maxUnitsPerLine(columnWidth: number, fontSize: number): number {
+  return Math.max(10, (columnWidth / fontSize) * LINE_WIDTH_FUDGE);
+}
 
-  return lines.reduce((total, line) => {
-    if (!line.trim()) return total + 1;
-    const units = Array.from(line).reduce((sum, char) => sum + glyphUnits(char), 0);
-    return total + Math.max(1, Math.ceil(units / maxUnitsPerLine));
-  }, 0);
+function wrapParagraph(paragraph: string, maxUnits: number): string[] {
+  const lines: string[] = [];
+  let currentLine = "";
+  let currentUnits = 0;
+  let i = 0;
+
+  while (i < paragraph.length) {
+    let nextSpace = paragraph.indexOf(" ", i);
+    if (nextSpace === -1) nextSpace = paragraph.length;
+    const word = paragraph.slice(i, nextSpace);
+    const wordUnits = Array.from(word).reduce((sum, ch) => sum + glyphUnits(ch), 0);
+    const spaceFollows = nextSpace < paragraph.length;
+    const spaceUnits = spaceFollows ? glyphUnits(" ") : 0;
+
+    if (wordUnits > maxUnits && !currentLine) {
+      let chunk = "";
+      let chunkUnits = 0;
+      for (const ch of word) {
+        const unit = glyphUnits(ch);
+        if (chunkUnits + unit > maxUnits && chunk) {
+          lines.push(chunk);
+          chunk = ch;
+          chunkUnits = unit;
+        } else {
+          chunk += ch;
+          chunkUnits += unit;
+        }
+      }
+      currentLine = chunk;
+      currentUnits = chunkUnits;
+    } else if (currentUnits + wordUnits > maxUnits && currentLine) {
+      lines.push(currentLine.trimEnd());
+      currentLine = word;
+      currentUnits = wordUnits;
+    } else {
+      currentLine += word;
+      currentUnits += wordUnits;
+    }
+
+    if (spaceFollows && currentUnits + spaceUnits <= maxUnits) {
+      currentLine += " ";
+      currentUnits += spaceUnits;
+    }
+
+    i = nextSpace + 1;
+  }
+
+  if (currentLine.trim()) lines.push(currentLine.trimEnd());
+  else if (currentLine === "") lines.push("");
+  return lines;
+}
+
+function textToLines(text: string, columnWidth: number, fontSize: number): string[] {
+  if (!text.trim()) return [];
+  const maxUnits = maxUnitsPerLine(columnWidth, fontSize);
+  const lines: string[] = [];
+
+  for (const paragraph of text.replace(/\r/g, "").split("\n")) {
+    if (!paragraph.trim()) {
+      lines.push("");
+      continue;
+    }
+    lines.push(...wrapParagraph(paragraph.trim(), maxUnits));
+  }
+
+  return lines;
+}
+
+export function estimateTextLines(text: string, columnWidth: number, fontSize: number): number {
+  return Math.max(1, textToLines(text, columnWidth, fontSize).length);
 }
 
 export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
@@ -65,33 +134,24 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
 
   return {
     columnWidth,
-    capacity: Math.max(520, contentHeight * 0.9),
+    capacity: Math.max(420, contentHeight * CAPACITY_FUDGE),
   };
-}
-
-export function estimatePassageHeight(group: PaperGroup, settings: PaginationSettings): number {
-  if (!group.includePassage || !group.passageContent) return 0;
-
-  const compact = settings.density === "compact";
-  const { columnWidth } = pageMetrics(settings, 0);
-  const fontSize = compact ? 10.5 : 11.5;
-  const lineHeight = fontSize * (compact ? 1.46 : 1.58);
-  const lines = estimateTextLines(group.passageContent, columnWidth, fontSize);
-  const title = settings.showPassageTitle && group.passageTitle ? 15 : 0;
-  const chrome =
-    settings.passageStyle === "boxed"
-      ? 24
-      : settings.passageStyle === "underlined"
-        ? 18
-        : 8;
-
-  return title + chrome + lines * lineHeight;
 }
 
 export function passageLineHeight(settings: PaginationSettings): number {
   const compact = settings.density === "compact";
   const fontSize = compact ? 10.5 : 11.5;
   return fontSize * (compact ? 1.46 : 1.58);
+}
+
+export function questionLineHeight(settings: PaginationSettings): number {
+  const compact = settings.density === "compact";
+  const fontSize = compact ? 10.5 : 11.5;
+  return fontSize * (compact ? 1.46 : 1.58);
+}
+
+export function questionMetaHeight(settings: PaginationSettings): number {
+  return settings.showQuestionMeta ? 18 : 16;
 }
 
 export function passageChromeHeight(group: PaperGroup, settings: PaginationSettings, includeTitle: boolean): number {
@@ -106,78 +166,27 @@ export function passageToLines(content: string, settings: PaginationSettings): s
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
   const fontSize = compact ? 10.5 : 11.5;
-  const maxUnitsPerLine = Math.max(12, columnWidth / fontSize);
-  const lines: string[] = [];
-
-  for (const paragraph of content.replace(/\r/g, "").split("\n")) {
-    if (!paragraph.trim()) {
-      lines.push("");
-      continue;
-    }
-
-    let currentLine = "";
-    let currentUnits = 0;
-    let i = 0;
-
-    while (i < paragraph.length) {
-      let nextSpace = paragraph.indexOf(" ", i);
-      if (nextSpace === -1) nextSpace = paragraph.length;
-      const word = paragraph.slice(i, nextSpace);
-      const wordUnits = Array.from(word).reduce((sum, ch) => sum + glyphUnits(ch), 0);
-      const spaceFollows = nextSpace < paragraph.length;
-      const spaceUnits = spaceFollows ? glyphUnits(" ") : 0;
-
-      if (wordUnits > maxUnitsPerLine && !currentLine) {
-        // word longer than a line — break by chars
-        let chunk = "";
-        let chunkUnits = 0;
-        for (const ch of word) {
-          const u = glyphUnits(ch);
-          if (chunkUnits + u > maxUnitsPerLine && chunk) {
-            lines.push(chunk);
-            chunk = ch;
-            chunkUnits = u;
-          } else {
-            chunk += ch;
-            chunkUnits += u;
-          }
-        }
-        currentLine = chunk;
-        currentUnits = chunkUnits;
-      } else if (currentUnits + wordUnits > maxUnitsPerLine && currentLine) {
-        lines.push(currentLine.trimEnd());
-        currentLine = word;
-        currentUnits = wordUnits;
-      } else {
-        currentLine += word;
-        currentUnits += wordUnits;
-      }
-
-      if (spaceFollows) {
-        if (currentUnits + spaceUnits <= maxUnitsPerLine) {
-          currentLine += " ";
-          currentUnits += spaceUnits;
-        }
-      }
-
-      i = nextSpace + 1;
-    }
-
-    if (currentLine.trim()) lines.push(currentLine.trimEnd());
-    else if (currentLine === "") lines.push("");
-  }
-
-  return lines;
+  return textToLines(normalizePassageText(content), columnWidth, fontSize);
 }
 
-export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
+export function questionToLines(content: string, settings: PaginationSettings): string[] {
+  if (!content) return [];
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
   const fontSize = compact ? 10.5 : 11.5;
-  const lineHeight = fontSize * (compact ? 1.46 : 1.58);
-  const questionLines = estimateTextLines(item.questionText, columnWidth, fontSize);
-  const metaHeight = settings.showQuestionMeta ? 18 : 16;
-  return metaHeight + questionLines * lineHeight + 6;
+  return textToLines(normalizeQuestionText(content), columnWidth, fontSize);
+}
+
+export function estimatePassageHeight(group: PaperGroup, settings: PaginationSettings): number {
+  if (!group.includePassage || !group.passageContent) return 0;
+  const lines = passageToLines(group.passageContent, settings);
+  const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
+  return passageChromeHeight(group, settings, includeTitle) + lines.length * passageLineHeight(settings);
+}
+
+export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
+  const lines = questionToLines(item.questionText, settings);
+  return questionMetaHeight(settings) + lines.length * questionLineHeight(settings) + 6;
 }
 
 export function estimateOptionBlockHeight(option: OptionItem, settings: PaginationSettings): number {
@@ -198,7 +207,15 @@ export function estimateTeacherNoteHeight(item: PaperItem, settings: PaginationS
 type FlowBlock =
   | { kind: "passage-atom"; group: PaperGroup; allLines: string[]; height: number }
   | { kind: "passage-line"; group: PaperGroup; line: string; lineIndex: number; totalLines: number; height: number }
-  | { kind: "header"; group: PaperGroup; item: PaperItem; height: number }
+  | {
+      kind: "question-meta";
+      group: PaperGroup;
+      item: PaperItem;
+      firstLine: string | null;
+      totalLines: number;
+      height: number;
+    }
+  | { kind: "question-line"; group: PaperGroup; item: PaperItem; line: string; lineIndex: number; totalLines: number; height: number }
   | { kind: "option"; group: PaperGroup; item: PaperItem; option: OptionItem; index: number; height: number }
   | { kind: "answer"; group: PaperGroup; item: PaperItem; height: number }
   | { kind: "note"; group: PaperGroup; item: PaperItem; height: number };
@@ -207,6 +224,12 @@ export type PaginationResult = {
   pages: PaperPage[];
   overflowItems: Set<string>;
 };
+
+function itemForBlock(block: FlowBlock): PaperItem | undefined {
+  return block.kind === "passage-line" || block.kind === "passage-atom"
+    ? undefined
+    : block.item;
+}
 
 export function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): PaginationResult {
   const pages: PaperPage[] = [];
@@ -273,6 +296,9 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       partKey: `${item.localId}@p${pageIndex}c${columnIndex}f${fragment.id}n${fragment.parts.length}`,
       showHeader: isFreshStart,
       showAnswer: false,
+      questionRenderedLines: [],
+      questionStartLineIndex: 0,
+      questionTotalLines: 0,
       options: [],
       isStart: isFreshStart,
       isContinuation: !isFreshStart,
@@ -286,7 +312,6 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     const col = currentPage[columnIndex];
     const lastFrag = col[col.length - 1];
     const sameFragment = !!lastFrag && lastFrag.groupSourceId === block.group.id;
-
     let cost = block.height;
 
     if (!sameFragment) {
@@ -299,42 +324,35 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         const includeTitle = !passageTitleShownFor.has(block.group.id);
         cost += passageChromeHeight(block.group, settings, includeTitle);
       }
-    } else if (block.kind === "passage-atom") {
-      // height already includes chrome
-    } else {
-      const item = block.item;
-      const lastPart = sameFragment ? lastFrag!.parts[lastFrag!.parts.length - 1] : undefined;
-      const samePart = !!lastPart && lastPart.source.localId === item.localId;
-      if (!samePart) {
-        const hasPassageOrParts =
-          sameFragment &&
-          (lastFrag!.parts.length > 0 || lastFrag!.passageRenderedLines.length > 0);
-        if (hasPassageOrParts) cost += ITEM_GAP;
-      }
+      return cost;
     }
 
+    if (block.kind === "passage-atom") return cost;
+
+    const item = block.item;
+    const lastPart = sameFragment ? lastFrag!.parts[lastFrag!.parts.length - 1] : undefined;
+    const samePart = !!lastPart && lastPart.source.localId === item.localId;
+    if (!samePart) {
+      const hasPassageOrParts =
+        sameFragment &&
+        (lastFrag!.parts.length > 0 || lastFrag!.passageRenderedLines.length > 0);
+      if (hasPassageOrParts) cost += ITEM_GAP;
+    }
     return cost;
   }
 
-  // Build flow blocks
   const blocks: FlowBlock[] = [];
   for (const group of groups) {
     if (group.includePassage && group.passageContent) {
       const lines = passageToLines(group.passageContent, settings);
-      // Default: passage flows naturally line-by-line so it fills empty column space.
-      // When keepTogether is true (currently keepWithPrev=true), treat passage as atomic
-      // so the whole question moves cleanly to the next column / page.
       const keepTogether = Boolean(group.items[0]?.keepWithPrev);
       if (keepTogether) {
-        const lineH = passageLineHeight(settings);
         const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
-        const chrome = passageChromeHeight(group, settings, includeTitle);
-        const atomHeight = chrome + lines.length * lineH;
         blocks.push({
           kind: "passage-atom",
           group,
           allLines: lines,
-          height: atomHeight,
+          height: passageChromeHeight(group, settings, includeTitle) + lines.length * passageLineHeight(settings),
         });
       } else {
         const lineH = passageLineHeight(settings);
@@ -350,8 +368,30 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         });
       }
     }
+
     for (const item of group.items) {
-      blocks.push({ kind: "header", group, item, height: estimateHeaderBlockHeight(item, settings) });
+      const questionLines = questionToLines(item.questionText, settings);
+      const lineH = questionLineHeight(settings);
+      blocks.push({
+        kind: "question-meta",
+        group,
+        item,
+        firstLine: questionLines[0] ?? null,
+        totalLines: questionLines.length,
+        height: questionMetaHeight(settings) + (questionLines.length > 0 ? lineH : 0),
+      });
+      questionLines.slice(1).forEach((line, offset) => {
+        const index = offset + 1;
+        blocks.push({
+          kind: "question-line",
+          group,
+          item,
+          line,
+          lineIndex: index,
+          totalLines: questionLines.length,
+          height: lineH,
+        });
+      });
       item.options.forEach((option, index) => {
         blocks.push({ kind: "option", group, item, option, index, height: estimateOptionBlockHeight(option, settings) });
       });
@@ -368,16 +408,14 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
 
   for (const block of blocks) {
     const group = block.group;
-    const item = block.kind === "passage-line" || block.kind === "passage-atom" ? undefined : block.item;
-    const isHeaderBlock = block.kind === "header";
-
+    const item = itemForBlock(block);
+    const isQuestionStartBlock = block.kind === "question-meta";
     const itemRequestsKeepStay = !!item && !isFirstBlockOverall && Boolean(item.keepWithPrev);
-    const headerForceStay = isHeaderBlock && itemRequestsKeepStay;
+    const headerForceStay = isQuestionStartBlock && itemRequestsKeepStay;
 
-    // breakBefore on header block
-    if (isHeaderBlock && item && !isFirstBlockOverall && !itemRequestsKeepStay) {
+    if (isQuestionStartBlock && item && !isFirstBlockOverall && !itemRequestsKeepStay) {
       if (item.breakBefore === "page") {
-        if (currentPage.some((c) => c.length > 0)) pushCurrentPage();
+        if (currentPage.some((column) => column.length > 0)) pushCurrentPage();
       } else if (item.breakBefore === "column") {
         if (columnHeights[columnIndex] > 0) advanceColumn();
       }
@@ -413,26 +451,39 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       }
       fragment.passageRenderedLines.push(block.line);
       columnHeights[columnIndex] += block.height;
-    } else if (block.kind === "header") {
-      const part = ensurePart(fragment, item!);
-      if (!headerRenderedFor.has(item!.localId)) {
-        headerRenderedFor.add(item!.localId);
+    } else if (block.kind === "question-meta") {
+      const part = ensurePart(fragment, block.item);
+      if (!headerRenderedFor.has(block.item.localId)) {
+        headerRenderedFor.add(block.item.localId);
+        part.showHeader = true;
+        if (block.firstLine !== null) {
+          part.questionRenderedLines.push(block.firstLine);
+          part.questionStartLineIndex = 0;
+          part.questionTotalLines = block.totalLines;
+        }
         columnHeights[columnIndex] += block.height;
         if (headerForceStay && columnHeights[columnIndex] > currentCapacity()) {
-          overflowItems.add(item!.localId);
+          overflowItems.add(block.item.localId);
         }
       }
-      void part;
+    } else if (block.kind === "question-line") {
+      const part = ensurePart(fragment, block.item);
+      if (part.questionRenderedLines.length === 0) {
+        part.questionStartLineIndex = block.lineIndex;
+        part.questionTotalLines = block.totalLines;
+      }
+      part.questionRenderedLines.push(block.line);
+      columnHeights[columnIndex] += block.height;
     } else if (block.kind === "option") {
-      const part = ensurePart(fragment, item!);
+      const part = ensurePart(fragment, block.item);
       part.options.push({ option: block.option, originalIndex: block.index });
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "answer") {
-      const part = ensurePart(fragment, item!);
+      const part = ensurePart(fragment, block.item);
       part.showAnswer = true;
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "note") {
-      ensurePart(fragment, item!);
+      ensurePart(fragment, block.item);
       columnHeights[columnIndex] += block.height;
     }
 

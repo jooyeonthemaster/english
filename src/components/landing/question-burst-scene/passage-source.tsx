@@ -23,7 +23,7 @@ export function PassageSource({
   );
 
   return (
-    <div className="px-7 lg:px-10 pt-5 pb-4 bg-gradient-to-b from-[#F8FAFC] to-white border-b border-blue-50 relative">
+    <div className="px-4 sm:px-7 lg:px-10 pt-4 sm:pt-5 pb-4 bg-gradient-to-b from-[#F8FAFC] to-white border-b border-blue-50 relative">
       <div className="flex items-center gap-3 mb-2.5">
         <span className="text-[10px] uppercase tracking-[0.2em] font-extrabold text-blue-500">
           분석된 원문

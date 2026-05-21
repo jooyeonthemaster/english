@@ -4,6 +4,12 @@
 // read from here to stay consistent.
 // ============================================================================
 
+import {
+  EXTRACTION_ORCHESTRATOR_QUEUE_CONCURRENCY,
+  EXTRACTION_PAGE_MAX_ATTEMPTS,
+  EXTRACTION_PAGE_QUEUE_CONCURRENCY,
+} from "@/lib/concurrency-config";
+import type { ExtractionMode } from "./modes";
 /** Hard upper bound per job. More pages in a single file break attention
  *  budgets on both the UI grid and Gemini verbatim fidelity. */
 export const MAX_PAGES_PER_JOB = 30;
@@ -27,18 +33,19 @@ export const ACCEPTED_IMAGE_MIMES = [
 ] as const;
 
 /** Gemini concurrency ceiling (global, shared across all jobs).
- *  Gemini 3 Flash Tier 1: 60 RPM. 8 동시 × ~10s/page ≈ 48 calls/min — 안전 마진.
+ *  Gemini Flash Tier 1: 60 RPM. 8 동시 × ~10s/page ≈ 48 calls/min — 안전 마진.
  *  8페이지 같은 작은 시험지는 두 wave (5+3) → 한 wave 로 줄어 시간 거의 절반. */
-export const GEMINI_CONCURRENCY_LIMIT = 8;
+export const GEMINI_CONCURRENCY_LIMIT = EXTRACTION_PAGE_QUEUE_CONCURRENCY;
 
 /** Per-academy concurrent orchestrator jobs (rate limit). */
-export const ORCHESTRATOR_CONCURRENCY_LIMIT = 3;
+export const ORCHESTRATOR_CONCURRENCY_LIMIT =
+  EXTRACTION_ORCHESTRATOR_QUEUE_CONCURRENCY;
 
 /** Lease duration for a worker claiming a page (prevents stuck workers). */
 export const PAGE_LEASE_DURATION_MS = 5 * 60 * 1000; // 5min
 
 /** Retries for transient Gemini errors. */
-export const MAX_PAGE_ATTEMPTS = 3;
+export const MAX_PAGE_ATTEMPTS = EXTRACTION_PAGE_MAX_ATTEMPTS;
 
 /** PDF render scale for pdfjs-dist client-side. 2.0 ≈ ~200 DPI, Gemini-safe. */
 export const PDF_RENDER_SCALE = 2.0;
@@ -70,8 +77,6 @@ export const MIN_COMMIT_PASSAGE_LENGTH = 40;
 // ============================================================================
 // Mode-specific constants (M1 ~ M4)
 // ============================================================================
-
-import type { ExtractionMode } from "./modes";
 
 /** "신규" 배지가 추출 결과에 붙어 있는 기간 (주 단위). */
 export const MODE_BADGE_DURATION_WEEKS = 4;

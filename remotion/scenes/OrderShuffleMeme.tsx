@@ -27,7 +27,7 @@ export const ORDER_MEME_H = 1920;
 //  5 QUESTION CARD     180     6.0s
 //  6 "하루면 됩니다"   120     4.0s
 //  7 EXTREME MONTAGE   270     9.0s   (6 types × 45f)
-//  8 APPEAL "영신 AI"  210     7.0s
+//  8 APPEAL "SMOAT"  210     7.0s
 //  9 OUTRO             120     4.0s
 const BEATS = [90, 150, 120, 180, 180, 120, 270, 210, 120];
 export const ORDER_MEME_TOTAL = BEATS.reduce((a, b) => a + b, 0); // 1440 = 48s
@@ -232,7 +232,7 @@ const HookBeat: React.FC = () => {
       {flash && <AbsoluteFill style={{ background: '#FF1F6B', opacity: 0.85 }} />}
 
       <Ticker text="11조각 ◆ 어법오류개수 ◆ 영영풀이 ◆ 재진술 ◆ 한단어요약" y={140} speed={6} bg="#FFF200" rotate={-6} />
-      <Ticker text="내신 ◆ 1등급 ◆ 영신 AI ◆ 24시간 납품" y={1720} speed={5} bg="#22D3EE" color="#0B0F1F" rotate={4} />
+      <Ticker text="내신 ◆ 1등급 ◆ SMOAT ◆ 24시간 납품" y={1720} speed={5} bg="#22D3EE" color="#0B0F1F" rotate={4} />
 
       <AbsoluteFill
         style={{
@@ -292,7 +292,7 @@ const HookBeat: React.FC = () => {
             boxShadow: '0 0 60px #22D3EE',
           }}
         >
-          영신 AI가 끝장냅니다
+          SMOAT가 끝장냅니다
         </div>
       </AbsoluteFill>
     </AbsoluteFill>
@@ -1619,7 +1619,7 @@ const ExtremeMontage: React.FC = () => (
 );
 
 // ────────────────────────────────────────────────────────────────────────────
-// BEAT 8 — APPEAL  ("묻지 마시고… 영신 AI")
+// BEAT 8 — APPEAL  ("묻지 마시고… SMOAT")
 // ────────────────────────────────────────────────────────────────────────────
 const AppealBeat: React.FC = () => {
   const frame = useCurrentFrame();
@@ -1776,7 +1776,7 @@ const AppealBeat: React.FC = () => {
         </div>
       </div>
 
-      {/* 8) 영신 AI BIG NAME */}
+      {/* 8) SMOAT BIG NAME */}
       <div
         style={{
           position: 'absolute',
@@ -1812,7 +1812,7 @@ const AppealBeat: React.FC = () => {
             그것이 바로
           </div>
           <Stroked
-            text="영신 AI"
+            text="SMOAT"
             size={210}
             color="#000"
             stroke="#FFF"
@@ -1913,7 +1913,7 @@ const OutroBeat: React.FC = () => {
             marginTop: 16,
           }}
         >
-          영신 AI
+          SMOAT
         </div>
 
         <div

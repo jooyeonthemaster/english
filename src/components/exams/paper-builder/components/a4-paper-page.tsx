@@ -1,5 +1,4 @@
 import * as React from "react";
-import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 
 import { SUBTYPE_LABELS } from "../constants";
@@ -65,6 +64,7 @@ export interface A4PaperPageProps {
   schoolName: string;
   className: string;
   examDate: string;
+  readOnly?: boolean;
 }
 
 export function A4PaperPage({
@@ -103,6 +103,7 @@ export function A4PaperPage({
   schoolName,
   className,
   examDate,
+  readOnly = false,
 }: A4PaperPageProps) {
   const compact = density === "compact";
   const visual = TEMPLATE_VISUALS[template];
@@ -143,6 +144,7 @@ export function A4PaperPage({
             className={className}
             examDate={examDate}
             onHeaderChange={onHeaderChange}
+            readOnly={readOnly}
           />
         )}
 
@@ -153,6 +155,7 @@ export function A4PaperPage({
             title={title}
             template={template}
             onHeaderChange={onHeaderChange}
+            readOnly={readOnly}
           />
         )}
 
@@ -169,7 +172,7 @@ export function A4PaperPage({
           {pageColumns.map((columnFragments, columnIndex) => (
             <div key={columnIndex} className="min-h-0 space-y-4">
               {columnFragments.map((fragment) => (
-                <div key={fragment.id} className="break-inside-avoid">
+                <div key={fragment.id} className="min-w-0">
                   {fragment.includePassage &&
                     fragment.passageRenderedLines.length > 0 &&
                     (() => {
@@ -186,7 +189,7 @@ export function A4PaperPage({
                       return (
                         <div
                           className={cn(
-                            "mb-3 break-inside-avoid",
+                            "mb-3",
                             passageStyle === "boxed" &&
                               "rounded border px-3 py-2",
                             passageStyle === "underlined" &&
@@ -212,6 +215,7 @@ export function A4PaperPage({
                                       { passageTitle: next },
                                     )
                                   }
+                                  readOnly={readOnly}
                                 >
                                   {fragment.passageTitle}
                                 </EditableText>
@@ -229,7 +233,7 @@ export function A4PaperPage({
                           )}
                           <p
                             className={cn(
-                              "whitespace-pre-line text-justify",
+                              "whitespace-pre-line text-left",
                               visual.questionClass,
                             )}
                           >
@@ -246,6 +250,7 @@ export function A4PaperPage({
                                   })
                                 }
                                 className="block"
+                                readOnly={readOnly}
                               >
                                 {renderFormattedInline(renderedText)}
                               </EditableText>
@@ -272,11 +277,15 @@ export function A4PaperPage({
                         <div
                           key={part.partKey}
                           data-paper-item-id={item.localId}
-                          onClick={() => setActiveItemId(item.localId)}
-                          onMouseDownCapture={() =>
-                            setActiveItemId(item.localId)
-                          }
-                          onFocusCapture={() => setActiveItemId(item.localId)}
+                          onClick={() => {
+                            if (!readOnly) setActiveItemId(item.localId);
+                          }}
+                          onMouseDownCapture={() => {
+                            if (!readOnly) setActiveItemId(item.localId);
+                          }}
+                          onFocusCapture={() => {
+                            if (!readOnly) setActiveItemId(item.localId);
+                          }}
                           style={{
                             breakBefore:
                               part.isStart && item.breakBefore === "page"
@@ -289,17 +298,21 @@ export function A4PaperPage({
                               : undefined,
                           }}
                           className={cn(
-                            "group/paper-item relative break-inside-avoid rounded-md transition-colors",
+                            "group/paper-item relative rounded-md transition-colors",
+                            item.keepWithPrev && "break-inside-avoid",
                             visual.itemClass,
-                            activeItemId === item.localId &&
+                            !readOnly &&
+                              activeItemId === item.localId &&
                               "bg-blue-50/80 ring-2 ring-blue-300",
-                            draggingItemId &&
+                            !readOnly &&
+                              draggingItemId &&
                               draggingItemId !== item.localId &&
                               "hover:ring-2 hover:ring-blue-300 hover:ring-offset-2",
-                            dragOverItemId === item.localId &&
+                            !readOnly &&
+                              dragOverItemId === item.localId &&
                               "ring-2 ring-blue-300 ring-offset-2",
-                            draggingItemId === item.localId && "opacity-55",
-                            activeItemId === item.localId
+                            !readOnly && draggingItemId === item.localId && "opacity-55",
+                            !readOnly && activeItemId === item.localId
                               ? "px-2 py-1.5"
                               : "py-0.5",
                           )}
@@ -315,7 +328,7 @@ export function A4PaperPage({
                                 )}
                               />
                             )}
-                          {part.isStart && (
+                          {part.isStart && !readOnly && (
                             <PaperItemActions
                               item={item}
                               isActive={activeItemId === item.localId}
@@ -354,27 +367,10 @@ export function A4PaperPage({
                                   </span>
                                 )}
                               </div>
-                              <p
-                                className={cn(
-                                  "whitespace-pre-line font-semibold",
-                                  visual.questionClass,
-                                )}
-                              >
-                                <EditableText
-                                  value={item.questionText}
-                                  onCommit={(next) =>
-                                    onUpdateItem(item.localId, {
-                                      questionText: next,
-                                    })
-                                  }
-                                  className="block"
-                                >
-                                  {renderFormattedInline(item.questionText)}
-                                </EditableText>
-                              </p>
                             </>
                           )}
-                          {part.isContinuation && part.options.length > 0 && (
+                          {part.isContinuation &&
+                            (part.questionRenderedLines.length > 0 || part.options.length > 0) && (
                             <p
                               className={cn(
                                 "no-print mb-1 text-[9px] font-semibold italic",
@@ -384,6 +380,44 @@ export function A4PaperPage({
                               ({item.orderNum}번 계속)
                             </p>
                           )}
+                          {part.questionRenderedLines.length > 0 &&
+                            (() => {
+                              const renderedQuestionText = part.questionRenderedLines.join("\n");
+                              const questionStartsAtBeginning = part.questionStartLineIndex === 0;
+                              const questionEndsHere =
+                                part.questionStartLineIndex + part.questionRenderedLines.length >=
+                                part.questionTotalLines;
+                              const questionIsWhole =
+                                questionStartsAtBeginning && questionEndsHere;
+
+                              return (
+                                <p
+                                  className={cn(
+                                    "whitespace-pre-line font-semibold",
+                                    visual.questionClass,
+                                  )}
+                                >
+                                  {questionIsWhole ? (
+                                    <EditableText
+                                      value={item.questionText}
+                                      onCommit={(next) =>
+                                        onUpdateItem(item.localId, {
+                                          questionText: next,
+                                        })
+                                      }
+                                      className="block"
+                                      readOnly={readOnly}
+                                    >
+                                      {renderFormattedInline(renderedQuestionText)}
+                                    </EditableText>
+                                  ) : (
+                                    <span className="block">
+                                      {renderFormattedInline(renderedQuestionText)}
+                                    </span>
+                                  )}
+                                </p>
+                              );
+                            })()}
                           {part.options.length > 0 && (
                             <div
                               className={cn(
@@ -421,6 +455,7 @@ export function A4PaperPage({
                                       });
                                     }}
                                     className="flex-1"
+                                    readOnly={readOnly}
                                   >
                                     {renderFormattedInline(option.text)}
                                   </EditableText>

@@ -67,7 +67,22 @@ export async function getExam(examId: string) {
         include: {
           question: {
             include: {
+              passage: {
+                select: {
+                  id: true,
+                  title: true,
+                  content: true,
+                  grade: true,
+                  semester: true,
+                  publisher: true,
+                  school: { select: { id: true, name: true } },
+                },
+              },
               explanation: true,
+              collectionItems: {
+                select: { collectionId: true },
+              },
+              _count: { select: { examLinks: true } },
             },
           },
         },

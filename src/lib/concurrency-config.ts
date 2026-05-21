@@ -1,0 +1,104 @@
+function readPositiveIntegerEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw.trim() === "") return fallback;
+
+  const value = Number(raw);
+  if (!Number.isFinite(value)) return fallback;
+
+  const integer = Math.floor(value);
+  return integer > 0 ? integer : fallback;
+}
+
+function capConcurrency(perAcademy: number, queueBudget: number): number {
+  return Math.max(1, Math.min(perAcademy, queueBudget));
+}
+
+export const WORKBENCH_QUESTION_GENERATION_QUEUE_NAME =
+  process.env.TRIGGER_WORKBENCH_QUESTION_QUEUE_NAME || "wb-question-generation";
+export const WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME =
+  process.env.TRIGGER_WORKBENCH_ANALYSIS_QUEUE_NAME || "wb-passage-analysis";
+export const EXTRACTION_PAGE_QUEUE_NAME =
+  process.env.TRIGGER_EXTRACTION_PAGE_QUEUE_NAME || "extraction-page";
+export const EXTRACTION_ORCHESTRATOR_QUEUE_NAME =
+  process.env.TRIGGER_EXTRACTION_ORCHESTRATOR_QUEUE_NAME ||
+  "extraction-orchestrator";
+export const EXTRACTION_FINALIZE_QUEUE_NAME =
+  process.env.TRIGGER_EXTRACTION_FINALIZE_QUEUE_NAME || "extraction-finalize";
+
+export const WORKBENCH_QUESTION_GENERATION_CONCURRENCY =
+  readPositiveIntegerEnv("TRIGGER_WORKBENCH_QUESTION_CONCURRENCY", 4);
+export const WORKBENCH_QUESTION_GENERATION_PER_ACADEMY_CONCURRENCY =
+  readPositiveIntegerEnv("TRIGGER_WORKBENCH_QUESTION_PER_ACADEMY", 4);
+export const WORKBENCH_QUESTION_GENERATION_QUEUE_CONCURRENCY = capConcurrency(
+  WORKBENCH_QUESTION_GENERATION_PER_ACADEMY_CONCURRENCY,
+  WORKBENCH_QUESTION_GENERATION_CONCURRENCY,
+);
+
+export const WORKBENCH_PASSAGE_ANALYSIS_CONCURRENCY = readPositiveIntegerEnv(
+  "TRIGGER_WORKBENCH_ANALYSIS_CONCURRENCY",
+  2,
+);
+export const WORKBENCH_PASSAGE_ANALYSIS_PER_ACADEMY_CONCURRENCY =
+  readPositiveIntegerEnv("TRIGGER_WORKBENCH_ANALYSIS_PER_ACADEMY", 2);
+export const WORKBENCH_PASSAGE_ANALYSIS_QUEUE_CONCURRENCY = capConcurrency(
+  WORKBENCH_PASSAGE_ANALYSIS_PER_ACADEMY_CONCURRENCY,
+  WORKBENCH_PASSAGE_ANALYSIS_CONCURRENCY,
+);
+
+export const EXTRACTION_PAGE_CONCURRENCY = readPositiveIntegerEnv(
+  "TRIGGER_EXTRACTION_PAGE_CONCURRENCY",
+  2,
+);
+export const EXTRACTION_PAGE_PER_ACADEMY_CONCURRENCY = readPositiveIntegerEnv(
+  "TRIGGER_EXTRACTION_PAGE_PER_ACADEMY",
+  2,
+);
+export const EXTRACTION_PAGE_QUEUE_CONCURRENCY = capConcurrency(
+  EXTRACTION_PAGE_PER_ACADEMY_CONCURRENCY,
+  EXTRACTION_PAGE_CONCURRENCY,
+);
+
+export const EXTRACTION_ORCHESTRATOR_CONCURRENCY = readPositiveIntegerEnv(
+  "TRIGGER_EXTRACTION_ORCHESTRATOR_CONCURRENCY",
+  1,
+);
+export const EXTRACTION_ORCHESTRATOR_PER_ACADEMY_CONCURRENCY =
+  readPositiveIntegerEnv("TRIGGER_EXTRACTION_ORCHESTRATOR_PER_ACADEMY", 1);
+export const EXTRACTION_ORCHESTRATOR_QUEUE_CONCURRENCY = capConcurrency(
+  EXTRACTION_ORCHESTRATOR_PER_ACADEMY_CONCURRENCY,
+  EXTRACTION_ORCHESTRATOR_CONCURRENCY,
+);
+
+export const EXTRACTION_FINALIZE_CONCURRENCY = readPositiveIntegerEnv(
+  "TRIGGER_EXTRACTION_FINALIZE_CONCURRENCY",
+  1,
+);
+export const EXTRACTION_FINALIZE_PER_ACADEMY_CONCURRENCY =
+  readPositiveIntegerEnv("TRIGGER_EXTRACTION_FINALIZE_PER_ACADEMY", 1);
+export const EXTRACTION_FINALIZE_QUEUE_CONCURRENCY = capConcurrency(
+  EXTRACTION_FINALIZE_PER_ACADEMY_CONCURRENCY,
+  EXTRACTION_FINALIZE_CONCURRENCY,
+);
+
+export const WORKBENCH_QUESTION_TRIGGER_MAX_ATTEMPTS =
+  readPositiveIntegerEnv("TRIGGER_WORKBENCH_QUESTION_MAX_ATTEMPTS", 2);
+export const WORKBENCH_PASSAGE_ANALYSIS_TRIGGER_MAX_ATTEMPTS =
+  readPositiveIntegerEnv("TRIGGER_WORKBENCH_ANALYSIS_MAX_ATTEMPTS", 2);
+export const EXTRACTION_PAGE_MAX_ATTEMPTS = readPositiveIntegerEnv(
+  "TRIGGER_EXTRACTION_PAGE_MAX_ATTEMPTS",
+  3,
+);
+export const EXTRACTION_FINALIZE_MAX_ATTEMPTS = readPositiveIntegerEnv(
+  "TRIGGER_EXTRACTION_FINALIZE_MAX_ATTEMPTS",
+  2,
+);
+export const GEMINI_QUESTION_MAX_RETRIES = readPositiveIntegerEnv(
+  "GEMINI_QUESTION_MAX_RETRIES",
+  2,
+);
+export const GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS =
+  readPositiveIntegerEnv("GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS", 2);
+
+export function academyConcurrencyKey(academyId: string): string {
+  return `academy:${academyId}`;
+}

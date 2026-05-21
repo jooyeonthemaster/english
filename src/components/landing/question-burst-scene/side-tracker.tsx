@@ -22,7 +22,7 @@ export function SideTracker({
   onReset: () => void;
 }) {
   return (
-    <aside className="bg-white rounded-2xl border border-gray-200 p-5 flex flex-col shadow-[0_15px_40px_-15px_rgba(0,0,0,0.05)] h-[680px]">
+    <aside className="bg-white rounded-2xl border border-gray-200 p-5 flex flex-col shadow-[0_15px_40px_-15px_rgba(0,0,0,0.05)] h-[360px] lg:h-[680px]">
       <div className="flex items-center justify-between mb-3 px-2">
         <div className="text-[11px] uppercase tracking-[0.18em] font-extrabold text-gray-500">
           실시간 생성 트래커

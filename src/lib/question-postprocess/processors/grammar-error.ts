@@ -34,10 +34,23 @@ export function processGrammarError(
     return { success: false, data: ai, warnings, error: "Missing markedExpressions field" };
   }
 
-  const canonicalMarkedExpressions = markedExpressions.map((me, index) => ({
-    ...me,
-    label: canonicalGrammarLabel(me.label, index),
-  }));
+  const canonicalMarkedExpressions = markedExpressions.map((me, index) => {
+    const expression = normalizeString(me.expression);
+    const errorExpression = normalizeString(me.errorExpression);
+    const correction =
+      normalizeString(me.correction) ||
+      (me.isError && errorExpression && expression && errorExpression !== expression
+        ? expression
+        : "");
+
+    return {
+      ...me,
+      label: canonicalGrammarLabel(me.label, index),
+      expression,
+      errorExpression: errorExpression || undefined,
+      correction: correction || undefined,
+    };
+  });
   const labelByKey = buildLabelMap(canonicalMarkedExpressions);
   const rawCorrectLabel = canonicalGrammarLabel(ai.correctAnswer);
   const errorLabels = canonicalMarkedExpressions
@@ -63,26 +76,21 @@ export function processGrammarError(
   const replacements: Replacement[] = [];
 
   for (const me of canonicalMarkedExpressions) {
-    const found = findExpressionInPassage(passage, me.expression, me.surroundingText);
+    const sourceExpression = getSourceExpression(me);
+    let found = findExpressionInPassage(passage, sourceExpression, me.surroundingText);
+
+    if (!found && me.isError && me.correction && me.correction !== sourceExpression) {
+      found = findExpressionInPassage(passage, me.correction, me.surroundingText);
+    }
+
     if (!found) {
-      warnings.push(`Expression not found for label ${me.label}: "${me.expression}"`);
+      warnings.push(`Expression not found for label ${me.label}: "${sourceExpression}"`);
       continue;
     }
 
-    let newText: string;
-    if (me.isError && me.errorExpression) {
-      // Replace with error expression wrapped in marker
-      const sanitized = sanitizeExpressionForMarker(me.errorExpression);
-      newText = `__${me.label} ${sanitized}__`;
-    } else if (me.isError) {
-      // isError but no separate errorExpression — use the expression itself
-      const sanitized = sanitizeExpressionForMarker(me.expression);
-      newText = `__${me.label} ${sanitized}__`;
-    } else {
-      // Correct expression — just wrap
-      const sanitized = sanitizeExpressionForMarker(me.expression);
-      newText = `__${me.label} ${sanitized}__`;
-    }
+    const displayedExpression = getMarkedSurfaceExpression(me) || sourceExpression;
+    const sanitized = sanitizeExpressionForMarker(displayedExpression);
+    const newText = `__${me.label} ${sanitized}__`;
 
     replacements.push({
       position: found.index,
@@ -122,21 +130,34 @@ function canonicalizeOptions(
 ): GrammarOption[] {
   const options = Array.isArray(value) ? value.filter(isGrammarOptionLike) : [];
 
-  return options.map((option, index) => {
-    const label = canonicalGrammarLabel(option.label, index);
-    const matchingMarkedExpression =
-      markedExpressions.find((me) => me.label === label) ?? markedExpressions[index];
-    const fallbackText =
-      matchingMarkedExpression?.isError && matchingMarkedExpression.errorExpression
-        ? matchingMarkedExpression.errorExpression
-        : matchingMarkedExpression?.expression;
+  return markedExpressions.map((markedExpression, index) => {
+    const label = canonicalGrammarLabel(markedExpression.label, index);
+    const matchingOption =
+      options.find((option) => normalizeGrammarKey(option.label) === normalizeGrammarKey(label)) ??
+      options[index];
+    const displayedExpression = getMarkedSurfaceExpression(markedExpression);
 
     return {
-      ...option,
+      ...matchingOption,
       label,
-      text: normalizeString(option.text) || normalizeString(fallbackText),
+      text: displayedExpression || normalizeString(matchingOption?.text) || label,
     };
   });
+}
+
+function getMarkedSurfaceExpression(markedExpression: GrammarMarkedExpression): string {
+  if (markedExpression.isError) {
+    return normalizeString(markedExpression.errorExpression) || normalizeString(markedExpression.expression);
+  }
+  return normalizeString(markedExpression.expression);
+}
+
+function getSourceExpression(markedExpression: GrammarMarkedExpression): string {
+  return (
+    normalizeString(markedExpression.expression) ||
+    normalizeString(markedExpression.correction) ||
+    normalizeString(markedExpression.errorExpression)
+  );
 }
 
 function canonicalizeWrongOptionExplanations(

@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import {
   QUESTION_GENERATION_PLANS,
@@ -213,25 +214,26 @@ export function QuestionListView({
           </button>
         ))}
         {/* 승인 필터 */}
-        {Object.entries(QUESTION_GENERATION_PLANS).map(([planId, plan]) => (
-          <button
-            key={planId}
-            onClick={() =>
-              onUpdateParam(
-                "generationPlan",
-                filters.generationPlan === planId ? "" : planId
-              )
-            }
-            className={cn(
-              "text-[11px] px-2.5 py-1 rounded-lg border font-medium transition-all",
-              filters.generationPlan === planId
-                ? "bg-blue-50 border-blue-300 text-blue-700"
-                : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
-            )}
-          >
-            {plan.shortLabel}
-          </button>
-        ))}
+        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR &&
+          Object.entries(QUESTION_GENERATION_PLANS).map(([planId, plan]) => (
+            <button
+              key={planId}
+              onClick={() =>
+                onUpdateParam(
+                  "generationPlan",
+                  filters.generationPlan === planId ? "" : planId
+                )
+              }
+              className={cn(
+                "text-[11px] px-2.5 py-1 rounded-lg border font-medium transition-all",
+                filters.generationPlan === planId
+                  ? "bg-blue-50 border-blue-300 text-blue-700"
+                  : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+              )}
+            >
+              {plan.shortLabel}
+            </button>
+          ))}
         <button
           onClick={() =>
             onUpdateParam(
@@ -469,7 +471,7 @@ function QuestionCard({
           <span className="text-[10px] px-1.5 py-0.5 rounded-lg bg-slate-100 text-slate-500 font-medium">
             {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
           </span>
-          {plan && (
+          {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && plan && (
             <span className="text-[10px] px-1.5 py-0.5 rounded-lg bg-blue-50 text-blue-600 font-semibold">
               {QUESTION_GENERATION_PLANS[plan].shortLabel}
             </span>

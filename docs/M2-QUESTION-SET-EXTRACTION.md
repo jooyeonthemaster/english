@@ -40,7 +40,7 @@ Upload
 
 Current model:
 
-- `gemini-3-flash-preview`
+- `gemini-3.5-flash`
 - used through Gemini REST in Trigger.dev for extraction
 - temperature `0`
 - page-level retry and concurrency are already handled by Trigger.dev tasks
@@ -102,7 +102,7 @@ The system should not silently save a problem-mutated passage as a clean study p
 
 ### Model Policy
 
-Use `gemini-3-flash-preview` for all extraction stages initially.
+Use `gemini-3.5-flash` for all extraction stages initially.
 
 However, implementation should allow later model separation by stage:
 

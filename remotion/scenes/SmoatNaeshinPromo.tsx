@@ -32,12 +32,12 @@ const FONT =
   '"Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 const MONO = 'ui-monospace, "SF Mono", Consolas, "Courier New", monospace';
 
-export const YOUNGSHIN_PROMO_FPS = 30;
-export const YOUNGSHIN_PROMO_W = 1080;
-export const YOUNGSHIN_PROMO_H = 1920;
+export const SMOAT_PROMO_FPS = 30;
+export const SMOAT_PROMO_W = 1080;
+export const SMOAT_PROMO_H = 1920;
 
 const BEATS = [150, 210, 210, 165, 330, 210];
-export const YOUNGSHIN_PROMO_TOTAL = BEATS.reduce((sum, beat) => sum + beat, 0);
+export const SMOAT_PROMO_TOTAL = BEATS.reduce((sum, beat) => sum + beat, 0);
 
 const C = {
   bg: '#f8fafc',
@@ -127,7 +127,7 @@ const useSpringIn = (delay = 0, damping = 13) => {
 
 const AppShell: React.FC<{ children: React.ReactNode; label?: string }> = ({
   children,
-  label = '영신 AI',
+  label = 'SMOAT',
 }) => {
   const frame = useCurrentFrame();
   const drift = (frame * 0.35) % 34;
@@ -194,7 +194,7 @@ const TopBar: React.FC<{ label: string }> = ({ label }) => (
       YS
     </div>
     <div style={{ flex: 1 }}>
-      <div style={{ fontSize: 23, fontWeight: 950, color: C.text }}>영신 AI</div>
+      <div style={{ fontSize: 23, fontWeight: 950, color: C.text }}>SMOAT</div>
       <div style={{ fontSize: 14, fontWeight: 750, color: C.sub }}>영어 내신 자료 제작 전문 솔루션</div>
     </div>
     <div
@@ -598,7 +598,7 @@ const ExamPreviewScene: React.FC = () => {
         >
           <div>
             <div style={{ fontSize: 13, fontWeight: 950, letterSpacing: 4, color: C.blue }}>
-              YOUNGSHIN AI
+              SMOAT
             </div>
             <div style={{ marginTop: 9, fontSize: 36, fontWeight: 950, color: C.text }}>
               고2 영어 내신 킬러 테스트
@@ -804,7 +804,7 @@ const FeatureScene: React.FC = () => {
         {group.map(([title, desc, color, Icon], index) => {
           const s = spring({
             frame: local - index * 12,
-            fps: YOUNGSHIN_PROMO_FPS,
+            fps: SMOAT_PROMO_FPS,
             config: { damping: 11, stiffness: 190 },
           });
           const TypedIcon = Icon as typeof FileText;
@@ -880,14 +880,14 @@ const FinalScene: React.FC = () => {
   const cards = progress(frame, 74, 122);
 
   return (
-    <AppShell label="영신 AI">
+    <AppShell label="SMOAT">
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', padding: 54 }}>
         <div style={{ textAlign: 'center', transform: `translateY(-52px) scale(${0.78 + logo * 0.22})`, opacity: logo }}>
           <div style={{ fontSize: 30, fontWeight: 950, color: C.sub, marginBottom: 18 }}>
             당신만을 위한 내신 대비 AI 프로그램
           </div>
           <div style={{ fontSize: 132, lineHeight: 1, fontWeight: 950, color: C.blue, letterSpacing: -3 }}>
-            영신 AI
+            SMOAT
           </div>
           <div style={{ marginTop: 28, fontSize: 52, lineHeight: 1.2, fontWeight: 950, color: C.text, wordBreak: 'keep-all' }}>
             극악 문제 유형도
@@ -989,7 +989,7 @@ const ProgressRail: React.FC = () => {
   );
 };
 
-const YoungshinNaeshinPromo: React.FC = () => (
+const SmoatNaeshinPromo: React.FC = () => (
   <AbsoluteFill style={{ background: C.bg }}>
     <Series>
       <Series.Sequence durationInFrames={BEATS[0]}>
@@ -1014,4 +1014,4 @@ const YoungshinNaeshinPromo: React.FC = () => (
   </AbsoluteFill>
 );
 
-export default YoungshinNaeshinPromo;
+export default SmoatNaeshinPromo;

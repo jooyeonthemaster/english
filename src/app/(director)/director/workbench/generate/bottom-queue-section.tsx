@@ -11,9 +11,12 @@ import {
   Sparkles,
 } from "lucide-react";
 import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
-import { type QueueItem, buildQuestionText } from "./generate-page-types";
+import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
+import { type QueueItem, buildQuestionText, countWords } from "./generate-page-types";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationPlanFromTags,
+  getQuestionGenerationPlanConfig,
   mergeQuestionGenerationPlanTag,
   QUESTION_GENERATION_PLAN_TAGS,
   type QuestionGenerationPlan,
@@ -78,6 +81,23 @@ function withVisiblePlanTag(q: QuestionCardItem): QuestionCardItem {
   };
 }
 
+function withSessionPlanTag(
+  q: QuestionCardItem,
+  fallbackPlan?: QuestionGenerationPlan,
+): QuestionCardItem {
+  const plan = getQuestionPlan(q) ?? fallbackPlan ?? "STANDARD";
+  const structuredData =
+    q.structuredData && typeof q.structuredData === "object"
+      ? { ...(q.structuredData as Record<string, unknown>), _generationPlan: plan }
+      : q.structuredData;
+
+  return {
+    ...q,
+    tags: JSON.stringify(mergeQuestionGenerationPlanTag(parseQuestionTags(q.tags), plan)),
+    structuredData,
+  };
+}
+
 // ─── Component ───────────────────────────────────────
 
 export function BottomQueueSection({
@@ -129,29 +149,40 @@ export function BottomQueueSection({
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 items-start">
               {filteredQueue.map((item) => {
+                const planConfig = getQuestionGenerationPlanConfig(item.config.generationPlan || "STANDARD");
+
                 // Generating: show loading card
                 if (item.status === "generating") {
-                  const progressDone = Object.values(item.progress).filter(v => v === "done").length;
-                  const progressTotal = Math.max(1, Object.keys(item.progress).length);
+                  const requestedCount = item.config.mode === "auto"
+                    ? autoCount
+                    : Object.values(item.config.typeCounts).reduce((a, b) => a + b, 0);
                   return (
-                    <div key={item.id} className="relative rounded-xl border border-blue-300 bg-white p-4 overflow-hidden">
-                      <div className="absolute -inset-px rounded-xl border-2 border-blue-400/40 animate-pulse pointer-events-none" />
-                      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-blue-100">
-                        <div className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-700"
-                          style={{ width: `${Math.max(8, (progressDone / progressTotal) * 100)}%` }} />
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Loader2 className="w-5 h-5 animate-spin text-blue-500 shrink-0" />
-                        <div>
-                          <h4 className="text-[13px] font-bold text-slate-800 truncate">{item.passageTitle}</h4>
-                          <span className="text-[11px] text-blue-500 font-medium">
-                            {item.config.mode === "auto" ? `${autoCount}문제 생성 중...` : `${Object.values(item.config.typeCounts).reduce((a, b) => a + b, 0)}문제 생성 중...`}
+                    <WorkbenchLoadingCard
+                      key={item.id}
+                      title={item.passageTitle}
+                      contentPreview={`${item.passageContent.slice(0, 200)}...`}
+                      statusLabel="생성 중"
+                      progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
+                      wordCount={countWords(item.passageContent)}
+                      showCheckbox={false}
+                      statusIcon={Loader2}
+                      variant="analyzing"
+                      ariaLabel={`${item.passageTitle} - 문제 생성 중`}
+                      planBadge={
+                        FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+                          <span className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
+                            planConfig.id === "PREMIUM"
+                              ? "border-violet-200 bg-violet-50 text-violet-700"
+                              : "border-sky-200 bg-sky-50 text-sky-700"
+                          }`}>
+                            {planConfig.id === "PREMIUM" ? <Gem className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+                            {planConfig.shortLabel}
                           </span>
-                        </div>
-                      </div>
-                    </div>
+                        ) : null
+                      }
+                    />
                   );
                 }
 
@@ -162,7 +193,19 @@ export function BottomQueueSection({
                       <div className="flex items-center gap-3">
                         <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
                         <div>
-                          <h4 className="text-[13px] font-bold text-slate-800 truncate">{item.passageTitle}</h4>
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <h4 className="text-[13px] font-bold text-slate-800 truncate">{item.passageTitle}</h4>
+                            {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+                              <span className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
+                                planConfig.id === "PREMIUM"
+                                  ? "border-violet-200 bg-violet-50 text-violet-700"
+                                  : "border-sky-200 bg-sky-50 text-sky-700"
+                              }`}>
+                                {planConfig.id === "PREMIUM" ? <Gem className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+                                {planConfig.shortLabel}
+                              </span>
+                            )}
+                          </div>
                           <span className="text-[11px] text-red-500 font-medium">생성 실패</span>
                         </div>
                       </div>
@@ -173,7 +216,7 @@ export function BottomQueueSection({
                 // Done/reviewed: show each question as QuestionCard
                 return item.questions.map((q: any, qi: number) => {
                   // Convert session question to QuestionCardItem format
-                  const cardItem: QuestionCardItem = {
+                  const cardItem: QuestionCardItem = withSessionPlanTag({
                     id: `${item.id}-${qi}`,
                     type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
                     subType: q._typeId || q.subType || null,
@@ -193,7 +236,7 @@ export function BottomQueueSection({
                       wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
                     } : null,
                     structuredData: q,
-                  };
+                  }, item.config.generationPlan);
                   return (
                     <div key={`${item.id}-${qi}`} onClick={(e) => {
                       const target = e.target as HTMLElement;
@@ -216,28 +259,30 @@ export function BottomQueueSection({
               저장된 문제 {savedQuestions.length > 0 && <span className="text-slate-400 font-normal ml-1">{visibleSavedQuestions.length}/{savedQuestions.length}개</span>}
             </h3>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex max-w-full items-center gap-1 overflow-x-auto p-0.5 rounded-lg bg-white border border-slate-200">
-                {([
-                  { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },
-                  { id: "STANDARD", label: QUESTION_GENERATION_PLAN_TAGS.STANDARD, count: savedPlanCounts.STANDARD, Icon: Sparkles },
-                  { id: "PREMIUM", label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM, count: savedPlanCounts.PREMIUM, Icon: Gem },
-                ] as const).map(({ id, label, count, Icon }) => (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setSavedPlanFilter(id)}
-                    className={`h-7 px-2.5 rounded-md inline-flex items-center gap-1.5 text-[11px] font-semibold transition-all ${
-                      savedPlanFilter === id
-                        ? "bg-blue-50 text-blue-700 shadow-sm"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-                    }`}
-                  >
-                    <Icon className="w-3 h-3" />
-                    <span>{label}</span>
-                    <span className={savedPlanFilter === id ? "text-blue-500" : "text-slate-400"}>{count}</span>
-                  </button>
-                ))}
-              </div>
+              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+                <div className="flex max-w-full items-center gap-1 overflow-x-auto p-0.5 rounded-lg bg-white border border-slate-200">
+                  {([
+                    { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },
+                    { id: "STANDARD", label: QUESTION_GENERATION_PLAN_TAGS.STANDARD, count: savedPlanCounts.STANDARD, Icon: Sparkles },
+                    { id: "PREMIUM", label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM, count: savedPlanCounts.PREMIUM, Icon: Gem },
+                  ] as const).map(({ id, label, count, Icon }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setSavedPlanFilter(id)}
+                      className={`h-7 px-2.5 rounded-md inline-flex items-center gap-1.5 text-[11px] font-semibold transition-all ${
+                        savedPlanFilter === id
+                          ? "bg-blue-50 text-blue-700 shadow-sm"
+                          : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                      }`}
+                    >
+                      <Icon className="w-3 h-3" />
+                      <span>{label}</span>
+                      <span className={savedPlanFilter === id ? "text-blue-500" : "text-slate-400"}>{count}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
               {savedQuestions.length > 0 && (
                 <Link href="/director/questions" className="text-[12px] text-blue-600 hover:text-blue-700 font-medium">
                   문제은행 전체 보기 →

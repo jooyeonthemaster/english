@@ -97,6 +97,8 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       answerSpaceLines: item.answerSpaceLines,
       sectionTitle: item.sectionTitle,
       teacherNote: item.teacherNote,
+      breakBefore: item.breakBefore,
+      keepWithPrev: item.keepWithPrev,
     })),
   });
 

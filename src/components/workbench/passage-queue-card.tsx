@@ -24,10 +24,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationPlanConfig,
   normalizeQuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
 
 // ─── Status Config ───────────────────────────────────────
@@ -165,6 +167,106 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       : "workbench-loading-card workbench-loading-card--pending"
     : "";
 
+  if (isLoading) {
+    const rightActions = confirmDelete ? (
+      <div className="flex items-center gap-1">
+        <button
+          onClick={() => onRemove(passage.id)}
+          className="text-[10px] font-medium text-red-600 hover:text-red-700 px-1.5 py-0.5 rounded bg-red-50"
+        >
+          삭제
+        </button>
+        <button
+          onClick={() => setConfirmDelete(false)}
+          className="text-[10px] font-medium text-slate-500 hover:text-slate-700 px-1.5 py-0.5"
+        >
+          취소
+        </button>
+      </div>
+    ) : (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-red-50 transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-slate-400 hover:text-red-500" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="text-xs">
+          큐에서 제거
+        </TooltipContent>
+      </Tooltip>
+    );
+
+    const metaSlot = (passage.schoolName || passage.grade || passage.unit || passage.publisher) ? (
+      <div className="flex items-center gap-1.5 flex-wrap mt-2.5">
+        {passage.schoolName && (
+          <Badge variant="outline" className="text-[9px] h-5 px-1.5 font-medium">
+            {passage.schoolName}
+          </Badge>
+        )}
+        {passage.grade && (
+          <Badge variant="secondary" className="text-[9px] h-5 px-1.5">
+            {passage.grade}학년
+          </Badge>
+        )}
+        {passage.semester && (
+          <Badge variant="secondary" className="text-[9px] h-5 px-1.5">
+            {passage.semester === "FIRST" ? "1학기" : "2학기"}
+          </Badge>
+        )}
+        {passage.unit && (
+          <Badge variant="secondary" className="text-[9px] h-5 px-1.5">
+            {passage.unit}
+          </Badge>
+        )}
+        {passage.publisher && (
+          <Badge variant="outline" className="text-[9px] h-5 px-1.5 text-slate-500">
+            {passage.publisher}
+          </Badge>
+        )}
+      </div>
+    ) : null;
+
+    return (
+      <WorkbenchLoadingCard
+        title={passage.title}
+        contentPreview={passage.contentPreview}
+        statusLabel={config.label}
+        progressLabel={
+          passage.status === "analyzing"
+            ? "AI가 5층 분석을 수행 중입니다..."
+            : "분석 작업 대기열에서 준비 중입니다..."
+        }
+        wordCount={passage.wordCount}
+        selected={selected}
+        onToggleSelect={
+          onToggleSelect
+            ? (shiftKey) => onToggleSelect(passage.id, shiftKey)
+            : undefined
+        }
+        showCheckbox={!!onToggleSelect}
+        statusIcon={StatusIcon}
+        spinIcon={passage.status === "analyzing"}
+        variant={passage.status === "analyzing" ? "analyzing" : "pending"}
+        planBadge={
+          FEATURE_FLAGS.SHOW_MODEL_SELECTOR && planConfig ? (
+            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
+              {planConfig.shortLabel}
+            </span>
+          ) : null
+        }
+        rightActions={rightActions}
+        metaSlot={metaSlot}
+        className="cursor-pointer"
+        role="button"
+        tabIndex={0}
+        ariaLabel={`${passage.title} - ${config.label}`}
+      />
+    );
+  }
+
   return (
     <div
       className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
@@ -231,7 +333,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
                   <span className="workbench-loading-dot h-1 w-1 rounded-full bg-teal-400 [animation-delay:0.32s]" />
                 </span>
               )}
-              {planConfig && (
+              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && planConfig && (
                 <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
                   {planConfig.shortLabel}
                 </span>

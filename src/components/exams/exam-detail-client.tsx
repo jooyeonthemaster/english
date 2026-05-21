@@ -2,11 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, FileText, Settings, Users } from "lucide-react";
+import { BarChart3, Eye, FileText, Settings, Users } from "lucide-react";
 import { toast } from "sonner";
 import { publishExam } from "@/actions/exams";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { AnalyticsData, ExamDetail } from "./exam-detail-client-parts/types";
+import { ExamDetailPaperPreview } from "./exam-detail-paper-preview";
 import { AnalyticsTab } from "./exam-detail-client-parts/analytics-tab";
 import { ExamQuestionCard } from "./exam-detail-client-parts/exam-question-card";
 import { HeaderSection } from "./exam-detail-client-parts/header-section";
@@ -28,7 +29,7 @@ interface Props {
 export function ExamDetailClient({ exam, analytics }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState("questions");
+  const [activeTab, setActiveTab] = useState("preview");
 
   const gradedCount = exam.submissions.filter((s) => s.status === "GRADED").length;
   const totalSubs = exam.submissions.length;
@@ -61,6 +62,13 @@ export function ExamDetailClient({ exam, analytics }: Props) {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="bg-[#F7F8FA] border border-[#E5E8EB]">
           <TabsTrigger
+            value="preview"
+            className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
+          >
+            <Eye className="size-4 mr-1.5" />
+            A4 미리보기
+          </TabsTrigger>
+          <TabsTrigger
             value="questions"
             className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
           >
@@ -89,6 +97,10 @@ export function ExamDetailClient({ exam, analytics }: Props) {
             설정
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="preview" className="mt-4">
+          <ExamDetailPaperPreview exam={exam} />
+        </TabsContent>
 
         {/* Questions Tab */}
         <TabsContent value="questions" className="mt-4">

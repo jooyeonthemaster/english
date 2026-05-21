@@ -1,0 +1,10 @@
+.git
+.next
+node_modules
+.env*
+.vercel
+.trigger
+.claude
+.codex
+scripts/_gen_audit_out
+*.log

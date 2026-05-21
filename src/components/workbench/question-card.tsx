@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import {
   getQuestionGenerationPlanFromTags,
@@ -310,7 +311,7 @@ export function QuestionCard({
               <Badge variant="outline" className="text-[10px]">{TYPE_LABELS[q.type] || q.type}</Badge>
               {q.subType && <span className="text-[10px] text-slate-500">{SUBTYPE_LABELS[q.subType] || q.subType}</span>}
               {diffConfig && <Badge variant="outline" className={`text-[10px] ${diffConfig.className}`}>{diffConfig.label}</Badge>}
-              {generationPlan && (
+              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
                 <Badge
                   variant="outline"
                   className={`gap-1 text-[10px] font-bold ${
@@ -413,7 +414,12 @@ export function QuestionCard({
                 )}
               </div>
             )}
-            <StructuredQuestionRenderer question={structuredData} index={num - 1} hideHeader />
+            <StructuredQuestionRenderer
+              question={structuredData}
+              index={num - 1}
+              hideHeader
+              sourcePassageContent={q.passage?.content}
+            />
           </>
         ) : (
           <>

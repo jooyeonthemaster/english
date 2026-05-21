@@ -297,7 +297,12 @@ export function QuestionBankCard({
           <>
             {/* Expanded: full structured rendering */}
             {structuredQuestion ? (
-              <StructuredQuestionRenderer question={structuredQuestion} index={num - 1} hideHeader />
+              <StructuredQuestionRenderer
+                question={structuredQuestion}
+                index={num - 1}
+                hideHeader
+                sourcePassageContent={q.passage?.content}
+              />
             ) : (
               <RenderedSections sections={sections} expanded />
             )}

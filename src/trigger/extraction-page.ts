@@ -31,12 +31,13 @@
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
+import {
+  EXTRACTION_PAGE_QUEUE_CONCURRENCY,
+  EXTRACTION_PAGE_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { refundCredits } from "@/lib/credits";
-import {
-  GEMINI_CONCURRENCY_LIMIT,
-  MAX_PAGE_ATTEMPTS,
-} from "@/lib/extraction/constants";
+import { MAX_PAGE_ATTEMPTS } from "@/lib/extraction/constants";
 import { classifyGeminiError } from "@/lib/extraction/error-classifier";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
@@ -56,7 +57,10 @@ type Input = { jobId: string; pageIndex: number; mode?: ExtractionMode };
 
 export const extractionPageTask = task({
   id: "extraction-page",
-  queue: { name: "gemini-calls", concurrencyLimit: GEMINI_CONCURRENCY_LIMIT },
+  queue: {
+    name: EXTRACTION_PAGE_QUEUE_NAME,
+    concurrencyLimit: EXTRACTION_PAGE_QUEUE_CONCURRENCY,
+  },
   retry: {
     maxAttempts: MAX_PAGE_ATTEMPTS,
     minTimeoutInMs: 2000,

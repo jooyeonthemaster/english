@@ -1,16 +1,26 @@
 /**
- * Generate one KILLER item for every question type with Anthropic Sonnet 4.6,
- * then run the same post-processing and quality checks used by the API route.
+ * Compare Gemini 3.5 Flash and Claude Sonnet 4.6 across all 19 question types.
+ *
+ * The audit measures:
+ * - generation latency
+ * - schema / post-process success
+ * - automated quality errors and warnings
+ * - JSON round-trip safety for structuredData
+ * - actual React renderer safety via StructuredQuestionRenderer
  */
 import * as fs from "fs";
 import * as path from "path";
 import * as dotenv from "dotenv";
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 
-import { generateObject } from "ai";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { anthropic } from "@ai-sdk/anthropic";
+import { generateObject } from "ai";
 import { z } from "zod";
-import { model as geminiModel } from "../src/lib/ai";
+
+import { GEMINI_MODEL_ID, model as geminiModel } from "../src/lib/ai";
+import { StructuredQuestionRenderer } from "../src/components/workbench/question-renderers";
 import { STRUCTURED_TYPE_PROMPTS, QUESTION_SCHEMAS } from "../src/lib/question-schemas";
 import { AI_QUESTION_SCHEMAS, getAiResponseSchema } from "../src/lib/question-ai-schemas-mc";
 import { postProcessQuestion } from "../src/lib/question-postprocess";
@@ -20,8 +30,30 @@ import {
   type QuestionQualityIssue,
   validateQuestionQuality,
 } from "../src/lib/question-quality";
+import { buildQuestionGenerationPromptContract } from "../src/lib/question-generation-prompt-contract";
 
 type GeneratedQuestion = Record<string, unknown>;
+type TestProvider = "gemini" | "anthropic";
+
+interface ProviderConfig {
+  provider: TestProvider;
+  label: string;
+  modelId: string;
+  defaultConcurrency: number;
+  timeoutMs: number;
+}
+
+interface RenderCheck {
+  success: boolean;
+  htmlLength?: number;
+  error?: string;
+}
+
+interface JsonCheck {
+  success: boolean;
+  bytes?: number;
+  error?: string;
+}
 
 interface AuditItem {
   raw: GeneratedQuestion;
@@ -32,34 +64,53 @@ interface AuditItem {
     warnings: string[];
   };
   qualityIssues: QuestionQualityIssue[];
+  jsonRoundTrip: JsonCheck;
+  render: RenderCheck;
+  automatedScore: number;
 }
 
 type RunResult =
   | {
+      provider: TestProvider;
+      modelId: string;
       typeId: string;
+      attempt: number;
       ok: true;
+      expectedCount: number;
+      generatedCount: number;
+      countMismatch: boolean;
+      retryAttempts: number;
+      retryErrors: string[];
       usage: unknown;
       ms: number;
       items: AuditItem[];
     }
   | {
+      provider: TestProvider;
+      modelId: string;
       typeId: string;
+      attempt: number;
       ok: false;
       error: string;
       ms: number;
     };
 
-type TestProvider = "anthropic" | "gemini" | "atlas";
-
-const PROVIDER = getProvider();
-const MODEL_ID =
-  PROVIDER === "gemini"
-    ? "gemini-3-flash-preview"
-    : PROVIDER === "atlas"
-      ? "qwen/qwen3.6-plus"
-      : "claude-sonnet-4-6";
-const MODEL_FILE_ID = MODEL_ID.replace(/[^\w.-]+/g, "_");
-const OUTDIR = path.join(process.cwd(), "scripts", "_gen_audit_out");
+const PROVIDERS: Record<TestProvider, ProviderConfig> = {
+  gemini: {
+    provider: "gemini",
+    label: "Gemini 3.5 Flash",
+    modelId: GEMINI_MODEL_ID,
+    defaultConcurrency: 4,
+    timeoutMs: Number(process.env.GEMINI_QUESTION_TIMEOUT_MS ?? 120_000),
+  },
+  anthropic: {
+    provider: "anthropic",
+    label: "Claude Sonnet 4.6",
+    modelId: "claude-sonnet-4-6",
+    defaultConcurrency: 3,
+    timeoutMs: 180_000,
+  },
+};
 
 const ALL_TYPES = [
   "BLANK_INFERENCE",
@@ -85,13 +136,11 @@ const ALL_TYPES = [
 
 const REQUESTED_TYPES = process.argv.slice(2).map((value) => value.trim()).filter(Boolean);
 const TYPES_TO_RUN = REQUESTED_TYPES.length > 0 ? REQUESTED_TYPES : ALL_TYPES;
-const CONCURRENCY = Number(process.env.TEST_CONCURRENCY || (PROVIDER === "gemini" ? 6 : 4));
-const OUTFILE = path.join(
-  OUTDIR,
-  REQUESTED_TYPES.length > 0
-    ? `${MODEL_FILE_ID}-${REQUESTED_TYPES.join("-").toLowerCase()}.json`
-    : `${MODEL_FILE_ID}-all19.json`,
-);
+const PROVIDERS_TO_RUN = getProvidersToRun();
+const REPEATS = Math.max(1, Number(process.env.TEST_REPEATS || 1));
+const GEMINI_THINKING_BUDGET = Number(process.env.GEMINI_QUESTION_THINKING_BUDGET ?? 4096);
+const RUN_SCOPE_ID = REQUESTED_TYPES.length > 0 ? REQUESTED_TYPES.join("-").toLowerCase() : "all19";
+const OUTDIR = path.join(process.cwd(), "scripts", "_gen_audit_out");
 
 const PASSAGE = `Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.`;
 
@@ -107,7 +156,7 @@ const MARKING_RUBRIC = `## Marking accuracy requirements
 - surroundingText must be an exact 40-80 character slice around the selected expression.
 - Do not generate full-passage display fields such as passageWithBlank, passageWithMarkers, passageWithUnderline, or passageWithNumbers. The server reconstructs them.`;
 
-async function generateOnce(typeId: string) {
+async function generateOnce(provider: ProviderConfig, typeId: string) {
   const typePrompt = STRUCTURED_TYPE_PROMPTS[typeId] || `${typeId} question type.`;
   const typeQualityRubric = getTypeQualityRubric(typeId, "KILLER");
   const targetCandidateBlock = buildQuestionTargetCandidateBlock(typeId, PASSAGE);
@@ -126,6 +175,9 @@ async function generateOnce(typeId: string) {
 - correctAnswer must be the option label for multiple-choice items, or the exact answer text for constructed-response items.
 - Do not include full passage display fields; the server will reconstruct them.`
     : "";
+  const providerQualityContract = provider.provider === "gemini"
+    ? buildQuestionGenerationPromptContract("STANDARD")
+    : "";
 
   const prompt = `You are a Korean high-school English exam item writer.
 
@@ -143,39 +195,42 @@ ${structuredInstructions}
 - Difficulty: KILLER
 ${DIFFICULTY_RUBRIC}
 ${MARKING_RUBRIC}
+${providerQualityContract}
 - difficulty field must be exactly "KILLER".
 - Multiple-choice items must have exactly 5 options in {label, text} form.
 - explanation: Korean, 3-5 sentences, evidence-based.
 - keyPoints: 3 Korean learning points.
 - wrongOptionExplanations: concise Korean explanation for each wrong option.
-- wrongOptionExplanations is required for every multiple-choice item: include exactly four entries keyed by the wrong option labels. Never return an empty object.
+- wrongOptionExplanations is required for every multiple-choice item: include exactly four entries, one for each wrong option. If the schema is an array, each entry must be {label, explanation}. Never return an empty object.
 - tags: Korean grammar/vocabulary/question-type tags.
 
 Generate exactly 1 question.`;
 
-  if (PROVIDER === "atlas") {
-    return generateWithAtlas(prompt);
-  }
-
   let lastError: unknown;
   let result: Awaited<ReturnType<typeof generateObject>> | null = null;
+  const retryErrors: string[] = [];
+  let attemptsUsed = 0;
   for (let attempt = 0; attempt < 3; attempt++) {
+    attemptsUsed = attempt + 1;
     try {
-      if (attempt > 0) console.log(`[${MODEL_ID}] retry ${typeId} attempt=${attempt}`);
+      if (attempt > 0) {
+        console.log(`[${provider.modelId}] retry ${typeId} attempt=${attempt}`);
+      }
       result = await generateObject({
-        model: PROVIDER === "gemini" ? geminiModel : anthropic(MODEL_ID),
+        model: provider.provider === "gemini" ? geminiModel : anthropic(provider.modelId),
         schema: responseSchema,
         prompt,
-        abortSignal: AbortSignal.timeout(PROVIDER === "gemini" ? 120_000 : 180_000),
+        abortSignal: AbortSignal.timeout(provider.timeoutMs),
         providerOptions: {
-          ...(PROVIDER === "gemini"
-            ? { google: { thinkingConfig: { thinkingBudget: 4096 } } }
+          ...(provider.provider === "gemini"
+            ? { google: { thinkingConfig: { thinkingBudget: GEMINI_THINKING_BUDGET } } }
             : { anthropic: { structuredOutputMode: "jsonTool" } }),
         },
       });
       break;
     } catch (error) {
       lastError = error;
+      retryErrors.push(error instanceof Error ? error.message : String(error));
     }
   }
   if (!result) throw lastError;
@@ -183,17 +238,31 @@ Generate exactly 1 question.`;
   return {
     questions: getQuestionArray(result.object),
     usage: "usage" in result ? result.usage : undefined,
+    retryAttempts: attemptsUsed,
+    retryErrors,
   };
 }
 
-async function runType(typeId: string) {
+async function runType(provider: ProviderConfig, typeId: string, attempt: number): Promise<RunResult> {
   const startedAt = Date.now();
   try {
-    console.log(`[${MODEL_ID}] ${typeId}...`);
-    const { questions, usage } = await generateOnce(typeId);
+    console.log(`[${provider.modelId}] ${typeId} #${attempt}...`);
+    const { questions, usage, retryAttempts, retryErrors } = await generateOnce(provider, typeId);
+    const expectedCount = 1;
+    const countMismatch = questions.length !== expectedCount;
+    if (countMismatch) {
+      console.log(`[${provider.modelId}] ${typeId} #${attempt} count mismatch: expected=${expectedCount}, actual=${questions.length}`);
+    }
     const items = questions.map((raw) => {
       const pp = postProcessQuestion(typeId, PASSAGE, raw);
-      const processed = pp.success ? pp.data : null;
+      const processed = pp.success ? (pp.data as Record<string, unknown>) : null;
+      const renderReady = processed
+        ? { ...processed, _typeId: typeId, _typeLabel: typeId, _generationPlan: provider.provider === "gemini" ? "STANDARD" : "PREMIUM" }
+        : null;
+      const jsonRoundTrip = renderReady ? checkJsonRoundTrip(renderReady) : { success: false, error: "post-process failed" };
+      const render = jsonRoundTrip.success && renderReady
+        ? checkRenderer(JSON.parse(JSON.stringify(renderReady)) as Record<string, unknown>)
+        : { success: false, error: jsonRoundTrip.error ?? "json round-trip failed" };
       const qualityIssues = processed
         ? validateQuestionQuality({
             typeId,
@@ -202,6 +271,7 @@ async function runType(typeId: string) {
             requestedDifficulty: "KILLER",
           })
         : [];
+
       return {
         raw,
         processed,
@@ -211,65 +281,90 @@ async function runType(typeId: string) {
           warnings: pp.warnings,
         },
         qualityIssues,
+        jsonRoundTrip,
+        render,
+        automatedScore: scoreItem({
+          postProcessOk: pp.success,
+          qualityIssues,
+          jsonOk: jsonRoundTrip.success,
+          renderOk: render.success,
+        }),
       };
     });
     const ms = Date.now() - startedAt;
-    const errorCount = items.reduce(
-      (sum, item) => sum + item.qualityIssues.filter((issue) => issue.severity === "error").length,
-      0,
+    const errorCount = countIssues(items, "error");
+    const warningCount = countIssues(items, "warning");
+    const renderFailures = items.filter((item) => !item.render.success).length;
+    const jsonFailures = items.filter((item) => !item.jsonRoundTrip.success).length;
+    console.log(
+      `[${provider.modelId}] ${typeId} #${attempt} done: ${items.length} item(s), errors=${errorCount}, warnings=${warningCount}, renderFailures=${renderFailures}, jsonFailures=${jsonFailures}, ${ms}ms`,
     );
-    const warningCount = items.reduce(
-      (sum, item) => sum + item.qualityIssues.filter((issue) => issue.severity === "warning").length,
-      0,
-    );
-    console.log(`[${MODEL_ID}] ${typeId} done: ${items.length} item(s), errors=${errorCount}, warnings=${warningCount}, ${ms}ms`);
-    return { typeId, ok: true, usage, ms, items };
+    return {
+      provider: provider.provider,
+      modelId: provider.modelId,
+      typeId,
+      attempt,
+      ok: true,
+      expectedCount,
+      generatedCount: questions.length,
+      countMismatch,
+      retryAttempts,
+      retryErrors,
+      usage,
+      ms,
+      items,
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.log(`[${MODEL_ID}] ${typeId} failed: ${message}`);
-    return { typeId, ok: false, error: message, ms: Date.now() - startedAt };
+    console.log(`[${provider.modelId}] ${typeId} #${attempt} failed: ${message}`);
+    return { provider: provider.provider, modelId: provider.modelId, typeId, attempt, ok: false, error: message, ms: Date.now() - startedAt };
   }
 }
 
+async function runProvider(provider: ProviderConfig) {
+  const concurrency = Math.max(1, Number(process.env.TEST_CONCURRENCY || provider.defaultConcurrency));
+  const jobs = TYPES_TO_RUN.flatMap((typeId) =>
+    Array.from({ length: REPEATS }, (_, index) => ({ typeId, attempt: index + 1 })),
+  );
+  console.log(`\n[${provider.modelId}] running ${jobs.length} job(s), concurrency=${concurrency}`);
+  const startedAt = Date.now();
+  const results = await runWithConcurrency(jobs, concurrency, (job) =>
+    runType(provider, job.typeId, job.attempt),
+  );
+  const aggregate = aggregateProvider(provider, results, Date.now() - startedAt);
+  const outfile = path.join(
+    OUTDIR,
+    `${safeFileId(provider.modelId)}-${RUN_SCOPE_ID}.json`,
+  );
+  fs.writeFileSync(
+    outfile,
+    JSON.stringify({ provider, settings: { geminiThinkingBudget: GEMINI_THINKING_BUDGET }, passage: PASSAGE, results, aggregate }, null, 2),
+    "utf-8",
+  );
+  return { provider, results, aggregate, outfile };
+}
+
 async function main() {
-  if (PROVIDER === "anthropic" && !process.env.ANTHROPIC_API_KEY) {
-    throw new Error("ANTHROPIC_API_KEY is not set");
-  }
-  if (PROVIDER === "atlas" && !process.env.ATLASCLOUD_API_KEY) {
-    throw new Error("ATLASCLOUD_API_KEY is not set");
-  }
+  validateEnv();
   if (!fs.existsSync(OUTDIR)) fs.mkdirSync(OUTDIR, { recursive: true });
 
-  console.log(`[${MODEL_ID}] running ${TYPES_TO_RUN.length} type(s), concurrency=${CONCURRENCY}`);
-  const results: RunResult[] = await runWithConcurrency(TYPES_TO_RUN, CONCURRENCY, runType);
+  const providerRuns = [];
+  for (const providerKey of PROVIDERS_TO_RUN) {
+    providerRuns.push(await runProvider(PROVIDERS[providerKey]));
+  }
 
-  const summary = results.map((result) => {
-    const items = result.ok ? result.items : [];
-    const issues = items.flatMap((item) => item.qualityIssues);
-    return {
-      typeId: result.typeId,
-      ok: result.ok,
-      generated: items.length,
-      postProcessOk: items.filter((item) => item.postProcess.success).length,
-      qualityErrors: issues.filter((issue) => issue.severity === "error").map((issue) => issue.code),
-      qualityWarnings: issues.filter((issue) => issue.severity === "warning").map((issue) => issue.code),
-      error: result.ok ? undefined : result.error,
-    };
-  });
-
+  const comparison = buildComparison(providerRuns);
+  const comparisonOutfile = path.join(
+    OUTDIR,
+    `comparison-${providerRuns.map((run) => safeFileId(run.provider.modelId)).join("-vs-")}-${RUN_SCOPE_ID}.json`,
+  );
   fs.writeFileSync(
-    OUTFILE,
-    JSON.stringify({ model: MODEL_ID, passage: PASSAGE, results, summary }, null, 2),
+    comparisonOutfile,
+    JSON.stringify({ generatedAt: new Date().toISOString(), comparison, providerRuns }, null, 2),
     "utf-8",
   );
 
-  console.log(`\n========== ${MODEL_ID} ALL-19 SUMMARY ==========`);
-  for (const row of summary) {
-    console.log(
-      `${row.typeId.padEnd(22)} ok=${String(row.ok).padEnd(5)} gen=${row.generated} pp=${row.postProcessOk} errors=${row.qualityErrors.join(",") || "-"} warnings=${row.qualityWarnings.join(",") || "-"}`,
-    );
-  }
-  console.log(`saved=${OUTFILE}`);
+  printComparison(providerRuns, comparison, comparisonOutfile);
 }
 
 main().catch((error) => {
@@ -277,104 +372,204 @@ main().catch((error) => {
   process.exit(1);
 });
 
+function checkJsonRoundTrip(value: Record<string, unknown>): JsonCheck {
+  try {
+    const serialized = JSON.stringify(value);
+    JSON.parse(serialized);
+    return { success: true, bytes: Buffer.byteLength(serialized, "utf-8") };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+function checkRenderer(question: Record<string, unknown>): RenderCheck {
+  try {
+    const html = renderToStaticMarkup(
+      React.createElement(StructuredQuestionRenderer, {
+        question,
+        index: 0,
+        hideHeader: true,
+      }),
+    );
+    return {
+      success: html.trim().length > 0,
+      htmlLength: html.length,
+      error: html.trim().length > 0 ? undefined : "empty renderer output",
+    };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+function scoreItem(input: {
+  postProcessOk: boolean;
+  qualityIssues: QuestionQualityIssue[];
+  jsonOk: boolean;
+  renderOk: boolean;
+}) {
+  let score = 100;
+  if (!input.postProcessOk) score -= 45;
+  if (!input.jsonOk) score -= 25;
+  if (!input.renderOk) score -= 35;
+  score -= input.qualityIssues.filter((issue) => issue.severity === "error").length * 20;
+  score -= input.qualityIssues.filter((issue) => issue.severity === "warning").length * 5;
+  return Math.max(0, score);
+}
+
+function aggregateProvider(provider: ProviderConfig, results: RunResult[], wallMs: number) {
+  const okResults = results.filter((result): result is Extract<RunResult, { ok: true }> => result.ok);
+  const items = okResults.flatMap((result) => result.items);
+  const qualityErrors = items.flatMap((item) => item.qualityIssues.filter((issue) => issue.severity === "error"));
+  const qualityWarnings = items.flatMap((item) => item.qualityIssues.filter((issue) => issue.severity === "warning"));
+  const totalMs = results.reduce((sum, result) => sum + result.ms, 0);
+  const generated = items.length;
+  const score = generated > 0
+    ? Number((items.reduce((sum, item) => sum + item.automatedScore, 0) / generated).toFixed(1))
+    : 0;
+
+  return {
+    provider: provider.provider,
+    label: provider.label,
+    modelId: provider.modelId,
+    requestedTypes: TYPES_TO_RUN.length,
+    repeats: REPEATS,
+    calls: results.length,
+    callFailures: results.filter((result) => !result.ok).length,
+    retriedCalls: okResults.filter((result) => result.retryAttempts > 1).length,
+    retryErrors: okResults.flatMap((result) => result.retryErrors),
+    generated,
+    countMismatches: okResults.filter((result) => result.countMismatch).length,
+    postProcessFailures: items.filter((item) => !item.postProcess.success).length,
+    renderFailures: items.filter((item) => !item.render.success).length,
+    jsonFailures: items.filter((item) => !item.jsonRoundTrip.success).length,
+    qualityErrorCount: qualityErrors.length,
+    qualityWarningCount: qualityWarnings.length,
+    averageCallMs: results.length > 0 ? Math.round(totalMs / results.length) : 0,
+    wallMs,
+    automatedScore: score,
+    issueCodes: summarizeIssueCodes(items),
+  };
+}
+
+function buildComparison(providerRuns: Awaited<ReturnType<typeof runProvider>>[]) {
+  const rows = providerRuns.map((run) => run.aggregate);
+  const qualityWinner = [...rows].sort((a, b) => b.automatedScore - a.automatedScore)[0];
+  const speedWinner = [...rows].sort((a, b) => a.averageCallMs - b.averageCallMs)[0];
+  const reliabilityWinner = [...rows].sort((a, b) => {
+    const aFailures = a.callFailures + a.countMismatches + a.postProcessFailures + a.renderFailures + a.jsonFailures + a.qualityErrorCount;
+    const bFailures = b.callFailures + b.countMismatches + b.postProcessFailures + b.renderFailures + b.jsonFailures + b.qualityErrorCount;
+    return aFailures - bFailures;
+  })[0];
+
+  return {
+    rows,
+    winners: {
+      quality: qualityWinner?.modelId,
+      speed: speedWinner?.modelId,
+      reliability: reliabilityWinner?.modelId,
+    },
+    byType: TYPES_TO_RUN.map((typeId) => {
+      const typeRows = providerRuns.map((run) => {
+        const results = run.results.filter((result) => result.typeId === typeId);
+        const okResults = results.filter((result): result is Extract<RunResult, { ok: true }> => result.ok);
+        const items = okResults.flatMap((result) => result.items);
+        const score = items.length
+          ? Number((items.reduce((sum, item) => sum + item.automatedScore, 0) / items.length).toFixed(1))
+          : 0;
+        return {
+          modelId: run.provider.modelId,
+          okCalls: okResults.length,
+          failedCalls: results.length - okResults.length,
+          averageMs: results.length ? Math.round(results.reduce((sum, result) => sum + result.ms, 0) / results.length) : 0,
+          generated: items.length,
+          countMismatches: okResults.filter((result) => result.countMismatch).length,
+          retriedCalls: okResults.filter((result) => result.retryAttempts > 1).length,
+          retryErrors: okResults.flatMap((result) => result.retryErrors),
+          qualityErrors: countIssues(items, "error"),
+          qualityWarnings: countIssues(items, "warning"),
+          renderFailures: items.filter((item) => !item.render.success).length,
+          jsonFailures: items.filter((item) => !item.jsonRoundTrip.success).length,
+          score,
+        };
+      });
+      return { typeId, providers: typeRows };
+    }),
+  };
+}
+
+function printComparison(
+  providerRuns: Awaited<ReturnType<typeof runProvider>>[],
+  comparison: ReturnType<typeof buildComparison>,
+  comparisonOutfile: string,
+) {
+  console.log("\n========== QUESTION GENERATION MODEL COMPARISON ==========");
+  for (const run of providerRuns) {
+    const a = run.aggregate;
+    console.log(
+      `${a.modelId.padEnd(24)} score=${String(a.automatedScore).padEnd(5)} avgMs=${String(a.averageCallMs).padEnd(6)} calls=${a.calls} callFail=${a.callFailures} countMismatch=${a.countMismatches} qErr=${a.qualityErrorCount} qWarn=${a.qualityWarningCount} ppFail=${a.postProcessFailures} renderFail=${a.renderFailures} jsonFail=${a.jsonFailures}`,
+    );
+    if (a.retriedCalls > 0) {
+      console.log(`  retriedCalls=${a.retriedCalls} retryErrors=${a.retryErrors.slice(0, 3).join(" | ")}`);
+    }
+    console.log(`  saved=${run.outfile}`);
+  }
+  console.log(
+    `winners quality=${comparison.winners.quality} speed=${comparison.winners.speed} reliability=${comparison.winners.reliability}`,
+  );
+  console.log(`comparison=${comparisonOutfile}`);
+
+  console.log("\nType".padEnd(24) + providerRuns.map((run) => run.provider.modelId.padEnd(36)).join(""));
+  for (const row of comparison.byType) {
+    const cells = row.providers.map((provider) =>
+      `ok=${provider.okCalls}/${provider.okCalls + provider.failedCalls} ms=${provider.averageMs} score=${provider.score} retry=${provider.retriedCalls} c=${provider.countMismatches} e=${provider.qualityErrors} w=${provider.qualityWarnings} r=${provider.renderFailures} j=${provider.jsonFailures}`.padEnd(36),
+    );
+    console.log(row.typeId.padEnd(24) + cells.join(""));
+  }
+}
+
 function getQuestionArray(value: unknown): GeneratedQuestion[] {
   if (!isRecord(value) || !Array.isArray(value.questions)) return [];
   return value.questions.filter(isRecord);
 }
 
-function getProvider(): TestProvider {
-  if (process.env.TEST_PROVIDER === "gemini") return "gemini";
-  if (process.env.TEST_PROVIDER === "atlas") return "atlas";
-  return "anthropic";
+function getProvidersToRun(): TestProvider[] {
+  const raw = process.env.TEST_PROVIDERS ?? process.env.TEST_PROVIDER;
+  if (!raw) return ["gemini", "anthropic"];
+  const providers = raw
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value): value is TestProvider => value === "gemini" || value === "anthropic");
+  return providers.length > 0 ? [...new Set(providers)] : ["gemini", "anthropic"];
 }
 
-async function generateWithAtlas(prompt: string): Promise<{ questions: GeneratedQuestion[]; usage: unknown }> {
-  let lastError: unknown;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      if (attempt > 0) console.log(`[${MODEL_ID}] retry atlas attempt=${attempt}`);
-      const response = await fetch("https://api.atlascloud.ai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.ATLASCLOUD_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: MODEL_ID,
-          messages: [
-            {
-              role: "user",
-              content: `${prompt}
+function validateEnv() {
+  if (PROVIDERS_TO_RUN.includes("gemini") && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is not set");
+  }
+  if (PROVIDERS_TO_RUN.includes("anthropic") && !process.env.ANTHROPIC_API_KEY) {
+    throw new Error("ANTHROPIC_API_KEY is not set");
+  }
+}
 
-Return only valid JSON. Do not wrap it in Markdown.
-The top-level shape must be exactly:
-{"questions":[{...}]}`,
-            },
-          ],
-          max_tokens: 4096,
-          temperature: 0.35,
-          stream: false,
-        }),
-        signal: AbortSignal.timeout(180_000),
-      });
+function countIssues(items: AuditItem[], severity: "error" | "warning") {
+  return items.reduce(
+    (sum, item) => sum + item.qualityIssues.filter((issue) => issue.severity === severity).length,
+    0,
+  );
+}
 
-      const payload: unknown = await response.json().catch(() => null);
-      if (!response.ok) {
-        throw new Error(`Atlas HTTP ${response.status}: ${extractErrorMessage(payload)}`);
-      }
-
-      const content = extractAtlasContent(payload);
-      const object = parseJsonObject(content);
-      return {
-        questions: getQuestionArray(object),
-        usage: isRecord(payload) ? payload.usage : undefined,
-      };
-    } catch (error) {
-      lastError = error;
+function summarizeIssueCodes(items: AuditItem[]) {
+  const counts: Record<string, number> = {};
+  for (const item of items) {
+    for (const issue of item.qualityIssues) {
+      counts[issue.code] = (counts[issue.code] ?? 0) + 1;
     }
   }
-  throw lastError;
+  return counts;
 }
 
-function extractAtlasContent(payload: unknown): string {
-  if (!isRecord(payload) || !Array.isArray(payload.choices)) {
-    throw new Error("Atlas response missing choices array");
-  }
-
-  const firstChoice = payload.choices.find(isRecord);
-  const message = isRecord(firstChoice?.message) ? firstChoice.message : null;
-  const content = message?.content;
-  if (typeof content !== "string" || !content.trim()) {
-    throw new Error("Atlas response missing message.content");
-  }
-  return content;
-}
-
-function extractErrorMessage(payload: unknown): string {
-  if (!isRecord(payload)) return "unknown error";
-  const error = payload.error;
-  if (isRecord(error) && typeof error.message === "string") return error.message;
-  if (typeof payload.message === "string") return payload.message;
-  return JSON.stringify(payload).slice(0, 300);
-}
-
-function parseJsonObject(content: string): unknown {
-  const stripped = content
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "")
-    .trim();
-
-  try {
-    return JSON.parse(stripped);
-  } catch {
-    const start = stripped.indexOf("{");
-    const end = stripped.lastIndexOf("}");
-    if (start === -1 || end === -1 || end <= start) {
-      throw new Error(`No JSON object found in response: ${stripped.slice(0, 300)}`);
-    }
-    return JSON.parse(stripped.slice(start, end + 1));
-  }
+function safeFileId(value: string) {
+  return value.replace(/[^\w.-]+/g, "_");
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

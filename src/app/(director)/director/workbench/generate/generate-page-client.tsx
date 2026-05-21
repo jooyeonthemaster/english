@@ -16,6 +16,7 @@ import { getCustomPrompts } from "@/actions/custom-prompts";
 import {
   type PassageItem,
   type FilterOptions,
+  type PassageAnalysisStatusFilter,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
@@ -78,6 +79,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   const [filterSchool, setFilterSchool] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterSemester, setFilterSemester] = useState("");
+  const [analysisStatusFilter, setAnalysisStatusFilter] = useState<PassageAnalysisStatusFilter>("all");
   const [showFilters, setShowFilters] = useState(false);
 
   // ── Selected passage ──
@@ -142,10 +144,18 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
       if (filterSchool && p.school?.id !== filterSchool) return false;
       if (filterGrade && p.grade !== Number(filterGrade)) return false;
       if (filterSemester && p.semester !== filterSemester) return false;
+      if (analysisStatusFilter === "analyzed" && !p.analysis) return false;
+      if (analysisStatusFilter === "unanalyzed" && p.analysis) return false;
       if (selectedCollectionId && !p.collectionItems?.some(ci => ci.collectionId === selectedCollectionId)) return false;
       return true;
     });
-  }, [passages, passageSearch, filterSchool, filterGrade, filterSemester, selectedCollectionId]);
+  }, [passages, passageSearch, filterSchool, filterGrade, filterSemester, analysisStatusFilter, selectedCollectionId]);
+
+  const passageStatusCounts = useMemo(() => ({
+    all: passages.length,
+    analyzed: passages.filter((p) => !!p.analysis).length,
+    unanalyzed: passages.filter((p) => !p.analysis).length,
+  }), [passages]);
 
   const filteredQueue = useMemo(() => {
     if (queueFilter === "all") return sessionQueue;
@@ -161,12 +171,14 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
     error: sessionQueue.filter((q) => q.status === "error").length,
   }), [sessionQueue]);
 
-  const activeFilterCount = [filterSchool, filterGrade, filterSemester].filter(Boolean).length;
+  const activeFilterCount =
+    [filterSchool, filterGrade, filterSemester].filter(Boolean).length +
+    (analysisStatusFilter === "all" ? 0 : 1);
 
   // ── Load passages ──
   useEffect(() => {
     setLoadingPassages(true);
-    fetch(`/api/passages/list?academyId=${academyId}&onlyAnalyzed=true`)
+    fetch(`/api/passages/list?academyId=${academyId}`)
       .then((r) => r.json())
       .then((data) => {
         setPassages(data.passages || []);
@@ -371,6 +383,9 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
           setFilterGrade={setFilterGrade}
           filterSemester={filterSemester}
           setFilterSemester={setFilterSemester}
+          analysisStatusFilter={analysisStatusFilter}
+          setAnalysisStatusFilter={setAnalysisStatusFilter}
+          passageStatusCounts={passageStatusCounts}
           showFilters={showFilters}
           setShowFilters={setShowFilters}
           activeFilterCount={activeFilterCount}

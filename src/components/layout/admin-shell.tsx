@@ -171,7 +171,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 "font-bold text-gray-900 tracking-tight transition-all duration-300",
                 collapsed ? "text-[18px]" : "text-[20px]"
               )}>
-                영신ai
+                SMOAT
               </span>
               {!collapsed && (
                 <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">

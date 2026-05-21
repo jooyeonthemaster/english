@@ -2,32 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Packer } from "docx";
 import { buildExamDocument } from "./_lib/build-document";
+import {
+  buildBuilderExamDocument,
+  type BuilderItem,
+  type BuilderSettings,
+} from "./_lib/build-builder-document";
 import type { ExamQuestionData } from "./_lib/types";
 
 // ---------------------------------------------------------------------------
 // API Route
 // ---------------------------------------------------------------------------
-
-type BuilderSettings = {
-  source?: string;
-  template?: string;
-  layout?: {
-    columns?: 1 | 2;
-    density?: "comfortable" | "compact";
-    passageStyle?: string;
-  };
-  items?: Array<{
-    questionId: string;
-    orderNum?: number;
-    points?: number;
-    includePassage?: boolean;
-    passageTitle?: string;
-    passageContent?: string;
-    questionText?: string;
-    options?: Array<{ label: string; text: string }>;
-    correctAnswer?: string;
-  }>;
-};
 
 function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;
@@ -38,6 +22,28 @@ function parseSettings(settings: string | null): BuilderSettings | null {
   } catch {
     return null;
   }
+}
+
+function resolveBuilderItems(
+  questions: ExamQuestionData[],
+  items: BuilderItem[],
+) {
+  const byQuestionId = new Map(
+    questions.map((item) => [item.question.id, item]),
+  );
+
+  return items
+    .map((item, index) => {
+      const original = byQuestionId.get(item.questionId);
+      if (!original) return null;
+      return {
+        ...item,
+        orderNum: item.orderNum ?? index + 1,
+        points: item.points ?? original.points,
+        sourceQuestion: original.question,
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
 }
 
 function applyBuilderSettings(
@@ -115,19 +121,25 @@ export async function GET(
       return NextResponse.json({ error: "시험을 찾을 수 없습니다." }, { status: 404 });
     }
 
-    const doc = buildExamDocument(
-      exam.title,
-      applyBuilderSettings(
-        exam.questions as unknown as ExamQuestionData[],
-        parseSettings(exam.settings),
-      ),
-      includeAnswers,
-      {
-        columns: parseSettings(exam.settings)?.layout?.columns,
-        density: parseSettings(exam.settings)?.layout?.density,
-        template: parseSettings(exam.settings)?.template,
-      },
-    );
+    const settings = parseSettings(exam.settings);
+    const examQuestions = exam.questions as unknown as ExamQuestionData[];
+
+    let doc;
+    if (settings) {
+      // 빌더 미리보기와 동일한 레이아웃의 DOCX (해설 포함 시 각 문항 아래에 정답·해설 추가)
+      const resolved = resolveBuilderItems(examQuestions, settings.items);
+      const fullExamQuestions = applyBuilderSettings(examQuestions, settings);
+      doc = buildBuilderExamDocument({
+        title: exam.title,
+        settings,
+        resolvedItems: resolved,
+        includeAnswers,
+        fullExamQuestions,
+      });
+    } else {
+      // 빌더 메타가 없는 레거시 시험지
+      doc = buildExamDocument(exam.title, examQuestions, includeAnswers);
+    }
 
     const buffer = await Packer.toBuffer(doc);
 

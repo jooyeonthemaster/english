@@ -26,7 +26,7 @@
 
 | Auth | NextAuth v5 (관리자) + JWT 쿠키 (학생) |
 
-| AI | Vercel AI SDK + Google Gemini 3.0 Flash (`@ai-sdk/google`, `gemini-3-flash-preview`) |
+| AI | Vercel AI SDK + Google Gemini 3.5 Flash (`@ai-sdk/google`, `gemini-3.5-flash`) |
 
 | 상태관리 | TanStack Query v5 (서버 상태) + React Context (세션) |
 
@@ -531,7 +531,7 @@ POST /api/ai/chat (스트리밍) →
 
 ### AI 모델
 
--**모델**: Google Gemini 3.0 Flash (`gemini-3-flash-preview`)
+-**모델**: Google Gemini 3.5 Flash (`gemini-3.5-flash`)
 
 -**SDK**: Vercel AI SDK의 `@ai-sdk/google` 패키지
 

@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ApplicationConfirmModal } from "./application-confirm-modal";
+
+const PHONE_RE = /^01[0-9]-?\d{3,4}-?\d{4}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const STUDENT_OPTIONS = [
   { value: "", label: "선택하지 않음" },
@@ -50,19 +54,44 @@ export function ApplicationScene() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const reducedMotion = useReducedMotion();
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!form.academyName.trim()) {
+      setError("학원명을 입력해 주세요.");
+      return;
+    }
+    if (!form.directorName.trim()) {
+      setError("신청자 성함을 입력해 주세요.");
+      return;
+    }
+    if (!PHONE_RE.test(form.directorPhone.replace(/\s/g, ""))) {
+      setError("연락처 형식이 올바르지 않습니다. (010-XXXX-XXXX)");
+      return;
+    }
+    if (!EMAIL_RE.test(form.directorEmail)) {
+      setError("올바른 이메일을 입력해 주세요.");
+      return;
+    }
+    if (!form.address.trim()) {
+      setError("학원 주소를 입력해 주세요.");
+      return;
+    }
     if (!form.agree) {
       setError("개인정보 수집·이용에 동의해 주세요.");
       return;
     }
+    setConfirmOpen(true);
+  }
+
+  async function doSubmit() {
     setSubmitting(true);
     try {
       const res = await fetch("/api/landing/apply", {
@@ -73,11 +102,14 @@ export function ApplicationScene() {
       const data = (await res.json()) as { success: boolean; error?: string };
       if (!res.ok || !data.success) {
         setError(data.error || "접수 중 오류가 발생했습니다.");
+        setConfirmOpen(false);
         return;
       }
+      setConfirmOpen(false);
       setSubmitted(true);
     } catch {
       setError("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+      setConfirmOpen(false);
     } finally {
       setSubmitting(false);
     }
@@ -117,21 +149,21 @@ export function ApplicationScene() {
         </div>
 
         <h2
-          className="font-black text-gray-900 text-center leading-[1.05] mb-4"
+          className="font-black text-gray-900 text-center leading-[1.05] mb-4 break-keep"
           style={{ fontSize: "clamp(28px, 3.6vw, 52px)", letterSpacing: "-0.035em" }}
         >
-          선착순 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-0.5">100명</span>,
-          {" "}사전예약 접수 중.
+          선착순 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-0.5">100명</span>,{" "}
+          사전예약 접수 중.
         </h2>
 
         <p
-          className="text-gray-600 text-center mx-auto mb-8 font-medium leading-[1.6] whitespace-nowrap"
+          className="text-gray-600 text-center mx-auto mb-8 font-medium leading-[1.6] whitespace-normal break-keep"
           style={{
             fontSize: "clamp(13px, 1.25vw, 17px)",
             letterSpacing: "-0.01em",
           }}
         >
-          지문 분석부터 시험지 출력까지 — 영신ai의 모든 기능을 5월 한 달간{" "}
+          지문 분석부터 시험지 출력까지 — SMOAT의 모든 기능을 5월 한 달간{" "}
           <strong className="font-black text-[#3B82F6]">100% 무료</strong>로 제한 없이 사용할 수 있는 기회입니다.
         </p>
 
@@ -174,7 +206,7 @@ export function ApplicationScene() {
                     required
                     value={form.academyName}
                     onChange={(e) => update("academyName", e.target.value)}
-                    placeholder="예: 영신영어학원"
+                    placeholder="예: SMOAT 영어학원"
                     className={inputCls}
                     autoComplete="organization"
                   />
@@ -337,6 +369,13 @@ export function ApplicationScene() {
           )}
         </motion.div>
       </div>
+
+      <ApplicationConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={doSubmit}
+        submitting={submitting}
+      />
     </section>
   );
 }

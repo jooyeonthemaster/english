@@ -31,6 +31,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { DraftCollectionItem } from "../types";
 
@@ -562,7 +563,7 @@ export function ExtractionDraftGrid({
                 해제
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-1.5 min-w-0">
+            <div className={`${FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "grid-cols-2" : "grid-cols-1"} grid gap-1.5 min-w-0`}>
               <button
                 type="button"
                 onClick={() => void handleBulk("STANDARD")}
@@ -589,6 +590,7 @@ export function ExtractionDraftGrid({
                   </>
                 )}
               </button>
+              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
               <button
                 type="button"
                 onClick={() => void handleBulk("PREMIUM")}
@@ -615,6 +617,7 @@ export function ExtractionDraftGrid({
                   </>
                 )}
               </button>
+              )}
             </div>
           </div>
         ) : null}

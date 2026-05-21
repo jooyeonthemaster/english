@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
@@ -8,7 +9,7 @@ export async function generateWithRetry(
   prompt: string,
   generationPlan: QuestionGenerationPlan,
   maxTokens: number,
-  maxRetries = 2,
+  maxRetries = GEMINI_QUESTION_MAX_RETRIES,
 ) {
   const result = await generateQuestionObject({
     schema,

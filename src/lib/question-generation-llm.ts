@@ -1,17 +1,28 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { generateObject, generateText } from "ai";
 import { z } from "zod";
+import { GEMINI_MODEL_ID, model as geminiModel } from "@/lib/ai";
+import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
-type QuestionGenerationProvider = "atlas" | "anthropic";
+type QuestionGenerationProvider = "google" | "anthropic";
+
+const GEMINI_QUESTION_THINKING_BUDGET = readNumberEnv(
+  "GEMINI_QUESTION_THINKING_BUDGET",
+  0,
+);
+const GEMINI_QUESTION_TIMEOUT_MS = readNumberEnv(
+  "GEMINI_QUESTION_TIMEOUT_MS",
+  60_000,
+);
 
 const QUESTION_GENERATION_MODEL_CONFIGS: Record<
   QuestionGenerationPlan,
   { provider: QuestionGenerationProvider; modelId: string }
 > = {
   STANDARD: {
-    provider: "atlas",
-    modelId: "qwen/qwen3.6-plus",
+    provider: "google",
+    modelId: GEMINI_MODEL_ID,
   },
   PREMIUM: {
     provider: "anthropic",
@@ -50,6 +61,8 @@ export interface GenerateQuestionObjectResult<T> {
   usage?: unknown;
   provider: string;
   modelId: string;
+  attempts: number;
+  durationMs: number;
 }
 
 export interface GenerateQuestionTextResult {
@@ -57,6 +70,8 @@ export interface GenerateQuestionTextResult {
   usage?: unknown;
   provider: string;
   modelId: string;
+  attempts: number;
+  durationMs: number;
   finishReason?: string;
   rawFinishReason?: string;
 }
@@ -66,26 +81,48 @@ export async function generateQuestionObject<T>({
   prompt,
   generationPlan,
   logPrefix = "QUESTION-GEN",
-  maxRetries = 2,
+  maxRetries = GEMINI_QUESTION_MAX_RETRIES,
   maxTokens = 8192,
 }: GenerateQuestionObjectArgs<T>): Promise<GenerateQuestionObjectResult<T>> {
   const config = getQuestionGenerationModelConfig(generationPlan);
   let lastError: unknown;
+  const operationStartedAt = Date.now();
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const attemptStartedAt = Date.now();
     try {
       if (attempt > 0) {
         console.log(`[${logPrefix}] Retry attempt ${attempt} via ${generationPlan} plan...`);
       }
 
-      if (config.provider === "atlas") {
-        const result = await generateWithAtlas({
+      if (config.provider === "google") {
+        const result = await generateObject({
+          model: geminiModel,
           schema,
           prompt,
-          modelId: config.modelId,
-          maxTokens,
+          maxOutputTokens: maxTokens,
+          abortSignal: AbortSignal.timeout(GEMINI_QUESTION_TIMEOUT_MS),
+          providerOptions: {
+            google: {
+              thinkingConfig: {
+                thinkingBudget: GEMINI_QUESTION_THINKING_BUDGET,
+              },
+            },
+          },
         });
-        return { ...result, provider: config.provider, modelId: config.modelId };
+
+        console.log(
+          `[${logPrefix}] ${generationPlan} ${config.modelId} attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
+        );
+
+        return {
+          object: result.object as T,
+          usage: "usage" in result ? result.usage : undefined,
+          provider: config.provider,
+          modelId: config.modelId,
+          attempts: attempt + 1,
+          durationMs: Date.now() - operationStartedAt,
+        };
       }
 
       const result = await generateObject({
@@ -99,11 +136,17 @@ export async function generateQuestionObject<T>({
         },
       });
 
+      console.log(
+        `[${logPrefix}] ${generationPlan} ${config.modelId} attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
+      );
+
       return {
         object: result.object as T,
         usage: "usage" in result ? result.usage : undefined,
         provider: config.provider,
         modelId: config.modelId,
+        attempts: attempt + 1,
+        durationMs: Date.now() - operationStartedAt,
       };
     } catch (error) {
       lastError = error;
@@ -128,7 +171,7 @@ export async function generateQuestionText({
   prompt,
   generationPlan,
   logPrefix = "TEXT-GEN",
-  maxRetries = 2,
+  maxRetries = GEMINI_QUESTION_MAX_RETRIES,
   maxTokens = 8192,
   omitMaxTokens = false,
   responseFormat,
@@ -138,25 +181,50 @@ export async function generateQuestionText({
 }: GenerateQuestionTextArgs): Promise<GenerateQuestionTextResult> {
   const config = getQuestionGenerationModelConfig(generationPlan);
   let lastError: unknown;
+  void responseFormat;
+  const operationStartedAt = Date.now();
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const attemptStartedAt = Date.now();
     try {
       if (attempt > 0) {
         console.log(`[${logPrefix}] Retry attempt ${attempt} via ${generationPlan} plan...`);
       }
 
-      if (config.provider === "atlas") {
-        const result = await generateTextWithAtlas({
+      if (config.provider === "google") {
+        const result = await generateText({
+          model: geminiModel,
           prompt,
-          modelId: config.modelId,
-          maxTokens,
-          omitMaxTokens,
-          responseFormat,
-          thinkingBudget,
-          timeoutMs,
+          maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
           temperature,
+          abortSignal: AbortSignal.timeout(Math.min(timeoutMs, GEMINI_QUESTION_TIMEOUT_MS)),
+          providerOptions: {
+            google: {
+              thinkingConfig: {
+                thinkingBudget: thinkingBudget ?? GEMINI_QUESTION_THINKING_BUDGET,
+              },
+            },
+          },
         });
-        return { ...result, provider: config.provider, modelId: config.modelId };
+
+        console.log(
+          `[${logPrefix}] ${generationPlan} ${config.modelId} text attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
+        );
+
+        return {
+          text: result.text,
+          usage: "usage" in result ? result.usage : undefined,
+          finishReason: "finishReason" in result && typeof result.finishReason === "string"
+            ? result.finishReason
+            : undefined,
+          rawFinishReason: "rawFinishReason" in result && typeof result.rawFinishReason === "string"
+            ? result.rawFinishReason
+            : undefined,
+          provider: config.provider,
+          modelId: config.modelId,
+          attempts: attempt + 1,
+          durationMs: Date.now() - operationStartedAt,
+        };
       }
 
       const result = await generateText({
@@ -166,6 +234,10 @@ export async function generateQuestionText({
         temperature,
         abortSignal: AbortSignal.timeout(timeoutMs),
       });
+
+      console.log(
+        `[${logPrefix}] ${generationPlan} ${config.modelId} text attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
+      );
 
       return {
         text: result.text,
@@ -178,6 +250,8 @@ export async function generateQuestionText({
           : undefined,
         provider: config.provider,
         modelId: config.modelId,
+        attempts: attempt + 1,
+        durationMs: Date.now() - operationStartedAt,
       };
     } catch (error) {
       lastError = error;
@@ -198,185 +272,13 @@ export async function generateQuestionText({
   throw lastError;
 }
 
-async function generateWithAtlas<T>({
-  schema,
-  prompt,
-  modelId,
-  maxTokens,
-}: {
-  schema: z.ZodType<T>;
-  prompt: string;
-  modelId: string;
-  maxTokens: number;
-}): Promise<{ object: T; usage?: unknown }> {
-  const apiKey = process.env.ATLASCLOUD_API_KEY;
-  if (!apiKey) {
-    throw new Error("ATLASCLOUD_API_KEY is not set");
-  }
-  const jsonSchema = z.toJSONSchema(schema);
-  const schemaInstruction = JSON.stringify(jsonSchema, null, 2);
-
-  const response = await fetch("https://api.atlascloud.ai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: modelId,
-      messages: [
-        {
-          role: "user",
-          content: `${prompt}
-
-Return only one valid JSON object matching this JSON Schema:
-${schemaInstruction}
-
-Do not wrap the JSON in Markdown.
-Do not include commentary before or after the JSON.
-The top-level object must satisfy every required property in the schema.`,
-        },
-      ],
-      max_tokens: maxTokens,
-      response_format: { type: "json_object" },
-      thinking_budget: 500,
-      temperature: 0.35,
-      stream: false,
-    }),
-    signal: AbortSignal.timeout(180_000),
-  });
-
-  const payload: unknown = await response.json().catch(() => null);
-  if (!response.ok) {
-    throw new Error(`Atlas HTTP ${response.status}: ${extractErrorMessage(payload)}`);
-  }
-
-  const content = extractAtlasContent(payload);
-  const parsedJson = parseJsonObject(content);
-  const parsedSchema = schema.safeParse(parsedJson);
-  if (!parsedSchema.success) {
-    const issues = parsedSchema.error.issues
-      .slice(0, 8)
-      .map((issue) => `${issue.path.join(".") || "<root>"}: ${issue.message}`)
-      .join("; ");
-    throw new Error(`Atlas JSON failed schema validation: ${issues}`);
-  }
-
-  return {
-    object: parsedSchema.data,
-    usage: isRecord(payload) ? payload.usage : undefined,
-  };
-}
-
-async function generateTextWithAtlas({
-  prompt,
-  modelId,
-  maxTokens,
-  omitMaxTokens,
-  responseFormat,
-  thinkingBudget,
-  timeoutMs,
-  temperature,
-}: {
-  prompt: string;
-  modelId: string;
-  maxTokens: number;
-  omitMaxTokens: boolean;
-  responseFormat?: "json_object";
-  thinkingBudget?: number;
-  timeoutMs: number;
-  temperature: number;
-}): Promise<{
-  text: string;
-  usage?: unknown;
-  finishReason?: string;
-  rawFinishReason?: string;
-}> {
-  const apiKey = process.env.ATLASCLOUD_API_KEY;
-  if (!apiKey) {
-    throw new Error("ATLASCLOUD_API_KEY is not set");
-  }
-
-  const response = await fetch("https://api.atlascloud.ai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: modelId,
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: omitMaxTokens ? undefined : maxTokens,
-      response_format: responseFormat ? { type: responseFormat } : undefined,
-      thinking_budget: thinkingBudget,
-      temperature,
-      stream: false,
-    }),
-    signal: AbortSignal.timeout(timeoutMs),
-  });
-
-  const payload: unknown = await response.json().catch(() => null);
-  if (!response.ok) {
-    throw new Error(`Atlas HTTP ${response.status}: ${extractErrorMessage(payload)}`);
-  }
-
-  const firstChoice = isRecord(payload) && Array.isArray(payload.choices)
-    ? payload.choices.find(isRecord)
-    : null;
-
-  return {
-    text: extractAtlasContent(payload),
-    usage: isRecord(payload) ? payload.usage : undefined,
-    finishReason: typeof firstChoice?.finish_reason === "string"
-      ? firstChoice.finish_reason
-      : undefined,
-    rawFinishReason: typeof firstChoice?.finish_reason === "string"
-      ? firstChoice.finish_reason
-      : undefined,
-  };
-}
-
-function extractAtlasContent(payload: unknown): string {
-  if (!isRecord(payload) || !Array.isArray(payload.choices)) {
-    throw new Error("Atlas response missing choices array");
-  }
-
-  const firstChoice = payload.choices.find(isRecord);
-  const message = isRecord(firstChoice?.message) ? firstChoice.message : null;
-  const content = message?.content;
-  if (typeof content !== "string" || !content.trim()) {
-    throw new Error("Atlas response missing message.content");
-  }
-  return content;
-}
-
-function extractErrorMessage(payload: unknown): string {
-  if (!isRecord(payload)) return "unknown error";
-  const error = payload.error;
-  if (isRecord(error) && typeof error.message === "string") return error.message;
-  if (typeof payload.message === "string") return payload.message;
-  return JSON.stringify(payload).slice(0, 300);
-}
-
-function parseJsonObject(content: string): unknown {
-  const stripped = content
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "")
-    .trim();
-
-  try {
-    return JSON.parse(stripped);
-  } catch {
-    const start = stripped.indexOf("{");
-    const end = stripped.lastIndexOf("}");
-    if (start === -1 || end === -1 || end <= start) {
-      throw new Error(`No JSON object found in response: ${stripped.slice(0, 300)}`);
-    }
-    return JSON.parse(stripped.slice(start, end + 1));
-  }
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function readNumberEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw.trim() === "") return fallback;
+  const value = Number(raw);
+  return Number.isFinite(value) && value >= 0 ? value : fallback;
 }

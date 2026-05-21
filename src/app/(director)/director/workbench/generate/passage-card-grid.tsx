@@ -16,7 +16,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { type PassageItem, type FilterOptions, countWords } from "./generate-page-types";
+import {
+  type PassageItem,
+  type FilterOptions,
+  type PassageAnalysisStatusFilter,
+  countWords,
+} from "./generate-page-types";
 
 type ParsedAnalysisSummary = {
   vocabulary?: unknown[];
@@ -51,6 +56,9 @@ interface PassageCardGridProps {
   setFilterGrade: (v: string) => void;
   filterSemester: string;
   setFilterSemester: (v: string) => void;
+  analysisStatusFilter: PassageAnalysisStatusFilter;
+  setAnalysisStatusFilter: (v: PassageAnalysisStatusFilter) => void;
+  passageStatusCounts: { all: number; analyzed: number; unanalyzed: number };
   showFilters: boolean;
   setShowFilters: (v: boolean) => void;
   activeFilterCount: number;
@@ -90,6 +98,9 @@ export function PassageCardGrid({
   setFilterGrade,
   filterSemester,
   setFilterSemester,
+  analysisStatusFilter,
+  setAnalysisStatusFilter,
+  passageStatusCounts,
   showFilters,
   setShowFilters,
   activeFilterCount,
@@ -187,8 +198,27 @@ export function PassageCardGrid({
                   }`}>{s.label}</button>
               ))}
             </div>
+            <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+              {[
+                { value: "all" as const, label: "전체", count: passageStatusCounts.all },
+                { value: "analyzed" as const, label: "분석 완료", count: passageStatusCounts.analyzed },
+                { value: "unanalyzed" as const, label: "미분석", count: passageStatusCounts.unanalyzed },
+              ].map((s) => (
+                <button
+                  key={s.value}
+                  onClick={() => setAnalysisStatusFilter(s.value)}
+                  className={`h-6 px-2.5 rounded-md text-[11px] font-medium transition-all ${
+                    analysisStatusFilter === s.value
+                      ? "bg-white text-blue-700 shadow-sm"
+                      : "text-slate-400 hover:text-slate-600"
+                  }`}
+                >
+                  {s.label} <span className="text-[10px] opacity-70">{s.count}</span>
+                </button>
+              ))}
+            </div>
             {activeFilterCount > 0 && (
-              <button onClick={() => { setFilterSchool(""); setFilterGrade(""); setFilterSemester(""); }}
+              <button onClick={() => { setFilterSchool(""); setFilterGrade(""); setFilterSemester(""); setAnalysisStatusFilter("all"); }}
                 className="text-[11px] text-blue-600 hover:text-blue-700 font-medium ml-auto flex items-center gap-1">
                 <X className="w-3 h-3" />
                 초기화
@@ -259,6 +289,7 @@ export function PassageCardGrid({
               const mainIdea = aData?.structure?.mainIdea;
 
               const isChecked = selectedIds.has(p.id);
+              const hasAnalysis = !!p.analysis;
 
               return (
                 <div
@@ -266,7 +297,9 @@ export function PassageCardGrid({
                   className={`group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md flex flex-col ${
                     isChecked
                       ? "border-blue-400 bg-blue-50/20 ring-1 ring-blue-300/30"
-                      : "border-emerald-200 bg-white"
+                      : hasAnalysis
+                        ? "border-emerald-200 bg-white"
+                        : "border-slate-200 bg-white"
                   }`}
                 >
                   {/* Header with checkbox */}
@@ -288,6 +321,9 @@ export function PassageCardGrid({
                         <div className="flex items-center gap-1.5 mt-0.5">
                           {p.analysis && (
                             <span className="text-[10px] font-medium text-emerald-600">분석 완료</span>
+                          )}
+                          {!hasAnalysis && (
+                            <span className="text-[10px] font-medium text-slate-400">미분석</span>
                           )}
                           <span className="text-[10px] text-slate-400">{countWords(p.content)} words</span>
                         </div>

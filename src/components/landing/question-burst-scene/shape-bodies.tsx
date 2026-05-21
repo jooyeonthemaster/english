@@ -233,7 +233,7 @@ function OrderingBody({
         </motion.div>
       )}
       {showParas && sample.paragraphs && (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {sample.paragraphs.map((p, i) => (
             <motion.div
               key={p.label}
@@ -251,7 +251,7 @@ function OrderingBody({
         </div>
       )}
       {showOptions && (
-        <div className="grid grid-cols-5 gap-1.5 pt-1">
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-5 pt-1">
           {opts.map((opt, i) => {
             const visibleText = generation.options[i] ?? "";
             const isCorrect = generation.answerVisible && i === correctIdx;

@@ -1,6 +1,11 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
 
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
+import {
+  WORKBENCH_PASSAGE_ANALYSIS_QUEUE_CONCURRENCY,
+  WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME,
+  WORKBENCH_PASSAGE_ANALYSIS_TRIGGER_MAX_ATTEMPTS,
+} from "@/lib/concurrency-config";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   InsufficientCreditsError,
@@ -75,9 +80,12 @@ function parseConfig(value: unknown): AnalysisJobConfig {
 
 export const workbenchPassageAnalysisTask = task({
   id: "workbench-passage-analysis",
-  queue: { name: "workbench-ai", concurrencyLimit: 3 },
+  queue: {
+    name: WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME,
+    concurrencyLimit: WORKBENCH_PASSAGE_ANALYSIS_QUEUE_CONCURRENCY,
+  },
   retry: {
-    maxAttempts: 2,
+    maxAttempts: WORKBENCH_PASSAGE_ANALYSIS_TRIGGER_MAX_ATTEMPTS,
     minTimeoutInMs: 2000,
     maxTimeoutInMs: 30000,
     factor: 2,

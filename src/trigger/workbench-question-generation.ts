@@ -1,6 +1,12 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
 
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
+import {
+  WORKBENCH_QUESTION_GENERATION_QUEUE_CONCURRENCY,
+  WORKBENCH_QUESTION_GENERATION_QUEUE_NAME,
+  WORKBENCH_QUESTION_TRIGGER_MAX_ATTEMPTS,
+  GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
+} from "@/lib/concurrency-config";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import {
   InsufficientCreditsError,
@@ -9,6 +15,7 @@ import {
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
+  mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -21,7 +28,7 @@ import {
 } from "@/app/api/ai/generate-questions-auto/_lib/build-analysis-context";
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 import { buildPlanningPrompt } from "@/app/api/ai/generate-questions-auto/_lib/prompts";
-import { runQuestionGeneration } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
+import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
 import { planSchema, type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 
 type Input = { jobId: string };
@@ -82,11 +89,32 @@ function buildManualPlan(config: QuestionJobConfig): PlanResult["plan"] {
   ];
 }
 
+function readQuestionTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) {
+    return rawTags.filter((tag): tag is string => typeof tag === "string");
+  }
+  if (typeof rawTags !== "string") return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : [];
+  } catch {
+    return rawTags
+      .split(/[,;|]/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+}
+
 export const workbenchQuestionGenerationTask = task({
   id: "workbench-question-generation",
-  queue: { name: "workbench-ai", concurrencyLimit: 3 },
+  queue: {
+    name: WORKBENCH_QUESTION_GENERATION_QUEUE_NAME,
+    concurrencyLimit: WORKBENCH_QUESTION_GENERATION_QUEUE_CONCURRENCY,
+  },
   retry: {
-    maxAttempts: 2,
+    maxAttempts: WORKBENCH_QUESTION_TRIGGER_MAX_ATTEMPTS,
     minTimeoutInMs: 2000,
     maxTimeoutInMs: 30000,
     factor: 2,
@@ -96,6 +124,12 @@ export const workbenchQuestionGenerationTask = task({
   async run(payload: Input, { ctx }) {
     const { jobId } = payload;
     const now = new Date();
+    const taskStartedAt = Date.now();
+    let creditMs = 0;
+    let planningMs = 0;
+    let generationMs = 0;
+    let persistenceMs = 0;
+    let generationAttempts = 0;
 
     const job = await prisma.workbenchAiJob.findUnique({
       where: { id: jobId },
@@ -128,19 +162,6 @@ export const workbenchQuestionGenerationTask = task({
       });
       return { error: "PASSAGE_NOT_FOUND" as const };
     }
-    if (!job.passage.analysis) {
-      await prisma.workbenchAiJob.update({
-        where: { id: jobId },
-        data: {
-          status: "FAILED",
-          failedCount: 1,
-          errorMessage: "Passage analysis is required before generating questions.",
-          completedAt: now,
-        },
-      });
-      return { error: "ANALYSIS_REQUIRED" as const };
-    }
-
     const config = parseConfig(job.config, job.generationPlan);
     const operationType = getOperationType(config);
     const baseCost = CREDIT_COSTS[operationType];
@@ -160,6 +181,7 @@ export const workbenchQuestionGenerationTask = task({
 
     let creditTxId: string | null = null;
     try {
+      const creditStartedAt = Date.now();
       const credit = await ensureWorkbenchAiJobCharged({
         jobId,
         academyId: job.academyId,
@@ -175,6 +197,7 @@ export const workbenchQuestionGenerationTask = task({
         },
         creditCost,
       });
+      creditMs = Date.now() - creditStartedAt;
       creditTxId = credit.transactionId;
 
       const schoolType =
@@ -190,6 +213,7 @@ export const workbenchQuestionGenerationTask = task({
       let plan: PlanResult["plan"];
       let rationale = "";
       if (config.mode === "AUTO") {
+        const planningStartedAt = Date.now();
         const { object: planResult } = await generateQuestionObject({
           schema: planSchema,
           prompt: buildPlanningPrompt({
@@ -201,40 +225,77 @@ export const workbenchQuestionGenerationTask = task({
             analysisContext,
             customPrompt: config.customPrompt,
             diffLabel,
+            generationPlan: config.generationPlan,
           }),
           generationPlan: config.generationPlan,
           logPrefix: "WORKBENCH-AUTO-GEN-PLAN",
           maxTokens: 4_096,
         });
+        planningMs = Date.now() - planningStartedAt;
         plan = planResult.plan;
         rationale = planResult.rationale;
       } else {
         plan = buildManualPlan(config);
       }
 
-      const questions = await runQuestionGeneration({
-        plan,
-        schoolType,
-        gradeInfo,
-        passageContent: job.passage.content,
-        teacherIntentBlock,
-        analysisContext,
-        diffLabel,
-        diffInstruction,
-        generationPlan: config.generationPlan,
-        customPrompt: config.customPrompt,
-      });
+      const generationStartedAt = Date.now();
+      const generationResult = await runQuestionGenerationWithEmptyRetry(
+        {
+          plan,
+          schoolType,
+          gradeInfo,
+          passageContent: job.passage.content,
+          teacherIntentBlock,
+          analysisContext,
+          diffLabel,
+          diffInstruction,
+          generationPlan: config.generationPlan,
+          customPrompt: config.customPrompt,
+        },
+        {
+          logPrefix: "WORKBENCH-Q-GEN",
+          maxAttempts: GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
+        },
+      );
+      const questions = generationResult.questions;
+      generationAttempts = generationResult.attempts;
+      generationMs = Date.now() - generationStartedAt;
 
       if (questions.length === 0) {
         throw new Error("No questions generated.");
       }
 
+      const questionsForDisplay = questions.map((question) => {
+        const tags = mergeQuestionGenerationPlanTag(
+          readQuestionTags(question.tags),
+          config.generationPlan,
+        );
+        return {
+          ...question,
+          _generationPlan: config.generationPlan,
+          tags,
+        };
+      });
+
+      const persistenceStartedAt = Date.now();
       const createdQuestionIds = await saveGeneratedQuestionsForJob({
         academyId: job.academyId,
         passageId: job.passage.id,
-        questions,
+        questions: questionsForDisplay,
         generationPlan: config.generationPlan,
+        skipPassageEligibilityCheck: true,
       });
+      persistenceMs = Date.now() - persistenceStartedAt;
+      const completedAt = new Date();
+      const debugTiming = {
+        queueWaitMs: now.getTime() - job.createdAt.getTime(),
+        creditMs,
+        planningMs,
+        generationAttempts,
+        generationMs,
+        persistenceMs,
+        totalRunMs: Date.now() - taskStartedAt,
+      };
 
       await prisma.workbenchAiJob.update({
         where: { id: jobId },
@@ -245,12 +306,13 @@ export const workbenchQuestionGenerationTask = task({
           resultCount: questions.length,
           result: JSON.parse(JSON.stringify({
             passageId: job.passage.id,
-            questions,
+            questions: questionsForDisplay,
             questionIds: createdQuestionIds,
             rationale,
             generationPlan: config.generationPlan,
+            debugTiming,
           })),
-          completedAt: new Date(),
+          completedAt,
         },
       });
 
@@ -258,6 +320,7 @@ export const workbenchQuestionGenerationTask = task({
         jobId,
         passageId: job.passage.id,
         count: questions.length,
+        debugTiming,
       });
 
       return { success: true as const, count: questions.length };

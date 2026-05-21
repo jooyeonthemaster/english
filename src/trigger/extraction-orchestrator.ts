@@ -9,7 +9,7 @@
 //     "last page" hook OR the reaper (safety net).
 //
 // This task does NOT await page completion. Pages run in parallel under the
-// "gemini-calls" queue's concurrency ceiling, and the job progresses through
+// extraction page queue's concurrency ceiling, and the job progresses through
 // many short DB writes rather than one long-lived orchestrator run.
 //
 // (P1-1) `mode` is forwarded inside the per-page payload so the page worker
@@ -19,8 +19,13 @@
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
+import {
+  academyConcurrencyKey,
+  EXTRACTION_PAGE_QUEUE_NAME,
+  EXTRACTION_ORCHESTRATOR_QUEUE_CONCURRENCY,
+  EXTRACTION_ORCHESTRATOR_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
-import { ORCHESTRATOR_CONCURRENCY_LIMIT } from "@/lib/extraction/constants";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { extractionPageTask } from "./extraction-page";
 
@@ -29,8 +34,8 @@ type Input = { jobId: string };
 export const extractionOrchestratorTask = task({
   id: "extraction-orchestrator",
   queue: {
-    name: "extraction-orchestrator",
-    concurrencyLimit: ORCHESTRATOR_CONCURRENCY_LIMIT,
+    name: EXTRACTION_ORCHESTRATOR_QUEUE_NAME,
+    concurrencyLimit: EXTRACTION_ORCHESTRATOR_QUEUE_CONCURRENCY,
   },
   async run(payload: Input, { ctx }) {
     const { jobId } = payload;
@@ -62,7 +67,11 @@ export const extractionOrchestratorTask = task({
 
     const items = job.pages.map((p) => ({
       payload: { jobId, pageIndex: p.pageIndex, mode },
-      options: { idempotencyKey: p.idempotencyKey },
+      options: {
+        idempotencyKey: p.idempotencyKey,
+        queue: EXTRACTION_PAGE_QUEUE_NAME,
+        concurrencyKey: academyConcurrencyKey(job.academyId),
+      },
     }));
 
     await extractionPageTask.batchTrigger(items);

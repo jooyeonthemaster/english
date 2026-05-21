@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!passage.analysis) {
+    if (request.nextUrl.searchParams.get("requireAnalysis") === "true" && !passage.analysis) {
       await refundCredits(
         staff.academyId,
         "AUTO_GEN_BATCH",
@@ -141,10 +141,11 @@ export async function POST(request: NextRequest) {
           count,
           passageContent: passage.content,
           teacherIntentBlock,
-          analysisContext,
-          customPrompt,
-          diffLabel,
-        }),
+            analysisContext,
+            customPrompt,
+            diffLabel,
+            generationPlan,
+          }),
         generationPlan,
         logPrefix: "AUTO-GEN-PLAN",
         maxTokens: 4_096,

@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (passage && !passage.analysis) {
+    if (passage && request.nextUrl.searchParams.get("requireAnalysis") === "true" && !passage.analysis) {
       await refundCredits(
         staff.academyId,
         "QUESTION_GEN_SINGLE",

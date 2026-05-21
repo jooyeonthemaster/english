@@ -58,6 +58,16 @@ export function BlankInferenceRenderer({ q }: { q: BlankInferenceQuestion }) {
   );
 }
 
+function getGrammarDisplayExpression(me: GrammarErrorQuestion["markedExpressions"][number]): string {
+  return me.isError && me.errorExpression ? me.errorExpression : me.expression;
+}
+
+function getGrammarCorrection(me: GrammarErrorQuestion["markedExpressions"][number]): string | undefined {
+  if (!me.isError) return undefined;
+  if (me.correction) return me.correction;
+  return me.errorExpression && me.errorExpression !== me.expression ? me.expression : undefined;
+}
+
 export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
   return (
     <>
@@ -69,13 +79,19 @@ export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
           <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">밑줄 표현 분석</span>
             <div className="space-y-1">
-              {q.markedExpressions.map((me, i) => (
-                <div key={i} className={`text-[12px] flex items-start gap-2 ${me.isError ? "text-red-700" : "text-slate-600"}`}>
-                  <span className="font-bold text-blue-600 w-6 shrink-0">{me.label}</span>
-                  <span className={me.isError ? "line-through" : ""}>{me.expression}</span>
-                  {me.isError && me.correction && <span className="text-emerald-700 font-semibold">→ {me.correction}</span>}
-                </div>
-              ))}
+              {q.markedExpressions.map((me, i) => {
+                const displayExpression = getGrammarDisplayExpression(me);
+                const correction = getGrammarCorrection(me);
+                const showCorrection = correction && correction !== displayExpression;
+
+                return (
+                  <div key={i} className={`text-[12px] flex items-start gap-2 ${me.isError ? "text-red-700" : "text-slate-600"}`}>
+                    <span className="font-bold text-blue-600 w-6 shrink-0">{me.label}</span>
+                    <span className={me.isError ? "line-through" : ""}>{displayExpression}</span>
+                    {showCorrection && <span className="text-emerald-700 font-semibold">→ {correction}</span>}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -277,10 +293,12 @@ export function SentenceTransformRenderer({ q }: { q: SentenceTransformQuestion 
 }
 
 export function FillBlankKeyRenderer({ q }: { q: FillBlankKeyQuestion }) {
+  const displayText = q.passageWithBlank || q.sentenceWithBlank;
+
   return (
     <>
       <Direction text={q.direction} />
-      <PassageBlock>{renderBlanks(q.sentenceWithBlank)}</PassageBlock>
+      <PassageBlock>{renderBlanks(displayText)}</PassageBlock>
       <AnswerRevealSection>
         <ModelAnswer answer={q.answer} label="정답" />
         <AnswerLine answer={q.correctAnswer} />

@@ -14,6 +14,11 @@
 // ============================================================================
 
 import { schedules, logger } from "@trigger.dev/sdk/v3";
+import {
+  academyConcurrencyKey,
+  EXTRACTION_FINALIZE_QUEUE_NAME,
+  EXTRACTION_PAGE_QUEUE_NAME,
+} from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import { extractionPageTask } from "./extraction-page";
 import { extractionFinalizeTask } from "./extraction-finalize";
@@ -115,6 +120,7 @@ export const extractionReaperTask = schedules.task({
         idempotencyKey: true,
         attemptCount: true,
         maxAttempts: true,
+        job: { select: { academyId: true } },
       },
       take: 500,
     });
@@ -125,14 +131,23 @@ export const extractionReaperTask = schedules.task({
     for (const p of pending) {
       await extractionPageTask.trigger(
         { jobId: p.jobId, pageIndex: p.pageIndex },
-        { idempotencyKey: p.idempotencyKey },
+        {
+          idempotencyKey: p.idempotencyKey,
+          queue: EXTRACTION_PAGE_QUEUE_NAME,
+          concurrencyKey: academyConcurrencyKey(p.job.academyId),
+        },
       );
     }
 
     // (3) Finalize PROCESSING jobs whose pages are all terminal
     const processingJobs = await prisma.extractionJob.findMany({
       where: { status: "PROCESSING", pendingPages: 0 },
-      select: { id: true, successPages: true, failedPages: true },
+      select: {
+        id: true,
+        successPages: true,
+        failedPages: true,
+        academyId: true,
+      },
       take: 50,
     });
     for (const job of processingJobs) {
@@ -140,6 +155,8 @@ export const extractionReaperTask = schedules.task({
         { jobId: job.id },
         {
           idempotencyKey: `finalize:${job.id}:${job.successPages}:${job.failedPages}`,
+          queue: EXTRACTION_FINALIZE_QUEUE_NAME,
+          concurrencyKey: academyConcurrencyKey(job.academyId),
         },
       );
     }

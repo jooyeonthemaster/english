@@ -16,8 +16,10 @@ export interface ExtractionAiModelConfig {
   thinkingBudget: number;
 }
 
+const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
+
 const GEMINI_FLASH: ExtractionAiModelConfig = {
-  model: "gemini-3-flash-preview",
+  model: DEFAULT_GEMINI_MODEL,
   temperature: 0,
   topK: 1,
   topP: 0,

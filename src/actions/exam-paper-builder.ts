@@ -18,6 +18,8 @@ export interface ExamPaperBuilderItemInput {
   answerSpaceLines?: number;
   sectionTitle?: string;
   teacherNote?: string;
+  breakBefore?: "auto" | "column" | "page";
+  keepWithPrev?: boolean;
 }
 
 export interface ExamPaperBuilderSaveInput {
@@ -132,6 +134,11 @@ export async function saveExamPaperDraft(
         orderNum: index + 1,
         points: Math.max(1, Math.min(100, Number(item.points) || 1)),
         answerSpaceLines: Math.max(0, Math.min(12, Number(item.answerSpaceLines) || 0)),
+        breakBefore:
+          item.breakBefore === "column" || item.breakBefore === "page"
+            ? item.breakBefore
+            : "auto",
+        keepWithPrev: Boolean(item.keepWithPrev),
       }));
 
     if (!input.title.trim()) {

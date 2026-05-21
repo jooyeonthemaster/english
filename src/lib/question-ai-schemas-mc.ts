@@ -5,17 +5,21 @@
 // ============================================================================
 
 import { z } from "zod";
+import { aiWrongOptionExplanationsSchema } from "./question-wrong-option-explanations";
 
-// Re-export unchanged schemas (지문 복사 없는 유형)
-export {
-  sentenceOrderSchema as aiSentenceOrderSchema,
-  type SentenceOrderQuestion as AiSentenceOrderQuestion,
-  topicMainIdeaSchema as aiTopicMainIdeaSchema,
-  type TopicMainIdeaQuestion as AiTopicMainIdeaQuestion,
-  titleSchema as aiTitleSchema,
-  type TitleQuestion as AiTitleQuestion,
-  contentMatchSchema as aiContentMatchSchema,
-  type ContentMatchQuestion as AiContentMatchQuestion,
+// AI variants for schemas that do not need passage reconstruction.
+import {
+  contentMatchSchema,
+  sentenceOrderSchema,
+  titleSchema,
+  topicMainIdeaSchema,
+} from "./question-schemas-mc";
+
+export type {
+  ContentMatchQuestion as AiContentMatchQuestion,
+  SentenceOrderQuestion as AiSentenceOrderQuestion,
+  TitleQuestion as AiTitleQuestion,
+  TopicMainIdeaQuestion as AiTopicMainIdeaQuestion,
 } from "./question-schemas-mc";
 
 // ---------------------------------------------------------------------------
@@ -37,8 +41,13 @@ const commonFields = {
 };
 
 const mcWrongExplanations = {
-  wrongOptionExplanations: z.record(z.string(), z.string()).describe("오답별 해설, key는 선지 label"),
+  wrongOptionExplanations: aiWrongOptionExplanationsSchema,
 };
+
+export const aiSentenceOrderSchema = sentenceOrderSchema.extend(mcWrongExplanations);
+export const aiTopicMainIdeaSchema = topicMainIdeaSchema.extend(mcWrongExplanations);
+export const aiTitleSchema = titleSchema.extend(mcWrongExplanations);
+export const aiContentMatchSchema = contentMatchSchema.extend(mcWrongExplanations);
 
 // ---------------------------------------------------------------------------
 // 1. 빈칸 추론 (BLANK_INFERENCE)
@@ -134,23 +143,16 @@ export type AiReferenceQuestion = z.infer<typeof aiReferenceSchema>;
 // Registry
 // ---------------------------------------------------------------------------
 
-import {
-  sentenceOrderSchema,
-  topicMainIdeaSchema,
-  titleSchema,
-  contentMatchSchema,
-} from "./question-schemas-mc";
-
 export const AI_MC_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   BLANK_INFERENCE: aiBlankInferenceSchema,
   GRAMMAR_ERROR: aiGrammarErrorSchema,
   VOCAB_CHOICE: aiVocabChoiceSchema,
-  SENTENCE_ORDER: sentenceOrderSchema,
+  SENTENCE_ORDER: aiSentenceOrderSchema,
   SENTENCE_INSERT: aiSentenceInsertSchema,
-  TOPIC_MAIN_IDEA: topicMainIdeaSchema,
-  TITLE: titleSchema,
+  TOPIC_MAIN_IDEA: aiTopicMainIdeaSchema,
+  TITLE: aiTitleSchema,
   REFERENCE: aiReferenceSchema,
-  CONTENT_MATCH: contentMatchSchema,
+  CONTENT_MATCH: aiContentMatchSchema,
   IRRELEVANT: aiIrrelevantSchema,
 };
 

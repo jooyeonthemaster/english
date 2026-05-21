@@ -272,16 +272,30 @@ export function ExamPaperBuilderClient({
 
   usePrintPortal();
 
+  function triggerDocxDownload(examId: string, withAnswers: boolean) {
+    const link = document.createElement("a");
+    link.href = withAnswers
+      ? `/api/exams/${examId}/export-docx?answers=true`
+      : `/api/exams/${examId}/export-docx`;
+    link.download = "";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
   function handleDownloadDocx() {
     startTransition(async () => {
       const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
       if (!examId) return;
-      const link = document.createElement("a");
-      link.href = `/api/exams/${examId}/export-docx`;
-      link.download = "";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      triggerDocxDownload(examId, false);
+    });
+  }
+
+  function handleDownloadDocxWithAnswers() {
+    startTransition(async () => {
+      const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
+      if (!examId) return;
+      triggerDocxDownload(examId, true);
     });
   }
 
@@ -357,6 +371,7 @@ export function ExamPaperBuilderClient({
             onGoToManage={handleGoToManage}
             onPrint={handlePrint}
             onDownloadDocx={handleDownloadDocx}
+            onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
             onSave={handleSave}
           />
 

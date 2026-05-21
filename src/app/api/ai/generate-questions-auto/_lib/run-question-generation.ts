@@ -4,6 +4,7 @@ import {
   AI_QUESTION_SCHEMAS,
   getAiResponseSchema,
 } from "@/lib/question-ai-schemas-mc";
+import { GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS } from "@/lib/concurrency-config";
 import { postProcessQuestion } from "@/lib/question-postprocess";
 import {
   QUESTION_SCHEMAS,
@@ -25,7 +26,7 @@ import {
   buildGenerationPrompt,
 } from "./prompts";
 
-interface RunGenerationInput {
+export interface RunGenerationInput {
   plan: PlanResult["plan"];
   schoolType: string;
   gradeInfo: string;
@@ -58,6 +59,7 @@ export async function runQuestionGeneration({
     plan.map(async (item) => {
       const { subType, count: typeCount, targetPoints } = item;
       if (typeCount <= 0) return [];
+      const expectedTypeCount = Math.max(1, Math.floor(Number(typeCount) || 1));
 
       console.log(
         `[AUTO-GEN] Step 2: Generating ${subType} x${typeCount} via ${generationPlan} plan...`,
@@ -100,16 +102,23 @@ export async function runQuestionGeneration({
             typeCount,
             diffLabel,
             diffInstruction,
+            generationPlan,
             customPrompt,
           }),
           generationPlan,
           Math.min(20_000, Math.max(4_096, (Number(typeCount) || 1) * 4_096)),
         );
 
-        const generatedQuestions =
+        const generatedQuestionsAll =
           isRecord(object) && Array.isArray(object.questions)
             ? object.questions.filter(isRecord)
             : [];
+        if (generatedQuestionsAll.length !== expectedTypeCount) {
+          console.warn(
+            `[AUTO-GEN] ${subType} returned ${generatedQuestionsAll.length}/${expectedTypeCount} questions; trimming to requested count.`,
+          );
+        }
+        const generatedQuestions = generatedQuestionsAll.slice(0, expectedTypeCount);
         const qs: Record<string, unknown>[] = [];
 
         for (const q of generatedQuestions) {
@@ -188,4 +197,29 @@ export async function runQuestionGeneration({
   );
 
   return generatedGroups.flat();
+}
+
+export async function runQuestionGenerationWithEmptyRetry(
+  input: RunGenerationInput,
+  {
+    maxAttempts = GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
+    logPrefix = "AUTO-GEN",
+  }: {
+    maxAttempts?: number;
+    logPrefix?: string;
+  } = {},
+): Promise<{ questions: Record<string, unknown>[]; attempts: number }> {
+  const attempts = Math.max(1, Math.floor(maxAttempts));
+
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const questions = await runQuestionGeneration(input);
+    if (questions.length > 0 || attempt === attempts) {
+      return { questions, attempts: attempt };
+    }
+    console.warn(
+      `[${logPrefix}] Empty generation result; retrying (${attempt + 1}/${attempts})`,
+    );
+  }
+
+  return { questions: [], attempts };
 }
