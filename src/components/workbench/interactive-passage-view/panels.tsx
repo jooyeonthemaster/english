@@ -158,6 +158,36 @@ export function KeySentencePanel({
 }
 
 // ─── Exam Point Panel ────────────────────────────────────
+function toDisplayText(value: unknown): string {
+  if (value == null) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) return value.map(toDisplayText).filter(Boolean).join(" / ");
+  if (typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    for (const key of ["text", "content", "question", "example", "prompt", "value", "original"]) {
+      const text = toDisplayText(record[key]);
+      if (text) return text;
+    }
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return "";
+    }
+  }
+  return "";
+}
+
+function toDisplayList(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(toDisplayText).filter(Boolean);
+  const text = toDisplayText(value);
+  if (!text) return [];
+  return text
+    .split(/\s*(?:\n|\/|;)\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export function ExamPointPanel({
   detail,
   onClose,
@@ -165,8 +195,16 @@ export function ExamPointPanel({
   detail: Extract<ActiveDetail, { kind: "examPoint" }>;
   onClose: () => void;
 }) {
-  const isParaphrase = !!detail.alternatives;
-  const isTransform = !!detail.transformType;
+  const alternatives = toDisplayList(detail.alternatives);
+  const text = toDisplayText(detail.text);
+  const reason = toDisplayText(detail.reason);
+  const questionExample = toDisplayText(detail.questionExample);
+  const example = toDisplayText(detail.example);
+  const relatedPoint = toDisplayText(detail.relatedPoint);
+  const transformType = toDisplayText(detail.transformType);
+  const difficulty = toDisplayText(detail.difficulty);
+  const isParaphrase = alternatives.length > 0;
+  const isTransform = !!transformType;
 
   return (
     <div className="rounded-xl border border-yellow-200 bg-gradient-to-b from-yellow-50/30 to-white p-4 space-y-3">
@@ -176,38 +214,38 @@ export function ExamPointPanel({
           <span className="text-[15px] font-bold text-slate-900">출제 포인트</span>
           {isParaphrase && <Badge className="text-[10px] border-0 bg-blue-100 text-blue-700">빈칸/동의어</Badge>}
           {isTransform && <Badge className="text-[10px] border-0 bg-violet-100 text-violet-700">서술형/변형</Badge>}
-          {detail.difficulty && <Badge className="text-[10px] border-0 bg-slate-100 text-slate-600">{detail.difficulty}</Badge>}
+          {difficulty && <Badge className="text-[10px] border-0 bg-slate-100 text-slate-600">{difficulty}</Badge>}
         </div>
         <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0"><X className="w-4 h-4" /></Button>
       </div>
 
       {/* 원문 */}
       <div className="rounded-lg border border-slate-100 p-3 text-[13px] font-mono" style={{ background: "linear-gradient(to top, #fef9c3 30%, white 30%)" }}>
-        {detail.text}
+        {text}
       </div>
 
       {/* 출제 이유 */}
-      {detail.reason && (
+      {reason && (
         <div className="text-[13px] bg-yellow-50 border border-yellow-100 rounded-lg px-3 py-2.5">
           <span className="text-yellow-700 font-semibold mr-1">출제 이유:</span>
-          <span className="text-slate-700">{detail.reason}</span>
+          <span className="text-slate-700">{reason}</span>
         </div>
       )}
 
       {/* 예상 문항 */}
-      {detail.questionExample && (
+      {questionExample && (
         <div className="text-[13px] bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5">
           <span className="text-slate-500 font-semibold mr-1 block mb-1">예상 출제 문항:</span>
-          <span className="text-slate-800 italic">{detail.questionExample}</span>
+          <span className="text-slate-800 italic">{questionExample}</span>
         </div>
       )}
 
       {/* 패러프레이징 */}
-      {detail.alternatives && detail.alternatives.length > 0 && (
+      {alternatives.length > 0 && (
         <div className="text-[13px]">
           <span className="text-blue-600 font-semibold mb-1.5 block">패러프레이징 대안:</span>
           <div className="space-y-1">
-            {detail.alternatives.map((a, i) => (
+            {alternatives.map((a, i) => (
               <div key={i} className="flex items-center gap-2 text-[12px]">
                 <span className="text-blue-400">→</span>
                 <span className="text-blue-700 bg-blue-50 rounded px-2 py-1 font-medium">{a}</span>
@@ -218,25 +256,25 @@ export function ExamPointPanel({
       )}
 
       {/* 구조 변형 */}
-      {detail.transformType && (
+      {transformType && (
         <div className="text-[13px]">
           <div className="flex items-center gap-1.5 mb-1.5">
             <ArrowRightLeft className="w-3.5 h-3.5 text-violet-500" />
-            <span className="text-violet-600 font-semibold">구조 변형: {detail.transformType}</span>
+            <span className="text-violet-600 font-semibold">구조 변형: {transformType}</span>
           </div>
-          {detail.example && (
+          {example && (
             <div className="bg-violet-50 rounded-lg px-3 py-2 text-[12px] font-mono text-violet-800">
-              → {detail.example}
+              → {example}
             </div>
           )}
         </div>
       )}
 
       {/* 관련 포인트 */}
-      {detail.relatedPoint && (
+      {relatedPoint && (
         <div className="text-[12px] text-slate-500">
           <span className="font-medium mr-1">관련:</span>
-          <span className="bg-slate-100 text-slate-600 rounded px-1.5 py-0.5">{detail.relatedPoint}</span>
+          <span className="bg-slate-100 text-slate-600 rounded px-1.5 py-0.5">{relatedPoint}</span>
         </div>
       )}
     </div>

@@ -139,6 +139,36 @@ function renderCollectionEntry(
   );
 }
 
+function toDisplayText(value: unknown): string {
+  if (value == null) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) return value.map(toDisplayText).filter(Boolean).join(" / ");
+  if (typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    for (const key of ["text", "content", "question", "example", "prompt", "value", "original"]) {
+      const text = toDisplayText(record[key]);
+      if (text) return text;
+    }
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return "";
+    }
+  }
+  return "";
+}
+
+function toDisplayList(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(toDisplayText).filter(Boolean);
+  const text = toDisplayText(value);
+  if (!text) return [];
+  return text
+    .split(/\s*(?:\n|\/|;)\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function VocabCollectionItem({ entry }: { entry: CollectionEntry }) {
   const item = entry.item as VocabItem;
   return (
@@ -225,23 +255,30 @@ function KeyCollectionItem({ entry }: { entry: CollectionEntry }) {
 function ExamCollectionItem({ entry }: { entry: CollectionEntry }) {
   const item = entry.item;
   const isParaphrase = item.kind === "paraphrase";
+  const original = toDisplayText(item.original || item.text || item.example);
+  const reason = toDisplayText(item.reason);
+  const questionExample = toDisplayText(item.questionExample);
+  const alternatives = toDisplayList(item.alternatives);
+  const example = toDisplayText(item.example);
+  const transformType = toDisplayText(item.transformType);
+  const difficulty = toDisplayText(item.difficulty);
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-1.5 flex-wrap">
         <Badge className={`h-5 border-0 text-[10px] ${isParaphrase ? "bg-blue-50 text-blue-700" : "bg-violet-50 text-violet-700"}`}>
-          {isParaphrase ? "패러프레이징" : item.transformType || "구조 변형"}
+          {isParaphrase ? "패러프레이징" : transformType || "구조 변형"}
         </Badge>
-        {item.difficulty && <Badge variant="outline" className="h-5 text-[10px]">{item.difficulty}</Badge>}
+        {difficulty && <Badge variant="outline" className="h-5 text-[10px]">{difficulty}</Badge>}
       </div>
-      <p className="rounded-md border border-yellow-100 bg-yellow-50/70 px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-800">{item.original}</p>
-      {item.reason && <p className="text-[12px] leading-relaxed text-slate-600"><span className="font-semibold text-yellow-700">이유:</span> {item.reason}</p>}
-      {item.questionExample && <p className="rounded-md bg-slate-50 px-2 py-1.5 text-[12px] leading-relaxed text-slate-700">{item.questionExample}</p>}
-      {item.alternatives?.length > 0 && (
+      {original && <p className="rounded-md border border-yellow-100 bg-yellow-50/70 px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-800">{original}</p>}
+      {reason && <p className="text-[12px] leading-relaxed text-slate-600"><span className="font-semibold text-yellow-700">이유:</span> {reason}</p>}
+      {questionExample && <p className="rounded-md bg-slate-50 px-2 py-1.5 text-[12px] leading-relaxed text-slate-700">{questionExample}</p>}
+      {alternatives.length > 0 && (
         <div className="flex flex-wrap gap-1.5 text-[11px]">
-          {item.alternatives.slice(0, 4).map((v, i) => <span key={i} className="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">{v}</span>)}
+          {alternatives.slice(0, 4).map((v, i) => <span key={i} className="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">{v}</span>)}
         </div>
       )}
-      {item.example && <p className="rounded-md bg-violet-50 px-2 py-1.5 font-mono text-[12px] text-violet-800">{item.example}</p>}
+      {example && <p className="rounded-md bg-violet-50 px-2 py-1.5 font-mono text-[12px] text-violet-800">{example}</p>}
     </div>
   );
 }
