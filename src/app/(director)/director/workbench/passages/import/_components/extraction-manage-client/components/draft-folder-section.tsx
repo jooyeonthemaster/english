@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
+  ChevronDown,
   ChevronRight,
+  ChevronUp,
   FolderOpen,
   FolderPlus,
   Check,
@@ -133,6 +135,7 @@ export function DraftFolderSection({
   resultScope = "all",
   onBackToAllResults,
 }: DraftFolderSectionProps) {
+  const [collapsed, setCollapsed] = useState(false);
   const useCards = useCardInsideFolder && activeFolder;
   const currentFolder = activeFolder
     ? breadcrumbPath[breadcrumbPath.length - 1]
@@ -199,9 +202,23 @@ export function DraftFolderSection({
               {toolbar}
             </div>
           ) : null}
+          <button
+            type="button"
+            onClick={() => setCollapsed((value) => !value)}
+            aria-expanded={!collapsed}
+            title={collapsed ? "관리 바 펼치기" : "관리 바 접기"}
+            className={`${toolbar ? "ml-1" : "ml-auto"} inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+          >
+            {collapsed ? (
+              <ChevronDown className="size-3.5" aria-hidden="true" />
+            ) : (
+              <ChevronUp className="size-3.5" aria-hidden="true" />
+            )}
+            <span>{collapsed ? "펼치기" : "접기"}</span>
+          </button>
         </div>
 
-        <div className="flex min-h-7 min-w-0 items-center gap-1.5 rounded-lg border border-blue-100 bg-blue-50/60 px-2.5 py-1.5 text-[11px]">
+        {!collapsed ? <div className="flex min-h-7 min-w-0 items-center gap-1.5 rounded-lg border border-blue-100 bg-blue-50/60 px-2.5 py-1.5 text-[11px]">
           <span className="shrink-0 font-semibold text-blue-500">
             현재 위치
           </span>
@@ -241,10 +258,10 @@ export function DraftFolderSection({
               </span>
             );
           })}
-        </div>
+        </div> : null}
       </div>
 
-      <div className="bg-slate-50/70 px-4 py-3">
+      {!collapsed ? <div className="bg-slate-50/70 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2.5">
           {currentFolder ? (
             <ParentFolderButton
@@ -339,9 +356,9 @@ export function DraftFolderSection({
             </button>
           )}
         </div>
-      </div>
+      </div> : null}
 
-      {selectionBar ? (
+      {!collapsed && selectionBar ? (
         <div className="border-t border-slate-100 bg-white px-2 py-1.5">
           {selectionBar}
         </div>
