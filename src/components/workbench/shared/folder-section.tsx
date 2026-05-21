@@ -136,6 +136,7 @@ export function FolderSection({
   rootLabel = "전체 문제",
 }: FolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const useCards = useCardInsideFolder && activeFolder;
   const currentFolder = activeFolder
     ? breadcrumbPath[breadcrumbPath.length - 1]
@@ -150,9 +151,34 @@ export function FolderSection({
     else onDragToRoot?.(itemId, copy);
   };
 
+  useEffect(() => {
+    const el = stickyRef.current;
+    if (!el) return;
+
+    const root = document.documentElement;
+    const syncOffset = () => {
+      root.style.setProperty(
+        "--workbench-management-sticky-offset",
+        `${Math.ceil(el.getBoundingClientRect().height)}px`,
+      );
+    };
+
+    syncOffset();
+    const observer = new ResizeObserver(syncOffset);
+    observer.observe(el);
+    window.addEventListener("resize", syncOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", syncOffset);
+      root.style.removeProperty("--workbench-management-sticky-offset");
+    };
+  }, []);
+
   return (
     <div
-      className="sticky top-0 z-10 -mx-6 px-6 pt-2 pb-2.5"
+      ref={stickyRef}
+      className="sticky top-0 z-30 -mx-6 px-6 pt-2 pb-2.5"
       style={{
         background: "rgba(244, 246, 249, 0.92)",
         backdropFilter: "blur(16px) saturate(180%)",

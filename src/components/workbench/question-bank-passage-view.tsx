@@ -126,11 +126,12 @@ export function PassageGroupedView({
             }`}
           >
             <header
-              className={`flex w-full items-center gap-2.5 border-b px-4 transition-colors ${
+              className={`sticky z-20 flex w-full items-center gap-2.5 border-b px-4 transition-colors ${
                 isOpen
                   ? "border-blue-100 bg-blue-50/60"
                   : "border-slate-100/70 bg-white hover:bg-slate-50/70"
               }`}
+              style={{ top: "var(--workbench-management-sticky-offset, 0px)" }}
             >
               <div
                 className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
