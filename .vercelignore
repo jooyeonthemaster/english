@@ -7,4 +7,5 @@ node_modules
 .claude
 .codex
 scripts/_gen_audit_out
+/*.pdf
 *.log

@@ -67,6 +67,7 @@ google-credentials*.json
 
 # Test PDFs / one-off OCR text dumps used during extraction-pipeline debugging.
 # These can be 1+ MB each and are not project assets.
+/*.pdf
 /nara*.pdf
 /고등영어_*.pdf
 .*-pdf.tmp.txt
