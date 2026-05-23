@@ -302,6 +302,28 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
     });
   }
 
+  function handleDownloadHwpx() {
+    startTransition(() => {
+      const link = document.createElement("a");
+      link.href = `/api/exams/${exam.id}/export-hwpx`;
+      link.download = "";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
+  }
+
+  function handleDownloadHwpxWithAnswers() {
+    startTransition(() => {
+      const link = document.createElement("a");
+      link.href = `/api/exams/${exam.id}/export-hwpx?answers=true`;
+      link.download = "";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
+  }
+
   const classes = exam.class ? [{ id: exam.class.id, name: exam.class.name }] : [];
   const schools = exam.school ? [{ id: exam.school.id, name: exam.school.name }] : [];
 
@@ -316,6 +338,8 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
         onPrint={handlePrint}
         onDownloadDocx={handleDownloadDocx}
         onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
+        onDownloadHwpx={handleDownloadHwpx}
+        onDownloadHwpxWithAnswers={handleDownloadHwpxWithAnswers}
         onSave={() => toast.info("이미 저장된 시험지입니다.")}
       />
 

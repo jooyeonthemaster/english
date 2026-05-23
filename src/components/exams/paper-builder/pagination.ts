@@ -5,6 +5,11 @@ import {
   PREVIEW_PAGE_WIDTH,
   TWO_COLUMN_GAP,
 } from "./constants";
+import {
+  formatSentenceInsertPassageMarkers,
+  optionDisplayTextForSubtype,
+  splitSentenceInsertGivenBlock,
+} from "./option-display";
 import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type {
   OptionItem,
@@ -16,8 +21,13 @@ import type {
   RenderItemPart,
 } from "./types";
 
-const LINE_WIDTH_FUDGE = 0.9;
-const CAPACITY_FUDGE = 0.82;
+const LINE_WIDTH_FUDGE = 1.08;
+const MIN_QUESTION_START_LINES = 8;
+const MIN_PASSAGE_START_LINES = 4;
+const BOXED_PASSAGE_HORIZONTAL_INSET = 28;
+const PAGE_BOTTOM_GUARD = 70;
+const OPTION_BLOCK_TOP_GAP = 6;
+const OPTION_ROW_GAP = 4;
 
 export function isWideGlyph(char: string): boolean {
   const code = char.charCodeAt(0);
@@ -120,9 +130,9 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
   const pageHeight = PREVIEW_PAGE_WIDTH * A4_HEIGHT_RATIO;
   const horizontalPadding = compact ? 68 : 84;
   const verticalPadding = compact ? 60 : 76;
-  const firstPageHeader = compact ? 100 : 122;
-  const followPageHeader = 28;
-  const footer = 26;
+  const firstPageHeader = compact ? 82 : 96;
+  const followPageHeader = 24;
+  const footer = 24;
   const contentHeight =
     pageHeight -
     verticalPadding -
@@ -134,7 +144,7 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
 
   return {
     columnWidth,
-    capacity: Math.max(420, contentHeight * CAPACITY_FUDGE),
+    capacity: Math.max(420, contentHeight - PAGE_BOTTOM_GUARD),
   };
 }
 
@@ -142,6 +152,16 @@ export function passageLineHeight(settings: PaginationSettings): number {
   const compact = settings.density === "compact";
   const fontSize = compact ? 10.5 : 11.5;
   return fontSize * (compact ? 1.46 : 1.58);
+}
+
+function passageContentWidth(settings: PaginationSettings): number {
+  const { columnWidth } = pageMetrics(settings, 0);
+  if (settings.passageStyle !== "boxed") return columnWidth;
+  return Math.max(80, columnWidth - BOXED_PASSAGE_HORIZONTAL_INSET);
+}
+
+function passageContinuationReserveHeight(settings: PaginationSettings): number {
+  return settings.density === "compact" ? 16 : 18;
 }
 
 export function questionLineHeight(settings: PaginationSettings): number {
@@ -154,19 +174,28 @@ export function questionMetaHeight(settings: PaginationSettings): number {
   return settings.showQuestionMeta ? 18 : 16;
 }
 
-export function passageChromeHeight(group: PaperGroup, settings: PaginationSettings, includeTitle: boolean): number {
+export function passageChromeHeight(
+  group: PaperGroup,
+  settings: PaginationSettings,
+  includeTitle: boolean,
+  reserveContinuation = false,
+): number {
   const titleHeight = includeTitle && settings.showPassageTitle && group.passageTitle ? 15 : 0;
   const boxChrome =
     settings.passageStyle === "boxed" ? 24 : settings.passageStyle === "underlined" ? 18 : 8;
-  return titleHeight + boxChrome + 12;
+  return (
+    titleHeight +
+    boxChrome +
+    12 +
+    (reserveContinuation ? passageContinuationReserveHeight(settings) : 0)
+  );
 }
 
 export function passageToLines(content: string, settings: PaginationSettings): string[] {
   if (!content) return [];
   const compact = settings.density === "compact";
-  const { columnWidth } = pageMetrics(settings, 0);
   const fontSize = compact ? 10.5 : 11.5;
-  return textToLines(normalizePassageText(content), columnWidth, fontSize);
+  return textToLines(normalizePassageText(content), passageContentWidth(settings), fontSize);
 }
 
 export function questionToLines(content: string, settings: PaginationSettings): string[] {
@@ -185,14 +214,33 @@ export function estimatePassageHeight(group: PaperGroup, settings: PaginationSet
 }
 
 export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
-  const lines = questionToLines(item.questionText, settings);
-  return questionMetaHeight(settings) + lines.length * questionLineHeight(settings) + 6;
+  const renderedQuestionText = formatSentenceInsertPassageMarkers(
+    item.questionText,
+    item.sourceQuestion.subType,
+  );
+  const lines = questionToLines(renderedQuestionText, settings);
+  const { givenText } = splitSentenceInsertGivenBlock(
+    renderedQuestionText,
+    item.sourceQuestion.subType,
+  );
+  return (
+    questionMetaHeight(settings) +
+    lines.length * questionLineHeight(settings) +
+    (givenText ? 10 : 0) +
+    6
+  );
 }
 
-export function estimateOptionBlockHeight(option: OptionItem, settings: PaginationSettings): number {
+export function estimateOptionBlockHeight(
+  option: OptionItem,
+  settings: PaginationSettings,
+  subType?: string | null,
+  optionIndex = 0,
+): number {
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
-  const optionLines = estimateTextLines(option.text, Math.max(80, columnWidth - 22), compact ? 10 : 11);
+  const displayText = optionDisplayTextForSubtype(subType, optionIndex, option.text);
+  const optionLines = estimateTextLines(displayText, Math.max(80, columnWidth - 22), compact ? 10 : 11);
   return Math.max(16, optionLines * (compact ? 14.5 : 16));
 }
 
@@ -241,6 +289,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
   const passageTitleShownFor = new Set<string>();
   const headerRenderedFor = new Set<string>();
   const overflowItems = new Set<string>();
+  const passageContinuationReserveFragments = new Set<string>();
 
   function pushCurrentPage() {
     if (currentPage.some((column) => column.length > 0)) pages.push(currentPage);
@@ -273,6 +322,9 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       passageTitle: group.passageTitle,
       passageContent: group.passageContent,
       includePassage: false,
+      usesSentenceInsertMarkers: group.items.some(
+        (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
+      ),
       passageRenderedLines: [],
       passageStartLineIndex: 0,
       passageTotalLines: 0,
@@ -322,7 +374,12 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       const isFirstLineOfFragment = !sameFragment || lastFrag!.passageRenderedLines.length === 0;
       if (isFirstLineOfFragment) {
         const includeTitle = !passageTitleShownFor.has(block.group.id);
-        cost += passageChromeHeight(block.group, settings, includeTitle);
+        cost += passageChromeHeight(
+          block.group,
+          settings,
+          includeTitle,
+          block.lineIndex + 1 < block.totalLines,
+        );
       }
       return cost;
     }
@@ -341,10 +398,66 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     return cost;
   }
 
+  function minimumQuestionStartCost(block: FlowBlock, blockIndex: number): number {
+    if (block.kind !== "question-meta") return marginalCostForBlock(block);
+
+    const targetHeight =
+      questionMetaHeight(settings) +
+      questionLineHeight(settings) *
+        Math.min(Math.max(block.totalLines, 1), MIN_QUESTION_START_LINES);
+    let itemStartHeight = block.height;
+
+    for (let index = blockIndex + 1; index < blocks.length; index += 1) {
+      const nextBlock = blocks[index];
+      const nextItem = itemForBlock(nextBlock);
+      if (nextItem?.localId !== block.item.localId) break;
+      itemStartHeight += nextBlock.height;
+      if (itemStartHeight >= targetHeight) break;
+    }
+
+    return marginalCostForBlock(block) + Math.max(0, itemStartHeight - block.height);
+  }
+
+  function minimumPassageStartCost(block: FlowBlock, blockIndex: number): number {
+    if (block.kind !== "passage-line") return marginalCostForBlock(block);
+
+    const col = currentPage[columnIndex];
+    const lastFrag = col[col.length - 1];
+    const sameFragment = !!lastFrag && lastFrag.groupSourceId === block.group.id;
+    const startsNewPassageFragment =
+      !sameFragment || lastFrag!.passageRenderedLines.length === 0;
+
+    if (!startsNewPassageFragment) return marginalCostForBlock(block);
+
+    const targetLines = Math.min(
+      block.totalLines - block.lineIndex,
+      MIN_PASSAGE_START_LINES,
+    );
+    let passageStartHeight = block.height;
+
+    for (let index = blockIndex + 1; index < blocks.length; index += 1) {
+      const nextBlock = blocks[index];
+      if (nextBlock.kind !== "passage-line" || nextBlock.group.id !== block.group.id) {
+        break;
+      }
+      passageStartHeight += nextBlock.height;
+      if (nextBlock.lineIndex - block.lineIndex + 1 >= targetLines) break;
+    }
+
+    return marginalCostForBlock(block) + Math.max(0, passageStartHeight - block.height);
+  }
+
   const blocks: FlowBlock[] = [];
   for (const group of groups) {
     if (group.includePassage && group.passageContent) {
-      const lines = passageToLines(group.passageContent, settings);
+      const usesSentenceInsertMarkers = group.items.some(
+        (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
+      );
+      const renderedPassageContent = formatSentenceInsertPassageMarkers(
+        group.passageContent,
+        usesSentenceInsertMarkers ? "SENTENCE_INSERT" : null,
+      );
+      const lines = passageToLines(renderedPassageContent, settings);
       const keepTogether = Boolean(group.items[0]?.keepWithPrev);
       if (keepTogether) {
         const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
@@ -370,7 +483,15 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     }
 
     for (const item of group.items) {
-      const questionLines = questionToLines(item.questionText, settings);
+      const renderedQuestionText = formatSentenceInsertPassageMarkers(
+        item.questionText,
+        item.sourceQuestion.subType,
+      );
+      const questionLines = questionToLines(renderedQuestionText, settings);
+      const { givenText } = splitSentenceInsertGivenBlock(
+        renderedQuestionText,
+        item.sourceQuestion.subType,
+      );
       const lineH = questionLineHeight(settings);
       blocks.push({
         kind: "question-meta",
@@ -378,7 +499,10 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         item,
         firstLine: questionLines[0] ?? null,
         totalLines: questionLines.length,
-        height: questionMetaHeight(settings) + (questionLines.length > 0 ? lineH : 0),
+        height:
+          questionMetaHeight(settings) +
+          (questionLines.length > 0 ? lineH : 0) +
+          (givenText ? 10 : 0),
       });
       questionLines.slice(1).forEach((line, offset) => {
         const index = offset + 1;
@@ -393,7 +517,16 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         });
       });
       item.options.forEach((option, index) => {
-        blocks.push({ kind: "option", group, item, option, index, height: estimateOptionBlockHeight(option, settings) });
+        blocks.push({
+          kind: "option",
+          group,
+          item,
+          option,
+          index,
+          height:
+            estimateOptionBlockHeight(option, settings, item.sourceQuestion.subType, index) +
+            (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP),
+        });
       });
       if (settings.showAnswerSpace && item.answerSpaceLines > 0) {
         blocks.push({ kind: "answer", group, item, height: estimateAnswerBlockHeight(item) });
@@ -406,7 +539,8 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
 
   let isFirstBlockOverall = true;
 
-  for (const block of blocks) {
+  for (let blockIndex = 0; blockIndex < blocks.length; blockIndex += 1) {
+    const block = blocks[blockIndex];
     const group = block.group;
     const item = itemForBlock(block);
     const isQuestionStartBlock = block.kind === "question-meta";
@@ -421,8 +555,24 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       }
     }
 
-    const cost = marginalCostForBlock(block);
-    const colHasContent = columnHeights[columnIndex] > 0;
+    let cost = marginalCostForBlock(block);
+    let colHasContent = columnHeights[columnIndex] > 0;
+    const wouldCreateQuestionOrphan =
+      colHasContent &&
+      isQuestionStartBlock &&
+      !headerForceStay &&
+      columnHeights[columnIndex] + minimumQuestionStartCost(block, blockIndex) > currentCapacity();
+    const wouldCreatePassageOrphan =
+      colHasContent &&
+      block.kind === "passage-line" &&
+      columnHeights[columnIndex] + minimumPassageStartCost(block, blockIndex) > currentCapacity();
+
+    if (wouldCreateQuestionOrphan || wouldCreatePassageOrphan) {
+      advanceColumn();
+      cost = marginalCostForBlock(block);
+      colHasContent = columnHeights[columnIndex] > 0;
+    }
+
     const wouldOverflow = colHasContent && columnHeights[columnIndex] + cost > currentCapacity();
 
     if (wouldOverflow && !headerForceStay) {
@@ -442,15 +592,31 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       const isFirstLineOfFragment = fragment.passageRenderedLines.length === 0;
       if (isFirstLineOfFragment) {
         const includeTitle = !passageTitleShownFor.has(group.id);
-        const chrome = passageChromeHeight(group, settings, includeTitle);
+        const reserveContinuation = block.lineIndex + 1 < block.totalLines;
+        const chrome = passageChromeHeight(
+          group,
+          settings,
+          includeTitle,
+          reserveContinuation,
+        );
         columnHeights[columnIndex] += chrome;
         fragment.includePassage = true;
         fragment.passageStartLineIndex = block.lineIndex;
         fragment.passageTotalLines = block.totalLines;
+        if (reserveContinuation) {
+          passageContinuationReserveFragments.add(fragment.id);
+        }
         if (includeTitle) passageTitleShownFor.add(group.id);
       }
       fragment.passageRenderedLines.push(block.line);
       columnHeights[columnIndex] += block.height;
+      if (
+        block.lineIndex + 1 >= block.totalLines &&
+        passageContinuationReserveFragments.has(fragment.id)
+      ) {
+        columnHeights[columnIndex] -= passageContinuationReserveHeight(settings);
+        passageContinuationReserveFragments.delete(fragment.id);
+      }
     } else if (block.kind === "question-meta") {
       const part = ensurePart(fragment, block.item);
       if (!headerRenderedFor.has(block.item.localId)) {

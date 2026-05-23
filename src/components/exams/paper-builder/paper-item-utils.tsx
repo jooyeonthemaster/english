@@ -6,6 +6,7 @@ import {
   normalizePassageText,
   normalizeQuestionText,
 } from "./text-normalization";
+import { splitSentenceInsertGivenBlock } from "./option-display";
 
 export function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -123,9 +124,26 @@ export function formatDateInput(date: Date): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-export function renderFormattedInline(text: string) {
+type FormattedInlineOptions = {
+  alphabetMarkerClassName?: string;
+};
+
+function alphabetMarkerClassNameForSubtype(
+  subType: string | null | undefined,
+  options?: FormattedInlineOptions,
+) {
+  if (options?.alphabetMarkerClassName) return options.alphabetMarkerClassName;
+  return subType === "SENTENCE_ORDER" ? "font-bold text-black" : "font-bold text-blue-700";
+}
+
+export function renderFormattedInline(
+  text: string,
+  subType?: string | null,
+  options?: FormattedInlineOptions,
+) {
   const parts: React.ReactNode[] = [];
   const pattern = /__([^_]+)__|_{3,}|([①②③④⑤])|\(([a-eA-E])\)/g;
+  const alphabetMarkerClassName = alphabetMarkerClassNameForSubtype(subType, options);
   let lastIndex = 0;
   let key = 0;
   let match: RegExpExecArray | null;
@@ -148,7 +166,7 @@ export function renderFormattedInline(text: string) {
       );
     } else if (match[3]) {
       parts.push(
-        <span key={key++} className="font-bold text-blue-700">
+        <span key={key++} className={alphabetMarkerClassName}>
           ({match[3]})
         </span>,
       );
@@ -164,4 +182,48 @@ export function renderFormattedInline(text: string) {
 
   if (lastIndex < text.length) parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
   return parts.length > 0 ? parts : text;
+}
+
+export function joinRenderedLinesForDisplay(lines: string[]) {
+  const paragraphs: string[] = [];
+  let currentParagraph: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      if (currentParagraph.length > 0) {
+        paragraphs.push(currentParagraph.join(" "));
+        currentParagraph = [];
+      }
+      continue;
+    }
+
+    currentParagraph.push(trimmed);
+  }
+
+  if (currentParagraph.length > 0) {
+    paragraphs.push(currentParagraph.join(" "));
+  }
+
+  return paragraphs.join("\n\n").replace(/[ \t]{2,}/g, " ").trim();
+}
+
+export function renderQuestionTextInline(
+  text: string,
+  subType: string | null | undefined,
+) {
+  const { beforeText, givenText } = splitSentenceInsertGivenBlock(text, subType);
+  if (!givenText) return renderFormattedInline(text, subType);
+
+  return (
+    <>
+      {beforeText && (
+        <span className="block">{renderFormattedInline(beforeText, subType)}</span>
+      )}
+      <span className="my-2 block rounded-[4px] border border-slate-400 bg-white/80 px-2.5 py-1.5 leading-[1.55]">
+        {renderFormattedInline(givenText, subType)}
+      </span>
+    </>
+  );
 }

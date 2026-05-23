@@ -2,7 +2,17 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 import { SUBTYPE_LABELS } from "../constants";
-import { renderFormattedInline } from "../paper-item-utils";
+import {
+  formatSentenceInsertPassageMarkers,
+  optionDisplayTextForSubtype,
+  optionOrdinalLabel,
+  shouldUseGrammarOptionReference,
+} from "../option-display";
+import {
+  joinRenderedLinesForDisplay,
+  renderFormattedInline,
+  renderQuestionTextInline,
+} from "../paper-item-utils";
 import { TEMPLATE_VISUALS } from "../templates";
 import type {
   Density,
@@ -183,9 +193,13 @@ export function A4PaperPage({
                         fragment.passageRenderedLines.length;
                       const isPassageEnd =
                         endLineIndex >= fragment.passageTotalLines;
-                      const renderedText =
-                        fragment.passageRenderedLines.join("\n");
                       const isSplit = !(isPassageStart && isPassageEnd);
+                      const renderedText = formatSentenceInsertPassageMarkers(
+                        isSplit
+                          ? joinRenderedLinesForDisplay(fragment.passageRenderedLines)
+                          : fragment.passageContent,
+                        fragment.usesSentenceInsertMarkers ? "SENTENCE_INSERT" : null,
+                      );
                       return (
                         <div
                           className={cn(
@@ -233,7 +247,7 @@ export function A4PaperPage({
                           )}
                           <p
                             className={cn(
-                              "whitespace-pre-line text-left",
+                              "whitespace-pre-line text-justify",
                               visual.questionClass,
                             )}
                           >
@@ -382,18 +396,23 @@ export function A4PaperPage({
                           )}
                           {part.questionRenderedLines.length > 0 &&
                             (() => {
-                              const renderedQuestionText = part.questionRenderedLines.join("\n");
                               const questionStartsAtBeginning = part.questionStartLineIndex === 0;
                               const questionEndsHere =
                                 part.questionStartLineIndex + part.questionRenderedLines.length >=
                                 part.questionTotalLines;
                               const questionIsWhole =
                                 questionStartsAtBeginning && questionEndsHere;
+                              const renderedQuestionText = formatSentenceInsertPassageMarkers(
+                                questionIsWhole
+                                  ? item.questionText
+                                  : joinRenderedLinesForDisplay(part.questionRenderedLines),
+                                item.sourceQuestion.subType,
+                              );
 
                               return (
                                 <p
                                   className={cn(
-                                    "whitespace-pre-line font-semibold",
+                                    "whitespace-pre-line text-justify font-semibold",
                                     visual.questionClass,
                                   )}
                                 >
@@ -408,11 +427,17 @@ export function A4PaperPage({
                                       className="block"
                                       readOnly={readOnly}
                                     >
-                                      {renderFormattedInline(renderedQuestionText)}
+                                      {renderQuestionTextInline(
+                                        renderedQuestionText,
+                                        item.sourceQuestion.subType,
+                                      )}
                                     </EditableText>
                                   ) : (
                                     <span className="block">
-                                      {renderFormattedInline(renderedQuestionText)}
+                                      {renderQuestionTextInline(
+                                        renderedQuestionText,
+                                        item.sourceQuestion.subType,
+                                      )}
                                     </span>
                                   )}
                                 </p>
@@ -426,41 +451,71 @@ export function A4PaperPage({
                                 compact ? "text-[10px]" : "text-[11px]",
                               )}
                             >
-                              {part.options.map(({ option, originalIndex }) => (
-                                <div
-                                  key={`${item.localId}-${originalIndex}`}
-                                  className={cn(
-                                    "flex items-start gap-1.5",
-                                    visual.optionRowClass,
-                                  )}
-                                >
-                                  <span
+                              {part.options.map(({ option, originalIndex }) => {
+                                const useReferenceLabel = shouldUseGrammarOptionReference(
+                                  item.sourceQuestion.subType,
+                                );
+                                const optionDisplayText = optionDisplayTextForSubtype(
+                                  item.sourceQuestion.subType,
+                                  originalIndex,
+                                  option.text,
+                                );
+                                const hasOptionDisplayText =
+                                  optionDisplayText.trim().length > 0;
+                                const optionFormattedInlineOptions =
+                                  item.sourceQuestion.subType === "SENTENCE_INSERT"
+                                    ? {
+                                        alphabetMarkerClassName:
+                                          "font-semibold text-slate-950",
+                                      }
+                                    : undefined;
+
+                                return (
+                                  <div
+                                    key={`${item.localId}-${originalIndex}`}
                                     className={cn(
-                                      "min-w-[18px] font-bold",
-                                      visual.optionNumberClass,
+                                      "flex items-start gap-1.5",
+                                      visual.optionRowClass,
                                     )}
                                   >
-                                    {originalIndex + 1}.
-                                  </span>
-                                  <EditableText
-                                    value={option.text}
-                                    onCommit={(nextText) => {
-                                      const nextOptions = [...item.options];
-                                      nextOptions[originalIndex] = {
-                                        ...nextOptions[originalIndex],
-                                        text: nextText,
-                                      };
-                                      onUpdateItem(item.localId, {
-                                        options: nextOptions,
-                                      });
-                                    }}
-                                    className="flex-1"
-                                    readOnly={readOnly}
-                                  >
-                                    {renderFormattedInline(option.text)}
-                                  </EditableText>
-                                </div>
-                              ))}
+                                    <span
+                                      className={cn(
+                                        "min-w-[18px] font-bold",
+                                        visual.optionNumberClass,
+                                      )}
+                                    >
+                                      {optionOrdinalLabel(originalIndex)}
+                                    </span>
+                                    {useReferenceLabel ? (
+                                      <span className="flex-1 font-semibold">
+                                        {optionDisplayText}
+                                      </span>
+                                    ) : !hasOptionDisplayText ? null : (
+                                      <EditableText
+                                        value={option.text}
+                                        onCommit={(nextText) => {
+                                          const nextOptions = [...item.options];
+                                          nextOptions[originalIndex] = {
+                                            ...nextOptions[originalIndex],
+                                            text: nextText,
+                                          };
+                                          onUpdateItem(item.localId, {
+                                            options: nextOptions,
+                                          });
+                                        }}
+                                        className="flex-1"
+                                        readOnly={readOnly}
+                                      >
+                                        {renderFormattedInline(
+                                          optionDisplayText,
+                                          item.sourceQuestion.subType,
+                                          optionFormattedInlineOptions,
+                                        )}
+                                      </EditableText>
+                                    )}
+                                  </div>
+                                );
+                              })}
                             </div>
                           )}
                           {part.showAnswer &&

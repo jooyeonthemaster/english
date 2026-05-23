@@ -24,6 +24,10 @@ import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
 import { useGenerationSessionQueue } from "./generation-session-store";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  getDefaultQuestionTypeGenerationSettings,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 
 // ─── Component ───────────────────────────────────────────
 
@@ -96,6 +100,8 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
 
   // ── Manual mode config ──
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
+  const [questionTypeSettings, setQuestionTypeSettings] =
+    useState<QuestionTypeGenerationSettings>(() => getDefaultQuestionTypeGenerationSettings());
   const [difficulty, setDifficulty] = useState<"BASIC" | "INTERMEDIATE" | "KILLER">("INTERMEDIATE");
   const [customPrompt, setCustomPrompt] = useState("");
 
@@ -347,6 +353,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
     activeTypes,
     difficulty,
     customPrompt,
+    questionTypeSettings,
     autoCount,
     selectedPassage,
     analysisData,
@@ -412,6 +419,8 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
           typeCounts={typeCounts}
           setTypeCount={setTypeCount}
           setTypeCounts={setTypeCounts}
+          questionTypeSettings={questionTypeSettings}
+          setQuestionTypeSettings={setQuestionTypeSettings}
           totalQuestions={totalQuestions}
           difficulty={difficulty}
           setDifficulty={setDifficulty}
@@ -474,6 +483,10 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
               if (reviewItem.config.mode === "manual") {
                 setGenMode("manual");
                 setTypeCounts(reviewItem.config.typeCounts);
+                setQuestionTypeSettings(
+                  reviewItem.config.questionTypeSettings ||
+                    getDefaultQuestionTypeGenerationSettings(),
+                );
               } else {
                 setGenMode("auto");
               }

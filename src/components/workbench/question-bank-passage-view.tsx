@@ -30,6 +30,9 @@ interface PassageGroupedViewProps {
   onApprove: (id: string) => void;
   onToggleStar: (id: string) => void;
   onEdit: (id: string) => void;
+  showManagementActions?: boolean;
+  showStar?: boolean;
+  enableDrag?: boolean;
   expandedPassageIds: Record<string, boolean>;
   setExpandedPassageIds: (
     next:
@@ -77,6 +80,9 @@ export function PassageGroupedView({
   onApprove,
   onToggleStar,
   onEdit,
+  showManagementActions = true,
+  showStar = true,
+  enableDrag = true,
   expandedPassageIds,
   setExpandedPassageIds,
   onActivePassageChange,
@@ -393,6 +399,9 @@ export function PassageGroupedView({
                         onToggleStar={() => onToggleStar(q.id)}
                         onEdit={() => onEdit(q.id)}
                         viewSize={viewSize}
+                        showManagementActions={showManagementActions}
+                        showStar={showStar}
+                        enableDrag={enableDrag}
                       />
                     ))}
                   </div>

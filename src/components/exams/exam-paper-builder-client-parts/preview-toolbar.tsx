@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Download, Eye, Loader2, Printer, Save } from "lucide-react";
+import { BookOpen, Download, Eye, FileType2, Loader2, Printer, Save } from "lucide-react";
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperTemplate } from "../paper-builder/types";
 
@@ -17,6 +17,8 @@ interface PreviewToolbarProps {
   onPrint: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
+  onDownloadHwpx: () => void;
+  onDownloadHwpxWithAnswers: () => void;
   onSave: () => void;
 }
 
@@ -29,6 +31,8 @@ export function PreviewToolbar({
   onPrint,
   onDownloadDocx,
   onDownloadDocxWithAnswers,
+  onDownloadHwpx,
+  onDownloadHwpxWithAnswers,
   onSave,
 }: PreviewToolbarProps) {
   return (
@@ -74,6 +78,28 @@ export function PreviewToolbar({
         >
           {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BookOpen className="h-3.5 w-3.5" />}
           해설 포함
+        </button>
+        <button
+          onClick={onDownloadHwpx}
+          disabled={isPending || paperItemsCount === 0}
+          className="flex h-8 items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-2.5 text-[11px] font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileType2 className="h-3.5 w-3.5" />}
+          HWPX
+          <span className="ml-0.5 rounded-sm bg-indigo-200/70 px-1 py-px text-[9px] font-bold uppercase leading-none tracking-wider text-indigo-700">
+            beta
+          </span>
+        </button>
+        <button
+          onClick={onDownloadHwpxWithAnswers}
+          disabled={isPending || paperItemsCount === 0}
+          className="flex h-8 items-center gap-1 rounded-md border border-violet-200 bg-violet-50 px-2.5 text-[11px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BookOpen className="h-3.5 w-3.5" />}
+          HWPX 해설
+          <span className="ml-0.5 rounded-sm bg-violet-200/70 px-1 py-px text-[9px] font-bold uppercase leading-none tracking-wider text-violet-700">
+            beta
+          </span>
         </button>
         <button
           onClick={onSave}

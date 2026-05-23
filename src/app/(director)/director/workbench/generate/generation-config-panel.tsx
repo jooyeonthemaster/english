@@ -15,7 +15,7 @@ import {
   Settings2,
   ChevronDown,
   CheckCircle2,
-  Eye,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
@@ -27,6 +27,7 @@ import {
   getQuestionGenerationCreditCost,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 
 const VOCAB_GENERATION_TYPE_IDS = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
@@ -47,6 +48,8 @@ interface GenerationConfigPanelProps {
   typeCounts: Record<string, number>;
   setTypeCount: (id: string, count: number) => void;
   setTypeCounts: (v: Record<string, number>) => void;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+  setQuestionTypeSettings: (v: QuestionTypeGenerationSettings | ((prev: QuestionTypeGenerationSettings) => QuestionTypeGenerationSettings)) => void;
   totalQuestions: number;
 
   // Difficulty
@@ -89,6 +92,8 @@ export function GenerationConfigPanel({
   typeCounts,
   setTypeCount,
   setTypeCounts,
+  questionTypeSettings,
+  setQuestionTypeSettings,
   totalQuestions,
   difficulty,
   setDifficulty,
@@ -113,11 +118,22 @@ export function GenerationConfigPanel({
   handleBatchGenerate,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>("BLANK_INFERENCE");
+  const [openHelpTypeId, setOpenHelpTypeId] = useState<string | null>(null);
   const activeTypeItems = useMemo(() => {
     return EXAM_TYPE_GROUPS
       .flatMap((group) => group.items)
       .filter((item) => (typeCounts[item.id] || 0) > 0);
   }, [typeCounts]);
+  const blankSettings = questionTypeSettings.BLANK_INFERENCE || {};
+  const updateBlankSetting = (next: Partial<NonNullable<QuestionTypeGenerationSettings["BLANK_INFERENCE"]>>) => {
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      BLANK_INFERENCE: {
+        ...(prev.BLANK_INFERENCE || {}),
+        ...next,
+      },
+    }));
+  };
 
   return (
     <div className="flex flex-col bg-white overflow-hidden w-full lg:w-[340px] xl:w-[420px] shrink-0 border-l border-slate-200/80">
@@ -292,7 +308,7 @@ export function GenerationConfigPanel({
                       const expanded = expandedTypeId === item.id;
                       return (
                         <div key={item.id}
-                          className={`rounded-xl border transition-all duration-150 overflow-hidden ${
+                          className={`relative rounded-xl border transition-all duration-150 overflow-visible ${
                             active
                               ? "bg-blue-50/70 border-blue-300 shadow-sm shadow-blue-50"
                               : "bg-white border-slate-200 hover:border-slate-300"
@@ -302,6 +318,7 @@ export function GenerationConfigPanel({
                               type="button"
                               onClick={() => {
                                 setExpandedTypeId(item.id);
+                                setOpenHelpTypeId(null);
                                 setTypeCount(item.id, count + 1);
                               }}
                               className="flex-1 min-w-0 text-left"
@@ -312,15 +329,61 @@ export function GenerationConfigPanel({
                                 </span>
                                 {active && <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
                               </div>
-                              <p className="text-[10px] text-slate-500 leading-snug mt-0.5">
-                                {item.studentTask}
-                              </p>
                             </button>
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setOpenHelpTypeId(openHelpTypeId === item.id ? null : item.id);
+                              }}
+                              className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 shrink-0"
+                              aria-label={`${item.label} 설명 보기`}
+                              aria-expanded={openHelpTypeId === item.id}
+                            >
+                              <HelpCircle className="w-3.5 h-3.5" />
+                            </button>
+
+                            {openHelpTypeId === item.id && (
+                              <div className="absolute left-3 right-3 top-10 z-30 rounded-lg border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/70">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    <p className="text-[12px] font-bold text-slate-800">{item.label}</p>
+                                    <p className="mt-1 text-[11px] leading-relaxed text-slate-600">{item.studentTask}</p>
+                                    <p className="mt-1 text-[10px] leading-relaxed text-slate-500">{item.description}</p>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => setOpenHelpTypeId(null)}
+                                    className="text-[11px] font-bold text-slate-400 hover:text-slate-600"
+                                    aria-label="설명 닫기"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                                <div className="mt-2 flex flex-wrap gap-1">
+                                  {item.outputUi.map((piece, pieceIndex) => (
+                                    <span key={`${piece}-${pieceIndex}`} className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                                      {piece}
+                                    </span>
+                                  ))}
+                                </div>
+                                <div className="mt-2 flex flex-wrap gap-1">
+                                  {item.bestFor.map((point, pointIndex) => (
+                                    <span key={`${point}-${pointIndex}`} className="px-1.5 py-0.5 rounded-full bg-emerald-50 text-[10px] font-medium text-emerald-700 border border-emerald-100">
+                                      {point}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
 
                             <div className="flex items-center gap-0.5 shrink-0">
                               <button
                                 type="button"
-                                onClick={() => setExpandedTypeId(expandedTypeId === item.id ? null : item.id)}
+                                onClick={() => {
+                                  setOpenHelpTypeId(null);
+                                  setExpandedTypeId(expandedTypeId === item.id ? null : item.id);
+                                }}
                                 className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100"
                                 aria-label={`${item.label} 상세 보기`}
                                 aria-expanded={expanded}
@@ -350,37 +413,38 @@ export function GenerationConfigPanel({
                             </div>
                           </div>
 
-                          {expanded && (
+                          {expanded && item.id === "BLANK_INFERENCE" && (
                             <div className={`px-3 pb-3 space-y-3 ${active ? "border-t border-blue-200/70" : "border-t border-slate-100"}`}>
-                              <p className="pt-3 text-[11px] text-slate-600 leading-relaxed">
-                                {item.description}
-                              </p>
-
-                              <div className="grid grid-cols-1 gap-2">
-                                <div className="space-y-1.5">
-                                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                                    <Eye className="w-3 h-3" />
-                                    학생 화면
+                              <div className="pt-3">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                      <Settings2 className="w-3.5 h-3.5 text-blue-500" />
+                                      <span className="text-[11px] font-bold text-slate-700">부정-부정 빈칸</span>
+                                    </div>
+                                    <div className="mt-1 flex flex-wrap gap-1">
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">정답 변형</span>
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">부정어 함정</span>
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">킬러형</span>
+                                    </div>
                                   </div>
-                                  <div className="flex flex-wrap gap-1">
-                                    {item.outputUi.map((piece, pieceIndex) => (
-                                      <span key={`${piece}-${pieceIndex}`} className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                                        {piece}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-
-                              </div>
-
-                              <div>
-                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">좋은 출제 포인트</span>
-                                <div className="flex flex-wrap gap-1 mt-1.5">
-                                  {item.bestFor.map((point, pointIndex) => (
-                                    <span key={`${point}-${pointIndex}`} className="px-1.5 py-0.5 rounded-full bg-emerald-50 text-[10px] font-medium text-emerald-700 border border-emerald-100">
-                                      {point}
-                                    </span>
-                                  ))}
+                                  <button
+                                    type="button"
+                                    role="switch"
+                                    aria-checked={!!blankSettings.doubleNegative}
+                                    onClick={() => updateBlankSetting({ doubleNegative: !blankSettings.doubleNegative })}
+                                    className={`relative h-6 w-11 rounded-full border transition-colors ${
+                                      blankSettings.doubleNegative
+                                        ? "border-blue-300 bg-blue-500"
+                                        : "border-slate-200 bg-slate-200"
+                                    }`}
+                                  >
+                                    <span
+                                      className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                                        blankSettings.doubleNegative ? "translate-x-5" : "translate-x-0"
+                                      }`}
+                                    />
+                                  </button>
                                 </div>
                               </div>
                             </div>

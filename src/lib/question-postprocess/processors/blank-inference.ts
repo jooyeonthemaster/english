@@ -11,6 +11,7 @@ export function processBlankInference(
   const surroundingText = ai.surroundingText as string | undefined;
   const options = ai.options as Array<{ label: string; text: string }>;
   const correctAnswer = ai.correctAnswer as string;
+  const isDoubleNegativeMode = ai.blankAnswerMode === "DOUBLE_NEGATIVE";
 
   if (!originalExpression) {
     return { success: false, data: ai, warnings, error: "Missing originalExpression field" };
@@ -27,10 +28,12 @@ export function processBlankInference(
     };
   }
 
-  // Validate: the correct answer option's text should equal originalExpression
+  // Validate: in default mode the correct answer option's text should equal originalExpression.
+  // In double-negative mode, originalExpression is still the source span to blank,
+  // but the visible correct option is intentionally transformed.
   if (options && Array.isArray(options)) {
     const correctOption = options.find((o) => o.label === correctAnswer);
-    if (correctOption && correctOption.text !== originalExpression) {
+    if (!isDoubleNegativeMode && correctOption && correctOption.text !== originalExpression) {
       // Auto-fix: check if any other option matches
       const matchingOption = options.find((o) => o.text === originalExpression);
       if (matchingOption) {
@@ -46,6 +49,10 @@ export function processBlankInference(
         );
         correctOption.text = originalExpression;
       }
+    } else if (isDoubleNegativeMode && correctOption?.text === originalExpression) {
+      warnings.push(
+        "DOUBLE_NEGATIVE mode expected a transformed correct option, but correct option matches originalExpression.",
+      );
     }
   }
 

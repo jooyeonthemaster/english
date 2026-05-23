@@ -164,8 +164,28 @@ function canonicalizeWrongOptionExplanations(
   value: unknown,
   labelByKey: Map<string, string>,
 ): unknown {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return value;
+  if (!value || typeof value !== "object") return value;
 
+  // 신규 array 형태 ([{label, expression, pointCode, explanation}, ...]) → Record<label, explanation>로 변환
+  // (GRAMMAR_ERROR 한정 — 다른 유형은 기존 Record 형태 유지)
+  if (Array.isArray(value)) {
+    const remapped: Record<string, unknown> = {};
+    for (const entry of value) {
+      if (!entry || typeof entry !== "object") continue;
+      const item = entry as Record<string, unknown>;
+      const rawLabel = item.label;
+      const explanation = item.explanation;
+      if (typeof explanation !== "string") continue;
+      const normalizedKey = normalizeGrammarKey(rawLabel);
+      const canonicalKey = normalizedKey ? labelByKey.get(normalizedKey) : "";
+      const finalKey = canonicalKey || normalizeString(rawLabel);
+      if (!finalKey) continue;
+      remapped[finalKey] = explanation;
+    }
+    return remapped;
+  }
+
+  // 기존 Record 형태 — 그대로 처리
   const remapped: Record<string, unknown> = {};
   for (const [key, explanation] of Object.entries(value as Record<string, unknown>)) {
     const normalizedKey = normalizeGrammarKey(key);

@@ -135,7 +135,7 @@ export function buildQuestionElements(
   }
 
   // 4. Render Options
-  elements.push(...renderOptions(options));
+  elements.push(...renderOptions(options, q.subType));
 
   // 5. Render Subjective Writing Area (if no options and no included answer, perfect for printed tests)
   if (options.length === 0 && !includeAnswer) {

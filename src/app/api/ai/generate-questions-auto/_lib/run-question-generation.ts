@@ -12,6 +12,10 @@ import {
 } from "@/lib/question-schemas";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
+  buildQuestionTypeSettingsPrompt,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
+import {
   buildQuestionTargetCandidateBlock,
   getTypeQualityRubric,
   validateQuestionQuality,
@@ -37,6 +41,7 @@ export interface RunGenerationInput {
   diffInstruction: string;
   generationPlan: QuestionGenerationPlan;
   customPrompt?: string;
+  typeSettings?: QuestionTypeGenerationSettings;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -54,6 +59,7 @@ export async function runQuestionGeneration({
   diffInstruction,
   generationPlan,
   customPrompt,
+  typeSettings,
 }: RunGenerationInput): Promise<Record<string, unknown>[]> {
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
@@ -69,6 +75,14 @@ export async function runQuestionGeneration({
         STRUCTURED_TYPE_PROMPTS[subType] ||
         `${subType} 유형의 문제를 만드세요.`;
       const typeQualityRubric = getTypeQualityRubric(subType, diffLabel);
+      const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
+        subType,
+        typeSettings?.[subType],
+      );
+      const mergedCustomPrompt = mergeCustomPromptWithTypeSettings(
+        customPrompt,
+        typeSettingsPrompt,
+      );
       const targetCandidateBlock = buildQuestionTargetCandidateBlock(
         subType,
         passageContent,
@@ -103,7 +117,7 @@ export async function runQuestionGeneration({
             diffLabel,
             diffInstruction,
             generationPlan,
-            customPrompt,
+            customPrompt: mergedCustomPrompt,
           }),
           generationPlan,
           Math.min(20_000, Math.max(4_096, (Number(typeCount) || 1) * 4_096)),
@@ -122,7 +136,18 @@ export async function runQuestionGeneration({
         const qs: Record<string, unknown>[] = [];
 
         for (const q of generatedQuestions) {
-          const ppResult = postProcessQuestion(subType, passageContent, q);
+          const normalizedAiQuestion =
+            subType === "BLANK_INFERENCE" && typeSettingsPrompt
+              ? {
+                  ...q,
+                  blankAnswerMode: "DOUBLE_NEGATIVE",
+                }
+              : q;
+          const ppResult = postProcessQuestion(
+            subType,
+            passageContent,
+            normalizedAiQuestion,
+          );
           if (!ppResult.success) {
             console.warn(
               `[AUTO-GEN] Post-process failed for ${subType}: ${ppResult.error}`,
@@ -199,6 +224,14 @@ export async function runQuestionGeneration({
   return generatedGroups.flat();
 }
 
+function mergeCustomPromptWithTypeSettings(
+  customPrompt: string | undefined,
+  typeSettingsPrompt: string,
+): string | undefined {
+  const parts = [customPrompt?.trim(), typeSettingsPrompt.trim()].filter(Boolean);
+  return parts.length ? parts.join("\n\n") : undefined;
+}
+
 export async function runQuestionGenerationWithEmptyRetry(
   input: RunGenerationInput,
   {
@@ -209,7 +242,9 @@ export async function runQuestionGenerationWithEmptyRetry(
     logPrefix?: string;
   } = {},
 ): Promise<{ questions: Record<string, unknown>[]; attempts: number }> {
-  const attempts = Math.max(1, Math.floor(maxAttempts));
+  const attempts = hasDoubleNegativeBlankSetting(input)
+    ? Math.max(4, Math.floor(maxAttempts))
+    : Math.max(1, Math.floor(maxAttempts));
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const questions = await runQuestionGeneration(input);
@@ -222,4 +257,18 @@ export async function runQuestionGenerationWithEmptyRetry(
   }
 
   return { questions: [], attempts };
+}
+
+function hasDoubleNegativeBlankSetting(input: RunGenerationInput): boolean {
+  if (!input.plan.some((item) => item.subType === "BLANK_INFERENCE" && item.count > 0)) {
+    return false;
+  }
+
+  const blankSettings = input.typeSettings?.BLANK_INFERENCE;
+  return (
+    typeof blankSettings === "object" &&
+    blankSettings !== null &&
+    "doubleNegative" in blankSettings &&
+    (blankSettings as { doubleNegative?: unknown }).doubleNegative === true
+  );
 }

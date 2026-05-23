@@ -39,6 +39,7 @@ interface QuestionJobConfig {
   mode: "AUTO" | "MANUAL";
   count: number;
   questionType?: string;
+  questionTypeSettings?: unknown;
   difficulty: string;
   customPrompt?: string;
   generationPlan: QuestionGenerationPlan;
@@ -58,6 +59,7 @@ function parseConfig(value: unknown, fallbackPlan: unknown): QuestionJobConfig {
         : 1,
     questionType:
       typeof raw.questionType === "string" ? raw.questionType : undefined,
+    questionTypeSettings: raw.questionTypeSettings,
     difficulty:
       typeof raw.difficulty === "string" ? raw.difficulty : "INTERMEDIATE",
     customPrompt:
@@ -251,6 +253,10 @@ export const workbenchQuestionGenerationTask = task({
           diffInstruction,
           generationPlan: config.generationPlan,
           customPrompt: config.customPrompt,
+          typeSettings:
+            config.mode === "MANUAL" && config.questionType
+              ? { [config.questionType]: config.questionTypeSettings }
+              : undefined,
         },
         {
           logPrefix: "WORKBENCH-Q-GEN",

@@ -99,6 +99,7 @@ export type RenderFragment = {
   passageTitle: string;
   passageContent: string;
   includePassage: boolean;
+  usesSentenceInsertMarkers: boolean;
   passageRenderedLines: string[];
   passageStartLineIndex: number;
   passageTotalLines: number;

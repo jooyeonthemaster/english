@@ -41,6 +41,7 @@ const requestSchema = z.object({
   mode: z.enum(["AUTO", "MANUAL"]).default("MANUAL"),
   count: z.number().int().min(1).max(1).default(1),
   questionType: z.string().optional(),
+  questionTypeSettings: z.unknown().optional(),
   difficulty: z.string().default("INTERMEDIATE"),
   customPrompt: z.string().optional(),
   generationPlan: z.unknown().optional(),
@@ -175,6 +176,7 @@ export async function POST(req: NextRequest) {
         mode: config.mode,
         count: config.count,
         questionType: config.questionType ?? null,
+        questionTypeSettings: config.questionTypeSettings ?? null,
         difficulty: config.difficulty,
         customPrompt: config.customPrompt ?? "",
         generationPlan: config.generationPlan,
@@ -276,6 +278,10 @@ export async function POST(req: NextRequest) {
         diffInstruction,
         generationPlan: config.generationPlan,
         customPrompt: config.customPrompt,
+        typeSettings:
+          config.mode === "MANUAL" && config.questionType
+            ? { [config.questionType]: config.questionTypeSettings }
+            : undefined,
       },
       { logPrefix: "WORKBENCH-FAST-Q-GEN" },
     );

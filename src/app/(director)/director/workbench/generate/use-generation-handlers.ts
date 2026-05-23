@@ -14,6 +14,7 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 
 function readFastBatchConcurrency(): number {
@@ -35,6 +36,7 @@ interface UseGenerationHandlersParams {
   activeTypes: string[];
   difficulty: string;
   customPrompt: string;
+  questionTypeSettings: QuestionTypeGenerationSettings;
   autoCount: number;
   selectedPassage: PassageItem | null;
   analysisData: any;
@@ -61,6 +63,7 @@ async function createQuestionGenerationJob({
   mode,
   count,
   questionType,
+  questionTypeSettings,
   difficulty,
   customPrompt,
   generationPlan,
@@ -69,6 +72,7 @@ async function createQuestionGenerationJob({
   mode: "AUTO" | "MANUAL";
   count: number;
   questionType?: string;
+  questionTypeSettings?: unknown;
   difficulty: string;
   customPrompt?: string;
   generationPlan: QuestionGenerationPlan;
@@ -82,6 +86,7 @@ async function createQuestionGenerationJob({
       mode,
       count,
       questionType,
+      questionTypeSettings,
       difficulty,
       customPrompt,
       generationPlan,
@@ -99,6 +104,7 @@ async function createFastQuestionGenerationJob({
   mode,
   count,
   questionType,
+  questionTypeSettings,
   difficulty,
   customPrompt,
   generationPlan,
@@ -107,6 +113,7 @@ async function createFastQuestionGenerationJob({
   mode: "AUTO" | "MANUAL";
   count: 1;
   questionType?: string;
+  questionTypeSettings?: unknown;
   difficulty: string;
   customPrompt?: string;
   generationPlan: QuestionGenerationPlan;
@@ -120,6 +127,7 @@ async function createFastQuestionGenerationJob({
       mode,
       count,
       questionType,
+      questionTypeSettings,
       difficulty,
       customPrompt,
       generationPlan,
@@ -206,6 +214,7 @@ interface ManualGenerationUnit {
   passage: PassageItem;
   pAnalysis: any;
   questionType: string;
+  questionTypeSettings?: unknown;
   tempId: string;
   config: QueueItem["config"];
 }
@@ -231,6 +240,7 @@ export function useGenerationHandlers({
   activeTypes,
   difficulty,
   customPrompt,
+  questionTypeSettings,
   autoCount,
   selectedPassage,
   analysisData,
@@ -289,6 +299,7 @@ export function useGenerationHandlers({
               mode: "MANUAL",
               count: 1,
               questionType: unit.questionType,
+              questionTypeSettings: unit.questionTypeSettings,
               difficulty,
               customPrompt: unit.config.prompt || undefined,
               generationPlan,
@@ -347,6 +358,7 @@ export function useGenerationHandlers({
       mode,
       count,
       questionType,
+      questionTypeSettings,
       pAnalysis,
       config,
       progressKey,
@@ -355,6 +367,7 @@ export function useGenerationHandlers({
       mode: "AUTO" | "MANUAL";
       count: number;
       questionType?: string;
+      questionTypeSettings?: unknown;
       pAnalysis: any;
       config: QueueItem["config"];
       progressKey: string;
@@ -364,6 +377,7 @@ export function useGenerationHandlers({
         mode,
         count,
         questionType,
+        questionTypeSettings,
         difficulty,
         customPrompt: config.prompt || undefined,
         generationPlan,
@@ -401,9 +415,11 @@ export function useGenerationHandlers({
               passage: p,
               pAnalysis,
               questionType: typeId,
+              questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
               config: {
                 typeCounts: { [typeId]: 1 },
+                questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
                 difficulty,
                 prompt: customPrompt.trim(),
                 mode: genMode,
@@ -437,6 +453,7 @@ export function useGenerationHandlers({
       const progressKey = "auto";
       const baseConfig = {
         typeCounts: {},
+        questionTypeSettings: {},
         difficulty,
         prompt: customPrompt.trim(),
         mode: genMode,
@@ -539,6 +556,7 @@ export function useGenerationHandlers({
       const pAnalysis = parsePassageAnalysis(p);
       const baseConfig = {
         typeCounts: {},
+        questionTypeSettings: {},
         difficulty,
         prompt: customPrompt.trim(),
         mode: genMode,
@@ -570,6 +588,7 @@ export function useGenerationHandlers({
     genMode,
     generationPlan,
     typeCounts,
+    questionTypeSettings,
     difficulty,
     customPrompt,
     autoCount,
@@ -589,6 +608,7 @@ export function useGenerationHandlers({
 
     const baseConfig = {
       typeCounts: genMode === "manual" ? { ...typeCounts } : {},
+      questionTypeSettings: genMode === "manual" ? { ...questionTypeSettings } : {},
       difficulty,
       prompt: customPrompt.trim(),
       mode: genMode,
@@ -607,10 +627,12 @@ export function useGenerationHandlers({
               passage: selectedPassage,
               pAnalysis: analysisData,
               questionType: typeId,
+              questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
               config: {
                 ...baseConfig,
                 typeCounts: { [typeId]: 1 },
+                questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
               },
             });
           }
@@ -681,8 +703,13 @@ export function useGenerationHandlers({
             mode: "MANUAL",
             count: typeCounts[typeId],
             questionType: typeId,
+            questionTypeSettings: questionTypeSettings[typeId],
             pAnalysis: analysisData,
-            config: { ...baseConfig, typeCounts: { [typeId]: typeCounts[typeId] } },
+            config: {
+              ...baseConfig,
+              typeCounts: { [typeId]: typeCounts[typeId] },
+              questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
+            },
             progressKey: typeId,
           }),
         );
@@ -699,6 +726,7 @@ export function useGenerationHandlers({
     totalQuestions,
     activeTypes,
     typeCounts,
+    questionTypeSettings,
     difficulty,
     customPrompt,
     autoCount,

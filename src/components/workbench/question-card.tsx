@@ -143,7 +143,12 @@ const MARKERS = {
 };
 
 // Format option: always use index-based number label, adapt text based on passage marking
-function formatOption(label: string, text: string, index: number, passageMarking: "lowercase" | "uppercase" | "circled" | "none"): { displayLabel: string; displayText: string } {
+function formatOption(
+  label: string,
+  text: string,
+  index: number,
+  passageMarking: "lowercase" | "uppercase" | "circled" | "none",
+): { displayLabel: string; displayText: string } {
   const displayLabel = `${index + 1}`;
   const trimmed = text.trim();
 

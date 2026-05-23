@@ -65,7 +65,7 @@ export function ExamPaperBuilderClient({
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCollectionId, setSelectedCollectionId] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
-  const [questionType, setQuestionType] = useState("ALL");
+  const [selectedSubTypes, setSelectedSubTypes] = useState<string[]>([]);
   const [approvedOnly, setApprovedOnly] = useState(false);
   const [starredOnly, setStarredOnly] = useState(false);
   const [detailQuestion, setDetailQuestion] = useState<BuilderQuestion | null>(null);
@@ -139,7 +139,9 @@ export function ExamPaperBuilderClient({
         return false;
       }
       if (difficulty !== "ALL" && question.difficulty !== difficulty) return false;
-      if (questionType !== "ALL" && question.type !== questionType) return false;
+      if (selectedSubTypes.length > 0 && !selectedSubTypes.includes(question.subType || "")) {
+        return false;
+      }
       if (approvedOnly && !question.approved) return false;
       if (starredOnly && !question.starred) return false;
       if (query) {
@@ -156,7 +158,7 @@ export function ExamPaperBuilderClient({
       }
       return true;
     });
-  }, [questions, search, selectedCollectionId, difficulty, questionType, approvedOnly, starredOnly]);
+  }, [questions, search, selectedCollectionId, difficulty, selectedSubTypes, approvedOnly, starredOnly]);
 
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
   const paginationSettings = useMemo<PaginationSettings>(
@@ -299,6 +301,33 @@ export function ExamPaperBuilderClient({
     });
   }
 
+  function triggerHwpxDownload(examId: string, withAnswers: boolean) {
+    const link = document.createElement("a");
+    link.href = withAnswers
+      ? `/api/exams/${examId}/export-hwpx?answers=true`
+      : `/api/exams/${examId}/export-hwpx`;
+    link.download = "";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function handleDownloadHwpx() {
+    startTransition(async () => {
+      const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
+      if (!examId) return;
+      triggerHwpxDownload(examId, false);
+    });
+  }
+
+  function handleDownloadHwpxWithAnswers() {
+    startTransition(async () => {
+      const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
+      if (!examId) return;
+      triggerHwpxDownload(examId, true);
+    });
+  }
+
   function handleGoToManage() {
     if (dirty || !savedExamId) {
       startTransition(async () => {
@@ -345,8 +374,8 @@ export function ExamPaperBuilderClient({
           setSearch={setSearch}
           showFilters={showFilters}
           setShowFilters={setShowFilters}
-          questionType={questionType}
-          setQuestionType={setQuestionType}
+          selectedSubTypes={selectedSubTypes}
+          setSelectedSubTypes={setSelectedSubTypes}
           difficulty={difficulty}
           setDifficulty={setDifficulty}
           approvedOnly={approvedOnly}
@@ -372,6 +401,8 @@ export function ExamPaperBuilderClient({
             onPrint={handlePrint}
             onDownloadDocx={handleDownloadDocx}
             onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
+            onDownloadHwpx={handleDownloadHwpx}
+            onDownloadHwpxWithAnswers={handleDownloadHwpxWithAnswers}
             onSave={handleSave}
           />
 

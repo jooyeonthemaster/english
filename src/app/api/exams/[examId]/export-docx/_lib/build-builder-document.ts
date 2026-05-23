@@ -22,6 +22,12 @@ import { COLOR, FONT, KR_FONT } from "./styles";
 import { parseFormattedText } from "./parse-formatted-text";
 import { buildAnswerKeyTable } from "./build-answer-key";
 import { safeParseJSON } from "./helpers";
+import {
+  formatSentenceInsertPassageMarkers,
+  optionDisplayTextForSubtype,
+  optionOrdinalLabel,
+  splitSentenceInsertGivenBlock,
+} from "@/components/exams/paper-builder/option-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 /*
@@ -389,8 +395,16 @@ function buildPassage(opts: {
   passageStyle: "boxed" | "underlined" | "plain";
   showPassageTitle: boolean;
   compact: boolean;
+  usesSentenceInsertMarkers: boolean;
 }): DocChild[] {
-  const { passageTitle, passageContent, passageStyle, showPassageTitle, compact } = opts;
+  const {
+    passageTitle,
+    passageContent,
+    passageStyle,
+    showPassageTitle,
+    compact,
+    usesSentenceInsertMarkers,
+  } = opts;
   if (!passageContent.trim()) return [];
 
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
@@ -412,7 +426,11 @@ function buildPassage(opts: {
         })
       : null;
 
-  const lines = passageContent.split("\n");
+  const renderedPassageContent = formatSentenceInsertPassageMarkers(
+    passageContent,
+    usesSentenceInsertMarkers ? "SENTENCE_INSERT" : null,
+  );
+  const lines = renderedPassageContent.split("\n");
   const bodyParas = lines.map((line, idx) => {
     const trimmed = line.trim();
     return new Paragraph({
@@ -503,7 +521,10 @@ function buildQuestionBlock(
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
   const subTypeLabel = subType ? SUBTYPE_LABELS_DOCX[subType] || subType : "";
-  const questionText = (item.questionText ?? item.sourceQuestion.questionText ?? "").trim();
+  const questionText = formatSentenceInsertPassageMarkers(
+    item.questionText ?? item.sourceQuestion.questionText ?? "",
+    subType,
+  ).trim();
   const options = (item.options ?? safeParseOptions(item.sourceQuestion.options)).filter(
     (o) => o && (o.text || "").length >= 0,
   );
@@ -543,13 +564,45 @@ function buildQuestionBlock(
   );
 
   if (questionText) {
-    const lines = questionText.split("\n");
-    lines.forEach((line, idx) => {
-      const trimmed = line.trim();
+    const { beforeText, givenText } = splitSentenceInsertGivenBlock(questionText, subType);
+    const questionParagraphs: Array<{ text: string; boxed: boolean }> = [];
+
+    if (beforeText) {
+      beforeText.split("\n").forEach((line) => {
+        questionParagraphs.push({ text: line, boxed: false });
+      });
+    }
+    if (givenText) {
+      questionParagraphs.push({
+        text: givenText.replace(/\s*\n\s*/g, " "),
+        boxed: true,
+      });
+    }
+    if (questionParagraphs.length === 0) {
+      questionText.split("\n").forEach((line) => {
+        questionParagraphs.push({ text: line, boxed: false });
+      });
+    }
+
+    questionParagraphs.forEach(({ text, boxed }, idx) => {
+      const trimmed = text.trim();
       result.push(
         new Paragraph({
-          spacing: { after: idx === lines.length - 1 ? 100 : 30, line: 290 },
-          keepNext: idx === lines.length - 1 && options.length > 0,
+          alignment: AlignmentType.JUSTIFIED,
+          spacing: {
+            before: boxed ? 50 : 0,
+            after: idx === questionParagraphs.length - 1 ? 100 : boxed ? 70 : 30,
+            line: 290,
+          },
+          keepNext: idx === questionParagraphs.length - 1 && options.length > 0,
+          border: boxed
+            ? {
+                top: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
+                bottom: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
+                left: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
+                right: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
+              }
+            : undefined,
           children:
             trimmed.length === 0
               ? [new TextRun({ text: " ", font: KR_FONT, size: bodySize })]
@@ -559,27 +612,33 @@ function buildQuestionBlock(
     });
   }
 
-  // 옵션 (preview 와 동일하게 1. 2. 3. … 평문 번호)
+  // 옵션 (preview 와 동일하게 원문자 번호 + 유형별 선택지 표시)
   if (options.length > 0) {
     options.forEach((opt, idx) => {
-      const useKR = /[가-힣]/.test(opt.text);
+      const displayText = optionDisplayTextForSubtype(subType, idx, opt.text || "");
+      const hasDisplayText = displayText.trim().length > 0;
+      const useKR = /[가-힣]/.test(displayText);
       result.push(
         new Paragraph({
           spacing: { after: 40, line: 280 },
           indent: { left: 360, hanging: 280 },
           children: [
             new TextRun({
-              text: `${idx + 1}.`,
+              text: optionOrdinalLabel(idx),
               font: KR_FONT,
               size: bodySize,
               bold: true,
               color: COLOR.darkGray,
             }),
-            new TextRun({ text: "  ", font: KR_FONT, size: bodySize }),
-            ...parseFormattedText(opt.text || "", {
-              font: useKR ? KR_FONT : FONT,
-              size: bodySize,
-            }),
+            ...(hasDisplayText
+              ? [
+                  new TextRun({ text: "  ", font: KR_FONT, size: bodySize }),
+                  ...parseFormattedText(displayText, {
+                    font: useKR ? KR_FONT : FONT,
+                    size: bodySize,
+                  }),
+                ]
+              : []),
           ],
         }),
       );
@@ -889,6 +948,9 @@ export function buildBuilderExamDocument(opts: {
         passageStyle,
         showPassageTitle,
         compact,
+        usesSentenceInsertMarkers: group.items.some(
+          (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
+        ),
       });
       section2Children.push(...passageBlocks);
     }

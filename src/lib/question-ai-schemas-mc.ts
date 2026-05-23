@@ -57,6 +57,8 @@ export const aiBlankInferenceSchema = z.object({
   ...commonFields,
   originalExpression: z.string().describe("원문에서 빈칸으로 교체할 정확한 표현 (원문 그대로, 한 글자도 변경 금지)"),
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
+  blankAnswerMode: z.enum(["SOURCE_EXACT", "DOUBLE_NEGATIVE"]).optional().describe("빈칸 정답 구성 방식"),
+  answerLogic: z.string().optional().describe("부정-부정 빈칸 등 특수 정답 논리 설명"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
   ...mcWrongExplanations,
 });
@@ -66,8 +68,15 @@ export type AiBlankInferenceQuestion = z.infer<typeof aiBlankInferenceSchema>;
 // 2. 어법 판단 (GRAMMAR_ERROR)
 // ---------------------------------------------------------------------------
 
+// GRAMMAR_ERROR 한정: 다른 유형에 영향 없도록 commonFields/mcWrongExplanations를 인라인 오버라이드
+// - correctAnswer: enum 강제 (괄호 포맷 보장)
+// - markedExpressions[i].pointCode: 어법 출제 포인트 코드 (a~m), 5개 unique 강제 가이드
+// - wrongOptionExplanations: array 형태로 변경 (label·expression·pointCode 일치 강제), 후처리에서 Record로 변환
 export const aiGrammarErrorSchema = z.object({
   ...commonFields,
+  correctAnswer: z
+    .enum(["(A)", "(B)", "(C)", "(D)", "(E)"])
+    .describe("정답 label. 반드시 괄호 포함 형식 '(A)' '(B)' '(C)' '(D)' '(E)' 중 하나"),
   markedExpressions: z.array(z.object({
     label: z.string().describe("(A)~(E) 라벨"),
     expression: z.string().describe("원문에서의 올바른 표현"),
@@ -75,9 +84,36 @@ export const aiGrammarErrorSchema = z.object({
     correction: z.string().optional().describe("오류인 경우 올바른 표현"),
     errorExpression: z.string().describe("지문에 표시할 어법 오류 표현 (isError=true일 때 틀린 형태, isError=false일 때 원문 그대로)"),
     surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
-  })).length(5).describe("밑줄 표시할 5개 표현"),
+    pointCode: z
+      .enum(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"])
+      .describe(
+        "이 위치의 어법 출제 포인트 코드. 5개 markedExpression의 pointCode는 서로 달라야 함. (a)정·준동사 (b)관계사 (c)분사능수동 (d)수일치 (e)능수동태 (f)형부자리 (g)대명사 (h)목적격보어 (i)병렬 (j)가정법 (k)to-v/v-ing (l)전치사vs.접속사 (m)비교구문",
+      ),
+  })).length(5).describe("밑줄 표시할 5개 표현 (pointCode 5개 모두 unique)"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
-  ...mcWrongExplanations,
+  wrongOptionExplanations: z
+    .array(z.object({
+      label: z.string().describe("정답이 아닌 4개 선지 label 중 하나 ('(A)'~'(E)' 형식)"),
+      expression: z
+        .string()
+        .describe(
+          "이 label의 markedExpression.expression 값과 완전히 동일해야 함. 다른 단어를 쓰면 안 됨.",
+        ),
+      pointCode: z
+        .enum(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"])
+        .describe(
+          "이 label의 markedExpression.pointCode 값과 동일해야 함.",
+        ),
+      explanation: z
+        .string()
+        .describe(
+          "이 위치의 expression이 어법상 왜 맞는지 한국어 1~2문장 해설. 반드시 markedExpression.expression을 인용하여 설명할 것.",
+        ),
+    }))
+    .length(4)
+    .describe(
+      "정답을 제외한 4개 오답 위치 각각에 대한 해설 (배열 길이 정확히 4, label·expression·pointCode가 markedExpressions와 일치). 후처리에서 Record<label, explanation> 형태로 변환됨.",
+    ),
 });
 export type AiGrammarErrorQuestion = z.infer<typeof aiGrammarErrorSchema>;
 

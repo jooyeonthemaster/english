@@ -2,6 +2,7 @@
 
 import { QUESTION_TYPE_GROUPS } from "@/lib/question-type-ui";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -46,7 +47,7 @@ export interface QueueItem {
   progress: Record<string, "pending" | "done" | "error">;
   questions: any[];
   error?: string;
-  config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual"; generationPlan?: QuestionGenerationPlan };
+  config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual"; generationPlan?: QuestionGenerationPlan; questionTypeSettings?: QuestionTypeGenerationSettings };
 }
 
 // ─── Helpers ─────────────────────────────────────────────

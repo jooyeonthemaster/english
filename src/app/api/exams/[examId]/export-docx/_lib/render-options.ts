@@ -7,36 +7,42 @@ import {
   TextRun,
   WidthType,
 } from "docx";
+import {
+  optionDisplayTextForSubtype,
+  optionOrdinalLabel,
+} from "@/components/exams/paper-builder/option-display";
 import { FONT, KR_FONT, PASSAGE_SIZE } from "./styles";
 import { noBorders } from "./borders";
 import { parseFormattedText } from "./parse-formatted-text";
 import type { DocChild, ParsedOption } from "./types";
 
+const koreanPattern = /[\uac00-\ud7a3]/;
+
 // ---------------------------------------------------------------------------
 // Options
 // ---------------------------------------------------------------------------
 
-export function renderOptions(options: ParsedOption[]): DocChild[] {
+export function renderOptions(
+  options: ParsedOption[],
+  subType?: string | null,
+): DocChild[] {
   if (options.length === 0) return [];
 
   const result: DocChild[] = [];
-  const maxLen = Math.max(...options.map((o) => o.text.length));
-
-  const toCircle = (lb: string) => {
-    const m: Record<string, string> = { "1": "①", "2": "②", "3": "③", "4": "④", "5": "⑤" };
-    return m[lb] || lb;
-  };
+  const displayTexts = options.map((option, index) =>
+    optionDisplayTextForSubtype(subType, index, option.text || ""),
+  );
+  const maxLen = Math.max(...displayTexts.map((text) => text.length));
 
   if (maxLen < 25 && options.length === 5) {
-    // Elegant 2-column layout for short/medium options
     const rows: TableRow[] = [];
     for (let i = 0; i < options.length; i += 2) {
       const rowCells: TableCell[] = [];
       for (let j = 0; j < 2; j++) {
         const opt = options[i + j];
+        const displayText = displayTexts[i + j];
         if (opt) {
-          const f = /[가-힣]/.test(opt.text) ? KR_FONT : FONT;
-          const circleLabel = toCircle(opt.label);
+          const f = koreanPattern.test(displayText) ? KR_FONT : FONT;
           rowCells.push(
             new TableCell({
               borders: noBorders(),
@@ -46,45 +52,58 @@ export function renderOptions(options: ParsedOption[]): DocChild[] {
                   spacing: { line: 276 },
                   indent: { left: 400, hanging: 400 },
                   children: [
-                    new TextRun({ text: `${circleLabel}   `, font: KR_FONT, size: PASSAGE_SIZE }),
-                    ...parseFormattedText(opt.text, { font: f, size: PASSAGE_SIZE }),
-                  ]
-                })
-              ]
-            })
+                    new TextRun({
+                      text: `${optionOrdinalLabel(i + j)}   `,
+                      font: KR_FONT,
+                      size: PASSAGE_SIZE,
+                    }),
+                    ...parseFormattedText(displayText, {
+                      font: f,
+                      size: PASSAGE_SIZE,
+                    }),
+                  ],
+                }),
+              ],
+            }),
           );
         } else {
-           rowCells.push(new TableCell({ borders: noBorders(), children: [new Paragraph({ children: [new TextRun({ text: " " })] })] }));
+          rowCells.push(
+            new TableCell({
+              borders: noBorders(),
+              children: [new Paragraph({ children: [new TextRun({ text: " " })] })],
+            }),
+          );
         }
       }
       rows.push(new TableRow({ children: rowCells }));
     }
-    result.push(new Table({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      borders: noBorders(),
-      rows,
-      layout: TableLayoutType.FIXED
-    }));
+    result.push(
+      new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        borders: noBorders(),
+        rows,
+        layout: TableLayoutType.FIXED,
+      }),
+    );
   } else {
-    // 1 Column for long options
-    for (const opt of options) {
-      const f = /[가-힣]/.test(opt.text) ? KR_FONT : FONT;
-      const circleLabel = toCircle(opt.label);
+    options.forEach((_, index) => {
+      const displayText = displayTexts[index];
+      const f = koreanPattern.test(displayText) ? KR_FONT : FONT;
       result.push(
         new Paragraph({
           spacing: { line: 276, after: 40 },
           indent: { left: 400, hanging: 400 },
           children: [
             new TextRun({
-              text: `${circleLabel}   `,
+              text: `${optionOrdinalLabel(index)}   `,
               font: KR_FONT,
               size: PASSAGE_SIZE,
             }),
-            ...parseFormattedText(opt.text, { font: f, size: PASSAGE_SIZE }),
+            ...parseFormattedText(displayText, { font: f, size: PASSAGE_SIZE }),
           ],
-        })
+        }),
       );
-    }
+    });
   }
 
   result.push(new Paragraph({ spacing: { after: 120 } }));
