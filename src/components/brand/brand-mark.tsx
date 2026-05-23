@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type Props = {
   className?: string;
   title?: string;
@@ -23,5 +25,26 @@ export function BrandMark({ className, title = "SMOAT" }: Props) {
       <path d="M50 21L53.5 30L63.3 30.7L55.7 36.9L58.2 46.3L50 41L41.8 46.3L44.3 36.9L36.7 30.7L46.5 30Z" />
       <path d="M50 58C40 53 25 49 12 50L12 88C25 87 40 89 50 94C60 89 75 87 88 88L88 50C75 49 60 53 50 58Z" />
     </svg>
+  );
+}
+
+type BrandIconProps = Props & {
+  markClassName?: string;
+};
+
+export function BrandIcon({
+  className,
+  markClassName,
+  title = "SMOAT",
+}: BrandIconProps) {
+  return (
+    <span
+      className={cn(
+        "flex size-9 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-[0_16px_32px_-22px_rgba(15,23,42,0.8)] transition",
+        className,
+      )}
+    >
+      <BrandMark className={cn("size-[22px]", markClassName)} title={title} />
+    </span>
   );
 }

@@ -394,22 +394,26 @@ export function HeroScene() {
             <span className="text-blue-600">SMOAT가 한 번에 완성</span>합니다
           </h1>
 
-          <p className="mx-auto mt-5 max-w-[760px] text-[15px] font-semibold leading-7 text-slate-600 sm:text-[17px] break-keep">
-            선생님의 필기와 출제 의도를 읽고 핵심 어휘, 구문, 출제 포인트, 19유형 문항,
-            <br className="hidden sm:block" />
-            편집 가능한 Word 시험지까지 이어주는 AI 영어 콘텐츠 워크벤치입니다.
-          </p>
+          <div className="mx-auto mt-6 max-w-[880px] break-keep">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-[12px] font-black text-white shadow-[0_18px_38px_-22px_rgba(37,99,235,0.95)] sm:text-[13px]">
+              <Zap className="size-4 fill-yellow-300 text-yellow-300" strokeWidth={2.6} />
+              2026.07.01 무료 종료
+            </div>
+            <p className="mt-3 text-[22px] font-black leading-[1.18] text-slate-950 sm:text-[30px]">
+              <span className="text-blue-600">지금 안 쓰면 손해.</span> 유료 전환 전에 전 기능을 끝까지 써보세요.
+            </p>
+            <p className="mt-2 text-[15px] font-black leading-7 text-slate-700 sm:text-[18px]">
+              압도적 퀄리티의 문제 생성 AI가{" "}
+              <span className="rounded-lg bg-yellow-300 px-2 py-0.5 text-blue-700">7월 1일까지 0원</span>
+            </p>
+          </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 relative z-20">
             <a
-              href="#section-apply"
-              onClick={(event) => {
-                event.preventDefault();
-                scrollTo("section-apply");
-              }}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-blue-600 px-7 text-[14px] font-black text-white shadow-[0_18px_44px_-22px_rgba(37,99,235,0.95)] transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_22px_50px_-24px_rgba(37,99,235,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[54px] sm:px-8"
+              href="/register"
+              className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-[15px] font-black text-white shadow-[0_24px_54px_-22px_rgba(37,99,235,1)] ring-4 ring-blue-500/15 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_28px_64px_-24px_rgba(37,99,235,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[58px] sm:px-10 sm:text-[16px]"
             >
-              무료 사전예약 신청
+              지금 무료로 활용하기
               <ArrowRight className="size-4" strokeWidth={2.5} />
             </a>
             <a

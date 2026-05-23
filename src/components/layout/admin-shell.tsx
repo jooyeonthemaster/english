@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BrandIcon } from "@/components/brand/brand-mark";
 import {
   Tooltip,
   TooltipContent,
@@ -167,12 +168,15 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
               href={basePath}
               className="flex items-center gap-2.5"
             >
-              <span className={cn(
-                "font-bold text-gray-900 tracking-tight transition-all duration-300",
-                collapsed ? "text-[18px]" : "text-[20px]"
-              )}>
-                SMOAT
-              </span>
+              <BrandIcon
+                className={cn("shrink-0", collapsed ? "size-9" : "size-8")}
+                markClassName={collapsed ? "size-[21px]" : "size-[20px]"}
+              />
+              {!collapsed && (
+                <span className="text-[20px] font-bold tracking-tight text-gray-900 transition-all duration-300">
+                  SMOAT
+                </span>
+              )}
               {!collapsed && (
                 <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">
                   erp

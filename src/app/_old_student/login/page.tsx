@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BrandIcon } from "@/components/brand/brand-mark";
 import { SCHOOLS } from "@/lib/constants";
 import { loginStudentAction } from "@/actions/auth";
 
@@ -66,9 +67,12 @@ export default function LoginPage() {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="relative z-10 px-5 pt-10"
         >
-          <span className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#7CB342]">
-            SMOAT
-          </span>
+          <div className="flex items-center gap-2">
+            <BrandIcon className="size-8 rounded-xl bg-[#1A1F16] shadow-none" markClassName="size-5" />
+            <span className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#7CB342]">
+              SMOAT
+            </span>
+          </div>
         </motion.div>
 
         {/* Back link */}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, LogIn } from "lucide-react";
 import { LoginModal } from "./login-modal";
-import { BrandMark } from "@/components/brand/brand-mark";
+import { BrandIcon } from "@/components/brand/brand-mark";
 
 const NAV_ITEMS: ReadonlyArray<{ href: string; label: string }> = [
   { href: "#section-annotation", label: "필기 기반 분석" },
@@ -45,9 +45,7 @@ export function LandingHeader() {
           }`}
         >
           <Link href="/" className="group flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-[0_16px_32px_-22px_rgba(15,23,42,0.8)] transition group-hover:bg-blue-600">
-              <BrandMark className="size-[22px]" />
-            </span>
+            <BrandIcon className="group-hover:bg-blue-600" />
             <span className="flex flex-col leading-none">
               <span className="text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
                 SMOAT

@@ -13,6 +13,7 @@ import {
   isJooyeonSpecialAccount,
   JOOYEON_WELCOME_STORAGE_KEY,
 } from "@/lib/jooyeon-special-account";
+import { BrandIcon } from "@/components/brand/brand-mark";
 
 const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
   missing_code: "인증 코드를 받지 못했습니다. 다시 시도해주세요.",
@@ -144,42 +145,7 @@ function StaffLoginForm() {
           
           <motion.div custom={0} initial="hidden" animate="visible" variants={fadeUp} className="mb-14">
             <div className="flex items-center gap-4 mb-8 cursor-pointer group" onClick={() => router.push('/')}>
-              {/* Jarvis 3D Hologram Effect */}
-              <div className="relative w-14 h-14 flex items-center justify-center">
-                {/* Ring 1 - Outer Orbit */}
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 border-[1.5px] border-blue-500/20 rounded-full"
-                  style={{ borderTopColor: "rgba(59, 130, 246, 0.9)", borderRightColor: "rgba(59, 130, 246, 0.4)" }}
-                />
-                {/* Ring 2 - Inner Orbit Reverse */}
-                <motion.div
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-[5px] border-[1.5px] border-indigo-500/20 rounded-full"
-                  style={{ borderBottomColor: "rgba(99, 102, 241, 0.9)", borderLeftColor: "rgba(99, 102, 241, 0.4)" }}
-                />
-                {/* The Core Orb */}
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    boxShadow: [
-                      "0 0 10px rgba(59, 130, 246, 0.4)",
-                      "0 0 25px rgba(59, 130, 246, 0.9)",
-                      "0 0 10px rgba(59, 130, 246, 0.4)"
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-5 h-5 bg-gradient-to-tr from-blue-600 to-sky-300 rounded-full z-10"
-                />
-                {/* Particles/Glow */}
-                <motion.div
-                  animate={{ opacity: [0.3, 0.8, 0.3], scale: [0.8, 1.2, 0.8] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute inset-0 bg-blue-400/20 blur-md rounded-full"
-                />
-              </div>
+              <BrandIcon className="size-14 group-hover:bg-blue-600" markClassName="size-8" />
 
               {/* Text */}
               <div className="flex flex-col">

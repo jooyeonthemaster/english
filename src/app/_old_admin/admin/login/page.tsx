@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Loader2, Mail, Lock } from "lucide-react";
+import { Loader2, Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandIcon } from "@/components/brand/brand-mark";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -46,9 +47,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-[400px] px-4">
         {/* Logo & Title */}
         <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex size-12 items-center justify-center rounded-xl bg-[#3182F6]">
-            <BookOpen className="size-6 text-white" />
-          </div>
+          <BrandIcon className="size-12 rounded-xl bg-[#3182F6] shadow-none" markClassName="size-7" />
           <div className="text-center">
             <h1 className="text-[22px] font-bold text-[#191F28]">
               다른 영어 학원

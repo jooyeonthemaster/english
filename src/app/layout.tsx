@@ -14,8 +14,12 @@ export const metadata: Metadata = {
   description: "SMOAT는 영어학원의 운영, 학습 데이터, AI 문제 생성을 하나로 묶어 가장 스마트한 해자를 만드는 AI ERP입니다.",
   applicationName: "SMOAT",
   icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/icon.svg",
   },
   appleWebApp: {
     title: "SMOAT",

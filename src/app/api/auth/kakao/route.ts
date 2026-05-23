@@ -7,8 +7,14 @@ const KAKAO_AUTHORIZE_URL = "https://kauth.kakao.com/oauth/authorize";
 const KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 const KAKAO_USER_URL = "https://kapi.kakao.com/v2/user/me";
 
-function errorRedirect(origin: string, code: string) {
-  const url = new URL("/login", origin);
+type AuthIntent = "login" | "register";
+
+function parseIntent(value: string | null): AuthIntent {
+  return value === "register" ? "register" : "login";
+}
+
+function errorRedirect(origin: string, code: string, intent: AuthIntent = "login") {
+  const url = new URL(intent === "register" ? "/register" : "/login", origin);
   url.searchParams.set("error", code);
   return NextResponse.redirect(url);
 }
@@ -17,15 +23,16 @@ export async function GET(request: NextRequest) {
   const { origin, searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const oauthError = searchParams.get("error");
+  const intent = parseIntent(searchParams.get("state") ?? searchParams.get("intent"));
 
   if (oauthError) {
-    return errorRedirect(origin, oauthError);
+    return errorRedirect(origin, oauthError, intent);
   }
 
   const clientId = process.env.KAKAO_CLIENT_ID;
   const clientSecret = process.env.KAKAO_CLIENT_SECRET;
   if (!clientId) {
-    return errorRedirect(origin, "kakao_not_configured");
+    return errorRedirect(origin, "kakao_not_configured", intent);
   }
 
   const redirectUri = `${origin}/api/auth/kakao`;
@@ -36,6 +43,7 @@ export async function GET(request: NextRequest) {
     authorizeUrl.searchParams.set("redirect_uri", redirectUri);
     authorizeUrl.searchParams.set("response_type", "code");
     authorizeUrl.searchParams.set("scope", "profile_nickname profile_image");
+    authorizeUrl.searchParams.set("state", intent);
     return NextResponse.redirect(authorizeUrl.toString());
   }
 
@@ -66,12 +74,12 @@ export async function GET(request: NextRequest) {
       body: errorBody,
       redirect_uri_sent: redirectUri,
     });
-    return errorRedirect(origin, "kakao_token_failed");
+    return errorRedirect(origin, "kakao_token_failed", intent);
   }
   const tokenData: { access_token?: string } = await tokenRes.json();
   if (!tokenData.access_token) {
     console.error("[kakao-oauth] no access_token in response", tokenData);
-    return errorRedirect(origin, "kakao_token_failed");
+    return errorRedirect(origin, "kakao_token_failed", intent);
   }
 
   const userRes = await fetch(KAKAO_USER_URL, {
@@ -86,7 +94,7 @@ export async function GET(request: NextRequest) {
       status: userRes.status,
       body: errorBody,
     });
-    return errorRedirect(origin, "kakao_user_failed");
+    return errorRedirect(origin, "kakao_user_failed", intent);
   }
 
   const kakaoUser: {
@@ -111,8 +119,8 @@ export async function GET(request: NextRequest) {
   });
 
   if (staff) {
-    if (!staff.isActive) return errorRedirect(origin, "inactive");
-    if (staff.role !== "DIRECTOR") return errorRedirect(origin, "not_director");
+    if (!staff.isActive) return errorRedirect(origin, "inactive", intent);
+    if (staff.role !== "DIRECTOR") return errorRedirect(origin, "not_director", intent);
 
     await prisma.staff.update({
       where: { id: staff.id },

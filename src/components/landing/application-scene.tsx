@@ -1,381 +1,164 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { ArrowRight, CheckCircle2, ClipboardCheck, LogIn, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ApplicationConfirmModal } from "./application-confirm-modal";
 
-const PHONE_RE = /^01[0-9]-?\d{3,4}-?\d{4}$/;
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ONBOARDING_STEPS = [
+  {
+    step: "01",
+    title: "소셜 계정으로 10초 가입",
+    detail: "Google 또는 Kakao 인증만 먼저 끝냅니다. 비밀번호를 새로 만들 필요가 없습니다.",
+  },
+  {
+    step: "02",
+    title: "학원 정보는 다음 화면에서 딱 한 번",
+    detail: "학원명, 원장/대표 강사 이름, 연락처, 주소, 예상 재원생 규모만 입력합니다.",
+  },
+  {
+    step: "03",
+    title: "바로 워크벤치 입장",
+    detail: "계정 생성과 동시에 학원 DB, 원장 권한, 무료 체험 크레딧을 같이 준비합니다.",
+  },
+] as const;
 
-const STUDENT_OPTIONS = [
-  { value: "", label: "선택하지 않음" },
-  { value: "20명 이하", label: "20명 이하" },
-  { value: "21-50명", label: "21-50명" },
-  { value: "51-100명", label: "51-100명" },
-  { value: "100명 이상", label: "100명 이상" },
-];
-
-interface FormState {
-  academyName: string;
-  directorName: string;
-  directorPhone: string;
-  directorEmail: string;
-  address: string;
-  estimatedStudents: string;
-  message: string;
-  agree: boolean;
-}
-
-const INITIAL: FormState = {
-  academyName: "",
-  directorName: "",
-  directorPhone: "",
-  directorEmail: "",
-  address: "",
-  estimatedStudents: "",
-  message: "",
-  agree: false,
-};
-
-function formatPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, "").slice(0, 11);
-  if (digits.length < 4) return digits;
-  if (digits.length < 8) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
-}
-
-const inputCls =
-  "h-11 w-full rounded-lg border border-blue-100 bg-white px-4 text-[14px] text-gray-900 placeholder:text-gray-400 transition-colors outline-none focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 disabled:opacity-60";
-
-const labelCls = "block text-[12px] font-bold text-blue-900 mb-1";
+const FIELD_ITEMS = ["학원명", "원장/대표 강사 이름", "연락처", "이메일", "학원 주소", "예상 재원생 수"];
 
 export function ApplicationScene() {
-  const [form, setForm] = useState<FormState>(INITIAL);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const reducedMotion = useReducedMotion();
-
-  function update<K extends keyof FormState>(key: K, value: FormState[K]) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    if (!form.academyName.trim()) {
-      setError("학원명을 입력해 주세요.");
-      return;
-    }
-    if (!form.directorName.trim()) {
-      setError("신청자 성함을 입력해 주세요.");
-      return;
-    }
-    if (!PHONE_RE.test(form.directorPhone.replace(/\s/g, ""))) {
-      setError("연락처 형식이 올바르지 않습니다. (010-XXXX-XXXX)");
-      return;
-    }
-    if (!EMAIL_RE.test(form.directorEmail)) {
-      setError("올바른 이메일을 입력해 주세요.");
-      return;
-    }
-    if (!form.address.trim()) {
-      setError("학원 주소를 입력해 주세요.");
-      return;
-    }
-    if (!form.agree) {
-      setError("개인정보 수집·이용에 동의해 주세요.");
-      return;
-    }
-    setConfirmOpen(true);
-  }
-
-  async function doSubmit() {
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/landing/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, desiredPlan: "FREE_MAY_2026" }),
-      });
-      const data = (await res.json()) as { success: boolean; error?: string };
-      if (!res.ok || !data.success) {
-        setError(data.error || "접수 중 오류가 발생했습니다.");
-        setConfirmOpen(false);
-        return;
-      }
-      setConfirmOpen(false);
-      setSubmitted(true);
-    } catch {
-      setError("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
-      setConfirmOpen(false);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  function resetForm() {
-    setForm(INITIAL);
-    setSubmitted(false);
-    setError(null);
-  }
 
   return (
     <section
       id="apply"
-      className="relative w-full overflow-hidden py-14 lg:py-16"
-      style={{ backgroundColor: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}
+      className="relative w-full overflow-hidden border-t border-slate-200 bg-slate-50 py-14 lg:py-16"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute top-0 right-0 w-[600px] h-[600px] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0) 70%)" }}
+        className="pointer-events-none absolute right-0 top-0 h-[520px] w-[520px] rounded-full bg-blue-500/10 blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(96,165,250,0.1) 0%, rgba(96,165,250,0) 70%)" }}
+        className="pointer-events-none absolute bottom-0 left-0 h-[460px] w-[460px] rounded-full bg-rose-500/10 blur-3xl"
       />
 
-      <div className="relative max-w-[1440px] mx-auto px-6 lg:px-10">
-        <div className="flex justify-center mb-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 border border-blue-200">
-            <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-pulse" />
-            <span className="text-[#1D4ED8] text-[12px] font-bold uppercase tracking-[0.25em]">
-              100% 무료 · 2026년 5월 한정 캠페인
+      <div className="relative mx-auto grid max-w-[1240px] items-center gap-8 px-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)] lg:px-10">
+        <div className="text-center lg:text-left">
+          <div className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-[12px] font-black uppercase tracking-[0.22em] text-red-600">
+              2026년 7월 1일까지 무료
             </span>
           </div>
+
+          <h2
+            className="mt-5 font-black leading-[1.05] tracking-[-0.035em] text-slate-950 break-keep"
+            style={{ fontSize: "clamp(32px, 4.2vw, 62px)" }}
+          >
+            7월 1일까지 무료!!!
+            <br />
+            써보고 판단하세요!!!
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-[640px] text-[15px] font-semibold leading-7 text-slate-600 sm:text-[17px] lg:mx-0 break-keep">
+            신청 폼으로 기다리지 마세요. 소셜 회원가입 후 온보딩에서 학원 정보를 입력하면 원장 계정과
+            학원 워크스페이스가 바로 생성됩니다.
+          </p>
+
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+            <Link
+              href="/register"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-blue-600 px-7 text-[14px] font-black text-white shadow-[0_18px_44px_-22px_rgba(37,99,235,0.95)] transition-all hover:-translate-y-0.5 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[54px] sm:px-8"
+            >
+              무료로 활용하기
+              <ArrowRight className="size-4" strokeWidth={2.5} />
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/85 px-6 text-[14px] font-black text-slate-800 shadow-[0_16px_42px_-30px_rgba(15,23,42,0.45)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[54px]"
+            >
+              <LogIn className="size-4" strokeWidth={2.5} />
+              기존 계정 로그인
+            </Link>
+          </div>
         </div>
-
-        <h2
-          className="font-black text-gray-900 text-center leading-[1.05] mb-4 break-keep"
-          style={{ fontSize: "clamp(28px, 3.6vw, 52px)", letterSpacing: "-0.035em" }}
-        >
-          선착순 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-0.5">100명</span>,{" "}
-          사전예약 접수 중.
-        </h2>
-
-        <p
-          className="text-gray-600 text-center mx-auto mb-8 font-medium leading-[1.6] whitespace-normal break-keep"
-          style={{
-            fontSize: "clamp(13px, 1.25vw, 17px)",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          지문 분석부터 시험지 출력까지 — SMOAT의 모든 기능을 5월 한 달간{" "}
-          <strong className="font-black text-[#3B82F6]">100% 무료</strong>로 제한 없이 사용할 수 있는 기회입니다.
-        </p>
 
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 24 }}
           whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-white rounded-3xl p-6 lg:p-10 max-w-[1360px] mx-auto border border-blue-100"
-          style={{ boxShadow: "0 40px 80px -20px rgba(59,130,246,0.1), 0 2px 10px rgba(59,130,246,0.05)" }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="rounded-[28px] border border-blue-100 bg-white p-5 shadow-[0_40px_90px_-34px_rgba(37,99,235,0.35)] sm:p-7 lg:p-8"
         >
-          {!submitted ? (
-            <form onSubmit={handleSubmit} noValidate>
-              <div className="flex items-baseline justify-between mb-5 flex-wrap gap-3 border-b border-blue-50 pb-4">
-                <div>
-                  <div className="text-[11px] font-bold tracking-[0.2em] text-[#60A5FA] mb-0.5 uppercase">
-                    Free Credit Application
-                  </div>
-                  <h3 className="text-[20px] font-black text-gray-900 tracking-tight">무료 크레딧 사전예약</h3>
-                </div>
-                <p className="text-[13px] text-gray-500 font-medium">
-                  접수 후 24시간 내 담당자가 연락드립니다.
-                </p>
+          <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-5">
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-[0.22em] text-blue-500">
+                Onboarding Flow
               </div>
-
-              {error && (
-                <div className="mb-4 bg-red-50 border border-red-200 text-red-800 text-[14px] font-medium p-3 rounded-xl">
-                  {error}
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-4">
-                <div>
-                  <label htmlFor="academyName" className={labelCls}>
-                    학원명 <span className="text-[#3B82F6]">*</span>
-                  </label>
-                  <input
-                    id="academyName"
-                    type="text"
-                    required
-                    value={form.academyName}
-                    onChange={(e) => update("academyName", e.target.value)}
-                    placeholder="예: SMOAT 영어학원"
-                    className={inputCls}
-                    autoComplete="organization"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="directorName" className={labelCls}>
-                    신청자 성함 <span className="text-[#3B82F6]">*</span>
-                  </label>
-                  <input
-                    id="directorName"
-                    type="text"
-                    required
-                    value={form.directorName}
-                    onChange={(e) => update("directorName", e.target.value)}
-                    placeholder="홍길동"
-                    className={inputCls}
-                    autoComplete="name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="directorPhone" className={labelCls}>
-                    연락처 <span className="text-[#3B82F6]">*</span>
-                  </label>
-                  <input
-                    id="directorPhone"
-                    type="tel"
-                    required
-                    value={form.directorPhone}
-                    onChange={(e) => update("directorPhone", formatPhone(e.target.value))}
-                    placeholder="010-0000-0000"
-                    className={inputCls}
-                    autoComplete="tel"
-                    inputMode="numeric"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="directorEmail" className={labelCls}>
-                    이메일 <span className="text-[#3B82F6]">*</span>
-                  </label>
-                  <input
-                    id="directorEmail"
-                    type="email"
-                    required
-                    value={form.directorEmail}
-                    onChange={(e) => update("directorEmail", e.target.value)}
-                    placeholder="director@example.com"
-                    className={inputCls}
-                    autoComplete="email"
-                  />
-                </div>
-                <div className="md:col-span-2 lg:col-span-3">
-                  <label htmlFor="address" className={labelCls}>
-                    학원 주소 <span className="text-[#3B82F6]">*</span>
-                  </label>
-                  <input
-                    id="address"
-                    type="text"
-                    required
-                    value={form.address}
-                    onChange={(e) => update("address", e.target.value)}
-                    placeholder="예: 서울특별시 강남구 테헤란로 123"
-                    className={inputCls}
-                    autoComplete="street-address"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="estimatedStudents" className={labelCls}>
-                    예상 재원생 수
-                  </label>
-                  <select
-                    id="estimatedStudents"
-                    value={form.estimatedStudents}
-                    onChange={(e) => update("estimatedStudents", e.target.value)}
-                    className={inputCls}
-                  >
-                    {STUDENT_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="md:col-span-2 lg:col-span-4">
-                  <label htmlFor="message" className={labelCls}>
-                    문의사항
-                  </label>
-                  <input
-                    id="message"
-                    type="text"
-                    value={form.message}
-                    onChange={(e) => update("message", e.target.value)}
-                    placeholder="담당자에게 전달할 내용이 있다면 남겨주세요."
-                    className={inputCls}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-5 flex items-center justify-between flex-wrap gap-4 pt-4 border-t border-blue-50">
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.agree}
-                    onChange={(e) => update("agree", e.target.checked)}
-                    className="mt-0.5 w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6]/30"
-                  />
-                  <span className="text-[14px] text-gray-700 leading-[1.6]">
-                    <strong className="font-bold text-gray-900">개인정보 수집·이용에 동의합니다.</strong>
-                    <span className="text-gray-500 block sm:inline mt-1 sm:mt-0">
-                      {" "}
-                      (학원명·연락처·이메일·주소는 캠페인 심사 및 연락 목적으로만 사용됩니다.)
-                    </span>
-                  </span>
-                </label>
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="h-12 px-10 rounded-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-black text-[15px] tracking-tight transition-all shadow-[0_5px_20px_rgba(59,130,246,0.3)] hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
-                >
-                  {submitting ? "접수 중..." : "무료 크레딧 사전예약 →"}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-              animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="py-12 text-center"
-            >
-              <div className="mx-auto w-16 h-16 rounded-full bg-[#3B82F6] text-white flex items-center justify-center shadow-[0_10px_20px_rgba(59,130,246,0.2)]">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path
-                    d="M5 12.5L10 17.5L19 7.5"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-[32px] font-black text-gray-900 mt-6 tracking-tight">
-                사전예약이 완료되었습니다
+              <h3 className="mt-1 text-[22px] font-black tracking-tight text-slate-950">
+                무료 체험 시작 온보딩
               </h3>
-              <p className="text-[16px] font-medium text-gray-600 mt-4 leading-[1.7]">
-                24시간 내 담당자가 기재하신 연락처로 안내드립니다.
-              </p>
-              <div className="mt-8">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="text-[14px] font-bold text-[#3B82F6] hover:text-[#1E3A8A] underline-offset-4 hover:underline transition-colors"
-                >
-                  다른 학원 신청하기
-                </button>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
+              <Zap className="size-3.5 text-yellow-300" />
+              카드 등록 없음
+            </span>
+          </div>
+
+          <div className="mt-5 grid gap-3">
+            {ONBOARDING_STEPS.map((item) => (
+              <div
+                key={item.step}
+                className="flex gap-4 rounded-2xl border border-slate-100 bg-slate-50/70 p-4"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-[12px] font-black text-white">
+                  {item.step}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[14px] font-black text-slate-950">{item.title}</span>
+                  <span className="mt-1 block text-[12.5px] font-semibold leading-5 text-slate-500">
+                    {item.detail}
+                  </span>
+                </span>
               </div>
-            </motion.div>
-          )}
+            ))}
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-red-100 bg-red-50 p-4">
+            <div className="flex items-center gap-2 text-[13px] font-black text-red-700">
+              <Sparkles className="size-4" />
+              7월 1일까지만 무료 기간입니다
+            </div>
+            <p className="mt-2 text-[12.5px] font-semibold leading-5 text-red-700/80">
+              요금제 선택은 나중입니다. 지금은 실제 수업 자료로 돌려보고, 우리 학원에 맞는지 먼저 확인하세요.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-2 sm:grid-cols-2">
+            {FIELD_ITEMS.map((item) => (
+              <div key={item} className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white px-3 py-2.5">
+                <CheckCircle2 className="size-4 shrink-0 text-blue-600" />
+                <span className="text-[12.5px] font-bold text-slate-700">{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 flex items-start gap-3 rounded-2xl bg-slate-950 p-4 text-white">
+            <ShieldCheck className="mt-0.5 size-5 shrink-0 text-emerald-300" />
+            <p className="text-[12.5px] font-semibold leading-5 text-white/75">
+              신규 소셜 계정은 온보딩을 완료해야 학원 DB가 생성됩니다. 이미 생성된 기존 계정은 지금처럼 바로
+              로그인되므로 기존 사용자 접근에는 영향을 주지 않습니다.
+            </p>
+          </div>
+
+          <Link
+            href="/register"
+            className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-blue-600 text-[15px] font-black text-white shadow-[0_18px_42px_-24px_rgba(37,99,235,0.95)] transition hover:bg-blue-700"
+          >
+            <ClipboardCheck className="size-4" />
+            온보딩 시작하기
+          </Link>
         </motion.div>
       </div>
-
-      <ApplicationConfirmModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={doSubmit}
-        submitting={submitting}
-      />
     </section>
   );
 }

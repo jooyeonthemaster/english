@@ -4,8 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
 import { signOnboardingToken } from "@/lib/onboarding-token";
 
-function buildErrorRedirect(origin: string, code: string) {
-  const url = new URL("/login", origin);
+type AuthIntent = "login" | "register";
+
+function parseIntent(value: string | null): AuthIntent {
+  return value === "register" ? "register" : "login";
+}
+
+function buildErrorRedirect(origin: string, code: string, intent: AuthIntent = "login") {
+  const url = new URL(intent === "register" ? "/register" : "/login", origin);
   url.searchParams.set("error", code);
   return NextResponse.redirect(url);
 }
@@ -24,15 +30,16 @@ function buildOnboardingRedirect(origin: string, onboardingToken: string) {
 
 export async function GET(request: NextRequest) {
   const { origin, searchParams } = new URL(request.url);
+  const intent = parseIntent(searchParams.get("intent"));
 
   const oauthError = searchParams.get("error");
   if (oauthError) {
-    return buildErrorRedirect(origin, oauthError);
+    return buildErrorRedirect(origin, oauthError, intent);
   }
 
   const code = searchParams.get("code");
   if (!code) {
-    return buildErrorRedirect(origin, "missing_code");
+    return buildErrorRedirect(origin, "missing_code", intent);
   }
 
   const supabase = await createSupabaseServerClient();
@@ -43,7 +50,7 @@ export async function GET(request: NextRequest) {
       error: error?.message,
       hasUser: !!data?.user,
     });
-    return buildErrorRedirect(origin, "exchange_failed");
+    return buildErrorRedirect(origin, "exchange_failed", intent);
   }
 
   const email = data.user.email;
@@ -60,7 +67,7 @@ export async function GET(request: NextRequest) {
 
   if (!email) {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "no_email");
+    return buildErrorRedirect(origin, "no_email", intent);
   }
 
   const staff = await prisma.staff.findUnique({
@@ -95,15 +102,15 @@ export async function GET(request: NextRequest) {
   }
   if (!staff.isActive) {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "inactive");
+    return buildErrorRedirect(origin, "inactive", intent);
   }
   if (staff.role !== "DIRECTOR") {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "not_director");
+    return buildErrorRedirect(origin, "not_director", intent);
   }
   if (staff.supabaseUserId && staff.supabaseUserId !== supabaseUserId) {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "account_mismatch");
+    return buildErrorRedirect(origin, "account_mismatch", intent);
   }
 
   await prisma.staff.update({

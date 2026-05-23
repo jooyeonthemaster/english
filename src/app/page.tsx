@@ -5,9 +5,7 @@ import { AnnotationScene } from "@/components/landing/annotation-scene";
 import { QuestionBurstScene } from "@/components/landing/question-burst-scene";
 import { ExamPaperScene } from "@/components/landing/exam-paper-scene";
 import { FolderScene } from "@/components/landing/folder-scene";
-import { ApplicationScene } from "@/components/landing/application-scene";
 import { CtaScene } from "@/components/landing/cta-scene";
-import { StickyCreditBar } from "@/components/landing/sticky-credit-bar";
 import { LandingHeader } from "@/components/landing/landing-header";
 
 export default function RootPage() {
@@ -27,11 +25,7 @@ export default function RootPage() {
       <div id="section-folder" className="w-full">
         <FolderScene />
       </div>
-      <div id="section-apply" className="w-full">
-        <ApplicationScene />
-      </div>
       <CtaScene />
-      <StickyCreditBar />
     </main>
   );
 }

@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BrandIcon } from "@/components/brand/brand-mark";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -46,9 +47,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-[360px]">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600/10 mb-4">
-            <Shield className="size-6 text-blue-400" strokeWidth={1.8} />
-          </div>
+          <BrandIcon className="mb-4 size-12 bg-blue-600 shadow-[0_16px_32px_-22px_rgba(37,99,235,0.8)]" markClassName="size-7" />
           <h1 className="text-[22px] font-bold text-white tracking-tight">
             SMOAT Admin
           </h1>

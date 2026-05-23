@@ -15,9 +15,9 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ChevronDown,
-  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BrandIcon } from "@/components/brand/brand-mark";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -134,7 +134,10 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
             )}
           >
             <Link href="/admin" className="flex items-center gap-2.5">
-              <Shield className="size-5 text-blue-400" strokeWidth={2} />
+              <BrandIcon
+                className={cn("shrink-0 bg-blue-600 shadow-none", collapsed ? "size-9" : "size-8")}
+                markClassName={collapsed ? "size-[21px]" : "size-[20px]"}
+              />
               {!collapsed && (
                 <span className="font-bold text-white tracking-tight text-[18px]">
                   SMOAT

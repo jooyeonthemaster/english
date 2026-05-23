@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getNavGroups } from "@/components/layout/nav-config";
+import { BrandIcon } from "@/components/brand/brand-mark";
 import {
-  BookOpen,
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
@@ -38,9 +38,7 @@ export function TeacherSidebar({ academyName }: TeacherSidebarProps) {
     >
       {/* Logo */}
       <div className="flex h-16 items-center gap-2.5 px-4">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#3182F6]">
-          <BookOpen className="size-4 text-white" />
-        </div>
+        <BrandIcon className="size-8 shrink-0 rounded-lg bg-[#3182F6] shadow-none" markClassName="size-5" />
         {!collapsed && (
           <span className="truncate text-[15px] font-bold text-[#191F28]">
             {academyName}

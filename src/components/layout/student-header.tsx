@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, Bell } from "lucide-react";
-import { BrandMark } from "@/components/brand/brand-mark";
+import { BrandIcon } from "@/components/brand/brand-mark";
 
 // ---------------------------------------------------------------------------
 // Sub-page titles
@@ -96,9 +96,7 @@ export function StudentHeader({
             <div className="flex items-center gap-[var(--sp-2)]">
               {/* Academy logo placeholder + name */}
               <div className="flex items-center gap-[var(--sp-1)]">
-                <div className="w-[var(--icon-md)] h-[var(--icon-md)] rounded-md bg-[var(--erp-primary)] flex items-center justify-center text-white">
-                  <BrandMark className="w-[70%] h-[70%]" />
-                </div>
+                <BrandIcon className="h-[var(--icon-md)] w-[var(--icon-md)] rounded-md bg-[var(--erp-primary)] shadow-none" markClassName="h-[70%] w-[70%]" />
                 <span className="text-[var(--fs-sm)] font-bold text-[var(--erp-text)] tracking-tight">
                   {academyName || "SMOAT"}
                 </span>
