@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { OptionList } from "./question-renderer-primitives";
 import {
@@ -51,6 +52,9 @@ export function StructuredQuestionRenderer({
   const typeId = questionForRender._typeId as string | undefined;
   const typeLabel = questionForRender._typeLabel as string | undefined;
   const meta = typeId ? QUESTION_TYPE_META[typeId] : undefined;
+  const visibleTags = getVisibleQuestionTags(
+    Array.isArray(questionForRender.tags) ? questionForRender.tags : [],
+  );
 
   // Determine if this is a structured question by checking for type-specific fields
   const isStructured = typeId && hasStructuredFields(typeId, questionForRender);
@@ -85,9 +89,9 @@ export function StructuredQuestionRenderer({
             {questionForRender.difficulty || "INTERMEDIATE"}
           </span>
         </div>
-        {questionForRender.tags && questionForRender.tags.length > 0 && (
+        {visibleTags.length > 0 && (
           <div className="flex gap-1">
-            {questionForRender.tags.slice(0, 3).map((tag: string, ti: number) => (
+            {visibleTags.slice(0, 3).map((tag: string, ti: number) => (
               <span
                 key={ti}
                 className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500 font-medium"
@@ -199,7 +203,10 @@ function normalizeVocabOptionsForDisplay(question: any): any {
 
 function stripOptionPrefix(text: string): string {
   return text
-    .replace(/^\s*(?:[\u2460-\u2464]|\([A-Ea-e1-5]\)|[A-Ea-e1-5][.)]|[1-5][.)])\s*/, "")
+    .replace(
+      /^\s*(?:[\u2460-\u2469]|\((?:[A-Ja-j]|10|[1-9])\)|(?:[A-Ja-j]|10|[1-9])[.)])\s*/,
+      "",
+    )
     .trim();
 }
 
@@ -332,9 +339,14 @@ function normalizeDisplayLabel(value: unknown): string {
     "\u2462": "3",
     "\u2463": "4",
     "\u2464": "5",
+    "\u2465": "6",
+    "\u2466": "7",
+    "\u2467": "8",
+    "\u2468": "9",
+    "\u2469": "10",
   };
   return (circledMap[text] ?? text)
-    .replace(/^[\(\[]?([A-Ea-e1-5])[\)\].]?\s*$/, "$1")
+    .replace(/^[\(\[]?([A-Ja-j]|10|[1-9])[\)\].]?\s*$/, "$1")
     .toLowerCase();
 }
 

@@ -28,6 +28,7 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationPlanConfig,
   normalizeQuestionGenerationPlan,
+  sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
@@ -152,6 +153,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const config = STATUS_CONFIG[passage.status];
   const StatusIcon = config.icon;
+  const displayTitle = sanitizeAiModelDisclosureText(passage.title);
   const analysisMeta = passage.analysisData as Record<string, unknown> | null;
   const planConfig = getQuestionGenerationPlanConfig(
     normalizeQuestionGenerationPlan(
@@ -231,7 +233,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
 
     return (
       <WorkbenchLoadingCard
-        title={passage.title}
+        title={displayTitle}
         contentPreview={passage.contentPreview}
         statusLabel={config.label}
         progressLabel={
@@ -262,7 +264,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         className="cursor-pointer"
         role="button"
         tabIndex={0}
-        ariaLabel={`${passage.title} - ${config.label}`}
+        ariaLabel={`${displayTitle} - ${config.label}`}
       />
     );
   }
@@ -295,7 +297,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
           }
         }
       }}
-      aria-label={`${passage.title} - ${config.label}`}
+      aria-label={`${displayTitle} - ${config.label}`}
     >
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
@@ -315,7 +317,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
           )}
           <div className="min-w-0 flex-1">
             <h4 className="text-[13px] font-semibold text-slate-800 truncate">
-              {passage.title}
+              {displayTitle}
             </h4>
             <div className="flex items-center gap-1.5 mt-0.5">
               {passage.status !== "done" && (

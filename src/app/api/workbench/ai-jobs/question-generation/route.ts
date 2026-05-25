@@ -9,6 +9,11 @@ import {
 } from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
+import { countPassageSentences } from "@/lib/passage-sentence-utils";
+import {
+  readIrrelevantSlotCountSetting,
+  validateIrrelevantAgainstPassage,
+} from "@/lib/question-type-generation-settings";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,10 +55,30 @@ export async function POST(req: NextRequest) {
     select: {
       id: true,
       title: true,
+      content: true,
     },
   });
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
+  }
+
+  // ── IRRELEVANT slot count guardrail (MANUAL mode only — AUTO planner picks its own count) ──
+  if (parsed.data.mode === "MANUAL" && parsed.data.questionType === "IRRELEVANT") {
+    const requestedSlotCount = readIrrelevantSlotCountSetting(parsed.data.questionTypeSettings);
+    const passageSentenceCount = countPassageSentences(passage.content);
+    const v = validateIrrelevantAgainstPassage(requestedSlotCount, passageSentenceCount);
+    if (!v.ok) {
+      return NextResponse.json(
+        {
+          error: v.error,
+          code: "IRRELEVANT_SLOT_COUNT_TOO_HIGH",
+          passageSentenceCount,
+          requestedSlotCount,
+          maxSlotCount: passageSentenceCount,
+        },
+        { status: 400 },
+      );
+    }
   }
 
   const generationPlan = normalizeQuestionGenerationPlan(

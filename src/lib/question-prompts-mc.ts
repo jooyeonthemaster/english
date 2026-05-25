@@ -27,17 +27,19 @@ export const MC_PROMPTS: Record<string, string> = {
   GRAMMAR_ERROR: `어법 판단 문제를 만드세요.
 
 ## 출제 철학
-수능 어법 5지선다는 5개 위치 모두가 어법 결정 지점입니다. 정답뿐 아니라 4개 디코이도 학생이 능동적 어법 판단을 해야 하는 자리.
+수능 어법 판단은 밑줄 친 모든 위치가 어법 결정 지점입니다. 정답뿐 아니라 디코이도 학생이 능동적으로 문장 구조를 판단해야 하는 자리입니다.
+기본은 5개 밑줄 중 1개 오류입니다. 별도의 Type detail setting이 주어지면 표시 개수만 따르고, 실제 정답 개수는 매번 자연스럽게 달라지게 고릅니다.
 
-## 5개 위치 선정
-1. 5개 모두 **서로 다른 pointCode** (a~m). 5개 코드는 unique.
-2. 5개는 서로 다른 문장
-3. pointCode 풀:
+## 위치 선정
+1. 표시 위치는 기본 5개, 설정이 있으면 5~10개까지 확장합니다.
+2. pointCode는 가능한 한 **서로 다른 코드**(a~m)를 사용합니다. 요청 개수가 많아 중복이 불가피하면 같은 코드라도 서로 다른 세부 문법 판단을 묻습니다.
+3. 서로 다른 문장을 우선 사용하되, 지문 길이상 부족하면 같은 문장 안에서도 서로 다른 절/구조의 강한 어법 포인트만 사용합니다.
+4. pointCode 풀:
    (a) 정·준동사  (b) 관계사  (c) 분사 능/수동  (d) 수일치
    (e) 능/수동태  (f) 형/부 자리  (g) 대명사 일치  (h) 목적격보어
    (i) 병렬  (j) 가정법 시제  (k) to-v vs. v-ing  (l) 전치사 vs. 접속사
    (m) 비교구문
-4. **pointCode 정확성**: 표시한 expression의 문법적 성격에 정확히 맞는 코드를 골라야 함. 분사면 c, 대명사면 g, 동사 단·복수면 d 등.
+5. **pointCode 정확성**: 표시한 expression의 문법적 성격에 정확히 맞는 코드를 골라야 함. 분사면 c, 대명사면 g, 동사 단·복수면 d 등.
 
 ## ⚠️ 약한 디코이 금지
 - to-v 전용 동사 뒤 to-v (plan, want, decide, refuse, hope, expect, manage, agree, promise, fail, learn)
@@ -55,36 +57,39 @@ export const MC_PROMPTS: Record<string, string> = {
 9. to-v ↔ v-ing  10. 가정법 시제  11. 전치사 ↔ 접속사
 **금지**: 동사↔명사, 형용사↔명사 같은 품사 변경. errorExpression의 어간은 expression과 동일해야 함.
 
-## wrongOptionExplanations 일관성 (배열 길이 4)
+## wrongOptionExplanations 일관성
 각 항목은 markedExpressions의 같은 label과 정확히 일치:
-- label: markedExpressions에서 정답이 아닌 4개
+- label: markedExpressions에서 정답이 아닌 label만 포함
 - expression: 해당 label의 markedExpression.expression과 완전 동일 문자열
 - pointCode: 해당 label의 markedExpression.pointCode와 동일 코드
 - explanation: 이 expression(인용 필수)이 어떤 포인트를 묻고 왜 어법상 맞는지 1~2문장 한국어
+복수 정답 설정에서도 모든 표시를 오류로 만들지 마세요. wrongOptionExplanations가 비면 안 됩니다.
 
 ❌ 잘못된 예 ((B) 위치가 detached인데 해설은 'them' 언급): {label:"(B)", expression:"detached", explanation:"...대명사 'them'이 옳다"}
 ⭕ 올바른 예: {label:"(B)", expression:"detached", pointCode:"c", explanation:"이 자리는 분사 능/수동을 묻고 있으며, isolated words가 detach의 대상이므로 과거분사 'detached'가 어법상 옳다."}
 
 ## correctAnswer 포맷
-괄호 포함: "(A)" "(B)" "(C)" "(D)" "(E)" 중 하나.
+괄호 포함: 기본은 "(A)"~"(E)" 중 하나.
+복수 정답 설정이면 correctAnswers 배열을 만들고, correctAnswer는 같은 라벨을 comma + space로 연결합니다. 예: "(A), (C), (F)". 발문에는 정답 개수를 노출하지 않습니다.
 
 ## 출력 작성 순서
-1. 지문에서 다른 문장의 강한 디코이 자리 5개 후보 선정 (각 a~m 중 다른 pointCode)
+1. 지문에서 강한 어법 판단 자리 후보를 필요한 개수만큼 선정 (각 a~m 중 가능한 한 다른 pointCode)
 2. 약한 디코이 자리가 섞이면 즉시 교체
-3. markedExpressions[5] 작성 — pointCode 라벨링. 5개 pointCode 서로 다름 확인.
-4. 가장 명백한 위치는 디코이로 두고 정답 위치 다양화 검토
-5. 1개에 11가지 변형 중 1개 적용 → isError=true, errorExpression 변형, correction = expression
-6. correctAnswer = "(?)"
-7. wrongOptionExplanations[4]: 정답 제외 4개 각각에 markedExpression의 label·expression·pointCode를 복사하고, expression을 인용한 해설 작성
-8. options[5] (오류는 errorExpression, 나머지는 expression)
-9. explanation, keyPoints[3], tags[5] (각 pointCode의 한국어 포인트명)
+3. markedExpressions 작성 — pointCode 라벨링. 요청된 표시 개수를 확인.
+4. 가장 명백한 위치에만 몰지 말고 정답 위치와 오류 유형을 다양화
+5. 복수 정답 설정이면 정답 개수를 매번 다르게 선택하되, 전체가 정답이 되지 않게 함 → isError=true, errorExpression 변형, correction = expression
+6. correctAnswers 및 correctAnswer 작성
+7. wrongOptionExplanations: 정답 제외 각 항목에 markedExpression의 label·expression·pointCode를 복사하고, expression을 인용한 해설 작성
+8. options 작성 (오류는 errorExpression, 나머지는 expression)
+9. explanation, keyPoints, tags 작성. 복수 정답이면 모든 오류와 핵심 디코이 포인트가 해설/오답 분석에 반영되어야 함.
 
 ## 자체 검증
-□ 5 pointCode unique (a~m 중 5개 선택, 중복 없음)
-□ 5 verbatim · 1 isError · 다른 문장 분포
-□ correctAnswer = "(?)" 괄호 포함
+□ 요청된 표시 개수 일치
+□ 복수 정답 설정에서 정답 개수가 매번 고정되지 않으며, 모든 표시가 정답이 아님
+□ 모든 expression/correction은 원문 verbatim, errorExpression만 의도적 변형
+□ correctAnswer/correctAnswers가 isError=true 라벨과 정확히 일치
 □ errorExpression 어간 = expression 어간 (품사 변경 X)
-□ wrongOptionExplanations 길이 4, 각 항목의 label·expression·pointCode가 markedExpressions와 완전 일치
+□ wrongOptionExplanations 길이가 정답 제외 선지 수와 일치, 각 항목의 label·expression·pointCode가 markedExpressions와 완전 일치
 □ wrongOptionExplanation 본문이 해당 expression을 인용 (다른 표현 언급 X)
 □ 약한 디코이 자리(plan+to-v, 단순 관사 등) 0개
 □ ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
@@ -163,6 +168,10 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 ## 핵심 규칙
 1. 지문에서 서로 이어지는 5문장 안팎의 흐름을 잡고, 그중 정확히 1문장을 AI 생성 문장으로 대체합니다.
 2. 나머지 4개는 지문의 실제 문장을 원문 그대로 사용합니다. 의미 보존 paraphrase, 요약, 문장 결합은 금지입니다.
+2-1. ⚠️ **sentences 배열의 각 슬롯에는 원문 문장이 정확히 1개만 들어가야 합니다.** 두 문장 이상을 결합·이어붙이기·",", " and", " but" 등으로 연결하지 마세요.
+   - 한 슬롯의 텍스트는 원문에서 . ! ?로 끝나는 한 문장과 정확히 동일해야 하며, 그 뒤에 다른 문장의 어떤 단어도 붙이지 마세요.
+   - 원문에 "No.", "Good question.", "Yes." 같은 매우 짧은 문장이 있어도, **짧다는 이유로 인접 문장과 합치지 말고 그 짧은 문장 자체를 슬롯으로 사용하거나, 그 짧은 문장을 포함하지 않는 다른 5문장 윈도우를 선택**하세요.
+   - 자체 검증: 출력 직전에 4개 non-irrelevant 슬롯이 각각 원문에 정확히 1개의 문장으로 존재하는지 다시 확인하세요. 슬롯 텍스트에 ". " 또는 "? "가 중간에 등장하면 그 슬롯은 결합된 것이므로 다시 작성합니다.
 3. 무관한 문장은 같은 소재/상황/핵심 어휘를 최소 2개 이상 공유해야 하며, 가능하면 주변 원문 문장의 영어 content word를 그대로 재사용합니다.
    - 삽입문 안의 의미 있는 단어 중 상당수는 선택한 원문 흐름의 단어여야 합니다. 새 구체명사를 많이 추가하지 마세요.
 4. 무관한 문장은 "랜덤한 외부 사실"이 아니라 다음 중 하나의 논리 이탈이어야 합니다.
@@ -186,12 +195,12 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 - 무관문이 조언/처방문으로 튀지 않고 주변 원문과 같은 설명문 톤을 유지하는가?
 
 ## 출력 필드
-- sentences: 5개 문장 배열 (순서대로 ①~⑤에 대응)
-  - 4개는 지문 원문에서 가져온 실제 문장
+- sentences: 요청한 선지 개수(5~10개)에 맞춘 문장 배열 (순서대로 ①~⑩ 범위에 대응)
   - 1개는 같은 소재를 공유하지만 논리 기능이 어긋나는 문장
-- irrelevantIndex: 무관한 문장의 인덱스 (0~4)
-- options: label과 text 모두 "①"~"⑤" 형식
-- wrongOptionExplanations: 정답이 아닌 4개 문장이 문단에서 맡는 역할(도입, 정의, 예시, 대조, 결론 등)을 각각 설명
+  - 나머지는 지문 원문에서 가져온 실제 문장
+- irrelevantIndex: 무관한 문장의 인덱스 (0부터 sentences.length - 1까지)
+- options: label과 text 모두 sentences 개수에 맞는 "①"~"⑩" 범위 형식
+- wrongOptionExplanations: 정답이 아닌 모든 문장이 문단에서 맡는 역할(도입, 정의, 예시, 대조, 결론 등)을 각각 설명. 항목 수는 sentences.length - 1개여야 함
 - ⚠️ passageWithNumbers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글에서 전체 흐름과 관계 없는 문장은?"`,
 };

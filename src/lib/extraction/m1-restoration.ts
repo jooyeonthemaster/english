@@ -20,7 +20,7 @@ export interface M1RestorationFallback {
   changes: M1RestorationChangeInput[];
 }
 
-const CIRCLED_OPTION_MARKER = /[\u2460-\u2468]\s*/g;
+const CIRCLED_OPTION_MARKER = /[\u2460-\u2469]\s*/g;
 const ORDER_SEGMENT_MARKER = /(^|\n)\s*\([A-E]\)\s+/m;
 const BRACKETED_BASE_FORM = /\([A-E]\)\s*\[[^\]]+\]/;
 const INCOMPLETE_BRACKETED_BASE_FORM = /\([A-E]\)\s*\[[^\]\n]*$/m;

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FileText, Check, BookOpen, PenTool } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -76,7 +77,7 @@ export function PassageFileRow({
 
       <Link href={`/director/workbench/passages/${passage.id}`} className="flex-1 min-w-0">
         <p className="text-[13px] font-medium text-slate-800 truncate group-hover:text-blue-600 transition-colors">
-          {passage.title}
+          {sanitizeAiModelDisclosureText(passage.title)}
         </p>
       </Link>
 

@@ -12,6 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import {
+  getVisibleQuestionTags,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
 import { PUBLISHERS } from "../constants";
 
 interface FormMetadataColumnProps {
@@ -59,6 +63,8 @@ export function FormMetadataColumn({
   addTag,
   removeTag,
 }: FormMetadataColumnProps) {
+  const visibleTags = getVisibleQuestionTags(tags);
+
   return (
     <div className="bg-slate-50/70 rounded-xl border border-slate-200 p-5 flex flex-col min-h-0 overflow-y-auto">
       <h3 className="text-[14px] font-semibold text-slate-700 mb-3 shrink-0">지문 정보</h3>
@@ -112,7 +118,7 @@ export function FormMetadataColumn({
           </div>
           <div>
             <Label className="text-[11px] text-slate-500 mb-1 block">출처</Label>
-            <Input placeholder="2025 기말" value={source} onChange={(e) => setSource(e.target.value)} className="h-9" />
+            <Input placeholder="2025 기말" value={sanitizeAiModelDisclosureText(source)} onChange={(e) => setSource(e.target.value)} className="h-9" />
           </div>
         </div>
 
@@ -148,9 +154,9 @@ export function FormMetadataColumn({
           </div>
         </div>
 
-        {tags.length > 0 && (
+        {visibleTags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {tags.map((tag) => (
+            {visibleTags.map((tag) => (
               <Badge key={tag} variant="secondary" className="text-[11px] pr-1 flex items-center gap-0.5">
                 {tag}
                 <button onClick={() => removeTag(tag)} className="ml-0.5 hover:text-red-500">

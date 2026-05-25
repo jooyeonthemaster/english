@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
   DenseSectionTitle,
@@ -27,7 +28,7 @@ function pushBlock(
   blocks.push({
     id: options.id || `${passage.id}-${category}-${blocks.length}`,
     passageId: passage.id,
-    passageTitle: passage.title,
+    passageTitle: sanitizeAiModelDisclosureText(passage.title),
     category,
     label,
     pointCount,

@@ -9,8 +9,8 @@ import React from "react";
 // ---------------------------------------------------------------------------
 
 export function renderFormatted(text: string): React.ReactNode {
-  // Match: __content__ (underline with possible marker inside), ___+ (blank), circled numbers, (a)/(A) markers
-  const regex = /__([^_]+)__|_{3,}|([①②③④⑤])|\(([a-eA-E])\)/g;
+  // Match: __content__ (underline with possible marker inside), ___+ (blank), ①~⑩, (a)/(A) markers
+  const regex = /__([^_]+)__|_{3,}|([\u2460-\u2469])|\(([a-jA-J])\)/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -23,7 +23,7 @@ export function renderFormatted(text: string): React.ReactNode {
 
     if (match[1]) {
       // __content__ -- check if content starts with a marker like (A)/(a)
-      const markerMatch = match[1].match(/^\(([a-eA-E])\)\s*(.+)$/);
+      const markerMatch = match[1].match(/^\(([a-jA-J])\)\s*(.+)$/);
       if (markerMatch) {
         parts.push(
           <span key={key++}>

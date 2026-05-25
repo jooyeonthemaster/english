@@ -84,7 +84,7 @@ export function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
       status: 500,
       code: "GOOGLE_API_KEY_INVALID",
       message:
-        "Google Gemini API 키가 유효하지 않습니다. GOOGLE_GENERATIVE_AI_API_KEY를 새 키로 교체한 뒤 서버를 재시작해주세요.",
+        "AI 서비스 인증 정보가 유효하지 않습니다. 운영팀에서 API 키를 교체한 뒤 서버를 재시작해야 합니다.",
       log,
     };
   }
@@ -94,7 +94,7 @@ export function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
       status: 500,
       code: "GOOGLE_API_KEY_MISSING",
       message:
-        "Google Gemini API 키가 설정되어 있지 않습니다. GOOGLE_GENERATIVE_AI_API_KEY 환경변수를 확인해주세요.",
+        "AI 서비스 인증 정보가 설정되어 있지 않습니다. 운영팀에 문의해주세요.",
       log,
     };
   }
@@ -104,7 +104,7 @@ export function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
       status: 502,
       code: "GOOGLE_API_PERMISSION_DENIED",
       message:
-        "Google Gemini API 권한이 거부되었습니다. API 사용 설정, 결제, 키 제한 설정을 확인해주세요.",
+        "AI 서비스 권한이 거부되었습니다. 사용 설정, 결제, 키 제한 설정을 확인해주세요.",
       log,
     };
   }
@@ -114,7 +114,7 @@ export function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
       status: 429,
       code: "GOOGLE_API_RATE_LIMITED",
       message:
-        "Google Gemini API 사용량 한도에 걸렸습니다. 잠시 후 다시 시도해주세요.",
+        "AI 서비스 사용량 한도에 걸렸습니다. 잠시 후 다시 시도해주세요.",
       log,
     };
   }

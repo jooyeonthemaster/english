@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  getVisibleQuestionTags,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
 import type { PassageDetailProps } from "../types";
 
 interface PassageDetailHeaderProps {
@@ -32,6 +36,8 @@ export function PassageDetailHeader({
   onSave,
   onDelete,
 }: PassageDetailHeaderProps) {
+  const visibleTags = getVisibleQuestionTags(tags);
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -43,7 +49,7 @@ export function PassageDetailHeader({
         <div>
           <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <FileText className="w-5 h-5 text-blue-600" />
-            {passage.title}
+            {sanitizeAiModelDisclosureText(passage.title)}
           </h1>
           <div className="flex items-center gap-2 mt-1">
             {passage.school && (
@@ -66,7 +72,7 @@ export function PassageDetailHeader({
                 {passage.unit}
               </Badge>
             )}
-            {tags.map((t) => (
+            {visibleTags.map((t) => (
               <Badge
                 key={t}
                 variant="outline"

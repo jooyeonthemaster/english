@@ -124,7 +124,7 @@ export function buildCommitPayload({
         const range = pMeta?.questionRange;
         if (typeof range === "string") {
           // 범위 구분자: 틸드(~), ASCII 하이픈(-), EN-DASH(–), EM-DASH(—),
-          // 전각 물결(～). Gemini/OCR 출력은 기기별 폰트·언어팩에 따라 다섯 기호
+          // 전각 물결(～). OCR 출력은 기기별 폰트·언어팩에 따라 다섯 기호
           // 모두 등장 가능 — 하나라도 누락되면 "2~4" 공통 지문이 질문에 못 붙는다.
           const m = range.match(/(\d+)\s*[~\-–—～]\s*(\d+)/);
           if (m) {

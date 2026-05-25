@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Coins,
   Cpu,
@@ -28,8 +28,14 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  GRAMMAR_MARKER_COUNT_DEFAULT,
+  GRAMMAR_MARKER_COUNT_MAX,
+  GRAMMAR_MARKER_COUNT_MIN,
+} from "@/lib/question-type-generation-settings";
 
 const VOCAB_GENERATION_TYPE_IDS = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
+const DETAIL_SETTING_TYPE_IDS = new Set(["BLANK_INFERENCE", "GRAMMAR_ERROR", "IRRELEVANT"]);
 
 // ─── Props ───────────────────────────────────────────
 
@@ -78,6 +84,37 @@ interface GenerationConfigPanelProps {
   canGenerate: boolean;
   selectedIds: Set<string>;
   handleBatchGenerate: () => void;
+
+  /** Max value allowed for IRRELEVANT slotCount stepper, based on currently
+   *  selected passage(s). When multiple passages selected, this is the min
+   *  sentence count across them. Defaults to 10 (no constraint). */
+  maxIrrelevantSlotCount?: number;
+}
+
+function DetailSettingsPanel({ active, children }) {
+  return (
+    <div
+      className={`mx-3 mb-3 overflow-hidden rounded-xl border bg-white shadow-sm ${
+        active
+          ? "border-blue-200 ring-1 ring-blue-100"
+          : "border-slate-200 ring-1 ring-slate-100"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-1.5 border-b px-3 py-2 ${
+          active
+            ? "border-blue-200/70 bg-blue-100/70"
+            : "border-slate-200 bg-slate-50"
+        }`}
+      >
+        <Settings2 className={`w-3.5 h-3.5 ${active ? "text-blue-600" : "text-slate-500"}`} />
+        <span className={`text-[11px] font-extrabold ${active ? "text-blue-800" : "text-slate-700"}`}>
+          상세 설정
+        </span>
+      </div>
+      <div className="px-3 py-3">{children}</div>
+    </div>
+  );
 }
 
 // ─── Component ───────────────────────────────────────
@@ -116,6 +153,7 @@ export function GenerationConfigPanel({
   canGenerate,
   selectedIds,
   handleBatchGenerate,
+  maxIrrelevantSlotCount = 10,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>("BLANK_INFERENCE");
   const [openHelpTypeId, setOpenHelpTypeId] = useState<string | null>(null);
@@ -134,6 +172,57 @@ export function GenerationConfigPanel({
       },
     }));
   };
+  const grammarErrorSettings = questionTypeSettings.GRAMMAR_ERROR || {};
+  const rawGrammarMarkerCount = Math.round(
+    Number(grammarErrorSettings.markerCount ?? grammarErrorSettings.errorCount) || GRAMMAR_MARKER_COUNT_DEFAULT,
+  );
+  const grammarMarkerCount = Math.min(
+    GRAMMAR_MARKER_COUNT_MAX,
+    Math.max(GRAMMAR_MARKER_COUNT_MIN, rawGrammarMarkerCount),
+  );
+  const setGrammarMarkerCount = (next: number) => {
+    const clamped = Math.min(
+      GRAMMAR_MARKER_COUNT_MAX,
+      Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      GRAMMAR_ERROR: {
+        ...(prev.GRAMMAR_ERROR || {}),
+        markerCount: clamped,
+      },
+    }));
+  };
+  const irrelevantSettings = questionTypeSettings.IRRELEVANT || {};
+  // Lower bound is always 5 (IRRELEVANT minimum). Upper bound is the smaller
+  // of the global max (10) and the shortest selected passage's sentence count.
+  // If selected passage(s) have fewer than 5 sentences, the type is unusable
+  // — clamp the displayed value to 5 and the stepper will disable + we surface
+  // a warning to the user.
+  const irrelevantPassageCap = Math.min(10, Math.max(0, maxIrrelevantSlotCount));
+  const irrelevantUsable = irrelevantPassageCap >= 5;
+  const irrelevantMax = irrelevantUsable ? irrelevantPassageCap : 5;
+  const rawSlotCount = Math.round(Number(irrelevantSettings.slotCount) || 5);
+  const irrelevantSlotCount = Math.min(irrelevantMax, Math.max(5, rawSlotCount));
+  const setIrrelevantSlotCount = (next: number) => {
+    const clamped = Math.min(irrelevantMax, Math.max(5, Math.round(next)));
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      IRRELEVANT: {
+        ...(prev.IRRELEVANT || {}),
+        slotCount: clamped,
+      },
+    }));
+  };
+  // If the user previously set a slotCount higher than what the current
+  // selection allows, snap it down so the persisted setting never exceeds
+  // the cap (otherwise the backend would reject generation).
+  useEffect(() => {
+    if (rawSlotCount > irrelevantMax || rawSlotCount < 5) {
+      setIrrelevantSlotCount(Math.min(irrelevantMax, Math.max(5, rawSlotCount)));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [irrelevantMax]);
 
   return (
     <div className="flex flex-col bg-white overflow-hidden w-full lg:w-[340px] xl:w-[420px] shrink-0 border-l border-slate-200/80">
@@ -305,7 +394,8 @@ export function GenerationConfigPanel({
                     {group.items.map((item) => {
                       const count = typeCounts[item.id] || 0;
                       const active = count > 0;
-                      const expanded = expandedTypeId === item.id;
+                      const hasDetailSettings = DETAIL_SETTING_TYPE_IDS.has(item.id);
+                      const expanded = hasDetailSettings && expandedTypeId === item.id;
                       return (
                         <div key={item.id}
                           className={`relative rounded-xl border transition-all duration-150 overflow-visible ${
@@ -317,7 +407,7 @@ export function GenerationConfigPanel({
                             <button
                               type="button"
                               onClick={() => {
-                                setExpandedTypeId(item.id);
+                                setExpandedTypeId(hasDetailSettings ? item.id : null);
                                 setOpenHelpTypeId(null);
                                 setTypeCount(item.id, count + 1);
                               }}
@@ -378,18 +468,25 @@ export function GenerationConfigPanel({
                             )}
 
                             <div className="flex items-center gap-0.5 shrink-0">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setOpenHelpTypeId(null);
-                                  setExpandedTypeId(expandedTypeId === item.id ? null : item.id);
-                                }}
-                                className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100"
-                                aria-label={`${item.label} 상세 보기`}
-                                aria-expanded={expanded}
-                              >
-                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? "rotate-180" : ""}`} />
-                              </button>
+                              {hasDetailSettings && (
+                                <button
+                                  type="button"
+                                  title="상세 설정"
+                                  onClick={() => {
+                                    setOpenHelpTypeId(null);
+                                    setExpandedTypeId(expanded ? null : item.id);
+                                  }}
+                                  className={`w-8 h-8 rounded-lg border flex items-center justify-center shadow-sm transition-all ${
+                                    expanded
+                                      ? "border-blue-600 bg-blue-600 text-white shadow-blue-200"
+                                      : "border-blue-200 bg-white text-blue-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+                                  }`}
+                                  aria-label={`${item.label} 상세 설정 ${expanded ? "접기" : "펼치기"}`}
+                                  aria-expanded={expanded}
+                                >
+                                  <ChevronDown className={`w-4 h-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                                </button>
+                              )}
                               <button
                                 type="button"
                                 onClick={() => setTypeCount(item.id, Math.max(0, count - 1))}
@@ -413,41 +510,132 @@ export function GenerationConfigPanel({
                             </div>
                           </div>
 
-                          {expanded && item.id === "BLANK_INFERENCE" && (
-                            <div className={`px-3 pb-3 space-y-3 ${active ? "border-t border-blue-200/70" : "border-t border-slate-100"}`}>
-                              <div className="pt-3">
-                                <div className="flex items-center justify-between gap-3">
-                                  <div className="min-w-0">
-                                    <div className="flex items-center gap-1.5">
-                                      <Settings2 className="w-3.5 h-3.5 text-blue-500" />
-                                      <span className="text-[11px] font-bold text-slate-700">부정-부정 빈칸</span>
-                                    </div>
-                                    <div className="mt-1 flex flex-wrap gap-1">
-                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">정답 변형</span>
-                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">부정어 함정</span>
-                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">킬러형</span>
-                                    </div>
+                          {expanded && item.id === "IRRELEVANT" && (
+                            <DetailSettingsPanel active={active}>
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="min-w-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[12px] font-bold text-slate-800">선지 개수</span>
                                   </div>
+                                  <div className="mt-1 flex flex-wrap gap-1">
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">5 ~ {irrelevantMax}개</span>
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">내신 변형형</span>
+                                  </div>
+                                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                                    지문에서 가져올 문장 수. 기본 5개(수능형), 늘리면 원문을 더 많이 보여줍니다.
+                                  </p>
+                                  {!irrelevantUsable && (
+                                    <p className="mt-1.5 text-[10px] leading-snug text-rose-600 font-medium">
+                                      선택한 지문이 {irrelevantPassageCap}문장이라 무관한 문장 유형을 만들 수 없습니다 (최소 5문장 필요).
+                                    </p>
+                                  )}
+                                  {irrelevantUsable && irrelevantMax < 10 && (
+                                    <p className="mt-1.5 text-[10px] leading-snug text-amber-600">
+                                      선택한 지문이 {irrelevantPassageCap}문장이라 최대 {irrelevantMax}개까지 가능합니다.
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-0.5 shrink-0">
                                   <button
                                     type="button"
-                                    role="switch"
-                                    aria-checked={!!blankSettings.doubleNegative}
-                                    onClick={() => updateBlankSetting({ doubleNegative: !blankSettings.doubleNegative })}
-                                    className={`relative h-6 w-11 rounded-full border transition-colors ${
-                                      blankSettings.doubleNegative
-                                        ? "border-blue-300 bg-blue-500"
-                                        : "border-slate-200 bg-slate-200"
-                                    }`}
+                                    onClick={() => setIrrelevantSlotCount(irrelevantSlotCount - 1)}
+                                    disabled={!irrelevantUsable || irrelevantSlotCount <= 5}
+                                    className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                    aria-label="선지 개수 줄이기"
                                   >
-                                    <span
-                                      className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
-                                        blankSettings.doubleNegative ? "translate-x-5" : "translate-x-0"
-                                      }`}
-                                    />
+                                    <Minus className="w-3 h-3" />
+                                  </button>
+                                  <span className={`w-6 text-center text-[12px] font-bold tabular-nums ${irrelevantUsable ? "text-blue-700" : "text-slate-300"}`}>
+                                    {irrelevantSlotCount}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => setIrrelevantSlotCount(irrelevantSlotCount + 1)}
+                                    disabled={!irrelevantUsable || irrelevantSlotCount >= irrelevantMax}
+                                    className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                    aria-label="선지 개수 늘리기"
+                                  >
+                                    <Plus className="w-3 h-3" />
                                   </button>
                                 </div>
                               </div>
-                            </div>
+                            </DetailSettingsPanel>
+                          )}
+
+                          {expanded && item.id === "GRAMMAR_ERROR" && (
+                            <DetailSettingsPanel active={active}>
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="min-w-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[12px] font-bold text-slate-800">밑줄 표현 개수</span>
+                                  </div>
+                                  <div className="mt-1 flex flex-wrap gap-1">
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">5 ~ 10개</span>
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">정답 개수 랜덤</span>
+                                  </div>
+                                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                                    지문에서 검토할 밑줄 표현 수. 실제로 어법상 틀린 정답 개수는 매번 달라지며 해설/오답 분석에 반영됩니다.
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-0.5 shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={() => setGrammarMarkerCount(grammarMarkerCount - 1)}
+                                    disabled={grammarMarkerCount <= GRAMMAR_MARKER_COUNT_MIN}
+                                    className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                    aria-label="밑줄 표현 개수 줄이기"
+                                  >
+                                    <Minus className="w-3 h-3" />
+                                  </button>
+                                  <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+                                    {grammarMarkerCount}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => setGrammarMarkerCount(grammarMarkerCount + 1)}
+                                    disabled={grammarMarkerCount >= GRAMMAR_MARKER_COUNT_MAX}
+                                    className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                    aria-label="밑줄 표현 개수 늘리기"
+                                  >
+                                    <Plus className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              </div>
+                            </DetailSettingsPanel>
+                          )}
+
+                          {expanded && item.id === "BLANK_INFERENCE" && (
+                            <DetailSettingsPanel active={active}>
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="min-w-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[12px] font-bold text-slate-800">부정-부정 빈칸</span>
+                                  </div>
+                                  <div className="mt-1 flex flex-wrap gap-1">
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">정답 변형</span>
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">부정어 함정</span>
+                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">킬러형</span>
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  role="switch"
+                                  aria-checked={!!blankSettings.doubleNegative}
+                                  onClick={() => updateBlankSetting({ doubleNegative: !blankSettings.doubleNegative })}
+                                  className={`relative h-6 w-11 rounded-full border transition-colors ${
+                                    blankSettings.doubleNegative
+                                      ? "border-blue-300 bg-blue-500"
+                                      : "border-slate-200 bg-slate-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                                      blankSettings.doubleNegative ? "translate-x-5" : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+                            </DetailSettingsPanel>
                           )}
                         </div>
                       );

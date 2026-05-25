@@ -10,8 +10,8 @@ Core evidence:
 - Keep every answer, distractor, and explanation grounded in the passage.
 
 Distractor design for multiple-choice items:
-- Create four plausible wrong options before finalizing the correct option.
-- Each wrong option must have a distinct trap role. Use four different roles from this pool: too broad, too narrow, partial truth, reversed logic, wrong cause/effect, wrong contrast/concession, unsupported inference, wrong reference, wrong grammar relation, wrong context meaning, dictionary-meaning trap, example-only trap, emotional-overreach trap.
+- Create one plausible wrong option for every non-correct option slot before finalizing the correct option. For standard 5-option items this means four wrong options; for IRRELEVANT with a larger slotCount, this means slotCount - 1 wrong options; for multi-answer GRAMMAR_ERROR this means option count minus grammar error count.
+- Each wrong option must have a distinct trap role where possible. Use different roles from this pool: too broad, too narrow, partial truth, reversed logic, wrong cause/effect, wrong contrast/concession, unsupported inference, wrong reference, wrong grammar relation, wrong context meaning, dictionary-meaning trap, example-only trap, emotional-overreach trap.
 - Do not make any wrong option obviously absurd, much shorter/longer, or stylistically different from the correct option.
 - For vocabulary/context items, keep distractors in the same part of speech and make them contextually tempting.
 - If a wrong option can be eliminated without reading the passage closely, rewrite it.
@@ -22,13 +22,13 @@ Distractor design for multiple-choice items:
 - Prefer "near-miss" distractors over opposite or random distractors. A near-miss borrows true passage language but distorts scope, relation, timing, target, or author stance.
 
 Silent trap blueprint:
-- Before final JSON, silently make a 5-option blueprint: correct evidence path + four wrong-option trap roles.
+- Before final JSON, silently make an option blueprint: correct evidence path + one wrong-option trap role for every wrong option.
 - Use the blueprint to write the options, but do not output the blueprint.
 - Make the wrongOptionExplanations reveal the trap logic in Korean without using role labels such as "too broad" unless that is natural.
 - Prefer traps that a strong student would actually consider for 5-15 seconds, not choices that a weak student would eliminate instantly.
 
 wrongOptionExplanations requirements:
-- For every multiple-choice item, wrongOptionExplanations must contain exactly four entries, one for each wrong option label.
+- For every multiple-choice item, wrongOptionExplanations must contain exactly one entry for each wrong option label. Standard 5-option items have four entries; IRRELEVANT with slotCount N must have N - 1 entries; multi-answer GRAMMAR_ERROR has one entry for each grammatically correct non-answer label and must never leave all labels as answers.
 - Follow the schema shape exactly. If the schema is an array, each entry must be { "label": "...", "explanation": "..." }. If the schema is an object, use the wrong option label as the key.
 - Each wrong option explanation must explain both why the option may look tempting and the concrete passage clue that makes it wrong.
 - Avoid generic phrases such as "it is not in the passage" unless you also name the exact missing or contradicted passage evidence.
@@ -40,8 +40,14 @@ Type-specific checks:
 - TITLE and TOPIC_MAIN_IDEA: build the four wrong options as different title/main-idea traps: topic-only, example-only, too broad, too narrow, reversed stance, or attractive but unsupported implication. Avoid title options that are merely silly.
 - CONTENT_MATCH: the false statement should be a subtle distortion of a real passage claim, not an invented fact. Use traps such as cause reversal, future/past criterion confusion, scope exaggeration, condition loss, or example-to-claim shift.
 - BLANK_INFERENCE: all options must fit the same grammatical slot. Wrong options should echo real passage vocabulary or concepts while violating the sentence's logical relation. Do not use unrelated distractors such as social comparison, vague life lessons, or generic experience unless they are explicitly in the passage.
+- BLANK_INFERENCE with blankAnswerMode DOUBLE_NEGATIVE: treat it as a negative-paraphrase blank. The passage itself does not need a visible negation cue. The correct option must be a non-verbatim negative/privative paraphrase of originalExpression, and at least two wrong options must also contain negative/privative language so the negative-looking option is not a shortcut. Avoid tangled negation such as "not ... without", "unable ... without", or "impossible ... without" when it changes a helpful function into a strict necessity.
+- BLANK_INFERENCE native-English check: reject awkward collocations such as "achievement(s) failing", "prevent your achievement from failing", "achieved success", "capacity to lack", "events cannot survive", "guarantee major crops", "not allow any disruption", or "can be not entirely immune". Use natural exam English such as "prevent success from eroding/collapsing", "keep current success from eroding", "freedom from dependence on...", "cannot be dismissed as trivial", "secure stable supplies of major crops", or "are not immune to...".
+- BLANK_INFERENCE slot check: if the source says "can/could certainly be influenced by X", blank the whole modal passive span such as "can certainly be influenced by reasoning"; do not leave "can certainly be _____" for a correct option beginning with "not..." or "are not...".
+- BLANK_INFERENCE adjacent-conclusion check: if the sentence right after the blank begins with a conclusion signal such as "By adopting this strategy", "Therefore", "Thus", "For this reason", or "As a result", the correct option must directly support that next sentence. Reject answers that only strengthen one side of a policy when the next sentence says the strategy reduces excessive dependence or creates a balanced/resilient system.
+- BLANK_INFERENCE wrong-option explanations: cite the decisive clue that eliminates each option. Do not explain a wrong option only by saying it is positive, negative, or close to the author's ideal. For conclusion blanks, name the conclusion signal or adjacent evidence that the option fails to match.
 - SENTENCE_ORDER and SENTENCE_INSERT: every wrong order/location should have one tempting local clue but fail on a later reference, contrast, chronology, or conclusion signal.
 - GRAMMAR_ERROR and GRAMMAR_CORRECTION: ensure the marked expression actually appears in the passage and the explanation names the grammar rule. Avoid controversial errors where a standard grammar reader could accept both versions. Grammar explanations must label parts of speech and syntax accurately; never call a finite verb, modal, conjunction, or clause by the wrong category. Use simple reliable labels such as subject, object, finite verb, auxiliary, conjunction, preposition, gerund, participle, relative pronoun, or noun clause; if unsure, describe the structure without inventing a category.
+- GRAMMAR_ERROR with expanded marked positions: the setting controls the number of marked expressions, not the number of answers. Choose a natural varying answer count, correctAnswers must list every isError=true label, correctAnswer must repeat those labels joined by comma + space, and the explanation must explicitly cover every displayed wrong expression and its correction. Do not silently fall back to a single answer, and do not make every label an answer.
 - When writing Korean grammar explanations, never call ask, asking, require, requires, spend, spent, developing, or similar verb forms "전치사". Never write phrases like "전치사 'asking'", "전치사 asking", "전치사 'spend'", "전치사 'require'", or "전치사 'developing'". Use "동사", "분사구문", "동명사", "현재분사", or "목적어를 취하는 구조" only when accurate.
 - If you explain "asking", say "asking 뒤의 목적어 자리" or "asking이 이끄는 분사구문" as appropriate. Do not put the word "전치사" anywhere in the same sentence as asking/ask/requires/require/spend/spent/developing.
 - GRAMMAR_ERROR schema rule: expression/correction must be the original correct passage wording; errorExpression must be the intentionally wrong displayed wording. The original correct wording must exist verbatim in the passage. Never mark the original author's wording as wrong, and never "improve" a grammatically acceptable original phrase into a different preferred phrase.
@@ -53,7 +59,7 @@ Type-specific checks:
 - SYNONYM uniqueness test: silently substitute every option into the original sentence. Exactly one option may preserve the sentence's meaning, tone, collocation, and argument structure. Do not use a wrong option that is also a normal dictionary synonym in that sentence, such as a metaphorically valid near-synonym. A good distractor should be semantically nearby but fail one specific contextual requirement, not merely be a less common synonym.
 - ANTONYM uniqueness test: exactly one option pair should fail the contextual antonym relation. Other pairs must be defensibly opposite in the passage's actual sense, not merely dictionary opposites in a different sense.
 - REFERENCE: include nearby grammatically plausible antecedents as distractors, then make the correct answer depend on number, role, and sentence meaning. Options must be Korean antecedent descriptions, and wrongOptionExplanations must refer to those Korean option texts before mentioning English source phrases.
-- IRRELEVANT: the inserted sentence must not be a random outside topic. It must reuse at least two meaningful English content words from the source window, and a substantial share of its meaningful words should come from that window. Share the passage's semantic field and nearby keywords, but fail by discourse function such as scope shift, actor/purpose shift, cause/effect reversal, example-to-advice shift, or local conclusion mismatch. Make it a plausible skim-reading trap, not an obvious alien sentence. Prefer neutral explanatory prose; do not rely on awkward grammar, absolute/extreme words, blunt advice markers, or a simple direct contradiction of the thesis to make it removable.
+- IRRELEVANT: the inserted sentence must not be a random outside topic. It must reuse meaningful English content words from the source window, and a substantial share of its meaningful words should come from that window. Share the passage's semantic field and nearby keywords, but fail by discourse function such as scope shift, actor/purpose shift, cause/effect target shift, evidence/procedure focus shift, example-to-advice shift, or local conclusion mismatch. Make it a plausible skim-reading trap, not an obvious alien sentence. Prefer neutral explanatory prose; do not rely on awkward grammar, absolute/extreme words, blunt advice markers, explicit opposition cues such as however/instead, regulation-backlash claims, intellectual-property detours, academic-freedom detours, sponsor-relationship advice, or a simple direct contradiction of the thesis to make it removable.
 `;
 
 export function buildQuestionGenerationPromptContract(
@@ -206,10 +212,10 @@ ${GEMINI_COMPACT_MARKING_RUBRIC}
 ${buildQuestionGenerationPromptContract("STANDARD")}
 ${customPrompt?.trim() ? `\n## Teacher instructions\n${customPrompt}` : ""}
 - difficulty field must be exactly "${difficulty}".
-- Multiple-choice items must have exactly 5 options in {label, text} form.
+- Multiple-choice items must have exactly the requested number of options in {label, text} form. Most types use 5 options; IRRELEVANT and multi-answer GRAMMAR_ERROR settings may use 5~10 options.
 - explanation: Korean, 3-5 concise evidence-based sentences.
 - keyPoints: exactly 3 Korean learning points.
-- wrongOptionExplanations is required for every multiple-choice item: exactly four entries, one for each wrong option. If the schema is an array, each entry must be {label, explanation}.
+- wrongOptionExplanations is required for every multiple-choice item: exactly one entry for each wrong option. Multi-answer items have fewer wrong options. If the schema is an array, each entry must be {label, explanation}.
 - tags: Korean grammar/vocabulary/question-type tags.
 
 Generate exactly ${count} question(s).`;

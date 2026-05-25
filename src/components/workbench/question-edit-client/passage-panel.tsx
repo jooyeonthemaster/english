@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FileText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 
 interface Props {
@@ -22,14 +23,14 @@ export function PassagePanel({ isModal, passage, passageAnalysis }: Props) {
           <FileText className="w-4 h-4 text-blue-500 shrink-0" />
           {isModal ? (
             <span className="text-[13px] font-semibold text-blue-600 truncate">
-              {passage.title}
+              {sanitizeAiModelDisclosureText(passage.title)}
             </span>
           ) : (
             <Link
               href={`/director/workbench/passages/${passage.id}`}
               className="text-[13px] font-semibold text-blue-600 hover:underline truncate"
             >
-              {passage.title}
+              {sanitizeAiModelDisclosureText(passage.title)}
             </Link>
           )}
         </div>

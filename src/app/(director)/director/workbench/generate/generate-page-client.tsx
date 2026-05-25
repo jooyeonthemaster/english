@@ -20,6 +20,8 @@ import {
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
+import { countPassageSentences } from "@/lib/passage-sentence-utils";
+import { IRRELEVANT_SLOT_COUNT_MAX } from "@/lib/question-type-generation-settings";
 import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
 import { useGenerationSessionQueue } from "./generation-session-store";
@@ -31,7 +33,13 @@ import {
 
 // ─── Component ───────────────────────────────────────────
 
-export function GeneratePageClient({ academyId }: { academyId: string }) {
+export function GeneratePageClient({
+  academyId,
+  defaultMode = "auto",
+}: {
+  academyId: string;
+  defaultMode?: "auto" | "manual";
+}) {
   const searchParams = useSearchParams();
 
   // ── Deep-link context (from /import or detail page) ──
@@ -65,7 +73,11 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
     })()
   );
   const initialModeRef = useRef<"auto" | "manual">(
-    searchParams.get("mode") === "manual" ? "manual" : "auto"
+    searchParams.get("mode") === "auto"
+      ? "auto"
+      : searchParams.get("mode") === "manual"
+        ? "manual"
+        : defaultMode
   );
   const prefillAppliedRef = useRef(false);
 
@@ -125,6 +137,25 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(initialPassageIdsRef.current)
   );
+
+  // ── IRRELEVANT stepper max — capped to the shortest passage in scope ──
+  // If multiple passages selected via checkbox, the cap is the min sentence
+  // count across them. If only a single passage is in focus, use that one's
+  // sentence count. Falls back to MAX (10) when no passage is in scope.
+  const maxIrrelevantSlotCount = useMemo(() => {
+    const targets = selectedIds.size > 0
+      ? passages.filter((p) => selectedIds.has(p.id))
+      : selectedPassage
+        ? [selectedPassage]
+        : [];
+    if (targets.length === 0) return IRRELEVANT_SLOT_COUNT_MAX;
+    let min = IRRELEVANT_SLOT_COUNT_MAX;
+    for (const p of targets) {
+      const n = countPassageSentences(p.content || "");
+      if (n < min) min = n;
+    }
+    return Math.max(0, Math.min(IRRELEVANT_SLOT_COUNT_MAX, min));
+  }, [selectedIds, selectedPassage, passages]);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -443,6 +474,7 @@ export function GeneratePageClient({ academyId }: { academyId: string }) {
           canGenerate={canGenerate}
           selectedIds={selectedIds}
           handleBatchGenerate={handleBatchGenerate}
+          maxIrrelevantSlotCount={maxIrrelevantSlotCount}
         />
       </div>
 

@@ -20,6 +20,10 @@ import {
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
 } from "@/actions/workbench";
+import {
+  getVisibleQuestionTags,
+  isQuestionGenerationPlanTag,
+} from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { EditHeader } from "./question-edit-client/header";
 import { ExplanationPanel } from "./question-edit-client/explanation-panel";
@@ -28,6 +32,26 @@ import { PassagePanel } from "./question-edit-client/passage-panel";
 interface Option {
   label: string;
   text: string;
+}
+
+function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
+  const labels = new Set<string>();
+  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  if (matches?.length) {
+    matches.forEach((match) => labels.add(normalizeAnswerLabel(match)));
+    return labels;
+  }
+  const single = normalizeAnswerLabel(correctAnswer);
+  if (single) labels.add(single);
+  return labels;
+}
+
+function normalizeAnswerLabel(value: string): string {
+  const text = String(value ?? "").trim();
+  const circled = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
 }
 
 interface QuestionEditProps {
@@ -96,7 +120,9 @@ export function QuestionEditClient({
   const [approved, setApproved] = useState(question.approved);
 
   const initialOptions: Option[] = question.options ? JSON.parse(question.options) : [];
-  const initialTags: string[] = question.tags ? JSON.parse(question.tags) : [];
+  const initialTags: string[] = getVisibleQuestionTags(
+    question.tags ? JSON.parse(question.tags) : [],
+  );
   const initialKeyPoints: string[] = question.explanation?.keyPoints ? JSON.parse(question.explanation.keyPoints) : [];
   const initialWrongExplanations: Record<string, string> = question.explanation?.wrongOptionExplanations
     ? JSON.parse(question.explanation.wrongOptionExplanations)
@@ -116,6 +142,7 @@ export function QuestionEditClient({
   const [aiModifying, setAiModifying] = useState(false);
   const [keyPoints, setKeyPoints] = useState<string[]>(initialKeyPoints);
   const [wrongExplanations, setWrongExplanations] = useState<Record<string, string>>(initialWrongExplanations);
+  const correctAnswerLabels = parseCorrectAnswerLabels(correctAnswer);
 
   function addOption() {
     setOptions([...options, { label: String(options.length + 1), text: "" }]);
@@ -136,7 +163,7 @@ export function QuestionEditClient({
   }
   function addTag() {
     const tag = tagInput.trim();
-    if (tag && !tags.includes(tag)) {
+    if (tag && !isQuestionGenerationPlanTag(tag) && !tags.includes(tag)) {
       setTags([...tags, tag]);
       setTagInput("");
     }
@@ -226,7 +253,7 @@ export function QuestionEditClient({
         if (q.explanation) setExplanation(q.explanation);
         if (q.keyPoints) setKeyPoints(q.keyPoints);
         if (q.wrongOptionExplanations) setWrongExplanations(q.wrongOptionExplanations);
-        if (q.tags) setTags(q.tags);
+        if (q.tags) setTags(getVisibleQuestionTags(q.tags));
         toast.success("AI 수정 완료. 확인 후 저장하세요.");
         setAiModifyPrompt("");
       }
@@ -322,11 +349,13 @@ export function QuestionEditClient({
                 <div className="flex-[3] min-h-0 flex flex-col gap-1.5">
                   <label className="text-[12px] font-semibold text-slate-500 shrink-0">선택지</label>
                   <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto">
-                    {options.map((opt, idx) => (
-                      <div key={idx} className="flex items-start gap-2 rounded-lg border border-transparent px-1 py-1 transition-colors hover:border-slate-200 hover:bg-slate-50/70">
+                    {options.map((opt, idx) => {
+                      const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
+                      return (
+                        <div key={idx} className="flex items-start gap-2 rounded-lg border border-transparent px-1 py-1 transition-colors hover:border-slate-200 hover:bg-slate-50/70">
                         <button
                           className={`mt-0.5 w-8 h-8 rounded-full text-[13px] font-bold flex items-center justify-center shrink-0 transition-all ${
-                            opt.label === correctAnswer ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                            isCorrect ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                           }`}
                           onClick={() => setCorrectAnswer(opt.label)}
                           title="정답으로 설정"
@@ -339,7 +368,7 @@ export function QuestionEditClient({
                           placeholder={`${opt.label}번 선택지`}
                           rows={2}
                           className={`flex-1 min-h-[42px] resize-y rounded-md border px-3 py-2 text-[13.5px] leading-relaxed outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
-                            opt.label === correctAnswer
+                            isCorrect
                               ? "border-emerald-300 bg-emerald-50/50 font-medium text-emerald-950"
                               : "border-slate-200 bg-white text-slate-800"
                           }`}
@@ -372,8 +401,9 @@ export function QuestionEditClient({
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
-                      </div>
-                    ))}
+                        </div>
+                      );
+                    })}
                     <button onClick={addOption} className="flex items-center gap-1.5 text-[12px] text-blue-600 font-medium hover:text-blue-700 shrink-0">
                       <Plus className="w-3.5 h-3.5" />선택지 추가
                     </button>

@@ -18,7 +18,7 @@ export function readProblemEvidence(draft: M1PassageDraftSnapshot): DraftProblem
 
 export function inferProblemEvidenceFromRaw(rawText: string): DraftProblemEvidence | null {
   const positionMarkers = [
-    ...rawText.matchAll(/\(\s*(?:[①-⑨1-5]|\?|[^\x00-\x7F]{1,3})\s*\)/g),
+    ...rawText.matchAll(/\(\s*(?:[\u2460-\u2469]|10|[1-9]|\?|[^\x00-\x7F]{1,3})\s*\)/g),
   ];
   const chunkMarkers = [...rawText.matchAll(/(?:^|\n)\s*\([A-E]\)\s+/g)];
   const firstSentence = rawText

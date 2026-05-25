@@ -12,6 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import {
+  getVisibleQuestionTags,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
 import { PUBLISHERS } from "../constants";
 import type { SavedPrompt } from "../types";
 
@@ -52,6 +56,8 @@ interface CompactOptionsRowProps {
 }
 
 export function CompactOptionsRow(props: CompactOptionsRowProps) {
+  const visibleTags = getVisibleQuestionTags(props.tags);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,0.72fr)_minmax(0,1.38fr)] gap-2 shrink-0 items-start">
       {/* ─── 선생님의 노하우 (compact) ─── */}
@@ -219,7 +225,7 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
           <div className="col-span-6 md:col-span-5">
             <Input
               placeholder="출처 (2025 기말)"
-              value={props.source}
+              value={sanitizeAiModelDisclosureText(props.source)}
               onChange={(e) => props.setSource(e.target.value)}
               className="h-7 text-[11px] px-2"
             />
@@ -274,9 +280,9 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
                 <Plus className="w-3 h-3" />
               </Button>
             </div>
-            {props.tags.length > 0 ? (
+            {visibleTags.length > 0 ? (
               <div className="flex flex-wrap gap-1 mt-1.5">
-                {props.tags.map((tag) => (
+                {visibleTags.map((tag) => (
                   <Badge
                     key={tag}
                     variant="secondary"

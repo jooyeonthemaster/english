@@ -15,7 +15,7 @@ export function parseFormattedText(
     italics: boolean;
   }> = {}
 ): TextRun[] {
-  const regex = /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([①②③④⑤])|\(([a-eA-E])\)/g;
+  const regex = /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([\u2460-\u2469])|\(([a-jA-J])\)/g;
   const runs: TextRun[] = [];
   let lastIndex = 0;
   let match;
@@ -47,7 +47,7 @@ export function parseFormattedText(
     } else if (match[3] || match[4]) {
       // __word__ or _word_ -> underlined bold
       const word = match[3] || match[4];
-      const choicePrefixMatch = word.match(/^\(([a-eA-E])\)\s(.+)$/);
+      const choicePrefixMatch = word.match(/^\(([a-jA-J])\)\s(.+)$/);
       if (choicePrefixMatch) {
         runs.push(
           new TextRun({
@@ -78,7 +78,7 @@ export function parseFormattedText(
         );
       }
     } else if (match[5]) {
-      // Circled numbers ①②③④⑤
+      // Circled numbers ①~⑩
       runs.push(
         new TextRun({
           text: match[5],

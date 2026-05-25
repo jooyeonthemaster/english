@@ -34,10 +34,10 @@ export function renderOptions(opts: {
   const maxLen = Math.max(...displayTexts.map((t) => t.length));
 
   // IRRELEVANT 등 본문에 박힌 마커가 답인 유형:
-  // 옵션 텍스트가 마커 자체(①~⑤) 또는 비어있으면 마커만 한 줄에 가로 배치.
+  // 옵션 텍스트가 마커 자체(①~⑩) 또는 비어있으면 마커만 한 줄에 가로 배치.
   const isMarkerOnly = options.every((_, i) => {
     const t = displayTexts[i].trim();
-    return t === "" || t === optionOrdinalLabel(i) || /^[①②③④⑤⑥⑦⑧⑨⑩]$/.test(t);
+    return t === "" || t === optionOrdinalLabel(i) || /^[\u2460-\u2469]$/.test(t);
   });
   if (isMarkerOnly) {
     const runs: RunNode[] = [];

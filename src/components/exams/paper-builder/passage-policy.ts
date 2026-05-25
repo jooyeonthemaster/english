@@ -59,7 +59,7 @@ function questionTextLooksEmbedded(questionText: string): boolean {
   const text = questionText.trim();
   if (!text) return false;
   if (/__(?:[^_]+)__/.test(text)) return true;
-  if (/[①②③④⑤]/.test(text) && text.split(/\s+/).length > 35) return true;
+  if (/[\u2460-\u2469]/.test(text) && text.split(/\s+/).length > 35) return true;
   if (/\([A-Ea-e]\)/.test(text) && text.split(/\s+/).length > 35) return true;
   return false;
 }

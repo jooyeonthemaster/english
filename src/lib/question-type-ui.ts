@@ -30,10 +30,10 @@ export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
     id: "GRAMMAR_ERROR",
     label: "어법 판단",
     category: "수능/모의고사 객관식",
-    description: "지문 속 5개 표현 중 어법상 어색한 부분을 찾게 합니다.",
-    studentTask: "밑줄 친 (A)~(E) 중 어법상 틀린 표현을 고릅니다.",
+    description: "지문 속 표현 중 어법상 어색한 부분을 찾게 합니다.",
+    studentTask: "밑줄 친 표현 중 어법상 틀린 표현을 고릅니다.",
     bestFor: ["시제/수일치", "분사/관계사", "병렬 구조"],
-    outputUi: ["밑줄 마커 지문", "표현별 오류 분석", "5지선다"],
+    outputUi: ["밑줄 마커 지문", "표현별 오류 분석", "복수 정답 가능"],
     requiredFields: ["markedExpressions", "passageWithMarkers", "correction"],
   },
   VOCAB_CHOICE: {
@@ -111,9 +111,9 @@ export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
     label: "무관한 문장",
     category: "수능/모의고사 객관식",
     description: "글의 흐름에서 벗어난 문장을 찾게 합니다.",
-    studentTask: "①~⑤ 중 전체 흐름과 관계없는 문장을 고릅니다.",
+    studentTask: "①~⑩ 범위에서 전체 흐름과 관계없는 문장을 고릅니다.",
     bestFor: ["문장 간 논리 흐름", "한 문장 삽입 변형", "주제 일관성"],
-    outputUi: ["번호 매김 지문", "5지선다", "문장별 흐름 해설"],
+    outputUi: ["번호 매김 지문", "5~10지선다", "문장별 흐름 해설"],
     requiredFields: ["passageWithNumbers", "options", "irrelevantIndex"],
   },
   CONDITIONAL_WRITING: {
@@ -244,4 +244,3 @@ export const QUESTION_TYPE_GROUPS = [
     ],
   },
 ];
-

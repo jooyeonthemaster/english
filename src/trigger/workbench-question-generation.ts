@@ -266,9 +266,14 @@ export const workbenchQuestionGenerationTask = task({
       const questions = generationResult.questions;
       generationAttempts = generationResult.attempts;
       generationMs = Date.now() - generationStartedAt;
+      const relaxedFallback = generationResult.relaxedFallback;
 
       if (questions.length === 0) {
-        throw new Error("No questions generated.");
+        throw new Error(
+          `No questions generated after ${generationAttempts} generation attempt${
+            generationAttempts === 1 ? "" : "s"
+          }.`,
+        );
       }
 
       const questionsForDisplay = questions.map((question) => {
@@ -298,6 +303,7 @@ export const workbenchQuestionGenerationTask = task({
         creditMs,
         planningMs,
         generationAttempts,
+        relaxedFallback: relaxedFallback ? 1 : 0,
         generationMs,
         persistenceMs,
         totalRunMs: Date.now() - taskStartedAt,

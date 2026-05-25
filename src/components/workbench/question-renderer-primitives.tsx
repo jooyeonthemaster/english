@@ -111,10 +111,10 @@ export function renderBlanks(text: string): React.ReactNode {
   return parts.length > 0 ? <>{parts}</> : text;
 }
 
-/** Render passage with underlines, blanks, and (A)/(a) markers */
+/** Render passage with underlines, blanks, and numbered markers */
 export function renderPassageFormatted(text: string): React.ReactNode {
-  // Match: __content__ (underline), ___+ (blank), ①②③④⑤ (circled numbers)
-  const combinedRegex = /__([^_]+)__|_{3,}|([①②③④⑤])/g;
+  // Match: __content__ (underline), ___+ (blank), ①~⑩ (circled numbers)
+  const combinedRegex = /__([^_]+)__|_{3,}|([\u2460-\u2469])/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -127,7 +127,7 @@ export function renderPassageFormatted(text: string): React.ReactNode {
 
     if (match[1]) {
       // __content__ → check if content starts with a marker like (A), (a)
-      const markerMatch = match[1].match(/^\(([a-eA-E])\)\s*(.+)$/);
+      const markerMatch = match[1].match(/^\(([a-jA-J])\)\s*(.+)$/);
       if (markerMatch) {
         // __(A) expression__ → bold blue marker + underlined expression
         parts.push(
@@ -151,7 +151,7 @@ export function renderPassageFormatted(text: string): React.ReactNode {
         );
       }
     } else if (match[2]) {
-      // ①②③④⑤ → circled number badge
+      // ①~⑩ -> circled number badge
       parts.push(
         <span
           key={key++}
@@ -181,9 +181,9 @@ export function renderPassageFormatted(text: string): React.ReactNode {
   return parts.length > 0 ? <>{parts}</> : text;
 }
 
-/** Render numbered markers (①②③④⑤) with colored styling */
+/** Render numbered markers (①~⑩) with colored styling */
 export function renderWithMarkers(text: string): React.ReactNode {
-  const markerRegex = /([①②③④⑤])/g;
+  const markerRegex = /([\u2460-\u2469])/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -215,14 +215,17 @@ export function renderWithMarkers(text: string): React.ReactNode {
 export function OptionList({
   options,
   correctAnswer,
+  correctAnswers,
 }: {
   options: Array<{ label: string; text: string }>;
   correctAnswer: string;
+  correctAnswers?: string[];
 }) {
+  const correctLabels = getCorrectAnswerLabels(correctAnswer, correctAnswers);
   return (
     <div className="space-y-1.5 pl-1">
       {options.map((opt, i) => {
-        const isCorrect = opt.label === correctAnswer;
+        const isCorrect = correctLabels.has(normalizeAnswerLabel(opt.label));
         return (
           <div
             key={i}
@@ -245,6 +248,29 @@ export function OptionList({
       })}
     </div>
   );
+}
+
+function getCorrectAnswerLabels(correctAnswer: string, correctAnswers?: string[]): Set<string> {
+  const labels = new Set<string>();
+  const push = (value: unknown) => {
+    const label = normalizeAnswerLabel(value);
+    if (label) labels.add(label);
+  };
+
+  correctAnswers?.forEach(push);
+  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  if (matches?.length) matches.forEach(push);
+  else push(correctAnswer);
+  return labels;
+}
+
+function normalizeAnswerLabel(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
 }
 
 /** Conditions box (서술형 조건 목록) */

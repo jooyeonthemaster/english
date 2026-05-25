@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import type { PassageDetailProps } from "./types";
 import { Q_TYPE_LABELS, Q_SUBTYPE_LABELS, Q_DIFF } from "./constants";
 import { safeParseJSON } from "./utils";
@@ -16,7 +17,8 @@ import { safeParseJSON } from "./utils";
 function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["questions"][0]; num: number }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
-  const tags = safeParseJSON<string[]>(q.tags, []);
+  const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
+  const tags = getVisibleQuestionTags(safeParseJSON<string[]>(q.tags, []));
   const keyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);
 
   return (
@@ -65,7 +67,10 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
       {options.length > 0 && (
         <div className="px-4 pb-3 space-y-1">
           {options.map((opt, i) => {
-            const isCorrect = q.correctAnswer === opt.label || q.correctAnswer === opt.text || q.correctAnswer === String(i + 1);
+            const isCorrect =
+              correctAnswerLabels.has(normalizeAnswerLabel(opt.label)) ||
+              correctAnswerLabels.has(String(i + 1)) ||
+              q.correctAnswer === opt.text;
             return (
               <div
                 key={i}
@@ -131,6 +136,30 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
       </div>
     </div>
   );
+}
+
+function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
+  const labels = new Set<string>();
+  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  if (matches?.length) {
+    matches.forEach((match) => {
+      const label = normalizeAnswerLabel(match);
+      if (label) labels.add(label);
+    });
+  } else {
+    const label = normalizeAnswerLabel(correctAnswer);
+    if (label) labels.add(label);
+  }
+  return labels;
+}
+
+function normalizeAnswerLabel(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
 }
 
 export function QuestionsSection({ questions }: { questions: PassageDetailProps["passage"]["questions"] }) {

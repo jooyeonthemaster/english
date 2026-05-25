@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ChevronRight, FileText, BadgeCheck } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { QuestionBankCard } from "./question-bank-card";
 
 interface GroupedPassage {
@@ -96,7 +97,7 @@ export function PassageGroupedView({
         passage.id,
         {
           id: passage.id,
-          title: passage.title || "(제목 없음)",
+          title: sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)",
           visibleCount: passage.questions.length,
           totalQuestionCount: passage.totalQuestionCount,
           hasAnalysis: Boolean(passage.analysis),
@@ -251,7 +252,7 @@ export function PassageGroupedView({
             >
               <div
                 className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
-                title={`${passage.title} 전체 선택`}
+                title={`${sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)"} 전체 선택`}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleGroupSelection(groupIds);
@@ -259,7 +260,7 @@ export function PassageGroupedView({
               >
                 <Checkbox
                   checked={groupCheckState}
-                  aria-label={`${passage.title} 전체 선택`}
+                  aria-label={`${sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)"} 전체 선택`}
                   className="size-4 cursor-pointer"
                   onClick={(e) => e.stopPropagation()}
                   onCheckedChange={() => toggleGroupSelection(groupIds)}
@@ -281,7 +282,7 @@ export function PassageGroupedView({
                       activePassageIdRef.current = passage.id;
                       onActivePassageChange?.({
                         id: passage.id,
-                        title: passage.title || "(제목 없음)",
+                        title: sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)",
                         visibleCount,
                         totalQuestionCount: passage.totalQuestionCount,
                         hasAnalysis: Boolean(passage.analysis),
@@ -325,7 +326,7 @@ export function PassageGroupedView({
                       activePassageIdRef.current = passage.id;
                       onActivePassageChange?.({
                         id: passage.id,
-                        title: passage.title || "(제목 없음)",
+                        title: sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)",
                         visibleCount,
                         totalQuestionCount: passage.totalQuestionCount,
                         hasAnalysis: Boolean(passage.analysis),
@@ -339,7 +340,7 @@ export function PassageGroupedView({
                   className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left transition-colors hover:opacity-90"
                 >
                   <h4 className="truncate text-sm font-bold tracking-tight text-slate-900">
-                    {passage.title || "(제목 없음)"}
+                    {sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)"}
                   </h4>
                   <span
                     className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums ring-1 ${

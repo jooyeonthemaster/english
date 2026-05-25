@@ -73,7 +73,7 @@ export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <OptionList options={q.options} correctAnswer={q.correctAnswer} correctAnswers={q.correctAnswers} />
       <AnswerRevealSection>
         {q.markedExpressions && (
           <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">

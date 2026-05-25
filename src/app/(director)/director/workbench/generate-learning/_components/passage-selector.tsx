@@ -5,6 +5,7 @@ import { Search, Loader2, FileText, ChevronRight, Plus } from "lucide-react";
 import { getSuneungPassages, createSuneungPassage } from "@/actions/learning-questions";
 import { toast } from "sonner";
 import { GRADE_LEVELS } from "@/lib/learning-constants";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -279,7 +280,7 @@ function SuneungPassageForm({ onClose, onCreated }: { onClose: () => void; onCre
         </select>
         <input
           placeholder="출처 (예: 2025 수능)"
-          value={source}
+          value={sanitizeAiModelDisclosureText(source)}
           onChange={(e) => setSource(e.target.value)}
           className="flex-1 h-10 px-3 text-[13px] rounded-lg border border-slate-200 outline-none focus:border-emerald-400"
         />

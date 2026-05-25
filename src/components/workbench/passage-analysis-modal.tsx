@@ -28,7 +28,11 @@ import type { AnalysisPromptConfig } from "./analysis-prompt-panel";
 import { InteractivePassageView } from "./interactive-passage-view";
 import { AnalysisLoadingOverlay } from "./analysis-loading-overlay";
 import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
-import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  getVisibleQuestionTags,
+  sanitizeAiModelDisclosureText,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // ─── Types ───────────────────────────────────────────────
 interface PassageData {
@@ -120,7 +124,9 @@ export function PassageAnalysisModal({
     lastPromptConfig.generationPlan || "STANDARD"
   );
 
-  const tags: string[] = passage.tags ? safeParseJSON(passage.tags, []) : [];
+  const tags: string[] = getVisibleQuestionTags(
+    passage.tags ? safeParseJSON(passage.tags, []) : [],
+  );
 
   // Sync when passage changes
   useEffect(() => {
@@ -270,7 +276,7 @@ export function PassageAnalysisModal({
               </div>
               <div className="min-w-0">
                 <h2 className="text-[16px] font-bold text-slate-800 truncate">
-                  {passage.title}
+                  {sanitizeAiModelDisclosureText(passage.title)}
                 </h2>
                 <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                   {passage.school && (

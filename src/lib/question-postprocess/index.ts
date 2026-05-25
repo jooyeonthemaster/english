@@ -6,9 +6,9 @@
 //
 // Frontend format contracts (from question-renderer-primitives.tsx):
 //   - Blanks:    _____ (5+ underscores) matched by /_{3,}/g
-//   - Markers:   __(A) expression__ matched by /__([^_]+)__/g then /^\(([a-eA-E])\)\s*(.+)$/
+//   - Markers:   __(A) expression__ matched by /__([^_]+)__/g then /^\(([a-jA-J])\)\s*(.+)$/
 //   - Underline: __word__ matched by /__([^_]+)__/g
-//   - Circled:   ①②③④⑤ matched by /([①②③④⑤])/g
+//   - Circled:   ①~⑩ matched by /([\u2460-\u2469])/g
 // ============================================================================
 
 import { processAntonym } from "./processors/antonym";
@@ -201,7 +201,10 @@ function normalizeOptionsForVisibleType(
 
 function stripOptionPrefix(text: string): string {
   return text
-    .replace(/^\s*(?:[\u2460-\u2464]|\([A-Ea-e1-5]\)|[A-Ea-e1-5][.)]|[1-5][.)])\s*/, "")
+    .replace(
+      /^\s*(?:[\u2460-\u2469]|\((?:[A-Ja-j]|10|[1-9])\)|(?:[A-Ja-j]|10|[1-9])[.)])\s*/,
+      "",
+    )
     .trim();
 }
 
@@ -288,9 +291,14 @@ function normalizeLabel(value: unknown): string {
     "\u2462": "3",
     "\u2463": "4",
     "\u2464": "5",
+    "\u2465": "6",
+    "\u2466": "7",
+    "\u2467": "8",
+    "\u2468": "9",
+    "\u2469": "10",
   };
   return (circledMap[text] ?? text)
-    .replace(/^[\(\[]?([A-Ea-e1-5])[\)\].]?\s*$/, "$1")
+    .replace(/^[\(\[]?([A-Ja-j]|10|[1-9])[\)\].]?\s*$/, "$1")
     .toLowerCase();
 }
 

@@ -21,7 +21,7 @@ import {
 } from "./_lib/build-analysis-context";
 import { DIFF_DESCRIPTION } from "./_lib/constants";
 import { buildPlanningPrompt } from "./_lib/prompts";
-import { runQuestionGeneration } from "./_lib/run-question-generation";
+import { runQuestionGenerationWithEmptyRetry } from "./_lib/run-question-generation";
 import { planSchema } from "./_lib/schemas";
 
 export const maxDuration = 300;
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
       );
 
       // ═══ STEP 2: Generate questions per type using existing structured schemas ═══
-      allQuestions = await runQuestionGeneration({
+      const generationResult = await runQuestionGenerationWithEmptyRetry({
         plan: planResult.plan,
         schoolType,
         gradeInfo,
@@ -170,7 +170,9 @@ export async function POST(request: NextRequest) {
         diffLabel,
         diffInstruction,
         generationPlan,
+        customPrompt,
       });
+      allQuestions = generationResult.questions;
     } catch (aiError) {
       // Refund credits on AI failure
       await refundCredits(

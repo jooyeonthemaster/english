@@ -23,7 +23,7 @@ export interface QuestionTypeMeta {
 
 export const QUESTION_TYPE_META: Record<string, QuestionTypeMeta> = {
   BLANK_INFERENCE:      { typeId: "BLANK_INFERENCE",      category: "객관식", label: "빈칸 추론",      includesPassage: true,  description: "지문의 핵심 표현을 빈칸으로 만들어 추론하게 하는 문제" },
-  GRAMMAR_ERROR:        { typeId: "GRAMMAR_ERROR",        category: "객관식", label: "어법 판단",      includesPassage: true,  description: "밑줄 친 5개 부분 중 어법상 틀린 것을 찾는 문제" },
+  GRAMMAR_ERROR:        { typeId: "GRAMMAR_ERROR",        category: "객관식", label: "어법 판단",      includesPassage: true,  description: "밑줄 친 표현 중 어법상 틀린 것을 찾는 문제" },
   VOCAB_CHOICE:         { typeId: "VOCAB_CHOICE",         category: "객관식", label: "어휘 적절성",    includesPassage: true,  description: "밑줄 친 어휘 중 문맥상 적절하지 않은 것을 찾는 문제" },
   SENTENCE_ORDER:       { typeId: "SENTENCE_ORDER",       category: "객관식", label: "글의 순서",      includesPassage: true,  description: "주어진 글 다음에 이어질 글의 순서를 맞추는 문제" },
   SENTENCE_INSERT:      { typeId: "SENTENCE_INSERT",      category: "객관식", label: "문장 삽입",      includesPassage: true,  description: "주어진 문장이 들어갈 가장 적절한 위치를 찾는 문제" },

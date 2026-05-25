@@ -5,7 +5,10 @@
 // ============================================================================
 
 import { z } from "zod";
-import { aiWrongOptionExplanationsSchema } from "./question-wrong-option-explanations";
+import {
+  aiWrongOptionExplanationsSchema,
+  buildAiWrongOptionExplanationsSchema,
+} from "./question-wrong-option-explanations";
 
 // AI variants for schemas that do not need passage reconstruction.
 import {
@@ -27,7 +30,7 @@ export type {
 // ---------------------------------------------------------------------------
 
 const optionSchema = z.object({
-  label: z.string().describe("선지 라벨 (①~⑤)"),
+  label: z.string().describe("선지 라벨 (기본 ①~⑤, 무관한 문장은 ①~⑩까지 가능)"),
   text: z.string().describe("선지 내용"),
 });
 
@@ -43,6 +46,40 @@ const commonFields = {
 const mcWrongExplanations = {
   wrongOptionExplanations: aiWrongOptionExplanationsSchema,
 };
+
+const GRAMMAR_POINT_CODES = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"] as const;
+const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
+
+const grammarMarkedExpressionSchema = z.object({
+  label: z.string().describe("(A)~(J) 라벨"),
+  expression: z.string().describe("원문에서의 올바른 표현"),
+  isError: z.boolean().describe("이 표현이 오류인지 여부"),
+  correction: z.string().optional().describe("오류인 경우 올바른 표현"),
+  errorExpression: z.string().describe("지문에 표시할 어법 오류 표현 (isError=true일 때 틀린 형태, isError=false일 때 원문 그대로)"),
+  surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
+  pointCode: z
+    .enum(GRAMMAR_POINT_CODES)
+    .describe(
+      "이 위치의 어법 출제 포인트 코드. 가능한 한 서로 다른 코드를 사용. (a)정·준동사 (b)관계사 (c)분사능수동 (d)수일치 (e)능수동태 (f)형부자리 (g)대명사 (h)목적격보어 (i)병렬 (j)가정법 (k)to-v/v-ing (l)전치사vs.접속사 (m)비교구문",
+    ),
+});
+
+const grammarWrongOptionExplanationSchema = z.object({
+  label: z.string().describe("정답이 아닌 선지 label 중 하나 ('(A)'~'(J)' 형식)"),
+  expression: z
+    .string()
+    .describe(
+      "이 label의 markedExpression.expression 값과 완전히 동일해야 함. 다른 단어를 쓰면 안 됨.",
+    ),
+  pointCode: z
+    .enum(GRAMMAR_POINT_CODES)
+    .describe("이 label의 markedExpression.pointCode 값과 동일해야 함."),
+  explanation: z
+    .string()
+    .describe(
+      "이 위치의 expression이 어법상 왜 맞는지 한국어 1~2문장 해설. 반드시 markedExpression.expression을 인용하여 설명할 것.",
+    ),
+});
 
 export const aiSentenceOrderSchema = sentenceOrderSchema.extend(mcWrongExplanations);
 export const aiTopicMainIdeaSchema = topicMainIdeaSchema.extend(mcWrongExplanations);
@@ -75,47 +112,54 @@ export type AiBlankInferenceQuestion = z.infer<typeof aiBlankInferenceSchema>;
 export const aiGrammarErrorSchema = z.object({
   ...commonFields,
   correctAnswer: z
-    .enum(["(A)", "(B)", "(C)", "(D)", "(E)"])
-    .describe("정답 label. 반드시 괄호 포함 형식 '(A)' '(B)' '(C)' '(D)' '(E)' 중 하나"),
-  markedExpressions: z.array(z.object({
-    label: z.string().describe("(A)~(E) 라벨"),
-    expression: z.string().describe("원문에서의 올바른 표현"),
-    isError: z.boolean().describe("이 표현이 오류인지 여부"),
-    correction: z.string().optional().describe("오류인 경우 올바른 표현"),
-    errorExpression: z.string().describe("지문에 표시할 어법 오류 표현 (isError=true일 때 틀린 형태, isError=false일 때 원문 그대로)"),
-    surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
-    pointCode: z
-      .enum(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"])
-      .describe(
-        "이 위치의 어법 출제 포인트 코드. 5개 markedExpression의 pointCode는 서로 달라야 함. (a)정·준동사 (b)관계사 (c)분사능수동 (d)수일치 (e)능수동태 (f)형부자리 (g)대명사 (h)목적격보어 (i)병렬 (j)가정법 (k)to-v/v-ing (l)전치사vs.접속사 (m)비교구문",
-      ),
-  })).length(5).describe("밑줄 표시할 5개 표현 (pointCode 5개 모두 unique)"),
-  options: z.array(optionSchema).length(5).describe("5개 선지"),
+    .string()
+    .describe("정답 label. 복수 정답이면 '(A), (C)'처럼 comma + space로 연결"),
+  correctAnswers: z
+    .array(z.string())
+    .min(1)
+    .max(10)
+    .optional()
+    .describe("복수 정답 지원용 정답 label 배열. correctAnswer와 같은 label들을 담음."),
+  markedExpressions: z.array(grammarMarkedExpressionSchema).min(5).max(10).describe("밑줄 표시할 5~10개 표현"),
+  options: z.array(optionSchema).min(5).max(10).describe("5~10개 선지"),
   wrongOptionExplanations: z
-    .array(z.object({
-      label: z.string().describe("정답이 아닌 4개 선지 label 중 하나 ('(A)'~'(E)' 형식)"),
-      expression: z
-        .string()
-        .describe(
-          "이 label의 markedExpression.expression 값과 완전히 동일해야 함. 다른 단어를 쓰면 안 됨.",
-        ),
-      pointCode: z
-        .enum(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"])
-        .describe(
-          "이 label의 markedExpression.pointCode 값과 동일해야 함.",
-        ),
-      explanation: z
-        .string()
-        .describe(
-          "이 위치의 expression이 어법상 왜 맞는지 한국어 1~2문장 해설. 반드시 markedExpression.expression을 인용하여 설명할 것.",
-        ),
-    }))
-    .length(4)
+    .array(grammarWrongOptionExplanationSchema)
+    .min(0)
+    .max(9)
     .describe(
-      "정답을 제외한 4개 오답 위치 각각에 대한 해설 (배열 길이 정확히 4, label·expression·pointCode가 markedExpressions와 일치). 후처리에서 Record<label, explanation> 형태로 변환됨.",
+      "정답을 제외한 오답 위치 각각에 대한 해설 (label·expression·pointCode가 markedExpressions와 일치). 후처리에서 Record<label, explanation> 형태로 변환됨.",
     ),
 });
 export type AiGrammarErrorQuestion = z.infer<typeof aiGrammarErrorSchema>;
+
+export function buildAiGrammarErrorSchema(markerCount: number) {
+  const count = Math.min(10, Math.max(5, Math.round(markerCount)));
+  const labels = GRAMMAR_LABELS.slice(0, count).join(" ");
+  return z.object({
+    ...commonFields,
+    correctAnswer: z
+      .string()
+      .describe(`정답 label들을 comma + space로 연결. 사용 가능한 label: ${labels}. 정답 개수는 매번 달라질 수 있음.`),
+    correctAnswers: z
+      .array(z.string())
+      .min(1)
+      .max(count - 1)
+      .describe(`정답 label 배열. 1개 이상 ${count - 1}개 이하이며, 모든 isError=true label과 정확히 일치해야 함.`),
+    markedExpressions: z
+      .array(grammarMarkedExpressionSchema)
+      .length(count)
+      .describe(`밑줄 표시할 표현. 정확히 ${count}개를 생성해야 함.`),
+    options: z
+      .array(optionSchema)
+      .length(count)
+      .describe(`선지. 정확히 ${count}개를 생성해야 함.`),
+    wrongOptionExplanations: z
+      .array(grammarWrongOptionExplanationSchema)
+      .min(1)
+      .max(count - 1)
+      .describe(`정답이 아닌 모든 label에 대한 해설. 항목 수는 ${count} - correctAnswers.length와 정확히 같아야 함.`),
+  });
+}
 
 // ---------------------------------------------------------------------------
 // 3. 어휘 적절성 (VOCAB_CHOICE)
@@ -153,14 +197,30 @@ export type AiSentenceInsertQuestion = z.infer<typeof aiSentenceInsertSchema>;
 // 5. 무관한 문장 (IRRELEVANT)
 // ---------------------------------------------------------------------------
 
+// Default IRRELEVANT schema (5 slots). Teacher may override slot count via
+// IRRELEVANT.slotCount setting; use `buildAiIrrelevantSchema(n)` then.
 export const aiIrrelevantSchema = z.object({
   ...commonFields,
-  sentences: z.array(z.string()).length(5).describe("표시할 5개 문장 (①~⑤). 이 중 하나는 AI가 생성한 무관한 문장"),
-  irrelevantIndex: z.number().describe("무관한 문장의 인덱스 (0~4)"),
-  options: z.array(optionSchema).length(5).describe("5개 선지"),
+  sentences: z.array(z.string()).min(5).max(10).describe("표시할 문장 (5~10개, 기본 5개). 이 중 하나는 AI가 생성한 무관한 문장"),
+  irrelevantIndex: z.number().describe("무관한 문장의 인덱스"),
+  options: z.array(optionSchema).min(5).max(10).describe("선지 (slotCount와 동일)"),
   ...mcWrongExplanations,
 });
 export type AiIrrelevantQuestion = z.infer<typeof aiIrrelevantSchema>;
+
+export function buildAiIrrelevantSchema(slotCount: number) {
+  const n = Math.min(10, Math.max(5, Math.round(slotCount)));
+  // NOTE: keep schema permissive (min 5, max 10) — strict `.length(n)` makes
+  // Gemini 3.5 Flash unstable for n > 5. The exact n is enforced in prompt +
+  // post-process instead.
+  return z.object({
+    ...commonFields,
+    sentences: z.array(z.string()).min(5).max(10).describe(`표시할 ${n}개 문장`),
+    irrelevantIndex: z.number().min(0).max(n - 1).describe(`무관한 문장의 인덱스 (0~${n - 1})`),
+    options: z.array(optionSchema).min(5).max(10).describe(`${n}개 선지`),
+    wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(n - 1),
+  });
+}
 
 // ---------------------------------------------------------------------------
 // 6. 지칭 추론 (REFERENCE)
@@ -221,8 +281,14 @@ export const AI_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   ...AI_ESSAY_QUESTION_SCHEMAS,
 };
 
-export function getAiResponseSchema(typeId: string) {
-  const schema = AI_QUESTION_SCHEMAS[typeId];
+export function getAiResponseSchema(typeId: string, options?: { irrelevantSlotCount?: number; grammarErrorCount?: number }) {
+  let schema = AI_QUESTION_SCHEMAS[typeId];
   if (!schema) throw new Error(`Unknown AI question type: ${typeId}`);
+  if (typeId === "GRAMMAR_ERROR" && options?.grammarErrorCount && options.grammarErrorCount !== 1) {
+    schema = buildAiGrammarErrorSchema(options.grammarErrorCount);
+  }
+  if (typeId === "IRRELEVANT" && options?.irrelevantSlotCount && options.irrelevantSlotCount !== 5) {
+    schema = buildAiIrrelevantSchema(options.irrelevantSlotCount);
+  }
   return z.object({ questions: z.array(schema) });
 }

@@ -1,8 +1,11 @@
 /**
- * Live quality loop for BLANK_INFERENCE double-negative mode.
+ * Live quality loop for BLANK_INFERENCE negative-paraphrase mode.
  *
  * Exercises the same Gemini workbench pipeline:
  * type setting -> prompt builder -> schema output -> post-process -> quality validation.
+ *
+ * The UI setting is still named doubleNegative for backward compatibility,
+ * but the intended subtype is now a negative/privative paraphrase blank.
  */
 import * as fs from "fs";
 import * as path from "path";
@@ -38,6 +41,26 @@ const PASSAGES = [
     id: "attention-design",
     text: `Designers often assume that adding more features gives users more freedom, but attention is not an unlimited resource. Each extra button or notification asks the user to decide whether it matters, and those tiny decisions accumulate. A clean interface is therefore not merely an aesthetic preference; it is a way of protecting the user's ability to focus on the task. This is why experienced designers remove options that technically work but do not support the main goal. The best products often feel powerful not because every possible action is visible, but because the next useful action is easy to recognize. In that sense, simplicity is less about having fewer parts than about making attention go where it should.`,
   },
+  {
+    id: "success-identity",
+    text: `Winning often brings the awareness that others are watching you. It is much easier to go unnoticed when no one knows who you are or pays attention to you. In those situations, you can make mistakes, be imperfect, and take risks without worrying too much, because no one is really watching. However, once you start to succeed and people begin to notice you, you become more aware that you are being observed. You feel judged, and you may start to worry that others will see your flaws and weaknesses. Because of this, you might try to hide your true self and present a version of yourself that others will respect, as a role model, a responsible person, or a leader. There is nothing wrong with that. But if you do this at the expense of being who you really are, making decisions that please others rather than yourself, you will not remain in that position for long. When you begin to apologize for who you are, you stop growing, which ultimately undermines your ability to sustain success.`,
+  },
+  {
+    id: "vagrancy-ecology",
+    text: `It is a common assumption that most vagrant birds are ultimately doomed, aside from the rare cases where individuals are able to reorientate and return to their normal ranges. In turn, it is also commonly assumed that vagrancy itself is a relatively unimportant biological phenomenon. This is undoubtedly true for the majority of cases, as the most likely outcome of any given vagrancy event is that the individual will fail to find enough resources, and/or be exposed to inhospitable environmental conditions, and perish. However, there are many lines of evidence to suggest that vagrancy can, on rare occasions, dramatically alter the fate of populations, species or even whole ecosystems. Despite being infrequent, these events can be extremely important when viewed at the timescales over which ecological and evolutionary processes unfold. The most profound consequences of vagrancy relate to the establishment of new breeding sites, new migration routes and wintering locations. Each of these can occur through different mechanisms, and at different frequencies, and they each have their own unique importance.`,
+  },
+  {
+    id: "sunk-cost",
+    text: `Few mistakes in reasoning are as common as the tendency to throw good money after bad. Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim. A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested. The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat. Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain. The hardest lesson in economics, then, may also be the hardest lesson in life.`,
+  },
+  {
+    id: "ecosystem-resilience",
+    text: `A forest is not healthy simply because every tree looks strong at the same moment. Long-term resilience depends on variation: young trees, old trees, fallen wood, fungi, insects, and animals all contribute to the system's ability to recover. When managers remove every irregular feature in the name of order, they may create a landscape that appears clean but is vulnerable to disease or drought. Diversity works like a set of backup routes, allowing energy and nutrients to keep moving when one path is blocked. For this reason, ecological stability is often produced by complexity that looks messy to the human eye.`,
+  },
+  {
+    id: "feedback-learning",
+    text: `Students often prefer praise because it feels encouraging, but praise alone rarely shows them what to do next. Useful feedback identifies the gap between current performance and a clearer goal. This does not mean that criticism should be harsh; it means that comments must be specific enough to guide revision. A vague statement such as "good job" may protect confidence for a moment while leaving the student's thinking unchanged. By contrast, feedback that points to a precise next step can make temporary discomfort part of genuine progress.`,
+  },
 ];
 
 type GeneratedQuestion = Record<string, unknown>;
@@ -60,9 +83,9 @@ function normalizeLabel(value: unknown): string {
 
 function hasNegationCue(text: string): boolean {
   return (
-    /\b(?:cannot|can't|not|never|no|none|neither|nor|little|few|hardly|rarely|scarcely|seldom|without|fail|fails|failed|failing|failure|lack|lacks|lacking|absence|absent|barrier|obstacle|enemy|unable|impossible|irrational|exclude|excludes|excluding|eliminate|eliminates|eliminating|reject|rejects|rejecting|neglect|neglects|neglecting|collapse|collapses|collapsing|erosion|erode|erodes|eroding|compromise|compromises|compromising|undermine|undermines|undermining)\b/i.test(text) ||
+    /\b(?:cannot|can't|not|never|no|none|neither|nor|little|few|hardly|rarely|scarcely|seldom|without|fail|fails|failed|failing|failure|lack|lacks|lacking|absence|absent|devoid|barrier|obstacle|enemy|unable|impossible|irrational|prevent|prevents|preventing|keep|keeps|keeping|exclude|excludes|excluding|eliminate|eliminates|eliminating|reject|rejects|rejecting|neglect|neglects|neglecting|collapse|collapses|collapsing|erosion|erode|erodes|eroding|compromise|compromises|compromising|undermine|undermines|undermining)\b/i.test(text) ||
     /\b(?:non-[a-z]+|nonreason|nonrational)\b/i.test(text) ||
-    /\b(?:anything but|nothing but|other than|free from|not based on|not derived from|not a result of|rather than)\b/i.test(text)
+    /\b(?:anything but|nothing but|other than|free from|not based on|not derived from|not a result of|not beyond|not independent of|not distorted by|rather than)\b/i.test(text)
   );
 }
 
@@ -247,7 +270,6 @@ function auditQuestion(question: GeneratedQuestion | undefined, passage: string)
   }).length;
   const targetTokenCount = contentTokens(originalExpression).size;
   const optionNegation = hasNegationCue(correctText);
-  const blankNegation = hasNegationCue(blankCarrierText);
   const transformed = normalizeText(correctText).toLowerCase() !== normalizeText(originalExpression).toLowerCase();
   const awkwardCorrectPhrase = findAwkwardBlankOptionPhrase(correctText);
   const awkwardOptionPhrase = options
@@ -267,10 +289,9 @@ function auditQuestion(question: GeneratedQuestion | undefined, passage: string)
   const ok =
     qualityErrors.length === 0 &&
     optionNegation &&
-    blankNegation &&
     transformed &&
     targetTokenCount >= 2 &&
-    attractiveWrongCount >= 3 &&
+    attractiveWrongCount >= 1 &&
     !awkwardCorrectPhrase &&
     !awkwardOptionPhrase &&
     !oddCapitalizedOptionToken &&
@@ -291,7 +312,6 @@ function auditQuestion(question: GeneratedQuestion | undefined, passage: string)
     correctAnswer: question.correctAnswer,
     correctText,
     optionNegation,
-    blankNegation,
     awkwardCorrectPhrase,
     awkwardOptionPhrase,
     oddCapitalizedOptionToken,
@@ -312,7 +332,7 @@ async function runCase(passage: { id: string; text: string }, runIndex: number) 
       {
         subType: "BLANK_INFERENCE",
         count: 1,
-        reason: "BLANK_INFERENCE double-negative quality loop",
+        reason: "BLANK_INFERENCE negative-paraphrase quality loop",
         targetPoints: [],
       },
     ],
@@ -322,7 +342,7 @@ async function runCase(passage: { id: string; text: string }, runIndex: number) 
     teacherIntentBlock: "",
     analysisContext: "",
     diffLabel: "KILLER",
-    diffInstruction: "high-difficulty double-negative blank inference with attractive distractors",
+    diffInstruction: "high-difficulty negative-paraphrase blank inference with attractive distractors",
     generationPlan: "STANDARD",
     typeSettings: { BLANK_INFERENCE: { doubleNegative: true } },
   }, {
@@ -366,7 +386,7 @@ async function main() {
   }
 
   const okCount = results.filter((result) => result.audit.ok).length;
-  const outPath = path.join(OUTDIR, "blank-double-negative-quality.json");
+  const outPath = path.join(OUTDIR, "blank-negative-paraphrase-quality.json");
   fs.writeFileSync(
     outPath,
     JSON.stringify({

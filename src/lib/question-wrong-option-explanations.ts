@@ -1,21 +1,27 @@
 import { z } from "zod";
 
-export const aiWrongOptionExplanationsSchema = z
-  .array(
-    z.object({
-      label: z.string().describe("The label of one wrong option."),
-      explanation: z
-        .string()
-        .min(12)
-        .describe(
-          "Concise Korean explanation of why this wrong option is tempting and why the passage makes it wrong.",
-        ),
-    }),
-  )
-  .length(4)
-  .describe(
-    "Exactly four wrong-option explanations, one per wrong option. Do not include the correct option.",
-  );
+const aiWrongOptionExplanationItemSchema = z.object({
+  label: z.string().describe("The label of one wrong option."),
+  explanation: z
+    .string()
+    .min(12)
+    .describe(
+      "Concise Korean explanation of why this wrong option is tempting and why the passage makes it wrong.",
+    ),
+});
+
+export function buildAiWrongOptionExplanationsSchema(wrongOptionCount: number) {
+  const count = Math.max(0, Math.round(wrongOptionCount));
+  return z
+    .array(aiWrongOptionExplanationItemSchema)
+    .length(count)
+    .describe(
+      `Exactly ${count} wrong-option explanations, one per wrong option. Do not include the correct option.`,
+    );
+}
+
+export const aiWrongOptionExplanationsSchema =
+  buildAiWrongOptionExplanationsSchema(4);
 
 export function normalizeWrongOptionExplanations(
   value: unknown,

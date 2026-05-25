@@ -293,7 +293,7 @@ export function FormSection(props: FormSectionProps) {
               )}
             </p>
             <div className="flex items-center gap-2">
-              {/* TEMP: 모델 선택 UI 숨김 시 Gemini(STANDARD) 단일 버튼만 노출 */}
+              {/* TEMP: 모델 선택 UI 숨김 시 기본 생성 단일 버튼만 노출 */}
               {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
               <Button
                 variant="outline"

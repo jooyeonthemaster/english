@@ -1,6 +1,7 @@
 import {
   applyReplacementsRTL,
   findExpressionInPassage,
+  findWordInPassage,
   sanitizeExpressionForMarker,
 } from "../text-utils";
 import type { PostProcessResult, QuestionPostProcessData, Replacement } from "../types";
@@ -19,8 +20,8 @@ type GrammarOption = {
   text: string;
 };
 
-const GRAMMAR_KEYS = ["A", "B", "C", "D", "E"] as const;
-const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)"] as const;
+const GRAMMAR_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const;
+const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
 
 export function processGrammarError(
   passage: string,
@@ -57,14 +58,25 @@ export function processGrammarError(
     .filter((me) => me.isError === true)
     .map((me) => me.label);
   const correctAnswer =
-    errorLabels.length === 1
-      ? errorLabels[0]
+    errorLabels.length > 0
+      ? errorLabels.join(", ")
       : rawCorrectLabel || normalizeString(ai.correctAnswer);
+  const correctAnswers = errorLabels.length > 0
+    ? errorLabels
+    : collectGrammarLabels(ai.correctAnswers).filter(Boolean);
 
   if (errorLabels.length === 1 && rawCorrectLabel && rawCorrectLabel !== errorLabels[0]) {
     warnings.push(
       `correctAnswer normalized from ${normalizeString(ai.correctAnswer)} to the marked error label ${errorLabels[0]}`,
     );
+  } else if (errorLabels.length > 1) {
+    const rawCorrectLabels = collectGrammarLabels(ai.correctAnswers ?? ai.correctAnswer);
+    const normalized = rawCorrectLabels.join(", ");
+    if (normalized && normalized !== correctAnswer) {
+      warnings.push(
+        `correctAnswer normalized from ${normalized} to marked error labels ${correctAnswer}`,
+      );
+    }
   }
 
   const options = canonicalizeOptions(ai.options, canonicalMarkedExpressions);
@@ -77,10 +89,18 @@ export function processGrammarError(
 
   for (const me of canonicalMarkedExpressions) {
     const sourceExpression = getSourceExpression(me);
-    let found = findExpressionInPassage(passage, sourceExpression, me.surroundingText);
+    let found = findGrammarExpressionInPassage(
+      passage,
+      sourceExpression,
+      me.surroundingText,
+    );
 
     if (!found && me.isError && me.correction && me.correction !== sourceExpression) {
-      found = findExpressionInPassage(passage, me.correction, me.surroundingText);
+      found = findGrammarExpressionInPassage(
+        passage,
+        me.correction,
+        me.surroundingText,
+      );
     }
 
     if (!found) {
@@ -115,6 +135,7 @@ export function processGrammarError(
     data: {
       ...ai,
       correctAnswer,
+      correctAnswers,
       markedExpressions: canonicalMarkedExpressions,
       options,
       wrongOptionExplanations,
@@ -122,6 +143,17 @@ export function processGrammarError(
     },
     warnings,
   };
+}
+
+function findGrammarExpressionInPassage(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+) {
+  if (isSingleTokenExpression(expression)) {
+    return findWordInPassage(passage, expression, surroundingText);
+  }
+  return findExpressionInPassage(passage, expression, surroundingText);
 }
 
 function canonicalizeOptions(
@@ -215,14 +247,33 @@ function canonicalGrammarLabel(value: unknown, fallbackIndex?: number): string {
   return normalizeString(value);
 }
 
+function collectGrammarLabels(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((entry) => canonicalGrammarLabel(entry))
+      .filter(Boolean);
+  }
+
+  const text = normalizeString(value);
+  if (!text) return [];
+  const labels: string[] = [];
+  const regex = /[([]?\s*([A-Ja-j]|10|[1-9])\s*[)\].:]?/g;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(text))) {
+    const label = canonicalGrammarLabel(match[1]);
+    if (label) labels.push(label);
+  }
+  return labels;
+}
+
 function normalizeGrammarKey(value: unknown): string {
   const text = normalizeString(value);
   if (!text) return "";
 
-  const alpha = text.match(/^[([]?\s*([A-Ea-e])\s*[)\].:]?$/);
+  const alpha = text.match(/^[([]?\s*([A-Ja-j])\s*[)\].:]?$/);
   if (alpha) return alpha[1].toUpperCase();
 
-  const numeric = text.match(/^[([]?\s*([1-5])\s*[)\].:]?$/);
+  const numeric = text.match(/^[([]?\s*(10|[1-9])\s*[)\].:]?$/);
   if (numeric) return GRAMMAR_KEYS[Number(numeric[1]) - 1] ?? "";
 
   return "";
@@ -230,6 +281,10 @@ function normalizeGrammarKey(value: unknown): string {
 
 function normalizeString(value: unknown): string {
   return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
+function isSingleTokenExpression(expression: string): boolean {
+  return /^[A-Za-z][A-Za-z'-]*$/.test(expression.trim());
 }
 
 function isGrammarOptionLike(value: unknown): value is GrammarOption {

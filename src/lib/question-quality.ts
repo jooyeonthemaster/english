@@ -11,6 +11,23 @@ interface ValidateQuestionQualityInput {
   question: Record<string, unknown>;
   passage?: string;
   requestedDifficulty?: string;
+  grammarErrorCount?: number;
+}
+
+const IRRELEVANT_SLOT_MIN = 5;
+const IRRELEVANT_SLOT_MAX = 10;
+const IRRELEVANT_OPTION_LABELS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"] as const;
+const GRAMMAR_MARKER_COUNT_MIN = 5;
+const GRAMMAR_MARKER_COUNT_MAX = 10;
+
+function getGrammarAnswerCountRange(markedCount: number): [number, number] {
+  const count = Math.min(
+    GRAMMAR_MARKER_COUNT_MAX,
+    Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(markedCount)),
+  );
+  const min = count >= 6 ? 2 : 1;
+  const max = Math.min(count - 1, Math.max(min, Math.ceil(count / 2)));
+  return [min, max];
 }
 
 const MC_TYPE_IDS = new Set([
@@ -46,11 +63,14 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
   BLANK_INFERENCE: [
     "Choose a blank that controls the paragraph logic, not a removable adjective or a local detail.",
     "All five options must fit the same grammatical slot; distractors should be plausible but fail the author's logic.",
+    "If the sentence after the blank begins with a conclusion signal such as therefore, thus, for this reason, or by adopting this strategy, the correct answer must directly support that adjacent conclusion.",
+    "Avoid result-declaration or over-absolute answers such as no disruption, unlimited imports, complete independence, or guarantee major crops unless the passage explicitly warrants that strength.",
     "For KILLER, the answer should require connecting at least two sentences or a concession/cause-effect relation.",
   ],
   GRAMMAR_ERROR: [
-    "Mark five real expressions from the original passage and create exactly one error by changing only the marked expression.",
+    "Mark 5-10 real expressions from the original passage. Expanded settings control marked-position count; the actual answer count should vary and must not include every label.",
     "The error must test a meaningful grammar point such as agreement, parallelism, modification, tense/aspect, reference, or verb form.",
+    "Every non-error marked expression must still be a defensible grammar judgment point with a clear explanation, not padding.",
     "For KILLER, avoid an obvious spelling-level error; the wrong expression should look natural until the sentence structure is checked.",
   ],
   VOCAB_CHOICE: [
@@ -92,9 +112,11 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
   ],
   IRRELEVANT: [
     "The irrelevant sentence must share the passage's topic, nearby keywords, and style while breaking the paragraph's logic or focus.",
-    "The four non-answer sentences must be copied verbatim from the source passage.",
+    "Every non-answer sentence must be copied verbatim from the source passage.",
     "Do not use a random outside fact as the intruder; make it fail by discourse function such as scope, actor, purpose, cause-effect, example/advice, or conclusion shift.",
-    "For KILLER, make the sentence tempting by local vocabulary overlap but wrong only after checking its role in the surrounding flow.",
+    "For BASIC, the intruder may be a clear but still passage-related focus shift; do not make it a completely unrelated topic.",
+    "For INTERMEDIATE, prefer a same-topic sentence that shifts the local role, evidence target, or practical focus without using an obvious counterclaim cue.",
+    "For KILLER, make the sentence locally cohesive and vocabulary-rich, but wrong only after checking how the surrounding sentences build the claim. Do not use explicit opposition markers, regulation-backlash claims, blunt advice, or a simple direct contradiction of the thesis.",
   ],
   CONDITIONAL_WRITING: [
     "Require an answer that combines passage meaning with at least one explicit grammatical or lexical condition.",
@@ -161,14 +183,64 @@ export function getTypeQualityRubric(typeId: string, difficulty?: string): strin
   ].join("\n");
 }
 
-export function buildQuestionTargetCandidateBlock(typeId: string, passage: string): string {
+export function buildQuestionTargetCandidateBlock(
+  typeId: string,
+  passage: string,
+  options: { irrelevantSlotCount?: number; grammarErrorCount?: number; requestedDifficulty?: string } = {},
+): string {
+  if (typeId === "GRAMMAR_ERROR") {
+    return buildGrammarErrorCandidateBlock(
+      passage,
+      options.grammarErrorCount,
+      options.requestedDifficulty,
+    );
+  }
+
   if (typeId === "IRRELEVANT") {
-    return buildIrrelevantCandidateBlock(passage);
+    return buildIrrelevantCandidateBlock(
+      passage,
+      options.irrelevantSlotCount,
+      options.requestedDifficulty,
+    );
   }
 
   if (typeId === "BLANK_INFERENCE") {
-    return buildBlankInferenceCandidateBlock(passage);
-  }
+  return buildBlankInferenceCandidateBlock(passage);
+}
+
+function buildGrammarErrorCandidateBlock(
+  passage: string,
+  requestedMarkerCount = 5,
+  requestedDifficulty?: string,
+): string {
+  const sentences = splitPassageSentences(passage);
+  const markedCount = Math.min(
+    GRAMMAR_MARKER_COUNT_MAX,
+    Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(requestedMarkerCount)),
+  );
+  const [answerMin, answerMax] = getGrammarAnswerCountRange(markedCount);
+  const labels = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"]
+    .slice(0, markedCount)
+    .join(" ");
+
+  return [
+    "## GRAMMAR_ERROR target planning guardrail",
+    `- The final item must contain ${markedCount} marked expression(s) labeled ${labels}.`,
+    `- Randomly choose ${answerMin}~${answerMax} grammatically incorrect answer label(s). Do not disclose the count in the direction.`,
+    "- Never make every marked expression incorrect; at least one label must remain a grammatically correct non-answer so 오답 분석 can be written.",
+    "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
+    "- Prefer high-value grammar decisions: finite vs non-finite verb, subject-verb agreement, modifier active/passive, parallelism, relative/nominal clause choice, pronoun agreement, complement form, comparison structure, and preposition vs conjunction.",
+    "- Avoid padding with articles, tiny prepositions, fixed verb-complement patterns, or expressions whose correctness can be judged without reading the sentence.",
+    "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked; avoid spelling-level or one-word giveaway errors."
+      : "",
+    sentences.length
+      ? "Detected passage sentences for target distribution:"
+      : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
+    ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
+  ].filter(Boolean).join("\n");
+}
 
   if (typeId !== "REFERENCE") return "";
 
@@ -193,57 +265,66 @@ export function buildQuestionTargetCandidateBlock(typeId: string, passage: strin
 
 function buildBlankInferenceCandidateBlock(passage: string): string {
   const sentences = splitPassageSentences(passage);
-  const negativeCandidates = sentences
+  const candidateSentences = sentences
     .map((sentence, index) => ({ sentence, index }))
-    .filter(({ sentence }) => hasNegationCue(sentence));
-  const strongCandidates = negativeCandidates
-    .filter(({ sentence }) => isStrongDoubleNegativeSourceSentence(sentence))
-    .slice(0, 6);
-  const secondaryCandidates = negativeCandidates
-    .filter(({ sentence }) => !isStrongDoubleNegativeSourceSentence(sentence))
+    .filter(({ sentence }) => isUsefulNegativeParaphraseSourceSentence(sentence));
+  const strongCandidates = candidateSentences
+    .filter(({ sentence }) => getNegativeParaphraseSuggestedTargets(sentence).length > 0)
+    .slice(0, 8);
+  const secondaryCandidates = candidateSentences
+    .filter(({ sentence }) => getNegativeParaphraseSuggestedTargets(sentence).length === 0)
     .slice(0, 4);
 
-  if (negativeCandidates.length === 0) {
+  if (candidateSentences.length === 0) {
     return [
-      "## BLANK_INFERENCE target note",
-      "- No obvious source sentence with a negation cue was detected.",
-      "- If a double-negative detail setting is active and no suitable sentence exists, prioritize producing a valid normal blank item rather than returning an invalid item.",
+      "## BLANK_INFERENCE negative-paraphrase target note",
+      "- No strong automatic target candidate was detected.",
+      "- If the negative-paraphrase detail setting is active, still produce a valid item by choosing a compact central phrase with a logical action or relation.",
+      "- The source sentence does not need to contain a negation cue. The correct option must carry the negative/privative paraphrase.",
     ].join("\n");
   }
 
   return [
-    "## BLANK_INFERENCE negation-aware candidates",
-    "- If the double-negative detail setting is active, use Strong candidates before Secondary candidates.",
-    "- Keep the visible negation cue outside the blank. Blank a full predicate, causal clause, or contrastive complement, not a single obvious keyword.",
-    "- The correct option should itself contain a negative cue such as not, no, never, without, lack, failure, non-, anything but, other than, barrier, obstacle, or enemy.",
-    "- Avoid a shallow 'rarely a result of ____' item if the answer is merely reasoning/logic/calculation under a new name.",
+    "## BLANK_INFERENCE negative-paraphrase candidates",
+    "- If the negative-paraphrase detail setting is active, choose a compact phrase with a real logical action or relation.",
+    "- The source sentence does not need an existing negation cue; the correct option must be a non-verbatim negative/privative paraphrase.",
+    "- Do not blank a single abstract noun, a colon/comma list, or an example-list slot.",
+    "- Every option must fit the same grammatical slot as the originalExpression.",
     strongCandidates.length ? "Strong candidates:" : "Strong candidates: none detected.",
     ...strongCandidates.map(({ sentence, index }) => {
-      const suggestedTarget = getDoubleNegativeSuggestedTarget(sentence);
-      return suggestedTarget
-        ? `${index + 1}. ${sentence}\n   Suggested originalExpression: "${suggestedTarget}"`
+      const suggestedTargets = getNegativeParaphraseSuggestedTargets(sentence).slice(0, 2);
+      return suggestedTargets.length
+        ? `${index + 1}. ${sentence}\n   Suggested originalExpression options: ${suggestedTargets.map((target) => `"${target}"`).join(", ")}`
         : `${index + 1}. ${sentence}`;
     }),
-    secondaryCandidates.length ? "Secondary candidates, use only if you can still build a real double-negative trap:" : "",
+    secondaryCandidates.length ? "Secondary candidates, use only if you can choose a compact logical phrase:" : "",
     ...secondaryCandidates.map(({ sentence, index }) => {
-      const suggestedTarget = getDoubleNegativeSuggestedTarget(sentence);
-      return suggestedTarget
-        ? `${index + 1}. ${sentence}\n   Suggested originalExpression: "${suggestedTarget}"`
+      const suggestedTargets = getNegativeParaphraseSuggestedTargets(sentence).slice(0, 2);
+      return suggestedTargets.length
+        ? `${index + 1}. ${sentence}\n   Suggested originalExpression options: ${suggestedTargets.map((target) => `"${target}"`).join(", ")}`
         : `${index + 1}. ${sentence}`;
     }),
   ].filter(Boolean).join("\n");
 }
 
-function buildIrrelevantCandidateBlock(passage: string): string {
+function buildIrrelevantCandidateBlock(
+  passage: string,
+  requestedSlotCount = 5,
+  requestedDifficulty?: string,
+): string {
   const sentences = splitPassageSentences(passage);
-  if (sentences.length < 4) {
+  const slotCount = Math.min(
+    IRRELEVANT_SLOT_MAX,
+    Math.max(IRRELEVANT_SLOT_MIN, Math.round(requestedSlotCount)),
+  );
+  if (sentences.length < IRRELEVANT_SLOT_MIN) {
     return [
       "## Valid IRRELEVANT source candidates",
-      "- Fewer than four source sentences were detected. Do not invent source sentences; copy every non-answer sentence verbatim from the passage.",
+      `- Fewer than ${IRRELEVANT_SLOT_MIN} source sentences were detected. Do not invent source sentences; copy every non-answer sentence verbatim from the passage.`,
     ].join("\n");
   }
 
-  const windowSize = Math.min(5, sentences.length);
+  const windowSize = Math.min(slotCount, sentences.length);
   const maxWindows = 4;
   const windowStarts = new Set<number>([0]);
   if (sentences.length > windowSize) {
@@ -265,13 +346,17 @@ function buildIrrelevantCandidateBlock(passage: string): string {
   return [
     "## Valid IRRELEVANT source windows",
     "- Choose one window below as the source flow.",
-    "- In sentences[5], copy exactly four sentences from that window verbatim and replace exactly one sentence with your inserted irrelevant sentence.",
-    "- Prefer replacing an inner sentence (②~④) unless an edge sentence creates a stronger discourse trap.",
+    `- In sentences[${windowSize}], copy exactly ${windowSize - 1} sentences from that window verbatim and replace exactly one sentence with your inserted irrelevant sentence.`,
+    `- The answer choices must be exactly ${windowSize} slots labeled ①~${IRRELEVANT_OPTION_LABELS[windowSize - 1]}.`,
+    `- wrongOptionExplanations must include exactly ${windowSize - 1} entries, one for every non-answer label. Do not stop at ⑤ when ${windowSize} slots are requested.`,
+    "- The slot pointed to by irrelevantIndex must be the inserted non-verbatim sentence, not one of the original source sentences.",
+    `- Prefer replacing an inner sentence (${IRRELEVANT_OPTION_LABELS[1]}~${IRRELEVANT_OPTION_LABELS[Math.max(1, windowSize - 2)]}) unless an edge sentence creates a stronger discourse trap.`,
     "- The inserted sentence must reuse at least two meaningful English content words from the chosen window, including at least one from a neighboring sentence when possible.",
     "- A substantial share of the inserted sentence's meaningful words should come from the chosen window; avoid adding many new concrete nouns.",
     "- The inserted sentence must be wrong by discourse role, not by random topic. Good traps shift scope, actor, purpose, cause/effect, example/advice, or conclusion while keeping the same semantic field.",
     "- Do not import a new setting or field that is absent from the passage just to make the sentence unrelated.",
     "- Prefer a neutral explanatory sentence. Do not use awkward grammar, extreme words, or blunt advice markers as the giveaway.",
+    ...buildIrrelevantDifficultyGuidance(requestedDifficulty),
     ...windows.flatMap((window) => [
       `Window ${window.label} (source sentence indices ${window.start + 1}-${window.start + window.sentences.length}):`,
       ...window.sentences.map((sentence, sentenceIndex) => `  ${sentenceIndex + 1}. ${sentence}`),
@@ -279,11 +364,43 @@ function buildIrrelevantCandidateBlock(passage: string): string {
   ].join("\n");
 }
 
+function buildIrrelevantDifficultyGuidance(requestedDifficulty?: string): string[] {
+  if (requestedDifficulty === "KILLER") {
+    return [
+      "## IRRELEVANT difficulty calibration: KILLER",
+      "- Treat the current 'clear counterclaim' style as too easy. The inserted sentence must look locally acceptable on a skim.",
+      "- Do NOT use giveaway opposition cues such as however, instead, rather than, might hinder, limiting academic freedom, aggressive regulations, or a simple anti-thesis statement.",
+      "- Do NOT use prescriptive research-policy sentences such as researchers should prioritize their own interests, secure intellectual property rights, build sponsor partnerships, or protect academic freedom unless that exact focus already exists in the source window.",
+      "- Do NOT make the intruder a recommendation to encourage researchers, build sponsor relationships, or develop stable relationships with sponsors. That is an easy advice/policy detour, not a KILLER trap.",
+      "- Build the trap as a subtle focus/role shift: procedure detail instead of principle, evidence method instead of conclusion, actor/purpose shift, cause/effect target shift, or local example reframed as general policy.",
+      "- Reuse at least three meaningful content words from the chosen window, including at least one from the immediately previous or next sentence.",
+      "- Keep sentence length, modality, abstraction level, and explanatory tone close to neighboring source sentences.",
+      "- The sentence should become clearly removable only when the reader checks both adjacent sentences and the paragraph's conclusion.",
+    ];
+  }
+
+  if (requestedDifficulty === "INTERMEDIATE") {
+    return [
+      "## IRRELEVANT difficulty calibration: INTERMEDIATE",
+      "- This should be the default usable exam level: same topic and keywords, but a clear local focus shift.",
+      "- Avoid random outside topics and avoid overly blunt advice. A mild counter-direction is acceptable only if it is not exposed by one giveaway word.",
+      "- Prefer traps that borrow the passage's terms but move from the paragraph's reasoning to an adjacent practical detail, administrative detail, or mismatched purpose.",
+    ];
+  }
+
+  return [
+    "## IRRELEVANT difficulty calibration: BASIC",
+    "- Keep it readable and fair: the sentence should be passage-related but clearly off-flow after one careful read.",
+    "- It may be easier than INTERMEDIATE, but it must still share the source topic and at least two meaningful keywords.",
+  ];
+}
+
 export function validateQuestionQuality({
   typeId,
   question,
   passage,
   requestedDifficulty,
+  grammarErrorCount,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
   const add = (severity: QuestionQualitySeverity, code: string, message: string) => {
@@ -296,7 +413,7 @@ export function validateQuestionQuality({
 
   validateOptions(question, typeId, add);
   validateMarkedText(question, add);
-  validateTypeSpecific(question, typeId, passage, requestedDifficulty, add);
+  validateTypeSpecific(question, typeId, passage, requestedDifficulty, grammarErrorCount, add);
 
   if (requestedDifficulty === "KILLER") {
     validateKillerBar(question, typeId, add);
@@ -341,6 +458,29 @@ function buildSurroundingWindow(passage: string, index: number, length: number):
   return window.length >= 35 ? window : passage.slice(Math.max(0, index - 20), Math.min(passage.length, index + length + 20)).trim();
 }
 
+function getExpectedOptionCount(question: Record<string, unknown>, typeId: string): number {
+  if (typeId === "GRAMMAR_ERROR") {
+    const markedCount = Array.isArray(question.markedExpressions)
+      ? question.markedExpressions.length
+      : 0;
+    if (markedCount >= 5 && markedCount <= 10) {
+      return markedCount;
+    }
+    return 5;
+  }
+
+  if (typeId !== "IRRELEVANT") return 5;
+
+  const sentenceCount = Array.isArray(question.sentences)
+    ? question.sentences.length
+    : 0;
+  if (sentenceCount >= IRRELEVANT_SLOT_MIN && sentenceCount <= IRRELEVANT_SLOT_MAX) {
+    return sentenceCount;
+  }
+
+  return 5;
+}
+
 function validateOptions(
   question: Record<string, unknown>,
   typeId: string,
@@ -349,8 +489,9 @@ function validateOptions(
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   if (!options.length) return;
 
-  if (MC_TYPE_IDS.has(typeId) && options.length !== 5) {
-    add("error", "option-count", `Expected 5 options, got ${options.length}.`);
+  const expectedOptionCount = getExpectedOptionCount(question, typeId);
+  if (MC_TYPE_IDS.has(typeId) && options.length !== expectedOptionCount) {
+    add("error", "option-count", `Expected ${expectedOptionCount} options, got ${options.length}.`);
   }
 
   const normalizedLabels = options.map((opt) => normalizeLabel(opt?.label));
@@ -369,30 +510,116 @@ function validateOptions(
     add("error", "empty-option-text", "One or more options are empty.");
   }
 
+  const correctAnswerLabels = collectCorrectAnswerLabels(question);
   const correctAnswer = normalizeText(question.correctAnswer);
   if (correctAnswer) {
-    const matchesOption = options.some((opt) => {
-      const label = normalizeLabel(opt?.label);
-      const text = normalizeText(opt?.text);
-      return correctAnswer === label || correctAnswer === text || normalizeLabel(correctAnswer) === label;
-    });
+    const missingCorrectLabels = correctAnswerLabels.filter(
+      (answerLabel) => !normalizedLabels.includes(answerLabel),
+    );
+    const matchesOption =
+      correctAnswerLabels.length > 0
+        ? missingCorrectLabels.length === 0
+        : options.some((opt) => {
+            const label = normalizeLabel(opt?.label);
+            const text = normalizeText(opt?.text);
+            return correctAnswer === label || correctAnswer === text || normalizeLabel(correctAnswer) === label;
+          });
     if (!matchesOption) {
-      add("error", "correct-answer-mismatch", "correctAnswer does not match any option label or text.");
+      add(
+        "error",
+        "correct-answer-mismatch",
+        missingCorrectLabels.length
+          ? `correctAnswer labels do not match options: ${missingCorrectLabels.join(", ")}.`
+          : "correctAnswer does not match any option label or text.",
+      );
     }
   }
 
   const wrongExplanations = question.wrongOptionExplanations;
+  const correctAnswerLabelSet = new Set(correctAnswerLabels);
+  const wrongOptionLabels = normalizedLabels.filter(
+    (label) => label && !correctAnswerLabelSet.has(label),
+  );
+  const expectedWrongExplanationCount =
+    correctAnswerLabelSet.size > 0
+      ? wrongOptionLabels.length
+      : Math.max(0, options.length - 1);
+  if (typeId === "IRRELEVANT" || typeId === "GRAMMAR_ERROR") {
+    const explanationMap = collectWrongOptionExplanations(wrongExplanations);
+    const missingLabels = wrongOptionLabels.filter((label) => !explanationMap.get(label));
+    if (missingLabels.length > 0 || explanationMap.size < expectedWrongExplanationCount) {
+      add(
+        "error",
+        "wrong-option-explanation-count",
+        `Expected explanations for ${expectedWrongExplanationCount} wrong options, got ${explanationMap.size}. Missing: ${missingLabels.join(", ") || "unknown"}.`,
+      );
+    }
+  }
+
   if (question.difficulty === "KILLER" && wrongExplanations && typeof wrongExplanations === "object") {
-    const explanationValues = Array.isArray(wrongExplanations)
-      ? wrongExplanations.map((value) =>
-          isRecord(value) ? value.explanation : value,
-        )
-      : Object.values(wrongExplanations as Record<string, unknown>);
-    const explanationCount = explanationValues.filter((value) => normalizeText(value)).length;
-    if (explanationCount < Math.max(0, options.length - 1)) {
+    const explanationCount = collectWrongOptionExplanations(wrongExplanations).size;
+    if (explanationCount < expectedWrongExplanationCount) {
       add("warning", "thin-wrong-option-explanations", "KILLER item should explain every wrong option.");
     }
   }
+}
+
+function collectWrongOptionExplanations(value: unknown): Map<string, string> {
+  const explanations = new Map<string, string>();
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (!isRecord(item)) continue;
+      const label = normalizeLabel(item.label);
+      const explanation = normalizeText(item.explanation);
+      if (label && explanation) explanations.set(label, explanation);
+    }
+    return explanations;
+  }
+
+  if (!isRecord(value)) return explanations;
+  for (const [rawLabel, rawExplanation] of Object.entries(value)) {
+    const label = normalizeLabel(rawLabel);
+    const explanation = normalizeText(rawExplanation);
+    if (label && explanation) explanations.set(label, explanation);
+  }
+  return explanations;
+}
+
+function collectCorrectAnswerLabels(question: Record<string, unknown>): string[] {
+  const labels: string[] = [];
+  const push = (value: unknown) => {
+    const label = normalizeLabelOnly(value);
+    if (label && !labels.includes(label)) labels.push(label);
+  };
+
+  if (Array.isArray(question.correctAnswers)) {
+    for (const value of question.correctAnswers) push(value);
+  }
+
+  const correctAnswerText = normalizeText(question.correctAnswer);
+  if (correctAnswerText) {
+    const matches = correctAnswerText.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+    if (matches?.length) {
+      for (const match of matches) push(match);
+    } else {
+      push(correctAnswerText);
+    }
+  }
+
+  return labels;
+}
+
+function normalizeLabelOnly(value: unknown): string {
+  const text = normalizeText(value);
+  if (!text) return "";
+  if (IRRELEVANT_OPTION_LABELS.includes(text as (typeof IRRELEVANT_OPTION_LABELS)[number])) {
+    return normalizeLabel(text);
+  }
+  if (/^[\(\[]?\s*([A-Ja-j]|\d{1,2})\s*[\)\].:]?\s*$/.test(text)) {
+    return normalizeLabel(text);
+  }
+  return "";
 }
 
 function validateMarkedText(
@@ -423,6 +650,7 @@ function validateTypeSpecific(
   typeId: string,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
+  grammarErrorCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -462,11 +690,37 @@ function validateTypeSpecific(
       : [];
     const passageWithMarkers = normalizeText(question.passageWithMarkers);
     const markerCount = countUnderlineMarkers(passageWithMarkers);
-    if (markedExpressions.length !== 5) {
-      add("error", "grammar-marker-count", `Expected 5 grammar marked expressions, got ${markedExpressions.length}.`);
+    const expectedMarkedCount =
+      typeof grammarErrorCount === "number" && Number.isFinite(grammarErrorCount)
+        ? Math.min(
+            GRAMMAR_MARKER_COUNT_MAX,
+            Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(grammarErrorCount)),
+          )
+        : GRAMMAR_MARKER_COUNT_MIN;
+    if (markedExpressions.length !== expectedMarkedCount) {
+      add("error", "grammar-marker-count", `Expected ${expectedMarkedCount} grammar marked expressions, got ${markedExpressions.length}.`);
     }
-    if (passageWithMarkers && markerCount !== 5) {
-      add("error", "grammar-render-marker-count", `Expected 5 rendered grammar markers, got ${markerCount}.`);
+    if (passageWithMarkers && markerCount !== expectedMarkedCount) {
+      add("error", "grammar-render-marker-count", `Expected ${expectedMarkedCount} rendered grammar markers, got ${markerCount}.`);
+    }
+
+    const errorLabels = markedExpressions
+      .filter((markedExpression) => markedExpression.isError === true)
+      .map((markedExpression) => normalizeLabel(markedExpression.label))
+      .filter(Boolean);
+    const [minErrorCount, maxErrorCount] = getGrammarAnswerCountRange(expectedMarkedCount);
+    if (errorLabels.length < minErrorCount || errorLabels.length > maxErrorCount) {
+      add("error", "grammar-error-count", `Expected ${minErrorCount}~${maxErrorCount} grammar error answer(s) for ${expectedMarkedCount} marked expressions, got ${errorLabels.length}.`);
+    }
+    const answerLabels = collectCorrectAnswerLabels(question);
+    const missingAnswerLabels = errorLabels.filter((label) => !answerLabels.includes(label));
+    const extraAnswerLabels = answerLabels.filter((label) => !errorLabels.includes(label));
+    if (missingAnswerLabels.length > 0 || extraAnswerLabels.length > 0) {
+      add(
+        "error",
+        "grammar-correct-answer-labels",
+        `correctAnswer/correctAnswers must match isError labels. Missing: ${missingAnswerLabels.join(", ") || "none"}; extra: ${extraAnswerLabels.join(", ") || "none"}.`,
+      );
     }
     for (const markedExpression of markedExpressions) {
       if (markedExpression.isError !== true) continue;
@@ -521,8 +775,7 @@ function validateBlankInferenceQuestion(
   requestedDifficulty: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
-  if (question.blankAnswerMode !== "DOUBLE_NEGATIVE") return;
-
+  const isNegativeParaphraseMode = question.blankAnswerMode === "DOUBLE_NEGATIVE";
   const originalExpression = normalizeText(question.originalExpression);
   const passageWithBlank = normalizeText(question.passageWithBlank);
   const blankCarrierText = extractBlankCarrierText(passageWithBlank);
@@ -530,41 +783,130 @@ function validateBlankInferenceQuestion(
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   const correctOption = options.find((option) => normalizeLabel(option.label) === correctLabel);
   const correctText = normalizeText(correctOption?.text);
+  const wrongOptions = options.filter((option) => normalizeLabel(option.label) !== correctLabel);
+  const wrongNegationCount = wrongOptions.filter((option) =>
+    hasNegationCue(normalizeText(option.text)),
+  ).length;
+  const totalNegationCount = options.filter((option) =>
+    hasNegationCue(normalizeText(option.text)),
+  ).length;
 
   if (!correctText) {
-    add("error", "double-negative-missing-answer", "DOUBLE_NEGATIVE blank is missing a correct option text.");
+    add("error", "blank-missing-answer", "BLANK_INFERENCE item is missing a correct option text.");
     return;
   }
+
+  if (crossesStrongContrastBoundary(originalExpression)) {
+    add(
+      isNegativeParaphraseMode ? "error" : "warning",
+      "blank-crosses-contrast",
+      "BLANK_INFERENCE blank must not swallow a contrast marker; keep but/rather/instead structure visible.",
+    );
+  }
+
+  if (requestedDifficulty === "KILLER" && countContentTokens(originalExpression) < 2) {
+    add(
+      isNegativeParaphraseMode ? "error" : "warning",
+      "blank-target-too-small",
+      "KILLER BLANK_INFERENCE should target a meaningful phrase or relation, not a single obvious keyword.",
+    );
+  }
+
+  if (isSingleAbstractNounTarget(originalExpression)) {
+    add(
+      isNegativeParaphraseMode ? "error" : "warning",
+      "blank-single-abstract-noun",
+      "BLANK_INFERENCE should avoid targeting a single abstract noun when a logical phrase is available.",
+    );
+  }
+
+  if (isListLikeBlankTarget(originalExpression)) {
+    add(
+      "error",
+      "blank-target-list-like",
+      "BLANK_INFERENCE should not target a long, punctuated, or list-like span.",
+    );
+  }
+
+  const adjacentConclusionIssue = findAdjacentBlankConclusionIssue(
+    passageWithBlank,
+    correctText,
+  );
+  if (adjacentConclusionIssue) {
+    add("error", adjacentConclusionIssue.code, adjacentConclusionIssue.message);
+  }
+
+  const awkwardCorrectPhrase = findAwkwardBlankOptionPhrase(correctText);
+  if (awkwardCorrectPhrase) {
+    add(
+      "error",
+      "blank-awkward-correct-option",
+      `BLANK_INFERENCE correct option contains an awkward or non-CSAT-like phrase: ${awkwardCorrectPhrase}.`,
+    );
+  }
+
+  for (const option of options) {
+    const optionText = normalizeText(option.text);
+    const awkwardOptionPhrase = findAwkwardBlankOptionPhrase(optionText);
+    if (awkwardOptionPhrase) {
+      add(
+        "error",
+        "blank-awkward-option",
+        `BLANK_INFERENCE option contains an awkward or non-CSAT-like phrase: ${awkwardOptionPhrase}.`,
+      );
+      break;
+    }
+    const contextualAwkwardOptionPhrase = findContextualAwkwardBlankOptionPhrase(
+      blankCarrierText,
+      optionText,
+    );
+    if (contextualAwkwardOptionPhrase) {
+      add(
+        "error",
+        "blank-awkward-option",
+        `BLANK_INFERENCE option is awkward in the blank sentence: ${contextualAwkwardOptionPhrase}.`,
+      );
+      break;
+    }
+  }
+
+  if (/\b(?:such as|including|for example)\s+_____/.test(blankCarrierText)) {
+    add(
+      isNegativeParaphraseMode ? "error" : "warning",
+      "blank-example-list-slot",
+      "Avoid example-list blanks; choose a logical clause, predicate, or relation where passage reasoning decides the answer.",
+    );
+  }
+
+  if (passage) {
+    const attractiveWrongCount = countAttractiveBlankWrongOptions(
+      options,
+      correctLabel,
+      passage,
+      correctText,
+    );
+    if (attractiveWrongCount === 0) {
+      add(
+        isNegativeParaphraseMode ? "error" : "warning",
+        "blank-weak-distractors",
+        "BLANK_INFERENCE has no wrong options with passage-keyword, semantic, or polarity overlap.",
+      );
+    } else if (attractiveWrongCount < 2) {
+      add(
+        "warning",
+        "blank-weak-distractors",
+        "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+      );
+    }
+  }
+
+  if (!isNegativeParaphraseMode) return;
 
   if (originalExpression && normalizeComparableText(correctText) === normalizeComparableText(originalExpression)) {
     add(
       "error",
       "double-negative-answer-not-transformed",
       "DOUBLE_NEGATIVE blank must use a transformed correct option, not the verbatim originalExpression.",
-    );
-  }
-
-  if (/\b(?:but because|but whether|rather|instead)\b/i.test(originalExpression)) {
-    add(
-      "error",
-      "double-negative-crosses-contrast",
-      "DOUBLE_NEGATIVE blank must not swallow the passage's contrast marker; keep but/rather/instead structure visible.",
-    );
-  }
-
-  if (requestedDifficulty === "KILLER" && countContentTokens(originalExpression) < 2) {
-    add(
-      "error",
-      "double-negative-target-too-small",
-      "KILLER DOUBLE_NEGATIVE blank should target a meaningful phrase or clause, not a single obvious keyword.",
-    );
-  }
-
-  if (!hasNegationCue(blankCarrierText)) {
-    add(
-      "error",
-      "double-negative-no-sentence-negation",
-      "DOUBLE_NEGATIVE blank must leave a visible negation cue in the blanked sentence.",
     );
   }
 
@@ -576,26 +918,46 @@ function validateBlankInferenceQuestion(
     );
   }
 
-  const awkwardCorrectPhrase = findAwkwardBlankOptionPhrase(correctText);
-  if (awkwardCorrectPhrase) {
+  if (wrongNegationCount < 1) {
     add(
       "error",
-      "double-negative-awkward-correct-option",
-      `DOUBLE_NEGATIVE correct option contains an awkward or non-CSAT-like phrase: ${awkwardCorrectPhrase}.`,
+      "negative-paraphrase-not-enough-negative-distractors",
+      `Correct option must not be the only negative-looking option; expected at least 1 negative-looking wrong option, got ${wrongNegationCount}.`,
     );
+  } else if (wrongNegationCount < 2) {
+    add(
+      "warning",
+      "negative-paraphrase-thin-negative-distractors",
+      `Negative-paraphrase blank should include at least 2 negative-looking wrong options; got ${wrongNegationCount}.`,
+    );
+  }
+
+  if (totalNegationCount < 2) {
+    add(
+      "error",
+      "negative-paraphrase-negative-option-shortcut",
+      `Negative-paraphrase blank needs at least 2 negative-looking options total, got ${totalNegationCount}.`,
+    );
+  } else if (totalNegationCount < 3) {
+    add(
+      "warning",
+      "negative-paraphrase-negative-option-shortcut",
+      `Negative-paraphrase blank is stronger with at least 3 negative-looking options total; got ${totalNegationCount}.`,
+    );
+  }
+
+  const slotIssue = findNegativeParaphraseSlotIssue(blankCarrierText, correctText);
+  if (slotIssue) {
+    add("error", slotIssue.code, slotIssue.message);
+  }
+
+  const tangledNegationIssue = findTangledNegativeParaphraseIssue(correctText);
+  if (tangledNegationIssue) {
+    add("error", tangledNegationIssue.code, tangledNegationIssue.message);
   }
 
   for (const option of options) {
     const optionText = normalizeText(option.text);
-    const awkwardOptionPhrase = findAwkwardBlankOptionPhrase(optionText);
-    if (awkwardOptionPhrase) {
-      add(
-        "error",
-        "double-negative-awkward-option",
-        `DOUBLE_NEGATIVE option contains an awkward or non-CSAT-like phrase: ${awkwardOptionPhrase}.`,
-      );
-      break;
-    }
     const oddCapital = findOddCapitalizedOptionToken(optionText);
     if (oddCapital) {
       add(
@@ -615,14 +977,6 @@ function validateBlankInferenceQuestion(
     );
   }
 
-  if (/\b(?:such as|including|for example)\s+_____/.test(blankCarrierText)) {
-    add(
-      "error",
-      "double-negative-example-list-slot",
-      "Avoid example-list blanks in DOUBLE_NEGATIVE mode; choose a logical clause or predicate where negation changes the inference.",
-    );
-  }
-
   if (requiresCompleteClauseAfterConnector(blankCarrierText) && startsWithoutClauseSubject(correctText)) {
     add(
       "error",
@@ -637,17 +991,6 @@ function validateBlankInferenceQuestion(
       "double-negative-because-phrase-slot",
       "A because-blank needs a clause, not a bare prepositional or without-phrase.",
     );
-  }
-
-  if (passage) {
-    const attractiveWrongCount = countAttractiveBlankWrongOptions(options, correctLabel, passage, correctText);
-    if (attractiveWrongCount < 3) {
-      add(
-        "error",
-        "double-negative-weak-distractors",
-        "DOUBLE_NEGATIVE blank should have at least three wrong options with passage-keyword, semantic, or polarity overlap.",
-      );
-    }
   }
 
   const answerLogic = normalizeText(question.answerLogic);
@@ -692,8 +1035,9 @@ function validateIrrelevantQuestion(
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.map((sentence: unknown) => normalizeText(sentence))
     : [];
-  if (sentences.length !== 5) {
-    add("error", "irrelevant-sentence-count", `Expected exactly 5 numbered sentences, got ${sentences.length}.`);
+  const slotCount = sentences.length;
+  if (slotCount < IRRELEVANT_SLOT_MIN || slotCount > IRRELEVANT_SLOT_MAX) {
+    add("error", "irrelevant-sentence-count", `Expected ${IRRELEVANT_SLOT_MIN}~${IRRELEVANT_SLOT_MAX} numbered sentences, got ${slotCount}.`);
     return;
   }
 
@@ -703,8 +1047,8 @@ function validateIrrelevantQuestion(
   }
 
   const irrelevantIndex = Number(question.irrelevantIndex);
-  if (!Number.isInteger(irrelevantIndex) || irrelevantIndex < 0 || irrelevantIndex > 4) {
-    add("error", "irrelevant-index-range", "irrelevantIndex must be an integer from 0 to 4.");
+  if (!Number.isInteger(irrelevantIndex) || irrelevantIndex < 0 || irrelevantIndex >= slotCount) {
+    add("error", "irrelevant-index-range", `irrelevantIndex must be an integer from 0 to ${slotCount - 1}.`);
     return;
   }
 
@@ -719,9 +1063,13 @@ function validateIrrelevantQuestion(
 
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   const optionLabels = options.map((option) => normalizeLabel(option.label));
-  const expectedLabels = ["1", "2", "3", "4", "5"];
-  if (optionLabels.length === 5 && optionLabels.some((label, index) => label !== expectedLabels[index])) {
-    add("warning", "irrelevant-option-labels", "IRRELEVANT options should be ordered ①~⑤.");
+  const expectedLabels = Array.from({ length: slotCount }, (_, index) => String(index + 1));
+  if (optionLabels.length === slotCount && optionLabels.some((label, index) => label !== expectedLabels[index])) {
+    add(
+      "warning",
+      "irrelevant-option-labels",
+      `IRRELEVANT options should be ordered ①~${IRRELEVANT_OPTION_LABELS[slotCount - 1]}.`,
+    );
   }
 
   if (!passage) return;
@@ -824,6 +1172,24 @@ function validateIrrelevantQuestion(
       );
     }
 
+    const counterclaimCue = findNewCounterclaimCue(insertedSentence, passage);
+    if (counterclaimCue) {
+      add(
+        "error",
+        "irrelevant-obvious-counterclaim-cue",
+        `KILLER IRRELEVANT should not be exposed by an explicit counterclaim cue: ${counterclaimCue}.`,
+      );
+    }
+
+    const prescriptiveCue = findPrescriptiveGiveawayCue(insertedSentence);
+    if (prescriptiveCue) {
+      add(
+        "error",
+        "irrelevant-prescriptive-giveaway",
+        `KILLER IRRELEVANT should not be exposed by a blunt advice/policy cue: ${prescriptiveCue}.`,
+      );
+    }
+
     const externalCue = findAbsentExternalSettingCue(insertedSentence, passage);
     if (externalCue) {
       add(
@@ -909,16 +1275,250 @@ function containsStandaloneToken(text: string, token: string): boolean {
 
 function hasNegationCue(text: string): boolean {
   if (!text) return false;
-  if (/\b(?:cannot|can't|not|never|no|none|neither|nor|little|few|hardly|rarely|scarcely|seldom|without|fail|fails|failed|failing|failure|lack|lacks|lacking|absence|absent|barrier|obstacle|enemy|unable|impossible|irrational|exclude|excludes|excluding|eliminate|eliminates|eliminating|reject|rejects|rejecting|neglect|neglects|neglecting|collapse|collapses|collapsing|erosion|erode|erodes|eroding|compromise|compromises|compromising|undermine|undermines|undermining)\b/i.test(text)) {
+  if (/\b(?:cannot|can't|not|never|no|none|neither|nor|little|few|hardly|rarely|scarcely|seldom|without|fail|fails|failed|failing|failure|lack|lacks|lacking|absence|absent|devoid|barrier|obstacle|enemy|unable|impossible|irrational|prevent|prevents|preventing|keep|keeps|keeping|exclude|excludes|excluding|eliminate|eliminates|eliminating|reject|rejects|rejecting|neglect|neglects|neglecting|collapse|collapses|collapsing|erosion|erode|erodes|eroding|compromise|compromises|compromising|undermine|undermines|undermining|disconnect|disconnects|disconnected|isolate|isolates|isolated|drift|drifts|drifting)\b/i.test(text)) {
     return true;
   }
-  if (/\b(?:non-[a-z]+|nonreason|nonrational)\b/i.test(text)) {
+  if (/\b(?:non-[a-z]+|nonreason|nonrational|unconnected|unchanged|unclear|uncertain|undefended|unprotected|uncontrolled|unfocused|unproductive|unresolved|unjustified|incapable|incomplete|inaccurate|inconsistent|insufficient|ineffective|imprecise|imbalanced|irrelevant|irregular|disordered|disorganized|misdirected|misleading)\b/i.test(text)) {
     return true;
   }
-  if (/\b(?:anything but|nothing but|other than|free from|not based on|not derived from|not a result of|rather than)\b/i.test(text)) {
+  if (/\b(?:anything but|nothing but|other than|free from|not based on|not derived from|not a result of|not beyond|not independent of|not distorted by|not undermining|rather than)\b/i.test(text)) {
     return true;
   }
   return false;
+}
+
+function negationCueCount(text: string): number {
+  if (!text) return 0;
+  const patterns = [
+    /\b(?:cannot|can't|not|never|no|none|neither|nor|little|few|hardly|rarely|scarcely|seldom|without|fail|fails|failed|failing|failure|lack|lacks|lacking|absence|absent|devoid|unable|impossible)\b/gi,
+    /\b(?:prevent|prevents|preventing|keep|keeps|keeping|free from|anything but|nothing but|other than|exclude|excludes|excluding|undermine|undermines|undermining|compromise|compromises|compromising)\b/gi,
+    /\b(?:non-[a-z]+|nonreason|nonrational|unconnected|unchanged|unclear|uncertain|undefended|unprotected|uncontrolled|unfocused|unproductive|unresolved|unjustified|incapable|incomplete|inaccurate|inconsistent|insufficient|ineffective|imprecise|imbalanced|irrelevant|irregular|disconnected|disordered|disorganized|misdirected|misleading)\b/gi,
+  ];
+  return patterns.reduce((sum, pattern) => sum + [...text.matchAll(pattern)].length, 0);
+}
+
+function isSingleAbstractNounTarget(text: string): boolean {
+  return /^(?:variation|diversity|complexity|simplicity|trust|efficiency|confidence|comfort|progress|order|freedom|creativity|reason|emotion|memory|feedback|logic|reasoning|value|values|calculation)$/i.test(text.trim());
+}
+
+function isListLikeBlankTarget(text: string): boolean {
+  const normalized = normalizeText(text);
+  return (
+    normalized.includes(":") ||
+    normalized.includes(";") ||
+    normalized.includes(",") ||
+    normalized.length > 90 ||
+    countContentTokens(normalized) > 11
+  );
+}
+
+function findNegativeParaphraseSlotIssue(
+  blankCarrierText: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const blankIndex = blankCarrierText.indexOf("_____");
+  if (blankIndex < 0) return null;
+
+  const leftOfBlank = blankCarrierText.slice(0, blankIndex);
+  const followsCopula = /\b(?:is|are|was|were|be|being|been|become|becomes|became|remain|remains|seem|seems)\s+$/i.test(leftOfBlank);
+  const followsPreposition = /\b(?:by|of|to|for|with|without|from|in|on|at|as|than|about|toward|towards)\s+$/i.test(leftOfBlank);
+  const followsModal = /\b(?:can|could|should|would|will|must|may|might)\s+$/i.test(leftOfBlank);
+  const followsModalBe = /\b(?:can|could|should|would|will|must|may|might)(?:\s+\w+ly)?\s+be\s+$/i.test(leftOfBlank);
+  const followsInfinitiveTo = /\bto\s+$/i.test(leftOfBlank);
+  const startsLikeFinitePredicate = /^(?:do|does|did|can(?:not)?|can't|could|couldn't|will|won't|would|wouldn't|should|shouldn't|must|might|may|prevent|prevents|keep|keeps|make|makes|allow|allows|refuse|refuses|fail|fails)\b/i.test(correctText);
+  const startsLikeAuxiliaryPredicate = /^(?:do|does|did|cannot|can't|can|could|should|would|will|must|may|might|is|are|was|were|has|have|had)\b/i.test(correctText);
+  const startsLikeNegatedComplement = /^(?:not|no|never)\b/i.test(correctText);
+  const startsLikePrepositionalPhrase = /^(?:without|with|by|of|from|to|in|on|at|for|as|than|about|toward|towards)\b/i.test(correctText);
+
+  if (followsCopula && startsLikeFinitePredicate) {
+    return {
+      code: "negative-paraphrase-copula-slot-mismatch",
+      message: "Correct option does not fit a be/linking-verb complement slot.",
+    };
+  }
+
+  if (followsPreposition && startsLikePrepositionalPhrase) {
+    return {
+      code: "negative-paraphrase-stacked-prepositions",
+      message: "Correct option creates stacked prepositions in the blank sentence.",
+    };
+  }
+
+  if ((followsModal || followsInfinitiveTo) && startsLikeAuxiliaryPredicate) {
+    return {
+      code: "negative-paraphrase-verb-slot-mismatch",
+      message: "Correct option does not fit the verb phrase slot after a modal or infinitive marker.",
+    };
+  }
+
+  if (followsModalBe && startsLikeNegatedComplement) {
+    return {
+      code: "negative-paraphrase-modal-be-negated-complement",
+      message: "Correct option creates awkward modal-be + negated complement phrasing.",
+    };
+  }
+
+  return null;
+}
+
+function findTangledNegativeParaphraseIssue(
+  correctText: string,
+): { code: string; message: string } | null {
+  const normalized = normalizeText(correctText);
+  const cueCount = negationCueCount(normalized);
+  if (cueCount > 3) {
+    return {
+      code: "negative-paraphrase-too-many-negation-cues",
+      message: `Correct option has too many negation cues (${cueCount}) and may become logically unstable.`,
+    };
+  }
+
+  if (
+    /\bnot\b[\s\S]+\bwithout\b/i.test(normalized) ||
+    /\bwithout\b[\s\S]+\bnot\b/i.test(normalized) ||
+    /\bfail\w*\b[\s\S]+\bwithout\b/i.test(normalized) ||
+    /\bwithout\b[\s\S]+\bfail\w*\b/i.test(normalized) ||
+    /\bfail\w*\b[\s\S]+\bfail\w*\b/i.test(normalized) ||
+    /\bunable\b[\s\S]+\bwithout\b/i.test(normalized) ||
+    /\bwithout\b[\s\S]+\bunable\b/i.test(normalized) ||
+    /\bimpossible\b[\s\S]+\bwithout\b/i.test(normalized) ||
+    /\bwithout\b[\s\S]+\bimpossible\b/i.test(normalized) ||
+    /\b(?:excluding|exclude|excludes)\b[\s\S]+\b(?:past|previous|spent|investment|investments)\b/i.test(normalized) ||
+    /\b(?:past|previous|spent|investment|investments)\b[\s\S]+\b(?:excluding|exclude|excludes)\b/i.test(normalized)
+  ) {
+    return {
+      code: "negative-paraphrase-tangled-negation",
+      message: "Correct option uses tangled or logically unstable negation.",
+    };
+  }
+
+  return null;
+}
+
+function crossesStrongContrastBoundary(text: string): boolean {
+  return (
+    /\b(?:but because|but whether)\b/i.test(text) ||
+    /\bnot\s+whether\b[\s\S]+\bbut\b/i.test(text) ||
+    /[,;]\s*(?:rather|instead)\b/i.test(text)
+  );
+}
+
+function findAdjacentBlankConclusionIssue(
+  passageWithBlank: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const nextSentence = extractSentenceAfterBlank(passageWithBlank);
+  if (!nextSentence || !hasConclusionSignal(nextSentence)) return null;
+
+  if (
+    mentionsReducedForeignDependence(nextSentence) &&
+    stressesImportRelianceWithoutBalance(correctText)
+  ) {
+    return {
+      code: "blank-adjacent-conclusion-conflict",
+      message:
+        "Correct option stresses import reliance but the adjacent conclusion says the strategy reduces excessive foreign dependence.",
+    };
+  }
+
+  if (
+    mentionsBalancedResilience(nextSentence) &&
+    usesAbsoluteDisruptionClaim(correctText)
+  ) {
+    return {
+      code: "blank-result-declaration",
+      message:
+        "Correct option declares an absolute no-disruption result instead of supporting the adjacent balanced/resilient strategy.",
+    };
+  }
+
+  return null;
+}
+
+function extractSentenceAfterBlank(passageWithBlank: string): string {
+  const blankIndex = passageWithBlank.indexOf("_____");
+  if (blankIndex < 0) return "";
+
+  const sentenceEndCandidates = [".", "!", "?"]
+    .map((mark) => passageWithBlank.indexOf(mark, blankIndex))
+    .filter((index) => index >= 0);
+  if (!sentenceEndCandidates.length) return "";
+
+  const currentSentenceEnd = Math.min(...sentenceEndCandidates);
+  const rest = passageWithBlank.slice(currentSentenceEnd + 1).trim();
+  if (!rest) return "";
+
+  const nextEndCandidates = [".", "!", "?"]
+    .map((mark) => rest.indexOf(mark))
+    .filter((index) => index >= 0);
+  const nextEnd = nextEndCandidates.length
+    ? Math.min(...nextEndCandidates)
+    : rest.length;
+
+  return normalizeText(rest.slice(0, nextEnd + 1));
+}
+
+function hasConclusionSignal(text: string): boolean {
+  return /\b(?:by adopting this strategy|therefore|thus|for this reason|as a result|in this way|consequently|accordingly)\b/i.test(text);
+}
+
+function mentionsReducedForeignDependence(text: string): boolean {
+  return /\breduc\w*\s+(?:excessive\s+)?dependence\s+on\s+(?:foreign|external|overseas)\b/i.test(text) ||
+    /\breduc\w*[\s\S]+\bforeign sources\b/i.test(text);
+}
+
+function mentionsBalancedResilience(text: string): boolean {
+  return /\b(?:balanced|resilient|resilience|diversified|diversify)\b/i.test(text);
+}
+
+function stressesImportRelianceWithoutBalance(text: string): boolean {
+  if (!/\b(?:imports?|imported|importing|foreign suppliers?|foreign sources?|foreign grain producers?|import supply chains?)\b/i.test(text)) {
+    return false;
+  }
+
+  const hasBalanceCue = /\b(?:diversif\w*|domestic|balanced|resilien\w*|reduc\w*|excessive|less|limit\w*|avoid\w* overdependence|multiple|reserve|stockpile|long-term contracts?)\b/i.test(text);
+  const hasImportEscalation = /\b(?:solely|only|entirely|exclusively|unlimited|complete|heavily|heavy|avoid domestic|replace domestic)\b/i.test(text);
+  return hasImportEscalation && !hasBalanceCue;
+}
+
+function usesAbsoluteDisruptionClaim(text: string): boolean {
+  return /\b(?:not|never|no|without)\s+(?:allow(?:ing)?|permit(?:ting)?|tolerat(?:e|ing))\s+(?:any|all)\s+disruption\b/i.test(text) ||
+    /\bnot\s+allow\s+any\s+disruption\b/i.test(text);
+}
+
+function isUsefulNegativeParaphraseSourceSentence(sentence: string): boolean {
+  if (sentence.length < 45) return false;
+  if (/\b(?:such as|including|for example)\s*$/i.test(sentence)) return false;
+  return /\b(?:because|therefore|rather|while|whereas|when|if|not only|not merely|by contrast|in that sense|this is why|requires?|depends?|allows?|allowing|guides?|guide|protects?|protecting|strengthens?|strengthening|prevents?|preventing|keeps?|keeping|evaluating|judging|making|ensuring|influenced|based on|contribute|recover|moving|focus|revision)\b/i.test(sentence);
+}
+
+function getNegativeParaphraseSuggestedTargets(sentence: string): string[] {
+  const targets: string[] = [];
+  const patterns = [
+    /\b((?:guide|guides|guiding|protect|protects|protecting|strengthen|strengthens|strengthening|allow|allows|allowing|prevent|prevents|preventing|keep|keeps|keeping|evaluate|evaluates|evaluating|judge|judges|judging|make|makes|making|ensure|ensures|ensuring)\b[^.;:!?]{8,90})/gi,
+    /\b((?:the\s+)?protection of [^.;:!?]{8,70})/gi,
+    /\b((?:the\s+)?ability to [^.;:!?]{8,70})/gi,
+    /\b((?:are|is|was|were|be|being|been)\s+(?:ultimately\s+)?based on [^.;:!?]{8,80})/gi,
+    /\b((?:can|could|may|might|will|would|should|must)(?:\s+\w+ly)?\s+be\s+influenced by [^.;:!?]{8,80})/gi,
+    /\b((?:influenced by|not beyond the reach of|points? to|contribute(?:s)? to)\b[^.;:!?]{8,80})/gi,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(sentence))) {
+      const target = normalizeSuggestedTarget(match[1] ?? "");
+      if (
+        target &&
+        countContentTokens(target) >= 2 &&
+        !isSingleAbstractNounTarget(target) &&
+        !isListLikeBlankTarget(target)
+      ) {
+        targets.push(target);
+      }
+    }
+  }
+
+  return [...new Set(targets)].slice(0, 4);
 }
 
 function isStrongDoubleNegativeSourceSentence(text: string): boolean {
@@ -932,27 +1532,6 @@ function isStrongDoubleNegativeSourceSentence(text: string): boolean {
     /\b(?:non-[a-z]+|anything but|other than|free from)\b/i.test(text);
   const hasRelationalCue = /\b(?:since|because|that|as|but|rather|rather than|while|whereas|unless|if|when|means?|implies?|suggests?)\b/i.test(text);
   return hasStrongCue && hasRelationalCue;
-}
-
-function getDoubleNegativeSuggestedTarget(sentence: string): string | null {
-  const patterns = [
-    /\bdoes\s+not\s+mean\s+that\s+(.+?)(?:;|,\s*rather|[.!?]|$)/i,
-    /\bdo\s+not\s+mean\s+that\s+(.+?)(?:;|,\s*rather|[.!?]|$)/i,
-    /\bnot\s+because\s+(.+?),\s+but\s+because\b/i,
-    /\bnot\s+whether\s+.+?,\s+but\s+(.+?)(?:[.!?]|$)/i,
-    /\b(?:since|because|as)\s+(.+?)(?:,\s+but\b|;|[.!?]|$)/i,
-    /\bnot\s+merely\s+(.+?)(?:;|,|[.!?]|$)/i,
-    /\bnot\s+only\s+.+?,\s+but\s+also\s+(.+?)(?:[.!?]|$)/i,
-    /\bwithout\s+(.+?)(?:[.!?]|$)/i,
-  ];
-
-  for (const pattern of patterns) {
-    const match = sentence.match(pattern);
-    const target = normalizeSuggestedTarget(match?.[1] ?? "");
-    if (target && countContentTokens(target) >= 2) return target;
-  }
-
-  return null;
 }
 
 function normalizeSuggestedTarget(value: string): string {
@@ -1020,7 +1599,57 @@ function findAwkwardBlankOptionPhrase(text: string): string | null {
     "which lack of",
   ];
   const normalized = text.toLowerCase();
-  return patterns.find((pattern) => normalized.includes(pattern)) ?? null;
+  const listedPattern = patterns.find((pattern) => normalized.includes(pattern));
+  if (listedPattern) return listedPattern;
+
+  const regexPatterns: Array<{ pattern: RegExp; label: string }> = [
+    {
+      pattern: /\bachievements?\s+from\s+failing\b/i,
+      label: "achievement(s) from failing",
+    },
+    {
+      pattern: /\bachievements?\s+(?:can\s+|could\s+|will\s+|would\s+)?(?:fail|fails|failed|failing)\b/i,
+      label: "achievement(s) failing",
+    },
+    {
+      pattern: /\bachieved\s+success\b/i,
+      label: "achieved success",
+    },
+    {
+      pattern: /\bcapacity\s+to\s+lack\b/i,
+      label: "capacity to lack",
+    },
+    {
+      pattern: /\bguarantee\s+major\s+crops\b/i,
+      label: "guarantee major crops",
+    },
+    {
+      pattern: /\bnot\s+allow\s+any\s+disruption\b/i,
+      label: "not allow any disruption",
+    },
+    {
+      pattern: /\bevents?\s+(?:can\s+|could\s+|will\s+|would\s+)?(?:not\s+)?survive\b/i,
+      label: "event(s) survive",
+    },
+    {
+      pattern: /\bcan\s+(?:certainly\s+|clearly\s+|fully\s+|really\s+)?be\s+not\b/i,
+      label: "can be not",
+    },
+  ];
+  return regexPatterns.find(({ pattern }) => pattern.test(text))?.label ?? null;
+}
+
+function findContextualAwkwardBlankOptionPhrase(
+  blankCarrierText: string,
+  optionText: string,
+): string | null {
+  const blankSubjectSuggestsEvent =
+    /\b(?:events?|phenomena|processes|consequences|effects|outcomes)\s+_____/.test(blankCarrierText);
+  if (blankSubjectSuggestsEvent && /^(?:can(?:not)?|can't|could|will|would|do\s+not|does\s+not|cannot)\s+survive\b/i.test(optionText)) {
+    return "event(s) survive";
+  }
+
+  return null;
 }
 
 function findOddCapitalizedOptionToken(text: string): string | null {
@@ -1155,6 +1784,76 @@ function findNewExtremeCue(sentence: string, passage: string): string | null {
   return null;
 }
 
+function findNewCounterclaimCue(sentence: string, passage: string): string | null {
+  const cuePatterns: Array<[string, RegExp]> = [
+    ["however", /\bhowever\b/i],
+    ["instead", /\binstead\b/i],
+    ["rather than", /\brather\s+than\b/i],
+    ["by contrast", /\bby\s+contrast\b/i],
+    ["on the contrary", /\bon\s+the\s+contrary\b/i],
+    ["nevertheless", /\bnevertheless\b/i],
+    ["nonetheless", /\bnonetheless\b/i],
+  ];
+
+  for (const [label, pattern] of cuePatterns) {
+    if (pattern.test(sentence) && !pattern.test(passage)) return label;
+  }
+
+  const backlashPatterns: Array<[string, RegExp]> = [
+    [
+      "regulation backlash",
+      /\b(?:aggressive|excessive|burdensome|strict)\s+(?:regulations?|rules?|requirements?|disclosures?)\b/i,
+    ],
+    [
+      "hinder research",
+      /\b(?:hinder|hinders|hindered|hindering|limit|limits|limited|limiting|restrict|restricts|restricted|restricting)\b[\s\S]{0,80}\b(?:research|science|scientific|progress|innovation|freedom)\b/i,
+    ],
+    [
+      "academic freedom",
+      /\bacademic\s+freedom\b/i,
+    ],
+    [
+      "intellectual property",
+      /\bintellectual\s+property(?:\s+rights?)?\b/i,
+    ],
+    [
+      "own academic interests",
+      /\bown\s+academic\s+interests\b/i,
+    ],
+    [
+      "sponsor relationships",
+      /\b(?:sponsor|sponsors|funding\s+sponsors)\b[\s\S]{0,60}\brelationships?\b|\brelationships?\b[\s\S]{0,60}\b(?:sponsor|sponsors|funding\s+sponsors)\b/i,
+    ],
+  ];
+
+  for (const [label, pattern] of backlashPatterns) {
+    if (pattern.test(sentence) && !pattern.test(passage)) return label;
+  }
+
+  return null;
+}
+
+function findPrescriptiveGiveawayCue(sentence: string): string | null {
+  const patterns: Array<[string, RegExp]> = [
+    ["to maximize", /^\s*to\s+maximize\b/i],
+    ["should actively", /\bshould\s+actively\b/i],
+    ["should prioritize", /\bshould\s+prioritize\b/i],
+    ["should secure", /\bshould\s+secure\b/i],
+    ["should protect", /\bshould\s+protect\b/i],
+    ["should build", /\bshould\s+build\b/i],
+    ["should focus on", /\bshould\s+(?:focus|concentrate|work)\s+on\b/i],
+    ["encourage researchers", /\bencourage\s+researchers\b/i],
+    ["develop sponsor relationships", /\bdevelop\s+[\s\S]{0,50}\brelationships?\s+with\s+[\s\S]{0,20}\bsponsors?\b/i],
+    ["must avoid", /\bmust\s+avoid\b/i],
+    ["ought to", /\bought\s+to\b/i],
+  ];
+
+  for (const [label, pattern] of patterns) {
+    if (pattern.test(sentence)) return label;
+  }
+  return null;
+}
+
 function findAbsentExternalSettingCue(sentence: string, passage: string): string | null {
   const cues = [
     "advertising",
@@ -1199,15 +1898,11 @@ function lightStemContentToken(token: string): string {
 
 function normalizeLabel(value: unknown): string {
   const text = normalizeText(value);
-  const circledMap: Record<string, string> = {
-    "①": "1",
-    "②": "2",
-    "③": "3",
-    "④": "4",
-    "⑤": "5",
-  };
+  const circledMap: Record<string, string> = Object.fromEntries(
+    IRRELEVANT_OPTION_LABELS.map((label, index) => [label, String(index + 1)]),
+  );
   return (circledMap[text] ?? text)
-    .replace(/^[\(\[]?([A-Ea-e1-5])[\)\].]?\s*$/, "$1")
+    .replace(/^[\(\[]?([A-Ja-j]|\d{1,2})[\)\].]?\s*$/, "$1")
     .toLowerCase();
 }
 

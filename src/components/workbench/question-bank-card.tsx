@@ -41,12 +41,40 @@ import { parseQuestionSections } from "./question-bank-card/parse-question-secti
 import { renderFormatted } from "./question-bank-card/render-formatted";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
 import type { QuestionBankItem } from "./question-bank-card/types";
+import {
+  getVisibleQuestionTags,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
 
 // ---------------------------------------------------------------------------
 // QuestionBankCard
 // ---------------------------------------------------------------------------
+
+function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
+  const labels = new Set<string>();
+  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  if (matches?.length) {
+    matches.forEach((match) => {
+      const label = normalizeAnswerLabel(match);
+      if (label) labels.add(label);
+    });
+  } else {
+    const label = normalizeAnswerLabel(correctAnswer);
+    if (label) labels.add(label);
+  }
+  return labels;
+}
+
+function normalizeAnswerLabel(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+}
 
 export function QuestionBankCard({
   q,
@@ -82,9 +110,11 @@ export function QuestionBankCard({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
+  const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const tags: string[] = Array.isArray(q.tags)
     ? q.tags
     : parseJSON<string[]>(q.tags, []);
+  const visibleTags = getVisibleQuestionTags(tags);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
     q.structuredData && typeof q.structuredData === "object" && "_typeId" in q.structuredData
@@ -254,9 +284,9 @@ export function QuestionBankCard({
         </div>
 
         {/* Tags */}
-        {Array.isArray(tags) && tags.length > 0 && viewSize !== "sm" && (
+        {visibleTags.length > 0 && viewSize !== "sm" && (
           <div className="flex gap-1 overflow-hidden shrink-0 h-5">
-            {tags.map((tag) => (
+            {visibleTags.map((tag) => (
               <span
                 key={tag}
                 className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 whitespace-nowrap shrink-0"
@@ -275,7 +305,9 @@ export function QuestionBankCard({
               className="w-full flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-lg transition-colors"
             >
               <FileText className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-              <span className="text-[11px] text-slate-600 truncate flex-1 text-left font-medium">{q.passage.title}</span>
+              <span className="text-[11px] text-slate-600 truncate flex-1 text-left font-medium">
+                {sanitizeAiModelDisclosureText(q.passage.title)}
+              </span>
               {passageOpen ? (
                 <ChevronUp className="w-3 h-3 text-slate-400 shrink-0" />
               ) : (
@@ -311,7 +343,7 @@ export function QuestionBankCard({
             {!structuredQuestion && options.length > 0 && (
               <div className="space-y-1 pl-1">
                 {options.map((opt) => {
-                  const isCorrect = opt.label === q.correctAnswer;
+                  const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
                   return (
                     <div
                       key={opt.label}

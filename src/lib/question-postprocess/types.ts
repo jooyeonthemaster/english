@@ -23,7 +23,7 @@ export interface Replacement {
 }
 
 export const BLANK = "_____";
-export const CIRCLED_NUMBERS = ["①", "②", "③", "④", "⑤"] as const;
+export const CIRCLED_NUMBERS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"] as const;
 
 /** Types that need NO post-processing — pass through unchanged */
 export const PASSTHROUGH_TYPES = new Set([

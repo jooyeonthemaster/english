@@ -24,6 +24,7 @@ import {
   studentActivityInstruction,
   studentActivityTitle,
 } from "@/lib/tutor/activity-labels";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { cn } from "@/lib/utils";
 
 type SubmitFeedback = {
@@ -231,7 +232,7 @@ export function ActivityPlayer({
 
       <div className="flex-1 space-y-5 px-4 pb-44 pt-4 md:pb-48">
         <PassageStrip
-          title={passage.title}
+          title={sanitizeAiModelDisclosureText(passage.title)}
           content={passage.content}
           showPassage={showPassage}
           onToggle={() => setShowPassage((value) => !value)}

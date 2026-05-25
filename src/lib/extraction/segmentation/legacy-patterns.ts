@@ -29,10 +29,10 @@ export const EN_INSTRUCTION =
 /** Single-item question header: `18.`, `19.`, `1)`, `(1)`. */
 export const QUESTION_NUMBER_RE = /^\s*\(?(\d{1,3})[).]\s*/;
 
-/** Choice line starts — ①~⑨ glyphs. */
-export const CHOICE_LINE_RE = /^\s*([①②③④⑤⑥⑦⑧⑨])/;
+/** Choice line starts — ①~⑩ glyphs. */
+export const CHOICE_LINE_RE = /^\s*([\u2460-\u2469])/;
 export const CIRCLED_INDEX: Record<string, number> = {
-  "①": 1, "②": 2, "③": 3, "④": 4, "⑤": 5, "⑥": 6, "⑦": 7, "⑧": 8, "⑨": 9,
+  "①": 1, "②": 2, "③": 3, "④": 4, "⑤": 5, "⑥": 6, "⑦": 7, "⑧": 8, "⑨": 9, "⑩": 10,
 };
 
 /**

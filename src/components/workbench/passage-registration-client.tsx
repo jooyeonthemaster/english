@@ -6,7 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
 import { createWorkbenchPassage } from "@/actions/workbench";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
-import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  isQuestionGenerationPlanTag,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
@@ -435,7 +438,7 @@ export function PassageRegistrationClient({
 
   const addTag = useCallback(() => {
     const tag = tagInput.trim();
-    if (tag && !tags.includes(tag)) {
+    if (tag && !isQuestionGenerationPlanTag(tag) && !tags.includes(tag)) {
       setTags((prev) => [...prev, tag]);
       setTagInput("");
     }

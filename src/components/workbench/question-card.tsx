@@ -34,6 +34,7 @@ import {
   getQuestionGenerationPlanFromTags,
   isQuestionGenerationPlanTag,
   QUESTION_GENERATION_PLAN_TAGS,
+  sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 
@@ -120,6 +121,30 @@ function parseJSON<T>(str: unknown, fallback: T): T {
   }
 }
 
+function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
+  const labels = new Set<string>();
+  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  if (matches?.length) {
+    matches.forEach((match) => {
+      const label = normalizeAnswerLabel(match);
+      if (label) labels.add(label);
+    });
+  } else {
+    const label = normalizeAnswerLabel(correctAnswer);
+    if (label) labels.add(label);
+  }
+  return labels;
+}
+
+function normalizeAnswerLabel(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+}
+
 // Detect what marking pattern the passage uses: (a)(b)(c), (A)(B)(C), ①②③, or none
 function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
   if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
@@ -131,15 +156,15 @@ function detectPassageMarking(passageContent?: string): "lowercase" | "uppercase
   if (!passageContent) return "none";
   if (/\(a\)/.test(passageContent)) return "lowercase";
   if (/\(A\)/.test(passageContent)) return "uppercase";
-  if (/①/.test(passageContent)) return "circled";
+  if (/[\u2460-\u2469]/.test(passageContent)) return "circled";
   return "none";
 }
 
 const MARKERS = {
-  lowercase: ["(a)", "(b)", "(c)", "(d)", "(e)"],
-  uppercase: ["(A)", "(B)", "(C)", "(D)", "(E)"],
-  circled: ["①", "②", "③", "④", "⑤"],
-  none: ["①", "②", "③", "④", "⑤"],
+  lowercase: ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"],
+  uppercase: ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"],
+  circled: ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"],
+  none: ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"],
 };
 
 // Format option: always use index-based number label, adapt text based on passage marking
@@ -153,14 +178,14 @@ function formatOption(
   const trimmed = text.trim();
 
   // If text is just a marker (①, ②, number, or empty) — use passage marking pattern
-  const isTextOnlyMarker = !trimmed || /^[①②③④⑤]$/.test(trimmed) || /^[1-5]$/.test(trimmed);
+  const isTextOnlyMarker = !trimmed || /^[\u2460-\u2469]$/.test(trimmed) || /^(?:10|[1-9])$/.test(trimmed);
   if (isTextOnlyMarker) {
     return { displayLabel, displayText: MARKERS[passageMarking][index] || label };
   }
 
   // If label is a plain number or circled number, just show text
   const num = parseInt(label);
-  if ((!isNaN(num) && num >= 1 && num <= 5) || /^[①②③④⑤]$/.test(label)) {
+  if ((!isNaN(num) && num >= 1 && num <= 10) || /^[\u2460-\u2469]$/.test(label)) {
     return { displayLabel, displayText: text };
   }
   // Otherwise prepend label to text (e.g. "(A) that", "(a) advantages")
@@ -175,13 +200,13 @@ export function renderFormatted(text: string, opts?: { underlineMarkedWords?: bo
   let pattern: string;
   if (underline) {
     // Match (a) word with the word captured separately
-    pattern = "__([^_]+)__|_{3,}|([①②③④⑤])|\\(([a-eA-E])\\)\\s*(\\S+)";
+    pattern = "__([^_]+)__|_{3,}|([\\u2460-\\u2469])|\\(([a-jA-J])\\)\\s*(\\S+)";
   } else if (highlightMarkers) {
     // Match (a) marker only, no word capture
-    pattern = "__([^_]+)__|_{3,}|([①②③④⑤])|\\(([a-eA-E])\\)";
+    pattern = "__([^_]+)__|_{3,}|([\\u2460-\\u2469])|\\(([a-jA-J])\\)";
   } else {
     // Basic: only __word__, blanks, circled numbers
-    pattern = "__([^_]+)__|_{3,}|([①②③④⑤])";
+    pattern = "__([^_]+)__|_{3,}|([\\u2460-\\u2469])";
   }
   const regex = new RegExp(pattern, "g");
   const parts: React.ReactNode[] = [];
@@ -201,7 +226,7 @@ export function renderFormatted(text: string, opts?: { underlineMarkedWords?: bo
         </span>
       );
     } else if (match[2]) {
-      // ①②③④⑤ → bold blue
+      // ①~⑩ -> bold blue
       parts.push(
         <span key={key++} className="font-extrabold text-blue-600 text-[18px] mx-1 relative -top-[1px]">
           {match[2]}
@@ -275,6 +300,7 @@ export function QuestionCard({
   const router = useRouter();
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
+  const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const passageMarking = detectPassageMarking(q.passage?.content || q.questionText);
   const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "ANTONYM"];
   const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
@@ -409,7 +435,7 @@ export function QuestionCard({
               <div className="bg-slate-50 rounded-md px-3 py-2">
                 <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
                   <FileText className="w-3 h-3 shrink-0" />
-                  <span className="truncate">{q.passage.title}</span>
+                  <span className="truncate">{sanitizeAiModelDisclosureText(q.passage.title)}</span>
                   {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
                 </button>
                 {passageOpen && (
@@ -435,7 +461,7 @@ export function QuestionCard({
               <div className="bg-slate-50 rounded-md px-3 py-2">
                 <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
                   <FileText className="w-3 h-3 shrink-0" />
-                  <span className="truncate">{q.passage.title}</span>
+                  <span className="truncate">{sanitizeAiModelDisclosureText(q.passage.title)}</span>
                   {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
                 </button>
                 <p className={`text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5 ${passageOpen ? "" : "line-clamp-3"}`}>
@@ -460,9 +486,9 @@ export function QuestionCard({
               <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
                 {options
                   .map((opt, idx) => ({ opt, idx }))
-                  .filter(({ opt }) => !compact || compactExpanded || opt.label === q.correctAnswer)
+                  .filter(({ opt }) => !compact || compactExpanded || correctAnswerLabels.has(normalizeAnswerLabel(opt.label)))
                   .map(({ opt, idx }) => {
-                  const isCorrect = opt.label === q.correctAnswer;
+                  const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
                   const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
                   return (
                     <div key={`${opt.label}-${idx}`} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>

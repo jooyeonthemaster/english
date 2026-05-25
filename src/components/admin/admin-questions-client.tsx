@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatDate } from "@/lib/utils";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import {
   TYPE_LABELS,
   SUBTYPE_LABELS,
@@ -165,7 +166,7 @@ function QuestionCard({ q, num }: { q: QuestionItem; num: number }) {
           >
             <FileText className="w-3.5 h-3.5 text-blue-400 shrink-0" />
             <span className="text-[11px] text-slate-600 truncate flex-1 text-left font-medium">
-              {q.passage.title}
+              {sanitizeAiModelDisclosureText(q.passage.title)}
             </span>
             {passageOpen ? (
               <ChevronUp className="w-3 h-3 text-slate-400" />

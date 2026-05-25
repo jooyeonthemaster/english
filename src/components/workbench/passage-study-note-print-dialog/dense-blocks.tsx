@@ -8,6 +8,7 @@ import type {
   SyntaxItem,
   VocabItem,
 } from "@/types/passage-analysis";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { findTextRange, getCounts, getSemesterLabel, countWords } from "./helpers";
 import { CATEGORY_META, type ExamEntry, type PageCategory, type StudyNotePassage } from "./types";
 
@@ -37,7 +38,7 @@ export function FirstPageSummaryBlock({ passage, data }: { passage: StudyNotePas
       <div className="compact-title-row">
         <div className="min-w-0">
           <p className="eyebrow">PASSAGE STUDY NOTE</p>
-          <h1>{passage.title}</h1>
+          <h1>{sanitizeAiModelDisclosureText(passage.title)}</h1>
           <div className="meta-row">
             {passage.school && <TinyMeta>{passage.school.name}</TinyMeta>}
             {passage.grade && <TinyMeta>{passage.grade}학년</TinyMeta>}

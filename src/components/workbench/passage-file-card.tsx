@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -82,7 +83,11 @@ export function PassageFileCard({
     if (!el) return;
     return draggable({
       element: el,
-      getInitialData: () => ({ passageId: passage.id, title: passage.title, type: "passage" }),
+      getInitialData: () => ({
+        passageId: passage.id,
+        title: sanitizeAiModelDisclosureText(passage.title),
+        type: "passage",
+      }),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -108,7 +113,7 @@ export function PassageFileCard({
             </button>
             <div className="min-w-0 flex-1">
               <h4 className="text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
-                {passage.title}
+                {sanitizeAiModelDisclosureText(passage.title)}
               </h4>
               <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                 {isAnalyzed ? (

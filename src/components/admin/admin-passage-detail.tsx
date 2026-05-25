@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatDate } from "@/lib/utils";
+import {
+  getVisibleQuestionTags,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import type { PassageData } from "./admin-passage-detail/types";
 import {
@@ -43,7 +47,7 @@ export function AdminPassageDetail({ passage, academyId }: Props) {
     }
   }, [passage.analysis]);
 
-  const tags = parseJSON<string[]>(passage.tags, []);
+  const tags = getVisibleQuestionTags(parseJSON<string[]>(passage.tags, []));
 
   return (
     <div className="space-y-4">
@@ -66,7 +70,7 @@ export function AdminPassageDetail({ passage, academyId }: Props) {
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-[18px] font-bold text-slate-900">
-              {passage.title || "제목 없음"}
+              {sanitizeAiModelDisclosureText(passage.title) || "제목 없음"}
             </h1>
             <div className="flex items-center gap-3 mt-1.5 flex-wrap">
               {passage.grade && (
@@ -107,7 +111,7 @@ export function AdminPassageDetail({ passage, academyId }: Props) {
               )}
               {passage.source && (
                 <span className="text-[11px] text-slate-400">
-                  출처: {passage.source}
+                  출처: {sanitizeAiModelDisclosureText(passage.source)}
                 </span>
               )}
             </div>

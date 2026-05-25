@@ -5,14 +5,14 @@
  *  - __word__       굵게+밑줄
  *  - _word_         굵게+밑줄
  *  - ___+           빈 밑줄 (긴 공백 + 밑줄)
- *  - ①②③④⑤        굵게
+ *  - ①~⑩           굵게
  *  - (A)~(E)        굵게
  */
 
 import type { RunNode, RunStyle } from "./types";
 
 const PATTERN =
-  /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([①②③④⑤])|\(([a-eA-E])\)/g;
+  /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([\u2460-\u2469])|\(([a-jA-J])\)/g;
 
 const koreanRe = /[\uac00-\ud7a3]/;
 
@@ -47,7 +47,7 @@ export function parseFormattedToRuns(
       push(m[2], { bold: true });
     } else if (m[3] !== undefined || m[4] !== undefined) {
       const word = (m[3] ?? m[4])!;
-      const choice = word.match(/^\(([a-eA-E])\)\s(.+)$/);
+      const choice = word.match(/^\(([a-jA-J])\)\s(.+)$/);
       if (choice) {
         push(`(${choice[1]})`, { bold: true });
         push(` ${choice[2]}`, { bold: true, underline: "SOLID" });

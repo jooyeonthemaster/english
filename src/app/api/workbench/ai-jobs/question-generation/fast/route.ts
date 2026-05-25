@@ -13,7 +13,6 @@ import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
-  type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
 import { prisma } from "@/lib/prisma";
@@ -29,6 +28,11 @@ import {
   planSchema,
   type PlanResult,
 } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
+import { countPassageSentences } from "@/lib/passage-sentence-utils";
+import {
+  readIrrelevantSlotCountSetting,
+  validateIrrelevantAgainstPassage,
+} from "@/lib/question-type-generation-settings";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -155,6 +159,25 @@ export async function POST(req: NextRequest) {
 
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
+  }
+
+  // ── IRRELEVANT slot count guardrail (MANUAL mode only) ────────────────
+  if (config.mode === "MANUAL" && config.questionType === "IRRELEVANT") {
+    const requestedSlotCount = readIrrelevantSlotCountSetting(config.questionTypeSettings);
+    const passageSentenceCount = countPassageSentences(passage.content);
+    const v = validateIrrelevantAgainstPassage(requestedSlotCount, passageSentenceCount);
+    if (!v.ok) {
+      return NextResponse.json(
+        {
+          error: v.error,
+          code: "IRRELEVANT_SLOT_COUNT_TOO_HIGH",
+          passageSentenceCount,
+          requestedSlotCount,
+          maxSlotCount: passageSentenceCount,
+        },
+        { status: 400 },
+      );
+    }
   }
 
   const now = new Date();
@@ -288,6 +311,7 @@ export async function POST(req: NextRequest) {
     const questions = generationResult.questions;
     generationAttempts = generationResult.attempts;
     generationMs = Date.now() - generationStartedAt;
+    const relaxedFallback = generationResult.relaxedFallback;
 
     const questionsForDisplay = questions.slice(0, config.count).map((question) => {
       const tags = mergeQuestionGenerationPlanTag(
@@ -302,7 +326,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (questionsForDisplay.length === 0) {
-      throw new Error("No questions generated.");
+      throw new Error(
+        `No questions generated after ${generationAttempts} generation attempt${
+          generationAttempts === 1 ? "" : "s"
+        }.`,
+      );
     }
 
     const persistenceStartedAt = Date.now();
@@ -321,6 +349,7 @@ export async function POST(req: NextRequest) {
       creditMs,
       planningMs,
       generationAttempts,
+      relaxedFallback: relaxedFallback ? 1 : 0,
       generationMs,
       persistenceMs,
       totalRunMs: Date.now() - requestStartedAt,

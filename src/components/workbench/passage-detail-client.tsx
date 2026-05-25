@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { deleteWorkbenchPassage, updatePassageAnalysis } from "@/actions/workbench";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
   AnalysisPromptPanel,
@@ -205,14 +206,14 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
           onOpenChange={setExamDialogOpen}
           academyId={academyId}
           passageId={passage.id}
-          passageTitle={passage.title}
+          passageTitle={sanitizeAiModelDisclosureText(passage.title)}
         />
         <PassageAssignToClassDialog
           open={assignDialogOpen}
           onOpenChange={setAssignDialogOpen}
           academyId={academyId}
           passageId={passage.id}
-          passageTitle={passage.title}
+          passageTitle={sanitizeAiModelDisclosureText(passage.title)}
         />
 
         {/* Interactive Passage View — integrated analysis */}

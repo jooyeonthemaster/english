@@ -12,31 +12,72 @@ export interface QuestionGenerationPlanConfig {
 export const QUESTION_GENERATION_PLANS: Record<QuestionGenerationPlan, QuestionGenerationPlanConfig> = {
   STANDARD: {
     id: "STANDARD",
-    label: "Gemini 문제 생성",
-    shortLabel: "Gemini",
-    description: "Gemini 3.5 Flash 기반 문제 생성",
-    modelLabel: "Gemini 3.5 Flash",
+    label: "일반 문제 생성",
+    shortLabel: "일반",
+    description: "기본 AI 문제 생성",
+    modelLabel: "기본 AI",
     creditMultiplier: 1,
   },
   PREMIUM: {
     id: "PREMIUM",
-    label: "Claude 문제 생성",
-    shortLabel: "Claude",
-    description: "Claude Sonnet 4.6 기반 문제 생성",
-    modelLabel: "Claude Sonnet 4.6",
+    label: "프리미엄 문제 생성",
+    shortLabel: "프리미엄",
+    description: "고급 AI 문제 생성",
+    modelLabel: "고급 AI",
     creditMultiplier: 2,
   },
 };
 
 export const QUESTION_GENERATION_PLAN_TAGS: Record<QuestionGenerationPlan, string> = {
-  STANDARD: "Gemini 생성",
-  PREMIUM: "Claude 생성",
-};
-
-const LEGACY_QUESTION_GENERATION_PLAN_TAGS: Record<QuestionGenerationPlan, string> = {
   STANDARD: "일반 생성",
   PREMIUM: "프리미엄 생성",
 };
+
+const QUESTION_GENERATION_PLAN_TAG_ALIASES: Record<QuestionGenerationPlan, readonly string[]> = {
+  STANDARD: [
+    QUESTION_GENERATION_PLAN_TAGS.STANDARD,
+    "Gemini 생성",
+    "Gemini 문제 생성",
+    "Gemini",
+    "Gemini 3.5 Flash",
+    "제미나이",
+  ],
+  PREMIUM: [
+    QUESTION_GENERATION_PLAN_TAGS.PREMIUM,
+    "Claude 생성",
+    "Claude 문제 생성",
+    "Claude",
+    "Claude Sonnet 4.6",
+    "Sonnet",
+  ],
+};
+
+const AI_MODEL_DISCLOSURE_PATTERNS = [
+  /gemini/i,
+  /제미나이/i,
+  /claude/i,
+  /sonnet/i,
+  /gpt[-\s]?\d*/i,
+  /openai/i,
+  /llm/i,
+  /ai\s*model/i,
+  /AI\s*모델/i,
+];
+
+const AI_MODEL_DISCLOSURE_REPLACEMENTS = [
+  /google\s+gemini/gi,
+  /gemini\s*\d*(?:\.\d+)?\s*flash/gi,
+  /gemini/gi,
+  /제미나이/gi,
+  /claude\s+sonnet\s*[\d.\-]*/gi,
+  /claude/gi,
+  /sonnet\s*[\d.\-]*/gi,
+  /gpt[-\s]?\d*/gi,
+  /openai/gi,
+  /llm/gi,
+  /ai\s*model/gi,
+  /AI\s*모델/gi,
+];
 
 export function normalizeQuestionGenerationPlan(value: unknown): QuestionGenerationPlan {
   return value === "PREMIUM" ? "PREMIUM" : "STANDARD";
@@ -65,23 +106,38 @@ function normalizePlanTag(value: unknown): string {
 
 export function getQuestionGenerationPlanFromTags(tags: readonly string[]): QuestionGenerationPlan | null {
   const normalized = new Set(tags.map(normalizePlanTag));
-  if (
-    normalized.has(QUESTION_GENERATION_PLAN_TAGS.PREMIUM) ||
-    normalized.has(LEGACY_QUESTION_GENERATION_PLAN_TAGS.PREMIUM)
-  ) return "PREMIUM";
-  if (
-    normalized.has(QUESTION_GENERATION_PLAN_TAGS.STANDARD) ||
-    normalized.has(LEGACY_QUESTION_GENERATION_PLAN_TAGS.STANDARD)
-  ) return "STANDARD";
+  if (QUESTION_GENERATION_PLAN_TAG_ALIASES.PREMIUM.some((tag) => normalized.has(tag))) return "PREMIUM";
+  if (QUESTION_GENERATION_PLAN_TAG_ALIASES.STANDARD.some((tag) => normalized.has(tag))) return "STANDARD";
   return null;
 }
 
 export function isQuestionGenerationPlanTag(tag: unknown): boolean {
   const normalizedTag = normalizePlanTag(tag);
-  return [
-    ...Object.values(QUESTION_GENERATION_PLAN_TAGS),
-    ...Object.values(LEGACY_QUESTION_GENERATION_PLAN_TAGS),
-  ].some((planTag) => planTag === normalizedTag);
+  if (
+    Object.values(QUESTION_GENERATION_PLAN_TAG_ALIASES)
+      .flat()
+      .some((planTag) => planTag === normalizedTag)
+  ) {
+    return true;
+  }
+  return AI_MODEL_DISCLOSURE_PATTERNS.some((pattern) => pattern.test(normalizedTag));
+}
+
+export function getVisibleQuestionTags(
+  tags: readonly string[] | null | undefined,
+): string[] {
+  return (tags ?? [])
+    .map(normalizePlanTag)
+    .filter((tag) => tag.length > 0 && !isQuestionGenerationPlanTag(tag));
+}
+
+export function sanitizeAiModelDisclosureText(value: string | null | undefined): string {
+  if (!value) return "";
+  return AI_MODEL_DISCLOSURE_REPLACEMENTS
+    .reduce((text, pattern) => text.replace(pattern, "AI"), value)
+    .replace(/\bAI(?:\s+AI)+\b/g, "AI")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 export function mergeQuestionGenerationPlanTag(

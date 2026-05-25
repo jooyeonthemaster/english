@@ -13,8 +13,11 @@ import {
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   buildQuestionTypeSettingsPrompt,
+  readGrammarErrorCountSetting,
+  readIrrelevantSlotCountSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
+import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
   buildQuestionTargetCandidateBlock,
   getTypeQualityRubric,
@@ -44,23 +47,64 @@ export interface RunGenerationInput {
   typeSettings?: QuestionTypeGenerationSettings;
 }
 
+type QualityMode = "strict" | "relaxed";
+
+const RELAXED_BLOCKING_QUALITY_CODES = new Set([
+  "option-count",
+  "duplicate-option-label",
+  "duplicate-option-text",
+  "empty-option-text",
+  "correct-answer-mismatch",
+  "wrong-option-explanation-count",
+  "mid-word-marker",
+  "target-not-standalone",
+  "punctuation-only-chunk",
+  "scrambled-already-solved",
+  "grammar-marker-count",
+  "grammar-render-marker-count",
+  "grammar-error-count",
+  "grammar-correct-answer-labels",
+  "grammar-missing-error-expression",
+  "grammar-error-not-mutated",
+  "irrelevant-sentence-count",
+  "empty-irrelevant-sentence",
+  "irrelevant-index-range",
+  "irrelevant-answer-index-mismatch",
+  "irrelevant-source-not-verbatim",
+  "irrelevant-answer-from-source",
+  "irrelevant-too-unrelated",
+  "irrelevant-inserted-ungrammatical",
+  "irrelevant-obvious-counterclaim-cue",
+  "irrelevant-prescriptive-giveaway",
+  "blank-missing-answer",
+  "negative-paraphrase-copula-slot-mismatch",
+  "negative-paraphrase-stacked-prepositions",
+  "negative-paraphrase-verb-slot-mismatch",
+  "negative-paraphrase-modal-be-negated-complement",
+  "double-negative-clause-missing-subject",
+  "double-negative-because-phrase-slot",
+]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-export async function runQuestionGeneration({
-  plan,
-  schoolType,
-  gradeInfo,
-  passageContent,
-  teacherIntentBlock,
-  analysisContext,
-  diffLabel,
-  diffInstruction,
-  generationPlan,
-  customPrompt,
-  typeSettings,
-}: RunGenerationInput): Promise<Record<string, unknown>[]> {
+export async function runQuestionGeneration(
+  {
+    plan,
+    schoolType,
+    gradeInfo,
+    passageContent,
+    teacherIntentBlock,
+    analysisContext,
+    diffLabel,
+    diffInstruction,
+    generationPlan,
+    customPrompt,
+    typeSettings,
+  }: RunGenerationInput,
+  { qualityMode = "strict" }: { qualityMode?: QualityMode } = {},
+): Promise<Record<string, unknown>[]> {
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
       const { subType, count: typeCount, targetPoints } = item;
@@ -75,9 +119,41 @@ export async function runQuestionGeneration({
         STRUCTURED_TYPE_PROMPTS[subType] ||
         `${subType} 유형의 문제를 만드세요.`;
       const typeQualityRubric = getTypeQualityRubric(subType, diffLabel);
+
+      // Resolve IRRELEVANT slot count and cap it to the actual passage length
+      // (safety net: route-level guardrail should already have rejected this
+      // case, but AUTO planner / Trigger.dev queued jobs may not have).
+      let irrelevantSlotCount: number | undefined;
+      let grammarErrorCount: number | undefined;
+      let effectiveTypeSettings: unknown = typeSettings?.[subType];
+      if (subType === "GRAMMAR_ERROR" && isRecord(typeSettings?.[subType])) {
+        grammarErrorCount = readGrammarErrorCountSetting(typeSettings?.[subType]);
+        effectiveTypeSettings = {
+          ...(typeSettings?.[subType] as Record<string, unknown>),
+          markerCount: grammarErrorCount,
+        };
+      }
+      if (subType === "IRRELEVANT" && isRecord(typeSettings?.[subType])) {
+        const requested = readIrrelevantSlotCountSetting(typeSettings?.[subType]);
+        const passageCount = countPassageSentences(passageContent);
+        if (passageCount >= 5 && passageCount < requested) {
+          console.warn(
+            `[AUTO-GEN] IRRELEVANT slotCount=${requested} > passage sentences=${passageCount}; capping to ${passageCount}`,
+          );
+          irrelevantSlotCount = passageCount;
+        } else {
+          irrelevantSlotCount = requested;
+        }
+        // Keep prompt and schema in sync — both must reference the same N.
+        effectiveTypeSettings = {
+          ...(typeSettings?.[subType] as Record<string, unknown>),
+          slotCount: irrelevantSlotCount,
+        };
+      }
+
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
         subType,
-        typeSettings?.[subType],
+        effectiveTypeSettings,
       );
       const mergedCustomPrompt = mergeCustomPromptWithTypeSettings(
         customPrompt,
@@ -86,11 +162,12 @@ export async function runQuestionGeneration({
       const targetCandidateBlock = buildQuestionTargetCandidateBlock(
         subType,
         passageContent,
+        { irrelevantSlotCount, grammarErrorCount, requestedDifficulty: diffLabel },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
       const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
       const responseSchema = hasAiSchema
-        ? getAiResponseSchema(subType)
+        ? getAiResponseSchema(subType, { irrelevantSlotCount, grammarErrorCount })
         : isStructured
           ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
           : fallbackResponseSchema;
@@ -98,6 +175,10 @@ export async function runQuestionGeneration({
       const structuredInstructions = isStructured
         ? STRUCTURED_OUTPUT_INSTRUCTIONS
         : UNSTRUCTURED_OUTPUT_INSTRUCTIONS;
+      const perQuestionTokenFloor =
+        subType === "GRAMMAR_ERROR" && (grammarErrorCount ?? 1) > 5
+          ? 8_192
+          : 4_096;
 
       try {
         const object = await generateWithRetry(
@@ -120,7 +201,7 @@ export async function runQuestionGeneration({
             customPrompt: mergedCustomPrompt,
           }),
           generationPlan,
-          Math.min(20_000, Math.max(4_096, (Number(typeCount) || 1) * 4_096)),
+          Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
         );
 
         const generatedQuestionsAll =
@@ -156,8 +237,9 @@ export async function runQuestionGeneration({
           }
           if (ppResult.warnings.length > 0) {
             console.warn(
-              `[AUTO-GEN] Post-process warnings for ${subType}:`,
-              ppResult.warnings,
+              `[AUTO-GEN] Post-process warnings for ${subType}: ${formatIssuesForLog(
+                ppResult.warnings,
+              )}`,
             );
           }
 
@@ -188,6 +270,7 @@ export async function runQuestionGeneration({
             question: mapped,
             passage: passageContent,
             requestedDifficulty: diffLabel,
+            grammarErrorCount,
           });
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",
@@ -195,14 +278,39 @@ export async function runQuestionGeneration({
           const qualityWarnings = qualityIssues.filter(
             (issue) => issue.severity === "warning",
           );
-          if (qualityErrors.length > 0) {
-            console.warn(`[AUTO-GEN] Quality errors for ${subType}:`, qualityErrors);
+          const blockingQualityErrors =
+            qualityMode === "relaxed"
+              ? qualityErrors.filter((issue) =>
+                  RELAXED_BLOCKING_QUALITY_CODES.has(issue.code),
+                )
+              : qualityErrors;
+          const relaxedQualityWarnings =
+            qualityMode === "relaxed"
+              ? qualityErrors
+                  .filter((issue) => !RELAXED_BLOCKING_QUALITY_CODES.has(issue.code))
+                  .map((issue) => ({ ...issue, severity: "warning" as const }))
+              : [];
+          if (blockingQualityErrors.length > 0) {
+            console.warn(
+              `[AUTO-GEN] Quality errors for ${subType}: ${formatIssuesForLog(
+                blockingQualityErrors,
+              )}`,
+            );
             continue;
           }
-          if (qualityWarnings.length > 0) {
+          const allQualityWarnings = [
+            ...qualityWarnings,
+            ...relaxedQualityWarnings,
+          ];
+          if (relaxedQualityWarnings.length > 0) {
+            mapped._qualityMode = "relaxed";
+            mapped._qualityWarnings = allQualityWarnings;
+          }
+          if (allQualityWarnings.length > 0) {
             console.warn(
-              `[AUTO-GEN] Quality warnings for ${subType}:`,
-              qualityWarnings,
+              `[AUTO-GEN] Quality warnings for ${subType}: ${formatIssuesForLog(
+                allQualityWarnings,
+              )}`,
             );
           }
 
@@ -232,6 +340,14 @@ function mergeCustomPromptWithTypeSettings(
   return parts.length ? parts.join("\n\n") : undefined;
 }
 
+function formatIssuesForLog(issues: unknown): string {
+  try {
+    return JSON.stringify(issues);
+  } catch {
+    return String(issues);
+  }
+}
+
 export async function runQuestionGenerationWithEmptyRetry(
   input: RunGenerationInput,
   {
@@ -241,22 +357,51 @@ export async function runQuestionGenerationWithEmptyRetry(
     maxAttempts?: number;
     logPrefix?: string;
   } = {},
-): Promise<{ questions: Record<string, unknown>[]; attempts: number }> {
-  const attempts = hasDoubleNegativeBlankSetting(input)
-    ? Math.max(4, Math.floor(maxAttempts))
-    : Math.max(1, Math.floor(maxAttempts));
+): Promise<{
+  questions: Record<string, unknown>[];
+  attempts: number;
+  relaxedFallback: boolean;
+}> {
+  const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(input);
+  const requestedCount = input.plan.reduce(
+    (sum, item) => sum + Math.max(0, Math.floor(Number(item.count) || 0)),
+    0,
+  );
+  const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(input);
+  const largestGrammarErrorCount = getLargestGrammarErrorCount(input);
+  const attempts = hasNegativeParaphraseBlank
+    ? Math.max(6, Math.floor(maxAttempts))
+    : largestIrrelevantSlotCount > 5 || largestGrammarErrorCount > 1
+      ? Math.max(6, Math.floor(maxAttempts))
+      : Math.max(4, Math.floor(maxAttempts));
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const questions = await runQuestionGeneration(input);
-    if (questions.length > 0 || attempt === attempts) {
-      return { questions, attempts: attempt };
+    const hasEnoughQuestions = hasNegativeParaphraseBlank
+      ? questions.length >= requestedCount
+      : questions.length > 0;
+    if (hasEnoughQuestions) {
+      return { questions, attempts: attempt, relaxedFallback: false };
+    }
+    if (attempt === attempts) {
+      break;
     }
     console.warn(
-      `[${logPrefix}] Empty generation result; retrying (${attempt + 1}/${attempts})`,
+      `[${logPrefix}] Generation result did not pass quality/count gate (${questions.length}/${requestedCount}); retrying (${attempt + 1}/${attempts})`,
     );
   }
 
-  return { questions: [], attempts };
+  console.warn(
+    `[${logPrefix}] Strict quality generation exhausted after ${attempts} attempts; running relaxed quality fallback.`,
+  );
+  const relaxedQuestions = await runQuestionGeneration(input, {
+    qualityMode: "relaxed",
+  });
+  return {
+    questions: relaxedQuestions,
+    attempts: attempts + 1,
+    relaxedFallback: true,
+  };
 }
 
 function hasDoubleNegativeBlankSetting(input: RunGenerationInput): boolean {
@@ -271,4 +416,28 @@ function hasDoubleNegativeBlankSetting(input: RunGenerationInput): boolean {
     "doubleNegative" in blankSettings &&
     (blankSettings as { doubleNegative?: unknown }).doubleNegative === true
   );
+}
+
+function getLargestIrrelevantSlotCount(input: RunGenerationInput): number {
+  let maxSlotCount = 0;
+  for (const item of input.plan) {
+    if (item.subType !== "IRRELEVANT" || item.count <= 0) continue;
+    maxSlotCount = Math.max(
+      maxSlotCount,
+      readIrrelevantSlotCountSetting(input.typeSettings?.IRRELEVANT),
+    );
+  }
+  return maxSlotCount;
+}
+
+function getLargestGrammarErrorCount(input: RunGenerationInput): number {
+  let maxErrorCount = 0;
+  for (const item of input.plan) {
+    if (item.subType !== "GRAMMAR_ERROR" || item.count <= 0) continue;
+    maxErrorCount = Math.max(
+      maxErrorCount,
+      readGrammarErrorCountSetting(input.typeSettings?.GRAMMAR_ERROR),
+    );
+  }
+  return maxErrorCount;
 }
