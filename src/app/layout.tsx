@@ -9,17 +9,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXTAUTH_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://nara-ten.vercel.app");
+
+const brandImage = "/smoat-logo.png";
+const openGraphImage = "/og-image.png";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "SMOAT | 가장 스마트한 해자",
   description: "SMOAT는 영어학원의 운영, 학습 데이터, AI 문제 생성을 하나로 묶어 가장 스마트한 해자를 만드는 AI ERP입니다.",
   applicationName: "SMOAT",
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: brandImage, type: "image/png", sizes: "500x500" },
+      { url: "/favicon.png", type: "image/png", sizes: "500x500" },
     ],
-    shortcut: "/favicon.svg",
-    apple: "/icon.svg",
+    shortcut: "/favicon.png",
+    apple: [
+      { url: "/apple-icon.png", type: "image/png", sizes: "500x500" },
+    ],
   },
   appleWebApp: {
     title: "SMOAT",
@@ -28,6 +39,21 @@ export const metadata: Metadata = {
     title: "SMOAT | 가장 스마트한 해자",
     description: "영어학원을 위한 가장 스마트한 AI 운영 해자",
     siteName: "SMOAT",
+    url: "/",
+    images: [
+      {
+        url: openGraphImage,
+        width: 500,
+        height: 500,
+        alt: "SMOAT",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "SMOAT | 가장 스마트한 해자",
+    description: "영어학원을 위한 가장 스마트한 AI 운영 해자",
+    images: [openGraphImage],
   },
 };
 
