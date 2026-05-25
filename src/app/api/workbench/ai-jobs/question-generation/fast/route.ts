@@ -173,7 +173,7 @@ export async function POST(req: NextRequest) {
           code: "IRRELEVANT_SLOT_COUNT_TOO_HIGH",
           passageSentenceCount,
           requestedSlotCount,
-          maxSlotCount: passageSentenceCount,
+          maxSlotCount: v.effective,
         },
         { status: 400 },
       );
@@ -219,6 +219,7 @@ export async function POST(req: NextRequest) {
   let generationMs = 0;
   let generationAttempts = 0;
   let persistenceMs = 0;
+  let generationRejectionSummary: unknown = null;
 
   try {
     const creditStartedAt = Date.now();
@@ -312,6 +313,7 @@ export async function POST(req: NextRequest) {
     generationAttempts = generationResult.attempts;
     generationMs = Date.now() - generationStartedAt;
     const relaxedFallback = generationResult.relaxedFallback;
+    generationRejectionSummary = generationResult.rejectionSummary;
 
     const questionsForDisplay = questions.slice(0, config.count).map((question) => {
       const tags = mergeQuestionGenerationPlanTag(
@@ -329,7 +331,7 @@ export async function POST(req: NextRequest) {
       throw new Error(
         `No questions generated after ${generationAttempts} generation attempt${
           generationAttempts === 1 ? "" : "s"
-        }.`,
+        }. ${generationResult.rejectionSummary.message}`,
       );
     }
 
@@ -427,6 +429,21 @@ export async function POST(req: NextRequest) {
         status: "FAILED",
         failedCount: 1,
         errorMessage: message,
+        result: JSON.parse(JSON.stringify({
+          passageId: passage.id,
+          generationPlan: config.generationPlan,
+          debugTiming: {
+            queueWaitMs: 0,
+            creditMs,
+            planningMs,
+            generationAttempts,
+            generationMs,
+            persistenceMs,
+            totalRunMs: Date.now() - requestStartedAt,
+          },
+          rejectionSummary: generationRejectionSummary,
+          fastPath: true,
+        })),
         completedAt: new Date(),
       },
     });

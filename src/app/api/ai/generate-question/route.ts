@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
             code: "IRRELEVANT_SLOT_COUNT_TOO_HIGH",
             passageSentenceCount,
             requestedSlotCount,
-            maxSlotCount: passageSentenceCount,
+            maxSlotCount: v.effective,
           },
           { status: 400 },
         );
@@ -420,7 +420,7 @@ ${DIFFICULTY_RUBRIC[difficulty] || DIFFICULTY_RUBRIC.INTERMEDIATE}
 ${MARKING_RUBRIC}
 ${providerQualityContract}
 - difficulty 필드에 반드시 "${difficulty}"을 입력하세요. 다른 값을 넣지 마세요.
-- 객관식은 해당 유형이 요구하는 개수의 선택지(options 배열에 {label, text} 형태)를 만드세요. 대부분은 5개이고, 무관한 문장은 설정된 slotCount(5~10개)를 따릅니다.
+- 객관식은 해당 유형이 요구하는 개수의 선택지(options 배열에 {label, text} 형태)를 만드세요. 대부분은 5개이고, 무관한 문장은 설정된 slotCount를 따릅니다.
 - 해설(explanation): 왜 정답인지 지문 근거와 함께 한국어로 작성 (3~5문장, 300자 이내로 간결하게)
 - keyPoints: 3개의 학습 포인트 (각 1문장)
 - wrongOptionExplanations: 각 오답이 틀린 이유를 한국어로 간결하게 (각 1~2문장)

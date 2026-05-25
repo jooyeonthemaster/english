@@ -1,13 +1,12 @@
-const MAX_CIRCLED_NUMBER = 20;
-const FIRST_CIRCLED_NUMBER_CODEPOINT = 0x2460;
-const POSITION_MARKER_PATTERN = /^(?:[\u2460-\u2473]|\((?:[1-9]|1\d|20)\)|(?:[1-9]|1\d|20)[.)]?)$/;
-const CIRCLED_POSITION_MARKER_PATTERN = /[\u2460-\u2473]/g;
+import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+
+const CIRCLED_LABELS = getCircledNumbers(50);
+const POSITION_MARKER_PATTERN = /^(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\(\d{1,3}\)|\d{1,3}[.)]?)$/;
+const CIRCLED_POSITION_MARKER_PATTERN = /[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/g;
 const GIVEN_MARKER_PATTERN = /(^|\n)([ \t]*\[given\][\s\S]*)$/i;
 
 export function optionOrdinalLabel(index: number) {
-  return index >= 0 && index < MAX_CIRCLED_NUMBER
-    ? String.fromCodePoint(0x2460 + index)
-    : `${index + 1}.`;
+  return getCircledNumber(index);
 }
 
 export function optionReferenceLabel(index: number) {
@@ -31,22 +30,15 @@ function positionMarkerIndex(optionText: string) {
   const normalized = optionText.trim();
   if (!normalized) return null;
 
-  const markerCodePoint = normalized.codePointAt(0);
-  if (
-    normalized.length === 1 &&
-    markerCodePoint !== undefined &&
-    markerCodePoint >= FIRST_CIRCLED_NUMBER_CODEPOINT &&
-    markerCodePoint < FIRST_CIRCLED_NUMBER_CODEPOINT + MAX_CIRCLED_NUMBER
-  ) {
-    return markerCodePoint - FIRST_CIRCLED_NUMBER_CODEPOINT;
-  }
+  const circledIndex = CIRCLED_LABELS.indexOf(normalized);
+  if (circledIndex >= 0) return circledIndex;
 
-  const numberMatch = normalized.match(/^(?:\((\d{1,2})\)|(\d{1,2})[.)]?)$/);
+  const numberMatch = normalized.match(/^(?:\((\d{1,3})\)|(\d{1,3})[.)]?)$/);
   const numberText = numberMatch?.[1] ?? numberMatch?.[2];
   if (!numberText) return null;
 
   const numberValue = Number(numberText);
-  if (numberValue < 1 || numberValue > MAX_CIRCLED_NUMBER) return null;
+  if (numberValue < 1 || numberValue > CIRCLED_LABELS.length) return null;
 
   return numberValue - 1;
 }

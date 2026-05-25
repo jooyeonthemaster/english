@@ -8,7 +8,7 @@
 //   - Blanks:    _____ (5+ underscores) matched by /_{3,}/g
 //   - Markers:   __(A) expression__ matched by /__([^_]+)__/g then /^\(([a-jA-J])\)\s*(.+)$/
 //   - Underline: __word__ matched by /__([^_]+)__/g
-//   - Circled:   ①~⑩ matched by /([\u2460-\u2469])/g
+//   - Circled:   ① and beyond matched by extended circled-number ranges
 // ============================================================================
 
 import { processAntonym } from "./processors/antonym";
@@ -23,6 +23,7 @@ import { processSynonym } from "./processors/synonym";
 import { processVocabChoice } from "./processors/vocab-choice";
 import { normalizeWrongOptionExplanations } from "@/lib/question-wrong-option-explanations";
 import {
+  getCircledNumbers,
   PASSTHROUGH_TYPES,
   type PostProcessResult,
   type QuestionPostProcessData,
@@ -202,7 +203,7 @@ function normalizeOptionsForVisibleType(
 function stripOptionPrefix(text: string): string {
   return text
     .replace(
-      /^\s*(?:[\u2460-\u2469]|\((?:[A-Ja-j]|10|[1-9])\)|(?:[A-Ja-j]|10|[1-9])[.)])\s*/,
+      /^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/,
       "",
     )
     .trim();
@@ -285,20 +286,11 @@ function alignWrongOptionExplanationsWithVisibleOptions(
 
 function normalizeLabel(value: unknown): string {
   const text = normalizeText(value);
-  const circledMap: Record<string, string> = {
-    "\u2460": "1",
-    "\u2461": "2",
-    "\u2462": "3",
-    "\u2463": "4",
-    "\u2464": "5",
-    "\u2465": "6",
-    "\u2466": "7",
-    "\u2467": "8",
-    "\u2468": "9",
-    "\u2469": "10",
-  };
+  const circledMap: Record<string, string> = Object.fromEntries(
+    getCircledNumbers(50).map((label, index) => [label, String(index + 1)]),
+  );
   return (circledMap[text] ?? text)
-    .replace(/^[\(\[]?([A-Ja-j]|10|[1-9])[\)\].]?\s*$/, "$1")
+    .replace(/^[\(\[]?([A-Ja-j]|\d{1,3})[\)\].]?\s*$/, "$1")
     .toLowerCase();
 }
 

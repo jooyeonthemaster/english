@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Check, Eye, EyeOff } from "lucide-react";
+import { getCircledNumbers } from "@/lib/question-postprocess/types";
 
 // ============================================================================
 // Shared UI primitives for question renderers
 // ============================================================================
+
+const CIRCLED_MARKER_PATTERN = "\\u2460-\\u2473\\u3251-\\u325F\\u32B1-\\u32BF";
 
 /** 답안 영역을 접어두는 래퍼 — 기본 접힌 상태, 토글로 열기 */
 export function AnswerRevealSection({ children }: { children: React.ReactNode }) {
@@ -113,8 +116,8 @@ export function renderBlanks(text: string): React.ReactNode {
 
 /** Render passage with underlines, blanks, and numbered markers */
 export function renderPassageFormatted(text: string): React.ReactNode {
-  // Match: __content__ (underline), ___+ (blank), ①~⑩ (circled numbers)
-  const combinedRegex = /__([^_]+)__|_{3,}|([\u2460-\u2469])/g;
+  // Match: __content__ (underline), ___+ (blank), circled numbers
+  const combinedRegex = new RegExp(`__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`, "g");
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -151,7 +154,7 @@ export function renderPassageFormatted(text: string): React.ReactNode {
         );
       }
     } else if (match[2]) {
-      // ①~⑩ -> circled number badge
+      // Circled number -> badge
       parts.push(
         <span
           key={key++}
@@ -181,9 +184,9 @@ export function renderPassageFormatted(text: string): React.ReactNode {
   return parts.length > 0 ? <>{parts}</> : text;
 }
 
-/** Render numbered markers (①~⑩) with colored styling */
+/** Render numbered markers with colored styling */
 export function renderWithMarkers(text: string): React.ReactNode {
-  const markerRegex = /([\u2460-\u2469])/g;
+  const markerRegex = new RegExp(`([${CIRCLED_MARKER_PATTERN}])`, "g");
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -258,7 +261,7 @@ function getCorrectAnswerLabels(correctAnswer: string, correctAnswers?: string[]
   };
 
   correctAnswers?.forEach(push);
-  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  const matches = correctAnswer?.match(/[\(\[]?\s*(?:[A-Ja-j]|\d{1,3}|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
   if (matches?.length) matches.forEach(push);
   else push(correctAnswer);
   return labels;
@@ -267,10 +270,9 @@ function getCorrectAnswerLabels(correctAnswer: string, correctAnswers?: string[]
 function normalizeAnswerLabel(value: unknown): string {
   if (typeof value !== "string") return "";
   const text = value.trim();
-  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
-  const circledIndex = circled.indexOf(text);
+  const circledIndex = getCircledNumbers(50).indexOf(text);
   if (circledIndex >= 0) return String(circledIndex + 1);
-  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|\d{1,3})\s*[\)\].:]?\s*$/, "$1").toLowerCase();
 }
 
 /** Conditions box (서술형 조건 목록) */

@@ -132,6 +132,7 @@ export const workbenchQuestionGenerationTask = task({
     let generationMs = 0;
     let persistenceMs = 0;
     let generationAttempts = 0;
+    let generationRejectionSummary: unknown = null;
 
     const job = await prisma.workbenchAiJob.findUnique({
       where: { id: jobId },
@@ -267,12 +268,13 @@ export const workbenchQuestionGenerationTask = task({
       generationAttempts = generationResult.attempts;
       generationMs = Date.now() - generationStartedAt;
       const relaxedFallback = generationResult.relaxedFallback;
+      generationRejectionSummary = generationResult.rejectionSummary;
 
       if (questions.length === 0) {
         throw new Error(
           `No questions generated after ${generationAttempts} generation attempt${
             generationAttempts === 1 ? "" : "s"
-          }.`,
+          }. ${generationResult.rejectionSummary.message}`,
         );
       }
 
@@ -373,6 +375,20 @@ export const workbenchQuestionGenerationTask = task({
           status: "FAILED",
           failedCount: 1,
           errorMessage: message,
+          result: JSON.parse(JSON.stringify({
+            passageId: job.passage?.id,
+            generationPlan: config.generationPlan,
+            debugTiming: {
+              queueWaitMs: now.getTime() - job.createdAt.getTime(),
+              creditMs,
+              planningMs,
+              generationAttempts,
+              generationMs,
+              persistenceMs,
+              totalRunMs: Date.now() - taskStartedAt,
+            },
+            rejectionSummary: generationRejectionSummary,
+          })),
           completedAt: new Date(),
         },
       });

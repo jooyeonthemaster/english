@@ -46,6 +46,7 @@ export interface QueueItem {
   status: QueueStatus;
   progress: Record<string, "pending" | "done" | "error">;
   questions: any[];
+  questionIds?: string[];
   error?: string;
   config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual"; generationPlan?: QuestionGenerationPlan; questionTypeSettings?: QuestionTypeGenerationSettings };
 }
@@ -74,7 +75,7 @@ export function buildQuestionText(q: any): string {
   if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
   // REFERENCE, CONTEXT_MEANING: 밑줄 대명사/단어가 포함된 지문
   if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
-  // IRRELEVANT: ①~⑩ 범위의 번호가 매겨진 지문
+  // IRRELEVANT: 번호가 매겨진 지문
   if (q.passageWithNumbers) parts.push(q.passageWithNumbers);
   // SENTENCE_ORDER: 주어진 첫 문장 + (A)(B)(C) 단락
   if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);

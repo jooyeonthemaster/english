@@ -49,6 +49,7 @@ export {
   deleteWorkbenchQuestion,
   bulkDeleteWorkbenchQuestions,
   approveWorkbenchQuestion,
+  bulkApproveWorkbenchQuestions,
   toggleQuestionStar,
 } from "./workbench/questions";
 

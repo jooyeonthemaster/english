@@ -1,4 +1,4 @@
-import { CIRCLED_NUMBERS, type PostProcessResult, type QuestionPostProcessData } from "../types";
+import { getCircledNumber, getCircledNumbers, type PostProcessResult, type QuestionPostProcessData } from "../types";
 import { splitPassageSentences } from "@/lib/passage-sentence-utils";
 
 function normalize(s: string): string {
@@ -82,6 +82,54 @@ function findOriginalContainingSlot(slot: string, pool: string[]): { idx: number
   return best ? { idx: best.idx, orig: best.orig } : null;
 }
 
+function findBestInsertiveSourceWindow(
+  outputSentences: string[],
+  irrelevantIndex: number,
+  passageSentences: string[],
+): { start: number; sentences: string[]; averageScore: number } | null {
+  const sourceCount = outputSentences.length - 1;
+  const firstUsableSourceIndex = 1;
+  if (
+    sourceCount <= 0 ||
+    passageSentences.length - firstUsableSourceIndex < sourceCount
+  ) {
+    return null;
+  }
+
+  const start = firstUsableSourceIndex;
+  const candidate = passageSentences.slice(start, start + sourceCount);
+  let sourceCursor = 0;
+  let scoreTotal = 0;
+
+  for (let outputIndex = 0; outputIndex < outputSentences.length; outputIndex += 1) {
+    if (outputIndex === irrelevantIndex) continue;
+
+    const slotNorm = normalize(outputSentences[outputIndex]);
+    const sourceNorm = normalize(candidate[sourceCursor]);
+    const dist = levenshtein(slotNorm, sourceNorm);
+    scoreTotal += dist / Math.max(slotNorm.length, sourceNorm.length, 1);
+    sourceCursor += 1;
+  }
+
+  return { start, sentences: candidate, averageScore: scoreTotal / sourceCount };
+}
+
+function stripLeadingChoiceMarker(value: string): string {
+  const trimmed = value.trim();
+  const circled = getCircledNumbers(50).find((label) => trimmed.startsWith(label));
+  if (circled) {
+    return trimmed
+      .slice(circled.length)
+      .replace(/^[\s.．、:：-]+/, "")
+      .trim();
+  }
+
+  return trimmed
+    .replace(/^\s*(?:\((?:[1-9]|[1-4]\d|50)\)|(?:[1-9]|[1-4]\d|50)[.)])\s+/, "")
+    .replace(/^\s*(?:[1-9]|[1-4]\d|50)\s+(?=[A-Z"'])/, "")
+    .trim();
+}
+
 export function processIrrelevant(
   passage: string,
   ai: QuestionPostProcessData,
@@ -89,14 +137,14 @@ export function processIrrelevant(
   const warnings: string[] = [];
 
   const sentences = ai.sentences as string[];
-  const irrelevantIndex = Number(ai.irrelevantIndex);
+  let irrelevantIndex = Number(ai.irrelevantIndex);
 
   if (!sentences || !Array.isArray(sentences)) {
     return { success: false, data: ai, warnings, error: "Missing sentences field" };
   }
 
-  if (sentences.length < 5 || sentences.length > 10) {
-    warnings.push(`Expected 5~10 sentences, got ${sentences.length}`);
+  if (sentences.length < 5) {
+    warnings.push(`Expected at least 5 sentences, got ${sentences.length}`);
   }
 
   if (!Number.isInteger(irrelevantIndex) || irrelevantIndex < 0 || irrelevantIndex >= sentences.length) {
@@ -114,7 +162,38 @@ export function processIrrelevant(
   // due to paraphrase/punctuation change, snap it back to the single best
   // matching passage sentence.
   const passageSentences = splitPassageSentences(passage);
-  const repairedSentences = sentences.slice();
+  const repairedSentences = sentences.map((sentence) =>
+    typeof sentence === "string" ? stripLeadingChoiceMarker(sentence) : sentence,
+  );
+
+  if (irrelevantIndex === 0 || irrelevantIndex === repairedSentences.length - 1) {
+    const targetIndex =
+      irrelevantIndex === 0 ? 1 : Math.max(1, repairedSentences.length - 2);
+    const [insertedSentence] = repairedSentences.splice(irrelevantIndex, 1);
+    repairedSentences.splice(targetIndex, 0, insertedSentence);
+    warnings.push(
+      `IRRELEVANT inserted sentence was placed at an edge; moved to numbered slot ${targetIndex + 1}`,
+    );
+    irrelevantIndex = targetIndex;
+  }
+
+  const availableNumberedSourceCount = Math.max(0, passageSentences.length - 1);
+  if (repairedSentences.length - 1 > availableNumberedSourceCount) {
+    const introIndex = repairedSentences.findIndex(
+      (sentence, index) =>
+        index !== irrelevantIndex &&
+        normalize(sentence) === normalize(passageSentences[0] ?? ""),
+    );
+    if (introIndex >= 0) {
+      repairedSentences.splice(introIndex, 1);
+      if (introIndex < irrelevantIndex) {
+        irrelevantIndex -= 1;
+      }
+      warnings.push(
+        "IRRELEVANT source list included the original first passage sentence; removed it from numbered choices",
+      );
+    }
+  }
 
   for (let i = 0; i < repairedSentences.length; i++) {
     if (i === irrelevantIndex) continue;
@@ -167,24 +246,54 @@ export function processIrrelevant(
     }
   }
 
-  const markers = CIRCLED_NUMBERS.slice(0, repairedSentences.length);
+  const sourceWindow = findBestInsertiveSourceWindow(
+    repairedSentences,
+    irrelevantIndex,
+    passageSentences,
+  );
+  if (sourceWindow) {
+    let sourceCursor = 0;
+    let changed = false;
+    for (let i = 0; i < repairedSentences.length; i++) {
+      if (i === irrelevantIndex) continue;
+      const sourceSentence = sourceWindow.sentences[sourceCursor];
+      if (normalize(repairedSentences[i]) !== normalize(sourceSentence)) {
+        changed = true;
+      }
+      repairedSentences[i] = sourceSentence;
+      sourceCursor += 1;
+    }
+    if (changed) {
+      warnings.push(
+        `IRRELEVANT source sentences realigned to contiguous passage window ${sourceWindow.start + 1}-${sourceWindow.start + sourceWindow.sentences.length}; inserted sentence preserved`,
+      );
+    }
+  }
+
+  const markers = getCircledNumbers(repairedSentences.length);
   const normalizedOptions = markers.map((label) => ({
     label,
     text: label,
   }));
   const expectedAnswer = markers[irrelevantIndex] ?? String(irrelevantIndex + 1);
+  const wrongOptionExplanations = alignIrrelevantWrongOptionExplanations(
+    ai.wrongOptionExplanations,
+    markers,
+    irrelevantIndex,
+  );
   if (normalizeAnswerLabel(ai.correctAnswer) !== String(irrelevantIndex + 1)) {
     warnings.push(`correctAnswer realigned to irrelevantIndex ${irrelevantIndex}`);
   }
 
+  const introSentence = passageSentences[0]?.trim() ?? "";
   const numbered = repairedSentences
     .map((sent, i) => {
-      const marker = i < CIRCLED_NUMBERS.length ? CIRCLED_NUMBERS[i] : `(${i + 1})`;
-      return `${marker} ${sent.trim()}`;
+      const marker = getCircledNumber(i);
+      return `${marker} ${stripLeadingChoiceMarker(sent.trim())}`;
     })
     .join(" ");
 
-  const passageWithNumbers = numbered;
+  const passageWithNumbers = [introSentence, numbered].filter(Boolean).join(" ");
 
   return {
     success: true,
@@ -193,19 +302,64 @@ export function processIrrelevant(
       sentences: repairedSentences,
       correctAnswer: expectedAnswer,
       options: normalizedOptions,
+      wrongOptionExplanations,
       passageWithNumbers,
     },
     warnings,
   };
 }
 
+function alignIrrelevantWrongOptionExplanations(
+  raw: unknown,
+  markers: string[],
+  irrelevantIndex: number,
+): Record<string, string> {
+  const existing = readWrongOptionExplanationMap(raw);
+  const aligned: Record<string, string> = {};
+
+  for (let index = 0; index < markers.length; index += 1) {
+    if (index === irrelevantIndex) continue;
+    const numericLabel = String(index + 1);
+    const marker = markers[index];
+    aligned[marker] =
+      existing[numericLabel] ||
+      existing[marker] ||
+      "이 문장은 원문 흐름에 포함된 문장으로, 앞뒤 내용과 자연스럽게 이어지므로 무관한 문장이 아닙니다.";
+  }
+
+  return aligned;
+}
+
+function readWrongOptionExplanationMap(raw: unknown): Record<string, string> {
+  const out: Record<string, string> = {};
+  if (Array.isArray(raw)) {
+    for (const item of raw) {
+      if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+      const record = item as Record<string, unknown>;
+      const label = normalizeAnswerLabel(record.label);
+      const explanation =
+        typeof record.explanation === "string" ? record.explanation.trim() : "";
+      if (label && explanation) out[label] = explanation;
+    }
+    return out;
+  }
+
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return out;
+  for (const [label, explanation] of Object.entries(raw)) {
+    const normalizedLabel = normalizeAnswerLabel(label);
+    if (typeof explanation === "string" && normalizedLabel && explanation.trim()) {
+      out[normalizedLabel] = explanation.trim();
+    }
+  }
+  return out;
+}
+
 function normalizeAnswerLabel(value: unknown): string {
   const text = typeof value === "string" ? value.trim() : "";
-  const circledMap: Record<string, string> = {
-    "①": "1", "②": "2", "③": "3", "④": "4", "⑤": "5",
-    "⑥": "6", "⑦": "7", "⑧": "8", "⑨": "9", "⑩": "10",
-  };
+  const circledMap: Record<string, string> = Object.fromEntries(
+    getCircledNumbers(50).map((label, index) => [label, String(index + 1)]),
+  );
   return (circledMap[text] ?? text)
-    .replace(/^[\(\[]?(\d{1,2})[\)\].]?\s*$/, "$1")
+    .replace(/^[\(\[]?(\d{1,3})[\)\].]?\s*$/, "$1")
     .trim();
 }

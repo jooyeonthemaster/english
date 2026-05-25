@@ -1,5 +1,5 @@
 const HARD_BREAK_MARKER_RE =
-  /^(\[[^\]]+\]|\(?[A-Ea-e]\)|[\u2460-\u2469]|\d+\.|[-*]\s+)/;
+  /^(\[[^\]]+\]|\(?[A-Ea-e]\)|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\d+\.|[-*]\s+)/;
 
 function normalizeBaseText(text: string): string {
   return text

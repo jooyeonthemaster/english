@@ -142,7 +142,7 @@ export function renderFormattedInline(
   options?: FormattedInlineOptions,
 ) {
   const parts: React.ReactNode[] = [];
-  const pattern = /__([^_]+)__|_{3,}|([\u2460-\u2469])|\(([a-eA-E])\)/g;
+  const pattern = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])|\(([a-eA-E])\)/g;
   const alphabetMarkerClassName = alphabetMarkerClassNameForSubtype(subType, options);
   let lastIndex = 0;
   let key = 0;

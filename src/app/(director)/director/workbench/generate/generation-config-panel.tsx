@@ -86,9 +86,14 @@ interface GenerationConfigPanelProps {
   handleBatchGenerate: () => void;
 
   /** Max value allowed for IRRELEVANT slotCount stepper, based on currently
-   *  selected passage(s). When multiple passages selected, this is the min
-   *  sentence count across them. Defaults to 10 (no constraint). */
+   *  selected passage(s). When multiple passages selected, this is the
+   *  shortest safe slot count across them. Defaults to 5 without passage context. */
   maxIrrelevantSlotCount?: number;
+  irrelevantPassageSentenceCount?: number | null;
+  irrelevantLimitPassageTitle?: string | null;
+  irrelevantLimitSelectedCount?: number;
+  irrelevantLongestPassageSentenceCount?: number | null;
+  irrelevantLongestPassageTitle?: string | null;
 }
 
 function DetailSettingsPanel({ active, children }) {
@@ -153,7 +158,12 @@ export function GenerationConfigPanel({
   canGenerate,
   selectedIds,
   handleBatchGenerate,
-  maxIrrelevantSlotCount = 10,
+  maxIrrelevantSlotCount = 5,
+  irrelevantPassageSentenceCount = null,
+  irrelevantLimitPassageTitle = null,
+  irrelevantLimitSelectedCount = 0,
+  irrelevantLongestPassageSentenceCount = null,
+  irrelevantLongestPassageTitle = null,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>("BLANK_INFERENCE");
   const [openHelpTypeId, setOpenHelpTypeId] = useState<string | null>(null);
@@ -194,16 +204,45 @@ export function GenerationConfigPanel({
     }));
   };
   const irrelevantSettings = questionTypeSettings.IRRELEVANT || {};
-  // Lower bound is always 5 (IRRELEVANT minimum). Upper bound is the smaller
-  // of the global max (10) and the shortest selected passage's sentence count.
-  // If selected passage(s) have fewer than 5 sentences, the type is unusable
-  // — clamp the displayed value to 5 and the stepper will disable + we surface
-  // a warning to the user.
-  const irrelevantPassageCap = Math.min(10, Math.max(0, maxIrrelevantSlotCount));
-  const irrelevantUsable = irrelevantPassageCap >= 5;
-  const irrelevantMax = irrelevantUsable ? irrelevantPassageCap : 5;
+  // N slots contain N - 1 source sentences plus one inserted irrelevant sentence.
+  // The original first passage sentence is context only and is not a choice.
+  const irrelevantSlotCap = Math.max(0, maxIrrelevantSlotCount);
+  const irrelevantUsable = irrelevantSlotCap >= 5;
+  const irrelevantMax = irrelevantUsable ? irrelevantSlotCap : 5;
   const rawSlotCount = Math.round(Number(irrelevantSettings.slotCount) || 5);
   const irrelevantSlotCount = Math.min(irrelevantMax, Math.max(5, rawSlotCount));
+  const irrelevantSourceSentencesShown = Math.max(0, irrelevantSlotCount - 1);
+  const irrelevantEligibleSourceSentenceCount =
+    typeof irrelevantPassageSentenceCount === "number"
+      ? Math.max(0, irrelevantPassageSentenceCount - 1)
+      : null;
+  const irrelevantHiddenSourceSentences =
+    typeof irrelevantEligibleSourceSentenceCount === "number"
+      ? Math.max(0, irrelevantEligibleSourceSentenceCount - irrelevantSourceSentencesShown)
+      : 0;
+  const irrelevantFullPassageSlotCount =
+    typeof irrelevantPassageSentenceCount === "number"
+      ? irrelevantPassageSentenceCount
+      : null;
+  const canShowFullIrrelevantPassage =
+    typeof irrelevantFullPassageSlotCount === "number" &&
+    irrelevantFullPassageSlotCount >= 5 &&
+    irrelevantFullPassageSlotCount <= irrelevantMax;
+  const isShowingFullIrrelevantPassage =
+    canShowFullIrrelevantPassage &&
+    irrelevantSlotCount >= (irrelevantFullPassageSlotCount as number);
+  const irrelevantLimitTitle =
+    typeof irrelevantLimitPassageTitle === "string"
+      ? irrelevantLimitPassageTitle.trim()
+      : "";
+  const irrelevantLongestTitle =
+    typeof irrelevantLongestPassageTitle === "string"
+      ? irrelevantLongestPassageTitle.trim()
+      : "";
+  const irrelevantLongestHiddenSourceSentences =
+    typeof irrelevantLongestPassageSentenceCount === "number"
+      ? Math.max(0, Math.max(0, irrelevantLongestPassageSentenceCount - 1) - irrelevantSourceSentencesShown)
+      : 0;
   const setIrrelevantSlotCount = (next: number) => {
     const clamped = Math.min(irrelevantMax, Math.max(5, Math.round(next)));
     setQuestionTypeSettings((prev) => ({
@@ -522,17 +561,47 @@ export function GenerationConfigPanel({
                                     <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">내신 변형형</span>
                                   </div>
                                   <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-                                    지문에서 가져올 문장 수. 기본 5개(수능형), 늘리면 원문을 더 많이 보여줍니다.
+                                    문제에는 첫 문장을 제외한 원문 {irrelevantSourceSentencesShown}문장과 새 무관문 1문장이 표시됩니다.
                                   </p>
-                                  {!irrelevantUsable && (
-                                    <p className="mt-1.5 text-[10px] leading-snug text-rose-600 font-medium">
-                                      선택한 지문이 {irrelevantPassageCap}문장이라 무관한 문장 유형을 만들 수 없습니다 (최소 5문장 필요).
+                                  {typeof irrelevantPassageSentenceCount === "number" && irrelevantUsable && (
+                                    <p className={`mt-1.5 text-[10px] leading-snug font-medium ${
+                                      irrelevantHiddenSourceSentences > 0 || irrelevantLongestHiddenSourceSentences > 0
+                                        ? "text-amber-600"
+                                        : "text-emerald-600"
+                                    }`}>
+                                      {irrelevantLimitSelectedCount > 1 && irrelevantLongestHiddenSourceSentences > 0
+                                        ? `가장 짧은 지문은 첫 문장을 제외한 전체가 표시됩니다. 긴 지문은 현재 설정에서 추가로 원문 ${irrelevantLongestHiddenSourceSentences}문장이 문제에 보이지 않을 수 있습니다.`
+                                        : irrelevantHiddenSourceSentences > 0
+                                        ? `선택한 지문은 첫 문장을 제외하면 원문 ${irrelevantEligibleSourceSentenceCount ?? 0}문장을 사용할 수 있어, 현재 설정에서는 추가로 원문 ${irrelevantHiddenSourceSentences}문장이 문제에 보이지 않습니다.`
+                                        : "현재 설정에서는 첫 문장을 제외한 원문 구간 전체가 문제에 표시됩니다."}
                                     </p>
                                   )}
-                                  {irrelevantUsable && irrelevantMax < 10 && (
-                                    <p className="mt-1.5 text-[10px] leading-snug text-amber-600">
-                                      선택한 지문이 {irrelevantPassageCap}문장이라 최대 {irrelevantMax}개까지 가능합니다.
+                                  {!irrelevantUsable && (
+                                    <p className="mt-1.5 text-[10px] leading-snug text-rose-600 font-medium">
+                                      선택한 지문은 원문 {irrelevantPassageSentenceCount ?? 0}문장이라 무관한 문장 유형을 만들 수 없습니다. 첫 문장을 제외하고 출제하려면 원문 5문장 이상이 필요합니다.
                                     </p>
+                                  )}
+                                  {irrelevantUsable && typeof irrelevantPassageSentenceCount === "number" && (
+                                    <p className="mt-1.5 text-[10px] leading-snug text-amber-600">
+                                      첫 문장 제외 원문 {irrelevantEligibleSourceSentenceCount ?? 0}문장 + 새 무관문 1문장 기준 최대 {irrelevantMax}개입니다. 여러 지문 선택 시 가장 짧은 지문 기준입니다.
+                                    </p>
+                                  )}
+                                  {irrelevantUsable && irrelevantLimitSelectedCount > 1 && irrelevantLimitTitle && (
+                                    <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                                      현재 제한 기준: {irrelevantLimitTitle} ({irrelevantPassageSentenceCount ?? 0}문장)
+                                      {irrelevantLongestHiddenSourceSentences > 0 && irrelevantLongestTitle
+                                        ? ` · 긴 지문만 선택하면 더 늘릴 수 있습니다.`
+                                        : ""}
+                                    </p>
+                                  )}
+                                  {irrelevantUsable && canShowFullIrrelevantPassage && !isShowingFullIrrelevantPassage && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setIrrelevantSlotCount(irrelevantFullPassageSlotCount as number)}
+                                      className="mt-2 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700 hover:bg-blue-100"
+                                    >
+                                      원문 전체 표시로 맞춤
+                                    </button>
                                   )}
                                 </div>
                                 <div className="flex items-center gap-0.5 shrink-0">

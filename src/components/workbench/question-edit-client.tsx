@@ -6,10 +6,8 @@ import { useRouter } from "next/navigation";
 import {
   ArrowDown,
   ArrowUp,
-  ChevronDown,
   Loader2,
   Plus,
-  Wand2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -137,9 +135,6 @@ export function QuestionEditClient({
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tagInput, setTagInput] = useState("");
   const [explanation, setExplanation] = useState(question.explanation?.content || "");
-  const [aiModifyOpen, setAiModifyOpen] = useState(false);
-  const [aiModifyPrompt, setAiModifyPrompt] = useState("");
-  const [aiModifying, setAiModifying] = useState(false);
   const [keyPoints, setKeyPoints] = useState<string[]>(initialKeyPoints);
   const [wrongExplanations, setWrongExplanations] = useState<Record<string, string>>(initialWrongExplanations);
   const correctAnswerLabels = parseCorrectAnswerLabels(correctAnswer);
@@ -226,44 +221,6 @@ export function QuestionEditClient({
     } else toast.error(r.error || "승인 실패");
   }
 
-  async function handleAiModify() {
-    if (!aiModifyPrompt.trim()) {
-      toast.error("수정 요청 내용을 입력해주세요.");
-      return;
-    }
-    setAiModifying(true);
-    try {
-      const res = await fetch("/api/ai/modify-question", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          questionId: question.id,
-          instruction: aiModifyPrompt.trim(),
-          currentState: { type, subType, questionText, options, correctAnswer, difficulty, explanation, keyPoints, tags },
-        }),
-      });
-      const json = await res.json();
-      if (json.error) {
-        toast.error(json.error);
-      } else {
-        const q = json.question;
-        if (q.questionText) setQuestionText(q.questionText);
-        if (q.options) setOptions(q.options);
-        if (q.correctAnswer) setCorrectAnswer(q.correctAnswer);
-        if (q.explanation) setExplanation(q.explanation);
-        if (q.keyPoints) setKeyPoints(q.keyPoints);
-        if (q.wrongOptionExplanations) setWrongExplanations(q.wrongOptionExplanations);
-        if (q.tags) setTags(getVisibleQuestionTags(q.tags));
-        toast.success("AI 수정 완료. 확인 후 저장하세요.");
-        setAiModifyPrompt("");
-      }
-    } catch {
-      toast.error("수정 중 오류");
-    } finally {
-      setAiModifying(false);
-    }
-  }
-
   const passageAnalysis = safeParseJSON<PassageAnalysisData | null>(
     question.passage?.analysis?.analysisData,
     null,
@@ -301,18 +258,20 @@ export function QuestionEditClient({
             isModal={isModal}
             passage={question.passage}
             passageAnalysis={passageAnalysis}
+            questionText={questionText}
+            setQuestionText={setQuestionText}
           />
         )}
 
         {/* ── CENTER: Question Editor ── */}
-        <div className="flex-1 min-w-[420px] overflow-hidden flex min-h-0 flex-col">
+        <div className="flex-1 min-w-[340px] overflow-hidden flex min-h-0 flex-col bg-white">
           {/* Tags bar */}
-          <div className="flex items-center gap-1.5 px-5 py-2 border-b border-slate-100 bg-white shrink-0 flex-wrap">
+          <div className="flex items-center gap-2 px-6 py-3 border-b border-slate-200 bg-white shrink-0 flex-wrap">
             {tags.map((tag) => (
-              <span key={tag} className="inline-flex items-center gap-1 text-[11px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">
+              <span key={tag} className="inline-flex items-center gap-1.5 text-[12.5px] font-medium bg-blue-50 text-blue-700 border border-blue-100 px-2.5 py-1 rounded-md">
                 {tag}
                 <button onClick={() => setTags(tags.filter((t) => t !== tag))} className="hover:text-red-500">
-                  <X className="w-3 h-3" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </span>
             ))}
@@ -326,86 +285,92 @@ export function QuestionEditClient({
                   addTag();
                 }
               }}
-              className="h-6 w-[90px] text-[11px] px-2 rounded-md border border-dashed border-slate-300 bg-transparent outline-none focus:border-blue-400 placeholder:text-slate-400"
+              className="h-8 w-[120px] text-[12.5px] px-2.5 rounded-md border border-dashed border-slate-300 bg-transparent outline-none focus:border-blue-400 placeholder:text-slate-400"
             />
           </div>
 
           {/* Editor area — fills remaining space */}
-          <div className="flex-1 min-h-0 overflow-y-auto p-5 bg-white">
-            <div className="min-h-full flex flex-col gap-4">
-              {/* Question text — flex-[2] proportional fill */}
-              <div className="flex-[2] min-h-0 flex flex-col gap-1.5">
-                <label className="text-[12px] font-semibold text-slate-500 shrink-0">문제 내용</label>
-                <textarea
-                  value={questionText}
-                  onChange={(e) => setQuestionText(e.target.value)}
-                  className="w-full flex-1 min-h-0 text-[14px] leading-relaxed px-3 py-2.5 rounded-lg border border-slate-200 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 resize-none text-slate-800 placeholder:text-slate-400"
-                  placeholder="문제를 입력하세요..."
-                />
-              </div>
+          <div className="flex-1 min-h-0 overflow-y-auto px-6 py-5 bg-white">
+            <div className="min-h-full flex flex-col gap-6">
+              {/* Question text — only shown when no passage (otherwise rendered in PassagePanel) */}
+              {!question.passage && (
+                <div className="flex-[2] min-h-0 flex flex-col gap-2">
+                  <label className="text-[13px] font-semibold text-slate-700 shrink-0">문제 내용</label>
+                  <textarea
+                    value={questionText}
+                    onChange={(e) => setQuestionText(e.target.value)}
+                    className="w-full flex-1 min-h-[120px] text-[15px] leading-[1.7] px-4 py-3 rounded-lg border border-slate-200 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 resize-none text-slate-800 placeholder:text-slate-400 shadow-sm"
+                    placeholder="문제를 입력하세요..."
+                  />
+                </div>
+              )}
 
               {/* Options — flex-[3] proportional fill */}
               {(type === "MULTIPLE_CHOICE" || options.length > 0) && (
-                <div className="flex-[3] min-h-0 flex flex-col gap-1.5">
-                  <label className="text-[12px] font-semibold text-slate-500 shrink-0">선택지</label>
-                  <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto">
+                <div className="flex-[3] min-h-0 flex flex-col gap-2">
+                  <label className="text-[13px] font-semibold text-slate-700 shrink-0">선택지</label>
+                  <div className="flex-1 min-h-0 flex flex-col gap-2 overflow-y-auto">
                     {options.map((opt, idx) => {
                       const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
                       return (
-                        <div key={idx} className="flex items-start gap-2 rounded-lg border border-transparent px-1 py-1 transition-colors hover:border-slate-200 hover:bg-slate-50/70">
-                        <button
-                          className={`mt-0.5 w-8 h-8 rounded-full text-[13px] font-bold flex items-center justify-center shrink-0 transition-all ${
-                            isCorrect ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                          }`}
-                          onClick={() => setCorrectAnswer(opt.label)}
-                          title="정답으로 설정"
-                        >
-                          {opt.label}
-                        </button>
-                        <textarea
-                          value={opt.text}
-                          onChange={(e) => updateOptionText(idx, e.target.value)}
-                          placeholder={`${opt.label}번 선택지`}
-                          rows={2}
-                          className={`flex-1 min-h-[42px] resize-y rounded-md border px-3 py-2 text-[13.5px] leading-relaxed outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
-                            isCorrect
-                              ? "border-emerald-300 bg-emerald-50/50 font-medium text-emerald-950"
-                              : "border-slate-200 bg-white text-slate-800"
-                          }`}
-                        />
-                        <div className="mt-1 flex shrink-0 items-center gap-1">
-                          <button
-                            type="button"
-                            onClick={() => moveOption(idx, "up")}
-                            disabled={idx === 0}
-                            className="w-7 h-7 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-500 shadow-sm hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-35"
-                            title="위로 이동"
-                          >
-                            <ArrowUp className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => moveOption(idx, "down")}
-                            disabled={idx === options.length - 1}
-                            className="w-7 h-7 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-500 shadow-sm hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-35"
-                            title="아래로 이동"
-                          >
-                            <ArrowDown className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => removeOption(idx)}
-                            className="w-7 h-7 rounded-md border border-red-100 bg-white flex items-center justify-center text-red-500 shadow-sm hover:bg-red-50"
-                            title="선택지 삭제"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
+                        <div key={idx} className={`rounded-xl border px-2.5 py-2 transition-colors ${
+                          isCorrect ? "border-emerald-200 bg-emerald-50/40" : "border-transparent hover:border-slate-200 hover:bg-slate-50/70"
+                        }`}>
+                          <div className="flex items-start gap-3">
+                            <button
+                              className={`mt-0.5 w-10 h-10 rounded-full text-[15px] font-bold flex items-center justify-center shrink-0 transition-all ${
+                                isCorrect ? "bg-emerald-500 text-white shadow-md ring-2 ring-emerald-200" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                              }`}
+                              onClick={() => setCorrectAnswer(opt.label)}
+                              title="정답으로 설정"
+                            >
+                              {opt.label}
+                            </button>
+                            <textarea
+                              value={opt.text}
+                              onChange={(e) => updateOptionText(idx, e.target.value)}
+                              placeholder={`${opt.label}번 선택지`}
+                              rows={4}
+                              className={`flex-1 min-h-[96px] resize-y rounded-lg border px-3.5 py-2.5 text-[14.5px] leading-[1.65] outline-none transition-[color,box-shadow] focus-visible:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/10 shadow-sm ${
+                                isCorrect
+                                  ? "border-emerald-300 bg-white font-medium text-emerald-950"
+                                  : "border-slate-200 bg-white text-slate-800"
+                              }`}
+                            />
+                          </div>
+                          <div className="mt-2 flex justify-end items-center gap-1 pl-[52px]">
+                            <button
+                              type="button"
+                              onClick={() => moveOption(idx, "up")}
+                              disabled={idx === 0}
+                              className="w-8 h-8 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-35"
+                              title="위로 이동"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveOption(idx, "down")}
+                              disabled={idx === options.length - 1}
+                              className="w-8 h-8 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-35"
+                              title="아래로 이동"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => removeOption(idx)}
+                              className="w-8 h-8 rounded-md border border-red-100 bg-white flex items-center justify-center text-red-500 shadow-sm hover:bg-red-50 hover:text-red-600"
+                              title="선택지 삭제"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
-                    <button onClick={addOption} className="flex items-center gap-1.5 text-[12px] text-blue-600 font-medium hover:text-blue-700 shrink-0">
-                      <Plus className="w-3.5 h-3.5" />선택지 추가
+                    <button onClick={addOption} className="flex items-center gap-1.5 text-[13px] text-blue-600 font-semibold hover:text-blue-700 shrink-0 mt-1 self-start">
+                      <Plus className="w-4 h-4" />선택지 추가
                     </button>
                   </div>
                 </div>
@@ -413,44 +378,12 @@ export function QuestionEditClient({
 
               {/* Non-MC answer */}
               {type !== "MULTIPLE_CHOICE" && (
-                <div className="flex flex-col gap-1.5 shrink-0">
-                  <label className="text-[12px] font-semibold text-slate-500">정답</label>
-                  <Input value={correctAnswer} onChange={(e) => setCorrectAnswer(e.target.value)} className="text-[14px] h-9" />
+                <div className="flex flex-col gap-2 shrink-0">
+                  <label className="text-[13px] font-semibold text-slate-700">정답</label>
+                  <Input value={correctAnswer} onChange={(e) => setCorrectAnswer(e.target.value)} className="text-[14.5px] h-10" />
                 </div>
               )}
 
-              {/* AI Modify (collapsed) */}
-              <div className="border-t border-slate-100 pt-3 shrink-0">
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 text-[12px] font-medium text-blue-600 hover:text-blue-700"
-                  onClick={() => setAiModifyOpen(!aiModifyOpen)}
-                >
-                  <Wand2 className="w-3.5 h-3.5" />AI로 문제 수정
-                  <ChevronDown className={`w-3 h-3 transition-transform ${aiModifyOpen ? "rotate-180" : ""}`} />
-                </button>
-                {aiModifyOpen && (
-                  <div className="mt-2 flex gap-2">
-                    <input
-                      placeholder="예: 선택지 (C)를 더 어렵게 바꿔줘..."
-                      value={aiModifyPrompt}
-                      onChange={(e) => setAiModifyPrompt(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          handleAiModify();
-                        }
-                      }}
-                      className="flex-1 h-9 px-3 text-[13px] rounded-lg border border-slate-200 bg-slate-50/60 outline-none focus:border-blue-400 placeholder:text-slate-400"
-                    />
-                    <Button className="h-9 bg-blue-600 hover:bg-blue-700 text-[12px] px-4 shrink-0" onClick={handleAiModify} disabled={aiModifying || !aiModifyPrompt.trim()}>
-                      {aiModifying ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Wand2 className="w-3.5 h-3.5 mr-1" />}
-                      {aiModifying ? "수정 중..." : "수정"}
-                      {!aiModifying && <span className="ml-1 text-[9px] font-semibold bg-white/20 px-1 py-0.5 rounded">1</span>}
-                    </Button>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>

@@ -37,8 +37,12 @@ import {
   sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import { getCircledNumbers } from "@/lib/question-postprocess/types";
 
 // ─── Constants ───────────────────────────────────────────
+
+const CIRCLED_MARKER_PATTERN = "\\u2460-\\u2473\\u3251-\\u325F\\u32B1-\\u32BF";
+const CIRCLED_MARKER_REGEX = new RegExp(`^[${CIRCLED_MARKER_PATTERN}]$`);
 
 const TYPE_LABELS: Record<string, string> = {
   MULTIPLE_CHOICE: "객관식",
@@ -123,7 +127,7 @@ function parseJSON<T>(str: unknown, fallback: T): T {
 
 function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   const labels = new Set<string>();
-  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  const matches = correctAnswer?.match(/[\(\[]?\s*(?:[A-Ja-j]|\d{1,3}|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
   if (matches?.length) {
     matches.forEach((match) => {
       const label = normalizeAnswerLabel(match);
@@ -139,13 +143,12 @@ function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
 function normalizeAnswerLabel(value: unknown): string {
   if (typeof value !== "string") return "";
   const text = value.trim();
-  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
-  const circledIndex = circled.indexOf(text);
+  const circledIndex = getCircledNumbers(50).indexOf(text);
   if (circledIndex >= 0) return String(circledIndex + 1);
-  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|\d{1,3})\s*[\)\].:]?\s*$/, "$1").toLowerCase();
 }
 
-// Detect what marking pattern the passage uses: (a)(b)(c), (A)(B)(C), ①②③, or none
+// Detect what marking pattern the passage uses: (a)(b)(c), (A)(B)(C), circled numbers, or none
 function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
   if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
   const plan = (value as { _generationPlan?: unknown })._generationPlan;
@@ -156,15 +159,15 @@ function detectPassageMarking(passageContent?: string): "lowercase" | "uppercase
   if (!passageContent) return "none";
   if (/\(a\)/.test(passageContent)) return "lowercase";
   if (/\(A\)/.test(passageContent)) return "uppercase";
-  if (/[\u2460-\u2469]/.test(passageContent)) return "circled";
+  if (/[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/.test(passageContent)) return "circled";
   return "none";
 }
 
 const MARKERS = {
   lowercase: ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"],
   uppercase: ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"],
-  circled: ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"],
-  none: ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"],
+  circled: getCircledNumbers(50),
+  none: getCircledNumbers(50),
 };
 
 // Format option: always use index-based number label, adapt text based on passage marking
@@ -177,15 +180,15 @@ function formatOption(
   const displayLabel = `${index + 1}`;
   const trimmed = text.trim();
 
-  // If text is just a marker (①, ②, number, or empty) — use passage marking pattern
-  const isTextOnlyMarker = !trimmed || /^[\u2460-\u2469]$/.test(trimmed) || /^(?:10|[1-9])$/.test(trimmed);
+  // If text is just a marker (circled number, number, or empty) — use passage marking pattern
+  const isTextOnlyMarker = !trimmed || CIRCLED_MARKER_REGEX.test(trimmed) || /^\d{1,3}$/.test(trimmed);
   if (isTextOnlyMarker) {
     return { displayLabel, displayText: MARKERS[passageMarking][index] || label };
   }
 
   // If label is a plain number or circled number, just show text
   const num = parseInt(label);
-  if ((!isNaN(num) && num >= 1 && num <= 10) || /^[\u2460-\u2469]$/.test(label)) {
+  if ((!isNaN(num) && num >= 1) || CIRCLED_MARKER_REGEX.test(label)) {
     return { displayLabel, displayText: text };
   }
   // Otherwise prepend label to text (e.g. "(A) that", "(a) advantages")
@@ -200,13 +203,13 @@ export function renderFormatted(text: string, opts?: { underlineMarkedWords?: bo
   let pattern: string;
   if (underline) {
     // Match (a) word with the word captured separately
-    pattern = "__([^_]+)__|_{3,}|([\\u2460-\\u2469])|\\(([a-jA-J])\\)\\s*(\\S+)";
+    pattern = `__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])|\\(([a-jA-J])\\)\\s*(\\S+)`;
   } else if (highlightMarkers) {
     // Match (a) marker only, no word capture
-    pattern = "__([^_]+)__|_{3,}|([\\u2460-\\u2469])|\\(([a-jA-J])\\)";
+    pattern = `__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])|\\(([a-jA-J])\\)`;
   } else {
     // Basic: only __word__, blanks, circled numbers
-    pattern = "__([^_]+)__|_{3,}|([\\u2460-\\u2469])";
+    pattern = `__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`;
   }
   const regex = new RegExp(pattern, "g");
   const parts: React.ReactNode[] = [];
@@ -226,7 +229,7 @@ export function renderFormatted(text: string, opts?: { underlineMarkedWords?: bo
         </span>
       );
     } else if (match[2]) {
-      // ①~⑩ -> bold blue
+      // Circled number -> bold blue
       parts.push(
         <span key={key++} className="font-extrabold text-blue-600 text-[18px] mx-1 relative -top-[1px]">
           {match[2]}
@@ -278,10 +281,12 @@ interface QuestionCardProps {
   onToggle?: () => void;
   onDelete?: () => void;
   onApprove?: () => void;
+  onEdit?: () => void;
   /** Hide actions (edit, dropdown) — for read-only contexts */
   readonly?: boolean;
   /** Compact mode — smaller padding, hide passage preview by default */
   compact?: boolean;
+  showReviewActions?: boolean;
 }
 
 export function QuestionCard({
@@ -291,8 +296,10 @@ export function QuestionCard({
   onToggle,
   onDelete,
   onApprove,
+  onEdit,
   readonly = false,
   compact = false,
+  showReviewActions = false,
 }: QuestionCardProps) {
   const [passageOpen, setPassageOpen] = useState(false);
   const [explanationOpen, setExplanationOpen] = useState(false);
@@ -325,10 +332,32 @@ export function QuestionCard({
   const typeIncludesPassage = typeMeta?.includesPassage ?? false;
   const hidePassageBlock = hasStructured && typeIncludesPassage;
   const showStructured = hasStructured && (!compact || compactExpanded);
+  const showFooterActions = showReviewActions && Boolean(q.id);
+  const handleEdit = () => {
+    if (onEdit) onEdit();
+    else router.push(`/director/questions/${q.id}`);
+  };
+
+  const compactFixed = compact && !compactExpanded;
 
   return (
-    <Card className={`transition-all ${selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"}`}>
-      <CardContent className={compact ? "p-3 space-y-2" : "p-4 space-y-3"}>
+    <Card
+      className={`transition-all ${
+        selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
+      } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""} ${
+        compactFixed ? "h-[340px]" : ""
+      }`}
+    >
+      <CardContent
+        className={
+          compactFixed
+            ? "p-3 flex flex-col gap-2 h-full"
+            : compact
+              ? "p-3 space-y-2"
+              : "p-4 space-y-3"
+        }
+      >
+        <div className={compactFixed ? "flex-1 min-h-0 overflow-hidden flex flex-col gap-2" : "contents"}>
         {/* Top row */}
         <div className="flex items-start gap-3">
           {onToggle && (
@@ -482,28 +511,37 @@ export function QuestionCard({
             </div>
 
             {/* Options */}
-            {options.length > 0 && (
-              <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
-                {options
-                  .map((opt, idx) => ({ opt, idx }))
-                  .filter(({ opt }) => !compact || compactExpanded || correctAnswerLabels.has(normalizeAnswerLabel(opt.label)))
-                  .map(({ opt, idx }) => {
-                  const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
-                  const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
-                  return (
-                    <div key={`${opt.label}-${idx}`} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
-                      <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
-                        {displayLabel}.
-                      </span>
-                      <span className="pt-0.5">{displayText}</span>
-                    </div>
-                  );
-                })}
-                {compact && !compactExpanded && options.length > 1 && (
-                  <span className="text-[10px] text-slate-400 pl-2">외 {options.length - 1}개 선택지</span>
-                )}
-              </div>
-            )}
+            {options.length > 0 && (() => {
+              const MAX_COMPACT_OPTIONS = 3;
+              const allEntries = options.map((opt, idx) => ({
+                opt,
+                idx,
+                isCorrect: correctAnswerLabels.has(normalizeAnswerLabel(opt.label)),
+              }));
+              const compactCorrect = allEntries.filter((e) => e.isCorrect);
+              const visibleEntries = compactFixed
+                ? compactCorrect.slice(0, MAX_COMPACT_OPTIONS)
+                : allEntries;
+              const hiddenCount = options.length - visibleEntries.length;
+              return (
+                <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
+                  {visibleEntries.map(({ opt, idx, isCorrect }) => {
+                    const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
+                    return (
+                      <div key={`${opt.label}-${idx}`} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
+                        <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
+                          {displayLabel}.
+                        </span>
+                        <span className="pt-0.5 line-clamp-1">{displayText}</span>
+                      </div>
+                    );
+                  })}
+                  {compactFixed && hiddenCount > 0 && (
+                    <span className="text-[10px] text-slate-400 pl-2">외 {hiddenCount}개 선택지</span>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Non-MC answer */}
             {options.length === 0 && q.correctAnswer && !q.questionText.includes(q.correctAnswer) && (
@@ -537,11 +575,45 @@ export function QuestionCard({
           </>
         )}
 
+        </div>
+
         {/* Footer */}
-        <div className="flex items-center gap-3 text-[10px] text-slate-400 pt-1 border-t border-slate-100">
-          <span>{formatDate(q.createdAt)}</span>
-          {q._count?.examLinks && q._count.examLinks > 0 && (
-            <span>시험 {q._count.examLinks}회 사용</span>
+        <div className={`space-y-2 pt-1 border-t border-slate-100 ${compactFixed ? "shrink-0" : ""}`}>
+          <div className="flex items-center gap-3 text-[10px] text-slate-400">
+            <span>{formatDate(q.createdAt)}</span>
+            {q._count?.examLinks && q._count.examLinks > 0 && (
+              <span>시험 {q._count.examLinks}회 사용</span>
+            )}
+          </div>
+          {showFooterActions && (
+            <div className="flex items-center gap-1.5">
+              <Button
+                type="button"
+                size="sm"
+                disabled={q.approved || !onApprove}
+                className="h-7 flex-1 bg-blue-600 px-2 text-[11px] font-semibold text-white hover:bg-blue-700 disabled:bg-blue-100 disabled:text-blue-600 disabled:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!q.approved) onApprove?.();
+                }}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                검수완료
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit();
+                }}
+              >
+                <Pencil className="w-3 h-3" />
+                수정하기
+              </Button>
+            </div>
           )}
         </div>
       </CardContent>

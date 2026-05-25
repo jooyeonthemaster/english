@@ -111,9 +111,9 @@ export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
     label: "무관한 문장",
     category: "수능/모의고사 객관식",
     description: "글의 흐름에서 벗어난 문장을 찾게 합니다.",
-    studentTask: "①~⑩ 범위에서 전체 흐름과 관계없는 문장을 고릅니다.",
+    studentTask: "번호가 매겨진 문장 중 전체 흐름과 관계없는 문장을 고릅니다.",
     bestFor: ["문장 간 논리 흐름", "한 문장 삽입 변형", "주제 일관성"],
-    outputUi: ["번호 매김 지문", "5~10지선다", "문장별 흐름 해설"],
+    outputUi: ["번호 매김 지문", "지문 길이 기반 선지", "문장별 흐름 해설"],
     requiredFields: ["passageWithNumbers", "options", "irrelevantIndex"],
   },
   CONDITIONAL_WRITING: {

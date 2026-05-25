@@ -49,7 +49,7 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
         ? true
         : params.approved === "false"
         ? false
-        : undefined,
+        : true,
     starred:
       params.starred === "true"
         ? true

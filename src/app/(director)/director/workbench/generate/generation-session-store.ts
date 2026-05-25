@@ -49,8 +49,14 @@ function parseAnalysis(raw: string | undefined): unknown {
   }
 }
 
-function jobToQueueItem(job: AiJobRow): QueueItem | null {
+function jobToQueueItem(
+  job: AiJobRow,
+  { includeTerminalFailures = false }: { includeTerminalFailures?: boolean } = {},
+): QueueItem | null {
   if (!job.passage) return null;
+  const terminalFailure = job.status === "FAILED" || job.status === "CANCELLED";
+  if (terminalFailure && !includeTerminalFailures) return null;
+
   const config = parseRecord(job.config);
   const result = parseRecord(job.result);
   const mode = config.mode === "MANUAL" ? "manual" : "auto";
@@ -59,6 +65,9 @@ function jobToQueueItem(job: AiJobRow): QueueItem | null {
       ? config.questionType
       : job.questionType ?? undefined;
   const questions = Array.isArray(result.questions) ? result.questions : [];
+  const questionIds = Array.isArray(result.questionIds)
+    ? result.questionIds.filter((id): id is string => typeof id === "string")
+    : [];
   const progressKey = mode === "auto" ? "auto" : questionType || "manual";
   const progressValue =
     job.status === "COMPLETED" || job.status === "PARTIAL"
@@ -88,6 +97,7 @@ function jobToQueueItem(job: AiJobRow): QueueItem | null {
           : "done",
     progress: { [progressKey]: progressValue },
     questions,
+    questionIds,
     error: job.errorMessage ?? undefined,
     config: {
       typeCounts:
@@ -151,7 +161,38 @@ export function useGenerationSessionQueue(): [
         if (!res.ok) return;
         const data = (await res.json()) as { jobs?: AiJobRow[] };
         if (cancelled) return;
-        setDbQueue((data.jobs ?? []).map(jobToQueueItem).filter(Boolean) as QueueItem[]);
+        const jobs = data.jobs ?? [];
+        const failedJobItems = jobs
+          .map((job) => jobToQueueItem(job, { includeTerminalFailures: true }))
+          .filter(
+            (item): item is QueueItem =>
+              !!item && item.status === "error",
+          );
+
+        if (failedJobItems.length > 0) {
+          setLocalQueue((prev) =>
+            prev.map((item) => {
+              if (
+                !isFastTempItem(item) ||
+                item.status !== "generating"
+              ) {
+                return item;
+              }
+              const failedMatch = failedJobItems.find((failed) =>
+                sameGenerationRequest(item, failed),
+              );
+              if (!failedMatch) return item;
+              return {
+                ...item,
+                status: "error" as const,
+                progress: failedMatch.progress,
+                error: failedMatch.error,
+              };
+            }),
+          );
+        }
+
+        setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
       } catch {
         // Keep local optimistic rows visible when a poll fails.
       }
@@ -170,11 +211,21 @@ export function useGenerationSessionQueue(): [
     const activeFastTemps = localQueue.filter(
       (item) => isFastTempItem(item) && item.status === "generating",
     );
+    const completedDbItems = dbQueue.filter(
+      (item) => item.status === "done" || item.status === "reviewed",
+    );
     for (const item of localQueue) {
+      if (
+        isFastTempItem(item) &&
+        completedDbItems.some((dbItem) => sameGenerationRequest(item, dbItem))
+      ) {
+        continue;
+      }
       byId.set(item.id, item);
     }
     for (const item of dbQueue) {
       if (
+        item.status === "generating" &&
         activeFastTemps.some((temp) => sameGenerationRequest(temp, item))
       ) {
         continue;

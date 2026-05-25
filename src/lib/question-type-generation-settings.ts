@@ -3,7 +3,7 @@ export interface BlankInferenceGenerationSettings {
 }
 
 export interface IrrelevantGenerationSettings {
-  /** Number of slots (①~⑩). Range 5~10. Default 5. */
+  /** Number of displayed slots. One slot is an inserted irrelevant sentence. Default 5. */
   slotCount?: number;
 }
 
@@ -15,7 +15,6 @@ export interface GrammarErrorGenerationSettings {
 }
 
 export const IRRELEVANT_SLOT_COUNT_MIN = 5;
-export const IRRELEVANT_SLOT_COUNT_MAX = 10;
 export const IRRELEVANT_SLOT_COUNT_DEFAULT = 5;
 export const GRAMMAR_MARKER_COUNT_MIN = 5;
 export const GRAMMAR_MARKER_COUNT_MAX = 10;
@@ -26,11 +25,18 @@ export const GRAMMAR_ERROR_COUNT_DEFAULT = GRAMMAR_MARKER_COUNT_DEFAULT;
 
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
 
+function getIrrelevantLabel(index: number): string {
+  if (index >= 0 && index < 20) return String.fromCodePoint(0x2460 + index);
+  if (index >= 20 && index < 35) return String.fromCodePoint(0x3251 + (index - 20));
+  if (index >= 35 && index < 50) return String.fromCodePoint(0x32b1 + (index - 35));
+  return `(${index + 1})`;
+}
+
 export function normalizeIrrelevantSlotCount(value: unknown): number {
   const n = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(n)) return IRRELEVANT_SLOT_COUNT_DEFAULT;
   const rounded = Math.round(n);
-  return Math.min(IRRELEVANT_SLOT_COUNT_MAX, Math.max(IRRELEVANT_SLOT_COUNT_MIN, rounded));
+  return Math.max(IRRELEVANT_SLOT_COUNT_MIN, rounded);
 }
 
 export function readIrrelevantSlotCountSetting(rawSettings: unknown): number {
@@ -95,31 +101,33 @@ export interface IrrelevantSlotValidation {
 /**
  * Validate a requested IRRELEVANT slot count against the actual passage.
  * - requested < 5  → clamped to 5 (callers should pre-clamp via normalizeIrrelevantSlotCount)
- * - passage < 5 sentences → not generatable (IRRELEVANT structurally needs ≥5)
+ * - the original first passage sentence is excluded from numbered choices
+ * - passage < 5 sentences → not generatable (5 slots need 4 non-intro source sentences + 1 inserted sentence)
  * - passage < requested → reject so user can lower the count or pick another passage
  */
 export function validateIrrelevantAgainstPassage(
   requestedSlotCount: number,
   passageSentenceCount: number,
 ): IrrelevantSlotValidation {
-  const requested = Math.min(
-    IRRELEVANT_SLOT_COUNT_MAX,
-    Math.max(IRRELEVANT_SLOT_COUNT_MIN, Math.round(requestedSlotCount)),
-  );
-  if (passageSentenceCount < IRRELEVANT_SLOT_COUNT_MIN) {
+  const requested = Math.max(IRRELEVANT_SLOT_COUNT_MIN, Math.round(requestedSlotCount));
+  const requiredSourceSentenceCount = requested - 1;
+  const minimumSourceSentenceCount = IRRELEVANT_SLOT_COUNT_MIN - 1;
+  const availableSourceSentenceCount = Math.max(0, passageSentenceCount - 1);
+
+  if (availableSourceSentenceCount < minimumSourceSentenceCount) {
     return {
       ok: false,
-      effective: passageSentenceCount,
+      effective: Math.max(0, availableSourceSentenceCount + 1),
       passageSentenceCount,
-      error: `무관한 문장 유형은 지문이 최소 ${IRRELEVANT_SLOT_COUNT_MIN}문장 이상이어야 합니다. 현재 지문은 ${passageSentenceCount}문장입니다.`,
+      error: `무관한 문장 유형은 첫 문장을 선지에서 제외하므로, 원문 문장이 최소 ${minimumSourceSentenceCount + 1}개 이상이어야 합니다. 현재 지문은 ${passageSentenceCount}문장입니다.`,
     };
   }
-  if (passageSentenceCount < requested) {
+  if (availableSourceSentenceCount < requiredSourceSentenceCount) {
     return {
       ok: false,
-      effective: passageSentenceCount,
+      effective: availableSourceSentenceCount + 1,
       passageSentenceCount,
-      error: `이 지문은 ${passageSentenceCount}문장이라 선지 ${requested}개로 만들 수 없습니다. 선지를 ${passageSentenceCount}개 이하로 줄이거나 더 긴 지문을 선택하세요.`,
+      error: `이 지문은 첫 문장을 제외하면 원문 ${availableSourceSentenceCount}문장을 사용할 수 있어 선택지 ${requested}개로 만들 수 없습니다. 선택지 수를 ${availableSourceSentenceCount + 1}개 이하로 줄이거나 더 긴 지문을 선택해 주세요.`,
     };
   }
   return { ok: true, effective: requested, passageSentenceCount };
@@ -182,11 +190,14 @@ export function buildQuestionTypeSettingsPrompt(
     if (slotCount === IRRELEVANT_SLOT_COUNT_DEFAULT) return "";
     return [
       "## Type detail setting: IRRELEVANT / custom slot count",
-      `- The teacher requested exactly ${slotCount} slots labeled ①~${["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"][slotCount - 1]}.`,
-      `- Output sentences array of length ${slotCount}, irrelevantIndex in range 0..${slotCount - 1}, options array of length ${slotCount}.`,
-      `- Choose an unbroken ${slotCount}-sentence window from the passage and replace exactly one of those sentences with the AI-generated irrelevant sentence.`,
-      `- The remaining ${slotCount - 1} slots must each contain exactly one verbatim original sentence from that window.`,
-      "- The sentence at irrelevantIndex must be the only non-verbatim inserted sentence; never point irrelevantIndex to an original passage sentence.",
+      `- The teacher requested exactly ${slotCount} slots labeled ①~${getIrrelevantLabel(slotCount - 1)}.`,
+      `- Output sentences array of length ${slotCount}, irrelevantIndex in range 1..${slotCount - 2}, options array of length ${slotCount}.`,
+      `- Use the unbroken ${slotCount - 1}-sentence source window starting at original passage sentence 2, then insert exactly one AI-generated irrelevant sentence into that flow.`,
+      `- The ${slotCount - 1} source sentences must all remain present, verbatim, and in the original order. Do not replace, delete, paraphrase, merge, or split any source sentence.`,
+      "- Never include the original first passage sentence in sentences or options. It must be shown only as unnumbered context in passageWithNumbers.",
+      "- The first numbered choice ① must be the original second passage sentence unless the inserted irrelevant sentence is placed before it.",
+      "- Never put the inserted irrelevant sentence in the first or last slot. The answer must be an inner numbered sentence.",
+      "- The sentence at irrelevantIndex must be the only non-verbatim inserted sentence; every other slot must be one of the original source-window sentences.",
     ].join("\n");
   }
 

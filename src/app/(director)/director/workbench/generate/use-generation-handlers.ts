@@ -14,7 +14,11 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  readIrrelevantSlotCountSetting,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
+import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 
 function readFastBatchConcurrency(): number {
@@ -141,6 +145,7 @@ async function createFastQuestionGenerationJob({
     jobId: string;
     status: "COMPLETED";
     questions: any[];
+    questionIds?: string[];
     createdAt?: string;
     debugTiming?: Record<string, number>;
   };
@@ -230,6 +235,43 @@ function parsePassageAnalysis(p: PassageItem) {
   }
 }
 
+function warnIfIrrelevantUsesPartialPassage({
+  passages,
+  activeTypes,
+  questionTypeSettings,
+}: {
+  passages: PassageItem[];
+  activeTypes: string[];
+  questionTypeSettings: QuestionTypeGenerationSettings;
+}) {
+  if (!activeTypes.includes("IRRELEVANT") || passages.length === 0) return;
+
+  const slotCount = readIrrelevantSlotCountSetting(questionTypeSettings.IRRELEVANT);
+  const sourceSentencesShown = Math.max(0, slotCount - 1);
+  const affected = passages
+    .map((passage) => ({
+      passage,
+      sentenceCount: countPassageSentences(passage.content || ""),
+    }))
+    .filter(({ sentenceCount }) => Math.max(0, sentenceCount - 1) > sourceSentencesShown);
+
+  if (affected.length === 0) return;
+
+  const shortestAffected = affected.reduce((min, item) =>
+    item.sentenceCount < min.sentenceCount ? item : min,
+  );
+  const fullSlotCount = shortestAffected.sentenceCount;
+  const title = shortestAffected.passage.title?.trim();
+  const basis =
+    passages.length > 1 && title
+      ? ` 가장 짧은 지문(${title}) 기준으로`
+      : "";
+
+  toast.warning(
+    `무관한 문장은 첫 문장을 제외하고 출제됩니다.${basis} 현재 원문 ${sourceSentencesShown}문장만 표시됩니다. 첫 문장을 제외한 전체를 보려면 선지 수를 ${fullSlotCount}개로 늘려 주세요.`,
+  );
+}
+
 export function useGenerationHandlers({
   passages,
   selectedIds,
@@ -316,6 +358,7 @@ export function useGenerationHandlers({
               status: "done" as const,
               progress: { [unit.questionType]: "done" as const },
               questions: Array.isArray(result.questions) ? result.questions : [],
+              questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
             };
             setSessionQueue((prev) => [
               doneItem,
@@ -403,6 +446,12 @@ export function useGenerationHandlers({
     const selectedPassages = passages.filter((p) => selectedIds.has(p.id));
 
     if (genMode === "manual") {
+      warnIfIrrelevantUsesPartialPassage({
+        passages: selectedPassages,
+        activeTypes,
+        questionTypeSettings,
+      });
+
       const units: ManualGenerationUnit[] = [];
       const runId = Date.now();
 
@@ -508,6 +557,7 @@ export function useGenerationHandlers({
               status: "done" as const,
               progress: { [progressKey]: "done" as const },
               questions: Array.isArray(result.questions) ? result.questions : [],
+              questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
             };
             setSessionQueue((prev) => [
               doneItem,
@@ -617,6 +667,12 @@ export function useGenerationHandlers({
 
     try {
       if (genMode === "manual") {
+        warnIfIrrelevantUsesPartialPassage({
+          passages: [selectedPassage],
+          activeTypes,
+          questionTypeSettings,
+        });
+
         const units: ManualGenerationUnit[] = [];
         const runId = Date.now();
 
@@ -675,6 +731,7 @@ export function useGenerationHandlers({
           status: "done" as const,
           progress: { [progressKey]: "done" as const },
           questions: Array.isArray(result.questions) ? result.questions : [],
+          questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
         };
         setSessionQueue((prev) => [
           doneItem,

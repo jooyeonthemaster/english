@@ -496,12 +496,15 @@ export async function approveWorkbenchQuestion(
   questionId: string
 ): Promise<ActionResult> {
   try {
-    await requireAuth();
+    const staff = await requireAuth();
 
-    await prisma.question.update({
-      where: { id: questionId },
+    const updated = await prisma.question.updateMany({
+      where: { id: questionId, academyId: staff.academyId },
       data: { approved: true },
     });
+    if (updated.count === 0) {
+      return { success: false, error: "문제를 찾을 수 없습니다." };
+    }
 
     revalidateQuestionBankPaths();
     return { success: true };
@@ -511,6 +514,70 @@ export async function approveWorkbenchQuestion(
         ? error.message
         : "문제 승인 중 오류가 발생했습니다.";
     return { success: false, error: message };
+  }
+}
+
+export async function bulkApproveWorkbenchQuestions(
+  questionIds: string[],
+): Promise<{
+  success: boolean;
+  requested: number;
+  approved: number;
+  approvedIds: string[];
+  error?: string;
+}> {
+  try {
+    const staff = await requireAuth();
+    const uniqueIds = [...new Set(questionIds.filter(Boolean))];
+    if (uniqueIds.length === 0) {
+      return {
+        success: true,
+        requested: 0,
+        approved: 0,
+        approvedIds: [],
+      };
+    }
+
+    const ownedQuestions = await prisma.question.findMany({
+      where: { id: { in: uniqueIds }, academyId: staff.academyId },
+      select: { id: true },
+    });
+    const ownedIds = ownedQuestions.map((question) => question.id);
+
+    if (ownedIds.length === 0) {
+      return {
+        success: false,
+        requested: uniqueIds.length,
+        approved: 0,
+        approvedIds: [],
+        error: "문제를 찾을 수 없습니다.",
+      };
+    }
+
+    await prisma.question.updateMany({
+      where: { id: { in: ownedIds }, academyId: staff.academyId },
+      data: { approved: true },
+    });
+
+    revalidateQuestionBankPaths();
+    return {
+      success: true,
+      requested: uniqueIds.length,
+      approved: ownedIds.length,
+      approvedIds: ownedIds,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "문제 일괄 승인 중 오류가 발생했습니다.";
+    return {
+      success: false,
+      requested: questionIds.length,
+      approved: 0,
+      approvedIds: [],
+      error: message,
+    };
   }
 }
 

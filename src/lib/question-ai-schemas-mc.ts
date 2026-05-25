@@ -30,7 +30,7 @@ export type {
 // ---------------------------------------------------------------------------
 
 const optionSchema = z.object({
-  label: z.string().describe("선지 라벨 (기본 ①~⑤, 무관한 문장은 ①~⑩까지 가능)"),
+  label: z.string().describe("선지 라벨 (기본 ①~⑤, 무관한 문장은 요청한 개수까지 가능)"),
   text: z.string().describe("선지 내용"),
 });
 
@@ -201,23 +201,23 @@ export type AiSentenceInsertQuestion = z.infer<typeof aiSentenceInsertSchema>;
 // IRRELEVANT.slotCount setting; use `buildAiIrrelevantSchema(n)` then.
 export const aiIrrelevantSchema = z.object({
   ...commonFields,
-  sentences: z.array(z.string()).min(5).max(10).describe("표시할 문장 (5~10개, 기본 5개). 이 중 하나는 AI가 생성한 무관한 문장"),
-  irrelevantIndex: z.number().describe("무관한 문장의 인덱스"),
-  options: z.array(optionSchema).min(5).max(10).describe("선지 (slotCount와 동일)"),
+  sentences: z.array(z.string()).min(5).describe("표시할 문장 (기본 5개 이상). 원문에서 연속된 문장들을 그대로 보존하고, 이 중 하나만 AI가 새로 삽입한 무관한 문장"),
+  irrelevantIndex: z.number().min(1).max(3).describe("무관한 문장의 인덱스 (1~3, 첫/마지막 금지)"),
+  options: z.array(optionSchema).min(5).describe("선지 (slotCount와 동일)"),
   ...mcWrongExplanations,
 });
 export type AiIrrelevantQuestion = z.infer<typeof aiIrrelevantSchema>;
 
 export function buildAiIrrelevantSchema(slotCount: number) {
-  const n = Math.min(10, Math.max(5, Math.round(slotCount)));
-  // NOTE: keep schema permissive (min 5, max 10) — strict `.length(n)` makes
+  const n = Math.max(5, Math.round(slotCount));
+  // NOTE: keep schema permissive (min 5, max n) — strict `.length(n)` makes
   // Gemini 3.5 Flash unstable for n > 5. The exact n is enforced in prompt +
   // post-process instead.
   return z.object({
     ...commonFields,
-    sentences: z.array(z.string()).min(5).max(10).describe(`표시할 ${n}개 문장`),
-    irrelevantIndex: z.number().min(0).max(n - 1).describe(`무관한 문장의 인덱스 (0~${n - 1})`),
-    options: z.array(optionSchema).min(5).max(10).describe(`${n}개 선지`),
+    sentences: z.array(z.string()).min(5).max(n).describe(`표시할 ${n}개 문장. 원문 ${n - 1}개 문장은 그대로 보존하고 AI 무관문 1개만 삽입`),
+    irrelevantIndex: z.number().min(1).max(n - 2).describe(`무관한 문장의 인덱스 (1~${n - 2}, 첫/마지막 금지)`),
+    options: z.array(optionSchema).min(5).max(n).describe(`${n}개 선지`),
     wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(n - 1),
   });
 }

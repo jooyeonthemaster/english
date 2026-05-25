@@ -132,8 +132,8 @@ export type ContentMatchQuestion = z.infer<typeof contentMatchSchema>;
 
 export const irrelevantSchema = z.object({
   ...commonFields,
-  passageWithNumbers: z.string().describe("①~⑩ 범위의 번호가 매겨진 문장들이 포함된 지문"),
-  options: z.array(optionSchema).min(5).max(10),
+  passageWithNumbers: z.string().describe("번호가 매겨진 문장들이 포함된 지문"),
+  options: z.array(optionSchema).min(5),
   ...mcWrongExplanations,
 });
 export type IrrelevantQuestion = z.infer<typeof irrelevantSchema>;

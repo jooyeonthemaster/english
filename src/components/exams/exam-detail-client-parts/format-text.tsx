@@ -5,7 +5,7 @@ import React from "react";
 // ---------------------------------------------------------------------------
 
 export function renderFormatted(text: string): React.ReactNode {
-  const regex = /__([^_]+)__|_{3,}|([\u2460-\u2469])/g;
+  const regex = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;

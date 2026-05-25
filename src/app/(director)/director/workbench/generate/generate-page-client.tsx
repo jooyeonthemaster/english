@@ -13,6 +13,7 @@ import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-mo
 import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { getCustomPrompts } from "@/actions/custom-prompts";
+import { approveWorkbenchQuestion, bulkApproveWorkbenchQuestions } from "@/actions/workbench";
 import {
   type PassageItem,
   type FilterOptions,
@@ -21,10 +22,11 @@ import {
 import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
-import { IRRELEVANT_SLOT_COUNT_MAX } from "@/lib/question-type-generation-settings";
 import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
 import { useGenerationSessionQueue } from "./generation-session-store";
+import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
+import { useQuestionEditor } from "@/components/workbench/question-bank-client/use-question-editor";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   getDefaultQuestionTypeGenerationSettings,
@@ -138,24 +140,51 @@ export function GeneratePageClient({
     () => new Set(initialPassageIdsRef.current)
   );
 
-  // ── IRRELEVANT stepper max — capped to the shortest passage in scope ──
-  // If multiple passages selected via checkbox, the cap is the min sentence
-  // count across them. If only a single passage is in focus, use that one's
-  // sentence count. Falls back to MAX (10) when no passage is in scope.
-  const maxIrrelevantSlotCount = useMemo(() => {
+  // ── IRRELEVANT stepper context ──
+  // IRRELEVANT now inserts one new sentence into a source window, so N slots
+  // need N - 1 original passage sentences. The original first passage sentence
+  // is context only, so the maximum slot count is the total sentence count.
+  // With multiple selected passages, use the shortest passage so one setting is
+  // safe for every target.
+  const irrelevantPassageContext = useMemo(() => {
     const targets = selectedIds.size > 0
       ? passages.filter((p) => selectedIds.has(p.id))
       : selectedPassage
         ? [selectedPassage]
         : [];
-    if (targets.length === 0) return IRRELEVANT_SLOT_COUNT_MAX;
-    let min = IRRELEVANT_SLOT_COUNT_MAX;
+    if (targets.length === 0) return null;
+    let min = Number.POSITIVE_INFINITY;
+    let max = 0;
+    let limitingPassage: PassageItem | null = null;
+    let longestPassage: PassageItem | null = null;
     for (const p of targets) {
       const n = countPassageSentences(p.content || "");
-      if (n < min) min = n;
+      if (n < min) {
+        min = n;
+        limitingPassage = p;
+      }
+      if (n > max) {
+        max = n;
+        longestPassage = p;
+      }
     }
-    return Math.max(0, Math.min(IRRELEVANT_SLOT_COUNT_MAX, min));
+    if (!Number.isFinite(min) || !limitingPassage) return null;
+    return {
+      sentenceCount: min,
+      title: limitingPassage.title,
+      longestSentenceCount: max,
+      longestTitle: longestPassage?.title ?? "",
+      selectedCount: targets.length,
+    };
   }, [selectedIds, selectedPassage, passages]);
+
+  const irrelevantPassageSentenceCount =
+    irrelevantPassageContext?.sentenceCount ?? null;
+
+  const maxIrrelevantSlotCount = useMemo(() => {
+    if (irrelevantPassageSentenceCount === null) return 5;
+    return Math.max(0, irrelevantPassageSentenceCount);
+  }, [irrelevantPassageSentenceCount]);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -167,6 +196,10 @@ export function GeneratePageClient({
 
   // ── Question detail modal ──
   const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(null);
+  const editor = useQuestionEditor((deletedId) => {
+    setSavedQuestions((prev) => prev.filter((q) => q.id !== deletedId));
+    setDetailQuestion((prev) => (prev?.id === deletedId ? null : prev));
+  });
 
   // ── Computed ──
   const totalQuestions = useMemo(() => Object.values(typeCounts).reduce((a, b) => a + b, 0), [typeCounts]);
@@ -373,6 +406,52 @@ export function GeneratePageClient({
     }
   }, []);
 
+  const applyApprovalState = useCallback((approvedIds: string[]) => {
+    if (approvedIds.length === 0) return;
+    const set = new Set(approvedIds);
+    setSavedQuestions((prev) =>
+      prev.map((q) => (set.has(q.id) ? { ...q, approved: true } : q)),
+    );
+    setSessionQueue((prev) =>
+      prev.map((item) => {
+        if (!item.questionIds?.some((id) => id && set.has(id))) return item;
+        const questions = item.questions.map((q, qi) => {
+          const id = item.questionIds?.[qi];
+          return id && set.has(id) ? { ...q, approved: true } : q;
+        });
+        return {
+          ...item,
+          questions,
+          status: questions.every((q) => q.approved) ? "reviewed" : item.status,
+        };
+      }),
+    );
+  }, [setSessionQueue]);
+
+  const handleApproveQuestion = useCallback(async (questionId: string) => {
+    const result = await approveWorkbenchQuestion(questionId);
+    if (!result.success) {
+      toast.error(result.error || "검수완료 처리에 실패했습니다.");
+      return;
+    }
+    applyApprovalState([questionId]);
+    toast.success("검수완료 처리됐습니다.");
+    loadSavedQuestions();
+  }, [loadSavedQuestions, applyApprovalState]);
+
+  const handleBatchApproveQuestions = useCallback(async (questionIds: string[]) => {
+    if (questionIds.length === 0) return;
+    const result = await bulkApproveWorkbenchQuestions(questionIds);
+    if (result.success && result.approvedIds.length > 0) {
+      const failed = Math.max(0, result.requested - result.approved);
+      applyApprovalState(result.approvedIds);
+      toast.success(`${result.approved}개 문제가 검수완료 처리됐습니다.${failed > 0 ? ` (${failed}개 건너뜀)` : ""}`);
+      loadSavedQuestions();
+    } else if (!result.success) {
+      toast.error(result.error || "일괄 검수완료 처리에 실패했습니다.");
+    }
+  }, [applyApprovalState, loadSavedQuestions]);
+
   // ── Generation handlers (extracted to hook) ──
   const { handleBatchGenerate, handleGenerate, handleSaveQuestions } = useGenerationHandlers({
     passages,
@@ -475,6 +554,11 @@ export function GeneratePageClient({
           selectedIds={selectedIds}
           handleBatchGenerate={handleBatchGenerate}
           maxIrrelevantSlotCount={maxIrrelevantSlotCount}
+          irrelevantPassageSentenceCount={irrelevantPassageSentenceCount}
+          irrelevantLimitPassageTitle={irrelevantPassageContext?.title ?? null}
+          irrelevantLimitSelectedCount={irrelevantPassageContext?.selectedCount ?? 0}
+          irrelevantLongestPassageSentenceCount={irrelevantPassageContext?.longestSentenceCount ?? null}
+          irrelevantLongestPassageTitle={irrelevantPassageContext?.longestTitle ?? null}
         />
       </div>
 
@@ -492,6 +576,9 @@ export function GeneratePageClient({
         savedQuestions={savedQuestions}
         loadingSavedQuestions={loadingSavedQuestions}
         setDetailQuestion={setDetailQuestion}
+        onApproveQuestion={handleApproveQuestion}
+        onBatchApproveQuestions={handleBatchApproveQuestions}
+        onEditQuestion={editor.openEditor}
       />
 
       </div>{/* end vertical split */}
@@ -570,6 +657,23 @@ export function GeneratePageClient({
           </div>
         </div>
       )}
+
+      <EditQuestionDialog
+        open={editor.editDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) editor.closeEditor();
+          else editor.setEditDialogOpen(true);
+        }}
+        loading={editor.questionLoading}
+        loadError={editor.questionLoadError}
+        editingQuestion={editor.editingQuestion}
+        editingQuestionId={editor.editingQuestionId}
+        onClose={editor.closeEditor}
+        onDeleted={editor.handleEditorDeleted}
+        onRetry={editor.openEditor}
+        onSaved={loadSavedQuestions}
+        onApproved={loadSavedQuestions}
+      />
 
       {/* ─── Analysis Detail Modal ─── */}
       {analysisModalPassage && (

@@ -21,6 +21,7 @@ import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
   buildQuestionTargetCandidateBlock,
   getTypeQualityRubric,
+  type QuestionQualityIssue,
   validateQuestionQuality,
 } from "@/lib/question-quality";
 
@@ -49,6 +50,29 @@ export interface RunGenerationInput {
 
 type QualityMode = "strict" | "relaxed";
 
+type RejectionPhase = "model" | "postprocess" | "quality";
+
+export interface QuestionGenerationRejectionIssue {
+  phase: RejectionPhase;
+  qualityMode: QualityMode;
+  subType: string;
+  message: string;
+  codes?: string[];
+  sample?: Record<string, unknown>;
+}
+
+export interface QuestionGenerationRejectionSummary {
+  total: number;
+  phaseCounts: Record<RejectionPhase, number>;
+  topCodes: Array<{ code: string; count: number }>;
+  lastIssue?: QuestionGenerationRejectionIssue;
+  message: string;
+}
+
+interface RejectionRecorder {
+  issues: QuestionGenerationRejectionIssue[];
+}
+
 const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "option-count",
   "duplicate-option-label",
@@ -69,8 +93,12 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "irrelevant-sentence-count",
   "empty-irrelevant-sentence",
   "irrelevant-index-range",
+  "irrelevant-index-edge",
   "irrelevant-answer-index-mismatch",
   "irrelevant-source-not-verbatim",
+  "irrelevant-source-first-sentence",
+  "irrelevant-source-window-gap",
+  "irrelevant-source-window-start",
   "irrelevant-answer-from-source",
   "irrelevant-too-unrelated",
   "irrelevant-inserted-ungrammatical",
@@ -103,7 +131,13 @@ export async function runQuestionGeneration(
     customPrompt,
     typeSettings,
   }: RunGenerationInput,
-  { qualityMode = "strict" }: { qualityMode?: QualityMode } = {},
+  {
+    qualityMode = "strict",
+    rejectionRecorder,
+  }: {
+    qualityMode?: QualityMode;
+    rejectionRecorder?: RejectionRecorder;
+  } = {},
 ): Promise<Record<string, unknown>[]> {
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
@@ -136,11 +170,12 @@ export async function runQuestionGeneration(
       if (subType === "IRRELEVANT" && isRecord(typeSettings?.[subType])) {
         const requested = readIrrelevantSlotCountSetting(typeSettings?.[subType]);
         const passageCount = countPassageSentences(passageContent);
-        if (passageCount >= 5 && passageCount < requested) {
+        const maxInsertiveSlotCount = passageCount;
+        if (passageCount >= 5 && maxInsertiveSlotCount < requested) {
           console.warn(
-            `[AUTO-GEN] IRRELEVANT slotCount=${requested} > passage sentences=${passageCount}; capping to ${passageCount}`,
+            `[AUTO-GEN] IRRELEVANT slotCount=${requested} needs ${requested - 1} non-intro source sentences, passage has ${passageCount}; capping to ${maxInsertiveSlotCount}`,
           );
-          irrelevantSlotCount = passageCount;
+          irrelevantSlotCount = maxInsertiveSlotCount;
         } else {
           irrelevantSlotCount = requested;
         }
@@ -233,6 +268,13 @@ export async function runQuestionGeneration(
             console.warn(
               `[AUTO-GEN] Post-process failed for ${subType}: ${ppResult.error}`,
             );
+            recordRejection(rejectionRecorder, {
+              phase: "postprocess",
+              qualityMode,
+              subType,
+              message: ppResult.error || "Post-process failed",
+              sample: buildRejectionSample(subType, normalizedAiQuestion),
+            });
             continue;
           }
           if (ppResult.warnings.length > 0) {
@@ -296,6 +338,14 @@ export async function runQuestionGeneration(
                 blockingQualityErrors,
               )}`,
             );
+            recordRejection(rejectionRecorder, {
+              phase: "quality",
+              qualityMode,
+              subType,
+              message: summarizeQualityIssues(blockingQualityErrors),
+              codes: blockingQualityErrors.map((issue) => issue.code),
+              sample: buildRejectionSample(subType, mapped),
+            });
             continue;
           }
           const allQualityWarnings = [
@@ -324,6 +374,12 @@ export async function runQuestionGeneration(
           `[AUTO-GEN] Failed ${subType}:`,
           err instanceof Error ? err.message : err,
         );
+        recordRejection(rejectionRecorder, {
+          phase: "model",
+          qualityMode,
+          subType,
+          message: err instanceof Error ? err.message : String(err),
+        });
         return [];
       }
     }),
@@ -348,6 +404,88 @@ function formatIssuesForLog(issues: unknown): string {
   }
 }
 
+function recordRejection(
+  recorder: RejectionRecorder | undefined,
+  issue: QuestionGenerationRejectionIssue,
+) {
+  if (!recorder) return;
+  recorder.issues.push({
+    ...issue,
+    message: issue.message.slice(0, 800),
+  });
+}
+
+function summarizeQualityIssues(issues: QuestionQualityIssue[]): string {
+  return issues
+    .map((issue) => `${issue.code}: ${issue.message}`)
+    .join(" | ")
+    .slice(0, 800);
+}
+
+function buildRejectionSample(
+  subType: string,
+  question: Record<string, unknown>,
+): Record<string, unknown> | undefined {
+  if (subType !== "IRRELEVANT") return undefined;
+  const sentences = Array.isArray(question.sentences)
+    ? question.sentences.filter((sentence): sentence is string => typeof sentence === "string")
+    : [];
+  const irrelevantIndex = Number(question.irrelevantIndex);
+  const insertedSentence =
+    Number.isInteger(irrelevantIndex) && irrelevantIndex >= 0
+      ? sentences[irrelevantIndex]
+      : undefined;
+
+  return {
+    sentenceCount: sentences.length,
+    irrelevantIndex: Number.isInteger(irrelevantIndex) ? irrelevantIndex : null,
+    correctAnswer: question.correctAnswer,
+    insertedSentence: insertedSentence?.slice(0, 180),
+    firstSentence: sentences[0]?.slice(0, 180),
+    lastSentence: sentences[sentences.length - 1]?.slice(0, 180),
+  };
+}
+
+function buildRejectionSummary(
+  recorder: RejectionRecorder,
+): QuestionGenerationRejectionSummary {
+  const phaseCounts: Record<RejectionPhase, number> = {
+    model: 0,
+    postprocess: 0,
+    quality: 0,
+  };
+  const codeCounts = new Map<string, number>();
+
+  for (const issue of recorder.issues) {
+    phaseCounts[issue.phase] += 1;
+    for (const code of issue.codes ?? []) {
+      codeCounts.set(code, (codeCounts.get(code) ?? 0) + 1);
+    }
+  }
+
+  const topCodes = [...codeCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([code, count]) => ({ code, count }));
+  const lastIssue = recorder.issues.at(-1);
+  const topCodeText = topCodes
+    .map(({ code, count }) => `${code} x${count}`)
+    .join(", ");
+  const message = [
+    `Rejected candidates: ${recorder.issues.length}`,
+    topCodeText ? `Top codes: ${topCodeText}` : "",
+    lastIssue ? `Last: ${lastIssue.phase}/${lastIssue.subType} - ${lastIssue.message}` : "",
+  ].filter(Boolean).join(" | ");
+
+  return {
+    total: recorder.issues.length,
+    phaseCounts,
+    topCodes,
+    lastIssue,
+    message,
+  };
+}
+
 export async function runQuestionGenerationWithEmptyRetry(
   input: RunGenerationInput,
   {
@@ -361,7 +499,9 @@ export async function runQuestionGenerationWithEmptyRetry(
   questions: Record<string, unknown>[];
   attempts: number;
   relaxedFallback: boolean;
+  rejectionSummary: QuestionGenerationRejectionSummary;
 }> {
+  const rejectionRecorder: RejectionRecorder = { issues: [] };
   const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(input);
   const requestedCount = input.plan.reduce(
     (sum, item) => sum + Math.max(0, Math.floor(Number(item.count) || 0)),
@@ -376,12 +516,17 @@ export async function runQuestionGenerationWithEmptyRetry(
       : Math.max(4, Math.floor(maxAttempts));
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const questions = await runQuestionGeneration(input);
+    const questions = await runQuestionGeneration(input, { rejectionRecorder });
     const hasEnoughQuestions = hasNegativeParaphraseBlank
       ? questions.length >= requestedCount
       : questions.length > 0;
     if (hasEnoughQuestions) {
-      return { questions, attempts: attempt, relaxedFallback: false };
+      return {
+        questions,
+        attempts: attempt,
+        relaxedFallback: false,
+        rejectionSummary: buildRejectionSummary(rejectionRecorder),
+      };
     }
     if (attempt === attempts) {
       break;
@@ -396,11 +541,13 @@ export async function runQuestionGenerationWithEmptyRetry(
   );
   const relaxedQuestions = await runQuestionGeneration(input, {
     qualityMode: "relaxed",
+    rejectionRecorder,
   });
   return {
     questions: relaxedQuestions,
     attempts: attempts + 1,
     relaxedFallback: true,
+    rejectionSummary: buildRejectionSummary(rejectionRecorder),
   };
 }
 

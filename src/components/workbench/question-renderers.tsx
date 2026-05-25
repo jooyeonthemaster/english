@@ -204,7 +204,7 @@ function normalizeVocabOptionsForDisplay(question: any): any {
 function stripOptionPrefix(text: string): string {
   return text
     .replace(
-      /^\s*(?:[\u2460-\u2469]|\((?:[A-Ja-j]|10|[1-9])\)|(?:[A-Ja-j]|10|[1-9])[.)])\s*/,
+      /^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/,
       "",
     )
     .trim();

@@ -47,11 +47,33 @@ interface Props {
   analysisData: PassageAnalysisData | null;
   /** "horizontal" (default): 지문|분석 가로 배치. "vertical": 지문 위, 분석 아래 세로 배치 */
   layout?: "horizontal" | "vertical";
+  /** 헤더 우측 (번역 ON 앞)에 추가로 삽입할 컨트롤 (예: 분석/원문 탭 토글) */
+  headerExtra?: React.ReactNode;
+  /** 헤더 첫 행(분석 포인트 + 번역 + words)을 숨기고 chips만 노출 */
+  hideHeaderControls?: boolean;
+  /** 번역 표시 외부 제어 (controlled) */
+  showTranslation?: boolean;
+  onShowTranslationChange?: (v: boolean) => void;
 }
 
 // ─── Main Component ──────────────────────────────────────
-export function InteractivePassageView({ content, analysisData, layout = "horizontal" }: Props) {
-  const [showTranslation, setShowTranslation] = useState(true);
+export function InteractivePassageView({
+  content,
+  analysisData,
+  layout = "horizontal",
+  headerExtra,
+  hideHeaderControls = false,
+  showTranslation: showTranslationProp,
+  onShowTranslationChange,
+}: Props) {
+  const [internalShowTranslation, setInternalShowTranslation] = useState(true);
+  const isControlledTranslation = showTranslationProp !== undefined;
+  const showTranslation = isControlledTranslation ? showTranslationProp : internalShowTranslation;
+  const setShowTranslation = (next: boolean | ((prev: boolean) => boolean)) => {
+    const resolved = typeof next === "function" ? (next as (p: boolean) => boolean)(showTranslation) : next;
+    if (isControlledTranslation) onShowTranslationChange?.(resolved);
+    else setInternalShowTranslation(resolved);
+  };
   const [activeDetail, setActiveDetail] = useState<ActiveDetail>(null);
   const [activeCollection, setActiveCollection] = useState<NoteCategory | null>(null);
   const [focusedNote, setFocusedNote] = useState<FocusedNote | null>(null);
@@ -355,32 +377,35 @@ export function InteractivePassageView({ content, analysisData, layout = "horizo
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
       {/* Header */}
       <div className="border-b px-5 py-3">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2">
-            {counts && (
-              <div className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 sm:flex">
-                <MousePointerClick className="h-4 w-4" />
-              </div>
-            )}
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-[12px] font-semibold text-slate-700">분석 포인트</span>
-                {counts && (
-                  <span className="hidden text-[11px] font-medium text-slate-400 sm:inline">칩을 눌러 목록 보기</span>
-                )}
+        {!hideHeaderControls && (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              {counts && (
+                <div className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 sm:flex">
+                  <MousePointerClick className="h-4 w-4" />
+                </div>
+              )}
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[12px] font-semibold text-slate-700">분석 포인트</span>
+                  {counts && (
+                    <span className="hidden text-[11px] font-medium text-slate-400 sm:inline">칩을 눌러 목록 보기</span>
+                  )}
+                </div>
               </div>
             </div>
+            <div className="flex shrink-0 items-center gap-2">
+              {headerExtra}
+              {hasAnalysis && (
+                <button onClick={() => setShowTranslation(v => !v)}
+                  className={`h-8 rounded-lg border px-2.5 text-[11px] font-semibold shadow-sm transition-colors ${showTranslation ? "border-slate-200 bg-slate-100 text-slate-700" : "border-slate-200 bg-white text-slate-400 hover:text-slate-600"}`}>
+                  번역 {showTranslation ? "ON" : "OFF"}
+                </button>
+              )}
+              <span className="rounded-lg bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-400">{wordCount} words</span>
+            </div>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            {hasAnalysis && (
-              <button onClick={() => setShowTranslation(v => !v)}
-                className={`h-8 rounded-lg border px-2.5 text-[11px] font-semibold shadow-sm transition-colors ${showTranslation ? "border-slate-200 bg-slate-100 text-slate-700" : "border-slate-200 bg-white text-slate-400 hover:text-slate-600"}`}>
-                번역 {showTranslation ? "ON" : "OFF"}
-              </button>
-            )}
-            <span className="rounded-lg bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-400">{wordCount} words</span>
-          </div>
-        </div>
+        )}
         {counts && (
           <div className="flex min-w-0 flex-wrap items-center gap-1.5">
             {rawCounts.vocab > 0 && <CategoryChip category="vocab" count={counts.vocab} rawCount={rawCounts.vocab} active={activeCollection === "vocab"} onClick={() => { setActiveCollection(v => v === "vocab" ? null : "vocab"); setActiveDetail(null); }} />}

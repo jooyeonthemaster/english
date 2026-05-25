@@ -1,3 +1,6 @@
+import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
+
 export type QuestionQualitySeverity = "error" | "warning";
 
 export interface QuestionQualityIssue {
@@ -15,8 +18,6 @@ interface ValidateQuestionQualityInput {
 }
 
 const IRRELEVANT_SLOT_MIN = 5;
-const IRRELEVANT_SLOT_MAX = 10;
-const IRRELEVANT_OPTION_LABELS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"] as const;
 const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
 
@@ -312,45 +313,36 @@ function buildIrrelevantCandidateBlock(
   requestedSlotCount = 5,
   requestedDifficulty?: string,
 ): string {
-  const sentences = splitPassageSentences(passage);
-  const slotCount = Math.min(
-    IRRELEVANT_SLOT_MAX,
-    Math.max(IRRELEVANT_SLOT_MIN, Math.round(requestedSlotCount)),
-  );
-  if (sentences.length < IRRELEVANT_SLOT_MIN) {
+  const sentences = splitPassageSentences(passage, { includeShort: true });
+  const slotCount = Math.max(IRRELEVANT_SLOT_MIN, Math.round(requestedSlotCount));
+  const minimumSourceSentenceCount = IRRELEVANT_SLOT_MIN - 1;
+  const eligibleSentences = sentences.slice(1);
+  if (eligibleSentences.length < minimumSourceSentenceCount) {
     return [
       "## Valid IRRELEVANT source candidates",
-      `- Fewer than ${IRRELEVANT_SLOT_MIN} source sentences were detected. Do not invent source sentences; copy every non-answer sentence verbatim from the passage.`,
+      `- Fewer than ${minimumSourceSentenceCount} usable source sentences were detected after excluding the original first passage sentence. Do not invent source sentences.`,
     ].join("\n");
   }
 
-  const windowSize = Math.min(slotCount, sentences.length);
-  const maxWindows = 4;
-  const windowStarts = new Set<number>([0]);
-  if (sentences.length > windowSize) {
-    windowStarts.add(Math.max(0, sentences.length - windowSize));
-    const middle = Math.floor((sentences.length - windowSize) / 2);
-    windowStarts.add(Math.max(0, middle));
-    windowStarts.add(Math.max(0, middle + 1));
-  }
-
-  const windows = [...windowStarts]
-    .sort((a, b) => a - b)
-    .slice(0, maxWindows)
-    .map((start, index) => ({
-      label: String.fromCharCode(65 + index),
-      start,
-      sentences: sentences.slice(start, start + windowSize),
-    }));
+  const sourceWindowSize = Math.min(slotCount - 1, eligibleSentences.length);
+  const outputSlotCount = sourceWindowSize + 1;
+  const windows = [{
+    label: "A",
+    start: 0,
+    sentences: eligibleSentences.slice(0, sourceWindowSize),
+  }];
 
   return [
     "## Valid IRRELEVANT source windows",
-    "- Choose one window below as the source flow.",
-    `- In sentences[${windowSize}], copy exactly ${windowSize - 1} sentences from that window verbatim and replace exactly one sentence with your inserted irrelevant sentence.`,
-    `- The answer choices must be exactly ${windowSize} slots labeled ①~${IRRELEVANT_OPTION_LABELS[windowSize - 1]}.`,
-    `- wrongOptionExplanations must include exactly ${windowSize - 1} entries, one for every non-answer label. Do not stop at ⑤ when ${windowSize} slots are requested.`,
+    "- Use the window below as the source flow. The original first passage sentence is context only and must appear before the numbered choices without a number.",
+    "- Numbered choices must begin with the original second passage sentence as ①. Do not choose a later source window.",
+    `- In sentences[${outputSlotCount}], copy all ${sourceWindowSize} source sentences from that window verbatim and insert exactly one new irrelevant sentence into the flow.`,
+    `- Do not replace, delete, paraphrase, merge, or split any source sentence. The ${sourceWindowSize} original sentences must all remain present and in their original order.`,
+    `- The answer choices must be exactly ${outputSlotCount} slots labeled ①~${getCircledNumber(outputSlotCount - 1)}.`,
+    `- wrongOptionExplanations must include exactly ${sourceWindowSize} entries, one for every non-answer label. Do not stop at ⑤ when ${outputSlotCount} slots are requested.`,
     "- The slot pointed to by irrelevantIndex must be the inserted non-verbatim sentence, not one of the original source sentences.",
-    `- Prefer replacing an inner sentence (${IRRELEVANT_OPTION_LABELS[1]}~${IRRELEVANT_OPTION_LABELS[Math.max(1, windowSize - 2)]}) unless an edge sentence creates a stronger discourse trap.`,
+    `- Insert only into an inner position (${getCircledNumber(1)}~${getCircledNumber(Math.max(1, outputSlotCount - 2))}); never make the first or last slot the answer.`,
+    `- irrelevantIndex must be an integer from 1 to ${outputSlotCount - 2}.`,
     "- The inserted sentence must reuse at least two meaningful English content words from the chosen window, including at least one from a neighboring sentence when possible.",
     "- A substantial share of the inserted sentence's meaningful words should come from the chosen window; avoid adding many new concrete nouns.",
     "- The inserted sentence must be wrong by discourse role, not by random topic. Good traps shift scope, actor, purpose, cause/effect, example/advice, or conclusion while keeping the same semantic field.",
@@ -358,7 +350,7 @@ function buildIrrelevantCandidateBlock(
     "- Prefer a neutral explanatory sentence. Do not use awkward grammar, extreme words, or blunt advice markers as the giveaway.",
     ...buildIrrelevantDifficultyGuidance(requestedDifficulty),
     ...windows.flatMap((window) => [
-      `Window ${window.label} (source sentence indices ${window.start + 1}-${window.start + window.sentences.length}):`,
+      `Window ${window.label} (source sentence indices ${window.start + 2}-${window.start + 1 + window.sentences.length}):`,
       ...window.sentences.map((sentence, sentenceIndex) => `  ${sentenceIndex + 1}. ${sentence}`),
     ]),
   ].join("\n");
@@ -474,7 +466,7 @@ function getExpectedOptionCount(question: Record<string, unknown>, typeId: strin
   const sentenceCount = Array.isArray(question.sentences)
     ? question.sentences.length
     : 0;
-  if (sentenceCount >= IRRELEVANT_SLOT_MIN && sentenceCount <= IRRELEVANT_SLOT_MAX) {
+  if (sentenceCount >= IRRELEVANT_SLOT_MIN) {
     return sentenceCount;
   }
 
@@ -599,7 +591,7 @@ function collectCorrectAnswerLabels(question: Record<string, unknown>): string[]
 
   const correctAnswerText = normalizeText(question.correctAnswer);
   if (correctAnswerText) {
-    const matches = correctAnswerText.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[A-Ja-j]|\d{1,3}|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
     if (matches?.length) {
       for (const match of matches) push(match);
     } else {
@@ -613,10 +605,10 @@ function collectCorrectAnswerLabels(question: Record<string, unknown>): string[]
 function normalizeLabelOnly(value: unknown): string {
   const text = normalizeText(value);
   if (!text) return "";
-  if (IRRELEVANT_OPTION_LABELS.includes(text as (typeof IRRELEVANT_OPTION_LABELS)[number])) {
+  if (getCircledNumbers(50).includes(text)) {
     return normalizeLabel(text);
   }
-  if (/^[\(\[]?\s*([A-Ja-j]|\d{1,2})\s*[\)\].:]?\s*$/.test(text)) {
+  if (/^[\(\[]?\s*([A-Ja-j]|\d{1,3})\s*[\)\].:]?\s*$/.test(text)) {
     return normalizeLabel(text);
   }
   return "";
@@ -1036,8 +1028,8 @@ function validateIrrelevantQuestion(
     ? question.sentences.map((sentence: unknown) => normalizeText(sentence))
     : [];
   const slotCount = sentences.length;
-  if (slotCount < IRRELEVANT_SLOT_MIN || slotCount > IRRELEVANT_SLOT_MAX) {
-    add("error", "irrelevant-sentence-count", `Expected ${IRRELEVANT_SLOT_MIN}~${IRRELEVANT_SLOT_MAX} numbered sentences, got ${slotCount}.`);
+  if (slotCount < IRRELEVANT_SLOT_MIN) {
+    add("error", "irrelevant-sentence-count", `Expected at least ${IRRELEVANT_SLOT_MIN} numbered sentences, got ${slotCount}.`);
     return;
   }
 
@@ -1050,6 +1042,13 @@ function validateIrrelevantQuestion(
   if (!Number.isInteger(irrelevantIndex) || irrelevantIndex < 0 || irrelevantIndex >= slotCount) {
     add("error", "irrelevant-index-range", `irrelevantIndex must be an integer from 0 to ${slotCount - 1}.`);
     return;
+  }
+  if (irrelevantIndex === 0 || irrelevantIndex === slotCount - 1) {
+    add(
+      "error",
+      "irrelevant-index-edge",
+      "IRRELEVANT answer cannot be the first or last numbered sentence.",
+    );
   }
 
   const expectedAnswer = String(irrelevantIndex + 1);
@@ -1068,19 +1067,71 @@ function validateIrrelevantQuestion(
     add(
       "warning",
       "irrelevant-option-labels",
-      `IRRELEVANT options should be ordered ①~${IRRELEVANT_OPTION_LABELS[slotCount - 1]}.`,
+      `IRRELEVANT options should be ordered ①~${getCircledNumber(slotCount - 1)}.`,
     );
   }
 
   if (!passage) return;
 
-  const sourceSentences = sentences.filter((_, index) => index !== irrelevantIndex);
-  for (const sourceSentence of sourceSentences) {
-    if (!containsComparableSentence(passage, sourceSentence)) {
+  const sourceSlots = sentences
+    .map((sentence, index) => ({ sentence, slotIndex: index }))
+    .filter(({ slotIndex }) => slotIndex !== irrelevantIndex);
+  const sourceSentences = sourceSlots.map(({ sentence }) => sentence);
+  const passageSentences = splitPassageSentences(passage, { includeShort: true });
+  const usedPassageSentenceIndices = new Set<number>();
+  const matchedSourceSlots: Array<{ slotIndex: number; passageIndex: number }> = [];
+
+  for (const { sentence: sourceSentence, slotIndex } of sourceSlots) {
+    const passageIndex = findComparablePassageSentenceIndex(
+      passageSentences,
+      sourceSentence,
+      usedPassageSentenceIndices,
+    );
+    if (passageIndex === -1) {
       add(
         "error",
         "irrelevant-source-not-verbatim",
         `A non-answer sentence is not copied verbatim from the passage: ${sourceSentence.slice(0, 80)}`,
+      );
+    } else {
+      usedPassageSentenceIndices.add(passageIndex);
+      matchedSourceSlots.push({ slotIndex, passageIndex });
+      if (passageIndex === 0) {
+        add(
+          "error",
+          "irrelevant-source-first-sentence",
+          "The original first passage sentence must not appear as a numbered choice in IRRELEVANT questions.",
+        );
+      }
+    }
+  }
+
+  if (matchedSourceSlots.length === slotCount - 1) {
+    const orderedMatches = matchedSourceSlots
+      .slice()
+      .sort((a, b) => a.slotIndex - b.slotIndex);
+    const passageIndices = orderedMatches.map((match) => match.passageIndex);
+    const isOriginalOrder = passageIndices.every(
+      (passageIndex, index) =>
+        index === 0 || passageIndex > passageIndices[index - 1],
+    );
+    const minIndex = Math.min(...passageIndices);
+    const maxIndex = Math.max(...passageIndices);
+    const isContiguousSourceWindow =
+      maxIndex - minIndex + 1 === passageIndices.length;
+
+    if (!isOriginalOrder || !isContiguousSourceWindow) {
+      add(
+        "error",
+        "irrelevant-source-window-gap",
+        "The non-answer sentences must be one contiguous source window with the inserted sentence added into it; do not replace or skip a source sentence inside the window.",
+      );
+    }
+    if (minIndex !== 1) {
+      add(
+        "error",
+        "irrelevant-source-window-start",
+        "IRRELEVANT numbered choices must start from the original second passage sentence; keep the first sentence unnumbered as context.",
       );
     }
   }
@@ -1677,16 +1728,47 @@ function isWordChar(value: string | undefined): boolean {
   return !!value && /[A-Za-z0-9_]/.test(value);
 }
 
-function splitPassageSentences(passage: string): string[] {
-  return (passage.match(/[^.!?]+(?:[.!?]+["')\]]*)?/g) ?? [])
+function splitPassageSentences(
+  passage: string,
+  { includeShort = false }: { includeShort?: boolean } = {},
+): string[] {
+  const sentences = splitSharedPassageSentences(passage)
     .map((sentence) => sentence.replace(/\s+/g, " ").trim())
-    .filter((sentence) => sentence.length >= 20);
+    .filter(Boolean);
+  return includeShort
+    ? sentences
+    : sentences.filter((sentence) => sentence.length >= 20);
 }
 
 function containsComparableSentence(passage: string, sentence: string): boolean {
   const comparablePassage = normalizeComparableText(passage);
   const comparableSentence = normalizeComparableText(sentence).replace(/[.!?]+$/, "");
   return comparableSentence.length >= 20 && comparablePassage.includes(comparableSentence);
+}
+
+function findComparablePassageSentenceIndex(
+  passageSentences: string[],
+  sentence: string,
+  usedIndices: Set<number>,
+): number {
+  const comparableSentence = normalizeComparableText(sentence).replace(/[.!?]+$/, "");
+  if (comparableSentence.length < 2) return -1;
+
+  for (let index = 0; index < passageSentences.length; index += 1) {
+    if (usedIndices.has(index)) continue;
+    const comparablePassageSentence = normalizeComparableText(
+      passageSentences[index],
+    ).replace(/[.!?]+$/, "");
+    if (
+      comparablePassageSentence === comparableSentence ||
+      comparablePassageSentence.includes(comparableSentence) ||
+      comparableSentence.includes(comparablePassageSentence)
+    ) {
+      return index;
+    }
+  }
+
+  return -1;
 }
 
 function normalizeComparableText(value: string): string {
@@ -1899,10 +1981,10 @@ function lightStemContentToken(token: string): string {
 function normalizeLabel(value: unknown): string {
   const text = normalizeText(value);
   const circledMap: Record<string, string> = Object.fromEntries(
-    IRRELEVANT_OPTION_LABELS.map((label, index) => [label, String(index + 1)]),
+    getCircledNumbers(50).map((label, index) => [label, String(index + 1)]),
   );
   return (circledMap[text] ?? text)
-    .replace(/^[\(\[]?([A-Ja-j]|\d{1,2})[\)\].]?\s*$/, "$1")
+    .replace(/^[\(\[]?([A-Ja-j]|\d{1,3})[\)\].]?\s*$/, "$1")
     .toLowerCase();
 }
 

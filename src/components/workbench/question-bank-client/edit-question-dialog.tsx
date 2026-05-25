@@ -22,6 +22,8 @@ interface Props {
   onClose: () => void;
   onDeleted: (id: string) => void;
   onRetry: (id: string) => void;
+  onSaved?: () => void;
+  onApproved?: () => void;
 }
 
 export function EditQuestionDialog({
@@ -34,11 +36,13 @@ export function EditQuestionDialog({
   onClose,
   onDeleted,
   onRetry,
+  onSaved,
+  onApproved,
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1440px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1440px]"
+        className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1920px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1920px]"
         showCloseButton={false}
       >
         <DialogHeader className="sr-only">
@@ -75,6 +79,8 @@ export function EditQuestionDialog({
             mode="modal"
             onClose={onClose}
             onDeleted={onDeleted}
+            onSaved={onSaved}
+            onApproved={onApproved}
           />
         ) : null}
       </DialogContent>

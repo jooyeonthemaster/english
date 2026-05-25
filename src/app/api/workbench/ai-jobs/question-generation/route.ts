@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
           code: "IRRELEVANT_SLOT_COUNT_TOO_HIGH",
           passageSentenceCount,
           requestedSlotCount,
-          maxSlotCount: passageSentenceCount,
+          maxSlotCount: v.effective,
         },
         { status: 400 },
       );
