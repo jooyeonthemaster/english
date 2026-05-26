@@ -10,6 +10,7 @@ export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   SENTENCE_INSERT: "embedded",
   TOPIC_MAIN_IDEA: "source",
   TITLE: "source",
+  IMPLIED_MEANING: "embedded",
   REFERENCE: "embedded",
   CONTENT_MATCH: "source",
   IRRELEVANT: "embedded",

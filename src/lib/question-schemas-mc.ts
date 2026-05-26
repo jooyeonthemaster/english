@@ -107,6 +107,21 @@ export const titleSchema = z.object({
 });
 export type TitleQuestion = z.infer<typeof titleSchema>;
 
+// ── 함축 의미 추론 ──
+
+export const impliedMeaningSchema = z.object({
+  ...commonFields,
+  passageWithUnderline: z.string().describe("밑줄 친 표현이 포함된 지문. 밑줄 표현은 __표현__ 형태로 표시"),
+  underlinedExpression: z.string().describe("함축 의미를 묻는 밑줄 친 구, 절, 또는 문장"),
+  surfaceMeaning: z.string().describe("밑줄 표현을 문자 그대로 읽었을 때의 표면 의미"),
+  impliedMeaning: z.string().describe("정답 선택지가 나타내는 핵심 함축 의미"),
+  reasoningGap: z.string().describe("표면 의미에서 실제 함축 의미로 넘어가기 위해 필요한 추론 간극"),
+  evidenceChain: z.array(z.string()).min(2).max(4).describe("정답을 뒷받침하는 지문 근거 흐름"),
+  options: z.array(optionSchema).length(5).describe("한국어 선택지"),
+  ...mcWrongExplanations,
+});
+export type ImpliedMeaningQuestion = z.infer<typeof impliedMeaningSchema>;
+
 // ── 지칭 추론 ──
 
 export const referenceSchema = z.object({

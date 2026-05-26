@@ -236,6 +236,37 @@ export const aiReferenceSchema = z.object({
 export type AiReferenceQuestion = z.infer<typeof aiReferenceSchema>;
 
 // ---------------------------------------------------------------------------
+// 7. 함축 의미 추론 (IMPLIED_MEANING)
+// ---------------------------------------------------------------------------
+
+export const aiImpliedMeaningSchema = z.object({
+  ...commonFields,
+  underlinedExpression: z
+    .string()
+    .describe("원문에서 밑줄 칠 정확한 구, 절, 또는 문장. 사전식 단일 단어가 아니라 문맥상 함축을 담은 표현이어야 함."),
+  surroundingText: z
+    .string()
+    .describe("밑줄 표현을 포함하는 원문 그대로의 주변 텍스트 40~80자. 동일 표현이 반복될 수 있으므로 반드시 포함."),
+  surfaceMeaning: z
+    .string()
+    .describe("밑줄 표현을 문자 그대로 읽었을 때의 표면 의미. 한국어로 작성."),
+  impliedMeaning: z
+    .string()
+    .describe("정답 선택지가 나타내는 핵심 함축 의미. 한국어로 작성."),
+  reasoningGap: z
+    .string()
+    .describe("표면 의미와 실제 함축 의미 사이의 거리, 즉 어떤 문맥 단서 때문에 깊은 의미로 이동해야 하는지 한국어로 설명."),
+  evidenceChain: z
+    .array(z.string())
+    .min(2)
+    .max(4)
+    .describe("정답을 뒷받침하는 지문 근거 흐름. 한국어 2~4단계."),
+  options: z.array(optionSchema).length(5).describe("한국어 선택지"),
+  ...mcWrongExplanations,
+});
+export type AiImpliedMeaningQuestion = z.infer<typeof aiImpliedMeaningSchema>;
+
+// ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 
@@ -247,6 +278,7 @@ export const AI_MC_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   SENTENCE_INSERT: aiSentenceInsertSchema,
   TOPIC_MAIN_IDEA: aiTopicMainIdeaSchema,
   TITLE: aiTitleSchema,
+  IMPLIED_MEANING: aiImpliedMeaningSchema,
   REFERENCE: aiReferenceSchema,
   CONTENT_MATCH: aiContentMatchSchema,
   IRRELEVANT: aiIrrelevantSchema,

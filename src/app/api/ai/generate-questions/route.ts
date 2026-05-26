@@ -129,6 +129,7 @@ export async function POST(request: NextRequest) {
       SENTENCE_ORDER: "문장 순서 배열하기",
       MAIN_IDEA: "주제/요지/제목 고르기",
       PURPOSE: "글의 목적 파악",
+      IMPLIED_MEANING: "함축 의미 추론",
       IMPLICATION: "함축 의미 추론",
       REFERENCE: "지칭 대상 파악 (밑줄 친 부분이 가리키는 것)",
       TRUE_FALSE: "글의 내용과 일치/불일치",

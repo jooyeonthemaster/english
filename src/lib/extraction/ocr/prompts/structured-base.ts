@@ -12,7 +12,7 @@ export const STRUCTURED_OCR_SCHEMA_HINT = `[JSON 스키마 — 엄격히 준수]
       "isAnswer": true/false (CHOICE에만, 정답 표기★/●/■가 보일 때만 true),
       "sharedPassageRange": "2~4" 형태 문자열 (선택, 이 블록이 속한 공유 지문 범위),
       "questionAnalysis": {                  // QUESTION_STEM에만 채움. 그 외는 null/생략.
-        "questionType": "BLANK_INFERENCE" | "BLANK_WORD" | "BLANK_SENTENCE" | "CONNECTOR" | "SENTENCE_ORDER" | "PARAGRAPH_ORDER" | "SENTENCE_INSERT" | "IRRELEVANT" | "GRAMMAR_ERROR" | "GRAMMAR_CORRECTION" | "VOCAB_CHOICE" | "CONTEXT_MEANING" | "REFERENCE" | "CONTENT_MATCH" | "TOPIC_MAIN_IDEA" | "TITLE" | "PURPOSE" | "MOOD_TONE" | "SUMMARY_COMPLETE" | "WORD_ORDER" | "SENTENCE_TRANSFORM" | "CONDITIONAL_WRITING" | "TEXTBOOK_DETAIL" | "DIALOGUE_ORDER" | "DIALOGUE_RESPONSE" | "KOREAN_TRANSLATION" | "ENGLISH_DEFINITION" | "UNKNOWN",
+        "questionType": "BLANK_INFERENCE" | "BLANK_WORD" | "BLANK_SENTENCE" | "CONNECTOR" | "SENTENCE_ORDER" | "PARAGRAPH_ORDER" | "SENTENCE_INSERT" | "IRRELEVANT" | "GRAMMAR_ERROR" | "GRAMMAR_CORRECTION" | "VOCAB_CHOICE" | "CONTEXT_MEANING" | "IMPLIED_MEANING" | "REFERENCE" | "CONTENT_MATCH" | "TOPIC_MAIN_IDEA" | "TITLE" | "PURPOSE" | "MOOD_TONE" | "SUMMARY_COMPLETE" | "WORD_ORDER" | "SENTENCE_TRANSFORM" | "CONDITIONAL_WRITING" | "TEXTBOOK_DETAIL" | "DIALOGUE_ORDER" | "DIALOGUE_RESPONSE" | "KOREAN_TRANSLATION" | "ENGLISH_DEFINITION" | "UNKNOWN",
         "typeLabel": "주제" | "제목" | "빈칸 추론" | "글의 순서" | "문장 삽입" | "무관한 문장" | "어법" | "어휘" 등 한국어 라벨,
         "answer": "③" 또는 "(B)-(A)-(C)" 같이 문제의 정답 (모르면 null),
         "answerConfidence": 0.0~1.0 (정답 단서 신뢰도, 모르면 null),

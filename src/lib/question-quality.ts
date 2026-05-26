@@ -39,6 +39,7 @@ const MC_TYPE_IDS = new Set([
   "SENTENCE_INSERT",
   "TOPIC_MAIN_IDEA",
   "TITLE",
+  "IMPLIED_MEANING",
   "REFERENCE",
   "CONTENT_MATCH",
   "IRRELEVANT",
@@ -57,6 +58,7 @@ const OPTION_HEAVY_TYPES = new Set([
   "TOPIC_MAIN_IDEA",
   "TITLE",
   "CONTENT_MATCH",
+  "IMPLIED_MEANING",
   "REFERENCE",
 ]);
 
@@ -98,6 +100,15 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "The title must capture the central tension or outcome of the passage, not only name the topic.",
     "Distractors should sound like valid titles but miss the passage's controlling idea.",
     "For KILLER, avoid giveaway wording; make the title choice depend on the full development of the text.",
+  ],
+  IMPLIED_MEANING: [
+    "Underline a phrase, clause, or short sentence whose meaning is determined by the passage logic, not by dictionary translation.",
+    "Do not use a single vocabulary word, pronoun, or trivial phrase as the target; that belongs to CONTEXT_MEANING or REFERENCE.",
+    "Do not underline a rhetorical question or a self-answering question whose answer is stated in the next sentence.",
+    "Reject targets whose correct answer is directly paraphrased by the immediately following sentence; there must be a real surface-to-hidden meaning gap.",
+    "The correct Korean option must paraphrase the implied meaning of the underlined expression, not merely translate its surface wording.",
+    "Distractors must borrow real passage concepts and fail by scope, cause-effect, stance, example/generalization, or local-vs-global evidence; avoid absolute-word giveaway distractors.",
+    "For KILLER, the answer should require connecting at least two clues before and after the underlined expression, and every distractor should be a near-miss.",
   ],
   REFERENCE: [
     "Underline a standalone pronoun or demonstrative that appears as its own token in the passage.",
@@ -189,24 +200,31 @@ export function buildQuestionTargetCandidateBlock(
   passage: string,
   options: { irrelevantSlotCount?: number; grammarErrorCount?: number; requestedDifficulty?: string } = {},
 ): string {
-  if (typeId === "GRAMMAR_ERROR") {
-    return buildGrammarErrorCandidateBlock(
-      passage,
-      options.grammarErrorCount,
-      options.requestedDifficulty,
-    );
+  switch (typeId) {
+    case "GRAMMAR_ERROR":
+      return buildGrammarErrorCandidateBlock(
+        passage,
+        options.grammarErrorCount,
+        options.requestedDifficulty,
+      );
+    case "IRRELEVANT":
+      return buildIrrelevantCandidateBlock(
+        passage,
+        options.irrelevantSlotCount,
+        options.requestedDifficulty,
+      );
+    case "BLANK_INFERENCE":
+      return buildBlankInferenceCandidateBlock(passage);
+    case "REFERENCE":
+      return buildReferenceCandidateBlock(passage);
+    case "IMPLIED_MEANING":
+      return buildImpliedMeaningCandidateBlock(
+        passage,
+        options.requestedDifficulty,
+      );
+    default:
+      return "";
   }
-
-  if (typeId === "IRRELEVANT") {
-    return buildIrrelevantCandidateBlock(
-      passage,
-      options.irrelevantSlotCount,
-      options.requestedDifficulty,
-    );
-  }
-
-  if (typeId === "BLANK_INFERENCE") {
-  return buildBlankInferenceCandidateBlock(passage);
 }
 
 function buildGrammarErrorCandidateBlock(
@@ -243,8 +261,7 @@ function buildGrammarErrorCandidateBlock(
   ].filter(Boolean).join("\n");
 }
 
-  if (typeId !== "REFERENCE") return "";
-
+function buildReferenceCandidateBlock(passage: string): string {
   const candidates = findReferenceCandidates(passage).slice(0, 12);
   if (candidates.length === 0) {
     return [
@@ -262,6 +279,44 @@ function buildGrammarErrorCandidateBlock(
       `${index + 1}. underlinedPronoun="${candidate.pronoun}" | surroundingText="${candidate.surroundingText}"`
     )),
   ].join("\n");
+}
+
+function buildImpliedMeaningCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+): string {
+  const sentences = splitPassageSentences(passage);
+  const candidates = findImpliedMeaningCandidates(passage).slice(0, 10);
+
+  if (candidates.length === 0) {
+    return [
+      "## IMPLIED_MEANING target planning guardrail",
+      "- No strong automatic candidate was detected, but you may still generate a valid item.",
+      "- Choose an exact phrase, clause, or short sentence from the passage whose meaning depends on surrounding logic.",
+      "- Do not underline a single vocabulary word, pronoun, function word, or dictionary idiom.",
+      "- The answer must be a Korean paraphrase of the implied meaning, not a literal translation.",
+    ].join("\n");
+  }
+
+  return [
+    "## IMPLIED_MEANING target candidates",
+    "- Prefer one candidate from this list, or choose another exact source span with the same quality.",
+    "- Copy underlinedExpression verbatim from the passage and provide surroundingText that contains it.",
+    "- The underlinedExpression should be a phrase, clause, or short sentence, not one word.",
+    "- Do not choose a rhetorical question or a sentence whose answer is stated in the immediately following sentence.",
+    "- Prefer targets with a visible surface-to-hidden meaning gap: metaphor, conceptual compression, contrast, or a conclusion that must be unpacked.",
+    "- The correct option must synthesize the expression's implied meaning from surrounding evidence.",
+    "- Distractors must be near-misses anchored in real passage concepts.",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER calibration: choose a target whose answer requires connecting at least two clues before/after the underline."
+      : "",
+    ...candidates.map((candidate, index) => (
+      `${index + 1}. sentence ${candidate.sentenceIndex + 1}: ${candidate.sentence}\n   Suggested underlinedExpression="${candidate.expression}" | surroundingText="${candidate.surroundingText}"`
+    )),
+    sentences.length
+      ? "Passage sentence map:\n" + sentences.slice(0, 12).map((sentence, index) => `${index + 1}. ${sentence}`).join("\n")
+      : "",
+  ].filter(Boolean).join("\n");
 }
 
 function buildBlankInferenceCandidateBlock(passage: string): string {
@@ -450,6 +505,145 @@ function buildSurroundingWindow(passage: string, index: number, length: number):
   return window.length >= 35 ? window : passage.slice(Math.max(0, index - 20), Math.min(passage.length, index + length + 20)).trim();
 }
 
+function findImpliedMeaningCandidates(
+  passage: string,
+): Array<{ expression: string; sentence: string; sentenceIndex: number; surroundingText: string }> {
+  const sentences = splitPassageSentences(passage);
+  const candidates: Array<{ expression: string; sentence: string; sentenceIndex: number; surroundingText: string }> = [];
+  const seen = new Set<string>();
+
+  for (const [sentenceIndex, sentence] of sentences.entries()) {
+    const expressions = suggestImpliedMeaningExpressions(sentence);
+    for (const expression of expressions) {
+      const normalized = normalizeComparableText(expression);
+      if (
+        seen.has(normalized) ||
+        countContentTokens(expression) < 2 ||
+        isSingleEnglishToken(expression) ||
+        isTinyFunctionWord(expression)
+      ) {
+        continue;
+      }
+      const index = passage.indexOf(expression);
+      if (index === -1) continue;
+      seen.add(normalized);
+      candidates.push({
+        expression,
+        sentence,
+        sentenceIndex,
+        surroundingText: buildSurroundingWindow(
+          passage,
+          index,
+          expression.length,
+        ),
+      });
+    }
+  }
+
+  return candidates.sort((a, b) =>
+    impliedMeaningCandidateScore(b.expression, b.sentence) -
+    impliedMeaningCandidateScore(a.expression, a.sentence),
+  );
+}
+
+function suggestImpliedMeaningExpressions(sentence: string): string[] {
+  const normalizedSentence = sentence.replace(/\s+/g, " ").trim();
+  const candidates: string[] = [];
+  const patterns = [
+    /\b(not\s+(?:merely|simply|only|just)\s+[^.;:!?]{8,100}?\s+but\s+[^.;:!?]{8,120})/gi,
+    /\b(rather than\s+[^.;:!?]{8,100})/gi,
+    /\b(instead of\s+[^.;:!?]{8,100})/gi,
+    /\b(no longer\s+[^.;:!?]{8,100})/gi,
+    /\b(cannot\s+be\s+[^.;:!?]{8,100})/gi,
+    /\b(serves?\s+as\s+[^.;:!?]{8,100})/gi,
+    /\b(functions?\s+as\s+[^.;:!?]{8,100})/gi,
+    /\b(represents?\s+[^.;:!?]{8,100})/gi,
+    /\b(reflects?\s+[^.;:!?]{8,100})/gi,
+    /\b(demonstrates?\s+that\s+[^.;:!?]{8,120})/gi,
+    /\b(suggests?\s+that\s+[^.;:!?]{8,120})/gi,
+    /\b(reveals?\s+that\s+[^.;:!?]{8,120})/gi,
+    /\b(means?\s+that\s+[^.;:!?]{8,120})/gi,
+    /\b(points?\s+to\s+[^.;:!?]{8,100})/gi,
+    /\b(we\s+are\s+creatures?\s+of\s+[^.;:!?]{8,120})/gi,
+    /\b(reasons?\s+have\s+to\s+be\s+based\s+on\s+something)/gi,
+    /\b(we\s+begin\s+to\s+reason\s+long\s+before\s+[^.;:!?]{8,120})/gi,
+    /\b(the\s+(?:point|problem|challenge|risk|value|result|lesson|implication)\s+[^.;:!?]{8,100})/gi,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(normalizedSentence))) {
+      const expression = normalizeSuggestedImpliedExpression(match[1] ?? "");
+      if (isUsableImpliedMeaningExpression(expression)) {
+        candidates.push(expression);
+      }
+    }
+  }
+
+  if (candidates.length === 0 && isImpliedMeaningSourceSentence(normalizedSentence)) {
+    candidates.push(...extractCentralSentenceSpans(normalizedSentence));
+  }
+
+  return [...new Set(candidates)].slice(0, 3);
+}
+
+function normalizeSuggestedImpliedExpression(value: string): string {
+  return value
+    .replace(/\s+/g, " ")
+    .replace(/^[,;:\-\s]+/g, "")
+    .replace(/[;:]+$/g, "")
+    .trim();
+}
+
+function isUsableImpliedMeaningExpression(value: string): boolean {
+  const text = normalizeText(value);
+  const tokenCount = countContentTokens(text);
+  return (
+    text.length >= 12 &&
+    text.length <= 170 &&
+    tokenCount >= 2 &&
+    !/[?？]\s*$/.test(text) &&
+    !/^(?:what|why|how|when|where|which|who|whom|whose)\b/i.test(text) &&
+    !isSingleEnglishToken(text) &&
+    !isTinyFunctionWord(text) &&
+    !/^(?:such as|including|for example)\b/i.test(text)
+  );
+}
+
+function isImpliedMeaningSourceSentence(sentence: string): boolean {
+  if (sentence.length < 45 || sentence.length > 260) return false;
+  return /\b(?:although|while|whereas|but|yet|therefore|thus|consequently|in this way|as a result|not merely|not simply|rather than|instead of|means?|suggests?|implies?|reveals?|reflects?|demonstrates?|represents?|serves?|functions?|challenge|risk|value|lesson|implication|creatures?|reason|emotion|effectively)\b/i.test(sentence);
+}
+
+function extractCentralSentenceSpans(sentence: string): string[] {
+  const spans: string[] = [];
+  const clauses = sentence
+    .split(/[,;:]\s+/)
+    .map(normalizeSuggestedImpliedExpression)
+    .filter(isUsableImpliedMeaningExpression);
+
+  spans.push(...clauses.filter((clause) =>
+    /\b(?:because|therefore|thus|but|yet|while|although|rather|instead|means?|suggests?|reveals?|reflects?|demonstrates?|represents?|serves?|functions?)\b/i.test(clause),
+  ));
+
+  if (spans.length === 0 && isUsableImpliedMeaningExpression(sentence)) {
+    spans.push(sentence);
+  }
+
+  return spans.slice(0, 2);
+}
+
+function impliedMeaningCandidateScore(expression: string, sentence: string): number {
+  let score = countContentTokens(expression);
+  if (/\b(?:creatures?|beggar|grave|mirror|lens|map|upstream|downstream)\b/i.test(expression)) score += 5;
+  if (/\b(?:long before|based on something|reason and emotion)\b/i.test(expression)) score += 4;
+  if (/\b(?:not merely|not simply|rather than|instead of|while|although|whereas|but|yet)\b/i.test(expression)) score += 4;
+  if (/\b(?:means?|suggests?|implies?|reveals?|reflects?|demonstrates?|represents?|serves?|functions?)\b/i.test(expression)) score += 3;
+  if (/\b(?:therefore|thus|consequently|as a result|in this way)\b/i.test(sentence)) score += 2;
+  if (expression.length > 150) score -= 2;
+  return score;
+}
+
 function getExpectedOptionCount(question: Record<string, unknown>, typeId: string): number {
   if (typeId === "GRAMMAR_ERROR") {
     const markedCount = Array.isArray(question.markedExpressions)
@@ -536,7 +730,7 @@ function validateOptions(
     correctAnswerLabelSet.size > 0
       ? wrongOptionLabels.length
       : Math.max(0, options.length - 1);
-  if (typeId === "IRRELEVANT" || typeId === "GRAMMAR_ERROR") {
+  if (typeId === "IRRELEVANT" || typeId === "GRAMMAR_ERROR" || typeId === "IMPLIED_MEANING") {
     const explanationMap = collectWrongOptionExplanations(wrongExplanations);
     const missingLabels = wrongOptionLabels.filter((label) => !explanationMap.get(label));
     if (missingLabels.length > 0 || explanationMap.size < expectedWrongExplanationCount) {
@@ -659,6 +853,10 @@ function validateTypeSpecific(
 
   if (typeId === "BLANK_INFERENCE") {
     validateBlankInferenceQuestion(question, passage, requestedDifficulty, add);
+  }
+
+  if (typeId === "IMPLIED_MEANING") {
+    validateImpliedMeaningQuestion(question, passage, requestedDifficulty, add);
   }
 
   if (typeId === "IRRELEVANT") {
@@ -1016,6 +1214,330 @@ function countAttractiveBlankWrongOptions(
         (hasNegationCue(text) && passageOverlap >= 1)
       );
     }).length;
+}
+
+function validateImpliedMeaningQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  requestedDifficulty: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const underlinedExpression = normalizeText(question.underlinedExpression);
+  const passageWithUnderline = normalizeText(question.passageWithUnderline);
+  const surfaceMeaning = normalizeText(question.surfaceMeaning);
+  const impliedMeaning = normalizeText(question.impliedMeaning);
+  const reasoningGap = normalizeText(question.reasoningGap);
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const correctLabel = normalizeLabel(question.correctAnswer);
+  const correctOption = options.find((option) => normalizeLabel(option.label) === correctLabel);
+  const correctText = normalizeText(correctOption?.text);
+  const expressionTokenCount = countContentTokens(underlinedExpression);
+
+  if (!underlinedExpression) {
+    add("error", "implied-meaning-missing-expression", "IMPLIED_MEANING is missing underlinedExpression.");
+    return;
+  }
+
+  if (!passageWithUnderline.includes("__")) {
+    add("error", "implied-meaning-missing-underline", "IMPLIED_MEANING passageWithUnderline must include one underlined expression.");
+  }
+
+  if (countUnderlineMarkers(passageWithUnderline) !== 1) {
+    add("error", "implied-meaning-underline-count", "IMPLIED_MEANING must contain exactly one underline marker.");
+  }
+
+  if (isSingleEnglishToken(underlinedExpression)) {
+    add(
+      requestedDifficulty === "KILLER" ? "error" : "warning",
+      "implied-meaning-single-word-target",
+      "IMPLIED_MEANING should underline a phrase, clause, or short sentence, not a single word.",
+    );
+  }
+
+  if (isTinyFunctionWord(underlinedExpression) || expressionTokenCount < 2) {
+    add(
+      requestedDifficulty === "KILLER" ? "error" : "warning",
+      "implied-meaning-target-too-short",
+      "IMPLIED_MEANING target is too small to support real implied-meaning inference.",
+    );
+  }
+
+  if (underlinedExpression.length > 190 || expressionTokenCount > 18) {
+    add(
+      "warning",
+      "implied-meaning-target-too-long",
+      "IMPLIED_MEANING target is very long and may become a main-idea item rather than a focused underline item.",
+    );
+  }
+
+  if (isQuestionLikeImpliedMeaningTarget(underlinedExpression)) {
+    add(
+      requestedDifficulty === "KILLER" ? "error" : "warning",
+      "implied-meaning-rhetorical-question-target",
+      "IMPLIED_MEANING should not use a rhetorical/self-answering question as the underline target.",
+    );
+  }
+
+  if (requestedDifficulty === "KILLER") {
+    if (surfaceMeaning.length < 12) {
+      add(
+        "error",
+        "implied-meaning-missing-surface-meaning",
+        "KILLER IMPLIED_MEANING must include surfaceMeaning so the surface-to-hidden gap can be audited.",
+      );
+    }
+    if (reasoningGap.length < 28) {
+      add(
+        "error",
+        "implied-meaning-thin-reasoning-gap",
+        "KILLER IMPLIED_MEANING must explain the real surface-to-hidden meaning gap, not just restate the answer.",
+      );
+    }
+  }
+
+  if (passage && !normalizeComparableText(passage).includes(normalizeComparableText(underlinedExpression))) {
+    add(
+      "error",
+      "implied-meaning-target-not-in-passage",
+      `underlinedExpression is not found in the original passage: ${underlinedExpression.slice(0, 80)}.`,
+    );
+  }
+
+  if (passage) {
+    const sentenceContext = findExpressionSentenceContext(
+      passage,
+      underlinedExpression,
+    );
+    const directLeak = sentenceContext
+      ? findDirectAnswerLeakage(underlinedExpression, sentenceContext.next)
+      : null;
+    if (directLeak) {
+      add(
+        requestedDifficulty === "KILLER" ? "error" : "warning",
+        "implied-meaning-direct-answer-leak",
+        `The underline is too directly answered by the next sentence: ${directLeak}.`,
+      );
+    }
+
+    if (
+      requestedDifficulty === "KILLER" &&
+      sentenceContext?.next &&
+      hasDirectExplanationCue(sentenceContext.next) &&
+      !hasSurfaceHiddenGapSignal(underlinedExpression, reasoningGap)
+    ) {
+      add(
+        "warning",
+        "implied-meaning-low-surface-gap",
+        "The target looks like a direct main-idea paraphrase rather than a high-gap implied-meaning target.",
+      );
+    }
+  }
+
+  if (
+    correctText &&
+    impliedMeaning &&
+    normalizeComparableText(correctText) !== normalizeComparableText(impliedMeaning) &&
+    countMeaningTokenOverlap(meaningTokens(correctText), meaningTokens(impliedMeaning)) < 2
+  ) {
+    add(
+      "warning",
+      "implied-meaning-answer-summary-mismatch",
+      "impliedMeaning should match the correct option's core meaning closely enough to audit the answer.",
+    );
+  }
+
+  if (correctText.length > 0 && correctText.length < 8) {
+    add(
+      "warning",
+      "implied-meaning-shallow-correct-option",
+      "IMPLIED_MEANING correct option is too short to express a real implied meaning.",
+    );
+  }
+
+  const evidenceChain = Array.isArray(question.evidenceChain)
+    ? question.evidenceChain.map((item: unknown) => normalizeText(item)).filter(Boolean)
+    : [];
+  if (evidenceChain.length < 2) {
+    add(
+      requestedDifficulty === "KILLER" ? "error" : "warning",
+      "implied-meaning-thin-evidence-chain",
+      "IMPLIED_MEANING should include at least two evidenceChain steps.",
+    );
+  }
+
+  if (!passage || !correctText) return;
+
+  const attractiveWrongCount = countAttractiveImpliedMeaningWrongOptions(
+    options,
+    correctLabel,
+    passage,
+    correctText,
+    underlinedExpression,
+    impliedMeaning,
+  );
+  if (requestedDifficulty === "KILLER" && attractiveWrongCount < 2) {
+    add(
+      "warning",
+      "implied-meaning-weak-distractors",
+      "KILLER IMPLIED_MEANING should have at least two near-miss wrong options anchored in passage concepts.",
+    );
+  }
+
+  if (requestedDifficulty === "KILLER") {
+    const absoluteCue = findImpliedMeaningAbsoluteGiveawayOption(
+      options,
+      correctLabel,
+      passage,
+    );
+    if (absoluteCue) {
+      add(
+        "error",
+        "implied-meaning-absolute-giveaway-option",
+        `KILLER IMPLIED_MEANING has an easily eliminated absolute-word distractor: ${absoluteCue}.`,
+      );
+    }
+  }
+}
+
+function countAttractiveImpliedMeaningWrongOptions(
+  options: Record<string, unknown>[],
+  correctLabel: string,
+  passage: string,
+  correctText: string,
+  underlinedExpression: string,
+  impliedMeaning: string,
+): number {
+  const passageTokens = contentTokens(passage);
+  const correctTokens = meaningTokens(correctText);
+  const impliedTokens = meaningTokens(impliedMeaning || underlinedExpression);
+
+  return options
+    .filter((option) => normalizeLabel(option.label) !== correctLabel)
+    .filter((option) => {
+      const text = normalizeText(option.text);
+      const tokens = meaningTokens(text);
+      return (
+        text.length >= 18 ||
+        countTokenOverlap(contentTokens(text), passageTokens) >= 1 ||
+        countMeaningTokenOverlap(tokens, correctTokens) >= 1 ||
+        countMeaningTokenOverlap(tokens, impliedTokens) >= 1
+      );
+    }).length;
+}
+
+function isQuestionLikeImpliedMeaningTarget(expression: string): boolean {
+  const text = expression.trim();
+  return (
+    /[?？]\s*$/.test(text) ||
+    /^(?:what|why|how|when|where|which|who|whom|whose)\b/i.test(text)
+  );
+}
+
+function findExpressionSentenceContext(
+  passage: string,
+  expression: string,
+): { previous: string; sentence: string; next: string } | null {
+  const sentences = splitPassageSentences(passage, { includeShort: true });
+  const comparableExpression = normalizeComparableText(expression).replace(/[.!?]+$/, "");
+  if (!comparableExpression) return null;
+
+  const index = sentences.findIndex((sentence) =>
+    normalizeComparableText(sentence).includes(comparableExpression),
+  );
+  if (index === -1) return null;
+
+  return {
+    previous: sentences[index - 1] ?? "",
+    sentence: sentences[index],
+    next: sentences[index + 1] ?? "",
+  };
+}
+
+function findDirectAnswerLeakage(expression: string, nextSentence: string): string | null {
+  if (!nextSentence) return null;
+
+  const expressionText = normalizeComparableText(expression);
+  const nextText = normalizeComparableText(nextSentence);
+  const questionLike = isQuestionLikeImpliedMeaningTarget(expression);
+  const placeholderLike = /\b(?:something|somewhere|someone|somebody|what|why|how)\b/i.test(expressionText);
+
+  if ((questionLike || placeholderLike) && hasDirectExplanationCue(nextSentence)) {
+    return nextSentence.slice(0, 120);
+  }
+
+  if (
+    /\bbased on (?:something|what|why|which)\b/i.test(expressionText) &&
+    /\bbased on\b/i.test(nextText)
+  ) {
+    return nextSentence.slice(0, 120);
+  }
+
+  if (
+    /\breasons?\b/i.test(expressionText) &&
+    /\breasons?\b[\s\S]{0,80}\b(?:ultimately|based on|come from|derive from)\b/i.test(nextSentence)
+  ) {
+    return nextSentence.slice(0, 120);
+  }
+
+  return null;
+}
+
+function hasDirectExplanationCue(sentence: string): boolean {
+  return /\b(?:the answer|this means|that means|in other words|that is|namely|ultimately|is based on|are based on|based on|is that|are that|because|since|therefore|thus|for this reason)\b/i.test(sentence);
+}
+
+function hasSurfaceHiddenGapSignal(expression: string, reasoningGap: string): boolean {
+  const combined = `${expression} ${reasoningGap}`;
+  return (
+    /\b(?:not merely|not simply|rather than|instead of|while|although|whereas|but|yet|creatures?|beggar|currency|map|mirror|bridge|mask|lens|architecture|grave|shadow|tool|upstream|downstream|answerable|reorganized|surface|hidden|literal|metaphor|표면|직역|비유|압축|대조|역설|겉보기|실제|함축|간극)\b/i.test(combined) ||
+    /[가-힣]*(?:표면|직역|비유|압축|대조|역설|겉보기|실제|함축|간극)[가-힣]*/.test(combined)
+  );
+}
+
+function findImpliedMeaningAbsoluteGiveawayOption(
+  options: Record<string, unknown>[],
+  correctLabel: string,
+  passage: string,
+): string | null {
+  const passageText = normalizeComparableText(passage);
+  const cues: Array<[string, RegExp, RegExp?]> = [
+    ["완전히", /완전(?:히|하게)/, /\b(?:completely|entirely|fully)\b/i],
+    ["완전히 극복/해결", /완전(?:히|하게)\s*(?:극복|해소|해결|제거|사라지|대체)/, /\b(?:completely|entirely|fully)\s+(?:overcome|solve|eliminate|remove|replace)\b/i],
+    ["전적으로", /전적(?:으로|인)/, /\b(?:entirely|solely|exclusively)\b/i],
+    ["항상", /항상/, /\balways\b/i],
+    ["언제나", /언제나/, /\balways\b/i],
+    ["절대", /절대/, /\bnever\b/i],
+    ["오직", /오직/, /\b(?:only|solely|exclusively)\b/i],
+    ["무조건", /무조건/, /\bwithout exception\b/i],
+    ["반드시", /반드시/, /\bmust\b/i],
+    ["예외 없이", /예외\s*없이/, /\bwithout exception\b/i],
+    ["해야만", /(?:해야만|하여야만|일\s*때만)/],
+    ["만을/만이/만으로", /(?:만을|만이|만으로(?:는|도)?)/],
+    ["배제", /배제/],
+    ["완벽한/완벽하게", /완벽(?:한|히|하게)?/],
+    ["완벽하게 이해/설명/해결", /완벽(?:히|하게)?\s*(?:이해|파악|분석|설명|해결|예측|통제|보장|대체)/, /\bperfect(?:ly)?\s+(?:understand|grasp|analyze|explain|solve|predict|control|guarantee|replace)\b/i],
+    ["always", /\balways\b/i],
+    ["never", /\bnever\b/i],
+    ["completely", /\bcompletely\b/i],
+    ["entirely", /\bentirely\b/i],
+    ["solely", /\bsolely\b/i],
+    ["exclusively", /\bexclusively\b/i],
+    ["only", /\bonly\b/i],
+  ];
+
+  for (const option of options) {
+    if (normalizeLabel(option.label) === correctLabel) continue;
+    const text = normalizeText(option.text);
+    for (const [label, pattern, passagePattern] of cues) {
+      if (!pattern.test(text)) continue;
+      if (passagePattern?.test(passage) || passageText.includes(label.toLowerCase())) {
+        continue;
+      }
+      return `${normalizeText(option.label) || "wrong option"} contains "${label}"`;
+    }
+  }
+
+  return null;
 }
 
 function validateIrrelevantQuestion(
@@ -1848,6 +2370,24 @@ function contentTokens(text: string): Set<string> {
   return content;
 }
 
+function meaningTokens(text: string): Set<string> {
+  const tokens = text
+    .toLowerCase()
+    .match(/[a-z][a-z'-]{3,}|[가-힣]{2,}/g) ?? [];
+  const content = new Set<string>();
+  for (const token of tokens) {
+    if (IRRELEVANT_TOKEN_STOPWORDS.has(token)) continue;
+    content.add(token);
+    if (/^[a-z]/.test(token)) {
+      const stem = lightStemContentToken(token);
+      if (stem !== token && !IRRELEVANT_TOKEN_STOPWORDS.has(stem)) {
+        content.add(stem);
+      }
+    }
+  }
+  return content;
+}
+
 function countTokenOverlap(a: Set<string>, b: Set<string>): number {
   let count = 0;
   for (const token of a) {
@@ -1855,6 +2395,8 @@ function countTokenOverlap(a: Set<string>, b: Set<string>): number {
   }
   return count;
 }
+
+const countMeaningTokenOverlap = countTokenOverlap;
 
 function findNewExtremeCue(sentence: string, passage: string): string | null {
   const cues = ["always", "never", "everyone", "everybody", "completely", "entirely"];

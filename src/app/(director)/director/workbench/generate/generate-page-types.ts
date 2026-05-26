@@ -73,7 +73,7 @@ export function buildQuestionText(q: any): string {
   if (q.passageWithBlank) parts.push(q.passageWithBlank);
   // GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_INSERT, ANTONYM: 마커가 포함된 지문
   if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
-  // REFERENCE, CONTEXT_MEANING: 밑줄 대명사/단어가 포함된 지문
+  // IMPLIED_MEANING, REFERENCE, CONTEXT_MEANING: 밑줄 표현/대명사/단어가 포함된 지문
   if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
   // IRRELEVANT: 번호가 매겨진 지문
   if (q.passageWithNumbers) parts.push(q.passageWithNumbers);

@@ -33,12 +33,13 @@ wrongOptionExplanations requirements:
 - Each wrong option explanation must explain both why the option may look tempting and the concrete passage clue that makes it wrong.
 - Avoid generic phrases such as "it is not in the passage" unless you also name the exact missing or contradicted passage evidence.
 - Use concise Korean, preferably 1-2 sentences per wrong option.
-- For Korean visible options, especially REFERENCE/TOPIC_MAIN_IDEA/CONTENT_MATCH, name the visible Korean option text first. Do not start the explanation only with the English source phrase; English passage terms may be used as evidence after the Korean option is identified.
+- For Korean visible options, especially IMPLIED_MEANING/REFERENCE/TOPIC_MAIN_IDEA/CONTENT_MATCH, name the visible Korean option text first. Do not start the explanation only with the English source phrase; English passage terms may be used as evidence after the Korean option is identified.
 
 Type-specific checks:
 - SENTENCE_ORDER and SENTENCE_INSERT: cite ordering clues such as reference words, contrast, chronology, cause/effect, or topic flow.
 - TITLE and TOPIC_MAIN_IDEA: build the four wrong options as different title/main-idea traps: topic-only, example-only, too broad, too narrow, reversed stance, or attractive but unsupported implication. Avoid title options that are merely silly.
 - CONTENT_MATCH: the false statement should be a subtle distortion of a real passage claim, not an invented fact. Use traps such as cause reversal, future/past criterion confusion, scope exaggeration, condition loss, or example-to-claim shift.
+- IMPLIED_MEANING: underline a phrase, clause, or short sentence whose implied meaning is decided by surrounding logic. Do not use a single vocabulary word, pronoun, dictionary idiom, rhetorical question, or self-answering question. The correct Korean option must paraphrase the hidden meaning, not translate the surface text. There must be a real surface-to-hidden gap; if the next sentence directly paraphrases the answer, choose a different underline. Wrong options must be near-misses anchored in passage concepts and fail by scope, cause-effect, stance, example/generalization, or local-vs-global evidence. For KILLER, require at least two evidence links before/after the underlined expression, fill surfaceMeaning and reasoningGap honestly, avoid giveaway absolutes such as 완전히, 전적으로, 항상, 언제나, 오직, 무조건, 반드시, 예외 없이, 해야만, 만을/만이/만으로, 배제, completely, entirely, always, never, only, and keep all five options similar in length and abstraction.
 - BLANK_INFERENCE: all options must fit the same grammatical slot. Wrong options should echo real passage vocabulary or concepts while violating the sentence's logical relation. Do not use unrelated distractors such as social comparison, vague life lessons, or generic experience unless they are explicitly in the passage.
 - BLANK_INFERENCE with blankAnswerMode DOUBLE_NEGATIVE: treat it as a negative-paraphrase blank. The passage itself does not need a visible negation cue. The correct option must be a non-verbatim negative/privative paraphrase of originalExpression, and at least two wrong options must also contain negative/privative language so the negative-looking option is not a shortcut. Avoid tangled negation such as "not ... without", "unable ... without", or "impossible ... without" when it changes a helpful function into a strict necessity.
 - BLANK_INFERENCE native-English check: reject awkward collocations such as "achievement(s) failing", "prevent your achievement from failing", "achieved success", "capacity to lack", "events cannot survive", "guarantee major crops", "not allow any disruption", or "can be not entirely immune". Use natural exam English such as "prevent success from eroding/collapsing", "keep current success from eroding", "freedom from dependence on...", "cannot be dismissed as trivial", "secure stable supplies of major crops", or "are not immune to...".
@@ -113,7 +114,7 @@ const GEMINI_COMPACT_DIFFICULTY_RUBRIC: Record<string, string> = {
 };
 
 const GEMINI_COMPACT_MARKING_RUBRIC = [
-  "- Any underlinedPronoun, underlinedWord, originalExpression, markedWords, or markedExpressions must exist verbatim in the original passage.",
+  "- Any underlinedPronoun, underlinedWord, underlinedExpression, originalExpression, markedWords, or markedExpressions must exist verbatim in the original passage.",
   "- Very short words such as it, is, in, as, or to may only be selected as standalone tokens, never as substrings.",
   "- surroundingText must be an exact 40-80 character slice around the selected expression.",
   "- Do not generate full-passage display fields such as passageWithBlank, passageWithMarkers, passageWithUnderline, or passageWithNumbers. The server reconstructs them.",
@@ -145,7 +146,7 @@ ${teacherIntentBlock?.trim() ? `\n\n## Teacher annotations\n${teacherIntentBlock
 ${analysisBlock}
 
 ## Available question types
-Multiple choice: BLANK_INFERENCE, GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_ORDER, SENTENCE_INSERT, TOPIC_MAIN_IDEA, TITLE, REFERENCE, CONTENT_MATCH, IRRELEVANT
+Multiple choice: BLANK_INFERENCE, GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_ORDER, SENTENCE_INSERT, TOPIC_MAIN_IDEA, TITLE, IMPLIED_MEANING, REFERENCE, CONTENT_MATCH, IRRELEVANT
 Constructed response: CONDITIONAL_WRITING, SENTENCE_TRANSFORM, FILL_BLANK_KEY, SUMMARY_COMPLETE, WORD_ORDER, GRAMMAR_CORRECTION
 Vocabulary: CONTEXT_MEANING, SYNONYM, ANTONYM
 

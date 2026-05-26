@@ -15,6 +15,7 @@ export const EXAM_TYPE_GROUPS = [
       { id: "SENTENCE_INSERT", label: "문장 삽입" },
       { id: "TOPIC_MAIN_IDEA", label: "주제/요지" },
       { id: "TITLE", label: "제목 추론" },
+      { id: "IMPLIED_MEANING", label: "함축 의미 추론" },
       { id: "REFERENCE", label: "지칭 추론" },
       { id: "CONTENT_MATCH", label: "내용 일치" },
       { id: "IRRELEVANT", label: "무관한 문장" },
@@ -52,7 +53,7 @@ export const Q_TYPE_LABELS: Record<string, string> = {
 export const Q_SUBTYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론", GRAMMAR_ERROR: "어법 판단", VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_INSERT: "문장 삽입", SENTENCE_ORDER: "글의 순서", TOPIC_MAIN_IDEA: "주제/요지",
-  TITLE: "제목 추론", REFERENCE: "지칭 추론", CONTENT_MATCH: "내용 일치",
+  TITLE: "제목 추론", IMPLIED_MEANING: "함축 의미 추론", REFERENCE: "지칭 추론", CONTENT_MATCH: "내용 일치",
   IRRELEVANT: "무관한 문장", CONDITIONAL_WRITING: "조건부 영작", SENTENCE_TRANSFORM: "문장 전환",
   FILL_BLANK_KEY: "핵심 표현 빈칸", SUMMARY_COMPLETE: "요약문 완성", WORD_ORDER: "배열 영작",
   GRAMMAR_CORRECTION: "문법 오류 수정", CONTEXT_MEANING: "문맥 속 의미", SYNONYM: "동의어", ANTONYM: "반의어",

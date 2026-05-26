@@ -119,6 +119,7 @@ export const QUESTION_SUBTYPES = {
     { value: "SENTENCE_INSERT", label: "문장 삽입" },
     { value: "TOPIC_MAIN_IDEA", label: "주제/요지" },
     { value: "TITLE", label: "제목 추론" },
+    { value: "IMPLIED_MEANING", label: "함축 의미 추론" },
     { value: "REFERENCE", label: "지칭 추론" },
     { value: "CONTENT_MATCH", label: "내용 일치" },
     { value: "IRRELEVANT", label: "무관한 문장" },

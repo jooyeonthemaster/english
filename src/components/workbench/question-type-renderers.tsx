@@ -11,6 +11,7 @@ import {
   type SentenceInsertQuestion,
   type TopicMainIdeaQuestion,
   type TitleQuestion,
+  type ImpliedMeaningQuestion,
   type ReferenceQuestion,
   type ContentMatchQuestion,
   type IrrelevantQuestion,
@@ -192,6 +193,54 @@ export function TitleRenderer({ q }: { q: TitleQuestion }) {
       </div>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
+        <AnswerLine answer={q.correctAnswer} />
+        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
+      </AnswerRevealSection>
+    </>
+  );
+}
+
+export function ImpliedMeaningRenderer({ q }: { q: ImpliedMeaningQuestion }) {
+  return (
+    <>
+      <Direction text={q.direction} />
+      {q.underlinedExpression && (
+        <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
+          <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">밑줄 표현</span>
+          <p className="text-[14px] font-bold text-indigo-900 mt-0.5 leading-relaxed">{q.underlinedExpression}</p>
+        </div>
+      )}
+      <PassageBlock>{renderUnderlinedText(q.passageWithUnderline)}</PassageBlock>
+      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <AnswerRevealSection>
+        {(q.surfaceMeaning || q.reasoningGap) && (
+          <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 space-y-2">
+            <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">표면과 함축</span>
+            {q.surfaceMeaning && (
+              <p className="text-[12px] text-amber-900 leading-relaxed">
+                <span className="font-bold">표면 의미: </span>{q.surfaceMeaning}
+              </p>
+            )}
+            {q.reasoningGap && (
+              <p className="text-[12px] text-amber-900 leading-relaxed">
+                <span className="font-bold">추론 간극: </span>{q.reasoningGap}
+              </p>
+            )}
+          </div>
+        )}
+        {q.evidenceChain && q.evidenceChain.length > 0 && (
+          <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">근거 흐름</span>
+            <ol className="space-y-1">
+              {q.evidenceChain.map((evidence, i) => (
+                <li key={i} className="text-[12px] text-slate-700 leading-relaxed flex gap-2">
+                  <span className="font-bold text-blue-600 shrink-0">{i + 1}.</span>
+                  <span>{evidence}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
       </AnswerRevealSection>

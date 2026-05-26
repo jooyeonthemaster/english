@@ -1,5 +1,5 @@
 /**
- * Smoke-test ALL 19 question types at KILLER difficulty using a real DB passage.
+ * Smoke-test ALL 20 question types at KILLER difficulty using a real DB passage.
  * Saves raw outputs + per-question marker/killer analysis to JSON for inspection.
  */
 import * as fs from "fs";
@@ -19,7 +19,7 @@ if (!fs.existsSync(OUTDIR)) fs.mkdirSync(OUTDIR, { recursive: true });
 const ALL_TYPES = [
   "BLANK_INFERENCE", "GRAMMAR_ERROR", "VOCAB_CHOICE",
   "SENTENCE_ORDER", "SENTENCE_INSERT", "TOPIC_MAIN_IDEA",
-  "TITLE", "REFERENCE", "CONTENT_MATCH", "IRRELEVANT",
+  "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH", "IRRELEVANT",
   "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY",
   "SUMMARY_COMPLETE", "WORD_ORDER", "GRAMMAR_CORRECTION",
   "CONTEXT_MEANING", "SYNONYM", "ANTONYM",

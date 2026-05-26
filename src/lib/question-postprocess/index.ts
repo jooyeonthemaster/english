@@ -16,6 +16,7 @@ import { processBlankInference } from "./processors/blank-inference";
 import { processContextMeaning } from "./processors/context-meaning";
 import { processFillBlankKey } from "./processors/fill-blank-key";
 import { processGrammarError } from "./processors/grammar-error";
+import { processImpliedMeaning } from "./processors/implied-meaning";
 import { processIrrelevant } from "./processors/irrelevant";
 import { processReference } from "./processors/reference";
 import { processSentenceInsert } from "./processors/sentence-insert";
@@ -100,6 +101,9 @@ export function postProcessQuestion(
 
       case "REFERENCE":
         return processReference(passageContent, aiOutput);
+
+      case "IMPLIED_MEANING":
+        return processImpliedMeaning(passageContent, aiOutput);
 
       case "CONTEXT_MEANING":
         return processContextMeaning(passageContent, aiOutput);
@@ -233,6 +237,7 @@ function sanitizeAntonymOptionText(text: string): string {
 }
 
 const VISIBLE_KOREAN_OPTION_TYPES = new Set([
+  "IMPLIED_MEANING",
   "REFERENCE",
   "TOPIC_MAIN_IDEA",
   "CONTENT_MATCH",

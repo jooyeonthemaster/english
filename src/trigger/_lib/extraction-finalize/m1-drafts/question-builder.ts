@@ -149,6 +149,7 @@ export function buildProblemEvidenceFromItems(
         | "GRAMMAR_CORRECTION"
         | "VOCAB_CHOICE"
         | "CONTEXT_MEANING"
+        | "IMPLIED_MEANING"
         | "REFERENCE"
         | "CONTENT_MATCH"
         | "TOPIC_MAIN_IDEA"

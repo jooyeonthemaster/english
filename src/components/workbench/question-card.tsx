@@ -57,6 +57,7 @@ const SUBTYPE_LABELS: Record<string, string> = {
   SENTENCE_INSERT: "문장 삽입",
   TOPIC_MAIN_IDEA: "주제/요지",
   TITLE: "제목 추론",
+  IMPLIED_MEANING: "함축 의미 추론",
   REFERENCE: "지칭 추론",
   CONTENT_MATCH: "내용 일치",
   IRRELEVANT: "무관한 문장",
@@ -309,7 +310,7 @@ export function QuestionCard({
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const passageMarking = detectPassageMarking(q.passage?.content || q.questionText);
-  const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "ANTONYM"];
+  const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "IMPLIED_MEANING", "ANTONYM"];
   const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
   const sub = q.subType || "";
   const needsUnderline = UNDERLINE_TYPES.includes(sub);

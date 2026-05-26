@@ -13,6 +13,7 @@ import {
   SentenceInsertRenderer,
   TopicMainIdeaRenderer,
   TitleRenderer,
+  ImpliedMeaningRenderer,
   ReferenceRenderer,
   ContentMatchRenderer,
   IrrelevantRenderer,
@@ -280,6 +281,7 @@ function buildPassageWithUnderlineForDisplay(
 }
 
 const DISPLAY_KOREAN_OPTION_TYPES = new Set([
+  "IMPLIED_MEANING",
   "REFERENCE",
   "TOPIC_MAIN_IDEA",
   "CONTENT_MATCH",
@@ -441,6 +443,7 @@ function hasStructuredFields(typeId: string, q: any): boolean {
     case "TITLE":
     case "CONTENT_MATCH":
       return !!q.direction && !!q.options;
+    case "IMPLIED_MEANING":
     case "REFERENCE":
     case "CONTEXT_MEANING":
       return !!q.passageWithUnderline && !!q.direction;
@@ -482,6 +485,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <TopicMainIdeaRenderer q={q} />;
     case "TITLE":
       return <TitleRenderer q={q} />;
+    case "IMPLIED_MEANING":
+      return <ImpliedMeaningRenderer q={q} />;
     case "REFERENCE":
       return <ReferenceRenderer q={q} />;
     case "CONTENT_MATCH":

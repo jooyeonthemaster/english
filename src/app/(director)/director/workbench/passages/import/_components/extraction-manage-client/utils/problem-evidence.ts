@@ -207,6 +207,7 @@ export function labelQuestionType(type: string | null | undefined, fallback?: st
     GRAMMAR_CORRECTION: "어법 수정",
     VOCAB_CHOICE: "어휘",
     CONTEXT_MEANING: "문맥 의미",
+    IMPLIED_MEANING: "함축 의미",
     REFERENCE: "지칭",
     CONTENT_MATCH: "내용 일치",
     TOPIC_MAIN_IDEA: "주제/요지",

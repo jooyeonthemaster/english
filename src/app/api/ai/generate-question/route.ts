@@ -48,6 +48,7 @@ const DIFFICULTY_RUBRIC: Record<string, string> = {
 - 모든 오답은 전부 그럴듯해야 하며, 단순 반대말/무관 단어/길이 차이로 쉽게 지워지면 안 됩니다.
 - 해설은 왜 정답인지뿐 아니라 매력적인 오답이 왜 틀렸는지 핵심 함정을 짚어야 합니다.
 - 어휘형 KILLER는 단순 사전식 synonym/antonym을 피하고, 문맥상 뉘앙스/평가/논리 역할까지 보게 하세요.
+- 함축 의미 추론 KILLER는 밑줄 표현 전후의 최소 두 근거를 연결해야 풀리게 하고, 오답은 지문 개념을 빌린 근접 오답으로 설계하세요.
 - 지칭 추론은 대명사의 문법적 수/의미 역할/앞뒤 논리를 모두 확인해야 풀리게 하세요.
 - 서술형 KILLER는 한 개 문법 포인트가 아니라 2개 이상의 조건을 동시에 만족하게 하세요.
 - 요약문/영작/배열 문제의 정답은 자연스러운 영어 collocation이어야 하며, 어색한 조합은 금지합니다.
@@ -55,7 +56,7 @@ const DIFFICULTY_RUBRIC: Record<string, string> = {
 };
 
 const MARKING_RUBRIC = `## 표시/위치 정확도 필수 규칙
-- underlinedPronoun/underlinedWord/originalExpression/markedWords/markedExpressions는 원문에 실제로 존재하는 표현만 쓰세요.
+- underlinedPronoun/underlinedWord/underlinedExpression/originalExpression/markedWords/markedExpressions는 원문에 실제로 존재하는 표현만 쓰세요.
 - 특히 "it", "is", "in", "as" 같은 짧은 단어는 반드시 독립 단어로 존재하는 위치만 선택하세요. digital, commitments, within 같은 단어 내부의 일부를 선택하면 실패입니다.
 - surroundingText는 선택한 표현을 포함하는 원문 그대로의 40~80자여야 하며, 철자/공백/문장부호를 바꾸지 마세요.
 - passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers 같은 지문 전체 복사 필드는 생성하지 마세요.`;
@@ -76,7 +77,7 @@ function filterAnnotationsForType(
   const vocabTypes = VOCAB_TYPES;
   const structureTypes = new Set([
     "ORDERING", "SENTENCE_INSERT", "TOPIC_GIST", "TITLE",
-    "MAIN_IDEA", "IRRELEVANT_SENTENCE", "SUMMARY",
+    "MAIN_IDEA", "IMPLIED_MEANING", "IRRELEVANT_SENTENCE", "SUMMARY",
   ]);
 
   return anns.filter((a) => {
