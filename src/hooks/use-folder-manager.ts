@@ -130,6 +130,7 @@ export function useFolderManager({
             name: trimmedName,
             description: null,
             color: null,
+            createdAt: new Date().toISOString(),
             _count: { items: 0, children: 0 },
           },
         ]);

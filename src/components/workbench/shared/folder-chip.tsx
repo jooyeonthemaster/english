@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { CollectionItem } from "./types";
 import { FOLDER_COLORS } from "./constants";
+import { formatFolderDate } from "./folder-date";
 
 interface FolderChipProps {
   collection: CollectionItem;
@@ -120,28 +121,35 @@ export function FolderChip({
     );
   }
 
+  const dateLabel = formatFolderDate(collection.createdAt);
+
   return (
     <div
       ref={dropRef}
       onClick={onClick}
       onDoubleClick={startEditing}
-      className={`group relative flex w-[100px] h-[72px] cursor-pointer flex-col items-center justify-center rounded-xl border transition-all ${
+      className={`group relative flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 ${
         isDragOver
-          ? "bg-blue-50 border-blue-400 scale-105 shadow-md"
-          : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
+          ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
+          : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
       }`}
     >
       {isDragOver ? (
-        <FolderOpen className="w-6 h-6 mb-1" style={{ color }} />
+        <FolderOpen className="mb-0.5 size-5" style={{ color }} />
       ) : (
-        <Folder className="w-6 h-6 mb-1" style={{ color }} />
+        <Folder className="mb-0.5 size-5" style={{ color }} />
       )}
-      <span className="text-[11px] font-semibold text-slate-700 truncate max-w-[80px] text-center leading-tight">
+      <span className="max-w-[84px] truncate text-center text-[11px] font-bold leading-tight text-slate-800">
         {collection.name}
       </span>
-      <span className="text-[9px] text-slate-400">
+      <span className="text-[10px] tabular-nums text-slate-400">
         {collection._count.items}개
       </span>
+      {dateLabel ? (
+        <span className="mt-0.5 text-[9px] tabular-nums text-slate-300">
+          {dateLabel}
+        </span>
+      ) : null}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button

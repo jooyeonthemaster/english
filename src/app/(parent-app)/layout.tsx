@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, TrendingUp, CreditCard, MessageSquare, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 
 const bottomTabs = [
   { label: "홈", icon: Home, href: "/parent" },
@@ -33,6 +34,10 @@ export default function ParentAppLayout({
         {/* Content */}
         <main className={cn("flex-1", !isLoginPage && "pb-20")}>
           {children}
+          <BusinessInfoBlock
+            compact
+            className="mt-8 border-t border-slate-200 bg-white"
+          />
         </main>
 
         {/* Bottom Navigation */}

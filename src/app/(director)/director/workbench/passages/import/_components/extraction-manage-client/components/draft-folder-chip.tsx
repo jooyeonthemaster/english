@@ -14,6 +14,8 @@ import {
 import { FOLDER_COLORS } from "@/components/workbench/shared/constants";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 
+import { formatFolderDate } from "./folder-date";
+
 interface DraftFolderChipProps {
   collection: CollectionItem;
   dragItemIdKey: string;
@@ -141,6 +143,11 @@ export function DraftFolderChip({
       <span className="text-[10px] tabular-nums text-slate-400">
         {collection._count.items}개
       </span>
+      {formatFolderDate(collection.createdAt) ? (
+        <span className="mt-0.5 text-[9px] tabular-nums text-slate-300">
+          {formatFolderDate(collection.createdAt)}
+        </span>
+      ) : null}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button

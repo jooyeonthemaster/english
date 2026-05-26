@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
+import { GlobalBusinessFooter } from "@/components/legal/global-business-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/providers/session-provider";
 import "./globals.css";
@@ -82,6 +83,7 @@ export default function RootLayout({
       <body className={`${geistMono.variable} font-sans antialiased`}>
         <Providers>
           {children}
+          <GlobalBusinessFooter />
         </Providers>
         <Toaster position="top-center" richColors />
       </body>

@@ -30,6 +30,12 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
     () => getCachedDrafts() ?? [],
   );
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  // Sticky "last opened" id — keeps the most recently viewed draft visually
+  // marked even after the detail modal closes, so users can quickly find
+  // where they were.
+  const [lastViewedDraftId, setLastViewedDraftId] = useState<string | null>(
+    null,
+  );
   const [selectedDraftDetail, setSelectedDraftDetail] =
     useState<M1PassageDraftWithJob | null>(null);
   const [detailLoadingId, setDetailLoadingId] = useState<string | null>(null);
@@ -311,6 +317,7 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
       detailRequestSeq.current = seq;
       const optimisticDraft = drafts.find((draft) => draft.id === id) ?? null;
       setSelectedDraftId(id);
+      setLastViewedDraftId(id);
       setSelectedDraftDetail(optimisticDraft);
       setDetailLoadingId(id);
       setError(null);
@@ -362,6 +369,8 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
     setDrafts,
     selectedDraftId,
     setSelectedDraftId,
+    lastViewedDraftId,
+    setLastViewedDraftId,
     selectedDraftDetail,
     setSelectedDraftDetail,
     detailLoadingId,

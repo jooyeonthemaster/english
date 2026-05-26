@@ -59,33 +59,6 @@ export function CtaScene() {
           </div>
         </motion.div>
 
-        <div className="border-t border-gray-200 my-16 max-w-5xl mx-auto" />
-
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div className="flex items-baseline gap-3">
-            <span className="text-gray-900 font-black text-base tracking-widest">
-              SMOAT
-            </span>
-            <span className="text-gray-500 text-sm font-bold">
-              Intelligent English Authoring
-            </span>
-          </div>
-          <div className="text-gray-400 text-xs flex items-center gap-3 font-medium">
-            <span>© 2026</span>
-            <span aria-hidden>·</span>
-            <a href="mailto:support@smoat.ai" className="hover:text-gray-900 transition">
-              support@smoat.ai
-            </a>
-            <span aria-hidden>·</span>
-            <Link href="/terms" className="hover:text-gray-900 transition">
-              이용약관
-            </Link>
-            <span aria-hidden>·</span>
-            <Link href="/privacy" className="hover:text-gray-900 transition">
-              개인정보처리방침
-            </Link>
-          </div>
-        </div>
       </div>
     </section>
   );

@@ -332,7 +332,7 @@ export function MoveOrCopyFolderPicker({
           else openPicker();
         }}
         disabled={disabled}
-        className="inline-flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-200 bg-white px-2.5 text-[11px] font-medium text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <ArrowRightLeft className="w-3.5 h-3.5" />
         이동 / 복사

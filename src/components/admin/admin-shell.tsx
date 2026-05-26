@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
+import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -303,6 +304,10 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
               </div>
             )}
             {children}
+            <BusinessInfoBlock
+              compact
+              className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm"
+            />
           </main>
         </div>
       </div>

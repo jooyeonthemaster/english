@@ -105,9 +105,9 @@ export function GroupSection({
         accent
       }
     >
-      <header className="flex w-full items-center gap-2.5 border-b border-slate-100/70 bg-white px-4">
+      <header className="flex w-full items-start gap-2.5 border-b border-slate-100/70 bg-white px-4">
         <div
-          className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
+          className="-m-1 mt-3 flex shrink-0 cursor-pointer items-center p-1"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();
@@ -125,13 +125,13 @@ export function GroupSection({
             aria-label={`${label} 전체 선택`}
           />
         </div>
-        <div className="flex flex-1 items-center gap-2.5 py-3">
+        <div className="flex min-w-0 flex-1 items-start gap-2.5 py-3">
           <button
             type="button"
             onClick={onToggle}
             aria-expanded={expanded}
             aria-label={expanded ? "그룹 접기" : "그룹 펼치기"}
-            className="flex shrink-0 cursor-pointer items-center"
+            className="mt-1.5 flex shrink-0 cursor-pointer items-center"
           >
             <ChevronRight
               className={
@@ -171,9 +171,9 @@ export function GroupSection({
               type="button"
               onClick={onToggle}
               aria-expanded={expanded}
-              className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left transition-colors hover:opacity-90"
+              className="flex min-w-0 flex-1 cursor-pointer flex-wrap items-center gap-x-2 gap-y-1 text-left transition-colors hover:opacity-90"
             >
-              <h4 className="truncate text-sm font-bold tracking-tight text-slate-900">
+              <h4 className="min-w-0 break-all text-sm font-bold tracking-tight text-slate-900">
                 {label}
               </h4>
               <span
@@ -206,7 +206,7 @@ export function GroupSection({
                 </span>
               ) : null}
               {!expanded ? (
-                <span className="ml-auto text-[11px] font-medium text-slate-400">
+                <span className="ml-auto shrink-0 text-[11px] font-medium text-slate-400">
                   클릭해서 펼치기
                 </span>
               ) : null}

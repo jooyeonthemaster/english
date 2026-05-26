@@ -32,7 +32,7 @@ export function useDraftDisplay({
   const [appliedSearch, setAppliedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const [gridCols, setGridCols] = useState<GridCols>(3);
+  const [gridCols, setGridCols] = useState<GridCols>("grid3");
   const [jobFilter, setJobFilter] = useState<Set<string>>(() => new Set());
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
@@ -120,12 +120,13 @@ export function useDraftDisplay({
   ]);
 
   const availableJobs = useMemo(() => {
-    // Count drafts per job from the currently-visible drafts. Jobs without
-    // any drafts (PENDING / PROCESSING) still appear in the chip row so
-    // teachers can see them running — count is 0 in that case.
+    // The job-card row sits above the folder section and stays visible
+    // regardless of which folder is open, so counts must come from the full
+    // drafts list rather than the folder-scoped slice. Otherwise the card
+    // count would drop to 0 the moment a user navigated into a folder.
     const countByJob = new Map<string, number>();
     const draftIdsByJob = new Map<string, string[]>();
-    for (const d of draftsInActiveFolder) {
+    for (const d of drafts) {
       const jobId = d.job?.id;
       if (!jobId) continue;
       countByJob.set(jobId, (countByJob.get(jobId) ?? 0) + 1);
