@@ -29,6 +29,7 @@ export default async function PassageRegistrationPage() {
 
   return (
     <PassageRegistrationClient
+      academyId={staff.academyId}
       schools={schools}
       recentPassages={recentData.passages}
       initialCollections={

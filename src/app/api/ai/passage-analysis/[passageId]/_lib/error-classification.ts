@@ -142,6 +142,27 @@ export function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
     };
   }
 
+  if (/No object generated|could not parse the response|response did not match schema/i.test(combined)) {
+    const rawText =
+      typeof getErrorField(error, "text") === "string"
+        ? (getErrorField(error, "text") as string)
+        : "";
+    return {
+      status: 502,
+      code: "AI_RESPONSE_JSON_PARSE_FAILED",
+      message:
+        "AI 응답 형식이 일부 깨져 분석을 저장하지 못했습니다. 다시 시도해주세요.",
+      log: {
+        ...log,
+        finishReason: getErrorField(error, "finishReason"),
+        rawFinishReason: getErrorField(error, "rawFinishReason"),
+        rawLength: rawText.length,
+        previewStart: rawText.slice(0, 500),
+        previewEnd: rawText.slice(-500),
+      },
+    };
+  }
+
   if (error instanceof SyntaxError) {
     return {
       status: 502,

@@ -13,7 +13,8 @@ import {
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   buildQuestionTypeSettingsPrompt,
-  readGrammarErrorCountSetting,
+  readGrammarAnswerCountSetting,
+  readGrammarMarkerCountSetting,
   readIrrelevantSlotCountSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
@@ -170,13 +171,19 @@ export async function runQuestionGeneration(
       // (safety net: route-level guardrail should already have rejected this
       // case, but AUTO planner / Trigger.dev queued jobs may not have).
       let irrelevantSlotCount: number | undefined;
-      let grammarErrorCount: number | undefined;
+      let grammarMarkerCount: number | undefined;
+      let grammarAnswerCount: number | undefined;
       let effectiveTypeSettings: unknown = typeSettings?.[subType];
       if (subType === "GRAMMAR_ERROR" && isRecord(typeSettings?.[subType])) {
-        grammarErrorCount = readGrammarErrorCountSetting(typeSettings?.[subType]);
+        grammarMarkerCount = readGrammarMarkerCountSetting(typeSettings?.[subType]);
+        grammarAnswerCount = readGrammarAnswerCountSetting(
+          typeSettings?.[subType],
+          grammarMarkerCount,
+        );
         effectiveTypeSettings = {
           ...(typeSettings?.[subType] as Record<string, unknown>),
-          markerCount: grammarErrorCount,
+          markerCount: grammarMarkerCount,
+          answerCount: grammarAnswerCount,
         };
       }
       if (subType === "IRRELEVANT" && isRecord(typeSettings?.[subType])) {
@@ -209,12 +216,21 @@ export async function runQuestionGeneration(
       const targetCandidateBlock = buildQuestionTargetCandidateBlock(
         subType,
         passageContent,
-        { irrelevantSlotCount, grammarErrorCount, requestedDifficulty: diffLabel },
+        {
+          irrelevantSlotCount,
+          grammarMarkerCount,
+          grammarAnswerCount,
+          requestedDifficulty: diffLabel,
+        },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
       const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
       const responseSchema = hasAiSchema
-        ? getAiResponseSchema(subType, { irrelevantSlotCount, grammarErrorCount })
+        ? getAiResponseSchema(subType, {
+            irrelevantSlotCount,
+            grammarMarkerCount,
+            grammarAnswerCount,
+          })
         : isStructured
           ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
           : fallbackResponseSchema;
@@ -223,7 +239,7 @@ export async function runQuestionGeneration(
         ? STRUCTURED_OUTPUT_INSTRUCTIONS
         : UNSTRUCTURED_OUTPUT_INSTRUCTIONS;
       const perQuestionTokenFloor =
-        subType === "GRAMMAR_ERROR" && (grammarErrorCount ?? 1) > 5
+        subType === "GRAMMAR_ERROR" && ((grammarMarkerCount ?? 5) > 5 || (grammarAnswerCount ?? 1) > 1)
           ? 8_192
           : 4_096;
 
@@ -324,7 +340,8 @@ export async function runQuestionGeneration(
             question: mapped,
             passage: passageContent,
             requestedDifficulty: diffLabel,
-            grammarErrorCount,
+            grammarMarkerCount,
+            grammarAnswerCount,
           });
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",
@@ -520,10 +537,11 @@ export async function runQuestionGenerationWithEmptyRetry(
     0,
   );
   const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(input);
-  const largestGrammarErrorCount = getLargestGrammarErrorCount(input);
+  const largestGrammarMarkerCount = getLargestGrammarMarkerCount(input);
+  const largestGrammarAnswerCount = getLargestGrammarAnswerCount(input);
   const attempts = hasNegativeParaphraseBlank
     ? Math.max(6, Math.floor(maxAttempts))
-    : largestIrrelevantSlotCount > 5 || largestGrammarErrorCount > 1
+    : largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
       ? Math.max(6, Math.floor(maxAttempts))
       : Math.max(4, Math.floor(maxAttempts));
 
@@ -589,14 +607,27 @@ function getLargestIrrelevantSlotCount(input: RunGenerationInput): number {
   return maxSlotCount;
 }
 
-function getLargestGrammarErrorCount(input: RunGenerationInput): number {
-  let maxErrorCount = 0;
+function getLargestGrammarMarkerCount(input: RunGenerationInput): number {
+  let maxMarkerCount = 0;
   for (const item of input.plan) {
     if (item.subType !== "GRAMMAR_ERROR" || item.count <= 0) continue;
-    maxErrorCount = Math.max(
-      maxErrorCount,
-      readGrammarErrorCountSetting(input.typeSettings?.GRAMMAR_ERROR),
+    maxMarkerCount = Math.max(
+      maxMarkerCount,
+      readGrammarMarkerCountSetting(input.typeSettings?.GRAMMAR_ERROR),
     );
   }
-  return maxErrorCount;
+  return maxMarkerCount;
+}
+
+function getLargestGrammarAnswerCount(input: RunGenerationInput): number {
+  let maxAnswerCount = 0;
+  for (const item of input.plan) {
+    if (item.subType !== "GRAMMAR_ERROR" || item.count <= 0) continue;
+    const markerCount = readGrammarMarkerCountSetting(input.typeSettings?.GRAMMAR_ERROR);
+    maxAnswerCount = Math.max(
+      maxAnswerCount,
+      readGrammarAnswerCountSetting(input.typeSettings?.GRAMMAR_ERROR, markerCount),
+    );
+  }
+  return maxAnswerCount;
 }

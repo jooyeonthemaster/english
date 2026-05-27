@@ -1,8 +1,8 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
 /**
- * Gemini 3.5 Flash model instance for AI question generation & passage analysis.
- * Used with Vercel AI SDK's generateObject() for structured output.
+ * Gemini Flash model instance for AI question generation & passage analysis.
+ * Used with Vercel AI SDK structured JSON output.
  */
 export const GEMINI_MODEL_ID = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
 

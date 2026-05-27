@@ -33,6 +33,7 @@ export interface DraftCollectionItem {
 }
 
 export interface PassageRegistrationProps {
+  academyId: string;
   schools: Array<{
     id: string;
     name: string;

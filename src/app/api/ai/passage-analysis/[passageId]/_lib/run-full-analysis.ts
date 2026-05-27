@@ -36,10 +36,12 @@ export async function runFullAnalysis(
   const analysisResult = await generateQuestionText({
     generationPlan,
     logPrefix: "ANALYSIS",
-    maxRetries: 0,
+    maxRetries: 1,
     maxTokens: 20000,
     omitMaxTokens: generationPlan === "STANDARD",
     responseFormat: generationPlan === "STANDARD" ? "json_object" : undefined,
+    isRecoverableJsonText:
+      generationPlan === "STANDARD" ? canRecoverAnalysisJsonText : undefined,
     thinkingBudget: generationPlan === "STANDARD" ? 500 : undefined,
     timeoutMs: 110_000,
     temperature: 0.1,
@@ -78,4 +80,13 @@ export async function runFullAnalysis(
       : [],
   );
   return analysisData;
+}
+
+function canRecoverAnalysisJsonText(raw: string): boolean {
+  try {
+    JSON.parse(extractJsonFromModelResponse(raw));
+    return true;
+  } catch {
+    return false;
+  }
 }

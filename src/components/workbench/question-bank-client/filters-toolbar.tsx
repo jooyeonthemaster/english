@@ -102,8 +102,8 @@ export function QuestionFiltersToolbar({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">전체 상태</SelectItem>
-          <SelectItem value="true">승인 완료</SelectItem>
-          <SelectItem value="false">미승인</SelectItem>
+          <SelectItem value="true">검수완료</SelectItem>
+          <SelectItem value="false">미검수</SelectItem>
         </SelectContent>
       </Select>
 

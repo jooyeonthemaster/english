@@ -140,6 +140,7 @@ export async function POST(req: NextRequest) {
   let creditTxId: string | null = null;
   let creditMs = 0;
   let generationMs = 0;
+  let generationStartedAt: number | null = null;
   let persistenceMs = 0;
 
   try {
@@ -217,7 +218,7 @@ export async function POST(req: NextRequest) {
       .filter((v) => typeof v === "string" && v.trim().length > 0)
       .join("\n\n");
 
-    const generationStartedAt = Date.now();
+    generationStartedAt = Date.now();
     const rawAnalysis = await runFullAnalysis(
       passage,
       mergedPrompt || undefined,
@@ -290,6 +291,10 @@ export async function POST(req: NextRequest) {
       fastPath: true,
     });
   } catch (err) {
+    if (generationStartedAt !== null && generationMs === 0) {
+      generationMs = Date.now() - generationStartedAt;
+    }
+
     if (err instanceof InsufficientCreditsError) {
       await prisma.workbenchAiJob.update({
         where: { id: job.id },

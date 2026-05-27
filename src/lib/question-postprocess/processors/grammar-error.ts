@@ -64,6 +64,7 @@ export function processGrammarError(
   const correctAnswers = errorLabels.length > 0
     ? errorLabels
     : collectGrammarLabels(ai.correctAnswers).filter(Boolean);
+  const direction = normalizeGrammarDirection(ai.direction, correctAnswers.length);
 
   if (errorLabels.length === 1 && rawCorrectLabel && rawCorrectLabel !== errorLabels[0]) {
     warnings.push(
@@ -134,6 +135,7 @@ export function processGrammarError(
     success: true,
     data: {
       ...ai,
+      direction,
       correctAnswer,
       correctAnswers,
       markedExpressions: canonicalMarkedExpressions,
@@ -175,6 +177,17 @@ function canonicalizeOptions(
       text: displayedExpression || normalizeString(matchingOption?.text) || label,
     };
   });
+}
+
+function normalizeGrammarDirection(value: unknown, answerCount: number): string {
+  const text = normalizeString(value);
+  if (answerCount >= 2) {
+    return "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 모두 고르시오.";
+  }
+  if (!text || /모두|전부|(?:\d+|두|세|네|여러)\s*개/.test(text)) {
+    return "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?";
+  }
+  return text;
 }
 
 function getMarkedSurfaceExpression(markedExpression: GrammarMarkedExpression): string {

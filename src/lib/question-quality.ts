@@ -14,6 +14,9 @@ interface ValidateQuestionQualityInput {
   question: Record<string, unknown>;
   passage?: string;
   requestedDifficulty?: string;
+  grammarMarkerCount?: number;
+  grammarAnswerCount?: number;
+  /** Legacy name; interpreted as grammarMarkerCount. */
   grammarErrorCount?: number;
 }
 
@@ -21,14 +24,20 @@ const IRRELEVANT_SLOT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
 
-function getGrammarAnswerCountRange(markedCount: number): [number, number] {
-  const count = Math.min(
+function normalizeGrammarMarkedCount(markedCount: unknown): number {
+  const n = typeof markedCount === "number" ? markedCount : Number(markedCount);
+  if (!Number.isFinite(n)) return GRAMMAR_MARKER_COUNT_MIN;
+  return Math.min(
     GRAMMAR_MARKER_COUNT_MAX,
-    Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(markedCount)),
+    Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(n)),
   );
-  const min = count >= 6 ? 2 : 1;
-  const max = Math.min(count - 1, Math.max(min, Math.ceil(count / 2)));
-  return [min, max];
+}
+
+function normalizeGrammarAnswerCount(answerCount: unknown, markedCount: number): number {
+  const n = typeof answerCount === "number" ? answerCount : Number(answerCount);
+  const max = Math.max(1, markedCount);
+  if (!Number.isFinite(n)) return 1;
+  return Math.min(max, Math.max(1, Math.round(n)));
 }
 
 const MC_TYPE_IDS = new Set([
@@ -71,7 +80,7 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, the answer should require connecting at least two sentences or a concession/cause-effect relation.",
   ],
   GRAMMAR_ERROR: [
-    "Mark 5-10 real expressions from the original passage. Expanded settings control marked-position count; the actual answer count should vary and must not include every label.",
+    "Mark 5-10 real expressions from the original passage. Detailed settings control both marked-position count and the exact answer count, including the case where every label is an answer.",
     "The error must test a meaningful grammar point such as agreement, parallelism, modification, tense/aspect, reference, or verb form.",
     "Every non-error marked expression must still be a defensible grammar judgment point with a clear explanation, not padding.",
     "For KILLER, avoid an obvious spelling-level error; the wrong expression should look natural until the sentence structure is checked.",
@@ -198,13 +207,21 @@ export function getTypeQualityRubric(typeId: string, difficulty?: string): strin
 export function buildQuestionTargetCandidateBlock(
   typeId: string,
   passage: string,
-  options: { irrelevantSlotCount?: number; grammarErrorCount?: number; requestedDifficulty?: string } = {},
+  options: {
+    irrelevantSlotCount?: number;
+    grammarMarkerCount?: number;
+    grammarAnswerCount?: number;
+    /** Legacy name; interpreted as grammarMarkerCount. */
+    grammarErrorCount?: number;
+    requestedDifficulty?: string;
+  } = {},
 ): string {
   switch (typeId) {
     case "GRAMMAR_ERROR":
       return buildGrammarErrorCandidateBlock(
         passage,
-        options.grammarErrorCount,
+        options.grammarMarkerCount ?? options.grammarErrorCount,
+        options.grammarAnswerCount,
         options.requestedDifficulty,
       );
     case "IRRELEVANT":
@@ -230,14 +247,12 @@ export function buildQuestionTargetCandidateBlock(
 function buildGrammarErrorCandidateBlock(
   passage: string,
   requestedMarkerCount = 5,
+  requestedAnswerCount = 1,
   requestedDifficulty?: string,
 ): string {
   const sentences = splitPassageSentences(passage);
-  const markedCount = Math.min(
-    GRAMMAR_MARKER_COUNT_MAX,
-    Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(requestedMarkerCount)),
-  );
-  const [answerMin, answerMax] = getGrammarAnswerCountRange(markedCount);
+  const markedCount = normalizeGrammarMarkedCount(requestedMarkerCount);
+  const answerCount = normalizeGrammarAnswerCount(requestedAnswerCount, markedCount);
   const labels = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"]
     .slice(0, markedCount)
     .join(" ");
@@ -245,8 +260,11 @@ function buildGrammarErrorCandidateBlock(
   return [
     "## GRAMMAR_ERROR target planning guardrail",
     `- The final item must contain ${markedCount} marked expression(s) labeled ${labels}.`,
-    `- Randomly choose ${answerMin}~${answerMax} grammatically incorrect answer label(s). Do not disclose the count in the direction.`,
-    "- Never make every marked expression incorrect; at least one label must remain a grammatically correct non-answer so 오답 분석 can be written.",
+    `- Exactly ${answerCount} marked expression(s) must be grammatically incorrect.`,
+    answerCount >= 2
+      ? "- In the direction, do not disclose the answer count; ask students to choose all grammatically incorrect parts using '모두'."
+      : "- In the direction, use single-answer wording for one grammatically incorrect part.",
+    "- If the requested answer count is lower than the marked count, keep the remaining labels grammatically correct as non-answer decoys. If it equals the marked count, every label must be intentionally incorrect and 오답 분석 can be empty.",
     "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
     "- Prefer high-value grammar decisions: finite vs non-finite verb, subject-verb agreement, modifier active/passive, parallelism, relative/nominal clause choice, pronoun agreement, complement form, comparison structure, and preposition vs conjunction.",
     "- Avoid padding with articles, tiny prepositions, fixed verb-complement patterns, or expressions whose correctness can be judged without reading the sentence.",
@@ -447,6 +465,8 @@ export function validateQuestionQuality({
   question,
   passage,
   requestedDifficulty,
+  grammarMarkerCount,
+  grammarAnswerCount,
   grammarErrorCount,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
@@ -460,7 +480,15 @@ export function validateQuestionQuality({
 
   validateOptions(question, typeId, add);
   validateMarkedText(question, add);
-  validateTypeSpecific(question, typeId, passage, requestedDifficulty, grammarErrorCount, add);
+  validateTypeSpecific(
+    question,
+    typeId,
+    passage,
+    requestedDifficulty,
+    grammarMarkerCount ?? grammarErrorCount,
+    grammarAnswerCount,
+    add,
+  );
 
   if (requestedDifficulty === "KILLER") {
     validateKillerBar(question, typeId, add);
@@ -836,7 +864,8 @@ function validateTypeSpecific(
   typeId: string,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
-  grammarErrorCount: number | undefined,
+  grammarMarkerCount: number | undefined,
+  grammarAnswerCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -880,13 +909,11 @@ function validateTypeSpecific(
       : [];
     const passageWithMarkers = normalizeText(question.passageWithMarkers);
     const markerCount = countUnderlineMarkers(passageWithMarkers);
-    const expectedMarkedCount =
-      typeof grammarErrorCount === "number" && Number.isFinite(grammarErrorCount)
-        ? Math.min(
-            GRAMMAR_MARKER_COUNT_MAX,
-            Math.max(GRAMMAR_MARKER_COUNT_MIN, Math.round(grammarErrorCount)),
-          )
-        : GRAMMAR_MARKER_COUNT_MIN;
+    const expectedMarkedCount = normalizeGrammarMarkedCount(grammarMarkerCount);
+    const expectedAnswerCount = normalizeGrammarAnswerCount(
+      grammarAnswerCount,
+      expectedMarkedCount,
+    );
     if (markedExpressions.length !== expectedMarkedCount) {
       add("error", "grammar-marker-count", `Expected ${expectedMarkedCount} grammar marked expressions, got ${markedExpressions.length}.`);
     }
@@ -898,9 +925,8 @@ function validateTypeSpecific(
       .filter((markedExpression) => markedExpression.isError === true)
       .map((markedExpression) => normalizeLabel(markedExpression.label))
       .filter(Boolean);
-    const [minErrorCount, maxErrorCount] = getGrammarAnswerCountRange(expectedMarkedCount);
-    if (errorLabels.length < minErrorCount || errorLabels.length > maxErrorCount) {
-      add("error", "grammar-error-count", `Expected ${minErrorCount}~${maxErrorCount} grammar error answer(s) for ${expectedMarkedCount} marked expressions, got ${errorLabels.length}.`);
+    if (errorLabels.length !== expectedAnswerCount) {
+      add("error", "grammar-error-count", `Expected exactly ${expectedAnswerCount} grammar error answer(s) for ${expectedMarkedCount} marked expressions, got ${errorLabels.length}.`);
     }
     const answerLabels = collectCorrectAnswerLabels(question);
     const missingAnswerLabels = errorLabels.filter((label) => !answerLabels.includes(label));
