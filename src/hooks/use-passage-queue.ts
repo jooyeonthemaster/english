@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -143,6 +144,11 @@ function readAnalysisFastBatchConcurrency(): number {
 }
 
 const ANALYSIS_FAST_BATCH_CONCURRENCY = readAnalysisFastBatchConcurrency();
+const PASSAGE_QUEUE_CACHE_EVENT = "workbench:passage-queue-cache";
+const DEFAULT_PASSAGE_QUEUE_CACHE_KEY = "default";
+
+let passageQueueCache: QueuedPassage[] | null = null;
+let passageQueueCacheKey = DEFAULT_PASSAGE_QUEUE_CACHE_KEY;
 
 function wordCount(content: string) {
   return content.trim().split(/\s+/).filter(Boolean).length;
@@ -275,6 +281,50 @@ function mergeQueueItems(
   }
 
   return merged;
+}
+
+function notifyPassageQueueCacheChanged(cacheKey: string) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent(PASSAGE_QUEUE_CACHE_EVENT, { detail: { cacheKey } }),
+  );
+}
+
+function resolveQueueUpdate(
+  previous: QueuedPassage[],
+  update: SetStateAction<QueuedPassage[]>,
+): QueuedPassage[] {
+  return typeof update === "function"
+    ? (update as (prev: QueuedPassage[]) => QueuedPassage[])(previous)
+    : update;
+}
+
+function seedLocalQueue(
+  initialItems: QueuedPassage[] | undefined,
+  cacheKey: string,
+): QueuedPassage[] {
+  const initial = initialItems ?? [];
+  if (!passageQueueCache || passageQueueCacheKey !== cacheKey) {
+    passageQueueCacheKey = cacheKey;
+    passageQueueCache = initial;
+    return initial;
+  }
+  passageQueueCache = mergeQueueItems(passageQueueCache, initial);
+  return passageQueueCache;
+}
+
+function updatePassageQueueCache(
+  update: SetStateAction<QueuedPassage[]>,
+  cacheKey: string,
+): QueuedPassage[] {
+  if (passageQueueCacheKey !== cacheKey) {
+    passageQueueCacheKey = cacheKey;
+    passageQueueCache = [];
+  }
+  const next = resolveQueueUpdate(passageQueueCache ?? [], update);
+  passageQueueCache = next;
+  notifyPassageQueueCacheChanged(cacheKey);
+  return next;
 }
 
 async function runWithConcurrency<T, R>(
@@ -442,9 +492,46 @@ async function startPassageAnalysisJob(
   return data;
 }
 
-export function usePassageQueue(initialItems?: QueuedPassage[]) {
-  const [localQueue, setLocalQueue] = useState<QueuedPassage[]>(() => initialItems || []);
+export function usePassageQueue(
+  initialItems?: QueuedPassage[],
+  options: { cacheKey?: string; onJobsChanged?: () => void } = {},
+) {
+  const cacheKey = options.cacheKey ?? DEFAULT_PASSAGE_QUEUE_CACHE_KEY;
+  const onJobsChangedRef = useRef(options.onJobsChanged);
+  const [localQueue, setLocalQueueState] = useState<QueuedPassage[]>(() =>
+    seedLocalQueue(initialItems, cacheKey),
+  );
   const [jobQueue, setJobQueue] = useState<QueuedPassage[]>([]);
+
+  useEffect(() => {
+    onJobsChangedRef.current = options.onJobsChanged;
+  }, [options.onJobsChanged]);
+
+  const notifyJobsChanged = useCallback(() => {
+    onJobsChangedRef.current?.();
+  }, []);
+
+  const setLocalQueue = useCallback<Dispatch<SetStateAction<QueuedPassage[]>>>(
+    (update) => {
+      const next = updatePassageQueueCache(update, cacheKey);
+      setLocalQueueState(next);
+    },
+    [cacheKey],
+  );
+
+  useEffect(() => {
+    const syncFromCache = (event: Event) => {
+      const detail = (event as CustomEvent<{ cacheKey?: string }>).detail;
+      if (detail?.cacheKey !== cacheKey) return;
+      if (passageQueueCache && passageQueueCacheKey === cacheKey) {
+        setLocalQueueState(passageQueueCache);
+      }
+    };
+    window.addEventListener(PASSAGE_QUEUE_CACHE_EVENT, syncFromCache);
+    return () => {
+      window.removeEventListener(PASSAGE_QUEUE_CACHE_EVENT, syncFromCache);
+    };
+  }, [cacheKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -493,6 +580,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
       );
 
       setLocalQueue((prev) => [newItem, ...prev.filter((p) => p.id !== passage.id)]);
+      notifyJobsChanged();
 
       if (!runAnalysisNow) return;
 
@@ -504,14 +592,16 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
           updateQueueItem(setJobQueue, passage.id, (item) =>
             applyAnalysisJobResponse(item, response),
           );
+          notifyJobsChanged();
         })
         .catch((err) => {
           updateQueueItem(setLocalQueue, passage.id, (item) =>
             applyAnalysisJobError(item, err),
           );
+          notifyJobsChanged();
         });
     },
-    [],
+    [notifyJobsChanged, setLocalQueue],
   );
 
   const addManyToQueue = useCallback(
@@ -531,6 +621,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         ...newItems,
         ...prev.filter((item) => !ids.has(item.id)),
       ]);
+      notifyJobsChanged();
 
       if (!runAnalysisNow) {
         return { success: prepared.length, failed: 0 };
@@ -551,11 +642,13 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
             updateQueueItem(setJobQueue, passage.id, (item) =>
               applyAnalysisJobResponse(item, response),
             );
+            notifyJobsChanged();
             return response;
           } catch (err) {
             updateQueueItem(setLocalQueue, passage.id, (item) =>
               applyAnalysisJobError(item, err),
             );
+            notifyJobsChanged();
             throw err;
           }
         },
@@ -566,7 +659,28 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         failed: 0,
       };
     },
-    [],
+    [notifyJobsChanged, setLocalQueue],
+  );
+
+  const enqueueManyPending = useCallback(
+    (items: QueueStartItem[]) => {
+      if (items.length === 0) return;
+      const prepared = items.map((item) => ({
+        passage: item.passage,
+        promptConfig: normalizePromptConfig(item.promptConfig),
+      }));
+      const ids = new Set(prepared.map((item) => item.passage.id));
+      const newItems = prepared.map((item) =>
+        buildQueueItem(item.passage, item.promptConfig, true),
+      );
+
+      setLocalQueue((prev) => [
+        ...newItems,
+        ...prev.filter((item) => !ids.has(item.id)),
+      ]);
+      notifyJobsChanged();
+    },
+    [notifyJobsChanged, setLocalQueue],
   );
 
   const retryAnalysis = useCallback(
@@ -588,20 +702,23 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
           updateQueueItem(setJobQueue, passageId, (item) =>
             applyAnalysisJobResponse(item, response),
           );
+          notifyJobsChanged();
         })
         .catch((err) => {
           updateQueueItem(setLocalQueue, passageId, (item) =>
             applyAnalysisJobError(item, err),
           );
+          notifyJobsChanged();
         });
     },
-    [queue],
+    [notifyJobsChanged, queue, setLocalQueue],
   );
 
   const removeFromQueue = useCallback((passageId: string) => {
     setLocalQueue((prev) => prev.filter((p) => p.id !== passageId));
     setJobQueue((prev) => prev.filter((p) => p.id !== passageId));
-  }, []);
+    notifyJobsChanged();
+  }, [notifyJobsChanged, setLocalQueue]);
 
   const updateAnalysisData = useCallback(
     (passageId: string, data: PassageAnalysisData) => {
@@ -627,8 +744,9 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         );
       setLocalQueue(update);
       setJobQueue(update);
+      notifyJobsChanged();
     },
-    [],
+    [notifyJobsChanged, setLocalQueue],
   );
 
   const updateQuestions = useCallback(
@@ -647,8 +765,9 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
         );
       setLocalQueue(update);
       setJobQueue(update);
+      notifyJobsChanged();
     },
-    [],
+    [notifyJobsChanged, setLocalQueue],
   );
 
   const hasActiveAnalysis = queue.some(
@@ -661,6 +780,7 @@ export function usePassageQueue(initialItems?: QueuedPassage[]) {
     hasActiveAnalysis,
     addToQueue,
     addManyToQueue,
+    enqueueManyPending,
     retryAnalysis,
     removeFromQueue,
     updateAnalysisData,

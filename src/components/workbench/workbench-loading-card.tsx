@@ -20,6 +20,7 @@ interface WorkbenchLoadingCardProps {
   planBadge?: ReactNode;
   rightActions?: ReactNode;
   metaSlot?: ReactNode;
+  fixedHeight?: boolean;
   className?: string;
   ariaLabel?: string;
   role?: string;
@@ -43,6 +44,7 @@ export function WorkbenchLoadingCard({
   planBadge,
   rightActions,
   metaSlot,
+  fixedHeight = false,
   className = "",
   ariaLabel,
   role,
@@ -63,10 +65,11 @@ export function WorkbenchLoadingCard({
     variant === "analyzing"
       ? "border-blue-200 bg-blue-50/60"
       : "border-slate-200 bg-slate-50";
+  const shellSizing = fixedHeight ? "h-[340px] p-3 flex flex-col" : "p-4";
 
   return (
     <div
-      className={`group relative rounded-xl border ${shellColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${selected ? "ring-2 ring-blue-400" : ""} ${className}`}
+      className={`group relative rounded-xl border ${shellColor} ${loadingClass} ${shellSizing} transition-shadow duration-200 hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${selected ? "ring-2 ring-blue-400" : ""} ${className}`}
       onClick={onClick}
       role={role}
       tabIndex={tabIndex}
@@ -127,13 +130,13 @@ export function WorkbenchLoadingCard({
         )}
       </div>
 
-      <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
+      <p className={`text-[11px] text-slate-500 leading-relaxed ${fixedHeight ? "mt-2 line-clamp-5" : "mt-2.5 line-clamp-3"}`}>
         {contentPreview}
       </p>
 
       {metaSlot}
 
-      <div className="mt-3">
+      <div className={fixedHeight ? "mt-auto pt-3" : "mt-3"}>
         <div className="h-1.5 bg-white/75 rounded-full overflow-hidden ring-1 ring-blue-100/80">
           <div className={`workbench-loading-progress h-full rounded-full ${progressClass}`} />
         </div>

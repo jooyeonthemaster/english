@@ -188,19 +188,21 @@ function buildOptimisticItem({
   analysisData,
   config,
   progressKey,
+  createdAt,
 }: {
   jobId: string;
   passage: PassageItem;
   analysisData: any;
   config: QueueItem["config"];
   progressKey: string;
+  createdAt?: string;
 }): QueueItem {
   return {
     id: jobId,
     passageId: passage.id,
     passageTitle: passage.title,
     passageContent: passage.content,
-    createdAt: new Date().toISOString(),
+    createdAt: createdAt ?? new Date().toISOString(),
     passageMeta: {
       school: passage.school?.name,
       grade: passage.grade,
@@ -213,6 +215,40 @@ function buildOptimisticItem({
     questions: [],
     config,
   };
+}
+
+function replaceQueueItemInPlace(
+  prev: QueueItem[],
+  targetIds: string[],
+  replacement: QueueItem,
+): QueueItem[] {
+  const targets = new Set(targetIds);
+  const anchor = prev.find((item) => targets.has(item.id));
+  const stableReplacement = {
+    ...replacement,
+    createdAt: anchor?.createdAt ?? replacement.createdAt,
+  };
+
+  if (!anchor) {
+    return [
+      stableReplacement,
+      ...prev.filter((item) => !targets.has(item.id)),
+    ];
+  }
+
+  let inserted = false;
+  const next: QueueItem[] = [];
+  for (const item of prev) {
+    if (targets.has(item.id)) {
+      if (!inserted) {
+        next.push(stableReplacement);
+        inserted = true;
+      }
+      continue;
+    }
+    next.push(item);
+  }
+  return next;
 }
 
 interface ManualGenerationUnit {
@@ -317,6 +353,7 @@ export function useGenerationHandlers({
         return { success: 0, failed: 0 };
       }
 
+      const batchCreatedAt = new Date().toISOString();
       setSessionQueue((prev) => [
         ...units.map((unit) =>
           buildOptimisticItem({
@@ -325,6 +362,7 @@ export function useGenerationHandlers({
             analysisData: unit.pAnalysis,
             config: unit.config,
             progressKey: unit.questionType,
+            createdAt: batchCreatedAt,
           }),
         ),
         ...prev,
@@ -360,12 +398,9 @@ export function useGenerationHandlers({
               questions: Array.isArray(result.questions) ? result.questions : [],
               questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
             };
-            setSessionQueue((prev) => [
-              doneItem,
-              ...prev.filter(
-                (item) => item.id !== unit.tempId && item.id !== result.jobId,
-              ),
-            ]);
+            setSessionQueue((prev) =>
+              replaceQueueItemInPlace(prev, [unit.tempId, result.jobId], doneItem),
+            );
             return result;
           } catch (err) {
             const message =
@@ -516,6 +551,7 @@ export function useGenerationHandlers({
           pAnalysis: parsePassageAnalysis(passage),
         };
       });
+      const batchCreatedAt = new Date().toISOString();
 
       setSessionQueue((prev) => [
         ...optimisticItems.map(({ tempId, passage, pAnalysis }) =>
@@ -525,6 +561,7 @@ export function useGenerationHandlers({
             analysisData: pAnalysis,
             config: baseConfig,
             progressKey,
+            createdAt: batchCreatedAt,
           }),
         ),
         ...prev,
@@ -559,12 +596,9 @@ export function useGenerationHandlers({
               questions: Array.isArray(result.questions) ? result.questions : [],
               questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
             };
-            setSessionQueue((prev) => [
-              doneItem,
-              ...prev.filter(
-                (item) => item.id !== tempId && item.id !== result.jobId,
-              ),
-            ]);
+            setSessionQueue((prev) =>
+              replaceQueueItemInPlace(prev, [tempId, result.jobId], doneItem),
+            );
             return result;
           } catch (err) {
             const message =

@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { ChevronRight, FileText, BadgeCheck } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
@@ -34,6 +34,7 @@ interface PassageGroupedViewProps {
   showManagementActions?: boolean;
   showStar?: boolean;
   enableDrag?: boolean;
+  renderQuestion?: (question: any, index: number) => ReactNode;
   expandedPassageIds: Record<string, boolean>;
   setExpandedPassageIds: (
     next:
@@ -84,6 +85,7 @@ export function PassageGroupedView({
   showManagementActions = true,
   showStar = true,
   enableDrag = true,
+  renderQuestion,
   expandedPassageIds,
   setExpandedPassageIds,
   onActivePassageChange,
@@ -388,23 +390,27 @@ export function PassageGroupedView({
                   </p>
                 ) : (
                   <div className={`grid gap-3 ${gridClass}`}>
-                    {passage.questions.map((q, idx) => (
-                      <QuestionBankCard
-                        key={q.id}
-                        q={q}
-                        num={idx + 1}
-                        selected={selectedIds.has(q.id)}
-                        onToggle={() => onToggleSelect(q.id)}
-                        onDelete={() => onDelete(q.id)}
-                        onApprove={() => onApprove(q.id)}
-                        onToggleStar={() => onToggleStar(q.id)}
-                        onEdit={() => onEdit(q.id)}
-                        viewSize={viewSize}
-                        showManagementActions={showManagementActions}
-                        showStar={showStar}
-                        enableDrag={enableDrag}
-                      />
-                    ))}
+                    {passage.questions.map((q, idx) =>
+                      renderQuestion ? (
+                        renderQuestion(q, idx)
+                      ) : (
+                        <QuestionBankCard
+                          key={q.id}
+                          q={q}
+                          num={idx + 1}
+                          selected={selectedIds.has(q.id)}
+                          onToggle={() => onToggleSelect(q.id)}
+                          onDelete={() => onDelete(q.id)}
+                          onApprove={() => onApprove(q.id)}
+                          onToggleStar={() => onToggleStar(q.id)}
+                          onEdit={() => onEdit(q.id)}
+                          viewSize={viewSize}
+                          showManagementActions={showManagementActions}
+                          showStar={showStar}
+                          enableDrag={enableDrag}
+                        />
+                      ),
+                    )}
                   </div>
                 )}
               </div>

@@ -115,6 +115,90 @@ function repairInvalidJsonEscapes(text: string): string {
 }
 
 /**
+ * Repair JavaScript-like object keys that occasionally leak into otherwise
+ * valid JSON, e.g. `{word":"get by"}` or `{word:"get by"}`. The scan only
+ * runs outside string literals and only after `{` or `,`, so passage text such
+ * as `"look at {word}"` remains untouched.
+ */
+function repairBareObjectKeys(text: string): string {
+  const out: string[] = [];
+  let inString = false;
+  let escaping = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+
+    if (escaping) {
+      escaping = false;
+      out.push(char);
+      continue;
+    }
+
+    if (inString) {
+      if (char === "\\") {
+        escaping = true;
+      } else if (char === "\"") {
+        inString = false;
+      }
+      out.push(char);
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = true;
+      out.push(char);
+      continue;
+    }
+
+    out.push(char);
+
+    if (char !== "{" && char !== ",") continue;
+
+    let cursor = i + 1;
+    while (/\s/.test(text[cursor] ?? "")) {
+      out.push(text[cursor]);
+      cursor += 1;
+    }
+
+    const keyStart = cursor;
+    if (!/[A-Za-z_$]/.test(text[cursor] ?? "")) {
+      i = cursor - 1;
+      continue;
+    }
+
+    cursor += 1;
+    while (/[A-Za-z0-9_$-]/.test(text[cursor] ?? "")) {
+      cursor += 1;
+    }
+
+    const key = text.slice(keyStart, cursor);
+    let afterKey = cursor;
+    if (text[afterKey] === "\"") afterKey += 1;
+    while (/\s/.test(text[afterKey] ?? "")) afterKey += 1;
+
+    if (text[afterKey] !== ":") {
+      i = keyStart - 1;
+      continue;
+    }
+
+    out.push(`"${key}"`);
+    if (text[cursor] === "\"") cursor += 1;
+    i = cursor - 1;
+  }
+
+  return out.join("");
+}
+
+function canParseJson(text: string): boolean {
+  try {
+    JSON.parse(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Strip Markdown fences, leading `json` language tag, and any surrounding
  * prose from a model response, then return the first balanced JSON region
  * with invalid escapes repaired. Throws `Error("NO_BALANCED_JSON_OBJECT")`
@@ -134,10 +218,20 @@ export function extractJsonFromModelResponse(raw: string): string {
 
   text = text.replace(/^json\s*\r?\n/i, "").trim();
 
-  const region = findFirstBalancedJson(text);
+  let sourceText = text;
+  let region = findFirstBalancedJson(sourceText);
+  if (!region) {
+    sourceText = repairBareObjectKeys(text);
+    region = findFirstBalancedJson(sourceText);
+  }
   if (!region) {
     throw new Error("NO_BALANCED_JSON_OBJECT");
   }
 
-  return repairInvalidJsonEscapes(text.slice(region.start, region.end).trim());
+  const repairedEscapes = repairInvalidJsonEscapes(
+    sourceText.slice(region.start, region.end).trim(),
+  );
+  if (canParseJson(repairedEscapes)) return repairedEscapes;
+
+  return repairBareObjectKeys(repairedEscapes);
 }
