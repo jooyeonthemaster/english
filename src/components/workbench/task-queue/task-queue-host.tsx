@@ -1,14 +1,45 @@
 "use client";
 
 import { useContext, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 import { TaskQueueContext, TaskQueueProvider, useTaskQueue } from "./context";
 import { TaskQueueDrawer } from "./components/task-queue-drawer";
 import { TaskQueueToggle } from "./components/task-queue-toggle";
-import type { TaskDomain } from "./types";
+import type { TaskDomain, TaskScope } from "./types";
 
 function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function resolveTaskQueueDefaultDomain(pathname: string): TaskScope {
+  if (
+    pathname.startsWith("/director/workbench/extraction") ||
+    pathname.startsWith("/director/workbench/passages/import")
+  ) {
+    return "extraction";
+  }
+  if (pathname.startsWith("/director/workbench/webtoon")) {
+    return "webtoon";
+  }
+  if (
+    pathname.startsWith("/director/workbench/questions") ||
+    pathname.startsWith("/director/workbench/generate") ||
+    pathname.startsWith("/director/questions") ||
+    pathname.startsWith("/director/learning-questions")
+  ) {
+    return "question-generation";
+  }
+  if (
+    pathname.startsWith("/director/workbench/exams") ||
+    pathname.startsWith("/director/exams")
+  ) {
+    return "exam-generation";
+  }
+  if (pathname.startsWith("/director/workbench/passages")) {
+    return "passage-analysis";
+  }
+  return "all";
 }
 
 function TaskQueueFloatingControls() {
@@ -157,6 +188,18 @@ export function TaskQueueHost({
   if (outer) {
     return <>{children}</>;
   }
+  return (
+    <TaskQueueProvider defaultDomain={defaultDomain}>
+      {children}
+      <TaskQueueFloatingControls />
+    </TaskQueueProvider>
+  );
+}
+
+export function TaskQueueRouteHost({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const defaultDomain = resolveTaskQueueDefaultDomain(pathname);
+
   return (
     <TaskQueueProvider defaultDomain={defaultDomain}>
       {children}

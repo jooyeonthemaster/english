@@ -172,8 +172,8 @@ export function PassageCompare({
         className={
           "grid min-h-0 flex-1 gap-4 [grid-auto-rows:minmax(0,1fr)] " +
           (showPanel
-            ? "2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]"
-            : "2xl:grid-cols-2")
+            ? "grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]"
+            : "grid-cols-2")
         }
       >
         <OriginalProblemBox

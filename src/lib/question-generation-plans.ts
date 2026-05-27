@@ -24,7 +24,7 @@ export const QUESTION_GENERATION_PLANS: Record<QuestionGenerationPlan, QuestionG
     shortLabel: "프리미엄",
     description: "고급 AI 문제 생성",
     modelLabel: "고급 AI",
-    creditMultiplier: 2,
+    creditMultiplier: 1,
   },
 };
 

@@ -1,15 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   ArrowUpDown,
   Copy,
   CopyMinus,
   Layers3,
-  PanelBottomOpen,
-  RefreshCw,
   Search,
-  UploadCloud,
 } from "lucide-react";
 
 import {
@@ -33,10 +29,6 @@ interface ManageFiltersBarProps {
   sortOrder: SortOrder;
   onSortOrderChange: (value: SortOrder) => void;
 
-  queueOpen: boolean;
-  onToggleQueue: () => void;
-  onRefresh: () => void;
-
   // Duplicate detection controls
   pageMode: "list" | "duplicates";
   onTogglePageMode: () => void;
@@ -54,9 +46,6 @@ export function ManageFiltersBar({
   onStatusFilterChange,
   sortOrder,
   onSortOrderChange,
-  queueOpen,
-  onToggleQueue,
-  onRefresh,
   pageMode,
   onTogglePageMode,
   hideDuplicates,
@@ -64,10 +53,8 @@ export function ManageFiltersBar({
   duplicateGroupCount,
   totalDuplicateCount,
 }: ManageFiltersBarProps) {
-  const router = useRouter();
-
   return (
-    <div className="flex min-w-0 items-center gap-2">
+    <div className="flex min-w-0 flex-wrap items-center gap-2">
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-300" />
         <input
@@ -125,7 +112,7 @@ export function ManageFiltersBar({
               : "중복 자료 숨기기 (같은 내용은 1개만 표시)"
         }
         className={
-          "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+          "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
           (hideDuplicates
             ? "border-blue-300 bg-blue-50 text-blue-700"
             : totalDuplicateCount === 0 || pageMode === "duplicates"
@@ -167,7 +154,7 @@ export function ManageFiltersBar({
               : "중복 그룹 모아보기"
         }
         className={
-          "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+          "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
           (pageMode === "duplicates"
             ? "border-blue-300 bg-blue-50 text-blue-700"
             : duplicateGroupCount === 0
@@ -189,39 +176,6 @@ export function ManageFiltersBar({
             {duplicateGroupCount}
           </span>
         ) : null}
-      </button>
-
-      <button
-        type="button"
-        onClick={onRefresh}
-        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-medium text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-      >
-        <RefreshCw className="size-3.5" aria-hidden="true" />
-        새로고침
-      </button>
-
-      <button
-        type="button"
-        onClick={onToggleQueue}
-        aria-pressed={queueOpen}
-        className={
-          "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-          (queueOpen
-            ? "border-blue-300 bg-blue-50 text-blue-700"
-            : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
-        }
-      >
-        <PanelBottomOpen className="size-3.5" aria-hidden="true" />
-        작업 목록
-      </button>
-
-      <button
-        type="button"
-        onClick={() => router.push("/director/workbench/extraction")}
-        className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-      >
-        <UploadCloud className="size-3.5" aria-hidden="true" />
-        자료 추출
       </button>
     </div>
   );

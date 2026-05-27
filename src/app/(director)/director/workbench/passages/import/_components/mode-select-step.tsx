@@ -124,7 +124,7 @@ export function ModeSelectStep() {
   );
 
   return (
-    <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-8 py-10">
+    <div className="flex w-full flex-col gap-8 px-8 py-10">
       <header className="space-y-1.5">
         <h2 className="text-[18px] font-semibold tracking-tight text-slate-900">
           시험지 인식 · 어떤 자료를 등록하나요?

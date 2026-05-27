@@ -48,8 +48,8 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
 
 // Top-up pricing tiers (KRW per credit pack)
 export const TOP_UP_PACKS = [
-  { credits: 100, price: 50000, label: "100 크레딧", perCredit: 500 },
-  { credits: 300, price: 120000, label: "300 크레딧", perCredit: 400 },
-  { credits: 500, price: 175000, label: "500 크레딧", perCredit: 350 },
-  { credits: 1000, price: 300000, label: "1,000 크레딧", perCredit: 300 },
+  { credits: 150, price: 19800, label: "스타터", perCredit: 132 },
+  { credits: 450, price: 49500, label: "스탠다드", perCredit: 110 },
+  { credits: 1500, price: 132000, label: "프리미엄", perCredit: 88 },
+  { credits: 4500, price: 330000, label: "엔터프라이즈", perCredit: 73 },
 ] as const;

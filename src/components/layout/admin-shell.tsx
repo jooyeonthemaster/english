@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
+import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import {
   Tooltip,
   TooltipContent,
@@ -17,6 +18,7 @@ import { getNavGroups, type NavGroup } from "./nav-config";
 import { MaybeComingSoon } from "./maybe-coming-soon";
 import { SidebarTopActions } from "./admin-shell/sidebar-top-actions";
 import { NavItem } from "./admin-shell/nav-item";
+import { useReviewDrawer } from "./review-drawer-context";
 
 interface StaffSession {
   id: string;
@@ -61,6 +63,23 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
       return next;
     });
   }, []);
+
+  // When a review drawer is open, force-collapse the sidebar so the main
+  // workspace has more room. Restore the user's preferred state on close.
+  const { isOpen: drawerOpen, width: drawerWidth } = useReviewDrawer();
+  const preDrawerCollapsedRef = React.useRef<boolean | null>(null);
+  useEffect(() => {
+    if (drawerOpen) {
+      if (preDrawerCollapsedRef.current === null) {
+        preDrawerCollapsedRef.current = collapsed;
+      }
+      if (!collapsed) setCollapsed(true);
+    } else if (preDrawerCollapsedRef.current !== null) {
+      setCollapsed(preDrawerCollapsedRef.current);
+      preDrawerCollapsedRef.current = null;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawerOpen]);
 
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
@@ -296,6 +315,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             collapsed ? "ml-[72px]" : "ml-[220px]",
             "max-md:ml-0"
           )}
+          style={drawerOpen && drawerWidth > 0 ? { marginRight: drawerWidth } : undefined}
         >
           {/* Page content */}
           <main className="flex-1 min-w-0 overflow-y-auto p-6 relative max-md:p-0">
@@ -310,6 +330,10 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             <MaybeComingSoon pathname={pathname} basePath={basePath}>
               {children}
             </MaybeComingSoon>
+            <BusinessInfoBlock
+              compact
+              className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm"
+            />
           </main>
         </div>
       </div>

@@ -35,13 +35,31 @@ export function EmptyGridState({ variant, onResetFilters }: EmptyGridStateProps)
   }
 
   if (variant === "empty-folder") {
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const activeFolder = searchParams?.get("folder");
+
     return (
       <Shell tone="slate">
         <IconCircle tone="slate">
           <FolderOpen className="size-7" aria-hidden="true" />
         </IconCircle>
         <Title>이 폴더에 아직 자료가 없습니다</Title>
-        <Sub>전체 자료에서 카드를 드래그하거나, 다중 선택 후 폴더로 이동할 수 있습니다.</Sub>
+        <Sub>
+          전체 자료에서 카드를 드래그하거나, 다중 선택 후 폴더로 이동할 수
+          있습니다.
+        </Sub>
+        <button
+          type="button"
+          onClick={() => {
+            const url = new URL("/director/workbench/passages/import", window.location.origin);
+            if (activeFolder) url.searchParams.set("targetCollectionId", activeFolder);
+            router.push(url.pathname + url.search);
+          }}
+          className="mt-5 inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-4 text-xs font-bold text-white shadow-sm motion-safe:transition-colors motion-safe:duration-200 hover:bg-blue-700"
+        >
+          <UploadCloud className="size-3.5" />
+          이 폴더에 자료 직접 추출하기
+        </button>
       </Shell>
     );
   }

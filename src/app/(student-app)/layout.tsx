@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Home, User, BookOpenCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import { StudentHeader } from "@/components/layout/student-header";
 import { QueryProvider } from "@/providers/query-provider";
 import { useHeaderData } from "@/hooks/use-student-data";
@@ -122,7 +123,10 @@ function StudentAppLayoutInner({ children }: { children: React.ReactNode }) {
   if (hideChrome) {
     return (
       <div className="flex justify-center bg-white" style={{ minHeight: "100dvh" }}>
-        <div className="w-full max-w-2xl" style={{ minHeight: "100dvh" }}>{children}</div>
+        <div className="w-full max-w-2xl" style={{ minHeight: "100dvh" }}>
+          {children}
+          <BusinessInfoBlock compact className="mt-8 border-t border-slate-200 bg-white" />
+        </div>
       </div>
     );
   }
@@ -164,6 +168,10 @@ function StudentAppLayoutInner({ children }: { children: React.ReactNode }) {
           )}
           <div className="pb-4">
             {children}
+            <BusinessInfoBlock
+              compact
+              className="mt-8 border-t border-slate-200 bg-white"
+            />
           </div>
         </main>
 

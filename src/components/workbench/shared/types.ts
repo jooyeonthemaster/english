@@ -4,6 +4,7 @@ export interface CollectionItem {
   name: string;
   description: string | null;
   color: string | null;
+  createdAt?: string | Date | null;
   _count: { items: number; children: number };
 }
 

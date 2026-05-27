@@ -13,6 +13,8 @@ import {
 import { FOLDER_COLORS } from "@/components/workbench/shared/constants";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 
+import { formatFolderDate } from "./folder-date";
+
 interface DraftFolderCardProps {
   collection: CollectionItem;
   dragItemIdKey: string;
@@ -135,8 +137,16 @@ export function DraftFolderCard({
             {collection.name}
           </p>
         )}
-        <p className="mt-0.5 text-xs tabular-nums text-slate-400">
-          {collection._count.items}개 {itemCountLabel}
+        <p className="mt-0.5 flex items-center gap-1.5 text-xs tabular-nums text-slate-400">
+          <span>{collection._count.items}개 {itemCountLabel}</span>
+          {formatFolderDate(collection.createdAt) ? (
+            <>
+              <span className="text-slate-300">·</span>
+              <span className="text-[11px]">
+                {formatFolderDate(collection.createdAt)}
+              </span>
+            </>
+          ) : null}
         </p>
       </div>
 

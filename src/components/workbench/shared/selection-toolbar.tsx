@@ -121,18 +121,18 @@ export function SelectionToolbar({
       </div>
 
       <div className="flex-1" />
-      {rightSlot && (
-        <>
-          {rightSlot}
-          <span className="text-slate-300">|</span>
-        </>
-      )}
       {hasSelection ? (
         <button onClick={onClearSelection} className="text-[11px] text-slate-500 hover:text-slate-700">
           선택 취소
         </button>
       ) : (
         <span className="text-[11px] text-slate-400">항목을 선택해 작업을 시작하세요</span>
+      )}
+      {rightSlot && (
+        <>
+          <span className="text-slate-300">|</span>
+          {rightSlot}
+        </>
       )}
     </div>
   );

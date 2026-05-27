@@ -21,4 +21,5 @@ export {
   getAcademyExams,
 } from "./content";
 
-export { getPlans, updatePlan } from "./plans";
+export { createPlan, deletePlan, getPlans, updatePlan } from "./plans";
+export { updateCreditTopUpProduct } from "./credit-products";

@@ -1,21 +1,17 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import {
-  Grid2X2,
-  Grid3X3,
-  LayoutGrid,
-} from "lucide-react";
+import type { ReactNode } from "react";
+import { Grid2X2, Grid3X3, List } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import { DraftCard } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
-import { JobFilterCard } from "./job-filter-card";
 import { ViewToggleButton } from "./view-toggle-button";
 
-export type GridCols = 2 | 3 | 4;
+export type GridCols = "grid3" | "grid2" | "list";
 
 export interface JobFilterOption {
   jobId: string;
@@ -35,6 +31,9 @@ interface DraftGridProps {
   inFolder: boolean;
   hasActiveSearchOrFilter: boolean;
   selectedDraftId: string | null;
+  /** Most recently opened draft id — kept after the detail modal closes
+   *  so the card stays subtly shaded. */
+  lastViewedDraftId?: string | null;
   checkedIds: Set<string>;
   gridCols: GridCols;
   onGridColsChange: (cols: GridCols) => void;
@@ -62,12 +61,23 @@ interface DraftGridProps {
   /** Optional. Per-draft-id, number of other drafts that share its
    *  normalized content. Used to render a "+N 중복" badge on cards. */
   dupCountById?: Map<string, number>;
+
+  /** Optional. Set of draft IDs that have been filed into at least one
+   *  folder. Cards whose IDs are absent from this set render a "미분류"
+   *  badge. Pass undefined to disable the badge entirely. */
+  filedDraftIds?: Set<string>;
+
+  /** Top filter row (search, sort, duplicate, refresh, queue, extract). */
+  filtersToolbar?: ReactNode;
+
+  /** Bulk selection toolbar (select all, move/copy, rerestore, promote, delete). */
+  selectionToolbar?: ReactNode;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
-  2: "grid-cols-1 sm:grid-cols-2",
-  3: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3",
-  4: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
+  grid3: "grid-cols-2 md:grid-cols-3",
+  grid2: "grid-cols-1 sm:grid-cols-2",
+  list: "grid-cols-1",
 };
 
 export function DraftGrid({
@@ -77,6 +87,7 @@ export function DraftGrid({
   inFolder,
   hasActiveSearchOrFilter,
   selectedDraftId,
+  lastViewedDraftId,
   checkedIds,
   gridCols,
   onGridColsChange,
@@ -92,8 +103,18 @@ export function DraftGrid({
   onRenameSourceMaterial,
   groupIndexBySourceMaterialId,
   dupCountById,
+  filedDraftIds,
+  filtersToolbar,
+  selectionToolbar,
 }: DraftGridProps) {
-  const showJobFilter = !inFolder && jobs.length > 1;
+  // The per-job card row was lifted to the page header above the folder
+  // section so it stays visible regardless of folder navigation. Clicking
+  // a card now opens the per-job review popup, not a filter.
+  void jobs;
+  void selectedJobIds;
+  void totalDraftCount;
+  void onSelectJob;
+  void onRenameJob;
 
   const draftGroups = useMemo(() => {
     const map = new Map<string, M1PassageDraftWithJob[]>();
@@ -129,79 +150,53 @@ export function DraftGrid({
       setExpandedGroups(new Set(draftGroups.map((g) => g.key)));
     }
   }, [allExpanded, draftGroups]);
-  const allJobDraftIds = useMemo(
-    () => drafts.map((draft) => draft.id),
-    [drafts],
-  );
-
   return (
-    <section className="min-w-0 pb-1">
-      {showJobFilter ? (
-        <div className="mb-4 flex min-w-0 shrink-0 items-stretch gap-3 overflow-x-auto pb-2">
-          <JobFilterCard
-            active={selectedJobIds.size === 0}
-            label="전체"
-            subLabel="모든 작업"
-            count={totalDraftCount}
-            draftIds={allJobDraftIds}
-            tone="emerald"
-            onClick={() => onSelectJob(null)}
-          />
-          {jobs.map((job) => (
-            <JobFilterCard
-              key={job.jobId}
-              active={selectedJobIds.has(job.jobId)}
-              label={job.label}
-              subLabel={job.subLabel}
-              count={job.count}
-              draftIds={job.draftIds}
-              tone="blue"
-              editable
-              createdAt={job.createdAt ?? null}
-              thumbnailUrl={job.thumbnailUrl ?? null}
-              status={job.status ?? null}
-              onClick={() => onSelectJob(job.jobId)}
-              onRename={(next) => onRenameJob(job.jobId, next)}
-            />
-          ))}
-        </div>
-      ) : null}
-
-      <div className="mb-3 flex min-h-9 shrink-0 flex-wrap items-center gap-x-3 gap-y-2">
+    <section className="min-w-0 pb-1 pt-2">
+      <div className="mb-2 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5">
         <h3 className="shrink-0 text-sm font-bold tracking-tight text-slate-700">
           자료
           <span className="ml-1.5 text-xs font-normal tabular-nums text-slate-400">
             {drafts.length}개
           </span>
         </h3>
-        <div className="flex-1" />
-        <div className="flex shrink-0 items-center gap-2">
-          <div className="flex items-center overflow-hidden rounded-md border border-slate-200">
-            <ViewToggleButton
-              active={gridCols === 2}
-              label="2열 보기"
-              onClick={() => onGridColsChange(2)}
-            >
-              <Grid2X2 className="size-4" />
-            </ViewToggleButton>
-            <ViewToggleButton
-              active={gridCols === 3}
-              label="3열 보기"
-              onClick={() => onGridColsChange(3)}
-              middle
-            >
-              <Grid3X3 className="size-4" />
-            </ViewToggleButton>
-            <ViewToggleButton
-              active={gridCols === 4}
-              label="4열 보기"
-              onClick={() => onGridColsChange(4)}
-            >
-              <LayoutGrid className="size-4" />
-            </ViewToggleButton>
+        {filtersToolbar ? (
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+            {filtersToolbar}
           </div>
+        ) : (
+          <div className="flex-1" />
+        )}
+        <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
+          <ViewToggleButton
+            active={gridCols === "grid3"}
+            label="3열 보기"
+            onClick={() => onGridColsChange("grid3")}
+          >
+            <Grid3X3 className="size-4" />
+          </ViewToggleButton>
+          <ViewToggleButton
+            active={gridCols === "grid2"}
+            label="2열 보기"
+            onClick={() => onGridColsChange("grid2")}
+            middle
+          >
+            <Grid2X2 className="size-4" />
+          </ViewToggleButton>
+          <ViewToggleButton
+            active={gridCols === "list"}
+            label="목록 보기"
+            onClick={() => onGridColsChange("list")}
+          >
+            <List className="size-4" />
+          </ViewToggleButton>
         </div>
       </div>
+
+      {selectionToolbar ? (
+        <div className="sticky top-0 z-20 -mx-1 mb-2 overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
+          {selectionToolbar}
+        </div>
+      ) : null}
 
       <div className="pr-1">
         {loading ? (
@@ -247,8 +242,8 @@ export function DraftGrid({
             onResetFilters={onResetFilters}
           />
         ) : showGroupHeaders ? (
-          <div className="space-y-4 pb-2">
-            <div className="flex items-center justify-between gap-2 pb-1">
+          <div className="pb-2">
+            <div className="flex items-center justify-between gap-2 pb-3">
               <span className="text-[11px] font-semibold tabular-nums text-slate-400">
                 {draftGroups.length}개 시험지 감지됨
               </span>
@@ -260,6 +255,7 @@ export function DraftGrid({
                 {allExpanded ? "전체 접기" : "전체 펼치기"}
               </button>
             </div>
+            <div className={`grid items-start gap-4 ${COL_CLASS[gridCols]}`}>
             {draftGroups.map((group) => {
               const isUnlinked = group.key === "__unlinked__";
               // Per-job absolute index lookup (passed from parent so the
@@ -308,7 +304,13 @@ export function DraftGrid({
                   dragIds={groupIds}
                   onRenameSourceMaterial={onRenameSourceMaterial}
                 >
-                  <div className={`grid gap-3 ${COL_CLASS[gridCols]}`}>
+                  <div
+                    className={`grid gap-3 ${
+                      gridCols === "list"
+                        ? COL_CLASS.list
+                        : "grid-cols-1"
+                    }`}
+                  >
                     {group.drafts.map((draft, index) => (
                       <DraftCard
                         key={draft.id}
@@ -316,16 +318,26 @@ export function DraftGrid({
                         index={index}
                         selected={false}
                         active={selectedDraftId === draft.id}
+                        recentlyViewed={
+                          selectedDraftId !== draft.id &&
+                          lastViewedDraftId === draft.id
+                        }
                         checked={checkedIds.has(draft.id)}
                         onClick={() => onSelectDraft(draft.id)}
                         onToggleCheck={() => onToggleCheck(draft.id)}
                         dupCount={dupCountById?.get(draft.id) ?? 0}
+                        unfiled={
+                          filedDraftIds
+                            ? !filedDraftIds.has(draft.id)
+                            : undefined
+                        }
                       />
                     ))}
                   </div>
                 </GroupSection>
               );
             })}
+            </div>
           </div>
         ) : (
           <div className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}>
@@ -336,10 +348,17 @@ export function DraftGrid({
                 index={index}
                 selected={false}
                 active={selectedDraftId === draft.id}
+                recentlyViewed={
+                  selectedDraftId !== draft.id &&
+                  lastViewedDraftId === draft.id
+                }
                 checked={checkedIds.has(draft.id)}
                 onClick={() => onSelectDraft(draft.id)}
                 onToggleCheck={() => onToggleCheck(draft.id)}
                 dupCount={dupCountById?.get(draft.id) ?? 0}
+                unfiled={
+                  filedDraftIds ? !filedDraftIds.has(draft.id) : undefined
+                }
               />
             ))}
           </div>

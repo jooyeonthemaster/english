@@ -338,7 +338,7 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
 
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
-      <main className="mx-auto flex w-full min-w-0 max-w-[1680px] flex-col gap-4">
+      <main className="flex w-full min-w-0 flex-col gap-4">
         <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-3 xl:px-6">
             <div className="flex items-center gap-3">

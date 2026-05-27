@@ -8,12 +8,15 @@ import {
   Layers,
   Loader2,
   Pencil,
+  Trash2,
 } from "lucide-react";
 
 import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDateParts } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
+import { MODES, type ExtractionMode } from "@/lib/extraction/modes";
+import type { ExtractionJobStatus } from "@/lib/extraction/types";
 
 function mapJobStatusToTaskStatus(
   status: string | null | undefined,
@@ -36,33 +39,53 @@ function mapJobStatusToTaskStatus(
   }
 }
 
-export function JobFilterCard({
-  active,
+export interface JobCardProps {
+  variant?: "compact" | "detailed";
+  active?: boolean;
+  label: string;
+  subLabel?: string;
+  count: number;
+  draftIds?: string[];
+  tone?: "blue" | "emerald";
+  editable?: boolean;
+  createdAt?: number | null;
+  thumbnailUrl?: string | null;
+  status?: ExtractionJobStatus | string | null;
+  onClick: () => void;
+  onRename?: (next: string | null) => void;
+
+  // ── detailed-only props ──
+  mode?: ExtractionMode;
+  totalPages?: number;
+  successPages?: number;
+  draftResultCount?: number;
+  savedResultCount?: number;
+  onDelete?: () => void;
+  deleting?: boolean;
+}
+
+export function JobCard({
+  variant = "compact",
+  active = false,
   label,
   subLabel,
   count,
-  draftIds,
-  tone,
+  draftIds = [],
+  tone = "blue",
   editable,
   createdAt,
   thumbnailUrl,
   status,
   onClick,
   onRename,
-}: {
-  active: boolean;
-  label: string;
-  subLabel?: string;
-  count: number;
-  draftIds: string[];
-  tone: "blue" | "emerald";
-  editable?: boolean;
-  createdAt?: number | null;
-  thumbnailUrl?: string | null;
-  status?: string | null;
-  onClick: () => void;
-  onRename?: (next: string | null) => void;
-}) {
+  mode,
+  totalPages,
+  successPages,
+  draftResultCount,
+  savedResultCount,
+  onDelete,
+  deleting,
+}: JobCardProps) {
   const dragRef = useRef<HTMLElement>(null);
   const Icon = tone === "emerald" ? Layers : FileText;
   const activeRing =
@@ -81,16 +104,18 @@ export function JobFilterCard({
   const [draft, setDraft] = useState(label);
   const [isDragging, setIsDragging] = useState(false);
 
+  const canDrag = variant === "compact" && draftIds.length > 0;
+
   useEffect(() => {
     const el = dragRef.current;
-    if (!el || draftIds.length === 0) return;
+    if (!el || !canDrag) return;
     return draggable({
       element: el,
       getInitialData: () => ({ type: "draft-bulk", draftIds }),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [draftIds]);
+  }, [canDrag, draftIds]);
 
   const commit = useCallback(() => {
     if (!onRename) {
@@ -110,11 +135,42 @@ export function JobFilterCard({
 
   const taskStatus = mapJobStatusToTaskStatus(status);
   const isActiveJob = status != null && ACTIVE_STATUSES.has(taskStatus);
+  const isProcessing = status === "PROCESSING";
 
   const dateParts =
     createdAt != null
       ? formatTaskDateParts(new Date(createdAt).toISOString())
       : null;
+
+  const modeShort = mode ? MODES[mode]?.shortLabel : null;
+
+  // Detailed-only progress
+  const progressPct =
+    isProcessing &&
+    typeof totalPages === "number" &&
+    totalPages > 0 &&
+    typeof successPages === "number"
+      ? Math.min(100, Math.max(0, (successPages / totalPages) * 100))
+      : null;
+
+  // Detailed-only result summary line
+  const resultSummary = (() => {
+    if (variant !== "detailed") return null;
+    const parts: string[] = [];
+    if (typeof successPages === "number" && typeof totalPages === "number") {
+      parts.push(`${successPages}/${totalPages}장`);
+    }
+    if (typeof draftResultCount === "number" && draftResultCount > 0) {
+      parts.push(`검토 ${draftResultCount}`);
+    }
+    if (typeof savedResultCount === "number" && savedResultCount > 0) {
+      parts.push(`저장 ${savedResultCount}`);
+    }
+    return parts.length > 0 ? parts.join(" · ") : null;
+  })();
+
+  const showRename = variant === "compact" && editable && !editing && onRename;
+  const showDelete = variant === "detailed" && onDelete;
 
   return (
     <article
@@ -132,14 +188,22 @@ export function JobFilterCard({
       aria-pressed={active}
       title={label}
       className={
-        "group relative flex w-[150px] shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-        (isDragging
-          ? "cursor-grabbing opacity-60 "
-          : "cursor-grab active:cursor-grabbing ") +
+        "group relative flex shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        (variant === "compact" ? "w-[124px] " : "w-[150px] ") +
+        (canDrag
+          ? isDragging
+            ? "cursor-grabbing opacity-60 "
+            : "cursor-grab active:cursor-grabbing "
+          : "cursor-pointer ") +
         cardClass
       }
     >
-      <div className="relative h-[100px] w-[150px] shrink-0 overflow-hidden bg-slate-50">
+      <div
+        className={
+          "relative shrink-0 overflow-hidden bg-slate-50 " +
+          (variant === "compact" ? "h-[72px] w-[124px]" : "h-[100px] w-[150px]")
+        }
+      >
         {thumbnailUrl ? (
           // Signed URLs change per fetch; no point in next/image optimization
           // eslint-disable-next-line @next/next/no-img-element
@@ -154,10 +218,14 @@ export function JobFilterCard({
             <Icon className="size-7" aria-hidden="true" />
           </div>
         )}
-        {/* Count badge — always visible on the thumbnail, top-left */}
         <span className="absolute left-1 top-1 rounded-full bg-slate-900/75 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm">
           {count.toLocaleString()}개
         </span>
+        {modeShort ? (
+          <span className="absolute bottom-1 right-1 rounded border border-white/40 bg-slate-900/70 px-1 py-0 text-[9.5px] font-bold text-white">
+            {modeShort}
+          </span>
+        ) : null}
         {active ? (
           <span className="absolute bottom-1 left-1 inline-flex items-center gap-1 rounded-full bg-blue-600 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm ring-1 ring-white/70">
             <CheckCircle2 className="size-3" aria-hidden="true" />
@@ -177,6 +245,14 @@ export function JobFilterCard({
           <span className="absolute right-1 top-1">
             <TaskStatusBadge status={taskStatus} />
           </span>
+        ) : null}
+        {progressPct !== null ? (
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-slate-900/30">
+            <div
+              className="h-full bg-blue-500 transition-[width] duration-300"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
         ) : null}
       </div>
       <div className="min-w-0 px-2 py-1.5">
@@ -206,7 +282,7 @@ export function JobFilterCard({
               {label}
             </h4>
           )}
-          {editable && !editing && onRename ? (
+          {showRename ? (
             <button
               type="button"
               onClick={(e) => {
@@ -221,6 +297,25 @@ export function JobFilterCard({
               <Pencil className="size-2.5" />
             </button>
           ) : null}
+          {showDelete ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.();
+              }}
+              disabled={deleting}
+              className="-mr-0.5 inline-flex size-4 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:cursor-wait disabled:opacity-50"
+              aria-label="추출 작업 삭제"
+              title="삭제"
+            >
+              {deleting ? (
+                <Loader2 className="size-2.5 animate-spin" />
+              ) : (
+                <Trash2 className="size-2.5" />
+              )}
+            </button>
+          ) : null}
         </div>
         {dateParts ? (
           <div className="mt-0.5 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-900">
@@ -230,6 +325,11 @@ export function JobFilterCard({
         ) : subLabel ? (
           <p className="mt-0.5 truncate text-[12px] font-medium text-slate-900">
             {subLabel}
+          </p>
+        ) : null}
+        {resultSummary ? (
+          <p className="mt-0.5 truncate text-[10.5px] font-medium text-slate-500">
+            {resultSummary}
           </p>
         ) : null}
       </div>

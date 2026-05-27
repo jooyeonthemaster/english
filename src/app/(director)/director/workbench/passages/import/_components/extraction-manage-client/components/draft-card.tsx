@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { CheckCircle2, Copy, FileText, Layers } from "lucide-react";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+import { CheckCircle2, Copy, FileText, Inbox, Layers } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -24,6 +25,19 @@ interface DraftCardProps {
   /** Optional. When this draft is part of a duplicate cluster, the number
    *  of *other* drafts that share its normalized content. */
   dupCount?: number;
+  /** Optional. All currently-checked draft IDs in the surrounding view. If
+   *  the user drags this card while it's checked and the group has 2+ ids,
+   *  the drag payload becomes a bulk move covering every checked draft —
+   *  one drag, many drafts. */
+  bulkDragIds?: string[];
+  /** True when this draft hasn't been filed into any folder yet. Renders a
+   *  "미분류" badge so users can spot loose drafts at a glance while browsing
+   *  the "전체 자료" view. */
+  unfiled?: boolean;
+  /** True when this card was the most recently opened in the detail modal.
+   *  Renders a subtle shading so users can quickly find where they were
+   *  after closing the popup. Overridden by `active` when both are true. */
+  recentlyViewed?: boolean;
 }
 
 export function DraftCard({
@@ -34,16 +48,89 @@ export function DraftCard({
   onClick,
   onToggleCheck,
   dupCount,
+  bulkDragIds,
+  unfiled,
+  recentlyViewed,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  // Keep latest values in a ref so the draggable callback (registered once
+  // per draft id) always reads the current checked/bulk state at drag-start.
+  const dragStateRef = useRef({ checked, bulkDragIds });
+  dragStateRef.current = { checked, bulkDragIds };
 
   useEffect(() => {
     const el = dragRef.current;
     if (!el) return;
     return draggable({
       element: el,
-      getInitialData: () => ({ draftId: draft.id, type: "draft" }),
+      getInitialData: () => {
+        const { checked: c, bulkDragIds: ids } = dragStateRef.current;
+        if (c && ids && ids.length > 1) {
+          return { draftIds: ids, type: "draft-bulk" };
+        }
+        return { draftId: draft.id, type: "draft" };
+      },
+      onGenerateDragPreview: ({ nativeSetDragImage }) => {
+        const { checked: c, bulkDragIds: ids } = dragStateRef.current;
+        const count = c && ids && ids.length > 1 ? ids.length : 1;
+        if (count <= 1) return;
+        setCustomNativeDragPreview({
+          nativeSetDragImage,
+          getOffset: ({ container }) => {
+            const rect = container.getBoundingClientRect();
+            return { x: Math.min(120, rect.width / 2), y: 24 };
+          },
+          render: ({ container }) => {
+            const source = dragRef.current;
+            if (!source) return;
+            const rect = source.getBoundingClientRect();
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "relative";
+            wrapper.style.width = `${rect.width}px`;
+            wrapper.style.height = `${rect.height}px`;
+            const backCount = Math.min(2, count - 1);
+            for (let i = backCount; i >= 1; i--) {
+              const back = document.createElement("div");
+              back.style.position = "absolute";
+              back.style.inset = "0";
+              back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
+              back.style.borderRadius = "12px";
+              back.style.background = "white";
+              back.style.border = "1px solid rgb(226, 232, 240)";
+              back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+              wrapper.appendChild(back);
+            }
+            const clone = source.cloneNode(true) as HTMLElement;
+            clone.style.position = "relative";
+            clone.style.width = `${rect.width}px`;
+            clone.style.margin = "0";
+            clone.style.opacity = "1";
+            clone.style.transform = "none";
+            wrapper.appendChild(clone);
+            const badge = document.createElement("div");
+            badge.textContent = String(count);
+            badge.style.position = "absolute";
+            badge.style.top = "-10px";
+            badge.style.right = "-10px";
+            badge.style.minWidth = "28px";
+            badge.style.height = "28px";
+            badge.style.padding = "0 8px";
+            badge.style.borderRadius = "14px";
+            badge.style.background = "#2563eb";
+            badge.style.color = "white";
+            badge.style.fontSize = "13px";
+            badge.style.fontWeight = "700";
+            badge.style.display = "flex";
+            badge.style.alignItems = "center";
+            badge.style.justifyContent = "center";
+            badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+            badge.style.fontVariantNumeric = "tabular-nums";
+            wrapper.appendChild(badge);
+            container.appendChild(wrapper);
+          },
+        });
+      },
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -94,7 +181,9 @@ export function DraftCard({
         " " +
         (active
           ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
-          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60")
+          : recentlyViewed
+            ? "border-slate-300 bg-slate-100/80 hover:border-slate-400 hover:bg-slate-100"
+            : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60")
       }
     >
       {active ? (
@@ -167,6 +256,15 @@ export function DraftCard({
           >
             <Copy className="size-3" aria-hidden="true" />
             {dupCount} 중복
+          </span>
+        ) : null}
+        {unfiled ? (
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 ring-1 ring-amber-200"
+            title="아직 어떤 폴더에도 포함되지 않은 자료입니다"
+          >
+            <Inbox className="size-3" aria-hidden="true" />
+            미분류
           </span>
         ) : null}
         {isPromoted ? (

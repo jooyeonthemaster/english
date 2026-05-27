@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
+import PortOne from "@portone/browser-sdk/v2";
 import {
+  AlertCircle,
   Coins,
   Calendar,
+  CheckCircle2,
   Gift,
-  TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
   RefreshCw,
@@ -19,6 +22,11 @@ import {
   BookOpen,
   Languages,
   GraduationCap,
+  CreditCard,
+  Landmark,
+  ReceiptText,
+  Smartphone,
+  WalletCards,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -52,6 +60,55 @@ interface CreditTransaction {
   createdAt: string;
 }
 
+interface CreditTopUp {
+  id: string;
+  paymentId: string | null;
+  creditAmount: number;
+  price: number;
+  paymentMethod: string | null;
+  paymentReference: string | null;
+  status: string;
+  portoneStatus: string | null;
+  paidAmount: number | null;
+  receiptUrl: string | null;
+  failureMessage: string | null;
+  createdAt: string;
+  completedAt: string | null;
+  paidAt: string | null;
+}
+
+interface CreditTopUpProduct {
+  id: string;
+  code: string;
+  name: string;
+  label: string;
+  creditAmount: number;
+  basePrice: number;
+  price: number;
+  discountRate: number;
+  discountAmount: number;
+  perCredit: number;
+  estimatedAutoQuestionCount: number;
+  perAutoQuestion: number;
+  promotionName: string | null;
+  promotionStartsAt: string | null;
+  promotionEndsAt: string | null;
+  isPromotionActive: boolean;
+  hasScheduledPromotion: boolean;
+  description: string | null;
+  isActive: boolean;
+  sortOrder: number;
+}
+
+type TopUpPayMethod =
+  | "CARD"
+  | "EASY_PAY"
+  | "TRANSFER"
+  | "VIRTUAL_ACCOUNT"
+  | "MOBILE";
+
+type EasyPayProvider = "KAKAOPAY" | "NAVERPAY" | "TOSSPAY" | "PAYCO";
+
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const TYPE_LABELS: Record<string, string> = {
@@ -72,6 +129,46 @@ const FILTER_OPTIONS = [
   { value: "REFUND", label: "환불" },
   { value: "ADJUSTMENT", label: "조정" },
 ];
+
+const PAY_METHOD_OPTIONS: Array<{
+  value: TopUpPayMethod;
+  label: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+}> = [
+  { value: "CARD", label: "카드", icon: CreditCard },
+  { value: "EASY_PAY", label: "간편결제", icon: WalletCards },
+  { value: "TRANSFER", label: "계좌이체", icon: Landmark },
+  { value: "VIRTUAL_ACCOUNT", label: "가상계좌", icon: ReceiptText },
+  { value: "MOBILE", label: "휴대폰", icon: Smartphone },
+];
+
+const EASY_PAY_PROVIDER_OPTIONS: Array<{
+  value: EasyPayProvider;
+  label: string;
+}> = [
+  { value: "KAKAOPAY", label: "카카오페이" },
+  { value: "NAVERPAY", label: "네이버페이" },
+  { value: "TOSSPAY", label: "토스페이" },
+  { value: "PAYCO", label: "페이코" },
+];
+
+const TOP_UP_STATUS_LABELS: Record<string, string> = {
+  PENDING: "결제 대기",
+  WAITING_FOR_DEPOSIT: "입금 대기",
+  COMPLETED: "충전 완료",
+  FAILED: "실패",
+  CANCELLED: "취소",
+  REFUNDED: "환불 확인",
+};
+
+const TOP_UP_STATUS_STYLES: Record<string, string> = {
+  PENDING: "bg-blue-50 text-blue-700",
+  WAITING_FOR_DEPOSIT: "bg-sky-50 text-sky-700",
+  COMPLETED: "bg-emerald-50 text-emerald-700",
+  FAILED: "bg-red-50 text-red-600",
+  CANCELLED: "bg-gray-100 text-gray-600",
+  REFUNDED: "bg-amber-50 text-amber-700",
+};
 
 // 기능별 아이콘 매핑
 const OPERATION_ICONS: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
@@ -113,8 +210,19 @@ export default function CreditsPage() {
   const [txLoading, setTxLoading] = useState(false);
   const [filterType, setFilterType] = useState("");
   const [page, setPage] = useState(0);
+  const [topUps, setTopUps] = useState<CreditTopUp[]>([]);
+  const [topUpProducts, setTopUpProducts] = useState<CreditTopUpProduct[]>([]);
+  const [payMethod, setPayMethod] = useState<TopUpPayMethod>("CARD");
+  const [easyPayProvider, setEasyPayProvider] =
+    useState<EasyPayProvider>("KAKAOPAY");
+  const [payingCredits, setPayingCredits] = useState<number | null>(null);
+  const [paymentMessage, setPaymentMessage] = useState<{
+    type: "success" | "error" | "info";
+    text: string;
+  } | null>(null);
   const pageSize = 20;
   const isFirstRender = useRef(true);
+  const completingPaymentRef = useRef(false);
 
   const fetchSummary = useCallback(async () => {
     try {
@@ -146,13 +254,153 @@ export default function CreditsPage() {
     }
   }, [page, filterType]);
 
+  const fetchTopUps = useCallback(async () => {
+    try {
+      const res = await fetch("/api/credits/top-ups?limit=8");
+      if (res.ok) {
+        const data = await res.json();
+        setTopUps(data.topUps);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const fetchTopUpProducts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/credits/top-up-products", {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTopUpProducts(data.products);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const refreshAllCreditData = useCallback(async () => {
+    await Promise.all([
+      fetchSummary(),
+      fetchTransactions(),
+      fetchTopUps(),
+      fetchTopUpProducts(),
+    ]);
+  }, [fetchSummary, fetchTransactions, fetchTopUps, fetchTopUpProducts]);
+
+  const completePayment = useCallback(
+    async (paymentId: string) => {
+      if (completingPaymentRef.current) return;
+      completingPaymentRef.current = true;
+      setPaymentMessage({ type: "info", text: "결제 승인 내역을 확인 중입니다." });
+      try {
+        const res = await fetch("/api/credits/top-ups/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentId }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error ?? "결제 검증에 실패했습니다.");
+        }
+        await refreshAllCreditData();
+        setPaymentMessage({
+          type: "success",
+          text: data.credited
+            ? "크레딧 충전이 완료되었습니다."
+            : "이미 처리된 결제입니다. 최신 잔고를 반영했습니다.",
+        });
+      } catch (err) {
+        setPaymentMessage({
+          type: "error",
+          text:
+            err instanceof Error
+              ? err.message
+              : "결제 검증 중 오류가 발생했습니다.",
+        });
+      } finally {
+        completingPaymentRef.current = false;
+        if (typeof window !== "undefined") {
+          const url = new URL(window.location.href);
+          if (url.searchParams.has("paymentId")) {
+            url.searchParams.delete("paymentId");
+            window.history.replaceState(null, "", url.toString());
+          }
+        }
+      }
+    },
+    [refreshAllCreditData],
+  );
+
+  const startTopUp = useCallback(
+    async (product: CreditTopUpProduct) => {
+      setPayingCredits(product.creditAmount);
+      setPaymentMessage(null);
+      try {
+        const prepareRes = await fetch("/api/credits/top-ups/prepare", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            credits: product.creditAmount,
+            payMethod,
+            easyPayProvider,
+          }),
+        });
+        const prepared = await prepareRes.json();
+        if (!prepareRes.ok) {
+          throw new Error(prepared.error ?? "결제 준비에 실패했습니다.");
+        }
+
+        const payment = await PortOne.requestPayment(prepared.paymentRequest);
+        if (!payment) {
+          setPaymentMessage({
+            type: "info",
+            text: "결제창에서 돌아오면 충전 상태가 자동으로 확인됩니다.",
+          });
+          return;
+        }
+        if (payment.code) {
+          setPaymentMessage({
+            type: "error",
+            text: payment.message ?? "결제가 완료되지 않았습니다.",
+          });
+          await fetchTopUps();
+          return;
+        }
+
+        await completePayment(payment.paymentId);
+      } catch (err) {
+        setPaymentMessage({
+          type: "error",
+          text:
+            err instanceof Error
+              ? err.message
+              : "결제 요청 중 오류가 발생했습니다.",
+        });
+      } finally {
+        setPayingCredits(null);
+      }
+    },
+    [completePayment, easyPayProvider, fetchTopUps, payMethod],
+  );
+
   // Initial load
   useEffect(() => {
-    Promise.all([fetchSummary(), fetchTransactions()]).then(() =>
-      setLoading(false),
-    );
+    Promise.all([
+      fetchSummary(),
+      fetchTransactions(),
+      fetchTopUps(),
+      fetchTopUpProducts(),
+    ]).then(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const paymentId = new URLSearchParams(window.location.search).get("paymentId");
+    if (paymentId) void completePayment(paymentId);
+  }, [completePayment]);
 
   // Re-fetch when page or filterType changes (skip initial)
   useEffect(() => {
@@ -203,6 +451,8 @@ export default function CreditsPage() {
           onClick={() => {
             fetchSummary();
             fetchTransactions();
+            fetchTopUps();
+            fetchTopUpProducts();
           }}
           className="flex items-center gap-1.5 h-9 px-3.5 text-[13px] font-medium text-gray-500 bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:text-gray-700 transition-all duration-200 shadow-sm"
         >
@@ -210,6 +460,38 @@ export default function CreditsPage() {
           새로고침
         </button>
       </div>
+
+      <TopUpPanel
+        products={topUpProducts}
+        costEntries={costEntries}
+        payMethod={payMethod}
+        onPayMethodChange={setPayMethod}
+        easyPayProvider={easyPayProvider}
+        onEasyPayProviderChange={setEasyPayProvider}
+        payingCredits={payingCredits}
+        onStartTopUp={startTopUp}
+      />
+
+      {paymentMessage && (
+        <div
+          className={cn(
+            "flex items-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium",
+            paymentMessage.type === "success" &&
+              "border-emerald-100 bg-emerald-50 text-emerald-700",
+            paymentMessage.type === "error" &&
+              "border-red-100 bg-red-50 text-red-600",
+            paymentMessage.type === "info" &&
+              "border-blue-100 bg-blue-50 text-blue-700",
+          )}
+        >
+          {paymentMessage.type === "success" ? (
+            <CheckCircle2 className="size-4" strokeWidth={2} />
+          ) : (
+            <AlertCircle className="size-4" strokeWidth={2} />
+          )}
+          {paymentMessage.text}
+        </div>
+      )}
 
       {/* Overview cards — 2x2 grid with usage bar */}
       {summary && (
@@ -271,7 +553,7 @@ export default function CreditsPage() {
             기능별 크레딧 비용
           </h2>
           <p className="text-[12px] text-gray-400 mt-0.5">
-            각 AI 기능 사용 시 차감되는 크레딧 단가
+            구매한 크레딧 상품과 관계없이 동일하게 적용되는 기능별 차감 기준
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -308,6 +590,8 @@ export default function CreditsPage() {
           })}
         </div>
       </div>
+
+      <TopUpHistory topUps={topUps} />
 
       {/* Transaction history */}
       <div className="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden">
@@ -456,6 +740,295 @@ export default function CreditsPage() {
           </>
         )}
       </div>
+
+    </div>
+  );
+}
+
+function TopUpPanel({
+  products,
+  costEntries,
+  payMethod,
+  onPayMethodChange,
+  easyPayProvider,
+  onEasyPayProviderChange,
+  payingCredits,
+  onStartTopUp,
+}: {
+  products: CreditTopUpProduct[];
+  costEntries: [OperationType, number][];
+  payMethod: TopUpPayMethod;
+  onPayMethodChange: (method: TopUpPayMethod) => void;
+  easyPayProvider: EasyPayProvider;
+  onEasyPayProviderChange: (provider: EasyPayProvider) => void;
+  payingCredits: number | null;
+  onStartTopUp: (product: CreditTopUpProduct) => void;
+}) {
+  return (
+    <div className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-blue-50 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="shrink-0">
+          <h2 className="text-[15px] font-semibold text-gray-900">
+            크레딧 충전
+          </h2>
+          <p className="text-[12px] text-gray-400 mt-0.5">
+            포트원 PG 결제로 즉시 잔고에 반영됩니다
+          </p>
+        </div>
+        <div className="flex w-full flex-col items-start gap-2 lg:w-auto">
+          <div className="flex flex-wrap gap-1.5">
+            {PAY_METHOD_OPTIONS.map((option) => {
+              const Icon = option.icon;
+              const active = payMethod === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => onPayMethodChange(option.value)}
+                  className={cn(
+                    "inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-[12px] font-semibold transition",
+                    active
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-blue-200 hover:text-blue-600",
+                  )}
+                >
+                  <Icon className="size-3.5" strokeWidth={2} />
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+          {payMethod === "EASY_PAY" && (
+            <div className="flex flex-wrap gap-1.5">
+              {EASY_PAY_PROVIDER_OPTIONS.map((option) => {
+                const active = easyPayProvider === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => onEasyPayProviderChange(option.value)}
+                    className={cn(
+                      "inline-flex h-7 items-center rounded-lg border px-2.5 text-[11px] font-semibold transition",
+                      active
+                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                        : "border-gray-200 bg-white text-gray-500 hover:border-emerald-200 hover:text-emerald-600",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="border-b border-blue-50 bg-slate-50/60 px-5 py-3">
+        <div className="flex flex-col gap-3 text-[12px] leading-5 text-slate-500 xl:flex-row xl:items-start xl:justify-between">
+          <div className="space-y-1">
+            <p className="font-semibold text-slate-700">SMOAT 크레딧</p>
+            <p>
+              문제 생성, 자동 출제, 지문 분석, OCR, 해설 생성 등 SMOAT 내부 AI
+              기능을 이용하기 위한 디지털 이용권입니다. 배송이 없는 상품이며,
+              결제 승인 또는 가상계좌 입금 확인 후 잔고에 즉시 지급됩니다.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap items-center gap-2 font-semibold text-blue-600">
+            <Link
+              href="/credits/products"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-blue-700"
+            >
+              상품 정보
+            </Link>
+            <span className="text-slate-300">·</span>
+            <Link
+              href="/terms"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-blue-700"
+            >
+              이용약관
+            </Link>
+            <span className="text-slate-300">·</span>
+            <Link
+              href="/privacy"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-blue-700"
+            >
+              개인정보처리방침
+            </Link>
+            <span className="text-slate-300">·</span>
+            <Link
+              href="/refund-policy"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-blue-700"
+            >
+              환불 정책
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-blue-50">
+        {products.length === 0 ? (
+          <div className="col-span-full px-5 py-12 text-center text-[13px] text-gray-400">
+            현재 노출 중인 크레딧 상품이 없습니다.
+          </div>
+        ) : products.map((product) => {
+          const loading = payingCredits === product.creditAmount;
+          return (
+            <button
+              key={product.id}
+              type="button"
+              onClick={() => onStartTopUp(product)}
+              disabled={payingCredits !== null}
+              className="group min-h-[128px] text-left px-5 py-4 transition hover:bg-blue-50/50 disabled:cursor-wait disabled:opacity-70"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] font-semibold text-blue-600">
+                  {product.name}
+                </span>
+                <span className="text-[11px] font-medium text-gray-400">
+                  {product.perAutoQuestion.toLocaleString("ko-KR")}원/문항
+                </span>
+              </div>
+              <div className="mt-2 text-[11px] font-medium text-gray-500">
+                자동출제 약{" "}
+                {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
+                문항 · {product.creditAmount.toLocaleString("ko-KR")}C
+              </div>
+              {product.isPromotionActive && (
+                <div className="mt-2 inline-flex rounded-md bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700">
+                  {product.promotionName || "프로모션"} · {product.discountRate}% 할인
+                </div>
+              )}
+              <div className="mt-3 text-[24px] font-bold tracking-tight text-gray-950">
+                {product.price.toLocaleString("ko-KR")}원
+              </div>
+              {product.isPromotionActive && (
+                <div className="mt-1 text-[11px] font-medium text-gray-400 line-through">
+                  {product.basePrice.toLocaleString("ko-KR")}원
+                </div>
+              )}
+              <div className="mt-3 inline-flex h-8 items-center rounded-lg bg-blue-600 px-3 text-[12px] font-semibold text-white transition group-hover:bg-blue-700">
+                {loading ? "결제 준비 중" : "충전하기"}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <div className="border-t border-blue-50 px-5 py-4">
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-[13px] font-semibold text-gray-800">
+            크레딧 사용 가능 기능 및 차감 기준
+          </h3>
+          <span className="text-[11px] text-gray-400">
+            구매 단가와 별도 적용
+          </span>
+        </div>
+        <p className="mb-3 text-[11px] leading-5 text-gray-400">
+          큰 단위로 충전하면 1C당 구매 단가는 낮아질 수 있지만, 같은 기능을
+          실행할 때 차감되는 크레딧 수는 동일합니다.
+        </p>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {costEntries.map(([op, cost]) => (
+            <div
+              key={op}
+              className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2"
+            >
+              <span className="truncate pr-3 text-[12px] font-medium text-slate-600">
+                {OPERATION_LABELS[op]}
+              </span>
+              <span className="shrink-0 text-[12px] font-black tabular-nums text-slate-900">
+                {cost}C
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TopUpHistory({ topUps }: { topUps: CreditTopUp[] }) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h2 className="text-[14px] font-semibold text-gray-800">
+            충전 요청
+          </h2>
+          <p className="text-[12px] text-gray-400 mt-0.5">
+            최근 결제 요청 상태
+          </p>
+        </div>
+      </div>
+      {topUps.length === 0 ? (
+        <div className="py-12 text-center text-[13px] text-gray-400">
+          충전 요청이 없습니다
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-50/50 text-[11px] font-semibold text-gray-400">
+                <th className="px-5 py-2.5">일시</th>
+                <th className="px-4 py-2.5">상태</th>
+                <th className="px-4 py-2.5 text-right">결제금액</th>
+                <th className="px-4 py-2.5 text-right">크레딧</th>
+                <th className="px-5 py-2.5">영수증</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {topUps.map((topUp) => (
+                <tr key={topUp.id} className="hover:bg-gray-50/60 transition">
+                  <td className="px-5 py-3 text-[12px] text-gray-500 whitespace-nowrap">
+                    {new Date(topUp.createdAt).toLocaleDateString("ko-KR", {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={cn(
+                        "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                        TOP_UP_STATUS_STYLES[topUp.status] ??
+                          "bg-gray-100 text-gray-600",
+                      )}
+                    >
+                      {TOP_UP_STATUS_LABELS[topUp.status] ?? topUp.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-right text-[13px] font-semibold tabular-nums text-gray-900">
+                    {topUp.price.toLocaleString("ko-KR")}원
+                  </td>
+                  <td className="px-4 py-3 text-right text-[13px] font-semibold tabular-nums text-blue-700">
+                    {topUp.creditAmount.toLocaleString("ko-KR")}C
+                  </td>
+                  <td className="px-5 py-3 text-[12px]">
+                    {topUp.receiptUrl ? (
+                      <a
+                        href={topUp.receiptUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium text-blue-600 hover:text-blue-700"
+                      >
+                        보기
+                      </a>
+                    ) : (
+                      <span className="text-gray-400">-</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
