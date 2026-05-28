@@ -173,7 +173,7 @@ ${customPrompt ? `\n## Teacher instructions\n${customPrompt}` : ""}
 - 객관식은 해당 유형이 요구하는 개수의 선택지(options 배열에 {label, text} 형태)를 만드세요. 대부분은 5개이고, 무관한 문장과 확장 어법 판단의 밑줄 표현 수는 상세 설정의 개수를 따릅니다.
 - 해설(explanation)은 왜 정답인지 지문 근거와 함께 한국어로 작성하세요.
 - keyPoints는 3개의 학습 포인트로 작성하세요.
-- wrongOptionExplanations는 객관식 문제마다 반드시 정답을 제외한 모든 오답에 대해 작성하세요. 복수 정답 문항은 전체 선지 수에서 정답 수를 뺀 만큼 작성합니다. 확장 어법 판단은 모든 선지를 정답으로 만들지 말고 오답 분석이 남게 하세요.
+- wrongOptionExplanations는 객관식 문제마다 반드시 정답을 제외한 모든 오답에 대해 작성하세요. 복수 정답 문항은 전체 선지 수에서 정답 수를 뺀 만큼 작성합니다. 확장 어법 판단에서 정답 수가 전체 선지 수와 같으면 오답 분석은 비워도 됩니다.
 - wrongOptionExplanations가 배열 스키마이면 각 항목은 {label, explanation} 형태로 작성하세요.
 - tags는 관련 문법/어휘/유형 태그를 한국어로 작성하세요.
 

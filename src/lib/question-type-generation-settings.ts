@@ -10,6 +10,8 @@ export interface IrrelevantGenerationSettings {
 export interface GrammarErrorGenerationSettings {
   /** Number of grammar judgment positions to mark. Range 5~10. Default 5. */
   markerCount?: number;
+  /** Number of actually incorrect marked expressions. Range 1~markerCount. Default 1. */
+  answerCount?: number;
   /** Legacy field name kept for already-saved configs; interpreted as markerCount. */
   errorCount?: number;
 }
@@ -19,9 +21,12 @@ export const IRRELEVANT_SLOT_COUNT_DEFAULT = 5;
 export const GRAMMAR_MARKER_COUNT_MIN = 5;
 export const GRAMMAR_MARKER_COUNT_MAX = 10;
 export const GRAMMAR_MARKER_COUNT_DEFAULT = 5;
-export const GRAMMAR_ERROR_COUNT_MIN = GRAMMAR_MARKER_COUNT_MIN;
-export const GRAMMAR_ERROR_COUNT_MAX = GRAMMAR_MARKER_COUNT_MAX;
-export const GRAMMAR_ERROR_COUNT_DEFAULT = GRAMMAR_MARKER_COUNT_DEFAULT;
+export const GRAMMAR_ANSWER_COUNT_MIN = 1;
+export const GRAMMAR_ANSWER_COUNT_MAX = GRAMMAR_MARKER_COUNT_MAX;
+export const GRAMMAR_ANSWER_COUNT_DEFAULT = 1;
+export const GRAMMAR_ERROR_COUNT_MIN = GRAMMAR_ANSWER_COUNT_MIN;
+export const GRAMMAR_ERROR_COUNT_MAX = GRAMMAR_ANSWER_COUNT_MAX;
+export const GRAMMAR_ERROR_COUNT_DEFAULT = GRAMMAR_ANSWER_COUNT_DEFAULT;
 
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
 
@@ -62,7 +67,19 @@ export function normalizeGrammarMarkerCount(value: unknown): number {
 }
 
 export function normalizeGrammarErrorCount(value: unknown): number {
-  return normalizeGrammarMarkerCount(value);
+  return normalizeGrammarAnswerCount(value);
+}
+
+export function normalizeGrammarAnswerCount(
+  value: unknown,
+  markerCount: number = GRAMMAR_MARKER_COUNT_DEFAULT,
+): number {
+  const n = typeof value === "number" ? value : Number(value);
+  const marker = normalizeGrammarMarkerCount(markerCount);
+  const max = Math.max(GRAMMAR_ANSWER_COUNT_MIN, marker);
+  if (!Number.isFinite(n)) return Math.min(GRAMMAR_ANSWER_COUNT_DEFAULT, max);
+  const rounded = Math.round(n);
+  return Math.min(max, Math.max(GRAMMAR_ANSWER_COUNT_MIN, rounded));
 }
 
 export function readGrammarMarkerCountSetting(rawSettings: unknown): number {
@@ -85,7 +102,35 @@ export function readGrammarMarkerCountSetting(rawSettings: unknown): number {
 }
 
 export function readGrammarErrorCountSetting(rawSettings: unknown): number {
-  return readGrammarMarkerCountSetting(rawSettings);
+  const markerCount = readGrammarMarkerCountSetting(rawSettings);
+  return readGrammarAnswerCountSetting(rawSettings, markerCount);
+}
+
+export function readGrammarAnswerCountSetting(
+  rawSettings: unknown,
+  markerCount: number = readGrammarMarkerCountSetting(rawSettings),
+): number {
+  if (!isRecord(rawSettings)) {
+    return normalizeGrammarAnswerCount(undefined, markerCount);
+  }
+
+  if (rawSettings.answerCount !== undefined) {
+    return normalizeGrammarAnswerCount(rawSettings.answerCount, markerCount);
+  }
+
+  if (rawSettings.correctAnswerCount !== undefined) {
+    return normalizeGrammarAnswerCount(rawSettings.correctAnswerCount, markerCount);
+  }
+
+  const nested = rawSettings.GRAMMAR_ERROR;
+  if (isRecord(nested)) {
+    return normalizeGrammarAnswerCount(
+      nested.answerCount ?? nested.correctAnswerCount,
+      markerCount,
+    );
+  }
+
+  return normalizeGrammarAnswerCount(undefined, markerCount);
 }
 
 export interface IrrelevantSlotValidation {
@@ -151,6 +196,7 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     },
     GRAMMAR_ERROR: {
       markerCount: GRAMMAR_MARKER_COUNT_DEFAULT,
+      answerCount: GRAMMAR_ANSWER_COUNT_DEFAULT,
     },
     IRRELEVANT: {
       slotCount: IRRELEVANT_SLOT_COUNT_DEFAULT,
@@ -165,21 +211,26 @@ export function buildQuestionTypeSettingsPrompt(
   if (typeId === "GRAMMAR_ERROR") {
     if (!isRecord(rawSettings)) return "";
     const markerCount = readGrammarMarkerCountSetting(rawSettings);
-    if (markerCount === GRAMMAR_MARKER_COUNT_DEFAULT) return "";
+    const answerCount = readGrammarAnswerCountSetting(rawSettings, markerCount);
+    if (
+      markerCount === GRAMMAR_MARKER_COUNT_DEFAULT &&
+      answerCount === GRAMMAR_ANSWER_COUNT_DEFAULT
+    ) {
+      return "";
+    }
     const labels = GRAMMAR_LABELS.slice(0, markerCount).join(" ");
-    const answerMin = markerCount >= 6 ? 2 : 1;
-    const answerMax = Math.min(markerCount - 1, Math.max(answerMin, Math.ceil(markerCount / 2)));
     return [
-      "## Type detail setting: GRAMMAR_ERROR / expanded grammar judgment positions",
-      `- The teacher requested exactly ${markerCount} marked grammar judgment positions, not ${markerCount} answers.`,
+      "## Type detail setting: GRAMMAR_ERROR / grammar judgment positions and answer count",
+      `- The teacher requested exactly ${markerCount} marked grammar judgment positions and exactly ${answerCount} answer label(s).`,
       `- Output exactly ${markerCount} markedExpressions and ${markerCount} options labeled ${labels}.`,
-      `- Randomly choose a natural answer count from ${answerMin} to ${answerMax}; do not reveal this count in the direction, and never make every marked expression incorrect.`,
-      `- Exactly the chosen answer count must have isError=true. Every other markedExpression must remain grammatically correct source wording.`,
+      `- Exactly ${answerCount} markedExpression item(s) must have isError=true. If fewer than ${markerCount} are answers, every other markedExpression must remain grammatically correct source wording. If all ${markerCount} are answers, every marked expression is intentionally incorrect.`,
       "- correctAnswers must list every isError=true label. correctAnswer must be the same labels joined by comma + space, for example \"(A), (C)\".",
-      "- The direction must ask students to choose all grammatically incorrect parts, without saying how many there are.",
+      answerCount >= 2
+        ? "- The direction must ask students to choose all grammatically incorrect parts using '모두', without saying how many answers there are."
+        : "- The direction must ask students to choose the grammatically incorrect part as a single-answer item.",
       "- Every marked expression, including non-error choices, must be a real exam-worthy grammar judgment point from the passage. Do not pad with weak function words, simple articles, or obvious fixed patterns.",
       "- For each isError=true item: expression/correction must be the original correct passage wording, errorExpression must be the displayed wrong form, and the explanation must name why that displayed form is wrong.",
-      "- wrongOptionExplanations must cover every grammatically correct non-answer label, so the 오답 분석 section is never empty for expanded grammar items.",
+      "- wrongOptionExplanations must cover every grammatically correct non-answer label. If every label is an answer, return an empty wrongOptionExplanations array/object according to the schema.",
       "- keyPoints and explanation must cover every error label and the most important non-error decoy points, not only the first few labels.",
     ].join("\n");
   }

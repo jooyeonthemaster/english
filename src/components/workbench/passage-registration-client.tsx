@@ -13,6 +13,7 @@ import {
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { PassageAnalysisIcon } from "@/components/icons/workflow-icons";
+import { useTaskQueue } from "@/components/workbench/task-queue";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
@@ -92,6 +93,13 @@ export function PassageRegistrationClient({
     return mapRecentPassagesToQueueItems(recentPassages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only compute once on mount — server data doesn't change
+  const { triggerRefresh } = useTaskQueue();
+  const refreshTaskQueueSoon = useCallback(() => {
+    triggerRefresh();
+    window.setTimeout(triggerRefresh, 750);
+    window.setTimeout(triggerRefresh, 2_000);
+    window.setTimeout(triggerRefresh, 4_000);
+  }, [triggerRefresh]);
 
   // Queue system
   const {
@@ -100,11 +108,15 @@ export function PassageRegistrationClient({
     hasActiveAnalysis,
     addToQueue,
     addManyToQueue,
+    enqueueManyPending,
     retryAnalysis,
     removeFromQueue,
     updateAnalysisData,
     updateQuestions,
-  } = usePassageQueue(initialQueueItems);
+  } = usePassageQueue(initialQueueItems, {
+    cacheKey: `passage-analysis:${academyId}`,
+    onJobsChanged: refreshTaskQueueSoon,
+  });
 
   // Modal state
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
@@ -329,10 +341,8 @@ export function PassageRegistrationClient({
   }, [hasActiveAnalysis]);
 
   // ─── Bulk-analyze selected extraction drafts ───
-  // Fire all createWorkbenchPassage writes in parallel, then enqueue the
-  // successfully-created passages in the user's selected order. The analysis
-  // calls themselves are throttled inside usePassageQueue so cards appear
-  // together without swamping the model/API.
+  // Fire all passage writes in parallel and enqueue each passage as soon as
+  // its write finishes, so the task cards appear before every draft completes.
   const handleBulkAnalyzeDrafts = useCallback(
     async (
       drafts: M1PassageDraftWithJob[],
@@ -382,7 +392,7 @@ export function PassageRegistrationClient({
             throw new Error(result.error || "CREATE_FAILED");
           }
 
-          return {
+          const queuedItem = {
             passage: {
               id: result.id,
               title: draftTitle,
@@ -403,6 +413,9 @@ export function PassageRegistrationClient({
               generationPlan,
             },
           };
+
+          enqueueManyPending([queuedItem]);
+          return queuedItem;
         }),
       );
 
@@ -436,6 +449,7 @@ export function PassageRegistrationClient({
       tags,
       analysisPrompt,
       addManyToQueue,
+      enqueueManyPending,
     ],
   );
 

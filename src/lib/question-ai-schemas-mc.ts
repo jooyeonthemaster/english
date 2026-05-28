@@ -132,19 +132,20 @@ export const aiGrammarErrorSchema = z.object({
 });
 export type AiGrammarErrorQuestion = z.infer<typeof aiGrammarErrorSchema>;
 
-export function buildAiGrammarErrorSchema(markerCount: number) {
+export function buildAiGrammarErrorSchema(markerCount: number, answerCount = 1) {
   const count = Math.min(10, Math.max(5, Math.round(markerCount)));
+  const answers = Math.min(count, Math.max(1, Math.round(answerCount)));
+  const wrongCount = count - answers;
   const labels = GRAMMAR_LABELS.slice(0, count).join(" ");
   return z.object({
     ...commonFields,
     correctAnswer: z
       .string()
-      .describe(`정답 label들을 comma + space로 연결. 사용 가능한 label: ${labels}. 정답 개수는 매번 달라질 수 있음.`),
+      .describe(`정답 label들을 comma + space로 연결. 사용 가능한 label: ${labels}. 정확히 ${answers}개 label이어야 함.`),
     correctAnswers: z
       .array(z.string())
-      .min(1)
-      .max(count - 1)
-      .describe(`정답 label 배열. 1개 이상 ${count - 1}개 이하이며, 모든 isError=true label과 정확히 일치해야 함.`),
+      .length(answers)
+      .describe(`정답 label 배열. 정확히 ${answers}개이며, 모든 isError=true label과 정확히 일치해야 함.`),
     markedExpressions: z
       .array(grammarMarkedExpressionSchema)
       .length(count)
@@ -155,9 +156,8 @@ export function buildAiGrammarErrorSchema(markerCount: number) {
       .describe(`선지. 정확히 ${count}개를 생성해야 함.`),
     wrongOptionExplanations: z
       .array(grammarWrongOptionExplanationSchema)
-      .min(1)
-      .max(count - 1)
-      .describe(`정답이 아닌 모든 label에 대한 해설. 항목 수는 ${count} - correctAnswers.length와 정확히 같아야 함.`),
+      .length(wrongCount)
+      .describe(`정답이 아닌 모든 label에 대한 해설. 항목 수는 정확히 ${wrongCount}개여야 함.`),
   });
 }
 
@@ -313,11 +313,30 @@ export const AI_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   ...AI_ESSAY_QUESTION_SCHEMAS,
 };
 
-export function getAiResponseSchema(typeId: string, options?: { irrelevantSlotCount?: number; grammarErrorCount?: number }) {
+export function getAiResponseSchema(
+  typeId: string,
+  options?: {
+    irrelevantSlotCount?: number;
+    grammarMarkerCount?: number;
+    grammarAnswerCount?: number;
+    /** Legacy option name; interpreted as grammarMarkerCount. */
+    grammarErrorCount?: number;
+  },
+) {
   let schema = AI_QUESTION_SCHEMAS[typeId];
   if (!schema) throw new Error(`Unknown AI question type: ${typeId}`);
-  if (typeId === "GRAMMAR_ERROR" && options?.grammarErrorCount && options.grammarErrorCount !== 1) {
-    schema = buildAiGrammarErrorSchema(options.grammarErrorCount);
+  if (typeId === "GRAMMAR_ERROR") {
+    const grammarMarkerCount = options?.grammarMarkerCount ?? options?.grammarErrorCount;
+    const grammarAnswerCount = options?.grammarAnswerCount;
+    if (
+      (grammarMarkerCount && grammarMarkerCount !== 5) ||
+      (grammarAnswerCount && grammarAnswerCount !== 1)
+    ) {
+      schema = buildAiGrammarErrorSchema(
+        grammarMarkerCount ?? 5,
+        grammarAnswerCount ?? 1,
+      );
+    }
   }
   if (typeId === "IRRELEVANT" && options?.irrelevantSlotCount && options.irrelevantSlotCount !== 5) {
     schema = buildAiIrrelevantSchema(options.irrelevantSlotCount);

@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ChevronUp,
   ClipboardList,
+  Clock,
   Rows3,
   FileText,
   Loader2,
@@ -46,6 +47,7 @@ import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
 import { SelectionToolbar } from "./shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
+import { QuestionCard } from "./question-card";
 import { QuestionBankCard } from "./question-bank-card";
 import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
@@ -61,6 +63,8 @@ import { useFolderManager } from "@/hooks/use-folder-manager";
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
+
+const QUESTION_BANK_PATH = "/director/workbench/questions";
 
 interface QuestionItem {
   id: string;
@@ -162,7 +166,7 @@ export function QuestionBankClient({
     updateFilters,
     handleSearch: urlSearch,
     goToPage,
-  } = useUrlFilters("/director/questions");
+  } = useUrlFilters(QUESTION_BANK_PATH);
 
   function handleSearch() {
     urlSearch(searchValue);
@@ -545,6 +549,14 @@ export function QuestionBankClient({
     setCreatingExam(false);
   }
 
+  const showingPendingOnly = filters.approved === false;
+  const togglePendingQuestions = useCallback(() => {
+    setSearchValue("");
+    folders.setActiveFolder(null);
+    clearSelection();
+    router.push(showingPendingOnly ? QUESTION_BANK_PATH : `${QUESTION_BANK_PATH}?approved=false`);
+  }, [clearSelection, folders, router, showingPendingOnly]);
+
   // ─── Filter bar (rendered inside FolderSection.toolbar) ───
   const viewModeToggle = (
     <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
@@ -589,6 +601,23 @@ export function QuestionBankClient({
       updateFilter={updateFilter}
       updateFilters={updateFilters}
     />
+  );
+
+  const pendingQuestionsButton = (
+    <button
+      type="button"
+      onClick={togglePendingQuestions}
+      aria-pressed={showingPendingOnly}
+      className={`inline-flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold transition-colors ${
+        showingPendingOnly
+          ? "border-rose-300 bg-white text-rose-700 shadow-[0_0_0_1px_rgba(244,63,94,0.18),0_0_16px_rgba(244,63,94,0.28)]"
+          : "border-rose-200 bg-white text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+      }`}
+      title={showingPendingOnly ? "검수완료 기본 목록으로 돌아가기" : "검수완료 전 문제만 모아보기"}
+    >
+      <Clock className="h-3.5 w-3.5" />
+      {showingPendingOnly ? "미검수 모음 보기 중" : "미검수 문제 모음"}
+    </button>
   );
 
   const selectionExtraActions = (
@@ -761,6 +790,7 @@ export function QuestionBankClient({
                   itemUnit="문항"
                   rightSlot={
                     <div className="flex items-center gap-1.5">
+                      {pendingQuestionsButton}
                       {viewModeToggle}
                       {gridToggle}
                     </div>
@@ -786,6 +816,24 @@ export function QuestionBankClient({
                   expandedPassageIds={expandedPassageIds}
                   setExpandedPassageIds={setExpandedPassageIds}
                   onActivePassageChange={setActivePassageContext}
+                  renderQuestion={
+                    showingPendingOnly
+                      ? (q, idx) => (
+                          <QuestionCard
+                            key={q.id}
+                            q={q}
+                            num={idx + 1}
+                            selected={selectedIds.has(q.id)}
+                            onToggle={() => toggleSelect(q.id)}
+                            onApprove={() => handleApprove(q.id)}
+                            onEdit={() => editor.openEditor(q.id)}
+                            readonly
+                            compact
+                            showReviewActions
+                          />
+                        )
+                      : undefined
+                  }
                 />
               ) : displayedQuestions.length === 0 ? (
                 <div className="text-center py-12">
@@ -813,6 +861,22 @@ export function QuestionBankClient({
                 >
                   {displayedQuestions.map((q, idx) => {
                     const startIdx = (currentPage - 1) * 20;
+                    if (showingPendingOnly) {
+                      return (
+                        <QuestionCard
+                          key={q.id}
+                          q={q}
+                          num={startIdx + idx + 1}
+                          selected={selectedIds.has(q.id)}
+                          onToggle={() => toggleSelect(q.id)}
+                          onApprove={() => handleApprove(q.id)}
+                          onEdit={() => editor.openEditor(q.id)}
+                          readonly
+                          compact
+                          showReviewActions
+                        />
+                      );
+                    }
                     return (
                       <QuestionBankCard
                         key={q.id}

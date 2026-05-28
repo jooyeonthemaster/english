@@ -98,6 +98,7 @@ export const workbenchPassageAnalysisTask = task({
     const taskStartedAt = Date.now();
     let creditMs = 0;
     let generationMs = 0;
+    let generationStartedAt: number | null = null;
     let persistenceMs = 0;
 
     const job = await prisma.workbenchAiJob.findUnique({
@@ -209,7 +210,7 @@ export const workbenchPassageAnalysisTask = task({
         .filter((v) => typeof v === "string" && v.trim().length > 0)
         .join("\n\n");
 
-      const generationStartedAt = Date.now();
+      generationStartedAt = Date.now();
       const rawAnalysis = await runFullAnalysis(
         job.passage,
         mergedPrompt || undefined,
@@ -286,6 +287,10 @@ export const workbenchPassageAnalysisTask = task({
       });
       return { success: true as const, passageId: job.passage.id };
     } catch (err) {
+      if (generationStartedAt !== null && generationMs === 0) {
+        generationMs = Date.now() - generationStartedAt;
+      }
+
       if (err instanceof InsufficientCreditsError) {
         await prisma.workbenchAiJob.update({
           where: { id: jobId },

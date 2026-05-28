@@ -51,6 +51,7 @@ interface GenerateQuestionTextArgs {
   maxTokens?: number;
   omitMaxTokens?: boolean;
   responseFormat?: "json_object";
+  isRecoverableJsonText?: (text: string) => boolean;
   thinkingBudget?: number;
   timeoutMs?: number;
   temperature?: number;
@@ -161,6 +162,7 @@ export async function generateQuestionObject<T>({
       if (isRecord(error) && typeof error.text === "string") {
         console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
       }
+
     }
   }
 
@@ -175,6 +177,7 @@ export async function generateQuestionText({
   maxTokens = 8192,
   omitMaxTokens = false,
   responseFormat,
+  isRecoverableJsonText,
   thinkingBudget,
   timeoutMs = 180_000,
   temperature = 0.35,
@@ -273,6 +276,46 @@ export async function generateQuestionText({
       if (isRecord(error) && typeof error.text === "string") {
         console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
       }
+
+      const rawText = readErrorString(error, "text");
+      if (config.provider === "google" && responseFormat === "json_object" && rawText) {
+        if (isRecoverableJsonText?.(rawText)) {
+          console.warn(
+            `[${logPrefix}] Falling back to recoverable raw JSON text after SDK object parsing failed.`,
+          );
+          return {
+            text: rawText,
+            usage: isRecord(error) && "usage" in error ? error.usage : undefined,
+            finishReason: readErrorString(error, "finishReason"),
+            rawFinishReason: readErrorString(error, "rawFinishReason"),
+            provider: config.provider,
+            modelId: config.modelId,
+            attempts: attempt + 1,
+            durationMs: Date.now() - operationStartedAt,
+          };
+        }
+
+        if (attempt < maxRetries) {
+          console.warn(
+            `[${logPrefix}] SDK object parsing failed with unrecoverable raw text; retrying before raw JSON fallback.`,
+          );
+          continue;
+        }
+
+        console.warn(
+          `[${logPrefix}] Falling back to raw JSON text after SDK object parsing failed.`,
+        );
+        return {
+          text: rawText,
+          usage: isRecord(error) && "usage" in error ? error.usage : undefined,
+          finishReason: readErrorString(error, "finishReason"),
+          rawFinishReason: readErrorString(error, "rawFinishReason"),
+          provider: config.provider,
+          modelId: config.modelId,
+          attempts: attempt + 1,
+          durationMs: Date.now() - operationStartedAt,
+        };
+      }
     }
   }
 
@@ -281,6 +324,12 @@ export async function generateQuestionText({
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function readErrorString(error: unknown, key: string): string | undefined {
+  if (!isRecord(error)) return undefined;
+  const value = error[key];
+  return typeof value === "string" ? value : undefined;
 }
 
 function readNumberEnv(name: string, fallback: number): number {

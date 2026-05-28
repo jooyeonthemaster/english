@@ -230,7 +230,13 @@ export function useGenerationSessionQueue(): [
       ) {
         continue;
       }
-      byId.set(item.id, item);
+      const localItem = byId.get(item.id);
+      byId.set(
+        item.id,
+        localItem
+          ? { ...item, createdAt: localItem.createdAt ?? item.createdAt }
+          : item,
+      );
     }
     return Array.from(byId.values()).sort((a, b) => {
       const aTime = a.createdAt ? Date.parse(a.createdAt) : 0;

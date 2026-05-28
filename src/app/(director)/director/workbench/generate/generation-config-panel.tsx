@@ -29,6 +29,8 @@ import {
 } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import {
+  GRAMMAR_ANSWER_COUNT_DEFAULT,
+  GRAMMAR_ANSWER_COUNT_MIN,
   GRAMMAR_MARKER_COUNT_DEFAULT,
   GRAMMAR_MARKER_COUNT_MAX,
   GRAMMAR_MARKER_COUNT_MIN,
@@ -190,6 +192,14 @@ export function GenerationConfigPanel({
     GRAMMAR_MARKER_COUNT_MAX,
     Math.max(GRAMMAR_MARKER_COUNT_MIN, rawGrammarMarkerCount),
   );
+  const rawGrammarAnswerCount = Math.round(
+    Number(grammarErrorSettings.answerCount ?? grammarErrorSettings.correctAnswerCount) || GRAMMAR_ANSWER_COUNT_DEFAULT,
+  );
+  const grammarAnswerMax = Math.max(GRAMMAR_ANSWER_COUNT_MIN, grammarMarkerCount);
+  const grammarAnswerCount = Math.min(
+    grammarAnswerMax,
+    Math.max(GRAMMAR_ANSWER_COUNT_MIN, rawGrammarAnswerCount),
+  );
   const setGrammarMarkerCount = (next: number) => {
     const clamped = Math.min(
       GRAMMAR_MARKER_COUNT_MAX,
@@ -200,6 +210,27 @@ export function GenerationConfigPanel({
       GRAMMAR_ERROR: {
         ...(prev.GRAMMAR_ERROR || {}),
         markerCount: clamped,
+        answerCount: Math.min(
+          Math.max(GRAMMAR_ANSWER_COUNT_MIN, clamped),
+          Math.max(
+            GRAMMAR_ANSWER_COUNT_MIN,
+            Math.round(Number(prev.GRAMMAR_ERROR?.answerCount) || GRAMMAR_ANSWER_COUNT_DEFAULT),
+          ),
+        ),
+      },
+    }));
+  };
+  const setGrammarAnswerCount = (next: number) => {
+    const clamped = Math.min(
+      grammarAnswerMax,
+      Math.max(GRAMMAR_ANSWER_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      GRAMMAR_ERROR: {
+        ...(prev.GRAMMAR_ERROR || {}),
+        markerCount: grammarMarkerCount,
+        answerCount: clamped,
       },
     }));
   };
@@ -262,6 +293,12 @@ export function GenerationConfigPanel({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [irrelevantMax]);
+  useEffect(() => {
+    if (rawGrammarAnswerCount !== grammarAnswerCount) {
+      setGrammarAnswerCount(grammarAnswerCount);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [grammarAnswerMax]);
 
   return (
     <div className="flex flex-col bg-white overflow-hidden w-full lg:w-[340px] xl:w-[420px] shrink-0 border-l border-slate-200/80">
@@ -633,41 +670,83 @@ export function GenerationConfigPanel({
 
                           {expanded && item.id === "GRAMMAR_ERROR" && (
                             <DetailSettingsPanel active={active}>
-                              <div className="flex items-center justify-between gap-3">
-                                <div className="min-w-0">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="text-[12px] font-bold text-slate-800">밑줄 표현 개수</span>
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[12px] font-bold text-slate-800">밑줄 표현 개수</span>
+                                    </div>
+                                    <div className="mt-1 flex flex-wrap gap-1">
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">5 ~ 10개</span>
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">표시 위치</span>
+                                    </div>
+                                    <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                                      지문에서 검토할 밑줄 표현 수입니다. 정답 수는 아래에서 따로 지정합니다.
+                                    </p>
                                   </div>
-                                  <div className="mt-1 flex flex-wrap gap-1">
-                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">5 ~ 10개</span>
-                                    <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">정답 개수 랜덤</span>
+                                  <div className="flex items-center gap-0.5 shrink-0">
+                                    <button
+                                      type="button"
+                                      onClick={() => setGrammarMarkerCount(grammarMarkerCount - 1)}
+                                      disabled={grammarMarkerCount <= GRAMMAR_MARKER_COUNT_MIN}
+                                      className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                      aria-label="밑줄 표현 개수 줄이기"
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+                                      {grammarMarkerCount}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => setGrammarMarkerCount(grammarMarkerCount + 1)}
+                                      disabled={grammarMarkerCount >= GRAMMAR_MARKER_COUNT_MAX}
+                                      className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                      aria-label="밑줄 표현 개수 늘리기"
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </button>
                                   </div>
-                                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-                                    지문에서 검토할 밑줄 표현 수. 실제로 어법상 틀린 정답 개수는 매번 달라지며 해설/오답 분석에 반영됩니다.
-                                  </p>
                                 </div>
-                                <div className="flex items-center gap-0.5 shrink-0">
-                                  <button
-                                    type="button"
-                                    onClick={() => setGrammarMarkerCount(grammarMarkerCount - 1)}
-                                    disabled={grammarMarkerCount <= GRAMMAR_MARKER_COUNT_MIN}
-                                    className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-                                    aria-label="밑줄 표현 개수 줄이기"
-                                  >
-                                    <Minus className="w-3 h-3" />
-                                  </button>
-                                  <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
-                                    {grammarMarkerCount}
-                                  </span>
-                                  <button
-                                    type="button"
-                                    onClick={() => setGrammarMarkerCount(grammarMarkerCount + 1)}
-                                    disabled={grammarMarkerCount >= GRAMMAR_MARKER_COUNT_MAX}
-                                    className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-                                    aria-label="밑줄 표현 개수 늘리기"
-                                  >
-                                    <Plus className="w-3 h-3" />
-                                  </button>
+
+                                <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+                                  <div className="min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[12px] font-bold text-slate-800">정답 개수</span>
+                                    </div>
+                                    <div className="mt-1 flex flex-wrap gap-1">
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">1 ~ {grammarAnswerMax}개</span>
+                                      <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                                        {grammarAnswerCount >= 2 ? "모두 고르기" : "단일 정답"}
+                                      </span>
+                                    </div>
+                                    <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                                      기본값은 1개입니다. 2개 이상이면 발문에 개수를 쓰지 않고 어법상 틀린 것을 모두 고르라고 안내합니다.
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-0.5 shrink-0">
+                                    <button
+                                      type="button"
+                                      onClick={() => setGrammarAnswerCount(grammarAnswerCount - 1)}
+                                      disabled={grammarAnswerCount <= GRAMMAR_ANSWER_COUNT_MIN}
+                                      className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                      aria-label="정답 개수 줄이기"
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+                                      {grammarAnswerCount}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => setGrammarAnswerCount(grammarAnswerCount + 1)}
+                                      disabled={grammarAnswerCount >= grammarAnswerMax}
+                                      className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                                      aria-label="정답 개수 늘리기"
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </DetailSettingsPanel>

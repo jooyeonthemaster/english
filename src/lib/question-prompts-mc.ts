@@ -28,7 +28,7 @@ export const MC_PROMPTS: Record<string, string> = {
 
 ## 출제 철학
 수능 어법 판단은 밑줄 친 모든 위치가 어법 결정 지점입니다. 정답뿐 아니라 디코이도 학생이 능동적으로 문장 구조를 판단해야 하는 자리입니다.
-기본은 5개 밑줄 중 1개 오류입니다. 별도의 Type detail setting이 주어지면 표시 개수만 따르고, 실제 정답 개수는 매번 자연스럽게 달라지게 고릅니다.
+기본은 5개 밑줄 중 1개 오류입니다. 별도의 Type detail setting이 주어지면 표시 개수와 정답 개수를 모두 그 설정에 정확히 맞춥니다.
 
 ## 위치 선정
 1. 표시 위치는 기본 5개, 설정이 있으면 5~10개까지 확장합니다.
@@ -63,21 +63,21 @@ export const MC_PROMPTS: Record<string, string> = {
 - expression: 해당 label의 markedExpression.expression과 완전 동일 문자열
 - pointCode: 해당 label의 markedExpression.pointCode와 동일 코드
 - explanation: 이 expression(인용 필수)이 어떤 포인트를 묻고 왜 어법상 맞는지 1~2문장 한국어
-복수 정답 설정에서도 모든 표시를 오류로 만들지 마세요. wrongOptionExplanations가 비면 안 됩니다.
+정답 개수가 표시 개수와 같으면 모든 표시를 오류로 만들 수 있으며, wrongOptionExplanations는 비어도 됩니다.
 
 ❌ 잘못된 예 ((B) 위치가 detached인데 해설은 'them' 언급): {label:"(B)", expression:"detached", explanation:"...대명사 'them'이 옳다"}
 ⭕ 올바른 예: {label:"(B)", expression:"detached", pointCode:"c", explanation:"이 자리는 분사 능/수동을 묻고 있으며, isolated words가 detach의 대상이므로 과거분사 'detached'가 어법상 옳다."}
 
 ## correctAnswer 포맷
 괄호 포함: 기본은 "(A)"~"(E)" 중 하나.
-복수 정답 설정이면 correctAnswers 배열을 만들고, correctAnswer는 같은 라벨을 comma + space로 연결합니다. 예: "(A), (C), (F)". 발문에는 정답 개수를 노출하지 않습니다.
+복수 정답 설정이면 correctAnswers 배열을 만들고, correctAnswer는 같은 라벨을 comma + space로 연결합니다. 예: "(A), (C), (F)". 발문에는 정답 개수를 노출하지 말고 "모두" 고르라고만 안내합니다.
 
 ## 출력 작성 순서
 1. 지문에서 강한 어법 판단 자리 후보를 필요한 개수만큼 선정 (각 a~m 중 가능한 한 다른 pointCode)
 2. 약한 디코이 자리가 섞이면 즉시 교체
 3. markedExpressions 작성 — pointCode 라벨링. 요청된 표시 개수를 확인.
 4. 가장 명백한 위치에만 몰지 말고 정답 위치와 오류 유형을 다양화
-5. 복수 정답 설정이면 정답 개수를 매번 다르게 선택하되, 전체가 정답이 되지 않게 함 → isError=true, errorExpression 변형, correction = expression
+5. 정답 개수 설정과 정확히 같은 수만 isError=true로 만들기. 정답 개수가 표시 개수보다 적으면 나머지는 정답이 아닌 디코이로 유지하고, 같으면 전체를 정답으로 처리 → isError=true, errorExpression 변형, correction = expression
 6. correctAnswers 및 correctAnswer 작성
 7. wrongOptionExplanations: 정답 제외 각 항목에 markedExpression의 label·expression·pointCode를 복사하고, expression을 인용한 해설 작성
 8. options 작성 (오류는 errorExpression, 나머지는 expression)
@@ -85,7 +85,7 @@ export const MC_PROMPTS: Record<string, string> = {
 
 ## 자체 검증
 □ 요청된 표시 개수 일치
-□ 복수 정답 설정에서 정답 개수가 매번 고정되지 않으며, 모든 표시가 정답이 아님
+□ 요청된 정답 개수 일치, 정답 개수가 표시 개수와 같으면 모든 표시가 정답일 수 있음
 □ 모든 expression/correction은 원문 verbatim, errorExpression만 의도적 변형
 □ correctAnswer/correctAnswers가 isError=true 라벨과 정확히 일치
 □ errorExpression 어간 = expression 어간 (품사 변경 X)

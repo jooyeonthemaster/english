@@ -65,6 +65,10 @@ type GroupedQuestionCards<T> = {
   cards: T[];
 };
 
+type SessionFlatEntry =
+  | { kind: "queue"; key: string; item: QueueItem }
+  | { kind: "question"; key: string; card: SessionQuestionCard };
+
 function parseQuestionTags(rawTags: unknown): string[] {
   if (Array.isArray(rawTags)) return rawTags.filter((tag): tag is string => typeof tag === "string");
   if (typeof rawTags !== "string") return [];
@@ -345,6 +349,46 @@ export function BottomQueueSection({
     [filteredQueue, reviewStatusFilter],
   );
 
+  const visibleSessionQuestionCardsByItemId = useMemo(() => {
+    const map = new Map<string, SessionQuestionCard[]>();
+    for (const card of visibleSessionQuestionCards) {
+      const cards = map.get(card.itemId);
+      if (cards) cards.push(card);
+      else map.set(card.itemId, [card]);
+    }
+    return map;
+  }, [visibleSessionQuestionCards]);
+
+  const sessionFlatEntries = useMemo<SessionFlatEntry[]>(() => {
+    if (reviewStatusFilter !== "ALL") {
+      return visibleSessionQuestionCards.map((card) => ({
+        kind: "question" as const,
+        key: card.key,
+        card,
+      }));
+    }
+
+    const entries: SessionFlatEntry[] = [];
+    for (const item of filteredQueue) {
+      if (item.status === "generating" || item.status === "error") {
+        entries.push({ kind: "queue", key: item.id, item });
+        continue;
+      }
+      const cards = visibleSessionQuestionCardsByItemId.get(item.id) ?? [];
+      cards.forEach((card) => entries.push({
+        kind: "question",
+        key: card.key,
+        card,
+      }));
+    }
+    return entries;
+  }, [
+    filteredQueue,
+    reviewStatusFilter,
+    visibleSessionQuestionCards,
+    visibleSessionQuestionCardsByItemId,
+  ]);
+
   useEffect(() => {
     setSelectedSessionQuestionIds((prev) => {
       if (prev.size === 0) return prev;
@@ -420,6 +464,7 @@ export function BottomQueueSection({
           showCheckbox={false}
           statusIcon={Loader2}
           variant="analyzing"
+          fixedHeight
           ariaLabel={`${item.passageTitle} - 문제 생성 중`}
           planBadge={
             FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
@@ -451,7 +496,7 @@ export function BottomQueueSection({
         .join(", ");
 
       return (
-        <div key={item.id} className="rounded-xl border border-red-200 bg-red-50/30 p-4">
+        <div key={item.id} className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4">
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
             <div className="min-w-0">
@@ -475,7 +520,7 @@ export function BottomQueueSection({
                 </p>
               )}
               {errorDetail && (
-                <p className="mt-1 text-[11px] leading-4 text-red-600 break-words">
+                <p className="mt-1 line-clamp-5 break-words text-[11px] leading-4 text-red-600">
                   {errorDetail}
                 </p>
               )}
@@ -747,34 +792,46 @@ export function BottomQueueSection({
               </div>
             </div>
 
-            {visibleQueueCards.length > 0 && (
-              <div className="mb-3 grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {visibleQueueCards.map(renderQueueStatusCard)}
-              </div>
-            )}
-
-            {visibleSessionQuestionCards.length === 0 ? (
-              reviewStatusFilter === "ALL" && visibleQueueCards.length > 0 ? null : (
+            {questionViewMode === "flat" ? (
+              sessionFlatEntries.length === 0 ? (
                 <EmptyState message="현재 필터에 해당하는 세션 문제가 없습니다." />
+              ) : (
+                <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {sessionFlatEntries.map((entry) =>
+                    entry.kind === "queue"
+                      ? renderQueueStatusCard(entry.item)
+                      : renderSessionQuestionCard(entry.card),
+                  )}
+                </div>
               )
-            ) : questionViewMode === "passage" ? (
-              <div className="space-y-3">
-                {sessionGroups.map((group) =>
-                  renderPassageGroup({
-                    group,
-                    source: "session",
-                    renderCard: (card) => renderSessionQuestionCard(card),
-                    getSelectableIds: (cards) =>
-                      cards
-                        .filter((card) => card.persistedQuestionId && !card.question.approved)
-                        .map((card) => card.persistedQuestionId as string),
-                  }),
-                )}
-              </div>
             ) : (
-              <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {visibleSessionQuestionCards.map(renderSessionQuestionCard)}
-              </div>
+              <>
+                {visibleQueueCards.length > 0 && (
+                  <div className="mb-3 grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {visibleQueueCards.map(renderQueueStatusCard)}
+                  </div>
+                )}
+
+                {visibleSessionQuestionCards.length === 0 ? (
+                  reviewStatusFilter === "ALL" && visibleQueueCards.length > 0 ? null : (
+                    <EmptyState message="현재 필터에 해당하는 세션 문제가 없습니다." />
+                  )
+                ) : (
+                  <div className="space-y-3">
+                    {sessionGroups.map((group) =>
+                      renderPassageGroup({
+                        group,
+                        source: "session",
+                        renderCard: (card) => renderSessionQuestionCard(card),
+                        getSelectableIds: (cards) =>
+                          cards
+                            .filter((card) => card.persistedQuestionId && !card.question.approved)
+                            .map((card) => card.persistedQuestionId as string),
+                      }),
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
