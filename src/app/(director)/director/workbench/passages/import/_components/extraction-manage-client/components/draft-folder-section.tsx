@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
+  ArrowUpDown,
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  Folder,
   FolderOpen,
   FolderPlus,
   Check,
@@ -18,6 +20,13 @@ import {
 } from "lucide-react";
 
 import type { CollectionItem } from "@/components/workbench/shared/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { DraftFolderCard } from "./draft-folder-card";
 import { DraftFolderChip } from "./draft-folder-chip";
@@ -26,6 +35,8 @@ import { ViewToggleButton } from "./view-toggle-button";
 
 const DRAG_TYPE = "draft" as const;
 const BULK_DRAG_TYPE = "draft-bulk" as const;
+
+type FolderSortOrder = "name_asc" | "name_desc" | "newest" | "oldest";
 
 interface DraftFolderSectionProps {
   childFolders: CollectionItem[];
@@ -59,7 +70,12 @@ interface DraftFolderSectionProps {
     title: string;
     totalCount: number;
     itemLabel: string;
+    /** Count unit ("개"/"편"/"문항"/"부"…). Defaults to "개". */
+    itemUnit?: string;
     description?: string;
+    /** Optional faded prefix rendered before the title (e.g., feature name).
+     *  Shown as `parentLabel · title` with a middle-dot separator. */
+    parentLabel?: string;
   };
   resultScope?: "all" | "job";
   onBackToAllResults?: () => void;
@@ -73,6 +89,89 @@ interface ParentFolderButtonProps {
   dragItemIdKey: string;
   onClick: () => void;
   onFileDrop: (itemId: string | string[], copy: boolean) => void;
+}
+
+interface AllResultsChipProps {
+  dragItemIdKey: string;
+  active: boolean;
+  totalCount: number;
+  onClick: () => void;
+  onFileDrop: (itemId: string | string[], copy: boolean) => void;
+}
+
+function AllResultsChip({
+  dragItemIdKey,
+  active,
+  totalCount,
+  onClick,
+  onFileDrop,
+}: AllResultsChipProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const dropRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = dropRef.current;
+    if (!el) return;
+    return dropTargetForElements({
+      element: el,
+      canDrop: ({ source }) =>
+        source.data.type === DRAG_TYPE || source.data.type === BULK_DRAG_TYPE,
+      onDragEnter: () => setIsDragOver(true),
+      onDragLeave: () => setIsDragOver(false),
+      onDrop: ({ source }) => {
+        setIsDragOver(false);
+        const itemId =
+          source.data.type === BULK_DRAG_TYPE
+            ? (source.data.draftIds as string[])
+            : (source.data[dragItemIdKey] as string);
+        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
+        onFileDrop(itemId, isCopy);
+      },
+    });
+  }, [dragItemIdKey, onFileDrop]);
+
+  const ringClass = active
+    ? "border-blue-400 bg-blue-50/80 ring-2 ring-blue-200/70 shadow-md"
+    : isDragOver
+      ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
+      : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md";
+
+  return (
+    <div
+      ref={dropRef}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      title="추출 작업 목록"
+      className={
+        "group relative flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
+        ringClass
+      }
+    >
+      {active || isDragOver ? (
+        <FolderOpen className="mb-0.5 size-3.5 text-blue-600" aria-hidden="true" />
+      ) : (
+        <Folder className="mb-0.5 size-3.5 text-blue-500" aria-hidden="true" />
+      )}
+      <span
+        className={
+          "max-w-[84px] truncate text-center text-[11px] font-bold leading-tight " +
+          (active ? "text-blue-700" : "text-slate-800")
+        }
+      >
+        추출 작업 목록
+      </span>
+      <span className="text-[10px] font-medium tabular-nums text-slate-400">
+        {totalCount}개 · 전체
+      </span>
+    </div>
+  );
 }
 
 function ParentFolderButton({
@@ -151,7 +250,7 @@ export function DraftFolderSection({
   const [collapsed, setCollapsed] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "date">("name");
+  const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");
   const useCards = useCardInsideFolder && Boolean(activeFolder);
 
   const listScrollRef = useRef<HTMLDivElement>(null);
@@ -382,9 +481,20 @@ export function DraftFolderSection({
       ? list.filter((c) => c.name.toLowerCase().includes(query))
       : list;
     return [...filtered].sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name, "ko");
-      // cuid prefixes encode creation time — descending ≈ newest first
-      return b.id.localeCompare(a.id);
+      if (sortBy === "name_asc") return a.name.localeCompare(b.name, "ko");
+      if (sortBy === "name_desc") return b.name.localeCompare(a.name, "ko");
+      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : NaN;
+      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : NaN;
+      const aComparable = Number.isFinite(aTime) ? aTime : 0;
+      const bComparable = Number.isFinite(bTime) ? bTime : 0;
+      if (aComparable !== bComparable) {
+        return sortBy === "newest"
+          ? bComparable - aComparable
+          : aComparable - bComparable;
+      }
+      return sortBy === "newest"
+        ? b.id.localeCompare(a.id)
+        : a.id.localeCompare(b.id);
     });
   };
 
@@ -458,9 +568,6 @@ export function DraftFolderSection({
     ? breadcrumbPath[breadcrumbPath.length - 1]
     : null;
   const title = pageHeader?.title ?? "폴더 관리";
-  const description = currentFolder
-    ? "현재 폴더 안의 자료를 정리하고 검수합니다."
-    : pageHeader?.description;
   const parentFolderId = currentFolder?.parentId ?? null;
   const navigateToParent = () => {
     if (parentFolderId) onNavigateToFolder(parentFolderId);
@@ -471,6 +578,94 @@ export function DraftFolderSection({
     else onDragToRoot?.(itemId, copy);
   };
 
+  const sortSearchControls = !collapsed ? (
+    <>
+      <Select
+        value={sortBy}
+        onValueChange={(value) => setSortBy(value as FolderSortOrder)}
+      >
+        <SelectTrigger
+          className={
+            "h-7 px-2.5 text-[11.5px] " +
+            (embedded ? "w-[120px]" : "w-[136px]")
+          }
+        >
+          <ArrowUpDown className="mr-1 size-3 shrink-0" />
+          <SelectValue placeholder="정렬" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="name_asc">이름 오름차순</SelectItem>
+          <SelectItem value="name_desc">이름 내림차순</SelectItem>
+          <SelectItem value="newest">최신순</SelectItem>
+          <SelectItem value="oldest">오래된순</SelectItem>
+        </SelectContent>
+      </Select>
+      <div
+        className={
+          "relative " + (embedded ? "min-w-0 flex-1" : "shrink-0")
+        }
+      >
+        <Search
+          className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+          aria-hidden="true"
+        />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="폴더 검색"
+          className={
+            "h-7 rounded-md border border-slate-200 bg-white pl-7 pr-2 text-[11.5px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:ring-2 focus:ring-blue-500/10 " +
+            (embedded ? "w-full" : "w-36")
+          }
+          aria-label="폴더 검색"
+        />
+        {searchQuery ? (
+          <button
+            type="button"
+            onClick={() => setSearchQuery("")}
+            className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+            aria-label="검색 지우기"
+          >
+            <X className="size-3" />
+          </button>
+        ) : null}
+      </div>
+    </>
+  ) : null;
+
+  const viewToggleControls = !collapsed ? (
+    <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
+      <ViewToggleButton
+        active={viewMode === "grid"}
+        label="그리드 보기"
+        onClick={() => setViewMode("grid")}
+      >
+        <Grid3X3 className="size-4" />
+      </ViewToggleButton>
+      <ViewToggleButton
+        active={viewMode === "list"}
+        label="목록 보기"
+        onClick={() => setViewMode("list")}
+      >
+        <List className="size-4" />
+      </ViewToggleButton>
+    </div>
+  ) : null;
+
+  const collapseExpandButton = collapsed ? (
+    <button
+      type="button"
+      onClick={() => setCollapsed(false)}
+      aria-expanded={false}
+      title="관리 바 펼치기"
+      className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+    >
+      <ChevronDown className="size-3.5" aria-hidden="true" />
+      <span>펼치기</span>
+    </button>
+  ) : null;
+
   return (
     <section
       className={
@@ -480,11 +675,16 @@ export function DraftFolderSection({
       }
     >
       <div className="border-b border-slate-100 px-4 py-2">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2.5">
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
             {pageHeader?.icon ?? <FolderOpen className="h-3.5 w-3.5" />}
           </span>
           <div className="flex min-w-0 flex-1 items-center gap-1.5">
+            {pageHeader?.parentLabel ? (
+              <span className="shrink-0 truncate text-[13px] font-medium text-slate-400">
+                {pageHeader.parentLabel} ·
+              </span>
+            ) : null}
             {breadcrumbPath.length === 0 ? (
               <h3 className="shrink-0 truncate text-[13px] font-bold text-slate-900">
                 {title}
@@ -526,9 +726,10 @@ export function DraftFolderSection({
                 </h3>
               </>
             )}
-            {pageHeader ? (
+            {embedded ? null : pageHeader ? (
               <span className="shrink-0 text-[11px] font-medium text-slate-400 tabular-nums">
-                · {pageHeader.itemLabel} {pageHeader.totalCount}개
+                · {pageHeader.itemLabel} {pageHeader.totalCount}
+                {pageHeader.itemUnit ?? "개"}
                 {childFolders.length > 0
                   ? ` · 폴더 ${childFolders.length}개`
                   : ""}
@@ -548,106 +749,41 @@ export function DraftFolderSection({
               </button>
             ) : null}
           </div>
-          {!collapsed ? (
-            <div className="flex shrink-0 items-center gap-1.5">
-              <div className="relative">
-                <Search
-                  className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
-                  aria-hidden="true"
-                />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="폴더 검색"
-                  className="h-7 w-36 rounded-md border border-slate-200 bg-white pl-7 pr-2 text-[11.5px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:ring-2 focus:ring-blue-500/10"
-                  aria-label="폴더 검색"
-                />
-                {searchQuery ? (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-                    aria-label="검색 지우기"
-                  >
-                    <X className="size-3" />
-                  </button>
-                ) : null}
-              </div>
-              <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                <button
-                  type="button"
-                  onClick={() => setSortBy("name")}
-                  aria-pressed={sortBy === "name"}
-                  className={
-                    "h-7 cursor-pointer px-2 text-[11.5px] font-semibold transition-colors " +
-                    (sortBy === "name"
-                      ? "bg-blue-50 text-blue-700"
-                      : "bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700")
-                  }
-                >
-                  이름순
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSortBy("date")}
-                  aria-pressed={sortBy === "date"}
-                  className={
-                    "h-7 cursor-pointer border-l border-slate-200 px-2 text-[11.5px] font-semibold transition-colors " +
-                    (sortBy === "date"
-                      ? "bg-blue-50 text-blue-700"
-                      : "bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700")
-                  }
-                >
-                  날짜순
-                </button>
-              </div>
+          {!embedded && sortSearchControls ? (
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              {sortSearchControls}
             </div>
           ) : null}
-          {description ? (
-            <span className="hidden min-w-0 truncate text-[11px] text-slate-400 xl:block">
-              {description}
-            </span>
-          ) : null}
-          {toolbar ? (
+          {!embedded && toolbar ? (
             <div className="ml-auto flex shrink-0 items-center gap-2">
               {toolbar}
             </div>
           ) : null}
-          {!collapsed ? (
+          {!embedded && viewToggleControls ? (
             <div
-              className={`${toolbar ? "ml-1" : "ml-auto"} flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200`}
+              className={
+                (toolbar ? "ml-1" : "ml-auto") +
+                " flex shrink-0 items-center"
+              }
             >
-              <ViewToggleButton
-                active={viewMode === "grid"}
-                label="그리드 보기"
-                onClick={() => setViewMode("grid")}
-              >
-                <Grid3X3 className="size-4" />
-              </ViewToggleButton>
-              <ViewToggleButton
-                active={viewMode === "list"}
-                label="목록 보기"
-                onClick={() => setViewMode("list")}
-              >
-                <List className="size-4" />
-              </ViewToggleButton>
+              {viewToggleControls}
             </div>
           ) : null}
-          {collapsed ? (
-            <button
-              type="button"
-              onClick={() => setCollapsed(false)}
-              aria-expanded={false}
-              title="관리 바 펼치기"
-              className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
-            >
-              <ChevronDown className="size-3.5" aria-hidden="true" />
-              <span>펼치기</span>
-            </button>
+          {collapseExpandButton ? (
+            <div className="ml-auto flex shrink-0 items-center">
+              {collapseExpandButton}
+            </div>
           ) : null}
         </div>
-
+        {embedded && !collapsed ? (
+          <div className="mt-1.5 flex min-w-0 items-center gap-1.5">
+            {sortSearchControls}
+            {toolbar ? (
+              <div className="flex shrink-0 items-center gap-2">{toolbar}</div>
+            ) : null}
+            {viewToggleControls}
+          </div>
+        ) : null}
       </div>
 
       {!collapsed && viewMode === "grid" ? (
@@ -662,7 +798,15 @@ export function DraftFolderSection({
                 onClick={navigateToParent}
                 onFileDrop={handleDropToParent}
               />
-            ) : null}
+            ) : (
+              <AllResultsChip
+                dragItemIdKey={dragItemIdKey}
+                active
+                totalCount={pageHeader?.totalCount ?? 0}
+                onClick={() => onNavigateToRoot?.()}
+                onFileDrop={(itemId, copy) => onDragToRoot?.(itemId, copy)}
+              />
+            )}
             {useCards
               ? visibleChildFolders.map((c) => (
                   <DraftFolderCard
@@ -774,14 +918,27 @@ export function DraftFolderSection({
                     <span className="size-4 shrink-0" aria-hidden="true" />
                     <button
                       type="button"
-                      onClick={() => setSortBy("name")}
-                      aria-pressed={sortBy === "name"}
+                      onClick={() =>
+                        setSortBy((current) =>
+                          current === "name_asc" ? "name_desc" : "name_asc",
+                        )
+                      }
+                      aria-pressed={
+                        sortBy === "name_asc" || sortBy === "name_desc"
+                      }
                       className={
                         "min-w-0 flex-1 cursor-pointer truncate text-left transition-colors hover:text-slate-700 " +
-                        (sortBy === "name" ? "text-blue-600" : "")
+                        (sortBy === "name_asc" || sortBy === "name_desc"
+                          ? "text-blue-600"
+                          : "")
                       }
                     >
-                      이름{sortBy === "name" ? " ↓" : ""}
+                      이름
+                      {sortBy === "name_asc"
+                        ? " ↑"
+                        : sortBy === "name_desc"
+                          ? " ↓"
+                          : ""}
                     </button>
                     <div
                       style={{ width: subColumnWidths.date }}
@@ -789,14 +946,27 @@ export function DraftFolderSection({
                     >
                       <button
                         type="button"
-                        onClick={() => setSortBy("date")}
-                        aria-pressed={sortBy === "date"}
+                        onClick={() =>
+                          setSortBy((current) =>
+                            current === "newest" ? "oldest" : "newest",
+                          )
+                        }
+                        aria-pressed={
+                          sortBy === "newest" || sortBy === "oldest"
+                        }
                         className={
                           "block w-full cursor-pointer truncate text-left transition-colors hover:text-slate-700 " +
-                          (sortBy === "date" ? "text-blue-600" : "")
+                          (sortBy === "newest" || sortBy === "oldest"
+                            ? "text-blue-600"
+                            : "")
                         }
                       >
-                        날짜{sortBy === "date" ? " ↓" : ""}
+                        날짜
+                        {sortBy === "newest"
+                          ? " ↓"
+                          : sortBy === "oldest"
+                            ? " ↑"
+                            : ""}
                       </button>
                       <div
                         onPointerDown={beginNameDateResize}

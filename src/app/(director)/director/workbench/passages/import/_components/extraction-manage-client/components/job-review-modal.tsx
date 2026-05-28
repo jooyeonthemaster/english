@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileText, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { CheckCircle2, FileText, Loader2, Trash2, X } from "lucide-react";
 
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import type { CollectionItem } from "@/components/workbench/shared/types";
@@ -28,7 +29,32 @@ interface JobReviewModalProps {
     collectionId: string,
     draftIds: Set<string>,
   ) => Promise<void> | void;
+  onPromoteDrafts?: (
+    draftIds: Set<string>,
+    clearSelection: () => void,
+  ) => Promise<void> | void;
+  onDeleteDrafts?: (
+    draftIds: Set<string>,
+    clearSelection: () => void,
+  ) => Promise<void> | void;
+  bulkActionRunning?: "delete" | "rerestore" | "promote" | null;
   dupCountById?: Map<string, number>;
+  /** Persist a new title for a draft surfaced inside the modal. */
+  onRenameDraft?: (draftId: string, title: string | null) => void;
+  /**
+   * When supplied, the modal mirrors the parent's selection instead of owning
+   * a private one. This lets "전체 선택" on the page toolbar drive the per-draft
+   * checkboxes inside the side panel.
+   */
+  externalSelectedIds?: Set<string>;
+  externalSetSelectedIds?: Dispatch<SetStateAction<Set<string>>>;
+  /** When provided, clicking a draft inside the drawer calls this callback
+   *  (instead of opening DraftDetailModal) so an embedder can route the click
+   *  to its own editor. */
+  onSelectDraftExternal?: (draft: M1PassageDraftWithJob) => void;
+  /** Highlighted draft id when an external picker controls selection — shows
+   *  the active blue stripe on the corresponding card. */
+  externalSelectedDraftId?: string | null;
 }
 
 export function JobReviewModal({
@@ -41,13 +67,29 @@ export function JobReviewModal({
   onOpenDraft,
   onAddToFolder,
   onMoveToFolder,
-  dupCountById,
+  onPromoteDrafts,
+  onDeleteDrafts,
+  bulkActionRunning = null,
+  onRenameDraft,
+  externalSelectedIds,
+  externalSetSelectedIds,
+  onSelectDraftExternal,
+  externalSelectedDraftId = null,
 }: JobReviewModalProps) {
+  const externallyPicking = typeof onSelectDraftExternal === "function";
   const [pages, setPages] = useState<PageImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [overlayEl, setOverlayEl] = useState<HTMLDivElement | null>(null);
-  const [checkedIds, setCheckedIds] = useState<Set<string>>(() => new Set());
+  const [internalCheckedIds, setInternalCheckedIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const isControlled =
+    externalSelectedIds !== undefined && externalSetSelectedIds !== undefined;
+  const checkedIds = isControlled ? externalSelectedIds : internalCheckedIds;
+  const setCheckedIds = isControlled
+    ? externalSetSelectedIds
+    : setInternalCheckedIds;
 
   // ESC to close
   useEffect(() => {
@@ -143,6 +185,71 @@ export function JobReviewModal({
     }
   }, []);
 
+  // ─── Image / drafts split (horizontal drag handle between them) ───
+  const IMAGE_HEIGHT_KEY = "smoat:job-review-drawer:image-height";
+  const IMAGE_MIN_HEIGHT = 120;
+  const SECTION_MIN_HEIGHT = 120;
+  const IMAGE_DEFAULT_HEIGHT = 360;
+  const splitContainerRef = useRef<HTMLDivElement | null>(null);
+  const [imageHeight, setImageHeight] = useState<number>(() => {
+    if (typeof window === "undefined") return IMAGE_DEFAULT_HEIGHT;
+    try {
+      const raw = window.localStorage.getItem(IMAGE_HEIGHT_KEY);
+      if (!raw) return IMAGE_DEFAULT_HEIGHT;
+      const n = parseInt(raw, 10);
+      if (Number.isNaN(n)) return IMAGE_DEFAULT_HEIGHT;
+      return Math.max(IMAGE_MIN_HEIGHT, n);
+    } catch {
+      return IMAGE_DEFAULT_HEIGHT;
+    }
+  });
+
+  const beginSplitResize = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const startY = e.clientY;
+      const startHeight = imageHeight;
+      let latest = startHeight;
+      document.body.style.cursor = "row-resize";
+      document.body.style.userSelect = "none";
+      const onMove = (ev: PointerEvent) => {
+        const containerH =
+          splitContainerRef.current?.getBoundingClientRect().height ??
+          window.innerHeight;
+        const max = Math.max(IMAGE_MIN_HEIGHT, containerH - SECTION_MIN_HEIGHT);
+        latest = Math.min(
+          max,
+          Math.max(IMAGE_MIN_HEIGHT, startHeight + (ev.clientY - startY)),
+        );
+        setImageHeight(latest);
+      };
+      const onUp = () => {
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        try {
+          window.localStorage.setItem(IMAGE_HEIGHT_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [imageHeight],
+  );
+
+  const resetSplit = useCallback(() => {
+    setImageHeight(IMAGE_DEFAULT_HEIGHT);
+    try {
+      window.localStorage.setItem(IMAGE_HEIGHT_KEY, String(IMAGE_DEFAULT_HEIGHT));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   // Fetch all pages for the job
   useEffect(() => {
     let cancelled = false;
@@ -195,7 +302,22 @@ export function JobReviewModal({
   const allIds = useMemo(() => drafts.map((d) => d.id), [drafts]);
   const allChecked =
     allIds.length > 0 && allIds.every((id) => checkedIds.has(id));
-  const bulkDragIds = useMemo(() => Array.from(checkedIds), [checkedIds]);
+  // Restrict the "selected count" and folder-action payloads to drafts visible
+  // in this modal — even when controlled by a parent selection that may also
+  // hold ids outside this job.
+  const modalCheckedIds = useMemo(() => {
+    const next = new Set<string>();
+    for (const id of allIds) if (checkedIds.has(id)) next.add(id);
+    return next;
+  }, [allIds, checkedIds]);
+  const bulkDragIds = useMemo(
+    () => Array.from(modalCheckedIds),
+    [modalCheckedIds],
+  );
+  const hasModalSelection = modalCheckedIds.size > 0;
+  const anyBulkRunning = bulkActionRunning !== null;
+  const isPromoting = bulkActionRunning === "promote";
+  const isDeleting = bulkActionRunning === "delete";
 
   function toggleCheck(id: string) {
     setCheckedIds((prev) => {
@@ -207,20 +329,46 @@ export function JobReviewModal({
   }
 
   function toggleAll() {
-    if (allChecked) setCheckedIds(new Set());
-    else setCheckedIds(new Set(allIds));
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      if (allChecked) {
+        for (const id of allIds) next.delete(id);
+      } else {
+        for (const id of allIds) next.add(id);
+      }
+      return next;
+    });
+  }
+
+  function clearModalChecks() {
+    setCheckedIds((prev) => {
+      if (allIds.length === 0) return prev;
+      const next = new Set(prev);
+      for (const id of allIds) next.delete(id);
+      return next;
+    });
   }
 
   async function handleAdd(collectionId: string) {
-    if (checkedIds.size === 0) return;
-    await onAddToFolder(collectionId, checkedIds);
-    setCheckedIds(new Set());
+    if (modalCheckedIds.size === 0) return;
+    await onAddToFolder(collectionId, modalCheckedIds);
+    clearModalChecks();
   }
 
   async function handleMove(collectionId: string) {
-    if (checkedIds.size === 0) return;
-    await onMoveToFolder(collectionId, checkedIds);
-    setCheckedIds(new Set());
+    if (modalCheckedIds.size === 0) return;
+    await onMoveToFolder(collectionId, modalCheckedIds);
+    clearModalChecks();
+  }
+
+  async function handlePromote() {
+    if (!onPromoteDrafts || modalCheckedIds.size === 0) return;
+    await onPromoteDrafts(new Set(modalCheckedIds), clearModalChecks);
+  }
+
+  async function handleDelete() {
+    if (!onDeleteDrafts || modalCheckedIds.size === 0) return;
+    await onDeleteDrafts(new Set(modalCheckedIds), clearModalChecks);
   }
 
   return (
@@ -267,9 +415,12 @@ export function JobReviewModal({
       </div>
 
       {/* Body: image (top) + drafts (bottom) stacked so each gets full drawer width */}
-      <div className="flex min-h-0 flex-1 flex-col">
-        {/* Image preview — fixed-ish top section */}
-        <div className="relative min-h-0 shrink-0 basis-[42%] overflow-y-auto border-b border-slate-200 bg-white p-3">
+      <div ref={splitContainerRef} className="flex min-h-0 flex-1 flex-col">
+        {/* Image preview — resizable top section */}
+        <div
+          style={{ height: imageHeight }}
+          className="relative shrink-0 overflow-y-auto bg-white p-3"
+        >
           <div
             ref={setOverlayEl}
             className="pointer-events-none absolute inset-0 z-20"
@@ -281,6 +432,19 @@ export function JobReviewModal({
             expectedCount={jobMeta?.resultCount ?? drafts.length}
             overlayEl={overlayEl}
           />
+        </div>
+
+        {/* Horizontal drag handle between preview and drafts list */}
+        <div
+          onPointerDown={beginSplitResize}
+          onDoubleClick={resetSplit}
+          title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+          aria-label="미리보기 영역 높이 조절"
+          role="separator"
+          aria-orientation="horizontal"
+          className="group/hhandle relative z-10 flex h-1.5 shrink-0 cursor-row-resize items-center justify-center border-y border-slate-200 bg-slate-50 transition-colors hover:bg-blue-50 select-none"
+        >
+          <div className="h-0.5 w-32 rounded-full bg-slate-300 transition-colors group-hover/hhandle:bg-blue-400 group-active/hhandle:bg-blue-500" />
         </div>
 
         {/* Drafts list */}
@@ -295,17 +459,58 @@ export function JobReviewModal({
               {allChecked && allIds.length > 0 ? "선택 해제" : "전체 선택"}
             </button>
             <span className="text-[12px] font-medium text-slate-400">
-              {checkedIds.size}개 선택
+              {modalCheckedIds.size}개 선택
             </span>
-            <div className="ml-auto">
+            <div className="ml-auto flex shrink-0 items-center gap-2">
+              {onPromoteDrafts ? (
+                <button
+                  type="button"
+                  onClick={() => void handlePromote()}
+                  disabled={anyBulkRunning || !hasModalSelection}
+                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isPromoting ? (
+                    <Loader2
+                      className="h-3.5 w-3.5 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <CheckCircle2
+                      className="h-3.5 w-3.5"
+                      aria-hidden="true"
+                    />
+                  )}
+                  검수완료
+                </button>
+              ) : null}
+
               <MoveOrCopyFolderPicker
                 collections={collections}
                 activeFolder={activeFolder}
-                selectedCount={checkedIds.size}
+                selectedCount={modalCheckedIds.size}
                 onCopy={handleAdd}
                 onMove={handleMove}
-                disabled={checkedIds.size === 0}
+                disabled={anyBulkRunning || !hasModalSelection}
               />
+
+              {onDeleteDrafts ? (
+                <button
+                  type="button"
+                  onClick={() => void handleDelete()}
+                  disabled={anyBulkRunning || !hasModalSelection}
+                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isDeleting ? (
+                    <Loader2
+                      className="h-3.5 w-3.5 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  )}
+                  삭제
+                </button>
+              ) : null}
             </div>
           </div>
 
@@ -322,12 +527,22 @@ export function JobReviewModal({
                     draft={draft}
                     index={index}
                     selected={false}
-                    active={false}
+                    active={
+                      externallyPicking
+                        ? externalSelectedDraftId === draft.id
+                        : false
+                    }
                     checked={checkedIds.has(draft.id)}
-                    onClick={() => onOpenDraft(draft.id)}
+                    onClick={() => {
+                      if (externallyPicking) {
+                        onSelectDraftExternal!(draft);
+                      } else {
+                        onOpenDraft(draft.id);
+                      }
+                    }}
                     onToggleCheck={() => toggleCheck(draft.id)}
-                    dupCount={dupCountById?.get(draft.id) ?? 0}
                     bulkDragIds={bulkDragIds}
+                    onTitleChange={onRenameDraft}
                   />
                 ))}
               </div>

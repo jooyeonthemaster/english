@@ -47,12 +47,9 @@ export function RestorationChangesPanel({
   }
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
-      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[13px] font-bold text-slate-900">복원 근거</span>
-          <span className="rounded bg-violet-50 px-1.5 py-0.5 text-[10.5px] font-bold text-violet-700">
-            {changes.length}건
-          </span>
           {aiRemovalCount > 0 ? (
             <span
               className="inline-flex items-center gap-1 rounded bg-amber-100 px-1.5 py-0.5 text-[10.5px] font-bold text-amber-800"
@@ -191,9 +188,6 @@ function ChangeCard({
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-bold tabular-nums text-slate-400">
-            #{index + 1}
-          </span>
           <span
             className={
               "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 " +

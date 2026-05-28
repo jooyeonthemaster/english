@@ -32,6 +32,8 @@ import {
   getDefaultQuestionTypeGenerationSettings,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
+import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
+import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 
 // ─── Component ───────────────────────────────────────────
 
@@ -481,6 +483,13 @@ export function GeneratePageClient({
     <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50">
       {/* ─── Main ─── */}
       <div className="flex flex-col">
+        <div className="shrink-0 border-b border-slate-200/80 bg-white px-5 py-3">
+          <WorkflowPageTitle
+            icon={QuestionGenerationIcon}
+            title="문제 생성"
+            description="분석된 지문을 선택하고 유형과 난이도를 설정해 문제를 생성합니다."
+          />
+        </div>
 
       {/* ═══ TOP SECTION: 지문 카드 + 설정 (가로 2패널, 고정 높이) ═══ */}
       <div className="flex flex-col lg:flex-row bg-white lg:h-[550px] xl:h-[600px] w-full">

@@ -36,6 +36,18 @@ interface UseFolderManagerOptions {
   itemLabel: string;
 }
 
+const UNDO_TOAST_DURATION = 8000;
+
+function cloneMembership(
+  source: Record<string, Set<string>>,
+): Record<string, Set<string>> {
+  const next: Record<string, Set<string>> = {};
+  for (const [collectionId, ids] of Object.entries(source)) {
+    next[collectionId] = new Set(ids);
+  }
+  return next;
+}
+
 // ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
@@ -108,6 +120,14 @@ export function useFolderManager({
       );
     },
     [],
+  );
+
+  const applyMembershipSnapshot = useCallback(
+    (nextMembership: Record<string, Set<string>>) => {
+      setMembership(nextMembership);
+      syncCollectionCounts(nextMembership);
+    },
+    [syncCollectionCounts],
   );
 
   // ─── CRUD handlers ───
@@ -199,39 +219,92 @@ export function useFolderManager({
           : new Set<string>();
         idsToAdd.forEach((id) => existing.add(id));
         nextMembership[collectionId] = existing;
-        setMembership(nextMembership);
-        syncCollectionCounts(nextMembership);
+        applyMembershipSnapshot(nextMembership);
+
+        const undoAddToFolder = async () => {
+          const undoResult = await actions.removeFromCollection(
+            collectionId,
+            idsToAdd,
+          );
+          if (!undoResult.success) {
+            toast.error("폴더 추가를 실행 취소하지 못했습니다.");
+            return;
+          }
+          const revertedMembership = cloneMembership(nextMembership);
+          const reverted = new Set(revertedMembership[collectionId] ?? []);
+          idsToAdd.forEach((id) => reverted.delete(id));
+          revertedMembership[collectionId] = reverted;
+          applyMembershipSnapshot(revertedMembership);
+          toast.success("폴더 추가를 실행 취소했습니다.");
+        };
+
         toast.success(
           `${idsToAdd.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () => void undoAddToFolder(),
+            },
+          },
         );
         return true;
       }
       return false;
     },
-    [actions, membership, itemLabel, syncCollectionCounts],
+    [actions, membership, itemLabel, applyMembershipSnapshot],
   );
 
   const handleRemoveFromFolder = useCallback(
     async (selectedIds: Set<string>) => {
       if (!activeFolder || selectedIds.size === 0) return false;
+      const folderId = activeFolder;
       const ids = [...selectedIds];
-      const result = await actions.removeFromCollection(activeFolder, ids);
+      const existingIds = membership[folderId] ?? new Set<string>();
+      const idsToRemove = ids.filter((id) => existingIds.has(id));
+      const result = await actions.removeFromCollection(folderId, ids);
       if (result.success) {
-        setMembership((prev) => {
-          const next = { ...prev };
-          const existing = new Set(next[activeFolder!]);
-          ids.forEach((id) => existing.delete(id));
-          next[activeFolder!] = existing;
-          return next;
-        });
+        const nextMembership = cloneMembership(membership);
+        const existing = new Set(nextMembership[folderId] ?? []);
+        idsToRemove.forEach((id) => existing.delete(id));
+        nextMembership[folderId] = existing;
+        applyMembershipSnapshot(nextMembership);
+
+        const undoRemoveFromFolder = async () => {
+          if (idsToRemove.length === 0) return;
+          const undoResult = await actions.addToCollection(
+            folderId,
+            idsToRemove,
+          );
+          if (!undoResult.success) {
+            toast.error("폴더 제거를 실행 취소하지 못했습니다.");
+            return;
+          }
+          const revertedMembership = cloneMembership(nextMembership);
+          const reverted = new Set(revertedMembership[folderId] ?? []);
+          idsToRemove.forEach((id) => reverted.add(id));
+          revertedMembership[folderId] = reverted;
+          applyMembershipSnapshot(revertedMembership);
+          toast.success("폴더 제거를 실행 취소했습니다.");
+        };
+
         toast.success(
           `${ids.length}개 ${itemLabel}이(가) 폴더에서 제거되었습니다.`,
+          idsToRemove.length > 0
+            ? {
+                duration: UNDO_TOAST_DURATION,
+                action: {
+                  label: "실행 취소",
+                  onClick: () => void undoRemoveFromFolder(),
+                },
+              }
+            : undefined,
         );
         return true;
       }
       return false;
     },
-    [actions, activeFolder, itemLabel],
+    [actions, activeFolder, membership, itemLabel, applyMembershipSnapshot],
   );
 
   // ─── Drag to folder handler ───
@@ -267,6 +340,7 @@ export function useFolderManager({
       }
 
       try {
+        const previousMembership = cloneMembership(membership);
         const nextMembership: Record<string, Set<string>> = {};
         for (const [colId, ids] of Object.entries(membership)) {
           const nextIds = new Set(ids);
@@ -301,8 +375,7 @@ export function useFolderManager({
           await actions.addToCollection(folderId, idsToAdd);
         }
 
-        setMembership(nextMembership);
-        syncCollectionCounts(nextMembership);
+        applyMembershipSnapshot(nextMembership);
 
         const folderName =
           collections.find((c) => c.id === folderId)?.name || "폴더";
@@ -311,10 +384,51 @@ export function useFolderManager({
           toastCount > 1
             ? `${toastCount}개 ${itemLabel}이(가)`
             : `${itemLabel}이(가)`;
+
+        const undoFolderMove = async () => {
+          try {
+            const folderIds = new Set([
+              ...Object.keys(previousMembership),
+              ...Object.keys(nextMembership),
+            ]);
+            const undoPromises: Promise<unknown>[] = [];
+            for (const colId of folderIds) {
+              const before = previousMembership[colId] ?? new Set<string>();
+              const after = nextMembership[colId] ?? new Set<string>();
+              const toRemove = [...after].filter((id) => !before.has(id));
+              const toAdd = [...before].filter((id) => !after.has(id));
+              if (toRemove.length > 0) {
+                undoPromises.push(
+                  actions.removeFromCollection(colId, toRemove),
+                );
+              }
+              if (toAdd.length > 0) {
+                undoPromises.push(actions.addToCollection(colId, toAdd));
+              }
+            }
+            await Promise.all(undoPromises);
+            applyMembershipSnapshot(previousMembership);
+            toast.success(
+              copy
+                ? "폴더 복사를 실행 취소했습니다."
+                : "폴더 이동을 실행 취소했습니다.",
+            );
+          } catch {
+            toast.error("폴더 작업을 실행 취소하지 못했습니다.");
+          }
+        };
+
         toast.success(
           copy
             ? `${countLabel} "${folderName}"에 복사되었습니다`
             : `${countLabel} "${folderName}"(으)로 이동되었습니다`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () => void undoFolderMove(),
+            },
+          },
         );
 
         return true;
@@ -323,7 +437,7 @@ export function useFolderManager({
         return false;
       }
     },
-    [membership, collections, actions, itemLabel, syncCollectionCounts],
+    [membership, collections, actions, itemLabel, applyMembershipSnapshot],
   );
 
   // ─── Navigation ───

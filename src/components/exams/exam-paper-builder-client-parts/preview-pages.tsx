@@ -1,6 +1,5 @@
 "use client";
 
-import { FileText } from "lucide-react";
 import { A4PaperPage } from "../paper-builder/components/a4-paper-page";
 import type {
   ClassOption,
@@ -9,6 +8,7 @@ import type {
   HeaderPatch,
   PaperItem,
   PaperPage,
+  PaperSize,
   PaperTemplate,
   PassageStyle,
   SchoolOption,
@@ -16,7 +16,6 @@ import type {
 
 // ---------------------------------------------------------------------------
 // 미리보기 스크롤러 안에 들어가는 페이지 묶음 (zoom 컨테이너 포함).
-// 빈 상태 UI 도 함께 처리한다.
 // ---------------------------------------------------------------------------
 
 interface PreviewPagesProps {
@@ -27,6 +26,7 @@ interface PreviewPagesProps {
   previewZoom: number;
   previewContentHeight: number;
   title: string;
+  paperSize: PaperSize;
   subtitle: string;
   instructions: string;
   studentNameLabel: string;
@@ -59,6 +59,8 @@ interface PreviewPagesProps {
   setDraggingItemId: (id: string | null) => void;
   dragOverItemId: string | null;
   setDragOverItemId: (id: string | null) => void;
+  dragOverPartKey: string | null;
+  setDragOverPartKey: (key: string | null) => void;
   dragPlacement: DropPlacement;
   setDragPlacement: (p: DropPlacement) => void;
   schools: SchoolOption[];
@@ -82,22 +84,7 @@ export function PreviewPages(props: PreviewPagesProps) {
     schoolId,
     classId,
   } = props;
-
-  if (paperItems.length === 0) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm">
-          <FileText className="h-7 w-7 text-slate-300" />
-        </div>
-        <p className="mt-4 text-[14px] font-bold text-slate-600">
-          문제를 선택하면 A4 미리보기가 생성됩니다
-        </p>
-        <p className="mt-1 max-w-sm text-[12px] leading-relaxed text-slate-400">
-          같은 지문에서 만든 문제는 기본적으로 하나의 지문 묶음으로 배치됩니다.
-        </p>
-      </div>
-    );
-  }
+  void paperItems;
 
   return (
     <div
@@ -116,45 +103,53 @@ export function PreviewPages(props: PreviewPagesProps) {
         }}
       >
         {paperPages.map((pageColumns, pageIndex) => (
-          <A4PaperPage
+          <div
             key={pageIndex}
-            pageIndex={pageIndex}
-            pageCount={paperPages.length}
-            title={props.title}
-            subtitle={props.subtitle}
-            instructions={props.instructions}
-            studentNameLabel={props.studentNameLabel}
-            academyLogoDataUrl={props.academyLogoDataUrl}
-            template={props.template}
-            columns={props.columns}
-            density={props.density}
-            passageStyle={props.passageStyle}
-            showAnswerSpace={props.showAnswerSpace}
-            showPassageTitle={props.showPassageTitle}
-            showQuestionMeta={props.showQuestionMeta}
-            pageColumns={pageColumns}
-            activeItemId={props.activeItemId}
-            setActiveItemId={props.setActiveItemId}
-            onHeaderChange={props.updateHeader}
-            onUpdateItem={props.updateItem}
-            onUpdateGroupPassage={props.updateGroupPassage}
-            onMoveItemToDropTarget={props.moveItemToDropTarget}
-            onRemoveItem={props.removeItem}
-            onUngroupItem={props.ungroupItem}
-            onRegroupByPassage={props.regroupByPassage}
-            onToggleKeepWithPrev={props.tryToggleKeepWithPrev}
-            overflowItemIds={overflowItemIds}
-            draggingItemId={props.draggingItemId}
-            setDraggingItemId={props.setDraggingItemId}
-            dragOverItemId={props.dragOverItemId}
-            setDragOverItemId={props.setDragOverItemId}
-            dragPlacement={props.dragPlacement}
-            setDragPlacement={props.setDragPlacement}
-            schoolName={schools.find((school) => school.id === schoolId)?.name || ""}
-            className={classes.find((cls) => cls.id === classId)?.name || ""}
-            examDate={props.examDate}
-            readOnly={props.readOnly}
-          />
+            className="exam-preview-page-frame w-full"
+            data-exam-page-index={pageIndex}
+          >
+            <A4PaperPage
+              pageIndex={pageIndex}
+              pageCount={paperPages.length}
+              paperSize={props.paperSize}
+              title={props.title}
+              subtitle={props.subtitle}
+              instructions={props.instructions}
+              studentNameLabel={props.studentNameLabel}
+              academyLogoDataUrl={props.academyLogoDataUrl}
+              template={props.template}
+              columns={props.columns}
+              density={props.density}
+              passageStyle={props.passageStyle}
+              showAnswerSpace={props.showAnswerSpace}
+              showPassageTitle={props.showPassageTitle}
+              showQuestionMeta={props.showQuestionMeta}
+              pageColumns={pageColumns}
+              activeItemId={props.activeItemId}
+              setActiveItemId={props.setActiveItemId}
+              onHeaderChange={props.updateHeader}
+              onUpdateItem={props.updateItem}
+              onUpdateGroupPassage={props.updateGroupPassage}
+              onMoveItemToDropTarget={props.moveItemToDropTarget}
+              onRemoveItem={props.removeItem}
+              onUngroupItem={props.ungroupItem}
+              onRegroupByPassage={props.regroupByPassage}
+              onToggleKeepWithPrev={props.tryToggleKeepWithPrev}
+              overflowItemIds={overflowItemIds}
+              draggingItemId={props.draggingItemId}
+              setDraggingItemId={props.setDraggingItemId}
+              dragOverItemId={props.dragOverItemId}
+              setDragOverItemId={props.setDragOverItemId}
+              dragOverPartKey={props.dragOverPartKey}
+              setDragOverPartKey={props.setDragOverPartKey}
+              dragPlacement={props.dragPlacement}
+              setDragPlacement={props.setDragPlacement}
+              schoolName={schools.find((school) => school.id === schoolId)?.name || ""}
+              className={classes.find((cls) => cls.id === classId)?.name || ""}
+              examDate={props.examDate}
+              readOnly={props.readOnly}
+            />
+          </div>
         ))}
       </div>
     </div>

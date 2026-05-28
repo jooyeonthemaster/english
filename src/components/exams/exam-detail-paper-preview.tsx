@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
@@ -9,8 +8,8 @@ import { PreviewToolbar } from "./exam-paper-builder-client-parts/preview-toolba
 import { PreviewZoomControls } from "./exam-paper-builder-client-parts/preview-zoom-controls";
 import { usePreviewZoom } from "./exam-paper-builder-client-parts/use-preview-zoom";
 import {
-  A4_HEIGHT_RATIO,
   DEFAULT_INSTRUCTIONS,
+  PAPER_SIZE_SPECS,
   PREVIEW_PAGE_WIDTH,
 } from "./paper-builder/constants";
 import { PrintStyles } from "./paper-builder/components/print-styles";
@@ -19,6 +18,7 @@ import { paginateGroups } from "./paper-builder/pagination";
 import {
   buildGroups,
   formatDateInput,
+  makeCustomPaperBlock,
   makePaperItem,
   parseOptions,
 } from "./paper-builder/paper-item-utils";
@@ -32,7 +32,9 @@ import type {
   BuilderQuestion,
   BreakBefore,
   Density,
+  InsertablePaperBlockType,
   PaperItem,
+  PaperSize,
   PaperTemplate,
   PaginationSettings,
   PassageStyle,
@@ -42,6 +44,8 @@ import type { ExamDetail, ExamQuestion } from "./exam-detail-client-parts/types"
 const PREVIEW_PAGE_GAP = 20;
 
 type SavedBuilderItem = {
+  localId?: string;
+  blockType?: "question";
   questionId?: string;
   orderNum?: number;
   points?: number;
@@ -53,17 +57,38 @@ type SavedBuilderItem = {
   options?: Array<{ label: string; text: string }>;
   correctAnswer?: string;
   answerSpaceLines?: number;
+  objectiveAnswerSlots?: number;
+  objectiveAnswerTexts?: string[];
   sectionTitle?: string;
   teacherNote?: string;
   breakBefore?: BreakBefore;
   keepWithPrev?: boolean;
 };
 
+type SavedBuilderBlock = Omit<SavedBuilderItem, "blockType"> & {
+  localId?: string;
+  blockType?: PaperItem["blockType"];
+  locked?: boolean;
+  blockTitle?: string;
+  blockText?: string;
+  blockAlign?: PaperItem["blockAlign"];
+  blockFontSize?: PaperItem["blockFontSize"];
+  blockAccentColor?: string;
+  dividerStyle?: PaperItem["dividerStyle"];
+  dividerThickness?: number;
+  spacerHeight?: number;
+  imageDataUrl?: string | null;
+  imageAlt?: string;
+  imageWidth?: number;
+};
+
 type SavedBuilderSettings = {
   source?: string;
+  version?: number;
   template?: string;
   layout?: {
     columns?: 1 | 2;
+    paperSize?: PaperSize;
     density?: Density;
     showAnswerSpace?: boolean;
     showPassageTitle?: boolean;
@@ -77,6 +102,7 @@ type SavedBuilderSettings = {
     academyLogoDataUrl?: string | null;
   };
   items?: SavedBuilderItem[];
+  blocks?: SavedBuilderBlock[];
 };
 
 function parseBuilderSettings(raw: string | null): SavedBuilderSettings | null {
@@ -94,6 +120,10 @@ function asPaperTemplate(value: unknown): PaperTemplate {
   return templates.includes(value as PaperTemplate) ? (value as PaperTemplate) : "clean";
 }
 
+function asPaperSize(value: unknown): PaperSize {
+  return value === "B4" ? "B4" : "A4";
+}
+
 function asDensity(value: unknown): Density {
   return value === "compact" ? "compact" : "comfortable";
 }
@@ -104,6 +134,11 @@ function asPassageStyle(value: unknown): PassageStyle {
 
 function asBreakBefore(value: unknown): BreakBefore {
   return value === "column" || value === "page" ? value : "auto";
+}
+
+function asObjectiveAnswerTexts(value: unknown, slots: number): string[] {
+  if (!Array.isArray(value) || slots <= 0) return [];
+  return value.slice(0, slots).map((text) => String(text ?? ""));
 }
 
 function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderItem): BuilderQuestion {
@@ -154,7 +189,7 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
 
 function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: number): PaperItem {
   const sourceQuestion = examQuestionToBuilderQuestion(eq, saved);
-  const localId = `${sourceQuestion.id}-saved-${index}`;
+  const localId = saved.localId || `${sourceQuestion.id}-saved-${index}`;
   const defaultIncludePassage = shouldIncludeSourcePassageByDefault(sourceQuestion);
   const options = Array.isArray(saved.options)
     ? saved.options.map((option, optionIndex) => ({
@@ -162,6 +197,7 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
         text: normalizeQuestionText(option.text || ""),
       }))
     : parseOptions(sourceQuestion.options);
+  const objectiveAnswerSlots = Math.max(0, Math.min(10, Number(saved.objectiveAnswerSlots) || 0));
 
   return {
     localId,
@@ -177,19 +213,116 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
     options,
     correctAnswer: saved.correctAnswer ?? sourceQuestion.correctAnswer ?? "",
     answerSpaceLines: Math.max(0, Math.min(12, Number(saved.answerSpaceLines) || (options.length === 0 ? 4 : 0))),
+    objectiveAnswerSlots,
+    objectiveAnswerTexts: asObjectiveAnswerTexts(saved.objectiveAnswerTexts, objectiveAnswerSlots),
     sectionTitle: saved.sectionTitle || "",
     teacherNote: saved.teacherNote || "",
     breakBefore: asBreakBefore(saved.breakBefore),
     keepWithPrev: Boolean(saved.keepWithPrev),
+    blockType: "question",
+    locked: false,
+    blockTitle: "",
+    blockText: "",
+    blockAlign: "left",
+    blockFontSize: "md",
+    blockAccentColor: "#2563EB",
+    dividerStyle: "solid",
+    dividerThickness: 1,
+    spacerHeight: 32,
+    imageDataUrl: null,
+    imageAlt: "",
+    imageWidth: 70,
+  };
+}
+
+function savedBlockToPaperItem(saved: SavedBuilderBlock, index: number): PaperItem | null {
+  const blockType = saved.blockType;
+  if (
+    blockType !== "text" &&
+    blockType !== "section" &&
+    blockType !== "divider" &&
+    blockType !== "spacer" &&
+    blockType !== "image"
+  ) {
+    return null;
+  }
+
+  const base = makeCustomPaperBlock(blockType as InsertablePaperBlockType, index + 1);
+  const localId = saved.localId || base.localId;
+  const blockText = saved.blockText ?? saved.questionText ?? base.blockText;
+  const blockTitle = saved.blockTitle ?? saved.sectionTitle ?? base.blockTitle;
+
+  const objectiveAnswerSlots = Math.max(0, Math.min(10, Number(saved.objectiveAnswerSlots) || base.objectiveAnswerSlots));
+
+  return {
+    ...base,
+    localId,
+    questionId: `custom:${localId}`,
+    sourceQuestion: {
+      ...base.sourceQuestion,
+      id: localId,
+      questionText: blockText || blockTitle || base.sourceQuestion.questionText,
+    },
+    groupId: saved.groupId ?? `block:${localId}`,
+    questionText: blockText || blockTitle || base.questionText,
+    breakBefore: asBreakBefore(saved.breakBefore),
+    keepWithPrev: Boolean(saved.keepWithPrev),
+    locked: Boolean(saved.locked),
+    blockTitle,
+    blockText,
+    blockAlign:
+      saved.blockAlign === "center" || saved.blockAlign === "right"
+        ? saved.blockAlign
+        : "left",
+    blockFontSize:
+      saved.blockFontSize === "sm" || saved.blockFontSize === "lg"
+        ? saved.blockFontSize
+        : base.blockFontSize,
+    blockAccentColor: saved.blockAccentColor || base.blockAccentColor,
+    dividerStyle:
+      saved.dividerStyle === "dashed" || saved.dividerStyle === "dotted"
+        ? saved.dividerStyle
+        : "solid",
+    dividerThickness: Math.max(1, Math.min(8, Number(saved.dividerThickness) || base.dividerThickness)),
+    spacerHeight: Math.max(8, Math.min(160, Number(saved.spacerHeight) || base.spacerHeight)),
+    imageDataUrl: saved.imageDataUrl ?? null,
+    imageAlt: saved.imageAlt || "",
+    imageWidth: Math.max(20, Math.min(100, Number(saved.imageWidth) || base.imageWidth)),
+    objectiveAnswerSlots,
+    objectiveAnswerTexts: asObjectiveAnswerTexts(saved.objectiveAnswerTexts, objectiveAnswerSlots),
   };
 }
 
 function buildPaperItems(exam: ExamDetail, settings: SavedBuilderSettings | null): PaperItem[] {
   const byQuestionId = new Map(exam.questions.map((eq) => [eq.question.id, eq]));
+  const savedBlocks =
+    settings?.source === "exam-paper-builder-v2" && Array.isArray(settings.blocks)
+      ? settings.blocks
+      : [];
   const savedItems =
-    settings?.source === "exam-paper-builder-v1" && Array.isArray(settings.items)
+    (settings?.source === "exam-paper-builder-v1" || settings?.source === "exam-paper-builder-v2") &&
+    Array.isArray(settings.items)
       ? settings.items
       : [];
+
+  if (savedBlocks.length > 0) {
+    const blocks = savedBlocks
+      .map((saved, index) => {
+        if (saved.blockType === "question") {
+          if (!saved.questionId) return null;
+          const eq = byQuestionId.get(saved.questionId);
+          return eq ? savedItemToPaperItem({ ...saved, blockType: "question" }, eq, index) : null;
+        }
+        return savedBlockToPaperItem(saved, index);
+      })
+      .filter((item): item is PaperItem => Boolean(item));
+    let questionOrder = 0;
+    return blocks.map((item) =>
+      item.blockType === "question"
+        ? { ...item, orderNum: (questionOrder += 1) }
+        : { ...item, orderNum: 0 },
+    );
+  }
 
   if (savedItems.length > 0) {
     return savedItems
@@ -219,12 +352,23 @@ function formatExamDate(value: string | Date | null): string {
 }
 
 export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
   const [draggingItemId, setDraggingItemId] = useState<string | null>(null);
   const [dragOverItemId, setDragOverItemId] = useState<string | null>(null);
+  const [dragOverPartKey, setDragOverPartKey] = useState<string | null>(null);
   const [dragPlacement, setDragPlacement] = useState<"before" | "after">("before");
+
+  const settings = useMemo(() => parseBuilderSettings(exam.settings), [exam.settings]);
+  const template = asPaperTemplate(settings?.template);
+  const paperSize = asPaperSize(settings?.layout?.paperSize);
+  const columns: 1 | 2 = settings?.layout?.columns === 1 ? 1 : 2;
+  const density = asDensity(settings?.layout?.density);
+  const passageStyle = asPassageStyle(settings?.layout?.passageStyle);
+  const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
+  const showPassageTitle = settings?.layout?.showPassageTitle ?? true;
+  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? true;
+
   const {
     scrollerRef,
     zoom,
@@ -234,23 +378,15 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
     zoomOut,
     reset,
     handleControlsDragStart,
-  } = usePreviewZoom();
+  } = usePreviewZoom(paperSize);
 
-  usePrintPortal();
-
-  const settings = useMemo(() => parseBuilderSettings(exam.settings), [exam.settings]);
-  const template = asPaperTemplate(settings?.template);
-  const columns: 1 | 2 = settings?.layout?.columns === 1 ? 1 : 2;
-  const density = asDensity(settings?.layout?.density);
-  const passageStyle = asPassageStyle(settings?.layout?.passageStyle);
-  const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
-  const showPassageTitle = settings?.layout?.showPassageTitle ?? true;
-  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? true;
+  usePrintPortal(paperSize);
 
   const paperItems = useMemo(() => buildPaperItems(exam, settings), [exam, settings]);
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
   const paginationSettings = useMemo<PaginationSettings>(
     () => ({
+      paperSize,
       columns,
       density,
       passageStyle,
@@ -259,7 +395,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
       showQuestionMeta,
       template,
     }),
-    [columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
+    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
   );
   const paginationResult = useMemo(
     () => paginateGroups(paperGroups, paginationSettings),
@@ -268,7 +404,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   const paperPages = paginationResult.pages;
   const previewContentHeight =
     paperPages.length > 0
-      ? paperPages.length * baseWidth * A4_HEIGHT_RATIO +
+      ? paperPages.length * baseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio +
         (paperPages.length - 1) * PREVIEW_PAGE_GAP
       : 0;
 
@@ -331,10 +467,10 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
     <section className="flex h-[calc(100dvh-282px)] min-h-[620px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-slate-100/70 shadow-sm">
       <PreviewToolbar
         template={template}
+        paperSize={paperSize}
         dirty={false}
         isPending={isPending}
         paperItemsCount={paperItems.length}
-        onGoToManage={() => router.push("/director/workbench/exams")}
         onPrint={handlePrint}
         onDownloadDocx={handleDownloadDocx}
         onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
@@ -367,6 +503,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
             previewZoom={zoom}
             previewContentHeight={previewContentHeight}
             title={exam.title}
+            paperSize={paperSize}
             subtitle={settings?.header?.subtitle || ""}
             instructions={settings?.header?.instructions || DEFAULT_INSTRUCTIONS}
             studentNameLabel={settings?.header?.studentNameLabel || "이름"}
@@ -392,6 +529,8 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
             setDraggingItemId={setDraggingItemId}
             dragOverItemId={dragOverItemId}
             setDragOverItemId={setDragOverItemId}
+            dragOverPartKey={dragOverPartKey}
+            setDragOverPartKey={setDragOverPartKey}
             dragPlacement={dragPlacement}
             setDragPlacement={setDragPlacement}
             schools={schools}
@@ -404,7 +543,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
         </div>
       </div>
 
-      <PrintStyles />
+      <PrintStyles paperSize={paperSize} />
     </section>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   GraduationCap,
   Calendar,
@@ -83,7 +84,7 @@ export function StudentExamList({ exams, studentId }: Props) {
         <div>
           <h1 className="text-lg font-bold text-[#191F28]">시험</h1>
           <p className="text-xs text-[#8B95A1]">
-            시험 응시 및 결과 확인
+            {FEATURE_FLAGS.SHOW_USER_RESULTS ? "시험 응시 및 결과 확인" : "시험 응시"}
           </p>
         </div>
       </div>
@@ -156,21 +157,26 @@ export function StudentExamList({ exams, studentId }: Props) {
       {completed.length > 0 && (
         <section>
           <h2 className="text-sm font-semibold text-[#4E5968] mb-3">
-            완료된 시험
+            {FEATURE_FLAGS.SHOW_USER_RESULTS ? "완료된 시험" : "제출한 시험"}
           </h2>
           <div className="space-y-2">
             {completed.map((exam) => {
               const status = getExamStatus(exam);
               const sub = exam.submission!;
+              const canOpenResult =
+                FEATURE_FLAGS.SHOW_USER_RESULTS && sub.status === "GRADED";
               return (
                 <Link
                   key={exam.id}
-                  href={
-                    sub.status === "GRADED"
-                      ? `/exams/${exam.id}/result`
-                      : "#"
-                  }
-                  className="flex items-center gap-4 rounded-xl border border-[#E5E8EB] bg-white p-4 hover:bg-[#F7F8FA] transition-colors"
+                  href={canOpenResult ? `/exams/${exam.id}/result` : "#"}
+                  aria-disabled={!canOpenResult}
+                  className={cn(
+                    "flex items-center gap-4 rounded-xl border border-[#E5E8EB] bg-white p-4 transition-colors",
+                    canOpenResult ? "hover:bg-[#F7F8FA]" : "cursor-default"
+                  )}
+                  onClick={(event) => {
+                    if (!canOpenResult) event.preventDefault();
+                  }}
                 >
                   <div
                     className={cn(
@@ -202,7 +208,7 @@ export function StudentExamList({ exams, studentId }: Props) {
                       </span>
                     </div>
                   </div>
-                  {sub.score != null && (
+                  {FEATURE_FLAGS.SHOW_USER_RESULTS && sub.score != null && (
                     <div className="text-right">
                       <p className="text-lg font-bold text-[#191F28]">
                         {sub.score}
@@ -215,7 +221,9 @@ export function StudentExamList({ exams, studentId }: Props) {
                       </p>
                     </div>
                   )}
-                  <ChevronRight className="size-4 text-[#8B95A1] shrink-0" />
+                  {canOpenResult && (
+                    <ChevronRight className="size-4 text-[#8B95A1] shrink-0" />
+                  )}
                 </Link>
               );
             })}

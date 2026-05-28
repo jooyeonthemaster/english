@@ -14,6 +14,7 @@ import { StudentDetailAttendanceTab } from "./student-detail-attendance-tab";
 import { StudentDetailBillingTab } from "./student-detail-billing-tab";
 import { StudentDetailConsultationTab } from "./student-detail-consultation-tab";
 import { StudentDetailParentTab } from "./student-detail-parent-tab";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface StudentDetailClientProps {
   student: any;
@@ -27,6 +28,7 @@ export function StudentDetailClient({
   isDirector,
 }: StudentDetailClientProps) {
   const basePath = isDirector ? "/director/students" : "/teacher/students";
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   return (
     <div className="flex flex-col h-full">
@@ -42,7 +44,7 @@ export function StudentDetailClient({
         <Tabs defaultValue="overview">
           <TabsList variant="line">
             <TabsTrigger value="overview">개요</TabsTrigger>
-            <TabsTrigger value="grades">성적</TabsTrigger>
+            {showResults && <TabsTrigger value="grades">성적</TabsTrigger>}
             <TabsTrigger value="attendance">출결</TabsTrigger>
             <TabsTrigger value="billing">수납</TabsTrigger>
             <TabsTrigger value="consultation">상담</TabsTrigger>
@@ -53,9 +55,11 @@ export function StudentDetailClient({
             <StudentDetailOverviewTab student={student} stats={stats} />
           </TabsContent>
 
-          <TabsContent value="grades" className="mt-6">
-            <StudentDetailGradesTab stats={stats} />
-          </TabsContent>
+          {showResults && (
+            <TabsContent value="grades" className="mt-6">
+              <StudentDetailGradesTab stats={stats} />
+            </TabsContent>
+          )}
 
           <TabsContent value="attendance" className="mt-6">
             <StudentDetailAttendanceTab stats={stats} />

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, RotateCcw, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
 import { getReviewPassageList } from "@/actions/student-wrong-answers";
 
 // ---------------------------------------------------------------------------
@@ -42,6 +44,14 @@ interface SeasonGroup {
 // ---------------------------------------------------------------------------
 
 export default function ReviewPage() {
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/student/learn" />;
+  }
+
+  return <ReviewPageContent />;
+}
+
+function ReviewPageContent() {
   const router = useRouter();
   const [data, setData] = useState<SeasonGroup[]>([]);
   const [loading, setLoading] = useState(true);

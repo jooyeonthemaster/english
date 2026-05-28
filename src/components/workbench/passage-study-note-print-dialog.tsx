@@ -222,7 +222,7 @@ export function PassageStudyNotePrintDialog({
               <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[12px] text-slate-500">
                 <span className="inline-flex items-center gap-1">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                  분석 완료 {analyzedPassages.length}개
+                  분석 완료 {analyzedPassages.length}편
                 </span>
                 {analyzedPassages.length > 0 && (
                   <span className="inline-flex items-center gap-1 text-blue-600">
@@ -233,7 +233,7 @@ export function PassageStudyNotePrintDialog({
                 {skippedCount > 0 && (
                   <span className="inline-flex items-center gap-1 text-amber-600">
                     <AlertCircle className="h-3.5 w-3.5" />
-                    분석 없는 지문 {skippedCount}개 제외
+                    분석 없는 지문 {skippedCount}편 제외
                   </span>
                 )}
               </div>

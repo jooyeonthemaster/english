@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
-import { PREVIEW_PAGE_WIDTH } from "../paper-builder/constants";
+import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "../paper-builder/constants";
+import type { PaperSize } from "../paper-builder/types";
 import {
   PREVIEW_ZOOM_MAX,
   PREVIEW_ZOOM_MIN,
@@ -13,11 +14,12 @@ import {
 // 한 번에 묶어두는 훅.
 // ---------------------------------------------------------------------------
 
-export function usePreviewZoom() {
+export function usePreviewZoom(paperSize: PaperSize = "A4") {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [fitZoom, setFitZoom] = useState(1);
   const [manualZoom, setManualZoom] = useState<number | null>(null);
   const [controlsPos, setControlsPos] = useState({ top: 12, right: 12 });
+  const baseWidth = Math.round(PREVIEW_PAGE_WIDTH * PAPER_SIZE_SPECS[paperSize].widthRatio);
   const zoom = useMemo(() => manualZoom ?? fitZoom, [fitZoom, manualZoom]);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export function usePreviewZoom() {
       const styles = window.getComputedStyle(scroller);
       const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
       const availableWidth = Math.max(320, scroller.clientWidth - paddingX);
-      const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / PREVIEW_PAGE_WIDTH));
+      const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / baseWidth));
       setFitZoom(Math.round(nextFit * 100) / 100);
     };
 
@@ -36,7 +38,7 @@ export function usePreviewZoom() {
     const observer = new ResizeObserver(updateFitZoom);
     observer.observe(scroller);
     return () => observer.disconnect();
-  }, []);
+  }, [baseWidth]);
 
   function zoomIn() {
     setManualZoom((current) =>
@@ -86,7 +88,7 @@ export function usePreviewZoom() {
   return {
     scrollerRef,
     zoom,
-    baseWidth: PREVIEW_PAGE_WIDTH,
+    baseWidth,
     controlsPos,
     zoomIn,
     zoomOut,

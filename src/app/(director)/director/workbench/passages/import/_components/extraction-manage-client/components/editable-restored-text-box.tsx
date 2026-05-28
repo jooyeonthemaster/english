@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
+import { Loader2, RefreshCw } from "lucide-react";
 
 import {
   buildHighlightedSegments,
@@ -23,6 +24,10 @@ interface EditableRestoredTextBoxProps {
   onHoverChange: (id: string | null) => void;
   /** Click on a body mark toggles the locked selection. */
   onSelectChange: (id: string | null) => void;
+  /** Re-run AI restoration. Hidden when omitted (e.g., read-only contexts). */
+  onRerestore?: () => void;
+  isRerestoring?: boolean;
+  rerestoreDisabled?: boolean;
 }
 
 export function EditableRestoredTextBox({
@@ -34,16 +39,31 @@ export function EditableRestoredTextBox({
   activeChangeId,
   onHoverChange,
   onSelectChange,
+  onRerestore,
+  isRerestoring = false,
+  rerestoreDisabled = false,
 }: EditableRestoredTextBoxProps) {
   const highlightRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
-      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
         <span className="text-[13px] font-bold text-slate-900">복원문</span>
-        <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
-          RESTORED
-        </span>
+        {onRerestore ? (
+          <button
+            type="button"
+            onClick={onRerestore}
+            disabled={rerestoreDisabled || isRerestoring}
+            className="inline-flex h-6 cursor-pointer items-center gap-1 rounded border border-blue-200 bg-blue-50 px-1.5 text-[13px] font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isRerestoring ? (
+              <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+            ) : (
+              <RefreshCw className="size-3" aria-hidden="true" />
+            )}
+            AI 복원 다시 실행
+          </button>
+        ) : null}
       </div>
       <div className="relative min-h-0 flex-1">
         <div

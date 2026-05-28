@@ -22,8 +22,8 @@ export function WorkflowStep({
         {index}
       </span>
       <div className="min-w-0">
-        <div className="text-xs font-bold text-slate-800">{title}</div>
-        <p className="mt-0.5 text-xs leading-5 text-slate-500">{description}</p>
+        <div className="text-[11px] font-bold text-slate-800">{title}</div>
+        <p className="mt-0.5 text-[11px] leading-5 text-slate-500">{description}</p>
       </div>
     </li>
   );

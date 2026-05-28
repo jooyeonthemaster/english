@@ -44,7 +44,6 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
-
   // Clear navigating state when pathname changes
   useEffect(() => {
     setNavigatingTo(null);
@@ -162,11 +161,12 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex h-screen overflow-hidden bg-[#F4F6F9]">
+      <div className="flex min-h-screen flex-col bg-[#F4F6F9]">
+       <div className="flex flex-1">
         {/* ─── Sidebar ─── */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-30 hidden flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:flex",
+            "hidden sticky top-0 h-screen self-start shrink-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:flex",
             collapsed ? "w-[72px]" : "w-[220px]"
           )}
           style={{
@@ -310,17 +310,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
 
         {/* ─── Main area ─── */}
         <div
-          className={cn(
-            "flex-1 flex flex-col min-h-0 min-w-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
-            collapsed ? "ml-[72px]" : "ml-[220px]",
-            "max-md:ml-0"
-          )}
+          className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           style={drawerOpen && drawerWidth > 0 ? { marginRight: drawerWidth } : undefined}
         >
           {/* Page content */}
-          <main className="flex-1 min-w-0 overflow-y-auto p-6 relative max-md:p-0">
+          <main className="flex-1 min-w-0 p-6 relative max-md:p-0">
             {isPending && (
-              <div className="absolute inset-0 z-10 bg-[#F4F6F9]/60 flex items-start justify-center pt-32">
+              <div className="fixed inset-0 z-10 bg-[#F4F6F9]/60 flex items-start justify-center pt-32 pointer-events-none">
                 <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border">
                   <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                   <span className="text-[13px] text-slate-600 font-medium">로딩 중...</span>
@@ -330,12 +326,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             <MaybeComingSoon pathname={pathname} basePath={basePath}>
               {children}
             </MaybeComingSoon>
-            <BusinessInfoBlock
-              compact
-              className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm"
-            />
           </main>
         </div>
+       </div>
+        <BusinessInfoBlock
+          compact
+          className="border-t border-slate-200 bg-white"
+        />
       </div>
     </TooltipProvider>
   );

@@ -1,16 +1,15 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  ArrowRight,
-  Download,
-  FileUp,
-  NotebookPen,
-  WandSparkles,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, type LucideIcon } from "lucide-react";
 
 import { getStaffSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import {
+  ExamPaperGenerationIcon,
+  MaterialExtractionIcon,
+  PassageAnalysisIcon,
+  QuestionGenerationIcon,
+} from "@/components/icons/workflow-icons";
 import { TaskQueueHost } from "@/components/workbench/task-queue";
 
 interface StageAction {
@@ -38,7 +37,7 @@ const workflowStages: WorkflowStage[] = [
     flowDescription: "스캔본, PDF, 문제지 사진을 올리면 지문과 문제 원본을 자동으로 분리합니다.",
     flowResult: "DB에 저장된 지문 자료",
     cardDescription: "이미지/PDF 파일에서 지문을 한 번에 추출하고 DB에 저장해 관리합니다.",
-    icon: FileUp,
+    icon: MaterialExtractionIcon,
     actions: [
       {
         label: "자료 추출하기",
@@ -59,7 +58,7 @@ const workflowStages: WorkflowStage[] = [
     flowDescription: "저장된 지문을 불러와 핵심 어휘, 문법, 문장 구조, 출제 포인트를 뽑습니다.",
     flowResult: "출제 포인트가 정리된 지문",
     cardDescription: "핵심 어휘, 문법, 문장 구조와 출제 포인트를 AI로 분석합니다.",
-    icon: NotebookPen,
+    icon: PassageAnalysisIcon,
     actions: [
       {
         label: "지문 분석하기",
@@ -80,7 +79,7 @@ const workflowStages: WorkflowStage[] = [
     flowDescription: "앞에서 찾은 출제 포인트를 바탕으로 내신형 문제를 원하는 수량만큼 생성합니다.",
     flowResult: "검수 가능한 문제 은행",
     cardDescription: "앞에서 도출한 출제 포인트로 문제를 한 번에 대량 생성할 수 있습니다.",
-    icon: WandSparkles,
+    icon: QuestionGenerationIcon,
     actions: [
       {
         label: "문제 생성하기",
@@ -101,7 +100,7 @@ const workflowStages: WorkflowStage[] = [
     flowDescription: "생성한 문제를 골라 시험지로 묶고, 편집 가능한 DOCX 문서로 내보냅니다.",
     flowResult: "Word/한글 편집용 시험지",
     cardDescription: "생성한 문제를 시험지로 묶고 DOCX로 내려받아 Word/한글에서 바로 편집합니다.",
-    icon: Download,
+    icon: ExamPaperGenerationIcon,
     actions: [
       {
         label: "시험지 생성",
@@ -188,7 +187,7 @@ function FlowStep({ stage }: { stage: WorkflowStage }) {
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-white text-blue-600 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-              <Icon className="size-3.5" />
+              <Icon className="size-[18px]" />
             </span>
             <span className="shrink-0 text-[11px] font-bold tabular-nums text-blue-700">
               {stage.step}
@@ -231,7 +230,7 @@ function WorkflowStageCard({
       <span className="absolute inset-x-0 top-0 h-0.5 bg-blue-500" />
       <div className="flex items-start justify-between gap-4">
         <div className="flex size-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-          <Icon className="size-[18px]" />
+          <Icon className="size-6" />
         </div>
         <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-bold tabular-nums text-slate-500">
           {step}

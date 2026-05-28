@@ -3,7 +3,6 @@
 import {
   ArrowUpDown,
   Copy,
-  CopyMinus,
   Layers3,
   Search,
 } from "lucide-react";
@@ -36,6 +35,8 @@ interface ManageFiltersBarProps {
   onToggleHideDuplicates: () => void;
   duplicateGroupCount: number;
   totalDuplicateCount: number;
+
+  compact?: boolean;
 }
 
 export function ManageFiltersBar({
@@ -52,25 +53,55 @@ export function ManageFiltersBar({
   onToggleHideDuplicates,
   duplicateGroupCount,
   totalDuplicateCount,
+  compact = false,
 }: ManageFiltersBarProps) {
-  return (
-    <div className="flex min-w-0 flex-wrap items-center gap-2">
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-300" />
-        <input
-          placeholder="검색..."
-          value={searchValue}
-          onChange={(e) => onSearchChange(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
-          className="h-7 w-40 rounded-md border border-slate-200 bg-slate-50 pl-7 pr-2.5 text-[11.5px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-        />
-      </div>
+  const duplicateMode = pageMode === "duplicates"
+    ? "grouped"
+    : hideDuplicates
+      ? "hidden"
+      : "all";
+  const handleDuplicateModeChange = (value: string) => {
+    if (value === duplicateMode) return;
 
+    if (value === "all") {
+      if (pageMode === "duplicates") onTogglePageMode();
+      if (hideDuplicates) onToggleHideDuplicates();
+      return;
+    }
+
+    if (value === "hidden") {
+      if (pageMode === "duplicates") onTogglePageMode();
+      if (!hideDuplicates) onToggleHideDuplicates();
+      return;
+    }
+
+    if (value === "grouped") {
+      if (hideDuplicates) onToggleHideDuplicates();
+      if (pageMode !== "duplicates") onTogglePageMode();
+    }
+  };
+
+  return (
+    <div
+      className={
+        compact
+          ? "flex min-w-0 flex-1 items-center justify-end gap-1"
+          : "flex min-w-0 flex-wrap items-center justify-end gap-2"
+      }
+    >
       <Select
         value={statusFilter}
         onValueChange={(v) => onStatusFilterChange(v as StatusFilter)}
       >
-        <SelectTrigger className="h-7 w-[88px] px-2.5 text-[11.5px]">
+        <SelectTrigger
+          title={compact ? "상태 필터" : undefined}
+          className={
+            "h-7 shrink-0 " +
+            (compact
+              ? "w-[78px] px-1.5 text-[10.5px]"
+              : "w-max min-w-[112px] px-2.5 text-[11.5px]")
+          }
+        >
           <SelectValue placeholder="상태" />
         </SelectTrigger>
         <SelectContent>
@@ -87,96 +118,100 @@ export function ManageFiltersBar({
         value={sortOrder}
         onValueChange={(v) => onSortOrderChange(v as SortOrder)}
       >
-        <SelectTrigger className="h-7 w-[108px] px-2.5 text-[11.5px]">
-          <ArrowUpDown className="mr-1 size-3 shrink-0" />
+        <SelectTrigger
+          title={compact ? "정렬" : undefined}
+          className={
+            "h-7 shrink-0 " +
+            (compact
+              ? "w-[86px] px-1.5 text-[10.5px]"
+              : "w-[136px] px-2.5 text-[11.5px]")
+          }
+        >
+          <ArrowUpDown
+            className={
+              (compact ? "mr-0.5 size-2.5" : "mr-1 size-3") + " shrink-0"
+            }
+          />
           <SelectValue placeholder="정렬" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="newest">최신순</SelectItem>
           <SelectItem value="oldest">오래된순</SelectItem>
+          <SelectItem value="name_asc">이름 오름차순</SelectItem>
+          <SelectItem value="name_desc">이름 내림차순</SelectItem>
           <SelectItem value="page_asc">페이지 순</SelectItem>
         </SelectContent>
       </Select>
 
-      {/* ─── Duplicate-hide toggle (acts on flat list) ─── */}
-      <button
-        type="button"
-        onClick={onToggleHideDuplicates}
-        disabled={totalDuplicateCount === 0 || pageMode === "duplicates"}
-        aria-pressed={hideDuplicates}
-        title={
-          totalDuplicateCount === 0
-            ? "중복 자료가 없습니다"
-            : hideDuplicates
-              ? "중복 자료 숨김 해제"
-              : "중복 자료 숨기기 (같은 내용은 1개만 표시)"
-        }
-        className={
-          "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-          (hideDuplicates
-            ? "border-blue-300 bg-blue-50 text-blue-700"
-            : totalDuplicateCount === 0 || pageMode === "duplicates"
-              ? "border-slate-200 text-slate-300 cursor-not-allowed"
-              : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
-        }
+      <Select
+        value={duplicateMode}
+        onValueChange={handleDuplicateModeChange}
       >
-        {hideDuplicates ? (
-          <CopyMinus className="size-3.5" aria-hidden="true" />
-        ) : (
-          <Copy className="size-3.5" aria-hidden="true" />
-        )}
-        {hideDuplicates ? "중복 숨김" : "중복 숨기기"}
-        {totalDuplicateCount > 0 ? (
-          <span
-            className={
-              "tabular-nums text-[10px] font-semibold px-1 rounded " +
-              (hideDuplicates
-                ? "bg-blue-100 text-blue-700"
-                : "bg-slate-100 text-slate-500")
-            }
+        <SelectTrigger
+          title={compact ? "중복 보기" : undefined}
+          className={
+            "h-7 shrink-0 " +
+            (compact
+              ? "w-[68px] px-1.5 text-[10.5px]"
+              : "w-[136px] px-2.5 text-[11.5px]")
+          }
+        >
+          {duplicateMode === "grouped" ? (
+            <Layers3
+              className={
+                (compact ? "mr-0.5 size-2.5" : "mr-1 size-3") + " shrink-0"
+              }
+              aria-hidden="true"
+            />
+          ) : (
+            <Copy
+              className={
+                (compact ? "mr-0.5 size-2.5" : "mr-1 size-3") + " shrink-0"
+              }
+              aria-hidden="true"
+            />
+          )}
+          <SelectValue placeholder="중복" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">중복 표시</SelectItem>
+          <SelectItem
+            value="hidden"
+            disabled={totalDuplicateCount === 0}
           >
-            {totalDuplicateCount}
-          </span>
-        ) : null}
-      </button>
+            중복 숨기기
+            {totalDuplicateCount > 0 ? ` ${totalDuplicateCount}` : ""}
+          </SelectItem>
+          <SelectItem
+            value="grouped"
+            disabled={duplicateGroupCount === 0}
+          >
+            중복 모아보기
+            {duplicateGroupCount > 0 ? ` ${duplicateGroupCount}` : ""}
+          </SelectItem>
+        </SelectContent>
+      </Select>
 
-      {/* ─── Duplicate cluster view toggle ─── */}
-      <button
-        type="button"
-        onClick={onTogglePageMode}
-        disabled={duplicateGroupCount === 0}
-        aria-pressed={pageMode === "duplicates"}
-        title={
-          duplicateGroupCount === 0
-            ? "중복 그룹이 없습니다"
-            : pageMode === "duplicates"
-              ? "목록으로 돌아가기"
-              : "중복 그룹 모아보기"
-        }
-        className={
-          "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[11.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-          (pageMode === "duplicates"
-            ? "border-blue-300 bg-blue-50 text-blue-700"
-            : duplicateGroupCount === 0
-              ? "border-slate-200 text-slate-300 cursor-not-allowed"
-              : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
-        }
-      >
-        <Layers3 className="size-3.5" aria-hidden="true" />
-        {pageMode === "duplicates" ? "목록 보기" : "중복 모아보기"}
-        {duplicateGroupCount > 0 ? (
-          <span
-            className={
-              "tabular-nums text-[10px] font-semibold px-1 rounded " +
-              (pageMode === "duplicates"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-slate-100 text-slate-500")
-            }
-          >
-            {duplicateGroupCount}
-          </span>
-        ) : null}
-      </button>
+      <div className={"relative " + (compact ? "min-w-0 flex-1" : "")}>
+        <Search
+          className={
+            "absolute top-1/2 -translate-y-1/2 text-slate-300 " +
+            (compact ? "left-1.5 size-3" : "left-2.5 size-3.5")
+          }
+        />
+        <input
+          placeholder={compact ? "검색" : "자료 검색"}
+          value={searchValue}
+          onChange={(e) => onSearchChange(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
+          className={
+            "h-7 rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 " +
+            (compact
+              ? "w-full min-w-0 pl-6 pr-1.5 text-[10.5px]"
+              : "w-40 pl-7 pr-2.5 text-[11.5px]")
+          }
+        />
+      </div>
     </div>
   );
 }

@@ -7,6 +7,8 @@ import {
 } from "@/lib/credit-costs";
 import { getCreditTopUpProducts } from "@/lib/credit-top-up-products";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
+import { prisma } from "@/lib/prisma";
+import { getPlanPricingPreview } from "@/lib/subscription-plan-pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
     "SMOAT 크레딧과 구독 요금제의 구매, 사용, 청약철회, 환불 기준을 안내합니다.",
 };
 
-const UPDATED_AT = "2026년 5월 26일";
+const UPDATED_AT = "2026년 5월 27일";
 
 const POLICY_SECTIONS = [
   {
@@ -40,9 +42,11 @@ const POLICY_SECTIONS = [
     title: "3. 구독 요금제 결제 및 30일 갱신",
     body: [
       "구독 요금제는 결제 승인일 또는 회사가 별도로 승인한 이용 개시일을 기준으로 30일 이용 기간이 시작됩니다.",
-      "구독을 유지하는 경우 다음 갱신일은 직전 결제일 또는 이용 개시일로부터 30일마다 도래하며, 자동결제 또는 회사가 안내한 결제 방식에 따라 다음 이용 기간의 요금이 청구될 수 있습니다.",
+      "신용카드 정기결제를 등록한 경우 회원의 동의 후 포트원이 발급한 빌링키로 30일마다 다음 이용 기간의 요금이 자동 청구됩니다.",
+      "회사는 카드번호, 유효기간, CVC 등 신용카드 원문 정보를 직접 저장하지 않으며, 카드 등록·결제·삭제 처리는 포트원 및 PG사의 보안 기준에 따라 진행됩니다.",
       "월 배정 크레딧은 각 30일 이용 기간 단위로 제공되며, 요금제의 이월 정책이 명시된 경우를 제외하고 갱신 시 미사용 월 배정 크레딧은 초기화될 수 있습니다.",
-      "회원이 다음 갱신을 원하지 않는 경우 갱신일 전에 해지 또는 갱신 중단을 요청해야 하며, 이미 시작된 이용 기간의 환불은 본 정책의 환불 가능 기준에 따라 판단합니다.",
+      "회원이 다음 갱신을 원하지 않는 경우 갱신일 전에 자동갱신을 해지해야 하며, 해지 시 예약된 다음 결제는 취소되고 현재 이용 기간은 종료일까지 유지됩니다.",
+      "이미 시작된 이용 기간의 환불은 본 정책의 환불 가능 기준에 따라 판단합니다.",
     ],
   },
   {
@@ -95,7 +99,13 @@ const POLICY_SECTIONS = [
 ];
 
 export default async function RefundPolicyPage() {
-  const products = await getCreditTopUpProducts();
+  const [products, subscriptionPlans] = await Promise.all([
+    getCreditTopUpProducts(),
+    prisma.subscriptionPlan.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+    }),
+  ]);
   const costEntries = Object.entries(CREDIT_COSTS) as [OperationType, number][];
 
   return (
@@ -128,6 +138,47 @@ export default async function RefundPolicyPage() {
           <p className="mt-5 text-[12px] font-medium text-slate-400">
             최종 업데이트: {UPDATED_AT}
           </p>
+        </section>
+
+        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-[16px] font-bold text-slate-900">
+            월 구독 요금제
+          </h2>
+          <p className="mt-1 text-[12px] leading-5 text-slate-400">
+            아래 금액은 30일 기준입니다. 신용카드 정기결제 등록 시 동일 주기로
+            자동 청구됩니다.
+          </p>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {subscriptionPlans.map((plan) => {
+              const pricing = getPlanPricingPreview(plan);
+              return (
+                <div
+                  key={plan.id}
+                  className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4"
+                >
+                  <div className="text-[14px] font-bold text-slate-900">
+                    {plan.name}
+                  </div>
+                  <div className="mt-1 text-[12px] text-slate-400">
+                    {plan.monthlyCredits.toLocaleString("ko-KR")}C · 30일
+                  </div>
+                  <div className="mt-3 text-[18px] font-black tabular-nums text-emerald-700">
+                    {pricing.finalPrice.toLocaleString("ko-KR")}원
+                  </div>
+                  {pricing.discountAmount > 0 && (
+                    <div className="mt-1 text-[11px] font-medium tabular-nums text-slate-400 line-through">
+                      {pricing.originalPrice.toLocaleString("ko-KR")}원
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {subscriptionPlans.length === 0 && (
+              <div className="col-span-full py-6 text-[13px] text-slate-400">
+                현재 노출 중인 구독 요금제가 없습니다.
+              </div>
+            )}
+          </div>
         </section>
 
         <section className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr]">

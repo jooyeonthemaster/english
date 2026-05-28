@@ -3,6 +3,8 @@ import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatTutorStatus } from "@/lib/tutor/ui-copy";
 
 const modeLabels: Record<string, string> = {
@@ -22,6 +24,10 @@ export default async function TutorProgramMonitorPage({
 }) {
   const staff = await requireStaffAuth("DIRECTOR");
   const { programId } = await params;
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/director/tutor" />;
+  }
+
   const program = await prisma.tutorProgram.findFirst({
     where: { id: programId, academyId: staff.academyId },
     include: {

@@ -13,10 +13,12 @@ interface PageProps {
 export default async function InvoiceDetailPage({ params }: PageProps) {
   const { invoiceId } = await params;
 
+  let invoice;
   try {
-    const invoice = await getInvoice(invoiceId);
-    return <InvoiceDetailClient invoice={invoice} />;
+    invoice = await getInvoice(invoiceId);
   } catch {
     notFound();
   }
+
+  return <InvoiceDetailClient invoice={invoice} />;
 }

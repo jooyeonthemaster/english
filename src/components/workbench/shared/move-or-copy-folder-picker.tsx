@@ -25,6 +25,8 @@ interface MoveOrCopyFolderPickerProps {
   onMove: (collectionId: string) => Promise<unknown> | void;
   /** Disables the trigger entirely (e.g. another bulk action in flight). */
   disabled?: boolean;
+  /** Renders the trigger as an icon-only square button with tooltip. */
+  compact?: boolean;
 }
 
 const DROPDOWN_WIDTH = 320;
@@ -52,6 +54,7 @@ export function MoveOrCopyFolderPicker({
   onCopy,
   onMove,
   disabled = false,
+  compact = false,
 }: MoveOrCopyFolderPickerProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"copy" | "move">("copy");
@@ -332,10 +335,16 @@ export function MoveOrCopyFolderPicker({
           else openPicker();
         }}
         disabled={disabled}
-        className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-200 bg-white px-2.5 text-[11px] font-medium text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+        title={compact ? "이동 / 복사" : undefined}
+        aria-label={compact ? "이동 / 복사" : undefined}
+        className={
+          compact
+            ? "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-blue-200 bg-white text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+            : "inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-200 bg-white px-2.5 text-[11px] font-medium text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+        }
       >
         <ArrowRightLeft className="w-3.5 h-3.5" />
-        이동 / 복사
+        {compact ? null : "이동 / 복사"}
       </button>
       {dropdown && typeof document !== "undefined"
         ? createPortal(dropdown, document.body)

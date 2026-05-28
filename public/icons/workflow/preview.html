@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SMOAT Workflow Icons</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --blue: #2563eb;
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --panel: #ffffff;
+        --bg: #f8fafc;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(960px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 56px 0;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .sub {
+        margin: 10px 0 24px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 18px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      }
+
+      .icon-box {
+        display: grid;
+        width: 52px;
+        height: 52px;
+        place-items: center;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: var(--blue);
+      }
+
+      .icon-box img {
+        width: 39px;
+        height: 39px;
+        display: block;
+      }
+
+      h2 {
+        margin: 14px 0 6px;
+        font-size: 16px;
+        line-height: 1.35;
+        letter-spacing: 0;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .inline-code {
+        border-radius: 5px;
+        background: #eaf1fb;
+        padding: 2px 5px;
+        color: #1d4ed8;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      code {
+        display: block;
+        margin-top: 14px;
+        overflow-wrap: anywhere;
+        border-radius: 6px;
+        background: #f1f5f9;
+        padding: 8px;
+        color: #334155;
+        font-size: 12px;
+      }
+
+      @media (max-width: 820px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 520px) {
+        main {
+          width: min(100vw - 24px, 960px);
+          padding: 28px 0;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SMOAT Workflow Icons</h1>
+      <p class="sub">24px SVG 세트입니다. 웹에서는 <span class="inline-code">/icons/workflow/파일명.svg</span> 경로로 바로 사용할 수 있습니다.</p>
+
+      <section class="grid" aria-label="Workflow icon preview">
+        <article class="card">
+          <div class="icon-box"><img src="./material-extraction.svg" alt="" /></div>
+          <h2>자료 추출</h2>
+          <p>겹친 두 장의 자료와 아래 화살표로 여러 자료를 추출해 저장하는 동작을 표현했습니다.</p>
+          <code>/icons/workflow/material-extraction.svg</code>
+        </article>
+
+        <article class="card">
+          <div class="icon-box"><img src="./passage-analysis.svg" alt="" /></div>
+          <h2>지문 분석</h2>
+          <p>텍스트 페이지와 확대경으로 분석의 의미가 바로 읽히도록 했습니다.</p>
+          <code>/icons/workflow/passage-analysis.svg</code>
+        </article>
+
+        <article class="card">
+          <div class="icon-box"><img src="./question-generation.svg" alt="" /></div>
+          <h2>문제 생성</h2>
+          <p>접힌 문서 위의 물음표로 새 문제를 만드는 기능을 직관적으로 잡았습니다.</p>
+          <code>/icons/workflow/question-generation.svg</code>
+        </article>
+
+        <article class="card">
+          <div class="icon-box"><img src="./exam-paper-generation.svg" alt="" /></div>
+          <h2>시험지 생성</h2>
+          <p>겹친 두 장의 지면과 문항 줄로 시험지 묶음 생성을 나타냈습니다.</p>
+          <code>/icons/workflow/exam-paper-generation.svg</code>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { CheckCircle2, Copy, FileText, Inbox, Layers } from "lucide-react";
+import { FileText, Pencil } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -12,7 +12,6 @@ import {
 } from "../utils/draft-source";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
-import { RestorationMethodBadge } from "./restoration-method-badge";
 
 interface DraftCardProps {
   draft: M1PassageDraftWithJob;
@@ -22,22 +21,22 @@ interface DraftCardProps {
   checked: boolean;
   onClick: () => void;
   onToggleCheck: () => void;
-  /** Optional. When this draft is part of a duplicate cluster, the number
-   *  of *other* drafts that share its normalized content. */
-  dupCount?: number;
   /** Optional. All currently-checked draft IDs in the surrounding view. If
    *  the user drags this card while it's checked and the group has 2+ ids,
    *  the drag payload becomes a bulk move covering every checked draft —
    *  one drag, many drafts. */
   bulkDragIds?: string[];
-  /** True when this draft hasn't been filed into any folder yet. Renders a
-   *  "미분류" badge so users can spot loose drafts at a glance while browsing
-   *  the "전체 자료" view. */
-  unfiled?: boolean;
   /** True when this card was the most recently opened in the detail modal.
    *  Renders a subtle shading so users can quickly find where they were
    *  after closing the popup. Overridden by `active` when both are true. */
   recentlyViewed?: boolean;
+  /** Hide the selection checkbox. Used by contexts (e.g., the extraction
+   *  page preview drawer) that don't expose folder/bulk operations the
+   *  checkbox feeds into. */
+  hideCheckbox?: boolean;
+  /** Persist a new title for this draft. When omitted, the title becomes
+   *  read-only (e.g., in read-only preview contexts). */
+  onTitleChange?: (id: string, value: string | null) => void;
 }
 
 export function DraftCard({
@@ -47,13 +46,39 @@ export function DraftCard({
   checked,
   onClick,
   onToggleCheck,
-  dupCount,
   bulkDragIds,
-  unfiled,
   recentlyViewed,
+  hideCheckbox,
+  onTitleChange,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [titleEditing, setTitleEditing] = useState(false);
+  const [titleInput, setTitleInput] = useState(draft.title ?? "");
+
+  useEffect(() => {
+    setTitleEditing(false);
+    setTitleInput(draft.title ?? "");
+  }, [draft.id, draft.title]);
+
+  const commitTitle = useCallback(() => {
+    if (!onTitleChange) {
+      setTitleEditing(false);
+      return;
+    }
+    const trimmed = titleInput.trim();
+    const next = trimmed.length > 0 ? trimmed : null;
+    const current = draft.title ?? null;
+    if (next !== current) {
+      onTitleChange(draft.id, next);
+    }
+    setTitleEditing(false);
+  }, [titleInput, draft.id, draft.title, onTitleChange]);
+
+  const cancelTitleEdit = useCallback(() => {
+    setTitleInput(draft.title ?? "");
+    setTitleEditing(false);
+  }, [draft.title]);
   // Keep latest values in a ref so the draggable callback (registered once
   // per draft id) always reads the current checked/bulk state at drag-start.
   const dragStateRef = useRef({ checked, bulkDragIds });
@@ -141,7 +166,7 @@ export function DraftCard({
     .trim()
     .slice(0, 140);
 
-  const isPromoted =
+  const isReviewed =
     draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
 
   const fileNames = getDraftSourceFileNames(draft);
@@ -181,9 +206,15 @@ export function DraftCard({
         " " +
         (active
           ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
-          : recentlyViewed
-            ? "border-slate-300 bg-slate-100/80 hover:border-slate-400 hover:bg-slate-100"
-            : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60")
+          : isReviewed
+            ? "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60"
+            : "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80") +
+        // "Just came back from this card" hint — one-shot bg flash. We keep
+        // the review-status border intact so 검수필요 카드는 여전히 빨간 테
+        // 두리로 식별됩니다.
+        (recentlyViewed && !active
+          ? " motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]"
+          : "")
       }
     >
       {active ? (
@@ -192,31 +223,93 @@ export function DraftCard({
           className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600"
         />
       ) : null}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <div
-            className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleCheck();
-            }}
-          >
+      {isReviewed ? (
+        <span
+          role="img"
+          aria-label="검수완료"
+          className="pointer-events-none absolute right-2 top-2 z-10 flex size-10 -rotate-12 select-none items-center justify-center rounded-full border-2 border-emerald-600/85 bg-white/70 text-[9px] font-extrabold tracking-tight text-emerald-700 shadow-sm backdrop-blur-[1px]"
+        >
+          검수완료
+        </span>
+      ) : (
+        <span
+          role="img"
+          aria-label="검수필요"
+          className="pointer-events-none absolute right-2 top-2 z-10 flex size-10 -rotate-12 select-none items-center justify-center rounded-full border border-dashed border-red-300/70 bg-red-50/30 text-[9px] font-bold tracking-tight text-red-400/80"
+        >
+          검수필요
+        </span>
+      )}
+      {/* Reserve right padding so the title row clears the stamp (size-10 at
+          right-2 top-2 ≈ 48px wide). */}
+      <div className="flex items-start justify-between gap-2 pr-12">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          {hideCheckbox ? null : (
+            <div
+              className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleCheck();
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                readOnly
+                tabIndex={-1}
+                className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
+                aria-label="자료 선택"
+              />
+            </div>
+          )}
+          {titleEditing && onTitleChange ? (
             <input
-              type="checkbox"
-              checked={checked}
-              readOnly
-              tabIndex={-1}
-              className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
-              aria-label="자료 선택"
+              autoFocus
+              value={titleInput}
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => setTitleInput(e.target.value)}
+              onBlur={commitTitle}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  commitTitle();
+                } else if (e.key === "Escape") {
+                  e.preventDefault();
+                  cancelTitleEdit();
+                }
+              }}
+              placeholder={getDraftDisplayTitle(draft)}
+              maxLength={200}
+              className="h-7 w-full min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-2 text-sm font-bold text-slate-900 outline-none ring-2 ring-blue-100 placeholder:font-medium placeholder:text-slate-400"
             />
-          </div>
-          <span className="shrink-0 text-xs font-bold tabular-nums text-slate-400">
-            #{index + 1}
-          </span>
-          <span className="truncate text-sm font-bold text-slate-900">
-            {getDraftDisplayTitle(draft)}
-          </span>
+          ) : onTitleChange ? (
+            <button
+              type="button"
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTitleInput(draft.title ?? "");
+                setTitleEditing(true);
+              }}
+              className="group flex min-w-0 flex-1 cursor-text items-center gap-1.5 rounded-md text-left"
+              title="제목 편집"
+            >
+              <span className="truncate text-sm font-bold text-slate-900 group-hover:text-blue-700">
+                {getDraftDisplayTitle(draft)}
+              </span>
+              <Pencil
+                className="size-3 shrink-0 text-slate-300 transition-colors group-hover:text-blue-500"
+                aria-hidden="true"
+              />
+            </button>
+          ) : (
+            <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">
+              {getDraftDisplayTitle(draft)}
+            </span>
+          )}
         </div>
       </div>
 
@@ -244,35 +337,6 @@ export function DraftCard({
 
       <div className="flex flex-wrap items-center gap-1.5">
         <RestorationBadge status={draft.restorationStatus} />
-        <RestorationMethodBadge draft={draft} />
-        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold tabular-nums text-slate-600">
-          <Layers className="size-3" aria-hidden="true" />
-          {draft.sourcePageIndex.length}p
-        </span>
-        {dupCount && dupCount > 0 ? (
-          <span
-            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 ring-1 ring-slate-200"
-            title={`동일한 내용의 자료 ${dupCount}개가 더 존재합니다`}
-          >
-            <Copy className="size-3" aria-hidden="true" />
-            {dupCount} 중복
-          </span>
-        ) : null}
-        {unfiled ? (
-          <span
-            className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 ring-1 ring-amber-200"
-            title="아직 어떤 폴더에도 포함되지 않은 자료입니다"
-          >
-            <Inbox className="size-3" aria-hidden="true" />
-            미분류
-          </span>
-        ) : null}
-        {isPromoted ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
-            <CheckCircle2 className="size-3" aria-hidden="true" />
-            지문 등록 완료
-          </span>
-        ) : null}
       </div>
 
       <p className="line-clamp-3 text-[13px] leading-6 text-slate-600">

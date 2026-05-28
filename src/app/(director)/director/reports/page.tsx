@@ -1,12 +1,17 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { getReportsList } from "@/actions/reports";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { ReportsManagementClient } from "./reports-management-client";
 
 export default async function DirectorReportsPage() {
   const staff = await getStaffSession();
   if (!staff) redirect("/login?callbackUrl=/director/reports");
   if (staff.role !== "DIRECTOR") redirect("/teacher");
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/director" />;
+  }
 
   const reports = await getReportsList();
 

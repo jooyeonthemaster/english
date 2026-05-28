@@ -1,8 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { CREDIT_COSTS, TOP_UP_PACKS } from "../src/lib/credit-costs";
 import { createUniqueAcademyCode } from "../src/lib/tutor/academy-code";
 
 const prisma = new PrismaClient();
+
+const [
+  STARTER_CREDIT_PACK,
+  STANDARD_CREDIT_PACK,
+  PREMIUM_CREDIT_PACK,
+  ENTERPRISE_CREDIT_PACK,
+] = TOP_UP_PACKS;
+
+function estimateAutoQuestionCount(credits: number) {
+  return Math.floor((credits / CREDIT_COSTS.AUTO_GEN_BATCH) * 10);
+}
+
+function planDescription(pack: (typeof TOP_UP_PACKS)[number]) {
+  return `자동출제 약 ${estimateAutoQuestionCount(pack.credits).toLocaleString("ko-KR")}문항 분량의 월 크레딧을 제공하는 ${pack.label} 플랜`;
+}
 
 const SCHOOLS = [
   // 중학교 (19개)
@@ -238,14 +254,14 @@ async function main() {
     {
       name: "스타터",
       tier: "STARTER",
-      monthlyPrice: 300000,
-      monthlyCredits: 500,
+      monthlyPrice: STARTER_CREDIT_PACK.price,
+      monthlyCredits: STARTER_CREDIT_PACK.credits,
       maxStudents: 50,
       maxStaff: 3,
       rolloverPolicy: "RESET",
       rolloverMaxRate: 0,
-      sortOrder: 1,
-      description: "소규모 학원을 위한 기본 플랜",
+      sortOrder: 10,
+      description: planDescription(STARTER_CREDIT_PACK),
       features: JSON.stringify({
         questionGenSingle: true,
         questionGenVocab: true,
@@ -267,14 +283,14 @@ async function main() {
     {
       name: "스탠다드",
       tier: "STANDARD",
-      monthlyPrice: 500000,
-      monthlyCredits: 1200,
+      monthlyPrice: STANDARD_CREDIT_PACK.price,
+      monthlyCredits: STANDARD_CREDIT_PACK.credits,
       maxStudents: 150,
       maxStaff: 8,
       rolloverPolicy: "PARTIAL_ROLLOVER",
       rolloverMaxRate: 0.2,
-      sortOrder: 2,
-      description: "중규모 학원을 위한 표준 플랜",
+      sortOrder: 20,
+      description: planDescription(STANDARD_CREDIT_PACK),
       features: JSON.stringify({
         questionGenSingle: true,
         questionGenVocab: true,
@@ -296,14 +312,14 @@ async function main() {
     {
       name: "프리미엄",
       tier: "PREMIUM",
-      monthlyPrice: 1000000,
-      monthlyCredits: 3000,
+      monthlyPrice: PREMIUM_CREDIT_PACK.price,
+      monthlyCredits: PREMIUM_CREDIT_PACK.credits,
       maxStudents: 500,
       maxStaff: 20,
       rolloverPolicy: "ROLLOVER",
       rolloverMaxRate: 1.0,
-      sortOrder: 3,
-      description: "대규모 학원을 위한 프리미엄 플랜",
+      sortOrder: 30,
+      description: planDescription(PREMIUM_CREDIT_PACK),
       features: JSON.stringify({
         questionGenSingle: true,
         questionGenVocab: true,
@@ -325,14 +341,14 @@ async function main() {
     {
       name: "엔터프라이즈",
       tier: "ENTERPRISE",
-      monthlyPrice: 0,
-      monthlyCredits: 10000,
+      monthlyPrice: ENTERPRISE_CREDIT_PACK.price,
+      monthlyCredits: ENTERPRISE_CREDIT_PACK.credits,
       maxStudents: 99999,
       maxStaff: 99999,
       rolloverPolicy: "ROLLOVER",
       rolloverMaxRate: 1.0,
-      sortOrder: 4,
-      description: "맞춤 솔루션이 필요한 대형 학원/프랜차이즈",
+      sortOrder: 40,
+      description: planDescription(ENTERPRISE_CREDIT_PACK),
       features: JSON.stringify({
         questionGenSingle: true,
         questionGenVocab: true,
@@ -390,9 +406,9 @@ async function main() {
       update: {},
       create: {
         academyId: academy.id,
-        balance: 1200,
-        monthlyAllocation: 1200,
-        totalAllocated: 1200,
+        balance: standardPlan.monthlyCredits,
+        monthlyAllocation: standardPlan.monthlyCredits,
+        totalAllocated: standardPlan.monthlyCredits,
       },
     });
 
@@ -400,8 +416,8 @@ async function main() {
       data: {
         academyId: academy.id,
         type: "ALLOCATION",
-        amount: 1200,
-        balanceAfter: 1200,
+        amount: standardPlan.monthlyCredits,
+        balanceAfter: standardPlan.monthlyCredits,
         description: "Initial STANDARD plan allocation",
       },
     });

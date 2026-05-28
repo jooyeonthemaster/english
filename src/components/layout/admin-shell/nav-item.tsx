@@ -13,6 +13,13 @@ import type { NavGroup } from "../nav-config";
 
 type NavItemRecord = NavGroup["items"][number];
 
+const WORKFLOW_ICON_NAMES = new Set([
+  "MaterialExtractionIcon",
+  "PassageAnalysisIcon",
+  "QuestionGenerationIcon",
+  "ExamPaperGenerationIcon",
+]);
+
 interface NavItemProps {
   item: NavItemRecord;
   active: boolean;
@@ -37,6 +44,7 @@ export function NavItem({
   onSetOpenMenu,
 }: NavItemProps) {
   const Icon = item.icon;
+  const isWorkflowIcon = WORKFLOW_ICON_NAMES.has(Icon.displayName);
   const hasChildren = item.children && item.children.length > 0;
   const childActive =
     hasChildren &&
@@ -73,7 +81,8 @@ export function NavItem({
           >
             <Icon
               className={cn(
-                "shrink-0 transition-colors duration-200 size-[17px]",
+                "shrink-0 transition-colors duration-200",
+                isWorkflowIcon ? "size-[22px]" : "size-[17px]",
                 active || childActive
                   ? "text-blue-500"
                   : "text-gray-350 group-hover/item:text-gray-500",
@@ -186,7 +195,13 @@ export function NavItem({
             : active
               ? "text-blue-500"
               : "text-gray-350 group-hover/item:text-gray-500",
-          collapsed ? "size-[20px]" : "size-[17px]",
+          isWorkflowIcon
+            ? collapsed
+              ? "size-[26px]"
+              : "size-[22px]"
+            : collapsed
+              ? "size-[20px]"
+              : "size-[17px]",
         )}
         strokeWidth={active ? 2 : 1.7}
       />

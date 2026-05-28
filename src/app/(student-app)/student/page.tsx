@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { useDashboard } from "@/hooks/use-student-data";
 import {
   DAY_MAP,
@@ -36,6 +37,7 @@ const QUICK_MENUS = [
   { id: "ranking", label: "랭킹", icon: Trophy, href: "/student/learn/ranking" },
   { id: "analytics", label: "학습분석", icon: TrendingUp, href: "/student/learn/analytics" },
 ];
+const RESULT_MENU_IDS = new Set(["review", "grades", "ranking", "analytics"]);
 
 // ---------------------------------------------------------------------------
 // Page
@@ -53,6 +55,9 @@ export default function StudentHomePage() {
   }
 
   const { student, stats, upcomingExams, pendingAssignments, xp, recentNotices } = data;
+  const quickMenus = FEATURE_FLAGS.SHOW_USER_RESULTS
+    ? QUICK_MENUS
+    : QUICK_MENUS.filter((item) => !RESULT_MENU_IDS.has(item.id));
   const todayIdx = getTodayDayIndex();
 
   // Build weekly schedule
@@ -79,7 +84,7 @@ export default function StudentHomePage() {
       {/* ── 퀵메뉴 (가로 스크롤) ── */}
       <div className="overflow-x-auto hide-scrollbar px-5">
         <div className="flex gap-4 w-max">
-          {QUICK_MENUS.map((item) => {
+          {quickMenus.map((item) => {
             const Icon = item.icon;
             return (
               <Link

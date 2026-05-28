@@ -12,6 +12,7 @@ import {
   Send,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -34,6 +35,7 @@ interface HeaderSectionProps {
 
 export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps) {
   const router = useRouter();
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
   return (
     <div className="flex items-start justify-between">
       <div className="flex items-start gap-3">
@@ -88,7 +90,8 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
             {isPending ? "배포 중..." : "배포하기"}
           </Button>
         )}
-        {(exam.status === "IN_PROGRESS" || exam.status === "COMPLETED") &&
+        {showResults &&
+          (exam.status === "IN_PROGRESS" || exam.status === "COMPLETED") &&
           exam.submissions.some((s) => s.status === "SUBMITTED") && (
             <Button asChild className="bg-[#3182F6] hover:bg-[#1B64DA]">
               <Link href={`/director/exams/${exam.id}/grade`}>

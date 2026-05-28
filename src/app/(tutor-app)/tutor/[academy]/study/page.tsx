@@ -3,6 +3,7 @@ import { ArrowRight, BookOpenCheck, CheckCircle2, Flame, MessageCircleQuestion, 
 import { getTutorStudentHome } from "@/actions/tutor";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatTutorStatus } from "@/lib/tutor/ui-copy";
 import { requireTutorRouteSession } from "@/lib/tutor/route-auth";
 
@@ -56,10 +57,14 @@ export default async function TutorStudyHomePage({
         </div>
       </section>
 
-      <section className="grid grid-cols-3 gap-2 sm:gap-3">
-        <QuickLink href={`/tutor/${academy}/review`} icon={Target} label="오답 복습" sub="틀린 것만" />
+      <section className={FEATURE_FLAGS.SHOW_USER_RESULTS ? "grid grid-cols-3 gap-2 sm:gap-3" : "grid grid-cols-1 gap-2 sm:gap-3"}>
+        {FEATURE_FLAGS.SHOW_USER_RESULTS && (
+          <QuickLink href={`/tutor/${academy}/review`} icon={Target} label="오답 복습" sub="틀린 것만" />
+        )}
         <QuickLink href={`/tutor/${academy}/question-history`} icon={MessageCircleQuestion} label="질문 기록" sub="해설 모음" />
-        <QuickLink href={`/tutor/${academy}/report`} icon={Flame} label="MY 리포트" sub="성장 확인" />
+        {FEATURE_FLAGS.SHOW_USER_RESULTS && (
+          <QuickLink href={`/tutor/${academy}/report`} icon={Flame} label="MY 리포트" sub="성장 확인" />
+        )}
       </section>
 
       <section className="space-y-3">

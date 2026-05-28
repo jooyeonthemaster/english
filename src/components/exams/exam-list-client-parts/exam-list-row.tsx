@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { Calendar, Check, Eye, Trash2 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
 import type { ExamItem } from "./types";
 
@@ -29,6 +30,7 @@ export function ExamListRow({
 }: ExamListRowProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   useEffect(() => {
     const el = dragRef.current;
@@ -103,7 +105,7 @@ export function ExamListRow({
 
       {/* Questions */}
       <span className="text-[11px] text-slate-500 w-14 text-center shrink-0">
-        {exam._count.questions}문제
+        {exam._count.questions}문항
       </span>
 
       {/* Status */}
@@ -117,9 +119,11 @@ export function ExamListRow({
       </span>
 
       {/* Submissions */}
-      <span className="text-[11px] text-slate-500 w-12 text-center shrink-0">
-        {exam._count.submissions}명
-      </span>
+      {showResults && (
+        <span className="text-[11px] text-slate-500 w-12 text-center shrink-0">
+          {exam._count.submissions}명
+        </span>
+      )}
 
       {/* Actions */}
       <div

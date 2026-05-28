@@ -5,12 +5,12 @@ import { useState, useRef, useEffect } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   Check,
-  FileText,
   Calendar,
   Users,
   ClipboardList,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -79,6 +79,7 @@ export function ExamFileCard({
 }) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   useEffect(() => {
     const el = dragRef.current;
@@ -141,12 +142,14 @@ export function ExamFileCard({
       <div className="flex items-center gap-3 mt-3 flex-wrap">
         <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
           <ClipboardList className="w-3 h-3 text-slate-400" />
-          {exam._count.questions}문제
+          {exam._count.questions}문항
         </span>
-        <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
-          <Users className="w-3 h-3 text-slate-400" />
-          {exam._count.submissions}명 응시
-        </span>
+        {showResults && (
+          <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
+            <Users className="w-3 h-3 text-slate-400" />
+            {exam._count.submissions}명 응시
+          </span>
+        )}
         {exam.examDate && (
           <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
             <Calendar className="w-3 h-3 text-slate-400" />

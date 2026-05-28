@@ -1,11 +1,13 @@
 import type * as React from "react";
 
+import { resolveDropIndicatorPartKey } from "../../drop-indicator-dom";
 import type { DropPlacement } from "../../types";
 
 interface UsePaperItemDragParams {
   setActiveItemId: (id: string | null) => void;
   setDraggingItemId: (id: string | null) => void;
   setDragOverItemId: (id: string | null) => void;
+  setDragOverPartKey: (key: string | null) => void;
   setDragPlacement: (placement: DropPlacement) => void;
   onMoveItemToDropTarget: (
     sourceLocalId: string,
@@ -24,6 +26,7 @@ export function usePaperItemDrag({
   setActiveItemId,
   setDraggingItemId,
   setDragOverItemId,
+  setDragOverPartKey,
   setDragPlacement,
   onMoveItemToDropTarget,
 }: UsePaperItemDragParams) {
@@ -39,13 +42,21 @@ export function usePaperItemDrag({
 
     if (!targetElement || !targetLocalId || targetLocalId === sourceLocalId) {
       setDragOverItemId(null);
+      setDragOverPartKey(null);
       return null;
     }
 
     const rect = targetElement.getBoundingClientRect();
     const placement: DropPlacement =
       clientY > rect.top + rect.height / 2 ? "after" : "before";
+    const scroller = document.getElementById("exam-paper-print-root") || document;
+    const targetPartKey = resolveDropIndicatorPartKey(
+      scroller,
+      targetLocalId,
+      placement,
+    );
     setDragOverItemId(targetLocalId);
+    setDragOverPartKey(targetPartKey);
     setDragPlacement(placement);
     return { targetLocalId, placement };
   }
@@ -75,6 +86,7 @@ export function usePaperItemDrag({
     setActiveItemId(sourceLocalId);
     setDraggingItemId(sourceLocalId);
     setDragOverItemId(null);
+    setDragOverPartKey(null);
 
     let latestDropTarget: {
       targetLocalId: string;
@@ -110,6 +122,7 @@ export function usePaperItemDrag({
 
       setDraggingItemId(null);
       setDragOverItemId(null);
+      setDragOverPartKey(null);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointercancel", handlePointerCancel);

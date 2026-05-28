@@ -1,11 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { requireAuth } from "./_helpers";
 
 /** Get comprehensive student stats */
 export async function getStudentStats(studentId: string) {
   await requireAuth();
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   const now = new Date();
   const thirtyDaysAgo = new Date(now);
@@ -32,14 +34,16 @@ export async function getStudentStats(studentId: string) {
       where: { studentId },
     }),
     // Exam submissions with scores
-    prisma.examSubmission.findMany({
-      where: { studentId },
-      include: {
-        exam: { select: { title: true, grade: true, examType: true } },
-      },
-      orderBy: { submittedAt: "desc" },
-      take: 10,
-    }),
+    showResults
+      ? prisma.examSubmission.findMany({
+          where: { studentId },
+          include: {
+            exam: { select: { title: true, grade: true, examType: true } },
+          },
+          orderBy: { submittedAt: "desc" },
+          take: 10,
+        })
+      : Promise.resolve([]),
     // Invoices
     prisma.invoice.findMany({
       where: { studentId },
@@ -73,7 +77,9 @@ export async function getStudentStats(studentId: string) {
       : 0;
 
   // Calculate average exam score
-  const scoredExams = examSubmissions.filter((e) => e.score !== null);
+  const scoredExams = showResults
+    ? examSubmissions.filter((e) => e.score !== null)
+    : [];
   const averageScore =
     scoredExams.length > 0
       ? Math.round(

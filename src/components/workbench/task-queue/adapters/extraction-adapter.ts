@@ -10,6 +10,7 @@ interface ExtractionJobRow {
   successPages: number;
   resultCount?: number;
   draftResultCount?: number;
+  savedResultCount?: number;
   createdAt: string;
   m1DraftPipelineError?: boolean;
   firstPageImageUrl?: string | null;
@@ -90,7 +91,7 @@ async function deleteExtractionJob(jobId: string, status: TaskStatus) {
 export const extractionAdapter: TaskAdapter = {
   domain: "extraction",
   async fetchTasks(signal): Promise<BaseTask[]> {
-    const res = await fetch("/api/extraction/jobs?limit=50&thumbnails=0", {
+    const res = await fetch("/api/extraction/jobs?limit=50", {
       credentials: "include",
       cache: "no-store",
       signal,
@@ -102,6 +103,19 @@ export const extractionAdapter: TaskAdapter = {
     return jobs.map<BaseTask>((job) => {
       const status = mapStatus(job.status);
       const result = job.resultCount ?? job.draftResultCount ?? 0;
+      const reviewNeeded = job.draftResultCount ?? 0;
+      const reviewCompleted = job.savedResultCount ?? 0;
+      const reviewTotal = reviewCompleted + reviewNeeded;
+      const reviewTone =
+        reviewTotal > 0
+          ? reviewCompleted === reviewTotal
+              ? "emerald"
+              : "red"
+          : status === "failed"
+            ? "red"
+            : status === "processing" || status === "pending"
+              ? "blue"
+              : "slate";
       return {
         id: job.id,
         domain: "extraction",
@@ -112,12 +126,12 @@ export const extractionAdapter: TaskAdapter = {
           {
             label: "처리 페이지",
             value: `${job.successPages}/${job.totalPages}`,
-            tone: status === "failed" ? "red" : "blue",
+            tone: "slate",
           },
           {
             label: "복원 결과",
             value: `${result}개`,
-            tone: result > 0 ? "emerald" : "slate",
+            tone: "slate",
           },
           {
             label: "전체 페이지",
@@ -126,22 +140,8 @@ export const extractionAdapter: TaskAdapter = {
           },
           {
             label: "검수 상태",
-            value:
-              status === "completed"
-                ? "대기"
-                : status === "partial"
-                  ? "부분"
-                  : status === "failed"
-                    ? "확인"
-                    : "진행",
-            tone:
-              status === "completed"
-                ? "emerald"
-                : status === "partial"
-                  ? "amber"
-                  : status === "failed"
-                    ? "red"
-                    : "blue",
+            value: `검수완료 ${reviewCompleted}/${reviewTotal}`,
+            tone: reviewTone,
           },
         ],
         status,

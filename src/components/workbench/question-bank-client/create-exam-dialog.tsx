@@ -50,7 +50,7 @@ export function CreateExamDialog({
             autoFocus
           />
           <p className="text-xs text-slate-500">
-            선택한 {selectedCount}개 문제로 초안(DRAFT) 시험지를 생성합니다. 생성 후 상세 페이지에서 순서, 배점 등을 편집할 수 있습니다.
+            선택한 {selectedCount}문항으로 초안(DRAFT) 시험지를 생성합니다. 생성 후 상세 페이지에서 순서, 배점 등을 편집할 수 있습니다.
           </p>
         </div>
         <DialogFooter>

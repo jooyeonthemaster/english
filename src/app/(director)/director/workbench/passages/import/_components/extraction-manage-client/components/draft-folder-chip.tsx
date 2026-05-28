@@ -103,7 +103,7 @@ export function DraftFolderChip({
         className="flex w-[120px] flex-col items-center justify-center rounded-xl border-2 border-blue-400 bg-blue-50/60 px-2 py-2 shadow-lg transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        <Folder className="mb-1 size-5" style={{ color }} />
+        <Folder className="mb-1 size-3.5" style={{ color }} />
         <input
           ref={inputRef}
           value={editName}
@@ -133,9 +133,9 @@ export function DraftFolderChip({
       }
     >
       {isDragOver ? (
-        <FolderOpen className="mb-0.5 size-5" style={{ color }} />
+        <FolderOpen className="mb-0.5 size-3.5" style={{ color }} />
       ) : (
-        <Folder className="mb-0.5 size-5" style={{ color }} />
+        <Folder className="mb-0.5 size-3.5" style={{ color }} />
       )}
       <span className="max-w-[84px] truncate text-center text-[11px] font-bold leading-tight text-slate-800">
         {collection.name}

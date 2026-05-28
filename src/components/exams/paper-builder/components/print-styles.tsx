@@ -1,8 +1,13 @@
-export function PrintStyles() {
+import { PAPER_SIZE_SPECS } from "../constants";
+import type { PaperSize } from "../types";
+
+export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
+  const paperSpec = PAPER_SIZE_SPECS[paperSize];
+
   return (
     <style jsx global>{`
       @page {
-        size: A4;
+        size: ${paperSpec.widthMm}mm ${paperSpec.heightMm}mm;
         margin: 0;
       }
 
@@ -12,7 +17,7 @@ export function PrintStyles() {
           background: white !important;
           margin: 0 !important;
           padding: 0 !important;
-          width: 210mm !important;
+          width: ${paperSpec.widthMm}mm !important;
         }
 
         /* During print, the JS handler moves the print root into #exam-print-host
@@ -23,15 +28,15 @@ export function PrintStyles() {
 
         #exam-print-host {
           position: static !important;
-          width: 210mm !important;
+          width: ${paperSpec.widthMm}mm !important;
           margin: 0 !important;
           padding: 0 !important;
           background: white !important;
         }
 
         #exam-paper-print-root {
-          width: 210mm !important;
-          max-width: 210mm !important;
+          width: ${paperSpec.widthMm}mm !important;
+          max-width: ${paperSpec.widthMm}mm !important;
           height: auto !important;
           overflow: visible !important;
           padding: 0 !important;
@@ -43,7 +48,7 @@ export function PrintStyles() {
         /* Inner pages container — wipe gap, max-width, alignment */
         #exam-paper-print-root > div {
           max-width: none !important;
-          width: 210mm !important;
+          width: ${paperSpec.widthMm}mm !important;
           height: auto !important;
           margin: 0 !important;
           padding: 0 !important;
@@ -54,7 +59,7 @@ export function PrintStyles() {
         .exam-preview-zoom-spacer,
         .exam-preview-zoom-content {
           max-width: none !important;
-          width: 210mm !important;
+          width: ${paperSpec.widthMm}mm !important;
           height: auto !important;
           margin: 0 !important;
           padding: 0 !important;
@@ -70,10 +75,10 @@ export function PrintStyles() {
         }
 
         .exam-a4-page {
-          width: 210mm !important;
-          height: 297mm !important;
-          min-height: 297mm !important;
-          max-height: 297mm !important;
+          width: ${paperSpec.widthMm}mm !important;
+          height: ${paperSpec.heightMm}mm !important;
+          min-height: ${paperSpec.heightMm}mm !important;
+          max-height: ${paperSpec.heightMm}mm !important;
           margin: 0 !important;
           box-shadow: none !important;
           border: none !important;

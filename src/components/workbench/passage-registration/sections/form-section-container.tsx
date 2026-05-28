@@ -22,6 +22,8 @@ import {
 import { FormSection } from "./form-section";
 
 interface FormSectionContainerProps {
+  academyId: string;
+
   // View state
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
@@ -101,6 +103,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
 
   return (
     <FormSection
+      academyId={p.academyId}
       formCollapsed={p.formCollapsed}
       setFormCollapsed={p.setFormCollapsed}
       hasContent={p.hasContent}

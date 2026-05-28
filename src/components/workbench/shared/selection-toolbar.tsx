@@ -19,6 +19,8 @@ interface SelectionToolbarProps {
   activeFolder: string | null;
   onRemoveFromFolder?: () => void;
   extraActions?: React.ReactNode;
+  /** Count unit shown next to selected count ("개"/"편"/"문항"/"부"). Default "개". */
+  itemUnit?: string;
   /** Optional content rendered on the right side of the toolbar, before the
    *  selection hint / cancel button. Always enabled regardless of selection. */
   rightSlot?: React.ReactNode;
@@ -45,6 +47,7 @@ export function SelectionToolbar({
   extraActions,
   rightSlot,
   embedded = false,
+  itemUnit = "개",
 }: SelectionToolbarProps) {
   const hasSelection = selectedCount > 0;
 
@@ -66,7 +69,8 @@ export function SelectionToolbar({
         }
       >
         <Check className="w-4 h-4" />
-        {selectedCount}개 선택
+        {selectedCount}
+        {itemUnit} 선택
       </span>
       <span className="text-slate-300">|</span>
       <button
@@ -125,9 +129,7 @@ export function SelectionToolbar({
         <button onClick={onClearSelection} className="text-[11px] text-slate-500 hover:text-slate-700">
           선택 취소
         </button>
-      ) : (
-        <span className="text-[11px] text-slate-400">항목을 선택해 작업을 시작하세요</span>
-      )}
+      ) : null}
       {rightSlot && (
         <>
           <span className="text-slate-300">|</span>

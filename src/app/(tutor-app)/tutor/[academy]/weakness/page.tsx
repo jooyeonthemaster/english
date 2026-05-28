@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { AlertTriangle, Gauge, ListChecks, SpellCheck2, Target } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireTutorRouteSession } from "@/lib/tutor/route-auth";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 const rows = [
   ["이해", "scoreInterpret"],
@@ -43,7 +45,11 @@ export default async function TutorWeaknessPage({
   params: Promise<{ academy: string }>;
 }) {
   const { academy: rawAcademy } = await params;
-  const { session } = await requireTutorRouteSession(rawAcademy);
+  const { academy, session } = await requireTutorRouteSession(rawAcademy);
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref={`/tutor/${academy}/study`} />;
+  }
+
   const snapshot = await prisma.tutorWeaknessSnapshot.findFirst({
     where: { academyId: session.academyId, studentId: session.studentId },
     orderBy: { computedAt: "desc" },

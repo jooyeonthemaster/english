@@ -2,6 +2,8 @@ import Link from "next/link";
 import { BookOpenCheck, ChevronRight, RotateCcw } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireTutorRouteSession } from "@/lib/tutor/route-auth";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { labelTutorActivityType, labelTutorMode, studentActivityTitle } from "@/lib/tutor/activity-labels";
 
 export default async function TutorReviewPage({
@@ -11,6 +13,10 @@ export default async function TutorReviewPage({
 }) {
   const { academy: rawAcademy } = await params;
   const { academy, session } = await requireTutorRouteSession(rawAcademy);
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref={`/tutor/${academy}/study`} />;
+  }
+
   const wrongItems = await prisma.tutorAttemptItem.findMany({
     where: { academyId: session.academyId, attempt: { studentId: session.studentId }, isCorrect: false },
     orderBy: { createdAt: "desc" },

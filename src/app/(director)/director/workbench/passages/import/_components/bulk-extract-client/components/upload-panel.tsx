@@ -5,13 +5,13 @@ import {
   Database,
   FileText,
   Keyboard,
-  Layers,
   Loader2,
   PlayCircle,
   Trash2,
   UploadCloud,
 } from "lucide-react";
 
+import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
 import { MAX_PAGES_PER_JOB, MAX_PDF_BYTES } from "@/lib/extraction/constants";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
@@ -85,14 +85,14 @@ export function UploadPanel({
       : "작업 중";
 
   return (
-    <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <section className="flex min-h-0 flex-col overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
         <div>
-          <h2 className="text-sm font-bold text-slate-950">자료 입력</h2>
-          <p className="mt-1 text-xs text-slate-500">{modeDescription}</p>
+          <h2 className="text-[13px] font-bold text-slate-950">자료 입력</h2>
+          <p className="mt-1 text-[11px] text-slate-500">{modeDescription}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-md bg-slate-100 p-0.5 text-xs font-bold text-slate-500">
+          <div className="inline-flex rounded-md bg-slate-100 p-0.5 text-[11px] font-bold text-slate-500">
             <button
               type="button"
               onClick={() => onInputModeChange("file")}
@@ -125,7 +125,7 @@ export function UploadPanel({
               type="button"
               onClick={onClear}
               disabled={busy}
-              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 className="size-3.5" aria-hidden="true" />
               비우기
@@ -136,7 +136,7 @@ export function UploadPanel({
               type="button"
               onClick={onClearText}
               disabled={busy}
-              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 className="size-3.5" aria-hidden="true" />
               비우기
@@ -147,41 +147,19 @@ export function UploadPanel({
 
       {inputMode === "text" ? (
         <div className="flex min-h-0 flex-1 flex-col gap-3 p-3.5">
-          <div className="grid gap-3 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-            <label className="block">
-              <span className="text-xs font-bold text-slate-700">제목</span>
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+            <div className="mb-2 flex items-center gap-2">
               <input
                 value={textTitle}
                 onChange={(event) => onTextTitleChange(event.target.value)}
                 disabled={busy}
-                placeholder="예: 222.jpg 텍스트 입력"
-                className="mt-1.5 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+                placeholder="제목을 입력하세요. 예: 2026 고1 3월 모의고사"
+                aria-label="제목"
+                className="h-9 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 text-[13px] text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
               />
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              <UploadMetaChip icon={<Keyboard className="size-3.5" aria-hidden="true" />}>
-                직접 입력
-              </UploadMetaChip>
-              <UploadMetaChip icon={<FileText className="size-3.5" aria-hidden="true" />}>
-                문제 형식 가능
-              </UploadMetaChip>
-              <UploadMetaChip icon={<Database className="size-3.5" aria-hidden="true" />}>
-                복원 적용
-              </UploadMetaChip>
-            </div>
-          </div>
-
-          <div className="flex min-h-[360px] flex-1 flex-col rounded-lg border border-slate-200 bg-slate-50/70 p-3">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <div>
-                <div className="text-xs font-bold text-slate-900">텍스트 원문</div>
-                <p className="mt-0.5 text-xs text-slate-500">
-                  지문만 붙여넣거나 보기와 선택지가 포함된 문제 텍스트를 그대로 붙여넣으세요.
-                </p>
-              </div>
               <span
                 className={
-                  "shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ring-1 " +
+                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 " +
                   (canStartText
                     ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
                     : "bg-white text-slate-500 ring-slate-200")
@@ -194,31 +172,17 @@ export function UploadPanel({
               value={textValue}
               onChange={(event) => onTextValueChange(event.target.value)}
               disabled={busy}
-              placeholder={`Soft drink companies attract consumers by adding bright colors...\n\n(A) Also, the artificial flavor...\n(B) Studies have shown...\n(C) They are artificial chemicals...`}
-              className="min-h-[280px] flex-1 resize-none rounded-md border border-dashed border-slate-300 bg-white px-4 py-3 text-sm leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+              placeholder={`본문을 입력하세요. 최소 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력하면 시작할 수 있습니다.\n\n예: Soft drink companies attract consumers by adding bright colors...\n\n(A) Also, the artificial flavor...\n(B) Studies have shown...\n(C) They are artificial chemicals...`}
+              aria-label="본문"
+              className="min-h-0 flex-1 resize-none rounded-md border border-dashed border-slate-300 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
             />
-          </div>
-
-          <div className="grid gap-2 rounded-lg border border-blue-100 bg-blue-50/50 p-3 text-xs leading-5 text-blue-800 md:grid-cols-3">
-            <div>
-              <div className="font-bold">입력</div>
-              <p className="mt-0.5">붙여넣은 텍스트를 줄바꿈까지 그대로 보존합니다.</p>
-            </div>
-            <div>
-              <div className="font-bold">복원</div>
-              <p className="mt-0.5">문제 형식이면 본문을 기준으로 M1 복원을 실행합니다.</p>
-            </div>
-            <div>
-              <div className="font-bold">검수</div>
-              <p className="mt-0.5">완료된 결과는 자료 관리에서 비교하고 저장합니다.</p>
-            </div>
           </div>
 
           <button
             type="button"
             onClick={onStartText}
             disabled={busy || !canStartText}
-            className="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-blue-600 px-5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="inline-flex h-10 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-blue-600 px-5 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
           >
             {busy ? (
               <>
@@ -259,7 +223,7 @@ export function UploadPanel({
             if (event.dataTransfer.files.length > 0) onFiles(event.dataTransfer.files);
           }}
           className={
-            "flex min-h-[220px] flex-1 cursor-pointer flex-col rounded-lg border-2 border-dashed transition-colors " +
+            "flex min-h-0 flex-1 cursor-pointer flex-col overflow-hidden rounded-lg border-2 border-dashed transition-colors " +
             (dragActive
               ? "border-sky-500 bg-sky-50"
               : slots.length > 0
@@ -283,17 +247,17 @@ export function UploadPanel({
               <span className="flex size-12 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
                 <UploadCloud className="size-6" strokeWidth={1.8} aria-hidden="true" />
               </span>
-              <div className="mt-3 text-sm font-bold text-slate-900">
+              <div className="mt-3 text-[13px] font-bold text-slate-900">
                 파일을 끌어놓거나 클릭해서 추가
               </div>
-              <div className="mt-1 text-xs text-slate-500">
+              <div className="mt-1 text-[11px] text-slate-500">
                 여러 이미지와 PDF 페이지를 순서대로 등록합니다.
               </div>
               <div className="mt-4 flex flex-wrap justify-center gap-2">
                 <UploadMetaChip icon={<FileText className="size-3.5" aria-hidden="true" />}>
                   PDF, PNG, JPG, WebP
                 </UploadMetaChip>
-                <UploadMetaChip icon={<Layers className="size-3.5" aria-hidden="true" />}>
+                <UploadMetaChip icon={<ExtractionTaskListIcon className="size-3.5" aria-hidden="true" />}>
                   최대 {MAX_PAGES_PER_JOB}페이지
                 </UploadMetaChip>
                 <UploadMetaChip icon={<Database className="size-3.5" aria-hidden="true" />}>
@@ -304,13 +268,10 @@ export function UploadPanel({
           ) : (
             <div className="flex min-h-0 flex-1 flex-col gap-3 p-3">
               <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center gap-2 text-[11px] text-slate-500">
                   <UploadCloud className="size-3.5 text-blue-500" aria-hidden="true" />
                   <span>파일을 더 끌어놓거나, 썸네일을 드래그해 순서를 바꿀 수 있습니다.</span>
                 </div>
-                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 ring-1 ring-blue-100">
-                  {slots.length}페이지
-                </span>
               </div>
               <div className="flex min-h-0 flex-1 items-stretch gap-2 overflow-x-auto pb-2">
                 {slots.map((slot, index) => {
@@ -402,7 +363,7 @@ export function UploadPanel({
           onClick={onStart}
           disabled={busy || slots.length === 0}
           className={
-            "relative inline-flex h-10 w-full items-center justify-center overflow-hidden rounded-md border px-5 text-sm font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
+            "relative inline-flex h-10 w-full shrink-0 items-center justify-center overflow-hidden rounded-md border px-5 text-[13px] font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
             (busy
               ? "cursor-wait border-blue-200 bg-white text-blue-700"
               : slots.length === 0

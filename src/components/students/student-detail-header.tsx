@@ -12,6 +12,7 @@ import {
   getLevelFromXp,
 } from "@/lib/utils";
 import { STUDENT_STATUSES } from "@/lib/constants";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { updateStudentStatus } from "@/actions/students";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -50,6 +51,7 @@ export function StudentDetailHeader({
 
   const statusInfo = STUDENT_STATUSES.find((s) => s.value === student.status);
   const levelInfo = getLevelFromXp(stats.xp);
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   function handleStatusChange(newStatus: string) {
     startTransition(async () => {
@@ -158,7 +160,12 @@ export function StudentDetailHeader({
       </div>
 
       {/* ===== Quick Stats ===== */}
-      <div className="grid grid-cols-4 gap-4 mt-6">
+      <div
+        className={cn(
+          "grid gap-4 mt-6",
+          showResults ? "grid-cols-4" : "grid-cols-2"
+        )}
+      >
         <div className="flex items-center gap-3 rounded-lg border border-[#F2F4F6] bg-[#F7F8FA] p-3">
           <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-100">
             <CheckCircle className="size-5 text-emerald-600" />
@@ -170,22 +177,24 @@ export function StudentDetailHeader({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3 rounded-lg border border-[#F2F4F6] bg-[#F7F8FA] p-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-blue-100">
-            <TrendingUp className="size-5 text-blue-600" />
+        {showResults && (
+          <div className="flex items-center gap-3 rounded-lg border border-[#F2F4F6] bg-[#F7F8FA] p-3">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-blue-100">
+              <TrendingUp className="size-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-xs text-[#8B95A1]">평균 점수</p>
+              <p
+                className={cn(
+                  "text-lg font-bold",
+                  getScoreColor(stats.averageScore)
+                )}
+              >
+                {stats.averageScore > 0 ? `${stats.averageScore}점` : "-"}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs text-[#8B95A1]">평균 점수</p>
-            <p
-              className={cn(
-                "text-lg font-bold",
-                getScoreColor(stats.averageScore)
-              )}
-            >
-              {stats.averageScore > 0 ? `${stats.averageScore}점` : "-"}
-            </p>
-          </div>
-        </div>
+        )}
         <div className="flex items-center gap-3 rounded-lg border border-[#F2F4F6] bg-[#F7F8FA] p-3">
           <div className="flex size-10 items-center justify-center rounded-lg bg-orange-100">
             <Flame className="size-5 text-orange-600" />
@@ -195,20 +204,22 @@ export function StudentDetailHeader({
             <p className="text-lg font-bold text-[#191F28]">{stats.streak}일</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 rounded-lg border border-[#F2F4F6] bg-[#F7F8FA] p-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-purple-100">
-            <Zap className="size-5 text-purple-600" />
-          </div>
-          <div>
-            <p className="text-xs text-[#8B95A1]">
-              Lv.{levelInfo.level} {levelInfo.title}
-            </p>
-            <div className="flex items-center gap-2">
-              <p className="text-lg font-bold text-[#191F28]">{stats.xp} XP</p>
+        {showResults && (
+          <div className="flex items-center gap-3 rounded-lg border border-[#F2F4F6] bg-[#F7F8FA] p-3">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-purple-100">
+              <Zap className="size-5 text-purple-600" />
             </div>
-            <Progress value={levelInfo.progress} className="h-1 mt-0.5" />
+            <div>
+              <p className="text-xs text-[#8B95A1]">
+                Lv.{levelInfo.level} {levelInfo.title}
+              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-bold text-[#191F28]">{stats.xp} XP</p>
+              </div>
+              <Progress value={levelInfo.progress} className="h-1 mt-0.5" />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

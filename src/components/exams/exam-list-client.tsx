@@ -209,7 +209,7 @@ export function ExamListClient({
         return;
       }
       if (result.deleted === result.requested) {
-        toast.success(`${result.deleted}개 시험을 삭제했습니다.`);
+        toast.success(`${result.deleted}부의 시험을 삭제했습니다.`);
       } else if (result.deleted === 0) {
         // Only DRAFT exams are deletable — surface that as a more helpful
         // message than the generic "no rows" path.
@@ -222,10 +222,10 @@ export function ExamListClient({
         const missing = result.requested - result.deleted;
         const reason =
           result.skippedNonDraft > 0
-            ? `(${result.skippedNonDraft}개는 초안이 아니어서 제외됨)`
+            ? `(${result.skippedNonDraft}부는 초안이 아니어서 제외됨)`
             : "";
         toast.warning(
-          `${result.deleted}개 삭제됨, ${missing}개 누락 ${reason}`.trim(),
+          `${result.deleted}부 삭제됨, ${missing}부 누락 ${reason}`.trim(),
         );
       }
       // Hide only the ids that the server confirmed it could delete. If the
@@ -355,6 +355,7 @@ export function ExamListClient({
                 title: "시험 관리",
                 totalCount,
                 itemLabel: "시험",
+                itemUnit: "부",
               }}
               selectionBar={
                 <SelectionToolbar
@@ -367,6 +368,7 @@ export function ExamListClient({
                   activeFolder={folder.activeFolder}
                   onRemoveFromFolder={onRemoveFromFolder}
                   extraActions={addToFolderAction}
+                  itemUnit="부"
                 />
               }
             />
@@ -377,7 +379,7 @@ export function ExamListClient({
                 <h3 className="text-[13px] font-semibold text-slate-600">
                   시험지
                   <span className="ml-1.5 text-[11px] text-slate-400 font-normal">
-                    {displayedExams.length}개
+                    {displayedExams.length}부
                   </span>
                 </h3>
               </div>
@@ -464,7 +466,7 @@ export function ExamListClient({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              선택한 시험 {selection.selectedIds.size}개를 삭제하시겠습니까?
+              선택한 시험 {selection.selectedIds.size}부를 삭제하시겠습니까?
             </AlertDialogTitle>
             <AlertDialogDescription>
               이 작업은 되돌릴 수 없습니다. 초안 상태의 시험만 삭제되며,

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, AlertTriangle, TrendingUp, ChevronDown, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
 import { getLearningAnalytics } from "@/actions/learning-analytics";
 import { SUBTYPE_TO_CATEGORY } from "@/lib/learning-constants";
 import { getWrongAnswerDashboard } from "@/actions/student-wrong-answers";
@@ -38,7 +40,14 @@ interface WrongDashboard {
 }
 
 export default function AnalyticsPage() {
-  const router = useRouter();
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/student/learn" />;
+  }
+
+  return <AnalyticsPageContent />;
+}
+
+function AnalyticsPageContent() {
   const [data, setData] = useState<LearningAnalytics | null>(null);
   const [wrongData, setWrongData] = useState<WrongDashboard | null>(null);
   const [loading, setLoading] = useState(true);

@@ -1,3 +1,5 @@
+import type { PaperSize } from "./types";
+
 export const TYPE_LABELS: Record<string, string> = {
   MULTIPLE_CHOICE: "객관식",
   SHORT_ANSWER: "주관식",
@@ -41,6 +43,31 @@ export const DEFAULT_INSTRUCTIONS =
 
 export const PREVIEW_PAGE_WIDTH = 760;
 export const A4_HEIGHT_RATIO = 297 / 210;
+export const PAPER_SIZE_SPECS: Record<
+  PaperSize,
+  {
+    label: string;
+    widthMm: number;
+    heightMm: number;
+    heightRatio: number;
+    widthRatio: number;
+  }
+> = {
+  A4: {
+    label: "A4",
+    widthMm: 210,
+    heightMm: 297,
+    heightRatio: 297 / 210,
+    widthRatio: 1,
+  },
+  B4: {
+    label: "B4",
+    widthMm: 257,
+    heightMm: 364,
+    heightRatio: 364 / 257,
+    widthRatio: 257 / 210,
+  },
+};
 export const TWO_COLUMN_GAP = 32;
 export const GROUP_GAP = 16;
 export const ITEM_GAP = 12;

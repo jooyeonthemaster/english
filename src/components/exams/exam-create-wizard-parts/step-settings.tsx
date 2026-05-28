@@ -1,6 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 // ---------------------------------------------------------------------------
 // STEP 3: 시험 설정 (온라인 시험 전용)
@@ -25,6 +26,8 @@ export function StepSettings({
   showResults,
   setShowResults,
 }: StepSettingsProps) {
+  const showResultSettings = FEATURE_FLAGS.SHOW_USER_RESULTS;
+
   return (
     <div className="space-y-5">
       <h2 className="text-lg font-semibold text-[#191F28]">시험 설정</h2>
@@ -62,18 +65,20 @@ export function StepSettings({
             </div>
           </label>
 
-          <label className="flex items-center gap-3 rounded-lg border border-[#E5E8EB] p-4 cursor-pointer hover:bg-[#F7F8FA]">
-            <Checkbox
-              checked={showResults}
-              onCheckedChange={(v) => setShowResults(v as boolean)}
-            />
-            <div>
-              <p className="text-sm font-medium text-[#191F28]">결과 즉시 공개</p>
-              <p className="text-xs text-[#8B95A1]">
-                제출 후 바로 점수와 정답을 확인할 수 있습니다.
-              </p>
-            </div>
-          </label>
+          {showResultSettings && (
+            <label className="flex items-center gap-3 rounded-lg border border-[#E5E8EB] p-4 cursor-pointer hover:bg-[#F7F8FA]">
+              <Checkbox
+                checked={showResults}
+                onCheckedChange={(v) => setShowResults(v as boolean)}
+              />
+              <div>
+                <p className="text-sm font-medium text-[#191F28]">결과 즉시 공개</p>
+                <p className="text-xs text-[#8B95A1]">
+                  제출 후 바로 점수와 정답을 확인할 수 있습니다.
+                </p>
+              </div>
+            </label>
+          )}
         </div>
       )}
     </div>

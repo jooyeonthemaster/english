@@ -6,7 +6,6 @@
 import type { BlockNode, BorderSpec, RunNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE, SUBTYPE_LABELS } from "../tokens";
-import { parseFormattedToRuns } from "../format";
 import { renderOptions, type ParsedOption } from "./options";
 import {
   renderBlanks,
@@ -29,7 +28,7 @@ import { renderAnswerBlock } from "./answer";
 import { parseQuestionSections, questionTextContainsPassage } from "@/app/api/exams/[examId]/export-docx/_lib/parse-question-sections";
 import {
   formatSentenceInsertPassageMarkers,
-  splitSentenceInsertGivenBlock,
+  optionOrdinalLabel,
 } from "@/components/exams/paper-builder/option-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
@@ -41,6 +40,7 @@ const GIVEN_BORDER: BorderSpec = {
 };
 
 export interface BuilderItemResolved {
+  localId?: string;
   questionId: string;
   orderNum?: number;
   points?: number;
@@ -52,6 +52,8 @@ export interface BuilderItemResolved {
   options?: ParsedOption[];
   correctAnswer?: string;
   answerSpaceLines?: number;
+  objectiveAnswerSlots?: number;
+  objectiveAnswerTexts?: string[];
   sectionTitle?: string;
   teacherNote?: string;
   sourceQuestion: ExamQuestionData["question"];
@@ -220,8 +222,49 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     result.push(...renderOptions({ options, subType, compact, contentWidthHpu }));
   }
 
-  // 5. 답란 (옵션 없는 주관식)
-  if (showAnswerSpace && options.length === 0) {
+  // 5. 객관식 추가 선지
+  if (
+    showAnswerSpace &&
+    options.length > 0 &&
+    (item.objectiveAnswerSlots ?? 0) > 0
+  ) {
+    const slots = Math.max(1, Math.min(10, item.objectiveAnswerSlots ?? 0));
+    const objectiveAnswerTexts = item.objectiveAnswerTexts || [];
+    for (let i = 0; i < slots; i += 1) {
+      const optionIndex = options.length + i;
+      const displayText = objectiveAnswerTexts[i]?.trim() || "";
+      result.push({
+        kind: "p",
+        style: {
+          leftMargin: 360,
+          indentFirst: -280,
+          spaceAfter: 40,
+          lineSpacingPct: 145,
+        },
+        runs: [
+          txt(optionOrdinalLabel(optionIndex), {
+            size: bodySize,
+            bold: true,
+            color: COLORS.darkGray,
+          }),
+          txt("  ", { size: bodySize }),
+          displayText
+            ? txt(displayText, {
+                size: bodySize,
+                color: COLORS.darkGray,
+              })
+            : txt("                                      ", {
+                size: bodySize,
+                underline: "SOLID",
+                color: COLORS.darkGray,
+              }),
+        ],
+      });
+    }
+  }
+
+  // 5. 서술형/주관식 답란
+  if (showAnswerSpace && (item.answerSpaceLines ?? 0) > 0) {
     const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 3));
     for (let i = 0; i < lines; i++) {
       result.push({

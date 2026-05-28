@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { Grid2X2, Grid3X3, List } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
@@ -10,6 +11,63 @@ import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
 import { ViewToggleButton } from "./view-toggle-button";
+
+const DRAG_TYPE = "draft" as const;
+const BULK_DRAG_TYPE = "draft-bulk" as const;
+
+interface FolderDropZoneProps {
+  children: ReactNode;
+  onDrop: (itemId: string | string[], copy: boolean) => void;
+}
+
+/**
+ * Wraps the populated draft grid in a drop target so users can drag drafts
+ * from elsewhere (e.g., the right-side preview drawer) into the currently
+ * open folder, even when it already contains items.
+ *
+ * Cards dragged from *within* the same grid still bubble their own drag
+ * payload here, but routing the drop back through `onDragToFolder(folderId)`
+ * is a no-op for items that are already in the folder, so it stays safe.
+ */
+function FolderDropZone({ children, onDrop }: FolderDropZoneProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    return dropTargetForElements({
+      element: el,
+      canDrop: ({ source }) =>
+        source.data.type === DRAG_TYPE || source.data.type === BULK_DRAG_TYPE,
+      onDragEnter: () => setIsDragOver(true),
+      onDragLeave: () => setIsDragOver(false),
+      onDrop: ({ source }) => {
+        setIsDragOver(false);
+        const itemId =
+          source.data.type === BULK_DRAG_TYPE
+            ? (source.data.draftIds as string[])
+            : (source.data.draftId as string);
+        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
+        onDrop(itemId, isCopy);
+      },
+    });
+  }, [onDrop]);
+
+  return (
+    <div
+      ref={ref}
+      className={
+        "rounded-xl motion-safe:transition-colors " +
+        (isDragOver
+          ? "bg-blue-50/40 outline outline-2 outline-dashed outline-blue-300/70"
+          : "")
+      }
+    >
+      {children}
+    </div>
+  );
+}
 
 export type GridCols = "grid3" | "grid2" | "list";
 
@@ -51,6 +109,9 @@ interface DraftGridProps {
   // Job rename (jobId, newName | null)
   onRenameJob: (jobId: string, name: string | null) => void;
 
+  // Draft title rename (draftId, newTitle | null)
+  onRenameDraft: (draftId: string, title: string | null) => void;
+
   // SourceMaterial (시험지) rename (sourceMaterialId, newTitle)
   onRenameSourceMaterial: (sourceMaterialId: string, title: string) => void;
 
@@ -72,6 +133,18 @@ interface DraftGridProps {
 
   /** Bulk selection toolbar (select all, move/copy, rerestore, promote, delete). */
   selectionToolbar?: ReactNode;
+
+  /** Pixel offset for the sticky filter header — accounts for the job list
+   *  and folder header pinned above. Defaults to 0 (stick to viewport top). */
+  stickyTop?: number;
+
+  /** When the current folder view is empty, dropping drafts onto the empty
+   *  area calls this. Wires the empty-folder state into the same drag/drop
+   *  system the folder chips use. Only meaningful when `inFolder` is true. */
+  onDropDraftsIntoCurrentFolder?: (
+    itemId: string | string[],
+    copy: boolean,
+  ) => void;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
@@ -100,12 +173,15 @@ export function DraftGrid({
   totalDraftCount,
   onSelectJob,
   onRenameJob,
+  onRenameDraft,
   onRenameSourceMaterial,
   groupIndexBySourceMaterialId,
   dupCountById,
   filedDraftIds,
   filtersToolbar,
   selectionToolbar,
+  stickyTop = 0,
+  onDropDraftsIntoCurrentFolder,
 }: DraftGridProps) {
   // The per-job card row was lifted to the page header above the folder
   // section so it stays visible regardless of folder navigation. Clicking
@@ -115,6 +191,8 @@ export function DraftGrid({
   void totalDraftCount;
   void onSelectJob;
   void onRenameJob;
+  void dupCountById;
+  void filedDraftIds;
 
   const draftGroups = useMemo(() => {
     const map = new Map<string, M1PassageDraftWithJob[]>();
@@ -129,7 +207,10 @@ export function DraftGrid({
     }));
   }, [drafts]);
 
-  const showGroupHeaders = draftGroups.length > 1;
+  // Inside a folder, render drafts as flat individual cards (matching the
+  // right-side drawer style). 시험지 grouping is only used in the root /
+  // "전체 자료" view, where it helps distinguish multiple source materials.
+  const showGroupHeaders = !inFolder && draftGroups.length > 1;
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const toggleGroup = useCallback((key: string) => {
@@ -151,52 +232,49 @@ export function DraftGrid({
     }
   }, [allExpanded, draftGroups]);
   return (
-    <section className="min-w-0 pb-1 pt-2">
-      <div className="mb-2 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-        <h3 className="shrink-0 text-sm font-bold tracking-tight text-slate-700">
-          자료
-          <span className="ml-1.5 text-xs font-normal tabular-nums text-slate-400">
-            {drafts.length}개
-          </span>
-        </h3>
-        {filtersToolbar ? (
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-            {filtersToolbar}
+    <section className="min-w-0 pb-1">
+      {/* Header + (optional) selection toolbar stick to the top of the page
+          scroll container as one block, offset below the job-list + folder
+          headers that are pinned above. Negative margin + matching padding
+          extend the sticky background flush to the scroll container edges so
+          drafts scrolling underneath don't bleed through at the sides. */}
+      <div
+        style={{ top: stickyTop }}
+        className="sticky z-20 -mx-4 bg-slate-50/95 px-4 pt-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/85 sm:-mx-5 sm:px-5"
+      >
+        <div className="mb-2 overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
+          <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+            {selectionToolbar ? selectionToolbar : null}
+            <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
+              {filtersToolbar}
+              <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
+                <ViewToggleButton
+                  active={gridCols === "grid3"}
+                  label="3열 보기"
+                  onClick={() => onGridColsChange("grid3")}
+                >
+                  <Grid3X3 className="size-4" />
+                </ViewToggleButton>
+                <ViewToggleButton
+                  active={gridCols === "grid2"}
+                  label="2열 보기"
+                  onClick={() => onGridColsChange("grid2")}
+                  middle
+                >
+                  <Grid2X2 className="size-4" />
+                </ViewToggleButton>
+                <ViewToggleButton
+                  active={gridCols === "list"}
+                  label="목록 보기"
+                  onClick={() => onGridColsChange("list")}
+                >
+                  <List className="size-4" />
+                </ViewToggleButton>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="flex-1" />
-        )}
-        <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-          <ViewToggleButton
-            active={gridCols === "grid3"}
-            label="3열 보기"
-            onClick={() => onGridColsChange("grid3")}
-          >
-            <Grid3X3 className="size-4" />
-          </ViewToggleButton>
-          <ViewToggleButton
-            active={gridCols === "grid2"}
-            label="2열 보기"
-            onClick={() => onGridColsChange("grid2")}
-            middle
-          >
-            <Grid2X2 className="size-4" />
-          </ViewToggleButton>
-          <ViewToggleButton
-            active={gridCols === "list"}
-            label="목록 보기"
-            onClick={() => onGridColsChange("list")}
-          >
-            <List className="size-4" />
-          </ViewToggleButton>
         </div>
       </div>
-
-      {selectionToolbar ? (
-        <div className="sticky top-0 z-20 -mx-1 mb-2 overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
-          {selectionToolbar}
-        </div>
-      ) : null}
 
       <div className="pr-1">
         {loading ? (
@@ -240,6 +318,9 @@ export function DraftGrid({
                     : "no-drafts"
             }
             onResetFilters={onResetFilters}
+            onDropDrafts={
+              inFolder ? onDropDraftsIntoCurrentFolder : undefined
+            }
           />
         ) : showGroupHeaders ? (
           <div className="pb-2">
@@ -325,12 +406,7 @@ export function DraftGrid({
                         checked={checkedIds.has(draft.id)}
                         onClick={() => onSelectDraft(draft.id)}
                         onToggleCheck={() => onToggleCheck(draft.id)}
-                        dupCount={dupCountById?.get(draft.id) ?? 0}
-                        unfiled={
-                          filedDraftIds
-                            ? !filedDraftIds.has(draft.id)
-                            : undefined
-                        }
+                        onTitleChange={onRenameDraft}
                       />
                     ))}
                   </div>
@@ -339,30 +415,36 @@ export function DraftGrid({
             })}
             </div>
           </div>
-        ) : (
-          <div className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}>
-            {drafts.map((draft, index) => (
-              <DraftCard
-                key={draft.id}
-                draft={draft}
-                index={index}
-                selected={false}
-                active={selectedDraftId === draft.id}
-                recentlyViewed={
-                  selectedDraftId !== draft.id &&
-                  lastViewedDraftId === draft.id
-                }
-                checked={checkedIds.has(draft.id)}
-                onClick={() => onSelectDraft(draft.id)}
-                onToggleCheck={() => onToggleCheck(draft.id)}
-                dupCount={dupCountById?.get(draft.id) ?? 0}
-                unfiled={
-                  filedDraftIds ? !filedDraftIds.has(draft.id) : undefined
-                }
-              />
-            ))}
-          </div>
-        )}
+        ) : (() => {
+          const flatGrid = (
+            <div className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}>
+              {drafts.map((draft, index) => (
+                <DraftCard
+                  key={draft.id}
+                  draft={draft}
+                  index={index}
+                  selected={false}
+                  active={selectedDraftId === draft.id}
+                  recentlyViewed={
+                    selectedDraftId !== draft.id &&
+                    lastViewedDraftId === draft.id
+                  }
+                  checked={checkedIds.has(draft.id)}
+                  onClick={() => onSelectDraft(draft.id)}
+                  onToggleCheck={() => onToggleCheck(draft.id)}
+                  onTitleChange={onRenameDraft}
+                />
+              ))}
+            </div>
+          );
+          return inFolder && onDropDraftsIntoCurrentFolder ? (
+            <FolderDropZone onDrop={onDropDraftsIntoCurrentFolder}>
+              {flatGrid}
+            </FolderDropZone>
+          ) : (
+            flatGrid
+          );
+        })()}
       </div>
     </section>
   );

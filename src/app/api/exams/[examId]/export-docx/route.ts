@@ -17,7 +17,12 @@ function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;
   try {
     const parsed = JSON.parse(settings) as BuilderSettings;
-    if (parsed?.source !== "exam-paper-builder-v1") return null;
+    if (
+      parsed?.source !== "exam-paper-builder-v1" &&
+      parsed?.source !== "exam-paper-builder-v2"
+    ) {
+      return null;
+    }
     return parsed;
   } catch {
     return null;

@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Check, Trash2 } from "lucide-react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Trash2 } from "lucide-react";
 
 interface DraftSelectionToolbarProps {
   selectedCount: number;
@@ -29,6 +29,16 @@ export function DraftSelectionToolbar({
   primaryAction,
 }: DraftSelectionToolbarProps) {
   const hasSelection = selectedCount > 0;
+  const checkboxRef = useRef<HTMLInputElement>(null);
+
+  // Indeterminate state can't be expressed as a React prop — set it
+  // imperatively whenever the partial-selection condition flips.
+  useEffect(() => {
+    if (checkboxRef.current) {
+      checkboxRef.current.indeterminate = hasSelection && !isAllSelected;
+    }
+  }, [hasSelection, isAllSelected]);
+
   const chrome = embedded
     ? "transition-colors"
     : "rounded-lg border shadow-sm transition-colors " +
@@ -37,31 +47,33 @@ export function DraftSelectionToolbar({
         : "border-slate-200 bg-slate-50/80");
 
   return (
-    <div className={`flex min-h-9 shrink-0 flex-wrap items-center gap-x-2.5 gap-y-1.5 px-3 py-1 ${chrome}`}>
-      <span
-        className={
-          "flex w-[82px] shrink-0 items-center gap-1.5 text-[12px] font-medium tabular-nums " +
-          (hasSelection ? "text-blue-700" : "text-slate-500")
-        }
-      >
-        <Check className="h-4 w-4" />
-        {selectedCount}개 선택
-      </span>
-      <span className="text-slate-300">|</span>
-      <button
-        type="button"
-        onClick={onSelectAll}
+    <div className={`flex min-h-9 shrink-0 ${embedded ? "" : "flex-wrap"} items-center gap-x-1.5 gap-y-1.5 px-2 py-1 ${chrome}`}>
+      <input
+        ref={checkboxRef}
+        type="checkbox"
+        checked={isAllSelected && hasSelection}
+        onChange={() => (hasSelection ? onClearSelection() : onSelectAll())}
         disabled={totalCount === 0}
-        className={
-          "cursor-pointer text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-          (hasSelection
-            ? "text-blue-600 hover:text-blue-700"
-            : "text-slate-600 hover:text-slate-800")
-        }
-      >
-        {isAllSelected && hasSelection ? "선택 해제" : "전체 선택"}
-      </button>
-      <span className="text-slate-300">|</span>
+        title={embedded ? `${selectedCount}개 선택` : undefined}
+        aria-label={hasSelection ? "선택 해제" : "전체 선택"}
+        className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+      />
+      {embedded ? null : (
+        <span
+          className={
+            "text-[12px] font-medium tabular-nums " +
+            (hasSelection ? "text-blue-700" : "text-slate-500")
+          }
+        >
+          {selectedCount}개 선택
+        </span>
+      )}
+      {embedded ? null : <span className="text-slate-300">|</span>}
+
+      {primaryAction ? primaryAction : null}
+      {primaryAction && !embedded ? (
+        <span className="text-slate-300">|</span>
+      ) : null}
 
       <div
         className={
@@ -83,27 +95,6 @@ export function DraftSelectionToolbar({
           </button>
         ) : null}
       </div>
-
-      <div className="flex-1" />
-      {hasSelection ? (
-        <button
-          type="button"
-          onClick={onClearSelection}
-          className="cursor-pointer text-[11px] text-slate-500 transition-colors hover:text-slate-700"
-        >
-          선택 취소
-        </button>
-      ) : (
-        <span className="text-[11px] text-slate-400">
-          항목을 선택해 작업을 시작하세요
-        </span>
-      )}
-      {primaryAction ? (
-        <>
-          <span className="text-slate-300">|</span>
-          {primaryAction}
-        </>
-      ) : null}
     </div>
   );
 }

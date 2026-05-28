@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return errorResponse(
       "INVALID_PAYLOAD",
-      "지문 등록 요청이 올바르지 않습니다.",
+      "검수 처리 요청이 올바르지 않습니다.",
       400,
       parsed.error.issues,
     );

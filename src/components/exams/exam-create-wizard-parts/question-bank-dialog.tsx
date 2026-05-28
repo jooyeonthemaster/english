@@ -129,7 +129,7 @@ export function QuestionBankDialog({
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-[#E5E8EB]">
-          <span className="text-sm text-[#8B95A1]">{selectedIds.size}개 선택됨</span>
+          <span className="text-sm text-[#8B95A1]">{selectedIds.size}문항 선택됨</span>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} className="border-[#E5E8EB]">
               취소

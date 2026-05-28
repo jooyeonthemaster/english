@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn, formatPercent, formatKoreanDate } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { ParentDashboardData } from "@/actions/parent";
 
 function ChildSwitcher({
@@ -164,14 +165,16 @@ export function ParentHomeClient({ data }: { data: ParentDashboardData }) {
           color="text-blue-600"
           bgColor="bg-blue-50/70"
         />
-        <SummaryCard
-          icon={Award}
-          label="평균 점수"
-          value={dashboard.averageScore > 0 ? `${dashboard.averageScore}점` : "-"}
-          color="text-emerald-600"
-          bgColor="bg-emerald-50/70"
-          href="/parent/grades"
-        />
+        {FEATURE_FLAGS.SHOW_USER_RESULTS && (
+          <SummaryCard
+            icon={Award}
+            label="평균 점수"
+            value={dashboard.averageScore > 0 ? `${dashboard.averageScore}점` : "-"}
+            color="text-emerald-600"
+            bgColor="bg-emerald-50/70"
+            href="/parent/grades"
+          />
+        )}
         <SummaryCard
           icon={ClipboardCheck}
           label="과제 완료"
@@ -242,14 +245,16 @@ export function ParentHomeClient({ data }: { data: ParentDashboardData }) {
       </section>
 
       {/* Weekly Summary */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5">
-        <h2 className="text-sm font-semibold text-gray-700 mb-2">
-          이번 달 요약
-        </h2>
-        <p className="text-sm text-gray-600 leading-relaxed">
-          {dashboard.weeklySummary}
-        </p>
-      </section>
+      {FEATURE_FLAGS.SHOW_USER_RESULTS && (
+        <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5">
+          <h2 className="text-sm font-semibold text-gray-700 mb-2">
+            이번 달 요약
+          </h2>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            {dashboard.weeklySummary}
+          </p>
+        </section>
+      )}
     </div>
   );
 }

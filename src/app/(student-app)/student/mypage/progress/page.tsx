@@ -16,6 +16,8 @@ import {
 } from "recharts";
 import { TrendingUp, Zap, BookOpen, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
 import { getStudentProgress } from "@/actions/student-app-progress";
 
 // ---------------------------------------------------------------------------
@@ -60,6 +62,14 @@ function CustomTooltip({
 // Component
 // ---------------------------------------------------------------------------
 export default function ProgressPage() {
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/student/mypage" />;
+  }
+
+  return <ProgressPageContent />;
+}
+
+function ProgressPageContent() {
   const [data, setData] = useState<ProgressData | null>(null);
   const [loading, setLoading] = useState(true);
 

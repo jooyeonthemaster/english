@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
 
 export interface ExamPaperBuilderItemInput {
+  localId?: string;
+  blockType?: "question";
   questionId: string;
   orderNum: number;
   points: number;
@@ -16,10 +18,46 @@ export interface ExamPaperBuilderItemInput {
   options?: { label: string; text: string }[];
   correctAnswer?: string;
   answerSpaceLines?: number;
+  objectiveAnswerSlots?: number;
+  objectiveAnswerTexts?: string[];
   sectionTitle?: string;
   teacherNote?: string;
   breakBefore?: "auto" | "column" | "page";
   keepWithPrev?: boolean;
+}
+
+export interface ExamPaperBuilderBlockInput {
+  localId: string;
+  blockType: "question" | "text" | "section" | "divider" | "spacer" | "image";
+  orderNum?: number;
+  questionId?: string;
+  points?: number;
+  groupId?: string | null;
+  includePassage?: boolean;
+  passageTitle?: string;
+  passageContent?: string;
+  questionText?: string;
+  options?: { label: string; text: string }[];
+  correctAnswer?: string;
+  answerSpaceLines?: number;
+  objectiveAnswerSlots?: number;
+  objectiveAnswerTexts?: string[];
+  sectionTitle?: string;
+  teacherNote?: string;
+  breakBefore?: "auto" | "column" | "page";
+  keepWithPrev?: boolean;
+  locked?: boolean;
+  blockTitle?: string;
+  blockText?: string;
+  blockAlign?: "left" | "center" | "right";
+  blockFontSize?: "sm" | "md" | "lg";
+  blockAccentColor?: string;
+  dividerStyle?: "solid" | "dashed" | "dotted";
+  dividerThickness?: number;
+  spacerHeight?: number;
+  imageDataUrl?: string | null;
+  imageAlt?: string;
+  imageWidth?: number;
 }
 
 export interface ExamPaperBuilderSaveInput {
@@ -36,6 +74,7 @@ export interface ExamPaperBuilderSaveInput {
   totalPoints: number;
   template: string;
   layout: {
+    paperSize?: "A4" | "B4";
     columns: 1 | 2;
     density: "comfortable" | "compact";
     showAnswerSpace: boolean;
@@ -53,6 +92,12 @@ export interface ExamPaperBuilderSaveInput {
     academyLogoDataUrl?: string | null;
   };
   items: ExamPaperBuilderItemInput[];
+  blocks?: ExamPaperBuilderBlockInput[];
+}
+
+function normalizeObjectiveAnswerTexts(input: unknown, slots: number): string[] {
+  if (!Array.isArray(input) || slots <= 0) return [];
+  return input.slice(0, slots).map((text) => String(text ?? ""));
 }
 
 export async function getExamPaperBuilderData(academyId: string) {
@@ -129,17 +174,98 @@ export async function saveExamPaperDraft(
 
     const normalizedItems = input.items
       .filter((item) => item.questionId)
-      .map((item, index) => ({
-        ...item,
-        orderNum: index + 1,
-        points: Math.max(1, Math.min(100, Number(item.points) || 1)),
-        answerSpaceLines: Math.max(0, Math.min(12, Number(item.answerSpaceLines) || 0)),
-        breakBefore:
-          item.breakBefore === "column" || item.breakBefore === "page"
-            ? item.breakBefore
-            : "auto",
-        keepWithPrev: Boolean(item.keepWithPrev),
-      }));
+      .map((item, index) => {
+        const objectiveAnswerSlots = Math.max(
+          0,
+          Math.min(10, Number(item.objectiveAnswerSlots) || 0),
+        );
+        return {
+          ...item,
+          blockType: "question" as const,
+          orderNum: index + 1,
+          points: Math.max(1, Math.min(100, Number(item.points) || 1)),
+          answerSpaceLines: Math.max(0, Math.min(12, Number(item.answerSpaceLines) || 0)),
+          objectiveAnswerSlots,
+          objectiveAnswerTexts: normalizeObjectiveAnswerTexts(
+            item.objectiveAnswerTexts,
+            objectiveAnswerSlots,
+          ),
+          breakBefore:
+            item.breakBefore === "column" || item.breakBefore === "page"
+              ? item.breakBefore
+              : "auto",
+          keepWithPrev: Boolean(item.keepWithPrev),
+        };
+      });
+    const rawBlocks: ExamPaperBuilderBlockInput[] = input.blocks?.length
+      ? input.blocks
+      : normalizedItems.map((item) => ({
+          ...item,
+          localId: item.localId || item.questionId,
+          blockType: "question" as const,
+          breakBefore: item.breakBefore as ExamPaperBuilderBlockInput["breakBefore"],
+          locked: false,
+          blockTitle: "",
+          blockText: "",
+          blockAlign: "left" as const,
+          blockFontSize: "md" as const,
+          blockAccentColor: "#2563EB",
+          dividerStyle: "solid" as const,
+          dividerThickness: 1,
+          spacerHeight: 32,
+          imageDataUrl: null,
+          imageAlt: "",
+          imageWidth: 70,
+          objectiveAnswerSlots: item.objectiveAnswerSlots,
+          objectiveAnswerTexts: item.objectiveAnswerTexts,
+        }));
+    const normalizedBlocks = rawBlocks
+      .filter((block) => block.localId && block.blockType)
+      .map((block, index) => {
+        const objectiveAnswerSlots = Math.max(
+          0,
+          Math.min(10, Number(block.objectiveAnswerSlots) || 0),
+        );
+        return {
+          ...block,
+          orderNum:
+            block.blockType === "question"
+              ? Math.max(1, Number(block.orderNum) || index + 1)
+              : 0,
+          points: Math.max(0, Math.min(100, Number(block.points) || 0)),
+          answerSpaceLines: Math.max(0, Math.min(12, Number(block.answerSpaceLines) || 0)),
+          objectiveAnswerSlots,
+          objectiveAnswerTexts: normalizeObjectiveAnswerTexts(
+            block.objectiveAnswerTexts,
+            objectiveAnswerSlots,
+          ),
+          breakBefore:
+            block.breakBefore === "column" || block.breakBefore === "page"
+              ? block.breakBefore
+              : "auto",
+          keepWithPrev: Boolean(block.keepWithPrev),
+          locked: Boolean(block.locked),
+          blockAlign:
+            block.blockAlign === "center" || block.blockAlign === "right"
+              ? block.blockAlign
+              : "left",
+          blockFontSize:
+            block.blockFontSize === "sm" || block.blockFontSize === "lg"
+              ? block.blockFontSize
+              : "md",
+          blockAccentColor:
+            typeof block.blockAccentColor === "string" && block.blockAccentColor
+              ? block.blockAccentColor
+              : "#2563EB",
+          dividerStyle:
+            block.dividerStyle === "dashed" || block.dividerStyle === "dotted"
+              ? block.dividerStyle
+              : "solid",
+          dividerThickness: Math.max(1, Math.min(8, Number(block.dividerThickness) || 1)),
+          spacerHeight: Math.max(8, Math.min(160, Number(block.spacerHeight) || 32)),
+          imageWidth: Math.max(20, Math.min(100, Number(block.imageWidth) || 70)),
+        };
+      });
 
     if (!input.title.trim()) {
       return { success: false as const, error: "시험지 제목을 입력해주세요." };
@@ -184,14 +310,33 @@ export async function saveExamPaperDraft(
       }
     }
 
+    const normalizedLayout = {
+      ...input.layout,
+      paperSize: input.layout.paperSize === "B4" ? "B4" : "A4",
+    };
+
     const settings = JSON.stringify({
-      source: "exam-paper-builder-v1",
+      source: "exam-paper-builder-v2",
+      version: 2,
       template: input.template,
-      layout: input.layout,
+      layout: normalizedLayout,
       header: input.header,
       items: normalizedItems,
+      blocks: normalizedBlocks,
       savedAt: new Date().toISOString(),
     });
+    const linkedQuestionIds = new Set<string>();
+    const examQuestionLinks = normalizedItems
+      .filter((item) => {
+        if (linkedQuestionIds.has(item.questionId)) return false;
+        linkedQuestionIds.add(item.questionId);
+        return true;
+      })
+      .map((item, index) => ({
+        questionId: item.questionId,
+        orderNum: index + 1,
+        points: item.points,
+      }));
 
     const examData = {
       academyId: staff.academyId,
@@ -226,11 +371,9 @@ export async function saveExamPaperDraft(
 
       await tx.examQuestion.deleteMany({ where: { examId: saved.id } });
       await tx.examQuestion.createMany({
-        data: normalizedItems.map((item) => ({
+        data: examQuestionLinks.map((item) => ({
+          ...item,
           examId: saved.id,
-          questionId: item.questionId,
-          orderNum: item.orderNum,
-          points: item.points,
         })),
       });
 

@@ -33,6 +33,20 @@ export function CreditBadge({
   popoverSide,
   popoverAlign = "end",
 }: CreditBadgeProps = {}) {
+  return (
+    <CreditBadgeContent
+      collapsed={collapsed}
+      popoverSide={popoverSide}
+      popoverAlign={popoverAlign}
+    />
+  );
+}
+
+function CreditBadgeContent({
+  collapsed = false,
+  popoverSide,
+  popoverAlign = "end",
+}: CreditBadgeProps = {}) {
   const [summary, setSummary] = useState<CreditSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);

@@ -3,6 +3,7 @@ import { getStaffSession } from "@/lib/auth";
 import { getExam } from "@/actions/exams";
 import { getExamAnalytics } from "@/actions/exam-grading";
 import { ExamDetailClient } from "@/components/exams/exam-detail-client";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface PageProps {
   params: Promise<{ examId: string }>;
@@ -13,13 +14,21 @@ export default async function ExamDetailPage({ params }: PageProps) {
   if (!staff) redirect("/login");
 
   const { examId } = await params;
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   const [exam, analytics] = await Promise.all([
     getExam(examId),
-    getExamAnalytics(examId),
+    showResults ? getExamAnalytics(examId) : Promise.resolve(null),
   ]);
 
   if (!exam) notFound();
 
-  return <ExamDetailClient exam={exam as never} analytics={analytics} />;
+  const clientExam = showResults
+    ? exam
+    : {
+        ...exam,
+        submissions: [],
+      };
+
+  return <ExamDetailClient exam={clientExam as never} analytics={analytics} />;
 }

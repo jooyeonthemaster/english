@@ -1,19 +1,29 @@
 "use client";
 
-import { BookOpen, Download, Eye, FileType2, Loader2, Printer, Save } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  BookOpen,
+  ChevronDown,
+  Download,
+  Eye,
+  FileType2,
+  Loader2,
+  Printer,
+  Save,
+} from "lucide-react";
 import { TEMPLATE_META } from "../paper-builder/templates";
-import type { PaperTemplate } from "../paper-builder/types";
+import type { PaperSize, PaperTemplate } from "../paper-builder/types";
 
 // ---------------------------------------------------------------------------
-// A4 미리보기 상단 헤더 툴바
+// 용지 미리보기 상단 헤더 툴바
 // ---------------------------------------------------------------------------
 
 interface PreviewToolbarProps {
   template: PaperTemplate;
+  paperSize: PaperSize;
   dirty: boolean;
   isPending: boolean;
   paperItemsCount: number;
-  onGoToManage: () => void;
   onPrint: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
@@ -24,10 +34,10 @@ interface PreviewToolbarProps {
 
 export function PreviewToolbar({
   template,
+  paperSize,
   dirty,
   isPending,
   paperItemsCount,
-  onGoToManage,
   onPrint,
   onDownloadDocx,
   onDownloadDocxWithAnswers,
@@ -35,11 +45,39 @@ export function PreviewToolbar({
   onDownloadHwpxWithAnswers,
   onSave,
 }: PreviewToolbarProps) {
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const downloadMenuRef = useRef<HTMLDivElement>(null);
+  const actionDisabled = isPending || paperItemsCount === 0;
+
+  useEffect(() => {
+    if (!downloadOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (downloadMenuRef.current?.contains(event.target as Node)) return;
+      setDownloadOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setDownloadOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [downloadOpen]);
+
+  function runDownload(handler: () => void) {
+    setDownloadOpen(false);
+    handler();
+  }
+
   return (
     <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3">
       <div className="flex min-w-0 items-center gap-2">
         <Eye className="h-3.5 w-3.5 text-slate-400" />
-        <span className="text-[12px] font-bold text-slate-600">A4 미리보기</span>
+        <span className="text-[12px] font-bold text-slate-600">{paperSize} 미리보기</span>
         <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
           {TEMPLATE_META[template].label}
         </span>
@@ -51,64 +89,76 @@ export function PreviewToolbar({
           </span>
         )}
         <button
-          onClick={onGoToManage}
-          className="h-8 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-        >
-          시험지 관리
-        </button>
-        <button
-          onClick={onPrint}
-          className="flex h-8 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-        >
-          <Printer className="h-3.5 w-3.5" />
-          인쇄
-        </button>
-        <button
-          onClick={onDownloadDocx}
-          disabled={isPending || paperItemsCount === 0}
-          className="flex h-8 items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-          DOCX
-        </button>
-        <button
-          onClick={onDownloadDocxWithAnswers}
-          disabled={isPending || paperItemsCount === 0}
-          className="flex h-8 items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 text-[11px] font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BookOpen className="h-3.5 w-3.5" />}
-          해설 포함
-        </button>
-        <button
-          onClick={onDownloadHwpx}
-          disabled={isPending || paperItemsCount === 0}
-          className="flex h-8 items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-2.5 text-[11px] font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileType2 className="h-3.5 w-3.5" />}
-          HWPX
-          <span className="ml-0.5 rounded-sm bg-indigo-200/70 px-1 py-px text-[9px] font-bold uppercase leading-none tracking-wider text-indigo-700">
-            beta
-          </span>
-        </button>
-        <button
-          onClick={onDownloadHwpxWithAnswers}
-          disabled={isPending || paperItemsCount === 0}
-          className="flex h-8 items-center gap-1 rounded-md border border-violet-200 bg-violet-50 px-2.5 text-[11px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BookOpen className="h-3.5 w-3.5" />}
-          HWPX 해설
-          <span className="ml-0.5 rounded-sm bg-violet-200/70 px-1 py-px text-[9px] font-bold uppercase leading-none tracking-wider text-violet-700">
-            beta
-          </span>
-        </button>
-        <button
           onClick={onSave}
-          disabled={isPending || paperItemsCount === 0}
-          className="flex h-8 items-center gap-1 rounded-md bg-slate-900 px-2.5 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+          disabled={actionDisabled}
+          className="flex h-8 min-w-[76px] items-center justify-center gap-1.5 rounded-md bg-slate-900 px-3 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           저장
         </button>
+        <button
+          onClick={onPrint}
+          disabled={actionDisabled}
+          className="flex h-8 min-w-[76px] items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Printer className="h-3.5 w-3.5" />
+          인쇄
+        </button>
+        <div ref={downloadMenuRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setDownloadOpen((open) => !open)}
+            disabled={actionDisabled}
+            aria-expanded={downloadOpen}
+            className="flex h-8 min-w-[98px] items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+            다운로드
+            <ChevronDown className="h-3 w-3 text-slate-400" />
+          </button>
+          {downloadOpen && (
+            <div className="absolute right-0 top-[calc(100%+6px)] z-30 w-44 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-200/70">
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadDocx)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <Download className="h-3.5 w-3.5 text-blue-500" />
+                DOCX
+              </button>
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadDocxWithAnswers)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <BookOpen className="h-3.5 w-3.5 text-emerald-500" />
+                DOCX 해설
+              </button>
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadHwpx)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <FileType2 className="h-3.5 w-3.5 text-indigo-500" />
+                HWPX
+                <span className="ml-auto rounded-sm bg-indigo-50 px-1 py-px text-[9px] font-bold uppercase leading-none text-indigo-600">
+                  beta
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadHwpxWithAnswers)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <BookOpen className="h-3.5 w-3.5 text-violet-500" />
+                HWPX 해설
+                <span className="ml-auto rounded-sm bg-violet-50 px-1 py-px text-[9px] font-bold uppercase leading-none text-violet-600">
+                  beta
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
+  CalendarClock,
   CheckCircle2,
   FileText,
   Layers,
@@ -13,7 +14,7 @@ import {
 
 import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
-import { formatTaskDateParts } from "@/components/workbench/task-queue/utils/format";
+import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { MODES, type ExtractionMode } from "@/lib/extraction/modes";
 import type { ExtractionJobStatus } from "@/lib/extraction/types";
@@ -137,9 +138,9 @@ export function JobCard({
   const isActiveJob = status != null && ACTIVE_STATUSES.has(taskStatus);
   const isProcessing = status === "PROCESSING";
 
-  const dateParts =
+  const dateLabel =
     createdAt != null
-      ? formatTaskDateParts(new Date(createdAt).toISOString())
+      ? formatTaskDate(new Date(createdAt).toISOString())
       : null;
 
   const modeShort = mode ? MODES[mode]?.shortLabel : null;
@@ -157,14 +158,14 @@ export function JobCard({
   const resultSummary = (() => {
     if (variant !== "detailed") return null;
     const parts: string[] = [];
+    const reviewNeeded = draftResultCount ?? 0;
+    const reviewCompleted = savedResultCount ?? 0;
+    const reviewTotal = reviewCompleted + reviewNeeded;
     if (typeof successPages === "number" && typeof totalPages === "number") {
       parts.push(`${successPages}/${totalPages}장`);
     }
-    if (typeof draftResultCount === "number" && draftResultCount > 0) {
-      parts.push(`검토 ${draftResultCount}`);
-    }
-    if (typeof savedResultCount === "number" && savedResultCount > 0) {
-      parts.push(`저장 ${savedResultCount}`);
+    if (reviewTotal > 0) {
+      parts.push(`검수완료 ${reviewCompleted}/${reviewTotal}`);
     }
     return parts.length > 0 ? parts.join(" · ") : null;
   })();
@@ -317,10 +318,12 @@ export function JobCard({
             </button>
           ) : null}
         </div>
-        {dateParts ? (
-          <div className="mt-0.5 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-900">
-            <span className="truncate">{dateParts.day}</span>
-            <span className="shrink-0 tabular-nums">{dateParts.time}</span>
+        {dateLabel ? (
+          <div className="mt-1 flex">
+            <span className="inline-flex min-w-0 items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+              <CalendarClock className="size-3 shrink-0" aria-hidden="true" />
+              <span className="truncate tabular-nums">{dateLabel}</span>
+            </span>
           </div>
         ) : subLabel ? (
           <p className="mt-0.5 truncate text-[12px] font-medium text-slate-900">

@@ -319,6 +319,12 @@
   0%, 100% { transform: translateY(0); opacity: 0.35; }
   50% { transform: translateY(-2px); opacity: 1; }
 }
+/* One-shot "I just came back from this" hint — light slate tint that
+   fades back to white. Border stays whatever review status dictates. */
+@keyframes card-recently-viewed-flash {
+  0% { background-color: rgb(226 232 240); }
+  100% { background-color: rgb(255 255 255); }
+}
 
 @layer base {
   * {

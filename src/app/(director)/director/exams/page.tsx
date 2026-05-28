@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { getExams, getClassesForFilter, getExamCollections, getExamCollectionMembership } from "@/actions/exams";
 import { ExamListClient } from "@/components/exams/exam-list-client";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface PageProps {
   searchParams: Promise<{
@@ -14,6 +15,7 @@ export default async function ExamsPage({ searchParams }: PageProps) {
   if (!staff) redirect("/login");
 
   const params = await searchParams;
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   const [exams, classes, collections, membershipRaw] = await Promise.all([
     getExams(staff.academyId, {
@@ -30,9 +32,16 @@ export default async function ExamsPage({ searchParams }: PageProps) {
     collectionMembership[colId] = new Set(examIds);
   }
 
+  const clientExams = showResults
+    ? exams
+    : exams.map((exam) => ({
+        ...exam,
+        _count: { ...exam._count, submissions: 0 },
+      }));
+
   return (
     <ExamListClient
-      exams={exams as never[]}
+      exams={clientExams as never[]}
       classes={classes}
       collections={collections}
       collectionMembership={collectionMembership}

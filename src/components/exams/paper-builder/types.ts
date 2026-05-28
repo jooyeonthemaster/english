@@ -48,8 +48,14 @@ export type SchoolOption = { id: string; name: string };
 export type PaperTemplate = "clean" | "mock" | "worksheet" | "minimal" | "academy" | "modern" | "classic" | "colorband";
 export type Density = "comfortable" | "compact";
 export type PassageStyle = "boxed" | "plain" | "underlined";
+export type PaperSize = "A4" | "B4";
 
 export type BreakBefore = "auto" | "column" | "page";
+export type PaperBlockType = "question" | "text" | "section" | "divider" | "spacer" | "image";
+export type InsertablePaperBlockType = Exclude<PaperBlockType, "question">;
+export type PaperBlockAlign = "left" | "center" | "right";
+export type PaperBlockFontSize = "sm" | "md" | "lg";
+export type PaperBlockDividerStyle = "solid" | "dashed" | "dotted";
 
 export type PaperItem = {
   localId: string;
@@ -65,11 +71,28 @@ export type PaperItem = {
   options: OptionItem[];
   correctAnswer: string;
   answerSpaceLines: number;
+  objectiveAnswerSlots: number;
+  objectiveAnswerTexts: string[];
   sectionTitle: string;
   teacherNote: string;
   breakBefore: BreakBefore;
   keepWithPrev: boolean;
+  blockType: PaperBlockType;
+  locked: boolean;
+  blockTitle: string;
+  blockText: string;
+  blockAlign: PaperBlockAlign;
+  blockFontSize: PaperBlockFontSize;
+  blockAccentColor: string;
+  dividerStyle: PaperBlockDividerStyle;
+  dividerThickness: number;
+  spacerHeight: number;
+  imageDataUrl: string | null;
+  imageAlt: string;
+  imageWidth: number;
 };
+
+export type PaperBlock = PaperItem;
 
 export type PaperGroup = {
   id: string;
@@ -86,6 +109,8 @@ export type RenderItemPart = {
   partKey: string;
   showHeader: boolean;
   showAnswer: boolean;
+  showObjectiveAnswer: boolean;
+  showCustomBlock: boolean;
   questionRenderedLines: string[];
   questionStartLineIndex: number;
   questionTotalLines: number;
@@ -110,6 +135,7 @@ export type RenderFragment = {
 export type PaperPage = RenderFragment[][];
 
 export type PaginationSettings = {
+  paperSize: PaperSize;
   columns: 1 | 2;
   density: Density;
   passageStyle: PassageStyle;

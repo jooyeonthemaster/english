@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 
@@ -9,12 +9,34 @@ import type {
   StatusFilter,
 } from "../components/manage-header";
 import type { M1PassageDraftWithJob } from "../types";
+import { getDraftDisplayTitle } from "../utils/title";
 
 interface UseDraftDisplayParams {
   drafts: M1PassageDraftWithJob[];
   draftsInActiveFolder: M1PassageDraftWithJob[];
   activeFolder: string | null;
   jobMetaByJobId: Map<string, JobMetaSnapshot>;
+}
+
+const SORT_ORDER_STORAGE_KEY = "smoat:extraction-manage:draft-sort-order";
+const SORT_ORDERS: readonly SortOrder[] = [
+  "newest",
+  "oldest",
+  "page_asc",
+  "name_asc",
+  "name_desc",
+];
+
+function readStoredSortOrder(): SortOrder {
+  if (typeof window === "undefined") return "newest";
+  try {
+    const stored = window.localStorage.getItem(SORT_ORDER_STORAGE_KEY);
+    return SORT_ORDERS.includes(stored as SortOrder)
+      ? (stored as SortOrder)
+      : "newest";
+  } catch {
+    return "newest";
+  }
 }
 
 /**
@@ -31,27 +53,22 @@ export function useDraftDisplay({
   const [searchValue, setSearchValue] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [sortOrder, setSortOrder] =
+    useState<SortOrder>(readStoredSortOrder);
   const [gridCols, setGridCols] = useState<GridCols>("grid3");
   const [jobFilter, setJobFilter] = useState<Set<string>>(() => new Set());
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
 
-  const dupInfo = useMemo(
-    () =>
-      buildDuplicateIndex(
-        drafts,
-        (d) =>
-          d.teacherText?.trim() ||
-          d.restoredText?.trim() ||
-          d.rawText?.trim() ||
-          "",
-        (d) => d.id,
-      ),
-    [drafts],
-  );
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(SORT_ORDER_STORAGE_KEY, sortOrder);
+    } catch {
+      /* ignore */
+    }
+  }, [sortOrder]);
 
-  const displayedDrafts = useMemo(() => {
+  const filteredDrafts = useMemo(() => {
     let result = draftsInActiveFolder;
 
     if (activeFolder === null && jobFilter.size > 0) {
@@ -75,7 +92,31 @@ export function useDraftDisplay({
       result = result.filter((d) => d.restorationStatus === statusFilter);
     }
 
-    const sorted = [...result];
+    return result;
+  }, [
+    draftsInActiveFolder,
+    activeFolder,
+    jobFilter,
+    appliedSearch,
+    statusFilter,
+  ]);
+
+  const dupInfo = useMemo(
+    () =>
+      buildDuplicateIndex(
+        filteredDrafts,
+        (d) =>
+          d.teacherText?.trim() ||
+          d.restoredText?.trim() ||
+          d.rawText?.trim() ||
+          "",
+        (d) => d.id,
+      ),
+    [filteredDrafts],
+  );
+
+  const displayedDrafts = useMemo(() => {
+    const sorted = [...filteredDrafts];
     if (sortOrder === "newest") {
       sorted.sort((a, b) => {
         const aDate = new Date(a.createdAt as unknown as string).getTime();
@@ -94,6 +135,18 @@ export function useDraftDisplay({
         const bPage = b.sourcePageIndex[0] ?? 0;
         return aPage - bPage;
       });
+    } else if (sortOrder === "name_asc") {
+      sorted.sort((a, b) =>
+        getDraftDisplayTitle(a).localeCompare(getDraftDisplayTitle(b), "ko"),
+      );
+    } else if (sortOrder === "name_desc") {
+      sorted.sort((a, b) =>
+        getDraftDisplayTitle(b).localeCompare(getDraftDisplayTitle(a), "ko"),
+      );
+    }
+
+    if (pageMode === "duplicates") {
+      return sorted.filter((d) => dupInfo.keyById.has(d.id));
     }
 
     if (hideDuplicates && dupInfo.keyById.size > 0) {
@@ -109,13 +162,10 @@ export function useDraftDisplay({
 
     return sorted;
   }, [
-    draftsInActiveFolder,
-    activeFolder,
-    jobFilter,
-    appliedSearch,
-    statusFilter,
+    filteredDrafts,
     sortOrder,
     hideDuplicates,
+    pageMode,
     dupInfo,
   ]);
 
@@ -176,7 +226,7 @@ export function useDraftDisplay({
       thumbnailUrl: j.thumbnailUrl,
       status: j.status,
     }));
-  }, [draftsInActiveFolder, jobMetaByJobId]);
+  }, [drafts, jobMetaByJobId]);
 
   const serverVisibleDraftTotal = useMemo(
     () =>
@@ -215,6 +265,8 @@ export function useDraftDisplay({
   const hasActiveSearchOrFilter =
     appliedSearch.trim().length > 0 ||
     statusFilter !== "ALL" ||
+    hideDuplicates ||
+    pageMode === "duplicates" ||
     (activeFolder === null && jobFilter.size > 0);
 
   const resetFilters = () => {
@@ -223,6 +275,8 @@ export function useDraftDisplay({
     setStatusFilter("ALL");
     setSortOrder("newest");
     setJobFilter(new Set());
+    setHideDuplicates(false);
+    setPageMode("list");
   };
 
   return {
@@ -250,6 +304,7 @@ export function useDraftDisplay({
     groupIndexBySourceMaterialId,
     hasActiveSearchOrFilter,
     dupInfo,
+    duplicateScopeCount: filteredDrafts.length,
     // actions
     resetFilters,
   };

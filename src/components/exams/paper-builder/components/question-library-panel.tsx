@@ -162,8 +162,8 @@ export function QuestionLibraryPanel({
       )}
 
       <div className="shrink-0 border-b border-slate-100 px-5 py-3">
-        <div className="flex items-center gap-2.5">
-          <div className="relative flex-1">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="relative min-w-[220px] flex-1 basis-full">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               value={search}
@@ -251,7 +251,7 @@ export function QuestionLibraryPanel({
           <div className="flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5">
             <FileText className="h-3.5 w-3.5 text-slate-400" />
             <span className="text-[12px] font-semibold text-slate-600">{filteredQuestions.length}</span>
-            <span className="text-[11px] text-slate-400">개</span>
+            <span className="text-[11px] text-slate-400">문항</span>
           </div>
         </div>
 
@@ -362,7 +362,7 @@ export function QuestionLibraryPanel({
             }}
             showManagementActions={false}
             showStar={false}
-            enableDrag={false}
+            enableDrag
             expandedPassageIds={expandedPassageIds}
             setExpandedPassageIds={setExpandedPassageIds}
           />
@@ -380,7 +380,7 @@ export function QuestionLibraryPanel({
                   onEdit={() => onShowDetail(question)}
                   viewSize="lg"
                   showManagementActions={false}
-                  enableDrag={false}
+                  enableDrag
                 />
               );
             })}

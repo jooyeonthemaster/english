@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { getStudent, getStudentStats } from "@/actions/students";
 import { StudentDetailClient } from "@/components/students/student-detail-client";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface PageProps {
   params: Promise<{ studentId: string }>;
@@ -19,11 +20,20 @@ export default async function StudentDetailPage({ params }: PageProps) {
   ]);
 
   if (!student) notFound();
+  const clientStats = FEATURE_FLAGS.SHOW_USER_RESULTS
+    ? stats
+    : {
+        ...stats,
+        averageScore: 0,
+        examSubmissions: [],
+        xp: 0,
+        level: 1,
+      };
 
   return (
     <StudentDetailClient
       student={student}
-      stats={stats}
+      stats={clientStats}
       isDirector
     />
   );

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Home, User, BookOpenCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import { StudentHeader } from "@/components/layout/student-header";
 import { QueryProvider } from "@/providers/query-provider";
@@ -13,16 +14,21 @@ import { useHeaderData } from "@/hooks/use-student-data";
 // ---------------------------------------------------------------------------
 // Marquee messages
 // ---------------------------------------------------------------------------
-const MARQUEE_MESSAGES = [
+const BASE_MARQUEE_MESSAGES = [
   "오늘도 한 걸음 더! 꾸준함이 실력이 됩니다 💪",
   "🔥 30일 연속 학습 달성하면 문화상품권 1만원!",
   "상위 1%는 매일 학습합니다. 오늘도 시작해볼까요?",
   "미션 달성하면 XP 배율 보너스! ✨",
   "어제보다 1문제 더! 작은 차이가 큰 변화를 만듭니다",
-  "🏆 이번 주 랭킹 도전! XP를 모아보세요",
-  "틀린 문제 복습하면 정답률 2배 UP! 📈",
   "매일 3분 투자로 영어 실력이 달라집니다",
 ];
+const RESULT_MARQUEE_MESSAGES = [
+  "🏆 이번 주 랭킹 도전! XP를 모아보세요",
+  "틀린 문제 복습하면 정답률 2배 UP! 📈",
+];
+const MARQUEE_MESSAGES = FEATURE_FLAGS.SHOW_USER_RESULTS
+  ? [...BASE_MARQUEE_MESSAGES, ...RESULT_MARQUEE_MESSAGES]
+  : BASE_MARQUEE_MESSAGES;
 const MARQUEE_CHUNK = MARQUEE_MESSAGES.join("   ✦   ");
 
 // ---------------------------------------------------------------------------

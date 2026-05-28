@@ -592,7 +592,7 @@ export function QuestionCard({
                 type="button"
                 size="sm"
                 disabled={q.approved || !onApprove}
-                className="h-7 flex-1 bg-blue-600 px-2 text-[11px] font-semibold text-white hover:bg-blue-700 disabled:bg-blue-100 disabled:text-blue-600 disabled:opacity-100"
+                className="h-7 flex-1 bg-emerald-600 px-2 text-[11px] font-semibold text-white hover:bg-emerald-700 disabled:bg-emerald-100 disabled:text-emerald-600 disabled:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!q.approved) onApprove?.();

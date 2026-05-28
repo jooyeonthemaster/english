@@ -1,15 +1,14 @@
 import type { M1PassageDraftSnapshot } from "@/lib/extraction/types";
 
-const MAX_AUTO_TITLE_LEN = 36;
-
 /**
  * Resolve a display title for a draft card / modal header.
  *
  * Priority:
  *   1. `draft.title` (teacher-set, trimmed)
  *   2. First sentence of `teacherText` (or `rawText` fallback) — stripped of
- *      common problem-stem noise (numbering "1. ", points "[3.0점]") and
- *      truncated to `MAX_AUTO_TITLE_LEN` chars with an ellipsis.
+ *      common problem-stem noise (numbering "1. ", points "[3.0점]"). Returns
+ *      the full sentence so callers can rely on CSS `truncate` to ellipsize
+ *      responsively against the container width.
  *   3. "지문 N" final fallback (1-based passage order).
  */
 export function getDraftDisplayTitle(draft: M1PassageDraftSnapshot): string {
@@ -26,9 +25,7 @@ export function getDraftDisplayTitle(draft: M1PassageDraftSnapshot): string {
 
     const firstSentence = cleaned.split(/[.!?\n]/)[0]?.trim();
     if (firstSentence && firstSentence.length > 0) {
-      return firstSentence.length > MAX_AUTO_TITLE_LEN
-        ? firstSentence.slice(0, MAX_AUTO_TITLE_LEN).trim() + "…"
-        : firstSentence;
+      return firstSentence;
     }
   }
 

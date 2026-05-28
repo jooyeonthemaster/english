@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" role="img" aria-labelledby="title desc" style="color:#2563eb">
+  <title id="title">Question generation</title>
+  <desc id="desc">A folded document with a question mark for generating questions.</desc>
+  <path d="M5.2 3.5h9.2L19 8.1V20a1.5 1.5 0 0 1-1.5 1.5H6.7A1.5 1.5 0 0 1 5.2 20V5A1.5 1.5 0 0 1 6.7 3.5Z"/>
+  <path d="M14.3 3.8v4.4h4.4"/>
+  <path d="M9.4 10.6c0-1.8 1.45-3.05 3.35-3.05 1.85 0 3.15 1.15 3.15 2.72 0 1.22-.72 1.88-1.73 2.44-1.08.6-1.45 1.1-1.45 2.13v.45"/>
+  <path d="M12.7 18h.01"/>
+</svg>

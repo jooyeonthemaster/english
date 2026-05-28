@@ -31,3 +31,7 @@ export function ptToCharHeight(value: number): number {
 /** A4 세로 (210mm × 297mm) HWPUNIT. */
 export const A4_WIDTH = mm(210);
 export const A4_HEIGHT = mm(297);
+
+/** B4 세로 (257mm × 364mm) HWPUNIT. */
+export const B4_WIDTH = mm(257);
+export const B4_HEIGHT = mm(364);

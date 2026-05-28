@@ -477,6 +477,7 @@ export function AdminPlansClient({ initialPlans }: AdminPlansClientProps) {
                 상품 카탈로그
               </p>
               <p className="mt-1 text-[12px] text-gray-500">
+                크레딧 충전 상품과 같은 크레딧 수, 금액, 정렬 기준으로 운영됩니다.
                 새 상품은 비활성 상태로 추가되어 결제/승인 화면에 바로 노출되지 않습니다.
               </p>
             </div>

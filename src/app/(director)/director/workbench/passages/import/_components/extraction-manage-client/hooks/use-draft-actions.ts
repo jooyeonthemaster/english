@@ -10,7 +10,10 @@ type SetSelectedDraftDetail = Dispatch<
   SetStateAction<M1PassageDraftWithJob | null>
 >;
 
+const UNDO_TOAST_DURATION = 8000;
+
 interface UseDraftActionsParams {
+  drafts: M1PassageDraftWithJob[];
   setDrafts: SetDrafts;
   setSelectedDraftDetail: SetSelectedDraftDetail;
   closeDraftDetail: () => void;
@@ -28,6 +31,7 @@ interface UseDraftActionsParams {
  */
 export function useDraftActions(params: UseDraftActionsParams) {
   const {
+    drafts,
     setDrafts,
     setSelectedDraftDetail,
     closeDraftDetail,
@@ -39,6 +43,7 @@ export function useDraftActions(params: UseDraftActionsParams) {
   const [rerestoringId, setRerestoringId] = useState<string | null>(null);
   const [deletingDraftId, setDeletingDraftId] = useState<string | null>(null);
   const [promotingId, setPromotingId] = useState<string | null>(null);
+  const [unpromotingId, setUnpromotingId] = useState<string | null>(null);
 
   const renameJob = useCallback(
     async (targetJobId: string, nextName: string | null) => {
@@ -344,6 +349,56 @@ export function useDraftActions(params: UseDraftActionsParams) {
     [setDrafts, setSelectedDraftDetail, setError, refreshQueueDrawer],
   );
 
+  const undoPromoteDraft = useCallback(
+    async (draftId: string, successMessage = "검수가 취소되었습니다.") => {
+      setUnpromotingId(draftId);
+      setError(null);
+
+      try {
+        const res = await fetch(
+          "/api/extraction/m1-passages/" + draftId + "/unpromote",
+          { method: "POST", credentials: "include" },
+        );
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error ?? "검수를 취소하지 못했습니다.");
+        }
+        setDrafts((current) =>
+          current.map((d) =>
+            d.id === draftId
+              ? {
+                  ...d,
+                  reviewStatus: "REVIEWED",
+                  savedPassageId: null,
+                  confirmedAt: null,
+                }
+              : d,
+          ),
+        );
+        setSelectedDraftDetail((current) =>
+          current?.id === draftId
+            ? {
+                ...current,
+                reviewStatus: "REVIEWED",
+                savedPassageId: null,
+                confirmedAt: null,
+              }
+            : current,
+        );
+        refreshQueueDrawer();
+        toast.success(successMessage);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "검수를 취소하지 못했습니다.";
+        setError(message);
+        toast.error(message);
+      } finally {
+        setUnpromotingId(null);
+      }
+    },
+    [setDrafts, setSelectedDraftDetail, setError, refreshQueueDrawer],
+  );
+
   const promoteDraft = useCallback(
     async (draft: M1PassageDraftSnapshot) => {
       setPromotingId(draft.id);
@@ -357,7 +412,7 @@ export function useDraftActions(params: UseDraftActionsParams) {
         });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data?.error ?? "지문으로 등록하지 못했습니다.");
+          throw new Error(data?.error ?? "검수완료로 표시하지 못했습니다.");
         }
         const data = (await res.json()) as {
           summary: { promoted: number; skipped: number; failed: number };
@@ -371,8 +426,8 @@ export function useDraftActions(params: UseDraftActionsParams) {
         const outcome = data.outcomes.find((o) => o.draftId === draft.id);
         if (outcome?.status === "promoted") {
           // Keep the draft visible in 자료 관리; flip it to COMMITTED so the
-          // card shows a "지문 등록 완료" badge and the promote button disables.
-          // Server fetch returns COMMITTED rows too.
+          // card shows the "검수완료" badge and drops the red "needs review"
+          // border. Server fetch returns COMMITTED rows too.
           setDrafts((current) =>
             current.map((d) =>
               d.id === draft.id
@@ -396,25 +451,76 @@ export function useDraftActions(params: UseDraftActionsParams) {
               : current,
           );
           refreshQueueDrawer();
-          toast.success("지문 관리로 등록되었습니다.");
+          toast.success("검수완료로 표시했습니다.", {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () =>
+                void undoPromoteDraft(
+                  draft.id,
+                  "검수완료를 실행 취소했습니다.",
+                ),
+            },
+          });
         } else {
           const label =
             outcome?.reason === "already_promoted"
-              ? "이미 등록된 자료입니다."
+              ? "이미 검수가 완료된 자료입니다."
               : outcome?.reason === "no_source_material"
-                ? "출처가 연결되지 않아 등록할 수 없습니다."
+                ? "출처가 연결되지 않아 검수할 수 없습니다."
                 : outcome?.reason === "empty_content"
-                  ? "본문이 비어 있어 등록할 수 없습니다."
-                  : "등록에 실패했습니다.";
+                  ? "본문이 비어 있어 검수할 수 없습니다."
+                  : "검수 처리에 실패했습니다.";
           toast.error(label);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "등록에 실패했습니다.");
+        setError(err instanceof Error ? err.message : "검수 처리에 실패했습니다.");
       } finally {
         setPromotingId(null);
       }
     },
-    [setDrafts, setSelectedDraftDetail, setError, refreshQueueDrawer],
+    [
+      setDrafts,
+      setSelectedDraftDetail,
+      setError,
+      refreshQueueDrawer,
+      undoPromoteDraft,
+    ],
+  );
+
+  const unpromoteDraft = useCallback(
+    async (draft: M1PassageDraftSnapshot) => {
+      const ok =
+        typeof window === "undefined"
+          ? true
+          : window.confirm("검수를 취소하시겠습니까?");
+      if (!ok) return;
+
+      // Optimistic rollback snapshot
+      const prev = {
+        reviewStatus: draft.reviewStatus,
+        savedPassageId: draft.savedPassageId,
+        confirmedAt: draft.confirmedAt,
+      };
+
+      try {
+        await undoPromoteDraft(draft.id);
+      } catch (err) {
+        // Restore optimistic state (none changed before await — rollback is
+        // defensive in case future code optimistically updates first).
+        setDrafts((current) =>
+          current.map((d) => (d.id === draft.id ? { ...d, ...prev } : d)),
+        );
+        setSelectedDraftDetail((current) =>
+          current?.id === draft.id ? { ...current, ...prev } : current,
+        );
+        const message =
+          err instanceof Error ? err.message : "검수를 취소하지 못했습니다.";
+        setError(message);
+        toast.error(message);
+      }
+    },
+    [setDrafts, setSelectedDraftDetail, setError, undoPromoteDraft],
   );
 
   const deleteDraft = useCallback(
@@ -427,6 +533,13 @@ export function useDraftActions(params: UseDraftActionsParams) {
 
       setDeletingDraftId(draft.id);
       setError(null);
+      const deletedDraft =
+        (drafts.find((item) => item.id === draft.id) ??
+          draft) as M1PassageDraftWithJob;
+      const deletedIndex = Math.max(
+        0,
+        drafts.findIndex((item) => item.id === draft.id),
+      );
       try {
         const res = await fetch("/api/extraction/m1-passages/" + draft.id, {
           method: "DELETE",
@@ -436,7 +549,39 @@ export function useDraftActions(params: UseDraftActionsParams) {
         setDrafts((current) => current.filter((item) => item.id !== draft.id));
         closeDraftDetail();
         refreshQueueDrawer();
-        toast.success("삭제되었습니다.");
+        toast.success("삭제되었습니다.", {
+          duration: UNDO_TOAST_DURATION,
+          action: {
+            label: "실행 취소",
+            onClick: () => {
+              void (async () => {
+                const restoreRes = await fetch(
+                  "/api/extraction/m1-passages/restore-many",
+                  {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ draftIds: [draft.id] }),
+                  },
+                );
+                if (!restoreRes.ok) {
+                  toast.error("삭제를 실행 취소하지 못했습니다.");
+                  return;
+                }
+                setDrafts((current) => {
+                  if (current.some((item) => item.id === deletedDraft.id)) {
+                    return current;
+                  }
+                  const next = [...current];
+                  next.splice(Math.min(deletedIndex, next.length), 0, deletedDraft);
+                  return next;
+                });
+                refreshQueueDrawer();
+                toast.success("삭제를 실행 취소했습니다.");
+              })();
+            },
+          },
+        });
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "지문을 삭제하지 못했습니다.",
@@ -445,7 +590,7 @@ export function useDraftActions(params: UseDraftActionsParams) {
         setDeletingDraftId(null);
       }
     },
-    [setDrafts, closeDraftDetail, refreshQueueDrawer, setError],
+    [drafts, setDrafts, closeDraftDetail, refreshQueueDrawer, setError],
   );
 
   return {
@@ -453,6 +598,7 @@ export function useDraftActions(params: UseDraftActionsParams) {
     rerestoringId,
     deletingDraftId,
     promotingId,
+    unpromotingId,
     renameJob,
     renameSourceMaterial,
     updateDraftText,
@@ -460,6 +606,7 @@ export function useDraftActions(params: UseDraftActionsParams) {
     saveDraft,
     rerestoreDraft,
     promoteDraft,
+    unpromoteDraft,
     deleteDraft,
   };
 }

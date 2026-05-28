@@ -442,12 +442,12 @@ export function PassageListClient({
         return;
       }
       if (result.deleted === result.requested) {
-        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
+        toast.success(`${result.deleted}편의 지문을 삭제했습니다.`);
       } else if (result.deleted === 0) {
         toast.error("삭제된 지문이 없습니다.");
       } else {
         toast.warning(
-          `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+          `${result.deleted}편 삭제됨, ${result.requested - result.deleted}편 누락`,
         );
       }
       // Mark as removed immediately so the grid and duplicates view update
@@ -555,6 +555,7 @@ export function PassageListClient({
                 title: "지문 관리",
                 totalCount,
                 itemLabel: "지문",
+                itemUnit: "편",
               }}
               selectionBar={
                 <SelectionToolbar
@@ -567,6 +568,7 @@ export function PassageListClient({
                   activeFolder={folder.activeFolder}
                   onRemoveFromFolder={onRemoveFromFolder}
                   extraActions={selectionActions}
+                  itemUnit="편"
                 />
               }
             />
@@ -579,8 +581,8 @@ export function PassageListClient({
                     중복 그룹 모아보기
                     {visibleDupSummary ? (
                       <span className="ml-1.5 text-[11px] font-normal text-slate-400">
-                        그룹 {visibleDupSummary.groupCount}개 · 중복 자료{" "}
-                        {visibleDupSummary.totalDuplicateCount}개
+                        그룹 {visibleDupSummary.groupCount}개 · 중복 지문{" "}
+                        {visibleDupSummary.totalDuplicateCount}편
                       </span>
                     ) : null}
                   </h3>
@@ -619,7 +621,7 @@ export function PassageListClient({
                       중복 자료가 없습니다
                     </p>
                     <p className="mt-1 text-sm text-slate-400">
-                      총 {visibleDupSummary?.totalScanned ?? 0}개 지문을
+                      총 {visibleDupSummary?.totalScanned ?? 0}편의 지문을
                       검사했습니다.
                     </p>
                   </div>
@@ -638,7 +640,7 @@ export function PassageListClient({
                             그룹 {groupIndex + 1}
                           </h4>
                           <span className="rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-blue-700">
-                            {group.items.length}개 동일
+                            {group.items.length}편 동일
                           </span>
                           <span className="ml-auto max-w-[400px] truncate font-mono text-[10.5px] text-slate-400">
                             {group.items[0]?.title ?? "(제목 없음)"}
@@ -692,9 +694,9 @@ export function PassageListClient({
               <div>
                 <div className="mb-3 flex items-center justify-between">
                   <h3 className="text-[13px] font-semibold text-slate-600">
-                    파일
+                    지문
                     <span className="ml-1.5 text-[11px] font-normal text-slate-400">
-                      {displayedPassages.length}개
+                      {displayedPassages.length}편
                     </span>
                   </h3>
                 </div>
@@ -770,7 +772,7 @@ export function PassageListClient({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              선택한 지문 {selection.selectedIds.size}개를 삭제하시겠습니까?
+              선택한 지문 {selection.selectedIds.size}편을 삭제하시겠습니까?
             </AlertDialogTitle>
             <AlertDialogDescription>
               이 작업은 되돌릴 수 없습니다. 지문에 연결된 분석/문제 데이터도

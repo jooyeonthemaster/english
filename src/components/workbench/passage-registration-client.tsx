@@ -11,6 +11,8 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
+import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
+import { PassageAnalysisIcon } from "@/components/icons/workflow-icons";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
@@ -28,6 +30,7 @@ import { QueueSectionContainer } from "./passage-registration/sections/queue-sec
 export type { PassageRegistrationProps } from "./passage-registration/types";
 
 export function PassageRegistrationClient({
+  academyId,
   schools,
   recentPassages,
   initialCollections,
@@ -452,8 +455,17 @@ export function PassageRegistrationClient({
       <div className="flex flex-col min-h-[calc(100vh-64px)]">
         {/* ─── Main Content Area ─── */}
         <div className="flex-1 overflow-y-auto bg-[#F4F6F9]">
+          <div className="border-b border-slate-200/80 bg-white px-6 py-3">
+            <WorkflowPageTitle
+              icon={PassageAnalysisIcon}
+              title="지문 분석"
+              description="추출된 자료나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
+            />
+          </div>
+
           {/* ─── Collapsible Form Section ─── */}
           <FormSectionContainer
+            academyId={academyId}
             formCollapsed={formCollapsed}
             setFormCollapsed={setFormCollapsed}
             hasContent={hasContent}

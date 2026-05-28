@@ -6,8 +6,6 @@ import {
   FileText,
   Group,
   GripVertical,
-  Minus,
-  Plus,
   Trash2,
   Ungroup,
 } from "lucide-react";
@@ -49,34 +47,6 @@ export function PaperItemActions({
         isActive && "pointer-events-auto opacity-100",
       )}
     >
-      <button
-        type="button"
-        onPointerDown={(event) => onStartDrag(event, item.localId)}
-        className="flex h-6 w-6 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
-        title="문항 드래그"
-      >
-        <GripVertical className="h-3.5 w-3.5" />
-      </button>
-      <button
-        onClick={(event) => {
-          event.stopPropagation();
-          onUpdateItem(item.localId, { points: Math.max(1, item.points - 1) });
-        }}
-        className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
-        title="배점 낮추기"
-      >
-        <Minus className="h-3 w-3" />
-      </button>
-      <button
-        onClick={(event) => {
-          event.stopPropagation();
-          onUpdateItem(item.localId, { points: item.points + 1 });
-        }}
-        className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
-        title="배점 올리기"
-      >
-        <Plus className="h-3 w-3" />
-      </button>
       <button
         onClick={(event) => {
           event.stopPropagation();
@@ -182,6 +152,14 @@ export function PaperItemActions({
         title="문항 삭제"
       >
         <Trash2 className="h-3 w-3" />
+      </button>
+      <button
+        type="button"
+        onPointerDown={(event) => onStartDrag(event, item.localId)}
+        className="flex h-6 w-6 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
+        title="문항 드래그"
+      >
+        <GripVertical className="h-3.5 w-3.5" />
       </button>
     </div>
   );

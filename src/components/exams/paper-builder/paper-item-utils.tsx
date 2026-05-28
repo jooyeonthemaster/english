@@ -1,5 +1,11 @@
 import * as React from "react";
-import type { BuilderQuestion, OptionItem, PaperGroup, PaperItem } from "./types";
+import type {
+  BuilderQuestion,
+  InsertablePaperBlockType,
+  OptionItem,
+  PaperGroup,
+  PaperItem,
+} from "./types";
 import { shouldIncludeSourcePassageByDefault } from "./passage-policy";
 import {
   normalizeInlineText,
@@ -53,6 +59,37 @@ export function makeLocalId(questionId: string): string {
   return `${questionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function paperBlockDefaults(): Pick<
+  PaperItem,
+  | "locked"
+  | "blockTitle"
+  | "blockText"
+  | "blockAlign"
+  | "blockFontSize"
+  | "blockAccentColor"
+  | "dividerStyle"
+  | "dividerThickness"
+  | "spacerHeight"
+  | "imageDataUrl"
+  | "imageAlt"
+  | "imageWidth"
+> {
+  return {
+    locked: false,
+    blockTitle: "",
+    blockText: "",
+    blockAlign: "left",
+    blockFontSize: "md",
+    blockAccentColor: "#2563EB",
+    dividerStyle: "solid",
+    dividerThickness: 1,
+    spacerHeight: 32,
+    imageDataUrl: null,
+    imageAlt: "",
+    imageWidth: 70,
+  };
+}
+
 export function makePaperItem(question: BuilderQuestion, orderNum: number, _existingItems: PaperItem[]): PaperItem {
   void _existingItems;
   const options = parseOptions(question.options);
@@ -82,20 +119,128 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     options,
     correctAnswer: question.correctAnswer || "",
     answerSpaceLines: isSubjective ? 4 : 0,
+    objectiveAnswerSlots: 0,
+    objectiveAnswerTexts: [],
     sectionTitle: "",
     teacherNote: "",
     breakBefore: "auto",
     keepWithPrev: false,
+    blockType: "question",
+    ...paperBlockDefaults(),
+  };
+}
+
+function makeSyntheticQuestion(localId: string, label: string): BuilderQuestion {
+  return {
+    id: localId,
+    type: "CUSTOM_BLOCK",
+    subType: null,
+    questionText: label,
+    structuredData: null,
+    options: null,
+    correctAnswer: "",
+    points: 0,
+    difficulty: "CUSTOM",
+    tags: null,
+    aiGenerated: false,
+    approved: true,
+    starred: false,
+    createdAt: new Date().toISOString(),
+    passage: null,
+    explanation: null,
+    collectionItems: [],
+    _count: { examLinks: 0 },
+  };
+}
+
+export function makeCustomPaperBlock(
+  blockType: InsertablePaperBlockType,
+  orderNum: number,
+): PaperItem {
+  const localId = makeLocalId(`block-${blockType}`);
+  const labelByType: Record<InsertablePaperBlockType, string> = {
+    text: "텍스트 블록",
+    section: "새 섹션",
+    divider: "구분선",
+    spacer: "여백",
+    image: "이미지",
+  };
+  const defaultTextByType: Record<InsertablePaperBlockType, string> = {
+    text: "안내 문구를 입력하세요.",
+    section: "새 섹션",
+    divider: "",
+    spacer: "",
+    image: "",
+  };
+  const sourceQuestion = makeSyntheticQuestion(localId, labelByType[blockType]);
+  const defaults = paperBlockDefaults();
+
+  return {
+    localId,
+    questionId: `custom:${localId}`,
+    sourceQuestion,
+    orderNum,
+    points: 0,
+    groupId: `block:${localId}`,
+    includePassage: false,
+    passageTitle: "",
+    passageContent: "",
+    questionText: defaultTextByType[blockType],
+    options: [],
+    correctAnswer: "",
+    answerSpaceLines: 0,
+    objectiveAnswerSlots: 0,
+    objectiveAnswerTexts: [],
+    sectionTitle: blockType === "section" ? "새 섹션" : "",
+    teacherNote: "",
+    breakBefore: "auto",
+    keepWithPrev: false,
+    blockType,
+    ...defaults,
+    blockTitle: blockType === "section" ? "새 섹션" : "",
+    blockText: defaultTextByType[blockType],
+    blockFontSize: blockType === "section" ? "lg" : "md",
+    spacerHeight: blockType === "spacer" ? 40 : defaults.spacerHeight,
+    imageWidth: blockType === "image" ? 78 : defaults.imageWidth,
+  };
+}
+
+export function clonePaperItem(item: PaperItem, orderNum: number): PaperItem {
+  const localId = makeLocalId(item.blockType === "question" ? item.questionId : `block-${item.blockType}`);
+  return {
+    ...item,
+    localId,
+    orderNum,
+    locked: false,
+    groupId:
+      item.blockType === "question" && item.groupId && item.groupId.startsWith("passage:")
+        ? item.groupId
+        : `${item.blockType === "question" ? "single" : "block"}:${localId}`,
   };
 }
 
 export function reindexItems(items: PaperItem[]): PaperItem[] {
-  return items.map((item, index) => ({ ...item, orderNum: index + 1 }));
+  let questionOrder = 0;
+  return items.map((item) => ({
+    ...item,
+    orderNum: item.blockType === "question" ? (questionOrder += 1) : 0,
+  }));
 }
 
 export function buildGroups(items: PaperItem[]): PaperGroup[] {
   const groups: PaperGroup[] = [];
   for (const item of items) {
+    if (item.blockType !== "question") {
+      groups.push({
+        id: item.groupId || item.localId,
+        items: [item],
+        includePassage: false,
+        passageTitle: "",
+        passageContent: "",
+      });
+      continue;
+    }
+
     const last = groups[groups.length - 1];
     if (last && item.groupId && last.id === item.groupId) {
       last.items.push(item);

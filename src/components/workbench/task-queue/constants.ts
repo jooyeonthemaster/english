@@ -8,6 +8,18 @@ export const DOMAIN_LABELS: Record<TaskDomain, string> = {
   webtoon: "웹툰 생성",
 };
 
+// Stage-specific count units so each workbench layer is visually distinct at a
+// glance. Used by task-queue list headers and other count badges. Keep aligned
+// with the unit terminology established for each management page:
+//   자료 → 권 · 지문 → 편 · 문제 → 문항 · 시험지 → 부
+export const DOMAIN_UNITS: Record<TaskDomain, string> = {
+  extraction: "권",
+  "passage-analysis": "편",
+  "question-generation": "문항",
+  "exam-generation": "부",
+  webtoon: "편",
+};
+
 export const DOMAIN_ORDER: TaskDomain[] = [
   "extraction",
   "passage-analysis",

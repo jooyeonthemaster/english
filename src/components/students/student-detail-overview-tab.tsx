@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { cn, formatDate, getScoreColor } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   Card,
   CardContent,
@@ -23,54 +24,58 @@ export function StudentDetailOverviewTab({
   student,
   stats,
 }: StudentDetailOverviewTabProps) {
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+
   return (
     <div className="grid grid-cols-2 gap-6">
       {/* Recent Exams */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-[#191F28] flex items-center gap-2">
-            <Award className="size-4 text-blue-500" />
-            최근 시험
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {stats.examSubmissions.length === 0 ? (
-            <p className="text-sm text-[#8B95A1] py-4 text-center">
-              시험 기록이 없습니다.
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {stats.examSubmissions.slice(0, 5).map((exam: any) => (
-                <div
-                  key={exam.id}
-                  className="flex items-center justify-between"
-                >
-                  <div>
-                    <p className="text-sm font-medium text-[#191F28]">
-                      {exam.exam.title}
-                    </p>
-                    <p className="text-xs text-[#8B95A1]">
-                      {formatDate(exam.submittedAt)}
-                    </p>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-sm font-bold",
-                      getScoreColor(
-                        exam.score && exam.totalPoints
-                          ? (exam.score / exam.totalPoints) * 100
-                          : 0
-                      )
-                    )}
+      {showResults && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold text-[#191F28] flex items-center gap-2">
+              <Award className="size-4 text-blue-500" />
+              최근 시험
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stats.examSubmissions.length === 0 ? (
+              <p className="text-sm text-[#8B95A1] py-4 text-center">
+                시험 기록이 없습니다.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {stats.examSubmissions.slice(0, 5).map((exam: any) => (
+                  <div
+                    key={exam.id}
+                    className="flex items-center justify-between"
                   >
-                    {exam.score ?? "-"}/{exam.totalPoints ?? "-"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                    <div>
+                      <p className="text-sm font-medium text-[#191F28]">
+                        {exam.exam.title}
+                      </p>
+                      <p className="text-xs text-[#8B95A1]">
+                        {formatDate(exam.submittedAt)}
+                      </p>
+                    </div>
+                    <span
+                      className={cn(
+                        "text-sm font-bold",
+                        getScoreColor(
+                          exam.score && exam.totalPoints
+                            ? (exam.score / exam.totalPoints) * 100
+                            : 0
+                        )
+                      )}
+                    >
+                      {exam.score ?? "-"}/{exam.totalPoints ?? "-"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Recent Attendance */}
       <Card>

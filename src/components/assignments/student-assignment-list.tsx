@@ -23,6 +23,7 @@ import {
 import { submitAssignment } from "@/actions/assignments";
 import { toast } from "sonner";
 import { formatDate } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -104,6 +105,9 @@ export function StudentAssignmentList({ assignments, studentId }: Props) {
       case "LATE":
         return { label: "지각제출", icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50" };
       case "GRADED":
+        if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+          return { label: "제출완료", icon: Check, color: "text-blue-600", bg: "bg-blue-50" };
+        }
         return { label: "채점완료", icon: Check, color: "text-emerald-600", bg: "bg-emerald-50" };
       default:
         return { label: "미제출", icon: Clock, color: "text-[#8B95A1]", bg: "bg-gray-100" };
@@ -228,7 +232,7 @@ export function StudentAssignmentList({ assignments, studentId }: Props) {
                       </span>
                     </div>
                   </div>
-                  {sub.score != null && (
+                  {FEATURE_FLAGS.SHOW_USER_RESULTS && sub.score != null && (
                     <div className="text-right">
                       <p className="text-lg font-bold text-[#191F28]">
                         {sub.score}
@@ -240,7 +244,7 @@ export function StudentAssignmentList({ assignments, studentId }: Props) {
                       </p>
                     </div>
                   )}
-                  {sub.feedback && (
+                  {FEATURE_FLAGS.SHOW_USER_RESULTS && sub.feedback && (
                     <ChevronRight className="size-4 text-[#8B95A1] shrink-0" />
                   )}
                 </div>

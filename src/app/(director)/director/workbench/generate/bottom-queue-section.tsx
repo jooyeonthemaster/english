@@ -721,7 +721,7 @@ export function BottomQueueSection({
                     size="sm"
                     disabled={selectedSessionQuestionIds.size === 0 || batchApproving}
                     onClick={handleBatchApprove}
-                    className="h-7 bg-blue-600 px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-blue-700 disabled:bg-blue-100 disabled:text-blue-400"
+                    className="h-7 bg-emerald-600 px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:bg-emerald-100 disabled:text-emerald-400"
                   >
                     {batchApproving ? (
                       <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />

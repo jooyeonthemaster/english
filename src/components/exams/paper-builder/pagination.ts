@@ -1,7 +1,7 @@
 import {
-  A4_HEIGHT_RATIO,
   GROUP_GAP,
   ITEM_GAP,
+  PAPER_SIZE_SPECS,
   PREVIEW_PAGE_WIDTH,
   TWO_COLUMN_GAP,
 } from "./constants";
@@ -127,7 +127,9 @@ export function estimateTextLines(text: string, columnWidth: number, fontSize: n
 
 export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
   const compact = settings.density === "compact";
-  const pageHeight = PREVIEW_PAGE_WIDTH * A4_HEIGHT_RATIO;
+  const paperSpec = PAPER_SIZE_SPECS[settings.paperSize];
+  const pageWidth = Math.round(PREVIEW_PAGE_WIDTH * paperSpec.widthRatio);
+  const pageHeight = pageWidth * paperSpec.heightRatio;
   const horizontalPadding = compact ? 68 : 84;
   const verticalPadding = compact ? 60 : 76;
   const firstPageHeader = compact ? 82 : 96;
@@ -138,7 +140,7 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
     verticalPadding -
     (pageIndex === 0 ? firstPageHeader : followPageHeader) -
     footer;
-  const contentWidth = PREVIEW_PAGE_WIDTH - horizontalPadding;
+  const contentWidth = pageWidth - horizontalPadding;
   const columnWidth =
     settings.columns === 2 ? (contentWidth - TWO_COLUMN_GAP) / 2 : contentWidth;
 
@@ -248,11 +250,31 @@ export function estimateAnswerBlockHeight(item: PaperItem): number {
   return item.answerSpaceLines * 14 + (item.answerSpaceLines > 0 ? 8 : 0);
 }
 
+export function estimateObjectiveAnswerBlockHeight(item: PaperItem, settings: PaginationSettings): number {
+  const slots = Math.max(0, Math.min(10, item.objectiveAnswerSlots || 0));
+  if (slots <= 0 || item.options.length === 0) return 0;
+  const texts = item.objectiveAnswerTexts || [];
+  return Array.from({ length: slots }).reduce<number>((sum, _, slotIndex) => {
+    const optionIndex = item.options.length + slotIndex;
+    return (
+      sum +
+      estimateOptionBlockHeight(
+        { label: String(optionIndex + 1), text: texts[slotIndex] || "" },
+        settings,
+        item.sourceQuestion.subType,
+        optionIndex,
+      ) +
+      (slotIndex === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP)
+    );
+  }, 0);
+}
+
 export function estimateTeacherNoteHeight(item: PaperItem, settings: PaginationSettings): number {
   return settings.template === "worksheet" && item.teacherNote ? 24 : 0;
 }
 
 type FlowBlock =
+  | { kind: "custom"; group: PaperGroup; item: PaperItem; height: number }
   | { kind: "passage-atom"; group: PaperGroup; allLines: string[]; height: number }
   | { kind: "passage-line"; group: PaperGroup; line: string; lineIndex: number; totalLines: number; height: number }
   | {
@@ -265,6 +287,7 @@ type FlowBlock =
     }
   | { kind: "question-line"; group: PaperGroup; item: PaperItem; line: string; lineIndex: number; totalLines: number; height: number }
   | { kind: "option"; group: PaperGroup; item: PaperItem; option: OptionItem; index: number; height: number }
+  | { kind: "objective-answer"; group: PaperGroup; item: PaperItem; height: number }
   | { kind: "answer"; group: PaperGroup; item: PaperItem; height: number }
   | { kind: "note"; group: PaperGroup; item: PaperItem; height: number };
 
@@ -277,6 +300,29 @@ function itemForBlock(block: FlowBlock): PaperItem | undefined {
   return block.kind === "passage-line" || block.kind === "passage-atom"
     ? undefined
     : block.item;
+}
+
+function estimateCustomBlockHeight(item: PaperItem, settings: PaginationSettings): number {
+  const compact = settings.density === "compact";
+  const { columnWidth } = pageMetrics(settings, 0);
+  const bodyFontSize =
+    item.blockFontSize === "lg" ? 14 : item.blockFontSize === "sm" ? 10 : 11.5;
+
+  switch (item.blockType) {
+    case "section":
+      return 38 + estimateTextLines(item.blockTitle || item.blockText || " ", columnWidth, 15) * 12;
+    case "text":
+      return 20 + estimateTextLines(item.blockText || " ", columnWidth, bodyFontSize) * (compact ? 14 : 16);
+    case "divider":
+      return 18 + Math.max(1, item.dividerThickness);
+    case "spacer":
+      return Math.max(8, Math.min(160, item.spacerHeight || 32));
+    case "image":
+      return Math.max(80, Math.min(260, (columnWidth * Math.max(20, Math.min(100, item.imageWidth || 70))) / 140));
+    case "question":
+    default:
+      return 0;
+  }
 }
 
 export function paginateGroups(groups: PaperGroup[], settings: PaginationSettings): PaginationResult {
@@ -348,6 +394,8 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       partKey: `${item.localId}@p${pageIndex}c${columnIndex}f${fragment.id}n${fragment.parts.length}`,
       showHeader: isFreshStart,
       showAnswer: false,
+      showObjectiveAnswer: false,
+      showCustomBlock: false,
       questionRenderedLines: [],
       questionStartLineIndex: 0,
       questionTotalLines: 0,
@@ -385,6 +433,8 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     }
 
     if (block.kind === "passage-atom") return cost;
+
+    if (block.kind === "custom") return cost;
 
     const item = block.item;
     const lastPart = sameFragment ? lastFrag!.parts[lastFrag!.parts.length - 1] : undefined;
@@ -449,6 +499,17 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
 
   const blocks: FlowBlock[] = [];
   for (const group of groups) {
+    if (group.items[0]?.blockType !== "question") {
+      const item = group.items[0];
+      blocks.push({
+        kind: "custom",
+        group,
+        item,
+        height: estimateCustomBlockHeight(item, settings),
+      });
+      continue;
+    }
+
     if (group.includePassage && group.passageContent) {
       const usesSentenceInsertMarkers = group.items.some(
         (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
@@ -528,6 +589,18 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
             (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP),
         });
       });
+      if (
+        settings.showAnswerSpace &&
+        item.options.length > 0 &&
+        item.objectiveAnswerSlots > 0
+      ) {
+        blocks.push({
+          kind: "objective-answer",
+          group,
+          item,
+          height: estimateObjectiveAnswerBlockHeight(item, settings),
+        });
+      }
       if (settings.showAnswerSpace && item.answerSpaceLines > 0) {
         blocks.push({ kind: "answer", group, item, height: estimateAnswerBlockHeight(item) });
       }
@@ -544,10 +617,11 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     const group = block.group;
     const item = itemForBlock(block);
     const isQuestionStartBlock = block.kind === "question-meta";
+    const isStartBlock = isQuestionStartBlock || block.kind === "custom";
     const itemRequestsKeepStay = !!item && !isFirstBlockOverall && Boolean(item.keepWithPrev);
-    const headerForceStay = isQuestionStartBlock && itemRequestsKeepStay;
+    const headerForceStay = isStartBlock && itemRequestsKeepStay;
 
-    if (isQuestionStartBlock && item && !isFirstBlockOverall && !itemRequestsKeepStay) {
+    if (isStartBlock && item && !isFirstBlockOverall && !itemRequestsKeepStay) {
       if (item.breakBefore === "page") {
         if (currentPage.some((column) => column.length > 0)) pushCurrentPage();
       } else if (item.breakBefore === "column") {
@@ -617,6 +691,12 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         columnHeights[columnIndex] -= passageContinuationReserveHeight(settings);
         passageContinuationReserveFragments.delete(fragment.id);
       }
+    } else if (block.kind === "custom") {
+      const part = ensurePart(fragment, block.item);
+      part.showHeader = false;
+      part.showCustomBlock = true;
+      headerRenderedFor.add(block.item.localId);
+      columnHeights[columnIndex] += block.height;
     } else if (block.kind === "question-meta") {
       const part = ensurePart(fragment, block.item);
       if (!headerRenderedFor.has(block.item.localId)) {
@@ -643,6 +723,10 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     } else if (block.kind === "option") {
       const part = ensurePart(fragment, block.item);
       part.options.push({ option: block.option, originalIndex: block.index });
+      columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "objective-answer") {
+      const part = ensurePart(fragment, block.item);
+      part.showObjectiveAnswer = true;
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "answer") {
       const part = ensurePart(fragment, block.item);

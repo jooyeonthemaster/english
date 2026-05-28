@@ -1,5 +1,6 @@
 "use client";
 
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { ExamDetail } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -7,13 +8,17 @@ import type { ExamDetail } from "./types";
 // ---------------------------------------------------------------------------
 
 export function SettingsTab({ exam }: { exam: ExamDetail }) {
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+
   return (
     <div className="rounded-xl border border-[#E5E8EB] bg-white p-6 space-y-4">
       <h3 className="text-sm font-semibold text-[#191F28]">시험 설정</h3>
       <div className="grid grid-cols-2 gap-4 text-sm">
         <SettingRow label="문제 순서 섞기" value={exam.shuffleQuestions ? "사용" : "미사용"} />
         <SettingRow label="선택지 순서 섞기" value={exam.shuffleOptions ? "사용" : "미사용"} />
-        <SettingRow label="결과 즉시 공개" value={exam.showResults ? "사용" : "미사용"} />
+        {showResults && (
+          <SettingRow label="결과 즉시 공개" value={exam.showResults ? "사용" : "미사용"} />
+        )}
         <SettingRow label="시간 제한" value={exam.duration ? `${exam.duration}분` : "없음"} />
       </div>
     </div>

@@ -4,8 +4,18 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getExamResult } from "@/actions/exam-taking";
 import { ExamResultClient } from "@/components/exams/exam-result-client";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export default function ExamResultPage() {
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/exams" />;
+  }
+
+  return <ExamResultPageContent />;
+}
+
+function ExamResultPageContent() {
   const params = useParams();
   const router = useRouter();
   const examId = params.examId as string;

@@ -4,7 +4,6 @@ import {
   BookOpen,
   ClipboardCheck,
   FileText,
-  GraduationCap,
   CreditCard,
   BarChart3,
   Wallet,
@@ -16,13 +15,19 @@ import {
   TrendingUp,
   FileBarChart,
   Settings,
-  Layers,
   Palette,
   Smartphone,
   Send,
   Activity,
   type LucideIcon,
 } from "lucide-react";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import {
+  ExamPaperGenerationIcon,
+  MaterialExtractionIcon,
+  PassageAnalysisIcon,
+  QuestionGenerationIcon,
+} from "@/components/icons/workflow-icons";
 
 export interface NavChild {
   label: string;
@@ -60,6 +65,8 @@ export const COMING_SOON_FEATURE_BY_PATH: Record<string, { feature: string; labe
 };
 
 export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+
   return [
     {
       title: "",
@@ -68,11 +75,11 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       ],
     },
     {
-      title: "AI 콘텐츠",
+      title: "출제 파이프라인",
       items: [
         {
           label: "자료 추출",
-          icon: ClipboardCheck,
+          icon: MaterialExtractionIcon,
           href: `${basePath}/workbench/extraction`,
           children: [
             { label: "자료 추출", href: `${basePath}/workbench/extraction` },
@@ -81,7 +88,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         },
         {
           label: "지문 분석",
-          icon: FileText,
+          icon: PassageAnalysisIcon,
           href: `${basePath}/workbench/passages/create`,
           children: [
             { label: "지문 분석", href: `${basePath}/workbench/passages/create` },
@@ -90,7 +97,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         },
         {
           label: "문제 생성",
-          icon: Layers,
+          icon: QuestionGenerationIcon,
           href: `${basePath}/workbench/questions/generate`,
           children: [
             { label: "문제 생성", href: `${basePath}/workbench/questions/generate` },
@@ -99,13 +106,18 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         },
         {
           label: "시험지 생성",
-          icon: GraduationCap,
+          icon: ExamPaperGenerationIcon,
           href: `${basePath}/workbench/exams/create`,
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
           ],
         },
+      ],
+    },
+    {
+      title: "AI 콘텐츠",
+      items: [
         {
           label: "지문 기반 웹툰",
           icon: Palette,
@@ -131,11 +143,15 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
             { label: "튜터 홈", href: `${basePath}/tutor` },
             { label: "프로그램", href: `${basePath}/tutor/programs` },
             { label: "새 프로그램", href: `${basePath}/tutor/programs/new` },
-            { label: "수강 현황", href: `${basePath}/tutor/monitor` },
+            ...(showResults
+              ? [{ label: "수강 현황", href: `${basePath}/tutor/monitor` }]
+              : []),
           ],
         },
         { label: "배포 관리", icon: Send, href: `${basePath}/tutor/distributions`, directorOnly: true },
-        { label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true },
+        ...(showResults
+          ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true }]
+          : []),
         { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
         { label: "공지사항", icon: Megaphone, href: `${basePath}/notices` },
       ],
@@ -159,8 +175,12 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
         { label: "메시지", icon: Mail, href: `${basePath}/messages`, comingSoon: true, feature: "messages" },
         { label: "상담 관리", icon: MessageSquare, href: `${basePath}/consultations`, comingSoon: true, feature: "consultations" },
         { label: "일정 관리", icon: Calendar, href: `${basePath}/calendar`, comingSoon: true, feature: "calendar" },
-        { label: "성적 분석", icon: TrendingUp, href: `${basePath}/analytics`, comingSoon: true, feature: "analytics" },
-        { label: "학부모 리포트", icon: FileBarChart, href: `${basePath}/reports`, comingSoon: true, feature: "reports" },
+        ...(showResults
+          ? [
+              { label: "성적 분석", icon: TrendingUp, href: `${basePath}/analytics`, comingSoon: true, feature: "analytics" },
+              { label: "학부모 리포트", icon: FileBarChart, href: `${basePath}/reports`, comingSoon: true, feature: "reports" },
+            ]
+          : []),
       ],
     },
   ];

@@ -1,8 +1,14 @@
 import { getTutorProgramList } from "@/actions/tutor";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
 import { Card, CardContent } from "@/components/ui/card";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import Link from "next/link";
 
 export default async function TutorMonitorIndexPage() {
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/director/tutor" />;
+  }
+
   const programs = await getTutorProgramList();
   return (
     <div className="space-y-5">

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Sparkles, Target, Zap, Trophy, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { SessionResult, QuestProgressUpdate } from "@/lib/learning-types";
 import { LEARNING_SUBTYPE_LABELS } from "@/lib/learning-constants";
 
@@ -14,6 +15,7 @@ interface ResultScreenProps {
 
 export default function ResultScreen({ result, passageId }: ResultScreenProps) {
   const router = useRouter();
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
   const questUpdates = result.questUpdates ?? [];
   const completedQuests = questUpdates.filter((q) => q.justCompleted);
 
@@ -38,39 +40,58 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
           transition={{ delay: 0.2 }}
           className="text-[var(--fs-xl)] font-bold text-black mb-2"
         >
-          {result.score >= 80 ? "훌륭해요!" : result.score >= 50 ? "잘했어요!" : "괜찮아요!"}
+          {showResults
+            ? result.score >= 80
+              ? "훌륭해요!"
+              : result.score >= 50
+                ? "잘했어요!"
+                : "괜찮아요!"
+            : "학습이 저장됐어요"}
         </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center gap-6 mb-6"
-        >
-          <div>
-            <p className="text-[var(--fs-2xl)] font-bold text-black">{result.score}%</p>
-            <p className="text-[var(--fs-xs)] text-gray-500">정답률</p>
-          </div>
-          <div className="w-px h-10 bg-gray-200" />
-          <div>
-            <p className="text-[var(--fs-2xl)] font-bold text-orange-500">+{result.xpEarned}</p>
-            <p className="text-[var(--fs-xs)] text-gray-500">
-              XP {result.xpMultiplier > 1 ? `(x${result.xpMultiplier})` : ""}
-            </p>
-          </div>
-        </motion.div>
+        {showResults ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="flex items-center gap-6 mb-6"
+          >
+            <div>
+              <p className="text-[var(--fs-2xl)] font-bold text-black">{result.score}%</p>
+              <p className="text-[var(--fs-xs)] text-gray-500">정답률</p>
+            </div>
+            <div className="w-px h-10 bg-gray-200" />
+            <div>
+              <p className="text-[var(--fs-2xl)] font-bold text-orange-500">+{result.xpEarned}</p>
+              <p className="text-[var(--fs-xs)] text-gray-500">
+                XP {result.xpMultiplier > 1 ? `(x${result.xpMultiplier})` : ""}
+              </p>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mb-6 max-w-xs text-[var(--fs-base)] leading-6 text-gray-500"
+          >
+            풀이 기록은 정상 저장되었습니다. 결과 확인 기능이 다시 열리면 누적 기록도 함께 확인할 수 있습니다.
+          </motion.p>
+        )}
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-[var(--fs-base)] text-gray-500 mb-6"
-        >
-          {result.correctCount}/{result.totalCount} 문제 정답
-        </motion.p>
+        {showResults && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-[var(--fs-base)] text-gray-500 mb-6"
+          >
+            {result.correctCount}/{result.totalCount} 문제 정답
+          </motion.p>
+        )}
 
         {/* 미션 진행도 섹션 */}
-        {questUpdates.length > 0 && (
+        {showResults && questUpdates.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -92,7 +113,7 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
         )}
 
         {/* 미션 달성 알림 */}
-        {completedQuests.length > 0 && (
+        {showResults && completedQuests.length > 0 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -123,7 +144,7 @@ export default function ResultScreen({ result, passageId }: ResultScreenProps) {
         )}
 
         {/* 틀린 유형 통계 */}
-        {result.wrongQuestions.length > 0 && (
+        {showResults && result.wrongQuestions.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

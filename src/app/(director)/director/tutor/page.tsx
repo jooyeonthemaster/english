@@ -4,11 +4,15 @@ import { getTutorDashboardData } from "@/actions/tutor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatTutorStatus } from "@/lib/tutor/ui-copy";
 
 export default async function DirectorTutorPage() {
   const data = await getTutorDashboardData();
-  const completed = data.progress.find((item) => item.status === "SUBMITTED" || item.status === "GRADED")?._count ?? 0;
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  const completed = showResults
+    ? data.progress.find((item) => item.status === "SUBMITTED" || item.status === "GRADED")?._count ?? 0
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -17,7 +21,9 @@ export default async function DirectorTutorPage() {
           <p className="text-sm font-medium text-blue-600">모바일 학습</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">튜터 운영 홈</h1>
           <p className="mt-2 text-sm text-slate-500">
-            지문 묶음 프로그램을 만들고, 학생들의 모바일 학습 진행을 한 곳에서 확인합니다.
+            {showResults
+              ? "지문 묶음 프로그램을 만들고, 학생들의 모바일 학습 진행을 한 곳에서 확인합니다."
+              : "지문 묶음 프로그램을 만들고 모바일 학습 배포를 관리합니다."}
           </p>
         </div>
         <Button asChild className="bg-blue-600 hover:bg-blue-700">
@@ -25,11 +31,11 @@ export default async function DirectorTutorPage() {
         </Button>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-4">
+      <div className={showResults ? "grid gap-3 md:grid-cols-4" : "grid gap-3 md:grid-cols-3"}>
         <MetricCard icon={BookOpenCheck} label="프로그램" value={data.programCount} />
         <MetricCard icon={Send} label="진행 중 배포" value={data.openAssignments} />
         <MetricCard icon={Users} label="활성 학생" value={data.activeStudents} />
-        <MetricCard icon={Activity} label="완료 기록" value={completed} />
+        {showResults && <MetricCard icon={Activity} label="완료 기록" value={completed} />}
       </div>
 
       <Card className="border-slate-200 bg-white shadow-sm">

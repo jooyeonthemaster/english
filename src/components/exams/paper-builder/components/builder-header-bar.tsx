@@ -35,7 +35,7 @@ export function BuilderHeaderBar({
         <div className="min-w-0">
           <h1 className="truncate text-[18px] font-bold tracking-tight text-slate-900">시험지 생성</h1>
           <p className="text-[12px] text-slate-400">
-            문제 은행에서 고르고, A4 미리보기에서 편집한 뒤 바로 저장합니다.
+            문제 은행에서 고르고, 용지 미리보기에서 편집한 뒤 바로 저장합니다.
           </p>
         </div>
       </div>

@@ -30,7 +30,7 @@ export default function AdminPlansPage() {
       <div>
         <h1 className="text-[22px] font-bold text-gray-900">요금제 관리</h1>
         <p className="mt-1 text-[13px] text-gray-400">
-          구독 요금제와 프로모션 표시 정보를 관리합니다
+          크레딧 충전 상품과 동일한 기준으로 구독 요금제 표시 정보를 관리합니다
         </p>
       </div>
 

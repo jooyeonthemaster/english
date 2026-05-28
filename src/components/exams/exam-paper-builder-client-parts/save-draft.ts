@@ -6,6 +6,7 @@ import type {
   ClassOption,
   Density,
   PaperItem,
+  PaperSize,
   PaperTemplate,
   PassageStyle,
   SchoolOption,
@@ -28,6 +29,7 @@ interface SaveDraftInput {
   examDate: string;
   totalPoints: number;
   template: PaperTemplate;
+  paperSize: PaperSize;
   columns: 1 | 2;
   density: Density;
   showAnswerSpace: boolean;
@@ -48,8 +50,46 @@ interface SaveDraftResult {
   id: string | null;
 }
 
+function serializePaperBlock(item: PaperItem) {
+  return {
+    localId: item.localId,
+    blockType: item.blockType,
+    orderNum: item.orderNum,
+    questionId: item.blockType === "question" ? item.questionId : undefined,
+    points: item.points,
+    groupId: item.groupId,
+    includePassage: item.includePassage,
+    passageTitle: item.passageTitle,
+    passageContent: item.passageContent,
+    questionText: item.questionText,
+    options: item.options,
+    correctAnswer: item.correctAnswer,
+    answerSpaceLines: item.answerSpaceLines,
+    objectiveAnswerSlots: item.objectiveAnswerSlots,
+    objectiveAnswerTexts: item.objectiveAnswerTexts,
+    sectionTitle: item.sectionTitle,
+    teacherNote: item.teacherNote,
+    breakBefore: item.breakBefore,
+    keepWithPrev: item.keepWithPrev,
+    locked: item.locked,
+    blockTitle: item.blockTitle,
+    blockText: item.blockText,
+    blockAlign: item.blockAlign,
+    blockFontSize: item.blockFontSize,
+    blockAccentColor: item.blockAccentColor,
+    dividerStyle: item.dividerStyle,
+    dividerThickness: item.dividerThickness,
+    spacerHeight: item.spacerHeight,
+    imageDataUrl: item.imageDataUrl,
+    imageAlt: item.imageAlt,
+    imageWidth: item.imageWidth,
+  };
+}
+
 export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Promise<SaveDraftResult> {
-  if (input.paperItems.length === 0) {
+  const questionItems = input.paperItems.filter((item) => item.blockType === "question");
+
+  if (questionItems.length === 0) {
     toast.error("시험지에 넣을 문제를 선택해주세요.");
     return { success: false, id: null };
   }
@@ -64,9 +104,10 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
     semester: input.semester || null,
     examType: input.examType || null,
     examDate: input.examDate || null,
-    totalPoints: input.totalPoints || input.paperItems.length,
+    totalPoints: input.totalPoints || questionItems.length,
     template: input.template,
     layout: {
+      paperSize: input.paperSize,
       columns: input.columns,
       density: input.density,
       showAnswerSpace: input.showAnswerSpace,
@@ -83,7 +124,9 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       instructions: input.instructions,
       academyLogoDataUrl: input.academyLogoDataUrl,
     },
-    items: input.paperItems.map((item) => ({
+    items: questionItems.map((item) => ({
+      localId: item.localId,
+      blockType: "question",
       questionId: item.questionId,
       orderNum: item.orderNum,
       points: item.points,
@@ -95,11 +138,14 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       options: item.options,
       correctAnswer: item.correctAnswer,
       answerSpaceLines: item.answerSpaceLines,
+      objectiveAnswerSlots: item.objectiveAnswerSlots,
+      objectiveAnswerTexts: item.objectiveAnswerTexts,
       sectionTitle: item.sectionTitle,
       teacherNote: item.teacherNote,
       breakBefore: item.breakBefore,
       keepWithPrev: item.keepWithPrev,
     })),
+    blocks: input.paperItems.map(serializePaperBlock),
   });
 
   if (!result.success) {

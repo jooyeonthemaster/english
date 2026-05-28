@@ -1,12 +1,16 @@
 "use client";
 
-import type { RefObject } from "react";
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import {
   Loader2,
   Wand2,
   Check,
-  ChevronDown,
-  ChevronUp,
   X,
   ImageIcon,
 } from "lucide-react";
@@ -16,14 +20,16 @@ import {
   PassageAnnotationEditor,
   type Annotation,
 } from "@/components/workbench/editor";
+import { ExtractionManageClient } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
-import { ExtractionDraftGrid } from "./extraction-draft-grid";
 import { CompactOptionsRow } from "./compact-options-row";
 
 interface FormSectionProps {
+  academyId: string;
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
   hasContent: boolean;
@@ -93,10 +99,28 @@ interface FormSectionProps {
   onDeletePrompt: (id: string) => void;
 }
 
+const LEFT_PANE_STORAGE_KEY = "smoat:passage-form:left-pane-width";
+const LEFT_PANE_MIN = 460;
+const LEFT_PANE_DEFAULT = 480;
+const LEFT_PANE_MAX_RATIO = 0.5;
+const RIGHT_PANE_MIN = 480;
+const HANDLE_HIT_WIDTH = 12;
+
+function readStoredLeftPaneWidth(): number {
+  if (typeof window === "undefined") return LEFT_PANE_DEFAULT;
+  try {
+    const raw = window.localStorage.getItem(LEFT_PANE_STORAGE_KEY);
+    if (!raw) return LEFT_PANE_DEFAULT;
+    const n = parseInt(raw, 10);
+    if (Number.isNaN(n)) return LEFT_PANE_DEFAULT;
+    return Math.max(LEFT_PANE_MIN, n);
+  } catch {
+    return LEFT_PANE_DEFAULT;
+  }
+}
+
 export function FormSection(props: FormSectionProps) {
   const {
-    formCollapsed,
-    setFormCollapsed,
     hasContent,
     wordCount,
     saving,
@@ -116,48 +140,107 @@ export function FormSection(props: FormSectionProps) {
     onDrop,
   } = props;
 
+  const splitContainerRef = useRef<HTMLDivElement>(null);
+  const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
+    readStoredLeftPaneWidth,
+  );
+
+  const beginLeftPaneResize = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startWidth = leftPaneWidth;
+      const containerWidth =
+        splitContainerRef.current?.getBoundingClientRect().width ?? 0;
+      const ratioCap = containerWidth > 0
+        ? Math.floor(containerWidth * LEFT_PANE_MAX_RATIO)
+        : Number.POSITIVE_INFINITY;
+      const maxWidth = Math.max(
+        LEFT_PANE_MIN,
+        Math.min(
+          ratioCap,
+          containerWidth - RIGHT_PANE_MIN - HANDLE_HIT_WIDTH,
+        ),
+      );
+      let latest = startWidth;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+      const onMove = (ev: PointerEvent) => {
+        latest = Math.min(
+          maxWidth,
+          Math.max(LEFT_PANE_MIN, startWidth + (ev.clientX - startX)),
+        );
+        setLeftPaneWidth(latest);
+      };
+      const onUp = () => {
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        try {
+          window.localStorage.setItem(
+            LEFT_PANE_STORAGE_KEY,
+            String(latest),
+          );
+        } catch {
+          /* ignore */
+        }
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [leftPaneWidth],
+  );
+
+  const resetLeftPaneWidth = useCallback(() => {
+    setLeftPaneWidth(LEFT_PANE_DEFAULT);
+    try {
+      window.localStorage.setItem(
+        LEFT_PANE_STORAGE_KEY,
+        String(LEFT_PANE_DEFAULT),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   return (
     <div className="border-b border-slate-200 bg-white">
-      {/* Collapse toggle */}
-      <button
-        type="button"
-        onClick={() => setFormCollapsed(!formCollapsed)}
-        className="w-full flex items-center justify-between px-6 py-3 hover:bg-slate-50/50 transition-colors"
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-semibold text-slate-700">
-            {formCollapsed ? "새 지문 등록하기" : "지문 입력"}
-          </span>
-          {hasContent && !formCollapsed ? (
-            <span className="text-[11px] text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded">
-              {wordCount} words
-            </span>
-          ) : null}
-        </div>
-        {formCollapsed ? (
-          <ChevronDown className="w-4 h-4 text-slate-400" />
-        ) : (
-          <ChevronUp className="w-4 h-4 text-slate-400" />
-        )}
-      </button>
+      <div className="px-6 pb-5">
+          {/* ─── 2-Pane Layout: 자료 관리 | Editor + Compact Bottom ─── */}
+          <div
+            ref={splitContainerRef}
+            className="flex flex-col xl:flex-row gap-4 xl:gap-0 h-[700px]"
+            style={
+              { "--left-pane-w": `${leftPaneWidth}px` } as React.CSSProperties
+            }
+          >
+            {/* LEFT: 자료 관리 picker (embedded ExtractionManageClient) */}
+            <div className="flex min-h-0 min-w-0 w-full flex-col xl:w-[var(--left-pane-w)] xl:shrink-0">
+              <ExtractionManageEmbed
+                academyId={props.academyId}
+                draftCollections={props.draftCollections}
+                draftMembership={props.draftMembership}
+                selectedDraftId={props.selectedDraftId}
+                onSelectDraft={props.onSelectDraft}
+              />
+            </div>
 
-      {!formCollapsed ? (
-        <div className="px-6 pb-5">
-          {/* ─── 2-Pane Layout: Extraction Grid | Editor + Compact Bottom ─── */}
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(360px,0.9fr)_minmax(620px,1.6fr)] gap-4 h-[700px]">
-            {/* LEFT: Extraction draft grid */}
-            <ExtractionDraftGrid
-              selectedDraftId={props.selectedDraftId}
-              refreshToken={props.draftRefreshToken}
-              onSelectDraft={props.onSelectDraft}
-              collections={props.draftCollections}
-              membership={props.draftMembership}
-              onBulkAnalyze={props.onBulkAnalyze}
-              bulkAnalyzing={props.bulkAnalyzing}
-            />
+            {/* RESIZE HANDLE — desktop only */}
+            <div
+              onPointerDown={beginLeftPaneResize}
+              onDoubleClick={resetLeftPaneWidth}
+              role="separator"
+              aria-orientation="vertical"
+              title="드래그하여 너비 조절 · 더블 클릭하여 초기화"
+              className="group/hhandle hidden xl:flex shrink-0 mx-1 w-3 cursor-col-resize items-center justify-center select-none"
+            >
+              <div className="h-12 w-0.5 rounded-full bg-slate-200 transition-colors group-hover/hhandle:bg-blue-400 group-active/hhandle:bg-blue-500" />
+            </div>
 
             {/* RIGHT: Editor + Compact options row */}
-            <div className="flex flex-col min-h-0 gap-3">
+            <div className="flex flex-col min-h-0 min-w-0 gap-3 xl:flex-1">
               {/* Title row + image */}
               <div className="flex items-center gap-2 shrink-0">
                 <Input
@@ -331,8 +414,45 @@ export function FormSection(props: FormSectionProps) {
               </Button>
             </div>
           </div>
-        </div>
-      ) : null}
+      </div>
     </div>
+  );
+}
+
+interface ExtractionManageEmbedProps {
+  academyId: string;
+  draftCollections: DraftCollectionItem[];
+  draftMembership: Record<string, string[]>;
+  selectedDraftId: string | null;
+  onSelectDraft: (draft: M1PassageDraftWithJob) => void;
+}
+
+function ExtractionManageEmbed({
+  academyId,
+  draftCollections,
+  draftMembership,
+  selectedDraftId,
+  onSelectDraft,
+}: ExtractionManageEmbedProps) {
+  const membership = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+    for (const [k, v] of Object.entries(draftMembership)) map[k] = new Set(v);
+    return map;
+  }, [draftMembership]);
+
+  const collections = useMemo<CollectionItem[]>(
+    () => draftCollections.map((c) => ({ ...c, createdAt: null })),
+    [draftCollections],
+  );
+
+  return (
+    <ExtractionManageClient
+      embedded
+      academyId={academyId}
+      initialCollections={collections}
+      initialCollectionMembership={membership}
+      selectedExternalDraftId={selectedDraftId}
+      onSelectDraftExternal={onSelectDraft}
+    />
   );
 }

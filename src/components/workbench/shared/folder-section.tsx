@@ -63,6 +63,10 @@ interface FolderSectionProps {
     title: string;
     totalCount: number;
     itemLabel: string;
+    /** Count unit ("개"/"편"/"문항"/"부"…). Defaults to "개". Used to give each
+     *  workbench stage a recognizable unit at a glance — see DOMAIN_UNITS in
+     *  the task queue constants for the canonical per-stage values. */
+    itemUnit?: string;
     description?: string;
   };
   rootLabel?: string;
@@ -494,7 +498,8 @@ export function FolderSection({
                     </span>
                   ) : null}
                   <span className="shrink-0 text-[11px] font-medium text-slate-400 tabular-nums">
-                    · {pageHeader.itemLabel} {pageHeader.totalCount}개
+                    · {pageHeader.itemLabel} {pageHeader.totalCount}
+                    {pageHeader.itemUnit ?? "개"}
                     {childFolders.length > 0
                       ? ` · 폴더 ${childFolders.length}개`
                       : ""}

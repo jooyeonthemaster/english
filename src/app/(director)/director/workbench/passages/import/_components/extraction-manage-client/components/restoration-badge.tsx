@@ -17,7 +17,7 @@ export function RestorationBadge({ status }: { status: string }) {
   }
   if (status === "NO_RESTORATION_NEEDED") {
     return (
-      <span className="inline-flex items-center rounded-full bg-gradient-to-b from-emerald-50 to-emerald-100/70 px-2 py-0.5 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-200/60">
+      <span className="inline-flex items-center rounded-full bg-gradient-to-b from-slate-50 to-slate-100/70 px-2 py-0.5 text-[11px] font-bold text-slate-600 ring-1 ring-slate-200/60">
         복원 불필요
       </span>
     );
@@ -37,15 +37,21 @@ export function RestorationBadge({ status }: { status: string }) {
       </span>
     );
   }
-  // PARTIAL or any unknown status — fall back to the cautious "needs review"
-  // amber badge. Never silently claim 복원됨 for an unrecognised value.
+  // PARTIAL or any unknown status — restoration *was* attempted but the
+  // outcome wasn't clean. Render the 복원됨 outcome alongside an orthogonal
+  // 확인 필요 flag so reviewers see both: "it was restored, but verify it."
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-b from-amber-50 to-amber-100/70 px-2 py-0.5 text-[11px] font-bold text-amber-800 ring-1 ring-amber-200/70">
-      <span
-        aria-hidden="true"
-        className="size-1.5 rounded-full bg-amber-500 motion-safe:animate-pulse"
-      />
-      확인 필요
-    </span>
+    <>
+      <span className="inline-flex items-center rounded-full bg-gradient-to-b from-sky-50 to-sky-100/70 px-2 py-0.5 text-[11px] font-bold text-sky-700 ring-1 ring-sky-200/60">
+        복원됨
+      </span>
+      <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-b from-amber-50 to-amber-100/70 px-2 py-0.5 text-[11px] font-bold text-amber-800 ring-1 ring-amber-200/70">
+        <span
+          aria-hidden="true"
+          className="size-1.5 rounded-full bg-amber-500 motion-safe:animate-pulse"
+        />
+        확인 필요
+      </span>
+    </>
   );
 }

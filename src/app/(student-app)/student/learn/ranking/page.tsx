@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Trophy, School, Building2, Medal, User } from "lucide-react";
+import { School, Building2, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
 import {
   getIndividualRanking,
   getSchoolRanking,
@@ -27,7 +28,14 @@ const TABS: { value: Tab; label: string; icon: typeof User }[] = [
 const RANK_MEDALS = ["", "🥇", "🥈", "🥉"];
 
 export default function RankingPage() {
-  const router = useRouter();
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref="/student/learn" />;
+  }
+
+  return <RankingPageContent />;
+}
+
+function RankingPageContent() {
   const [tab, setTab] = useState<Tab>("individual");
   const [individualData, setIndividualData] = useState<{
     top5: RankingEntry[];

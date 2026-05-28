@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, TrendingUp, CreditCard, MessageSquare, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 const bottomTabs = [
   { label: "홈", icon: Home, href: "/parent" },
@@ -13,6 +14,7 @@ const bottomTabs = [
   { label: "소통", icon: MessageSquare, href: "/parent/messages" },
   { label: "리포트", icon: FileText, href: "/parent/reports" },
 ];
+const resultTabHrefs = new Set(["/parent/grades", "/parent/reports"]);
 
 export default function ParentAppLayout({
   children,
@@ -22,6 +24,9 @@ export default function ParentAppLayout({
   const pathname = usePathname();
 
   const isLoginPage = pathname === "/parent/login";
+  const visibleTabs = FEATURE_FLAGS.SHOW_USER_RESULTS
+    ? bottomTabs
+    : bottomTabs.filter((tab) => !resultTabHrefs.has(tab.href));
 
   function isActive(href: string) {
     if (href === "/parent") return pathname === "/parent";
@@ -48,7 +53,7 @@ export default function ParentAppLayout({
             aria-label="하단 메뉴"
           >
             <div className="flex items-center justify-around h-16 w-full max-w-2xl mx-auto">
-              {bottomTabs.map((tab) => {
+              {visibleTabs.map((tab) => {
                 const active = isActive(tab.href);
                 const Icon = tab.icon;
                 return (

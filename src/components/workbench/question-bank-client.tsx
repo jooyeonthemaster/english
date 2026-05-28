@@ -347,7 +347,7 @@ export function QuestionBankClient({
       }
 
       setSelectedIds(new Set(ids));
-      toast.success(`${ids.length}개 문제를 전체 페이지에서 선택했습니다.`);
+      toast.success(`${ids.length}문항을 전체 페이지에서 선택했습니다.`);
     } catch (err) {
       toast.error(
         err instanceof Error
@@ -498,12 +498,12 @@ export function QuestionBankClient({
         return;
       }
       if (result.deleted === result.requested) {
-        toast.success(`${result.deleted}개 문제를 삭제했습니다.`);
+        toast.success(`${result.deleted}문항을 삭제했습니다.`);
       } else if (result.deleted === 0) {
         toast.error("삭제된 문제가 없습니다.");
       } else {
         toast.warning(
-          `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+          `${result.deleted}문항 삭제됨, ${result.requested - result.deleted}문항 누락`,
         );
       }
       setRemovedIds((prev) => {
@@ -666,7 +666,7 @@ export function QuestionBankClient({
           {activePassageContext.title}
         </span>
         <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10.5px] font-bold text-blue-700 ring-1 ring-blue-200">
-          {activePassageContext.visibleCount}개
+          {activePassageContext.visibleCount}문항
         </span>
         {activePassageContext.hasAnalysis ? (
           <span className="shrink-0 rounded-md border border-blue-100 bg-white/70 px-1.5 py-0.5 text-[10px] font-medium text-blue-700">
@@ -739,6 +739,7 @@ export function QuestionBankClient({
                 title: "문제 관리",
                 totalCount,
                 itemLabel: isGrouped ? "지문" : "문제",
+                itemUnit: isGrouped ? "편" : "문항",
               }}
               selectionBar={
                 <SelectionToolbar
@@ -757,6 +758,7 @@ export function QuestionBankClient({
                   activeFolder={folders.activeFolder}
                   onRemoveFromFolder={handleRemoveFromFolder}
                   extraActions={selectionExtraActions}
+                  itemUnit="문항"
                   rightSlot={
                     <div className="flex items-center gap-1.5">
                       {viewModeToggle}
@@ -885,7 +887,7 @@ export function QuestionBankClient({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              선택한 문제 {selectedIds.size}개를 삭제하시겠습니까?
+              선택한 문제 {selectedIds.size}문항을 삭제하시겠습니까?
             </AlertDialogTitle>
             <AlertDialogDescription>
               이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께

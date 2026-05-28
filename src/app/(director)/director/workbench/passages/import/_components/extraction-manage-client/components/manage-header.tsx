@@ -6,4 +6,9 @@ export type StatusFilter =
   | "FAILED"
   | "NO_RESTORATION_NEEDED";
 
-export type SortOrder = "newest" | "oldest" | "page_asc";
+export type SortOrder =
+  | "newest"
+  | "oldest"
+  | "page_asc"
+  | "name_asc"
+  | "name_desc";

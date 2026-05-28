@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Clock, Award, TrendingUp } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { getStudentExamResults } from "@/actions/student-app-resources";
 
 // ---------------------------------------------------------------------------
@@ -43,7 +44,9 @@ export function ExamsTab() {
         setUpcoming(d.upcoming);
         setGraded(d.graded);
         // 예정 시험 없고 채점 결과만 있으면 자동 전환
-        if (d.upcoming.length === 0 && d.graded.length > 0) setTab("graded");
+        if (FEATURE_FLAGS.SHOW_USER_RESULTS && d.upcoming.length === 0 && d.graded.length > 0) {
+          setTab("graded");
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -62,7 +65,8 @@ export function ExamsTab() {
     );
   }
 
-  const isEmpty = upcoming.length === 0 && graded.length === 0;
+  const visibleGraded = FEATURE_FLAGS.SHOW_USER_RESULTS ? graded : [];
+  const isEmpty = upcoming.length === 0 && visibleGraded.length === 0;
   if (isEmpty) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-gray-400">
@@ -87,17 +91,19 @@ export function ExamsTab() {
         >
           예정 ({upcoming.length})
         </button>
-        <button
-          onClick={() => setTab("graded")}
-          className={cn(
-            "flex-1 py-2 rounded-2xl text-[var(--fs-sm)] font-medium transition-colors",
-            tab === "graded"
-              ? "bg-[var(--key-color)] text-white"
-              : "bg-gray-100 text-gray-500"
-          )}
-        >
-          결과 ({graded.length})
-        </button>
+        {FEATURE_FLAGS.SHOW_USER_RESULTS && (
+          <button
+            onClick={() => setTab("graded")}
+            className={cn(
+              "flex-1 py-2 rounded-2xl text-[var(--fs-sm)] font-medium transition-colors",
+              tab === "graded"
+                ? "bg-[var(--key-color)] text-white"
+                : "bg-gray-100 text-gray-500"
+            )}
+          >
+            결과 ({graded.length})
+          </button>
+        )}
       </div>
 
       {/* 예정된 시험 */}
@@ -116,7 +122,7 @@ export function ExamsTab() {
       )}
 
       {/* 채점 결과 */}
-      {tab === "graded" && (
+      {FEATURE_FLAGS.SHOW_USER_RESULTS && tab === "graded" && (
         <div className="space-y-2">
           {graded.length === 0 ? (
             <p className="text-center text-gray-400 py-8 text-[var(--fs-sm)]">

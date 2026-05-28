@@ -96,26 +96,21 @@ export function OriginalProblemBox({
 
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col rounded-lg border border-slate-200 bg-white">
-      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-bold text-slate-900">
-            문제 원문
-          </span>
-          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-bold text-slate-600">
-            RAW
-          </span>
-        </div>
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
+        <span className="text-[13px] font-bold text-slate-900">
+          문제 원문
+        </span>
         <div className="inline-flex items-center gap-0.5 rounded-md border border-slate-200 bg-slate-50 p-0.5">
           <ViewModeButton
             active={mode === "text"}
             onClick={() => setMode("text")}
-            icon={<FileText className="size-3.5" aria-hidden="true" />}
+            icon={<FileText className="size-3" aria-hidden="true" />}
             label="텍스트"
           />
           <ViewModeButton
             active={mode === "image"}
             onClick={() => setMode("image")}
-            icon={<ImageIcon className="size-3.5" aria-hidden="true" />}
+            icon={<ImageIcon className="size-3" aria-hidden="true" />}
             label="이미지"
           />
         </div>
@@ -182,7 +177,7 @@ function ViewModeButton({
       onClick={onClick}
       aria-pressed={active}
       className={
-        "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded px-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        "inline-flex h-6 cursor-pointer items-center gap-1 rounded px-1.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (active
           ? "bg-white text-blue-700 shadow-sm"
           : "text-slate-500 hover:text-slate-800")

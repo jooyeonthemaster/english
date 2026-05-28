@@ -14,6 +14,7 @@ import {
   TableLayoutType,
   TableRow,
   TextRun,
+  UnderlineType,
   VerticalAlign,
   WidthType,
 } from "docx";
@@ -82,6 +83,15 @@ const SIZE_ANSWER_VALUE = 22; // 11pt
 const SIZE_EXPLAIN_LABEL = 16; // 8pt
 const SIZE_EXPLAIN_BODY = 18; // 9pt
 
+function mmToDxa(value: number) {
+  return Math.round((value / 25.4) * 1440);
+}
+
+const DOCX_PAPER_SIZES = {
+  A4: { width: mmToDxa(210), height: mmToDxa(297) },
+  B4: { width: mmToDxa(257), height: mmToDxa(364) },
+} as const;
+
 export interface BuilderHeader {
   subtitle?: string;
   schoolName?: string;
@@ -92,6 +102,7 @@ export interface BuilderHeader {
 }
 
 export interface BuilderLayout {
+  paperSize?: "A4" | "B4";
   columns?: 1 | 2;
   density?: "comfortable" | "compact";
   showAnswerSpace?: boolean;
@@ -102,6 +113,8 @@ export interface BuilderLayout {
 }
 
 export interface BuilderItem {
+  localId?: string;
+  blockType?: "question";
   questionId: string;
   orderNum?: number;
   points?: number;
@@ -113,16 +126,39 @@ export interface BuilderItem {
   options?: Array<{ label: string; text: string }>;
   correctAnswer?: string;
   answerSpaceLines?: number;
+  objectiveAnswerSlots?: number;
+  objectiveAnswerTexts?: string[];
   sectionTitle?: string;
   teacherNote?: string;
 }
 
+export type BuilderBlockType = "question" | "text" | "section" | "divider" | "spacer" | "image";
+
+export interface BuilderBlock extends Omit<Partial<BuilderItem>, "blockType"> {
+  localId: string;
+  blockType: BuilderBlockType;
+  locked?: boolean;
+  blockTitle?: string;
+  blockText?: string;
+  blockAlign?: "left" | "center" | "right";
+  blockFontSize?: "sm" | "md" | "lg";
+  blockAccentColor?: string;
+  dividerStyle?: "solid" | "dashed" | "dotted";
+  dividerThickness?: number;
+  spacerHeight?: number;
+  imageDataUrl?: string | null;
+  imageAlt?: string;
+  imageWidth?: number;
+}
+
 export interface BuilderSettings {
   source: string;
+  version?: number;
   template?: string;
   layout?: BuilderLayout;
   header?: BuilderHeader;
   items: BuilderItem[];
+  blocks?: BuilderBlock[];
 }
 
 interface BuilderItemResolved extends BuilderItem {
@@ -644,13 +680,60 @@ function buildQuestionBlock(
         }),
       );
     });
+  }
+
+  // 객관식 추가 선지
+  if (
+    showAnswerSpace &&
+    options.length > 0 &&
+    (item.objectiveAnswerSlots ?? 0) > 0
+  ) {
+    const slots = Math.max(1, Math.min(10, item.objectiveAnswerSlots ?? 0));
+    const objectiveAnswerTexts = item.objectiveAnswerTexts || [];
+    for (let slotIndex = 0; slotIndex < slots; slotIndex += 1) {
+      const optionIndex = options.length + slotIndex;
+      const displayText = objectiveAnswerTexts[slotIndex]?.trim() || "";
+      const useKR = /[가-힣]/.test(displayText);
+      result.push(
+        new Paragraph({
+          spacing: { after: 40, line: 280 },
+          indent: { left: 360, hanging: 280 },
+          children: [
+            new TextRun({
+              text: optionOrdinalLabel(optionIndex),
+              font: KR_FONT,
+              size: bodySize,
+              bold: true,
+              color: COLOR.darkGray,
+            }),
+            new TextRun({ text: "  ", font: KR_FONT, size: bodySize }),
+            ...(displayText
+              ? parseFormattedText(displayText, {
+                  font: useKR ? KR_FONT : FONT,
+                  size: bodySize,
+                })
+              : [
+                  new TextRun({
+                    text: "                                      ",
+                    font: KR_FONT,
+                    size: bodySize,
+                    underline: { type: UnderlineType.SINGLE },
+                    color: COLOR.darkGray,
+                  }),
+                ]),
+          ],
+        }),
+      );
+    }
+  }
+
+  if (options.length > 0) {
     result.push(new Paragraph({ spacing: { after: 60 } }));
   }
 
-  // 답란
+  // 서술형/주관식 답란
   if (
     showAnswerSpace &&
-    options.length === 0 &&
     (item.answerSpaceLines ?? 0) > 0
   ) {
     const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 0));
@@ -908,6 +991,186 @@ function groupItems(
   return groups;
 }
 
+function docAlignment(align: BuilderBlock["blockAlign"]): (typeof AlignmentType)[keyof typeof AlignmentType] {
+  if (align === "center") return AlignmentType.CENTER;
+  if (align === "right") return AlignmentType.RIGHT;
+  return AlignmentType.LEFT;
+}
+
+function blockBodySize(block: BuilderBlock, compact: boolean) {
+  if (block.blockFontSize === "lg") return compact ? 24 : 26;
+  if (block.blockFontSize === "sm") return compact ? 16 : 18;
+  return compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+}
+
+function dividerBorderStyle(style: BuilderBlock["dividerStyle"]) {
+  if (style === "dashed") return BorderStyle.DASHED;
+  if (style === "dotted") return BorderStyle.DOTTED;
+  return BorderStyle.SINGLE;
+}
+
+function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
+  const accent = (block.blockAccentColor || "#2563EB").replace("#", "");
+  const align = docAlignment(block.blockAlign);
+  const text = block.blockText || block.questionText || "";
+
+  if (block.blockType === "section") {
+    return [
+      new Paragraph({
+        alignment: align,
+        spacing: { before: 140, after: 120 },
+        border: {
+          left: bdr(BorderStyle.SINGLE, 16, accent),
+          bottom: bdr(BorderStyle.SINGLE, 4, COLOR.lightGray),
+          top: NONE,
+          right: NONE,
+        },
+        indent: { left: 160 },
+        children: [
+          new TextRun({
+            text: block.blockTitle || text || "새 섹션",
+            font: KR_FONT,
+            size: compact ? 24 : 26,
+            bold: true,
+            color: COLOR.black,
+          }),
+        ],
+      }),
+    ];
+  }
+
+  if (block.blockType === "text") {
+    const paragraphs = (text || " ").replace(/\r/g, "").split("\n");
+    return paragraphs.map(
+      (paragraph) =>
+        new Paragraph({
+          alignment: align,
+          spacing: { before: 40, after: 80 },
+          children: parseFormattedText(paragraph || " ", {
+            font: KR_FONT,
+            size: blockBodySize(block, compact),
+            color: COLOR.darkGray,
+          }),
+        }),
+    );
+  }
+
+  if (block.blockType === "divider") {
+    return [
+      new Paragraph({
+        spacing: { before: 120, after: 120 },
+        border: {
+          top: bdr(
+            dividerBorderStyle(block.dividerStyle),
+            Math.max(4, Math.min(24, (block.dividerThickness || 1) * 4)),
+            accent,
+          ),
+          bottom: NONE,
+          left: NONE,
+          right: NONE,
+        },
+        children: [new TextRun({ text: "" })],
+      }),
+    ];
+  }
+
+  if (block.blockType === "spacer") {
+    return [
+      new Paragraph({
+        spacing: { before: 0, after: Math.max(80, Math.min(900, (block.spacerHeight || 32) * 10)) },
+        children: [new TextRun({ text: "" })],
+      }),
+    ];
+  }
+
+  if (block.blockType === "image") {
+    const image = dataUrlToImage(block.imageDataUrl);
+    if (!image) {
+      return [
+        new Paragraph({
+          alignment: align,
+          spacing: { before: 80, after: 80 },
+          children: [
+            new TextRun({
+              text: block.imageAlt || "이미지",
+              font: KR_FONT,
+              size: SIZE_META,
+              color: COLOR.gray,
+              italics: true,
+            }),
+          ],
+        }),
+      ];
+    }
+
+    const width = Math.max(120, Math.min(520, 520 * ((block.imageWidth || 70) / 100)));
+    return [
+      new Paragraph({
+        alignment: align,
+        spacing: { before: 80, after: block.imageAlt ? 40 : 120 },
+        children: [
+          new ImageRun({
+            data: image.buffer,
+            transformation: { width, height: width * 0.68 },
+            type: image.type,
+          }),
+        ],
+      }),
+      ...(block.imageAlt
+        ? [
+            new Paragraph({
+              alignment: align,
+              spacing: { after: 100 },
+              children: [
+                new TextRun({
+                  text: block.imageAlt,
+                  font: KR_FONT,
+                  size: SIZE_META,
+                  color: COLOR.gray,
+                }),
+              ],
+            }),
+          ]
+        : []),
+    ];
+  }
+
+  return [];
+}
+
+function appendQuestionGroups(
+  target: DocChild[],
+  items: BuilderItemResolved[],
+  layout: BuilderLayout,
+  includeAnswers: boolean,
+  compact: boolean,
+) {
+  const passageStyle = layout.passageStyle ?? "boxed";
+  const showPassageTitle = layout.showPassageTitle !== false;
+  const groups = groupItems(items);
+  for (const group of groups) {
+    const first = group.items[0];
+    const includePassage = first.includePassage !== false;
+    const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
+    if (includePassage && passageContent) {
+      const passageBlocks = buildPassage({
+        passageTitle: first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+        passageContent,
+        passageStyle,
+        showPassageTitle,
+        compact,
+        usesSentenceInsertMarkers: group.items.some(
+          (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
+        ),
+      });
+      target.push(...passageBlocks);
+    }
+    for (const item of group.items) {
+      target.push(...buildQuestionBlock(item, layout, includeAnswers));
+    }
+  }
+}
+
 // =============================================================================
 // 메인: Document 빌드
 // =============================================================================
@@ -924,8 +1187,8 @@ export function buildBuilderExamDocument(opts: {
   const layout = settings.layout || {};
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
   const compact = layout.density === "compact";
-  const passageStyle = layout.passageStyle ?? "boxed";
-  const showPassageTitle = layout.showPassageTitle !== false;
+  const paperSize = layout.paperSize === "B4" ? "B4" : "A4";
+  const pageSize = DOCX_PAPER_SIZES[paperSize];
 
   // 페이지 마진: compact 살짝 작게
   const margin = compact
@@ -937,27 +1200,44 @@ export function buildBuilderExamDocument(opts: {
 
   // ---- Section 2: 본문 (1단/2단) ----
   const section2Children: DocChild[] = [];
-  const groups = groupItems(resolvedItems);
-  for (const group of groups) {
-    const first = group.items[0];
-    const includePassage = first.includePassage !== false;
-    const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
-    if (includePassage && passageContent) {
-      const passageBlocks = buildPassage({
-        passageTitle: first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
-        passageContent,
-        passageStyle,
-        showPassageTitle,
-        compact,
-        usesSentenceInsertMarkers: group.items.some(
-          (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
-        ),
-      });
-      section2Children.push(...passageBlocks);
+  if (settings.blocks?.length) {
+    const byLocalId = new Map(
+      resolvedItems
+        .filter((item) => item.localId)
+        .map((item) => [item.localId as string, item]),
+    );
+    const used = new Set<BuilderItemResolved>();
+    const takeQuestion = (block: BuilderBlock) => {
+      const byId = block.localId ? byLocalId.get(block.localId) : undefined;
+      if (byId && !used.has(byId)) {
+        used.add(byId);
+        return byId;
+      }
+      const fallback = resolvedItems.find(
+        (item) => !used.has(item) && item.questionId === block.questionId,
+      );
+      if (fallback) used.add(fallback);
+      return fallback;
+    };
+    let pendingQuestions: BuilderItemResolved[] = [];
+    const flush = () => {
+      if (pendingQuestions.length === 0) return;
+      appendQuestionGroups(section2Children, pendingQuestions, layout, includeAnswers, compact);
+      pendingQuestions = [];
+    };
+
+    for (const block of settings.blocks) {
+      if (block.blockType === "question") {
+        const questionItem = takeQuestion(block);
+        if (questionItem) pendingQuestions.push(questionItem);
+        continue;
+      }
+      flush();
+      section2Children.push(...buildCustomBlock(block, compact));
     }
-    for (const item of group.items) {
-      section2Children.push(...buildQuestionBlock(item, layout, includeAnswers));
-    }
+    flush();
+  } else {
+    appendQuestionGroups(section2Children, resolvedItems, layout, includeAnswers, compact);
   }
 
   // 정답표 (정답포함 모드가 아닐 때만 추가)
@@ -1042,7 +1322,7 @@ export function buildBuilderExamDocument(opts: {
       {
         properties: {
           type: SectionType.CONTINUOUS,
-          page: { size: { width: 11906, height: 16838 }, margin },
+          page: { size: pageSize, margin },
           column: { count: 1 },
           titlePage: true,
         },
@@ -1053,7 +1333,7 @@ export function buildBuilderExamDocument(opts: {
       {
         properties: {
           type: SectionType.CONTINUOUS,
-          page: { size: { width: 11906, height: 16838 }, margin },
+          page: { size: pageSize, margin },
           column: {
             count: columns,
             space: columns === 2 ? 540 : 0,

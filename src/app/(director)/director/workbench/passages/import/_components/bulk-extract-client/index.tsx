@@ -4,12 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
-  PanelBottomOpen,
+  ChevronDown,
+  ChevronUp,
   RefreshCw,
-  UploadCloud,
 } from "lucide-react";
 
 import { TaskQueueInlineList } from "@/components/workbench/task-queue";
+import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
+import { MaterialExtractionIcon } from "@/components/icons/workflow-icons";
+import { toast } from "sonner";
 import { useExtractionUpload } from "@/hooks/use-extraction-upload";
 import { useExtractionStream } from "@/hooks/use-extraction-stream";
 import {
@@ -32,9 +35,14 @@ import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
 import { ExtractionRunPanel } from "./components/extraction-run-panel";
+import { JobPreviewDrawer } from "./components/job-preview-drawer";
 import { UploadPanel } from "./components/upload-panel";
 
-export function BulkExtractClient({ initialCreditBalance }: Props) {
+export function BulkExtractClient({
+  initialCreditBalance,
+  initialCollections,
+  initialCollectionMembership,
+}: Props) {
   void initialCreditBalance;
 
   const router = useRouter();
@@ -61,10 +69,88 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
   const [inputMode, setInputMode] = useState<InputMode>("file");
   const [textTitle, setTextTitle] = useState("");
   const [textValue, setTextValue] = useState("");
+  const [previewJobId, setPreviewJobId] = useState<string | null>(null);
 
   const bootstrapped = useRef(false);
   const navigatedToManage = useRef(false);
   const fileInputId = "m1-passage-workroom-file-input";
+
+  const UPLOAD_COLLAPSE_KEY = "smoat:extraction-bulk:upload:collapsed";
+  const UPLOAD_HEIGHT_KEY = "smoat:extraction-bulk:upload:height";
+  const UPLOAD_MIN = 320;
+  const UPLOAD_MAX = 900;
+  const UPLOAD_DEFAULT = 520;
+  const [uploadCollapsed, setUploadCollapsed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage.getItem(UPLOAD_COLLAPSE_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const [uploadHeight, setUploadHeight] = useState<number>(() => {
+    if (typeof window === "undefined") return UPLOAD_DEFAULT;
+    try {
+      const raw = window.localStorage.getItem(UPLOAD_HEIGHT_KEY);
+      if (!raw) return UPLOAD_DEFAULT;
+      const n = parseInt(raw, 10);
+      if (Number.isNaN(n)) return UPLOAD_DEFAULT;
+      return Math.min(UPLOAD_MAX, Math.max(UPLOAD_MIN, n));
+    } catch {
+      return UPLOAD_DEFAULT;
+    }
+  });
+  const toggleUploadCollapsed = useCallback(() => {
+    setUploadCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(UPLOAD_COLLAPSE_KEY, next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+  const beginUploadResize = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const startY = e.clientY;
+      const startHeight = uploadHeight;
+      let latest = startHeight;
+      document.body.style.cursor = "row-resize";
+      document.body.style.userSelect = "none";
+      const onMove = (ev: PointerEvent) => {
+        latest = Math.min(
+          UPLOAD_MAX,
+          Math.max(UPLOAD_MIN, startHeight + (ev.clientY - startY)),
+        );
+        setUploadHeight(latest);
+      };
+      const onUp = () => {
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        try {
+          window.localStorage.setItem(UPLOAD_HEIGHT_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [uploadHeight],
+  );
+  const resetUploadHeight = useCallback(() => {
+    setUploadHeight(UPLOAD_DEFAULT);
+    try {
+      window.localStorage.setItem(UPLOAD_HEIGHT_KEY, String(UPLOAD_DEFAULT));
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   useExtractionStream({
     jobId,
@@ -340,41 +426,34 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
       <main className="flex w-full min-w-0 flex-col gap-4">
         <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-5 py-3 xl:px-6">
-            <div className="flex items-center gap-3">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-                <UploadCloud className="size-4" aria-hidden="true" />
-              </span>
-              <div>
-                <h1 className="text-xl font-bold text-slate-950">자료 추출</h1>
-                <p className="mt-0.5 text-sm text-slate-500">
-                  PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다.
-                </p>
-              </div>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
+            <WorkflowPageTitle
+              icon={MaterialExtractionIcon}
+              title="자료 추출"
+              description="PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다."
+            />
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={queueDrawer.triggerRefresh}
-                className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                aria-label="새로고침"
+                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
-                <RefreshCw className="size-3.5" aria-hidden="true" />
-                새로고침
+                <RefreshCw className="size-4" aria-hidden="true" />
               </button>
-              <button
-                type="button"
-                onClick={queueDrawer.toggle}
-                className={
-                  "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-                  (queueDrawer.open
-                    ? "border-blue-300 bg-blue-50 text-blue-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-slate-50")
-                }
-              >
-                <PanelBottomOpen className="size-3.5" aria-hidden="true" />
-                작업 목록
-              </button>
+              {uploadCollapsed ? (
+                <button
+                  type="button"
+                  onClick={toggleUploadCollapsed}
+                  aria-expanded={false}
+                  title="자료 추출 펼치기"
+                  className="inline-flex h-8 cursor-pointer items-center gap-1 px-1 text-[11.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+                >
+                  <ChevronDown className="size-3.5" aria-hidden="true" />
+                  <span>펼치기</span>
+                </button>
+              ) : null}
             </div>
           </div>
 
@@ -385,49 +464,110 @@ export function BulkExtractClient({ initialCreditBalance }: Props) {
             </div>
           ) : null}
 
-          <div className="grid min-h-[520px] gap-4 p-4 pb-3 sm:p-5 sm:pb-3 xl:grid-cols-[minmax(0,1fr)_320px] xl:p-6 xl:pb-3 2xl:grid-cols-[minmax(0,1fr)_340px]">
-            <UploadPanel
-              busy={inputBusy}
-              dragActive={dragActive}
-              fileInputId={fileInputId}
-              inputMode={inputMode}
-              slots={slots}
-              splitProgress={splitProgress}
-              textTitle={textTitle}
-              textValue={textValue}
-              uploadProgress={uploadProgress}
-              onClear={clearFiles}
-              onClearText={clearText}
-              onFiles={handleFiles}
-              onInputModeChange={setInputMode}
-              onStart={startExtraction}
-              onStartText={startTextExtraction}
-              onDragActiveChange={setDragActive}
-              onTextTitleChange={setTextTitle}
-              onTextValueChange={setTextValue}
-              onReorderSlots={reorderSlots}
-            />
-            <ExtractionRunPanel
-              busy={runBusy}
-              inputMode={inputMode}
-              pageCount={slots.length}
-              textLength={textValue.trim().length}
-              activeJobId={jobId}
-              onOpenManage={() => router.push("/director/workbench/passages/import/jobs")}
-            />
-          </div>
-
-          <div className="flex shrink-0 flex-col px-4 pb-4 sm:px-5 sm:pb-5 xl:px-6 xl:pb-6">
-            <TaskQueueInlineList
-              domain="extraction"
-              layout="grid"
-              limit={100}
-              title="추출 작업 목록"
-              emptyMessage="아직 추출 작업이 없습니다."
-            />
-          </div>
+          {!uploadCollapsed ? (
+            <>
+              <div
+                className="grid min-h-0 overflow-hidden xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px]"
+                style={{ height: uploadHeight }}
+              >
+                <UploadPanel
+                  busy={inputBusy}
+                  dragActive={dragActive}
+                  fileInputId={fileInputId}
+                  inputMode={inputMode}
+                  slots={slots}
+                  splitProgress={splitProgress}
+                  textTitle={textTitle}
+                  textValue={textValue}
+                  uploadProgress={uploadProgress}
+                  onClear={clearFiles}
+                  onClearText={clearText}
+                  onFiles={handleFiles}
+                  onInputModeChange={setInputMode}
+                  onStart={startExtraction}
+                  onStartText={startTextExtraction}
+                  onDragActiveChange={setDragActive}
+                  onTextTitleChange={setTextTitle}
+                  onTextValueChange={setTextValue}
+                  onReorderSlots={reorderSlots}
+                />
+                <ExtractionRunPanel
+                  busy={runBusy}
+                  inputMode={inputMode}
+                  pageCount={slots.length}
+                  textLength={textValue.trim().length}
+                  activeJobId={jobId}
+                />
+              </div>
+              <div className="relative flex items-center justify-end px-4 pb-1 pt-1">
+                <div
+                  onPointerDown={beginUploadResize}
+                  onDoubleClick={resetUploadHeight}
+                  title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+                  className="group/uhandle absolute left-1/2 top-1/2 inline-flex h-3 w-[200px] -translate-x-1/2 -translate-y-1/2 cursor-row-resize items-center justify-center px-1 select-none"
+                >
+                  <div className="h-0.5 w-full rounded-full bg-slate-200 transition-colors group-hover/uhandle:bg-blue-400 group-active/uhandle:bg-blue-500" />
+                </div>
+                <button
+                  type="button"
+                  onClick={toggleUploadCollapsed}
+                  aria-expanded
+                  title="자료 추출 접기"
+                  className="inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+                >
+                  <ChevronUp className="size-3.5" aria-hidden="true" />
+                  <span>접기</span>
+                </button>
+              </div>
+            </>
+          ) : null}
         </section>
+
+        <TaskQueueInlineList
+          domain="extraction"
+          layout="grid"
+          limit={100}
+          title="자료 목록"
+          headerNote="최신순으로 표시됩니다"
+          emptyMessage="아직 등록된 자료가 없습니다."
+          onTaskClick={(task) => setPreviewJobId(task.id)}
+          onRenameTask={async (task, next) => {
+            try {
+              const body = JSON.stringify({
+                displayName: next.length > 0 ? next : null,
+              });
+              const res = await fetch(`/api/extraction/jobs/${task.id}`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body,
+              });
+              if (!res.ok) throw new Error("자료 이름을 저장하지 못했습니다.");
+              toast.success("자료 이름이 저장되었습니다.");
+              queueDrawer.triggerRefresh();
+            } catch (err) {
+              toast.error(
+                err instanceof Error
+                  ? err.message
+                  : "자료 이름을 저장하지 못했습니다.",
+              );
+            }
+          }}
+          collapsible={{
+            storageKey: "smoat:extraction-bulk:job-list",
+            resizable: false,
+          }}
+        />
       </main>
+
+      {previewJobId ? (
+        <JobPreviewDrawer
+          jobId={previewJobId}
+          onClose={() => setPreviewJobId(null)}
+          initialCollections={initialCollections}
+          initialCollectionMembership={initialCollectionMembership}
+        />
+      ) : null}
     </div>
   );
 }

@@ -125,7 +125,7 @@ export function PassageFileCard({
                 {dupCount && dupCount > 0 ? (
                   <span
                     className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 tabular-nums"
-                    title={`동일한 내용의 지문 ${dupCount}개가 더 존재합니다`}
+                    title={`동일한 내용의 지문 ${dupCount}편이 더 존재합니다`}
                   >
                     <Copy className="w-2.5 h-2.5" />
                     {dupCount} 중복

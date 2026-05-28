@@ -151,14 +151,37 @@ export function getPortOneRuntimeConfig(): RuntimeConfig {
 }
 
 export function getPortOneWebhookSecret() {
-  const secret = process.env.PORTONE_WEBHOOK_SECRET;
-  if (!secret) {
+  return getPortOneWebhookSecrets()[0];
+}
+
+export function getPortOneWebhookSecrets() {
+  const secrets = [
+    ...(process.env.PORTONE_WEBHOOK_SECRET?.split(",") ?? []),
+    process.env.PORTONE_WEBHOOK_SECRET1,
+    process.env.PORTONE_WEBHOOK_SECRET2,
+  ]
+    .map(normalizeSecretEnvValue)
+    .filter((value): value is string => Boolean(value));
+
+  if (!secrets?.length) {
     throw new PortOneTopUpError(
       "CONFIG_MISSING",
       "PortOne webhook secret must be configured.",
     );
   }
-  return secret;
+  return secrets;
+}
+
+function normalizeSecretEnvValue(value: string | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
 }
 
 export function getPortOneClient() {

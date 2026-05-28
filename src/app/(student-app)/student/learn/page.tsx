@@ -15,6 +15,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { useLearnPage } from "@/hooks/use-student-data";
 import type { LessonItem, SeasonInfo, DailyQuestStatus, QuestItem } from "@/lib/learning-types";
 import { LessonPath } from "./_components/lesson-path";
@@ -43,13 +44,14 @@ export default function LearnPage() {
   const lessons = data?.lessons ?? [];
   const quests = data?.quests ?? null;
   const streak = data?.streak ?? null;
+  const learnMenus = FEATURE_FLAGS.SHOW_USER_RESULTS ? LEARN_MENUS : [];
 
   return (
     <div className="max-w-2xl mx-auto pb-4">
       {/* 퀵메뉴 탭바 — 홈/마이와 동일 스타일 */}
       <div className="px-5 mb-3">
         <div className="flex gap-4 justify-center">
-          {LEARN_MENUS.map((item) => {
+          {learnMenus.map((item) => {
             const Icon = item.icon;
             return (
               <Link

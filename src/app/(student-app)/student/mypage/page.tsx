@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BarChart3, CalendarCheck, BookOpen, CreditCard, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { useMyPage, useEnrollments } from "@/hooks/use-student-data";
 import { logoutStudentAction } from "@/actions/auth";
 import { GradesTab } from "./_components/grades-tab";
@@ -25,6 +26,9 @@ const TABS: { key: Tab; label: string; icon: React.ComponentType<{ className?: s
   { key: "payment", label: "수납", icon: CreditCard },
   { key: "settings", label: "설정", icon: Settings },
 ];
+const VISIBLE_TABS = FEATURE_FLAGS.SHOW_USER_RESULTS
+  ? TABS
+  : TABS.filter((tab) => tab.key !== "grades");
 
 // ---------------------------------------------------------------------------
 // Page
@@ -32,7 +36,10 @@ const TABS: { key: Tab; label: string; icon: React.ComponentType<{ className?: s
 export default function StudentMyPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as Tab) || "grades";
+  const requestedInitialTab = (searchParams.get("tab") as Tab) || "grades";
+  const initialTab = VISIBLE_TABS.some((tab) => tab.key === requestedInitialTab)
+    ? requestedInitialTab
+    : VISIBLE_TABS[0].key;
 
   const { data: inbadi, isLoading } = useMyPage();
   const { data: enrollments = [], refetch: refetchEnrollments } = useEnrollments();
@@ -40,10 +47,12 @@ export default function StudentMyPage() {
 
   useEffect(() => {
     const tab = searchParams.get("tab") as Tab;
-    if (tab && TABS.some((t) => t.key === tab)) {
+    if (tab && VISIBLE_TABS.some((t) => t.key === tab)) {
       setActiveTab(tab);
+    } else if (!VISIBLE_TABS.some((t) => t.key === activeTab)) {
+      setActiveTab(VISIBLE_TABS[0].key);
     }
-  }, [searchParams]);
+  }, [activeTab, searchParams]);
 
   const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab);
@@ -73,7 +82,7 @@ export default function StudentMyPage() {
       {/* 탭바 — 홈 퀵메뉴와 동일 스타일 */}
       <div className="px-5 mb-3">
         <div className="flex gap-4 justify-between">
-          {TABS.map((tab) => {
+          {VISIBLE_TABS.map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.key;
             return (
@@ -103,7 +112,7 @@ export default function StudentMyPage() {
       {/* 탭 콘텐츠 */}
       <div className="px-5">
         <AnimatePresence mode="wait">
-          {activeTab === "grades" && (
+          {FEATURE_FLAGS.SHOW_USER_RESULTS && activeTab === "grades" && (
             <motion.div key="grades" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <GradesTab
                 analytics={analytics}

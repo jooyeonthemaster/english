@@ -6,6 +6,7 @@ import { Calendar, Users, ChevronDown, Trash2, Pencil, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { getSeasonStudentProgress } from "@/actions/learning-admin";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { GRADE_LEVELS } from "@/lib/learning-constants";
 import type { Season, StudentProgress } from "./season-manager-types";
 import { StudentProgressCard } from "./student-progress-card";
@@ -20,6 +21,7 @@ export function SeasonDetailModal({ season, onClose, onEdit, onDelete }: {
 }) {
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState<StudentProgress[] | null>(null);
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   async function loadProgress() {
     if (progress) { setShowProgress(!showProgress); return; }
@@ -71,21 +73,25 @@ export function SeasonDetailModal({ season, onClose, onEdit, onDelete }: {
           </div>
 
           {/* Student Progress (collapsible) */}
-          <button onClick={loadProgress} className="w-full flex items-center justify-between py-2 text-xs font-semibold text-slate-400 uppercase hover:text-slate-600">
-            <span className="flex items-center gap-1"><Users className="size-3" />학생 진도</span>
-            <ChevronDown className={cn("size-3.5 transition-transform", showProgress && "rotate-180")} />
-          </button>
-          <AnimatePresence>
-            {showProgress && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                {!progress ? <p className="text-xs text-slate-400 py-2">불러오는 중...</p>
-                  : progress.length === 0 ? <p className="text-xs text-slate-400 py-2">해당 학년 학생이 없습니다</p>
-                  : <div className="space-y-1.5">{progress.map((sp) => (
-                    <StudentProgressCard key={sp.studentId} student={sp} />
-                  ))}</div>}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {showResults && (
+            <>
+              <button onClick={loadProgress} className="w-full flex items-center justify-between py-2 text-xs font-semibold text-slate-400 uppercase hover:text-slate-600">
+                <span className="flex items-center gap-1"><Users className="size-3" />학생 진도</span>
+                <ChevronDown className={cn("size-3.5 transition-transform", showProgress && "rotate-180")} />
+              </button>
+              <AnimatePresence>
+                {showProgress && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                    {!progress ? <p className="text-xs text-slate-400 py-2">불러오는 중...</p>
+                      : progress.length === 0 ? <p className="text-xs text-slate-400 py-2">해당 학년 학생이 없습니다</p>
+                      : <div className="space-y-1.5">{progress.map((sp) => (
+                        <StudentProgressCard key={sp.studentId} student={sp} />
+                      ))}</div>}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
         </div>
       </div>
     </div>

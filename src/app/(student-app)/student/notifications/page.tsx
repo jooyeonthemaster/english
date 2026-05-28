@@ -13,6 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { useNotifications } from "@/hooks/use-student-data";
 
 // ---------------------------------------------------------------------------
@@ -153,7 +154,9 @@ export default function NotificationsPage() {
     }
 
     // -- 랭킹 --
-    const myRank = dashboard.ranking.find((r) => r.isMe);
+    const myRank = FEATURE_FLAGS.SHOW_USER_RESULTS
+      ? dashboard.ranking.find((r) => r.isMe)
+      : null;
     if (myRank && myRank.rank <= 3) {
       notifs.push({
         id: "rank-up",

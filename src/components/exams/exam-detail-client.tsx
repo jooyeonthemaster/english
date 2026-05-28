@@ -6,6 +6,7 @@ import { BarChart3, Eye, FileText, Settings, Users } from "lucide-react";
 import { toast } from "sonner";
 import { publishExam } from "@/actions/exams";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { AnalyticsData, ExamDetail } from "./exam-detail-client-parts/types";
 import { ExamDetailPaperPreview } from "./exam-detail-paper-preview";
 import { AnalyticsTab } from "./exam-detail-client-parts/analytics-tab";
@@ -30,6 +31,7 @@ export function ExamDetailClient({ exam, analytics }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState("preview");
+  const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   const gradedCount = exam.submissions.filter((s) => s.status === "GRADED").length;
   const totalSubs = exam.submissions.length;
@@ -51,11 +53,15 @@ export function ExamDetailClient({ exam, analytics }: Props) {
       <HeaderSection exam={exam} isPending={isPending} onPublish={handlePublish} />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className={showResults ? "grid grid-cols-4 gap-4" : "grid grid-cols-1 gap-4"}>
         <StatCard label="문제 수" value={String(exam.questions.length)} />
-        <StatCard label="응시 인원" value={String(totalSubs)} />
-        <StatCard label="채점 완료" value={`${gradedCount}/${totalSubs}`} />
-        <StatCard label="평균 점수" value={analytics ? String(analytics.avgScore) : "-"} />
+        {showResults && (
+          <>
+            <StatCard label="응시 인원" value={String(totalSubs)} />
+            <StatCard label="채점 완료" value={`${gradedCount}/${totalSubs}`} />
+            <StatCard label="평균 점수" value={analytics ? String(analytics.avgScore) : "-"} />
+          </>
+        )}
       </div>
 
       {/* Tabs */}
@@ -66,7 +72,7 @@ export function ExamDetailClient({ exam, analytics }: Props) {
             className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
           >
             <Eye className="size-4 mr-1.5" />
-            A4 미리보기
+            용지 미리보기
           </TabsTrigger>
           <TabsTrigger
             value="questions"
@@ -75,20 +81,24 @@ export function ExamDetailClient({ exam, analytics }: Props) {
             <FileText className="size-4 mr-1.5" />
             문제 목록
           </TabsTrigger>
-          <TabsTrigger
-            value="submissions"
-            className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
-          >
-            <Users className="size-4 mr-1.5" />
-            응시 현황
-          </TabsTrigger>
-          <TabsTrigger
-            value="analytics"
-            className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
-          >
-            <BarChart3 className="size-4 mr-1.5" />
-            성적 분석
-          </TabsTrigger>
+          {showResults && (
+            <TabsTrigger
+              value="submissions"
+              className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
+            >
+              <Users className="size-4 mr-1.5" />
+              응시 현황
+            </TabsTrigger>
+          )}
+          {showResults && (
+            <TabsTrigger
+              value="analytics"
+              className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
+            >
+              <BarChart3 className="size-4 mr-1.5" />
+              성적 분석
+            </TabsTrigger>
+          )}
           <TabsTrigger
             value="settings"
             className="data-[state=active]:bg-white data-[state=active]:text-[#3182F6]"
@@ -118,13 +128,17 @@ export function ExamDetailClient({ exam, analytics }: Props) {
           )}
         </TabsContent>
 
-        <TabsContent value="submissions" className="mt-4">
-          <SubmissionsTab submissions={exam.submissions} />
-        </TabsContent>
+        {showResults && (
+          <TabsContent value="submissions" className="mt-4">
+            <SubmissionsTab submissions={exam.submissions} />
+          </TabsContent>
+        )}
 
-        <TabsContent value="analytics" className="mt-4">
-          <AnalyticsTab analytics={analytics} />
-        </TabsContent>
+        {showResults && (
+          <TabsContent value="analytics" className="mt-4">
+            <AnalyticsTab analytics={analytics} />
+          </TabsContent>
+        )}
 
         <TabsContent value="settings" className="mt-4">
           <SettingsTab exam={exam} />

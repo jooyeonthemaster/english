@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { requireTutorRouteSession } from "@/lib/tutor/route-auth";
+import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export default async function TutorReportPage({
   params,
@@ -12,6 +14,10 @@ export default async function TutorReportPage({
 }) {
   const { academy: rawAcademy } = await params;
   const { academy, session } = await requireTutorRouteSession(rawAcademy);
+  if (!FEATURE_FLAGS.SHOW_USER_RESULTS) {
+    return <UserResultsDisabled homeHref={`/tutor/${academy}/study`} />;
+  }
+
   const attempts = await prisma.tutorAttempt.findMany({
     where: { academyId: session.academyId, studentId: session.studentId },
     orderBy: { startedAt: "desc" },
