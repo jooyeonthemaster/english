@@ -88,7 +88,7 @@ function safeParseOptions(raw: string | null | undefined): ParsedOption[] {
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
-  const showMeta = layout.showQuestionMeta !== false;
+  const showMeta = layout.showQuestionMeta === true;
   const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
 
   const orderNum = item.orderNum ?? 0;

@@ -18,6 +18,7 @@ export interface PassageItem {
   unit: string | null;
   publisher: string | null;
   difficulty: string | null;
+  source?: string | null;
   school: { id: string; name: string } | null;
   content: string;
   analysis?: { analysisData: string } | null;
@@ -63,6 +64,7 @@ export function typeLabel(id: string): string {
 
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
+  const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   // 발문 (모든 유형 공통)
   if (q.direction) parts.push(q.direction);
   // CONTENT_MATCH: 일치/불일치 유형 표시
@@ -94,7 +96,7 @@ export function buildQuestionText(q: any): string {
   if (q.sentenceWithBlank) parts.push(q.sentenceWithBlank);
   // SUMMARY_COMPLETE: 빈칸 포함 요약문 + 빈칸 정답
   if (q.summaryWithBlanks) parts.push(`[요약문] ${q.summaryWithBlanks}`);
-  if (q.blanks?.length) parts.push(`[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`);
+  if (!isSummaryCompleteMc && q.blanks?.length) parts.push(`[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`);
   // WORD_ORDER: 뒤섞인 단어
   if (q.scrambledWords?.length) parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
   if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);

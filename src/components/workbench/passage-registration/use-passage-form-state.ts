@@ -4,9 +4,13 @@ import { useState } from "react";
 import type { Annotation } from "@/components/workbench/editor";
 import type { SavedPrompt } from "./types";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 
 /**
- * Groups the 19 contiguous useState calls for the passage input form
+ * Groups the contiguous useState calls for the passage input form
  * (core fields, annotations, image, metadata, analysis prompt). Called at
  * the same hook slot as the original first useState in this contiguous run
  * so overall hook call order is preserved.
@@ -38,6 +42,8 @@ export function usePassageFormState() {
   const [analysisPrompt, setAnalysisPrompt] = useState("");
   const [analysisGenerationPlan, setAnalysisGenerationPlan] =
     useState<QuestionGenerationPlan>("STANDARD");
+  const [analysisTone, setAnalysisTone] =
+    useState<AnalysisTone>(DEFAULT_ANALYSIS_TONE);
   const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([]);
   const [showSavedPrompts, setShowSavedPrompts] = useState(false);
   const [newPromptName, setNewPromptName] = useState("");
@@ -60,6 +66,7 @@ export function usePassageFormState() {
     tags, setTags,
     analysisPrompt, setAnalysisPrompt,
     analysisGenerationPlan, setAnalysisGenerationPlan,
+    analysisTone, setAnalysisTone,
     savedPrompts, setSavedPrompts,
     showSavedPrompts, setShowSavedPrompts,
     newPromptName, setNewPromptName,

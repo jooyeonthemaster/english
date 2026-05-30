@@ -25,6 +25,7 @@ import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
 import { CompactOptionsRow } from "./compact-options-row";
 
@@ -35,7 +36,10 @@ interface FormSectionProps {
   hasContent: boolean;
   wordCount: number;
   saving: boolean;
-  onSave: (analysisGenerationPlan: QuestionGenerationPlan) => void;
+  onSave: (
+    analysisGenerationPlan: QuestionGenerationPlan,
+    analysisTone: AnalysisTone,
+  ) => void;
 
   // Editor
   title: string;
@@ -89,6 +93,8 @@ interface FormSectionProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
+  analysisTone: AnalysisTone;
+  setAnalysisTone: (v: AnalysisTone) => void;
   savedPrompts: SavedPrompt[];
   showSavedPrompts: boolean;
   setShowSavedPrompts: (v: boolean | ((prev: boolean) => boolean)) => void;
@@ -319,7 +325,7 @@ export function FormSection(props: FormSectionProps) {
                     annotations={annotations}
                     onAnnotationsChange={setAnnotations}
                     placeholder={
-                      "왼쪽에서 추출 자료를 선택하거나, 영어 지문을 직접 붙여넣으세요...\n\n텍스트를 드래그하여 핵심 단어, 주요 문법, 중요 문장을 마킹할 수 있습니다."
+                      "왼쪽에서 추출 자료를 선택하거나, 영어 지문을 직접 붙여넣으세요...\n\n텍스트를 드래그하여 핵심 단어, 어법 포인트, 중요 문장을 마킹할 수 있습니다."
                     }
                   />
                 </div>
@@ -349,6 +355,8 @@ export function FormSection(props: FormSectionProps) {
                 removeTag={props.removeTag}
                 analysisPrompt={props.analysisPrompt}
                 setAnalysisPrompt={props.setAnalysisPrompt}
+                analysisTone={props.analysisTone}
+                setAnalysisTone={props.setAnalysisTone}
                 savedPrompts={props.savedPrompts}
                 showSavedPrompts={props.showSavedPrompts}
                 setShowSavedPrompts={props.setShowSavedPrompts}
@@ -380,7 +388,7 @@ export function FormSection(props: FormSectionProps) {
               {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
               <Button
                 variant="outline"
-                onClick={() => onSave("STANDARD")}
+                onClick={() => onSave("STANDARD", props.analysisTone)}
                 disabled={saving || !hasContent}
                 className="h-9 border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
               >
@@ -398,7 +406,10 @@ export function FormSection(props: FormSectionProps) {
               <Button
                 className="bg-blue-600 hover:bg-blue-700 h-9"
                 onClick={() =>
-                  onSave(FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD")
+                  onSave(
+                    FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD",
+                    props.analysisTone,
+                  )
                 }
                 disabled={saving || !hasContent}
               >

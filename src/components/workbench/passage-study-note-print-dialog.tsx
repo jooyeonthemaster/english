@@ -289,7 +289,7 @@ export function PassageStudyNotePrintDialog({
                   <BookMarked className="mx-auto mb-3 h-10 w-10 text-blue-400" />
                   <p className="text-[14px] font-semibold text-slate-700">A4 페이지를 계산하고 있습니다.</p>
                   <p className="mt-1 text-[12px] leading-relaxed text-slate-400">
-                    요약/본문/어휘/어법/구문/출제 포인트를 실제 A4 높이에 맞춰 재배치합니다.
+                    요약/본문/어휘/어법/읽기 포인트/출제 포인트를 실제 A4 높이에 맞춰 재배치합니다.
                   </p>
                 </div>
               ) : (

@@ -22,6 +22,7 @@ interface EnrollStudentDialogProps {
   classId: string;
   academyId: string;
   enrolledStudentIds: string[];
+  onEnrolled?: () => void;
 }
 
 interface StudentResult {
@@ -38,6 +39,7 @@ export function EnrollStudentDialog({
   classId,
   academyId,
   enrolledStudentIds,
+  onEnrolled,
 }: EnrollStudentDialogProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<StudentResult[]>([]);
@@ -71,6 +73,7 @@ export function EnrollStudentDialog({
       if (result.success) {
         toast.success("학생이 등록되었습니다.");
         setResults((prev) => prev.filter((s) => s.id !== studentId));
+        onEnrolled?.();
       } else {
         toast.error(result.error || "등록에 실패했습니다.");
       }

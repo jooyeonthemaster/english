@@ -8,6 +8,7 @@ import {
   WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME,
 } from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
+import { normalizeAnalysisTone } from "@/lib/passage-analysis-options";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
 
 export const runtime = "nodejs";
@@ -19,6 +20,7 @@ const requestSchema = z.object({
   focusAreas: z.array(z.string()).optional(),
   targetLevel: z.string().optional(),
   generationPlan: z.unknown().optional(),
+  analysisTone: z.unknown().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -60,6 +62,7 @@ export async function POST(req: NextRequest) {
   const generationPlan = normalizeQuestionGenerationPlan(
     parsed.data.generationPlan,
   );
+  const analysisTone = normalizeAnalysisTone(parsed.data.analysisTone);
   const job = await prisma.workbenchAiJob.create({
     data: {
       academyId: staff.academyId,
@@ -76,6 +79,7 @@ export async function POST(req: NextRequest) {
         focusAreas: parsed.data.focusAreas ?? [],
         targetLevel: parsed.data.targetLevel ?? "",
         generationPlan,
+        analysisTone,
       },
     },
   });

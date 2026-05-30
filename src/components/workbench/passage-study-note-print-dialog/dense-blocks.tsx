@@ -50,7 +50,7 @@ export function FirstPageSummaryBlock({ passage, data }: { passage: StudyNotePas
         <div className="count-grid">
           <span>어휘<b>{counts.vocab}</b></span>
           <span>어법<b>{counts.grammar}</b></span>
-          <span>구문<b>{counts.syntax}</b></span>
+          <span>읽기<b>{counts.syntax}</b></span>
           <span>출제<b>{counts.exam}</b></span>
         </div>
       </div>

@@ -185,12 +185,16 @@ function VocabCollectionItem({ entry }: { entry: CollectionEntry }) {
         <span className="text-right text-[13px] font-semibold text-blue-700">{item.meaning}</span>
       </div>
       {item.contextMeaning && <p className="rounded-md bg-slate-50 px-2 py-1.5 text-[12px] text-slate-600">{item.contextMeaning}</p>}
+      {item.studentNote && <p className="rounded-md bg-blue-50 px-2 py-1.5 text-[12px] text-blue-700"><span className="font-semibold">쉽게:</span> {item.studentNote}</p>}
+      {item.examTrap && <p className="rounded-md bg-amber-50 px-2 py-1.5 text-[12px] text-amber-700"><span className="font-semibold">함정:</span> {item.examTrap}</p>}
       {entry.sentence && <p className="rounded-md border border-slate-100 bg-white px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-600">{highlightWord(entry.sentence.english, item.word)}</p>}
-      {(item.synonyms?.length > 0 || item.antonyms?.length > 0 || item.collocations?.length > 0) && (
+      {(item.synonyms?.length > 0 || item.antonyms?.length > 0 || item.collocations?.length > 0 || item.confusableWords?.length > 0 || item.examplePhrase) && (
         <div className="flex flex-wrap gap-1.5 text-[11px]">
           {item.synonyms?.slice(0, 4).map((v, i) => <span key={`s-${i}`} className="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">동의 {v}</span>)}
           {item.antonyms?.slice(0, 4).map((v, i) => <span key={`a-${i}`} className="rounded bg-rose-50 px-1.5 py-0.5 text-rose-700">반의 {v}</span>)}
           {item.collocations?.slice(0, 4).map((v, i) => <span key={`c-${i}`} className="rounded bg-green-50 px-1.5 py-0.5 text-green-700">{v}</span>)}
+          {item.confusableWords?.slice(0, 3).map((v, i) => <span key={`f-${i}`} className="rounded bg-amber-50 px-1.5 py-0.5 text-amber-700">헷갈림 {v}</span>)}
+          {item.examplePhrase && <span className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">{item.examplePhrase}</span>}
         </div>
       )}
     </div>
@@ -206,8 +210,10 @@ function GrammarCollectionItem({ entry }: { entry: CollectionEntry }) {
         {item.level && <Badge variant="outline" className="h-5 shrink-0 text-[10px]">{item.level}</Badge>}
       </div>
       {item.textFragment && <p className="rounded-md border border-violet-100 bg-violet-50/50 px-2 py-1.5 font-mono text-[12px] text-violet-800">{item.textFragment}</p>}
+      {item.studentExplanation && <p className="text-[12px] leading-relaxed text-slate-800">{item.studentExplanation}</p>}
       <p className="text-[12px] leading-relaxed text-slate-600">{item.explanation}</p>
       {item.commonMistake && <p className="rounded-md bg-rose-50 px-2 py-1.5 text-[12px] text-rose-700"><span className="font-semibold">오답 함정:</span> {item.commonMistake}</p>}
+      {item.quickCheck && <p className="rounded-md bg-violet-50 px-2 py-1.5 text-[12px] text-violet-700"><span className="font-semibold">체크:</span> {item.quickCheck}</p>}
       {item.transformations?.length > 0 && (
         <div className="flex flex-wrap gap-1.5 text-[11px]">
           {item.transformations.slice(0, 4).map((v, i) => <span key={i} className="rounded bg-violet-50 px-1.5 py-0.5 text-violet-700">{v}</span>)}
@@ -222,12 +228,14 @@ function SyntaxCollectionItem({ entry }: { entry: CollectionEntry }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-1.5 flex-wrap">
-        <span className="text-[13px] font-bold text-cyan-700">구문 분석</span>
+        <span className="text-[13px] font-bold text-cyan-700">읽기 포인트</span>
         <Badge className="h-5 border-0 bg-cyan-50 text-[10px] text-cyan-700">{item.complexity}</Badge>
         {item.patternType && <Badge variant="outline" className="h-5 text-[10px]">{item.patternType}</Badge>}
       </div>
       <p className="rounded-md border border-slate-100 bg-white px-2 py-1.5 font-mono text-[12px] leading-relaxed text-slate-700">{item.structure}</p>
+      {item.plainExplanation && <p className="rounded-md border border-cyan-100 bg-white px-2 py-1.5 text-[12px] leading-relaxed text-slate-700">{item.plainExplanation}</p>}
       {item.chunkReading && <p className="rounded-md bg-cyan-50 px-2 py-1.5 font-mono text-[12px] leading-relaxed text-cyan-800">{item.chunkReading}</p>}
+      {item.readingTip && <p className="text-[12px] text-slate-600">{item.readingTip}</p>}
       {item.transformPoint && <p className="text-[12px] text-slate-600">{item.transformPoint}</p>}
     </div>
   );

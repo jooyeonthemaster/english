@@ -2,6 +2,7 @@
 
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
+  const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   if (q.direction) parts.push(q.direction);
   if (q.passageWithBlank) parts.push(q.passageWithBlank);
   if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
@@ -15,7 +16,7 @@ export function buildQuestionText(q: any): string {
   if (q.conditions) parts.push(`[조건] ${q.conditions.join(" / ")}`);
   if (q.sentenceWithBlank) parts.push(q.sentenceWithBlank);
   if (q.summaryWithBlanks) parts.push(`[요약문] ${q.summaryWithBlanks}`);
-  if (q.blanks?.length) parts.push(`[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`);
+  if (!isSummaryCompleteMc && q.blanks?.length) parts.push(`[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`);
   if (q.scrambledWords?.length) parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
   if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);
   if (q.sentenceWithError) parts.push(`[오류 문장] ${q.sentenceWithError}`);

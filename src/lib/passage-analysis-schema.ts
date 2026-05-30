@@ -26,6 +26,9 @@ export const vocabSchema = z.object({
   confusableWords: z.array(z.string()).max(2).optional(),
   contextMeaning: z.string().optional(),
   examType: z.string().optional(),
+  studentNote: z.string().optional(),
+  examTrap: z.string().optional(),
+  examplePhrase: z.string().optional(),
 });
 
 // ─── Layer 2: Grammar/어법 (확장) ────────────────────────
@@ -46,6 +49,9 @@ export const grammarSchema = z.object({
   gradeLevel: z.string().optional(),
   relatedGrammar: z.array(z.string()).max(3).optional(),
   csatFrequency: z.string().optional(),
+  studentExplanation: z.string().optional(),
+  whyItMatters: z.string().optional(),
+  quickCheck: z.string().optional(),
 });
 
 // ─── Layer 3: Syntax Analysis (신규) ─────────────────────
@@ -57,6 +63,8 @@ export const syntaxSchema = z.object({
   transformPoint: z.string().optional(),
   complexity: z.string().min(1),
   keyPhrase: z.string().optional(),
+  plainExplanation: z.string().optional(),
+  readingTip: z.string().optional(),
 });
 
 // ─── Layer 4: Structure/독해 (확장) ──────────────────────
@@ -134,7 +142,7 @@ export const passageAnalysisCoreSchema = z.object({
 
 // ─── Extended Schema (2차 호출) ──────────────────────────
 export const passageAnalysisExtendedSchema = z.object({
-  syntaxAnalysis: z.array(syntaxSchema).min(1).max(5),
+  syntaxAnalysis: z.array(syntaxSchema).max(5),
   examDesign: examDesignSchema,
 });
 

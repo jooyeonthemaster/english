@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   Users,
-  BookOpen,
   ClipboardCheck,
   FileText,
   CreditCard,
@@ -133,16 +132,15 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "운영",
       directorOnly: true,
       items: [
-        { label: "학생 관리", icon: Users, href: `${basePath}/students`, directorOnly: true },
-        { label: "반 관리", icon: BookOpen, href: `${basePath}/classes`, directorOnly: true },
+        { label: "학생·반 관리", icon: Users, href: `${basePath}/students`, directorOnly: true },
         {
           label: "모바일 학습",
           icon: Smartphone,
           href: `${basePath}/tutor`,
           children: [
             { label: "튜터 홈", href: `${basePath}/tutor` },
-            { label: "프로그램", href: `${basePath}/tutor/programs` },
-            { label: "새 프로그램", href: `${basePath}/tutor/programs/new` },
+            { label: "프로그램 생성", href: `${basePath}/tutor/programs/new` },
+            { label: "프로그램 관리", href: `${basePath}/tutor/programs` },
             ...(showResults
               ? [{ label: "수강 현황", href: `${basePath}/tutor/monitor` }]
               : []),

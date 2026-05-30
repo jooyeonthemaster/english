@@ -11,6 +11,11 @@ import {
   refundCredits,
 } from "@/lib/credits";
 import { passageAnalysisSchema } from "@/lib/passage-analysis-schema";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  normalizeAnalysisTone,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import { hashContent } from "@/lib/passage-utils";
 import { prisma } from "@/lib/prisma";
 import {
@@ -32,11 +37,21 @@ function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | nul
   return raw === "PREMIUM" || raw === "STANDARD" ? raw : null;
 }
 
+function getAnalysisTone(value: unknown): AnalysisTone | null {
+  if (!value || typeof value !== "object") return null;
+  const raw = (value as Record<string, unknown>)._analysisTone;
+  return typeof raw === "string" ? normalizeAnalysisTone(raw) : null;
+}
+
 function shouldUseCachedAnalysis(
   cached: unknown,
   requestedPlan: QuestionGenerationPlan,
+  requestedTone: AnalysisTone,
 ): boolean {
   const cachedPlan = getAnalysisGenerationPlan(cached);
+  const cachedTone = getAnalysisTone(cached);
+  if (cachedTone && cachedTone !== requestedTone) return false;
+  if (!cachedTone && requestedTone !== DEFAULT_ANALYSIS_TONE) return false;
   if (requestedPlan === "PREMIUM") return cachedPlan === "PREMIUM";
   return true;
 }
@@ -44,6 +59,7 @@ function shouldUseCachedAnalysis(
 function withAnalysisGenerationMetadata(
   analysisData: unknown,
   generationPlan: QuestionGenerationPlan,
+  analysisTone: AnalysisTone,
 ) {
   if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
     return analysisData;
@@ -53,6 +69,7 @@ function withAnalysisGenerationMetadata(
     ...(analysisData as Record<string, unknown>),
     _generationPlan: generationPlan,
     _generationTag: getQuestionGenerationPlanTag(generationPlan),
+    _analysisTone: analysisTone,
   };
 }
 
@@ -84,6 +101,9 @@ export async function GET(
     const generationPlan = normalizeQuestionGenerationPlan(
       _request.nextUrl.searchParams.get("generationPlan"),
     );
+    const analysisTone = normalizeAnalysisTone(
+      _request.nextUrl.searchParams.get("analysisTone"),
+    );
     const creditCost = getQuestionGenerationCreditCost(
       CREDIT_COSTS.PASSAGE_ANALYSIS,
       generationPlan,
@@ -107,11 +127,12 @@ export async function GET(
     const currentHash = hashContent(passage.content);
     if (passage.analysis && passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(passage.analysis.analysisData);
-      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan)) {
+      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         return NextResponse.json({
           data: stripModelMetadataFromAnalysis(cachedAnalysis),
           cached: true,
           generationPlan: getAnalysisGenerationPlan(cachedAnalysis) || generationPlan,
+          analysisTone: getAnalysisTone(cachedAnalysis) || analysisTone,
         });
       }
       console.log(
@@ -156,8 +177,13 @@ export async function GET(
         passage,
         autoPrompt,
         generationPlan,
+        analysisTone,
       );
-      analysisData = withAnalysisGenerationMetadata(rawAnalysis, generationPlan);
+      analysisData = withAnalysisGenerationMetadata(
+        rawAnalysis,
+        generationPlan,
+        analysisTone,
+      );
     } catch (aiError) {
       await refundCredits(
         staff.academyId,
@@ -189,6 +215,7 @@ export async function GET(
       cached: false,
       creditsRemaining: creditResult.balanceAfter,
       generationPlan,
+      analysisTone,
     });
   } catch (error) {
     const classified = classifyAnalysisError(error);
@@ -216,6 +243,7 @@ export async function POST(
     const { passageId } = await params;
     const body = await request.json();
     const generationPlan = normalizeQuestionGenerationPlan(body.generationPlan);
+    const analysisTone = normalizeAnalysisTone(body.analysisTone);
     const creditCost = getQuestionGenerationCreditCost(
       CREDIT_COSTS.PASSAGE_ANALYSIS,
       generationPlan,
@@ -383,8 +411,13 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
         passage,
         mergedPrompt || undefined,
         generationPlan,
+        analysisTone,
       );
-      analysisData = withAnalysisGenerationMetadata(rawAnalysis, generationPlan);
+      analysisData = withAnalysisGenerationMetadata(
+        rawAnalysis,
+        generationPlan,
+        analysisTone,
+      );
     } catch (aiError) {
       await refundCredits(
         staff.academyId,
@@ -417,6 +450,7 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
       cached: false,
       creditsRemaining: creditResult.balanceAfter,
       generationPlan,
+      analysisTone,
     });
   } catch (error) {
     const classified = classifyAnalysisError(error);

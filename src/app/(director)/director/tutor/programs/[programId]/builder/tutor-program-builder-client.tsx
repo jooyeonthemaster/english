@@ -12,6 +12,7 @@ import {
   Layers3,
   Loader2,
   MessageCircleQuestion,
+  MonitorSmartphone,
   Rocket,
   Sparkles,
   Target,
@@ -119,11 +120,13 @@ export function TutorProgramBuilderClient({
   initialProgram,
   activeStudentCount,
   classes,
+  students,
 }: {
   academyId: string;
   initialProgram: BuilderProgram;
   activeStudentCount: number;
   classes: TargetOption[];
+  students: TargetOption[];
 }) {
   const router = useRouter();
   const [program, setProgram] = useState(initialProgram);
@@ -300,13 +303,13 @@ export function TutorProgramBuilderClient({
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="flex min-w-0 gap-3">
             <Button asChild variant="outline" size="icon" className="mt-1 shrink-0 rounded-xl">
-              <Link href="/director/tutor/programs" aria-label="프로그램 목록으로 이동">
+              <Link href="/director/tutor/programs" aria-label="프로그램 관리로 이동">
                 <ArrowLeft className="size-4" />
               </Link>
             </Button>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="text-xs font-black uppercase tracking-wide text-blue-600">Mobile Learning Builder</p>
+                <p className="text-xs font-black text-blue-600">프로그램 생성 빌더</p>
                 <Badge variant="outline" className="rounded-full border-blue-100 bg-blue-50 text-blue-700">
                   {formatTutorStatus(program.status)}
                 </Badge>
@@ -318,10 +321,18 @@ export function TutorProgramBuilderClient({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 sm:min-w-[420px]">
-            <Metric label="지문" value={`${program.lessons.length}`} />
-            <Metric label="활동" value={`${totalActivities}`} />
-            <Metric label="분량" value={`${totalWords}`} />
+          <div className="grid gap-2 sm:min-w-[420px]">
+            <Button asChild variant="outline" className="h-11 rounded-xl border-blue-200 bg-blue-50 text-sm font-black text-blue-700 hover:bg-blue-100">
+              <Link href={`/director/tutor/programs/${program.id}/emulator`}>
+                <MonitorSmartphone className="size-4" />
+                학생 화면 에뮬레이터
+              </Link>
+            </Button>
+            <div className="grid grid-cols-3 gap-2">
+              <Metric label="지문" value={`${program.lessons.length}`} />
+              <Metric label="활동" value={`${totalActivities}`} />
+              <Metric label="분량" value={`${totalWords}`} />
+            </div>
           </div>
         </div>
       </header>
@@ -412,6 +423,7 @@ export function TutorProgramBuilderClient({
               disabled={program.lessons.length === 0 || totalActivities === 0}
               activeStudentCount={activeStudentCount}
               classes={classes}
+              students={students}
             />
           </div>
         </aside>

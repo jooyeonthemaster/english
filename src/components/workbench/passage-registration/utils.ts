@@ -1,4 +1,5 @@
 import type { RecentPassage } from "./types";
+import { DEFAULT_ANALYSIS_TONE } from "@/lib/passage-analysis-options";
 
 export function mapRecentPassagesToQueueItems(
   recentPassages: RecentPassage[] | undefined
@@ -22,7 +23,13 @@ export function mapRecentPassagesToQueueItems(
       status: p.analysis ? ("done" as const) : ("not_analyzed" as const),
       analysisData,
       error: null,
-      promptConfig: { customPrompt: "", focusAreas: [], targetLevel: "", generationPlan: "STANDARD" },
+      promptConfig: {
+        customPrompt: "",
+        focusAreas: [],
+        targetLevel: "",
+        generationPlan: "STANDARD",
+        analysisTone: DEFAULT_ANALYSIS_TONE,
+      },
       createdAt: new Date(p.createdAt),
       schoolName: p.school?.name,
       grade: p.grade ?? undefined,

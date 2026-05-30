@@ -27,11 +27,14 @@ export const QUESTION_TYPE_META: Record<string, QuestionTypeMeta> = {
   VOCAB_CHOICE:         { typeId: "VOCAB_CHOICE",         category: "객관식", label: "어휘 적절성",    includesPassage: true,  description: "밑줄 친 어휘 중 문맥상 적절하지 않은 것을 찾는 문제" },
   SENTENCE_ORDER:       { typeId: "SENTENCE_ORDER",       category: "객관식", label: "글의 순서",      includesPassage: true,  description: "주어진 글 다음에 이어질 글의 순서를 맞추는 문제" },
   SENTENCE_INSERT:      { typeId: "SENTENCE_INSERT",      category: "객관식", label: "문장 삽입",      includesPassage: true,  description: "주어진 문장이 들어갈 가장 적절한 위치를 찾는 문제" },
-  TOPIC_MAIN_IDEA:      { typeId: "TOPIC_MAIN_IDEA",      category: "객관식", label: "주제/요지",      includesPassage: false, description: "글의 주제 또는 요지를 파악하는 문제" },
+  TOPIC:               { typeId: "TOPIC",               category: "객관식", label: "주제 추론",      includesPassage: false, description: "글 전체의 주제를 파악하는 문제" },
+  MAIN_IDEA:           { typeId: "MAIN_IDEA",           category: "객관식", label: "요지/주장",      includesPassage: false, description: "글의 요지 또는 필자의 주장을 파악하는 문제" },
+  TOPIC_MAIN_IDEA:      { typeId: "TOPIC_MAIN_IDEA",      category: "객관식", label: "주제/요지",      includesPassage: false, description: "글의 주제 또는 요지를 파악하는 레거시 문제" },
   TITLE:                { typeId: "TITLE",                category: "객관식", label: "제목 추론",      includesPassage: false, description: "글의 제목을 추론하는 문제" },
   IMPLIED_MEANING:      { typeId: "IMPLIED_MEANING",      category: "객관식", label: "함축 의미 추론", includesPassage: true,  description: "밑줄 친 구절이나 문장이 문맥에서 함축하는 의미를 찾는 문제" },
   REFERENCE:            { typeId: "REFERENCE",            category: "객관식", label: "지칭 추론",      includesPassage: true,  description: "밑줄 친 대명사가 가리키는 대상을 찾는 문제" },
   CONTENT_MATCH:        { typeId: "CONTENT_MATCH",        category: "객관식", label: "내용 일치",      includesPassage: false, description: "글의 내용과 일치/불일치하는 것을 찾는 문제" },
+  SUMMARY_COMPLETE_MC:  { typeId: "SUMMARY_COMPLETE_MC",  category: "객관식", label: "요약문 완성(객관식)", includesPassage: false, description: "요약문의 (A), (B)에 들어갈 말의 조합을 고르는 수능형 문제" },
   IRRELEVANT:           { typeId: "IRRELEVANT",           category: "객관식", label: "무관한 문장",    includesPassage: true,  description: "전체 흐름과 관계없는 문장을 찾는 문제" },
   CONDITIONAL_WRITING:  { typeId: "CONDITIONAL_WRITING",  category: "서술형", label: "조건부 영작",    includesPassage: false, description: "조건에 맞게 영어 문장을 작성하는 문제" },
   SENTENCE_TRANSFORM:   { typeId: "SENTENCE_TRANSFORM",   category: "서술형", label: "문장 전환",      includesPassage: false, description: "주어진 문장을 조건에 맞게 전환하는 문제" },
@@ -54,11 +57,12 @@ export {
   vocabChoiceSchema, type VocabChoiceQuestion,
   sentenceOrderSchema, type SentenceOrderQuestion,
   sentenceInsertSchema, type SentenceInsertQuestion,
-  topicMainIdeaSchema, type TopicMainIdeaQuestion,
+  topicSchema, mainIdeaSchema, topicMainIdeaSchema, type TopicMainIdeaQuestion,
   titleSchema, type TitleQuestion,
   impliedMeaningSchema, type ImpliedMeaningQuestion,
   referenceSchema, type ReferenceQuestion,
   contentMatchSchema, type ContentMatchQuestion,
+  summaryCompleteMcSchema, type SummaryCompleteMcQuestion,
   irrelevantSchema, type IrrelevantQuestion,
 } from "./question-schemas-mc";
 
@@ -81,14 +85,14 @@ export {
 // 3. Schema registry
 // ---------------------------------------------------------------------------
 
-import { blankInferenceSchema as _bi, grammarErrorSchema as _ge, vocabChoiceSchema as _vc, sentenceOrderSchema as _so, sentenceInsertSchema as _si, topicMainIdeaSchema as _tm, titleSchema as _ti, impliedMeaningSchema as _im, referenceSchema as _rf, contentMatchSchema as _cm, irrelevantSchema as _ir } from "./question-schemas-mc";
+import { blankInferenceSchema as _bi, grammarErrorSchema as _ge, vocabChoiceSchema as _vc, sentenceOrderSchema as _so, sentenceInsertSchema as _si, topicSchema as _to, mainIdeaSchema as _mi, topicMainIdeaSchema as _tm, titleSchema as _ti, impliedMeaningSchema as _im, referenceSchema as _rf, contentMatchSchema as _cm, summaryCompleteMcSchema as _scm, irrelevantSchema as _ir } from "./question-schemas-mc";
 import { conditionalWritingSchema as _cw, sentenceTransformSchema as _st, fillBlankKeySchema as _fb, summaryCompleteSchema as _sc, wordOrderSchema as _wo, grammarCorrectionSchema as _gc } from "./question-schemas-essay";
 import { contextMeaningSchema as _cx, synonymSchema as _sy, antonymSchema as _an } from "./question-schemas-vocab";
 
 export const QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   BLANK_INFERENCE: _bi, GRAMMAR_ERROR: _ge, VOCAB_CHOICE: _vc,
-  SENTENCE_ORDER: _so, SENTENCE_INSERT: _si, TOPIC_MAIN_IDEA: _tm,
-  TITLE: _ti, IMPLIED_MEANING: _im, REFERENCE: _rf, CONTENT_MATCH: _cm, IRRELEVANT: _ir,
+  SENTENCE_ORDER: _so, SENTENCE_INSERT: _si, TOPIC: _to, MAIN_IDEA: _mi, TOPIC_MAIN_IDEA: _tm,
+  TITLE: _ti, IMPLIED_MEANING: _im, REFERENCE: _rf, CONTENT_MATCH: _cm, SUMMARY_COMPLETE_MC: _scm, IRRELEVANT: _ir,
   CONDITIONAL_WRITING: _cw, SENTENCE_TRANSFORM: _st, FILL_BLANK_KEY: _fb,
   SUMMARY_COMPLETE: _sc, WORD_ORDER: _wo, GRAMMAR_CORRECTION: _gc,
   CONTEXT_MEANING: _cx, SYNONYM: _sy, ANTONYM: _an,
@@ -118,7 +122,7 @@ export const STRUCTURED_TYPE_PROMPTS: Record<string, string> = {
 // 5. Union type
 // ---------------------------------------------------------------------------
 
-import type { BlankInferenceQuestion as BIQ, GrammarErrorQuestion as GEQ, VocabChoiceQuestion as VCQ, SentenceOrderQuestion as SOQ, SentenceInsertQuestion as SIQ, TopicMainIdeaQuestion as TMQ, TitleQuestion as TIQ, ImpliedMeaningQuestion as IMQ, ReferenceQuestion as RFQ, ContentMatchQuestion as CMQ, IrrelevantQuestion as IRQ } from "./question-schemas-mc";
+import type { BlankInferenceQuestion as BIQ, GrammarErrorQuestion as GEQ, VocabChoiceQuestion as VCQ, SentenceOrderQuestion as SOQ, SentenceInsertQuestion as SIQ, TopicMainIdeaQuestion as TMQ, TitleQuestion as TIQ, ImpliedMeaningQuestion as IMQ, ReferenceQuestion as RFQ, ContentMatchQuestion as CMQ, SummaryCompleteMcQuestion as SMCQ, IrrelevantQuestion as IRQ } from "./question-schemas-mc";
 import type { ConditionalWritingQuestion as CWQ, SentenceTransformQuestion as STQ, FillBlankKeyQuestion as FBQ, SummaryCompleteQuestion as SCQ, WordOrderQuestion as WOQ, GrammarCorrectionQuestion as GCQ } from "./question-schemas-essay";
 import type { ContextMeaningQuestion as CXQ, SynonymQuestion as SYQ, AntonymQuestion as ANQ } from "./question-schemas-vocab";
 
@@ -128,11 +132,14 @@ export type StructuredQuestion =
   | ({ _typeId: "VOCAB_CHOICE" } & VCQ)
   | ({ _typeId: "SENTENCE_ORDER" } & SOQ)
   | ({ _typeId: "SENTENCE_INSERT" } & SIQ)
+  | ({ _typeId: "TOPIC" } & TMQ)
+  | ({ _typeId: "MAIN_IDEA" } & TMQ)
   | ({ _typeId: "TOPIC_MAIN_IDEA" } & TMQ)
   | ({ _typeId: "TITLE" } & TIQ)
   | ({ _typeId: "IMPLIED_MEANING" } & IMQ)
   | ({ _typeId: "REFERENCE" } & RFQ)
   | ({ _typeId: "CONTENT_MATCH" } & CMQ)
+  | ({ _typeId: "SUMMARY_COMPLETE_MC" } & SMCQ)
   | ({ _typeId: "IRRELEVANT" } & IRQ)
   | ({ _typeId: "CONDITIONAL_WRITING" } & CWQ)
   | ({ _typeId: "SENTENCE_TRANSFORM" } & STQ)

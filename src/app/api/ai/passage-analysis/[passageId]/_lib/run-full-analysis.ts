@@ -1,4 +1,8 @@
 import { passageAnalysisSchema } from "@/lib/passage-analysis-schema";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import { generateQuestionText } from "@/lib/question-generation-llm";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
@@ -20,12 +24,14 @@ export async function runFullAnalysis(
   },
   customPrompt?: string,
   generationPlan: QuestionGenerationPlan = "STANDARD",
+  analysisTone: AnalysisTone = DEFAULT_ANALYSIS_TONE,
 ) {
   const prompt = buildFullAnalysisPrompt({
     passageContent: passage.content,
     schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
     grade: passage.grade,
     customPrompt,
+    analysisTone,
   });
 
   const startTime = Date.now();
@@ -42,7 +48,7 @@ export async function runFullAnalysis(
     responseFormat: generationPlan === "STANDARD" ? "json_object" : undefined,
     isRecoverableJsonText:
       generationPlan === "STANDARD" ? canRecoverAnalysisJsonText : undefined,
-    thinkingBudget: generationPlan === "STANDARD" ? 500 : undefined,
+    thinkingBudget: generationPlan === "STANDARD" ? 0 : undefined,
     timeoutMs: 110_000,
     temperature: 0.1,
     prompt,

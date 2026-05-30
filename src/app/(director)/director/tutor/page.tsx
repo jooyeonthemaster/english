@@ -21,18 +21,16 @@ export default async function DirectorTutorPage() {
           <p className="text-sm font-medium text-blue-600">모바일 학습</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950">튜터 운영 홈</h1>
           <p className="mt-2 text-sm text-slate-500">
-            {showResults
-              ? "지문 묶음 프로그램을 만들고, 학생들의 모바일 학습 진행을 한 곳에서 확인합니다."
-              : "지문 묶음 프로그램을 만들고 모바일 학습 배포를 관리합니다."}
+            프로그램 생성과 생성된 모바일 프로그램 관리를 분리해서 운영합니다.
           </p>
         </div>
         <Button asChild className="bg-blue-600 hover:bg-blue-700">
-          <Link href="/director/tutor/programs/new">새 프로그램 만들기</Link>
+          <Link href="/director/tutor/programs/new">프로그램 생성</Link>
         </Button>
       </div>
 
       <div className={showResults ? "grid gap-3 md:grid-cols-4" : "grid gap-3 md:grid-cols-3"}>
-        <MetricCard icon={BookOpenCheck} label="프로그램" value={data.programCount} />
+        <MetricCard icon={BookOpenCheck} label="관리 프로그램" value={data.programCount} />
         <MetricCard icon={Send} label="진행 중 배포" value={data.openAssignments} />
         <MetricCard icon={Users} label="활성 학생" value={data.activeStudents} />
         {showResults && <MetricCard icon={Activity} label="완료 기록" value={completed} />}
@@ -40,10 +38,10 @@ export default async function DirectorTutorPage() {
 
       <Card className="border-slate-200 bg-white shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base">최근 프로그램</CardTitle>
+          <CardTitle className="text-base">최근 관리 프로그램</CardTitle>
           <Button asChild variant="ghost" size="sm">
             <Link href="/director/tutor/programs">
-              전체 보기 <ChevronRight className="ml-1 size-4" />
+              프로그램 관리 <ChevronRight className="ml-1 size-4" />
             </Link>
           </Button>
         </CardHeader>
@@ -57,7 +55,7 @@ export default async function DirectorTutorPage() {
               data.recentPrograms.map((program) => (
                 <Link
                   key={program.id}
-                  href={`/director/tutor/programs/${program.id}/builder`}
+                  href={`/director/tutor/programs/${program.id}/monitor`}
                   className="flex items-center justify-between gap-4 py-4 hover:bg-slate-50"
                 >
                   <div className="min-w-0">
@@ -69,7 +67,7 @@ export default async function DirectorTutorPage() {
                     </div>
                     <p className="mt-1 text-xs text-slate-500">
                       {program.lessons.length}개 지문 ·{" "}
-                      {program.lessons.reduce((sum, link) => sum + link.lesson.activities.length, 0)}개 활동
+                      {program.lessons.reduce((sum, link) => sum + link.lesson.activities.length, 0)}개 활동 · 배포 현황
                     </p>
                   </div>
                   <ChevronRight className="size-4 shrink-0 text-slate-400" />

@@ -12,12 +12,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  ANALYSIS_TONE_OPTIONS,
+  DEFAULT_ANALYSIS_TONE,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 
 export interface AnalysisPromptConfig {
   customPrompt: string;
   focusAreas: string[];
   targetLevel: string;
   generationPlan?: QuestionGenerationPlan;
+  analysisTone?: AnalysisTone;
 }
 
 interface AnalysisPromptPanelProps {
@@ -39,9 +45,18 @@ export function AnalysisPromptPanel({
   const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>(
     initialConfig?.generationPlan || "STANDARD"
   );
+  const [analysisTone, setAnalysisTone] = useState<AnalysisTone>(
+    initialConfig?.analysisTone || DEFAULT_ANALYSIS_TONE
+  );
 
   function handleRun() {
-    onRunAnalysis({ customPrompt, focusAreas: [], targetLevel: "", generationPlan });
+    onRunAnalysis({
+      customPrompt,
+      focusAreas: [],
+      targetLevel: "",
+      generationPlan,
+      analysisTone,
+    });
   }
 
   return (
@@ -66,6 +81,10 @@ export function AnalysisPromptPanel({
             value={generationPlan}
             onChange={setGenerationPlan}
             compact
+          />
+          <AnalysisToneSelector
+            value={analysisTone}
+            onChange={setAnalysisTone}
           />
           <div>
             <Label className="text-[12px] text-slate-500 mb-1.5 block">
@@ -100,6 +119,46 @@ export function AnalysisPromptPanel({
           </Button>
         </div>
       )}
+    </div>
+  );
+}
+
+export function AnalysisToneSelector({
+  value,
+  onChange,
+  compact = false,
+  className = "",
+}: {
+  value: AnalysisTone;
+  onChange: (value: AnalysisTone) => void;
+  compact?: boolean;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      <Label className="text-[12px] text-slate-500 mb-1.5 block">
+        분석 말투
+      </Label>
+      <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-1">
+        {ANALYSIS_TONE_OPTIONS.map((option) => {
+          const active = value === option.id;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => onChange(option.id)}
+              title={option.description}
+              className={`rounded-lg px-2 py-2 text-[12px] font-semibold transition-colors ${
+                active
+                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
+                  : "text-slate-500 hover:bg-white/70 hover:text-slate-700"
+              } ${compact ? "h-9" : "min-h-9"}`}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

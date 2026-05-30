@@ -89,7 +89,7 @@ export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
               지문 관리
             </h3>
             <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed flex-1">
-              영어 지문을 등록하고 AI가 어휘·문법·구조를 자동 분석합니다.
+              영어 지문을 등록하고 AI가 어휘·어법·문장별 읽기 포인트를 자동 분석합니다.
               분석 결과를 검토하고 수정할 수 있습니다.
             </p>
             <p className="mt-4 pt-4 border-t border-slate-100 text-[13px] text-slate-500">
@@ -239,7 +239,7 @@ export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
               {
                 step: "2",
                 title: "AI 자동 분석",
-                desc: "어휘, 문법 포인트, 문장 구조를 AI가 즉시 분석합니다. 분석 결과를 직접 수정할 수도 있습니다.",
+                desc: "어휘, 어법 포인트, 문장별 읽기 포인트를 AI가 즉시 분석합니다. 분석 결과를 직접 수정할 수도 있습니다.",
               },
               {
                 step: "3",

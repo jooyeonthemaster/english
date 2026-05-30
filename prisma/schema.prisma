@@ -98,6 +98,7 @@ model Academy {
   tutorSeatBillingRuns      SeatBillingRun[]
   academyTheme              AcademyTheme?
   academyFeatureFlags       AcademyFeatureFlag[]
+  passageReports            PassageReport[]
 
   @@map("academies")
 }
@@ -137,6 +138,11 @@ model Staff {
   uploadedMaterials      ClassMaterial[]      @relation("ClassMaterialUploader")
   tutorProgramsAuthored  TutorProgram[]       @relation("TutorProgramAuthor")
   tutorLessonsAuthored   TutorLesson[]        @relation("TutorLessonAuthor")
+
+  // ── Passage Reports (A4 자유 편집 학습자료) ──
+  passageReportsCreated  PassageReport[]         @relation("PassageReportCreator")
+  passageReportsEdited   PassageReport[]         @relation("PassageReportEditor")
+  passageReportRevisions PassageReportRevision[] @relation("PassageReportRevisionAuthor")
 
   @@index([academyId])
   @@map("staff")
@@ -680,6 +686,7 @@ model Passage {
   tutorConversations TutorConversation[]
   tutorAiLogs        TutorAiLog[]
   workbenchAiJobs    WorkbenchAiJob[]
+  reports            PassageReport[]
 
   @@index([academyId])
   @@index([schoolId])
@@ -729,6 +736,109 @@ model PassageNote {
   @@index([passageId])
   @@index([passageId, annotationId])
   @@map("passage_notes")
+}
+
+/// PassageReport — A4 자유 편집 학습자료 (Canva 스타일 보고서)
+/// 동일 passage에 N개 보고서 가능 (수업용 / 내신킬러 / 보강용 등 변형)
+/// pages: PageNode[] — 페이지/블록 트리 (Zod: src/lib/passage-report/schema.ts)
+/// theme: ReportTheme — palette/font scale
+/// templateId: "modern" | "classic" | "magazine" | "notebook" | "exam-sheet" (디자인 스킨)
+/// status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
+/// version: 낙관적 락 (PATCH 시 WHERE id=$1 AND version=$expected)
+/// shareToken / sharedAt: v2 외부 공유 링크 대비 (현재는 nullable 컬럼만)
+model PassageReport {
+  id                    String    @id @default(cuid())
+  academyId             String
+  passageId             String
+  title                 String
+  status                String    @default("DRAFT") // "DRAFT" | "PUBLISHED" | "ARCHIVED"
+  pages                 Json // PageNode[] — single source of truth
+  theme                 Json? // ReportTheme — palette / font scale
+  templateId            String? // "modern" | "classic" | "magazine" | "notebook" | "exam-sheet"
+  generationPlan        String    @default("STANDARD")
+  sourcedFromAnalysisId String? // 어떤 PassageAnalysis 스냅샷에서 생성됐는지 (FK 아님 — soft ref)
+  contentHash           String? // pages JSON sha1 — PDF 캐시 키
+  version               Int       @default(1)
+  createdById           String
+  lastEditedById        String?
+  lastEditedAt          DateTime?
+  publishedAt           DateTime?
+  shareToken            String?   @unique // v2 외부 공유 토큰
+  sharedAt              DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime? // soft delete
+
+  // Relations
+  academy      Academy                 @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  passage      Passage                 @relation(fields: [passageId], references: [id], onDelete: Cascade)
+  createdBy    Staff                   @relation("PassageReportCreator", fields: [createdById], references: [id])
+  lastEditedBy Staff?                  @relation("PassageReportEditor", fields: [lastEditedById], references: [id])
+  revisions    PassageReportRevision[]
+  exports      PassageReportExport[]
+
+  @@index([academyId, passageId])
+  @@index([academyId, status, updatedAt])
+  @@index([passageId])
+  @@map("passage_reports")
+}
+
+/// CoverPreset — 학원 단위 재사용 표지 프리셋 (분석 보고서 편집기에서 저장/적용)
+model CoverPreset {
+  id          String   @id @default(cuid())
+  academyId   String
+  name        String
+  cover       Json // ReportCover (logoDataUrl 포함)
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([academyId, updatedAt])
+  @@map("cover_presets")
+}
+
+/// PassageReportRevision — 명시적 스냅샷 (수동 "버전 저장" 또는 자동 N분마다)
+model PassageReportRevision {
+  id        String   @id @default(cuid())
+  reportId  String
+  version   Int
+  pages     Json
+  theme     Json?
+  authorId  String
+  note      String?  @db.Text
+  createdAt DateTime @default(now())
+
+  report PassageReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  author Staff         @relation("PassageReportRevisionAuthor", fields: [authorId], references: [id])
+
+  @@unique([reportId, version])
+  @@index([reportId, createdAt])
+  @@map("passage_report_revisions")
+}
+
+/// PassageReportExport — 출력물 캐시 (Supabase Storage)
+/// format: "PDF" | "DOCX"
+/// contentHash: 같으면 재사용 (캐시 hit)
+model PassageReportExport {
+  id            String    @id @default(cuid())
+  reportId      String
+  format        String // "PDF" | "DOCX"
+  contentHash   String // pages JSON sha1
+  storageKey    String? // supabase storage path (생성 완료 시 채워짐)
+  fileSizeBytes Int?
+  triggerRunId  String?
+  status        String    @default("PENDING") // "PENDING" | "RUNNING" | "DONE" | "FAILED"
+  errorMessage  String?   @db.Text
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+  expiresAt     DateTime?
+
+  report PassageReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@unique([reportId, format, contentHash])
+  @@index([reportId])
+  @@index([status, createdAt])
+  @@map("passage_report_exports")
 }
 
 // ============================================================================

@@ -77,7 +77,7 @@ function filterAnnotationsForType(
   const vocabTypes = VOCAB_TYPES;
   const structureTypes = new Set([
     "ORDERING", "SENTENCE_INSERT", "TOPIC_GIST", "TITLE",
-    "MAIN_IDEA", "IMPLIED_MEANING", "IRRELEVANT_SENTENCE", "SUMMARY",
+    "TOPIC", "MAIN_IDEA", "IMPLIED_MEANING", "IRRELEVANT_SENTENCE", "SUMMARY",
   ]);
 
   return anns.filter((a) => {

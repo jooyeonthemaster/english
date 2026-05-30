@@ -83,7 +83,7 @@ export function optionDisplayTextForSubtype(
   optionText: string,
 ) {
   if (shouldUseGrammarOptionReference(subType)) {
-    return optionReferenceLabel(index);
+    return "";
   }
 
   if (shouldUseSentenceInsertOptionReference(subType, optionText)) {

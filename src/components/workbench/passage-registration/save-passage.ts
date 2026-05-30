@@ -5,6 +5,10 @@ import { createWorkbenchPassage } from "@/actions/workbench";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import type { Annotation } from "@/components/workbench/editor";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import { extractTextFromImage } from "./image-handlers";
 
 interface ResetFormArgs {
@@ -59,6 +63,7 @@ interface HandleSaveArgs {
   tags: string[];
   analysisPrompt: string;
   analysisGenerationPlan: QuestionGenerationPlan;
+  analysisTone?: AnalysisTone;
   sourceDraftId?: string | null;
 
   // External
@@ -80,7 +85,13 @@ interface HandleSaveArgs {
       tags?: string[];
       source?: string;
     },
-    promptConfig: { customPrompt: string; focusAreas: string[]; targetLevel: string; generationPlan?: QuestionGenerationPlan },
+    promptConfig: {
+      customPrompt: string;
+      focusAreas: string[];
+      targetLevel: string;
+      generationPlan?: QuestionGenerationPlan;
+      analysisTone?: AnalysisTone;
+    },
     runAnalysis: boolean
   ) => void | Promise<void>;
   resetForm: () => void;
@@ -102,6 +113,7 @@ export async function handleSave({
   tags,
   analysisPrompt,
   analysisGenerationPlan,
+  analysisTone = DEFAULT_ANALYSIS_TONE,
   sourceDraftId,
   schools,
   setSaving,
@@ -181,6 +193,7 @@ export async function handleSave({
           focusAreas: [],
           targetLevel: "",
           generationPlan: analysisGenerationPlan,
+          analysisTone,
         },
         runAnalysis
       );

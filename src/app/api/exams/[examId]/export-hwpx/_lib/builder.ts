@@ -48,6 +48,17 @@ function groupItems(
   return groups;
 }
 
+function normalizePrintableTitle(value: string | null | undefined): string {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function printablePassageTitle(item: BuilderItemResolved): string {
+  const savedTitle = normalizePrintableTitle(item.passageTitle);
+  if (!savedTitle) return "";
+  const sourceTitle = normalizePrintableTitle(item.sourceQuestion.passage?.title);
+  return savedTitle === sourceTitle ? "" : savedTitle;
+}
+
 function blockAlign(align: BuilderBlock["blockAlign"]) {
   if (align === "center") return "CENTER" as const;
   if (align === "right") return "RIGHT" as const;
@@ -167,8 +178,7 @@ function appendQuestionGroups(opts: {
     if (includePassage && passageContent) {
       opts.target.push(
         ...renderPassage({
-          passageTitle:
-            first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+          passageTitle: printablePassageTitle(first),
           passageContent,
           passageStyle: opts.passageStyle,
           showPassageTitle: opts.showPassageTitle,
@@ -202,7 +212,7 @@ export function buildBuilderHwpxDocument(
   const layout: BuilderLayout = settings?.layout ?? {};
   const compact = layout.density === "compact";
   const passageStyle = layout.passageStyle ?? "boxed";
-  const showPassageTitle = layout.showPassageTitle !== false;
+  const showPassageTitle = layout.showPassageTitle === true;
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
 
   // 페이지 설정 — 미리보기와 비슷한 빽빽한 마진

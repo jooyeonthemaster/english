@@ -14,6 +14,11 @@ export interface WorkbenchPassageFilters {
   /** When true, only passages that already have a PassageAnalysis row are
    *  returned. */
   analyzedOnly?: boolean;
+  /** Only meaningful together with `analyzedOnly`. When true, passages created
+   *  via the direct-paste flow (`source === DIRECT_INPUT_PASSAGE_SOURCE`) are
+   *  included even though they have no analysis yet, so freshly pasted material
+   *  shows up in the 자료 관리 list immediately. */
+  includeDirectInput?: boolean;
 }
 
 export interface WorkbenchQuestionFilters {

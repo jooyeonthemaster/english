@@ -78,6 +78,8 @@ export function PassageRegistrationClient({
     setTags,
     analysisPrompt,
     setAnalysisPrompt,
+    analysisTone,
+    setAnalysisTone,
     savedPrompts,
     setSavedPrompts,
     showSavedPrompts,
@@ -411,6 +413,7 @@ export function PassageRegistrationClient({
               focusAreas: [],
               targetLevel: "",
               generationPlan,
+              analysisTone,
             },
           };
 
@@ -448,6 +451,7 @@ export function PassageRegistrationClient({
       effectivePublisher,
       tags,
       analysisPrompt,
+      analysisTone,
       addManyToQueue,
       enqueueManyPending,
     ],
@@ -521,6 +525,8 @@ export function PassageRegistrationClient({
             removeTag={removeTag}
             analysisPrompt={analysisPrompt}
             setAnalysisPrompt={setAnalysisPrompt}
+            analysisTone={analysisTone}
+            setAnalysisTone={setAnalysisTone}
             savedPrompts={savedPrompts}
             setSavedPrompts={setSavedPrompts}
             showSavedPrompts={showSavedPrompts}

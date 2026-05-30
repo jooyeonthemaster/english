@@ -1250,13 +1250,13 @@ function EmbeddedJobCardGrid({
   }, [filteredJobs, onVisibleJobsChange]);
 
   return (
-    <div className="flex min-h-0 min-w-0 flex-1 flex-col rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-3 pb-3 pt-3">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-3 pb-3 pt-3">
       {filteredJobs.length === 0 ? (
         <div className="flex h-24 items-center justify-center text-[12px] font-medium text-slate-400">
           표시할 자료가 없습니다.
         </div>
       ) : (
-        <div className="flex flex-wrap items-stretch gap-3">
+        <div className="flex flex-wrap items-stretch gap-3 pb-1">
           {filteredJobs.map((job) => (
             <JobCard
               key={job.jobId}

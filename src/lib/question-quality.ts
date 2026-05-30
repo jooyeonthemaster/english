@@ -46,11 +46,14 @@ const MC_TYPE_IDS = new Set([
   "VOCAB_CHOICE",
   "SENTENCE_ORDER",
   "SENTENCE_INSERT",
+  "TOPIC",
+  "MAIN_IDEA",
   "TOPIC_MAIN_IDEA",
   "TITLE",
   "IMPLIED_MEANING",
   "REFERENCE",
   "CONTENT_MATCH",
+  "SUMMARY_COMPLETE_MC",
   "IRRELEVANT",
   "CONTEXT_MEANING",
   "SYNONYM",
@@ -65,8 +68,11 @@ const SHORT_TARGET_TYPES = new Set([
 
 const OPTION_HEAVY_TYPES = new Set([
   "TOPIC_MAIN_IDEA",
+  "TOPIC",
+  "MAIN_IDEA",
   "TITLE",
   "CONTENT_MATCH",
+  "SUMMARY_COMPLETE_MC",
   "IMPLIED_MEANING",
   "REFERENCE",
 ]);
@@ -105,6 +111,17 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "Distractors should be partial, too broad, too narrow, reversed, or unsupported versions of the passage.",
     "For KILLER, options should be close in wording and differ by scope, causal direction, or author stance.",
   ],
+  TOPIC: [
+    "The correct option must be an English topic phrase that states the passage's central topic plus controlling viewpoint, not only name the subject matter.",
+    "Distractors should be topic-only, example-only, too broad, too narrow, reversed in stance, or focused on a side detail.",
+    "For KILLER, every option should sound like a plausible topic until the full passage scope and author stance are checked.",
+  ],
+  MAIN_IDEA: [
+    "The correct option must express the passage's overall point, claim, or conclusion as a complete Korean statement.",
+    "Do not write a title-like noun phrase or a mere topic label for a main-idea item.",
+    "Distractors should preserve real passage concepts while distorting conclusion, recommendation, cause-effect relation, scope, or stance.",
+    "For KILLER, options should differ by subtle logical relation rather than by obvious factual absence.",
+  ],
   TITLE: [
     "The title must capture the central tension or outcome of the passage, not only name the topic.",
     "Distractors should sound like valid titles but miss the passage's controlling idea.",
@@ -112,10 +129,12 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
   ],
   IMPLIED_MEANING: [
     "Underline a phrase, clause, or short sentence whose meaning is determined by the passage logic, not by dictionary translation.",
+    "Treat implied meaning as a main-idea family item: the underline should be a paraphrased, metaphorical, compressed, or conclusion-like expression of the passage's central claim.",
+    "Avoid underlining a peripheral local detail even if it has a surface-to-hidden gap; the answer should connect back to the passage's topic/gist/title-level meaning.",
     "Do not use a single vocabulary word, pronoun, or trivial phrase as the target; that belongs to CONTEXT_MEANING or REFERENCE.",
     "Do not underline a rhetorical question or a self-answering question whose answer is stated in the next sentence.",
     "Reject targets whose correct answer is directly paraphrased by the immediately following sentence; there must be a real surface-to-hidden meaning gap.",
-    "The correct Korean option must paraphrase the implied meaning of the underlined expression, not merely translate its surface wording.",
+    "The correct option must be written in English and paraphrase the implied meaning of the underlined expression, not merely translate its surface wording.",
     "Distractors must borrow real passage concepts and fail by scope, cause-effect, stance, example/generalization, or local-vs-global evidence; avoid absolute-word giveaway distractors.",
     "For KILLER, the answer should require connecting at least two clues before and after the underlined expression, and every distractor should be a near-miss.",
   ],
@@ -130,6 +149,15 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "Every option must be traceable to a specific passage claim.",
     "The incorrect option should be subtly distorted by degree, cause-effect, comparison, time, or condition.",
     "For KILLER, avoid invented statements that are obviously absent from the passage.",
+  ],
+  SUMMARY_COMPLETE_MC: [
+    "Use the CSAT-style frame: passage, down arrow/summary, then five paired options for (A) and (B).",
+    "The summary must be one natural English sentence that abstracts the whole passage; it must not copy a single passage sentence.",
+    "After filling the correct pair, the sentence must read as native English; reject awkward bridges such as question of equity to ensuring.",
+    "The two blanks should carry distinct core ideas, such as cause/result, problem/solution, contrast/concession, or concept/effect.",
+    "Every option must be an English pair with parallel grammar slots. Wrong pairs should be near-misses, not random vocabulary.",
+    "Include at least one A-only-correct trap and one B-only-correct trap so students must verify both blanks.",
+    "For KILLER, make the correct pair depend on global relation mapping, and make every distractor passage-grounded.",
   ],
   IRRELEVANT: [
     "The irrelevant sentence must share the passage's topic, nearby keywords, and style while breaking the paragraph's logic or focus.",
@@ -312,7 +340,7 @@ function buildImpliedMeaningCandidateBlock(
       "- No strong automatic candidate was detected, but you may still generate a valid item.",
       "- Choose an exact phrase, clause, or short sentence from the passage whose meaning depends on surrounding logic.",
       "- Do not underline a single vocabulary word, pronoun, function word, or dictionary idiom.",
-      "- The answer must be a Korean paraphrase of the implied meaning, not a literal translation.",
+      "- The answer option must be an English paraphrase of the implied meaning, not a literal translation.",
     ].join("\n");
   }
 
@@ -321,6 +349,8 @@ function buildImpliedMeaningCandidateBlock(
     "- Prefer one candidate from this list, or choose another exact source span with the same quality.",
     "- Copy underlinedExpression verbatim from the passage and provide surroundingText that contains it.",
     "- The underlinedExpression should be a phrase, clause, or short sentence, not one word.",
+    "- Treat this type as TOPIC/TITLE/SUMMARY family: prefer a target that restates the passage's central claim in metaphorical, compressed, unfamiliar, or conclusion-like wording.",
+    "- Avoid peripheral local details. A good target should be reducible to the passage's topic/gist/title-level meaning.",
     "- Do not choose a rhetorical question or a sentence whose answer is stated in the immediately following sentence.",
     "- Prefer targets with a visible surface-to-hidden meaning gap: metaphor, conceptual compression, contrast, or a conclusion that must be unpacked.",
     "- The correct option must synthesize the expression's implied meaning from surrounding evidence.",
@@ -569,8 +599,8 @@ function findImpliedMeaningCandidates(
   }
 
   return candidates.sort((a, b) =>
-    impliedMeaningCandidateScore(b.expression, b.sentence) -
-    impliedMeaningCandidateScore(a.expression, a.sentence),
+    impliedMeaningCandidateScore(b.expression, b.sentence, b.sentenceIndex, sentences.length) -
+    impliedMeaningCandidateScore(a.expression, a.sentence, a.sentenceIndex, sentences.length),
   );
 }
 
@@ -580,6 +610,7 @@ function suggestImpliedMeaningExpressions(sentence: string): string[] {
   const patterns = [
     /\b(not\s+(?:merely|simply|only|just)\s+[^.;:!?]{8,100}?\s+but\s+[^.;:!?]{8,120})/gi,
     /\b(rather than\s+[^.;:!?]{8,100})/gi,
+    /\b(not\s+whether\s+[^.;:!?]{8,120}?\s+but\s+[^.;:!?]{8,120})/gi,
     /\b(instead of\s+[^.;:!?]{8,100})/gi,
     /\b(no longer\s+[^.;:!?]{8,100})/gi,
     /\b(cannot\s+be\s+[^.;:!?]{8,100})/gi,
@@ -592,7 +623,12 @@ function suggestImpliedMeaningExpressions(sentence: string): string[] {
     /\b(reveals?\s+that\s+[^.;:!?]{8,120})/gi,
     /\b(means?\s+that\s+[^.;:!?]{8,120})/gi,
     /\b(points?\s+to\s+[^.;:!?]{8,100})/gi,
+    /\b(lies?\s+between\s+[^.;:!?]{8,120})/gi,
+    /\b(move\s+upstream\s+as\s+well\s+as\s+downstream)/gi,
+    /\b(changed\s+what\s+counted\s+as\s+valuable\s+[^.;:!?]{4,80})/gi,
     /\b(we\s+are\s+creatures?\s+of\s+[^.;:!?]{8,120})/gi,
+    /\b(tool\s+that\s+helps\s+[^.;:!?]{8,80})/gi,
+    /\b(how\s+human\s+responsibility\s+is\s+reorganized\s+around\s+them)/gi,
     /\b(reasons?\s+have\s+to\s+be\s+based\s+on\s+something)/gi,
     /\b(we\s+begin\s+to\s+reason\s+long\s+before\s+[^.;:!?]{8,120})/gi,
     /\b(the\s+(?:point|problem|challenge|risk|value|result|lesson|implication)\s+[^.;:!?]{8,100})/gi,
@@ -661,14 +697,37 @@ function extractCentralSentenceSpans(sentence: string): string[] {
   return spans.slice(0, 2);
 }
 
-function impliedMeaningCandidateScore(expression: string, sentence: string): number {
+function impliedMeaningCandidateScore(
+  expression: string,
+  sentence: string,
+  sentenceIndex = 0,
+  sentenceCount = 1,
+): number {
   let score = countContentTokens(expression);
-  if (/\b(?:creatures?|beggar|grave|mirror|lens|map|upstream|downstream)\b/i.test(expression)) score += 5;
-  if (/\b(?:long before|based on something|reason and emotion)\b/i.test(expression)) score += 4;
+  if (/\b(?:creatures?|beggar|grave|mirror|lens|map|upstream|downstream|weight|carry|sculpt|sculpting|craft|discipline)\b/i.test(expression)) score += 5;
+  if (/\b(?:long before|based on something|reason and emotion|changed what counted|human responsibility is reorganized|tool that helps learning happen)\b/i.test(expression)) score += 4;
   if (/\b(?:not merely|not simply|rather than|instead of|while|although|whereas|but|yet)\b/i.test(expression)) score += 4;
   if (/\b(?:means?|suggests?|implies?|reveals?|reflects?|demonstrates?|represents?|serves?|functions?)\b/i.test(expression)) score += 3;
   if (/\b(?:therefore|thus|consequently|as a result|in this way)\b/i.test(sentence)) score += 2;
+  score += impliedMeaningCentralityScore(sentence, sentenceIndex, sentenceCount);
   if (expression.length > 150) score -= 2;
+  return score;
+}
+
+function impliedMeaningCentralityScore(
+  sentence: string,
+  sentenceIndex: number,
+  sentenceCount: number,
+): number {
+  let score = 0;
+  if (sentenceIndex >= Math.max(0, sentenceCount - 2)) score += 4;
+  if (sentenceIndex === 0 && sentenceCount <= 4) score += 1;
+  if (/\b(?:central issue|in the end|for that reason|therefore|thus|consequently|as a result|this is why|the point|the lesson|a durable solution|a serious .* must|must therefore|not whether|not merely|rather than|instead of|does not mean|it shows that|ultimately)\b/i.test(sentence)) {
+    score += 5;
+  }
+  if (/\b(?:topic|gist|claim|conclusion|responsibility|value|equality|opportunity|solution|policy|learning|evidence)\b/i.test(sentence)) {
+    score += 1;
+  }
   return score;
 }
 
@@ -888,6 +947,14 @@ function validateTypeSpecific(
     validateImpliedMeaningQuestion(question, passage, requestedDifficulty, add);
   }
 
+  if (typeId === "TOPIC" || typeId === "MAIN_IDEA" || typeId === "TOPIC_MAIN_IDEA") {
+    validateTopicMainIdeaQuestion(question, typeId, add);
+  }
+
+  if (typeId === "SUMMARY_COMPLETE_MC") {
+    validateSummaryCompleteMcQuestion(question, requestedDifficulty, add);
+  }
+
   if (typeId === "IRRELEVANT") {
     validateIrrelevantQuestion(question, passage, requestedDifficulty, add);
   }
@@ -977,10 +1044,10 @@ function validateTypeSpecific(
     }
   }
 
-  if (typeId === "SUMMARY_COMPLETE" && Array.isArray(question.blanks)) {
+  if ((typeId === "SUMMARY_COMPLETE" || typeId === "SUMMARY_COMPLETE_MC") && Array.isArray(question.blanks)) {
     const answers = question.blanks.filter(isRecord).map((blank) => normalizeText(blank.answer)).filter(Boolean);
     if (findDuplicate(answers)) {
-      add("warning", "duplicate-summary-answer", "SUMMARY_COMPLETE repeats the same blank answer.");
+      add("warning", "duplicate-summary-answer", `${typeId} repeats the same blank answer.`);
     }
   }
 }
@@ -1219,6 +1286,301 @@ function validateBlankInferenceQuestion(
   }
 }
 
+function validateTopicMainIdeaQuestion(
+  question: Record<string, unknown>,
+  typeId: string,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const direction = normalizeText(question.direction);
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const optionTexts = options.map((option) => normalizeText(option.text)).filter(Boolean);
+
+  if (typeId === "TOPIC" && !/주제/.test(direction)) {
+    add("error", "topic-direction-mismatch", "TOPIC direction must ask for the passage topic.");
+  }
+  if (typeId === "MAIN_IDEA" && !/(요지|주장)/.test(direction)) {
+    add("error", "main-idea-direction-mismatch", "MAIN_IDEA direction must ask for the passage gist or author's claim.");
+  }
+
+  if (typeId === "TOPIC") {
+    for (const optionText of optionTexts) {
+      if (containsHangul(optionText) || !containsLatinLetter(optionText)) {
+        add(
+          "error",
+          "topic-option-language",
+          "TOPIC options should be English topic phrases.",
+        );
+        break;
+      }
+    }
+  } else {
+    for (const optionText of optionTexts) {
+      if (!containsHangul(optionText)) {
+        add(
+          "warning",
+          "topic-main-idea-option-language",
+          `${typeId} options should be Korean statements unless the direction is explicitly a TOPIC item.`,
+        );
+        break;
+      }
+    }
+  }
+
+  if (typeId === "MAIN_IDEA") {
+    const nounPhraseLikeCount = optionTexts.filter((text) =>
+      text.length > 0 && !/(다|음|함|됨|해야|필요|중요|가능|있다|없다|된다|준다)[.!?。]?$/.test(text),
+    ).length;
+    if (nounPhraseLikeCount >= Math.max(3, optionTexts.length - 1)) {
+      add(
+        "warning",
+        "main-idea-title-like-options",
+        "MAIN_IDEA options look like topic/title noun phrases; use complete Korean claim statements.",
+      );
+    }
+  }
+}
+
+function validateSummaryCompleteMcQuestion(
+  question: Record<string, unknown>,
+  requestedDifficulty: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const direction = normalizeText(question.direction);
+  const summary = normalizeText(question.summaryWithBlanks);
+  const blanks = Array.isArray(question.blanks) ? question.blanks.filter(isRecord) : [];
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const correctLabel = normalizeLabel(question.correctAnswer);
+  const blankA = findSummaryBlankAnswer(blanks, "(A)");
+  const blankB = findSummaryBlankAnswer(blanks, "(B)");
+
+  if (!/요약/.test(direction) || !direction.includes("(A)") || !direction.includes("(B)")) {
+    add(
+      "error",
+      "summary-mc-direction-frame",
+      "SUMMARY_COMPLETE_MC direction must ask for the best words for summary blanks (A) and (B).",
+    );
+  }
+
+  if (!summary) {
+    add("error", "summary-mc-missing-summary", "SUMMARY_COMPLETE_MC is missing summaryWithBlanks.");
+  }
+
+  if (countLiteral(summary, "(A)") !== 1 || countLiteral(summary, "(B)") !== 1) {
+    add(
+      "error",
+      "summary-mc-blank-marker-count",
+      "summaryWithBlanks must contain (A) and (B) exactly once each.",
+    );
+  }
+
+  if (summary && containsHangul(summary)) {
+    add(
+      "error",
+      "summary-mc-summary-language",
+      "SUMMARY_COMPLETE_MC summaryWithBlanks must be an English summary sentence.",
+    );
+  }
+
+  if (countSentenceEndings(summary.replace(/\([AB]\)/g, "")) > 1) {
+    add(
+      "warning",
+      "summary-mc-summary-too-many-sentences",
+      "SUMMARY_COMPLETE_MC summary should be one sentence, not multiple sentences.",
+    );
+  }
+
+  if (!blankA || !blankB) {
+    add(
+      "error",
+      "summary-mc-missing-blank-answer",
+      "SUMMARY_COMPLETE_MC blanks must include answers for both (A) and (B).",
+    );
+  }
+
+  for (const [label, answer] of [["(A)", blankA], ["(B)", blankB]] as const) {
+    if (!answer) continue;
+    if (containsHangul(answer) || !containsLatinLetter(answer)) {
+      add(
+        "error",
+        "summary-mc-answer-language",
+        `${label} answer must be an English word or phrase.`,
+      );
+      break;
+    }
+    const normalizedAnswer = normalizeComparableText(answer);
+    if (
+      normalizedAnswer.length >= 4 &&
+      normalizeComparableText(summary).includes(normalizedAnswer)
+    ) {
+      add(
+        "warning",
+        "summary-mc-answer-leaks-in-summary",
+        `${label} answer appears elsewhere in the summary sentence.`,
+      );
+      break;
+    }
+  }
+
+  if (summary && blankA && blankB) {
+    const filledSummary = summary
+      .replace("(A)", blankA)
+      .replace("(B)", blankB);
+    const awkwardCollocation = findAwkwardSummaryMcCollocation(filledSummary);
+    if (awkwardCollocation) {
+      add(
+        "error",
+        "summary-mc-awkward-collocation",
+        `SUMMARY_COMPLETE_MC filled summary has an awkward English collocation: ${awkwardCollocation}.`,
+      );
+    }
+  }
+
+  if (!correctLabel) {
+    add("error", "summary-mc-correct-answer-mismatch", "SUMMARY_COMPLETE_MC correctAnswer must be an option label.");
+  }
+
+  const optionPairs = options.map((option) => ({
+    label: normalizeLabel(option.label),
+    ...readSummaryPairOption(option),
+  }));
+  const correctPair = optionPairs.find((option) => option.label === correctLabel);
+
+  if (!correctPair) {
+    add(
+      "error",
+      "summary-mc-correct-answer-mismatch",
+      "SUMMARY_COMPLETE_MC correctAnswer does not point to an existing option pair.",
+    );
+  } else if (
+    blankA &&
+    blankB &&
+    (normalizeComparableText(correctPair.blankA) !== normalizeComparableText(blankA) ||
+      normalizeComparableText(correctPair.blankB) !== normalizeComparableText(blankB))
+  ) {
+    add(
+      "error",
+      "summary-mc-correct-pair-mismatch",
+      "SUMMARY_COMPLETE_MC correct option pair must match the blanks answers exactly.",
+    );
+  }
+
+  let hasAOnlyTrap = false;
+  let hasBOnlyTrap = false;
+  let malformedPairFound = false;
+  let nonEnglishPairFound = false;
+
+  for (const pair of optionPairs) {
+    if (!pair.blankA || !pair.blankB) {
+      malformedPairFound = true;
+      continue;
+    }
+    const pairText = `${pair.blankA} ${pair.blankB}`;
+    if (containsHangul(pairText) || !containsLatinLetter(pairText)) {
+      nonEnglishPairFound = true;
+    }
+    if (pair.label !== correctLabel && blankA && blankB) {
+      const aMatches = normalizeComparableText(pair.blankA) === normalizeComparableText(blankA);
+      const bMatches = normalizeComparableText(pair.blankB) === normalizeComparableText(blankB);
+      if (aMatches && !bMatches) hasAOnlyTrap = true;
+      if (!aMatches && bMatches) hasBOnlyTrap = true;
+    }
+  }
+
+  if (malformedPairFound) {
+    add(
+      "error",
+      "summary-mc-option-pair-shape",
+      "Every SUMMARY_COMPLETE_MC option must provide both blankA and blankB, or a clearly paired text value.",
+    );
+  }
+
+  if (nonEnglishPairFound) {
+    add(
+      "error",
+      "summary-mc-option-language",
+      "SUMMARY_COMPLETE_MC options must be English-only paired expressions.",
+    );
+  }
+
+  if (!hasAOnlyTrap || !hasBOnlyTrap) {
+    add(
+      "error",
+      "summary-mc-missing-half-correct-traps",
+      "SUMMARY_COMPLETE_MC should include at least one A-only-correct trap and one B-only-correct trap.",
+    );
+  }
+}
+
+function findSummaryBlankAnswer(
+  blanks: Record<string, unknown>[],
+  expectedLabel: "(A)" | "(B)",
+): string {
+  const normalizedExpected = expectedLabel.replace(/[()]/g, "").toLowerCase();
+  const blank = blanks.find((item) => {
+    const label = normalizeText(item.label).replace(/[()]/g, "").toLowerCase();
+    return label === normalizedExpected;
+  });
+  return normalizeText(blank?.answer);
+}
+
+function readSummaryPairOption(option: Record<string, unknown>): {
+  blankA: string;
+  blankB: string;
+  text: string;
+} {
+  const text = normalizeText(option.text);
+  const explicitA = normalizeText(option.blankA);
+  const explicitB = normalizeText(option.blankB);
+  if (explicitA || explicitB) {
+    return { blankA: explicitA, blankB: explicitB, text };
+  }
+
+  const stripped = stripSummaryOptionPrefix(text);
+  const parts = stripped
+    .split(/\s*(?:……|\.{3,}|…|\/|\||;|,|\s[-–—]\s)\s*/u)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length >= 2) {
+    return { blankA: parts[0], blankB: parts.slice(1).join(" "), text };
+  }
+
+  return { blankA: "", blankB: "", text };
+}
+
+function stripSummaryOptionPrefix(text: string): string {
+  return text
+    .replace(
+      /^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/,
+      "",
+    )
+    .trim();
+}
+
+function countLiteral(text: string, literal: string): number {
+  if (!text || !literal) return 0;
+  return text.split(literal).length - 1;
+}
+
+function countSentenceEndings(text: string): number {
+  const matches = text.match(/[.!?]+(?:\s|$)/g);
+  return matches?.length ?? 0;
+}
+
+function findAwkwardSummaryMcCollocation(text: string): string | null {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  const patterns: RegExp[] = [
+    /\b(?:question|matter|issue|problem)\s+of\s+[a-z][a-z-]*(?:\s+[a-z][a-z-]*){0,3}\s+to\s+[a-z]+ing\b/i,
+    /\b(?:equity|equality|opportunity|responsibility)\s+to\s+[a-z]+ing\b/i,
+    /\b(?:a|the)\s+(?:question|matter|issue|problem)\s+of\s+[a-z][a-z-]*(?:\s+[a-z][a-z-]*){0,2}\s+for\s+[a-z]+ing\b/i,
+  ];
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern);
+    if (match?.[0]) return match[0];
+  }
+  return null;
+}
+
 function countAttractiveBlankWrongOptions(
   options: Record<string, unknown>[],
   correctLabel: string,
@@ -1258,10 +1620,38 @@ function validateImpliedMeaningQuestion(
   const correctOption = options.find((option) => normalizeLabel(option.label) === correctLabel);
   const correctText = normalizeText(correctOption?.text);
   const expressionTokenCount = countContentTokens(underlinedExpression);
+  const optionTexts = options.map((option) => normalizeText(option.text)).filter(Boolean);
 
   if (!underlinedExpression) {
     add("error", "implied-meaning-missing-expression", "IMPLIED_MEANING is missing underlinedExpression.");
     return;
+  }
+
+  for (const optionText of optionTexts) {
+    if (containsHangul(optionText)) {
+      add(
+        "error",
+        "implied-meaning-option-language",
+        "IMPLIED_MEANING options must be English-only; Korean text was found in an option.",
+      );
+      break;
+    }
+    if (!containsLatinLetter(optionText)) {
+      add(
+        "error",
+        "implied-meaning-option-not-english",
+        `IMPLIED_MEANING option is not a usable English phrase: ${optionText.slice(0, 80)}.`,
+      );
+      break;
+    }
+    if (englishWordCount(optionText) < 3) {
+      add(
+        "warning",
+        "implied-meaning-option-too-short",
+        "IMPLIED_MEANING options should be meaningful English phrases or clauses, not one- or two-word labels.",
+      );
+      break;
+    }
   }
 
   if (!passageWithUnderline.includes("__")) {
@@ -1334,6 +1724,25 @@ function validateImpliedMeaningQuestion(
       passage,
       underlinedExpression,
     );
+    const targetSentenceInfo = findExpressionSentenceContextWithIndex(
+      passage,
+      underlinedExpression,
+    );
+    if (
+      targetSentenceInfo &&
+      !isCentralImpliedMeaningTarget(
+        targetSentenceInfo.sentence,
+        targetSentenceInfo.index,
+        targetSentenceInfo.total,
+        underlinedExpression,
+      )
+    ) {
+      add(
+        requestedDifficulty === "KILLER" ? "error" : "warning",
+        "implied-meaning-noncentral-target",
+        "IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail.",
+      );
+    }
     const directLeak = sentenceContext
       ? findDirectAnswerLeakage(underlinedExpression, sentenceContext.next)
       : null;
@@ -1362,6 +1771,7 @@ function validateImpliedMeaningQuestion(
   if (
     correctText &&
     impliedMeaning &&
+    containsHangul(correctText) === containsHangul(impliedMeaning) &&
     normalizeComparableText(correctText) !== normalizeComparableText(impliedMeaning) &&
     countMeaningTokenOverlap(meaningTokens(correctText), meaningTokens(impliedMeaning)) < 2
   ) {
@@ -1477,6 +1887,48 @@ function findExpressionSentenceContext(
     sentence: sentences[index],
     next: sentences[index + 1] ?? "",
   };
+}
+
+function findExpressionSentenceContextWithIndex(
+  passage: string,
+  expression: string,
+): { previous: string; sentence: string; next: string; index: number; total: number } | null {
+  const sentences = splitPassageSentences(passage, { includeShort: true });
+  const comparableExpression = normalizeComparableText(expression).replace(/[.!?]+$/, "");
+  if (!comparableExpression) return null;
+
+  const index = sentences.findIndex((sentence) =>
+    normalizeComparableText(sentence).includes(comparableExpression),
+  );
+  if (index === -1) return null;
+
+  return {
+    previous: sentences[index - 1] ?? "",
+    sentence: sentences[index],
+    next: sentences[index + 1] ?? "",
+    index,
+    total: sentences.length,
+  };
+}
+
+function isCentralImpliedMeaningTarget(
+  sentence: string,
+  sentenceIndex: number,
+  sentenceCount: number,
+  expression: string,
+): boolean {
+  if (sentenceIndex >= Math.max(0, sentenceCount - 2)) return true;
+  if (hasCentralClaimCue(sentence)) return true;
+  if (hasFigurativeOrCompressedSignal(expression)) return true;
+  return false;
+}
+
+function hasCentralClaimCue(sentence: string): boolean {
+  return /\b(?:central issue|in the end|for that reason|therefore|thus|consequently|as a result|this is why|the point|the lesson|a durable solution|a serious .* must|must therefore|not whether|not merely|rather than|instead of|does not mean|it shows that|ultimately|the craft of|the result is|the consequence is)\b/i.test(sentence);
+}
+
+function hasFigurativeOrCompressedSignal(expression: string): boolean {
+  return /\b(?:creatures?|beggar|grave|mirror|lens|map|upstream|downstream|weight|carry|sculpt|sculpting|craft|discipline|reorganized|shifted|tool that helps|changed what counted|lies between)\b/i.test(expression);
 }
 
 function findDirectAnswerLeakage(expression: string, nextSentence: string): string | null {
@@ -2558,6 +3010,18 @@ function normalizeLabel(value: unknown): string {
 
 function normalizeText(value: unknown): string {
   return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
+function containsHangul(text: string): boolean {
+  return /[가-힣]/.test(text);
+}
+
+function containsLatinLetter(text: string): boolean {
+  return /[A-Za-z]/.test(text);
+}
+
+function englishWordCount(text: string): number {
+  return (text.match(/[A-Za-z]+(?:[-'][A-Za-z]+)*/g) ?? []).length;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

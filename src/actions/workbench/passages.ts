@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAuth, getAcademyId } from "./_helpers";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
+import { DIRECT_INPUT_PASSAGE_SOURCE } from "@/lib/passage-source";
 import type {
   WorkbenchPassageFilters,
   ActionResult,
@@ -40,7 +41,24 @@ export async function getWorkbenchPassages(
       { content: { contains: filters.search, mode: "insensitive" } },
     ];
   }
-  if (filters?.analyzedOnly) where.analysis = { isNot: null };
+  if (filters?.analyzedOnly) {
+    if (filters?.includeDirectInput) {
+      // Analysis-complete passages OR direct-paste passages (which have no
+      // analysis yet). Pushed onto `where.AND` so it composes correctly with
+      // the `where.OR` search predicate above instead of overwriting it.
+      const analyzedOrDirectInput = {
+        OR: [
+          { analysis: { isNot: null } },
+          { source: DIRECT_INPUT_PASSAGE_SOURCE },
+        ],
+      };
+      where.AND = Array.isArray(where.AND)
+        ? [...where.AND, analyzedOrDirectInput]
+        : [analyzedOrDirectInput];
+    } else {
+      where.analysis = { isNot: null };
+    }
+  }
 
   const [passages, total] = await Promise.all([
     prisma.passage.findMany({

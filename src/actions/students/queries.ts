@@ -20,6 +20,14 @@ export async function getStudents(academyId: string, filters?: StudentFilters) {
   if (filters?.schoolId) {
     where.schoolId = filters.schoolId;
   }
+  if (filters?.classId) {
+    where.classEnrollments = {
+      some: {
+        classId: filters.classId,
+        status: "ENROLLED",
+      },
+    };
+  }
   if (filters?.grade) {
     where.grade = filters.grade;
   }

@@ -91,12 +91,12 @@ export function buildStudyNoteBlocks(
 
     const syntax = data.syntaxAnalysis || [];
     if (syntax.length > 0) {
-      pushBlock(blocks, passage, "syntax", "구문", 0, <DenseSectionTitle category="syntax" title="구문 정리" count={syntax.length} />, {
+      pushBlock(blocks, passage, "syntax", "읽기", 0, <DenseSectionTitle category="syntax" title="문장별 읽기 포인트" count={syntax.length} />, {
         id: `${passage.id}-syntax-title`,
         keepWithNext: true,
       });
       chunkArray(syntax, 4).forEach((chunk, index) => {
-        pushBlock(blocks, passage, "syntax", `구문 ${index + 1}`, chunk.length, <SyntaxDenseBlock items={chunk} />, {
+        pushBlock(blocks, passage, "syntax", `읽기 ${index + 1}`, chunk.length, <SyntaxDenseBlock items={chunk} />, {
           id: `${passage.id}-syntax-${index}`,
         });
       });

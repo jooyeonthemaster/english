@@ -48,5 +48,6 @@ export interface QuestionBankItem {
     wrongOptionExplanations: string | null;
   } | null;
   _count: { examLinks: number };
+  examLinks?: { exam: { id: string; title: string } }[];
   structuredData?: unknown;
 }

@@ -62,7 +62,7 @@ export function SentenceRow({
   onSyntaxBadgeClick,
 }: SentenceRowProps) {
   const text = sentence.english;
-  const allHighlights = collectHighlights(text, vocab, grammar, syntax, examTexts);
+  const allHighlights = collectHighlights(text, vocab, grammar, undefined, examTexts);
   const segments = buildSegments(allHighlights);
 
   const parts: React.ReactNode[] = [];
@@ -95,7 +95,7 @@ export function SentenceRow({
         onClick={(e) => { e.stopPropagation(); onSegmentClick(segKey, seg.highlights, sentence); }}
         role="button"
         tabIndex={0}
-        title={hasOverlap ? `클릭하여 순환: ${uniqueTypes.map((t) => t === "vocab" ? "어휘" : t === "grammar" ? "문법" : t === "syntax" ? "구문" : "출제포인트").join(" → ")}` : undefined}
+        title={hasOverlap ? `클릭하여 순환: ${uniqueTypes.map((t) => t === "vocab" ? "어휘" : t === "grammar" ? "어법" : t === "syntax" ? "읽기포인트" : "출제포인트").join(" → ")}` : undefined}
       >
         {frag}
         {hasOverlap && (
@@ -112,8 +112,6 @@ export function SentenceRow({
   }
   if (cursor < text.length) parts.push(<span key={`p-${sentence.index}-end`}>{text.slice(cursor)}</span>);
 
-  // Use text-decoration instead of border-bottom so it wraps across multiple lines
-  const syntaxInlineStyle = syntax ? { textDecoration: "underline dashed #22d3ee", textUnderlineOffset: "4px", textDecorationSkipInk: "none" as const } : undefined;
   const isFocusedKeySentence = focusedNote?.id === keySentenceKey(sentence.index);
 
   return (
@@ -124,7 +122,7 @@ export function SentenceRow({
       style={isFocusedKeySentence ? FOCUS_STYLES.key : undefined}
     >
       <div className="flex items-start gap-1">
-        {/* 줄번호 + 핵심문장/구문 뱃지 */}
+        {/* 줄번호 + 핵심문장/읽기 포인트 뱃지 */}
         <div className="flex items-center gap-1 shrink-0 mt-0.5">
           <sup className="text-[10px] font-bold text-slate-400 select-none w-3">{sentence.index + 1}</sup>
           {isTopic && (
@@ -147,14 +145,14 @@ export function SentenceRow({
             <span
               className="text-[8px] font-bold text-cyan-600 bg-cyan-50 px-1 py-0.5 rounded leading-none cursor-pointer hover:bg-cyan-100 transition-colors"
               onClick={() => onSyntaxBadgeClick(sentence, syntax)}
-              title="구문 분석 보기"
+              title="이 문장 읽기 포인트 보기"
             >
-              구문
+              읽기
             </span>
           )}
         </div>
         {/* 본문 텍스트: 내부 하이라이트 개별 클릭 */}
-        <span className="font-mono text-[14px] leading-[1.9]" style={syntaxInlineStyle}>{parts}</span>
+        <span className="font-mono text-[14px] leading-[1.9]">{parts}</span>
       </div>
       {showTranslation && (
         <p className={`text-[12px] text-slate-400 mt-0.5 leading-relaxed ${isKey ? "pl-6" : "pl-4"}`}>{sentence.korean}</p>

@@ -106,13 +106,13 @@ function AnalysisMiniSummary({ data }: { data: QueuedPassage["analysisData"] }) 
         {grammarCount > 0 && (
           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
             <PenTool className="w-3 h-3" />
-            문법 {grammarCount}
+            어법 {grammarCount}
           </span>
         )}
         {syntaxCount > 0 && (
           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
             <Braces className="w-3 h-3" />
-            구문 {syntaxCount}
+            읽기포인트 {syntaxCount}
           </span>
         )}
         {keySentenceCount > 0 && (

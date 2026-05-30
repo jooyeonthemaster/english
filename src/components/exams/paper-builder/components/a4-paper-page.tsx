@@ -669,7 +669,7 @@ export function A4PaperPage({
                                     >
                                       {optionOrdinalLabel(originalIndex)}
                                     </span>
-                                    {useReferenceLabel ? (
+                                    {useReferenceLabel && hasOptionDisplayText ? (
                                       <span className="flex-1 font-semibold">
                                         {optionDisplayText}
                                       </span>

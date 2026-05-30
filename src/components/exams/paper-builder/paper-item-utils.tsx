@@ -97,6 +97,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   const isSubjective = options.length === 0;
   const normalizedQuestionText = normalizeQuestionText(question.questionText);
   const passageContent = normalizePassageText(question.passage?.content || "");
+  const includeSourcePassage = shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
     ...question,
     questionText: normalizedQuestionText,
@@ -112,8 +113,8 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     orderNum,
     points: question.points || 1,
     groupId: `single:${localId}`,
-    includePassage: shouldIncludeSourcePassageByDefault(normalizedQuestion),
-    passageTitle: normalizeInlineText(question.passage?.title || ""),
+    includePassage: includeSourcePassage,
+    passageTitle: "",
     passageContent,
     questionText: normalizedQuestionText,
     options,
@@ -124,7 +125,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     sectionTitle: "",
     teacherNote: "",
     breakBefore: "auto",
-    keepWithPrev: false,
+    keepWithPrev: includeSourcePassage,
     blockType: "question",
     ...paperBlockDefaults(),
   };
@@ -329,6 +330,17 @@ export function renderFormattedInline(
   return parts.length > 0 ? parts : text;
 }
 
+function normalizeSummaryCompletionQuestionText(
+  text: string,
+  subType: string | null | undefined,
+) {
+  if (subType !== "SUMMARY_COMPLETE_MC") return text;
+
+  return text
+    .replace(/\n{0,2}\[(?:빈칸 정답|blank answers)\][\s\S]*$/i, "")
+    .replace(/^\[(?:요약문|summary)\]\s*/gim, "↓\n");
+}
+
 export function joinRenderedLinesForDisplay(lines: string[]) {
   const paragraphs: string[] = [];
   let currentParagraph: string[] = [];
@@ -358,8 +370,9 @@ export function renderQuestionTextInline(
   text: string,
   subType: string | null | undefined,
 ) {
-  const { beforeText, givenText } = splitSentenceInsertGivenBlock(text, subType);
-  if (!givenText) return renderFormattedInline(text, subType);
+  const normalizedText = normalizeSummaryCompletionQuestionText(text, subType);
+  const { beforeText, givenText } = splitSentenceInsertGivenBlock(normalizedText, subType);
+  if (!givenText) return renderFormattedInline(normalizedText, subType);
 
   return (
     <>

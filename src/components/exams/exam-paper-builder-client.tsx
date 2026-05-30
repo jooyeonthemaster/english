@@ -27,6 +27,7 @@ import type {
 } from "./paper-builder/types";
 import {
   DEFAULT_INSTRUCTIONS,
+  DEFAULT_SHOW_PASSAGE_TITLE,
   PAPER_SIZE_SPECS,
   PREVIEW_PAGE_WIDTH,
   SUBTYPE_LABELS,
@@ -433,8 +434,8 @@ export function ExamPaperBuilderClient({
   const [density, setDensity] = useState<Density>("comfortable");
   const [passageStyle, setPassageStyle] = useState<PassageStyle>("boxed");
   const showAnswerSpace = true;
-  const [showPassageTitle, setShowPassageTitle] = useState(true);
-  const [showQuestionMeta, setShowQuestionMeta] = useState(true);
+  const [showPassageTitle, setShowPassageTitle] = useState(DEFAULT_SHOW_PASSAGE_TITLE);
+  const [showQuestionMeta, setShowQuestionMeta] = useState(false);
   const {
     paperItems,
     activeItemId,

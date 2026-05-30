@@ -46,8 +46,8 @@ const EDITOR_STYLES = `
 // ─── Config ──────────────────────────────────────────────
 const ANNOTATION_CONFIG: Record<AnnotationType, { label: string; shortLabel: string; icon: typeof BookOpen; color: string; dotColor: string; description: string }> = {
   vocab: { label: "핵심 어휘", shortLabel: "어휘", icon: BookOpen, color: "text-blue-600", dotColor: "bg-blue-500", description: "동의어·파생어·콜로케이션 등 어휘 심층 분석" },
-  grammar: { label: "문법/어법", shortLabel: "문법", icon: PenTool, color: "text-violet-600", dotColor: "bg-violet-500", description: "어법 출제 포인트, 오답 함정, 변형 가능 방향" },
-  syntax: { label: "구문 분석", shortLabel: "구문", icon: Braces, color: "text-cyan-600", dotColor: "bg-cyan-500", description: "S/V/O/C 구조, 끊어읽기, 복잡 구문" },
+  grammar: { label: "어법/문법", shortLabel: "어법", icon: PenTool, color: "text-violet-600", dotColor: "bg-violet-500", description: "어법 출제 포인트, 오답 함정, 변형 가능 방향" },
+  syntax: { label: "문장별 읽기 포인트", shortLabel: "읽기", icon: Braces, color: "text-cyan-600", dotColor: "bg-cyan-500", description: "긴 문장 끊어읽기, 수식 관계, 읽는 순서" },
   sentence: { label: "핵심 문장", shortLabel: "문장", icon: MessageSquare, color: "text-green-600", dotColor: "bg-green-500", description: "논리 흐름, 주제문, 빈칸 출제 적합 위치" },
   examPoint: { label: "출제 포인트", shortLabel: "출제", icon: Target, color: "text-yellow-600", dotColor: "bg-yellow-500", description: "패러프레이징, 문장 전환, 서술형 조건 설정" },
 };
@@ -452,7 +452,7 @@ export function PassageAnnotationEditor({
             <span className="font-bold text-blue-900 px-1 py-0.5 rounded bg-white/70 shadow-[0_0_8px_rgba(59,130,246,0.35)]">
               드래그(터치 길게 누르기)
             </span>
-            하면 핵심 어휘, 문법 포인트, 출제 포인트 등을 마킹할 수 있습니다
+            하면 핵심 어휘, 어법 포인트, 출제 포인트 등을 마킹할 수 있습니다
           </p>
           <style jsx>{`
             @keyframes annotationHintShimmer {

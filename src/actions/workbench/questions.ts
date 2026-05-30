@@ -125,6 +125,9 @@ export async function getWorkbenchQuestions(
           },
         },
         explanation: true,
+        examLinks: {
+          select: { exam: { select: { id: true, title: true } } },
+        },
         _count: { select: { examLinks: true } },
       },
       orderBy: needsDifficultySort ? { createdAt: "desc" as const } : orderBy,
@@ -188,6 +191,9 @@ export async function getWorkbenchQuestionsGroupedByPassage(
           where: questionWhere,
           include: {
             explanation: true,
+            examLinks: {
+              select: { exam: { select: { id: true, title: true } } },
+            },
             _count: { select: { examLinks: true } },
           },
           orderBy: { createdAt: "desc" },

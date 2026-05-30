@@ -16,6 +16,8 @@ import {
   getVisibleQuestionTags,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
+import type { AnalysisTone } from "@/lib/passage-analysis-options";
+import { AnalysisToneSelector } from "@/components/workbench/analysis-prompt-panel";
 import { PUBLISHERS } from "../constants";
 import type { SavedPrompt } from "../types";
 
@@ -45,6 +47,8 @@ interface CompactOptionsRowProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
+  analysisTone: AnalysisTone;
+  setAnalysisTone: (v: AnalysisTone) => void;
   savedPrompts: SavedPrompt[];
   showSavedPrompts: boolean;
   setShowSavedPrompts: (v: boolean | ((prev: boolean) => boolean)) => void;
@@ -124,11 +128,18 @@ export function CompactOptionsRow(props: CompactOptionsRowProps) {
         </div>
 
         <Textarea
-          placeholder="예: 핵심 단어: contribute, responsible / 관계대명사, to부정사 / 3번째 문장 구문 분석"
+          placeholder="예: 핵심 단어: contribute, responsible / 관계대명사, to부정사 / 3번째 문장은 읽기 포인트로 설명"
           value={props.analysisPrompt}
           onChange={(e) => props.setAnalysisPrompt(e.target.value)}
           className="min-h-[48px] max-h-[70px] text-[11px] leading-relaxed bg-white border-blue-200/60 placeholder:text-slate-300 resize-none focus:border-blue-300 py-1.5 px-2.5"
           spellCheck={false}
+        />
+
+        <AnalysisToneSelector
+          value={props.analysisTone}
+          onChange={props.setAnalysisTone}
+          compact
+          className="mt-1.5"
         />
 
         {props.analysisPrompt.trim() ? (

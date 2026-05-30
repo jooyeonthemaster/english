@@ -46,11 +46,14 @@ const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
+  TOPIC: "주제 추론",
+  MAIN_IDEA: "요지/주장",
   TOPIC_MAIN_IDEA: "주제/요지",
   TITLE: "제목 추론",
   IMPLIED_MEANING: "함축 의미 추론",
   REFERENCE: "지칭 추론",
   CONTENT_MATCH: "내용 일치",
+  SUMMARY_COMPLETE_MC: "요약문 완성(객관식)",
   IRRELEVANT: "무관한 문장",
   CONDITIONAL_WRITING: "조건부 영작",
   SENTENCE_TRANSFORM: "문장 전환",
@@ -163,6 +166,17 @@ export interface BuilderSettings {
 
 interface BuilderItemResolved extends BuilderItem {
   sourceQuestion: ExamQuestionData["question"];
+}
+
+function normalizePrintableTitle(value: string | null | undefined): string {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function printablePassageTitle(item: BuilderItemResolved): string {
+  const savedTitle = normalizePrintableTitle(item.passageTitle);
+  if (!savedTitle) return "";
+  const sourceTitle = normalizePrintableTitle(item.sourceQuestion.passage?.title);
+  return savedTitle === sourceTitle ? "" : savedTitle;
 }
 
 function dataUrlToImage(dataUrl: string | null | undefined):
@@ -551,7 +565,7 @@ function buildQuestionBlock(
 ): DocChild[] {
   const result: DocChild[] = [];
   const compact = layout.density === "compact";
-  const showMeta = layout.showQuestionMeta !== false;
+  const showMeta = layout.showQuestionMeta === true;
   const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
 
   const orderNum = item.orderNum ?? 0;
@@ -1146,7 +1160,7 @@ function appendQuestionGroups(
   compact: boolean,
 ) {
   const passageStyle = layout.passageStyle ?? "boxed";
-  const showPassageTitle = layout.showPassageTitle !== false;
+  const showPassageTitle = layout.showPassageTitle === true;
   const groups = groupItems(items);
   for (const group of groups) {
     const first = group.items[0];
@@ -1154,7 +1168,7 @@ function appendQuestionGroups(
     const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
     if (includePassage && passageContent) {
       const passageBlocks = buildPassage({
-        passageTitle: first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+        passageTitle: printablePassageTitle(first),
         passageContent,
         passageStyle,
         showPassageTitle,

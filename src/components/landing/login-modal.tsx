@@ -9,10 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Eye, EyeOff, X, ShieldAlert } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
-import {
-  isJooyeonSpecialAccount,
-  JOOYEON_WELCOME_STORAGE_KEY,
-} from "@/lib/jooyeon-special-account";
+import { getSpecialAccount } from "@/lib/special-accounts";
 
 const loginSchema = z.object({
   email: z.string().min(1, "아이디 또는 이메일을 입력해주세요"),
@@ -77,8 +74,9 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
     const res = await fetch("/api/auth/session");
     const session = await res.json();
     const role = session?.user?.role;
-    if (isJooyeonSpecialAccount(session?.user?.email) || isJooyeonSpecialAccount(data.email)) {
-      sessionStorage.setItem(JOOYEON_WELCOME_STORAGE_KEY, "true");
+    const special = getSpecialAccount(session?.user?.email) ?? getSpecialAccount(data.email);
+    if (special) {
+      sessionStorage.setItem(special.welcomeStorageKey, "true");
     }
     onClose();
     router.push(role === "DIRECTOR" ? "/director" : "/teacher");
