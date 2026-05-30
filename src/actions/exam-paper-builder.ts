@@ -137,6 +137,14 @@ export async function getExamPaperBuilderData(academyId: string) {
         collectionItems: {
           select: { collectionId: true },
         },
+        // Which exam papers already include this question — surfaced on the
+        // library card as a "사용 이력" band so teachers can see at a glance
+        // whether a question has been used before (and in which papers).
+        examLinks: {
+          select: {
+            exam: { select: { id: true, title: true, createdAt: true } },
+          },
+        },
         _count: { select: { examLinks: true } },
       },
       orderBy: [{ starred: "desc" }, { createdAt: "desc" }],

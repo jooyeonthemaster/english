@@ -10,16 +10,22 @@ import { parseFormattedToRuns } from "../format";
 import { formatSentenceInsertPassageMarkers } from "@/components/exams/paper-builder/option-display";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
+// 미리보기 boxed 지문: rounded border (1px ≈ 0.26mm) + px-3 py-2 패딩.
 const BOX_BORDER: BorderSpec = {
   type: "SOLID",
-  widthMm: 0.15,
-  color: COLORS.darkGray,
+  widthMm: 0.26,
+  color: COLORS.separator,
 };
 const UNDERLINE_BORDER: BorderSpec = {
   type: "SOLID",
-  widthMm: 0.22,
-  color: COLORS.darkGray,
+  widthMm: 0.26,
+  color: COLORS.separator,
 };
+
+// 미리보기 가상 A4(760px=210mm) 스케일: 1px = 0.276316mm = 78.33 HPU.
+// px-3(12px)=3.316mm → ~940HPU, py-2(8px)=2.211mm → ~627HPU
+const BOX_PAD_LR = 940;
+const BOX_PAD_TB = 627;
 
 export interface PassageOptions {
   passageTitle: string;
@@ -36,6 +42,8 @@ function makePassageParas(
   compact: boolean,
 ): ParagraphNode[] {
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+  // 미리보기 본문 줄간격: comfortable leading-[1.58], compact leading-[1.46].
+  const lineSpacingPct = compact ? 146 : 158;
   const lines = content.split("\n");
   return lines.map<ParagraphNode>((line, idx) => {
     const trimmed = line.trim();
@@ -45,7 +53,7 @@ function makePassageParas(
         style: {
           align: "JUSTIFY",
           spaceAfter: idx < lines.length - 1 ? 40 : 0,
-          lineSpacingPct: 160,
+          lineSpacingPct,
         },
         runs: [txt(" ", { size: bodySize })],
       };
@@ -55,7 +63,7 @@ function makePassageParas(
       style: {
         align: "JUSTIFY",
         spaceAfter: idx < lines.length - 1 ? 40 : 0,
-        lineSpacingPct: 160,
+        lineSpacingPct,
       },
       runs: parseFormattedToRuns(trimmed, { size: bodySize }),
     };
@@ -106,7 +114,7 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
           top: BOX_BORDER,
           bottom: BOX_BORDER,
         },
-        cellMargins: { left: 240, right: 240, top: 180, bottom: 180 },
+        cellMargins: { left: BOX_PAD_LR, right: BOX_PAD_LR, top: BOX_PAD_TB, bottom: BOX_PAD_TB },
         rows: [
           {
             heightHpu: 1500,
@@ -121,7 +129,7 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
                   top: BOX_BORDER,
                   bottom: BOX_BORDER,
                 },
-                margins: { left: 240, right: 240, top: 180, bottom: 180 },
+                margins: { left: BOX_PAD_LR, right: BOX_PAD_LR, top: BOX_PAD_TB, bottom: BOX_PAD_TB },
                 blocks: inner,
               },
             ],
@@ -143,7 +151,7 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
           top: UNDERLINE_BORDER,
           bottom: UNDERLINE_BORDER,
         },
-        cellMargins: { left: 0, right: 0, top: 150, bottom: 150 },
+        cellMargins: { left: 0, right: 0, top: BOX_PAD_TB, bottom: BOX_PAD_TB },
         rows: [
           {
             heightHpu: 1500,
@@ -158,7 +166,7 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
                   top: UNDERLINE_BORDER,
                   bottom: UNDERLINE_BORDER,
                 },
-                margins: { left: 0, right: 0, top: 150, bottom: 150 },
+                margins: { left: 0, right: 0, top: BOX_PAD_TB, bottom: BOX_PAD_TB },
                 blocks: inner,
               },
             ],

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { Trash2 } from "lucide-react";
+import { FolderX } from "lucide-react";
 
 interface DraftSelectionToolbarProps {
   selectedCount: number;
@@ -47,7 +47,7 @@ export function DraftSelectionToolbar({
         : "border-slate-200 bg-slate-50/80");
 
   return (
-    <div className={`flex min-h-9 shrink-0 ${embedded ? "" : "flex-wrap"} items-center gap-x-1.5 gap-y-1.5 px-2 py-1 ${chrome}`}>
+    <div className={`flex min-h-9 shrink-0 ${embedded ? "" : "flex-wrap"} items-center gap-x-1.5 gap-y-1.5 py-1 ${chrome} ${embedded ? "pl-2 pr-0" : "px-2"}`}>
       <input
         ref={checkboxRef}
         type="checkbox"
@@ -88,10 +88,11 @@ export function DraftSelectionToolbar({
           <button
             type="button"
             onClick={onRemoveFromFolder}
-            className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50"
+            title="폴더에서 삭제"
+            aria-label="폴더에서 삭제"
+            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-300 bg-red-50 text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
           >
-            <Trash2 className="h-3.5 w-3.5" />
-            폴더에서 제거
+            <FolderX className="size-3.5" />
           </button>
         ) : null}
       </div>

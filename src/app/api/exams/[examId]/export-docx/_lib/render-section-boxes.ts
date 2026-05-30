@@ -7,7 +7,7 @@ import {
   TextRun,
   WidthType,
 } from "docx";
-import { COLOR, FONT, KR_FONT, PASSAGE_SIZE } from "./styles";
+import { COLOR, KR_FONT, PASSAGE_SIZE } from "./styles";
 import { bdr, NONE, noBorders, thinBox } from "./borders";
 import { BorderStyle } from "docx";
 import { makePassageParagraphs, passageTable } from "./passage-base";
@@ -57,7 +57,7 @@ export function renderMarkerSection(section: ParsedSection): DocChild[] {
               borders: thinBox(COLOR.black, 4),
               margins: { top: 120, bottom: 120, left: 160, right: 160 },
               width: { size: 100, type: WidthType.PERCENTAGE },
-              children: makePassageParagraphs(section.content, isKorean ? KR_FONT : FONT),
+              children: makePassageParagraphs(section.content, isKorean),
             }),
           ],
         }),

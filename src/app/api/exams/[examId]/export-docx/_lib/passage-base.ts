@@ -35,7 +35,10 @@ export function passageTable(contentParagraphs: Paragraph[]): Table {
   });
 }
 
-export function makePassageParagraphs(content: string, overrideFont?: string): Paragraph[] {
+// 글꼴은 맑은 고딕으로 통일되었으므로(FONT === KR_FONT) 정렬 결정은
+// 글꼴 동일성으로 추론하지 않고 명시적 isKorean 플래그로 받는다.
+// 한국어 지문은 좌측 정렬, 그 외(영문 등)는 양쪽 정렬.
+export function makePassageParagraphs(content: string, isKorean?: boolean): Paragraph[] {
   if (!content) content = " ";
   const lines = content.split("\n").filter((l) => l.trim());
   if (lines.length === 0) {
@@ -44,13 +47,13 @@ export function makePassageParagraphs(content: string, overrideFont?: string): P
   return lines.map(
     (line, i) =>
       new Paragraph({
-        alignment: overrideFont === KR_FONT ? AlignmentType.LEFT : AlignmentType.JUSTIFIED,
+        alignment: isKorean ? AlignmentType.LEFT : AlignmentType.JUSTIFIED,
         spacing: {
           after: i < lines.length - 1 ? 40 : 0,
           line: 312, // ~1.3x line height (very generous reading spacing like real exams)
         },
         children: parseFormattedText(line, {
-          font: overrideFont || FONT,
+          font: isKorean ? KR_FONT : FONT,
           size: PASSAGE_SIZE,
         }),
       })

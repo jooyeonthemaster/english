@@ -31,6 +31,8 @@ const URBAN_FARMING_PASSAGE = `In cities around the world, a quiet revolution is
 
 const DIGITAL_DIVIDE_PASSAGE = `Access to the internet has become essential for education, employment, and social participation. However, millions of people worldwide still lack reliable internet connections. This gap, known as the digital divide, disproportionately affects rural communities and low-income households. Students without internet access struggle to complete homework assignments and miss opportunities for online learning. Governments and nonprofit organizations are working to bridge this divide by expanding broadband infrastructure and providing affordable devices. Closing the digital divide is not just a matter of technology; it is a matter of equality and opportunity for future generations.`;
 
+const GRANDMOTHER_HYPOTHESIS_PASSAGE = `Scientists have long debated why humans, unlike most animals, continue to live for decades after they can no longer reproduce. One theory, known as the 'grandmother hypothesis,' suggests that older women who helped raise their grandchildren improved the family's chances of survival. By gathering food and sharing knowledge, these grandmothers allowed their daughters to have more children. Communities that benefited from such support were more likely to thrive, which means the trait was gradually passed down through generations.`;
+
 const CASES: VerificationCase[] = [
   {
     id: "implied-basic",
@@ -151,6 +153,14 @@ const CASES: VerificationCase[] = [
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["better technology relocates rather than removes human responsibility in value-based decisions"],
     focus: "요약문 완성 객관식 킬러형: 전체 논지 추상화와 A-only/B-only 근접 오답 설계",
+  },
+  {
+    id: "summary-mc-killer-grandmother",
+    subType: "SUMMARY_COMPLETE_MC",
+    difficulty: "KILLER",
+    passage: GRANDMOTHER_HYPOTHESIS_PASSAGE,
+    targetPoints: ["altruistic post-reproductive support increased family survival and was preserved through evolutionary selection"],
+    focus: "요약문 완성 객관식 킬러형: altruistic/evolutionarily 정답에서 genetically 같은 핵심 B 함정을 정답 A와 붙이고 cooperative 같은 A 함정을 정답 B와 붙이는지",
   },
   {
     id: "blank-killer-control",
@@ -479,11 +489,18 @@ function evaluateDeterministically(
         message: "Expected at least one A-only and one B-only near-miss option.",
       });
     }
-    if (!html.includes("↓") || !html.includes("(A)") || !html.includes("(B)")) {
+    if (!html.includes("(A)") || !html.includes("(B)")) {
       issues.push({
         severity: "error",
         code: "summary-mc-ui-frame",
-        message: "Rendered UI does not show the summary-completion arrow and blank markers.",
+        message: "Rendered UI does not show the summary-completion blank markers.",
+      });
+    }
+    if (html.includes("grid-cols-[44px_1fr_1fr]") || html.includes(">No.</div>")) {
+      issues.push({
+        severity: "error",
+        code: "summary-mc-ui-table-options",
+        message: "SUMMARY_COMPLETE_MC options should use the shared objective option list, not a custom table.",
       });
     }
   }

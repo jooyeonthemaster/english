@@ -30,11 +30,13 @@ export async function packageHwpx(doc: HwpxDocument): Promise<Buffer> {
   // 2) META-INF/container.xml — 한컴이 rootfile 위치를 찾는 진입점
   zip.file("META-INF/container.xml", containerXml(), {
     compression: "DEFLATE",
+    createFolders: false,
   });
 
   // 3) META-INF/manifest.xml
   zip.file("META-INF/manifest.xml", manifestXml(), {
     compression: "DEFLATE",
+    createFolders: false,
   });
 
   // 4) version.xml
@@ -46,6 +48,7 @@ export async function packageHwpx(doc: HwpxDocument): Promise<Buffer> {
   // 6) Contents/content.hpf
   zip.file("Contents/content.hpf", contentHpfXml({ title: doc.title }), {
     compression: "DEFLATE",
+    createFolders: false,
   });
 
   // 6) Section XML (단일 섹션 가정 — Phase 0)
@@ -56,10 +59,16 @@ export async function packageHwpx(doc: HwpxDocument): Promise<Buffer> {
 
   // 7) header.xml — 모든 섹션 빌드 후 (shape 등록 끝난 후) 작성
   const headerXml = buildHeaderXml(registry, doc.sections.length);
-  zip.file("Contents/header.xml", headerXml, { compression: "DEFLATE" });
+  zip.file("Contents/header.xml", headerXml, {
+    compression: "DEFLATE",
+    createFolders: false,
+  });
 
   sectionXmls.forEach((xml, idx) => {
-    zip.file(`Contents/section${idx}.xml`, xml, { compression: "DEFLATE" });
+    zip.file(`Contents/section${idx}.xml`, xml, {
+      compression: "DEFLATE",
+      createFolders: false,
+    });
   });
 
   // 빌드

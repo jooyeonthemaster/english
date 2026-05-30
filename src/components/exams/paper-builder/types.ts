@@ -31,6 +31,7 @@ export type BuilderQuestion = {
     wrongOptionExplanations: string | null;
   } | null;
   collectionItems: { collectionId: string }[];
+  examLinks: { exam: { id: string; title: string; createdAt: Date | string } }[];
   _count: { examLinks: number };
 };
 
@@ -104,6 +105,18 @@ export type PaperGroup = {
 
 export type RenderOption = { option: OptionItem; originalIndex: number };
 
+// 구조화 본문(지문/요약/given 박스·↓·순서 단락)을 줄 단위로 흘려 칸 경계에서
+// 쪼갤 수 있게 하는 행 단위 표현.
+export type StructRowStyle = "passage" | "summary" | "given" | "arrow" | "para" | "text";
+export type StructRow = {
+  segIndex: number;
+  style: StructRowStyle;
+  paraLabel?: string;
+  line: string;
+  isSegStart: boolean; // 세그먼트(박스/단락)의 전역 첫 줄인지
+  isSegEnd: boolean; // 세그먼트의 전역 마지막 줄인지
+};
+
 export type RenderItemPart = {
   source: PaperItem;
   partKey: string;
@@ -114,6 +127,7 @@ export type RenderItemPart = {
   questionRenderedLines: string[];
   questionStartLineIndex: number;
   questionTotalLines: number;
+  structRows: StructRow[];
   options: RenderOption[];
   isStart: boolean;
   isContinuation: boolean;
@@ -143,6 +157,9 @@ export type PaginationSettings = {
   showPassageTitle: boolean;
   showQuestionMeta: boolean;
   template: PaperTemplate;
+  // 켜면 자동 흐름/분할 대신 한 칸(섹션)당 문항(그룹) 1개씩 강제 배치한다.
+  // 2단 레이아웃에서 "페이지당 2문제" 효과. 기본(undefined/false)은 기존 동작 유지.
+  forceTwoPerPage?: boolean;
 };
 
 export type HeaderPatch = Partial<{

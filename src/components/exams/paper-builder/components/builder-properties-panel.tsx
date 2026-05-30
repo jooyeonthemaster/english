@@ -16,8 +16,6 @@ import {
   ArrowUp,
   BookOpen,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   ChevronUp,
   Columns2,
   Copy,
@@ -33,6 +31,7 @@ import {
   Redo2,
   Rows3,
   Settings2,
+  Shuffle,
   Space,
   Trash2,
   Type,
@@ -44,6 +43,10 @@ import {
 import { cn } from "@/lib/utils";
 
 import { optionOrdinalLabel } from "../option-display";
+import {
+  isSourcePassageForcedForItem,
+  shouldRenderSourcePassageForItem,
+} from "../paper-item-utils";
 import type {
   BreakBefore,
   InsertablePaperBlockType,
@@ -57,10 +60,8 @@ interface BuilderPropertiesPanelProps {
   paperItemsCount: number;
   totalPoints: number;
   templateControls: ReactNode;
-  collapsed: boolean;
   canUndo: boolean;
   canRedo: boolean;
-  onCollapsedChange: (collapsed: boolean) => void;
   onUndo: () => void;
   onRedo: () => void;
   onInsertBlock: (type: InsertablePaperBlockType) => void;
@@ -71,6 +72,7 @@ interface BuilderPropertiesPanelProps {
   onToggleKeepWithPrev: (localId: string) => void;
   onUngroupItem: (localId: string) => void;
   onRegroupByPassage: () => void;
+  onShuffleQuestions: (options: { keepGroups: boolean; anchorBlocks: boolean }) => void;
   onRemoveItem: (localId: string) => void;
 }
 
@@ -90,7 +92,13 @@ const PANEL_SECTION_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.propertiesPanel.sectionCollapsed.v1";
 const QUESTION_PREVIEW_HEIGHT_STORAGE_KEY =
   "smoat.examPaperBuilder.propertiesPanel.questionPreviewHeight.v1";
-const PANEL_SECTION_IDS = ["actions", "insert", "inspector", "template"] as const;
+const PANEL_SECTION_IDS = [
+  "actions",
+  "insert",
+  "inspector",
+  "shuffle",
+  "template",
+] as const;
 const QUESTION_PREVIEW_HEIGHT_MIN = 72;
 const QUESTION_PREVIEW_HEIGHT_DEFAULT = 92;
 
@@ -101,6 +109,7 @@ function isPanelSectionId(value: unknown): value is PanelSectionId {
     value === "actions" ||
     value === "insert" ||
     value === "inspector" ||
+    value === "shuffle" ||
     value === "template"
   );
 }
@@ -645,10 +654,8 @@ export function BuilderPropertiesPanel({
   paperItemsCount,
   totalPoints,
   templateControls,
-  collapsed,
   canUndo,
   canRedo,
-  onCollapsedChange,
   onUndo,
   onRedo,
   onInsertBlock,
@@ -659,6 +666,7 @@ export function BuilderPropertiesPanel({
   onToggleKeepWithPrev,
   onUngroupItem,
   onRegroupByPassage,
+  onShuffleQuestions,
   onRemoveItem,
 }: BuilderPropertiesPanelProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -666,6 +674,8 @@ export function BuilderPropertiesPanel({
   const hasActiveItem = Boolean(activeItem);
   const activeIsQuestion = activeItem?.blockType === "question";
   const activeLocked = Boolean(activeItem?.locked);
+  const activePassageForced = activeItem ? isSourcePassageForcedForItem(activeItem) : false;
+  const activePassageRendered = activePassageForced || (activeItem ? shouldRenderSourcePassageForItem(activeItem) : false);
   const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
     readStoredPanelSectionOrder,
   );
@@ -680,6 +690,8 @@ export function BuilderPropertiesPanel({
   );
   const [draggingSectionId, setDraggingSectionId] = useState<PanelSectionId | null>(null);
   const [dragOverSectionId, setDragOverSectionId] = useState<PanelSectionId | null>(null);
+  const [shuffleKeepGroups, setShuffleKeepGroups] = useState(true);
+  const [shuffleAnchorBlocks, setShuffleAnchorBlocks] = useState(true);
   const collapsedSections = new Set(collapsedSectionIds);
 
   useEffect(() => {
@@ -902,6 +914,7 @@ export function BuilderPropertiesPanel({
     if (id === "actions") return "작업";
     if (id === "insert") return "블록 삽입";
     if (id === "inspector") return "선택 블록";
+    if (id === "shuffle") return "문제 샘플링";
     return "시험지 설정";
   }
 
@@ -909,6 +922,7 @@ export function BuilderPropertiesPanel({
     if (id === "actions") return <Settings2 className="h-3.5 w-3.5 text-slate-400" />;
     if (id === "insert") return <Type className="h-3.5 w-3.5 text-slate-400" />;
     if (id === "inspector") return <FileText className="h-3.5 w-3.5 text-slate-400" />;
+    if (id === "shuffle") return <Shuffle className="h-3.5 w-3.5 text-slate-400" />;
     return <PanelTop className="h-3.5 w-3.5 text-slate-400" />;
   }
 
@@ -989,6 +1003,96 @@ export function BuilderPropertiesPanel({
             <ImageIcon className="h-3.5 w-3.5" />
             이미지
           </button>
+        </div>
+      );
+    }
+
+    if (id === "shuffle") {
+      const shuffleToggles = [
+        {
+          checked: shuffleKeepGroups,
+          set: setShuffleKeepGroups,
+          label: "지문 묶음 유지",
+          hint: "같은 지문 문항을 함께 이동",
+        },
+        {
+          checked: shuffleAnchorBlocks,
+          set: setShuffleAnchorBlocks,
+          label: "구분 블록 고정",
+          hint: "섹션·구분선 등은 제자리 유지",
+        },
+      ];
+
+      return (
+        <div className="space-y-3">
+          <p className="text-[11px] font-semibold leading-relaxed text-slate-500">
+            문항 순서를 무작위로 다시 배치합니다. 잠긴 문항은 항상 자리에
+            고정됩니다.
+          </p>
+          <div className="grid grid-cols-1 gap-2">
+            {shuffleToggles.map((toggle) => (
+              <button
+                key={toggle.label}
+                type="button"
+                onClick={() => toggle.set(!toggle.checked)}
+                className={cn(
+                  "flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left transition-colors",
+                  toggle.checked
+                    ? "border-blue-300 bg-blue-50 text-blue-700"
+                    : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
+                )}
+              >
+                <span className="min-w-0">
+                  <span className="block text-[12px] font-bold">{toggle.label}</span>
+                  <span className="mt-0.5 block text-[10px] font-semibold text-slate-400">
+                    {toggle.hint}
+                  </span>
+                </span>
+                <span
+                  className={cn(
+                    "h-2 w-2 shrink-0 rounded-full",
+                    toggle.checked ? "bg-blue-500" : "bg-slate-300",
+                  )}
+                />
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={paperItemsCount < 2}
+              onClick={() =>
+                onShuffleQuestions({
+                  keepGroups: shuffleKeepGroups,
+                  anchorBlocks: shuffleAnchorBlocks,
+                })
+              }
+              className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Shuffle className="h-3.5 w-3.5" />
+              샘플링
+            </button>
+            <button
+              type="button"
+              disabled={!canUndo}
+              onClick={onUndo}
+              title="되돌리기"
+              aria-label="되돌리기"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Undo2 className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              disabled={!canRedo}
+              onClick={onRedo}
+              title="앞으로 돌리기"
+              aria-label="앞으로 돌리기"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Redo2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       );
     }
@@ -1102,9 +1206,9 @@ export function BuilderPropertiesPanel({
               <p className="mb-2 text-[11px] font-bold text-slate-500">흐름</p>
               <div className="grid grid-cols-2 gap-2">
                 <IconToggleButton
-                  active={activeItem.includePassage}
-                  disabled={activeLocked}
-                  title="지문 표시 전환"
+                  active={activePassageRendered}
+                  disabled={activeLocked || activePassageForced}
+                  title={activePassageForced ? "이 유형은 원문 지문이 필수입니다." : "지문 표시 전환"}
                   onClick={() =>
                     updateActiveItem({ includePassage: !activeItem.includePassage })
                   }
@@ -1179,30 +1283,6 @@ export function BuilderPropertiesPanel({
     );
   }
 
-  if (collapsed) {
-    return (
-      <aside className="hidden min-w-0 flex-col items-center overflow-hidden border-l border-slate-200 bg-white py-3 lg:flex">
-        <button
-          type="button"
-          onClick={() => onCollapsedChange(false)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-          title="편집 패널 펼치기"
-          aria-label="편집 패널 펼치기"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <div className="mt-4 flex flex-1 items-center justify-center">
-          <p className="rotate-90 whitespace-nowrap text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-            편집 패널
-          </p>
-        </div>
-        <div className="mb-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-blue-50 px-2 text-[10px] font-black text-blue-700">
-          {paperItemsCount}
-        </div>
-      </aside>
-    );
-  }
-
   return (
     <aside className="hidden min-w-0 flex-col overflow-hidden border-l border-slate-200 bg-white lg:flex">
       <input
@@ -1221,19 +1301,8 @@ export function BuilderPropertiesPanel({
               {paperItemsCount}블록 · {totalPoints}점
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-1">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500">
-              <Settings2 className="h-4 w-4" />
-            </div>
-            <button
-              type="button"
-              onClick={() => onCollapsedChange(true)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-              title="편집 패널 접기"
-              aria-label="편집 패널 접기"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500">
+            <Settings2 className="h-4 w-4" />
           </div>
         </div>
       </div>

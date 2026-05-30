@@ -16,10 +16,16 @@ import {
   CornerUpLeft,
   Grid3X3,
   List,
+  ListFilter,
   Search,
 } from "lucide-react";
 
 import type { CollectionItem } from "@/components/workbench/shared/types";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -83,6 +89,11 @@ interface DraftFolderSectionProps {
    *  parent wrapper can own the box. Used to visually unify this section
    *  with the file preview area below it. */
   embedded?: boolean;
+  /** When true, hide the grid/list view toggle and force grid view. Also
+   *  enables header wrapping + a minimum width so the controls don't
+   *  visually overlap when the parent column is narrowed. Used by the
+   *  지문 등록(create) page where only the grid view is supported. */
+  gridOnly?: boolean;
 }
 
 interface ParentFolderButtonProps {
@@ -148,26 +159,26 @@ function AllResultsChip({
           onClick();
         }
       }}
-      title="추출 작업 목록"
+      title="전체 자료"
       className={
-        "group relative flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
+        "group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
         ringClass
       }
     >
       {active || isDragOver ? (
-        <FolderOpen className="mb-0.5 size-3.5 text-blue-600" aria-hidden="true" />
+        <FolderOpen className="mb-0.5 size-3 text-blue-600" aria-hidden="true" />
       ) : (
-        <Folder className="mb-0.5 size-3.5 text-blue-500" aria-hidden="true" />
+        <Folder className="mb-0.5 size-3 text-blue-500" aria-hidden="true" />
       )}
       <span
         className={
-          "max-w-[84px] truncate text-center text-[11px] font-bold leading-tight " +
+          "max-w-[56px] truncate text-center text-[9.5px] font-bold leading-tight " +
           (active ? "text-blue-700" : "text-slate-800")
         }
       >
-        추출 작업 목록
+        전체 자료
       </span>
-      <span className="text-[10px] font-medium tabular-nums text-slate-400">
+      <span className="text-[8.5px] font-medium tabular-nums text-slate-400">
         {totalCount}개 · 전체
       </span>
     </div>
@@ -209,14 +220,14 @@ function ParentFolderButton({
       type="button"
       onClick={onClick}
       className={
-        "flex size-[72px] cursor-pointer flex-col items-center justify-center rounded-xl border bg-white text-slate-500 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:text-blue-600 hover:shadow-md " +
+        "flex size-[48px] cursor-pointer flex-col items-center justify-center rounded-lg border bg-white text-slate-500 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:text-blue-600 hover:shadow-md " +
         (isDragOver
           ? "scale-105 border-blue-400 bg-blue-50 text-blue-700 shadow-md ring-2 ring-blue-200/60"
           : "border-slate-200")
       }
     >
-      <CornerUpLeft className="mb-0.5 size-5" aria-hidden="true" />
-      <span className="text-[10.5px] font-semibold">상위</span>
+      <CornerUpLeft className="mb-0.5 size-3.5" aria-hidden="true" />
+      <span className="text-[9.5px] font-semibold">상위</span>
     </button>
   );
 }
@@ -246,9 +257,11 @@ export function DraftFolderSection({
   resultScope = "all",
   onBackToAllResults,
   embedded = false,
+  gridOnly = false,
 }: DraftFolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const effectiveViewMode: "grid" | "list" = gridOnly ? "grid" : viewMode;
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");
   const useCards = useCardInsideFolder && Boolean(activeFolder);
@@ -426,7 +439,7 @@ export function DraftFolderSection({
   );
 
   useEffect(() => {
-    if (collapsed || viewMode !== "list") return;
+    if (collapsed || effectiveViewMode !== "list") return;
     const el = listScrollRef.current;
     if (!el) return;
     const update = () => setContainerWidth(el.clientWidth);
@@ -434,7 +447,7 @@ export function DraftFolderSection({
     const obs = new ResizeObserver(update);
     obs.observe(el);
     return () => obs.disconnect();
-  }, [collapsed, viewMode]);
+  }, [collapsed, effectiveViewMode]);
 
   const defaultColumnWidth = Math.max(
     MIN_COLUMN_WIDTH,
@@ -542,7 +555,7 @@ export function DraftFolderSection({
   // navigated into.
   const prevColumnCountRef = useRef(0);
   useEffect(() => {
-    if (viewMode !== "list") {
+    if (effectiveViewMode !== "list") {
       prevColumnCountRef.current = listColumns.length;
       return;
     }
@@ -554,7 +567,7 @@ export function DraftFolderSection({
       });
     }
     prevColumnCountRef.current = listColumns.length;
-  }, [listColumns.length, viewMode]);
+  }, [listColumns.length, effectiveViewMode]);
 
   const childCountByParent = useMemo(() => {
     const map = new Map<string, number>();
@@ -578,63 +591,99 @@ export function DraftFolderSection({
     else onDragToRoot?.(itemId, copy);
   };
 
-  const sortSearchControls = !collapsed ? (
-    <>
-      <Select
-        value={sortBy}
-        onValueChange={(value) => setSortBy(value as FolderSortOrder)}
-      >
-        <SelectTrigger
-          className={
-            "h-7 px-2.5 text-[11.5px] " +
-            (embedded ? "w-[120px]" : "w-[136px]")
-          }
+  // The embedded create panel (gridOnly) has its own powerful material
+  // search/sort/filter toolbar right below this header, so the folder-only
+  // sort + folder-search controls here are redundant (and were a broken
+  // Select-in-Popover). Hide them in that context to keep the header clean.
+  const sortSearchControls = !collapsed && !gridOnly ? (
+    <div className="flex shrink-0 items-center gap-1">
+      <Popover>
+        <PopoverTrigger
+          title="정렬"
+          aria-label="정렬"
+          className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          <ArrowUpDown className="mr-1 size-3 shrink-0" />
-          <SelectValue placeholder="정렬" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="name_asc">이름 오름차순</SelectItem>
-          <SelectItem value="name_desc">이름 내림차순</SelectItem>
-          <SelectItem value="newest">최신순</SelectItem>
-          <SelectItem value="oldest">오래된순</SelectItem>
-        </SelectContent>
-      </Select>
-      <div
-        className={
-          "relative " + (embedded ? "min-w-0 flex-1" : "shrink-0")
-        }
-      >
-        <Search
-          className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
-          aria-hidden="true"
-        />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="폴더 검색"
-          className={
-            "h-7 rounded-md border border-slate-200 bg-white pl-7 pr-2 text-[11.5px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:ring-2 focus:ring-blue-500/10 " +
-            (embedded ? "w-full" : "w-36")
-          }
+          <ListFilter className="size-3.5 shrink-0" />
+          {sortBy !== "name_asc" ? (
+            <span
+              aria-hidden="true"
+              className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+            />
+          ) : null}
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-52 p-2.5">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-medium text-slate-600">
+              정렬
+            </label>
+            <Select
+              value={sortBy}
+              onValueChange={(value) => setSortBy(value as FolderSortOrder)}
+            >
+              <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
+                <ArrowUpDown className="mr-1 size-3 shrink-0" />
+                <SelectValue placeholder="정렬" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name_asc">이름 오름차순</SelectItem>
+                <SelectItem value="name_desc">이름 내림차순</SelectItem>
+                <SelectItem value="newest">최신순</SelectItem>
+                <SelectItem value="oldest">오래된순</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </PopoverContent>
+      </Popover>
+      <Popover>
+        <PopoverTrigger
+          title="폴더 검색"
           aria-label="폴더 검색"
-        />
-        {searchQuery ? (
-          <button
-            type="button"
-            onClick={() => setSearchQuery("")}
-            className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-            aria-label="검색 지우기"
-          >
-            <X className="size-3" />
-          </button>
-        ) : null}
-      </div>
-    </>
+          className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        >
+          <Search className="size-3.5 shrink-0" />
+          {searchQuery ? (
+            <span
+              aria-hidden="true"
+              className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+            />
+          ) : null}
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-56 p-2.5">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-medium text-slate-600">
+              폴더 검색
+            </label>
+            <div className="relative">
+              <Search
+                className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+                aria-hidden="true"
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="폴더 검색"
+                className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:ring-2 focus:ring-blue-500/10"
+                aria-label="폴더 검색"
+              />
+              {searchQuery ? (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                  aria-label="검색 지우기"
+                >
+                  <X className="size-3" />
+                </button>
+              ) : null}
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   ) : null;
 
-  const viewToggleControls = !collapsed ? (
+  const viewToggleControls = !collapsed && !gridOnly ? (
     <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
       <ViewToggleButton
         active={viewMode === "grid"}
@@ -675,7 +724,12 @@ export function DraftFolderSection({
       }
     >
       <div className="border-b border-slate-100 px-4 py-2">
-        <div className="flex min-w-0 items-center gap-2.5">
+        <div
+          className={
+            "flex min-w-0 items-center gap-2.5" +
+            (gridOnly ? " flex-wrap gap-y-1.5" : "")
+          }
+        >
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
             {pageHeader?.icon ?? <FolderOpen className="h-3.5 w-3.5" />}
           </span>
@@ -749,20 +803,25 @@ export function DraftFolderSection({
               </button>
             ) : null}
           </div>
-          {!embedded && sortSearchControls ? (
+          {sortSearchControls ? (
             <div className="ml-auto flex shrink-0 items-center gap-1.5">
               {sortSearchControls}
             </div>
           ) : null}
-          {!embedded && toolbar ? (
-            <div className="ml-auto flex shrink-0 items-center gap-2">
+          {toolbar ? (
+            <div
+              className={
+                (sortSearchControls ? "ml-1" : "ml-auto") +
+                " flex shrink-0 items-center gap-2"
+              }
+            >
               {toolbar}
             </div>
           ) : null}
-          {!embedded && viewToggleControls ? (
+          {viewToggleControls ? (
             <div
               className={
-                (toolbar ? "ml-1" : "ml-auto") +
+                (sortSearchControls || toolbar ? "ml-1" : "ml-auto") +
                 " flex shrink-0 items-center"
               }
             >
@@ -770,23 +829,20 @@ export function DraftFolderSection({
             </div>
           ) : null}
           {collapseExpandButton ? (
-            <div className="ml-auto flex shrink-0 items-center">
+            <div
+              className={
+                (sortSearchControls || toolbar || viewToggleControls
+                  ? "ml-1"
+                  : "ml-auto") + " flex shrink-0 items-center"
+              }
+            >
               {collapseExpandButton}
             </div>
           ) : null}
         </div>
-        {embedded && !collapsed ? (
-          <div className="mt-1.5 flex min-w-0 items-center gap-1.5">
-            {sortSearchControls}
-            {toolbar ? (
-              <div className="flex shrink-0 items-center gap-2">{toolbar}</div>
-            ) : null}
-            {viewToggleControls}
-          </div>
-        ) : null}
       </div>
 
-      {!collapsed && viewMode === "grid" ? (
+      {!collapsed && effectiveViewMode === "grid" ? (
         <div
           style={{ height: listHeight }}
           className="overflow-y-auto bg-slate-50/70 px-4 py-3"
@@ -886,17 +942,17 @@ export function DraftFolderSection({
               <button
                 type="button"
                 onClick={() => onShowNewFolder(true)}
-                className="flex size-[72px] cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-blue-200 bg-white text-blue-500 shadow-sm transition-all hover:border-blue-300 hover:bg-blue-50/70"
+                className="flex size-[48px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-blue-200 bg-white text-blue-500 shadow-sm transition-all hover:border-blue-300 hover:bg-blue-50/70"
               >
-                <FolderPlus className="mb-0.5 size-5" />
-                <span className="text-[10.5px] font-semibold">추가</span>
+                <FolderPlus className="mb-0.5 size-3.5" />
+                <span className="text-[9.5px] font-semibold">추가</span>
               </button>
             )}
           </div>
         </div>
       ) : null}
 
-      {!collapsed && viewMode === "list" ? (
+      {!collapsed && effectiveViewMode === "list" ? (
         <div
           style={{ height: listHeight }}
           className="flex flex-col bg-slate-50/70 px-3 py-2"

@@ -13,25 +13,34 @@ export const COLORS = {
   answerBg: "#F5F5F5",
 } as const;
 
-// pt 단위
+// pt 단위.
+// 값은 미리보기(A4PaperPage / page-header)의 CSS px 를 pt 로 환산했다.
+// 미리보기는 "가상 A4" 모델: 페이지 폭 = PREVIEW_PAGE_WIDTH(760px) = 210mm.
+// (pagination.ts 가 pageWidth = 760 * widthRatio, contentWidth = pageWidth - 좌우padding 으로
+//  줄넘김을 계산하므로, 760px == 210mm 가 미리보기의 실제 스케일이다.)
+// 따라서 96dpi(px*0.75)가 아니라 px * (210/760)/0.352778 = px * 0.783257 로 환산해야
+// 본문 글자크기 → 칸당 글자수 → 줄넘김이 미리보기와 맞는다.
+//   pt/px = (210/760) / 0.352778 = 0.783257
 export const SIZE = {
-  title: 22,
-  titleCompact: 18,
-  subtitle: 8,
-  info: 9,
-  instructions: 9,
-  qNum: 11,
-  qNumCompact: 10,
-  meta: 8.5,
-  body: 10,
-  bodyCompact: 9,
-  passageTitle: 7.5,
-  continued: 8,
-  footer: 8,
-  answerLabel: 9,
-  answerValue: 11,
-  explainLabel: 9,
-  explainBody: 9.5,
+  title: 21.9, // h2 28px
+  titleCompact: 17.2, // compact 22px
+  subtitle: 7.0, // 9px
+  info: 7.8, // 학교/반/이름 10px
+  instructions: 7.8, // 안내문 10px
+  qNum: 10.2, // 문항번호 13px
+  qNumCompact: 9.4, // compact 12px
+  meta: 7.0, // [점·유형] 9px
+  body: 9.0, // 본문 11.5px (≈9.007pt)
+  bodyCompact: 8.2, // compact 10.5px (≈8.224pt)
+  options: 8.6, // 선지 11px
+  optionsCompact: 7.8, // compact 선지 10px
+  passageTitle: 7.0, // 10px (uppercase 트래킹 라벨)
+  continued: 7.8, // 2페이지~ 미니헤더 10px
+  footer: 7.8, // 푸터 - N / M - 10px
+  answerLabel: 8.4,
+  answerValue: 9.0,
+  explainLabel: 8.4,
+  explainBody: 8.8,
 } as const;
 
 export const SUBTYPE_LABELS: Record<string, string> = {

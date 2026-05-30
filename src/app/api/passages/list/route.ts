@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "인증 필요" }, { status: 401 });
     }
 
-    const onlyAnalyzed = request.nextUrl.searchParams.get("onlyAnalyzed") === "true";
+    const onlyAnalyzed =
+      request.nextUrl.searchParams.get("onlyAnalyzed") === "true";
     const passageWhere = {
       academyId: staff.academyId,
       ...(onlyAnalyzed ? { analysis: { isNot: null } } : {}),
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest) {
         where: { academyId: staff.academyId },
         select: {
           id: true,
+          parentId: true,
           name: true,
           _count: { select: { items: collectionItemCount } },
         },
@@ -55,9 +57,15 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Extract unique filter values
-    const grades = [...new Set(passages.map((p) => p.grade).filter(Boolean))].sort();
-    const semesters = [...new Set(passages.map((p) => p.semester).filter(Boolean))];
-    const publishers = [...new Set(passages.map((p) => p.publisher).filter(Boolean))].sort();
+    const grades = [
+      ...new Set(passages.map((p) => p.grade).filter(Boolean)),
+    ].sort();
+    const semesters = [
+      ...new Set(passages.map((p) => p.semester).filter(Boolean)),
+    ];
+    const publishers = [
+      ...new Set(passages.map((p) => p.publisher).filter(Boolean)),
+    ].sort();
 
     return NextResponse.json({
       passages,
@@ -65,6 +73,9 @@ export async function GET(request: NextRequest) {
       collections,
     });
   } catch {
-    return NextResponse.json({ passages: [], filters: { schools: [], grades: [], semesters: [], publishers: [] } });
+    return NextResponse.json({
+      passages: [],
+      filters: { schools: [], grades: [], semesters: [], publishers: [] },
+    });
   }
 }

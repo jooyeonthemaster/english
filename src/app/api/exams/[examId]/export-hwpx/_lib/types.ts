@@ -15,8 +15,8 @@ export type UnderlineType = "NONE" | "SOLID" | "DOTTED" | "DASHED";
 // =============================================================================
 
 export interface RunStyle {
-  fontKr?: string;       // 한글 폰트명 (기본: 한컴바탕)
-  fontLatin?: string;    // 영문 폰트명 (기본: Times New Roman)
+  fontKr?: string;       // 한글 폰트명 (기본: 맑은 고딕)
+  fontLatin?: string;    // 영문 폰트명 (기본: 맑은 고딕)
   size?: number;         // pt
   bold?: boolean;
   italic?: boolean;
@@ -125,11 +125,17 @@ export interface TableNode {
   cellMargins?: { left: number; right: number; top: number; bottom: number };
 }
 
+export interface ColumnControlNode {
+  kind: "columnPr";
+  columns: 1 | 2;
+  columnGapHpu: number;
+}
+
 // =============================================================================
 // Block 단위
 // =============================================================================
 
-export type BlockNode = ParagraphNode | TableNode;
+export type BlockNode = ParagraphNode | TableNode | ColumnControlNode;
 
 // =============================================================================
 // Section (페이지 단위)

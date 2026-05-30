@@ -22,7 +22,7 @@ interface GroupedPassage {
 
 interface PassageGroupedViewProps {
   passages: GroupedPassage[];
-  gridCols: 2 | 3 | 4;
+  gridCols: 1 | 2 | 3 | 4;
   viewSize: "lg" | "md" | "sm";
   selectedIds: Set<string>;
   setSelectedIds: (next: Set<string>) => void;
@@ -189,11 +189,13 @@ export function PassageGroupedView({
   }
 
   const gridClass =
-    gridCols === 2
-      ? "grid-cols-1 md:grid-cols-2"
-      : gridCols === 3
-        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-        : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+    gridCols === 1
+      ? "grid-cols-1"
+      : gridCols === 2
+        ? "grid-cols-1 md:grid-cols-2"
+        : gridCols === 3
+          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
   function toggleGroupSelection(ids: string[]) {
     const next = new Set(selectedIds);

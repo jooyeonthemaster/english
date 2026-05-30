@@ -22,6 +22,13 @@ import { normalizePassageText } from "../paper-builder/text-normalization";
 // 메인 컴포넌트는 markDirty 콜백만 전달하면 된다.
 // ---------------------------------------------------------------------------
 
+export type ShuffleOptions = {
+  // 같은 지문에 묶인 문항을 한 덩어리로 함께 이동시킬지 여부.
+  keepGroups: boolean;
+  // 섹션/구분선 등 문항이 아닌 블록을 자리에 고정할지 여부.
+  anchorBlocks: boolean;
+};
+
 export function usePaperItems(markDirty: () => void) {
   const [paperItems, setPaperItems] = useState<PaperItem[]>([]);
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
@@ -374,6 +381,71 @@ export function usePaperItems(markDirty: () => void) {
     );
   }
 
+  function shuffleQuestions(options: ShuffleOptions) {
+    const { keepGroups, anchorBlocks } = options;
+    commitItems((current) => {
+      if (current.length < 2) {
+        toast.error("샘플링할 문항이 충분하지 않습니다.");
+        return current;
+      }
+
+      // 1) 연속된 같은 지문 묶음을 하나의 이동 단위로 만든다.
+      //    지문 묶음 유지가 꺼져 있으면 모든 항목을 개별 단위로 취급한다.
+      const units: PaperItem[][] = [];
+      for (const item of current) {
+        const last = units[units.length - 1];
+        const sameGroup =
+          keepGroups &&
+          item.blockType === "question" &&
+          Boolean(item.groupId) &&
+          last !== undefined &&
+          last[0].blockType === "question" &&
+          last[0].groupId === item.groupId;
+        if (sameGroup) {
+          last.push(item);
+        } else {
+          units.push([item]);
+        }
+      }
+
+      // 2) 잠긴 항목이 포함된 단위와(원하면) 문항이 아닌 블록은 자리에 고정한다.
+      const isAnchored = (unit: PaperItem[]) =>
+        unit.some((it) => it.locked) ||
+        (anchorBlocks && unit.every((it) => it.blockType !== "question"));
+
+      const movableIndices: number[] = [];
+      units.forEach((unit, index) => {
+        if (!isAnchored(unit)) movableIndices.push(index);
+      });
+
+      if (movableIndices.length < 2) {
+        toast.error("샘플링할 수 있는 문항이 부족합니다. 잠금/고정 설정을 확인하세요.");
+        return current;
+      }
+
+      // 3) 이동 가능한 단위만 Fisher-Yates로 섞되, 순서가 실제로 바뀌도록 보장한다.
+      const movableUnits = movableIndices.map((index) => units[index]);
+      const originalKey = movableUnits.map((unit) => unit[0].localId).join("|");
+      for (let attempt = 0; attempt < 6; attempt += 1) {
+        for (let i = movableUnits.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [movableUnits[i], movableUnits[j]] = [movableUnits[j], movableUnits[i]];
+        }
+        const nextKey = movableUnits.map((unit) => unit[0].localId).join("|");
+        if (nextKey !== originalKey) break;
+      }
+
+      // 4) 고정 단위는 제자리에 두고, 이동 단위만 섞인 순서로 되돌려 채운다.
+      const result = [...units];
+      movableIndices.forEach((targetIndex, k) => {
+        result[targetIndex] = movableUnits[k];
+      });
+
+      toast.success(`${movableUnits.length}개 항목을 샘플링했습니다.`);
+      return result.flat();
+    });
+  }
+
   function regroupByPassage() {
     commitItems((current) => {
       if (current.length === 0) return current;
@@ -442,5 +514,6 @@ export function usePaperItems(markDirty: () => void) {
     moveItemToDropTarget,
     ungroupItem,
     regroupByPassage,
+    shuffleQuestions,
   };
 }

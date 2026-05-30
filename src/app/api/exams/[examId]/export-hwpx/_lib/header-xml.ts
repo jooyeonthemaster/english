@@ -32,10 +32,13 @@ import { HWPX_NS } from "./static-files";
 
 function fontXml(fonts: FontFaceSpec[], lang: string): string {
   const items = fonts
-    .map(
-      (f, i) =>
-        `<hh:font id="${i}" face="${escapeXml(f.face)}" type="${f.type}" isEmbedded="0"/>`,
-    )
+    .map((f, i) => {
+      // substFont: 해당 글꼴이 없을 때 한컴이 같은 고딕 계열로 우아하게 대체하도록
+      // typeInfo(고딕 = familyType GOTHIC) 와 대체 글꼴명을 함께 선언한다.
+      const subst = `<hh:substFont face="${escapeXml(f.face)}" type="${f.type}" isEmbedded="0" binaryItemIDRef=""/>`;
+      const typeInfo = `<hh:typeInfo familyType="FCAT_GOTHIC" weight="6" proportion="3" contrast="0" strokeVariation="1" armStyle="0" letterform="0" midline="0" xHeight="0"/>`;
+      return `<hh:font id="${i}" face="${escapeXml(f.face)}" type="${f.type}" isEmbedded="0">${subst}${typeInfo}</hh:font>`;
+    })
     .join("");
   return `<hh:fontface lang="${lang}" fontCnt="${fonts.length}">${items}</hh:fontface>`;
 }

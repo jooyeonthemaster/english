@@ -7,6 +7,10 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -68,7 +72,15 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     );
   }
   push(q.sentenceWithBlank);
-  if (q.summaryWithBlanks) parts.push(`[요약문] ${String(q.summaryWithBlanks)}`);
+  if (q.summaryWithBlanks) {
+    const summary = isSummaryCompleteMc
+      ? formatSummaryCompleteMcSummaryForDisplay(
+        String(q.summaryWithBlanks),
+        readSummaryBlankAnswersFromQuestionLike(q),
+      )
+      : String(q.summaryWithBlanks);
+    parts.push(isSummaryCompleteMc ? `\u2193\n${summary}` : `[요약문] ${summary}`);
+  }
   if (!isSummaryCompleteMc && Array.isArray(q.blanks) && q.blanks.length > 0) {
     parts.push(
       `[빈칸 정답] ${q.blanks

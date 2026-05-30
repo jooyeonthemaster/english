@@ -128,25 +128,25 @@ export function FolderChip({
       ref={dropRef}
       onClick={onClick}
       onDoubleClick={startEditing}
-      className={`group relative flex w-[96px] cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 shadow-sm motion-safe:transition-all motion-safe:duration-200 ${
+      className={`group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200 ${
         isDragOver
           ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
           : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
       }`}
     >
       {isDragOver ? (
-        <FolderOpen className="mb-0.5 size-5" style={{ color }} />
+        <FolderOpen className="mb-0.5 size-3" style={{ color }} />
       ) : (
-        <Folder className="mb-0.5 size-5" style={{ color }} />
+        <Folder className="mb-0.5 size-3" style={{ color }} />
       )}
-      <span className="max-w-[84px] truncate text-center text-[11px] font-bold leading-tight text-slate-800">
+      <span className="max-w-[56px] truncate text-center text-[9.5px] font-bold leading-tight text-slate-800">
         {collection.name}
       </span>
-      <span className="text-[10px] tabular-nums text-slate-400">
+      <span className="text-[8.5px] tabular-nums text-slate-400">
         {collection._count.items}개
       </span>
       {dateLabel ? (
-        <span className="mt-0.5 text-[9px] tabular-nums text-slate-300">
+        <span className="text-[8px] tabular-nums text-slate-300">
           {dateLabel}
         </span>
       ) : null}
@@ -155,10 +155,10 @@ export function FolderChip({
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
-            className="absolute right-1 top-1 inline-flex size-5 cursor-pointer items-center justify-center rounded-md bg-white/90 text-slate-400 opacity-0 shadow-sm ring-1 ring-slate-200 transition-opacity hover:text-slate-700 group-hover:opacity-100"
+            className="absolute right-0.5 top-0.5 inline-flex size-4 cursor-pointer items-center justify-center rounded bg-white/90 text-slate-400 opacity-0 shadow-sm ring-1 ring-slate-200 transition-opacity hover:text-slate-700 group-hover:opacity-100"
             aria-label="폴더 메뉴"
           >
-            <MoreHorizontal className="size-3.5" aria-hidden="true" />
+            <MoreHorizontal className="size-2.5" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

@@ -423,9 +423,16 @@ export function JobPreviewDrawer({
     allIds.length > 0 && allIds.every((id) => checkedIds.has(id));
   const bulkDragIds = useMemo(() => Array.from(checkedIds), [checkedIds]);
   const hasSelection = checkedIds.size > 0;
+  const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
+  const selectAllIndeterminate = checkedIds.size > 0 && !allChecked;
   const anyBulkRunning = bulk.bulkActionRunning !== null;
   const isPromoting = bulk.bulkActionRunning === "promote";
   const isDeleting = bulk.bulkActionRunning === "delete";
+
+  useEffect(() => {
+    if (!selectAllCheckboxRef.current) return;
+    selectAllCheckboxRef.current.indeterminate = selectAllIndeterminate;
+  }, [selectAllIndeterminate]);
 
   const toggleCheck = useCallback((id: string) => {
     setCheckedIds((prev) => {
@@ -437,7 +444,7 @@ export function JobPreviewDrawer({
   }, []);
 
   const toggleAll = useCallback(() => {
-    setCheckedIds((prev) => {
+    setCheckedIds(() => {
       if (allChecked) return new Set();
       return new Set(allIds);
     });
@@ -550,23 +557,31 @@ export function JobPreviewDrawer({
 
           <div className="flex min-h-0 flex-1 flex-col bg-[#F8FAFB]">
             <div className="flex shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-4 py-2">
-              <button
-                type="button"
-                onClick={toggleAll}
-                disabled={allIds.length === 0}
-                className="text-[12px] font-medium text-slate-600 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              <label
+                className={`flex size-7 shrink-0 items-center justify-center ${
+                  allIds.length === 0
+                    ? "cursor-not-allowed opacity-50"
+                    : "cursor-pointer"
+                }`}
               >
-                {allChecked && allIds.length > 0 ? "선택 해제" : "전체 선택"}
-              </button>
-              <span className="text-[12px] font-medium text-slate-400">
-                {checkedIds.size}개 선택
-              </span>
+                <input
+                  ref={selectAllCheckboxRef}
+                  type="checkbox"
+                  checked={allChecked}
+                  onChange={toggleAll}
+                  disabled={allIds.length === 0}
+                  aria-label="전체 선택"
+                  className="size-4 cursor-pointer rounded border-slate-300 accent-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed"
+                />
+              </label>
               <div className="ml-auto flex shrink-0 items-center gap-2">
                 <button
                   type="button"
                   onClick={handlePromote}
                   disabled={anyBulkRunning || !hasSelection}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="검수완료"
+                  aria-label="검수완료"
+                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md bg-emerald-600 text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isPromoting ? (
                     <Loader2
@@ -576,7 +591,6 @@ export function JobPreviewDrawer({
                   ) : (
                     <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                   )}
-                  검수완료
                 </button>
 
                 <MoveOrCopyFolderPicker
@@ -586,13 +600,16 @@ export function JobPreviewDrawer({
                   onCopy={handleAdd}
                   onMove={handleMove}
                   disabled={anyBulkRunning || !hasSelection}
+                  compact
                 />
 
                 <button
                   type="button"
                   onClick={handleDelete}
                   disabled={anyBulkRunning || !hasSelection}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="삭제"
+                  aria-label="삭제"
+                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isDeleting ? (
                     <Loader2
@@ -602,7 +619,6 @@ export function JobPreviewDrawer({
                   ) : (
                     <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                   )}
-                  삭제
                 </button>
               </div>
             </div>

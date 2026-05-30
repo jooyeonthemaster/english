@@ -1,6 +1,12 @@
 import type { BuilderQuestion } from "./types";
 
 type PassageFlow = "embedded" | "source";
+type PassageQuestionLike = Pick<
+  BuilderQuestion,
+  "subType" | "questionText" | "structuredData"
+> & {
+  passage?: { content?: string | null } | null;
+};
 
 export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   BLANK_INFERENCE: "embedded",
@@ -28,6 +34,19 @@ export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   ANTONYM: "embedded",
 };
 
+const INLINE_SOURCE_PASSAGE_SUBTYPES = new Set([
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "TITLE",
+  "CONTENT_MATCH",
+  "SUMMARY_COMPLETE_MC",
+]);
+
+export function shouldRenderSourcePassageInsideQuestion(subType: string | null | undefined): boolean {
+  return INLINE_SOURCE_PASSAGE_SUBTYPES.has(subType || "");
+}
+
 const EMBEDDED_PASSAGE_FIELDS = [
   "passageWithBlank",
   "passageWithMarkers",
@@ -35,7 +54,15 @@ const EMBEDDED_PASSAGE_FIELDS = [
   "passageWithNumbers",
 ] as const;
 
-function readStructuredData(question: BuilderQuestion): Record<string, unknown> | null {
+function getQuestionPassageFlow(subType: string | null | undefined): PassageFlow | null {
+  return QUESTION_PASSAGE_FLOW_RULES[subType || ""] ?? null;
+}
+
+function hasSourcePassageContent(question: PassageQuestionLike): boolean {
+  return Boolean(question.passage?.content?.trim());
+}
+
+function readStructuredData(question: PassageQuestionLike): Record<string, unknown> | null {
   const raw = question.structuredData;
   if (!raw) return null;
   if (typeof raw === "object" && !Array.isArray(raw)) return raw as Record<string, unknown>;
@@ -50,7 +77,7 @@ function readStructuredData(question: BuilderQuestion): Record<string, unknown> 
   }
 }
 
-function structuredDataHasEmbeddedPassage(question: BuilderQuestion): boolean {
+function structuredDataHasEmbeddedPassage(question: PassageQuestionLike): boolean {
   const data = readStructuredData(question);
   if (!data) return false;
   if (EMBEDDED_PASSAGE_FIELDS.some((field) => typeof data[field] === "string" && String(data[field]).trim())) {
@@ -68,12 +95,24 @@ function questionTextLooksEmbedded(questionText: string): boolean {
   return false;
 }
 
-export function questionHasEmbeddedPassage(question: BuilderQuestion): boolean {
-  const subType = question.subType || "";
-  if (QUESTION_PASSAGE_FLOW_RULES[subType] === "embedded") return true;
-  return structuredDataHasEmbeddedPassage(question) || questionTextLooksEmbedded(question.questionText);
+export function shouldForceSourcePassage(question: PassageQuestionLike): boolean {
+  return hasSourcePassageContent(question) && getQuestionPassageFlow(question.subType) === "source";
 }
 
-export function shouldIncludeSourcePassageByDefault(question: BuilderQuestion): boolean {
-  return Boolean(question.passage?.content?.trim()) && !questionHasEmbeddedPassage(question);
+export function questionHasEmbeddedPassage(question: PassageQuestionLike): boolean {
+  const flow = getQuestionPassageFlow(question.subType);
+  if (flow === "embedded") return true;
+  if (flow === "source") return false;
+  return (
+    structuredDataHasEmbeddedPassage(question) ||
+    questionTextLooksEmbedded(question.questionText || "")
+  );
+}
+
+export function shouldIncludeSourcePassageByDefault(question: PassageQuestionLike): boolean {
+  if (!hasSourcePassageContent(question)) return false;
+  const flow = getQuestionPassageFlow(question.subType);
+  if (flow === "source") return true;
+  if (flow === "embedded") return false;
+  return !questionHasEmbeddedPassage(question);
 }

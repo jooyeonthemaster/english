@@ -2,7 +2,7 @@
 
 export function DraftCardSkeleton() {
   return (
-    <div className="relative flex h-full min-h-[176px] min-w-0 flex-col gap-3 overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border border-slate-200 bg-white p-2.5 shadow-sm">
       <div className="flex items-center gap-2">
         <Bar w="size-4" />
         <Bar w="w-8" h="h-4" />

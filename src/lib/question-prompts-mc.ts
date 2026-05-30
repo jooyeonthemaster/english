@@ -295,6 +295,11 @@ direction은 반드시 다음 문장으로 작성합니다.
    - (A)만 맞는 선지는 정답 blankA 문자열을 그대로 복사하고 blankB만 틀리게 만듭니다.
    - (B)만 맞는 선지는 정답 blankB 문자열을 그대로 복사하고 blankA만 틀리게 만듭니다.
    - 두 반쪽 정답 선지는 서로 다른 label이어야 하며, correctAnswer label과도 달라야 합니다.
+8-1. 특히 KILLER에서는 반쪽 정답 선지가 "형식상 존재"하는 것으로는 부족합니다. 가장 강한 함정을 반드시 정답 쪽과 붙여야 합니다.
+   - 정답이 altruistic / evolutionarily라면, altruistic / genetically처럼 정답 (A)에 가장 그럴듯한 (B) 함정을 붙입니다. genetically를 individualistic처럼 즉시 탈락하는 (A)에 묶으면 실패입니다.
+   - 반대로 cooperative / evolutionarily처럼 정답 (B)에 정답 (A)와 같은 의미권의 그럴듯한 (A) 함정을 붙입니다.
+   - KILLER의 오답 blankA는 정답과 같은 의미장 안의 근접어(prosocial/cooperative/supportive/communal 등) 또는 범위가 살짝 다른 표현이어야 합니다. competitive, individualistic, dominant처럼 지문 정서와 정반대라 즉시 소거되는 단어를 핵심 함정으로 쓰지 마세요.
+   - KILLER의 오답 blankB도 정답과 같은 설명 축의 근접어(genetically/evolutionarily/biologically/culturally 등)로 경쟁시켜야 합니다. 지문이 "passed down through generations"처럼 표면적으로 genetic을 떠올리게 하지만 정확히는 evolutionary selection을 말하는 경우, genetically 같은 함정을 정답 (A)와 결합해 변별력을 만드세요.
 9. 나머지 오답은 다음 함정 중 서로 다른 방식으로 설계합니다:
    - 지문의 세부 예시를 전체 요지처럼 과장
    - 원인과 결과를 뒤집음
@@ -306,13 +311,13 @@ direction은 반드시 다음 문장으로 작성합니다.
 ## 난이도 기준
 - BASIC: 정답 개념이 지문에서 비교적 명시적으로 드러나고 요약문도 직접적인 paraphrase입니다.
 - INTERMEDIATE: 두 문장 이상의 근거를 연결해야 하며, 한쪽 빈칸만 보고 고르면 틀리도록 만듭니다.
-- KILLER: 정답은 원문 표현의 직접 반복이 아니라 상위 개념/추상화이고, 오답은 모두 지문 개념을 빌린 근접 오답이어야 합니다.
+- KILLER: 정답은 원문 표현의 직접 반복이 아니라 상위 개념/추상화이고, 오답은 모두 지문 개념을 빌린 근접 오답이어야 합니다. 정답 후보가 한쪽 빈칸만 보고 2개 이하로 즉시 좁혀지면 실패입니다. 각 빈칸의 오답 후보가 최소 2개 이상은 지문상 그럴듯해야 하며, 가장 매력적인 B 함정을 정답 A와 결합하고 가장 매력적인 A 함정을 정답 B와 결합하세요.
 
 ## 출력 필드
 - summaryWithBlanks: (A), (B)가 들어간 영어 한 문장 요약문
 - blanks: [{label:"(A)", answer:"..."}, {label:"(B)", answer:"..."}]
 - options: [{label:"1", blankA:"...", blankB:"...", text:"... …… ..."}] 5개
-- wrongOptionExplanations: 정답이 아닌 모든 선지에 대해, 왜 그럴듯하지만 지문/요약 논리에 어긋나는지 한국어로 설명`,
+- wrongOptionExplanations: 정답이 아닌 모든 선지에 대해, 왜 그럴듯하지만 지문/요약 논리에 어긋나는지 한국어로 설명. "대조군 설계" 같은 실험 용어는 쓰지 말고 "선지 배열상", "지문 논리상", "요약문의 관계상"처럼 자연스럽게 설명`,
 
   IRRELEVANT: `무관한 문장 문제를 만드세요.
 

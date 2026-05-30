@@ -3,6 +3,10 @@
 import { QUESTION_TYPE_GROUPS } from "@/lib/question-type-ui";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -25,6 +29,13 @@ export interface PassageItem {
   collectionItems?: { collectionId: string }[];
 }
 
+export interface PassageCollectionItem {
+  id: string;
+  parentId?: string | null;
+  name: string;
+  _count: { items: number };
+}
+
 export interface FilterOptions {
   schools: { id: string; name: string }[];
   grades: number[];
@@ -42,14 +53,26 @@ export interface QueueItem {
   passageTitle: string;
   passageContent: string;
   createdAt?: string;
-  passageMeta: { school?: string; grade?: number | null; semester?: string | null; unit?: string | null };
+  passageMeta: {
+    school?: string;
+    grade?: number | null;
+    semester?: string | null;
+    unit?: string | null;
+  };
   analysisData: any;
   status: QueueStatus;
   progress: Record<string, "pending" | "done" | "error">;
   questions: any[];
   questionIds?: string[];
   error?: string;
-  config: { typeCounts: Record<string, number>; difficulty: string; prompt: string; mode: "auto" | "manual"; generationPlan?: QuestionGenerationPlan; questionTypeSettings?: QuestionTypeGenerationSettings };
+  config: {
+    typeCounts: Record<string, number>;
+    difficulty: string;
+    prompt: string;
+    mode: "auto" | "manual";
+    generationPlan?: QuestionGenerationPlan;
+    questionTypeSettings?: QuestionTypeGenerationSettings;
+  };
 }
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -91,14 +114,29 @@ export function buildQuestionText(q: any): string {
   // SENTENCE_TRANSFORM: 전환 대상 원래 문장
   if (q.originalSentence) parts.push(`[원문] ${q.originalSentence}`);
   // 조건 (CONDITIONAL_WRITING, SENTENCE_TRANSFORM)
-  if (q.conditions?.length) parts.push(`[조건]\n${q.conditions.map((c: string, i: number) => `${i + 1}. ${c}`).join("\n")}`);
+  if (q.conditions?.length)
+    parts.push(
+      `[조건]\n${q.conditions.map((c: string, i: number) => `${i + 1}. ${c}`).join("\n")}`,
+    );
   // FILL_BLANK_KEY: 빈칸 포함 문장
   if (q.sentenceWithBlank) parts.push(q.sentenceWithBlank);
   // SUMMARY_COMPLETE: 빈칸 포함 요약문 + 빈칸 정답
-  if (q.summaryWithBlanks) parts.push(`[요약문] ${q.summaryWithBlanks}`);
-  if (!isSummaryCompleteMc && q.blanks?.length) parts.push(`[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`);
+  if (q.summaryWithBlanks) {
+    const summary = isSummaryCompleteMc
+      ? formatSummaryCompleteMcSummaryForDisplay(
+        String(q.summaryWithBlanks),
+        readSummaryBlankAnswersFromQuestionLike(q),
+      )
+      : q.summaryWithBlanks;
+    parts.push(isSummaryCompleteMc ? `\u2193\n${summary}` : `[요약문] ${summary}`);
+  }
+  if (!isSummaryCompleteMc && q.blanks?.length)
+    parts.push(
+      `[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`,
+    );
   // WORD_ORDER: 뒤섞인 단어
-  if (q.scrambledWords?.length) parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
+  if (q.scrambledWords?.length)
+    parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
   if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);
   // GRAMMAR_CORRECTION: 오류 문장
   if (q.sentenceWithError) parts.push(`[오류 문장] ${q.sentenceWithError}`);
@@ -114,4 +152,9 @@ export function buildQuestionText(q: any): string {
   return parts.join("\n\n") || "";
 }
 
-export function countWords(t: string) { return t.trim().split(/\s+/).filter((w) => w.length > 0).length; }
+export function countWords(t: string) {
+  return t
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w.length > 0).length;
+}

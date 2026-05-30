@@ -14,6 +14,11 @@ import {
   renderFormattedInline,
   renderQuestionTextInline,
 } from "../paper-item-utils";
+import {
+  isStructuredAtomicSubtype,
+  questionStemAndBody,
+  recombineQuestionText,
+} from "../question-body-layout";
 import { TEMPLATE_VISUALS } from "../templates";
 import type {
   Density,
@@ -24,6 +29,8 @@ import type {
   PaperSize,
   PaperTemplate,
   PassageStyle,
+  StructRow,
+  StructRowStyle,
 } from "../types";
 import { EditableText } from "./editable-text";
 import {
@@ -43,6 +50,119 @@ function blockAlignClass(item: PaperItem) {
   if (item.blockAlign === "center") return "text-center";
   if (item.blockAlign === "right") return "text-right";
   return "text-left";
+}
+
+// \uC904 \uB2E8\uC704\uB85C \uD758\uB7EC\uC628 \uAD6C\uC870\uD654 \uBCF8\uBB38(structRows)\uC744 \uBC15\uC2A4/\uB2E8\uB77D\uC73C\uB85C \uC7AC\uAD6C\uC131\uD55C\uB2E4.
+// \uBC15\uC2A4\uAC00 \uCE78 \uACBD\uACC4\uC5D0\uC11C \uCABC\uAC1C\uC9C0\uBA74 (\uC774\uC5B4\uC11C) / (\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192) \uB9C8\uCEE4\uB85C \uC5F0\uACB0\uD55C\uB2E4.
+function StructuredBody({
+  rows,
+  subType,
+  compact,
+  withTopGap,
+  visualQuestionClass,
+}: {
+  rows: StructRow[];
+  subType: string | null;
+  compact: boolean;
+  withTopGap: boolean;
+  visualQuestionClass: string;
+}) {
+  if (rows.length === 0) return null;
+
+  const groups: {
+    segIndex: number;
+    style: StructRowStyle;
+    paraLabel?: string;
+    rows: StructRow[];
+  }[] = [];
+  for (const row of rows) {
+    const last = groups[groups.length - 1];
+    if (last && last.segIndex === row.segIndex) last.rows.push(row);
+    else {
+      groups.push({
+        segIndex: row.segIndex,
+        style: row.style,
+        paraLabel: row.paraLabel,
+        rows: [row],
+      });
+    }
+  }
+
+  const leading = compact ? "leading-[1.52]" : "leading-[1.58]";
+
+  return (
+    <div className={cn("space-y-2", withTopGap && "mt-1", visualQuestionClass)}>
+      {groups.map((group, groupIndex) => {
+        const text = joinRenderedLinesForDisplay(group.rows.map((row) => row.line));
+        const resumed = !group.rows[0].isSegStart;
+        const continues = !group.rows[group.rows.length - 1].isSegEnd;
+
+        if (group.style === "arrow") {
+          return (
+            <div
+              key={groupIndex}
+              className="text-center text-[12px] font-bold leading-none text-slate-500"
+            >
+              {"\u2193"}
+            </div>
+          );
+        }
+
+        if (group.style === "passage" || group.style === "summary" || group.style === "given") {
+          const boxTone =
+            group.style === "passage"
+              ? "border-slate-400 bg-white font-normal"
+              : "border-slate-300 bg-slate-50 font-semibold";
+          return (
+            <div
+              key={groupIndex}
+              className={cn(
+                "whitespace-pre-line rounded-[4px] border px-2.5 py-2 text-justify text-slate-950",
+                leading,
+                boxTone,
+              )}
+            >
+              {resumed && (
+                <span className="no-print mb-1 block text-[9px] italic text-slate-400">
+                  {"(\uC774\uC5B4\uC11C)"}
+                </span>
+              )}
+              {group.style === "given" && !resumed && (
+                <span className="mr-1 font-black text-slate-700">[given]</span>
+              )}
+              {renderFormattedInline(text, subType, {
+                alphabetMarkerClassName: "font-semibold text-slate-950",
+              })}
+              {continues && (
+                <span className="no-print mt-1 block text-[9px] italic text-slate-400">
+                  {"(\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192)"}
+                </span>
+              )}
+            </div>
+          );
+        }
+
+        if (group.style === "para") {
+          return (
+            <p key={groupIndex} className={cn("whitespace-pre-line text-justify font-semibold", leading)}>
+              {!resumed && group.paraLabel && (
+                <span className="mr-1.5 font-black text-slate-950">{group.paraLabel}</span>
+              )}
+              {renderFormattedInline(text, subType, {
+                alphabetMarkerClassName: "font-semibold text-slate-950",
+              })}
+            </p>
+          );
+        }
+
+        return (
+          <p key={groupIndex} className="whitespace-pre-line text-justify font-semibold">
+            {renderFormattedInline(text, subType)}
+          </p>
+        );
+      })}
+    </div>
+  );
 }
 
 function CustomPaperBlock({
@@ -274,13 +394,22 @@ export function A4PaperPage({
         "exam-a4-page relative w-full overflow-hidden shadow-xl ring-1",
         visual.pageClass,
       )}
-      style={{ aspectRatio: `${paperSpec.widthMm} / ${paperSpec.heightMm}` }}
+      style={{
+        aspectRatio: `${paperSpec.widthMm} / ${paperSpec.heightMm}`,
+        // 시험지 미리보기 글꼴을 HWPX 다운로드(맑은 고딕)와 통일한다.
+        // Apple SD Gothic Neo 는 Mac 사용자에게 합리적인 미리보기를 제공한다(다운로드 파일은 한글에서 여전히 맑은 고딕 사용).
+        fontFamily:
+          '"Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif',
+      }}
       data-paper-size={paperSize}
     >
       <div
         className={cn(
           "relative flex h-full flex-col",
-          compact ? "px-[34px] py-[30px]" : "px-[42px] py-[38px]",
+          // 전체 여백 축소(5차): 좌우는 줄넘김 안정성을 위해 소폭만, 상하는 더 적극적으로.
+          // comfortable px-[34px] py-[28px], compact px-[28px] py-[24px].
+          // 좌우 변경은 pagination.ts(horizontalPadding)·HWPX/DOCX 빌더와 함께 바꿔 미리보기↔출력 일치 유지.
+          compact ? "px-[28px] py-[24px]" : "px-[34px] py-[28px]",
           visual.innerClass,
         )}
       >
@@ -436,6 +565,15 @@ export function A4PaperPage({
                         (!dragOverPartKey &&
                           part.isStart &&
                           dragOverItemId === item.localId);
+                      const subType = item.sourceQuestion.subType;
+                      // 지시문(stem)은 번호 옆에 항상 통째로 렌더하고, 본문(body)은
+                      // 그 아래에 둔다. 추정 줄 수로 stem 을 쪼개지 않아 잘림/인위적
+                      // 줄바꿈을 방지한다.
+                      const { stem: questionStem, body: questionBody } = isCustomBlock
+                        ? { stem: "", body: "" }
+                        : questionStemAndBody(item);
+                      const isStructuredQuestion =
+                        !isCustomBlock && isStructuredAtomicSubtype(subType);
                       return (
                         <div
                           key={part.partKey}
@@ -457,13 +595,15 @@ export function A4PaperPage({
                                 : part.isStart && item.breakBefore === "column"
                                   ? "column"
                                   : undefined,
-                            breakInside: item.keepWithPrev
-                              ? "avoid"
-                              : undefined,
+                            breakInside:
+                              item.keepWithPrev || isStructuredQuestion
+                                ? "avoid"
+                                : undefined,
                           }}
                           className={cn(
                             "group/paper-item relative rounded-md transition-colors",
-                            item.keepWithPrev && "break-inside-avoid",
+                            (item.keepWithPrev || isStructuredQuestion) &&
+                              "break-inside-avoid",
                             item.locked && "cursor-default",
                             visual.itemClass,
                             !readOnly &&
@@ -535,33 +675,55 @@ export function A4PaperPage({
                           {!isCustomBlock && (
                             <>
                           {part.showHeader && (
-                            <>
-                              <div className="mb-1 flex items-baseline gap-1.5">
+                            <p
+                              className={cn(
+                                "mb-1 whitespace-pre-line text-justify font-semibold",
+                                visual.questionClass,
+                              )}
+                            >
+                              <span
+                                className={cn(
+                                  "mr-1.5 font-black",
+                                  compact ? "text-[12px]" : "text-[13px]",
+                                  visual.numberClass,
+                                )}
+                              >
+                                {item.orderNum}.
+                              </span>
+                              {showQuestionMeta && (
                                 <span
                                   className={cn(
-                                    "font-black",
-                                    compact ? "text-[12px]" : "text-[13px]",
-                                    visual.numberClass,
+                                    "mr-1.5 align-baseline text-[9px] font-semibold",
+                                    visual.metaClass,
                                   )}
                                 >
-                                  {item.orderNum}.
+                                  [{item.points}점
+                                  {subType
+                                    ? ` · ${SUBTYPE_LABELS[subType] || subType}`
+                                    : ""}
+                                  ]
                                 </span>
-                                {showQuestionMeta && (
-                                  <span
-                                    className={cn(
-                                      "text-[9px] font-semibold",
-                                      visual.metaClass,
-                                    )}
-                                  >
-                                    [{item.points}점
-                                    {item.sourceQuestion.subType
-                                      ? ` · ${SUBTYPE_LABELS[item.sourceQuestion.subType] || item.sourceQuestion.subType}`
-                                      : ""}
-                                    ]
-                                  </span>
-                                )}
-                              </div>
-                            </>
+                              )}
+                              {questionStem ? (
+                                <EditableText
+                                  value={questionStem}
+                                  onCommit={(next) =>
+                                    onUpdateItem(item.localId, {
+                                      questionText: recombineQuestionText(
+                                        next,
+                                        questionBody,
+                                      ),
+                                    })
+                                  }
+                                  // 구조화 유형은 questionText 에 [요약문] 등 본문이
+                                  // 함께 들어있어, 지시문만 재결합하면 본문이 사라진다.
+                                  // 따라서 지시문 인라인 편집은 평문 유형에서만 허용.
+                                  readOnly={readOnly || item.locked || isStructuredQuestion}
+                                >
+                                  {renderQuestionTextInline(questionStem, subType)}
+                                </EditableText>
+                              ) : null}
+                            </p>
                           )}
                           {part.isContinuation &&
                             (part.questionRenderedLines.length > 0 ||
@@ -577,55 +739,85 @@ export function A4PaperPage({
                               ({item.orderNum}번 계속)
                             </p>
                           )}
-                          {part.questionRenderedLines.length > 0 &&
-                            (() => {
-                              const questionStartsAtBeginning = part.questionStartLineIndex === 0;
-                              const questionEndsHere =
-                                part.questionStartLineIndex + part.questionRenderedLines.length >=
-                                part.questionTotalLines;
-                              const questionIsWhole =
-                                questionStartsAtBeginning && questionEndsHere;
-                              const renderedQuestionText = formatSentenceInsertPassageMarkers(
-                                questionIsWhole
-                                  ? item.questionText
-                                  : joinRenderedLinesForDisplay(part.questionRenderedLines),
-                                item.sourceQuestion.subType,
+                          {(() => {
+                            // 구조화 유형: 지시문은 헤더에서 이미 렌더했고, 본문(지문/요약/
+                            // given 박스·↓·순서 단락)은 줄 단위로 흘러온 structRows 를
+                            // 박스로 재구성한다 — 칸 경계에서 깔끔하게 이어진다.
+                            if (isStructuredQuestion) {
+                              return (
+                                <StructuredBody
+                                  rows={part.structRows}
+                                  subType={subType}
+                                  compact={compact}
+                                  withTopGap={part.showHeader}
+                                  visualQuestionClass={visual.questionClass}
+                                />
                               );
+                            }
 
+                            // 평문 유형: 본문(삽입 지문 등). 한 칸에 모두 들어가면 통째로
+                            // 렌더(편집 가능), 칸을 넘어가면 이 part 에 배치된 줄만 잇는다.
+                            const startsAtBeginning = part.questionStartLineIndex === 0;
+                            const endsHere =
+                              part.questionStartLineIndex +
+                                part.questionRenderedLines.length >=
+                              part.questionTotalLines;
+                            const bodyIsWhole =
+                              part.isStart && startsAtBeginning && endsHere;
+
+                            if (bodyIsWhole) {
+                              if (!questionBody.trim()) return null;
                               return (
                                 <p
                                   className={cn(
-                                    "whitespace-pre-line text-justify font-semibold",
+                                    "mt-1 whitespace-pre-line text-justify font-semibold",
                                     visual.questionClass,
                                   )}
                                 >
-                                  {questionIsWhole ? (
-                                    <EditableText
-                                      value={item.questionText}
-                                      onCommit={(next) =>
-                                        onUpdateItem(item.localId, {
-                                          questionText: next,
-                                        })
-                                      }
-                                      className="block"
-                                      readOnly={readOnly || item.locked}
-                                    >
-                                      {renderQuestionTextInline(
-                                        renderedQuestionText,
-                                        item.sourceQuestion.subType,
-                                      )}
-                                    </EditableText>
-                                  ) : (
-                                    <span className="block">
-                                      {renderQuestionTextInline(
-                                        renderedQuestionText,
-                                        item.sourceQuestion.subType,
-                                      )}
-                                    </span>
-                                  )}
+                                  <EditableText
+                                    value={questionBody}
+                                    onCommit={(next) =>
+                                      onUpdateItem(item.localId, {
+                                        questionText: recombineQuestionText(
+                                          questionStem,
+                                          next,
+                                        ),
+                                      })
+                                    }
+                                    className="block"
+                                    readOnly={readOnly || item.locked}
+                                  >
+                                    {renderQuestionTextInline(
+                                      formatSentenceInsertPassageMarkers(questionBody, subType),
+                                      subType,
+                                    )}
+                                  </EditableText>
                                 </p>
                               );
-                            })()}
+                            }
+
+                            if (part.questionRenderedLines.length === 0) return null;
+                            return (
+                              <p
+                                className={cn(
+                                  "mt-1 whitespace-pre-line text-justify font-semibold",
+                                  visual.questionClass,
+                                )}
+                              >
+                                <span className="block">
+                                  {renderQuestionTextInline(
+                                    formatSentenceInsertPassageMarkers(
+                                      joinRenderedLinesForDisplay(
+                                        part.questionRenderedLines,
+                                      ),
+                                      subType,
+                                    ),
+                                    subType,
+                                  )}
+                                </span>
+                              </p>
+                            );
+                          })()}
                           {(part.options.length > 0 || part.showObjectiveAnswer) && (
                             <div
                               className={cn(

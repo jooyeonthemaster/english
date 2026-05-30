@@ -41,6 +41,10 @@ import {
   AnswerLine,
   AnswerRevealSection,
 } from "./question-renderer-primitives";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 
 // ============================================================================
 // 수능/모의고사 객관식 (10 types)
@@ -265,13 +269,6 @@ export function ContentMatchRenderer({ q }: { q: ContentMatchQuestion }) {
   );
 }
 
-function normalizeRendererOptionLabel(value: unknown): string {
-  return String(value ?? "")
-    .trim()
-    .replace(/^[\(\[]?([A-Ja-j]|\d{1,3})[\)\].:]?$/, "$1")
-    .toLowerCase();
-}
-
 function getSummaryPairOption(option: SummaryCompleteMcQuestion["options"][number]) {
   const blankA = typeof option.blankA === "string" ? option.blankA.trim() : "";
   const blankB = typeof option.blankB === "string" ? option.blankB.trim() : "";
@@ -290,8 +287,16 @@ function getSummaryPairOption(option: SummaryCompleteMcQuestion["options"][numbe
   };
 }
 
+function formatSummaryPairOptionText(option: SummaryCompleteMcQuestion["options"][number]) {
+  const pair = getSummaryPairOption(option);
+  if (pair.blankA || pair.blankB) {
+    return `(A) ${pair.blankA || "-"} / (B) ${pair.blankB || "-"}`;
+  }
+  return typeof option.text === "string" ? option.text : "";
+}
+
 function renderSummaryBlankMarkers(text: string) {
-  return text.split(/(\([AB]\))/g).map((part, index) => {
+  return text.split(/(\([AB]\)|_{3,})/g).map((part, index) => {
     if (part === "(A)" || part === "(B)") {
       return (
         <span
@@ -302,56 +307,37 @@ function renderSummaryBlankMarkers(text: string) {
         </span>
       );
     }
+    if (/^_{3,}$/.test(part)) {
+      return (
+        <span
+          key={index}
+          className="mx-1 inline-block min-w-[72px] border-b-2 border-blue-400 align-baseline"
+        >
+          &nbsp;
+        </span>
+      );
+    }
     return <React.Fragment key={index}>{part}</React.Fragment>;
   });
 }
 
 export function SummaryCompleteMcRenderer({ q }: { q: SummaryCompleteMcQuestion }) {
-  const correctLabel = normalizeRendererOptionLabel(q.correctAnswer);
+  const summaryForDisplay = formatSummaryCompleteMcSummaryForDisplay(
+    q.summaryWithBlanks,
+    readSummaryBlankAnswersFromQuestionLike(q),
+  );
+  const options = q.options.map((option) => ({
+    label: option.label,
+    text: formatSummaryPairOptionText(option),
+  }));
 
   return (
     <>
       <Direction text={q.direction} />
       <SourcePassageBlock q={q as SummaryCompleteMcQuestion & { _sourcePassageContent?: unknown }} />
-      <div className="text-center text-[15px] font-bold text-slate-400">↓</div>
-      <PassageBlock label="요약문">{renderSummaryBlankMarkers(q.summaryWithBlanks)}</PassageBlock>
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-        <div className="grid grid-cols-[44px_1fr_1fr] border-b border-slate-200 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          <div className="px-2 py-2 text-center">No.</div>
-          <div className="border-l border-slate-200 px-3 py-2">(A)</div>
-          <div className="border-l border-slate-200 px-3 py-2">(B)</div>
-        </div>
-        {q.options.map((option, index) => {
-          const pair = getSummaryPairOption(option);
-          const isCorrect =
-            normalizeRendererOptionLabel(option.label) === correctLabel;
-
-          return (
-            <div
-              key={`${option.label}-${index}`}
-              className={`grid grid-cols-[44px_1fr_1fr] border-b border-slate-100 text-[12.5px] last:border-b-0 ${
-                isCorrect ? "bg-emerald-50 text-emerald-900" : "text-slate-700"
-              }`}
-            >
-              <div className="px-2 py-2 text-center font-bold text-blue-700">{option.label}</div>
-              <div className="border-l border-slate-100 px-3 py-2 font-medium">{pair.blankA}</div>
-              <div className="border-l border-slate-100 px-3 py-2 font-medium">{pair.blankB}</div>
-            </div>
-          );
-        })}
-      </div>
+      <PassageBlock label="요약문">{renderSummaryBlankMarkers(summaryForDisplay)}</PassageBlock>
+      <OptionList options={options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
-        {q.blanks && q.blanks.length > 0 && (
-          <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-1">
-            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">빈칸 정답</span>
-            {q.blanks.map((b, i) => (
-              <div key={i} className="text-[12px] text-emerald-800 flex items-center gap-2">
-                <span className="font-bold">{b.label}</span>
-                <span>{b.answer}</span>
-              </div>
-            ))}
-          </div>
-        )}
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
       </AnswerRevealSection>

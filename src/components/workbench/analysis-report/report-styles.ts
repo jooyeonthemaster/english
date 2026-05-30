@@ -274,11 +274,54 @@ export const ANALYSIS_REPORT_CSS = `
 /* ── 인쇄 ── */
 @media print {
   @page { size: A4; margin: 0; }
-  body { background: #fff !important; }
-  /* 모달/툴바 등 주변 요소 숨기고 보고서(.par-root)만 인쇄 */
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* 모달이 body 에 inline 으로 건 overflow:hidden / 고정 높이가 인쇄를 1페이지로 자르는 것 방지 */
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* 측정용 숨김 클론·표지 미리보기 썸네일은 절대 인쇄하지 않음.
+     (아래 .par-root * 의 visibility:visible 가 숨김 측정 컨테이너/미리보기를 되살리던 버그 차단) */
+  .par-measure { display: none !important; }
+  .par-cover-preview { display: none !important; }
+
+  /* 화면 전체를 숨기고 실제 보고서(.par-root)만 인쇄.
+     우측 패널 미리보기(.par-cover-preview)는 같은 .par-root 라도 제외한다. */
   body * { visibility: hidden !important; }
-  .par-root, .par-root * { visibility: visible !important; }
-  .par-root { position: absolute !important; left: 0; top: 0; width: 210mm; margin: 0 !important; padding: 0 !important; background: #fff !important; }
+  .par-root:not(.par-cover-preview),
+  .par-root:not(.par-cover-preview) * { visibility: visible !important; }
+
+  /* 보고서 계보(조상 체인)를 제외한 모든 형제 요소(모달 헤더·우측 표지 패널·페이지 인디케이터·
+     모달 뒤의 워크벤치 페이지·토스트 등)를 흐름에서 완전히 제거한다.
+     visibility:hidden 은 숨겨도 '자리'는 차지하므로, 보고서(예: 7쪽)보다 긴 숨김 요소들이
+     그 길이만큼 8·9·10페이지 같은 빈 페이지를 만들던 문제를 해결한다. */
+  :has(.par-root:not(.par-cover-preview))
+    > *:not(:has(.par-root:not(.par-cover-preview))):not(.par-root:not(.par-cover-preview)) {
+    display: none !important;
+  }
+
+  /* 보고서를 감싼 모든 조상(모달·스크롤러·고정 컨테이너)의 클리핑·포지션·높이 제한을 해제.
+     모달의 overflow:hidden / position:relative / 고정 높이 때문에 보고서가 표지(첫 화면)에서
+     잘려 "모든 페이지가 표지로만" 인쇄되던 문제를 해결한다. */
+  body:has(.par-root:not(.par-cover-preview)) *:has(.par-root:not(.par-cover-preview)) {
+    overflow: visible !important;
+    position: static !important;
+    max-height: none !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  .par-root:not(.par-cover-preview) {
+    position: absolute !important;
+    left: 0; top: 0;
+    width: 210mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
   .par-sheet { box-shadow: none !important; margin: 0 !important; break-after: page; }
   .par-sheet:last-child { break-after: auto; }
 }

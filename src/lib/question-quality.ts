@@ -157,6 +157,8 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "The two blanks should carry distinct core ideas, such as cause/result, problem/solution, contrast/concession, or concept/effect.",
     "Every option must be an English pair with parallel grammar slots. Wrong pairs should be near-misses, not random vocabulary.",
     "Include at least one A-only-correct trap and one B-only-correct trap so students must verify both blanks.",
+    "For KILLER, the half-correct traps must be genuinely competitive: pair the correct blankA with the strongest wrong blankB, and pair the correct blankB with the strongest wrong blankA.",
+    "For KILLER, do not bury the best trap behind an instantly removable partner. For example, if evolutionarily is correct, genetically should be tested with the correct blankA, not paired with an obviously wrong blankA.",
     "For KILLER, make the correct pair depend on global relation mapping, and make every distractor passage-grounded.",
   ],
   IRRELEVANT: [
@@ -1413,9 +1415,9 @@ function validateSummaryCompleteMcQuestion(
       normalizeComparableText(summary).includes(normalizedAnswer)
     ) {
       add(
-        "warning",
+        "error",
         "summary-mc-answer-leaks-in-summary",
-        `${label} answer appears elsewhere in the summary sentence.`,
+        `${label} answer appears in summaryWithBlanks; the student-facing summary must hide the answer behind the blank marker.`,
       );
       break;
     }
@@ -1509,6 +1511,249 @@ function validateSummaryCompleteMcQuestion(
       "SUMMARY_COMPLETE_MC should include at least one A-only-correct trap and one B-only-correct trap.",
     );
   }
+
+  if (requestedDifficulty === "KILLER" && blankA && blankB && correctLabel) {
+    validateKillerSummaryTrapStrength(optionPairs, correctLabel, blankA, blankB, add);
+  }
+
+  const wrongExplanations =
+    question.wrongOptionExplanations &&
+    typeof question.wrongOptionExplanations === "object" &&
+    !Array.isArray(question.wrongOptionExplanations)
+      ? (question.wrongOptionExplanations as Record<string, unknown>)
+      : {};
+  if (
+    Object.values(wrongExplanations).some(
+      (explanation) =>
+        typeof explanation === "string" &&
+        /대조군\s*설계|control\s+group|control\s+design/i.test(explanation),
+    )
+  ) {
+    add(
+      "warning",
+      "summary-mc-explanation-experimental-jargon",
+      "Wrong-option explanations should say 선지 배열상/지문 논리상, not 대조군 설계 or experimental control-group jargon.",
+    );
+  }
+}
+
+function validateKillerSummaryTrapStrength(
+  optionPairs: Array<{ label: string; blankA: string; blankB: string; text: string }>,
+  correctLabel: string,
+  blankA: string,
+  blankB: string,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const correctA = normalizeComparableText(blankA);
+  const correctB = normalizeComparableText(blankB);
+  const wrongPairs = optionPairs.filter((pair) => pair.label !== correctLabel);
+  const aOnlyPairs = wrongPairs.filter(
+    (pair) => normalizeComparableText(pair.blankA) === correctA && normalizeComparableText(pair.blankB) !== correctB,
+  );
+  const bOnlyPairs = wrongPairs.filter(
+    (pair) => normalizeComparableText(pair.blankA) !== correctA && normalizeComparableText(pair.blankB) === correctB,
+  );
+
+  const blankAFamily = summarySemanticFamily(blankA);
+  const blankBFamily = summarySemanticFamily(blankB);
+  const hasCompetitiveBWithCorrectA = aOnlyPairs.some((pair) =>
+    sameSummarySemanticField(pair.blankB, blankB),
+  );
+  const hasCompetitiveAWithCorrectB = bOnlyPairs.some((pair) =>
+    sameSummarySemanticField(pair.blankA, blankA),
+  );
+
+  const strongBTrapBuriedBehindWrongA = wrongPairs.some(
+    (pair) =>
+      normalizeComparableText(pair.blankA) !== correctA &&
+      normalizeComparableText(pair.blankB) !== correctB &&
+      sameSummarySemanticField(pair.blankB, blankB),
+  );
+  const strongATrapBuriedBehindWrongB = wrongPairs.some(
+    (pair) =>
+      normalizeComparableText(pair.blankA) !== correctA &&
+      normalizeComparableText(pair.blankB) !== correctB &&
+      sameSummarySemanticField(pair.blankA, blankA),
+  );
+
+  if (blankBFamily && !hasCompetitiveBWithCorrectA) {
+    add(
+      "error",
+      "summary-mc-killer-weak-b-trap",
+      "KILLER SUMMARY_COMPLETE_MC needs a genuinely tempting wrong blankB paired with the correct blankA.",
+    );
+  }
+  if (blankAFamily && !hasCompetitiveAWithCorrectB) {
+    add(
+      "error",
+      "summary-mc-killer-weak-a-trap",
+      "KILLER SUMMARY_COMPLETE_MC needs a genuinely tempting wrong blankA paired with the correct blankB.",
+    );
+  }
+  if (blankBFamily && strongBTrapBuriedBehindWrongA && !hasCompetitiveBWithCorrectA) {
+    add(
+      "error",
+      "summary-mc-killer-buried-b-trap",
+      "A strong blankB trap is paired with an easily removable blankA; pair it with the correct blankA instead.",
+    );
+  }
+  if (blankAFamily && strongATrapBuriedBehindWrongB && !hasCompetitiveAWithCorrectB) {
+    add(
+      "error",
+      "summary-mc-killer-buried-a-trap",
+      "A strong blankA trap is paired with an easily removable blankB; pair it with the correct blankB instead.",
+    );
+  }
+
+  const plausibleWrongACount = new Set(
+    wrongPairs
+      .map((pair) => pair.blankA)
+      .filter((value) => sameSummarySemanticField(value, blankA))
+      .map(normalizeComparableText),
+  ).size;
+  const plausibleWrongBCount = new Set(
+    wrongPairs
+      .map((pair) => pair.blankB)
+      .filter((value) => sameSummarySemanticField(value, blankB))
+      .map(normalizeComparableText),
+  ).size;
+
+  if (blankAFamily && plausibleWrongACount < 1) {
+    add(
+      "error",
+      "summary-mc-killer-too-easy-a-column",
+      "KILLER SUMMARY_COMPLETE_MC blankA column is too easy; include at least one same-field wrong blankA.",
+    );
+  }
+  if (blankBFamily && plausibleWrongBCount < 1) {
+    add(
+      "error",
+      "summary-mc-killer-too-easy-b-column",
+      "KILLER SUMMARY_COMPLETE_MC blankB column is too easy; include at least one same-field wrong blankB.",
+    );
+  }
+}
+
+const SUMMARY_SEMANTIC_FAMILIES: Record<string, string[]> = {
+  altruistic: [
+    "altruistic",
+    "cooperative",
+    "supportive",
+    "prosocial",
+    "communal",
+    "collaborative",
+    "helpful",
+    "helping",
+    "caregiving",
+    "nurturing",
+    "selfless",
+    "family-oriented",
+    "intergenerational",
+  ],
+  evolutionary: [
+    "evolutionary",
+    "evolutionarily",
+    "evolved",
+    "adaptive",
+    "adaptively",
+    "biological",
+    "biologically",
+    "genetic",
+    "genetically",
+    "hereditary",
+    "hereditarily",
+    "inherited",
+    "heritable",
+    "generational",
+    "generationally",
+    "reproductive",
+    "reproductively",
+    "selected",
+    "selective",
+  ],
+  responsibility: [
+    "responsibility",
+    "responsible",
+    "accountability",
+    "accountable",
+    "judgment",
+    "judgement",
+    "ethical",
+    "moral",
+    "value-based",
+    "human",
+    "decision-making",
+  ],
+  technology: [
+    "technological",
+    "technology",
+    "technical",
+    "digital",
+    "algorithmic",
+    "automated",
+    "mechanical",
+    "computational",
+  ],
+  equality: [
+    "equality",
+    "equity",
+    "equitable",
+    "opportunity",
+    "inclusive",
+    "access",
+    "accessible",
+    "participation",
+    "social",
+  ],
+  environmental: [
+    "environmental",
+    "ecological",
+    "sustainable",
+    "green",
+    "local",
+    "urban",
+    "community",
+    "communal",
+    "social",
+  ],
+};
+
+function summarySemanticFamily(value: string): string | null {
+  const normalized = normalizeComparableText(value);
+  if (!normalized) return null;
+  for (const [family, words] of Object.entries(SUMMARY_SEMANTIC_FAMILIES)) {
+    if (words.some((word) => normalized.includes(normalizeComparableText(word)))) {
+      return family;
+    }
+  }
+  return null;
+}
+
+function sameSummarySemanticField(candidate: string, correct: string): boolean {
+  const candidateComparable = normalizeComparableText(candidate);
+  const correctComparable = normalizeComparableText(correct);
+  if (!candidateComparable || !correctComparable || candidateComparable === correctComparable) {
+    return false;
+  }
+
+  const candidateFamily = summarySemanticFamily(candidate);
+  const correctFamily = summarySemanticFamily(correct);
+  if (candidateFamily && correctFamily && candidateFamily === correctFamily) {
+    return true;
+  }
+
+  const candidateTokens = contentTokens(candidate);
+  const correctTokens = contentTokens(correct);
+  if (candidateTokens.size > 0 && correctTokens.size > 0) {
+    return countTokenOverlap(candidateTokens, correctTokens) > 0;
+  }
+
+  return (
+    candidateComparable.length >= 6 &&
+    correctComparable.length >= 6 &&
+    (candidateComparable.includes(correctComparable.slice(0, 6)) ||
+      correctComparable.includes(candidateComparable.slice(0, 6)))
+  );
 }
 
 function findSummaryBlankAnswer(

@@ -190,6 +190,7 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
         }
       : null,
     collectionItems: q.collectionItems || [],
+    examLinks: [],
     _count: q._count || { examLinks: 0 },
   };
 }
@@ -197,7 +198,13 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
 function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: number): PaperItem {
   const sourceQuestion = examQuestionToBuilderQuestion(eq, saved);
   const localId = saved.localId || `${sourceQuestion.id}-saved-${index}`;
-  const defaultIncludePassage = shouldIncludeSourcePassageByDefault(sourceQuestion);
+  const passageContent = normalizePassageText(saved.passageContent ?? sourceQuestion.passage?.content ?? "");
+  const defaultIncludePassage = shouldIncludeSourcePassageByDefault({
+    ...sourceQuestion,
+    passage: sourceQuestion.passage
+      ? { ...sourceQuestion.passage, content: passageContent }
+      : sourceQuestion.passage,
+  });
   const options = Array.isArray(saved.options)
     ? saved.options.map((option, optionIndex) => ({
         label: normalizeInlineText(option.label || String(optionIndex + 1)),
@@ -213,9 +220,9 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
     orderNum: saved.orderNum || index + 1,
     points: saved.points || eq.points || sourceQuestion.points || 1,
     groupId: saved.groupId ?? `single:${localId}`,
-    includePassage: saved.includePassage === false ? false : defaultIncludePassage,
+    includePassage: defaultIncludePassage || (saved.includePassage === true),
     passageTitle: printablePassageTitle(saved.passageTitle, eq.question.passage?.title),
-    passageContent: normalizePassageText(saved.passageContent ?? sourceQuestion.passage?.content ?? ""),
+    passageContent,
     questionText: normalizeQuestionText(saved.questionText ?? sourceQuestion.questionText),
     options,
     correctAnswer: saved.correctAnswer ?? sourceQuestion.correctAnswer ?? "",
@@ -426,7 +433,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadDocx() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-docx`;
+      link.href = `/api/exams/${exam.id}/export-docx?t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();
@@ -437,7 +444,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadDocxWithAnswers() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-docx?answers=true`;
+      link.href = `/api/exams/${exam.id}/export-docx?answers=true&t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();
@@ -448,7 +455,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadHwpx() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-hwpx`;
+      link.href = `/api/exams/${exam.id}/export-hwpx?t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();
@@ -459,7 +466,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadHwpxWithAnswers() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-hwpx?answers=true`;
+      link.href = `/api/exams/${exam.id}/export-hwpx?answers=true&t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();

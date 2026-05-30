@@ -6,7 +6,11 @@ import type {
   PaperGroup,
   PaperItem,
 } from "./types";
-import { shouldIncludeSourcePassageByDefault } from "./passage-policy";
+import {
+  shouldForceSourcePassage,
+  shouldIncludeSourcePassageByDefault,
+  shouldRenderSourcePassageInsideQuestion,
+} from "./passage-policy";
 import {
   normalizeInlineText,
   normalizePassageText,
@@ -125,10 +129,50 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     sectionTitle: "",
     teacherNote: "",
     breakBefore: "auto",
-    keepWithPrev: includeSourcePassage,
+    // keepWithPrev 는 "앞 문항과 강제로 같은 칸에 붙이기"(사용자 수동 토글) 전용.
+    // 출처 지문 포함 여부(includeSourcePassage)와 분리한다 — 기본값을 true 로 두면
+    // 페이지네이션이 overflow 를 무시(headerForceStay)해 칸 경계에서 잘렸다.
+    // 구조화 유형의 "한 덩어리 유지"는 subtype 기반 원자 배치 로직이 담당한다.
+    keepWithPrev: false,
     blockType: "question",
     ...paperBlockDefaults(),
   };
+}
+
+function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
+  const passageContent = normalizePassageText(
+    item.passageContent || item.sourceQuestion.passage?.content || "",
+  );
+  return {
+    ...item.sourceQuestion,
+    passage: item.sourceQuestion.passage
+      ? { ...item.sourceQuestion.passage, content: passageContent }
+      : {
+          id: `paper:${item.questionId}`,
+          title: "",
+          content: passageContent,
+          grade: null,
+          semester: null,
+          publisher: null,
+          school: null,
+        },
+  };
+}
+
+export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
+  if (item.blockType !== "question") return false;
+  if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) return false;
+  const sourceQuestion = questionWithPaperItemPassage(item);
+  return (
+    Boolean(sourceQuestion.passage?.content?.trim()) &&
+    (item.includePassage || shouldForceSourcePassage(sourceQuestion))
+  );
+}
+
+export function isSourcePassageForcedForItem(item: PaperItem): boolean {
+  if (item.blockType !== "question") return false;
+  const sourceQuestion = questionWithPaperItemPassage(item);
+  return shouldForceSourcePassage(sourceQuestion);
 }
 
 function makeSyntheticQuestion(localId: string, label: string): BuilderQuestion {
@@ -150,6 +194,7 @@ function makeSyntheticQuestion(localId: string, label: string): BuilderQuestion 
     passage: null,
     explanation: null,
     collectionItems: [],
+    examLinks: [],
     _count: { examLinks: 0 },
   };
 }
@@ -245,18 +290,24 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
     const last = groups[groups.length - 1];
     if (last && item.groupId && last.id === item.groupId) {
       last.items.push(item);
-      if (item.includePassage && item.passageContent) {
+      const passageContent = normalizePassageText(
+        item.passageContent || item.sourceQuestion.passage?.content || "",
+      );
+      if (shouldRenderSourcePassageForItem(item) && passageContent) {
         last.includePassage = true;
         last.passageTitle = item.passageTitle;
-        last.passageContent = item.passageContent;
+        last.passageContent = passageContent;
       }
     } else {
+      const passageContent = normalizePassageText(
+        item.passageContent || item.sourceQuestion.passage?.content || "",
+      );
       groups.push({
         id: item.groupId || item.localId,
         items: [item],
-        includePassage: item.includePassage,
+        includePassage: shouldRenderSourcePassageForItem(item) && Boolean(passageContent),
         passageTitle: item.passageTitle,
-        passageContent: item.passageContent,
+        passageContent,
       });
     }
   }
@@ -337,8 +388,8 @@ function normalizeSummaryCompletionQuestionText(
   if (subType !== "SUMMARY_COMPLETE_MC") return text;
 
   return text
-    .replace(/\n{0,2}\[(?:빈칸 정답|blank answers)\][\s\S]*$/i, "")
-    .replace(/^\[(?:요약문|summary)\]\s*/gim, "↓\n");
+    .replace(/\n{0,2}\[(?:\uBE48\uCE78\s*\uC815\uB2F5|blank answers)\][\s\S]*$/i, "")
+    .replace(/^\[(?:\uC694\uC57D\uBB38|summary)\]\s*/gim, "\u2193\n");
 }
 
 export function joinRenderedLinesForDisplay(lines: string[]) {

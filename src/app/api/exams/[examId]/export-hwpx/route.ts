@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { buildBuilderHwpxDocument } from "./_lib/builder";
 import { packageHwpx } from "./_lib/package";
+import { MIMETYPE } from "./_lib/static-files";
+import { shouldForceSourcePassage } from "@/components/exams/paper-builder/passage-policy";
 import type {
   BuilderItem,
   BuilderSettings,
 } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 import type { BuilderItemResolved } from "./_lib/render/question";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;
@@ -37,14 +42,29 @@ function resolveBuilderItems(
     .map((item, index) => {
       const original = byQuestionId.get(item.questionId);
       if (!original) return null;
+      const forceSourcePassage = shouldForceBuilderSourcePassage(original, item);
       return {
         ...item,
+        includePassage: item.includePassage !== false || forceSourcePassage,
         orderNum: item.orderNum ?? index + 1,
         points: item.points ?? original.points,
         sourceQuestion: original.question,
       } as BuilderItemResolved;
     })
     .filter((it): it is BuilderItemResolved => Boolean(it));
+}
+
+function shouldForceBuilderSourcePassage(
+  original: ExamQuestionData,
+  item: Pick<BuilderItem, "questionText" | "passageContent">,
+) {
+  const passageContent = item.passageContent || original.question.passage?.content || "";
+  return shouldForceSourcePassage({
+    subType: original.question.subType,
+    questionText: item.questionText || original.question.questionText,
+    structuredData: (original.question as { structuredData?: unknown }).structuredData,
+    passage: { content: passageContent },
+  });
 }
 
 function applyBuilderSettings(
@@ -62,8 +82,10 @@ function applyBuilderSettings(
       const original = byQuestionId.get(item.questionId);
       if (!original) return null;
 
+      const includePassage =
+        item.includePassage !== false || shouldForceBuilderSourcePassage(original, item);
       const passage =
-        item.includePassage === false
+        !includePassage
           ? null
           : {
               title:
@@ -164,8 +186,11 @@ export async function GET(
 
     return new NextResponse(buffer as unknown as BodyInit, {
       headers: {
-        "Content-Type": "application/vnd.hancom.hwpx",
+        "Content-Type": MIMETYPE,
+        "X-Content-Type-Options": "nosniff",
         "Content-Disposition": `attachment; filename*=UTF-8''${filename}`,
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        "Pragma": "no-cache",
       },
     });
   } catch (error) {

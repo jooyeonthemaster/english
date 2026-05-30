@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
@@ -12,6 +12,7 @@ import {
   Clock,
   Rows3,
   FileText,
+  FolderX,
   Loader2,
   Trash2,
 } from "lucide-react";
@@ -45,7 +46,6 @@ import {
 import type { CollectionItem } from "./shared/types";
 import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
-import { SelectionToolbar } from "./shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 import { QuestionCard } from "./question-card";
 import { QuestionBankCard } from "./question-bank-card";
@@ -141,6 +141,67 @@ interface QuestionBankProps {
   };
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers (shared chrome with passage-list-client)
+// ---------------------------------------------------------------------------
+
+function useMeasuredHeight(enabled: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      setHeight(Math.ceil(el.getBoundingClientRect().height));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [enabled]);
+
+  return [ref, height] as const;
+}
+
+function SelectAllCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+  title,
+  ariaLabel,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  disabled: boolean;
+  onChange: () => void;
+  title: string;
+  ariaLabel: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
+      className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -558,7 +619,7 @@ export function QuestionBankClient({
     router.push(showingPendingOnly ? QUESTION_BANK_PATH : `${QUESTION_BANK_PATH}?approved=false`);
   }, [clearSelection, folders, router, showingPendingOnly]);
 
-  // ─── Filter bar (rendered inside FolderSection.toolbar) ───
+  // ─── View mode toggle (문제별 / 지문별) ───
   const viewModeToggle = (
     <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
       <button
@@ -630,8 +691,6 @@ export function QuestionBankClient({
         onCopy={handleAddToFolder}
         onMove={handleMoveToFolder}
       />
-
-      <span className="text-slate-300">|</span>
 
       {/* Create exam */}
       <button
@@ -719,16 +778,75 @@ export function QuestionBankClient({
       </div>
     ) : null;
 
+  // ─── Selection / filter toolbar row (mirrors passage-list-client) ───
+  const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
+
+  const toolbarRow = (
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
+      <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+        <div className="flex items-center gap-2">
+          <SelectAllCheckbox
+            checked={isCurrentPageSelected && selectedIds.size > 0}
+            indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
+            disabled={displayedQuestions.length === 0}
+            onChange={handleSelectCurrentPage}
+            title={`${selectedIds.size}문항 선택`}
+            ariaLabel={
+              isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
+            }
+          />
+          <button
+            type="button"
+            onClick={handleSelectAllPages}
+            disabled={allPagesSelectableCount === 0 || selectingAllPages}
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 transition-colors hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {selectingAllPages && <Loader2 className="h-3 w-3 animate-spin" />}
+            전체 페이지 선택
+          </button>
+          <div
+            className={
+              "flex items-center gap-3 " +
+              (selectedIds.size > 0
+                ? ""
+                : "pointer-events-none opacity-50")
+            }
+            aria-disabled={selectedIds.size === 0}
+          >
+            {selectionExtraActions}
+            {folders.activeFolder ? (
+              <button
+                type="button"
+                onClick={handleRemoveFromFolder}
+                title="폴더에서 삭제"
+                aria-label="폴더에서 삭제"
+                className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+              >
+                <FolderX className="h-3.5 w-3.5" />
+                폴더에서 삭제
+              </button>
+            ) : null}
+          </div>
+        </div>
+        <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+          {filtersToolbar}
+          {pendingQuestionsButton}
+          {viewModeToggle}
+          {gridToggle}
+        </div>
+      </div>
+    </div>
+  );
+
+  const isEmpty =
+    (isGrouped ? groupedPassages.length === 0 : flatQuestions.length === 0) &&
+    !folders.activeFolder;
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
-      {/* Page header bar removed — identity + CTAs now live inside the
-          sticky FolderSection card. */}
-
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
-        {(isGrouped
-          ? groupedPassages.length === 0
-          : flatQuestions.length === 0) && !folders.activeFolder ? (
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-2 pb-4">
+        {isEmpty ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">
@@ -741,67 +859,56 @@ export function QuestionBankClient({
             </p>
           </div>
         ) : (
-          <>
-            {/* Folders section -- sticky below header. Selection toolbar is
-              embedded inside so it shares the sticky pinning. */}
-            <FolderSection
-              childFolders={folders.childFolders}
-              activeFolder={folders.activeFolder}
-              dragItemType="question"
-              dragItemIdKey="questionId"
-              itemCountLabel={isGrouped ? "지문" : "문제"}
-              showNewFolder={folders.showNewFolder}
-              newFolderName={folders.newFolderName}
-              onNewFolderNameChange={folders.setNewFolderName}
-              onShowNewFolder={folders.setShowNewFolder}
-              onCreateFolder={folders.handleCreateFolder}
-              onNavigateToFolder={handleNavigateFolder}
-              onRenameFolder={folders.handleRenameFolder}
-              onDeleteFolder={folders.handleDeleteFolder}
-              onDragToFolder={handleDragToFolder}
-              onDragToRoot={handleDragToRoot}
-              breadcrumbPath={folders.breadcrumbPath}
-              onNavigateToRoot={handleNavigateToRoot}
-              toolbar={filtersToolbar}
-              contextBar={activePassageBar}
-              pageHeader={{
-                icon: <Database className="h-3.5 w-3.5" />,
-                title: "문제 관리",
-                totalCount,
-                itemLabel: isGrouped ? "지문" : "문제",
-                itemUnit: isGrouped ? "편" : "문항",
-              }}
-              selectionBar={
-                <SelectionToolbar
-                  embedded
-                  selectedCount={selectedIds.size}
-                  totalCount={displayedQuestions.length}
-                  isAllSelected={isCurrentPageSelected}
-                  onSelectAll={handleSelectCurrentPage}
-                  selectAllLabel="현재 페이지 선택"
-                  deselectAllLabel="현재 페이지 해제"
-                  onSelectAllPages={handleSelectAllPages}
-                  selectAllPagesLabel="전체 페이지 선택"
-                  isSelectingAllPages={selectingAllPages}
-                  isSelectAllPagesDisabled={allPagesSelectableCount === 0}
-                  onClearSelection={clearSelection}
-                  activeFolder={folders.activeFolder}
-                  onRemoveFromFolder={handleRemoveFromFolder}
-                  extraActions={selectionExtraActions}
-                  itemUnit="문항"
-                  rightSlot={
-                    <div className="flex items-center gap-1.5">
-                      {pendingQuestionsButton}
-                      {viewModeToggle}
-                      {gridToggle}
-                    </div>
-                  }
-                />
-              }
-            />
+          <section className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div
+              ref={folderStickyRef}
+              className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
+            >
+              <FolderSection
+                embedded
+                childFolders={folders.childFolders}
+                activeFolder={folders.activeFolder}
+                dragItemType="question"
+                dragItemIdKey="questionId"
+                itemCountLabel={isGrouped ? "지문" : "문제"}
+                showNewFolder={folders.showNewFolder}
+                newFolderName={folders.newFolderName}
+                onNewFolderNameChange={folders.setNewFolderName}
+                onShowNewFolder={folders.setShowNewFolder}
+                onCreateFolder={folders.handleCreateFolder}
+                onNavigateToFolder={handleNavigateFolder}
+                onRenameFolder={folders.handleRenameFolder}
+                onDeleteFolder={folders.handleDeleteFolder}
+                onDragToFolder={handleDragToFolder}
+                onDragToRoot={handleDragToRoot}
+                breadcrumbPath={folders.breadcrumbPath}
+                onNavigateToRoot={handleNavigateToRoot}
+                useCardInsideFolder={true}
+                rootLabel="전체 문제"
+                enableFolderControls
+                allFolders={folders.collections}
+                storageKey="questions"
+                treatRootAsFolder
+                contextBar={activePassageBar}
+                pageHeader={{
+                  icon: <Database className="h-3.5 w-3.5" />,
+                  parentLabel: "문제 관리",
+                  title: "전체 문제",
+                  totalCount,
+                  itemLabel: isGrouped ? "지문" : "문제",
+                  itemUnit: isGrouped ? "편" : "문항",
+                }}
+              />
+            </div>
 
-            {/* Questions / Passages section */}
-            <div>
+            <div
+              style={{ top: folderStickyHeight }}
+              className="sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90"
+            >
+              {toolbarRow}
+            </div>
+
+            <div className="min-w-0 px-4 pb-3 pt-3 sm:px-5">
               {isGrouped ? (
                 <PassageGroupedView
                   passages={groupedPassages}
@@ -837,7 +944,7 @@ export function QuestionBankClient({
                   }
                 />
               ) : displayedQuestions.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="py-12 text-center">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
                     {folders.activeFolder
@@ -896,7 +1003,7 @@ export function QuestionBankClient({
                 </div>
               )}
             </div>
-          </>
+          </section>
         )}
 
         {/* Pagination — flat mode: hidden when folder active.

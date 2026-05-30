@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
 import { useCallback, useMemo, useState } from "react";
 import {
+  CheckCircle2,
   Columns2,
   FileText,
   Filter,
@@ -12,10 +14,48 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { TypeFilterPopover } from "@/components/workbench/question-type-filter";
 import type { BuilderQuestion, QuestionCollection } from "../types";
+
+const DIFFICULTY_OPTIONS: { value: string; label: string }[] = [
+  { value: "ALL", label: "전체" },
+  { value: "BASIC", label: "기본" },
+  { value: "INTERMEDIATE", label: "중급" },
+  { value: "KILLER", label: "킬러" },
+];
+
+function FilterPill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "inline-flex h-7 cursor-pointer items-center gap-1 rounded-full px-2.5 text-[11.5px] font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-blue-500/40",
+        active
+          ? "bg-blue-600 text-white shadow-sm"
+          : "bg-slate-50 text-slate-600 ring-1 ring-inset ring-slate-200 hover:bg-slate-100 hover:text-slate-900",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
 
 interface QuestionLibraryPanelProps {
   paperItemsCount: number;
@@ -68,7 +108,7 @@ export function QuestionLibraryPanel({
   onClearPaper,
   onShowDetail,
 }: QuestionLibraryPanelProps) {
-  const [gridColumns, setGridColumns] = useState<1 | 2>(2);
+  const [gridColumns, setGridColumns] = useState<1 | 2>(1);
   const [libraryView, setLibraryView] = useState<"questions" | "passages">("questions");
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
   const questionById = useMemo(
@@ -139,7 +179,10 @@ export function QuestionLibraryPanel({
     [onToggleQuestion, questionById],
   );
 
-  const showTypeFilterActive = selectedSubTypes.length > 0;
+  const activeFilterCount =
+    (difficulty !== "ALL" ? 1 : 0) +
+    (approvedOnly ? 1 : 0) +
+    (starredOnly ? 1 : 0);
 
   return (
     <section className="flex min-w-0 flex-col overflow-hidden border-r border-slate-200/80 bg-white">
@@ -162,28 +205,102 @@ export function QuestionLibraryPanel({
       )}
 
       <div className="shrink-0 border-b border-slate-100 px-5 py-3">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="relative min-w-[220px] flex-1 basis-full">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="문제, 지문, 태그로 검색..."
-              className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50/80 pl-10 pr-4 text-[13px] outline-none transition-all placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-            />
-          </div>
-          <button
-            onClick={() => setShowFilters((value) => !value)}
-            className={cn(
-              "flex h-9 items-center gap-1.5 rounded-lg border px-3 text-[12px] font-medium transition-all",
-              showFilters || difficulty !== "ALL" || showTypeFilterActive || approvedOnly || starredOnly
-                ? "border-blue-300 bg-blue-50 text-blue-700 shadow-sm shadow-blue-100"
-                : "border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50",
-            )}
-          >
-            <Filter className="h-3.5 w-3.5" />
-            필터
-          </button>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="문제, 지문, 태그로 검색..."
+            className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50/80 pl-10 pr-4 text-[13px] outline-none transition-all placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+          />
+        </div>
+
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          <TypeFilterPopover
+            currentSubTypes={selectedSubTypes}
+            onApply={setSelectedSubTypes}
+          />
+
+          <Popover open={showFilters} onOpenChange={setShowFilters}>
+            <PopoverTrigger
+              className={cn(
+                "relative flex h-9 items-center gap-1.5 rounded-lg border px-3 text-[12px] font-medium outline-none transition-all",
+                activeFilterCount > 0
+                  ? "border-blue-300 bg-blue-50 text-blue-700"
+                  : "border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50",
+              )}
+            >
+              <Filter className="h-3.5 w-3.5" />
+              필터
+              {activeFilterCount > 0 && (
+                <span className="ml-0.5 inline-flex min-w-[16px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold leading-4 text-white">
+                  {activeFilterCount}
+                </span>
+              )}
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-60 overflow-hidden p-0">
+              <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-slate-800">
+                  <Filter className="h-3.5 w-3.5 text-slate-500" />
+                  난이도 · 상태
+                </span>
+                {activeFilterCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDifficulty("ALL");
+                      setApprovedOnly(false);
+                      setStarredOnly(false);
+                    }}
+                    className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                  >
+                    <X className="h-3 w-3" />
+                    초기화
+                  </button>
+                )}
+              </div>
+              <div className="space-y-3 p-3">
+                <div>
+                  <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">
+                    난이도
+                  </p>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {DIFFICULTY_OPTIONS.map((opt) => (
+                      <FilterPill
+                        key={opt.value}
+                        active={difficulty === opt.value}
+                        onClick={() => setDifficulty(opt.value)}
+                      >
+                        {opt.label}
+                      </FilterPill>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">
+                    상태
+                  </p>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    <FilterPill
+                      active={approvedOnly}
+                      onClick={() => setApprovedOnly((value) => !value)}
+                    >
+                      <CheckCircle2 className="h-3 w-3" />
+                      승인 문제만
+                    </FilterPill>
+                    <FilterPill
+                      active={starredOnly}
+                      onClick={() => setStarredOnly((value) => !value)}
+                    >
+                      <Star className={cn("h-3 w-3", starredOnly && "fill-current")} />
+                      중요
+                    </FilterPill>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
           <div className="flex h-9 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
             <button
               type="button"
@@ -223,14 +340,13 @@ export function QuestionLibraryPanel({
               aria-pressed={gridColumns === 1}
               title="1열 보기"
               className={cn(
-                "flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-semibold transition-colors",
+                "flex h-7 items-center justify-center rounded-md px-2 text-[11px] font-semibold transition-colors",
                 gridColumns === 1
                   ? "bg-white text-blue-700 shadow-sm"
                   : "text-slate-500 hover:bg-white/70 hover:text-slate-700",
               )}
             >
               <List className="h-3.5 w-3.5" />
-              1열
             </button>
             <button
               type="button"
@@ -238,72 +354,21 @@ export function QuestionLibraryPanel({
               aria-pressed={gridColumns === 2}
               title="2열 보기"
               className={cn(
-                "flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-semibold transition-colors",
+                "flex h-7 items-center justify-center rounded-md px-2 text-[11px] font-semibold transition-colors",
                 gridColumns === 2
                   ? "bg-white text-blue-700 shadow-sm"
                   : "text-slate-500 hover:bg-white/70 hover:text-slate-700",
               )}
             >
               <Columns2 className="h-3.5 w-3.5" />
-              2열
             </button>
           </div>
-          <div className="flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5">
+          <div className="ml-auto flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5">
             <FileText className="h-3.5 w-3.5 text-slate-400" />
             <span className="text-[12px] font-semibold text-slate-600">{filteredQuestions.length}</span>
             <span className="text-[11px] text-slate-400">문항</span>
           </div>
         </div>
-
-        {showFilters && (
-          <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-2.5">
-            <TypeFilterPopover
-              currentSubTypes={selectedSubTypes}
-              onApply={setSelectedSubTypes}
-            />
-            <select
-              value={difficulty}
-              onChange={(event) => setDifficulty(event.target.value)}
-              className="h-7 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600"
-            >
-              <option value="ALL">전체 난이도</option>
-              <option value="BASIC">기본</option>
-              <option value="INTERMEDIATE">중급</option>
-              <option value="KILLER">킬러</option>
-            </select>
-            <button
-              onClick={() => setApprovedOnly((value) => !value)}
-              className={cn(
-                "h-7 rounded-md border px-2 text-[11px] font-semibold",
-                approvedOnly ? "border-emerald-300 bg-emerald-50 text-emerald-700" : "border-slate-200 text-slate-500",
-              )}
-            >
-              승인 문제만
-            </button>
-            <button
-              onClick={() => setStarredOnly((value) => !value)}
-              className={cn(
-                "flex h-7 items-center gap-1 rounded-md border px-2 text-[11px] font-semibold",
-                starredOnly ? "border-yellow-300 bg-yellow-50 text-yellow-700" : "border-slate-200 text-slate-500",
-              )}
-            >
-              <Star className={cn("h-3 w-3", starredOnly && "fill-yellow-400")} />
-              중요
-            </button>
-            <button
-              onClick={() => {
-                setDifficulty("ALL");
-                setSelectedSubTypes([]);
-                setApprovedOnly(false);
-                setStarredOnly(false);
-              }}
-              className="ml-auto flex items-center gap-1 text-[11px] font-medium text-blue-600 hover:text-blue-700"
-            >
-              <X className="h-3 w-3" />
-              초기화
-            </button>
-          </div>
-        )}
 
         {collections.length > 0 && (
           <div className="mt-2.5 flex items-center gap-1.5 overflow-x-auto border-t border-slate-100 pt-2.5">
@@ -348,7 +413,7 @@ export function QuestionLibraryPanel({
         ) : libraryView === "passages" ? (
           <PassageGroupedView
             passages={groupedPassages}
-            gridCols={gridColumns === 1 ? 2 : 3}
+            gridCols={gridColumns}
             viewSize="lg"
             selectedIds={selectedQuestionIds}
             setSelectedIds={applySelectedQuestionIds}
@@ -367,7 +432,7 @@ export function QuestionLibraryPanel({
             setExpandedPassageIds={setExpandedPassageIds}
           />
         ) : (
-          <div className={cn("grid gap-3", gridColumns === 2 ? "grid-cols-1 xl:grid-cols-2" : "grid-cols-1")}>
+          <div className={cn("grid gap-3", gridColumns === 2 ? "grid-cols-2" : "grid-cols-1")}>
             {filteredQuestions.map((question, index) => {
               const selected = selectedQuestionIds.has(question.id);
               return (

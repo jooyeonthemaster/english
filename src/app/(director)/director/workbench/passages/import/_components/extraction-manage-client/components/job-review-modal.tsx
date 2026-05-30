@@ -10,7 +10,10 @@ import { useReviewDrawer } from "@/components/layout/review-drawer-context";
 
 import type { M1PassageDraftWithJob } from "../types";
 import type { JobMetaSnapshot } from "../drafts-cache";
-import { DraftCard } from "./draft-card";
+import {
+  DraftCard,
+  type DraftCardStatusBadgeMode,
+} from "./draft-card";
 import { ImagePages, type PageImage } from "./image-carousel";
 
 interface JobReviewModalProps {
@@ -55,6 +58,7 @@ interface JobReviewModalProps {
   /** Highlighted draft id when an external picker controls selection — shows
    *  the active blue stripe on the corresponding card. */
   externalSelectedDraftId?: string | null;
+  statusBadgeMode?: DraftCardStatusBadgeMode;
 }
 
 export function JobReviewModal({
@@ -75,6 +79,7 @@ export function JobReviewModal({
   externalSetSelectedIds,
   onSelectDraftExternal,
   externalSelectedDraftId = null,
+  statusBadgeMode = "review",
 }: JobReviewModalProps) {
   const externallyPicking = typeof onSelectDraftExternal === "function";
   const [pages, setPages] = useState<PageImage[]>([]);
@@ -315,9 +320,16 @@ export function JobReviewModal({
     [modalCheckedIds],
   );
   const hasModalSelection = modalCheckedIds.size > 0;
+  const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
+  const selectAllIndeterminate = modalCheckedIds.size > 0 && !allChecked;
   const anyBulkRunning = bulkActionRunning !== null;
   const isPromoting = bulkActionRunning === "promote";
   const isDeleting = bulkActionRunning === "delete";
+
+  useEffect(() => {
+    if (!selectAllCheckboxRef.current) return;
+    selectAllCheckboxRef.current.indeterminate = selectAllIndeterminate;
+  }, [selectAllIndeterminate]);
 
   function toggleCheck(id: string) {
     setCheckedIds((prev) => {
@@ -450,24 +462,32 @@ export function JobReviewModal({
         {/* Drafts list */}
         <div className="flex min-h-0 flex-1 flex-col bg-[#F8FAFB]">
           <div className="flex shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-4 py-2">
-            <button
-              type="button"
-              onClick={toggleAll}
-              disabled={allIds.length === 0}
-              className="text-[12px] font-medium text-slate-600 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+            <label
+              className={`flex size-7 shrink-0 items-center justify-center ${
+                allIds.length === 0
+                  ? "cursor-not-allowed opacity-50"
+                  : "cursor-pointer"
+              }`}
             >
-              {allChecked && allIds.length > 0 ? "선택 해제" : "전체 선택"}
-            </button>
-            <span className="text-[12px] font-medium text-slate-400">
-              {modalCheckedIds.size}개 선택
-            </span>
+              <input
+                ref={selectAllCheckboxRef}
+                type="checkbox"
+                checked={allChecked}
+                onChange={toggleAll}
+                disabled={allIds.length === 0}
+                aria-label="전체 선택"
+                className="size-4 cursor-pointer rounded border-slate-300 accent-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed"
+              />
+            </label>
             <div className="ml-auto flex shrink-0 items-center gap-2">
               {onPromoteDrafts ? (
                 <button
                   type="button"
                   onClick={() => void handlePromote()}
                   disabled={anyBulkRunning || !hasModalSelection}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="검수완료"
+                  aria-label="검수완료"
+                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md bg-emerald-600 text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isPromoting ? (
                     <Loader2
@@ -480,7 +500,6 @@ export function JobReviewModal({
                       aria-hidden="true"
                     />
                   )}
-                  검수완료
                 </button>
               ) : null}
 
@@ -491,6 +510,7 @@ export function JobReviewModal({
                 onCopy={handleAdd}
                 onMove={handleMove}
                 disabled={anyBulkRunning || !hasModalSelection}
+                compact
               />
 
               {onDeleteDrafts ? (
@@ -498,7 +518,9 @@ export function JobReviewModal({
                   type="button"
                   onClick={() => void handleDelete()}
                   disabled={anyBulkRunning || !hasModalSelection}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="삭제"
+                  aria-label="삭제"
+                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isDeleting ? (
                     <Loader2
@@ -508,7 +530,6 @@ export function JobReviewModal({
                   ) : (
                     <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                   )}
-                  삭제
                 </button>
               ) : null}
             </div>
@@ -543,6 +564,7 @@ export function JobReviewModal({
                     onToggleCheck={() => toggleCheck(draft.id)}
                     bulkDragIds={bulkDragIds}
                     onTitleChange={onRenameDraft}
+                    statusBadgeMode={statusBadgeMode}
                   />
                 ))}
               </div>

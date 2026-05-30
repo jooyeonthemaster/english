@@ -51,10 +51,12 @@ export interface BorderFillSpec {
 // 기본값
 // =============================================================================
 
-// 한컴 정품 폰트. ①~⑳ 원숫자 글리프를 정상 표시한다.
-// (한컴바탕은 환경에 따라 ⓘ 같은 폴백 글리프로 깨지는 케이스 있음.)
-export const DEFAULT_FONT_KR = "함초롬바탕";
-export const DEFAULT_FONT_LATIN = "Times New Roman";
+// 미리보기와 HWPX 다운로드를 동일한 글꼴(맑은 고딕)로 통일한다.
+// 맑은 고딕은 Windows(한글/HWP 가 도는 환경)에 기본 번들되어 있어
+// 사용자가 별도 폰트를 설치하지 않아도 양쪽 결과가 일관된다.
+// 한컴은 이 글꼴을 한국어 이름 "맑은 고딕" 으로 표기하므로 그대로 사용.
+export const DEFAULT_FONT_KR = "맑은 고딕";
+export const DEFAULT_FONT_LATIN = "맑은 고딕";
 
 const NO_BORDER: BorderSpec = { type: "NONE", widthMm: 0.1, color: "#000000" };
 
@@ -88,7 +90,8 @@ export class ShapeRegistry {
       top: NO_BORDER,
       bottom: NO_BORDER,
     });
-    // BorderFill 2: 표 셀 기본 (얇은 검정 테두리 — 한글 표 기본값)
+    // BorderFill 2: 실제 표가 필요할 때 재사용할 수 있는 얇은 검정 테두리.
+    // 레이아웃용 표가 많으므로 미지정 셀은 보더 없음(0)을 기본으로 둔다.
     const thin: BorderSpec = { type: "SOLID", widthMm: 0.12, color: "#000000" };
     this.borderFills.push({
       left: thin,
@@ -215,7 +218,7 @@ export class ShapeRegistry {
   }
 
   borderFillFromCell(border: CellBorders | undefined): number {
-    if (!border) return 2; // 기본 표 셀 테두리
+    if (!border) return 0;
     const def: BorderSpec = NO_BORDER;
     const spec: BorderFillSpec = {
       left: border.left ?? def,

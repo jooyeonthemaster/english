@@ -11,8 +11,6 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
-import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
-import { PassageAnalysisIcon } from "@/components/icons/workflow-icons";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
@@ -149,44 +147,47 @@ export function PassageRegistrationClient({
   // ─── Selected extraction draft (left grid → editor) ───
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
   const [draftRefreshToken, setDraftRefreshToken] = useState(0);
-  const handleSelectDraft = useCallback((draft: M1PassageDraftWithJob) => {
-    if (selectedDraftId === draft.id) {
-      setSelectedDraftId(null);
-      setTitle("");
-      setContent("");
+  const handleSelectDraft = useCallback(
+    (draft: M1PassageDraftWithJob) => {
+      if (selectedDraftId === draft.id) {
+        setSelectedDraftId(null);
+        setTitle("");
+        setContent("");
+        setAnnotations([]);
+        setImageFile(null);
+        setImagePreview(null);
+        setSource("");
+        return;
+      }
+
+      const text =
+        draft.teacherText?.trim() ||
+        draft.restoredText?.trim() ||
+        draft.rawText?.trim() ||
+        "";
+      const draftTitle = draft.title?.trim() || getDraftDisplayTitle(draft);
+      setSelectedDraftId(draft.id);
+      setTitle(draftTitle);
+      setContent(text);
       setAnnotations([]);
       setImageFile(null);
       setImagePreview(null);
-      setSource("");
-      return;
-    }
-
-    const text =
-      draft.teacherText?.trim() ||
-      draft.restoredText?.trim() ||
-      draft.rawText?.trim() ||
-      "";
-    const draftTitle = draft.title?.trim() || getDraftDisplayTitle(draft);
-    setSelectedDraftId(draft.id);
-    setTitle(draftTitle);
-    setContent(text);
-    setAnnotations([]);
-    setImageFile(null);
-    setImagePreview(null);
-    const fileName =
-      draft.job?.displayName?.trim() ||
-      draft.job?.originalFileName?.trim() ||
-      "";
-    if (fileName) setSource(fileName);
-  }, [
-    selectedDraftId,
-    setAnnotations,
-    setContent,
-    setImageFile,
-    setImagePreview,
-    setSource,
-    setTitle,
-  ]);
+      const fileName =
+        draft.job?.displayName?.trim() ||
+        draft.job?.originalFileName?.trim() ||
+        "";
+      if (fileName) setSource(fileName);
+    },
+    [
+      selectedDraftId,
+      setAnnotations,
+      setContent,
+      setImageFile,
+      setImagePreview,
+      setSource,
+      setTitle,
+    ],
+  );
   const handleSelectedDraftSaved = useCallback(() => {
     setSelectedDraftId(null);
     setDraftRefreshToken((v) => v + 1);
@@ -353,92 +354,99 @@ export function PassageRegistrationClient({
       if (drafts.length === 0 || bulkAnalyzing) return;
       setBulkAnalyzing(true);
 
-      const normalizedSchoolId =
-        schoolId && schoolId !== "NONE" ? schoolId : "";
-      const schoolName = schools.find((s) => s.id === normalizedSchoolId)?.name;
-      const combinedPrompt = buildAnalysisPrompt(analysisPrompt, []);
-      const parsedGrade = grade ? parseInt(grade) : undefined;
-      const trimmedUnit = unit.trim();
-      const sharedTags = tags.length > 0 ? tags : undefined;
+      try {
+        const normalizedSchoolId =
+          schoolId && schoolId !== "NONE" ? schoolId : "";
+        const schoolName = schools.find((s) => s.id === normalizedSchoolId)?.name;
+        const combinedPrompt = buildAnalysisPrompt(analysisPrompt, []);
+        const parsedGrade = grade ? parseInt(grade) : undefined;
+        const trimmedUnit = unit.trim();
+        const sharedTags = tags.length > 0 ? tags : undefined;
 
-      const results = await Promise.allSettled(
-        drafts.map(async (draft) => {
-          const text =
-            draft.teacherText?.trim() ||
-            draft.restoredText?.trim() ||
-            draft.rawText?.trim() ||
-            "";
-          if (!text) throw new Error("EMPTY_CONTENT");
+        const results = await Promise.allSettled(
+          drafts.map(async (draft) => {
+            const text =
+              draft.teacherText?.trim() ||
+              draft.restoredText?.trim() ||
+              draft.rawText?.trim() ||
+              "";
+            if (!text) throw new Error("EMPTY_CONTENT");
 
-          const draftTitle =
-            draft.title?.trim() || getDraftDisplayTitle(draft);
-          const fileName =
-            draft.job?.displayName?.trim() ||
-            draft.job?.originalFileName?.trim() ||
-            "";
+            const draftTitle = draft.title?.trim() || getDraftDisplayTitle(draft);
+            const fileName =
+              draft.job?.displayName?.trim() ||
+              draft.job?.originalFileName?.trim() ||
+              "";
 
-          const result = await createWorkbenchPassage({
-            title: draftTitle,
-            content: text,
-            schoolId: normalizedSchoolId || undefined,
-            grade: parsedGrade,
-            semester: semester || undefined,
-            unit: trimmedUnit || undefined,
-            publisher: effectivePublisher || undefined,
-            source: fileName || undefined,
-            tags: sharedTags,
-            sourceDraftId: draft.id,
-          });
-
-          if (!result.success || !result.id) {
-            throw new Error(result.error || "CREATE_FAILED");
-          }
-
-          const queuedItem = {
-            passage: {
-              id: result.id,
+            const result = await createWorkbenchPassage({
               title: draftTitle,
               content: text,
               schoolId: normalizedSchoolId || undefined,
-              schoolName,
               grade: parsedGrade,
               semester: semester || undefined,
               unit: trimmedUnit || undefined,
               publisher: effectivePublisher || undefined,
-              tags: sharedTags,
               source: fileName || undefined,
-            },
-            promptConfig: {
-              customPrompt: combinedPrompt,
-              focusAreas: [],
-              targetLevel: "",
-              generationPlan,
-              analysisTone,
-            },
-          };
+              tags: sharedTags,
+              sourceDraftId: draft.id,
+            });
 
-          enqueueManyPending([queuedItem]);
-          return queuedItem;
-        }),
-      );
+            if (!result.success || !result.id) {
+              throw new Error(result.error || "CREATE_FAILED");
+            }
 
-      const created = results.flatMap((r) =>
-        r.status === "fulfilled" ? [r.value] : [],
-      );
-      const createFailed = results.length - created.length;
-      const queued = await addManyToQueue(created, true);
-      const success = queued.success;
-      const failed = createFailed + queued.failed;
+            const queuedItem = {
+              passage: {
+                id: result.id,
+                title: draftTitle,
+                content: text,
+                schoolId: normalizedSchoolId || undefined,
+                schoolName,
+                grade: parsedGrade,
+                semester: semester || undefined,
+                unit: trimmedUnit || undefined,
+                publisher: effectivePublisher || undefined,
+                tags: sharedTags,
+                source: fileName || undefined,
+              },
+              promptConfig: {
+                customPrompt: combinedPrompt,
+                focusAreas: [],
+                targetLevel: "",
+                generationPlan,
+                analysisTone,
+              },
+            };
 
-      setBulkAnalyzing(false);
-
-      if (success > 0) {
-        toast.success(
-          `${success}개 지문이 등록되었습니다. 백그라운드에서 분석 진행 중 (동시 3개씩).`,
+            enqueueManyPending([queuedItem]);
+            return queuedItem;
+          }),
         );
-      }
-      if (failed > 0) {
-        toast.error(`${failed}개 지문 등록에 실패했습니다.`);
+
+        const created = results.flatMap((r) =>
+          r.status === "fulfilled" ? [r.value] : [],
+        );
+        const createFailed = results.length - created.length;
+        const queued = await addManyToQueue(created, true);
+        const success = queued.success;
+        const failed = createFailed + queued.failed;
+
+        if (success > 0) {
+          toast.success(
+            `${success}개 지문이 등록되었습니다. 백그라운드에서 분석 진행 중 (동시 3개씩).`,
+          );
+        }
+        if (failed > 0) {
+          toast.error(`${failed}개 지문 등록에 실패했습니다.`);
+        }
+      } catch (err) {
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "일괄 분석 등록 중 오류가 발생했습니다.",
+        );
+      } finally {
+        setBulkAnalyzing(false);
       }
     },
     [
@@ -470,17 +478,8 @@ export function PassageRegistrationClient({
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col min-h-[calc(100vh-64px)]">
-        {/* ─── Main Content Area ─── */}
-        <div className="flex-1 overflow-y-auto bg-[#F4F6F9]">
-          <div className="border-b border-slate-200/80 bg-white px-6 py-3">
-            <WorkflowPageTitle
-              icon={PassageAnalysisIcon}
-              title="지문 분석"
-              description="추출된 자료나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
-            />
-          </div>
-
+      <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+        <main className="flex w-full min-w-0 flex-col gap-4">
           {/* ─── Collapsible Form Section ─── */}
           <FormSectionContainer
             academyId={academyId}
@@ -591,7 +590,7 @@ export function PassageRegistrationClient({
             retryAnalysis={retryAnalysis}
             removeFromQueue={removeFromQueue}
           />
-        </div>
+        </main>
 
         {/* ─── Analysis Modal ─── */}
         {modalPassage && (

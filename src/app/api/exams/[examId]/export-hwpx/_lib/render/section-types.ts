@@ -35,7 +35,7 @@ function labelPara(label: string): ParagraphNode {
   };
 }
 
-function bodyParas(content: string, font?: "kr" | "latin"): ParagraphNode[] {
+function bodyParas(content: string): ParagraphNode[] {
   const lines = content.split("\n");
   return lines.map<ParagraphNode>((line, idx) => {
     const trimmed = line.trim();
@@ -306,15 +306,17 @@ export function renderDirection(
       }),
     );
   }
+  headerRuns.push(
+    ...parseFormattedToRuns(section.content, {
+      size: compact ? SIZE.bodyCompact : SIZE.body,
+      bold: true,
+    }),
+  );
   return [
-    { kind: "p", style: { spaceBefore: 80, spaceAfter: 40 }, runs: headerRuns },
     {
       kind: "p",
-      style: { align: "JUSTIFY", spaceAfter: 100, lineSpacingPct: 160 },
-      runs: parseFormattedToRuns(section.content, {
-        size: compact ? SIZE.bodyCompact : SIZE.body,
-        bold: true,
-      }),
+      style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 160 },
+      runs: headerRuns,
     },
   ];
 }

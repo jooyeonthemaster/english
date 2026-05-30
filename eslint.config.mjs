@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -14,6 +15,7 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "node_modules/**",
     "next-env.d.ts",
+    ".vercel/**",
 
     // Vendored/generated artifacts. They are consumed by the app but should
     // not determine source lint health.
@@ -26,6 +28,9 @@ const eslintConfig = defineConfig([
     "remotion/**",
   ]),
   {
+    plugins: {
+      "react-hooks": reactHooks,
+    },
     rules: {
       // Baseline legacy debt as warnings so `npm run lint` can be used as a
       // merge gate again. Tighten these back to errors path-by-path as files

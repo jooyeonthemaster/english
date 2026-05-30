@@ -1,20 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
+import { ClipboardList, Grid2X2, Grid3X3, List, RefreshCw } from "lucide-react";
 import type { QueuedPassage } from "@/hooks/use-passage-queue";
+import { useTaskQueue } from "@/components/workbench/task-queue";
 import type { PassageCollection } from "../types";
 import {
-  handleCreateFolder as createFolder,
-  handleRenameFolder as renameFolder,
-  handleDeleteFolder as deleteFolder,
   handleAddToFolder as addToFolder,
   handleMoveToFolder as moveToFolder,
 } from "../folder-actions";
 import { QueueEmpty } from "./queue-empty";
-import { QueueToolbar } from "./queue-toolbar";
-import { QueueFilterRow } from "./queue-filter-row";
 import { QueueSelectionBar } from "./queue-selection-bar";
-import { QueueGrid } from "./queue-grid";
+import { QueueGrid, type QueueGridCols } from "./queue-grid";
 
 interface QueueSectionContainerProps {
   queue: QueuedPassage[];
@@ -73,122 +71,154 @@ interface QueueSectionContainerProps {
   removeFromQueue: (id: string) => void;
 }
 
-export function QueueSectionContainer(p: QueueSectionContainerProps) {
+function HeaderViewToggleButton({
+  active,
+  middle,
+  label,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  middle?: boolean;
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="px-6 py-5">
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      aria-pressed={active}
+      className={
+        "p-2 cursor-pointer transition-colors " +
+        (middle ? "border-x border-slate-200 " : "") +
+        (active
+          ? "bg-slate-800 text-white"
+          : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
+      }
+    >
+      {children}
+    </button>
+  );
+}
+
+export function QueueSectionContainer(p: QueueSectionContainerProps) {
+  const [gridCols, setGridCols] = useState<QueueGridCols>("grid3");
+  const { triggerRefresh } = useTaskQueue();
+
+  return (
+    <div className="min-w-0">
       {p.queue.length === 0 ? (
         <QueueEmpty />
       ) : (
-        <>
-          {/* ─── Search + Filter bar ─── */}
-          <QueueToolbar
-            queueLength={p.queue.length}
-            filteredLength={p.filteredQueue.length}
-            activeCount={p.activeCount}
-            filterSearch={p.filterSearch}
-            setFilterSearch={p.setFilterSearch}
-            showFilters={p.showFilters}
-            setShowFilters={p.setShowFilters}
-            hasActiveFilters={p.hasActiveFilters}
-            activeFilterCount={[p.filterSchool, p.filterGrade, p.filterSemester, p.filterPublisher].filter(Boolean).length}
-            collections={p.collections}
-            filterCollection={p.filterCollection}
-            setFilterCollection={p.setFilterCollection}
-            editingFolderId={p.editingFolderId}
-            setEditingFolderId={p.setEditingFolderId}
-            editingFolderName={p.editingFolderName}
-            setEditingFolderName={p.setEditingFolderName}
-            onRenameFolder={(id) =>
-              renameFolder({
-                id,
-                editingFolderName: p.editingFolderName,
-                setCollections: p.setCollections,
-                setEditingFolderId: p.setEditingFolderId,
-              })
-            }
-            onDeleteFolder={(id) =>
-              deleteFolder({
-                id,
-                filterCollection: p.filterCollection,
-                setCollections: p.setCollections,
-                setFilterCollection: p.setFilterCollection,
-              })
-            }
-            showNewFolder={p.showNewFolder}
-            setShowNewFolder={p.setShowNewFolder}
-            newFolderName={p.newFolderName}
-            setNewFolderName={p.setNewFolderName}
-            onCreateFolder={() =>
-              createFolder({
-                newFolderName: p.newFolderName,
-                setCollections: p.setCollections,
-                setNewFolderName: p.setNewFolderName,
-                setShowNewFolder: p.setShowNewFolder,
-              })
-            }
-          />
+        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          {/* ─── Section header ─── */}
+          <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                <ClipboardList className="size-4" aria-hidden="true" />
+              </span>
+              <h3 className="truncate text-[13px] font-bold text-slate-900">
+                지문 목록
+              </h3>
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-[11px] font-medium text-slate-300"
+              >
+                ·
+              </span>
+              <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
+                {p.queue.length}개
+              </span>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <span className="shrink-0 text-[11px] font-medium text-slate-400">
+                최신순으로 표시됩니다
+              </span>
+              <button
+                type="button"
+                onClick={() => triggerRefresh()}
+                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                aria-label="작업 목록 새로고침"
+              >
+                <RefreshCw className="size-4" aria-hidden="true" />
+              </button>
+              <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
+                <HeaderViewToggleButton
+                  active={gridCols === "grid3"}
+                  label="3열 보기"
+                  onClick={() => setGridCols("grid3")}
+                >
+                  <Grid3X3 className="size-4" />
+                </HeaderViewToggleButton>
+                <HeaderViewToggleButton
+                  active={gridCols === "grid2"}
+                  label="2열 보기"
+                  middle
+                  onClick={() => setGridCols("grid2")}
+                >
+                  <Grid2X2 className="size-4" />
+                </HeaderViewToggleButton>
+                <HeaderViewToggleButton
+                  active={gridCols === "list"}
+                  label="목록 보기"
+                  onClick={() => setGridCols("list")}
+                >
+                  <List className="size-4" />
+                </HeaderViewToggleButton>
+              </div>
+            </div>
+          </div>
 
-          {/* ─── Expanded filter row ─── */}
-          {p.showFilters && (
-            <QueueFilterRow
-              filterSchool={p.filterSchool}
-              setFilterSchool={p.setFilterSchool}
-              filterGrade={p.filterGrade}
-              setFilterGrade={p.setFilterGrade}
-              filterSemester={p.filterSemester}
-              setFilterSemester={p.setFilterSemester}
-              filterPublisher={p.filterPublisher}
-              setFilterPublisher={p.setFilterPublisher}
-              filterOptions={p.filterOptions}
-              hasActiveFilters={p.hasActiveFilters}
-              onResetFilters={() => { p.setFilterSearch(""); p.setFilterSchool(""); p.setFilterGrade(""); p.setFilterSemester(""); p.setFilterPublisher(""); }}
+          {/* ─── Body ─── */}
+          <div className="px-4 py-3">
+            {/* ─── Selection toolbar ─── */}
+            {p.selectedIds.size > 0 && (
+              <QueueSelectionBar
+                selectedCount={p.selectedIds.size}
+                filteredLength={p.filteredQueue.length}
+                onSelectAll={p.selectAll}
+                onClearSelection={p.clearSelection}
+                collections={p.collections}
+                activeCollectionId={p.filterCollection || null}
+                onAddToFolder={(collectionId) =>
+                  addToFolder({
+                    collectionId,
+                    selectedIds: p.selectedIds,
+                    setAddingToFolder: p.setAddingToFolder,
+                    setCollections: p.setCollections,
+                    setCollectionPassageIds: p.setCollectionPassageIds,
+                    clearSelection: p.clearSelection,
+                  })
+                }
+                onMoveToFolder={(collectionId) =>
+                  moveToFolder({
+                    collectionId,
+                    selectedIds: p.selectedIds,
+                    collections: p.collections,
+                    collectionPassageIds: p.collectionPassageIds,
+                    setAddingToFolder: p.setAddingToFolder,
+                    setCollections: p.setCollections,
+                    setCollectionPassageIds: p.setCollectionPassageIds,
+                    clearSelection: p.clearSelection,
+                  })
+                }
+              />
+            )}
+
+            {/* ─── Card grid ─── */}
+            <QueueGrid
+              filteredQueue={p.filteredQueue}
+              selectedIds={p.selectedIds}
+              onToggleSelect={p.toggleSelect}
+              onViewDetail={p.setModalPassageId}
+              onRetry={p.retryAnalysis}
+              onRemove={p.removeFromQueue}
+              gridCols={gridCols}
             />
-          )}
-
-          {/* ─── Selection toolbar ─── */}
-          {p.selectedIds.size > 0 && (
-            <QueueSelectionBar
-              selectedCount={p.selectedIds.size}
-              filteredLength={p.filteredQueue.length}
-              onSelectAll={p.selectAll}
-              onClearSelection={p.clearSelection}
-              collections={p.collections}
-              activeCollectionId={p.filterCollection || null}
-              onAddToFolder={(collectionId) =>
-                addToFolder({
-                  collectionId,
-                  selectedIds: p.selectedIds,
-                  setAddingToFolder: p.setAddingToFolder,
-                  setCollections: p.setCollections,
-                  setCollectionPassageIds: p.setCollectionPassageIds,
-                  clearSelection: p.clearSelection,
-                })
-              }
-              onMoveToFolder={(collectionId) =>
-                moveToFolder({
-                  collectionId,
-                  selectedIds: p.selectedIds,
-                  collections: p.collections,
-                  collectionPassageIds: p.collectionPassageIds,
-                  setAddingToFolder: p.setAddingToFolder,
-                  setCollections: p.setCollections,
-                  setCollectionPassageIds: p.setCollectionPassageIds,
-                  clearSelection: p.clearSelection,
-                })
-              }
-            />
-          )}
-
-          {/* ─── Card grid ─── */}
-          <QueueGrid
-            filteredQueue={p.filteredQueue}
-            selectedIds={p.selectedIds}
-            onToggleSelect={p.toggleSelect}
-            onViewDetail={p.setModalPassageId}
-            onRetry={p.retryAnalysis}
-            onRemove={p.removeFromQueue}
-          />
-        </>
+          </div>
+        </section>
       )}
     </div>
   );

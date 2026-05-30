@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { Check, Loader2, Trash2 } from "lucide-react";
+import { Check, Loader2, FolderX } from "lucide-react";
 
 interface SelectionToolbarProps {
   selectedCount: number;
@@ -116,10 +116,12 @@ export function SelectionToolbar({
         {activeFolder && onRemoveFromFolder && (
           <button
             onClick={onRemoveFromFolder}
-            className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50"
+            title="폴더에서 삭제"
+            aria-label="폴더에서 삭제"
+            className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            폴더에서 제거
+            <FolderX className="w-3.5 h-3.5" />
+            폴더에서 삭제
           </button>
         )}
       </div>

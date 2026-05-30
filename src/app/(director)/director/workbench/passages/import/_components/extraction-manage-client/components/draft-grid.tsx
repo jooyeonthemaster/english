@@ -6,7 +6,7 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { Grid2X2, Grid3X3, List } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
-import { DraftCard } from "./draft-card";
+import { DraftCard, type DraftCardStatusBadgeMode } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
@@ -95,6 +95,7 @@ interface DraftGridProps {
   checkedIds: Set<string>;
   gridCols: GridCols;
   onGridColsChange: (cols: GridCols) => void;
+  grid3Disabled?: boolean;
   onSelectDraft: (id: string) => void;
   onToggleCheck: (id: string) => void;
   onToggleGroupCheck: (ids: string[], select: boolean) => void;
@@ -145,6 +146,12 @@ interface DraftGridProps {
     itemId: string | string[],
     copy: boolean,
   ) => void;
+
+  /** When true, hide the grid/list view toggle in the selection toolbar.
+   *  Used by the 지문 등록(create) page embed where only the grid view is
+   *  supported. */
+  gridOnly?: boolean;
+  statusBadgeMode?: DraftCardStatusBadgeMode;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
@@ -164,6 +171,7 @@ export function DraftGrid({
   checkedIds,
   gridCols,
   onGridColsChange,
+  grid3Disabled = false,
   onSelectDraft,
   onToggleCheck,
   onToggleGroupCheck,
@@ -182,6 +190,8 @@ export function DraftGrid({
   selectionToolbar,
   stickyTop = 0,
   onDropDraftsIntoCurrentFolder,
+  gridOnly = false,
+  statusBadgeMode = "review",
 }: DraftGridProps) {
   // The per-job card row was lifted to the page header above the folder
   // section so it stays visible regardless of folder navigation. Clicking
@@ -232,45 +242,62 @@ export function DraftGrid({
     }
   }, [allExpanded, draftGroups]);
   return (
-    <section className="min-w-0 pb-1">
-      {/* Header + (optional) selection toolbar stick to the top of the page
-          scroll container as one block, offset below the job-list + folder
-          headers that are pinned above. Negative margin + matching padding
-          extend the sticky background flush to the scroll container edges so
-          drafts scrolling underneath don't bleed through at the sides. */}
+    <section className="relative min-w-0 pb-1">
+      {/* Header + (optional) selection toolbar stick to the active scroll
+          container as one block. Negative margin + matching padding extend
+          the opaque background flush to the container edges so drafts scrolling
+          underneath don't bleed through at the sides. */}
       <div
         style={{ top: stickyTop }}
-        className="sticky z-20 -mx-4 bg-slate-50/95 px-4 pt-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/85 sm:-mx-5 sm:px-5"
+        className="sticky z-30 -mx-4 bg-slate-50 px-4 py-2 shadow-[0_1px_0_rgba(148,163,184,0.22)] sm:-mx-5 sm:px-5"
       >
-        <div className="mb-2 overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
-          <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
+          <div
+            className={
+              "flex min-h-9 flex-wrap items-center gap-y-1.5 " +
+              (gridOnly ? "gap-x-0" : "gap-x-2")
+            }
+          >
             {selectionToolbar ? selectionToolbar : null}
-            <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
+            <div
+              className={
+                "ml-auto flex min-w-0 flex-wrap items-center justify-end " +
+                (gridOnly ? "gap-1" : "gap-2")
+              }
+            >
               {filtersToolbar}
-              <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                <ViewToggleButton
-                  active={gridCols === "grid3"}
-                  label="3열 보기"
-                  onClick={() => onGridColsChange("grid3")}
-                >
-                  <Grid3X3 className="size-4" />
-                </ViewToggleButton>
-                <ViewToggleButton
-                  active={gridCols === "grid2"}
-                  label="2열 보기"
-                  onClick={() => onGridColsChange("grid2")}
-                  middle
-                >
-                  <Grid2X2 className="size-4" />
-                </ViewToggleButton>
-                <ViewToggleButton
-                  active={gridCols === "list"}
-                  label="목록 보기"
-                  onClick={() => onGridColsChange("list")}
-                >
-                  <List className="size-4" />
-                </ViewToggleButton>
-              </div>
+              {!gridOnly ? (
+                <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
+                  <ViewToggleButton
+                    active={gridCols === "grid3"}
+                    label="3열 보기"
+                    title={
+                      grid3Disabled
+                        ? "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다"
+                        : undefined
+                    }
+                    disabled={grid3Disabled}
+                    onClick={() => onGridColsChange("grid3")}
+                  >
+                    <Grid3X3 className="size-4" />
+                  </ViewToggleButton>
+                  <ViewToggleButton
+                    active={gridCols === "grid2"}
+                    label="2열 보기"
+                    onClick={() => onGridColsChange("grid2")}
+                    middle
+                  >
+                    <Grid2X2 className="size-4" />
+                  </ViewToggleButton>
+                  <ViewToggleButton
+                    active={gridCols === "list"}
+                    label="목록 보기"
+                    onClick={() => onGridColsChange("list")}
+                  >
+                    <List className="size-4" />
+                  </ViewToggleButton>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -318,9 +345,7 @@ export function DraftGrid({
                     : "no-drafts"
             }
             onResetFilters={onResetFilters}
-            onDropDrafts={
-              inFolder ? onDropDraftsIntoCurrentFolder : undefined
-            }
+            onDropDrafts={inFolder ? onDropDraftsIntoCurrentFolder : undefined}
           />
         ) : showGroupHeaders ? (
           <div className="pb-2">
@@ -337,114 +362,116 @@ export function DraftGrid({
               </button>
             </div>
             <div className={`grid items-start gap-4 ${COL_CLASS[gridCols]}`}>
-            {draftGroups.map((group) => {
-              const isUnlinked = group.key === "__unlinked__";
-              // Per-job absolute index lookup (passed from parent so the
-              // number is stable regardless of UI filter/sort).
-              const absoluteIndex = isUnlinked
-                ? 0
-                : (groupIndexBySourceMaterialId.get(group.key) ?? 0);
-              const firstJob = group.drafts[0]?.job;
-              const jobName =
-                (firstJob?.displayName?.trim() && firstJob.displayName) ||
-                firstJob?.originalFileName ||
-                "";
-              const derivedLabel = isUnlinked
-                ? "출처 미연결"
-                : `${jobName ? jobName + " " : ""}시험지 ${absoluteIndex || "?"}`;
-              // Teacher-set customLabel takes precedence over the derived
-              // label. (Auto-set `title` is intentionally not consulted —
-              // extraction AI fills it with unreliable guesses.)
-              const sourceMaterial = group.drafts.find(
-                (d) => d.sourceMaterial,
-              )?.sourceMaterial;
-              const label = sourceMaterial?.customLabel?.trim()
-                ? sourceMaterial.customLabel
-                : derivedLabel;
-              const expanded = expandedGroups.has(group.key);
-              const groupIds = group.drafts.map((d) => d.id);
-              const allChecked =
-                groupIds.length > 0 &&
-                groupIds.every((id) => checkedIds.has(id));
-              const someChecked = groupIds.some((id) => checkedIds.has(id));
-              return (
-                <GroupSection
-                  key={group.key}
-                  label={label}
-                  derivedLabel={derivedLabel}
-                  count={group.drafts.length}
-                  tone={isUnlinked ? "amber" : "blue"}
-                  expanded={expanded}
-                  onToggle={() => toggleGroup(group.key)}
-                  allChecked={allChecked}
-                  someChecked={someChecked}
-                  onToggleAllInGroup={(select) =>
-                    onToggleGroupCheck(groupIds, select)
-                  }
-                  sourceMaterialId={sourceMaterial?.id ?? null}
-                  dragIds={groupIds}
-                  onRenameSourceMaterial={onRenameSourceMaterial}
-                >
-                  <div
-                    className={`grid gap-3 ${
-                      gridCols === "list"
-                        ? COL_CLASS.list
-                        : "grid-cols-1"
-                    }`}
+              {draftGroups.map((group) => {
+                const isUnlinked = group.key === "__unlinked__";
+                // Per-job absolute index lookup (passed from parent so the
+                // number is stable regardless of UI filter/sort).
+                const absoluteIndex = isUnlinked
+                  ? 0
+                  : (groupIndexBySourceMaterialId.get(group.key) ?? 0);
+                const firstJob = group.drafts[0]?.job;
+                const jobName =
+                  (firstJob?.displayName?.trim() && firstJob.displayName) ||
+                  firstJob?.originalFileName ||
+                  "";
+                const derivedLabel = isUnlinked
+                  ? "출처 미연결"
+                  : `${jobName ? jobName + " " : ""}시험지 ${absoluteIndex || "?"}`;
+                // Teacher-set customLabel takes precedence over the derived
+                // label. (Auto-set `title` is intentionally not consulted —
+                // extraction AI fills it with unreliable guesses.)
+                const sourceMaterial = group.drafts.find(
+                  (d) => d.sourceMaterial,
+                )?.sourceMaterial;
+                const label = sourceMaterial?.customLabel?.trim()
+                  ? sourceMaterial.customLabel
+                  : derivedLabel;
+                const expanded = expandedGroups.has(group.key);
+                const groupIds = group.drafts.map((d) => d.id);
+                const allChecked =
+                  groupIds.length > 0 &&
+                  groupIds.every((id) => checkedIds.has(id));
+                const someChecked = groupIds.some((id) => checkedIds.has(id));
+                return (
+                  <GroupSection
+                    key={group.key}
+                    label={label}
+                    derivedLabel={derivedLabel}
+                    count={group.drafts.length}
+                    tone={isUnlinked ? "amber" : "blue"}
+                    expanded={expanded}
+                    onToggle={() => toggleGroup(group.key)}
+                    allChecked={allChecked}
+                    someChecked={someChecked}
+                    onToggleAllInGroup={(select) =>
+                      onToggleGroupCheck(groupIds, select)
+                    }
+                    sourceMaterialId={sourceMaterial?.id ?? null}
+                    dragIds={groupIds}
+                    onRenameSourceMaterial={onRenameSourceMaterial}
                   >
-                    {group.drafts.map((draft, index) => (
-                      <DraftCard
-                        key={draft.id}
-                        draft={draft}
-                        index={index}
-                        selected={false}
-                        active={selectedDraftId === draft.id}
-                        recentlyViewed={
-                          selectedDraftId !== draft.id &&
-                          lastViewedDraftId === draft.id
-                        }
-                        checked={checkedIds.has(draft.id)}
-                        onClick={() => onSelectDraft(draft.id)}
-                        onToggleCheck={() => onToggleCheck(draft.id)}
-                        onTitleChange={onRenameDraft}
-                      />
-                    ))}
-                  </div>
-                </GroupSection>
-              );
-            })}
+                    <div
+                      className={`grid gap-3 ${
+                        gridCols === "list" ? COL_CLASS.list : "grid-cols-1"
+                      }`}
+                    >
+                      {group.drafts.map((draft, index) => (
+                        <DraftCard
+                          key={draft.id}
+                          draft={draft}
+                          index={index}
+                          selected={false}
+                          active={selectedDraftId === draft.id}
+                          recentlyViewed={
+                            selectedDraftId !== draft.id &&
+                            lastViewedDraftId === draft.id
+                          }
+                          checked={checkedIds.has(draft.id)}
+                          onClick={() => onSelectDraft(draft.id)}
+                          onToggleCheck={() => onToggleCheck(draft.id)}
+                          onTitleChange={onRenameDraft}
+                          statusBadgeMode={statusBadgeMode}
+                        />
+                      ))}
+                    </div>
+                  </GroupSection>
+                );
+              })}
             </div>
           </div>
-        ) : (() => {
-          const flatGrid = (
-            <div className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}>
-              {drafts.map((draft, index) => (
-                <DraftCard
-                  key={draft.id}
-                  draft={draft}
-                  index={index}
-                  selected={false}
-                  active={selectedDraftId === draft.id}
-                  recentlyViewed={
-                    selectedDraftId !== draft.id &&
-                    lastViewedDraftId === draft.id
-                  }
-                  checked={checkedIds.has(draft.id)}
-                  onClick={() => onSelectDraft(draft.id)}
-                  onToggleCheck={() => onToggleCheck(draft.id)}
-                  onTitleChange={onRenameDraft}
-                />
-              ))}
-            </div>
-          );
-          return inFolder && onDropDraftsIntoCurrentFolder ? (
-            <FolderDropZone onDrop={onDropDraftsIntoCurrentFolder}>
-              {flatGrid}
-            </FolderDropZone>
-          ) : (
-            flatGrid
-          );
-        })()}
+        ) : (
+          (() => {
+            const flatGrid = (
+              <div className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}>
+                {drafts.map((draft, index) => (
+                  <DraftCard
+                    key={draft.id}
+                    draft={draft}
+                    index={index}
+                    selected={false}
+                    active={selectedDraftId === draft.id}
+                    recentlyViewed={
+                      selectedDraftId !== draft.id &&
+                      lastViewedDraftId === draft.id
+                    }
+                    checked={checkedIds.has(draft.id)}
+                    onClick={() => onSelectDraft(draft.id)}
+                    onToggleCheck={() => onToggleCheck(draft.id)}
+                    onTitleChange={onRenameDraft}
+                    statusBadgeMode={statusBadgeMode}
+                  />
+                ))}
+              </div>
+            );
+            return inFolder && onDropDraftsIntoCurrentFolder ? (
+              <FolderDropZone onDrop={onDropDraftsIntoCurrentFolder}>
+                {flatGrid}
+              </FolderDropZone>
+            ) : (
+              flatGrid
+            );
+          })()
+        )}
       </div>
     </section>
   );

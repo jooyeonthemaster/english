@@ -29,6 +29,18 @@ import {
   optionOrdinalLabel,
   splitSentenceInsertGivenBlock,
 } from "@/components/exams/paper-builder/option-display";
+import {
+  shouldForceSourcePassage,
+  shouldRenderSourcePassageInsideQuestion,
+} from "@/components/exams/paper-builder/passage-policy";
+import {
+  isSummaryCompleteMc,
+  splitSummaryCompleteMcQuestionText,
+} from "@/components/exams/paper-builder/summary-complete-mc-layout";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 /*
@@ -179,6 +191,15 @@ function printablePassageTitle(item: BuilderItemResolved): string {
   return savedTitle === sourceTitle ? "" : savedTitle;
 }
 
+function firstQuestionLineForHeader(questionText: string, subType: string | null | undefined): string {
+  const { beforeText } = splitSentenceInsertGivenBlock(questionText, subType);
+  const sourceText = beforeText || questionText;
+  return sourceText
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .find(Boolean) || "";
+}
+
 function dataUrlToImage(dataUrl: string | null | undefined):
   | { buffer: Buffer; type: "png" | "jpg" | "gif" | "bmp"; width: number; height: number }
   | null {
@@ -312,17 +333,19 @@ function buildPage1Header(
     rows: [
       new TableRow({
         children: [
+          // 상단 여백 축소(5차): 미리보기 헤더가 items-start(TOP) 이므로 BOTTOM→TOP 으로
+          // 바꿔 제목/학생정보가 위로 붙게 한다. 하단 셀 마진도 140→60 으로 축소.
           new TableCell({
             borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
-            verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 60, bottom: 140, left: 0, right: 120 },
+            verticalAlign: VerticalAlign.TOP,
+            margins: { top: 0, bottom: 60, left: 0, right: 120 },
             width: { size: 6800, type: WidthType.DXA },
             children: [leftTable],
           }),
           new TableCell({
             borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
-            verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 60, bottom: 140, left: 120, right: 0 },
+            verticalAlign: VerticalAlign.TOP,
+            margins: { top: 0, bottom: 60, left: 120, right: 0 },
             width: { size: 2900, type: WidthType.DXA },
             children: rightCellChildren,
           }),
@@ -337,7 +360,7 @@ function buildPage1Header(
   if (instructions) {
     result.push(
       new Paragraph({
-        spacing: { before: 120, after: 160 },
+        spacing: { before: 60, after: 120 },
         children: [
           new TextRun({
             text: instructions,
@@ -371,7 +394,7 @@ function buildInfoBlock(opts: {
   const rows = rowsData.map(
     (row) =>
       new TableRow({
-        height: { value: 280, rule: HeightRule.ATLEAST },
+        height: { value: 220, rule: HeightRule.ATLEAST },
         children: [
           new TableCell({
             borders: {
@@ -380,7 +403,7 @@ function buildInfoBlock(opts: {
             },
             width: { size: 30, type: WidthType.PERCENTAGE },
             verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 20, bottom: 40, left: 0, right: 80 },
+            margins: { top: 10, bottom: 30, left: 0, right: 80 },
             children: [
               new Paragraph({
                 spacing: { after: 0 },
@@ -402,7 +425,7 @@ function buildInfoBlock(opts: {
             },
             width: { size: 70, type: WidthType.PERCENTAGE },
             verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 20, bottom: 40, left: 0, right: 0 },
+            margins: { top: 10, bottom: 30, left: 0, right: 0 },
             children: [
               new Paragraph({
                 alignment: AlignmentType.RIGHT,
@@ -582,6 +605,18 @@ function buildQuestionBlock(
 
   const qNumSize = compact ? SIZE_QNUM_COMPACT : SIZE_QNUM;
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const summaryMc = isSummaryCompleteMc(subType);
+  const inlineSourcePassage =
+    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc;
+  const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
+  const summaryPartsForHeader = summaryMc
+    ? splitSummaryCompleteMcQuestionText(questionText)
+    : null;
+  const genericHeaderQuestionText = !summaryPartsForHeader
+    ? firstQuestionLineForHeader(questionText, subType)
+    : "";
+  const headerQuestionText =
+    summaryPartsForHeader?.stem || genericHeaderQuestionText;
 
   // 번호 + 메타 + 본문 한 단락 (번호 굵게, 메타 작게, 본문은 새 줄에서 시작)
   const headerRuns: TextRun[] = [
@@ -606,6 +641,16 @@ function buildQuestionBlock(
   }
 
   // 첫 단락에 번호 + 메타. 그 다음 단락에 본문(있는 경우).
+  if (headerQuestionText) {
+    headerRuns.push(
+      ...parseFormattedText(headerQuestionText, {
+        font: KR_FONT,
+        size: bodySize,
+        bold: true,
+      }),
+    );
+  }
+
   result.push(
     new Paragraph({
       spacing: { before: 80, after: questionText ? 40 : 80 },
@@ -615,6 +660,76 @@ function buildQuestionBlock(
   );
 
   if (questionText) {
+    if (summaryMc) {
+      const { summary } = summaryPartsForHeader ?? splitSummaryCompleteMcQuestionText(questionText);
+      const maskedSummary = formatSummaryCompleteMcSummaryForDisplay(
+        summary,
+        readSummaryBlankAnswersFromQuestionLike(
+          item.sourceQuestion,
+          item.options,
+          item.correctAnswer ?? item.sourceQuestion.correctAnswer,
+        ),
+      );
+      if (passageContent) {
+        result.push(
+          ...buildPassage({
+            passageTitle: "",
+            passageContent,
+            passageStyle: layout.passageStyle ?? "boxed",
+            showPassageTitle: false,
+            compact,
+            usesSentenceInsertMarkers: false,
+          }),
+        );
+      }
+      result.push(
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 20, after: 50 },
+          children: [
+            new TextRun({
+              text: "\u2193",
+              font: KR_FONT,
+              size: bodySize,
+              bold: true,
+              color: COLOR.gray,
+            }),
+          ],
+        }),
+      );
+      if (maskedSummary) {
+        result.push(
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            layout: TableLayoutType.FIXED,
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({
+                    borders: thinBox(COLOR.lightGray, 4),
+                    shading: { fill: "F8FAFC" },
+                    margins: { top: 100, bottom: 100, left: 140, right: 140 },
+                    width: { size: 100, type: WidthType.PERCENTAGE },
+                    children: [
+                      new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 0, line: 290 },
+                        children: parseFormattedText(maskedSummary, {
+                          font: FONT,
+                          size: bodySize,
+                          bold: true,
+                        }),
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+            ],
+          }),
+          new Paragraph({ spacing: { after: 90 } }),
+        );
+      }
+    } else {
     const { beforeText, givenText } = splitSentenceInsertGivenBlock(questionText, subType);
     const questionParagraphs: Array<{ text: string; boxed: boolean }> = [];
 
@@ -635,17 +750,31 @@ function buildQuestionBlock(
       });
     }
 
-    questionParagraphs.forEach(({ text, boxed }, idx) => {
+    let skippedHeaderQuestionLine = false;
+    const bodyQuestionParagraphs = questionParagraphs.filter(({ text, boxed }) => {
+      if (
+        !skippedHeaderQuestionLine &&
+        headerQuestionText &&
+        !boxed &&
+        text.trim() === headerQuestionText.trim()
+      ) {
+        skippedHeaderQuestionLine = true;
+        return false;
+      }
+      return true;
+    });
+
+    bodyQuestionParagraphs.forEach(({ text, boxed }, idx) => {
       const trimmed = text.trim();
       result.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
           spacing: {
             before: boxed ? 50 : 0,
-            after: idx === questionParagraphs.length - 1 ? 100 : boxed ? 70 : 30,
+            after: idx === bodyQuestionParagraphs.length - 1 ? 100 : boxed ? 70 : 30,
             line: 290,
           },
-          keepNext: idx === questionParagraphs.length - 1 && options.length > 0,
+          keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
           border: boxed
             ? {
                 top: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
@@ -661,6 +790,20 @@ function buildQuestionBlock(
         }),
       );
     });
+
+    if (inlineSourcePassage && passageContent) {
+      result.push(
+        ...buildPassage({
+          passageTitle: "",
+          passageContent,
+          passageStyle: layout.passageStyle ?? "boxed",
+          showPassageTitle: false,
+          compact,
+          usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
+        }),
+      );
+    }
+    }
   }
 
   // 옵션 (preview 와 동일하게 원문자 번호 + 유형별 선택지 표시)
@@ -1164,8 +1307,16 @@ function appendQuestionGroups(
   const groups = groupItems(items);
   for (const group of groups) {
     const first = group.items[0];
-    const includePassage = first.includePassage !== false;
     const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
+    const includePassage =
+      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
+      (first.includePassage !== false ||
+        shouldForceSourcePassage({
+          subType: first.sourceQuestion.subType,
+          questionText: first.questionText || first.sourceQuestion.questionText,
+          structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
+          passage: { content: passageContent },
+        }));
     if (includePassage && passageContent) {
       const passageBlocks = buildPassage({
         passageTitle: printablePassageTitle(first),
@@ -1204,10 +1355,16 @@ export function buildBuilderExamDocument(opts: {
   const paperSize = layout.paperSize === "B4" ? "B4" : "A4";
   const pageSize = DOCX_PAPER_SIZES[paperSize];
 
-  // 페이지 마진: compact 살짝 작게
-  const margin = compact
-    ? { top: 560, bottom: 720, left: 720, right: 720 }
-    : { top: 720, bottom: 840, left: 900, right: 900 };
+  // 페이지 마진 (5차 — 전체 여백 축소): 미리보기 a4-paper-page.tsx 의 px 패딩을
+  // 가상 A4 스케일(760px=210mm, mm/px=0.276316)로 환산해 미리보기·HWPX 와 일치시킨다.
+  //   comfortable px-[34px] py-[28px] → L/R 9.395mm, T/B 7.737mm.
+  //   compact px-[28px] py-[24px] → L/R 7.737mm, T/B 6.632mm.
+  const MM_PER_PX = 210 / 760; // 0.276316
+  const lrPx = compact ? 28 : 34;
+  const tbPx = compact ? 24 : 28;
+  const lrDxa = mmToDxa(lrPx * MM_PER_PX);
+  const tbDxa = mmToDxa(tbPx * MM_PER_PX);
+  const margin = { top: tbDxa, bottom: tbDxa, left: lrDxa, right: lrDxa };
 
   // ---- Section 1: 1페이지 상단 헤더 (단일 컬럼, 연속 섹션) ----
   const section1Children: DocChild[] = buildPage1Header(header, title, compact);

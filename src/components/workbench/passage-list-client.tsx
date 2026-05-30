@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -11,12 +11,17 @@ import {
   FileText,
   Plus,
   Folder,
+  FolderX,
   BookMarked,
   Layers3,
   Loader2,
   Trash2,
   X,
 } from "lucide-react";
+import type {
+  PassageSortOrder,
+  PassageGridCols,
+} from "./passage-list-client/filters-toolbar";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +34,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PassageImportDialog } from "@/components/workbench/passage-import-dialog";
 import { PassageStudyNotePrintDialog } from "@/components/workbench/passage-study-note-print-dialog";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
@@ -47,7 +51,6 @@ import {
 import type { CollectionItem } from "./shared/types";
 import { Pagination } from "./shared/pagination";
 import { FolderSection } from "./shared/folder-section";
-import { SelectionToolbar } from "./shared/selection-toolbar";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 
 // Hooks
@@ -147,6 +150,63 @@ const folderActions = {
   removeFromCollection: removePassagesFromCollection,
 };
 
+function useMeasuredHeight(enabled: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      setHeight(Math.ceil(el.getBoundingClientRect().height));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [enabled]);
+
+  return [ref, height] as const;
+}
+
+function SelectAllCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+  title,
+  ariaLabel,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  disabled: boolean;
+  onChange: () => void;
+  title: string;
+  ariaLabel: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
+      className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  );
+}
+
 // ─── Main Component ──────────────────────────────────────
 export function PassageListClient({
   academyId,
@@ -160,8 +220,9 @@ export function PassageListClient({
 }: PassageListProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
-  const [importOpen, setImportOpen] = useState(false);
-  const [viewType, setViewType] = useState<"grid" | "list">("grid");
+  const [gridCols, setGridCols] = useState<PassageGridCols>("grid3");
+  const [sortOrder, setSortOrder] = useState<PassageSortOrder>("newest");
+  const [hideDuplicates, setHideDuplicates] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
   const [studyNoteOpen, setStudyNoteOpen] = useState(false);
   const [dupSummary, setDupSummary] = useState<DupSummary | null>(null);
@@ -246,14 +307,58 @@ export function PassageListClient({
   });
   const { filterByActiveFolder } = folder;
 
-  // Filter passages by active folder and hide optimistically-removed rows.
-  const displayedPassages = useMemo(
-    () =>
-      filterByActiveFolder(passagesData.passages).filter(
-        (p) => !removedIds.has(p.id),
-      ),
-    [filterByActiveFolder, passagesData.passages, removedIds],
-  );
+  // Non-first members of each duplicate group, used when 중복 숨기기 is on.
+  const duplicateMembersToHide = useMemo<Set<string>>(() => {
+    const hidden = new Set<string>();
+    if (!visibleDupSummary) return hidden;
+    for (const group of visibleDupSummary.groups) {
+      const sorted = [...group.items].sort(
+        (a, b) =>
+          new Date(b.createdAt as any).getTime() -
+          new Date(a.createdAt as any).getTime(),
+      );
+      for (let i = 1; i < sorted.length; i += 1) hidden.add(sorted[i].id);
+    }
+    return hidden;
+  }, [visibleDupSummary]);
+
+  // Filter passages by active folder, hide optimistically-removed rows, then
+  // sort. When 중복 숨기기 is on we also drop non-first members of each
+  // duplicate group so the user sees one representative per group.
+  const displayedPassages = useMemo(() => {
+    const base = filterByActiveFolder(passagesData.passages).filter(
+      (p) =>
+        !removedIds.has(p.id) &&
+        !(hideDuplicates && duplicateMembersToHide.has(p.id)),
+    );
+    const sorted = [...base];
+    sorted.sort((a, b) => {
+      switch (sortOrder) {
+        case "newest":
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        case "oldest":
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        case "name_asc":
+          return (a.title || "").localeCompare(b.title || "", "ko");
+        case "name_desc":
+          return (b.title || "").localeCompare(a.title || "", "ko");
+        default:
+          return 0;
+      }
+    });
+    return sorted;
+  }, [
+    filterByActiveFolder,
+    passagesData.passages,
+    removedIds,
+    hideDuplicates,
+    duplicateMembersToHide,
+    sortOrder,
+  ]);
 
   const passageIds = useMemo(
     () => displayedPassages.map((p) => p.id),
@@ -344,70 +449,35 @@ export function PassageListClient({
     [updateFilter],
   );
 
-  // ─── Filter + view-toggle bar (rendered inside FolderSection.toolbar) ───
-  const filtersToolbar = (
-    <>
-      <PassageFiltersToolbar
-        filters={filters}
-        schools={schools}
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        onSearchSubmit={() => handleSearch(searchValue)}
-        updateFilter={updateFilter}
-        viewType={viewType}
-        setViewType={setViewType}
-        onImportClick={() => setImportOpen(true)}
-      />
+  const togglePageMode = useCallback(() => {
+    setPageMode((mode) => (mode === "duplicates" ? "list" : "duplicates"));
+  }, []);
 
-      <button
-        type="button"
-        onClick={() =>
-          setPageMode((mode) =>
-            mode === "duplicates" ? "list" : "duplicates",
-          )
-        }
-        disabled={dupLoading || (visibleDupSummary?.groupCount ?? 0) === 0}
-        className={
-          "flex h-7 items-center gap-1 rounded-md border px-2.5 text-[11.5px] font-medium transition-all " +
-          (pageMode === "duplicates"
-            ? "border-blue-300 bg-blue-50 text-blue-700"
-            : (visibleDupSummary?.groupCount ?? 0) === 0 && !dupLoading
-              ? "cursor-not-allowed border-slate-200 text-slate-300"
-              : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50")
-        }
-        title={
-          dupLoading
-            ? "중복 자료 분석 중"
-            : (visibleDupSummary?.groupCount ?? 0) === 0
-              ? "중복 자료가 없습니다"
-              : pageMode === "duplicates"
-                ? "목록으로 돌아가기"
-                : "중복 그룹 모아보기"
-        }
-        aria-pressed={pageMode === "duplicates"}
-      >
-        {dupLoading ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        ) : pageMode === "duplicates" ? (
-          <CopyMinus className="h-3.5 w-3.5" />
-        ) : (
-          <Copy className="h-3.5 w-3.5" />
-        )}
-        <span>{pageMode === "duplicates" ? "목록 보기" : "중복 모아보기"}</span>
-        {visibleDupSummary && visibleDupSummary.groupCount > 0 ? (
-          <span
-            className={
-              "rounded px-1 text-[10px] font-semibold tabular-nums " +
-              (pageMode === "duplicates"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-slate-100 text-slate-500")
-            }
-          >
-            {visibleDupSummary.groupCount}
-          </span>
-        ) : null}
-      </button>
-    </>
+  const toggleHideDuplicates = useCallback(() => {
+    setHideDuplicates((v) => !v);
+  }, []);
+
+  // ─── Combined filters + view toggle bar (rendered in stickyFooter) ───
+  const filtersToolbar = (
+    <PassageFiltersToolbar
+      filters={filters}
+      schools={schools}
+      searchValue={searchValue}
+      onSearchChange={setSearchValue}
+      onSearchSubmit={() => handleSearch(searchValue)}
+      updateFilter={updateFilter}
+      sortOrder={sortOrder}
+      onSortOrderChange={setSortOrder}
+      pageMode={pageMode}
+      onTogglePageMode={togglePageMode}
+      hideDuplicates={hideDuplicates}
+      onToggleHideDuplicates={toggleHideDuplicates}
+      duplicateGroupCount={visibleDupSummary?.groupCount ?? 0}
+      totalDuplicateCount={visibleDupSummary?.totalDuplicateCount ?? 0}
+      duplicatesLoading={dupLoading}
+      gridCols={gridCols}
+      setGridCols={setGridCols}
+    />
   );
 
   // ─── "Add to folder" extra action for SelectionToolbar ───
@@ -512,6 +582,61 @@ export function PassageListClient({
     ? passagesData.passages.find((x) => x.id === modalPassageId)
     : null;
 
+  const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
+
+  const toolbarRow = (
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
+      <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+        <div className="flex items-center gap-2">
+          <SelectAllCheckbox
+            checked={
+              selection.isAllSelected && selection.selectedIds.size > 0
+            }
+            indeterminate={
+              selection.selectedIds.size > 0 && !selection.isAllSelected
+            }
+            disabled={displayedPassages.length === 0}
+            onChange={() =>
+              selection.selectedIds.size > 0
+                ? selection.clearSelection()
+                : selection.selectAll()
+            }
+            title={`${selection.selectedIds.size}개 선택`}
+            ariaLabel={
+              selection.selectedIds.size > 0 ? "선택 해제" : "전체 선택"
+            }
+          />
+          <div
+            className={
+              "flex items-center gap-3 " +
+              (selection.selectedIds.size > 0
+                ? ""
+                : "pointer-events-none opacity-50")
+            }
+            aria-disabled={selection.selectedIds.size === 0}
+          >
+            {selectionActions}
+            {folder.activeFolder ? (
+              <button
+                type="button"
+                onClick={onRemoveFromFolder}
+                title="폴더에서 삭제"
+                aria-label="폴더에서 삭제"
+                className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+              >
+                <FolderX className="h-3.5 w-3.5" />
+                폴더에서 삭제
+              </button>
+            ) : null}
+          </div>
+        </div>
+        <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+          {filtersToolbar}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
       {/* ─── Deep-link filter badges (sourceMaterial / collection) ─── */}
@@ -522,7 +647,7 @@ export function PassageListClient({
       />
 
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-2 pb-4">
         {passagesData.passages.length === 0 ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -540,56 +665,58 @@ export function PassageListClient({
             </div>
           </div>
         ) : (
-          <>
-            {/* Folders section — selection toolbar embedded inside so it
-              inherits the sticky pinning. */}
-            <FolderSection
-              childFolders={folder.childFolders}
-              activeFolder={folder.activeFolder}
-              dragItemType="passage"
-              dragItemIdKey="passageId"
-              itemCountLabel="지문"
-              showNewFolder={folder.showNewFolder}
-              newFolderName={folder.newFolderName}
-              onNewFolderNameChange={folder.setNewFolderName}
-              onShowNewFolder={folder.setShowNewFolder}
-              onCreateFolder={folder.handleCreateFolder}
-              onNavigateToFolder={onFolderClick}
-              onRenameFolder={folder.handleRenameFolder}
-              onDeleteFolder={folder.handleDeleteFolder}
-              onDragToFolder={onDragToFolder}
-              onDragToRoot={onDragToRoot}
-              breadcrumbPath={folder.breadcrumbPath}
-              onNavigateToRoot={() => {
-                folder.setActiveFolder(null);
-                selection.clearSelection();
-              }}
-              useCardInsideFolder={true}
-              rootLabel="전체 지문"
-              toolbar={filtersToolbar}
-              pageHeader={{
-                icon: <FileText className="h-3.5 w-3.5" />,
-                title: "지문 관리",
-                totalCount,
-                itemLabel: "지문",
-                itemUnit: "편",
-              }}
-              selectionBar={
-                <SelectionToolbar
-                  embedded
-                  selectedCount={selection.selectedIds.size}
-                  totalCount={displayedPassages.length}
-                  isAllSelected={selection.isAllSelected}
-                  onSelectAll={selection.selectAll}
-                  onClearSelection={selection.clearSelection}
-                  activeFolder={folder.activeFolder}
-                  onRemoveFromFolder={onRemoveFromFolder}
-                  extraActions={selectionActions}
-                  itemUnit="편"
-                />
-              }
-            />
+          <section className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div
+              ref={folderStickyRef}
+              className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
+            >
+              <FolderSection
+                embedded
+                childFolders={folder.childFolders}
+                activeFolder={folder.activeFolder}
+                dragItemType="passage"
+                dragItemIdKey="passageId"
+                itemCountLabel="지문"
+                showNewFolder={folder.showNewFolder}
+                newFolderName={folder.newFolderName}
+                onNewFolderNameChange={folder.setNewFolderName}
+                onShowNewFolder={folder.setShowNewFolder}
+                onCreateFolder={folder.handleCreateFolder}
+                onNavigateToFolder={onFolderClick}
+                onRenameFolder={folder.handleRenameFolder}
+                onDeleteFolder={folder.handleDeleteFolder}
+                onDragToFolder={onDragToFolder}
+                onDragToRoot={onDragToRoot}
+                breadcrumbPath={folder.breadcrumbPath}
+                onNavigateToRoot={() => {
+                  folder.setActiveFolder(null);
+                  selection.clearSelection();
+                }}
+                useCardInsideFolder={true}
+                rootLabel="전체 지문"
+                enableFolderControls
+                allFolders={folder.collections}
+                storageKey="passages"
+                treatRootAsFolder
+                pageHeader={{
+                  icon: <FileText className="h-3.5 w-3.5" />,
+                  parentLabel: "지문 관리",
+                  title: "전체 지문",
+                  totalCount,
+                  itemLabel: "지문",
+                  itemUnit: "편",
+                }}
+              />
+            </div>
 
+            <div
+              style={{ top: folderStickyHeight }}
+              className="sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90"
+            >
+              {toolbarRow}
+            </div>
+
+            <div className="min-w-0 px-4 pb-3 pt-3 sm:px-5">
             {pageMode === "duplicates" ? (
               <div>
                 <div className="mb-3 flex items-center justify-between">
@@ -709,14 +836,6 @@ export function PassageListClient({
               </div>
             ) : (
               <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-[13px] font-semibold text-slate-600">
-                    지문
-                    <span className="ml-1.5 text-[11px] font-normal text-slate-400">
-                      {displayedPassages.length}편
-                    </span>
-                  </h3>
-                </div>
                 {displayedPassages.length === 0 ? (
                   <div className="py-12 text-center">
                     <FileText className="mx-auto mb-3 h-10 w-10 text-slate-200" />
@@ -732,8 +851,25 @@ export function PassageListClient({
                       </p>
                     )}
                   </div>
-                ) : viewType === "grid" ? (
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
+                ) : gridCols === "list" ? (
+                  <div className="space-y-1.5">
+                    {displayedPassages.map((p) => (
+                      <PassageFileRow
+                        key={p.id}
+                        passage={p}
+                        selected={selection.selectedIds.has(p.id)}
+                        onToggleSelect={selection.toggleSelect}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div
+                    className={
+                      gridCols === "grid2"
+                        ? "grid grid-cols-1 gap-3 sm:grid-cols-2"
+                        : "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                    }
+                  >
                     {displayedPassages.map((p) => (
                       <PassageFileCard
                         key={p.id}
@@ -745,21 +881,11 @@ export function PassageListClient({
                       />
                     ))}
                   </div>
-                ) : (
-                  <div className="space-y-1.5">
-                    {displayedPassages.map((p) => (
-                      <PassageFileRow
-                        key={p.id}
-                        passage={p}
-                        selected={selection.selectedIds.has(p.id)}
-                        onToggleSelect={selection.toggleSelect}
-                      />
-                    ))}
-                  </div>
                 )}
               </div>
             )}
-          </>
+            </div>
+          </section>
         )}
 
         {/* Pagination */}
@@ -772,7 +898,6 @@ export function PassageListClient({
         )}
       </div>
 
-      <PassageImportDialog open={importOpen} onOpenChange={setImportOpen} />
       <PassageStudyNotePrintDialog
         open={studyNoteOpen}
         onOpenChange={setStudyNoteOpen}
