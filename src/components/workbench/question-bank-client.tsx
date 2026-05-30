@@ -100,6 +100,7 @@ interface QuestionItem {
     wrongOptionExplanations: string | null;
   } | null;
   _count: { examLinks: number };
+  examLinks?: { exam: { id: string; title: string } }[];
 }
 
 interface GroupedPassage {

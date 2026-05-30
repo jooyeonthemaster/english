@@ -10,6 +10,18 @@ import {
   optionDisplayTextForSubtype,
   splitSentenceInsertGivenBlock,
 } from "./option-display";
+import {
+  isSummaryCompleteMc,
+  splitSummaryCompleteMcQuestionText,
+  summaryCompleteMcPassageForItem,
+  summaryCompleteMcSummaryForItem,
+} from "./summary-complete-mc-layout";
+import {
+  isInlineSourcePassageSubtype,
+  isStructuredAtomicSubtype,
+  questionStemAndBody,
+  structuredSegments,
+} from "./question-body-layout";
 import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type {
   OptionItem,
@@ -19,17 +31,20 @@ import type {
   PaperPage,
   RenderFragment,
   RenderItemPart,
+  StructRowStyle,
 } from "./types";
 
 // 줄당 문자 폭 보정 계수. 미리보기/다운로드 글꼴을 맑은 고딕으로 통일하면서
 // 조정했다. 맑은 고딕의 라틴 글리프가 Pretendard보다 약간 넓어 한 줄에 들어가는
 // 글자수가 살짝 줄어들므로, 줄바꿈 과소예측을 막기 위해 계수를 소폭 낮춘다.
 // (양쪽이 같은 글꼴을 쓰므로 정확한 페이지 분할 일치는 요구되지 않음.)
-const LINE_WIDTH_FUDGE = 1.05;
+const LINE_WIDTH_FUDGE = 0.99;
 const MIN_QUESTION_START_LINES = 8;
 const MIN_PASSAGE_START_LINES = 4;
 const BOXED_PASSAGE_HORIZONTAL_INSET = 28;
-const PAGE_BOTTOM_GUARD = 70;
+// 칸 하단 안전 여백. 모든 본문이 줄 단위로 쪼개지므로 추정 오차가 작아
+// 여백을 줄여 내용이 footer 근처까지 채워지도록 한다(잘림은 줄 단위 분할로 방지).
+const PAGE_BOTTOM_GUARD = 44;
 const OPTION_BLOCK_TOP_GAP = 6;
 const OPTION_ROW_GAP = 4;
 
@@ -183,6 +198,180 @@ export function questionMetaHeight(settings: PaginationSettings): number {
   return settings.showQuestionMeta ? 18 : 16;
 }
 
+// --- 구조화 본문(지문 박스/요약 박스/순서 단락 등) 높이 추정 ------------------
+// a4-paper-page.tsx 의 실제 렌더 박스 치수(px-2.5 py-2 border, space-y-2, ↓)를
+// 모델링한다. 살짝 보수적으로 잡아 칸 경계에서 잘리지 않도록 한다.
+const BOX_VERTICAL_CHROME = 18; // py-2(16) + border(2)
+const STRUCT_BOX_CHROME = 18; // 박스(지문/요약/given) 1개당 상하 테두리+패딩
+const BOX_TEXT_INSET = 24; // px-2.5(20) + border(2) + 여유
+const STRUCTURE_GAP = 8; // space-y-2
+const HEADER_BODY_GAP = 8; // 헤더(지시문)과 본문 사이 간격
+const ARROW_BLOCK_HEIGHT = 16; // ↓ 라인
+const GIVEN_BOX_CHROME = 18; // SENTENCE_INSERT [given] 박스 여백
+// 문항 1개당 추정에 잡히지 않는 렌더 여백 합(part py-0.5 + 헤더 mb-1 + 본문 mt-1 등).
+// 여러 문항이 한 칸에 쌓일 때 누적 오차로 칸 경계를 넘지 않도록 보정한다.
+const ITEM_RENDER_OVERHEAD = 12;
+
+function boxLineHeight(settings: PaginationSettings): number {
+  const compact = settings.density === "compact";
+  const fontSize = compact ? 10.5 : 11.5;
+  return fontSize * (compact ? 1.52 : 1.58);
+}
+
+function boxedTextHeight(text: string, settings: PaginationSettings): number {
+  if (!text.trim()) return 0;
+  const compact = settings.density === "compact";
+  const fontSize = compact ? 10.5 : 11.5;
+  const { columnWidth } = pageMetrics(settings, 0);
+  const lines = estimateTextLines(text, Math.max(80, columnWidth - BOX_TEXT_INSET), fontSize);
+  return BOX_VERTICAL_CHROME + lines * boxLineHeight(settings);
+}
+
+function questionBodyAfterStem(item: PaperItem): string {
+  const normalized = normalizeQuestionText(item.questionText || "");
+  const blocks = normalized.split(/\n{2,}/);
+  return blocks.slice(1).join("\n\n").trim();
+}
+
+// 구조화 유형(요약문/순서/주제·요지·제목·내용일치)의 헤더(지시문) 아래
+// 본문 영역 높이. 헤더(번호+지시문)는 별도 question-meta 높이로 계산한다.
+export function estimateStructuredBodyHeight(
+  item: PaperItem,
+  settings: PaginationSettings,
+): number {
+  const subType = item.sourceQuestion.subType;
+
+  if (isSummaryCompleteMc(subType)) {
+    const passage = summaryCompleteMcPassageForItem(item);
+    const { summary: rawSummary } = splitSummaryCompleteMcQuestionText(item.questionText);
+    const summary = summaryCompleteMcSummaryForItem(item, rawSummary);
+    const blocks: number[] = [];
+    if (passage) blocks.push(boxedTextHeight(passage, settings));
+    blocks.push(ARROW_BLOCK_HEIGHT);
+    if (summary) blocks.push(boxedTextHeight(summary, settings));
+    return (
+      HEADER_BODY_GAP +
+      blocks.reduce((sum, h) => sum + h, 0) +
+      STRUCTURE_GAP * Math.max(0, blocks.length - 1)
+    );
+  }
+
+  if (isInlineSourcePassageSubtype(subType)) {
+    const passage = normalizePassageText(
+      item.passageContent || item.sourceQuestion.passage?.content || "",
+    );
+    const bodyAfterStem = questionBodyAfterStem(item);
+    let height = HEADER_BODY_GAP;
+    if (bodyAfterStem) {
+      const { columnWidth } = pageMetrics(settings, 0);
+      const fontSize = settings.density === "compact" ? 10.5 : 11.5;
+      height +=
+        estimateTextLines(bodyAfterStem, columnWidth, fontSize) * questionLineHeight(settings) +
+        STRUCTURE_GAP;
+    }
+    if (passage) height += boxedTextHeight(passage, settings);
+    return height;
+  }
+
+  // SENTENCE_ORDER: [given] 박스 + (A)(B)(C) 단락(비박스) + 기타.
+  const bodyText = questionBodyAfterStem(item);
+  const { columnWidth } = pageMetrics(settings, 0);
+  const fontSize = settings.density === "compact" ? 10.5 : 11.5;
+  let height =
+    HEADER_BODY_GAP + estimateTextLines(bodyText, columnWidth, fontSize) * questionLineHeight(settings);
+  if (/\[(?:주어진\s*문장|given)\]/i.test(bodyText)) {
+    height += GIVEN_BOX_CHROME;
+  }
+  return height;
+}
+
+// 구조화 본문을 줄 단위 flow 블록으로 분해한다(박스/단락이 칸 경계에서 쪼개지도록).
+function boxTextToLines(text: string, settings: PaginationSettings): string[] {
+  const compact = settings.density === "compact";
+  const fontSize = compact ? 10.5 : 11.5;
+  const { columnWidth } = pageMetrics(settings, 0);
+  const lines = textToLines(text, Math.max(80, columnWidth - BOX_TEXT_INSET), fontSize);
+  return lines.length > 0 ? lines : [""];
+}
+
+function columnTextToLines(text: string, settings: PaginationSettings): string[] {
+  const lines = questionToLines(text, settings);
+  return lines.length > 0 ? lines : [""];
+}
+
+function buildStructLineBlocks(
+  item: PaperItem,
+  group: PaperGroup,
+  settings: PaginationSettings,
+): FlowBlock[] {
+  const boxLineH = boxLineHeight(settings);
+  const textLineH = questionLineHeight(settings);
+  const blocks: FlowBlock[] = [];
+
+  structuredSegments(item).forEach((seg, segIndex) => {
+    if (seg.kind === "arrow") {
+      const segChrome = STRUCTURE_GAP + ARROW_BLOCK_HEIGHT;
+      blocks.push({
+        kind: "struct-line",
+        group,
+        item,
+        segIndex,
+        style: "arrow",
+        line: "",
+        isSegStart: true,
+        isSegEnd: true,
+        lineHeight: 0,
+        segChrome,
+        height: segChrome,
+      });
+      return;
+    }
+
+    let lines: string[];
+    let style: StructRowStyle;
+    let lineHeight: number;
+    let segChrome: number;
+    let paraLabel: string | undefined;
+
+    if (seg.kind === "box") {
+      lines = boxTextToLines(seg.text, settings);
+      style = seg.boxStyle;
+      lineHeight = boxLineH;
+      segChrome = STRUCTURE_GAP + STRUCT_BOX_CHROME;
+    } else if (seg.kind === "para") {
+      lines = columnTextToLines(seg.text, settings);
+      style = "para";
+      lineHeight = textLineH;
+      segChrome = STRUCTURE_GAP;
+      paraLabel = seg.label;
+    } else {
+      lines = columnTextToLines(seg.text, settings);
+      style = "text";
+      lineHeight = textLineH;
+      segChrome = STRUCTURE_GAP;
+    }
+
+    lines.forEach((line, lineIndex) => {
+      blocks.push({
+        kind: "struct-line",
+        group,
+        item,
+        segIndex,
+        style,
+        paraLabel,
+        line,
+        isSegStart: lineIndex === 0,
+        isSegEnd: lineIndex === lines.length - 1,
+        lineHeight,
+        segChrome,
+        height: lineHeight + (lineIndex === 0 ? segChrome : 0),
+      });
+    });
+  });
+
+  return blocks;
+}
+
 export function passageChromeHeight(
   group: PaperGroup,
   settings: PaginationSettings,
@@ -222,23 +411,33 @@ export function estimatePassageHeight(group: PaperGroup, settings: PaginationSet
   return passageChromeHeight(group, settings, includeTitle) + lines.length * passageLineHeight(settings);
 }
 
-export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
-  const renderedQuestionText = formatSentenceInsertPassageMarkers(
-    item.questionText,
-    item.sourceQuestion.subType,
-  );
-  const lines = questionToLines(renderedQuestionText, settings);
-  const { givenText } = splitSentenceInsertGivenBlock(
-    renderedQuestionText,
-    item.sourceQuestion.subType,
-  );
+// 헤더(번호 + 지시문) 높이. 지시문은 항상 통째로 헤더에 렌더되므로
+// stem 의 줄 수만큼 높이를 잡는다(본문/구조화 박스는 별도 계산).
+function estimateStemHeight(item: PaperItem, settings: PaginationSettings): number {
+  const { stem } = questionStemAndBody(item);
+  const stemRendered = formatSentenceInsertPassageMarkers(stem, item.sourceQuestion.subType);
+  const stemLines = questionToLines(stemRendered, settings);
   return (
     questionMetaHeight(settings) +
-    lines.length * questionLineHeight(settings) +
-    (givenText ? 10 : 0) +
-    6
+    Math.max(1, stemLines.length) * questionLineHeight(settings)
   );
 }
+
+export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
+  const subType = item.sourceQuestion.subType;
+  let height = estimateStemHeight(item, settings) + ITEM_RENDER_OVERHEAD;
+  if (isStructuredAtomicSubtype(subType)) {
+    height += estimateStructuredBodyHeight(item, settings);
+  } else {
+    const { body } = questionStemAndBody(item);
+    const bodyRendered = formatSentenceInsertPassageMarkers(body, subType);
+    height += questionToLines(bodyRendered, settings).length * questionLineHeight(settings);
+    const { givenText } = splitSentenceInsertGivenBlock(bodyRendered, subType);
+    if (givenText) height += GIVEN_BOX_CHROME;
+  }
+  return height;
+}
+
 
 export function estimateOptionBlockHeight(
   option: OptionItem,
@@ -293,6 +492,20 @@ type FlowBlock =
       height: number;
     }
   | { kind: "question-line"; group: PaperGroup; item: PaperItem; line: string; lineIndex: number; totalLines: number; height: number }
+  | {
+      kind: "struct-line";
+      group: PaperGroup;
+      item: PaperItem;
+      segIndex: number;
+      style: StructRowStyle;
+      paraLabel?: string;
+      line: string;
+      isSegStart: boolean;
+      isSegEnd: boolean;
+      lineHeight: number;
+      segChrome: number;
+      height: number;
+    }
   | { kind: "option"; group: PaperGroup; item: PaperItem; option: OptionItem; index: number; height: number }
   | { kind: "objective-answer"; group: PaperGroup; item: PaperItem; height: number }
   | { kind: "answer"; group: PaperGroup; item: PaperItem; height: number }
@@ -361,6 +574,9 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
   }
 
   function currentCapacity() {
+    // 강제 2문제/페이지 모드: 칸 용량을 무한으로 둬 자동 분할·오버플로 advance 를
+    // 모두 비활성화하고, 그룹 경계에서만 칸을 넘긴다(아래 루프).
+    if (settings.forceTwoPerPage) return Number.POSITIVE_INFINITY;
     return pageMetrics(settings, pageIndex).capacity;
   }
 
@@ -406,6 +622,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       questionRenderedLines: [],
       questionStartLineIndex: 0,
       questionTotalLines: 0,
+      structRows: [],
       options: [],
       isStart: isFreshStart,
       isContinuation: !isFreshStart,
@@ -442,6 +659,28 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     if (block.kind === "passage-atom") return cost;
 
     if (block.kind === "custom") return cost;
+
+    if (block.kind === "struct-line") {
+      const lastStructPart = sameFragment
+        ? lastFrag!.parts[lastFrag!.parts.length - 1]
+        : undefined;
+      const sameStructPart =
+        !!lastStructPart && lastStructPart.source.localId === block.item.localId;
+      let structCost = block.lineHeight;
+      if (!sameFragment) {
+        structCost += col.length > 0 ? GROUP_GAP : 0;
+      } else if (!sameStructPart) {
+        const hasPassageOrParts =
+          lastFrag!.parts.length > 0 || lastFrag!.passageRenderedLines.length > 0;
+        if (hasPassageOrParts) structCost += ITEM_GAP;
+      }
+      // 박스/단락 세그먼트가 현재 part 에서 처음 등장하면 박스 여백을 더한다
+      // (칸 경계에서 이어질 때 새 박스의 테두리/패딩 반영).
+      const segInPart =
+        sameStructPart && lastStructPart!.structRows.some((row) => row.segIndex === block.segIndex);
+      if (!segInPart) structCost += block.segChrome;
+      return structCost;
+    }
 
     const item = block.item;
     const lastPart = sameFragment ? lastFrag!.parts[lastFrag!.parts.length - 1] : undefined;
@@ -551,39 +790,51 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     }
 
     for (const item of group.items) {
-      const renderedQuestionText = formatSentenceInsertPassageMarkers(
-        item.questionText,
-        item.sourceQuestion.subType,
-      );
-      const questionLines = questionToLines(renderedQuestionText, settings);
-      const { givenText } = splitSentenceInsertGivenBlock(
-        renderedQuestionText,
-        item.sourceQuestion.subType,
-      );
+      const subType = item.sourceQuestion.subType;
+      const { stem, body } = questionStemAndBody(item);
       const lineH = questionLineHeight(settings);
+
+      const stemRendered = formatSentenceInsertPassageMarkers(stem, subType);
+      const stemLineCount = Math.max(1, questionToLines(stemRendered, settings).length);
+
+      const structured = isStructuredAtomicSubtype(subType);
+      const bodyRendered = structured ? "" : formatSentenceInsertPassageMarkers(body, subType);
+      const bodyLines = structured ? [] : questionToLines(bodyRendered, settings);
+      const givenText = structured
+        ? ""
+        : splitSentenceInsertGivenBlock(bodyRendered, subType).givenText;
+      const structBlocks = structured ? buildStructLineBlocks(item, group, settings) : [];
+
+      // 헤더(번호 + 지시문)는 항상 통째로 렌더 → stem 줄 수만큼 높이를 잡는다.
+      // 본문(평문 지문 / 구조화 박스)은 별도 줄 블록으로 흘려보내 칸 경계에서 쪼갠다.
+      const metaHeight =
+        ITEM_RENDER_OVERHEAD +
+        questionMetaHeight(settings) +
+        stemLineCount * lineH +
+        (structured ? 0 : givenText ? GIVEN_BOX_CHROME : 0);
+
       blocks.push({
         kind: "question-meta",
         group,
         item,
-        firstLine: questionLines[0] ?? null,
-        totalLines: questionLines.length,
-        height:
-          questionMetaHeight(settings) +
-          (questionLines.length > 0 ? lineH : 0) +
-          (givenText ? 10 : 0),
+        // firstLine 은 더 이상 헤더 표시에 쓰지 않는다(지시문은 item 에서 직접 렌더).
+        firstLine: null,
+        // 고아(orphan) 방지 계산용 — 지시문 + 본문 줄 수 기준.
+        totalLines: stemLineCount + bodyLines.length + structBlocks.length,
+        height: metaHeight,
       });
-      questionLines.slice(1).forEach((line, offset) => {
-        const index = offset + 1;
+      bodyLines.forEach((line, index) => {
         blocks.push({
           kind: "question-line",
           group,
           item,
           line,
           lineIndex: index,
-          totalLines: questionLines.length,
+          totalLines: bodyLines.length,
           height: lineH,
         });
       });
+      structBlocks.forEach((structBlock) => blocks.push(structBlock));
       item.options.forEach((option, index) => {
         blocks.push({
           kind: "option",
@@ -618,6 +869,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
   }
 
   let isFirstBlockOverall = true;
+  let forcedGroupId: string | null = null;
 
   for (let blockIndex = 0; blockIndex < blocks.length; blockIndex += 1) {
     const block = blocks[blockIndex];
@@ -627,6 +879,20 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     const isStartBlock = isQuestionStartBlock || block.kind === "custom";
     const itemRequestsKeepStay = !!item && !isFirstBlockOverall && Boolean(item.keepWithPrev);
     const headerForceStay = isStartBlock && itemRequestsKeepStay;
+
+    // 강제 2문제/페이지 모드: 새 "문항" 그룹이 시작될 때마다 다음 칸으로 넘긴다.
+    // 용량이 무한이라 그룹 내부에서는 분할/오버플로가 일어나지 않으므로,
+    // 한 칸당 문항 1개 → 2단에서 페이지당 2문제로 배치된다.
+    // (섹션/구분선 등 비문항 블록은 칸을 차지하지 않도록 advance 를 트리거하지 않는다.)
+    if (settings.forceTwoPerPage) {
+      const isQuestionGroup = block.group.items[0]?.blockType === "question";
+      if (isQuestionGroup) {
+        if (!isFirstBlockOverall && block.group.id !== forcedGroupId) {
+          advanceColumn();
+        }
+        forcedGroupId = block.group.id;
+      }
+    }
 
     if (isStartBlock && item && !isFirstBlockOverall && !itemRequestsKeepStay) {
       if (item.breakBefore === "page") {
@@ -727,6 +993,19 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       }
       part.questionRenderedLines.push(block.line);
       columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "struct-line") {
+      const part = ensurePart(fragment, block.item);
+      const segInPart = part.structRows.some((row) => row.segIndex === block.segIndex);
+      if (!segInPart) columnHeights[columnIndex] += block.segChrome;
+      part.structRows.push({
+        segIndex: block.segIndex,
+        style: block.style,
+        paraLabel: block.paraLabel,
+        line: block.line,
+        isSegStart: block.isSegStart,
+        isSegEnd: block.isSegEnd,
+      });
+      columnHeights[columnIndex] += block.lineHeight;
     } else if (block.kind === "option") {
       const part = ensurePart(fragment, block.item);
       part.options.push({ option: block.option, originalIndex: block.index });

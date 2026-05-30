@@ -14,6 +14,11 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  normalizeAnalysisTone,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 
 export interface AnalysisPromptConfig {
@@ -21,6 +26,7 @@ export interface AnalysisPromptConfig {
   focusAreas: string[];
   targetLevel: string;
   generationPlan?: QuestionGenerationPlan;
+  analysisTone?: AnalysisTone;
 }
 
 export type QueuedPassageStatus =
@@ -165,7 +171,12 @@ function parseAnalysis(raw: string | null | undefined): PassageAnalysisData | nu
 
 function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
   if (!config || typeof config !== "object" || Array.isArray(config)) {
-    return { customPrompt: "", focusAreas: [], targetLevel: "" };
+    return {
+      customPrompt: "",
+      focusAreas: [],
+      targetLevel: "",
+      analysisTone: DEFAULT_ANALYSIS_TONE,
+    };
   }
   const raw = config as Record<string, unknown>;
   return {
@@ -175,6 +186,7 @@ function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
       : [],
     targetLevel: typeof raw.targetLevel === "string" ? raw.targetLevel : "",
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
+    analysisTone: normalizeAnalysisTone(raw.analysisTone),
   };
 }
 
@@ -199,6 +211,7 @@ function normalizePromptConfig(promptConfig: AnalysisPromptConfig): AnalysisProm
     targetLevel: promptConfig.targetLevel ?? "",
     customPrompt: promptConfig.customPrompt ?? "",
     generationPlan: normalizeQuestionGenerationPlan(promptConfig.generationPlan),
+    analysisTone: normalizeAnalysisTone(promptConfig.analysisTone),
   };
 }
 
@@ -483,6 +496,7 @@ async function startPassageAnalysisJob(
       focusAreas: promptConfig.focusAreas,
       targetLevel: promptConfig.targetLevel,
       generationPlan: promptConfig.generationPlan,
+      analysisTone: promptConfig.analysisTone,
     }),
   });
   const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;

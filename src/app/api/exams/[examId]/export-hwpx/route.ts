@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { buildBuilderHwpxDocument } from "./_lib/builder";
 import { packageHwpx } from "./_lib/package";
 import { MIMETYPE } from "./_lib/static-files";
+import { shouldForceSourcePassage } from "@/components/exams/paper-builder/passage-policy";
 import type {
   BuilderItem,
   BuilderSettings,
@@ -41,14 +42,29 @@ function resolveBuilderItems(
     .map((item, index) => {
       const original = byQuestionId.get(item.questionId);
       if (!original) return null;
+      const forceSourcePassage = shouldForceBuilderSourcePassage(original, item);
       return {
         ...item,
+        includePassage: item.includePassage !== false || forceSourcePassage,
         orderNum: item.orderNum ?? index + 1,
         points: item.points ?? original.points,
         sourceQuestion: original.question,
       } as BuilderItemResolved;
     })
     .filter((it): it is BuilderItemResolved => Boolean(it));
+}
+
+function shouldForceBuilderSourcePassage(
+  original: ExamQuestionData,
+  item: Pick<BuilderItem, "questionText" | "passageContent">,
+) {
+  const passageContent = item.passageContent || original.question.passage?.content || "";
+  return shouldForceSourcePassage({
+    subType: original.question.subType,
+    questionText: item.questionText || original.question.questionText,
+    structuredData: (original.question as { structuredData?: unknown }).structuredData,
+    passage: { content: passageContent },
+  });
 }
 
 function applyBuilderSettings(
@@ -66,8 +82,10 @@ function applyBuilderSettings(
       const original = byQuestionId.get(item.questionId);
       if (!original) return null;
 
+      const includePassage =
+        item.includePassage !== false || shouldForceBuilderSourcePassage(original, item);
       const passage =
-        item.includePassage === false
+        !includePassage
           ? null
           : {
               title:

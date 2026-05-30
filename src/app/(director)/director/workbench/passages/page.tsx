@@ -61,6 +61,10 @@ export default async function PassagesPage({ searchParams }: PageProps) {
     // the analysis queue page at /passages/create — we hide them here so the
     // grid contains only analysis-complete passages.
     analyzedOnly: true,
+    // …with one exception: passages pasted directly on the question-generation
+    // page ("직접 지문 붙여넣기") are surfaced here immediately even before any
+    // analysis runs, so the material isn't stranded out of the 자료 관리 view.
+    includeDirectInput: true,
   };
 
   const [passagesData, schools, collections, membershipRaw] = await Promise.all([

@@ -553,8 +553,25 @@ export function PassageListClient({
     </button>
   );
 
+  const reportAction = (
+    <button
+      type="button"
+      onClick={() => {
+        const firstId = selection.selectedIds.values().next().value;
+        if (!firstId) return;
+        router.push(`/director/workbench/passages/${firstId}/reports`);
+      }}
+      disabled={selection.selectedIds.size === 0}
+      className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-semibold text-white bg-emerald-600 border border-emerald-600 rounded-md hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <FileText className="w-3.5 h-3.5" />
+      A4 학습자료 [신규]
+    </button>
+  );
+
   const selectionActions = (
     <>
+      {reportAction}
       {studyNoteAction}
       {addToFolderAction}
       {bulkDeleteAction}

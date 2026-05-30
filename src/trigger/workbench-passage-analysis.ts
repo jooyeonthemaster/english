@@ -17,6 +17,11 @@ import {
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  normalizeAnalysisTone,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import { prisma } from "@/lib/prisma";
 import {
   getQuestionGenerationCreditCost,
@@ -27,22 +32,17 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { runFullAnalysis } from "@/app/api/ai/passage-analysis/[passageId]/_lib/run-full-analysis";
+import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
+import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
 type Input = { jobId: string };
-
-type AnalysisUsageEvent = {
-  usage?: unknown;
-  provider: string;
-  modelId: string;
-  durationMs: number;
-};
 
 interface AnalysisJobConfig {
   customPrompt?: string;
   focusAreas?: string[];
   targetLevel?: string;
   generationPlan?: QuestionGenerationPlan;
+  analysisTone?: AnalysisTone;
 }
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -51,11 +51,21 @@ function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | nul
   return raw === "PREMIUM" || raw === "STANDARD" ? raw : null;
 }
 
+function getAnalysisTone(value: unknown): AnalysisTone | null {
+  if (!value || typeof value !== "object") return null;
+  const raw = (value as Record<string, unknown>)._analysisTone;
+  return typeof raw === "string" ? normalizeAnalysisTone(raw) : null;
+}
+
 function shouldUseCachedAnalysis(
   cached: unknown,
   requestedPlan: QuestionGenerationPlan,
+  requestedTone: AnalysisTone,
 ): boolean {
   const cachedPlan = getAnalysisGenerationPlan(cached);
+  const cachedTone = getAnalysisTone(cached);
+  if (cachedTone && cachedTone !== requestedTone) return false;
+  if (!cachedTone && requestedTone !== DEFAULT_ANALYSIS_TONE) return false;
   if (requestedPlan === "PREMIUM") return cachedPlan === "PREMIUM";
   return true;
 }
@@ -63,6 +73,7 @@ function shouldUseCachedAnalysis(
 function withAnalysisGenerationMetadata(
   analysisData: unknown,
   generationPlan: QuestionGenerationPlan,
+  analysisTone: AnalysisTone,
 ) {
   if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
     return analysisData;
@@ -72,6 +83,7 @@ function withAnalysisGenerationMetadata(
     ...(analysisData as Record<string, unknown>),
     _generationPlan: generationPlan,
     _generationTag: getQuestionGenerationPlanTag(generationPlan),
+    _analysisTone: analysisTone,
   };
 }
 
@@ -87,6 +99,7 @@ function parseConfig(value: unknown): AnalysisJobConfig {
     targetLevel:
       typeof raw.targetLevel === "string" ? raw.targetLevel : undefined,
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
+    analysisTone: normalizeAnalysisTone(raw.analysisTone),
   };
 }
 
@@ -148,6 +161,7 @@ export const workbenchPassageAnalysisTask = task({
     const generationPlan = normalizeQuestionGenerationPlan(
       config.generationPlan ?? job.generationPlan,
     );
+    const analysisTone = normalizeAnalysisTone(config.analysisTone);
     const currentHash = hashContent(job.passage.content);
 
     await prisma.workbenchAiJob.update({
@@ -161,7 +175,7 @@ export const workbenchPassageAnalysisTask = task({
 
     if (job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(job.passage.analysis.analysisData);
-      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan)) {
+      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         const debugTiming = {
           queueWaitMs: now.getTime() - job.createdAt.getTime(),
           creditMs: 0,
@@ -182,6 +196,7 @@ export const workbenchPassageAnalysisTask = task({
               cached: true,
               passageId: job.passage.id,
               generationPlan,
+              analysisTone,
               debugTiming,
               fastPath: false,
             },
@@ -208,6 +223,7 @@ export const workbenchPassageAnalysisTask = task({
         metadata: {
           passageId: job.passage.id,
           generationPlan,
+          analysisTone,
           creditCost,
         },
         creditCost,
@@ -223,16 +239,18 @@ export const workbenchPassageAnalysisTask = task({
         .join("\n\n");
 
       generationStartedAt = Date.now();
-      let analysisUsageEvent: AnalysisUsageEvent | null = null;
-      const rawAnalysis = await runFullAnalysis(
-        job.passage,
-        mergedPrompt || undefined,
-        generationPlan,
-        (event) => {
-          analysisUsageEvent = event;
-        },
-      );
-      const usageEvent = analysisUsageEvent as AnalysisUsageEvent | null;
+      // PRIME A4 보고서를 단일 소스로 생성 (옛 5-layer 대체)
+      const primeResult = await generateAnalysisReport({
+        passageContent: job.passage.content,
+        schoolType: (job.passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+        grade: job.passage.grade,
+        customPrompt: mergedPrompt || undefined,
+      });
+      generationMs = Date.now() - generationStartedAt;
+      if (!primeResult.ok) {
+        throw new Error(`PRIME 생성 실패: ${primeResult.error}`);
+      }
+      const usageEvent = primeResult.usage;
       if (usageEvent) {
         const usage = readAiUsageTokens(usageEvent.usage);
         await recordPlatformApiUsageCost({
@@ -255,14 +273,32 @@ export const workbenchPassageAnalysisTask = task({
           },
         });
       }
-      generationMs = Date.now() - generationStartedAt;
-      const analysisData = withAnalysisGenerationMetadata(
-        rawAnalysis,
-        generationPlan,
-      );
+      const primeReport = primeResult.report;
+      const analysisData = derivePassageAnalysisFromReport(primeReport);
 
       const persistenceStartedAt = Date.now();
       await prisma.$transaction(async (tx) => {
+        // 1) PRIME 보고서 저장/갱신 (모달 A4)
+        const existingPrime = await tx.passageReport.findFirst({
+          where: { passageId: job.passage!.id, academyId: job.academyId, generationPlan: "PRIME", deletedAt: null },
+          select: { id: true },
+        });
+        const primeData = {
+          title: primeReport.meta.titleKo,
+          status: "PUBLISHED",
+          pages: primeReport as never,
+          theme: { themeId: primeReport.themeId } as never,
+          templateId: "prime",
+          generationPlan: "PRIME",
+          lastEditedById: job.createdById,
+          lastEditedAt: new Date(),
+        };
+        if (existingPrime) {
+          await tx.passageReport.update({ where: { id: existingPrime.id }, data: { ...primeData, version: { increment: 1 } } });
+        } else {
+          await tx.passageReport.create({ data: { academyId: job.academyId, passageId: job.passage!.id, createdById: job.createdById, ...primeData } });
+        }
+        // 2) 파생 PassageAnalysis (카드/문제생성 호환)
         await tx.passageAnalysis.upsert({
           where: { passageId: job.passage!.id },
           update: {
@@ -288,6 +324,7 @@ export const workbenchPassageAnalysisTask = task({
               cached: false,
               passageId: job.passage!.id,
               generationPlan,
+              analysisTone,
             },
             completedAt: new Date(),
           },
@@ -312,6 +349,7 @@ export const workbenchPassageAnalysisTask = task({
             cached: false,
             passageId: job.passage!.id,
             generationPlan,
+            analysisTone,
             debugTiming,
             fastPath: false,
           },
@@ -322,6 +360,7 @@ export const workbenchPassageAnalysisTask = task({
         jobId,
         passageId: job.passage.id,
         generationPlan,
+        analysisTone,
         debugTiming,
       });
       return { success: true as const, passageId: job.passage.id };

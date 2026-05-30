@@ -46,6 +46,19 @@ import {
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
+import { DIRECT_INPUT_PASSAGE_SOURCE } from "@/lib/passage-source";
+
+// ─── Helpers ─────────────────────────────────────────────
+
+/** Build a passage title from the first non-empty line of pasted content. */
+function derivePastedTitle(content: string): string {
+  const firstLine = (
+    content.split(/\r?\n/).find((l) => l.trim().length > 0) || content
+  ).trim();
+  const words = firstLine.split(/\s+/).filter(Boolean).slice(0, 8).join(" ");
+  const base = words || "직접 입력 지문";
+  return base.length > 60 ? base.slice(0, 60) + "…" : base;
+}
 
 const UNDO_TOAST_DURATION = 8000;
 
@@ -115,6 +128,9 @@ export function GeneratePageClient({
   // ── Collections ──
   const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
+  // ── Direct paste mode (paste raw passage text → persist → select) ──
+  const [pasteMode, setPasteMode] = useState(false);
+  const [pasteSaving, setPasteSaving] = useState(false);
   const [passageBulkAction, setPassageBulkAction] = useState<
     "move" | "remove" | "delete" | null
   >(null);
@@ -837,6 +853,98 @@ export function GeneratePageClient({
     setSelectedIds(new Set());
   }, []);
 
+  // ── Direct paste handlers ──
+  const handleEnterPasteMode = useCallback(() => setPasteMode(true), []);
+  const handleExitPasteMode = useCallback(() => {
+    setPasteMode((prev) => (pasteSaving ? prev : false));
+  }, [pasteSaving]);
+
+  // Persist the pasted passage as a real Passage (academy-scoped, marked as
+  // "직접 입력"), then select it so the user can generate questions right away.
+  // Questions link to it automatically via passageId during generation, and it
+  // shows up in 자료 관리 immediately thanks to the includeDirectInput filter.
+  const handleCreatePastedPassage = useCallback(
+    async (rawTitle: string, content: string) => {
+      const trimmed = content.trim();
+      if (trimmed.length < 20) {
+        toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
+        return;
+      }
+      setPasteSaving(true);
+      try {
+        const { createWorkbenchPassage } = await import("@/actions/workbench");
+        const title = rawTitle.trim() || derivePastedTitle(trimmed);
+        const result = await createWorkbenchPassage({
+          title,
+          content: trimmed,
+          source: DIRECT_INPUT_PASSAGE_SOURCE,
+        });
+        if (!result?.success || !result.id) {
+          toast.error(result?.error || "지문 등록에 실패했습니다.");
+          return;
+        }
+        const newId = result.id;
+
+        // Refetch the academy passage list so the new passage becomes a
+        // canonical PassageItem (same shape the grid + generation expect).
+        let createdPassage: PassageItem | null = null;
+        try {
+          const res = await fetch(`/api/passages/list?academyId=${academyId}`);
+          const data = await res.json();
+          const list: PassageItem[] = Array.isArray(data.passages)
+            ? data.passages
+            : [];
+          setPassages(list);
+          if (data.filters) setFilterOptions(data.filters);
+          if (data.collections) setCollections(data.collections);
+          createdPassage = list.find((p) => p.id === newId) ?? null;
+        } catch {
+          /* list refresh is best-effort — fall back to a synthesized item */
+        }
+
+        // Fallback: if the refetch failed or didn't surface the new row, build a
+        // minimal PassageItem so generation can still proceed immediately.
+        if (!createdPassage) {
+          createdPassage = {
+            id: newId,
+            title,
+            grade: null,
+            semester: null,
+            unit: null,
+            publisher: null,
+            difficulty: null,
+            source: DIRECT_INPUT_PASSAGE_SOURCE,
+            school: null,
+            content: trimmed,
+            analysis: null,
+            collectionItems: [],
+          };
+          const synthesized = createdPassage;
+          setPassages((prev) =>
+            prev.some((p) => p.id === newId) ? prev : [synthesized, ...prev],
+          );
+        }
+
+        // Reset filters that would otherwise hide the freshly pasted (미분석) card,
+        // then select it as the sole target.
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+        setSelectedIds(new Set([newId]));
+        setSelectedPassage(createdPassage);
+        setPasteMode(false);
+        toast.success(
+          "지문이 등록되었습니다. 유형·난이도를 설정해 문제를 생성하세요.",
+        );
+      } catch {
+        toast.error("지문 등록 중 오류가 발생했습니다.");
+      } finally {
+        setPasteSaving(false);
+      }
+    },
+    [academyId],
+  );
+
   // ── Open analysis detail modal ──
   const handleOpenAnalysisModal = useCallback(async (passageId: string) => {
     setLoadingAnalysisModal(true);
@@ -1035,6 +1143,11 @@ export function GeneratePageClient({
               genMode={genMode}
               totalQuestions={totalQuestions}
               handleBatchGenerate={handleBatchGenerate}
+              pasteMode={pasteMode}
+              onEnterPasteMode={handleEnterPasteMode}
+              onExitPasteMode={handleExitPasteMode}
+              onCreatePastedPassage={handleCreatePastedPassage}
+              pasteSaving={pasteSaving}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
             />
           }

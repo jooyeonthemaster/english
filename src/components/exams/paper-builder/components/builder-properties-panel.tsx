@@ -43,6 +43,10 @@ import {
 import { cn } from "@/lib/utils";
 
 import { optionOrdinalLabel } from "../option-display";
+import {
+  isSourcePassageForcedForItem,
+  shouldRenderSourcePassageForItem,
+} from "../paper-item-utils";
 import type {
   BreakBefore,
   InsertablePaperBlockType,
@@ -671,6 +675,8 @@ export function BuilderPropertiesPanel({
   const hasActiveItem = Boolean(activeItem);
   const activeIsQuestion = activeItem?.blockType === "question";
   const activeLocked = Boolean(activeItem?.locked);
+  const activePassageForced = activeItem ? isSourcePassageForcedForItem(activeItem) : false;
+  const activePassageRendered = activePassageForced || (activeItem ? shouldRenderSourcePassageForItem(activeItem) : false);
   const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
     readStoredPanelSectionOrder,
   );
@@ -915,7 +921,7 @@ export function BuilderPropertiesPanel({
     if (id === "actions") return "작업";
     if (id === "insert") return "블록 삽입";
     if (id === "inspector") return "선택 블록";
-    if (id === "shuffle") return "문제 순서 섞기";
+    if (id === "shuffle") return "문제 샘플링";
     return "시험지 설정";
   }
 
@@ -1071,7 +1077,7 @@ export function BuilderPropertiesPanel({
               className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
             >
               <Shuffle className="h-3.5 w-3.5" />
-              섞기
+              샘플링
             </button>
             <button
               type="button"
@@ -1212,9 +1218,9 @@ export function BuilderPropertiesPanel({
               <p className="mb-2 text-[11px] font-bold text-slate-500">흐름</p>
               <div className="grid grid-cols-2 gap-2">
                 <IconToggleButton
-                  active={activeItem.includePassage}
-                  disabled={activeLocked}
-                  title="지문 표시 전환"
+                  active={activePassageRendered}
+                  disabled={activeLocked || activePassageForced}
+                  title={activePassageForced ? "이 유형은 원문 지문이 필수입니다." : "지문 표시 전환"}
                   onClick={() =>
                     updateActiveItem({ includePassage: !activeItem.includePassage })
                   }

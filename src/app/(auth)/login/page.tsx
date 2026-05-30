@@ -9,10 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Eye, EyeOff, ArrowRight, Sparkles, BrainCircuit, BarChart3, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
-import {
-  isJooyeonSpecialAccount,
-  JOOYEON_WELCOME_STORAGE_KEY,
-} from "@/lib/jooyeon-special-account";
+import { getSpecialAccount } from "@/lib/special-accounts";
 import { BrandIcon } from "@/components/brand/brand-mark";
 
 const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
@@ -107,8 +104,9 @@ function StaffLoginForm() {
     const res = await fetch("/api/auth/session");
     const session = await res.json();
     const role = session?.user?.role;
-    if (isJooyeonSpecialAccount(session?.user?.email) || isJooyeonSpecialAccount(data.email)) {
-      sessionStorage.setItem(JOOYEON_WELCOME_STORAGE_KEY, "true");
+    const special = getSpecialAccount(session?.user?.email) ?? getSpecialAccount(data.email);
+    if (special) {
+      sessionStorage.setItem(special.welcomeStorageKey, "true");
     }
     
     if (callbackUrl) router.push(callbackUrl);

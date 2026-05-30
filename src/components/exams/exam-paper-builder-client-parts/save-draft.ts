@@ -2,6 +2,7 @@
 
 import { toast } from "sonner";
 import { saveExamPaperDraft } from "@/actions/exam-paper-builder";
+import { shouldForceSourcePassage } from "../paper-builder/passage-policy";
 import type {
   ClassOption,
   Density,
@@ -51,6 +52,7 @@ interface SaveDraftResult {
 }
 
 function serializePaperBlock(item: PaperItem) {
+  const includePassage = resolveSerializableIncludePassage(item);
   return {
     localId: item.localId,
     blockType: item.blockType,
@@ -58,7 +60,7 @@ function serializePaperBlock(item: PaperItem) {
     questionId: item.blockType === "question" ? item.questionId : undefined,
     points: item.points,
     groupId: item.groupId,
-    includePassage: item.includePassage,
+    includePassage,
     passageTitle: item.passageTitle,
     passageContent: item.passageContent,
     questionText: item.questionText,
@@ -84,6 +86,20 @@ function serializePaperBlock(item: PaperItem) {
     imageAlt: item.imageAlt,
     imageWidth: item.imageWidth,
   };
+}
+
+function resolveSerializableIncludePassage(item: PaperItem) {
+  if (item.blockType !== "question") return item.includePassage;
+  const passageContent = item.passageContent || item.sourceQuestion.passage?.content || "";
+  return (
+    item.includePassage ||
+    shouldForceSourcePassage({
+      ...item.sourceQuestion,
+      passage: item.sourceQuestion.passage
+        ? { ...item.sourceQuestion.passage, content: passageContent }
+        : { content: passageContent },
+    })
+  );
 }
 
 export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Promise<SaveDraftResult> {
@@ -131,7 +147,7 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       orderNum: item.orderNum,
       points: item.points,
       groupId: item.groupId,
-      includePassage: item.includePassage,
+      includePassage: resolveSerializableIncludePassage(item),
       passageTitle: item.passageTitle,
       passageContent: item.passageContent,
       questionText: item.questionText,

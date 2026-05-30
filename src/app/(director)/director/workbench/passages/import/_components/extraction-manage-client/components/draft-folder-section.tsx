@@ -591,7 +591,11 @@ export function DraftFolderSection({
     else onDragToRoot?.(itemId, copy);
   };
 
-  const sortSearchControls = !collapsed ? (
+  // The embedded create panel (gridOnly) has its own powerful material
+  // search/sort/filter toolbar right below this header, so the folder-only
+  // sort + folder-search controls here are redundant (and were a broken
+  // Select-in-Popover). Hide them in that context to keep the header clean.
+  const sortSearchControls = !collapsed && !gridOnly ? (
     <div className="flex shrink-0 items-center gap-1">
       <Popover>
         <PopoverTrigger

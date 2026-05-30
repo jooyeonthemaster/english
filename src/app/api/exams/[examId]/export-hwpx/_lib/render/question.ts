@@ -6,6 +6,7 @@
 import type { BlockNode, BorderSpec, RunNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE, SUBTYPE_LABELS } from "../tokens";
+import { parseFormattedToRuns } from "../format";
 import { renderOptions, type ParsedOption } from "./options";
 import {
   renderBlanks,
@@ -25,11 +26,20 @@ import {
 import { renderPassage } from "./passage";
 import { renderAnswerBlock } from "./answer";
 
-import { parseQuestionSections, questionTextContainsPassage } from "@/app/api/exams/[examId]/export-docx/_lib/parse-question-sections";
+import { parseQuestionSections } from "@/app/api/exams/[examId]/export-docx/_lib/parse-question-sections";
 import {
   formatSentenceInsertPassageMarkers,
   optionOrdinalLabel,
 } from "@/components/exams/paper-builder/option-display";
+import { shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
+import {
+  isSummaryCompleteMc,
+  splitSummaryCompleteMcQuestionText,
+} from "@/components/exams/paper-builder/summary-complete-mc-layout";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
@@ -71,6 +81,7 @@ export interface QuestionRenderOptions {
     density?: "comfortable" | "compact";
     showAnswerSpace?: boolean;
     showQuestionMeta?: boolean;
+    passageStyle?: "boxed" | "underlined" | "plain";
   };
   includeAnswers: boolean;
   contentWidthHpu: number;
@@ -93,7 +104,7 @@ function safeParseOptions(raw: string | null | undefined): ParsedOption[] {
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
-  const showMeta = layout.showQuestionMeta !== false;
+  const showMeta = layout.showQuestionMeta === true;
   const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
 
   const orderNum = item.orderNum ?? 0;
@@ -113,11 +124,55 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
 
   // 본문 텍스트 파싱
   const sections = parseQuestionSections(questionText, subType);
-  const hasEmbeddedPassage = questionTextContainsPassage(sections);
   const directionSection = sections.find((s) => s.type === "direction");
+  const summaryMc = isSummaryCompleteMc(subType);
+  const inlineSourcePassage =
+    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc;
+  const summaryParts = summaryMc
+    ? splitSummaryCompleteMcQuestionText(questionText)
+    : { stem: "", summary: "" };
+  const summaryText = summaryMc
+    ? formatSummaryCompleteMcSummaryForDisplay(
+      summaryParts.summary,
+      readSummaryBlankAnswersFromQuestionLike(
+        item.sourceQuestion,
+        item.options,
+        item.correctAnswer ?? item.sourceQuestion.correctAnswer,
+      ),
+    )
+    : "";
 
   // 1. 번호 + 메타 + (지시문)
-  if (directionSection) {
+  if (summaryMc) {
+    const headerRuns: RunNode[] = [
+      txt(`${orderNum}. `, {
+        size: qNumSize,
+        bold: true,
+        color: COLORS.black,
+      }),
+    ];
+    if (showMeta) {
+      headerRuns.push(
+        txt(subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`, {
+          size: SIZE.meta,
+          color: COLORS.gray,
+        }),
+      );
+    }
+    if (summaryParts.stem) {
+      headerRuns.push(
+        ...parseFormattedToRuns(summaryParts.stem, {
+          size: compact ? SIZE.bodyCompact : SIZE.body,
+          bold: true,
+        }),
+      );
+    }
+    result.push({
+      kind: "p",
+      style: { spaceBefore: 80, spaceAfter: 80, lineSpacingPct: 160 },
+      runs: headerRuns,
+    });
+  } else if (directionSection) {
     result.push(
       ...renderDirection(
         directionSection,
@@ -153,12 +208,12 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
 
   // 2. 글로벌 지문 (passage 모델, embed 가 아닌 경우)
   const sourcePassage = item.sourceQuestion.passage;
-  if (sourcePassage && !hasEmbeddedPassage) {
+  if (sourcePassage && (summaryMc || inlineSourcePassage)) {
     result.push(
       ...renderPassage({
         passageTitle: item.passageTitle ?? sourcePassage.title ?? "",
         passageContent: item.passageContent ?? sourcePassage.content ?? "",
-        passageStyle: "plain",
+        passageStyle: layout.passageStyle ?? "boxed",
         showPassageTitle: false,
         compact,
         usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
@@ -168,9 +223,24 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   }
 
   // 3. 본문 섹션들
-  for (const section of sections) {
-    if (section.type === "direction") continue;
-    switch (section.type) {
+  if (summaryMc) {
+    result.push({
+      kind: "p",
+      style: { align: "CENTER", spaceBefore: 20, spaceAfter: 60 },
+      runs: [txt("\u2193", { size: bodySize, bold: true, color: COLORS.gray })],
+    });
+    if (summaryText) {
+      result.push(
+        ...renderSummary(
+          { type: "summary", content: summaryText },
+          contentWidthHpu,
+        ),
+      );
+    }
+  } else {
+    for (const section of sections) {
+      if (section.type === "direction") continue;
+      switch (section.type) {
       case "passage":
         result.push(
           ...renderPassage({
@@ -219,6 +289,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
         break;
       default:
         result.push(...renderFallback(section));
+      }
     }
   }
 

@@ -43,11 +43,15 @@ export function VocabPanel({
         <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0"><X className="w-4 h-4" /></Button>
       </div>
       <div className="text-[14px]"><span className="text-slate-500 mr-1">뜻:</span><span className="font-medium text-slate-800">{item.meaning}</span></div>
+      {item.studentNote && <div className="text-[13px] text-blue-700 bg-blue-50 rounded-lg px-3 py-2"><span className="font-semibold mr-1">쉽게:</span>{item.studentNote}</div>}
       {item.contextMeaning && <div className="text-[13px] text-slate-600 bg-slate-50 rounded-lg px-3 py-2"><span className="text-slate-400 mr-1">문맥:</span>{item.contextMeaning}</div>}
+      {item.examTrap && <div className="text-[13px] bg-amber-50 border border-amber-100 rounded-lg px-3 py-2"><span className="text-amber-700 font-semibold mr-1">함정:</span><span className="text-slate-700">{item.examTrap}</span></div>}
+      {item.examplePhrase && <div className="text-[13px] text-slate-600 bg-white border border-slate-100 rounded-lg px-3 py-2"><span className="text-slate-400 mr-1">활용:</span>{item.examplePhrase}</div>}
       {item.englishDefinition && <div className="text-[13px] text-slate-600 bg-slate-50 rounded-lg px-3 py-2 italic"><span className="text-slate-400 mr-1 not-italic">영영:</span>{item.englishDefinition}</div>}
       <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[12px]">
         {item.synonyms?.length > 0 && <div><span className="text-slate-400 mr-1">동의어:</span>{item.synonyms.map((s, i) => <span key={i} className="bg-blue-50 text-blue-700 rounded px-1.5 py-0.5 mr-1 font-medium">{s}</span>)}</div>}
         {item.antonyms?.length > 0 && <div><span className="text-slate-400 mr-1">반의어:</span>{item.antonyms.map((s, i) => <span key={i} className="bg-red-50 text-red-700 rounded px-1.5 py-0.5 mr-1 font-medium">{s}</span>)}</div>}
+        {item.confusableWords?.length > 0 && <div><span className="text-slate-400 mr-1">헷갈림:</span>{item.confusableWords.map((s, i) => <span key={i} className="bg-amber-50 text-amber-700 rounded px-1.5 py-0.5 mr-1 font-medium">{s}</span>)}</div>}
       </div>
       {item.derivatives?.length > 0 && <div className="text-[12px]"><span className="text-slate-400 mr-1">파생어:</span>{item.derivatives.map((d, i) => <span key={i} className="bg-slate-100 text-slate-600 rounded px-1.5 py-0.5 mr-1">{d}</span>)}</div>}
       {item.collocations?.length > 0 && <div className="text-[12px]"><span className="text-slate-400 mr-1">콜로케이션:</span>{item.collocations.map((c, i) => <span key={i} className="bg-green-50 text-green-700 rounded px-1.5 py-0.5 mr-1">{c}</span>)}</div>}
@@ -78,9 +82,16 @@ export function GrammarPanel({
         </div>
         <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0"><X className="w-4 h-4" /></Button>
       </div>
-      <p className="text-[14px] text-slate-700 leading-relaxed">{item.explanation}</p>
+      <div className="flex flex-wrap gap-1.5 text-[11px]">
+        <span className="rounded bg-violet-50 px-1.5 py-0.5 font-semibold text-violet-700">정답 형태</span>
+        <span className="rounded bg-rose-50 px-1.5 py-0.5 font-semibold text-rose-700">오답 함정</span>
+      </div>
+      {item.studentExplanation && <p className="text-[14px] text-slate-800 leading-relaxed">{item.studentExplanation}</p>}
+      <p className="text-[13px] text-slate-600 leading-relaxed">{item.explanation}</p>
       <div className="rounded-lg bg-white border border-slate-100 p-2.5 text-[13px]"><span className="text-slate-400 mr-1">본문:</span><span className="border-b-2 border-dashed border-violet-400">{item.textFragment}</span></div>
       {item.commonMistake && <div className="text-[13px] bg-rose-50 border border-rose-100 rounded-lg px-3 py-2"><span className="text-rose-500 font-semibold mr-1">오답 함정:</span><span className="text-rose-700">{item.commonMistake}</span></div>}
+      {item.whyItMatters && <div className="text-[13px] bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span className="text-slate-500 font-semibold mr-1">왜 중요:</span><span className="text-slate-700">{item.whyItMatters}</span></div>}
+      {item.quickCheck && <div className="text-[13px] bg-violet-50 border border-violet-100 rounded-lg px-3 py-2"><span className="text-violet-600 font-semibold mr-1">체크:</span><span className="text-violet-800">{item.quickCheck}</span></div>}
       {item.transformations?.length > 0 && <div className="text-[13px]"><div className="flex items-center gap-1 text-slate-500 mb-1"><ArrowRightLeft className="w-3 h-3" /><span className="font-medium">변형 가능:</span></div><ul className="space-y-1 pl-4">{item.transformations.map((t, i) => <li key={i} className="list-disc text-slate-600">{t}</li>)}</ul></div>}
       {item.relatedGrammar?.length > 0 && <div className="text-[12px]"><span className="text-slate-400 mr-1">연관 문법:</span>{item.relatedGrammar.map((g, i) => <span key={i} className="bg-violet-50 text-violet-600 rounded px-1.5 py-0.5 mr-1">{g}</span>)}</div>}
       {item.examples?.length > 0 && <div className="text-[12px]"><span className="text-slate-400 mb-1 block">예문:</span><ul className="space-y-1 pl-4 text-slate-600">{item.examples.map((e, i) => <li key={i} className="list-disc">{e}</li>)}</ul></div>}
@@ -102,15 +113,17 @@ export function SyntaxPanel({
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           <Braces className="w-4 h-4 text-cyan-600" />
-          <span className="text-[15px] font-bold text-slate-900">구문 분석</span>
+          <span className="text-[15px] font-bold text-slate-900">이 문장 읽기 포인트</span>
           <Badge className="text-[10px] border-0 bg-cyan-100 text-cyan-700">{item.complexity}</Badge>
           {item.patternType && <Badge variant="outline" className="text-[10px]">{item.patternType}</Badge>}
         </div>
         <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0"><X className="w-4 h-4" /></Button>
       </div>
-      <div className="rounded-lg bg-white border border-slate-100 p-2.5 text-[13px] font-mono leading-relaxed"><span className="text-slate-400 mr-1 font-sans">구조:</span>{item.structure}</div>
+      <div className="rounded-lg bg-white border border-slate-100 p-2.5 text-[13px] font-mono leading-relaxed"><span className="text-slate-400 mr-1 font-sans">문장 뼈대:</span>{item.structure}</div>
+      {item.plainExplanation && <div className="rounded-lg bg-white border border-cyan-100 p-2.5 text-[13px] leading-relaxed text-slate-700"><span className="text-cyan-600 font-semibold mr-1">쉽게:</span>{item.plainExplanation}</div>}
       <div className="rounded-lg bg-cyan-50/50 border border-cyan-100 p-2.5 text-[13px] font-mono leading-relaxed"><span className="text-cyan-600 mr-1 font-sans font-medium">끊어읽기:</span>{item.chunkReading}</div>
-      {item.keyPhrase && <div className="text-[13px]"><span className="text-slate-400 mr-1">핵심 구문:</span><span className="font-medium">{item.keyPhrase}</span></div>}
+      {item.readingTip && <div className="text-[13px] bg-cyan-50 border border-cyan-100 rounded-lg px-3 py-2"><span className="text-cyan-700 font-semibold mr-1">해석 팁:</span><span className="text-slate-700">{item.readingTip}</span></div>}
+      {item.keyPhrase && <div className="text-[13px]"><span className="text-slate-400 mr-1">어려운 부분:</span><span className="font-medium">{item.keyPhrase}</span></div>}
       {item.transformPoint && <div className="text-[13px] flex items-start gap-1.5"><ArrowRightLeft className="w-3 h-3 text-slate-400 mt-0.5 shrink-0" /><span className="text-slate-600">{item.transformPoint}</span></div>}
     </div>
   );

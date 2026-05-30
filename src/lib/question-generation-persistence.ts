@@ -7,6 +7,10 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -33,6 +37,8 @@ function readQuestionTags(rawTags: unknown): string[] {
 
 export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   const parts: string[] = [];
+  const typeId = typeof q._typeId === "string" ? q._typeId : "";
+  const isSummaryCompleteMc = typeId === "SUMMARY_COMPLETE_MC";
   const push = (value: unknown) => {
     if (typeof value === "string" && value.trim()) parts.push(value);
   };
@@ -66,10 +72,18 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     );
   }
   push(q.sentenceWithBlank);
-  if (q.summaryWithBlanks) parts.push(`[summary] ${String(q.summaryWithBlanks)}`);
-  if (Array.isArray(q.blanks) && q.blanks.length > 0) {
+  if (q.summaryWithBlanks) {
+    const summary = isSummaryCompleteMc
+      ? formatSummaryCompleteMcSummaryForDisplay(
+        String(q.summaryWithBlanks),
+        readSummaryBlankAnswersFromQuestionLike(q),
+      )
+      : String(q.summaryWithBlanks);
+    parts.push(isSummaryCompleteMc ? `\u2193\n${summary}` : `[요약문] ${summary}`);
+  }
+  if (!isSummaryCompleteMc && Array.isArray(q.blanks) && q.blanks.length > 0) {
     parts.push(
-      `[blank answers] ${q.blanks
+      `[빈칸 정답] ${q.blanks
         .map((b) => {
           const row = b as Record<string, unknown>;
           return `${String(row.label ?? "")} ${String(row.answer ?? "")}`.trim();

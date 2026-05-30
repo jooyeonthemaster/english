@@ -36,7 +36,7 @@ export function buildAnalysisPrompt(
     },
     syntax: {
       header:
-        "[선생님이 표시한 구문 분석 대상 — syntaxAnalysis에서 이 문장들의 S/V/O/C 구조, 끊어읽기, 핵심 구문 패턴을 반드시 다루세요]",
+        "[선생님이 표시한 문장별 읽기 포인트 — syntaxAnalysis에서 이 문장을 어떻게 끊고 읽을지, 무엇이 무엇을 꾸미는지 학생 눈높이로 다루세요]",
       anns: anns.filter((a) => a.type === "syntax"),
     },
     sentence: {

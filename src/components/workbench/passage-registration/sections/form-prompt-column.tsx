@@ -82,12 +82,12 @@ export function FormPromptColumn({
       </div>
 
       <p className="text-[11px] text-slate-400 leading-relaxed mb-2 shrink-0">
-        수업에서 강조하는 <span className="text-slate-600 font-medium">핵심 단어, 주요 문법, 중요 문장</span>을
+        수업에서 강조하는 <span className="text-slate-600 font-medium">핵심 단어, 어법 포인트, 중요 문장</span>을
         적어주시면 선생님만의 관점이 반영된 분석이 만들어집니다.
       </p>
 
       <Textarea
-        placeholder={"예시:\n• 핵심 단어: contribute, responsible\n• 문법 포인트: 관계대명사, to부정사\n• 주요 문장: 3번째 문장 구문 분석 집중"}
+        placeholder={"예시:\n• 핵심 단어: contribute, responsible\n• 어법 포인트: 관계대명사, to부정사\n• 주요 문장: 3번째 문장 읽기 포인트 집중"}
         value={analysisPrompt}
         onChange={(e) => setAnalysisPrompt(e.target.value)}
         className="flex-1 text-[12px] leading-relaxed bg-white border-blue-200/60 placeholder:text-slate-300 resize-none focus:border-blue-300"

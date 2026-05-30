@@ -2,11 +2,8 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Crown, Gift, Sparkles, X } from "lucide-react";
-import {
-  isJooyeonSpecialAccount,
-  JOOYEON_WELCOME_STORAGE_KEY,
-} from "@/lib/jooyeon-special-account";
+import { Crown, Gift, Infinity as InfinityIcon, X } from "lucide-react";
+import { getSpecialAccount } from "@/lib/special-accounts";
 
 interface JooyeonWelcomeModalProps {
   staffEmail: string;
@@ -14,23 +11,28 @@ interface JooyeonWelcomeModalProps {
 
 export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
   const [dismissed, setDismissed] = useState(false);
+  const account = getSpecialAccount(staffEmail);
   const shouldOpen = useSyncExternalStore(
     () => () => {},
     () =>
-      isJooyeonSpecialAccount(staffEmail) &&
-      sessionStorage.getItem(JOOYEON_WELCOME_STORAGE_KEY) === "true",
+      Boolean(account) &&
+      sessionStorage.getItem(account!.welcomeStorageKey) === "true",
     () => false,
   );
-  const open = shouldOpen && !dismissed;
+  const open = Boolean(account) && shouldOpen && !dismissed;
 
   function close() {
-    sessionStorage.removeItem(JOOYEON_WELCOME_STORAGE_KEY);
+    if (account) {
+      sessionStorage.removeItem(account.welcomeStorageKey);
+    }
     setDismissed(true);
   }
 
+  const welcome = account?.welcome;
+
   return (
     <AnimatePresence>
-      {open && (
+      {open && welcome && (
         <motion.div
           className="fixed inset-0 z-[120] flex items-center justify-center px-4"
           initial={{ opacity: 0 }}
@@ -54,7 +56,7 @@ export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full max-w-[520px] overflow-hidden rounded-[28px] border border-white/70 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)]"
           >
-            <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-500 via-emerald-400 to-amber-300" />
+            <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-400" />
             <button
               type="button"
               onClick={close}
@@ -67,17 +69,17 @@ export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
             <div className="px-7 pb-7 pt-10 sm:px-9 sm:pb-9">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex size-[52px] items-center justify-center rounded-2xl bg-slate-950 text-white shadow-[0_12px_28px_rgba(15,23,42,0.22)]">
-                  <Crown className="size-6 text-amber-300" />
+                  <Crown className="size-6 text-blue-300" />
                 </div>
                 <div>
                   <p className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-blue-600">
-                    Special Access
+                    {welcome.badge}
                   </p>
                   <h2
                     id="jooyeon-welcome-title"
                     className="mt-1 text-[26px] font-black leading-tight tracking-tight text-slate-950"
                   >
-                    다른 학원 원장선생님 환영합니다!
+                    {welcome.title}
                   </h2>
                 </div>
               </div>
@@ -89,12 +91,10 @@ export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
                   </div>
                   <div>
                     <p className="text-[17px] font-extrabold leading-7 text-slate-950">
-                      1억 크래딧과 함께 무제한 사용권을
-                      <br className="hidden sm:block" />
-                      멋쟁이 주연 제자님께서 보내셨습니다!
+                      {welcome.highlight}
                     </p>
                     <p className="mt-2 text-[14px] font-semibold leading-6 text-slate-600">
-                      마음껏 활용해보세요!
+                      {welcome.sub}
                     </p>
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
                     Credits
                   </p>
                   <p className="mt-1 text-[24px] font-black tabular-nums text-slate-950">
-                    100,000,000
+                    {welcome.creditsLabel}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
@@ -114,8 +114,8 @@ export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
                     Pass
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-[24px] font-black text-slate-950">
-                    무제한
-                    <Sparkles className="size-5 text-emerald-500" />
+                    {welcome.passLabel}
+                    <InfinityIcon className="size-5 text-emerald-500" />
                   </p>
                 </div>
               </div>

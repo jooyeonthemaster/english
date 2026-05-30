@@ -1,708 +1,865 @@
-import { generateText, Output } from "ai";
+// ============================================================================
+// Rule-based Tutor Activity Generator (v2)
+// ----------------------------------------------------------------------------
+// 분석 데이터에서 모바일 우선 v2 활동을 생성한다. 死유형 미생성, 영어 메타 distractor
+// 금지(충분한 실제 오답이 없으면 생성 skip), seed Fisher-Yates 셔플, syntaxAnalysis/
+// 어휘 신규 빌더, CHIP 시퀀스·SPAN 토큰정합. (스펙 §2, §7 Phase 4)
+// ============================================================================
+
+import { z } from "zod";
 import type { PassageAnalysisData, SentenceAnalysis, VocabItem } from "@/types/passage-analysis";
-import { getTutorModel, getTutorModelNameForAudit } from "@/lib/tutor/ai";
-import { TutorDraftResponseSchema, type TutorActivityDraft } from "@/lib/tutor/schemas";
+import { getTutorModelNameForAudit } from "@/lib/tutor/ai";
+import { TutorActivityDraftSchema, type TutorActivityDraft } from "@/lib/tutor/schemas";
+import { normalizeForCompare, tokenizeSpan } from "@/lib/tutor/activity-payload-schema";
+import { PASSAGE_POLICY_BY_TYPE } from "@/lib/tutor/visibility";
+import type { TutorActivityType } from "@/lib/tutor/activity-types";
 
-export const PLAYER_SUPPORTED_ACTIVITY_TYPES = new Set([
-  "sentence_translate",
-  "gist_select",
-  "paraphrase_mc",
-  "first_letter_recall",
-  "progressive_cloze",
-  "sentence_rebuild",
-  "chunk_rebuild",
-  "sentence_order",
-  "insertion_point",
-  "irrelevant_sentence",
-  "vocab_choice",
-  "vocab_spell",
-  "vocab_match",
-  "contextual_meaning",
-  "collocation_select",
-  "grammar_binary",
-  "grammar_find",
-  "grammar_correct",
-  "structure_transform",
-  "mastery_test",
-]);
+// 빌더는 입력 타입(default 필드 생략 가능)으로 구성하고, 조립 단계에서 파싱해 출력 타입으로 만든다.
+type Draft = z.input<typeof TutorActivityDraftSchema>;
+type Dimension = TutorActivityDraft["coverageRefs"][number]["dimension"];
 
-const COVERAGE_DIMENSIONS = ["interpret", "memorize", "order", "vocab", "grammar", "transfer"] as const;
-
-function sentenceCoverage(
-  sentenceIndex: number,
-  dimension: TutorActivityDraft["coverageRefs"][number]["dimension"],
-  weight = 0.85,
-) {
-  return [{ sentenceIndex, dimension, weight }];
-}
-
-function unique(values: string[]) {
-  return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
-}
-
-function rotate<T>(items: T[]) {
-  if (items.length <= 1) return items;
-  const pivot = Math.max(1, Math.floor(items.length / 2));
-  return [...items.slice(pivot), ...items.slice(0, pivot)];
-}
-
-function shuffleWithCorrectIndex(correct: string, distractors: string[], fallback: string[]) {
-  const options = unique([correct, ...distractors, ...fallback]).slice(0, 4);
-  while (options.length < 4) options.push(`오답 선택지 ${options.length}`);
-  const rotated = rotate(options);
-  return {
-    options: rotated,
-    correctIndex: Math.max(0, rotated.findIndex((entry) => entry === correct)),
-  };
-}
-
-function splitWords(text: string) {
-  return text.match(/\S+/g) ?? [];
-}
-
-function cleanWord(text: string) {
-  return text.replace(/^[^A-Za-z]+|[^A-Za-z]+$/g, "");
-}
-
-function makeFirstLetterPrompt(sentence: string) {
-  return splitWords(sentence)
-    .map((word) => {
-      const cleaned = cleanWord(word);
-      if (cleaned.length <= 2) return word;
-      return word.replace(cleaned, `${cleaned[0]}${"_".repeat(Math.min(cleaned.length - 1, 8))}`);
-    })
-    .join(" ");
-}
-
-function makeChunks(sentence: string) {
-  const words = splitWords(sentence);
-  const chunkSize = words.length > 14 ? 3 : 2;
-  const chunks: string[] = [];
-  for (let index = 0; index < words.length; index += chunkSize) {
-    chunks.push(words.slice(index, index + chunkSize).join(" "));
+// ── 시드 셔플(결정적, 정답 위치 편향 제거) ──────────────────────────────────
+function hashSeed(text: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
   }
-  return chunks.length > 1 ? chunks : words;
+  return h >>> 0 || 1;
+}
+function seededShuffle<T>(items: T[], seed: number): T[] {
+  const arr = [...items];
+  let s = seed >>> 0 || 1;
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    s = (Math.imul(s, 1103515245) + 12345) & 0x7fffffff;
+    const j = s % (i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
-function pickLongWord(sentence: string) {
-  const words = splitWords(sentence).map(cleanWord).filter(Boolean);
-  return words.find((word) => word.length >= 6) ?? words[Math.max(0, Math.floor(words.length / 2))] ?? "";
+function uniqueStrings(values: (string | undefined | null)[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values) {
+    const trimmed = String(value ?? "").trim();
+    if (!trimmed) continue;
+    const key = normalizeForCompare(trimmed);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(trimmed);
+  }
+  return out;
+}
+
+// 충분한 "실제" 오답이 있을 때만 4지선다 구성. 없으면 null → 생성 skip(템플릿 금지).
+function buildChoice(
+  correct: string,
+  distractorPool: (string | undefined)[],
+  seed: number,
+  size = 4,
+): { options: string[]; correctIndex: number } | null {
+  const correctText = String(correct ?? "").trim();
+  if (!correctText) return null;
+  const pool = uniqueStrings(distractorPool).filter(
+    (value) => normalizeForCompare(value) !== normalizeForCompare(correctText),
+  );
+  if (pool.length < size - 1) return null;
+  const distractors = seededShuffle(pool, seed).slice(0, size - 1);
+  const options = seededShuffle([correctText, ...distractors], seed + 7);
+  const correctIndex = options.findIndex((value) => normalizeForCompare(value) === normalizeForCompare(correctText));
+  if (correctIndex < 0) return null;
+  return { options, correctIndex };
+}
+
+function ref(sentenceIndex: number, dimension: Dimension, weight = 0.85) {
+  return [{ sentenceIndex: Math.max(0, sentenceIndex), dimension, weight }];
 }
 
 function sentenceLabel(sentence: SentenceAnalysis) {
   return `문장 ${sentence.index + 1}`;
 }
 
-function makeGistDraft(analysis: PassageAnalysisData, sentences: SentenceAnalysis[]): TutorActivityDraft | null {
-  const mainIdea = analysis.structure?.mainIdea || analysis.structure?.keyPoints?.[0] || sentences[0]?.korean;
-  if (!mainIdea || sentences.length === 0) return null;
-  const distractors = [
-    ...(analysis.structure?.keyPoints ?? []).filter((point) => point !== mainIdea),
-    "지문의 일부 예시만을 지나치게 일반화한 설명",
-    "글의 주장과 반대로 정리한 설명",
-    "세부 소재를 주제로 착각한 설명",
-  ];
-  const shuffled = shuffleWithCorrectIndex(mainIdea, distractors, [
-    "글쓴이의 목적과 무관한 배경 설명",
-    "단어 뜻만 나열한 설명",
-  ]);
-  return {
-    mode: "interpret",
-    type: "gist_select",
-    title: "지문 핵심 주제 고르기",
-    instructions: "전체 지문의 중심 생각과 가장 가까운 설명을 고르세요.",
-    payload: {
-      prompt: "이 지문의 핵심 주제로 가장 적절한 것은?",
-      options: shuffled.options,
-      correctIndex: shuffled.correctIndex,
-      explanation: analysis.structure?.purpose || "첫 문장과 결론 문장을 연결해 중심 흐름을 확인하세요.",
-    },
-    itemCount: 1,
-    maxScore: 12,
-    estimatedSec: 60,
-    coverageRefs: sentences.slice(0, 6).map((sentence) => ({
-      sentenceIndex: sentence.index,
-      dimension: "interpret",
-      weight: 0.25,
-    })),
-  };
+function chunkSentence(english: string, chunkReading?: string): string[] {
+  if (chunkReading && chunkReading.includes("/")) {
+    const parts = chunkReading
+      .split("/")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (parts.length >= 2 && parts.length <= 12) return parts;
+  }
+  const words = english.split(/\s+/).filter(Boolean);
+  const size = words.length > 14 ? 3 : 2;
+  const chunks: string[] = [];
+  for (let i = 0; i < words.length; i += size) chunks.push(words.slice(i, i + size).join(" "));
+  return chunks.length > 1 ? chunks : words;
 }
 
-function makeSentenceTranslateDraft(sentence: SentenceAnalysis): TutorActivityDraft {
-  return {
-    mode: "interpret",
-    type: "sentence_translate",
-    title: `${sentenceLabel(sentence)} 직독직해`,
-    instructions: "영어 문장을 읽고 핵심 의미가 드러나도록 한국어로 적어보세요.",
-    payload: {
-      prompt: sentence.english,
-      sentenceIndex: sentence.index,
-      answerText: sentence.korean,
-      explanation: `${sentenceLabel(sentence)}은 직역보다 핵심 관계를 놓치지 않는 해석이 중요합니다.`,
-    },
-    itemCount: 1,
-    maxScore: 10,
-    estimatedSec: 75,
-    coverageRefs: sentenceCoverage(sentence.index, "interpret"),
-  };
+// pieces(정답 순서)로부터 chips(셔플 표시순서)+correctOrder(ids in correct sequence) 생성.
+function buildChips(pieces: string[], seed: number) {
+  const ordered = pieces.map((text, id) => ({ id, text }));
+  const chips = seededShuffle(ordered, seed);
+  // 셔플이 우연히 원순서면 한 번 더 비틀기
+  const sameOrder = chips.every((chip, index) => chip.id === index);
+  const finalChips = sameOrder && chips.length > 1 ? seededShuffle(ordered, seed + 13) : chips;
+  return { chips: finalChips, correctOrder: ordered.map((piece) => piece.id) };
 }
 
-function makeFirstLetterDraft(sentence: SentenceAnalysis): TutorActivityDraft {
-  return {
-    mode: "memorize",
-    type: "first_letter_recall",
-    title: `${sentenceLabel(sentence)} 첫 글자 암기`,
-    instructions: "첫 글자 힌트를 보고 원문 문장을 최대한 정확히 복원하세요.",
-    payload: {
-      prompt: makeFirstLetterPrompt(sentence.english),
-      koreanHint: sentence.korean,
-      sentenceIndex: sentence.index,
-      answers: [sentence.english],
-      explanation: "첫 글자 암기는 통문장 암기와 서술형 대비를 동시에 잡는 훈련입니다.",
-    },
-    itemCount: 1,
-    maxScore: 12,
-    estimatedSec: 90,
-    coverageRefs: sentenceCoverage(sentence.index, "memorize"),
-  };
+function pickKeyWord(english: string, vocab: VocabItem[], sentenceIndex: number): string | null {
+  const inSentence = vocab.find((item) => item.sentenceIndex === sentenceIndex && english.includes(item.word));
+  if (inSentence) return inSentence.word;
+  const words = english.split(/\s+/).map((word) => word.replace(/^[^A-Za-z]+|[^A-Za-z]+$/g, ""));
+  return words.filter((word) => word.length >= 6).sort((a, b) => b.length - a.length)[0] ?? null;
 }
 
-function makeClozeDraft(sentence: SentenceAnalysis): TutorActivityDraft | null {
-  const target = pickLongWord(sentence.english);
-  if (!target) return null;
-  return {
-    mode: "memorize",
-    type: "progressive_cloze",
-    title: `${sentenceLabel(sentence)} 핵심어 빈칸`,
-    instructions: "문맥상 빈칸에 들어갈 원문 표현을 입력하세요.",
-    payload: {
-      prompt: sentence.english.replace(target, "_____"),
-      koreanHint: sentence.korean,
-      sentenceIndex: sentence.index,
-      answers: [target],
-      explanation: `빈칸 앞뒤의 수식 관계를 보면 ${target}의 역할이 드러납니다.`,
-    },
-    itemCount: 1,
-    maxScore: 10,
-    estimatedSec: 55,
-    coverageRefs: sentenceCoverage(sentence.index, "memorize", 0.75),
-  };
+function firstLetterMask(english: string): string {
+  return english
+    .split(/\s+/)
+    .map((word) => {
+      const cleaned = word.replace(/^[^A-Za-z]+|[^A-Za-z]+$/g, "");
+      if (cleaned.length <= 2) return word;
+      return word.replace(cleaned, `${cleaned[0]}${"_".repeat(Math.min(cleaned.length - 1, 8))}`);
+    })
+    .join(" ");
 }
 
-function makeSentenceRebuildDraft(sentence: SentenceAnalysis): TutorActivityDraft {
-  const chunks = makeChunks(sentence.english);
-  return {
-    mode: "memorize",
-    type: "sentence_rebuild",
-    title: `${sentenceLabel(sentence)} 어순 조립`,
-    instructions: "아래 조각을 눌러 원문 어순대로 문장을 완성하세요.",
-    payload: {
-      chunks: rotate(chunks),
-      koreanHint: sentence.korean,
-      sentenceIndex: sentence.index,
-      answerText: sentence.english,
-      explanation: "영어는 의미 단위가 쌓이는 순서가 곧 논리입니다. 원문 어순을 소리 내어 확인하세요.",
-    },
-    itemCount: 1,
-    maxScore: 12,
-    estimatedSec: 90,
-    coverageRefs: sentenceCoverage(sentence.index, "memorize", 0.8),
-  };
-}
-
-function makeSentenceOrderDraft(sentences: SentenceAnalysis[]): TutorActivityDraft | null {
-  if (sentences.length < 3) return null;
-  const targetSentences = sentences.slice(0, Math.min(6, sentences.length));
-  return {
-    mode: "order",
-    type: "sentence_order",
-    title: "문장 흐름 배열",
-    instructions: "문장들의 논리 흐름이 자연스럽도록 순서를 맞추세요.",
-    payload: {
-      shuffled: rotate([...targetSentences].reverse()).map((sentence) => ({
-        index: sentence.index,
-        text: sentence.english,
-      })),
-      correctOrder: targetSentences.map((sentence) => sentence.index),
-      explanation: "도입, 문제 제기, 예시, 해결, 결론으로 이어지는 흐름 단서를 확인하세요.",
-    },
-    itemCount: targetSentences.length,
-    maxScore: 18,
-    estimatedSec: 120,
-    coverageRefs: targetSentences.map((sentence) => ({
-      sentenceIndex: sentence.index,
-      dimension: "order",
-      weight: 0.75,
-    })),
-  };
-}
-
-function makeInsertionDraft(sentences: SentenceAnalysis[]): TutorActivityDraft | null {
-  if (sentences.length < 4) return null;
-  const targetPosition = Math.min(2, sentences.length - 2);
-  const target = sentences[targetPosition];
-  const remaining = sentences.filter((_, index) => index !== targetPosition);
-  const options = Array.from({ length: remaining.length + 1 }).map((_, index) => ({
-    label: `${index + 1}번 위치`,
-    before: index === 0 ? "글의 맨 앞" : remaining[index - 1].english,
-    after: index === remaining.length ? "글의 맨 뒤" : remaining[index].english,
-  }));
-  return {
-    mode: "order",
-    type: "insertion_point",
-    title: `${sentenceLabel(target)} 삽입 위치`,
-    instructions: "제시문이 들어갈 위치를 앞뒤 문맥 단서로 판단하세요.",
-    payload: {
-      targetSentence: target.english,
-      options,
-      correctIndex: targetPosition,
-      explanation: "제시문 앞에는 배경 또는 원인이, 뒤에는 그 결과나 부연이 이어지는지 확인하세요.",
-    },
-    itemCount: 1,
-    maxScore: 14,
-    estimatedSec: 100,
-    coverageRefs: sentences.slice(0, 6).map((sentence) => ({
-      sentenceIndex: sentence.index,
-      dimension: "order",
-      weight: sentence.index === target.index ? 0.7 : 0.25,
-    })),
-  };
-}
-
-function makeVocabChoiceDraft(item: VocabItem, analysis: PassageAnalysisData): TutorActivityDraft {
-  const distractors = analysis.vocabulary
-    .filter((candidate) => candidate.word !== item.word)
-    .map((candidate) => candidate.meaning);
-  const shuffled = shuffleWithCorrectIndex(item.meaning, distractors, [
-    "문맥과 반대되는 의미",
-    "품사는 비슷하지만 뜻이 다른 표현",
-    "본문과 무관한 일반적 의미",
-  ]);
+// ── 빌더: 어휘 ───────────────────────────────────────────────────────────────
+function vocabChoiceDraft(item: VocabItem, analysis: PassageAnalysisData): Draft | null {
+  const correct = item.contextMeaning || item.meaning;
+  const choice = buildChoice(
+    correct,
+    analysis.vocabulary.filter((v) => v.word !== item.word).map((v) => v.contextMeaning || v.meaning),
+    hashSeed(`vc:${item.word}`),
+  );
+  if (!choice) return null;
   return {
     mode: "vocab",
     type: "vocab_choice",
     title: `${item.word} 문맥 뜻`,
-    instructions: "지문 속 쓰임에 가장 가까운 한국어 뜻을 고르세요.",
+    instructions: "지문 속 쓰임에 가장 가까운 뜻을 고르세요.",
     payload: {
+      form: "CHOICE",
+      variant: "stem",
+      prompt: item.word,
       stem: item.word,
-      sentenceIndex: item.sentenceIndex,
-      options: shuffled.options,
-      correctIndex: shuffled.correctIndex,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: item.sentenceIndex },
       explanation: item.contextMeaning || item.meaning,
     },
     itemCount: 1,
     maxScore: 10,
-    estimatedSec: 45,
-    coverageRefs: sentenceCoverage(item.sentenceIndex, "vocab"),
+    estimatedSec: 40,
+    coverageRefs: ref(item.sentenceIndex, "vocab"),
   };
 }
 
-function makeVocabSpellDraft(item: VocabItem): TutorActivityDraft {
-  return {
-    mode: "vocab",
-    type: "vocab_spell",
-    title: `${item.meaning} 철자 쓰기`,
-    instructions: "뜻과 첫 글자 힌트를 보고 지문 속 영어 단어를 입력하세요.",
-    payload: {
-      meaning: item.meaning,
-      firstLetter: item.word[0],
-      length: item.word.length,
-      sentenceIndex: item.sentenceIndex,
-      answerText: item.word,
-      explanation: `${item.word}: ${item.contextMeaning || item.meaning}`,
-    },
-    itemCount: 1,
-    maxScore: 10,
-    estimatedSec: 45,
-    coverageRefs: sentenceCoverage(item.sentenceIndex, "vocab", 0.75),
-  };
-}
-
-function makeVocabMatchDraft(items: VocabItem[]): TutorActivityDraft | null {
-  const targetItems = items.slice(0, 5);
-  if (targetItems.length < 2) return null;
-  return {
-    mode: "vocab",
-    type: "vocab_match",
-    title: "핵심 어휘 매칭",
-    instructions: "영단어마다 지문 속 한국어 뜻을 연결하세요.",
-    payload: {
-      leftItems: targetItems.map((item) => item.word),
-      rightItems: rotate(targetItems.map((item) => item.meaning)),
-      correctPairs: Object.fromEntries(targetItems.map((item) => [item.word, item.meaning])),
-      explanation: "단어 뜻을 외울 때는 본문 문장의 쓰임까지 같이 묶어야 오래 남습니다.",
-    },
-    itemCount: targetItems.length,
-    maxScore: targetItems.length * 5,
-    estimatedSec: 100,
-    coverageRefs: targetItems.map((item) => ({
-      sentenceIndex: item.sentenceIndex,
-      dimension: "vocab",
-      weight: 0.5,
-    })),
-  };
-}
-
-function makeContextMeaningDraft(item: VocabItem, analysis: PassageAnalysisData): TutorActivityDraft | null {
-  if (!item.contextMeaning && !item.englishDefinition) return null;
-  const correct = item.contextMeaning || item.meaning;
-  const distractors = analysis.vocabulary
-    .filter((candidate) => candidate.word !== item.word)
-    .map((candidate) => candidate.contextMeaning || candidate.meaning);
-  const shuffled = shuffleWithCorrectIndex(correct, distractors, [
-    "사전의 대표뜻이지만 이 문맥과 어긋나는 의미",
-    "뒤 문장과 연결되지 않는 의미",
-  ]);
+function contextualMeaningDraft(item: VocabItem, analysis: PassageAnalysisData): Draft | null {
+  if (!item.contextMeaning) return null;
+  const choice = buildChoice(
+    item.contextMeaning,
+    [item.meaning, ...analysis.vocabulary.filter((v) => v.word !== item.word).map((v) => v.contextMeaning || v.meaning)],
+    hashSeed(`cm:${item.word}`),
+  );
+  if (!choice) return null;
   return {
     mode: "vocab",
     type: "contextual_meaning",
     title: `${item.word} 문맥 추론`,
     instructions: "사전 뜻이 아니라 이 문장에서 실제로 작동하는 의미를 고르세요.",
     payload: {
+      form: "CHOICE",
+      variant: "stem",
+      prompt: item.word,
       stem: item.word,
-      sentenceIndex: item.sentenceIndex,
-      options: shuffled.options,
-      correctIndex: shuffled.correctIndex,
-      explanation: correct,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: item.sentenceIndex },
+      explanation: item.contextMeaning,
     },
     itemCount: 1,
     maxScore: 10,
-    estimatedSec: 55,
-    coverageRefs: sentenceCoverage(item.sentenceIndex, "vocab", 0.8),
+    estimatedSec: 50,
+    coverageRefs: ref(item.sentenceIndex, "vocab", 0.8),
   };
 }
 
-function makeCollocationDraft(item: VocabItem): TutorActivityDraft | null {
-  const collocations = item.collocations ?? [];
-  if (collocations.length === 0) return null;
-  const correct = collocations[0];
-  const shuffled = shuffleWithCorrectIndex(correct, collocations.slice(1), [
-    `${item.word} with a wrong preposition`,
-    `make ${item.word}`,
-    `do ${item.word}`,
-  ]);
+function collocationDraft(item: VocabItem, analysis: PassageAnalysisData): Draft | null {
+  const correct = (item.collocations ?? [])[0];
+  if (!correct) return null;
+  const otherCollocations = analysis.vocabulary
+    .filter((v) => v.word !== item.word)
+    .flatMap((v) => v.collocations ?? []);
+  const choice = buildChoice(correct, [...(item.collocations ?? []).slice(1), ...otherCollocations], hashSeed(`co:${item.word}`));
+  if (!choice) return null;
   return {
     mode: "vocab",
-    type: "collocation_select",
-    title: `${item.word} 연어 선택`,
-    instructions: "본문 어휘와 함께 외워야 할 자연스러운 표현을 고르세요.",
+    type: "vocab_collocation",
+    title: `${item.word} 연어`,
+    instructions: "본문 어휘와 자연스럽게 함께 쓰는 표현을 고르세요.",
     payload: {
+      form: "CHOICE",
+      variant: "stem",
+      prompt: item.word,
       stem: item.word,
-      options: shuffled.options,
-      correctIndex: shuffled.correctIndex,
-      explanation: `${item.word}는 단어 하나보다 함께 쓰이는 표현까지 묶어 외워야 합니다.`,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: item.sentenceIndex },
+      explanation: `${item.word}는 함께 쓰이는 표현까지 묶어 외워야 해요.`,
     },
     itemCount: 1,
     maxScore: 8,
-    estimatedSec: 45,
-    coverageRefs: sentenceCoverage(item.sentenceIndex, "vocab", 0.55),
+    estimatedSec: 40,
+    coverageRefs: ref(item.sentenceIndex, "vocab", 0.55),
   };
 }
 
-function makeGrammarDrafts(analysis: PassageAnalysisData): TutorActivityDraft[] {
-  return analysis.grammarPoints.slice(0, 3).flatMap((point) => {
-    const sentenceIndex = point.sentenceIndex;
-    const binary: TutorActivityDraft = {
-      mode: "grammar",
-      type: "grammar_binary",
-      title: `${point.pattern} 판단`,
-      instructions: "아래 설명이 지문 속 어법 포인트와 맞는지 판단하세요.",
-      payload: {
-        statement: `"${point.textFragment}"에서 핵심 출제 포인트는 ${point.pattern}입니다.`,
-        options: ["맞다", "아니다"],
-        correctIndex: 0,
-        explanation: point.explanation,
-      },
-      itemCount: 1,
-      maxScore: 10,
-      estimatedSec: 50,
-      coverageRefs: sentenceCoverage(sentenceIndex, "grammar"),
-    };
-    const find: TutorActivityDraft = {
-      mode: "grammar",
-      type: "grammar_find",
-      title: `${point.pattern} 원문 찾기`,
-      instructions: "설명에 해당하는 원문 표현을 그대로 입력하세요.",
-      payload: {
-        prompt: point.explanation,
-        sentenceIndex,
-        answerText: point.textFragment,
-        explanation: point.commonMistake || point.explanation,
-      },
-      itemCount: 1,
-      maxScore: 12,
-      estimatedSec: 70,
-      coverageRefs: sentenceCoverage(sentenceIndex, "grammar", 0.85),
-    };
-    return [binary, find];
-  });
+function confusableDraft(item: VocabItem): Draft | null {
+  const confusables = item.confusableWords ?? [];
+  if (confusables.length < 2) return null;
+  const choice = buildChoice(item.word, confusables, hashSeed(`cf:${item.word}`));
+  if (!choice) return null;
+  return {
+    mode: "vocab",
+    type: "vocab_confusable",
+    title: `${item.meaning} 혼동어 구분`,
+    instructions: "뜻에 가장 알맞은 단어를 고르세요. (혼동하기 쉬운 단어 주의)",
+    payload: {
+      form: "CHOICE",
+      variant: "plain",
+      prompt: `'${item.contextMeaning || item.meaning}'에 해당하는 단어는?`,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: item.sentenceIndex },
+      explanation: `${item.word}: ${item.contextMeaning || item.meaning}`,
+    },
+    itemCount: 1,
+    maxScore: 10,
+    estimatedSec: 45,
+    coverageRefs: ref(item.sentenceIndex, "vocab", 0.6),
+  };
 }
 
-function makeTransferDraft(analysis: PassageAnalysisData): TutorActivityDraft | null {
+function synonymDraft(item: VocabItem, analysis: PassageAnalysisData): Draft | null {
+  const synonym = (item.synonyms ?? [])[0];
+  if (!synonym) return null;
+  const choice = buildChoice(
+    synonym,
+    [
+      ...(item.antonyms ?? []),
+      ...analysis.vocabulary.filter((v) => v.word !== item.word).map((v) => v.word),
+    ],
+    hashSeed(`sy:${item.word}`),
+  );
+  if (!choice) return null;
+  return {
+    mode: "vocab",
+    type: "vocab_synonym",
+    title: `${item.word} 유의어`,
+    instructions: "밑줄 친 단어와 의미가 가장 가까운 것을 고르세요.",
+    payload: {
+      form: "CHOICE",
+      variant: "stem",
+      prompt: item.word,
+      stem: item.word,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: item.sentenceIndex },
+      explanation: `${item.word} ≈ ${synonym}`,
+    },
+    itemCount: 1,
+    maxScore: 9,
+    estimatedSec: 45,
+    coverageRefs: ref(item.sentenceIndex, "vocab", 0.6),
+  };
+}
+
+function formDraft(item: VocabItem): Draft | null {
+  const derivative = (item.derivatives ?? [])[0];
+  if (!derivative || !/[A-Za-z]/.test(derivative)) return null;
+  return {
+    mode: "vocab",
+    type: "vocab_form",
+    title: `${item.word} 파생어`,
+    instructions: "뜻과 첫 글자를 보고 파생어를 완성하세요.",
+    payload: {
+      form: "TEXT",
+      variant: "derive",
+      prompt: `${item.word}의 파생어를 쓰세요.`,
+      inputMode: "short",
+      firstLetter: derivative[0],
+      length: derivative.length,
+      gradeMode: "rule_exact",
+      acceptedAnswers: [derivative],
+      source: { sentenceIndex: item.sentenceIndex },
+      explanation: `${item.word} → ${derivative}`,
+    },
+    itemCount: 1,
+    maxScore: 9,
+    estimatedSec: 45,
+    coverageRefs: ref(item.sentenceIndex, "vocab", 0.5),
+  };
+}
+
+function vocabMatchDraft(vocab: VocabItem[]): Draft | null {
+  const target = vocab.slice(0, 5);
+  if (target.length < 2) return null;
+  return {
+    mode: "vocab",
+    type: "vocab_match",
+    title: "핵심 어휘 매칭",
+    instructions: "영단어마다 지문 속 뜻을 연결하세요.",
+    payload: {
+      form: "MATCH",
+      prompt: "단어와 뜻을 1:1로 연결하세요.",
+      pairs: target.map((item) => ({ left: item.word, right: item.contextMeaning || item.meaning })),
+      explanation: "단어 뜻은 본문 쓰임까지 묶어 외워야 오래 남아요.",
+    },
+    itemCount: target.length,
+    maxScore: target.length * 5,
+    estimatedSec: 90,
+    coverageRefs: target.map((item) => ({ sentenceIndex: item.sentenceIndex, dimension: "vocab" as Dimension, weight: 0.5 })),
+  };
+}
+
+function spellDraft(item: VocabItem): Draft | null {
+  if (!/^[A-Za-z]/.test(item.word)) return null;
+  return {
+    mode: "vocab",
+    type: "vocab_spell",
+    title: `${item.meaning} 철자 쓰기`,
+    instructions: "뜻과 첫 글자·길이 힌트를 보고 영어 단어를 입력하세요.",
+    payload: {
+      form: "TEXT",
+      variant: "spell",
+      prompt: item.contextMeaning || item.meaning,
+      inputMode: "short",
+      firstLetter: item.word[0],
+      length: item.word.length,
+      gradeMode: "rule_exact",
+      acceptedAnswers: [item.word],
+      source: { sentenceIndex: item.sentenceIndex },
+      explanation: `${item.word}: ${item.contextMeaning || item.meaning}`,
+    },
+    itemCount: 1,
+    maxScore: 10,
+    estimatedSec: 45,
+    coverageRefs: ref(item.sentenceIndex, "vocab", 0.7),
+  };
+}
+
+// ── 빌더: 해석 ───────────────────────────────────────────────────────────────
+function translateDraft(sentence: SentenceAnalysis): Draft {
+  return {
+    mode: "interpret",
+    type: "sentence_translate",
+    title: `${sentenceLabel(sentence)} 직독직해`,
+    instructions: "영어 문장을 읽고 핵심 의미가 드러나도록 한국어로 적어보세요.",
+    payload: {
+      form: "TEXT",
+      variant: "translate",
+      prompt: sentence.english,
+      inputMode: "long",
+      gradeMode: "ai",
+      modelAnswer: sentence.korean,
+      source: { sentenceIndex: sentence.index },
+      explanation: "직역보다 주어·동사·연결어의 관계를 놓치지 않는 게 핵심이에요.",
+    },
+    itemCount: 1,
+    maxScore: 12,
+    estimatedSec: 75,
+    coverageRefs: ref(sentence.index, "interpret"),
+  };
+}
+
+function chunkReadingDraft(sentence: SentenceAnalysis, analysis: PassageAnalysisData): Draft | null {
+  const syntax = analysis.syntaxAnalysis?.find((item) => item.sentenceIndex === sentence.index);
+  if (!syntax?.chunkReading || !syntax.chunkReading.includes("/")) return null;
+  const pieces = chunkSentence(sentence.english, syntax.chunkReading);
+  if (pieces.length < 2) return null;
+  const { chips, correctOrder } = buildChips(pieces, hashSeed(`cr:${sentence.index}`));
+  return {
+    mode: "interpret",
+    type: "chunk_reading",
+    title: `${sentenceLabel(sentence)} 끊어읽기`,
+    instructions: "의미 단위(끊어읽기) 순서대로 조각을 배열하세요.",
+    payload: {
+      form: "CHIP",
+      variant: "chunk_reading",
+      prompt: "의미 덩어리를 읽는 순서대로 이어보세요.",
+      chips,
+      correctOrder,
+      source: { sentenceIndex: sentence.index },
+      explanation: syntax.readingTip || "끊어읽기 단위를 의식하면 긴 문장도 빠르게 해석돼요.",
+    },
+    itemCount: 1,
+    maxScore: 10,
+    estimatedSec: 60,
+    coverageRefs: ref(sentence.index, "interpret", 0.8),
+  };
+}
+
+function structureRoleDraft(sentence: SentenceAnalysis, analysis: PassageAnalysisData): Draft | null {
+  const syntax = analysis.syntaxAnalysis?.find((item) => item.sentenceIndex === sentence.index);
+  if (!syntax?.patternType) return null;
+  const pool = [
+    "단순 문장 (S+V)",
+    "수동태",
+    "관계사절",
+    "분사구문",
+    "가정법",
+    "도치",
+    "강조구문",
+    "병렬구조",
+  ].filter((label) => normalizeForCompare(label) !== normalizeForCompare(syntax.patternType ?? ""));
+  const choice = buildChoice(syntax.patternType, pool, hashSeed(`sr:${sentence.index}`));
+  if (!choice) return null;
+  return {
+    mode: "interpret",
+    type: "structure_role",
+    title: `${sentenceLabel(sentence)} 구문 유형`,
+    instructions: "밑줄 친 문장의 핵심 구문 유형을 고르세요.",
+    payload: {
+      form: "CHOICE",
+      variant: "stem",
+      prompt: syntax.keyPhrase || sentence.english,
+      stem: syntax.keyPhrase || sentence.english,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: sentence.index },
+      explanation: syntax.plainExplanation || `이 문장의 구문 유형은 ${syntax.patternType}입니다.`,
+    },
+    itemCount: 1,
+    maxScore: 10,
+    estimatedSec: 50,
+    coverageRefs: ref(sentence.index, "interpret", 0.7),
+  };
+}
+
+function gistDraft(analysis: PassageAnalysisData): Draft | null {
+  const mainIdea = analysis.structure?.mainIdea;
+  if (!mainIdea) return null;
+  const choice = buildChoice(
+    mainIdea,
+    [
+      ...(analysis.structure?.keyPoints ?? []),
+      ...(analysis.structure?.paragraphSummaries ?? []).map((p) => p.summary),
+      analysis.structure?.purpose,
+    ],
+    hashSeed(`gist:${mainIdea}`),
+  );
+  if (!choice) return null;
+  return {
+    mode: "interpret",
+    type: "gist_select",
+    title: "지문 핵심 주제 고르기",
+    instructions: "전체 지문의 중심 생각과 가장 가까운 설명을 고르세요.",
+    payload: {
+      form: "CHOICE",
+      variant: "plain",
+      prompt: "이 지문의 핵심 주제로 가장 적절한 것은?",
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      explanation: analysis.structure?.purpose || "첫 문장과 결론을 연결해 중심 흐름을 확인하세요.",
+    },
+    itemCount: 1,
+    maxScore: 12,
+    estimatedSec: 60,
+    coverageRefs: ref(analysis.structure?.topicSentenceIndex ?? 0, "interpret", 0.4),
+  };
+}
+
+// ── 빌더: 순서 ───────────────────────────────────────────────────────────────
+function sentenceOrderDraft(sentences: SentenceAnalysis[]): Draft | null {
+  const target = sentences.slice(0, Math.min(5, sentences.length));
+  if (target.length < 3) return null;
+  const { chips, correctOrder } = buildChips(target.map((s) => s.english), hashSeed(`so:${target[0].index}`));
+  return {
+    mode: "order",
+    type: "sentence_order",
+    title: "문장 흐름 배열",
+    instructions: "원문을 가리고, 논리 흐름이 자연스럽도록 문장 순서를 맞추세요.",
+    payload: {
+      form: "CHIP",
+      variant: "order",
+      prompt: "도입 → 전개 → 결론의 흐름 단서를 떠올려 순서를 맞추세요.",
+      chips,
+      correctOrder,
+      source: { sentenceIndices: target.map((s) => s.index) },
+      explanation: "연결어·지시어·예시와 결론의 위치가 순서 단서예요.",
+    },
+    itemCount: target.length,
+    maxScore: 16,
+    estimatedSec: 110,
+    coverageRefs: target.map((s) => ({ sentenceIndex: s.index, dimension: "order" as Dimension, weight: 0.7 })),
+  };
+}
+
+function connectorDraft(analysis: PassageAnalysisData): Draft | null {
+  const connector = analysis.structure?.connectorAnalysis?.[0];
+  if (!connector?.word) return null;
+  const pool = ["However", "Therefore", "For example", "In addition", "On the other hand", "As a result", "In contrast"].filter(
+    (label) => normalizeForCompare(label) !== normalizeForCompare(connector.word),
+  );
+  const choice = buildChoice(connector.word, pool, hashSeed(`con:${connector.word}`));
+  if (!choice) return null;
+  return {
+    mode: "order",
+    type: "connector_select",
+    title: "연결어 고르기",
+    instructions: "문맥 흐름에 가장 알맞은 연결어를 고르세요.",
+    payload: {
+      form: "CHOICE",
+      variant: "plain",
+      prompt: `다음 흐름(${connector.role})에 알맞은 연결어는?`,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: connector.sentenceIndex },
+      explanation: connector.examRelevance || `${connector.word}는 ${connector.role} 관계를 나타내요.`,
+    },
+    itemCount: 1,
+    maxScore: 9,
+    estimatedSec: 45,
+    coverageRefs: ref(connector.sentenceIndex, "order", 0.6),
+  };
+}
+
+// ── 빌더: 암기 ───────────────────────────────────────────────────────────────
+function rebuildDraft(sentence: SentenceAnalysis, analysis: PassageAnalysisData): Draft | null {
+  const syntax = analysis.syntaxAnalysis?.find((item) => item.sentenceIndex === sentence.index);
+  const pieces = chunkSentence(sentence.english, syntax?.chunkReading);
+  if (pieces.length < 2) return null;
+  const { chips, correctOrder } = buildChips(pieces, hashSeed(`rb:${sentence.index}`));
+  return {
+    mode: "memorize",
+    type: "sentence_rebuild",
+    title: `${sentenceLabel(sentence)} 어순 조립`,
+    instructions: "조각을 원문 어순대로 눌러 문장을 완성하세요.",
+    payload: {
+      form: "CHIP",
+      variant: "rebuild",
+      prompt: "원문 어순대로 조각을 배열하세요.",
+      chips,
+      correctOrder,
+      hint: sentence.korean,
+      source: { sentenceIndex: sentence.index },
+      explanation: "영어는 의미 단위가 쌓이는 순서가 곧 논리예요.",
+    },
+    itemCount: 1,
+    maxScore: 12,
+    estimatedSec: 80,
+    coverageRefs: ref(sentence.index, "memorize", 0.8),
+  };
+}
+
+function clozeDraft(sentence: SentenceAnalysis, analysis: PassageAnalysisData): Draft | null {
+  const key = pickKeyWord(sentence.english, analysis.vocabulary, sentence.index);
+  if (!key) return null;
+  const blanked = sentence.english.replace(new RegExp(`\\b${key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`), "______");
+  if (blanked === sentence.english) return null;
+  return {
+    mode: "memorize",
+    type: "progressive_cloze",
+    title: `${sentenceLabel(sentence)} 핵심어 빈칸`,
+    instructions: "문맥상 빈칸에 들어갈 원문 표현을 입력하세요.",
+    payload: {
+      form: "TEXT",
+      variant: "cloze",
+      prompt: blanked,
+      inputMode: "short",
+      firstLetter: key[0],
+      gradeMode: "rule_exact",
+      acceptedAnswers: [key],
+      hint: sentence.korean,
+      source: { sentenceIndex: sentence.index },
+      explanation: `빈칸에는 '${key}'가 들어가요.`,
+    },
+    itemCount: 1,
+    maxScore: 10,
+    estimatedSec: 50,
+    coverageRefs: ref(sentence.index, "memorize", 0.75),
+  };
+}
+
+function firstLetterDraft(sentence: SentenceAnalysis): Draft {
+  return {
+    mode: "memorize",
+    type: "first_letter_recall",
+    title: `${sentenceLabel(sentence)} 첫 글자 복원`,
+    instructions: "첫 글자 힌트를 보고 원문 문장을 최대한 정확히 복원하세요.",
+    payload: {
+      form: "TEXT",
+      variant: "first_letter",
+      prompt: firstLetterMask(sentence.english),
+      inputMode: "long",
+      gradeMode: "rule_exact",
+      acceptedAnswers: [sentence.english],
+      hint: sentence.korean,
+      source: { sentenceIndex: sentence.index },
+      explanation: "첫 글자 복원은 통문장 암기와 서술형 대비를 동시에 잡아줘요.",
+    },
+    itemCount: 1,
+    maxScore: 12,
+    estimatedSec: 90,
+    coverageRefs: ref(sentence.index, "memorize", 0.85),
+  };
+}
+
+// ── 빌더: 어법 ───────────────────────────────────────────────────────────────
+function grammarJudgeDraft(analysis: PassageAnalysisData, point: PassageAnalysisData["grammarPoints"][number]): Draft | null {
+  const pool = [
+    ...analysis.grammarPoints.filter((p) => p.id !== point.id).map((p) => p.pattern),
+    "단순 시제 일치",
+    "관사 용법",
+    "전치사 선택",
+    "수동태",
+    "관계대명사",
+    "병렬 구조",
+  ];
+  const choice = buildChoice(point.pattern, pool, hashSeed(`gj:${point.id}`));
+  if (!choice) return null;
+  return {
+    mode: "grammar",
+    type: "grammar_judge",
+    title: `${point.pattern} 판단`,
+    instructions: "밑줄 친 표현의 핵심 어법 포인트로 옳은 것을 고르세요.",
+    payload: {
+      form: "CHOICE",
+      variant: "stem",
+      prompt: point.textFragment,
+      stem: point.textFragment,
+      options: choice.options,
+      correctIndex: choice.correctIndex,
+      source: { sentenceIndex: point.sentenceIndex },
+      explanation: point.studentExplanation || point.explanation,
+    },
+    itemCount: 1,
+    maxScore: 10,
+    estimatedSec: 50,
+    coverageRefs: ref(point.sentenceIndex, "grammar"),
+  };
+}
+
+function grammarErrorSpanDraft(
+  analysis: PassageAnalysisData,
+  point: PassageAnalysisData["grammarPoints"][number],
+): Draft | null {
+  const sentence = analysis.sentences.find((s) => s.index === point.sentenceIndex);
+  if (!sentence) return null;
+  const tokens = tokenizeSpan(sentence.english);
+  const fragTokens = tokenizeSpan(point.textFragment);
+  if (fragTokens.length === 0 || fragTokens.length > tokens.length) return null;
+  let span: [number, number] | null = null;
+  for (let i = 0; i + fragTokens.length <= tokens.length; i += 1) {
+    const slice = tokens.slice(i, i + fragTokens.length);
+    if (normalizeForCompare(slice.join(" ")) === normalizeForCompare(point.textFragment)) {
+      span = [i, i + fragTokens.length - 1];
+      break;
+    }
+  }
+  if (!span) return null;
+  return {
+    mode: "grammar",
+    type: "grammar_error_span",
+    title: `${point.pattern} 근거 찾기`,
+    instructions: "설명에 해당하는 어법 포인트 구간을 원문에서 탭하세요.",
+    payload: {
+      form: "SPAN",
+      variant: "grammar_error",
+      prompt: point.explanation,
+      spanTokens: tokens,
+      correctSpan: span,
+      textFragment: point.textFragment,
+      source: { sentenceIndex: point.sentenceIndex },
+      explanation: point.commonMistake || point.explanation,
+    },
+    itemCount: 1,
+    maxScore: 12,
+    estimatedSec: 60,
+    coverageRefs: ref(point.sentenceIndex, "grammar", 0.85),
+  };
+}
+
+function grammarCorrectDraft(point: PassageAnalysisData["grammarPoints"][number]): Draft | null {
+  const corrected = (point.transformations ?? [])[0];
+  if (!corrected || !point.commonMistake) return null;
+  return {
+    mode: "grammar",
+    type: "grammar_correct",
+    title: `${point.pattern} 고치기`,
+    instructions: "어법상 어색한 부분을 원문 의미에 맞게 고쳐 쓰세요.",
+    payload: {
+      form: "TEXT",
+      variant: "correct",
+      prompt: point.commonMistake,
+      sentenceWithError: point.commonMistake,
+      inputMode: "short",
+      gradeMode: "hybrid",
+      acceptedAnswers: [corrected, point.textFragment],
+      modelAnswer: point.textFragment,
+      rubric: [point.explanation],
+      source: { sentenceIndex: point.sentenceIndex },
+      explanation: point.explanation,
+    },
+    itemCount: 1,
+    maxScore: 12,
+    estimatedSec: 75,
+    coverageRefs: ref(point.sentenceIndex, "grammar", 0.8),
+  };
+}
+
+// ── 빌더: 전이(서술형) ──────────────────────────────────────────────────────
+function transformDraft(analysis: PassageAnalysisData): Draft | null {
   const point = analysis.examDesign?.structureTransformPoints?.[0];
-  if (!point) return null;
+  if (!point?.original || !point.example) return null;
   return {
     mode: "transfer",
     type: "structure_transform",
     title: "구문 전환 서술형",
     instructions: "조건에 맞게 핵심 구문을 바꾸어 쓰세요.",
     payload: {
-      prompt: point.questionExample || `${point.transformType} 방식으로 바꾸어 쓰세요: ${point.original}`,
-      source: point.original,
+      form: "TEXT",
+      variant: "transform",
+      prompt: point.original,
+      inputMode: "long",
       transformType: point.transformType,
-      answerText: point.example,
-      explanation: point.reason || "전환 후에도 원문의 의미 관계가 유지되어야 합니다.",
+      conditions: [
+        `${point.transformType} 형태로 전환할 것`,
+        "원문의 의미 관계를 유지할 것",
+      ],
+      gradeMode: "ai",
+      modelAnswer: point.example,
+      source: { sentenceIndex: point.sentenceIndex },
+      explanation: point.reason || "전환 후에도 원문의 의미가 유지되어야 해요.",
     },
     itemCount: 1,
     maxScore: 14,
     estimatedSec: 100,
-    coverageRefs: sentenceCoverage(point.sentenceIndex, "transfer"),
+    coverageRefs: ref(point.sentenceIndex, "transfer"),
   };
 }
 
+function conditionalWritingDraft(analysis: PassageAnalysisData): Draft | null {
+  const conditions = analysis.examDesign?.descriptiveConditions ?? [];
+  const keyPoints = analysis.examDesign?.summaryKeyPoints ?? analysis.structure?.keyPoints ?? [];
+  if (conditions.length === 0 || keyPoints.length === 0) return null;
+  return {
+    mode: "transfer",
+    type: "conditional_writing",
+    title: "조건 영작 서술형",
+    instructions: "주어진 조건을 모두 만족하도록 영어로 작성하세요.",
+    payload: {
+      form: "TEXT",
+      variant: "conditional",
+      prompt: `다음 내용을 조건에 맞게 영어로 작성하세요: ${keyPoints[0]}`,
+      inputMode: "long",
+      conditions: conditions.slice(0, 3),
+      gradeMode: "hybrid",
+      modelAnswer: keyPoints[0],
+      source: { sentenceIndex: 0 },
+      explanation: "조건을 하나씩 만족했는지 점검하며 작성하세요.",
+    },
+    itemCount: 1,
+    maxScore: 14,
+    estimatedSec: 110,
+    coverageRefs: ref(0, "transfer", 0.7),
+  };
+}
+
+// ── refKey(반복 숙달용) 부여 ───────────────────────────────────────────────
+function refKeyFor(draft: Draft): string {
+  const sentenceIndex = draft.coverageRefs[0]?.sentenceIndex ?? 0;
+  const stem = (draft.payload as { stem?: string }).stem;
+  switch (draft.payload.form) {
+    case "CHOICE":
+      return draft.type.startsWith("vocab") && stem ? `vocab:${normalizeForCompare(stem)}` : `${draft.coverageRefs[0]?.dimension}:${draft.type}:${sentenceIndex}`;
+    default:
+      return `${draft.coverageRefs[0]?.dimension}:${draft.type}:${sentenceIndex}`;
+  }
+}
+
+// ── 조립 ────────────────────────────────────────────────────────────────────
 export function buildRuleBasedTutorDrafts(analysis: PassageAnalysisData): TutorActivityDraft[] {
   const sentences = analysis.sentences.slice(0, 6);
   const vocab = analysis.vocabulary.slice(0, 8);
-  const drafts: TutorActivityDraft[] = [];
+  const drafts: (Draft | null)[] = [];
 
-  const gistDraft = makeGistDraft(analysis, sentences);
-  if (gistDraft) drafts.push(gistDraft);
+  // 어휘
+  for (const item of vocab.slice(0, 4)) drafts.push(vocabChoiceDraft(item, analysis));
+  for (const item of vocab.slice(0, 3)) drafts.push(contextualMeaningDraft(item, analysis));
+  for (const item of vocab.slice(0, 3)) drafts.push(collocationDraft(item, analysis));
+  for (const item of vocab.slice(0, 2)) drafts.push(confusableDraft(item));
+  for (const item of vocab.slice(0, 2)) drafts.push(synonymDraft(item, analysis));
+  for (const item of vocab.slice(0, 2)) drafts.push(formDraft(item));
+  drafts.push(vocabMatchDraft(vocab));
+  for (const item of vocab.slice(0, 4)) drafts.push(spellDraft(item));
 
-  for (const sentence of sentences.slice(0, 3)) {
-    drafts.push(makeSentenceTranslateDraft(sentence));
+  // 해석
+  for (const sentence of sentences.slice(0, 3)) drafts.push(translateDraft(sentence));
+  for (const sentence of sentences.slice(0, 3)) drafts.push(chunkReadingDraft(sentence, analysis));
+  for (const sentence of sentences.slice(0, 2)) drafts.push(structureRoleDraft(sentence, analysis));
+  drafts.push(gistDraft(analysis));
+
+  // 순서
+  drafts.push(sentenceOrderDraft(sentences));
+  drafts.push(connectorDraft(analysis));
+
+  // 암기
+  for (const sentence of sentences.slice(0, 3)) drafts.push(rebuildDraft(sentence, analysis));
+  for (const sentence of sentences.slice(0, 3)) drafts.push(clozeDraft(sentence, analysis));
+  for (const sentence of sentences.slice(0, 2)) drafts.push(firstLetterDraft(sentence));
+
+  // 어법
+  for (const point of analysis.grammarPoints.slice(0, 3)) {
+    drafts.push(grammarJudgeDraft(analysis, point));
+    drafts.push(grammarErrorSpanDraft(analysis, point));
+    drafts.push(grammarCorrectDraft(point));
   }
 
-  for (const sentence of sentences.slice(0, 3)) {
-    drafts.push(makeFirstLetterDraft(sentence));
-    const cloze = makeClozeDraft(sentence);
-    if (cloze) drafts.push(cloze);
-  }
+  // 전이
+  drafts.push(transformDraft(analysis));
+  drafts.push(conditionalWritingDraft(analysis));
 
-  for (const sentence of sentences.slice(0, 2)) {
-    drafts.push(makeSentenceRebuildDraft(sentence));
+  const built = drafts.filter((draft): draft is Draft => draft !== null);
+  // 정책·refKey 부여
+  for (const draft of built) {
+    const policy = PASSAGE_POLICY_BY_TYPE[draft.type as TutorActivityType] ?? "visible";
+    (draft.payload as { passagePolicy?: string }).passagePolicy = policy;
+    if (!(draft.payload as { refKey?: string }).refKey) {
+      (draft.payload as { refKey?: string }).refKey = refKeyFor(draft);
+    }
   }
-
-  const orderDraft = makeSentenceOrderDraft(sentences);
-  if (orderDraft) drafts.push(orderDraft);
-  const insertionDraft = makeInsertionDraft(sentences);
-  if (insertionDraft) drafts.push(insertionDraft);
-
-  for (const item of vocab.slice(0, 4)) {
-    drafts.push(makeVocabChoiceDraft(item, analysis));
-  }
-  for (const item of vocab.slice(0, 3)) {
-    drafts.push(makeVocabSpellDraft(item));
-  }
-  const vocabMatch = makeVocabMatchDraft(vocab);
-  if (vocabMatch) drafts.push(vocabMatch);
-  for (const item of vocab.slice(0, 2)) {
-    const contextDraft = makeContextMeaningDraft(item, analysis);
-    if (contextDraft) drafts.push(contextDraft);
-    const collocationDraft = makeCollocationDraft(item);
-    if (collocationDraft) drafts.push(collocationDraft);
-  }
-
-  drafts.push(...makeGrammarDrafts(analysis));
-  const transferDraft = makeTransferDraft(analysis);
-  if (transferDraft) drafts.push(transferDraft);
-
-  return drafts.filter((draft) => draft.coverageRefs.every((ref) => COVERAGE_DIMENSIONS.includes(ref.dimension)));
+  // 파싱해 v2 스키마(payload superRefine 포함)를 통과한 것만 반환. 폴백 쓰레기 0건.
+  return built.flatMap((draft) => {
+    const parsed = TutorActivityDraftSchema.safeParse(draft);
+    return parsed.success ? [parsed.data] : [];
+  });
 }
 
-export async function generateTutorDraftsWithModel(analysis: PassageAnalysisData) {
-  const startedAt = Date.now();
-  const result = await generateText({
-    model: getTutorModel(),
-    output: Output.object({ schema: TutorDraftResponseSchema }),
-    system: [
-      "You are a conservative Korean high-school English exam item writer for a mobile study product.",
-      "Generate grounded, compact JSON only. Never invent words, sentences, facts, or answer keys outside the supplied analysis.",
-      "Every item must be solvable by the supplied passage analysis alone.",
-      "Distractors must be plausible but clearly wrong from the passage. Never make trick questions that depend on outside knowledge.",
-      "Student-visible text must be concise Korean. Do not leak answers in titles, instructions, or prompts.",
-      "Do not include model/provider names in any student-visible text.",
-    ].join("\n"),
-    prompt: JSON.stringify({
-      task:
-        "Generate 16-24 mobile-first activities that cover interpretation, memorization, sentence order, vocabulary, grammar, and transfer. Prefer short tasks a student can complete on a phone in under 2 minutes.",
-      analysis,
-      qualityBar: [
-        "Reject your own item if the correct answer is ambiguous.",
-        "Use exact source sentence indices in coverageRefs.",
-        "For multiple choice, provide exactly 4 options unless the source task genuinely needs 5.",
-        "For sentence rebuild/order/insertion, use only source sentence text or chunks from source sentence text.",
-        "For vocabulary, the target word must be one of vocabWordsMustComeFrom.",
-        "For grammar, the point must be tied to a supplied grammarPoints entry.",
-        "Explanations should teach the clue, not merely repeat the answer.",
-      ],
-      constraints: {
-        allowedActivityTypes: Array.from(PLAYER_SUPPORTED_ACTIVITY_TYPES),
-        requiredCoverageDimensions: COVERAGE_DIMENSIONS,
-        vocabWordsMustComeFrom: analysis.vocabulary.map((item) => item.word),
-        sentenceIndicesMustComeFrom: analysis.sentences.map((item) => item.index),
-        payloadRules: {
-          multipleChoice: "Use options plus correctIndex.",
-          textAnswer: "Use answerText or answers for accepted hidden answers.",
-          matching: "Use leftItems, rightItems, and correctPairs.",
-          rebuild: "Use chunks and answerText.",
-          insertion: "Use targetSentence, options, and correctIndex.",
-        },
-      },
-    }),
-  });
+// LLM 범용 생성 경로는 v2에서 rule-based + 내신형(exam-aligned)로 대체되어 사용 중단.
+// 호출부 호환을 위해 시그니처만 유지(빈 결과 반환).
+export async function generateTutorDraftsWithModel(_analysis: PassageAnalysisData) {
   return {
-    activities: result.output.activities,
+    activities: [] as TutorActivityDraft[],
     model: getTutorModelNameForAudit(),
-    latencyMs: Date.now() - startedAt,
-    usage: result.usage,
+    latencyMs: 0,
+    usage: undefined,
   };
 }
 
-function isUniqueStringArray(value: unknown, minLength: number, maxLength = 6) {
-  if (!Array.isArray(value)) return false;
-  const strings = value.map((item) => String(item ?? "").trim()).filter(Boolean);
-  if (strings.length < minLength || strings.length > maxLength) return false;
-  return new Set(strings.map((item) => item.toLowerCase())).size === strings.length;
-}
-
-function hasValidChoicePayload(payload: Record<string, unknown>) {
-  if (!isUniqueStringArray(payload.options, 4, 5)) return false;
-  const options = payload.options as unknown[];
-  const correctIndex = Number(payload.correctIndex ?? payload.answerIndex ?? payload.correctOptionIndex);
-  return Number.isInteger(correctIndex) && correctIndex >= 0 && correctIndex < options.length;
-}
-
-function hasTextAnswerPayload(payload: Record<string, unknown>) {
-  const answers = [
-    payload.answerText,
-    payload.answer,
-    payload.correctText,
-    payload.modelAnswer,
-    payload.expected,
-    ...(Array.isArray(payload.answers) ? payload.answers : []),
-    ...(Array.isArray(payload.acceptedAnswers) ? payload.acceptedAnswers : []),
-  ];
-  return answers.some((answer) => String(answer ?? "").trim().length >= 2);
-}
-
-function hasRebuildPayload(payload: Record<string, unknown>) {
-  return isUniqueStringArray(payload.chunks, 2, 30) && hasTextAnswerPayload(payload);
-}
-
-function hasOrderPayload(payload: Record<string, unknown>, sentenceIndices: Set<number>) {
-  if (!Array.isArray(payload.shuffled) || !Array.isArray(payload.correctOrder)) return false;
-  const order = payload.correctOrder.map(Number);
-  if (order.length < 3 || order.some((index) => !sentenceIndices.has(index))) return false;
-  return payload.shuffled.every((item) => {
-    const record = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
-    return sentenceIndices.has(Number(record.index)) && String(record.text ?? "").trim().length > 0;
-  });
-}
-
-function hasInsertionPayload(payload: Record<string, unknown>) {
-  if (String(payload.targetSentence ?? "").trim().length < 8) return false;
-  if (!Array.isArray(payload.options) || payload.options.length < 3 || payload.options.length > 7) return false;
-  const correctIndex = Number(payload.correctIndex ?? payload.answerIndex);
-  return Number.isInteger(correctIndex) && correctIndex >= 0 && correctIndex < payload.options.length;
-}
-
-function hasMatchingPayload(payload: Record<string, unknown>) {
-  if (!isUniqueStringArray(payload.leftItems, 2, 10) || !isUniqueStringArray(payload.rightItems, 2, 10)) return false;
-  return payload.correctPairs && typeof payload.correctPairs === "object" && !Array.isArray(payload.correctPairs);
-}
-
-function containsHangul(value: unknown) {
-  return /[가-힣]/.test(String(value ?? ""));
-}
-
-function normalizeComparable(value: unknown) {
-  return String(value ?? "")
-    .trim()
-    .toLowerCase()
-    .replace(/[“”‘’"'`.,!?;:()[\]{}]/g, "")
-    .replace(/\s+/g, " ");
-}
-
-function exactSourceSentenceSet(analysis: PassageAnalysisData) {
-  return new Set(analysis.sentences.map((sentence) => normalizeComparable(sentence.english)).filter(Boolean));
-}
-
-function isSourceSentence(value: unknown, sourceSentences: Set<string>) {
-  return sourceSentences.has(normalizeComparable(value));
-}
-
-function hasReasonableTimingAndScore(draft: TutorActivityDraft) {
-  return draft.maxScore >= 1 && draft.maxScore <= 40 && draft.estimatedSec >= 10 && draft.estimatedSec <= 240;
-}
-
+// v2 스키마 통과 + 死유형 제거를 단일 검증으로. 통과 못하면 폴백 없이 제외.
 export function validateGroundedDrafts(
-  drafts: TutorActivityDraft[],
+  drafts: Draft[],
   analysis: PassageAnalysisData,
 ): TutorActivityDraft[] {
   const sentenceIndices = new Set(analysis.sentences.map((sentence) => sentence.index));
-  const vocabWords = new Set(analysis.vocabulary.map((item) => item.word.toLowerCase()));
-  const sourceSentences = exactSourceSentenceSet(analysis);
-  return drafts.filter((draft) => {
-    if (!PLAYER_SUPPORTED_ACTIVITY_TYPES.has(draft.type)) return false;
-    if (!draft.title.trim() || draft.title.length > 80) return false;
-    if (!draft.instructions?.trim()) return false;
-    if (!containsHangul(draft.title) || !containsHangul(draft.instructions)) return false;
-    if (!hasReasonableTimingAndScore(draft)) return false;
-    const refsOk = draft.coverageRefs.every(
-      (ref) =>
-        sentenceIndices.has(ref.sentenceIndex) &&
-        COVERAGE_DIMENSIONS.includes(ref.dimension) &&
-        ref.weight >= 0 &&
-        ref.weight <= 1,
-    );
-    if (!refsOk) return false;
-    const payload = draft.payload as Record<string, unknown>;
-    if (
-      [
-        "vocab_choice",
-        "gist_select",
-        "paraphrase_mc",
-        "contextual_meaning",
-        "collocation_select",
-        "grammar_binary",
-        "irrelevant_sentence",
-        "mastery_test",
-      ].includes(draft.type) &&
-      !hasValidChoicePayload(payload)
-    ) {
-      return false;
+  const out: TutorActivityDraft[] = [];
+  for (const draft of drafts) {
+    const parsed = TutorActivityDraftSchema.safeParse(draft);
+    if (!parsed.success) continue;
+    if (parsed.data.coverageRefs.every((refItem) => sentenceIndices.has(refItem.sentenceIndex) || refItem.sentenceIndex === 0)) {
+      out.push(parsed.data);
     }
-    if (draft.type === "sentence_order" && !hasOrderPayload(payload, sentenceIndices)) return false;
-    if (draft.type === "insertion_point" && (!hasInsertionPayload(payload) || !isSourceSentence(payload.targetSentence, sourceSentences))) {
-      return false;
-    }
-    if (["sentence_rebuild", "chunk_rebuild"].includes(draft.type)) {
-      if (!hasRebuildPayload(payload)) return false;
-      if (!isSourceSentence(payload.answerText, sourceSentences)) return false;
-    }
-    if (draft.type === "vocab_match" && !hasMatchingPayload(payload)) return false;
-    if (
-      [
-        "sentence_translate",
-        "progressive_cloze",
-        "first_letter_recall",
-        "vocab_spell",
-        "grammar_find",
-        "grammar_correct",
-        "structure_transform",
-      ].includes(draft.type) &&
-      !hasTextAnswerPayload(payload)
-    ) {
-      return false;
-    }
-    if (["vocab_choice", "contextual_meaning", "collocation_select"].includes(draft.type)) {
-      const word = String(payload.stem ?? payload.word ?? "").toLowerCase();
-      return !word || vocabWords.has(word);
-    }
-    if (draft.type === "vocab_spell") {
-      const word = String(payload.answerText ?? payload.answer ?? "").toLowerCase();
-      return !word || vocabWords.has(word);
-    }
-    return true;
-  });
+  }
+  return out;
 }

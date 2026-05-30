@@ -10,12 +10,14 @@ type TargetOption = {
   id: string;
   label: string;
   count?: number;
+  meta?: string | null;
 };
 
-type TargetType = "CLASS";
+type TargetType = "CLASS" | "STUDENT";
 
 const targetLabels: Record<TargetType, string> = {
   CLASS: "클래스",
+  STUDENT: "개별 학생",
 };
 
 export function TutorPublishForm({
@@ -23,11 +25,13 @@ export function TutorPublishForm({
   disabled,
   activeStudentCount,
   classes,
+  students,
 }: {
   programId: string;
   disabled: boolean;
   activeStudentCount: number;
   classes: TargetOption[];
+  students: TargetOption[];
 }) {
   const router = useRouter();
   const [targetType, setTargetType] = useState<TargetType>("CLASS");
@@ -37,8 +41,8 @@ export function TutorPublishForm({
   const [isPending, startTransition] = useTransition();
 
   const options = useMemo(() => {
-    return classes;
-  }, [classes]);
+    return targetType === "CLASS" ? classes : students;
+  }, [classes, students, targetType]);
 
   const canSubmit =
     !disabled &&
@@ -69,8 +73,8 @@ export function TutorPublishForm({
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-slate-950">클래스 단위 배포</p>
-          <p className="mt-1 text-xs text-slate-500">반을 지정해야 학생 모바일 화면에 학습이 열립니다.</p>
+          <p className="text-sm font-bold text-slate-950">학생 앱 배포</p>
+          <p className="mt-1 text-xs text-slate-500">클래스 전체 또는 특정 학생 1명에게 바로 열어줄 수 있습니다.</p>
         </div>
         <span className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
           {activeStudentCount}명
@@ -86,10 +90,10 @@ export function TutorPublishForm({
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button asChild variant="outline" size="sm" className="rounded-lg border-blue-200 bg-white text-blue-700 hover:bg-blue-50">
-                <Link href="/director/students">학생 관리로 이동</Link>
+                <Link href="/director/students">학생·반 관리로 이동</Link>
               </Button>
               <Button asChild variant="outline" size="sm" className="rounded-lg border-blue-200 bg-white text-blue-700 hover:bg-blue-50">
-                <Link href="/director/classes">반 관리로 이동</Link>
+                <Link href="/director/students?pane=classes">반 편성으로 이동</Link>
               </Button>
             </div>
           </div>
@@ -122,11 +126,12 @@ export function TutorPublishForm({
             onChange={(event) => setTargetId(event.target.value)}
             className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-blue-100"
           >
-            <option value="">클래스를 선택하세요</option>
+            <option value="">{targetType === "CLASS" ? "클래스를 선택하세요" : "학생을 선택하세요"}</option>
             {options.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
                 {typeof option.count === "number" ? ` · ${option.count}명` : ""}
+                {option.meta ? ` · ${option.meta}` : ""}
               </option>
             ))}
           </select>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, Plus } from "lucide-react";
+import { Activity, ChevronRight, PencilLine, Plus, Smartphone } from "lucide-react";
 import { getTutorProgramList } from "@/actions/tutor";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,14 +11,17 @@ export default async function TutorProgramsPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-blue-600">프로그램</p>
-          <h1 className="mt-1 text-2xl font-bold text-slate-950">학습 프로그램</h1>
+          <p className="text-sm font-medium text-blue-600">프로그램 관리</p>
+          <h1 className="mt-1 text-2xl font-bold text-slate-950">생성된 모바일 프로그램 관리</h1>
+          <p className="mt-2 text-sm text-slate-500">
+            이미 생성한 모바일 학습 프로그램의 구성, 학생 화면, 배포 현황을 운영합니다.
+          </p>
         </div>
         <Button asChild className="bg-blue-600 hover:bg-blue-700">
           <Link href="/director/tutor/programs/new">
-            <Plus className="mr-2 size-4" /> 새 프로그램
+            <Plus className="size-4" /> 프로그램 생성
           </Link>
         </Button>
       </div>
@@ -26,8 +29,8 @@ export default async function TutorProgramsPage() {
       <div className="grid gap-3">
         {programs.map((program) => (
           <Card key={program.id} className="border-slate-200 bg-white shadow-sm">
-            <CardContent className="flex items-center justify-between gap-4 p-4">
-              <div className="min-w-0">
+            <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 sm:flex-1">
                 <div className="flex items-center gap-2">
                   <h2 className="truncate text-base font-bold text-slate-950">{program.title}</h2>
                   <Badge variant="outline" className="border-blue-100 bg-blue-50 text-blue-700">
@@ -39,17 +42,29 @@ export default async function TutorProgramsPage() {
                   {program.assignments.reduce((sum, assignment) => sum + assignment.recipients.length, 0)}명 대상
                 </p>
               </div>
-              <Button asChild variant="ghost" size="sm">
-                <Link href={`/director/tutor/programs/${program.id}/builder`}>
-                  열기 <ChevronRight className="ml-1 size-4" />
-                </Link>
-              </Button>
+              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/director/tutor/programs/${program.id}/emulator`}>
+                    <Smartphone className="size-4" /> 학생 화면
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/director/tutor/programs/${program.id}/monitor`}>
+                    <Activity className="size-4" /> 배포 현황
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href={`/director/tutor/programs/${program.id}/builder`}>
+                    <PencilLine className="size-4" /> 생성 빌더 <ChevronRight className="size-4" />
+                  </Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
         {programs.length === 0 && (
           <div className="rounded-xl border border-dashed border-slate-200 bg-white px-4 py-12 text-center text-sm text-slate-500">
-            분석 완료 지문을 선택해서 첫 프로그램을 만들어보세요.
+            아직 관리할 프로그램이 없습니다. 프로그램 생성에서 첫 모바일 프로그램을 만들어보세요.
           </div>
         )}
       </div>

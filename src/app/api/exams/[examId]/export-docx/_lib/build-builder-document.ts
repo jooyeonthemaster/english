@@ -29,6 +29,18 @@ import {
   optionOrdinalLabel,
   splitSentenceInsertGivenBlock,
 } from "@/components/exams/paper-builder/option-display";
+import {
+  shouldForceSourcePassage,
+  shouldRenderSourcePassageInsideQuestion,
+} from "@/components/exams/paper-builder/passage-policy";
+import {
+  isSummaryCompleteMc,
+  splitSummaryCompleteMcQuestionText,
+} from "@/components/exams/paper-builder/summary-complete-mc-layout";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 /*
@@ -46,11 +58,14 @@ const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
+  TOPIC: "주제 추론",
+  MAIN_IDEA: "요지/주장",
   TOPIC_MAIN_IDEA: "주제/요지",
   TITLE: "제목 추론",
   IMPLIED_MEANING: "함축 의미 추론",
   REFERENCE: "지칭 추론",
   CONTENT_MATCH: "내용 일치",
+  SUMMARY_COMPLETE_MC: "요약문 완성(객관식)",
   IRRELEVANT: "무관한 문장",
   CONDITIONAL_WRITING: "조건부 영작",
   SENTENCE_TRANSFORM: "문장 전환",
@@ -165,6 +180,26 @@ export interface BuilderSettings {
 
 interface BuilderItemResolved extends BuilderItem {
   sourceQuestion: ExamQuestionData["question"];
+}
+
+function normalizePrintableTitle(value: string | null | undefined): string {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function printablePassageTitle(item: BuilderItemResolved): string {
+  const savedTitle = normalizePrintableTitle(item.passageTitle);
+  if (!savedTitle) return "";
+  const sourceTitle = normalizePrintableTitle(item.sourceQuestion.passage?.title);
+  return savedTitle === sourceTitle ? "" : savedTitle;
+}
+
+function firstQuestionLineForHeader(questionText: string, subType: string | null | undefined): string {
+  const { beforeText } = splitSentenceInsertGivenBlock(questionText, subType);
+  const sourceText = beforeText || questionText;
+  return sourceText
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .find(Boolean) || "";
 }
 
 function dataUrlToImage(dataUrl: string | null | undefined):
@@ -555,7 +590,7 @@ function buildQuestionBlock(
 ): DocChild[] {
   const result: DocChild[] = [];
   const compact = layout.density === "compact";
-  const showMeta = layout.showQuestionMeta !== false;
+  const showMeta = layout.showQuestionMeta === true;
   const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
 
   const orderNum = item.orderNum ?? 0;
@@ -572,6 +607,18 @@ function buildQuestionBlock(
 
   const qNumSize = compact ? SIZE_QNUM_COMPACT : SIZE_QNUM;
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const summaryMc = isSummaryCompleteMc(subType);
+  const inlineSourcePassage =
+    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc;
+  const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
+  const summaryPartsForHeader = summaryMc
+    ? splitSummaryCompleteMcQuestionText(questionText)
+    : null;
+  const genericHeaderQuestionText = !summaryPartsForHeader
+    ? firstQuestionLineForHeader(questionText, subType)
+    : "";
+  const headerQuestionText =
+    summaryPartsForHeader?.stem || genericHeaderQuestionText;
 
   // 번호 + 메타 + 본문 한 단락 (번호 굵게, 메타 작게, 본문은 새 줄에서 시작)
   const headerRuns: TextRun[] = [
@@ -596,6 +643,16 @@ function buildQuestionBlock(
   }
 
   // 첫 단락에 번호 + 메타. 그 다음 단락에 본문(있는 경우).
+  if (headerQuestionText) {
+    headerRuns.push(
+      ...parseFormattedText(headerQuestionText, {
+        font: KR_FONT,
+        size: bodySize,
+        bold: true,
+      }),
+    );
+  }
+
   result.push(
     new Paragraph({
       spacing: { before: 80, after: questionText ? 40 : 80 },
@@ -605,6 +662,76 @@ function buildQuestionBlock(
   );
 
   if (questionText) {
+    if (summaryMc) {
+      const { summary } = summaryPartsForHeader ?? splitSummaryCompleteMcQuestionText(questionText);
+      const maskedSummary = formatSummaryCompleteMcSummaryForDisplay(
+        summary,
+        readSummaryBlankAnswersFromQuestionLike(
+          item.sourceQuestion,
+          item.options,
+          item.correctAnswer ?? item.sourceQuestion.correctAnswer,
+        ),
+      );
+      if (passageContent) {
+        result.push(
+          ...buildPassage({
+            passageTitle: "",
+            passageContent,
+            passageStyle: layout.passageStyle ?? "boxed",
+            showPassageTitle: false,
+            compact,
+            usesSentenceInsertMarkers: false,
+          }),
+        );
+      }
+      result.push(
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 20, after: 50 },
+          children: [
+            new TextRun({
+              text: "\u2193",
+              font: KR_FONT,
+              size: bodySize,
+              bold: true,
+              color: COLOR.gray,
+            }),
+          ],
+        }),
+      );
+      if (maskedSummary) {
+        result.push(
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            layout: TableLayoutType.FIXED,
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({
+                    borders: thinBox(COLOR.lightGray, 4),
+                    shading: { fill: "F8FAFC" },
+                    margins: { top: 100, bottom: 100, left: 140, right: 140 },
+                    width: { size: 100, type: WidthType.PERCENTAGE },
+                    children: [
+                      new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 0, line: 290 },
+                        children: parseFormattedText(maskedSummary, {
+                          font: FONT,
+                          size: bodySize,
+                          bold: true,
+                        }),
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+            ],
+          }),
+          new Paragraph({ spacing: { after: 90 } }),
+        );
+      }
+    } else {
     const { beforeText, givenText } = splitSentenceInsertGivenBlock(questionText, subType);
     const questionParagraphs: Array<{ text: string; boxed: boolean }> = [];
 
@@ -625,17 +752,31 @@ function buildQuestionBlock(
       });
     }
 
-    questionParagraphs.forEach(({ text, boxed }, idx) => {
+    let skippedHeaderQuestionLine = false;
+    const bodyQuestionParagraphs = questionParagraphs.filter(({ text, boxed }) => {
+      if (
+        !skippedHeaderQuestionLine &&
+        headerQuestionText &&
+        !boxed &&
+        text.trim() === headerQuestionText.trim()
+      ) {
+        skippedHeaderQuestionLine = true;
+        return false;
+      }
+      return true;
+    });
+
+    bodyQuestionParagraphs.forEach(({ text, boxed }, idx) => {
       const trimmed = text.trim();
       result.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
           spacing: {
             before: boxed ? 50 : 0,
-            after: idx === questionParagraphs.length - 1 ? 100 : boxed ? 70 : 30,
+            after: idx === bodyQuestionParagraphs.length - 1 ? 100 : boxed ? 70 : 30,
             line: 290,
           },
-          keepNext: idx === questionParagraphs.length - 1 && options.length > 0,
+          keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
           border: boxed
             ? {
                 top: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
@@ -651,6 +792,20 @@ function buildQuestionBlock(
         }),
       );
     });
+
+    if (inlineSourcePassage && passageContent) {
+      result.push(
+        ...buildPassage({
+          passageTitle: "",
+          passageContent,
+          passageStyle: layout.passageStyle ?? "boxed",
+          showPassageTitle: false,
+          compact,
+          usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
+        }),
+      );
+    }
+    }
   }
 
   // 옵션 (preview 와 동일하게 원문자 번호 + 유형별 선택지 표시)
@@ -1150,15 +1305,23 @@ function appendQuestionGroups(
   compact: boolean,
 ) {
   const passageStyle = layout.passageStyle ?? "boxed";
-  const showPassageTitle = layout.showPassageTitle !== false;
+  const showPassageTitle = layout.showPassageTitle === true;
   const groups = groupItems(items);
   for (const group of groups) {
     const first = group.items[0];
-    const includePassage = first.includePassage !== false;
     const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
+    const includePassage =
+      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
+      (first.includePassage !== false ||
+        shouldForceSourcePassage({
+          subType: first.sourceQuestion.subType,
+          questionText: first.questionText || first.sourceQuestion.questionText,
+          structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
+          passage: { content: passageContent },
+        }));
     if (includePassage && passageContent) {
       const passageBlocks = buildPassage({
-        passageTitle: first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+        passageTitle: printablePassageTitle(first),
         passageContent,
         passageStyle,
         showPassageTitle,

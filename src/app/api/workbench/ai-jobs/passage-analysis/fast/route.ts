@@ -15,6 +15,11 @@ import {
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  normalizeAnalysisTone,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import { prisma } from "@/lib/prisma";
 import {
   getQuestionGenerationCreditCost,
@@ -25,14 +30,8 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { runFullAnalysis } from "@/app/api/ai/passage-analysis/[passageId]/_lib/run-full-analysis";
-
-type AnalysisUsageEvent = {
-  usage?: unknown;
-  provider: string;
-  modelId: string;
-  durationMs: number;
-};
+import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
+import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,6 +43,7 @@ const requestSchema = z.object({
   focusAreas: z.array(z.string()).optional(),
   targetLevel: z.string().optional(),
   generationPlan: z.unknown().optional(),
+  analysisTone: z.unknown().optional(),
 });
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -52,11 +52,21 @@ function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | nul
   return raw === "PREMIUM" || raw === "STANDARD" ? raw : null;
 }
 
+function getAnalysisTone(value: unknown): AnalysisTone | null {
+  if (!value || typeof value !== "object") return null;
+  const raw = (value as Record<string, unknown>)._analysisTone;
+  return typeof raw === "string" ? normalizeAnalysisTone(raw) : null;
+}
+
 function shouldUseCachedAnalysis(
   cached: unknown,
   requestedPlan: QuestionGenerationPlan,
+  requestedTone: AnalysisTone,
 ): boolean {
   const cachedPlan = getAnalysisGenerationPlan(cached);
+  const cachedTone = getAnalysisTone(cached);
+  if (cachedTone && cachedTone !== requestedTone) return false;
+  if (!cachedTone && requestedTone !== DEFAULT_ANALYSIS_TONE) return false;
   if (requestedPlan === "PREMIUM") return cachedPlan === "PREMIUM";
   return true;
 }
@@ -64,6 +74,7 @@ function shouldUseCachedAnalysis(
 function withAnalysisGenerationMetadata(
   analysisData: unknown,
   generationPlan: QuestionGenerationPlan,
+  analysisTone: AnalysisTone,
 ) {
   if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
     return analysisData;
@@ -73,6 +84,7 @@ function withAnalysisGenerationMetadata(
     ...(analysisData as Record<string, unknown>),
     _generationPlan: generationPlan,
     _generationTag: getQuestionGenerationPlanTag(generationPlan),
+    _analysisTone: analysisTone,
   };
 }
 
@@ -127,6 +139,7 @@ export async function POST(req: NextRequest) {
   const generationPlan = normalizeQuestionGenerationPlan(
     parsed.data.generationPlan,
   );
+  const analysisTone = normalizeAnalysisTone(parsed.data.analysisTone);
 
   const passage = await prisma.passage.findFirst({
     where: { id: parsed.data.passageId, academyId: staff.academyId },
@@ -177,6 +190,7 @@ export async function POST(req: NextRequest) {
         focusAreas: parsed.data.focusAreas ?? [],
         targetLevel: parsed.data.targetLevel ?? "",
         generationPlan,
+        analysisTone,
         fastPath: true,
       },
     },
@@ -192,7 +206,7 @@ export async function POST(req: NextRequest) {
   try {
     if (passage.analysis && passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(passage.analysis.analysisData);
-      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan)) {
+      if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         const completedAt = new Date();
         const debugTiming = {
           queueWaitMs: 0,
@@ -215,6 +229,7 @@ export async function POST(req: NextRequest) {
               cached: true,
               passageId: passage.id,
               generationPlan,
+              analysisTone,
               debugTiming,
               fastPath: true,
             })),
@@ -228,6 +243,7 @@ export async function POST(req: NextRequest) {
           data: cachedAnalysis,
           cached: true,
           generationPlan,
+          analysisTone: getAnalysisTone(cachedAnalysis) || analysisTone,
           createdAt: job.createdAt.toISOString(),
           completedAt: completedAt.toISOString(),
           debugTiming,
@@ -249,6 +265,7 @@ export async function POST(req: NextRequest) {
       metadata: {
         passageId: passage.id,
         generationPlan,
+        analysisTone,
         creditCost,
         fastPath: true,
       },
@@ -265,16 +282,18 @@ export async function POST(req: NextRequest) {
       .join("\n\n");
 
     generationStartedAt = Date.now();
-    let analysisUsageEvent: AnalysisUsageEvent | null = null;
-    const rawAnalysis = await runFullAnalysis(
-      passage,
-      mergedPrompt || undefined,
-      generationPlan,
-      (event) => {
-        analysisUsageEvent = event;
-      },
-    );
-    const usageEvent = analysisUsageEvent as AnalysisUsageEvent | null;
+    // PRIME A4 보고서를 단일 소스로 생성 (옛 5-layer runFullAnalysis 대체)
+    const primeResult = await generateAnalysisReport({
+      passageContent: passage.content,
+      schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+      grade: passage.grade,
+      customPrompt: mergedPrompt || undefined,
+    });
+    generationMs = Date.now() - generationStartedAt;
+    if (!primeResult.ok) {
+      throw new Error(`PRIME 생성 실패: ${primeResult.error}`);
+    }
+    const usageEvent = primeResult.usage;
     if (usageEvent) {
       const usage = readAiUsageTokens(usageEvent.usage);
       await recordCostSafely({
@@ -295,27 +314,37 @@ export async function POST(req: NextRequest) {
         },
       });
     }
-    generationMs = Date.now() - generationStartedAt;
-    const analysisData = withAnalysisGenerationMetadata(
-      rawAnalysis,
-      generationPlan,
-    );
+    const primeReport = primeResult.report;
+    // 카드/문제생성 호환용 파생 데이터 (별도 LLM 호출 없음)
+    const analysisData = derivePassageAnalysisFromReport(primeReport);
 
     const persistenceStartedAt = Date.now();
     await prisma.$transaction(async (tx) => {
+      // 1) PRIME 보고서 저장/갱신 (모달이 읽어 A4 렌더)
+      const existingPrime = await tx.passageReport.findFirst({
+        where: { passageId: passage.id, academyId: passage.academyId, generationPlan: "PRIME", deletedAt: null },
+        select: { id: true },
+      });
+      const primeData = {
+        title: primeReport.meta.titleKo,
+        status: "PUBLISHED",
+        pages: primeReport as never,
+        theme: { themeId: primeReport.themeId } as never,
+        templateId: "prime",
+        generationPlan: "PRIME",
+        lastEditedById: staff.id,
+        lastEditedAt: new Date(),
+      };
+      if (existingPrime) {
+        await tx.passageReport.update({ where: { id: existingPrime.id }, data: { ...primeData, version: { increment: 1 } } });
+      } else {
+        await tx.passageReport.create({ data: { academyId: passage.academyId, passageId: passage.id, createdById: staff.id, ...primeData } });
+      }
+      // 2) 파생 PassageAnalysis (지문 카드 칩·문제생성 컨텍스트 호환)
       await tx.passageAnalysis.upsert({
         where: { passageId: passage.id },
-        update: {
-          analysisData: JSON.stringify(analysisData),
-          contentHash: currentHash,
-          version: 1,
-        },
-        create: {
-          passageId: passage.id,
-          analysisData: JSON.stringify(analysisData),
-          contentHash: currentHash,
-          version: 1,
-        },
+        update: { analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
+        create: { passageId: passage.id, analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
       });
     });
     persistenceMs = Date.now() - persistenceStartedAt;
@@ -342,6 +371,7 @@ export async function POST(req: NextRequest) {
           cached: false,
           passageId: passage.id,
           generationPlan,
+          analysisTone,
           debugTiming,
           fastPath: true,
         })),
@@ -355,6 +385,7 @@ export async function POST(req: NextRequest) {
       data: analysisData,
       cached: false,
       generationPlan,
+      analysisTone,
       creditsRemaining: credit.balanceAfter,
       createdAt: job.createdAt.toISOString(),
       completedAt: completedAt.toISOString(),

@@ -2,10 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import type { ComponentProps, MouseEvent } from "react";
-import { useRouter } from "next/navigation";
-import { BookOpen, CheckCircle2, FileText, Loader2, Settings2, Sparkles, Wand2, Zap } from "lucide-react";
+import { CheckCircle2, FileText, Loader2, Send, Settings2, Users, Wand2, Zap } from "lucide-react";
 import { toast } from "sonner";
-import { createTutorProgramAction } from "@/actions/tutor";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,11 +13,17 @@ import {
   type PassageItem,
 } from "@/app/(director)/director/workbench/generate/generate-page-types";
 import { PassageCardGrid } from "@/app/(director)/director/workbench/generate/passage-card-grid";
+import {
+  TutorProgramGenerationQueue,
+  type TutorProgramGenerationJob,
+} from "./tutor-program-generation-queue";
 
 type CollectionOption = { id: string; name: string; _count: { items: number } };
 type GenerationMode = "auto" | "template";
 type TemplateKey = "basic_interpret" | "memorize" | "grammar_focus" | "advanced_transform" | "exam_compression";
 type AnalysisModalPassage = ComponentProps<typeof PassageAnalysisModal>["passage"];
+type PublishTargetType = "NONE" | "CLASS" | "STUDENT";
+type TargetOption = { id: string; label: string; count?: number; meta?: string | null };
 
 const templateOptions: Array<{ key: TemplateKey; label: string; detail: string }> = [
   { key: "basic_interpret", label: "기초 해석", detail: "직독직해, 핵심 흐름, 필수 어휘" },
@@ -29,8 +33,13 @@ const templateOptions: Array<{ key: TemplateKey; label: string; detail: string }
   { key: "exam_compression", label: "시험 압축", detail: "출제 포인트 위주 빠른 회전" },
 ];
 
-export function TutorProgramCreateForm() {
-  const router = useRouter();
+export function TutorProgramCreateForm({
+  classes = [],
+  students = [],
+}: {
+  classes?: TargetOption[];
+  students?: TargetOption[];
+}) {
   const [passages, setPassages] = useState<PassageItem[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     schools: [],
@@ -51,8 +60,13 @@ export function TutorProgramCreateForm() {
   const [templateKey, setTemplateKey] = useState<TemplateKey>("basic_interpret");
   const [programTitle, setProgramTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [publishTargetType, setPublishTargetType] = useState<PublishTargetType>("NONE");
+  const [publishTargetId, setPublishTargetId] = useState("");
+  const [dueAt, setDueAt] = useState("");
   const [analysisModalPassage, setAnalysisModalPassage] = useState<AnalysisModalPassage | null>(null);
   const [loadingAnalysisModal, setLoadingAnalysisModal] = useState(false);
+  const [generationJobs, setGenerationJobs] = useState<TutorProgramGenerationJob[]>([]);
+  const [loadingGenerationJobs, setLoadingGenerationJobs] = useState(false);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -68,6 +82,29 @@ export function TutorProgramCreateForm() {
       .catch(() => toast.error("지문 목록을 불러오지 못했어요."))
       .finally(() => setLoadingPassages(false));
   }, []);
+
+  const loadGenerationJobs = useCallback(async () => {
+    setLoadingGenerationJobs(true);
+    try {
+      const response = await fetch("/api/tutor/program-generation/jobs?limit=50", {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (!response.ok) return;
+      const data = (await response.json()) as { jobs?: TutorProgramGenerationJob[] };
+      setGenerationJobs(data.jobs ?? []);
+    } catch {
+      // Keep optimistic jobs visible during transient polling failures.
+    } finally {
+      setLoadingGenerationJobs(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadGenerationJobs();
+    const timer = window.setInterval(loadGenerationJobs, 5_000);
+    return () => window.clearInterval(timer);
+  }, [loadGenerationJobs]);
 
   const filteredPassages = useMemo(() => {
     return passages.filter((passage) => {
@@ -107,6 +144,7 @@ export function TutorProgramCreateForm() {
     [filterSchool, filterGrade, filterSemester].filter(Boolean).length + (analysisStatusFilter === "all" ? 0 : 1);
   const canCreate = selectedIds.size > 0 && selectedIds.size <= 12 && !hasUnanalyzedSelection && !isPending;
   const resolvedTemplateKey = generationMode === "auto" ? "basic_interpret" : templateKey;
+  const publishOptions = publishTargetType === "CLASS" ? classes : publishTargetType === "STUDENT" ? students : [];
 
   const toggleCheckbox = useCallback((id: string, event?: MouseEvent) => {
     event?.stopPropagation();
@@ -161,24 +199,103 @@ export function TutorProgramCreateForm() {
       setError("분석 완료 지문만 모바일 학습 프로그램으로 만들 수 있어요.");
       return;
     }
+    if (publishTargetType !== "NONE" && !publishTargetId) {
+      setError("바로 배포하려면 클래스 또는 학생을 선택하세요.");
+      return;
+    }
     const firstTitle = selectedPassages[0]?.title ?? "모바일 학습";
     const autoTitle = selectedIds.size > 1 ? `${firstTitle} 외 ${selectedIds.size - 1}개` : firstTitle;
-    const formData = new FormData();
-    formData.set("title", programTitle.trim() || autoTitle);
-    formData.set("description", description.trim());
-    formData.set("templateKey", resolvedTemplateKey);
-    formData.set("passageIds", Array.from(selectedIds).join(","));
+    const title = programTitle.trim() || autoTitle;
+    const passageIds = Array.from(selectedIds);
+    const optimisticLessons = selectedPassages.map((passage) => ({
+      passageId: passage.id,
+      title: passage.title,
+      contentPreview: passage.content.slice(0, 260),
+      activityCount: 0,
+      ruleBasedCount: 0,
+      examAlignedCount: 0,
+      activities: [],
+      warnings: [],
+    }));
 
     startTransition(async () => {
-      const result = await createTutorProgramAction(formData);
-      if (!result.ok) {
-        setError(result.error);
+      const response = await fetch("/api/tutor/program-generation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          title,
+          description: description.trim(),
+          templateKey: resolvedTemplateKey,
+          passageIds,
+          publishTargetType,
+          publishTargetId: publishTargetId || undefined,
+          dueAt: dueAt || undefined,
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.error) {
+        setError(result.details || result.error || "프로그램 생성 작업을 시작하지 못했습니다.");
         return;
       }
-      toast.success("모바일 학습 프로그램을 생성했어요.");
-      router.push(`/director/tutor/programs/${result.id}/builder`);
+      const jobId = String(result.jobId ?? "");
+      if (jobId) {
+        const now = new Date().toISOString();
+        setGenerationJobs((current) => [
+          {
+            id: jobId,
+            status: "PENDING",
+            title,
+            requestedCount: passageIds.length,
+            successCount: 0,
+            failedCount: 0,
+            resultCount: 0,
+            config: {
+              title,
+              description,
+              templateKey: resolvedTemplateKey,
+              passageIds,
+              publishTargetType,
+              publishTargetId,
+              dueAt,
+            },
+            result: {
+              title,
+              status: "PROCESSING",
+              totalPassages: passageIds.length,
+              completedPassages: 0,
+              activityCount: 0,
+              estimatedMin: 0,
+              currentPassageTitle: selectedPassages[0]?.title,
+              lessons: optimisticLessons,
+              warnings: [],
+            },
+            errorMessage: null,
+            createdAt: result.createdAt || now,
+            startedAt: null,
+            completedAt: null,
+          },
+          ...current.filter((job) => job.id !== jobId),
+        ]);
+      }
+      setSelectedIds(new Set());
+      toast.success("프로그램 생성 작업을 시작했습니다. 아래 카드에서 진행 상황을 확인하세요.");
+      window.setTimeout(loadGenerationJobs, 800);
+      window.setTimeout(loadGenerationJobs, 2500);
     });
-  }, [description, hasUnanalyzedSelection, programTitle, resolvedTemplateKey, router, selectedIds, selectedPassages]);
+  }, [
+    description,
+    dueAt,
+    hasUnanalyzedSelection,
+    loadGenerationJobs,
+    programTitle,
+    publishTargetId,
+    publishTargetType,
+    resolvedTemplateKey,
+    selectedIds,
+    selectedPassages,
+    setSelectedIds,
+  ]);
 
   return (
     <div className="flex min-h-[calc(100vh-88px)] flex-col bg-slate-50">
@@ -316,6 +433,71 @@ export function TutorProgramCreateForm() {
                 />
               </div>
 
+              <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
+                <div className="flex items-start gap-2.5">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 shadow-sm">
+                    <Send className="size-4" />
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-black text-slate-900">생성 후 바로 배포</p>
+                    <p className="mt-0.5 text-[11px] font-medium leading-5 text-slate-500">
+                      클래스 전체나 개별 학생에게 학생 앱 학습으로 즉시 열어줄 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-1.5">
+                  {[
+                    { key: "NONE", label: "나중에", icon: FileText },
+                    { key: "CLASS", label: "클래스", icon: Users },
+                    { key: "STUDENT", label: "학생", icon: CheckCircle2 },
+                  ].map(({ key, label, icon: Icon }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => {
+                        setPublishTargetType(key as PublishTargetType);
+                        setPublishTargetId("");
+                      }}
+                      className={[
+                        "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border text-[11px] font-black transition",
+                        publishTargetType === key
+                          ? "border-blue-300 bg-blue-50 text-blue-700"
+                          : "border-slate-200 bg-white text-slate-500 hover:border-slate-300",
+                      ].join(" ")}
+                    >
+                      <Icon className="size-3.5" />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                {publishTargetType !== "NONE" && (
+                  <div className="mt-3 grid gap-2">
+                    <select
+                      value={publishTargetId}
+                      onChange={(event) => setPublishTargetId(event.target.value)}
+                      className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                    >
+                      <option value="">{publishTargetType === "CLASS" ? "배포할 클래스를 선택하세요" : "배포할 학생을 선택하세요"}</option>
+                      {publishOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.label}
+                          {typeof option.count === "number" ? ` · ${option.count}명` : ""}
+                          {option.meta ? ` · ${option.meta}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="datetime-local"
+                      value={dueAt}
+                      onChange={(event) => setDueAt(event.target.value)}
+                      className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                    />
+                  </div>
+                )}
+              </div>
+
               {hasUnanalyzedSelection && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] font-semibold text-amber-700">
                   미분석 지문이 포함되어 있어요. 분석 완료 지문만 학습 생성이 가능합니다.
@@ -343,22 +525,11 @@ export function TutorProgramCreateForm() {
 
       <div className="h-3 shrink-0 border-y border-slate-200/60 bg-[#E8EAEE]" />
 
-      <section className="bg-slate-50 px-5 py-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-              <BookOpen className="size-4" />
-            </div>
-            <div>
-              <p className="text-sm font-black text-slate-950">생성 후 바로 빌더로 이동합니다</p>
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                다음 화면에서 클래스 단위 배포와 지문 추가 생성을 이어서 처리할 수 있습니다.
-              </p>
-            </div>
-            <Sparkles className="ml-auto hidden size-5 text-slate-300 sm:block" />
-          </div>
-        </div>
-      </section>
+      <TutorProgramGenerationQueue
+        jobs={generationJobs}
+        loading={loadingGenerationJobs}
+        onRefresh={loadGenerationJobs}
+      />
 
       {analysisModalPassage && (
         <PassageAnalysisModal

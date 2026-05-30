@@ -237,8 +237,9 @@ function sanitizeAntonymOptionText(text: string): string {
 }
 
 const VISIBLE_KOREAN_OPTION_TYPES = new Set([
-  "IMPLIED_MEANING",
   "REFERENCE",
+  "TOPIC",
+  "MAIN_IDEA",
   "TOPIC_MAIN_IDEA",
   "CONTENT_MATCH",
 ]);

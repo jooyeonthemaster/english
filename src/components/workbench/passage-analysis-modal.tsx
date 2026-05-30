@@ -12,20 +12,23 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import {
   deleteWorkbenchPassage,
   updatePassageAnalysis,
 } from "@/actions/workbench";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
-import type { AnalysisPromptConfig } from "./analysis-prompt-panel";
+import {
+  AnalysisToneSelector,
+  type AnalysisPromptConfig,
+} from "./analysis-prompt-panel";
+import {
+  DEFAULT_ANALYSIS_TONE,
+  type AnalysisTone,
+} from "@/lib/passage-analysis-options";
 import { InteractivePassageView } from "./interactive-passage-view";
+import { PrimeAnalysisView } from "./prime-analysis-view";
 import { AnalysisLoadingOverlay } from "./analysis-loading-overlay";
 import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
 import {
@@ -118,10 +121,19 @@ export function PassageAnalysisModal({
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastPromptConfig, setLastPromptConfig] = useState<AnalysisPromptConfig>(
-    initialPromptConfig || { customPrompt: "", focusAreas: [], targetLevel: "", generationPlan: "STANDARD" }
+    initialPromptConfig || {
+      customPrompt: "",
+      focusAreas: [],
+      targetLevel: "",
+      generationPlan: "STANDARD",
+      analysisTone: DEFAULT_ANALYSIS_TONE,
+    }
   );
   const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>(
     lastPromptConfig.generationPlan || "STANDARD"
+  );
+  const [analysisTone, setAnalysisTone] = useState<AnalysisTone>(
+    lastPromptConfig.analysisTone || DEFAULT_ANALYSIS_TONE
   );
 
   const tags: string[] = getVisibleQuestionTags(
@@ -137,9 +149,11 @@ export function PassageAnalysisModal({
       focusAreas: [],
       targetLevel: "",
       generationPlan: "STANDARD" as const,
+      analysisTone: DEFAULT_ANALYSIS_TONE,
     };
     setLastPromptConfig(nextConfig);
     setGenerationPlan(nextConfig.generationPlan || "STANDARD");
+    setAnalysisTone(nextConfig.analysisTone || DEFAULT_ANALYSIS_TONE);
   }, [initialAnalysis, initialPromptConfig, passage.id]);
 
   // Close on Escape
@@ -174,10 +188,20 @@ export function PassageAnalysisModal({
   const runAnalysisWithConfig = async (config: AnalysisPromptConfig) => {
     setAnalyzing(true);
     const selectedPlan = config.generationPlan || generationPlan;
+    const selectedTone = config.analysisTone || analysisTone;
     setGenerationPlan(selectedPlan);
-    setLastPromptConfig({ ...config, generationPlan: selectedPlan });
+    setAnalysisTone(selectedTone);
+    setLastPromptConfig({
+      ...config,
+      generationPlan: selectedPlan,
+      analysisTone: selectedTone,
+    });
     try {
-      const hasConfig = config.customPrompt || config.focusAreas.length > 0 || config.targetLevel;
+      const hasConfig =
+        config.customPrompt ||
+        config.focusAreas.length > 0 ||
+        config.targetLevel ||
+        selectedTone !== DEFAULT_ANALYSIS_TONE;
       let res: Response;
       if (hasConfig) {
         res = await fetch(`/api/ai/passage-analysis/${passage.id}`, {
@@ -188,10 +212,15 @@ export function PassageAnalysisModal({
             focusAreas: config.focusAreas,
             targetLevel: config.targetLevel,
             generationPlan: selectedPlan,
+            analysisTone: selectedTone,
           }),
         });
       } else {
-        res = await fetch(`/api/ai/passage-analysis/${passage.id}?generationPlan=${selectedPlan}`);
+        const params = new URLSearchParams({
+          generationPlan: selectedPlan,
+          analysisTone: selectedTone,
+        });
+        res = await fetch(`/api/ai/passage-analysis/${passage.id}?${params}`);
       }
       const json = await res.json();
       if (json.error) {
@@ -346,54 +375,13 @@ export function PassageAnalysisModal({
             </div>
           </div>
 
-          {/* ─── Content area ─── */}
-          <div className="flex-1 overflow-y-auto px-6 py-5">
-            <div className="space-y-5">
-              {analysisData ? (
-                <>
-                  <InteractivePassageView
-                    content={passage.content}
-                    analysisData={analysisData}
-                  />
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-                    <Lightbulb className="w-7 h-7 text-blue-400" />
-                  </div>
-                  <h3 className="text-[15px] font-semibold text-slate-700 mb-1">
-                    아직 분석되지 않았습니다
-                  </h3>
-                  <p className="text-[13px] text-slate-400 mb-5 max-w-sm">
-                    AI 분석을 실행하면 어휘, 문법, 구문, 출제 포인트 등을 자동으로 분석합니다.
-                  </p>
-                  <GenerationPlanSelector
-                    value={generationPlan}
-                    onChange={setGenerationPlan}
-                    compact
-                    className="w-full max-w-sm mb-4"
-                  />
-                  <Button
-                    className="bg-blue-600 hover:bg-blue-700"
-                    onClick={() =>
-                      runAnalysisWithConfig({
-                        ...lastPromptConfig,
-                        generationPlan,
-                      })
-                    }
-                    disabled={analyzing}
-                  >
-                    {analyzing ? (
-                      <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
-                    ) : (
-                      <RefreshCw className="w-4 h-4 mr-1.5" />
-                    )}
-                    AI 분석 실행
-                    <span className="ml-1.5 inline-flex items-center text-[10px] font-semibold bg-white/20 px-1.5 py-0.5 rounded">5 크레딧</span>
-                  </Button>
-                </div>
-              )}
-            </div>
+          {/* ─── Content area — PRIME A4 (있으면) / 기존 5-layer 인터랙티브 (폴백) ─── */}
+          <div className="flex-1 min-h-0">
+            <PrimeAnalysisView
+              passageId={passage.id}
+              legacyAnalysisData={analysisData}
+              passageContent={passage.content}
+            />
           </div>
         </div>
       </TooltipProvider>

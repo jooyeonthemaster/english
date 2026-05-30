@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
           unit: true,
           publisher: true,
           difficulty: true,
+          source: true,
           school: { select: { id: true, name: true } },
           collectionItems: { select: { collectionId: true } },
           analysis: { select: { id: true, analysisData: true } },

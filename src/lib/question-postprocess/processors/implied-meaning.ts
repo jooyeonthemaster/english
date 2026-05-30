@@ -46,8 +46,9 @@ export function processImpliedMeaning(
     success: true,
     data: {
       ...ai,
+      direction: "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?",
       correctAnswer,
-      options: softenAbsoluteGiveawayDistractors(ai.options, correctAnswer),
+      options: normalizeEnglishOptions(ai.options),
       underlinedExpression: originalExpression,
       passageWithUnderline,
     },
@@ -74,22 +75,14 @@ function normalizeCorrectAnswerLabel(
   return answerLabel;
 }
 
-function softenAbsoluteGiveawayDistractors(
-  options: unknown,
-  correctAnswer: unknown,
-): unknown {
-  const correctLabel = normalizeLabel(correctAnswer);
-  if (!correctLabel || !Array.isArray(options)) return options;
+function normalizeEnglishOptions(options: unknown): unknown {
+  if (!Array.isArray(options)) return options;
 
   let changed = false;
-  const softened = options.map((option) => {
+  const normalized = options.map((option) => {
     if (!isRecord(option)) return option;
-    const optionLabel = normalizeLabel(option.label);
-    if (!optionLabel || optionLabel === correctLabel || typeof option.text !== "string") {
-      return option;
-    }
-
-    const text = softenAbsoluteCueText(option.text);
+    if (typeof option.text !== "string") return option;
+    const text = stripOptionPrefix(option.text).replace(/\s+/g, " ").trim();
     if (text === option.text) return option;
 
     changed = true;
@@ -99,28 +92,12 @@ function softenAbsoluteGiveawayDistractors(
     };
   });
 
-  return changed ? softened : options;
+  return changed ? normalized : options;
 }
 
-function softenAbsoluteCueText(text: string): string {
+function stripOptionPrefix(text: string): string {
   return text
-    .replace(/완전(?:히|하게)\s*(극복|해소|해결|제거|대체|사라지)/g, "$1")
-    .replace(/절대적(?:인|으로)?\s*/g, "주요한 ")
-    .replace(/완전한\s*/g, "")
-    .replace(/완벽한\s*/g, "")
-    .replace(/완벽(?:히|하게)?\s*(이해|파악|분석|설명|해결|예측|통제|보장|대체)/g, "$1")
-    .replace(/완벽(?:히|하게)\s*/g, "")
-    .replace(/(?:해야만|하여야만)/g, "해야")
-    .replace(/일\s*때만/g, "일 때")
-    .replace(/만을/g, "을")
-    .replace(/만이/g, "이")
-    .replace(/만으로(?:는|도)?/g, "으로")
-    .replace(/배제하고/g, "분리하고")
-    .replace(/배제해야/g, "분리해야")
-    .replace(/배제/g, "분리")
-    .replace(/순수한\s*/g, "")
-    .replace(/(?:완전(?:히|하게)|전적(?:으로|인)|오직|항상|언제나|절대|무조건|반드시|예외\s*없이)\s*/g, "")
-    .replace(/\s{2,}/g, " ")
+    .replace(/^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/, "")
     .trim();
 }
 

@@ -172,7 +172,7 @@ ${JSON.stringify(a.sentences, null, 2)}
 }
 
 // ---------------------------------------------------------------------------
-// INTERPRETATION 섹션 — sentences[] + syntaxAnalysis[] 활용
+// INTERPRETATION 섹션 — sentences[] + sentence-level reading points 활용
 // ---------------------------------------------------------------------------
 
 function buildInterpretationSection(a: PassageAnalysisData): string {
@@ -194,7 +194,7 @@ ${JSON.stringify(collocData, null, 2)}
 
 ${a.examDesign ? `## 분석 데이터 — 출제 포인트\n${JSON.stringify(a.examDesign.paraphrasableSegments, null, 2)}` : ""}
 
-${chunkData?.length ? `## 분석 데이터 — 끊어읽기 (구문 분석)\n${JSON.stringify(chunkData, null, 2)}` : ""}
+${chunkData?.length ? `## 분석 데이터 — 문장별 읽기 포인트\n${JSON.stringify(chunkData, null, 2)}` : ""}
 
 ## 유형별 생성 규칙
 
@@ -228,7 +228,7 @@ ${chunkData?.length ? `## 분석 데이터 — 끊어읽기 (구문 분석)\n${J
 - chunkReading을 "/" 기준으로 분리하여 chunks 배열 생성
 - chunks 배열을 섞어서 제시 (correctOrder는 원래 순서의 인덱스)
 - koreanHint: 해당 문장의 한국어 해석
-- syntaxAnalysis가 없으면 이 유형은 빈 배열 반환
+- syntaxAnalysis가 없거나 비어 있으면 이 유형은 빈 배열 반환
 `;
 }
 
@@ -253,7 +253,7 @@ ${JSON.stringify(grammarData, null, 2)}
 ## 분석 데이터 — 문장 원문
 ${JSON.stringify(a.sentences, null, 2)}
 
-${a.syntaxAnalysis ? `## 분석 데이터 — 구문 분석\n${JSON.stringify(a.syntaxAnalysis, null, 2)}` : ""}
+${a.syntaxAnalysis?.length ? `## 분석 데이터 — 문장별 읽기 포인트\n${JSON.stringify(a.syntaxAnalysis, null, 2)}` : ""}
 
 ${transformPoints?.length ? `## 분석 데이터 — 구조 변환 포인트\n${JSON.stringify(transformPoints, null, 2)}` : ""}
 

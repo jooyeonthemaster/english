@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import { isDirectInputPassage } from "@/lib/passage-source";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -66,6 +67,7 @@ export function PassageFileCard({
 }) {
   const data = parseAnalysis(passage.analysis);
   const isAnalyzed = !!passage.analysis;
+  const isDirectInput = isDirectInputPassage(passage.source);
   const vocabCount = data?.vocabulary?.length ?? 0;
   const grammarCount = data?.grammarPoints?.length ?? 0;
   const syntaxCount = data?.syntaxAnalysis?.length ?? 0;
@@ -121,6 +123,11 @@ export function PassageFileCard({
                 ) : (
                   <span className="text-[10px] font-medium text-slate-400">분석 대기</span>
                 )}
+                {isDirectInput && (
+                  <span className="inline-flex items-center text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+                    직접 입력
+                  </span>
+                )}
                 <span className="text-[10px] text-slate-400">{wordCount} words</span>
                 {dupCount && dupCount > 0 ? (
                   <span
@@ -163,12 +170,12 @@ export function PassageFileCard({
             )}
             {grammarCount > 0 && (
               <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
-                <PenTool className="w-3 h-3" />문법 {grammarCount}
+                <PenTool className="w-3 h-3" />어법 {grammarCount}
               </span>
             )}
             {syntaxCount > 0 && (
               <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
-                <Braces className="w-3 h-3" />구문 {syntaxCount}
+                <Braces className="w-3 h-3" />읽기포인트 {syntaxCount}
               </span>
             )}
             {keySentenceCount > 0 && (

@@ -16,6 +16,7 @@ import {
   ImpliedMeaningRenderer,
   ReferenceRenderer,
   ContentMatchRenderer,
+  SummaryCompleteMcRenderer,
   IrrelevantRenderer,
   ConditionalWritingRenderer,
   SentenceTransformRenderer,
@@ -121,6 +122,20 @@ function enrichQuestionForDisplay(question: any, sourcePassageContent?: string):
   const normalizedQuestion = normalizeVocabOptionsForDisplay(
     questionWithAlignedExplanations,
   );
+  const sourceBackedType =
+    normalizedQuestion?._typeId === "TOPIC" ||
+    normalizedQuestion?._typeId === "MAIN_IDEA" ||
+    normalizedQuestion?._typeId === "TOPIC_MAIN_IDEA" ||
+    normalizedQuestion?._typeId === "TITLE" ||
+    normalizedQuestion?._typeId === "CONTENT_MATCH" ||
+    normalizedQuestion?._typeId === "SUMMARY_COMPLETE_MC";
+
+  if (sourceBackedType && sourcePassageContent) {
+    return {
+      ...normalizedQuestion,
+      _sourcePassageContent: sourcePassageContent,
+    };
+  }
 
   if (
     normalizedQuestion?._typeId === "SYNONYM" &&
@@ -281,8 +296,8 @@ function buildPassageWithUnderlineForDisplay(
 }
 
 const DISPLAY_KOREAN_OPTION_TYPES = new Set([
-  "IMPLIED_MEANING",
   "REFERENCE",
+  "MAIN_IDEA",
   "TOPIC_MAIN_IDEA",
   "CONTENT_MATCH",
 ]);
@@ -439,10 +454,14 @@ function hasStructuredFields(typeId: string, q: any): boolean {
       return !!q.givenSentence && !!q.paragraphs;
     case "SENTENCE_INSERT":
       return !!q.givenSentence && !!q.passageWithMarkers;
+    case "TOPIC":
+    case "MAIN_IDEA":
     case "TOPIC_MAIN_IDEA":
     case "TITLE":
     case "CONTENT_MATCH":
       return !!q.direction && !!q.options;
+    case "SUMMARY_COMPLETE_MC":
+      return !!q.direction && !!q.summaryWithBlanks && !!q.options;
     case "IMPLIED_MEANING":
     case "REFERENCE":
     case "CONTEXT_MEANING":
@@ -481,6 +500,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <SentenceOrderRenderer q={q} />;
     case "SENTENCE_INSERT":
       return <SentenceInsertRenderer q={q} />;
+    case "TOPIC":
+    case "MAIN_IDEA":
     case "TOPIC_MAIN_IDEA":
       return <TopicMainIdeaRenderer q={q} />;
     case "TITLE":
@@ -491,6 +512,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <ReferenceRenderer q={q} />;
     case "CONTENT_MATCH":
       return <ContentMatchRenderer q={q} />;
+    case "SUMMARY_COMPLETE_MC":
+      return <SummaryCompleteMcRenderer q={q} />;
     case "IRRELEVANT":
       return <IrrelevantRenderer q={q} />;
     case "CONDITIONAL_WRITING":

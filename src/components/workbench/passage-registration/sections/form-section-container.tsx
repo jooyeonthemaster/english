@@ -3,6 +3,7 @@
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import type { Annotation } from "@/components/workbench/editor";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
 import {
@@ -72,6 +73,8 @@ interface FormSectionContainerProps {
   // Prompt
   analysisPrompt: string;
   setAnalysisPrompt: (v: string) => void;
+  analysisTone: AnalysisTone;
+  setAnalysisTone: (v: AnalysisTone) => void;
   savedPrompts: SavedPrompt[];
   setSavedPrompts: Dispatch<SetStateAction<SavedPrompt[]>>;
   showSavedPrompts: boolean;
@@ -109,7 +112,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       hasContent={p.hasContent}
       wordCount={p.wordCount}
       saving={p.saving}
-      onSave={(analysisGenerationPlan) =>
+      onSave={(analysisGenerationPlan, analysisTone) =>
         handleSaveFn({
           runAnalysis: true,
           content: p.content,
@@ -125,6 +128,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
           tags: p.tags,
           analysisPrompt: p.analysisPrompt,
           analysisGenerationPlan,
+          analysisTone,
           sourceDraftId: p.selectedDraftId,
           schools: p.schools,
           setSaving: p.setSaving,
@@ -182,6 +186,8 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       removeTag={p.removeTag}
       analysisPrompt={p.analysisPrompt}
       setAnalysisPrompt={p.setAnalysisPrompt}
+      analysisTone={p.analysisTone}
+      setAnalysisTone={p.setAnalysisTone}
       savedPrompts={p.savedPrompts}
       showSavedPrompts={p.showSavedPrompts}
       setShowSavedPrompts={p.setShowSavedPrompts}

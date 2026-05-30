@@ -14,6 +14,7 @@ import {
   type ImpliedMeaningQuestion,
   type ReferenceQuestion,
   type ContentMatchQuestion,
+  type SummaryCompleteMcQuestion,
   type IrrelevantQuestion,
   type ConditionalWritingQuestion,
   type SentenceTransformQuestion,
@@ -40,10 +41,31 @@ import {
   AnswerLine,
   AnswerRevealSection,
 } from "./question-renderer-primitives";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 
 // ============================================================================
 // 수능/모의고사 객관식 (10 types)
 // ============================================================================
+
+function SourcePassageBlock({ q }: { q: { _sourcePassageContent?: unknown } }) {
+  const sourcePassage =
+    typeof q._sourcePassageContent === "string"
+      ? q._sourcePassageContent.trim()
+      : "";
+
+  if (sourcePassage) {
+    return <PassageBlock>{sourcePassage}</PassageBlock>;
+  }
+
+  return (
+    <div className="text-[11px] text-slate-400 italic flex items-center gap-1">
+      <BookOpen className="w-3 h-3" />원문 지문을 참고하세요
+    </div>
+  );
+}
 
 export function BlankInferenceRenderer({ q }: { q: BlankInferenceQuestion }) {
   return (
@@ -172,9 +194,7 @@ export function TopicMainIdeaRenderer({ q }: { q: TopicMainIdeaQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      <div className="text-[11px] text-slate-400 italic flex items-center gap-1">
-        <BookOpen className="w-3 h-3" />위 지문을 참고하세요
-      </div>
+      <SourcePassageBlock q={q as TopicMainIdeaQuestion & { _sourcePassageContent?: unknown }} />
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
@@ -188,9 +208,7 @@ export function TitleRenderer({ q }: { q: TitleQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      <div className="text-[11px] text-slate-400 italic flex items-center gap-1">
-        <BookOpen className="w-3 h-3" />위 지문을 참고하세요
-      </div>
+      <SourcePassageBlock q={q as TitleQuestion & { _sourcePassageContent?: unknown }} />
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
@@ -204,43 +222,9 @@ export function ImpliedMeaningRenderer({ q }: { q: ImpliedMeaningQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      {q.underlinedExpression && (
-        <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
-          <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">밑줄 표현</span>
-          <p className="text-[14px] font-bold text-indigo-900 mt-0.5 leading-relaxed">{q.underlinedExpression}</p>
-        </div>
-      )}
       <PassageBlock>{renderUnderlinedText(q.passageWithUnderline)}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
-        {(q.surfaceMeaning || q.reasoningGap) && (
-          <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 space-y-2">
-            <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">표면과 함축</span>
-            {q.surfaceMeaning && (
-              <p className="text-[12px] text-amber-900 leading-relaxed">
-                <span className="font-bold">표면 의미: </span>{q.surfaceMeaning}
-              </p>
-            )}
-            {q.reasoningGap && (
-              <p className="text-[12px] text-amber-900 leading-relaxed">
-                <span className="font-bold">추론 간극: </span>{q.reasoningGap}
-              </p>
-            )}
-          </div>
-        )}
-        {q.evidenceChain && q.evidenceChain.length > 0 && (
-          <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">근거 흐름</span>
-            <ol className="space-y-1">
-              {q.evidenceChain.map((evidence, i) => (
-                <li key={i} className="text-[12px] text-slate-700 leading-relaxed flex gap-2">
-                  <span className="font-bold text-blue-600 shrink-0">{i + 1}.</span>
-                  <span>{evidence}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
       </AnswerRevealSection>
@@ -272,13 +256,87 @@ export function ContentMatchRenderer({ q }: { q: ContentMatchQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      <div className="text-[11px] text-slate-400 italic flex items-center gap-1">
-        <BookOpen className="w-3 h-3" />위 지문을 참고하세요
-      </div>
+      <SourcePassageBlock q={q as ContentMatchQuestion & { _sourcePassageContent?: unknown }} />
       <div className="text-[11px] font-medium text-slate-500">
         유형: <Badge variant="outline" className="text-[9px] ml-1">{q.matchType}</Badge>
       </div>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <AnswerRevealSection>
+        <AnswerLine answer={q.correctAnswer} />
+        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
+      </AnswerRevealSection>
+    </>
+  );
+}
+
+function getSummaryPairOption(option: SummaryCompleteMcQuestion["options"][number]) {
+  const blankA = typeof option.blankA === "string" ? option.blankA.trim() : "";
+  const blankB = typeof option.blankB === "string" ? option.blankB.trim() : "";
+  if (blankA || blankB) return { blankA, blankB };
+
+  const text = typeof option.text === "string" ? option.text.trim() : "";
+  const parts = text
+    .replace(/^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/, "")
+    .split(/\s*(?:……|\.{3,}|…|\/|\||;|,|\s[-–—]\s)\s*/u)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return {
+    blankA: parts[0] ?? text,
+    blankB: parts.slice(1).join(" "),
+  };
+}
+
+function formatSummaryPairOptionText(option: SummaryCompleteMcQuestion["options"][number]) {
+  const pair = getSummaryPairOption(option);
+  if (pair.blankA || pair.blankB) {
+    return `(A) ${pair.blankA || "-"} / (B) ${pair.blankB || "-"}`;
+  }
+  return typeof option.text === "string" ? option.text : "";
+}
+
+function renderSummaryBlankMarkers(text: string) {
+  return text.split(/(\([AB]\)|_{3,})/g).map((part, index) => {
+    if (part === "(A)" || part === "(B)") {
+      return (
+        <span
+          key={index}
+          className="mx-1 inline-flex min-w-10 items-center justify-center rounded-[4px] border border-blue-300 bg-blue-50 px-2 py-0.5 text-[12px] font-bold text-blue-700"
+        >
+          {part}
+        </span>
+      );
+    }
+    if (/^_{3,}$/.test(part)) {
+      return (
+        <span
+          key={index}
+          className="mx-1 inline-block min-w-[72px] border-b-2 border-blue-400 align-baseline"
+        >
+          &nbsp;
+        </span>
+      );
+    }
+    return <React.Fragment key={index}>{part}</React.Fragment>;
+  });
+}
+
+export function SummaryCompleteMcRenderer({ q }: { q: SummaryCompleteMcQuestion }) {
+  const summaryForDisplay = formatSummaryCompleteMcSummaryForDisplay(
+    q.summaryWithBlanks,
+    readSummaryBlankAnswersFromQuestionLike(q),
+  );
+  const options = q.options.map((option) => ({
+    label: option.label,
+    text: formatSummaryPairOptionText(option),
+  }));
+
+  return (
+    <>
+      <Direction text={q.direction} />
+      <SourcePassageBlock q={q as SummaryCompleteMcQuestion & { _sourcePassageContent?: unknown }} />
+      <PassageBlock label="요약문">{renderSummaryBlankMarkers(summaryForDisplay)}</PassageBlock>
+      <OptionList options={options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />

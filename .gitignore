@@ -99,3 +99,6 @@ google-credentials*.json
 /skills-lock.json
 
 .env*.local
+
+# scratch / test harness output
+/tmp/

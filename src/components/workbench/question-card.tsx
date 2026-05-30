@@ -56,11 +56,14 @@ const SUBTYPE_LABELS: Record<string, string> = {
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
+  TOPIC: "주제 추론",
+  MAIN_IDEA: "요지/주장",
   TOPIC_MAIN_IDEA: "주제/요지",
   TITLE: "제목 추론",
   IMPLIED_MEANING: "함축 의미 추론",
   REFERENCE: "지칭 추론",
   CONTENT_MATCH: "내용 일치",
+  SUMMARY_COMPLETE_MC: "요약문 완성(객관식)",
   IRRELEVANT: "무관한 문장",
   CONDITIONAL_WRITING: "조건부 영작",
   SENTENCE_TRANSFORM: "문장 전환",
@@ -197,6 +200,15 @@ const MARKERS = {
   circled: getCircledNumbers(50),
   none: getCircledNumbers(50),
 };
+
+const STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES = new Set([
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "TITLE",
+  "CONTENT_MATCH",
+  "SUMMARY_COMPLETE_MC",
+]);
 
 // Format option: always use index-based number label, adapt text based on passage marking
 function formatOption(
@@ -371,7 +383,9 @@ export function QuestionCard({
   // 유형이 자체 지문을 포함하면 원본 지문 블록 숨김 (중복 방지)
   const typeMeta = sub ? QUESTION_TYPE_META[sub] : undefined;
   const typeIncludesPassage = typeMeta?.includesPassage ?? false;
-  const hidePassageBlock = hasStructured && typeIncludesPassage;
+  const structuredRendererOwnsPassage =
+    typeIncludesPassage || STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES.has(sub);
+  const hidePassageBlock = hasStructured && structuredRendererOwnsPassage;
   const showStructured = hasStructured && (!compact || compactExpanded);
   const showFooterActions = showReviewActions && Boolean(q.id);
   const handleEdit = () => {
@@ -548,7 +562,7 @@ export function QuestionCard({
             {/* ── Flat 렌더링 (DB 저장 문제 또는 compact 모드) ── */}
 
             {/* Passage — structuredData가 있고 includesPassage인 유형만 지문 숨김 (DB 로드 문제는 항상 지문 표시) */}
-            {q.passage && (!compact || compactExpanded) && !(q.structuredData && typeIncludesPassage) && (
+            {q.passage && (!compact || compactExpanded) && !(q.structuredData && structuredRendererOwnsPassage) && (
               <div className="bg-slate-50 rounded-md px-3 py-2">
                 <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
                   <FileText className="w-3 h-3 shrink-0" />

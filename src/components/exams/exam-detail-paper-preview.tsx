@@ -9,6 +9,7 @@ import { PreviewZoomControls } from "./exam-paper-builder-client-parts/preview-z
 import { usePreviewZoom } from "./exam-paper-builder-client-parts/use-preview-zoom";
 import {
   DEFAULT_INSTRUCTIONS,
+  DEFAULT_SHOW_PASSAGE_TITLE,
   PAPER_SIZE_SPECS,
   PREVIEW_PAGE_WIDTH,
 } from "./paper-builder/constants";
@@ -141,6 +142,12 @@ function asObjectiveAnswerTexts(value: unknown, slots: number): string[] {
   return value.slice(0, slots).map((text) => String(text ?? ""));
 }
 
+function printablePassageTitle(savedTitle: string | undefined, sourceTitle: string | undefined): string {
+  const saved = normalizeInlineText(savedTitle || "");
+  if (!saved) return "";
+  return saved === normalizeInlineText(sourceTitle || "") ? "" : saved;
+}
+
 function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderItem): BuilderQuestion {
   const q = eq.question;
   const passageContent = normalizePassageText(saved?.passageContent ?? q.passage?.content ?? "");
@@ -183,6 +190,7 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
         }
       : null,
     collectionItems: q.collectionItems || [],
+    examLinks: [],
     _count: q._count || { examLinks: 0 },
   };
 }
@@ -190,7 +198,13 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
 function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: number): PaperItem {
   const sourceQuestion = examQuestionToBuilderQuestion(eq, saved);
   const localId = saved.localId || `${sourceQuestion.id}-saved-${index}`;
-  const defaultIncludePassage = shouldIncludeSourcePassageByDefault(sourceQuestion);
+  const passageContent = normalizePassageText(saved.passageContent ?? sourceQuestion.passage?.content ?? "");
+  const defaultIncludePassage = shouldIncludeSourcePassageByDefault({
+    ...sourceQuestion,
+    passage: sourceQuestion.passage
+      ? { ...sourceQuestion.passage, content: passageContent }
+      : sourceQuestion.passage,
+  });
   const options = Array.isArray(saved.options)
     ? saved.options.map((option, optionIndex) => ({
         label: normalizeInlineText(option.label || String(optionIndex + 1)),
@@ -206,9 +220,9 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
     orderNum: saved.orderNum || index + 1,
     points: saved.points || eq.points || sourceQuestion.points || 1,
     groupId: saved.groupId ?? `single:${localId}`,
-    includePassage: saved.includePassage === false ? false : defaultIncludePassage,
-    passageTitle: normalizeInlineText(saved.passageTitle ?? sourceQuestion.passage?.title ?? ""),
-    passageContent: normalizePassageText(saved.passageContent ?? sourceQuestion.passage?.content ?? ""),
+    includePassage: defaultIncludePassage || (saved.includePassage === true),
+    passageTitle: printablePassageTitle(saved.passageTitle, eq.question.passage?.title),
+    passageContent,
     questionText: normalizeQuestionText(saved.questionText ?? sourceQuestion.questionText),
     options,
     correctAnswer: saved.correctAnswer ?? sourceQuestion.correctAnswer ?? "",
@@ -366,8 +380,8 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   const density = asDensity(settings?.layout?.density);
   const passageStyle = asPassageStyle(settings?.layout?.passageStyle);
   const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
-  const showPassageTitle = settings?.layout?.showPassageTitle ?? true;
-  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? true;
+  const showPassageTitle = settings?.layout?.showPassageTitle ?? DEFAULT_SHOW_PASSAGE_TITLE;
+  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? false;
 
   const {
     scrollerRef,

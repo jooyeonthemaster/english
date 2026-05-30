@@ -13,8 +13,11 @@ import {
 // AI variants for schemas that do not need passage reconstruction.
 import {
   contentMatchSchema,
+  mainIdeaSchema,
   sentenceOrderSchema,
+  summaryCompleteMcSchema,
   titleSchema,
+  topicSchema,
   topicMainIdeaSchema,
 } from "./question-schemas-mc";
 
@@ -22,6 +25,7 @@ export type {
   ContentMatchQuestion as AiContentMatchQuestion,
   SentenceOrderQuestion as AiSentenceOrderQuestion,
   TitleQuestion as AiTitleQuestion,
+  SummaryCompleteMcQuestion as AiSummaryCompleteMcQuestion,
   TopicMainIdeaQuestion as AiTopicMainIdeaQuestion,
 } from "./question-schemas-mc";
 
@@ -83,8 +87,11 @@ const grammarWrongOptionExplanationSchema = z.object({
 
 export const aiSentenceOrderSchema = sentenceOrderSchema.extend(mcWrongExplanations);
 export const aiTopicMainIdeaSchema = topicMainIdeaSchema.extend(mcWrongExplanations);
+export const aiTopicSchema = topicSchema.extend(mcWrongExplanations);
+export const aiMainIdeaSchema = mainIdeaSchema.extend(mcWrongExplanations);
 export const aiTitleSchema = titleSchema.extend(mcWrongExplanations);
 export const aiContentMatchSchema = contentMatchSchema.extend(mcWrongExplanations);
+export const aiSummaryCompleteMcSchema = summaryCompleteMcSchema.extend(mcWrongExplanations);
 
 // ---------------------------------------------------------------------------
 // 1. 빈칸 추론 (BLANK_INFERENCE)
@@ -261,7 +268,10 @@ export const aiImpliedMeaningSchema = z.object({
     .min(2)
     .max(4)
     .describe("정답을 뒷받침하는 지문 근거 흐름. 한국어 2~4단계."),
-  options: z.array(optionSchema).length(5).describe("한국어 선택지"),
+  options: z
+    .array(optionSchema)
+    .length(5)
+    .describe("영어 함축 의미 선택지. 한글을 포함하면 안 됨."),
   ...mcWrongExplanations,
 });
 export type AiImpliedMeaningQuestion = z.infer<typeof aiImpliedMeaningSchema>;
@@ -276,11 +286,14 @@ export const AI_MC_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   VOCAB_CHOICE: aiVocabChoiceSchema,
   SENTENCE_ORDER: aiSentenceOrderSchema,
   SENTENCE_INSERT: aiSentenceInsertSchema,
+  TOPIC: aiTopicSchema,
+  MAIN_IDEA: aiMainIdeaSchema,
   TOPIC_MAIN_IDEA: aiTopicMainIdeaSchema,
   TITLE: aiTitleSchema,
   IMPLIED_MEANING: aiImpliedMeaningSchema,
   REFERENCE: aiReferenceSchema,
   CONTENT_MATCH: aiContentMatchSchema,
+  SUMMARY_COMPLETE_MC: aiSummaryCompleteMcSchema,
   IRRELEVANT: aiIrrelevantSchema,
 };
 

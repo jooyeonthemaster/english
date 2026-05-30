@@ -410,7 +410,6 @@ export function InteractivePassageView({
           <div className="flex min-w-0 flex-wrap items-center gap-1.5">
             {rawCounts.vocab > 0 && <CategoryChip category="vocab" count={counts.vocab} rawCount={rawCounts.vocab} active={activeCollection === "vocab"} onClick={() => { setActiveCollection(v => v === "vocab" ? null : "vocab"); setActiveDetail(null); }} />}
             {rawCounts.grammar > 0 && <CategoryChip category="grammar" count={counts.grammar} rawCount={rawCounts.grammar} active={activeCollection === "grammar"} onClick={() => { setActiveCollection(v => v === "grammar" ? null : "grammar"); setActiveDetail(null); }} />}
-            {rawCounts.syntax > 0 && <CategoryChip category="syntax" count={counts.syntax} rawCount={rawCounts.syntax} active={activeCollection === "syntax"} onClick={() => { setActiveCollection(v => v === "syntax" ? null : "syntax"); setActiveDetail(null); }} />}
             {rawCounts.key > 0 && <CategoryChip category="key" count={counts.key} rawCount={rawCounts.key} active={activeCollection === "key"} onClick={() => { setActiveCollection(v => v === "key" ? null : "key"); setActiveDetail(null); }} />}
             {rawCounts.exam > 0 && <CategoryChip category="exam" count={counts.exam} rawCount={rawCounts.exam} active={activeCollection === "exam"} onClick={() => { setActiveCollection(v => v === "exam" ? null : "exam"); setActiveDetail(null); }} />}
           </div>
@@ -423,7 +422,7 @@ export function InteractivePassageView({
       }>
         {/* 지문 필기노트 */}
         <div className={layout === "vertical" ? "p-5 overflow-y-auto max-h-[45vh]" : "p-5 overflow-y-auto max-h-[700px]"}>
-          {!hasAnalysis && <p className="text-[13px] text-slate-400 mb-3">AI 분석을 실행하면 어휘·문법·구문 하이라이트가 표시됩니다.</p>}
+          {!hasAnalysis && <p className="text-[13px] text-slate-400 mb-3">AI 분석을 실행하면 어휘·어법·출제 포인트와 문장별 읽기 포인트가 표시됩니다.</p>}
           <div>{hasAnalysis ? (analysisData.sentences || []).map(s => renderSentence(s)) : <div className="font-mono text-sm leading-[2]">{content}</div>}</div>
         </div>
 

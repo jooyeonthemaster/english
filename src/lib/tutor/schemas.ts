@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+import { TUTOR_ACTIVITY_TYPES } from "@/lib/tutor/activity-types";
+import { TutorActivityPayloadSchema } from "@/lib/tutor/activity-payload-schema";
+
 export const TutorActivityModeSchema = z.enum([
   "interpret",
   "memorize",
@@ -10,52 +13,26 @@ export const TutorActivityModeSchema = z.enum([
   "mastery",
 ]);
 
-export const TutorActivityTypeSchema = z.enum([
-  "sentence_translate",
-  "gist_select",
-  "paraphrase_mc",
-  "first_letter_recall",
-  "progressive_cloze",
-  "sentence_rebuild",
-  "chunk_rebuild",
-  "back_translation",
-  "dictogloss",
-  "sentence_order",
-  "insertion_point",
-  "irrelevant_sentence",
-  "vocab_choice",
-  "vocab_spell",
-  "vocab_match",
-  "contextual_meaning",
-  "collocation_select",
-  "grammar_binary",
-  "grammar_find",
-  "grammar_correct",
-  "structure_transform",
-  "transfer_mini_passage",
-  "mastery_test",
-]);
+// type 단일소스(activity-types.ts)에서 enum 생성. 死유형은 더 이상 허용되지 않는다.
+export const TutorActivityTypeSchema = z.enum(TUTOR_ACTIVITY_TYPES);
+
+export const TutorCoverageRefSchema = z.object({
+  sentenceIndex: z.number().int().min(0),
+  dimension: z.enum(["interpret", "memorize", "order", "vocab", "grammar", "transfer"]),
+  weight: z.number().min(0).max(1),
+});
 
 export const TutorActivityDraftSchema = z.object({
   mode: TutorActivityModeSchema,
   type: TutorActivityTypeSchema,
   title: z.string().min(1),
   instructions: z.string().optional(),
-  payload: z.record(z.string(), z.unknown()),
+  payload: TutorActivityPayloadSchema,
+  payloadSchemaVersion: z.literal(2).default(2),
   itemCount: z.number().int().min(1).default(1),
   maxScore: z.number().int().min(1).default(10),
   estimatedSec: z.number().int().min(10).default(60),
-  coverageRefs: z.array(
-    z.object({
-      sentenceIndex: z.number().int().min(0),
-      dimension: z.enum(["interpret", "memorize", "order", "vocab", "grammar", "transfer"]),
-      weight: z.number().min(0).max(1),
-    }),
-  ),
-});
-
-export const TutorDraftResponseSchema = z.object({
-  activities: z.array(TutorActivityDraftSchema).min(1),
+  coverageRefs: z.array(TutorCoverageRefSchema).min(1),
 });
 
 export type TutorActivityDraft = z.infer<typeof TutorActivityDraftSchema>;

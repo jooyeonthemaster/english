@@ -11,10 +11,17 @@ import {
   FileText,
   Pencil,
   Layers,
+  ClipboardList,
+  Clock,
   Star,
   XCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -146,9 +153,6 @@ export function QuestionBankCard({
     });
   }, [enableDrag, q.id]);
 
-  const collapsedPx =
-    viewSize === "lg" ? 340 : viewSize === "md" ? 300 : 256;
-
   const questionClamp =
     viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
 
@@ -188,13 +192,11 @@ export function QuestionBankCard({
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""
       }`}
-      style={expanded ? undefined : {
-        maxHeight: `${collapsedPx}px`,
-      }}
     >
       <CardContent ref={contentRef} className={`p-3 flex flex-col gap-1.5 ${expanded ? "" : "flex-1 min-h-0"}`}>
         {/* Header row */}
-        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+        <div className="flex items-start gap-1.5 shrink-0">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
           <Checkbox
             checked={selected}
             onCheckedChange={onToggle}
@@ -248,7 +250,13 @@ export function QuestionBankCard({
           {q.aiGenerated && (
             <Layers className="w-3 h-3 text-blue-400 shrink-0" />
           )}
-          <div className="ml-auto flex items-center gap-1 shrink-0">
+          {q.approved ? (
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+          ) : (
+            <Clock className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+          )}
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
             {showManagementActions && onDelete && (
               <Button
                 variant="ghost"
@@ -281,17 +289,26 @@ export function QuestionBankCard({
         </div>
 
         <div className={`flex flex-col ${expanded ? "gap-2" : "gap-1.5 flex-1 min-h-0 overflow-hidden"}`}>
-        {/* Tags */}
+        {/* Tags — compact view caps at 3 (+N overflow); expanding shows all.
+            Keeps the card from drowning in topic chips. */}
         {visibleTags.length > 0 && viewSize !== "sm" && (
-          <div className="flex gap-1 overflow-hidden shrink-0 h-5">
-            {visibleTags.map((tag) => (
+          <div className="flex flex-wrap items-center gap-1 shrink-0">
+            {(expanded ? visibleTags : visibleTags.slice(0, 3)).map((tag) => (
               <span
                 key={tag}
-                className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 whitespace-nowrap shrink-0"
+                className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-50 text-slate-500 ring-1 ring-inset ring-slate-100 whitespace-nowrap"
               >
                 {tag}
               </span>
             ))}
+            {!expanded && visibleTags.length > 3 && (
+              <span
+                title={visibleTags.join(", ")}
+                className="text-[10px] px-1 py-0.5 font-semibold text-slate-400 whitespace-nowrap"
+              >
+                +{visibleTags.length - 3}
+              </span>
+            )}
           </div>
         )}
 
@@ -386,7 +403,7 @@ export function QuestionBankCard({
         <ExplanationSection explanation={q.explanation} />
         </div>
 
-        {/* Footer */}
+        {/* Footer: review actions (검수완료/취소 + 수정) */}
         <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
           <div className="flex items-end justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
@@ -446,6 +463,98 @@ export function QuestionBankCard({
             </div>
           )}
         </div>
+
+        {/* Footer — exam-usage history band: shows whether (and where) this
+            question has already been placed on an exam paper. */}
+        {(() => {
+          const usedCount = q._count?.examLinks ?? 0;
+          const used = usedCount > 0;
+          const links = q.examLinks ?? [];
+          const hasList = used && links.length > 0;
+          const createdLabel = formatDate(q.createdAt);
+
+          const inner = (
+            <>
+              <ClipboardList
+                className={`w-3.5 h-3.5 shrink-0 ${used ? "text-blue-500" : "text-slate-300"}`}
+                aria-hidden="true"
+              />
+              <span
+                className={`text-[11px] font-semibold ${used ? "text-blue-700" : "text-slate-400"}`}
+              >
+                {used ? `${usedCount}개 시험지에 사용됨` : "아직 사용 안 됨"}
+              </span>
+              <span className="ml-auto shrink-0 text-[10px] tabular-nums text-slate-400">
+                {createdLabel}
+              </span>
+              {hasList && (
+                <ChevronDown className="w-3 h-3 shrink-0 text-blue-400" aria-hidden="true" />
+              )}
+            </>
+          );
+
+          const bandTone = used
+            ? "border-blue-100 bg-blue-50/70"
+            : "border-slate-100 bg-slate-50/70";
+
+          if (hasList) {
+            const sortedLinks = [...links].sort((a, b) => {
+              const at = a.exam.createdAt ? new Date(a.exam.createdAt).getTime() : 0;
+              const bt = b.exam.createdAt ? new Date(b.exam.createdAt).getTime() : 0;
+              return bt - at;
+            });
+            return (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label="이 문제가 포함된 시험지 보기"
+                    className={`mt-auto flex w-full shrink-0 items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left transition-colors hover:bg-blue-100/70 ${bandTone}`}
+                  >
+                    {inner}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent
+                  align="start"
+                  className="w-64 p-1.5"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="px-2 py-1 text-[11px] font-semibold text-slate-500">
+                    이 문제가 포함된 시험지 {usedCount}개
+                  </div>
+                  <div className="flex max-h-64 flex-col overflow-y-auto">
+                    {sortedLinks.map(({ exam }) => (
+                      <a
+                        key={exam.id}
+                        href={`/director/exams/${exam.id}`}
+                        className="flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-slate-100"
+                      >
+                        <FileText className="w-3 h-3 shrink-0 text-slate-400" />
+                        <span className="flex-1 truncate text-[12px] text-slate-700">
+                          {exam.title}
+                        </span>
+                        {exam.createdAt && (
+                          <span className="shrink-0 text-[10px] tabular-nums text-slate-400">
+                            {formatDate(exam.createdAt)}
+                          </span>
+                        )}
+                      </a>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            );
+          }
+
+          return (
+            <div
+              className={`mt-auto flex w-full shrink-0 items-center gap-2 rounded-lg border px-2.5 py-1.5 ${bandTone}`}
+            >
+              {inner}
+            </div>
+          );
+        })()}
       </CardContent>
     </Card>
   );

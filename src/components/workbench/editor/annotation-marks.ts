@@ -30,7 +30,7 @@ export const GrammarMark = Mark.create({
   },
 });
 
-// ─── 3. Syntax Mark: 구문 분석 ──────────────────────────
+// ─── 3. Syntax Mark: 문장별 읽기 포인트 ─────────────────
 export const SyntaxMark = Mark.create({
   name: "syntaxHighlight",
   addAttributes() {

@@ -5,12 +5,15 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
 import { requireTutorStudentSession } from "@/lib/auth-tutor-student";
-import { gradeTutorActivity } from "@/lib/tutor/activity-engine";
+import { gradeActivityResponse } from "@/lib/tutor/grading/grade-router";
+import { applyHintPenalty } from "@/lib/tutor/visibility";
 import {
   buildRuleBasedTutorDrafts,
   generateTutorDraftsWithModel,
   validateGroundedDrafts,
 } from "@/lib/tutor/generate-activities";
+import { requiresAiGrade } from "@/lib/tutor/activity-types";
+import { updateMasteryAndSchedule } from "@/lib/tutor/mastery";
 import { parsePassageAnalysis } from "@/lib/tutor/passage-analysis";
 import { CreateTutorProgramSchema, PublishTutorProgramSchema } from "@/lib/tutor/schemas";
 import { sha256Json } from "@/lib/tutor/crypto";
@@ -21,6 +24,7 @@ type TutorSubmitFeedback = {
   scoreEarned: number;
   scoreMax: number;
   explanation: string;
+  degraded?: boolean;
 };
 
 type ActionResult = { ok: true; id?: string; feedback?: TutorSubmitFeedback } | { ok: false; error: string };
@@ -417,11 +421,12 @@ export async function createTutorProgramAction(formData: FormData): Promise<Acti
             instructions: draft.instructions ?? null,
             payload: asJsonInput(draft.payload),
             payloadHash: sha256Json(draft.payload),
+            payloadSchemaVersion: 2,
             analysisSnapshotHash: sha256Json(analysis),
             itemCount: draft.itemCount,
             maxScore: draft.maxScore,
             estimatedSec: draft.estimatedSec,
-            requiresAiGrade: ["back_translation", "dictogloss", "transfer_mini_passage"].includes(draft.type),
+            requiresAiGrade: requiresAiGrade(draft.type),
             coverageRefs: asJsonInput(draft.coverageRefs),
             sourceAnalysisVersion: passage.analysis?.version,
             createdBy: "system",
@@ -615,11 +620,12 @@ export async function addTutorProgramPassagesAction(
             instructions: draft.instructions ?? null,
             payload: asJsonInput(draft.payload),
             payloadHash: sha256Json(draft.payload),
+            payloadSchemaVersion: 2,
             analysisSnapshotHash: sha256Json(analysis),
             itemCount: draft.itemCount,
             maxScore: draft.maxScore,
             estimatedSec: draft.estimatedSec,
-            requiresAiGrade: ["back_translation", "dictogloss", "transfer_mini_passage"].includes(draft.type),
+            requiresAiGrade: requiresAiGrade(draft.type),
             coverageRefs: asJsonInput(draft.coverageRefs),
             sourceAnalysisVersion: passage.analysis?.version,
             createdBy: "system",
@@ -855,7 +861,12 @@ export async function getTutorStudentProgram(programId: string) {
   });
 }
 
-export async function submitTutorActivityAction(activityId: string, response: unknown, programId: string): Promise<ActionResult> {
+export async function submitTutorActivityAction(
+  activityId: string,
+  response: unknown,
+  programId: string,
+  meta?: { hintUsedCount?: number },
+): Promise<ActionResult> {
   const session = await requireTutorStudentSession();
   const now = new Date();
   const activity = await prisma.tutorActivity.findFirst({
@@ -888,7 +899,22 @@ export async function submitTutorActivityAction(activityId: string, response: un
   });
   if (!assignment) return { ok: false, error: "배포된 학습을 찾을 수 없어요." };
 
-  const grade = gradeTutorActivity(activity, response);
+  // AI 채점은 트랜잭션 밖에서(여기) 수행한다. rule 유형은 즉시 동기 반환.
+  const graded = await gradeActivityResponse({
+    payload: activity.payload,
+    maxScore: activity.maxScore,
+    response,
+  });
+  const hintUsedCount = Math.max(0, Math.round(Number(meta?.hintUsedCount ?? 0)));
+  // 단계적 힌트 감점(현재: 원문 열람 1회당 context_window 0.25, 누적 상한 0.5).
+  const hintPenalty = hintUsedCount > 0 ? Math.min(0.5, hintUsedCount * 0.25) : 0;
+  const grade = {
+    ...graded,
+    scoreEarned: hintPenalty > 0 ? applyHintPenalty(graded.scoreEarned, hintPenalty) : graded.scoreEarned,
+  };
+  const activityPayloadRecord =
+    activity.payload && typeof activity.payload === "object" ? (activity.payload as Record<string, unknown>) : {};
+  const activityRefKey = String(activityPayloadRecord.refKey ?? "").trim();
   try {
     await prisma.$transaction(async (tx) => {
     const existing = await tx.tutorAttempt.findFirst({
@@ -951,6 +977,9 @@ export async function submitTutorActivityAction(activityId: string, response: un
         isCorrect: grade.isCorrect,
         scoreEarned: grade.scoreEarned,
         scoreMax: grade.scoreMax,
+        hintUsedCount,
+        aiGrade: grade.aiGrade ? asJsonInput(grade.aiGrade) : undefined,
+        clientFlags: grade.degraded ? asJsonInput({ degraded: true }) : undefined,
       },
       update: {
         responseText: typeof response === "string" ? response : null,
@@ -958,8 +987,23 @@ export async function submitTutorActivityAction(activityId: string, response: un
         isCorrect: grade.isCorrect,
         scoreEarned: grade.scoreEarned,
         scoreMax: grade.scoreMax,
+        hintUsedCount,
+        aiGrade: grade.aiGrade ? asJsonInput(grade.aiGrade) : undefined,
+        clientFlags: grade.degraded ? asJsonInput({ degraded: true }) : undefined,
       },
     });
+
+    if (activityRefKey) {
+      await updateMasteryAndSchedule(tx, {
+        academyId: session.academyId,
+        studentId: session.studentId,
+        programId,
+        lessonId: activity.lessonId,
+        refKey: activityRefKey,
+        isCorrect: grade.isCorrect,
+        now,
+      });
+    }
 
     const totals = await tx.tutorAttemptItem.aggregate({
       where: { attemptId: attempt.id },
@@ -1067,5 +1111,15 @@ export async function submitTutorActivityAction(activityId: string, response: un
   revalidatePath(`/tutor/${session.academySlug}/study/${programId}/units/${activity.lessonId}`);
   revalidatePath(`/tutor/${session.academySlug}/review`);
   revalidatePath(`/tutor/${session.academySlug}/weakness`);
-  return { ok: true, id: grade.isCorrect ? "correct" : "wrong", feedback: grade };
+  return {
+    ok: true,
+    id: grade.isCorrect ? "correct" : "wrong",
+    feedback: {
+      isCorrect: grade.isCorrect,
+      scoreEarned: grade.scoreEarned,
+      scoreMax: grade.scoreMax,
+      explanation: grade.explanation,
+      degraded: grade.degraded ?? false,
+    },
+  };
 }

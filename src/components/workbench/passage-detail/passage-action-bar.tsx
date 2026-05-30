@@ -8,6 +8,7 @@ import {
   GraduationCap,
   FilePlus2,
   Users,
+  FileText,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -50,6 +51,10 @@ export function PassageActionBar({
     );
   }, [passageId, router]);
 
+  const goReports = useCallback(() => {
+    router.push(`/director/workbench/passages/${passageId}/reports`);
+  }, [passageId, router]);
+
   return (
     <section
       aria-label="이 지문으로 할 수 있는 작업"
@@ -63,7 +68,7 @@ export function PassageActionBar({
           다음 작업으로 바로 이어갑니다
         </span>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
         <button
           type="button"
           onClick={handleAnalyze}
@@ -119,6 +124,17 @@ export function PassageActionBar({
           <Users className="w-4 h-4 text-sky-600 shrink-0" />
           <span className="text-[12px] font-semibold text-slate-700 group-hover:text-sky-800 truncate">
             반 과제로 배포
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={goReports}
+          className="group flex items-center gap-2 h-11 px-3 rounded-lg border-2 border-emerald-300 bg-emerald-50 hover:bg-emerald-100 hover:border-emerald-400 transition-colors text-left"
+        >
+          <FileText className="w-4 h-4 text-emerald-700 shrink-0" />
+          <span className="text-[12px] font-bold text-emerald-900 group-hover:text-emerald-950 truncate">
+            A4 학습자료 [신규]
           </span>
         </button>
       </div>

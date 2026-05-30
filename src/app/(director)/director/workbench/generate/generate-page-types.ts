@@ -3,6 +3,10 @@
 import { QUESTION_TYPE_GROUPS } from "@/lib/question-type-ui";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryBlankAnswersFromQuestionLike,
+} from "@/lib/summary-complete-mc";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -18,6 +22,7 @@ export interface PassageItem {
   unit: string | null;
   publisher: string | null;
   difficulty: string | null;
+  source?: string | null;
   school: { id: string; name: string } | null;
   content: string;
   analysis?: { analysisData: string } | null;
@@ -88,6 +93,7 @@ export function typeLabel(id: string): string {
 
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
+  const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   // 발문 (모든 유형 공통)
   if (q.direction) parts.push(q.direction);
   // CONTENT_MATCH: 일치/불일치 유형 표시
@@ -121,8 +127,16 @@ export function buildQuestionText(q: any): string {
   // FILL_BLANK_KEY: 빈칸 포함 문장
   if (q.sentenceWithBlank) parts.push(q.sentenceWithBlank);
   // SUMMARY_COMPLETE: 빈칸 포함 요약문 + 빈칸 정답
-  if (q.summaryWithBlanks) parts.push(`[요약문] ${q.summaryWithBlanks}`);
-  if (q.blanks?.length)
+  if (q.summaryWithBlanks) {
+    const summary = isSummaryCompleteMc
+      ? formatSummaryCompleteMcSummaryForDisplay(
+        String(q.summaryWithBlanks),
+        readSummaryBlankAnswersFromQuestionLike(q),
+      )
+      : q.summaryWithBlanks;
+    parts.push(isSummaryCompleteMc ? `\u2193\n${summary}` : `[요약문] ${summary}`);
+  }
+  if (!isSummaryCompleteMc && q.blanks?.length)
     parts.push(
       `[빈칸 정답] ${q.blanks.map((b: any) => `${b.label} ${b.answer}`).join(", ")}`,
     );

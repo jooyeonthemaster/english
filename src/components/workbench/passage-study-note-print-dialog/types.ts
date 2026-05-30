@@ -55,6 +55,6 @@ export const CATEGORY_META: Record<PageCategory, { label: string; dot: string; f
   body: { label: "본문/번역", dot: "bg-emerald-500", fg: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200" },
   vocab: { label: "어휘", dot: "bg-blue-500", fg: "text-blue-700", bg: "bg-blue-50", border: "border-blue-200" },
   grammar: { label: "어법", dot: "bg-violet-500", fg: "text-violet-700", bg: "bg-violet-50", border: "border-violet-200" },
-  syntax: { label: "구문", dot: "bg-cyan-500", fg: "text-cyan-700", bg: "bg-cyan-50", border: "border-cyan-200" },
+  syntax: { label: "읽기", dot: "bg-cyan-500", fg: "text-cyan-700", bg: "bg-cyan-50", border: "border-cyan-200" },
   exam: { label: "출제", dot: "bg-yellow-500", fg: "text-yellow-700", bg: "bg-yellow-50", border: "border-yellow-200" },
 };

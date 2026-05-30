@@ -40,6 +40,9 @@ export interface VocabItem {
   confusableWords?: string[];          // affect vs effect
   contextMeaning?: string;             // 문맥 속 특정 의미
   examType?: VocabExamType;            // 출제 예상 유형
+  studentNote?: string;                // 학생 눈높이 한 줄 설명
+  examTrap?: string;                   // 시험에서 낚이기 쉬운 지점
+  examplePhrase?: string;              // 짧은 활용 예시/표현
 }
 
 export type VocabExamType =
@@ -67,6 +70,9 @@ export interface GrammarPoint {
   gradeLevel?: GradeLevel;             // 학년별 위계
   relatedGrammar?: string[];           // 연관/혼동 문법
   csatFrequency?: CsatFrequency;      // 수능 빈출 여부
+  studentExplanation?: string;         // 쉬운 말 설명
+  whyItMatters?: string;               // 왜 시험/독해에서 중요한지
+  quickCheck?: string;                 // 학생 확인 질문/체크포인트
 }
 
 export type GrammarExamType =
@@ -86,7 +92,7 @@ export type CsatFrequency =
   | "간헐"
   | "해당없음";
 
-// ─── Layer 3: 구문 분석 (신규) ───────────────────────────
+// ─── Layer 3: 문장별 읽기 포인트 ─────────────────────────
 export interface SyntaxItem {
   sentenceIndex: number;
   structure: string;                   // S/V/O/C 분석 ("S[주어] + V[동사] + O[목적어]")
@@ -94,7 +100,9 @@ export interface SyntaxItem {
   patternType?: string;                // 도치, 강조, 가정법, 분사구문, 삽입, 생략 등
   transformPoint?: string;             // 전환 가능 지점 설명
   complexity: "simple" | "compound" | "complex" | "compound-complex";
-  keyPhrase?: string;                  // 핵심 구문 (원문 발췌)
+  keyPhrase?: string;                  // 읽기 도움을 줄 핵심 구간 (원문 발췌)
+  plainExplanation?: string;           // 문장 읽는 법을 쉬운 말로 설명
+  readingTip?: string;                 // 끊어읽기/해석 팁
 }
 
 // ─── Layer 4: 독해/구조 분석 (확장) ─────────────────────

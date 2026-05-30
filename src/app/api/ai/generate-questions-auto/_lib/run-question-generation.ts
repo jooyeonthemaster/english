@@ -103,12 +103,28 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  "topic-option-language",
+  "summary-mc-direction-frame",
+  "summary-mc-missing-summary",
+  "summary-mc-blank-marker-count",
+  "summary-mc-summary-language",
+  "summary-mc-missing-blank-answer",
+  "summary-mc-answer-language",
+  "summary-mc-awkward-collocation",
+  "summary-mc-correct-answer-mismatch",
+  "summary-mc-correct-pair-mismatch",
+  "summary-mc-option-pair-shape",
+  "summary-mc-option-language",
+  "summary-mc-missing-half-correct-traps",
   "implied-meaning-missing-expression",
   "implied-meaning-missing-underline",
   "implied-meaning-underline-count",
+  "implied-meaning-option-language",
+  "implied-meaning-option-not-english",
   "implied-meaning-single-word-target",
   "implied-meaning-target-too-short",
   "implied-meaning-target-not-in-passage",
+  "implied-meaning-noncentral-target",
   "implied-meaning-rhetorical-question-target",
   "implied-meaning-missing-surface-meaning",
   "implied-meaning-thin-reasoning-gap",
@@ -567,6 +583,9 @@ export async function runQuestionGenerationWithEmptyRetry(
   };
   const rejectionRecorder: RejectionRecorder = { issues: [] };
   const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(inputWithUsage);
+  const hasSummaryCompleteMc = inputWithUsage.plan.some(
+    (item) => item.subType === "SUMMARY_COMPLETE_MC" && item.count > 0,
+  );
   const requestedCount = inputWithUsage.plan.reduce(
     (sum, item) => sum + Math.max(0, Math.floor(Number(item.count) || 0)),
     0,
@@ -576,7 +595,7 @@ export async function runQuestionGenerationWithEmptyRetry(
   const largestGrammarAnswerCount = getLargestGrammarAnswerCount(inputWithUsage);
   const attempts = hasNegativeParaphraseBlank
     ? Math.max(6, Math.floor(maxAttempts))
-    : largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
+    : hasSummaryCompleteMc || largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
       ? Math.max(6, Math.floor(maxAttempts))
       : Math.max(4, Math.floor(maxAttempts));
 

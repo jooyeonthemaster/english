@@ -5,6 +5,7 @@
 export interface StudentFilters {
   status?: string;
   schoolId?: string;
+  classId?: string;
   grade?: number;
   search?: string;
   page?: number;

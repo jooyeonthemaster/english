@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -47,6 +54,7 @@ import { DraftFolderSection } from "./components/draft-folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
 import { JobCard } from "@/components/workbench/shared/job-card";
+import { MaterialJobCard } from "./components/material-job-card";
 import { JobReviewModal } from "./components/job-review-modal";
 import {
   ManageFiltersBar,
@@ -54,6 +62,7 @@ import {
 } from "./components/manage-filters-bar";
 import {
   ManageFiltersBarTasks,
+  type TaskAnalysisFilter,
   type TaskSortOrder,
   type TaskStatusFilter,
 } from "./components/manage-filters-bar-tasks";
@@ -213,9 +222,10 @@ export function ExtractionManageClient({
   // Task domain has its own status vocabulary and no dedup concept, so it
   // gets a parallel set of controls rather than sharing with the draft bar.
   const [taskSearchValue, setTaskSearchValue] = useState("");
-  const [taskAppliedSearch, setTaskAppliedSearch] = useState("");
   const [taskStatusFilter, setTaskStatusFilter] =
     useState<TaskStatusFilter>("ALL");
+  const [taskAnalysisFilter, setTaskAnalysisFilter] =
+    useState<TaskAnalysisFilter>("all");
   const [taskSortOrder, setTaskSortOrder] = useState<TaskSortOrder>(
     readStoredTaskSortOrder,
   );
@@ -1119,22 +1129,23 @@ export function ExtractionManageClient({
                           compact={embedded}
                           searchValue={taskSearchValue}
                           onSearchChange={setTaskSearchValue}
-                          onSearchSubmit={() =>
-                            setTaskAppliedSearch(taskSearchValue)
-                          }
                           statusFilter={taskStatusFilter}
                           onStatusFilterChange={setTaskStatusFilter}
                           sortOrder={taskSortOrder}
                           onSortOrderChange={setTaskSortOrder}
+                          analysisFilter={
+                            embedded ? taskAnalysisFilter : undefined
+                          }
+                          onAnalysisFilterChange={
+                            embedded ? setTaskAnalysisFilter : undefined
+                          }
                         />
                         <ManageFiltersBarTasks
                           variant="search-only"
                           compact={embedded}
                           searchValue={taskSearchValue}
                           onSearchChange={setTaskSearchValue}
-                          onSearchSubmit={() =>
-                            setTaskAppliedSearch(taskSearchValue)
-                          }
+                          resultCount={embedded ? visibleTasks.length : undefined}
                           statusFilter={taskStatusFilter}
                           onStatusFilterChange={setTaskStatusFilter}
                           sortOrder={taskSortOrder}
@@ -1182,8 +1193,9 @@ export function ExtractionManageClient({
                 embedded ? (
                   <EmbeddedJobCardGrid
                     jobs={display.availableJobs}
-                    searchQuery={taskAppliedSearch}
+                    searchQuery={taskSearchValue}
                     statusFilter={taskStatusFilter}
+                    analysisFilter={taskAnalysisFilter}
                     sortOrder={taskSortOrder}
                     reviewingJobId={reviewingJobId}
                     onOpenJob={setReviewingJobId}
@@ -1216,7 +1228,7 @@ export function ExtractionManageClient({
                         )
                       }
                       onTaskClick={(task) => setReviewingJobId(task.id)}
-                      searchQuery={taskAppliedSearch}
+                      searchQuery={taskSearchValue}
                       statusFilter={taskStatusFilter}
                       sortOrder={taskSortOrder}
                       onVisibleTasksChange={setVisibleTasks}
@@ -1472,6 +1484,9 @@ type AvailableJob = {
   label: string;
   subLabel?: string;
   count: number;
+  analyzedCount: number;
+  /** Lowercased haystack (title + filename + every draft's body) for search. */
+  searchText: string;
   draftIds: string[];
   createdAt: number | null;
   thumbnailUrl?: string | null;
@@ -1503,6 +1518,7 @@ function EmbeddedJobCardGrid({
   jobs,
   searchQuery,
   statusFilter,
+  analysisFilter,
   sortOrder,
   reviewingJobId,
   onOpenJob,
@@ -1514,6 +1530,7 @@ function EmbeddedJobCardGrid({
   jobs: AvailableJob[];
   searchQuery: string;
   statusFilter: TaskStatusFilter;
+  analysisFilter: TaskAnalysisFilter;
   sortOrder: TaskSortOrder;
   reviewingJobId: string | null;
   onOpenJob: (jobId: string) => void;
@@ -1522,21 +1539,30 @@ function EmbeddedJobCardGrid({
   onRenameJob: (jobId: string, next: string | null) => void | Promise<void>;
   onVisibleJobsChange: (tasks: BaseTask[]) => void;
 }) {
+  // Defer the query so typing stays smooth even while re-filtering across every
+  // job's full-body haystack.
+  const deferredQuery = useDeferredValue(searchQuery);
+
   const filteredJobs = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = deferredQuery.trim().toLowerCase();
     let next = jobs.filter((j) => {
-      if (q && !j.label.toLowerCase().includes(q)) return false;
+      if (q && !j.searchText.includes(q)) return false;
       if (statusFilter !== "ALL") {
         if (mapJobStatusToTaskStatus(j.status) !== statusFilter) return false;
+      }
+      if (analysisFilter !== "all") {
+        const fullyAnalyzed = j.count > 0 && j.analyzedCount >= j.count;
+        if (analysisFilter === "analyzed" && !fullyAnalyzed) return false;
+        if (analysisFilter === "pending" && fullyAnalyzed) return false;
       }
       return true;
     });
     next = [...next].sort((a, b) => {
       switch (sortOrder) {
         case "name_asc":
-          return a.label.localeCompare(b.label);
+          return a.label.localeCompare(b.label, "ko");
         case "name_desc":
-          return b.label.localeCompare(a.label);
+          return b.label.localeCompare(a.label, "ko");
         case "oldest":
           return (a.createdAt ?? 0) - (b.createdAt ?? 0);
         case "newest":
@@ -1545,7 +1571,7 @@ function EmbeddedJobCardGrid({
       }
     });
     return next;
-  }, [jobs, searchQuery, statusFilter, sortOrder]);
+  }, [jobs, deferredQuery, statusFilter, analysisFilter, sortOrder]);
 
   const taskRows = useMemo(
     () =>
@@ -1578,24 +1604,21 @@ function EmbeddedJobCardGrid({
           표시할 자료가 없습니다.
         </div>
       ) : (
-        <div className="flex flex-wrap items-stretch gap-3">
+        <div className="grid grid-cols-3 items-stretch gap-2.5">
           {taskRows.map(({ job, task }) => {
             const checked = isTaskChecked(task);
             return (
-              <JobCard
+              <MaterialJobCard
                 key={job.jobId}
-                variant="compact"
                 active={reviewingJobId === job.jobId}
+                checked={checked === true}
                 label={job.label}
-                subLabel={job.subLabel}
                 count={job.count}
+                analyzedCount={job.analyzedCount}
                 draftIds={job.draftIds}
-                tone="blue"
-                editable
                 createdAt={job.createdAt ?? null}
                 thumbnailUrl={job.thumbnailUrl ?? null}
                 status={job.status ?? null}
-                checked={checked === true}
                 onToggleCheck={() => onToggleTaskCheck(task)}
                 onClick={() => onOpenJob(job.jobId)}
                 onRename={(next) => onRenameJob(job.jobId, next)}

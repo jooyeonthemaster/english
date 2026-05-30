@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 import { deleteWorkbenchPassage, updatePassageAnalysis } from "@/actions/workbench";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import { DEFAULT_ANALYSIS_TONE } from "@/lib/passage-analysis-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
   AnalysisPromptPanel,
@@ -37,6 +38,7 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
       focusAreas: initialFocus || [],
       targetLevel: initialLevel || "",
       generationPlan: "STANDARD",
+      analysisTone: DEFAULT_ANALYSIS_TONE,
     });
   const autoAnalyzeTriggered = useRef(false);
 
@@ -51,9 +53,11 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
         const hasConfig =
           config.customPrompt ||
           config.focusAreas.length > 0 ||
-          config.targetLevel;
+          config.targetLevel ||
+          (config.analysisTone && config.analysisTone !== DEFAULT_ANALYSIS_TONE);
 
         const generationPlan = config.generationPlan || "STANDARD";
+        const analysisTone = config.analysisTone || DEFAULT_ANALYSIS_TONE;
         let res: Response;
         if (hasConfig) {
           // POST with custom parameters — always fresh
@@ -65,11 +69,16 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
               focusAreas: config.focusAreas,
               targetLevel: config.targetLevel,
               generationPlan,
+              analysisTone,
             }),
           });
         } else {
           // GET — uses cache
-          res = await fetch(`/api/ai/passage-analysis/${passage.id}?generationPlan=${generationPlan}`);
+          const params = new URLSearchParams({
+            generationPlan,
+            analysisTone,
+          });
+          res = await fetch(`/api/ai/passage-analysis/${passage.id}?${params}`);
         }
 
         const json = await res.json();

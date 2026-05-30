@@ -55,9 +55,9 @@ const workflowStages: WorkflowStage[] = [
     step: "02",
     title: "지문 분석",
     flowLabel: "AI 지문 분석",
-    flowDescription: "저장된 지문을 불러와 핵심 어휘, 문법, 문장 구조, 출제 포인트를 뽑습니다.",
+    flowDescription: "저장된 지문을 불러와 핵심 어휘, 어법, 문장별 읽기 포인트, 출제 포인트를 뽑습니다.",
     flowResult: "출제 포인트가 정리된 지문",
-    cardDescription: "핵심 어휘, 문법, 문장 구조와 출제 포인트를 AI로 분석합니다.",
+    cardDescription: "핵심 어휘, 어법, 문장별 읽기 포인트와 출제 포인트를 AI로 분석합니다.",
     icon: PassageAnalysisIcon,
     actions: [
       {

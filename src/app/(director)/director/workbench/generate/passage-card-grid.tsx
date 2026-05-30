@@ -24,6 +24,7 @@ import {
   Folder,
   FolderOpen,
   FolderX,
+  ClipboardPaste,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { isDirectInputPassage } from "@/lib/passage-source";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
@@ -42,6 +44,7 @@ import {
   type PassageSortOrder,
   countWords,
 } from "./generate-page-types";
+import { PastePassagePanel } from "./paste-passage-panel";
 
 type ParsedAnalysisSummary = {
   vocabulary?: unknown[];
@@ -117,6 +120,14 @@ interface PassageCardGridProps {
   selectionActionText?: string;
   selectionActionDisabled?: boolean;
 
+  // Direct paste — optional; only the question-generation page wires these.
+  // When omitted (e.g. the tutor program builder reuse), the paste UI is hidden.
+  pasteMode?: boolean;
+  onEnterPasteMode?: () => void;
+  onExitPasteMode?: () => void;
+  onCreatePastedPassage?: (title: string, content: string) => void;
+  pasteSaving?: boolean;
+
   // Actions
   handleOpenAnalysisModal: (passageId: string) => void;
 }
@@ -160,6 +171,11 @@ export function PassageCardGrid({
   handleBatchGenerate,
   selectionActionText,
   selectionActionDisabled,
+  pasteMode,
+  onEnterPasteMode,
+  onExitPasteMode,
+  onCreatePastedPassage,
+  pasteSaving,
   handleOpenAnalysisModal,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
@@ -433,6 +449,21 @@ export function PassageCardGrid({
     setDraggingPassageIds([]);
     setDropTargetCollectionId(null);
   };
+
+  const pasteEnabled = !!onCreatePastedPassage && !!onEnterPasteMode;
+
+  // ── Direct-paste mode: swap the whole left panel for the paste panel ──
+  if (pasteEnabled && pasteMode && onCreatePastedPassage) {
+    return (
+      <div className="flex flex-col overflow-hidden bg-white border-r lg:border-r-0 border-slate-200/80 flex-1 min-w-0">
+        <PastePassagePanel
+          onSubmit={onCreatePastedPassage}
+          onCancel={() => onExitPasteMode?.()}
+          saving={!!pasteSaving}
+        />
+      </div>
+    );
+  }
 
   const renderFolderChip = (
     key: string,
@@ -745,6 +776,23 @@ export function PassageCardGrid({
           </>
         ) : null}
       </div>
+
+      {/* Direct-paste CTA — prominent entry point for pasting a passage directly */}
+      {pasteEnabled && (
+        <div className="px-5 pt-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => onEnterPasteMode?.()}
+            className="group w-full h-11 rounded-xl flex items-center justify-center gap-2 bg-blue-600 text-white text-[13.5px] font-semibold shadow-sm shadow-blue-200/70 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-200 transition-all"
+          >
+            <ClipboardPaste className="w-4 h-4" />
+            지문 직접 붙여넣기
+            <span className="text-[11px] font-medium text-blue-100/90 group-hover:text-white/90">
+              · 추출·분석 없이 바로 문제 생성
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* Search & filter bar */}
       <div className="px-5 py-3 border-b border-slate-100 shrink-0">
@@ -1136,7 +1184,7 @@ export function PassageCardGrid({
                         <h4 className="text-[13px] font-semibold text-slate-800 truncate">
                           {p.title}
                         </h4>
-                        <div className="flex items-center gap-1.5 mt-0.5">
+                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                           {p.analysis && (
                             <span className="text-[10px] font-medium text-emerald-600">
                               분석 완료
@@ -1145,6 +1193,11 @@ export function PassageCardGrid({
                           {!hasAnalysis && (
                             <span className="text-[10px] font-medium text-slate-400">
                               미분석
+                            </span>
+                          )}
+                          {isDirectInputPassage(p.source) && (
+                            <span className="inline-flex items-center text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+                              직접 입력
                             </span>
                           )}
                           <span className="text-[10px] text-slate-400">
@@ -1219,12 +1272,12 @@ export function PassageCardGrid({
                         )}
                         {grammarCount > 0 && (
                           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
-                            <Braces className="w-3 h-3" /> 문법 {grammarCount}
+                            <Braces className="w-3 h-3" /> 어법 {grammarCount}
                           </span>
                         )}
                         {syntaxCount > 0 && (
                           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
-                            <Braces className="w-3 h-3" /> 구문 {syntaxCount}
+                            <Braces className="w-3 h-3" /> 읽기포인트 {syntaxCount}
                           </span>
                         )}
                         {keySentenceCount > 0 && (

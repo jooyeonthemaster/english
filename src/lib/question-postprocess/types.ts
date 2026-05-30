@@ -50,9 +50,12 @@ export function getCircledNumbers(count: number): string[] {
 /** Types that need NO post-processing — pass through unchanged */
 export const PASSTHROUGH_TYPES = new Set([
   "SENTENCE_ORDER",
+  "TOPIC",
+  "MAIN_IDEA",
   "TOPIC_MAIN_IDEA",
   "TITLE",
   "CONTENT_MATCH",
+  "SUMMARY_COMPLETE_MC",
   "CONDITIONAL_WRITING",
   "SENTENCE_TRANSFORM",
   "SUMMARY_COMPLETE",

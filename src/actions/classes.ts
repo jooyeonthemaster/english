@@ -31,16 +31,6 @@ interface ActionResult {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-const DAY_MAP: Record<string, string> = {
-  MON: "월",
-  TUE: "화",
-  WED: "수",
-  THU: "목",
-  FRI: "금",
-  SAT: "토",
-  SUN: "일",
-};
-
 // NOTE: formatScheduleLabel moved to @/lib/utils (can't export non-async from "use server")
 
 
@@ -75,8 +65,9 @@ export async function getClasses(academyId: string) {
 }
 
 export async function getClass(classId: string) {
-  const cls = await prisma.class.findUnique({
-    where: { id: classId },
+  const staff = await requireStaffAuth();
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, academyId: staff.academyId },
     include: {
       teacher: { select: { id: true, name: true, avatarUrl: true, phone: true } },
       enrollments: {
@@ -170,6 +161,7 @@ export async function createClass(
       },
     });
     revalidatePath("/director/classes");
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
@@ -201,6 +193,7 @@ export async function updateClass(
     });
     revalidatePath("/director/classes");
     revalidatePath(`/director/classes/${classId}`);
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
@@ -215,6 +208,7 @@ export async function deleteClass(classId: string): Promise<ActionResult> {
     await requireStaffAuth("DIRECTOR");
     await prisma.class.delete({ where: { id: classId } });
     revalidatePath("/director/classes");
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
@@ -254,6 +248,7 @@ export async function enrollStudent(
     });
 
     revalidatePath(`/director/classes/${classId}`);
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {
@@ -274,6 +269,7 @@ export async function removeStudent(
       data: { status: "DROPPED", droppedAt: new Date() },
     });
     revalidatePath(`/director/classes/${classId}`);
+    revalidatePath("/director/students");
     return { success: true };
   } catch (error) {
     return {

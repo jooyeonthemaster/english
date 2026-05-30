@@ -91,11 +91,28 @@ export type SentenceInsertQuestion = z.infer<typeof sentenceInsertSchema>;
 
 // ── 주제/요지 ──
 
-export const topicMainIdeaSchema = z.object({
+export const topicSchema = z.object({
   ...commonFields,
-  options: z.array(optionSchema).length(5).describe("한국어 선택지"),
+  options: z.array(optionSchema).length(5).describe("영어 주제 선택지"),
   ...mcWrongExplanations,
 });
+
+export const mainIdeaSchema = z.object({
+  ...commonFields,
+  options: z.array(optionSchema).length(5).describe("한국어 요지/주장 선택지"),
+  ...mcWrongExplanations,
+});
+
+export const topicMainIdeaSchema = z.object({
+  ...commonFields,
+  options: z
+    .array(optionSchema)
+    .length(5)
+    .describe("주제는 영어 선택지, 요지/주장은 한국어 선택지"),
+  ...mcWrongExplanations,
+});
+export type TopicQuestion = z.infer<typeof topicSchema>;
+export type MainIdeaQuestion = z.infer<typeof mainIdeaSchema>;
 export type TopicMainIdeaQuestion = z.infer<typeof topicMainIdeaSchema>;
 
 // ── 제목 추론 ──
@@ -117,7 +134,7 @@ export const impliedMeaningSchema = z.object({
   impliedMeaning: z.string().describe("정답 선택지가 나타내는 핵심 함축 의미"),
   reasoningGap: z.string().describe("표면 의미에서 실제 함축 의미로 넘어가기 위해 필요한 추론 간극"),
   evidenceChain: z.array(z.string()).min(2).max(4).describe("정답을 뒷받침하는 지문 근거 흐름"),
-  options: z.array(optionSchema).length(5).describe("한국어 선택지"),
+  options: z.array(optionSchema).length(5).describe("영어 함축 의미 선택지"),
   ...mcWrongExplanations,
 });
 export type ImpliedMeaningQuestion = z.infer<typeof impliedMeaningSchema>;
@@ -142,6 +159,36 @@ export const contentMatchSchema = z.object({
   ...mcWrongExplanations,
 });
 export type ContentMatchQuestion = z.infer<typeof contentMatchSchema>;
+
+// ── 요약문 완성 객관식 ──
+
+const summaryPairOptionSchema = optionSchema.extend({
+  blankA: z.string().describe("(A)에 들어갈 영어 단어 또는 어구"),
+  blankB: z.string().describe("(B)에 들어갈 영어 단어 또는 어구"),
+});
+
+export const summaryCompleteMcSchema = z.object({
+  ...commonFields,
+  summaryWithBlanks: z
+    .string()
+    .describe("지문 내용을 한 문장으로 요약한 영어 요약문. (A), (B)를 각각 정확히 한 번 포함"),
+  blanks: z
+    .array(
+      z.object({
+        label: z.enum(["(A)", "(B)"]),
+        answer: z.string().describe("해당 빈칸의 정답 영어 단어 또는 어구"),
+        role: z.string().optional().describe("요약문 안에서 해당 빈칸이 담당하는 의미 역할"),
+      }),
+    )
+    .length(2)
+    .describe("(A), (B) 정답 정보"),
+  options: z
+    .array(summaryPairOptionSchema)
+    .length(5)
+    .describe("5개 객관식 선지. 각 선지는 (A), (B)에 들어갈 영어 단어/어구 쌍"),
+  ...mcWrongExplanations,
+});
+export type SummaryCompleteMcQuestion = z.infer<typeof summaryCompleteMcSchema>;
 
 // ── 무관한 문장 ──
 

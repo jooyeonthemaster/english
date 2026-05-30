@@ -15,6 +15,10 @@ import {
   renderQuestionBlock,
   type BuilderItemResolved,
 } from "./render/question";
+import {
+  shouldForceSourcePassage,
+  shouldRenderSourcePassageInsideQuestion,
+} from "@/components/exams/paper-builder/passage-policy";
 import type {
   BuilderBlock,
   BuilderHeader,
@@ -62,6 +66,17 @@ function groupItems(
     }
   }
   return groups;
+}
+
+function normalizePrintableTitle(value: string | null | undefined): string {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function printablePassageTitle(item: BuilderItemResolved): string {
+  const savedTitle = normalizePrintableTitle(item.passageTitle);
+  if (!savedTitle) return "";
+  const sourceTitle = normalizePrintableTitle(item.sourceQuestion.passage?.title);
+  return savedTitle === sourceTitle ? "" : savedTitle;
 }
 
 function blockAlign(align: BuilderBlock["blockAlign"]) {
@@ -208,15 +223,23 @@ function appendQuestionGroups(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const includePassage = first.includePassage !== false;
     const passageContent = (
       first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
     ).trim();
+    const includePassage =
+      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
+      (first.includePassage !== false ||
+        shouldForceSourcePassage({
+          subType: first.sourceQuestion.subType,
+          questionText: first.questionText || first.sourceQuestion.questionText,
+          structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
+          passage: { content: passageContent },
+        }));
 
-    if (includePassage && passageContent) {
+    const passageRenderedSeparately = includePassage && Boolean(passageContent);
+    if (passageRenderedSeparately) {
       const passageBlocks = renderPassage({
-        passageTitle:
-          first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+        passageTitle: printablePassageTitle(first),
         passageContent,
         passageStyle: opts.passageStyle,
         showPassageTitle: opts.showPassageTitle,
@@ -231,7 +254,7 @@ function appendQuestionGroups(opts: {
       }
       opts.target.push(...passageBlocks);
     }
-    for (const item of group.items) {
+    group.items.forEach((item, idx) => {
       const questionBlocks = renderQuestionBlock({
         item,
         layout: opts.layout,
@@ -241,8 +264,14 @@ function appendQuestionGroups(opts: {
       if (item.localId) {
         applyBreak(questionBlocks, opts.breakPlan.get(questionBreakKey(item.localId)));
       }
+      // 지문이 별도 블록으로 렌더되지 않는 유형(문항 내부 인라인 지문)에서는
+      // 지문 기준 단/페이지 나눔이 유실되므로, 그룹 첫 문항 블록에 대신 적용해
+      // break plan 이 미리보기와 동일하게 단 시작에 반영되도록 한다.
+      if (idx === 0 && !passageRenderedSeparately && firstLocalId) {
+        applyBreak(questionBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
+      }
       opts.target.push(...questionBlocks);
-    }
+    });
   }
 }
 
@@ -360,7 +389,7 @@ export function buildBuilderHwpxDocument(
   const layout: BuilderLayout = settings?.layout ?? {};
   const compact = layout.density === "compact";
   const passageStyle = layout.passageStyle ?? "boxed";
-  const showPassageTitle = layout.showPassageTitle !== false;
+  const showPassageTitle = layout.showPassageTitle === true;
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
 
   // 미리보기와 동일한 페이지/단 분할을 재현하기 위한 break plan.

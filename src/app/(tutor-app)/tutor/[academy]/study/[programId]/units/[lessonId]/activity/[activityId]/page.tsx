@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { openTutorAssignmentWhere } from "@/lib/tutor/access";
 import { requireTutorRouteSession } from "@/lib/tutor/route-auth";
-import { sanitizeTutorActivityPayload } from "@/lib/tutor/sanitize-activity";
+import { TutorActivityPayloadSchema } from "@/lib/tutor/activity-payload-schema";
+import { toStudentPayload } from "@/lib/tutor/student-payload";
+import { buildViewablePassage, resolvePassagePolicy } from "@/lib/tutor/visibility";
 import { ActivityPlayer } from "./activity-player";
 
 export default async function TutorActivityPage({
@@ -44,6 +46,21 @@ export default async function TutorActivityPage({
   const currentIndex = activity.lesson.activities.findIndex((item) => item.id === activity.id);
   const next = activity.lesson.activities[currentIndex + 1];
 
+  const assignment = await prisma.tutorAssignment.findFirst({
+    where: { ...openTutorAssignmentWhere({ academyId: session.academyId, studentId: session.studentId, now }), programId },
+    orderBy: { createdAt: "desc" },
+    select: { hintsAllowed: true },
+  });
+  const hintsAllowed = assignment?.hintsAllowed ?? true;
+
+  // v2 payload 파싱 → 학생용(정답키 제거) + 정책 기반 원문 가시성. 구버전이면 폴백.
+  const parsed = TutorActivityPayloadSchema.safeParse(activity.payload);
+  const studentPayload = parsed.success ? toStudentPayload(parsed.data) : null;
+  const policy = parsed.success
+    ? resolvePassagePolicy(activity.type, parsed.data.passagePolicy, hintsAllowed)
+    : "visible";
+  const viewable = buildViewablePassage(policy, activity.lesson.passage.content);
+
   return (
     <ActivityPlayer
       academy={academy}
@@ -55,9 +72,10 @@ export default async function TutorActivityPage({
         type: activity.type,
         title: activity.title,
         instructions: activity.instructions,
-        payload: sanitizeTutorActivityPayload(activity.payload),
+        studentPayload,
       }}
-      passage={activity.lesson.passage}
+      passageTitle={activity.lesson.passage.title}
+      viewable={viewable}
       nextActivityId={next?.id}
     />
   );

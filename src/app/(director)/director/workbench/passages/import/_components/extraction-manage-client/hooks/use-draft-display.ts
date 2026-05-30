@@ -175,14 +175,32 @@ export function useDraftDisplay({
     // drafts list rather than the folder-scoped slice. Otherwise the card
     // count would drop to 0 the moment a user navigated into a folder.
     const countByJob = new Map<string, number>();
+    const analyzedCountByJob = new Map<string, number>();
     const draftIdsByJob = new Map<string, string[]>();
+    // Per-job searchable haystack: every draft's title + restored/raw body so
+    // the toolbar search can match on the actual 자료 내용, not just the job name.
+    const draftSearchByJob = new Map<string, string[]>();
     for (const d of drafts) {
       const jobId = d.job?.id;
       if (!jobId) continue;
       countByJob.set(jobId, (countByJob.get(jobId) ?? 0) + 1);
+      const isAnalyzed =
+        d.analysisStatus === "analyzed" || d.savedPassageAnalysisId != null;
+      if (isAnalyzed) {
+        analyzedCountByJob.set(jobId, (analyzedCountByJob.get(jobId) ?? 0) + 1);
+      }
       const ids = draftIdsByJob.get(jobId) ?? [];
       ids.push(d.id);
       draftIdsByJob.set(jobId, ids);
+
+      const body =
+        d.teacherText?.trim() ||
+        d.restoredText?.trim() ||
+        d.rawText?.trim() ||
+        "";
+      const parts = draftSearchByJob.get(jobId) ?? [];
+      parts.push(d.title ?? "", body);
+      draftSearchByJob.set(jobId, parts);
     }
 
     // Authoritative job list comes from the /api/extraction/jobs response
@@ -196,10 +214,20 @@ export function useDraftDisplay({
           meta.originalFileName ||
           "이름 없는 작업";
         const localCount = countByJob.get(jobId);
+        const searchText = [
+          label,
+          meta.originalFileName ?? "",
+          meta.displayName ?? "",
+          ...(draftSearchByJob.get(jobId) ?? []),
+        ]
+          .join(" ")
+          .toLowerCase();
         return {
           jobId,
           label,
           count: localCount ?? meta.resultCount,
+          analyzedCount: analyzedCountByJob.get(jobId) ?? 0,
+          searchText,
           draftIds: draftIdsByJob.get(jobId) ?? [],
           createdAt: Number.isFinite(createdAtMs) ? createdAtMs : null,
           thumbnailUrl: meta.thumbnailUrl,
@@ -221,6 +249,8 @@ export function useDraftDisplay({
       subLabel:
         j.createdAt !== null ? formatShortTimestamp(j.createdAt) : undefined,
       count: j.count,
+      analyzedCount: j.analyzedCount,
+      searchText: j.searchText,
       draftIds: j.draftIds,
       createdAt: j.createdAt,
       thumbnailUrl: j.thumbnailUrl,

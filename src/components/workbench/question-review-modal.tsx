@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
-import { toast } from "sonner";
 
 interface QuestionReviewModalProps {
   open: boolean;
@@ -174,7 +173,14 @@ export function QuestionReviewModal({
                   <div className="space-y-3">
                     {qs.map((q: any) => {
                       const idx = globalIdx++;
-                      return <StructuredQuestionRenderer key={idx} question={q} index={idx} />;
+                      return (
+                        <StructuredQuestionRenderer
+                          key={idx}
+                          question={q}
+                          index={idx}
+                          sourcePassageContent={passageContent}
+                        />
+                      );
                     })}
                   </div>
                 </div>

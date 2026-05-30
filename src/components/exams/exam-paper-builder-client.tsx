@@ -27,6 +27,7 @@ import type {
 } from "./paper-builder/types";
 import {
   DEFAULT_INSTRUCTIONS,
+  DEFAULT_SHOW_PASSAGE_TITLE,
   PAPER_SIZE_SPECS,
   PREVIEW_PAGE_WIDTH,
   SUBTYPE_LABELS,
@@ -64,7 +65,9 @@ interface ExamPaperBuilderClientProps {
 }
 
 const PREVIEW_PAGE_GAP = 20;
-const PANEL_WIDTH_STORAGE_KEY = "smoat.examPaperBuilder.panelWidths.v1";
+// v2: bumped so the wider default left panel applies for everyone (old saved
+// widths from v1 are discarded).
+const PANEL_WIDTH_STORAGE_KEY = "smoat.examPaperBuilder.panelWidths.v2";
 const RIGHT_PANEL_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.rightPanelCollapsed.v1";
 const LEFT_PANEL_COLLAPSED_STORAGE_KEY =
@@ -74,9 +77,9 @@ const PANEL_TOGGLE_HANDLE_WIDTH = 24;
 // 핸들 클릭(여닫기)과 드래그(폭 조절)를 구분하는 이동 임계값(px).
 const PANEL_DRAG_THRESHOLD = 4;
 const PANEL_MIN_CENTER = 420;
-const PANEL_DEFAULT_WIDTHS = { left: 400, right: 320 };
+const PANEL_DEFAULT_WIDTHS = { left: 560, right: 320 };
 const PANEL_LIMITS = {
-  left: { min: 280, max: 560 },
+  left: { min: 280, max: 880 },
   right: { min: 260, max: 440 },
 };
 // 미리보기 페이지 썸네일(세로 목록) 패널.
@@ -477,10 +480,12 @@ export function ExamPaperBuilderClient({
   const [template, setTemplate] = useState<PaperTemplate>("clean");
   const [columns, setColumns] = useState<1 | 2>(2);
   const [density, setDensity] = useState<Density>("comfortable");
+  // 켜면 자동 흐름 대신 한 칸당 문항 1개씩(2단=페이지당 2문제) 강제 배치.
+  const [forceTwoPerPage, setForceTwoPerPage] = useState(false);
   const [passageStyle, setPassageStyle] = useState<PassageStyle>("boxed");
   const showAnswerSpace = true;
-  const [showPassageTitle, setShowPassageTitle] = useState(true);
-  const [showQuestionMeta, setShowQuestionMeta] = useState(true);
+  const [showPassageTitle, setShowPassageTitle] = useState(DEFAULT_SHOW_PASSAGE_TITLE);
+  const [showQuestionMeta, setShowQuestionMeta] = useState(false);
   const {
     paperItems,
     activeItemId,
@@ -606,6 +611,7 @@ export function ExamPaperBuilderClient({
       showPassageTitle,
       showQuestionMeta,
       template,
+      forceTwoPerPage,
     }),
     [
       paperSize,
@@ -616,6 +622,7 @@ export function ExamPaperBuilderClient({
       showPassageTitle,
       showQuestionMeta,
       template,
+      forceTwoPerPage,
     ],
   );
   const paginationResult = useMemo(
@@ -1174,6 +1181,8 @@ export function ExamPaperBuilderClient({
             dirty={dirty}
             isPending={isPending}
             paperItemsCount={questionItemsCount}
+            forceTwoPerPage={forceTwoPerPage}
+            onToggleTwoPerPage={() => setForceTwoPerPage((value) => !value)}
             canUndo={canUndo}
             canRedo={canRedo}
             onUndo={undo}

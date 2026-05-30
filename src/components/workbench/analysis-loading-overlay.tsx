@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 const ANALYSIS_STEPS = [
   { label: "지문 텍스트 분석 중", duration: 3000 },
   { label: "핵심 어휘 추출 중", duration: 4000 },
-  { label: "문법 포인트 식별 중", duration: 5000 },
-  { label: "문장 구조 분석 중", duration: 4000 },
+  { label: "어법 포인트 식별 중", duration: 5000 },
+  { label: "문장별 읽기 포인트 점검 중", duration: 4000 },
   { label: "출제 포인트 도출 중", duration: 3000 },
   { label: "분석 결과 정리 중", duration: 2000 },
 ];
@@ -128,7 +128,7 @@ export function AnalysisLoadingOverlay() {
         </div>
 
         <p className="text-[11px] text-slate-400 mt-6">
-          어휘, 문법, 구조, 출제 포인트를 종합 분석하고 있습니다
+          어휘, 어법, 문장별 읽기 포인트, 출제 포인트를 종합 분석하고 있습니다
         </p>
       </div>
     </div>

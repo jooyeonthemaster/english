@@ -37,8 +37,8 @@ export const CATEGORY_META: Record<NoteCategory, {
     ring: "ring-blue-300",
   },
   grammar: {
-    label: "문법",
-    title: "문법 정리본",
+    label: "어법",
+    title: "어법/문법 포인트",
     dot: "bg-violet-500",
     text: "text-violet-600",
     soft: "bg-violet-50",
@@ -47,8 +47,8 @@ export const CATEGORY_META: Record<NoteCategory, {
     ring: "ring-violet-300",
   },
   syntax: {
-    label: "구문",
-    title: "구문 분석본",
+    label: "읽기포인트",
+    title: "문장별 읽기 포인트",
     dot: "bg-cyan-500",
     text: "text-cyan-600",
     soft: "bg-cyan-50",

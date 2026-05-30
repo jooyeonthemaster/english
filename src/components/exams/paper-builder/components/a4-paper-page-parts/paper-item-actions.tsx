@@ -13,6 +13,10 @@ import {
 import { cn } from "@/lib/utils";
 
 import type { BreakBefore, PaperItem } from "../../types";
+import {
+  isSourcePassageForcedForItem,
+  shouldRenderSourcePassageForItem,
+} from "../../paper-item-utils";
 
 interface PaperItemActionsProps {
   item: PaperItem;
@@ -40,6 +44,9 @@ export function PaperItemActions({
   onRegroupByPassage,
   onRemoveItem,
 }: PaperItemActionsProps) {
+  const passageForced = isSourcePassageForcedForItem(item);
+  const passageActive = passageForced || shouldRenderSourcePassageForItem(item);
+
   return (
     <div
       className={cn(
@@ -50,13 +57,16 @@ export function PaperItemActions({
       <button
         onClick={(event) => {
           event.stopPropagation();
+          if (passageForced) return;
           onUpdateItem(item.localId, { includePassage: !item.includePassage });
         }}
+        disabled={passageForced}
         className={cn(
           "flex h-6 w-6 items-center justify-center rounded-md hover:bg-slate-50",
-          item.includePassage
+          passageActive
             ? "text-blue-600"
             : "text-slate-400 hover:text-slate-700",
+          passageForced && "cursor-not-allowed opacity-75",
         )}
         title="지문 표시 전환"
       >
