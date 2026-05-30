@@ -351,17 +351,6 @@ export function PassageAnalysisModal({
                 </Button>
               )}
               <Button
-                variant="outline"
-                size="sm"
-                className="text-emerald-700 border-emerald-300 hover:bg-emerald-50 h-8 text-xs font-semibold"
-                onClick={() => {
-                  window.location.href = `/director/workbench/passages/${passage.id}/reports`;
-                }}
-              >
-                <FileText className="w-3.5 h-3.5 mr-1" />
-                A4 학습자료
-              </Button>
-              <Button
                 variant="ghost"
                 size="sm"
                 className="text-red-500 hover:text-red-600 hover:bg-red-50 h-8 text-xs"
