@@ -662,7 +662,7 @@ export function BottomQueueSection({
   ] as const;
 
   return (
-    <div className="bg-[#F0F2F5]">
+    <div className="bg-white">
       <div className="px-8 pt-5 pb-8 space-y-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>

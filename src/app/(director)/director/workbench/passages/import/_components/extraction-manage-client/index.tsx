@@ -13,10 +13,21 @@ import {
   Loader2,
   RefreshCw,
   Trash2,
+  Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   addDraftsToCollection,
   createM1DraftCollection,
@@ -33,7 +44,7 @@ import { useQueueDrawer } from "../queue-drawer-context";
 
 import { DraftDetailModal } from "./components/draft-detail-modal";
 import { DraftFolderSection } from "./components/draft-folder-section";
-import { DraftGrid } from "./components/draft-grid";
+import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
 import { JobCard } from "@/components/workbench/shared/job-card";
 import { JobReviewModal } from "./components/job-review-modal";
@@ -52,6 +63,12 @@ import { useBulkActions } from "./hooks/use-bulk-actions";
 import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
 import { useDraftsData } from "./hooks/use-drafts-data";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import {
+  getQuestionGenerationCreditCost,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import type { M1PassageDraftWithJob } from "./types";
 
 interface ExtractionManageClientProps {
@@ -59,7 +76,7 @@ interface ExtractionManageClientProps {
   initialCollections: CollectionItem[];
   initialCollectionMembership: Record<string, Set<string>>;
   /** When true, drop the page-bleed wrapper (-m-6) and render inside a
-   *  scrollable container that fits its parent. Used when embedding this
+   *  clipped container that fits its parent. Used when embedding this
    *  surface as a left-column picker (e.g. in 지문 분석 - 새 지문 등록). */
   embedded?: boolean;
   /** When provided, clicking a draft card calls this callback instead of
@@ -68,6 +85,13 @@ interface ExtractionManageClientProps {
   onSelectDraftExternal?: (draft: M1PassageDraftWithJob) => void;
   /** Highlighted draft id when an external picker controls selection. */
   selectedExternalDraftId?: string | null;
+  /** Optional bridge used by the passage-registration embed to register and
+   *  analyze extraction drafts without copying them into the editor first. */
+  onBulkAnalyze?: (
+    drafts: M1PassageDraftWithJob[],
+    generationPlan: QuestionGenerationPlan,
+  ) => Promise<void>;
+  bulkAnalyzing?: boolean;
 }
 
 function useMeasuredHeight(enabled: boolean) {
@@ -98,9 +122,7 @@ function useMeasuredHeight(enabled: boolean) {
   return [ref, height] as const;
 }
 
-
-const TASK_SORT_ORDER_STORAGE_KEY =
-  "smoat:extraction-manage:task-sort-order";
+const TASK_SORT_ORDER_STORAGE_KEY = "smoat:extraction-manage:task-sort-order";
 const TASK_SORT_ORDERS: readonly TaskSortOrder[] = [
   "newest",
   "oldest",
@@ -120,6 +142,30 @@ function readStoredTaskSortOrder(): TaskSortOrder {
   }
 }
 
+function getDraftAnalysisText(draft: M1PassageDraftWithJob): string {
+  return (
+    draft.teacherText?.trim() ||
+    draft.restoredText?.trim() ||
+    draft.rawText?.trim() ||
+    ""
+  );
+}
+
+function isDraftReadyForAnalysis(draft: M1PassageDraftWithJob): boolean {
+  return (
+    draft.analysisStatus !== "analyzed" &&
+    getDraftAnalysisText(draft).length > 0
+  );
+}
+
+function isDraftAnalyzable(draft: M1PassageDraftWithJob): boolean {
+  return getDraftAnalysisText(draft).length > 0;
+}
+
+function isDraftAnalyzed(draft: M1PassageDraftWithJob): boolean {
+  return draft.analysisStatus === "analyzed";
+}
+
 export function ExtractionManageClient({
   academyId,
   initialCollections,
@@ -127,6 +173,8 @@ export function ExtractionManageClient({
   embedded = false,
   onSelectDraftExternal,
   selectedExternalDraftId = null,
+  onBulkAnalyze,
+  bulkAnalyzing = false,
 }: ExtractionManageClientProps) {
   void academyId;
 
@@ -164,6 +212,10 @@ export function ExtractionManageClient({
   const [taskSortOrder, setTaskSortOrder] = useState<TaskSortOrder>(
     readStoredTaskSortOrder,
   );
+  const [reanalyzeDialogOpen, setReanalyzeDialogOpen] = useState(false);
+  const [pendingBulkAnalysisDrafts, setPendingBulkAnalysisDrafts] = useState<
+    M1PassageDraftWithJob[] | null
+  >(null);
   // Visible tasks reported by TaskQueueInlineList. We need the actual list (not
   // just a count) so task-level checkboxes can map back to the underlying
   // drafts that the selection actions operate on.
@@ -283,6 +335,23 @@ export function ExtractionManageClient({
     activeFolder: folders.activeFolder,
     jobMetaByJobId: data.jobMetaByJobId,
   });
+  const { gridCols, setGridCols } = display;
+  const reviewDrawerOpen = reviewingJobId !== null;
+  const materialGridCols =
+    reviewDrawerOpen && gridCols === "grid3" ? "grid2" : gridCols;
+  const setMaterialGridCols = useCallback(
+    (cols: GridCols) => {
+      if (reviewDrawerOpen && cols === "grid3") return;
+      setGridCols(cols);
+    },
+    [reviewDrawerOpen, setGridCols],
+  );
+
+  useEffect(() => {
+    if (reviewDrawerOpen && gridCols === "grid3") {
+      setGridCols("grid2");
+    }
+  }, [gridCols, reviewDrawerOpen, setGridCols]);
 
   // ─── Actions hooks (per-draft + bulk) ───
   const actions = useDraftActions({
@@ -431,6 +500,47 @@ export function ExtractionManageClient({
     selectedIds,
   ]);
 
+  const bulkAnalysisCandidateDrafts = useMemo(() => {
+    if (actionTargetIds.size === 0) return [];
+    return data.drafts.filter((draft) => actionTargetIds.has(draft.id));
+  }, [actionTargetIds, data.drafts]);
+
+  const bulkAnalysisRunnableDrafts = useMemo(
+    () => bulkAnalysisCandidateDrafts.filter(isDraftAnalyzable),
+    [bulkAnalysisCandidateDrafts],
+  );
+
+  const bulkAnalysisAlreadyAnalyzedCount =
+    bulkAnalysisRunnableDrafts.filter(isDraftAnalyzed).length;
+  const bulkAnalysisPlan: QuestionGenerationPlan =
+    FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD";
+  const bulkAnalysisUnitCreditCost = getQuestionGenerationCreditCost(
+    CREDIT_COSTS.PASSAGE_ANALYSIS,
+    bulkAnalysisPlan,
+  );
+  const bulkAnalysisTotalCreditCost =
+    bulkAnalysisRunnableDrafts.length * bulkAnalysisUnitCreditCost;
+  const bulkAnalysisSummaryLabel =
+    bulkAnalysisAlreadyAnalyzedCount > 0
+      ? `${bulkAnalysisCandidateDrafts.length}개 선택/${bulkAnalysisAlreadyAnalyzedCount}개 분석완료`
+      : `${bulkAnalysisCandidateDrafts.length}개 선택`;
+  const bulkAnalysisTitle =
+    actionTargetIds.size === 0
+      ? "분석할 자료를 선택하세요."
+      : bulkAnalysisRunnableDrafts.length > 0
+        ? bulkAnalysisAlreadyAnalyzedCount > 0
+          ? `${bulkAnalysisAlreadyAnalyzedCount}개는 이미 분석된 지문입니다. 실행 전에 추가 분석 여부를 확인합니다. 예상 소모: ${bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")} 크레딧.`
+          : `${bulkAnalysisRunnableDrafts.length}개 자료를 AI 분석 큐에 등록합니다. 예상 소모: ${bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")} 크레딧.`
+        : "분석할 수 있는 자료가 없습니다.";
+
+  const pendingAnalysisDrafts = pendingBulkAnalysisDrafts ?? [];
+  const pendingAlreadyAnalyzedCount =
+    pendingAnalysisDrafts.filter(isDraftAnalyzed).length;
+  const pendingUnanalyzedDrafts = useMemo(
+    () => pendingAnalysisDrafts.filter(isDraftReadyForAnalysis),
+    [pendingAnalysisDrafts],
+  );
+
   const clearActionSelection = useCallback(() => {
     if (selectedIds.size > 0) {
       clearSelection();
@@ -440,6 +550,69 @@ export function ExtractionManageClient({
       display.setJobFilter(new Set());
     }
   }, [clearSelection, display, selectedIds.size]);
+
+  const runBulkAnalyze = useCallback(
+    async (draftsToAnalyze: M1PassageDraftWithJob[]) => {
+      if (!onBulkAnalyze || bulkAnalyzing || draftsToAnalyze.length === 0) {
+        return;
+      }
+      await onBulkAnalyze(draftsToAnalyze, bulkAnalysisPlan);
+      clearActionSelection();
+      await data.loadAllDrafts();
+    },
+    [
+      bulkAnalysisPlan,
+      bulkAnalyzing,
+      clearActionSelection,
+      data,
+      onBulkAnalyze,
+    ],
+  );
+
+  const handleBulkAnalyze = useCallback(async () => {
+    if (
+      !onBulkAnalyze ||
+      bulkAnalyzing ||
+      bulkAnalysisRunnableDrafts.length === 0
+    ) {
+      return;
+    }
+
+    if (bulkAnalysisAlreadyAnalyzedCount > 0) {
+      setPendingBulkAnalysisDrafts(bulkAnalysisRunnableDrafts);
+      setReanalyzeDialogOpen(true);
+      return;
+    }
+
+    await runBulkAnalyze(bulkAnalysisRunnableDrafts);
+  }, [
+    bulkAnalysisAlreadyAnalyzedCount,
+    bulkAnalysisRunnableDrafts,
+    bulkAnalyzing,
+    onBulkAnalyze,
+    runBulkAnalyze,
+  ]);
+
+  const handleReanalysisDialogOpenChange = useCallback((open: boolean) => {
+    setReanalyzeDialogOpen(open);
+    if (!open) setPendingBulkAnalysisDrafts(null);
+  }, []);
+
+  const rejectReanalysis = useCallback(() => {
+    if (pendingUnanalyzedDrafts.length === 0) {
+      toast.info("추가 분석을 취소했습니다.");
+      setPendingBulkAnalysisDrafts(null);
+      return;
+    }
+    void runBulkAnalyze(pendingUnanalyzedDrafts);
+    setPendingBulkAnalysisDrafts(null);
+  }, [pendingUnanalyzedDrafts, runBulkAnalyze]);
+
+  const approveReanalysis = useCallback(() => {
+    if (pendingAnalysisDrafts.length === 0) return;
+    void runBulkAnalyze(pendingAnalysisDrafts);
+    setPendingBulkAnalysisDrafts(null);
+  }, [pendingAnalysisDrafts, runBulkAnalyze]);
 
   const toggleGroupCheck = useCallback(
     (ids: string[], select: boolean) => {
@@ -530,6 +703,37 @@ export function ExtractionManageClient({
     [folders, selectedIds, clearSelection],
   );
 
+  // Toggle a job in/out of the jobFilter set — drives the JobCard checkbox
+  // and the legacy DraftGrid jobs filter dropdown alike.
+  const toggleJobSelection = useCallback(
+    (nextJobId: string | null) => {
+      void (async () => {
+        if (nextJobId === null) {
+          display.setJobFilter(new Set());
+          await data.loadAllDrafts();
+          return;
+        }
+        const next = new Set(display.jobFilter);
+        if (next.has(nextJobId)) next.delete(nextJobId);
+        else next.add(nextJobId);
+        display.setJobFilter(next);
+        if (!embedded && typeof window !== "undefined") {
+          const nextUrl =
+            next.size === 1
+              ? "?jobId=" + Array.from(next)[0]
+              : window.location.pathname;
+          window.history.replaceState(null, "", nextUrl);
+        }
+        if (next.size === 0) await data.loadAllDrafts();
+        else if (next.size === 1) {
+          const [targetJobId] = Array.from(next);
+          await data.loadJobDetails(targetJobId);
+        } else await data.loadJobsDetails(next);
+      })();
+    },
+    [data, display, embedded],
+  );
+
   // ─── Selection toolbar ───
   const isRerestoring = bulk.bulkActionRunning === "rerestore";
   const isDeleting = bulk.bulkActionRunning === "delete";
@@ -551,7 +755,9 @@ export function ExtractionManageClient({
 
       <button
         type="button"
-        onClick={() => void bulk.bulkRerestore(actionTargetIds, clearActionSelection)}
+        onClick={() =>
+          void bulk.bulkRerestore(actionTargetIds, clearActionSelection)
+        }
         disabled={anyBulkRunning || noSelection}
         title={embedded ? "AI 복원 다시" : undefined}
         aria-label={embedded ? "AI 복원 다시" : undefined}
@@ -571,7 +777,9 @@ export function ExtractionManageClient({
 
       <button
         type="button"
-        onClick={() => void bulk.bulkDelete(actionTargetIds, clearActionSelection)}
+        onClick={() =>
+          void bulk.bulkDelete(actionTargetIds, clearActionSelection)
+        }
         disabled={anyBulkRunning || noSelection}
         title={embedded ? "삭제" : undefined}
         aria-label={embedded ? "삭제" : undefined}
@@ -616,25 +824,21 @@ export function ExtractionManageClient({
     />
   );
 
-  const promoteAction = (
+  const promoteAction = embedded ? null : (
     <button
       type="button"
-      onClick={() => void bulk.bulkPromote(actionTargetIds, clearActionSelection)}
-      disabled={anyBulkRunning || noSelection}
-      title={embedded ? "검수완료" : undefined}
-      aria-label={embedded ? "검수완료" : undefined}
-      className={
-        embedded
-          ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md bg-emerald-600 text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
-          : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+      onClick={() =>
+        void bulk.bulkPromote(actionTargetIds, clearActionSelection)
       }
+      disabled={anyBulkRunning || noSelection}
+      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {isPromoting ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
       ) : (
         <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
       )}
-      {embedded ? null : "검수완료"}
+      검수완료
     </button>
   );
 
@@ -646,20 +850,16 @@ export function ExtractionManageClient({
     : display.displayedDrafts.length;
 
   const isAllSelected =
-    actionTargetIds.size > 0 &&
-    actionTargetIds.size === totalSelectableCount;
+    actionTargetIds.size > 0 && actionTargetIds.size === totalSelectableCount;
 
-  // Pin the top sections (job list, folder header, filters toolbar) in both
-  // 전체 자료 and folder/drafts views. The page wrapper scrolls in both views
-  // so sticky positions resolve against the same scroll container.
-  const shouldPinManageHeaders = true;
+  // Standalone mode uses the page wrapper as its scroll container, so the top
+  // sections need sticky offsets. Embedded mode keeps those sections fixed and
+  // scrolls only the materials list below them.
+  const shouldPinManageHeaders = !embedded;
   const hasStickyJobList =
-    !embedded &&
-    shouldPinManageHeaders &&
-    display.availableJobs.length > 0;
-  const [jobListStickyRef, jobListStickyHeight] = useMeasuredHeight(
-    hasStickyJobList,
-  );
+    !embedded && shouldPinManageHeaders && display.availableJobs.length > 0;
+  const [jobListStickyRef, jobListStickyHeight] =
+    useMeasuredHeight(hasStickyJobList);
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(
     shouldPinManageHeaders,
   );
@@ -672,14 +872,13 @@ export function ExtractionManageClient({
     <div
       className={
         embedded
-          ? "flex h-full min-h-0 min-w-0 flex-col overflow-y-auto"
+          ? "flex h-full min-h-0 min-w-0 flex-col overflow-hidden"
           : "-m-6 flex min-h-[calc(100%+3rem)] min-w-0 flex-col bg-[#F4F6F9]"
       }
     >
       <div
         className={
-          "flex w-full min-w-0 flex-col" +
-          (embedded ? " min-h-0 flex-1" : "")
+          "flex w-full min-w-0 flex-col" + (embedded ? " min-h-0 flex-1" : "")
         }
       >
         {data.error ? (
@@ -694,8 +893,7 @@ export function ExtractionManageClient({
 
         <div
           className={
-            "flex min-w-0 flex-col" +
-            (embedded ? " min-h-0 flex-1" : "")
+            "flex min-w-0 flex-col" + (embedded ? " min-h-0 flex-1" : "")
           }
         >
           {!embedded && display.availableJobs.length > 0 ? (
@@ -703,9 +901,7 @@ export function ExtractionManageClient({
               ref={jobListStickyRef}
               className={
                 "shrink-0 px-6 pt-2 sm:px-8 " +
-                (shouldPinManageHeaders
-                  ? "sticky top-0 z-40 bg-[#F4F6F9]"
-                  : "")
+                (shouldPinManageHeaders ? "sticky top-0 z-40 bg-[#F4F6F9]" : "")
               }
             >
               <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -753,6 +949,8 @@ export function ExtractionManageClient({
                             createdAt={job.createdAt ?? null}
                             thumbnailUrl={job.thumbnailUrl ?? null}
                             status={job.status ?? null}
+                            checked={display.jobFilter.has(job.jobId)}
+                            onToggleCheck={() => toggleJobSelection(job.jobId)}
                             onClick={() => setReviewingJobId(job.jobId)}
                             onRename={(next) =>
                               actions.renameJob(job.jobId, next)
@@ -796,8 +994,8 @@ export function ExtractionManageClient({
           >
             <section
               className={
-                "flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm" +
-                (embedded ? " min-h-0 flex-1" : "")
+                "flex min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm" +
+                (embedded ? " min-h-0 flex-1 overflow-hidden" : "")
               }
             >
               <div
@@ -807,11 +1005,14 @@ export function ExtractionManageClient({
                 }
                 className={
                   "shrink-0 overflow-hidden rounded-t-2xl " +
-                  (shouldPinManageHeaders ? "sticky z-30 bg-white" : "")
+                  (shouldPinManageHeaders
+                    ? "sticky z-40 bg-white shadow-[0_1px_0_rgba(148,163,184,0.22)]"
+                    : "bg-white")
                 }
               >
                 <DraftFolderSection
                   embedded
+                  gridOnly={embedded}
                   childFolders={folders.childFolders}
                   allFolders={folders.collections}
                   activeFolder={folders.activeFolder}
@@ -851,81 +1052,94 @@ export function ExtractionManageClient({
               </div>
 
               {isAllMaterialsView ? (
-              <div
-                style={{ top: materialToolbarStickyTop }}
-                className="sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90"
-              >
-                <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
-                  <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-                    <DraftSelectionToolbar
-                      embedded
-                      selectedCount={actionTargetIds.size}
-                      totalCount={totalSelectableCount}
-                      isAllSelected={isAllSelected}
-                      onSelectAll={selectAll}
-                      onClearSelection={clearActionSelection}
-                      activeFolder={folders.activeFolder}
-                      onRemoveFromFolder={handleRemoveFromFolderClick}
-                      extraActions={selectionExtraActions}
-                      primaryAction={promoteAction}
-                    />
-                    <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
-                      <ManageFiltersBarTasks
-                        variant="filters-only"
-                        compact={embedded}
-                        searchValue={taskSearchValue}
-                        onSearchChange={setTaskSearchValue}
-                        onSearchSubmit={() =>
-                          setTaskAppliedSearch(taskSearchValue)
-                        }
-                        statusFilter={taskStatusFilter}
-                        onStatusFilterChange={setTaskStatusFilter}
-                        sortOrder={taskSortOrder}
-                        onSortOrderChange={setTaskSortOrder}
+                <div
+                  style={
+                    embedded ? undefined : { top: materialToolbarStickyTop }
+                  }
+                  className={
+                    (embedded
+                      ? "shrink-0"
+                      : "sticky z-30 shrink-0 shadow-[0_1px_0_rgba(148,163,184,0.22)]") +
+                    " border-t border-slate-200 bg-slate-50 px-4 py-2"
+                  }
+                >
+                  <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
+                    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+                      <DraftSelectionToolbar
+                        embedded
+                        selectedCount={actionTargetIds.size}
+                        totalCount={totalSelectableCount}
+                        isAllSelected={isAllSelected}
+                        onSelectAll={selectAll}
+                        onClearSelection={clearActionSelection}
+                        activeFolder={folders.activeFolder}
+                        onRemoveFromFolder={handleRemoveFromFolderClick}
+                        extraActions={selectionExtraActions}
+                        primaryAction={promoteAction}
                       />
-                      <ManageFiltersBarTasks
-                        variant="search-only"
-                        compact={embedded}
-                        searchValue={taskSearchValue}
-                        onSearchChange={setTaskSearchValue}
-                        onSearchSubmit={() =>
-                          setTaskAppliedSearch(taskSearchValue)
-                        }
-                        statusFilter={taskStatusFilter}
-                        onStatusFilterChange={setTaskStatusFilter}
-                        sortOrder={taskSortOrder}
-                        onSortOrderChange={setTaskSortOrder}
-                      />
-                      {!embedded ? (
-                        <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                          <ViewToggleButton
-                            active={display.gridCols === "grid3"}
-                            label="3열 보기"
-                            onClick={() => display.setGridCols("grid3")}
-                          >
-                            <Grid3X3 className="size-4" />
-                          </ViewToggleButton>
-                          <ViewToggleButton
-                            active={display.gridCols === "grid2"}
-                            label="2열 보기"
-                            onClick={() => display.setGridCols("grid2")}
-                            middle
-                          >
-                            <Grid2X2 className="size-4" />
-                          </ViewToggleButton>
-                          <ViewToggleButton
-                            active={display.gridCols === "list"}
-                            label="목록 보기"
-                            onClick={() => display.setGridCols("list")}
-                          >
-                            <List className="size-4" />
-                          </ViewToggleButton>
-                        </div>
-                      ) : null}
+                      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+                        <ManageFiltersBarTasks
+                          variant="filters-only"
+                          compact={embedded}
+                          searchValue={taskSearchValue}
+                          onSearchChange={setTaskSearchValue}
+                          onSearchSubmit={() =>
+                            setTaskAppliedSearch(taskSearchValue)
+                          }
+                          statusFilter={taskStatusFilter}
+                          onStatusFilterChange={setTaskStatusFilter}
+                          sortOrder={taskSortOrder}
+                          onSortOrderChange={setTaskSortOrder}
+                        />
+                        <ManageFiltersBarTasks
+                          variant="search-only"
+                          compact={embedded}
+                          searchValue={taskSearchValue}
+                          onSearchChange={setTaskSearchValue}
+                          onSearchSubmit={() =>
+                            setTaskAppliedSearch(taskSearchValue)
+                          }
+                          statusFilter={taskStatusFilter}
+                          onStatusFilterChange={setTaskStatusFilter}
+                          sortOrder={taskSortOrder}
+                          onSortOrderChange={setTaskSortOrder}
+                        />
+                        {!embedded ? (
+                          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
+                            <ViewToggleButton
+                              active={materialGridCols === "grid3"}
+                              label="3열 보기"
+                              title={
+                                reviewDrawerOpen
+                                  ? "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다"
+                                  : undefined
+                              }
+                              disabled={reviewDrawerOpen}
+                              onClick={() => setMaterialGridCols("grid3")}
+                            >
+                              <Grid3X3 className="size-4" />
+                            </ViewToggleButton>
+                            <ViewToggleButton
+                              active={materialGridCols === "grid2"}
+                              label="2열 보기"
+                              onClick={() => setMaterialGridCols("grid2")}
+                              middle
+                            >
+                              <Grid2X2 className="size-4" />
+                            </ViewToggleButton>
+                            <ViewToggleButton
+                              active={materialGridCols === "list"}
+                              label="목록 보기"
+                              onClick={() => setMaterialGridCols("list")}
+                            >
+                              <List className="size-4" />
+                            </ViewToggleButton>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               ) : null}
 
               {isAllMaterialsView ? (
@@ -937,6 +1151,8 @@ export function ExtractionManageClient({
                     sortOrder={taskSortOrder}
                     reviewingJobId={reviewingJobId}
                     onOpenJob={setReviewingJobId}
+                    isTaskChecked={isTaskChecked}
+                    onToggleTaskCheck={onToggleTaskCheck}
                     onRenameJob={actions.renameJob}
                     onVisibleJobsChange={setVisibleTasks}
                   />
@@ -948,14 +1164,14 @@ export function ExtractionManageClient({
                       limit={100}
                       bare
                       viewMode={
-                        display.gridCols === "grid3"
+                        materialGridCols === "grid3"
                           ? "grid-3"
-                          : display.gridCols === "grid2"
+                          : materialGridCols === "grid2"
                             ? "grid-2"
                             : "list"
                       }
                       onViewModeChange={(mode) =>
-                        display.setGridCols(
+                        setMaterialGridCols(
                           mode === "grid-3"
                             ? "grid3"
                             : mode === "grid-2"
@@ -973,113 +1189,137 @@ export function ExtractionManageClient({
                       getTaskDragData={getTaskDragData}
                       getTaskDragCount={getTaskDragCount}
                       onRenameTask={(task, next) =>
-                        actions.renameJob(task.id, next.length > 0 ? next : null)
+                        actions.renameJob(
+                          task.id,
+                          next.length > 0 ? next : null,
+                        )
                       }
                     />
                   </div>
                 )
               ) : (
-              <div
-                className={
-                  "flex min-w-0 flex-col rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-4 pb-3 sm:px-5" +
-                  (embedded ? " min-h-0 flex-1" : "")
-                }
-              >
-              <DraftGrid
-                drafts={display.displayedDrafts}
-                loading={data.loadingDetails && data.drafts.length === 0}
-                hasAnyDraft={data.drafts.length > 0}
-                inFolder={folders.activeFolder !== null}
-                hasActiveSearchOrFilter={display.hasActiveSearchOrFilter}
-                stickyTop={materialToolbarStickyTop}
-                selectedDraftId={
-                  externallyPicking ? selectedExternalDraftId : data.selectedDraftId
-                }
-                lastViewedDraftId={data.lastViewedDraftId}
-                checkedIds={selectedIds}
-                gridCols={display.gridCols}
-                onGridColsChange={display.setGridCols}
-                onSelectDraft={
-                  externallyPicking
-                    ? (id: string) => {
-                        const draft = data.drafts.find((d) => d.id === id);
-                        if (draft) onSelectDraftExternal!(draft);
-                      }
-                    : data.openDraftDetail
-                }
-                onToggleCheck={toggleSelect}
-                onToggleGroupCheck={toggleGroupCheck}
-                onResetFilters={display.resetFilters}
-                jobs={display.availableJobs}
-                selectedJobIds={display.jobFilter}
-                totalDraftCount={
-                  folders.activeFolder === null
-                    ? display.serverVisibleDraftTotal ||
-                      draftsInActiveFolder.length
-                    : draftsInActiveFolder.length
-                }
-                onSelectJob={(nextJobId) => {
-                  void (async () => {
-                    if (nextJobId === null) {
-                      display.setJobFilter(new Set());
-                      await data.loadAllDrafts();
-                      return;
+                <div
+                  className={
+                    "flex min-w-0 flex-col rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-4 pb-3 sm:px-5" +
+                    (embedded
+                      ? " min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                      : "")
+                  }
+                >
+                  <DraftGrid
+                    gridOnly={embedded}
+                    drafts={display.displayedDrafts}
+                    loading={data.loadingDetails && data.drafts.length === 0}
+                    hasAnyDraft={data.drafts.length > 0}
+                    inFolder={folders.activeFolder !== null}
+                    hasActiveSearchOrFilter={display.hasActiveSearchOrFilter}
+                    stickyTop={embedded ? 0 : materialToolbarStickyTop}
+                    selectedDraftId={
+                      externallyPicking
+                        ? selectedExternalDraftId
+                        : data.selectedDraftId
                     }
-
-                    const next = new Set(display.jobFilter);
-                    if (next.has(nextJobId)) next.delete(nextJobId);
-                    else next.add(nextJobId);
-
-                    display.setJobFilter(next);
-                    if (!embedded && typeof window !== "undefined") {
-                      const nextUrl =
-                        next.size === 1
-                          ? "?jobId=" + Array.from(next)[0]
-                          : window.location.pathname;
-                      window.history.replaceState(null, "", nextUrl);
+                    lastViewedDraftId={data.lastViewedDraftId}
+                    checkedIds={selectedIds}
+                    gridCols={materialGridCols}
+                    onGridColsChange={setMaterialGridCols}
+                    grid3Disabled={reviewDrawerOpen}
+                    onSelectDraft={
+                      externallyPicking
+                        ? (id: string) => {
+                            const draft = data.drafts.find((d) => d.id === id);
+                            if (draft) onSelectDraftExternal!(draft);
+                          }
+                        : data.openDraftDetail
                     }
-                    if (next.size === 0) await data.loadAllDrafts();
-                    else if (next.size === 1) {
-                      const [targetJobId] = Array.from(next);
-                      await data.loadJobDetails(targetJobId);
-                    } else await data.loadJobsDetails(next);
-                  })();
-                }}
-                onRenameJob={actions.renameJob}
-                onRenameDraft={actions.updateDraftTitle}
-                onRenameSourceMaterial={actions.renameSourceMaterial}
-                groupIndexBySourceMaterialId={
-                  display.groupIndexBySourceMaterialId
-                }
-                dupCountById={display.dupInfo.countById}
-                filedDraftIds={
-                  folders.activeFolder === null ? filedDraftIds : undefined
-                }
-                filtersToolbar={filtersToolbar}
-                onDropDraftsIntoCurrentFolder={
-                  folders.activeFolder
-                    ? (itemId, copy) =>
-                        handleDragToFolder(itemId, folders.activeFolder!, copy)
-                    : undefined
-                }
-                selectionToolbar={
-                  <DraftSelectionToolbar
-                    embedded
-                    selectedCount={actionTargetIds.size}
-                    totalCount={display.displayedDrafts.length}
-                    isAllSelected={isAllSelected}
-                    onSelectAll={selectAll}
-                    onClearSelection={clearActionSelection}
-                    activeFolder={folders.activeFolder}
-                    onRemoveFromFolder={handleRemoveFromFolderClick}
-                    extraActions={selectionExtraActions}
-                    primaryAction={promoteAction}
+                    onToggleCheck={toggleSelect}
+                    onToggleGroupCheck={toggleGroupCheck}
+                    onResetFilters={display.resetFilters}
+                    jobs={display.availableJobs}
+                    selectedJobIds={display.jobFilter}
+                    totalDraftCount={
+                      folders.activeFolder === null
+                        ? display.serverVisibleDraftTotal ||
+                          draftsInActiveFolder.length
+                        : draftsInActiveFolder.length
+                    }
+                    onSelectJob={toggleJobSelection}
+                    onRenameJob={actions.renameJob}
+                    onRenameDraft={actions.updateDraftTitle}
+                    onRenameSourceMaterial={actions.renameSourceMaterial}
+                    statusBadgeMode={embedded ? "analysis" : "review"}
+                    groupIndexBySourceMaterialId={
+                      display.groupIndexBySourceMaterialId
+                    }
+                    dupCountById={display.dupInfo.countById}
+                    filedDraftIds={
+                      folders.activeFolder === null ? filedDraftIds : undefined
+                    }
+                    filtersToolbar={filtersToolbar}
+                    onDropDraftsIntoCurrentFolder={
+                      folders.activeFolder
+                        ? (itemId, copy) =>
+                            handleDragToFolder(
+                              itemId,
+                              folders.activeFolder!,
+                              copy,
+                            )
+                        : undefined
+                    }
+                    selectionToolbar={
+                      <DraftSelectionToolbar
+                        embedded
+                        selectedCount={actionTargetIds.size}
+                        totalCount={display.displayedDrafts.length}
+                        isAllSelected={isAllSelected}
+                        onSelectAll={selectAll}
+                        onClearSelection={clearActionSelection}
+                        activeFolder={folders.activeFolder}
+                        onRemoveFromFolder={handleRemoveFromFolderClick}
+                        extraActions={selectionExtraActions}
+                        primaryAction={promoteAction}
+                      />
+                    }
                   />
-                }
-              />
-              </div>
+                </div>
               )}
             </section>
+            {onBulkAnalyze ? (
+              <div className="shrink-0 pt-2">
+                <button
+                  type="button"
+                  onClick={() => void handleBulkAnalyze()}
+                  disabled={
+                    bulkAnalyzing || bulkAnalysisRunnableDrafts.length === 0
+                  }
+                  title={bulkAnalysisTitle}
+                  className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-white"
+                >
+                  {bulkAnalyzing ? (
+                    <Loader2
+                      className="size-4 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Wand2 className="size-4" aria-hidden="true" />
+                  )}
+                  <span>
+                    {bulkAnalyzing ? "일괄 분석 등록 중" : "일괄 분석 시작"}
+                  </span>
+                  {bulkAnalysisCandidateDrafts.length > 0 ? (
+                    <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
+                      {bulkAnalysisSummaryLabel}
+                    </span>
+                  ) : null}
+                  {bulkAnalysisTotalCreditCost > 0 ? (
+                    <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
+                      {bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")}{" "}
+                      크레딧
+                    </span>
+                  ) : null}
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -1131,6 +1371,7 @@ export function ExtractionManageClient({
             onSelectDraftExternal={
               externallyPicking ? onSelectDraftExternal : undefined
             }
+            statusBadgeMode={embedded ? "analysis" : "review"}
           />
         ) : null}
 
@@ -1152,6 +1393,38 @@ export function ExtractionManageClient({
             onTitleChange={actions.updateDraftTitle}
           />
         ) : null}
+
+        <AlertDialog
+          open={reanalyzeDialogOpen}
+          onOpenChange={handleReanalysisDialogOpenChange}
+        >
+          <AlertDialogContent className="max-w-sm">
+            <AlertDialogHeader>
+              <AlertDialogTitle>이미 분석된 지문이 있습니다</AlertDialogTitle>
+              <AlertDialogDescription className="space-y-2 leading-relaxed">
+                <span className="block">
+                  {pendingAlreadyAnalyzedCount}개는 이미 분석이 된 지문입니다.
+                  추가 분석을 진행하시겠습니까?
+                </span>
+                <span className="block">
+                  승인하면 선택한 {pendingAnalysisDrafts.length}개 전체를 새
+                  분석 큐에 등록합니다.
+                  {pendingUnanalyzedDrafts.length > 0
+                    ? ` 거절하면 이미 분석된 지문은 제외하고 ${pendingUnanalyzedDrafts.length}개만 진행합니다.`
+                    : " 거절하면 이번 일괄 분석은 취소됩니다."}
+                </span>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={rejectReanalysis}>
+                거절
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={approveReanalysis}>
+                승인
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
@@ -1196,6 +1469,8 @@ function EmbeddedJobCardGrid({
   sortOrder,
   reviewingJobId,
   onOpenJob,
+  isTaskChecked,
+  onToggleTaskCheck,
   onRenameJob,
   onVisibleJobsChange,
 }: {
@@ -1205,6 +1480,8 @@ function EmbeddedJobCardGrid({
   sortOrder: TaskSortOrder;
   reviewingJobId: string | null;
   onOpenJob: (jobId: string) => void;
+  isTaskChecked: (task: BaseTask) => boolean | "indeterminate";
+  onToggleTaskCheck: (task: BaseTask) => void;
   onRenameJob: (jobId: string, next: string | null) => void | Promise<void>;
   onVisibleJobsChange: (tasks: BaseTask[]) => void;
 }) {
@@ -1233,48 +1510,61 @@ function EmbeddedJobCardGrid({
     return next;
   }, [jobs, searchQuery, statusFilter, sortOrder]);
 
+  const taskRows = useMemo(
+    () =>
+      filteredJobs.map((job) => ({
+        job,
+        task: {
+          id: job.jobId,
+          domain: "extraction" as const,
+          title: job.label,
+          subtitle: job.subLabel ?? "",
+          status: mapJobStatusToTaskStatus(job.status),
+          createdAt:
+            job.createdAt !== null
+              ? new Date(job.createdAt).toISOString()
+              : new Date(0).toISOString(),
+          thumbnailUrl: job.thumbnailUrl ?? null,
+        } satisfies BaseTask,
+      })),
+    [filteredJobs],
+  );
+
   useEffect(() => {
-    const tasks: BaseTask[] = filteredJobs.map((j) => ({
-      id: j.jobId,
-      domain: "extraction",
-      title: j.label,
-      subtitle: j.subLabel ?? "",
-      status: mapJobStatusToTaskStatus(j.status),
-      createdAt:
-        j.createdAt !== null
-          ? new Date(j.createdAt).toISOString()
-          : new Date(0).toISOString(),
-      thumbnailUrl: j.thumbnailUrl ?? null,
-    }));
-    onVisibleJobsChange(tasks);
-  }, [filteredJobs, onVisibleJobsChange]);
+    onVisibleJobsChange(taskRows.map((row) => row.task));
+  }, [taskRows, onVisibleJobsChange]);
 
   return (
-    <div className="flex min-h-0 min-w-0 flex-1 flex-col rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-3 pb-3 pt-3">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overscroll-contain rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-3 pb-3 pt-3">
       {filteredJobs.length === 0 ? (
         <div className="flex h-24 items-center justify-center text-[12px] font-medium text-slate-400">
           표시할 자료가 없습니다.
         </div>
       ) : (
         <div className="flex flex-wrap items-stretch gap-3">
-          {filteredJobs.map((job) => (
-            <JobCard
-              key={job.jobId}
-              variant="compact"
-              active={reviewingJobId === job.jobId}
-              label={job.label}
-              subLabel={job.subLabel}
-              count={job.count}
-              draftIds={job.draftIds}
-              tone="blue"
-              editable
-              createdAt={job.createdAt ?? null}
-              thumbnailUrl={job.thumbnailUrl ?? null}
-              status={job.status ?? null}
-              onClick={() => onOpenJob(job.jobId)}
-              onRename={(next) => onRenameJob(job.jobId, next)}
-            />
-          ))}
+          {taskRows.map(({ job, task }) => {
+            const checked = isTaskChecked(task);
+            return (
+              <JobCard
+                key={job.jobId}
+                variant="compact"
+                active={reviewingJobId === job.jobId}
+                label={job.label}
+                subLabel={job.subLabel}
+                count={job.count}
+                draftIds={job.draftIds}
+                tone="blue"
+                editable
+                createdAt={job.createdAt ?? null}
+                thumbnailUrl={job.thumbnailUrl ?? null}
+                status={job.status ?? null}
+                checked={checked === true}
+                onToggleCheck={() => onToggleTaskCheck(task)}
+                onClick={() => onOpenJob(job.jobId)}
+                onRename={(next) => onRenameJob(job.jobId, next)}
+              />
+            );
+          })}
         </div>
       )}
     </div>

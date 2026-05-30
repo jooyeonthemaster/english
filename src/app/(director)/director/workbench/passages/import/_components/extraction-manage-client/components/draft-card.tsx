@@ -13,6 +13,8 @@ import {
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
 
+export type DraftCardStatusBadgeMode = "review" | "analysis";
+
 interface DraftCardProps {
   draft: M1PassageDraftWithJob;
   index: number;
@@ -37,6 +39,8 @@ interface DraftCardProps {
   /** Persist a new title for this draft. When omitted, the title becomes
    *  read-only (e.g., in read-only preview contexts). */
   onTitleChange?: (id: string, value: string | null) => void;
+  /** Which workflow status the circular stamp should express. */
+  statusBadgeMode?: DraftCardStatusBadgeMode;
 }
 
 export function DraftCard({
@@ -50,6 +54,7 @@ export function DraftCard({
   recentlyViewed,
   hideCheckbox,
   onTitleChange,
+  statusBadgeMode = "review",
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -168,6 +173,25 @@ export function DraftCard({
 
   const isReviewed =
     draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
+  const isAnalyzed =
+    draft.analysisStatus === "analyzed" || draft.savedPassageAnalysisId != null;
+  const stampDone = statusBadgeMode === "analysis" ? isAnalyzed : isReviewed;
+  const stampLabel =
+    statusBadgeMode === "analysis"
+      ? stampDone
+        ? "분석완료"
+        : "분석필요"
+      : stampDone
+        ? "검수완료"
+        : "검수필요";
+  const stampDoneClass =
+    statusBadgeMode === "analysis"
+      ? "border-blue-600/85 text-blue-700"
+      : "border-emerald-600/85 text-emerald-700";
+  const stampNeededClass =
+    statusBadgeMode === "analysis"
+      ? "border-amber-300/80 bg-amber-50/40 text-amber-500/90"
+      : "border-red-300/70 bg-red-50/30 text-red-400/80";
 
   const fileNames = getDraftSourceFileNames(draft);
   const primaryFile =
@@ -199,19 +223,21 @@ export function DraftCard({
         }
       }}
       className={
-        "relative flex h-full min-h-[176px] min-w-0 flex-col gap-3 overflow-hidden rounded-xl border bg-white p-4 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        "relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (isDragging
           ? "cursor-grabbing opacity-50"
           : "cursor-grab active:cursor-grabbing") +
         " " +
         (active
           ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
-          : isReviewed
+          : stampDone
             ? "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60"
-            : "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80") +
+            : statusBadgeMode === "analysis"
+              ? "border-amber-200/90 shadow-[0_0_0_1px_rgba(251,191,36,0.28),0_0_18px_rgba(245,158,11,0.10)] hover:border-amber-300/90"
+              : "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80") +
         // "Just came back from this card" hint — one-shot bg flash. We keep
-        // the review-status border intact so 검수필요 카드는 여전히 빨간 테
-        // 두리로 식별됩니다.
+        // the workflow-status border intact so attention-needed cards stay
+        // identifiable.
         (recentlyViewed && !active
           ? " motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]"
           : "")
@@ -223,26 +249,30 @@ export function DraftCard({
           className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600"
         />
       ) : null}
-      {isReviewed ? (
+      {stampDone ? (
         <span
           role="img"
-          aria-label="검수완료"
-          className="pointer-events-none absolute right-2 top-2 z-10 flex size-10 -rotate-12 select-none items-center justify-center rounded-full border-2 border-emerald-600/85 bg-white/70 text-[9px] font-extrabold tracking-tight text-emerald-700 shadow-sm backdrop-blur-[1px]"
+          aria-label={stampLabel}
+          className={
+            "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full border-2 bg-white/70 text-[7px] font-bold tracking-tighter shadow-sm backdrop-blur-[1px] " +
+            stampDoneClass
+          }
         >
-          검수완료
+          {stampLabel}
         </span>
       ) : (
         <span
           role="img"
-          aria-label="검수필요"
-          className="pointer-events-none absolute right-2 top-2 z-10 flex size-10 -rotate-12 select-none items-center justify-center rounded-full border border-dashed border-red-300/70 bg-red-50/30 text-[9px] font-bold tracking-tight text-red-400/80"
+          aria-label={stampLabel}
+          className={
+            "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center rounded-full border border-dashed text-[7.5px] font-bold tracking-tight " +
+            stampNeededClass
+          }
         >
-          검수필요
+          {stampLabel}
         </span>
       )}
-      {/* Reserve right padding so the title row clears the stamp (size-10 at
-          right-2 top-2 ≈ 48px wide). */}
-      <div className="flex items-start justify-between gap-2 pr-12">
+      <div className="flex items-start justify-between gap-2 pr-8">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           {hideCheckbox ? null : (
             <div
@@ -258,7 +288,7 @@ export function DraftCard({
                 checked={checked}
                 readOnly
                 tabIndex={-1}
-                className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="size-3.5 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
                 aria-label="자료 선택"
               />
             </div>
@@ -283,7 +313,7 @@ export function DraftCard({
               }}
               placeholder={getDraftDisplayTitle(draft)}
               maxLength={200}
-              className="h-7 w-full min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-2 text-sm font-bold text-slate-900 outline-none ring-2 ring-blue-100 placeholder:font-medium placeholder:text-slate-400"
+              className="h-6 w-full min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-1.5 text-[11.5px] font-bold text-slate-900 outline-none ring-2 ring-blue-100 placeholder:font-medium placeholder:text-slate-400"
             />
           ) : onTitleChange ? (
             <button
@@ -294,19 +324,19 @@ export function DraftCard({
                 setTitleInput(draft.title ?? "");
                 setTitleEditing(true);
               }}
-              className="group flex min-w-0 flex-1 cursor-text items-center gap-1.5 rounded-md text-left"
+              className="group flex min-w-0 flex-1 cursor-text items-center gap-1 rounded-md text-left"
               title="제목 편집"
             >
-              <span className="truncate text-sm font-bold text-slate-900 group-hover:text-blue-700">
+              <span className="truncate text-[11.5px] font-bold text-slate-900 group-hover:text-blue-700">
                 {getDraftDisplayTitle(draft)}
               </span>
               <Pencil
-                className="size-3 shrink-0 text-slate-300 transition-colors group-hover:text-blue-500"
+                className="size-2.5 shrink-0 text-slate-300 transition-colors group-hover:text-blue-500"
                 aria-hidden="true"
               />
             </button>
           ) : (
-            <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">
+            <span className="min-w-0 flex-1 truncate text-[11.5px] font-bold text-slate-900">
               {getDraftDisplayTitle(draft)}
             </span>
           )}
@@ -315,31 +345,31 @@ export function DraftCard({
 
       {primaryFile ? (
         <div
-          className="flex min-w-0 items-center gap-1.5 rounded-md bg-slate-100/80 px-2 py-1 ring-1 ring-slate-200/70"
+          className="flex min-w-0 items-center gap-1 rounded bg-slate-100/80 px-1.5 py-0.5 ring-1 ring-slate-200/70"
           title={getDraftSourceLabel(draft)}
         >
-          <FileText className="size-3.5 shrink-0 text-slate-500" aria-hidden="true" />
-          <span className="truncate text-xs font-semibold text-slate-700">
+          <FileText className="size-3 shrink-0 text-slate-500" aria-hidden="true" />
+          <span className="truncate text-[10.5px] font-semibold text-slate-700">
             {primaryFile}
           </span>
           {extraFileCount > 0 ? (
-            <span className="shrink-0 rounded bg-white px-1 py-0.5 text-[10px] font-bold text-slate-500 ring-1 ring-slate-200">
+            <span className="shrink-0 rounded bg-white px-1 py-0 text-[9px] font-bold text-slate-500 ring-1 ring-slate-200">
               +{extraFileCount}
             </span>
           ) : null}
           {pageLabel ? (
-            <span className="shrink-0 text-[11px] font-bold tabular-nums text-slate-400">
+            <span className="shrink-0 text-[9.5px] font-bold tabular-nums text-slate-400">
               · {pageLabel}
             </span>
           ) : null}
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div className="flex flex-wrap items-center gap-1">
         <RestorationBadge status={draft.restorationStatus} />
       </div>
 
-      <p className="line-clamp-3 text-[13px] leading-6 text-slate-600">
+      <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">
         {preview || "추출된 본문이 비어있습니다."}
       </p>
     </div>

@@ -38,6 +38,11 @@ const GIVEN_BORDER: BorderSpec = {
   widthMm: 0.18,
   color: COLORS.gray,
 };
+const ANSWER_LINE: BorderSpec = {
+  type: "SOLID",
+  widthMm: 0.12,
+  color: COLORS.lightGray,
+};
 
 export interface BuilderItemResolved {
   localId?: string;
@@ -253,11 +258,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
                 size: bodySize,
                 color: COLORS.darkGray,
               })
-            : txt("                                      ", {
-                size: bodySize,
-                underline: "SOLID",
-                color: COLORS.darkGray,
-              }),
+            : txt("", { size: bodySize, color: COLORS.darkGray }),
         ],
       });
     }
@@ -268,9 +269,24 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 3));
     for (let i = 0; i < lines; i++) {
       result.push({
-        kind: "p",
-        style: { spaceBefore: i === 0 ? 40 : 80, spaceAfter: 80 },
-        runs: [txt("                                                                                                  ", { size: bodySize, underline: "SOLID", color: COLORS.lightGray })],
+        kind: "tbl",
+        colWidthsHpu: [contentWidthHpu],
+        borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+        rows: [
+          {
+            heightHpu: 720,
+            cells: [
+              {
+                widthHpu: contentWidthHpu,
+                heightHpu: 720,
+                vAlign: "BOTTOM",
+                borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+                margins: { left: 0, right: 0, top: i === 0 ? 80 : 120, bottom: 0 },
+                blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
+              },
+            ],
+          },
+        ],
       });
     }
   }
@@ -287,19 +303,6 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     );
   }
 
-  // 7. 구분선 (얇은 회색)
-  result.push({
-    kind: "p",
-    style: { spaceBefore: 60, spaceAfter: 60, lineSpacingPct: 80 },
-    runs: [
-      txt("─".repeat(40), {
-        size: 6,
-        color: COLORS.separator,
-      }),
-    ],
-  });
-
-  void NO;
   void GIVEN_BORDER;
   return result;
 }

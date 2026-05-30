@@ -274,13 +274,22 @@ export function A4PaperPage({
         "exam-a4-page relative w-full overflow-hidden shadow-xl ring-1",
         visual.pageClass,
       )}
-      style={{ aspectRatio: `${paperSpec.widthMm} / ${paperSpec.heightMm}` }}
+      style={{
+        aspectRatio: `${paperSpec.widthMm} / ${paperSpec.heightMm}`,
+        // 시험지 미리보기 글꼴을 HWPX 다운로드(맑은 고딕)와 통일한다.
+        // Apple SD Gothic Neo 는 Mac 사용자에게 합리적인 미리보기를 제공한다(다운로드 파일은 한글에서 여전히 맑은 고딕 사용).
+        fontFamily:
+          '"Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif',
+      }}
       data-paper-size={paperSize}
     >
       <div
         className={cn(
           "relative flex h-full flex-col",
-          compact ? "px-[34px] py-[30px]" : "px-[42px] py-[38px]",
+          // 전체 여백 축소(5차): 좌우는 줄넘김 안정성을 위해 소폭만, 상하는 더 적극적으로.
+          // comfortable px-[34px] py-[28px], compact px-[28px] py-[24px].
+          // 좌우 변경은 pagination.ts(horizontalPadding)·HWPX/DOCX 빌더와 함께 바꿔 미리보기↔출력 일치 유지.
+          compact ? "px-[28px] py-[24px]" : "px-[34px] py-[28px]",
           visual.innerClass,
         )}
       >

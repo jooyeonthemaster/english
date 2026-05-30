@@ -1,7 +1,6 @@
 /**
  * 옵션 렌더러.
- * - 5개 + 모두 25자 미만 → 2열 정렬
- * - 그 외 → 한 줄씩
+ * - 미리보기(A4PaperPage)와 같이 모든 선지를 한 줄씩 세로 배치한다.
  */
 
 import type { BlockNode, RunNode } from "../types";
@@ -24,114 +23,15 @@ export function renderOptions(opts: {
   compact: boolean;
   contentWidthHpu: number;
 }): BlockNode[] {
-  const { options, subType, compact, contentWidthHpu } = opts;
+  const { options, subType, compact } = opts;
   if (options.length === 0) return [];
 
-  const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+  // 미리보기 선지는 본문보다 살짝 작은 11px(=8.25pt)/compact 10px(=7.5pt).
+  const bodySize = compact ? SIZE.optionsCompact : SIZE.options;
   const displayTexts = options.map((o, i) =>
     optionDisplayTextForSubtype(subType, i, o.text || ""),
   );
-  const maxLen = Math.max(...displayTexts.map((t) => t.length));
 
-  // IRRELEVANT 등 본문에 박힌 마커가 답인 유형:
-  // 옵션 텍스트가 마커 자체 또는 비어있으면 마커만 한 줄에 가로 배치.
-  const isMarkerOnly = options.every((_, i) => {
-    const t = displayTexts[i].trim();
-    return t === "" || t === optionOrdinalLabel(i) || /^[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]$/.test(t);
-  });
-  if (isMarkerOnly) {
-    const runs: RunNode[] = [];
-    for (let i = 0; i < options.length; i++) {
-      if (i > 0) runs.push(txt("      ", { size: bodySize }));
-      runs.push(
-        txt(optionOrdinalLabel(i), {
-          size: bodySize,
-          bold: true,
-          color: COLORS.darkGray,
-        }),
-      );
-    }
-    return [
-      {
-        kind: "p",
-        style: {
-          align: "LEFT",
-          leftMargin: 200,
-          spaceBefore: 40,
-          spaceAfter: 80,
-          lineSpacingPct: 150,
-        },
-        runs,
-      },
-    ];
-  }
-
-  // 2열 정렬: 5개 + 모두 짧을 때
-  if (maxLen < 25 && options.length === 5) {
-    const colW = Math.floor(contentWidthHpu / 2);
-    const rows = [];
-    for (let i = 0; i < options.length; i += 2) {
-      rows.push({
-        heightHpu: 1000,
-        cells: [0, 1].map((j) => {
-          const idx = i + j;
-          const opt = options[idx];
-          if (!opt) {
-            return {
-              widthHpu: colW,
-              heightHpu: 1000,
-              vAlign: "TOP" as const,
-              margins: { left: 60, right: 60, top: 40, bottom: 40 },
-              blocks: [
-                {
-                  kind: "p" as const,
-                  style: { spaceAfter: 0 },
-                  runs: [txt(" ", { size: bodySize })],
-                },
-              ],
-            };
-          }
-          const display = displayTexts[idx];
-          return {
-            widthHpu: colW,
-            heightHpu: 1000,
-            vAlign: "TOP" as const,
-            margins: { left: 60, right: 60, top: 40, bottom: 40 },
-            blocks: [
-              {
-                kind: "p" as const,
-                style: {
-                  align: "LEFT" as const,
-                  leftMargin: 400,
-                  indentFirst: -400,
-                  spaceAfter: 0,
-                  lineSpacingPct: 150,
-                },
-                runs: [
-                  txt(`${optionOrdinalLabel(idx)}   `, {
-                    size: bodySize,
-                    bold: true,
-                    color: COLORS.darkGray,
-                  }),
-                  ...parseFormattedToRuns(display, { size: bodySize }),
-                ],
-              },
-            ],
-          };
-        }),
-      });
-    }
-    return [
-      {
-        kind: "tbl",
-        colWidthsHpu: [colW, contentWidthHpu - colW],
-        rows,
-      },
-      { kind: "p", style: { spaceAfter: 60 }, runs: [] },
-    ];
-  }
-
-  // 한 줄씩
   const blocks: BlockNode[] = [];
   options.forEach((_, idx) => {
     const display = displayTexts[idx];
@@ -151,10 +51,12 @@ export function renderOptions(opts: {
       kind: "p",
       style: {
         align: "LEFT",
-        leftMargin: 360,
-        indentFirst: -280,
+        // 미리보기 선지는 원문자 marker(min-w-[18px]) + gap-1.5 뒤에 텍스트가 오고,
+        // 줄바꿈 시 텍스트가 marker 아래가 아니라 들여쓰기되어 정렬된다.
+        leftMargin: 560,
+        indentFirst: -560,
         spaceAfter: 40,
-        lineSpacingPct: 150,
+        lineSpacingPct: compact ? 146 : 158,
       },
       runs,
     });

@@ -110,13 +110,25 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <a href={`/api/exams/${exam.id}/export-docx`} download>
+                <a
+                  href={`/api/exams/${exam.id}/export-docx`}
+                  download
+                  onClick={(e) => {
+                    e.currentTarget.href = `/api/exams/${exam.id}/export-docx?t=${Date.now()}`;
+                  }}
+                >
                   <FileText className="size-4 mr-2" />
                   시험지 (문제만)
                 </a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href={`/api/exams/${exam.id}/export-docx?answers=true`} download>
+                <a
+                  href={`/api/exams/${exam.id}/export-docx?answers=true`}
+                  download
+                  onClick={(e) => {
+                    e.currentTarget.href = `/api/exams/${exam.id}/export-docx?answers=true&t=${Date.now()}`;
+                  }}
+                >
                   <FileText className="size-4 mr-2" />
                   시험지 + 정답 해설
                 </a>

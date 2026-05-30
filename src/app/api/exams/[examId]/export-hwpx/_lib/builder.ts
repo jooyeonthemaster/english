@@ -15,7 +15,6 @@ import {
   renderQuestionBlock,
   type BuilderItemResolved,
 } from "./render/question";
-import { renderAnswerKey } from "./render/answer-key";
 import type {
   BuilderBlock,
   BuilderHeader,
@@ -63,6 +62,7 @@ function blockTextSize(block: BuilderBlock, compact: boolean) {
 function renderCustomBlock(
   block: BuilderBlock,
   compact: boolean,
+  contentWidthHpu: number,
 ): BlockNode[] {
   const align = blockAlign(block.blockAlign);
   const color = block.blockAccentColor || "#2563EB";
@@ -99,17 +99,37 @@ function renderCustomBlock(
   }
 
   if (block.blockType === "divider") {
-    const char = block.dividerStyle === "dotted" ? "·" : block.dividerStyle === "dashed" ? "─ " : "─";
+    const lineType =
+      block.dividerStyle === "dotted"
+        ? "DOT"
+        : block.dividerStyle === "dashed"
+          ? "DASH"
+          : "SOLID";
+    const border = {
+      type: lineType,
+      widthMm: Math.max(0.1, Math.min(0.8, (block.dividerThickness || 1) * 0.12)),
+      color,
+    } as const;
+    const none = { type: "NONE", widthMm: 0.1, color: COLORS.black } as const;
     return [
       {
-        kind: "p",
-        style: { align: "CENTER", spaceBefore: 120, spaceAfter: 120 },
-        runs: [
-          txt(char.repeat(block.dividerStyle === "dashed" ? 34 : 58), {
-            size: Math.max(8, Math.min(14, 8 + (block.dividerThickness || 1))),
-            bold: (block.dividerThickness || 1) >= 3,
-            color,
-          }),
+        kind: "tbl",
+        colWidthsHpu: [contentWidthHpu],
+        borders: { left: none, right: none, top: border, bottom: none },
+        rows: [
+          {
+            heightHpu: 220,
+            cells: [
+              {
+                widthHpu: contentWidthHpu,
+                heightHpu: 220,
+                vAlign: "CENTER",
+                borders: { left: none, right: none, top: border, bottom: none },
+                margins: { left: 0, right: 0, top: 80, bottom: 80 },
+                blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
+              },
+            ],
+          },
         ],
       },
     ];
@@ -196,8 +216,7 @@ function appendQuestionGroups(opts: {
 export function buildBuilderHwpxDocument(
   opts: BuildHwpxOptions,
 ): HwpxDocument {
-  const { title, settings, resolvedItems, includeAnswers, fullExamQuestions } =
-    opts;
+  const { title, settings, resolvedItems, includeAnswers } = opts;
   const header: BuilderHeader = settings?.header ?? {};
   const layout: BuilderLayout = settings?.layout ?? {};
   const compact = layout.density === "compact";
@@ -205,24 +224,37 @@ export function buildBuilderHwpxDocument(
   const showPassageTitle = layout.showPassageTitle !== false;
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
 
-  // 페이지 설정 — 미리보기와 비슷한 빽빽한 마진
+  // 페이지 설정 — 미리보기(A4PaperPage)의 px padding 을 mm로 정확히 환산.
+  // 미리보기: comfortable px-[42px] py-[38px], compact px-[34px] py-[30px].
+  // 미리보기는 가상 A4(760px=210mm) 모델 → 1px = 210/760 = 0.276316mm.
+  //   (96dpi(0.264583mm) 가 아님. 그게 직전 패스의 버그였다.)
+  const MM_PER_PX = 210 / 760; // 0.276316
   const paperSize = layout.paperSize === "B4" ? "B4" : "A4";
-  const marginLR = compact ? mm(12) : mm(14);
-  const marginTB = compact ? mm(12) : mm(14);
+  // 전체 여백 축소(5차): 미리보기 a4-paper-page.tsx 의 새 px 패딩을 그대로 환산한다.
+  //   comfortable px-[34px] py-[28px], compact px-[28px] py-[24px].
+  //   좌우는 줄넘김 안정성을 위해 소폭(42→34, 34→28)만, 상하는 더 적극적으로 축소.
+  //   (직전의 LR_TRIM 별도 보정은 제거 — 미리보기 패딩 자체를 줄였으므로 불필요.)
+  const LR_PX = compact ? 28 : 34;
+  const TB_PX = compact ? 24 : 28;
+  const marginLR = mm(LR_PX * MM_PER_PX);
+  const marginTB = mm(TB_PX * MM_PER_PX);
   const pageWidth = paperSize === "B4" ? B4_WIDTH : A4_WIDTH;
   const pageHeight = paperSize === "B4" ? B4_HEIGHT : A4_HEIGHT;
   const contentWidth = pageWidth - 2 * marginLR;
-  const columnGap = mm(6);
+  const columnGap = mm(32 * MM_PER_PX); // gap-8 = 32px ≈ 8.84mm
+  // 줄넘김(칸당 글자수)은 본문 칸 폭으로 결정된다. 칸 폭은 미리보기의 콘텐츠 폭
+  // (새 좌우 패딩 34/28px 기준)으로 고정해 미리보기 pagination.ts 와 동일 폭을 쓴다.
+  // (좌우 패딩을 미리보기·pagination·HWPX·DOCX 에서 함께 바꿨으므로 줄넘김이 어긋나지 않는다.)
+  const previewContentWidth = pageWidth - 2 * marginLR;
   const columnWidth =
     columns === 1
-      ? contentWidth
-      : Math.floor((contentWidth - columnGap) / 2);
+      ? previewContentWidth
+      : Math.floor((previewContentWidth - columnGap) / 2);
 
   const blocks: BlockNode[] = [];
 
   // 1) 페이지 헤더 (제목, 학교/반/이름)
-  //    2단 모드에서도 헤더 표는 단 폭으로 줄어든다(자동). 사용자는 columns=1
-  //    모드를 골라야 헤더가 페이지 전체 폭을 차지하는 일반 시험지 룩이 된다.
+  //    미리보기처럼 헤더는 항상 전체 본문 폭을 사용하고, 본문 직전에 다단을 켠다.
   blocks.push(
     ...renderPageHeader({
       subtitle: header.subtitle,
@@ -231,7 +263,7 @@ export function buildBuilderHwpxDocument(
       className: header.className,
       studentNameLabel: header.studentNameLabel,
       compact,
-      contentWidthHpu: columnWidth,
+      contentWidthHpu: contentWidth,
     }),
   );
 
@@ -242,8 +274,10 @@ export function buildBuilderHwpxDocument(
       kind: "p",
       style: {
         align: "LEFT",
-        spaceBefore: 120,
-        spaceAfter: 160,
+        // 미리보기 instructions 는 헤더 바로 아래(mt-2)에 붙어 있다.
+        // 본문 위 빈공간을 줄이려 위/아래 간격을 축소.
+        spaceBefore: 60,
+        spaceAfter: 120,
         lineSpacingPct: 150,
       },
       runs: [
@@ -254,7 +288,15 @@ export function buildBuilderHwpxDocument(
       ],
     });
   } else {
-    blocks.push({ kind: "p", style: { spaceAfter: 100 }, runs: [] });
+    blocks.push({ kind: "p", style: { spaceAfter: 60 }, runs: [] });
+  }
+
+  if (columns === 2) {
+    blocks.push({
+      kind: "columnPr",
+      columns: 2,
+      columnGapHpu: columnGap,
+    });
   }
 
   // 3) 본문 — v2 는 사용자 삽입 블록 순서를 유지한다.
@@ -300,7 +342,7 @@ export function buildBuilderHwpxDocument(
         continue;
       }
       flush();
-      blocks.push(...renderCustomBlock(block, compact));
+      blocks.push(...renderCustomBlock(block, compact, columnWidth));
     }
     flush();
   } else {
@@ -316,26 +358,6 @@ export function buildBuilderHwpxDocument(
     });
   }
 
-  // 4) 정답표 (해설 모드가 아닐 때)
-  if (!includeAnswers && fullExamQuestions.length > 0) {
-    blocks.push(
-      ...renderAnswerKey(fullExamQuestions, columnWidth),
-    );
-  }
-
-  // 5) 마지막 페이지 번호 (인라인) — Phase 0
-  blocks.push({
-    kind: "p",
-    style: { align: "CENTER", spaceBefore: 240, spaceAfter: 0 },
-    runs: [
-      txt("- ", { size: SIZE.footer, color: COLORS.gray }),
-      { kind: "pageNum", style: { size: SIZE.footer, color: COLORS.gray } },
-      txt(" / ", { size: SIZE.footer, color: COLORS.gray }),
-      { kind: "totalPages", style: { size: SIZE.footer, color: COLORS.gray } },
-      txt(" -", { size: SIZE.footer, color: COLORS.gray }),
-    ],
-  });
-
   const section: SectionSpec = {
     pageWidthHpu: pageWidth,
     pageHeightHpu: pageHeight,
@@ -343,9 +365,13 @@ export function buildBuilderHwpxDocument(
     marginRight: marginLR,
     marginTop: marginTB,
     marginBottom: marginTB,
-    marginHeader: mm(8),
-    marginFooter: mm(8),
-    columns,
+    // 머리말은 실제로 쓰지 않고(헤더를 본문 블록으로 그림) 본문 위 죽은 공간만
+    // 만들므로 0 에 가깝게. 한컴은 top 여백 안에 header 밴드를 잡으므로 0이면
+    // 본문이 marginTop 바로 아래에서 시작한다.
+    marginHeader: mm(0),
+    // 꼬리말(autoNum 페이지번호)은 살아있어야 하므로 적당한 값 유지.
+    marginFooter: mm(7),
+    columns: 1,
     columnGapHpu: columnGap,
     blocks,
   };

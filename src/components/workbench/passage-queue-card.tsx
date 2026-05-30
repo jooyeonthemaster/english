@@ -17,6 +17,7 @@ import {
   Target,
   LayoutList,
   Sparkles,
+  CalendarClock,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -32,6 +33,19 @@ import {
 } from "@/lib/question-generation-plans";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
+
+function formatAnalysisDateTime(value: Date | string | null | undefined) {
+  if (!value) return "";
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString("ko-KR", {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
 
 // ─── Status Config ───────────────────────────────────────
 const STATUS_CONFIG: Record<
@@ -163,6 +177,10 @@ export const PassageQueueCard = memo(function PassageQueueCard({
 
   const questionsCount = passage.passageData.questions.length;
   const isLoading = passage.status === "pending" || passage.status === "analyzing";
+  const analysisDateLabel =
+    passage.status === "done"
+      ? formatAnalysisDateTime(passage.passageData.analysis?.updatedAt)
+      : "";
   const loadingClass = isLoading
     ? passage.status === "analyzing"
       ? "workbench-loading-card workbench-loading-card--analyzing"
@@ -319,7 +337,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
             <h4 className="text-[13px] font-semibold text-slate-800 truncate">
               {displayTitle}
             </h4>
-            <div className="flex items-center gap-1.5 mt-0.5">
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-0.5">
               {passage.status !== "done" && (
                 <StatusIcon
                   className={`w-3 h-3 ${config.color} ${passage.status === "analyzing" ? "animate-spin" : ""}`}
@@ -343,6 +361,15 @@ export const PassageQueueCard = memo(function PassageQueueCard({
               <span className="text-[10px] text-slate-400">
                 {passage.wordCount} words
               </span>
+              {analysisDateLabel ? (
+                <span className="inline-flex min-w-0 items-center gap-0.5 text-[10px] font-medium text-slate-400">
+                  <CalendarClock className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span className="shrink-0">분석일시</span>
+                  <span className="shrink-0 tabular-nums">
+                    {analysisDateLabel}
+                  </span>
+                </span>
+              ) : null}
             </div>
           </div>
         </div>

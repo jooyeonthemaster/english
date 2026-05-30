@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { buildBuilderHwpxDocument } from "./_lib/builder";
 import { packageHwpx } from "./_lib/package";
+import { MIMETYPE } from "./_lib/static-files";
 import type {
   BuilderItem,
   BuilderSettings,
 } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 import type { BuilderItemResolved } from "./_lib/render/question";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;
@@ -164,8 +168,11 @@ export async function GET(
 
     return new NextResponse(buffer as unknown as BodyInit, {
       headers: {
-        "Content-Type": "application/vnd.hancom.hwpx",
+        "Content-Type": MIMETYPE,
+        "X-Content-Type-Options": "nosniff",
         "Content-Disposition": `attachment; filename*=UTF-8''${filename}`,
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        "Pragma": "no-cache",
       },
     });
   } catch (error) {

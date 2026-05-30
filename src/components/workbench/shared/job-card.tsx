@@ -54,6 +54,11 @@ export interface JobCardProps {
   status?: ExtractionJobStatus | string | null;
   onClick: () => void;
   onRename?: (next: string | null) => void;
+  /** When provided, renders a selection checkbox at the top-left of the
+   *  thumbnail. The handler is invoked on toggle; the card's primary onClick
+   *  is suppressed so checking does not also open the job. */
+  checked?: boolean;
+  onToggleCheck?: () => void;
 
   // ── detailed-only props ──
   mode?: ExtractionMode;
@@ -79,6 +84,8 @@ export function JobCard({
   status,
   onClick,
   onRename,
+  checked,
+  onToggleCheck,
   mode,
   totalPages,
   successPages,
@@ -190,7 +197,7 @@ export function JobCard({
       title={label}
       className={
         "group relative flex shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-        (variant === "compact" ? "w-[124px] " : "w-[150px] ") +
+        (variant === "compact" ? "w-[78px] " : "w-[150px] ") +
         (canDrag
           ? isDragging
             ? "cursor-grabbing opacity-60 "
@@ -202,7 +209,7 @@ export function JobCard({
       <div
         className={
           "relative shrink-0 overflow-hidden bg-slate-50 " +
-          (variant === "compact" ? "h-[72px] w-[124px]" : "h-[100px] w-[150px]")
+          (variant === "compact" ? "h-[46px] w-[78px]" : "h-[100px] w-[150px]")
         }
       >
         {thumbnailUrl ? (
@@ -219,9 +226,51 @@ export function JobCard({
             <Icon className="size-7" aria-hidden="true" />
           </div>
         )}
-        <span className="absolute left-1 top-1 rounded-full bg-slate-900/75 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm">
-          {count.toLocaleString()}개
-        </span>
+        {onToggleCheck ? (
+          <span
+            role="checkbox"
+            aria-checked={checked ?? false}
+            aria-label="작업 선택"
+            tabIndex={0}
+            onMouseDown={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleCheck();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                e.stopPropagation();
+                onToggleCheck();
+              }
+            }}
+            className="absolute left-0.5 top-0.5 z-10 inline-flex cursor-pointer items-center justify-center rounded bg-white/85 p-0.5 shadow-sm ring-1 ring-slate-200 backdrop-blur-[1px] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            <input
+              type="checkbox"
+              checked={checked ?? false}
+              readOnly
+              tabIndex={-1}
+              className="size-3 cursor-pointer rounded border-slate-300 text-blue-600 pointer-events-none"
+            />
+          </span>
+        ) : null}
+        <div className="absolute right-1 top-1 z-10 flex flex-col items-end gap-1">
+          <span
+            className={
+              "rounded-full bg-slate-900/75 font-bold text-white shadow-sm " +
+              (variant === "compact"
+                ? "px-1 py-0 text-[9px]"
+                : "px-1.5 py-0.5 text-[10.5px]")
+            }
+          >
+            {count.toLocaleString()}개
+          </span>
+          {!isActiveJob && status ? (
+            <TaskStatusBadge status={taskStatus} />
+          ) : null}
+        </div>
         {modeShort ? (
           <span className="absolute bottom-1 right-1 rounded border border-white/40 bg-slate-900/70 px-1 py-0 text-[9.5px] font-bold text-white">
             {modeShort}
@@ -242,10 +291,6 @@ export function JobCard({
               <Loader2 className="size-7 animate-spin" aria-hidden="true" />
             </span>
           </span>
-        ) : status ? (
-          <span className="absolute right-1 top-1">
-            <TaskStatusBadge status={taskStatus} />
-          </span>
         ) : null}
         {progressPct !== null ? (
           <div className="absolute inset-x-0 bottom-0 h-1 bg-slate-900/30">
@@ -256,8 +301,13 @@ export function JobCard({
           </div>
         ) : null}
       </div>
-      <div className="min-w-0 px-2 py-1.5">
-        <div className="flex min-w-0 items-start gap-1">
+      <div
+        className={
+          "min-w-0 " +
+          (variant === "compact" ? "px-1 py-0.5" : "px-2 py-1.5")
+        }
+      >
+        <div className="flex min-w-0 items-start gap-0.5">
           {editing ? (
             <input
               autoFocus
@@ -279,7 +329,12 @@ export function JobCard({
               className="block w-full min-w-0 rounded-md border border-blue-300 bg-white px-1.5 py-0.5 text-[13px] font-bold text-slate-900 outline-none ring-2 ring-blue-100"
             />
           ) : (
-            <h4 className="min-w-0 flex-1 truncate text-[13px] font-bold text-slate-900">
+            <h4
+              className={
+                "min-w-0 flex-1 truncate font-bold text-slate-900 " +
+                (variant === "compact" ? "text-[10.5px]" : "text-[13px]")
+              }
+            >
               {label}
             </h4>
           )}
@@ -319,9 +374,23 @@ export function JobCard({
           ) : null}
         </div>
         {dateLabel ? (
-          <div className="mt-1 flex">
-            <span className="inline-flex min-w-0 items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
-              <CalendarClock className="size-3 shrink-0" aria-hidden="true" />
+          <div className={variant === "compact" ? "mt-0.5 flex" : "mt-1 flex"}>
+            <span
+              className={
+                "inline-flex min-w-0 items-center gap-0.5 rounded bg-slate-50 font-medium text-slate-500 " +
+                (variant === "compact"
+                  ? "px-1 py-0 text-[9px]"
+                  : "px-1.5 py-0.5 text-[10px]")
+              }
+            >
+              <CalendarClock
+                className={
+                  variant === "compact"
+                    ? "size-2.5 shrink-0"
+                    : "size-3 shrink-0"
+                }
+                aria-hidden="true"
+              />
               <span className="truncate tabular-nums">{dateLabel}</span>
             </span>
           </div>

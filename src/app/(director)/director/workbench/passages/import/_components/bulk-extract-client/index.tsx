@@ -2,14 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  AlertCircle,
-  ChevronDown,
-  ChevronUp,
-  RefreshCw,
-} from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
 
 import { TaskQueueInlineList } from "@/components/workbench/task-queue";
+import type { GridViewMode } from "@/components/workbench/task-queue/task-queue-inline-list";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { MaterialExtractionIcon } from "@/components/icons/workflow-icons";
 import { toast } from "sonner";
@@ -70,6 +66,8 @@ export function BulkExtractClient({
   const [textTitle, setTextTitle] = useState("");
   const [textValue, setTextValue] = useState("");
   const [previewJobId, setPreviewJobId] = useState<string | null>(null);
+  const [taskListViewMode, setTaskListViewMode] =
+    useState<GridViewMode>("grid-3");
 
   const bootstrapped = useRef(false);
   const navigatedToManage = useRef(false);
@@ -100,6 +98,11 @@ export function BulkExtractClient({
       return UPLOAD_DEFAULT;
     }
   });
+
+  const openPreviewDrawer = useCallback((taskId: string) => {
+    setTaskListViewMode((prev) => (prev === "grid-3" ? "grid-2" : prev));
+    setPreviewJobId(taskId);
+  }, []);
   const toggleUploadCollapsed = useCallback(() => {
     setUploadCollapsed((prev) => {
       const next = !prev;
@@ -154,7 +157,8 @@ export function BulkExtractClient({
 
   useExtractionStream({
     jobId,
-    enabled: phase === "processing" || phase === "starting" || phase === "uploading",
+    enabled:
+      phase === "processing" || phase === "starting" || phase === "uploading",
   });
 
   useEffect(() => {
@@ -163,9 +167,13 @@ export function BulkExtractClient({
     setMode("PASSAGE_ONLY");
 
     if (typeof window !== "undefined") {
-      const resumeJobId = new URLSearchParams(window.location.search).get("jobId");
+      const resumeJobId = new URLSearchParams(window.location.search).get(
+        "jobId",
+      );
       if (resumeJobId) {
-        router.replace(`/director/workbench/passages/import/jobs?jobId=${resumeJobId}`);
+        router.replace(
+          `/director/workbench/passages/import/jobs?jobId=${resumeJobId}`,
+        );
         return;
       }
     }
@@ -183,14 +191,16 @@ export function BulkExtractClient({
     if (phase !== "reviewing") return;
     if (!jobId) return;
     navigatedToManage.current = true;
-    router.replace(
-      `/director/workbench/passages/import/jobs?jobId=${jobId}`,
-    );
+    router.replace(`/director/workbench/passages/import/jobs?jobId=${jobId}`);
   }, [phase, jobId, router]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
-      if (phase === "preparing" || phase === "uploading" || phase === "starting") {
+      if (
+        phase === "preparing" ||
+        phase === "uploading" ||
+        phase === "starting"
+      ) {
         event.preventDefault();
         event.returnValue = "";
       }
@@ -210,7 +220,11 @@ export function BulkExtractClient({
       setSlots(next);
       setSource(
         `${next.length}페이지`,
-        incoming.length === 1 ? "IMAGES" : sourceType === "PDF" ? "PDF" : "IMAGES",
+        incoming.length === 1
+          ? "IMAGES"
+          : sourceType === "PDF"
+            ? "PDF"
+            : "IMAGES",
       );
     },
     [setSlots, setSource, slots, sourceType],
@@ -236,6 +250,22 @@ export function BulkExtractClient({
     [setSlots, slots],
   );
 
+  const removeSlot = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= slots.length) return;
+      const next = slots
+        .filter((_, i) => i !== index)
+        .map((slot, i) => ({ ...slot, pageIndex: i }));
+      setSlots(next);
+      if (next.length === 0) {
+        setSourceName(null);
+        setSourceType(null);
+        setError(null);
+      }
+    },
+    [setError, setSlots, slots],
+  );
+
   const handleFiles = useCallback(
     async (files: FileList | File[]) => {
       const arr = Array.from(files);
@@ -243,26 +273,32 @@ export function BulkExtractClient({
       setError(null);
 
       const pdf = arr.find((file) =>
-        ACCEPTED_PDF_MIMES.includes(file.type as (typeof ACCEPTED_PDF_MIMES)[number]),
+        ACCEPTED_PDF_MIMES.includes(
+          file.type as (typeof ACCEPTED_PDF_MIMES)[number],
+        ),
       );
       const allImages = arr.every((file) =>
-        ACCEPTED_IMAGE_MIMES.includes(file.type as (typeof ACCEPTED_IMAGE_MIMES)[number]),
+        ACCEPTED_IMAGE_MIMES.includes(
+          file.type as (typeof ACCEPTED_IMAGE_MIMES)[number],
+        ),
       );
 
       try {
         if (pdf) {
           if (arr.length > 1) {
-      setError("PDF는 한 번에 하나만 추가해 주세요.");
+            setError("PDF는 한 번에 하나만 추가해 주세요.");
             return;
           }
           if (pdf.size > MAX_PDF_BYTES) {
             setError(
-        `PDF 파일은 최대 ${Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB까지 업로드할 수 있습니다.`,
+              `PDF 파일은 최대 ${Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB까지 업로드할 수 있습니다.`,
             );
             return;
           }
           if (slots.length >= MAX_PAGES_PER_JOB) {
-      setError(`한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`);
+            setError(
+              `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
+            );
             return;
           }
           setPhase("preparing");
@@ -279,7 +315,9 @@ export function BulkExtractClient({
           });
           if (slots.length + pages.length > MAX_PAGES_PER_JOB) {
             revokeSlotUrls(pages);
-      setError(`한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`);
+            setError(
+              `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
+            );
             setPhase("idle");
             return;
           }
@@ -294,12 +332,18 @@ export function BulkExtractClient({
 
         if (allImages) {
           if (slots.length + arr.length > MAX_PAGES_PER_JOB) {
-      setError(`한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`);
+            setError(
+              `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
+            );
             return;
           }
-          const oversized = arr.find((file) => file.size > MAX_PAGE_IMAGE_BYTES);
+          const oversized = arr.find(
+            (file) => file.size > MAX_PAGE_IMAGE_BYTES,
+          );
           if (oversized) {
-      setError(`${oversized.name} 파일이 너무 큽니다. 이미지는 5MB 이하로 올려 주세요.`);
+            setError(
+              `${oversized.name} 파일이 너무 큽니다. 이미지는 5MB 이하로 올려 주세요.`,
+            );
             return;
           }
           const pages = await imagesToSlots(arr);
@@ -313,7 +357,9 @@ export function BulkExtractClient({
 
         setError("PDF, PNG, JPG, WebP 파일만 업로드할 수 있습니다.");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "파일을 처리하지 못했습니다");
+        setError(
+          err instanceof Error ? err.message : "파일을 처리하지 못했습니다",
+        );
         setPhase("idle");
       } finally {
         setSplitProgress(null);
@@ -334,7 +380,8 @@ export function BulkExtractClient({
       setError("추출할 파일을 먼저 추가해 주세요.");
       return;
     }
-    const uploadSourceType: FileSourceType = sourceType === "PDF" ? "PDF" : "IMAGES";
+    const uploadSourceType: FileSourceType =
+      sourceType === "PDF" ? "PDF" : "IMAGES";
     const nextJobId = await startUpload({
       slots,
       sourceType: uploadSourceType,
@@ -386,7 +433,7 @@ export function BulkExtractClient({
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-      throw new Error(data?.error ?? "텍스트 추출에 실패했습니다.");
+        throw new Error(data?.error ?? "텍스트 추출에 실패했습니다.");
       }
       const data = (await res.json()) as { jobId: string };
       setJobId(data.jobId);
@@ -396,7 +443,9 @@ export function BulkExtractClient({
       queueDrawer.setOpen(true);
       queueDrawer.triggerRefresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.");
+      setError(
+        err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
+      );
       setPhase("idle");
     }
   }, [queueDrawer, setError, setJobId, setPhase, textTitle, textValue]);
@@ -415,12 +464,8 @@ export function BulkExtractClient({
   }, [setError]);
 
   const inputBusy =
-    phase === "preparing" ||
-    phase === "uploading" ||
-    phase === "starting";
-  const runBusy =
-    inputBusy ||
-    phase === "processing";
+    phase === "preparing" || phase === "uploading" || phase === "starting";
+  const runBusy = inputBusy || phase === "processing";
 
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
@@ -459,7 +504,10 @@ export function BulkExtractClient({
 
           {error ? (
             <div className="mx-6 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
-              <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <AlertCircle
+                className="mt-0.5 size-4 shrink-0"
+                aria-hidden="true"
+              />
               <span>{error}</span>
             </div>
           ) : null}
@@ -490,6 +538,7 @@ export function BulkExtractClient({
                   onTextTitleChange={setTextTitle}
                   onTextValueChange={setTextValue}
                   onReorderSlots={reorderSlots}
+                  onRemoveSlot={removeSlot}
                 />
                 <ExtractionRunPanel
                   busy={runBusy}
@@ -530,7 +579,9 @@ export function BulkExtractClient({
           title="자료 목록"
           headerNote="최신순으로 표시됩니다"
           emptyMessage="아직 등록된 자료가 없습니다."
-          onTaskClick={(task) => setPreviewJobId(task.id)}
+          viewMode={taskListViewMode}
+          onViewModeChange={setTaskListViewMode}
+          onTaskClick={(task) => openPreviewDrawer(task.id)}
           onRenameTask={async (task, next) => {
             try {
               const body = JSON.stringify({
@@ -557,6 +608,7 @@ export function BulkExtractClient({
             storageKey: "smoat:extraction-bulk:job-list",
             resizable: false,
           }}
+          grid3Disabled={previewJobId !== null}
         />
       </main>
 

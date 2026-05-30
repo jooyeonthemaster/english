@@ -67,6 +67,8 @@ interface TaskQueueInlineListProps {
   viewMode?: GridViewMode;
   /** Notified when the user picks a different view mode. */
   onViewModeChange?: (mode: GridViewMode) => void;
+  /** Disable 3-column grid mode, usually while a right-side drawer is open. */
+  grid3Disabled?: boolean;
   /** Free-text search applied to task title/subtitle. */
   searchQuery?: string;
   /** Restrict to a single task status; "ALL" / undefined disables. */
@@ -159,7 +161,9 @@ function TaskGridStatusIcon({ status }: { status: TaskStatus }) {
   const className = `size-3 shrink-0 ${gridIconClass(status)}`;
   switch (status) {
     case "processing":
-      return <Loader2 className={`${className} animate-spin`} aria-hidden="true" />;
+      return (
+        <Loader2 className={`${className} animate-spin`} aria-hidden="true" />
+      );
     case "completed":
       return <CheckCircle2 className={className} aria-hidden="true" />;
     case "partial":
@@ -370,8 +374,10 @@ function TaskGridCard({
   }>({ getData: getDragData, count: dragCount ?? 0 });
   dragStateRef.current = { getData: getDragData, count: dragCount ?? 0 };
   const active = ACTIVE_STATUSES.has(task.status);
-  const canDelete = Boolean(task.onDelete) && TERMINAL_STATUSES.has(task.status);
-  const DomainIcon = task.domain === "extraction" ? ExtractionTaskListIcon : Database;
+  const canDelete =
+    Boolean(task.onDelete) && TERMINAL_STATUSES.has(task.status);
+  const DomainIcon =
+    task.domain === "extraction" ? ExtractionTaskListIcon : Database;
 
   useEffect(() => {
     if (!getDragData) return;
@@ -534,97 +540,99 @@ function TaskGridCard({
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 flex-1 items-start gap-2.5">
-          {onToggleCheck ? (
-            <span className="mt-0.5">
-              <TaskCheckbox
-                state={checked ?? false}
-                onToggle={onToggleCheck}
-              />
-            </span>
-          ) : null}
-          <span className="mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded border border-slate-300 bg-white">
-            <TaskGridStatusIcon status={task.status} />
-          </span>
-          <div className="min-w-0 flex-1">
-            {onRename ? (
-              <EditableTaskTitle
-                title={task.title}
-                onRename={onRename}
-                className="text-[13px] font-semibold text-slate-800 hover:text-blue-600"
-                size="card"
-              />
-            ) : (
-              <h4
-                className="truncate text-[13px] font-semibold text-slate-800 transition-colors group-hover:text-blue-600"
-                title={task.title}
-              >
-                {task.title}
-              </h4>
-            )}
-            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-              <span className={`text-[10px] font-medium ${gridIconClass(task.status)}`}>
-                <TaskStatusBadge status={task.status} />
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex min-w-0 flex-1 items-start gap-2.5">
+            {onToggleCheck ? (
+              <span className="mt-0.5">
+                <TaskCheckbox
+                  state={checked ?? false}
+                  onToggle={onToggleCheck}
+                />
               </span>
-              {task.errorBadge ? (
-                <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10.5px] font-bold text-red-600">
-                  {task.errorBadge}
+            ) : null}
+            <span className="mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded border border-slate-300 bg-white">
+              <TaskGridStatusIcon status={task.status} />
+            </span>
+            <div className="min-w-0 flex-1">
+              {onRename ? (
+                <EditableTaskTitle
+                  title={task.title}
+                  onRename={onRename}
+                  className="text-[13px] font-semibold text-slate-800 hover:text-blue-600"
+                  size="card"
+                />
+              ) : (
+                <h4
+                  className="truncate text-[13px] font-semibold text-slate-800 transition-colors group-hover:text-blue-600"
+                  title={task.title}
+                >
+                  {task.title}
+                </h4>
+              )}
+              <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+                <span
+                  className={`text-[10px] font-medium ${gridIconClass(task.status)}`}
+                >
+                  <TaskStatusBadge status={task.status} />
                 </span>
-              ) : null}
+                {task.errorBadge ? (
+                  <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10.5px] font-bold text-red-600">
+                    {task.errorBadge}
+                  </span>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
 
-        {canDelete ? (
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleting}
-            className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-            aria-label="작업 삭제"
-          >
-            {deleting ? (
-              <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-            ) : (
-              <Trash2 className="size-3.5" aria-hidden="true" />
-            )}
-          </button>
-        ) : null}
-      </div>
-
-      {task.stats?.length ? (
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {task.stats.slice(0, 4).map((stat) => (
-            <div
-              key={stat.label}
-              className={`rounded-lg px-2.5 py-2 ${statToneClass(stat.tone)}`}
+          {canDelete ? (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting}
+              className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+              aria-label="작업 삭제"
             >
-              <div className="text-[10px] font-medium opacity-75">
-                {stat.label}
-              </div>
-              <div className="mt-0.5 text-[13px] font-bold tabular-nums">
-                {stat.value}
-              </div>
-            </div>
-          ))}
+              {deleting ? (
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Trash2 className="size-3.5" aria-hidden="true" />
+              )}
+            </button>
+          ) : null}
         </div>
-      ) : (
-        <p className="mt-3 text-[11px] font-medium text-slate-400">
-          {task.subtitle}
-        </p>
-      )}
 
-      <div className="mt-auto flex flex-wrap items-center gap-2 pt-3 text-[10px] font-medium">
-        <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-1.5 py-0.5 text-blue-600">
-          <DomainIcon className="size-3.5" aria-hidden="true" />
-          {DOMAIN_LABELS[task.domain]}
-        </span>
-        <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-slate-500">
-          <CalendarClock className="size-3.5" aria-hidden="true" />
-          {formatTaskDate(task.createdAt)}
-        </span>
-      </div>
+        {task.stats?.length ? (
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {task.stats.slice(0, 4).map((stat) => (
+              <div
+                key={stat.label}
+                className={`rounded-lg px-2.5 py-2 ${statToneClass(stat.tone)}`}
+              >
+                <div className="text-[10px] font-medium opacity-75">
+                  {stat.label}
+                </div>
+                <div className="mt-0.5 text-[13px] font-bold tabular-nums">
+                  {stat.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-3 text-[11px] font-medium text-slate-400">
+            {task.subtitle}
+          </p>
+        )}
+
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-3 text-[10px] font-medium">
+          <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-1.5 py-0.5 text-blue-600">
+            <DomainIcon className="size-3.5" aria-hidden="true" />
+            {DOMAIN_LABELS[task.domain]}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-slate-500">
+            <CalendarClock className="size-3.5" aria-hidden="true" />
+            {formatTaskDate(task.createdAt)}
+          </span>
+        </div>
       </div>
 
       {active ? (
@@ -675,7 +683,8 @@ function TaskListRow({
   }>({ getData: getDragData, count: dragCount ?? 0 });
   dragStateRef.current = { getData: getDragData, count: dragCount ?? 0 };
   const active = ACTIVE_STATUSES.has(task.status);
-  const canDelete = Boolean(task.onDelete) && TERMINAL_STATUSES.has(task.status);
+  const canDelete =
+    Boolean(task.onDelete) && TERMINAL_STATUSES.has(task.status);
 
   useEffect(() => {
     if (!getDragData) return;
@@ -768,7 +777,9 @@ function TaskListRow({
               {task.title}
             </h4>
           )}
-          <span className={`shrink-0 text-[10px] font-medium ${gridIconClass(task.status)}`}>
+          <span
+            className={`shrink-0 text-[10px] font-medium ${gridIconClass(task.status)}`}
+          >
             <TaskStatusBadge status={task.status} />
           </span>
           {task.errorBadge ? (
@@ -842,28 +853,39 @@ const VIEW_MODE_OPTIONS: Array<{
 function ViewModeToggle({
   value,
   onChange,
+  grid3Disabled = false,
 }: {
   value: GridViewMode;
   onChange: (mode: GridViewMode) => void;
+  grid3Disabled?: boolean;
 }) {
   return (
     <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
       {VIEW_MODE_OPTIONS.map(({ mode, label, Icon }, index) => {
         const pressed = value === mode;
         const middle = index === 1;
+        const disabled = grid3Disabled && mode === "grid-3";
         return (
           <button
             key={mode}
             type="button"
             aria-label={label}
             aria-pressed={pressed}
+            title={
+              disabled
+                ? "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다"
+                : label
+            }
+            disabled={disabled}
             onClick={() => onChange(mode)}
             className={
-              "p-2 cursor-pointer transition-colors " +
+              "p-2 transition-colors disabled:cursor-not-allowed disabled:opacity-40 " +
               (middle ? "border-x border-slate-200 " : "") +
-              (pressed
-                ? "bg-slate-800 text-white"
-                : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
+              (disabled
+                ? "text-slate-300"
+                : pressed
+                  ? "cursor-pointer bg-slate-800 text-white"
+                  : "cursor-pointer text-slate-400 hover:bg-slate-50 hover:text-slate-600")
             }
           >
             <Icon className="size-4" aria-hidden="true" />
@@ -890,6 +912,7 @@ export function TaskQueueInlineList({
   onTaskClick,
   viewMode: controlledViewMode,
   onViewModeChange,
+  grid3Disabled = false,
   searchQuery,
   statusFilter,
   sortOrder,
@@ -910,9 +933,17 @@ export function TaskQueueInlineList({
     useState<GridViewMode>("grid-3");
   const viewMode = controlledViewMode ?? internalViewMode;
   const setViewMode = (mode: GridViewMode) => {
+    if (grid3Disabled && mode === "grid-3") return;
     if (onViewModeChange) onViewModeChange(mode);
     if (controlledViewMode === undefined) setInternalViewMode(mode);
   };
+  const effectiveViewMode =
+    grid3Disabled && viewMode === "grid-3" ? "grid-2" : viewMode;
+
+  useEffect(() => {
+    if (!grid3Disabled || viewMode !== "grid-3") return;
+    if (onViewModeChange) onViewModeChange("grid-2");
+  }, [grid3Disabled, onViewModeChange, viewMode]);
 
   const collapseEnabled = Boolean(collapsible) && !bare;
   const resizeEnabled = collapseEnabled && collapsible?.resizable !== false;
@@ -1037,13 +1068,14 @@ export function TaskQueueInlineList({
   }, [onVisibleTasksChange, visible]);
 
   const resolvedTitle = title ?? `${DOMAIN_LABELS[domain]} 작업 목록`;
-  const HeaderIcon = domain === "extraction" ? ExtractionTaskListIcon : Database;
+  const HeaderIcon =
+    domain === "extraction" ? ExtractionTaskListIcon : Database;
   const grid = layout === "grid";
-  const isList = grid && viewMode === "list";
+  const isList = grid && effectiveViewMode === "list";
   // Fixed column counts regardless of viewport width — the toggle should
   // mean "exactly N columns", not "responsive grid that *prefers* N".
   const gridColsClass =
-    viewMode === "grid-2" ? "grid-cols-2" : "grid-cols-3";
+    effectiveViewMode === "grid-2" ? "grid-cols-2" : "grid-cols-3";
 
   const bodyPadding = bare ? "" : "p-3";
   const sectionClass = bare
@@ -1066,7 +1098,10 @@ export function TaskQueueInlineList({
             <h3 className="truncate text-[13px] font-bold text-slate-900">
               {resolvedTitle}
             </h3>
-            <span aria-hidden="true" className="shrink-0 text-[11px] font-medium text-slate-300">
+            <span
+              aria-hidden="true"
+              className="shrink-0 text-[11px] font-medium text-slate-300"
+            >
               ·
             </span>
             <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
@@ -1092,7 +1127,11 @@ export function TaskQueueInlineList({
               />
             </button>
             {grid ? (
-              <ViewModeToggle value={viewMode} onChange={setViewMode} />
+              <ViewModeToggle
+                value={effectiveViewMode}
+                onChange={setViewMode}
+                grid3Disabled={grid3Disabled}
+              />
             ) : null}
             {collapseEnabled && collapsed ? (
               <button
@@ -1156,7 +1195,9 @@ export function TaskQueueInlineList({
                   ))}
                 </div>
               ) : (
-                <div className={`grid gap-3 ${bodyPadding} ${gridColsClass}`.trim()}>
+                <div
+                  className={`grid gap-3 ${bodyPadding} ${gridColsClass}`.trim()}
+                >
                   {visible.map((task) => (
                     <TaskGridCard
                       key={`${task.domain}:${task.id}`}

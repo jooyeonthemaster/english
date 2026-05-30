@@ -27,6 +27,7 @@ import type {
 interface EmitState {
   nextParaId: number;
   nextCtrlId: number;
+  currentLineWidthHpu: number;
 }
 
 // =============================================================================
@@ -79,15 +80,26 @@ function secPrXml(sec: SectionSpec): string {
 // =============================================================================
 
 function colPrCtrl(sec: SectionSpec): string {
-  const colCount = Math.max(1, sec.columns);
+  return colPrCtrlFor({
+    columns: sec.columns,
+    columnGapHpu: sec.columnGapHpu,
+    contentWidthHpu: sec.pageWidthHpu - sec.marginLeft - sec.marginRight,
+  });
+}
+
+function colPrCtrlFor(opts: {
+  columns: 1 | 2;
+  columnGapHpu: number;
+  contentWidthHpu: number;
+}): string {
+  const colCount = Math.max(1, opts.columns);
   if (colCount === 1) {
     return `<hp:ctrl><hp:colPr id="" type="NEWSPAPER" layout="LEFT" colCount="1" sameSz="1" sameGap="0"/></hp:ctrl>`;
   }
-  // 2단 이상: colSz 자식 노드 필요 (한컴 multi-column 샘플 패턴)
-  const contentWidth =
-    sec.pageWidthHpu - sec.marginLeft - sec.marginRight;
-  const gap = sec.columnGapHpu;
-  const eachWidth = Math.floor((contentWidth - gap * (colCount - 1)) / colCount);
+  const gap = opts.columnGapHpu;
+  const eachWidth = Math.floor(
+    (opts.contentWidthHpu - gap * (colCount - 1)) / colCount,
+  );
   const colSzs: string[] = [];
   for (let i = 0; i < colCount; i++) {
     const isLast = i === colCount - 1;
@@ -100,8 +112,58 @@ function colPrCtrl(sec: SectionSpec): string {
 // lineseg (레이아웃 캐시)
 // =============================================================================
 
-function defaultLineseg(horzsize: number): string {
-  return `<hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="1000" textheight="1000" baseline="850" spacing="600" horzpos="0" horzsize="${horzsize}" flags="393216"/></hp:linesegarray>`;
+function paragraphLineseg(
+  horzsize: number,
+  registry: ShapeRegistry,
+  paraShapeId: number,
+  charShapeIds: number[],
+): string {
+  const paraShape = registry.paraShapes[paraShapeId] ?? registry.paraShapes[0];
+  const textHeight = Math.max(
+    100,
+    ...charShapeIds.map(
+      (id) => registry.charShapes[id]?.heightHpu100 ?? 1000,
+    ),
+  );
+  const lineHeight = Math.max(
+    textHeight,
+    Math.round((textHeight * paraShape.lineSpacingPct) / 100),
+  );
+  const spacing = Math.max(0, lineHeight - textHeight);
+  const baseline = Math.round(textHeight * 0.85);
+  return `<hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="${textHeight}" textheight="${textHeight}" baseline="${baseline}" spacing="${spacing}" horzpos="0" horzsize="${horzsize}" flags="393216"/></hp:linesegarray>`;
+}
+
+function footerCtrl(
+  sec: SectionSpec,
+  registry: ShapeRegistry,
+  state: EmitState,
+): string {
+  const contentWidth = sec.pageWidthHpu - sec.marginLeft - sec.marginRight;
+  // 미리보기 푸터 "- N / M -" 는 text-[10px] = 7.5pt.
+  const charShapeId = registry.charShapeFromStyle({
+    size: 7.5,
+    color: "#666666",
+  });
+  const paraShapeId = registry.paraShapeFromStyle({
+    align: "CENTER",
+    lineSpacingPct: 130,
+    spaceBefore: 0,
+    spaceAfter: 0,
+  });
+  const lineSeg = paragraphLineseg(contentWidth, registry, paraShapeId, [
+    charShapeId,
+  ]);
+  return [
+    `<hp:ctrl><hp:footer id="${state.nextCtrlId++}" applyPageType="BOTH">`,
+    `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="TOP" linkListIDRef="0" linkListNextIDRef="0" textWidth="${contentWidth}" textHeight="${sec.marginFooter}" hasTextRef="0" hasNumRef="0">`,
+    `<hp:p id="0" paraPrIDRef="${paraShapeId}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
+    `<hp:run charPrIDRef="${charShapeId}"><hp:t>- </hp:t><hp:autoNum numType="PAGE" format="DIGIT"/><hp:t> / </hp:t><hp:autoNum numType="TOTAL_PAGE" format="DIGIT"/><hp:t> -</hp:t></hp:run>`,
+    lineSeg,
+    `</hp:p>`,
+    `</hp:subList>`,
+    `</hp:footer></hp:ctrl>`,
+  ].join("");
 }
 
 // =============================================================================
@@ -146,11 +208,11 @@ interface RunGroup {
   children: string[];
 }
 
-function emitRuns(
+function buildRunGroups(
   runs: RunNode[],
   registry: ShapeRegistry,
   state: EmitState,
-): string {
+): RunGroup[] {
   const groups: RunGroup[] = [];
   for (const run of runs) {
     const style: RunStyle | undefined =
@@ -169,8 +231,12 @@ function emitRuns(
     }
   }
   if (groups.length === 0) {
-    return `<hp:run charPrIDRef="0"><hp:t></hp:t></hp:run>`;
+    return [{ charShapeId: 0, children: ["<hp:t></hp:t>"] }];
   }
+  return groups;
+}
+
+function runGroupsXml(groups: RunGroup[]): string {
   return groups
     .map(
       (g) =>
@@ -187,14 +253,16 @@ function emitParagraph(
   para: ParagraphNode,
   registry: ShapeRegistry,
   state: EmitState,
-  options: { firstParaPrelude?: string } = {},
+  options: { firstParaPrelude?: string; lineWidthHpu?: number } = {},
 ): string {
   const pid = state.nextParaId++;
   const paraShapeId = registry.paraShapeFromStyle(para.style);
   const pageBreak = para.pageBreak ? "1" : "0";
   const columnBreak = para.columnBreak ? "1" : "0";
 
-  const runsXml = emitRuns(para.runs, registry, state);
+  const runGroups = buildRunGroups(para.runs, registry, state);
+  const runsXml = runGroupsXml(runGroups);
+  const lineWidth = options.lineWidthHpu ?? state.currentLineWidthHpu;
 
   let body: string;
   if (options.firstParaPrelude) {
@@ -204,10 +272,12 @@ function emitParagraph(
     body = runsXml;
   }
 
+  const charShapeIds = runGroups.map((group) => group.charShapeId);
+
   return [
     `<hp:p id="${pid}" paraPrIDRef="${paraShapeId}" styleIDRef="0" pageBreak="${pageBreak}" columnBreak="${columnBreak}" merged="0">`,
     body,
-    defaultLineseg(42520),
+    paragraphLineseg(lineWidth, registry, paraShapeId, charShapeIds),
     `</hp:p>`,
   ].join("");
 }
@@ -236,12 +306,18 @@ function emitTable(
           const cm =
             cell.margins ?? { left: 141, right: 141, top: 141, bottom: 141 };
           const vAlign = cell.vAlign ?? "TOP";
+          const prevLineWidth = state.currentLineWidthHpu;
+          state.currentLineWidthHpu = Math.max(
+            100,
+            cell.widthHpu - cm.left - cm.right,
+          );
           const subBlocks = cell.blocks
             .map((b) => emitBlock(b, registry, state))
             .join("");
           const cellInner =
             subBlocks ||
             emitParagraph({ kind: "p", runs: [] }, registry, state);
+          state.currentLineWidthHpu = prevLineWidth;
           return [
             `<hp:tc name="" header="0" hasMargin="1" protect="0" editable="0" dirty="0" borderFillIDRef="${cellBorderId}">`,
             `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="Break" vertAlign="${vAlign}" linkListIDRef="0" linkListNextIDRef="0" textWidth="0" textHeight="0" hasTextRef="0" hasNumRef="0">`,
@@ -278,16 +354,49 @@ function emitBlock(
   block: BlockNode,
   registry: ShapeRegistry,
   state: EmitState,
+  sec?: SectionSpec,
 ): string {
   if (block.kind === "p") {
     return emitParagraph(block, registry, state);
-  } else {
+  }
+
+  if (block.kind === "columnPr") {
+    const pid = state.nextParaId++;
+    const contentWidth =
+      sec?.pageWidthHpu &&
+      sec?.marginLeft !== undefined &&
+      sec?.marginRight !== undefined
+        ? sec.pageWidthHpu - sec.marginLeft - sec.marginRight
+        : 42520;
+    const ctrl = colPrCtrlFor({
+      columns: block.columns,
+      columnGapHpu: block.columnGapHpu,
+      contentWidthHpu: contentWidth,
+    });
+    const lineWidth =
+      block.columns === 1
+        ? contentWidth
+        : Math.floor(
+            (contentWidth - block.columnGapHpu * (block.columns - 1)) /
+              block.columns,
+          );
+    const xml = [
+      `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
+      `<hp:run charPrIDRef="0">${ctrl}<hp:t></hp:t></hp:run>`,
+      paragraphLineseg(contentWidth, registry, 0, [0]),
+      `</hp:p>`,
+    ].join("");
+    state.currentLineWidthHpu = lineWidth;
+    return xml;
+  }
+
+  {
     const tblXml = emitTable(block, registry, state);
     const pid = state.nextParaId++;
     return [
       `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
       `<hp:run charPrIDRef="0">${tblXml}</hp:run>`,
-      defaultLineseg(42520),
+      paragraphLineseg(state.currentLineWidthHpu, registry, 0, [0]),
       `</hp:p>`,
     ].join("");
   }
@@ -301,7 +410,12 @@ export function buildSectionXml(
   sec: SectionSpec,
   registry: ShapeRegistry,
 ): string {
-  const state: EmitState = { nextParaId: 0, nextCtrlId: 1 };
+  const contentWidth = sec.pageWidthHpu - sec.marginLeft - sec.marginRight;
+  const state: EmitState = {
+    nextParaId: 0,
+    nextCtrlId: 1,
+    currentLineWidthHpu: contentWidth,
+  };
 
   const blocks = [...sec.blocks];
 
@@ -309,16 +423,18 @@ export function buildSectionXml(
     blocks.unshift({ kind: "p", runs: [] });
   }
 
-  const firstParaPrelude = secPrXml(sec) + colPrCtrl(sec);
+  const firstParaPrelude =
+    secPrXml(sec) + footerCtrl(sec, registry, state) + colPrCtrl(sec);
 
   const firstBlock = blocks[0] as ParagraphNode;
   const firstXml = emitParagraph(firstBlock, registry, state, {
     firstParaPrelude,
+    lineWidthHpu: contentWidth,
   });
 
   const restXml = blocks
     .slice(1)
-    .map((b) => emitBlock(b, registry, state))
+    .map((b) => emitBlock(b, registry, state, sec))
     .join("");
 
   return [

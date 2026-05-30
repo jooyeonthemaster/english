@@ -21,7 +21,11 @@ import type {
   RenderItemPart,
 } from "./types";
 
-const LINE_WIDTH_FUDGE = 1.08;
+// 줄당 문자 폭 보정 계수. 미리보기/다운로드 글꼴을 맑은 고딕으로 통일하면서
+// 조정했다. 맑은 고딕의 라틴 글리프가 Pretendard보다 약간 넓어 한 줄에 들어가는
+// 글자수가 살짝 줄어들므로, 줄바꿈 과소예측을 막기 위해 계수를 소폭 낮춘다.
+// (양쪽이 같은 글꼴을 쓰므로 정확한 페이지 분할 일치는 요구되지 않음.)
+const LINE_WIDTH_FUDGE = 1.05;
 const MIN_QUESTION_START_LINES = 8;
 const MIN_PASSAGE_START_LINES = 4;
 const BOXED_PASSAGE_HORIZONTAL_INSET = 28;
@@ -130,8 +134,11 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
   const paperSpec = PAPER_SIZE_SPECS[settings.paperSize];
   const pageWidth = Math.round(PREVIEW_PAGE_WIDTH * paperSpec.widthRatio);
   const pageHeight = pageWidth * paperSpec.heightRatio;
-  const horizontalPadding = compact ? 68 : 84;
-  const verticalPadding = compact ? 60 : 76;
+  // 전체 여백 축소(5차): a4-paper-page.tsx 의 새 px 패딩과 1:1 일치시킨다.
+  //   comfortable px-[34px] py-[28px] → H=68, V=56 / compact px-[28px] py-[24px] → H=56, V=48.
+  //   좌우 패딩(=칸 폭)이 미리보기·HWPX·DOCX 와 동일해야 줄넘김이 일치한다.
+  const horizontalPadding = compact ? 56 : 68;
+  const verticalPadding = compact ? 48 : 56;
   const firstPageHeader = compact ? 82 : 96;
   const followPageHeader = 24;
   const footer = 24;

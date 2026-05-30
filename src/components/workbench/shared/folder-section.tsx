@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
+  ArrowUpDown,
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  Folder,
   FolderOpen,
   FolderPlus,
   Check,
@@ -14,12 +16,27 @@ import {
   CornerUpLeft,
   Grid3X3,
   List,
+  ListFilter,
   Search,
 } from "lucide-react";
 import type { CollectionItem } from "./types";
 import { FolderChip } from "./folder-chip";
 import { FolderCard } from "./folder-card";
 import { FolderListRow } from "./folder-list-row";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+type FolderSortOrder = "name_asc" | "name_desc" | "newest" | "oldest";
 
 interface FolderSectionProps {
   childFolders: CollectionItem[];
@@ -68,6 +85,9 @@ interface FolderSectionProps {
      *  the task queue constants for the canonical per-stage values. */
     itemUnit?: string;
     description?: string;
+    /** Optional faded prefix rendered before the title (e.g., feature name).
+     *  Shown as `parentLabel · title` with a middle-dot separator. */
+    parentLabel?: string;
   };
   rootLabel?: string;
   /** Opt-in: enables 자료관리-style folder controls (folder search input,
@@ -86,6 +106,16 @@ interface FolderSectionProps {
    *  below it. Use this for chrome that must stick with the folder section
    *  (e.g. a page-level filter/toolbar row). */
   stickyFooter?: ReactNode;
+  /** When true, the root view is presented as if the user is inside a virtual
+   *  "전체 X" folder — the "현재 폴더" badge stays visible at root and the
+   *  pageHeader.title doubles as the folder's name. */
+  treatRootAsFolder?: boolean;
+  /** When true, drop the outer sticky/card chrome and render only the
+   *  internal content (header row + folder area + optional selection bar).
+   *  Use when the caller wraps this in its own larger sticky+rounded section
+   *  (e.g. passage-list combining folders + filters + grid into one box).
+   *  `stickyFooter` is ignored in this mode — the caller handles it. */
+  embedded?: boolean;
 }
 
 interface ParentFolderButtonProps {
@@ -93,6 +123,96 @@ interface ParentFolderButtonProps {
   dragItemIdKey: string;
   onClick: () => void;
   onFileDrop: (itemId: string, copy: boolean) => void;
+}
+
+interface RootFolderChipProps {
+  label: string;
+  count: number;
+  unit: string;
+  selected: boolean;
+  dragItemType: "question" | "passage" | "exam";
+  dragItemIdKey: string;
+  onClick: () => void;
+  onFileDrop?: (itemId: string, copy: boolean) => void;
+}
+
+function RootFolderChip({
+  label,
+  count,
+  unit,
+  selected,
+  dragItemType,
+  dragItemIdKey,
+  onClick,
+  onFileDrop,
+}: RootFolderChipProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const dropRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = dropRef.current;
+    if (!el || !onFileDrop) return;
+    return dropTargetForElements({
+      element: el,
+      canDrop: ({ source }) => source.data.type === dragItemType,
+      onDragEnter: () => setIsDragOver(true),
+      onDragLeave: () => setIsDragOver(false),
+      onDrop: ({ source }) => {
+        setIsDragOver(false);
+        const itemId = source.data[dragItemIdKey] as string;
+        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
+        onFileDrop(itemId, isCopy);
+      },
+    });
+  }, [dragItemIdKey, dragItemType, onFileDrop]);
+
+  const base =
+    "group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200";
+  const chrome = selected
+    ? "border-blue-400 bg-blue-50 ring-2 ring-blue-200/60 shadow-md"
+    : isDragOver
+      ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
+      : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md";
+
+  return (
+    <div ref={dropRef} onClick={onClick} className={`${base} ${chrome}`}>
+      {selected || isDragOver ? (
+        <FolderOpen
+          className="mb-0.5 size-3 text-blue-600"
+          aria-hidden="true"
+        />
+      ) : (
+        <Folder
+          className="mb-0.5 size-3 text-blue-500"
+          aria-hidden="true"
+        />
+      )}
+      <span
+        className={
+          "max-w-[56px] truncate text-center text-[9.5px] font-bold leading-tight " +
+          (selected ? "text-blue-700" : "text-slate-800")
+        }
+      >
+        {label}
+      </span>
+      <span
+        className={
+          "text-[8.5px] tabular-nums " +
+          (selected ? "text-blue-500" : "text-slate-400")
+        }
+      >
+        {count}
+        {unit}
+      </span>
+    </div>
+  );
+}
+
+function getFolderTimestamp(folder: CollectionItem) {
+  const value = folder.createdAt;
+  if (!value) return 0;
+  const time = value instanceof Date ? value.getTime() : new Date(value).getTime();
+  return Number.isNaN(time) ? 0 : time;
 }
 
 function ParentFolderButton({
@@ -127,14 +247,14 @@ function ParentFolderButton({
       type="button"
       onClick={onClick}
       className={
-        "flex size-[72px] cursor-pointer flex-col items-center justify-center rounded-xl border bg-white text-slate-500 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:text-blue-600 hover:shadow-md " +
+        "flex size-[48px] cursor-pointer flex-col items-center justify-center rounded-lg border bg-white text-slate-500 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:text-blue-600 hover:shadow-md " +
         (isDragOver
           ? "scale-105 border-blue-400 bg-blue-50 text-blue-700 shadow-md ring-2 ring-blue-200/60"
           : "border-slate-200")
       }
     >
-      <CornerUpLeft className="mb-0.5 size-5" aria-hidden="true" />
-      <span className="text-[10.5px] font-semibold">상위</span>
+      <CornerUpLeft className="mb-0.5 size-3.5" aria-hidden="true" />
+      <span className="text-[9.5px] font-semibold">상위</span>
     </button>
   );
 }
@@ -167,6 +287,8 @@ export function FolderSection({
   allFolders,
   storageKey = "default",
   stickyFooter,
+  treatRootAsFolder = false,
+  embedded = false,
 }: FolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
   const useCards = useCardInsideFolder && activeFolder;
@@ -186,7 +308,7 @@ export function FolderSection({
   // ─── Enhanced controls state (only used when enableFolderControls=true) ───
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "date">("name");
+  const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");
 
   const COLUMN_WIDTH_KEY = `smoat:folder-section:${storageKey}:column-widths`;
   const SUB_COLUMN_WIDTH_KEY = `smoat:folder-section:${storageKey}:sub-column-widths`;
@@ -404,8 +526,17 @@ export function FolderSection({
       ? list.filter((c) => c.name.toLowerCase().includes(query))
       : list;
     return [...filtered].sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name, "ko");
-      return b.id.localeCompare(a.id);
+      switch (sortBy) {
+        case "name_desc":
+          return b.name.localeCompare(a.name, "ko");
+        case "newest":
+          return getFolderTimestamp(b) - getFolderTimestamp(a);
+        case "oldest":
+          return getFolderTimestamp(a) - getFolderTimestamp(b);
+        case "name_asc":
+        default:
+          return a.name.localeCompare(b.name, "ko");
+      }
     });
   };
 
@@ -470,17 +601,9 @@ export function FolderSection({
     return map;
   }, [allFolders, childFolders, enableFolderControls]);
 
-  return (
-    <div
-      className="sticky top-0 z-30 -mx-6 px-6 pt-2 pb-2.5"
-      style={{
-        background: "rgba(244, 246, 249, 0.92)",
-        backdropFilter: "blur(16px) saturate(180%)",
-        borderBottom: "1px solid rgba(0,0,0,0.06)",
-      }}
-    >
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-col gap-1.5 border-b border-slate-100 px-4 py-1.5">
+  const inner = (
+    <>
+      <div className="flex flex-col gap-1.5 border-b border-slate-100 px-4 py-1.5">
           {/* Header row: page/folder identity (left) + page-specific filters/actions (right) */}
           <div className="flex items-center gap-3 min-w-0">
             {pageHeader ? (
@@ -488,22 +611,53 @@ export function FolderSection({
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                   {pageHeader.icon}
                 </span>
-                <div className="min-w-0 flex items-center gap-2">
-                  <h3 className="truncate text-[13px] font-bold text-slate-900">
-                    {currentFolder ? currentFolder.name : pageHeader.title}
-                  </h3>
-                  {currentFolder ? (
-                    <span className="shrink-0 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
-                      현재 폴더
+                <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                  {pageHeader.parentLabel ? (
+                    <span className="shrink-0 truncate text-[13px] font-medium text-slate-400">
+                      {pageHeader.parentLabel} ·
                     </span>
                   ) : null}
-                  <span className="shrink-0 text-[11px] font-medium text-slate-400 tabular-nums">
-                    · {pageHeader.itemLabel} {pageHeader.totalCount}
-                    {pageHeader.itemUnit ?? "개"}
-                    {childFolders.length > 0
-                      ? ` · 폴더 ${childFolders.length}개`
-                      : ""}
-                  </span>
+                  {breadcrumbPath.length === 0 ? (
+                    <h3 className="shrink-0 truncate text-[13px] font-bold text-slate-900">
+                      {pageHeader.title}
+                    </h3>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={onNavigateToRoot}
+                        className="shrink-0 cursor-pointer truncate text-[13px] font-medium text-slate-500 transition-colors hover:text-blue-700"
+                        title={`${pageHeader.title}로 이동`}
+                      >
+                        {pageHeader.title}
+                      </button>
+                      {breadcrumbPath.slice(0, -1).map((folder) => (
+                        <span
+                          key={folder.id}
+                          className="flex min-w-0 items-center gap-1"
+                        >
+                          <ChevronRight
+                            className="size-3 shrink-0 text-slate-300"
+                            aria-hidden="true"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => onNavigateToFolder(folder.id)}
+                            className="cursor-pointer truncate text-[13px] font-medium text-slate-500 transition-colors hover:text-blue-700"
+                          >
+                            {folder.name}
+                          </button>
+                        </span>
+                      ))}
+                      <ChevronRight
+                        className="size-3 shrink-0 text-slate-300"
+                        aria-hidden="true"
+                      />
+                      <h3 className="shrink-0 truncate text-[13px] font-bold text-slate-900">
+                        {breadcrumbPath[breadcrumbPath.length - 1].name}
+                      </h3>
+                    </>
+                  )}
                 </div>
               </>
             ) : (
@@ -528,59 +682,92 @@ export function FolderSection({
             )}
 
             {enableFolderControls && !collapsed ? (
-              <div className="flex shrink-0 items-center gap-1.5">
-                <div className="relative">
-                  <Search
-                    className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
-                    aria-hidden="true"
-                  />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="폴더 검색"
-                    className="h-7 w-36 rounded-md border border-slate-200 bg-white pl-7 pr-2 text-[11.5px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:ring-2 focus:ring-blue-500/10"
+              <div className="flex shrink-0 items-center gap-1">
+                <Popover>
+                  <PopoverTrigger
+                    title="정렬"
+                    aria-label="정렬"
+                    className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  >
+                    <ListFilter className="size-3.5 shrink-0" />
+                    {sortBy !== "name_asc" ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                      />
+                    ) : null}
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-52 p-2.5">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-medium text-slate-600">
+                        정렬
+                      </label>
+                      <Select
+                        value={sortBy}
+                        onValueChange={(value) =>
+                          setSortBy(value as FolderSortOrder)
+                        }
+                      >
+                        <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
+                          <ArrowUpDown className="mr-1 size-3 shrink-0" />
+                          <SelectValue placeholder="정렬" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="name_asc">이름 오름차순</SelectItem>
+                          <SelectItem value="name_desc">이름 내림차순</SelectItem>
+                          <SelectItem value="newest">최신순</SelectItem>
+                          <SelectItem value="oldest">오래된순</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <Popover>
+                  <PopoverTrigger
+                    title="폴더 검색"
                     aria-label="폴더 검색"
-                  />
-                  {searchQuery ? (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-                      aria-label="검색 지우기"
-                    >
-                      <X className="size-3" />
-                    </button>
-                  ) : null}
-                </div>
-                <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                  <button
-                    type="button"
-                    onClick={() => setSortBy("name")}
-                    aria-pressed={sortBy === "name"}
-                    className={
-                      "h-7 cursor-pointer px-2 text-[11.5px] font-semibold transition-colors " +
-                      (sortBy === "name"
-                        ? "bg-blue-50 text-blue-700"
-                        : "bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700")
-                    }
+                    className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                   >
-                    이름순
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSortBy("date")}
-                    aria-pressed={sortBy === "date"}
-                    className={
-                      "h-7 cursor-pointer border-l border-slate-200 px-2 text-[11.5px] font-semibold transition-colors " +
-                      (sortBy === "date"
-                        ? "bg-blue-50 text-blue-700"
-                        : "bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700")
-                    }
-                  >
-                    날짜순
-                  </button>
-                </div>
+                    <Search className="size-3.5 shrink-0" />
+                    {searchQuery ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                      />
+                    ) : null}
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-56 p-2.5">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-medium text-slate-600">
+                        폴더 검색
+                      </label>
+                      <div className="relative">
+                        <Search
+                          className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+                          aria-hidden="true"
+                        />
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="폴더 검색"
+                          className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:ring-2 focus:ring-blue-500/10"
+                          aria-label="폴더 검색"
+                        />
+                        {searchQuery ? (
+                          <button
+                            type="button"
+                            onClick={() => setSearchQuery("")}
+                            className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                            aria-label="검색 지우기"
+                          >
+                            <X className="size-3" />
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             ) : null}
 
@@ -661,50 +848,6 @@ export function FolderSection({
           </div>
 
           {contextBar}
-
-          {!collapsed ? <div className="flex min-h-6 min-w-0 items-center gap-1.5 rounded-lg border border-blue-100 bg-blue-50/60 px-2.5 py-1 text-[11px]">
-            <span className="shrink-0 font-semibold text-blue-500">
-              현재 위치
-            </span>
-            <span className="h-3 w-px shrink-0 bg-blue-200" />
-            {currentFolder ? (
-              <button
-                type="button"
-                onClick={onNavigateToRoot}
-                className="shrink-0 cursor-pointer font-medium text-slate-500 hover:text-blue-700"
-              >
-                {rootLabel}
-              </button>
-            ) : (
-              <span className="shrink-0 font-bold text-blue-700">
-                {rootLabel}
-              </span>
-            )}
-            {breadcrumbPath.map((folder, index) => {
-              const isLast = index === breadcrumbPath.length - 1;
-              return (
-                <span
-                  key={folder.id}
-                  className="flex min-w-0 items-center gap-1"
-                >
-                  <ChevronRight className="h-3 w-3 shrink-0 text-blue-300" />
-                  {isLast ? (
-                    <span className="truncate font-bold text-blue-700">
-                      {folder.name}
-                    </span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onNavigateToFolder(folder.id)}
-                      className="truncate cursor-pointer font-medium text-slate-500 hover:text-blue-700"
-                    >
-                      {folder.name}
-                    </button>
-                  )}
-                </span>
-              );
-            })}
-          </div> : null}
         </div>
 
         {!collapsed && (!enableFolderControls || viewMode === "grid") ? (
@@ -717,6 +860,20 @@ export function FolderSection({
             }
           >
             <div className="flex items-center gap-2.5 flex-wrap">
+              {treatRootAsFolder && pageHeader && !currentFolder ? (
+                <RootFolderChip
+                  label={rootLabel}
+                  count={pageHeader.totalCount}
+                  unit={pageHeader.itemUnit ?? "개"}
+                  selected={!currentFolder}
+                  dragItemType={dragItemType}
+                  dragItemIdKey={dragItemIdKey}
+                  onClick={() => {
+                    if (currentFolder) onNavigateToRoot?.();
+                  }}
+                  onFileDrop={onDragToRoot}
+                />
+              ) : null}
               {currentFolder ? (
                 <ParentFolderButton
                   dragItemType={dragItemType}
@@ -806,10 +963,10 @@ export function FolderSection({
               ) : (
                 <button
                   onClick={() => onShowNewFolder(true)}
-                  className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-xl border border-dashed border-blue-200 bg-white text-blue-500 shadow-sm hover:border-blue-300 hover:bg-blue-50/70 transition-all"
+                  className="flex flex-col items-center justify-center w-[48px] h-[48px] rounded-lg border border-dashed border-blue-200 bg-white text-blue-500 shadow-sm hover:border-blue-300 hover:bg-blue-50/70 transition-all"
                 >
-                  <FolderPlus className="w-5 h-5 mb-1" />
-                  <span className="text-[10px] font-semibold">추가</span>
+                  <FolderPlus className="w-3.5 h-3.5 mb-0.5" />
+                  <span className="text-[9.5px] font-semibold">추가</span>
                 </button>
               )}
             </div>
@@ -838,14 +995,18 @@ export function FolderSection({
                       <span className="size-4 shrink-0" aria-hidden="true" />
                       <button
                         type="button"
-                        onClick={() => setSortBy("name")}
-                        aria-pressed={sortBy === "name"}
+                        onClick={() => setSortBy("name_asc")}
+                        aria-pressed={
+                          sortBy === "name_asc" || sortBy === "name_desc"
+                        }
                         className={
                           "min-w-0 flex-1 cursor-pointer truncate text-left transition-colors hover:text-slate-700 " +
-                          (sortBy === "name" ? "text-blue-600" : "")
+                          (sortBy === "name_asc" || sortBy === "name_desc"
+                            ? "text-blue-600"
+                            : "")
                         }
                       >
-                        이름{sortBy === "name" ? " ↓" : ""}
+                        이름
                       </button>
                       <div
                         style={{ width: subColumnWidths.date }}
@@ -853,14 +1014,18 @@ export function FolderSection({
                       >
                         <button
                           type="button"
-                          onClick={() => setSortBy("date")}
-                          aria-pressed={sortBy === "date"}
+                          onClick={() => setSortBy("newest")}
+                          aria-pressed={
+                            sortBy === "newest" || sortBy === "oldest"
+                          }
                           className={
                             "block w-full cursor-pointer truncate text-left transition-colors hover:text-slate-700 " +
-                            (sortBy === "date" ? "text-blue-600" : "")
+                            (sortBy === "newest" || sortBy === "oldest"
+                              ? "text-blue-600"
+                              : "")
                           }
                         >
-                          날짜{sortBy === "date" ? " ↓" : ""}
+                          날짜
                         </button>
                         <div
                           onPointerDown={beginNameDateResize}
@@ -1033,6 +1198,22 @@ export function FolderSection({
             {selectionBar}
           </div>
         ) : null}
+    </>
+  );
+
+  if (embedded) return inner;
+
+  return (
+    <div
+      className="sticky top-0 z-30 -mx-6 px-6 pt-2 pb-2.5"
+      style={{
+        background: "rgba(244, 246, 249, 0.92)",
+        backdropFilter: "blur(16px) saturate(180%)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
+      }}
+    >
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {inner}
       </section>
       {stickyFooter ? <div className="mt-2.5">{stickyFooter}</div> : null}
     </div>

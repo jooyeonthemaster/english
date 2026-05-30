@@ -298,17 +298,19 @@ function buildPage1Header(
     rows: [
       new TableRow({
         children: [
+          // 상단 여백 축소(5차): 미리보기 헤더가 items-start(TOP) 이므로 BOTTOM→TOP 으로
+          // 바꿔 제목/학생정보가 위로 붙게 한다. 하단 셀 마진도 140→60 으로 축소.
           new TableCell({
             borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
-            verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 60, bottom: 140, left: 0, right: 120 },
+            verticalAlign: VerticalAlign.TOP,
+            margins: { top: 0, bottom: 60, left: 0, right: 120 },
             width: { size: 6800, type: WidthType.DXA },
             children: [leftTable],
           }),
           new TableCell({
             borders: { top: NONE, left: NONE, right: NONE, bottom: NONE },
-            verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 60, bottom: 140, left: 120, right: 0 },
+            verticalAlign: VerticalAlign.TOP,
+            margins: { top: 0, bottom: 60, left: 120, right: 0 },
             width: { size: 2900, type: WidthType.DXA },
             children: rightCellChildren,
           }),
@@ -323,7 +325,7 @@ function buildPage1Header(
   if (instructions) {
     result.push(
       new Paragraph({
-        spacing: { before: 120, after: 160 },
+        spacing: { before: 60, after: 120 },
         children: [
           new TextRun({
             text: instructions,
@@ -357,7 +359,7 @@ function buildInfoBlock(opts: {
   const rows = rowsData.map(
     (row) =>
       new TableRow({
-        height: { value: 280, rule: HeightRule.ATLEAST },
+        height: { value: 220, rule: HeightRule.ATLEAST },
         children: [
           new TableCell({
             borders: {
@@ -366,7 +368,7 @@ function buildInfoBlock(opts: {
             },
             width: { size: 30, type: WidthType.PERCENTAGE },
             verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 20, bottom: 40, left: 0, right: 80 },
+            margins: { top: 10, bottom: 30, left: 0, right: 80 },
             children: [
               new Paragraph({
                 spacing: { after: 0 },
@@ -388,7 +390,7 @@ function buildInfoBlock(opts: {
             },
             width: { size: 70, type: WidthType.PERCENTAGE },
             verticalAlign: VerticalAlign.BOTTOM,
-            margins: { top: 20, bottom: 40, left: 0, right: 0 },
+            margins: { top: 10, bottom: 30, left: 0, right: 0 },
             children: [
               new Paragraph({
                 alignment: AlignmentType.RIGHT,
@@ -1190,10 +1192,16 @@ export function buildBuilderExamDocument(opts: {
   const paperSize = layout.paperSize === "B4" ? "B4" : "A4";
   const pageSize = DOCX_PAPER_SIZES[paperSize];
 
-  // 페이지 마진: compact 살짝 작게
-  const margin = compact
-    ? { top: 560, bottom: 720, left: 720, right: 720 }
-    : { top: 720, bottom: 840, left: 900, right: 900 };
+  // 페이지 마진 (5차 — 전체 여백 축소): 미리보기 a4-paper-page.tsx 의 px 패딩을
+  // 가상 A4 스케일(760px=210mm, mm/px=0.276316)로 환산해 미리보기·HWPX 와 일치시킨다.
+  //   comfortable px-[34px] py-[28px] → L/R 9.395mm, T/B 7.737mm.
+  //   compact px-[28px] py-[24px] → L/R 7.737mm, T/B 6.632mm.
+  const MM_PER_PX = 210 / 760; // 0.276316
+  const lrPx = compact ? 28 : 34;
+  const tbPx = compact ? 24 : 28;
+  const lrDxa = mmToDxa(lrPx * MM_PER_PX);
+  const tbDxa = mmToDxa(tbPx * MM_PER_PX);
+  const margin = { top: tbDxa, bottom: tbDxa, left: lrDxa, right: lrDxa };
 
   // ---- Section 1: 1페이지 상단 헤더 (단일 컬럼, 연속 섹션) ----
   const section1Children: DocChild[] = buildPage1Header(header, title, compact);

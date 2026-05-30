@@ -4,18 +4,25 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import {
-  Loader2,
-  X,
-} from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
-import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
+import {
+  QuestionCard,
+  type QuestionCardItem,
+} from "@/components/workbench/question-card";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { getCustomPrompts } from "@/actions/custom-prompts";
-import { approveWorkbenchQuestion, bulkApproveWorkbenchQuestions } from "@/actions/workbench";
+import {
+  addPassagesToCollection,
+  approveWorkbenchQuestion,
+  bulkApproveWorkbenchQuestions,
+  bulkDeleteWorkbenchPassages,
+  removePassagesFromCollection,
+} from "@/actions/workbench";
 import {
   type PassageItem,
+  type PassageCollectionItem,
   type FilterOptions,
   type PassageAnalysisStatusFilter,
 } from "./generate-page-types";
@@ -34,6 +41,7 @@ import {
 } from "@/lib/question-type-generation-settings";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
+import { WorkspaceShell } from "./workspace-shell";
 
 // ─── Component ───────────────────────────────────────────
 
@@ -63,7 +71,10 @@ export function GeneratePageClient({
       } catch {
         decoded = raw;
       }
-      const parts = decoded.split(",").map((s) => s.trim()).filter(Boolean);
+      const parts = decoded
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
       // Dedupe while preserving order, cap at 100.
       const seen = new Set<string>();
       const out: string[] = [];
@@ -74,42 +85,56 @@ export function GeneratePageClient({
         if (out.length >= 100) break;
       }
       return out;
-    })()
+    })(),
   );
   const initialModeRef = useRef<"auto" | "manual">(
     searchParams.get("mode") === "auto"
       ? "auto"
       : searchParams.get("mode") === "manual"
         ? "manual"
-        : defaultMode
+        : defaultMode,
   );
   const prefillAppliedRef = useRef(false);
 
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
-  const [filterOptions, setFilterOptions] = useState<FilterOptions>({ schools: [], grades: [], semesters: [], publishers: [] });
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+    schools: [],
+    grades: [],
+    semesters: [],
+    publishers: [],
+  });
   const [loadingPassages, setLoadingPassages] = useState(true);
 
   // ── Collections ──
-  const [collections, setCollections] = useState<{ id: string; name: string; _count: { items: number } }[]>([]);
+  const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
+  const [passageBulkAction, setPassageBulkAction] = useState<
+    "move" | "delete" | null
+  >(null);
 
   // ── Search/filter state ──
   const [passageSearch, setPassageSearch] = useState("");
   const [filterSchool, setFilterSchool] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterSemester, setFilterSemester] = useState("");
-  const [analysisStatusFilter, setAnalysisStatusFilter] = useState<PassageAnalysisStatusFilter>("all");
+  const [analysisStatusFilter, setAnalysisStatusFilter] =
+    useState<PassageAnalysisStatusFilter>("all");
   const [showFilters, setShowFilters] = useState(false);
 
   // ── Selected passage ──
-  const [selectedPassage, setSelectedPassage] = useState<PassageItem | null>(null);
+  const [selectedPassage, setSelectedPassage] = useState<PassageItem | null>(
+    null,
+  );
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
 
   // ── Mode: auto vs manual (seeded from ?mode= URL param) ──
-  const [genMode, setGenMode] = useState<"auto" | "manual">(initialModeRef.current);
-  const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>("STANDARD");
+  const [genMode, setGenMode] = useState<"auto" | "manual">(
+    initialModeRef.current,
+  );
+  const [generationPlan, setGenerationPlan] =
+    useState<QuestionGenerationPlan>("STANDARD");
 
   // ── Auto mode config ──
   const [autoCount, setAutoCount] = useState(1);
@@ -117,12 +142,18 @@ export function GeneratePageClient({
   // ── Manual mode config ──
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
   const [questionTypeSettings, setQuestionTypeSettings] =
-    useState<QuestionTypeGenerationSettings>(() => getDefaultQuestionTypeGenerationSettings());
-  const [difficulty, setDifficulty] = useState<"BASIC" | "INTERMEDIATE" | "KILLER">("INTERMEDIATE");
+    useState<QuestionTypeGenerationSettings>(() =>
+      getDefaultQuestionTypeGenerationSettings(),
+    );
+  const [difficulty, setDifficulty] = useState<
+    "BASIC" | "INTERMEDIATE" | "KILLER"
+  >("INTERMEDIATE");
   const [customPrompt, setCustomPrompt] = useState("");
 
   // ── Saved prompts ──
-  const [savedPrompts, setSavedPrompts] = useState<{ id: string; name: string; content: string }[]>([]);
+  const [savedPrompts, setSavedPrompts] = useState<
+    { id: string; name: string; content: string }[]
+  >([]);
   const [showSavedPrompts, setShowSavedPrompts] = useState(false);
   const [savingPrompt, setSavingPrompt] = useState(false);
   const [savePromptName, setSavePromptName] = useState("");
@@ -139,7 +170,7 @@ export function GeneratePageClient({
 
   // ── Checkbox multi-select (seeded from ?passageIds= URL param) ──
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
-    () => new Set(initialPassageIdsRef.current)
+    () => new Set(initialPassageIdsRef.current),
   );
 
   // ── IRRELEVANT stepper context ──
@@ -149,11 +180,12 @@ export function GeneratePageClient({
   // With multiple selected passages, use the shortest passage so one setting is
   // safe for every target.
   const irrelevantPassageContext = useMemo(() => {
-    const targets = selectedIds.size > 0
-      ? passages.filter((p) => selectedIds.has(p.id))
-      : selectedPassage
-        ? [selectedPassage]
-        : [];
+    const targets =
+      selectedIds.size > 0
+        ? passages.filter((p) => selectedIds.has(p.id))
+        : selectedPassage
+          ? [selectedPassage]
+          : [];
     if (targets.length === 0) return null;
     let min = Number.POSITIVE_INFINITY;
     let max = 0;
@@ -197,69 +229,227 @@ export function GeneratePageClient({
   const [loadingSavedQuestions, setLoadingSavedQuestions] = useState(true);
 
   // ── Question detail modal ──
-  const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(null);
+  const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
+    null,
+  );
   const editor = useQuestionEditor((deletedId) => {
     setSavedQuestions((prev) => prev.filter((q) => q.id !== deletedId));
     setDetailQuestion((prev) => (prev?.id === deletedId ? null : prev));
   });
 
   // ── Computed ──
-  const totalQuestions = useMemo(() => Object.values(typeCounts).reduce((a, b) => a + b, 0), [typeCounts]);
-  const activeTypes = useMemo(() => Object.keys(typeCounts).filter((k) => typeCounts[k] > 0), [typeCounts]);
+  const totalQuestions = useMemo(
+    () => Object.values(typeCounts).reduce((a, b) => a + b, 0),
+    [typeCounts],
+  );
+  const activeTypes = useMemo(
+    () => Object.keys(typeCounts).filter((k) => typeCounts[k] > 0),
+    [typeCounts],
+  );
 
   const filteredPassages = useMemo(() => {
     return passages.filter((p) => {
       if (passageSearch) {
         const q = passageSearch.toLowerCase();
-        if (!p.title.toLowerCase().includes(q) && !p.content.toLowerCase().includes(q)) return false;
+        if (
+          !p.title.toLowerCase().includes(q) &&
+          !p.content.toLowerCase().includes(q)
+        )
+          return false;
       }
       if (filterSchool && p.school?.id !== filterSchool) return false;
       if (filterGrade && p.grade !== Number(filterGrade)) return false;
       if (filterSemester && p.semester !== filterSemester) return false;
       if (analysisStatusFilter === "analyzed" && !p.analysis) return false;
       if (analysisStatusFilter === "unanalyzed" && p.analysis) return false;
-      if (selectedCollectionId && !p.collectionItems?.some(ci => ci.collectionId === selectedCollectionId)) return false;
+      if (
+        selectedCollectionId &&
+        !p.collectionItems?.some(
+          (ci) => ci.collectionId === selectedCollectionId,
+        )
+      )
+        return false;
       return true;
     });
-  }, [passages, passageSearch, filterSchool, filterGrade, filterSemester, analysisStatusFilter, selectedCollectionId]);
+  }, [
+    passages,
+    passageSearch,
+    filterSchool,
+    filterGrade,
+    filterSemester,
+    analysisStatusFilter,
+    selectedCollectionId,
+  ]);
 
-  const passageStatusCounts = useMemo(() => ({
-    all: passages.length,
-    analyzed: passages.filter((p) => !!p.analysis).length,
-    unanalyzed: passages.filter((p) => !p.analysis).length,
-  }), [passages]);
+  const passageStatusCounts = useMemo(
+    () => ({
+      all: passages.length,
+      analyzed: passages.filter((p) => !!p.analysis).length,
+      unanalyzed: passages.filter((p) => !p.analysis).length,
+    }),
+    [passages],
+  );
 
   const filteredQueue = useMemo(() => {
     if (queueFilter === "all") return sessionQueue;
-    if (queueFilter === "error") return sessionQueue.filter((q) => q.status === "error");
+    if (queueFilter === "error")
+      return sessionQueue.filter((q) => q.status === "error");
     return sessionQueue;
   }, [sessionQueue, queueFilter]);
 
-  const reviewItem = useMemo(() => sessionQueue.find((q) => q.id === reviewModalId) || null, [sessionQueue, reviewModalId]);
+  const reviewItem = useMemo(
+    () => sessionQueue.find((q) => q.id === reviewModalId) || null,
+    [sessionQueue, reviewModalId],
+  );
 
-  const queueCounts = useMemo(() => ({
-    generating: sessionQueue.filter((q) => q.status === "generating").length,
-    done: sessionQueue.filter((q) => q.status === "done" || q.status === "reviewed").length,
-    error: sessionQueue.filter((q) => q.status === "error").length,
-  }), [sessionQueue]);
+  const queueCounts = useMemo(
+    () => ({
+      generating: sessionQueue.filter((q) => q.status === "generating").length,
+      done: sessionQueue.filter(
+        (q) => q.status === "done" || q.status === "reviewed",
+      ).length,
+      error: sessionQueue.filter((q) => q.status === "error").length,
+    }),
+    [sessionQueue],
+  );
 
   const activeFilterCount =
     [filterSchool, filterGrade, filterSemester].filter(Boolean).length +
     (analysisStatusFilter === "all" ? 0 : 1);
 
   // ── Load passages ──
-  useEffect(() => {
+  const loadPassages = useCallback(async () => {
     setLoadingPassages(true);
-    fetch(`/api/passages/list?academyId=${academyId}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setPassages(data.passages || []);
-        if (data.filters) setFilterOptions(data.filters);
-        if (data.collections) setCollections(data.collections);
-      })
-      .catch(() => {})
-      .finally(() => setLoadingPassages(false));
+    try {
+      const response = await fetch(`/api/passages/list?academyId=${academyId}`);
+      const data = await response.json();
+      setPassages(data.passages || []);
+      if (data.filters) setFilterOptions(data.filters);
+      if (data.collections) setCollections(data.collections);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoadingPassages(false);
+    }
   }, [academyId]);
+
+  useEffect(() => {
+    void loadPassages();
+  }, [loadPassages]);
+
+  const handleCopySelectedPassagesToCollection = useCallback(
+    async (collectionId: string) => {
+      const ids = [...selectedIds];
+      if (ids.length === 0 || passageBulkAction) return;
+      setPassageBulkAction("move");
+      try {
+        const result = await addPassagesToCollection(collectionId, ids);
+        if (!result.success) {
+          toast.error(result.error || "폴더에 복사하지 못했습니다.");
+          return;
+        }
+        toast.success(`${ids.length}개 지문을 폴더에 복사했습니다.`);
+        setSelectedIds(new Set());
+        await loadPassages();
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "폴더에 복사하지 못했습니다.",
+        );
+      } finally {
+        setPassageBulkAction(null);
+      }
+    },
+    [loadPassages, passageBulkAction, selectedIds],
+  );
+
+  const handleMoveSelectedPassagesToCollection = useCallback(
+    async (collectionId: string) => {
+      const ids = [...selectedIds];
+      if (ids.length === 0 || passageBulkAction) return;
+      setPassageBulkAction("move");
+      try {
+        const selectedPassages = passages.filter((passage) =>
+          selectedIds.has(passage.id),
+        );
+        const sourceCollectionIds = Array.from(
+          new Set(
+            selectedPassages.flatMap((passage) =>
+              (passage.collectionItems ?? [])
+                .map((item) => item.collectionId)
+                .filter((id) => id !== collectionId),
+            ),
+          ),
+        );
+        const removeResults = await Promise.all(
+          sourceCollectionIds.map((sourceId) =>
+            removePassagesFromCollection(sourceId, ids),
+          ),
+        );
+        const failedRemove = removeResults.find((result) => !result.success);
+        if (failedRemove) {
+          toast.error(
+            failedRemove.error || "폴더 이동 중 일부 제거에 실패했습니다.",
+          );
+          return;
+        }
+
+        const addResult = await addPassagesToCollection(collectionId, ids);
+        if (!addResult.success) {
+          toast.error(addResult.error || "폴더로 이동하지 못했습니다.");
+          return;
+        }
+
+        toast.success(`${ids.length}개 지문을 이동했습니다.`);
+        setSelectedIds(new Set());
+        await loadPassages();
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "폴더로 이동하지 못했습니다.",
+        );
+      } finally {
+        setPassageBulkAction(null);
+      }
+    },
+    [loadPassages, passageBulkAction, passages, selectedIds],
+  );
+
+  const handleDeleteSelectedPassages = useCallback(async () => {
+    const ids = [...selectedIds];
+    if (ids.length === 0 || passageBulkAction) return;
+    if (!window.confirm(`${ids.length}개 지문을 삭제하시겠습니까?`)) return;
+
+    setPassageBulkAction("delete");
+    try {
+      const result = await bulkDeleteWorkbenchPassages(ids);
+      if (!result.success) {
+        toast.error(result.error || "삭제에 실패했습니다.");
+        return;
+      }
+      if (result.deleted === 0) {
+        toast.error("삭제된 지문이 없습니다.");
+      } else if (result.deleted === result.requested) {
+        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
+      } else {
+        toast.warning(
+          `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+        );
+      }
+
+      setPassages((prev) =>
+        prev.filter((passage) => !ids.includes(passage.id)),
+      );
+      setSelectedIds(new Set());
+      if (selectedPassage && ids.includes(selectedPassage.id)) {
+        setSelectedPassage(null);
+        setAnalysisData(null);
+      }
+      await loadPassages();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
+    } finally {
+      setPassageBulkAction(null);
+    }
+  }, [loadPassages, passageBulkAction, selectedIds, selectedPassage]);
 
   // ── Apply deep-link pre-selection once passages are loaded ──
   // Runs once — filters the incoming ?passageIds= against the academy-scoped
@@ -281,7 +471,7 @@ export function GeneratePageClient({
       toast.success(
         validIds.length === ids.length
           ? `지문 ${validIds.length}개를 불러왔습니다.`
-          : `지문 ${validIds.length}/${ids.length}개를 불러왔습니다.`
+          : `지문 ${validIds.length}/${ids.length}개를 불러왔습니다.`,
       );
     }
     prefillAppliedRef.current = true;
@@ -291,12 +481,19 @@ export function GeneratePageClient({
   const loadSavedQuestions = useCallback(async () => {
     try {
       const { getWorkbenchQuestions } = await import("@/actions/workbench");
-      const result = await getWorkbenchQuestions(academyId, { page: 1, limit: 100, aiGenerated: true });
+      const result = await getWorkbenchQuestions(academyId, {
+        page: 1,
+        limit: 100,
+        aiGenerated: true,
+      });
       if (result?.questions) {
         setSavedQuestions(result.questions as QuestionCardItem[]);
       }
-    } catch { /* ignore */ }
-    finally { setLoadingSavedQuestions(false); }
+    } catch {
+      /* ignore */
+    } finally {
+      setLoadingSavedQuestions(false);
+    }
   }, [academyId]);
   useEffect(() => {
     if (loadingPassages) return;
@@ -329,18 +526,26 @@ export function GeneratePageClient({
   // ── Load saved prompts ──
   const loadSavedPrompts = useCallback(async () => {
     const prompts = await getCustomPrompts("QUESTION_GENERATION");
-    setSavedPrompts(prompts.map((p) => ({ id: p.id, name: p.name, content: p.content })));
+    setSavedPrompts(
+      prompts.map((p) => ({ id: p.id, name: p.name, content: p.content })),
+    );
   }, []);
-  useEffect(() => { loadSavedPrompts(); }, [loadSavedPrompts]);
+  useEffect(() => {
+    loadSavedPrompts();
+  }, [loadSavedPrompts]);
 
   // ── Parse analysis from passage data (already loaded with list) ──
   useEffect(() => {
-    if (!selectedPassage) { setAnalysisData(null); return; }
+    if (!selectedPassage) {
+      setAnalysisData(null);
+      return;
+    }
     if (selectedPassage.analysis?.analysisData) {
       try {
-        const parsed = typeof selectedPassage.analysis.analysisData === "string"
-          ? JSON.parse(selectedPassage.analysis.analysisData)
-          : selectedPassage.analysis.analysisData;
+        const parsed =
+          typeof selectedPassage.analysis.analysisData === "string"
+            ? JSON.parse(selectedPassage.analysis.analysisData)
+            : selectedPassage.analysis.analysisData;
         setAnalysisData(parsed);
       } catch {
         setAnalysisData(null);
@@ -366,21 +571,24 @@ export function GeneratePageClient({
   }, []);
 
   // ── Checkbox toggle ──
-  const toggleCheckbox = useCallback((id: string, e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      // If exactly 1 selected, also set as selectedPassage
-      if (next.size === 1) {
-        const selectedId = Array.from(next)[0];
-        const p = passages.find((pp) => pp.id === selectedId);
-        if (p) setSelectedPassage(p);
-      }
-      return next;
-    });
-  }, [passages]);
+  const toggleCheckbox = useCallback(
+    (id: string, e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        // If exactly 1 selected, also set as selectedPassage
+        if (next.size === 1) {
+          const selectedId = Array.from(next)[0];
+          const p = passages.find((pp) => pp.id === selectedId);
+          if (p) setSelectedPassage(p);
+        }
+        return next;
+      });
+    },
+    [passages],
+  );
 
   const selectAll = useCallback(() => {
     setSelectedIds(new Set(filteredPassages.map((p) => p.id)));
@@ -408,189 +616,221 @@ export function GeneratePageClient({
     }
   }, []);
 
-  const applyApprovalState = useCallback((approvedIds: string[]) => {
-    if (approvedIds.length === 0) return;
-    const set = new Set(approvedIds);
-    setSavedQuestions((prev) =>
-      prev.map((q) => (set.has(q.id) ? { ...q, approved: true } : q)),
-    );
-    setSessionQueue((prev) =>
-      prev.map((item) => {
-        if (!item.questionIds?.some((id) => id && set.has(id))) return item;
-        const questions = item.questions.map((q, qi) => {
-          const id = item.questionIds?.[qi];
-          return id && set.has(id) ? { ...q, approved: true } : q;
-        });
-        return {
-          ...item,
-          questions,
-          status: questions.every((q) => q.approved) ? "reviewed" : item.status,
-        };
-      }),
-    );
-  }, [setSessionQueue]);
+  const applyApprovalState = useCallback(
+    (approvedIds: string[]) => {
+      if (approvedIds.length === 0) return;
+      const set = new Set(approvedIds);
+      setSavedQuestions((prev) =>
+        prev.map((q) => (set.has(q.id) ? { ...q, approved: true } : q)),
+      );
+      setSessionQueue((prev) =>
+        prev.map((item) => {
+          if (!item.questionIds?.some((id) => id && set.has(id))) return item;
+          const questions = item.questions.map((q, qi) => {
+            const id = item.questionIds?.[qi];
+            return id && set.has(id) ? { ...q, approved: true } : q;
+          });
+          return {
+            ...item,
+            questions,
+            status: questions.every((q) => q.approved)
+              ? "reviewed"
+              : item.status,
+          };
+        }),
+      );
+    },
+    [setSessionQueue],
+  );
 
-  const handleApproveQuestion = useCallback(async (questionId: string) => {
-    const result = await approveWorkbenchQuestion(questionId);
-    if (!result.success) {
-      toast.error(result.error || "검수완료 처리에 실패했습니다.");
-      return;
-    }
-    applyApprovalState([questionId]);
-    toast.success("검수완료 처리됐습니다.");
-    loadSavedQuestions();
-  }, [loadSavedQuestions, applyApprovalState]);
-
-  const handleBatchApproveQuestions = useCallback(async (questionIds: string[]) => {
-    if (questionIds.length === 0) return;
-    const result = await bulkApproveWorkbenchQuestions(questionIds);
-    if (result.success && result.approvedIds.length > 0) {
-      const failed = Math.max(0, result.requested - result.approved);
-      applyApprovalState(result.approvedIds);
-      toast.success(`${result.approved}개 문제가 검수완료 처리됐습니다.${failed > 0 ? ` (${failed}개 건너뜀)` : ""}`);
+  const handleApproveQuestion = useCallback(
+    async (questionId: string) => {
+      const result = await approveWorkbenchQuestion(questionId);
+      if (!result.success) {
+        toast.error(result.error || "검수완료 처리에 실패했습니다.");
+        return;
+      }
+      applyApprovalState([questionId]);
+      toast.success("검수완료 처리됐습니다.");
       loadSavedQuestions();
-    } else if (!result.success) {
-      toast.error(result.error || "일괄 검수완료 처리에 실패했습니다.");
-    }
-  }, [applyApprovalState, loadSavedQuestions]);
+    },
+    [loadSavedQuestions, applyApprovalState],
+  );
+
+  const handleBatchApproveQuestions = useCallback(
+    async (questionIds: string[]) => {
+      if (questionIds.length === 0) return;
+      const result = await bulkApproveWorkbenchQuestions(questionIds);
+      if (result.success && result.approvedIds.length > 0) {
+        const failed = Math.max(0, result.requested - result.approved);
+        applyApprovalState(result.approvedIds);
+        toast.success(
+          `${result.approved}개 문제가 검수완료 처리됐습니다.${failed > 0 ? ` (${failed}개 건너뜀)` : ""}`,
+        );
+        loadSavedQuestions();
+      } else if (!result.success) {
+        toast.error(result.error || "일괄 검수완료 처리에 실패했습니다.");
+      }
+    },
+    [applyApprovalState, loadSavedQuestions],
+  );
 
   // ── Generation handlers (extracted to hook) ──
-  const { handleBatchGenerate, handleGenerate, handleSaveQuestions } = useGenerationHandlers({
-    passages,
-    selectedIds,
-    setSelectedIds,
-    genMode,
-    generationPlan,
-    typeCounts,
-    activeTypes,
-    difficulty,
-    customPrompt,
-    questionTypeSettings,
-    autoCount,
-    selectedPassage,
-    analysisData,
-    totalQuestions,
-    setSessionQueue,
-    reviewItem,
-    setReviewModalId,
-    loadSavedQuestions,
-  });
+  const { handleBatchGenerate, handleGenerate, handleSaveQuestions } =
+    useGenerationHandlers({
+      passages,
+      selectedIds,
+      setSelectedIds,
+      genMode,
+      generationPlan,
+      typeCounts,
+      activeTypes,
+      difficulty,
+      customPrompt,
+      questionTypeSettings,
+      autoCount,
+      selectedPassage,
+      analysisData,
+      totalQuestions,
+      setSessionQueue,
+      reviewItem,
+      setReviewModalId,
+      loadSavedQuestions,
+    });
 
   // ── Can generate? ──
-  const canGenerate = selectedIds.size > 0 && (genMode === "auto" ? autoCount > 0 : totalQuestions > 0);
+  const canGenerate =
+    selectedIds.size > 0 &&
+    (genMode === "auto" ? autoCount > 0 : totalQuestions > 0);
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50">
-      {/* ─── Main ─── */}
-      <div className="flex flex-col">
-        <div className="shrink-0 border-b border-slate-200/80 bg-white px-5 py-3">
-          <WorkflowPageTitle
-            icon={QuestionGenerationIcon}
-            title="문제 생성"
-            description="분석된 지문을 선택하고 유형과 난이도를 설정해 문제를 생성합니다."
+    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <main className="flex w-full min-w-0 flex-col gap-4">
+        {/* ═══ TOP SECTION: 지문 관리(좌) + 문제생성 작업대(우) ═══ */}
+        <WorkspaceShell
+          leftLabel="지문"
+          header={
+            <WorkflowPageTitle
+              icon={QuestionGenerationIcon}
+              title="문제 생성"
+              description="분석된 지문을 선택하고 유형과 난이도를 설정해 문제를 생성합니다."
+            />
+          }
+          left={
+            /* ═══ LEFT PANEL: Passage cards ═══ */
+            <PassageCardGrid
+              passages={passages}
+              filteredPassages={filteredPassages}
+              filterOptions={filterOptions}
+              collections={collections}
+              loadingPassages={loadingPassages}
+              passageSearch={passageSearch}
+              setPassageSearch={setPassageSearch}
+              filterSchool={filterSchool}
+              setFilterSchool={setFilterSchool}
+              filterGrade={filterGrade}
+              setFilterGrade={setFilterGrade}
+              filterSemester={filterSemester}
+              setFilterSemester={setFilterSemester}
+              analysisStatusFilter={analysisStatusFilter}
+              setAnalysisStatusFilter={setAnalysisStatusFilter}
+              passageStatusCounts={passageStatusCounts}
+              showFilters={showFilters}
+              setShowFilters={setShowFilters}
+              activeFilterCount={activeFilterCount}
+              selectedCollectionId={selectedCollectionId}
+              setSelectedCollectionId={setSelectedCollectionId}
+              selectedIds={selectedIds}
+              toggleCheckbox={toggleCheckbox}
+              selectAll={selectAll}
+              deselectAll={deselectAll}
+              onCopySelectedToCollection={
+                handleCopySelectedPassagesToCollection
+              }
+              onMoveSelectedToCollection={
+                handleMoveSelectedPassagesToCollection
+              }
+              onDeleteSelectedPassages={handleDeleteSelectedPassages}
+              passageBulkAction={passageBulkAction}
+              genMode={genMode}
+              totalQuestions={totalQuestions}
+              handleBatchGenerate={handleBatchGenerate}
+              handleOpenAnalysisModal={handleOpenAnalysisModal}
+            />
+          }
+          right={
+            /* ═══ RIGHT PANEL: Generation settings ═══ */
+            <GenerationConfigPanel
+              genMode={genMode}
+              setGenMode={setGenMode}
+              generationPlan={generationPlan}
+              setGenerationPlan={setGenerationPlan}
+              autoCount={autoCount}
+              setAutoCount={setAutoCount}
+              typeCounts={typeCounts}
+              setTypeCount={setTypeCount}
+              setTypeCounts={setTypeCounts}
+              questionTypeSettings={questionTypeSettings}
+              setQuestionTypeSettings={setQuestionTypeSettings}
+              totalQuestions={totalQuestions}
+              difficulty={difficulty}
+              setDifficulty={setDifficulty}
+              customPrompt={customPrompt}
+              setCustomPrompt={setCustomPrompt}
+              savedPrompts={savedPrompts}
+              showSavedPrompts={showSavedPrompts}
+              setShowSavedPrompts={setShowSavedPrompts}
+              showSaveInput={showSaveInput}
+              setShowSaveInput={setShowSaveInput}
+              savePromptName={savePromptName}
+              setSavePromptName={setSavePromptName}
+              savingPrompt={savingPrompt}
+              setSavingPrompt={setSavingPrompt}
+              editingPromptId={editingPromptId}
+              setEditingPromptId={setEditingPromptId}
+              editingName={editingName}
+              setEditingName={setEditingName}
+              loadSavedPrompts={loadSavedPrompts}
+              canGenerate={canGenerate}
+              selectedIds={selectedIds}
+              handleBatchGenerate={handleBatchGenerate}
+              maxIrrelevantSlotCount={maxIrrelevantSlotCount}
+              irrelevantPassageSentenceCount={irrelevantPassageSentenceCount}
+              irrelevantLimitPassageTitle={
+                irrelevantPassageContext?.title ?? null
+              }
+              irrelevantLimitSelectedCount={
+                irrelevantPassageContext?.selectedCount ?? 0
+              }
+              irrelevantLongestPassageSentenceCount={
+                irrelevantPassageContext?.longestSentenceCount ?? null
+              }
+              irrelevantLongestPassageTitle={
+                irrelevantPassageContext?.longestTitle ?? null
+              }
+            />
+          }
+        />
+
+        {/* ═══ BOTTOM SECTION: 생성된 문제 (최신순) ═══ */}
+        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <BottomQueueSection
+            sessionQueue={sessionQueue}
+            filteredQueue={filteredQueue}
+            queueFilter={queueFilter}
+            setQueueFilter={setQueueFilter}
+            queueCounts={queueCounts}
+            autoCount={autoCount}
+            savedQuestions={savedQuestions}
+            loadingSavedQuestions={loadingSavedQuestions}
+            setDetailQuestion={setDetailQuestion}
+            onApproveQuestion={handleApproveQuestion}
+            onBatchApproveQuestions={handleBatchApproveQuestions}
+            onEditQuestion={editor.openEditor}
           />
-        </div>
-
-      {/* ═══ TOP SECTION: 지문 카드 + 설정 (가로 2패널, 고정 높이) ═══ */}
-      <div className="flex flex-col lg:flex-row bg-white lg:h-[550px] xl:h-[600px] w-full">
-
-        {/* ═══ LEFT PANEL: Passage cards ═══ */}
-        <PassageCardGrid
-          passages={passages}
-          filteredPassages={filteredPassages}
-          filterOptions={filterOptions}
-          collections={collections}
-          loadingPassages={loadingPassages}
-          passageSearch={passageSearch}
-          setPassageSearch={setPassageSearch}
-          filterSchool={filterSchool}
-          setFilterSchool={setFilterSchool}
-          filterGrade={filterGrade}
-          setFilterGrade={setFilterGrade}
-          filterSemester={filterSemester}
-          setFilterSemester={setFilterSemester}
-          analysisStatusFilter={analysisStatusFilter}
-          setAnalysisStatusFilter={setAnalysisStatusFilter}
-          passageStatusCounts={passageStatusCounts}
-          showFilters={showFilters}
-          setShowFilters={setShowFilters}
-          activeFilterCount={activeFilterCount}
-          selectedCollectionId={selectedCollectionId}
-          setSelectedCollectionId={setSelectedCollectionId}
-          selectedIds={selectedIds}
-          toggleCheckbox={toggleCheckbox}
-          selectAll={selectAll}
-          deselectAll={deselectAll}
-          genMode={genMode}
-          totalQuestions={totalQuestions}
-          handleBatchGenerate={handleBatchGenerate}
-          handleOpenAnalysisModal={handleOpenAnalysisModal}
-        />
-
-        {/* ═══ RIGHT PANEL: Generation settings ═══ */}
-        <GenerationConfigPanel
-          genMode={genMode}
-          setGenMode={setGenMode}
-          generationPlan={generationPlan}
-          setGenerationPlan={setGenerationPlan}
-          autoCount={autoCount}
-          setAutoCount={setAutoCount}
-          typeCounts={typeCounts}
-          setTypeCount={setTypeCount}
-          setTypeCounts={setTypeCounts}
-          questionTypeSettings={questionTypeSettings}
-          setQuestionTypeSettings={setQuestionTypeSettings}
-          totalQuestions={totalQuestions}
-          difficulty={difficulty}
-          setDifficulty={setDifficulty}
-          customPrompt={customPrompt}
-          setCustomPrompt={setCustomPrompt}
-          savedPrompts={savedPrompts}
-          showSavedPrompts={showSavedPrompts}
-          setShowSavedPrompts={setShowSavedPrompts}
-          showSaveInput={showSaveInput}
-          setShowSaveInput={setShowSaveInput}
-          savePromptName={savePromptName}
-          setSavePromptName={setSavePromptName}
-          savingPrompt={savingPrompt}
-          setSavingPrompt={setSavingPrompt}
-          editingPromptId={editingPromptId}
-          setEditingPromptId={setEditingPromptId}
-          editingName={editingName}
-          setEditingName={setEditingName}
-          loadSavedPrompts={loadSavedPrompts}
-          canGenerate={canGenerate}
-          selectedIds={selectedIds}
-          handleBatchGenerate={handleBatchGenerate}
-          maxIrrelevantSlotCount={maxIrrelevantSlotCount}
-          irrelevantPassageSentenceCount={irrelevantPassageSentenceCount}
-          irrelevantLimitPassageTitle={irrelevantPassageContext?.title ?? null}
-          irrelevantLimitSelectedCount={irrelevantPassageContext?.selectedCount ?? 0}
-          irrelevantLongestPassageSentenceCount={irrelevantPassageContext?.longestSentenceCount ?? null}
-          irrelevantLongestPassageTitle={irrelevantPassageContext?.longestTitle ?? null}
-        />
-      </div>
-
-      {/* ═══ Divider ═══ */}
-      <div className="h-3 bg-[#E8EAEE] shrink-0 border-y border-slate-200/60" />
-
-      {/* ═══ BOTTOM SECTION: 생성 중 + DB 저장된 문제 ═══ */}
-      <BottomQueueSection
-        sessionQueue={sessionQueue}
-        filteredQueue={filteredQueue}
-        queueFilter={queueFilter}
-        setQueueFilter={setQueueFilter}
-        queueCounts={queueCounts}
-        autoCount={autoCount}
-        savedQuestions={savedQuestions}
-        loadingSavedQuestions={loadingSavedQuestions}
-        setDetailQuestion={setDetailQuestion}
-        onApproveQuestion={handleApproveQuestion}
-        onBatchApproveQuestions={handleBatchApproveQuestions}
-        onEditQuestion={editor.openEditor}
-      />
-
-      </div>{/* end vertical split */}
+        </section>
+      </main>
+      {/* end vertical stack */}
 
       {/* ─── Review Modal ─── */}
       {reviewItem && (
@@ -629,12 +869,20 @@ export function GeneratePageClient({
       {/* ─── Question Detail Modal ─── */}
       {detailQuestion && (
         <div className="fixed inset-0 z-50 flex items-stretch justify-center">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => setDetailQuestion(null)} />
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+            onClick={() => setDetailQuestion(null)}
+          />
           <div className="relative z-10 w-full max-w-[1200px] mx-4 my-4 bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 shrink-0">
-              <h2 className="text-[15px] font-bold text-slate-800">문제 상세</h2>
-              <button onClick={() => setDetailQuestion(null)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100">
+              <h2 className="text-[15px] font-bold text-slate-800">
+                문제 상세
+              </h2>
+              <button
+                onClick={() => setDetailQuestion(null)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100"
+              >
                 <X className="w-4 h-4 text-slate-400" />
               </button>
             </div>
@@ -647,15 +895,25 @@ export function GeneratePageClient({
                     <InteractivePassageView
                       content={detailQuestion.passage.content}
                       analysisData={(() => {
-                        const p = passages.find(pp => pp.id === detailQuestion.passage?.id);
+                        const p = passages.find(
+                          (pp) => pp.id === detailQuestion.passage?.id,
+                        );
                         if (!p?.analysis?.analysisData) return null;
-                        try { return typeof p.analysis.analysisData === "string" ? JSON.parse(p.analysis.analysisData) : p.analysis.analysisData; } catch { return null; }
+                        try {
+                          return typeof p.analysis.analysisData === "string"
+                            ? JSON.parse(p.analysis.analysisData)
+                            : p.analysis.analysisData;
+                        } catch {
+                          return null;
+                        }
                       })()}
                       layout="vertical"
                     />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-slate-400 text-sm">지문 없음</div>
+                  <div className="flex items-center justify-center h-full text-slate-400 text-sm">
+                    지문 없음
+                  </div>
                 )}
               </div>
               {/* Right: Question */}
@@ -692,9 +950,9 @@ export function GeneratePageClient({
           passage={analysisModalPassage}
           initialAnalysis={
             analysisModalPassage.analysis?.analysisData
-              ? (typeof analysisModalPassage.analysis.analysisData === "string"
+              ? typeof analysisModalPassage.analysis.analysisData === "string"
                 ? JSON.parse(analysisModalPassage.analysis.analysisData)
-                : analysisModalPassage.analysis.analysisData)
+                : analysisModalPassage.analysis.analysisData
               : null
           }
         />
@@ -705,7 +963,9 @@ export function GeneratePageClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
           <div className="bg-white rounded-xl px-6 py-4 shadow-xl flex items-center gap-3">
             <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
-            <span className="text-[13px] text-slate-700 font-medium">지문 분석 데이터 로딩 중...</span>
+            <span className="text-[13px] text-slate-700 font-medium">
+              지문 분석 데이터 로딩 중...
+            </span>
           </div>
         </div>
       )}

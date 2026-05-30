@@ -35,7 +35,7 @@ function labelPara(label: string): ParagraphNode {
   };
 }
 
-function bodyParas(content: string, font?: "kr" | "latin"): ParagraphNode[] {
+function bodyParas(content: string): ParagraphNode[] {
   const lines = content.split("\n");
   return lines.map<ParagraphNode>((line, idx) => {
     const trimmed = line.trim();

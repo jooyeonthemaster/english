@@ -10,7 +10,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { GripVertical } from "lucide-react";
+import { ChevronRight, GripVertical, PanelLeftClose } from "lucide-react";
 import { toast } from "sonner";
 import type {
   BuilderQuestion,
@@ -67,14 +67,26 @@ const PREVIEW_PAGE_GAP = 20;
 const PANEL_WIDTH_STORAGE_KEY = "smoat.examPaperBuilder.panelWidths.v1";
 const RIGHT_PANEL_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.rightPanelCollapsed.v1";
-const PANEL_HANDLE_WIDTH = 8;
-const RIGHT_PANEL_COLLAPSED_WIDTH = 48;
+const LEFT_PANEL_COLLAPSED_STORAGE_KEY =
+  "smoat.examPaperBuilder.leftPanelCollapsed.v1";
+// 패널 여닫기/폭 조절 겸용 세로 핸들의 컬럼 폭(버튼 w-4 + 좌우 mx-1).
+const PANEL_TOGGLE_HANDLE_WIDTH = 24;
+// 핸들 클릭(여닫기)과 드래그(폭 조절)를 구분하는 이동 임계값(px).
+const PANEL_DRAG_THRESHOLD = 4;
 const PANEL_MIN_CENTER = 420;
 const PANEL_DEFAULT_WIDTHS = { left: 400, right: 320 };
 const PANEL_LIMITS = {
   left: { min: 280, max: 560 },
   right: { min: 260, max: 440 },
 };
+// 미리보기 페이지 썸네일(세로 목록) 패널.
+const THUMBNAILS_WIDTH_STORAGE_KEY =
+  "smoat.examPaperBuilder.thumbnailsWidth.v1";
+const THUMBNAILS_COLLAPSED_STORAGE_KEY =
+  "smoat.examPaperBuilder.thumbnailsCollapsed.v1";
+const THUMBNAILS_WIDTH_DEFAULT = 96;
+const THUMBNAILS_WIDTH_MIN = 64;
+const THUMBNAILS_WIDTH_MAX = 240;
 
 type PanelWidths = typeof PANEL_DEFAULT_WIDTHS;
 type PanelResizeSide = "left" | "right";
@@ -92,7 +104,10 @@ function clampNumber(value: number, min: number, max: number) {
 function sanitizeStoredPanelWidths(input: unknown): PanelWidths | null {
   if (!input || typeof input !== "object") return null;
   const candidate = input as Partial<Record<keyof PanelWidths, unknown>>;
-  if (typeof candidate.left !== "number" || typeof candidate.right !== "number") {
+  if (
+    typeof candidate.left !== "number" ||
+    typeof candidate.right !== "number"
+  ) {
     return null;
   }
   return {
@@ -115,13 +130,48 @@ function readStoredPanelWidths(): PanelWidths {
 
 function readStoredRightPanelCollapsed(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(RIGHT_PANEL_COLLAPSED_STORAGE_KEY) === "true";
+  return (
+    window.localStorage.getItem(RIGHT_PANEL_COLLAPSED_STORAGE_KEY) === "true"
+  );
 }
 
-function clampPanelWidths(widths: PanelWidths, containerWidth: number): PanelWidths {
+function readStoredLeftPanelCollapsed(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.localStorage.getItem(LEFT_PANEL_COLLAPSED_STORAGE_KEY) === "true"
+  );
+}
+
+function clampThumbnailsWidth(width: number): number {
+  return Math.min(
+    THUMBNAILS_WIDTH_MAX,
+    Math.max(THUMBNAILS_WIDTH_MIN, Math.round(width)),
+  );
+}
+
+function readStoredThumbnailsWidth(): number {
+  if (typeof window === "undefined") return THUMBNAILS_WIDTH_DEFAULT;
+  const stored = Number(
+    window.localStorage.getItem(THUMBNAILS_WIDTH_STORAGE_KEY),
+  );
+  if (!Number.isFinite(stored) || stored <= 0) return THUMBNAILS_WIDTH_DEFAULT;
+  return clampThumbnailsWidth(stored);
+}
+
+function readStoredThumbnailsCollapsed(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.localStorage.getItem(THUMBNAILS_COLLAPSED_STORAGE_KEY) === "true"
+  );
+}
+
+function clampPanelWidths(
+  widths: PanelWidths,
+  containerWidth: number,
+): PanelWidths {
   const availableWidth = Math.max(
     0,
-    containerWidth - PANEL_HANDLE_WIDTH * 2,
+    containerWidth - PANEL_TOGGLE_HANDLE_WIDTH * 2,
   );
   const maxSideWidth = Math.max(0, availableWidth - PANEL_MIN_CENTER);
 
@@ -172,13 +222,11 @@ function getQuestionDropInsertion(
     return { targetLocalId: null, targetPartKey: null, placement: "after" };
   }
 
-  let best:
-    | {
-        element: HTMLElement;
-        rect: DOMRect;
-        score: number;
-      }
-    | null = null;
+  let best: {
+    element: HTMLElement;
+    rect: DOMRect;
+    score: number;
+  } | null = null;
 
   for (const element of itemElements) {
     const rect = element.getBoundingClientRect();
@@ -208,48 +256,14 @@ function getQuestionDropInsertion(
   }
 
   const targetLocalId = best.element.dataset.paperItemId || null;
-  const placement = clientY < best.rect.top + best.rect.height / 2 ? "before" : "after";
+  const placement =
+    clientY < best.rect.top + best.rect.height / 2 ? "before" : "after";
   const targetPartKey = resolveDropIndicatorPartKey(
     scroller,
     targetLocalId,
     placement,
   );
   return { targetLocalId, targetPartKey, placement };
-}
-
-function PanelResizeHandle({
-  side,
-  disabled = false,
-  onPointerDown,
-}: {
-  side: PanelResizeSide;
-  disabled?: boolean;
-  onPointerDown: (
-    event: ReactPointerEvent<HTMLButtonElement>,
-    side: PanelResizeSide,
-  ) => void;
-}) {
-  const label = side === "left" ? "문제은행 패널 폭 조절" : "편집 패널 폭 조절";
-
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      tabIndex={disabled ? -1 : 0}
-      aria-hidden={disabled}
-      disabled={disabled}
-      onPointerDown={(event) => onPointerDown(event, side)}
-      className={cn(
-        "no-print hidden h-full min-h-0 cursor-col-resize touch-none items-center justify-center border-x border-slate-200 bg-slate-50 text-slate-300 transition-colors hover:bg-blue-50 hover:text-blue-500 active:bg-blue-100 lg:flex",
-        disabled
-          ? "w-0 cursor-default overflow-hidden border-0 p-0 opacity-0"
-          : "w-2",
-      )}
-    >
-      <GripVertical className="h-4 w-4" />
-    </button>
-  );
 }
 
 function PageThumbnails({
@@ -272,6 +286,8 @@ function PageThumbnails({
   schoolName,
   className,
   examDate,
+  width,
+  onClose,
   onSelectPage,
 }: {
   paperPages: PaperPage[];
@@ -293,18 +309,40 @@ function PageThumbnails({
   schoolName: string;
   className: string;
   examDate: string;
+  width: number;
+  onClose: () => void;
   onSelectPage: (pageIndex: number) => void;
 }) {
   const pageCount = paperPages.length;
   if (pageCount <= 0) return null;
-  const thumbnailWidth = 56;
+  // 썸네일 폭은 패널 폭에 맞춰 비례 조절(좌우 여백·스크롤바 분량 차감).
+  const thumbnailWidth = Math.max(28, width - 40);
   const paperSpec = PAPER_SIZE_SPECS[paperSize];
-  const previewPageWidth = Math.round(PREVIEW_PAGE_WIDTH * paperSpec.widthRatio);
+  const previewPageWidth = Math.round(
+    PREVIEW_PAGE_WIDTH * paperSpec.widthRatio,
+  );
   const thumbnailScale = thumbnailWidth / previewPageWidth;
 
   return (
-    <div className="no-print hidden w-[96px] shrink-0 overflow-y-auto border-r border-slate-200 bg-white/80 px-2 py-3 lg:block">
-      <div className="space-y-2">
+    <div
+      style={{ width }}
+      className="no-print hidden shrink-0 flex-col border-r border-slate-200 bg-white/80 lg:flex"
+    >
+      <div className="flex shrink-0 items-center justify-between gap-1 border-b border-slate-200 px-2 py-1.5">
+        <span className="truncate text-[10px] font-black uppercase tracking-wider text-slate-400">
+          페이지
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          title="페이지 목록 닫기"
+          aria-label="페이지 목록 닫기"
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+        >
+          <PanelLeftClose className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-2 py-3">
         {paperPages.map((pageColumns, pageIndex) => (
           <button
             key={pageIndex}
@@ -393,6 +431,8 @@ export function ExamPaperBuilderClient({
 }: ExamPaperBuilderClientProps) {
   const [isPending, startTransition] = useTransition();
   const builderGridRef = useRef<HTMLDivElement>(null);
+  // 핸들을 드래그(폭 조절)한 직후 발생하는 click이 패널을 토글하지 않도록 막는 플래그.
+  const suppressHandleClickRef = useRef(false);
 
   const [savedExamId, setSavedExamId] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -403,7 +443,9 @@ export function ExamPaperBuilderClient({
   const [selectedSubTypes, setSelectedSubTypes] = useState<string[]>([]);
   const [approvedOnly, setApprovedOnly] = useState(false);
   const [starredOnly, setStarredOnly] = useState(false);
-  const [detailQuestion, setDetailQuestion] = useState<BuilderQuestion | null>(null);
+  const [detailQuestion, setDetailQuestion] = useState<BuilderQuestion | null>(
+    null,
+  );
   const [paperSize, setPaperSize] = useState<PaperSize>("A4");
   const {
     scrollerRef: previewScrollerRef,
@@ -416,11 +458,15 @@ export function ExamPaperBuilderClient({
     handleControlsDragStart: handlePreviewZoomControlsDragStart,
   } = usePreviewZoom(paperSize);
 
-  const [title, setTitle] = useState(`새 시험지 ${formatDateInput(new Date())}`);
+  const [title, setTitle] = useState(
+    `새 시험지 ${formatDateInput(new Date())}`,
+  );
   const [subtitle, setSubtitle] = useState("영어 내신 대비");
   const [instructions, setInstructions] = useState(DEFAULT_INSTRUCTIONS);
   const [studentNameLabel, setStudentNameLabel] = useState("이름");
-  const [academyLogoDataUrl, setAcademyLogoDataUrl] = useState<string | null>(null);
+  const [academyLogoDataUrl, setAcademyLogoDataUrl] = useState<string | null>(
+    null,
+  );
   const [examDate] = useState("");
   const [classId] = useState("");
   const [schoolId] = useState("");
@@ -460,16 +506,30 @@ export function ExamPaperBuilderClient({
     moveItemToDropTarget,
     ungroupItem,
     regroupByPassage,
+    shuffleQuestions,
   } = usePaperItems(markDirty);
   const [questionDropActive, setQuestionDropActive] = useState(false);
   const [draggingItemId, setDraggingItemId] = useState<string | null>(null);
   const [dragOverItemId, setDragOverItemId] = useState<string | null>(null);
   const [dragOverPartKey, setDragOverPartKey] = useState<string | null>(null);
-  const [dragPlacement, setDragPlacement] = useState<"before" | "after">("before");
+  const [dragPlacement, setDragPlacement] = useState<"before" | "after">(
+    "before",
+  );
   const [activePageIndex, setActivePageIndex] = useState(0);
-  const [panelWidths, setPanelWidths] = useState<PanelWidths>(readStoredPanelWidths);
+  const [panelWidths, setPanelWidths] = useState<PanelWidths>(
+    readStoredPanelWidths,
+  );
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(
     readStoredRightPanelCollapsed,
+  );
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(
+    readStoredLeftPanelCollapsed,
+  );
+  const [thumbnailsWidth, setThumbnailsWidth] = useState(
+    readStoredThumbnailsWidth,
+  );
+  const [thumbnailsCollapsed, setThumbnailsCollapsed] = useState(
+    readStoredThumbnailsCollapsed,
   );
 
   const questionById = useMemo(
@@ -491,11 +551,20 @@ export function ExamPaperBuilderClient({
   const filteredQuestions = useMemo(() => {
     const query = search.trim().toLowerCase();
     return questions.filter((question) => {
-      if (selectedCollectionId && !question.collectionItems.some((item) => item.collectionId === selectedCollectionId)) {
+      if (
+        selectedCollectionId &&
+        !question.collectionItems.some(
+          (item) => item.collectionId === selectedCollectionId,
+        )
+      ) {
         return false;
       }
-      if (difficulty !== "ALL" && question.difficulty !== difficulty) return false;
-      if (selectedSubTypes.length > 0 && !selectedSubTypes.includes(question.subType || "")) {
+      if (difficulty !== "ALL" && question.difficulty !== difficulty)
+        return false;
+      if (
+        selectedSubTypes.length > 0 &&
+        !selectedSubTypes.includes(question.subType || "")
+      ) {
         return false;
       }
       if (approvedOnly && !question.approved) return false;
@@ -509,12 +578,22 @@ export function ExamPaperBuilderClient({
           question.passage?.content || "",
           tags,
           SUBTYPE_LABELS[question.subType || ""] || "",
-        ].join(" ").toLowerCase();
+        ]
+          .join(" ")
+          .toLowerCase();
         if (!haystack.includes(query)) return false;
       }
       return true;
     });
-  }, [questions, search, selectedCollectionId, difficulty, selectedSubTypes, approvedOnly, starredOnly]);
+  }, [
+    questions,
+    search,
+    selectedCollectionId,
+    difficulty,
+    selectedSubTypes,
+    approvedOnly,
+    starredOnly,
+  ]);
 
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
   const paginationSettings = useMemo<PaginationSettings>(
@@ -528,7 +607,16 @@ export function ExamPaperBuilderClient({
       showQuestionMeta,
       template,
     }),
-    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
+    [
+      paperSize,
+      columns,
+      density,
+      passageStyle,
+      showAnswerSpace,
+      showPassageTitle,
+      showQuestionMeta,
+      template,
+    ],
   );
   const paginationResult = useMemo(
     () => paginateGroups(paperGroups, paginationSettings),
@@ -538,14 +626,15 @@ export function ExamPaperBuilderClient({
   const overflowItemIds = paginationResult.overflowItems;
   const previewContentHeight =
     paperPages.length > 0
-      ? paperPages.length * previewBaseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio +
+      ? paperPages.length *
+          previewBaseWidth *
+          PAPER_SIZE_SPECS[paperSize].heightRatio +
         (paperPages.length - 1) * PREVIEW_PAGE_GAP
       : 0;
-  const rightHandleWidth = rightPanelCollapsed ? 0 : PANEL_HANDLE_WIDTH;
-  const rightColumnWidth = rightPanelCollapsed
-    ? RIGHT_PANEL_COLLAPSED_WIDTH
-    : panelWidths.right;
-  const builderGridColumns = `${panelWidths.left}px ${PANEL_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr) ${rightHandleWidth}px ${rightColumnWidth}px`;
+  // 토글 핸들은 접힘 여부와 무관하게 항상 표시한다.
+  const leftColumnWidth = leftPanelCollapsed ? 0 : panelWidths.left;
+  const rightColumnWidth = rightPanelCollapsed ? 0 : panelWidths.right;
+  const builderGridColumns = `${leftColumnWidth}px ${PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr) ${PANEL_TOGGLE_HANDLE_WIDTH}px ${rightColumnWidth}px`;
 
   useEffect(() => {
     const element = previewScrollerRef.current;
@@ -557,14 +646,22 @@ export function ExamPaperBuilderClient({
       onDragEnter: ({ location }) => {
         setQuestionDropActive(true);
         const input = location.current.input;
-        const insertion = getQuestionDropInsertion(element, input.clientX, input.clientY);
+        const insertion = getQuestionDropInsertion(
+          element,
+          input.clientX,
+          input.clientY,
+        );
         setDragOverItemId(insertion.targetLocalId);
         setDragOverPartKey(insertion.targetPartKey);
         setDragPlacement(insertion.placement);
       },
       onDrag: ({ location }) => {
         const input = location.current.input;
-        const insertion = getQuestionDropInsertion(element, input.clientX, input.clientY);
+        const insertion = getQuestionDropInsertion(
+          element,
+          input.clientX,
+          input.clientY,
+        );
         setDragOverItemId(insertion.targetLocalId);
         setDragOverPartKey(insertion.targetPartKey);
         setDragPlacement(insertion.placement);
@@ -587,7 +684,11 @@ export function ExamPaperBuilderClient({
           return;
         }
         const input = location.current.input;
-        const insertion = getQuestionDropInsertion(element, input.clientX, input.clientY);
+        const insertion = getQuestionDropInsertion(
+          element,
+          input.clientX,
+          input.clientY,
+        );
         addQuestionAtDropTarget(
           question,
           insertion.targetLocalId,
@@ -612,7 +713,9 @@ export function ExamPaperBuilderClient({
       let bestDistance = Number.POSITIVE_INFINITY;
       pageFrames.forEach((frame) => {
         const pageIndex = Number(frame.dataset.examPageIndex || 0);
-        const distance = Math.abs(frame.getBoundingClientRect().top - scrollerTop - 20);
+        const distance = Math.abs(
+          frame.getBoundingClientRect().top - scrollerTop - 20,
+        );
         if (distance < bestDistance) {
           bestDistance = distance;
           bestIndex = pageIndex;
@@ -649,6 +752,39 @@ export function ExamPaperBuilderClient({
   }, [rightPanelCollapsed]);
 
   useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        LEFT_PANEL_COLLAPSED_STORAGE_KEY,
+        String(leftPanelCollapsed),
+      );
+    } catch {
+      // Ignore storage failures; the drawer still works for the current session.
+    }
+  }, [leftPanelCollapsed]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        THUMBNAILS_WIDTH_STORAGE_KEY,
+        String(thumbnailsWidth),
+      );
+    } catch {
+      // Thumbnail width is a convenience preference.
+    }
+  }, [thumbnailsWidth]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        THUMBNAILS_COLLAPSED_STORAGE_KEY,
+        String(thumbnailsCollapsed),
+      );
+    } catch {
+      // Ignore storage failures; the list still works for the current session.
+    }
+  }, [thumbnailsCollapsed]);
+
+  useEffect(() => {
     const element = builderGridRef.current;
     if (!element) return;
 
@@ -664,21 +800,81 @@ export function ExamPaperBuilderClient({
     return () => observer.disconnect();
   }, []);
 
-  function handlePanelResizeStart(
+  // 핸들 클릭: 패널 여닫기 토글. 직전에 드래그(폭 조절)한 경우엔 토글하지 않는다.
+  function togglePanelCollapsed(side: PanelResizeSide) {
+    if (suppressHandleClickRef.current) {
+      suppressHandleClickRef.current = false;
+      return;
+    }
+    if (side === "left") {
+      setLeftPanelCollapsed((collapsed) => !collapsed);
+    } else {
+      setRightPanelCollapsed((collapsed) => !collapsed);
+    }
+  }
+
+  // 핸들 드래그: 임계값을 넘겨 움직이면 폭을 조절한다(열려 있을 때만 사용).
+  function handlePanelResizePointerDown(
     event: ReactPointerEvent<HTMLButtonElement>,
     side: PanelResizeSide,
   ) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
+    // 새 상호작용을 시작하므로 직전 드래그의 잔여 플래그를 초기화한다.
+    suppressHandleClickRef.current = false;
+
     const container = builderGridRef.current;
-    if (!container) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
     const startX = event.clientX;
     const startWidths = panelWidths;
-    const containerWidth = container.getBoundingClientRect().width;
+    const containerWidth = container?.getBoundingClientRect().width ?? 0;
+    const previousCursor = document.body.style.cursor;
+    const previousUserSelect = document.body.style.userSelect;
+    let didDrag = false;
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      if (!didDrag) {
+        if (Math.abs(deltaX) < PANEL_DRAG_THRESHOLD) return;
+        didDrag = true;
+        // 드래그가 시작됐으니 이어지는 click의 토글을 막는다.
+        suppressHandleClickRef.current = true;
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+      }
+      moveEvent.preventDefault();
+      const nextWidths =
+        side === "left"
+          ? { ...startWidths, left: startWidths.left + deltaX }
+          : { ...startWidths, right: startWidths.right - deltaX };
+      setPanelWidths(clampPanelWidths(nextWidths, containerWidth));
+    };
+
+    const finish = () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", finish);
+      if (didDrag) {
+        document.body.style.cursor = previousCursor;
+        document.body.style.userSelect = previousUserSelect;
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: false,
+    });
+    window.addEventListener("pointerup", finish, { once: true });
+    window.addEventListener("pointercancel", finish, { once: true });
+  }
+
+  // 페이지 썸네일 드래그바: 좌우로 끌어 패널(썸네일) 폭을 조절한다.
+  function handleThumbnailsResizePointerDown(
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = thumbnailsWidth;
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
 
@@ -687,26 +883,22 @@ export function ExamPaperBuilderClient({
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       moveEvent.preventDefault();
-      const deltaX = moveEvent.clientX - startX;
-      const nextWidths =
-        side === "left"
-          ? { ...startWidths, left: startWidths.left + deltaX }
-          : { ...startWidths, right: startWidths.right - deltaX };
-
-      setPanelWidths(clampPanelWidths(nextWidths, containerWidth));
+      setThumbnailsWidth(clampThumbnailsWidth(startWidth + moveEvent.clientX - startX));
     };
 
-    const finishResize = () => {
+    const finish = () => {
       window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", finishResize);
-      window.removeEventListener("pointercancel", finishResize);
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", finish);
       document.body.style.cursor = previousCursor;
       document.body.style.userSelect = previousUserSelect;
     };
 
-    window.addEventListener("pointermove", handlePointerMove, { passive: false });
-    window.addEventListener("pointerup", finishResize, { once: true });
-    window.addEventListener("pointercancel", finishResize, { once: true });
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: false,
+    });
+    window.addEventListener("pointerup", finish, { once: true });
+    window.addEventListener("pointercancel", finish, { once: true });
   }
 
   function markDirty() {
@@ -717,8 +909,10 @@ export function ExamPaperBuilderClient({
     if (patch.title !== undefined) setTitle(patch.title);
     if (patch.subtitle !== undefined) setSubtitle(patch.subtitle);
     if (patch.instructions !== undefined) setInstructions(patch.instructions);
-    if (patch.studentNameLabel !== undefined) setStudentNameLabel(patch.studentNameLabel);
-    if (patch.academyLogoDataUrl !== undefined) setAcademyLogoDataUrl(patch.academyLogoDataUrl);
+    if (patch.studentNameLabel !== undefined)
+      setStudentNameLabel(patch.studentNameLabel);
+    if (patch.academyLogoDataUrl !== undefined)
+      setAcademyLogoDataUrl(patch.academyLogoDataUrl);
     markDirty();
   }
 
@@ -802,8 +996,8 @@ export function ExamPaperBuilderClient({
   function triggerDocxDownload(examId: string, withAnswers: boolean) {
     const link = document.createElement("a");
     link.href = withAnswers
-      ? `/api/exams/${examId}/export-docx?answers=true`
-      : `/api/exams/${examId}/export-docx`;
+      ? `/api/exams/${examId}/export-docx?answers=true&t=${Date.now()}`
+      : `/api/exams/${examId}/export-docx?t=${Date.now()}`;
     link.download = "";
     document.body.appendChild(link);
     link.click();
@@ -829,8 +1023,8 @@ export function ExamPaperBuilderClient({
   function triggerHwpxDownload(examId: string, withAnswers: boolean) {
     const link = document.createElement("a");
     link.href = withAnswers
-      ? `/api/exams/${examId}/export-hwpx?answers=true`
-      : `/api/exams/${examId}/export-hwpx`;
+      ? `/api/exams/${examId}/export-hwpx?answers=true&t=${Date.now()}`
+      : `/api/exams/${examId}/export-hwpx?t=${Date.now()}`;
     link.download = "";
     document.body.appendChild(link);
     link.click();
@@ -894,7 +1088,10 @@ export function ExamPaperBuilderClient({
   );
 
   return (
-    <div id="exam-builder-shell" className="flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#F4F6F9] md:-m-6">
+    <div
+      id="exam-builder-shell"
+      className="flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-[#F4F6F9] md:-m-6"
+    >
       <div className="no-print shrink-0 border-b border-slate-200/80 bg-white px-5 py-3">
         <WorkflowPageTitle
           icon={ExamPaperGenerationIcon}
@@ -911,33 +1108,64 @@ export function ExamPaperBuilderClient({
           } as CSSProperties
         }
       >
-        <QuestionLibraryPanel
-          paperItemsCount={questionItemsCount}
-          filteredQuestions={filteredQuestions}
-          selectedQuestionIds={selectedQuestionIds}
-          collections={collections}
-          search={search}
-          setSearch={setSearch}
-          showFilters={showFilters}
-          setShowFilters={setShowFilters}
-          selectedSubTypes={selectedSubTypes}
-          setSelectedSubTypes={setSelectedSubTypes}
-          difficulty={difficulty}
-          setDifficulty={setDifficulty}
-          approvedOnly={approvedOnly}
-          setApprovedOnly={setApprovedOnly}
-          starredOnly={starredOnly}
-          setStarredOnly={setStarredOnly}
-          selectedCollectionId={selectedCollectionId}
-          setSelectedCollectionId={setSelectedCollectionId}
-          onToggleQuestion={toggleQuestion}
-          onSelectAllFiltered={() => selectAllFiltered(filteredQuestions)}
-          onRegroupByPassage={regroupByPassage}
-          onClearPaper={clearPaper}
-          onShowDetail={setDetailQuestion}
-        />
+        {leftPanelCollapsed ? (
+          // 접혀도 그리드 1번 컬럼 자리를 채워 나머지 컬럼이 밀리지 않게 한다.
+          <div aria-hidden className="min-w-0 overflow-hidden" />
+        ) : (
+          <QuestionLibraryPanel
+            paperItemsCount={questionItemsCount}
+            filteredQuestions={filteredQuestions}
+            selectedQuestionIds={selectedQuestionIds}
+            collections={collections}
+            search={search}
+            setSearch={setSearch}
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            selectedSubTypes={selectedSubTypes}
+            setSelectedSubTypes={setSelectedSubTypes}
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+            approvedOnly={approvedOnly}
+            setApprovedOnly={setApprovedOnly}
+            starredOnly={starredOnly}
+            setStarredOnly={setStarredOnly}
+            selectedCollectionId={selectedCollectionId}
+            setSelectedCollectionId={setSelectedCollectionId}
+            onToggleQuestion={toggleQuestion}
+            onSelectAllFiltered={() => selectAllFiltered(filteredQuestions)}
+            onRegroupByPassage={regroupByPassage}
+            onClearPaper={clearPaper}
+            onShowDetail={setDetailQuestion}
+          />
+        )}
 
-        <PanelResizeHandle side="left" onPointerDown={handlePanelResizeStart} />
+        {leftPanelCollapsed ? (
+          <button
+            type="button"
+            onClick={() => setLeftPanelCollapsed(false)}
+            title="문제관리 패널 열기"
+            aria-label="문제관리 패널 열기"
+            aria-expanded={false}
+            className="no-print mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+          >
+            <span>{">"}</span>
+            <span style={{ writingMode: "vertical-rl" }}>문제관리</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            onPointerDown={(event) => handlePanelResizePointerDown(event, "left")}
+            onClick={() => togglePanelCollapsed("left")}
+            title="드래그하여 폭 조절 · 클릭하여 닫기"
+            aria-label="문제관리 패널 닫기"
+            aria-expanded
+            className="group/lhandle no-print mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+          >
+            <span>{"<"}</span>
+            <span style={{ writingMode: "vertical-rl" }}>문제관리</span>
+            <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
+          </button>
+        )}
 
         <section className="flex min-w-0 flex-col overflow-hidden bg-slate-100/70">
           <PreviewToolbar
@@ -946,6 +1174,10 @@ export function ExamPaperBuilderClient({
             dirty={dirty}
             isPending={isPending}
             paperItemsCount={questionItemsCount}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onUndo={undo}
+            onRedo={redo}
             onPrint={handlePrint}
             onDownloadDocx={handleDownloadDocx}
             onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
@@ -982,28 +1214,61 @@ export function ExamPaperBuilderClient({
               </div>
             )}
             <div className="flex h-full min-h-0">
-              <PageThumbnails
-                paperPages={paperPages}
-                overflowItemIds={overflowItemIds}
-                activePageIndex={activePageIndex}
-                title={title}
-                subtitle={subtitle}
-                instructions={instructions}
-                studentNameLabel={studentNameLabel}
-                academyLogoDataUrl={academyLogoDataUrl}
-                paperSize={paperSize}
-                template={template}
-                columns={columns}
-                density={density}
-                passageStyle={passageStyle}
-                showAnswerSpace={showAnswerSpace}
-                showPassageTitle={showPassageTitle}
-                showQuestionMeta={showQuestionMeta}
-                schoolName={schools.find((school) => school.id === schoolId)?.name || ""}
-                className={classes.find((cls) => cls.id === classId)?.name || ""}
-                examDate={examDate}
-                onSelectPage={handleSelectPage}
-              />
+              {paperPages.length > 0 &&
+                (thumbnailsCollapsed ? (
+                  <button
+                    type="button"
+                    onClick={() => setThumbnailsCollapsed(false)}
+                    title="페이지 목록 열기"
+                    aria-label="페이지 목록 열기"
+                    aria-expanded={false}
+                    className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-r border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600 lg:flex"
+                  >
+                    <ChevronRight className="h-3.5 w-3.5" />
+                    <span style={{ writingMode: "vertical-rl" }}>페이지</span>
+                  </button>
+                ) : (
+                  <>
+                    <PageThumbnails
+                      paperPages={paperPages}
+                      overflowItemIds={overflowItemIds}
+                      activePageIndex={activePageIndex}
+                      title={title}
+                      subtitle={subtitle}
+                      instructions={instructions}
+                      studentNameLabel={studentNameLabel}
+                      academyLogoDataUrl={academyLogoDataUrl}
+                      paperSize={paperSize}
+                      template={template}
+                      columns={columns}
+                      density={density}
+                      passageStyle={passageStyle}
+                      showAnswerSpace={showAnswerSpace}
+                      showPassageTitle={showPassageTitle}
+                      showQuestionMeta={showQuestionMeta}
+                      schoolName={
+                        schools.find((school) => school.id === schoolId)?.name || ""
+                      }
+                      className={
+                        classes.find((cls) => cls.id === classId)?.name || ""
+                      }
+                      examDate={examDate}
+                      width={thumbnailsWidth}
+                      onClose={() => setThumbnailsCollapsed(true)}
+                      onSelectPage={handleSelectPage}
+                    />
+                    <div
+                      role="separator"
+                      aria-orientation="vertical"
+                      aria-label="페이지 목록 폭 조절"
+                      title="드래그하여 페이지 목록 폭 조절"
+                      onPointerDown={handleThumbnailsResizePointerDown}
+                      className="no-print hidden h-full min-h-0 w-2 shrink-0 cursor-col-resize touch-none items-center justify-center border-r border-slate-200 bg-slate-50 text-slate-300 transition-colors hover:bg-blue-50 hover:text-blue-500 active:bg-blue-100 lg:flex"
+                    >
+                      <GripVertical className="h-4 w-4" />
+                    </div>
+                  </>
+                ))}
               <div
                 id="exam-paper-print-root"
                 ref={previewScrollerRef}
@@ -1065,40 +1330,65 @@ export function ExamPaperBuilderClient({
               </div>
             </div>
           </div>
-
         </section>
 
-        <PanelResizeHandle
-          side="right"
-          disabled={rightPanelCollapsed}
-          onPointerDown={handlePanelResizeStart}
-        />
+        {rightPanelCollapsed ? (
+          <button
+            type="button"
+            onClick={() => setRightPanelCollapsed(false)}
+            title="편집 패널 열기"
+            aria-label="편집 패널 열기"
+            aria-expanded={false}
+            className="no-print mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+          >
+            <span>{"<"}</span>
+            <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            onPointerDown={(event) => handlePanelResizePointerDown(event, "right")}
+            onClick={() => togglePanelCollapsed("right")}
+            title="드래그하여 폭 조절 · 클릭하여 닫기"
+            aria-label="편집 패널 닫기"
+            aria-expanded
+            className="group/ehandle no-print mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+          >
+            <span>{">"}</span>
+            <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+            <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/ehandle:opacity-70" />
+          </button>
+        )}
 
-        <BuilderPropertiesPanel
-          activeItem={activeItem}
-          paperItemsCount={paperItems.length}
-          totalPoints={totalPoints}
-          templateControls={templateSettingsPanel}
-          collapsed={rightPanelCollapsed}
-          canUndo={canUndo}
-          canRedo={canRedo}
-          onCollapsedChange={setRightPanelCollapsed}
-          onUndo={undo}
-          onRedo={redo}
-          onInsertBlock={insertBlock}
-          onUploadImageBlock={insertImageBlock}
-          onDuplicateItem={duplicateItem}
-          onToggleLockItem={toggleLockItem}
-          onUpdateItem={updateItem}
-          onToggleKeepWithPrev={tryToggleKeepWithPrev}
-          onUngroupItem={ungroupItem}
-          onRegroupByPassage={regroupByPassage}
-          onRemoveItem={removeItem}
-        />
+        {!rightPanelCollapsed && (
+          <BuilderPropertiesPanel
+            activeItem={activeItem}
+            paperItemsCount={paperItems.length}
+            totalPoints={totalPoints}
+            templateControls={templateSettingsPanel}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onUndo={undo}
+            onRedo={redo}
+            onInsertBlock={insertBlock}
+            onUploadImageBlock={insertImageBlock}
+            onDuplicateItem={duplicateItem}
+            onToggleLockItem={toggleLockItem}
+            onUpdateItem={updateItem}
+            onToggleKeepWithPrev={tryToggleKeepWithPrev}
+            onUngroupItem={ungroupItem}
+            onRegroupByPassage={regroupByPassage}
+            onShuffleQuestions={shuffleQuestions}
+            onRemoveItem={removeItem}
+          />
+        )}
       </div>
 
       {detailQuestion && (
-        <QuestionDetailModal question={detailQuestion} onClose={() => setDetailQuestion(null)} />
+        <QuestionDetailModal
+          question={detailQuestion}
+          onClose={() => setDetailQuestion(null)}
+        />
       )}
 
       <PrintStyles paperSize={paperSize} />

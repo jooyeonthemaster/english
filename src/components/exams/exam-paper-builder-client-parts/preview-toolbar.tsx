@@ -9,7 +9,9 @@ import {
   FileType2,
   Loader2,
   Printer,
+  Redo2,
   Save,
+  Undo2,
 } from "lucide-react";
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperSize, PaperTemplate } from "../paper-builder/types";
@@ -24,6 +26,10 @@ interface PreviewToolbarProps {
   dirty: boolean;
   isPending: boolean;
   paperItemsCount: number;
+  canUndo?: boolean;
+  canRedo?: boolean;
+  onUndo?: () => void;
+  onRedo?: () => void;
   onPrint: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
@@ -38,6 +44,10 @@ export function PreviewToolbar({
   dirty,
   isPending,
   paperItemsCount,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
   onPrint,
   onDownloadDocx,
   onDownloadDocxWithAnswers,
@@ -87,6 +97,28 @@ export function PreviewToolbar({
           <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
             저장 필요
           </span>
+        )}
+        {onUndo && (
+          <button
+            onClick={onUndo}
+            disabled={!canUndo}
+            title="되돌리기"
+            aria-label="되돌리기"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Undo2 className="h-3.5 w-3.5" />
+          </button>
+        )}
+        {onRedo && (
+          <button
+            onClick={onRedo}
+            disabled={!canRedo}
+            title="앞으로 돌리기"
+            aria-label="앞으로 돌리기"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Redo2 className="h-3.5 w-3.5" />
+          </button>
         )}
         <button
           onClick={onSave}

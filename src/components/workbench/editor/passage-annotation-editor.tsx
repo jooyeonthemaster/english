@@ -53,6 +53,16 @@ const ANNOTATION_CONFIG: Record<AnnotationType, { label: string; shortLabel: str
 };
 const ANNOTATION_TYPES = Object.keys(ANNOTATION_CONFIG) as AnnotationType[];
 
+// Alt/Option + letter shortcuts (event.code for IME-agnostic matching).
+// vocab=Vocabulary, grammar=Grammar, syntax=Phrase, sentence=Sentence, examPoint=Exam.
+const SHORTCUT_MAP: Record<AnnotationType, { code: string; letter: string }> = {
+  vocab: { code: "KeyV", letter: "V" },
+  grammar: { code: "KeyG", letter: "G" },
+  syntax: { code: "KeyP", letter: "P" },
+  sentence: { code: "KeyS", letter: "S" },
+  examPoint: { code: "KeyE", letter: "E" },
+};
+
 // ─── Props ───────────────────────────────────────────────
 interface PassageAnnotationEditorProps {
   content: string;
@@ -256,6 +266,20 @@ export function PassageAnnotationEditor({
     setTimeout(() => { popupLockRef.current = false; }, 500);
   }, [editor, annotations, onAnnotationsChange]);
 
+  // ─── Keyboard shortcuts (only while toolbar is open) ──
+  useEffect(() => {
+    if (popup?.mode !== "toolbar") return;
+    function handleKey(e: KeyboardEvent) {
+      if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const match = ANNOTATION_TYPES.find((t) => SHORTCUT_MAP[t].code === e.code);
+      if (!match) return;
+      e.preventDefault();
+      doMark(match);
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [popup, doMark]);
+
   // ─── Save memo ─────────────────────────────────────────
   const saveMemo = useCallback((id: string, memo: string) => {
     if (memo.trim()) {
@@ -286,7 +310,7 @@ export function PassageAnnotationEditor({
 
   // Popup positioning — measured against the inner (positioning context) container
   const containerWidth = innerRef.current?.offsetWidth || containerRef.current?.offsetWidth || 600;
-  const popupWidth = popup?.mode === "toolbar" ? 340 : 300;
+  const popupWidth = popup?.mode === "toolbar" ? 380 : 300;
   const halfPopup = popupWidth / 2;
   const clampedLeft = Math.max(8, Math.min(popupPos.x - halfPopup, containerWidth - popupWidth - 8));
   const arrowLeft = Math.max(12, Math.min(popupPos.x - clampedLeft, popupWidth - 12));
@@ -330,21 +354,27 @@ export function PassageAnnotationEditor({
             {/* ── Toolbar mode ── */}
             {popup.mode === "toolbar" && (
               <div
-                className="flex items-center gap-0.5 rounded-xl p-1 shadow-2xl"
+                className="flex flex-col rounded-xl p-1 shadow-2xl"
                 style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)", boxShadow: "0 8px 32px rgba(37,99,235,0.25), 0 0 0 1px rgba(255,255,255,0.1) inset" }}
               >
-                {ANNOTATION_TYPES.map((type) => {
-                  const config = ANNOTATION_CONFIG[type];
-                  const Icon = config.icon;
-                  return (
-                    <button key={type} onPointerDown={(e) => { e.preventDefault(); doMark(type); }}
-                      className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-medium text-white hover:bg-white/15 active:bg-white/25 transition-colors whitespace-nowrap touch-manipulation"
-                      title={config.description}
-                    >
-                      <Icon className="w-3.5 h-3.5" />{config.shortLabel}
-                    </button>
-                  );
-                })}
+                <div className="flex items-center gap-0.5">
+                  {ANNOTATION_TYPES.map((type) => {
+                    const config = ANNOTATION_CONFIG[type];
+                    const Icon = config.icon;
+                    return (
+                      <button key={type} onPointerDown={(e) => { e.preventDefault(); doMark(type); }}
+                        className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-medium text-white hover:bg-white/15 active:bg-white/25 transition-colors whitespace-nowrap touch-manipulation"
+                        title={`${config.description} (Alt+${SHORTCUT_MAP[type].letter})`}
+                      >
+                        <Icon className="w-3.5 h-3.5" />{config.shortLabel}
+                        <span className="ml-0.5 text-[9px] font-bold leading-none text-white/55 tabular-nums">{SHORTCUT_MAP[type].letter}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="select-none pt-0.5 text-center text-[8.5px] font-medium tracking-wide text-white/45">
+                  Alt(⌥) + 단축키
+                </div>
               </div>
             )}
 

@@ -13,6 +13,9 @@ import type { ExamQuestionData } from "./_lib/types";
 // API Route
 // ---------------------------------------------------------------------------
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;
   try {
@@ -157,6 +160,8 @@ export async function GET(
         "Content-Type":
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "Content-Disposition": `attachment; filename*=UTF-8''${filename}`,
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        "Pragma": "no-cache",
       },
     });
   } catch (error) {

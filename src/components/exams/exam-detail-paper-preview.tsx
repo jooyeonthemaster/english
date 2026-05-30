@@ -419,7 +419,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadDocx() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-docx`;
+      link.href = `/api/exams/${exam.id}/export-docx?t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();
@@ -430,7 +430,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadDocxWithAnswers() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-docx?answers=true`;
+      link.href = `/api/exams/${exam.id}/export-docx?answers=true&t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();
@@ -441,7 +441,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadHwpx() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-hwpx`;
+      link.href = `/api/exams/${exam.id}/export-hwpx?t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();
@@ -452,7 +452,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   function handleDownloadHwpxWithAnswers() {
     startTransition(() => {
       const link = document.createElement("a");
-      link.href = `/api/exams/${exam.id}/export-hwpx?answers=true`;
+      link.href = `/api/exams/${exam.id}/export-hwpx?answers=true&t=${Date.now()}`;
       link.download = "";
       document.body.appendChild(link);
       link.click();

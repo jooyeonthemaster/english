@@ -92,6 +92,9 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
           box-sizing: border-box !important;
           border-radius: 0 !important;
           display: block !important;
+          /* HWPX 다운로드와 동일 글꼴(맑은 고딕)로 인쇄 */
+          font-family:
+            "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif !important;
         }
 
         /* Tailwind ring utilities use box-shadow — neutralize */
