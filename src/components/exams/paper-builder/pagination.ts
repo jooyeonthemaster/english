@@ -39,12 +39,22 @@ import type {
 // 글자수가 살짝 줄어들므로, 줄바꿈 과소예측을 막기 위해 계수를 소폭 낮춘다.
 // (양쪽이 같은 글꼴을 쓰므로 정확한 페이지 분할 일치는 요구되지 않음.)
 const LINE_WIDTH_FUDGE = 0.99;
-const MIN_QUESTION_START_LINES = 8;
-const MIN_PASSAGE_START_LINES = 4;
+// 고아(orphan) 방지 최소 줄 수. 칸 경계에서 새 문항/지문이 시작할 때 최소 이만큼은
+// 함께 둔다. 너무 크면(원래 8/4) 칸 하단 빈 공간이 이 값보다 작을 때 다음 문항이
+// "통째로" 다음 칸/페이지로 넘어가 큰 여백이 남는다. 8→3 / 4→2 로 낮추면, 키 큰 문항
+// (요약문·지문 박스 등)이 남은 공간에서 시작해 줄 단위로 쪼개지며 칸을 끝까지 채운다.
+// (본문은 "(이어짐)" 마커로 분할되도록 설계돼 있어 시작 줄 수를 줄여도 잘리지 않는다.)
+const MIN_QUESTION_START_LINES = 3;
+const MIN_PASSAGE_START_LINES = 2;
 const BOXED_PASSAGE_HORIZONTAL_INSET = 28;
 // 칸 하단 안전 여백. 모든 본문이 줄 단위로 쪼개지므로 추정 오차가 작아
 // 여백을 줄여 내용이 footer 근처까지 채워지도록 한다(잘림은 줄 단위 분할로 방지).
-const PAGE_BOTTOM_GUARD = 44;
+// 인쇄(window.print)가 미리보기와 1:1 균일배율로 렌더되도록 print-styles.tsx 를
+// 고친 뒤에는 미리보기가 곧 인쇄 결과(WYSIWYG)이므로, 과채움이 생기면 미리보기에서
+// 바로 보인다 → 가드를 44→20 으로 낮춰 본문을 footer 끝선 가까이 더 내린다.
+// (지문 위주 칸은 줄 단위 추정이 정확해 under-count 가 작다. 잘림은 미리보기에서
+//  즉시 확인 가능하므로, 잘리면 이 값을 다시 올린다.)
+const PAGE_BOTTOM_GUARD = 20;
 const OPTION_BLOCK_TOP_GAP = 6;
 const OPTION_ROW_GAP = 4;
 
@@ -184,8 +194,11 @@ function passageContentWidth(settings: PaginationSettings): number {
   return Math.max(80, columnWidth - BOXED_PASSAGE_HORIZONTAL_INSET);
 }
 
+// 지문이 칸 경계에서 쪼개질 때 "(다음 칸으로 이어짐 →)" 마커 자리만큼 미리 비워둔다.
+// 마커는 화면 전용(no-print)이라 인쇄엔 안 나오므로 보수적으로 크게 잡을 필요가 없다.
+// 값을 줄이면(18→10 / 16→9) 분할 지문이 칸 하단까지 더 채워진다.
 function passageContinuationReserveHeight(settings: PaginationSettings): number {
-  return settings.density === "compact" ? 16 : 18;
+  return settings.density === "compact" ? 9 : 10;
 }
 
 export function questionLineHeight(settings: PaginationSettings): number {

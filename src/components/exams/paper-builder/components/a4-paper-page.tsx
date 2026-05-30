@@ -123,7 +123,7 @@ function StructuredBody({
               )}
             >
               {resumed && (
-                <span className="no-print mb-1 block text-[9px] italic text-slate-400">
+                <span className="continuation-hint mb-1 block text-[9px] italic text-slate-400">
                   {"(\uC774\uC5B4\uC11C)"}
                 </span>
               )}
@@ -134,7 +134,7 @@ function StructuredBody({
                 alphabetMarkerClassName: "font-semibold text-slate-950",
               })}
               {continues && (
-                <span className="no-print mt-1 block text-[9px] italic text-slate-400">
+                <span className="continuation-hint mt-1 block text-[9px] italic text-slate-400">
                   {"(\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192)"}
                 </span>
               )}
@@ -510,7 +510,7 @@ export function A4PaperPage({
                           {!isPassageStart && (
                             <p
                               className={cn(
-                                "no-print mb-1 text-[9px] italic",
+                                "continuation-hint mb-1 text-[9px] italic",
                                 visual.passageTitleClass,
                               )}
                             >
@@ -545,7 +545,7 @@ export function A4PaperPage({
                           {isSplit && !isPassageEnd && (
                             <p
                               className={cn(
-                                "no-print mt-1 text-[9px] italic text-slate-400",
+                                "continuation-hint mt-1 text-[9px] italic text-slate-400",
                                 visual.passageTitleClass,
                               )}
                             >
@@ -732,7 +732,7 @@ export function A4PaperPage({
                               part.showAnswer) && (
                             <p
                               className={cn(
-                                "no-print mb-1 text-[9px] font-semibold italic",
+                                "continuation-hint mb-1 text-[9px] font-semibold italic",
                                 visual.metaClass,
                               )}
                             >

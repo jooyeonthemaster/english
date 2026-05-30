@@ -1,8 +1,19 @@
-import { PAPER_SIZE_SPECS } from "../constants";
+import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "../constants";
 import type { PaperSize } from "../types";
 
 export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
   const paperSpec = PAPER_SIZE_SPECS[paperSize];
+
+  // 미리보기(A4PaperPage)는 "가상 A4" 모델: 페이지 박스 폭 = baseWidth(=760px*widthRatio),
+  // 높이 = baseWidth*heightRatio (aspect-ratio). 본문/패딩/글꼴은 모두 px 절대값이다.
+  // 반면 window.print 는 .exam-a4-page 를 물리 용지(210mm 등)로 '박스만' 늘려서,
+  // px 콘텐츠가 함께 커지지 않아 우/하단에 미리보기보다 큰 여백이 남았다.
+  // → HWPX/DOCX 내보내기와 동일하게, 760 모델 박스를 물리 용지에 균일 배율로 확대한다.
+  //   (글자도 같은 비율로 커져 용지를 꽉 채우고, 인쇄 결과가 미리보기와 1:1 일치한다.)
+  const MM_TO_PX = 96 / 25.4; // CSS 절대단위: 1mm = 96/25.4 px
+  const modelWidth = Math.round(PREVIEW_PAGE_WIDTH * paperSpec.widthRatio);
+  const modelHeight = modelWidth * paperSpec.heightRatio;
+  const printScale = (paperSpec.widthMm * MM_TO_PX) / modelWidth;
 
   return (
     <style jsx global>{`
@@ -74,6 +85,14 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
           visibility: hidden !important;
         }
 
+        /* 화면 전용 분할 안내("이어서"/"다음 칸으로 이어짐"/"지문 계속"/"N번 계속")는
+           인쇄에서 글자만 숨기되 차지하던 높이는 그대로 둔다(display:none 아님).
+           no-print 로 완전히 제거하면 인쇄 본문이 미리보기보다 (마커 높이만큼) 짧아져
+           하단 여백이 더 커진다 → 인쇄=미리보기 높이로 맞춰 동일하게 채운다. */
+        .continuation-hint {
+          visibility: hidden !important;
+        }
+
         .exam-a4-page {
           width: ${paperSpec.widthMm}mm !important;
           height: ${paperSpec.heightMm}mm !important;
@@ -97,6 +116,17 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
             "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif !important;
         }
 
+        /* 인쇄 시 내부 콘텐츠를 760 모델 치수로 고정하고 물리 용지에 균일 확대.
+           .exam-a4-page 박스는 위에서 210mm×297mm(overflow:hidden, page-break)로
+           고정되어 페이지 분할은 그대로 견고하고, 내부 div 만 scale 로 용지를 채운다.
+           (scale 후 modelWidth*printScale = 용지 폭, modelHeight*printScale = 용지 높이) */
+        .exam-a4-page > div {
+          width: ${modelWidth}px !important;
+          height: ${modelHeight.toFixed(3)}px !important;
+          transform: scale(${printScale.toFixed(5)}) !important;
+          transform-origin: top left !important;
+        }
+
         /* Tailwind ring utilities use box-shadow — neutralize */
         .exam-a4-page,
         .exam-a4-page * {
@@ -104,6 +134,13 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
           --tw-ring-offset-shadow: 0 0 #0000 !important;
           --tw-shadow: 0 0 #0000 !important;
           box-shadow: none !important;
+        }
+
+        /* 편집 중 선택된 문항 하이라이트(bg-blue-50/80 + ring)는 인쇄에 안 보이게 한다.
+           ring 은 위 box-shadow:none 으로 이미 제거되고, 파란 배경만 남으므로 투명 처리.
+           문항 래퍼는 선택됐을 때만 배경이 생기므로 다른 의도된 배경엔 영향 없다. */
+        .exam-a4-page [data-paper-item-id] {
+          background-color: transparent !important;
         }
 
         .exam-a4-page:last-child {
