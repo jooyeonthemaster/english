@@ -573,7 +573,7 @@ export function FormSection(props: FormSectionProps) {
                     annotations={annotations}
                     onAnnotationsChange={setAnnotations}
                     placeholder={
-                      "왼쪽에서 추출 자료를 선택하거나, 영어 지문을 직접 붙여넣으세요...\n\n텍스트를 드래그하여 핵심 단어, 주요 문법, 중요 문장을 마킹할 수 있습니다."
+                      "왼쪽에서 추출 자료를 선택하거나, 영어 지문을 직접 붙여넣으세요...\n\n텍스트를 드래그하여 핵심 단어, 어법 포인트, 중요 문장을 마킹할 수 있습니다."
                     }
                   />
                 </div>
