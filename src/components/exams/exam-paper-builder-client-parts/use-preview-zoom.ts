@@ -21,15 +21,35 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
   const [controlsPos, setControlsPos] = useState({ top: 12, right: 12 });
   const baseWidth = Math.round(PREVIEW_PAGE_WIDTH * PAPER_SIZE_SPECS[paperSize].widthRatio);
   const zoom = useMemo(() => manualZoom ?? fitZoom, [fitZoom, manualZoom]);
+  const lastFitWidthRef = useRef(0);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
+    // baseWidth changed (e.g. paper size) → force the next measurement to apply.
+    lastFitWidthRef.current = 0;
+
+    // Width wobbles smaller than a scrollbar are ignored. When the page count
+    // changes (e.g. pressing undo repeatedly) the vertical scrollbar can appear
+    // or disappear, nudging clientWidth by ~17px. Reacting to that would change
+    // the zoom → change the content height → toggle the scrollbar again — a
+    // measure→zoom→resize feedback loop that makes the paper flicker bigger and
+    // smaller. The deadband keeps the fit zoom stable through those wobbles
+    // while still responding to real container resizes.
+    const SCROLLBAR_DEADBAND = 24;
+
     const updateFitZoom = () => {
       const styles = window.getComputedStyle(scroller);
       const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
       const availableWidth = Math.max(320, scroller.clientWidth - paddingX);
+      if (
+        lastFitWidthRef.current > 0 &&
+        Math.abs(availableWidth - lastFitWidthRef.current) < SCROLLBAR_DEADBAND
+      ) {
+        return;
+      }
+      lastFitWidthRef.current = availableWidth;
       const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / baseWidth));
       setFitZoom(Math.round(nextFit * 100) / 100);
     };

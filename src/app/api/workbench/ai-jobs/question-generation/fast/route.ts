@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
@@ -8,6 +9,11 @@ import {
   InsufficientCreditsError,
   refundCredits,
 } from "@/lib/credits";
+import {
+  providerFromModel,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
@@ -118,6 +124,40 @@ function readQuestionTags(rawTags: unknown): string[] {
       .split(/[,;|]/)
       .map((tag) => tag.trim())
       .filter(Boolean);
+  }
+}
+
+async function recordCostSafely(input: {
+  sourceKey: string;
+  sourceId: string;
+  sourceDetail: string;
+  academyId: string;
+  provider: ReturnType<typeof providerFromModel>;
+  model: string;
+  operationType: OperationType;
+  inputTokens: number;
+  outputTokens: number;
+  usageAt: Date;
+  metadata: Record<string, unknown>;
+}) {
+  try {
+    await recordPlatformApiUsageCost({
+      sourceKey: input.sourceKey,
+      sourceType: "WORKBENCH_AI_JOB",
+      sourceId: input.sourceId,
+      sourceDetail: input.sourceDetail,
+      academyId: input.academyId,
+      provider: input.provider,
+      model: input.model,
+      operationType: input.operationType,
+      unitType: "TOKENS",
+      inputTokens: input.inputTokens,
+      outputTokens: input.outputTokens,
+      usageAt: input.usageAt,
+      metadata: input.metadata as Prisma.InputJsonValue,
+    });
+  } catch (error) {
+    console.warn("[workbench-fast-question] Failed to record API cost", error);
   }
 }
 
@@ -258,7 +298,7 @@ export async function POST(req: NextRequest) {
     let rationale = "";
     if (config.mode === "AUTO") {
       const planningStartedAt = Date.now();
-      const { object: planResult } = await generateQuestionObject({
+      const planningResult = await generateQuestionObject({
         schema: planSchema,
         prompt: buildPlanningPrompt({
           schoolType,
@@ -274,6 +314,27 @@ export async function POST(req: NextRequest) {
         generationPlan: config.generationPlan,
         logPrefix: "WORKBENCH-FAST-AUTO-GEN-PLAN",
         maxTokens: 4_096,
+      });
+      const planResult = planningResult.object;
+      const planUsage = readAiUsageTokens(planningResult.usage);
+      await recordCostSafely({
+        sourceKey: `workbench_ai_job:${job.id}:planning`,
+        sourceId: job.id,
+        sourceDetail: "QUESTION_PLANNING",
+        academyId: job.academyId,
+        provider: providerFromModel(planningResult.modelId),
+        model: planningResult.modelId,
+        operationType,
+        inputTokens: planUsage.inputTokens,
+        outputTokens: planUsage.outputTokens,
+        usageAt: new Date(),
+        metadata: {
+          passageId: passage.id,
+          generationPlan: config.generationPlan,
+          fastPath: true,
+          attempts: planningResult.attempts,
+          durationMs: planningResult.durationMs,
+        },
       });
       planningMs = Date.now() - planningStartedAt;
       plan = capPlanToCount(planResult.plan, config.count);
@@ -310,6 +371,29 @@ export async function POST(req: NextRequest) {
       { logPrefix: "WORKBENCH-FAST-Q-GEN" },
     );
     const questions = generationResult.questions;
+    for (const [idx, event] of generationResult.usageEvents.entries()) {
+      const usage = readAiUsageTokens(event.usage);
+      await recordCostSafely({
+        sourceKey: `workbench_ai_job:${job.id}:generation:${idx}`,
+        sourceId: job.id,
+        sourceDetail: `QUESTION_GENERATION:${event.subType}`,
+        academyId: job.academyId,
+        provider: providerFromModel(event.modelId),
+        model: event.modelId,
+        operationType,
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        usageAt: new Date(),
+        metadata: {
+          passageId: passage.id,
+          generationPlan: config.generationPlan,
+          fastPath: true,
+          qualityMode: event.qualityMode,
+          attempts: event.attempts,
+          durationMs: event.durationMs,
+        },
+      });
+    }
     generationAttempts = generationResult.attempts;
     generationMs = Date.now() - generationStartedAt;
     const relaxedFallback = generationResult.relaxedFallback;

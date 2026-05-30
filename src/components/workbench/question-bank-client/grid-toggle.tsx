@@ -2,40 +2,72 @@
 "use client";
 
 import React from "react";
-import { Grid2X2, Grid3X3, LayoutGrid } from "lucide-react";
+import { Grid2X2, Grid3X3, List } from "lucide-react";
+
+export type QuestionGridCols = 2 | 3 | "list";
 
 interface Props {
-  gridCols: 2 | 3 | 4;
-  setGridCols: (cols: 2 | 3 | 4) => void;
+  gridCols: QuestionGridCols;
+  setGridCols: (cols: QuestionGridCols) => void;
+}
+
+function ViewToggleButton({
+  active,
+  middle,
+  label,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  middle?: boolean;
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      aria-pressed={active}
+      className={
+        "p-2 cursor-pointer transition-colors " +
+        (middle ? "border-x border-slate-200 " : "") +
+        (active
+          ? "bg-slate-800 text-white"
+          : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
+      }
+    >
+      {children}
+    </button>
+  );
 }
 
 export function GridToggle({ gridCols, setGridCols }: Props) {
   return (
-    <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
-      <button
+    <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
+      <ViewToggleButton
+        active={gridCols === 2}
+        label="2열 보기"
         onClick={() => setGridCols(2)}
-        className={`p-1 transition-colors ${gridCols === 2 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-        aria-label="2열 보기"
-        aria-pressed={gridCols === 2}
       >
-        <Grid2X2 className="w-3.5 h-3.5" />
-      </button>
-      <button
+        <Grid2X2 className="size-4" />
+      </ViewToggleButton>
+      <ViewToggleButton
+        active={gridCols === 3}
+        label="3열 보기"
+        middle
         onClick={() => setGridCols(3)}
-        className={`p-1 transition-colors border-x border-slate-200 ${gridCols === 3 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-        aria-label="3열 보기"
-        aria-pressed={gridCols === 3}
       >
-        <Grid3X3 className="w-3.5 h-3.5" />
-      </button>
-      <button
-        onClick={() => setGridCols(4)}
-        className={`p-1 transition-colors ${gridCols === 4 ? "bg-slate-800 text-white" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
-        aria-label="4열 보기"
-        aria-pressed={gridCols === 4}
+        <Grid3X3 className="size-4" />
+      </ViewToggleButton>
+      <ViewToggleButton
+        active={gridCols === "list"}
+        label="목록 보기"
+        onClick={() => setGridCols("list")}
       >
-        <LayoutGrid className="w-3.5 h-3.5" />
-      </button>
+        <List className="size-4" />
+      </ViewToggleButton>
     </div>
   );
 }

@@ -28,6 +28,125 @@ interface EmitState {
   nextParaId: number;
   nextCtrlId: number;
   currentLineWidthHpu: number;
+  // 표 셀 안에서 본문 흐름과 달리, 이 렌더러는 텍스트 문단의 lineseg vertpos 를
+  // "셀 상단 기준 절대 좌표"로 해석한다(문단을 자동 누적하지 않음). 그래서 셀 안
+  // 텍스트 문단은 앞 문단들의 높이만큼 vertpos 를 직접 누적해 줘야 겹치지 않는다.
+  //   null  = 본문 흐름(누적 불필요, 문단마다 vertpos 0 기준)
+  //   number= 현재 셀 안에서 다음 텍스트 문단이 시작할 누적 세로 오프셋(HPU)
+  // (셀은 텍스트 문단과 표를 섞지 않으므로 표는 별도 보정이 필요 없다.)
+  cellTextVertOffset: number | null;
+}
+
+// =============================================================================
+// 줄바꿈 측정 (미리보기 pagination.ts 와 동일한 글리프 폭 모델)
+// =============================================================================
+//
+// 핵심: 한컴 한글은 파일을 열 때 본문을 다시 흐름(reflow)시키지만, 우리가 쓰는
+// HWPX 렌더러(및 일부 뷰어/초기 표시)는 <hp:linesegarray> 레이아웃 캐시를 그대로
+// 신뢰한다. 문단마다 lineseg 가 1개뿐이면 긴 영어 지문이 칸 폭을 넘어 한 줄로
+// 그려져 미리보기와 "극심하게" 어긋난다.
+//   → 문단의 실제 텍스트를 칸 폭 기준으로 줄바꿈해서 줄마다 lineseg 를 emit 한다.
+//
+// maxUnits = horzsize(HPU) / fontSize(HPU) * FUDGE 는 미리보기의
+// columnWidth(px) / fontSize(px) * FUDGE 와 같은 비율(스케일 불변)이므로
+// 동일한 glyphUnits 로 래핑하면 미리보기와 줄바꿈이 일치한다.
+const LINE_WIDTH_FUDGE = 1.05;
+
+function isWideGlyph(char: string): boolean {
+  const code = char.charCodeAt(0);
+  return (
+    (code >= 0x1100 && code <= 0x11ff) ||
+    (code >= 0x3130 && code <= 0x318f) ||
+    (code >= 0xac00 && code <= 0xd7af) ||
+    (code >= 0x2e80 && code <= 0x9fff) ||
+    (code >= 0xff00 && code <= 0xffef)
+  );
+}
+
+function glyphUnits(char: string): number {
+  if (char === " " || char === "\t") return 0.34;
+  if (isWideGlyph(char)) return 1;
+  if (/[A-Z0-9]/.test(char)) return 0.62;
+  if (/[a-z]/.test(char)) return 0.53;
+  if (/[,.;:!?'"()[\]{}<>/\\|`~_-]/.test(char)) return 0.34;
+  return 0.72;
+}
+
+// 텍스트를 칸 폭(maxUnits)에 맞춰 줄바꿈하고, 각 줄의 시작 문자 오프셋(원본 문자열
+// 기준)을 반환한다. textpos 로 그대로 사용한다. pagination.ts 의 wrapParagraph 와
+// 같은 결정을 내리되 트림 대신 절대 오프셋을 추적한다.
+function wrapLineStartOffsets(text: string, maxUnits: number): number[] {
+  const starts: number[] = [];
+  let lineOpen = false;
+  let currentUnits = 0;
+  let i = 0;
+  const n = text.length;
+
+  const openLine = (idx: number) => {
+    starts.push(idx);
+    lineOpen = true;
+    currentUnits = 0;
+  };
+  const closeLine = () => {
+    lineOpen = false;
+    currentUnits = 0;
+  };
+
+  while (i < n) {
+    let nextSpace = text.indexOf(" ", i);
+    if (nextSpace === -1) nextSpace = n;
+    const wordStart = i;
+    const word = text.slice(i, nextSpace);
+    let wordUnits = 0;
+    for (const ch of word) wordUnits += glyphUnits(ch);
+    const spaceFollows = nextSpace < n;
+    const spaceUnits = spaceFollows ? glyphUnits(" ") : 0;
+
+    if (wordUnits > maxUnits && !lineOpen) {
+      // 한 칸보다 긴 단어: 글자 단위로 끊는다.
+      let pos = wordStart;
+      for (const ch of word) {
+        const u = glyphUnits(ch);
+        if (!lineOpen) openLine(pos);
+        else if (currentUnits + u > maxUnits) {
+          closeLine();
+          openLine(pos);
+        }
+        currentUnits += u;
+        pos += ch.length;
+      }
+    } else if (lineOpen && currentUnits + wordUnits > maxUnits) {
+      closeLine();
+      openLine(wordStart);
+      currentUnits += wordUnits;
+    } else {
+      if (!lineOpen) openLine(wordStart);
+      currentUnits += wordUnits;
+    }
+
+    if (spaceFollows && lineOpen && currentUnits + spaceUnits <= maxUnits) {
+      currentUnits += spaceUnits;
+    }
+    i = nextSpace + 1;
+  }
+
+  if (starts.length === 0) starts.push(0);
+  return starts;
+}
+
+// 문단의 텍스트 런을 이어붙여 줄바꿈 측정용 평문을 만든다. 강제 줄바꿈/이미지/
+// 페이지번호 등 복합 런이 있으면 null 을 반환해 단일 lineseg 로 폴백한다.
+function paragraphPlainText(runs: RunNode[]): string | null {
+  let out = "";
+  for (const run of runs) {
+    if (run.kind === "text") {
+      if (run.text.includes("\n")) return null;
+      out += run.text;
+    } else {
+      return null;
+    }
+  }
+  return out;
 }
 
 // =============================================================================
@@ -51,6 +170,13 @@ function secPrXml(sec: SectionSpec): string {
     `<hp:startNum pageStartsOn="BOTH" page="0" pic="0" tbl="0" equation="0"/>`,
     `<hp:visibility hideFirstHeader="0" hideFirstFooter="0" hideFirstMasterPage="0" border="SHOW_ALL" fill="SHOW_ALL" hideFirstPageNum="0" hideFirstEmptyLine="0" showLineNumber="0"/>`,
     `<hp:lineNumberShape restartType="0" countBy="0" distance="0" startNumber="0"/>`,
+    // landscape 는 용지 방향 enum. OWPML/hwpxlib 공식 정의:
+    //   WIDELY = 세로(portrait), NARROWLY = 가로(landscape).
+    // 시험지는 A4/B4 "세로"이므로 WIDELY 가 맞다. 실제 한컴이 만든 portrait HWPX
+    // (졸업/사업계획서/이전 시험지 export 등)도 전부 WIDELY 다.
+    //   ※ 직전 패스가 enum 의미를 거꾸로 이해해 NARROWLY(가로)로 잘못 바꿨고,
+    //     그 결과 한컴이 "가로 용지"로 오인해 상하좌우 여백을 강제로 재해석하면서
+    //     미리보기와 여백이 극심하게 어긋났다(사용자 보고). → WIDELY 로 복구.
     `<hp:pagePr landscape="WIDELY" width="${pageWidthHpu}" height="${pageHeightHpu}" gutterType="LEFT_ONLY">`,
     `<hp:margin header="${marginHeader}" footer="${marginFooter}" gutter="0" left="${marginLeft}" right="${marginRight}" top="${marginTop}" bottom="${marginBottom}"/>`,
     `</hp:pagePr>`,
@@ -112,12 +238,22 @@ function colPrCtrlFor(opts: {
 // lineseg (레이아웃 캐시)
 // =============================================================================
 
+interface LinesegResult {
+  xml: string;
+  lineCount: number;
+  lineHeight: number;
+  // 문단 본문이 차지하는 세로 높이(줄 높이 합). 표 셀 높이 계산에 쓴다.
+  contentHeightHpu: number;
+}
+
 function paragraphLineseg(
   horzsize: number,
   registry: ShapeRegistry,
   paraShapeId: number,
   charShapeIds: number[],
-): string {
+  text = "",
+  vertOffset = 0,
+): LinesegResult {
   const paraShape = registry.paraShapes[paraShapeId] ?? registry.paraShapes[0];
   const textHeight = Math.max(
     100,
@@ -131,7 +267,27 @@ function paragraphLineseg(
   );
   const spacing = Math.max(0, lineHeight - textHeight);
   const baseline = Math.round(textHeight * 0.85);
-  return `<hp:linesegarray><hp:lineseg textpos="0" vertpos="0" vertsize="${textHeight}" textheight="${textHeight}" baseline="${baseline}" spacing="${spacing}" horzpos="0" horzsize="${horzsize}" flags="393216"/></hp:linesegarray>`;
+
+  // 텍스트가 칸 폭을 넘으면 줄마다 lineseg 를 만든다.
+  const maxUnits = Math.max(8, (horzsize / textHeight) * LINE_WIDTH_FUDGE);
+  const offsets =
+    text && horzsize > 0 ? wrapLineStartOffsets(text, maxUnits) : [0];
+
+  const segs = offsets
+    .map((off, idx) => {
+      const vertpos = vertOffset + idx * lineHeight;
+      // flags: 첫 줄만 393216(한컴 기본 표기), 나머지는 0.
+      const flags = idx === 0 ? 393216 : 0;
+      return `<hp:lineseg textpos="${off}" vertpos="${vertpos}" vertsize="${textHeight}" textheight="${textHeight}" baseline="${baseline}" spacing="${spacing}" horzpos="0" horzsize="${horzsize}" flags="${flags}"/>`;
+    })
+    .join("");
+
+  return {
+    xml: `<hp:linesegarray>${segs}</hp:linesegarray>`,
+    lineCount: offsets.length,
+    lineHeight,
+    contentHeightHpu: offsets.length * lineHeight,
+  };
 }
 
 function footerCtrl(
@@ -159,7 +315,7 @@ function footerCtrl(
     `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="TOP" linkListIDRef="0" linkListNextIDRef="0" textWidth="${contentWidth}" textHeight="${sec.marginFooter}" hasTextRef="0" hasNumRef="0">`,
     `<hp:p id="0" paraPrIDRef="${paraShapeId}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
     `<hp:run charPrIDRef="${charShapeId}"><hp:t>- </hp:t><hp:autoNum numType="PAGE" format="DIGIT"/><hp:t> / </hp:t><hp:autoNum numType="TOTAL_PAGE" format="DIGIT"/><hp:t> -</hp:t></hp:run>`,
-    lineSeg,
+    lineSeg.xml,
     `</hp:p>`,
     `</hp:subList>`,
     `</hp:footer></hp:ctrl>`,
@@ -253,7 +409,11 @@ function emitParagraph(
   para: ParagraphNode,
   registry: ShapeRegistry,
   state: EmitState,
-  options: { firstParaPrelude?: string; lineWidthHpu?: number } = {},
+  options: {
+    firstParaPrelude?: string;
+    firstParaFooter?: string;
+    lineWidthHpu?: number;
+  } = {},
 ): string {
   const pid = state.nextParaId++;
   const paraShapeId = registry.paraShapeFromStyle(para.style);
@@ -266,20 +426,86 @@ function emitParagraph(
 
   let body: string;
   if (options.firstParaPrelude) {
-    // 첫 paragraph: secPr + colPr + 빈 hp:t 를 첫 run 안에.
-    body = `<hp:run charPrIDRef="0">${options.firstParaPrelude}<hp:t></hp:t></hp:run>${runsXml}`;
+    // 첫 paragraph: secPr + colPr 는 첫 run 에 두고(쪽 설정), 꼬리말(footer)은
+    // 반드시 "별도 run"으로 분리한다.
+    //   ※ 꼬리말 컨트롤은 내부에 중첩 문단(subList>p)을 갖는데, 이걸 secPr 와 같은
+    //     run(특히 secPr 와 colPr 사이)에 끼워넣으면 한컴 한글이 쪽 설정 파싱을
+    //     중단하고 여백을 "기본값(좌우 30mm 등)"으로 리셋해 버린다(미리보기와
+    //     여백이 극심히 어긋난 근본 원인). secPr+colPr 를 먼저 깨끗이 닫은 뒤
+    //     꼬리말을 별도 run 으로 두면 여백이 정상 적용된다.
+    const footerRun = options.firstParaFooter
+      ? `<hp:run charPrIDRef="0">${options.firstParaFooter}</hp:run>`
+      : "";
+    body = `<hp:run charPrIDRef="0">${options.firstParaPrelude}<hp:t></hp:t></hp:run>${footerRun}${runsXml}`;
   } else {
     body = runsXml;
   }
 
   const charShapeIds = runGroups.map((group) => group.charShapeId);
+  const plainText = options.firstParaPrelude
+    ? "" // 첫 문단(secPr 보유)은 보통 빈 문단이라 단일 lineseg.
+    : (paragraphPlainText(para.runs) ?? "");
+
+  // 표 셀 안 텍스트 문단은 앞 문단 높이만큼 vertpos 를 누적해야 겹치지 않는다.
+  const inCell = state.cellTextVertOffset !== null && !options.firstParaPrelude;
+  const spaceBefore = inCell ? (para.style?.spaceBefore ?? 0) : 0;
+  const baseOffset = inCell ? state.cellTextVertOffset! + spaceBefore : 0;
+
+  const lineseg = paragraphLineseg(
+    lineWidth,
+    registry,
+    paraShapeId,
+    charShapeIds,
+    plainText,
+    baseOffset,
+  );
+
+  if (inCell) {
+    const spaceAfter = para.style?.spaceAfter ?? 0;
+    state.cellTextVertOffset =
+      baseOffset + lineseg.contentHeightHpu + spaceAfter;
+  }
 
   return [
     `<hp:p id="${pid}" paraPrIDRef="${paraShapeId}" styleIDRef="0" pageBreak="${pageBreak}" columnBreak="${columnBreak}" merged="0">`,
     body,
-    paragraphLineseg(lineWidth, registry, paraShapeId, charShapeIds),
+    lineseg.xml,
     `</hp:p>`,
   ].join("");
+}
+
+// 표 셀 안 블록들의 세로 높이를 추정한다(줄바꿈 후 줄 높이 + 문단 간격 합).
+// 셀/행 높이를 내용에 맞게 키워 boxed 지문 등이 잘리지 않도록 한다.
+function measureBlockHeight(
+  block: BlockNode,
+  registry: ShapeRegistry,
+  innerWidthHpu: number,
+): number {
+  if (block.kind === "p") {
+    const style = block.style ?? {};
+    const charShapeIds = block.runs
+      .filter((r): r is Extract<RunNode, { kind: "text" }> => r.kind === "text")
+      .map((r) => registry.charShapeFromStyle(r.style));
+    const ids = charShapeIds.length > 0 ? charShapeIds : [0];
+    const paraShapeId = registry.paraShapeFromStyle(style);
+    const plain = paragraphPlainText(block.runs) ?? "";
+    const seg = paragraphLineseg(
+      innerWidthHpu,
+      registry,
+      paraShapeId,
+      ids,
+      plain,
+    );
+    return (
+      (style.spaceBefore ?? 0) +
+      seg.contentHeightHpu +
+      (style.spaceAfter ?? 0)
+    );
+  }
+  if (block.kind === "tbl") {
+    return block.rows.reduce((sum, r) => sum + r.heightHpu, 0);
+  }
+  return 0;
 }
 
 // =============================================================================
@@ -294,23 +520,48 @@ function emitTable(
   const rowCnt = tbl.rows.length;
   const colCnt = tbl.colWidthsHpu.length;
   const totalWidth = tbl.colWidthsHpu.reduce((a, b) => a + b, 0);
-  const totalHeight = tbl.rows.reduce((a, r) => a + r.heightHpu, 0);
   const m = tbl.cellMargins ?? { left: 141, right: 141, top: 141, bottom: 141 };
   const outerBorderId = registry.borderFillFromCell(tbl.borders);
 
+  // 셀 내용 높이를 측정해 행 높이를 키운다(줄바꿈된 지문이 잘리지 않도록).
+  // 행 높이 = max(선언 높이, 그 행의 가장 높은 셀 내용 높이). rowSpan 셀은 단순화를
+  // 위해 측정 대상에서 제외한다(대부분 1행 레이아웃 표라 영향 없음).
+  const rowHeights = tbl.rows.map((row) => {
+    let maxCell = row.heightHpu;
+    for (const cell of row.cells) {
+      if ((cell.rowSpan ?? 1) > 1) continue;
+      const cm =
+        cell.margins ?? { left: 141, right: 141, top: 141, bottom: 141 };
+      const innerWidth = Math.max(100, cell.widthHpu - cm.left - cm.right);
+      const contentH = cell.blocks.reduce(
+        (sum, b) => sum + measureBlockHeight(b, registry, innerWidth),
+        0,
+      );
+      maxCell = Math.max(maxCell, contentH + cm.top + cm.bottom);
+    }
+    return maxCell;
+  });
+  const totalHeight = rowHeights.reduce((a, b) => a + b, 0);
+
   const trs = tbl.rows
     .map((row, rIdx) => {
+      const rowHeight = rowHeights[rIdx];
       const tcs = row.cells
         .map((cell, cIdx) => {
           const cellBorderId = registry.borderFillFromCell(cell.borders);
           const cm =
             cell.margins ?? { left: 141, right: 141, top: 141, bottom: 141 };
           const vAlign = cell.vAlign ?? "TOP";
+          const cellHeight =
+            (cell.rowSpan ?? 1) > 1 ? cell.heightHpu : rowHeight;
           const prevLineWidth = state.currentLineWidthHpu;
+          const prevCellOffset = state.cellTextVertOffset;
           state.currentLineWidthHpu = Math.max(
             100,
             cell.widthHpu - cm.left - cm.right,
           );
+          // 이 셀 안 텍스트 문단의 누적 vertpos 를 0 부터 시작한다.
+          state.cellTextVertOffset = 0;
           const subBlocks = cell.blocks
             .map((b) => emitBlock(b, registry, state))
             .join("");
@@ -318,6 +569,7 @@ function emitTable(
             subBlocks ||
             emitParagraph({ kind: "p", runs: [] }, registry, state);
           state.currentLineWidthHpu = prevLineWidth;
+          state.cellTextVertOffset = prevCellOffset;
           return [
             `<hp:tc name="" header="0" hasMargin="1" protect="0" editable="0" dirty="0" borderFillIDRef="${cellBorderId}">`,
             `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="Break" vertAlign="${vAlign}" linkListIDRef="0" linkListNextIDRef="0" textWidth="0" textHeight="0" hasTextRef="0" hasNumRef="0">`,
@@ -325,7 +577,7 @@ function emitTable(
             `</hp:subList>`,
             `<hp:cellAddr colAddr="${cIdx}" rowAddr="${rIdx}"/>`,
             `<hp:cellSpan colSpan="${cell.colSpan ?? 1}" rowSpan="${cell.rowSpan ?? 1}"/>`,
-            `<hp:cellSz width="${cell.widthHpu}" height="${cell.heightHpu}"/>`,
+            `<hp:cellSz width="${cell.widthHpu}" height="${cellHeight}"/>`,
             `<hp:cellMargin left="${cm.left}" right="${cm.right}" top="${cm.top}" bottom="${cm.bottom}"/>`,
             `</hp:tc>`,
           ].join("");
@@ -383,7 +635,7 @@ function emitBlock(
     const xml = [
       `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
       `<hp:run charPrIDRef="0">${ctrl}<hp:t></hp:t></hp:run>`,
-      paragraphLineseg(contentWidth, registry, 0, [0]),
+      paragraphLineseg(contentWidth, registry, 0, [0]).xml,
       `</hp:p>`,
     ].join("");
     state.currentLineWidthHpu = lineWidth;
@@ -393,10 +645,13 @@ function emitBlock(
   {
     const tblXml = emitTable(block, registry, state);
     const pid = state.nextParaId++;
+    // 표를 감싸는 문단도 강제 단/페이지 나눔을 따른다 (지문 boxed 등이 단/페이지를 시작할 때).
+    const pageBreak = block.pageBreak ? "1" : "0";
+    const columnBreak = block.columnBreak ? "1" : "0";
     return [
-      `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
+      `<hp:p id="${pid}" paraPrIDRef="0" styleIDRef="0" pageBreak="${pageBreak}" columnBreak="${columnBreak}" merged="0">`,
       `<hp:run charPrIDRef="0">${tblXml}</hp:run>`,
-      paragraphLineseg(state.currentLineWidthHpu, registry, 0, [0]),
+      paragraphLineseg(state.currentLineWidthHpu, registry, 0, [0]).xml,
       `</hp:p>`,
     ].join("");
   }
@@ -415,6 +670,7 @@ export function buildSectionXml(
     nextParaId: 0,
     nextCtrlId: 1,
     currentLineWidthHpu: contentWidth,
+    cellTextVertOffset: null,
   };
 
   const blocks = [...sec.blocks];
@@ -423,12 +679,15 @@ export function buildSectionXml(
     blocks.unshift({ kind: "p", runs: [] });
   }
 
-  const firstParaPrelude =
-    secPrXml(sec) + footerCtrl(sec, registry, state) + colPrCtrl(sec);
+  // secPr 와 colPr 는 첫 run 에(쪽 설정). 꼬리말은 별도 run 으로 분리한다.
+  // (꼬리말을 secPr~colPr 사이에 끼우면 한컴이 여백을 기본값으로 리셋함 — emitParagraph 주석 참고)
+  const firstParaPrelude = secPrXml(sec) + colPrCtrl(sec);
+  const firstParaFooter = footerCtrl(sec, registry, state);
 
   const firstBlock = blocks[0] as ParagraphNode;
   const firstXml = emitParagraph(firstBlock, registry, state, {
     firstParaPrelude,
+    firstParaFooter,
     lineWidthHpu: contentWidth,
   });
 

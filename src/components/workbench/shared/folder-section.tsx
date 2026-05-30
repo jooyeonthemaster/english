@@ -823,7 +823,7 @@ export function FolderSection({
                   onClick={() => setCollapsed(false)}
                   aria-expanded={false}
                   title="관리 바 펼치기"
-                  className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+                  className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
                 >
                   <ChevronDown className="size-3.5" aria-hidden="true" />
                   <span>펼치기</span>
@@ -1185,7 +1185,7 @@ export function FolderSection({
               onClick={() => setCollapsed(true)}
               aria-expanded
               title="관리 바 접기"
-              className="inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+              className="inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
             >
               <ChevronUp className="size-3.5" aria-hidden="true" />
               <span>접기</span>

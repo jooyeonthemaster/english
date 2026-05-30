@@ -1,3 +1,9 @@
+/* pdfjs-polyfill: pdfjs-dist 5.6.x calls native Map/WeakMap.prototype.getOrInsertComputed
+   and Set.prototype.intersection (recent TC39 methods). Older browsers/runtimes lack them,
+   which throws "getOrInsertComputed is not a function". Installed at the top of both the
+   main-thread and worker bundles so it runs before any pdf.js code, in each global scope.
+   Remove if you upgrade to a pdfjs build that ships its own polyfills. */
+(()=>{const def=(p,n,f)=>{if(p&&typeof p[n]!=="function"){Object.defineProperty(p,n,{value:f,writable:true,configurable:true,enumerable:false});}};const goic=function(k,cb){if(this.has(k))return this.get(k);const v=cb(k);this.set(k,v);return v;};if(typeof Map!=="undefined")def(Map.prototype,"getOrInsertComputed",goic);if(typeof WeakMap!=="undefined")def(WeakMap.prototype,"getOrInsertComputed",goic);if(typeof Set!=="undefined")def(Set.prototype,"intersection",function(o){const r=new Set();for(const v of this){if(o.has(v))r.add(v);}return r;});})();
 /**
  * @licstart The following is the entire license notice for the
  * JavaScript code in this page

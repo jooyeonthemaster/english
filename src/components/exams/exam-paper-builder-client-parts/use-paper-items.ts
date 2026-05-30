@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import type {
   BuilderQuestion,
@@ -37,6 +37,21 @@ export function usePaperItems(markDirty: () => void) {
     future: PaperItem[][];
   }>({ past: [], future: [] });
 
+  // Latest-value mirrors for synchronous reads inside event handlers. React
+  // state setters MUST be pure — the old code nested setHistory()/setActiveItemId()
+  // inside the setPaperItems() updater, so StrictMode's double-invoke (and any
+  // concurrent re-entry) ran those nested setters twice and pushed duplicate
+  // history entries, corrupting undo/redo after a few edits. commit/undo/redo now
+  // compute the next state from these refs and call each setter once with a plain
+  // value. Refs are updated synchronously here (for back-to-back calls in one
+  // tick) and re-synced from state via effects (for any other state path).
+  const itemsRef = useRef(paperItems);
+  const historyRef = useRef(history);
+  const activeItemIdRef = useRef(activeItemId);
+  useEffect(() => { itemsRef.current = paperItems; }, [paperItems]);
+  useEffect(() => { historyRef.current = history; }, [history]);
+  useEffect(() => { activeItemIdRef.current = activeItemId; }, [activeItemId]);
+
   const activeItem = useMemo(
     () => paperItems.find((item) => item.localId === activeItemId) || paperItems[0] || null,
     [paperItems, activeItemId],
@@ -54,71 +69,73 @@ export function usePaperItems(markDirty: () => void) {
   const canUndo = history.past.length > 0;
   const canRedo = history.future.length > 0;
 
+  // Point activeItemId at `fallback` only if the current active item is gone.
+  function reconcileActiveId(nextItems: PaperItem[], explicit?: string | null | undefined) {
+    if (explicit !== undefined) {
+      activeItemIdRef.current = explicit;
+      setActiveItemId(explicit);
+      return;
+    }
+    const active = activeItemIdRef.current;
+    if (active && !nextItems.some((item) => item.localId === active)) {
+      const fallback = nextItems[0]?.localId || null;
+      activeItemIdRef.current = fallback;
+      setActiveItemId(fallback);
+    }
+  }
+
   function commitItems(
     updater: (current: PaperItem[]) => PaperItem[],
     getNextActiveId?: () => string | null | undefined,
   ) {
-    setPaperItems((current) => {
-      const rawNext = updater(current);
-      if (rawNext === current) return current;
-      const next = reindexItems(rawNext);
-      setHistory((historyState) => ({
-        past: [...historyState.past, current].slice(-80),
-        future: [],
-      }));
-      const nextActiveId = getNextActiveId?.();
-      if (nextActiveId !== undefined) {
-        setActiveItemId(nextActiveId);
-      } else if (activeItemId && !next.some((item) => item.localId === activeItemId)) {
-        setActiveItemId(next[0]?.localId || null);
-      }
-      markDirty();
-      return next;
-    });
+    const current = itemsRef.current;
+    const rawNext = updater(current);
+    if (rawNext === current) return;
+    const next = reindexItems(rawNext);
+    const nextHistory = {
+      past: [...historyRef.current.past, current].slice(-80),
+      future: [] as PaperItem[][],
+    };
+    itemsRef.current = next;
+    historyRef.current = nextHistory;
+    setPaperItems(next);
+    setHistory(nextHistory);
+    reconcileActiveId(next, getNextActiveId?.());
+    markDirty();
   }
 
   function undo() {
-    setPaperItems((current) => {
-      let previous: PaperItem[] | null = null;
-      setHistory((historyState) => {
-        if (historyState.past.length === 0) return historyState;
-        previous = historyState.past[historyState.past.length - 1];
-        return {
-          past: historyState.past.slice(0, -1),
-          future: [current, ...historyState.future].slice(0, 80),
-        };
-      });
-      if (!previous) return current;
-      setActiveItemId((active) =>
-        previous!.some((item) => item.localId === active)
-          ? active
-          : previous![0]?.localId || null,
-      );
-      markDirty();
-      return previous;
-    });
+    const { past, future } = historyRef.current;
+    if (past.length === 0) return;
+    const current = itemsRef.current;
+    const previous = past[past.length - 1];
+    const nextHistory = {
+      past: past.slice(0, -1),
+      future: [current, ...future].slice(0, 80),
+    };
+    itemsRef.current = previous;
+    historyRef.current = nextHistory;
+    setPaperItems(previous);
+    setHistory(nextHistory);
+    reconcileActiveId(previous);
+    markDirty();
   }
 
   function redo() {
-    setPaperItems((current) => {
-      let next: PaperItem[] | null = null;
-      setHistory((historyState) => {
-        if (historyState.future.length === 0) return historyState;
-        next = historyState.future[0];
-        return {
-          past: [...historyState.past, current].slice(-80),
-          future: historyState.future.slice(1),
-        };
-      });
-      if (!next) return current;
-      setActiveItemId((active) =>
-        next!.some((item) => item.localId === active)
-          ? active
-          : next![0]?.localId || null,
-      );
-      markDirty();
-      return next;
-    });
+    const { past, future } = historyRef.current;
+    if (future.length === 0) return;
+    const current = itemsRef.current;
+    const next = future[0];
+    const nextHistory = {
+      past: [...past, current].slice(-80),
+      future: future.slice(1),
+    };
+    itemsRef.current = next;
+    historyRef.current = nextHistory;
+    setPaperItems(next);
+    setHistory(nextHistory);
+    reconcileActiveId(next);
+    markDirty();
   }
 
   function toggleQuestion(question: BuilderQuestion) {

@@ -360,6 +360,10 @@ export function QuestionLibraryPanel({
               const question = questionById.get(id);
               if (question) onShowDetail(question);
             }}
+            onDetail={(id) => {
+              const question = questionById.get(id);
+              if (question) onShowDetail(question);
+            }}
             showManagementActions={false}
             showStar={false}
             enableDrag

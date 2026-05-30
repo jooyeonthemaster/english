@@ -630,9 +630,9 @@ export function PassageListClient({
       />
 
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-2 pb-4">
+      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4">
         {passagesData.passages.length === 0 ? (
-          <div className="bg-white rounded-xl border text-center py-20">
+          <div className="mt-2 bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">등록된 지문이 없습니다</p>
             <p className="text-sm text-slate-400 mt-1">
@@ -648,7 +648,7 @@ export function PassageListClient({
             </div>
           </div>
         ) : (
-          <section className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div
               ref={folderStickyRef}
               className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
@@ -693,8 +693,8 @@ export function PassageListClient({
             </div>
 
             <div
-              style={{ top: folderStickyHeight }}
-              className="sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90"
+              style={{ top: folderStickyHeight > 0 ? folderStickyHeight - 1 : 0 }}
+              className="sticky z-20 shrink-0 border-y border-slate-200 bg-slate-50 px-4 py-2 shadow-[0_6px_8px_-4px_rgba(15,23,42,0.08)]"
             >
               {toolbarRow}
             </div>

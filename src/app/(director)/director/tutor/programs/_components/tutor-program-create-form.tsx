@@ -45,7 +45,6 @@ export function TutorProgramCreateForm() {
   const [filterGrade, setFilterGrade] = useState("");
   const [filterSemester, setFilterSemester] = useState("");
   const [analysisStatusFilter, setAnalysisStatusFilter] = useState<PassageAnalysisStatusFilter>("all");
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedCollectionId, setSelectedCollectionId] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [generationMode, setGenerationMode] = useState<GenerationMode>("auto");
@@ -201,8 +200,6 @@ export function TutorProgramCreateForm() {
           analysisStatusFilter={analysisStatusFilter}
           setAnalysisStatusFilter={setAnalysisStatusFilter}
           passageStatusCounts={passageStatusCounts}
-          showFilters={showFilters}
-          setShowFilters={setShowFilters}
           activeFilterCount={activeFilterCount}
           selectedCollectionId={selectedCollectionId}
           setSelectedCollectionId={setSelectedCollectionId}

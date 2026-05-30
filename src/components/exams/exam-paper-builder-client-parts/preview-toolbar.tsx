@@ -31,6 +31,7 @@ interface PreviewToolbarProps {
   onUndo?: () => void;
   onRedo?: () => void;
   onPrint: () => void;
+  onDownloadPdf: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
   onDownloadHwpx: () => void;
@@ -49,6 +50,7 @@ export function PreviewToolbar({
   onUndo,
   onRedo,
   onPrint,
+  onDownloadPdf,
   onDownloadDocx,
   onDownloadDocxWithAnswers,
   onDownloadHwpx,
@@ -56,8 +58,29 @@ export function PreviewToolbar({
   onSave,
 }: PreviewToolbarProps) {
   const [downloadOpen, setDownloadOpen] = useState(false);
+  const [compactLabels, setCompactLabels] = useState(false);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const downloadMenuRef = useRef<HTMLDivElement>(null);
   const actionDisabled = isPending || paperItemsCount === 0;
+  const templateLabel = TEMPLATE_META[template].label;
+  const compactTemplateLabel = templateLabel.trim().slice(0, 1) || templateLabel;
+
+  useEffect(() => {
+    const toolbar = toolbarRef.current;
+    if (!toolbar) return;
+
+    const updateCompactLabels = () => {
+      setCompactLabels(toolbar.getBoundingClientRect().width < 620);
+    };
+
+    updateCompactLabels();
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const resizeObserver = new ResizeObserver(updateCompactLabels);
+    resizeObserver.observe(toolbar);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!downloadOpen) return;
@@ -84,12 +107,21 @@ export function PreviewToolbar({
   }
 
   return (
-    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3">
+    <div
+      ref={toolbarRef}
+      className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3"
+    >
       <div className="flex min-w-0 items-center gap-2">
         <Eye className="h-3.5 w-3.5 text-slate-400" />
-        <span className="text-[12px] font-bold text-slate-600">{paperSize} 미리보기</span>
-        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
-          {TEMPLATE_META[template].label}
+        <span className="whitespace-nowrap text-[12px] font-bold text-slate-600">
+          {compactLabels ? paperSize : `${paperSize} 미리보기`}
+        </span>
+        <span
+          className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500"
+          title={templateLabel}
+          aria-label={templateLabel}
+        >
+          {compactLabels ? compactTemplateLabel : templateLabel}
         </span>
       </div>
       <div className="no-print flex shrink-0 items-center gap-1.5">
@@ -149,7 +181,19 @@ export function PreviewToolbar({
             <ChevronDown className="h-3 w-3 text-slate-400" />
           </button>
           {downloadOpen && (
-            <div className="absolute right-0 top-[calc(100%+6px)] z-30 w-44 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-200/70">
+            <div className="absolute right-0 top-[calc(100%+6px)] z-30 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-200/70">
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadPdf)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <Printer className="h-3.5 w-3.5 text-rose-500" />
+                PDF
+                <span className="ml-auto rounded-sm bg-rose-50 px-1 py-px text-[9px] font-bold leading-none text-rose-600">
+                  미리보기 그대로
+                </span>
+              </button>
+              <div className="my-1 h-px bg-slate-100" />
               <button
                 type="button"
                 onClick={() => runDownload(onDownloadDocx)}

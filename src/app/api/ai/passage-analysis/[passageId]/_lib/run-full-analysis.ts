@@ -20,6 +20,12 @@ export async function runFullAnalysis(
   },
   customPrompt?: string,
   generationPlan: QuestionGenerationPlan = "STANDARD",
+  onUsage?: (usage: {
+    usage?: unknown;
+    provider: string;
+    modelId: string;
+    durationMs: number;
+  }) => void,
 ) {
   const prompt = buildFullAnalysisPrompt({
     passageContent: passage.content,
@@ -49,6 +55,12 @@ export async function runFullAnalysis(
   });
 
   const { text: rawJson, finishReason, rawFinishReason, usage } = analysisResult;
+  onUsage?.({
+    usage,
+    provider: analysisResult.provider,
+    modelId: analysisResult.modelId,
+    durationMs: analysisResult.durationMs,
+  });
   console.log("[ANALYSIS] generateText completed", {
     seconds: ((Date.now() - startTime) / 1000).toFixed(1),
     finishReason,

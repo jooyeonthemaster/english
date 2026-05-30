@@ -29,6 +29,7 @@ import {
   bulkDeleteNaeshinQuestions,
 } from "@/actions/learning-questions";
 import { LEARNING_CATEGORIES } from "@/lib/learning-constants";
+import { getQuestionDifficultyBadge } from "@/lib/difficulty";
 import { QuestionDetail } from "../question-detail";
 import {
   CATEGORY_COLORS,
@@ -468,7 +469,12 @@ function QuestionCard({
           className="flex items-center gap-2 shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="text-[10px] px-1.5 py-0.5 rounded-lg bg-slate-100 text-slate-500 font-medium">
+          <span
+            className={cn(
+              "text-[10px] px-1.5 py-0.5 rounded-lg border font-medium",
+              getQuestionDifficultyBadge(q.difficulty)
+            )}
+          >
             {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
           </span>
           {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && plan && (

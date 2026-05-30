@@ -97,9 +97,10 @@ function CustomPaperBlock({
           blockTextSizeClass(item),
           blockAlignClass(item),
         )}
+        placeholder="안내 문구를 입력하세요."
         readOnly={disabled}
       >
-        {item.blockText || "텍스트를 입력하세요."}
+        {item.blockText}
       </EditableText>
     );
   }
@@ -486,11 +487,7 @@ export function A4PaperPage({
                               isDropTarget &&
                               "ring-2 ring-blue-300 ring-offset-2",
                             !readOnly && draggingItemId === item.localId && "opacity-55",
-                            !readOnly && activeItemId === item.localId
-                              ? "px-2 py-1.5"
-                              : isCustomBlock
-                                ? "py-1"
-                                : "py-0.5",
+                            isCustomBlock ? "py-1" : "py-0.5",
                           )}
                         >
                           {isDropTarget && (

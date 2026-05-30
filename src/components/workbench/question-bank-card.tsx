@@ -5,28 +5,19 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   CheckCircle2,
-  Clock,
   ChevronDown,
   ChevronUp,
   Trash2,
-  Eye,
   FileText,
   Pencil,
   Layers,
-  MoreHorizontal,
   Star,
+  XCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
 import {
   TYPE_LABELS,
@@ -35,12 +26,14 @@ import {
 } from "./question-type-filter";
 import { parseJSON } from "./shared/helpers";
 import { StructuredQuestionRenderer } from "./question-renderers";
+import { ReviewStatusStamp } from "./question-card";
 import { CollapsedPreview } from "./question-bank-card/collapsed-preview";
 import { ExplanationSection } from "./question-bank-card/explanation-section";
 import { parseQuestionSections } from "./question-bank-card/parse-question-sections";
 import { renderFormatted } from "./question-bank-card/render-formatted";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
 import type { QuestionBankItem } from "./question-bank-card/types";
+import { shouldIgnoreCardClick } from "./shared/card-click";
 import {
   getVisibleQuestionTags,
   sanitizeAiModelDisclosureText,
@@ -83,7 +76,9 @@ export function QuestionBankCard({
   onToggle,
   onDelete,
   onApprove,
+  onUnapprove,
   onToggleStar,
+  onDetail,
   onEdit,
   viewSize = "lg",
   showManagementActions = true,
@@ -96,7 +91,9 @@ export function QuestionBankCard({
   onToggle: () => void;
   onDelete?: () => void;
   onApprove?: () => void;
+  onUnapprove?: () => void;
   onToggleStar?: () => void;
+  onDetail?: () => void;
   onEdit?: () => void;
   viewSize?: "lg" | "md" | "sm";
   showManagementActions?: boolean;
@@ -108,6 +105,7 @@ export function QuestionBankCard({
   const [passageOpen, setPassageOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const suppressCardClickRef = useRef(false);
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
@@ -135,32 +133,66 @@ export function QuestionBankCard({
     return draggable({
       element: el,
       getInitialData: () => ({ questionId: q.id, type: "question" }),
-      onDragStart: () => setIsDragging(true),
-      onDrop: () => setIsDragging(false),
+      onDragStart: () => {
+        suppressCardClickRef.current = true;
+        setIsDragging(true);
+      },
+      onDrop: () => {
+        setIsDragging(false);
+        window.setTimeout(() => {
+          suppressCardClickRef.current = false;
+        }, 0);
+      },
     });
   }, [enableDrag, q.id]);
 
   const collapsedPx =
-    viewSize === "lg" ? 280 : viewSize === "md" ? 240 : 200;
+    viewSize === "lg" ? 340 : viewSize === "md" ? 300 : 256;
 
   const questionClamp =
     viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
 
+  // Review action footer (검수완료/검수취소 + 수정하기 + stamp) — only in managed contexts
+  const showReviewActions =
+    showManagementActions && Boolean(q.id) && Boolean(onApprove || onUnapprove);
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit?.();
+  };
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      (!onDetail && !onEdit) ||
+      suppressCardClickRef.current ||
+      shouldIgnoreCardClick(e)
+    ) {
+      return;
+    }
+    if (onDetail) onDetail();
+    else onEdit?.();
+  };
+
   return (
     <Card
       ref={dragRef}
-      className={`${enableDrag ? "cursor-grab active:cursor-grabbing" : ""} flex flex-col ${
+      onClick={handleCardClick}
+      className={`${enableDrag ? "cursor-grab active:cursor-grabbing" : onDetail || onEdit ? "cursor-pointer" : ""} flex flex-col ${
         expanded ? "" : "overflow-hidden"
       } ${
         isDragging ? "opacity-40 scale-95" : ""
       } ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
+      } ${
+        !q.approved
+          ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
+          : ""
       }`}
       style={expanded ? undefined : {
         maxHeight: `${collapsedPx}px`,
       }}
     >
-      <CardContent ref={contentRef} className={`p-3 flex flex-col gap-1.5 ${expanded ? "space-y-2" : ""}`}>
+      <CardContent ref={contentRef} className={`p-3 flex flex-col gap-1.5 ${expanded ? "" : "flex-1 min-h-0"}`}>
         {/* Header row */}
         <div className="flex flex-wrap items-center gap-1.5 shrink-0">
           <Checkbox
@@ -194,7 +226,7 @@ export function QuestionBankCard({
               </span>
             )
           )}
-          <span className="text-[13px] font-bold text-slate-500 shrink-0">
+          <span className="text-xs font-bold text-slate-400 shrink-0">
             {num}.
           </span>
           <Badge variant="outline" className="text-[10px] shrink-0">
@@ -214,75 +246,41 @@ export function QuestionBankCard({
             </Badge>
           )}
           {q.aiGenerated && (
-            <Layers className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-          )}
-          {q.approved ? (
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          ) : (
-            <Clock className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+            <Layers className="w-3 h-3 text-blue-400 shrink-0" />
           )}
           <div className="ml-auto flex items-center gap-1 shrink-0">
+            {showManagementActions && onDelete && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-red-500 hover:bg-red-50 hover:text-red-600"
+                aria-label="삭제"
+                title="삭제"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            )}
             {/* Expand/Collapse toggle */}
             <button
               onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); if (!expanded) setPassageOpen(false); }}
               aria-expanded={expanded}
               title={expanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
-              className={`group/expand h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-colors border ${
-                expanded
-                  ? "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
-                  : "text-blue-600 bg-blue-50/70 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
-              }`}
+              className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
             >
               {expanded ? (
-                <><ChevronUp className="w-3.5 h-3.5" />접기</>
+                <><ChevronUp className="size-3.5" />접기</>
               ) : (
-                <><ChevronDown className="w-3.5 h-3.5 transition-transform group-hover/expand:translate-y-0.5" />펼치기</>
+                <><ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />펼치기</>
               )}
             </button>
-            {showManagementActions && (
-              <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEdit?.();
-                  }}
-                >
-                  <Pencil className="w-3 h-3" />
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-6 w-6">
-                      <MoreHorizontal className="w-3 h-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={onEdit}
-                    >
-                      <Eye className="w-3.5 h-3.5 mr-2" />
-                      상세 보기
-                    </DropdownMenuItem>
-                    {!q.approved && (
-                      <DropdownMenuItem onClick={onApprove}>
-                        <CheckCircle2 className="w-3.5 h-3.5 mr-2" />
-                        승인
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={onDelete} className="text-red-600">
-                      <Trash2 className="w-3.5 h-3.5 mr-2" />
-                      삭제
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            )}
           </div>
         </div>
 
+        <div className={`flex flex-col ${expanded ? "gap-2" : "gap-1.5 flex-1 min-h-0 overflow-hidden"}`}>
         {/* Tags */}
         {visibleTags.length > 0 && viewSize !== "sm" && (
           <div className="flex gap-1 overflow-hidden shrink-0 h-5">
@@ -347,20 +345,18 @@ export function QuestionBankCard({
                   return (
                     <div
                       key={opt.label}
-                      className={`flex items-start gap-2 text-[12px] rounded px-2 py-1 ${
+                      className={`flex items-start gap-2.5 text-[12px] rounded px-2 py-1 ${
                         isCorrect
                           ? "bg-emerald-50 text-emerald-800 font-medium"
                           : "text-slate-600"
                       }`}
                     >
                       <span
-                        className={`shrink-0 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                          isCorrect
-                            ? "bg-emerald-500 text-white"
-                            : "bg-slate-200 text-slate-500"
+                        className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${
+                          isCorrect ? "text-emerald-600" : "text-slate-400"
                         }`}
                       >
-                        {opt.label}
+                        {opt.label}.
                       </span>
                       <span className="pt-0.5">{renderFormatted(opt.text)}</span>
                     </div>
@@ -388,12 +384,66 @@ export function QuestionBankCard({
 
         {/* Explanation toggle */}
         <ExplanationSection explanation={q.explanation} />
+        </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-3 text-[10px] text-slate-400 pt-1.5 border-t border-slate-100 mt-auto shrink-0">
-          <span>{formatDate(q.createdAt)}</span>
-          {q._count.examLinks > 0 && (
-            <span>시험 {q._count.examLinks}회 사용</span>
+        <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
+          <div className="flex items-end justify-between gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+              <span>{formatDate(q.createdAt)}</span>
+              {q._count.examLinks > 0 && (
+                <span>시험 {q._count.examLinks}회 사용</span>
+              )}
+            </div>
+            {!showReviewActions && (
+              <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+            )}
+          </div>
+          {showReviewActions && (
+            <div className="flex items-end gap-1.5">
+              <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                {q.approved ? (
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={!onUnapprove}
+                    className="h-7 flex-1 border border-red-200 bg-red-50 px-2 text-[11px] font-semibold text-red-600 shadow-none hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:bg-red-50 disabled:text-red-300 disabled:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUnapprove?.();
+                    }}
+                  >
+                    <XCircle className="w-3.5 h-3.5 mr-1" />
+                    검수취소
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={!onApprove}
+                    className="h-7 flex-1 border border-green-200 bg-green-50/60 px-2 text-[11px] font-semibold text-green-700 shadow-none hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onApprove?.();
+                    }}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                    검수완료
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                  onClick={handleEdit}
+                >
+                  <Pencil className="w-3 h-3" />
+                  수정하기
+                </Button>
+              </div>
+              <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+            </div>
           )}
         </div>
       </CardContent>

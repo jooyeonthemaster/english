@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { GripVertical, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
@@ -36,6 +36,16 @@ interface AdminShellProps {
 }
 
 const SIDEBAR_STORAGE_KEY = "yshin-sidebar-collapsed";
+const SIDEBAR_WIDTH_STORAGE_KEY = "yshin-sidebar-width";
+const SIDEBAR_DEFAULT_WIDTH = 220;
+const SIDEBAR_COLLAPSED_WIDTH = 72;
+const SIDEBAR_MIN_WIDTH = 180;
+const SIDEBAR_MAX_WIDTH = 300;
+const SIDEBAR_DRAG_THRESHOLD = 4;
+
+function clampSidebarWidth(width: number) {
+  return Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width));
+}
 
 export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const pathname = usePathname();
@@ -43,7 +53,11 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [isPending, startTransition] = useTransition();
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_DEFAULT_WIDTH);
+  const [sidebarScrolling, setSidebarScrolling] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const suppressSidebarHandleClickRef = React.useRef(false);
+  const sidebarScrollTimeoutRef = React.useRef<ReturnType<typeof window.setTimeout> | null>(null);
   // Clear navigating state when pathname changes
   useEffect(() => {
     setNavigatingTo(null);
@@ -52,7 +66,19 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   useEffect(() => {
     const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
     if (stored === "true") setCollapsed(true);
+    const storedWidth = Number(localStorage.getItem(SIDEBAR_WIDTH_STORAGE_KEY));
+    if (Number.isFinite(storedWidth) && storedWidth > 0) {
+      setSidebarWidth(clampSidebarWidth(storedWidth));
+    }
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (sidebarScrollTimeoutRef.current) {
+        window.clearTimeout(sidebarScrollTimeoutRef.current);
+      }
+    };
   }, []);
 
   const toggleSidebar = useCallback(() => {
@@ -61,6 +87,75 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
       localStorage.setItem(SIDEBAR_STORAGE_KEY, String(next));
       return next;
     });
+  }, []);
+
+  const handleSidebarHandleClick = useCallback(() => {
+    if (suppressSidebarHandleClickRef.current) {
+      suppressSidebarHandleClickRef.current = false;
+      return;
+    }
+    toggleSidebar();
+  }, [toggleSidebar]);
+
+  const handleSidebarResizePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (collapsed) return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+
+      suppressSidebarHandleClickRef.current = false;
+
+      const startX = event.clientX;
+      const startWidth = sidebarWidth;
+      const previousCursor = document.body.style.cursor;
+      const previousUserSelect = document.body.style.userSelect;
+      let didDrag = false;
+      let latestWidth = startWidth;
+
+      const handlePointerMove = (moveEvent: PointerEvent) => {
+        const deltaX = moveEvent.clientX - startX;
+        if (!didDrag) {
+          if (Math.abs(deltaX) < SIDEBAR_DRAG_THRESHOLD) return;
+          didDrag = true;
+          suppressSidebarHandleClickRef.current = true;
+          document.body.style.cursor = "col-resize";
+          document.body.style.userSelect = "none";
+        }
+
+        moveEvent.preventDefault();
+        latestWidth = clampSidebarWidth(startWidth + deltaX);
+        setSidebarWidth(latestWidth);
+      };
+
+      const finish = () => {
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerup", finish);
+        window.removeEventListener("pointercancel", finish);
+        if (didDrag) {
+          document.body.style.cursor = previousCursor;
+          document.body.style.userSelect = previousUserSelect;
+          localStorage.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(latestWidth));
+          window.setTimeout(() => {
+            suppressSidebarHandleClickRef.current = false;
+          }, 0);
+        }
+      };
+
+      window.addEventListener("pointermove", handlePointerMove, { passive: false });
+      window.addEventListener("pointerup", finish, { once: true });
+      window.addEventListener("pointercancel", finish, { once: true });
+    },
+    [collapsed, sidebarWidth],
+  );
+
+  const handleSidebarScroll = useCallback(() => {
+    setSidebarScrolling(true);
+    if (sidebarScrollTimeoutRef.current) {
+      window.clearTimeout(sidebarScrollTimeoutRef.current);
+    }
+    sidebarScrollTimeoutRef.current = window.setTimeout(() => {
+      setSidebarScrolling(false);
+      sidebarScrollTimeoutRef.current = null;
+    }, 900);
   }, []);
 
   // When a review drawer is open, force-collapse the sidebar so the main
@@ -164,149 +259,160 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
       <div className="flex min-h-screen flex-col bg-[#F4F6F9]">
        <div className="flex flex-1">
         {/* ─── Sidebar ─── */}
-        <aside
-          className={cn(
-            "hidden sticky top-0 h-screen self-start shrink-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:flex",
-            collapsed ? "w-[72px]" : "w-[220px]"
-          )}
-          style={{
-            background: "rgba(255,255,255,0.55)",
-            backdropFilter: "blur(40px) saturate(180%)",
-            WebkitBackdropFilter: "blur(40px) saturate(180%)",
-            borderRight: "1px solid rgba(0,0,0,0.06)",
-          }}
-        >
-          {/* Logo */}
-          <div
-            className={cn(
-              "flex items-center h-[64px] shrink-0 transition-all duration-300",
-              collapsed ? "justify-center px-0" : "px-6"
-            )}
+        <div className="sticky top-0 hidden h-screen self-start shrink-0 md:flex">
+          <aside
+            className="flex h-full shrink-0 flex-col transition-[width] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            style={{
+              width: collapsed ? SIDEBAR_COLLAPSED_WIDTH : sidebarWidth,
+              background: "rgba(255,255,255,0.55)",
+              backdropFilter: "blur(40px) saturate(180%)",
+              WebkitBackdropFilter: "blur(40px) saturate(180%)",
+              borderRight: "1px solid rgba(0,0,0,0.06)",
+            }}
           >
-            <Link
-              href={basePath}
-              className="flex items-center gap-2.5"
+            {/* Logo */}
+            <div
+              className={cn(
+                "flex items-center h-[64px] shrink-0 transition-all duration-300",
+                collapsed ? "justify-center px-0" : "px-6"
+              )}
             >
-              <BrandIcon
-                className={cn("shrink-0", collapsed ? "size-9" : "size-8")}
-                markClassName={collapsed ? "size-[21px]" : "size-[20px]"}
-              />
-              {!collapsed && (
-                <span className="text-[20px] font-bold tracking-tight text-gray-900 transition-all duration-300">
-                  SMOAT
-                </span>
-              )}
-              {!collapsed && (
-                <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">
-                  erp
-                </span>
-              )}
-            </Link>
-          </div>
-
-          {/* Top user actions */}
-          <SidebarTopActions
-            staff={staff}
-            basePath={basePath}
-            collapsed={collapsed}
-            pathname={pathname}
-            isDirector={isDirector}
-            onNavClick={handleNavClick}
-          />
-
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto sidebar-scroll py-3 px-3">
-            {filteredGroups.map((group, gi) => (
-              <div
-                key={gi}
-                className={cn(
-                  gi > 0 && "mt-6",
-                  group.comingSoon && "mt-8 pt-5",
-                )}
-                style={
-                  group.comingSoon
-                    ? {
-                        borderTop: "1px dashed rgba(56, 189, 248, 0.25)",
-                      }
-                    : undefined
-                }
+              <Link
+                href={basePath}
+                className="flex items-center gap-2.5"
               >
-                {group.title && !collapsed && (
-                  <div className="px-3 mb-2 flex items-center gap-2">
-                    {group.comingSoon ? (
-                      <>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-600">
-                          Coming Soon
-                        </span>
-                        <span
-                          className="size-1.5 rounded-full bg-sky-500"
-                          style={{ animation: "yshin-pulse 1.6s ease-in-out infinite" }}
-                        />
-                      </>
-                    ) : (
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-300">
-                        {group.title}
-                      </span>
+                <BrandIcon
+                  className={cn("shrink-0", collapsed ? "size-9" : "size-8")}
+                  markClassName={collapsed ? "size-[21px]" : "size-[20px]"}
+                />
+                {!collapsed && (
+                  <span className="text-[20px] font-bold tracking-tight text-gray-900 transition-all duration-300">
+                    SMOAT
+                  </span>
+                )}
+                {!collapsed && (
+                  <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">
+                    erp
+                  </span>
+                )}
+              </Link>
+            </div>
+
+            {/* Top user actions */}
+            <SidebarTopActions
+              staff={staff}
+              basePath={basePath}
+              collapsed={collapsed}
+              pathname={pathname}
+              isDirector={isDirector}
+              onNavClick={handleNavClick}
+            />
+
+            {/* Navigation */}
+            <nav
+              className={cn(
+                "flex-1 overflow-y-auto sidebar-scroll sidebar-scroll-left py-3 px-3",
+                sidebarScrolling && "is-scrolling",
+              )}
+              onScroll={handleSidebarScroll}
+            >
+              <div className="sidebar-scroll-content">
+                {filteredGroups.map((group, gi) => (
+                  <div
+                    key={gi}
+                    className={cn(
+                      gi > 0 && "mt-6",
+                      group.comingSoon && "mt-8 pt-5",
                     )}
-                  </div>
-                )}
-                {group.title && collapsed && gi > 0 && (
-                  <div className="mx-auto mb-3 w-5 border-t border-gray-200/50" />
-                )}
-                <ul className="space-y-0.5">
-                  {group.items.map((item) => (
-                    <NavItem
-                      key={item.href}
-                      item={item}
-                      active={isActive(item.href)}
-                      collapsed={collapsed}
-                      isOpen={!!openMenus[item.href]}
-                      effectivePath={effectivePath}
-                      routeMatches={routeMatches}
-                      onNavClick={handleNavClick}
-                      onToggleMenu={toggleMenu}
-                      onSetOpenMenu={setOpenMenu}
-                    />
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
-
-          {/* Collapse toggle */}
-          <div
-            className={cn(
-              "shrink-0 border-t border-gray-200/50 transition-all duration-300",
-              collapsed ? "px-2 py-2" : "px-3 py-2.5"
-            )}
-          >
-            {collapsed ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={toggleSidebar}
-                    className="flex items-center justify-center h-10 w-10 mx-auto rounded-xl text-white bg-blue-600 border border-blue-600 hover:bg-blue-700 hover:border-blue-700 shadow-[0_4px_12px_rgba(37,99,235,0.25)] hover:shadow-[0_6px_16px_rgba(37,99,235,0.35)] transition-all duration-200"
-                    aria-label="사이드바 열기"
+                    style={
+                      group.comingSoon
+                        ? {
+                            borderTop: "1px dashed rgba(56, 189, 248, 0.25)",
+                          }
+                        : undefined
+                    }
                   >
-                    <PanelLeftOpen className="size-[18px]" strokeWidth={1.9} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
-                  사이드바 열기
-                </TooltipContent>
-              </Tooltip>
-            ) : (
+                    {group.title && !collapsed && (
+                      <div className="px-3 mb-2 flex items-center gap-2">
+                        {group.comingSoon ? (
+                          <>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-600">
+                              Coming Soon
+                            </span>
+                            <span
+                              className="size-1.5 rounded-full bg-sky-500"
+                              style={{ animation: "yshin-pulse 1.6s ease-in-out infinite" }}
+                            />
+                          </>
+                        ) : (
+                          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-300">
+                            {group.title}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {group.title && collapsed && gi > 0 && (
+                      <div className="mx-auto mb-3 w-5 border-t border-gray-200/50" />
+                    )}
+                    <ul className="space-y-0.5">
+                      {group.items.map((item) => (
+                        <NavItem
+                          key={item.href}
+                          item={item}
+                          active={isActive(item.href)}
+                          collapsed={collapsed}
+                          isOpen={!!openMenus[item.href]}
+                          effectivePath={effectivePath}
+                          routeMatches={routeMatches}
+                          onNavClick={handleNavClick}
+                          onToggleMenu={toggleMenu}
+                          onSetOpenMenu={setOpenMenu}
+                        />
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </nav>
+          </aside>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
               <button
-                onClick={toggleSidebar}
-                className="group flex items-center justify-center gap-2 w-full h-10 rounded-xl text-white bg-blue-600 border border-blue-600 hover:bg-blue-700 hover:border-blue-700 shadow-[0_4px_12px_rgba(37,99,235,0.25)] hover:shadow-[0_6px_16px_rgba(37,99,235,0.35)] transition-all duration-200"
-                aria-label="사이드바 접기"
+                type="button"
+                onPointerDown={handleSidebarResizePointerDown}
+                onClick={handleSidebarHandleClick}
+                title={
+                  collapsed
+                    ? "사이드바열기"
+                    : "드래그하여 폭 조절 · 클릭하여 사이드바닫기"
+                }
+                aria-label={collapsed ? "사이드바열기" : "사이드바닫기"}
+                aria-expanded={!collapsed}
+                className={cn(
+                  "group/sidebar-handle flex h-full min-h-0 w-4 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 rounded-md bg-white/50 py-1 text-[11px] font-semibold transition-colors",
+                  collapsed ? "cursor-pointer" : "cursor-col-resize",
+                  "text-sky-400 hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100",
+                )}
               >
-                <PanelLeftClose className="size-[17px] text-white/90 group-hover:text-white transition-colors" strokeWidth={1.9} />
-                <span className="text-[12px] font-semibold tracking-tight">사이드바 접기</span>
+                {collapsed ? (
+                  <PanelLeftOpen className="h-3.5 w-3.5" strokeWidth={1.9} />
+                ) : (
+                  <PanelLeftClose className="h-3.5 w-3.5" strokeWidth={1.9} />
+                )}
+                <span style={{ writingMode: "vertical-rl" }}>
+                  {collapsed ? "사이드바열기" : "사이드바닫기"}
+                </span>
+                {!collapsed && (
+                  <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/sidebar-handle:opacity-70" />
+                )}
               </button>
-            )}
-          </div>
-        </aside>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
+              {collapsed ? "사이드바열기" : "드래그하여 폭 조절 · 클릭하여 사이드바닫기"}
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
         {/* ─── Main area ─── */}
         <div

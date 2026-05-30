@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
   Database,
+  CheckCircle2,
   ChevronDown,
   ChevronUp,
   ClipboardList,
-  Clock,
   Rows3,
   FileText,
   FolderX,
@@ -21,8 +21,11 @@ import { toast } from "sonner";
 import {
   deleteWorkbenchQuestion,
   bulkDeleteWorkbenchQuestions,
+  bulkApproveWorkbenchQuestions,
+  getWorkbenchQuestion,
   getWorkbenchQuestionIds,
   approveWorkbenchQuestion,
+  unapproveWorkbenchQuestion,
   toggleQuestionStar,
   createQuestionCollection,
   addQuestionsToCollection,
@@ -52,6 +55,7 @@ import { QuestionBankCard } from "./question-bank-card";
 import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
 import { GridToggle } from "./question-bank-client/grid-toggle";
+import { QuestionDetailDialog } from "./question-bank-client/question-detail-dialog";
 import { QuestionFiltersToolbar } from "./question-bank-client/filters-toolbar";
 import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 
@@ -126,6 +130,7 @@ interface QuestionBankProps {
     page: number;
     totalPages: number;
   } | null;
+  statusCounts?: { all: number; pending: number; approved: number };
   filters: {
     page: number;
     type?: string;
@@ -212,6 +217,7 @@ export function QuestionBankClient({
   view,
   questionsData,
   groupedData,
+  statusCounts,
   filters,
   collections: initialCollections,
   collectionMembership: initialMembership,
@@ -248,9 +254,9 @@ export function QuestionBankClient({
   });
 
   // Grid view mode
-  const [gridCols, setGridCols] = useState<2 | 3 | 4>(2);
+  const [gridCols, setGridCols] = useState<2 | 3 | "list">(2);
   const viewSize: "lg" | "md" | "sm" =
-    gridCols === 2 ? "lg" : gridCols === 3 ? "md" : "sm";
+    gridCols === 3 ? "md" : "lg";
 
   // Optimistically hide deleted questions until router.refresh() reaches the
   // page. Declared up here because the displayed-questions useMemo below
@@ -369,6 +375,9 @@ export function QuestionBankClient({
   // Bulk delete
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+
+  // Bulk approve (검수완료)
+  const [bulkApproving, setBulkApproving] = useState(false);
   const [selectingAllPages, setSelectingAllPages] = useState(false);
 
   // Stats
@@ -436,6 +445,50 @@ export function QuestionBankClient({
     selectedIds.delete(id);
     setSelectedIds(new Set(selectedIds));
   });
+  const detailLoadTokenRef = useRef(0);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailQuestionId, setDetailQuestionId] = useState<string | null>(null);
+  const [detailQuestion, setDetailQuestion] = useState<Awaited<
+    ReturnType<typeof getWorkbenchQuestion>
+  > | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailLoadError, setDetailLoadError] = useState<string | null>(null);
+
+  const openDetail = useCallback(async (id: string) => {
+    const token = detailLoadTokenRef.current + 1;
+    detailLoadTokenRef.current = token;
+    setDetailOpen(true);
+    setDetailQuestionId(id);
+    setDetailQuestion(null);
+    setDetailLoadError(null);
+    setDetailLoading(true);
+
+    try {
+      const question = await getWorkbenchQuestion(id);
+      if (detailLoadTokenRef.current !== token) return;
+      if (!question) {
+        setDetailLoadError("문제를 찾을 수 없습니다.");
+        toast.error("문제를 찾을 수 없습니다.");
+        return;
+      }
+      setDetailQuestion(question);
+    } catch {
+      if (detailLoadTokenRef.current !== token) return;
+      setDetailLoadError("문제를 불러오는 중 오류가 발생했습니다.");
+      toast.error("문제를 불러오지 못했습니다.");
+    } finally {
+      if (detailLoadTokenRef.current === token) setDetailLoading(false);
+    }
+  }, []);
+
+  const closeDetail = useCallback(() => {
+    detailLoadTokenRef.current += 1;
+    setDetailOpen(false);
+    setDetailQuestionId(null);
+    setDetailQuestion(null);
+    setDetailLoadError(null);
+    setDetailLoading(false);
+  }, []);
 
   // ─── Question Actions ───
   async function handleDelete(id: string) {
@@ -450,6 +503,7 @@ export function QuestionBankClient({
       });
       selectedIds.delete(id);
       setSelectedIds(new Set(selectedIds));
+      if (detailQuestionId === id) closeDetail();
       router.refresh();
     } else {
       toast.error(result.error || "삭제 실패");
@@ -459,10 +513,48 @@ export function QuestionBankClient({
   async function handleApprove(id: string) {
     const result = await approveWorkbenchQuestion(id);
     if (result.success) {
-      toast.success("승인됨");
+      toast.success("검수완료");
+      setDetailQuestion((prev) =>
+        prev && prev.id === id ? { ...prev, approved: true } : prev,
+      );
       router.refresh();
     } else {
       toast.error(result.error || "승인 실패");
+    }
+  }
+
+  async function handleUnapprove(id: string) {
+    const result = await unapproveWorkbenchQuestion(id);
+    if (result.success) {
+      toast.success("검수 취소됨");
+      setDetailQuestion((prev) =>
+        prev && prev.id === id ? { ...prev, approved: false } : prev,
+      );
+      router.refresh();
+    } else {
+      toast.error(result.error || "검수 취소 실패");
+    }
+  }
+
+  async function handleBulkApprove() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0 || bulkApproving) return;
+    setBulkApproving(true);
+    try {
+      const result = await bulkApproveWorkbenchQuestions(ids);
+      if (!result.success) {
+        toast.error(result.error || "검수 처리에 실패했습니다.");
+        return;
+      }
+      toast.success(`${result.approved}문항을 검수완료 처리했습니다.`);
+      clearSelection();
+      router.refresh();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "검수 처리에 실패했습니다.",
+      );
+    } finally {
+      setBulkApproving(false);
     }
   }
 
@@ -611,12 +703,6 @@ export function QuestionBankClient({
   }
 
   const showingPendingOnly = filters.approved === false;
-  const togglePendingQuestions = useCallback(() => {
-    setSearchValue("");
-    folders.setActiveFolder(null);
-    clearSelection();
-    router.push(showingPendingOnly ? QUESTION_BANK_PATH : `${QUESTION_BANK_PATH}?approved=false`);
-  }, [clearSelection, folders, router, showingPendingOnly]);
 
   // ─── View mode toggle (문제별 / 지문별) ───
   const viewModeToggle = (
@@ -664,25 +750,58 @@ export function QuestionBankClient({
     />
   );
 
-  const pendingQuestionsButton = (
-    <button
-      type="button"
-      onClick={togglePendingQuestions}
-      aria-pressed={showingPendingOnly}
-      className={`inline-flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold transition-colors ${
-        showingPendingOnly
-          ? "border-rose-300 bg-white text-rose-700 shadow-[0_0_0_1px_rgba(244,63,94,0.18),0_0_16px_rgba(244,63,94,0.28)]"
-          : "border-rose-200 bg-white text-rose-600 hover:bg-rose-50 hover:text-rose-700"
-      }`}
-      title={showingPendingOnly ? "검수완료 기본 목록으로 돌아가기" : "검수완료 전 문제만 모아보기"}
-    >
-      <Clock className="h-3.5 w-3.5" />
-      {showingPendingOnly ? "미검수 모음 보기 중" : "미검수 문제 모음"}
-    </button>
-  );
+  const reviewStatusSegment = (() => {
+    const segments = [
+      { id: "all", label: "전체", count: statusCounts?.all ?? 0, value: "ALL", active: filters.approved === undefined },
+      { id: "pending", label: "미검수", count: statusCounts?.pending ?? 0, value: "false", active: filters.approved === false },
+      { id: "approved", label: "검수완료", count: statusCounts?.approved ?? 0, value: "true", active: filters.approved === true },
+    ] as const;
+    return (
+      <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
+        {segments.map((seg, index) => (
+          <button
+            key={seg.id}
+            type="button"
+            onClick={() => {
+              clearSelection();
+              updateFilter("approved", seg.value);
+            }}
+            aria-pressed={seg.active}
+            className={`h-8 cursor-pointer px-2.5 text-[11px] font-semibold transition-colors ${
+              index > 0 ? "border-l border-slate-200 " : ""
+            }${
+              seg.active
+                ? "bg-slate-800 text-white"
+                : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+            }`}
+          >
+            {seg.label}{" "}
+            <span className={seg.active ? "text-slate-200" : "text-slate-400"}>
+              {seg.count}
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  })();
 
   const selectionExtraActions = (
     <>
+      {/* 검수완료 (선택 문항 일괄 검수) */}
+      <button
+        type="button"
+        onClick={() => void handleBulkApprove()}
+        disabled={selectedIds.size === 0 || bulkApproving}
+        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 shadow-none transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:cursor-not-allowed disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
+      >
+        {bulkApproving ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : (
+          <CheckCircle2 className="w-3.5 h-3.5" />
+        )}
+        검수완료
+      </button>
+
       <MoveOrCopyFolderPicker
         collections={folders.collections}
         activeFolder={folders.activeFolder}
@@ -794,15 +913,6 @@ export function QuestionBankClient({
               isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
             }
           />
-          <button
-            type="button"
-            onClick={handleSelectAllPages}
-            disabled={allPagesSelectableCount === 0 || selectingAllPages}
-            className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 transition-colors hover:text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {selectingAllPages && <Loader2 className="h-3 w-3 animate-spin" />}
-            전체 페이지 선택
-          </button>
           <div
             className={
               "flex items-center gap-3 " +
@@ -828,9 +938,9 @@ export function QuestionBankClient({
           </div>
         </div>
         <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
-          {filtersToolbar}
-          {pendingQuestionsButton}
+          {reviewStatusSegment}
           {viewModeToggle}
+          {filtersToolbar}
           {gridToggle}
         </div>
       </div>
@@ -842,9 +952,9 @@ export function QuestionBankClient({
     !folders.activeFolder;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]">
+    <div className="flex flex-col min-h-[calc(100vh-64px)]">
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-2 pb-4">
+      <div className="flex-1 bg-[#F4F6F9] px-6 pt-2 pb-4">
         {isEmpty ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -858,7 +968,7 @@ export function QuestionBankClient({
             </p>
           </div>
         ) : (
-          <section className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div
               ref={folderStickyRef}
               className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
@@ -918,7 +1028,9 @@ export function QuestionBankClient({
                   onToggleSelect={toggleSelect}
                   onDelete={handleDelete}
                   onApprove={handleApprove}
+                  onUnapprove={handleUnapprove}
                   onToggleStar={handleToggleStar}
+                  onDetail={openDetail}
                   onEdit={editor.openEditor}
                   expandedPassageIds={expandedPassageIds}
                   setExpandedPassageIds={setExpandedPassageIds}
@@ -933,10 +1045,12 @@ export function QuestionBankClient({
                             selected={selectedIds.has(q.id)}
                             onToggle={() => toggleSelect(q.id)}
                             onApprove={() => handleApprove(q.id)}
+                            onDetail={() => openDetail(q.id)}
                             onEdit={() => editor.openEditor(q.id)}
                             readonly
                             compact
                             showReviewActions
+                            openOnCardClick
                           />
                         )
                       : undefined
@@ -963,7 +1077,7 @@ export function QuestionBankClient({
                       ? "grid-cols-1 md:grid-cols-2"
                       : gridCols === 3
                         ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                        : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                        : "grid-cols-1"
                   }`}
                 >
                   {displayedQuestions.map((q, idx) => {
@@ -977,10 +1091,12 @@ export function QuestionBankClient({
                           selected={selectedIds.has(q.id)}
                           onToggle={() => toggleSelect(q.id)}
                           onApprove={() => handleApprove(q.id)}
+                          onDetail={() => openDetail(q.id)}
                           onEdit={() => editor.openEditor(q.id)}
                           readonly
                           compact
                           showReviewActions
+                          openOnCardClick
                         />
                       );
                     }
@@ -993,7 +1109,9 @@ export function QuestionBankClient({
                         onToggle={() => toggleSelect(q.id)}
                         onDelete={() => handleDelete(q.id)}
                         onApprove={() => handleApprove(q.id)}
+                        onUnapprove={() => handleUnapprove(q.id)}
                         onToggleStar={() => handleToggleStar(q.id)}
+                        onDetail={() => openDetail(q.id)}
                         onEdit={() => editor.openEditor(q.id)}
                         viewSize={viewSize}
                       />
@@ -1032,6 +1150,19 @@ export function QuestionBankClient({
         open={generateDialogOpen}
         onOpenChange={setGenerateDialogOpen}
         academyId={academyId}
+      />
+
+      <QuestionDetailDialog
+        open={detailOpen}
+        loading={detailLoading}
+        loadError={detailLoadError}
+        questionId={detailQuestionId}
+        question={detailQuestion}
+        onClose={closeDetail}
+        onRetry={openDetail}
+        onApprove={handleApprove}
+        onUnapprove={handleUnapprove}
+        onDelete={handleDelete}
       />
 
       <EditQuestionDialog

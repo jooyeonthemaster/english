@@ -10,6 +10,7 @@ import {
   Users,
   Coins,
   CreditCard,
+  ChartNoAxesCombined,
   Settings,
   LogOut,
   PanelLeftClose,
@@ -52,6 +53,7 @@ const NAV_ITEMS = [
   { label: "가입 신청", icon: UserPlus, href: "/admin/registrations" },
   { label: "학원 관리", icon: Building2, href: "/admin/academies" },
   { label: "크레딧", icon: Coins, href: "/admin/credits" },
+  { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },
   { label: "요금제", icon: CreditCard, href: "/admin/plans" },
   { label: "설정", icon: Settings, href: "/admin/settings" },
 ];

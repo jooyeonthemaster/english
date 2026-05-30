@@ -5,17 +5,19 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
-  BadgeCheck,
   Braces,
   CheckCircle2,
   ChevronRight,
+  ClipboardList,
   FileText,
   Gem,
+  Grid2X2,
+  Grid3X3,
+  List as ListIcon,
   Loader2,
   Rows3,
   Sparkles,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
@@ -42,13 +44,26 @@ interface BottomQueueSectionProps {
   loadingSavedQuestions: boolean;
   setDetailQuestion: (q: QuestionCardItem | null) => void;
   onApproveQuestion: (questionId: string) => void;
+  onUnapproveQuestion: (questionId: string) => void;
   onBatchApproveQuestions?: (questionIds: string[]) => void | Promise<void>;
+  onDeleteQuestion?: (questionId: string) => void | Promise<void>;
   onEditQuestion: (questionId: string) => void;
 }
 
 type SavedQuestionPlanFilter = "ALL" | QuestionGenerationPlan;
 type ReviewStatusFilter = "ALL" | "PENDING" | "APPROVED";
 type QuestionViewMode = "flat" | "passage";
+type CardLayoutMode = "grid2" | "grid3" | "list";
+
+const cardLayoutClassNames: Record<CardLayoutMode, string> = {
+  grid2: "grid grid-cols-1 items-stretch gap-3 md:grid-cols-2",
+  grid3: "grid grid-cols-1 items-stretch gap-3 md:grid-cols-3",
+  list: "grid grid-cols-1 items-stretch gap-3",
+};
+
+// "최근 N개" 윈도우 크기. 새 세션 문제가 들어오면 가장 오래된 저장 문제가 이 한도 밖으로 밀려난다.
+// (저장 문제 fetch limit과 일치해야 함 — generate-page-client.tsx loadSavedQuestions)
+const RECENT_QUESTION_LIMIT = 100;
 
 type SessionQuestionCard = {
   key: string;
@@ -182,22 +197,21 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export function BottomQueueSection({
-  sessionQueue,
   filteredQueue,
-  queueFilter,
-  setQueueFilter,
-  queueCounts,
   autoCount,
   savedQuestions,
   loadingSavedQuestions,
   setDetailQuestion,
   onApproveQuestion,
+  onUnapproveQuestion,
   onBatchApproveQuestions,
+  onDeleteQuestion,
   onEditQuestion,
 }: BottomQueueSectionProps) {
   const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
   const [reviewStatusFilter, setReviewStatusFilter] = useState<ReviewStatusFilter>("ALL");
   const [questionViewMode, setQuestionViewMode] = useState<QuestionViewMode>("flat");
+  const [cardLayoutMode, setCardLayoutMode] = useState<CardLayoutMode>("grid3");
   const [selectedSessionQuestionIds, setSelectedSessionQuestionIds] = useState<Set<string>>(new Set());
   const [batchApproving, setBatchApproving] = useState(false);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
@@ -316,9 +330,37 @@ export function BottomQueueSection({
     [reviewFilteredSavedQuestions, savedPlanFilter],
   );
 
+  // 현재 세션에서 이미 카드로 보여주는 문제 id (저장 목록과의 중복 제거용)
+  const sessionCardQuestionIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const card of sessionQuestionCards) {
+      ids.add(card.question.id);
+      if (card.persistedQuestionId) ids.add(card.persistedQuestionId);
+    }
+    return ids;
+  }, [sessionQuestionCards]);
+
+  // 세션 카드와 중복되지 않는 저장 문제 (최신 100개 중 세션에 안 나온 것)
+  const mergedSavedQuestions = useMemo(
+    () => visibleSavedQuestions.filter((q) => !sessionCardQuestionIds.has(q.id)),
+    [visibleSavedQuestions, sessionCardQuestionIds],
+  );
+
+  // "최근 N개" 윈도우: 세션 문제가 먼저 자리를 차지하고, 남는 칸만큼만 저장 문제를 채운다.
+  // → 새로 생성한 세션 문제 수만큼 가장 오래된 저장 문제가 잘려나간다.
+  const cappedMergedSavedQuestions = useMemo(
+    () => mergedSavedQuestions.slice(0, Math.max(0, RECENT_QUESTION_LIMIT - visibleSessionQuestionCards.length)),
+    [mergedSavedQuestions, visibleSessionQuestionCards.length],
+  );
+
+  const mergedSavedGroups = useMemo(
+    () => groupByPassage(cappedMergedSavedQuestions.map(withVisiblePlanTag), (q) => q),
+    [cappedMergedSavedQuestions],
+  );
+
   const reviewCounts = useMemo(() => {
+    // "최근 N개" 윈도우 기준으로 집계 — 세션 문제가 먼저, 남는 칸만 저장 문제로 채운다.
     const questionsById = new Map<string, QuestionCardItem>();
-    for (const q of savedQuestions) questionsById.set(q.id, q);
     for (const card of sessionQuestionCards) {
       const previous = questionsById.get(card.question.id);
       questionsById.set(card.question.id, {
@@ -326,22 +368,25 @@ export function BottomQueueSection({
         approved: Boolean(previous?.approved || card.question.approved),
       });
     }
+    const remaining = Math.max(0, RECENT_QUESTION_LIMIT - questionsById.size);
+    let added = 0;
+    for (const q of savedQuestions) {
+      if (added >= remaining) break;
+      if (questionsById.has(q.id) || sessionCardQuestionIds.has(q.id)) continue;
+      questionsById.set(q.id, q);
+      added++;
+    }
     const allQuestions = [...questionsById.values()];
     return {
       ALL: allQuestions.length,
       PENDING: allQuestions.filter((q) => !q.approved).length,
       APPROVED: allQuestions.filter((q) => q.approved).length,
     };
-  }, [savedQuestions, sessionQuestionCards]);
+  }, [savedQuestions, sessionQuestionCards, sessionCardQuestionIds]);
 
   const sessionGroups = useMemo(
     () => groupByPassage(visibleSessionQuestionCards, (card) => card.question),
     [visibleSessionQuestionCards],
-  );
-
-  const savedGroups = useMemo(
-    () => groupByPassage(visibleSavedQuestions.slice(0, 30).map(withVisiblePlanTag), (q) => q),
-    [visibleSavedQuestions],
   );
 
   const visibleQueueCards = useMemo(
@@ -544,16 +589,23 @@ export function BottomQueueSection({
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
         setDetailQuestion(card.question);
-      }} className="cursor-pointer">
+      }} className="cursor-pointer h-full">
         <QuestionCard
           q={card.question}
           num={card.number}
           readonly
           compact
           showReviewActions={Boolean(card.persistedQuestionId)}
+          showHeaderActions={Boolean(card.persistedQuestionId)}
           selected={isSelected}
           onToggle={canSelect ? () => toggleSessionQuestion(card.persistedQuestionId as string) : undefined}
           onApprove={() => card.persistedQuestionId && onApproveQuestion(card.persistedQuestionId)}
+          onUnapprove={() => card.persistedQuestionId && onUnapproveQuestion(card.persistedQuestionId)}
+          onDelete={
+            onDeleteQuestion && card.persistedQuestionId
+              ? () => onDeleteQuestion(card.persistedQuestionId as string)
+              : undefined
+          }
           onEdit={() => card.persistedQuestionId && onEditQuestion(card.persistedQuestionId)}
         />
       </div>
@@ -567,14 +619,16 @@ export function BottomQueueSection({
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input")) return;
         setDetailQuestion(cardQuestion);
-      }} className="cursor-pointer">
+      }} className="cursor-pointer h-full">
         <QuestionCard
           q={cardQuestion}
           num={index + 1}
           readonly
           compact
           showReviewActions
+          showHeaderActions
           onApprove={() => onApproveQuestion(cardQuestion.id)}
+          onUnapprove={() => onUnapproveQuestion(cardQuestion.id)}
           onEdit={() => onEditQuestion(cardQuestion.id)}
         />
       </div>
@@ -646,7 +700,7 @@ export function BottomQueueSection({
         </header>
         {isOpen && (
           <div className="p-3">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className={cardLayoutClassNames[cardLayoutMode]}>
               {group.cards.map((card, index) => renderCard(card, index))}
             </div>
           </div>
@@ -661,248 +715,218 @@ export function BottomQueueSection({
     { id: "APPROVED", label: "검수완료", count: reviewCounts.APPROVED },
   ] as const;
 
-  return (
-    <div className="bg-white">
-      <div className="px-8 pt-5 pb-8 space-y-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-[15px] font-bold text-slate-900">생성/검수 결과</h2>
-            <p className="mt-0.5 text-[12px] text-slate-500">
-              현재 세션과 저장된 AI 문제를 검수 상태와 지문 단위로 확인합니다.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-0.5">
-              {reviewButtons.map(({ id, label, count }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setReviewStatusFilter(id)}
-                  className={`h-7 rounded-md px-2.5 text-[11px] font-semibold transition-colors ${
-                    reviewStatusFilter === id
-                      ? "bg-slate-900 text-white shadow-sm"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-                  }`}
-                  aria-pressed={reviewStatusFilter === id}
-                >
-                  {label} <span className={reviewStatusFilter === id ? "text-slate-200" : "text-slate-400"}>{count}</span>
-                </button>
-              ))}
-            </div>
+  const layoutButtons = [
+    { id: "grid2", label: "2열 보기", Icon: Grid2X2 },
+    { id: "grid3", label: "3열 보기", Icon: Grid3X3 },
+    { id: "list", label: "목록 보기", Icon: ListIcon },
+  ] as const;
 
-            <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+  return (
+    <div className="rounded-lg bg-white">
+      <div className="sticky top-0 z-20 flex flex-col gap-3 rounded-t-lg border-b border-slate-100 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+            <ClipboardList className="size-4" aria-hidden="true" />
+          </span>
+          <h2 className="truncate text-[13px] font-bold text-slate-900">생성/검수 결과</h2>
+          <span aria-hidden="true" className="shrink-0 text-[11px] font-medium text-slate-300">·</span>
+          <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
+            최근 {reviewCounts.ALL}개
+          </span>
+          {sessionApprovableIds.length > 0 && (
+            <div className="ml-1 flex shrink-0 items-center gap-1.5">
+              <Checkbox
+                checked={allSessionSelected ? true : someSessionSelected ? "indeterminate" : false}
+                onCheckedChange={toggleSelectAllSession}
+                aria-label="현재 세션 문제 전체 선택"
+                title="전체 선택"
+                className="size-4 cursor-pointer"
+              />
               <button
                 type="button"
-                onClick={() => setQuestionViewMode("flat")}
-                className={`flex h-8 items-center gap-1.5 px-2.5 text-[11px] font-semibold transition-colors ${
-                  questionViewMode === "flat"
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-                }`}
-                aria-pressed={questionViewMode === "flat"}
+                disabled={selectedSessionQuestionIds.size === 0 || batchApproving}
+                onClick={handleBatchApprove}
+                className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 shadow-none transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:cursor-not-allowed disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
               >
-                <Rows3 className="w-3.5 h-3.5" />
-                문제별
-              </button>
-              <button
-                type="button"
-                onClick={() => setQuestionViewMode("passage")}
-                className={`flex h-8 items-center gap-1.5 border-l border-slate-200 px-2.5 text-[11px] font-semibold transition-colors ${
-                  questionViewMode === "passage"
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-                }`}
-                aria-pressed={questionViewMode === "passage"}
-              >
-                <FileText className="w-3.5 h-3.5" />
-                지문별
+                {batchApproving ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                )}
+                검수완료
+                {selectedSessionQuestionIds.size > 0 && (
+                  <span className="text-[11px] font-bold opacity-90">
+                    ({selectedSessionQuestionIds.size})
+                  </span>
+                )}
               </button>
             </div>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
+          <span className="hidden shrink-0 text-[11px] font-medium text-slate-400 lg:inline">
+            검수 상태와 지문 단위로 표시됩니다
+          </span>
+          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
+            {reviewButtons.map(({ id, label, count }, index) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setReviewStatusFilter(id)}
+                className={`h-8 cursor-pointer px-2.5 text-[11px] font-semibold transition-colors ${
+                  index > 0 ? "border-l border-slate-200" : ""
+                } ${
+                  reviewStatusFilter === id
+                    ? "bg-slate-800 text-white"
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                }`}
+                aria-pressed={reviewStatusFilter === id}
+              >
+                {label} <span className={reviewStatusFilter === id ? "text-slate-200" : "text-slate-400"}>{count}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
+            <button
+              type="button"
+              onClick={() => setQuestionViewMode("flat")}
+              className={`flex h-8 cursor-pointer items-center gap-1.5 px-2.5 text-[11px] font-semibold transition-colors ${
+                questionViewMode === "flat"
+                  ? "bg-slate-800 text-white"
+                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+              }`}
+              aria-pressed={questionViewMode === "flat"}
+            >
+              <Rows3 className="w-3.5 h-3.5" />
+              문제별
+            </button>
+            <button
+              type="button"
+              onClick={() => setQuestionViewMode("passage")}
+              className={`flex h-8 cursor-pointer items-center gap-1.5 border-l border-slate-200 px-2.5 text-[11px] font-semibold transition-colors ${
+                questionViewMode === "passage"
+                  ? "bg-slate-800 text-white"
+                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+              }`}
+              aria-pressed={questionViewMode === "passage"}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              지문별
+            </button>
+          </div>
+
+          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
+            {layoutButtons.map(({ id, label, Icon }, index) => (
+              <button
+                key={id}
+                type="button"
+                aria-label={label}
+                title={label}
+                aria-pressed={cardLayoutMode === id}
+                onClick={() => setCardLayoutMode(id)}
+                className={`inline-flex size-8 cursor-pointer items-center justify-center transition-colors ${
+                  index > 0 ? "border-l border-slate-200" : ""
+                } ${
+                  cardLayoutMode === id
+                    ? "bg-slate-800 text-white"
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                }`}
+              >
+                <Icon className="size-4" />
+              </button>
+            ))}
           </div>
         </div>
+      </div>
 
-        {sessionQueue.length > 0 && (
-          <div>
-            <div className="mb-3 flex flex-wrap items-center gap-3">
-              <h3 className="text-[14px] font-bold text-slate-800">현재 세션</h3>
-              {queueCounts.error > 0 && (
-                <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-0.5">
-                  {(["all", "error"] as const).map((f) => {
-                    const labels = { all: "전체", error: "오류" };
-                    const counts = { all: sessionQueue.length, error: queueCounts.error };
-                    return (
-                      <button
-                        key={f}
-                        type="button"
-                        onClick={() => setQueueFilter(f)}
-                        className={`rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all ${
-                          queueFilter === f
-                            ? "bg-blue-50 text-blue-700 shadow-sm"
-                            : "text-slate-400 hover:text-slate-600"
-                        }`}
-                      >
-                        {labels[f]} {counts[f]}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {sessionApprovableIds.length > 0 && (
-                <div className="flex items-center gap-2.5">
-                  <label className="inline-flex cursor-pointer select-none items-center gap-2">
-                    <Checkbox
-                      checked={allSessionSelected ? true : someSessionSelected ? "indeterminate" : false}
-                      onCheckedChange={toggleSelectAllSession}
-                    />
-                    <span className="text-[12px] font-semibold text-slate-700">
-                      전체 선택
-                      <span className="ml-1 font-medium text-slate-400">
-                        ({selectedSessionQuestionIds.size}/{sessionApprovableIds.length})
-                      </span>
-                    </span>
-                  </label>
-                  <Button
-                    size="sm"
-                    disabled={selectedSessionQuestionIds.size === 0 || batchApproving}
-                    onClick={handleBatchApprove}
-                    className="h-7 bg-emerald-600 px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:bg-emerald-100 disabled:text-emerald-400"
+      <div className="space-y-4 rounded-b-lg bg-white px-4 py-4">
+        {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedQuestions.length > 0) && (
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+              <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
+                {([
+                  { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },
+                  { id: "STANDARD", label: QUESTION_GENERATION_PLAN_TAGS.STANDARD, count: savedPlanCounts.STANDARD, Icon: Sparkles },
+                  { id: "PREMIUM", label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM, count: savedPlanCounts.PREMIUM, Icon: Gem },
+                ] as const).map(({ id, label, count, Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setSavedPlanFilter(id)}
+                    className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[11px] font-semibold transition-all ${
+                      savedPlanFilter === id
+                        ? "bg-blue-50 text-blue-700 shadow-sm"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                    }`}
                   >
-                    {batchApproving ? (
-                      <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
-                    )}
-                    일괄 검수완료
-                    {selectedSessionQuestionIds.size > 0 && (
-                      <span className="ml-1 text-[11px] font-bold opacity-90">
-                        ({selectedSessionQuestionIds.size})
-                      </span>
-                    )}
-                  </Button>
-                </div>
-              )}
-
-              <div className="ml-auto inline-flex items-center gap-2 rounded-xl border border-blue-200/70 bg-blue-50 px-3.5 py-2 ring-1 ring-blue-200/40">
-                <BadgeCheck className="h-4 w-4 shrink-0 text-blue-600" />
-                <span className="text-[12px] font-semibold leading-snug text-blue-900">
-                  <span className="font-bold text-blue-700">검수 완료</span>한 문제만{" "}
-                  <span className="font-bold text-blue-700">문제 관리</span> 페이지의 기본 목록에 보입니다
-                </span>
+                    <Icon className="h-3 w-3" />
+                    <span>{label}</span>
+                    <span className={savedPlanFilter === id ? "text-blue-500" : "text-slate-400"}>{count}</span>
+                  </button>
+                ))}
               </div>
-            </div>
-
-            {questionViewMode === "flat" ? (
-              sessionFlatEntries.length === 0 ? (
-                <EmptyState message="현재 필터에 해당하는 세션 문제가 없습니다." />
-              ) : (
-                <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {sessionFlatEntries.map((entry) =>
-                    entry.kind === "queue"
-                      ? renderQueueStatusCard(entry.item)
-                      : renderSessionQuestionCard(entry.card),
-                  )}
-                </div>
-              )
-            ) : (
-              <>
-                {visibleQueueCards.length > 0 && (
-                  <div className="mb-3 grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
-                    {visibleQueueCards.map(renderQueueStatusCard)}
-                  </div>
-                )}
-
-                {visibleSessionQuestionCards.length === 0 ? (
-                  reviewStatusFilter === "ALL" && visibleQueueCards.length > 0 ? null : (
-                    <EmptyState message="현재 필터에 해당하는 세션 문제가 없습니다." />
-                  )
-                ) : (
-                  <div className="space-y-3">
-                    {sessionGroups.map((group) =>
-                      renderPassageGroup({
-                        group,
-                        source: "session",
-                        renderCard: (card) => renderSessionQuestionCard(card),
-                        getSelectableIds: (cards) =>
-                          cards
-                            .filter((card) => card.persistedQuestionId && !card.question.approved)
-                            .map((card) => card.persistedQuestionId as string),
-                      }),
-                    )}
-                  </div>
-                )}
-              </>
+            )}
+            {savedQuestions.length > 0 && (
+              <Link href="/director/workbench/questions" className="text-[12px] font-medium text-blue-600 hover:text-blue-700">
+                문제은행 전체 보기 →
+              </Link>
             )}
           </div>
         )}
 
-        <div>
-          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h3 className="text-[14px] font-bold text-slate-800">
-              저장된 문제
-              {savedQuestions.length > 0 && (
-                <span className="ml-1 font-normal text-slate-400">
-                  {visibleSavedQuestions.length}/{savedQuestions.length}개
-                </span>
-              )}
-            </h3>
-            <div className="flex flex-wrap items-center gap-2">
-              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-                <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
-                  {([
-                    { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },
-                    { id: "STANDARD", label: QUESTION_GENERATION_PLAN_TAGS.STANDARD, count: savedPlanCounts.STANDARD, Icon: Sparkles },
-                    { id: "PREMIUM", label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM, count: savedPlanCounts.PREMIUM, Icon: Gem },
-                  ] as const).map(({ id, label, count, Icon }) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => setSavedPlanFilter(id)}
-                      className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[11px] font-semibold transition-all ${
-                        savedPlanFilter === id
-                          ? "bg-blue-50 text-blue-700 shadow-sm"
-                          : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-                      }`}
-                    >
-                      <Icon className="h-3 w-3" />
-                      <span>{label}</span>
-                      <span className={savedPlanFilter === id ? "text-blue-500" : "text-slate-400"}>{count}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-              {savedQuestions.length > 0 && (
-                <Link href="/director/workbench/questions" className="text-[12px] font-medium text-blue-600 hover:text-blue-700">
-                  문제은행 전체 보기 →
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {loadingSavedQuestions ? (
+        {questionViewMode === "flat" ? (
+          loadingSavedQuestions && sessionFlatEntries.length === 0 && cappedMergedSavedQuestions.length === 0 ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
             </div>
-          ) : savedQuestions.length === 0 ? (
-            <EmptyState message="아직 저장된 문제가 없습니다." />
-          ) : visibleSavedQuestions.length === 0 ? (
-            <EmptyState message="현재 필터에 해당하는 저장 문제가 없습니다." />
-          ) : questionViewMode === "passage" ? (
-            <div className="space-y-3">
-              {savedGroups.map((group) =>
-                renderPassageGroup({
-                  group,
-                  source: "saved",
-                  renderCard: (q, index) => renderSavedQuestionCard(q, index),
-                }),
-              )}
-            </div>
+          ) : sessionFlatEntries.length === 0 && cappedMergedSavedQuestions.length === 0 ? (
+            <EmptyState message={reviewStatusFilter === "ALL" && savedPlanFilter === "ALL" ? "아직 저장된 문제가 없습니다." : "현재 필터에 해당하는 문제가 없습니다."} />
           ) : (
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {visibleSavedQuestions.slice(0, 30).map(renderSavedQuestionCard)}
+            <div className={cardLayoutClassNames[cardLayoutMode]}>
+              {sessionFlatEntries.map((entry) =>
+                entry.kind === "queue"
+                  ? renderQueueStatusCard(entry.item)
+                  : renderSessionQuestionCard(entry.card),
+              )}
+              {cappedMergedSavedQuestions.map(renderSavedQuestionCard)}
             </div>
-          )}
-        </div>
+          )
+        ) : (
+          <div className="space-y-3">
+            {visibleQueueCards.length > 0 && (
+              <div className={cardLayoutClassNames[cardLayoutMode]}>
+                {visibleQueueCards.map(renderQueueStatusCard)}
+              </div>
+            )}
+            {sessionGroups.map((group) =>
+              renderPassageGroup({
+                group,
+                source: "session",
+                renderCard: (card) => renderSessionQuestionCard(card),
+                getSelectableIds: (cards) =>
+                  cards
+                    .filter((card) => card.persistedQuestionId && !card.question.approved)
+                    .map((card) => card.persistedQuestionId as string),
+              }),
+            )}
+            {mergedSavedGroups.map((group) =>
+              renderPassageGroup({
+                group,
+                source: "saved",
+                renderCard: (q, index) => renderSavedQuestionCard(q, index),
+              }),
+            )}
+            {loadingSavedQuestions && visibleQueueCards.length === 0 && sessionGroups.length === 0 && mergedSavedGroups.length === 0 && (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+              </div>
+            )}
+            {!loadingSavedQuestions && visibleQueueCards.length === 0 && sessionGroups.length === 0 && mergedSavedGroups.length === 0 && (
+              <EmptyState message={reviewStatusFilter === "ALL" && savedPlanFilter === "ALL" ? "아직 저장된 문제가 없습니다." : "현재 필터에 해당하는 문제가 없습니다."} />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

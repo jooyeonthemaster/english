@@ -87,8 +87,8 @@ export const TYPE_SUBTYPE_MAP: { type: string; label: string; subtypes: { value:
 ];
 
 export const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  INTERMEDIATE: { label: "중급", className: "bg-blue-50 text-blue-700 border-blue-200" },
+  BASIC: { label: "기본", className: "bg-blue-50 text-blue-700 border-blue-200" },
+  INTERMEDIATE: { label: "중급", className: "bg-amber-50 text-amber-700 border-amber-200" },
   KILLER: { label: "킬러", className: "bg-red-50 text-red-700 border-red-200" },
 };
 

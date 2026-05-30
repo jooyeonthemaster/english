@@ -8,7 +8,7 @@ export const TYPE_OPTIONS = [
 ];
 
 export const DIFFICULTY_OPTIONS = [
-  { value: "BASIC", label: "기본", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  { value: "INTERMEDIATE", label: "중급", color: "bg-blue-50 text-blue-700 border-blue-200" },
+  { value: "BASIC", label: "기본", color: "bg-blue-50 text-blue-700 border-blue-200" },
+  { value: "INTERMEDIATE", label: "중급", color: "bg-amber-50 text-amber-700 border-amber-200" },
   { value: "KILLER", label: "킬러", color: "bg-red-50 text-red-700 border-red-200" },
 ];

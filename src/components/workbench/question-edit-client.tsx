@@ -23,6 +23,7 @@ import {
   isQuestionGenerationPlanTag,
 } from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EditHeader } from "./question-edit-client/header";
 import { ExplanationPanel } from "./question-edit-client/explanation-panel";
 import { PassagePanel } from "./question-edit-client/passage-panel";
@@ -139,6 +140,47 @@ export function QuestionEditClient({
   const [wrongExplanations, setWrongExplanations] = useState<Record<string, string>>(initialWrongExplanations);
   const correctAnswerLabels = parseCorrectAnswerLabels(correctAnswer);
 
+  // ─── 변경사항 추적 (닫기 시 미저장 변경 경고) ───
+  const initialSnapshot = JSON.stringify({
+    type: question.type,
+    subType: question.subType || "",
+    questionText: question.questionText,
+    options: initialOptions,
+    correctAnswer: question.correctAnswer,
+    difficulty: question.difficulty,
+    tags: initialTags,
+    explanation: question.explanation?.content || "",
+    keyPoints: initialKeyPoints,
+    wrongExplanations: initialWrongExplanations,
+  });
+  const [baseline, setBaseline] = useState(initialSnapshot);
+  const currentSnapshot = JSON.stringify({
+    type,
+    subType,
+    questionText,
+    options,
+    correctAnswer,
+    difficulty,
+    tags,
+    explanation,
+    keyPoints,
+    wrongExplanations,
+  });
+  const isDirty = currentSnapshot !== baseline;
+  const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
+
+  function performClose() {
+    if (isModal) onClose?.();
+    else router.push("/director/questions");
+  }
+  function requestClose() {
+    if (isDirty) {
+      setCloseConfirmOpen(true);
+      return;
+    }
+    performClose();
+  }
+
   function addOption() {
     setOptions([...options, { label: String(options.length + 1), text: "" }]);
   }
@@ -186,6 +228,7 @@ export function QuestionEditClient({
       });
       if (result.success) {
         toast.success("수정 완료");
+        setBaseline(currentSnapshot);
         router.refresh();
         onSaved?.();
       } else toast.error(result.error || "수정 실패");
@@ -234,7 +277,7 @@ export function QuestionEditClient({
       {/* ─── Header: 44px ─── */}
       <EditHeader
         isModal={isModal}
-        onClose={onClose}
+        onClose={requestClose}
         approved={approved}
         aiGenerated={question.aiGenerated}
         type={type}
@@ -400,6 +443,17 @@ export function QuestionEditClient({
           setWrongExplanations={setWrongExplanations}
         />
       </div>
+
+      <ConfirmDialog
+        open={closeConfirmOpen}
+        onOpenChange={setCloseConfirmOpen}
+        title="변경사항이 있습니다"
+        description="저장하지 않은 변경사항이 있습니다. 그래도 닫으시겠습니까?"
+        confirmText="닫기"
+        cancelText="취소"
+        variant="destructive"
+        onConfirm={performClose}
+      />
     </div>
   );
 }

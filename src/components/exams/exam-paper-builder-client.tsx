@@ -1179,6 +1179,7 @@ export function ExamPaperBuilderClient({
             onUndo={undo}
             onRedo={redo}
             onPrint={handlePrint}
+            onDownloadPdf={handlePrint}
             onDownloadDocx={handleDownloadDocx}
             onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
             onDownloadHwpx={handleDownloadHwpx}
@@ -1279,7 +1280,10 @@ export function ExamPaperBuilderClient({
                   }
                 }}
                 className={cn(
-                  "min-h-0 flex-1 overflow-auto overscroll-contain px-5 py-5 transition-colors",
+                  // scrollbar-gutter:stable keeps the vertical scrollbar from
+                  // toggling the content width when the page count changes, which
+                  // (with the fit-zoom measurement) caused the paper to flicker.
+                  "min-h-0 flex-1 overflow-auto overscroll-contain px-5 py-5 transition-colors [scrollbar-gutter:stable]",
                   questionDropActive && "bg-blue-50/40",
                 )}
               >

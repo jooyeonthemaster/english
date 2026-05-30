@@ -148,6 +148,36 @@ export async function getWorkbenchQuestions(
 }
 
 /**
+ * Aggregate question counts by review status (전체/미검수/검수완료) for the
+ * status segmented control. Respects all active filters EXCEPT `approved`
+ * (which the control itself owns), so the three counts always sum to "전체".
+ */
+export async function getWorkbenchQuestionStatusCounts(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+) {
+  await requireAuth();
+
+  const { approved: _ignored, ...rest } = filters ?? {};
+  const where = buildWorkbenchQuestionWhere(academyId, rest);
+
+  const grouped = await prisma.question.groupBy({
+    by: ["approved"],
+    where,
+    _count: { _all: true },
+  });
+
+  let approved = 0;
+  let pending = 0;
+  for (const row of grouped) {
+    if (row.approved) approved += row._count._all;
+    else pending += row._count._all;
+  }
+
+  return { all: approved + pending, pending, approved };
+}
+
+/**
  * Returns passages that have
  * at least one question matching the filters, paginated by passage. Each
  * passage carries its matching questions inline. Used by the "지문별" view
@@ -513,6 +543,31 @@ export async function approveWorkbenchQuestion(
       error instanceof Error
         ? error.message
         : "문제 승인 중 오류가 발생했습니다.";
+    return { success: false, error: message };
+  }
+}
+
+export async function unapproveWorkbenchQuestion(
+  questionId: string
+): Promise<ActionResult> {
+  try {
+    const staff = await requireAuth();
+
+    const updated = await prisma.question.updateMany({
+      where: { id: questionId, academyId: staff.academyId },
+      data: { approved: false },
+    });
+    if (updated.count === 0) {
+      return { success: false, error: "문제를 찾을 수 없습니다." };
+    }
+
+    revalidateQuestionBankPaths();
+    return { success: true };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "검수취소 중 오류가 발생했습니다.";
     return { success: false, error: message };
   }
 }

@@ -166,7 +166,7 @@ export function makeCustomPaperBlock(
     image: "이미지",
   };
   const defaultTextByType: Record<InsertablePaperBlockType, string> = {
-    text: "안내 문구를 입력하세요.",
+    text: "",
     section: "새 섹션",
     divider: "",
     spacer: "",
@@ -299,7 +299,7 @@ export function renderFormattedInline(
     }
     if (match[1]) {
       parts.push(
-        <span key={key++} className="font-semibold underline decoration-blue-500 underline-offset-4">
+        <span key={key++} data-mark="u" className="font-semibold underline decoration-blue-500 underline-offset-4">
           {match[1]}
         </span>,
       );
@@ -317,7 +317,13 @@ export function renderFormattedInline(
       );
     } else {
       parts.push(
-        <span key={key++} className="mx-1 inline-block min-w-[56px] border-b border-slate-500 align-baseline">
+        <span
+          key={key++}
+          data-mark="blank"
+          data-raw={match[0]}
+          contentEditable={false}
+          className="mx-1 inline-block min-w-[56px] border-b border-slate-500 align-baseline"
+        >
           &nbsp;
         </span>,
       );
@@ -364,9 +370,9 @@ export function renderQuestionTextInline(
   return (
     <>
       {beforeText && (
-        <span className="block">{renderFormattedInline(beforeText, subType)}</span>
+        <span data-block="1" className="block">{renderFormattedInline(beforeText, subType)}</span>
       )}
-      <span className="my-2 block rounded-[4px] border border-slate-400 bg-white/80 px-2.5 py-1.5 leading-[1.55]">
+      <span data-block="1" className="my-2 block rounded-[4px] border border-slate-400 bg-white/80 px-2.5 py-1.5 leading-[1.55]">
         {renderFormattedInline(givenText, subType)}
       </span>
     </>

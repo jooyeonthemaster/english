@@ -21,6 +21,7 @@ import {
 // ─── Prompt Section (shared between auto/manual) ─────────
 
 export function PromptSection({
+  fill = false,
   customPrompt, setCustomPrompt,
   savedPrompts, showSavedPrompts, setShowSavedPrompts,
   showSaveInput, setShowSaveInput,
@@ -30,6 +31,9 @@ export function PromptSection({
   editingName, setEditingName,
   loadSavedPrompts,
 }: {
+  /** When true, fill the available vertical space and let the textarea grow
+   *  to absorb height changes (used in auto mode / when the panel is resized). */
+  fill?: boolean;
   customPrompt: string; setCustomPrompt: (v: string) => void;
   savedPrompts: { id: string; name: string; content: string }[];
   showSavedPrompts: boolean; setShowSavedPrompts: (v: boolean) => void;
@@ -41,7 +45,7 @@ export function PromptSection({
   loadSavedPrompts: () => Promise<void>;
 }) {
   return (
-    <div className="space-y-2.5">
+    <div className={fill ? "flex flex-1 min-h-0 flex-col gap-2.5" : "space-y-2.5"}>
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">추가 지시사항</span>
         <div className="flex items-center gap-1.5">
@@ -131,7 +135,7 @@ export function PromptSection({
       )}
 
       <textarea placeholder="예: 킬러 문항은 빈칸 추론으로, 서술형은 조건부 영작 위주로..." value={customPrompt} onChange={(e) => setCustomPrompt(e.target.value)}
-        className="w-full min-h-[72px] px-3.5 py-2.5 text-[12px] leading-relaxed rounded-xl border border-slate-200 bg-slate-50/60 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-500/10 placeholder:text-slate-400 resize-none transition-all"
+        className={`w-full min-h-[72px] px-3.5 py-2.5 text-[12px] leading-relaxed rounded-xl border border-slate-200 bg-slate-50/60 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-500/10 placeholder:text-slate-400 resize-none transition-all ${fill ? "flex-1" : ""}`}
       />
     </div>
   );

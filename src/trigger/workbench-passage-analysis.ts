@@ -12,6 +12,11 @@ import {
   refundCredits,
 } from "@/lib/credits";
 import { hashContent } from "@/lib/passage-utils";
+import {
+  providerFromModel,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
 import { prisma } from "@/lib/prisma";
 import {
   getQuestionGenerationCreditCost,
@@ -25,6 +30,13 @@ import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]
 import { runFullAnalysis } from "@/app/api/ai/passage-analysis/[passageId]/_lib/run-full-analysis";
 
 type Input = { jobId: string };
+
+type AnalysisUsageEvent = {
+  usage?: unknown;
+  provider: string;
+  modelId: string;
+  durationMs: number;
+};
 
 interface AnalysisJobConfig {
   customPrompt?: string;
@@ -211,11 +223,38 @@ export const workbenchPassageAnalysisTask = task({
         .join("\n\n");
 
       generationStartedAt = Date.now();
+      let analysisUsageEvent: AnalysisUsageEvent | null = null;
       const rawAnalysis = await runFullAnalysis(
         job.passage,
         mergedPrompt || undefined,
         generationPlan,
+        (event) => {
+          analysisUsageEvent = event;
+        },
       );
+      const usageEvent = analysisUsageEvent as AnalysisUsageEvent | null;
+      if (usageEvent) {
+        const usage = readAiUsageTokens(usageEvent.usage);
+        await recordPlatformApiUsageCost({
+          sourceKey: `workbench_ai_job:${jobId}:analysis`,
+          sourceType: "WORKBENCH_AI_JOB",
+          sourceId: jobId,
+          sourceDetail: "PASSAGE_ANALYSIS",
+          academyId: job.academyId,
+          provider: providerFromModel(usageEvent.modelId),
+          model: usageEvent.modelId,
+          operationType: "PASSAGE_ANALYSIS",
+          unitType: "TOKENS",
+          inputTokens: usage.inputTokens,
+          outputTokens: usage.outputTokens,
+          usageAt: new Date(),
+          metadata: {
+            passageId: job.passage.id,
+            generationPlan,
+            durationMs: usageEvent.durationMs,
+          },
+        });
+      }
       generationMs = Date.now() - generationStartedAt;
       const analysisData = withAnalysisGenerationMetadata(
         rawAnalysis,

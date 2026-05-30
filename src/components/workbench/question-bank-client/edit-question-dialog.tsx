@@ -44,6 +44,8 @@ export function EditQuestionDialog({
       <DialogContent
         className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1920px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1920px]"
         showCloseButton={false}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader className="sr-only">
           <DialogTitle>문제 수정</DialogTitle>

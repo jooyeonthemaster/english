@@ -106,7 +106,11 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
           box-shadow: none !important;
         }
 
-        .exam-a4-page:last-child {
+        /* Drop the forced page break on the LAST page only, otherwise the
+           trailing break emits an extra blank sheet. Each .exam-a4-page is the
+           only child of its .exam-preview-page-frame, so ".exam-a4-page:last-child"
+           matched every page (not just the last) — target the last frame instead. */
+        .exam-preview-page-frame:last-child .exam-a4-page {
           page-break-after: auto !important;
           break-after: auto !important;
         }

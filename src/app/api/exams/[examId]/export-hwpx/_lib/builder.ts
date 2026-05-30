@@ -22,6 +22,23 @@ import type {
   BuilderSettings,
 } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
+import {
+  computeBreakPlan,
+  computePaginatedLayout,
+  passageBreakKey,
+  questionBreakKey,
+  type BreakPlan,
+  type BreakType,
+} from "./break-plan";
+import {
+  renderPassageFragment,
+  renderQuestionPart,
+  type FragmentRenderOptions,
+} from "./render/fragment";
+import type {
+  PaperPage,
+  RenderFragment,
+} from "@/components/exams/paper-builder/types";
 
 export interface BuildHwpxOptions {
   title: string;
@@ -51,6 +68,16 @@ function blockAlign(align: BuilderBlock["blockAlign"]) {
   if (align === "center") return "CENTER" as const;
   if (align === "right") return "RIGHT" as const;
   return "LEFT" as const;
+}
+
+// 분할 계획에 따라 블록 묶음의 첫 블록에 강제 단/페이지 나눔을 부여한다.
+// (문단·표 모두 pageBreak/columnBreak 필드를 지원한다.)
+function applyBreak(blocks: BlockNode[], type: BreakType | undefined) {
+  if (!type) return;
+  const first = blocks[0];
+  if (!first || first.kind === "columnPr") return;
+  if (type === "page") first.pageBreak = true;
+  else first.columnBreak = true;
 }
 
 function blockTextSize(block: BuilderBlock, compact: boolean) {
@@ -175,42 +202,154 @@ function appendQuestionGroups(opts: {
   passageStyle: "boxed" | "underlined" | "plain";
   showPassageTitle: boolean;
   contentWidthHpu: number;
+  breakPlan: BreakPlan;
 }) {
   const groups = groupItems(opts.items);
   for (const group of groups) {
     const first = group.items[0];
+    const firstLocalId = first.localId;
     const includePassage = first.includePassage !== false;
     const passageContent = (
       first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
     ).trim();
 
     if (includePassage && passageContent) {
-      opts.target.push(
-        ...renderPassage({
-          passageTitle:
-            first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
-          passageContent,
-          passageStyle: opts.passageStyle,
-          showPassageTitle: opts.showPassageTitle,
-          compact: opts.compact,
-          usesSentenceInsertMarkers: group.items.some(
-            (it) => it.sourceQuestion.subType === "SENTENCE_INSERT",
-          ),
-          contentWidthHpu: opts.contentWidthHpu,
-        }),
-      );
+      const passageBlocks = renderPassage({
+        passageTitle:
+          first.passageTitle ?? first.sourceQuestion.passage?.title ?? "",
+        passageContent,
+        passageStyle: opts.passageStyle,
+        showPassageTitle: opts.showPassageTitle,
+        compact: opts.compact,
+        usesSentenceInsertMarkers: group.items.some(
+          (it) => it.sourceQuestion.subType === "SENTENCE_INSERT",
+        ),
+        contentWidthHpu: opts.contentWidthHpu,
+      });
+      if (firstLocalId) {
+        applyBreak(passageBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
+      }
+      opts.target.push(...passageBlocks);
     }
     for (const item of group.items) {
-      opts.target.push(
-        ...renderQuestionBlock({
-          item,
-          layout: opts.layout,
-          includeAnswers: opts.includeAnswers,
-          contentWidthHpu: opts.contentWidthHpu,
-        }),
-      );
+      const questionBlocks = renderQuestionBlock({
+        item,
+        layout: opts.layout,
+        includeAnswers: opts.includeAnswers,
+        contentWidthHpu: opts.contentWidthHpu,
+      });
+      if (item.localId) {
+        applyBreak(questionBlocks, opts.breakPlan.get(questionBreakKey(item.localId)));
+      }
+      opts.target.push(...questionBlocks);
     }
   }
+}
+
+// 한 단(column)의 fragment 들을 BlockNode[] 로.
+function renderColumn(
+  column: RenderFragment[],
+  fopts: FragmentRenderOptions,
+): BlockNode[] {
+  const blocks: BlockNode[] = [];
+  for (const fragment of column) {
+    blocks.push(...renderPassageFragment(fragment, fopts));
+    for (const part of fragment.parts) {
+      blocks.push(...renderQuestionPart(part, fopts));
+    }
+  }
+  if (blocks.length === 0) {
+    blocks.push({ kind: "p", style: { spaceAfter: 0 }, runs: [] });
+  }
+  return blocks;
+}
+
+// 한 페이지를 단별 명시 표(2단: 좌 | 간격 | 우, 또는 1단)로.
+function buildPageTable(opts: {
+  page: PaperPage;
+  columns: 1 | 2;
+  columnWidthHpu: number;
+  columnGapHpu: number;
+  contentWidthHpu: number;
+  pageBreak: boolean;
+  fopts: FragmentRenderOptions;
+}): BlockNode {
+  const NO_BORDERS = {
+    left: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+    right: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+    top: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+    bottom: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+  };
+  const noMargin = { left: 0, right: 0, top: 0, bottom: 0 };
+
+  if (opts.columns === 1) {
+    const colBlocks = renderColumn(opts.page[0] ?? [], opts.fopts);
+    return {
+      kind: "tbl",
+      colWidthsHpu: [opts.contentWidthHpu],
+      borders: NO_BORDERS,
+      cellMargins: noMargin,
+      pageBreak: opts.pageBreak,
+      rows: [
+        {
+          heightHpu: 1,
+          cells: [
+            {
+              widthHpu: opts.contentWidthHpu,
+              heightHpu: 1,
+              vAlign: "TOP",
+              borders: NO_BORDERS,
+              margins: noMargin,
+              blocks: colBlocks,
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  const leftBlocks = renderColumn(opts.page[0] ?? [], opts.fopts);
+  const rightBlocks = renderColumn(opts.page[1] ?? [], opts.fopts);
+  const colW = opts.columnWidthHpu;
+  const gap = opts.columnGapHpu;
+  return {
+    kind: "tbl",
+    colWidthsHpu: [colW, gap, colW],
+    borders: NO_BORDERS,
+    cellMargins: noMargin,
+    pageBreak: opts.pageBreak,
+    rows: [
+      {
+        heightHpu: 1,
+        cells: [
+          {
+            widthHpu: colW,
+            heightHpu: 1,
+            vAlign: "TOP",
+            borders: NO_BORDERS,
+            margins: noMargin,
+            blocks: leftBlocks,
+          },
+          {
+            widthHpu: gap,
+            heightHpu: 1,
+            vAlign: "TOP",
+            borders: NO_BORDERS,
+            margins: noMargin,
+            blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
+          },
+          {
+            widthHpu: colW,
+            heightHpu: 1,
+            vAlign: "TOP",
+            borders: NO_BORDERS,
+            margins: noMargin,
+            blocks: rightBlocks,
+          },
+        ],
+      },
+    ],
+  };
 }
 
 export function buildBuilderHwpxDocument(
@@ -223,6 +362,18 @@ export function buildBuilderHwpxDocument(
   const passageStyle = layout.passageStyle ?? "boxed";
   const showPassageTitle = layout.showPassageTitle !== false;
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
+
+  // 미리보기와 동일한 페이지/단 분할을 재현하기 위한 break plan.
+  // 정답포함 모드는 해설 블록 때문에 미리보기와 레이아웃이 본질적으로 다르므로,
+  // 강제 분할을 적용하지 않고 한컴 자동 흐름에 맡긴다(빈 plan).
+  const { plan: breakPlan } = includeAnswers
+    ? { plan: new Map() as BreakPlan }
+    : computeBreakPlan({
+        blocks: settings?.blocks,
+        resolvedItems,
+        layout,
+        template: settings?.template,
+      });
 
   // 페이지 설정 — 미리보기(A4PaperPage)의 px padding 을 mm로 정확히 환산.
   // 미리보기: comfortable px-[42px] py-[38px], compact px-[34px] py-[30px].
@@ -291,71 +442,126 @@ export function buildBuilderHwpxDocument(
     blocks.push({ kind: "p", style: { spaceAfter: 60 }, runs: [] });
   }
 
-  if (columns === 2) {
-    blocks.push({
-      kind: "columnPr",
-      columns: 2,
-      columnGapHpu: columnGap,
-    });
-  }
+  // 3) 본문.
+  // 새 방식: 미리보기 pagination 이 확정한 페이지/단 배치를 단별 명시 표로 옮긴다.
+  //   한컴 자동 다단 흐름/균형 맞춤에 의존하지 않으므로, 긴 지문 시험지에서도
+  //   미리보기와 같은 단·페이지 배치가 강제된다. (정답포함 모드는 해설 때문에
+  //   pagination 모델과 다르므로 기존 흐름 방식 유지.)
+  // NOTE(명시 2단 표 방식 비활성화): 페이지마다 2단 표로 배치를 강제하는 방식은
+  // 결정적 배치라는 장점이 있으나, 실제 한컴 한글에서 (1) inline 표의 명시 셀 폭을
+  // 제대로 적용하지 않아 칸이 좁아지고(약 55%), (2) 표가 너무 높아 1페이지에서
+  // 다음 장으로 밀리는 문제가 확인됐다. 그래서 전체폭 2단(colPr) 흐름 방식으로
+  // 되돌린다. (fragment 렌더러/레이아웃 계산 코드는 추후 재시도 위해 보존.)
+  const USE_EXPLICIT_COLUMN_TABLES = false;
+  const pageLayout =
+    USE_EXPLICIT_COLUMN_TABLES && !includeAnswers
+      ? computePaginatedLayout({
+          blocks: settings?.blocks,
+          resolvedItems,
+          layout,
+          template: settings?.template,
+        })
+      : null;
 
-  // 3) 본문 — v2 는 사용자 삽입 블록 순서를 유지한다.
-  if (settings?.blocks?.length) {
-    const byLocalId = new Map(
-      resolvedItems
-        .filter((item) => item.localId)
-        .map((item) => [item.localId as string, item]),
-    );
-    const used = new Set<BuilderItemResolved>();
-    const takeQuestion = (block: BuilderBlock) => {
-      const byId = block.localId ? byLocalId.get(block.localId) : undefined;
-      if (byId && !used.has(byId)) {
-        used.add(byId);
-        return byId;
-      }
-      const fallback = resolvedItems.find(
-        (item) => !used.has(item) && item.questionId === block.questionId,
-      );
-      if (fallback) used.add(fallback);
-      return fallback;
+  if (pageLayout) {
+    const fopts: FragmentRenderOptions = {
+      passageStyle,
+      showPassageTitle,
+      showQuestionMeta: layout.showQuestionMeta !== false,
+      showAnswerSpace: layout.showAnswerSpace !== false,
+      compact,
+      template: settings?.template,
+      columnWidthHpu: columnWidth,
     };
-    let pendingQuestions: BuilderItemResolved[] = [];
-    const flush = () => {
-      if (pendingQuestions.length === 0) return;
+    pageLayout.pages.forEach((page: PaperPage, idx: number) => {
+      blocks.push(
+        buildPageTable({
+          page,
+          columns,
+          columnWidthHpu: columnWidth,
+          columnGapHpu: columnGap,
+          contentWidthHpu: contentWidth,
+          pageBreak: idx > 0,
+          fopts,
+        }),
+      );
+    });
+  } else {
+    // 폴백: 기존 한컴 자동 흐름(colPr) + 강제 break 방식.
+    if (columns === 2) {
+      blocks.push({
+        kind: "columnPr",
+        columns: 2,
+        columnGapHpu: columnGap,
+      });
+    }
+
+    if (settings?.blocks?.length) {
+      const byLocalId = new Map(
+        resolvedItems
+          .filter((item) => item.localId)
+          .map((item) => [item.localId as string, item]),
+      );
+      const used = new Set<BuilderItemResolved>();
+      const takeQuestion = (block: BuilderBlock) => {
+        const byId = block.localId ? byLocalId.get(block.localId) : undefined;
+        if (byId && !used.has(byId)) {
+          used.add(byId);
+          return byId;
+        }
+        const fallback = resolvedItems.find(
+          (item) => !used.has(item) && item.questionId === block.questionId,
+        );
+        if (fallback) used.add(fallback);
+        return fallback;
+      };
+      let pendingQuestions: BuilderItemResolved[] = [];
+      const flush = () => {
+        if (pendingQuestions.length === 0) return;
+        appendQuestionGroups({
+          target: blocks,
+          items: pendingQuestions,
+          layout,
+          includeAnswers,
+          compact,
+          passageStyle,
+          showPassageTitle,
+          contentWidthHpu: columnWidth,
+          breakPlan,
+        });
+        pendingQuestions = [];
+      };
+
+      for (const block of settings.blocks) {
+        if (block.blockType === "question") {
+          const questionItem = takeQuestion(block);
+          if (questionItem) pendingQuestions.push(questionItem);
+          continue;
+        }
+        flush();
+        const customBlocks = renderCustomBlock(block, compact, columnWidth);
+        if (block.localId) {
+          applyBreak(
+            customBlocks,
+            breakPlan.get(questionBreakKey(block.localId)),
+          );
+        }
+        blocks.push(...customBlocks);
+      }
+      flush();
+    } else {
       appendQuestionGroups({
         target: blocks,
-        items: pendingQuestions,
+        items: resolvedItems,
         layout,
         includeAnswers,
         compact,
         passageStyle,
         showPassageTitle,
         contentWidthHpu: columnWidth,
+        breakPlan,
       });
-      pendingQuestions = [];
-    };
-
-    for (const block of settings.blocks) {
-      if (block.blockType === "question") {
-        const questionItem = takeQuestion(block);
-        if (questionItem) pendingQuestions.push(questionItem);
-        continue;
-      }
-      flush();
-      blocks.push(...renderCustomBlock(block, compact, columnWidth));
     }
-    flush();
-  } else {
-    appendQuestionGroups({
-      target: blocks,
-      items: resolvedItems,
-      layout,
-      includeAnswers,
-      compact,
-      passageStyle,
-      showPassageTitle,
-      contentWidthHpu: columnWidth,
-    });
   }
 
   const section: SectionSpec = {

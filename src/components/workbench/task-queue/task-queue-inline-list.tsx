@@ -933,13 +933,42 @@ export function TaskQueueInlineList({
     useState<GridViewMode>("grid-3");
   const viewMode = controlledViewMode ?? internalViewMode;
   const setViewMode = (mode: GridViewMode) => {
-    if (grid3Disabled && mode === "grid-3") return;
+    if (grid3Blocked && mode === "grid-3") return;
     if (onViewModeChange) onViewModeChange(mode);
     if (controlledViewMode === undefined) setInternalViewMode(mode);
   };
-  const effectiveViewMode =
-    grid3Disabled && viewMode === "grid-3" ? "grid-2" : viewMode;
 
+  // Auto-collapse the 3-column grid to 2 columns when the grid itself gets too
+  // narrow (sidebar/review drawer open, smaller window). Measured on the grid
+  // container, not the viewport, so it reacts to layout changes around it. This
+  // single signal drives both the rendered columns AND the view toggle, so the
+  // two never disagree.
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  const [autoGrid3Disabled, setAutoGrid3Disabled] = useState(false);
+
+  useEffect(() => {
+    if (layout !== "grid") return;
+    const el = bodyRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const measure = (width: number) => {
+      // 3 columns need ~900px before cards get thin enough to break.
+      setAutoGrid3Disabled(width > 0 && width < 900);
+    };
+    measure(el.clientWidth);
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) measure(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [layout]);
+
+  const grid3Blocked = grid3Disabled || autoGrid3Disabled;
+  const effectiveViewMode =
+    grid3Blocked && viewMode === "grid-3" ? "grid-2" : viewMode;
+
+  // Persist the fallback only when grid-3 is *externally* disabled — an auto
+  // width-collapse must not overwrite the user's saved preference, so 3 columns
+  // come back once there's room again.
   useEffect(() => {
     if (!grid3Disabled || viewMode !== "grid-3") return;
     if (onViewModeChange) onViewModeChange("grid-2");
@@ -1072,8 +1101,8 @@ export function TaskQueueInlineList({
     domain === "extraction" ? ExtractionTaskListIcon : Database;
   const grid = layout === "grid";
   const isList = grid && effectiveViewMode === "list";
-  // Fixed column counts regardless of viewport width — the toggle should
-  // mean "exactly N columns", not "responsive grid that *prefers* N".
+  // Column count follows effectiveViewMode, which already accounts for the
+  // auto width-collapse above — so grid and toggle stay in sync.
   const gridColsClass =
     effectiveViewMode === "grid-2" ? "grid-cols-2" : "grid-cols-3";
 
@@ -1130,7 +1159,7 @@ export function TaskQueueInlineList({
               <ViewModeToggle
                 value={effectiveViewMode}
                 onChange={setViewMode}
-                grid3Disabled={grid3Disabled}
+                grid3Disabled={grid3Blocked}
               />
             ) : null}
             {collapseEnabled && collapsed ? (
@@ -1151,6 +1180,7 @@ export function TaskQueueInlineList({
       {collapseEnabled && collapsed ? null : (
         <>
           <div
+            ref={bodyRef}
             className={bodyClass}
             style={
               resizeEnabled

@@ -141,7 +141,6 @@ export function TutorProgramBuilderClient({
   const [filterGrade, setFilterGrade] = useState("");
   const [filterSemester, setFilterSemester] = useState("");
   const [analysisStatusFilter, setAnalysisStatusFilter] = useState<PassageAnalysisStatusFilter>("all");
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedCollectionId, setSelectedCollectionId] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [analysisModalPassage, setAnalysisModalPassage] = useState<AnalysisModalPassage | null>(null);
@@ -344,8 +343,6 @@ export function TutorProgramBuilderClient({
           analysisStatusFilter={analysisStatusFilter}
           setAnalysisStatusFilter={setAnalysisStatusFilter}
           passageStatusCounts={passageStatusCounts}
-          showFilters={showFilters}
-          setShowFilters={setShowFilters}
           activeFilterCount={activeFilterCount}
           selectedCollectionId={selectedCollectionId}
           setSelectedCollectionId={setSelectedCollectionId}

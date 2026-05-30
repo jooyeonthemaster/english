@@ -95,8 +95,9 @@ const PANEL_SECTION_IDS = [
   "shuffle",
   "template",
 ] as const;
-const QUESTION_PREVIEW_HEIGHT_MIN = 72;
+const QUESTION_PREVIEW_HEIGHT_MIN = 48;
 const QUESTION_PREVIEW_HEIGHT_DEFAULT = 92;
+const QUESTION_PREVIEW_HEIGHT_MAX_FLOOR = 260;
 
 type PanelSectionId = (typeof PANEL_SECTION_IDS)[number];
 
@@ -290,7 +291,7 @@ function PanelSection({
       onDragOver={(event) => onDragOver(event, id)}
       onDrop={(event) => onDrop(event, id)}
       className={cn(
-        "overflow-hidden rounded-xl border bg-white transition-all",
+        "w-full overflow-hidden rounded-xl border bg-white transition-all",
         dragOver
           ? "border-blue-300 shadow-[0_0_0_2px_rgba(59,130,246,0.12)]"
           : "border-slate-200 shadow-sm",
@@ -666,7 +667,7 @@ export function BuilderPropertiesPanel({
   onRemoveItem,
 }: BuilderPropertiesPanelProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const questionPreviewBodyRef = useRef<HTMLDivElement>(null);
+  const questionPreviewBodyRef = useRef<HTMLTextAreaElement>(null);
   const hasActiveItem = Boolean(activeItem);
   const activeIsQuestion = activeItem?.blockType === "question";
   const activeLocked = Boolean(activeItem?.locked);
@@ -729,7 +730,7 @@ export function BuilderPropertiesPanel({
 
     const measure = () => {
       const nextMaxHeight = Math.max(
-        QUESTION_PREVIEW_HEIGHT_MIN,
+        QUESTION_PREVIEW_HEIGHT_MAX_FLOOR,
         Math.ceil(body.scrollHeight),
       );
       setQuestionPreviewMaxHeight(nextMaxHeight);
@@ -746,6 +747,12 @@ export function BuilderPropertiesPanel({
   function updateActiveItem(patch: Partial<PaperItem>) {
     if (!activeItem) return;
     onUpdateItem(activeItem.localId, patch);
+  }
+
+  function updateQuestionPreviewMaxHeight(element: HTMLTextAreaElement) {
+    setQuestionPreviewMaxHeight(
+      Math.max(QUESTION_PREVIEW_HEIGHT_MAX_FLOOR, Math.ceil(element.scrollHeight)),
+    );
   }
 
   function updateObjectiveAnswerSlots(objectiveAnswerSlots: number) {
@@ -1112,15 +1119,20 @@ export function BuilderPropertiesPanel({
         {activeItem && activeIsQuestion && (
           <div className="space-y-4">
             <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50/70">
-              <div
+              <textarea
+                key={activeItem.localId}
                 ref={questionPreviewBodyRef}
-                className="overflow-y-auto overscroll-contain px-3 py-2.5 [scrollbar-gutter:stable]"
+                value={activeItem.questionText}
+                disabled={activeLocked}
+                onChange={(event) => {
+                  updateQuestionPreviewMaxHeight(event.currentTarget);
+                  updateActiveItem({ questionText: event.currentTarget.value });
+                }}
+                className="block w-full resize-none overflow-y-auto overscroll-contain border-0 bg-transparent px-3 py-2.5 text-[12px] font-bold leading-relaxed text-slate-700 outline-none transition-colors focus:bg-white disabled:cursor-not-allowed disabled:text-slate-400 [scrollbar-gutter:stable]"
                 style={{ height: questionPreviewHeight }}
-              >
-                <p className="whitespace-pre-wrap text-[12px] font-bold leading-relaxed text-slate-700">
-                  {activeItem.questionText}
-                </p>
-              </div>
+                aria-label="문항 텍스트 편집"
+                spellCheck={false}
+              />
               <button
                 type="button"
                 onPointerDown={handleQuestionPreviewResizeStart}
@@ -1301,7 +1313,7 @@ export function BuilderPropertiesPanel({
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4">
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4 [scrollbar-gutter:stable]">
         {sectionOrder.map((sectionId, index) => (
           <PanelSection
             key={sectionId}

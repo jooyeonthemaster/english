@@ -136,13 +136,13 @@ export function TemplateSettingsPanel({
                 key={id}
                 onClick={() => { setTemplate(id); markDirty(); }}
                 className={cn(
-                  "min-h-[86px] rounded-xl border p-2.5 text-left transition-all",
+                  "flex min-h-11 items-center rounded-xl border px-3 py-2 text-left transition-all",
                   template === id ? `${TEMPLATE_META[id].accent} shadow-sm` : "border-slate-200 bg-white hover:bg-slate-50",
                 )}
               >
-                <span className={cn("mb-2 block h-2.5 w-14 rounded-full bg-gradient-to-r", TEMPLATE_META[id].swatch)} />
-                <p className="text-[12px] font-bold">{TEMPLATE_META[id].label}</p>
-                <p className="mt-1 text-[10px] leading-relaxed opacity-80">{TEMPLATE_META[id].description}</p>
+                <p className={cn("text-[12px] font-black", TEMPLATE_META[id].titleClass)}>
+                  {TEMPLATE_META[id].label}
+                </p>
               </button>
             ))}
           </div>

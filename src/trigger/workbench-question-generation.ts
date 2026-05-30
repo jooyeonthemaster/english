@@ -14,6 +14,11 @@ import {
 } from "@/lib/credits";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
+  providerFromModel,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
+import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
@@ -217,7 +222,7 @@ export const workbenchQuestionGenerationTask = task({
       let rationale = "";
       if (config.mode === "AUTO") {
         const planningStartedAt = Date.now();
-        const { object: planResult } = await generateQuestionObject({
+        const planningResult = await generateQuestionObject({
           schema: planSchema,
           prompt: buildPlanningPrompt({
             schoolType,
@@ -234,9 +239,30 @@ export const workbenchQuestionGenerationTask = task({
           logPrefix: "WORKBENCH-AUTO-GEN-PLAN",
           maxTokens: 4_096,
         });
+        const planUsage = readAiUsageTokens(planningResult.usage);
+        await recordPlatformApiUsageCost({
+          sourceKey: `workbench_ai_job:${jobId}:planning`,
+          sourceType: "WORKBENCH_AI_JOB",
+          sourceId: jobId,
+          sourceDetail: "QUESTION_PLANNING",
+          academyId: job.academyId,
+          provider: providerFromModel(planningResult.modelId),
+          model: planningResult.modelId,
+          operationType,
+          unitType: "TOKENS",
+          inputTokens: planUsage.inputTokens,
+          outputTokens: planUsage.outputTokens,
+          usageAt: new Date(),
+          metadata: {
+            passageId: job.passage.id,
+            generationPlan: config.generationPlan,
+            attempts: planningResult.attempts,
+            durationMs: planningResult.durationMs,
+          },
+        });
         planningMs = Date.now() - planningStartedAt;
-        plan = planResult.plan;
-        rationale = planResult.rationale;
+        plan = planningResult.object.plan;
+        rationale = planningResult.object.rationale;
       } else {
         plan = buildManualPlan(config);
       }
@@ -265,6 +291,30 @@ export const workbenchQuestionGenerationTask = task({
         },
       );
       const questions = generationResult.questions;
+      for (const [idx, event] of generationResult.usageEvents.entries()) {
+        const usage = readAiUsageTokens(event.usage);
+        await recordPlatformApiUsageCost({
+          sourceKey: `workbench_ai_job:${jobId}:generation:${idx}`,
+          sourceType: "WORKBENCH_AI_JOB",
+          sourceId: jobId,
+          sourceDetail: `QUESTION_GENERATION:${event.subType}`,
+          academyId: job.academyId,
+          provider: providerFromModel(event.modelId),
+          model: event.modelId,
+          operationType,
+          unitType: "TOKENS",
+          inputTokens: usage.inputTokens,
+          outputTokens: usage.outputTokens,
+          usageAt: new Date(),
+          metadata: {
+            passageId: job.passage.id,
+            generationPlan: config.generationPlan,
+            qualityMode: event.qualityMode,
+            attempts: event.attempts,
+            durationMs: event.durationMs,
+          },
+        });
+      }
       generationAttempts = generationResult.attempts;
       generationMs = Date.now() - generationStartedAt;
       const relaxedFallback = generationResult.relaxedFallback;

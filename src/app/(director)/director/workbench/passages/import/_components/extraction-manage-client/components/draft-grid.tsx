@@ -132,6 +132,10 @@ interface DraftGridProps {
   /** Top filter row (search, sort, duplicate, refresh, queue, extract). */
   filtersToolbar?: ReactNode;
 
+  /** Expanded sub-filter panel. Rendered full-width directly below the header
+   *  row when the 필터 toggle is active. */
+  filtersPanel?: ReactNode;
+
   /** Bulk selection toolbar (select all, move/copy, rerestore, promote, delete). */
   selectionToolbar?: ReactNode;
 
@@ -187,6 +191,7 @@ export function DraftGrid({
   dupCountById,
   filedDraftIds,
   filtersToolbar,
+  filtersPanel,
   selectionToolbar,
   stickyTop = 0,
   onDropDraftsIntoCurrentFolder,
@@ -252,6 +257,7 @@ export function DraftGrid({
         className="sticky z-30 -mx-4 bg-slate-50 px-4 py-2 shadow-[0_1px_0_rgba(148,163,184,0.22)] sm:-mx-5 sm:px-5"
       >
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
+          <div className="flex flex-col">
           <div
             className={
               "flex min-h-9 flex-wrap items-center gap-y-1.5 " +
@@ -299,6 +305,8 @@ export function DraftGrid({
                 </div>
               ) : null}
             </div>
+          </div>
+          {filtersPanel ? filtersPanel : null}
           </div>
         </div>
       </div>
