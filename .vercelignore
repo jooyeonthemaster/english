@@ -9,3 +9,20 @@ node_modules
 scripts/_gen_audit_out
 /*.pdf
 *.log
+
+# scratch / local-only working files (do NOT ship to production)
+.tmp
+
+# sensitive: call recordings + transcripts must not be publicly served
+public/*.m4a
+public/*.mp3
+public/*.wav
+public/*.transcript.txt
+public/*.transcript.meta.txt
+
+# untracked PDFs in public root (copyrighted/source materials, not app assets)
+public/*.pdf
+
+# unrelated marketing/scratch images (bloat, not referenced by app)
+public/brixs-strawberry-latte-*
+public/61c7d3c3-d347-474f-83cb-2e39efdaa594.jpg
