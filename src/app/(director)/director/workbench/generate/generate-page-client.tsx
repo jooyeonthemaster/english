@@ -18,6 +18,7 @@ import {
   approveWorkbenchQuestion,
   bulkApproveWorkbenchQuestions,
   bulkDeleteWorkbenchPassages,
+  bulkDeleteWorkbenchQuestions,
   removePassagesFromCollection,
 } from "@/actions/workbench";
 import {
@@ -25,10 +26,10 @@ import {
   type PassageCollectionItem,
   type FilterOptions,
   type PassageAnalysisStatusFilter,
+  questionSignature,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
-import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
 import { useGenerationSessionQueue } from "./generation-session-store";
@@ -189,53 +190,6 @@ export function GeneratePageClient({
     () => new Set(initialPassageIdsRef.current),
   );
 
-  // ── IRRELEVANT stepper context ──
-  // IRRELEVANT now inserts one new sentence into a source window, so N slots
-  // need N - 1 original passage sentences. The original first passage sentence
-  // is context only, so the maximum slot count is the total sentence count.
-  // With multiple selected passages, use the shortest passage so one setting is
-  // safe for every target.
-  const irrelevantPassageContext = useMemo(() => {
-    const targets =
-      selectedIds.size > 0
-        ? passages.filter((p) => selectedIds.has(p.id))
-        : selectedPassage
-          ? [selectedPassage]
-          : [];
-    if (targets.length === 0) return null;
-    let min = Number.POSITIVE_INFINITY;
-    let max = 0;
-    let limitingPassage: PassageItem | null = null;
-    let longestPassage: PassageItem | null = null;
-    for (const p of targets) {
-      const n = countPassageSentences(p.content || "");
-      if (n < min) {
-        min = n;
-        limitingPassage = p;
-      }
-      if (n > max) {
-        max = n;
-        longestPassage = p;
-      }
-    }
-    if (!Number.isFinite(min) || !limitingPassage) return null;
-    return {
-      sentenceCount: min,
-      title: limitingPassage.title,
-      longestSentenceCount: max,
-      longestTitle: longestPassage?.title ?? "",
-      selectedCount: targets.length,
-    };
-  }, [selectedIds, selectedPassage, passages]);
-
-  const irrelevantPassageSentenceCount =
-    irrelevantPassageContext?.sentenceCount ?? null;
-
-  const maxIrrelevantSlotCount = useMemo(() => {
-    if (irrelevantPassageSentenceCount === null) return 5;
-    return Math.max(0, irrelevantPassageSentenceCount);
-  }, [irrelevantPassageSentenceCount]);
-
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
   const [loadingAnalysisModal, setLoadingAnalysisModal] = useState(false);
@@ -244,12 +198,61 @@ export function GeneratePageClient({
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
   const [loadingSavedQuestions, setLoadingSavedQuestions] = useState(true);
 
+  // ── Deleted-question tombstones ──
+  // The 현재 세션 cards are derived from AI jobs that re-poll every 5s, and the
+  // job's questionIds survive even after we delete the underlying Question rows.
+  // We keep a client-side tombstone set so deleted questions stay hidden in this
+  // session instead of flickering back in on the next poll.
+  const [deletedQuestionIds, setDeletedQuestionIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  // Companion signature tombstones — a session card may resolve to its saved row
+  // by signature (legacy jobs without aligned questionIds) rather than by id, so
+  // the id set alone can't always hide it after deletion.
+  const [deletedQuestionSignatures, setDeletedQuestionSignatures] = useState<
+    Set<string>
+  >(() => new Set());
+  const [deletingQuestions, setDeletingQuestions] = useState(false);
+
+  // Signature of a saved question, matching the session-queue card signature so
+  // a deleted question can be tombstoned by signature as well as by id.
+  const savedQuestionSig = useCallback(
+    (q: QuestionCardItem) =>
+      questionSignature({
+        passageId: q.passage?.id,
+        subType: q.subType,
+        questionText: q.questionText,
+        correctAnswer: q.correctAnswer,
+        options: q.options,
+      }),
+    [],
+  );
+
   // ── Question detail modal ──
   const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
     null,
   );
   const editor = useQuestionEditor((deletedId) => {
-    setSavedQuestions((prev) => prev.filter((q) => q.id !== deletedId));
+    let deletedSig: string | null = null;
+    setSavedQuestions((prev) => {
+      const target = prev.find((q) => q.id === deletedId);
+      if (target) deletedSig = savedQuestionSig(target);
+      return prev.filter((q) => q.id !== deletedId);
+    });
+    setDeletedQuestionIds((prev) => {
+      if (prev.has(deletedId)) return prev;
+      const next = new Set(prev);
+      next.add(deletedId);
+      return next;
+    });
+    if (deletedSig) {
+      setDeletedQuestionSignatures((prev) => {
+        if (prev.has(deletedSig as string)) return prev;
+        const next = new Set(prev);
+        next.add(deletedSig as string);
+        return next;
+      });
+    }
     setDetailQuestion((prev) => (prev?.id === deletedId ? null : prev));
   });
 
@@ -783,6 +786,69 @@ export function GeneratePageClient({
     [applyApprovalState, loadSavedQuestions],
   );
 
+  const handleBatchDeleteQuestions = useCallback(
+    async (questionIds: string[]): Promise<boolean> => {
+      // Confirmation is handled by the in-app AlertDialog in BottomQueueSection
+      // before this runs — no native window.confirm here.
+      const ids = [...new Set(questionIds)].filter(Boolean);
+      if (ids.length === 0 || deletingQuestions) return false;
+
+      setDeletingQuestions(true);
+      try {
+        const result = await bulkDeleteWorkbenchQuestions(ids);
+        if (!result.success) {
+          toast.error(result.error || "문제 삭제에 실패했습니다.");
+          return false;
+        }
+
+        // Tombstone ONLY the rows the server actually deleted — never the full
+        // request. On a partial delete (cross-academy / already-gone ids) the
+        // survivors must stay visible, and loadSavedQuestions() reconciles them.
+        const deletedIds = result.deletedIds ?? [];
+        const deletedSet = new Set(deletedIds);
+        const deletedSigs = savedQuestions
+          .filter((q) => deletedSet.has(q.id))
+          .map(savedQuestionSig);
+        setDeletedQuestionIds((prev) => {
+          const next = new Set(prev);
+          deletedIds.forEach((id) => next.add(id));
+          return next;
+        });
+        if (deletedSigs.length > 0) {
+          setDeletedQuestionSignatures((prev) => {
+            const next = new Set(prev);
+            deletedSigs.forEach((sig) => next.add(sig));
+            return next;
+          });
+        }
+        setSavedQuestions((prev) => prev.filter((q) => !deletedSet.has(q.id)));
+        setDetailQuestion((prev) =>
+          prev && deletedSet.has(prev.id) ? null : prev,
+        );
+
+        if (result.deleted === 0) {
+          toast.error("삭제된 문제가 없습니다.");
+        } else if (result.deleted === result.requested) {
+          toast.success(`${result.deleted}개 문제를 삭제했습니다.`);
+        } else {
+          toast.warning(
+            `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+          );
+        }
+        loadSavedQuestions();
+        return true;
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "문제 삭제에 실패했습니다.",
+        );
+        return false;
+      } finally {
+        setDeletingQuestions(false);
+      }
+    },
+    [deletingQuestions, loadSavedQuestions, savedQuestions, savedQuestionSig],
+  );
+
   // ── Generation handlers (extracted to hook) ──
   const { handleBatchGenerate, handleGenerate, handleSaveQuestions } =
     useGenerationHandlers({
@@ -907,20 +973,6 @@ export function GeneratePageClient({
               canGenerate={canGenerate}
               selectedIds={selectedIds}
               handleBatchGenerate={handleBatchGenerate}
-              maxIrrelevantSlotCount={maxIrrelevantSlotCount}
-              irrelevantPassageSentenceCount={irrelevantPassageSentenceCount}
-              irrelevantLimitPassageTitle={
-                irrelevantPassageContext?.title ?? null
-              }
-              irrelevantLimitSelectedCount={
-                irrelevantPassageContext?.selectedCount ?? 0
-              }
-              irrelevantLongestPassageSentenceCount={
-                irrelevantPassageContext?.longestSentenceCount ?? null
-              }
-              irrelevantLongestPassageTitle={
-                irrelevantPassageContext?.longestTitle ?? null
-              }
             />
           }
         />
@@ -939,6 +991,10 @@ export function GeneratePageClient({
             setDetailQuestion={setDetailQuestion}
             onApproveQuestion={handleApproveQuestion}
             onBatchApproveQuestions={handleBatchApproveQuestions}
+            onBatchDeleteQuestions={handleBatchDeleteQuestions}
+            deletedQuestionIds={deletedQuestionIds}
+            deletedQuestionSignatures={deletedQuestionSignatures}
+            batchDeleting={deletingQuestions}
             onEditQuestion={editor.openEditor}
           />
         </section>

@@ -47,6 +47,23 @@ export function getCircledNumbers(count: number): string[] {
   );
 }
 
+// Circled lowercase letters ⓐ ⓑ ⓒ … (U+24D0–U+24E9). Used by the IRRELEVANT
+// (무관한 문장) type to mark in-passage sentences while the answer choices stay
+// numbered (① ② ③ → ⓐ ⓑ ⓒ). Nothing else in the codebase emits this Unicode
+// range, so renderers can safely treat it as an inline marker.
+export function getCircledLetter(index: number): string {
+  if (index >= 0 && index < 26) {
+    return String.fromCodePoint(0x24d0 + index);
+  }
+  return `(${String.fromCharCode(97 + (index % 26))})`;
+}
+
+export function getCircledLetters(count: number): string[] {
+  return Array.from({ length: Math.max(0, Math.floor(count)) }, (_, index) =>
+    getCircledLetter(index),
+  );
+}
+
 /** Types that need NO post-processing — pass through unchanged */
 export const PASSTHROUGH_TYPES = new Set([
   "SENTENCE_ORDER",

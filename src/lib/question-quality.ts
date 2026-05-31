@@ -102,9 +102,12 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, the correct order should require checking both local cohesion and the whole paragraph argument.",
   ],
   SENTENCE_INSERT: [
-    "The inserted sentence must contain a referent, transition, or logical bridge that uniquely fits one gap.",
-    "Place five markers at natural sentence boundaries and keep the given sentence stylistically consistent with the passage.",
-    "For KILLER, distractor locations should each have one tempting clue but fail because of reference, flow, or logic.",
+    "The given sentence must carry at least one explicit cohesive cue (demonstrative/pronoun anaphora, definite-article old information, a directional connective, or a temporal/causal link). A self-contained 'neutral' sentence that fits anywhere yields multiple answers and must be rejected.",
+    "The correct gap is decided by asymmetry: at the answer it closes BOTH the link to the preceding sentence and the link to the following sentence, while every other gap breaks at least one link (and inserting there splits two originally adjacent sentences).",
+    "Referent uniqueness: the cue's antecedent must exist only just before the correct gap; if a demonstrative/the-noun could resolve at two or more gaps the item has multiple answers.",
+    "Place the answer in the middle (②③④), not at the first or last gap, and keep the given sentence's length/register/abstraction homogeneous with the passage so position cannot be back-traced from style.",
+    "Each of the four distractor gaps must have one tempting clue (e.g. shared keyword, connective surface form) yet fail for a DIFFERENT decisive reason (missing antecedent, broken back-link, mismatched connective logic, undefined the/this). Avoid gaps that are obviously wrong.",
+    "For KILLER, weaken and spread surface cues so no single cue forces the answer; converge 2-3 cues on the correct gap while leaving only one cue at each distractor, and raise difficulty through abstract/argumentative passage logic, not through a missing cue.",
   ],
   TOPIC_MAIN_IDEA: [
     "The correct option must paraphrase the whole passage, not repeat a surface keyword.",
@@ -162,9 +165,10 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, make the correct pair depend on global relation mapping, and make every distractor passage-grounded.",
   ],
   IRRELEVANT: [
-    "The irrelevant sentence must share the passage's topic, nearby keywords, and style while breaking the paragraph's logic or focus.",
-    "Every non-answer sentence must be copied verbatim from the source passage.",
-    "Do not use a random outside fact as the intruder; make it fail by discourse function such as scope, actor, purpose, cause-effect, example/advice, or conclusion shift.",
+    "The irrelevant sentence must share the passage's central topic word, nearby keywords, and style while breaking only the paragraph's discourse function. It must bridge to the sentence right before it (echo a word or open with This/Such/These/However) so it looks connected on a skim.",
+    "Every non-answer sentence must be copied verbatim from the source passage; spread the four chosen choices across the whole passage body (not bunched at the top) but keep them in original order.",
+    "Apply the remove-and-reconnect test: deleting the answer must leave a seamless paragraph, and deleting any other choice must damage coherence (unique answer). Bias the answer to ②/③/④ and vary it; never ① or ⑤.",
+    "Do not use a random outside fact as the intruder; make it fail by discourse function such as evaluation reversal, scope/actor shift, cause-effect swap, example/advice jump, sub-topic drift, or over-generalization.",
     "For BASIC, the intruder may be a clear but still passage-related focus shift; do not make it a completely unrelated topic.",
     "For INTERMEDIATE, prefer a same-topic sentence that shifts the local role, evidence target, or practical focus without using an obvious counterclaim cue.",
     "For KILLER, make the sentence locally cohesive and vocabulary-rich, but wrong only after checking how the surrounding sentences build the claim. Do not use explicit opposition markers, regulation-backlash claims, blunt advice, or a simple direct contradiction of the thesis.",
@@ -429,35 +433,33 @@ function buildIrrelevantCandidateBlock(
     ].join("\n");
   }
 
-  const sourceWindowSize = Math.min(slotCount - 1, eligibleSentences.length);
-  const outputSlotCount = sourceWindowSize + 1;
-  const windows = [{
-    label: "A",
-    start: 0,
-    sentences: eligibleSentences.slice(0, sourceWindowSize),
-  }];
+  const sourceCount = slotCount - 1; // verbatim originals among the choices
+  // Force the answer position to vary across items (the model otherwise always
+  // lands on the middle → answer ③/ⓒ every time). Bias toward the center per
+  // exam convention but genuinely rotate among ②③④.
+  const targetIndex = (() => {
+    const r = Math.random();
+    return r < 0.34 ? 1 : r < 0.67 ? 2 : 3;
+  })();
+  const numberedEligible = eligibleSentences.map(
+    (sentence, index) => `  [sentence ${index + 2}] ${sentence}`,
+  );
+  const lastSentenceNumber = eligibleSentences.length + 1;
 
   return [
-    "## Valid IRRELEVANT source windows",
-    "- Use the window below as the source flow. The original first passage sentence is context only and must appear before the numbered choices without a number.",
-    "- Numbered choices must begin with the original second passage sentence as ①. Do not choose a later source window.",
-    `- In sentences[${outputSlotCount}], copy all ${sourceWindowSize} source sentences from that window verbatim and insert exactly one new irrelevant sentence into the flow.`,
-    `- Do not replace, delete, paraphrase, merge, or split any source sentence. The ${sourceWindowSize} original sentences must all remain present and in their original order.`,
-    `- The answer choices must be exactly ${outputSlotCount} slots labeled ①~${getCircledNumber(outputSlotCount - 1)}.`,
-    `- wrongOptionExplanations must include exactly ${sourceWindowSize} entries, one for every non-answer label. Do not stop at ⑤ when ${outputSlotCount} slots are requested.`,
-    "- The slot pointed to by irrelevantIndex must be the inserted non-verbatim sentence, not one of the original source sentences.",
-    `- Insert only into an inner position (${getCircledNumber(1)}~${getCircledNumber(Math.max(1, outputSlotCount - 2))}); never make the first or last slot the answer.`,
-    `- irrelevantIndex must be an integer from 1 to ${outputSlotCount - 2}.`,
-    "- The inserted sentence must reuse at least two meaningful English content words from the chosen window, including at least one from a neighboring sentence when possible.",
-    "- A substantial share of the inserted sentence's meaningful words should come from the chosen window; avoid adding many new concrete nouns.",
-    "- The inserted sentence must be wrong by discourse role, not by random topic. Good traps shift scope, actor, purpose, cause/effect, example/advice, or conclusion while keeping the same semantic field.",
-    "- Do not import a new setting or field that is absent from the passage just to make the sentence unrelated.",
-    "- Prefer a neutral explanatory sentence. Do not use awkward grammar, extreme words, or blunt advice markers as the giveaway.",
+    "## IRRELEVANT source sentences — pick the marked choices from here",
+    "- Sentence 1 (the very first passage sentence) is the unmarked TOPIC sentence: it defines 소재 and thesis and is the reference point for relevance. Never put it in sentences[]; it stays before the choices as context.",
+    `- Choose exactly ${sourceCount} sentences from the list below to be the non-answer choices. Copy each one VERBATIM (no paraphrase, merge, or split) and keep them in their original passage order.`,
+    `- DISTRIBUTE the ${sourceCount} chosen sentences across the WHOLE passage body — one near the start, one or two in the middle, and one near the end (e.g. sentences like 2, ${Math.max(3, Math.round(lastSentenceNumber * 0.4))}, ${Math.max(4, Math.round(lastSentenceNumber * 0.7))}, ${lastSentenceNumber}) — so the marked choices are NOT bunched at the top. This matters most for long passages; in a short passage adjacent choices are fine.`,
+    "- Write ONE new irrelevant sentence and place it BETWEEN two consecutive original sentences. The remove-and-reconnect test must pass: deleting your sentence must leave those two originals reading as one seamless, logical flow.",
+    `- Output sentences[${slotCount}] in passage order: the ${sourceCount} chosen originals plus the inserted sentence at irrelevantIndex (the inserted sentence's two immediate neighbors in sentences[] are the two consecutive originals it was placed between).`,
+    `- ⭐ 이번 문항의 정답 위치(고정): irrelevantIndex = ${targetIndex}. 무관문을 정확히 sentences[${targetIndex}]에 넣어 정답이 ${getCircledNumber(targetIndex)}(=${targetIndex + 1}번 선지)가 되게 하세요. 다른 위치를 쓰지 말고, 특히 항상 가운데(③)로 두지 마세요. 첫·마지막 표시 문장은 절대 금지.`,
+    `- wrongOptionExplanations must include exactly ${sourceCount} entries, one for every non-answer choice.`,
+    "- The inserted sentence must reuse at least two meaningful English content words from its neighbors and stay in the passage's semantic field; do not import a new setting, field, or many new concrete nouns.",
+    "- It must be wrong by DISCOURSE FUNCTION (관점/평가 역전, 인과 방향 뒤집기, 범위/주어 이동, 예시→처방 전환, 하위 주제 드리프트, 과잉 일반화), not by an obviously new topic. Keep it native, neutral, and the same length/register as the source sentences; no extreme words, no blunt advice markers, no awkward grammar as the giveaway.",
     ...buildIrrelevantDifficultyGuidance(requestedDifficulty),
-    ...windows.flatMap((window) => [
-      `Window ${window.label} (source sentence indices ${window.start + 2}-${window.start + 1 + window.sentences.length}):`,
-      ...window.sentences.map((sentence, sentenceIndex) => `  ${sentenceIndex + 1}. ${sentence}`),
-    ]),
+    `### Passage sentences (choose ${sourceCount} of these, spread out):`,
+    ...numberedEligible,
   ].join("\n");
 }
 
@@ -469,7 +471,8 @@ function buildIrrelevantDifficultyGuidance(requestedDifficulty?: string): string
       "- Do NOT use giveaway opposition cues such as however, instead, rather than, might hinder, limiting academic freedom, aggressive regulations, or a simple anti-thesis statement.",
       "- Do NOT use prescriptive research-policy sentences such as researchers should prioritize their own interests, secure intellectual property rights, build sponsor partnerships, or protect academic freedom unless that exact focus already exists in the source window.",
       "- Do NOT make the intruder a recommendation to encourage researchers, build sponsor relationships, or develop stable relationships with sponsors. That is an easy advice/policy detour, not a KILLER trap.",
-      "- Build the trap as a subtle focus/role shift: procedure detail instead of principle, evidence method instead of conclusion, actor/purpose shift, cause/effect target shift, or local example reframed as general policy.",
+      "- Build the trap as ONE of these subtle shifts: an evaluation/stance reversal (positively reframe what the passage criticizes, or criticize what it praises), an actor/scope shift (this case → people in general, or this subject → a different one), a cause/effect-target swap, or a local example reframed as a general claim.",
+      "- ⛔ Do NOT drift into how to MEASURE / optimize / calculate / quantify / standardize / build / develop / study the topic (procedure, evidence method, laboratory, equipment, tooling, data). Such sentences are auto-rejected. Stay a descriptive sentence about the same idea whose logic direction is wrong.",
       "- Reuse at least three meaningful content words from the chosen window, including at least one from the immediately previous or next sentence.",
       "- Keep sentence length, modality, abstraction level, and explanatory tone close to neighboring source sentences.",
       "- The sentence should become clearly removable only when the reader checks both adjacent sentences and the paragraph's conclusion.",
@@ -481,7 +484,7 @@ function buildIrrelevantDifficultyGuidance(requestedDifficulty?: string): string
       "## IRRELEVANT difficulty calibration: INTERMEDIATE",
       "- This should be the default usable exam level: same topic and keywords, but a clear local focus shift.",
       "- Avoid random outside topics and avoid overly blunt advice. A mild counter-direction is acceptable only if it is not exposed by one giveaway word.",
-      "- Prefer traps that borrow the passage's terms but move from the paragraph's reasoning to an adjacent practical detail, administrative detail, or mismatched purpose.",
+      "- Prefer traps that borrow the passage's terms but reverse its evaluation/stance or shift its scope/actor. Do NOT drift into a measurement/procedure/administrative/tooling detail (those are auto-rejected).",
     ];
   }
 
@@ -961,6 +964,10 @@ function validateTypeSpecific(
     validateIrrelevantQuestion(question, passage, requestedDifficulty, add);
   }
 
+  if (typeId === "SENTENCE_INSERT") {
+    validateSentenceInsertQuestion(question, add);
+  }
+
   if (typeId === "WORD_ORDER" && Array.isArray(question.scrambledWords)) {
     if (question.scrambledWords.some((part: unknown) => typeof part === "string" && /^[^\wA-Za-z]+$/.test(part.trim()))) {
       add("error", "punctuation-only-chunk", "WORD_ORDER has a punctuation-only chunk.");
@@ -1050,6 +1057,106 @@ function validateTypeSpecific(
     const answers = question.blanks.filter(isRecord).map((blank) => normalizeText(blank.answer)).filter(Boolean);
     if (findDuplicate(answers)) {
       add("warning", "duplicate-summary-answer", `${typeId} repeats the same blank answer.`);
+    }
+  }
+}
+
+// SENTENCE_INSERT: 응집 단서(지시어/대명사/연결사) 존재 여부를 표면 검사한다.
+// 정관사 'the' 단독은 너무 흔해 신호로 쓰지 않는다(중립 문장 오탐 방지).
+function sentenceInsertHasCohesiveCue(sentence: string): boolean {
+  const s = ` ${sentence.toLowerCase()} `;
+  if (/\b(this|that|these|those|such|it|its|they|them|their|he|she|his|her|him)\b/.test(s)) {
+    return true;
+  }
+  if (
+    /\b(however|yet|instead|nevertheless|nonetheless|therefore|thus|hence|consequently|for example|for instance|moreover|furthermore|in addition|besides|also|then|later|subsequently|afterwards?|meanwhile|on the contrary|in contrast|by contrast|similarly|likewise|as a result)\b/.test(
+      s,
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function normalizeSentenceInsertGapLabel(value: unknown): string {
+  const text = normalizeText(value);
+  if (!text) return "";
+  const circledIndex = getCircledNumbers(50).indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  const match = text.match(/(\d{1,2})/);
+  return match ? match[1] : text;
+}
+
+function validateSentenceInsertQuestion(
+  question: Record<string, unknown>,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  // 1) 마커 인덱스: 5개 · 오름차순
+  const indices = Array.isArray(question.markerAfterSentenceIndices)
+    ? question.markerAfterSentenceIndices.filter((n): n is number => typeof n === "number")
+    : [];
+  if (indices.length !== 5) {
+    add(
+      "warning",
+      "sentence-insert-marker-count",
+      `Expected 5 marker indices for SENTENCE_INSERT, got ${indices.length}.`,
+    );
+  } else if (!indices.every((n, i) => i === 0 || n > indices[i - 1])) {
+    add(
+      "warning",
+      "sentence-insert-marker-order",
+      "markerAfterSentenceIndices must be strictly ascending.",
+    );
+  }
+
+  // 2) 주어진 문장: 존재 + 응집 단서(중립 문장 → 복수정답 위험)
+  const given = normalizeText(question.givenSentence);
+  if (!given) {
+    add("error", "sentence-insert-missing-given", "SENTENCE_INSERT is missing givenSentence.");
+  } else if (!sentenceInsertHasCohesiveCue(given)) {
+    add(
+      "warning",
+      "sentence-insert-neutral-given",
+      "The given sentence has no explicit cohesive cue (demonstrative/pronoun/connective); it may fit multiple gaps (복수정답 위험).",
+    );
+  }
+
+  // 3) 정답 위치: 양끝(①·⑤) 회피 → 가운데(②③④) 권장
+  const answer = normalizeSentenceInsertGapLabel(question.correctAnswer);
+  if (answer === "1" || answer === "5") {
+    add(
+      "warning",
+      "sentence-insert-edge-answer",
+      `Correct gap is at an edge (${answer}); 가운데(②③④)가 변별력에 유리합니다.`,
+    );
+  }
+
+  // 4) 함정 게이트: distractorTraps 가 있으면 각 결함이 비어있지 않고 서로 달라야 함
+  const traps = Array.isArray(question.distractorTraps)
+    ? question.distractorTraps.filter(isRecord)
+    : [];
+  if (traps.length > 0) {
+    const flaws = traps.map((t) => normalizeText(t.fatalFlaw)).filter(Boolean);
+    if (flaws.length < traps.length) {
+      add(
+        "warning",
+        "sentence-insert-trap-empty-flaw",
+        "Some distractorTraps have an empty fatalFlaw; each wrong gap needs a decisive reason.",
+      );
+    }
+    if (findDuplicate(flaws)) {
+      add(
+        "warning",
+        "sentence-insert-trap-duplicate-flaw",
+        "distractorTraps repeat the same fatalFlaw; each trap should fail for a different reason.",
+      );
+    }
+    if (answer && traps.some((t) => normalizeSentenceInsertGapLabel(t.gapLabel) === answer)) {
+      add(
+        "warning",
+        "sentence-insert-trap-on-answer",
+        "A distractorTrap points at the correct gap.",
+      );
     }
   }
 }
@@ -2273,8 +2380,8 @@ function validateIrrelevantQuestion(
     ? question.sentences.map((sentence: unknown) => normalizeText(sentence))
     : [];
   const slotCount = sentences.length;
-  if (slotCount < IRRELEVANT_SLOT_MIN) {
-    add("error", "irrelevant-sentence-count", `Expected at least ${IRRELEVANT_SLOT_MIN} numbered sentences, got ${slotCount}.`);
+  if (slotCount !== IRRELEVANT_SLOT_MIN) {
+    add("error", "irrelevant-sentence-count", `IRRELEVANT must have exactly ${IRRELEVANT_SLOT_MIN} marked sentences, got ${slotCount}.`);
     return;
   }
 
@@ -2360,23 +2467,16 @@ function validateIrrelevantQuestion(
       (passageIndex, index) =>
         index === 0 || passageIndex > passageIndices[index - 1],
     );
-    const minIndex = Math.min(...passageIndices);
-    const maxIndex = Math.max(...passageIndices);
-    const isContiguousSourceWindow =
-      maxIndex - minIndex + 1 === passageIndices.length;
 
-    if (!isOriginalOrder || !isContiguousSourceWindow) {
+    // The marked source sentences may be SPREAD across the passage (they no
+    // longer have to be a contiguous early block), but they must keep their
+    // original passage order so the inserted sentence sits between two real
+    // consecutive neighbors and the remove-and-reconnect test stays valid.
+    if (!isOriginalOrder) {
       add(
         "error",
-        "irrelevant-source-window-gap",
-        "The non-answer sentences must be one contiguous source window with the inserted sentence added into it; do not replace or skip a source sentence inside the window.",
-      );
-    }
-    if (minIndex !== 1) {
-      add(
-        "error",
-        "irrelevant-source-window-start",
-        "IRRELEVANT numbered choices must start from the original second passage sentence; keep the first sentence unnumbered as context.",
+        "irrelevant-source-order",
+        "The non-answer sentences must appear in their original passage order.",
       );
     }
   }
@@ -2483,6 +2583,45 @@ function validateIrrelevantQuestion(
         "error",
         "irrelevant-prescriptive-giveaway",
         `KILLER IRRELEVANT should not be exposed by a blunt advice/policy cue: ${prescriptiveCue}.`,
+      );
+    }
+
+    // Generic "agent + must/should/need to" advice dropped into a purely
+    // descriptive passage is a register tell — unless the passage itself already
+    // gives advice in that modal register.
+    const adviceCue =
+      /\b(?:designers?|managers?|users?|students?|teachers?|people|companies|individuals?|readers?|scientists?|researchers?|one|we|you)\s+(?:must|should|need\s+to|have\s+to|ought\s+to)\b/i;
+    const passageHasAdviceRegister = /\b(?:must|should|ought\s+to)\b/i.test(passage);
+    if (adviceCue.test(insertedSentence) && !passageHasAdviceRegister) {
+      add(
+        "error",
+        "irrelevant-prescriptive-advice",
+        "The inserted sentence gives direct advice (agent + must/should/need to) that is out of register for the descriptive passage.",
+      );
+    }
+
+    // Methodology / procedure / measurement drift — the most common Gemini tell:
+    // the inserted sentence pivots from the passage's idea into "to measure/
+    // optimize/calculate X you need a procedure/equipment/tool". Passage-gated.
+    const methodologyDriftPatterns: Array<[string, RegExp]> = [
+      ["procedure/process requires", /\b(?:the\s+)?(?:procedure|process|method|technique|protocol|system|approach)\s+(?:requires|involves|demands|entails|relies\s+on|depends\s+on)\b/i],
+      ["it is essential/necessary to", /\bit\s+is\s+(?:essential|necessary|crucial|vital|important|imperative)\s+to\b/i],
+      ["methodology gerund lead", /^(?:in\s+\w+,?\s+|while\s+[^,]+,\s+)?(?:measuring|optimi[sz]ing|calculating|quantifying|standardi[sz]ing|categori[sz]ing|catalogu?ing|indexing|monitoring|storing|organi[sz]ing|tracking)\b/i],
+      ["to measure/optimize/...", /\bto\s+(?:measure|optimi[sz]e|calculate|quantify|standardi[sz]e|categori[sz]e|monitor|index|catalog|track)\b/i],
+      ["measure/track the precise/exact", /\b(?:measure|track|calculate|monitor|quantify)\s+(?:the\s+)?(?:precise|exact|accurate)\b/i],
+      ["requires precise/sufficient/advanced", /\brequires?\s+(?:the\s+)?(?:precise|exact|sufficient|accurate|advanced|specialized|highly|careful)\b/i],
+      ["laboratory/equipment drift", /\b(?:laborator|lab)\w*\s+(?:equipment|procedures?|techniques?|settings?)\b/i],
+      ["automated tracking/tooling", /\bautomat(?:ed|ically)\s+(?:track|monitor|catalog|index|record)\w*\b/i],
+      ["develop/build tools/equipment", /\b(?:develop|building|build|design|implement|install)\w*\s+\w*\s*(?:tools?|equipment|software|systems?|infrastructure|mechanisms?|tutorials?|dashboards?|devices?)\b/i],
+    ];
+    const methodologyDrift = methodologyDriftPatterns.find(
+      ([, re]) => re.test(insertedSentence) && !re.test(passage),
+    );
+    if (methodologyDrift) {
+      add(
+        "error",
+        "irrelevant-methodology-drift",
+        `The inserted sentence drifts into a methodology/procedure/measurement/tooling sub-topic, a recognizable AI-generator tell: ${methodologyDrift[0]}.`,
       );
     }
 
@@ -3122,7 +3261,10 @@ function countTokenOverlap(a: Set<string>, b: Set<string>): number {
 const countMeaningTokenOverlap = countTokenOverlap;
 
 function findNewExtremeCue(sentence: string, passage: string): string | null {
-  const cues = ["always", "never", "everyone", "everybody", "completely", "entirely"];
+  const cues = [
+    "always", "never", "everyone", "everybody", "completely", "entirely",
+    "guarantees", "guarantee", "guaranteed", "ensures",
+  ];
   for (const cue of cues) {
     if (containsStandaloneToken(sentence, cue) && !containsStandaloneToken(passage, cue)) {
       return cue;

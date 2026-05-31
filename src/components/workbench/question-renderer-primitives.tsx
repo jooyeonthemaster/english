@@ -214,6 +214,52 @@ export function renderWithMarkers(text: string): React.ReactNode {
   return parts.length > 0 ? <>{parts}</> : text;
 }
 
+/**
+ * Render the IRRELEVANT (무관한 문장) marked passage: circled-letter markers
+ * (ⓐ–ⓔ, U+24D0–U+24E9) shown inline as bold blue, and each marked sentence
+ * fully underlined via `__…__` markup. All other (context) text stays plain.
+ * Circled numbers are also styled inline so older stored questions still read.
+ */
+export function renderMarkedSentencePassage(text: string): React.ReactNode {
+  const regex = new RegExp(
+    `__([^_]+)__|([\\u24D0-\\u24E9${CIRCLED_MARKER_PATTERN}])`,
+    "g",
+  );
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
+    }
+    if (match[1]) {
+      parts.push(
+        <span
+          key={key++}
+          className="underline decoration-2 decoration-blue-500 underline-offset-4 text-slate-900"
+        >
+          {match[1]}
+        </span>,
+      );
+    } else {
+      parts.push(
+        <span key={key++} className="mr-0.5 font-bold text-blue-600">
+          {match[2]}
+        </span>,
+      );
+    }
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
+  }
+
+  return parts.length > 0 ? <>{parts}</> : text;
+}
+
 /** MC Option list */
 export function OptionList({
   options,

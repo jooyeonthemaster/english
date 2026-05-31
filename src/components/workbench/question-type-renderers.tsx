@@ -33,6 +33,7 @@ import {
   renderBlanks,
   renderPassageFormatted,
   renderWithMarkers,
+  renderMarkedSentencePassage,
   OptionList,
   ConditionsBox,
   ModelAnswer,
@@ -349,7 +350,7 @@ export function IrrelevantRenderer({ q }: { q: IrrelevantQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      <PassageBlock>{renderWithMarkers(q.passageWithNumbers)}</PassageBlock>
+      <PassageBlock>{renderMarkedSentencePassage(q.passageWithNumbers)}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />

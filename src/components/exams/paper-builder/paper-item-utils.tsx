@@ -339,7 +339,7 @@ export function renderFormattedInline(
   options?: FormattedInlineOptions,
 ) {
   const parts: React.ReactNode[] = [];
-  const pattern = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])|\(([a-eA-E])\)/g;
+  const pattern = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-eA-E])\)/g;
   const alphabetMarkerClassName = alphabetMarkerClassNameForSubtype(subType, options);
   let lastIndex = 0;
   let key = 0;
@@ -425,14 +425,18 @@ export function renderQuestionTextInline(
   const { beforeText, givenText } = splitSentenceInsertGivenBlock(normalizedText, subType);
   if (!givenText) return renderFormattedInline(normalizedText, subType);
 
+  // 실제 수능 포맷: '주어진 문장' 박스를 지문 '위'에 둔다(라벨은 한글).
   return (
     <>
+      <span className="mb-1.5 block rounded-[4px] border border-slate-400 bg-white/80 px-2.5 py-1.5 leading-[1.55]">
+        <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
+          주어진 문장
+        </span>
+        {renderFormattedInline(givenText, subType)}
+      </span>
       {beforeText && (
         <span className="block">{renderFormattedInline(beforeText, subType)}</span>
       )}
-      <span className="my-2 block rounded-[4px] border border-slate-400 bg-white/80 px-2.5 py-1.5 leading-[1.55]">
-        {renderFormattedInline(givenText, subType)}
-      </span>
     </>
   );
 }

@@ -53,23 +53,25 @@ function revalidateQuestionBankPaths() {
   revalidatePath("/director/workbench");
 }
 
+// Returns the ids actually deleted (academy-owned + existing) — callers tombstone
+// exactly these, never the full request, so a partial delete can't hide surviving rows.
 async function deleteQuestionsForAcademy(
   questionIds: string[],
   academyId: string,
-): Promise<number> {
+): Promise<string[]> {
   const uniqueIds = [...new Set(questionIds.filter(Boolean))];
-  if (uniqueIds.length === 0) return 0;
+  if (uniqueIds.length === 0) return [];
 
   const ownedQuestions = await prisma.question.findMany({
     where: { id: { in: uniqueIds }, academyId },
     select: { id: true },
   });
   const ownedIds = ownedQuestions.map((question) => question.id);
-  if (ownedIds.length === 0) return 0;
+  if (ownedIds.length === 0) return [];
 
   const questionIdWhere = { questionId: { in: ownedIds } };
 
-  const [, , , , , deleted] = await prisma.$transaction([
+  await prisma.$transaction([
     prisma.examQuestion.deleteMany({ where: questionIdWhere }),
     prisma.wrongAnswerLog.deleteMany({ where: questionIdWhere }),
     prisma.aIConversation.deleteMany({ where: questionIdWhere }),
@@ -80,7 +82,7 @@ async function deleteQuestionsForAcademy(
     }),
   ]);
 
-  return deleted.count;
+  return ownedIds;
 }
 
 // ---------------------------------------------------------------------------
@@ -446,8 +448,8 @@ export async function deleteWorkbenchQuestion(
   try {
     const staff = await requireAuth();
 
-    const deleted = await deleteQuestionsForAcademy([questionId], staff.academyId);
-    if (deleted === 0) {
+    const deletedIds = await deleteQuestionsForAcademy([questionId], staff.academyId);
+    if (deletedIds.length === 0) {
       return { success: false, error: "문제를 찾을 수 없습니다." };
     }
 
@@ -470,19 +472,21 @@ export async function bulkDeleteWorkbenchQuestions(
   success: boolean;
   requested: number;
   deleted: number;
+  deletedIds: string[];
   error?: string;
 }> {
   try {
     const staff = await requireAuth();
     if (questionIds.length === 0) {
-      return { success: true, requested: 0, deleted: 0 };
+      return { success: true, requested: 0, deleted: 0, deletedIds: [] };
     }
-    const deleted = await deleteQuestionsForAcademy(questionIds, staff.academyId);
+    const deletedIds = await deleteQuestionsForAcademy(questionIds, staff.academyId);
     revalidateQuestionBankPaths();
     return {
       success: true,
       requested: questionIds.length,
-      deleted,
+      deleted: deletedIds.length,
+      deletedIds,
     };
   } catch (error) {
     const message =
@@ -493,6 +497,7 @@ export async function bulkDeleteWorkbenchQuestions(
       success: false,
       requested: questionIds.length,
       deleted: 0,
+      deletedIds: [],
       error: message,
     };
   }

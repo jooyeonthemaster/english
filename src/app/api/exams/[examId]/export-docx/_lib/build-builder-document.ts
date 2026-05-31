@@ -733,15 +733,16 @@ function buildQuestionBlock(
     const { beforeText, givenText } = splitSentenceInsertGivenBlock(questionText, subType);
     const questionParagraphs: Array<{ text: string; boxed: boolean }> = [];
 
-    if (beforeText) {
-      beforeText.split("\n").forEach((line) => {
-        questionParagraphs.push({ text: line, boxed: false });
-      });
-    }
+    // 주어진 문장(문장삽입) 박스는 지문 '위'에 와야 하므로 beforeText(지문)보다 먼저 넣는다.
     if (givenText) {
       questionParagraphs.push({
         text: givenText.replace(/\s*\n\s*/g, " "),
         boxed: true,
+      });
+    }
+    if (beforeText) {
+      beforeText.split("\n").forEach((line) => {
+        questionParagraphs.push({ text: line, boxed: false });
       });
     }
     if (questionParagraphs.length === 0) {

@@ -85,6 +85,25 @@ export function typeLabel(id: string): string {
   return id;
 }
 
+/** Stable identity for a question, shared by the session queue (job-derived
+ *  cards) and the saved list. Used both to match a job card to its persisted
+ *  row and to tombstone deletions so the 5s job poll can't resurrect them. */
+export function questionSignature(parts: {
+  passageId?: string | null;
+  subType?: string | null;
+  questionText: string;
+  correctAnswer: string;
+  options: string | null;
+}): string {
+  return [
+    parts.passageId || "",
+    parts.subType || "",
+    parts.questionText,
+    parts.correctAnswer,
+    parts.options || "",
+  ].join("\u001f");
+}
+
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
   const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";

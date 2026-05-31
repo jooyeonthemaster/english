@@ -3,7 +3,11 @@ import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/
 const CIRCLED_LABELS = getCircledNumbers(50);
 const POSITION_MARKER_PATTERN = /^(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\(\d{1,3}\)|\d{1,3}[.)]?)$/;
 const CIRCLED_POSITION_MARKER_PATTERN = /[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/g;
-const GIVEN_MARKER_PATTERN = /(^|\n)([ \t]*\[given\][\s\S]*)$/i;
+// '[주어진 문장]'(표준) 또는 '[given]'(레거시) 라벨을 양쪽 모두 인식한다.
+// 라벨이 지문 '앞'(신규 직렬화)이든 '뒤'(레거시)이든 한 블록(다음 빈 줄 또는 문자열
+// 끝까지)만 잡아내고, 라벨 접두사는 제거한 채 순수 문장만 돌려준다.
+const GIVEN_MARKER_PATTERN =
+  /(?:^|\n)[ \t]*\[(?:주어진\s*문장|given)\][ \t]*([\s\S]*?)(?=\n\n|$)/i;
 
 export function optionOrdinalLabel(index: number) {
   return getCircledNumber(index);
@@ -68,13 +72,15 @@ export function splitSentenceInsertGivenBlock(
     return { beforeText: text, givenText: "" };
   }
 
-  const markerStartsWithNewline = match[1].length > 0;
-  const givenStartIndex = match.index + (markerStartsWithNewline ? match[1].length : 0);
+  const givenText = (match[1] ?? "").trim();
+  const matchEnd = match.index + match[0].length;
+  // 주어진 문장 블록을 제거한 나머지(지문 등)를 beforeText 로 돌려준다.
+  // 라벨이 앞/뒤 어디에 있었든 렌더러가 박스를 '지문 위'로 올려 그린다.
+  const beforeText = `${text.slice(0, match.index)}\n${text.slice(matchEnd)}`
+    .replace(/\n{2,}/g, "\n\n")
+    .replace(/^\s+|\s+$/g, "");
 
-  return {
-    beforeText: text.slice(0, givenStartIndex).replace(/\n+$/g, ""),
-    givenText: text.slice(givenStartIndex).trim(),
-  };
+  return { beforeText, givenText };
 }
 
 export function optionDisplayTextForSubtype(

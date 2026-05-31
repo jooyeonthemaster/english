@@ -220,7 +220,7 @@ const BOX_TEXT_INSET = 24; // px-2.5(20) + border(2) + 여유
 const STRUCTURE_GAP = 8; // space-y-2
 const HEADER_BODY_GAP = 8; // 헤더(지시문)과 본문 사이 간격
 const ARROW_BLOCK_HEIGHT = 16; // ↓ 라인
-const GIVEN_BOX_CHROME = 18; // SENTENCE_INSERT [given] 박스 여백
+const GIVEN_BOX_CHROME = 32; // SENTENCE_INSERT 주어진 문장 박스: 테두리+패딩+'주어진 문장' 라벨 줄
 // 문항 1개당 추정에 잡히지 않는 렌더 여백 합(part py-0.5 + 헤더 mb-1 + 본문 mt-1 등).
 // 여러 문항이 한 칸에 쌓일 때 누적 오차로 칸 경계를 넘지 않도록 보정한다.
 const ITEM_RENDER_OVERHEAD = 12;

@@ -628,6 +628,22 @@ export function QuestionCard({
                 <Pencil className="w-3 h-3" />
                 수정하기
               </Button>
+              {onDelete && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  aria-label="문제 삭제"
+                  title="삭제"
+                  className="h-7 w-9 shrink-0 justify-center border border-slate-200 bg-white px-0 text-slate-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                  }}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              )}
             </div>
           )}
         </div>

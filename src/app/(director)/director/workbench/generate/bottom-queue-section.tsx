@@ -14,9 +14,20 @@ import {
   Loader2,
   Rows3,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import { type QueueItem, buildQuestionText, countWords, typeLabel } from "./generate-page-types";
@@ -43,6 +54,18 @@ interface BottomQueueSectionProps {
   setDetailQuestion: (q: QuestionCardItem | null) => void;
   onApproveQuestion: (questionId: string) => void;
   onBatchApproveQuestions?: (questionIds: string[]) => void | Promise<void>;
+  /** Bulk-delete persisted questions. Returns true if deletion actually ran
+   *  (false on user-cancel) so the section can keep the selection on cancel. */
+  onBatchDeleteQuestions?: (
+    questionIds: string[],
+  ) => boolean | void | Promise<boolean | void>;
+  /** Session-scoped tombstones — ids deleted this session, kept hidden across
+   *  the 5s session-queue poll that would otherwise resurrect their cards. */
+  deletedQuestionIds?: Set<string>;
+  /** Signature tombstones for the same deletions — catches session cards that
+   *  resolve to a saved row by signature rather than by aligned questionId. */
+  deletedQuestionSignatures?: Set<string>;
+  batchDeleting?: boolean;
   onEditQuestion: (questionId: string) => void;
 }
 
@@ -193,6 +216,10 @@ export function BottomQueueSection({
   setDetailQuestion,
   onApproveQuestion,
   onBatchApproveQuestions,
+  onBatchDeleteQuestions,
+  deletedQuestionIds,
+  deletedQuestionSignatures,
+  batchDeleting = false,
   onEditQuestion,
 }: BottomQueueSectionProps) {
   const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
@@ -201,15 +228,34 @@ export function BottomQueueSection({
   const [selectedSessionQuestionIds, setSelectedSessionQuestionIds] = useState<Set<string>>(new Set());
   const [batchApproving, setBatchApproving] = useState(false);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
+  // ── Delete mode (select-and-delete across session + saved) ──
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [selectedDeleteIds, setSelectedDeleteIds] = useState<Set<string>>(new Set());
+  // Pending delete awaiting in-app confirmation (replaces native window.confirm).
+  const [confirmDelete, setConfirmDelete] = useState<{
+    ids: string[];
+    source: "bulk" | "single";
+  } | null>(null);
+
+  // Live (non-tombstoned) saved questions — the source of truth for every
+  // saved-question derivation below, so deletes take effect immediately and
+  // survive the periodic session-queue refetch.
+  const liveSavedQuestions = useMemo(
+    () =>
+      deletedQuestionIds && deletedQuestionIds.size > 0
+        ? savedQuestions.filter((q) => !deletedQuestionIds.has(q.id))
+        : savedQuestions,
+    [savedQuestions, deletedQuestionIds],
+  );
 
   const savedQuestionsById = useMemo(
-    () => new Map(savedQuestions.map((q) => [q.id, q])),
-    [savedQuestions],
+    () => new Map(liveSavedQuestions.map((q) => [q.id, q])),
+    [liveSavedQuestions],
   );
 
   const savedQuestionsBySignature = useMemo(() => {
     const map = new Map<string, QuestionCardItem>();
-    for (const q of savedQuestions) {
+    for (const q of liveSavedQuestions) {
       map.set(
         questionSignature({
           passageId: q.passage?.id,
@@ -222,7 +268,7 @@ export function BottomQueueSection({
       );
     }
     return map;
-  }, [savedQuestions]);
+  }, [liveSavedQuestions]);
 
   const sessionQuestionCards = useMemo<SessionQuestionCard[]>(() => {
     const cards: SessionQuestionCard[] = [];
@@ -234,18 +280,25 @@ export function BottomQueueSection({
         const optionsJson = q.options ? JSON.stringify(q.options) : null;
         const correctAnswer = q.correctAnswer || q.modelAnswer || "";
         const savedQuestionId = item.questionIds?.[qi];
+        const sig = questionSignature({
+          passageId: item.passageId,
+          subType,
+          questionText,
+          correctAnswer,
+          options: optionsJson,
+        });
+        // Signature tombstone: covers cards that resolve via the signature
+        // fallback (legacy jobs with no aligned questionIds), where the deleted
+        // row has already left the signature map so the id guard below can't fire.
+        if (deletedQuestionSignatures?.has(sig)) return;
         const savedQuestion = savedQuestionId
           ? savedQuestionsById.get(savedQuestionId)
-          : savedQuestionsBySignature.get(
-              questionSignature({
-                passageId: item.passageId,
-                subType,
-                questionText,
-                correctAnswer,
-                options: optionsJson,
-              }),
-            );
+          : savedQuestionsBySignature.get(sig);
         const persistedQuestionId = savedQuestionId ?? savedQuestion?.id;
+        // Id tombstone: drops id-aligned cards whose row was deleted this session
+        // (the job still references the id, but the row is gone).
+        if (persistedQuestionId && deletedQuestionIds?.has(persistedQuestionId))
+          return;
         const createdAt = savedQuestion?.createdAt ?? (item.createdAt ? new Date(item.createdAt) : new Date());
         const cardItem: QuestionCardItem = withSessionPlanTag({
           id: persistedQuestionId || `${item.id}-${qi}`,
@@ -279,11 +332,24 @@ export function BottomQueueSection({
       });
     }
     return cards;
-  }, [filteredQueue, savedQuestionsById, savedQuestionsBySignature]);
+  }, [filteredQueue, savedQuestionsById, savedQuestionsBySignature, deletedQuestionIds, deletedQuestionSignatures]);
 
   const visibleSessionQuestionCards = useMemo(
     () => sessionQuestionCards.filter((card) => matchesReviewFilter(card.question, reviewStatusFilter)),
     [reviewStatusFilter, sessionQuestionCards],
+  );
+
+  // Persisted ids already shown as 현재 세션 cards — used to dedupe the saved list
+  // in delete mode so one question doesn't appear as two independently-checkboxed
+  // cards sharing a single selection entry.
+  const sessionShownPersistedIds = useMemo(
+    () =>
+      new Set(
+        visibleSessionQuestionCards
+          .filter((card) => card.persistedQuestionId)
+          .map((card) => card.persistedQuestionId as string),
+      ),
+    [visibleSessionQuestionCards],
   );
 
   const sessionApprovableIds = useMemo(
@@ -298,8 +364,8 @@ export function BottomQueueSection({
   );
 
   const reviewFilteredSavedQuestions = useMemo(
-    () => savedQuestions.filter((q) => matchesReviewFilter(q, reviewStatusFilter)),
-    [reviewStatusFilter, savedQuestions],
+    () => liveSavedQuestions.filter((q) => matchesReviewFilter(q, reviewStatusFilter)),
+    [reviewStatusFilter, liveSavedQuestions],
   );
 
   const savedPlanCounts = useMemo(() => {
@@ -316,9 +382,18 @@ export function BottomQueueSection({
     [reviewFilteredSavedQuestions, savedPlanFilter],
   );
 
+  // The saved cards actually rendered (capped at 30). In delete mode we drop any
+  // that are already shown as a 현재 세션 card, so each question is checkboxed once.
+  const savedCardsForDisplay = useMemo(() => {
+    if (!deleteMode) return visibleSavedQuestions.slice(0, 30);
+    return visibleSavedQuestions
+      .filter((q) => !sessionShownPersistedIds.has(q.id))
+      .slice(0, 30);
+  }, [visibleSavedQuestions, deleteMode, sessionShownPersistedIds]);
+
   const reviewCounts = useMemo(() => {
     const questionsById = new Map<string, QuestionCardItem>();
-    for (const q of savedQuestions) questionsById.set(q.id, q);
+    for (const q of liveSavedQuestions) questionsById.set(q.id, q);
     for (const card of sessionQuestionCards) {
       const previous = questionsById.get(card.question.id);
       questionsById.set(card.question.id, {
@@ -332,7 +407,7 @@ export function BottomQueueSection({
       PENDING: allQuestions.filter((q) => !q.approved).length,
       APPROVED: allQuestions.filter((q) => q.approved).length,
     };
-  }, [savedQuestions, sessionQuestionCards]);
+  }, [liveSavedQuestions, sessionQuestionCards]);
 
   const sessionGroups = useMemo(
     () => groupByPassage(visibleSessionQuestionCards, (card) => card.question),
@@ -340,8 +415,8 @@ export function BottomQueueSection({
   );
 
   const savedGroups = useMemo(
-    () => groupByPassage(visibleSavedQuestions.slice(0, 30).map(withVisiblePlanTag), (q) => q),
-    [visibleSavedQuestions],
+    () => groupByPassage(savedCardsForDisplay.map(withVisiblePlanTag), (q) => q),
+    [savedCardsForDisplay],
   );
 
   const visibleQueueCards = useMemo(
@@ -446,6 +521,104 @@ export function BottomQueueSection({
     }
   }, [onBatchApproveQuestions, selectedSessionQuestionIds]);
 
+  // ── Delete mode selection (session + saved persisted questions) ──
+  // Saved cards render at most 30 (see flat/passage views), so the deletable
+  // pool mirrors exactly what the user can see and "전체 선택" stays honest.
+  const deletableSessionIds = useMemo(
+    () => [...sessionShownPersistedIds],
+    [sessionShownPersistedIds],
+  );
+
+  const deletableSavedIds = useMemo(
+    () => savedCardsForDisplay.map((q) => q.id),
+    [savedCardsForDisplay],
+  );
+
+  const allDeletableIds = useMemo(
+    () => [...new Set([...deletableSessionIds, ...deletableSavedIds])],
+    [deletableSessionIds, deletableSavedIds],
+  );
+
+  // Prune stale selections once items leave the deletable pool (e.g. deleted).
+  useEffect(() => {
+    setSelectedDeleteIds((prev) => {
+      if (prev.size === 0) return prev;
+      const valid = new Set(allDeletableIds);
+      let changed = false;
+      const next = new Set<string>();
+      prev.forEach((id) => {
+        if (valid.has(id)) next.add(id);
+        else changed = true;
+      });
+      return changed ? next : prev;
+    });
+  }, [allDeletableIds]);
+
+  const toggleDeleteQuestion = useCallback((id: string) => {
+    setSelectedDeleteIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const toggleDeleteGroupSelection = useCallback((ids: string[]) => {
+    setSelectedDeleteIds((prev) => {
+      const next = new Set(prev);
+      const allSelected = ids.length > 0 && ids.every((id) => next.has(id));
+      ids.forEach((id) => {
+        if (allSelected) next.delete(id);
+        else next.add(id);
+      });
+      return next;
+    });
+  }, []);
+
+  const allDeleteSelected =
+    allDeletableIds.length > 0 &&
+    allDeletableIds.every((id) => selectedDeleteIds.has(id));
+  const someDeleteSelected =
+    selectedDeleteIds.size > 0 && !allDeleteSelected;
+
+  const toggleSelectAllDelete = useCallback(() => {
+    if (allDeleteSelected) setSelectedDeleteIds(new Set());
+    else setSelectedDeleteIds(new Set(allDeletableIds));
+  }, [allDeleteSelected, allDeletableIds]);
+
+  const enterDeleteMode = useCallback(() => {
+    setDeleteMode(true);
+    setSelectedSessionQuestionIds(new Set());
+  }, []);
+
+  const exitDeleteMode = useCallback(() => {
+    setDeleteMode(false);
+    setSelectedDeleteIds(new Set());
+  }, []);
+
+  // Open the in-app confirm dialog instead of a native window.confirm.
+  const requestDelete = useCallback(
+    (ids: string[], source: "bulk" | "single") => {
+      if (!onBatchDeleteQuestions || ids.length === 0 || batchDeleting) return;
+      setConfirmDelete({ ids, source });
+    },
+    [batchDeleting, onBatchDeleteQuestions],
+  );
+
+  const handleBatchDelete = useCallback(() => {
+    if (selectedDeleteIds.size === 0) return;
+    requestDelete(Array.from(selectedDeleteIds), "bulk");
+  }, [requestDelete, selectedDeleteIds]);
+
+  // Runs after the user confirms in the dialog.
+  const confirmDeleteNow = useCallback(async () => {
+    if (!confirmDelete || !onBatchDeleteQuestions) return;
+    const { ids, source } = confirmDelete;
+    const ran = await onBatchDeleteQuestions(ids);
+    if (ran !== false && source === "bulk") setSelectedDeleteIds(new Set());
+    setConfirmDelete(null);
+  }, [confirmDelete, onBatchDeleteQuestions]);
+
   function renderQueueStatusCard(item: QueueItem) {
     const planConfig = getQuestionGenerationPlanConfig(item.config.generationPlan || "STANDARD");
 
@@ -534,27 +707,46 @@ export function BottomQueueSection({
   }
 
   function renderSessionQuestionCard(card: SessionQuestionCard) {
-    const canSelect = Boolean(card.persistedQuestionId) && !card.question.approved;
-    const isSelected = canSelect
-      ? selectedSessionQuestionIds.has(card.persistedQuestionId as string)
-      : false;
+    const persistedId = card.persistedQuestionId;
+    const canDelete = deleteMode && Boolean(persistedId);
+    const canApprove = !deleteMode && Boolean(persistedId) && !card.question.approved;
+    const isSelected = canDelete
+      ? selectedDeleteIds.has(persistedId as string)
+      : canApprove
+        ? selectedSessionQuestionIds.has(persistedId as string)
+        : false;
 
     return (
       <div key={card.key} onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
+        if (deleteMode) {
+          if (persistedId) toggleDeleteQuestion(persistedId);
+          return;
+        }
         setDetailQuestion(card.question);
-      }} className="cursor-pointer">
+      }} className={deleteMode && !persistedId ? "cursor-default opacity-50" : "cursor-pointer"}>
         <QuestionCard
           q={card.question}
           num={card.number}
           readonly
           compact
-          showReviewActions={Boolean(card.persistedQuestionId)}
+          showReviewActions={!deleteMode && Boolean(persistedId)}
           selected={isSelected}
-          onToggle={canSelect ? () => toggleSessionQuestion(card.persistedQuestionId as string) : undefined}
-          onApprove={() => card.persistedQuestionId && onApproveQuestion(card.persistedQuestionId)}
-          onEdit={() => card.persistedQuestionId && onEditQuestion(card.persistedQuestionId)}
+          onToggle={
+            canDelete
+              ? () => toggleDeleteQuestion(persistedId as string)
+              : canApprove
+                ? () => toggleSessionQuestion(persistedId as string)
+                : undefined
+          }
+          onApprove={deleteMode ? undefined : () => persistedId && onApproveQuestion(persistedId)}
+          onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
+          onDelete={
+            deleteMode || !persistedId
+              ? undefined
+              : () => requestDelete([persistedId as string], "single")
+          }
         />
       </div>
     );
@@ -562,10 +754,15 @@ export function BottomQueueSection({
 
   function renderSavedQuestionCard(q: QuestionCardItem, index: number) {
     const cardQuestion = withVisiblePlanTag(q);
+    const isSelected = deleteMode && selectedDeleteIds.has(q.id);
     return (
       <div key={q.id} onClick={(e) => {
         const target = e.target as HTMLElement;
-        if (target.closest("button") || target.closest("a") || target.closest("input")) return;
+        if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
+        if (deleteMode) {
+          toggleDeleteQuestion(q.id);
+          return;
+        }
         setDetailQuestion(cardQuestion);
       }} className="cursor-pointer">
         <QuestionCard
@@ -573,9 +770,14 @@ export function BottomQueueSection({
           num={index + 1}
           readonly
           compact
-          showReviewActions
-          onApprove={() => onApproveQuestion(cardQuestion.id)}
-          onEdit={() => onEditQuestion(cardQuestion.id)}
+          showReviewActions={!deleteMode}
+          selected={isSelected}
+          onToggle={deleteMode ? () => toggleDeleteQuestion(q.id) : undefined}
+          onApprove={deleteMode ? undefined : () => onApproveQuestion(cardQuestion.id)}
+          onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}
+          onDelete={
+            deleteMode ? undefined : () => requestDelete([cardQuestion.id], "single")
+          }
         />
       </div>
     );
@@ -595,7 +797,13 @@ export function BottomQueueSection({
     const groupKey = `${source}:${group.id}`;
     const isOpen = expandedPassageIds[groupKey] !== false;
     const selectableIds = getSelectableIds?.(group.cards) ?? [];
-    const selectedInGroup = selectableIds.filter((id) => selectedSessionQuestionIds.has(id)).length;
+    const activeSelection = deleteMode ? selectedDeleteIds : selectedSessionQuestionIds;
+    const toggleGroup = deleteMode ? toggleDeleteGroupSelection : toggleSessionGroupSelection;
+    // Saved groups only get a header checkbox in delete mode; session groups
+    // keep theirs for both batch-approve and delete.
+    const showGroupCheckbox =
+      selectableIds.length > 0 && (deleteMode || source === "session");
+    const selectedInGroup = selectableIds.filter((id) => activeSelection.has(id)).length;
     const checkState: boolean | "indeterminate" =
       selectableIds.length > 0 && selectedInGroup === selectableIds.length
         ? true
@@ -606,17 +814,17 @@ export function BottomQueueSection({
     return (
       <section key={groupKey} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <header className={`flex items-center gap-2.5 border-b px-4 ${isOpen ? "bg-blue-50/50 border-blue-100" : "bg-white border-slate-100"}`}>
-          {source === "session" && selectableIds.length > 0 ? (
+          {showGroupCheckbox ? (
             <div className="-m-1 flex shrink-0 cursor-pointer items-center p-1" onClick={(e) => {
               e.stopPropagation();
-              toggleSessionGroupSelection(selectableIds);
+              toggleGroup(selectableIds);
             }}>
               <Checkbox
                 checked={checkState}
                 aria-label={`${group.title} 전체 선택`}
                 className="size-4 cursor-pointer"
                 onClick={(e) => e.stopPropagation()}
-                onCheckedChange={() => toggleSessionGroupSelection(selectableIds)}
+                onCheckedChange={() => toggleGroup(selectableIds)}
               />
             </div>
           ) : (
@@ -721,6 +929,59 @@ export function BottomQueueSection({
           </div>
         </div>
 
+        {deleteMode && (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-red-200 bg-red-50/70 px-4 py-2.5">
+            <label className="inline-flex cursor-pointer select-none items-center gap-2">
+              <Checkbox
+                checked={
+                  allDeleteSelected ? true : someDeleteSelected ? "indeterminate" : false
+                }
+                disabled={allDeletableIds.length === 0}
+                onCheckedChange={toggleSelectAllDelete}
+              />
+              <span className="text-[12px] font-semibold text-slate-700">
+                전체 선택
+                <span className="ml-1 font-medium text-slate-400">
+                  ({selectedDeleteIds.size}/{allDeletableIds.length})
+                </span>
+              </span>
+            </label>
+            <span className="hidden text-[12px] font-medium text-red-600 sm:inline">
+              삭제할 문제를 선택하세요. 삭제된 문제는 되돌릴 수 없습니다.
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={exitDeleteMode}
+                className="h-7 border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-600 hover:bg-slate-50"
+              >
+                취소
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={selectedDeleteIds.size === 0 || batchDeleting || !onBatchDeleteQuestions}
+                onClick={handleBatchDelete}
+                className="h-7 bg-red-600 px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-red-700 disabled:bg-red-100 disabled:text-red-400"
+              >
+                {batchDeleting ? (
+                  <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="mr-1 h-3.5 w-3.5" />
+                )}
+                선택 삭제
+                {selectedDeleteIds.size > 0 && (
+                  <span className="ml-1 text-[11px] font-bold opacity-90">
+                    ({selectedDeleteIds.size})
+                  </span>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+
         {sessionQueue.length > 0 && (
           <div>
             <div className="mb-3 flex flex-wrap items-center gap-3">
@@ -748,7 +1009,7 @@ export function BottomQueueSection({
                 </div>
               )}
 
-              {sessionApprovableIds.length > 0 && (
+              {!deleteMode && sessionApprovableIds.length > 0 && (
                 <div className="flex items-center gap-2.5">
                   <label className="inline-flex cursor-pointer select-none items-center gap-2">
                     <Checkbox
@@ -782,6 +1043,20 @@ export function BottomQueueSection({
                   </Button>
                 </div>
               )}
+
+              <button
+                type="button"
+                onClick={() => (deleteMode ? exitDeleteMode() : enterDeleteMode())}
+                aria-pressed={deleteMode}
+                className={`inline-flex h-7 items-center gap-1.5 rounded-md border px-3 text-[12px] font-semibold transition-colors ${
+                  deleteMode
+                    ? "border-red-600 bg-red-600 text-white hover:bg-red-700"
+                    : "border-slate-200 bg-white text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                }`}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                {deleteMode ? "삭제 모드 종료" : "삭제"}
+              </button>
 
               <div className="ml-auto inline-flex items-center gap-2 rounded-xl border border-blue-200/70 bg-blue-50 px-3.5 py-2 ring-1 ring-blue-200/40">
                 <BadgeCheck className="h-4 w-4 shrink-0 text-blue-600" />
@@ -825,7 +1100,11 @@ export function BottomQueueSection({
                         renderCard: (card) => renderSessionQuestionCard(card),
                         getSelectableIds: (cards) =>
                           cards
-                            .filter((card) => card.persistedQuestionId && !card.question.approved)
+                            .filter(
+                              (card) =>
+                                card.persistedQuestionId &&
+                                (deleteMode || !card.question.approved),
+                            )
                             .map((card) => card.persistedQuestionId as string),
                       }),
                     )}
@@ -840,9 +1119,9 @@ export function BottomQueueSection({
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="text-[14px] font-bold text-slate-800">
               저장된 문제
-              {savedQuestions.length > 0 && (
+              {liveSavedQuestions.length > 0 && (
                 <span className="ml-1 font-normal text-slate-400">
-                  {visibleSavedQuestions.length}/{savedQuestions.length}개
+                  {visibleSavedQuestions.length}/{liveSavedQuestions.length}개
                 </span>
               )}
             </h3>
@@ -871,7 +1150,7 @@ export function BottomQueueSection({
                   ))}
                 </div>
               )}
-              {savedQuestions.length > 0 && (
+              {liveSavedQuestions.length > 0 && (
                 <Link href="/director/workbench/questions" className="text-[12px] font-medium text-blue-600 hover:text-blue-700">
                   문제은행 전체 보기 →
                 </Link>
@@ -883,10 +1162,14 @@ export function BottomQueueSection({
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
             </div>
-          ) : savedQuestions.length === 0 ? (
+          ) : liveSavedQuestions.length === 0 ? (
             <EmptyState message="아직 저장된 문제가 없습니다." />
           ) : visibleSavedQuestions.length === 0 ? (
             <EmptyState message="현재 필터에 해당하는 저장 문제가 없습니다." />
+          ) : savedCardsForDisplay.length === 0 ? (
+            // Delete mode only: every saved question is already listed above as a
+            // 현재 세션 card, so there's nothing distinct to render here.
+            <EmptyState message="현재 세션 목록과 중복되어 따로 표시할 저장 문제가 없습니다. 위 목록에서 선택해 삭제하세요." />
           ) : questionViewMode === "passage" ? (
             <div className="space-y-3">
               {savedGroups.map((group) =>
@@ -894,16 +1177,53 @@ export function BottomQueueSection({
                   group,
                   source: "saved",
                   renderCard: (q, index) => renderSavedQuestionCard(q, index),
+                  getSelectableIds: deleteMode
+                    ? (qs) => qs.map((q) => q.id)
+                    : undefined,
                 }),
               )}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {visibleSavedQuestions.slice(0, 30).map(renderSavedQuestionCard)}
+              {savedCardsForDisplay.map(renderSavedQuestionCard)}
             </div>
           )}
         </div>
       </div>
+
+      <AlertDialog
+        open={!!confirmDelete}
+        onOpenChange={(open) => {
+          if (!open && !batchDeleting) setConfirmDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmDelete?.source === "single"
+                ? "이 문제를 삭제하시겠습니까?"
+                : `선택한 문제 ${confirmDelete?.ids.length ?? 0}개를 삭제하시겠습니까?`}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설·시험 연결도 함께
+              삭제됩니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={batchDeleting}>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void confirmDeleteNow();
+              }}
+              disabled={batchDeleting}
+              className="bg-red-600 hover:bg-red-700 focus-visible:ring-red-400"
+            >
+              {batchDeleting ? "삭제 중..." : "삭제"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

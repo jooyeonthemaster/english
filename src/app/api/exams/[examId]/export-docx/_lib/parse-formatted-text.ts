@@ -15,7 +15,7 @@ export function parseFormattedText(
     italics: boolean;
   }> = {}
 ): TextRun[] {
-  const regex = /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])|\(([a-jA-J])\)/g;
+  const regex = /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-jA-J])\)/g;
   const runs: TextRun[] = [];
   let lastIndex = 0;
   let match;

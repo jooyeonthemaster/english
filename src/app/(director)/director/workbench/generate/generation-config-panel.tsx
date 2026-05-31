@@ -45,7 +45,6 @@ const VOCAB_GENERATION_TYPE_IDS = new Set([
 const DETAIL_SETTING_TYPE_IDS = new Set([
   "BLANK_INFERENCE",
   "GRAMMAR_ERROR",
-  "IRRELEVANT",
 ]);
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
@@ -103,16 +102,6 @@ interface GenerationConfigPanelProps {
   canGenerate: boolean;
   selectedIds: Set<string>;
   handleBatchGenerate: () => void;
-
-  /** Max value allowed for IRRELEVANT slotCount stepper, based on currently
-   *  selected passage(s). When multiple passages selected, this is the
-   *  shortest safe slot count across them. Defaults to 5 without passage context. */
-  maxIrrelevantSlotCount?: number;
-  irrelevantPassageSentenceCount?: number | null;
-  irrelevantLimitPassageTitle?: string | null;
-  irrelevantLimitSelectedCount?: number;
-  irrelevantLongestPassageSentenceCount?: number | null;
-  irrelevantLongestPassageTitle?: string | null;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -151,12 +140,6 @@ export function GenerationConfigPanel({
   canGenerate,
   selectedIds,
   handleBatchGenerate,
-  maxIrrelevantSlotCount = 5,
-  irrelevantPassageSentenceCount = null,
-  irrelevantLimitPassageTitle = null,
-  irrelevantLimitSelectedCount = 0,
-  irrelevantLongestPassageSentenceCount = null,
-  irrelevantLongestPassageTitle = null,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(
     "BLANK_INFERENCE",
@@ -289,78 +272,6 @@ export function GenerationConfigPanel({
       },
     }));
   };
-  const irrelevantSettings = questionTypeSettings.IRRELEVANT || {};
-  // N slots contain N - 1 source sentences plus one inserted irrelevant sentence.
-  // The original first passage sentence is context only and is not a choice.
-  const irrelevantSlotCap = Math.max(0, maxIrrelevantSlotCount);
-  const irrelevantUsable = irrelevantSlotCap >= 5;
-  const irrelevantMax = irrelevantUsable ? irrelevantSlotCap : 5;
-  const rawSlotCount = Math.round(Number(irrelevantSettings.slotCount) || 5);
-  const irrelevantSlotCount = Math.min(
-    irrelevantMax,
-    Math.max(5, rawSlotCount),
-  );
-  const irrelevantSourceSentencesShown = Math.max(0, irrelevantSlotCount - 1);
-  const irrelevantEligibleSourceSentenceCount =
-    typeof irrelevantPassageSentenceCount === "number"
-      ? Math.max(0, irrelevantPassageSentenceCount - 1)
-      : null;
-  const irrelevantHiddenSourceSentences =
-    typeof irrelevantEligibleSourceSentenceCount === "number"
-      ? Math.max(
-          0,
-          irrelevantEligibleSourceSentenceCount -
-            irrelevantSourceSentencesShown,
-        )
-      : 0;
-  const irrelevantFullPassageSlotCount =
-    typeof irrelevantPassageSentenceCount === "number"
-      ? irrelevantPassageSentenceCount
-      : null;
-  const canShowFullIrrelevantPassage =
-    typeof irrelevantFullPassageSlotCount === "number" &&
-    irrelevantFullPassageSlotCount >= 5 &&
-    irrelevantFullPassageSlotCount <= irrelevantMax;
-  const isShowingFullIrrelevantPassage =
-    canShowFullIrrelevantPassage &&
-    irrelevantSlotCount >= (irrelevantFullPassageSlotCount as number);
-  const irrelevantLimitTitle =
-    typeof irrelevantLimitPassageTitle === "string"
-      ? irrelevantLimitPassageTitle.trim()
-      : "";
-  const irrelevantLongestTitle =
-    typeof irrelevantLongestPassageTitle === "string"
-      ? irrelevantLongestPassageTitle.trim()
-      : "";
-  const irrelevantLongestHiddenSourceSentences =
-    typeof irrelevantLongestPassageSentenceCount === "number"
-      ? Math.max(
-          0,
-          Math.max(0, irrelevantLongestPassageSentenceCount - 1) -
-            irrelevantSourceSentencesShown,
-        )
-      : 0;
-  const setIrrelevantSlotCount = (next: number) => {
-    const clamped = Math.min(irrelevantMax, Math.max(5, Math.round(next)));
-    setQuestionTypeSettings((prev) => ({
-      ...prev,
-      IRRELEVANT: {
-        ...(prev.IRRELEVANT || {}),
-        slotCount: clamped,
-      },
-    }));
-  };
-  // If the user previously set a slotCount higher than what the current
-  // selection allows, snap it down so the persisted setting never exceeds
-  // the cap (otherwise the backend would reject generation).
-  useEffect(() => {
-    if (rawSlotCount > irrelevantMax || rawSlotCount < 5) {
-      setIrrelevantSlotCount(
-        Math.min(irrelevantMax, Math.max(5, rawSlotCount)),
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [irrelevantMax]);
   useEffect(() => {
     if (rawGrammarAnswerCount !== grammarAnswerCount) {
       setGrammarAnswerCount(grammarAnswerCount);
@@ -440,119 +351,6 @@ export function GenerationConfigPanel({
   };
 
   const renderTypeDetailContent = (typeId: string, active: boolean) => {
-    if (typeId === "IRRELEVANT") {
-      return (
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-bold text-slate-800">
-                선지 개수
-              </span>
-            </div>
-            <div className="mt-1 flex flex-wrap gap-1">
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                5 ~ {irrelevantMax}개
-              </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                내신 변형형
-              </span>
-            </div>
-            <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-              문제에는 첫 문장을 제외한 원문 {irrelevantSourceSentencesShown}
-              문장과 새 무관문 1문장이 표시됩니다.
-            </p>
-            {typeof irrelevantPassageSentenceCount === "number" &&
-              irrelevantUsable && (
-                <p
-                  className={`mt-1.5 text-[10px] leading-snug font-medium ${
-                    irrelevantHiddenSourceSentences > 0 ||
-                    irrelevantLongestHiddenSourceSentences > 0
-                      ? "text-amber-600"
-                      : "text-emerald-600"
-                  }`}
-                >
-                  {irrelevantLimitSelectedCount > 1 &&
-                  irrelevantLongestHiddenSourceSentences > 0
-                    ? `가장 짧은 지문은 첫 문장을 제외한 전체가 표시됩니다. 긴 지문은 현재 설정에서 추가로 원문 ${irrelevantLongestHiddenSourceSentences}문장이 문제에 보이지 않을 수 있습니다.`
-                    : irrelevantHiddenSourceSentences > 0
-                      ? `선택한 지문은 첫 문장을 제외하면 원문 ${irrelevantEligibleSourceSentenceCount ?? 0}문장을 사용할 수 있어, 현재 설정에서는 추가로 원문 ${irrelevantHiddenSourceSentences}문장이 문제에 보이지 않습니다.`
-                      : "현재 설정에서는 첫 문장을 제외한 원문 구간 전체가 문제에 표시됩니다."}
-                </p>
-              )}
-            {!irrelevantUsable && (
-              <p className="mt-1.5 text-[10px] leading-snug text-rose-600 font-medium">
-                선택한 지문은 원문 {irrelevantPassageSentenceCount ?? 0}문장이라
-                무관한 문장 유형을 만들 수 없습니다. 첫 문장을 제외하고
-                출제하려면 원문 5문장 이상이 필요합니다.
-              </p>
-            )}
-            {irrelevantUsable &&
-              typeof irrelevantPassageSentenceCount === "number" && (
-                <p className="mt-1.5 text-[10px] leading-snug text-amber-600">
-                  첫 문장 제외 원문 {irrelevantEligibleSourceSentenceCount ?? 0}
-                  문장 + 새 무관문 1문장 기준 최대 {irrelevantMax}개입니다. 여러
-                  지문 선택 시 가장 짧은 지문 기준입니다.
-                </p>
-              )}
-            {irrelevantUsable &&
-              irrelevantLimitSelectedCount > 1 &&
-              irrelevantLimitTitle && (
-                <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-                  현재 제한 기준: {irrelevantLimitTitle} (
-                  {irrelevantPassageSentenceCount ?? 0}문장)
-                  {irrelevantLongestHiddenSourceSentences > 0 &&
-                  irrelevantLongestTitle
-                    ? ` · 긴 지문만 선택하면 더 늘릴 수 있습니다.`
-                    : ""}
-                </p>
-              )}
-            {irrelevantUsable &&
-              canShowFullIrrelevantPassage &&
-              !isShowingFullIrrelevantPassage && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setIrrelevantSlotCount(
-                      irrelevantFullPassageSlotCount as number,
-                    )
-                  }
-                  className="mt-2 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700 hover:bg-blue-100"
-                >
-                  원문 전체 표시로 맞춤
-                </button>
-              )}
-          </div>
-          <div className="flex items-center gap-0.5 shrink-0">
-            <button
-              type="button"
-              onClick={() => setIrrelevantSlotCount(irrelevantSlotCount - 1)}
-              disabled={!irrelevantUsable || irrelevantSlotCount <= 5}
-              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-              aria-label="선지 개수 줄이기"
-            >
-              <Minus className="w-3 h-3" />
-            </button>
-            <span
-              className={`w-6 text-center text-[12px] font-bold tabular-nums ${irrelevantUsable ? "text-blue-700" : "text-slate-300"}`}
-            >
-              {irrelevantSlotCount}
-            </span>
-            <button
-              type="button"
-              onClick={() => setIrrelevantSlotCount(irrelevantSlotCount + 1)}
-              disabled={
-                !irrelevantUsable || irrelevantSlotCount >= irrelevantMax
-              }
-              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-              aria-label="선지 개수 늘리기"
-            >
-              <Plus className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-      );
-    }
-
     if (typeId === "GRAMMAR_ERROR") {
       return (
         <div className="space-y-3">

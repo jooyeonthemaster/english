@@ -128,7 +128,9 @@ function StructuredBody({
                 </span>
               )}
               {group.style === "given" && !resumed && (
-                <span className="mr-1 font-black text-slate-700">[given]</span>
+                <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
+                  주어진 문장
+                </span>
               )}
               {renderFormattedInline(text, subType, {
                 alphabetMarkerClassName: "font-semibold text-slate-950",

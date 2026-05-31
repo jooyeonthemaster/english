@@ -18,7 +18,6 @@ import {
   readIrrelevantSlotCountSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
-import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
   buildQuestionTargetCandidateBlock,
   getTypeQualityRubric,
@@ -126,13 +125,15 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "irrelevant-answer-index-mismatch",
   "irrelevant-source-not-verbatim",
   "irrelevant-source-first-sentence",
-  "irrelevant-source-window-gap",
-  "irrelevant-source-window-start",
+  "irrelevant-source-order",
   "irrelevant-answer-from-source",
   "irrelevant-too-unrelated",
   "irrelevant-inserted-ungrammatical",
   "irrelevant-obvious-counterclaim-cue",
   "irrelevant-prescriptive-giveaway",
+  // The softer giveaway gates below stay STRICT-only: strict retries away from
+  // them, but the last-resort relaxed fallback may still ship one (flagged) so a
+  // hard passage returns a usable item instead of failing with 0 questions.
   "blank-missing-answer",
   "negative-paraphrase-copula-slot-mismatch",
   "negative-paraphrase-stacked-prepositions",
@@ -202,22 +203,17 @@ export async function runQuestionGeneration(
           answerCount: grammarAnswerCount,
         };
       }
-      if (subType === "IRRELEVANT" && isRecord(typeSettings?.[subType])) {
-        const requested = readIrrelevantSlotCountSetting(typeSettings?.[subType]);
-        const passageCount = countPassageSentences(passageContent);
-        const maxInsertiveSlotCount = passageCount;
-        if (passageCount >= 5 && maxInsertiveSlotCount < requested) {
-          console.warn(
-            `[AUTO-GEN] IRRELEVANT slotCount=${requested} needs ${requested - 1} non-intro source sentences, passage has ${passageCount}; capping to ${maxInsertiveSlotCount}`,
-          );
-          irrelevantSlotCount = maxInsertiveSlotCount;
-        } else {
-          irrelevantSlotCount = requested;
-        }
-        // Keep prompt and schema in sync — both must reference the same N.
+      if (subType === "IRRELEVANT") {
+        // The 무관한 문장 type is fixed at 5 slots (선지 개수 selector removed).
+        // The post-processor preserves the full passage and marks exactly 5
+        // sentences — 4 verbatim originals + 1 inserted — with circled letters
+        // ⓐ–ⓔ, so there is no per-passage slot count to resolve any more.
+        irrelevantSlotCount = 5;
         effectiveTypeSettings = {
-          ...(typeSettings?.[subType] as Record<string, unknown>),
-          slotCount: irrelevantSlotCount,
+          ...(isRecord(typeSettings?.[subType])
+            ? (typeSettings?.[subType] as Record<string, unknown>)
+            : {}),
+          slotCount: 5,
         };
       }
 

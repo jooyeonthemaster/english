@@ -238,7 +238,16 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       );
     }
   } else {
-    for (const section of sections) {
+    // 문장삽입: '주어진 문장' 마커 박스는 지문 '위'에 와야 한다. 레거시 직렬화는
+    // 지문 뒤에 위치할 수 있으므로 marker 섹션을 본문 앞으로 끌어올린다.
+    const orderedSections =
+      subType === "SENTENCE_INSERT"
+        ? [
+            ...sections.filter((s) => s.type === "marker"),
+            ...sections.filter((s) => s.type !== "marker"),
+          ]
+        : sections;
+    for (const section of orderedSections) {
       if (section.type === "direction") continue;
       switch (section.type) {
       case "passage":

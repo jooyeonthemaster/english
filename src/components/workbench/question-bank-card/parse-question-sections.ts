@@ -19,6 +19,7 @@ export function parseQuestionSections(
   // Known section markers that buildQuestionText() prefixes
   const MARKER_MAP: Record<string, { type: ParsedSection["type"]; label: string }> = {
     "[주어진 문장]": { type: "marker", label: "주어진 문장" },
+    "[given]": { type: "marker", label: "주어진 문장" },
     "[영작할 우리말]": { type: "marker", label: "영작할 우리말" },
     "[원문]": { type: "marker", label: "원래 문장" },
     "[조건]": { type: "conditions", label: "조건" },

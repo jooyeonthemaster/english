@@ -10,7 +10,7 @@ import React from "react";
 
 export function renderFormatted(text: string): React.ReactNode {
   // Match: __content__ (underline with possible marker inside), ___+ (blank), circled numbers, (a)/(A) markers
-  const regex = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])|\(([a-jA-J])\)/g;
+  const regex = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-jA-J])\)/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;

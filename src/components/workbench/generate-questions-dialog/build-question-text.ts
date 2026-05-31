@@ -9,12 +9,13 @@ export function buildQuestionText(q: any): string {
   const parts: string[] = [];
   const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   if (q.direction) parts.push(q.direction);
+  if (q.matchType) parts.push(`[유형: ${q.matchType}]`);
+  // 주어진 문장은 지문 '위'에 와야 한다(문장삽입·글의 순서). 직렬화 순서를 통일.
+  if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);
   if (q.passageWithBlank) parts.push(q.passageWithBlank);
   if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
   if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
   if (q.passageWithNumbers) parts.push(q.passageWithNumbers);
-  if (q.matchType) parts.push(`[유형: ${q.matchType}]`);
-  if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);
   if (q.paragraphs) parts.push(q.paragraphs.map((p: any) => `${p.label} ${p.text}`).join("\n"));
   if (q.referenceSentence) parts.push(`[영작할 우리말] ${q.referenceSentence}`);
   if (q.originalSentence) parts.push(`[원문] ${q.originalSentence}`);

@@ -193,9 +193,32 @@ export type AiVocabChoiceQuestion = z.infer<typeof aiVocabChoiceSchema>;
 
 export const aiSentenceInsertSchema = z.object({
   ...commonFields,
-  givenSentence: z.string().describe("삽입할 문장"),
-  markerAfterSentenceIndices: z.array(z.number()).length(5).describe("①~⑤ 마커를 배치할 위치 (0-based: 'N번째 문장 뒤에 마커 삽입'). 5개 인덱스 배열"),
+  givenSentence: z
+    .string()
+    .describe(
+      "삽입할 문장. 지시어/정관사/연결사/시간·인과 순서/어휘사슬 중 최소 1개의 응집 단서를 포함해야 함(단서 없는 중립 문장 금지).",
+    ),
+  markerAfterSentenceIndices: z.array(z.number()).length(5).describe("①~⑤ 마커를 배치할 위치 (0-based: 'N번째 문장 뒤에 마커 삽입'). 5개 인덱스 배열, 오름차순"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
+  // CoT 효과로 정답 위치 정합성을 높이기 위한 선택 필드(.optional 로 생성 안정성 유지).
+  insertionRationale: z
+    .string()
+    .optional()
+    .describe(
+      "정답 위치에서 앞 문장과의 연결(앞 고리)과 뒤 문장과의 연결(뒤 고리)이 어떻게 동시에 성립하는지 1~2문장 한국어 근거.",
+    ),
+  // 함정 게이트: 오답 위치별 '유혹 단서 1개 + 결정적 결함 1개'를 데이터로 받아 검증에 사용.
+  distractorTraps: z
+    .array(
+      z.object({
+        gapLabel: z.string().describe("오답 gap 라벨 '1'~'5' (정답 제외)"),
+        temptingClue: z.string().describe("이 자리가 그럴듯해 보이는 유혹 단서(예: 같은 키워드 반복, 연결사 외형)"),
+        fatalFlaw: z.string().describe("이 자리가 정답이 될 수 없는 결정적 결함(끊기는 고리: 선행사 부재/뒤 고리 단절/연결사 논리 불일치 등)"),
+      }),
+    )
+    .max(4)
+    .optional()
+    .describe("오답 위치별 함정 근거 4개. 각 fatalFlaw 는 서로 달라야 함"),
   ...mcWrongExplanations,
 });
 export type AiSentenceInsertQuestion = z.infer<typeof aiSentenceInsertSchema>;
@@ -208,9 +231,9 @@ export type AiSentenceInsertQuestion = z.infer<typeof aiSentenceInsertSchema>;
 // IRRELEVANT.slotCount setting; use `buildAiIrrelevantSchema(n)` then.
 export const aiIrrelevantSchema = z.object({
   ...commonFields,
-  sentences: z.array(z.string()).min(5).describe("표시할 문장 (기본 5개 이상). 원문에서 연속된 문장들을 그대로 보존하고, 이 중 하나만 AI가 새로 삽입한 무관한 문장"),
-  irrelevantIndex: z.number().min(1).max(3).describe("무관한 문장의 인덱스 (1~3, 첫/마지막 금지)"),
-  options: z.array(optionSchema).min(5).describe("선지 (slotCount와 동일)"),
+  sentences: z.array(z.string()).min(5).max(5).describe("정확히 5개 문장: 원문 4문장(지문 전체에 분산, 원래 순서 유지) + 삽입 무관문 1개. 5개를 초과하지 마세요."),
+  irrelevantIndex: z.number().min(1).max(3).describe("무관한 문장의 인덱스 (1~3 → 정답 ②③④, 첫/마지막 금지)"),
+  options: z.array(optionSchema).min(5).max(5).describe("선지 5개 (서버에서 번호→알파벳으로 재생성)"),
   ...mcWrongExplanations,
 });
 export type AiIrrelevantQuestion = z.infer<typeof aiIrrelevantSchema>;

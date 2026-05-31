@@ -409,7 +409,7 @@ export function examQuestionToTutorActivityDraft(
         form: "CHOICE",
         variant: "marked_passage",
         prompt: "전체 흐름과 관계 없는 문장은?",
-        markedPassage: String(question.passageWithNumbers ?? question.passageWithMarkers ?? question.direction ?? ""),
+        markedPassage: String(question.passageWithNumbers ?? question.passageWithMarkers ?? question.direction ?? "").replace(/__/g, ""),
         markers: markersFromOptions(optionTexts),
         options: optionTexts,
         correctIndex,

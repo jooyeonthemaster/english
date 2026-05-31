@@ -1,4 +1,9 @@
-import { getCircledNumber, getCircledNumbers, type PostProcessResult, type QuestionPostProcessData } from "../types";
+import {
+  getCircledLetters,
+  getCircledNumbers,
+  type PostProcessResult,
+  type QuestionPostProcessData,
+} from "../types";
 import { splitPassageSentences } from "@/lib/passage-sentence-utils";
 
 function normalize(s: string): string {
@@ -80,38 +85,6 @@ function findOriginalContainingSlot(slot: string, pool: string[]): { idx: number
     }
   }
   return best ? { idx: best.idx, orig: best.orig } : null;
-}
-
-function findBestInsertiveSourceWindow(
-  outputSentences: string[],
-  irrelevantIndex: number,
-  passageSentences: string[],
-): { start: number; sentences: string[]; averageScore: number } | null {
-  const sourceCount = outputSentences.length - 1;
-  const firstUsableSourceIndex = 1;
-  if (
-    sourceCount <= 0 ||
-    passageSentences.length - firstUsableSourceIndex < sourceCount
-  ) {
-    return null;
-  }
-
-  const start = firstUsableSourceIndex;
-  const candidate = passageSentences.slice(start, start + sourceCount);
-  let sourceCursor = 0;
-  let scoreTotal = 0;
-
-  for (let outputIndex = 0; outputIndex < outputSentences.length; outputIndex += 1) {
-    if (outputIndex === irrelevantIndex) continue;
-
-    const slotNorm = normalize(outputSentences[outputIndex]);
-    const sourceNorm = normalize(candidate[sourceCursor]);
-    const dist = levenshtein(slotNorm, sourceNorm);
-    scoreTotal += dist / Math.max(slotNorm.length, sourceNorm.length, 1);
-    sourceCursor += 1;
-  }
-
-  return { start, sentences: candidate, averageScore: scoreTotal / sourceCount };
 }
 
 function stripLeadingChoiceMarker(value: string): string {
@@ -246,54 +219,60 @@ export function processIrrelevant(
     }
   }
 
-  const sourceWindow = findBestInsertiveSourceWindow(
-    repairedSentences,
-    irrelevantIndex,
-    passageSentences,
-  );
-  if (sourceWindow) {
-    let sourceCursor = 0;
-    let changed = false;
-    for (let i = 0; i < repairedSentences.length; i++) {
-      if (i === irrelevantIndex) continue;
-      const sourceSentence = sourceWindow.sentences[sourceCursor];
-      if (normalize(repairedSentences[i]) !== normalize(sourceSentence)) {
-        changed = true;
-      }
-      repairedSentences[i] = sourceSentence;
-      sourceCursor += 1;
-    }
-    if (changed) {
-      warnings.push(
-        `IRRELEVANT source sentences realigned to contiguous passage window ${sourceWindow.start + 1}-${sourceWindow.start + sourceWindow.sentences.length}; inserted sentence preserved`,
-      );
+  // Locate each non-irrelevant slot inside the original passage so the chosen
+  // sentences can be marked IN PLACE — spread across the whole passage — rather
+  // than forced into a contiguous block at the top. The per-slot repair above
+  // already snapped each non-answer slot to its verbatim original.
+  const sourcePassageIndexBySlot = new Map<number, number>();
+  for (let i = 0; i < repairedSentences.length; i++) {
+    if (i === irrelevantIndex) continue;
+    const match = bestSingleSentenceMatch(repairedSentences[i], passageSentences);
+    if (match.idx > 0 && match.score <= 0.2) {
+      repairedSentences[i] = passageSentences[match.idx];
+      sourcePassageIndexBySlot.set(i, match.idx);
     }
   }
+  // Sources must be distinct and in ascending passage order to reconstruct the
+  // passage in place; otherwise fall back to a contiguous block after the intro.
+  const locatedSlots = Array.from(sourcePassageIndexBySlot.entries()).sort(
+    (a, b) => a[0] - b[0],
+  );
+  const locatedPassageIndices = locatedSlots.map(([, pIdx]) => pIdx);
+  const allSourcesLocated =
+    sourcePassageIndexBySlot.size === repairedSentences.length - 1 &&
+    new Set(locatedPassageIndices).size === locatedPassageIndices.length &&
+    locatedPassageIndices.every(
+      (pIdx, index) => index === 0 || pIdx > locatedPassageIndices[index - 1],
+    );
 
-  const markers = getCircledNumbers(repairedSentences.length);
-  const normalizedOptions = markers.map((label) => ({
+  // Answer choices stay numbered (① ② ③ …); each number maps to the circled
+  // letter (ⓐ ⓑ ⓒ …) that marks its sentence inside the passage — the 내신
+  // 변형형 layout from the reference.
+  const numbers = getCircledNumbers(repairedSentences.length);
+  const letters = getCircledLetters(repairedSentences.length);
+  const normalizedOptions = numbers.map((label, i) => ({
     label,
-    text: label,
+    text: letters[i] ?? label,
   }));
-  const expectedAnswer = markers[irrelevantIndex] ?? String(irrelevantIndex + 1);
+  const expectedAnswer = numbers[irrelevantIndex] ?? String(irrelevantIndex + 1);
   const wrongOptionExplanations = alignIrrelevantWrongOptionExplanations(
     ai.wrongOptionExplanations,
-    markers,
+    numbers,
     irrelevantIndex,
   );
   if (normalizeAnswerLabel(ai.correctAnswer) !== String(irrelevantIndex + 1)) {
     warnings.push(`correctAnswer realigned to irrelevantIndex ${irrelevantIndex}`);
   }
 
-  const introSentence = passageSentences[0]?.trim() ?? "";
-  const numbered = repairedSentences
-    .map((sent, i) => {
-      const marker = getCircledNumber(i);
-      return `${marker} ${stripLeadingChoiceMarker(sent.trim())}`;
-    })
-    .join(" ");
-
-  const passageWithNumbers = [introSentence, numbered].filter(Boolean).join(" ");
+  const passageWithNumbers = allSourcesLocated
+    ? buildSpreadMarkedPassage(
+        passageSentences,
+        repairedSentences,
+        irrelevantIndex,
+        sourcePassageIndexBySlot,
+        letters,
+      )
+    : buildFallbackMarkedPassage(repairedSentences, passageSentences, letters);
 
   return {
     success: true,
@@ -307,6 +286,62 @@ export function processIrrelevant(
     },
     warnings,
   };
+}
+
+/**
+ * Reconstruct the FULL passage with the 5 chosen sentences marked with circled
+ * letters ⓐ–ⓔ and underlined (`__…__`), each at its ORIGINAL position so the
+ * marked sentences spread naturally across the whole passage (no top-clustering).
+ * The inserted irrelevant sentence is placed right after the source that
+ * precedes it, so removing it reconnects two consecutive originals seamlessly.
+ * Every other sentence — intro, gaps between marks, and trailing context — stays
+ * plain and verbatim. Stored under `passageWithNumbers` for backward compat.
+ */
+function buildSpreadMarkedPassage(
+  passageSentences: string[],
+  slots: string[],
+  irrelevantIndex: number,
+  sourcePassageIndexBySlot: Map<number, number>,
+  letters: string[],
+): string {
+  const slotByPassageIndex = new Map<number, number>();
+  for (const [slot, pIdx] of sourcePassageIndexBySlot) {
+    slotByPassageIndex.set(pIdx, slot);
+  }
+  // Insert the irrelevant sentence right after the source that precedes it.
+  const insertAfter = sourcePassageIndexBySlot.get(irrelevantIndex - 1);
+
+  let letterCursor = 0;
+  const mark = (text: string) =>
+    `${letters[letterCursor++] ?? ""} __${stripLeadingChoiceMarker(text.trim())}__`.trim();
+
+  const out: string[] = [];
+  for (let i = 0; i < passageSentences.length; i++) {
+    out.push(
+      slotByPassageIndex.has(i)
+        ? mark(passageSentences[i])
+        : passageSentences[i].trim(),
+    );
+    if (i === insertAfter) {
+      out.push(mark(slots[irrelevantIndex]));
+    }
+  }
+  return out.filter(Boolean).join(" ");
+}
+
+/** Fallback when the source sentences cannot be located verbatim in the passage:
+ *  intro + a contiguous lettered/underlined block of all five slots. */
+function buildFallbackMarkedPassage(
+  slots: string[],
+  passageSentences: string[],
+  letters: string[],
+): string {
+  const intro = passageSentences[0]?.trim() ?? "";
+  const block = slots.map(
+    (sentence, index) =>
+      `${letters[index] ?? ""} __${stripLeadingChoiceMarker(sentence.trim())}__`.trim(),
+  );
+  return [intro, ...block].filter(Boolean).join(" ");
 }
 
 function alignIrrelevantWrongOptionExplanations(
