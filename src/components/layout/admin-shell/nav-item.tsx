@@ -207,7 +207,7 @@ export function NavItem({
       />
       {!collapsed && (
         <>
-          <span className="truncate flex-1">{item.label}</span>
+          <span className="truncate flex-1 min-w-0">{item.label}</span>
           {isComingSoon && (
             <span
               className={cn(

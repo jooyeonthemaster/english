@@ -49,6 +49,29 @@ const DETAIL_SETTING_TYPE_IDS = new Set([
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
 
+// Difficulty tones — unified palette: 기본 파랑 / 중급 노랑 / 킬러 빨강.
+const DIFFICULTY_TONES = [
+  {
+    value: "BASIC",
+    label: "기본",
+    selected: "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50",
+    idle: "bg-white text-slate-400 border-slate-200 hover:border-blue-200 hover:text-blue-600",
+  },
+  {
+    value: "INTERMEDIATE",
+    label: "중급",
+    selected:
+      "bg-amber-50 text-amber-700 border-amber-300 shadow-sm shadow-amber-50",
+    idle: "bg-white text-slate-400 border-slate-200 hover:border-amber-200 hover:text-amber-600",
+  },
+  {
+    value: "KILLER",
+    label: "킬러",
+    selected: "bg-red-50 text-red-700 border-red-300 shadow-sm shadow-red-50",
+    idle: "bg-white text-slate-400 border-slate-200 hover:border-red-200 hover:text-red-600",
+  },
+] as const;
+
 // ─── Props ───────────────────────────────────────────
 
 interface GenerationConfigPanelProps {
@@ -319,6 +342,40 @@ export function GenerationConfigPanel({
     });
   };
 
+  const incrementTypeCount = (id: string) => {
+    const ordered = normalizeTypeOrder(typeOrder);
+    setTypeCounts((prev) => {
+      const draft = { ...prev };
+      draft[id] = Number(prev[id] || 0) + 1;
+      return orderTypeCounts(ordered, draft);
+    });
+  };
+
+  const isTypeControlTarget = (target: HTMLElement | null) => {
+    return Boolean(
+      target?.closest(
+        "button,a,input,textarea,select,label,[data-ignore-type-section-click]",
+      ),
+    );
+  };
+
+  const handleTypeSectionClick = (event, id: string) => {
+    const target = event.target as HTMLElement | null;
+    if (isTypeControlTarget(target)) {
+      return;
+    }
+    incrementTypeCount(id);
+  };
+
+  const handleTypeSurfaceClick = (event, id: string) => {
+    const target = event.target as HTMLElement | null;
+    if (isTypeControlTarget(target)) {
+      return;
+    }
+    event.stopPropagation();
+    incrementTypeCount(id);
+  };
+
   const dropTypeBlock = (sourceId: string, targetId: string) => {
     if (!sourceId || sourceId === targetId) return;
     const current = normalizeTypeOrder(typeOrder);
@@ -498,9 +555,9 @@ export function GenerationConfigPanel({
 
   return (
     <div className="flex flex-1 min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex flex-1 min-h-0 flex-col overflow-y-auto">
         {/* Mode Toggle */}
-        <div className="px-5 pt-5 pb-3">
+        <div className="px-5 pt-5 pb-3 shrink-0">
           <div className="flex bg-slate-100/80 rounded-xl p-1">
             <button
               onClick={() => setGenMode("auto")}
@@ -529,7 +586,7 @@ export function GenerationConfigPanel({
 
         {/* Model selector */}
         {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <div className="px-5 pb-3">
+          <div className="px-5 pb-3 shrink-0">
             <div className="grid grid-cols-2 gap-2">
               {(["STANDARD", "PREMIUM"] as const).map((planId) => {
                 const plan = QUESTION_GENERATION_PLANS[planId];
@@ -573,78 +630,51 @@ export function GenerationConfigPanel({
 
         {/* Auto Mode Config */}
         {genMode === "auto" && (
-          <div className="px-5 py-3 space-y-4">
-            <div className="rounded-xl bg-gradient-to-br from-blue-50/80 to-blue-50/30 border border-blue-200/50 p-4 space-y-4">
-              <div className="flex items-start gap-2.5">
-                <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100/80 shrink-0 mt-0.5">
-                  <Zap className="w-4 h-4 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-[13px] font-bold text-blue-800">
-                    AI 자동 출제
-                  </p>
-                  <p className="text-[11px] text-blue-600/80 mt-1 leading-relaxed">
-                    지문 분석 데이터를 기반으로 최적의 유형과 난이도를 자동
-                    선택합니다.
-                  </p>
-                </div>
-              </div>
-
-              {/* Question count */}
-              <div>
-                <span className="text-[11px] font-semibold text-blue-700 block mb-2">
-                  문제 수
+          <div className="px-5 py-3 flex flex-1 min-h-0 flex-col gap-3">
+            {/* 문제 수 — minimal inline control */}
+            <div className="flex items-center justify-between gap-2 shrink-0">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                문제 수
+              </span>
+              <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shrink-0">
+                <button
+                  onClick={() => setAutoCount(Math.max(1, autoCount - 1))}
+                  className="w-7 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                  aria-label="문제 수 줄이기"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+                <span className="w-8 h-8 flex items-center justify-center text-[13px] font-bold text-slate-700 border-x border-slate-200 bg-slate-50/50 tabular-nums">
+                  {autoCount}
                 </span>
-                <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden w-fit">
-                  <button
-                    onClick={() => setAutoCount(Math.max(1, autoCount - 1))}
-                    className="w-8 h-9 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                  >
-                    <Minus className="w-3.5 h-3.5" />
-                  </button>
-                  <span className="w-9 h-9 flex items-center justify-center text-[13px] font-bold text-slate-700 border-x border-slate-200 bg-slate-50/50">
-                    {autoCount}
-                  </span>
-                  <button
-                    onClick={() => setAutoCount(Math.min(20, autoCount + 1))}
-                    className="w-8 h-9 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => setAutoCount(Math.min(20, autoCount + 1))}
+                  className="w-7 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                  aria-label="문제 수 늘리기"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
 
             {/* Difficulty */}
-            <div>
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-                난이도
-              </span>
-              <div className="flex gap-2">
-                {(
-                  [
-                    { value: "BASIC", label: "기본", desc: "기초 수준" },
-                    { value: "INTERMEDIATE", label: "중급", desc: "내신 대비" },
-                    { value: "KILLER", label: "킬러", desc: "상위권" },
-                  ] as const
-                ).map((d) => (
-                  <button
-                    key={d.value}
-                    onClick={() => setDifficulty(d.value)}
-                    className={`flex-1 h-9 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
-                      difficulty === d.value
-                        ? "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50"
-                        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-600"
-                    }`}
-                  >
-                    {d.label}
-                  </button>
-                ))}
-              </div>
+            <div className="flex gap-2 shrink-0">
+              {DIFFICULTY_TONES.map((d) => (
+                <button
+                  key={d.value}
+                  onClick={() => setDifficulty(d.value)}
+                  className={`flex-1 h-8 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
+                    difficulty === d.value ? d.selected : d.idle
+                  }`}
+                >
+                  {d.label}
+                </button>
+              ))}
             </div>
 
             {/* Custom prompt */}
             <PromptSection
+              fill
               customPrompt={customPrompt}
               setCustomPrompt={setCustomPrompt}
               savedPrompts={savedPrompts}
@@ -667,38 +697,25 @@ export function GenerationConfigPanel({
 
         {/* Manual Mode Config */}
         {genMode === "manual" && (
-          <div className="px-5 py-3 space-y-4">
+          <div className="px-5 py-3 space-y-3">
             {/* Difficulty */}
-            <div>
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-                난이도
-              </span>
-              <div className="flex gap-2">
-                {(
-                  [
-                    { value: "BASIC", label: "기본" },
-                    { value: "INTERMEDIATE", label: "중급" },
-                    { value: "KILLER", label: "킬러" },
-                  ] as const
-                ).map((d) => (
-                  <button
-                    key={d.value}
-                    onClick={() => setDifficulty(d.value)}
-                    className={`flex-1 h-9 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
-                      difficulty === d.value
-                        ? "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50"
-                        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-600"
-                    }`}
-                  >
-                    {d.label}
-                  </button>
-                ))}
-              </div>
+            <div className="flex gap-2">
+              {DIFFICULTY_TONES.map((d) => (
+                <button
+                  key={d.value}
+                  onClick={() => setDifficulty(d.value)}
+                  className={`flex-1 h-8 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
+                    difficulty === d.value ? d.selected : d.idle
+                  }`}
+                >
+                  {d.label}
+                </button>
+              ))}
             </div>
 
             {/* Type selection blocks */}
             <div className="space-y-3">
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {orderedTypeItems.map((item) => {
                   const count = typeCounts[item.id] || 0;
                   const active = count > 0;
@@ -715,6 +732,9 @@ export function GenerationConfigPanel({
                     <section
                       key={item.id}
                       data-question-type-id={item.id}
+                      onClick={(event) =>
+                        handleTypeSectionClick(event, item.id)
+                      }
                       onDragOver={(event) => {
                         event.preventDefault();
                         if (draggingTypeId && draggingTypeId !== item.id) {
@@ -730,7 +750,7 @@ export function GenerationConfigPanel({
                         setDraggingTypeId(null);
                         setDragOverTypeId(null);
                       }}
-                      className={`overflow-hidden rounded-xl border bg-white transition-all ${
+                      className={`group cursor-pointer overflow-hidden rounded-xl border bg-white transition-all ${
                         dragOver
                           ? "border-blue-300 shadow-[0_0_0_2px_rgba(59,130,246,0.12)]"
                           : active
@@ -739,7 +759,10 @@ export function GenerationConfigPanel({
                       } ${dragging ? "opacity-50" : ""}`}
                     >
                       <div
-                        className={`flex items-center gap-1.5 border-b px-2.5 py-2 ${
+                        onClick={(event) =>
+                          handleTypeSurfaceClick(event, item.id)
+                        }
+                        className={`flex items-center gap-1.5 border-b px-2.5 py-1 ${
                           active
                             ? "border-blue-100 bg-blue-50/70"
                             : "border-slate-100 bg-slate-50/70"
@@ -767,12 +790,12 @@ export function GenerationConfigPanel({
                         {hasDetailSettings ? (
                           <button
                             type="button"
-                            onClick={() =>
-                              setExpandedTypeId(expanded ? null : item.id)
-                            }
-                            aria-expanded={expanded}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              applyTypeCount(item.id, count + 1);
+                            }}
                             className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
-                            title={`${item.label} ${expanded ? "접기" : "펼치기"}`}
+                            aria-label={`${item.label} 1개 추가`}
                           >
                             <span
                               className={`min-w-0 flex-1 truncate text-[12px] font-black ${
@@ -794,7 +817,15 @@ export function GenerationConfigPanel({
                             )}
                           </button>
                         ) : (
-                          <div className="flex min-w-0 flex-1 items-center gap-2 px-1.5 py-1">
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              applyTypeCount(item.id, count + 1);
+                            }}
+                            className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
+                            aria-label={`${item.label} 1개 추가`}
+                          >
                             <span
                               className={`min-w-0 flex-1 truncate text-[12px] font-black ${
                                 active ? "text-blue-800" : "text-slate-700"
@@ -813,7 +844,7 @@ export function GenerationConfigPanel({
                             {active && (
                               <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-blue-600" />
                             )}
-                          </div>
+                          </button>
                         )}
 
                         <div className="grid w-[108px] shrink-0 grid-cols-[76px_28px] items-center gap-1">
@@ -851,7 +882,7 @@ export function GenerationConfigPanel({
                               onClick={() =>
                                 setExpandedTypeId(expanded ? null : item.id)
                               }
-                              className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
+                              className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-blue-500 ring-1 ring-blue-100 transition-colors hover:bg-blue-100 hover:text-blue-700"
                               title={`${item.label} ${expanded ? "접기" : "펼치기"}`}
                               aria-label={`${item.label} ${expanded ? "접기" : "펼치기"}`}
                             >
@@ -868,7 +899,12 @@ export function GenerationConfigPanel({
                       </div>
 
                       {expanded ? (
-                        <div className="px-3 py-3">
+                        <div
+                          onClick={(event) =>
+                            handleTypeSurfaceClick(event, item.id)
+                          }
+                          className="px-3 py-3"
+                        >
                           {renderTypeDetailContent(item.id, active)}
                         </div>
                       ) : null}
@@ -926,7 +962,7 @@ export function GenerationConfigPanel({
       </div>
 
       {/* Generate Button */}
-      <div className="px-5 py-4 border-t border-slate-100 bg-white shrink-0">
+      <div className="px-5 py-3 border-t border-slate-100 bg-white shrink-0">
         {(() => {
           // 크레딧 비용 계산
           const baseCreditCost =
@@ -947,7 +983,7 @@ export function GenerationConfigPanel({
           return (
             <>
               <Button
-                className={`w-full h-12 rounded-xl text-[14px] font-bold transition-all duration-200 ${
+                className={`relative w-full h-12 rounded-xl text-[14px] font-bold transition-all duration-200 ${
                   canGenerate
                     ? "bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200/50 hover:shadow-lg hover:shadow-blue-200/60"
                     : "bg-slate-200 text-slate-400 cursor-not-allowed"
@@ -955,6 +991,12 @@ export function GenerationConfigPanel({
                 onClick={handleBatchGenerate}
                 disabled={!canGenerate}
               >
+                {canGenerate && creditCost > 0 && (
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] font-bold tabular-nums text-white">
+                    <Coins className="w-3 h-3" />
+                    {creditCost}크레딧
+                  </span>
+                )}
                 {selectedIds.size === 0 ? (
                   <span className="flex items-center gap-2">
                     <FileText className="w-4.5 h-4.5" />
@@ -981,18 +1023,6 @@ export function GenerationConfigPanel({
                   </span>
                 )}
               </Button>
-              {canGenerate && creditCost > 0 && (
-                <div className="flex items-center justify-center gap-1.5 mt-2 text-[11px] text-slate-400">
-                  <Coins className="w-3 h-3" />
-                  <span>
-                    이 작업에{" "}
-                    <strong className="text-slate-600 font-semibold">
-                      {creditCost} 크레딧
-                    </strong>
-                    이 차감됩니다
-                  </span>
-                </div>
-              )}
             </>
           );
         })()}

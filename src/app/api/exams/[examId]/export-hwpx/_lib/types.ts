@@ -123,6 +123,9 @@ export interface TableNode {
   colWidthsHpu: number[];
   borders?: CellBorders; // 표 외곽
   cellMargins?: { left: number; right: number; top: number; bottom: number };
+  // 표를 감싸는 문단에 적용할 강제 쪽/단 나눔 (미리보기 분할을 HWPX 에 반영할 때 사용).
+  pageBreak?: boolean;
+  columnBreak?: boolean;
 }
 
 export interface ColumnControlNode {

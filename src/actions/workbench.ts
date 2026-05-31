@@ -42,6 +42,7 @@ export {
 export {
   getWorkbenchQuestions,
   getWorkbenchQuestionsGroupedByPassage,
+  getWorkbenchQuestionStatusCounts,
   getWorkbenchQuestion,
   getWorkbenchQuestionIds,
   saveGeneratedQuestions,
@@ -49,6 +50,7 @@ export {
   deleteWorkbenchQuestion,
   bulkDeleteWorkbenchQuestions,
   approveWorkbenchQuestion,
+  unapproveWorkbenchQuestion,
   bulkApproveWorkbenchQuestions,
   toggleQuestionStar,
 } from "./workbench/questions";

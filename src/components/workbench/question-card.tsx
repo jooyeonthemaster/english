@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle2,
-  Clock,
   ChevronDown,
   ChevronUp,
   Trash2,
@@ -14,6 +13,7 @@ import {
   Pencil,
   Layers,
   Sparkles,
+  XCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +38,7 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
+import { shouldIgnoreCardClick } from "./shared/card-click";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -76,10 +77,36 @@ const SUBTYPE_LABELS: Record<string, string> = {
 };
 
 const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  INTERMEDIATE: { label: "중급", className: "bg-blue-50 text-blue-700 border-blue-200" },
+  BASIC: { label: "기본", className: "bg-blue-50 text-blue-700 border-blue-200" },
+  INTERMEDIATE: { label: "중급", className: "bg-amber-50 text-amber-700 border-amber-200" },
   KILLER: { label: "킬러", className: "bg-red-50 text-red-700 border-red-200" },
 };
+
+export function ReviewStatusStamp({
+  approved,
+  className = "",
+}: {
+  approved: boolean;
+  className?: string;
+}) {
+  const label = approved ? "검수완료" : "검수필요";
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      className={
+        "pointer-events-none inline-flex -rotate-12 select-none items-center justify-center rounded-full leading-none " +
+        (approved
+          ? "size-7 whitespace-nowrap border-2 border-emerald-600/85 bg-white/70 text-[7px] font-bold tracking-tighter text-emerald-700 shadow-sm"
+          : "size-7 border border-dashed border-red-300/70 bg-red-50/30 text-[7.5px] font-bold tracking-tight text-red-400/80") +
+        " " +
+        className
+      }
+    >
+      {label}
+    </span>
+  );
+}
 
 // ─── Types ───────────────────────────────────────────────
 
@@ -294,12 +321,20 @@ interface QuestionCardProps {
   onToggle?: () => void;
   onDelete?: () => void;
   onApprove?: () => void;
+  onUnapprove?: () => void;
+  onDetail?: () => void;
   onEdit?: () => void;
   /** Hide actions (edit, dropdown) — for read-only contexts */
   readonly?: boolean;
   /** Compact mode — smaller padding, hide passage preview by default */
   compact?: boolean;
   showReviewActions?: boolean;
+  hideReviewStatusStamp?: boolean;
+  /** Show the 수정(pencil) + 더보기(...) action pair in the header, left of 펼치기.
+   *  Works even in readonly contexts (e.g. 문제 생성 결과 카드). */
+  showHeaderActions?: boolean;
+  /** Open the detail view when the card body is clicked. */
+  openOnCardClick?: boolean;
 }
 
 export function QuestionCard({
@@ -309,10 +344,15 @@ export function QuestionCard({
   onToggle,
   onDelete,
   onApprove,
+  onUnapprove,
+  onDetail,
   onEdit,
   readonly = false,
   compact = false,
   showReviewActions = false,
+  hideReviewStatusStamp = false,
+  showHeaderActions = false,
+  openOnCardClick = false,
 }: QuestionCardProps) {
   const [passageOpen, setPassageOpen] = useState(false);
   const [explanationOpen, setExplanationOpen] = useState(false);
@@ -352,15 +392,24 @@ export function QuestionCard({
     if (onEdit) onEdit();
     else router.push(`/director/questions/${q.id}`);
   };
+  const handleDetail = () => {
+    if (onDetail) onDetail();
+    else handleEdit();
+  };
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!openOnCardClick || shouldIgnoreCardClick(e)) return;
+    handleDetail();
+  };
 
   const compactFixed = compact && !compactExpanded;
 
   return (
     <Card
-      className={`transition-all ${
+      onClick={handleCardClick}
+      className={`gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
-      } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""} ${
-        compactFixed ? "h-[340px]" : ""
+      } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
+        compactFixed ? " h-full" : ""
       }`}
     >
       <CardContent
@@ -372,7 +421,9 @@ export function QuestionCard({
               : "p-4 space-y-3"
         }
       >
-        <div className={compactFixed ? "flex-1 min-h-0 overflow-hidden flex flex-col gap-2" : "contents"}>
+        <div
+          className={compactFixed ? "flex flex-col gap-2 flex-1 min-h-0" : "contents"}
+        >
         {/* Top row */}
         <div className="flex items-start gap-3">
           {onToggle && (
@@ -384,7 +435,7 @@ export function QuestionCard({
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-xs font-bold text-slate-400">{num}.</span>
               <Badge variant="outline" className="text-[10px]">{TYPE_LABELS[q.type] || q.type}</Badge>
-              {q.subType && <span className="text-[10px] text-slate-500">{SUBTYPE_LABELS[q.subType] || q.subType}</span>}
+              {q.subType && <Badge variant="outline" className="text-[10px] text-slate-500">{SUBTYPE_LABELS[q.subType] || q.subType}</Badge>}
               {diffConfig && <Badge variant="outline" className={`text-[10px] ${diffConfig.className}`}>{diffConfig.label}</Badge>}
               {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
                 <Badge
@@ -400,7 +451,6 @@ export function QuestionCard({
                 </Badge>
               )}
               {q.aiGenerated && <Layers className="w-3 h-3 text-blue-400" />}
-              {q.approved ? <CheckCircle2 className="w-3 h-3 text-emerald-500" /> : <Clock className="w-3 h-3 text-slate-300" />}
             </div>
             {visibleTags.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
@@ -410,6 +460,21 @@ export function QuestionCard({
               </div>
             )}
           </div>
+          {showHeaderActions && onDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 shrink-0 text-red-500 hover:bg-red-50 hover:text-red-600"
+              aria-label="삭제"
+              title="삭제"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Trash2 className="w-3 h-3" />
+            </Button>
+          )}
           {compact && (
             <button
               type="button"
@@ -419,21 +484,17 @@ export function QuestionCard({
                 if (compactExpanded) setPassageOpen(false);
               }}
               aria-expanded={compactExpanded}
-              title={compactExpanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
-              className={`group/expand h-6 px-2 rounded-md flex items-center gap-1 text-[11px] font-semibold transition-colors border shrink-0 ${
-                compactExpanded
-                  ? "text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
-                  : "text-blue-600 bg-blue-50/70 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
-              }`}
+              title={compactExpanded ? "접기" : "펼치기"}
+              className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
             >
               {compactExpanded ? (
                 <>
-                  <ChevronUp className="w-3.5 h-3.5" />
+                  <ChevronUp className="size-3.5" />
                   접기
                 </>
               ) : (
                 <>
-                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover/expand:translate-y-0.5" />
+                  <ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />
                   펼치기
                 </>
               )}
@@ -449,7 +510,7 @@ export function QuestionCard({
                   <Button variant="ghost" size="icon" className="h-7 w-7"><span className="text-xs">...</span></Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => router.push(`/director/questions/${q.id}`)}>
+                  <DropdownMenuItem onClick={handleDetail}>
                     <Eye className="w-3.5 h-3.5 mr-2" /> 상세 보기
                   </DropdownMenuItem>
                   {!q.approved && onApprove && (
@@ -593,58 +654,84 @@ export function QuestionCard({
         </div>
 
         {/* Footer */}
-        <div className={`space-y-2 pt-1 border-t border-slate-100 ${compactFixed ? "shrink-0" : ""}`}>
-          <div className="flex items-center gap-3 text-[10px] text-slate-400">
-            <span>{formatDate(q.createdAt)}</span>
-            {q._count?.examLinks && q._count.examLinks > 0 && (
-              <span>시험 {q._count.examLinks}회 사용</span>
+        <div className={`space-y-2 pt-1 border-t border-slate-100${compactFixed ? " shrink-0" : ""}`}>
+          <div className="flex items-end justify-between gap-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+              <span>{formatDate(q.createdAt)}</span>
+              {q._count?.examLinks && q._count.examLinks > 0 && (
+                <span>시험 {q._count.examLinks}회 사용</span>
+              )}
+            </div>
+            {!showFooterActions && !hideReviewStatusStamp && (
+              <ReviewStatusStamp approved={q.approved} className="shrink-0" />
             )}
           </div>
           {showFooterActions && (
-            <div className="flex items-center gap-1.5">
-              <Button
-                type="button"
-                size="sm"
-                disabled={q.approved || !onApprove}
-                className="h-7 flex-1 bg-emerald-600 px-2 text-[11px] font-semibold text-white hover:bg-emerald-700 disabled:bg-emerald-100 disabled:text-emerald-600 disabled:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!q.approved) onApprove?.();
-                }}
-              >
-                <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                검수완료
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit();
-                }}
-              >
-                <Pencil className="w-3 h-3" />
-                수정하기
-              </Button>
-              {onDelete && (
+            q.approved ? (
+              <div className="flex items-end gap-1.5">
+                <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={!onUnapprove}
+                    className="h-7 flex-1 border border-red-200 bg-red-50 px-2 text-[11px] font-semibold text-red-600 shadow-none hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:bg-red-50 disabled:text-red-300 disabled:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUnapprove?.();
+                    }}
+                  >
+                    <XCircle className="w-3.5 h-3.5 mr-1" />
+                    검수취소
+                  </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  aria-label="문제 삭제"
-                  title="삭제"
-                  className="h-7 w-9 shrink-0 justify-center border border-slate-200 bg-white px-0 text-slate-400 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                  className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onDelete();
+                    handleEdit();
                   }}
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Pencil className="w-3 h-3" />
+                  수정하기
                 </Button>
-              )}
-            </div>
+                </div>
+                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+              </div>
+            ) : (
+              <div className="flex items-end gap-1.5">
+                <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={!onApprove}
+                    className="h-7 flex-1 border border-green-200 bg-green-50/60 px-2 text-[11px] font-semibold text-green-700 shadow-none hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onApprove?.();
+                    }}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                    검수완료
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit();
+                    }}
+                  >
+                    <Pencil className="w-3 h-3" />
+                    수정하기
+                  </Button>
+                </div>
+                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+              </div>
+            )
           )}
         </div>
       </CardContent>

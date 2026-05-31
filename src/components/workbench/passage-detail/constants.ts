@@ -62,7 +62,7 @@ export const Q_SUBTYPE_LABELS: Record<string, string> = {
 };
 
 export const Q_DIFF: Record<string, { label: string; cls: string }> = {
-  BASIC: { label: "기본", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  INTERMEDIATE: { label: "중급", cls: "bg-blue-50 text-blue-700 border-blue-200" },
+  BASIC: { label: "기본", cls: "bg-blue-50 text-blue-700 border-blue-200" },
+  INTERMEDIATE: { label: "중급", cls: "bg-amber-50 text-amber-700 border-amber-200" },
   KILLER: { label: "킬러", cls: "bg-red-50 text-red-700 border-red-200" },
 };

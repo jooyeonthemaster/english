@@ -46,11 +46,23 @@ export interface RunGenerationInput {
   generationPlan: QuestionGenerationPlan;
   customPrompt?: string;
   typeSettings?: QuestionTypeGenerationSettings;
+  onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
 }
 
 type QualityMode = "strict" | "relaxed";
 
 type RejectionPhase = "model" | "postprocess" | "quality";
+
+export interface QuestionGenerationUsageEvent {
+  phase: "question_generation";
+  subType: string;
+  qualityMode: QualityMode;
+  usage?: unknown;
+  provider: string;
+  modelId: string;
+  attempts: number;
+  durationMs: number;
+}
 
 export interface QuestionGenerationRejectionIssue {
   phase: RejectionPhase;
@@ -160,6 +172,7 @@ export async function runQuestionGeneration(
     generationPlan,
     customPrompt,
     typeSettings,
+    onModelUsage,
   }: RunGenerationInput,
   {
     qualityMode = "strict",
@@ -277,6 +290,19 @@ export async function runQuestionGeneration(
           }),
           generationPlan,
           Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
+          undefined,
+          (result) => {
+            onModelUsage?.({
+              phase: "question_generation",
+              subType,
+              qualityMode,
+              usage: result.usage,
+              provider: result.provider,
+              modelId: result.modelId,
+              attempts: result.attempts,
+              durationMs: result.durationMs,
+            });
+          },
         );
 
         const generatedQuestionsAll =
@@ -541,19 +567,28 @@ export async function runQuestionGenerationWithEmptyRetry(
   attempts: number;
   relaxedFallback: boolean;
   rejectionSummary: QuestionGenerationRejectionSummary;
+  usageEvents: QuestionGenerationUsageEvent[];
 }> {
+  const usageEvents: QuestionGenerationUsageEvent[] = [];
+  const inputWithUsage: RunGenerationInput = {
+    ...input,
+    onModelUsage: (event) => {
+      usageEvents.push(event);
+      input.onModelUsage?.(event);
+    },
+  };
   const rejectionRecorder: RejectionRecorder = { issues: [] };
-  const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(input);
-  const hasSummaryCompleteMc = input.plan.some(
+  const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(inputWithUsage);
+  const hasSummaryCompleteMc = inputWithUsage.plan.some(
     (item) => item.subType === "SUMMARY_COMPLETE_MC" && item.count > 0,
   );
-  const requestedCount = input.plan.reduce(
+  const requestedCount = inputWithUsage.plan.reduce(
     (sum, item) => sum + Math.max(0, Math.floor(Number(item.count) || 0)),
     0,
   );
-  const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(input);
-  const largestGrammarMarkerCount = getLargestGrammarMarkerCount(input);
-  const largestGrammarAnswerCount = getLargestGrammarAnswerCount(input);
+  const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(inputWithUsage);
+  const largestGrammarMarkerCount = getLargestGrammarMarkerCount(inputWithUsage);
+  const largestGrammarAnswerCount = getLargestGrammarAnswerCount(inputWithUsage);
   const attempts = hasNegativeParaphraseBlank
     ? Math.max(6, Math.floor(maxAttempts))
     : hasSummaryCompleteMc || largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
@@ -561,7 +596,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       : Math.max(4, Math.floor(maxAttempts));
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const questions = await runQuestionGeneration(input, { rejectionRecorder });
+    const questions = await runQuestionGeneration(inputWithUsage, { rejectionRecorder });
     const hasEnoughQuestions = hasNegativeParaphraseBlank
       ? questions.length >= requestedCount
       : questions.length > 0;
@@ -571,6 +606,7 @@ export async function runQuestionGenerationWithEmptyRetry(
         attempts: attempt,
         relaxedFallback: false,
         rejectionSummary: buildRejectionSummary(rejectionRecorder),
+        usageEvents,
       };
     }
     if (attempt === attempts) {
@@ -584,7 +620,7 @@ export async function runQuestionGenerationWithEmptyRetry(
   console.warn(
     `[${logPrefix}] Strict quality generation exhausted after ${attempts} attempts; running relaxed quality fallback.`,
   );
-  const relaxedQuestions = await runQuestionGeneration(input, {
+  const relaxedQuestions = await runQuestionGeneration(inputWithUsage, {
     qualityMode: "relaxed",
     rejectionRecorder,
   });
@@ -593,6 +629,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     attempts: attempts + 1,
     relaxedFallback: true,
     rejectionSummary: buildRejectionSummary(rejectionRecorder),
+    usageEvents,
   };
 }
 

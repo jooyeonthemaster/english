@@ -13,6 +13,15 @@ export { getAcademyList, getAcademyDetail } from "./academies";
 export { adjustCredits, getCreditTransactionsAll } from "./credits";
 
 export { getSystemStats } from "./stats";
+export {
+  createProviderBillingReconciliation,
+  createProviderPricing,
+  getOperationsCostDashboard,
+  syncProviderBillingReconciliation,
+  type CostBucket,
+  type CostPeriodMode,
+  type OperationsCostDashboard,
+} from "./operations-cost";
 
 export {
   getAcademyPassages,

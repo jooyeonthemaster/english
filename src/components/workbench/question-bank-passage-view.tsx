@@ -22,14 +22,16 @@ interface GroupedPassage {
 
 interface PassageGroupedViewProps {
   passages: GroupedPassage[];
-  gridCols: 1 | 2 | 3 | 4;
+  gridCols: 1 | 2 | 3 | 4 | "list";
   viewSize: "lg" | "md" | "sm";
   selectedIds: Set<string>;
   setSelectedIds: (next: Set<string>) => void;
   onToggleSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onApprove: (id: string) => void;
+  onUnapprove?: (id: string) => void;
   onToggleStar: (id: string) => void;
+  onDetail: (id: string) => void;
   onEdit: (id: string) => void;
   showManagementActions?: boolean;
   showStar?: boolean;
@@ -80,7 +82,9 @@ export function PassageGroupedView({
   onToggleSelect,
   onDelete,
   onApprove,
+  onUnapprove,
   onToggleStar,
+  onDetail,
   onEdit,
   showManagementActions = true,
   showStar = true,
@@ -195,7 +199,17 @@ export function PassageGroupedView({
         ? "grid-cols-1 md:grid-cols-2"
         : gridCols === 3
           ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+          : gridCols === 4
+            ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            : "grid-cols-1";
+  const expandedPassageSpanClass =
+    gridCols === 2
+      ? "md:col-span-2"
+      : gridCols === 3
+        ? "md:col-span-2 lg:col-span-3"
+        : gridCols === 4
+          ? "md:col-span-2 lg:col-span-3 xl:col-span-4"
+          : "";
 
   function toggleGroupSelection(ids: string[]) {
     const next = new Set(selectedIds);
@@ -209,7 +223,7 @@ export function PassageGroupedView({
   }
 
   return (
-    <div className="space-y-3">
+    <div className={`grid items-start gap-3 ${gridClass}`}>
       {passages.map((passage) => {
         const isOpen = expandedPassageIds[passage.id] === true;
         const visibleCount = passage.questions.length;
@@ -241,11 +255,11 @@ export function PassageGroupedView({
             ref={(el) => {
               sectionRefs.current[passage.id] = el;
             }}
-            className={`overflow-hidden rounded-xl border bg-white shadow-sm transition-colors ${
+            className={`min-w-0 overflow-hidden rounded-xl border bg-white shadow-sm transition-colors ${
               isOpen
                 ? "border-blue-200 ring-1 ring-blue-100"
                 : "border-slate-200 hover:border-slate-300 hover:shadow-md"
-            }`}
+            } ${isOpen ? expandedPassageSpanClass : ""}`}
           >
             <header
               className={`flex w-full items-center gap-2.5 border-b px-4 transition-colors ${
@@ -404,7 +418,9 @@ export function PassageGroupedView({
                           onToggle={() => onToggleSelect(q.id)}
                           onDelete={() => onDelete(q.id)}
                           onApprove={() => onApprove(q.id)}
+                          onUnapprove={onUnapprove ? () => onUnapprove(q.id) : undefined}
                           onToggleStar={() => onToggleStar(q.id)}
+                          onDetail={() => onDetail(q.id)}
                           onEdit={() => onEdit(q.id)}
                           viewSize={viewSize}
                           showManagementActions={showManagementActions}

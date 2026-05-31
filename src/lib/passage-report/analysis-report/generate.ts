@@ -17,8 +17,15 @@ export interface GenerateAnalysisReportInput extends BuildAnalysisReportPromptIn
   themeId?: ReportThemeId;
 }
 
+export interface AnalysisReportUsage {
+  usage: unknown;
+  provider: string;
+  modelId: string;
+  durationMs: number;
+}
+
 export type GenerateAnalysisReportResult =
-  | { ok: true; report: AnalysisReport; raw: string }
+  | { ok: true; report: AnalysisReport; raw: string; usage: AnalysisReportUsage }
   | { ok: false; error: string; raw: string; parsed?: unknown };
 
 export async function generateAnalysisReport(
@@ -39,6 +46,12 @@ export async function generateAnalysisReport(
     timeoutMs: 110_000,
     temperature: 0.1,
   });
+  const usage: AnalysisReportUsage = {
+    usage: result.usage,
+    provider: result.provider,
+    modelId: result.modelId,
+    durationMs: result.durationMs,
+  };
 
   const raw = result.text;
   let parsed: unknown;
@@ -68,7 +81,7 @@ export async function generateAnalysisReport(
     meta: validation.data.meta,
     sections: validation.data.sections,
   };
-  return { ok: true, report, raw };
+  return { ok: true, report, raw, usage };
 }
 
 function canRecover(raw: string): boolean {

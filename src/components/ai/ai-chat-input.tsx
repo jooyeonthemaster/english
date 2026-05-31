@@ -56,7 +56,7 @@ export function AIChatInput({ onSend, isLoading }: AIChatInputProps) {
         {/* Input container with focus glow */}
         <div
           className={cn(
-            "flex-1 rounded-2xl border bg-white px-4 py-2.5 transition-all duration-200",
+            "flex-1 min-w-0 rounded-2xl border bg-white px-4 py-2.5 transition-all duration-200",
             isFocused
               ? "border-[#7CB342]/30 shadow-[0_0_0_3px_rgba(124,179,66,0.08)]"
               : "border-[#E5E7E0]"

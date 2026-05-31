@@ -7,6 +7,11 @@ import { parsePassageAnalysis } from "@/lib/tutor/passage-analysis";
 import { sanitizeTutorUserText } from "@/lib/tutor/ui-copy";
 import { sha256Json } from "@/lib/tutor/crypto";
 import { openTutorAssignmentWhere } from "@/lib/tutor/access";
+import {
+  providerFromModel,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 
 export const runtime = "nodejs";
@@ -434,8 +439,13 @@ export async function POST(
           fullText = fullText.trim();
         }
 
-        await prisma.$transaction([
-          prisma.tutorMessage.create({
+        let usageTokens = { inputTokens: 0, outputTokens: 0 };
+        try {
+          usageTokens = readAiUsageTokens(await result.totalUsage);
+        } catch {}
+
+        const aiLog = await prisma.$transaction(async (tx) => {
+          await tx.tutorMessage.create({
             data: {
               academyId: session.academyId,
               conversationId: conversation.id,
@@ -450,15 +460,15 @@ export async function POST(
                 passageId: lesson.passageId,
               },
             },
-          }),
-          prisma.tutorConversation.update({
+          });
+          await tx.tutorConversation.update({
             where: { id: conversation.id },
             data: {
               turnCount: { increment: 1 },
               updatedAt: new Date(),
             },
-          }),
-          prisma.tutorAiLog.create({
+          });
+          return tx.tutorAiLog.create({
             data: {
               academyId: session.academyId,
               kind: "chat_turn",
@@ -469,15 +479,42 @@ export async function POST(
               studentId: session.studentId,
               model: modelName,
               promptHash: sha256Json({ lessonId, message, missionId, compactAnalysisVersion: lesson.passage.analysis?.version }),
-              tokensIn: 0,
-              tokensOut: 0,
+              tokensIn: usageTokens.inputTokens,
+              tokensOut: usageTokens.outputTokens,
               costUsd: 0,
               latencyMs: Date.now() - startedAt,
               status: "ok",
               outputPreview: fullText.slice(0, 240),
             },
-          }),
-        ]);
+            select: { id: true, createdAt: true },
+          });
+        });
+
+        try {
+          await recordPlatformApiUsageCost({
+            sourceKey: `tutor_ai_log:${aiLog.id}`,
+            sourceType: "TUTOR_AI_LOG",
+            sourceId: aiLog.id,
+            sourceDetail: "chat_turn",
+            academyId: session.academyId,
+            provider: providerFromModel(modelName),
+            model: modelName,
+            operationType: "AI_CHAT",
+            unitType: "TOKENS",
+            inputTokens: usageTokens.inputTokens,
+            outputTokens: usageTokens.outputTokens,
+            usageAt: aiLog.createdAt,
+            metadata: {
+              lessonId: lesson.id,
+              passageId: lesson.passageId,
+              programId: programId ?? null,
+              activityId: activityId ?? null,
+              responseMode: isVisualization ? "visualization" : "chat",
+            },
+          });
+        } catch (error) {
+          console.warn("[tutor-chat] Failed to record platform API cost", error);
+        }
         controller.close();
       } catch {
         await prisma.tutorAiLog.create({

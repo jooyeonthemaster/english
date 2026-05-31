@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
@@ -9,6 +10,11 @@ import {
   refundCredits,
 } from "@/lib/credits";
 import { hashContent } from "@/lib/passage-utils";
+import {
+  providerFromModel,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
 import {
   DEFAULT_ANALYSIS_TONE,
   normalizeAnalysisTone,
@@ -24,7 +30,6 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { runFullAnalysis } from "@/app/api/ai/passage-analysis/[passageId]/_lib/run-full-analysis";
 import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
@@ -81,6 +86,39 @@ function withAnalysisGenerationMetadata(
     _generationTag: getQuestionGenerationPlanTag(generationPlan),
     _analysisTone: analysisTone,
   };
+}
+
+async function recordCostSafely(input: {
+  sourceKey: string;
+  sourceId: string;
+  sourceDetail: string;
+  academyId: string;
+  provider: ReturnType<typeof providerFromModel>;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  usageAt: Date;
+  metadata: Record<string, unknown>;
+}) {
+  try {
+    await recordPlatformApiUsageCost({
+      sourceKey: input.sourceKey,
+      sourceType: "WORKBENCH_AI_JOB",
+      sourceId: input.sourceId,
+      sourceDetail: input.sourceDetail,
+      academyId: input.academyId,
+      provider: input.provider,
+      model: input.model,
+      operationType: "PASSAGE_ANALYSIS",
+      unitType: "TOKENS",
+      inputTokens: input.inputTokens,
+      outputTokens: input.outputTokens,
+      usageAt: input.usageAt,
+      metadata: input.metadata as Prisma.InputJsonValue,
+    });
+  } catch (error) {
+    console.warn("[workbench-fast-analysis] Failed to record API cost", error);
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -254,6 +292,27 @@ export async function POST(req: NextRequest) {
     generationMs = Date.now() - generationStartedAt;
     if (!primeResult.ok) {
       throw new Error(`PRIME 생성 실패: ${primeResult.error}`);
+    }
+    const usageEvent = primeResult.usage;
+    if (usageEvent) {
+      const usage = readAiUsageTokens(usageEvent.usage);
+      await recordCostSafely({
+        sourceKey: `workbench_ai_job:${job.id}:analysis`,
+        sourceId: job.id,
+        sourceDetail: "PASSAGE_ANALYSIS",
+        academyId: job.academyId,
+        provider: providerFromModel(usageEvent.modelId),
+        model: usageEvent.modelId,
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        usageAt: new Date(),
+        metadata: {
+          passageId: passage.id,
+          generationPlan,
+          fastPath: true,
+          durationMs: usageEvent.durationMs,
+        },
+      });
     }
     const primeReport = primeResult.report;
     // 카드/문제생성 호환용 파생 데이터 (별도 LLM 호출 없음)

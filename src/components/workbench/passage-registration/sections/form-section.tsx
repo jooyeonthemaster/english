@@ -1,7 +1,15 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState, type RefObject } from "react";
-import { GripVertical, ImageIcon, Loader2, Wand2, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  ImageIcon,
+  Loader2,
+  Wand2,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -189,6 +197,8 @@ function readStoredOptionsOpen(): boolean {
 
 export function FormSection(props: FormSectionProps) {
   const {
+    formCollapsed,
+    setFormCollapsed,
     hasContent,
     wordCount,
     saving,
@@ -426,8 +436,22 @@ export function FormSection(props: FormSectionProps) {
           title="지문 분석"
           description="추출된 자료나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
         />
+        {formCollapsed ? (
+          <button
+            type="button"
+            onClick={() => setFormCollapsed(false)}
+            aria-expanded={false}
+            title="지문 분석 펼치기"
+            className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+          >
+            <ChevronDown className="size-3.5" aria-hidden="true" />
+            <span>펼치기</span>
+          </button>
+        ) : null}
       </div>
 
+      {!formCollapsed ? (
+      <>
       <div className="px-4 pt-4 pb-3">
         {/* ─── 2-Pane Layout: 자료 관리 | 입력 폼 ─── */}
         <div
@@ -689,16 +713,32 @@ export function FormSection(props: FormSectionProps) {
       </div>
 
       {/* ─── Form pane vertical resize handle ─── */}
-      <div
-        onPointerDown={beginFormResize}
-        onDoubleClick={resetFormHeight}
-        role="separator"
-        aria-orientation="horizontal"
-        title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
-        className="group/fhandle h-3 cursor-row-resize flex items-center justify-center select-none"
-      >
-        <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
+      <div className="relative pb-2.5">
+        <div
+          onPointerDown={beginFormResize}
+          onDoubleClick={resetFormHeight}
+          role="separator"
+          aria-orientation="horizontal"
+          title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+          className="group/fhandle h-3 cursor-row-resize flex items-center justify-center select-none"
+        >
+          <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
+        </div>
+        <button
+          type="button"
+          onClick={() => setFormCollapsed(true)}
+          onPointerDown={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+          aria-expanded
+          title="지문 분석 접기"
+          className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+        >
+          <ChevronUp className="size-3.5" aria-hidden="true" />
+          <span>접기</span>
+        </button>
       </div>
+      </>
+      ) : null}
     </section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState, type ReactNode } from "react";
-import { GripVertical } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 
 /**
  * Resizable / collapsible two-pane workspace shell that mirrors the
@@ -24,6 +24,8 @@ const BODY_STORAGE_KEY = "smoat:generate:body-height";
 const BODY_MIN = 460;
 const BODY_DEFAULT = 600;
 const BODY_MAX = 1300;
+
+const BODY_COLLAPSED_STORAGE_KEY = "smoat:generate:body-collapsed";
 
 function readStoredLeftPaneWidth(): number {
   if (typeof window === "undefined") return LEFT_PANE_DEFAULT;
@@ -62,6 +64,15 @@ function readStoredBodyHeight(): number {
   }
 }
 
+function readStoredCollapsed(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(BODY_COLLAPSED_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
 interface WorkspaceShellProps {
   header: ReactNode;
   /** LEFT pane content — the 지문 관리 panel. */
@@ -86,6 +97,16 @@ export function WorkspaceShell({
     readStoredLeftPaneOpen,
   );
   const [bodyHeight, setBodyHeight] = useState<number>(readStoredBodyHeight);
+  const [collapsed, setCollapsed] = useState<boolean>(readStoredCollapsed);
+
+  const updateCollapsed = useCallback((next: boolean) => {
+    setCollapsed(next);
+    try {
+      window.localStorage.setItem(BODY_COLLAPSED_STORAGE_KEY, String(next));
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const toggleLeftPaneOpen = useCallback(() => {
     setLeftPaneOpen((prev) => {
@@ -209,8 +230,22 @@ export function WorkspaceShell({
     <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
         {header}
+        {collapsed ? (
+          <button
+            type="button"
+            onClick={() => updateCollapsed(false)}
+            aria-expanded={false}
+            title="펼치기"
+            className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+          >
+            <ChevronDown className="size-3.5" aria-hidden="true" />
+            <span>펼치기</span>
+          </button>
+        ) : null}
       </div>
 
+      {!collapsed ? (
+      <>
       <div className="px-4 pt-4 pb-3">
         <div
           ref={splitContainerRef}
@@ -258,16 +293,32 @@ export function WorkspaceShell({
       </div>
 
       {/* Body vertical resize handle */}
-      <div
-        onPointerDown={beginBodyResize}
-        onDoubleClick={resetBodyHeight}
-        role="separator"
-        aria-orientation="horizontal"
-        title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
-        className="group/fhandle flex h-3 cursor-row-resize select-none items-center justify-center"
-      >
-        <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
+      <div className="relative pb-2.5">
+        <div
+          onPointerDown={beginBodyResize}
+          onDoubleClick={resetBodyHeight}
+          role="separator"
+          aria-orientation="horizontal"
+          title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+          className="group/fhandle flex h-3 cursor-row-resize select-none items-center justify-center"
+        >
+          <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
+        </div>
+        <button
+          type="button"
+          onClick={() => updateCollapsed(true)}
+          onPointerDown={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+          aria-expanded
+          title="접기"
+          className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+        >
+          <ChevronUp className="size-3.5" aria-hidden="true" />
+          <span>접기</span>
+        </button>
       </div>
+      </>
+      ) : null}
     </section>
   );
 }

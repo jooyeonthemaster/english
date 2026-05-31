@@ -56,7 +56,10 @@ import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
 import { JobCard } from "@/components/workbench/shared/job-card";
 import { MaterialJobCard } from "./components/material-job-card";
 import { JobReviewModal } from "./components/job-review-modal";
-import { ManageFiltersBar } from "./components/manage-filters-bar";
+import {
+  ManageFiltersBar,
+  ManageFiltersPanel,
+} from "./components/manage-filters-bar";
 import {
   ManageFiltersBarTasks,
   type TaskAnalysisFilter,
@@ -210,6 +213,10 @@ export function ExtractionManageClient({
 
   // ─── Per-job review popup state ───
   const [reviewingJobId, setReviewingJobId] = useState<string | null>(null);
+
+  // Toggles the inline sub-filter panel rendered below the draft toolbar
+  // header (mirrors the 문제 생성 page) instead of a floating popover.
+  const [showMaterialFilters, setShowMaterialFilters] = useState(false);
 
   // ─── Filter state for the "전체 자료" (tasks) view ───
   // Task domain has its own status vocabulary and no dedup concept, so it
@@ -809,12 +816,31 @@ export function ExtractionManageClient({
     </>
   );
 
+  const materialDuplicateMode =
+    display.pageMode === "duplicates"
+      ? "grouped"
+      : display.hideDuplicates
+        ? "hidden"
+        : "all";
+  const materialHasActiveFilter =
+    display.statusFilter !== "ALL" ||
+    display.sortOrder !== "newest" ||
+    materialDuplicateMode !== "all";
+
   const filtersToolbar = (
     <ManageFiltersBar
       compact={embedded}
       searchValue={display.searchValue}
       onSearchChange={display.setSearchValue}
       onSearchSubmit={() => display.setAppliedSearch(display.searchValue)}
+      showFilters={showMaterialFilters}
+      onToggleFilters={() => setShowMaterialFilters((v) => !v)}
+      hasActiveFilter={materialHasActiveFilter}
+    />
+  );
+
+  const filtersPanel = showMaterialFilters ? (
+    <ManageFiltersPanel
       statusFilter={display.statusFilter}
       onStatusFilterChange={display.setStatusFilter}
       sortOrder={display.sortOrder}
@@ -832,7 +858,7 @@ export function ExtractionManageClient({
       duplicateGroupCount={display.dupInfo.groupCount}
       totalDuplicateCount={display.dupInfo.totalDuplicateCount}
     />
-  );
+  ) : null;
 
   const promoteAction = embedded ? null : (
     <button
@@ -873,7 +899,14 @@ export function ExtractionManageClient({
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(
     shouldPinManageHeaders,
   );
-  const folderStickyTop = hasStickyJobList ? jobListStickyHeight : 0;
+  // The job-list sticky band extends one corner-radius (16px) BELOW the visible
+  // gap so its #F4F6F9 fill sits behind the folder card's rounded top corners
+  // (otherwise the transparent corner notches expose scrolling content). Pin the
+  // folder header 16px higher so it overlaps that extended band region.
+  const STICKY_CORNER_OVERLAP = 16;
+  const folderStickyTop = hasStickyJobList
+    ? jobListStickyHeight - STICKY_CORNER_OVERLAP
+    : 0;
   const materialToolbarStickyTop = shouldPinManageHeaders
     ? folderStickyTop + folderStickyHeight
     : 0;
@@ -910,7 +943,7 @@ export function ExtractionManageClient({
             <div
               ref={jobListStickyRef}
               className={
-                "shrink-0 px-6 pt-2 sm:px-8 " +
+                "shrink-0 px-6 pb-6 pt-2 sm:px-8 " +
                 (shouldPinManageHeaders ? "sticky top-0 z-40 bg-[#F4F6F9]" : "")
               }
             >
@@ -999,7 +1032,10 @@ export function ExtractionManageClient({
             className={
               embedded
                 ? "flex min-h-0 min-w-0 flex-1 flex-col"
-                : "flex min-w-0 flex-col px-6 pb-2 pt-2 sm:px-8 sm:pb-3"
+                : "flex min-w-0 flex-col px-6 pb-2 sm:px-8 sm:pb-3" +
+                  // Pull back up under the job-list band's extended 16px tail so
+                  // the visible gap stays 8px while the band covers the corners.
+                  (hasStickyJobList ? " -mt-4" : "")
             }
           >
             <section
@@ -1268,6 +1304,7 @@ export function ExtractionManageClient({
                       folders.activeFolder === null ? filedDraftIds : undefined
                     }
                     filtersToolbar={filtersToolbar}
+                    filtersPanel={filtersPanel}
                     onDropDraftsIntoCurrentFolder={
                       folders.activeFolder
                         ? (itemId, copy) =>

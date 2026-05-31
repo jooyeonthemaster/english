@@ -13,6 +13,11 @@ import {
 } from "@/lib/credits";
 import { hashContent } from "@/lib/passage-utils";
 import {
+  providerFromModel,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
+import {
   DEFAULT_ANALYSIS_TONE,
   normalizeAnalysisTone,
   type AnalysisTone,
@@ -27,7 +32,6 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { runFullAnalysis } from "@/app/api/ai/passage-analysis/[passageId]/_lib/run-full-analysis";
 import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
@@ -245,6 +249,29 @@ export const workbenchPassageAnalysisTask = task({
       generationMs = Date.now() - generationStartedAt;
       if (!primeResult.ok) {
         throw new Error(`PRIME 생성 실패: ${primeResult.error}`);
+      }
+      const usageEvent = primeResult.usage;
+      if (usageEvent) {
+        const usage = readAiUsageTokens(usageEvent.usage);
+        await recordPlatformApiUsageCost({
+          sourceKey: `workbench_ai_job:${jobId}:analysis`,
+          sourceType: "WORKBENCH_AI_JOB",
+          sourceId: jobId,
+          sourceDetail: "PASSAGE_ANALYSIS",
+          academyId: job.academyId,
+          provider: providerFromModel(usageEvent.modelId),
+          model: usageEvent.modelId,
+          operationType: "PASSAGE_ANALYSIS",
+          unitType: "TOKENS",
+          inputTokens: usage.inputTokens,
+          outputTokens: usage.outputTokens,
+          usageAt: new Date(),
+          metadata: {
+            passageId: job.passage.id,
+            generationPlan,
+            durationMs: usageEvent.durationMs,
+          },
+        });
       }
       const primeReport = primeResult.report;
       const analysisData = derivePassageAnalysisFromReport(primeReport);

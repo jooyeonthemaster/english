@@ -4,11 +4,12 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, X } from "lucide-react";
+import { CheckCircle2, Loader2, X, XCircle } from "lucide-react";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import {
   QuestionCard,
+  ReviewStatusStamp,
   type QuestionCardItem,
 } from "@/components/workbench/question-card";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
@@ -19,7 +20,9 @@ import {
   bulkApproveWorkbenchQuestions,
   bulkDeleteWorkbenchPassages,
   bulkDeleteWorkbenchQuestions,
+  deleteWorkbenchQuestion,
   removePassagesFromCollection,
+  unapproveWorkbenchQuestion,
 } from "@/actions/workbench";
 import {
   type PassageItem,
@@ -27,6 +30,7 @@ import {
   type FilterOptions,
   type PassageAnalysisStatusFilter,
   questionSignature,
+  type PassageSortOrder,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
 import { GenerationConfigPanel } from "./generation-config-panel";
@@ -56,6 +60,8 @@ function derivePastedTitle(content: string): string {
   const base = words || "직접 입력 지문";
   return base.length > 60 ? base.slice(0, 60) + "…" : base;
 }
+
+const UNDO_TOAST_DURATION = 8000;
 
 // ─── Component ───────────────────────────────────────────
 
@@ -127,7 +133,7 @@ export function GeneratePageClient({
   const [pasteMode, setPasteMode] = useState(false);
   const [pasteSaving, setPasteSaving] = useState(false);
   const [passageBulkAction, setPassageBulkAction] = useState<
-    "move" | "delete" | null
+    "move" | "remove" | "delete" | null
   >(null);
 
   // ── Search/filter state ──
@@ -137,7 +143,8 @@ export function GeneratePageClient({
   const [filterSemester, setFilterSemester] = useState("");
   const [analysisStatusFilter, setAnalysisStatusFilter] =
     useState<PassageAnalysisStatusFilter>("all");
-  const [showFilters, setShowFilters] = useState(false);
+  const [passageSortOrder, setPassageSortOrder] =
+    useState<PassageSortOrder>("newest");
 
   // ── Selected passage ──
   const [selectedPassage, setSelectedPassage] = useState<PassageItem | null>(
@@ -267,7 +274,7 @@ export function GeneratePageClient({
   );
 
   const filteredPassages = useMemo(() => {
-    return passages.filter((p) => {
+    const result = passages.filter((p) => {
       if (passageSearch) {
         const q = passageSearch.toLowerCase();
         if (
@@ -290,6 +297,25 @@ export function GeneratePageClient({
         return false;
       return true;
     });
+
+    // `passages` arrives newest-first (createdAt desc), so "newest" keeps the
+    // source order and "oldest" reverses it. Name sorts use the Korean locale.
+    switch (passageSortOrder) {
+      case "oldest":
+        result.reverse();
+        break;
+      case "name_asc":
+        result.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+        break;
+      case "name_desc":
+        result.sort((a, b) => b.title.localeCompare(a.title, "ko"));
+        break;
+      case "newest":
+      default:
+        break;
+    }
+
+    return result;
   }, [
     passages,
     passageSearch,
@@ -298,6 +324,7 @@ export function GeneratePageClient({
     filterSemester,
     analysisStatusFilter,
     selectedCollectionId,
+    passageSortOrder,
   ]);
 
   const passageStatusCounts = useMemo(
@@ -362,12 +389,65 @@ export function GeneratePageClient({
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
-        const result = await addPassagesToCollection(collectionId, ids);
+        const selectedPassages = passages.filter((passage) =>
+          selectedIds.has(passage.id),
+        );
+        const idsToAdd = ids.filter(
+          (id) =>
+            !selectedPassages
+              .find((passage) => passage.id === id)
+              ?.collectionItems?.some((item) => item.collectionId === collectionId),
+        );
+        if (idsToAdd.length === 0) {
+          toast.info("이미 이 폴더에 들어있는 지문입니다.");
+          return;
+        }
+
+        const result = await addPassagesToCollection(collectionId, idsToAdd);
         if (!result.success) {
           toast.error(result.error || "폴더에 복사하지 못했습니다.");
           return;
         }
-        toast.success(`${ids.length}개 지문을 폴더에 복사했습니다.`);
+
+        const folderName =
+          collections.find((collection) => collection.id === collectionId)
+            ?.name || "폴더";
+        const countLabel =
+          idsToAdd.length > 1 ? `${idsToAdd.length}개 지문이` : "지문이";
+
+        const undoFolderCopy = async () => {
+          setPassageBulkAction("move");
+          try {
+            const undoResult = await removePassagesFromCollection(
+              collectionId,
+              idsToAdd,
+            );
+            if (!undoResult.success) {
+              toast.error(
+                undoResult.error || "폴더 복사를 실행 취소하지 못했습니다.",
+              );
+              return;
+            }
+            await loadPassages();
+            toast.success("폴더 복사를 실행 취소했습니다.");
+          } catch (err) {
+            toast.error(
+              err instanceof Error
+                ? err.message
+                : "폴더 복사를 실행 취소하지 못했습니다.",
+            );
+          } finally {
+            setPassageBulkAction(null);
+          }
+        };
+
+        toast.success(`${countLabel} "${folderName}"에 복사되었습니다`, {
+          duration: UNDO_TOAST_DURATION,
+          action: {
+            label: "실행 취소",
+            onClick: () => void undoFolderCopy(),
+          },
+        });
         setSelectedIds(new Set());
         await loadPassages();
       } catch (err) {
@@ -378,30 +458,48 @@ export function GeneratePageClient({
         setPassageBulkAction(null);
       }
     },
-    [loadPassages, passageBulkAction, selectedIds],
+    [collections, loadPassages, passageBulkAction, passages, selectedIds],
   );
 
-  const handleMoveSelectedPassagesToCollection = useCallback(
-    async (collectionId: string) => {
-      const ids = [...selectedIds];
+  const handleMovePassagesToCollection = useCallback(
+    async (passageIds: string[], collectionId: string) => {
+      const ids = Array.from(new Set(passageIds));
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
+        const idSet = new Set(ids);
         const selectedPassages = passages.filter((passage) =>
-          selectedIds.has(passage.id),
+          idSet.has(passage.id),
         );
-        const sourceCollectionIds = Array.from(
-          new Set(
-            selectedPassages.flatMap((passage) =>
-              (passage.collectionItems ?? [])
-                .map((item) => item.collectionId)
-                .filter((id) => id !== collectionId),
-            ),
-          ),
+        const previousMembership = new Map<string, string[]>();
+        for (const passage of selectedPassages) {
+          for (const item of passage.collectionItems ?? []) {
+            const list = previousMembership.get(item.collectionId) ?? [];
+            list.push(passage.id);
+            previousMembership.set(item.collectionId, list);
+          }
+        }
+        const sourceCollectionIds = [...previousMembership.keys()].filter(
+          (id) => id !== collectionId,
         );
+        const targetExistingIds = new Set(
+          previousMembership.get(collectionId) ?? [],
+        );
+        const idsToAdd = ids.filter((id) => !targetExistingIds.has(id));
+        const hasFolderChanges =
+          idsToAdd.length > 0 || sourceCollectionIds.length > 0;
+
+        if (!hasFolderChanges) {
+          toast.info("이미 이 폴더에 들어있는 지문입니다.");
+          return;
+        }
+
         const removeResults = await Promise.all(
           sourceCollectionIds.map((sourceId) =>
-            removePassagesFromCollection(sourceId, ids),
+            removePassagesFromCollection(
+              sourceId,
+              previousMembership.get(sourceId) ?? [],
+            ),
           ),
         );
         const failedRemove = removeResults.find((result) => !result.success);
@@ -412,14 +510,66 @@ export function GeneratePageClient({
           return;
         }
 
-        const addResult = await addPassagesToCollection(collectionId, ids);
-        if (!addResult.success) {
-          toast.error(addResult.error || "폴더로 이동하지 못했습니다.");
-          return;
+        if (idsToAdd.length > 0) {
+          const addResult = await addPassagesToCollection(collectionId, idsToAdd);
+          if (!addResult.success) {
+            toast.error(addResult.error || "폴더로 이동하지 못했습니다.");
+            return;
+          }
         }
 
-        toast.success(`${ids.length}개 지문을 이동했습니다.`);
-        setSelectedIds(new Set());
+        const folderName =
+          collections.find((collection) => collection.id === collectionId)
+            ?.name || "폴더";
+        const countLabel =
+          ids.length > 1 ? `${ids.length}개 지문이` : "지문이";
+
+        const undoFolderMove = async () => {
+          setPassageBulkAction("move");
+          try {
+            const undoResults = await Promise.all([
+              ...(idsToAdd.length > 0
+                ? [removePassagesFromCollection(collectionId, idsToAdd)]
+                : []),
+              ...sourceCollectionIds.map((sourceId) =>
+                addPassagesToCollection(
+                  sourceId,
+                  previousMembership.get(sourceId) ?? [],
+                ),
+              ),
+            ]);
+            const failedUndo = undoResults.find((result) => !result.success);
+            if (failedUndo) {
+              toast.error(
+                failedUndo.error || "폴더 이동을 실행 취소하지 못했습니다.",
+              );
+              return;
+            }
+
+            await loadPassages();
+            toast.success("폴더 이동을 실행 취소했습니다.");
+          } catch (err) {
+            toast.error(
+              err instanceof Error
+                ? err.message
+                : "폴더 이동을 실행 취소하지 못했습니다.",
+            );
+          } finally {
+            setPassageBulkAction(null);
+          }
+        };
+
+        toast.success(`${countLabel} "${folderName}"(으)로 이동되었습니다`, {
+          duration: UNDO_TOAST_DURATION,
+          action: {
+            label: "실행 취소",
+            onClick: () => void undoFolderMove(),
+          },
+        });
+        setSelectedIds((prev) => {
+          if (!ids.some((id) => prev.has(id))) return prev;
+          return new Set([...prev].filter((id) => !idSet.has(id)));
+        });
         await loadPassages();
       } catch (err) {
         toast.error(
@@ -429,8 +579,97 @@ export function GeneratePageClient({
         setPassageBulkAction(null);
       }
     },
-    [loadPassages, passageBulkAction, passages, selectedIds],
+    [collections, loadPassages, passageBulkAction, passages],
   );
+
+  const handleMoveSelectedPassagesToCollection = useCallback(
+    async (collectionId: string) => {
+      await handleMovePassagesToCollection([...selectedIds], collectionId);
+    },
+    [handleMovePassagesToCollection, selectedIds],
+  );
+
+  const handleRemoveSelectedPassagesFromCollection = useCallback(async () => {
+    const ids = [...selectedIds];
+    const collectionId = selectedCollectionId;
+    if (!collectionId || ids.length === 0 || passageBulkAction) return;
+
+    setPassageBulkAction("remove");
+    try {
+      const idSet = new Set(ids);
+      const idsToRemove = passages
+        .filter(
+          (passage) =>
+            idSet.has(passage.id) &&
+            passage.collectionItems?.some(
+              (item) => item.collectionId === collectionId,
+            ),
+        )
+        .map((passage) => passage.id);
+
+      if (idsToRemove.length === 0) {
+        toast.info("이 폴더에서 제거할 지문이 없습니다.");
+        return;
+      }
+
+      const result = await removePassagesFromCollection(
+        collectionId,
+        idsToRemove,
+      );
+      if (!result.success) {
+        toast.error(result.error || "폴더에서 삭제하지 못했습니다.");
+        return;
+      }
+
+      const undoFolderRemove = async () => {
+        setPassageBulkAction("remove");
+        try {
+          const undoResult = await addPassagesToCollection(
+            collectionId,
+            idsToRemove,
+          );
+          if (!undoResult.success) {
+            toast.error(
+              undoResult.error || "폴더 삭제를 실행 취소하지 못했습니다.",
+            );
+            return;
+          }
+          await loadPassages();
+          toast.success("폴더 삭제를 실행 취소했습니다.");
+        } catch (err) {
+          toast.error(
+            err instanceof Error
+              ? err.message
+              : "폴더 삭제를 실행 취소하지 못했습니다.",
+          );
+        } finally {
+          setPassageBulkAction(null);
+        }
+      };
+
+      toast.success(`${idsToRemove.length}개 지문을 폴더에서 삭제했습니다.`, {
+        duration: UNDO_TOAST_DURATION,
+        action: {
+          label: "실행 취소",
+          onClick: () => void undoFolderRemove(),
+        },
+      });
+      setSelectedIds(new Set());
+      await loadPassages();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "폴더에서 삭제하지 못했습니다.",
+      );
+    } finally {
+      setPassageBulkAction(null);
+    }
+  }, [
+    loadPassages,
+    passageBulkAction,
+    passages,
+    selectedCollectionId,
+    selectedIds,
+  ]);
 
   const handleDeleteSelectedPassages = useCallback(async () => {
     const ids = [...selectedIds];
@@ -727,26 +966,31 @@ export function GeneratePageClient({
     }
   }, []);
 
-  const applyApprovalState = useCallback(
-    (approvedIds: string[]) => {
-      if (approvedIds.length === 0) return;
-      const set = new Set(approvedIds);
+  const applyReviewState = useCallback(
+    (questionIds: string[], approved: boolean) => {
+      if (questionIds.length === 0) return;
+      const set = new Set(questionIds);
       setSavedQuestions((prev) =>
-        prev.map((q) => (set.has(q.id) ? { ...q, approved: true } : q)),
+        prev.map((q) => (set.has(q.id) ? { ...q, approved } : q)),
+      );
+      setDetailQuestion((prev) =>
+        prev && set.has(prev.id) ? { ...prev, approved } : prev,
       );
       setSessionQueue((prev) =>
         prev.map((item) => {
           if (!item.questionIds?.some((id) => id && set.has(id))) return item;
           const questions = item.questions.map((q, qi) => {
             const id = item.questionIds?.[qi];
-            return id && set.has(id) ? { ...q, approved: true } : q;
+            return id && set.has(id) ? { ...q, approved } : q;
           });
           return {
             ...item,
             questions,
             status: questions.every((q) => q.approved)
               ? "reviewed"
-              : item.status,
+              : item.status === "reviewed"
+                ? "done"
+                : item.status,
           };
         }),
       );
@@ -761,11 +1005,42 @@ export function GeneratePageClient({
         toast.error(result.error || "검수완료 처리에 실패했습니다.");
         return;
       }
-      applyApprovalState([questionId]);
+      applyReviewState([questionId], true);
       toast.success("검수완료 처리됐습니다.");
       loadSavedQuestions();
     },
-    [loadSavedQuestions, applyApprovalState],
+    [loadSavedQuestions, applyReviewState],
+  );
+
+  const handleUnapproveQuestion = useCallback(
+    async (questionId: string) => {
+      const result = await unapproveWorkbenchQuestion(questionId);
+      if (!result.success) {
+        toast.error(result.error || "검수취소 처리에 실패했습니다.");
+        return;
+      }
+      applyReviewState([questionId], false);
+      toast.success("검수취소 처리됐습니다.");
+      loadSavedQuestions();
+    },
+    [loadSavedQuestions, applyReviewState],
+  );
+
+  const handleDeleteQuestion = useCallback(
+    async (questionId: string) => {
+      if (!questionId) return;
+      if (!confirm("이 문제를 삭제하시겠습니까?")) return;
+      const result = await deleteWorkbenchQuestion(questionId);
+      if (!result.success) {
+        toast.error(result.error || "삭제에 실패했습니다.");
+        return;
+      }
+      setSavedQuestions((prev) => prev.filter((q) => q.id !== questionId));
+      setDetailQuestion((prev) => (prev?.id === questionId ? null : prev));
+      toast.success("삭제됐습니다.");
+      loadSavedQuestions();
+    },
+    [loadSavedQuestions],
   );
 
   const handleBatchApproveQuestions = useCallback(
@@ -774,7 +1049,7 @@ export function GeneratePageClient({
       const result = await bulkApproveWorkbenchQuestions(questionIds);
       if (result.success && result.approvedIds.length > 0) {
         const failed = Math.max(0, result.requested - result.approved);
-        applyApprovalState(result.approvedIds);
+        applyReviewState(result.approvedIds, true);
         toast.success(
           `${result.approved}개 문제가 검수완료 처리됐습니다.${failed > 0 ? ` (${failed}개 건너뜀)` : ""}`,
         );
@@ -783,7 +1058,7 @@ export function GeneratePageClient({
         toast.error(result.error || "일괄 검수완료 처리에 실패했습니다.");
       }
     },
-    [applyApprovalState, loadSavedQuestions],
+    [applyReviewState, loadSavedQuestions],
   );
 
   const handleBatchDeleteQuestions = useCallback(
@@ -858,6 +1133,7 @@ export function GeneratePageClient({
       genMode,
       generationPlan,
       typeCounts,
+      setTypeCounts,
       activeTypes,
       difficulty,
       customPrompt,
@@ -908,9 +1184,9 @@ export function GeneratePageClient({
               setFilterSemester={setFilterSemester}
               analysisStatusFilter={analysisStatusFilter}
               setAnalysisStatusFilter={setAnalysisStatusFilter}
+              passageSortOrder={passageSortOrder}
+              setPassageSortOrder={setPassageSortOrder}
               passageStatusCounts={passageStatusCounts}
-              showFilters={showFilters}
-              setShowFilters={setShowFilters}
               activeFilterCount={activeFilterCount}
               selectedCollectionId={selectedCollectionId}
               setSelectedCollectionId={setSelectedCollectionId}
@@ -923,6 +1199,10 @@ export function GeneratePageClient({
               }
               onMoveSelectedToCollection={
                 handleMoveSelectedPassagesToCollection
+              }
+              onMovePassagesToCollection={handleMovePassagesToCollection}
+              onRemoveSelectedFromCollection={
+                handleRemoveSelectedPassagesFromCollection
               }
               onDeleteSelectedPassages={handleDeleteSelectedPassages}
               passageBulkAction={passageBulkAction}
@@ -978,7 +1258,7 @@ export function GeneratePageClient({
         />
 
         {/* ═══ BOTTOM SECTION: 생성된 문제 (최신순) ═══ */}
-        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <section className="relative rounded-lg border border-slate-200 bg-white shadow-sm">
           <BottomQueueSection
             sessionQueue={sessionQueue}
             filteredQueue={filteredQueue}
@@ -990,11 +1270,13 @@ export function GeneratePageClient({
             loadingSavedQuestions={loadingSavedQuestions}
             setDetailQuestion={setDetailQuestion}
             onApproveQuestion={handleApproveQuestion}
+            onUnapproveQuestion={handleUnapproveQuestion}
             onBatchApproveQuestions={handleBatchApproveQuestions}
             onBatchDeleteQuestions={handleBatchDeleteQuestions}
             deletedQuestionIds={deletedQuestionIds}
             deletedQuestionSignatures={deletedQuestionSignatures}
             batchDeleting={deletingQuestions}
+            onDeleteQuestion={handleDeleteQuestion}
             onEditQuestion={editor.openEditor}
           />
         </section>
@@ -1044,16 +1326,41 @@ export function GeneratePageClient({
           />
           <div className="relative z-10 w-full max-w-[1200px] mx-4 my-4 bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 shrink-0">
-              <h2 className="text-[15px] font-bold text-slate-800">
-                문제 상세
-              </h2>
-              <button
-                onClick={() => setDetailQuestion(null)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100"
-              >
-                <X className="w-4 h-4 text-slate-400" />
-              </button>
+            <div className="flex items-center justify-between gap-3 px-6 py-3 border-b border-slate-200 shrink-0">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <h2 className="text-[15px] font-bold text-slate-800">
+                  문제 상세
+                </h2>
+                <ReviewStatusStamp approved={detailQuestion.approved} className="shrink-0" />
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                {detailQuestion.approved ? (
+                  <button
+                    type="button"
+                    onClick={() => handleUnapproveQuestion(detailQuestion.id)}
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+                  >
+                    <XCircle className="h-3.5 w-3.5" />
+                    검수취소
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleApproveQuestion(detailQuestion.id)}
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 shadow-none transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800"
+                  >
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    검수완료
+                  </button>
+                )}
+                <button
+                  onClick={() => setDetailQuestion(null)}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100"
+                  aria-label="닫기"
+                >
+                  <X className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
             </div>
             {/* Content: 2 columns */}
             <div className="flex-1 overflow-hidden grid grid-cols-2">
@@ -1087,7 +1394,12 @@ export function GeneratePageClient({
               </div>
               {/* Right: Question */}
               <div className="overflow-y-auto px-6 py-5">
-                <QuestionCard q={detailQuestion} num={1} readonly />
+                <QuestionCard
+                  q={detailQuestion}
+                  num={1}
+                  readonly
+                  hideReviewStatusStamp
+                />
               </div>
             </div>
           </div>

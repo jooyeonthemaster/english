@@ -20,8 +20,8 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
     q.difficulty === "KILLER"
       ? "bg-red-50 text-red-700 border-red-200"
       : q.difficulty === "INTERMEDIATE"
-        ? "bg-blue-50 text-blue-700 border-blue-200"
-        : "bg-emerald-50 text-emerald-700 border-emerald-200";
+        ? "bg-amber-50 text-amber-700 border-amber-200"
+        : "bg-blue-50 text-blue-700 border-blue-200";
 
   return (
     <div className="rounded-xl border border-[#E5E8EB] bg-white p-4 space-y-3">

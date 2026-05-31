@@ -45,6 +45,12 @@ export interface FilterOptions {
 
 export type PassageAnalysisStatusFilter = "all" | "analyzed" | "unanalyzed";
 
+export type PassageSortOrder =
+  | "newest"
+  | "oldest"
+  | "name_asc"
+  | "name_desc";
+
 export type QueueStatus = "generating" | "done" | "reviewed" | "error";
 
 export interface QueueItem {

@@ -43,11 +43,11 @@ export function CollapsedPreview({
             .filter((o) => correctLabels.has(normalizeAnswerLabel(o.label)))
             .slice(0, 3)
             .map((correct) => (
-              <div key={correct.label} className="flex items-center gap-1.5 text-[12px] rounded px-1.5 py-0.5 bg-emerald-50 text-emerald-800 font-medium">
-                <span className="shrink-0 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-emerald-500 text-white">
-                  {correct.label}
+              <div key={correct.label} className="flex items-start gap-2.5 text-[12px] rounded px-2 py-1 bg-emerald-50 text-emerald-800 font-medium">
+                <span className="shrink-0 text-[13px] font-bold tabular-nums pt-px text-emerald-600">
+                  {correct.label}.
                 </span>
-                <div className="truncate">{correct.text}</div>
+                <div className="truncate pt-0.5">{correct.text}</div>
               </div>
             ))}
           {options.length > 1 && (

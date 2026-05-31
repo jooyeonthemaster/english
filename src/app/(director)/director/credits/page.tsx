@@ -722,6 +722,7 @@ export default function CreditsPage() {
         onConsentChange={setSubscriptionConsent}
         onStartBilling={startSubscriptionBilling}
         onCancelBilling={cancelSubscriptionBilling}
+        disabled={!FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING}
       />
 
       {subscriptionMessage && (
@@ -1037,6 +1038,7 @@ function SubscriptionBillingPanel({
   onConsentChange,
   onStartBilling,
   onCancelBilling,
+  disabled = false,
 }: {
   overview: SubscriptionBillingOverview | null;
   consent: boolean;
@@ -1044,14 +1046,27 @@ function SubscriptionBillingPanel({
   onConsentChange: (checked: boolean) => void;
   onStartBilling: () => void;
   onCancelBilling: () => void;
+  disabled?: boolean;
 }) {
   const subscription = overview?.subscription ?? null;
   const latestPayments = overview?.payments ?? [];
 
   if (!subscription) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden">
-        <div className="flex flex-col gap-3 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        className={cn(
+          "relative rounded-2xl border shadow-sm overflow-hidden",
+          disabled ? "border-slate-200 bg-slate-100" : "border-gray-200/60 bg-white",
+        )}
+        aria-disabled={disabled}
+      >
+        {disabled && <ComingSoonOverlay />}
+        <div
+          className={cn(
+            "flex flex-col gap-3 px-5 py-5 sm:flex-row sm:items-center sm:justify-between",
+            disabled && "pointer-events-none select-none opacity-45 grayscale",
+          )}
+        >
           <div>
             <h2 className="text-[15px] font-semibold text-gray-900">
               구독 정기결제
@@ -1082,7 +1097,15 @@ function SubscriptionBillingPanel({
   const hasDiscount = subscription.plan.pricing.discountAmount > 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-emerald-100 shadow-sm overflow-hidden">
+    <div
+      className={cn(
+        "relative rounded-2xl border shadow-sm overflow-hidden",
+        disabled ? "border-slate-200 bg-slate-100" : "border-emerald-100 bg-white",
+      )}
+      aria-disabled={disabled}
+    >
+      {disabled && <ComingSoonOverlay />}
+      <div className={cn(disabled && "pointer-events-none select-none opacity-45 grayscale")}>
       <div className="flex flex-col gap-4 border-b border-emerald-50 px-5 py-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">
@@ -1181,6 +1204,7 @@ function SubscriptionBillingPanel({
                 type="checkbox"
                 checked={consent}
                 onChange={(event) => onConsentChange(event.target.checked)}
+                disabled={disabled}
                 className="mt-0.5 size-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
               />
               <span className="text-[12px] leading-5 text-slate-600">
@@ -1201,7 +1225,7 @@ function SubscriptionBillingPanel({
             <button
               type="button"
               onClick={onStartBilling}
-              disabled={busy !== null || !consent}
+              disabled={disabled || busy !== null || !consent}
               className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 text-[13px] font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
               {busy === "register" ? (
@@ -1215,7 +1239,7 @@ function SubscriptionBillingPanel({
               <button
                 type="button"
                 onClick={onCancelBilling}
-                disabled={busy !== null}
+                disabled={disabled || busy !== null}
                 className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-[13px] font-semibold text-gray-600 transition hover:border-red-200 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {busy === "cancel" ? (
@@ -1306,6 +1330,24 @@ function SubscriptionBillingPanel({
           )}
         </div>
       </div>
+      </div>
+    </div>
+  );
+}
+
+function ComingSoonOverlay({
+  message = "PG 심사 준비가 완료되면 결제 기능을 다시 열 예정입니다.",
+}: {
+  message?: string;
+}) {
+  return (
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-100/65 backdrop-blur-[1px]">
+      <div className="rounded-xl border border-slate-200 bg-white/95 px-5 py-3 text-center shadow-sm">
+        <p className="text-[13px] font-bold text-slate-900">기능 준비중</p>
+        <p className="mt-1 text-[12px] font-medium text-slate-500">
+          {message}
+        </p>
+      </div>
     </div>
   );
 }
@@ -1387,14 +1429,7 @@ function TopUpPanel({
       aria-disabled={disabled}
     >
       {disabled && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-100/65 backdrop-blur-[1px]">
-          <div className="rounded-xl border border-slate-200 bg-white/95 px-5 py-3 text-center shadow-sm">
-            <p className="text-[13px] font-bold text-slate-900">기능 준비중</p>
-            <p className="mt-1 text-[12px] font-medium text-slate-500">
-              PG 심사 준비가 완료되면 크레딧 충전을 다시 열 예정입니다.
-            </p>
-          </div>
-        </div>
+        <ComingSoonOverlay message="PG 심사 준비가 완료되면 크레딧 충전을 다시 열 예정입니다." />
       )}
 
       <div

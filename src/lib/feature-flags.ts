@@ -44,6 +44,16 @@ export const FEATURE_FLAGS = {
       process.env.NEXT_PUBLIC_SHOW_CREDIT_PAYMENTS,
     false,
   ),
+
+  /**
+   * Enable subscription card registration and recurring billing controls on the
+   * director credit page. When false, the subscription section is shaded and
+   * non-interactive while the underlying billing code stays in place.
+   */
+  SHOW_SUBSCRIPTION_BILLING: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_SHOW_SUBSCRIPTION_BILLING,
+    false,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

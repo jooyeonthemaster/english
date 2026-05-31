@@ -152,6 +152,8 @@ export type BuilderBlockType = "question" | "text" | "section" | "divider" | "sp
 export interface BuilderBlock extends Omit<Partial<BuilderItem>, "blockType"> {
   localId: string;
   blockType: BuilderBlockType;
+  breakBefore?: "auto" | "column" | "page";
+  keepWithPrev?: boolean;
   locked?: boolean;
   blockTitle?: string;
   blockText?: string;

@@ -2,55 +2,47 @@ import type { PaperTemplate } from "./types";
 
 export const TEMPLATE_META: Record<
   PaperTemplate,
-  { label: string; description: string; accent: string; swatch: string }
+  { label: string; accent: string; titleClass: string }
 > = {
   clean: {
     label: "클린 내신형",
-    description: "파란 포인트와 넓은 여백의 정돈된 내신 시험지",
     accent: "border-blue-300 bg-blue-50 text-blue-700",
-    swatch: "from-blue-500 to-sky-400",
+    titleClass: "bg-gradient-to-r from-blue-500 to-sky-400 bg-clip-text text-transparent",
   },
   mock: {
     label: "모의고사형",
-    description: "흑백 신문식 헤더와 조밀한 2단 문항 흐름",
     accent: "border-slate-400 bg-slate-100 text-slate-800",
-    swatch: "from-slate-900 to-slate-500",
+    titleClass: "bg-gradient-to-r from-slate-900 to-slate-500 bg-clip-text text-transparent",
   },
   worksheet: {
     label: "워크시트형",
-    description: "초록 포인트, 풀이 공간과 교사용 메모 강조",
     accent: "border-emerald-300 bg-emerald-50 text-emerald-700",
-    swatch: "from-emerald-500 to-teal-400",
+    titleClass: "bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent",
   },
   minimal: {
     label: "미니멀",
-    description: "얇은 선과 낮은 채도로 텍스트 밀도 우선",
     accent: "border-zinc-300 bg-zinc-50 text-zinc-700",
-    swatch: "from-zinc-500 to-stone-300",
+    titleClass: "bg-gradient-to-r from-zinc-500 to-stone-300 bg-clip-text text-transparent",
   },
   academy: {
     label: "학원 브랜드형",
-    description: "로고와 남색 헤더가 살아나는 배포용 시험지",
     accent: "border-indigo-300 bg-indigo-50 text-indigo-700",
-    swatch: "from-indigo-700 to-cyan-500",
+    titleClass: "bg-gradient-to-r from-indigo-700 to-cyan-500 bg-clip-text text-transparent",
   },
   modern: {
     label: "모던 컬러형",
-    description: "보라 포인트와 카드형 지문으로 선명한 디자인",
     accent: "border-violet-300 bg-violet-50 text-violet-700",
-    swatch: "from-violet-600 to-fuchsia-400",
+    titleClass: "bg-gradient-to-r from-violet-600 to-fuchsia-400 bg-clip-text text-transparent",
   },
   classic: {
     label: "클래식 원고형",
-    description: "와인 컬러와 세리프 감성의 차분한 지면",
     accent: "border-rose-300 bg-rose-50 text-rose-800",
-    swatch: "from-rose-800 to-amber-500",
+    titleClass: "bg-gradient-to-r from-rose-800 to-amber-500 bg-clip-text text-transparent",
   },
   colorband: {
     label: "컬러 밴드형",
-    description: "상단 색상 띠와 번호 배지로 빠르게 읽히는 구성",
     accent: "border-cyan-300 bg-cyan-50 text-cyan-800",
-    swatch: "from-cyan-500 to-lime-400",
+    titleClass: "bg-gradient-to-r from-cyan-500 to-lime-400 bg-clip-text text-transparent",
   },
 };
 

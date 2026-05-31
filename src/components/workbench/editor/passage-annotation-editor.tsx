@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import { closeHistory } from "@tiptap/pm/history";
 import {
   BookOpen, PenTool, Braces, MessageSquare, Target,
-  X, Trash2, MousePointerClick,
+  X, Trash2, MousePointerClick, Undo2, Redo2,
 } from "lucide-react";
 import {
   VocabMark, GrammarMark, SyntaxMark, SentenceMark, ExamPointMark,
@@ -26,15 +27,19 @@ const EDITOR_STYLES = `
   .ProseMirror p.is-editor-empty:first-child::before {
     content: attr(data-placeholder); float: left; color: #94a3b8; pointer-events: none; height: 0;
   }
-  .ann-vocab { background: linear-gradient(to top, #dbeafe 35%, transparent 35%); border-bottom: 2px solid #3b82f6; cursor: pointer; transition: all 0.15s; border-radius: 1px; padding: 0 1px; }
+  /* NOTE: transitions are scoped to background / border-radius — NOT "all".
+     Safari does not repaint text-decoration on dynamically-inserted inline
+     marks while "text-decoration-color" is part of a "transition: all" set,
+     so the wavy underline stayed invisible until a hover forced a repaint. */
+  .ann-vocab { background: linear-gradient(to top, #dbeafe 35%, transparent 35%); border-bottom: 2px solid #3b82f6; cursor: pointer; transition: background 0.15s; border-radius: 1px; padding: 0 1px; }
   .ann-vocab:hover { background: linear-gradient(to top, #bfdbfe 45%, transparent 45%); }
-  .ann-grammar { text-decoration: underline wavy #8b5cf6; text-decoration-skip-ink: none; text-underline-offset: 3px; cursor: pointer; transition: all 0.15s; padding: 0 1px; }
+  .ann-grammar { text-decoration: underline wavy #8b5cf6; -webkit-text-decoration: underline wavy #8b5cf6; text-decoration-skip-ink: none; text-underline-offset: 3px; cursor: pointer; transition: background-color 0.15s, border-radius 0.15s; padding: 0 1px; }
   .ann-grammar:hover { background-color: #ede9fe; border-radius: 2px; }
-  .ann-syntax { border-bottom: 2px dashed #0891b2; cursor: pointer; transition: all 0.15s; padding: 0 1px; }
+  .ann-syntax { border-bottom: 2px dashed #0891b2; cursor: pointer; transition: background-color 0.15s, border-radius 0.15s; padding: 0 1px; }
   .ann-syntax:hover { background-color: #ecfeff; border-radius: 2px; }
-  .ann-sentence { background: linear-gradient(to right, #22c55e 3px, #f0fdf4 3px); padding: 2px 6px 2px 8px; cursor: pointer; transition: all 0.15s; border-radius: 2px; }
+  .ann-sentence { background: linear-gradient(to right, #22c55e 3px, #f0fdf4 3px); padding: 2px 6px 2px 8px; cursor: pointer; transition: background 0.15s; border-radius: 2px; }
   .ann-sentence:hover { background: linear-gradient(to right, #16a34a 3px, #dcfce7 3px); }
-  .ann-exam { background: linear-gradient(to top, #fef08a 40%, transparent 40%); cursor: pointer; transition: all 0.15s; padding: 0 2px; border-radius: 1px; }
+  .ann-exam { background: linear-gradient(to top, #fef08a 40%, transparent 40%); cursor: pointer; transition: background 0.15s; padding: 0 2px; border-radius: 1px; }
   .ann-exam:hover { background: linear-gradient(to top, #fde047 50%, transparent 50%); }
   .ProseMirror { -webkit-user-select: text; user-select: text; -webkit-touch-callout: none; }
   @media (pointer: coarse) {
@@ -79,6 +84,44 @@ type PopupState =
   | { mode: "memo"; type: AnnotationType; id: string; text: string }
   | { mode: "edit"; annotation: Annotation };
 
+// ─── Derive annotations from the editor document ─────────
+// The TipTap doc is the single source of truth for marks, so undo/redo
+// (which mutate the doc) stay in sync automatically. Memo text lives outside
+// the doc in a per-id map and is re-attached here, so it survives a mark being
+// removed and re-added by undo/redo.
+function deriveAnnotationsFromDoc(editor: Editor, memoMap: Map<string, string>): Annotation[] {
+  const acc = new Map<string, { type: AnnotationType; from: number; to: number }>();
+  editor.state.doc.descendants((node, pos) => {
+    if (!node.isText) return;
+    for (const m of node.marks) {
+      const entry = Object.entries(MARK_NAME_MAP).find(([, v]) => v === m.type.name);
+      if (!entry) continue;
+      const type = entry[0] as AnnotationType;
+      const id = (m.attrs.id as string) || "";
+      if (!id) continue;
+      const from = pos;
+      const to = pos + node.nodeSize;
+      const ex = acc.get(id);
+      if (ex) {
+        ex.from = Math.min(ex.from, from);
+        ex.to = Math.max(ex.to, to);
+      } else {
+        acc.set(id, { type, from, to });
+      }
+    }
+  });
+  return Array.from(acc.entries())
+    .map(([id, v]) => ({
+      id,
+      type: v.type,
+      text: editor.state.doc.textBetween(v.from, v.to),
+      memo: memoMap.get(id) ?? "",
+      from: v.from,
+      to: v.to,
+    }))
+    .sort((a, b) => a.from - b.from);
+}
+
 // ─── Component ───────────────────────────────────────────
 export function PassageAnnotationEditor({
   content, onContentChange, annotations, onAnnotationsChange,
@@ -94,6 +137,28 @@ export function PassageAnnotationEditor({
   const selectionRef = useRef<{ from: number; to: number } | null>(null);
   const justMarkedRef = useRef(false);
   const popupLockRef = useRef(false); // prevents handleMouseDown from closing popup right after doMark
+
+  // Memo text is kept here (keyed by mark id), not in the doc, so it survives
+  // undo/redo removing & re-adding a mark. pendingMemoRef holds the id of a
+  // freshly-marked-but-not-yet-saved annotation (discarded if the popup closes
+  // without pressing 저장). hasMarkedRef gates the first derive so we never
+  // clobber incoming annotations before the doc has any marks.
+  const memoMapRef = useRef<Map<string, string>>(new Map());
+  const pendingMemoRef = useRef<{ id: string } | null>(null);
+  const hasMarkedRef = useRef(false);
+  const seededRef = useRef(false);
+  // Bumped on every doc transaction so the undo/redo buttons re-evaluate
+  // editor.can().undo()/redo() even when the derived annotations don't change.
+  const [, bumpHistory] = useState(0);
+
+  // Rebuild the annotations array from the doc and push it to the parent.
+  const deriveAndPush = useCallback((ed: Editor) => {
+    const derived = deriveAnnotationsFromDoc(ed, memoMapRef.current);
+    // Before the first mark exists, an empty derive must not overwrite
+    // annotations the parent supplied (e.g. when re-opening a saved passage).
+    if (derived.length === 0 && !hasMarkedRef.current) return;
+    onAnnotationsChange(derived);
+  }, [onAnnotationsChange]);
 
   useEffect(() => {
     if (!styleRef.current) {
@@ -118,39 +183,58 @@ export function PassageAnnotationEditor({
     ],
     content: content ? `<p>${content.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br>")}</p>` : "",
     editable,
-    onUpdate: ({ editor: ed }) => onContentChange?.(ed.getText()),
+    onUpdate: ({ editor: ed }) => {
+      onContentChange?.(ed.getText());
+      deriveAndPush(ed);
+      bumpHistory((n) => n + 1);
+    },
     editorProps: {
       handleClick(view, pos) {
-        // Check if clicked on an annotation mark
+        // Derive the clicked annotation straight from the doc (not the captured
+        // `annotations` prop, which would be stale on this persistent editor).
         const marks = view.state.doc.resolve(pos).marks();
         for (const mark of marks) {
-          const type = Object.entries(MARK_NAME_MAP).find(([, v]) => v === mark.type.name)?.[0] as AnnotationType | undefined;
-          if (type) {
-            const ann = annotations.find((a) => a.id === mark.attrs.id);
-            if (ann) {
-              // Use ProseMirror's coordsAtPos for cross-browser consistency (Safari bug fix)
-              const cRect = containerRef.current?.getBoundingClientRect();
-              const innerRect = innerRef.current?.getBoundingClientRect();
-              if (cRect && innerRect) {
-                const startCoords = view.coordsAtPos(ann.from);
-                const endCoords = view.coordsAtPos(ann.to);
-                const centerX = (startCoords.left + endCoords.right) / 2;
-                const bottomY = Math.max(startCoords.bottom, endCoords.bottom);
-                const scrollTop = innerRef.current?.scrollTop ?? 0;
-                setPopupPos({
-                  x: centerX - innerRect.left,
-                  y: bottomY - innerRect.top + scrollTop + 8,
-                  below: true,
-                });
-              }
-              setMemoInput(ann.memo);
-              setPopup({ mode: "edit", annotation: ann });
-              return true;
+          const entry = Object.entries(MARK_NAME_MAP).find(([, v]) => v === mark.type.name);
+          if (!entry) continue;
+          const type = entry[0] as AnnotationType;
+          const id = (mark.attrs.id as string) || "";
+          if (!id) continue;
+          // Full range of this mark id (a mark may span several text nodes).
+          let from = Infinity;
+          let to = -Infinity;
+          view.state.doc.descendants((node, p) => {
+            if (node.isText && node.marks.some((m) => m.type.name === mark.type.name && m.attrs.id === id)) {
+              from = Math.min(from, p);
+              to = Math.max(to, p + node.nodeSize);
             }
+          });
+          if (!Number.isFinite(from)) return false;
+          const ann: Annotation = {
+            id, type,
+            text: view.state.doc.textBetween(from, to),
+            memo: memoMapRef.current.get(id) ?? "",
+            from, to,
+          };
+          // ProseMirror coordsAtPos for cross-browser consistency (Safari bug fix)
+          const innerRect = innerRef.current?.getBoundingClientRect();
+          if (innerRect) {
+            const startCoords = view.coordsAtPos(from);
+            const endCoords = view.coordsAtPos(to);
+            const centerX = (startCoords.left + endCoords.right) / 2;
+            const bottomY = Math.max(startCoords.bottom, endCoords.bottom);
+            const scrollTop = innerRef.current?.scrollTop ?? 0;
+            setPopupPos({
+              x: centerX - innerRect.left,
+              y: bottomY - innerRect.top + scrollTop + 8,
+              below: true,
+            });
           }
+          setMemoInput(ann.memo);
+          setPopup({ mode: "edit", annotation: ann });
+          return true;
         }
         // Plain text clicked — close toolbar, but NOT memo/edit
-        if (popup?.mode === "toolbar") setPopup(null);
+        setPopup((prev) => (prev?.mode === "toolbar" ? null : prev));
         return false;
       },
     },
@@ -166,6 +250,32 @@ export function PassageAnnotationEditor({
       editor.commands.setContent("");
     }
   }, [content, editor]);
+
+  // One-time seed: render incoming saved annotations as marks (so re-opening a
+  // passage shows the underlines) and prime the memo map. Applied without
+  // history so they can't be undone past the initial state.
+  useEffect(() => {
+    if (!editor || seededRef.current) return;
+    seededRef.current = true;
+    if (annotations.length === 0) return;
+    const size = editor.state.doc.content.size;
+    for (const a of annotations) {
+      memoMapRef.current.set(a.id, a.memo);
+      if (a.from < 0 || a.to > size || a.from >= a.to) continue;
+      try {
+        editor
+          .chain()
+          .command(({ tr }) => { tr.setMeta("addToHistory", false); return true; })
+          .setTextSelection({ from: a.from, to: a.to })
+          .setMark(MARK_NAME_MAP[a.type], { id: a.id, memo: a.memo })
+          .run();
+      } catch {
+        // skip annotations whose stored offsets no longer map into the doc
+      }
+    }
+    editor.commands.setTextSelection(0);
+    hasMarkedRef.current = true;
+  }, [editor, annotations]);
 
   // ─── Show toolbar on selection end (pointer = mouse + touch + pen) ──
   useEffect(() => {
@@ -227,10 +337,25 @@ export function PassageAnnotationEditor({
       showToolbarFromSelection();
     }
 
-    // Close ONLY toolbar mode on outside tap/click
+    // Close toolbar on outside tap/click; discard a still-tentative mark.
     function handlePointerDown(e: PointerEvent) {
       const t = e.target as HTMLElement;
-      if (t.closest("[data-popup]")) return;
+      if (t.closest("[data-popup],[data-editor-tools]")) return;
+      // The click that triggered doMark fires this listener too; by then the
+      // toolbar has re-rendered into the memo popup so the clicked button is
+      // detached and the closest() check above misses. popupLockRef (set in
+      // doMark) tells us "we just marked" — don't treat it as an outside click.
+      if (popupLockRef.current) return;
+      // A freshly-marked-but-unsaved annotation is dropped if the user moves on
+      // without pressing 저장 (저장 안 누르면 밑줄이 저장되지 않음).
+      const pending = pendingMemoRef.current;
+      if (pending) {
+        pendingMemoRef.current = null;
+        setPopup(null);
+        memoMapRef.current.delete(pending.id);
+        editor?.commands.undo();
+        return;
+      }
       setPopup((prev) => (prev?.mode === "toolbar" ? null : prev));
     }
 
@@ -255,8 +380,30 @@ export function PassageAnnotationEditor({
     const id = generateAnnotationId();
     justMarkedRef.current = true;
     popupLockRef.current = true;
-    editor.chain().focus().setTextSelection({ from, to }).setMark(MARK_NAME_MAP[type], { memo: "", id }).run();
-    onAnnotationsChange([...annotations, { id, type, text, memo: "", from, to }]);
+    hasMarkedRef.current = true;
+    // Tentative until 저장: this is one clean history step, so closing the memo
+    // popup without saving can discard it with a single undo().
+    pendingMemoRef.current = { id };
+    // closeHistory ensures this mark is its OWN undo step (never merged with
+    // preceding keystrokes), so discarding it with undo() can't eat the user's
+    // text edits.
+    editor
+      .chain()
+      .focus()
+      .command(({ tr }) => { closeHistory(tr); return true; })
+      .setTextSelection({ from, to })
+      .setMark(MARK_NAME_MAP[type], { memo: "", id })
+      .run();
+    // onUpdate → deriveAndPush adds it to the annotations list automatically.
+
+    // Safari belt-and-suspenders: even with the transition scoped, WebKit can
+    // skip painting text-decoration on a just-inserted inline mark until the
+    // surface is repainted. Toggling a no-op transform for one frame forces it.
+    const surface = innerRef.current;
+    if (surface) {
+      surface.style.transform = "translateZ(0)";
+      requestAnimationFrame(() => { surface.style.transform = ""; });
+    }
 
     // Switch popup to memo mode — keep same position
     setMemoInput("");
@@ -264,7 +411,7 @@ export function PassageAnnotationEditor({
 
     // Release lock after popup is fully rendered and user can interact with it
     setTimeout(() => { popupLockRef.current = false; }, 500);
-  }, [editor, annotations, onAnnotationsChange]);
+  }, [editor]);
 
   // ─── Keyboard shortcuts (only while toolbar is open) ──
   useEffect(() => {
@@ -280,30 +427,46 @@ export function PassageAnnotationEditor({
     return () => document.removeEventListener("keydown", handleKey);
   }, [popup, doMark]);
 
-  // ─── Save memo ─────────────────────────────────────────
+  // ─── Save memo (commit the mark) ───────────────────────
+  // The mark already lives in the doc; we just attach memo text and finalize.
   const saveMemo = useCallback((id: string, memo: string) => {
-    if (memo.trim()) {
-      onAnnotationsChange(annotations.map((a) => (a.id === id ? { ...a, memo: memo.trim() } : a)));
-    }
+    memoMapRef.current.set(id, memo.trim());
+    pendingMemoRef.current = null;
+    if (editor) deriveAndPush(editor); // memo isn't in the doc, so push manually
     setPopup(null);
-  }, [annotations, onAnnotationsChange]);
+  }, [editor, deriveAndPush]);
+
+  // ─── Cancel a tentative mark (저장 안 누름) ─────────────
+  const cancelMemo = useCallback(() => {
+    const pending = pendingMemoRef.current;
+    pendingMemoRef.current = null;
+    setPopup(null);
+    if (pending && editor) {
+      memoMapRef.current.delete(pending.id);
+      editor.commands.undo(); // remove the just-applied mark (its own history step)
+    }
+  }, [editor]);
 
   // ─── Remove annotation ────────────────────────────────
   const removeAnnotation = useCallback((id: string) => {
     if (!editor) return;
-    const ann = annotations.find((a) => a.id === id);
-    if (!ann) return;
-    const markName = MARK_NAME_MAP[ann.type];
+    const markEntry = Object.values(MARK_NAME_MAP);
     editor.state.doc.descendants((node, pos) => {
-      if (node.isText && node.marks.find((m) => m.type.name === markName && m.attrs.id === id)) {
-        editor.chain().focus().setTextSelection({ from: pos, to: pos + node.nodeSize }).unsetMark(markName).run();
+      if (!node.isText) return;
+      const mark = node.marks.find((m) => markEntry.includes(m.type.name) && m.attrs.id === id);
+      if (mark) {
+        editor.chain().focus().setTextSelection({ from: pos, to: pos + node.nodeSize }).unsetMark(mark.type.name).run();
       }
     });
-    onAnnotationsChange(annotations.filter((a) => a.id !== id));
+    memoMapRef.current.delete(id);
+    // onUpdate → deriveAndPush removes it from the annotations list.
     setPopup(null);
-  }, [editor, annotations, onAnnotationsChange]);
+  }, [editor]);
 
   if (!editor) return null;
+
+  const canUndo = editor.can().undo();
+  const canRedo = editor.can().redo();
 
   const hasText = editor.getText().trim().length > 0;
   const counts = ANNOTATION_TYPES.reduce((acc, t) => { acc[t] = annotations.filter((a) => a.type === t).length; return acc; }, {} as Record<AnnotationType, number>);
@@ -316,7 +479,50 @@ export function PassageAnnotationEditor({
   const arrowLeft = Math.max(12, Math.min(popupPos.x - clampedLeft, popupWidth - 12));
 
   return (
-    <div className="flex flex-col h-full" ref={containerRef}>
+    <div className="relative flex flex-col h-full" ref={containerRef}>
+      {/* Undo / redo — pinned to the top-right of the input area, arrows only.
+          Lives on the (non-scrolling) outer container so it stays put while the
+          passage scrolls. The counts bar's right side is empty, so no overlap. */}
+      {editable && (
+        <div
+          data-editor-tools
+          className="absolute top-2 right-2 z-30 flex items-center gap-0.5 rounded-lg border border-slate-200 bg-white/90 px-0.5 py-0.5 shadow-sm backdrop-blur-sm"
+        >
+          <button
+            type="button"
+            title="되돌리기 (⌘Z)"
+            aria-label="되돌리기"
+            disabled={!canUndo}
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (pendingMemoRef.current) {
+                cancelMemo();
+              } else {
+                editor.commands.undo();
+              }
+            }}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-500"
+          >
+            <Undo2 className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            title="다시 실행 (⌘⇧Z)"
+            aria-label="다시 실행"
+            disabled={!canRedo}
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => {
+              pendingMemoRef.current = null;
+              setPopup(null);
+              editor.commands.redo();
+            }}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-500"
+          >
+            <Redo2 className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
       {/* Annotation counts */}
       {annotations.length > 0 && (
         <div className="flex items-center gap-3 px-4 py-2 border-b border-slate-100 bg-slate-50/50 shrink-0">
@@ -384,13 +590,13 @@ export function PassageAnnotationEditor({
                 <div className="flex items-center gap-1.5 mb-2">
                   {(() => { const c = ANNOTATION_CONFIG[popup.type]; const Icon = c.icon; return <Icon className={`w-3 h-3 ${c.color}`} />; })()}
                   <span className={`text-[11px] font-semibold ${ANNOTATION_CONFIG[popup.type].color}`}>{ANNOTATION_CONFIG[popup.type].label}</span>
-                  <span className="text-[10px] text-slate-400">마킹 완료</span>
+                  <span className="text-[10px] text-slate-400">저장 시 확정</span>
                 </div>
                 <div className="flex gap-1.5">
                   <input autoFocus value={memoInput} onChange={(e) => setMemoInput(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); saveMemo(popup.id, memoInput); } if (e.key === "Escape") setPopup(null); }}
-                    placeholder="메모 (Enter 저장, Esc 건너뛰기)"
-                    className="flex-1 h-7 px-2.5 text-[12px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/10"
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); saveMemo(popup.id, memoInput); } if (e.key === "Escape") { e.preventDefault(); cancelMemo(); } }}
+                    placeholder="메모 (Enter 저장 · Esc 취소)"
+                    className="flex-1 min-w-0 h-7 px-2.5 text-[12px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/10"
                   />
                   <button onClick={() => saveMemo(popup.id, memoInput)} className="h-7 px-2.5 rounded-md bg-blue-600 text-white text-[11px] font-medium hover:bg-blue-700 transition-colors shrink-0">저장</button>
                 </div>
@@ -415,7 +621,7 @@ export function PassageAnnotationEditor({
                   <input autoFocus value={memoInput} onChange={(e) => setMemoInput(e.target.value)}
                     onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); saveMemo(popup.annotation.id, memoInput); } if (e.key === "Escape") setPopup(null); }}
                     placeholder="메모 수정 (Enter 저장)"
-                    className="flex-1 h-7 px-2.5 text-[12px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/10"
+                    className="flex-1 min-w-0 h-7 px-2.5 text-[12px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/10"
                   />
                   <button onClick={() => saveMemo(popup.annotation.id, memoInput)} className="h-7 px-2.5 rounded-md bg-blue-600 text-white text-[11px] font-medium hover:bg-blue-700 transition-colors shrink-0">저장</button>
                 </div>

@@ -3,6 +3,7 @@ import { getStaffSession } from "@/lib/auth";
 import {
   getWorkbenchQuestions,
   getWorkbenchQuestionsGroupedByPassage,
+  getWorkbenchQuestionStatusCounts,
   getQuestionCollections,
 } from "@/actions/workbench";
 import { prisma } from "@/lib/prisma";
@@ -49,7 +50,7 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
         ? true
         : params.approved === "false"
         ? false
-        : true,
+        : undefined,
     starred:
       params.starred === "true"
         ? true
@@ -60,13 +61,14 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
     search: params.search || undefined,
   };
 
-  const [questionsData, groupedData, collections, collectionItems] = await Promise.all([
+  const [questionsData, groupedData, statusCounts, collections, collectionItems] = await Promise.all([
     view === "flat"
       ? getWorkbenchQuestions(staff.academyId, filters)
       : Promise.resolve(null),
     view === "passage"
       ? getWorkbenchQuestionsGroupedByPassage(staff.academyId, filters)
       : Promise.resolve(null),
+    getWorkbenchQuestionStatusCounts(staff.academyId, filters),
     getQuestionCollections(staff.academyId),
     prisma.questionCollectionItem.findMany({
       where: { collection: { academyId: staff.academyId } },
@@ -87,6 +89,7 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
       view={view}
       questionsData={questionsData}
       groupedData={groupedData}
+      statusCounts={statusCounts}
       filters={filters}
       collections={collections as any}
       collectionMembership={Object.fromEntries(

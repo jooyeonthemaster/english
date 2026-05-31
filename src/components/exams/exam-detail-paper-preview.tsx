@@ -486,6 +486,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
         isPending={isPending}
         paperItemsCount={paperItems.length}
         onPrint={handlePrint}
+        onDownloadPdf={handlePrint}
         onDownloadDocx={handleDownloadDocx}
         onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
         onDownloadHwpx={handleDownloadHwpx}

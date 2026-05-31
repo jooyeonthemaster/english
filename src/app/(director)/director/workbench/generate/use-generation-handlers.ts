@@ -35,6 +35,7 @@ interface UseGenerationHandlersParams {
   genMode: "auto" | "manual";
   generationPlan: QuestionGenerationPlan;
   typeCounts: Record<string, number>;
+  setTypeCounts: Dispatch<SetStateAction<Record<string, number>>>;
   activeTypes: string[];
   difficulty: string;
   customPrompt: string;
@@ -276,6 +277,7 @@ export function useGenerationHandlers({
   genMode,
   generationPlan,
   typeCounts,
+  setTypeCounts,
   activeTypes,
   difficulty,
   customPrompt,
@@ -469,6 +471,11 @@ export function useGenerationHandlers({
         }
       }
 
+      // Generation has started — clear the configured type counts so the
+      // panel is a fresh slate for the next batch. `units` already captured
+      // the counts, so the in-flight generation is unaffected.
+      setTypeCounts({});
+
       const { success, failed } = await runManualUnitsWithFastPath(units);
 
       setSelectedIds(new Set());
@@ -627,6 +634,7 @@ export function useGenerationHandlers({
     genMode,
     generationPlan,
     typeCounts,
+    setTypeCounts,
     questionTypeSettings,
     difficulty,
     customPrompt,

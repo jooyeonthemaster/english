@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
   }
 
   // 보고서 문서 빌드
-  let documentTitle = title ?? `${passage.title} - 학습자료`;
+  const documentTitle = title ?? `${passage.title} - 학습자료`;
   let document;
   let sourcedFromAnalysisId: string | null = null;
 

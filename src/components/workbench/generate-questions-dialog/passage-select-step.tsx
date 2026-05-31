@@ -139,7 +139,7 @@ export function PassageSelectStep({
               className="w-full text-left px-3 py-2.5 rounded-lg border border-transparent hover:border-blue-200 hover:bg-blue-50/40 transition-all group"
             >
               <div className="flex items-center gap-2">
-                <span className="text-[13px] font-semibold text-slate-800 group-hover:text-blue-700 transition-colors flex-1 truncate">
+                <span className="text-[13px] font-semibold text-slate-800 group-hover:text-blue-700 transition-colors flex-1 min-w-0 truncate">
                   {p.title}
                 </span>
                 <div className="flex items-center gap-1 shrink-0">

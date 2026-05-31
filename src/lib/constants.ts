@@ -143,8 +143,8 @@ export const QUESTION_SUBTYPES = {
 
 // Difficulty Levels
 export const DIFFICULTY_LEVELS = [
-  { value: "BASIC", label: "기본", color: "bg-green-100 text-green-700" },
-  { value: "INTERMEDIATE", label: "중급", color: "bg-blue-100 text-blue-700" },
+  { value: "BASIC", label: "기본", color: "bg-blue-100 text-blue-700" },
+  { value: "INTERMEDIATE", label: "중급", color: "bg-amber-100 text-amber-700" },
   { value: "KILLER", label: "킬러", color: "bg-red-100 text-red-700" },
 ] as const;
 
