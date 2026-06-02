@@ -102,3 +102,6 @@ google-credentials*.json
 
 # scratch / test harness output
 /tmp/
+
+# demo screen recordings (large binaries)
+/public/recordings/*.webm
