@@ -19,6 +19,7 @@ import {
   questionStemAndBody,
   recombineQuestionText,
 } from "../question-body-layout";
+import { questionHasEmbeddedPassage } from "../passage-policy";
 import { TEMPLATE_VISUALS } from "../templates";
 import type {
   Density,
@@ -60,12 +61,14 @@ function StructuredBody({
   compact,
   withTopGap,
   visualQuestionClass,
+  passageStyle,
 }: {
   rows: StructRow[];
   subType: string | null;
   compact: boolean;
   withTopGap: boolean;
   visualQuestionClass: string;
+  passageStyle: PassageStyle;
 }) {
   if (rows.length === 0) return null;
 
@@ -109,16 +112,21 @@ function StructuredBody({
         }
 
         if (group.style === "passage" || group.style === "summary" || group.style === "given") {
+          const isSourcePassage = group.style === "passage";
           const boxTone =
-            group.style === "passage"
+            isSourcePassage
               ? "border-slate-400 bg-white font-normal"
               : "border-slate-300 bg-slate-50 font-semibold";
           return (
             <div
               key={groupIndex}
               className={cn(
-                "whitespace-pre-line rounded-[4px] border px-2.5 py-2 text-justify text-slate-950",
+                "whitespace-pre-line text-justify text-slate-950",
                 leading,
+                isSourcePassage && passageStyle === "boxed" && "rounded-[4px] border px-2.5 py-2",
+                isSourcePassage && passageStyle === "underlined" && "border-y py-2",
+                isSourcePassage && passageStyle === "plain" && "py-1",
+                !isSourcePassage && "rounded-[4px] border px-2.5 py-2",
                 boxTone,
               )}
             >
@@ -577,6 +585,20 @@ export function A4PaperPage({
                         : questionStemAndBody(item);
                       const isStructuredQuestion =
                         !isCustomBlock && isStructuredAtomicSubtype(subType);
+                      // 지문이 문항 본문에 내장된 유형(무관한 문장·문장 삽입·어법 등)도
+                      // 출처 지문 박스와 동일하게 "지문 스타일"(박스/밑줄/본문)을 따른다.
+                      const hasEmbeddedPassage =
+                        !isCustomBlock &&
+                        !isStructuredQuestion &&
+                        questionHasEmbeddedPassage(item.sourceQuestion);
+                      const embeddedPassageBoxClass =
+                        hasEmbeddedPassage && passageStyle !== "plain"
+                          ? cn(
+                              passageStyle === "boxed" && "rounded border px-3 py-2",
+                              passageStyle === "underlined" && "border-b border-t py-2",
+                              visual.passageClass,
+                            )
+                          : undefined;
                       return (
                         <div
                           key={part.partKey}
@@ -750,6 +772,7 @@ export function A4PaperPage({
                                   compact={compact}
                                   withTopGap={part.showHeader}
                                   visualQuestionClass={visual.questionClass}
+                                  passageStyle={passageStyle}
                                 />
                               );
                             }
@@ -771,6 +794,7 @@ export function A4PaperPage({
                                   className={cn(
                                     "mt-1 whitespace-pre-line text-justify font-semibold",
                                     visual.questionClass,
+                                    embeddedPassageBoxClass,
                                   )}
                                 >
                                   <EditableText
@@ -801,6 +825,7 @@ export function A4PaperPage({
                                 className={cn(
                                   "mt-1 whitespace-pre-line text-justify font-semibold",
                                   visual.questionClass,
+                                  embeddedPassageBoxClass,
                                 )}
                               >
                                 <span className="block">

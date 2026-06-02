@@ -180,6 +180,12 @@ export async function GET(
 
     const buffer = await packageHwpx(doc);
 
+    // 출력(HWPX/HWPX해설) 1회 → 인쇄 횟수 +1
+    await prisma.exam.update({
+      where: { id: examId },
+      data: { printCount: { increment: 1 } },
+    });
+
     const filename = encodeURIComponent(
       `${exam.title}${includeAnswers ? "_정답포함" : ""}.hwpx`,
     );

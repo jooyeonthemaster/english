@@ -89,7 +89,10 @@ export function optionDisplayTextForSubtype(
   optionText: string,
 ) {
   if (shouldUseGrammarOptionReference(subType)) {
-    return "";
+    // 어법 판단(GRAMMAR_ERROR): 지문에는 (A)~(E) 밑줄 마커가 인라인으로 들어가고,
+    // 선택지 ①~⑤ 는 그 마커를 참조한다. 빈 문자열을 돌려주면 선택지가 번호만
+    // 남고 텍스트가 비어 미리보기에 공란으로 보이는 버그가 생긴다.
+    return optionReferenceLabel(index);
   }
 
   if (shouldUseSentenceInsertOptionReference(subType, optionText)) {

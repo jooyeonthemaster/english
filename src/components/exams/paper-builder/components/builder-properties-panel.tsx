@@ -8,12 +8,10 @@ import {
   type ReactNode,
 } from "react";
 import {
-  ArrowDown,
   AlignCenter,
   AlignLeft,
   AlignRight,
   ArrowDownToLine,
-  ArrowUp,
   BookOpen,
   ChevronDown,
   ChevronUp,
@@ -24,18 +22,16 @@ import {
   Group,
   Heading1,
   Image as ImageIcon,
+  Layers,
   Lock,
   Minus,
-  PanelTop,
   Plus,
-  Redo2,
   Rows3,
-  Settings2,
+  Settings,
   Shuffle,
   Space,
   Trash2,
   Type,
-  Undo2,
   Ungroup,
   Unlock,
 } from "lucide-react";
@@ -57,13 +53,14 @@ import type {
 
 interface BuilderPropertiesPanelProps {
   activeItem: PaperItem | null;
+  paperItems: PaperItem[];
+  activeItemId: string | null;
   paperItemsCount: number;
   totalPoints: number;
-  templateControls: ReactNode;
-  canUndo: boolean;
-  canRedo: boolean;
-  onUndo: () => void;
-  onRedo: () => void;
+  autoPointTotal: number | null;
+  settingsNudgeActive?: boolean;
+  onOpenSettings: () => void;
+  onSelectItem: (localId: string) => void;
   onInsertBlock: (type: InsertablePaperBlockType) => void;
   onUploadImageBlock: (dataUrl: string, imageAlt: string) => void;
   onDuplicateItem: (localId: string) => void;
@@ -87,31 +84,31 @@ const BLOCK_LABELS: Record<PaperItem["blockType"], string> = {
 
 const COLOR_SWATCHES = ["#2563EB", "#0F766E", "#7C3AED", "#DC2626", "#111827"];
 const PANEL_SECTION_ORDER_STORAGE_KEY =
-  "smoat.examPaperBuilder.propertiesPanel.sectionOrder.v1";
+  "smoat.examPaperBuilder.propertiesPanel.sectionOrder.v2";
 const PANEL_SECTION_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.propertiesPanel.sectionCollapsed.v1";
 const QUESTION_PREVIEW_HEIGHT_STORAGE_KEY =
-  "smoat.examPaperBuilder.propertiesPanel.questionPreviewHeight.v1";
+  "smoat.examPaperBuilder.propertiesPanel.questionPreviewHeight.v2";
 const PANEL_SECTION_IDS = [
-  "actions",
+  "outline",
   "insert",
   "inspector",
   "shuffle",
-  "template",
 ] as const;
-const QUESTION_PREVIEW_HEIGHT_MIN = 48;
-const QUESTION_PREVIEW_HEIGHT_DEFAULT = 92;
+const QUESTION_PREVIEW_HEIGHT_MIN = 44;
+const QUESTION_PREVIEW_HEIGHT_DEFAULT = 72;
 const QUESTION_PREVIEW_HEIGHT_MAX_FLOOR = 260;
+const IMAGE_WIDTH_PRESETS = [25, 50, 75, 100];
+const SPACER_HEIGHT_PRESETS = [16, 32, 64, 96];
 
 type PanelSectionId = (typeof PANEL_SECTION_IDS)[number];
 
 function isPanelSectionId(value: unknown): value is PanelSectionId {
   return (
-    value === "actions" ||
+    value === "outline" ||
     value === "insert" ||
     value === "inspector" ||
-    value === "shuffle" ||
-    value === "template"
+    value === "shuffle"
   );
 }
 
@@ -168,39 +165,6 @@ function readStoredQuestionPreviewHeight(): number {
   return Math.max(QUESTION_PREVIEW_HEIGHT_MIN, Math.round(stored));
 }
 
-function IconButton({
-  title,
-  disabled,
-  active,
-  children,
-  onClick,
-}: {
-  title: string;
-  disabled?: boolean;
-  active?: boolean;
-  children: ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      title={title}
-      aria-label={title}
-      aria-pressed={active}
-      disabled={disabled}
-      onClick={onClick}
-      className={cn(
-        "flex h-8 min-w-8 items-center justify-center rounded-lg border text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-40",
-        active
-          ? "border-blue-300 bg-blue-50 text-blue-700"
-          : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
-
 function TextButton({
   title,
   children,
@@ -215,7 +179,7 @@ function TextButton({
       type="button"
       title={title}
       onClick={onClick}
-      className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+      className="flex h-7 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
     >
       {children}
     </button>
@@ -243,7 +207,7 @@ function IconToggleButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "flex h-8 items-center justify-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-45",
+        "flex h-7 items-center justify-center gap-1 rounded-md border px-2 text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-45",
         active
           ? "border-blue-300 bg-blue-50 text-blue-700"
           : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700",
@@ -260,13 +224,10 @@ function PanelSection({
   badge,
   icon,
   collapsed,
-  canMoveUp,
-  canMoveDown,
   dragging,
   dragOver,
   children,
   onToggle,
-  onMove,
   onDragStart,
   onDragOver,
   onDrop,
@@ -277,13 +238,10 @@ function PanelSection({
   badge?: ReactNode;
   icon?: ReactNode;
   collapsed: boolean;
-  canMoveUp: boolean;
-  canMoveDown: boolean;
   dragging: boolean;
   dragOver: boolean;
   children: ReactNode;
   onToggle: (id: PanelSectionId) => void;
-  onMove: (id: PanelSectionId, direction: "up" | "down") => void;
   onDragStart: (event: DragEvent<HTMLButtonElement>, id: PanelSectionId) => void;
   onDragOver: (event: DragEvent<HTMLElement>, id: PanelSectionId) => void;
   onDrop: (event: DragEvent<HTMLElement>, id: PanelSectionId) => void;
@@ -295,20 +253,20 @@ function PanelSection({
       onDragOver={(event) => onDragOver(event, id)}
       onDrop={(event) => onDrop(event, id)}
       className={cn(
-        "w-full overflow-hidden rounded-xl border bg-white transition-all",
+        "w-full overflow-hidden rounded-lg border bg-white transition-all",
         dragOver
           ? "border-blue-300 shadow-[0_0_0_2px_rgba(59,130,246,0.12)]"
           : "border-slate-200 shadow-sm",
         dragging && "opacity-50",
       )}
     >
-      <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50/70 px-2.5 py-2">
+      <div className="flex items-center gap-1 border-b border-slate-100 bg-slate-50/70 px-2 py-1.5">
         <button
           type="button"
           draggable
           onDragStart={(event) => onDragStart(event, id)}
           onDragEnd={onDragEnd}
-          className="flex h-7 w-7 cursor-grab items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 active:cursor-grabbing"
+          className="flex h-6 w-6 cursor-grab items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 active:cursor-grabbing"
           title={`${title} 섹션 드래그`}
           aria-label={`${title} 섹션 드래그`}
         >
@@ -318,7 +276,7 @@ function PanelSection({
           type="button"
           onClick={() => onToggle(id)}
           aria-expanded={!collapsed}
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
+          className="flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-0.5 text-left transition-colors hover:bg-white"
           title={`${title} ${collapsed ? "펼치기" : "접기"}`}
         >
           {icon}
@@ -330,28 +288,8 @@ function PanelSection({
         <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
-            onClick={() => onMove(id, "up")}
-            disabled={!canMoveUp}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-30"
-            title={`${title} 위로 이동`}
-            aria-label={`${title} 위로 이동`}
-          >
-            <ArrowUp className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => onMove(id, "down")}
-            disabled={!canMoveDown}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-30"
-            title={`${title} 아래로 이동`}
-            aria-label={`${title} 아래로 이동`}
-          >
-            <ArrowDown className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
             onClick={() => onToggle(id)}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
+            className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
             title={`${title} ${collapsed ? "펼치기" : "접기"}`}
             aria-label={`${title} ${collapsed ? "펼치기" : "접기"}`}
           >
@@ -359,7 +297,7 @@ function PanelSection({
           </button>
         </div>
       </div>
-      {!collapsed && <div className="px-3 py-3">{children}</div>}
+      {!collapsed && <div className="px-2.5 py-2">{children}</div>}
     </section>
   );
 }
@@ -381,14 +319,14 @@ function NumberStepper({
 }) {
   return (
     <div>
-      <p className="mb-2 text-[11px] font-bold text-slate-500">{label}</p>
-      <div className="flex h-9 items-center rounded-lg border border-slate-200 bg-white">
+      <p className="mb-1.5 text-[11px] font-bold text-slate-500">{label}</p>
+      <div className="flex h-8 items-center rounded-md border border-slate-200 bg-white">
         <button
           type="button"
           title={`${label} 낮추기`}
           disabled={disabled}
           onClick={() => onChange(clampInt(value - 1, min, max))}
-          className="flex h-full w-8 items-center justify-center text-slate-400 hover:text-slate-700 disabled:opacity-30"
+          className="flex h-full w-7 items-center justify-center text-slate-400 hover:text-slate-700 disabled:opacity-30"
         >
           <Minus className="h-3.5 w-3.5" />
         </button>
@@ -406,7 +344,7 @@ function NumberStepper({
           title={`${label} 올리기`}
           disabled={disabled}
           onClick={() => onChange(clampInt(value + 1, min, max))}
-          className="flex h-full w-8 items-center justify-center text-slate-400 hover:text-slate-700 disabled:opacity-30"
+          className="flex h-full w-7 items-center justify-center text-slate-400 hover:text-slate-700 disabled:opacity-30"
         >
           <Plus className="h-3.5 w-3.5" />
         </button>
@@ -452,6 +390,42 @@ function AlignmentControls({
   );
 }
 
+function PrecisionPresetButtons({
+  values,
+  suffix,
+  activeValue,
+  disabled,
+  onChange,
+}: {
+  values: number[];
+  suffix: string;
+  activeValue: number;
+  disabled?: boolean;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="grid grid-cols-4 gap-1">
+      {values.map((value) => (
+        <button
+          key={value}
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange(value)}
+          className={cn(
+            "h-7 rounded-md border text-[10px] font-black transition-colors disabled:opacity-40",
+            activeValue === value
+              ? "border-blue-300 bg-blue-50 text-blue-700"
+              : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
+          )}
+        >
+          {value}
+          {suffix}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function CustomBlockInspector({
   item,
   disabled,
@@ -464,8 +438,8 @@ function CustomBlockInspector({
   const setFontSize = (blockFontSize: PaperBlockFontSize) => onUpdate({ blockFontSize });
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5">
+    <div className="space-y-3">
+      <div className="rounded-lg border border-slate-200 bg-slate-50/70 px-2.5 py-2">
         <p className="text-[11px] font-black text-slate-500">
           {BLOCK_LABELS[item.blockType]} 블록
         </p>
@@ -499,7 +473,7 @@ function CustomBlockInspector({
                   : { blockText: next, questionText: next },
               );
             }}
-            className="min-h-24 w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold leading-relaxed text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
+            className="min-h-20 w-full resize-y rounded-md border border-slate-200 bg-white px-2.5 py-2 text-[12px] font-semibold leading-relaxed text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
           />
         </div>
       )}
@@ -513,14 +487,18 @@ function CustomBlockInspector({
               disabled={disabled}
               value={item.imageAlt}
               onChange={(event) => onUpdate({ imageAlt: event.target.value })}
-              className="h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
+              className="h-8 w-full rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
             />
           </div>
-          <div>
-            <div className="mb-2 flex items-center justify-between">
-              <p className="text-[11px] font-bold text-slate-500">폭</p>
-              <span className="text-[10px] font-black text-slate-400">{item.imageWidth}%</span>
-            </div>
+          <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50/60 p-2">
+            <NumberStepper
+              label="정밀 폭(%)"
+              min={20}
+              max={100}
+              value={item.imageWidth}
+              disabled={disabled}
+              onChange={(imageWidth) => onUpdate({ imageWidth })}
+            />
             <input
               type="range"
               min={20}
@@ -531,16 +509,27 @@ function CustomBlockInspector({
               onChange={(event) => onUpdate({ imageWidth: Number(event.target.value) })}
               className="w-full accent-blue-600"
             />
+            <PrecisionPresetButtons
+              values={IMAGE_WIDTH_PRESETS}
+              suffix="%"
+              activeValue={item.imageWidth}
+              disabled={disabled}
+              onChange={(imageWidth) => onUpdate({ imageWidth })}
+            />
           </div>
         </div>
       )}
 
       {item.blockType === "spacer" && (
-        <div>
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-[11px] font-bold text-slate-500">여백 높이</p>
-            <span className="text-[10px] font-black text-slate-400">{item.spacerHeight}px</span>
-          </div>
+        <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50/60 p-2">
+          <NumberStepper
+            label="정밀 높이(px)"
+            min={8}
+            max={160}
+            value={item.spacerHeight}
+            disabled={disabled}
+            onChange={(spacerHeight) => onUpdate({ spacerHeight })}
+          />
           <input
             type="range"
             min={8}
@@ -550,6 +539,13 @@ function CustomBlockInspector({
             value={item.spacerHeight}
             onChange={(event) => onUpdate({ spacerHeight: Number(event.target.value) })}
             className="w-full accent-blue-600"
+          />
+          <PrecisionPresetButtons
+            values={SPACER_HEIGHT_PRESETS}
+            suffix="px"
+            activeValue={item.spacerHeight}
+            disabled={disabled}
+            onChange={(spacerHeight) => onUpdate({ spacerHeight })}
           />
         </div>
       )}
@@ -574,7 +570,7 @@ function CustomBlockInspector({
                   dividerStyle: event.target.value as PaperItem["dividerStyle"],
                 })
               }
-              className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2 text-[12px] font-bold text-slate-600 outline-none disabled:bg-slate-50"
+              className="h-8 w-full rounded-md border border-slate-200 bg-white px-2 text-[12px] font-bold text-slate-600 outline-none disabled:bg-slate-50"
             >
               <option value="solid">실선</option>
               <option value="dashed">파선</option>
@@ -652,13 +648,14 @@ function CustomBlockInspector({
 
 export function BuilderPropertiesPanel({
   activeItem,
+  paperItems,
+  activeItemId,
   paperItemsCount,
   totalPoints,
-  templateControls,
-  canUndo,
-  canRedo,
-  onUndo,
-  onRedo,
+  autoPointTotal,
+  settingsNudgeActive = false,
+  onOpenSettings,
+  onSelectItem,
   onInsertBlock,
   onUploadImageBlock,
   onDuplicateItem,
@@ -677,6 +674,7 @@ export function BuilderPropertiesPanel({
   const activeLocked = Boolean(activeItem?.locked);
   const activePassageForced = activeItem ? isSourcePassageForcedForItem(activeItem) : false;
   const activePassageRendered = activePassageForced || (activeItem ? shouldRenderSourcePassageForItem(activeItem) : false);
+  const questionItemsCount = paperItems.filter((item) => item.blockType === "question").length;
   const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
     readStoredPanelSectionOrder,
   );
@@ -693,6 +691,7 @@ export function BuilderPropertiesPanel({
   const [dragOverSectionId, setDragOverSectionId] = useState<PanelSectionId | null>(null);
   const [shuffleKeepGroups, setShuffleKeepGroups] = useState(true);
   const [shuffleAnchorBlocks, setShuffleAnchorBlocks] = useState(true);
+  const [advancedQuestionOpen, setAdvancedQuestionOpen] = useState(false);
   const collapsedSections = new Set(collapsedSectionIds);
 
   useEffect(() => {
@@ -792,18 +791,6 @@ export function BuilderPropertiesPanel({
         ? current.filter((sectionId) => sectionId !== id)
         : [...current, id],
     );
-  }
-
-  function movePanelSection(id: PanelSectionId, direction: "up" | "down") {
-    setSectionOrder((current) => {
-      const index = current.indexOf(id);
-      const nextIndex = direction === "up" ? index - 1 : index + 1;
-      if (index < 0 || nextIndex < 0 || nextIndex >= current.length) return current;
-
-      const next = [...current];
-      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-      return next;
-    });
   }
 
   function reorderPanelSection(sourceId: PanelSectionId, targetId: PanelSectionId) {
@@ -917,27 +904,44 @@ export function BuilderPropertiesPanel({
     reader.readAsDataURL(file);
   }
 
+  function outlineTitle(item: PaperItem) {
+    if (item.blockType === "question") {
+      return `${item.orderNum}번 ${item.questionText.replace(/\s+/g, " ").trim() || "문항"}`;
+    }
+    if (item.blockType === "section") return item.blockTitle || item.blockText || "섹션";
+    if (item.blockType === "text") return item.blockText || "텍스트";
+    if (item.blockType === "image") return item.imageAlt || "이미지";
+    return BLOCK_LABELS[item.blockType];
+  }
+
+  function outlineIcon(item: PaperItem) {
+    if (item.blockType === "question") return <FileText className="h-3.5 w-3.5" />;
+    if (item.blockType === "section") return <Heading1 className="h-3.5 w-3.5" />;
+    if (item.blockType === "text") return <Type className="h-3.5 w-3.5" />;
+    if (item.blockType === "divider") return <Rows3 className="h-3.5 w-3.5" />;
+    if (item.blockType === "spacer") return <Space className="h-3.5 w-3.5" />;
+    return <ImageIcon className="h-3.5 w-3.5" />;
+  }
+
   function panelSectionTitle(id: PanelSectionId) {
-    if (id === "actions") return "작업";
+    if (id === "outline") return "블록 목록";
     if (id === "insert") return "블록 삽입";
     if (id === "inspector") return "선택 블록";
-    if (id === "shuffle") return "문제 샘플링";
-    return "시험지 설정";
+    return "문제 샘플링";
   }
 
   function panelSectionIcon(id: PanelSectionId) {
-    if (id === "actions") return <Settings2 className="h-3.5 w-3.5 text-slate-400" />;
+    if (id === "outline") return <Layers className="h-3.5 w-3.5 text-slate-400" />;
     if (id === "insert") return <Type className="h-3.5 w-3.5 text-slate-400" />;
     if (id === "inspector") return <FileText className="h-3.5 w-3.5 text-slate-400" />;
-    if (id === "shuffle") return <Shuffle className="h-3.5 w-3.5 text-slate-400" />;
-    return <PanelTop className="h-3.5 w-3.5 text-slate-400" />;
+    return <Shuffle className="h-3.5 w-3.5 text-slate-400" />;
   }
 
   function panelSectionBadge(id: PanelSectionId) {
-    if (id === "actions" && activeItem) {
+    if (id === "outline") {
       return (
         <span className="ml-auto rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-          {BLOCK_LABELS[activeItem.blockType]}
+          {paperItems.length}
         </span>
       );
     }
@@ -954,37 +958,56 @@ export function BuilderPropertiesPanel({
   }
 
   function renderPanelSectionContent(id: PanelSectionId) {
-    if (id === "actions") {
+    if (id === "outline") {
       return (
-        <div className="grid grid-cols-4 gap-1.5">
-          <IconButton title="실행 취소" disabled={!canUndo} onClick={onUndo}>
-            <Undo2 className="h-3.5 w-3.5" />
-          </IconButton>
-          <IconButton title="다시 실행" disabled={!canRedo} onClick={onRedo}>
-            <Redo2 className="h-3.5 w-3.5" />
-          </IconButton>
-          <IconButton
-            title="선택 블록 복제"
-            disabled={!activeItem}
-            onClick={() => activeItem && onDuplicateItem(activeItem.localId)}
-          >
-            <Copy className="h-3.5 w-3.5" />
-          </IconButton>
-          <IconButton
-            title={activeLocked ? "잠금 해제" : "잠금"}
-            disabled={!activeItem}
-            active={activeLocked}
-            onClick={() => activeItem && onToggleLockItem(activeItem.localId)}
-          >
-            {activeLocked ? <Lock className="h-3.5 w-3.5" /> : <Unlock className="h-3.5 w-3.5" />}
-          </IconButton>
+        <div className="max-h-64 space-y-1 overflow-y-auto pr-1 [scrollbar-gutter:stable]">
+          {paperItems.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50/70 px-3 py-3 text-center">
+              <p className="text-[12px] font-bold text-slate-500">아직 블록이 없습니다</p>
+            </div>
+          ) : (
+            paperItems.map((item) => {
+              const selected = item.localId === activeItemId;
+              return (
+                <div
+                  key={item.localId}
+                  className={cn(
+                    "group/outline flex min-w-0 items-center gap-1.5 rounded-md border px-1.5 py-1.5 transition-colors",
+                    selected
+                      ? "border-blue-300 bg-blue-50 text-blue-700"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-slate-50",
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => onSelectItem(item.localId)}
+                    className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
+                    title={outlineTitle(item)}
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-slate-100 text-slate-500">
+                      {outlineIcon(item)}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[11px] font-bold">
+                        {outlineTitle(item)}
+                      </span>
+                      <span className="block text-[10px] font-semibold text-slate-400">
+                        {BLOCK_LABELS[item.blockType]}
+                        {item.locked ? " · 잠김" : ""}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              );
+            })
+          )}
         </div>
       );
     }
 
     if (id === "insert") {
       return (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1.5">
           <TextButton title="텍스트 삽입" onClick={() => onInsertBlock("text")}>
             <Type className="h-3.5 w-3.5" />
             텍스트
@@ -1005,7 +1028,7 @@ export function BuilderPropertiesPanel({
             type="button"
             title="이미지 삽입"
             onClick={() => imageInputRef.current?.click()}
-            className="col-span-2 flex h-8 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+            className="col-span-2 flex h-7 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
           >
             <ImageIcon className="h-3.5 w-3.5" />
             이미지
@@ -1031,19 +1054,19 @@ export function BuilderPropertiesPanel({
       ];
 
       return (
-        <div className="space-y-3">
-          <p className="text-[11px] font-semibold leading-relaxed text-slate-500">
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold leading-snug text-slate-500">
             문항 순서를 무작위로 다시 배치합니다. 잠긴 문항은 항상 자리에
             고정됩니다.
           </p>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 gap-1.5">
             {shuffleToggles.map((toggle) => (
               <button
                 key={toggle.label}
                 type="button"
                 onClick={() => toggle.set(!toggle.checked)}
                 className={cn(
-                  "flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left transition-colors",
+                  "flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 text-left transition-colors",
                   toggle.checked
                     ? "border-blue-300 bg-blue-50 text-blue-700"
                     : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
@@ -1074,43 +1097,48 @@ export function BuilderPropertiesPanel({
                   anchorBlocks: shuffleAnchorBlocks,
                 })
               }
-              className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
+              className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
             >
               <Shuffle className="h-3.5 w-3.5" />
               샘플링
-            </button>
-            <button
-              type="button"
-              disabled={!canUndo}
-              onClick={onUndo}
-              title="되돌리기"
-              aria-label="되돌리기"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              <Undo2 className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              disabled={!canRedo}
-              onClick={onRedo}
-              title="앞으로 돌리기"
-              aria-label="앞으로 돌리기"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              <Redo2 className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       );
     }
 
-    if (id === "template") return templateControls;
-
     return (
       <>
         {!hasActiveItem && (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-3 py-4 text-center">
+          <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50/70 px-3 py-3 text-center">
             <p className="text-[12px] font-bold text-slate-500">선택 없음</p>
+          </div>
+        )}
+
+        {activeItem && (
+          <div className="mb-3 grid grid-cols-2 gap-1.5">
+            <button
+              type="button"
+              onClick={() => onDuplicateItem(activeItem.localId)}
+              className="flex h-7 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
+            >
+              <Copy className="h-3.5 w-3.5" />
+              복제
+            </button>
+            <button
+              type="button"
+              onClick={() => onToggleLockItem(activeItem.localId)}
+              aria-pressed={activeLocked}
+              className={cn(
+                "flex h-7 items-center justify-center gap-1 rounded-md border px-2 text-[11px] font-bold transition-colors",
+                activeLocked
+                  ? "border-blue-300 bg-blue-50 text-blue-700"
+                  : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700",
+              )}
+            >
+              {activeLocked ? <Lock className="h-3.5 w-3.5" /> : <Unlock className="h-3.5 w-3.5" />}
+              {activeLocked ? "잠김" : "잠금"}
+            </button>
           </div>
         )}
 
@@ -1123,8 +1151,8 @@ export function BuilderPropertiesPanel({
         )}
 
         {activeItem && activeIsQuestion && (
-          <div className="space-y-4">
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50/70">
+          <div className="space-y-3">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70">
               <textarea
                 key={activeItem.localId}
                 ref={questionPreviewBodyRef}
@@ -1134,7 +1162,7 @@ export function BuilderPropertiesPanel({
                   updateQuestionPreviewMaxHeight(event.currentTarget);
                   updateActiveItem({ questionText: event.currentTarget.value });
                 }}
-                className="block w-full resize-none overflow-y-auto overscroll-contain border-0 bg-transparent px-3 py-2.5 text-[12px] font-bold leading-relaxed text-slate-700 outline-none transition-colors focus:bg-white disabled:cursor-not-allowed disabled:text-slate-400 [scrollbar-gutter:stable]"
+                className="block w-full resize-none overflow-y-auto overscroll-contain border-0 bg-transparent px-2.5 py-2 text-[12px] font-bold leading-relaxed text-slate-700 outline-none transition-colors focus:bg-white disabled:cursor-not-allowed disabled:text-slate-400 [scrollbar-gutter:stable]"
                 style={{ height: questionPreviewHeight }}
                 aria-label="문항 텍스트 편집"
                 spellCheck={false}
@@ -1150,69 +1178,93 @@ export function BuilderPropertiesPanel({
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <NumberStepper
-                label="배점"
-                min={1}
-                max={100}
-                value={activeItem.points}
-                disabled={activeLocked}
-                onChange={(points) => updateActiveItem({ points })}
-              />
-              <NumberStepper
-                label="서술형/주관식 답란"
-                min={0}
-                max={12}
-                value={activeItem.answerSpaceLines}
-                disabled={activeLocked}
-                onChange={(answerSpaceLines) => updateActiveItem({ answerSpaceLines })}
-              />
-              {activeItem.options.length > 0 && (
-                <NumberStepper
-                  label="객관식 추가 선지"
-                  min={0}
-                  max={10}
-                  value={activeItem.objectiveAnswerSlots}
-                  disabled={activeLocked}
-                  onChange={updateObjectiveAnswerSlots}
-                />
+            <NumberStepper
+              label="선택 문항 배점"
+              min={1}
+              max={100}
+              value={activeItem.points}
+              disabled={activeLocked || autoPointTotal !== null}
+              onChange={(points) => updateActiveItem({ points })}
+            />
+            {autoPointTotal !== null && (
+              <p className="-mt-1 text-[10px] font-semibold leading-snug text-slate-400">
+                자동 배점 적용 중 · 목표 총점 {autoPointTotal}점
+              </p>
+            )}
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50/60">
+              <button
+                type="button"
+                onClick={() => setAdvancedQuestionOpen((open) => !open)}
+                className="flex h-8 w-full items-center justify-between px-2.5 text-left text-[11px] font-bold text-slate-500 transition-colors hover:bg-white"
+                aria-expanded={advancedQuestionOpen}
+              >
+                고급 답란 설정
+                {advancedQuestionOpen ? (
+                  <ChevronUp className="h-3.5 w-3.5" />
+                ) : (
+                  <ChevronDown className="h-3.5 w-3.5" />
+                )}
+              </button>
+              {advancedQuestionOpen && (
+                <div className="space-y-2 border-t border-slate-200 px-2.5 py-2">
+                  <NumberStepper
+                    label="서술형/주관식 답란"
+                    min={0}
+                    max={12}
+                    value={activeItem.answerSpaceLines}
+                    disabled={activeLocked}
+                    onChange={(answerSpaceLines) => updateActiveItem({ answerSpaceLines })}
+                  />
+                  {activeItem.options.length > 0 && (
+                    <>
+                      <NumberStepper
+                        label="객관식 추가 선지"
+                        min={0}
+                        max={10}
+                        value={activeItem.objectiveAnswerSlots}
+                        disabled={activeLocked}
+                        onChange={updateObjectiveAnswerSlots}
+                      />
+                      {activeItem.objectiveAnswerSlots > 0 && (
+                        <div>
+                          <p className="mb-1.5 text-[11px] font-bold text-slate-500">
+                            추가 선지 텍스트
+                          </p>
+                          <div className="space-y-1.5">
+                            {Array.from({
+                              length: Math.max(1, Math.min(10, activeItem.objectiveAnswerSlots)),
+                            }).map((_, slotIndex) => {
+                              const optionIndex = activeItem.options.length + slotIndex;
+                              return (
+                                <label
+                                  key={`${activeItem.localId}-objective-text-${slotIndex}`}
+                                  className="flex items-center gap-2"
+                                >
+                                  <span className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md bg-white text-[11px] font-black text-slate-600">
+                                    {optionOrdinalLabel(optionIndex)}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    disabled={activeLocked}
+                                    value={activeItem.objectiveAnswerTexts?.[slotIndex] || ""}
+                                    onChange={(event) =>
+                                      updateObjectiveAnswerText(slotIndex, event.target.value)
+                                    }
+                                    placeholder="추가 선지 입력"
+                                    className="h-8 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
+                                  />
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               )}
             </div>
-
-            {activeItem.options.length > 0 && activeItem.objectiveAnswerSlots > 0 && (
-              <div>
-                <p className="mb-2 text-[11px] font-bold text-slate-500">
-                  추가 선지 텍스트
-                </p>
-                <div className="space-y-2">
-                  {Array.from({
-                    length: Math.max(1, Math.min(10, activeItem.objectiveAnswerSlots)),
-                  }).map((_, slotIndex) => {
-                    const optionIndex = activeItem.options.length + slotIndex;
-                    return (
-                      <label
-                        key={`${activeItem.localId}-objective-text-${slotIndex}`}
-                        className="flex items-center gap-2"
-                      >
-                        <span className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md bg-slate-100 text-[11px] font-black text-slate-600">
-                          {optionOrdinalLabel(optionIndex)}
-                        </span>
-                        <input
-                          type="text"
-                          disabled={activeLocked}
-                          value={activeItem.objectiveAnswerTexts?.[slotIndex] || ""}
-                          onChange={(event) =>
-                            updateObjectiveAnswerText(slotIndex, event.target.value)
-                          }
-                          placeholder="추가 선지 입력"
-                          className="h-8 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
-                        />
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             <div>
               <p className="mb-2 text-[11px] font-bold text-slate-500">흐름</p>
@@ -1263,7 +1315,7 @@ export function BuilderPropertiesPanel({
                 type="button"
                 disabled={activeLocked}
                 onClick={() => onUngroupItem(activeItem.localId)}
-                className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[11px] font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-45"
+                className="flex h-7 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-45"
               >
                 <Ungroup className="h-3.5 w-3.5" />
                 묶음 해제
@@ -1271,7 +1323,7 @@ export function BuilderPropertiesPanel({
               <button
                 type="button"
                 onClick={onRegroupByPassage}
-                className="flex h-8 items-center justify-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 text-[11px] font-bold text-blue-700 hover:bg-blue-100"
+                className="flex h-7 items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 text-[11px] font-bold text-blue-700 hover:bg-blue-100"
               >
                 <Group className="h-3.5 w-3.5" />
                 지문별
@@ -1285,7 +1337,7 @@ export function BuilderPropertiesPanel({
             type="button"
             disabled={activeLocked}
             onClick={() => onRemoveItem(activeItem.localId)}
-            className="mt-4 flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 text-[12px] font-bold text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-45"
+            className="mt-3 flex h-8 w-full items-center justify-center gap-1.5 rounded-md border border-rose-200 bg-rose-50 text-[12px] font-bold text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-45"
           >
             <Trash2 className="h-3.5 w-3.5" />
             블록 삭제
@@ -1296,7 +1348,95 @@ export function BuilderPropertiesPanel({
   }
 
   return (
-    <aside className="hidden min-w-0 flex-col overflow-hidden border-l border-slate-200 bg-white lg:flex">
+    <>
+      <style jsx global>{`
+        @keyframes exam-builder-settings-neon-glow {
+          0%,
+          100% {
+            opacity: 0.28;
+            transform: scale(0.82);
+          }
+          50% {
+            opacity: 0.9;
+            transform: scale(1.16);
+          }
+        }
+
+        @keyframes exam-builder-settings-button-breathe {
+          0%,
+          100% {
+            box-shadow:
+              0 0 0 1px rgba(147, 197, 253, 0.42),
+              0 8px 18px -18px rgba(37, 99, 235, 0.65);
+          }
+          50% {
+            box-shadow:
+              0 0 0 1px rgba(96, 165, 250, 0.82),
+              0 0 22px -7px rgba(37, 99, 235, 0.9);
+          }
+        }
+
+        @keyframes exam-builder-settings-ring-breathe {
+          0%,
+          100% {
+            opacity: 0.12;
+            transform: scale(0.94);
+          }
+          50% {
+            opacity: 0.58;
+            transform: scale(1.22);
+          }
+        }
+
+        .exam-builder-settings-nudge {
+          isolation: isolate;
+          overflow: visible;
+          animation: exam-builder-settings-button-breathe 3.8s ease-in-out infinite;
+        }
+
+        .exam-builder-settings-nudge::before {
+          content: "";
+          position: absolute;
+          inset: -10px;
+          z-index: -1;
+          border-radius: 9999px;
+          background: radial-gradient(
+            circle,
+            rgba(59, 130, 246, 0.55) 0%,
+            rgba(96, 165, 250, 0.28) 42%,
+            rgba(59, 130, 246, 0) 74%
+          );
+          filter: blur(9px);
+          pointer-events: none;
+          animation: exam-builder-settings-neon-glow 3.8s ease-in-out infinite;
+        }
+
+        .exam-builder-settings-nudge::after {
+          content: "";
+          position: absolute;
+          inset: -4px;
+          z-index: -1;
+          border-radius: 9999px;
+          border: 1px solid rgba(96, 165, 250, 0.44);
+          pointer-events: none;
+          animation: exam-builder-settings-ring-breathe 3.8s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .exam-builder-settings-nudge,
+          .exam-builder-settings-nudge::before,
+          .exam-builder-settings-nudge::after {
+            animation: none;
+          }
+
+          .exam-builder-settings-nudge::before {
+            opacity: 0.48;
+            transform: scale(1.02);
+          }
+        }
+      `}</style>
+
+      <aside className="hidden min-w-0 flex-col overflow-hidden border-l border-slate-200 bg-white lg:flex">
       <input
         ref={imageInputRef}
         type="file"
@@ -1305,22 +1445,32 @@ export function BuilderPropertiesPanel({
         onChange={handleImageSelected}
       />
 
-      <div className="shrink-0 border-b border-slate-200 px-4 py-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
+      <div className="flex h-11 shrink-0 items-center border-b border-slate-200 px-3">
+        <div className="flex w-full items-center justify-between gap-3">
+          <div className="min-w-0 leading-tight">
             <p className="truncate text-[13px] font-black text-slate-800">편집 패널</p>
-            <p className="mt-0.5 text-[11px] font-semibold text-slate-400">
-              {paperItemsCount}블록 · {totalPoints}점
+            <p className="text-[11px] font-semibold text-slate-400">
+              {paperItemsCount}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
             </p>
           </div>
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500">
-            <Settings2 className="h-4 w-4" />
-          </div>
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            title="시험지 설정"
+            aria-label="시험지 설정"
+            className={cn(
+              "relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800",
+              settingsNudgeActive &&
+                "exam-builder-settings-nudge border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-800",
+            )}
+          >
+            <Settings className="h-4 w-4" />
+          </button>
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4 [scrollbar-gutter:stable]">
-        {sectionOrder.map((sectionId, index) => (
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-gutter:stable]">
+        {sectionOrder.map((sectionId) => (
           <PanelSection
             key={sectionId}
             id={sectionId}
@@ -1328,12 +1478,9 @@ export function BuilderPropertiesPanel({
             badge={panelSectionBadge(sectionId)}
             icon={panelSectionIcon(sectionId)}
             collapsed={collapsedSections.has(sectionId)}
-            canMoveUp={index > 0}
-            canMoveDown={index < sectionOrder.length - 1}
             dragging={draggingSectionId === sectionId}
             dragOver={dragOverSectionId === sectionId && draggingSectionId !== sectionId}
             onToggle={togglePanelSection}
-            onMove={movePanelSection}
             onDragStart={handlePanelSectionDragStart}
             onDragOver={handlePanelSectionDragOver}
             onDrop={handlePanelSectionDrop}
@@ -1343,6 +1490,7 @@ export function BuilderPropertiesPanel({
           </PanelSection>
         ))}
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

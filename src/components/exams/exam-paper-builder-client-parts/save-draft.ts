@@ -6,12 +6,15 @@ import { shouldForceSourcePassage } from "../paper-builder/passage-policy";
 import type {
   ClassOption,
   Density,
+  PaperCover,
   PaperItem,
   PaperSize,
   PaperTemplate,
   PassageStyle,
   SchoolOption,
 } from "../paper-builder/types";
+
+const EXAM_MANAGEMENT_PATH = "/director/workbench/exams";
 
 // ---------------------------------------------------------------------------
 // `saveExamPaperDraft` 호출을 한 곳에 묶어두는 헬퍼.
@@ -21,7 +24,9 @@ import type {
 interface SaveDraftInput {
   academyId: string;
   savedExamId: string | null;
+  successMessage?: string;
   title: string;
+  type?: string;
   classId: string;
   schoolId: string;
   grade: string;
@@ -29,6 +34,7 @@ interface SaveDraftInput {
   examType: string;
   examDate: string;
   totalPoints: number;
+  autoPointTotal: number | null;
   template: PaperTemplate;
   paperSize: PaperSize;
   columns: 1 | 2;
@@ -41,6 +47,7 @@ interface SaveDraftInput {
   studentNameLabel: string;
   instructions: string;
   academyLogoDataUrl: string | null;
+  cover: PaperCover;
   paperItems: PaperItem[];
   classes: ClassOption[];
   schools: SchoolOption[];
@@ -113,7 +120,7 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
   const result = await saveExamPaperDraft(input.academyId, {
     examId: input.savedExamId,
     title: input.title,
-    type: "OFFLINE",
+    type: input.type || "OFFLINE",
     classId: input.classId || null,
     schoolId: input.schoolId || null,
     grade: input.grade ? Number(input.grade) : null,
@@ -121,6 +128,9 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
     examType: input.examType || null,
     examDate: input.examDate || null,
     totalPoints: input.totalPoints || questionItems.length,
+    scoring: {
+      autoPointTotal: input.autoPointTotal,
+    },
     template: input.template,
     layout: {
       paperSize: input.paperSize,
@@ -140,6 +150,7 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       instructions: input.instructions,
       academyLogoDataUrl: input.academyLogoDataUrl,
     },
+    cover: input.cover,
     items: questionItems.map((item) => ({
       localId: item.localId,
       blockType: "question",
@@ -169,6 +180,13 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
     return { success: false, id: null };
   }
 
-  toast.success("시험지 관리에 초안으로 저장되었습니다.");
+  toast.success(input.successMessage || "시험지 관리에 저장되었습니다.", {
+    action: {
+      label: "시험지 관리로 가기",
+      onClick: () => {
+        window.location.assign(EXAM_MANAGEMENT_PATH);
+      },
+    },
+  });
   return { success: true, id: result.id || null };
 }

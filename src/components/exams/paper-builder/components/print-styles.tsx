@@ -93,6 +93,12 @@ export function PrintStyles({ paperSize }: { paperSize: PaperSize }) {
           visibility: hidden !important;
         }
 
+        /* 표지(cover)는 편집 모드 그대로 인쇄되므로, 값이 비어 자리표시자(placeholder)만
+           남은 편집 필드는 인쇄에서 제거한다(EditableText 가 빈 값일 때 text-slate-300 부여). */
+        .exam-cover-page .editable-paper-field.text-slate-300 {
+          display: none !important;
+        }
+
         .exam-a4-page {
           width: ${paperSpec.widthMm}mm !important;
           height: ${paperSpec.heightMm}mm !important;

@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Calendar, Check, Eye, Trash2 } from "lucide-react";
+import { Calendar, Check, Eye, PencilLine, Trash2 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
@@ -18,6 +18,7 @@ interface ExamListRowProps {
   selected: boolean;
   onToggleSelect: (id: string, shift: boolean) => void;
   onClick: (id: string) => void;
+  onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
@@ -26,6 +27,7 @@ export function ExamListRow({
   selected,
   onToggleSelect,
   onClick,
+  onEdit,
   onDelete,
 }: ExamListRowProps) {
   const dragRef = useRef<HTMLDivElement>(null);
@@ -131,7 +133,17 @@ export function ExamListRow({
         onClick={(e) => e.stopPropagation()}
       >
         <button
+          onClick={() => onEdit(exam.id)}
+          title="시험지 수정"
+          aria-label="시험지 수정"
+          className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-blue-50 transition-colors"
+        >
+          <PencilLine className="w-3.5 h-3.5 text-blue-500" />
+        </button>
+        <button
           onClick={() => onClick(exam.id)}
+          title="상세 보기"
+          aria-label="상세 보기"
           className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-slate-100 transition-colors"
         >
           <Eye className="w-3.5 h-3.5 text-slate-400" />

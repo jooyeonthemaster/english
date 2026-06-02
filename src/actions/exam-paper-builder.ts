@@ -83,6 +83,9 @@ export interface ExamPaperBuilderSaveInput {
     passageStyle: "boxed" | "plain" | "underlined";
     pageNumberStyle: "center" | "outside" | "none";
   };
+  scoring?: {
+    autoPointTotal?: number | null;
+  };
   header: {
     subtitle?: string;
     schoolName?: string;
@@ -90,6 +93,14 @@ export interface ExamPaperBuilderSaveInput {
     studentNameLabel?: string;
     instructions?: string;
     academyLogoDataUrl?: string | null;
+  };
+  cover?: {
+    enabled: boolean;
+    template: "classic" | "band" | "minimal";
+    eyebrow: string;
+    footnote: string;
+    showLogo: boolean;
+    showInfo: boolean;
   };
   items: ExamPaperBuilderItemInput[];
   blocks?: ExamPaperBuilderBlockInput[];
@@ -307,14 +318,32 @@ export async function saveExamPaperDraft(
       if (!school) return { success: false as const, error: "학교를 찾을 수 없습니다." };
     }
 
+    let existingExam: {
+      id: string;
+      status: string;
+      type: string;
+      duration: number | null;
+      shuffleQuestions: boolean;
+      shuffleOptions: boolean;
+      showResults: boolean;
+    } | null = null;
+
     if (input.examId) {
-      const existing = await prisma.exam.findFirst({
+      existingExam = await prisma.exam.findFirst({
         where: { id: input.examId, academyId: staff.academyId },
-        select: { id: true, status: true },
+        select: {
+          id: true,
+          status: true,
+          type: true,
+          duration: true,
+          shuffleQuestions: true,
+          shuffleOptions: true,
+          showResults: true,
+        },
       });
-      if (!existing) return { success: false as const, error: "시험지를 찾을 수 없습니다." };
-      if (existing.status !== "DRAFT") {
-        return { success: false as const, error: "초안 상태의 시험지만 편집할 수 있습니다." };
+      if (!existingExam) return { success: false as const, error: "시험지를 찾을 수 없습니다." };
+      if (existingExam.status === "ARCHIVED") {
+        return { success: false as const, error: "보관된 시험지는 편집할 수 없습니다." };
       }
     }
 
@@ -322,13 +351,34 @@ export async function saveExamPaperDraft(
       ...input.layout,
       paperSize: input.layout.paperSize === "B4" ? "B4" : "A4",
     };
+    const numericAutoPointTotal = Number(input.scoring?.autoPointTotal);
+    const normalizedScoring = {
+      autoPointTotal:
+        Number.isFinite(numericAutoPointTotal) && numericAutoPointTotal >= 1
+          ? Math.min(999, Math.round(numericAutoPointTotal))
+          : null,
+    };
 
     const settings = JSON.stringify({
       source: "exam-paper-builder-v2",
       version: 2,
       template: input.template,
+      scoring: normalizedScoring,
       layout: normalizedLayout,
       header: input.header,
+      cover: input.cover
+        ? {
+            enabled: Boolean(input.cover.enabled),
+            template:
+              input.cover.template === "band" || input.cover.template === "minimal"
+                ? input.cover.template
+                : "classic",
+            eyebrow: String(input.cover.eyebrow ?? ""),
+            footnote: String(input.cover.footnote ?? ""),
+            showLogo: input.cover.showLogo !== false,
+            showInfo: input.cover.showInfo !== false,
+          }
+        : undefined,
       items: normalizedItems,
       blocks: normalizedBlocks,
       savedAt: new Date().toISOString(),
@@ -347,21 +397,19 @@ export async function saveExamPaperDraft(
       }));
 
     const examData = {
-      academyId: staff.academyId,
       title: input.title.trim(),
-      type: input.type || "OFFLINE",
+      type: existingExam?.type || input.type || "OFFLINE",
       classId: input.classId || null,
       schoolId: input.schoolId || null,
       grade: input.grade || null,
       semester: input.semester || null,
       examType: input.examType || null,
       examDate: input.examDate ? new Date(input.examDate) : null,
-      duration: input.duration || null,
+      duration: input.duration || existingExam?.duration || null,
       totalPoints: input.totalPoints || normalizedItems.reduce((sum, item) => sum + item.points, 0),
-      shuffleQuestions: false,
-      shuffleOptions: false,
-      showResults: true,
-      status: "DRAFT",
+      shuffleQuestions: existingExam?.shuffleQuestions ?? false,
+      shuffleOptions: existingExam?.shuffleOptions ?? false,
+      showResults: existingExam?.showResults ?? true,
       settings,
     };
 
@@ -369,11 +417,22 @@ export async function saveExamPaperDraft(
       const saved = input.examId
         ? await tx.exam.update({
             where: { id: input.examId },
-            data: examData,
+            // 재저장(수정)이므로 저장 횟수와 수정 횟수를 모두 +1.
+            data: {
+              ...examData,
+              saveCount: { increment: 1 },
+              editCount: { increment: 1 },
+            },
             select: { id: true },
           })
         : await tx.exam.create({
-            data: examData,
+            data: {
+              ...examData,
+              academyId: staff.academyId,
+              status: "DRAFT",
+              // 최초 생성도 저장 1회로 집계. 수정 횟수는 0에서 시작.
+              saveCount: 1,
+            },
             select: { id: true },
           });
 
@@ -391,6 +450,7 @@ export async function saveExamPaperDraft(
     revalidatePath("/director/exams");
     revalidatePath("/director/workbench/exams");
     revalidatePath(`/director/exams/${exam.id}`);
+    revalidatePath(`/director/workbench/exams/${exam.id}/edit`);
     return { success: true as const, id: exam.id };
   } catch (error) {
     const message =

@@ -1,11 +1,13 @@
 "use client";
 
 import { A4PaperPage } from "../paper-builder/components/a4-paper-page";
+import { ExamCoverPage } from "../paper-builder/components/exam-cover-page";
 import type {
   ClassOption,
   Density,
   DropPlacement,
   HeaderPatch,
+  PaperCover,
   PaperItem,
   PaperPage,
   PaperSize,
@@ -38,6 +40,8 @@ interface PreviewPagesProps {
   showAnswerSpace: boolean;
   showPassageTitle: boolean;
   showQuestionMeta: boolean;
+  cover: PaperCover;
+  updateCover: (patch: Partial<PaperCover>) => void;
   activeItemId: string | null;
   setActiveItemId: (id: string | null) => void;
   updateHeader: (patch: HeaderPatch) => void;
@@ -83,8 +87,13 @@ export function PreviewPages(props: PreviewPagesProps) {
     classes,
     schoolId,
     classId,
+    cover,
+    updateCover,
   } = props;
   void paperItems;
+
+  const schoolName = schools.find((school) => school.id === schoolId)?.name || "";
+  const resolvedClassName = classes.find((cls) => cls.id === classId)?.name || "";
 
   return (
     <div
@@ -102,6 +111,23 @@ export function PreviewPages(props: PreviewPagesProps) {
           transformOrigin: "top left",
         }}
       >
+        {cover.enabled && (
+          <div className="exam-preview-page-frame w-full" data-exam-cover-frame="true">
+            <ExamCoverPage
+              paperSize={props.paperSize}
+              cover={cover}
+              title={props.title}
+              subtitle={props.subtitle}
+              academyLogoDataUrl={props.academyLogoDataUrl}
+              schoolName={schoolName}
+              className={resolvedClassName}
+              examDate={props.examDate}
+              onHeaderChange={props.updateHeader}
+              onCoverChange={updateCover}
+              readOnly={props.readOnly}
+            />
+          </div>
+        )}
         {paperPages.map((pageColumns, pageIndex) => (
           <div
             key={pageIndex}
@@ -144,8 +170,8 @@ export function PreviewPages(props: PreviewPagesProps) {
               setDragOverPartKey={props.setDragOverPartKey}
               dragPlacement={props.dragPlacement}
               setDragPlacement={props.setDragPlacement}
-              schoolName={schools.find((school) => school.id === schoolId)?.name || ""}
-              className={classes.find((cls) => cls.id === classId)?.name || ""}
+              schoolName={schoolName}
+              className={resolvedClassName}
               examDate={props.examDate}
               readOnly={props.readOnly}
             />

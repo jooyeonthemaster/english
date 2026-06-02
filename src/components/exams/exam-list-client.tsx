@@ -1,10 +1,16 @@
 // @ts-nocheck
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ClipboardList, GraduationCap, Loader2, Plus, Trash2 } from "lucide-react";
+import {
+  ClipboardList,
+  GraduationCap,
+  Grid2x2,
+  List,
+  Loader2,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   addExamsToCollection,
@@ -15,7 +21,6 @@ import {
   removeExamsFromCollection,
   updateExamCollection,
 } from "@/actions/exams";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +36,10 @@ import {
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
-import { SelectionToolbar } from "@/components/workbench/shared/selection-toolbar";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 
 // Hooks
 import { useSelection } from "@/components/workbench/hooks/use-selection";
@@ -39,6 +47,7 @@ import { useFolderManager } from "@/hooks/use-folder-manager";
 
 // Exam card
 import { ExamFileCard } from "./exam-file-card";
+import { ExamQuickViewDialog } from "./exam-quick-view-dialog";
 
 import { ExamListRow } from "./exam-list-client-parts/exam-list-row";
 import { FiltersToolbar } from "./exam-list-client-parts/filters-toolbar";
@@ -62,6 +71,72 @@ const folderActions = {
   removeFromCollection: removeExamsFromCollection,
 };
 
+const EXAM_VIEW_OPTIONS = [
+  { value: "grid", label: "그리드 보기", Icon: Grid2x2 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<"grid" | "list">>;
+
+// ---------------------------------------------------------------------------
+// Shared chrome helpers (mirrors question-bank-client)
+// ---------------------------------------------------------------------------
+
+function useMeasuredHeight(enabled: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      setHeight(Math.ceil(el.getBoundingClientRect().height));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [enabled]);
+
+  return [ref, height] as const;
+}
+
+function SelectAllCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+  title,
+  ariaLabel,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  disabled: boolean;
+  onChange: () => void;
+  title: string;
+  ariaLabel: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
+      className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  );
+}
+
 // ---------------------------------------------------------------------------
 // 시험 관리 메인 페이지
 // ---------------------------------------------------------------------------
@@ -78,6 +153,8 @@ export function ExamListClient({
   const [classFilter, setClassFilter] = useState("ALL");
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   // Optimistically hide deleted exams until router.refresh() updates props —
@@ -178,6 +255,11 @@ export function ExamListClient({
     [folder, selection],
   );
 
+  const openQuickView = useCallback((examId: string) => {
+    setQuickViewExamId(examId);
+    setQuickViewOpen(true);
+  }, []);
+
   // ─── Delete handler ───
   async function handleDelete() {
     if (!deleteId) return;
@@ -254,8 +336,13 @@ export function ExamListClient({
     }
   }, [selection, bulkDeleting, router]);
 
-  // ─── "Add to folder" extra action for SelectionToolbar ───
-  const addToFolderAction = (
+  const totalCount = exams.length;
+
+  // ─── Sticky measurement so the toolbar row pins below the folder card ───
+  const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
+
+  // ─── Selection-gated bulk actions (left side of toolbar) ───
+  const selectionExtraActions = (
     <>
       <MoveOrCopyFolderPicker
         collections={folder.collections}
@@ -264,8 +351,6 @@ export function ExamListClient({
         onCopy={onAddToFolder}
         onMove={onMoveToFolder}
       />
-
-      <span className="text-slate-300">|</span>
 
       {/* Bulk delete */}
       <button
@@ -284,108 +369,135 @@ export function ExamListClient({
     </>
   );
 
-  const totalCount = exams.length;
+  // ─── Toolbar row (mirrors question-bank-client) ───
+  const toolbarRow = (
+    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+      <div className="flex items-center gap-2">
+        <SelectAllCheckbox
+          checked={selection.isAllSelected && selection.selectedIds.size > 0}
+          indeterminate={
+            selection.selectedIds.size > 0 && !selection.isAllSelected
+          }
+          disabled={displayedExams.length === 0}
+          onChange={selection.selectAll}
+          title={`${selection.selectedIds.size}부 선택`}
+          ariaLabel={selection.isAllSelected ? "전체 해제" : "전체 선택"}
+        />
+        <div
+          className={
+            "flex items-center gap-3 " +
+            (selection.selectedIds.size > 0
+              ? ""
+              : "pointer-events-none opacity-50")
+          }
+          aria-disabled={selection.selectedIds.size === 0}
+        >
+          {selectionExtraActions}
+          {folder.activeFolder ? (
+            <button
+              type="button"
+              onClick={onRemoveFromFolder}
+              title="폴더에서 삭제"
+              aria-label="폴더에서 삭제"
+              className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              폴더에서 삭제
+            </button>
+          ) : null}
+        </div>
+      </div>
+      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+        <FiltersToolbar
+          search={search}
+          setSearch={setSearch}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          classFilter={classFilter}
+          setClassFilter={setClassFilter}
+          classes={classes}
+        />
+        <ViewModeCycleButton
+          value={viewType}
+          options={EXAM_VIEW_OPTIONS}
+          onChange={setViewType}
+        />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]">
-      {/* Page header bar removed — identity + CTAs now live inside the
-          sticky FolderSection card. */}
-
+    <div className="flex flex-col min-h-[calc(100vh-64px)]">
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pt-0 pb-4">
+      <div className="-mx-6 flex-1 bg-[#F4F6F9] px-6 pt-2 pb-4 sm:px-8">
         {exams.length === 0 ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <GraduationCap className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">등록된 시험이 없습니다</p>
-            <p className="text-sm text-slate-400 mt-1">시험을 만들어 문제를 관리하세요</p>
-            <div className="flex items-center justify-center gap-2 mt-4">
-              <Link href="/director/exams/create">
-                <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
-                  <Plus className="w-3.5 h-3.5 mr-1.5" />
-                  시험 만들기
-                </Button>
-              </Link>
-            </div>
+            <p className="text-sm text-slate-400 mt-1">
+              시험을 만들어 문제를 관리하세요
+            </p>
           </div>
         ) : (
-          <>
-            {/* Folders section — selection toolbar is embedded inside so it
-                inherits the section's sticky positioning and stays pinned
-                while the grid below scrolls. */}
-            <FolderSection
-              childFolders={folder.childFolders}
-              activeFolder={folder.activeFolder}
-              dragItemType="exam"
-              dragItemIdKey="examId"
-              itemCountLabel="시험"
-              showNewFolder={folder.showNewFolder}
-              newFolderName={folder.newFolderName}
-              onNewFolderNameChange={folder.setNewFolderName}
-              onShowNewFolder={folder.setShowNewFolder}
-              onCreateFolder={folder.handleCreateFolder}
-              onNavigateToFolder={onFolderClick}
-              onRenameFolder={folder.handleRenameFolder}
-              onDeleteFolder={folder.handleDeleteFolder}
-              onDragToFolder={onDragToFolder}
-              onDragToRoot={onDragToRoot}
-              breadcrumbPath={folder.breadcrumbPath}
-              onNavigateToRoot={() => {
-                folder.setActiveFolder(null);
-                selection.clearSelection();
-              }}
-              useCardInsideFolder={true}
-              rootLabel="전체 시험"
-              toolbar={
-                <FiltersToolbar
-                  search={search}
-                  setSearch={setSearch}
-                  typeFilter={typeFilter}
-                  setTypeFilter={setTypeFilter}
-                  statusFilter={statusFilter}
-                  setStatusFilter={setStatusFilter}
-                  classFilter={classFilter}
-                  setClassFilter={setClassFilter}
-                  viewType={viewType}
-                  setViewType={setViewType}
-                  classes={classes}
-                />
-              }
-              pageHeader={{
-                icon: <GraduationCap className="h-3.5 w-3.5" />,
-                title: "시험 관리",
-                totalCount,
-                itemLabel: "시험",
-                itemUnit: "부",
-              }}
-              selectionBar={
-                <SelectionToolbar
-                  embedded
-                  selectedCount={selection.selectedIds.size}
-                  totalCount={displayedExams.length}
-                  isAllSelected={selection.isAllSelected}
-                  onSelectAll={selection.selectAll}
-                  onClearSelection={selection.clearSelection}
-                  activeFolder={folder.activeFolder}
-                  onRemoveFromFolder={onRemoveFromFolder}
-                  extraActions={addToFolderAction}
-                  itemUnit="부"
-                />
-              }
-            />
+          <section className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+            {/* Sticky layer 1 — folder section (page identity + folders) */}
+            <div
+              ref={folderStickyRef}
+              className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
+            >
+              <FolderSection
+                embedded
+                childFolders={folder.childFolders}
+                activeFolder={folder.activeFolder}
+                dragItemType="exam"
+                dragItemIdKey="examId"
+                itemCountLabel="시험"
+                showNewFolder={folder.showNewFolder}
+                newFolderName={folder.newFolderName}
+                onNewFolderNameChange={folder.setNewFolderName}
+                onShowNewFolder={folder.setShowNewFolder}
+                onCreateFolder={folder.handleCreateFolder}
+                onNavigateToFolder={onFolderClick}
+                onRenameFolder={folder.handleRenameFolder}
+                onDeleteFolder={folder.handleDeleteFolder}
+                onDragToFolder={onDragToFolder}
+                onDragToRoot={onDragToRoot}
+                breadcrumbPath={folder.breadcrumbPath}
+                onNavigateToRoot={() => {
+                  folder.setActiveFolder(null);
+                  selection.clearSelection();
+                }}
+                useCardInsideFolder={true}
+                rootLabel="전체 시험"
+                enableFolderControls
+                allFolders={folder.collections}
+                storageKey="exams"
+                treatRootAsFolder
+                pageHeader={{
+                  icon: <GraduationCap className="h-3.5 w-3.5" />,
+                  parentLabel: "시험 관리",
+                  title: "전체 시험",
+                  totalCount,
+                  itemLabel: "시험",
+                  itemUnit: "부",
+                }}
+              />
+            </div>
 
-            {/* Exams section */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-[13px] font-semibold text-slate-600">
-                  시험지
-                  <span className="ml-1.5 text-[11px] text-slate-400 font-normal">
-                    {displayedExams.length}부
-                  </span>
-                </h3>
-              </div>
+            {/* Sticky layer 2 — selection + filter toolbar */}
+            <div
+              style={{ top: folderStickyHeight }}
+              className="sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90"
+            >
+              {toolbarRow}
+            </div>
 
+            {/* Cards / list */}
+            <div className="min-w-0 px-4 pb-3 pt-3 sm:px-5">
               {displayedExams.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="py-12 text-center">
                   <ClipboardList className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
                     {folder.activeFolder
@@ -407,7 +519,10 @@ export function ExamListClient({
                       exam={exam}
                       selected={selection.selectedIds.has(exam.id)}
                       onToggleSelect={selection.toggleSelect}
-                      onClick={(id) => router.push(`/director/exams/${id}`)}
+                      onClick={openQuickView}
+                      onEdit={(id) =>
+                        router.push(`/director/workbench/exams/${id}/edit`)
+                      }
                     />
                   ))}
                 </div>
@@ -420,14 +535,17 @@ export function ExamListClient({
                       exam={exam}
                       selected={selection.selectedIds.has(exam.id)}
                       onToggleSelect={selection.toggleSelect}
-                      onClick={(id) => router.push(`/director/exams/${id}`)}
+                      onClick={openQuickView}
+                      onEdit={(id) =>
+                        router.push(`/director/workbench/exams/${id}/edit`)
+                      }
                       onDelete={setDeleteId}
                     />
                   ))}
                 </div>
               )}
             </div>
-          </>
+          </section>
         )}
       </div>
 
@@ -488,6 +606,12 @@ export function ExamListClient({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ExamQuickViewDialog
+        examId={quickViewExamId}
+        open={quickViewOpen}
+        onOpenChange={setQuickViewOpen}
+      />
     </div>
   );
 }

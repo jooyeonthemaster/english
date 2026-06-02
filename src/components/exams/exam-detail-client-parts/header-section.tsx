@@ -9,6 +9,7 @@ import {
   Download,
   FileText,
   Pencil,
+  PencilLine,
   Send,
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
@@ -80,6 +81,12 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
       </div>
 
       <div className="flex gap-2">
+        <Button asChild variant="outline">
+          <Link href={`/director/workbench/exams/${exam.id}/edit`}>
+            <PencilLine className="size-4 mr-1.5" />
+            시험지 수정
+          </Link>
+        </Button>
         {exam.status === "DRAFT" && (
           <Button
             onClick={onPublish}

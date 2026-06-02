@@ -11,14 +11,14 @@ interface QuestionDetailModalProps {
 export function QuestionDetailModal({ question, onClose }: QuestionDetailModalProps) {
   return (
     <div
-      className="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6 backdrop-blur-[2px]"
+      className="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-3 backdrop-blur-[2px]"
       onClick={onClose}
     >
       <div
-        className="max-h-full w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+        className="flex h-[96vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-2">
           <div>
             <p className="text-[14px] font-bold text-slate-900">문제 상세</p>
             <p className="text-[11px] text-slate-400">
@@ -29,7 +29,7 @@ export function QuestionDetailModal({ question, onClose }: QuestionDetailModalPr
             <X className="h-4 w-4 text-slate-400" />
           </button>
         </div>
-        <div className="max-h-[72vh] overflow-y-auto px-6 py-5">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
           {question.passage && (
             <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
               <p className="mb-2 text-[12px] font-bold text-slate-700">

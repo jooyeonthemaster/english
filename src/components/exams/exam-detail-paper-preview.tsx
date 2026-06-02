@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { incrementExamPrintCount } from "@/actions/exams";
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
 import { PreviewToolbar } from "./exam-paper-builder-client-parts/preview-toolbar";
 import { PreviewZoomControls } from "./exam-paper-builder-client-parts/preview-zoom-controls";
@@ -34,12 +35,14 @@ import type {
   BreakBefore,
   Density,
   InsertablePaperBlockType,
+  PaperCover,
   PaperItem,
   PaperSize,
   PaperTemplate,
   PaginationSettings,
   PassageStyle,
 } from "./paper-builder/types";
+import { normalizePaperCover } from "./paper-builder/saved-template-settings";
 import type { ExamDetail, ExamQuestion } from "./exam-detail-client-parts/types";
 
 const PREVIEW_PAGE_GAP = 20;
@@ -102,6 +105,7 @@ type SavedBuilderSettings = {
     instructions?: string;
     academyLogoDataUrl?: string | null;
   };
+  cover?: Partial<PaperCover>;
   items?: SavedBuilderItem[];
   blocks?: SavedBuilderBlock[];
 };
@@ -382,6 +386,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
   const showPassageTitle = settings?.layout?.showPassageTitle ?? DEFAULT_SHOW_PASSAGE_TITLE;
   const showQuestionMeta = settings?.layout?.showQuestionMeta ?? false;
+  const cover = normalizePaperCover(settings?.cover);
 
   const {
     scrollerRef,
@@ -391,6 +396,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
     zoomIn,
     zoomOut,
     reset,
+    fitToScreen,
     handleControlsDragStart,
   } = usePreviewZoom(paperSize);
 
@@ -416,10 +422,12 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
     [paperGroups, paginationSettings],
   );
   const paperPages = paginationResult.pages;
+  // 표지가 켜져 있으면 본문 앞에 한 장 더 렌더되므로 zoom-spacer 높이에 반영한다.
+  const renderedPageCount = paperPages.length + (cover.enabled ? 1 : 0);
   const previewContentHeight =
-    paperPages.length > 0
-      ? paperPages.length * baseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio +
-        (paperPages.length - 1) * PREVIEW_PAGE_GAP
+    renderedPageCount > 0
+      ? renderedPageCount * baseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio +
+        (renderedPageCount - 1) * PREVIEW_PAGE_GAP
       : 0;
 
   function handlePrint() {
@@ -427,8 +435,26 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
       toast.error("인쇄할 문제가 없습니다.");
       return;
     }
+    // PDF 인쇄 1회 → 인쇄 횟수 집계
+    void incrementExamPrintCount(exam.id);
     window.setTimeout(() => window.print(), 50);
   }
+
+  // ?print=1 로 열렸을 때(시험지 카드의 '인쇄' 버튼 → 새 탭) 미리보기가
+  // 준비되면 자동으로 브라우저 인쇄 대화상자를 띄운다.
+  const autoPrintedRef = useRef(false);
+  useEffect(() => {
+    if (autoPrintedRef.current) return;
+    if (typeof window === "undefined") return;
+    const shouldPrint =
+      new URLSearchParams(window.location.search).get("print") === "1";
+    if (!shouldPrint || paperItems.length === 0) return;
+    autoPrintedRef.current = true;
+    // 페이지 레이아웃/폰트가 안정된 뒤 인쇄가 뜨도록 약간의 지연을 둔다.
+    const timer = window.setTimeout(() => handlePrint(), 600);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paperItems.length]);
 
   function handleDownloadDocx() {
     startTransition(() => {
@@ -502,6 +528,7 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
             onZoomIn={zoomIn}
             onZoomOut={zoomOut}
             onReset={reset}
+            onFit={fitToScreen}
             onDragStart={handleControlsDragStart}
           />
         )}
@@ -530,6 +557,8 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
             showAnswerSpace={showAnswerSpace}
             showPassageTitle={showPassageTitle}
             showQuestionMeta={showQuestionMeta}
+            cover={cover}
+            updateCover={() => undefined}
             activeItemId={activeItemId}
             setActiveItemId={setActiveItemId}
             updateHeader={() => undefined}

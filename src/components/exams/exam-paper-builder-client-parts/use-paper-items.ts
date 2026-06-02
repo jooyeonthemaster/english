@@ -29,9 +29,18 @@ export type ShuffleOptions = {
   anchorBlocks: boolean;
 };
 
-export function usePaperItems(markDirty: () => void) {
-  const [paperItems, setPaperItems] = useState<PaperItem[]>([]);
-  const [activeItemId, setActiveItemId] = useState<string | null>(null);
+export function usePaperItems(
+  markDirty: () => void,
+  initialItems: PaperItem[] = [],
+  autoPointTotal: number | null = null,
+) {
+  const [initialPaperItems] = useState(() => reindexItems(initialItems));
+  const [paperItems, setPaperItems] = useState<PaperItem[]>(
+    initialPaperItems,
+  );
+  const [activeItemId, setActiveItemId] = useState<string | null>(
+    initialPaperItems[0]?.localId || null,
+  );
   const [history, setHistory] = useState<{
     past: PaperItem[][];
     future: PaperItem[][];
@@ -48,9 +57,11 @@ export function usePaperItems(markDirty: () => void) {
   const itemsRef = useRef(paperItems);
   const historyRef = useRef(history);
   const activeItemIdRef = useRef(activeItemId);
+  const autoPointTotalRef = useRef(autoPointTotal);
   useEffect(() => { itemsRef.current = paperItems; }, [paperItems]);
   useEffect(() => { historyRef.current = history; }, [history]);
   useEffect(() => { activeItemIdRef.current = activeItemId; }, [activeItemId]);
+  useEffect(() => { autoPointTotalRef.current = autoPointTotal; }, [autoPointTotal]);
 
   const activeItem = useMemo(
     () => paperItems.find((item) => item.localId === activeItemId) || paperItems[0] || null,
@@ -84,14 +95,106 @@ export function usePaperItems(markDirty: () => void) {
     }
   }
 
+  function distributeItemsToTotal(
+    current: PaperItem[],
+    targetTotal: number,
+  ): {
+    ok: boolean;
+    items: PaperItem[];
+    changed: boolean;
+    editableCount: number;
+    message?: string;
+  } {
+    const normalizedTarget = Math.round(targetTotal);
+    if (!Number.isFinite(normalizedTarget) || normalizedTarget < 1) {
+      return {
+        ok: false,
+        items: current,
+        changed: false,
+        editableCount: 0,
+        message: "총점은 1점 이상으로 입력해주세요.",
+      };
+    }
+
+    const questionItems = current.filter((item) => item.blockType === "question");
+    if (questionItems.length === 0) {
+      return { ok: true, items: current, changed: false, editableCount: 0 };
+    }
+
+    const lockedQuestions = questionItems.filter((item) => item.locked);
+    const editableQuestions = questionItems.filter((item) => !item.locked);
+    const lockedTotal = lockedQuestions.reduce((sum, item) => sum + item.points, 0);
+
+    if (editableQuestions.length === 0) {
+      const currentTotal = questionItems.reduce((sum, item) => sum + item.points, 0);
+      return currentTotal === normalizedTarget
+        ? { ok: true, items: current, changed: false, editableCount: 0 }
+        : {
+            ok: false,
+            items: current,
+            changed: false,
+            editableCount: 0,
+            message: "잠긴 문항만 있어서 배점을 다시 나눌 수 없습니다.",
+          };
+    }
+
+    const minTotal = lockedTotal + editableQuestions.length;
+    const maxTotal = lockedTotal + editableQuestions.length * 100;
+    if (normalizedTarget < minTotal) {
+      return {
+        ok: false,
+        items: current,
+        changed: false,
+        editableCount: editableQuestions.length,
+        message: `현재 문항 구성에서는 최소 ${minTotal}점 이상이어야 합니다.`,
+      };
+    }
+    if (normalizedTarget > maxTotal) {
+      return {
+        ok: false,
+        items: current,
+        changed: false,
+        editableCount: editableQuestions.length,
+        message: `문항당 최대 100점 기준으로 최대 ${maxTotal}점까지 가능합니다.`,
+      };
+    }
+
+    const distributableTotal = normalizedTarget - lockedTotal;
+    const basePoints = Math.floor(distributableTotal / editableQuestions.length);
+    const remainder = distributableTotal % editableQuestions.length;
+    let editableIndex = 0;
+    let changed = false;
+
+    const items = current.map((item) => {
+      if (item.blockType !== "question" || item.locked) return item;
+      const points = basePoints + (editableIndex < remainder ? 1 : 0);
+      editableIndex += 1;
+      if (item.points === points) return item;
+      changed = true;
+      return { ...item, points };
+    });
+
+    return { ok: true, items, changed, editableCount: editableQuestions.length };
+  }
+
   function commitItems(
     updater: (current: PaperItem[]) => PaperItem[],
     getNextActiveId?: () => string | null | undefined,
-  ) {
+    options: { skipAutoDistribution?: boolean } = {},
+  ): boolean {
     const current = itemsRef.current;
     const rawNext = updater(current);
-    if (rawNext === current) return;
-    const next = reindexItems(rawNext);
+    if (rawNext === current) return false;
+    let next = reindexItems(rawNext);
+    const activeAutoPointTotal = autoPointTotalRef.current;
+    if (!options.skipAutoDistribution && activeAutoPointTotal !== null) {
+      const distributed = distributeItemsToTotal(next, activeAutoPointTotal);
+      if (distributed.ok) {
+        next = distributed.items;
+      } else if (distributed.message) {
+        toast.error(distributed.message);
+      }
+    }
     const nextHistory = {
       past: [...historyRef.current.past, current].slice(-80),
       future: [] as PaperItem[][],
@@ -102,6 +205,7 @@ export function usePaperItems(markDirty: () => void) {
     setHistory(nextHistory);
     reconcileActiveId(next, getNextActiveId?.());
     markDirty();
+    return true;
   }
 
   function undo() {
@@ -180,10 +284,20 @@ export function usePaperItems(markDirty: () => void) {
     }, () => nextActiveId);
   }
 
+  function addDuplicateQuestion(question: BuilderQuestion) {
+    let nextActiveId: string | null | undefined;
+    commitItems((current) => {
+      const nextItem = makePaperItem(question, current.length + 1, current);
+      nextActiveId = nextItem.localId;
+      return [...current, nextItem];
+    }, () => nextActiveId);
+  }
+
   function addQuestionAtDropTarget(
     question: BuilderQuestion,
     targetLocalId: string | null,
     placement: DropPlacement,
+    options: { forceDuplicate?: boolean } = {},
   ) {
     let nextActiveId: string | null | undefined;
 
@@ -191,14 +305,17 @@ export function usePaperItems(markDirty: () => void) {
       const existing = current.find(
         (item) => item.blockType === "question" && item.questionId === question.id,
       );
-      if (existing?.locked) {
+      if (!options.forceDuplicate && existing?.locked) {
         nextActiveId = existing.localId;
         setActiveItemId(existing.localId);
         toast.error("잠긴 문항은 먼저 잠금 해제해야 이동할 수 있습니다.");
         return current;
       }
 
-      const itemToInsert = existing ?? makePaperItem(question, current.length + 1, current);
+      const itemToInsert =
+        !options.forceDuplicate && existing
+          ? existing
+          : makePaperItem(question, current.length + 1, current);
       nextActiveId = itemToInsert.localId;
 
       if (targetLocalId === itemToInsert.localId) {
@@ -206,7 +323,7 @@ export function usePaperItems(markDirty: () => void) {
         return current;
       }
 
-      const withoutSource = existing
+      const withoutSource = !options.forceDuplicate && existing
         ? current.filter((item) => item.localId !== existing.localId)
         : current;
       const targetIndex = targetLocalId
@@ -219,6 +336,83 @@ export function usePaperItems(markDirty: () => void) {
           ? targetIndex + (placement === "after" ? 1 : 0)
           : next.length;
       next.splice(insertIndex, 0, itemToInsert);
+      return next;
+    }, () => nextActiveId);
+  }
+
+  // 체크박스로 다중 선택한 문항을 드롭 지점에 한 덩어리로 삽입한다.
+  // 이미 미리보기에 있는 문항은 그 위치로 이동시키고, 잠긴 문항은 건너뛴다.
+  function addQuestionsAtDropTarget(
+    questionList: BuilderQuestion[],
+    targetLocalId: string | null,
+    placement: DropPlacement,
+    options: { duplicateQuestionIds?: Set<string> | string[] } = {},
+  ) {
+    if (questionList.length === 0) return;
+    const duplicateQuestionIds =
+      options.duplicateQuestionIds instanceof Set
+        ? options.duplicateQuestionIds
+        : new Set(options.duplicateQuestionIds || []);
+    if (questionList.length === 1) {
+      addQuestionAtDropTarget(questionList[0], targetLocalId, placement, {
+        forceDuplicate: duplicateQuestionIds.has(questionList[0].id),
+      });
+      return;
+    }
+
+    let nextActiveId: string | null | undefined;
+    commitItems((current) => {
+      let lockedSkipped = false;
+      const movedExistingIds = new Set<string>();
+      const itemsToInsert: PaperItem[] = [];
+
+      for (const question of questionList) {
+        const forceDuplicate = duplicateQuestionIds.has(question.id);
+        const existing = current.find(
+          (item) => item.blockType === "question" && item.questionId === question.id,
+        );
+        if (!forceDuplicate && existing?.locked) {
+          lockedSkipped = true;
+          continue;
+        }
+        if (!forceDuplicate && existing) {
+          movedExistingIds.add(existing.localId);
+          itemsToInsert.push(existing);
+        } else {
+          itemsToInsert.push(
+            makePaperItem(
+              question,
+              current.length + itemsToInsert.length + 1,
+              current,
+            ),
+          );
+        }
+      }
+
+      if (itemsToInsert.length === 0) {
+        if (lockedSkipped) {
+          toast.error("잠긴 문항은 먼저 잠금 해제해야 이동할 수 있습니다.");
+        }
+        return current;
+      }
+      if (lockedSkipped) {
+        toast.error("잠긴 문항은 제외하고 추가했습니다.");
+      }
+
+      const withoutMoved = current.filter(
+        (item) => !movedExistingIds.has(item.localId),
+      );
+      const targetIndex = targetLocalId
+        ? withoutMoved.findIndex((item) => item.localId === targetLocalId)
+        : -1;
+      const insertIndex =
+        targetIndex >= 0
+          ? targetIndex + (placement === "after" ? 1 : 0)
+          : withoutMoved.length;
+
+      const next = [...withoutMoved];
+      next.splice(insertIndex, 0, ...itemsToInsert);
+      nextActiveId = itemsToInsert[itemsToInsert.length - 1].localId;
       return next;
     }, () => nextActiveId);
   }
@@ -248,6 +442,29 @@ export function usePaperItems(markDirty: () => void) {
     commitItems(() => [], () => null);
   }
 
+  function replacePaperItems(
+    nextItems: PaperItem[],
+    nextActiveItemId: string | null = null,
+    options: { markAsDirty?: boolean } = {},
+  ) {
+    const normalizedItems = reindexItems(nextItems);
+    const nextHistory = { past: [] as PaperItem[][], future: [] as PaperItem[][] };
+    const normalizedActiveId =
+      nextActiveItemId &&
+      normalizedItems.some((item) => item.localId === nextActiveItemId)
+        ? nextActiveItemId
+        : normalizedItems[0]?.localId ?? null;
+
+    itemsRef.current = normalizedItems;
+    historyRef.current = nextHistory;
+    activeItemIdRef.current = normalizedActiveId;
+    setPaperItems(normalizedItems);
+    setHistory(nextHistory);
+    setActiveItemId(normalizedActiveId);
+
+    if (options.markAsDirty) markDirty();
+  }
+
   function updateItem(localId: string, patch: Partial<PaperItem>) {
     commitItems((current) =>
       current.map((item) => {
@@ -256,6 +473,20 @@ export function usePaperItems(markDirty: () => void) {
         return { ...item, ...patch };
       }),
     );
+  }
+
+  function distributeTotalPoints(targetTotal: number): boolean {
+    const distributed = distributeItemsToTotal(itemsRef.current, targetTotal);
+    if (!distributed.ok) {
+      if (distributed.message) toast.error(distributed.message);
+      return false;
+    }
+
+    if (distributed.changed) {
+      commitItems(() => distributed.items, undefined, { skipAutoDistribution: true });
+      toast.success(`${distributed.editableCount}개 문항에 총 ${Math.round(targetTotal)}점을 나눴습니다.`);
+    }
+    return true;
   }
 
   function insertBlock(blockType: InsertablePaperBlockType) {
@@ -516,11 +747,15 @@ export function usePaperItems(markDirty: () => void) {
     undo,
     redo,
     addQuestion,
+    addDuplicateQuestion,
     addQuestionAtDropTarget,
+    addQuestionsAtDropTarget,
     toggleQuestion,
     selectAllFiltered,
     clearPaper,
+    replacePaperItems,
     updateItem,
+    distributeTotalPoints,
     insertBlock,
     insertImageBlock,
     duplicateItem,

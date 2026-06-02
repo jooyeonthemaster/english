@@ -76,6 +76,23 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
     setManualZoom(null);
   }
 
+  // "화면에 맞추기" — 한 페이지 전체(가로·세로 모두)가 미리보기 뷰포트 안에
+  // 들어오도록 줌을 맞춘다. fitZoom 은 가로 폭에만 맞추고 100% 로 상한이
+  // 걸려 있어, A4 처럼 세로로 긴 페이지는 높이가 넘쳐 일부만 보였다.
+  function fitToScreen() {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const styles = window.getComputedStyle(scroller);
+    const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+    const paddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+    const availableWidth = Math.max(1, scroller.clientWidth - paddingX);
+    const availableHeight = Math.max(1, scroller.clientHeight - paddingY);
+    const pageHeight = baseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio;
+    const next = Math.min(availableWidth / baseWidth, availableHeight / pageHeight);
+    const clamped = Math.min(PREVIEW_ZOOM_MAX, Math.max(PREVIEW_ZOOM_MIN, next));
+    setManualZoom(Math.round(clamped * 100) / 100);
+  }
+
   function handleControlsDragStart(event: ReactMouseEvent<HTMLSpanElement>) {
     if (event.button !== 0) return;
     event.preventDefault();
@@ -113,6 +130,7 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
     zoomIn,
     zoomOut,
     reset,
+    fitToScreen,
     handleControlsDragStart,
   };
 }
