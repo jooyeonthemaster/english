@@ -993,6 +993,11 @@ model Exam {
   showResults      Boolean   @default(true) // Show results immediately after submission
   settings         String?   @db.Text // JSON: additional exam settings
 
+  // ── Activity counters (시험지 관리 카드에 노출) ──
+  saveCount  Int @default(0) // 빌더에서 저장된 총 횟수 (최초 생성 포함)
+  editCount  Int @default(0) // 기존 시험지를 다시 저장(수정)한 횟수 (생성 제외)
+  printCount Int @default(0) // 출력 횟수 (PDF 인쇄 + HWPX/HWPX해설 + DOCX 내보내기)
+
   // ── Extraction lineage ──
   sourceMaterialId String?
 
