@@ -123,6 +123,18 @@ export default async function DirectorDashboardPage() {
   return (
     <TaskQueueHost defaultDomain="all">
       <div className="w-full space-y-4">
+        <div className="flex justify-end">
+          <Link
+            href="/director/dashboard-v2"
+            className={cn(
+              "group inline-flex h-9 items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/60 px-3 text-[12px] font-bold text-blue-700 transition-colors",
+              "hover:border-blue-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            )}
+          >
+            대시보드 베타
+            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
         <WorkflowOverview />
 
         <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
