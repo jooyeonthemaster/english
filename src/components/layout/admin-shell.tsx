@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { GripVertical, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
@@ -19,6 +19,7 @@ import { MaybeComingSoon } from "./maybe-coming-soon";
 import { SidebarTopActions } from "./admin-shell/sidebar-top-actions";
 import { NavItem } from "./admin-shell/nav-item";
 import { useReviewDrawer } from "./review-drawer-context";
+import { useSidebarFocus } from "./sidebar-focus-context";
 
 interface StaffSession {
   id: string;
@@ -53,6 +54,10 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [isPending, startTransition] = useTransition();
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
+  // When the sidebar is collapsed, moving the mouse to the very left window edge
+  // temporarily "peeks" the full sidebar as an overlay (without pushing content).
+  // It stays open until the mouse fully leaves the sidebar.
+  const [peekOpen, setPeekOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_DEFAULT_WIDTH);
   const [sidebarScrolling, setSidebarScrolling] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -80,6 +85,11 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
       }
     };
   }, []);
+
+  // When the sidebar is pinned open (not collapsed), peek is irrelevant.
+  useEffect(() => {
+    if (!collapsed) setPeekOpen(false);
+  }, [collapsed]);
 
   const toggleSidebar = useCallback(() => {
     setCollapsed((prev) => {
@@ -158,22 +168,26 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     }, 900);
   }, []);
 
-  // When a review drawer is open, force-collapse the sidebar so the main
-  // workspace has more room. Restore the user's preferred state on close.
+  // When a review drawer is open — or a workspace (e.g. 시험지 빌더) requests it
+  // because both of its side panels are open — force-collapse the sidebar so the
+  // main workspace has more room. On release we restore whatever the user had set
+  // manually, so a manually-collapsed sidebar stays collapsed.
   const { isOpen: drawerOpen, width: drawerWidth } = useReviewDrawer();
-  const preDrawerCollapsedRef = React.useRef<boolean | null>(null);
+  const { collapseRequested } = useSidebarFocus();
+  const shouldForceCollapse = drawerOpen || collapseRequested;
+  const preForceCollapsedRef = React.useRef<boolean | null>(null);
   useEffect(() => {
-    if (drawerOpen) {
-      if (preDrawerCollapsedRef.current === null) {
-        preDrawerCollapsedRef.current = collapsed;
+    if (shouldForceCollapse) {
+      if (preForceCollapsedRef.current === null) {
+        preForceCollapsedRef.current = collapsed;
       }
       if (!collapsed) setCollapsed(true);
-    } else if (preDrawerCollapsedRef.current !== null) {
-      setCollapsed(preDrawerCollapsedRef.current);
-      preDrawerCollapsedRef.current = null;
+    } else if (preForceCollapsedRef.current !== null) {
+      setCollapsed(preForceCollapsedRef.current);
+      preForceCollapsedRef.current = null;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drawerOpen]);
+  }, [shouldForceCollapse]);
 
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
@@ -253,28 +267,76 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   }
 
   const effectivePath = navigatingTo || pathname;
+  const isDashboardV2 = pathname === "/director/dashboard-v2";
+
+  // `isPeeking`: collapsed sidebar temporarily expanded via the left-edge hover.
+  // `displayCollapsed`: whether to render the sidebar visually collapsed (narrow,
+  // icons only). During a peek we render it visually expanded even though the
+  // underlying `collapsed` state is still true.
+  const isPeeking = collapsed && peekOpen;
+  const displayCollapsed = collapsed && !isPeeking;
 
   return (
     <TooltipProvider delayDuration={300}>
       <div className="flex min-h-screen flex-col bg-[#F4F6F9]">
        <div className="flex flex-1">
+        {/* Left-edge hover trigger: when collapsed, reaching the very window edge
+            temporarily peeks the full sidebar. */}
+        {collapsed && !peekOpen && (
+          <div
+            aria-hidden
+            onMouseEnter={() => setPeekOpen(true)}
+            className="fixed left-0 top-0 z-40 hidden h-screen w-1.5 md:block"
+          />
+        )}
         {/* ─── Sidebar ─── */}
-        <div className="sticky top-0 hidden h-screen self-start shrink-0 md:flex">
+        <div
+          className={cn(
+            "sticky top-0 hidden h-screen self-start shrink-0 md:flex",
+            isPeeking ? "z-[60]" : collapsed ? "z-30" : null,
+          )}
+        >
+          {/* While collapsed, the sidebar is rendered as an absolute overlay so
+              that peeking it open only animates the overlay's width — the content
+              to the right keeps the same reserved space (this spacer) and never
+              reflows when the peek opens or closes. */}
+          {collapsed && (
+            <div className="shrink-0" style={{ width: SIDEBAR_COLLAPSED_WIDTH }} />
+          )}
+          <div
+            className={cn(
+              "flex h-full min-h-0",
+              collapsed && "absolute left-0 top-0 z-50",
+            )}
+            onMouseLeave={isPeeking ? () => setPeekOpen(false) : undefined}
+            style={
+              collapsed
+                ? {
+                    // Opaque backdrop so the overlaid sidebar (incl. the drag-bar
+                    // strip) doesn't show the content behind it.
+                    background: "var(--sidebar-solid)",
+                    ...(isPeeking
+                      ? { boxShadow: "0 8px 40px rgba(0,0,0,0.18)" }
+                      : {}),
+                  }
+                : undefined
+            }
+          >
           <aside
             className="flex h-full shrink-0 flex-col transition-[width] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
             style={{
-              width: collapsed ? SIDEBAR_COLLAPSED_WIDTH : sidebarWidth,
-              background: "rgba(255,255,255,0.55)",
+              width: displayCollapsed ? SIDEBAR_COLLAPSED_WIDTH : sidebarWidth,
+              background: "var(--sidebar-glass)",
               backdropFilter: "blur(40px) saturate(180%)",
               WebkitBackdropFilter: "blur(40px) saturate(180%)",
-              borderRight: "1px solid rgba(0,0,0,0.06)",
+              borderRight: "1px solid var(--sidebar-edge)",
             }}
           >
             {/* Logo */}
             <div
               className={cn(
                 "flex items-center h-[64px] shrink-0 transition-all duration-300",
-                collapsed ? "justify-center px-0" : "px-6"
+                displayCollapsed ? "justify-center px-0" : "px-6"
               )}
             >
               <Link
@@ -282,15 +344,15 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 className="flex items-center gap-2.5"
               >
                 <BrandIcon
-                  className={cn("shrink-0", collapsed ? "size-9" : "size-8")}
-                  markClassName={collapsed ? "size-[21px]" : "size-[20px]"}
+                  className={cn("shrink-0", displayCollapsed ? "size-9" : "size-8")}
+                  markClassName={displayCollapsed ? "size-[21px]" : "size-[20px]"}
                 />
-                {!collapsed && (
+                {!displayCollapsed && (
                   <span className="text-[20px] font-bold tracking-tight text-gray-900 transition-all duration-300">
                     SMOAT
                   </span>
                 )}
-                {!collapsed && (
+                {!displayCollapsed && (
                   <span className="text-[10px] text-gray-300 font-medium tracking-widest uppercase mt-0.5">
                     erp
                   </span>
@@ -302,7 +364,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             <SidebarTopActions
               staff={staff}
               basePath={basePath}
-              collapsed={collapsed}
+              collapsed={displayCollapsed}
               pathname={pathname}
               isDirector={isDirector}
               onNavClick={handleNavClick}
@@ -311,7 +373,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             {/* Navigation */}
             <nav
               className={cn(
-                "flex-1 overflow-y-auto sidebar-scroll sidebar-scroll-left py-3 px-3",
+                "min-h-0 flex-1 overflow-y-auto sidebar-scroll sidebar-scroll-left py-3 px-3",
                 sidebarScrolling && "is-scrolling",
               )}
               onScroll={handleSidebarScroll}
@@ -332,7 +394,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                         : undefined
                     }
                   >
-                    {group.title && !collapsed && (
+                    {group.title && !displayCollapsed && (
                       <div className="px-3 mb-2 flex items-center gap-2">
                         {group.comingSoon ? (
                           <>
@@ -351,7 +413,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                         )}
                       </div>
                     )}
-                    {group.title && collapsed && gi > 0 && (
+                    {group.title && displayCollapsed && gi > 0 && (
                       <div className="mx-auto mb-3 w-5 border-t border-gray-200/50" />
                     )}
                     <ul className="space-y-0.5">
@@ -360,7 +422,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                           key={item.href}
                           item={item}
                           active={isActive(item.href)}
-                          collapsed={collapsed}
+                          collapsed={displayCollapsed}
                           isOpen={!!openMenus[item.href]}
                           effectivePath={effectivePath}
                           routeMatches={routeMatches}
@@ -390,28 +452,25 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 aria-label={collapsed ? "사이드바열기" : "사이드바닫기"}
                 aria-expanded={!collapsed}
                 className={cn(
-                  "group/sidebar-handle flex h-full min-h-0 w-4 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 rounded-md bg-white/50 py-1 text-[11px] font-semibold transition-colors",
+                  "group/sidebar-handle relative flex h-full min-h-0 w-2 shrink-0 touch-none select-none items-center justify-center",
                   collapsed ? "cursor-pointer" : "cursor-col-resize",
-                  "text-sky-400 hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100",
                 )}
               >
-                {collapsed ? (
-                  <PanelLeftOpen className="h-3.5 w-3.5" strokeWidth={1.9} />
-                ) : (
-                  <PanelLeftClose className="h-3.5 w-3.5" strokeWidth={1.9} />
-                )}
-                <span style={{ writingMode: "vertical-rl" }}>
-                  {collapsed ? "사이드바열기" : "사이드바닫기"}
+                <span className="h-full w-px bg-slate-200 transition-colors group-hover/sidebar-handle:bg-sky-300" />
+                <span className="absolute right-0 z-10 flex h-7 w-5 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm transition-colors group-hover/sidebar-handle:border-sky-300 group-hover/sidebar-handle:text-sky-500 group-active/sidebar-handle:bg-sky-50">
+                  {collapsed ? (
+                    <PanelLeftOpen className="h-3.5 w-3.5" strokeWidth={1.9} />
+                  ) : (
+                    <PanelLeftClose className="h-3.5 w-3.5" strokeWidth={1.9} />
+                  )}
                 </span>
-                {!collapsed && (
-                  <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/sidebar-handle:opacity-70" />
-                )}
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={12} className="text-[12px] font-medium">
               {collapsed ? "사이드바열기" : "드래그하여 폭 조절 · 클릭하여 사이드바닫기"}
             </TooltipContent>
           </Tooltip>
+          </div>
         </div>
 
         {/* ─── Main area ─── */}
@@ -420,7 +479,12 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           style={drawerOpen && drawerWidth > 0 ? { marginRight: drawerWidth } : undefined}
         >
           {/* Page content */}
-          <main className="flex-1 min-w-0 p-6 relative max-md:p-0">
+          <main
+            className={cn(
+              "flex-1 min-w-0 relative max-md:p-0",
+              isDashboardV2 ? "p-2.5" : "p-6",
+            )}
+          >
             {isPending && (
               <div className="fixed inset-0 z-10 bg-[#F4F6F9]/60 flex items-start justify-center pt-32 pointer-events-none">
                 <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border">
@@ -435,10 +499,12 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           </main>
         </div>
        </div>
-        <BusinessInfoBlock
-          compact
-          className="border-t border-slate-200 bg-white"
-        />
+        {!isDashboardV2 && (
+          <BusinessInfoBlock
+            compact
+            className="border-t border-slate-200 bg-white"
+          />
+        )}
       </div>
     </TooltipProvider>
   );

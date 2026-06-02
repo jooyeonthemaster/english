@@ -239,6 +239,53 @@
   --sidebar-accent-foreground: #111827;
   --sidebar-border: #E5E7EB;
   --sidebar-ring: #3B82F6;
+  --sidebar-glass: rgba(255, 255, 255, 0.55);
+  --sidebar-solid: #ffffff;
+  --sidebar-edge: rgba(0, 0, 0, 0.06);
+  /* 지문 하이라이트(인라인 그라데이션) */
+  --hl-exam-bg: #fef08a;
+  --hl-vocab-bg: #dbeafe;
+}
+
+.dark {
+  /* 중성 차콜 그레이 팔레트 (네이비 톤 제거, IDE 다크 스타일) */
+  --background: #1b1b1b;
+  --foreground: #e4e4e4;
+  --card: #232323;
+  --card-foreground: #e4e4e4;
+  --popover: #232323;
+  --popover-foreground: #e4e4e4;
+  --primary: #3B82F6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #e4e4e4;
+  --muted: #282828;
+  --muted-foreground: #9b9b9b;
+  --accent: #2c2c2c;
+  --accent-foreground: #e4e4e4;
+  --destructive: #F87171;
+  --border: #333333;
+  --input: #333333;
+  --ring: #3B82F6;
+  --chart-1: #3B82F6;
+  --chart-2: #10B981;
+  --chart-3: #F59E0B;
+  --chart-4: #EF4444;
+  --chart-5: #8B5CF6;
+  --sidebar: #202020;
+  --sidebar-foreground: #e4e4e4;
+  --sidebar-primary: #3B82F6;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2c2c2c;
+  --sidebar-accent-foreground: #e4e4e4;
+  --sidebar-border: #333333;
+  --sidebar-ring: #3B82F6;
+  --sidebar-glass: #202020;
+  --sidebar-solid: #202020;
+  --sidebar-edge: #333333;
+  /* 지문 하이라이트: 밝은 텍스트 아래 반투명 컬러 밴드(가독 유지) */
+  --hl-exam-bg: rgba(250, 204, 21, 0.45);
+  --hl-vocab-bg: rgba(96, 165, 250, 0.42);
 }
 
 /* ────── Keyframes ────── */
@@ -630,7 +677,12 @@
 
 /* Narrow variant for sidebar / compact panels */
 .sidebar-scroll {
-  scrollbar-width: none;
+  /* Keep the scrollbar gutter reserved at a constant width so the content
+     never shifts when the scrollbar becomes visible on scroll. Only the thumb
+     color changes between idle and scrolling states. */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable;
 }
 .sidebar-scroll-left {
   direction: rtl;
@@ -647,7 +699,6 @@
   border: none;
 }
 .sidebar-scroll.is-scrolling {
-  scrollbar-width: thin;
   scrollbar-color: #BFDBFE transparent;
 }
 .sidebar-scroll.is-scrolling::-webkit-scrollbar-thumb {
@@ -673,3 +724,385 @@
 .table-row-hover:hover {
   background-color: #F9FAFB;
 }
+
+/* 시험지 생성(exams/create) 좌측 패널의 문제 카드 전용 — 카드 내부 텍스트만
+   한 단계 작게 표시한다. #exam-question-bank-scroll 컨테이너는 시험지 빌더에만
+   존재하므로 /director/workbench/questions 의 문제 카드에는 영향이 없다.
+   (Tailwind v4 유틸리티는 @layer 안에 있어, 레이어 밖의 이 규칙이 우선 적용된다.) */
+#exam-question-bank-scroll .text-\[15px\] { font-size: 13px; }
+#exam-question-bank-scroll .text-\[13px\] { font-size: 11px; }
+#exam-question-bank-scroll .text-\[12\.5px\] { font-size: 11px; }
+#exam-question-bank-scroll .text-\[12px\] { font-size: 10.5px; }
+#exam-question-bank-scroll .text-\[11\.5px\] { font-size: 10px; }
+#exam-question-bank-scroll .text-\[11px\] { font-size: 10px; }
+#exam-question-bank-scroll .text-\[10px\] { font-size: 9px; }
+#exam-question-bank-scroll .text-\[9px\] { font-size: 8px; }
+#exam-question-bank-scroll .text-xs { font-size: 10px; }
+
+/* 카드 상하 여백 축소 — Card 기본값 py-6(24px)·gap-6 때문에 상하 여백이
+   좌우(CardContent p-3=12px)보다 과하다. 카드의 세로 패딩/갭을 제거해
+   CardContent 자체 p-3 만 남기면 상하·좌우가 12px로 균형을 맞춘다. */
+#exam-question-bank-scroll [data-slot="card"] {
+  padding-top: 0;
+  padding-bottom: 0;
+  gap: 0;
+}
+
+/* 카드 하단('해설 보기' 이하) 압축 — 날짜+검수 스탬프 줄을 생략하고(컴포넌트의
+   compactUsageLabel 처리) '사용 이력' 밴드 한 줄만 남긴다. 검수 도장은 그 밴드
+   우측(카드 오른쪽 아래)에 표시된다. 밴드 세로 패딩을 살짝 줄여 더 조인다. */
+#exam-question-bank-scroll [data-slot="card-content"] > .mt-auto {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* ============================================================================
+   Global Dark Mode Compatibility Layer
+   ----------------------------------------------------------------------------
+   앱 전반의 컴포넌트가 하드코딩된 밝은색 Tailwind 유틸리티(bg-white,
+   text-slate-900, 임의 hex 등)를 사용하므로, 컴포넌트를 일일이 토큰으로
+   바꾸지 않고 `.dark` 스코프에서 해당 유틸리티들을 어두운 계열로 일괄
+   재매핑한다. 이 규칙들은 unlayered → Tailwind utilities 레이어보다 우선한다.
+
+   원칙: 밝은 표면→어두운 표면, 어두운 텍스트→밝은 텍스트, 밝은 보더→어두운
+   보더. text-white / 반투명 white 오버레이 / 솔리드 브랜드 색상은 유지.
+   ============================================================================ */
+.dark {
+  /* 중성 차콜 그레이 (네이비 톤 제거, IDE 다크 스타일) */
+  --d-bg: #1b1b1b;          /* 페이지 배경 */
+  --d-surface: #232323;     /* 카드 */
+  --d-surface-2: #282828;   /* 옅은 섹션 */
+  --d-surface-3: #303030;   /* 한 단계 진한 */
+  --d-surface-4: #3a3a3a;
+  --d-border: #333333;
+  --d-text: #e4e4e4;
+  --d-text-2: #c6c6c6;
+  --d-text-3: #9b9b9b;
+  --d-text-4: #6f6f6f;
+  --d-blue: #60a5fa;
+  --d-green: #4ade80;
+  --d-red: #f87171;
+  --d-amber: #fbbf24;
+  --d-purple: #a78bfa;
+  --d-blue-surface: #1b2735;
+  --d-green-surface: #1c2a1e;
+  --d-purple-surface: #271f33;
+  --d-red-surface: #2e1d1f;
+  --d-amber-surface: #2c2516;
+  --d-blue-border: #2c425c;
+  --d-green-border: #2e4230;
+  --d-red-border: #492a2d;
+  --d-amber-border: #4a3d20;
+  --d-purple-border: #3d3151;
+  color-scheme: dark;
+}
+
+.dark body { background-color: var(--d-bg); color: var(--d-text); }
+
+/* ── Tailwind 중성 배경 ── */
+.dark .bg-white { background-color: var(--d-surface); }
+.dark .bg-slate-50, .dark .bg-gray-50 { background-color: #1f1f1f; }
+.dark .bg-slate-100, .dark .bg-gray-100 { background-color: var(--d-surface-2); }
+.dark .bg-slate-200, .dark .bg-gray-200 { background-color: var(--d-surface-3); }
+.dark .bg-slate-300, .dark .bg-gray-300 { background-color: var(--d-surface-4); }
+
+/* 반투명 카드성 표면(이미지 위 bg-white/5~25 오버레이는 제외) */
+.dark .bg-white\/95, .dark .bg-white\/90, .dark .bg-white\/80,
+.dark .bg-white\/70 { background-color: var(--d-surface); }
+.dark .bg-slate-50\/80, .dark .bg-slate-50\/70, .dark .bg-slate-50\/60,
+.dark .bg-slate-50\/50, .dark .bg-slate-50\/40, .dark .bg-gray-50\/60,
+.dark .bg-gray-50\/50, .dark .bg-slate-100\/80,
+.dark .bg-slate-100\/70 { background-color: var(--d-surface-2); }
+
+/* ── Tailwind 중성 텍스트 ── */
+.dark .text-black, .dark .text-slate-950, .dark .text-slate-900,
+.dark .text-slate-800, .dark .text-gray-950, .dark .text-gray-900,
+.dark .text-gray-800 { color: var(--d-text); }
+.dark .text-slate-700, .dark .text-slate-600, .dark .text-gray-700,
+.dark .text-gray-600 { color: var(--d-text-2); }
+.dark .text-slate-500, .dark .text-gray-500 { color: var(--d-text-3); }
+.dark .text-slate-400, .dark .text-gray-400 { color: #97a2b2; }
+.dark .text-slate-300, .dark .text-gray-300 { color: var(--d-text-4); }
+
+/* ── Tailwind 중성 보더 ── */
+.dark .border-white, .dark .border-slate-100, .dark .border-slate-200,
+.dark .border-slate-300, .dark .border-gray-100, .dark .border-gray-200,
+.dark .border-gray-300 { border-color: var(--d-border); }
+
+/* ── hover 배경 ── */
+.dark .hover\:bg-white:hover, .dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-slate-100:hover, .dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover { background-color: var(--d-surface-3); }
+.dark .hover\:bg-slate-200:hover,
+.dark .hover\:bg-gray-200:hover { background-color: var(--d-surface-4); }
+
+/* ── placeholder ── */
+.dark .placeholder\:text-slate-400::placeholder,
+.dark .placeholder\:text-slate-300::placeholder,
+.dark .placeholder\:text-gray-400::placeholder,
+.dark .placeholder\:text-slate-600::placeholder { color: var(--d-text-4); }
+
+/* ── 임의 hex 배경: 밝은 그레이/오프화이트 → 표면 ── */
+.dark .bg-\[\#F0F2F5\], .dark .bg-\[\#F2F3F6\], .dark .bg-\[\#F2F4F6\],
+.dark .bg-\[\#F4F5F7\], .dark .bg-\[\#F4F6F9\], .dark .bg-\[\#F7F8FA\],
+.dark .bg-\[\#F7F9FB\], .dark .bg-\[\#F8F9FA\], .dark .bg-\[\#F8FAFB\],
+.dark .bg-\[\#F8FAFC\], .dark .bg-\[\#FAFBFC\], .dark .bg-\[\#F3F4F0\],
+.dark .bg-\[\#F7F8F5\], .dark .bg-\[\#F9FBF5\], .dark .bg-\[\#F9FBF8\],
+.dark .bg-\[\#FAFBF8\], .dark .bg-\[\#FFFDF7\] { background-color: var(--d-surface-2); }
+.dark .bg-\[\#E5E7EB\], .dark .bg-\[\#E5E8EB\], .dark .bg-\[\#E8EAEE\],
+.dark .bg-\[\#E8ECF2\], .dark .bg-\[\#E5E7E0\], .dark .bg-\[\#9CA396\],
+.dark .bg-\[\#C8CCC2\] { background-color: var(--d-surface-3); }
+.dark .bg-\[\#E8F3FF\], .dark .bg-\[\#EFF6FF\],
+.dark .bg-\[\#DBEAFE\] { background-color: var(--d-blue-surface); }
+.dark .bg-\[\#F1F8E9\], .dark .bg-\[\#F0FDF4\], .dark .bg-\[\#E8F5E9\],
+.dark .bg-\[\#E8FAF0\], .dark .bg-\[\#ECFDF5\], .dark .bg-\[\#F0FDF9\],
+.dark .bg-\[\#D1FAE5\], .dark .bg-\[\#D7FFB8\] { background-color: var(--d-green-surface); }
+.dark .bg-\[\#F3E8FF\], .dark .bg-\[\#F3EEFF\] { background-color: var(--d-purple-surface); }
+.dark .bg-\[\#FEE2E2\], .dark .bg-\[\#FFDFE0\], .dark .bg-\[\#FFEBEE\],
+.dark .bg-\[\#FFF0F0\], .dark .bg-\[\#FFF5F5\] { background-color: var(--d-red-surface); }
+.dark .bg-\[\#FEF3C7\], .dark .bg-\[\#FFF7ED\], .dark .bg-\[\#FFF8E6\],
+.dark .bg-\[\#FFFBF0\] { background-color: var(--d-amber-surface); }
+
+/* ── 임의 hex 텍스트: 어두운 → 밝은 ── */
+.dark .text-\[\#191F28\], .dark .text-\[\#1A1F16\], .dark .text-\[\#1C1C1E\],
+.dark .text-\[\#252B20\], .dark .text-\[\#343B2E\],
+.dark .text-\[\#3C1E1E\] { color: var(--d-text); }
+.dark .text-\[\#333D4B\], .dark .text-\[\#4A5043\],
+.dark .text-\[\#4E5968\] { color: var(--d-text-2); }
+.dark .text-\[\#6B7265\], .dark .text-\[\#6B7684\] { color: #aab4c0; }
+.dark .text-\[\#8B95A1\], .dark .text-\[\#9CA396\], .dark .text-\[\#ADB5BD\],
+.dark .text-\[\#AEB5BC\] { color: var(--d-text-3); }
+.dark .text-\[\#1B64DA\], .dark .text-\[\#1D4ED8\], .dark .text-\[\#1d4ed8\],
+.dark .text-\[\#1E3A8A\] { color: var(--d-blue); }
+.dark .text-\[\#065F46\], .dark .text-\[\#166534\],
+.dark .text-\[\#689F38\] { color: var(--d-green); }
+.dark .text-\[\#991B1B\] { color: var(--d-red); }
+.dark .text-\[\#92400E\], .dark .text-\[\#9A3412\],
+.dark .text-\[\#D97706\] { color: var(--d-amber); }
+.dark .text-\[\#7C3AED\] { color: var(--d-purple); }
+
+/* ── 임의 hex 보더: 밝은 → 어두운 ── */
+.dark .border-\[\#E5E7EB\], .dark .border-\[\#E5E8EB\], .dark .border-\[\#F2F4F6\],
+.dark .border-\[\#F3F4F0\], .dark .border-\[\#E5E7E0\], .dark .border-\[\#D5D8DC\],
+.dark .border-\[\#DDE2E7\], .dark .border-\[\#C8CCC2\] { border-color: var(--d-border); }
+.dark .border-\[\#BFDBFE\] { border-color: #243a52; }
+.dark .border-\[\#FEE2E2\] { border-color: #3a2326; }
+.dark .border-\[\#C5E1A5\], .dark .border-\[\#AED581\] { border-color: #2e3d2a; }
+
+/* ── 그라데이션(장식, best-effort) ── */
+.dark .from-white { --tw-gradient-from: var(--d-surface); }
+.dark .via-white { --tw-gradient-via: var(--d-surface); }
+.dark .to-white { --tw-gradient-to: var(--d-surface); }
+.dark .from-slate-50 { --tw-gradient-from: var(--d-surface-2); }
+.dark .to-slate-50 { --tw-gradient-to: var(--d-surface-2); }
+
+/* ── 스크롤바 ── */
+.dark ::-webkit-scrollbar-thumb { background-color: #3a3a3a; }
+.dark ::-webkit-scrollbar-track { background-color: transparent; }
+
+/* ============================================================================
+   컬러 스케일(밝은 톤) 다크 매핑 — bg-blue-50, bg-emerald-50, bg-red-50 같은
+   밝은 배지/버튼/박스가 다크에서 그대로 밝게 튀던 문제 해결.
+   배경은 어두운 틴트 표면으로, 텍스트는 밝은 액센트로(하이라이트 유지),
+   보더는 은은한 틴트 보더로 바꾼다. 솔리드 버튼(bg-blue-600 등)과 그 위의
+   text-white 는 건드리지 않는다.
+   ============================================================================ */
+
+/* 앱 셸/페이지 배경 그레이 → 가장 어두운 페이지 톤(카드가 위로 떠 보이게) */
+.dark .bg-\[\#F4F6F9\], .dark .bg-\[\#F7F8FA\], .dark .bg-\[\#F8F9FA\],
+.dark .bg-\[\#F8FAFB\], .dark .bg-\[\#F8FAFC\],
+.dark .bg-\[\#FAFBFC\] { background-color: var(--d-bg); }
+
+/* ── 컬러 배경 → 어두운 틴트 표면 ── */
+.dark .bg-blue-50, .dark .bg-blue-100, .dark .bg-blue-200,
+.dark .bg-sky-50, .dark .bg-sky-100, .dark .bg-indigo-50, .dark .bg-indigo-100,
+.dark .bg-cyan-50, .dark .bg-cyan-100 { background-color: var(--d-blue-surface); }
+.dark .bg-emerald-50, .dark .bg-emerald-100, .dark .bg-green-50, .dark .bg-green-100,
+.dark .bg-teal-50, .dark .bg-teal-100, .dark .bg-lime-50,
+.dark .bg-lime-100 { background-color: var(--d-green-surface); }
+.dark .bg-violet-50, .dark .bg-violet-100, .dark .bg-purple-50, .dark .bg-purple-100,
+.dark .bg-fuchsia-50, .dark .bg-fuchsia-100 { background-color: var(--d-purple-surface); }
+.dark .bg-red-50, .dark .bg-red-100, .dark .bg-rose-50, .dark .bg-rose-100,
+.dark .bg-pink-50, .dark .bg-pink-100 { background-color: var(--d-red-surface); }
+.dark .bg-amber-50, .dark .bg-amber-100, .dark .bg-amber-200, .dark .bg-yellow-50,
+.dark .bg-yellow-100, .dark .bg-orange-50,
+.dark .bg-orange-100 { background-color: var(--d-amber-surface); }
+
+/* 컬러 배경 불투명도 변형 */
+.dark .bg-blue-50\/80, .dark .bg-blue-50\/70, .dark .bg-blue-50\/60,
+.dark .bg-blue-50\/50, .dark .bg-blue-50\/40, .dark .bg-blue-50\/30,
+.dark .bg-blue-100\/70, .dark .bg-sky-50\/70 { background-color: var(--d-blue-surface); }
+.dark .bg-emerald-50\/60, .dark .bg-green-50\/60,
+.dark .bg-green-50\/50 { background-color: var(--d-green-surface); }
+.dark .bg-red-50\/30, .dark .bg-rose-50\/80 { background-color: var(--d-red-surface); }
+.dark .bg-amber-50\/50 { background-color: var(--d-amber-surface); }
+
+/* 컬러 hover 배경 */
+.dark .hover\:bg-blue-50:hover, .dark .hover\:bg-blue-100:hover,
+.dark .hover\:bg-sky-50:hover, .dark .hover\:bg-sky-100:hover,
+.dark .hover\:bg-indigo-50:hover { background-color: var(--d-blue-surface); }
+.dark .hover\:bg-emerald-50:hover,
+.dark .hover\:bg-green-50:hover { background-color: var(--d-green-surface); }
+.dark .hover\:bg-red-50:hover, .dark .hover\:bg-red-100:hover,
+.dark .hover\:bg-rose-50:hover { background-color: var(--d-red-surface); }
+.dark .hover\:bg-amber-50:hover { background-color: var(--d-amber-surface); }
+.dark .hover\:bg-violet-50:hover,
+.dark .hover\:bg-purple-50:hover { background-color: var(--d-purple-surface); }
+
+/* ── 컬러 액센트 텍스트(짙은 스케일) → 밝은 액센트(하이라이트) ── */
+.dark .text-blue-600, .dark .text-blue-700, .dark .text-blue-800, .dark .text-blue-900,
+.dark .text-sky-600, .dark .text-sky-700, .dark .text-sky-800,
+.dark .text-indigo-600, .dark .text-indigo-700, .dark .text-indigo-800,
+.dark .text-cyan-600, .dark .text-cyan-700 { color: var(--d-blue); }
+.dark .text-emerald-600, .dark .text-emerald-700, .dark .text-emerald-800,
+.dark .text-green-600, .dark .text-green-700, .dark .text-green-800,
+.dark .text-teal-600, .dark .text-teal-700 { color: var(--d-green); }
+.dark .text-red-600, .dark .text-red-700, .dark .text-red-800, .dark .text-red-900,
+.dark .text-rose-600, .dark .text-rose-700, .dark .text-rose-800,
+.dark .text-pink-600, .dark .text-pink-700 { color: var(--d-red); }
+.dark .text-amber-600, .dark .text-amber-700, .dark .text-amber-800, .dark .text-amber-900,
+.dark .text-yellow-600, .dark .text-yellow-700, .dark .text-yellow-800,
+.dark .text-orange-600, .dark .text-orange-700 { color: var(--d-amber); }
+.dark .text-violet-600, .dark .text-violet-700, .dark .text-violet-800,
+.dark .text-purple-600, .dark .text-purple-700,
+.dark .text-fuchsia-600, .dark .text-fuchsia-700 { color: var(--d-purple); }
+
+/* ── 컬러 보더(밝은 스케일) → 은은한 틴트 보더 ── */
+.dark .border-blue-100, .dark .border-blue-200, .dark .border-blue-300,
+.dark .border-sky-100, .dark .border-sky-200, .dark .border-indigo-100,
+.dark .border-indigo-200, .dark .border-cyan-100,
+.dark .border-cyan-200 { border-color: var(--d-blue-border); }
+.dark .border-emerald-100, .dark .border-emerald-200, .dark .border-emerald-300,
+.dark .border-green-100, .dark .border-green-200, .dark .border-teal-100,
+.dark .border-teal-200 { border-color: var(--d-green-border); }
+.dark .border-red-100, .dark .border-red-200, .dark .border-red-300,
+.dark .border-rose-100, .dark .border-rose-200, .dark .border-pink-100,
+.dark .border-pink-200 { border-color: var(--d-red-border); }
+.dark .border-amber-100, .dark .border-amber-200, .dark .border-amber-300,
+.dark .border-yellow-100, .dark .border-yellow-200, .dark .border-orange-100,
+.dark .border-orange-200 { border-color: var(--d-amber-border); }
+.dark .border-violet-100, .dark .border-violet-200, .dark .border-purple-100,
+.dark .border-purple-200 { border-color: var(--d-purple-border); }
+
+/* ── 누락됐던 중성 불투명도 변형(예: 사이드바 하위메뉴 bg-gray-50/80, 프로스티드
+   카드 bg-white/85 등) → 어두운 표면. 단, 이미지/컬러 위 반투명 오버레이로
+   쓰이는 bg-white/5~25 는 제외하고 유지한다. ── */
+.dark .bg-white\/50, .dark .bg-white\/60, .dark .bg-white\/68, .dark .bg-white\/70,
+.dark .bg-white\/72, .dark .bg-white\/75, .dark .bg-white\/80, .dark .bg-white\/82,
+.dark .bg-white\/85, .dark .bg-white\/86, .dark .bg-white\/90,
+.dark .bg-white\/95 { background-color: var(--d-surface); }
+.dark .bg-slate-50\/40, .dark .bg-slate-50\/50, .dark .bg-slate-50\/60, .dark .bg-slate-50\/70,
+.dark .bg-slate-50\/80, .dark .bg-slate-50\/90, .dark .bg-slate-50\/95,
+.dark .bg-gray-50\/30, .dark .bg-gray-50\/50, .dark .bg-gray-50\/60, .dark .bg-gray-50\/80,
+.dark .bg-slate-100\/65, .dark .bg-slate-100\/70, .dark .bg-slate-100\/80,
+.dark .bg-gray-100\/80 { background-color: var(--d-surface-2); }
+.dark .bg-slate-200\/60, .dark .bg-slate-200\/70,
+.dark .bg-slate-200\/80 { background-color: var(--d-surface-3); }
+
+/* ============================================================================
+   시험지 미리보기/표지는 "인쇄물(흰 종이)"이므로 다크모드에서도 항상 라이트로
+   렌더한다. .exam-preview-page-frame 스코프 안에서 다크 오버라이드를 표준
+   Tailwind 라이트 값으로 되돌린다(.dark .frame .X = 0,3,0 > .dark .X = 0,2,0).
+   ============================================================================ */
+.dark .exam-preview-page-frame {
+  color-scheme: light;
+  --background: #fff; --foreground: #0f172a; --card: #fff; --card-foreground: #0f172a;
+  --popover: #fff; --popover-foreground: #0f172a; --muted: #f8fafc; --muted-foreground: #64748b;
+  --secondary: #f1f5f9; --secondary-foreground: #0f172a; --accent: #eff6ff; --accent-foreground: #0f172a;
+  --border: #e2e8f0; --input: #e2e8f0;
+  --hl-exam-bg: #fef08a; --hl-vocab-bg: #dbeafe;
+}
+/* 배경 → 라이트 */
+.dark .exam-preview-page-frame .bg-white,
+.dark .exam-preview-page-frame [class*="bg-white/"] { background-color: #fff; }
+.dark .exam-preview-page-frame .bg-slate-50,
+.dark .exam-preview-page-frame [class*="bg-slate-50/"],
+.dark .exam-preview-page-frame .bg-gray-50 { background-color: #f8fafc; }
+.dark .exam-preview-page-frame .bg-slate-100,
+.dark .exam-preview-page-frame [class*="bg-slate-100/"] { background-color: #f1f5f9; }
+.dark .exam-preview-page-frame .bg-slate-300 { background-color: #cbd5e1; }
+.dark .exam-preview-page-frame .bg-blue-50,
+.dark .exam-preview-page-frame [class*="bg-blue-50/"] { background-color: #eff6ff; }
+.dark .exam-preview-page-frame .bg-blue-100 { background-color: #dbeafe; }
+.dark .exam-preview-page-frame .bg-indigo-50,
+.dark .exam-preview-page-frame [class*="bg-indigo-50/"] { background-color: #eef2ff; }
+.dark .exam-preview-page-frame .bg-cyan-50 { background-color: #ecfeff; }
+.dark .exam-preview-page-frame .bg-emerald-50,
+.dark .exam-preview-page-frame [class*="bg-emerald-50/"] { background-color: #ecfdf5; }
+.dark .exam-preview-page-frame .bg-amber-50,
+.dark .exam-preview-page-frame [class*="bg-amber-50/"] { background-color: #fffbeb; }
+.dark .exam-preview-page-frame .bg-amber-100 { background-color: #fef3c7; }
+.dark .exam-preview-page-frame .bg-red-50 { background-color: #fef2f2; }
+.dark .exam-preview-page-frame .bg-rose-50 { background-color: #fff1f2; }
+.dark .exam-preview-page-frame .bg-rose-100 { background-color: #ffe4e6; }
+.dark .exam-preview-page-frame .bg-violet-50,
+.dark .exam-preview-page-frame [class*="bg-violet-50/"] { background-color: #f5f3ff; }
+/* 텍스트 → 라이트(짙은 글씨) */
+.dark .exam-preview-page-frame .text-black,
+.dark .exam-preview-page-frame .text-slate-950,
+.dark .exam-preview-page-frame .text-slate-900 { color: #0f172a; }
+.dark .exam-preview-page-frame .text-slate-800 { color: #1e293b; }
+.dark .exam-preview-page-frame .text-slate-700 { color: #334155; }
+.dark .exam-preview-page-frame .text-slate-600 { color: #475569; }
+.dark .exam-preview-page-frame .text-slate-500 { color: #64748b; }
+.dark .exam-preview-page-frame .text-slate-400 { color: #94a3b8; }
+.dark .exam-preview-page-frame .text-slate-300 { color: #cbd5e1; }
+.dark .exam-preview-page-frame .text-blue-600 { color: #2563eb; }
+.dark .exam-preview-page-frame .text-blue-700 { color: #1d4ed8; }
+.dark .exam-preview-page-frame .text-blue-800 { color: #1e40af; }
+.dark .exam-preview-page-frame .text-emerald-600 { color: #059669; }
+.dark .exam-preview-page-frame .text-emerald-700 { color: #047857; }
+.dark .exam-preview-page-frame .text-emerald-800 { color: #065f46; }
+.dark .exam-preview-page-frame .text-amber-700 { color: #b45309; }
+.dark .exam-preview-page-frame .text-amber-800 { color: #92400e; }
+.dark .exam-preview-page-frame .text-amber-900 { color: #78350f; }
+.dark .exam-preview-page-frame .text-indigo-600 { color: #4f46e5; }
+.dark .exam-preview-page-frame .text-indigo-700 { color: #4338ca; }
+.dark .exam-preview-page-frame .text-indigo-800 { color: #3730a3; }
+.dark .exam-preview-page-frame .text-cyan-600 { color: #0891b2; }
+.dark .exam-preview-page-frame .text-cyan-700 { color: #0e7490; }
+.dark .exam-preview-page-frame .text-red-600 { color: #dc2626; }
+.dark .exam-preview-page-frame .text-red-700 { color: #b91c1c; }
+.dark .exam-preview-page-frame .text-rose-600 { color: #e11d48; }
+.dark .exam-preview-page-frame .text-rose-700 { color: #be123c; }
+.dark .exam-preview-page-frame .text-rose-800 { color: #9f1239; }
+.dark .exam-preview-page-frame .text-violet-600 { color: #7c3aed; }
+.dark .exam-preview-page-frame .text-violet-700 { color: #6d28d9; }
+.dark .exam-preview-page-frame .text-violet-800 { color: #5b21b6; }
+/* 보더 → 라이트 */
+.dark .exam-preview-page-frame .border-white { border-color: #fff; }
+.dark .exam-preview-page-frame .border-slate-100 { border-color: #f1f5f9; }
+.dark .exam-preview-page-frame .border-slate-200,
+.dark .exam-preview-page-frame [class*="border-slate-200/"] { border-color: #e2e8f0; }
+.dark .exam-preview-page-frame .border-slate-300 { border-color: #cbd5e1; }
+.dark .exam-preview-page-frame .border-blue-200 { border-color: #bfdbfe; }
+.dark .exam-preview-page-frame .border-blue-300 { border-color: #93c5fd; }
+.dark .exam-preview-page-frame .border-emerald-200 { border-color: #a7f3d0; }
+.dark .exam-preview-page-frame .border-emerald-300 { border-color: #6ee7b7; }
+.dark .exam-preview-page-frame .border-indigo-100 { border-color: #e0e7ff; }
+.dark .exam-preview-page-frame .border-indigo-200 { border-color: #c7d2fe; }
+.dark .exam-preview-page-frame .border-indigo-300 { border-color: #a5b4fc; }
+.dark .exam-preview-page-frame .border-cyan-200 { border-color: #a5f3fc; }
+.dark .exam-preview-page-frame .border-cyan-300 { border-color: #67e8f9; }
+.dark .exam-preview-page-frame .border-red-200 { border-color: #fecaca; }
+.dark .exam-preview-page-frame .border-rose-200 { border-color: #fecdd3; }
+.dark .exam-preview-page-frame .border-rose-300 { border-color: #fda4af; }
+.dark .exam-preview-page-frame .border-amber-100 { border-color: #fef3c7; }
+.dark .exam-preview-page-frame .border-amber-200 { border-color: #fde68a; }
+.dark .exam-preview-page-frame .border-violet-200 { border-color: #ddd6fe; }
+.dark .exam-preview-page-frame .border-violet-300 { border-color: #c4b5fd; }
+
+/* ============================================================================
+   지문 분석 입력 에디터(PassageAnnotationEditor) — 전역 <style>의 .ProseMirror /
+   .ann-* 클래스라 여기서 덮는다. 어두운 에디터 위에서 본문은 밝게, 주석
+   하이라이트는 반투명 컬러로(가독 유지).
+   ============================================================================ */
+.dark .ProseMirror { color: var(--d-text); }
+.dark .ann-vocab { background: linear-gradient(to top, var(--hl-vocab-bg) 35%, transparent 35%); }
+.dark .ann-vocab:hover { background: linear-gradient(to top, rgba(96, 165, 250, 0.55) 45%, transparent 45%); }
+.dark .ann-exam { background: linear-gradient(to top, var(--hl-exam-bg) 40%, transparent 40%); }
+.dark .ann-exam:hover { background: linear-gradient(to top, rgba(250, 204, 21, 0.6) 50%, transparent 50%); }
+.dark .ann-sentence { background: linear-gradient(to right, #22c55e 3px, rgba(34, 197, 94, 0.16) 3px); }
+.dark .ann-sentence:hover { background: linear-gradient(to right, #16a34a 3px, rgba(34, 197, 94, 0.24) 3px); }
+.dark .ann-grammar:hover { background-color: rgba(139, 92, 246, 0.22); }
+.dark .ann-syntax:hover { background-color: rgba(8, 145, 178, 0.2); }
