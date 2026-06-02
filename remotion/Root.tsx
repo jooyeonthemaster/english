@@ -20,6 +20,8 @@ import PassageAnalysisDeepDive, { PASSAGE_DEEP_DIVE_TOTAL } from './scenes/Passa
 import HiggsfieldPromo, { HIGGSFIELD_PROMO_TOTAL, HIGGSFIELD_PROMO_FPS, HIGGSFIELD_PROMO_WIDTH, HIGGSFIELD_PROMO_HEIGHT } from './scenes/HiggsfieldPromo';
 import OrderShuffleMeme, { ORDER_MEME_TOTAL, ORDER_MEME_FPS, ORDER_MEME_W, ORDER_MEME_H } from './scenes/OrderShuffleMeme';
 import SmoatNaeshinPromo, { SMOAT_PROMO_TOTAL, SMOAT_PROMO_FPS, SMOAT_PROMO_W, SMOAT_PROMO_H } from './scenes/SmoatNaeshinPromo';
+import ScreencastScene from './scenes/ScreencastScene';
+import { GUIDE_FLOWS } from './guideManifest';
 
 const NaraDemoVideo: React.FC = () => {
   return (
@@ -132,6 +134,20 @@ export const RemotionRoot: React.FC = () => {
         width={SMOAT_PROMO_W}
         height={SMOAT_PROMO_H}
       />
+
+      {/* ─── Guide screencasts (auto-registered from recorded flows) ─── */}
+      {GUIDE_FLOWS.map((entry) => (
+        <Composition
+          key={entry.flow}
+          id={`Guide-${entry.flow}`}
+          component={ScreencastScene as React.FC<Record<string, unknown>>}
+          durationInFrames={Math.max(1, Math.round((entry.durationMs / 1000) * entry.fps))}
+          fps={entry.fps}
+          width={VIDEO_WIDTH}
+          height={VIDEO_HEIGHT}
+          defaultProps={{ entry } as Record<string, unknown>}
+        />
+      ))}
     </>
   );
 };

@@ -68,9 +68,6 @@ export function QuestionDetailDialog({
             <h2 className="text-[15px] font-bold text-slate-800">
               문제 상세
             </h2>
-            {question ? (
-              <ReviewStatusStamp approved={question.approved} className="shrink-0" />
-            ) : null}
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {question ? (
@@ -154,15 +151,23 @@ export function QuestionDetailDialog({
                 </div>
               )}
             </div>
-            <div className="overflow-y-auto px-6 py-5">
-              <QuestionCard
-                q={{
-                  ...question,
-                  _count: question._count ?? { examLinks: 0 },
-                }}
-                num={1}
-                readonly
-                hideReviewStatusStamp
+            <div className="relative overflow-hidden">
+              <div className="h-full overflow-y-auto px-6 py-5">
+                <QuestionCard
+                  q={{
+                    ...question,
+                    _count: question._count ?? { examLinks: 0 },
+                  }}
+                  num={1}
+                  readonly
+                  hideReviewStatusStamp
+                />
+              </div>
+              {/* 검수 도장 — 이 팝업 전용으로 우측 문제 박스 우측 상단에 고정 + 확대.
+                  ReviewStatusStamp는 공용이라 컴포넌트를 바꾸지 않고 transform scale로만 키운다. */}
+              <ReviewStatusStamp
+                approved={question.approved}
+                className="absolute right-9 top-9 z-10 origin-top-right scale-125"
               />
             </div>
           </div>

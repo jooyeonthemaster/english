@@ -31,6 +31,8 @@ export interface PassageItem {
   content: string;
   analysis?: { analysisData: string } | null;
   collectionItems?: { collectionId: string }[];
+  // 이 지문으로 이미 생성된 문제 수(서버 집계).
+  _count?: { questions: number };
 }
 
 export interface PassageCollectionItem {

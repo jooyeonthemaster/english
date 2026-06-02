@@ -6,12 +6,9 @@ import { useRouter } from "next/navigation";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import {
-  AlertTriangle,
   CalendarClock,
-  CheckCircle2,
   ChevronDown,
   ChevronUp,
-  Clock,
   Database,
   FileText,
   Grid2x2,
@@ -21,7 +18,6 @@ import {
   Pencil,
   RefreshCw,
   Trash2,
-  XCircle,
 } from "lucide-react";
 
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
@@ -37,6 +33,10 @@ import { TaskStatusBadge } from "./components/task-status-badge";
 import { useTaskList } from "./hooks/use-task-list";
 import type { BaseTask, TaskDomain, TaskStatus } from "./types";
 import { formatTaskDate } from "./utils/format";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 
 type InlineListLayout = "horizontal" | "grid";
 export type GridViewMode = "grid-3" | "grid-2" | "list";
@@ -154,26 +154,6 @@ function gridIconClass(status: TaskStatus): string {
     case "pending":
     default:
       return "text-slate-500";
-  }
-}
-
-function TaskGridStatusIcon({ status }: { status: TaskStatus }) {
-  const className = `size-3 shrink-0 ${gridIconClass(status)}`;
-  switch (status) {
-    case "processing":
-      return (
-        <Loader2 className={`${className} animate-spin`} aria-hidden="true" />
-      );
-    case "completed":
-      return <CheckCircle2 className={className} aria-hidden="true" />;
-    case "partial":
-    case "failed":
-      return <AlertTriangle className={className} aria-hidden="true" />;
-    case "cancelled":
-      return <XCircle className={className} aria-hidden="true" />;
-    case "pending":
-    default:
-      return <Clock className={className} aria-hidden="true" />;
   }
 }
 
@@ -550,9 +530,6 @@ function TaskGridCard({
                 />
               </span>
             ) : null}
-            <span className="mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded border border-slate-300 bg-white">
-              <TaskGridStatusIcon status={task.status} />
-            </span>
             <div className="min-w-0 flex-1">
               {onRename ? (
                 <EditableTaskTitle
@@ -757,9 +734,6 @@ function TaskListRow({
       {onToggleCheck ? (
         <TaskCheckbox state={checked ?? false} onToggle={onToggleCheck} />
       ) : null}
-      <span className="flex size-[18px] shrink-0 items-center justify-center rounded border border-slate-300 bg-white">
-        <TaskGridStatusIcon status={task.status} />
-      </span>
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 items-center gap-2">
           {onRename ? (
@@ -840,15 +814,11 @@ function TaskListRow({
   );
 }
 
-const VIEW_MODE_OPTIONS: Array<{
-  mode: GridViewMode;
-  label: string;
-  Icon: typeof Grid3x3;
-}> = [
-  { mode: "grid-3", label: "3열 보기", Icon: Grid3x3 },
-  { mode: "grid-2", label: "2열 보기", Icon: Grid2x2 },
-  { mode: "list", label: "목록 보기", Icon: List },
-];
+const VIEW_MODE_OPTIONS = [
+  { value: "grid-3", label: "3열 보기", Icon: Grid3x3 },
+  { value: "grid-2", label: "2열 보기", Icon: Grid2x2 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<GridViewMode>>;
 
 function ViewModeToggle({
   value,
@@ -859,40 +829,18 @@ function ViewModeToggle({
   onChange: (mode: GridViewMode) => void;
   grid3Disabled?: boolean;
 }) {
+  const options = VIEW_MODE_OPTIONS.map((option) =>
+    option.value === "grid-3"
+      ? {
+          ...option,
+          disabled: grid3Disabled,
+          disabledTitle: "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
+        }
+      : option,
+  );
+
   return (
-    <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-      {VIEW_MODE_OPTIONS.map(({ mode, label, Icon }, index) => {
-        const pressed = value === mode;
-        const middle = index === 1;
-        const disabled = grid3Disabled && mode === "grid-3";
-        return (
-          <button
-            key={mode}
-            type="button"
-            aria-label={label}
-            aria-pressed={pressed}
-            title={
-              disabled
-                ? "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다"
-                : label
-            }
-            disabled={disabled}
-            onClick={() => onChange(mode)}
-            className={
-              "p-2 transition-colors disabled:cursor-not-allowed disabled:opacity-40 " +
-              (middle ? "border-x border-slate-200 " : "") +
-              (disabled
-                ? "text-slate-300"
-                : pressed
-                  ? "cursor-pointer bg-slate-800 text-white"
-                  : "cursor-pointer text-slate-400 hover:bg-slate-50 hover:text-slate-600")
-            }
-          >
-            <Icon className="size-4" aria-hidden="true" />
-          </button>
-        );
-      })}
-    </div>
+    <ViewModeCycleButton value={value} options={options} onChange={onChange} />
   );
 }
 

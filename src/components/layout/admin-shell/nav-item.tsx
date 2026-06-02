@@ -54,7 +54,10 @@ export function NavItem({
   if (hasChildren && !collapsed) {
     return (
       <li>
-        <div
+        {/* Parent button → only toggles the submenu (no navigation) */}
+        <button
+          type="button"
+          onClick={() => onToggleMenu(item.href)}
           className={cn(
             "group/item relative flex items-center gap-3 rounded-xl text-[13px] font-medium transition-all duration-200 w-full h-[38px] px-3",
             active || childActive
@@ -70,46 +73,27 @@ export function NavItem({
               : undefined
           }
         >
-          {/* Clickable label area → navigates to page + opens submenu */}
-          <Link
-            href={item.href}
-            onClick={(e) => {
-              if (!isOpen) onSetOpenMenu(item.href, true);
-              onNavClick(item.href, e);
-            }}
-            className="flex items-center gap-3 flex-1 min-w-0"
-          >
-            <Icon
-              className={cn(
-                "shrink-0 transition-colors duration-200",
-                isWorkflowIcon ? "size-[22px]" : "size-[17px]",
-                active || childActive
-                  ? "text-blue-500"
-                  : "text-gray-350 group-hover/item:text-gray-500",
-              )}
-              strokeWidth={active || childActive ? 2 : 1.7}
-            />
-            <span className="truncate">{item.label}</span>
-          </Link>
-          {/* Toggle button → only toggles submenu */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleMenu(item.href);
-            }}
-            className="p-1 -mr-1 rounded hover:bg-black/[0.04] transition-colors"
-          >
-            <ChevronDown
-              className={cn(
-                "size-3.5 shrink-0 transition-transform duration-200",
-                active || childActive
-                  ? "text-blue-400"
-                  : "text-gray-300 group-hover/item:text-gray-400",
-                isOpen ? "rotate-0" : "-rotate-90",
-              )}
-            />
-          </button>
-        </div>
+          <Icon
+            className={cn(
+              "shrink-0 transition-colors duration-200",
+              isWorkflowIcon ? "size-[22px]" : "size-[17px]",
+              active || childActive
+                ? "text-blue-500"
+                : "text-gray-350 group-hover/item:text-gray-500",
+            )}
+            strokeWidth={active || childActive ? 2 : 1.7}
+          />
+          <span className="truncate flex-1 min-w-0 text-left">{item.label}</span>
+          <ChevronDown
+            className={cn(
+              "size-3.5 shrink-0 transition-transform duration-200",
+              active || childActive
+                ? "text-blue-400"
+                : "text-gray-300 group-hover/item:text-gray-400",
+              isOpen ? "rotate-0" : "-rotate-90",
+            )}
+          />
+        </button>
         {/* Sub-menu */}
         <div
           className={cn(
@@ -154,6 +138,10 @@ export function NavItem({
 
   // Regular link (no children, or collapsed mode)
   const isComingSoon = !!item.comingSoon;
+  // When collapsed, a parent item has no visible submenu, so it must reflect the
+  // current location even when the active route is one of its children (the
+  // parent's own href points at just the first child).
+  const linkActive = active || childActive;
   const linkContent = (
     <Link
       href={item.href}
@@ -164,20 +152,20 @@ export function NavItem({
           ? "justify-center h-10 w-10 mx-auto"
           : "h-[38px] px-3",
         isComingSoon
-          ? active
+          ? linkActive
             ? "text-sky-700"
             : "text-slate-500 hover:text-sky-700"
-          : active
+          : linkActive
             ? "text-blue-600"
             : "text-gray-400 hover:text-gray-700",
       )}
       style={
-        active && !isComingSoon
+        linkActive && !isComingSoon
           ? {
               background: "rgba(59, 130, 246, 0.08)",
               boxShadow: "0 1px 3px rgba(59, 130, 246, 0.06)",
             }
-          : active && isComingSoon
+          : linkActive && isComingSoon
             ? {
                 background: "rgba(56, 189, 248, 0.1)",
                 boxShadow: "0 1px 3px rgba(56, 189, 248, 0.08)",
@@ -189,10 +177,10 @@ export function NavItem({
         className={cn(
           "shrink-0 transition-colors duration-200",
           isComingSoon
-            ? active
+            ? linkActive
               ? "text-sky-500"
               : "text-slate-400 group-hover/item:text-sky-500"
-            : active
+            : linkActive
               ? "text-blue-500"
               : "text-gray-350 group-hover/item:text-gray-500",
           isWorkflowIcon
@@ -203,7 +191,7 @@ export function NavItem({
               ? "size-[20px]"
               : "size-[17px]",
         )}
-        strokeWidth={active ? 2 : 1.7}
+        strokeWidth={linkActive ? 2 : 1.7}
       />
       {!collapsed && (
         <>
@@ -212,12 +200,12 @@ export function NavItem({
             <span
               className={cn(
                 "size-1.5 rounded-full shrink-0 transition-all",
-                active
+                linkActive
                   ? "bg-sky-500"
                   : "bg-sky-300 group-hover/item:bg-sky-500",
               )}
               style={{
-                boxShadow: active
+                boxShadow: linkActive
                   ? "0 0 8px rgba(56, 189, 248, 0.6)"
                   : undefined,
               }}

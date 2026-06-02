@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/layout/admin-shell";
 import { JooyeonWelcomeModal } from "@/components/layout/jooyeon-welcome-modal";
 import { FeedbackProgram } from "@/components/feedback/feedback-program";
 import { ReviewDrawerProvider } from "@/components/layout/review-drawer-context";
+import { SidebarFocusProvider } from "@/components/layout/sidebar-focus-context";
 import { TaskQueueRouteHost } from "@/components/workbench/task-queue";
 
 export default async function DirectorLayout({
@@ -23,13 +24,15 @@ export default async function DirectorLayout({
 
   return (
     <ReviewDrawerProvider>
-      <AdminShell staff={staff} basePath="/director">
-        <TaskQueueRouteHost>
-          {children}
-          <JooyeonWelcomeModal staffEmail={staff.email} />
-          <FeedbackProgram staffEmail={staff.email} />
-        </TaskQueueRouteHost>
-      </AdminShell>
+      <SidebarFocusProvider>
+        <AdminShell staff={staff} basePath="/director">
+          <TaskQueueRouteHost>
+            {children}
+            <JooyeonWelcomeModal staffEmail={staff.email} />
+            <FeedbackProgram staffEmail={staff.email} />
+          </TaskQueueRouteHost>
+        </AdminShell>
+      </SidebarFocusProvider>
     </ReviewDrawerProvider>
   );
 }

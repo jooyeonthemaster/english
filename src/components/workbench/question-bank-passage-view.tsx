@@ -36,6 +36,16 @@ interface PassageGroupedViewProps {
   showManagementActions?: boolean;
   showStar?: boolean;
   enableDrag?: boolean;
+  compactUsageLabel?: boolean;
+  cardClickSelects?: boolean;
+  showDetailButton?: boolean;
+  getDragQuestionIds?: (draggedId: string) => string[];
+  getDuplicateDragQuestionIds?: (draggedId: string) => string[];
+  selectionOrder?: Map<string, number>;
+  disabledIds?: Set<string>;
+  duplicateSelectedIds?: Set<string>;
+  usageCounts?: Map<string, number>;
+  onApproveDuplicateSelect?: (questionId: string) => void;
   renderQuestion?: (question: any, index: number) => ReactNode;
   expandedPassageIds: Record<string, boolean>;
   setExpandedPassageIds: (
@@ -89,6 +99,16 @@ export function PassageGroupedView({
   showManagementActions = true,
   showStar = true,
   enableDrag = true,
+  compactUsageLabel = false,
+  cardClickSelects = false,
+  showDetailButton = false,
+  getDragQuestionIds,
+  getDuplicateDragQuestionIds,
+  selectionOrder,
+  disabledIds,
+  duplicateSelectedIds,
+  usageCounts,
+  onApproveDuplicateSelect,
   renderQuestion,
   expandedPassageIds,
   setExpandedPassageIds,
@@ -212,12 +232,17 @@ export function PassageGroupedView({
           : "";
 
   function toggleGroupSelection(ids: string[]) {
+    const selectableIds = ids.filter(
+      (id) => !disabledIds?.has(id) || duplicateSelectedIds?.has(id),
+    );
+    if (selectableIds.length === 0) return;
     const next = new Set(selectedIds);
-    const allSelected = ids.length > 0 && ids.every((id) => next.has(id));
+    const allSelected =
+      selectableIds.length > 0 && selectableIds.every((id) => next.has(id));
     if (allSelected) {
-      ids.forEach((id) => next.delete(id));
+      selectableIds.forEach((id) => next.delete(id));
     } else {
-      ids.forEach((id) => next.add(id));
+      selectableIds.forEach((id) => next.add(id));
     }
     setSelectedIds(next);
   }
@@ -233,9 +258,12 @@ export function PassageGroupedView({
             : 0;
 
         const groupIds = passage.questions.map((q) => q.id);
-        const selectedInGroup = groupIds.filter((id) => selectedIds.has(id)).length;
+        const selectableGroupIds = groupIds.filter(
+          (id) => !disabledIds?.has(id) || duplicateSelectedIds?.has(id),
+        );
+        const selectedInGroup = selectableGroupIds.filter((id) => selectedIds.has(id)).length;
         const groupCheckState: boolean | "indeterminate" =
-          groupIds.length > 0 && selectedInGroup === groupIds.length
+          selectableGroupIds.length > 0 && selectedInGroup === selectableGroupIds.length
             ? true
             : selectedInGroup > 0
               ? "indeterminate"
@@ -280,6 +308,7 @@ export function PassageGroupedView({
                   checked={groupCheckState}
                   aria-label={`${sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)"} 전체 선택`}
                   className="size-4 cursor-pointer"
+                  disabled={selectableGroupIds.length === 0}
                   onClick={(e) => e.stopPropagation()}
                   onCheckedChange={() => toggleGroupSelection(groupIds)}
                 />
@@ -410,12 +439,19 @@ export function PassageGroupedView({
                       renderQuestion ? (
                         renderQuestion(q, idx)
                       ) : (
+                        (() => {
+                          const usageCount = usageCounts?.get(q.id) || 0;
+                          const duplicateSelected = Boolean(duplicateSelectedIds?.has(q.id));
+                          const disabled = Boolean(disabledIds?.has(q.id)) && !duplicateSelected;
+                          return (
                         <QuestionBankCard
                           key={q.id}
                           q={q}
                           num={idx + 1}
                           selected={selectedIds.has(q.id)}
-                          onToggle={() => onToggleSelect(q.id)}
+                          onToggle={() => {
+                            if (!disabled) onToggleSelect(q.id);
+                          }}
                           onDelete={() => onDelete(q.id)}
                           onApprove={() => onApprove(q.id)}
                           onUnapprove={onUnapprove ? () => onUnapprove(q.id) : undefined}
@@ -425,8 +461,23 @@ export function PassageGroupedView({
                           viewSize={viewSize}
                           showManagementActions={showManagementActions}
                           showStar={showStar}
-                          enableDrag={enableDrag}
+                          enableDrag={enableDrag && !disabled}
+                          compactUsageLabel={compactUsageLabel}
+                          cardClickSelects={cardClickSelects}
+                          showDetailButton={showDetailButton}
+                          getDragQuestionIds={getDragQuestionIds}
+                          getDuplicateDragQuestionIds={getDuplicateDragQuestionIds}
+                          selectionIndex={selectionOrder?.get(q.id)}
+                          selectionDisabled={disabled}
+                          duplicateCount={usageCount > 1 ? usageCount : undefined}
+                          onDuplicateSelectConfirm={
+                            disabled && onApproveDuplicateSelect
+                              ? () => onApproveDuplicateSelect(q.id)
+                              : undefined
+                          }
                         />
+                          );
+                        })()
                       ),
                     )}
                   </div>

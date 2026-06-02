@@ -35,15 +35,14 @@ import {
 } from "./report-sections";
 
 const PX_PER_MM = 96 / 25.4;
+/** A4 한 장의 픽셀 폭(210mm @96dpi) — 썸네일 scale 계산용. */
+export const REPORT_A4_WIDTH_PX = Math.round(210 * PX_PER_MM);
 // Matches the usable .par-sheet-body height after A4 padding, running header, and footer.
 const PAGE_BODY_MM = 250;
 const BOX_PAD_MM = 9;
 const RUN_GAP_MM = 6;
 const LI_GAP_MM = 2.5;
 const ARROW_MM = 7;
-const THUMB_WIDTH_PX = 64;
-const THUMB_HEIGHT_PX = Math.round((THUMB_WIDTH_PX * 297) / 210);
-const THUMB_SCALE = THUMB_WIDTH_PX / (210 * PX_PER_MM);
 
 export type DropPlacement = "before" | "after";
 
@@ -90,15 +89,6 @@ export function enumerateItems(report: AnalysisReport): ItemDescriptor[] {
   }));
 }
 
-function reportRootStyle(report: AnalysisReport): CSSProperties {
-  const theme = getReportTheme(report.themeId);
-  return {
-    "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
-    "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
-    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
-  } as CSSProperties;
-}
-
 function visibleFlowItems(report: AnalysisReport, natural: FlowItem[]): FlowItem[] {
   const byId = new Map(natural.map((it) => [it.id, it]));
   const orderedIds = applyBlockOrder(natural.map((it) => it.id), report.blockOrder);
@@ -128,6 +118,19 @@ function blockStyleOf(meta: BlockMeta | undefined, it?: FlowItem): CSSProperties
   return Object.keys(st).length ? (st as CSSProperties) : undefined;
 }
 
+// ─── 테마 → CSS 변수 (par-root 에 주입) ────────────────────────────────────────
+export function buildReportRootStyle(report: AnalysisReport): CSSProperties {
+  const theme = getReportTheme(report.themeId);
+  return {
+    "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
+    "--ink-fill": theme.inkFill, "--ink-fill-soft": theme.inkFillSoft,
+    "--ink-on-fill": theme.inkOnFill, "--ink-on-fill-muted": theme.inkOnFillMuted,
+    "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
+    "--table-head-bg": theme.tableHeadBg, "--table-head-text": theme.tableHeadText,
+    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
+  } as CSSProperties;
+}
+
 // ─── 메인 ─────────────────────────────────────────────────────────────────────
 export function ReportPages({
   report,
@@ -138,7 +141,8 @@ export function ReportPages({
   edit?: ReportEdit;
   onPagesChange?: (pages: string[][]) => void;
 }) {
-  const rootStyle = reportRootStyle(report);
+  const rootStyle = buildReportRootStyle(report);
+  const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
 
   const natural = useMemo(
     () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, ced: edit.ced } : undefined),
@@ -220,7 +224,7 @@ export function ReportPages({
           return (
             <section className="par-sheet" key={`p-${pi}`} data-page-index={pi}>
               <PageDeleteButton ids={pageIds} edit={edit} />
-              <RunningHeader brand={report.brand} title={report.meta.titleKo} />
+              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
               <div className="par-sheet-body">
                 <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} />
               </div>
@@ -251,90 +255,69 @@ function PageDeleteButton({ ids, edit }: { ids: string[]; edit?: ReportEdit }) {
   );
 }
 
-export function ReportPageThumbnails({
+// ─── 썸네일(페이지 인디케이터) — 실제 페이지를 그대로 축소 렌더 ─────────────────
+/**
+ * 좌측 페이지 목록에 쓰는 단일 페이지 미니 미리보기. 중앙 캔버스와 동일한
+ * 실제 블록 노드(`reportFlowItems` 결과)를 읽기전용으로 A4 시트에 담아
+ * `transform: scale()` 로 축소한다 — 스켈레톤이 아니라 진짜 페이지 축소본.
+ *
+ * 페이지 분할은 중앙 `ReportPages` 가 계산해 `onPagesChange` 로 넘긴 `ids`
+ * 를 그대로 받아 재측정 없이 렌더하므로 가볍다. CSS(.par-sheet 등)는 중앙
+ * `ReportPages` 가 전역 주입하므로 여기서는 클래스만 사용한다.
+ */
+export function ReportThumbnailSheet({
   report,
-  pages,
-  activePageIndex,
-  onSelect,
-  onDelete,
+  ids,
+  itemsById,
+  bodyNumber,
+  bodyTotal,
+  width = 80,
 }: {
   report: AnalysisReport;
-  pages: string[][];
-  activePageIndex: number;
-  onSelect: (pageIndex: number) => void;
-  onDelete: (ids: string[]) => void;
+  ids: string[];
+  /** id → FlowItem (편집기에서 한 번만 계산해 공유). */
+  itemsById: Map<string, FlowItem>;
+  bodyNumber: number;
+  bodyTotal: number;
+  width?: number;
 }) {
-  const rootStyle = reportRootStyle(report);
-  const natural = useMemo(() => reportFlowItems(report), [report]);
-  const items = useMemo(() => visibleFlowItems(report, natural), [natural, report]);
-  const itemsById = useMemo(() => new Map(items.map((it) => [it.id, it])), [items]);
-  const coverPageFlags = pages.map((ids) => ids.length === 1 && itemsById.get(ids[0])?.wrap === "cover");
-  const bodyTotal = coverPageFlags.filter((c) => !c).length;
+  const items = ids.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
+  const isCover = items.length === 1 && items[0]?.wrap === "cover";
+  const scale = width / REPORT_A4_WIDTH_PX;
+  const height = width * (297 / 210);
+  const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
 
-  let bodyNo = 0;
   return (
-    <div className="flex flex-col items-center gap-2.5">
-      <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_CSS }} />
-      {pages.map((pageIds, pi) => {
-        const pageItems = pageIds.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
-        const isCover = coverPageFlags[pi];
-        const pageNo = isCover ? 0 : ++bodyNo;
-        return (
-          <div key={pi} className="group relative">
-            <button
-              type="button"
-              data-page-thumb-index={pi}
-              onClick={() => onSelect(pi)}
-              className={`relative overflow-hidden rounded-[3px] border bg-white shadow-sm transition ${
-                activePageIndex === pi
-                  ? "border-blue-500 ring-2 ring-blue-100"
-                  : "border-slate-300 hover:border-blue-400"
-              }`}
-              style={{ width: THUMB_WIDTH_PX, height: THUMB_HEIGHT_PX }}
-              title={`${pi + 1}페이지로 이동`}
-              aria-current={activePageIndex === pi ? "page" : undefined}
-            >
-              <div className="pointer-events-none absolute inset-0 overflow-hidden bg-white">
-                <div
-                  className="par-root"
-                  style={{
-                    ...rootStyle,
-                    transform: `scale(${THUMB_SCALE})`,
-                    transformOrigin: "top left",
-                    width: "210mm",
-                    height: "297mm",
-                  }}
-                >
-                  {pageItems.length === 0 ? null : isCover ? (
-                    <section className="par-sheet par-sheet-cover" style={{ margin: 0, boxShadow: "none" }}>
-                      <CoverShell it={pageItems[0]} meta={report.blockMeta?.[pageItems[0].id]} />
-                    </section>
-                  ) : (
-                    <section className="par-sheet" style={{ margin: 0, boxShadow: "none" }}>
-                      <RunningHeader brand={report.brand} title={report.meta.titleKo} />
-                      <div className="par-sheet-body">
-                        <RunsView items={pageItems} blockMeta={report.blockMeta} />
-                      </div>
-                      <RunningFooter brand={report.brand} docNo={report.docNo} page={pageNo} total={bodyTotal} />
-                    </section>
-                  )}
-                </div>
+    <div style={{ width, height, overflow: "hidden", position: "relative" }} aria-hidden>
+      <div
+        style={{
+          width: REPORT_A4_WIDTH_PX,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          pointerEvents: "none",
+        }}
+      >
+        <div className="par-root" style={buildReportRootStyle(report)}>
+          {isCover ? (
+            <section className="par-sheet par-sheet-cover">
+              <div className="par-cover-shell">{items[0]?.node}</div>
+            </section>
+          ) : (
+            <section className="par-sheet">
+              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
+              <div className="par-sheet-body">
+                <RunsView items={items} blockMeta={report.blockMeta} />
               </div>
-              <span className="absolute bottom-1 right-1 rounded bg-white/90 px-1 text-[10px] font-semibold text-slate-600 shadow-sm">
-                {pi + 1}
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onDelete(pageIds)}
-              title="이 페이지 삭제"
-              className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full border border-red-200 bg-white text-[11px] leading-none text-red-500 opacity-0 hover:bg-red-50 group-hover:opacity-100"
-            >
-              ×
-            </button>
-          </div>
-        );
-      })}
+              <RunningFooter
+                brand={report.brand}
+                docNo={report.docNo}
+                page={bodyNumber}
+                total={bodyTotal}
+              />
+            </section>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -692,10 +675,16 @@ function packFlow(
 }
 
 // ─── 헤더/푸터 ────────────────────────────────────────────────────────────────
-function RunningHeader({ brand, title }: { brand: string; title: string }) {
+function RunningHeader({ brand, title, logoDataUrl }: { brand: string; title: string; logoDataUrl?: string }) {
   return (
     <div className="par-runhead">
-      <span>{brand}</span>
+      <span className="par-runhead-brand">
+        {logoDataUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="par-runhead-logo" src={logoDataUrl} alt="" />
+        ) : null}
+        <span>{brand}</span>
+      </span>
       <span className="par-runhead-r">{title}</span>
     </div>
   );

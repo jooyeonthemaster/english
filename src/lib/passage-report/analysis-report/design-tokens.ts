@@ -11,9 +11,14 @@ import type { ReportThemeId } from "./schema";
 export interface ReportTheme {
   id: ReportThemeId;
   label: string;
-  /** 핵심 네이비 (섹션 헤더 바, 강조 박스) */
+  /** 핵심 잉크 컬러 (텍스트, 선, 포인트) */
   ink: string;
   inkSoft: string;
+  /** 넓은 채움 면적. 잉크 절약 템플릿은 여기만 밝게 둔다. */
+  inkFill: string;
+  inkFillSoft: string;
+  inkOnFill: string;
+  inkOnFillMuted: string;
   /** 앤틱 골드 (액센트 라인, eyebrow, 강조 키워드) */
   gold: string;
   goldSoft: string;
@@ -33,11 +38,36 @@ export interface ReportTheme {
 }
 
 export const REPORT_THEMES: Record<ReportThemeId, ReportTheme> = {
+  "black-white": {
+    id: "black-white",
+    label: "블랙.화이트",
+    ink: "#111111",
+    inkSoft: "#3F3F46",
+    inkFill: "#FFFFFF",
+    inkFillSoft: "#F7F7F7",
+    inkOnFill: "#111111",
+    inkOnFillMuted: "#52525B",
+    gold: "#111111",
+    goldSoft: "#52525B",
+    text: "#111111",
+    textMuted: "#52525B",
+    tint: "#FFFFFF",
+    tintBorder: "#D4D4D8",
+    tableHeadBg: "#FFFFFF",
+    tableHeadText: "#111111",
+    tableStripe: "#FFFFFF",
+    page: "#FFFFFF",
+    rule: "#111111",
+  },
   "veritas-navy": {
     id: "veritas-navy",
     label: "베리타스 네이비",
     ink: "#1B2A4A",
     inkSoft: "#2C3E63",
+    inkFill: "#1B2A4A",
+    inkFillSoft: "#2C3E63",
+    inkOnFill: "#FFFFFF",
+    inkOnFillMuted: "#D7DEF0",
     gold: "#A8853A",
     goldSoft: "#C8A85C",
     text: "#1A2233",
@@ -55,6 +85,10 @@ export const REPORT_THEMES: Record<ReportThemeId, ReportTheme> = {
     label: "스칼라 잉크",
     ink: "#26303A",
     inkSoft: "#3C4956",
+    inkFill: "#26303A",
+    inkFillSoft: "#3C4956",
+    inkOnFill: "#FFFFFF",
+    inkOnFillMuted: "#DDE3EA",
     gold: "#8C2F39", // 버건디 액센트
     goldSoft: "#B9606A",
     text: "#1F2730",
@@ -72,6 +106,10 @@ export const REPORT_THEMES: Record<ReportThemeId, ReportTheme> = {
     label: "프레시 틸",
     ink: "#0F3D3E",
     inkSoft: "#1C5658",
+    inkFill: "#0F3D3E",
+    inkFillSoft: "#1C5658",
+    inkOnFill: "#FFFFFF",
+    inkOnFillMuted: "#D4EFEC",
     gold: "#0D9488",
     goldSoft: "#5ECfC5",
     text: "#10231F",
@@ -87,7 +125,7 @@ export const REPORT_THEMES: Record<ReportThemeId, ReportTheme> = {
 };
 
 export function getReportTheme(id: ReportThemeId): ReportTheme {
-  return REPORT_THEMES[id] ?? REPORT_THEMES["veritas-navy"];
+  return REPORT_THEMES[id] ?? REPORT_THEMES["black-white"];
 }
 
 /**

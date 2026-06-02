@@ -199,11 +199,12 @@ export function TaskQueueHost({
 export function TaskQueueRouteHost({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const defaultDomain = resolveTaskQueueDefaultDomain(pathname);
+  const hideFloatingControls = pathname === "/director/dashboard-v2";
 
   return (
     <TaskQueueProvider defaultDomain={defaultDomain}>
       {children}
-      <TaskQueueFloatingControls />
+      {!hideFloatingControls && <TaskQueueFloatingControls />}
     </TaskQueueProvider>
   );
 }

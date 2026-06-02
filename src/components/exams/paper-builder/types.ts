@@ -51,6 +51,39 @@ export type Density = "comfortable" | "compact";
 export type PassageStyle = "boxed" | "plain" | "underlined";
 export type PaperSize = "A4" | "B4";
 
+// ─── 표지(COVER) ──────────────────────────────────────────────────────────────
+// 켜면 시험지 첫 장 앞에 별도의 표지 페이지가 생긴다. 표지는 본문 페이지 번호에
+// 포함되지 않으며, 끄더라도 아래 설정값은 그대로 보존된다.
+export type PaperCoverTemplate = "classic" | "band" | "minimal";
+
+export type PaperCover = {
+  enabled: boolean;
+  template: PaperCoverTemplate;
+  // 큰 제목 위에 들어가는 작은 라벨(예: 학원·시리즈명). 비우면 표시 안 함.
+  eyebrow: string;
+  // 표지 하단 문구(예: 문서번호·슬로건). 비우면 표시 안 함.
+  footnote: string;
+  // 학원 로고(헤더와 공유) 표시 여부.
+  showLogo: boolean;
+  // 학교/반/이름/시험일 정보 박스 표시 여부.
+  showInfo: boolean;
+};
+
+export const DEFAULT_PAPER_COVER: PaperCover = {
+  enabled: false,
+  template: "classic",
+  eyebrow: "",
+  footnote: "",
+  showLogo: true,
+  showInfo: true,
+};
+
+export const PAPER_COVER_TEMPLATE_LABELS: Record<PaperCoverTemplate, string> = {
+  classic: "클래식",
+  band: "밴드",
+  minimal: "미니멀",
+};
+
 export type BreakBefore = "auto" | "column" | "page";
 export type PaperBlockType = "question" | "text" | "section" | "divider" | "spacer" | "image";
 export type InsertablePaperBlockType = Exclude<PaperBlockType, "question">;

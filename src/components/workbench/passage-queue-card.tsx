@@ -7,7 +7,7 @@ import {
   AlertTriangle,
   RotateCcw,
   Trash2,
-  Eye,
+  Maximize2,
   Clock,
   Check,
   BookOpen,
@@ -292,13 +292,10 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
       }`}
-      onClick={() => {
-        if (
-          passage.status === "done" ||
-          passage.status === "error" ||
-          passage.status === "not_analyzed"
-        ) {
-          onViewDetail(passage.id);
+      onClick={(e) => {
+        // 카드 본문 어디든 클릭 = 선택(체크) 토글. 상세는 우측 하단 '상세 보기' 버튼으로만 연다.
+        if (onToggleSelect) {
+          onToggleSelect(passage.id, e.shiftKey);
         }
       }}
       role="button"
@@ -306,12 +303,8 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          if (
-            passage.status === "done" ||
-            passage.status === "error" ||
-            passage.status === "not_analyzed"
-          ) {
-            onViewDetail(passage.id);
+          if (onToggleSelect) {
+            onToggleSelect(passage.id, e.shiftKey);
           }
         }
       }}
@@ -379,21 +372,6 @@ export const PassageQueueCard = memo(function PassageQueueCard({
           className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={(e) => e.stopPropagation()}
         >
-          {passage.status === "done" && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => onViewDetail(passage.id)}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"
-                >
-                  <Eye className="w-3.5 h-3.5 text-slate-500" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="top" className="text-xs">
-                분석 결과 보기
-              </TooltipContent>
-            </Tooltip>
-          )}
           {passage.status === "not_analyzed" && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -545,10 +523,19 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         </div>
       )}
 
-      {/* Click hint for completed cards */}
+      {/* 상세 보기 — 우측 하단 상시 표시. 문제 카드의 '상세 보기' 버튼과 디자인·색을 통일. */}
       {passage.status === "done" && (
-        <div className="absolute bottom-2 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <span className="text-[9px] text-blue-500 font-medium">클릭하여 상세 보기</span>
+        <div
+          className="absolute bottom-2 right-3"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => onViewDetail(passage.id)}
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          >
+            상세 보기
+            <Maximize2 className="w-3 h-3" />
+          </button>
         </div>
       )}
     </div>

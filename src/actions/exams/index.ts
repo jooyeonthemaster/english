@@ -18,6 +18,7 @@ export {
   deleteExam,
   bulkDeleteExams,
   publishExam,
+  incrementExamPrintCount,
 } from "./crud";
 
 export {

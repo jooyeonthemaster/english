@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import {
   BookOpen,
   ChevronDown,
+  Command,
   Columns2,
+  Copy,
   Download,
   Eye,
   FileType2,
@@ -30,6 +32,7 @@ interface PreviewToolbarProps {
   paperItemsCount: number;
   forceTwoPerPage?: boolean;
   onToggleTwoPerPage?: () => void;
+  onOpenCommandPalette?: () => void;
   canUndo?: boolean;
   canRedo?: boolean;
   onUndo?: () => void;
@@ -41,6 +44,7 @@ interface PreviewToolbarProps {
   onDownloadHwpx: () => void;
   onDownloadHwpxWithAnswers: () => void;
   onSave: () => void;
+  onSaveAs?: () => void;
 }
 
 export function PreviewToolbar({
@@ -51,6 +55,7 @@ export function PreviewToolbar({
   paperItemsCount,
   forceTwoPerPage,
   onToggleTwoPerPage,
+  onOpenCommandPalette,
   canUndo,
   canRedo,
   onUndo,
@@ -62,6 +67,7 @@ export function PreviewToolbar({
   onDownloadHwpx,
   onDownloadHwpxWithAnswers,
   onSave,
+  onSaveAs,
 }: PreviewToolbarProps) {
   const [downloadOpen, setDownloadOpen] = useState(false);
   const [compactLabels, setCompactLabels] = useState(false);
@@ -115,7 +121,7 @@ export function PreviewToolbar({
   return (
     <div
       ref={toolbarRef}
-      className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3"
+      className="flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4"
     >
       <div className="flex min-w-0 items-center gap-2">
         <Eye className="h-3.5 w-3.5 text-slate-400" />
@@ -130,11 +136,22 @@ export function PreviewToolbar({
           {compactLabels ? compactTemplateLabel : templateLabel}
         </span>
       </div>
-      <div className="no-print flex shrink-0 items-center gap-1.5">
+      <div className="no-print flex shrink-0 items-center gap-1">
         {dirty && (
           <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
             저장 필요
           </span>
+        )}
+        {onOpenCommandPalette && (
+          <button
+            type="button"
+            onClick={onOpenCommandPalette}
+            title="빠른 실행 (Ctrl/⌘+K)"
+            aria-label="빠른 실행"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50"
+          >
+            <Command className="h-3.5 w-3.5" />
+          </button>
         )}
         {onToggleTwoPerPage && (
           <button
@@ -150,7 +167,7 @@ export function PreviewToolbar({
             )}
           >
             <Columns2 className="h-3.5 w-3.5" />
-            쪽당 2문제
+            {forceTwoPerPage ? "쪽당 1문제" : "쪽당 2문제"}
           </button>
         )}
         {onUndo && (
@@ -178,15 +195,28 @@ export function PreviewToolbar({
         <button
           onClick={onSave}
           disabled={actionDisabled}
-          className="flex h-8 min-w-[76px] items-center justify-center gap-1.5 rounded-md bg-slate-900 px-3 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           저장
         </button>
+        {onSaveAs && (
+          <button
+            type="button"
+            onClick={onSaveAs}
+            disabled={actionDisabled}
+            title="다른 이름으로 저장"
+            aria-label="다른 이름으로 저장"
+            className="flex h-8 min-w-[78px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Copy className="h-3.5 w-3.5" />
+            {compactLabels ? "복사" : "다른 이름"}
+          </button>
+        )}
         <button
           onClick={onPrint}
           disabled={actionDisabled}
-          className="flex h-8 min-w-[76px] items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Printer className="h-3.5 w-3.5" />
           인쇄

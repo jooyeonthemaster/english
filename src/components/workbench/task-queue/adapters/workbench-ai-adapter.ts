@@ -58,7 +58,7 @@ function buildDescription(job: WorkbenchAiJobRow, domain: TaskDomain): string {
       : "Trigger.dev에서 지문 분석을 처리하고 있습니다.";
   }
   return job.status === "COMPLETED"
-    ? "생성된 문제는 문제은행에 저장되었습니다."
+    ? "생성된 문제는 문제관리에 저장되었습니다."
     : "Trigger.dev에서 문제 생성을 처리하고 있습니다.";
 }
 

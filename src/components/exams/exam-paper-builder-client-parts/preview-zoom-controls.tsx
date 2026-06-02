@@ -18,6 +18,7 @@ interface PreviewZoomControlsProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onReset: () => void;
+  onFit: () => void;
   onDragStart: (event: ReactMouseEvent<HTMLSpanElement>) => void;
 }
 
@@ -27,6 +28,7 @@ export function PreviewZoomControls({
   onZoomIn,
   onZoomOut,
   onReset,
+  onFit,
   onDragStart,
 }: PreviewZoomControlsProps) {
   return (
@@ -58,7 +60,7 @@ export function PreviewZoomControls({
       <PreviewZoomButton onClick={onZoomIn} disabled={zoom >= PREVIEW_ZOOM_MAX} label="확대">
         <Plus className="size-3.5" aria-hidden="true" />
       </PreviewZoomButton>
-      <PreviewZoomButton onClick={onReset} disabled={zoom === 1} label="화면에 맞추기">
+      <PreviewZoomButton onClick={onFit} label="화면에 맞추기">
         <Maximize2 className="size-3.5" aria-hidden="true" />
       </PreviewZoomButton>
     </div>

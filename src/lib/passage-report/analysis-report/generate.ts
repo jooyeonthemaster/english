@@ -141,7 +141,7 @@ export async function generateAnalysisReportCore(
     schemaVersion: 1,
     brand: input.brand ?? "ENGLISH READING LAB",
     docNo: input.docNo,
-    themeId: input.themeId ?? "veritas-navy",
+    themeId: input.themeId ?? "black-white",
     passageLayout: "hlc", // 01 원문 필기 캔버스(신규 레이아웃)
     meta: validation.data.meta,
     sections: validation.data.sections,

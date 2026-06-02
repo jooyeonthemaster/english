@@ -19,6 +19,9 @@
     "remotion:render": "remotion render remotion/index.ts NaraDemoVideo out/nara-demo.mp4",
     "remotion:render-mobile": "remotion render remotion/index.ts AIFlowMobilePromo out/ai-flow-promo.mp4",
     "remotion:render-scene": "remotion render remotion/index.ts",
+    "demo:record": "tsx scripts/demo/record.ts",
+    "demo:manifest": "tsx scripts/demo/manifest.ts",
+    "demo:render": "remotion render remotion/index.ts",
     "test:webkit": "playwright test --project=webkit-desktop",
     "test:webkit:headed": "playwright test --project=webkit-desktop --headed",
     "safari:open": "playwright open --browser=webkit http://localhost:3000/dev/annotation-editor"

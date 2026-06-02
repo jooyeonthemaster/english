@@ -95,7 +95,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         const u = user as unknown as Record<string, unknown>;
         token.id = user.id;
@@ -103,6 +103,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.academyId = u.academyId as string;
         token.academyName = u.academyName as string;
         token.academySlug = u.academySlug as string;
+      }
+      // 프로필/학원 정보 수정 후 useSession().update()로 토큰 갱신
+      if (trigger === "update" && session) {
+        const s = session as Record<string, unknown>;
+        if (typeof s.name === "string") token.name = s.name;
+        if (typeof s.email === "string") token.email = s.email;
+        if (typeof s.academyName === "string") token.academyName = s.academyName;
       }
       return token;
     },

@@ -335,3 +335,32 @@ export async function publishExam(examId: string): Promise<ActionResult> {
     return { success: false, error: message };
   }
 }
+
+/**
+ * incrementExamPrintCount — PDF 인쇄(window.print) 시 인쇄 횟수를 +1 한다.
+ * HWPX/DOCX 내보내기는 각 export 라우트에서 직접 증가시키므로, 이 액션은
+ * 클라이언트에서만 일어나는 브라우저 인쇄를 집계하기 위한 보완 경로다.
+ */
+export async function incrementExamPrintCount(examId: string) {
+  try {
+    const staff = await requireStaffAuth();
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!exam) return { success: false as const, error: "시험을 찾을 수 없습니다." };
+
+    await prisma.exam.update({
+      where: { id: examId },
+      data: { printCount: { increment: 1 } },
+    });
+
+    revalidatePath("/director/exams");
+    revalidatePath("/director/workbench/exams");
+    return { success: true as const };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "인쇄 집계 중 오류가 발생했습니다.";
+    return { success: false as const, error: message };
+  }
+}

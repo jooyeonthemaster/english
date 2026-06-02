@@ -14,6 +14,7 @@ import {
   Layers,
   Sparkles,
   XCircle,
+  Maximize2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -337,6 +338,9 @@ interface QuestionCardProps {
   showHeaderActions?: boolean;
   /** Open the detail view when the card body is clicked. */
   openOnCardClick?: boolean;
+  /** 해설보기 줄 왼쪽에 '상세 보기' 버튼을 띄우고, 해설보기를 오른쪽으로 보낸다.
+   *  두 버튼 색은 '펼치기' 버튼과 통일(blue-400). 생성/검수 결과 카드 전용. */
+  showDetailButton?: boolean;
 }
 
 export function QuestionCard({
@@ -355,6 +359,7 @@ export function QuestionCard({
   hideReviewStatusStamp = false,
   showHeaderActions = false,
   openOnCardClick = false,
+  showDetailButton = false,
 }: QuestionCardProps) {
   const [passageOpen, setPassageOpen] = useState(false);
   const [explanationOpen, setExplanationOpen] = useState(false);
@@ -409,6 +414,22 @@ export function QuestionCard({
   };
 
   const compactFixed = compact && !compactExpanded;
+
+  // 펼친 해설 본문 — 일반/생성결과 두 레이아웃에서 공유한다.
+  const explanationPanel =
+    q.explanation && explanationOpen ? (
+      <div className="mt-2 bg-slate-50 border border-slate-100 rounded-md px-3 py-2 space-y-2">
+        <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">{q.explanation.content}</p>
+        {keyPoints.length > 0 && (
+          <div className="space-y-1">
+            <span className="text-[10px] font-semibold text-slate-500">핵심 포인트</span>
+            {keyPoints.map((kp, i) => (
+              <p key={i} className="text-[11px] text-slate-600 pl-2 border-l-2 border-teal-300">{kp}</p>
+            ))}
+          </div>
+        )}
+      </div>
+    ) : null;
 
   return (
     <Card
@@ -637,27 +658,48 @@ export function QuestionCard({
               </div>
             )}
 
-            {/* Explanation */}
-            {q.explanation && (
-              <div>
-                <button className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1" onClick={() => setExplanationOpen(!explanationOpen)}>
-                  {explanationOpen ? "해설 접기" : "해설 보기"}
-                  {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                </button>
-                {explanationOpen && (
-                  <div className="mt-2 bg-slate-50 border border-slate-100 rounded-md px-3 py-2 space-y-2">
-                    <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">{q.explanation.content}</p>
-                    {keyPoints.length > 0 && (
-                      <div className="space-y-1">
-                        <span className="text-[10px] font-semibold text-slate-500">핵심 포인트</span>
-                        {keyPoints.map((kp, i) => (
-                          <p key={i} className="text-[11px] text-slate-600 pl-2 border-l-2 border-teal-300">{kp}</p>
-                        ))}
-                      </div>
-                    )}
+            {/* Explanation (+ 생성결과 카드: 좌측 '상세 보기' 버튼) */}
+            {showDetailButton && onDetail ? (
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    {/* 상세 보기 — 색은 펼치기 버튼과 통일(blue-400/blue-600) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDetail();
+                      }}
+                      className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                    >
+                      상세 보기
+                      <Maximize2 className="w-3 h-3" />
+                    </button>
+                    {q.explanation ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExplanationOpen(!explanationOpen);
+                        }}
+                        className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                      >
+                        {explanationOpen ? "해설 접기" : "해설 보기"}
+                        {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </button>
+                    ) : null}
                   </div>
-                )}
-              </div>
+                  {explanationPanel}
+                </div>
+            ) : (
+              q.explanation && (
+                <div>
+                  <button className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1" onClick={() => setExplanationOpen(!explanationOpen)}>
+                    {explanationOpen ? "해설 접기" : "해설 보기"}
+                    {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                  </button>
+                  {explanationPanel}
+                </div>
+              )
             )}
           </>
         )}

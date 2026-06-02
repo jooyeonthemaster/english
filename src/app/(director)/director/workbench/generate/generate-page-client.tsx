@@ -241,6 +241,18 @@ export function GeneratePageClient({
     [],
   );
 
+  // 지문별 "이미 생성된" 문제 수(실시간). 하단 생성/검수 결과(savedQuestions)는
+  // 생성 완료 시 갱신되므로, 이를 지문 id 로 집계해 지문 카드의 서버 _count(페이지
+  // 로드 시점 총계)와 합쳐(max) 뱃지에 쓴다 — 새로고침 없이 방금 생성한 문제도 반영.
+  const questionCountByPassage = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const q of savedQuestions) {
+      const pid = q.passage?.id;
+      if (pid) map.set(pid, (map.get(pid) ?? 0) + 1);
+    }
+    return map;
+  }, [savedQuestions]);
+
   // ── Question detail modal ──
   const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
     null,
@@ -1255,6 +1267,7 @@ export function GeneratePageClient({
               onExitPasteMode={handleExitPasteMode}
               onCreatePastedPassage={handleCreatePastedPassage}
               pasteSaving={pasteSaving}
+              questionCountByPassage={questionCountByPassage}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
               onViewPassageContent={setContentModalPassage}
             />
@@ -1373,7 +1386,6 @@ export function GeneratePageClient({
                 <h2 className="text-[15px] font-bold text-slate-800">
                   문제 상세
                 </h2>
-                <ReviewStatusStamp approved={detailQuestion.approved} className="shrink-0" />
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 {detailQuestion.approved ? (
@@ -1435,12 +1447,20 @@ export function GeneratePageClient({
                 )}
               </div>
               {/* Right: Question */}
-              <div className="overflow-y-auto px-6 py-5">
-                <QuestionCard
-                  q={detailQuestion}
-                  num={1}
-                  readonly
-                  hideReviewStatusStamp
+              <div className="relative overflow-hidden">
+                <div className="h-full overflow-y-auto px-6 py-5">
+                  <QuestionCard
+                    q={detailQuestion}
+                    num={1}
+                    readonly
+                    hideReviewStatusStamp
+                  />
+                </div>
+                {/* 검수 도장 — 이 팝업 전용으로 우측 문제 박스 우측 상단에 고정 + 확대.
+                    공용 ReviewStatusStamp는 그대로 두고 transform scale로만 키운다. */}
+                <ReviewStatusStamp
+                  approved={detailQuestion.approved}
+                  className="absolute right-9 top-9 z-10 origin-top-right scale-125"
                 />
               </div>
             </div>

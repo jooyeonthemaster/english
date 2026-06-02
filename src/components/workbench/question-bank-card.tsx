@@ -3,6 +3,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import {
   CheckCircle2,
   ChevronDown,
@@ -12,13 +13,15 @@ import {
   Pencil,
   Layers,
   ClipboardList,
-  Clock,
   Star,
   XCircle,
+  Maximize2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
+  PopoverAnchor,
+  PopoverArrow,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
@@ -93,6 +96,15 @@ export function QuestionBankCard({
   showManagementActions = true,
   showStar = true,
   enableDrag = true,
+  compactUsageLabel = false,
+  cardClickSelects = false,
+  showDetailButton = false,
+  getDragQuestionIds,
+  getDuplicateDragQuestionIds,
+  selectionIndex,
+  selectionDisabled = false,
+  duplicateCount,
+  onDuplicateSelectConfirm,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -108,13 +120,42 @@ export function QuestionBankCard({
   showManagementActions?: boolean;
   showStar?: boolean;
   enableDrag?: boolean;
+  // 시험지 빌더(exams/create)용 간결 표기: 미사용 "0개 시험지에 미사용",
+  // 사용 "N개 시험지에 사용". 기본(questions 페이지)은 기존 문구 유지.
+  compactUsageLabel?: boolean;
+  // 시험지 빌더: 카드 본문 클릭 시 상세 대신 체크(선택)를 토글한다.
+  cardClickSelects?: boolean;
+  // 시험지 빌더: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
+  showDetailButton?: boolean;
+  // 다중 드래그: 드래그 시작 시 함께 끌고 갈 문항 id 목록을 계산한다.
+  // (선택된 카드를 끌면 선택 전체, 아니면 이 카드만)
+  getDragQuestionIds?: (draggedId: string) => string[];
+  getDuplicateDragQuestionIds?: (draggedId: string) => string[];
+  // 체크한 순서(1,2,3…). 드롭 시 이 순서대로 미리보기에 들어간다.
+  selectionIndex?: number;
+  // 시험지 빌더: 이미 들어간 문항은 일반 선택/드래그를 막고 흐리게 표시한다.
+  selectionDisabled?: boolean;
+  // 시험지 빌더: 같은 문항이 여러 번 들어간 경우 총 포함 개수를 숫자만 표시한다.
+  duplicateCount?: number;
+  // 시험지 빌더: 이미 들어간 문항을 다시 선택할지 확인한 뒤 체크 상태로 만든다.
+  onDuplicateSelectConfirm?: () => void;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [passageOpen, setPassageOpen] = useState(false);
+  const [duplicatePromptOpen, setDuplicatePromptOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const suppressCardClickRef = useRef(false);
+  // 드래그 시작 시점의 최신 선택 상태를 읽기 위해 ref로 보관한다(effect 재구독 방지).
+  const getDragQuestionIdsRef = useRef(getDragQuestionIds);
+  const getDuplicateDragQuestionIdsRef = useRef(getDuplicateDragQuestionIds);
+  useEffect(() => {
+    getDragQuestionIdsRef.current = getDragQuestionIds;
+  }, [getDragQuestionIds]);
+  useEffect(() => {
+    getDuplicateDragQuestionIdsRef.current = getDuplicateDragQuestionIds;
+  }, [getDuplicateDragQuestionIds]);
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const displayOptions =
@@ -148,12 +189,79 @@ export function QuestionBankCard({
 
   // Make card draggable
   useEffect(() => {
-    if (!enableDrag) return;
+    if (!enableDrag || selectionDisabled) return;
     const el = dragRef.current;
     if (!el) return;
     return draggable({
       element: el,
-      getInitialData: () => ({ questionId: q.id, type: "question" }),
+      getInitialData: () => ({
+        questionId: q.id,
+        questionIds: getDragQuestionIdsRef.current?.(q.id) ?? [q.id],
+        duplicateQuestionIds: getDuplicateDragQuestionIdsRef.current?.(q.id) ?? [],
+        type: "question",
+      }),
+      // 다중 선택 드래그: 선택한 카드들이 한 장으로 겹쳐진 듯한 미리보기 + 개수 배지.
+      // (1개일 땐 기본 드래그 미리보기를 그대로 사용)
+      onGenerateDragPreview: ({ nativeSetDragImage }) => {
+        const count = getDragQuestionIdsRef.current?.(q.id)?.length ?? 1;
+        if (count <= 1) return;
+        setCustomNativeDragPreview({
+          nativeSetDragImage,
+          getOffset: ({ container }) => {
+            const rect = container.getBoundingClientRect();
+            return { x: Math.min(120, rect.width / 2), y: 24 };
+          },
+          render: ({ container }) => {
+            const source = dragRef.current;
+            if (!source) return;
+            const rect = source.getBoundingClientRect();
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "relative";
+            wrapper.style.width = `${rect.width}px`;
+            wrapper.style.height = `${rect.height}px`;
+            // 뒤로 살짝 어긋나게 겹친 카드 2장 — "여러 장이 한 덩어리" 느낌.
+            const backCount = Math.min(2, count - 1);
+            for (let i = backCount; i >= 1; i--) {
+              const back = document.createElement("div");
+              back.style.position = "absolute";
+              back.style.inset = "0";
+              back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
+              back.style.borderRadius = "12px";
+              back.style.background = "white";
+              back.style.border = "1px solid rgb(226, 232, 240)";
+              back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+              wrapper.appendChild(back);
+            }
+            const clone = source.cloneNode(true) as HTMLElement;
+            clone.style.position = "relative";
+            clone.style.width = `${rect.width}px`;
+            clone.style.margin = "0";
+            clone.style.opacity = "1";
+            clone.style.transform = "none";
+            wrapper.appendChild(clone);
+            const badge = document.createElement("div");
+            badge.textContent = String(count);
+            badge.style.position = "absolute";
+            badge.style.top = "-10px";
+            badge.style.right = "-10px";
+            badge.style.minWidth = "28px";
+            badge.style.height = "28px";
+            badge.style.padding = "0 8px";
+            badge.style.borderRadius = "14px";
+            badge.style.background = "#2563eb";
+            badge.style.color = "white";
+            badge.style.fontSize = "13px";
+            badge.style.fontWeight = "700";
+            badge.style.display = "flex";
+            badge.style.alignItems = "center";
+            badge.style.justifyContent = "center";
+            badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+            badge.style.fontVariantNumeric = "tabular-nums";
+            wrapper.appendChild(badge);
+            container.appendChild(wrapper);
+          },
+        });
+      },
       onDragStart: () => {
         suppressCardClickRef.current = true;
         setIsDragging(true);
@@ -165,7 +273,7 @@ export function QuestionBankCard({
         }, 0);
       },
     });
-  }, [enableDrag, q.id]);
+  }, [enableDrag, q.id, selectionDisabled]);
 
   const questionClamp =
     viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
@@ -180,29 +288,35 @@ export function QuestionBankCard({
   };
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (
-      (!onDetail && !onEdit) ||
-      suppressCardClickRef.current ||
-      shouldIgnoreCardClick(e)
-    ) {
+    if (suppressCardClickRef.current || shouldIgnoreCardClick(e)) return;
+    if (selectionDisabled) {
+      if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
       return;
     }
+    // 시험지 빌더: 본문 클릭은 체크(선택) 토글. 상세는 '상세 보기' 버튼으로만 연다.
+    if (cardClickSelects) {
+      onToggle();
+      return;
+    }
+    if (!onDetail && !onEdit) return;
     if (onDetail) onDetail();
     else onEdit?.();
   };
 
-  return (
+  const card = (
     <Card
       ref={dragRef}
       onClick={handleCardClick}
-      className={`${enableDrag ? "cursor-grab active:cursor-grabbing" : onDetail || onEdit ? "cursor-pointer" : ""} flex flex-col ${
+      className={`${enableDrag && !selectionDisabled ? "cursor-grab active:cursor-grabbing" : onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} relative flex flex-col ${
         expanded ? "" : "overflow-hidden"
       } ${
         isDragging ? "opacity-40 scale-95" : ""
       } ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
       } ${
-        !q.approved
+        selectionDisabled ? "border-slate-200 bg-slate-100/80 text-slate-400 shadow-none hover:shadow-none" : ""
+      } ${
+        !selectionDisabled && !q.approved
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""
       }`}
@@ -213,9 +327,24 @@ export function QuestionBankCard({
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
           <Checkbox
             checked={selected}
-            onCheckedChange={onToggle}
+            aria-disabled={selectionDisabled}
+            onCheckedChange={() => {
+              if (selectionDisabled) {
+                if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
+                return;
+              }
+              onToggle();
+            }}
             className="shrink-0"
           />
+          {selected && typeof selectionIndex === "number" && (
+            <span
+              className="inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold tabular-nums text-white"
+              title={`체크 순서 ${selectionIndex}번`}
+            >
+              {selectionIndex}
+            </span>
+          )}
           {showStar && (
             onToggleStar ? (
               <button
@@ -264,13 +393,19 @@ export function QuestionBankCard({
           {q.aiGenerated && (
             <Layers className="w-3 h-3 text-blue-400 shrink-0" />
           )}
-          {q.approved ? (
+          {q.approved && (
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          ) : (
-            <Clock className="w-3.5 h-3.5 text-slate-300 shrink-0" />
           )}
           </div>
           <div className="flex items-center gap-1 shrink-0">
+            {typeof duplicateCount === "number" && duplicateCount > 1 && (
+              <span
+                className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black tabular-nums text-white shadow-sm"
+                title={`시험지에 ${duplicateCount}개 포함`}
+              >
+                {duplicateCount}
+              </span>
+            )}
             {showManagementActions && onDelete && (
               <Button
                 variant="ghost"
@@ -413,11 +548,30 @@ export function QuestionBankCard({
           />
         )}
 
-        {/* Explanation toggle */}
-        <ExplanationSection explanation={q.explanation} />
+        {/* Explanation toggle (+ optional 상세 보기 button on the same row) */}
+        <ExplanationSection
+          explanation={q.explanation}
+          rightSlot={
+            showDetailButton && (onDetail || onEdit) ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  (onDetail ?? onEdit)?.();
+                }}
+                className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+              >
+                상세 보기
+                <Maximize2 className="w-3 h-3" />
+              </button>
+            ) : undefined
+          }
+        />
         </div>
 
-        {/* Footer: review actions (검수완료/취소 + 수정) */}
+        {/* Footer: review actions (검수완료/취소 + 수정).
+            compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
+            스탬프를 아래 '사용 이력' 밴드 우측으로 옮긴다. */}
+        {(!compactUsageLabel || showReviewActions) && (
         <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
           <div className="flex items-end justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
@@ -477,6 +631,7 @@ export function QuestionBankCard({
             </div>
           )}
         </div>
+        )}
 
         {/* Footer — exam-usage history band: shows whether (and where) this
             question has already been placed on an exam paper. */}
@@ -493,16 +648,31 @@ export function QuestionBankCard({
                 className={`w-3.5 h-3.5 shrink-0 ${used ? "text-blue-500" : "text-slate-300"}`}
                 aria-hidden="true"
               />
-              <span
-                className={`text-[11px] font-semibold ${used ? "text-blue-700" : "text-slate-400"}`}
-              >
-                {used ? `${usedCount}개 시험지에 사용됨` : "아직 사용 안 됨"}
-              </span>
+              {compactUsageLabel ? (
+                // 칸이 좁아져도 "N개"는 항상 보이고, "시험지에 사용"만 말줄임
+                // 처리(세로쓰기 방지). min-w-0 로 flex 안에서 줄어들 수 있게 한다.
+                <span
+                  className={`flex min-w-0 items-center gap-0.5 text-[11px] font-semibold ${used ? "text-blue-700" : "text-slate-400"}`}
+                >
+                  <span className="shrink-0">{usedCount}개</span>
+                  <span className="min-w-0 truncate">시험지에 사용</span>
+                </span>
+              ) : (
+                <span
+                  className={`text-[11px] font-semibold ${used ? "text-blue-700" : "text-slate-400"}`}
+                >
+                  {used ? `${usedCount}개 시험지에 사용됨` : "아직 사용 안 됨"}
+                </span>
+              )}
               <span className="ml-auto shrink-0 text-[10px] tabular-nums text-slate-400">
                 {createdLabel}
               </span>
               {hasList && (
                 <ChevronDown className="w-3 h-3 shrink-0 text-blue-400" aria-hidden="true" />
+              )}
+              {/* 시험지 빌더: 검수 도장을 밴드(카드 오른쪽 아래)로 옮겨 표시 */}
+              {compactUsageLabel && (
+                <ReviewStatusStamp approved={q.approved} className="ml-1 shrink-0" />
               )}
             </>
           );
@@ -571,5 +741,57 @@ export function QuestionBankCard({
         })()}
       </CardContent>
     </Card>
+  );
+
+  if (!selectionDisabled || !onDuplicateSelectConfirm) return card;
+
+  return (
+    <Popover open={duplicatePromptOpen} onOpenChange={setDuplicatePromptOpen}>
+      <div className="relative">
+        {card}
+        <PopoverAnchor asChild>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute right-3 top-3 size-2 rounded-full bg-slate-400/45 ring-2 ring-white"
+          />
+        </PopoverAnchor>
+      </div>
+      <PopoverContent
+        side="right"
+        align="start"
+        alignOffset={-6}
+        sideOffset={10}
+        collisionPadding={12}
+        className="w-56 border-slate-200 bg-white p-3 shadow-lg shadow-slate-900/10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <PopoverArrow width={10} height={5} />
+        <p className="text-[12px] font-bold leading-relaxed text-slate-700">
+          이미 시험지에 추가된 문제입니다.
+        </p>
+        <p className="mt-0.5 text-[11px] font-medium text-slate-500">
+          다시 선택하시겠습니까?
+        </p>
+        <div className="mt-3 grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            onClick={() => setDuplicatePromptOpen(false)}
+            className="flex h-7 items-center justify-center rounded-md border border-slate-200 bg-white text-[11px] font-bold text-slate-500 transition-colors hover:bg-slate-50"
+          >
+            거절
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onDuplicateSelectConfirm();
+              setDuplicatePromptOpen(false);
+            }}
+            className="flex h-7 items-center justify-center rounded-md border border-blue-200 bg-blue-50 text-[11px] font-bold text-blue-700 transition-colors hover:bg-blue-100"
+          >
+            승인
+          </button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

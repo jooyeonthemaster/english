@@ -35,6 +35,8 @@ export async function GET(request: NextRequest) {
           school: { select: { id: true, name: true } },
           collectionItems: { select: { collectionId: true } },
           analysis: { select: { id: true, analysisData: true } },
+          // 이 지문으로 이미 생성된 문제 수 — 지문 카드 뱃지에 사용.
+          _count: { select: { questions: true } },
         },
         orderBy: { createdAt: "desc" },
         take: 200,

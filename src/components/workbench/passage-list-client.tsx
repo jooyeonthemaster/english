@@ -585,8 +585,7 @@ export function PassageListClient({
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
 
   const toolbarRow = (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
-      <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
         <div className="flex items-center gap-2">
           <SelectAllCheckbox
             checked={
@@ -634,7 +633,6 @@ export function PassageListClient({
           {filtersToolbar}
         </div>
       </div>
-    </div>
   );
 
   return (
@@ -647,7 +645,7 @@ export function PassageListClient({
       />
 
       {/* ─── Content ─── */}
-      <div className="flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4">
+      <div className="-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8">
         {passagesData.passages.length === 0 ? (
           <div className="mt-2 bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />

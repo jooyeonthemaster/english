@@ -53,7 +53,7 @@ export function BuilderHeaderBar({
         </button>
         <button
           onClick={onPrint}
-          className="flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+          className="flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
         >
           <Printer className="h-3.5 w-3.5" />
           인쇄
@@ -69,7 +69,7 @@ export function BuilderHeaderBar({
         <button
           onClick={onSave}
           disabled={isPending || !hasItems}
-          className="flex h-9 items-center gap-1.5 rounded-lg bg-slate-900 px-3 text-[12px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+          className="flex h-9 items-center gap-1.5 rounded-lg bg-slate-900 px-2 text-[12px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           저장

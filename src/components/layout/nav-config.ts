@@ -158,7 +158,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "설정",
       directorOnly: true,
       items: [
-        { label: "학원 설정", icon: Settings, href: `${basePath}/settings`, directorOnly: true },
+        { label: "설정", icon: Settings, href: `${basePath}/settings`, directorOnly: true },
       ],
     },
     {

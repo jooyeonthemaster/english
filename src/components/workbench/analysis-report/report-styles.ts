@@ -1,6 +1,6 @@
 /**
  * PRIME ANALYSIS 보고서 CSS — 디자인 시스템을 CSS 변수로 구동.
- * 색은 컴포넌트가 .par-root 에 --ink/--gold 등으로 주입 (테마 전환 지원).
+ * 색은 컴포넌트가 .par-root 에 --ink/--gold 등으로 주입 (디자인 템플릿 전환 지원).
  * 모든 간격/정렬은 여기서 고정 → 섹션이 어떤 내용이든 동일 규칙으로 조판됨.
  *
  * 레이아웃: .par-root > .par-sheet(A4 1장) × N. 각 시트는 헤더/본문/푸터.
@@ -35,11 +35,13 @@ export const ANALYSIS_REPORT_CSS = `
 
 /* ── 러닝 헤더/푸터 ── */
 .par-runhead {
-  display: flex; justify-content: space-between; align-items: baseline;
+  display: flex; justify-content: space-between; align-items: center; gap: 5mm;
   font-size: calc(8pt * var(--par-fs, 1)); letter-spacing: .04em;
   color: var(--ink); border-bottom: .6mm solid var(--rule);
   padding-bottom: 2mm; margin-bottom: 5mm; font-weight: 700; flex: 0 0 auto;
 }
+.par-runhead-brand { display: flex; align-items: center; gap: 2.2mm; min-width: 0; }
+.par-runhead-logo { width: 9mm; height: 9mm; object-fit: contain; flex: 0 0 auto; }
 .par-runhead .par-runhead-r { color: var(--text-muted); font-weight: 500; }
 .par-runfoot {
   display: flex; justify-content: space-between; align-items: center;
@@ -76,7 +78,7 @@ export const ANALYSIS_REPORT_CSS = `
 
 /* ── 타이틀 블록 ── */
 .par-title {
-  background: var(--ink); color: #fff; border-left: 2.2mm solid var(--gold);
+  background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border-left: 2.2mm solid var(--gold);
   padding: 7mm 8mm; border-radius: 1.5mm; margin-bottom: 4mm;
 }
 .par-title .par-eyebrow {
@@ -86,13 +88,13 @@ export const ANALYSIS_REPORT_CSS = `
 .par-title .par-title-ko { font-size: calc(21pt * var(--par-fs, 1)); font-weight: 800; line-height: 1.18; margin: 0; white-space: pre-wrap; }
 .par-title .par-title-en {
   font-family: var(--font-en); font-style: italic; font-size: calc(12pt * var(--par-fs, 1));
-  color: #d7def0; margin-top: 2mm; white-space: pre-wrap;
+  color: var(--ink-on-fill-muted, #d7def0); margin-top: 2mm; white-space: pre-wrap;
 }
 
 /* ── 메타 테이블 ── */
 .par-meta { width: 100%; border-collapse: collapse; margin-bottom: 3mm; font-size: calc(8.5pt * var(--par-fs, 1)); }
 .par-meta th, .par-meta td { border: .3mm solid var(--tint-border); padding: 2mm 2.5mm; text-align: center; }
-.par-meta th { background: var(--ink); color: #fff; font-weight: 700; letter-spacing: .02em; }
+.par-meta th { background: var(--table-head-bg, var(--ink-fill, var(--ink))); color: var(--table-head-text, var(--ink-on-fill, #fff)); font-weight: 700; letter-spacing: .02em; }
 .par-meta td { color: var(--text); }
 .par-meta .par-meta-diff { color: var(--gold); font-weight: 800; }
 .par-docnote { display: flex; justify-content: flex-end; gap: 4mm; font-size: calc(7.5pt * var(--par-fs, 1)); color: var(--text-muted); letter-spacing: .03em; }
@@ -100,12 +102,12 @@ export const ANALYSIS_REPORT_CSS = `
 /* ── 섹션 헤더 ── */
 .par-sec-head {
   display: flex; align-items: center; gap: 3mm;
-  background: var(--ink); color: #fff; border-left: 2.2mm solid var(--gold);
+  background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border-left: 2.2mm solid var(--gold);
   padding: 2.5mm 4mm; border-radius: 1mm; margin-bottom: 3.5mm;
 }
 .par-sec-head .par-sec-no { color: var(--gold-soft); font-weight: 800; font-size: calc(13pt * var(--par-fs, 1)); font-style: italic; }
 .par-sec-head .par-sec-ko { font-weight: 800; font-size: calc(12pt * var(--par-fs, 1)); }
-.par-sec-head .par-sec-en { font-family: var(--font-en); font-style: italic; font-size: calc(9pt * var(--par-fs, 1)); color: #c2cbe0; }
+.par-sec-head .par-sec-en { font-family: var(--font-en); font-style: italic; font-size: calc(9pt * var(--par-fs, 1)); color: var(--ink-on-fill-muted, #c2cbe0); }
 .par-cont-head { font-size: calc(8.5pt * var(--par-fs, 1)); font-weight: 700; color: var(--ink); margin-bottom: 2.5mm; }
 .par-cont-head .par-cont-k { color: var(--gold); }
 .par-note { font-size: calc(8pt * var(--par-fs, 1)); color: var(--text-muted); font-style: italic; margin: 0 0 3mm; }
@@ -491,10 +493,10 @@ export const ANALYSIS_REPORT_CSS = `
 
 /* ── 02 구조도 ── */
 .par-map { display: flex; flex-direction: column; align-items: center; gap: 0; }
-.par-node { background: var(--ink); color: #fff; border-radius: 2mm; padding: 3mm 6mm; text-align: center; min-width: 60%; }
+.par-node { background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border-radius: 2mm; padding: 3mm 6mm; text-align: center; min-width: 60%; }
 .par-node .par-node-eyebrow { color: var(--gold-soft); font-size: calc(7pt * var(--par-fs, 1)); font-weight: 800; letter-spacing: .18em; margin-bottom: 1mm; }
 .par-node .par-node-label { font-weight: 800; font-size: calc(11pt * var(--par-fs, 1)); }
-.par-node.par-node-soft { background: var(--ink-soft); min-width: 48%; padding: 2.5mm 5mm; }
+.par-node.par-node-soft { background: var(--ink-fill-soft, var(--ink-soft)); min-width: 48%; padding: 2.5mm 5mm; }
 .par-node.par-node-soft .par-node-label { font-size: calc(10pt * var(--par-fs, 1)); }
 
 /* 화살표 — 세로선 + 아래 삼각형 (또렷하게) */
@@ -513,15 +515,15 @@ export const ANALYSIS_REPORT_CSS = `
 /* sequence 변형 — 단계 흐름도 */
 .par-steps { display: flex; flex-direction: column; align-items: stretch; gap: 0; width: 86%; }
 .par-step { display: flex; gap: 3mm; align-items: flex-start; background: var(--tint); border: .3mm solid var(--tint-border); border-left: 1.5mm solid var(--gold); border-radius: 1.5mm; padding: 3mm 4mm; }
-.par-step-no { flex: 0 0 auto; width: 7mm; height: 7mm; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 800; font-size: calc(9pt * var(--par-fs, 1)); display: flex; align-items: center; justify-content: center; }
+.par-step-no { flex: 0 0 auto; width: 7mm; height: 7mm; border-radius: 50%; background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border: .3mm solid var(--ink); font-weight: 800; font-size: calc(9pt * var(--par-fs, 1)); display: flex; align-items: center; justify-content: center; }
 .par-step-body { flex: 1; }
 .par-step-title { font-weight: 800; color: var(--ink); font-size: calc(10pt * var(--par-fs, 1)); }
 .par-step-en { font-family: var(--font-en); font-style: italic; font-weight: 600; color: var(--text-muted); font-size: calc(9pt * var(--par-fs, 1)); }
 .par-step-detail { font-size: calc(9pt * var(--par-fs, 1)); margin-top: .8mm; }
-.par-core { background: var(--ink); color: #fff; border: 1mm solid var(--gold); border-radius: 2mm; padding: 3mm 6mm; text-align: center; min-width: 70%; }
+.par-core { background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border: 1mm solid var(--gold); border-radius: 2mm; padding: 3mm 6mm; text-align: center; min-width: 70%; }
 .par-core .par-core-eyebrow { color: var(--gold-soft); font-size: calc(7pt * var(--par-fs, 1)); font-weight: 800; letter-spacing: .18em; }
 .par-core .par-core-label { font-weight: 800; font-size: calc(13pt * var(--par-fs, 1)); margin: 1mm 0; }
-.par-core .par-core-detail { font-size: calc(8pt * var(--par-fs, 1)); color: #cdd5e6; }
+.par-core .par-core-detail { font-size: calc(8pt * var(--par-fs, 1)); color: var(--ink-on-fill-muted, #cdd5e6); }
 .par-concl { background: var(--tint); border: .3mm solid var(--gold); border-radius: 2mm; padding: 3mm 6mm; text-align: center; min-width: 80%; }
 .par-concl .par-concl-eyebrow { color: var(--gold); font-size: calc(7pt * var(--par-fs, 1)); font-weight: 800; letter-spacing: .18em; margin-bottom: 1mm; }
 .par-concl .par-concl-text { font-weight: 700; font-size: calc(10pt * var(--par-fs, 1)); color: var(--ink); }
@@ -531,7 +533,7 @@ export const ANALYSIS_REPORT_CSS = `
 /* ── 03 요약 ── */
 .par-summary ol { margin: 0; padding-left: 5mm; }
 .par-summary li { margin-bottom: 1.8mm; font-size: calc(10pt * var(--par-fs, 1)); }
-.par-thesis { background: var(--ink); color: #fff; border-left: 2mm solid var(--gold); border-radius: 1.5mm; padding: 4mm 5mm; margin-top: 4mm; }
+.par-thesis { background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border-left: 2mm solid var(--gold); border-radius: 1.5mm; padding: 4mm 5mm; margin-top: 4mm; }
 .par-thesis .par-thesis-eyebrow { color: var(--gold-soft); font-size: calc(7.5pt * var(--par-fs, 1)); font-weight: 800; letter-spacing: .2em; margin-bottom: 1.5mm; }
 .par-thesis .par-thesis-en { font-family: var(--font-en); font-style: italic; font-size: calc(11.5pt * var(--par-fs, 1)); line-height: 1.4; }
 
@@ -541,7 +543,7 @@ export const ANALYSIS_REPORT_CSS = `
 /* 행(tr)에 --par-fs 가 실리므로 tr 기준으로 글자크기 → td 가 상속받아 행 단위 크기 조절이 먹는다 */
 .par-table tbody tr { font-size: calc(8.7pt * var(--par-fs, 1)); }
 .par-table th, .par-table td { border: .3mm solid var(--tint-border); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
-.par-table thead th { background: var(--ink); color: #fff; font-weight: 700; }
+.par-table thead th { background: var(--table-head-bg, var(--ink-fill, var(--ink))); color: var(--table-head-text, var(--ink-on-fill, #fff)); font-weight: 700; }
 .par-table tbody tr:nth-child(even) td { background: var(--table-stripe); }
 .par-cell-no { text-align: center; color: var(--gold); font-weight: 800; white-space: nowrap; }
 .par-cell-pos { text-align: center; font-style: italic; color: var(--text-muted); white-space: nowrap; }
@@ -996,7 +998,7 @@ export const ANALYSIS_REPORT_CSS = `
 .par-quiz .par-q-choices { list-style: none; margin: 2mm 0 0; padding: 0; display: flex; flex-direction: column; gap: 1.4mm; font-size: calc(9.2pt * var(--par-fs, 1)); }
 .par-quiz .par-q-choices li { display: flex; gap: 2mm; align-items: baseline; line-height: 1.45; }
 .par-quiz .par-choice-mark { color: var(--gold); font-weight: 800; flex: 0 0 auto; }
-.par-answers { background: var(--ink); color: #fff; border-left: 2mm solid var(--gold); border-radius: 1.5mm; padding: 3.5mm 5mm; }
+.par-answers { background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); border-left: 2mm solid var(--gold); border-radius: 1.5mm; padding: 3.5mm 5mm; }
 .par-answers .par-ans-eyebrow { color: var(--gold-soft); font-size: calc(7.5pt * var(--par-fs, 1)); font-weight: 800; letter-spacing: .2em; margin-bottom: 2mm; }
 .par-answers .par-ans-row { font-size: calc(8.7pt * var(--par-fs, 1)); margin-bottom: 1mm; }
 .par-answers .par-ans-no { color: var(--gold-soft); font-weight: 800; margin-right: 1.5mm; }
@@ -1009,9 +1011,9 @@ export const ANALYSIS_REPORT_CSS = `
 .par-cov-eyebrow { font-size: calc(9pt * var(--par-fs, 1)); font-weight: 800; letter-spacing: .26em; color: var(--gold); text-transform: uppercase; white-space: pre-wrap; }
 .par-cov-title { font-size: calc(30pt * var(--par-fs, 1)); font-weight: 800; line-height: 1.14; color: var(--ink); margin: 0; white-space: pre-wrap; }
 .par-cov-title-l { text-align: left; }
-.par-cov-title-white { color: #fff; }
+.par-cov-title-white { color: var(--ink-on-fill, #fff); }
 .par-cov-sub { font-family: var(--font-en); font-style: italic; font-size: calc(14pt * var(--par-fs, 1)); color: var(--text-muted); white-space: pre-wrap; }
-.par-cov-sub-white { color: #d7def0; }
+.par-cov-sub-white { color: var(--ink-on-fill-muted, #d7def0); }
 .par-cov-rule { width: 26mm; height: .8mm; background: var(--gold); margin: 5mm 0; }
 .par-cov-tag { font-size: calc(10.5pt * var(--par-fs, 1)); color: var(--text); white-space: pre-wrap; }
 .par-cov-logo { display: flex; align-items: center; }
@@ -1030,7 +1032,7 @@ export const ANALYSIS_REPORT_CSS = `
 
 /* 2) spine-left */
 .par-cov-spine { flex-direction: row; padding: 0; }
-.par-cov-spine-bar { width: 11mm; background: var(--ink); border-right: 2mm solid var(--gold); flex: 0 0 auto; }
+.par-cov-spine-bar { width: 11mm; background: var(--ink-fill, var(--ink)); border-right: 2mm solid var(--gold); flex: 0 0 auto; }
 .par-cov-spine-body { flex: 1; display: flex; flex-direction: column; padding: 24mm 20mm; }
 .par-cov-spine-body .par-cov-logo { margin-bottom: 8mm; }
 .par-cov-spine-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3mm; align-items: flex-start; }
@@ -1038,7 +1040,7 @@ export const ANALYSIS_REPORT_CSS = `
 
 /* 3) band-fill */
 .par-cov-band { padding: 0; }
-.par-cov-band-top { background: var(--ink); color: #fff; padding: 26mm 20mm 16mm; display: flex; flex-direction: column; gap: 3mm; flex: 0 0 auto; min-height: 45%; justify-content: center; border-bottom: 2mm solid var(--gold); }
+.par-cov-band-top { background: var(--ink-fill, var(--ink)); color: var(--ink-on-fill, #fff); padding: 26mm 20mm 16mm; display: flex; flex-direction: column; gap: 3mm; flex: 0 0 auto; min-height: 45%; justify-content: center; border-bottom: 2mm solid var(--gold); }
 .par-cov-band-bot { flex: 1; padding: 16mm 20mm; display: flex; flex-direction: column; gap: 4mm; }
 .par-cov-band-foot { margin-top: auto; display: flex; justify-content: space-between; font-size: calc(9pt * var(--par-fs, 1)); color: var(--text-muted); border-top: .3mm solid var(--tint-border); padding-top: 4mm; }
 .par-cov-eyebrow-gold { color: var(--gold-soft); }
