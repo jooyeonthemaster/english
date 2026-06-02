@@ -19,7 +19,7 @@ const SOURCES = [
  * PDF 와 1:1 비교용. AI/DB 안 거침.
  */
 export default function ReportPreviewPage() {
-  const [themeId, setThemeId] = useState<ReportThemeId>("veritas-navy");
+  const [themeId, setThemeId] = useState<ReportThemeId>("black-white");
   const [sourceId, setSourceId] = useState<string>("ref");
   const base = useMemo(() => SOURCES.find((s) => s.id === sourceId)?.report ?? RECALL_RECOGNITION_FIXTURE, [sourceId]);
   const report = useMemo(() => ({ ...base, themeId }), [base, themeId]);
@@ -45,7 +45,7 @@ export default function ReportPreviewPage() {
           ))}
         </select>
         <div style={{ flex: 1 }} />
-        <span style={{ fontSize: 12, color: "rgb(100,116,139)" }}>테마</span>
+        <span style={{ fontSize: 12, color: "rgb(100,116,139)" }}>디자인 템플릿</span>
         {Object.values(REPORT_THEMES).map((t) => (
           <button
             key={t.id}

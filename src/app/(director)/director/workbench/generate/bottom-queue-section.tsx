@@ -2,7 +2,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import {
   AlertTriangle,
   Braces,
@@ -21,6 +20,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -778,17 +781,19 @@ export function BottomQueueSection({
       : canApprove
         ? selectedSessionQuestionIds.has(persistedId as string)
         : false;
+    // 카드 본문 클릭 = 체크(선택) 토글. 상세는 '상세 보기' 버튼으로만 연다.
+    const cardToggle = canDelete
+      ? () => toggleDeleteQuestion(persistedId as string)
+      : canApprove
+        ? () => toggleSessionQuestion(persistedId as string)
+        : undefined;
 
     return (
       <div key={card.key} onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
-        if (deleteMode) {
-          if (persistedId) toggleDeleteQuestion(persistedId);
-          return;
-        }
-        setDetailQuestion(card.question);
-      }} className={`h-full ${deleteMode && !persistedId ? "cursor-default opacity-50" : "cursor-pointer"}`}>
+        cardToggle?.();
+      }} className={`h-full ${deleteMode && !persistedId ? "cursor-default opacity-50" : cardToggle ? "cursor-pointer" : "cursor-default"}`}>
         <QuestionCard
           q={card.question}
           num={card.number}
@@ -797,13 +802,9 @@ export function BottomQueueSection({
           showReviewActions={!deleteMode && Boolean(persistedId)}
           showHeaderActions={!deleteMode && Boolean(persistedId)}
           selected={isSelected}
-          onToggle={
-            canDelete
-              ? () => toggleDeleteQuestion(persistedId as string)
-              : canApprove
-                ? () => toggleSessionQuestion(persistedId as string)
-                : undefined
-          }
+          onToggle={cardToggle}
+          onDetail={() => setDetailQuestion(card.question)}
+          showDetailButton
           onApprove={deleteMode ? undefined : () => persistedId && onApproveQuestion(persistedId)}
           onUnapprove={deleteMode ? undefined : () => persistedId && onUnapproveQuestion(persistedId)}
           onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
@@ -820,16 +821,13 @@ export function BottomQueueSection({
   function renderSavedQuestionCard(q: QuestionCardItem, index: number) {
     const cardQuestion = withVisiblePlanTag(q);
     const isSelected = deleteMode && selectedDeleteIds.has(q.id);
+    const cardToggle = deleteMode ? () => toggleDeleteQuestion(q.id) : undefined;
     return (
       <div key={q.id} onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
-        if (deleteMode) {
-          toggleDeleteQuestion(q.id);
-          return;
-        }
-        setDetailQuestion(cardQuestion);
-      }} className="cursor-pointer h-full">
+        cardToggle?.();
+      }} className={`h-full ${cardToggle ? "cursor-pointer" : "cursor-default"}`}>
         <QuestionCard
           q={cardQuestion}
           num={index + 1}
@@ -838,7 +836,9 @@ export function BottomQueueSection({
           showReviewActions={!deleteMode}
           showHeaderActions={!deleteMode}
           selected={isSelected}
-          onToggle={deleteMode ? () => toggleDeleteQuestion(q.id) : undefined}
+          onToggle={cardToggle}
+          onDetail={() => setDetailQuestion(cardQuestion)}
+          showDetailButton
           onApprove={deleteMode ? undefined : () => onApproveQuestion(cardQuestion.id)}
           onUnapprove={deleteMode ? undefined : () => onUnapproveQuestion(cardQuestion.id)}
           onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}
@@ -937,10 +937,15 @@ export function BottomQueueSection({
   ] as const;
 
   const layoutButtons = [
-    { id: "grid2", label: "2열 보기", Icon: Grid2X2 },
-    { id: "grid3", label: "3열 보기", Icon: Grid3X3 },
-    { id: "list", label: "목록 보기", Icon: ListIcon },
-  ] as const;
+    { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+    { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
+    { value: "list", label: "목록 보기", Icon: ListIcon },
+  ] satisfies ReadonlyArray<ViewModeCycleOption<CardLayoutMode>>;
+
+  const QUESTION_VIEW_MODE_OPTIONS = [
+    { value: "flat", label: "문제별", Icon: Rows3 },
+    { value: "passage", label: "지문별", Icon: FileText },
+  ] satisfies ReadonlyArray<ViewModeCycleOption<QuestionViewMode>>;
 
   return (
     <div className="rounded-lg bg-white">
@@ -1001,76 +1006,33 @@ export function BottomQueueSection({
           <span className="hidden shrink-0 text-[11px] font-medium text-slate-400 lg:inline">
             검수 상태와 지문 단위로 표시됩니다
           </span>
-          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
-            {reviewButtons.map(({ id, label, count }, index) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setReviewStatusFilter(id)}
-                className={`h-8 cursor-pointer px-2.5 text-[11px] font-semibold transition-colors ${
-                  index > 0 ? "border-l border-slate-200" : ""
-                } ${
-                  reviewStatusFilter === id
-                    ? "bg-slate-800 text-white"
-                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-                }`}
-                aria-pressed={reviewStatusFilter === id}
-              >
-                {label} <span className={reviewStatusFilter === id ? "text-slate-200" : "text-slate-400"}>{count}</span>
-              </button>
-            ))}
-          </div>
+          <ViewModeCycleButton
+            value={reviewStatusFilter}
+            options={reviewButtons.map(({ id, label, count }) => ({
+              value: id,
+              label,
+              content: (
+                <>
+                  {label}{" "}
+                  <span className="text-slate-400">{count}</span>
+                </>
+              ),
+            }))}
+            onChange={setReviewStatusFilter}
+          />
 
-          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
-            <button
-              type="button"
-              onClick={() => setQuestionViewMode("flat")}
-              className={`flex h-8 cursor-pointer items-center gap-1.5 px-2.5 text-[11px] font-semibold transition-colors ${
-                questionViewMode === "flat"
-                  ? "bg-slate-800 text-white"
-                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-              }`}
-              aria-pressed={questionViewMode === "flat"}
-            >
-              <Rows3 className="w-3.5 h-3.5" />
-              문제별
-            </button>
-            <button
-              type="button"
-              onClick={() => setQuestionViewMode("passage")}
-              className={`flex h-8 cursor-pointer items-center gap-1.5 border-l border-slate-200 px-2.5 text-[11px] font-semibold transition-colors ${
-                questionViewMode === "passage"
-                  ? "bg-slate-800 text-white"
-                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-              }`}
-              aria-pressed={questionViewMode === "passage"}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              지문별
-            </button>
-          </div>
+          <ViewModeCycleButton
+            value={questionViewMode}
+            options={QUESTION_VIEW_MODE_OPTIONS}
+            showLabel
+            onChange={setQuestionViewMode}
+          />
 
-          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
-            {layoutButtons.map(({ id, label, Icon }, index) => (
-              <button
-                key={id}
-                type="button"
-                aria-label={label}
-                title={label}
-                aria-pressed={cardLayoutMode === id}
-                onClick={() => setCardLayoutMode(id)}
-                className={`inline-flex size-8 cursor-pointer items-center justify-center transition-colors ${
-                  index > 0 ? "border-l border-slate-200" : ""
-                } ${
-                  cardLayoutMode === id
-                    ? "bg-slate-800 text-white"
-                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-                }`}
-              >
-                <Icon className="size-4" />
-              </button>
-            ))}
-          </div>
+          <ViewModeCycleButton
+            value={cardLayoutMode}
+            options={layoutButtons}
+            onChange={setCardLayoutMode}
+          />
         </div>
       </div>
 
@@ -1128,7 +1090,7 @@ export function BottomQueueSection({
           </div>
         )}
 
-        {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedQuestions.length > 0) && (
+        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
           <div className="flex flex-wrap items-center justify-end gap-2">
             {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
               <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
@@ -1153,11 +1115,6 @@ export function BottomQueueSection({
                   </button>
                 ))}
               </div>
-            )}
-            {savedQuestions.length > 0 && (
-              <Link href="/director/workbench/questions" className="text-[12px] font-medium text-blue-600 hover:text-blue-700">
-                문제은행 전체 보기 →
-              </Link>
             )}
           </div>
         )}

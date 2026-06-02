@@ -35,6 +35,8 @@ import {
 } from "./report-sections";
 
 const PX_PER_MM = 96 / 25.4;
+/** A4 한 장의 픽셀 폭(210mm @96dpi) — 썸네일 scale 계산용. */
+export const REPORT_A4_WIDTH_PX = Math.round(210 * PX_PER_MM);
 const PAGE_BODY_MM = 243;
 const BOX_PAD_MM = 9;
 const RUN_GAP_MM = 6;
@@ -97,6 +99,19 @@ function blockStyleOf(meta?: BlockMeta): CSSProperties | undefined {
   return Object.keys(st).length ? (st as CSSProperties) : undefined;
 }
 
+// ─── 테마 → CSS 변수 (par-root 에 주입) ────────────────────────────────────────
+export function buildReportRootStyle(report: AnalysisReport): CSSProperties {
+  const theme = getReportTheme(report.themeId);
+  return {
+    "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
+    "--ink-fill": theme.inkFill, "--ink-fill-soft": theme.inkFillSoft,
+    "--ink-on-fill": theme.inkOnFill, "--ink-on-fill-muted": theme.inkOnFillMuted,
+    "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
+    "--table-head-bg": theme.tableHeadBg, "--table-head-text": theme.tableHeadText,
+    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
+  } as CSSProperties;
+}
+
 // ─── 메인 ─────────────────────────────────────────────────────────────────────
 export function ReportPages({
   report,
@@ -107,12 +122,8 @@ export function ReportPages({
   edit?: ReportEdit;
   onPagesChange?: (pages: string[][]) => void;
 }) {
-  const theme = getReportTheme(report.themeId);
-  const rootStyle = {
-    "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
-    "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
-    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
-  } as CSSProperties;
+  const rootStyle = buildReportRootStyle(report);
+  const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
 
   const natural = useMemo(
     () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, ced: edit.ced } : undefined),
@@ -201,7 +212,7 @@ export function ReportPages({
           bodyNo += 1;
           return (
             <section className="par-sheet" key={`p-${pi}`} data-page-index={pi}>
-              <RunningHeader brand={report.brand} title={report.meta.titleKo} />
+              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
               <div className="par-sheet-body">
                 <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} />
               </div>
@@ -210,6 +221,73 @@ export function ReportPages({
           );
         });
       })()}
+    </div>
+  );
+}
+
+// ─── 썸네일(페이지 인디케이터) — 실제 페이지를 그대로 축소 렌더 ─────────────────
+/**
+ * 좌측 페이지 목록에 쓰는 단일 페이지 미니 미리보기. 중앙 캔버스와 동일한
+ * 실제 블록 노드(`reportFlowItems` 결과)를 읽기전용으로 A4 시트에 담아
+ * `transform: scale()` 로 축소한다 — 스켈레톤이 아니라 진짜 페이지 축소본.
+ *
+ * 페이지 분할은 중앙 `ReportPages` 가 계산해 `onPagesChange` 로 넘긴 `ids`
+ * 를 그대로 받아 재측정 없이 렌더하므로 가볍다. CSS(.par-sheet 등)는 중앙
+ * `ReportPages` 가 전역 주입하므로 여기서는 클래스만 사용한다.
+ */
+export function ReportThumbnailSheet({
+  report,
+  ids,
+  itemsById,
+  bodyNumber,
+  bodyTotal,
+  width = 80,
+}: {
+  report: AnalysisReport;
+  ids: string[];
+  /** id → FlowItem (편집기에서 한 번만 계산해 공유). */
+  itemsById: Map<string, FlowItem>;
+  bodyNumber: number;
+  bodyTotal: number;
+  width?: number;
+}) {
+  const items = ids.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
+  const isCover = items.length === 1 && items[0]?.wrap === "cover";
+  const scale = width / REPORT_A4_WIDTH_PX;
+  const height = width * (297 / 210);
+  const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
+
+  return (
+    <div style={{ width, height, overflow: "hidden", position: "relative" }} aria-hidden>
+      <div
+        style={{
+          width: REPORT_A4_WIDTH_PX,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          pointerEvents: "none",
+        }}
+      >
+        <div className="par-root" style={buildReportRootStyle(report)}>
+          {isCover ? (
+            <section className="par-sheet par-sheet-cover">
+              <div className="par-cover-shell">{items[0]?.node}</div>
+            </section>
+          ) : (
+            <section className="par-sheet">
+              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
+              <div className="par-sheet-body">
+                <RunsView items={items} blockMeta={report.blockMeta} />
+              </div>
+              <RunningFooter
+                brand={report.brand}
+                docNo={report.docNo}
+                page={bodyNumber}
+                total={bodyTotal}
+              />
+            </section>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -540,10 +618,16 @@ function packFlow(
 }
 
 // ─── 헤더/푸터 ────────────────────────────────────────────────────────────────
-function RunningHeader({ brand, title }: { brand: string; title: string }) {
+function RunningHeader({ brand, title, logoDataUrl }: { brand: string; title: string; logoDataUrl?: string }) {
   return (
     <div className="par-runhead">
-      <span>{brand}</span>
+      <span className="par-runhead-brand">
+        {logoDataUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="par-runhead-logo" src={logoDataUrl} alt="" />
+        ) : null}
+        <span>{brand}</span>
+      </span>
       <span className="par-runhead-r">{title}</span>
     </div>
   );

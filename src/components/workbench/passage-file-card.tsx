@@ -9,6 +9,7 @@ import {
   PenTool,
   Braces,
   Copy,
+  Maximize2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
@@ -98,8 +99,11 @@ export function PassageFileCard({
   return (
     <div
       ref={dragRef}
-      onClick={() => onViewDetail(passage.id)}
-      className={`group relative rounded-xl border ${borderColor} bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+      onClick={(e) => {
+        // 카드 본문 어디든 클릭 = 선택(체크) 토글. 상세는 우측 하단 '상세 보기' 버튼으로만 연다.
+        onToggleSelect(passage.id, e.shiftKey);
+      }}
+      className={`group relative flex h-full flex-col rounded-xl border ${borderColor} bg-white px-4 py-2.5 transition-all duration-200 hover:shadow-md cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
       } ${isDragging ? "opacity-40 scale-95" : ""}
       `}>
@@ -191,8 +195,19 @@ export function PassageFileCard({
           </div>
         )}
 
-        <div className="absolute bottom-2 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <span className="text-[9px] text-blue-500 font-medium">클릭하여 상세 보기</span>
+        {/* 상세 보기 — mt-auto로 카드 우측 하단에 고정. 카드가 flex 컬럼 + h-full이라
+            같은 행 카드들이 동일 높이로 늘어나도 버튼 위치가 항상 일정하다. */}
+        <div
+          className="mt-auto -mr-1.5 -mb-1 flex justify-end pt-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => onViewDetail(passage.id)}
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          >
+            상세 보기
+            <Maximize2 className="w-3 h-3" />
+          </button>
         </div>
     </div>
   );

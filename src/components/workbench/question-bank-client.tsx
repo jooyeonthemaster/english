@@ -55,6 +55,10 @@ import { QuestionBankCard } from "./question-bank-card";
 import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
 import { GridToggle } from "./question-bank-client/grid-toggle";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 import { QuestionDetailDialog } from "./question-bank-client/question-detail-dialog";
 import { QuestionFiltersToolbar } from "./question-bank-client/filters-toolbar";
 import { useQuestionEditor } from "./question-bank-client/use-question-editor";
@@ -614,6 +618,15 @@ export function QuestionBankClient({
     [folders, selectedIds, clearSelection],
   );
 
+  // 다중 선택 드래그: 선택된 카드를 끌면 선택 전체를, 아니면 그 카드만 끌고
+  // 간다. 카드(QuestionBankCard)는 이 값으로 "여러 장이 한 덩어리로 겹쳐진"
+  // 드래그 미리보기 + 개수 배지를 띄운다.
+  const getDragQuestionIds = useCallback(
+    (draggedId: string) =>
+      selectedIds.has(draggedId) ? Array.from(selectedIds) : [draggedId],
+    [selectedIds],
+  );
+
   // ─── Move (cut + paste) — removes from all current folders, adds to target ───
   const handleMoveToFolder = useCallback(
     async (collectionId: string) => {
@@ -706,38 +719,24 @@ export function QuestionBankClient({
   const showingPendingOnly = filters.approved === false;
 
   // ─── View mode toggle (문제별 / 지문별) ───
+  const VIEW_MODE_OPTIONS = [
+    { value: "ALL", label: "문제별", Icon: Rows3 },
+    { value: "passage", label: "지문별", Icon: FileText },
+  ] satisfies ReadonlyArray<ViewModeCycleOption<string>>;
   const viewModeToggle = (
-    <div className="flex items-center border border-slate-200 rounded-md overflow-hidden bg-white">
-      <button
-        onClick={() => updateFilters({ view: "ALL", collectionId: "ALL" })}
-        className={`flex items-center gap-1 px-2 h-7 text-[11px] font-medium transition-colors ${
-          !isGrouped
-            ? "bg-slate-800 text-white"
-            : "text-slate-500 hover:bg-slate-50"
-        }`}
-        aria-pressed={!isGrouped}
-      >
-        <Rows3 className="w-3 h-3" />
-        문제별
-      </button>
-      <button
-        onClick={() =>
-          updateFilters({
-            view: "passage",
-            collectionId: folders.activeFolder || "ALL",
-          })
-        }
-        className={`flex items-center gap-1 px-2 h-7 text-[11px] font-medium transition-colors border-l border-slate-200 ${
-          isGrouped
-            ? "bg-slate-800 text-white"
-            : "text-slate-500 hover:bg-slate-50"
-        }`}
-        aria-pressed={isGrouped}
-      >
-        <FileText className="w-3 h-3" />
-        지문별
-      </button>
-    </div>
+    <ViewModeCycleButton
+      value={isGrouped ? "passage" : "ALL"}
+      options={VIEW_MODE_OPTIONS}
+      showLabel
+      onChange={(next) =>
+        next === "passage"
+          ? updateFilters({
+              view: "passage",
+              collectionId: folders.activeFolder || "ALL",
+            })
+          : updateFilters({ view: "ALL", collectionId: "ALL" })
+      }
+    />
   );
 
   const filtersToolbar = (
@@ -901,8 +900,7 @@ export function QuestionBankClient({
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
 
   const toolbarRow = (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/95">
-      <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
         <div className="flex items-center gap-2">
           <SelectAllCheckbox
             checked={isCurrentPageSelected && selectedIds.size > 0}
@@ -945,7 +943,6 @@ export function QuestionBankClient({
           {gridToggle}
         </div>
       </div>
-    </div>
   );
 
   const isEmpty =
@@ -955,7 +952,7 @@ export function QuestionBankClient({
   return (
     <div className="flex flex-col min-h-[calc(100vh-64px)]">
       {/* ─── Content ─── */}
-      <div className="flex-1 bg-[#F4F6F9] px-6 pt-2 pb-4">
+      <div className="-mx-6 flex-1 bg-[#F4F6F9] px-6 pt-2 pb-4 sm:px-8">
         {isEmpty ? (
           <div className="bg-white rounded-xl border text-center py-20">
             <Database className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -1033,9 +1030,12 @@ export function QuestionBankClient({
                   onToggleStar={handleToggleStar}
                   onDetail={openDetail}
                   onEdit={editor.openEditor}
+                  cardClickSelects
+                  showDetailButton
                   expandedPassageIds={expandedPassageIds}
                   setExpandedPassageIds={setExpandedPassageIds}
                   onActivePassageChange={setActivePassageContext}
+                  getDragQuestionIds={getDragQuestionIds}
                   renderQuestion={
                     showingPendingOnly
                       ? (q, idx) => (
@@ -1115,6 +1115,9 @@ export function QuestionBankClient({
                         onDetail={() => openDetail(q.id)}
                         onEdit={() => editor.openEditor(q.id)}
                         viewSize={viewSize}
+                        cardClickSelects
+                        showDetailButton
+                        getDragQuestionIds={getDragQuestionIds}
                       />
                     );
                   })}

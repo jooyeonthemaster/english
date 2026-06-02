@@ -135,7 +135,7 @@ export function QuestionReviewModal({
               disabled={saving || questions.length === 0}
             >
               {saving ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Save className="w-3.5 h-3.5 mr-1" />}
-              문제은행에 저장 ({questions.length}개)
+              문제관리에 저장 ({questions.length}개)
             </Button>
             <button
               onClick={onClose}

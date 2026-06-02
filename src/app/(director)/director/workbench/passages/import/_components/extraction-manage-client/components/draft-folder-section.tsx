@@ -33,16 +33,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 
 import { DraftFolderCard } from "./draft-folder-card";
 import { DraftFolderChip } from "./draft-folder-chip";
 import { DraftFolderListRow } from "./draft-folder-list-row";
-import { ViewToggleButton } from "./view-toggle-button";
 
 const DRAG_TYPE = "draft" as const;
 const BULK_DRAG_TYPE = "draft-bulk" as const;
 
 type FolderSortOrder = "name_asc" | "name_desc" | "newest" | "oldest";
+type FolderViewMode = "grid" | "list";
+
+const DRAFT_FOLDER_VIEW_OPTIONS = [
+  { value: "grid", label: "그리드 보기", Icon: Grid3X3 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<FolderViewMode>>;
 
 interface DraftFolderSectionProps {
   childFolders: CollectionItem[];
@@ -260,8 +269,8 @@ export function DraftFolderSection({
   gridOnly = false,
 }: DraftFolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const effectiveViewMode: "grid" | "list" = gridOnly ? "grid" : viewMode;
+  const [viewMode, setViewMode] = useState<FolderViewMode>("grid");
+  const effectiveViewMode: FolderViewMode = gridOnly ? "grid" : viewMode;
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");
   const useCards = useCardInsideFolder && Boolean(activeFolder);
@@ -684,22 +693,11 @@ export function DraftFolderSection({
   ) : null;
 
   const viewToggleControls = !collapsed && !gridOnly ? (
-    <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-      <ViewToggleButton
-        active={viewMode === "grid"}
-        label="그리드 보기"
-        onClick={() => setViewMode("grid")}
-      >
-        <Grid3X3 className="size-4" />
-      </ViewToggleButton>
-      <ViewToggleButton
-        active={viewMode === "list"}
-        label="목록 보기"
-        onClick={() => setViewMode("list")}
-      >
-        <List className="size-4" />
-      </ViewToggleButton>
-    </div>
+    <ViewModeCycleButton
+      value={viewMode}
+      options={DRAFT_FOLDER_VIEW_OPTIONS}
+      onChange={setViewMode}
+    />
   ) : null;
 
   const collapseExpandButton = collapsed ? (

@@ -1,7 +1,6 @@
 // @ts-nocheck
 "use client";
 
-import React from "react";
 import {
   ArrowUpDown,
   Copy,
@@ -25,6 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 
 interface School {
   id: string;
@@ -72,37 +75,11 @@ interface Props {
   setGridCols: (v: PassageGridCols) => void;
 }
 
-function ViewToggleButton({
-  active,
-  middle,
-  label,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  middle?: boolean;
-  label: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={active}
-      className={
-        "p-2 cursor-pointer transition-colors " +
-        (middle ? "border-x border-slate-200 " : "") +
-        (active
-          ? "bg-slate-800 text-white"
-          : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
-      }
-    >
-      {children}
-    </button>
-  );
-}
+const PASSAGE_GRID_OPTIONS = [
+  { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
+  { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<PassageGridCols>>;
 
 export function PassageFiltersToolbar({
   filters,
@@ -155,14 +132,13 @@ export function PassageFiltersToolbar({
       <Popover>
         <PopoverTrigger
           title="필터"
-          className="relative flex h-7 shrink-0 items-center gap-1 rounded-md border border-input bg-transparent px-2.5 text-[11.5px] shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent text-[11.5px] shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          <ListFilter className="size-3 shrink-0" />
-          <span>필터</span>
+          <ListFilter className="size-3.5 shrink-0" />
           {hasActiveFilter ? (
             <span
               aria-hidden="true"
-              className="ml-0.5 inline-block size-1.5 rounded-full bg-blue-500"
+              className="absolute -right-0.5 -top-0.5 inline-block size-1.5 rounded-full bg-blue-500"
             />
           ) : null}
         </PopoverTrigger>
@@ -281,42 +257,41 @@ export function PassageFiltersToolbar({
       </Popover>
 
       {/* 검색 */}
-      <div className="relative shrink-0">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-300" />
-        <input
-          placeholder="지문 검색"
-          value={searchValue}
-          onChange={(e) => onSearchChange(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
-          className="h-7 w-40 rounded-md border border-slate-200 bg-slate-50 pl-7 pr-2.5 text-[11.5px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-        />
-      </div>
+      <Popover>
+        <PopoverTrigger
+          title="지문 검색"
+          className="relative flex h-7 shrink-0 items-center gap-1 rounded-md border border-input bg-transparent px-2.5 text-[11.5px] shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        >
+          <Search className="size-3 shrink-0" />
+          <span>검색</span>
+          {searchValue ? (
+            <span
+              aria-hidden="true"
+              className="ml-0.5 inline-block size-1.5 rounded-full bg-blue-500"
+            />
+          ) : null}
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-56 p-3">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-300" />
+            <input
+              autoFocus
+              placeholder="지문 검색"
+              value={searchValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
+              className="h-8 w-full rounded-md border border-slate-200 bg-slate-50 pl-7 pr-2.5 text-[12px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+            />
+          </div>
+        </PopoverContent>
+      </Popover>
 
-      {/* 3-mode 뷰 토글 — matches ExtractionManage */}
-      <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-        <ViewToggleButton
-          active={gridCols === "grid3"}
-          label="3열 보기"
-          onClick={() => setGridCols("grid3")}
-        >
-          <Grid3X3 className="size-4" />
-        </ViewToggleButton>
-        <ViewToggleButton
-          active={gridCols === "grid2"}
-          label="2열 보기"
-          middle
-          onClick={() => setGridCols("grid2")}
-        >
-          <Grid2X2 className="size-4" />
-        </ViewToggleButton>
-        <ViewToggleButton
-          active={gridCols === "list"}
-          label="목록 보기"
-          onClick={() => setGridCols("list")}
-        >
-          <List className="size-4" />
-        </ViewToggleButton>
-      </div>
+      {/* 보기 모드 — 단일 버튼으로 3열 → 2열 → 목록 순환 */}
+      <ViewModeCycleButton
+        value={gridCols}
+        options={PASSAGE_GRID_OPTIONS}
+        onChange={setGridCols}
+      />
 
     </div>
   );

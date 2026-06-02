@@ -12,24 +12,41 @@ interface Explanation {
   wrongOptionExplanations: string | null;
 }
 
-export function ExplanationSection({ explanation }: { explanation: Explanation | null }) {
+export function ExplanationSection({
+  explanation,
+  rightSlot,
+}: {
+  explanation: Explanation | null;
+  // 해설보기와 같은 줄 오른쪽에 둘 추가 액션(예: '상세 보기' 버튼).
+  rightSlot?: React.ReactNode;
+}) {
   const [explanationOpen, setExplanationOpen] = useState(false);
 
-  if (!explanation?.content) return null;
+  const hasExplanation = Boolean(explanation?.content);
+  if (!hasExplanation && !rightSlot) return null;
 
   return (
     <div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setExplanationOpen(!explanationOpen);
-        }}
-        className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-      >
-        {explanationOpen ? "해설 접기" : "해설 보기"}
-        {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-      </button>
-      {explanationOpen && (
+      <div className="flex items-center justify-between gap-2">
+        {/* rightSlot(상세 보기)이 있으면 왼쪽에 두고, 해설보기는 항상 오른쪽 정렬.
+            상세 보기 버튼이 없는 페이지에서는 왼쪽에 빈 칸을 둬 해설보기를 오른쪽으로 민다. */}
+        {rightSlot ? <div className="shrink-0">{rightSlot}</div> : <span aria-hidden="true" />}
+        {hasExplanation ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setExplanationOpen(!explanationOpen);
+            }}
+            className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+          >
+            {explanationOpen ? "해설 접기" : "해설 보기"}
+            {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          </button>
+        ) : (
+          <span aria-hidden="true" />
+        )}
+      </div>
+      {hasExplanation && explanationOpen && (
         <div className="bg-blue-50/50 rounded-lg p-2.5 mt-1.5 border border-blue-100">
           <p className="text-[10px] font-semibold text-blue-600 mb-1">해설</p>
           <p className="text-[12px] text-slate-700 leading-relaxed">{explanation.content}</p>

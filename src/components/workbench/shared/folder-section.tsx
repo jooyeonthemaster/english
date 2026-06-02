@@ -19,10 +19,15 @@ import {
   ListFilter,
   Search,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { CollectionItem } from "./types";
 import { FolderChip } from "./folder-chip";
 import { FolderCard } from "./folder-card";
 import { FolderListRow } from "./folder-list-row";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "./view-mode-cycle-button";
 import {
   Popover,
   PopoverContent,
@@ -37,6 +42,12 @@ import {
 } from "@/components/ui/select";
 
 type FolderSortOrder = "name_asc" | "name_desc" | "newest" | "oldest";
+type FolderViewMode = "grid" | "list";
+
+const FOLDER_VIEW_OPTIONS = [
+  { value: "grid", label: "그리드 보기", Icon: Grid3X3 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<FolderViewMode>>;
 
 interface FolderSectionProps {
   childFolders: CollectionItem[];
@@ -95,6 +106,12 @@ interface FolderSectionProps {
    *  collapse handle). When enabled, the previous header collapse button is
    *  replaced by the bottom resize+collapse row. */
   enableFolderControls?: boolean;
+  /** Opt-in (independent of `enableFolderControls`): bounds the grid folder
+   *  area to a fixed, drag-resizable height with its own scroll and a slim
+   *  drag handle below it. Use when the folder bar can wrap into many rows and
+   *  would otherwise push the content below off-screen. Height persists under
+   *  `storageKey`. */
+  resizableGrid?: boolean;
   /** Required when `enableFolderControls` is true and the list view is in
    *  use — supplies all folders across all levels so the Miller-column list
    *  view can render parent→child columns. Falls back to `childFolders` when
@@ -284,6 +301,7 @@ export function FolderSection({
   pageHeader,
   rootLabel = "전체 문제",
   enableFolderControls = false,
+  resizableGrid = false,
   allFolders,
   storageKey = "default",
   stickyFooter,
@@ -306,7 +324,7 @@ export function FolderSection({
   };
 
   // ─── Enhanced controls state (only used when enableFolderControls=true) ───
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<FolderViewMode>("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");
 
@@ -317,7 +335,9 @@ export function FolderSection({
   const MIN_SUB_COLUMN_WIDTH = 28;
   const MIN_LIST_HEIGHT = 40;
   const MAX_LIST_HEIGHT = 800;
-  const DEFAULT_LIST_HEIGHT = 156;
+  // Grid mode starts shorter (≈1 row of chips) since folder chips are compact;
+  // the list view needs more room for its Miller columns.
+  const DEFAULT_LIST_HEIGHT = resizableGrid ? 84 : 156;
 
   const [listHeight, setListHeight] = useState<number>(() => {
     if (typeof window === "undefined") return DEFAULT_LIST_HEIGHT;
@@ -541,9 +561,12 @@ export function FolderSection({
   };
 
   const visibleChildFolders = useMemo(
-    () => (enableFolderControls ? sortAndFilter(childFolders) : childFolders),
+    () =>
+      enableFolderControls || resizableGrid
+        ? sortAndFilter(childFolders)
+        : childFolders,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [childFolders, searchQuery, sortBy, enableFolderControls],
+    [childFolders, searchQuery, sortBy, enableFolderControls, resizableGrid],
   );
 
   const listColumns = useMemo(() => {
@@ -681,8 +704,13 @@ export function FolderSection({
               </>
             )}
 
-            {enableFolderControls && !collapsed ? (
-              <div className="flex shrink-0 items-center gap-1">
+            {(enableFolderControls || resizableGrid) && !collapsed ? (
+              <div
+                className={cn(
+                  "flex shrink-0 items-center gap-1",
+                  resizableGrid && !enableFolderControls && "ml-auto",
+                )}
+              >
                 <Popover>
                   <PopoverTrigger
                     title="정렬"
@@ -785,38 +813,12 @@ export function FolderSection({
 
             {enableFolderControls ? (
               !collapsed ? (
-                <div
-                  className={`${toolbar ? "ml-1" : "ml-auto"} flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("grid")}
-                    aria-pressed={viewMode === "grid"}
-                    aria-label="그리드 보기"
-                    className={
-                      "p-2 cursor-pointer transition-colors " +
-                      (viewMode === "grid"
-                        ? "bg-slate-800 text-white"
-                        : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
-                    }
-                  >
-                    <Grid3X3 className="size-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("list")}
-                    aria-pressed={viewMode === "list"}
-                    aria-label="목록 보기"
-                    className={
-                      "p-2 cursor-pointer transition-colors border-l border-slate-200 " +
-                      (viewMode === "list"
-                        ? "bg-slate-800 text-white"
-                        : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
-                    }
-                  >
-                    <List className="size-4" />
-                  </button>
-                </div>
+                <ViewModeCycleButton
+                  value={viewMode}
+                  options={FOLDER_VIEW_OPTIONS}
+                  onChange={setViewMode}
+                  className={toolbar ? "ml-1" : "ml-auto"}
+                />
               ) : (
                 <button
                   type="button"
@@ -829,6 +831,21 @@ export function FolderSection({
                   <span>펼치기</span>
                 </button>
               )
+            ) : resizableGrid ? (
+              /* 접기 버튼은 하단 드래그 핸들 행으로 이동. 헤더에는 접힌
+                 상태일 때만 '펼치기'를 노출한다. */
+              collapsed ? (
+                <button
+                  type="button"
+                  onClick={() => setCollapsed(false)}
+                  aria-expanded={false}
+                  title="관리 바 펼치기"
+                  className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+                >
+                  <ChevronDown className="size-3.5" aria-hidden="true" />
+                  <span>펼치기</span>
+                </button>
+              ) : null
             ) : (
               <button
                 type="button"
@@ -851,12 +868,19 @@ export function FolderSection({
         </div>
 
         {!collapsed && (!enableFolderControls || viewMode === "grid") ? (
+          <>
           <div
-            style={enableFolderControls ? { height: listHeight } : undefined}
+            style={
+              enableFolderControls || resizableGrid
+                ? { height: listHeight }
+                : undefined
+            }
             className={
               enableFolderControls
                 ? "overflow-y-auto bg-slate-50/70 px-4 py-2"
-                : "bg-slate-50/70 px-4 py-3"
+                : resizableGrid
+                  ? "overflow-y-auto overscroll-contain bg-slate-50/70 px-4 py-3"
+                  : "bg-slate-50/70 px-4 py-3"
             }
           >
             <div className="flex items-center gap-2.5 flex-wrap">
@@ -971,6 +995,39 @@ export function FolderSection({
               )}
             </div>
           </div>
+          {resizableGrid && !enableFolderControls ? (
+            <div className="relative flex items-center justify-end px-4 pb-1 pt-0.5">
+              <div
+                onPointerDown={beginListHeightResize}
+                onDoubleClick={() => {
+                  setListHeight(DEFAULT_LIST_HEIGHT);
+                  try {
+                    window.localStorage.setItem(
+                      LIST_HEIGHT_KEY,
+                      String(DEFAULT_LIST_HEIGHT),
+                    );
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+                className="group/vhandle absolute left-1/2 top-1/2 inline-flex h-3 w-[200px] -translate-x-1/2 -translate-y-1/2 cursor-row-resize items-center justify-center px-1 select-none"
+              >
+                <div className="h-0.5 w-full rounded-full bg-slate-200 transition-colors group-hover/vhandle:bg-blue-400 group-active/vhandle:bg-blue-500" />
+              </div>
+              <button
+                type="button"
+                onClick={() => setCollapsed(true)}
+                aria-expanded
+                title="관리 바 접기"
+                className="inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+              >
+                <ChevronUp className="size-3.5" aria-hidden="true" />
+                <span>접기</span>
+              </button>
+            </div>
+          ) : null}
+          </>
         ) : null}
 
         {!collapsed && enableFolderControls && viewMode === "list" ? (

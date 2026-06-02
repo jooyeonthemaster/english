@@ -15,9 +15,6 @@ import { z } from "zod";
 /** 본문 문장 번호 (① = 1). 보고서 전체에서 상호 참조되는 1-base 인덱스. */
 const sentenceNo = z.number().int().min(1).max(60);
 
-/** 인라인 강조 토큰 — 렌더러가 키컬러/볼드/이탤릭으로 표시. 평문도 허용. */
-const richText = z.string().min(1);
-
 // ─── 문서 메타 (타이틀 블록 + 메타 테이블) ───────────────────────────────────
 export const reportMetaSchema = z
   .object({
@@ -261,9 +258,10 @@ export type VocabularySection = z.infer<typeof vocabularySectionSchema>;
 export type ParsingSection = z.infer<typeof parsingSectionSchema>;
 export type SelfCheckSection = z.infer<typeof selfCheckSectionSchema>;
 
-// ─── 디자인 테마 (키컬러 / 톤앤매너) ─────────────────────────────────────────
+// ─── 디자인 템플릿 (키컬러 / 톤앤매너) ────────────────────────────────────────
 export const reportThemeIdSchema = z.enum([
-  "veritas-navy", // 레퍼런스: 딥 네이비 + 앤틱 골드 (기본)
+  "black-white", // 잉크 절약형 흑백 (기본)
+  "veritas-navy", // 레퍼런스: 딥 네이비 + 앤틱 골드
   "scholar-ink", // 차분한 잉크 그레이 + 버건디
   "fresh-teal", // 모던 틸 + 슬레이트
 ]);
@@ -383,7 +381,7 @@ export const analysisReportSchema = z
     brand: z.string().default("ENGLISH READING LAB"),
     /** 문서 번호 (예: "No.037" / "VE·RR·037") — 자동 생성 가능 */
     docNo: z.string().optional(),
-    themeId: reportThemeIdSchema.default("veritas-navy"),
+    themeId: reportThemeIdSchema.default("black-white"),
     meta: reportMetaSchema,
     /** AI가 결정한 섹션 순서. 보통 위 순서대로지만 가변. */
     sections: z.array(analysisSectionSchema).min(1).max(12),

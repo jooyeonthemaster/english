@@ -5,12 +5,15 @@ import type { ReactNode } from "react";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { Grid2X2, Grid3X3, List } from "lucide-react";
 
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 import type { M1PassageDraftWithJob } from "../types";
 import { DraftCard, type DraftCardStatusBadgeMode } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
-import { ViewToggleButton } from "./view-toggle-button";
 
 const DRAG_TYPE = "draft" as const;
 const BULK_DRAG_TYPE = "draft-bulk" as const;
@@ -70,6 +73,12 @@ function FolderDropZone({ children, onDrop }: FolderDropZoneProps) {
 }
 
 export type GridCols = "grid3" | "grid2" | "list";
+
+const DRAFT_GRID_OPTIONS = [
+  { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
+  { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<GridCols>>;
 
 export interface JobFilterOption {
   jobId: string;
@@ -209,6 +218,10 @@ export function DraftGrid({
   void dupCountById;
   void filedDraftIds;
 
+  // 다중 선택 드래그용: 체크된 카드를 끌면 체크된 자료 전체가 함께 끌려가고,
+  // 카드가 "여러 장이 한 덩어리로 겹쳐진" 미리보기 + 개수 배지를 띄운다.
+  const checkedIdsList = useMemo(() => Array.from(checkedIds), [checkedIds]);
+
   const draftGroups = useMemo(() => {
     const map = new Map<string, M1PassageDraftWithJob[]>();
     for (const d of drafts) {
@@ -273,36 +286,20 @@ export function DraftGrid({
             >
               {filtersToolbar}
               {!gridOnly ? (
-                <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                  <ViewToggleButton
-                    active={gridCols === "grid3"}
-                    label="3열 보기"
-                    title={
-                      grid3Disabled
-                        ? "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다"
-                        : undefined
-                    }
-                    disabled={grid3Disabled}
-                    onClick={() => onGridColsChange("grid3")}
-                  >
-                    <Grid3X3 className="size-4" />
-                  </ViewToggleButton>
-                  <ViewToggleButton
-                    active={gridCols === "grid2"}
-                    label="2열 보기"
-                    onClick={() => onGridColsChange("grid2")}
-                    middle
-                  >
-                    <Grid2X2 className="size-4" />
-                  </ViewToggleButton>
-                  <ViewToggleButton
-                    active={gridCols === "list"}
-                    label="목록 보기"
-                    onClick={() => onGridColsChange("list")}
-                  >
-                    <List className="size-4" />
-                  </ViewToggleButton>
-                </div>
+                <ViewModeCycleButton
+                  value={gridCols}
+                  options={DRAFT_GRID_OPTIONS.map((option) =>
+                    option.value === "grid3"
+                      ? {
+                          ...option,
+                          disabled: grid3Disabled,
+                          disabledTitle:
+                            "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
+                        }
+                      : option,
+                  )}
+                  onChange={onGridColsChange}
+                />
               ) : null}
             </div>
           </div>
@@ -435,6 +432,7 @@ export function DraftGrid({
                             lastViewedDraftId === draft.id
                           }
                           checked={checkedIds.has(draft.id)}
+                          bulkDragIds={checkedIdsList}
                           onClick={() => onSelectDraft(draft.id)}
                           onToggleCheck={() => onToggleCheck(draft.id)}
                           onTitleChange={onRenameDraft}
@@ -463,6 +461,7 @@ export function DraftGrid({
                       lastViewedDraftId === draft.id
                     }
                     checked={checkedIds.has(draft.id)}
+                    bulkDragIds={checkedIdsList}
                     onClick={() => onSelectDraft(draft.id)}
                     onToggleCheck={() => onToggleCheck(draft.id)}
                     onTitleChange={onRenameDraft}

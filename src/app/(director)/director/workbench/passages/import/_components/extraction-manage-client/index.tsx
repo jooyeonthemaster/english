@@ -44,6 +44,10 @@ import {
 } from "@/actions/workbench";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "@/hooks/use-selection";
 
@@ -70,7 +74,6 @@ import {
   TaskQueueInlineList,
   type BaseTask,
 } from "@/components/workbench/task-queue";
-import { ViewToggleButton } from "./components/view-toggle-button";
 import { useBulkActions } from "./hooks/use-bulk-actions";
 import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
@@ -105,6 +108,12 @@ interface ExtractionManageClientProps {
   ) => Promise<void>;
   bulkAnalyzing?: boolean;
 }
+
+const MATERIAL_GRID_OPTIONS = [
+  { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
+  { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<GridCols>>;
 
 function useMeasuredHeight(enabled: boolean) {
   const ref = useRef<HTMLDivElement>(null);
@@ -1109,9 +1118,8 @@ export function ExtractionManageClient({
                     " border-t border-slate-200 bg-slate-50 px-4 py-2"
                   }
                 >
-                  <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
-                    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-                      <DraftSelectionToolbar
+                  <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+                    <DraftSelectionToolbar
                         embedded
                         selectedCount={actionTargetIds.size}
                         totalCount={totalSelectableCount}
@@ -1152,38 +1160,21 @@ export function ExtractionManageClient({
                           onSortOrderChange={setTaskSortOrder}
                         />
                         {!embedded ? (
-                          <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                            <ViewToggleButton
-                              active={materialGridCols === "grid3"}
-                              label="3열 보기"
-                              title={
-                                reviewDrawerOpen
-                                  ? "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다"
-                                  : undefined
-                              }
-                              disabled={reviewDrawerOpen}
-                              onClick={() => setMaterialGridCols("grid3")}
-                            >
-                              <Grid3X3 className="size-4" />
-                            </ViewToggleButton>
-                            <ViewToggleButton
-                              active={materialGridCols === "grid2"}
-                              label="2열 보기"
-                              onClick={() => setMaterialGridCols("grid2")}
-                              middle
-                            >
-                              <Grid2X2 className="size-4" />
-                            </ViewToggleButton>
-                            <ViewToggleButton
-                              active={materialGridCols === "list"}
-                              label="목록 보기"
-                              onClick={() => setMaterialGridCols("list")}
-                            >
-                              <List className="size-4" />
-                            </ViewToggleButton>
-                          </div>
+                          <ViewModeCycleButton
+                            value={materialGridCols}
+                            options={MATERIAL_GRID_OPTIONS.map((option) =>
+                              option.value === "grid3"
+                                ? {
+                                    ...option,
+                                    disabled: reviewDrawerOpen,
+                                    disabledTitle:
+                                      "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
+                                  }
+                                : option,
+                            )}
+                            onChange={setMaterialGridCols}
+                          />
                         ) : null}
-                      </div>
                     </div>
                   </div>
                 </div>

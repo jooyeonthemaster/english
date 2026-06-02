@@ -173,9 +173,9 @@ export function buildSegments(allHighlights: Highlight[]): Segment[] {
 export function getSegmentStyle(types: Set<Highlight["type"]>): React.CSSProperties {
   const s: React.CSSProperties & { textDecorationSkipInk?: string } = {};
   if (types.has("exam")) {
-    s.background = "linear-gradient(to top, #fef08a 40%, transparent 40%)";
+    s.background = "linear-gradient(to top, var(--hl-exam-bg) 40%, transparent 40%)";
   } else if (types.has("vocab")) {
-    s.background = "linear-gradient(to top, #dbeafe 35%, transparent 35%)";
+    s.background = "linear-gradient(to top, var(--hl-vocab-bg) 35%, transparent 35%)";
   }
   if (types.has("vocab")) {
     s.borderBottom = "2px solid #3b82f6";

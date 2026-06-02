@@ -362,7 +362,7 @@ export function CoverSheet({ report, ced }: { report: AnalysisReport; ced?: Cove
   return <>{Tpl({ d, editable, patch })}</>;
 }
 
-/** 패널 썸네일/미리보기 — .par-root 안에서 테마 변수 + 전역 CSS 사용, 축소 렌더. */
+/** 패널 썸네일/미리보기 — .par-root 안에서 디자인 템플릿 변수 + 전역 CSS 사용, 축소 렌더. */
 export function CoverPreview({
   report,
   templateId,
@@ -380,7 +380,10 @@ export function CoverPreview({
   const scale = widthPx / A4_W;
   const rootStyle = {
     "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
+    "--ink-fill": theme.inkFill, "--ink-fill-soft": theme.inkFillSoft,
+    "--ink-on-fill": theme.inkOnFill, "--ink-on-fill-muted": theme.inkOnFillMuted,
     "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
+    "--table-head-bg": theme.tableHeadBg, "--table-head-text": theme.tableHeadText,
     "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
     width: A4_W, height: A4_H,
   } as CSSProperties;

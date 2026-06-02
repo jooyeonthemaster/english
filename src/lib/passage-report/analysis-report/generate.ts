@@ -77,7 +77,7 @@ export async function generateAnalysisReport(
     schemaVersion: 1,
     brand: input.brand ?? "ENGLISH READING LAB",
     docNo: input.docNo,
-    themeId: input.themeId ?? "veritas-navy",
+    themeId: input.themeId ?? "black-white",
     meta: validation.data.meta,
     sections: validation.data.sections,
   };

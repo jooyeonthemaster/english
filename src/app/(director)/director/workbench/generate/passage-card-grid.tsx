@@ -5,13 +5,14 @@ import {
   draggable,
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import {
   Search,
   Loader2,
   X,
   Check,
   FileText,
-  Eye,
+  Maximize2,
   ChevronRight,
   ChevronDown,
   ChevronUp,
@@ -128,6 +129,9 @@ interface PassageCardGridProps {
   onCreatePastedPassage?: (title: string, content: string) => void;
   pasteSaving?: boolean;
 
+  // 지문별 "이미 생성된" 문제 수(실시간). 생략 시 서버 _count 만 사용한다.
+  questionCountByPassage?: Map<string, number>;
+
   // Actions
   handleOpenAnalysisModal: (passageId: string) => void;
 }
@@ -176,6 +180,7 @@ export function PassageCardGrid({
   onExitPasteMode,
   onCreatePastedPassage,
   pasteSaving,
+  questionCountByPassage,
   handleOpenAnalysisModal,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
@@ -363,6 +368,67 @@ export function PassageCardGrid({
               passageId: passage.id,
               passageIds: ids,
             };
+          },
+          // 2개 이상을 선택한 채 드래그하면 카드들이 하나로 겹쳐지는
+          // 스택 프리뷰 + 개수 배지를 띄운다 (단일 드래그는 브라우저 기본).
+          onGenerateDragPreview: ({ nativeSetDragImage }) => {
+            const count = getDragPassageIds(passage.id).length;
+            if (count <= 1) return;
+            const source = passageDragRefs.current.get(passage.id);
+            if (!source) return;
+            setCustomNativeDragPreview({
+              nativeSetDragImage,
+              getOffset: ({ container }) => {
+                const rect = container.getBoundingClientRect();
+                return { x: Math.min(120, rect.width / 2), y: 24 };
+              },
+              render: ({ container }) => {
+                const rect = source.getBoundingClientRect();
+                const wrapper = document.createElement("div");
+                wrapper.style.position = "relative";
+                wrapper.style.width = `${rect.width}px`;
+                wrapper.style.height = `${rect.height}px`;
+                const backCount = Math.min(2, count - 1);
+                for (let i = backCount; i >= 1; i--) {
+                  const back = document.createElement("div");
+                  back.style.position = "absolute";
+                  back.style.inset = "0";
+                  back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
+                  back.style.borderRadius = "12px";
+                  back.style.background = "white";
+                  back.style.border = "1px solid rgb(226, 232, 240)";
+                  back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+                  wrapper.appendChild(back);
+                }
+                const clone = source.cloneNode(true) as HTMLElement;
+                clone.style.position = "relative";
+                clone.style.width = `${rect.width}px`;
+                clone.style.margin = "0";
+                clone.style.opacity = "1";
+                clone.style.transform = "none";
+                wrapper.appendChild(clone);
+                const badge = document.createElement("div");
+                badge.textContent = String(count);
+                badge.style.position = "absolute";
+                badge.style.top = "-10px";
+                badge.style.right = "-10px";
+                badge.style.minWidth = "28px";
+                badge.style.height = "28px";
+                badge.style.padding = "0 8px";
+                badge.style.borderRadius = "14px";
+                badge.style.background = "#2563eb";
+                badge.style.color = "white";
+                badge.style.fontSize = "13px";
+                badge.style.fontWeight = "700";
+                badge.style.display = "flex";
+                badge.style.alignItems = "center";
+                badge.style.justifyContent = "center";
+                badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+                badge.style.fontVariantNumeric = "tabular-nums";
+                wrapper.appendChild(badge);
+                container.appendChild(wrapper);
+              },
+            });
           },
           onDragStart: ({ source }) => {
             const sourceIds = Array.isArray(source.data.passageIds)
@@ -605,9 +671,22 @@ export function PassageCardGrid({
             })}
           </div>
 
-          {/* 정렬 필터 + 검색 (팝오버) */}
-          {setPassageSortOrder ? (
+          {/* 지문 직접 넣기 + 정렬 필터 + 검색 (팝오버) */}
+          {(pasteEnabled || setPassageSortOrder) ? (
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
+            {pasteEnabled ? (
+              <button
+                type="button"
+                onClick={() => onEnterPasteMode?.()}
+                title="지문 직접 넣기 · 추출·분석 없이 바로 문제 생성"
+                className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white shadow-sm shadow-blue-200/70 transition-all hover:bg-blue-700 hover:shadow-md"
+              >
+                <ClipboardPaste className="size-3.5 shrink-0" aria-hidden="true" />
+                지문 직접 넣기
+              </button>
+            ) : null}
+            {setPassageSortOrder ? (
+            <>
             <Popover>
               <PopoverTrigger
                 title="정렬"
@@ -706,6 +785,8 @@ export function PassageCardGrid({
                 </div>
               </PopoverContent>
             </Popover>
+            </>
+            ) : null}
           </div>
           ) : null}
 
@@ -776,23 +857,6 @@ export function PassageCardGrid({
           </>
         ) : null}
       </div>
-
-      {/* Direct-paste CTA — prominent entry point for pasting a passage directly */}
-      {pasteEnabled && (
-        <div className="px-5 pt-3 shrink-0">
-          <button
-            type="button"
-            onClick={() => onEnterPasteMode?.()}
-            className="group w-full h-11 rounded-xl flex items-center justify-center gap-2 bg-blue-600 text-white text-[13.5px] font-semibold shadow-sm shadow-blue-200/70 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-200 transition-all"
-          >
-            <ClipboardPaste className="w-4 h-4" />
-            지문 직접 붙여넣기
-            <span className="text-[11px] font-medium text-blue-100/90 group-hover:text-white/90">
-              · 추출·분석 없이 바로 문제 생성
-            </span>
-          </button>
-        </div>
-      )}
 
       {/* Search & filter bar */}
       <div className="px-5 py-3 border-b border-slate-100 shrink-0">
@@ -1127,6 +1191,13 @@ export function PassageCardGrid({
                 (aData?.examDesign?.paraphrasableSegments?.length || 0) +
                 (aData?.examDesign?.structureTransformPoints?.length || 0);
               const mainIdea = aData?.structure?.mainIdea;
+              // 이 지문으로 이미 생성된 문제 수. 서버 _count(로드 시점 총계)와
+              // 실시간 집계(savedQuestions 기반) 중 큰 값 — 새로고침 없이 방금
+              // 생성한 문제도 반영된다.
+              const generatedQuestionCount = Math.max(
+                p._count?.questions ?? 0,
+                questionCountByPassage?.get(p.id) ?? 0,
+              );
 
               const isChecked = selectedIds.has(p.id);
               const hasAnalysis = !!p.analysis;
@@ -1203,24 +1274,18 @@ export function PassageCardGrid({
                           <span className="text-[10px] text-slate-400">
                             {countWords(p.content)} words
                           </span>
+                          {generatedQuestionCount > 0 && (
+                            <span
+                              className="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded"
+                              title={`이 지문으로 생성된 문제 ${generatedQuestionCount}개`}
+                            >
+                              <FileText className="w-3 h-3" /> 문제 {generatedQuestionCount}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
 
-                    {/* Hover actions */}
-                    <div
-                      className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => handleOpenAnalysisModal(p.id)}
-                        className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"
-                        title="상세 보기"
-                      >
-                        <Eye className="w-3.5 h-3.5 text-slate-500" />
-                      </button>
-                    </div>
                   </div>
 
                   {/* Content preview */}
@@ -1296,6 +1361,21 @@ export function PassageCardGrid({
                   </div>
 
                   <div className="flex-1" />
+
+                  {/* 상세 보기 — 우측 하단 상시 표시. 다른 지문/문제 카드와 디자인·색 통일. */}
+                  <div
+                    className="absolute bottom-2 right-3"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleOpenAnalysisModal(p.id)}
+                      className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                    >
+                      상세 보기
+                      <Maximize2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               );
             })}

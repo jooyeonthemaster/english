@@ -5,6 +5,10 @@ import type { Dispatch, SetStateAction } from "react";
 import { ClipboardList, Grid2X2, Grid3X3, List, RefreshCw } from "lucide-react";
 import type { QueuedPassage } from "@/hooks/use-passage-queue";
 import { useTaskQueue } from "@/components/workbench/task-queue";
+import {
+  ViewModeCycleButton,
+  type ViewModeCycleOption,
+} from "@/components/workbench/shared/view-mode-cycle-button";
 import type { PassageCollection } from "../types";
 import {
   handleAddToFolder as addToFolder,
@@ -71,37 +75,11 @@ interface QueueSectionContainerProps {
   removeFromQueue: (id: string) => void;
 }
 
-function HeaderViewToggleButton({
-  active,
-  middle,
-  label,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  middle?: boolean;
-  label: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={active}
-      className={
-        "p-2 cursor-pointer transition-colors " +
-        (middle ? "border-x border-slate-200 " : "") +
-        (active
-          ? "bg-slate-800 text-white"
-          : "text-slate-400 hover:bg-slate-50 hover:text-slate-600")
-      }
-    >
-      {children}
-    </button>
-  );
-}
+const QUEUE_GRID_OPTIONS = [
+  { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
+  { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+  { value: "list", label: "목록 보기", Icon: List },
+] satisfies ReadonlyArray<ViewModeCycleOption<QueueGridCols>>;
 
 export function QueueSectionContainer(p: QueueSectionContainerProps) {
   const [gridCols, setGridCols] = useState<QueueGridCols>("grid3");
@@ -144,30 +122,11 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
               >
                 <RefreshCw className="size-4" aria-hidden="true" />
               </button>
-              <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200">
-                <HeaderViewToggleButton
-                  active={gridCols === "grid3"}
-                  label="3열 보기"
-                  onClick={() => setGridCols("grid3")}
-                >
-                  <Grid3X3 className="size-4" />
-                </HeaderViewToggleButton>
-                <HeaderViewToggleButton
-                  active={gridCols === "grid2"}
-                  label="2열 보기"
-                  middle
-                  onClick={() => setGridCols("grid2")}
-                >
-                  <Grid2X2 className="size-4" />
-                </HeaderViewToggleButton>
-                <HeaderViewToggleButton
-                  active={gridCols === "list"}
-                  label="목록 보기"
-                  onClick={() => setGridCols("list")}
-                >
-                  <List className="size-4" />
-                </HeaderViewToggleButton>
-              </div>
+              <ViewModeCycleButton
+                value={gridCols}
+                options={QUEUE_GRID_OPTIONS}
+                onChange={setGridCols}
+              />
             </div>
           </div>
 

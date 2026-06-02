@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Check, Eye, EyeOff } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronDown, ChevronUp, Check } from "lucide-react";
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
 
 // ============================================================================
@@ -13,6 +13,17 @@ const CIRCLED_MARKER_PATTERN = "\\u2460-\\u2473\\u3251-\\u325F\\u32B1-\\u32BF";
 /** 답안 영역을 접어두는 래퍼 — 기본 접힌 상태, 토글로 열기 */
 export function AnswerRevealSection({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // 답안을 펼치면 화면이 튀지 않게 부드럽게 스크롤해서 펼쳐진 답안을 보여 준다.
+  // block: "nearest" — 이미 보이면 움직이지 않고, 가려져 있을 때만 최소한으로 내려간다.
+  useEffect(() => {
+    if (!open) return;
+    const frame = requestAnimationFrame(() => {
+      contentRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
 
   return (
     <div className="pt-1.5 border-t border-dashed border-slate-200">
@@ -21,10 +32,14 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
         onClick={() => setOpen(!open)}
         className="text-[11px] font-semibold text-teal-600 hover:text-teal-700 transition-colors flex items-center gap-1.5"
       >
-        {open ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+        {open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         {open ? "답안 숨기기" : "답안 보기"}
       </button>
-      {open && <div className="space-y-3 pt-2">{children}</div>}
+      {open && (
+        <div ref={contentRef} className="space-y-3 pt-2 scroll-mt-4">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -378,6 +393,16 @@ export function ExplanationSection({
   wrongOptionExplanations?: Record<string, string>;
 }) {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // 해설을 펼치면 답안 보기와 동일하게 부드럽게 스크롤해서 펼쳐진 해설을 보여 준다.
+  useEffect(() => {
+    if (!open) return;
+    const frame = requestAnimationFrame(() => {
+      contentRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
 
   return (
     <div className="pt-1 border-t border-slate-100">
@@ -391,7 +416,7 @@ export function ExplanationSection({
       </button>
 
       {open && (
-        <div className="space-y-3 pt-2">
+        <div ref={contentRef} className="space-y-3 pt-2 scroll-mt-4">
           {explanation && (
             <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100">
               <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">

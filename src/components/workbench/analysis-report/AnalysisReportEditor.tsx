@@ -1,27 +1,61 @@
 "use client";
 
+import NextImage from "next/image";
 import {
   AlignCenter,
   AlignLeft,
   AlignRight,
+  Bookmark,
   Bold,
+  ChevronDown,
   BookImage,
-  Check,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
   Eye,
   EyeOff,
-  ImageUp,
+  FileText,
+  GripVertical,
+  ImagePlus,
   Loader2,
   Minus,
   Plus,
   Printer,
+  Redo2,
   RotateCcw,
   Rows3,
+  Save,
   Trash2,
   Type,
+  Undo2,
 } from "lucide-react";
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Children,
+  cloneElement,
+  type DragEvent,
+  type MouseEvent as ReactMouseEvent,
+  isValidElement,
+  memo,
+  type ReactElement,
+  type ReactNode,
+  type SetStateAction,
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 
+import {
+  PreviewZoomControls,
+  PREVIEW_ZOOM_MAX,
+  PREVIEW_ZOOM_MIN,
+  PREVIEW_ZOOM_STEP,
+} from "@/components/exams/exam-paper-builder-client-parts/preview-zoom-controls";
 import { usePaperItemDrag } from "@/components/exams/paper-builder/components/a4-paper-page-parts/use-paper-item-drag";
+import { cn } from "@/lib/utils";
 import {
   COVER_TEMPLATE_LABELS,
   NUMBERED_SECTION_LABELS,
@@ -39,12 +73,13 @@ import {
 
 import {
   ReportPages,
+  ReportThumbnailSheet,
   enumerateItems,
   type ItemDescriptor,
   type DropPlacement,
   type ReportEdit,
 } from "./report-pages";
-import { TABLE_COLUMNS } from "./report-sections";
+import { TABLE_COLUMNS, reportFlowItems, type FlowItem } from "./report-sections";
 import { CoverPreview } from "./cover-templates";
 import {
   applyBlockOrder,
@@ -66,11 +101,250 @@ import {
 } from "./editor-mutations";
 import { ANALYSIS_REPORT_EDIT_CSS } from "./report-edit-styles";
 
-const THEME_LABELS: Record<ReportThemeId, string> = {
+const DESIGN_TEMPLATE_LABELS: Record<ReportThemeId, string> = {
+  "black-white": "블랙.화이트",
   "veritas-navy": "네이비 · 골드",
   "scholar-ink": "잉크 · 버건디",
   "fresh-teal": "틸 · 슬레이트",
 };
+
+const REPORT_A4_WIDTH_PX = Math.round((210 * 96) / 25.4);
+const REPORT_A4_HEIGHT_PX = Math.round((297 * 96) / 25.4);
+const REPORT_PAGE_GAP_PX = Math.round((9 * 96) / 25.4);
+const LOGO_FILE_MAX_BYTES = 1.5 * 1024 * 1024;
+const PANEL_SECTION_ORDER_STORAGE_KEY =
+  "smoat.analysisReportEditor.propertiesPanel.sectionOrder.v1";
+const PANEL_SECTION_COLLAPSED_STORAGE_KEY =
+  "smoat.analysisReportEditor.propertiesPanel.sectionCollapsed.v1";
+const REPORT_LOGO_SETTINGS_STORAGE_KEY =
+  "smoat.analysisReportEditor.logoSettings.v1";
+const PANEL_SECTION_IDS = [
+  "cover",
+  "logo",
+  "cover-edit",
+  "guide",
+  "selected",
+  "spacer-height",
+  "format",
+  "table-cols",
+  "layout",
+  "order",
+  "section",
+  "custom",
+  "delete",
+  "insert",
+  "theme",
+] as const;
+
+type PanelSectionId = (typeof PANEL_SECTION_IDS)[number];
+
+function isPanelSectionId(value: unknown): value is PanelSectionId {
+  return typeof value === "string" && (PANEL_SECTION_IDS as readonly string[]).includes(value);
+}
+
+function normalizePanelSectionOrder(input: unknown): PanelSectionId[] {
+  if (!Array.isArray(input)) return [...PANEL_SECTION_IDS];
+  const seen = new Set<PanelSectionId>();
+  const normalized: PanelSectionId[] = [];
+
+  for (const value of input) {
+    if (!isPanelSectionId(value) || seen.has(value)) continue;
+    seen.add(value);
+    normalized.push(value);
+  }
+
+  for (const sectionId of PANEL_SECTION_IDS) {
+    if (seen.has(sectionId)) continue;
+    const canonicalIndex = PANEL_SECTION_IDS.indexOf(sectionId);
+    const anchorId = [...PANEL_SECTION_IDS]
+      .slice(0, canonicalIndex)
+      .reverse()
+      .find((candidate) => seen.has(candidate));
+    const anchorIndex = anchorId ? normalized.indexOf(anchorId) : -1;
+    normalized.splice(anchorIndex + 1, 0, sectionId);
+    seen.add(sectionId);
+  }
+  return normalized;
+}
+
+function readStoredPanelSectionOrder(): PanelSectionId[] {
+  if (typeof window === "undefined") return [...PANEL_SECTION_IDS];
+  try {
+    return normalizePanelSectionOrder(
+      JSON.parse(window.localStorage.getItem(PANEL_SECTION_ORDER_STORAGE_KEY) || ""),
+    );
+  } catch {
+    return [...PANEL_SECTION_IDS];
+  }
+}
+
+function readStoredCollapsedPanelSections(): PanelSectionId[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const parsed = JSON.parse(
+      window.localStorage.getItem(PANEL_SECTION_COLLAPSED_STORAGE_KEY) || "",
+    );
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isPanelSectionId);
+  } catch {
+    return [];
+  }
+}
+
+type ReportLogoSettings = {
+  logoDataUrl?: string;
+  showLogo: boolean;
+  logoAlign: NonNullable<ReportCover["logoAlign"]>;
+  logoHeightMm: number;
+  savedAt: string;
+};
+
+const DEFAULT_LOGO_SETTINGS: ReportLogoSettings = {
+  showLogo: true,
+  logoAlign: "center",
+  logoHeightMm: 14,
+  savedAt: "",
+};
+
+function isLogoAlign(value: unknown): value is ReportLogoSettings["logoAlign"] {
+  return value === "left" || value === "center" || value === "right";
+}
+
+function normalizeLogoSettings(input: unknown): ReportLogoSettings | null {
+  if (!input || typeof input !== "object") return null;
+  const candidate = input as Partial<ReportLogoSettings>;
+  return {
+    logoDataUrl: typeof candidate.logoDataUrl === "string" ? candidate.logoDataUrl : undefined,
+    showLogo: typeof candidate.showLogo === "boolean" ? candidate.showLogo : true,
+    logoAlign: isLogoAlign(candidate.logoAlign) ? candidate.logoAlign : "center",
+    logoHeightMm: Math.min(28, Math.max(6, Number(candidate.logoHeightMm) || 14)),
+    savedAt: typeof candidate.savedAt === "string" ? candidate.savedAt : "",
+  };
+}
+
+function readSavedLogoSettings(): ReportLogoSettings | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return normalizeLogoSettings(
+      JSON.parse(window.localStorage.getItem(REPORT_LOGO_SETTINGS_STORAGE_KEY) || ""),
+    );
+  } catch {
+    return null;
+  }
+}
+
+function writeSavedLogoSettings(settings: ReportLogoSettings): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    window.localStorage.setItem(
+      REPORT_LOGO_SETTINGS_STORAGE_KEY,
+      JSON.stringify({ ...settings, savedAt: new Date().toISOString() }),
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function clearSavedLogoSettings(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(REPORT_LOGO_SETTINGS_STORAGE_KEY);
+}
+
+function logoSettingsFromCover(cover?: ReportCover): ReportLogoSettings {
+  return {
+    logoDataUrl: cover?.logoDataUrl,
+    showLogo: cover?.showLogo ?? true,
+    logoAlign: cover?.logoAlign ?? "center",
+    logoHeightMm: cover?.logoHeightMm ?? 14,
+    savedAt: "",
+  };
+}
+
+function logoSettingsToCoverPatch(settings: ReportLogoSettings): Partial<ReportCover> {
+  return {
+    logoDataUrl: settings.logoDataUrl,
+    showLogo: settings.showLogo,
+    logoAlign: settings.logoAlign,
+    logoHeightMm: settings.logoHeightMm,
+    logoX: undefined,
+    logoY: undefined,
+  };
+}
+
+function coverWithoutLogoSettings(cover: ReportCover): Partial<ReportCover> {
+  const next: Partial<ReportCover> = { ...cover };
+  delete next.logoDataUrl;
+  delete next.showLogo;
+  delete next.logoAlign;
+  delete next.logoHeightMm;
+  delete next.logoX;
+  delete next.logoY;
+  return next;
+}
+
+type ReportHistoryState = {
+  present: AnalysisReport;
+  past: AnalysisReport[];
+  future: AnalysisReport[];
+};
+
+type ReportHistoryAction =
+  | { type: "set"; updater: SetStateAction<AnalysisReport>; record?: boolean }
+  | { type: "replace"; report: AnalysisReport; clearHistory?: boolean }
+  | { type: "undo" }
+  | { type: "redo" };
+
+function resolveReportUpdate(
+  current: AnalysisReport,
+  updater: SetStateAction<AnalysisReport>,
+): AnalysisReport {
+  return typeof updater === "function"
+    ? (updater as (current: AnalysisReport) => AnalysisReport)(current)
+    : updater;
+}
+
+function reportHistoryReducer(
+  state: ReportHistoryState,
+  action: ReportHistoryAction,
+): ReportHistoryState {
+  if (action.type === "undo") {
+    const previous = state.past[state.past.length - 1];
+    if (!previous) return state;
+    return {
+      present: previous,
+      past: state.past.slice(0, -1),
+      future: [state.present, ...state.future],
+    };
+  }
+
+  if (action.type === "redo") {
+    const next = state.future[0];
+    if (!next) return state;
+    return {
+      present: next,
+      past: [...state.past, state.present].slice(-50),
+      future: state.future.slice(1),
+    };
+  }
+
+  if (action.type === "replace") {
+    return {
+      present: action.report,
+      past: action.clearHistory ? [] : state.past,
+      future: action.clearHistory ? [] : state.future,
+    };
+  }
+
+  const next = resolveReportUpdate(state.present, action.updater);
+  if (next === state.present) return state;
+  if (action.record === false) return { ...state, present: next };
+  return {
+    present: next,
+    past: [...state.past, state.present].slice(-50),
+    future: [],
+  };
+}
 
 /** 업로드 이미지 → 640px 다운스케일 data URL (용량 폭증/무음 누락 방지, 검증 P0). */
 async function downscaleImage(file: File): Promise<string> {
@@ -103,7 +377,7 @@ async function downscaleImage(file: File): Promise<string> {
 }
 
 const COVER_DEFAULTS: ReportCover = {
-  enabled: true,
+  enabled: false,
   templateId: "classic-center",
   showLogo: true,
   logoAlign: "center",
@@ -118,8 +392,19 @@ interface Props {
   onExit?: () => void;
 }
 
-export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit }: Props) {
-  const [report, setReport] = useState<AnalysisReport>(initialReport);
+export function AnalysisReportEditor({ passageId, initialReport, onSaved }: Props) {
+  const [history, dispatchReport] = useReducer(reportHistoryReducer, {
+    present: initialReport,
+    past: [],
+    future: [],
+  });
+  const report = history.present;
+  const setReport = useCallback(
+    (updater: SetStateAction<AnalysisReport>, options?: { record?: boolean }) => {
+      dispatchReport({ type: "set", updater, record: options?.record });
+    },
+    [],
+  );
   const [baseline, setBaseline] = useState<AnalysisReport>(initialReport);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -130,12 +415,14 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const [placement, setPlacement] = useState<DropPlacement>("before");
 
   const dirty = report !== baseline;
+  const canUndo = history.past.length > 0;
+  const canRedo = history.future.length > 0;
 
   // 콘텐츠 편집 콜백 (안정적)
-  const med = useMemo(() => ({ commit: (next: ReportMeta) => setReport((r) => setMeta(r, next)) }), []);
+  const med = useMemo(() => ({ commit: (next: ReportMeta) => setReport((r) => setMeta(r, next)) }), [setReport]);
   const sectionEdit = useCallback(
     (index: number) => ({ commit: (next: AnalysisSection) => setReport((r) => setSection(r, index, next)) }),
-    [],
+    [setReport],
   );
 
   const onReorder = useCallback((sourceId: string, targetId: string, place: DropPlacement) => {
@@ -143,15 +430,15 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       const ids = applyBlockOrder(enumerateItems(r).map((b) => b.id), r.blockOrder);
       return { ...r, blockOrder: reorderIds(ids, sourceId, targetId, place) };
     });
-  }, []);
+  }, [setReport]);
 
   const onBlockMeta = useCallback((id: string, patch: Partial<BlockMeta>) => {
     setReport((r) => setBlockMeta(r, id, patch));
-  }, []);
+  }, [setReport]);
 
   const setCustom = useCallback((id: string, patch: Partial<CustomBlock>) => {
     setReport((r) => setCustomBlock(r, id, patch));
-  }, []);
+  }, [setReport]);
 
   const onResize = useCallback((id: string, mm: number) => {
     setReport((r) => {
@@ -163,25 +450,33 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       }
       return setBlockMeta(r, id, { minHeight: mm > 0 ? Math.min(237, mm) : undefined });
     });
-  }, []);
+  }, [setReport]);
 
   // ── 표지(Cover) ──
   const [coverError, setCoverError] = useState<string | null>(null);
-  const ced = useMemo(() => ({ commit: (next: ReportCover) => setReport((r) => ({ ...r, cover: next })) }), []);
+  const ced = useMemo(() => ({ commit: (next: ReportCover) => setReport((r) => ({ ...r, cover: next })) }), [setReport]);
   const setCoverPatch = useCallback((patch: Partial<ReportCover>) => {
     setReport((r) => ({ ...r, cover: { ...COVER_DEFAULTS, ...(r.cover ?? {}), ...patch } }));
-  }, []);
+  }, [setReport]);
   const onLogoFile = useCallback(
     async (file?: File | null) => {
       if (!file) return;
       setCoverError(null);
+      if (!file.type.startsWith("image/")) {
+        setCoverError("이미지 파일만 로고로 넣을 수 있습니다.");
+        return;
+      }
+      if (file.size > LOGO_FILE_MAX_BYTES) {
+        setCoverError("로고 이미지는 1.5MB 이하로 올려주세요.");
+        return;
+      }
       try {
         const url = await downscaleImage(file);
         if (url.length > 900_000) {
           setCoverError("로고 용량이 큽니다. 더 작거나 단순한 이미지를 사용하세요.");
           return;
         }
-        setCoverPatch({ logoDataUrl: url, showLogo: true });
+        setCoverPatch({ logoDataUrl: url, showLogo: true, logoX: undefined, logoY: undefined });
       } catch {
         setCoverError("로고를 불러오지 못했습니다. PNG/JPG 파일을 사용하세요.");
       }
@@ -204,22 +499,159 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       });
       setActiveId(null);
     },
-    [activeId],
+    [activeId, setReport],
   );
 
   const [pageList, setPageList] = useState<string[][]>([]);
+  const [activePageIndex, setActivePageIndex] = useState(0);
+  const [pagesPanelCollapsed, setPagesPanelCollapsed] = useState(false);
+  const [propertiesPanelCollapsed, setPropertiesPanelCollapsed] = useState(false);
+  const previewScrollerRef = useRef<HTMLDivElement>(null);
+  const [fitZoom, setFitZoom] = useState(1);
+  const [manualZoom, setManualZoom] = useState<number | null>(null);
+  const [zoomControlsPos, setZoomControlsPos] = useState({ top: 12, right: 12 });
+  const zoom = manualZoom ?? fitZoom;
+  const previewPageCount = Math.max(pageList.length, 1);
+  const previewContentHeight = previewPageCount * (REPORT_A4_HEIGHT_PX + REPORT_PAGE_GAP_PX);
+
+  useEffect(() => {
+    const scroller = previewScrollerRef.current;
+    if (!scroller) return;
+
+    let lastFitWidth = 0;
+    const updateFitZoom = () => {
+      const styles = window.getComputedStyle(scroller);
+      const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+      const availableWidth = Math.max(320, scroller.clientWidth - paddingX);
+      if (lastFitWidth > 0 && Math.abs(availableWidth - lastFitWidth) < 24) return;
+      lastFitWidth = availableWidth;
+      const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / REPORT_A4_WIDTH_PX));
+      setFitZoom(Math.round(nextFit * 100) / 100);
+    };
+
+    updateFitZoom();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(updateFitZoom);
+    observer.observe(scroller);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const scroller = previewScrollerRef.current;
+    if (!scroller) return;
+
+    const updateActivePage = () => {
+      const scrollerRect = scroller.getBoundingClientRect();
+      const pageNodes = Array.from(scroller.querySelectorAll<HTMLElement>("[data-page-index]"));
+      let nextIndex = 0;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      pageNodes.forEach((node) => {
+        const rawIndex = Number(node.dataset.pageIndex);
+        const top = node.getBoundingClientRect().top - scrollerRect.top;
+        const distance = Math.abs(top - 24);
+        if (Number.isFinite(rawIndex) && distance < bestDistance) {
+          nextIndex = rawIndex;
+          bestDistance = distance;
+        }
+      });
+      setActivePageIndex(nextIndex);
+    };
+
+    updateActivePage();
+    const frame = window.requestAnimationFrame(updateActivePage);
+    scroller.addEventListener("scroll", updateActivePage, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      scroller.removeEventListener("scroll", updateActivePage);
+    };
+  }, [pageList.length, zoom]);
+
+  const scrollToPage = useCallback((index: number) => {
+    const scroller = previewScrollerRef.current;
+    const node = scroller?.querySelector<HTMLElement>(`[data-page-index="${index}"]`);
+    if (!scroller || !node) return;
+    const scrollerRect = scroller.getBoundingClientRect();
+    const targetRect = node.getBoundingClientRect();
+    scroller.scrollTo({
+      top: scroller.scrollTop + targetRect.top - scrollerRect.top - 20,
+      behavior: "smooth",
+    });
+    setActivePageIndex(index);
+  }, []);
+
+  const zoomPreviewIn = useCallback(() => {
+    setManualZoom((current) =>
+      Math.min(PREVIEW_ZOOM_MAX, Math.round(((current ?? zoom) + PREVIEW_ZOOM_STEP) * 100) / 100),
+    );
+  }, [zoom]);
+
+  const zoomPreviewOut = useCallback(() => {
+    setManualZoom((current) =>
+      Math.max(PREVIEW_ZOOM_MIN, Math.round(((current ?? zoom) - PREVIEW_ZOOM_STEP) * 100) / 100),
+    );
+  }, [zoom]);
+
+  const resetPreviewZoom = useCallback(() => setManualZoom(null), []);
+
+  const fitPreviewToScreen = useCallback(() => {
+    const scroller = previewScrollerRef.current;
+    if (!scroller) return;
+    const styles = window.getComputedStyle(scroller);
+    const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+    const paddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+    const availableWidth = Math.max(1, scroller.clientWidth - paddingX);
+    const availableHeight = Math.max(1, scroller.clientHeight - paddingY);
+    const next = Math.min(availableWidth / REPORT_A4_WIDTH_PX, availableHeight / REPORT_A4_HEIGHT_PX);
+    const clamped = Math.min(PREVIEW_ZOOM_MAX, Math.max(PREVIEW_ZOOM_MIN, next));
+    setManualZoom(Math.round(clamped * 100) / 100);
+  }, []);
+
+  const handlePreviewZoomControlsDragStart = useCallback(
+    (event: ReactMouseEvent<HTMLSpanElement>) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+
+      const startMouseX = event.clientX;
+      const startMouseY = event.clientY;
+      const startTop = zoomControlsPos.top;
+      const startRight = zoomControlsPos.right;
+      const prevCursor = document.body.style.cursor;
+      const prevUserSelect = document.body.style.userSelect;
+      document.body.style.cursor = "grabbing";
+      document.body.style.userSelect = "none";
+
+      const handleMove = (moveEvent: MouseEvent) => {
+        setZoomControlsPos({
+          top: Math.max(0, startTop + (moveEvent.clientY - startMouseY)),
+          right: Math.max(0, startRight - (moveEvent.clientX - startMouseX)),
+        });
+      };
+      const handleUp = () => {
+        document.removeEventListener("mousemove", handleMove);
+        document.removeEventListener("mouseup", handleUp);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevUserSelect;
+      };
+
+      document.addEventListener("mousemove", handleMove);
+      document.addEventListener("mouseup", handleUp);
+    },
+    [zoomControlsPos],
+  );
+
   const deleteActive = useCallback((id: string) => {
     setReport((r) => deleteItem(r, id));
     setActiveId(null);
-  }, []);
+  }, [setReport]);
   const deletePage = useCallback((ids: string[]) => {
     if (!ids.length) return;
     if (!window.confirm(`이 페이지의 블록 ${ids.length}개를 삭제할까요?`)) return;
     setReport((r) => hideOrDeleteIds(r, ids));
-  }, []);
+  }, [setReport]);
   const onToggleCol = useCallback((si: number, key: string) => {
     setReport((r) => toggleTableCol(r, si, key));
-  }, []);
+  }, [setReport]);
 
   // Delete 키로 선택 블록 삭제 (텍스트 편집 중이면 무시)
   useEffect(() => {
@@ -260,6 +692,25 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
+  // ─── 페이지 썸네일용 데이터 ───
+  // 실제 블록 노드를 한 번만 계산해 모든 썸네일이 공유. 타이핑 중 썸네일
+  // 재렌더가 입력을 끊지 않도록 deferred 값으로 낮은 우선순위로 갱신한다.
+  const deferredReport = useDeferredValue(report);
+  const thumbItemsById = useMemo(() => {
+    const map = new Map<string, FlowItem>();
+    for (const it of reportFlowItems(deferredReport)) map.set(it.id, it);
+    return map;
+  }, [deferredReport]);
+  // 표지를 제외한 본문 페이지 번호/총수 (중앙 캔버스의 푸터 번호와 일치).
+  const thumbPageInfo = useMemo(() => {
+    const coverFlags = pageList.map(
+      (ids) => ids.length === 1 && thumbItemsById.get(ids[0])?.wrap === "cover",
+    );
+    const bodyTotal = coverFlags.filter((c) => !c).length;
+    let bodyNo = 0;
+    const bodyNumbers = coverFlags.map((isCover) => (isCover ? 0 : ++bodyNo));
+    return { coverFlags, bodyTotal, bodyNumbers };
+  }, [pageList, thumbItemsById]);
   const orderedIds = useMemo(
     () => applyBlockOrder(descriptors.map((d) => d.id), report.blockOrder),
     [descriptors, report.blockOrder],
@@ -283,7 +734,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       const j = await res.json();
       if (!res.ok) throw new Error(j?.error ?? "저장에 실패했습니다.");
       const saved = (j.report as AnalysisReport) ?? report;
-      setReport(saved);
+      setReport(saved, { record: false });
       setBaseline(saved);
       onSaved?.(saved);
     } catch (e) {
@@ -291,13 +742,23 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     } finally {
       setSaving(false);
     }
-  }, [passageId, report, onSaved]);
+  }, [passageId, report, onSaved, setReport]);
 
   const revert = useCallback(() => {
     if (dirty && !window.confirm("저장하지 않은 편집을 모두 되돌릴까요?")) return;
-    setReport(baseline);
+    dispatchReport({ type: "replace", report: baseline, clearHistory: true });
     setActiveId(null);
   }, [dirty, baseline]);
+
+  const undo = useCallback(() => {
+    dispatchReport({ type: "undo" });
+    setActiveId(null);
+  }, []);
+
+  const redo = useCallback(() => {
+    dispatchReport({ type: "redo" });
+    setActiveId(null);
+  }, []);
 
   const fontScale = activeMeta.fontScale ?? 1;
   const setMetaPatch = (patch: Partial<BlockMeta>) => activeId && onBlockMeta(activeId, patch);
@@ -319,139 +780,527 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     });
 
   return (
-    <div className="are-shell flex h-full flex-col bg-slate-100">
+    <div className="are-shell flex h-full min-h-0 flex-col overflow-hidden bg-[#F4F6F9]">
       <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_EDIT_CSS }} />
 
       {/* 상단 바 */}
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-slate-200 bg-white shrink-0">
-        <span className="text-[12px] font-semibold text-slate-700">레이아웃 편집</span>
-        <span className="text-[11px] text-slate-400 hidden md:inline">
-          블록 클릭→우측에서 서식/페이지 · ⠿ 드래그로 이동 · 텍스트 클릭해 바로 수정
-        </span>
-        <div className="flex-1" />
-        {error ? <span className="text-[11px] text-red-500 max-w-[240px] truncate">{error}</span> : null}
-        {dirty ? <span className="text-[11px] text-amber-600">● 저장 안 됨</span> : null}
-        <button
-          type="button"
-          onClick={revert}
-          disabled={!dirty || saving}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-slate-200 text-[12px] font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40"
-        >
-          <RotateCcw className="w-3.5 h-3.5" /> 되돌리기
-        </button>
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-slate-200 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
-        >
-          <Printer className="w-3.5 h-3.5" /> 인쇄
-        </button>
-        <button
-          type="button"
-          onClick={save}
-          disabled={saving || !dirty}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue-600 text-[12px] font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-        >
-          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
-          저장
-        </button>
-        {onExit ? (
+      <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+          <span className="truncate text-[12px] font-bold text-slate-600">A4 보고서 편집</span>
+          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+            {pageList.length || 1}페이지
+          </span>
+          <span className="hidden shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 sm:inline-flex">
+            {DESIGN_TEMPLATE_LABELS[report.themeId]}
+          </span>
+        </div>
+
+        <div className="flex min-w-0 items-center justify-end gap-2">
+          {error ? <span className="max-w-[260px] truncate text-[11px] text-red-500">{error}</span> : null}
+          {dirty ? (
+            <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
+              저장 필요
+            </span>
+          ) : null}
           <button
             type="button"
-            onClick={() => {
-              if (dirty && !window.confirm("저장하지 않은 편집이 있습니다. 보기로 나갈까요?")) return;
-              onExit();
-            }}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-slate-200 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
+            onClick={undo}
+            disabled={!canUndo || saving}
+            title="되돌리기"
+            aria-label="되돌리기"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Eye className="w-3.5 h-3.5" /> 보기
+            <Undo2 className="h-3.5 w-3.5" />
           </button>
-        ) : null}
+          <button
+            type="button"
+            onClick={redo}
+            disabled={!canRedo || saving}
+            title="앞으로 가기"
+            aria-label="앞으로 가기"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Redo2 className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={revert}
+            disabled={!dirty || saving}
+            title="저장 전 상태로 되돌리기"
+            aria-label="저장 전 상태로 되돌리기"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={save}
+            disabled={saving || !dirty}
+            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+          >
+            {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+            저장
+          </button>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+          >
+            <Printer className="h-3.5 w-3.5" />
+            인쇄
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-1 min-h-0">
+      <div className="flex min-h-0 flex-1 overflow-hidden bg-white">
         {/* 좌측 — 페이지 인디케이터 */}
-        <div className="w-[72px] flex-shrink-0 border-r border-slate-200 bg-white overflow-auto py-3">
-          <div className="text-[10px] text-slate-400 text-center mb-2">페이지</div>
-          <div className="flex flex-col items-center gap-2.5">
-            {pageList.map((ids, pi) => (
-              <div key={pi} className="group relative">
-                <button
-                  type="button"
-                  onClick={() =>
-                    document.querySelector(`[data-page-index="${pi}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" })
-                  }
-                  className="w-12 h-[68px] rounded-[3px] border border-slate-300 bg-white shadow-sm hover:border-blue-400 flex items-center justify-center text-[12px] font-semibold text-slate-500"
-                  title={`${pi + 1}페이지로 이동`}
-                >
-                  {pi + 1}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => deletePage(ids)}
-                  title="이 페이지 삭제"
-                  className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-red-200 text-red-500 text-[11px] leading-none opacity-0 group-hover:opacity-100 hover:bg-red-50"
-                >
-                  ×
-                </button>
+        {pagesPanelCollapsed ? (
+          <button
+            type="button"
+            onClick={() => setPagesPanelCollapsed(false)}
+            title="페이지 목록 열기"
+            aria-label="페이지 목록 열기"
+            aria-expanded={false}
+            className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-r border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600 lg:flex"
+          >
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span style={{ writingMode: "vertical-rl" }}>페이지</span>
+          </button>
+        ) : (
+          <aside className="no-print flex w-[112px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
+            <div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 px-3">
+              <div>
+                <p className="text-[11px] font-black text-slate-700">페이지</p>
+                <p className="text-[10px] font-semibold text-slate-400">{pageList.length || 1}장</p>
               </div>
-            ))}
-          </div>
-        </div>
+              <button
+                type="button"
+                onClick={() => setPagesPanelCollapsed(true)}
+                title="페이지 목록 닫기"
+                aria-label="페이지 목록 닫기"
+                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
+              {pageList.length === 0 ? (
+                <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-2 py-4 text-center text-[11px] font-semibold text-slate-400">
+                  페이지 계산 중
+                </div>
+              ) : (
+                pageList.map((ids, pi) => {
+                  const selected = activePageIndex === pi;
+                  return (
+                    <div key={pi} className="group/page relative">
+                      <button
+                        type="button"
+                        onClick={() => scrollToPage(pi)}
+                        className={cn(
+                          "flex w-full flex-col items-center rounded-lg border bg-white p-1.5 text-left shadow-sm transition-colors",
+                          selected
+                            ? "border-blue-300 bg-blue-50/70 shadow-[0_0_0_2px_rgba(59,130,246,0.10)]"
+                            : "border-slate-200 hover:border-blue-200 hover:bg-slate-50",
+                        )}
+                        title={`${pi + 1}페이지로 이동`}
+                        aria-current={selected ? "page" : undefined}
+                      >
+                        <PageMiniPreview
+                          ids={ids}
+                          report={deferredReport}
+                          itemsById={thumbItemsById}
+                          isCover={thumbPageInfo.coverFlags[pi]}
+                          bodyNumber={thumbPageInfo.bodyNumbers[pi]}
+                          bodyTotal={thumbPageInfo.bodyTotal}
+                          selected={selected}
+                        />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deletePage(ids)}
+                        title="이 페이지 삭제"
+                        aria-label="이 페이지 삭제"
+                        className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border border-red-200 bg-white text-red-500 opacity-0 shadow-sm transition hover:bg-red-50 group-hover/page:opacity-100"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </aside>
+        )}
 
         {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
-        <div id="exam-paper-print-root" className="par-scroll flex-1 overflow-auto px-6 py-6" onMouseDown={(e) => {
-          if (e.target === e.currentTarget) setActiveId(null);
-        }}>
-          <ReportPages report={report} edit={edit} onPagesChange={setPageList} />
-        </div>
+        <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-slate-100/70">
+          <div className="relative min-h-0 flex-1 overflow-hidden">
+            {pageList.length > 0 ? (
+              <PreviewZoomControls
+                zoom={zoom}
+                position={zoomControlsPos}
+                onZoomIn={zoomPreviewIn}
+                onZoomOut={zoomPreviewOut}
+                onReset={resetPreviewZoom}
+                onFit={fitPreviewToScreen}
+                onDragStart={handlePreviewZoomControlsDragStart}
+              />
+            ) : null}
+            <div
+              id="exam-paper-print-root"
+              ref={previewScrollerRef}
+              className="par-scroll h-full min-h-0 overflow-auto overscroll-contain px-5 py-5 [scrollbar-gutter:stable]"
+              onMouseDown={(e) => {
+                if (e.target === e.currentTarget) setActiveId(null);
+              }}
+            >
+              <div
+                className="mx-auto"
+                style={{
+                  width: REPORT_A4_WIDTH_PX * zoom,
+                  height: previewContentHeight * zoom,
+                }}
+              >
+                <div
+                  style={{
+                    width: REPORT_A4_WIDTH_PX,
+                    transform: `scale(${zoom})`,
+                    transformOrigin: "top left",
+                  }}
+                >
+                  <ReportPages report={report} edit={edit} onPagesChange={setPageList} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* 우측 — 속성 패널 */}
-        <aside className="w-[280px] flex-shrink-0 border-l border-slate-200 bg-white overflow-auto">
-          <PropertiesPanel
-            report={report}
-            active={active}
-            activeMeta={activeMeta}
-            activeCustom={(activeId && report.customBlocks?.find((b) => b.id === activeId)) || null}
-            activePos={activePos}
-            total={orderedIds.length}
-            fontScale={fontScale}
-            coverError={coverError}
-            onCoverPatch={setCoverPatch}
-            onLogoFile={onLogoFile}
-            onApplyCover={(cv) => setReport((r) => ({ ...r, cover: { ...cv, enabled: true } }))}
-            onTheme={(t) => setReport((r) => ({ ...r, themeId: t }))}
-            onMetaPatch={setMetaPatch}
-            onMove={moveActive}
-            onAddRow={addRow}
-            onInsertCustom={insertCustom}
-            onSetCustom={setCustom}
-            onDeleteItem={deleteActive}
-            onToggleCol={onToggleCol}
-            onDeleteCustom={(id) => {
-              setReport((r) => deleteCustomBlock(r, id));
-              setActiveId(null);
-            }}
-            onDeleteSection={(si) => {
-              if (window.confirm("이 섹션 전체를 삭제할까요?")) {
-                setReport((r) => deleteSection(r, si));
-                setActiveId(null);
-              }
-            }}
-          />
-        </aside>
+        {propertiesPanelCollapsed ? (
+          <button
+            type="button"
+            onClick={() => setPropertiesPanelCollapsed(false)}
+            title="편집 패널 열기"
+            aria-label="편집 패널 열기"
+            aria-expanded={false}
+            className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+            <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+          </button>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => setPropertiesPanelCollapsed(true)}
+              title="편집 패널 닫기"
+              aria-label="편집 패널 닫기"
+              aria-expanded
+              className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+              <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+            </button>
+            <aside className="no-print flex w-[304px] shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
+              <div className="flex h-11 shrink-0 items-center border-b border-slate-200 bg-white px-3.5">
+                <div className="min-w-0">
+                  <p className="truncate text-[12px] font-black text-slate-800">편집 패널</p>
+                  <p className="truncate text-[10.5px] font-semibold text-slate-400">
+                    {active ? "선택 블록 조정" : "문서 설정"}
+                  </p>
+                </div>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
+                <PropertiesPanel
+                  report={report}
+                  active={active}
+                  activeMeta={activeMeta}
+                  activeCustom={(activeId && report.customBlocks?.find((b) => b.id === activeId)) || null}
+                  activePos={activePos}
+                  total={orderedIds.length}
+                  fontScale={fontScale}
+                  coverError={coverError}
+                  onCoverPatch={setCoverPatch}
+                  onLogoFile={onLogoFile}
+                  onApplyCover={(cv) =>
+                    setReport((r) => ({
+                      ...r,
+                      cover: {
+                        ...COVER_DEFAULTS,
+                        ...(r.cover ?? {}),
+                        ...coverWithoutLogoSettings(cv),
+                        enabled: true,
+                      },
+                    }))
+                  }
+                  onTheme={(t) => setReport((r) => ({ ...r, themeId: t }))}
+                  onMetaPatch={setMetaPatch}
+                  onMove={moveActive}
+                  onAddRow={addRow}
+                  onInsertCustom={insertCustom}
+                  onSetCustom={setCustom}
+                  onDeleteItem={deleteActive}
+                  onToggleCol={onToggleCol}
+                  onDeleteCustom={(id) => {
+                    setReport((r) => deleteCustomBlock(r, id));
+                    setActiveId(null);
+                  }}
+                  onDeleteSection={(si) => {
+                    if (window.confirm("이 섹션 전체를 삭제할까요?")) {
+                      setReport((r) => deleteSection(r, si));
+                      setActiveId(null);
+                    }
+                  }}
+                />
+              </div>
+            </aside>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
 // ─── 우측 속성 패널 ───────────────────────────────────────────────────────────
-function PanelSection({ title, children }: { title: string; children: ReactNode }) {
+const PAGE_THUMB_WIDTH_PX = 76;
+
+const PageMiniPreview = memo(function PageMiniPreview({
+  ids,
+  report,
+  itemsById,
+  isCover,
+  bodyNumber,
+  bodyTotal,
+  selected,
+}: {
+  ids: string[];
+  report: AnalysisReport;
+  itemsById: Map<string, FlowItem>;
+  isCover: boolean;
+  bodyNumber: number;
+  bodyTotal: number;
+  selected: boolean;
+}) {
   return (
-    <section className="border-b border-slate-100 px-4 py-3.5">
-      <h4 className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">{title}</h4>
-      {children}
+    <span
+      className={cn(
+        "relative inline-block overflow-hidden rounded-[3px] border bg-white shadow-sm",
+        selected ? "border-blue-300" : "border-slate-200",
+      )}
+    >
+      <ReportThumbnailSheet
+        report={report}
+        ids={ids}
+        itemsById={itemsById}
+        bodyNumber={bodyNumber}
+        bodyTotal={bodyTotal}
+        width={PAGE_THUMB_WIDTH_PX}
+      />
+      <span className="absolute bottom-1 right-1 rounded bg-white/90 px-1 text-[8px] font-black text-slate-500 shadow-sm">
+        {isCover ? "C" : bodyNumber}
+      </span>
+    </span>
+  );
+});
+
+type PanelSectionProps = {
+  sectionId?: PanelSectionId;
+  title: string;
+  children: ReactNode;
+  collapsed?: boolean;
+  dragging?: boolean;
+  dragOver?: boolean;
+  onToggle?: (id: PanelSectionId) => void;
+  onDragStart?: (event: DragEvent<HTMLButtonElement>, id: PanelSectionId) => void;
+  onDragOver?: (event: DragEvent<HTMLElement>, id: PanelSectionId) => void;
+  onDrop?: (event: DragEvent<HTMLElement>, id: PanelSectionId) => void;
+  onDragEnd?: () => void;
+};
+
+function PanelSection({
+  sectionId,
+  title,
+  children,
+  collapsed = false,
+  dragging = false,
+  dragOver = false,
+  onToggle,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
+}: PanelSectionProps) {
+  return (
+    <section
+      onDragOver={(event) => sectionId && onDragOver?.(event, sectionId)}
+      onDrop={(event) => sectionId && onDrop?.(event, sectionId)}
+      className={cn(
+        "mb-2.5 overflow-hidden rounded-lg border bg-white shadow-sm transition-all last:mb-0",
+        dragOver ? "border-blue-300 shadow-[0_0_0_2px_rgba(59,130,246,0.12)]" : "border-slate-200",
+        dragging && "opacity-50",
+      )}
+    >
+      <div className="flex items-center gap-1 border-b border-slate-100 bg-slate-50/70 px-2 py-1.5">
+        {sectionId ? (
+          <button
+            type="button"
+            draggable
+            onDragStart={(event) => onDragStart?.(event, sectionId)}
+            onDragEnd={onDragEnd}
+            className="flex h-6 w-6 cursor-grab items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 active:cursor-grabbing"
+            title={`${title} 섹션 드래그`}
+            aria-label={`${title} 섹션 드래그`}
+          >
+            <GripVertical className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => sectionId && onToggle?.(sectionId)}
+          aria-expanded={!collapsed}
+          className="flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-0.5 text-left transition-colors hover:bg-white"
+          title={`${title} ${collapsed ? "펼치기" : "접기"}`}
+        >
+          <h4 className="truncate text-[10.5px] font-black uppercase tracking-wide text-slate-500">{title}</h4>
+        </button>
+        {sectionId ? (
+          <button
+            type="button"
+            onClick={() => onToggle?.(sectionId)}
+            className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
+            title={`${title} ${collapsed ? "펼치기" : "접기"}`}
+            aria-label={`${title} ${collapsed ? "펼치기" : "접기"}`}
+          >
+            {collapsed ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+          </button>
+        ) : null}
+      </div>
+      {!collapsed ? <div className="px-3 py-3">{children}</div> : null}
     </section>
+  );
+}
+
+function SortablePanelStack({ children }: { children: ReactNode }) {
+  const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
+    readStoredPanelSectionOrder,
+  );
+  const [collapsedSectionIds, setCollapsedSectionIds] = useState<PanelSectionId[]>(
+    readStoredCollapsedPanelSections,
+  );
+  const [draggingSectionId, setDraggingSectionId] = useState<PanelSectionId | null>(null);
+  const [dragOverSectionId, setDragOverSectionId] = useState<PanelSectionId | null>(null);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PANEL_SECTION_ORDER_STORAGE_KEY, JSON.stringify(sectionOrder));
+    } catch {
+      // Convenience setting only.
+    }
+  }, [sectionOrder]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PANEL_SECTION_COLLAPSED_STORAGE_KEY, JSON.stringify(collapsedSectionIds));
+    } catch {
+      // Convenience setting only.
+    }
+  }, [collapsedSectionIds]);
+
+  const togglePanelSection = useCallback((id: PanelSectionId) => {
+    setCollapsedSectionIds((current) =>
+      current.includes(id) ? current.filter((sectionId) => sectionId !== id) : [...current, id],
+    );
+  }, []);
+
+  const reorderPanelSection = useCallback((sourceId: PanelSectionId, targetId: PanelSectionId) => {
+    if (sourceId === targetId) return;
+    setSectionOrder((current) => {
+      const normalized = normalizePanelSectionOrder(current);
+      const withoutSource = normalized.filter((sectionId) => sectionId !== sourceId);
+      const targetIndex = withoutSource.indexOf(targetId);
+      if (targetIndex < 0) return current;
+      const next = [...withoutSource];
+      next.splice(targetIndex, 0, sourceId);
+      return next;
+    });
+  }, []);
+
+  const handlePanelSectionDragStart = useCallback(
+    (event: DragEvent<HTMLButtonElement>, id: PanelSectionId) => {
+      setDraggingSectionId(id);
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", id);
+    },
+    [],
+  );
+
+  const handlePanelSectionDragOver = useCallback(
+    (event: DragEvent<HTMLElement>, id: PanelSectionId) => {
+      const sourceId = draggingSectionId;
+      if (!sourceId || sourceId === id) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+      setDragOverSectionId(id);
+    },
+    [draggingSectionId],
+  );
+
+  const handlePanelSectionDrop = useCallback(
+    (event: DragEvent<HTMLElement>, id: PanelSectionId) => {
+      event.preventDefault();
+      const data = event.dataTransfer.getData("text/plain");
+      const sourceId = isPanelSectionId(data) ? data : draggingSectionId;
+      if (sourceId) reorderPanelSection(sourceId, id);
+      setDraggingSectionId(null);
+      setDragOverSectionId(null);
+    },
+    [draggingSectionId, reorderPanelSection],
+  );
+
+  const handlePanelSectionDragEnd = useCallback(() => {
+    setDraggingSectionId(null);
+    setDragOverSectionId(null);
+  }, []);
+
+  const collectPanels = (node: ReactNode): ReactElement<PanelSectionProps>[] => {
+    const out: ReactElement<PanelSectionProps>[] = [];
+    Children.forEach(node, (child) => {
+      if (!isValidElement(child)) return;
+      const props = child.props as Partial<PanelSectionProps> & { children?: ReactNode };
+      if (props.sectionId) out.push(child as ReactElement<PanelSectionProps>);
+      else if (props.children) out.push(...collectPanels(props.children));
+    });
+    return out;
+  };
+
+  const panels = collectPanels(children);
+  const panelById = new Map<PanelSectionId, ReactElement<PanelSectionProps>>();
+  for (const panel of panels) {
+    const id = panel.props.sectionId;
+    if (id) panelById.set(id, panel);
+  }
+
+  const orderedIds = normalizePanelSectionOrder(sectionOrder).filter((id) => panelById.has(id));
+  const collapsedSections = new Set(collapsedSectionIds);
+
+  return (
+    <div>
+      {orderedIds.map((id) => {
+        const panel = panelById.get(id);
+        if (!panel) return null;
+        return cloneElement(panel, {
+          collapsed: collapsedSections.has(id),
+          dragging: draggingSectionId === id,
+          dragOver: dragOverSectionId === id,
+          onToggle: togglePanelSection,
+          onDragStart: handlePanelSectionDragStart,
+          onDragOver: handlePanelSectionDragOver,
+          onDrop: handlePanelSectionDrop,
+          onDragEnd: handlePanelSectionDragEnd,
+        });
+      })}
+    </div>
   );
 }
 
@@ -541,14 +1390,25 @@ function PropertiesPanel({
   const isSectionItem = !!active && !isCustom && !isTitleMeta && !isCover;
   const cover = report.cover;
   const coverPanel = (
-    <CoverPanel
-      report={report}
-      cover={cover}
-      coverError={coverError}
-      onPatch={onCoverPatch}
-      onLogoFile={onLogoFile}
-      onApplyCover={onApplyCover}
-    />
+    <PanelSection sectionId="cover" title="표지 (Cover)">
+      <CoverPanel
+        report={report}
+        cover={cover}
+        onPatch={onCoverPatch}
+        onApplyCover={onApplyCover}
+      />
+    </PanelSection>
+  );
+  const logoPanel = (
+    <PanelSection sectionId="logo" title="학원 로고">
+      <LogoPanel
+        cover={cover}
+        coverEnabled={!!cover?.enabled}
+        error={coverError}
+        onPatch={onCoverPatch}
+        onLogoFile={onLogoFile}
+      />
+    </PanelSection>
   );
   const activeSection = active && active.sectionIndex >= 0 ? report.sections[active.sectionIndex] : null;
   const tableGroup =
@@ -574,7 +1434,7 @@ function PropertiesPanel({
   const addLabel = isSectionItem ? ADD_LABEL[(active as ItemDescriptor).kind] : undefined;
 
   const InsertSection = (
-    <PanelSection title="블록 삽입">
+    <PanelSection sectionId="insert" title="블록 삽입">
       <div className="grid grid-cols-2 gap-1.5">
         <button
           type="button"
@@ -598,19 +1458,20 @@ function PropertiesPanel({
   );
 
   return (
-    <div>
+    <SortablePanelStack>
       {coverPanel}
+      {logoPanel}
       {isCover ? (
-        <PanelSection title="표지 편집">
+        <PanelSection sectionId="cover-edit" title="표지 편집">
           <p className="text-[12px] text-slate-400 leading-relaxed">
             표지 텍스트(제목·부제·학원명 등)는 보고서에서 <b className="text-slate-500">직접 클릭</b>해 수정해요.
             <br />
-            <span className="text-slate-300">템플릿·로고·정렬은 위 표지 패널에서 변경합니다.</span>
+            <span className="text-slate-300">표지 템플릿은 표지 패널에서, 로고는 학원 로고 패널에서 변경합니다.</span>
           </p>
         </PanelSection>
       ) : !active ? (
         <>
-          <PanelSection title="블록 편집">
+          <PanelSection sectionId="guide" title="블록 편집">
             <p className="text-[12px] text-slate-400 leading-relaxed">
               보고서에서 <b className="text-slate-500">블록을 클릭</b>하면 여기에서
               글자 크기·굵게·정렬·페이지 분할·순서·숨김을 조정할 수 있어요.
@@ -622,7 +1483,7 @@ function PropertiesPanel({
         </>
       ) : (
         <>
-          <PanelSection title="선택한 블록">
+          <PanelSection sectionId="selected" title="선택한 블록">
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-semibold text-slate-700">{blockLabel}</span>
               {isSectionItem && !active.isSectionStart ? (
@@ -644,7 +1505,7 @@ function PropertiesPanel({
           </PanelSection>
 
           {activeCustom?.kind === "spacer" ? (
-            <PanelSection title="여백 높이">
+            <PanelSection sectionId="spacer-height" title="여백 높이">
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -660,7 +1521,7 @@ function PropertiesPanel({
           ) : null}
 
           {activeCustom?.kind !== "spacer" ? (
-          <PanelSection title="서식">
+          <PanelSection sectionId="format" title="서식">
             {/* 글자 크기 */}
             <div className="mb-2.5">
               <div className="flex items-center justify-between mb-1">
@@ -722,7 +1583,7 @@ function PropertiesPanel({
           ) : null}
 
           {tableGroup ? (
-            <PanelSection title="표 열 표시">
+            <PanelSection sectionId="table-cols" title="표 열 표시">
               <div className="flex flex-col gap-1">
                 {TABLE_COLUMNS[tableGroup].map((c) => {
                   const shown = !hiddenCols.has(c.key);
@@ -745,7 +1606,7 @@ function PropertiesPanel({
             </PanelSection>
           ) : null}
 
-          <PanelSection title="페이지 조판">
+          <PanelSection sectionId="layout" title="페이지 조판">
             <div className="space-y-2">
               <ToggleRow
                 label="앞 블록과 한 페이지에 (분리 금지)"
@@ -772,7 +1633,7 @@ function PropertiesPanel({
             ) : null}
           </PanelSection>
 
-          <PanelSection title="순서 / 표시">
+          <PanelSection sectionId="order" title="순서 / 표시">
             <div className="grid grid-cols-2 gap-1.5 mb-2">
               <button
                 type="button"
@@ -802,7 +1663,7 @@ function PropertiesPanel({
           </PanelSection>
 
           {isSectionItem && active.isSectionStart ? (
-            <PanelSection title="섹션">
+            <PanelSection sectionId="section" title="섹션">
               <button
                 type="button"
                 onClick={() => onDeleteSection(active.sectionIndex)}
@@ -814,7 +1675,7 @@ function PropertiesPanel({
           ) : null}
 
           {isCustom ? (
-            <PanelSection title={activeCustom?.kind === "spacer" ? "여백 블록" : "텍스트 블록"}>
+            <PanelSection sectionId="custom" title={activeCustom?.kind === "spacer" ? "여백 블록" : "텍스트 블록"}>
               <button
                 type="button"
                 onClick={() => onDeleteCustom(active.id)}
@@ -826,7 +1687,7 @@ function PropertiesPanel({
           ) : null}
 
           {isSectionItem && !active.isSectionStart ? (
-            <PanelSection title="이 블록">
+            <PanelSection sectionId="delete" title="이 블록">
               <button
                 type="button"
                 onClick={() => onDeleteItem(active.id)}
@@ -841,7 +1702,7 @@ function PropertiesPanel({
         </>
       )}
 
-      <PanelSection title="테마">
+      <PanelSection sectionId="theme" title="디자인 템플릿">
         <div className="flex flex-col gap-1.5">
           {reportThemeIdSchema.options.map((t) => (
             <button
@@ -854,16 +1715,16 @@ function PropertiesPanel({
                   : "border-slate-200 text-slate-600 hover:bg-slate-50"
               }`}
             >
-              {THEME_LABELS[t]}
+              {DESIGN_TEMPLATE_LABELS[t]}
             </button>
           ))}
         </div>
       </PanelSection>
-    </div>
+    </SortablePanelStack>
   );
 }
 
-// ─── 표지 패널 (템플릿 갤러리 + 로고 + 실시간 미리보기) ──────────────────────
+// ─── 표지 / 로고 패널 ────────────────────────────────────────────────────────
 interface CoverPresetRow {
   id: string;
   name: string;
@@ -871,28 +1732,261 @@ interface CoverPresetRow {
   updatedAt: string;
 }
 
+function LogoPanel({
+  cover,
+  coverEnabled,
+  error,
+  onPatch,
+  onLogoFile,
+}: {
+  cover: ReportCover | undefined;
+  coverEnabled: boolean;
+  error: string | null;
+  onPatch: (patch: Partial<ReportCover>) => void;
+  onLogoFile: (file?: File | null) => void;
+}) {
+  const logoAlign = cover?.logoAlign ?? "center";
+  const [logoDropActive, setLogoDropActive] = useState(false);
+  const [savedSettingsAvailable, setSavedSettingsAvailable] = useState(
+    () => Boolean(readSavedLogoSettings()),
+  );
+  const [settingsNotice, setSettingsNotice] = useState("");
+  const logoDragDepthRef = useRef(0);
+
+  useEffect(() => {
+    if (!settingsNotice) return;
+    const timer = window.setTimeout(() => setSettingsNotice(""), 1800);
+    return () => window.clearTimeout(timer);
+  }, [settingsNotice]);
+
+  const handleLogoDragEnter = useCallback((event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    logoDragDepthRef.current += 1;
+    event.dataTransfer.dropEffect = "copy";
+    setLogoDropActive(true);
+  }, []);
+
+  const handleLogoDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    event.dataTransfer.dropEffect = "copy";
+  }, []);
+
+  const handleLogoDragLeave = useCallback((event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    logoDragDepthRef.current = Math.max(0, logoDragDepthRef.current - 1);
+    if (logoDragDepthRef.current === 0) setLogoDropActive(false);
+  }, []);
+
+  const handleLogoDrop = useCallback(
+    (event: DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      logoDragDepthRef.current = 0;
+      setLogoDropActive(false);
+      onLogoFile(event.dataTransfer.files?.[0] || null);
+    },
+    [onLogoFile],
+  );
+
+  const saveLogoSettings = useCallback(() => {
+    const saved = writeSavedLogoSettings(logoSettingsFromCover(cover));
+    setSavedSettingsAvailable(saved);
+    setSettingsNotice(saved ? "현재 로고 설정을 저장했어요." : "저장하지 못했어요.");
+  }, [cover]);
+
+  const applySavedLogoSettings = useCallback(() => {
+    const settings = readSavedLogoSettings();
+    if (!settings) {
+      setSavedSettingsAvailable(false);
+      setSettingsNotice("저장된 로고 설정이 없어요.");
+      return;
+    }
+    onPatch(logoSettingsToCoverPatch(settings));
+    setSavedSettingsAvailable(true);
+    setSettingsNotice("저장된 로고 설정을 적용했어요.");
+  }, [onPatch]);
+
+  const resetLogoSettings = useCallback(() => {
+    clearSavedLogoSettings();
+    onPatch(logoSettingsToCoverPatch(DEFAULT_LOGO_SETTINGS));
+    setSavedSettingsAvailable(false);
+    setSettingsNotice("로고 설정을 기본값으로 되돌렸어요.");
+  }, [onPatch]);
+
+  return (
+    <div>
+      <div
+        onDragEnter={handleLogoDragEnter}
+        onDragOver={handleLogoDragOver}
+        onDragLeave={handleLogoDragLeave}
+        onDrop={handleLogoDrop}
+        title="이미지 파일을 드래그해서 놓기"
+        className={cn(
+          "relative rounded-lg border bg-white p-2 transition-colors",
+          logoDropActive ? "border-blue-300 bg-blue-50/70 ring-2 ring-blue-100" : "border-slate-200",
+        )}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className={cn(
+              "flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-slate-50 transition-colors",
+              logoDropActive ? "border-blue-300 bg-white" : "border-slate-200",
+            )}
+          >
+            {cover?.logoDataUrl ? (
+              <NextImage
+                src={cover.logoDataUrl}
+                alt="학원 로고 미리보기"
+                width={56}
+                height={56}
+                unoptimized
+                className="h-full w-full object-contain p-1"
+              />
+            ) : (
+              <ImagePlus className="h-5 w-5 text-slate-300" />
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <label className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[12px] font-bold text-blue-700 hover:bg-blue-100">
+              <ImagePlus className="h-3.5 w-3.5" />
+              로고 넣기
+              <input
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={(event) => {
+                  onLogoFile(event.target.files?.[0] || null);
+                  event.currentTarget.value = "";
+                }}
+              />
+            </label>
+            <p className="mt-1 text-[10px] leading-snug text-slate-400">PNG/JPG 권장, 1.5MB 이하</p>
+          </div>
+          {cover?.logoDataUrl ? (
+            <button
+              type="button"
+              onClick={() => onPatch({ logoDataUrl: undefined, logoX: undefined, logoY: undefined })}
+              className="h-7 rounded-md border border-slate-200 px-2 text-[11px] font-bold text-slate-500 hover:bg-slate-50"
+            >
+              삭제
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {error ? <p className="mt-1 text-[11px] text-red-500">{error}</p> : null}
+
+      {cover?.logoDataUrl ? (
+        <div className="mt-2 space-y-2">
+          <ToggleRow
+            label="보고서에 로고 표시"
+            on={cover.showLogo !== false}
+            onClick={() => onPatch({ showLogo: cover.showLogo === false })}
+            icon={cover.showLogo === false ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+          />
+          <div className="flex items-center gap-1.5">
+            {(["left", "center", "right"] as const).map((a) => {
+              const Icon = a === "left" ? AlignLeft : a === "center" ? AlignCenter : AlignRight;
+              return (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => onPatch({ logoAlign: a })}
+                  title={`표지 로고 ${a === "left" ? "왼쪽" : a === "center" ? "가운데" : "오른쪽"} 정렬`}
+                  className={`inline-flex h-7 flex-1 items-center justify-center rounded-md border ${
+                    logoAlign === a ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-slate-500">크기</span>
+            <input
+              type="range"
+              min={6}
+              max={28}
+              value={cover.logoHeightMm ?? 14}
+              onChange={(e) => onPatch({ logoHeightMm: Number(e.target.value) })}
+              className="flex-1 accent-blue-600"
+            />
+            <span className="w-10 text-right text-[11px]">{Math.round(cover.logoHeightMm ?? 14)}mm</span>
+          </div>
+          {coverEnabled ? (
+            <>
+              <p className="text-[10.5px] text-slate-400">표지 위 로고를 <b className="text-slate-500">드래그</b>해 현재 보고서에서만 위치를 조정할 수 있어요.</p>
+              {typeof cover.logoX === "number" ? (
+                <button
+                  type="button"
+                  onClick={() => onPatch({ logoX: undefined, logoY: undefined })}
+                  className="w-full rounded-md border border-slate-200 px-2 py-1.5 text-[12px] text-slate-600 hover:bg-slate-50"
+                >
+                  로고 위치 초기화 (정렬로)
+                </button>
+              ) : null}
+            </>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="mt-3 border-t border-slate-100 pt-3">
+        <div className="grid grid-cols-3 gap-1.5">
+          <button
+            type="button"
+            onClick={saveLogoSettings}
+            className="inline-flex h-8 items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 text-[11px] font-bold text-blue-700 hover:bg-blue-100"
+          >
+            <Save className="h-3.5 w-3.5" />
+            저장
+          </button>
+          <button
+            type="button"
+            onClick={applySavedLogoSettings}
+            disabled={!savedSettingsAvailable}
+            className="h-8 rounded-md border border-slate-200 px-2 text-[11px] font-bold text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            적용
+          </button>
+          <button
+            type="button"
+            onClick={resetLogoSettings}
+            className="inline-flex h-8 items-center justify-center gap-1 rounded-md border border-slate-200 px-2 text-[11px] font-bold text-slate-500 hover:bg-slate-50"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            기본값
+          </button>
+        </div>
+        <p className="mt-1.5 min-h-[14px] text-[10.5px] font-semibold leading-snug text-slate-400">
+          {settingsNotice || "저장한 로고 설정은 다른 보고서에서 적용할 수 있어요."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function CoverPanel({
   report,
   cover,
-  coverError,
   onPatch,
-  onLogoFile,
   onApplyCover,
 }: {
   report: AnalysisReport;
   cover: ReportCover | undefined;
-  coverError: string | null;
   onPatch: (patch: Partial<ReportCover>) => void;
-  onLogoFile: (file?: File | null) => void;
   onApplyCover: (cover: ReportCover) => void;
 }) {
   const enabled = !!cover?.enabled;
   const tpl = (cover?.templateId ?? "classic-center") as CoverTemplateId;
-  const logoAlign = cover?.logoAlign ?? "center";
 
   const [presets, setPresets] = useState<CoverPresetRow[]>([]);
   const [presetName, setPresetName] = useState("");
   const [presetBusy, setPresetBusy] = useState(false);
+  const [presetsOpen, setPresetsOpen] = useState(false);
   useEffect(() => {
     let cancelled = false;
     fetch("/api/workbench/cover-presets")
@@ -904,30 +1998,31 @@ function CoverPanel({
     };
   }, []);
   const savePreset = useCallback(async () => {
-    const name = presetName.trim();
-    if (!name || !cover) return;
+    const name = presetName.trim() || `표지 저장본 ${presets.length + 1}`;
+    if (!cover) return;
     setPresetBusy(true);
     try {
       const res = await fetch("/api/workbench/cover-presets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, cover }),
+        body: JSON.stringify({ name, cover: coverWithoutLogoSettings(cover) }),
       });
       const j = await res.json();
       if (res.ok && j?.preset) {
         setPresets((p) => [j.preset as CoverPresetRow, ...p]);
         setPresetName("");
+        setPresetsOpen(true);
       }
     } finally {
       setPresetBusy(false);
     }
-  }, [presetName, cover]);
+  }, [presetName, cover, presets.length]);
   const deletePreset = useCallback(async (id: string) => {
     setPresets((p) => p.filter((x) => x.id !== id));
     await fetch(`/api/workbench/cover-presets/${id}`, { method: "DELETE" }).catch(() => {});
   }, []);
   return (
-    <PanelSection title="표지 (Cover)">
+    <>
       <ToggleRow label="표지 페이지 사용" on={enabled} onClick={() => onPatch({ enabled: !enabled })} icon={<BookImage className="w-3.5 h-3.5" />} />
       {!enabled ? (
         <p className="mt-2 text-[10.5px] text-slate-400 leading-relaxed">
@@ -935,11 +2030,6 @@ function CoverPanel({
         </p>
       ) : (
         <div className="mt-3 space-y-3.5">
-          {/* 실시간 미리보기 */}
-          <div className="flex justify-center">
-            <CoverPreview report={report} widthPx={150} />
-          </div>
-
           {/* 템플릿 갤러리 (실제 축소 렌더) */}
           <div>
             <div className="text-[11px] text-slate-400 mb-1.5">템플릿</div>
@@ -959,119 +2049,81 @@ function CoverPanel({
             </div>
           </div>
 
-          {/* 로고 */}
-          <div>
-            <div className="text-[11px] text-slate-400 mb-1.5">로고</div>
-            <div className="flex items-center gap-2">
-              <label className="inline-flex items-center gap-1.5 text-[12px] px-2.5 py-1.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer">
-                <ImageUp className="w-3.5 h-3.5" /> {cover?.logoDataUrl ? "변경" : "업로드"}
-                <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={(e) => onLogoFile(e.target.files?.[0])} />
-              </label>
-              {cover?.logoDataUrl ? (
-                <button type="button" onClick={() => onPatch({ logoDataUrl: undefined })} className="text-[11px] text-red-500 hover:underline">
-                  제거
-                </button>
-              ) : null}
-            </div>
-            {coverError ? <p className="text-[11px] text-red-500 mt-1">{coverError}</p> : null}
-            {cover?.logoDataUrl ? (
-              <div className="mt-2 space-y-2">
-                <div className="flex items-center gap-1.5">
-                  {(["left", "center", "right"] as const).map((a) => {
-                    const Icon = a === "left" ? AlignLeft : a === "center" ? AlignCenter : AlignRight;
-                    return (
-                      <button
-                        key={a}
-                        type="button"
-                        onClick={() => onPatch({ logoAlign: a })}
-                        className={`flex-1 inline-flex justify-center items-center h-7 rounded-md border ${
-                          logoAlign === a ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
-                        }`}
-                      >
-                        <Icon className="w-3.5 h-3.5" />
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-slate-500">크기</span>
-                  <input
-                    type="range"
-                    min={6}
-                    max={28}
-                    value={cover.logoHeightMm ?? 14}
-                    onChange={(e) => onPatch({ logoHeightMm: Number(e.target.value) })}
-                    className="flex-1 accent-blue-600"
-                  />
-                  <span className="text-[11px] w-10 text-right">{Math.round(cover.logoHeightMm ?? 14)}mm</span>
-                </div>
-                <p className="text-[10.5px] text-slate-400">표지 위 로고를 <b className="text-slate-500">드래그</b>해 자유롭게 옮길 수 있어요.</p>
-                {typeof cover.logoX === "number" ? (
-                  <button
-                    type="button"
-                    onClick={() => onPatch({ logoX: undefined, logoY: undefined })}
-                    className="w-full text-[12px] px-2 py-1.5 rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50"
-                  >
-                    로고 위치 초기화 (정렬로)
-                  </button>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-
           <ToggleRow label="메타 정보(분류·난이도) 표시" on={!!cover?.showMeta} onClick={() => onPatch({ showMeta: !cover?.showMeta })} />
 
           {/* 프리셋 — 학원 공용 저장·재사용 */}
           <div className="pt-3 border-t border-slate-100">
-            <div className="text-[11px] text-slate-400 mb-1.5">프리셋 (학원 공용)</div>
+            <div className="mb-1.5 flex items-center justify-between gap-2">
+              <div className="text-[11px] text-slate-400">프리셋 (학원 공용)</div>
+              <button
+                type="button"
+                onClick={() => setPresetsOpen((open) => !open)}
+                disabled={!presets.length}
+                className="flex items-center gap-1 rounded-md border border-blue-100 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+                title="저장본 목록"
+                aria-expanded={presetsOpen}
+              >
+                <Bookmark className="h-2.5 w-2.5" />
+                저장본
+                <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-600 text-[9px] font-bold leading-none text-white">
+                  {presets.length}
+                </span>
+                <ChevronDown className={cn("h-2.5 w-2.5 transition-transform", presetsOpen && "rotate-180")} />
+              </button>
+            </div>
             <div className="flex gap-1.5 mb-2">
               <input
                 value={presetName}
                 onChange={(e) => setPresetName(e.target.value)}
-                placeholder="이 표지를 프리셋으로 저장"
+                placeholder={`표지 저장본 ${presets.length + 1}`}
                 className="flex-1 min-w-0 text-[12px] px-2 py-1.5 rounded-md border border-slate-200 focus:border-blue-400 outline-none"
               />
               <button
                 type="button"
                 onClick={savePreset}
-                disabled={presetBusy || !presetName.trim()}
+                disabled={presetBusy || !cover}
                 className="text-[12px] px-2.5 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40"
               >
                 저장
               </button>
             </div>
-            {presets.length ? (
-              <div className="grid grid-cols-3 gap-1.5">
+            {presetsOpen && presets.length ? (
+              <div className="rounded-lg border border-slate-200 bg-white p-2 shadow-sm">
+                <div className="max-h-[260px] space-y-1.5 overflow-y-auto pr-1">
                 {presets.map((p) => (
-                  <div key={p.id} className="relative group">
+                  <div key={p.id} className="group flex items-center gap-2 rounded-md border border-slate-100 p-1.5 transition-colors hover:border-blue-200 hover:bg-blue-50/40">
                     <button
                       type="button"
                       onClick={() => onApplyCover(p.cover)}
                       title={`${p.name} — 적용`}
-                      className="rounded-md p-0.5 border border-slate-200 hover:border-blue-400 w-full"
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
                     >
-                      <CoverPreview report={report} coverOverride={p.cover} widthPx={56} />
-                      <div className="text-[8.5px] text-slate-500 truncate mt-0.5 text-center">{p.name}</div>
+                      <CoverPreview report={report} coverOverride={p.cover} widthPx={34} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[12px] font-bold text-slate-700">{p.name}</span>
+                        <span className="block text-[10px] text-slate-400">클릭해서 불러오기</span>
+                      </span>
                     </button>
                     <button
                       type="button"
                       onClick={() => deletePreset(p.id)}
                       title="프리셋 삭제"
-                      className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-red-200 text-red-500 text-[11px] leading-none opacity-0 group-hover:opacity-100 hover:bg-red-50"
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-red-100 bg-white text-red-400 opacity-0 transition hover:bg-red-50 hover:text-red-600 group-hover:opacity-100"
                     >
-                      ×
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 ))}
+                </div>
               </div>
-            ) : (
+            ) : !presets.length ? (
               <p className="text-[10.5px] text-slate-300">저장한 프리셋이 여기에 모여 다른 지문에서도 재사용돼요.</p>
-            )}
+            ) : null}
           </div>
 
           <p className="text-[10.5px] text-slate-400 leading-relaxed">표지 텍스트는 보고서에서 직접 클릭해 수정해요.</p>
         </div>
       )}
-    </PanelSection>
+    </>
   );
 }

@@ -820,7 +820,7 @@ export function useGenerationHandlers({
 
       const result = await saveGeneratedQuestions(questionsToSave);
       if (result.success) {
-        toast.success("문제은행에 저장되었습니다.");
+        toast.success("문제관리에 저장되었습니다.");
         setSessionQueue((prev) =>
           prev.map((item) => item.id === reviewItem.id ? { ...item, status: "reviewed" } : item)
         );
