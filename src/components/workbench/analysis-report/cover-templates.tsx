@@ -1,9 +1,12 @@
 import {
+  type ClipboardEvent,
   type CSSProperties,
   type ElementType,
   type FocusEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  useLayoutEffect,
+  useRef,
 } from "react";
 
 import { cn } from "@/lib/utils";
@@ -35,6 +38,15 @@ function CF({
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = (as ?? "div") as any;
+  const ref = useRef<HTMLElement | null>(null);
+  const focusedRef = useRef(false);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || focusedRef.current) return;
+    if (el.innerText !== value) el.textContent = value;
+  }, [value]);
+
   if (!editable) {
     if (!value) return null;
     return <Tag className={className}>{value}</Tag>;
@@ -42,19 +54,64 @@ function CF({
   const empty = !value.trim();
   return (
     <Tag
+      ref={ref}
       className={cn(className, "par-edit-field", empty && "par-edit-empty")}
       contentEditable
       suppressContentEditableWarning
       spellCheck={false}
       data-ph={placeholder ?? "—"}
+      dangerouslySetInnerHTML={{ __html: editableTextHtml(value) }}
+      onFocus={() => {
+        focusedRef.current = true;
+      }}
       onBlur={(e: FocusEvent<HTMLElement>) => {
-        const next = normalizeEditableText(e.currentTarget.innerText);
+        focusedRef.current = false;
+        const next = normalizeEditableText(readEditablePlainText(e.currentTarget));
         if (next !== value) onCommit(next);
       }}
-    >
-      {value}
-    </Tag>
+      onPaste={(e: ClipboardEvent<HTMLElement>) => {
+        e.preventDefault();
+        const text = e.clipboardData.getData("text/plain");
+        document.execCommand("insertText", false, text);
+      }}
+    />
   );
+}
+
+function editableTextHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br>");
+}
+
+function readEditablePlainText(root: HTMLElement): string {
+  let out = "";
+  const addNewline = () => {
+    if (out && !out.endsWith("\n")) out += "\n";
+  };
+  const walk = (node: Node) => {
+    node.childNodes.forEach((child) => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        out += child.textContent ?? "";
+        return;
+      }
+      if (child.nodeType !== Node.ELEMENT_NODE) return;
+      const el = child as HTMLElement;
+      if (el.tagName === "BR") {
+        out += "\n";
+        return;
+      }
+      const isBlock = el.tagName === "DIV" || el.tagName === "P" || el.tagName === "LI";
+      if (isBlock) addNewline();
+      walk(el);
+      if (isBlock) addNewline();
+    });
+  };
+  walk(root);
+  return out;
 }
 
 interface CoverData {
@@ -134,6 +191,45 @@ function startLogoDrag(e: ReactPointerEvent<HTMLDivElement>, patch: (p: Partial<
   window.addEventListener("pointerup", up, { once: true });
 }
 
+function startLogoResize(
+  e: ReactPointerEvent<HTMLButtonElement>,
+  patch: (p: Partial<ReportCover>) => void,
+  currentHeightMm: number,
+) {
+  e.preventDefault();
+  e.stopPropagation();
+  const handle = e.currentTarget;
+  const wrap = handle.closest(".par-cov-logo") as HTMLElement | null;
+  const cover = handle.closest(".par-cover") as HTMLElement | null;
+  const img = wrap?.querySelector("img");
+  if (!wrap || !cover || !img) return;
+  handle.setPointerCapture(e.pointerId);
+  const cRect = cover.getBoundingClientRect();
+  const pxPerMm = cRect.width / 210;
+  const sx = e.clientX;
+  const sy = e.clientY;
+  const base = currentHeightMm;
+  let raf = 0;
+  let next = base;
+  const move = (ev: PointerEvent) => {
+    const deltaMm = ((ev.clientX - sx) + (ev.clientY - sy)) / 2 / pxPerMm;
+    next = clamp(base + deltaMm, 6, 60);
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      img.style.height = `${next}mm`;
+    });
+  };
+  const finish = () => {
+    if (raf) cancelAnimationFrame(raf);
+    window.removeEventListener("pointermove", move);
+    patch({ logoHeightMm: Math.round(next * 10) / 10 });
+  };
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", finish, { once: true });
+  window.addEventListener("pointercancel", finish, { once: true });
+}
+
 function CoverLogo({
   d,
   editable,
@@ -153,6 +249,15 @@ function CoverLogo({
     // eslint-disable-next-line @next/next/no-img-element
     <img src={d.logo} alt="" style={{ height: `${d.logoHeightMm}mm`, maxWidth: "70%", objectFit: "contain", display: "block", pointerEvents: "none" }} />
   );
+  const resizeHandle = editable ? (
+    <button
+      type="button"
+      className="par-cov-logo-resize par-edit-chrome"
+      title="모서리를 드래그해 로고 크기 조절"
+      onPointerDown={(e) => startLogoResize(e, patch, d.logoHeightMm)}
+      aria-label="로고 크기 조절"
+    />
+  ) : null;
   const onDown = editable ? (e: ReactPointerEvent<HTMLDivElement>) => startLogoDrag(e, patch) : undefined;
   if (positioned) {
     return (
@@ -162,12 +267,14 @@ function CoverLogo({
         onPointerDown={onDown}
       >
         {img}
+        {resizeHandle}
       </div>
     );
   }
   return (
     <div className={cn("par-cov-logo", editable && "par-cov-logo-draggable")} style={{ justifyContent: justify }} onPointerDown={onDown}>
       {img}
+      {resizeHandle}
     </div>
   );
 }

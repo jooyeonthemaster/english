@@ -10,6 +10,7 @@ import { useReviewDrawer } from "@/components/layout/review-drawer-context";
 
 import type { M1PassageDraftWithJob } from "../types";
 import type { JobMetaSnapshot } from "../drafts-cache";
+import { compareDraftAnalysisPriority } from "../utils/analysis-status";
 import {
   DraftCard,
   type DraftCardStatusBadgeMode,
@@ -95,6 +96,16 @@ export function JobReviewModal({
   const setCheckedIds = isControlled
     ? externalSetSelectedIds
     : setInternalCheckedIds;
+  const orderedDrafts = useMemo(() => {
+    if (statusBadgeMode !== "analysis") return drafts;
+    return drafts
+      .map((draft, index) => ({ draft, index }))
+      .sort(
+        (a, b) =>
+          compareDraftAnalysisPriority(a.draft, b.draft) || a.index - b.index,
+      )
+      .map((item) => item.draft);
+  }, [drafts, statusBadgeMode]);
 
   // ESC to close
   useEffect(() => {
@@ -304,7 +315,10 @@ export function JobReviewModal({
     );
   }, [jobMeta]);
 
-  const allIds = useMemo(() => drafts.map((d) => d.id), [drafts]);
+  const allIds = useMemo(
+    () => orderedDrafts.map((d) => d.id),
+    [orderedDrafts],
+  );
   const allChecked =
     allIds.length > 0 && allIds.every((id) => checkedIds.has(id));
   // Restrict the "selected count" and folder-action payloads to drafts visible
@@ -536,13 +550,13 @@ export function JobReviewModal({
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
-            {drafts.length === 0 ? (
+            {orderedDrafts.length === 0 ? (
               <p className="py-12 text-center text-[12px] text-slate-400">
                 추출된 자료가 없습니다.
               </p>
             ) : (
               <div className="grid grid-cols-1 gap-2">
-                {drafts.map((draft, index) => (
+                {orderedDrafts.map((draft, index) => (
                   <DraftCard
                     key={draft.id}
                     draft={draft}

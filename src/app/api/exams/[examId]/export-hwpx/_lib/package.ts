@@ -46,10 +46,14 @@ export async function packageHwpx(doc: HwpxDocument): Promise<Buffer> {
   zip.file("settings.xml", settingsXml(), { compression: "DEFLATE" });
 
   // 6) Contents/content.hpf
-  zip.file("Contents/content.hpf", contentHpfXml({ title: doc.title }), {
-    compression: "DEFLATE",
-    createFolders: false,
-  });
+  zip.file(
+    "Contents/content.hpf",
+    contentHpfXml({ title: doc.title, sectionCount: doc.sections.length }),
+    {
+      compression: "DEFLATE",
+      createFolders: false,
+    },
+  );
 
   // 6) Section XML (단일 섹션 가정 — Phase 0)
   const registry = new ShapeRegistry();

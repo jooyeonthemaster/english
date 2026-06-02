@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { requireAuth, getAcademyId } from "./_helpers";
+import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
 import type {
   WorkbenchQuestionFilters,
   ActionResult,
@@ -20,6 +21,10 @@ function buildWorkbenchQuestionWhere(
   filters?: WorkbenchQuestionFilters,
 ): Prisma.QuestionWhereInput {
   const where: Prisma.QuestionWhereInput = { academyId };
+
+  // 장문 세트 members render only as a set (their passage is stored as anchors, not
+  // baked into questionText), so they must NOT appear as standalone bank cards.
+  where.inSet = false;
 
   if (filters?.type) {
     // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
@@ -51,6 +56,36 @@ function revalidateQuestionBankPaths() {
   revalidatePath("/director/questions");
   revalidatePath("/director/workbench/questions");
   revalidatePath("/director/workbench");
+}
+
+function normalizeOptionsForSubtype(
+  subType: string | null | undefined,
+  options: SaveQuestionData["options"] | string | undefined,
+) {
+  if (subType === "SENTENCE_INSERT") {
+    return buildCanonicalSentenceInsertOptions();
+  }
+  return options;
+}
+
+function stringifyOptionsForCreate(
+  subType: string | null | undefined,
+  options: SaveQuestionData["options"] | string | undefined,
+) {
+  const normalizedOptions = normalizeOptionsForSubtype(subType, options);
+  return typeof normalizedOptions === "string"
+    ? normalizedOptions
+    : normalizedOptions
+      ? JSON.stringify(normalizedOptions)
+      : null;
+}
+
+function stringifyOptionsForUpdate(
+  subType: string | null | undefined,
+  options: SaveQuestionData["options"] | undefined,
+) {
+  if (options === undefined && subType !== "SENTENCE_INSERT") return undefined;
+  return JSON.stringify(normalizeOptionsForSubtype(subType, options));
 }
 
 // Returns the ids actually deleted (academy-owned + existing) — callers tombstone
@@ -373,7 +408,7 @@ export async function saveGeneratedQuestions(
             subType: q.subType || null,
             questionText: q.questionText || "",
             structuredData: toPrismaJson(q.structuredData),
-            options: typeof q.options === "string" ? q.options : q.options ? JSON.stringify(q.options) : null,
+            options: stringifyOptionsForCreate(q.subType || null, q.options),
             correctAnswer: q.correctAnswer || "",
             points: q.points || 1,
             difficulty: q.difficulty || "INTERMEDIATE",
@@ -422,7 +457,7 @@ export async function updateWorkbenchQuestion(
         subType: data.subType,
         questionText: data.questionText,
         structuredData: toPrismaJson(data.structuredData),
-        options: data.options ? JSON.stringify(data.options) : undefined,
+        options: stringifyOptionsForUpdate(data.subType, data.options),
         correctAnswer: data.correctAnswer,
         points: data.points,
         difficulty: data.difficulty,

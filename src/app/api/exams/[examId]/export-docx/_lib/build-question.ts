@@ -24,6 +24,7 @@ import {
 import { renderOptions } from "./render-options";
 import { renderAnswer } from "./render-answer";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
+import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ---------------------------------------------------------------------------
 // Element Builder
@@ -37,7 +38,10 @@ export function buildQuestionElements(
   const q = eq.question;
   const options = safeParseJSON<ParsedOption[]>(q.options, []);
 
-  const sections = parseQuestionSections(q.questionText, q.subType);
+  const sections = parseQuestionSections(
+    formatInlineMarkersForSubtype(q.questionText, q.subType),
+    q.subType,
+  );
   const hasEmbeddedPassage = questionTextContainsPassage(sections);
 
   // 1. Render Direction FIRST

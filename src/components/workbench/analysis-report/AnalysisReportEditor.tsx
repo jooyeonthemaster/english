@@ -6,22 +6,28 @@ import {
   AlignRight,
   Bold,
   BookImage,
+  BookOpen,
+  ChevronDown,
   Check,
   Eye,
   EyeOff,
+  FileQuestion,
   ImageUp,
+  Languages,
   Loader2,
   Minus,
   Plus,
   Printer,
   RotateCcw,
+  RotateCw,
   Rows3,
   Trash2,
   Type,
 } from "lucide-react";
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { usePaperItemDrag } from "@/components/exams/paper-builder/components/a4-paper-page-parts/use-paper-item-drag";
+import { REPORT_THEMES } from "@/lib/passage-report/analysis-report/design-tokens";
 import {
   COVER_TEMPLATE_LABELS,
   NUMBERED_SECTION_LABELS,
@@ -35,10 +41,14 @@ import {
   type ReportCover,
   type ReportMeta,
   type ReportThemeId,
+  type VocabTestLayout,
+  type VocabTestMode,
 } from "@/lib/passage-report/analysis-report/schema";
+import { worksheetAnswersAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
 
 import {
   ReportPages,
+  ReportPageThumbnails,
   enumerateItems,
   type ItemDescriptor,
   type DropPlacement,
@@ -62,6 +72,9 @@ import {
   setCustomBlock,
   setMeta,
   setSection,
+  setVocabularyTestLayout,
+  setVocabularyTestOnly,
+  setVocabularyTestMode,
   toggleTableCol,
 } from "./editor-mutations";
 import { ANALYSIS_REPORT_EDIT_CSS } from "./report-edit-styles";
@@ -130,6 +143,75 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const [placement, setPlacement] = useState<DropPlacement>("before");
 
   const dirty = report !== baseline;
+  const [history, setHistory] = useState<{ past: AnalysisReport[]; future: AnalysisReport[] }>({
+    past: [],
+    future: [],
+  });
+  const historyModeRef = useRef<"track" | "silent">("track");
+  const previousReportRef = useRef(report);
+  const reportRef = useRef(report);
+  const historyRef = useRef(history);
+
+  useEffect(() => {
+    reportRef.current = report;
+  }, [report]);
+
+  useEffect(() => {
+    historyRef.current = history;
+  }, [history]);
+
+  useEffect(() => {
+    const previous = previousReportRef.current;
+    if (previous === report) {
+      if (historyModeRef.current === "silent") historyModeRef.current = "track";
+      return;
+    }
+    if (historyModeRef.current === "silent") {
+      historyModeRef.current = "track";
+      previousReportRef.current = report;
+      return;
+    }
+    setHistory((h) => ({
+      past: [...h.past, previous].slice(-80),
+      future: [],
+    }));
+    previousReportRef.current = report;
+  }, [report]);
+
+  const replaceReportSilently = useCallback((next: AnalysisReport, resetHistory = false) => {
+    historyModeRef.current = "silent";
+    previousReportRef.current = next;
+    reportRef.current = next;
+    setReport(next);
+    if (resetHistory) setHistory({ past: [], future: [] });
+  }, []);
+
+  const undo = useCallback(() => {
+    const currentHistory = historyRef.current;
+    const previous = currentHistory.past[currentHistory.past.length - 1];
+    if (!previous) return;
+    const current = reportRef.current;
+    setHistory({
+      past: currentHistory.past.slice(0, -1),
+      future: [current, ...currentHistory.future].slice(0, 80),
+    });
+    replaceReportSilently(previous);
+  }, [replaceReportSilently]);
+
+  const redo = useCallback(() => {
+    const currentHistory = historyRef.current;
+    const next = currentHistory.future[0];
+    if (!next) return;
+    const current = reportRef.current;
+    setHistory({
+      past: [...currentHistory.past, current].slice(-80),
+      future: currentHistory.future.slice(1),
+    });
+    replaceReportSilently(next);
+  }, [replaceReportSilently]);
+
+  const canUndo = history.past.length > 0;
+  const canRedo = history.future.length > 0;
 
   // 콘텐츠 편집 콜백 (안정적)
   const med = useMemo(() => ({ commit: (next: ReportMeta) => setReport((r) => setMeta(r, next)) }), []);
@@ -208,6 +290,9 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   );
 
   const [pageList, setPageList] = useState<string[][]>([]);
+  const [activePageIndex, setActivePageIndex] = useState(0);
+  const paperScrollRef = useRef<HTMLDivElement | null>(null);
+  const thumbScrollRef = useRef<HTMLDivElement | null>(null);
   const deleteActive = useCallback((id: string) => {
     setReport((r) => deleteItem(r, id));
     setActiveId(null);
@@ -220,6 +305,130 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const onToggleCol = useCallback((si: number, key: string) => {
     setReport((r) => toggleTableCol(r, si, key));
   }, []);
+  const scrollToBlock = useCallback((id: string) => {
+    window.setTimeout(() => {
+      const root = document.getElementById("exam-paper-print-root");
+      const el =
+        root?.querySelector<HTMLElement>(`[data-paper-item-id="${id}"]`) ??
+        root?.querySelector<HTMLElement>(`.par-root-edit > .par-sheet [data-mid="${id}"]`);
+      if (root && el) {
+        const rootRect = root.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        root.scrollTo({
+          top: Math.max(0, root.scrollTop + elRect.top - rootRect.top - 18),
+          behavior: "smooth",
+        });
+      }
+      const pageEl = el?.closest<HTMLElement>("[data-page-index]");
+      const pageIndex = Number(pageEl?.dataset.pageIndex);
+      if (Number.isFinite(pageIndex)) setActivePageIndex(pageIndex);
+      setActiveId(id);
+    }, 160);
+  }, []);
+  const onVocabTestMode = useCallback((si: number, mode: VocabTestMode) => {
+    setReport((r) => setVocabularyTestMode(r, si, mode));
+    scrollToBlock(mode === "study" ? `s${si}-head` : `s${si}-vocab-test-head`);
+  }, [scrollToBlock]);
+  const onVocabTestLayout = useCallback((si: number, layout: VocabTestLayout) => {
+    setReport((r) => setVocabularyTestLayout(r, si, layout));
+    scrollToBlock(`s${si}-vocab-test-head`);
+  }, [scrollToBlock]);
+  const onVocabTestOnly = useCallback(
+    (si: number, enabled: boolean, mode: Exclude<VocabTestMode, "study"> = "hide-meaning") => {
+      setReport((r) => setVocabularyTestOnly(r, si, enabled, mode));
+      scrollToBlock(enabled ? `s${si}-vocab-test-head` : `s${si}-head`);
+    },
+    [scrollToBlock],
+  );
+  const onRestoreVocabTestRows = useCallback((si: number) => {
+    setReport((r) => {
+      const sec = r.sections[si];
+      if (!sec || sec.kind !== "vocabulary") return r;
+      return setSection(r, si, { ...sec, vocabTestExcludedKeys: undefined });
+    });
+    scrollToBlock(`s${si}-vocab-test-head`);
+  }, [scrollToBlock]);
+  const onToggleWorksheetAnswers = useCallback((si: number) => {
+    setReport((r) => {
+      const sec = r.sections[si];
+      if (!sec || sec.kind !== "learning-worksheet") return r;
+      return setSection(r, si, { ...sec, hiddenAnswers: !worksheetAnswersAreHidden(sec) });
+    });
+    scrollToBlock(`s${si}-ws-title`);
+  }, [scrollToBlock]);
+  const selectPage = useCallback((pageIndex: number) => {
+    setActivePageIndex(pageIndex);
+    const root = paperScrollRef.current;
+    const page = root?.querySelector<HTMLElement>(`[data-page-index="${pageIndex}"]`);
+    if (!root || !page) return;
+    const rootRect = root.getBoundingClientRect();
+    const pageRect = page.getBoundingClientRect();
+    root.scrollTo({
+      top: Math.max(0, root.scrollTop + pageRect.top - rootRect.top),
+      behavior: "smooth",
+    });
+  }, []);
+
+  useEffect(() => {
+    const root = paperScrollRef.current;
+    if (!root || pageList.length === 0) return;
+
+    let frame = 0;
+    const updateVisiblePage = () => {
+      frame = 0;
+      const rootRect = root.getBoundingClientRect();
+      const sheets = Array.from(root.querySelectorAll<HTMLElement>("[data-page-index]"));
+      let bestIndex = -1;
+      let bestVisible = -1;
+
+      sheets.forEach((sheet) => {
+        const pageIndex = Number(sheet.dataset.pageIndex);
+        if (!Number.isFinite(pageIndex)) return;
+        const rect = sheet.getBoundingClientRect();
+        const visible = Math.max(0, Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top));
+        const fallback = -Math.abs(rect.top - rootRect.top);
+        const score = visible > 0 ? visible : fallback;
+        if (score > bestVisible) {
+          bestVisible = score;
+          bestIndex = pageIndex;
+        }
+      });
+
+      if (bestIndex >= 0) {
+        setActivePageIndex((prev) => (prev === bestIndex ? prev : bestIndex));
+      }
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateVisiblePage);
+    };
+
+    updateVisiblePage();
+    root.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      root.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pageList.length]);
+
+  useEffect(() => {
+    const pane = thumbScrollRef.current;
+    if (!pane || pageList.length === 0) return;
+    const activeThumb = pane.querySelector<HTMLElement>(`[data-page-thumb-index="${activePageIndex}"]`);
+    if (!activeThumb) return;
+    const paneRect = pane.getBoundingClientRect();
+    const thumbRect = activeThumb.getBoundingClientRect();
+    const outside = thumbRect.top < paneRect.top + 36 || thumbRect.bottom > paneRect.bottom - 16;
+    if (outside) activeThumb.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [activePageIndex, pageList.length]);
+
+  useEffect(() => {
+    if (pageList.length === 0) return;
+    if (activePageIndex >= pageList.length) setActivePageIndex(pageList.length - 1);
+  }, [activePageIndex, pageList.length]);
 
   // Delete 키로 선택 블록 삭제 (텍스트 편집 중이면 무시)
   useEffect(() => {
@@ -233,6 +442,25 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [activeId, deleteActive]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+      const ae = document.activeElement as HTMLElement | null;
+      if (ae && (ae.isContentEditable || ae.tagName === "INPUT" || ae.tagName === "TEXTAREA")) return;
+      const key = e.key.toLowerCase();
+      if (key === "z") {
+        e.preventDefault();
+        if (e.shiftKey) redo();
+        else undo();
+      } else if (key === "y") {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [redo, undo]);
 
   const { startDrag } = usePaperItemDrag({
     setActiveItemId: setActiveId,
@@ -254,9 +482,10 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       setCustom,
       ced,
       onResize,
+      onDeletePage: deletePage,
       drag: { startDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, ced, onResize, startDrag, draggingId, dragOverId, placement],
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, ced, onResize, deletePage, startDrag, draggingId, dragOverId, placement],
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
@@ -283,7 +512,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       const j = await res.json();
       if (!res.ok) throw new Error(j?.error ?? "저장에 실패했습니다.");
       const saved = (j.report as AnalysisReport) ?? report;
-      setReport(saved);
+      replaceReportSilently(saved, true);
       setBaseline(saved);
       onSaved?.(saved);
     } catch (e) {
@@ -291,13 +520,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     } finally {
       setSaving(false);
     }
-  }, [passageId, report, onSaved]);
-
-  const revert = useCallback(() => {
-    if (dirty && !window.confirm("저장하지 않은 편집을 모두 되돌릴까요?")) return;
-    setReport(baseline);
-    setActiveId(null);
-  }, [dirty, baseline]);
+  }, [passageId, report, onSaved, replaceReportSilently]);
 
   const fontScale = activeMeta.fontScale ?? 1;
   const setMetaPatch = (patch: Partial<BlockMeta>) => activeId && onBlockMeta(activeId, patch);
@@ -317,6 +540,52 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       if (sec.kind === "summary") return setSection(r, sectionIndex, { ...sec, sentences: [...sec.sentences, ""] });
       return r;
     });
+  const toolbarVocabularyIndex = useMemo(
+    () => report.sections.findIndex((section) => section.kind === "vocabulary"),
+    [report.sections],
+  );
+  const toolbarVocabularySection = toolbarVocabularyIndex >= 0 ? report.sections[toolbarVocabularyIndex] : null;
+  const toolbarVocabMode: VocabTestMode =
+    toolbarVocabularySection?.kind === "vocabulary" ? toolbarVocabularySection.vocabTestMode ?? "study" : "study";
+  const canToggleToolbarVocabTestOnly =
+    toolbarVocabularySection?.kind === "vocabulary" && toolbarVocabularySection.rows.length > 0;
+  const toggleToolbarVocabTestOnly = useCallback(() => {
+    if (!canToggleToolbarVocabTestOnly || toolbarVocabularyIndex < 0) return;
+    if (report.vocabTestOnly) {
+      onVocabTestOnly(toolbarVocabularyIndex, false);
+      return;
+    }
+    onVocabTestOnly(
+      toolbarVocabularyIndex,
+      true,
+      toolbarVocabMode === "hide-headword" ? "hide-headword" : "hide-meaning",
+    );
+  }, [canToggleToolbarVocabTestOnly, onVocabTestOnly, report.vocabTestOnly, toolbarVocabMode, toolbarVocabularyIndex]);
+
+  // 페이지 확대/축소 (화면 편집용 — .par-sheet 에만 zoom 적용, 측정/인쇄에는 영향 없음)
+  const ZOOM_MIN = 0.5;
+  const ZOOM_MAX = 1.6;
+  const [zoom, setZoom] = useState(1);
+  const stepZoom = useCallback((delta: number) => {
+    setZoom((z) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round((z + delta) * 20) / 20)));
+  }, []);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (e.key === "=" || e.key === "+") {
+        e.preventDefault();
+        stepZoom(0.1);
+      } else if (e.key === "-" || e.key === "_") {
+        e.preventDefault();
+        stepZoom(-0.1);
+      } else if (e.key === "0") {
+        e.preventDefault();
+        setZoom(1);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [stepZoom]);
 
   return (
     <div className="are-shell flex h-full flex-col bg-slate-100">
@@ -331,13 +600,70 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
         <div className="flex-1" />
         {error ? <span className="text-[11px] text-red-500 max-w-[240px] truncate">{error}</span> : null}
         {dirty ? <span className="text-[11px] text-amber-600">● 저장 안 됨</span> : null}
+        {canToggleToolbarVocabTestOnly ? (
+          <button
+            type="button"
+            data-vocab-test-only-toolbar={report.vocabTestOnly ? "restore" : "only"}
+            onClick={toggleToolbarVocabTestOnly}
+            className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-md border text-[12px] font-medium transition-colors ${
+              report.vocabTestOnly
+                ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+                : "border-slate-200 text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            <FileQuestion className={`w-3.5 h-3.5 ${report.vocabTestOnly ? "text-blue-600" : "text-amber-500"}`} />
+            {report.vocabTestOnly ? "전체 자료 보기" : "단어 시험지만"}
+          </button>
+        ) : null}
+        <div className="inline-flex items-center rounded-md border border-slate-200 overflow-hidden" role="group" aria-label="페이지 확대/축소">
+          <button
+            type="button"
+            onClick={() => stepZoom(-0.1)}
+            disabled={zoom <= ZOOM_MIN}
+            className="inline-flex items-center justify-center h-8 w-8 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+            title="축소 (Ctrl -)"
+            aria-label="축소"
+          >
+            <Minus className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setZoom(1)}
+            className="h-8 min-w-[46px] px-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 border-x border-slate-200 tabular-nums"
+            title="100%로 맞춤 (Ctrl 0)"
+          >
+            {Math.round(zoom * 100)}%
+          </button>
+          <button
+            type="button"
+            onClick={() => stepZoom(0.1)}
+            disabled={zoom >= ZOOM_MAX}
+            className="inline-flex items-center justify-center h-8 w-8 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+            title="확대 (Ctrl +)"
+            aria-label="확대"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
         <button
           type="button"
-          onClick={revert}
-          disabled={!dirty || saving}
+          onClick={undo}
+          disabled={!canUndo || saving}
           className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-slate-200 text-[12px] font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          title="되돌리기 (Ctrl+Z)"
+          aria-label="되돌리기"
         >
           <RotateCcw className="w-3.5 h-3.5" /> 되돌리기
+        </button>
+        <button
+          type="button"
+          onClick={redo}
+          disabled={!canRedo || saving}
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-slate-200 text-[12px] font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          title="다시 실행 (Ctrl+Y)"
+          aria-label="다시 실행"
+        >
+          <RotateCw className="w-3.5 h-3.5" /> 다시 실행
         </button>
         <button
           type="button"
@@ -371,38 +697,27 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
 
       <div className="flex flex-1 min-h-0">
         {/* 좌측 — 페이지 인디케이터 */}
-        <div className="w-[72px] flex-shrink-0 border-r border-slate-200 bg-white overflow-auto py-3">
+        <div ref={thumbScrollRef} className="w-[92px] flex-shrink-0 border-r border-slate-200 bg-white overflow-auto py-3">
           <div className="text-[10px] text-slate-400 text-center mb-2">페이지</div>
-          <div className="flex flex-col items-center gap-2.5">
-            {pageList.map((ids, pi) => (
-              <div key={pi} className="group relative">
-                <button
-                  type="button"
-                  onClick={() =>
-                    document.querySelector(`[data-page-index="${pi}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" })
-                  }
-                  className="w-12 h-[68px] rounded-[3px] border border-slate-300 bg-white shadow-sm hover:border-blue-400 flex items-center justify-center text-[12px] font-semibold text-slate-500"
-                  title={`${pi + 1}페이지로 이동`}
-                >
-                  {pi + 1}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => deletePage(ids)}
-                  title="이 페이지 삭제"
-                  className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-white border border-red-200 text-red-500 text-[11px] leading-none opacity-0 group-hover:opacity-100 hover:bg-red-50"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
+          <ReportPageThumbnails
+            report={report}
+            pages={pageList}
+            activePageIndex={activePageIndex}
+            onSelect={selectPage}
+            onDelete={deletePage}
+          />
         </div>
 
         {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
-        <div id="exam-paper-print-root" className="par-scroll flex-1 overflow-auto px-6 py-6" onMouseDown={(e) => {
-          if (e.target === e.currentTarget) setActiveId(null);
-        }}>
+        <div
+          ref={paperScrollRef}
+          id="exam-paper-print-root"
+          className="par-scroll flex-1 overflow-auto px-6 py-6"
+          style={{ "--par-zoom": zoom } as CSSProperties}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setActiveId(null);
+          }}
+        >
           <ReportPages report={report} edit={edit} onPagesChange={setPageList} />
         </div>
 
@@ -428,6 +743,11 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
             onSetCustom={setCustom}
             onDeleteItem={deleteActive}
             onToggleCol={onToggleCol}
+            onVocabTestLayout={onVocabTestLayout}
+            onVocabTestOnly={onVocabTestOnly}
+            onVocabTestMode={onVocabTestMode}
+            onRestoreVocabTestRows={onRestoreVocabTestRows}
+            onToggleWorksheetAnswers={onToggleWorksheetAnswers}
             onDeleteCustom={(id) => {
               setReport((r) => deleteCustomBlock(r, id));
               setActiveId(null);
@@ -446,11 +766,37 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
 }
 
 // ─── 우측 속성 패널 ───────────────────────────────────────────────────────────
-function PanelSection({ title, children }: { title: string; children: ReactNode }) {
+function PanelSection({
+  title,
+  children,
+  defaultOpen = true,
+  summary,
+}: {
+  title: string;
+  children: ReactNode;
+  defaultOpen?: boolean;
+  summary?: ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <section className="border-b border-slate-100 px-4 py-3.5">
-      <h4 className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">{title}</h4>
-      {children}
+    <section className="border-b border-blue-100/70">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={`flex w-full items-center gap-2 border-l-2 px-4 py-3 text-left transition-colors ${
+          open
+            ? "border-blue-400 bg-blue-50 hover:bg-blue-50"
+            : "border-transparent bg-sky-50/60 hover:bg-sky-100/70"
+        }`}
+        aria-expanded={open}
+      >
+        <span className="min-w-0 flex-1">
+          <span className="block text-[10.5px] font-bold uppercase tracking-wider text-blue-700">{title}</span>
+          {summary ? <span className="mt-0.5 block truncate text-[10.5px] text-blue-500/75">{summary}</span> : null}
+        </span>
+        <ChevronDown className={`h-3.5 w-3.5 text-blue-400 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open ? <div className="px-4 pt-2.5 pb-3.5">{children}</div> : null}
     </section>
   );
 }
@@ -505,6 +851,11 @@ function PropertiesPanel({
   onSetCustom,
   onDeleteItem,
   onToggleCol,
+  onVocabTestLayout,
+  onVocabTestOnly,
+  onVocabTestMode,
+  onRestoreVocabTestRows,
+  onToggleWorksheetAnswers,
   onDeleteCustom,
   onDeleteSection,
   coverError,
@@ -531,6 +882,11 @@ function PropertiesPanel({
   onSetCustom: (id: string, patch: Partial<CustomBlock>) => void;
   onDeleteItem: (id: string) => void;
   onToggleCol: (sectionIndex: number, key: string) => void;
+  onVocabTestLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
+  onVocabTestOnly: (sectionIndex: number, enabled: boolean, mode?: Exclude<VocabTestMode, "study">) => void;
+  onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
+  onRestoreVocabTestRows: (sectionIndex: number) => void;
+  onToggleWorksheetAnswers: (sectionIndex: number) => void;
   onDeleteCustom: (id: string) => void;
   onDeleteSection: (sectionIndex: number) => void;
 }) {
@@ -542,15 +898,18 @@ function PropertiesPanel({
   const cover = report.cover;
   const coverPanel = (
     <CoverPanel
+      key={isCover ? "cover-active" : "cover-idle"}
       report={report}
       cover={cover}
       coverError={coverError}
       onPatch={onCoverPatch}
       onLogoFile={onLogoFile}
       onApplyCover={onApplyCover}
+      defaultOpen={isCover}
     />
   );
   const activeSection = active && active.sectionIndex >= 0 ? report.sections[active.sectionIndex] : null;
+  const activeWorksheet = activeSection?.kind === "learning-worksheet" ? activeSection : null;
   const tableGroup =
     activeSection?.kind === "vocabulary"
       ? "vocab"
@@ -562,6 +921,19 @@ function PropertiesPanel({
   const hiddenCols = new Set(
     activeSection && "hiddenCols" in activeSection ? (activeSection.hiddenCols as string[] | undefined) ?? [] : [],
   );
+  const fallbackVocabularyIndex = report.sections.findIndex((section) => section.kind === "vocabulary");
+  const fallbackVocabularySection = fallbackVocabularyIndex >= 0 ? report.sections[fallbackVocabularyIndex] : null;
+  const vocabularyTarget =
+    active && activeSection?.kind === "vocabulary"
+      ? { section: activeSection, index: active.sectionIndex }
+      : fallbackVocabularySection?.kind === "vocabulary"
+        ? { section: fallbackVocabularySection, index: fallbackVocabularyIndex }
+        : null;
+  const vocabMode: VocabTestMode =
+    vocabularyTarget?.section.vocabTestMode ?? "study";
+  const vocabTestLayout: VocabTestLayout =
+    vocabularyTarget?.section.vocabTestLayout ?? "table";
+  const excludedVocabTestCount = vocabularyTarget?.section.vocabTestExcludedKeys?.length ?? 0;
   const blockLabel = !active
     ? ""
     : isCustom
@@ -574,7 +946,7 @@ function PropertiesPanel({
   const addLabel = isSectionItem ? ADD_LABEL[(active as ItemDescriptor).kind] : undefined;
 
   const InsertSection = (
-    <PanelSection title="블록 삽입">
+    <PanelSection title="블록 추가" defaultOpen={false} summary="여백과 자유 텍스트">
       <div className="grid grid-cols-2 gap-1.5">
         <button
           type="button"
@@ -597,11 +969,110 @@ function PropertiesPanel({
     </PanelSection>
   );
 
+  const VocabTestSection = vocabularyTarget ? (
+    <PanelSection
+      title="단어 시험지"
+      summary={
+        report.vocabTestOnly
+          ? "단어 시험지만 표시"
+          : vocabMode === "study"
+            ? "추가 안 함"
+            : vocabMode === "hide-meaning"
+              ? "뜻 쓰기 시험지 추가"
+              : "단어 쓰기 시험지 추가"
+      }
+    >
+      <div className="grid grid-cols-3 gap-1.5">
+        {([
+          { mode: "study", label: "추가 안 함", icon: BookOpen },
+          { mode: "hide-meaning", label: "뜻 쓰기", icon: Languages },
+          { mode: "hide-headword", label: "단어 쓰기", icon: FileQuestion },
+        ] as const).map(({ mode, label, icon: Icon }) => (
+          <button
+            key={mode}
+            type="button"
+            data-vocab-mode={mode}
+            onClick={() => onVocabTestMode(vocabularyTarget.index, mode)}
+            className={`flex h-14 flex-col items-center justify-center gap-1 rounded-md border text-[11px] font-semibold ${
+              vocabMode === mode
+                ? "border-blue-500 bg-blue-50 text-blue-700"
+                : "border-slate-200 text-slate-500 hover:bg-slate-50"
+            }`}
+          >
+            <Icon className="h-3.5 w-3.5" />
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
+      <div className="mt-2.5">
+        <div className="mb-1.5 flex items-center justify-between">
+          <span className="text-[11px] font-semibold text-slate-500">시험지 레이아웃</span>
+          <span className="text-[10.5px] text-slate-400">{vocabTestLayout === "two-column" ? "2열 카드" : "1열 표"}</span>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          {([
+            { layout: "table", label: "1열 표" },
+            { layout: "two-column", label: "2열 카드" },
+          ] as const).map(({ layout, label }) => (
+            <button
+              key={layout}
+              type="button"
+              data-vocab-test-layout={layout}
+              onClick={() => onVocabTestLayout(vocabularyTarget.index, layout)}
+              className={`h-8 rounded-md border text-[12px] font-semibold transition-colors ${
+                vocabTestLayout === layout
+                  ? "border-blue-500 bg-blue-50 text-blue-700"
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <button
+        type="button"
+        data-vocab-test-only={report.vocabTestOnly ? "restore" : "only"}
+        onClick={() => {
+          if (report.vocabTestOnly) {
+            onVocabTestOnly(vocabularyTarget.index, false);
+            return;
+          }
+          onVocabTestOnly(
+            vocabularyTarget.index,
+            true,
+            vocabMode === "hide-headword" ? "hide-headword" : "hide-meaning",
+          );
+        }}
+        className={`mt-2.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-[12px] font-semibold transition-colors ${
+          report.vocabTestOnly
+            ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+            : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+        }`}
+      >
+        <FileQuestion className={`h-3.5 w-3.5 ${report.vocabTestOnly ? "text-blue-600" : "text-amber-500"}`} />
+        {report.vocabTestOnly ? "전체 자료 다시 보이기" : "단어 시험지만 만들기"}
+      </button>
+      {excludedVocabTestCount > 0 ? (
+        <button
+          type="button"
+          onClick={() => onRestoreVocabTestRows(vocabularyTarget.index)}
+          className="mt-1.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-[11.5px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
+        >
+          제외한 단어 다시 포함 ({excludedVocabTestCount})
+        </button>
+      ) : null}
+      <p className="mt-2 text-[10.5px] leading-relaxed text-slate-400">
+        단어장 블록을 따로 선택하지 않아도 여기에서 바로 시험지만 추가하거나 끌 수 있습니다.
+      </p>
+    </PanelSection>
+  ) : null;
+
   return (
     <div>
       {coverPanel}
       {isCover ? (
-        <PanelSection title="표지 편집">
+        <PanelSection title="표지 편집" summary="문구는 종이 위에서 직접 수정">
           <p className="text-[12px] text-slate-400 leading-relaxed">
             표지 텍스트(제목·부제·학원명 등)는 보고서에서 <b className="text-slate-500">직접 클릭</b>해 수정해요.
             <br />
@@ -610,7 +1081,7 @@ function PropertiesPanel({
         </PanelSection>
       ) : !active ? (
         <>
-          <PanelSection title="블록 편집">
+          <PanelSection title="블록 편집" summary="종이에서 블록을 선택하세요">
             <p className="text-[12px] text-slate-400 leading-relaxed">
               보고서에서 <b className="text-slate-500">블록을 클릭</b>하면 여기에서
               글자 크기·굵게·정렬·페이지 분할·순서·숨김을 조정할 수 있어요.
@@ -622,7 +1093,7 @@ function PropertiesPanel({
         </>
       ) : (
         <>
-          <PanelSection title="선택한 블록">
+          <PanelSection title="선택한 블록" summary={blockLabel}>
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-semibold text-slate-700">{blockLabel}</span>
               {isSectionItem && !active.isSectionStart ? (
@@ -644,7 +1115,7 @@ function PropertiesPanel({
           </PanelSection>
 
           {activeCustom?.kind === "spacer" ? (
-            <PanelSection title="여백 높이">
+            <PanelSection title="여백 높이" summary={`${Math.round(activeCustom.heightMm)}mm`}>
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -660,7 +1131,7 @@ function PropertiesPanel({
           ) : null}
 
           {activeCustom?.kind !== "spacer" ? (
-          <PanelSection title="서식">
+          <PanelSection title="서식" summary={`${Math.round(fontScale * 100)}%`}>
             {/* 글자 크기 */}
             <div className="mb-2.5">
               <div className="flex items-center justify-between mb-1">
@@ -722,7 +1193,7 @@ function PropertiesPanel({
           ) : null}
 
           {tableGroup ? (
-            <PanelSection title="표 열 표시">
+            <PanelSection title="표 열 표시" defaultOpen={false} summary="원본 단어장/표 열 관리">
               <div className="flex flex-col gap-1">
                 {TABLE_COLUMNS[tableGroup].map((c) => {
                   const shown = !hiddenCols.has(c.key);
@@ -745,7 +1216,24 @@ function PropertiesPanel({
             </PanelSection>
           ) : null}
 
-          <PanelSection title="페이지 조판">
+          {activeWorksheet ? (
+            <PanelSection
+              title="학습지 출력"
+              defaultOpen={false}
+              summary={worksheetAnswersAreHidden(activeWorksheet) ? "정답·오답 분석 숨김" : "정답·오답 분석 표시"}
+            >
+              <ToggleRow
+                label="정답·오답 분석 숨김"
+                on={worksheetAnswersAreHidden(activeWorksheet)}
+                onClick={() => onToggleWorksheetAnswers(active.sectionIndex)}
+              />
+              <p className="mt-2 text-[10.5px] text-slate-400 leading-relaxed">
+                학생 배포용으로 쓸 때는 정답과 오답 분석을 숨기고, 해설지로 쓸 때는 다시 켜면 돼요.
+              </p>
+            </PanelSection>
+          ) : null}
+
+          <PanelSection title="페이지 조판" defaultOpen={false} summary="분리 금지와 새 페이지 시작">
             <div className="space-y-2">
               <ToggleRow
                 label="앞 블록과 한 페이지에 (분리 금지)"
@@ -772,7 +1260,7 @@ function PropertiesPanel({
             ) : null}
           </PanelSection>
 
-          <PanelSection title="순서 / 표시">
+          <PanelSection title="순서 / 표시" defaultOpen={false} summary="위치 이동과 숨김">
             <div className="grid grid-cols-2 gap-1.5 mb-2">
               <button
                 type="button"
@@ -802,7 +1290,7 @@ function PropertiesPanel({
           </PanelSection>
 
           {isSectionItem && active.isSectionStart ? (
-            <PanelSection title="섹션">
+            <PanelSection title="섹션" defaultOpen={false} summary="섹션 전체 삭제">
               <button
                 type="button"
                 onClick={() => onDeleteSection(active.sectionIndex)}
@@ -814,7 +1302,7 @@ function PropertiesPanel({
           ) : null}
 
           {isCustom ? (
-            <PanelSection title={activeCustom?.kind === "spacer" ? "여백 블록" : "텍스트 블록"}>
+            <PanelSection title={activeCustom?.kind === "spacer" ? "여백 블록" : "텍스트 블록"} defaultOpen={false} summary="블록 삭제">
               <button
                 type="button"
                 onClick={() => onDeleteCustom(active.id)}
@@ -826,7 +1314,7 @@ function PropertiesPanel({
           ) : null}
 
           {isSectionItem && !active.isSectionStart ? (
-            <PanelSection title="이 블록">
+            <PanelSection title="이 블록" defaultOpen={false} summary="선택 블록 삭제">
               <button
                 type="button"
                 onClick={() => onDeleteItem(active.id)}
@@ -841,22 +1329,31 @@ function PropertiesPanel({
         </>
       )}
 
-      <PanelSection title="테마">
+      {VocabTestSection}
+
+      <PanelSection title="테마" defaultOpen={false} summary={THEME_LABELS[report.themeId]}>
         <div className="flex flex-col gap-1.5">
-          {reportThemeIdSchema.options.map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => onTheme(t)}
-              className={`text-left text-[12px] px-2.5 py-1.5 rounded-md border ${
-                report.themeId === t
-                  ? "border-blue-500 bg-blue-50 text-blue-700 font-semibold"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              {THEME_LABELS[t]}
-            </button>
-          ))}
+          {reportThemeIdSchema.options.map((t) => {
+            const theme = REPORT_THEMES[t];
+            const selected = report.themeId === t;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => onTheme(t)}
+                className={`flex items-center gap-2 text-left text-[12px] px-2.5 py-1.5 rounded-md border transition-colors ${
+                  selected ? "font-semibold" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                }`}
+                style={selected ? { borderColor: theme.ink, backgroundColor: theme.tint, color: theme.ink } : undefined}
+              >
+                <span className="flex h-4 w-8 overflow-hidden rounded border border-white shadow-sm" aria-hidden>
+                  <span className="flex-1" style={{ backgroundColor: theme.ink }} />
+                  <span className="flex-1" style={{ backgroundColor: theme.gold }} />
+                </span>
+                <span className="min-w-0 flex-1">{THEME_LABELS[t]}</span>
+              </button>
+            );
+          })}
         </div>
       </PanelSection>
     </div>
@@ -878,6 +1375,7 @@ function CoverPanel({
   onPatch,
   onLogoFile,
   onApplyCover,
+  defaultOpen = false,
 }: {
   report: AnalysisReport;
   cover: ReportCover | undefined;
@@ -885,6 +1383,7 @@ function CoverPanel({
   onPatch: (patch: Partial<ReportCover>) => void;
   onLogoFile: (file?: File | null) => void;
   onApplyCover: (cover: ReportCover) => void;
+  defaultOpen?: boolean;
 }) {
   const enabled = !!cover?.enabled;
   const tpl = (cover?.templateId ?? "classic-center") as CoverTemplateId;
@@ -927,7 +1426,7 @@ function CoverPanel({
     await fetch(`/api/workbench/cover-presets/${id}`, { method: "DELETE" }).catch(() => {});
   }, []);
   return (
-    <PanelSection title="표지 (Cover)">
+    <PanelSection title="표지" defaultOpen={defaultOpen} summary={enabled ? "표지 페이지 사용 중" : "표지 페이지 꺼짐"}>
       <ToggleRow label="표지 페이지 사용" on={enabled} onClick={() => onPatch({ enabled: !enabled })} icon={<BookImage className="w-3.5 h-3.5" />} />
       {!enabled ? (
         <p className="mt-2 text-[10.5px] text-slate-400 leading-relaxed">
@@ -998,7 +1497,7 @@ function CoverPanel({
                   <input
                     type="range"
                     min={6}
-                    max={28}
+                    max={60}
                     value={cover.logoHeightMm ?? 14}
                     onChange={(e) => onPatch({ logoHeightMm: Number(e.target.value) })}
                     className="flex-1 accent-blue-600"

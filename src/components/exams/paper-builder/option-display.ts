@@ -1,8 +1,10 @@
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
-const CIRCLED_LABELS = getCircledNumbers(50);
 const POSITION_MARKER_PATTERN = /^(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\(\d{1,3}\)|\d{1,3}[.)]?)$/;
 const CIRCLED_POSITION_MARKER_PATTERN = /[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/g;
+const CIRCLED_LABELS = getCircledNumbers(50);
+const GRAMMAR_LABEL_KEYS = "ABCDEFGHIJ";
 // '[주어진 문장]'(표준) 또는 '[given]'(레거시) 라벨을 양쪽 모두 인식한다.
 // 라벨이 지문 '앞'(신규 직렬화)이든 '뒤'(레거시)이든 한 블록(다음 빈 줄 또는 문자열
 // 끝까지)만 잡아내고, 라벨 접두사는 제거한 채 순수 문장만 돌려준다.
@@ -23,6 +25,10 @@ export function shouldUseGrammarOptionReference(subType: string | null | undefin
   return subType === "GRAMMAR_ERROR";
 }
 
+export function shouldRenderOptionListForSubtype(subType: string | null | undefined) {
+  return subType !== "GRAMMAR_ERROR";
+}
+
 export function shouldUseSentenceInsertOptionReference(
   subType: string | null | undefined,
   optionText: string,
@@ -31,20 +37,7 @@ export function shouldUseSentenceInsertOptionReference(
 }
 
 function positionMarkerIndex(optionText: string) {
-  const normalized = optionText.trim();
-  if (!normalized) return null;
-
-  const circledIndex = CIRCLED_LABELS.indexOf(normalized);
-  if (circledIndex >= 0) return circledIndex;
-
-  const numberMatch = normalized.match(/^(?:\((\d{1,3})\)|(\d{1,3})[.)]?)$/);
-  const numberText = numberMatch?.[1] ?? numberMatch?.[2];
-  if (!numberText) return null;
-
-  const numberValue = Number(numberText);
-  if (numberValue < 1 || numberValue > CIRCLED_LABELS.length) return null;
-
-  return numberValue - 1;
+  return sentenceInsertOptionMarkerIndex(optionText);
 }
 
 export function formatSentenceInsertPassageMarkers(
@@ -57,6 +50,73 @@ export function formatSentenceInsertPassageMarkers(
     const markerIndex = positionMarkerIndex(marker);
     return markerIndex === null ? marker : optionReferenceLabel(markerIndex);
   });
+}
+
+export function grammarMarkerIndex(value: unknown): number | null {
+  if (typeof value !== "string") return null;
+  const text = value.replace(/\s+/g, " ").trim();
+  if (!text) return null;
+
+  const circledIndex = CIRCLED_LABELS.indexOf(text);
+  if (circledIndex >= 0) return circledIndex;
+
+  const alpha = text.match(/^(?:\(([A-Ja-j])\)|([A-Ja-j])[.)]?)$/);
+  const alphaKey = alpha?.[1] ?? alpha?.[2];
+  if (alphaKey) {
+    const index = GRAMMAR_LABEL_KEYS.indexOf(alphaKey.toUpperCase());
+    return index >= 0 ? index : null;
+  }
+
+  const numeric = text.match(/^(?:\((10|[1-9])\)|(10|[1-9])[.)]?)$/);
+  const rawNumber = numeric?.[1] ?? numeric?.[2];
+  if (!rawNumber) return null;
+  const index = Number(rawNumber) - 1;
+  return index >= 0 && index < CIRCLED_LABELS.length ? index : null;
+}
+
+export function grammarMarkerDisplayLabel(value: unknown): string {
+  const index = grammarMarkerIndex(value);
+  return index === null ? String(value ?? "") : getCircledNumber(index);
+}
+
+function formatGrammarUnderlineContent(content: string): string {
+  const match = content.match(
+    /^\s*(\(([A-Ja-j])\)|([A-Ja-j])[.)]?|\((10|[1-9])\)|(10|[1-9])[.)]?|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]))\s+(.+)$/,
+  );
+  if (!match) return content;
+
+  const rawLabel =
+    match[1] ||
+    match[2] ||
+    match[3] ||
+    match[4] ||
+    match[5] ||
+    match[6] ||
+    "";
+  const rest = (match[7] || "").trim();
+  const marker = grammarMarkerDisplayLabel(rawLabel);
+  return rest ? `${marker} ${rest}` : marker;
+}
+
+export function formatGrammarErrorPassageMarkers(
+  text: string,
+  subType: string | null | undefined,
+) {
+  if (subType !== "GRAMMAR_ERROR") return text;
+  return text.replace(/__([^_]+)__/g, (full, content: string) => {
+    const formatted = formatGrammarUnderlineContent(content);
+    return formatted === content ? full : `__${formatted}__`;
+  });
+}
+
+export function formatInlineMarkersForSubtype(
+  text: string,
+  subType: string | null | undefined,
+) {
+  return formatGrammarErrorPassageMarkers(
+    formatSentenceInsertPassageMarkers(text, subType),
+    subType,
+  );
 }
 
 export function splitSentenceInsertGivenBlock(
@@ -92,7 +152,7 @@ export function optionDisplayTextForSubtype(
     return "";
   }
 
-  if (shouldUseSentenceInsertOptionReference(subType, optionText)) {
+  if (subType === "SENTENCE_INSERT") {
     return optionReferenceLabel(positionMarkerIndex(optionText) ?? index);
   }
 

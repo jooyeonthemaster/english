@@ -3,6 +3,10 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS } from "@/lib/concurrency-config";
 import {
+  buildGrammarCorrectionQuestionTextForDisplay,
+  grammarCorrectionErrorSentenceForQuestionText,
+} from "@/lib/grammar-correction-display";
+import {
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
@@ -37,11 +41,21 @@ function readQuestionTags(rawTags: unknown): string[] {
 
 export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   const parts: string[] = [];
-  const typeId = typeof q._typeId === "string" ? q._typeId : "";
+  const typeId =
+    typeof q._typeId === "string"
+      ? q._typeId
+      : typeof q.subType === "string"
+        ? q.subType
+        : "";
   const isSummaryCompleteMc = typeId === "SUMMARY_COMPLETE_MC";
   const push = (value: unknown) => {
     if (typeof value === "string" && value.trim()) parts.push(value);
   };
+
+  if (typeId === "GRAMMAR_CORRECTION") {
+    const text = buildGrammarCorrectionQuestionTextForDisplay(q);
+    if (text) return text;
+  }
 
   push(q.direction);
   if (q.matchType) parts.push(`[type: ${String(q.matchType)}]`);
@@ -52,7 +66,7 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   // 영문 '[given]' 라벨이 노출되던 버그를 바로잡음.)
   if (q.givenSentence) parts.push(`[주어진 문장] ${String(q.givenSentence)}`);
   push(q.passageWithBlank);
-  push(q.passageWithMarkers);
+  if (typeId !== "GRAMMAR_CORRECTION") push(q.passageWithMarkers);
   push(q.passageWithUnderline);
   push(q.passageWithNumbers);
   if (Array.isArray(q.paragraphs)) {
@@ -100,8 +114,8 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     parts.push(`[word order] ${q.scrambledWords.map(String).join(" / ")}`);
   }
   if (q.contextHint) parts.push(`[hint] ${String(q.contextHint)}`);
-  if (q.sentenceWithError) {
-    parts.push(`[error sentence] ${String(q.sentenceWithError)}`);
+  if (q.sentenceWithError && typeId !== "GRAMMAR_CORRECTION") {
+    push(grammarCorrectionErrorSentenceForQuestionText(q));
   }
   if (q.targetWord) parts.push(`[target] ${String(q.targetWord)}`);
   if (q.contextSentence) parts.push(`[context] ${String(q.contextSentence)}`);

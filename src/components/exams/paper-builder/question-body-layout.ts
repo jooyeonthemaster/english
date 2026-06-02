@@ -4,6 +4,10 @@ import {
   summaryCompleteMcPassageForItem,
   summaryCompleteMcSummaryForItem,
 } from "./summary-complete-mc-layout";
+import {
+  formatSentenceInsertPassageMarkers,
+  splitSentenceInsertGivenBlock,
+} from "./option-display";
 import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type { PaperItem } from "./types";
 
@@ -38,6 +42,10 @@ const STRUCTURED_ATOMIC_SUBTYPES = new Set([
 
 export function isStructuredAtomicSubtype(subType?: string | null): boolean {
   return STRUCTURED_ATOMIC_SUBTYPES.has(subType || "");
+}
+
+export function isFlowStructuredSubtype(subType?: string | null): boolean {
+  return isStructuredAtomicSubtype(subType) || subType === "SENTENCE_INSERT";
 }
 
 export function isInlineSourcePassageSubtype(subType?: string | null): boolean {
@@ -123,6 +131,29 @@ function parseSentenceOrderSegments(questionText: string): StructSegment[] {
   return segs;
 }
 
+function parseSentenceInsertSegments(questionText: string): StructSegment[] {
+  const body = splitFirstParagraph(questionText).body;
+  const renderedBody = formatSentenceInsertPassageMarkers(body, "SENTENCE_INSERT");
+  const { beforeText, givenText } = splitSentenceInsertGivenBlock(renderedBody, "SENTENCE_INSERT");
+  const segs: StructSegment[] = [];
+
+  if (givenText) {
+    segs.push({
+      kind: "box",
+      boxStyle: "given",
+      text: givenText.replace(/\s*\n\s*/g, " "),
+    });
+  }
+  if (beforeText) {
+    segs.push({ kind: "text", text: beforeText });
+  }
+  if (!segs.length && renderedBody) {
+    segs.push({ kind: "text", text: renderedBody });
+  }
+
+  return segs;
+}
+
 // 구조화 유형의 본문 세그먼트(지시문 제외 — 지시문은 헤더에서 렌더).
 export function structuredSegments(item: PaperItem): StructSegment[] {
   const subType = item.sourceQuestion.subType;
@@ -143,6 +174,10 @@ export function structuredSegments(item: PaperItem): StructSegment[] {
   }
 
   // INLINE_SOURCE (주제/요지/제목/내용일치): 지시문 다음의 추가 안내문 + 출처 지문 박스.
+  if (subType === "SENTENCE_INSERT") {
+    return parseSentenceInsertSegments(item.questionText);
+  }
+
   const passage = normalizePassageText(
     item.passageContent || item.sourceQuestion.passage?.content || "",
   );

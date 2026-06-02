@@ -22,6 +22,7 @@ import {
   getVisibleQuestionTags,
   isQuestionGenerationPlanTag,
 } from "@/lib/question-generation-plans";
+import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EditHeader } from "./question-edit-client/header";
@@ -118,7 +119,10 @@ export function QuestionEditClient({
   const [deleting, setDeleting] = useState(false);
   const [approved, setApproved] = useState(question.approved);
 
-  const initialOptions: Option[] = question.options ? JSON.parse(question.options) : [];
+  const initialOptions: Option[] =
+    question.subType === "SENTENCE_INSERT"
+      ? buildCanonicalSentenceInsertOptions()
+      : question.options ? JSON.parse(question.options) : [];
   const initialTags: string[] = getVisibleQuestionTags(
     question.tags ? JSON.parse(question.tags) : [],
   );

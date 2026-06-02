@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import { optionDisplayTextForSubtype } from "../option-display";
 import { parseOptions } from "../paper-item-utils";
 import type { BuilderQuestion } from "../types";
 
@@ -9,6 +10,15 @@ interface QuestionDetailModalProps {
 }
 
 export function QuestionDetailModal({ question, onClose }: QuestionDetailModalProps) {
+  const options = parseOptions(question.options);
+  const displayOptions =
+    question.subType === "SENTENCE_INSERT"
+      ? options.map((option, index) => ({
+          ...option,
+          text: optionDisplayTextForSubtype(question.subType, index, option.text),
+        }))
+      : options;
+
   return (
     <div
       className="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6 backdrop-blur-[2px]"
@@ -39,9 +49,9 @@ export function QuestionDetailModal({ question, onClose }: QuestionDetailModalPr
             </div>
           )}
           <p className="whitespace-pre-line text-[14px] font-semibold leading-relaxed text-slate-800">{question.questionText}</p>
-          {parseOptions(question.options).length > 0 && (
+          {displayOptions.length > 0 && (
             <div className="mt-4 space-y-2">
-              {parseOptions(question.options).map((option) => (
+              {displayOptions.map((option) => (
                 <div key={option.label} className="flex gap-2 rounded-lg bg-slate-50 px-3 py-2 text-[13px] text-slate-700">
                   <span className="font-bold text-slate-400">{option.label}</span>
                   <span>{option.text}</span>

@@ -11,6 +11,7 @@ import {
 } from "docx";
 import { COLOR, FONT, KR_FONT, LABEL_SIZE, PASSAGE_SIZE } from "./styles";
 import { bdr, hrule, NONE } from "./borders";
+import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
 import type { DocChild, ExamQuestionData } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -36,6 +37,33 @@ export function buildAnswerKeyTable(questions: ExamQuestionData[]): DocChild[] {
       ],
     })
   );
+
+  // 서술형 등 긴 정답이 섞이면 5열 그리드가 한 단어씩 세로로 터진다.
+  // 가장 긴 정답이 임계값을 넘으면 전체 폭 번호 목록으로 렌더한다.
+  const maxAnswerLen = questions.reduce(
+    (max, eq) => Math.max(max, answerTextForQuestion(eq).length),
+    0,
+  );
+  if (maxAnswerLen > 20) {
+    for (const eq of questions) {
+      result.push(
+        new Paragraph({
+          spacing: { before: 30, after: 30 },
+          indent: { left: 420, hanging: 420 },
+          children: [
+            new TextRun({ text: `${eq.orderNum}. `, font: KR_FONT, size: PASSAGE_SIZE, bold: true }),
+            new TextRun({
+              text: answerTextForQuestion(eq) || " ",
+              font: FONT,
+              size: PASSAGE_SIZE,
+              color: COLOR.black,
+            }),
+          ],
+        }),
+      );
+    }
+    return result;
+  }
 
   const COLS = 5;
   const totalRows = Math.ceil(questions.length / COLS);
@@ -83,7 +111,7 @@ export function buildAnswerKeyTable(questions: ExamQuestionData[]): DocChild[] {
             spacing: { before: 40, after: 40 },
             children: [
               new TextRun({ text: `${eq.orderNum}. `, font: KR_FONT, size: PASSAGE_SIZE, bold: true }),
-              new TextRun({ text: eq.question.correctAnswer, font: FONT, size: PASSAGE_SIZE, bold: true, color: COLOR.black }),
+              new TextRun({ text: answerTextForQuestion(eq), font: FONT, size: PASSAGE_SIZE, bold: true, color: COLOR.black }),
             ],
           })
         );
@@ -116,4 +144,8 @@ export function buildAnswerKeyTable(questions: ExamQuestionData[]): DocChild[] {
   );
 
   return result;
+}
+
+function answerTextForQuestion(eq: ExamQuestionData): string {
+  return formatGrammarCorrectionCorrectAnswerForStoredQuestion(eq.question);
 }

@@ -6,9 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { createUniqueAcademyCode } from "@/lib/tutor/academy-code";
 import { verifyOnboardingToken } from "@/lib/onboarding-token";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
+import { SIGNUP_CREDITS } from "@/lib/feedback-program";
 
 const FREE_TRIAL_END = new Date("2026-07-01T23:59:59+09:00");
-const MIN_TRIAL_CREDITS = 3000;
 
 const phoneRegex = /^(0\d{1,2}-?\d{3,4}-?\d{4})$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -114,7 +114,9 @@ export async function POST(request: NextRequest) {
   }
 
   const now = new Date();
-  const initialCredits = Math.max(plan.monthlyCredits, MIN_TRIAL_CREDITS);
+  // New signups receive a small starter allocation; additional free credits
+  // are granted through the "협업 피드백 이벤트" program (see /lib/feedback-program).
+  const initialCredits = SIGNUP_CREDITS;
   const placeholderPassword = await bcrypt.hash(randomBytes(32).toString("hex"), 10);
 
   let academySlug = slugify(academyName);

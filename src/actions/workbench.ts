@@ -19,6 +19,7 @@ export {
   findWorkbenchPassageDuplicates,
   getWorkbenchPassage,
   createWorkbenchPassage,
+  createDirectInputPassageMaterial,
   updateWorkbenchPassage,
   deleteWorkbenchPassage,
   bulkDeleteWorkbenchPassages,

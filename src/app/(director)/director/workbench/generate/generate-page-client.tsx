@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { CheckCircle2, Loader2, X, XCircle } from "lucide-react";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
+import { PassageContentModal } from "@/components/workbench/passage-content-modal";
 import {
   QuestionCard,
   ReviewStatusStamp,
@@ -201,6 +202,11 @@ export function GeneratePageClient({
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
   const [loadingAnalysisModal, setLoadingAnalysisModal] = useState(false);
 
+  // ── 미분석 지문 전체 내용 뷰어 모달 ──
+  // 분석이 없는 지문은 "상세 보기" 시 보고서 생성 CTA 대신 원문 전체를 보여준다.
+  const [contentModalPassage, setContentModalPassage] =
+    useState<PassageItem | null>(null);
+
   // ── Saved questions from DB (persists across page visits) ──
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
   const [loadingSavedQuestions, setLoadingSavedQuestions] = useState(true);
@@ -239,29 +245,37 @@ export function GeneratePageClient({
   const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
     null,
   );
-  const editor = useQuestionEditor((deletedId) => {
-    let deletedSig: string | null = null;
-    setSavedQuestions((prev) => {
-      const target = prev.find((q) => q.id === deletedId);
-      if (target) deletedSig = savedQuestionSig(target);
-      return prev.filter((q) => q.id !== deletedId);
-    });
-    setDeletedQuestionIds((prev) => {
-      if (prev.has(deletedId)) return prev;
-      const next = new Set(prev);
-      next.add(deletedId);
-      return next;
-    });
-    if (deletedSig) {
-      setDeletedQuestionSignatures((prev) => {
-        if (prev.has(deletedSig as string)) return prev;
+  // 로컬에서 문제를 삭제 처리(tombstone) — 5초 세션-큐 폴링이 되살리지 못하게
+  // id/시그니처로 숨기고, 저장 목록·상세 모달에서도 제거한다. 실제 삭제와,
+  // "이미 삭제된 좀비 문제"를 검수하려다 실패한 경우 모두 같은 정리 경로를 쓴다.
+  const markQuestionDeletedLocally = useCallback(
+    (deletedId: string) => {
+      let deletedSig: string | null = null;
+      setSavedQuestions((prev) => {
+        const target = prev.find((q) => q.id === deletedId);
+        if (target) deletedSig = savedQuestionSig(target);
+        return prev.filter((q) => q.id !== deletedId);
+      });
+      setDeletedQuestionIds((prev) => {
+        if (prev.has(deletedId)) return prev;
         const next = new Set(prev);
-        next.add(deletedSig as string);
+        next.add(deletedId);
         return next;
       });
-    }
-    setDetailQuestion((prev) => (prev?.id === deletedId ? null : prev));
-  });
+      if (deletedSig) {
+        setDeletedQuestionSignatures((prev) => {
+          if (prev.has(deletedSig as string)) return prev;
+          const next = new Set(prev);
+          next.add(deletedSig as string);
+          return next;
+        });
+      }
+      setDetailQuestion((prev) => (prev?.id === deletedId ? null : prev));
+    },
+    [savedQuestionSig],
+  );
+
+  const editor = useQuestionEditor(markQuestionDeletedLocally);
 
   // ── Computed ──
   const totalQuestions = useMemo(
@@ -863,9 +877,10 @@ export function GeneratePageClient({
   }, [pasteSaving]);
 
   // Persist the pasted passage as a real Passage (academy-scoped, marked as
-  // "직접 입력"), then select it so the user can generate questions right away.
+  // "직접 입력") AND register it as 추출된 자료 (a shared TEXT material with no
+  // image), then select it so the user can generate questions right away.
   // Questions link to it automatically via passageId during generation, and it
-  // shows up in 자료 관리 immediately thanks to the includeDirectInput filter.
+  // shows up in 추출된 자료 관리 / 지문 분석 / 분석된 지문 관리 lists immediately.
   const handleCreatePastedPassage = useCallback(
     async (rawTitle: string, content: string) => {
       const trimmed = content.trim();
@@ -875,12 +890,13 @@ export function GeneratePageClient({
       }
       setPasteSaving(true);
       try {
-        const { createWorkbenchPassage } = await import("@/actions/workbench");
+        const { createDirectInputPassageMaterial } = await import(
+          "@/actions/workbench"
+        );
         const title = rawTitle.trim() || derivePastedTitle(trimmed);
-        const result = await createWorkbenchPassage({
+        const result = await createDirectInputPassageMaterial({
           title,
           content: trimmed,
-          source: DIRECT_INPUT_PASSAGE_SOURCE,
         });
         if (!result?.success || !result.id) {
           toast.error(result?.error || "지문 등록에 실패했습니다.");
@@ -949,13 +965,20 @@ export function GeneratePageClient({
   );
 
   // ── Open analysis detail modal ──
+  // 분석 완료 지문 → 분석/보고서 모달. 미분석 지문 → 원문 전체 뷰어 모달.
+  // (지문 카드에서 이미 분기하지만, 어떤 경로로 호출돼도 동일하게 동작하도록
+  //  서버에서 받은 analysis 유무로 한 번 더 분기해 조건을 철저히 보장한다.)
   const handleOpenAnalysisModal = useCallback(async (passageId: string) => {
     setLoadingAnalysisModal(true);
     try {
       const { getWorkbenchPassage } = await import("@/actions/workbench");
       const result = await getWorkbenchPassage(passageId);
       if (result) {
-        setAnalysisModalPassage(result);
+        if (result.analysis) {
+          setAnalysisModalPassage(result);
+        } else {
+          setContentModalPassage(result as unknown as PassageItem);
+        }
       } else {
         toast.error("지문 데이터를 불러올 수 없습니다.");
       }
@@ -998,32 +1021,50 @@ export function GeneratePageClient({
     [setSessionQueue],
   );
 
+  // 서버가 "문제를 찾을 수 없습니다"로 거절하면, 그 문제는 이미 삭제된 좀비다
+  // (세션 큐 폴링 직전에 지워졌거나 다른 기기에서 삭제됨). 로컬에서 카드를
+  // 정리하고 목록을 새로고침해, 같은 좀비를 다시 검수하려는 일을 막는다.
+  const isMissingQuestionError = (error?: string) =>
+    typeof error === "string" && error.includes("찾을 수 없");
+
   const handleApproveQuestion = useCallback(
     async (questionId: string) => {
       const result = await approveWorkbenchQuestion(questionId);
       if (!result.success) {
-        toast.error(result.error || "검수완료 처리에 실패했습니다.");
+        if (isMissingQuestionError(result.error)) {
+          markQuestionDeletedLocally(questionId);
+          loadSavedQuestions();
+          toast.error("이미 삭제된 문제예요. 목록에서 정리했어요.");
+        } else {
+          toast.error(result.error || "검수완료 처리에 실패했습니다.");
+        }
         return;
       }
       applyReviewState([questionId], true);
       toast.success("검수완료 처리됐습니다.");
       loadSavedQuestions();
     },
-    [loadSavedQuestions, applyReviewState],
+    [loadSavedQuestions, applyReviewState, markQuestionDeletedLocally],
   );
 
   const handleUnapproveQuestion = useCallback(
     async (questionId: string) => {
       const result = await unapproveWorkbenchQuestion(questionId);
       if (!result.success) {
-        toast.error(result.error || "검수취소 처리에 실패했습니다.");
+        if (isMissingQuestionError(result.error)) {
+          markQuestionDeletedLocally(questionId);
+          loadSavedQuestions();
+          toast.error("이미 삭제된 문제예요. 목록에서 정리했어요.");
+        } else {
+          toast.error(result.error || "검수취소 처리에 실패했습니다.");
+        }
         return;
       }
       applyReviewState([questionId], false);
       toast.success("검수취소 처리됐습니다.");
       loadSavedQuestions();
     },
-    [loadSavedQuestions, applyReviewState],
+    [loadSavedQuestions, applyReviewState, markQuestionDeletedLocally],
   );
 
   const handleDeleteQuestion = useCallback(
@@ -1215,6 +1256,7 @@ export function GeneratePageClient({
               onCreatePastedPassage={handleCreatePastedPassage}
               pasteSaving={pasteSaving}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
+              onViewPassageContent={setContentModalPassage}
             />
           }
           right={
@@ -1438,6 +1480,13 @@ export function GeneratePageClient({
           }
         />
       )}
+
+      {/* ─── 미분석 지문 전체 내용 모달 ─── */}
+      <PassageContentModal
+        open={!!contentModalPassage}
+        onClose={() => setContentModalPassage(null)}
+        passage={contentModalPassage}
+      />
 
       {/* Loading overlay for analysis modal fetch */}
       {loadingAnalysisModal && (

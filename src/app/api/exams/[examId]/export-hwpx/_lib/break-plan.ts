@@ -88,6 +88,8 @@ function parseOptionsLoose(raw: unknown): OptionItem[] {
 function paginationSettingsFrom(
   layout: BuilderLayout,
   template: string | undefined,
+  firstPageHeaderPx?: number,
+  contentSafetyPx?: number,
 ): PaginationSettings {
   return {
     paperSize: layout.paperSize === "B4" ? "B4" : "A4",
@@ -99,6 +101,10 @@ function paginationSettingsFrom(
     showQuestionMeta: layout.showQuestionMeta !== false,
     passageStyle: layout.passageStyle ?? "boxed",
     template: (template ?? "clean") as PaginationSettings["template"],
+    // HWPX: 1쪽 헤더(제목/학생정보/안내문)를 본문 표 위 별도 블록으로 그리므로
+    // 실제 한컴 렌더 높이를 page-0 용량에서 빼 첫 표가 1쪽에 들어가게 한다.
+    ...(firstPageHeaderPx ? { firstPageHeaderPx } : {}),
+    ...(contentSafetyPx ? { contentSafetyPx } : {}),
   };
 }
 
@@ -339,6 +345,8 @@ export function computePaginatedLayout(opts: {
   resolvedItems: BuilderItemResolved[];
   layout: BuilderLayout;
   template: string | undefined;
+  firstPageHeaderPx?: number;
+  contentSafetyPx?: number;
 }): PaginatedLayout | null {
   try {
     const paperItems = reconstructPaperItems({
@@ -346,7 +354,12 @@ export function computePaginatedLayout(opts: {
       resolvedItems: opts.resolvedItems,
     });
     if (paperItems.length === 0) return null;
-    const settings = paginationSettingsFrom(opts.layout, opts.template);
+    const settings = paginationSettingsFrom(
+      opts.layout,
+      opts.template,
+      opts.firstPageHeaderPx,
+      opts.contentSafetyPx,
+    );
     const groups = buildGroups(paperItems);
     const { pages } = paginateGroups(groups, settings);
     if (!pages.length) return null;

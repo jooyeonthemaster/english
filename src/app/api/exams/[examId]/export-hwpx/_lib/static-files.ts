@@ -73,11 +73,21 @@ export function settingsXml(): string {
 export interface ContentHpfOptions {
   title: string;
   createdIso?: string; // ISO 8601 timestamp
+  sectionCount?: number; // 섹션(구역) 수. 기본 1.
 }
 
 export function contentHpfXml(opts: ContentHpfOptions): string {
   const { title, createdIso } = opts;
+  const sectionCount = Math.max(1, opts.sectionCount ?? 1);
   const iso = createdIso ?? new Date().toISOString().slice(0, 19) + "Z";
+  const sectionItems: string[] = [];
+  const sectionRefs: string[] = [];
+  for (let i = 0; i < sectionCount; i++) {
+    sectionItems.push(
+      `<opf:item id="section${i}" href="Contents/section${i}.xml" media-type="application/xml"/>`,
+    );
+    sectionRefs.push(`<opf:itemref idref="section${i}"/>`);
+  }
   return [
     `<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>`,
     `<opf:package ${HWPX_NS} version="" unique-identifier="" id="">`,
@@ -95,12 +105,12 @@ export function contentHpfXml(opts: ContentHpfOptions): string {
     `</opf:metadata>`,
     `<opf:manifest>`,
     `<opf:item id="header" href="Contents/header.xml" media-type="application/xml"/>`,
-    `<opf:item id="section0" href="Contents/section0.xml" media-type="application/xml"/>`,
+    ...sectionItems,
     `<opf:item id="settings" href="settings.xml" media-type="application/xml"/>`,
     `</opf:manifest>`,
     `<opf:spine>`,
     `<opf:itemref idref="header"/>`,
-    `<opf:itemref idref="section0"/>`,
+    ...sectionRefs,
     `</opf:spine>`,
     `</opf:package>`,
   ].join("");

@@ -6,6 +6,7 @@ import {
   Header,
   HeightRule,
   ImageRun,
+  LineRuleType,
   PageNumber,
   Paragraph,
   SectionType,
@@ -24,9 +25,11 @@ import { parseFormattedText } from "./parse-formatted-text";
 import { buildAnswerKeyTable } from "./build-answer-key";
 import { safeParseJSON } from "./helpers";
 import {
+  formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
+  shouldRenderOptionListForSubtype,
   splitSentenceInsertGivenBlock,
 } from "@/components/exams/paper-builder/option-display";
 import {
@@ -41,6 +44,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 /*
@@ -80,16 +84,21 @@ const SUBTYPE_LABELS_DOCX: Record<string, string> = {
 
 // 미리보기 px 기준값 → docx half-point.
 // 미리보기 text-[11.5px] ≈ 본문 10pt, [10.5px] ≈ 9.5pt
-const SIZE_TITLE = 40;        // 20pt (h2 28px)
-const SIZE_TITLE_COMPACT = 32; // 16pt (compact 22px)
+const SIZE_TITLE = 44;        // 22pt (미리보기 h2 28px → 28×0.78325=21.9pt)
+const SIZE_TITLE_COMPACT = 34; // 17pt (compact 22px)
 const SIZE_SUBTITLE = 14;     // 7pt (subtitle 9px)
 const SIZE_INFO = 16;         // 8pt (학교/반/이름)
 const SIZE_INSTRUCTIONS = 16; // 8pt
-const SIZE_QNUM = 22;         // 11pt
-const SIZE_QNUM_COMPACT = 20; // 10pt
-const SIZE_META = 14;         // 7pt
-const SIZE_BODY = 20;         // 10pt
-const SIZE_BODY_COMPACT = 18; // 9pt
+// 미리보기 a4-paper-page 의 px 폰트를 가상 A4(760px=210mm) 스케일로 물리 pt 환산:
+//   pt = px × (210/760) / (25.4/72) = px × 0.78325,  half-pt = px × 1.5665.
+// 번호 13px→20, compact 12px→19 / 본문·지시문·선지 11.5px→18, compact 10.5px→16.
+const SIZE_QNUM = 20;         // 10pt (미리보기 번호 13px)
+const SIZE_QNUM_COMPACT = 19; // 9.5pt (compact 12px)
+const SIZE_META = 14;         // 7pt (미리보기 메타 9px)
+const SIZE_BODY = 18;         // 9pt (미리보기 본문 11.5px)
+const SIZE_BODY_COMPACT = 16; // 8pt (compact 10.5px)
+const SIZE_OPTION = 17;       // 8.5pt (미리보기 선지 text-[11px] → 11×0.78325=8.6pt)
+const SIZE_OPTION_COMPACT = 16; // 8pt (compact text-[10px])
 const SIZE_PASSAGE_TITLE = 14; // 7pt
 const SIZE_CONTINUED = 16;    // 8pt
 const SIZE_FOOTER = 16;       // 8pt
@@ -97,6 +106,17 @@ const SIZE_ANSWER_LABEL = 16; // 8pt
 const SIZE_ANSWER_VALUE = 22; // 11pt
 const SIZE_EXPLAIN_LABEL = 16; // 8pt
 const SIZE_EXPLAIN_BODY = 18; // 9pt
+
+// 미리보기 본문 행간(leading)과 1:1 로 맞춘다. a4-paper-page:
+//   comfortable leading-[1.58], compact leading-[1.46].
+const BODY_LINE_HEIGHT = 1.58;
+const BODY_LINE_HEIGHT_COMPACT = 1.46;
+// CSS line-height(고정 행간)를 그대로 재현하려면 EXACT 행간을 써야 한다.
+// (AUTO/multiple 은 글꼴 고유 leading 이 더해져 더 벌어진다.)
+// line(트윕) = pt × lineHeight × 20,  pt = halfPt / 2.
+function exactLineSpacing(halfPt: number, lineHeight: number) {
+  return { line: Math.round((halfPt / 2) * lineHeight * 20), lineRule: LineRuleType.EXACT };
+}
 
 function mmToDxa(value: number) {
   return Math.round((value / 25.4) * 1440);
@@ -250,7 +270,7 @@ function buildPage1Header(
             size: SIZE_SUBTITLE,
             bold: true,
             color: COLOR.gray,
-            characterSpacing: 30,
+            characterSpacing: 25, // 미리보기 tracking-[0.18em] @9px ≈ 1.27pt
           }),
         ],
       }),
@@ -484,6 +504,7 @@ function buildPassage(opts: {
   if (!passageContent.trim()) return [];
 
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
 
   const titlePara: Paragraph | null =
     showPassageTitle && passageTitle.trim()
@@ -513,7 +534,7 @@ function buildPassage(opts: {
       alignment: AlignmentType.JUSTIFIED,
       spacing: {
         after: idx < lines.length - 1 ? 40 : 0,
-        line: 300,
+        ...exactLineSpacing(bodySize, lh),
       },
       children:
         trimmed.length === 0
@@ -535,8 +556,9 @@ function buildPassage(opts: {
           new TableRow({
             children: [
               new TableCell({
-                borders: thinBox(COLOR.darkGray, 4),
-                margins: { top: 120, bottom: 120, left: 160, right: 160 },
+                borders: thinBox(COLOR.slate400, 4), // 미리보기 border-slate-400
+                // 미리보기 boxed 지문: px-3 py-2 → L/R 12px=188dxa, T/B 8px=125dxa
+                margins: { top: 125, bottom: 125, left: 188, right: 188 },
                 width: { size: 100, type: WidthType.PERCENTAGE },
                 children: innerChildren,
               }),
@@ -579,6 +601,64 @@ function buildPassage(opts: {
   return [...innerChildren, new Paragraph({ spacing: { after: 120 } })];
 }
 
+// 주어진 문장 블록([주어진 문장]/[given]) 추출 — 문장삽입/순서 공용.
+function extractGivenBlock(text: string, subType: string): { given: string; rest: string } {
+  if (subType !== "SENTENCE_INSERT" && subType !== "SENTENCE_ORDER") {
+    return { given: "", rest: text };
+  }
+  const re = /(?:^|\n)[ \t]*\[(?:주어진\s*문장|given)\][ \t]*([\s\S]*?)(?=\n\n|$)/i;
+  const m = re.exec(text);
+  if (!m || m.index === undefined) return { given: "", rest: text };
+  const given = (m[1] ?? "").trim();
+  const rest = `${text.slice(0, m.index)}\n${text.slice(m.index + m[0].length)}`
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/^\s+|\s+$/g, "");
+  return { given, rest };
+}
+
+// 미리보기 'given' 박스(StructuredBody given style): 연한 테두리 + slate-50 배경 + "주어진 문장" 캡션.
+function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
+  return [
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      layout: TableLayoutType.FIXED,
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({
+              borders: thinBox(COLOR.slate300, 4), // 미리보기 given 박스 border-slate-300
+              shading: { fill: "F8FAFC" }, // slate-50
+              margins: { top: 125, bottom: 125, left: 156, right: 156 }, // px-2.5 py-2
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              children: [
+                new Paragraph({
+                  spacing: { after: 30 },
+                  children: [
+                    new TextRun({
+                      text: "주어진 문장",
+                      font: KR_FONT,
+                      size: SIZE_META,
+                      bold: true,
+                      color: COLOR.gray,
+                      characterSpacing: 10,
+                    }),
+                  ],
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  spacing: { after: 0, ...exactLineSpacing(bodySize, lh) },
+                  children: parseFormattedText(text, { font: KR_FONT, size: bodySize, bold: true }),
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+    new Paragraph({ spacing: { after: 80 } }),
+  ];
+}
+
 // =============================================================================
 // 문항 (번호 + 메타 + 본문 + 옵션 + 답란)
 // =============================================================================
@@ -597,16 +677,19 @@ function buildQuestionBlock(
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
   const subTypeLabel = subType ? SUBTYPE_LABELS_DOCX[subType] || subType : "";
-  const questionText = formatSentenceInsertPassageMarkers(
+  const questionText = formatInlineMarkersForSubtype(
     item.questionText ?? item.sourceQuestion.questionText ?? "",
     subType,
   ).trim();
-  const options = (item.options ?? safeParseOptions(item.sourceQuestion.options)).filter(
+  const parsedOptions = (item.options ?? safeParseOptions(item.sourceQuestion.options)).filter(
     (o) => o && (o.text || "").length >= 0,
   );
+  const options = shouldRenderOptionListForSubtype(subType) ? parsedOptions : [];
 
   const qNumSize = compact ? SIZE_QNUM_COMPACT : SIZE_QNUM;
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const optionSize = compact ? SIZE_OPTION_COMPACT : SIZE_OPTION;
+  const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
   const summaryMc = isSummaryCompleteMc(subType);
   const inlineSourcePassage =
     shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc;
@@ -715,7 +798,7 @@ function buildQuestionBlock(
                     children: [
                       new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
-                        spacing: { after: 0, line: 290 },
+                        spacing: { after: 0, ...exactLineSpacing(bodySize, lh) },
                         children: parseFormattedText(maskedSummary, {
                           font: FONT,
                           size: bodySize,
@@ -732,33 +815,20 @@ function buildQuestionBlock(
         );
       }
     } else {
-    const { beforeText, givenText } = splitSentenceInsertGivenBlock(questionText, subType);
-    const questionParagraphs: Array<{ text: string; boxed: boolean }> = [];
+    const { given: givenText, rest: restText } = extractGivenBlock(questionText, subType);
 
-    // 주어진 문장(문장삽입) 박스는 지문 '위'에 와야 하므로 beforeText(지문)보다 먼저 넣는다.
+    // 주어진 문장 박스(문장삽입/순서)를 본문(지문/단락) 위에 먼저 그린다.
     if (givenText) {
-      questionParagraphs.push({
-        text: givenText.replace(/\s*\n\s*/g, " "),
-        boxed: true,
-      });
+      result.push(...buildGivenBox(givenText.replace(/\s*\n\s*/g, " "), bodySize, lh));
     }
-    if (beforeText) {
-      beforeText.split("\n").forEach((line) => {
-        questionParagraphs.push({ text: line, boxed: false });
-      });
-    }
-    if (questionParagraphs.length === 0) {
-      questionText.split("\n").forEach((line) => {
-        questionParagraphs.push({ text: line, boxed: false });
-      });
-    }
+
+    const questionLines = (restText || questionText).split("\n");
 
     let skippedHeaderQuestionLine = false;
-    const bodyQuestionParagraphs = questionParagraphs.filter(({ text, boxed }) => {
+    const bodyQuestionParagraphs = questionLines.filter((text) => {
       if (
         !skippedHeaderQuestionLine &&
         headerQuestionText &&
-        !boxed &&
         text.trim() === headerQuestionText.trim()
       ) {
         skippedHeaderQuestionLine = true;
@@ -767,29 +837,27 @@ function buildQuestionBlock(
       return true;
     });
 
-    bodyQuestionParagraphs.forEach(({ text, boxed }, idx) => {
+    bodyQuestionParagraphs.forEach((text, idx) => {
       const trimmed = text.trim();
       result.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
           spacing: {
-            before: boxed ? 50 : 0,
-            after: idx === bodyQuestionParagraphs.length - 1 ? 100 : boxed ? 70 : 30,
-            line: 290,
+            before: 0,
+            after: idx === bodyQuestionParagraphs.length - 1 ? 100 : 30,
+            ...exactLineSpacing(bodySize, lh),
           },
           keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
-          border: boxed
-            ? {
-                top: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
-                bottom: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
-                left: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
-                right: bdr(BorderStyle.SINGLE, 6, COLOR.gray),
-              }
-            : undefined,
           children:
             trimmed.length === 0
               ? [new TextRun({ text: " ", font: KR_FONT, size: bodySize })]
-              : parseFormattedText(trimmed, { font: KR_FONT, size: bodySize, bold: true }),
+              : parseFormattedText(trimmed, {
+                  font: KR_FONT,
+                  size: bodySize,
+                  bold: true,
+                  // 순서 유형의 (A)(B)(C)는 미리보기에서 검정, 그 외 본문 마커는 파랑(기본)
+                  ...(subType === "SENTENCE_ORDER" ? { markerColor: COLOR.black } : {}),
+                }),
         }),
       );
     });
@@ -817,22 +885,23 @@ function buildQuestionBlock(
       const useKR = /[가-힣]/.test(displayText);
       result.push(
         new Paragraph({
-          spacing: { after: 40, line: 280 },
-          indent: { left: 360, hanging: 280 },
+          spacing: { after: 60, ...exactLineSpacing(optionSize, lh) },
+          indent: { left: 376, hanging: 290 }, // 미리보기 선지: 번호 min-w-18px + gap-1.5(6px)
           children: [
             new TextRun({
               text: optionOrdinalLabel(idx),
               font: KR_FONT,
-              size: bodySize,
+              size: optionSize,
               bold: true,
               color: COLOR.darkGray,
             }),
             ...(hasDisplayText
               ? [
-                  new TextRun({ text: "  ", font: KR_FONT, size: bodySize }),
+                  new TextRun({ text: "  ", font: KR_FONT, size: optionSize }),
                   ...parseFormattedText(displayText, {
                     font: useKR ? KR_FONT : FONT,
-                    size: bodySize,
+                    size: optionSize,
+                    markerColor: COLOR.black, // 선지의 (A) 마커는 미리보기에서 검정
                   }),
                 ]
               : []),
@@ -856,27 +925,28 @@ function buildQuestionBlock(
       const useKR = /[가-힣]/.test(displayText);
       result.push(
         new Paragraph({
-          spacing: { after: 40, line: 280 },
-          indent: { left: 360, hanging: 280 },
+          spacing: { after: 60, ...exactLineSpacing(optionSize, lh) },
+          indent: { left: 376, hanging: 290 }, // 미리보기 선지: 번호 min-w-18px + gap-1.5(6px)
           children: [
             new TextRun({
               text: optionOrdinalLabel(optionIndex),
               font: KR_FONT,
-              size: bodySize,
+              size: optionSize,
               bold: true,
               color: COLOR.darkGray,
             }),
-            new TextRun({ text: "  ", font: KR_FONT, size: bodySize }),
+            new TextRun({ text: "  ", font: KR_FONT, size: optionSize }),
             ...(displayText
               ? parseFormattedText(displayText, {
                   font: useKR ? KR_FONT : FONT,
-                  size: bodySize,
+                  size: optionSize,
+                  markerColor: COLOR.black,
                 })
               : [
                   new TextRun({
                     text: "                                      ",
                     font: KR_FONT,
-                    size: bodySize,
+                    size: optionSize,
                     underline: { type: UnderlineType.SINGLE },
                     color: COLOR.darkGray,
                   }),
@@ -917,8 +987,10 @@ function buildQuestionBlock(
   if (includeAnswers) {
     result.push(
       ...buildAnswerBlock({
-        correctAnswer:
-          item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+        correctAnswer: formatGrammarCorrectionCorrectAnswerForStoredQuestion({
+          ...item.sourceQuestion,
+          correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+        }),
         explanation: item.sourceQuestion.explanation,
         hasOptions: options.length > 0,
       }),
@@ -1510,7 +1582,7 @@ export function buildBuilderExamDocument(opts: {
           page: { size: pageSize, margin },
           column: {
             count: columns,
-            space: columns === 2 ? 540 : 0,
+            space: columns === 2 ? 501 : 0, // 미리보기 TWO_COLUMN_GAP 32px → 8.842mm
           },
           titlePage: true,
         },

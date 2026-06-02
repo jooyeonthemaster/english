@@ -115,7 +115,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
       if (!t) continue;
       result.push({
         kind: "p",
-        style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 160 },
+        style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 158 },
         runs: parseFormattedToRuns(t, {
           size: SIZE.explainBody,
           color: COLORS.darkGray,
@@ -154,7 +154,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
           leftMargin: 280,
           indentFirst: -160,
           spaceAfter: 40,
-          lineSpacingPct: 160,
+          lineSpacingPct: 158,
         },
         runs,
       });
@@ -188,7 +188,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
           leftMargin: 280,
           indentFirst: -200,
           spaceAfter: 40,
-          lineSpacingPct: 160,
+          lineSpacingPct: 158,
         },
         runs: [
           txt(`${label} `, {

@@ -226,10 +226,15 @@ function colPrCtrlFor(opts: {
   const eachWidth = Math.floor(
     (opts.contentWidthHpu - gap * (colCount - 1)) / colCount,
   );
+  // 마지막 칸이 폭 나머지를 흡수해 (열폭 합 + 간격 합) === contentWidth 가 정확히
+  // 맞도록 한다. 합이 어긋나면 한컴이 폭을 재분배해 단 경계가 미리보기와 틀어진다.
+  const lastWidth =
+    opts.contentWidthHpu - eachWidth * (colCount - 1) - gap * (colCount - 1);
   const colSzs: string[] = [];
   for (let i = 0; i < colCount; i++) {
     const isLast = i === colCount - 1;
-    colSzs.push(`<hp:colSz width="${eachWidth}" gap="${isLast ? 0 : gap}"/>`);
+    const w = isLast ? lastWidth : eachWidth;
+    colSzs.push(`<hp:colSz width="${w}" gap="${isLast ? 0 : gap}"/>`);
   }
   return `<hp:ctrl><hp:colPr id="" type="NEWSPAPER" layout="LEFT" colCount="${colCount}" sameSz="1" sameGap="${gap}">${colSzs.join("")}</hp:colPr></hp:ctrl>`;
 }
@@ -268,17 +273,22 @@ function paragraphLineseg(
   const spacing = Math.max(0, lineHeight - textHeight);
   const baseline = Math.round(textHeight * 0.85);
 
-  // 텍스트가 칸 폭을 넘으면 줄마다 lineseg 를 만든다.
+  // 텍스트를 칸 폭 기준으로 줄바꿈해 줄마다 lineseg 를 emit 한다(한컴은 PDF 저장 시
+  // reflow 하지 않고 linesegarray 를 그대로 사용하므로 줄 정보가 정확해야 한다).
+  // vertpos 는 "문단 상단 기준 상대 좌표"(0, lineHeight, 2*lineHeight, ...)다 — 정상
+  // HWPX 와 동일. 한컴이 문단들을 알아서 위→아래로 쌓으므로 셀 안에서도 누적 보정이
+  // 필요 없다. (이전엔 셀 절대좌표로 오해해 누적했다가 표+문단 혼합 셀에서 줄이 사라졌다.)
+  void vertOffset;
   const maxUnits = Math.max(8, (horzsize / textHeight) * LINE_WIDTH_FUDGE);
   const offsets =
     text && horzsize > 0 ? wrapLineStartOffsets(text, maxUnits) : [0];
 
   const segs = offsets
     .map((off, idx) => {
-      const vertpos = vertOffset + idx * lineHeight;
-      // flags: 첫 줄만 393216(한컴 기본 표기), 나머지는 0.
-      const flags = idx === 0 ? 393216 : 0;
-      return `<hp:lineseg textpos="${off}" vertpos="${vertpos}" vertsize="${textHeight}" textheight="${textHeight}" baseline="${baseline}" spacing="${spacing}" horzpos="0" horzsize="${horzsize}" flags="${flags}"/>`;
+      const vertpos = idx * lineHeight;
+      // flags 는 모든 줄에 393216 (한컴 정상 출력과 동일). 연속줄을 0 으로 두면 한컴이
+      // 그 줄을 무효 처리해 표 셀 안에서 첫 줄만 그리고 나머지를 비워버린다(긴 지문 1줄).
+      return `<hp:lineseg textpos="${off}" vertpos="${vertpos}" vertsize="${textHeight}" textheight="${textHeight}" baseline="${baseline}" spacing="${spacing}" horzpos="0" horzsize="${horzsize}" flags="393216"/>`;
     })
     .join("");
 
@@ -296,10 +306,10 @@ function footerCtrl(
   state: EmitState,
 ): string {
   const contentWidth = sec.pageWidthHpu - sec.marginLeft - sec.marginRight;
-  // 미리보기 푸터 "- N / M -" 는 text-[10px] = 7.5pt.
+  // 미리보기 푸터 "- N / M -" 는 text-[10px]. DOCX 골드와 동일하게 8pt(16 half-pt).
   const charShapeId = registry.charShapeFromStyle({
-    size: 7.5,
-    color: "#666666",
+    size: 8.0,
+    color: "#94A3B8", // 미리보기 footer text-slate-400
   });
   const paraShapeId = registry.paraShapeFromStyle({
     align: "CENTER",
@@ -319,6 +329,35 @@ function footerCtrl(
     `</hp:p>`,
     `</hp:subList>`,
     `</hp:footer></hp:ctrl>`,
+  ].join("");
+}
+
+// 머리말(header) — 전체폭 헤더 밴드. 한컴 실제 시험지가 쓰는 방식: 본문 칸 위
+// 전체폭 머리말에 제목/학생정보를 표·문단으로 넣고, 본문은 2단으로 흘린다.
+// applyPageType: "FIRST" = 1쪽만, "BOTH" = 모든 쪽.
+function headerCtrl(
+  sec: SectionSpec,
+  registry: ShapeRegistry,
+  state: EmitState,
+  contentWidthHpu: number,
+  applyPageType: "BOTH" | "FIRST" | "EVEN" | "ODD" = "BOTH",
+): string {
+  if (!sec.header || sec.header.length === 0) return "";
+  const prevWidth = state.currentLineWidthHpu;
+  const prevCellOffset = state.cellTextVertOffset;
+  state.currentLineWidthHpu = contentWidthHpu;
+  state.cellTextVertOffset = null; // 머리말 블록은 본문 흐름처럼 누적 없이.
+  const inner = sec.header
+    .map((b) => emitBlock(b, registry, state, sec))
+    .join("");
+  state.currentLineWidthHpu = prevWidth;
+  state.cellTextVertOffset = prevCellOffset;
+  return [
+    `<hp:ctrl><hp:header id="${state.nextCtrlId++}" applyPageType="${applyPageType}">`,
+    `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="TOP" linkListIDRef="0" linkListNextIDRef="0" textWidth="${contentWidthHpu}" textHeight="${sec.marginHeader}" hasTextRef="0" hasNumRef="0">`,
+    inner,
+    `</hp:subList>`,
+    `</hp:header></hp:ctrl>`,
   ].join("");
 }
 
@@ -411,6 +450,7 @@ function emitParagraph(
   state: EmitState,
   options: {
     firstParaPrelude?: string;
+    firstParaHeader?: string;
     firstParaFooter?: string;
     lineWidthHpu?: number;
   } = {},
@@ -433,10 +473,13 @@ function emitParagraph(
     //     중단하고 여백을 "기본값(좌우 30mm 등)"으로 리셋해 버린다(미리보기와
     //     여백이 극심히 어긋난 근본 원인). secPr+colPr 를 먼저 깨끗이 닫은 뒤
     //     꼬리말을 별도 run 으로 두면 여백이 정상 적용된다.
+    const headerRun = options.firstParaHeader
+      ? `<hp:run charPrIDRef="0">${options.firstParaHeader}</hp:run>`
+      : "";
     const footerRun = options.firstParaFooter
       ? `<hp:run charPrIDRef="0">${options.firstParaFooter}</hp:run>`
       : "";
-    body = `<hp:run charPrIDRef="0">${options.firstParaPrelude}<hp:t></hp:t></hp:run>${footerRun}${runsXml}`;
+    body = `<hp:run charPrIDRef="0">${options.firstParaPrelude}<hp:t></hp:t></hp:run>${headerRun}${footerRun}${runsXml}`;
   } else {
     body = runsXml;
   }
@@ -474,6 +517,16 @@ function emitParagraph(
   ].join("");
 }
 
+// 빌더의 그리디 단 패킹용: BlockNode[] 의 세로 높이(HPU)를 추정한다.
+// (section-xml 의 lineseg/줄바꿈 모델과 동일하게 측정하므로 실제 렌더와 일치한다.)
+export function estimateBlocksHeight(
+  blocks: BlockNode[],
+  widthHpu: number,
+): number {
+  const reg = new ShapeRegistry();
+  return blocks.reduce((s, b) => s + measureBlockHeight(b, reg, widthHpu), 0);
+}
+
 // 표 셀 안 블록들의 세로 높이를 추정한다(줄바꿈 후 줄 높이 + 문단 간격 합).
 // 셀/행 높이를 내용에 맞게 키워 boxed 지문 등이 잘리지 않도록 한다.
 function measureBlockHeight(
@@ -503,7 +556,24 @@ function measureBlockHeight(
     );
   }
   if (block.kind === "tbl") {
-    return block.rows.reduce((sum, r) => sum + r.heightHpu, 0);
+    // 표 높이 = 각 행의 max(선언 높이, 셀 내용 높이)의 합. 셀 내용은 재귀 측정한다.
+    // (행 heightHpu 만 더하면 content-driven(heightHpu=1) 중첩 표가 1로 오측정되어
+    //  바깥 셀이 내용을 클리핑한다 — 긴 지문 1줄 잘림 버그의 원인이었다.)
+    return block.rows.reduce((sum, row) => {
+      let maxCell = row.heightHpu;
+      for (const cell of row.cells) {
+        if ((cell.rowSpan ?? 1) > 1) continue;
+        const cm =
+          cell.margins ?? { left: 141, right: 141, top: 141, bottom: 141 };
+        const innerWidth = Math.max(100, cell.widthHpu - cm.left - cm.right);
+        const contentH = cell.blocks.reduce(
+          (s, b) => s + measureBlockHeight(b, registry, innerWidth),
+          0,
+        );
+        maxCell = Math.max(maxCell, contentH + cm.top + cm.bottom);
+      }
+      return sum + maxCell;
+    }, 0);
   }
   return 0;
 }
@@ -542,6 +612,18 @@ function emitTable(
     return maxCell;
   });
   const totalHeight = rowHeights.reduce((a, b) => a + b, 0);
+
+  // 떠 있는 표(전체폭 머리말): 본문 흐름에서 빠져 secPr 오염 없이 지정 좌표에 둔다.
+  const fl = tbl.float;
+  const u32 = (n: number) => (n < 0 ? n + 4294967296 : n);
+  const tblWidth = fl ? fl.widthHpu : totalWidth;
+  const textWrap = fl ? (fl.wrap ?? "IN_FRONT_OF_TEXT") : "TOP_AND_BOTTOM";
+  const lock = fl ? "1" : "0";
+  const noAdjustAttr = fl ? ` noAdjust="1"` : "";
+  const zOrder = fl?.zOrder ?? 0;
+  const posXml = fl
+    ? `<hp:pos treatAsChar="0" affectLSpacing="0" flowWithText="0" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="${fl.vertRelTo ?? "PARA"}" horzRelTo="${fl.horzRelTo ?? "COLUMN"}" vertAlign="TOP" horzAlign="LEFT" vertOffset="${u32(fl.vertOffsetHpu)}" horzOffset="${u32(fl.horzOffsetHpu)}"/>`
+    : `<hp:pos treatAsChar="1" affectLSpacing="0" flowWithText="1" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="Para" horzRelTo="Para" vertAlign="Top" horzAlign="Left" vertOffset="0" horzOffset="0"/>`;
 
   const trs = tbl.rows
     .map((row, rIdx) => {
@@ -588,9 +670,9 @@ function emitTable(
     .join("");
 
   return [
-    `<hp:tbl id="${state.nextCtrlId++}" zOrder="0" numberingType="TABLE" textWrap="TOP_AND_BOTTOM" textFlow="BOTH_SIDES" lock="0" dropcapstyle="None" pageBreak="Cell" repeatHeader="0" rowCnt="${rowCnt}" colCnt="${colCnt}" cellSpacing="0" borderFillIDRef="${outerBorderId}">`,
-    `<hp:sz width="${totalWidth}" widthRelTo="Absolute" height="${totalHeight}" heightRelTo="Absolute" protect="0"/>`,
-    `<hp:pos treatAsChar="1" affectLSpacing="0" flowWithText="1" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="Para" horzRelTo="Para" vertAlign="Top" horzAlign="Left" vertOffset="0" horzOffset="0"/>`,
+    `<hp:tbl id="${state.nextCtrlId++}" zOrder="${zOrder}" numberingType="TABLE" textWrap="${textWrap}" textFlow="BOTH_SIDES" lock="${lock}" dropcapstyle="None" pageBreak="Cell" repeatHeader="0" rowCnt="${rowCnt}" colCnt="${colCnt}" cellSpacing="0" borderFillIDRef="${outerBorderId}"${noAdjustAttr}>`,
+    `<hp:sz width="${tblWidth}" widthRelTo="ABSOLUTE" height="${totalHeight}" heightRelTo="ABSOLUTE" protect="0"/>`,
+    posXml,
     `<hp:outMargin left="0" right="0" top="0" bottom="0"/>`,
     `<hp:inMargin left="${m.left}" right="${m.right}" top="${m.top}" bottom="${m.bottom}"/>`,
     trs,
@@ -679,14 +761,23 @@ export function buildSectionXml(
     blocks.unshift({ kind: "p", runs: [] });
   }
 
-  // secPr 와 colPr 는 첫 run 에(쪽 설정). 꼬리말은 별도 run 으로 분리한다.
-  // (꼬리말을 secPr~colPr 사이에 끼우면 한컴이 여백을 기본값으로 리셋함 — emitParagraph 주석 참고)
+  // secPr 와 colPr 는 첫 run 에(쪽 설정). 머리말·꼬리말은 별도 run 으로 분리한다.
+  // (이들을 secPr~colPr 사이에 끼우면 한컴이 여백을 기본값으로 리셋함 — emitParagraph 주석 참고)
   const firstParaPrelude = secPrXml(sec) + colPrCtrl(sec);
+  // 머리말(전체폭 헤더 밴드). sec.headerApplyFirstOnly 면 1쪽만, 아니면 모든 쪽.
+  const firstParaHeader = headerCtrl(
+    sec,
+    registry,
+    state,
+    contentWidth,
+    sec.headerApplyFirstOnly ? "FIRST" : "BOTH",
+  );
   const firstParaFooter = footerCtrl(sec, registry, state);
 
   const firstBlock = blocks[0] as ParagraphNode;
   const firstXml = emitParagraph(firstBlock, registry, state, {
     firstParaPrelude,
+    firstParaHeader,
     firstParaFooter,
     lineWidthHpu: contentWidth,
   });

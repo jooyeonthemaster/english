@@ -7,6 +7,10 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import {
+  buildGrammarCorrectionQuestionTextForDisplay,
+  grammarCorrectionErrorSentenceForQuestionText,
+} from "@/lib/grammar-correction-display";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -113,6 +117,11 @@ export function questionSignature(parts: {
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
   const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
+  const isGrammarCorrection = q?._typeId === "GRAMMAR_CORRECTION" || q?.subType === "GRAMMAR_CORRECTION";
+  if (isGrammarCorrection) {
+    const text = buildGrammarCorrectionQuestionTextForDisplay(q);
+    if (text) return text;
+  }
   // 발문 (모든 유형 공통)
   if (q.direction) parts.push(q.direction);
   // CONTENT_MATCH: 일치/불일치 유형 표시
@@ -122,7 +131,7 @@ export function buildQuestionText(q: any): string {
   // BLANK_INFERENCE: 빈칸이 삽입된 지문
   if (q.passageWithBlank) parts.push(q.passageWithBlank);
   // GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_INSERT, ANTONYM: 마커가 포함된 지문
-  if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
+  if (q.passageWithMarkers && !isGrammarCorrection) parts.push(q.passageWithMarkers);
   // IMPLIED_MEANING, REFERENCE, CONTEXT_MEANING: 밑줄 표현/대명사/단어가 포함된 지문
   if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
   // IRRELEVANT: 번호가 매겨진 지문
@@ -163,8 +172,8 @@ export function buildQuestionText(q: any): string {
   if (q.scrambledWords?.length)
     parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
   if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);
-  // GRAMMAR_CORRECTION: 오류 문장
-  if (q.sentenceWithError) parts.push(`[오류 문장] ${q.sentenceWithError}`);
+  // GRAMMAR_CORRECTION: passageWithUnderline already contains the underlined passage.
+  if (q.sentenceWithError && !isGrammarCorrection) parts.push(grammarCorrectionErrorSentenceForQuestionText(q));
 
   // ── 어휘 ──
   // SYNONYM: 대상 단어 + 문맥 문장

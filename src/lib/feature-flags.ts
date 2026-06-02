@@ -54,6 +54,19 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_SHOW_SUBSCRIPTION_BILLING,
     false,
   ),
+
+  /**
+   * Enable 장문 세트 (long-passage multi-question sets): the 3rd generation mode
+   * that attaches multiple ordered questions to ONE shared passage with
+   * deterministic hint-leakage isolation (generalizes CSAT 43~45). Gates the set
+   * mode toggle, the set generation/finalize endpoints, the set renderer, and the
+   * paper-builder set-aware grouping. The additive schema columns ship inert when
+   * off. See docs/long-passage-set-architecture.md.
+   */
+  ENABLE_LONG_PASSAGE_SETS: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_LONG_PASSAGE_SETS,
+    true,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

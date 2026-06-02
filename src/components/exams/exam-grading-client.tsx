@@ -17,6 +17,7 @@ import {
   User,
 } from "lucide-react";
 import { gradeSubmission } from "@/actions/exam-grading";
+import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
 import { toast } from "sonner";
 
 // ---------------------------------------------------------------------------
@@ -26,12 +27,13 @@ interface ExamQuestion {
   id: string;
   orderNum: number;
   points: number;
-  question: {
-    id: string;
-    type: string;
-    questionText: string;
-    options: string | null;
-    correctAnswer: string;
+    question: {
+      id: string;
+      type: string;
+      subType?: string | null;
+      questionText: string;
+      options: string | null;
+      correctAnswer: string;
   };
 }
 
@@ -122,10 +124,7 @@ export function ExamGradingClient({
           typeof studentAns === "string"
             ? studentAns
             : studentAns?.answer || "";
-        if (
-          ansText.trim().toLowerCase() ===
-          eq.question.correctAnswer.trim().toLowerCase()
-        ) {
+        if (isSameObjectiveAnswerForSubtype(eq.question.subType, ansText, eq.question.correctAnswer)) {
           score += eq.points;
         }
       }
@@ -321,8 +320,7 @@ export function ExamGradingClient({
                   const ansText =
                     typeof ans === "string" ? ans : ans?.answer || "";
                   const correct =
-                    ansText.trim().toLowerCase() ===
-                    eq.question.correctAnswer.trim().toLowerCase();
+                    isSameObjectiveAnswerForSubtype(eq.question.subType, ansText, eq.question.correctAnswer);
                   return (
                     <div
                       key={eq.id}

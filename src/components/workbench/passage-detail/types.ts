@@ -42,6 +42,7 @@ export interface PassageDetailProps {
       subType: string | null;
       difficulty: string;
       questionText: string;
+      structuredData?: unknown;
       options: string | null;
       correctAnswer: string;
       tags: string | null;

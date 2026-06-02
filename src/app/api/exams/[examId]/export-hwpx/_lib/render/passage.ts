@@ -11,15 +11,17 @@ import { formatSentenceInsertPassageMarkers } from "@/components/exams/paper-bui
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
 // 미리보기 boxed 지문: rounded border (1px ≈ 0.26mm) + px-3 py-2 패딩.
+// 테두리 색은 DOCX 골드와 동일하게 slate-400(#94A3B8).
 const BOX_BORDER: BorderSpec = {
   type: "SOLID",
   widthMm: 0.26,
-  color: COLORS.separator,
+  color: COLORS.slate400,
 };
+// underlined 지문: 위/아래 진한 회색 라인 (DOCX darkGray).
 const UNDERLINE_BORDER: BorderSpec = {
   type: "SOLID",
   widthMm: 0.26,
-  color: COLORS.separator,
+  color: COLORS.darkGray,
 };
 
 // 미리보기 가상 A4(760px=210mm) 스케일: 1px = 0.276316mm = 78.33 HPU.
@@ -117,11 +119,11 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
         cellMargins: { left: BOX_PAD_LR, right: BOX_PAD_LR, top: BOX_PAD_TB, bottom: BOX_PAD_TB },
         rows: [
           {
-            heightHpu: 1500,
+            heightHpu: 1,
             cells: [
               {
                 widthHpu: contentWidthHpu,
-                heightHpu: 1500,
+                heightHpu: 1,
                 vAlign: "TOP",
                 borders: {
                   left: BOX_BORDER,
@@ -154,11 +156,11 @@ export function renderPassage(opts: PassageOptions): BlockNode[] {
         cellMargins: { left: 0, right: 0, top: BOX_PAD_TB, bottom: BOX_PAD_TB },
         rows: [
           {
-            heightHpu: 1500,
+            heightHpu: 1,
             cells: [
               {
                 widthHpu: contentWidthHpu,
-                heightHpu: 1500,
+                heightHpu: 1,
                 vAlign: "TOP",
                 borders: {
                   left: NO,

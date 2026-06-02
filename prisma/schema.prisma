@@ -49,6 +49,7 @@ model Academy {
   assignments               Assignment[]
   passages                  Passage[]
   questions                 Question[]
+  questionSets              QuestionSet[]
   questionCollections       QuestionCollection[]
   passageCollections        PassageCollection[]
   examCollections           ExamCollection[]
@@ -688,6 +689,7 @@ model Passage {
   tutorAiLogs        TutorAiLog[]
   workbenchAiJobs    WorkbenchAiJob[]
   reports            PassageReport[]
+  setBasePassages    QuestionSet[]           @relation("SetBasePassage")
 
   @@index([academyId])
   @@index([schoolId])
@@ -875,6 +877,10 @@ model Question {
   sourceExtractionItemId String? @unique
   questionNumber         Int? // printed number on the original exam (e.g. 33)
 
+  // ── 장문 세트 membership (nullable — solo questions stay null) ──
+  setId String? // denormalized — fast set filtering without a join
+  inSet Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -883,6 +889,7 @@ model Question {
   passage         Passage?                 @relation(fields: [passageId], references: [id])
   sourceMaterial  SourceMaterial?          @relation(fields: [sourceMaterialId], references: [id])
   bundle          PassageBundle?           @relation("BundleQuestions", fields: [bundleId], references: [id])
+  setItem         QuestionSetItem?         @relation("SetItemQuestion")
   explanation     QuestionExplanation?
   examLinks       ExamQuestion[]
   wrongLogs       WrongAnswerLog[]
@@ -895,6 +902,7 @@ model Question {
   @@index([academyId, approved])
   @@index([sourceMaterialId])
   @@index([bundleId])
+  @@index([setId])
   @@map("questions")
 }
 
@@ -955,9 +963,10 @@ model WorkbenchAiJob {
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
 
-  academy   Academy  @relation(fields: [academyId], references: [id], onDelete: Cascade)
-  createdBy Staff    @relation("WorkbenchAiJobCreator", fields: [createdById], references: [id], onDelete: Cascade)
-  passage   Passage? @relation(fields: [passageId], references: [id], onDelete: SetNull)
+  academy      Academy       @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  createdBy    Staff         @relation("WorkbenchAiJobCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  passage      Passage?      @relation(fields: [passageId], references: [id], onDelete: SetNull)
+  questionSets QuestionSet[]
 
   @@index([academyId, domain, status])
   @@index([academyId, createdAt])
@@ -2553,6 +2562,55 @@ model PassageBundle {
   @@index([sourceMaterialId])
   @@index([passageId])
   @@map("passage_bundles")
+}
+
+/// QuestionSet — one shared passage carrying N ordered questions (장문 세트; generalizes CSAT 43~45).
+/// canonicalPassage is the ordered source and is NEVER shown to students (would leak SENTENCE_ORDER).
+/// displayedPassageLayout (JSON LayoutDescriptor) is the visible base every member anchors into.
+/// status: "OK" | "DEGRADED" (anchor resolution failed → manual review required).
+model QuestionSet {
+  id                     String   @id @default(cuid())
+  jobId                  String? // generation lineage → WorkbenchAiJob (nullable: hand-assembled sets)
+  academyId              String
+  structuralMode         String   @default("NONE") // "NONE" | "SENTENCE_ORDER" | "SENTENCE_INSERT"
+  canonicalPassage       String   @db.Text // ordered; never rendered to students
+  displayedPassageLayout String   @db.Text // JSON LayoutDescriptor; the visible base
+  layoutFingerprint      String // sha256(displayedPassageLayout) — anchor-resolution gate
+  itemCount              Int      @default(0)
+  setLabel               String? // "[43~45]" — printed group header
+  basePassageId          String? // optional: structural member promoted to a stored Passage (Phase 7+)
+  status                 String   @default("OK")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  job         WorkbenchAiJob?   @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  academy     Academy           @relation(fields: [academyId], references: [id])
+  basePassage Passage?          @relation("SetBasePassage", fields: [basePassageId], references: [id], onDelete: SetNull)
+  items       QuestionSetItem[]
+
+  @@index([jobId])
+  @@index([academyId])
+  @@map("question_sets")
+}
+
+/// QuestionSetItem — one member of a set. spans are RE-DERIVABLE ANCHORS (never absolute offsets).
+/// isStructural=true => this member DEFINES displayedPassageLayout (글의 순서 / 문장 삽입).
+model QuestionSetItem {
+  id           String   @id @default(cuid())
+  setId        String
+  questionId   String   @unique // one Question ⇄ one set membership
+  orderInSet   Int // 0-indexed; SPARSE allowed after deletes (0,1,3)
+  isStructural Boolean  @default(false)
+  spans        Json? // Array<Anchor>; authoritative anchor store
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  set      QuestionSet @relation(fields: [setId], references: [id], onDelete: Cascade)
+  question Question    @relation("SetItemQuestion", fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([setId, orderInSet])
+  @@index([setId])
+  @@map("question_set_items")
 }
 
 // ============================================================================

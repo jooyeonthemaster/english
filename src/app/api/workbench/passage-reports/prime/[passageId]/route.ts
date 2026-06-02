@@ -7,7 +7,7 @@ import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/gen
 import { analysisReportSchema } from "@/lib/passage-report/analysis-report/schema";
 import { prisma } from "@/lib/prisma";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const PRIME_MARKER = "PRIME";
 

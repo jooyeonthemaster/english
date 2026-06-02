@@ -10,6 +10,7 @@ import {
 import { COLOR, FONT, KR_FONT, LABEL_SIZE, PASSAGE_SIZE, QUESTION_SIZE, SMALL_SIZE } from "./styles";
 import { thinBox } from "./borders";
 import { safeParseJSON } from "./helpers";
+import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -21,6 +22,7 @@ export function renderAnswer(
   options: ParsedOption[]
 ): DocChild[] {
   const result: DocChild[] = [];
+  const answerText = formatGrammarCorrectionCorrectAnswerForStoredQuestion(q);
 
   const answerLabel = options.length > 0 ? "정답" : "정답:";
   const answerTable = new Table({
@@ -45,7 +47,7 @@ export function renderAnswer(
                     color: COLOR.darkGray,
                   }),
                   new TextRun({
-                    text: q.correctAnswer,
+                    text: answerText,
                     font: FONT,
                     size: QUESTION_SIZE,
                     bold: true,

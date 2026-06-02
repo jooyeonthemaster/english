@@ -16,7 +16,9 @@ import {
   normalizePassageText,
   normalizeQuestionText,
 } from "./text-normalization";
+import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
 import { splitSentenceInsertGivenBlock } from "./option-display";
+import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-correction-display";
 
 export function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -59,6 +61,23 @@ export function questionPreview(questionText: string): string {
   return normalizeQuestionText(questionText).replace(/\s+/g, " ").trim().slice(0, 180);
 }
 
+function normalizedQuestionTextForPaper(question: BuilderQuestion): string {
+  const normalizedQuestionText = normalizeQuestionText(question.questionText);
+  if (question.subType !== "GRAMMAR_CORRECTION") {
+    return normalizedQuestionText;
+  }
+
+  const structuredData = parseJSON<Record<string, unknown>>(question.structuredData, {});
+  const grammarCorrectionText = normalizeQuestionText(
+    buildGrammarCorrectionQuestionTextForDisplay(structuredData),
+  );
+  if (!grammarCorrectionText.includes("__")) {
+    return normalizedQuestionText;
+  }
+
+  return grammarCorrectionText;
+}
+
 export function makeLocalId(questionId: string): string {
   return `${questionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
@@ -96,10 +115,13 @@ function paperBlockDefaults(): Pick<
 
 export function makePaperItem(question: BuilderQuestion, orderNum: number, _existingItems: PaperItem[]): PaperItem {
   void _existingItems;
-  const options = parseOptions(question.options);
+  const options =
+    question.subType === "SENTENCE_INSERT"
+      ? buildCanonicalSentenceInsertOptions()
+      : parseOptions(question.options);
   const localId = makeLocalId(question.id);
   const isSubjective = options.length === 0;
-  const normalizedQuestionText = normalizeQuestionText(question.questionText);
+  const normalizedQuestionText = normalizedQuestionTextForPaper(question);
   const passageContent = normalizePassageText(question.passage?.content || "");
   const includeSourcePassage = shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
@@ -123,7 +145,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     questionText: normalizedQuestionText,
     options,
     correctAnswer: question.correctAnswer || "",
-    answerSpaceLines: isSubjective ? 4 : 0,
+    answerSpaceLines: isSubjective && question.subType !== "GRAMMAR_CORRECTION" ? 4 : 0,
     objectiveAnswerSlots: 0,
     objectiveAnswerTexts: [],
     sectionTitle: "",
@@ -350,11 +372,38 @@ export function renderFormattedInline(
       parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
     }
     if (match[1]) {
-      parts.push(
-        <span key={key++} data-mark="u" className="font-semibold underline decoration-blue-500 underline-offset-4">
-          {match[1]}
-        </span>,
-      );
+      const circledMarkerMatch = match[1].match(/^([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*(.+)$/);
+      if (circledMarkerMatch) {
+        parts.push(
+          <span key={key++} data-mark="u" data-raw={`__${match[1]}__`}>
+            <span className="font-bold text-blue-700">{circledMarkerMatch[1]}</span>
+            {" "}
+            <span className="font-semibold underline decoration-blue-500 underline-offset-4">
+              {circledMarkerMatch[2]}
+            </span>
+          </span>,
+        );
+        lastIndex = pattern.lastIndex;
+        continue;
+      }
+      const markerMatch = match[1].match(/^\(([a-jA-J])\)\s*(.+)$/);
+      if (markerMatch) {
+        parts.push(
+          <span key={key++} data-mark="u" data-raw={`__${match[1]}__`}>
+            <span className="font-bold text-blue-700">({markerMatch[1].toUpperCase()})</span>
+            {" "}
+            <span className="font-semibold underline decoration-blue-500 underline-offset-4">
+              {markerMatch[2]}
+            </span>
+          </span>,
+        );
+      } else {
+        parts.push(
+          <span key={key++} data-mark="u" className="font-semibold underline decoration-blue-500 underline-offset-4">
+            {match[1]}
+          </span>,
+        );
+      }
     } else if (match[2]) {
       parts.push(
         <span key={key++} className="mx-0.5 font-bold text-blue-700">

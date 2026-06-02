@@ -5,7 +5,13 @@
  * 하단에 굵은 검정 라인.
  */
 
-import type { BorderSpec, BlockNode, ParagraphNode } from "../types";
+import type {
+  BorderSpec,
+  BlockNode,
+  ParagraphNode,
+  TableNode,
+  TableRowNode,
+} from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
 
@@ -20,71 +26,63 @@ interface HeaderProps {
 }
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
-// 미리보기 헤더 구분선은 border-b (1px ≈ 0.26mm, 연한 회색)일 뿐 두꺼운 검정선이 아니다.
-const THICK_BOTTOM: BorderSpec = {
+// 학생정보 박스 테두리: 일관된 얇은 선(slate400). 한컴은 "아래만/부분 보더" 표를
+// 리플로 시 기본 격자선을 덧그려 박스가 깨져 보인다(검증) → 모든 변을 동일 보더로
+// 둔 "단일 표"가 깔끔하게 렌더된다.
+const BOX_LINE: BorderSpec = {
   type: "SOLID",
-  widthMm: 0.26,
-  color: COLORS.separator,
-};
-const THIN_BOTTOM: BorderSpec = {
-  type: "SOLID",
-  widthMm: 0.2,
-  color: COLORS.separator,
+  widthMm: 0.15,
+  color: COLORS.slate400,
 };
 
-function infoRow(label: string, value: string, rowWidth: number): BlockNode {
-  const labelW = Math.floor(rowWidth * 0.32);
+// 학생정보 박스를 "단일 3×2 표"로(중첩 표 금지). 라벨 셀은 옅은 음영.
+function buildInfoBox(
+  rows: Array<{ label: string; value: string }>,
+  rowWidth: number,
+): TableNode {
+  const labelW = Math.floor(rowWidth * 0.34);
   const valueW = rowWidth - labelW;
-  return {
-    kind: "tbl",
-    colWidthsHpu: [labelW, valueW],
-    rows: [
+  const box = { left: BOX_LINE, right: BOX_LINE, top: BOX_LINE, bottom: BOX_LINE };
+  const trs: TableRowNode[] = rows.map(({ label, value }) => ({
+    heightHpu: 540,
+    cells: [
       {
-        heightHpu: 520,
-        cells: [
+        widthHpu: labelW,
+        heightHpu: 540,
+        vAlign: "CENTER",
+        borders: { ...box, fillColor: COLORS.slate50 },
+        margins: { left: 100, right: 60, top: 10, bottom: 10 },
+        blocks: [
           {
-            widthHpu: labelW,
-            heightHpu: 520,
-            vAlign: "BOTTOM",
-            borders: { left: NO, right: NO, top: NO, bottom: THIN_BOTTOM },
-            margins: { left: 0, right: 80, top: 10, bottom: 40 },
-            blocks: [
-              {
-                kind: "p",
-                style: { align: "LEFT", lineSpacingPct: 130 },
-                runs: [
-                  txt(label, {
-                    size: SIZE.info,
-                    color: COLORS.darkGray,
-                  }),
-                ],
-              },
-            ],
+            kind: "p",
+            style: { align: "LEFT", lineSpacingPct: 120 },
+            runs: [txt(label, { size: SIZE.info, color: COLORS.darkGray })],
           },
+        ],
+      },
+      {
+        widthHpu: valueW,
+        heightHpu: 540,
+        vAlign: "BOTTOM",
+        borders: { ...box },
+        margins: { left: 60, right: 40, top: 10, bottom: 30 },
+        blocks: [
           {
-            widthHpu: valueW,
-            heightHpu: 520,
-            vAlign: "BOTTOM",
-            borders: { left: NO, right: NO, top: NO, bottom: THIN_BOTTOM },
-            margins: { left: 0, right: 0, top: 10, bottom: 40 },
-            blocks: [
-              {
-                kind: "p",
-                style: { align: "RIGHT", lineSpacingPct: 130 },
-                runs: [
-                  txt(value || " ", {
-                    size: SIZE.info,
-                    bold: !!value,
-                    color: COLORS.black,
-                  }),
-                ],
-              },
+            kind: "p",
+            style: { align: "RIGHT", lineSpacingPct: 120 },
+            runs: [
+              txt(value || " ", {
+                size: SIZE.info,
+                bold: !!value,
+                color: COLORS.black,
+              }),
             ],
           },
         ],
       },
     ],
-  };
+  }));
+  return { kind: "tbl", colWidthsHpu: [labelW, valueW], borders: box, rows: trs };
 }
 
 export function renderPageHeader(props: HeaderProps): BlockNode[] {
@@ -131,11 +129,16 @@ export function renderPageHeader(props: HeaderProps): BlockNode[] {
     ],
   });
 
-  // 우측: 학교/반/이름 — 3행 1표
+  // 우측: 학교/반/이름 — 단일 3×2 박스(중첩 표 금지, 일관 보더로 깔끔).
   const rightBlocks: BlockNode[] = [
-    infoRow("학교", schoolName, rightWidth),
-    infoRow("반", className, rightWidth),
-    infoRow(studentNameLabel || "이름", "", rightWidth),
+    buildInfoBox(
+      [
+        { label: "학교", value: schoolName },
+        { label: "반", value: className },
+        { label: studentNameLabel || "이름", value: "" },
+      ],
+      rightWidth,
+    ),
   ];
 
   // 헤더 행 높이 / 정렬 (5차 — 상단 여백 축소):
@@ -174,26 +177,8 @@ export function renderPageHeader(props: HeaderProps): BlockNode[] {
     ],
   };
 
-  const bottomLine: BlockNode = {
-    kind: "tbl",
-    colWidthsHpu: [contentWidthHpu],
-    borders: { left: NO, right: NO, top: THICK_BOTTOM, bottom: NO },
-    rows: [
-      {
-        heightHpu: 120,
-        cells: [
-          {
-            widthHpu: contentWidthHpu,
-            heightHpu: 120,
-            vAlign: "CENTER",
-            borders: { left: NO, right: NO, top: THICK_BOTTOM, bottom: NO },
-            margins: { left: 0, right: 0, top: 0, bottom: 0 },
-            blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
-          },
-        ],
-      },
-    ],
-  };
-
-  return [outer, bottomLine];
+  // 머리말 하단 구분선은 두지 않는다: 한컴이 "윗변만 있는(부분 보더)" 떠있는 표를
+  // 리플로 시 옅은 파랑 셀 안내선 박스로 덧그려 머리말이 깨져 보인다(검증). 제목+박스+
+  // 본문 간 여백으로 충분히 구분되며, 부분 보더 표를 피해야 안내선 아티팩트가 없다.
+  return [outer];
 }

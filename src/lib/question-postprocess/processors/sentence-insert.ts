@@ -1,4 +1,5 @@
 import { splitIntoSentences } from "../sentence-splitter";
+import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
 import { CIRCLED_NUMBERS, type PostProcessResult, type QuestionPostProcessData } from "../types";
 
 export function processSentenceInsert(
@@ -55,10 +56,10 @@ export function processSentenceInsert(
   const passageWithMarkers = parts.join("").trim();
 
   // Build options from circled numbers (standard format: ①~⑤)
-  const options = CIRCLED_NUMBERS.map((cn, i) => ({
-    label: `${i + 1}`,
-    text: cn,
-  }));
+  const options = buildCanonicalSentenceInsertOptions(5);
+  if (Array.isArray(ai.options)) {
+    warnings.push("Ignored AI-provided SENTENCE_INSERT options; using canonical gap-marker options.");
+  }
 
   return {
     success: true,
@@ -66,7 +67,7 @@ export function processSentenceInsert(
       ...ai,
       givenSentence: givenSentence || ai.givenSentence,
       passageWithMarkers,
-      options: ai.options || options,
+      options,
     },
     warnings,
   };

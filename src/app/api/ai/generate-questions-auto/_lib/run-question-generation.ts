@@ -14,6 +14,7 @@ import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   buildQuestionTypeSettingsPrompt,
   readGrammarAnswerCountSetting,
+  readGrammarCorrectionErrorCountSetting,
   readGrammarMarkerCountSetting,
   readIrrelevantSlotCountSetting,
   type QuestionTypeGenerationSettings,
@@ -102,6 +103,27 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  "grammar-correction-underline-count",
+  "grammar-correction-missing-underlined-segments",
+  "grammar-correction-missing-passage-underline",
+  "grammar-correction-underline-count-mismatch",
+  "grammar-correction-error-count",
+  "grammar-correction-missing-corrected-part",
+  "grammar-correction-missing-source-text",
+  "grammar-correction-missing-displayed-text",
+  "grammar-correction-missing-error-part",
+  "grammar-correction-not-mutated",
+  "grammar-correction-correction-mismatch",
+  "grammar-correction-answer-mismatch",
+  "grammar-correction-corrected-part-not-in-source-text",
+  "grammar-correction-error-part-not-in-displayed-text",
+  "grammar-correction-displayed-not-mutated",
+  "grammar-correction-underline-too-narrow",
+  "grammar-correction-underlined-segment-short",
+  "grammar-correction-displayed-text-not-rendered",
+  "grammar-correction-source-text-not-source-backed",
+  "grammar-correction-sentence-not-source-backed",
+  "grammar-correction-debatable-infinitive",
   "topic-option-language",
   "summary-mc-direction-frame",
   "summary-mc-missing-summary",
@@ -203,6 +225,7 @@ export async function runQuestionGeneration(
       let irrelevantSlotCount: number | undefined;
       let grammarMarkerCount: number | undefined;
       let grammarAnswerCount: number | undefined;
+      let grammarCorrectionErrorCount: number | undefined;
       let effectiveTypeSettings: unknown = typeSettings?.[subType];
       if (subType === "GRAMMAR_ERROR" && isRecord(typeSettings?.[subType])) {
         grammarMarkerCount = readGrammarMarkerCountSetting(typeSettings?.[subType]);
@@ -214,6 +237,15 @@ export async function runQuestionGeneration(
           ...(typeSettings?.[subType] as Record<string, unknown>),
           markerCount: grammarMarkerCount,
           answerCount: grammarAnswerCount,
+        };
+      }
+      if (subType === "GRAMMAR_CORRECTION" && isRecord(typeSettings?.[subType])) {
+        grammarCorrectionErrorCount = readGrammarCorrectionErrorCountSetting(
+          typeSettings?.[subType],
+        );
+        effectiveTypeSettings = {
+          ...(typeSettings?.[subType] as Record<string, unknown>),
+          errorCount: grammarCorrectionErrorCount,
         };
       }
       if (subType === "IRRELEVANT") {
@@ -245,6 +277,7 @@ export async function runQuestionGeneration(
           irrelevantSlotCount,
           grammarMarkerCount,
           grammarAnswerCount,
+          grammarCorrectionErrorCount,
           requestedDifficulty: diffLabel,
         },
       );
@@ -255,6 +288,7 @@ export async function runQuestionGeneration(
             irrelevantSlotCount,
             grammarMarkerCount,
             grammarAnswerCount,
+            grammarCorrectionErrorCount,
           })
         : isStructured
           ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
@@ -380,6 +414,7 @@ export async function runQuestionGeneration(
             requestedDifficulty: diffLabel,
             grammarMarkerCount,
             grammarAnswerCount,
+            grammarCorrectionErrorCount,
           });
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",

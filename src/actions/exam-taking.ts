@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -88,7 +90,9 @@ export async function startExam(
               select: {
                 id: true,
                 type: true,
+                subType: true,
                 questionText: true,
+                structuredData: true,
                 questionImage: true,
                 options: true,
                 points: true,
@@ -151,7 +155,12 @@ export async function startExam(
       orderNum: eq.orderNum,
       points: eq.points,
       type: eq.question.type,
-      questionText: eq.question.questionText,
+      subType: eq.question.subType,
+      questionText: repairGrammarCorrectionQuestionText({
+        subType: eq.question.subType,
+        questionText: eq.question.questionText,
+        structuredData: eq.question.structuredData,
+      }),
       questionImage: eq.question.questionImage,
       options: eq.question.options ? JSON.parse(eq.question.options) : null,
     }));
@@ -208,7 +217,7 @@ export async function saveAnswer(
     });
 
     return { success: true };
-  } catch (error) {
+  } catch {
     return { success: false, error: "답안 저장 실패" };
   }
 }
@@ -258,10 +267,7 @@ export async function submitExam(
             typeof studentAnswer === "string"
               ? studentAnswer
               : studentAnswer?.answer || "";
-          if (
-            answerText.trim().toLowerCase() ===
-            q.correctAnswer.trim().toLowerCase()
-          ) {
+          if (isSameObjectiveAnswerForSubtype(q.subType, answerText, q.correctAnswer)) {
             autoScore += eq.points;
           }
         }
@@ -342,8 +348,7 @@ export async function getExamResult(submissionId: string) {
         : studentAnswer?.answer || "";
     const isCorrect =
       q.type === "MULTIPLE_CHOICE" || q.type === "VOCAB"
-        ? answerText.trim().toLowerCase() ===
-          q.correctAnswer.trim().toLowerCase()
+        ? isSameObjectiveAnswerForSubtype(q.subType, answerText, q.correctAnswer)
         : null;
 
     return {
@@ -351,7 +356,12 @@ export async function getExamResult(submissionId: string) {
       points: eq.points,
       questionId: q.id,
       type: q.type,
-      questionText: q.questionText,
+      subType: q.subType,
+      questionText: repairGrammarCorrectionQuestionText({
+        subType: q.subType,
+        questionText: q.questionText,
+        structuredData: q.structuredData,
+      }),
       options: q.options ? JSON.parse(q.options) : null,
       correctAnswer: q.correctAnswer,
       studentAnswer: answerText,

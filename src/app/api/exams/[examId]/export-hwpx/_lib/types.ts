@@ -21,6 +21,7 @@ export interface RunStyle {
   bold?: boolean;
   italic?: boolean;
   underline?: UnderlineType;
+  underlineColor?: string; // 밑줄 색 (기본 본문색). __밑줄__ 은 파랑(#3B82F6).
   color?: string;        // "#RRGGBB"
   shadeColor?: string;   // 형광펜
   letterSpacing?: number; // -50~50 (%)
@@ -117,6 +118,22 @@ export interface TableRowNode {
   cells: TableCellNode[];
 }
 
+// 떠 있는(floating) 표 배치. 한컴 실제 시험지의 전체폭 머리말이 쓰는 방식:
+// treatAsChar="0" + textWrap="IN_FRONT_OF_TEXT" 로 본문 흐름에서 빠져(=secPr 를
+// 오염시키지 않음) 지정 좌표에 떠 있는다. 본문은 marginTop 아래에서 정상 시작한다.
+//   offset 은 부호 있는 HPU(음수 가능) — 직렬화 시 unsigned 32bit 로 인코딩한다.
+export interface TableFloat {
+  widthHpu: number; // 표 폭(콘텐츠/전체폭). sz width 로 그대로 쓴다.
+  vertRelTo?: "PARA" | "PAGE" | "PAPER" | "COLUMN"; // 기본 PARA
+  horzRelTo?: "PARA" | "PAGE" | "PAPER" | "COLUMN"; // 기본 COLUMN
+  vertOffsetHpu: number; // 세로 오프셋(음수=위로)
+  horzOffsetHpu: number; // 가로 오프셋(음수=왼쪽으로)
+  zOrder?: number;
+  // 본문과의 어울림. IN_FRONT_OF_TEXT=본문 위에 떠 자리 안 차지(머리말용),
+  // TOP_AND_BOTTOM=세로 자리 차지(본문이 아래로 밀림 — 1쪽 전용 본문 헤더용).
+  wrap?: "IN_FRONT_OF_TEXT" | "TOP_AND_BOTTOM";
+}
+
 export interface TableNode {
   kind: "tbl";
   rows: TableRowNode[];
@@ -126,6 +143,8 @@ export interface TableNode {
   // 표를 감싸는 문단에 적용할 강제 쪽/단 나눔 (미리보기 분할을 HWPX 에 반영할 때 사용).
   pageBreak?: boolean;
   columnBreak?: boolean;
+  // 지정 시 본문 흐름에서 빠진 "떠 있는" 표로 직렬화(전체폭 머리말용).
+  float?: TableFloat;
 }
 
 export interface ColumnControlNode {
@@ -155,7 +174,8 @@ export interface SectionSpec {
   marginFooter: number;
   columns: 1 | 2;
   columnGapHpu: number;
-  header?: BlockNode[]; // 페이지 머리말 (옵션)
+  header?: BlockNode[]; // 페이지 머리말 (옵션) — 전체폭 헤더 밴드
+  headerApplyFirstOnly?: boolean; // 머리말을 1쪽에만 (기본: 모든 쪽)
   footer?: BlockNode[]; // 페이지 꼬리말 (옵션)
   blocks: BlockNode[];
 }

@@ -10,6 +10,7 @@ import {
 import {
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
+  shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
 import { FONT, KR_FONT, PASSAGE_SIZE } from "./styles";
 import { noBorders } from "./borders";
@@ -26,6 +27,7 @@ export function renderOptions(
   options: ParsedOption[],
   subType?: string | null,
 ): DocChild[] {
+  if (!shouldRenderOptionListForSubtype(subType)) return [];
   if (options.length === 0) return [];
 
   const result: DocChild[] = [];

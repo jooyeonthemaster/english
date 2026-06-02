@@ -29,6 +29,8 @@ import {
   normalizePassageText,
   normalizeQuestionText,
 } from "./paper-builder/text-normalization";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
 import type {
   BuilderQuestion,
   BreakBefore,
@@ -150,6 +152,13 @@ function printablePassageTitle(savedTitle: string | undefined, sourceTitle: stri
 
 function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderItem): BuilderQuestion {
   const q = eq.question;
+  const questionText = normalizeQuestionText(
+    repairGrammarCorrectionQuestionText({
+      subType: q.subType,
+      questionText: saved?.questionText ?? q.questionText,
+      structuredData: q.structuredData,
+    }),
+  );
   const passageContent = normalizePassageText(saved?.passageContent ?? q.passage?.content ?? "");
   const passageTitle = normalizeInlineText(saved?.passageTitle ?? q.passage?.title ?? "");
   const passage =
@@ -169,7 +178,7 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
     id: q.id,
     type: q.type,
     subType: q.subType,
-    questionText: normalizeQuestionText(saved?.questionText ?? q.questionText),
+    questionText,
     structuredData: q.structuredData,
     options: q.options,
     correctAnswer: saved?.correctAnswer ?? q.correctAnswer,
@@ -205,13 +214,21 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
       ? { ...sourceQuestion.passage, content: passageContent }
       : sourceQuestion.passage,
   });
-  const options = Array.isArray(saved.options)
+  const rawOptions = Array.isArray(saved.options)
     ? saved.options.map((option, optionIndex) => ({
         label: normalizeInlineText(option.label || String(optionIndex + 1)),
         text: normalizeQuestionText(option.text || ""),
       }))
     : parseOptions(sourceQuestion.options);
+  const options =
+    sourceQuestion.subType === "SENTENCE_INSERT"
+      ? buildCanonicalSentenceInsertOptions()
+      : rawOptions;
   const objectiveAnswerSlots = Math.max(0, Math.min(10, Number(saved.objectiveAnswerSlots) || 0));
+  const answerSpaceLines =
+    sourceQuestion.subType === "GRAMMAR_CORRECTION"
+      ? 0
+      : Math.max(0, Math.min(12, Number(saved.answerSpaceLines) || (options.length === 0 ? 4 : 0)));
 
   return {
     localId,
@@ -223,10 +240,10 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
     includePassage: defaultIncludePassage || (saved.includePassage === true),
     passageTitle: printablePassageTitle(saved.passageTitle, eq.question.passage?.title),
     passageContent,
-    questionText: normalizeQuestionText(saved.questionText ?? sourceQuestion.questionText),
+    questionText: sourceQuestion.questionText,
     options,
     correctAnswer: saved.correctAnswer ?? sourceQuestion.correctAnswer ?? "",
-    answerSpaceLines: Math.max(0, Math.min(12, Number(saved.answerSpaceLines) || (options.length === 0 ? 4 : 0))),
+    answerSpaceLines,
     objectiveAnswerSlots,
     objectiveAnswerTexts: asObjectiveAnswerTexts(saved.objectiveAnswerTexts, objectiveAnswerSlots),
     sectionTitle: saved.sectionTitle || "",

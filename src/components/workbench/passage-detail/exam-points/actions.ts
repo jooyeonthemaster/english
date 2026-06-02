@@ -1,21 +1,30 @@
 import type { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 import { EXAM_TYPE_GROUPS } from "../constants";
+import {
+  buildGrammarCorrectionQuestionTextForDisplay,
+  grammarCorrectionErrorSentenceForQuestionText,
+} from "@/lib/grammar-correction-display";
 
 // Build questionText from structured fields for DB storage
 export function buildQuestionText(q: any): string {
   // Structured question — combine direction + relevant content
   const parts: string[] = [];
+  const isGrammarCorrection = q?._typeId === "GRAMMAR_CORRECTION" || q?.subType === "GRAMMAR_CORRECTION";
+  if (isGrammarCorrection) {
+    const text = buildGrammarCorrectionQuestionTextForDisplay(q);
+    if (text) return text;
+  }
   if (q.direction) parts.push(q.direction);
   if (q.passageWithBlank) parts.push(q.passageWithBlank);
-  if (q.passageWithMarkers) parts.push(q.passageWithMarkers);
+  if (q.passageWithMarkers && !isGrammarCorrection) parts.push(q.passageWithMarkers);
   if (q.passageWithNumbers) parts.push(q.passageWithNumbers);
   if (q.passageWithUnderline) parts.push(q.passageWithUnderline);
   if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);
   if (q.originalSentence) parts.push(`[원문] ${q.originalSentence}`);
   if (q.sentenceWithBlank) parts.push(q.sentenceWithBlank);
   if (q.summaryWithBlanks) parts.push(q.summaryWithBlanks);
-  if (q.sentenceWithError) parts.push(q.sentenceWithError);
+  if (q.sentenceWithError && !isGrammarCorrection) parts.push(grammarCorrectionErrorSentenceForQuestionText(q));
   if (q.scrambledWords) parts.push(`[배열] ${q.scrambledWords.join(" / ")}`);
   if (q.conditions) parts.push(`[조건] ${q.conditions.join(" / ")}`);
   if (q.questionText) parts.push(q.questionText);

@@ -1,5 +1,6 @@
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
+import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
 export type QuestionQualitySeverity = "error" | "warning";
 
@@ -16,6 +17,7 @@ interface ValidateQuestionQualityInput {
   requestedDifficulty?: string;
   grammarMarkerCount?: number;
   grammarAnswerCount?: number;
+  grammarCorrectionErrorCount?: number;
   /** Legacy name; interpreted as grammarMarkerCount. */
   grammarErrorCount?: number;
 }
@@ -23,6 +25,8 @@ interface ValidateQuestionQualityInput {
 const IRRELEVANT_SLOT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
+const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
+const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
 
 function normalizeGrammarMarkedCount(markedCount: unknown): number {
   const n = typeof markedCount === "number" ? markedCount : Number(markedCount);
@@ -199,8 +203,11 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, the order should require grammar plus meaning; the scrambledWords order must not already equal the model answer.",
   ],
   GRAMMAR_CORRECTION: [
-    "Create exactly one grammar error in a sentence that otherwise reads naturally.",
-    "The correction must fix only the target error and preserve the original meaning.",
+    "Underline a sentence-level or clause-level segment from the source passage; the exact wrong word/form must be hidden inside that wider underline.",
+    "Do not underline only the wrong expression itself. The underlined segment must be meaningfully wider than errorPart.",
+    "Use underlinedSegments: sourceText is the original correct source segment, displayedText is the same segment with one grammar mutation, and every underlined segment has isError=true.",
+    "passageWithUnderline must contain the full passage with the wider underlined segment(s), not a separate error sentence below the passage.",
+    "Avoid controversial style edits and low-value targets such as articles, tiny prepositions, spelling, punctuation, or preference-only active/passive infinitives.",
     "For KILLER, test a higher-value grammar point such as modifier attachment, parallelism, tense logic, or agreement across distance.",
   ],
   CONTEXT_MEANING: [
@@ -245,6 +252,7 @@ export function buildQuestionTargetCandidateBlock(
     irrelevantSlotCount?: number;
     grammarMarkerCount?: number;
     grammarAnswerCount?: number;
+    grammarCorrectionErrorCount?: number;
     /** Legacy name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
     requestedDifficulty?: string;
@@ -256,6 +264,12 @@ export function buildQuestionTargetCandidateBlock(
         passage,
         options.grammarMarkerCount ?? options.grammarErrorCount,
         options.grammarAnswerCount,
+        options.requestedDifficulty,
+      );
+    case "GRAMMAR_CORRECTION":
+      return buildGrammarCorrectionCandidateBlock(
+        passage,
+        options.grammarCorrectionErrorCount,
         options.requestedDifficulty,
       );
     case "IRRELEVANT":
@@ -309,6 +323,46 @@ function buildGrammarErrorCandidateBlock(
     sentences.length
       ? "Detected passage sentences for target distribution:"
       : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
+    ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
+  ].filter(Boolean).join("\n");
+}
+
+function normalizeGrammarCorrectionErrorCount(errorCount: unknown): number {
+  const n = typeof errorCount === "number" ? errorCount : Number(errorCount);
+  if (!Number.isFinite(n)) return GRAMMAR_CORRECTION_ERROR_COUNT_MIN;
+  return Math.min(
+    GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+    Math.max(GRAMMAR_CORRECTION_ERROR_COUNT_MIN, Math.round(n)),
+  );
+}
+
+function buildGrammarCorrectionCandidateBlock(
+  passage: string,
+  requestedErrorCount?: number,
+  requestedDifficulty?: string,
+): string {
+  const sentences = splitPassageSentences(passage);
+  const errorCount = normalizeGrammarCorrectionErrorCount(requestedErrorCount);
+
+  return [
+    "## GRAMMAR_CORRECTION target planning guardrail",
+    `- Underline exactly ${errorCount} sentence-level or clause-level segment(s) from the original passage. A full sentence is ideal.`,
+    `- Every underlined segment must contain a hidden grammar error. The underline count and error count are both ${errorCount}.`,
+    "- Do not include grammatically correct extra underlined segments for GRAMMAR_CORRECTION.",
+    "- Do NOT underline only the wrong word/form. The underlined sourceText must be wider than errorPart by at least several words.",
+    "- sourceText must be an original passage segment. displayedText is sourceText after changing correctedPart into errorPart inside that segment.",
+    "- correctAnswer must list every label and correctedPart in order, joined with comma + space. It must not be the full underlined segment.",
+    "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
+    "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
+    "- Use wording like \"다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.\"",
+    "- Prefer high-value grammar decisions: subject-verb agreement, finite vs non-finite verb, parallelism, modifier active/passive, relative/nominal clause choice, pronoun agreement, complement form, comparison structure, and preposition vs conjunction.",
+    "- Avoid padding with articles, tiny prepositions, punctuation, spelling-only changes, optional style improvements, or debatable active/passive infinitive preferences such as to gain vs to be gained.",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER calibration: use a long enough underlined clause/sentence that students must inspect structure, not just spot a visibly odd token."
+      : "",
+    sentences.length
+      ? "Detected source sentences. Prefer one of these as sourceText:"
+      : "No reliable sentence split was detected; still choose an exact sentence/clause segment from the passage.",
     ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
   ].filter(Boolean).join("\n");
 }
@@ -502,6 +556,7 @@ export function validateQuestionQuality({
   requestedDifficulty,
   grammarMarkerCount,
   grammarAnswerCount,
+  grammarCorrectionErrorCount,
   grammarErrorCount,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
@@ -522,6 +577,7 @@ export function validateQuestionQuality({
     requestedDifficulty,
     grammarMarkerCount ?? grammarErrorCount,
     grammarAnswerCount,
+    grammarCorrectionErrorCount,
     add,
   );
 
@@ -788,6 +844,20 @@ function validateOptions(
     add("error", "empty-option-text", "One or more options are empty.");
   }
 
+  if (typeId === "SENTENCE_INSERT") {
+    const badOption = options.find((opt, index) => {
+      const markerIndex = sentenceInsertOptionMarkerIndex(opt?.text);
+      return markerIndex !== index;
+    });
+    if (badOption) {
+      add(
+        "error",
+        "sentence-insert-option-marker",
+        "SENTENCE_INSERT options must be canonical gap markers in order: ①, ②, ③, ④, ⑤.",
+      );
+    }
+  }
+
   const correctAnswerLabels = collectCorrectAnswerLabels(question);
   const correctAnswer = normalizeText(question.correctAnswer);
   if (correctAnswer) {
@@ -930,6 +1000,7 @@ function validateTypeSpecific(
   requestedDifficulty: string | undefined,
   grammarMarkerCount: number | undefined,
   grammarAnswerCount: number | undefined,
+  grammarCorrectionErrorCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -1047,6 +1118,15 @@ function validateTypeSpecific(
     }
   }
 
+  if (typeId === "GRAMMAR_CORRECTION") {
+    validateGrammarCorrectionQuestion(
+      question,
+      passage,
+      grammarCorrectionErrorCount,
+      add,
+    );
+  }
+
   if ((typeId === "CONDITIONAL_WRITING" || typeId === "SENTENCE_TRANSFORM") && Array.isArray(question.conditions)) {
     if (question.difficulty === "KILLER" && question.conditions.length < 2) {
       add("warning", "killer-needs-multiple-conditions", `${typeId} KILLER should require at least two conditions.`);
@@ -1159,6 +1239,139 @@ function validateSentenceInsertQuestion(
       );
     }
   }
+}
+
+function validateGrammarCorrectionQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  requestedErrorCount: number | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const expectedErrorCount = normalizeGrammarCorrectionErrorCount(requestedErrorCount);
+  const underlinedSegments = Array.isArray(question.underlinedSegments)
+    ? (question.underlinedSegments as Record<string, unknown>[])
+    : [];
+  const passageWithUnderline = normalizeText(question.passageWithUnderline);
+  const primaryErrorPart = normalizeText(question.errorPart);
+  const primaryCorrectedPart = normalizeText(question.correctedPart);
+  const errorParts = Array.isArray(question.errorParts)
+    ? question.errorParts.map((item) => normalizeText(item))
+    : [];
+  const correctedParts = Array.isArray(question.correctedParts)
+    ? question.correctedParts.map((item) => normalizeText(item))
+    : [];
+  const correctedSentence = normalizeText(question.correctedSentence);
+  const correctAnswer = normalizeText(question.correctAnswer);
+
+  if (underlinedSegments.length < 1) {
+    add("error", "grammar-correction-missing-underlined-segments", "GRAMMAR_CORRECTION must underline at least one sentence/clause segment.");
+    return;
+  }
+  if (underlinedSegments.length !== expectedErrorCount) {
+    add("error", "grammar-correction-underline-count", `Expected exactly ${expectedErrorCount} wrong underlined segment(s), got ${underlinedSegments.length}.`);
+  }
+  if (!passageWithUnderline) {
+    add("error", "grammar-correction-missing-passage-underline", "GRAMMAR_CORRECTION must render the source passage with wider underlined segment(s).");
+    return;
+  }
+
+  const markerCount = (passageWithUnderline.match(/__[^_]+__/g) ?? []).length;
+  if (markerCount !== expectedErrorCount) {
+    add("error", "grammar-correction-underline-count-mismatch", `passageWithUnderline must render exactly ${expectedErrorCount} underlined segment(s).`);
+  }
+
+  const errorItems = underlinedSegments.filter((item) => item.isError === true);
+  if (errorItems.length !== expectedErrorCount || errorItems.length !== underlinedSegments.length) {
+    add("error", "grammar-correction-error-count", `GRAMMAR_CORRECTION must have exactly ${expectedErrorCount} wrong underline(s), and every underlined segment must have isError=true.`);
+    return;
+  }
+
+  const collectedCorrectedParts: string[] = [];
+  for (const [index, errorItem] of errorItems.entries()) {
+    const sourceText = normalizeText(errorItem.sourceText);
+    const displayedText = normalizeText(errorItem.displayedText);
+    const displayedError =
+      normalizeText(errorItem.errorPart) ||
+      errorParts[index] ||
+      (index === 0 ? primaryErrorPart : "");
+    const sourceCorrection =
+      normalizeText(errorItem.correctedPart) ||
+      correctedParts[index] ||
+      (index === 0 ? primaryCorrectedPart : "");
+
+    if (sourceCorrection) collectedCorrectedParts.push(sourceCorrection);
+
+    if (!sourceCorrection) {
+      add("error", "grammar-correction-missing-corrected-part", `Error underlined segment ${index + 1} is missing correctedPart.`);
+      continue;
+    }
+    if (!sourceText) {
+      add("error", "grammar-correction-missing-source-text", `Error underlined segment ${index + 1} is missing sourceText.`);
+      continue;
+    }
+    if (!displayedText) {
+      add("error", "grammar-correction-missing-displayed-text", `Error underlined segment ${index + 1} is missing displayedText.`);
+      continue;
+    }
+    if (!displayedError) {
+      add("error", "grammar-correction-missing-error-part", `Error underlined segment ${index + 1} must include the wrong expression hidden inside the underline.`);
+      continue;
+    }
+
+    if (normalizeComparableText(displayedError) === normalizeComparableText(sourceCorrection)) {
+      add("error", "grammar-correction-not-mutated", `Error underlined segment ${index + 1} has the same errorPart and correctedPart.`);
+    }
+    if (correctedParts[index] && normalizeComparableText(correctedParts[index]) !== normalizeComparableText(sourceCorrection)) {
+      add("error", "grammar-correction-correction-mismatch", `correctedParts[${index}] must match the segment correctedPart.`);
+    }
+    if (!containsLoose(sourceText, sourceCorrection)) {
+      add("error", "grammar-correction-corrected-part-not-in-source-text", `correctedPart for error segment ${index + 1} must appear inside the original underlined sourceText.`);
+    }
+    if (!containsLoose(displayedText, displayedError)) {
+      add("error", "grammar-correction-error-part-not-in-displayed-text", `errorPart for error segment ${index + 1} must appear inside the displayed underlined segment.`);
+    }
+    if (normalizeComparableText(sourceText) === normalizeComparableText(displayedText)) {
+      add("error", "grammar-correction-displayed-not-mutated", `displayedText for error segment ${index + 1} must differ from sourceText.`);
+    }
+    if (normalizeComparableText(sourceText) === normalizeComparableText(sourceCorrection)) {
+      add("error", "grammar-correction-underline-too-narrow", `Do not underline only the exact corrected expression for error segment ${index + 1}; underline a wider sentence or clause.`);
+    }
+    if (countWordsForQuality(displayedText) < Math.max(5, countWordsForQuality(displayedError) + 3)) {
+      add("error", "grammar-correction-underlined-segment-short", `Error underlined segment ${index + 1} is too short; underline a wider sentence/clause so the exact error is hidden.`);
+    }
+    if (!containsLoose(passageWithUnderline, displayedText)) {
+      add("error", "grammar-correction-displayed-text-not-rendered", `Displayed underlined segment ${index + 1} must appear in passageWithUnderline.`);
+    }
+    if (passage && sourceText && !containsLoose(passage, sourceText)) {
+      add("error", "grammar-correction-source-text-not-source-backed", `sourceText for error segment ${index + 1} must exist in the original passage.`);
+    }
+
+    const combined = `${displayedError} ${sourceCorrection}`.toLowerCase();
+    if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
+      add("error", "grammar-correction-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-correction target.");
+    }
+  }
+
+  if (collectedCorrectedParts.length === expectedErrorCount) {
+    const expectedAnswer = collectedCorrectedParts
+      .map((part, index) => `(${String.fromCharCode(65 + index)}) ${part}`)
+      .join(", ");
+    if (correctAnswer && normalizeComparableText(correctAnswer) !== normalizeComparableText(expectedAnswer)) {
+      add("error", "grammar-correction-answer-mismatch", "correctAnswer must equal every label and correctedPart joined by comma + space.");
+    }
+  }
+
+  if (passage && correctedSentence && !containsComparableSentence(passage, correctedSentence)) {
+    add("error", "grammar-correction-sentence-not-source-backed", "correctedSentence must be an original source-passage sentence when provided.");
+  }
+}
+
+function countWordsForQuality(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function containsLoose(text: string, fragment: string): boolean {
+  return normalizeComparableText(text).includes(normalizeComparableText(fragment));
 }
 
 function validateBlankInferenceQuestion(

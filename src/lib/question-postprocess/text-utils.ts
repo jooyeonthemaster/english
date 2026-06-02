@@ -314,3 +314,65 @@ export function sanitizeExpressionForMarker(expr: string): string {
   // Replace runs of 2+ underscores inside expression with dashes
   return expr.replace(/_{2,}/g, "--");
 }
+
+/**
+ * Count occurrences of `expression` in `text`, honoring token boundaries for
+ * single-word/pronoun targets so "it" does not match inside "digital".
+ */
+function countMatches(
+  text: string,
+  expression: string,
+  requireWordBoundary: boolean,
+): number {
+  const needle = expression.trim();
+  if (!needle) return 0;
+  const hay = text.toLowerCase();
+  const low = needle.toLowerCase();
+  let count = 0;
+  let idx = hay.indexOf(low);
+  while (idx !== -1) {
+    if (!requireWordBoundary || hasTokenBoundaries(text, idx, needle.length)) {
+      count += 1;
+    }
+    idx = hay.indexOf(low, idx + 1);
+  }
+  return count;
+}
+
+export interface StrictFindResult {
+  pos: FoundPosition | null;
+  /** Occurrences within the resolution scope (surroundingText window, else whole passage). */
+  count: number;
+  /** True when the target is NOT uniquely located (count !== 1) — caller should reject. */
+  ambiguous: boolean;
+}
+
+/**
+ * 장문 세트 strict locator. Unlike findExpressionInPassage (which silently returns
+ * the FIRST match), this reports the occurrence COUNT within the resolution scope
+ * so the set orchestrator can mark an anchor DEGRADED instead of leaking by
+ * pinning the wrong occurrence. Scope = a ±50-char window around surroundingText
+ * when given, else the whole passage.
+ */
+export function findExpressionInPassageStrict(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+): StrictFindResult {
+  const pos = findExpressionInPassage(passage, expression, surroundingText);
+  if (!pos) return { pos: null, count: 0, ambiguous: true };
+
+  let scopeText = passage;
+  if (surroundingText && surroundingText.trim().length > 0) {
+    const ctxIdx = findSurroundingContextIndex(passage, surroundingText);
+    if (ctxIdx !== null) {
+      const start = Math.max(0, ctxIdx - 50);
+      const end = Math.min(passage.length, ctxIdx + surroundingText.length + 50);
+      scopeText = passage.slice(start, end);
+    }
+  }
+
+  const requireWordBoundary = isSingleTokenExpression(expression);
+  const count = countMatches(scopeText, expression, requireWordBoundary);
+  return { pos, count, ambiguous: count !== 1 };
+}

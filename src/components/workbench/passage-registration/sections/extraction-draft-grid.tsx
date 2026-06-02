@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import { isDraftAnalysisComplete } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/analysis-status";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -77,11 +78,37 @@ const ANALYSIS_STATUS_LABEL: Record<
 function getDraftAnalysisStatus(
   draft: M1PassageDraftWithJob,
 ): NonNullable<M1PassageDraftWithJob["analysisStatus"]> {
-  return draft.analysisStatus ?? "not_analyzed";
+  return isDraftAnalysisComplete(draft) ? "analyzed" : "not_analyzed";
 }
 
 function isDraftUnanalyzed(draft: M1PassageDraftWithJob): boolean {
   return getDraftAnalysisStatus(draft) !== "analyzed";
+}
+
+function analysisSortRank(draft: M1PassageDraftWithJob): number {
+  return isDraftUnanalyzed(draft) ? 0 : 1;
+}
+
+function compareDraftsBySelectedOrder(
+  a: M1PassageDraftWithJob,
+  b: M1PassageDraftWithJob,
+  sortOrder: SortOrder,
+): number {
+  const analysisDiff = analysisSortRank(a) - analysisSortRank(b);
+  if (analysisDiff !== 0) return analysisDiff;
+
+  if (sortOrder === "oldest") {
+    return toMillis(a.createdAt) - toMillis(b.createdAt);
+  }
+
+  if (sortOrder === "page_asc") {
+    const aPage = a.sourcePageIndex[0] ?? Number.MAX_SAFE_INTEGER;
+    const bPage = b.sourcePageIndex[0] ?? Number.MAX_SAFE_INTEGER;
+    if (aPage !== bPage) return aPage - bPage;
+    return toMillis(b.createdAt) - toMillis(a.createdAt);
+  }
+
+  return toMillis(b.createdAt) - toMillis(a.createdAt);
 }
 
 function getDuplicateCountForDrafts(
@@ -296,17 +323,7 @@ export function ExtractionDraftGrid({
 
   const filtered = useMemo(() => {
     const sorted = [...analysisFilteredDrafts];
-    if (sortOrder === "newest") {
-      sorted.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
-    } else if (sortOrder === "oldest") {
-      sorted.sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt));
-    } else if (sortOrder === "page_asc") {
-      sorted.sort((a, b) => {
-        const aPage = a.sourcePageIndex[0] ?? 0;
-        const bPage = b.sourcePageIndex[0] ?? 0;
-        return aPage - bPage;
-      });
-    }
+    sorted.sort((a, b) => compareDraftsBySelectedOrder(a, b, sortOrder));
 
     if (hideDuplicates) {
       const seen = new Set<string>();

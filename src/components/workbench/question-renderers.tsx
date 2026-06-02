@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { OptionList } from "./question-renderer-primitives";
@@ -479,7 +480,7 @@ function hasStructuredFields(typeId: string, q: any): boolean {
     case "WORD_ORDER":
       return !!q.scrambledWords;
     case "GRAMMAR_CORRECTION":
-      return !!q.sentenceWithError && !!q.errorPart;
+      return !!q.passageWithUnderline && !!q.underlinedSegments && !!q.correctedPart;
     case "SYNONYM":
       return !!q.targetWord && !!q.contextSentence;
     default:
@@ -542,6 +543,20 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
 /** Fallback for legacy/unstructured questions (backward compat with old questionText format) */
 function FallbackRenderer({ question: q }: { question: any }) {
   const [showExplanation, setShowExplanation] = useState(false);
+  const options =
+    q._typeId === "SENTENCE_INSERT" && Array.isArray(q.options)
+      ? q.options.map((option: unknown, index: number) => {
+          const record =
+            option && typeof option === "object" && !Array.isArray(option)
+              ? (option as Record<string, unknown>)
+              : {};
+          const optionText = typeof record.text === "string" ? record.text : "";
+          return {
+            ...record,
+            text: optionDisplayTextForSubtype(q._typeId, index, optionText),
+          };
+        })
+      : q.options;
 
   return (
     <>
@@ -549,12 +564,12 @@ function FallbackRenderer({ question: q }: { question: any }) {
         {q.questionText || q.direction || ""}
       </div>
 
-      {q.options && q.options.length > 0 && (
-        <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      {options && options.length > 0 && (
+        <OptionList options={options} correctAnswer={q.correctAnswer} />
       )}
 
       <div className="flex items-center justify-between pt-1 border-t border-slate-100">
-        {!(q.modelAnswer && (!q.options || q.options.length === 0)) ? (
+        {!(q.modelAnswer && (!options || options.length === 0)) ? (
           <span className="text-[12px] text-slate-400">
             정답: <span className="font-bold text-emerald-600">{q.correctAnswer}</span>
           </span>

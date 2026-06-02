@@ -5,6 +5,8 @@ import type {
   CustomBlock,
   ReportMeta,
   SectionLayout,
+  VocabTestLayout,
+  VocabTestMode,
 } from "@/lib/passage-report/analysis-report/schema";
 
 /**
@@ -243,6 +245,39 @@ export function toggleTableCol(report: AnalysisReport, sectionIndex: number, col
   if (hidden.has(colKey)) hidden.delete(colKey);
   else hidden.add(colKey);
   return setSection(report, sectionIndex, { ...sec, hiddenCols: [...hidden] } as AnalysisSection);
+}
+
+export function setVocabularyTestMode(
+  report: AnalysisReport,
+  sectionIndex: number,
+  mode: VocabTestMode,
+): AnalysisReport {
+  const sec = report.sections[sectionIndex];
+  if (!sec || sec.kind !== "vocabulary") return report;
+  const next = setSection(report, sectionIndex, { ...sec, vocabTestMode: mode });
+  return mode === "study" ? { ...next, vocabTestOnly: false } : next;
+}
+
+export function setVocabularyTestOnly(
+  report: AnalysisReport,
+  sectionIndex: number,
+  enabled: boolean,
+  mode: Exclude<VocabTestMode, "study"> = "hide-meaning",
+): AnalysisReport {
+  const sec = report.sections[sectionIndex];
+  if (!sec || sec.kind !== "vocabulary") return report;
+  const next = enabled ? setSection(report, sectionIndex, { ...sec, vocabTestMode: mode }) : report;
+  return { ...next, vocabTestOnly: enabled };
+}
+
+export function setVocabularyTestLayout(
+  report: AnalysisReport,
+  sectionIndex: number,
+  layout: VocabTestLayout,
+): AnalysisReport {
+  const sec = report.sections[sectionIndex];
+  if (!sec || sec.kind !== "vocabulary") return report;
+  return setSection(report, sectionIndex, { ...sec, vocabTestLayout: layout });
 }
 
 // ─── 배열 행 추가용 빈 템플릿 ────────────────────────────────────────────────

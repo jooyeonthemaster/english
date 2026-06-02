@@ -12,6 +12,7 @@ export interface ExamQuestionData {
     type: string;
     subType: string | null;
     questionText: string;
+    structuredData?: unknown;
     options: string | null;
     correctAnswer: string;
     difficulty: string;

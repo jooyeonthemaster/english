@@ -16,7 +16,26 @@ import { z } from "zod";
 const sentenceNo = z.number().int().min(1).max(60);
 
 /** 인라인 강조 토큰 — 렌더러가 키컬러/볼드/이탤릭으로 표시. 평문도 허용. */
-const richText = z.string().min(1);
+
+/**
+ * 필기 레이아웃 의도 — 01 원문 "필기 캔버스" 전용. 의미만 담는다(좌표/픽셀 없음).
+ * 모두 선택. 렌더러가 안전상 band 를 덮어쓸 수 있고, 값이 없으면 kind 기본값으로 파생한다.
+ * 기존 보고서(이 필드 없음)도 그대로 렌더된다.
+ */
+export const annoLayoutSchema = z
+  .object({
+    /** 이 필기가 가리키는, 해당 문장 en 안에 글자 그대로 존재하는 부분 문자열(≤4단어 권장) */
+    anchorText: z.string().optional(),
+    /** 선호 band — inline=단어 위, underchunk=구 아래, interline=줄 사이, rail=여백 카드, footnote=문장 하단 */
+    band: z.enum(["inline", "underchunk", "interline", "rail", "footnote"]).optional(),
+    /** 1=핵심(숨김 금지) … 3=보조(공간 부족 시 각주 강등) */
+    priority: z.number().int().min(1).max(3).optional(),
+    /** 미리 끊은 짧은 설명 줄들(각 줄 ≤ 약 28자) */
+    lines: z.array(z.string()).max(4).optional(),
+  })
+  .partial()
+  .optional();
+export type AnnoLayout = z.infer<typeof annoLayoutSchema>;
 
 // ─── 문서 메타 (타이틀 블록 + 메타 테이블) ───────────────────────────────────
 export const reportMetaSchema = z
@@ -49,6 +68,20 @@ export const passageSectionSchema = z
           n: sentenceNo,
           en: z.string(),
           ko: z.string(), // 문장별 한글 해석
+          /**
+           * (선택) 직독직해 의미 단위 청크 — 필기 캔버스가 청크 아래에 구문 라벨/필기를 붙인다.
+           * text 를 순서대로 이으면 en 과 일치해야 한다(불일치 시 렌더러가 자동 분할로 폴백).
+           */
+          chunks: z
+            .array(
+              z.object({
+                text: z.string(), // 원문 연속 구절(그대로)
+                role: z.string().optional(), // 짧은 한국어 구문 라벨 ("주절","이유 부사절" 등)
+                emphasis: z.enum(["core", "normal"]).optional(),
+              }),
+            )
+            .max(24)
+            .optional(),
         }),
       )
       .min(1)
@@ -129,9 +162,12 @@ export const grammarSectionSchema = z
         z.object({
           sentenceNo, // 문장 번호
           excerpt: z.string().optional(), // 해당 어법 자리가 있는 실제 원문 구절 (밑줄 표현 포함)
-          point: z.string(), // 핵심 문법 (예: "분사 능/수동 — weakened")
-          explanation: z.string(), // 학생 눈높이 해설
+          /** 어법 출제 포인트 코드 a~m — 객관식 어법 생성기(GRAMMAR_POINT_CODES)와 동일 분류 */
+          pointCode: z.enum(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"]).optional().catch(undefined),
+          point: z.string(), // 핵심 문법 (예: "(i) 병렬 — search 와 reconstruct")
+          explanation: z.string(), // 학생 눈높이 해설 (정의→이유→비교→적용 4단계)
           trap: z.string().optional(), // ⚠ 함정/오답 형태
+          layout: annoLayoutSchema, // (선택) 원문 필기 배치 의도
         }),
       )
       .min(1)
@@ -148,9 +184,13 @@ export const examFocusSectionSchema = z
     rows: z
       .array(
         z.object({
-          type: z.string(), // "빈칸추론"
+          sentenceNo: sentenceNo.optional(),
+          type: z.string(), // 유형: 빈칸추론·주제·제목·순서·문장삽입·함축의미·지칭·요약
           asks: z.string().optional().default(""), // 무엇을 묻는가 (모델 누락 잦음 → 관대)
           strategy: z.string().optional().default(""), // 대비 전략 & 예시 (모델 누락 잦음 → 관대)
+          /** 이 유형이 이 지문에서 걸리는 위치 + 왜 (예: "역접 ⑥ 뒤 — 대조축이 단서 유무라서") */
+          logicLocation: z.string().optional(),
+          layout: annoLayoutSchema, // (선택) 원문 필기 배치 의도
         }),
       )
       .min(1)
@@ -161,6 +201,11 @@ export const examFocusSectionSchema = z
   .passthrough();
 
 // 06 핵심 어휘 (표) — "단어 테스트" 원천
+export const vocabTestModeSchema = z.enum(["study", "hide-meaning", "hide-headword"]);
+export type VocabTestMode = z.infer<typeof vocabTestModeSchema>;
+export const vocabTestLayoutSchema = z.enum(["table", "two-column"]);
+export type VocabTestLayout = z.infer<typeof vocabTestLayoutSchema>;
+
 export const vocabularySectionSchema = z
   .object({
     kind: z.literal("vocabulary"),
@@ -178,6 +223,12 @@ export const vocabularySectionSchema = z
       .max(40),
     /** (편집기) 숨긴 열 키 목록 — 예: ["pronunciation","synonyms"] */
     hiddenCols: z.array(z.string()).optional(),
+    /** Vocabulary worksheet mode. */
+    vocabTestMode: vocabTestModeSchema.optional(),
+    /** Vocabulary worksheet layout. */
+    vocabTestLayout: vocabTestLayoutSchema.optional(),
+    /** Word-test rows excluded from the generated worksheet. Source vocabulary rows stay intact. */
+    vocabTestExcludedKeys: z.array(z.string()).optional(),
   })
   .passthrough();
 
@@ -201,6 +252,7 @@ export const parsingSectionSchema = z
             .min(1)
             .max(10),
           translation: z.string(), // → 해석
+          layout: annoLayoutSchema, // (선택) 원문 필기 배치 의도
         }),
       )
       .min(1)
@@ -238,7 +290,219 @@ export const selfCheckSectionSchema = z
   })
   .passthrough();
 
+const worksheetChoiceSchema = z.object({
+  label: z.string(),
+  text: z.string(),
+});
+
+const worksheetDistractorSchema = z.object({
+  label: z.string(),
+  type: z.string().default("오답"),
+  reason: z.string(),
+});
+
+const worksheetQuestionSchema = z.object({
+  no: z.number().int().min(1).max(12),
+  type: z.string(),
+  prompt: z.string(),
+  passage: z.string().optional(),
+  choices: z.array(worksheetChoiceSchema).min(2).max(6),
+  answerLabel: z.string(),
+  answerText: z.string().optional(),
+  explanation: z.string(),
+  distractors: z.array(worksheetDistractorSchema).max(6).optional(),
+});
+
+const worksheetInferenceSetSchema = z.object({
+  title: z.string().default("수능추론 문제"),
+  questions: z
+    .array(
+      worksheetQuestionSchema.extend({
+        no: z.number().int().min(1).max(5),
+        typeLabel: z.string(),
+        choices: z.array(worksheetChoiceSchema).min(5).max(5),
+      }),
+    )
+    .min(5)
+    .max(5),
+});
+
+const worksheetInferenceGenerationSetSchema = z.object({
+  title: z.string().default("수능추론 문제"),
+  questions: z
+    .array(
+      worksheetQuestionSchema.extend({
+        no: z.number().int().min(1).max(5),
+        typeLabel: z.string(),
+        choices: z.array(worksheetChoiceSchema).min(5).max(5),
+        answerText: z.string().min(1),
+        distractors: z.array(worksheetDistractorSchema).min(4).max(4),
+      }),
+    )
+    .min(5)
+    .max(5),
+});
+
+const worksheetGrammarSelectionSchema = z.object({
+  title: z.string().default("어법 선택"),
+  passage: z.string(),
+  choices: z
+    .array(
+      z.object({
+        no: z.number().int().min(1).max(30),
+        options: z.array(z.string()).min(2).max(4),
+        answer: z.string(),
+        explanation: z.string(),
+      }),
+    )
+    .min(2)
+    .max(12),
+});
+
+const worksheetVocabularyClozeSchema = z.object({
+  title: z.string().default("어휘 빈칸 완성"),
+  passage: z.string(),
+  blanks: z
+    .array(
+      z.object({
+        no: z.number().int().min(1).max(40),
+        answer: z.string(),
+        meaning: z.string().optional(),
+        clue: z.string().optional(),
+      }),
+    )
+    .min(6)
+    .max(24),
+});
+
+const worksheetWordOrderSchema = z.object({
+  no: z.number().int().min(1).max(8),
+  korean: z.string(),
+  chunks: z.array(z.string()).min(4).max(36),
+  answer: z.string(),
+});
+
+const worksheetWorkbookSetSchema = z.object({
+  title: z.string().default("EBS 워크북 유형 훈련"),
+  topicGist: z.object({
+    title: z.string().default("주제 / 요지"),
+    topicTitle: z.string(),
+    gist: z.string(),
+  }),
+  grammarSelection: worksheetGrammarSelectionSchema,
+  vocabularyCloze: worksheetVocabularyClozeSchema,
+  wordOrders: z.array(worksheetWordOrderSchema).min(1).max(4),
+});
+
+const worksheetWorkbookGenerationSetSchema = worksheetWorkbookSetSchema.extend({
+  grammarSelection: worksheetGrammarSelectionSchema.extend({
+    choices: worksheetGrammarSelectionSchema.shape.choices.min(4).max(10),
+  }),
+  vocabularyCloze: worksheetVocabularyClozeSchema.extend({
+    blanks: worksheetVocabularyClozeSchema.shape.blanks.min(8).max(18),
+  }),
+});
+
 // ─── 섹션 union ──────────────────────────────────────────────────────────────
+// 08+ 실전 학습지 — 첨부 워크북/DOCX 스타일을 A4 보고서에 통합
+export const learningWorksheetSectionSchema = z
+  .object({
+    kind: z.literal("learning-worksheet"),
+    title: z.string().default("실전 학습지"),
+    note: z.string().optional(),
+    logicRows: z
+      .array(
+        z.object({
+          sentenceNo: sentenceNo.optional(),
+          functionLabel: z.string(),
+          keyPoint: z.string(),
+          layout: annoLayoutSchema, // (선택) 원문 필기 배치 의도
+        }),
+      )
+      .min(3)
+      .max(12),
+    cloze: z
+      .object({
+        title: z.string().default("핵심어구 빈칸 + 한국어 해석"),
+        items: z
+          .array(
+            z.object({
+              no: z.number().int().min(1).max(30),
+              sentenceNo: sentenceNo.optional(),
+              text: z.string(),
+              translation: z.string().optional(),
+              answers: z.array(z.string()).min(1).max(3),
+            }),
+          )
+          .min(4)
+          .max(18),
+        wordBank: z.array(z.string()).min(4).max(24),
+      })
+      .optional(),
+    practice: z
+      .object({
+        title: z.string().default("빈칸 연습"),
+        items: z
+          .array(
+            z.object({
+              no: z.number().int().min(1).max(30),
+              sentenceNo: sentenceNo.optional(),
+              text: z.string(),
+              answers: z.array(z.string()).min(1).max(3),
+            }),
+          )
+          .min(4)
+          .max(18),
+        wordBank: z.array(z.string()).min(4).max(24).optional(),
+      })
+      .optional(),
+    drills: z
+      .object({
+        grammarChoices: z
+          .array(
+            z.object({
+              no: z.number().int().min(1).max(20),
+              sentenceNo: sentenceNo.optional(),
+              text: z.string(),
+              choices: z.array(z.string()).min(2).max(4),
+              answer: z.string(),
+              explanation: z.string(),
+            }),
+          )
+          .max(8)
+          .optional(),
+        wordOrders: z
+          .array(
+            z.object({
+              no: z.number().int().min(1).max(12),
+              sentenceNo: sentenceNo.optional(),
+              korean: z.string(),
+              chunks: z.array(z.string()).min(4).max(28),
+              answer: z.string(),
+            }),
+          )
+          .max(6)
+          .optional(),
+      })
+      .optional(),
+    workbookSet: worksheetWorkbookSetSchema.optional(),
+    inferenceSet: worksheetInferenceSetSchema.optional(),
+    questions: z.array(worksheetQuestionSchema).max(8).default([]),
+    hiddenAnswers: z.boolean().default(true),
+  })
+  .passthrough();
+
+export const learningWorksheetGenerationSectionSchema = learningWorksheetSectionSchema.extend({
+  workbookSet: worksheetWorkbookGenerationSetSchema,
+  inferenceSet: worksheetInferenceGenerationSetSchema,
+});
+
+export const learningWorksheetCoreGenerationSectionSchema = learningWorksheetSectionSchema.extend({
+  workbookSet: worksheetWorkbookGenerationSetSchema,
+});
+
+export const learningWorksheetInferenceGenerationSchema = worksheetInferenceGenerationSetSchema;
+
 export const analysisSectionSchema = z.discriminatedUnion("kind", [
   passageSectionSchema,
   structureMapSectionSchema,
@@ -248,6 +512,7 @@ export const analysisSectionSchema = z.discriminatedUnion("kind", [
   vocabularySectionSchema,
   parsingSectionSchema,
   selfCheckSectionSchema,
+  learningWorksheetSectionSchema,
 ]);
 export type AnalysisSection = z.infer<typeof analysisSectionSchema>;
 export type AnalysisSectionKind = AnalysisSection["kind"];
@@ -260,6 +525,7 @@ export type ExamFocusSection = z.infer<typeof examFocusSectionSchema>;
 export type VocabularySection = z.infer<typeof vocabularySectionSchema>;
 export type ParsingSection = z.infer<typeof parsingSectionSchema>;
 export type SelfCheckSection = z.infer<typeof selfCheckSectionSchema>;
+export type LearningWorksheetSection = z.infer<typeof learningWorksheetSectionSchema>;
 
 // ─── 디자인 테마 (키컬러 / 톤앤매너) ─────────────────────────────────────────
 export const reportThemeIdSchema = z.enum([
@@ -358,7 +624,7 @@ export const coverSchema = z
     logoDataUrl: z.string().max(900_000).optional().catch(undefined),
     showLogo: z.boolean().default(true),
     logoAlign: z.enum(["left", "center", "right"]).default("center"),
-    logoHeightMm: z.number().min(6).max(28).default(14),
+    logoHeightMm: z.number().min(6).max(60).default(14),
     /** 자유 위치(드래그) — mm 좌표. 둘 다 있으면 절대 배치, 없으면 정렬 슬롯. */
     logoX: z.number().optional(),
     logoY: z.number().optional(),
@@ -384,6 +650,11 @@ export const analysisReportSchema = z
     /** 문서 번호 (예: "No.037" / "VE·RR·037") — 자동 생성 가능 */
     docNo: z.string().optional(),
     themeId: reportThemeIdSchema.default("veritas-navy"),
+    /**
+     * 01 원문 섹션 렌더 모드. "hlc"=새 필기 캔버스(기본), "legacy"=구 스택 카드(롤백 스위치).
+     * 없으면 새 캔버스로 렌더(기존 보고서도 파생 기본값으로 자연 적용).
+     */
+    passageLayout: z.enum(["hlc", "legacy"]).optional(),
     meta: reportMetaSchema,
     /** AI가 결정한 섹션 순서. 보통 위 순서대로지만 가변. */
     sections: z.array(analysisSectionSchema).min(1).max(12),
@@ -393,6 +664,8 @@ export const analysisReportSchema = z
     blockMeta: z.record(z.string(), blockMetaSchema).optional(),
     /** (편집기) 블록 표시 순서 — 블록 id 배열. 없으면 자연 순서. */
     blockOrder: z.array(z.string()).optional(),
+    /** Vocabulary worksheet only mode. Keeps source data but renders only the word-test sheet. */
+    vocabTestOnly: z.boolean().optional(),
     /** (편집기) 사용자 삽입 커스텀 블록 (spacer/text). 위치는 blockOrder 로 결정. 손상 시 전체 무시. */
     customBlocks: z.array(customBlockSchema).max(60).optional().catch(undefined),
     /** (편집기) 표지 템플릿 설정. 없거나 enabled=false 면 표지 없음. */
@@ -432,6 +705,7 @@ export const NUMBERED_SECTION_LABELS: Record<AnalysisSectionKind, string> = {
   vocabulary: "핵심 어휘",
   parsing: "구문 분석",
   "self-check": "학습 점검",
+  "learning-worksheet": "실전 학습지",
 };
 
 export const SECTION_LABELS_EN: Record<AnalysisSectionKind, string> = {
@@ -443,4 +717,5 @@ export const SECTION_LABELS_EN: Record<AnalysisSectionKind, string> = {
   vocabulary: "Key Vocabulary",
   parsing: "Sentence Parsing",
   "self-check": "Self-Check",
+  "learning-worksheet": "Practice Workbook",
 };

@@ -12,6 +12,21 @@ import type {
 } from "./_types";
 
 // ---------------------------------------------------------------------------
+// Direct-input ("직접 붙여넣은 지문") material bucket
+// ---------------------------------------------------------------------------
+// Pasted passages are filed under ONE shared per-academy text material so they
+// surface as 추출된 자료 (extracted material) — a text source with no image —
+// in 추출된 자료 관리 / 지문 분석 lists, exactly like OCR-extracted material.
+
+/** Label shown on the shared bucket's material card / source material. */
+const DIRECT_INPUT_MATERIAL_LABEL = "직접 붙여넣은 지문";
+/** Sentinel `SourceMaterial.contentHash`. The `@@unique([academyId, contentHash])`
+ *  index makes find-or-create return the single shared bucket per academy. */
+const DIRECT_INPUT_MATERIAL_HASH = "__SMOAT_DIRECT_INPUT_TEXT__";
+/** `ExtractionJob.sourceType` marker for the text bucket (vs "PDF" | "IMAGES"). */
+const DIRECT_INPUT_SOURCE_TYPE = "TEXT";
+
+// ---------------------------------------------------------------------------
 // Passage CRUD (Workbench)
 // ---------------------------------------------------------------------------
 
@@ -215,6 +230,63 @@ export async function createWorkbenchPassage(
     }));
 
     const passage = await prisma.$transaction(async (tx) => {
+      // ── Idempotent reuse for direct-input (pasted) passages ──
+      // A pasted passage already exists as a real Passage AND carries an M1
+      // draft (savedPassageId). Re-saving / analyzing that draft from 추출된
+      // 자료 관리 must update the SAME passage, never spawn a duplicate. This is
+      // gated on `source === 직접 입력`, so every existing extraction flow keeps
+      // its exact create-new behavior untouched.
+      if (data.sourceDraftId) {
+        const linkedDraft = await tx.extractionM1PassageDraft.findFirst({
+          where: {
+            id: data.sourceDraftId,
+            deletedAt: null,
+            job: { academyId, deletedAt: null },
+          },
+          select: { id: true, savedPassageId: true },
+        });
+        if (linkedDraft?.savedPassageId) {
+          const existing = await tx.passage.findFirst({
+            where: {
+              id: linkedDraft.savedPassageId,
+              academyId,
+              source: DIRECT_INPUT_PASSAGE_SOURCE,
+            },
+            select: { id: true },
+          });
+          if (existing) {
+            await tx.passage.update({
+              where: { id: existing.id },
+              data: {
+                title: data.title,
+                content: data.content,
+                // Preserve the 직접 입력 source marker — never overwrite it with
+                // the analyze form's `source` (job name) or it stops being a
+                // direct-input material. Only fill provided meta fields.
+                ...(schoolId ? { schoolId } : {}),
+                ...(data.grade !== undefined ? { grade: data.grade || null } : {}),
+                ...(data.semester !== undefined
+                  ? { semester: data.semester || null }
+                  : {}),
+                ...(data.unit !== undefined ? { unit: data.unit || null } : {}),
+                ...(data.publisher !== undefined
+                  ? { publisher: data.publisher || null }
+                  : {}),
+                ...(data.difficulty !== undefined
+                  ? { difficulty: data.difficulty || null }
+                  : {}),
+                ...(data.tags ? { tags: JSON.stringify(data.tags) } : {}),
+              },
+            });
+            await tx.extractionM1PassageDraft.update({
+              where: { id: linkedDraft.id },
+              data: { reviewStatus: "COMMITTED", confirmedAt: new Date() },
+            });
+            return existing;
+          }
+        }
+      }
+
       const created = await tx.passage.create({
         data: {
           academyId,
@@ -261,6 +333,150 @@ export async function createWorkbenchPassage(
 
     revalidatePath("/director/workbench/passages");
     return { success: true, id: passage.id };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "지문 등록 중 오류가 발생했습니다.";
+    return { success: false, error: message };
+  }
+}
+
+/**
+ * Create a directly-pasted passage AND register it as 추출된 자료 (extracted
+ * material) so it appears in 추출된 자료 관리 / 지문 분석 lists like OCR material —
+ * just a TEXT source with no image assigned.
+ *
+ * Everything is filed under ONE shared per-academy bucket:
+ *   • SourceMaterial  — "직접 붙여넣은 지문" (type TEXT-ish handout, no originalFileUrl)
+ *   • ExtractionJob   — PASSAGE_ONLY, sourceType "TEXT", no pages/image
+ *   • ExtractionM1PassageDraft — one per pasted passage, COMMITTED + savedPassageId,
+ *     restorationStatus "RESTORED" so it's always visible (`isM1DraftVisible`).
+ *
+ * The Passage keeps `source = 직접 입력` (so the existing includeDirectInput /
+ * direct-input UI paths still work) and gains `sourceMaterialId` lineage.
+ */
+export async function createDirectInputPassageMaterial(data: {
+  title: string;
+  content: string;
+}): Promise<ActionResult> {
+  try {
+    const staff = await requireAuth();
+    const academyId = staff.academyId;
+    const createdById = staff.id;
+    const title = data.title.trim();
+    const content = data.content.trim();
+
+    if (content.length < 20) {
+      return {
+        success: false,
+        error: "지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.",
+      };
+    }
+
+    const passageId = await prisma.$transaction(
+      async (tx) => {
+        // 1) Shared "직접 붙여넣은 지문" SourceMaterial — one per academy.
+        //    The sentinel contentHash + unique index makes this find-or-create.
+        let material = await tx.sourceMaterial.findFirst({
+          where: { academyId, contentHash: DIRECT_INPUT_MATERIAL_HASH },
+          select: { id: true },
+        });
+        if (!material) {
+          material = await tx.sourceMaterial.create({
+            data: {
+              academyId,
+              type: "HANDOUT",
+              title: DIRECT_INPUT_MATERIAL_LABEL,
+              customLabel: DIRECT_INPUT_MATERIAL_LABEL,
+              subject: "ENGLISH",
+              contentHash: DIRECT_INPUT_MATERIAL_HASH,
+              createdById,
+            },
+            select: { id: true },
+          });
+        }
+
+        // 2) Shared text-source ExtractionJob (no file/image) — one per academy.
+        let job = await tx.extractionJob.findFirst({
+          where: {
+            academyId,
+            sourceMaterialId: material.id,
+            sourceType: DIRECT_INPUT_SOURCE_TYPE,
+            deletedAt: null,
+          },
+          select: { id: true },
+        });
+        if (!job) {
+          job = await tx.extractionJob.create({
+            data: {
+              academyId,
+              createdById,
+              sourceType: DIRECT_INPUT_SOURCE_TYPE,
+              mode: "PASSAGE_ONLY",
+              displayName: DIRECT_INPUT_MATERIAL_LABEL,
+              originalFileName: DIRECT_INPUT_MATERIAL_LABEL,
+              sourceMaterialId: material.id,
+              status: "COMPLETED",
+              totalPages: 0,
+              pendingPages: 0,
+              successPages: 0,
+              completedAt: new Date(),
+            },
+            select: { id: true },
+          });
+        }
+
+        // 3) The Passage — direct-input + linked to the material for lineage.
+        const passage = await tx.passage.create({
+          data: {
+            academyId,
+            title,
+            content,
+            source: DIRECT_INPUT_PASSAGE_SOURCE,
+            sourceMaterialId: material.id,
+          },
+          select: { id: true },
+        });
+
+        // 4) Next passageOrder for the shared job (unique [jobId, passageOrder]).
+        const last = await tx.extractionM1PassageDraft.findFirst({
+          where: { jobId: job.id },
+          orderBy: { passageOrder: "desc" },
+          select: { passageOrder: true },
+        });
+        const nextOrder = (last?.passageOrder ?? -1) + 1;
+
+        // 5) The M1 draft — mirrors a saved/committed extraction draft so the
+        //    text passage shows in 추출된 자료 관리 (no restoration, no image).
+        await tx.extractionM1PassageDraft.create({
+          data: {
+            jobId: job.id,
+            sourceMaterialId: material.id,
+            passageOrder: nextOrder,
+            sourcePageIndex: [],
+            title: title || null,
+            rawText: content,
+            restoredText: content,
+            teacherText: content,
+            // != "NO_RESTORATION_NEEDED" → always visible via isM1DraftVisible,
+            // regardless of length. No real restoration happened.
+            restorationStatus: "RESTORED",
+            reviewStatus: "COMMITTED",
+            savedPassageId: passage.id,
+            confirmedAt: new Date(),
+            metadata: { directInput: true, source: "PASTE" },
+          },
+        });
+
+        return passage.id;
+      },
+      { timeout: 15_000 },
+    );
+
+    revalidatePath("/director/workbench/passages");
+    revalidatePath("/director/workbench/passages/create");
+    revalidatePath("/director/workbench/passages/import/jobs");
+    revalidatePath("/director/workbench/extraction/jobs");
+    return { success: true, id: passageId };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "지문 등록 중 오류가 발생했습니다.";

@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, Save, Send } from "lucide-react";
 import { createExam, publishExam } from "@/actions/exams";
 import { getQuestionBank } from "@/actions/exam-questions";
 import { Button } from "@/components/ui/button";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import type {
   ClassOption,
   QuestionBankItem,
@@ -109,7 +110,11 @@ export function ExamCreateWizard({ academyId, classes, schools }: Props) {
     );
     const newQuestions: SelectedQuestion[] = toAdd.map((q, i) => ({
       questionId: q.id,
-      questionText: q.questionText,
+      questionText: repairGrammarCorrectionQuestionText({
+        subType: q.subType,
+        questionText: q.questionText,
+        structuredData: q.structuredData,
+      }),
       type: q.type,
       points: q.points,
       orderNum: questions.length + i + 1,

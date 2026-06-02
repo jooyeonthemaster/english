@@ -10,6 +10,7 @@ import { parseFormattedToRuns } from "../format";
 import {
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
+  shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
 
 export interface ParsedOption {
@@ -24,6 +25,7 @@ export function renderOptions(opts: {
   contentWidthHpu: number;
 }): BlockNode[] {
   const { options, subType, compact } = opts;
+  if (!shouldRenderOptionListForSubtype(subType)) return [];
   if (options.length === 0) return [];
 
   // 미리보기 선지는 본문보다 살짝 작은 11px(=8.25pt)/compact 10px(=7.5pt).
@@ -45,7 +47,10 @@ export function renderOptions(opts: {
     ];
     if (hasText) {
       runs.push(txt("  ", { size: bodySize }));
-      runs.push(...parseFormattedToRuns(display, { size: bodySize }));
+      // 선지 본문의 (A)~(E) 마커는 DOCX/미리보기와 동일하게 검정.
+      runs.push(
+        ...parseFormattedToRuns(display, { size: bodySize }, { markerColor: COLORS.black }),
+      );
     }
     blocks.push({
       kind: "p",

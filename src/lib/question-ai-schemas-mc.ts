@@ -38,6 +38,11 @@ const optionSchema = z.object({
   text: z.string().describe("선지 내용"),
 });
 
+const sentenceInsertOptionSchema = z.object({
+  label: z.enum(["1", "2", "3", "4", "5"]).describe("삽입 위치 label"),
+  text: z.enum(["①", "②", "③", "④", "⑤"]).describe("삽입 위치 마커. label과 같은 순서로 ①~⑤만 사용"),
+});
+
 const commonFields = {
   direction: z.string().describe("발문 (한국어)"),
   correctAnswer: z.string().describe("정답 라벨"),
@@ -199,7 +204,7 @@ export const aiSentenceInsertSchema = z.object({
       "삽입할 문장. 지시어/정관사/연결사/시간·인과 순서/어휘사슬 중 최소 1개의 응집 단서를 포함해야 함(단서 없는 중립 문장 금지).",
     ),
   markerAfterSentenceIndices: z.array(z.number()).length(5).describe("①~⑤ 마커를 배치할 위치 (0-based: 'N번째 문장 뒤에 마커 삽입'). 5개 인덱스 배열, 오름차순"),
-  options: z.array(optionSchema).length(5).describe("5개 선지"),
+  options: z.array(sentenceInsertOptionSchema).length(5).describe("삽입 위치 선지. text는 반드시 ①, ②, ③, ④, ⑤"),
   // CoT 효과로 정답 위치 정합성을 높이기 위한 선택 필드(.optional 로 생성 안정성 유지).
   insertionRationale: z
     .string()
@@ -355,6 +360,7 @@ export function getAiResponseSchema(
     irrelevantSlotCount?: number;
     grammarMarkerCount?: number;
     grammarAnswerCount?: number;
+    grammarCorrectionErrorCount?: number;
     /** Legacy option name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
   },

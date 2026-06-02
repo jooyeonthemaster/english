@@ -8,6 +8,9 @@ import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import type { PassageDetailProps } from "./types";
 import { Q_TYPE_LABELS, Q_SUBTYPE_LABELS, Q_DIFF } from "./constants";
 import { safeParseJSON } from "./utils";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { renderFormatted } from "@/components/workbench/question-bank-card/render-formatted";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -17,9 +20,21 @@ import { safeParseJSON } from "./utils";
 function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["questions"][0]; num: number }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
+  const displayOptions =
+    q.subType === "SENTENCE_INSERT"
+      ? options.map((option, index) => ({
+          ...option,
+          text: optionDisplayTextForSubtype(q.subType, index, option.text),
+        }))
+      : options;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const tags = getVisibleQuestionTags(safeParseJSON<string[]>(q.tags, []));
   const keyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);
+  const displayQuestionText = repairGrammarCorrectionQuestionText({
+    subType: q.subType,
+    questionText: q.questionText,
+    structuredData: q.structuredData,
+  });
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all">
@@ -59,14 +74,14 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
       {/* Question text */}
       <div className="px-4 py-3">
         <p className="text-[13px] text-slate-800 leading-relaxed whitespace-pre-wrap">
-          {q.questionText}
+          {renderFormatted(displayQuestionText)}
         </p>
       </div>
 
       {/* Options (for multiple choice) */}
-      {options.length > 0 && (
+      {displayOptions.length > 0 && (
         <div className="px-4 pb-3 space-y-1">
-          {options.map((opt, i) => {
+          {displayOptions.map((opt, i) => {
             const isCorrect =
               correctAnswerLabels.has(normalizeAnswerLabel(opt.label)) ||
               correctAnswerLabels.has(String(i + 1)) ||
@@ -91,7 +106,7 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
       )}
 
       {/* Short answer */}
-      {options.length === 0 && q.correctAnswer && (
+      {displayOptions.length === 0 && q.correctAnswer && (
         <div className="px-4 pb-3">
           <div className="px-3 py-2 rounded-lg bg-emerald-50 text-[13px] text-emerald-800 font-medium">
             정답: {q.correctAnswer}

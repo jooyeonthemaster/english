@@ -35,11 +35,15 @@ import {
 } from "./report-sections";
 
 const PX_PER_MM = 96 / 25.4;
-const PAGE_BODY_MM = 243;
+// Matches the usable .par-sheet-body height after A4 padding, running header, and footer.
+const PAGE_BODY_MM = 250;
 const BOX_PAD_MM = 9;
 const RUN_GAP_MM = 6;
 const LI_GAP_MM = 2.5;
 const ARROW_MM = 7;
+const THUMB_WIDTH_PX = 64;
+const THUMB_HEIGHT_PX = Math.round((THUMB_WIDTH_PX * 297) / 210);
+const THUMB_SCALE = THUMB_WIDTH_PX / (210 * PX_PER_MM);
 
 export type DropPlacement = "before" | "after";
 
@@ -56,6 +60,7 @@ export interface ReportEdit {
   ced: CoverEdit;
   /** 블록 세로 리사이즈 종료 — 최종 높이(mm) commit */
   onResize: (id: string, heightMm: number) => void;
+  onDeletePage?: (ids: string[]) => void;
   drag: {
     startDrag: (e: ReactPointerEvent<HTMLButtonElement>, id: string) => void;
     draggingId: string | null;
@@ -85,15 +90,41 @@ export function enumerateItems(report: AnalysisReport): ItemDescriptor[] {
   }));
 }
 
-const isStandalone = (w: WrapKind) => !TABLE_WRAPS.has(w) && !BOX_LIST_WRAPS.has(w) && w !== "map";
+function reportRootStyle(report: AnalysisReport): CSSProperties {
+  const theme = getReportTheme(report.themeId);
+  return {
+    "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
+    "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
+    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
+  } as CSSProperties;
+}
 
-function blockStyleOf(meta?: BlockMeta): CSSProperties | undefined {
+function visibleFlowItems(report: AnalysisReport, natural: FlowItem[]): FlowItem[] {
+  const byId = new Map(natural.map((it) => [it.id, it]));
+  const orderedIds = applyBlockOrder(natural.map((it) => it.id), report.blockOrder);
+  const out: FlowItem[] = [];
+  for (const id of orderedIds) {
+    const it = byId.get(id);
+    if (!it) continue;
+    if (report.blockMeta?.[id]?.hidden) continue;
+    out.push(it);
+  }
+  return out;
+}
+
+const isStandalone = (w: WrapKind) => !TABLE_WRAPS.has(w) && !BOX_LIST_WRAPS.has(w) && w !== "map" && w !== "vocab-grid" && w !== "reading";
+
+function isAutoFitItem(it: FlowItem): boolean {
+  return /^s\d+-annotated-snt\d+/.test(it.id);
+}
+
+function blockStyleOf(meta: BlockMeta | undefined, it?: FlowItem): CSSProperties | undefined {
   if (!meta) return undefined;
   const st: Record<string, unknown> = {};
   if (meta.fontScale && meta.fontScale !== 1) st["--par-fs"] = meta.fontScale;
   if (meta.bold) st.fontWeight = 700;
   if (meta.align) st.textAlign = meta.align;
-  if (meta.minHeight) st.minHeight = `${meta.minHeight}mm`;
+  if (meta.minHeight && (!it || !isAutoFitItem(it))) st.minHeight = `${meta.minHeight}mm`;
   return Object.keys(st).length ? (st as CSSProperties) : undefined;
 }
 
@@ -107,12 +138,7 @@ export function ReportPages({
   edit?: ReportEdit;
   onPagesChange?: (pages: string[][]) => void;
 }) {
-  const theme = getReportTheme(report.themeId);
-  const rootStyle = {
-    "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
-    "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
-    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
-  } as CSSProperties;
+  const rootStyle = reportRootStyle(report);
 
   const natural = useMemo(
     () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, ced: edit.ced } : undefined),
@@ -121,17 +147,8 @@ export function ReportPages({
   );
 
   const items = useMemo(() => {
-    const byId = new Map(natural.map((it) => [it.id, it]));
-    const orderedIds = applyBlockOrder(natural.map((it) => it.id), report.blockOrder);
-    const out: FlowItem[] = [];
-    for (const id of orderedIds) {
-      const it = byId.get(id);
-      if (!it) continue;
-      if (report.blockMeta?.[id]?.hidden) continue;
-      out.push(it);
-    }
-    return out;
-  }, [natural, report.blockOrder, report.blockMeta]);
+    return visibleFlowItems(report, natural);
+  }, [natural, report]);
 
   const itemsById = useMemo(() => new Map(items.map((it) => [it.id, it])), [items]);
 
@@ -194,13 +211,15 @@ export function ReportPages({
           if (coverPageFlags[pi]) {
             return (
               <section className="par-sheet par-sheet-cover" key={`p-${pi}`} data-page-index={pi}>
-                <CoverShell it={pageItems[0]} edit={edit} />
+                <PageDeleteButton ids={pageIds} edit={edit} />
+                <CoverShell it={pageItems[0]} edit={edit} meta={report.blockMeta?.[pageItems[0].id]} />
               </section>
             );
           }
           bodyNo += 1;
           return (
             <section className="par-sheet" key={`p-${pi}`} data-page-index={pi}>
+              <PageDeleteButton ids={pageIds} edit={edit} />
               <RunningHeader brand={report.brand} title={report.meta.titleKo} />
               <div className="par-sheet-body">
                 <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} />
@@ -210,6 +229,112 @@ export function ReportPages({
           );
         });
       })()}
+    </div>
+  );
+}
+
+function PageDeleteButton({ ids, edit }: { ids: string[]; edit?: ReportEdit }) {
+  if (!edit?.onDeletePage) return null;
+  return (
+    <button
+      type="button"
+      className="par-page-delete par-edit-chrome"
+      title="이 페이지 삭제"
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        edit.onDeletePage?.(ids);
+      }}
+    >
+      ×
+    </button>
+  );
+}
+
+export function ReportPageThumbnails({
+  report,
+  pages,
+  activePageIndex,
+  onSelect,
+  onDelete,
+}: {
+  report: AnalysisReport;
+  pages: string[][];
+  activePageIndex: number;
+  onSelect: (pageIndex: number) => void;
+  onDelete: (ids: string[]) => void;
+}) {
+  const rootStyle = reportRootStyle(report);
+  const natural = useMemo(() => reportFlowItems(report), [report]);
+  const items = useMemo(() => visibleFlowItems(report, natural), [natural, report]);
+  const itemsById = useMemo(() => new Map(items.map((it) => [it.id, it])), [items]);
+  const coverPageFlags = pages.map((ids) => ids.length === 1 && itemsById.get(ids[0])?.wrap === "cover");
+  const bodyTotal = coverPageFlags.filter((c) => !c).length;
+
+  let bodyNo = 0;
+  return (
+    <div className="flex flex-col items-center gap-2.5">
+      <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_CSS }} />
+      {pages.map((pageIds, pi) => {
+        const pageItems = pageIds.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
+        const isCover = coverPageFlags[pi];
+        const pageNo = isCover ? 0 : ++bodyNo;
+        return (
+          <div key={pi} className="group relative">
+            <button
+              type="button"
+              data-page-thumb-index={pi}
+              onClick={() => onSelect(pi)}
+              className={`relative overflow-hidden rounded-[3px] border bg-white shadow-sm transition ${
+                activePageIndex === pi
+                  ? "border-blue-500 ring-2 ring-blue-100"
+                  : "border-slate-300 hover:border-blue-400"
+              }`}
+              style={{ width: THUMB_WIDTH_PX, height: THUMB_HEIGHT_PX }}
+              title={`${pi + 1}페이지로 이동`}
+              aria-current={activePageIndex === pi ? "page" : undefined}
+            >
+              <div className="pointer-events-none absolute inset-0 overflow-hidden bg-white">
+                <div
+                  className="par-root"
+                  style={{
+                    ...rootStyle,
+                    transform: `scale(${THUMB_SCALE})`,
+                    transformOrigin: "top left",
+                    width: "210mm",
+                    height: "297mm",
+                  }}
+                >
+                  {pageItems.length === 0 ? null : isCover ? (
+                    <section className="par-sheet par-sheet-cover" style={{ margin: 0, boxShadow: "none" }}>
+                      <CoverShell it={pageItems[0]} meta={report.blockMeta?.[pageItems[0].id]} />
+                    </section>
+                  ) : (
+                    <section className="par-sheet" style={{ margin: 0, boxShadow: "none" }}>
+                      <RunningHeader brand={report.brand} title={report.meta.titleKo} />
+                      <div className="par-sheet-body">
+                        <RunsView items={pageItems} blockMeta={report.blockMeta} />
+                      </div>
+                      <RunningFooter brand={report.brand} docNo={report.docNo} page={pageNo} total={bodyTotal} />
+                    </section>
+                  )}
+                </div>
+              </div>
+              <span className="absolute bottom-1 right-1 rounded bg-white/90 px-1 text-[10px] font-semibold text-slate-600 shadow-sm">
+                {pi + 1}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onDelete(pageIds)}
+              title="이 페이지 삭제"
+              className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full border border-red-200 bg-white text-[11px] leading-none text-red-500 opacity-0 hover:bg-red-50 group-hover:opacity-100"
+            >
+              ×
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -244,7 +369,7 @@ function RunsView({
   let i = 0;
   while (i < items.length) {
     const it = items[i];
-    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map";
+    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading";
     const run: FlowItem[] = [it];
     if (merge) {
       let j = i + 1;
@@ -276,10 +401,31 @@ function RunBlock({
 }) {
   const editable = !!edit && !measure;
 
+  if (wrap === "vocab-grid") {
+    return (
+      <div className="par-runblock par-vocab-grid-run">
+        {run.map((it) => (
+          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+        ))}
+      </div>
+    );
+  }
+
+  if (wrap === "reading") {
+    return (
+      <div className="par-runblock par-reading-flow-run">
+        {run.map((it) => (
+          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+        ))}
+      </div>
+    );
+  }
+
   if (TABLE_WRAPS.has(wrap)) {
+    const isVocabTestRun = wrap === "vocab" && run.every((it) => it.id.includes("-vtest-row"));
     return (
       <div className="par-runblock">
-        <table className="par-table">
+        <table className={`par-table${isVocabTestRun ? " par-vocab-test-table" : ""}`}>
           <thead>{tableHeadRow(wrap, editable, run[0]?.hiddenCols)}</thead>
           <tbody>
             {run.map((it) => (
@@ -421,11 +567,12 @@ function ResizeHandle({ edit, id, el }: { edit: ReportEdit; id: string; el: () =
 function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; listStyle?: boolean; measure?: boolean }) {
   const ref = useRef<HTMLLIElement>(null);
   const cp = chromeProps(it, edit, measure);
+  const resizable = !!edit && !measure && !isAutoFitItem(it);
   return (
-    <li ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
+    <li ref={ref} data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
       {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
       {it.node}
-      {edit && !measure ? <ResizeHandle edit={edit} id={it.id} el={() => ref.current} /> : null}
+      {resizable ? <ResizeHandle edit={edit} id={it.id} el={() => ref.current} /> : null}
     </li>
   );
 }
@@ -433,7 +580,7 @@ function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; edit?: 
 function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const cp = chromeProps(it, edit, measure);
   return (
-    <tr data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={(cp.className as string) ?? ""}>
+    <tr data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={(cp.className as string) ?? ""}>
       {edit && !measure ? (
         <td className="par-edit-hcell"><Grip edit={edit} id={it.id} /></td>
       ) : null}
@@ -445,22 +592,24 @@ function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit
 function BlockShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const cp = chromeProps(it, edit, measure);
+  const resizable = !!edit && !measure && !isAutoFitItem(it);
   return (
-    <div ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-block ${(cp.className as string) ?? ""}`}>
+    <div ref={ref} data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={`par-block par-wrap-${it.wrap} ${(cp.className as string) ?? ""}`}>
       {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
       {it.node}
-      {edit && !measure ? <ResizeHandle edit={edit} id={it.id} el={() => ref.current} /> : null}
+      {resizable ? <ResizeHandle edit={edit} id={it.id} el={() => ref.current} /> : null}
     </div>
   );
 }
 
 /** 표지 전면 페이지 — 선택만 가능(드래그/리사이즈 없음, 풀블리드). */
-function CoverShell({ it, edit }: { it: FlowItem; edit?: ReportEdit }) {
-  if (!edit) return <div className="par-cover-shell">{it.node}</div>;
+function CoverShell({ it, edit, meta }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta }) {
+  if (!edit) return <div className="par-cover-shell" style={blockStyleOf(meta, it)}>{it.node}</div>;
   const active = edit.activeId === it.id;
   return (
     <div
       className={`par-cover-shell par-eline${active ? " is-active" : ""}`}
+      style={blockStyleOf(meta, it)}
       data-paper-item-id={it.id}
       data-paper-part-key={it.id}
       onMouseDown={() => {
@@ -475,7 +624,7 @@ function CoverShell({ it, edit }: { it: FlowItem; edit?: ReportEdit }) {
 function MapItemShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const cp = chromeProps(it, edit, measure);
   return (
-    <div data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
+    <div data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
       {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
       {it.node}
     </div>
@@ -502,9 +651,12 @@ function packFlow(
     const mp = it.wrap === "map";
     const isCover = it.wrap === "cover";
     const standalone = isStandalone(it.wrap);
+    const autoFit = isAutoFitItem(it);
     // 표지는 자기 페이지 독점: 표지 앞/뒤 모두 페이지 분할
-    const forceBreak = (!!meta?.breakBefore || isCover || prevWrap === "cover") && page.length > 0;
-    const hh = isCover ? PAGE_BODY_MM : Math.max(own[k], meta?.minHeight ?? 0);
+    // 자동 독해 조각은 저장된 breakBefore/minHeight 때문에 다음 장으로 밀리지 않게 한다.
+    const forceBreak = ((!!meta?.breakBefore && !autoFit) || !!it.breakBefore || isCover || prevWrap === "cover") && page.length > 0;
+    const metaMinHeight = autoFit ? 0 : meta?.minHeight ?? 0;
+    const hh = isCover ? PAGE_BODY_MM : Math.max(own[k], metaMinHeight);
 
     const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + hh;
 

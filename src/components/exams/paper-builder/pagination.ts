@@ -6,8 +6,10 @@ import {
   TWO_COLUMN_GAP,
 } from "./constants";
 import {
+  formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
   optionDisplayTextForSubtype,
+  shouldRenderOptionListForSubtype,
   splitSentenceInsertGivenBlock,
 } from "./option-display";
 import {
@@ -18,7 +20,7 @@ import {
 } from "./summary-complete-mc-layout";
 import {
   isInlineSourcePassageSubtype,
-  isStructuredAtomicSubtype,
+  isFlowStructuredSubtype,
   questionStemAndBody,
   structuredSegments,
 } from "./question-body-layout";
@@ -164,7 +166,8 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
   //   좌우 패딩(=칸 폭)이 미리보기·HWPX·DOCX 와 동일해야 줄넘김이 일치한다.
   const horizontalPadding = compact ? 56 : 68;
   const verticalPadding = compact ? 48 : 56;
-  const firstPageHeader = compact ? 82 : 96;
+  const firstPageHeader =
+    settings.firstPageHeaderPx ?? (compact ? 82 : 96);
   const followPageHeader = 24;
   const footer = 24;
   const contentHeight =
@@ -178,7 +181,10 @@ export function pageMetrics(settings: PaginationSettings, pageIndex: number) {
 
   return {
     columnWidth,
-    capacity: Math.max(420, contentHeight - PAGE_BOTTOM_GUARD),
+    capacity: Math.max(
+      420,
+      contentHeight - PAGE_BOTTOM_GUARD - (settings.contentSafetyPx ?? 0),
+    ),
   };
 }
 
@@ -428,7 +434,7 @@ export function estimatePassageHeight(group: PaperGroup, settings: PaginationSet
 // stem 의 줄 수만큼 높이를 잡는다(본문/구조화 박스는 별도 계산).
 function estimateStemHeight(item: PaperItem, settings: PaginationSettings): number {
   const { stem } = questionStemAndBody(item);
-  const stemRendered = formatSentenceInsertPassageMarkers(stem, item.sourceQuestion.subType);
+  const stemRendered = formatInlineMarkersForSubtype(stem, item.sourceQuestion.subType);
   const stemLines = questionToLines(stemRendered, settings);
   return (
     questionMetaHeight(settings) +
@@ -439,11 +445,11 @@ function estimateStemHeight(item: PaperItem, settings: PaginationSettings): numb
 export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
   const subType = item.sourceQuestion.subType;
   let height = estimateStemHeight(item, settings) + ITEM_RENDER_OVERHEAD;
-  if (isStructuredAtomicSubtype(subType)) {
+  if (isFlowStructuredSubtype(subType)) {
     height += estimateStructuredBodyHeight(item, settings);
   } else {
     const { body } = questionStemAndBody(item);
-    const bodyRendered = formatSentenceInsertPassageMarkers(body, subType);
+    const bodyRendered = formatInlineMarkersForSubtype(body, subType);
     height += questionToLines(bodyRendered, settings).length * questionLineHeight(settings);
     const { givenText } = splitSentenceInsertGivenBlock(bodyRendered, subType);
     if (givenText) height += GIVEN_BOX_CHROME;
@@ -807,11 +813,11 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       const { stem, body } = questionStemAndBody(item);
       const lineH = questionLineHeight(settings);
 
-      const stemRendered = formatSentenceInsertPassageMarkers(stem, subType);
+      const stemRendered = formatInlineMarkersForSubtype(stem, subType);
       const stemLineCount = Math.max(1, questionToLines(stemRendered, settings).length);
 
-      const structured = isStructuredAtomicSubtype(subType);
-      const bodyRendered = structured ? "" : formatSentenceInsertPassageMarkers(body, subType);
+      const structured = isFlowStructuredSubtype(subType);
+      const bodyRendered = structured ? "" : formatInlineMarkersForSubtype(body, subType);
       const bodyLines = structured ? [] : questionToLines(bodyRendered, settings);
       const givenText = structured
         ? ""
@@ -848,20 +854,23 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         });
       });
       structBlocks.forEach((structBlock) => blocks.push(structBlock));
-      item.options.forEach((option, index) => {
-        blocks.push({
-          kind: "option",
-          group,
-          item,
-          option,
-          index,
-          height:
-            estimateOptionBlockHeight(option, settings, item.sourceQuestion.subType, index) +
-            (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP),
+      if (shouldRenderOptionListForSubtype(subType)) {
+        item.options.forEach((option, index) => {
+          blocks.push({
+            kind: "option",
+            group,
+            item,
+            option,
+            index,
+            height:
+              estimateOptionBlockHeight(option, settings, item.sourceQuestion.subType, index) +
+              (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP),
+          });
         });
-      });
+      }
       if (
         settings.showAnswerSpace &&
+        shouldRenderOptionListForSubtype(subType) &&
         item.options.length > 0 &&
         item.objectiveAnswerSlots > 0
       ) {

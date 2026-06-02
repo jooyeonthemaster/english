@@ -4,9 +4,11 @@ import { cn } from "@/lib/utils";
 
 import { PAPER_SIZE_SPECS, SUBTYPE_LABELS } from "../constants";
 import {
+  formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
+  shouldRenderOptionListForSubtype,
   shouldUseGrammarOptionReference,
 } from "../option-display";
 import {
@@ -15,6 +17,7 @@ import {
   renderQuestionTextInline,
 } from "../paper-item-utils";
 import {
+  isFlowStructuredSubtype,
   isStructuredAtomicSubtype,
   questionStemAndBody,
   recombineQuestionText,
@@ -575,8 +578,12 @@ export function A4PaperPage({
                       const { stem: questionStem, body: questionBody } = isCustomBlock
                         ? { stem: "", body: "" }
                         : questionStemAndBody(item);
-                      const isStructuredQuestion =
+                      const usesStructuredBody =
+                        !isCustomBlock && isFlowStructuredSubtype(subType);
+                      const isAtomicStructuredQuestion =
                         !isCustomBlock && isStructuredAtomicSubtype(subType);
+                      const renderOptionList =
+                        !isCustomBlock && shouldRenderOptionListForSubtype(subType);
                       return (
                         <div
                           key={part.partKey}
@@ -599,13 +606,13 @@ export function A4PaperPage({
                                   ? "column"
                                   : undefined,
                             breakInside:
-                              item.keepWithPrev || isStructuredQuestion
+                              item.keepWithPrev || usesStructuredBody
                                 ? "avoid"
                                 : undefined,
                           }}
                           className={cn(
                             "group/paper-item relative rounded-md transition-colors",
-                            (item.keepWithPrev || isStructuredQuestion) &&
+                            (item.keepWithPrev || usesStructuredBody) &&
                               "break-inside-avoid",
                             item.locked && "cursor-default",
                             visual.itemClass,
@@ -717,7 +724,7 @@ export function A4PaperPage({
                                   // 구조화 유형은 questionText 에 [요약문] 등 본문이
                                   // 함께 들어있어, 지시문만 재결합하면 본문이 사라진다.
                                   // 따라서 지시문 인라인 편집은 평문 유형에서만 허용.
-                                  readOnly={readOnly || item.locked || isStructuredQuestion}
+                                  readOnly={readOnly || item.locked || isAtomicStructuredQuestion}
                                 >
                                   {renderQuestionTextInline(questionStem, subType)}
                                 </EditableText>
@@ -725,7 +732,8 @@ export function A4PaperPage({
                             </p>
                           )}
                           {part.isContinuation &&
-                            (part.questionRenderedLines.length > 0 ||
+                            (part.structRows.length > 0 ||
+                              part.questionRenderedLines.length > 0 ||
                               part.options.length > 0 ||
                               part.showObjectiveAnswer ||
                               part.showAnswer) && (
@@ -742,7 +750,7 @@ export function A4PaperPage({
                             // 구조화 유형: 지시문은 헤더에서 이미 렌더했고, 본문(지문/요약/
                             // given 박스·↓·순서 단락)은 줄 단위로 흘러온 structRows 를
                             // 박스로 재구성한다 — 칸 경계에서 깔끔하게 이어진다.
-                            if (isStructuredQuestion) {
+                            if (usesStructuredBody) {
                               return (
                                 <StructuredBody
                                   rows={part.structRows}
@@ -787,7 +795,7 @@ export function A4PaperPage({
                                     readOnly={readOnly || item.locked}
                                   >
                                     {renderQuestionTextInline(
-                                      formatSentenceInsertPassageMarkers(questionBody, subType),
+                                      formatInlineMarkersForSubtype(questionBody, subType),
                                       subType,
                                     )}
                                   </EditableText>
@@ -805,7 +813,7 @@ export function A4PaperPage({
                               >
                                 <span className="block">
                                   {renderQuestionTextInline(
-                                    formatSentenceInsertPassageMarkers(
+                                    formatInlineMarkersForSubtype(
                                       joinRenderedLinesForDisplay(
                                         part.questionRenderedLines,
                                       ),
@@ -817,7 +825,8 @@ export function A4PaperPage({
                               </p>
                             );
                           })()}
-                          {(part.options.length > 0 || part.showObjectiveAnswer) && (
+                          {renderOptionList &&
+                            (part.options.length > 0 || part.showObjectiveAnswer) && (
                             <div
                               className={cn(
                                 "space-y-1",

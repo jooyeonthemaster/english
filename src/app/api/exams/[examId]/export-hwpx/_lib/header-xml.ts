@@ -105,8 +105,14 @@ function charShapeXml(c: CharShapeSpec, id: number): string {
   );
   if (c.italic) parts.push(`<hh:italic/>`);
   if (c.bold) parts.push(`<hh:bold/>`);
+  // OWPML hh:underline@type 는 NONE|TOP|BOTTOM 만 유효(밑줄=BOTTOM). 선 스타일(SOLID/DOT/DASH)
+  // 은 @shape(LineType3) 에 둔다. 이전엔 type 에 "SOLID"/"DOTTED" 를 넣어 무효값이라
+  // 한컴이 밑줄을 무시/오해했다.
+  const ulType = c.underline === "NONE" ? "NONE" : "BOTTOM";
+  const ulShape =
+    c.underline === "DOTTED" ? "DOT" : c.underline === "DASHED" ? "DASH" : "SOLID";
   parts.push(
-    `<hh:underline type="${c.underline}" shape="SOLID" color="${c.underlineColor}"/>`,
+    `<hh:underline type="${ulType}" shape="${ulShape}" color="${c.underlineColor}"/>`,
   );
   parts.push(`<hh:strikeout shape="NONE" color="#000000"/>`);
   parts.push(`<hh:outline type="NONE"/>`);

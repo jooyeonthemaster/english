@@ -30,4 +30,10 @@ export const COLOR = {
   separator: "CCCCCC",
   errorLeft: "FF0000",
   answerBg: "F9F9F9",
+  // 미리보기 마커/밑줄 색 — renderFormattedInline 과 일치.
+  markerBlue: "1D4ED8",      // (A)·동그라미 마커 = text-blue-700
+  underlineBlue: "3B82F6",   // __밑줄__ = decoration-blue-500
+  // 미리보기 박스 테두리색.
+  slate400: "94A3B8",        // 지문 박스 = border-slate-400
+  slate300: "CBD5E1",        // given/summary 박스 = border-slate-300
 } as const;

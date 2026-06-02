@@ -41,6 +41,8 @@ import { renderFormatted } from "./question-bank-card/render-formatted";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
 import type { QuestionBankItem } from "./question-bank-card/types";
 import { shouldIgnoreCardClick } from "./shared/card-click";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import {
   getVisibleQuestionTags,
   sanitizeAiModelDisclosureText,
@@ -115,6 +117,13 @@ export function QuestionBankCard({
   const suppressCardClickRef = useRef(false);
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
+  const displayOptions =
+    q.subType === "SENTENCE_INSERT"
+      ? options.map((option, index) => ({
+          ...option,
+          text: optionDisplayTextForSubtype(q.subType, index, option.text),
+        }))
+      : options;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const tags: string[] = Array.isArray(q.tags)
     ? q.tags
@@ -125,11 +134,16 @@ export function QuestionBankCard({
     q.structuredData && typeof q.structuredData === "object" && "_typeId" in q.structuredData
       ? (q.structuredData as Record<string, unknown>)
       : null;
+  const displayQuestionText = repairGrammarCorrectionQuestionText({
+    subType: q.subType,
+    questionText: q.questionText,
+    structuredData: q.structuredData,
+  });
 
   // Parse questionText into structured sections
   const sections = useMemo(
-    () => parseQuestionSections(q.questionText, q.subType),
-    [q.questionText, q.subType],
+    () => parseQuestionSections(displayQuestionText, q.subType),
+    [displayQuestionText, q.subType],
   );
 
   // Make card draggable
@@ -355,9 +369,9 @@ export function QuestionBankCard({
             )}
 
             {/* Options (MC) */}
-            {!structuredQuestion && options.length > 0 && (
+            {!structuredQuestion && displayOptions.length > 0 && (
               <div className="space-y-1 pl-1">
-                {options.map((opt) => {
+                {displayOptions.map((opt) => {
                   const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
                   return (
                     <div
@@ -383,7 +397,7 @@ export function QuestionBankCard({
             )}
 
             {/* Non-MC correct answer */}
-            {!structuredQuestion && options.length === 0 && q.correctAnswer && (
+            {!structuredQuestion && displayOptions.length === 0 && q.correctAnswer && (
               <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
                 <span className="font-medium">정답:</span> {renderFormatted(q.correctAnswer)}
               </div>
@@ -393,7 +407,7 @@ export function QuestionBankCard({
           /* Collapsed: smart preview */
           <CollapsedPreview
             sections={sections}
-            options={options}
+            options={displayOptions}
             correctAnswer={q.correctAnswer}
             questionClamp={questionClamp}
           />

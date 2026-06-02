@@ -16,6 +16,11 @@ export interface GrammarErrorGenerationSettings {
   errorCount?: number;
 }
 
+export interface GrammarCorrectionGenerationSettings {
+  /** Number of wrong underlined sentence/clause segments. Range 1~5. Default 1. */
+  errorCount?: number;
+}
+
 export const IRRELEVANT_SLOT_COUNT_MIN = 5;
 export const IRRELEVANT_SLOT_COUNT_DEFAULT = 5;
 export const GRAMMAR_MARKER_COUNT_MIN = 5;
@@ -27,6 +32,9 @@ export const GRAMMAR_ANSWER_COUNT_DEFAULT = 1;
 export const GRAMMAR_ERROR_COUNT_MIN = GRAMMAR_ANSWER_COUNT_MIN;
 export const GRAMMAR_ERROR_COUNT_MAX = GRAMMAR_ANSWER_COUNT_MAX;
 export const GRAMMAR_ERROR_COUNT_DEFAULT = GRAMMAR_ANSWER_COUNT_DEFAULT;
+export const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
+export const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
+export const GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT = 1;
 
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
 
@@ -133,6 +141,35 @@ export function readGrammarAnswerCountSetting(
   return normalizeGrammarAnswerCount(undefined, markerCount);
 }
 
+export function normalizeGrammarCorrectionErrorCount(value: unknown): number {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT;
+  const rounded = Math.round(n);
+  return Math.min(
+    GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+    Math.max(GRAMMAR_CORRECTION_ERROR_COUNT_MIN, rounded),
+  );
+}
+
+export function readGrammarCorrectionErrorCountSetting(rawSettings: unknown): number {
+  if (!isRecord(rawSettings)) return GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT;
+
+  if (rawSettings.errorCount !== undefined) {
+    return normalizeGrammarCorrectionErrorCount(rawSettings.errorCount);
+  }
+
+  if (rawSettings.answerCount !== undefined) {
+    return normalizeGrammarCorrectionErrorCount(rawSettings.answerCount);
+  }
+
+  const nested = rawSettings.GRAMMAR_CORRECTION;
+  if (isRecord(nested)) {
+    return normalizeGrammarCorrectionErrorCount(nested.errorCount ?? nested.answerCount);
+  }
+
+  return GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT;
+}
+
 export interface IrrelevantSlotValidation {
   ok: boolean;
   /** The slot count actually usable for generation (capped to passage length). */
@@ -181,6 +218,7 @@ export function validateIrrelevantAgainstPassage(
 export interface QuestionTypeGenerationSettings {
   BLANK_INFERENCE?: BlankInferenceGenerationSettings;
   GRAMMAR_ERROR?: GrammarErrorGenerationSettings;
+  GRAMMAR_CORRECTION?: GrammarCorrectionGenerationSettings;
   IRRELEVANT?: IrrelevantGenerationSettings;
   [typeId: string]: unknown;
 }
@@ -197,6 +235,9 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     GRAMMAR_ERROR: {
       markerCount: GRAMMAR_MARKER_COUNT_DEFAULT,
       answerCount: GRAMMAR_ANSWER_COUNT_DEFAULT,
+    },
+    GRAMMAR_CORRECTION: {
+      errorCount: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
     },
     IRRELEVANT: {
       slotCount: IRRELEVANT_SLOT_COUNT_DEFAULT,
@@ -249,6 +290,23 @@ export function buildQuestionTypeSettingsPrompt(
       "- The first numbered choice ① must be the original second passage sentence unless the inserted irrelevant sentence is placed before it.",
       "- Never put the inserted irrelevant sentence in the first or last slot. The answer must be an inner numbered sentence.",
       "- The sentence at irrelevantIndex must be the only non-verbatim inserted sentence; every other slot must be one of the original source-window sentences.",
+    ].join("\n");
+  }
+
+  if (typeId === "GRAMMAR_CORRECTION") {
+    if (!isRecord(rawSettings)) return "";
+    const errorCount = readGrammarCorrectionErrorCountSetting(rawSettings);
+    if (errorCount === GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT) return "";
+    return [
+      "## Type detail setting: GRAMMAR_CORRECTION / wrong underline count",
+      `- The teacher requested exactly ${errorCount} wrong underlined sentence/clause segment(s).`,
+      `- Output exactly ${errorCount} underlinedSegments item(s), and every item must have isError=true.`,
+      "- Each underlined segment must be a wider sentence/clause from the original passage, not only the exact wrong word/form.",
+      "- Each displayedText must hide one grammar mutation inside that wider underline.",
+      "- correctAnswer must list every label and correctedPart in order, for example \"(A) are, (B) have\".",
+      "- correctedParts should list the corrected expression for every wrong underline in the same order as underlinedSegments.",
+      "- Each underlinedSegments item must include label values starting from \"(A)\" in order.",
+      "- Do not add extra grammatically correct underlined segments for this setting; underline count and error count are the same.",
     ].join("\n");
   }
 

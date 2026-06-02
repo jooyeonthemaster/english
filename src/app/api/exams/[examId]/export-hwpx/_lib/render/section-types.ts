@@ -45,7 +45,7 @@ function bodyParas(content: string): ParagraphNode[] {
         style: {
           align: "JUSTIFY",
           spaceAfter: idx < lines.length - 1 ? 40 : 0,
-          lineSpacingPct: 160,
+          lineSpacingPct: 158,
         },
         runs: [txt(" ", { size: SIZE.body })],
       };
@@ -55,7 +55,7 @@ function bodyParas(content: string): ParagraphNode[] {
       style: {
         align: "JUSTIFY",
         spaceAfter: idx < lines.length - 1 ? 40 : 0,
-        lineSpacingPct: 160,
+        lineSpacingPct: 158,
       },
       runs: parseFormattedToRuns(trimmed, { size: SIZE.body }),
     };
@@ -76,11 +76,11 @@ function boxed(
       cellMargins: margins,
       rows: [
         {
-          heightHpu: 1500,
+          heightHpu: 1,
           cells: [
             {
               widthHpu: contentWidthHpu,
-              heightHpu: 1500,
+              heightHpu: 1,
               vAlign: "TOP",
               borders: {
                 left: border,
@@ -150,11 +150,11 @@ export function renderError(
     cellMargins: { left: 240, right: 0, top: 60, bottom: 60 },
     rows: [
       {
-        heightHpu: 1200,
+        heightHpu: 1,
         cells: [
           {
             widthHpu: contentWidthHpu,
-            heightHpu: 1200,
+            heightHpu: 1,
             vAlign: "TOP",
             borders: { left: ERROR_LEFT, right: NO, top: NO, bottom: NO },
             margins: { left: 240, right: 0, top: 60, bottom: 60 },
@@ -217,15 +217,16 @@ export function renderContext(section: ParsedSection): BlockNode[] {
 
 export function renderParagraphs(section: ParsedSection): BlockNode[] {
   const items = section.items ?? section.content.split("\n");
+  // SENTENCE_ORDER (A)/(B)/(C) 문단: 마커는 DOCX/미리보기와 동일하게 검정.
   return items.map<ParagraphNode>((line) => ({
     kind: "p",
     style: {
       align: "JUSTIFY",
       leftMargin: 200,
       spaceAfter: 60,
-      lineSpacingPct: 160,
+      lineSpacingPct: 158,
     },
-    runs: parseFormattedToRuns(line, { size: SIZE.body }),
+    runs: parseFormattedToRuns(line, { size: SIZE.body }, { markerColor: COLORS.black }),
   }));
 }
 
@@ -256,14 +257,15 @@ export function renderHint(section: ParsedSection): BlockNode[] {
 }
 
 export function renderMatchType(section: ParsedSection): BlockNode[] {
+  // DOCX 와 동일하게 우측 정렬 · lightGray · 8pt.
   return [
     {
       kind: "p",
-      style: { spaceAfter: 60 },
+      style: { align: "RIGHT", spaceAfter: 60 },
       runs: [
         txt(`[유형: ${section.content}]`, {
-          size: SIZE.meta,
-          color: COLORS.gray,
+          size: SIZE.continued,
+          color: COLORS.lightGray,
         }),
       ],
     },
@@ -274,7 +276,7 @@ export function renderFallback(section: ParsedSection): BlockNode[] {
   return [
     {
       kind: "p",
-      style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 160 },
+      style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 158 },
       runs: parseFormattedToRuns(section.content, { size: SIZE.body }),
     },
   ];
@@ -315,7 +317,7 @@ export function renderDirection(
   return [
     {
       kind: "p",
-      style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 160 },
+      style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
       runs: headerRuns,
     },
   ];

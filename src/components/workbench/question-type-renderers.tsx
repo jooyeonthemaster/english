@@ -46,6 +46,12 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import {
+  buildGrammarCorrectionAnswerSlots,
+  formatGrammarCorrectionCorrectAnswer,
+  grammarCorrectionErrorSentenceForQuestionText,
+} from "@/lib/grammar-correction-display";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ============================================================================
 // 수능/모의고사 객관식 (10 types)
@@ -177,12 +183,17 @@ export function SentenceOrderRenderer({ q }: { q: SentenceOrderQuestion }) {
 }
 
 export function SentenceInsertRenderer({ q }: { q: SentenceInsertQuestion }) {
+  const options = q.options.map((option, index) => ({
+    ...option,
+    text: optionDisplayTextForSubtype("SENTENCE_INSERT", index, option.text),
+  }));
+
   return (
     <>
       <Direction text={q.direction} />
       <GivenSentenceBox sentence={q.givenSentence} label="삽입할 문장" />
       <PassageBlock>{renderWithMarkers(q.passageWithMarkers)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <OptionList options={options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
@@ -462,33 +473,56 @@ export function WordOrderRenderer({ q }: { q: WordOrderQuestion }) {
 }
 
 export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion }) {
+  const errorSegments = Array.isArray(q.underlinedSegments)
+    ? q.underlinedSegments.filter((item) => item.isError)
+    : [];
+  const corrections = errorSegments.length
+    ? errorSegments.map((item, index) => ({
+        error: item.errorPart || q.errorParts?.[index] || (index === 0 ? q.errorPart : ""),
+        correction:
+          item.correctedPart ||
+          q.correctedParts?.[index] ||
+          (index === 0 ? q.correctedPart : ""),
+      }))
+    : [{
+        error: q.errorPart || "",
+        correction: q.correctedPart || q.correctAnswer,
+      }];
+  const passageWithLabels = grammarCorrectionErrorSentenceForQuestionText(q);
+  const answerSlots = buildGrammarCorrectionAnswerSlots(q).split("\n").filter(Boolean);
+  const formattedAnswer = formatGrammarCorrectionCorrectAnswer(q) || q.correctAnswer;
+
   return (
     <>
       <Direction text={q.direction} />
-      <div className="rounded-lg bg-red-50 border border-red-200 p-3">
-        <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider block mb-1">오류 문장</span>
-        <p className="text-[13px] text-slate-700 leading-relaxed">
-          {q.sentenceWithError.split(q.errorPart).map((part, i, arr) => (
-            <React.Fragment key={i}>
-              {part}
-              {i < arr.length - 1 && (
-                <span className="underline decoration-wavy decoration-red-500 underline-offset-4 text-red-700 font-semibold">{q.errorPart}</span>
-              )}
-            </React.Fragment>
+      <PassageBlock>{renderPassageFormatted(passageWithLabels || "")}</PassageBlock>
+      {answerSlots.length > 0 && (
+        <div className="space-y-2 rounded-lg border border-slate-200 bg-white p-3">
+          {answerSlots.map((slot, index) => (
+            <div key={index} className="font-mono text-[12.5px] text-slate-700">
+              {renderPassageFormatted(slot)}
+            </div>
           ))}
-        </p>
-      </div>
+        </div>
+      )}
       <AnswerRevealSection>
         <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-2">
           <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">수정</span>
-          <div className="flex items-center gap-2 text-[12px]">
-            <span className="line-through text-red-500">{q.errorPart}</span>
-            <span className="text-slate-400">-&gt;</span>
-            <span className="font-semibold text-emerald-700">{q.correctedPart}</span>
-          </div>
-          <p className="text-[13px] text-emerald-800 leading-relaxed font-medium">{q.correctedSentence}</p>
+          {corrections.map((item, index) => (
+            <div key={index} className="flex items-center gap-2 text-[12px]">
+              {corrections.length > 1 && (
+                <span className="w-4 shrink-0 font-bold text-emerald-700">{index + 1}.</span>
+              )}
+              <span className="line-through text-red-500">{item.error}</span>
+              <span className="text-slate-400">-&gt;</span>
+              <span className="font-semibold text-emerald-700">{item.correction}</span>
+            </div>
+          ))}
+          {q.correctedSentence && (
+            <p className="text-[13px] text-emerald-800 leading-relaxed font-medium">{q.correctedSentence}</p>
+          )}
         </div>
-        <AnswerLine answer={q.correctAnswer} />
+        <AnswerLine answer={formattedAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>

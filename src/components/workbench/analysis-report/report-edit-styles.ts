@@ -9,6 +9,7 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
   cursor: text;
   border-radius: 3px;
   transition: background-color .12s, box-shadow .12s;
+  white-space: pre-wrap;
 }
 .par-root-edit .par-edit-field:hover { background: rgba(59,130,246,.10); }
 .par-root-edit .par-edit-field:focus {
@@ -34,6 +35,28 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
   vertical-align: middle; margin-left: 4px; opacity: .55;
 }
 .par-root-edit .par-edit-del:hover { opacity: 1; background: #fee2e2; }
+.par-root-edit .par-table-row-delete-cell { position: relative; overflow: visible; }
+.par-root-edit .par-edit-del.par-table-row-delete {
+  position: absolute; right: -8mm; top: 50%; z-index: 12;
+  transform: translateY(-50%);
+  margin-left: 0; opacity: 0;
+  width: 18px; height: 18px;
+  box-shadow: 0 2px 8px rgba(15,23,42,.12);
+}
+.par-root-edit tr.par-eline:hover .par-edit-del.par-table-row-delete,
+.par-root-edit tr.par-eline.is-active .par-edit-del.par-table-row-delete,
+.par-root-edit .par-edit-del.par-table-row-delete:focus-visible { opacity: 1; }
+.par-root-edit .par-edit-del.par-table-row-delete:hover {
+  transform: translateY(-50%) scale(1.04);
+}
+.par-root-edit .par-vocab-test-card-exclude {
+  position: absolute; right: -7px; top: -7px; z-index: 12;
+  margin-left: 0; opacity: 0;
+  box-shadow: 0 2px 8px rgba(15,23,42,.12);
+}
+.par-root-edit .par-vocab-test-card:hover .par-vocab-test-card-exclude,
+.par-root-edit .par-eline.is-active .par-vocab-test-card-exclude,
+.par-root-edit .par-vocab-test-card-exclude:focus-visible { opacity: 1; }
 .par-root-edit .par-edit-add {
   margin-top: 2mm; font-size: 11px; padding: 3px 9px;
   border: 1px dashed #93c5fd; color: #2563eb; background: #eff6ff;
@@ -62,6 +85,15 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
 .par-root-edit .par-egrip2:active { cursor: grabbing; }
 .par-root-edit .par-eline:hover > .par-egrip2,
 .par-root-edit .par-eline.is-active > .par-egrip2 { opacity: 1; }
+.par-root-edit .par-page-delete {
+  position: absolute; left: 3mm; top: 3mm; z-index: 30;
+  width: 7mm; height: 7mm; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #fecaca; border-radius: 999px; background: #fff;
+  color: #dc2626; font-size: 18px; line-height: 1; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(15,23,42,.10); cursor: pointer;
+}
+.par-root-edit .par-page-delete:hover { background: #fee2e2; border-color: #fca5a5; }
 /* 세로 리사이즈 핸들 — 블록 하단 중앙, hover/active 시 표시 */
 .par-root-edit .par-eresize {
   position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%);
@@ -80,8 +112,22 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
 body.par-resizing { cursor: ns-resize !important; user-select: none !important; }
 
 /* 표지 로고 — 편집 시 드래그 이동 */
-.par-root-edit .par-cov-logo-draggable { cursor: move; touch-action: none; }
+.par-root-edit .par-cov-logo-draggable { position: relative; cursor: move; touch-action: none; }
 .par-root-edit .par-cov-logo-draggable:hover { outline: 1.5px dashed rgba(37,99,235,.55); outline-offset: 3px; border-radius: 2px; }
+.par-root-edit .par-cov-logo-resize {
+  position: absolute; right: -7px; bottom: -7px; z-index: 8;
+  width: 14px; height: 14px; padding: 0; border-radius: 999px;
+  border: 1px solid #93c5fd; background: #fff;
+  box-shadow: 0 2px 7px rgba(15,23,42,.16);
+  cursor: nwse-resize; opacity: 0; transition: opacity .12s, background-color .12s;
+}
+.par-root-edit .par-cov-logo-resize::after {
+  content: ""; display: block; width: 6px; height: 6px; margin: 3px;
+  border-right: 2px solid #2563eb; border-bottom: 2px solid #2563eb;
+}
+.par-root-edit .par-cov-logo-draggable:hover .par-cov-logo-resize,
+.par-root-edit .par-cov-logo-resize:focus-visible { opacity: 1; }
+.par-root-edit .par-cov-logo-resize:hover { background: #eff6ff; opacity: 1; }
 
 /* 여백(spacer) 블록 — 편집 시 점선 + "여백" 라벨, 인쇄 시 순수 공백 */
 .par-root-edit .par-spacer-fill { position: relative; }
@@ -92,7 +138,8 @@ body.par-resizing { cursor: ns-resize !important; user-select: none !important; 
 
 /* 표 행 핸들 — 별도 좁은 셀 */
 .par-root-edit .par-edit-hcell {
-  width: 6mm; padding: 0 1mm !important; text-align: center; vertical-align: middle;
+  width: 6mm !important; min-width: 6mm !important; max-width: 6mm !important;
+  padding: 0 1mm !important; text-align: center; vertical-align: middle;
   border: none !important; background: transparent !important;
 }
 .par-root-edit .par-edit-hcell .par-egrip2 { position: static; left: auto; top: auto; opacity: .45; }
@@ -100,7 +147,7 @@ body.par-resizing { cursor: ns-resize !important; user-select: none !important; 
 
 /* 인쇄 시 편집 chrome 전부 숨김 → 깨끗한 A4 */
 @media print {
-  .par-edit-chrome, .par-egrip2, .par-edit-hcell, .par-eresize { display: none !important; }
+  .par-edit-chrome, .par-egrip2, .par-edit-hcell, .par-eresize, .par-page-delete, .par-cov-logo-resize { display: none !important; }
   .par-root-edit .par-edit-field { background: none !important; box-shadow: none !important; }
   .par-root-edit .par-eline, .par-root-edit .par-eline:hover, .par-root-edit .par-eline.is-active { outline: none !important; box-shadow: none !important; }
   .par-root-edit .par-edit-empty::before { content: "" !important; }

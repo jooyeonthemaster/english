@@ -160,6 +160,14 @@ export type PaginationSettings = {
   // 켜면 자동 흐름/분할 대신 한 칸(섹션)당 문항(그룹) 1개씩 강제 배치한다.
   // 2단 레이아웃에서 "페이지당 2문제" 효과. 기본(undefined/false)은 기존 동작 유지.
   forceTwoPerPage?: boolean;
+  // 1페이지 상단 헤더(제목/학생정보/안내문)가 차지하는 높이(px) 오버라이드.
+  // HWPX export 는 헤더를 본문 표 위 별도 블록으로 그리므로, 한컴 실제 렌더 높이를
+  // 여기로 넘겨 page-0 본문 용량에서 정확히 빼야 첫 표가 1쪽에 들어간다(미지정 시 기본값).
+  firstPageHeaderPx?: number;
+  // HWPX 전용 페이지 용량 안전 여백(px). 한컴 실제 렌더가 추정보다 미세하게 클 때
+  // (특히 구조화 박스 유형) 원자 페이지 표가 넘쳐 통째로 다음 장으로 밀리는 것을
+  // 막기 위해 모든 페이지 용량에서 추가로 뺀다(미지정 시 0 — 웹 미리보기 영향 없음).
+  contentSafetyPx?: number;
 };
 
 export type HeaderPatch = Partial<{

@@ -39,10 +39,37 @@ export const ESSAY_PROMPTS: Record<string, string> = {
 - direction 예시: "주어진 단어를 올바른 순서로 배열하여 문장을 완성하시오."`,
 
   GRAMMAR_CORRECTION: `문법 오류 수정 서술형 문제를 만드세요.
-- sentenceWithError: 오류가 포함된 문장
-- errorPart: 오류 부분
-- correctedPart: 수정된 부분
-- correctedSentence: 전체 수정된 문장
-- correctAnswer: correctedPart
-- direction 예시: "다음 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오."`,
+- underlinedSegments: 문장/절 단위 밑줄 구간 1~5개. 모든 항목은 label("(A)"부터 순서대로), isError=true 포함
+- errorPart/errorParts: 밑줄 구간 안에 숨어 있는 틀린 표현
+- correctedPart/correctedParts: 학생이 써야 하는 올바른 표현
+- correctedSentence: 첫 correctedPart가 들어간 원문 문장
+- correctAnswer: "(A) correctedPart, (B) correctedPart"처럼 label과 correctedPart를 순서대로 연결
+- direction 예시: "다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오."`,
 };
+
+ESSAY_PROMPTS.GRAMMAR_CORRECTION = `어법 고치기 서술형 문제를 만드세요.
+
+## 출제 방식
+- 원문 지문 안에서 문장 또는 절 단위의 밑줄 구간을 고릅니다. 설정이 없으면 1개, 설정이 있으면 정확히 그 개수만큼 고릅니다.
+- 밑줄 구간 개수와 오류 개수는 같습니다. 모든 밑줄 구간 안에 어법 오류를 숨깁니다.
+- 각 밑줄 구간은 (A), (B), (C)처럼 순서대로 구분되어야 합니다.
+- 오류 표현 자체만 밑줄 치지 마세요. 밑줄 구간은 errorPart보다 충분히 넓은 문장/절이어야 합니다.
+- 학생은 밑줄 친 구간 안에서 틀린 표현을 직접 찾아 올바른 표현으로 고쳐 씁니다.
+- 문제 아래에 오류 문장이나 틀린 위치를 따로 제시하지 마세요.
+- underlinedSegments.sourceText는 반드시 원문 지문에 있는 올바른 문장/절입니다.
+- isError=true인 항목의 displayedText는 sourceText 안의 correctedPart를 errorPart로 바꾼 텍스트입니다.
+
+## 좋은 어법 포인트
+- 주어-동사 수일치, 정동사/준동사, 병렬구조, 분사 능수동, 관계사/명사절, 대명사 일치, 보어 형태, 비교구문, 전치사 vs 접속사처럼 내신에서 판단 가치가 큰 포인트를 사용합니다.
+- 관사, 사소한 전치사, 철자, 구두점, 문체 선호, 논쟁적인 표현 개선은 사용하지 마세요.
+- 원문이 이미 문법적으로 옳다고 가정하고, 원문을 고치는 문제가 아니라 원문 표현을 틀리게 변형한 뒤 되돌리게 하는 문제를 만듭니다.
+
+## 출력 필드
+- underlinedSegments: 문장/절 단위 밑줄 구간 1~5개. 각 항목은 label, sourceText, displayedText, isError=true, surroundingText, errorPart, correctedPart를 포함합니다.
+- errorPart: 첫 밑줄 구간 안에 숨어 있는 틀린 표현
+- errorParts: 각 밑줄 구간 안에 숨어 있는 틀린 표현 목록
+- correctedPart: 첫 밑줄 구간의 원문에 있던 올바른 표현
+- correctedParts: 각 밑줄 구간의 원문에 있던 올바른 표현 목록
+- correctedSentence: 첫 correctedPart가 들어간 원문 문장
+- correctAnswer: "(A) correctedPart, (B) correctedPart"처럼 label과 correctedPart를 순서대로 연결
+- direction: "다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오."`;

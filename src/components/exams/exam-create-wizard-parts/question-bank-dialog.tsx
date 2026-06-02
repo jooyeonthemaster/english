@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { DIFFICULTY_LABELS, TYPE_LABELS } from "./constants";
 import type { QuestionBankItem } from "./types";
 
@@ -98,33 +99,40 @@ export function QuestionBankDialog({
               문제가 없습니다.
             </div>
           ) : (
-            bankQuestions.map((q) => (
-              <label
-                key={q.id}
-                className={cn(
-                  "flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors",
-                  selectedIds.has(q.id)
-                    ? "border-[#3182F6] bg-blue-50/50"
-                    : "border-[#E5E8EB] hover:bg-[#F7F8FA]",
-                )}
-              >
-                <Checkbox
-                  checked={selectedIds.has(q.id)}
-                  onCheckedChange={() => onToggle(q)}
-                  className="mt-0.5"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#191F28] line-clamp-2">{q.questionText}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-[#8B95A1]">{TYPE_LABELS[q.type] || q.type}</span>
-                    <span className="text-xs text-[#8B95A1]">
-                      {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
-                    </span>
-                    <span className="text-xs text-[#8B95A1]">{q.points}점</span>
+            bankQuestions.map((q) => {
+              const displayQuestionText = repairGrammarCorrectionQuestionText({
+                subType: q.subType,
+                questionText: q.questionText,
+                structuredData: q.structuredData,
+              });
+              return (
+                <label
+                  key={q.id}
+                  className={cn(
+                    "flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors",
+                    selectedIds.has(q.id)
+                      ? "border-[#3182F6] bg-blue-50/50"
+                      : "border-[#E5E8EB] hover:bg-[#F7F8FA]",
+                  )}
+                >
+                  <Checkbox
+                    checked={selectedIds.has(q.id)}
+                    onCheckedChange={() => onToggle(q)}
+                    className="mt-0.5"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-[#191F28] line-clamp-2">{displayQuestionText}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-[#8B95A1]">{TYPE_LABELS[q.type] || q.type}</span>
+                      <span className="text-xs text-[#8B95A1]">
+                        {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
+                      </span>
+                      <span className="text-xs text-[#8B95A1]">{q.points}점</span>
+                    </div>
                   </div>
-                </div>
-              </label>
-            ))
+                </label>
+              );
+            })
           )}
         </div>
 

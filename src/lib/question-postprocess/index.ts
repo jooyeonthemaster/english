@@ -15,6 +15,7 @@ import { processAntonym } from "./processors/antonym";
 import { processBlankInference } from "./processors/blank-inference";
 import { processContextMeaning } from "./processors/context-meaning";
 import { processFillBlankKey } from "./processors/fill-blank-key";
+import { processGrammarCorrection } from "./processors/grammar-correction";
 import { processGrammarError } from "./processors/grammar-error";
 import { processImpliedMeaning } from "./processors/implied-meaning";
 import { processIrrelevant } from "./processors/irrelevant";
@@ -23,6 +24,7 @@ import { processSentenceInsert } from "./processors/sentence-insert";
 import { processSynonym } from "./processors/synonym";
 import { processVocabChoice } from "./processors/vocab-choice";
 import { normalizeWrongOptionExplanations } from "@/lib/question-wrong-option-explanations";
+import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
 import {
   getCircledNumbers,
   PASSTHROUGH_TYPES,
@@ -89,6 +91,9 @@ export function postProcessQuestion(
 
       case "GRAMMAR_ERROR":
         return processGrammarError(passageContent, aiOutput);
+
+      case "GRAMMAR_CORRECTION":
+        return processGrammarCorrection(passageContent, aiOutput);
 
       case "VOCAB_CHOICE":
         return processVocabChoice(passageContent, aiOutput);
@@ -182,6 +187,7 @@ function normalizeOptionsForVisibleType(
   typeId: string | undefined,
   options: unknown,
 ): unknown {
+  if (typeId === "SENTENCE_INSERT") return buildCanonicalSentenceInsertOptions();
   if (!typeId || !VOCAB_OPTION_TEXT_TYPES.has(typeId)) return options;
   if (!Array.isArray(options)) return options;
 

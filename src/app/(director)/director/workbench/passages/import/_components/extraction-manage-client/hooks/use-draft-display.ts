@@ -9,6 +9,10 @@ import type {
   StatusFilter,
 } from "../components/manage-header";
 import type { M1PassageDraftWithJob } from "../types";
+import {
+  compareDraftAnalysisPriority,
+  isDraftAnalysisComplete,
+} from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 
 interface UseDraftDisplayParams {
@@ -16,6 +20,7 @@ interface UseDraftDisplayParams {
   draftsInActiveFolder: M1PassageDraftWithJob[];
   activeFolder: string | null;
   jobMetaByJobId: Map<string, JobMetaSnapshot>;
+  prioritizeAnalysisNeeded?: boolean;
 }
 
 const SORT_ORDER_STORAGE_KEY = "smoat:extraction-manage:draft-sort-order";
@@ -49,6 +54,7 @@ export function useDraftDisplay({
   draftsInActiveFolder,
   activeFolder,
   jobMetaByJobId,
+  prioritizeAnalysisNeeded = false,
 }: UseDraftDisplayParams) {
   const [searchValue, setSearchValue] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
@@ -117,33 +123,46 @@ export function useDraftDisplay({
 
   const displayedDrafts = useMemo(() => {
     const sorted = [...filteredDrafts];
-    if (sortOrder === "newest") {
-      sorted.sort((a, b) => {
+    sorted.sort((a, b) => {
+      if (prioritizeAnalysisNeeded) {
+        const analysisDiff = compareDraftAnalysisPriority(a, b);
+        if (analysisDiff !== 0) return analysisDiff;
+      }
+
+      if (sortOrder === "newest") {
         const aDate = new Date(a.createdAt as unknown as string).getTime();
         const bDate = new Date(b.createdAt as unknown as string).getTime();
         return bDate - aDate;
-      });
-    } else if (sortOrder === "oldest") {
-      sorted.sort((a, b) => {
+      }
+
+      if (sortOrder === "oldest") {
         const aDate = new Date(a.createdAt as unknown as string).getTime();
         const bDate = new Date(b.createdAt as unknown as string).getTime();
         return aDate - bDate;
-      });
-    } else if (sortOrder === "page_asc") {
-      sorted.sort((a, b) => {
+      }
+
+      if (sortOrder === "page_asc") {
         const aPage = a.sourcePageIndex[0] ?? 0;
         const bPage = b.sourcePageIndex[0] ?? 0;
         return aPage - bPage;
-      });
-    } else if (sortOrder === "name_asc") {
-      sorted.sort((a, b) =>
-        getDraftDisplayTitle(a).localeCompare(getDraftDisplayTitle(b), "ko"),
-      );
-    } else if (sortOrder === "name_desc") {
-      sorted.sort((a, b) =>
-        getDraftDisplayTitle(b).localeCompare(getDraftDisplayTitle(a), "ko"),
-      );
-    }
+      }
+
+      if (sortOrder === "name_asc") {
+        return getDraftDisplayTitle(a).localeCompare(
+          getDraftDisplayTitle(b),
+          "ko",
+        );
+      }
+
+      if (sortOrder === "name_desc") {
+        return getDraftDisplayTitle(b).localeCompare(
+          getDraftDisplayTitle(a),
+          "ko",
+        );
+      }
+
+      return 0;
+    });
 
     if (pageMode === "duplicates") {
       return sorted.filter((d) => dupInfo.keyById.has(d.id));
@@ -164,6 +183,7 @@ export function useDraftDisplay({
   }, [
     filteredDrafts,
     sortOrder,
+    prioritizeAnalysisNeeded,
     hideDuplicates,
     pageMode,
     dupInfo,
@@ -184,9 +204,7 @@ export function useDraftDisplay({
       const jobId = d.job?.id;
       if (!jobId) continue;
       countByJob.set(jobId, (countByJob.get(jobId) ?? 0) + 1);
-      const isAnalyzed =
-        d.analysisStatus === "analyzed" || d.savedPassageAnalysisId != null;
-      if (isAnalyzed) {
+      if (isDraftAnalysisComplete(d)) {
         analyzedCountByJob.set(jobId, (analyzedCountByJob.get(jobId) ?? 0) + 1);
       }
       const ids = draftIdsByJob.get(jobId) ?? [];

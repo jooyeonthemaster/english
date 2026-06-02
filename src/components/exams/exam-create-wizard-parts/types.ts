@@ -15,7 +15,9 @@ export interface SchoolOption {
 export interface QuestionBankItem {
   id: string;
   type: string;
+  subType?: string | null;
   questionText: string;
+  structuredData?: unknown;
   difficulty: string;
   points: number;
   tags: string | null;

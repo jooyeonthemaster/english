@@ -82,6 +82,7 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import type { M1PassageDraftWithJob } from "./types";
+import { isDraftAnalysisComplete } from "./utils/analysis-status";
 
 interface ExtractionManageClientProps {
   academyId: string;
@@ -165,8 +166,7 @@ function getDraftAnalysisText(draft: M1PassageDraftWithJob): string {
 
 function isDraftReadyForAnalysis(draft: M1PassageDraftWithJob): boolean {
   return (
-    draft.analysisStatus !== "analyzed" &&
-    getDraftAnalysisText(draft).length > 0
+    !isDraftAnalysisComplete(draft) && getDraftAnalysisText(draft).length > 0
   );
 }
 
@@ -175,7 +175,7 @@ function isDraftAnalyzable(draft: M1PassageDraftWithJob): boolean {
 }
 
 function isDraftAnalyzed(draft: M1PassageDraftWithJob): boolean {
-  return draft.analysisStatus === "analyzed";
+  return isDraftAnalysisComplete(draft);
 }
 
 export function ExtractionManageClient({
@@ -351,6 +351,7 @@ export function ExtractionManageClient({
     draftsInActiveFolder,
     activeFolder: folders.activeFolder,
     jobMetaByJobId: data.jobMetaByJobId,
+    prioritizeAnalysisNeeded: embedded,
   });
   const { gridCols, setGridCols } = display;
   const reviewDrawerOpen = reviewingJobId !== null;
@@ -550,7 +551,10 @@ export function ExtractionManageClient({
           : `${bulkAnalysisRunnableDrafts.length}개 자료를 AI 분석 큐에 등록합니다. 예상 소모: ${bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")} 크레딧.`
         : "분석할 수 있는 자료가 없습니다.";
 
-  const pendingAnalysisDrafts = pendingBulkAnalysisDrafts ?? [];
+  const pendingAnalysisDrafts = useMemo(
+    () => pendingBulkAnalysisDrafts ?? [],
+    [pendingBulkAnalysisDrafts],
+  );
   const pendingAlreadyAnalyzedCount =
     pendingAnalysisDrafts.filter(isDraftAnalyzed).length;
   const pendingUnanalyzedDrafts = useMemo(
@@ -1558,6 +1562,14 @@ function EmbeddedJobCardGrid({
       return true;
     });
     next = [...next].sort((a, b) => {
+      if (analysisFilter === "all") {
+        const aFullyAnalyzed = a.count > 0 && a.analyzedCount >= a.count;
+        const bFullyAnalyzed = b.count > 0 && b.analyzedCount >= b.count;
+        const analysisDiff =
+          Number(aFullyAnalyzed) - Number(bFullyAnalyzed);
+        if (analysisDiff !== 0) return analysisDiff;
+      }
+
       switch (sortOrder) {
         case "name_asc":
           return a.label.localeCompare(b.label, "ko");

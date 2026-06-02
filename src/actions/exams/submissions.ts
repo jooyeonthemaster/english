@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
 import type { ActionResult, GradeInput } from "./_types";
 
 // ---------------------------------------------------------------------------
@@ -137,7 +139,6 @@ export async function getExamAnalytics(examId: string) {
 
   const questionAnalysis = exam.questions.map((eq) => {
     let correctCount = 0;
-    const correctAnswerNorm = eq.question.correctAnswer.trim().toLowerCase();
     for (const answers of parsedAnswersBySubmission) {
       const answer = answers[eq.questionId];
       if (answer) {
@@ -145,7 +146,7 @@ export async function getExamAnalytics(examId: string) {
           typeof answer === "string"
             ? answer
             : (answer as Record<string, string>).answer || "";
-        if (answerText.trim().toLowerCase() === correctAnswerNorm) {
+        if (isSameObjectiveAnswerForSubtype(eq.question.subType, answerText, eq.question.correctAnswer)) {
           correctCount++;
         }
       }
@@ -153,7 +154,11 @@ export async function getExamAnalytics(examId: string) {
     return {
       questionId: eq.questionId,
       orderNum: eq.orderNum,
-      questionText: eq.question.questionText,
+      questionText: repairGrammarCorrectionQuestionText({
+        subType: eq.question.subType,
+        questionText: eq.question.questionText,
+        structuredData: eq.question.structuredData,
+      }),
       correctRate:
         totalStudents > 0
           ? Math.round((correctCount / totalStudents) * 100)

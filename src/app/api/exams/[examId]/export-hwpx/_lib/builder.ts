@@ -6,7 +6,13 @@
  */
 
 import { mm, A4_WIDTH, A4_HEIGHT, B4_WIDTH, B4_HEIGHT } from "./units";
-import type { BlockNode, HwpxDocument, SectionSpec } from "./types";
+import type {
+  BlockNode,
+  BorderSpec,
+  HwpxDocument,
+  SectionSpec,
+  TableNode,
+} from "./types";
 import { txt } from "./types";
 import { COLORS, SIZE } from "./tokens";
 import { renderPageHeader } from "./render/page-header";
@@ -15,6 +21,8 @@ import {
   renderQuestionBlock,
   type BuilderItemResolved,
 } from "./render/question";
+import { renderAnswerKey } from "./render/answer-key";
+import { estimateBlocksHeight } from "./section-xml";
 import {
   shouldForceSourcePassage,
   shouldRenderSourcePassageInsideQuestion,
@@ -33,6 +41,7 @@ import {
   questionBreakKey,
   type BreakPlan,
   type BreakType,
+  type PaginatedLayout,
 } from "./break-plan";
 import {
   renderPassageFragment,
@@ -50,6 +59,57 @@ export interface BuildHwpxOptions {
   resolvedItems: BuilderItemResolved[];
   includeAnswers: boolean;
   fullExamQuestions: ExamQuestionData[];
+}
+
+// 네이티브 2단 머리말: 전체폭 헤더를 "떠 있는(floating)" 표로 만든다.
+//  - 한컴은 머리말이 일반 흐름 표(treatAsChar="1")면 secPr 파싱을 망가뜨려 본문이
+//    상단 여백을 무시하고 페이지 맨 위에 그려진다(머리말과 겹침). 실제 한컴 시험지는
+//    머리말 표를 treatAsChar="0"(IN_FRONT_OF_TEXT)로 띄워 이 문제를 피한다.
+//  - 또한 한컴은 2단 본문을 marginHeader(머리말 밴드) 높이 아래에서 시작한다(실측).
+//    따라서 marginHeader = 머리말 높이 + 여백 으로 잡아야 본문이 머리말 아래서 시작한다.
+function floatHeaderBlocks(
+  blocks: BlockNode[],
+  contentWidthHpu: number,
+): { blocks: BlockNode[]; heightHpu: number } {
+  const NONE: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
+  let yOff = 0;
+  const out: BlockNode[] = blocks.map((blk, i) => {
+    const tbl: TableNode =
+      blk.kind === "tbl"
+        ? blk
+        : {
+            kind: "tbl",
+            colWidthsHpu: [contentWidthHpu],
+            borders: { left: NONE, right: NONE, top: NONE, bottom: NONE },
+            rows: [
+              {
+                heightHpu: estimateBlocksHeight([blk], contentWidthHpu),
+                cells: [
+                  {
+                    widthHpu: contentWidthHpu,
+                    heightHpu: estimateBlocksHeight([blk], contentWidthHpu),
+                    vAlign: "TOP",
+                    borders: { left: NONE, right: NONE, top: NONE, bottom: NONE },
+                    margins: { left: 0, right: 0, top: 0, bottom: 0 },
+                    blocks: [blk],
+                  },
+                ],
+              },
+            ],
+          };
+    const h = estimateBlocksHeight([tbl], contentWidthHpu);
+    tbl.float = {
+      widthHpu: contentWidthHpu,
+      vertRelTo: "PARA",
+      horzRelTo: "COLUMN",
+      vertOffsetHpu: yOff,
+      horzOffsetHpu: 0,
+      zOrder: 10 + i,
+    };
+    yOff += h;
+    return tbl;
+  });
+  return { blocks: out, heightHpu: yOff };
 }
 
 function groupItems(
@@ -381,6 +441,169 @@ function buildPageTable(opts: {
   };
 }
 
+// =============================================================================
+// 결정론적 명시 2단 표 (한컴은 본문 중간 colPr 다단을 적용하지 않으므로 — 검증됨 —
+// 페이지마다 [좌칸 | 간격 | 우칸] 무테 표로 배치를 강제한다.)
+// =============================================================================
+
+const TBL_NO_BORDERS = {
+  left: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+  right: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+  top: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+  bottom: { type: "NONE" as const, widthMm: 0.1, color: "#000000" },
+};
+const TBL_NO_MARGIN = { left: 0, right: 0, top: 0, bottom: 0 };
+
+interface ColumnUnit {
+  placeKey: string | null;
+  blocks: BlockNode[];
+}
+
+// 각 그룹(지문 + 문항들)을 "배치 단위(unit)"로 렌더한다. appendQuestionGroups 와
+// 동일한 렌더링이되, 평탄 배열 대신 placeKey 가 달린 unit 으로 내보낸다.
+function renderGroupsToUnits(opts: {
+  items: BuilderItemResolved[];
+  layout: BuilderLayout;
+  includeAnswers: boolean;
+  compact: boolean;
+  passageStyle: "boxed" | "underlined" | "plain";
+  showPassageTitle: boolean;
+  columnWidthHpu: number;
+}): ColumnUnit[] {
+  const units: ColumnUnit[] = [];
+  const groups = groupItems(opts.items);
+  for (const group of groups) {
+    const first = group.items[0];
+    const firstLocalId = first.localId;
+    const passageContent = (
+      first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
+    ).trim();
+    const includePassage =
+      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
+      (first.includePassage !== false ||
+        shouldForceSourcePassage({
+          subType: first.sourceQuestion.subType,
+          questionText: first.questionText || first.sourceQuestion.questionText,
+          structuredData: (first.sourceQuestion as { structuredData?: unknown })
+            .structuredData,
+          passage: { content: passageContent },
+        }));
+    const passageRenderedSeparately = includePassage && Boolean(passageContent);
+    if (passageRenderedSeparately) {
+      const passageBlocks = renderPassage({
+        passageTitle: printablePassageTitle(first),
+        passageContent,
+        passageStyle: opts.passageStyle,
+        showPassageTitle: opts.showPassageTitle,
+        compact: opts.compact,
+        usesSentenceInsertMarkers: group.items.some(
+          (it) => it.sourceQuestion.subType === "SENTENCE_INSERT",
+        ),
+        contentWidthHpu: opts.columnWidthHpu,
+      });
+      units.push({
+        placeKey: firstLocalId ? passageBreakKey(firstLocalId) : null,
+        blocks: passageBlocks,
+      });
+    }
+    group.items.forEach((item) => {
+      const questionBlocks = renderQuestionBlock({
+        item,
+        layout: opts.layout,
+        includeAnswers: opts.includeAnswers,
+        contentWidthHpu: opts.columnWidthHpu,
+      });
+      units.push({
+        placeKey: item.localId ? questionBreakKey(item.localId) : null,
+        blocks: questionBlocks,
+      });
+    });
+  }
+  return units;
+}
+
+// pagination(미리보기와 동일)이 정한 "각 단위 → (페이지, 단)" 배치를 맵으로.
+function buildPlacementMap(
+  pageLayout: PaginatedLayout,
+): Map<string, { page: number; col: number }> {
+  const placement = new Map<string, { page: number; col: number }>();
+  pageLayout.pages.forEach((columns, p) => {
+    columns.forEach((frags, c) => {
+      frags.forEach((frag) => {
+        const groupFirstId = frag.parts[0]?.source.localId;
+        if (
+          frag.includePassage &&
+          frag.passageRenderedLines.length > 0 &&
+          frag.passageStartLineIndex === 0 &&
+          groupFirstId
+        ) {
+          const k = passageBreakKey(groupFirstId);
+          if (!placement.has(k)) placement.set(k, { page: p, col: c });
+        }
+        frag.parts.forEach((part) => {
+          if (part.isStart && part.source.localId) {
+            const k = questionBreakKey(part.source.localId);
+            if (!placement.has(k)) placement.set(k, { page: p, col: c });
+          }
+        });
+      });
+    });
+  });
+  return placement;
+}
+
+// 한 페이지를 [좌칸 | 간격 | 우칸] 무테 표로.
+function buildColumnPageTable(opts: {
+  leftBlocks: BlockNode[];
+  rightBlocks: BlockNode[];
+  colWidthHpu: number;
+  gapHpu: number;
+  lastColWidthHpu: number;
+  pageBreak: boolean;
+}): BlockNode {
+  const emptyPara: BlockNode = { kind: "p", style: { spaceAfter: 0 }, runs: [] };
+  const left = opts.leftBlocks.length ? opts.leftBlocks : [emptyPara];
+  const right = opts.rightBlocks.length ? opts.rightBlocks : [emptyPara];
+  return {
+    kind: "tbl",
+    colWidthsHpu: [opts.colWidthHpu, opts.gapHpu, opts.lastColWidthHpu],
+    borders: TBL_NO_BORDERS,
+    cellMargins: TBL_NO_MARGIN,
+    pageBreak: opts.pageBreak,
+    rows: [
+      {
+        heightHpu: 1,
+        cells: [
+          {
+            widthHpu: opts.colWidthHpu,
+            heightHpu: 1,
+            vAlign: "TOP",
+            borders: TBL_NO_BORDERS,
+            margins: TBL_NO_MARGIN,
+            blocks: left,
+          },
+          {
+            widthHpu: opts.gapHpu,
+            heightHpu: 1,
+            vAlign: "TOP",
+            borders: TBL_NO_BORDERS,
+            margins: TBL_NO_MARGIN,
+            blocks: [emptyPara],
+          },
+          {
+            widthHpu: opts.lastColWidthHpu,
+            heightHpu: 1,
+            vAlign: "TOP",
+            borders: TBL_NO_BORDERS,
+            margins: TBL_NO_MARGIN,
+            blocks: right,
+          },
+        ],
+      },
+    ],
+  };
+}
+
 export function buildBuilderHwpxDocument(
   opts: BuildHwpxOptions,
 ): HwpxDocument {
@@ -431,6 +654,88 @@ export function buildBuilderHwpxDocument(
       ? previewContentWidth
       : Math.floor((previewContentWidth - columnGap) / 2);
 
+  // =========================================================================
+  // 네이티브 2단 경로 (한컴 검증 방식·기본 활성): per-page 표를 폐기하고, 본문을
+  // 한컴 섹션 다단(secPr colCount=2)에 "문단으로 흘려" 한컴이 자동으로 페이지/단을
+  // 꽉 채우게 한다 → 옛 그리디 표 방식의 "칸 하단 여백/왼쪽→오른쪽 조기 넘어감"
+  // 문제 제거. 전체폭 헤더(제목/학생정보)는 떠 있는 표로 머리말 밴드에 얹는다.
+  //   (한컴 실제 시험지 인코딩 역공학으로 확인: header control + colCount=2.)
+  //   비활성화하려면 env HWPX_NATIVE_2COL=0. (1단/커스텀블록/정답포함은 기존 경로.)
+  // =========================================================================
+  const nativeHasCustom = (settings?.blocks ?? []).some(
+    (b) => b.blockType && b.blockType !== "question",
+  );
+  if (
+    process.env.HWPX_NATIVE_2COL !== "0" &&
+    columns === 2 &&
+    !nativeHasCustom &&
+    !includeAnswers
+  ) {
+    const rawHeader: BlockNode[] = renderPageHeader({
+      subtitle: header.subtitle,
+      title,
+      schoolName: header.schoolName,
+      className: header.className,
+      studentNameLabel: header.studentNameLabel,
+      compact,
+      contentWidthHpu: contentWidth,
+    });
+    // (전역 안내문 header.instructions 는 네이티브 경로에서 제외 — 매쪽 반복·문항별
+    //  지시문과 중복. 사용자 요청.) 머리말을 떠있는 표로(secPr 오염 방지) + 밴드 예약.
+    const floatedHeader = floatHeaderBlocks(rawHeader, contentWidth);
+    const headerBlocks = floatedHeader.blocks;
+
+    const nativeColW = Math.floor((contentWidth - columnGap) / 2);
+    // 첫 블록은 secPr+colPr+머리말 컨트롤을 품는다. 거기에 본문 텍스트가 있으면
+    // 한컴이 그 문단을 전체폭으로 그려(머리말 컨트롤 영향) 첫 지문이 칸을 벗어난다.
+    // → 빈 문단을 맨 앞에 둬 컨트롤만 품게 하고 실제 본문은 둘째 블록부터 흐르게 한다.
+    const bodyBlocks: BlockNode[] = [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }];
+    appendQuestionGroups({
+      target: bodyBlocks,
+      items: resolvedItems,
+      layout,
+      includeAnswers,
+      compact,
+      passageStyle,
+      showPassageTitle,
+      contentWidthHpu: nativeColW,
+      breakPlan: new Map(), // 강제 분할 없음 — 한컴이 자동 흐름으로 채운다.
+    });
+    if (!includeAnswers && opts.fullExamQuestions.length > 0) {
+      bodyBlocks.push(...renderAnswerKey(opts.fullExamQuestions, nativeColW));
+    }
+
+    // 핵심(실측): 한컴은 2단 본문을 marginHeader(머리말 밴드) 높이 아래에서 시작한다
+    // (marginTop 이 아니라!). 따라서 marginHeader = 머리말 실제 높이 + 여백 으로 잡으면
+    // 본문이 머리말 바로 아래에서 시작해 겹치지 않는다. marginTop 은 작게 둔다.
+    //   env HWPX_HDR_BAND_MM 로 밴드(=본문 시작선) 미세조정 가능.
+    const envBand = Number(process.env.HWPX_HDR_BAND_MM);
+    const marginHeaderNative =
+      Number.isFinite(envBand) && envBand > 0
+        ? mm(envBand)
+        : floatedHeader.heightHpu + mm(7);
+
+    const section: SectionSpec = {
+      pageWidthHpu: pageWidth,
+      pageHeightHpu: pageHeight,
+      marginLeft: marginLR,
+      marginRight: marginLR,
+      marginTop: marginTB,
+      marginBottom: marginTB,
+      marginHeader: marginHeaderNative,
+      marginFooter: mm(7),
+      columns: 2,
+      columnGapHpu: columnGap,
+      header: headerBlocks,
+      // 머리말 1쪽 전용은 한컴 제약으로 보류: applyPageType 에 "FIRST" 가 없고(BOTH/EVEN/ODD뿐),
+      // 본문 떠있는 표(TOP_AND_BOTTOM)는 2단 중 한 칸만 밀어 반대 칸이 겹친다(검증). 진짜 1쪽
+      // 전용은 마스터페이지(FIRST) 또는 2구역 분할 필요 → 후속. 현재는 모든 쪽 머리말(밴드 채움).
+      headerApplyFirstOnly: false,
+      blocks: bodyBlocks,
+    };
+    return { title, sections: [section] };
+  }
+
   const blocks: BlockNode[] = [];
 
   // 1) 페이지 헤더 (제목, 학교/반/이름)
@@ -471,60 +776,184 @@ export function buildBuilderHwpxDocument(
     blocks.push({ kind: "p", style: { spaceAfter: 60 }, runs: [] });
   }
 
-  // 3) 본문.
-  // 새 방식: 미리보기 pagination 이 확정한 페이지/단 배치를 단별 명시 표로 옮긴다.
-  //   한컴 자동 다단 흐름/균형 맞춤에 의존하지 않으므로, 긴 지문 시험지에서도
-  //   미리보기와 같은 단·페이지 배치가 강제된다. (정답포함 모드는 해설 때문에
-  //   pagination 모델과 다르므로 기존 흐름 방식 유지.)
-  // NOTE(명시 2단 표 방식 비활성화): 페이지마다 2단 표로 배치를 강제하는 방식은
-  // 결정적 배치라는 장점이 있으나, 실제 한컴 한글에서 (1) inline 표의 명시 셀 폭을
-  // 제대로 적용하지 않아 칸이 좁아지고(약 55%), (2) 표가 너무 높아 1페이지에서
-  // 다음 장으로 밀리는 문제가 확인됐다. 그래서 전체폭 2단(colPr) 흐름 방식으로
-  // 되돌린다. (fragment 렌더러/레이아웃 계산 코드는 추후 재시도 위해 보존.)
-  const USE_EXPLICIT_COLUMN_TABLES = false;
-  const pageLayout =
-    USE_EXPLICIT_COLUMN_TABLES && !includeAnswers
-      ? computePaginatedLayout({
+  // 3) 본문 — 결정론적 명시 2단 표.
+  //   한컴은 본문 중간 colPr(신문 다단)을 적용하지 않는다(검증: 전체폭 단일단으로
+  //   렌더됨). 그래서 페이지마다 [좌칸 | 간격 | 우칸] 무테 표로 배치를 강제하고,
+  //   각 문항을 미리보기 pagination 이 정한 (페이지, 단) 으로 라우팅해 미리보기와
+  //   동일한 단/페이지 배치를 얻는다. (명시 셀 폭은 한컴이 정확히 지킨다 — 검증됨.)
+  const lastColWidth =
+    columns === 1 ? columnWidth : contentWidth - columnWidth - columnGap;
+
+  // 커스텀 블록(섹션/구분선/이미지 등)이 섞인 빌더는 placement 라우팅이 복잡하므로
+  // 폴백(전체폭 흐름)으로 처리한다. 순수 문항 시험지는 명시 2단 표 경로를 쓴다.
+  const hasCustomBlocks = (settings?.blocks ?? []).some(
+    (b) => b.blockType && b.blockType !== "question",
+  );
+
+  // 2단 시험지(순수 문항)는 우리 자신의 높이 측정으로 그리디 패킹한다.
+  //   미리보기 pagination 의 (페이지,단) 배치를 그대로 쓰면 미리보기와 한컴의 글꼴
+  //   메트릭/줄바꿈 차이로 칸이 페이지를 넘쳐 (treatAsChar 원자) 표가 통째로 다음
+  //   장으로 밀린다(1쪽이 헤더만 남는 현상). 대신 estimateBlocksHeight(렌더와 동일
+  //   모델)로 각 칸을 페이지 용량까지만 채워 넘침/빈 페이지가 생기지 않게 한다.
+  const useColumnTables = columns === 2 && !hasCustomBlocks;
+
+  if (useColumnTables) {
+    // 미리보기(paginateGroups)가 확정한 (페이지 → 단 → fragment) 배치를 그대로
+    // 셀에 채운다. 문항/지문이 칸·페이지 경계에서 분할되어 웹과 동일한 연속 흐름이
+    // 된다(칸당 1문항만 들어가 하단 40%가 비던 과소충전·페이지 늘어남 문제 해소).
+    // 1쪽 헤더(제목/학생정보/안내문)는 본문 표 위 별도 블록으로 그린다. 한컴 실제
+    // 렌더 높이를 pagination 의 page-0 용량에서 빼지 않으면 첫 표가 1쪽에 못 들어가
+    // 2쪽으로 통째로 밀린다(1쪽 헤더만 남는 현상). estimateBlocksHeight 는 헤더의
+    // 중첩 표(학생정보 박스)를 과소추정하므로, 환산값에 보정 오버헤드를 더한다.
+    //   px = HPU * 760 / (210 * 283.465)   (가상 A4: 760px=210mm)
+    const HPU_TO_PX = 760 / (210 * 283.465);
+    const headerEstPx = estimateBlocksHeight([...blocks], contentWidth) * HPU_TO_PX;
+    const envHdr = Number(process.env.HWPX_HDR_PX);
+    const HEADER_TABLE_UNDERCOUNT_PX = 92; // 헤더 박스(학생정보 3행) 과소추정 실측 보정
+    const firstPageHeaderPx =
+      Number.isFinite(envHdr) && envHdr > 0
+        ? envHdr
+        : Math.round(headerEstPx + HEADER_TABLE_UNDERCOUNT_PX);
+
+    // 한컴 실제 렌더가 pagination 추정보다 미세하게 클 때(특히 구조화 박스 유형)
+    // 원자 페이지 표가 넘쳐 통째로 다음 장으로 밀리는 것을 막는 페이지 용량 안전 여백.
+    const envSafety = Number(process.env.HWPX_SAFETY_PX);
+    const contentSafetyPx = Number.isFinite(envSafety) ? envSafety : 40;
+
+    // 정답포함 모드는 해설 블록 때문에 미리보기 pagination 과 레이아웃이 본질적으로
+    // 다르므로(해설은 pagination 대상 아님) 프래그먼트 경로를 쓰지 않고 그리디 폴백
+    // (renderQuestionBlock 가 해설을 렌더)으로 처리한다.
+    const pageLayout = includeAnswers
+      ? null
+      : computePaginatedLayout({
           blocks: settings?.blocks,
           resolvedItems,
           layout,
           template: settings?.template,
-        })
-      : null;
+          firstPageHeaderPx,
+          contentSafetyPx,
+        });
 
-  if (pageLayout) {
-    const fopts: FragmentRenderOptions = {
-      passageStyle,
-      showPassageTitle,
-      showQuestionMeta: layout.showQuestionMeta !== false,
-      showAnswerSpace: layout.showAnswerSpace !== false,
-      compact,
-      template: settings?.template,
-      columnWidthHpu: columnWidth,
-    };
-    pageLayout.pages.forEach((page: PaperPage, idx: number) => {
-      blocks.push(
-        buildPageTable({
-          page,
-          columns,
-          columnWidthHpu: columnWidth,
-          columnGapHpu: columnGap,
-          contentWidthHpu: contentWidth,
-          pageBreak: idx > 0,
-          fopts,
-        }),
-      );
-    });
-  } else {
-    // 폴백: 기존 한컴 자동 흐름(colPr) + 강제 break 방식.
-    if (columns === 2) {
-      blocks.push({
-        kind: "columnPr",
-        columns: 2,
-        columnGapHpu: columnGap,
+    let usedFragment = false;
+    if (pageLayout && pageLayout.pages.length > 0) {
+      const fopts: FragmentRenderOptions = {
+        passageStyle,
+        showPassageTitle,
+        showQuestionMeta: layout.showQuestionMeta !== false,
+        showAnswerSpace: layout.showAnswerSpace !== false,
+        compact,
+        template: settings?.template,
+        columnWidthHpu: columnWidth,
+      };
+      const pageCols = pageLayout.pages.map((page) => ({
+        left: renderColumn(page[0] ?? [], fopts),
+        right: renderColumn(page[1] ?? [], fopts),
+      }));
+      // 정답표: 웹은 마지막 문항 뒤 흐름에 이어진다 → 마지막 페이지 우칸 끝에 잇는다.
+      if (
+        !includeAnswers &&
+        opts.fullExamQuestions.length > 0 &&
+        pageCols.length > 0
+      ) {
+        const ak = renderAnswerKey(opts.fullExamQuestions, columnWidth);
+        pageCols[pageCols.length - 1].right.push(...ak);
+      }
+
+      // 일관된 HWPX 높이 모델(estimateBlocksHeight)로 페이지별 오버플로를 검사한다.
+      // 구조화 박스 유형(요약/순서/주제 등)은 pagination 추정보다 타게 렌더되어
+      // 헤더로 줄어든 page-0 칸을 넘칠 수 있는데, 페이지 표는 원자(treatAsChar)라
+      // 넘치면 통째로 다음 장으로 밀려 빈 페이지가 생긴다. 한 페이지라도 넘치면
+      // 안전한 그리디 패킹으로 폴백한다(과소충전이지만 빈 페이지·잘림 없음).
+      const pageContentHpu = pageHeight - marginTB - marginTB;
+      const headerHpu = Math.round(firstPageHeaderPx / HPU_TO_PX);
+      const fits = pageCols.every((cols, idx) => {
+        const colH = Math.max(
+          estimateBlocksHeight(cols.left, columnWidth),
+          estimateBlocksHeight(cols.right, columnWidth),
+        );
+        const avail = pageContentHpu - (idx === 0 ? headerHpu : 0);
+        return colH <= avail;
       });
+
+      if (fits) {
+        pageCols.forEach((cols, idx) => {
+          blocks.push(
+            buildColumnPageTable({
+              leftBlocks: cols.left,
+              rightBlocks: cols.right,
+              colWidthHpu: columnWidth,
+              gapHpu: columnGap,
+              lastColWidthHpu: lastColWidth,
+              pageBreak: idx > 0,
+            }),
+          );
+        });
+        usedFragment = true;
+      }
     }
 
+    if (!usedFragment) {
+      // 폴백: fragment 가 한컴에서 넘치거나 pagination 실패 시 자체 높이추정 그리디
+      // 패킹(문항 통째). 안전(빈 페이지·잘림 없음)하나 칸당 1문항이라 다소 성김.
+      const units = renderGroupsToUnits({
+        items: resolvedItems,
+        layout,
+        includeAnswers,
+        compact,
+        passageStyle,
+        showPassageTitle,
+        columnWidthHpu: columnWidth,
+      });
+      if (!includeAnswers && opts.fullExamQuestions.length > 0) {
+        units.push({
+          placeKey: null,
+          blocks: renderAnswerKey(opts.fullExamQuestions, columnWidth),
+        });
+      }
+      const pageContentH = pageHeight - marginTB - marginTB;
+      const SAFETY = 0.95;
+      const colCapacity = Math.floor(pageContentH * SAFETY);
+      const headerH = estimateBlocksHeight([...blocks], contentWidth);
+      const capAt = (pg: number) =>
+        Math.max(1, colCapacity - (pg === 0 ? headerH : 0));
+
+      const pages: BlockNode[][][] = [[[], []]];
+      let p = 0;
+      let col = 0;
+      let used = 0;
+      for (const unit of units) {
+        const h = estimateBlocksHeight(unit.blocks, columnWidth);
+        if (pages[p][col].length > 0 && used + h > capAt(p)) {
+          if (col === 0) {
+            col = 1;
+          } else {
+            p += 1;
+            col = 0;
+            pages[p] = [[], []];
+          }
+          used = 0;
+        }
+        pages[p][col].push(...unit.blocks);
+        used += h;
+      }
+
+      pages.forEach((cols, idx) => {
+        blocks.push(
+          buildColumnPageTable({
+            leftBlocks: cols[0] ?? [],
+            rightBlocks: cols[1] ?? [],
+            colWidthHpu: columnWidth,
+            gapHpu: columnGap,
+            lastColWidthHpu: lastColWidth,
+            pageBreak: idx > 0,
+          }),
+        );
+      });
+    }
+  } else {
+    // 폴백: 전체폭 단일 흐름 (1단 / 정답포함 / 커스텀 블록 / pagination 실패).
+    // colPr 다단은 한컴에서 작동하지 않으므로 쓰지 않는다.
+    const flatWidth = contentWidth;
     if (settings?.blocks?.length) {
       const byLocalId = new Map(
         resolvedItems
@@ -555,7 +984,7 @@ export function buildBuilderHwpxDocument(
           compact,
           passageStyle,
           showPassageTitle,
-          contentWidthHpu: columnWidth,
+          contentWidthHpu: flatWidth,
           breakPlan,
         });
         pendingQuestions = [];
@@ -568,13 +997,7 @@ export function buildBuilderHwpxDocument(
           continue;
         }
         flush();
-        const customBlocks = renderCustomBlock(block, compact, columnWidth);
-        if (block.localId) {
-          applyBreak(
-            customBlocks,
-            breakPlan.get(questionBreakKey(block.localId)),
-          );
-        }
+        const customBlocks = renderCustomBlock(block, compact, flatWidth);
         blocks.push(...customBlocks);
       }
       flush();
@@ -587,9 +1010,12 @@ export function buildBuilderHwpxDocument(
         compact,
         passageStyle,
         showPassageTitle,
-        contentWidthHpu: columnWidth,
+        contentWidthHpu: flatWidth,
         breakPlan,
       });
+    }
+    if (!includeAnswers && opts.fullExamQuestions.length > 0) {
+      blocks.push(...renderAnswerKey(opts.fullExamQuestions, flatWidth));
     }
   }
 

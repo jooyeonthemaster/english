@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useTransition } from "react";
+import { useState, useEffect, useCallback, useRef, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,6 +26,7 @@ import {
   Send,
 } from "lucide-react";
 import { saveAnswer, submitExam } from "@/actions/exam-taking";
+import { normalizeSentenceInsertAnswer } from "@/lib/sentence-insert-options";
 import { toast } from "sonner";
 
 // ---------------------------------------------------------------------------
@@ -37,6 +38,7 @@ interface ExamQuestion {
   orderNum: number;
   points: number;
   type: string;
+  subType: string | null;
   questionText: string;
   questionImage: string | null;
   options: { label: string; text: string }[] | null;
@@ -92,6 +94,92 @@ function formatTime(seconds: number) {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+function getGrammarCorrectionAnswerLabels(questionText: string): string[] {
+  const labels: string[] = [];
+  const regex = /^\(([A-J])\)\s*_{3,}\s*$/gm;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(questionText)) !== null) {
+    if (!labels.includes(match[1])) labels.push(match[1]);
+  }
+  return labels;
+}
+
+function stripGrammarCorrectionAnswerSlots(questionText: string): string {
+  return questionText
+    .replace(/\n{2,}(?:\([A-J]\)\s*_{3,}\s*\n?)+\s*$/m, "")
+    .trim();
+}
+
+function parseGrammarCorrectionAnswer(value: string): Record<string, string> {
+  const map: Record<string, string> = {};
+  const regex = /^\(([A-J])\)\s*(.*)$/gm;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(value || "")) !== null) {
+    map[match[1]] = match[2] || "";
+  }
+  return map;
+}
+
+function formatGrammarCorrectionAnswer(
+  labels: string[],
+  answers: Record<string, string>,
+): string {
+  return labels.map((label) => `(${label}) ${answers[label] || ""}`).join("\n");
+}
+
+function renderFormattedExamText(text: string) {
+  const parts: ReactNode[] = [];
+  const pattern = /__([^_]+)__|_{3,}/g;
+  let lastIndex = 0;
+  let key = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
+    }
+
+    if (match[1]) {
+      const markerMatch = match[1].match(/^\(([A-J])\)\s*(.+)$/i);
+      if (markerMatch) {
+        parts.push(
+          <span key={key++}>
+            <span className="font-bold text-[#3182F6]">({markerMatch[1].toUpperCase()})</span>{" "}
+            <span className="font-semibold underline decoration-2 decoration-[#3182F6] underline-offset-4">
+              {markerMatch[2]}
+            </span>
+          </span>,
+        );
+      } else {
+        parts.push(
+          <span
+            key={key++}
+            className="font-semibold underline decoration-2 decoration-[#3182F6] underline-offset-4"
+          >
+            {match[1]}
+          </span>,
+        );
+      }
+    } else {
+      parts.push(
+        <span
+          key={key++}
+          className="mx-1 inline-block min-w-[88px] border-b-2 border-[#3182F6] align-baseline"
+        >
+          &nbsp;
+        </span>,
+      );
+    }
+    lastIndex = pattern.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -114,14 +202,6 @@ export function ExamTakingClient({ examData }: Props) {
     (k) => answers[k]?.trim()
   ).length;
   const unansweredCount = questions.length - answeredCount;
-
-  // Auto-submit on timeout
-  useEffect(() => {
-    if (remaining === 0 && !autoSubmittedRef.current) {
-      autoSubmittedRef.current = true;
-      handleSubmit();
-    }
-  }, [remaining]);
 
   // Save answer with debounce
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -149,19 +229,25 @@ export function ExamTakingClient({ examData }: Props) {
     });
   }
 
-  function handleSubmit() {
+  const handleSubmit = useCallback(() => {
     startTransition(async () => {
       const result = await submitExam(examData.submissionId);
       if (result.success) {
         toast.success("시험이 제출되었습니다.");
-        router.replace(`/exams/${currentQ?.questionId ? "" : ""}result`);
-        // Navigate back to exam list for now
         router.replace("/exams");
       } else {
         toast.error(result.error || "제출에 실패했습니다.");
       }
     });
-  }
+  }, [examData.submissionId, router, startTransition]);
+
+  // Auto-submit on timeout
+  useEffect(() => {
+    if (remaining === 0 && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true;
+      handleSubmit();
+    }
+  }, [handleSubmit, remaining]);
 
   if (!currentQ) {
     return (
@@ -172,6 +258,30 @@ export function ExamTakingClient({ examData }: Props) {
   }
 
   const isTimeLow = remaining !== null && remaining < 300; // Less than 5 min
+  const grammarCorrectionLabels =
+    currentQ.subType === "GRAMMAR_CORRECTION"
+      ? getGrammarCorrectionAnswerLabels(currentQ.questionText)
+      : [];
+  const isGrammarCorrection =
+    currentQ.subType === "GRAMMAR_CORRECTION" && grammarCorrectionLabels.length > 0;
+  const displayQuestionText = isGrammarCorrection
+    ? stripGrammarCorrectionAnswerSlots(currentQ.questionText)
+    : currentQ.questionText;
+  const grammarCorrectionAnswerMap = isGrammarCorrection
+    ? parseGrammarCorrectionAnswer(answers[currentQ.questionId] || "")
+    : {};
+  const selectedAnswerValue =
+    currentQ.subType === "SENTENCE_INSERT"
+      ? normalizeSentenceInsertAnswer(answers[currentQ.questionId] || "")
+      : answers[currentQ.questionId] || "";
+
+  function setGrammarCorrectionAnswer(label: string, value: string) {
+    const next = { ...grammarCorrectionAnswerMap, [label]: value };
+    setAnswer(
+      currentQ.questionId,
+      formatGrammarCorrectionAnswer(grammarCorrectionLabels, next),
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-white max-w-[480px] mx-auto">
@@ -269,7 +379,7 @@ export function ExamTakingClient({ examData }: Props) {
 
           {/* Question Text */}
           <p className="text-[15px] leading-relaxed text-[#191F28] whitespace-pre-wrap">
-            {currentQ.questionText}
+            {renderFormattedExamText(displayQuestionText)}
           </p>
 
           {/* Question Image */}
@@ -287,30 +397,57 @@ export function ExamTakingClient({ examData }: Props) {
               currentQ.type === "VOCAB") &&
             currentQ.options ? (
               <RadioGroup
-                value={answers[currentQ.questionId] || ""}
+                value={selectedAnswerValue}
                 onValueChange={(v) => setAnswer(currentQ.questionId, v)}
                 className="space-y-2"
               >
-                {currentQ.options.map((opt, oi) => (
-                  <label
-                    key={oi}
-                    className={cn(
-                      "flex items-center gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all",
-                      answers[currentQ.questionId] === opt.text
-                        ? "border-[#3182F6] bg-blue-50/50"
-                        : "border-[#E5E8EB] hover:border-[#3182F6]/30 hover:bg-[#F7F8FA]"
-                    )}
-                  >
-                    <RadioGroupItem value={opt.text} id={`opt-${oi}`} />
-                    <span className="text-sm font-medium text-[#8B95A1] shrink-0">
-                      {opt.label}
-                    </span>
-                    <span className="text-[15px] text-[#191F28]">
-                      {opt.text}
-                    </span>
-                  </label>
-                ))}
+                {currentQ.options.map((opt, oi) => {
+                  const isSentenceInsert = currentQ.subType === "SENTENCE_INSERT";
+                  const optionValue = isSentenceInsert ? String(oi + 1) : opt.text;
+                  const optionText = isSentenceInsert
+                    ? optionDisplayTextForSubtype(currentQ.subType, oi, opt.text)
+                    : opt.text;
+
+                  return (
+                    <label
+                      key={oi}
+                      className={cn(
+                        "flex items-center gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all",
+                        selectedAnswerValue === optionValue
+                          ? "border-[#3182F6] bg-blue-50/50"
+                          : "border-[#E5E8EB] hover:border-[#3182F6]/30 hover:bg-[#F7F8FA]"
+                      )}
+                    >
+                      <RadioGroupItem value={optionValue} id={`opt-${oi}`} />
+                      <span className="text-sm font-medium text-[#8B95A1] shrink-0">
+                        {opt.label}
+                      </span>
+                      <span className="text-[15px] text-[#191F28]">
+                        {optionText}
+                      </span>
+                    </label>
+                  );
+                })}
               </RadioGroup>
+            ) : isGrammarCorrection ? (
+              <div className="space-y-3">
+                {grammarCorrectionLabels.map((label) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <span className="flex h-10 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-sm font-bold text-[#3182F6]">
+                      ({label})
+                    </span>
+                    <Input
+                      value={grammarCorrectionAnswerMap[label] || ""}
+                      onChange={(e) =>
+                        setGrammarCorrectionAnswer(label, e.target.value)
+                      }
+                      placeholder="정답 입력"
+                      className="h-10 border-[#E5E8EB] text-[15px]"
+                      aria-label={`(${label}) 정답`}
+                    />
+                  </div>
+                ))}
+              </div>
             ) : currentQ.type === "ESSAY" ? (
               <Textarea
                 value={answers[currentQ.questionId] || ""}

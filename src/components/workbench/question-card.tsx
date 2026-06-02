@@ -38,7 +38,9 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { shouldIgnoreCardClick } from "./shared/card-click";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -361,7 +363,12 @@ export function QuestionCard({
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
-  const passageMarking = detectPassageMarking(q.passage?.content || q.questionText);
+  const displayQuestionText = repairGrammarCorrectionQuestionText({
+    subType: q.subType,
+    questionText: q.questionText,
+    structuredData: q.structuredData,
+  });
+  const passageMarking = detectPassageMarking(q.passage?.content || displayQuestionText);
   const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "IMPLIED_MEANING", "ANTONYM"];
   const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
   const sub = q.subType || "";
@@ -583,7 +590,7 @@ export function QuestionCard({
                   : "text-[12px] line-clamp-3"
                 : "text-[13px]"
             }`}>
-              {renderFormatted(q.questionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
+              {renderFormatted(displayQuestionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
             </div>
 
             {/* Options */}
@@ -602,7 +609,11 @@ export function QuestionCard({
               return (
                 <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
                   {visibleEntries.map(({ opt, idx, isCorrect }) => {
-                    const { displayLabel, displayText } = formatOption(opt.label, opt.text, idx, passageMarking);
+                    const optionText =
+                      sub === "SENTENCE_INSERT"
+                        ? optionDisplayTextForSubtype(sub, idx, opt.text)
+                        : opt.text;
+                    const { displayLabel, displayText } = formatOption(opt.label, optionText, idx, passageMarking);
                     return (
                       <div key={`${opt.label}-${idx}`} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
                         <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
@@ -620,7 +631,7 @@ export function QuestionCard({
             })()}
 
             {/* Non-MC answer */}
-            {options.length === 0 && q.correctAnswer && !q.questionText.includes(q.correctAnswer) && (
+            {options.length === 0 && q.correctAnswer && !displayQuestionText.includes(q.correctAnswer) && (
               <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
                 <span className="font-medium">정답:</span> {q.correctAnswer}
               </div>

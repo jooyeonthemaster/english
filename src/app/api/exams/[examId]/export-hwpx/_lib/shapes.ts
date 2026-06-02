@@ -125,7 +125,8 @@ export class ShapeRegistry {
       rightMargin: 0,
       spaceBefore: 0,
       spaceAfter: 0,
-      lineSpacingPct: 160,
+      // 미리보기 본문 line-height 1.58 과 일치(이전 160 은 한컴 기본값이라 미세 드리프트).
+      lineSpacingPct: 158,
     });
   }
 
@@ -174,7 +175,7 @@ export class ShapeRegistry {
       bold: !!s.bold,
       italic: !!s.italic,
       underline: s.underline ?? "NONE",
-      underlineColor: "#000000",
+      underlineColor: s.underlineColor ?? "#000000",
       letterSpacing: s.letterSpacing ?? 0,
       borderFillIDRef: 1,
     });
@@ -202,7 +203,7 @@ export class ShapeRegistry {
       rightMargin: s.rightMargin ?? 0,
       spaceBefore: s.spaceBefore ?? 0,
       spaceAfter: s.spaceAfter ?? 0,
-      lineSpacingPct: s.lineSpacingPct ?? 160,
+      lineSpacingPct: s.lineSpacingPct ?? 158,
     });
   }
 

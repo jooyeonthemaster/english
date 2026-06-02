@@ -130,6 +130,10 @@ interface PassageCardGridProps {
 
   // Actions
   handleOpenAnalysisModal: (passageId: string) => void;
+  // Optional. When provided, clicking "상세 보기" on a 미분석 (un-analyzed) passage
+  // opens a plain full-content viewer instead of the analysis/report modal.
+  // Omit it (e.g. tutor program builder) to keep the legacy single-modal behavior.
+  onViewPassageContent?: (passage: PassageItem) => void;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -177,6 +181,7 @@ export function PassageCardGrid({
   onCreatePastedPassage,
   pasteSaving,
   handleOpenAnalysisModal,
+  onViewPassageContent,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
   const [folderWindowCollapsed, setFolderWindowCollapsed] = useState(false);
@@ -1214,9 +1219,17 @@ export function PassageCardGrid({
                     >
                       <button
                         type="button"
-                        onClick={() => handleOpenAnalysisModal(p.id)}
+                        onClick={() => {
+                          // 미분석 지문 → 보고서 생성 모달이 아니라 지문 전체 내용
+                          // 뷰어를 연다. 분석 완료 지문은 기존 분석/보고서 모달 유지.
+                          if (!hasAnalysis && onViewPassageContent) {
+                            onViewPassageContent(p);
+                          } else {
+                            handleOpenAnalysisModal(p.id);
+                          }
+                        }}
                         className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"
-                        title="상세 보기"
+                        title={hasAnalysis ? "상세 보기" : "지문 전체 보기"}
                       >
                         <Eye className="w-3.5 h-3.5 text-slate-500" />
                       </button>

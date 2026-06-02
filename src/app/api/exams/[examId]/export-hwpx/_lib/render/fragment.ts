@@ -13,14 +13,23 @@ import { txt } from "../types";
 import { COLORS, SIZE, SUBTYPE_LABELS } from "../tokens";
 import { parseFormattedToRuns } from "../format";
 import {
+  formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
+  shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
+import {
+  questionStemAndBody,
+  isStructuredAtomicSubtype,
+} from "@/components/exams/paper-builder/question-body-layout";
+import { renderQuestionBlock, type BuilderItemResolved } from "./question";
 import type {
   PassageStyle,
   RenderFragment,
   RenderItemPart,
+  StructRow,
+  StructRowStyle,
 } from "@/components/exams/paper-builder/types";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
@@ -197,6 +206,7 @@ export function renderPassageFragment(
 
 function partHasContent(part: RenderItemPart): boolean {
   return (
+    part.structRows.length > 0 ||
     part.questionRenderedLines.length > 0 ||
     part.options.length > 0 ||
     part.showObjectiveAnswer ||
@@ -205,6 +215,96 @@ function partHasContent(part: RenderItemPart): boolean {
 }
 
 /** fragment 의 한 문항 part(이 단에 배정된 부분)를 렌더. */
+function renderStructRows(
+  rows: StructRow[],
+  subType: string,
+  opts: FragmentRenderOptions,
+): BlockNode[] {
+  if (rows.length === 0) return [];
+
+  const groups: {
+    segIndex: number;
+    style: StructRowStyle;
+    paraLabel?: string;
+    rows: StructRow[];
+  }[] = [];
+
+  for (const row of rows) {
+    const last = groups[groups.length - 1];
+    if (last && last.segIndex === row.segIndex) {
+      last.rows.push(row);
+    } else {
+      groups.push({
+        segIndex: row.segIndex,
+        style: row.style,
+        paraLabel: row.paraLabel,
+        rows: [row],
+      });
+    }
+  }
+
+  const result: BlockNode[] = [];
+  const bodySize = opts.compact ? SIZE.bodyCompact : SIZE.body;
+
+  for (const group of groups) {
+    const text = formatSentenceInsertPassageMarkers(
+      joinRenderedLines(group.rows.map((row) => row.line)),
+      subType === "SENTENCE_INSERT" ? "SENTENCE_INSERT" : null,
+    );
+    const resumed = !group.rows[0].isSegStart;
+    const continues = !group.rows[group.rows.length - 1].isSegEnd;
+
+    if (group.style === "arrow") {
+      result.push({
+        kind: "p",
+        style: { align: "CENTER", spaceAfter: 60, lineSpacingPct: 120 },
+        runs: [txt("\u2193", { size: bodySize, bold: true, color: COLORS.gray })],
+      });
+      continue;
+    }
+
+    if (
+      group.style === "given" ||
+      group.style === "passage" ||
+      group.style === "summary"
+    ) {
+      const inner: ParagraphNode[] = [];
+      if (resumed) inner.push(italicMarker("(\uC774\uC5B4\uC11C)"));
+      if (group.style === "given" && !resumed) {
+        inner.push({
+          kind: "p",
+          style: { align: "LEFT", spaceAfter: 30, lineSpacingPct: 120 },
+          runs: [
+            txt("\uC8FC\uC5B4\uC9C4 \uBB38\uC7A5", {
+              size: SIZE.meta,
+              bold: true,
+              color: COLORS.gray,
+            }),
+          ],
+        });
+      }
+      inner.push(...bodyParas(text, opts.compact, { bold: group.style !== "passage" }));
+      if (continues) {
+        inner.push(italicMarker("(\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192)"));
+      }
+      result.push(...wrapPassageBox(inner, "boxed", opts.columnWidthHpu));
+      continue;
+    }
+
+    if (resumed) result.push(italicMarker("(\uC774\uC5B4\uC11C)"));
+    const prefix =
+      group.style === "para" && group.paraLabel && !resumed
+        ? `${group.paraLabel} `
+        : "";
+    result.push(...bodyParas(`${prefix}${text}`.trim(), opts.compact, { bold: true }));
+    if (continues) {
+      result.push(italicMarker("(\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192)"));
+    }
+  }
+
+  return result;
+}
+
 export function renderQuestionPart(
   part: RenderItemPart,
   opts: FragmentRenderOptions,
@@ -221,7 +321,36 @@ export function renderQuestionPart(
   const subType = item.sourceQuestion.subType || "";
   const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || subType : "";
 
-  // 1) 번호 + 메타
+  // 구조화 원자 유형(요약완성·순서·주제/요지/제목/내용일치)은 칸 경계에서 쪼개지
+  // 않고 한 덩어리로 배치된다. fragment 렌더러는 지문/요약/순서 박스를 그리지
+  // 못하므로, 검증된 완전 렌더러(renderQuestionBlock)로 통째 렌더한다.
+  //   (정답 미포함 경로에서만 fragment 가 쓰이므로 includeAnswers=false.)
+  if (isStructuredAtomicSubtype(subType)) {
+    if (!part.showHeader) return [];
+    // part.source 는 재구성된 PaperItem(sourceQuestion={subType}). renderQuestionBlock
+    // 가 읽는 필드(passageContent/options/questionText/sourceQuestion.subType)는 모두
+    // 갖고 있고, 없는 필드는 정답 미포함 경로에서 안 쓰이므로 캐스팅해 재사용한다.
+    const blocks = renderQuestionBlock({
+      item: item as unknown as BuilderItemResolved,
+      layout: {
+        columns: 2,
+        density: compact ? "compact" : "comfortable",
+        showAnswerSpace: opts.showAnswerSpace,
+        showQuestionMeta: opts.showQuestionMeta,
+        passageStyle: opts.passageStyle,
+      },
+      includeAnswers: false,
+      contentWidthHpu: opts.columnWidthHpu,
+    });
+    blocks.push({ kind: "p", style: { spaceAfter: 80 }, runs: [] });
+    return blocks;
+  }
+
+  // 미리보기(a4-paper-page)와 동일: 지시문(stem=첫 단락)은 번호 옆에 항상 통째로,
+  // 본문(body)만 칸 경계에서 분할된다. questionRenderedLines/Total 은 body 좌표다.
+  const { stem, body } = questionStemAndBody(item);
+
+  // 1) 번호 + 메타 + 지시문(stem) — 한 줄에 인라인.
   if (part.showHeader) {
     const headerRuns: RunNode[] = [
       txt(`${item.orderNum}. `, {
@@ -234,15 +363,23 @@ export function renderQuestionPart(
       headerRuns.push(
         txt(
           subTypeLabel
-            ? `[${item.points}점 · ${subTypeLabel}]`
-            : `[${item.points}점]`,
+            ? `[${item.points}점 · ${subTypeLabel}] `
+            : `[${item.points}점] `,
           { size: SIZE.meta, color: COLORS.gray },
+        ),
+      );
+    }
+    if (stem.trim()) {
+      headerRuns.push(
+        ...parseFormattedToRuns(
+          formatInlineMarkersForSubtype(stem, subType),
+          { size: bodySize, bold: true },
         ),
       );
     }
     result.push({
       kind: "p",
-      style: { spaceBefore: 40, spaceAfter: 60 },
+      style: { align: "JUSTIFY", spaceBefore: 40, spaceAfter: 60 },
       runs: headerRuns,
     });
   }
@@ -252,21 +389,31 @@ export function renderQuestionPart(
     result.push(italicMarker(`(${item.orderNum}번 계속)`));
   }
 
-  // 3) 발문(이 단에 배정된 줄). whole 이면 원문, 분할이면 join.
-  if (part.questionRenderedLines.length > 0) {
-    const whole =
-      part.questionStartLineIndex === 0 &&
-      part.questionStartLineIndex + part.questionRenderedLines.length >=
-        part.questionTotalLines;
-    const text = whole
-      ? item.questionText
-      : joinRenderedLines(part.questionRenderedLines);
-    const rendered = formatSentenceInsertPassageMarkers(text, subType);
+  // 3) 본문(body) — 한 칸에 다 들어가면 통째로, 칸을 넘으면 이 part 에 배치된 줄만.
+  //    (stem 은 위 헤더에서 이미 렌더했다.)
+  const startsAtBeginning = part.questionStartLineIndex === 0;
+  const endsHere =
+    part.questionStartLineIndex + part.questionRenderedLines.length >=
+    part.questionTotalLines;
+  const bodyIsWhole = part.isStart && startsAtBeginning && endsHere;
+
+  if (part.structRows.length > 0) {
+    result.push(...renderStructRows(part.structRows, subType, opts));
+  } else if (bodyIsWhole) {
+    if (body.trim()) {
+      const rendered = formatInlineMarkersForSubtype(body, subType);
+      result.push(...bodyParas(rendered, compact, { bold: true }));
+    }
+  } else if (part.questionRenderedLines.length > 0) {
+    const rendered = formatInlineMarkersForSubtype(
+      joinRenderedLines(part.questionRenderedLines),
+      subType,
+    );
     result.push(...bodyParas(rendered, compact, { bold: true }));
   }
 
   // 4) 선지(이 단에 배정된 선지). originalIndex 로 라벨/표시.
-  if (part.options.length > 0) {
+  if (shouldRenderOptionListForSubtype(subType) && part.options.length > 0) {
     for (const { option, originalIndex } of part.options) {
       const display = optionDisplayTextForSubtype(
         subType,
@@ -303,6 +450,7 @@ export function renderQuestionPart(
   if (
     part.showObjectiveAnswer &&
     opts.showAnswerSpace &&
+    shouldRenderOptionListForSubtype(subType) &&
     (item.objectiveAnswerSlots ?? 0) > 0 &&
     item.options.length > 0
   ) {

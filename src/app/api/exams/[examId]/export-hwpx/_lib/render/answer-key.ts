@@ -5,6 +5,7 @@
 import type { BlockNode, BorderSpec, TableRowNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
+import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const THIN: BorderSpec = {
@@ -38,6 +39,7 @@ export function renderAnswerKey(
   const result: BlockNode[] = [];
   const cellW = Math.floor(contentWidthHpu / cols);
 
+  // 상단 굵은 구분선
   result.push({
     kind: "tbl",
     colWidthsHpu: [contentWidthHpu],
@@ -59,7 +61,7 @@ export function renderAnswerKey(
     ],
   });
 
-  // 제목
+  // 제목 "정 답 표" (DOCX 28 half-pt = 14pt)
   result.push({
     kind: "p",
     style: {
@@ -76,6 +78,36 @@ export function renderAnswerKey(
       }),
     ],
   });
+
+  // 서술형 등 긴 정답이 섞이면 5열 그리드가 한 단어씩 세로로 터진다.
+  // DOCX 와 동일하게 가장 긴 정답이 20자를 넘으면 전체폭 번호 목록으로 렌더한다.
+  const maxAnswerLen = questions.reduce(
+    (max, eq) => Math.max(max, answerTextForQuestion(eq).length),
+    0,
+  );
+  if (maxAnswerLen > 20) {
+    for (const eq of questions) {
+      result.push({
+        kind: "p",
+        style: {
+          leftMargin: 2100, // DOCX indent left 420 dxa × 5
+          indentFirst: -2100, // hanging 420 dxa × 5
+          spaceBefore: 30,
+          spaceAfter: 30,
+          lineSpacingPct: 150,
+        },
+        runs: [
+          txt(`${eq.orderNum}. `, { size: SIZE.answerValue, bold: true, color: COLORS.darkGray }),
+          txt(answerTextForQuestion(eq) || " ", {
+            size: SIZE.answerValue,
+            color: COLORS.black,
+          }),
+        ],
+      });
+    }
+    result.push({ kind: "p", style: { spaceAfter: 80 }, runs: [] });
+    return result;
+  }
 
   const headerCells = Array.from({ length: cols }, () => ({
     widthHpu: cellW,
@@ -94,9 +126,9 @@ export function renderAnswerKey(
         kind: "p" as const,
         style: { align: "CENTER" as const, spaceAfter: 0 },
         runs: [
-          txt("문항", { size: SIZE.answerLabel, bold: true, color: COLORS.darkGray }),
-          txt(" / ", { size: SIZE.answerLabel, color: COLORS.darkGray }),
-          txt("정답", { size: SIZE.answerLabel, bold: true, color: COLORS.darkGray }),
+          txt("문항", { size: 10, bold: true, color: COLORS.darkGray }),
+          txt(" / ", { size: 10, color: COLORS.darkGray }),
+          txt("정답", { size: 10, bold: true, color: COLORS.darkGray }),
         ],
       },
     ],
@@ -110,7 +142,7 @@ export function renderAnswerKey(
       const idx = r + c * totalRows;
       const q = questions[idx];
       const num = q ? `${q.orderNum}. ` : "";
-      const ans = q ? (q.question.correctAnswer || "").trim() : "";
+      const ans = q ? answerTextForQuestion(q) : "";
       cells.push({
         widthHpu: cellW,
         heightHpu: 780,
@@ -128,12 +160,12 @@ export function renderAnswerKey(
             style: { align: "CENTER" as const, spaceAfter: 0 },
             runs: [
               txt(num, {
-                size: SIZE.body,
+                size: SIZE.answerValue,
                 bold: true,
                 color: COLORS.darkGray,
               }),
               txt(ans, {
-                size: SIZE.body,
+                size: SIZE.answerValue,
                 bold: true,
                 color: COLORS.black,
               }),
@@ -154,4 +186,8 @@ export function renderAnswerKey(
   result.push({ kind: "p", style: { spaceAfter: 80 }, runs: [] });
 
   return result;
+}
+
+function answerTextForQuestion(eq: ExamQuestionData): string {
+  return formatGrammarCorrectionCorrectAnswerForStoredQuestion(eq.question);
 }

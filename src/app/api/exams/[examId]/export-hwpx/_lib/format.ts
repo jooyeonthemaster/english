@@ -10,6 +10,7 @@
  */
 
 import type { RunNode, RunStyle } from "./types";
+import { COLORS } from "./tokens";
 
 const PATTERN =
   /<u>(.*?)<\/u>|<b>(.*?)<\/b>|__([^_]+)__|_([^_]+)_|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-jA-J])\)/g;
@@ -23,11 +24,19 @@ export function pickFont(text: string, base: RunStyle | undefined): RunStyle {
   return base ?? {};
 }
 
+export interface FormatOptions {
+  // (A)~(E) 알파벳 마커 색. 기본 파랑(markerBlue). 선지/SENTENCE_ORDER 본문은 검정.
+  // (동그라미 마커 ①·ⓐ 는 DOCX 와 동일하게 항상 파랑이라 이 값을 무시한다.)
+  markerColor?: string;
+}
+
 export function parseFormattedToRuns(
   text: string,
   base: RunStyle = {},
+  opts: FormatOptions = {},
 ): RunNode[] {
   const result: RunNode[] = [];
+  const markerColor = opts.markerColor ?? COLORS.markerBlue;
   let last = 0;
   let m: RegExpExecArray | null;
 
@@ -42,24 +51,49 @@ export function parseFormattedToRuns(
     if (m.index > last) push(text.slice(last, m.index));
 
     if (m[1] !== undefined) {
-      push(m[1], { underline: "SOLID" });
+      // <u>…</u> : 파랑 밑줄 (DOCX underlineBlue)
+      push(m[1], { underline: "SOLID", underlineColor: COLORS.underlineBlue });
     } else if (m[2] !== undefined) {
+      // <b>…</b> : 굵게(색 없음)
       push(m[2], { bold: true });
     } else if (m[3] !== undefined || m[4] !== undefined) {
+      // __word__ / _word_ : 굵게 + 파랑 밑줄
       const word = (m[3] ?? m[4])!;
+      const circledChoice = word.match(/^([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s(.+)$/);
+      if (circledChoice) {
+        push(circledChoice[1], { bold: true, color: markerColor });
+        push(` ${circledChoice[2]}`, {
+          bold: true,
+          underline: "SOLID",
+          underlineColor: COLORS.underlineBlue,
+        });
+        last = m.index + m[0].length;
+        continue;
+      }
       const choice = word.match(/^\(([a-jA-J])\)\s(.+)$/);
       if (choice) {
-        push(`(${choice[1]})`, { bold: true });
-        push(` ${choice[2]}`, { bold: true, underline: "SOLID" });
+        // "(a) text" 형태: (a) 마커는 markerColor, 나머지는 굵게+파랑밑줄
+        push(`(${choice[1]})`, { bold: true, color: markerColor });
+        push(` ${choice[2]}`, {
+          bold: true,
+          underline: "SOLID",
+          underlineColor: COLORS.underlineBlue,
+        });
       } else {
-        push(word, { bold: true, underline: "SOLID" });
+        push(word, {
+          bold: true,
+          underline: "SOLID",
+          underlineColor: COLORS.underlineBlue,
+        });
       }
     } else if (m[5] !== undefined) {
-      push(m[5], { bold: true });
+      // 동그라미 숫자/문자 ①·ⓐ : DOCX 와 동일하게 항상 파랑(markerBlue)
+      push(m[5], { bold: true, color: COLORS.markerBlue });
     } else if (m[6] !== undefined) {
-      push(`(${m[6]})`, { bold: true });
+      // (A)~(J) 알파벳 마커 : markerColor (기본 파랑, 선지/SENTENCE_ORDER 는 검정)
+      push(`(${m[6]})`, { bold: true, color: markerColor });
     } else {
-      // _____ 다수
+      // _____ (긴 빈칸) : 검정 밑줄(색 없음)
       push("               ", { underline: "SOLID" });
     }
     last = m.index + m[0].length;

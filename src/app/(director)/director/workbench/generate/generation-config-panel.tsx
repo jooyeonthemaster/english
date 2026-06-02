@@ -23,6 +23,7 @@ import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { SetBuilderPanel } from "@/components/workbench/set-builder-panel";
 import {
   QUESTION_GENERATION_PLANS,
   getQuestionGenerationCreditCost,
@@ -32,6 +33,9 @@ import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generat
 import {
   GRAMMAR_ANSWER_COUNT_DEFAULT,
   GRAMMAR_ANSWER_COUNT_MIN,
+  GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+  GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+  GRAMMAR_CORRECTION_ERROR_COUNT_MIN,
   GRAMMAR_MARKER_COUNT_DEFAULT,
   GRAMMAR_MARKER_COUNT_MAX,
   GRAMMAR_MARKER_COUNT_MIN,
@@ -45,6 +49,7 @@ const VOCAB_GENERATION_TYPE_IDS = new Set([
 const DETAIL_SETTING_TYPE_IDS = new Set([
   "BLANK_INFERENCE",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CORRECTION",
 ]);
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
@@ -302,6 +307,34 @@ export function GenerationConfigPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grammarAnswerMax]);
 
+  const grammarCorrectionSettings = questionTypeSettings.GRAMMAR_CORRECTION || {};
+  const rawGrammarCorrectionErrorCount = Math.round(
+    Number(
+      grammarCorrectionSettings.errorCount ??
+        grammarCorrectionSettings.answerCount,
+    ) || GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+  );
+  const grammarCorrectionErrorCount = Math.min(
+    GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+    Math.max(
+      GRAMMAR_CORRECTION_ERROR_COUNT_MIN,
+      rawGrammarCorrectionErrorCount,
+    ),
+  );
+  const setGrammarCorrectionErrorCount = (next: number) => {
+    const clamped = Math.min(
+      GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+      Math.max(GRAMMAR_CORRECTION_ERROR_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      GRAMMAR_CORRECTION: {
+        ...(prev.GRAMMAR_CORRECTION || {}),
+        errorCount: clamped,
+      },
+    }));
+  };
+
   useEffect(() => {
     setTypeOrder((prev) => normalizeTypeOrder(prev));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -407,7 +440,7 @@ export function GenerationConfigPanel({
     return category;
   };
 
-  const renderTypeDetailContent = (typeId: string, active: boolean) => {
+  const renderTypeDetailContent = (typeId: string) => {
     if (typeId === "GRAMMAR_ERROR") {
       return (
         <div className="space-y-3">
@@ -504,6 +537,65 @@ export function GenerationConfigPanel({
       );
     }
 
+    if (typeId === "GRAMMAR_CORRECTION") {
+      return (
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[12px] font-bold text-slate-800">
+                틀린 밑줄 개수
+              </span>
+            </div>
+            <div className="mt-1 flex flex-wrap gap-1">
+              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                1 ~ 5개
+              </span>
+              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                밑줄=오류
+              </span>
+            </div>
+            <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              지문에 밑줄 칠 문장/절 구간 수입니다. 선택한 모든 밑줄 구간 안에는
+              어법 오류가 숨어 있어야 합니다.
+            </p>
+          </div>
+          <div className="flex items-center gap-0.5 shrink-0">
+            <button
+              type="button"
+              onClick={() =>
+                setGrammarCorrectionErrorCount(grammarCorrectionErrorCount - 1)
+              }
+              disabled={
+                grammarCorrectionErrorCount <=
+                GRAMMAR_CORRECTION_ERROR_COUNT_MIN
+              }
+              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+              aria-label="틀린 밑줄 개수 줄이기"
+            >
+              <Minus className="w-3 h-3" />
+            </button>
+            <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+              {grammarCorrectionErrorCount}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                setGrammarCorrectionErrorCount(grammarCorrectionErrorCount + 1)
+              }
+              disabled={
+                grammarCorrectionErrorCount >=
+                GRAMMAR_CORRECTION_ERROR_COUNT_MAX
+              }
+              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+              aria-label="틀린 밑줄 개수 늘리기"
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     if (typeId === "BLANK_INFERENCE") {
       return (
         <div className="flex items-center justify-between gap-3">
@@ -581,6 +673,19 @@ export function GenerationConfigPanel({
               <Settings2 className="w-4 h-4" />
               유형 지정
             </button>
+            {FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS && (
+              <button
+                onClick={() => setGenMode("set")}
+                className={`flex-1 flex items-center justify-center gap-2 h-9 rounded-lg text-[13px] font-semibold transition-all duration-200 ${
+                  genMode === "set"
+                    ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-200"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                장문 세트
+              </button>
+            )}
           </div>
         </div>
 
@@ -905,7 +1010,7 @@ export function GenerationConfigPanel({
                           }
                           className="px-3 py-3"
                         >
-                          {renderTypeDetailContent(item.id, active)}
+                          {renderTypeDetailContent(item.id)}
                         </div>
                       ) : null}
                     </section>
@@ -959,9 +1064,21 @@ export function GenerationConfigPanel({
             />
           </div>
         )}
+
+        {genMode === "set" && (
+          <SetBuilderPanel
+            passageId={
+              selectedIds && selectedIds.size > 0
+                ? Array.from(selectedIds)[0]
+                : null
+            }
+            generationPlan={generationPlan}
+          />
+        )}
       </div>
 
       {/* Generate Button */}
+      {genMode !== "set" && (
       <div className="px-5 py-3 border-t border-slate-100 bg-white shrink-0">
         {(() => {
           // 크레딧 비용 계산
@@ -1027,6 +1144,7 @@ export function GenerationConfigPanel({
           );
         })()}
       </div>
+      )}
     </div>
   );
 }

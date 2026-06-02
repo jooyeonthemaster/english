@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Megaphone } from "lucide-react";
+import { Bell, Megaphone, Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -10,6 +10,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CreditBadge } from "@/components/credits/credit-badge";
+import { getSpecialAccount } from "@/lib/special-accounts";
+import { requestOpenFeedback } from "@/lib/feedback-store";
 import { UserMenu } from "./user-menu";
 
 interface StaffSession {
@@ -38,6 +40,8 @@ export function SidebarTopActions({
   isDirector,
   onNavClick,
 }: SidebarTopActionsProps) {
+  const isSpecial = Boolean(getSpecialAccount(staff.email));
+
   return (
     <div
       className={cn(
@@ -130,6 +134,40 @@ export function SidebarTopActions({
           </button>
         )}
       </div>
+
+      {/* 무료 크레딧 신청 (협업 피드백 이벤트) — opens the contact modal */}
+      {isDirector &&
+        !isSpecial &&
+        (collapsed ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => requestOpenFeedback(2)}
+                className="feedback-cta-glow flex items-center justify-center h-9 w-10 mx-auto rounded-xl bg-blue-600 text-white transition-colors duration-200 hover:bg-blue-700"
+                aria-label="무료 크레딧 신청하기"
+              >
+                <Ticket className="size-[16px]" strokeWidth={1.9} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="right"
+              sideOffset={12}
+              className="text-[12px] font-medium"
+            >
+              무료 크레딧 신청하기
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <button
+            type="button"
+            onClick={() => requestOpenFeedback(2)}
+            className="feedback-cta-glow flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-[12.5px] font-bold text-white transition-colors duration-200 hover:bg-blue-700"
+          >
+            <Ticket className="size-[15px]" strokeWidth={1.9} />
+            <span>무료 크레딧 신청하기</span>
+          </button>
+        ))}
     </div>
   );
 }

@@ -28,7 +28,7 @@ export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   FILL_BLANK_KEY: "embedded",
   SUMMARY_COMPLETE: "source",
   WORD_ORDER: "source",
-  GRAMMAR_CORRECTION: "source",
+  GRAMMAR_CORRECTION: "embedded",
   CONTEXT_MEANING: "embedded",
   SYNONYM: "source",
   ANTONYM: "embedded",
@@ -95,7 +95,22 @@ function questionTextLooksEmbedded(questionText: string): boolean {
   return false;
 }
 
+// source 흐름이라 기본은 출처 지문을 켜두지만(단독 출제 시 발문의 "다음 글"이 필요),
+// 강제(토글 잠금)는 하지 않는 유형. 같은 지문을 공유하는 문항들에서 중복 지문을
+// 숨기고 싶을 수 있어 출제자가 끌 수 있게 둔다. 기본값(ON)은 그대로 유지된다
+// — shouldIncludeSourcePassageByDefault 가 flow === "source" 로 결정하기 때문.
+// (별도 출처 지문 블록을 쓰는 서술형/어휘 유형만. 주제·제목·요지 등 INLINE 유형은
+//  지문이 문제 안에 렌더되어 토글이 무의미하므로 제외 → 그대로 강제.)
+const HIDEABLE_SOURCE_PASSAGE_SUBTYPES = new Set([
+  "CONDITIONAL_WRITING", // 조건부 영작
+  "SENTENCE_TRANSFORM", // 문장 전환
+  "SUMMARY_COMPLETE", // 요약문 완성
+  "WORD_ORDER", // 배열 영작
+  "SYNONYM", // 동의어
+]);
+
 export function shouldForceSourcePassage(question: PassageQuestionLike): boolean {
+  if (HIDEABLE_SOURCE_PASSAGE_SUBTYPES.has(question.subType || "")) return false;
   return hasSourcePassageContent(question) && getQuestionPassageFlow(question.subType) === "source";
 }
 

@@ -528,6 +528,74 @@
   box-shadow: 0 0 12px rgba(37, 99, 235, 0.42);
 }
 
+/* Subtle traveling "laser" border — gently guides the eye to the feedback-call
+   row in the 협업 피드백 이벤트 modal. Reuses the workbench-border-orbit keyframe:
+   a faint static blue ring + a soft beam that orbits the rounded border. */
+.feedback-laser {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: transparent;
+  box-shadow: 0 0 0 1px rgba(147, 197, 253, 0.5);
+}
+.feedback-laser::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 250deg,
+    rgba(59, 130, 246, 0.6) 312deg,
+    rgba(99, 102, 241, 0.38) 340deg,
+    transparent 360deg
+  );
+  animation: workbench-border-orbit 4.6s linear infinite;
+}
+.feedback-laser::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgb(246 250 255);
+}
+.feedback-laser > * {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .feedback-laser::before {
+    animation: none;
+  }
+}
+
+/* Sidebar "무료 크레딧 신청하기" CTA — a calm, slow ring pulse keeps it gently
+   noticeable without flashing. Combines a static drop shadow with the ring. */
+@keyframes feedback-cta-pulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22), 0 0 0 0 rgba(37, 99, 235, 0.4);
+  }
+  70% {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22), 0 0 0 7px rgba(37, 99, 235, 0);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22), 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+.feedback-cta-glow {
+  animation: feedback-cta-pulse 2.8s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .feedback-cta-glow {
+    animation: none;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+  }
+}
+
 .workbench-loading-progress--pending {
   width: 34%;
 }

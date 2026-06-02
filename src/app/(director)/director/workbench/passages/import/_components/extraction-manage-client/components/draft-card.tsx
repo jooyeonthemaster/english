@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { FileText, Pencil } from "lucide-react";
@@ -10,6 +16,7 @@ import {
   getDraftSourceFileNames,
   getDraftSourceLabel,
 } from "../utils/draft-source";
+import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
 
@@ -45,7 +52,6 @@ interface DraftCardProps {
 
 export function DraftCard({
   draft,
-  index,
   active,
   checked,
   onClick,
@@ -58,17 +64,20 @@ export function DraftCard({
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [titleEditing, setTitleEditing] = useState(false);
-  const [titleInput, setTitleInput] = useState(draft.title ?? "");
-
-  useEffect(() => {
-    setTitleEditing(false);
-    setTitleInput(draft.title ?? "");
-  }, [draft.id, draft.title]);
+  const [titleEditState, setTitleEditState] = useState<{
+    draftId: string;
+    value: string;
+  } | null>(null);
+  const titleEditing = titleEditState?.draftId === draft.id;
+  const titleInput = titleEditing ? titleEditState.value : draft.title ?? "";
+  const setTitleInput = useCallback(
+    (value: string) => setTitleEditState({ draftId: draft.id, value }),
+    [draft.id],
+  );
 
   const commitTitle = useCallback(() => {
     if (!onTitleChange) {
-      setTitleEditing(false);
+      setTitleEditState(null);
       return;
     }
     const trimmed = titleInput.trim();
@@ -77,17 +86,19 @@ export function DraftCard({
     if (next !== current) {
       onTitleChange(draft.id, next);
     }
-    setTitleEditing(false);
+    setTitleEditState(null);
   }, [titleInput, draft.id, draft.title, onTitleChange]);
 
   const cancelTitleEdit = useCallback(() => {
-    setTitleInput(draft.title ?? "");
-    setTitleEditing(false);
-  }, [draft.title]);
+    setTitleEditState(null);
+  }, []);
   // Keep latest values in a ref so the draggable callback (registered once
   // per draft id) always reads the current checked/bulk state at drag-start.
   const dragStateRef = useRef({ checked, bulkDragIds });
-  dragStateRef.current = { checked, bulkDragIds };
+
+  useLayoutEffect(() => {
+    dragStateRef.current = { checked, bulkDragIds };
+  }, [checked, bulkDragIds]);
 
   useEffect(() => {
     const el = dragRef.current;
@@ -173,8 +184,7 @@ export function DraftCard({
 
   const isReviewed =
     draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
-  const isAnalyzed =
-    draft.analysisStatus === "analyzed" || draft.savedPassageAnalysisId != null;
+  const isAnalyzed = isDraftAnalysisComplete(draft);
   const stampDone = statusBadgeMode === "analysis" ? isAnalyzed : isReviewed;
   const stampLabel =
     statusBadgeMode === "analysis"
@@ -321,8 +331,10 @@ export function DraftCard({
               onMouseDown={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
-                setTitleInput(draft.title ?? "");
-                setTitleEditing(true);
+                setTitleEditState({
+                  draftId: draft.id,
+                  value: draft.title ?? "",
+                });
               }}
               className="group flex min-w-0 flex-1 cursor-text items-center gap-1 rounded-md text-left"
               title="제목 편집"

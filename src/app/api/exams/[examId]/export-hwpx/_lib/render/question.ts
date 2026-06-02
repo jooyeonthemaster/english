@@ -28,8 +28,9 @@ import { renderAnswerBlock } from "./answer";
 
 import { parseQuestionSections } from "@/app/api/exams/[examId]/export-docx/_lib/parse-question-sections";
 import {
-  formatSentenceInsertPassageMarkers,
+  formatInlineMarkersForSubtype,
   optionOrdinalLabel,
+  shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
 import { shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
 import {
@@ -40,6 +41,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
@@ -104,19 +106,21 @@ function safeParseOptions(raw: string | null | undefined): ParsedOption[] {
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
-  const showMeta = layout.showQuestionMeta === true;
+  // 미리보기/break-plan 과 동일하게 기본 ON ([점·유형] 표시). 이전엔 === true 라 기본 OFF 였다.
+  const showMeta = layout.showQuestionMeta !== false;
   const showAnswerSpace = layout.showAnswerSpace !== false && !includeAnswers;
 
   const orderNum = item.orderNum ?? 0;
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
   const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || subType : "";
-  const questionText = formatSentenceInsertPassageMarkers(
+  const questionText = formatInlineMarkersForSubtype(
     item.questionText ?? item.sourceQuestion.questionText ?? "",
     subType,
   ).trim();
-  const options = (item.options ?? safeParseOptions(item.sourceQuestion.options))
+  const parsedOptions = (item.options ?? safeParseOptions(item.sourceQuestion.options))
     .filter((o) => o && (o.text || "").length >= 0);
+  const options = shouldRenderOptionListForSubtype(subType) ? parsedOptions : [];
 
   const result: BlockNode[] = [];
   const qNumSize = compact ? SIZE.qNumCompact : SIZE.qNum;
@@ -169,7 +173,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     }
     result.push({
       kind: "p",
-      style: { spaceBefore: 80, spaceAfter: 80, lineSpacingPct: 160 },
+      style: { spaceBefore: 80, spaceAfter: 80, lineSpacingPct: 158 },
       runs: headerRuns,
     });
   } else if (directionSection) {
@@ -207,12 +211,16 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   }
 
   // 2. 글로벌 지문 (passage 모델, embed 가 아닌 경우)
+  //    fragment 경로는 재구성된 PaperItem(sourceQuestion.passage 없음)을 넘기므로,
+  //    지문 존재 판정은 sourceQuestion.passage 가 아니라 passageContent 로 한다.
   const sourcePassage = item.sourceQuestion.passage;
-  if (sourcePassage && (summaryMc || inlineSourcePassage)) {
+  const inlinePassageContent =
+    item.passageContent ?? sourcePassage?.content ?? "";
+  if (inlinePassageContent && (summaryMc || inlineSourcePassage)) {
     result.push(
       ...renderPassage({
-        passageTitle: item.passageTitle ?? sourcePassage.title ?? "",
-        passageContent: item.passageContent ?? sourcePassage.content ?? "",
+        passageTitle: item.passageTitle ?? sourcePassage?.title ?? "",
+        passageContent: inlinePassageContent,
         passageStyle: layout.passageStyle ?? "boxed",
         showPassageTitle: false,
         compact,
@@ -375,7 +383,10 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   if (includeAnswers) {
     result.push(
       ...renderAnswerBlock({
-        correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+        correctAnswer: formatGrammarCorrectionCorrectAnswerForStoredQuestion({
+          ...item.sourceQuestion,
+          correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+        }),
         explanation: item.sourceQuestion.explanation,
         hasOptions: options.length > 0,
         contentWidthHpu,

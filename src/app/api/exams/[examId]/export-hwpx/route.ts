@@ -4,6 +4,7 @@ import { buildBuilderHwpxDocument } from "./_lib/builder";
 import { packageHwpx } from "./_lib/package";
 import { MIMETYPE } from "./_lib/static-files";
 import { shouldForceSourcePassage } from "@/components/exams/paper-builder/passage-policy";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import type {
   BuilderItem,
   BuilderSettings,
@@ -43,8 +44,14 @@ function resolveBuilderItems(
       const original = byQuestionId.get(item.questionId);
       if (!original) return null;
       const forceSourcePassage = shouldForceBuilderSourcePassage(original, item);
+      const questionText = repairGrammarCorrectionQuestionText({
+        subType: original.question.subType,
+        questionText: item.questionText || original.question.questionText,
+        structuredData: (original.question as { structuredData?: unknown }).structuredData,
+      });
       return {
         ...item,
+        questionText,
         includePassage: item.includePassage !== false || forceSourcePassage,
         orderNum: item.orderNum ?? index + 1,
         points: item.points ?? original.points,
@@ -102,8 +109,11 @@ function applyBuilderSettings(
         points: item.points || original.points,
         question: {
           ...original.question,
-          questionText:
-            item.questionText || original.question.questionText,
+          questionText: repairGrammarCorrectionQuestionText({
+            subType: original.question.subType,
+            questionText: item.questionText || original.question.questionText,
+            structuredData: (original.question as { structuredData?: unknown }).structuredData,
+          }),
           options: item.options
             ? JSON.stringify(item.options)
             : original.question.options,

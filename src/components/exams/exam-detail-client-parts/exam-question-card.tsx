@@ -5,6 +5,8 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DIFFICULTY_LABELS, QUESTION_TYPE_LABELS } from "./constants";
 import { renderFormatted, safeParseJSON } from "./format-text";
+import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import type { ExamQuestion } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -14,7 +16,19 @@ import type { ExamQuestion } from "./types";
 export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
   const [explanationOpen, setExplanationOpen] = useState(false);
   const q = eq.question;
+  const displayQuestionText = repairGrammarCorrectionQuestionText({
+    subType: q.subType,
+    questionText: q.questionText,
+    structuredData: q.structuredData,
+  });
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
+  const displayOptions =
+    q.subType === "SENTENCE_INSERT"
+      ? options.map((option, index) => ({
+          ...option,
+          text: optionDisplayTextForSubtype(q.subType, index, option.text),
+        }))
+      : options;
   const diffLabel = DIFFICULTY_LABELS[q.difficulty] || q.difficulty;
   const diffClass =
     q.difficulty === "KILLER"
@@ -41,13 +55,13 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
 
       {/* Question text */}
       <div className="text-[13px] text-[#191F28] leading-relaxed whitespace-pre-line">
-        {renderFormatted(q.questionText)}
+        {renderFormatted(displayQuestionText)}
       </div>
 
       {/* Options */}
-      {options.length > 0 && (
+      {displayOptions.length > 0 && (
         <div className="space-y-1 pl-1">
-          {options.map((opt) => {
+          {displayOptions.map((opt) => {
             const isCorrect = opt.label === q.correctAnswer;
             return (
               <div
@@ -71,7 +85,7 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
       )}
 
       {/* Non-MC answer */}
-      {options.length === 0 && q.correctAnswer && (
+      {displayOptions.length === 0 && q.correctAnswer && (
         <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded flex items-center gap-1.5">
           <Check className="w-3.5 h-3.5" />
           <span className="font-medium">정답:</span> {q.correctAnswer}
