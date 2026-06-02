@@ -23,6 +23,17 @@ public/*.transcript.meta.txt
 # untracked PDFs in public root (copyrighted/source materials, not app assets)
 public/*.pdf
 
+# office/source documents in public must never be publicly served
+# (backup layer — sensitive files are also kept OUT of public/ entirely)
+public/*.docx
+public/*.doc
+public/*.xlsx
+public/*.xls
+public/*.pptx
+public/*.hwp
+public/*.hwpx
+/*.docx
+
 # unrelated marketing/scratch images (bloat, not referenced by app)
 public/brixs-strawberry-latte-*
 public/61c7d3c3-d347-474f-83cb-2e39efdaa594.jpg
