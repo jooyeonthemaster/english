@@ -1,6 +1,7 @@
 "use client";
 
 import { PassageQueueCard } from "@/components/workbench/passage-queue-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import type { QueuedPassage } from "@/hooks/use-passage-queue";
 
 export type QueueGridCols = "grid3" | "grid2" | "list";
@@ -8,6 +9,7 @@ export type QueueGridCols = "grid3" | "grid2" | "list";
 interface QueueGridProps {
   filteredQueue: QueuedPassage[];
   selectedIds: Set<string>;
+  setSelectedIds: (next: Set<string>) => void;
   onToggleSelect: (id: string, shiftKey: boolean) => void;
   onViewDetail: (id: string) => void;
   onRetry: (id: string) => void;
@@ -24,6 +26,7 @@ const GRID_CLASS: Record<QueueGridCols, string> = {
 export function QueueGrid({
   filteredQueue,
   selectedIds,
+  setSelectedIds,
   onToggleSelect,
   onViewDetail,
   onRetry,
@@ -31,7 +34,11 @@ export function QueueGrid({
   gridCols = "grid3",
 }: QueueGridProps) {
   return (
-    <div className={GRID_CLASS[gridCols]}>
+    <DragSelect
+      className={GRID_CLASS[gridCols]}
+      value={selectedIds}
+      onChange={setSelectedIds}
+    >
       {filteredQueue.map((passage) => (
         <PassageQueueCard
           key={passage.id}
@@ -43,6 +50,6 @@ export function QueueGrid({
           onRemove={onRemove}
         />
       ))}
-    </div>
+    </DragSelect>
   );
 }

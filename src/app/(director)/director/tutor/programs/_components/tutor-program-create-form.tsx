@@ -321,6 +321,7 @@ export function TutorProgramCreateForm({
           selectedCollectionId={selectedCollectionId}
           setSelectedCollectionId={setSelectedCollectionId}
           selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
           toggleCheckbox={toggleCheckbox}
           selectAll={selectAll}
           deselectAll={deselectAll}

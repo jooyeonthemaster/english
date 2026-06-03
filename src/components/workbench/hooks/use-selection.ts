@@ -44,6 +44,7 @@ export function useSelection(itemIds: string[]) {
 
   return {
     selectedIds,
+    setSelectedIds,
     toggleSelect,
     selectAll,
     clearSelection,

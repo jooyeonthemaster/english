@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { isDirectInputPassage } from "@/lib/passage-source";
+import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -79,10 +80,12 @@ export function PassageFileCard({
 
   const borderColor = isAnalyzed ? "border-emerald-200" : "border-slate-200";
   const dragRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    const el = dragRef.current;
+    // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 카드 본문은 영역 선택용.
+    const el = dragHandleRef.current;
     if (!el) return;
     return draggable({
       element: el,
@@ -91,6 +94,7 @@ export function PassageFileCard({
         title: sanitizeAiModelDisclosureText(passage.title),
         type: "passage",
       }),
+      onGenerateDragPreview: makeCardDragPreview(dragRef),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -99,6 +103,7 @@ export function PassageFileCard({
   return (
     <div
       ref={dragRef}
+      data-drag-item-id={passage.id}
       onClick={(e) => {
         // 카드 본문 어디든 클릭 = 선택(체크) 토글. 상세는 우측 하단 '상세 보기' 버튼으로만 연다.
         onToggleSelect(passage.id, e.shiftKey);
@@ -109,6 +114,7 @@ export function PassageFileCard({
       `}>
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start gap-2.5 min-w-0 flex-1">
+            <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSelect(passage.id, e.shiftKey); }}
               className={`w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-0.5 transition-all ${

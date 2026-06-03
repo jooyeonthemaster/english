@@ -8,6 +8,7 @@ import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
 import type { ExamItem } from "./types";
+import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 
 // ---------------------------------------------------------------------------
 // 목록 보기 모드에서 사용하는 드래그 가능한 시험 행
@@ -31,11 +32,13 @@ export function ExamListRow({
   onDelete,
 }: ExamListRowProps) {
   const dragRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   useEffect(() => {
-    const el = dragRef.current;
+    // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 행 본문은 영역 선택용.
+    const el = dragHandleRef.current;
     if (!el) return;
     return draggable({
       element: el,
@@ -44,6 +47,7 @@ export function ExamListRow({
         title: exam.title,
         type: "exam",
       }),
+      onGenerateDragPreview: makeCardDragPreview(dragRef),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -52,6 +56,7 @@ export function ExamListRow({
   return (
     <div
       ref={dragRef}
+      data-drag-item-id={exam.id}
       onClick={() => onClick(exam.id)}
       className={cn(
         "group flex items-center gap-3 px-4 py-3 rounded-lg bg-white border cursor-pointer transition-all hover:shadow-sm",
@@ -61,6 +66,8 @@ export function ExamListRow({
         isDragging && "opacity-40 scale-95",
       )}
     >
+      {/* Drag handle */}
+      <DragHandle ref={dragHandleRef} className="shrink-0" />
       {/* Checkbox */}
       <button
         onClick={(e) => {

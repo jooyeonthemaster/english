@@ -54,7 +54,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [isPending, startTransition] = useTransition();
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
-  // When the sidebar is collapsed, moving the mouse to the very left window edge
+  // When the sidebar is collapsed, hovering the collapsed sidebar area
   // temporarily "peeks" the full sidebar as an overlay (without pushing content).
   // It stays open until the mouse fully leaves the sidebar.
   const [peekOpen, setPeekOpen] = useState(false);
@@ -269,7 +269,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const effectivePath = navigatingTo || pathname;
   const isDashboardV2 = pathname === "/director/dashboard-v2";
 
-  // `isPeeking`: collapsed sidebar temporarily expanded via the left-edge hover.
+  // `isPeeking`: collapsed sidebar temporarily expanded via collapsed-area hover.
   // `displayCollapsed`: whether to render the sidebar visually collapsed (narrow,
   // icons only). During a peek we render it visually expanded even though the
   // underlying `collapsed` state is still true.
@@ -280,8 +280,8 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     <TooltipProvider delayDuration={300}>
       <div className="flex min-h-screen flex-col bg-[#F4F6F9]">
        <div className="flex flex-1">
-        {/* Left-edge hover trigger: when collapsed, reaching the very window edge
-            temporarily peeks the full sidebar. */}
+        {/* Left-edge hover trigger kept for edge-only entries; the collapsed
+            sidebar itself also opens the temporary peek on hover. */}
         {collapsed && !peekOpen && (
           <div
             aria-hidden
@@ -308,6 +308,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
               "flex h-full min-h-0",
               collapsed && "absolute left-0 top-0 z-50",
             )}
+            onMouseEnter={collapsed && !peekOpen ? () => setPeekOpen(true) : undefined}
             onMouseLeave={isPeeking ? () => setPeekOpen(false) : undefined}
             style={
               collapsed

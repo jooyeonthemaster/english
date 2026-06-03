@@ -50,6 +50,7 @@ import { ExamFileCard } from "./exam-file-card";
 import { ExamQuickViewDialog } from "./exam-quick-view-dialog";
 
 import { ExamListRow } from "./exam-list-client-parts/exam-list-row";
+import { DragSelect } from "@/components/ui/drag-select";
 import { FiltersToolbar } from "./exam-list-client-parts/filters-toolbar";
 import type { ClassOption, ExamItem } from "./exam-list-client-parts/types";
 
@@ -512,7 +513,11 @@ export function ExamListClient({
                   )}
                 </div>
               ) : viewType === "grid" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                <DragSelect
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+                  value={selection.selectedIds}
+                  onChange={selection.setSelectedIds}
+                >
                   {displayedExams.map((exam) => (
                     <ExamFileCard
                       key={exam.id}
@@ -525,10 +530,14 @@ export function ExamListClient({
                       }
                     />
                   ))}
-                </div>
+                </DragSelect>
               ) : (
                 /* List view — with drag support */
-                <div className="space-y-1.5">
+                <DragSelect
+                  className="space-y-1.5"
+                  value={selection.selectedIds}
+                  onChange={selection.setSelectedIds}
+                >
                   {displayedExams.map((exam) => (
                     <ExamListRow
                       key={exam.id}
@@ -542,7 +551,7 @@ export function ExamListClient({
                       onDelete={setDeleteId}
                     />
                   ))}
-                </div>
+                </DragSelect>
               )}
             </div>
           </section>

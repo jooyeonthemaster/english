@@ -583,6 +583,7 @@ export function PassageRegistrationClient({
             collectionPassageIds={collectionPassageIds}
             setCollectionPassageIds={setCollectionPassageIds}
             selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
             toggleSelect={toggleSelect}
             selectAll={selectAll}
             clearSelection={clearSelection}

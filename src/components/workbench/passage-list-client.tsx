@@ -37,6 +37,7 @@ import {
 import { PassageStudyNotePrintDialog } from "@/components/workbench/passage-study-note-print-dialog";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import {
   createPassageCollection,
   updatePassageCollection,
@@ -850,7 +851,11 @@ export function PassageListClient({
                     )}
                   </div>
                 ) : gridCols === "list" ? (
-                  <div className="space-y-1.5">
+                  <DragSelect
+                    className="space-y-1.5"
+                    value={selection.selectedIds}
+                    onChange={selection.setSelectedIds}
+                  >
                     {displayedPassages.map((p) => (
                       <PassageFileRow
                         key={p.id}
@@ -859,14 +864,16 @@ export function PassageListClient({
                         onToggleSelect={selection.toggleSelect}
                       />
                     ))}
-                  </div>
+                  </DragSelect>
                 ) : (
-                  <div
+                  <DragSelect
                     className={
                       gridCols === "grid2"
                         ? "grid grid-cols-1 gap-3 sm:grid-cols-2"
                         : "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
                     }
+                    value={selection.selectedIds}
+                    onChange={selection.setSelectedIds}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileCard
@@ -878,7 +885,7 @@ export function PassageListClient({
                         dupCount={dupCountById.get(p.id) ?? 0}
                       />
                     ))}
-                  </div>
+                  </DragSelect>
                 )}
               </div>
             )}

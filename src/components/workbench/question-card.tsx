@@ -341,6 +341,10 @@ interface QuestionCardProps {
   /** 해설보기 줄 왼쪽에 '상세 보기' 버튼을 띄우고, 해설보기를 오른쪽으로 보낸다.
    *  두 버튼 색은 '펼치기' 버튼과 통일(blue-400). 생성/검수 결과 카드 전용. */
   showDetailButton?: boolean;
+  /** 영역 드래그 선택(DragSelect)이 읽는 식별자. 기본은 q.id 지만, 선택 상태가
+   *  q.id 가 아닌 다른 키(예: 생성 결과의 persistedQuestionId)로 관리되는 경우
+   *  해당 키를 넘긴다. null 을 주면 이 카드는 영역 선택 대상에서 제외된다. */
+  dragItemId?: string | null;
 }
 
 export function QuestionCard({
@@ -360,7 +364,9 @@ export function QuestionCard({
   showHeaderActions = false,
   openOnCardClick = false,
   showDetailButton = false,
+  dragItemId,
 }: QuestionCardProps) {
+  const resolvedDragItemId = dragItemId === undefined ? q.id : dragItemId;
   const [passageOpen, setPassageOpen] = useState(false);
   const [explanationOpen, setExplanationOpen] = useState(false);
   const [compactExpanded, setCompactExpanded] = useState(false);
@@ -433,6 +439,7 @@ export function QuestionCard({
 
   return (
     <Card
+      data-drag-item-id={resolvedDragItemId ?? undefined}
       onClick={handleCardClick}
       className={`gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"

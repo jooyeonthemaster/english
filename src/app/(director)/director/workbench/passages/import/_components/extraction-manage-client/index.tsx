@@ -1107,6 +1107,23 @@ export function ExtractionManageClient({
                   }}
                   resultScope={data.resultScope}
                   onBackToAllResults={showAllResults}
+                  toolbar={
+                    embedded && isAllMaterialsView ? (
+                      <ManageFiltersBarTasks
+                        variant="all"
+                        compact
+                        searchValue={taskSearchValue}
+                        onSearchChange={setTaskSearchValue}
+                        resultCount={visibleTasks.length}
+                        statusFilter={taskStatusFilter}
+                        onStatusFilterChange={setTaskStatusFilter}
+                        sortOrder={taskSortOrder}
+                        onSortOrderChange={setTaskSortOrder}
+                        analysisFilter={taskAnalysisFilter}
+                        onAnalysisFilterChange={setTaskAnalysisFilter}
+                      />
+                    ) : undefined
+                  }
                 />
               </div>
 
@@ -1124,62 +1141,53 @@ export function ExtractionManageClient({
                 >
                   <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
                     <DraftSelectionToolbar
-                        embedded
-                        selectedCount={actionTargetIds.size}
-                        totalCount={totalSelectableCount}
-                        isAllSelected={isAllSelected}
-                        onSelectAll={selectAll}
-                        onClearSelection={clearActionSelection}
-                        activeFolder={folders.activeFolder}
-                        onRemoveFromFolder={handleRemoveFromFolderClick}
-                        extraActions={selectionExtraActions}
-                        primaryAction={promoteAction}
-                      />
+                      embedded
+                      selectedCount={actionTargetIds.size}
+                      totalCount={totalSelectableCount}
+                      isAllSelected={isAllSelected}
+                      onSelectAll={selectAll}
+                      onClearSelection={clearActionSelection}
+                      activeFolder={folders.activeFolder}
+                      onRemoveFromFolder={handleRemoveFromFolderClick}
+                      extraActions={selectionExtraActions}
+                      primaryAction={promoteAction}
+                    />
+                    {!embedded ? (
                       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
                         <ManageFiltersBarTasks
                           variant="filters-only"
-                          compact={embedded}
+                          searchValue={taskSearchValue}
+                          onSearchChange={setTaskSearchValue}
+                          statusFilter={taskStatusFilter}
+                          onStatusFilterChange={setTaskStatusFilter}
+                          sortOrder={taskSortOrder}
+                          onSortOrderChange={setTaskSortOrder}
+                        />
+                        <ManageFiltersBarTasks
+                          variant="search-only"
                           searchValue={taskSearchValue}
                           onSearchChange={setTaskSearchValue}
                           statusFilter={taskStatusFilter}
                           onStatusFilterChange={setTaskStatusFilter}
                           sortOrder={taskSortOrder}
                           onSortOrderChange={setTaskSortOrder}
-                          analysisFilter={
-                            embedded ? taskAnalysisFilter : undefined
-                          }
-                          onAnalysisFilterChange={
-                            embedded ? setTaskAnalysisFilter : undefined
-                          }
                         />
-                        <ManageFiltersBarTasks
-                          variant="search-only"
-                          compact={embedded}
-                          searchValue={taskSearchValue}
-                          onSearchChange={setTaskSearchValue}
-                          resultCount={embedded ? visibleTasks.length : undefined}
-                          statusFilter={taskStatusFilter}
-                          onStatusFilterChange={setTaskStatusFilter}
-                          sortOrder={taskSortOrder}
-                          onSortOrderChange={setTaskSortOrder}
+                        <ViewModeCycleButton
+                          value={materialGridCols}
+                          options={MATERIAL_GRID_OPTIONS.map((option) =>
+                            option.value === "grid3"
+                              ? {
+                                  ...option,
+                                  disabled: reviewDrawerOpen,
+                                  disabledTitle:
+                                    "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
+                                }
+                              : option,
+                          )}
+                          onChange={setMaterialGridCols}
                         />
-                        {!embedded ? (
-                          <ViewModeCycleButton
-                            value={materialGridCols}
-                            options={MATERIAL_GRID_OPTIONS.map((option) =>
-                              option.value === "grid3"
-                                ? {
-                                    ...option,
-                                    disabled: reviewDrawerOpen,
-                                    disabledTitle:
-                                      "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
-                                  }
-                                : option,
-                            )}
-                            onChange={setMaterialGridCols}
-                          />
-                        ) : null}
-                    </div>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               ) : null}
@@ -1264,6 +1272,7 @@ export function ExtractionManageClient({
                     }
                     lastViewedDraftId={data.lastViewedDraftId}
                     checkedIds={selectedIds}
+                    setCheckedIds={setSelectedIds}
                     gridCols={materialGridCols}
                     onGridColsChange={setMaterialGridCols}
                     grid3Disabled={reviewDrawerOpen}

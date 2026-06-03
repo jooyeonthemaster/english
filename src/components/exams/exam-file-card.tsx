@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -55,15 +56,18 @@ export function ExamFileCard({
   onEdit?: (id: string) => void;
 }) {
   const dragRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
 
   useEffect(() => {
-    const el = dragRef.current;
+    // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 카드 본문은 영역 선택용.
+    const el = dragHandleRef.current;
     if (!el) return;
     return draggable({
       element: el,
       getInitialData: () => ({ examId: exam.id, title: exam.title, type: "exam" }),
+      onGenerateDragPreview: makeCardDragPreview(dragRef),
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -72,6 +76,7 @@ export function ExamFileCard({
   return (
     <div
       ref={dragRef}
+      data-drag-item-id={exam.id}
       onClick={(e) => onToggleSelect(exam.id, e.shiftKey)}
       className={cn(
         "group relative rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer",
@@ -79,8 +84,9 @@ export function ExamFileCard({
         isDragging && "opacity-40 scale-95",
       )}
     >
-      {/* Top row: checkbox + title */}
+      {/* Top row: handle + checkbox + title */}
       <div className="flex items-start gap-2.5 min-w-0">
+        <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSelect(exam.id, e.shiftKey); }}
           className={cn(

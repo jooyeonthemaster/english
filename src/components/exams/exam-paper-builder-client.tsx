@@ -132,6 +132,8 @@ const RIGHT_PANEL_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.rightPanelCollapsed.v1";
 const LEFT_PANEL_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.leftPanelCollapsed.v1";
+const SETTINGS_NUDGE_HIDDEN_STORAGE_KEY =
+  "smoat.examPaperBuilder.settingsNudgeHidden.v1";
 // 패널 여닫기/폭 조절 겸용 세로 핸들의 컬럼 폭(버튼 w-4 + 좌우 mx-1).
 const PANEL_TOGGLE_HANDLE_WIDTH = 24;
 // 핸들 클릭(여닫기)과 드래그(폭 조절)를 구분하는 이동 임계값(px).
@@ -778,6 +780,8 @@ export function ExamPaperBuilderClient({
   const [headerVisible, setHeaderVisible] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsNudgeDismissed, setSettingsNudgeDismissed] = useState(false);
+  const [settingsNudgePreferenceLoaded, setSettingsNudgePreferenceLoaded] =
+    useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [paperSize, setPaperSize] = useState<PaperSize>(() =>
     asPaperSize(
@@ -1026,13 +1030,39 @@ export function ExamPaperBuilderClient({
   );
   const shouldNudgeSettingsButton =
     !isEditingExistingExam &&
+    settingsNudgePreferenceLoaded &&
     !settingsOpen &&
     !settingsNudgeDismissed &&
     paperItems.length === 0;
 
+  useEffect(() => {
+    try {
+      setSettingsNudgeDismissed(
+        window.localStorage.getItem(SETTINGS_NUDGE_HIDDEN_STORAGE_KEY) === "true",
+      );
+    } catch {
+      // Keep the normal first-run hint when storage is unavailable.
+    } finally {
+      setSettingsNudgePreferenceLoaded(true);
+    }
+  }, []);
+
   const openSettingsPanel = useCallback(() => {
     setSettingsNudgeDismissed(true);
     setSettingsOpen(true);
+  }, []);
+
+  const dismissSettingsNudge = useCallback(() => {
+    setSettingsNudgeDismissed(true);
+  }, []);
+
+  const hideSettingsNudgePermanently = useCallback(() => {
+    setSettingsNudgeDismissed(true);
+    try {
+      window.localStorage.setItem(SETTINGS_NUDGE_HIDDEN_STORAGE_KEY, "true");
+    } catch {
+      // The hint can still be dismissed for the current session.
+    }
   }, []);
 
   // 체크박스 다중 선택(드래그 대상) — 미리보기 포함 여부와 무관한 별도 상태.
@@ -2471,6 +2501,8 @@ export function ExamPaperBuilderClient({
             totalPoints={totalPoints}
             autoPointTotal={autoPointTotal}
             settingsNudgeActive={shouldNudgeSettingsButton}
+            onDismissSettingsNudge={dismissSettingsNudge}
+            onHideSettingsNudgePermanently={hideSettingsNudgePermanently}
             onOpenSettings={openSettingsPanel}
             onSelectItem={handleSelectPaperItem}
             onInsertBlock={insertBlock}

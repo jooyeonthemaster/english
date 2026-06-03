@@ -52,6 +52,7 @@ import { FolderSection } from "./shared/folder-section";
 import { MoveOrCopyFolderPicker } from "./shared/move-or-copy-folder-picker";
 import { QuestionCard } from "./question-card";
 import { QuestionBankCard } from "./question-bank-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
 import { GridToggle } from "./question-bank-client/grid-toggle";
@@ -767,7 +768,7 @@ export function QuestionBankClient({
               updateFilter("approved", seg.value);
             }}
             aria-pressed={seg.active}
-            className={`h-8 cursor-pointer px-2.5 text-[11px] font-semibold transition-colors ${
+            className={`h-7 cursor-pointer px-2.5 text-[11px] font-semibold transition-colors ${
               index > 0 ? "border-l border-slate-200 " : ""
             }${
               seg.active
@@ -1032,6 +1033,7 @@ export function QuestionBankClient({
                   onEdit={editor.openEditor}
                   cardClickSelects
                   showDetailButton
+                  dragRequiresSelection
                   expandedPassageIds={expandedPassageIds}
                   setExpandedPassageIds={setExpandedPassageIds}
                   onActivePassageChange={setActivePassageContext}
@@ -1072,7 +1074,9 @@ export function QuestionBankClient({
                   )}
                 </div>
               ) : (
-                <div
+                <DragSelect
+                  value={selectedIds}
+                  onChange={setSelectedIds}
                   className={`grid gap-3 ${
                     gridCols === 2
                       ? "grid-cols-1 md:grid-cols-2"
@@ -1117,11 +1121,12 @@ export function QuestionBankClient({
                         viewSize={viewSize}
                         cardClickSelects
                         showDetailButton
+                        dragRequiresSelection
                         getDragQuestionIds={getDragQuestionIds}
                       />
                     );
                   })}
-                </div>
+                </DragSelect>
               )}
             </div>
           </section>
