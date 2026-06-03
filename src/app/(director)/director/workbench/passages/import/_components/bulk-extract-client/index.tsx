@@ -95,9 +95,9 @@ export function BulkExtractClient({
 
   const UPLOAD_COLLAPSE_KEY = "smoat:extraction-bulk:upload:collapsed";
   const UPLOAD_HEIGHT_KEY = "smoat:extraction-bulk:upload:height";
-  const UPLOAD_MIN = 320;
-  const UPLOAD_MAX = 900;
-  const UPLOAD_DEFAULT = 520;
+  const UPLOAD_MIN = 360;
+  const UPLOAD_MAX = 1400;
+  const UPLOAD_DEFAULT = 760;
   const [uploadCollapsed, setUploadCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {

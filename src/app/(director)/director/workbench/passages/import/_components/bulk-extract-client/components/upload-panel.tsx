@@ -369,7 +369,7 @@ export function UploadPanel({
                     </span>
                   </div>
                 </div>
-                <div className="flex min-h-0 flex-1 items-stretch gap-2 overflow-x-auto pb-2">
+                <div className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto pb-2 [grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]">
                   {slots.map((slot, index) => {
                     const isDragging = dragSlotIndex === index;
                     const isDropTarget =
@@ -437,7 +437,7 @@ export function UploadPanel({
                           setDropTargetIndex(null);
                         }}
                         className={
-                          "flex h-full w-[168px] shrink-0 flex-col rounded-md border bg-white p-2 transition-all " +
+                          "flex flex-col rounded-md border bg-white p-2 transition-all " +
                           (selectionOrder >= 0
                             ? "border-blue-500 ring-2 ring-blue-300 "
                             : isDragging
@@ -468,7 +468,7 @@ export function UploadPanel({
                             {kindBadge.text}
                           </span>
                         ) : null}
-                        <div className="relative min-h-0 flex-1 aspect-[4/3] overflow-hidden rounded border border-slate-200 bg-slate-50">
+                        <div className="relative aspect-[3/4] w-full overflow-hidden rounded border border-slate-200 bg-slate-100">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={slot.previewUrl}
@@ -490,7 +490,7 @@ export function UploadPanel({
                                   : undefined
                             }
                             className={
-                              "absolute inset-0 h-full w-full object-cover object-top " +
+                              "absolute inset-0 h-full w-full bg-white object-contain " +
                               (selectMode
                                 ? selectable
                                   ? "cursor-pointer"
