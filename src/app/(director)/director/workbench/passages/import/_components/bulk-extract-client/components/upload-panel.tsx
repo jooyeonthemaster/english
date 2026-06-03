@@ -369,7 +369,7 @@ export function UploadPanel({
                     </span>
                   </div>
                 </div>
-                <div className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto pb-2 [grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]">
+                <div className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto pb-2 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
                   {slots.map((slot, index) => {
                     const isDragging = dragSlotIndex === index;
                     const isDropTarget =

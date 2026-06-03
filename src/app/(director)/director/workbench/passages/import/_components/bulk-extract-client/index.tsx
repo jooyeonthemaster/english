@@ -708,7 +708,12 @@ export function BulkExtractClient({
           {!uploadCollapsed ? (
             <>
               <div
-                className="grid min-h-0 overflow-hidden xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px]"
+                className={
+                  "grid min-h-0 overflow-hidden " +
+                  (adaptiveIntake
+                    ? "grid-cols-1"
+                    : "xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px]")
+                }
                 style={{ height: uploadHeight }}
               >
                 <UploadPanel
@@ -756,13 +761,15 @@ export function BulkExtractClient({
                   }
                   onUnmerge={adaptiveIntake ? handleUnmerge : undefined}
                 />
-                <ExtractionRunPanel
-                  busy={runBusy}
-                  inputMode={inputMode}
-                  pageCount={slots.length}
-                  textLength={textValue.trim().length}
-                  activeJobId={jobId}
-                />
+                {adaptiveIntake ? null : (
+                  <ExtractionRunPanel
+                    busy={runBusy}
+                    inputMode={inputMode}
+                    pageCount={slots.length}
+                    textLength={textValue.trim().length}
+                    activeJobId={jobId}
+                  />
+                )}
               </div>
               <div className="relative flex items-center justify-end px-4 pb-1 pt-1">
                 <div
