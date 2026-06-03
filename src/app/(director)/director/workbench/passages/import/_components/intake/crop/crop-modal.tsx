@@ -51,6 +51,8 @@ export function CropModal({
       : (initialBoxes ?? []).map((_, i) => i + 1),
   );
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  // 체크된 영역 인덱스 — "한 지문으로 묶기 / 따로 떼기" 대상.
+  const [regionSel, setRegionSel] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const createdUrls = useRef<string[]>([]);
@@ -73,6 +75,7 @@ export function CropModal({
   // CropCanvas의 onChange — 영역 추가/삭제 시 groups를 정렬 동기화.
   const handleBoxesChange = useCallback(
     (next: CropBox[]) => {
+      if (next.length !== boxes.length) setRegionSel([]); // 인덱스 어긋남 방지
       if (next.length > boxes.length) {
         const maxG = groups.length ? Math.max(...groups) : 0;
         setGroups([...groups, maxG + 1]); // 새 영역 = 새 지문
@@ -91,6 +94,7 @@ export function CropModal({
 
   const removeBox = useCallback(
     (index: number) => {
+      setRegionSel([]);
       setBoxes((prev) => prev.filter((_, i) => i !== index));
       setGroups((prev) => renumber(prev.filter((_, i) => i !== index)));
       setActiveIndex((prev) =>
@@ -100,20 +104,36 @@ export function CropModal({
     [],
   );
 
-  const setRegionGroup = useCallback(
-    (index: number, group: number) => {
-      setGroups((prev) => {
-        const ng = [...prev];
-        ng[index] = group;
-        return renumber(ng);
-      });
-    },
-    [],
-  );
+  const toggleRegionSel = useCallback((index: number) => {
+    setRegionSel((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+    );
+  }, []);
 
-  const distinctGroups = Array.from(new Set(groups)).sort((a, b) => a - b);
-  const passageCount = distinctGroups.length;
-  const nextNewGroup = (groups.length ? Math.max(...groups) : 0) + 1;
+  // 선택한 영역들을 한 지문(첫 선택 영역의 지문 번호)으로 통합.
+  const mergeSelected = useCallback(() => {
+    if (regionSel.length < 2) return;
+    setGroups((prev) => {
+      const firstIdx = [...regionSel].sort((a, b) => a - b)[0];
+      const target = prev[firstIdx];
+      return renumber(prev.map((g, i) => (regionSel.includes(i) ? target : g)));
+    });
+    setRegionSel([]);
+  }, [regionSel]);
+
+  // 선택한 영역들을 각각 별개 지문으로 분리.
+  const splitSelected = useCallback(() => {
+    if (regionSel.length === 0) return;
+    setGroups((prev) => {
+      let nextId = prev.length ? Math.max(...prev) : 0;
+      return renumber(
+        prev.map((g, i) => (regionSel.includes(i) ? ++nextId : g)),
+      );
+    });
+    setRegionSel([]);
+  }, [regionSel]);
+
+  const passageCount = new Set(groups).size;
 
   const handleConfirm = useCallback(async () => {
     if (boxes.length === 0 || busy) return;
@@ -225,6 +245,31 @@ export function CropModal({
               </span>
             </div>
 
+            {regionSel.length > 0 ? (
+              <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-slate-100 bg-blue-50/60 px-3 py-2">
+                <span className="text-[10.5px] font-bold text-slate-700">
+                  {regionSel.length}개 영역 선택됨
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={mergeSelected}
+                    disabled={regionSel.length < 2}
+                    className="inline-flex h-6 cursor-pointer items-center rounded bg-blue-600 px-2 text-[10.5px] font-bold text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:bg-blue-300"
+                  >
+                    한 지문으로 묶기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={splitSelected}
+                    className="inline-flex h-6 cursor-pointer items-center rounded border border-slate-200 bg-white px-2 text-[10.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  >
+                    따로 떼기
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-2">
               {boxes.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-3 text-center">
@@ -239,16 +284,26 @@ export function CropModal({
               ) : (
                 boxes.map((box, index) => {
                   const active = index === activeIndex;
+                  const checked = regionSel.includes(index);
                   return (
                     <div
                       key={index}
                       className={
                         "flex w-full items-center gap-1.5 rounded-md border px-2 py-1.5 transition-colors " +
-                        (active
+                        (checked
                           ? "border-blue-500 bg-blue-50/60"
-                          : "border-slate-200 bg-white hover:bg-slate-50")
+                          : active
+                            ? "border-blue-300 bg-blue-50/30"
+                            : "border-slate-200 bg-white hover:bg-slate-50")
                       }
                     >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleRegionSel(index)}
+                        aria-label={`영역 ${index + 1} 선택`}
+                        className="size-3.5 shrink-0 cursor-pointer accent-blue-600"
+                      />
                       <button
                         type="button"
                         onClick={() => setActiveIndex(index)}
@@ -261,29 +316,9 @@ export function CropModal({
                           {cropBoxLabel(box)}
                         </span>
                       </button>
-                      <label className="flex shrink-0 items-center gap-1">
-                        <span className="text-[10px] font-medium text-slate-400">
-                          지문
-                        </span>
-                        <select
-                          value={groups[index] ?? 1}
-                          onChange={(e) =>
-                            setRegionGroup(index, Number(e.target.value))
-                          }
-                          aria-label={`영역 ${index + 1} 지문 번호`}
-                          className="h-6 cursor-pointer rounded border border-slate-200 bg-white px-1 text-[11px] font-bold text-blue-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200"
-                        >
-                          {distinctGroups.map((g) => (
-                            <option key={g} value={g}>
-                              {g}
-                            </option>
-                          ))}
-                          {/* 이 영역이 단독 그룹이 아니면 "새 지문"으로 분리 가능 */}
-                          {groups.filter((g) => g === groups[index]).length > 1 ? (
-                            <option value={nextNewGroup}>새 지문</option>
-                          ) : null}
-                        </select>
-                      </label>
+                      <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-700 ring-1 ring-blue-100">
+                        지문 {groups[index]}
+                      </span>
                       <button
                         type="button"
                         onClick={() => removeBox(index)}
@@ -298,10 +333,10 @@ export function CropModal({
               )}
             </div>
             <div className="border-t border-slate-100 px-3 py-2 text-[10.5px] leading-relaxed text-slate-400">
-              드래그=영역 · 안쪽 드래그=이동 · 핸들=크기조절
+              드래그=영역 · 안쪽 드래그=이동 · 핸들=크기조절 · Del=삭제
               <br />
-              같은 <b className="font-bold text-blue-600">지문 번호</b>끼리 이어붙여
-              추출 · Del=삭제
+              여러 조각이 한 지문이면{" "}
+              <b className="font-bold text-blue-600">체크 후 “한 지문으로 묶기”</b>
             </div>
           </aside>
         </div>
