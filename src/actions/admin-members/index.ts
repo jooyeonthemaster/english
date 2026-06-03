@@ -28,3 +28,5 @@ export {
 export { adjustMemberCredits } from "./adjust-member-credits";
 
 export { toggleMemberActive } from "./toggle-member-active";
+
+export { updateMemberMemo } from "./update-member-memo";

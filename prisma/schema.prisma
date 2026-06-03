@@ -30,6 +30,7 @@ model Academy {
   code      String   @unique @db.Char(4) // Tutor academy login code
   status    String   @default("ACTIVE") // "ACTIVE" | "TRIAL" | "SUSPENDED" | "DEACTIVATED"
   settings  String?  @db.Text // JSON: business hours, notification prefs, etc.
+  memo      String?  @db.Text // Admin internal notes shown on 회원 관리 (member management)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

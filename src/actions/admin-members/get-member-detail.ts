@@ -101,6 +101,7 @@ export async function getMemberDetail(memberId: string) {
         status: academy.status,
         address: academy.address,
         phone: academy.phone,
+        memo: academy.memo,
         createdAt: academy.createdAt,
         counts: academy._count,
       },
