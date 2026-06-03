@@ -11,7 +11,7 @@ import { Crop, Loader2, Plus, Trash2, X } from "lucide-react";
 
 import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 import { CropCanvas } from "./crop-canvas";
-import { cropBoxLabel, cropImageToBlob } from "./crop-utils";
+import { cropBoxLabel, cropImageToBlob, stitchCropsToBlob } from "./crop-utils";
 
 export function CropModal({
   slot,
@@ -25,6 +25,8 @@ export function CropModal({
 }) {
   const [boxes, setBoxes] = useState<CropBox[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  // true면 모든 영역을 순서대로 이어붙여 1개 지문으로 추출 (여러 칼럼/페이지에 걸친 한 지문).
+  const [mergeIntoOne, setMergeIntoOne] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const createdUrls = useRef<string[]>([]);
@@ -56,27 +58,47 @@ export function CropModal({
     [],
   );
 
+  const merge = mergeIntoOne && boxes.length >= 2;
+
   const handleConfirm = useCallback(async () => {
     if (boxes.length === 0 || busy) return;
     setBusy(true);
     setError(null);
     try {
       const slots: ClientPageSlot[] = [];
-      for (let i = 0; i < boxes.length; i += 1) {
-        const { blob, width, height, previewUrl } = await cropImageToBlob(
+      if (merge) {
+        // 모든 영역을 순서대로 이어붙여 1개 지문(=1 슬롯)으로.
+        const { blob, width, height, previewUrl } = await stitchCropsToBlob(
           slot.blob,
-          boxes[i],
+          boxes,
         );
         createdUrls.current.push(previewUrl);
         slots.push({
-          pageIndex: 0, // 호출부에서 재계산
+          pageIndex: 0,
           blob,
           previewUrl,
           bytes: blob.size,
           width,
           height,
-          sourceFileName: `${slot.sourceFileName ?? "이미지"} · 크롭 ${i + 1}`,
+          sourceFileName: `${slot.sourceFileName ?? "이미지"} · 이어붙인 지문 (${boxes.length}영역)`,
         });
+      } else {
+        for (let i = 0; i < boxes.length; i += 1) {
+          const { blob, width, height, previewUrl } = await cropImageToBlob(
+            slot.blob,
+            boxes[i],
+          );
+          createdUrls.current.push(previewUrl);
+          slots.push({
+            pageIndex: 0, // 호출부에서 재계산
+            blob,
+            previewUrl,
+            bytes: blob.size,
+            width,
+            height,
+            sourceFileName: `${slot.sourceFileName ?? "이미지"} · 크롭 ${i + 1}`,
+          });
+        }
       }
       // 확정된 URL은 호출부 소유로 넘긴다(여기서 revoke하지 않음).
       createdUrls.current = [];
@@ -87,7 +109,7 @@ export function CropModal({
       );
       setBusy(false);
     }
-  }, [boxes, busy, onConfirm, slot]);
+  }, [boxes, busy, merge, onConfirm, slot]);
 
   return (
     <div
@@ -145,6 +167,27 @@ export function CropModal({
                 </span>
               </div>
             </div>
+
+            {boxes.length >= 2 ? (
+              <label className="flex cursor-pointer items-start gap-2 border-b border-slate-100 bg-blue-50/40 px-3 py-2.5">
+                <input
+                  type="checkbox"
+                  checked={mergeIntoOne}
+                  onChange={(e) => setMergeIntoOne(e.target.checked)}
+                  className="mt-0.5 size-3.5 shrink-0 accent-blue-600"
+                />
+                <span className="text-[11px] leading-relaxed">
+                  <span className="font-bold text-slate-800">
+                    한 지문으로 이어붙이기
+                  </span>
+                  <span className="mt-0.5 block text-slate-500">
+                    여러 칼럼·페이지에 걸친 한 지문일 때 켜세요. 순서(1→2…)대로
+                    이어 <b className="font-bold text-blue-700">1개 지문</b>으로
+                    추출합니다.
+                  </span>
+                </span>
+              </label>
+            ) : null}
             <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-2">
               {boxes.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-3 text-center">
@@ -208,9 +251,11 @@ export function CropModal({
             <span className="text-[11.5px] font-medium text-red-600">{error}</span>
           ) : (
             <span className="text-[11.5px] text-slate-500">
-              {boxes.length > 0
-                ? `${boxes.length}개 영역을 새 페이지로 추가합니다.`
-                : "선택한 영역이 없습니다."}
+              {boxes.length === 0
+                ? "선택한 영역이 없습니다."
+                : merge
+                  ? `${boxes.length}개 영역을 이어붙여 1개 지문으로 추가합니다.`
+                  : `${boxes.length}개 영역을 각각 1개씩, 총 ${boxes.length}개 지문으로 추가합니다.`}
             </span>
           )}
           <div className="flex items-center gap-2">

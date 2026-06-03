@@ -391,30 +391,6 @@ export function UploadPanel({
                           <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
                             {slot.pageIndex + 1}
                           </span>
-                          {onCropSlot ? (
-                            <button
-                              type="button"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                onCropSlot(index);
-                              }}
-                              onPointerDown={(event) => {
-                                event.stopPropagation();
-                              }}
-                              onDragStart={(event) => {
-                                event.preventDefault();
-                                event.stopPropagation();
-                              }}
-                              disabled={busy}
-                              title="영역 자르기"
-                              aria-label={`${slot.pageIndex + 1}페이지 영역 자르기`}
-                              className="absolute left-1 top-1 inline-flex h-5 cursor-pointer items-center gap-1 rounded-full bg-slate-950/75 px-1.5 text-[10px] font-bold text-white shadow-sm transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                              <Crop className="size-3" aria-hidden="true" />
-                              자르기
-                            </button>
-                          ) : null}
                           <button
                             type="button"
                             onClick={(event) => {
@@ -445,6 +421,29 @@ export function UploadPanel({
                           <span>{slot.pageIndex + 1}페이지</span>
                           <span>{formatBytes(slot.bytes)}</span>
                         </div>
+                        {onCropSlot ? (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              onCropSlot(index);
+                            }}
+                            onPointerDown={(event) => {
+                              event.stopPropagation();
+                            }}
+                            onDragStart={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                            }}
+                            disabled={busy}
+                            aria-label={`${slot.pageIndex + 1}페이지에서 지문 영역 자르기`}
+                            className="mt-2 inline-flex h-7 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[11px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <Crop className="size-3.5" aria-hidden="true" />
+                            영역 자르기
+                          </button>
+                        ) : null}
                       </div>
                     );
                   })}
