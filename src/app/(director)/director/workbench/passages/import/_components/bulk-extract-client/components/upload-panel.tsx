@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Crop,
   Database,
   FileText,
   Keyboard,
@@ -46,6 +47,7 @@ export function UploadPanel({
   onTextValueChange,
   onReorderSlots,
   onRemoveSlot,
+  onCropSlot,
 }: {
   busy: boolean;
   dragActive: boolean;
@@ -67,6 +69,8 @@ export function UploadPanel({
   onTextValueChange: (value: string) => void;
   onReorderSlots: (fromIndex: number, toIndex: number) => void;
   onRemoveSlot: (index: number) => void;
+  /** 적응형 인테이크 플래그가 켜졌을 때만 전달 — 슬롯별 "영역 자르기" 진입점. */
+  onCropSlot?: (index: number) => void;
 }) {
   // Slot-reorder local state. dragIndex !== null while a slot is being dragged
   // — used to mute the parent label's drop handler so a slot reorder doesn't
@@ -387,6 +391,30 @@ export function UploadPanel({
                           <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
                             {slot.pageIndex + 1}
                           </span>
+                          {onCropSlot ? (
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                onCropSlot(index);
+                              }}
+                              onPointerDown={(event) => {
+                                event.stopPropagation();
+                              }}
+                              onDragStart={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                              }}
+                              disabled={busy}
+                              title="영역 자르기"
+                              aria-label={`${slot.pageIndex + 1}페이지 영역 자르기`}
+                              className="absolute left-1 top-1 inline-flex h-5 cursor-pointer items-center gap-1 rounded-full bg-slate-950/75 px-1.5 text-[10px] font-bold text-white shadow-sm transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              <Crop className="size-3" aria-hidden="true" />
+                              자르기
+                            </button>
+                          ) : null}
                           <button
                             type="button"
                             onClick={(event) => {

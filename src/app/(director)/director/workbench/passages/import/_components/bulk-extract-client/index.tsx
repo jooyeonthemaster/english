@@ -17,6 +17,7 @@ import {
   splitPdfToImages,
 } from "@/lib/extraction/pdf-splitter";
 import { useExtractionStore } from "@/lib/extraction/store";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   ACCEPTED_IMAGE_MIMES,
   ACCEPTED_PDF_MIMES,
@@ -27,6 +28,7 @@ import {
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { useQueueDrawer } from "../queue-drawer-context";
+import { CropModal } from "../intake/crop/crop-modal";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
@@ -68,6 +70,9 @@ export function BulkExtractClient({
   const [previewJobId, setPreviewJobId] = useState<string | null>(null);
   const [taskListViewMode, setTaskListViewMode] =
     useState<GridViewMode>("grid-3");
+  // 적응형 인테이크 — 크롭 대상 슬롯 인덱스 (플래그 on일 때만 활성)
+  const adaptiveIntake = FEATURE_FLAGS.EXTRACTION_ADAPTIVE_INTAKE;
+  const [cropSlotIndex, setCropSlotIndex] = useState<number | null>(null);
 
   const bootstrapped = useRef(false);
   const navigatedToManage = useRef(false);
@@ -450,6 +455,26 @@ export function BulkExtractClient({
     }
   }, [queueDrawer, setError, setJobId, setPhase, textTitle, textValue]);
 
+  // 크롭 모달이 만든 영역 슬롯들을 새 페이지로 추가 (각 영역 = 지문 1개).
+  const handleCropConfirm = useCallback(
+    (croppedSlots: ClientPageSlot[]) => {
+      if (croppedSlots.length === 0) {
+        setCropSlotIndex(null);
+        return;
+      }
+      if (slots.length + croppedSlots.length > MAX_PAGES_PER_JOB) {
+        setError(
+          `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
+        );
+        setCropSlotIndex(null);
+        return;
+      }
+      appendSlots(croppedSlots);
+      setCropSlotIndex(null);
+    },
+    [appendSlots, setError, slots.length],
+  );
+
   const clearFiles = useCallback(() => {
     setSlots([]);
     setSourceName(null);
@@ -539,6 +564,9 @@ export function BulkExtractClient({
                   onTextValueChange={setTextValue}
                   onReorderSlots={reorderSlots}
                   onRemoveSlot={removeSlot}
+                  onCropSlot={
+                    adaptiveIntake ? (index) => setCropSlotIndex(index) : undefined
+                  }
                 />
                 <ExtractionRunPanel
                   busy={runBusy}
@@ -618,6 +646,14 @@ export function BulkExtractClient({
           onClose={() => setPreviewJobId(null)}
           initialCollections={initialCollections}
           initialCollectionMembership={initialCollectionMembership}
+        />
+      ) : null}
+
+      {adaptiveIntake && cropSlotIndex !== null && slots[cropSlotIndex] ? (
+        <CropModal
+          slot={slots[cropSlotIndex]}
+          onCancel={() => setCropSlotIndex(null)}
+          onConfirm={handleCropConfirm}
         />
       ) : null}
     </div>
