@@ -96,7 +96,8 @@ export async function persistM1PassageDrafts(
 
   // 호출 대상만 추려둔다. 실제 호출은 Phase A INSERT 직후에 시작.
   // P7-D2: verbatim 잡은 자동 복원을 강제로 끈다 → restorationTargets 비움 →
-  // restoreM1PassageBatch 미호출(Google Search 0콜). 게이트 우선순위: verbatim > 휴리스틱.
+  // restoreM1PassageBatch 미호출(로컬DB 조회 0 + AI 복원 호출 0). 게이트 우선순위:
+  // verbatim > 휴리스틱. (참고: 그라운딩/Google Search는 현재 비활성 — _archive 참고.)
   const verbatimMode = input.outputMode === "verbatim";
   const restorationTargets = verbatimMode
     ? []
