@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { MAX_PAGE_IMAGE_BYTES } from "@/lib/extraction/constants";
 import { useExtractionStore } from "@/lib/extraction/store";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 import type { ExtractionMode } from "@/lib/extraction/modes";
@@ -26,6 +27,72 @@ interface StartJobResponse {
 }
 
 const UPLOAD_CONCURRENCY = 4;
+
+/** 업로드 전 다운스케일 기준 폭(px). 시험지/지문 텍스트 OCR은 ~170DPI(=A4 폭
+ *  2000px)면 충분하고, 폰 사진 원본(폭 3000~4000px·수 MB)을 그대로 올릴 때보다
+ *  업로드도 OCR도 크게 빨라진다. 가독성이 폭에 좌우되므로 "긴 변"이 아닌 "폭"
+ *  기준으로 축소한다(세로로 긴 합본 지문이 뭉개지는 것 방지). 정확도 떨어지면 상향. */
+const UPLOAD_MAX_WIDTH = 2000;
+
+/**
+ * 업로드 직전 이미지 1장 다운스케일/재압축. 폭이 기준 이하이고 용량도 5MB 이하면
+ * 원본을 그대로 반환한다. 그 외엔 폭을 UPLOAD_MAX_WIDTH로 줄여 JPEG 재인코딩(5MB
+ * 이하가 되도록 품질 단계적 하향). createImageBitmap(from-image)로 EXIF 회전도 함께
+ * 굳혀(canvas 출력엔 EXIF 없음) 폰 사진 회전 메타로 OCR이 뒤집히는 문제도 막는다.
+ * 디코드 실패(PDF 등)·결과가 더 큰 경우엔 원본 유지(안전 우선).
+ */
+async function downscaleForUpload(blob: Blob): Promise<Blob> {
+  if (!blob.type.startsWith("image/")) return blob;
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(blob, { imageOrientation: "from-image" });
+  } catch {
+    return blob;
+  }
+  try {
+    const needsResize = bitmap.width > UPLOAD_MAX_WIDTH;
+    if (!needsResize && blob.size <= MAX_PAGE_IMAGE_BYTES) return blob;
+    const scale = needsResize ? UPLOAD_MAX_WIDTH / bitmap.width : 1;
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return blob;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height, 0, 0, width, height);
+    let out: Blob | null = null;
+    for (const q of [0.85, 0.78, 0.7, 0.62, 0.5]) {
+      const b = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob((x) => resolve(x), "image/jpeg", q),
+      );
+      if (!b) continue;
+      out = b;
+      if (b.size <= MAX_PAGE_IMAGE_BYTES) break;
+    }
+    if (!out || out.size >= blob.size) return blob;
+    return out;
+  } finally {
+    bitmap.close?.();
+  }
+}
+
+/**
+ * 슬롯 전체를 업로드 직전 다운스케일한다. 메모리 안전을 위해 순차 처리
+ * (한 번에 비트맵 1장만 메모리에 올림 — 모바일 다중 12MP 동시 디코드 방지).
+ */
+async function prepareSlotsForUpload(
+  slots: ClientPageSlot[],
+): Promise<ClientPageSlot[]> {
+  const out: ClientPageSlot[] = [];
+  for (const slot of slots) {
+    const blob = await downscaleForUpload(slot.blob);
+    out.push(blob === slot.blob ? slot : { ...slot, blob, bytes: blob.size });
+  }
+  return out;
+}
 
 async function putWithLimit(
   slots: ClientPageSlot[],
@@ -79,15 +146,20 @@ export function useExtractionUpload() {
       /** P7-D2: "verbatim"(원문 그대로) | "restored"(AI 복원). 미전달=기존 동작. */
       outputMode?: "verbatim" | "restored";
     }): Promise<string | null> => {
-      const { slots, sourceType, originalFileName, mode, outputMode } = opts;
-      if (slots.length === 0) {
+      const { slots: rawSlots, sourceType, originalFileName, mode, outputMode } =
+        opts;
+      if (rawSlots.length === 0) {
         setError("업로드할 페이지가 없습니다.");
         return null;
       }
 
       try {
         setPhase("uploading");
-        setUploadProgress({ uploaded: 0, total: slots.length });
+        setUploadProgress({ uploaded: 0, total: rawSlots.length });
+
+        // 업로드 전 다운스케일 — 폰 사진(수 MB)을 OCR 충분 해상도로 줄여 업로드·
+        // OCR 시간을 함께 단축. 실패 슬롯은 원본 그대로 유지된다.
+        const slots = await prepareSlotsForUpload(rawSlots);
 
         const createRes = await fetch("/api/extraction/jobs", {
           method: "POST",

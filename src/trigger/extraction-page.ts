@@ -136,6 +136,8 @@ export const extractionPageTask = task({
         idempotencyKey,
         imageUrl: page.imageUrl,
         mode,
+        // P7-D2: 잡이 verbatim("그대로 추출")이면 Gemini 없이 Document AI만.
+        outputMode: page.job.outputMode,
         pageIndex,
         totalPages: page.job.totalPages,
       });
