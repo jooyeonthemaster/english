@@ -1,9 +1,9 @@
 "use client";
 
 // ============================================================================
-// CropModal — 한 페이지(슬롯)에서 영역을 잘라 N개의 새 슬롯을 만드는 오버레이.
-// 설계 §3.0 와이어프레임: 좌측 크롭 캔버스 + 우측 영역 목록 + 푸터 확정.
-// 각 크롭 영역 = 지문 1개로 추출(새 ClientPageSlot). (adaptive-intake G2/C8)
+// CropModal — 한 이미지에서 영역을 드래그해 잘라내고, 각 영역에 "지문 번호"를
+// 지정해 N개 지문으로 추출한다. 같은 지문 번호 영역끼리는 순서대로 이어붙여
+// 한 지문으로(여러 칼럼/조각에 나뉜 한 지문). (adaptive-intake G2/C3/C8)
 // ============================================================================
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -12,6 +12,16 @@ import { Crop, Loader2, Plus, Trash2, X } from "lucide-react";
 import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 import { CropCanvas } from "./crop-canvas";
 import { cropBoxLabel, cropImageToBlob, stitchCropsToBlob } from "./crop-utils";
+
+/** 그룹 배열을 첫 등장 순서대로 1..K 연속 번호로 정규화. */
+function renumber(groups: number[]): number[] {
+  const map = new Map<number, number>();
+  let next = 1;
+  return groups.map((g) => {
+    if (!map.has(g)) map.set(g, next++);
+    return map.get(g)!;
+  });
+}
 
 export function CropModal({
   slot,
@@ -27,14 +37,15 @@ export function CropModal({
   onConfirm: (croppedSlots: ClientPageSlot[], boxes: CropBox[]) => void;
 }) {
   const [boxes, setBoxes] = useState<CropBox[]>(initialBoxes ?? []);
+  // 영역별 지문 그룹 번호(연속 1..K). 기본: 영역마다 별개 지문.
+  const [groups, setGroups] = useState<number[]>(
+    (initialBoxes ?? []).map((_, i) => i + 1),
+  );
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  // true면 모든 영역을 순서대로 이어붙여 1개 지문으로 추출 (여러 칼럼/페이지에 걸친 한 지문).
-  const [mergeIntoOne, setMergeIntoOne] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const createdUrls = useRef<string[]>([]);
 
-  // Esc 닫기
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !busy) onCancel();
@@ -43,7 +54,6 @@ export function CropModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [busy, onCancel]);
 
-  // 모달이 닫힐 때, 확정되지 않은 미리보기 URL 정리(확정 시엔 호출부로 넘어감).
   useEffect(() => {
     return () => {
       createdUrls.current.forEach((u) => URL.revokeObjectURL(u));
@@ -51,9 +61,29 @@ export function CropModal({
     };
   }, []);
 
+  // CropCanvas의 onChange — 영역 추가/삭제 시 groups를 정렬 동기화.
+  const handleBoxesChange = useCallback(
+    (next: CropBox[]) => {
+      if (next.length > boxes.length) {
+        const maxG = groups.length ? Math.max(...groups) : 0;
+        setGroups([...groups, maxG + 1]); // 새 영역 = 새 지문
+      } else if (next.length < boxes.length) {
+        const removedIdx = boxes.findIndex((b) => !next.includes(b));
+        const ng =
+          removedIdx >= 0
+            ? groups.filter((_, i) => i !== removedIdx)
+            : groups.slice(0, next.length);
+        setGroups(renumber(ng));
+      }
+      setBoxes(next);
+    },
+    [boxes, groups],
+  );
+
   const removeBox = useCallback(
     (index: number) => {
       setBoxes((prev) => prev.filter((_, i) => i !== index));
+      setGroups((prev) => renumber(prev.filter((_, i) => i !== index)));
       setActiveIndex((prev) =>
         prev === null ? null : prev === index ? null : prev > index ? prev - 1 : prev,
       );
@@ -61,7 +91,20 @@ export function CropModal({
     [],
   );
 
-  const merge = mergeIntoOne && boxes.length >= 2;
+  const setRegionGroup = useCallback(
+    (index: number, group: number) => {
+      setGroups((prev) => {
+        const ng = [...prev];
+        ng[index] = group;
+        return renumber(ng);
+      });
+    },
+    [],
+  );
+
+  const distinctGroups = Array.from(new Set(groups)).sort((a, b) => a - b);
+  const passageCount = distinctGroups.length;
+  const nextNewGroup = (groups.length ? Math.max(...groups) : 0) + 1;
 
   const handleConfirm = useCallback(async () => {
     if (boxes.length === 0 || busy) return;
@@ -69,54 +112,54 @@ export function CropModal({
     setError(null);
     try {
       const slots: ClientPageSlot[] = [];
-      if (merge) {
-        // 모든 영역을 순서대로 이어붙여 1개 지문(=1 슬롯)으로.
-        const { blob, width, height, previewUrl } = await stitchCropsToBlob(
-          slot.blob,
-          boxes,
-        );
-        createdUrls.current.push(previewUrl);
-        slots.push({
-          pageIndex: 0,
-          blob,
-          previewUrl,
-          bytes: blob.size,
-          width,
-          height,
-          sourceFileName: `${slot.sourceFileName ?? "이미지"} · 이어붙인 지문`,
-          kind: "merged",
-          regionCount: boxes.length,
-        });
-      } else {
-        for (let i = 0; i < boxes.length; i += 1) {
+      const groupIds = Array.from(new Set(groups)).sort((a, b) => a - b);
+      for (const g of groupIds) {
+        const groupBoxes = boxes.filter((_, i) => groups[i] === g);
+        if (groupBoxes.length === 0) continue;
+        if (groupBoxes.length === 1) {
           const { blob, width, height, previewUrl } = await cropImageToBlob(
             slot.blob,
-            boxes[i],
+            groupBoxes[0],
           );
           createdUrls.current.push(previewUrl);
           slots.push({
-            pageIndex: 0, // 호출부에서 재계산
+            pageIndex: 0,
             blob,
             previewUrl,
             bytes: blob.size,
             width,
             height,
-            sourceFileName: `${slot.sourceFileName ?? "이미지"} · 영역 ${i + 1}`,
+            sourceFileName: `${slot.sourceFileName ?? "이미지"} · 지문 ${g}`,
             kind: "crop",
-            regionIndex: i + 1,
+            regionIndex: g,
+          });
+        } else {
+          // 같은 지문 번호 영역들을 순서대로 이어붙여 1개 지문으로.
+          const { blob, width, height, previewUrl } = await stitchCropsToBlob(
+            slot.blob,
+            groupBoxes,
+          );
+          createdUrls.current.push(previewUrl);
+          slots.push({
+            pageIndex: 0,
+            blob,
+            previewUrl,
+            bytes: blob.size,
+            width,
+            height,
+            sourceFileName: `${slot.sourceFileName ?? "이미지"} · 지문 ${g} (이어붙임)`,
+            kind: "merged",
+            regionCount: groupBoxes.length,
           });
         }
       }
-      // 확정된 URL은 호출부 소유로 넘긴다(여기서 revoke하지 않음).
       createdUrls.current = [];
       onConfirm(slots, boxes);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "영역을 잘라내지 못했습니다.",
-      );
+      setError(err instanceof Error ? err.message : "영역을 잘라내지 못했습니다.");
       setBusy(false);
     }
-  }, [boxes, busy, merge, onConfirm, slot]);
+  }, [boxes, busy, groups, onConfirm, slot]);
 
   return (
     <div
@@ -135,7 +178,9 @@ export function CropModal({
             <div>
               <h2 className="text-[13px] font-bold text-slate-950">영역 자르기</h2>
               <p className="text-[11px] text-slate-500">
-                지문이 있는 부분을 드래그해 선택하세요. 영역 하나당 지문 1개로 추출됩니다.
+                지문 부분을 드래그해 선택하세요. 한 지문이 여러 조각이면{" "}
+                <b className="font-bold text-blue-700">지문 번호를 같게</b> 맞추면
+                이어붙여 추출합니다.
               </p>
             </div>
           </div>
@@ -151,50 +196,26 @@ export function CropModal({
         </div>
 
         {/* 본문: 캔버스 + 영역 목록 */}
-        <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[minmax(0,1fr)_240px]">
+        <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[minmax(0,1fr)_268px]">
           <div className="min-h-0 border-b border-slate-100 p-2 md:border-b-0 md:border-r">
             <CropCanvas
               imageUrl={slot.previewUrl}
               boxes={boxes}
-              onChange={setBoxes}
+              onChange={handleBoxesChange}
               activeIndex={activeIndex}
               onActiveIndexChange={setActiveIndex}
               disabled={busy}
+              regionLabels={groups.map(String)}
             />
           </div>
 
           <aside className="flex min-h-0 flex-col">
-            <div className="border-b border-slate-100 px-3 py-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-slate-700">
-                  선택 영역
-                </span>
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-bold text-slate-600">
-                  {boxes.length}개
-                </span>
-              </div>
+            <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">
+              <span className="text-[11px] font-bold text-slate-700">
+                영역 {boxes.length}개 · 지문 {passageCount}개
+              </span>
             </div>
 
-            {boxes.length >= 2 ? (
-              <label className="flex cursor-pointer items-start gap-2 border-b border-slate-100 bg-blue-50/40 px-3 py-2.5">
-                <input
-                  type="checkbox"
-                  checked={mergeIntoOne}
-                  onChange={(e) => setMergeIntoOne(e.target.checked)}
-                  className="mt-0.5 size-3.5 shrink-0 accent-blue-600"
-                />
-                <span className="text-[11px] leading-relaxed">
-                  <span className="font-bold text-slate-800">
-                    한 지문으로 이어붙이기
-                  </span>
-                  <span className="mt-0.5 block text-slate-500">
-                    여러 칼럼·페이지에 걸친 한 지문일 때 켜세요. 순서(1→2…)대로
-                    이어 <b className="font-bold text-blue-700">1개 지문</b>으로
-                    추출합니다.
-                  </span>
-                </span>
-              </label>
-            ) : null}
             <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-2">
               {boxes.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-3 text-center">
@@ -210,36 +231,59 @@ export function CropModal({
                 boxes.map((box, index) => {
                   const active = index === activeIndex;
                   return (
-                    <button
+                    <div
                       key={index}
-                      type="button"
-                      onClick={() => setActiveIndex(index)}
                       className={
-                        "flex w-full items-center gap-2 rounded-md border px-2 py-1.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+                        "flex w-full items-center gap-1.5 rounded-md border px-2 py-1.5 transition-colors " +
                         (active
                           ? "border-blue-500 bg-blue-50/60"
                           : "border-slate-200 bg-white hover:bg-slate-50")
                       }
                     >
-                      <span className="flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10px] font-bold text-white">
-                        {index + 1}
-                      </span>
-                      <span className="min-w-0 flex-1 truncate font-mono text-[10.5px] text-slate-600">
-                        {cropBoxLabel(box)}
-                      </span>
-                      <span
-                        role="button"
-                        tabIndex={-1}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeBox(index);
-                        }}
+                      <button
+                        type="button"
+                        onClick={() => setActiveIndex(index)}
+                        className="flex min-w-0 flex-1 items-center gap-2 text-left focus-visible:outline-none"
+                      >
+                        <span className="flex size-5 shrink-0 items-center justify-center rounded bg-slate-200 text-[10px] font-bold text-slate-600">
+                          {index + 1}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate font-mono text-[10px] text-slate-500">
+                          {cropBoxLabel(box)}
+                        </span>
+                      </button>
+                      <label className="flex shrink-0 items-center gap-1">
+                        <span className="text-[10px] font-medium text-slate-400">
+                          지문
+                        </span>
+                        <select
+                          value={groups[index] ?? 1}
+                          onChange={(e) =>
+                            setRegionGroup(index, Number(e.target.value))
+                          }
+                          aria-label={`영역 ${index + 1} 지문 번호`}
+                          className="h-6 cursor-pointer rounded border border-slate-200 bg-white px-1 text-[11px] font-bold text-blue-700 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200"
+                        >
+                          {distinctGroups.map((g) => (
+                            <option key={g} value={g}>
+                              {g}
+                            </option>
+                          ))}
+                          {/* 이 영역이 단독 그룹이 아니면 "새 지문"으로 분리 가능 */}
+                          {groups.filter((g) => g === groups[index]).length > 1 ? (
+                            <option value={nextNewGroup}>새 지문</option>
+                          ) : null}
+                        </select>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => removeBox(index)}
                         aria-label={`영역 ${index + 1} 삭제`}
-                        className="inline-flex size-5 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                        className="inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                       >
                         <Trash2 className="size-3.5" aria-hidden="true" />
-                      </span>
-                    </button>
+                      </button>
+                    </div>
                   );
                 })
               )}
@@ -247,7 +291,8 @@ export function CropModal({
             <div className="border-t border-slate-100 px-3 py-2 text-[10.5px] leading-relaxed text-slate-400">
               드래그=영역 · 안쪽 드래그=이동 · 핸들=크기조절
               <br />
-              화살표=미세이동 · Del=삭제 · Esc=닫기
+              같은 <b className="font-bold text-blue-600">지문 번호</b>끼리 이어붙여
+              추출 · Del=삭제
             </div>
           </aside>
         </div>
@@ -260,9 +305,7 @@ export function CropModal({
             <span className="text-[11.5px] text-slate-500">
               {boxes.length === 0
                 ? "선택한 영역이 없습니다."
-                : merge
-                  ? `${boxes.length}개 영역을 이어붙여 1개 지문으로 추가합니다.`
-                  : `${boxes.length}개 영역을 각각 1개씩, 총 ${boxes.length}개 지문으로 추가합니다.`}
+                : `영역 ${boxes.length}개 → 지문 ${passageCount}개로 추가합니다.`}
             </span>
           )}
           <div className="flex items-center gap-2">
@@ -288,7 +331,7 @@ export function CropModal({
               ) : (
                 <>
                   <Crop className="size-4" aria-hidden="true" />
-                  이 영역들로 확정
+                  지문 {passageCount}개로 확정
                 </>
               )}
             </button>

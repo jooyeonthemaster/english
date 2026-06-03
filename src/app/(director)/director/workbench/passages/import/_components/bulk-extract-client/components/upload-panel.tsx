@@ -502,19 +502,33 @@ export function UploadPanel({
                             draggable={false}
                           />
                           {selectMode ? (
-                            <span
-                              aria-hidden="true"
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                if (selectable && slot.slotId)
+                                  onToggleSlotSelect?.(slot.slotId);
+                              }}
+                              onPointerDown={(event) => event.stopPropagation()}
+                              disabled={!selectable}
+                              aria-pressed={selectionOrder >= 0}
+                              aria-label={
+                                selectionOrder >= 0
+                                  ? "합치기 선택 해제"
+                                  : "합치기 선택"
+                              }
                               className={
-                                "absolute left-1 top-1 inline-flex size-5 items-center justify-center rounded text-[10px] font-bold ring-1 " +
+                                "absolute left-1 top-1 z-20 inline-flex size-5 items-center justify-center rounded text-[10px] font-bold ring-1 transition-colors " +
                                 (selectionOrder >= 0
-                                  ? "bg-blue-600 text-white ring-blue-700"
+                                  ? "cursor-pointer bg-blue-600 text-white ring-blue-700"
                                   : selectable
-                                    ? "bg-white/90 text-transparent ring-slate-300"
-                                    : "bg-slate-200/80 text-transparent ring-slate-300")
+                                    ? "cursor-pointer bg-white/95 text-slate-300 ring-slate-300 hover:text-blue-500 hover:ring-blue-400"
+                                    : "cursor-not-allowed bg-slate-200/80 text-slate-300 ring-slate-300")
                               }
                             >
-                              {selectionOrder >= 0 ? selectionOrder + 1 : "·"}
-                            </span>
+                              {selectionOrder >= 0 ? selectionOrder + 1 : "+"}
+                            </button>
                           ) : null}
                           <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
                             {slot.pageIndex + 1}

@@ -63,6 +63,7 @@ export function CropCanvas({
   activeIndex,
   onActiveIndexChange,
   disabled = false,
+  regionLabels,
 }: {
   imageUrl: string;
   boxes: CropBox[];
@@ -70,6 +71,8 @@ export function CropCanvas({
   activeIndex: number | null;
   onActiveIndexChange: (index: number | null) => void;
   disabled?: boolean;
+  /** 영역 배지에 표시할 라벨(없으면 1-based 순번). 지문 그룹 번호 표시용. */
+  regionLabels?: string[];
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
@@ -333,9 +336,9 @@ export function CropCanvas({
                   : "border border-blue-400/80 hover:border-blue-500")
               }
             >
-              {/* 영역 번호 배지 */}
+              {/* 영역 배지 — 지문 그룹 라벨(없으면 순번) */}
               <span className="absolute -left-px -top-px rounded-br bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
-                {index + 1}
+                {regionLabels?.[index] ?? index + 1}
               </span>
 
               {/* 8핸들 (활성일 때만) */}
