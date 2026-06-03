@@ -57,6 +57,7 @@ export function UploadPanel({
   onReorderSlots,
   onRemoveSlot,
   onCropSlot,
+  onOpenStackedCrop,
   onPreviewSlot,
   selectMode,
   mergeSelection,
@@ -90,6 +91,8 @@ export function UploadPanel({
   onRemoveSlot: (index: number) => void;
   /** 적응형 인테이크 플래그가 켜졌을 때만 전달 — 슬롯별 "영역 자르기" 진입점. */
   onCropSlot?: (index: number) => void;
+  /** 적응형 — 올린 N장을 연속 캔버스로 띄워 한 번에 지문 영역을 나누는 진입점. */
+  onOpenStackedCrop?: () => void;
   /** 적응형 인테이크 — 썸네일 클릭 시 큰 미리보기. */
   onPreviewSlot?: (index: number) => void;
   // ── 여러 장 합치기(접근 A) ──
@@ -254,22 +257,16 @@ export function UploadPanel({
             </button>
           </div>
           {inputMode === "file" &&
-          onToggleSelectMode != null &&
-          slots.length >= 2 ? (
+          onOpenStackedCrop != null &&
+          slots.length >= 1 ? (
             <button
               type="button"
-              onClick={onToggleSelectMode}
+              onClick={onOpenStackedCrop}
               disabled={busy}
-              aria-pressed={!!selectMode}
-              className={
-                "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 " +
-                (selectMode
-                  ? "border-blue-300 bg-blue-50 text-blue-700"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50")
-              }
+              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Combine className="size-3.5" aria-hidden="true" />
-              {selectMode ? "합치기 종료" : "여러 장 합치기"}
+              지문 영역 나누기
             </button>
           ) : null}
           {inputMode === "file" && slots.length > 0 ? (

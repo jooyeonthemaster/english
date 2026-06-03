@@ -29,6 +29,7 @@ import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 
 import { useQueueDrawer } from "../queue-drawer-context";
 import { CropModal } from "../intake/crop/crop-modal";
+import { StackedCropModal } from "../intake/crop/stacked-crop-modal";
 import { SlotPreviewModal } from "../intake/crop/slot-preview-modal";
 import { MergeConfirmModal } from "../intake/crop/merge-confirm-modal";
 import { stitchSlotsToBlob } from "../intake/crop/crop-utils";
@@ -82,6 +83,9 @@ export function BulkExtractClient({
   const [outputMode, setOutputMode] = useState<"verbatim" | "restored">(
     "verbatim",
   );
+  // 연속 캔버스 영역 나누기 — 올린 N장을 한 모달에 스택해 크롭+번호로 지문 정의.
+  // (기존 이미지별 크롭 + "여러 장 합치기"를 하나로 통합)
+  const [stackedCropOpen, setStackedCropOpen] = useState(false);
   // 여러 장 합치기(접근 A) — 선택 모드 + 선택 slotId(클릭순) + 합치기 프리뷰
   const [selectMode, setSelectMode] = useState(false);
   const [mergeSelection, setMergeSelection] = useState<string[]>([]);
@@ -570,6 +574,33 @@ export function BulkExtractClient({
     [cropSlotIndex, setError, setSlots, slots],
   );
 
+  // ── 연속 캔버스 영역 나누기 확정 ────────────────────────────────────────
+  // 스택 모달이 모든 이미지를 한 번에 처리해 "지문 슬롯들"을 돌려준다 → 트레이를
+  // 그 지문들로 교체(1슬롯=1지문). 합치기 단계 없이 크롭+번호가 곧 지문.
+  const handleStackedCropConfirm = useCallback(
+    (passageSlots: ClientPageSlot[]) => {
+      if (passageSlots.length === 0) {
+        setStackedCropOpen(false);
+        return;
+      }
+      if (passageSlots.length > MAX_PAGES_PER_JOB) {
+        setError(
+          `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
+        );
+        return;
+      }
+      setSlots(
+        passageSlots.map((s, i) => ({
+          ...s,
+          pageIndex: i,
+          slotId: s.slotId ?? crypto.randomUUID(),
+        })),
+      );
+      setStackedCropOpen(false);
+    },
+    [setError, setSlots],
+  );
+
   // ── 여러 장 합치기(접근 A) 핸들러 ───────────────────────────────────────
   const toggleSelectMode = useCallback(() => {
     setSelectMode((p) => !p);
@@ -770,6 +801,9 @@ export function BulkExtractClient({
                   onCropSlot={
                     adaptiveIntake ? (index) => setCropSlotIndex(index) : undefined
                   }
+                  onOpenStackedCrop={
+                    adaptiveIntake ? () => setStackedCropOpen(true) : undefined
+                  }
                   onPreviewSlot={
                     adaptiveIntake
                       ? (index) => setPreviewSlotIndex(index)
@@ -912,6 +946,14 @@ export function BulkExtractClient({
             setMergePreview(null);
           }}
           onConfirm={handleConfirmMerge}
+        />
+      ) : null}
+
+      {adaptiveIntake && stackedCropOpen ? (
+        <StackedCropModal
+          images={slots.filter(isExtractable)}
+          onCancel={() => setStackedCropOpen(false)}
+          onConfirm={handleStackedCropConfirm}
         />
       ) : null}
     </div>
