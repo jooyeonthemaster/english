@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { ClipboardList, Grid2X2, Grid3X3, List, RefreshCw } from "lucide-react";
 import type { QueuedPassage } from "@/hooks/use-passage-queue";
@@ -14,9 +14,22 @@ import {
   handleAddToFolder as addToFolder,
   handleMoveToFolder as moveToFolder,
 } from "../folder-actions";
+import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 import { QueueEmpty } from "./queue-empty";
-import { QueueSelectionBar } from "./queue-selection-bar";
 import { QueueGrid, type QueueGridCols } from "./queue-grid";
+
+// passage-create 컬렉션(평면 구조)을 공용 폴더 피커가 기대하는 CollectionItem 으로 변환.
+function adaptCollections(list: PassageCollection[]): CollectionItem[] {
+  return list.map((c) => ({
+    id: c.id,
+    parentId: null,
+    name: c.name,
+    description: c.description,
+    color: c.color,
+    _count: { items: c._count.items, children: 0 },
+  }));
+}
 
 interface QueueSectionContainerProps {
   queue: QueuedPassage[];
@@ -85,13 +98,47 @@ const QUEUE_GRID_OPTIONS = [
 export function QueueSectionContainer(p: QueueSectionContainerProps) {
   const [gridCols, setGridCols] = useState<QueueGridCols>("grid3");
   const { triggerRefresh } = useTaskQueue();
+  // 마키(영역 드래그) 시작 영역 = 이 "지문 목록" 섹션 전체(헤더·툴바·그리드). 같은
+  // 페이지의 "자료 관리" 패널과 boundary 가 분리돼 서로 섞이지 않는다.
+  const marqueeBoundaryRef = useRef<HTMLElement>(null);
+
+  // ─── 선택 상태(툴바 상시 표시용) ───
+  const selectedCount = p.selectedIds.size;
+  const allSelected =
+    p.filteredQueue.length > 0 &&
+    p.filteredQueue.every((q) => p.selectedIds.has(q.id));
+  const someSelected = selectedCount > 0 && !allSelected;
+  const adaptedCollections = adaptCollections(p.collections);
+  const handleCopyToFolder = (collectionId: string) =>
+    addToFolder({
+      collectionId,
+      selectedIds: p.selectedIds,
+      setAddingToFolder: p.setAddingToFolder,
+      setCollections: p.setCollections,
+      setCollectionPassageIds: p.setCollectionPassageIds,
+      clearSelection: p.clearSelection,
+    });
+  const handleMoveToFolder = (collectionId: string) =>
+    moveToFolder({
+      collectionId,
+      selectedIds: p.selectedIds,
+      collections: p.collections,
+      collectionPassageIds: p.collectionPassageIds,
+      setAddingToFolder: p.setAddingToFolder,
+      setCollections: p.setCollections,
+      setCollectionPassageIds: p.setCollectionPassageIds,
+      clearSelection: p.clearSelection,
+    });
 
   return (
     <div className="min-w-0">
       {p.queue.length === 0 ? (
         <QueueEmpty />
       ) : (
-        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <section
+          ref={marqueeBoundaryRef}
+          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+        >
           {/* ─── Section header ─── */}
           <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
             <div className="flex min-w-0 items-center gap-2">
@@ -101,6 +148,19 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
               <h3 className="truncate text-[13px] font-bold text-slate-900">
                 지문 목록
               </h3>
+              {/* 전체 선택 체크박스 — 제목 오른쪽에 상시 표시(다른 페이지 툴바와 통일) */}
+              <input
+                type="checkbox"
+                checked={allSelected}
+                ref={(el) => {
+                  if (el) el.indeterminate = someSelected;
+                }}
+                onChange={p.selectAll}
+                disabled={p.filteredQueue.length === 0}
+                title="전체 선택"
+                aria-label="전체 선택"
+                className="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 accent-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+              />
               <span
                 aria-hidden="true"
                 className="shrink-0 text-[11px] font-medium text-slate-300"
@@ -108,10 +168,27 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
                 ·
               </span>
               <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
-                {p.queue.length}개
+                {selectedCount > 0
+                  ? `${selectedCount}개 선택`
+                  : `${p.queue.length}개`}
               </span>
             </div>
             <div className="flex shrink-0 items-center gap-2">
+              {/* 이동 / 복사 — 상시 표시(선택이 없으면 비활성) */}
+              <MoveOrCopyFolderPicker
+                collections={adaptedCollections}
+                activeFolder={p.filterCollection || null}
+                selectedCount={selectedCount}
+                onCopy={handleCopyToFolder}
+                onMove={handleMoveToFolder}
+                disabled={selectedCount === 0}
+              />
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-slate-200"
+              >
+                |
+              </span>
               <span className="shrink-0 text-[11px] font-medium text-slate-400">
                 최신순으로 표시됩니다
               </span>
@@ -133,40 +210,6 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
 
           {/* ─── Body ─── */}
           <div className="px-4 py-3">
-            {/* ─── Selection toolbar ─── */}
-            {p.selectedIds.size > 0 && (
-              <QueueSelectionBar
-                selectedCount={p.selectedIds.size}
-                filteredLength={p.filteredQueue.length}
-                onSelectAll={p.selectAll}
-                onClearSelection={p.clearSelection}
-                collections={p.collections}
-                activeCollectionId={p.filterCollection || null}
-                onAddToFolder={(collectionId) =>
-                  addToFolder({
-                    collectionId,
-                    selectedIds: p.selectedIds,
-                    setAddingToFolder: p.setAddingToFolder,
-                    setCollections: p.setCollections,
-                    setCollectionPassageIds: p.setCollectionPassageIds,
-                    clearSelection: p.clearSelection,
-                  })
-                }
-                onMoveToFolder={(collectionId) =>
-                  moveToFolder({
-                    collectionId,
-                    selectedIds: p.selectedIds,
-                    collections: p.collections,
-                    collectionPassageIds: p.collectionPassageIds,
-                    setAddingToFolder: p.setAddingToFolder,
-                    setCollections: p.setCollections,
-                    setCollectionPassageIds: p.setCollectionPassageIds,
-                    clearSelection: p.clearSelection,
-                  })
-                }
-              />
-            )}
-
             {/* ─── Card grid ─── */}
             <QueueGrid
               filteredQueue={p.filteredQueue}
@@ -177,6 +220,7 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
               onRetry={p.retryAnalysis}
               onRemove={p.removeFromQueue}
               gridCols={gridCols}
+              marqueeBoundaryRef={marqueeBoundaryRef}
             />
           </div>
         </section>

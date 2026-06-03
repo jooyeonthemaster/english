@@ -9,7 +9,6 @@ import {
   Clock,
   Users,
   ClipboardList,
-  Maximize2,
   Pencil,
   Printer,
   Save,
@@ -17,6 +16,7 @@ import {
 import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -142,7 +142,7 @@ export function ExamFileCard({
 
       {/* Activity counters as actions — 수정(편집 이동) / 인쇄(바로 인쇄) /
           저장(횟수 표시 전용). 각 칩에 'N회'를 붙여 '횟수'임을 분명히 한다. */}
-      <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
+      <div className="mt-3 grid grid-cols-3 gap-1.5">
         {/* 수정: 누르면 편집 화면으로 이동 */}
         <button
           type="button"
@@ -154,10 +154,10 @@ export function ExamFileCard({
           disabled={!onEdit}
           title="시험지 수정 (지금까지 수정한 횟수)"
           aria-label="시험지 수정"
-          className="inline-flex items-center gap-1 cursor-pointer rounded text-[10px] font-medium text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5 tabular-nums transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-slate-200 disabled:hover:bg-slate-50 disabled:hover:text-slate-500"
+          className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-blue-100 bg-blue-50/60 px-2 text-[11px] font-semibold tabular-nums text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100/70 hover:text-blue-800 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-50 disabled:text-slate-400 disabled:opacity-70 disabled:hover:border-slate-200 disabled:hover:bg-slate-50 disabled:hover:text-slate-400"
         >
-          <Pencil className="w-2.5 h-2.5" />
-          수정 {exam.editCount}회
+          <Pencil className="h-3 w-3 shrink-0" />
+          <span className="truncate">수정 {exam.editCount}회</span>
         </button>
 
         {/* 인쇄: 미리보기를 새 탭으로 열어 바로 인쇄 대화상자를 띄운다 */}
@@ -174,37 +174,34 @@ export function ExamFileCard({
           }}
           title="바로 인쇄 (지금까지 인쇄한 횟수)"
           aria-label="시험지 인쇄"
-          className="inline-flex items-center gap-1 cursor-pointer rounded text-[10px] font-medium text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5 tabular-nums transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+          className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-blue-100 bg-blue-50/60 px-2 text-[11px] font-semibold tabular-nums text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100/70 hover:text-blue-800"
         >
-          <Printer className="w-2.5 h-2.5" />
-          인쇄 {exam.printCount}회
+          <Printer className="h-3 w-3 shrink-0" />
+          <span className="truncate">인쇄 {exam.printCount}회</span>
         </button>
 
         {/* 저장: 횟수 표시 전용 (버튼 동작 없음) */}
         <span
           title="저장한 횟수"
-          className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-400 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded tabular-nums"
+          className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-500"
         >
-          <Save className="w-2.5 h-2.5 text-slate-300" />
-          저장 {exam.saveCount}회
+          <Save className="h-3 w-3 shrink-0 text-slate-400" />
+          <span className="truncate">저장 {exam.saveCount}회</span>
         </span>
       </div>
 
       {/* Bottom row: 상세 보기 (좌) · 마지막 수정일 (최우측) */}
       <div className="flex items-center justify-between gap-2 mt-3">
-        {/* 상세 보기 — 문제/지문 카드와 동일한 옅은 파란색 버튼 */}
-        <button
-          type="button"
+        {/* 상세 보기 — 카드 하단에서 잘 보이는 bordered action button */}
+        <DetailActionButton
+          title="시험지 상세 보기"
+          aria-label="시험지 상세 보기"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             onClick(exam.id);
           }}
-          className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-        >
-          상세 보기
-          <Maximize2 className="w-3 h-3" />
-        </button>
+        />
 
         <span
           title="마지막 수정일"

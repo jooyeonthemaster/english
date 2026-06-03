@@ -15,7 +15,6 @@ import {
   ClipboardList,
   Star,
   XCircle,
-  Maximize2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -28,6 +27,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 import { formatDate } from "@/lib/utils";
 import {
@@ -107,6 +107,7 @@ export function QuestionBankCard({
   selectionDisabled = false,
   duplicateCount,
   onDuplicateSelectConfirm,
+  selectedCardHighlight = true,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -144,6 +145,8 @@ export function QuestionBankCard({
   duplicateCount?: number;
   // 시험지 빌더: 이미 들어간 문항을 다시 선택할지 확인한 뒤 체크 상태로 만든다.
   onDuplicateSelectConfirm?: () => void;
+  // 시험지 빌더처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
+  selectedCardHighlight?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -321,7 +324,9 @@ export function QuestionBankCard({
       } ${
         isDragging ? "opacity-40 scale-95" : ""
       } ${
-        selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
+        selected && selectedCardHighlight
+          ? "ring-2 ring-blue-400 bg-blue-50/30"
+          : "hover:shadow-md"
       } ${
         selectionDisabled ? "border-slate-200 bg-slate-100/80 text-slate-400 shadow-none hover:shadow-none" : ""
       } ${
@@ -565,16 +570,12 @@ export function QuestionBankCard({
           explanation={q.explanation}
           rightSlot={
             showDetailButton && (onDetail || onEdit) ? (
-              <button
+              <DetailActionButton
                 onClick={(e) => {
                   e.stopPropagation();
                   (onDetail ?? onEdit)?.();
                 }}
-                className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-              >
-                상세 보기
-                <Maximize2 className="w-3 h-3" />
-              </button>
+              />
             ) : undefined
           }
         />

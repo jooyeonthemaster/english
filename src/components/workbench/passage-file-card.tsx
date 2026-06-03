@@ -9,13 +9,13 @@ import {
   PenTool,
   Braces,
   Copy,
-  Maximize2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -207,13 +207,9 @@ export function PassageFileCard({
           className="mt-auto -mr-1.5 -mb-1 flex justify-end pt-2"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
+          <DetailActionButton
             onClick={() => onViewDetail(passage.id)}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-          >
-            상세 보기
-            <Maximize2 className="w-3 h-3" />
-          </button>
+          />
         </div>
     </div>
   );

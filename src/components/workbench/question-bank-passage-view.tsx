@@ -27,6 +27,12 @@ interface PassageGroupedViewProps {
   viewSize: "lg" | "md" | "sm";
   selectedIds: Set<string>;
   setSelectedIds: (next: Set<string>) => void;
+  /**
+   * 마키(영역 드래그) 시작 영역을 그룹 그리드 바깥(콘텐츠 영역 전체)까지 넓히기 위한
+   * boundary. 그룹마다 DragSelect 가 하나씩 렌더되지만 모두 같은 boundary·선택집합을
+   * 공유하므로, 한 번의 드래그로 그룹을 가로질러 카드를 선택할 수 있다.
+   */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
   onToggleSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onApprove: (id: string) => void;
@@ -40,6 +46,7 @@ interface PassageGroupedViewProps {
   compactUsageLabel?: boolean;
   cardClickSelects?: boolean;
   showDetailButton?: boolean;
+  selectedCardHighlight?: boolean;
   dragRequiresSelection?: boolean;
   getDragQuestionIds?: (draggedId: string) => string[];
   getDuplicateDragQuestionIds?: (draggedId: string) => string[];
@@ -91,6 +98,7 @@ export function PassageGroupedView({
   viewSize,
   selectedIds,
   setSelectedIds,
+  marqueeBoundaryRef,
   onToggleSelect,
   onDelete,
   onApprove,
@@ -104,6 +112,7 @@ export function PassageGroupedView({
   compactUsageLabel = false,
   cardClickSelects = false,
   showDetailButton = false,
+  selectedCardHighlight = true,
   dragRequiresSelection = false,
   getDragQuestionIds,
   getDuplicateDragQuestionIds,
@@ -441,6 +450,7 @@ export function PassageGroupedView({
                     className={`grid gap-3 ${gridClass}`}
                     value={selectedIds}
                     onChange={setSelectedIds}
+                    boundaryRef={marqueeBoundaryRef}
                   >
                     {passage.questions.map((q, idx) =>
                       renderQuestion ? (
@@ -472,6 +482,7 @@ export function PassageGroupedView({
                           compactUsageLabel={compactUsageLabel}
                           cardClickSelects={cardClickSelects}
                           showDetailButton={showDetailButton}
+                          selectedCardHighlight={selectedCardHighlight}
                           dragRequiresSelection={dragRequiresSelection}
                           getDragQuestionIds={getDragQuestionIds}
                           getDuplicateDragQuestionIds={getDuplicateDragQuestionIds}

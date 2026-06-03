@@ -45,6 +45,8 @@ export interface MaterialJobCardProps {
   onClick: () => void;
   onToggleCheck: () => void;
   onRename: (next: string | null) => void;
+  /** 설정 시 마키(영역 드래그) 선택 대상이 된다(DragSelect 가 읽는 식별자). */
+  dragItemId?: string;
 }
 
 /**
@@ -67,6 +69,7 @@ export function MaterialJobCard({
   onClick,
   onToggleCheck,
   onRename,
+  dragItemId,
 }: MaterialJobCardProps) {
   const dragRef = useRef<HTMLElement>(null);
   const [editing, setEditing] = useState(false);
@@ -127,6 +130,7 @@ export function MaterialJobCard({
   return (
     <article
       ref={dragRef}
+      data-drag-item-id={dragItemId}
       role="button"
       tabIndex={0}
       onClick={editing ? undefined : onClick}

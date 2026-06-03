@@ -167,6 +167,10 @@ interface DraftGridProps {
    *  supported. */
   gridOnly?: boolean;
   statusBadgeMode?: DraftCardStatusBadgeMode;
+  /** 마키(영역 드래그) 시작 영역을 자료 콘텐츠 영역 전체로 넓히기 위한 boundary(부모에서
+   *  내려줌). 그룹 보기에서는 그룹마다 DragSelect 가 렌더되지만 모두 같은 boundary·선택
+   *  집합을 공유하므로 한 번의 드래그로 그룹을 가로질러 선택할 수 있다. */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 const COL_CLASS: Record<GridCols, string> = {
@@ -209,6 +213,7 @@ export function DraftGrid({
   onDropDraftsIntoCurrentFolder,
   gridOnly = false,
   statusBadgeMode = "review",
+  marqueeBoundaryRef,
 }: DraftGridProps) {
   // The per-job card row was lifted to the page header above the folder
   // section so it stays visible regardless of folder navigation. Clicking
@@ -422,6 +427,7 @@ export function DraftGrid({
                       }`}
                       value={checkedIds}
                       onChange={setCheckedIds}
+                      boundaryRef={marqueeBoundaryRef}
                     >
                       {group.drafts.map((draft, index) => (
                         <DraftCard
@@ -456,6 +462,7 @@ export function DraftGrid({
                 className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}
                 value={checkedIds}
                 onChange={setCheckedIds}
+                boundaryRef={marqueeBoundaryRef}
               >
                 {drafts.map((draft, index) => (
                   <DraftCard

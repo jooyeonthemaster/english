@@ -14,7 +14,6 @@ import {
   Layers,
   Sparkles,
   XCircle,
-  Maximize2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +30,7 @@ import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 import {
   getQuestionGenerationPlanFromTags,
   isQuestionGenerationPlanTag,
@@ -669,18 +669,12 @@ export function QuestionCard({
             {showDetailButton && onDetail ? (
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    {/* 상세 보기 — 색은 펼치기 버튼과 통일(blue-400/blue-600) */}
-                    <button
-                      type="button"
+                    <DetailActionButton
                       onClick={(e) => {
                         e.stopPropagation();
                         onDetail();
                       }}
-                      className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                    >
-                      상세 보기
-                      <Maximize2 className="w-3 h-3" />
-                    </button>
+                    />
                     {q.explanation ? (
                       <button
                         type="button"
