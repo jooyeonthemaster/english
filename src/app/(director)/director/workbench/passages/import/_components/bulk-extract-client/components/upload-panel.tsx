@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  CornerDownRight,
   Crop,
   Database,
   FileText,
@@ -25,6 +26,12 @@ import {
 import type { InputMode } from "../types";
 import { formatBytes } from "../utils";
 import { UploadMetaChip } from "./upload-meta-chip";
+import {
+  isCropChild,
+  isCroppable,
+  isExtractable,
+  slotKindLabel,
+} from "../../intake/crop/slot-meta";
 
 export function UploadPanel({
   busy,
@@ -48,6 +55,7 @@ export function UploadPanel({
   onReorderSlots,
   onRemoveSlot,
   onCropSlot,
+  onPreviewSlot,
 }: {
   busy: boolean;
   dragActive: boolean;
@@ -71,6 +79,8 @@ export function UploadPanel({
   onRemoveSlot: (index: number) => void;
   /** 적응형 인테이크 플래그가 켜졌을 때만 전달 — 슬롯별 "영역 자르기" 진입점. */
   onCropSlot?: (index: number) => void;
+  /** 적응형 인테이크 — 썸네일 클릭 시 큰 미리보기. */
+  onPreviewSlot?: (index: number) => void;
 }) {
   // Slot-reorder local state. dragIndex !== null while a slot is being dragged
   // — used to mute the parent label's drop handler so a slot reorder doesn't
@@ -79,6 +89,14 @@ export function UploadPanel({
   const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
   const textLength = textValue.trim().length;
   const canStartText = textLength >= TEXT_EXTRACTION_MIN_LENGTH;
+  // 적응형 인테이크 — 추출 대상/제외 집계 (크롭 떠낸 원본은 제외).
+  const extractableCount = slots.filter(isExtractable).length;
+  const excludedCount = slots.length - extractableCount;
+  const showExtractSummary = onCropSlot != null && excludedCount > 0;
+  const startDisabled =
+    busy ||
+    slots.length === 0 ||
+    (onCropSlot != null && extractableCount === 0);
   const modeDescription =
     inputMode === "file"
       ? "PDF와 이미지를 계속 추가할 수 있습니다."
@@ -318,6 +336,12 @@ export function UploadPanel({
                     const isDragging = dragSlotIndex === index;
                     const isDropTarget =
                       dropTargetIndex === index && dragSlotIndex !== index;
+                    const kindBadge = slotKindLabel(slot);
+                    const child = isCropChild(slot);
+                    const excluded = !isExtractable(slot);
+                    const showBadge =
+                      slot.kind != null && slot.kind !== "original";
+                    const croppable = isCroppable(slot);
                     return (
                       <div
                         key={slot.pageIndex + "-" + slot.previewUrl}
@@ -366,26 +390,51 @@ export function UploadPanel({
                           setDropTargetIndex(null);
                         }}
                         className={
-                          "flex h-full shrink-0 flex-col rounded-md border bg-white p-2 transition-all " +
+                          "flex h-full w-[168px] shrink-0 flex-col rounded-md border bg-white p-2 transition-all " +
                           (isDragging
-                            ? "border-blue-400 opacity-40"
+                            ? "border-blue-400 opacity-40 "
                             : isDropTarget
-                              ? "border-blue-500 ring-2 ring-blue-200"
-                              : "border-slate-200") +
+                              ? "border-blue-500 ring-2 ring-blue-200 "
+                              : excluded
+                                ? "border-dashed border-slate-300 opacity-75 "
+                                : "border-slate-200 ") +
+                          (child ? "border-l-[3px] border-l-blue-300 " : "") +
                           (busy
-                            ? " cursor-not-allowed"
-                            : " cursor-grab active:cursor-grabbing")
+                            ? "cursor-not-allowed"
+                            : "cursor-grab active:cursor-grabbing")
                         }
                         title={
                           slot.sourceFileName ?? slot.pageIndex + 1 + "페이지"
                         }
                       >
+                        {showBadge ? (
+                          <span
+                            className={
+                              "mb-1 inline-flex w-fit max-w-full items-center truncate rounded px-1.5 py-0.5 text-[10px] font-bold ring-1 " +
+                              kindBadge.className
+                            }
+                          >
+                            {kindBadge.text}
+                          </span>
+                        ) : null}
                         <div className="relative min-h-0 flex-1 aspect-[4/3] overflow-hidden rounded border border-slate-200 bg-slate-50">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={slot.previewUrl}
                             alt={slot.pageIndex + 1 + "페이지"}
-                            className="absolute inset-0 h-full w-full object-cover object-top"
+                            onClick={
+                              onPreviewSlot
+                                ? (event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    onPreviewSlot(index);
+                                  }
+                                : undefined
+                            }
+                            className={
+                              "absolute inset-0 h-full w-full object-cover object-top " +
+                              (onPreviewSlot ? "cursor-zoom-in" : "")
+                            }
                             draggable={false}
                           />
                           <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
@@ -418,10 +467,19 @@ export function UploadPanel({
                             slot.pageIndex + 1 + "페이지 이미지"}
                         </div>
                         <div className="mt-0.5 flex items-center justify-between gap-1 text-[10.5px] text-slate-500">
-                          <span>{slot.pageIndex + 1}페이지</span>
+                          <span>{child ? "지문" : `${slot.pageIndex + 1}페이지`}</span>
                           <span>{formatBytes(slot.bytes)}</span>
                         </div>
-                        {onCropSlot ? (
+                        {child ? (
+                          <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-blue-600">
+                            <CornerDownRight
+                              className="size-3 shrink-0"
+                              aria-hidden="true"
+                            />
+                            잘라낸 원본에서
+                          </div>
+                        ) : null}
+                        {onCropSlot && croppable ? (
                           <button
                             type="button"
                             onClick={(event) => {
@@ -437,11 +495,15 @@ export function UploadPanel({
                               event.stopPropagation();
                             }}
                             disabled={busy}
-                            aria-label={`${slot.pageIndex + 1}페이지에서 지문 영역 자르기`}
+                            aria-label={
+                              slot.kind === "source"
+                                ? "크롭 영역 편집"
+                                : `${slot.pageIndex + 1}페이지에서 지문 영역 자르기`
+                            }
                             className="mt-2 inline-flex h-7 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[11px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <Crop className="size-3.5" aria-hidden="true" />
-                            영역 자르기
+                            {slot.kind === "source" ? "영역 편집" : "영역 자르기"}
                           </button>
                         ) : null}
                       </div>
@@ -452,15 +514,27 @@ export function UploadPanel({
             )}
           </label>
 
+          {showExtractSummary ? (
+            <div className="flex shrink-0 items-center justify-between rounded-md border border-blue-100 bg-blue-50/70 px-3 py-1.5 text-[11px]">
+              <span className="inline-flex items-center gap-1 font-bold text-slate-700">
+                <Crop className="size-3.5 text-blue-600" aria-hidden="true" />
+                추출 대상 지문 {extractableCount}개
+              </span>
+              <span className="text-slate-500">
+                잘라낸 원본 {excludedCount}개 제외
+              </span>
+            </div>
+          ) : null}
+
           <button
             type="button"
             onClick={onStart}
-            disabled={busy || slots.length === 0}
+            disabled={startDisabled}
             className={
               "relative inline-flex h-10 w-full shrink-0 items-center justify-center overflow-hidden rounded-md border px-5 text-[13px] font-bold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
               (busy
                 ? "cursor-wait border-blue-600 bg-blue-600"
-                : slots.length === 0
+                : startDisabled
                   ? "cursor-not-allowed border-blue-200 bg-blue-300"
                   : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700")
             }

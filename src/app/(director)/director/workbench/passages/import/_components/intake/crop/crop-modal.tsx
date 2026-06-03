@@ -15,15 +15,18 @@ import { cropBoxLabel, cropImageToBlob, stitchCropsToBlob } from "./crop-utils";
 
 export function CropModal({
   slot,
+  initialBoxes,
   onCancel,
   onConfirm,
 }: {
   slot: ClientPageSlot;
+  /** 재편집 시 기존 크롭 영역을 프리로드. */
+  initialBoxes?: CropBox[];
   onCancel: () => void;
-  /** 잘라낸 영역들로 만든 새 슬롯 배열. pageIndex는 호출부에서 재계산. */
-  onConfirm: (croppedSlots: ClientPageSlot[]) => void;
+  /** 잘라낸 새 슬롯 배열 + 확정 영역들. pageIndex는 호출부에서 재계산. */
+  onConfirm: (croppedSlots: ClientPageSlot[], boxes: CropBox[]) => void;
 }) {
-  const [boxes, setBoxes] = useState<CropBox[]>([]);
+  const [boxes, setBoxes] = useState<CropBox[]>(initialBoxes ?? []);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   // true면 모든 영역을 순서대로 이어붙여 1개 지문으로 추출 (여러 칼럼/페이지에 걸친 한 지문).
   const [mergeIntoOne, setMergeIntoOne] = useState(false);
@@ -80,7 +83,9 @@ export function CropModal({
           bytes: blob.size,
           width,
           height,
-          sourceFileName: `${slot.sourceFileName ?? "이미지"} · 이어붙인 지문 (${boxes.length}영역)`,
+          sourceFileName: `${slot.sourceFileName ?? "이미지"} · 이어붙인 지문`,
+          kind: "merged",
+          regionCount: boxes.length,
         });
       } else {
         for (let i = 0; i < boxes.length; i += 1) {
@@ -96,13 +101,15 @@ export function CropModal({
             bytes: blob.size,
             width,
             height,
-            sourceFileName: `${slot.sourceFileName ?? "이미지"} · 크롭 ${i + 1}`,
+            sourceFileName: `${slot.sourceFileName ?? "이미지"} · 영역 ${i + 1}`,
+            kind: "crop",
+            regionIndex: i + 1,
           });
         }
       }
       // 확정된 URL은 호출부 소유로 넘긴다(여기서 revoke하지 않음).
       createdUrls.current = [];
-      onConfirm(slots);
+      onConfirm(slots, boxes);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "영역을 잘라내지 못했습니다.",

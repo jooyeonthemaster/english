@@ -25,10 +25,12 @@ import {
   MAX_PAGES_PER_JOB,
   MAX_PDF_BYTES,
 } from "@/lib/extraction/constants";
-import type { ClientPageSlot } from "@/lib/extraction/types";
+import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 
 import { useQueueDrawer } from "../queue-drawer-context";
 import { CropModal } from "../intake/crop/crop-modal";
+import { SlotPreviewModal } from "../intake/crop/slot-preview-modal";
+import { isCroppable, isExtractable } from "../intake/crop/slot-meta";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
@@ -73,6 +75,7 @@ export function BulkExtractClient({
   // 적응형 인테이크 — 크롭 대상 슬롯 인덱스 (플래그 on일 때만 활성)
   const adaptiveIntake = FEATURE_FLAGS.EXTRACTION_ADAPTIVE_INTAKE;
   const [cropSlotIndex, setCropSlotIndex] = useState<number | null>(null);
+  const [previewSlotIndex, setPreviewSlotIndex] = useState<number | null>(null);
 
   const bootstrapped = useRef(false);
   const navigatedToManage = useRef(false);
@@ -220,6 +223,7 @@ export function BulkExtractClient({
       const adjusted = incoming.map((slot, index) => ({
         ...slot,
         pageIndex: offset + index,
+        slotId: slot.slotId ?? crypto.randomUUID(),
       }));
       const next = [...slots, ...adjusted];
       setSlots(next);
@@ -385,10 +389,17 @@ export function BulkExtractClient({
       setError("추출할 파일을 먼저 추가해 주세요.");
       return;
     }
+    // 크롭 떠낸 원본(추출 제외)은 빼고, 실제 추출 대상만 0..N-1로 재인덱싱.
+    const extractable = adaptiveIntake ? slots.filter(isExtractable) : slots;
+    if (extractable.length === 0) {
+      setError("추출할 자료가 없습니다. (잘라낸 원본은 추출에서 제외됩니다)");
+      return;
+    }
+    const reindexed = extractable.map((slot, i) => ({ ...slot, pageIndex: i }));
     const uploadSourceType: FileSourceType =
       sourceType === "PDF" ? "PDF" : "IMAGES";
     const nextJobId = await startUpload({
-      slots,
+      slots: reindexed,
       sourceType: uploadSourceType,
       originalFileName: sourceName,
       mode: "PASSAGE_ONLY",
@@ -403,6 +414,7 @@ export function BulkExtractClient({
       queueDrawer.triggerRefresh();
     }
   }, [
+    adaptiveIntake,
     queueDrawer,
     setError,
     setJobId,
@@ -455,24 +467,49 @@ export function BulkExtractClient({
     }
   }, [queueDrawer, setError, setJobId, setPhase, textTitle, textValue]);
 
-  // 크롭 모달이 만든 영역 슬롯들을 새 페이지로 추가 (각 영역 = 지문 1개).
+  // 크롭 확정 → 소스를 '추출 제외'로 표시하고, 떠낸 영역들을 소스 바로 뒤에 그룹으로
+  // 끼워넣는다. 재편집이면 같은 소스의 기존 자식을 먼저 제거해 중복을 막는다.
   const handleCropConfirm = useCallback(
-    (croppedSlots: ClientPageSlot[]) => {
-      if (croppedSlots.length === 0) {
+    (croppedSlots: ClientPageSlot[], boxes: CropBox[]) => {
+      if (cropSlotIndex === null) {
+        return;
+      }
+      const source = slots[cropSlotIndex];
+      if (!source || croppedSlots.length === 0) {
         setCropSlotIndex(null);
         return;
       }
-      if (slots.length + croppedSlots.length > MAX_PAGES_PER_JOB) {
+      const sourceId = source.slotId ?? crypto.randomUUID();
+      // 이 소스의 기존 크롭 자식 제거(재편집 중복 방지). 소스 자체는 유지.
+      const base = slots.filter(
+        (s) => s === source || s.sourceSlotId !== sourceId,
+      );
+      if (base.length + croppedSlots.length > MAX_PAGES_PER_JOB) {
         setError(
           `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
         );
         setCropSlotIndex(null);
         return;
       }
-      appendSlots(croppedSlots);
+      const stamped = croppedSlots.map((s) => ({
+        ...s,
+        slotId: crypto.randomUUID(),
+        sourceSlotId: sourceId,
+      }));
+      const srcIdx = base.findIndex((s) => s === source);
+      const next = [...base];
+      next[srcIdx] = {
+        ...source,
+        slotId: sourceId,
+        kind: "source" as const,
+        excludedFromExtraction: true,
+        cropRegions: boxes,
+      };
+      next.splice(srcIdx + 1, 0, ...stamped);
+      setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
       setCropSlotIndex(null);
     },
-    [appendSlots, setError, slots.length],
+    [cropSlotIndex, setError, setSlots, slots],
   );
 
   const clearFiles = useCallback(() => {
@@ -567,6 +604,11 @@ export function BulkExtractClient({
                   onCropSlot={
                     adaptiveIntake ? (index) => setCropSlotIndex(index) : undefined
                   }
+                  onPreviewSlot={
+                    adaptiveIntake
+                      ? (index) => setPreviewSlotIndex(index)
+                      : undefined
+                  }
                 />
                 <ExtractionRunPanel
                   busy={runBusy}
@@ -652,8 +694,27 @@ export function BulkExtractClient({
       {adaptiveIntake && cropSlotIndex !== null && slots[cropSlotIndex] ? (
         <CropModal
           slot={slots[cropSlotIndex]}
+          initialBoxes={slots[cropSlotIndex].cropRegions}
           onCancel={() => setCropSlotIndex(null)}
           onConfirm={handleCropConfirm}
+        />
+      ) : null}
+
+      {adaptiveIntake &&
+      previewSlotIndex !== null &&
+      slots[previewSlotIndex] ? (
+        <SlotPreviewModal
+          slot={slots[previewSlotIndex]}
+          onClose={() => setPreviewSlotIndex(null)}
+          onEdit={
+            isCroppable(slots[previewSlotIndex])
+              ? () => {
+                  const idx = previewSlotIndex;
+                  setPreviewSlotIndex(null);
+                  setCropSlotIndex(idx);
+                }
+              : undefined
+          }
         />
       ) : null}
     </div>
