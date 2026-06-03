@@ -75,6 +75,10 @@ export async function createOrReusePassage(
     sourceMaterialId,
     sourceExtractionItemId: input.sourceItemId,
     contentHash,
+    // (adaptive-intake P1) — 승급 시 출처 페이지·산출유형을 보존. 기존엔 payload가
+    // sourcePageIndex를 만들어도 컬럼이 없어 버려졌다. build-payload.ts가 이미 채움.
+    sourcePageIndex: input.sourcePageIndex ?? [],
+    extractionOutput: input.extractionOutput ?? "verbatim",
   };
 
   // Fast path: look up an existing Passage for this ExtractionItem.
