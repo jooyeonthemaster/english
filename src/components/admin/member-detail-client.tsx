@@ -30,6 +30,7 @@ import {
 } from "@/components/admin/member-detail/atoms";
 import { IdentitySection } from "@/components/admin/member-detail/identity-section";
 import { AcademySection } from "@/components/admin/member-detail/academy-section";
+import { MemoSection } from "@/components/admin/member-detail/memo-section";
 import { SubscriptionSection } from "@/components/admin/member-detail/subscription-section";
 import type { MemberDetail } from "@/actions/admin-members";
 
@@ -90,6 +91,8 @@ export function MemberDetailClient({
         onAdjust={() => setAdjustOpen(true)}
         onToggle={() => setToggleOpen(true)}
       />
+
+      <MemoSection memberId={member.id} initialMemo={member.academy.memo} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-1 space-y-4">
