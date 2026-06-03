@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
+import { PAYMENT_PG_NAME } from "@/lib/legal/payment-processor";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
@@ -43,7 +44,7 @@ const PRIVACY_SECTIONS = [
       SUBSCRIPTION_BILLING_ENABLED
         ? "회사는 구독 요금제 및 크레딧 결제와 결제 검증을 위해 포트원(PortOne) 결제 연동 서비스를 이용합니다."
         : "회사는 크레딧 결제와 결제 검증을 위해 포트원(PortOne) 결제 연동 서비스를 이용합니다.",
-      "NHN KCP는 카드, 간편결제, 계좌이체, 가상계좌, 휴대폰 결제 등 PG 결제 처리를 수행할 수 있습니다.",
+      `${PAYMENT_PG_NAME}는 카드, 간편결제, 계좌이체, 가상계좌, 휴대폰 결제 등 PG 결제 처리를 수행할 수 있습니다.`,
       ...(SUBSCRIPTION_BILLING_ENABLED
         ? [
             "신용카드 정기결제를 등록하는 경우 포트원이 발급한 빌링키와 등록·삭제 상태, 다음 결제 예약 정보를 저장하여 30일 단위 구독 갱신과 해지를 처리합니다.",
@@ -61,7 +62,7 @@ const PRIVACY_SECTIONS = [
       SUBSCRIPTION_BILLING_ENABLED
         ? "포트원(PortOne): 결제 연동, 빌링키 발급·삭제, 정기결제 예약, 결제 상태 조회, 웹훅 전송, 결제 취소 및 환불 연동"
         : "포트원(PortOne): 결제 연동, 결제 상태 조회, 웹훅 전송, 결제 취소 및 환불 연동",
-      "NHN KCP: PG 결제 승인, 매입, 취소, 환불, 가상계좌 입금 처리, 영수증 및 거래 확인",
+      `${PAYMENT_PG_NAME}: PG 결제 승인, 매입, 취소, 환불, 가상계좌 입금 처리, 영수증 및 거래 확인`,
       "클라우드 및 데이터베이스 제공업체: 서비스 인프라 운영, 데이터 저장, 백업, 보안 관리",
       "이메일·알림 발송 서비스 제공업체: 서비스 안내, 고객지원, 가입 및 운영 관련 알림 발송",
       "회사는 위탁 계약 또는 서비스 이용 조건을 통해 수탁자가 개인정보를 안전하게 처리하도록 관리·감독합니다.",
@@ -81,7 +82,7 @@ const PRIVACY_SECTIONS = [
     title: "6. 개인정보의 제3자 제공",
     body: [
       "회사는 정보주체의 동의, 법령상 의무, 수사기관의 적법한 요청 등 관계 법령에서 허용하는 경우를 제외하고 개인정보를 제3자에게 제공하지 않습니다.",
-      "결제 처리 과정에서 포트원 및 NHN KCP가 처리하는 정보는 결제 대행 및 정산 목적의 위탁 처리이며, 회사는 결제와 환불에 필요한 최소 정보를 연동합니다.",
+      `결제 처리 과정에서 포트원 및 ${PAYMENT_PG_NAME}가 처리하는 정보는 결제 대행 및 정산 목적의 위탁 처리이며, 회사는 결제와 환불에 필요한 최소 정보를 연동합니다.`,
     ],
   },
   {
@@ -167,7 +168,7 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <SummaryCard title="결제 위탁" body="PortOne, NHN KCP" />
+          <SummaryCard title="결제 위탁" body={`PortOne, ${PAYMENT_PG_NAME}`} />
           {SUBSCRIPTION_BILLING_ENABLED ? (
             <SummaryCard title="정기결제" body="포트원 빌링키로 30일 갱신" />
           ) : (
@@ -203,8 +204,8 @@ export default function PrivacyPage() {
         <section className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-5 text-[13px] leading-6 text-blue-900">
           <h2 className="font-bold">결제 및 환불 정보 처리 안내</h2>
           <p className="mt-2">
-            SMOAT는 결제수단 원문 정보를 직접 저장하지 않고, 포트원 및 NHN
-            KCP를 통해 크레딧 결제 승인·취소·환불 상태를 확인합니다.
+            SMOAT는 결제수단 원문 정보를 직접 저장하지 않고, 포트원 및{" "}
+            {PAYMENT_PG_NAME}를 통해 크레딧 결제 승인·취소·환불 상태를 확인합니다.
             환불계좌 정보는 가상계좌·계좌이체 등 계좌 환불이 필요한 경우에만
             최소 범위로 수집합니다.
           </p>

@@ -6,10 +6,12 @@ import {
   buildPortOnePaymentId,
   buildTopUpOrderName,
   getAllowedPortOneTopUpPayMethods,
+  getPortOnePgProvider,
   getPortOneRuntimeConfig,
   isPortOneTopUpPayMethod,
   PortOneTopUpError,
   preRegisterPortOnePayment,
+  type PortOnePgProvider,
   type PortOneTopUpPayMethod,
 } from "@/lib/portone-credit-topups";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
@@ -96,6 +98,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { storeId, channelKey } = getPortOneRuntimeConfig();
+    const pgProvider = getPortOnePgProvider();
     const appUrl = getAppUrl();
     const paymentId = buildPortOnePaymentId();
     const orderName = buildTopUpOrderName(product.creditAmount);
@@ -177,6 +180,7 @@ export async function POST(request: NextRequest) {
         paymentId,
         orderName,
         totalAmount: product.price,
+        pgProvider,
         payMethod,
         easyPayProvider: parsed.data.easyPayProvider,
         staffId: staff.id,
@@ -224,6 +228,7 @@ function buildPaymentRequest(params: {
   paymentId: string;
   orderName: string;
   totalAmount: number;
+  pgProvider: PortOnePgProvider;
   payMethod: PortOneTopUpPayMethod;
   easyPayProvider?: string;
   staffId: string;
@@ -273,15 +278,18 @@ function buildPaymentRequest(params: {
   }
 
   if (params.payMethod === "MOBILE") {
-    return {
+    const request: PaymentRequest = {
       ...base,
       mobile: {},
-      bypass: {
+    };
+    if (params.pgProvider === "kcp_v2") {
+      request.bypass = {
         kcp_v2: {
           shop_user_id: buildKcpShopUserId(params.staffId),
         },
-      },
-    };
+      };
+    }
+    return request;
   }
 
   return base;
