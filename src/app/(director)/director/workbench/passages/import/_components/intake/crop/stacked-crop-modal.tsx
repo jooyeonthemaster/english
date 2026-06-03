@@ -39,11 +39,14 @@ interface FlatEntry {
 
 export function StackedCropModal({
   images,
+  maxPassages,
   onCancel,
   onConfirm,
 }: {
   /** 추출 대상 원본 이미지 슬롯들(연속 스택으로 렌더). */
   images: ClientPageSlot[];
+  /** 최종 지문 수 상한(잡당 페이지 한도). 초과 시 모달 안에서 막는다. */
+  maxPassages: number;
   onCancel: () => void;
   /** 잘라낸 지문 슬롯 배열. pageIndex는 호출부에서 재계산. */
   onConfirm: (passageSlots: ClientPageSlot[]) => void;
@@ -192,8 +195,22 @@ export function StackedCropModal({
     setRegionSel([]);
   }, [regionSel, flat, maxGroup, applyRenumber]);
 
+  // 박스가 하나도 없는 이미지(=크롭 안 한 장). confirm 시 통째로 1지문 포함해
+  // 무경고 손실을 막는다.
+  const uncroppedImageIdx = useMemo(() => {
+    const used = new Set(flat.map((e) => e.imageIndex));
+    return images.map((_, i) => i).filter((i) => !used.has(i));
+  }, [flat, images]);
+  const totalPassages = passageCount + uncroppedImageIdx.length;
+
   const handleConfirm = useCallback(async () => {
-    if (flat.length === 0 || busy) return;
+    if (totalPassages === 0 || busy) return;
+    if (totalPassages > maxPassages) {
+      setError(
+        `지문이 너무 많습니다 (${totalPassages}개). 한 작업에는 최대 ${maxPassages}개까지 넣을 수 있습니다.`,
+      );
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -202,7 +219,16 @@ export function StackedCropModal({
         (a, b) => a - b,
       );
       for (const g of groupIds) {
-        const items = flat.filter((e) => e.group === g);
+        const items = flat
+          .filter((e) => e.group === g)
+          // 이어붙임 순서 = 읽기 순서: 이미지순 → 같은 이미지면 위→아래(y)→좌→우(x).
+          // (그린 순서가 아니라 공간 순서로 정렬해 거꾸로 붙는 것 방지)
+          .sort(
+            (a, b) =>
+              a.imageIndex - b.imageIndex ||
+              a.box.y - b.box.y ||
+              a.box.x - b.box.x,
+          );
         if (items.length === 0) continue;
         // 각 영역을 해당 원본 이미지에서 잘라낸다(병렬). 경계 넘는 그룹도 OK —
         // 각 조각을 따로 자른 뒤 이어붙이므로.
@@ -247,15 +273,28 @@ export function StackedCropModal({
           });
         }
       }
+      // 박스 없는 이미지는 통째로 1지문(무경고 손실 방지). 원본 슬롯을 그대로
+      // 재사용 — previewUrl은 부모 소유라 여기서 revoke하지 않는다.
+      for (const i of uncroppedImageIdx) {
+        slots.push({
+          ...images[i],
+          pageIndex: 0,
+          kind: "original",
+          excludedFromExtraction: false,
+        });
+      }
       createdUrls.current = [];
       onConfirm(slots);
     } catch (err) {
+      // 실패 시 이번 시도에서 만든 crop/stitch previewUrl 정리(누수 방지).
+      createdUrls.current.forEach((u) => URL.revokeObjectURL(u));
+      createdUrls.current = [];
       setError(
         err instanceof Error ? err.message : "영역을 잘라내지 못했습니다.",
       );
       setBusy(false);
     }
-  }, [flat, busy, images, onConfirm]);
+  }, [totalPassages, maxPassages, busy, flat, images, uncroppedImageIdx, onConfirm]);
 
   return (
     <div
@@ -426,9 +465,12 @@ export function StackedCropModal({
             <span className="text-[11.5px] font-medium text-red-600">{error}</span>
           ) : (
             <span className="text-[11.5px] text-slate-500">
-              {flat.length === 0
+              {totalPassages === 0
                 ? "선택한 영역이 없습니다."
-                : `영역 ${flat.length}개 → 지문 ${passageCount}개로 추출합니다.`}
+                : `지문 ${totalPassages}개로 추출합니다.` +
+                  (uncroppedImageIdx.length > 0
+                    ? ` (크롭 안 한 ${uncroppedImageIdx.length}장은 통째로 포함)`
+                    : "")}
             </span>
           )}
           <div className="flex items-center gap-2">
@@ -443,7 +485,7 @@ export function StackedCropModal({
             <button
               type="button"
               onClick={handleConfirm}
-              disabled={busy || flat.length === 0}
+              disabled={busy || totalPassages === 0}
               className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[12px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-300"
             >
               {busy ? (
@@ -454,7 +496,7 @@ export function StackedCropModal({
               ) : (
                 <>
                   <Crop className="size-4" aria-hidden="true" />
-                  지문 {passageCount}개로 확정
+                  지문 {totalPassages}개로 확정
                 </>
               )}
             </button>

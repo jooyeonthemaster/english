@@ -584,9 +584,12 @@ export function BulkExtractClient({
         return;
       }
       if (passageSlots.length > MAX_PAGES_PER_JOB) {
+        // 모달이 1차로 막지만(maxPassages), 방어적으로 여기서도 차단 — 모달을
+        // 닫아 busy 잠금으로 갇히지 않게 한다.
         setError(
           `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
         );
+        setStackedCropOpen(false);
         return;
       }
       setSlots(
@@ -951,7 +954,10 @@ export function BulkExtractClient({
 
       {adaptiveIntake && stackedCropOpen ? (
         <StackedCropModal
-          images={slots.filter(isExtractable)}
+          // 원본(original/source)만 캔버스로 — 이미 잘라낸 crop/merged 결과를
+          // 다시 크롭 대상으로 넣지 않는다.
+          images={slots.filter(isCroppable)}
+          maxPassages={MAX_PAGES_PER_JOB}
           onCancel={() => setStackedCropOpen(false)}
           onConfirm={handleStackedCropConfirm}
         />

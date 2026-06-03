@@ -99,6 +99,32 @@ export async function POST(_req: Request, ctx: RouteContext) {
       sourceMatches: restoration.sourceMatches,
     });
 
+    // 복원 결과 metadata(problemEvidence/restoration 등)에 기존 questions/questionTypes를
+    // 보존 머지한다. restoration.metadata는 questions를 포함하지 않으므로, 그대로
+    // 덮어쓰면 2회차 "AI 복원 다시"에서 readQuestionsFromMetadata가 []를 반환해 복원
+    // 정확도가 조용히 퇴화한다.
+    const prevMeta =
+      draft.metadata &&
+      typeof draft.metadata === "object" &&
+      !Array.isArray(draft.metadata)
+        ? (draft.metadata as Record<string, unknown>)
+        : {};
+    const restMeta =
+      restoration.metadata &&
+      typeof restoration.metadata === "object" &&
+      !Array.isArray(restoration.metadata)
+        ? (restoration.metadata as Record<string, unknown>)
+        : {};
+    const mergedMetadata: Prisma.InputJsonValue = {
+      ...restMeta,
+      ...(prevMeta.questions !== undefined
+        ? { questions: prevMeta.questions as Prisma.InputJsonValue }
+        : {}),
+      ...(prevMeta.questionTypes !== undefined
+        ? { questionTypes: prevMeta.questionTypes as Prisma.InputJsonValue }
+        : {}),
+    };
+
     const updated = await prisma.$transaction(
       async (tx) => {
         await tx.extractionM1PassageDraftChange.deleteMany({
@@ -119,7 +145,7 @@ export async function POST(_req: Request, ctx: RouteContext) {
               restoration.warnings.length > 0
                 ? (restoration.warnings as Prisma.InputJsonValue)
                 : Prisma.JsonNull,
-            metadata: restoration.metadata,
+            metadata: mergedMetadata,
           },
         });
         if (changeRows.length > 0) {
