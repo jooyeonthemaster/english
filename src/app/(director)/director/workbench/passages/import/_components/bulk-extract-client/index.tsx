@@ -30,6 +30,8 @@ import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 import { useQueueDrawer } from "../queue-drawer-context";
 import { CropModal } from "../intake/crop/crop-modal";
 import { SlotPreviewModal } from "../intake/crop/slot-preview-modal";
+import { MergeConfirmModal } from "../intake/crop/merge-confirm-modal";
+import { stitchSlotsToBlob } from "../intake/crop/crop-utils";
 import { isCroppable, isExtractable } from "../intake/crop/slot-meta";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
@@ -76,6 +78,16 @@ export function BulkExtractClient({
   const adaptiveIntake = FEATURE_FLAGS.EXTRACTION_ADAPTIVE_INTAKE;
   const [cropSlotIndex, setCropSlotIndex] = useState<number | null>(null);
   const [previewSlotIndex, setPreviewSlotIndex] = useState<number | null>(null);
+  // 여러 장 합치기(접근 A) — 선택 모드 + 선택 slotId(클릭순) + 합치기 프리뷰
+  const [selectMode, setSelectMode] = useState(false);
+  const [mergeSelection, setMergeSelection] = useState<string[]>([]);
+  const [mergePreview, setMergePreview] = useState<{
+    blob: Blob;
+    url: string;
+    width: number;
+    height: number;
+    materials: ClientPageSlot[];
+  } | null>(null);
 
   const bootstrapped = useRef(false);
   const navigatedToManage = useRef(false);
@@ -262,7 +274,18 @@ export function BulkExtractClient({
   const removeSlot = useCallback(
     (index: number) => {
       if (index < 0 || index >= slots.length) return;
-      const next = slots
+      const target = slots[index];
+      // merged(여러 장 합친 결과)를 삭제하면, 재료들을 추출 대상으로 원복(고아 방지).
+      let working = slots;
+      if (target?.kind === "merged" && target.mergedFromSlotIds?.length) {
+        const restore = new Set(target.mergedFromSlotIds);
+        working = slots.map((s) =>
+          s.slotId && restore.has(s.slotId)
+            ? { ...s, kind: "original" as const, excludedFromExtraction: false }
+            : s,
+        );
+      }
+      const next = working
         .filter((_, i) => i !== index)
         .map((slot, i) => ({ ...slot, pageIndex: i }));
       setSlots(next);
@@ -512,11 +535,110 @@ export function BulkExtractClient({
     [cropSlotIndex, setError, setSlots, slots],
   );
 
+  // ── 여러 장 합치기(접근 A) 핸들러 ───────────────────────────────────────
+  const toggleSelectMode = useCallback(() => {
+    setSelectMode((p) => !p);
+    setMergeSelection([]);
+  }, []);
+
+  const toggleSlotSelect = useCallback((slotId: string) => {
+    setMergeSelection((prev) =>
+      prev.includes(slotId)
+        ? prev.filter((id) => id !== slotId)
+        : [...prev, slotId],
+    );
+  }, []);
+
+  // 클릭 순서(=읽기 순서)대로 선택 슬롯 이미지를 미리 이어붙여 확인 모달 오픈.
+  const handleOpenMergePreview = useCallback(async () => {
+    const materials = mergeSelection
+      .map((id) => slots.find((s) => s.slotId === id))
+      .filter((s): s is ClientPageSlot => !!s && isExtractable(s));
+    if (materials.length < 2) return;
+    try {
+      const { blob, width, height, previewUrl } = await stitchSlotsToBlob(
+        materials.map((s) => s.blob),
+        { maxWidth: 2480 },
+      );
+      setMergePreview({ blob, url: previewUrl, width, height, materials });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "이어붙이기에 실패했습니다.",
+      );
+    }
+  }, [mergeSelection, slots, setError]);
+
+  // 확인 모달 확정 → 재료를 source+제외로, 첫 재료 위치에 merged 1개 삽입.
+  const handleConfirmMerge = useCallback(
+    (
+      orderedMaterials: ClientPageSlot[],
+      finalBlob: Blob,
+      finalUrl: string,
+      width: number,
+      height: number,
+    ) => {
+      const matIds = new Set(orderedMaterials.map((s) => s.slotId));
+      const firstIdx = slots.findIndex(
+        (s) => s.slotId != null && matIds.has(s.slotId),
+      );
+      if (firstIdx < 0) {
+        setMergePreview(null);
+        return;
+      }
+      const next = slots.map((s) =>
+        s.slotId != null && matIds.has(s.slotId)
+          ? { ...s, kind: "source" as const, excludedFromExtraction: true }
+          : s,
+      );
+      const merged: ClientPageSlot = {
+        pageIndex: 0,
+        blob: finalBlob,
+        previewUrl: finalUrl,
+        bytes: finalBlob.size,
+        width,
+        height,
+        sourceFileName: `이어붙인 지문 · ${orderedMaterials.length}장`,
+        slotId: crypto.randomUUID(),
+        kind: "merged",
+        regionCount: orderedMaterials.length,
+        mergedFromSlotIds: orderedMaterials
+          .map((s) => s.slotId)
+          .filter((id): id is string => !!id),
+      };
+      next.splice(firstIdx + 1, 0, merged);
+      setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
+      setMergePreview(null);
+      setSelectMode(false);
+      setMergeSelection([]);
+    },
+    [slots, setSlots],
+  );
+
+  // merged "합치기 되돌리기" → merged 제거 + 재료 원복.
+  const handleUnmerge = useCallback(
+    (mergedSlotId: string) => {
+      const merged = slots.find((s) => s.slotId === mergedSlotId);
+      if (!merged || merged.kind !== "merged") return;
+      const restoreIds = new Set(merged.mergedFromSlotIds ?? []);
+      const next = slots
+        .filter((s) => s.slotId !== mergedSlotId)
+        .map((s) =>
+          s.slotId && restoreIds.has(s.slotId)
+            ? { ...s, kind: "original" as const, excludedFromExtraction: false }
+            : s,
+        );
+      setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
+    },
+    [slots, setSlots],
+  );
+
   const clearFiles = useCallback(() => {
     setSlots([]);
     setSourceName(null);
     setSourceType(null);
     setError(null);
+    setSelectMode(false);
+    setMergeSelection([]);
   }, [setError, setSlots]);
 
   const clearText = useCallback(() => {
@@ -609,6 +731,21 @@ export function BulkExtractClient({
                       ? (index) => setPreviewSlotIndex(index)
                       : undefined
                   }
+                  selectMode={adaptiveIntake ? selectMode : undefined}
+                  mergeSelection={adaptiveIntake ? mergeSelection : undefined}
+                  onToggleSelectMode={
+                    adaptiveIntake ? toggleSelectMode : undefined
+                  }
+                  onToggleSlotSelect={
+                    adaptiveIntake ? toggleSlotSelect : undefined
+                  }
+                  onClearSelection={
+                    adaptiveIntake ? () => setMergeSelection([]) : undefined
+                  }
+                  onOpenMergePreview={
+                    adaptiveIntake ? handleOpenMergePreview : undefined
+                  }
+                  onUnmerge={adaptiveIntake ? handleUnmerge : undefined}
                 />
                 <ExtractionRunPanel
                   busy={runBusy}
@@ -715,6 +852,17 @@ export function BulkExtractClient({
                 }
               : undefined
           }
+        />
+      ) : null}
+
+      {adaptiveIntake && mergePreview ? (
+        <MergeConfirmModal
+          initial={mergePreview}
+          onCancel={() => {
+            URL.revokeObjectURL(mergePreview.url);
+            setMergePreview(null);
+          }}
+          onConfirm={handleConfirmMerge}
         />
       ) : null}
     </div>

@@ -25,9 +25,11 @@ export function slotKindLabel(slot: ClientPageSlot): SlotKindLabel {
       };
     case "merged":
       return {
-        text: slot.regionCount
-          ? `이어붙인 지문 · ${slot.regionCount}영역`
-          : "이어붙인 지문",
+        text: slot.mergedFromSlotIds?.length
+          ? `이어붙인 지문 · ${slot.mergedFromSlotIds.length}장` // 트레이 합치기(A)
+          : slot.regionCount
+            ? `이어붙인 지문 · ${slot.regionCount}영역` // 크롭 모달 합치기
+            : "이어붙인 지문",
         className: "bg-blue-50 text-blue-700 ring-blue-100",
       };
     default:

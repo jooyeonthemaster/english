@@ -227,3 +227,58 @@ export async function stitchCropsToBlob(
     bitmap.close?.();
   }
 }
+
+/**
+ * 여러 독립 이미지(blob)를 순서대로 세로로 이어붙여 단일 이미지(=한 지문)로 만든다.
+ * 페이지/장 경계를 넘는 "한 지문"을 1개 슬롯=1 OCR로 추출하기 위함 (접근 A).
+ * blob 순서 = 읽기 순서(1→2→…). 폭이 다르면 좌측 정렬, 최대 폭 기준 캔버스.
+ * maxWidth 초과 시 비율 유지 다운스케일(긴 이미지 OCR 글자 뭉개짐 가드).
+ */
+export async function stitchSlotsToBlob(
+  blobs: Blob[],
+  opts?: { quality?: number; mime?: string; gap?: number; maxWidth?: number },
+): Promise<{ blob: Blob; width: number; height: number; previewUrl: string }> {
+  if (blobs.length === 0) throw new Error("이어붙일 이미지가 없습니다.");
+  const gap = Math.max(0, opts?.gap ?? 0);
+  const bitmaps = await Promise.all(
+    blobs.map((b) => createImageBitmap(b, { imageOrientation: "from-image" })),
+  );
+  try {
+    const rawWidth = Math.max(1, ...bitmaps.map((b) => b.width));
+    const scale =
+      opts?.maxWidth && rawWidth > opts.maxWidth ? opts.maxWidth / rawWidth : 1;
+    const width = Math.round(rawWidth * scale);
+    const heights = bitmaps.map((b) => Math.max(1, Math.round(b.height * scale)));
+    const height =
+      heights.reduce((s, h) => s + h, 0) + gap * Math.max(0, bitmaps.length - 1);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("canvas 2d 컨텍스트를 사용할 수 없습니다.");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    let y = 0;
+    bitmaps.forEach((b, i) => {
+      const w = Math.max(1, Math.round(b.width * scale));
+      const h = heights[i];
+      ctx.drawImage(b, 0, 0, b.width, b.height, 0, y, w, h); // 좌측 정렬
+      y += h + gap;
+    });
+
+    const mime = opts?.mime ?? "image/jpeg";
+    const quality = opts?.quality ?? 0.92;
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("이어붙이기에 실패했습니다."))),
+        mime,
+        quality,
+      );
+    });
+    return { blob, width, height, previewUrl: URL.createObjectURL(blob) };
+  } finally {
+    bitmaps.forEach((b) => b.close?.());
+  }
+}

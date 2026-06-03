@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Combine,
   CornerDownRight,
   Crop,
   Database,
@@ -10,6 +11,7 @@ import {
   Loader2,
   PlayCircle,
   Trash2,
+  Undo2,
   UploadCloud,
   X,
 } from "lucide-react";
@@ -56,6 +58,13 @@ export function UploadPanel({
   onRemoveSlot,
   onCropSlot,
   onPreviewSlot,
+  selectMode,
+  mergeSelection,
+  onToggleSelectMode,
+  onToggleSlotSelect,
+  onClearSelection,
+  onOpenMergePreview,
+  onUnmerge,
 }: {
   busy: boolean;
   dragActive: boolean;
@@ -81,6 +90,16 @@ export function UploadPanel({
   onCropSlot?: (index: number) => void;
   /** 적응형 인테이크 — 썸네일 클릭 시 큰 미리보기. */
   onPreviewSlot?: (index: number) => void;
+  // ── 여러 장 합치기(접근 A) ──
+  /** 선택 모드 on/off. */
+  selectMode?: boolean;
+  /** 선택된 slotId 목록(클릭 순서). */
+  mergeSelection?: string[];
+  onToggleSelectMode?: () => void;
+  onToggleSlotSelect?: (slotId: string) => void;
+  onClearSelection?: () => void;
+  onOpenMergePreview?: () => void;
+  onUnmerge?: (slotId: string) => void;
 }) {
   // Slot-reorder local state. dragIndex !== null while a slot is being dragged
   // — used to mute the parent label's drop handler so a slot reorder doesn't
@@ -153,6 +172,25 @@ export function UploadPanel({
               텍스트
             </button>
           </div>
+          {inputMode === "file" &&
+          onToggleSelectMode != null &&
+          slots.length >= 2 ? (
+            <button
+              type="button"
+              onClick={onToggleSelectMode}
+              disabled={busy}
+              aria-pressed={!!selectMode}
+              className={
+                "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 " +
+                (selectMode
+                  ? "border-blue-300 bg-blue-50 text-blue-700"
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50")
+              }
+            >
+              <Combine className="size-3.5" aria-hidden="true" />
+              {selectMode ? "합치기 종료" : "여러 장 합치기"}
+            </button>
+          ) : null}
           {inputMode === "file" && slots.length > 0 ? (
             <button
               type="button"
@@ -342,10 +380,19 @@ export function UploadPanel({
                     const showBadge =
                       slot.kind != null && slot.kind !== "original";
                     const croppable = isCroppable(slot);
+                    const selectionOrder =
+                      slot.slotId != null
+                        ? (mergeSelection ?? []).indexOf(slot.slotId)
+                        : -1;
+                    // 선택 가능: 합치기 모드 + 추출 대상 + 이미 합쳐진 것 아님(중첩 방지)
+                    const selectable =
+                      !!selectMode &&
+                      isExtractable(slot) &&
+                      slot.kind !== "merged";
                     return (
                       <div
                         key={slot.pageIndex + "-" + slot.previewUrl}
-                        draggable={!busy}
+                        draggable={!busy && !selectMode}
                         onClick={(event) => {
                           // Stop bubble so the label's <input type="file"> isn't
                           // opened when the user only meant to grip a thumbnail.
@@ -391,17 +438,21 @@ export function UploadPanel({
                         }}
                         className={
                           "flex h-full w-[168px] shrink-0 flex-col rounded-md border bg-white p-2 transition-all " +
-                          (isDragging
-                            ? "border-blue-400 opacity-40 "
-                            : isDropTarget
-                              ? "border-blue-500 ring-2 ring-blue-200 "
-                              : excluded
-                                ? "border-dashed border-slate-300 opacity-75 "
-                                : "border-slate-200 ") +
+                          (selectionOrder >= 0
+                            ? "border-blue-500 ring-2 ring-blue-300 "
+                            : isDragging
+                              ? "border-blue-400 opacity-40 "
+                              : isDropTarget
+                                ? "border-blue-500 ring-2 ring-blue-200 "
+                                : excluded
+                                  ? "border-dashed border-slate-300 opacity-75 "
+                                  : "border-slate-200 ") +
                           (child ? "border-l-[3px] border-l-blue-300 " : "") +
                           (busy
                             ? "cursor-not-allowed"
-                            : "cursor-grab active:cursor-grabbing")
+                            : selectMode
+                              ? "cursor-default"
+                              : "cursor-grab active:cursor-grabbing")
                         }
                         title={
                           slot.sourceFileName ?? slot.pageIndex + 1 + "페이지"
@@ -423,23 +474,52 @@ export function UploadPanel({
                             src={slot.previewUrl}
                             alt={slot.pageIndex + 1 + "페이지"}
                             onClick={
-                              onPreviewSlot
+                              selectMode
                                 ? (event) => {
                                     event.preventDefault();
                                     event.stopPropagation();
-                                    onPreviewSlot(index);
+                                    if (selectable && slot.slotId)
+                                      onToggleSlotSelect?.(slot.slotId);
                                   }
-                                : undefined
+                                : onPreviewSlot
+                                  ? (event) => {
+                                      event.preventDefault();
+                                      event.stopPropagation();
+                                      onPreviewSlot(index);
+                                    }
+                                  : undefined
                             }
                             className={
                               "absolute inset-0 h-full w-full object-cover object-top " +
-                              (onPreviewSlot ? "cursor-zoom-in" : "")
+                              (selectMode
+                                ? selectable
+                                  ? "cursor-pointer"
+                                  : "cursor-not-allowed"
+                                : onPreviewSlot
+                                  ? "cursor-zoom-in"
+                                  : "")
                             }
                             draggable={false}
                           />
+                          {selectMode ? (
+                            <span
+                              aria-hidden="true"
+                              className={
+                                "absolute left-1 top-1 inline-flex size-5 items-center justify-center rounded text-[10px] font-bold ring-1 " +
+                                (selectionOrder >= 0
+                                  ? "bg-blue-600 text-white ring-blue-700"
+                                  : selectable
+                                    ? "bg-white/90 text-transparent ring-slate-300"
+                                    : "bg-slate-200/80 text-transparent ring-slate-300")
+                              }
+                            >
+                              {selectionOrder >= 0 ? selectionOrder + 1 : "·"}
+                            </span>
+                          ) : null}
                           <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
                             {slot.pageIndex + 1}
                           </span>
+                          {!selectMode ? (
                           <button
                             type="button"
                             onClick={(event) => {
@@ -461,6 +541,7 @@ export function UploadPanel({
                           >
                             <X className="size-3.5" aria-hidden="true" />
                           </button>
+                          ) : null}
                         </div>
                         <div className="mt-1.5 truncate text-[11px] font-bold text-slate-800">
                           {slot.sourceFileName ??
@@ -479,7 +560,7 @@ export function UploadPanel({
                             잘라낸 원본에서
                           </div>
                         ) : null}
-                        {onCropSlot && croppable ? (
+                        {onCropSlot && croppable && !selectMode ? (
                           <button
                             type="button"
                             onClick={(event) => {
@@ -506,6 +587,27 @@ export function UploadPanel({
                             {slot.kind === "source" ? "영역 편집" : "영역 자르기"}
                           </button>
                         ) : null}
+                        {onUnmerge && slot.kind === "merged" && !selectMode ? (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              if (slot.slotId) onUnmerge(slot.slotId);
+                            }}
+                            onPointerDown={(event) => event.stopPropagation()}
+                            onDragStart={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                            }}
+                            disabled={busy}
+                            aria-label="합치기 되돌리기"
+                            className="mt-2 inline-flex h-7 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white text-[11px] font-bold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <Undo2 className="size-3.5" aria-hidden="true" />
+                            합치기 되돌리기
+                          </button>
+                        ) : null}
                       </div>
                     );
                   })}
@@ -513,6 +615,35 @@ export function UploadPanel({
               </div>
             )}
           </label>
+
+          {selectMode ? (
+            <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/70 px-3 py-2 text-[11px]">
+              <span className="font-bold text-slate-700">
+                {(mergeSelection?.length ?? 0) >= 2
+                  ? `${mergeSelection?.length ?? 0}장 선택됨 · 클릭 순서대로 위→아래 이어붙입니다`
+                  : "합칠 장을 순서대로 클릭하세요 (2장 이상)"}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={onClearSelection}
+                  disabled={busy || (mergeSelection?.length ?? 0) === 0}
+                  className="inline-flex h-7 cursor-pointer items-center rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  선택 해제
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenMergePreview}
+                  disabled={busy || (mergeSelection?.length ?? 0) < 2}
+                  className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:bg-blue-300"
+                >
+                  <Combine className="size-3.5" aria-hidden="true" />
+                  선택한 {mergeSelection?.length ?? 0}장 합치기
+                </button>
+              </div>
+            </div>
+          ) : null}
 
           {showExtractSummary ? (
             <div className="flex shrink-0 items-center justify-between rounded-md border border-blue-100 bg-blue-50/70 px-3 py-1.5 text-[11px]">
