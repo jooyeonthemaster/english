@@ -8,6 +8,7 @@ import { ACTIVE_STATUSES, TERMINAL_STATUSES } from "../constants";
 import type { BaseTask } from "../types";
 import { formatTaskDateParts } from "../utils/format";
 import { TaskStatusBadge } from "./task-status-badge";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 export function TaskCard({
   task,
@@ -42,6 +43,7 @@ export function TaskCard({
 
   const canDelete = task.onDelete && TERMINAL_STATUSES.has(task.status);
   const dateParts = formatTaskDateParts(task.createdAt);
+  const canOpen = Boolean(task.href);
 
   return (
     <article
@@ -123,6 +125,15 @@ export function TaskCard({
             <span className="truncate">{dateParts.day}</span>
             <span className="shrink-0 tabular-nums">{dateParts.time}</span>
           </div>
+        ) : null}
+        {canOpen ? (
+          <DetailActionButton
+            className="mt-1.5 w-full justify-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpen();
+            }}
+          />
         ) : null}
       </div>
     </article>

@@ -38,6 +38,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 type InlineListLayout = "horizontal" | "grid";
 export type GridViewMode = "grid-3" | "grid-2" | "list";
@@ -457,6 +458,7 @@ function TaskGridCard({
     }
     if (task.href) router.push(task.href);
   };
+  const canOpen = Boolean(onClick || task.href);
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -623,6 +625,15 @@ function TaskGridCard({
             <CalendarClock className="size-3.5" aria-hidden="true" />
             {formatTaskDate(task.createdAt)}
           </span>
+          {canOpen ? (
+            <DetailActionButton
+              className="ml-auto"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOpen();
+              }}
+            />
+          ) : null}
         </div>
       </div>
 
@@ -632,13 +643,6 @@ function TaskGridCard({
             className="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-700"
             style={{ width: task.status === "pending" ? "22%" : "68%" }}
           />
-        </div>
-      ) : null}
-      {!active && task.href ? (
-        <div className="absolute bottom-2 right-3 opacity-0 transition-opacity group-hover:opacity-100">
-          <span className="text-[9px] font-medium text-blue-500">
-            클릭하여 상세 보기
-          </span>
         </div>
       ) : null}
     </article>
@@ -706,6 +710,7 @@ function TaskListRow({
     }
     if (task.href) router.push(task.href);
   };
+  const canOpen = Boolean(onClick || task.href);
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -805,6 +810,14 @@ function TaskListRow({
         <CalendarClock className="size-3.5" aria-hidden="true" />
         {formatTaskDate(task.createdAt)}
       </span>
+      {canOpen ? (
+        <DetailActionButton
+          onClick={(event) => {
+            event.stopPropagation();
+            handleOpen();
+          }}
+        />
+      ) : null}
       {canDelete ? (
         <button
           type="button"

@@ -376,12 +376,12 @@ export function UploadPanel({
                           slot.sourceFileName ?? slot.pageIndex + 1 + "페이지"
                         }
                       >
-                        <div className="relative min-h-0 flex-1 aspect-[4/3] overflow-hidden rounded border border-slate-200 bg-slate-50">
+                        <div className="relative min-h-0 flex-1 aspect-[210/297] overflow-hidden rounded border border-slate-200 bg-slate-50">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={slot.previewUrl}
                             alt={slot.pageIndex + 1 + "페이지"}
-                            className="absolute inset-0 h-full w-full object-cover object-top"
+                            className="absolute inset-0 h-full w-full object-contain"
                             draggable={false}
                           />
                           <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">

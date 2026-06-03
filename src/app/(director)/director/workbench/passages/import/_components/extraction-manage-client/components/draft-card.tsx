@@ -19,6 +19,7 @@ import {
 import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
@@ -65,7 +66,6 @@ export function DraftCard({
   hideCheckbox,
   onTitleChange,
   statusBadgeMode = "review",
-  dragRequiresSelection = false,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -393,6 +393,14 @@ export function DraftCard({
       <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">
         {preview || "추출된 본문이 비어있습니다."}
       </p>
+      <div className="mt-auto flex justify-end pt-1">
+        <DetailActionButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick();
+          }}
+        />
+      </div>
     </div>
   );
 }
