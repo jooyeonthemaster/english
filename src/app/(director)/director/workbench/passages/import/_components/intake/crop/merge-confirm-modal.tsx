@@ -9,6 +9,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertTriangle, ChevronDown, ChevronUp, Combine, Loader2, X } from "lucide-react";
 
+import { MAX_PAGE_IMAGE_BYTES } from "@/lib/extraction/constants";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 import { stitchSlotsToBlob } from "./crop-utils";
 
@@ -96,6 +97,7 @@ export function MergeConfirmModal({
   );
 
   const tooTall = preview.height > TOO_TALL_PX;
+  const tooLarge = preview.blob.size > MAX_PAGE_IMAGE_BYTES;
 
   return (
     <div
@@ -202,7 +204,19 @@ export function MergeConfirmModal({
           </aside>
         </div>
 
-        {tooTall ? (
+        {tooLarge ? (
+          <div className="flex items-start gap-2 border-t border-slate-100 bg-slate-100 px-4 py-2.5 text-[11.5px] font-medium text-slate-700">
+            <AlertTriangle
+              className="mt-0.5 size-4 shrink-0 text-slate-600"
+              aria-hidden="true"
+            />
+            <span>
+              합친 이미지 용량이 너무 큽니다 (
+              {Math.round(MAX_PAGE_IMAGE_BYTES / 1024 / 1024)}MB 초과). 장수를
+              줄이거나 영역을 더 작게 잘라야 추출할 수 있습니다.
+            </span>
+          </div>
+        ) : tooTall ? (
           <div className="flex items-start gap-2 border-t border-slate-100 bg-slate-50 px-4 py-2.5 text-[11.5px] text-slate-600">
             <AlertTriangle
               className="mt-0.5 size-4 shrink-0 text-slate-500"
@@ -237,7 +251,7 @@ export function MergeConfirmModal({
                 preview.height,
               );
             }}
-            disabled={busy || ordered.length < 2}
+            disabled={busy || ordered.length < 2 || tooLarge}
             className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[12px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Combine className="size-4" aria-hidden="true" />

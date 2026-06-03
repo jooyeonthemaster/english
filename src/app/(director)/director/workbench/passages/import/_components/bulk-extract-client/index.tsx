@@ -281,7 +281,7 @@ export function BulkExtractClient({
         const restore = new Set(target.mergedFromSlotIds);
         working = slots.map((s) =>
           s.slotId && restore.has(s.slotId)
-            ? { ...s, kind: "original" as const, excludedFromExtraction: false }
+            ? { ...s, kind: undefined, excludedFromExtraction: false }
             : s,
         );
       }
@@ -419,6 +419,14 @@ export function BulkExtractClient({
       return;
     }
     const reindexed = extractable.map((slot, i) => ({ ...slot, pageIndex: i }));
+    // HIGH-1 가드: 합친/잘린 이미지가 5MB 초과면 서버가 거부하므로 업로드 전 차단.
+    const oversized = reindexed.find((s) => s.bytes > MAX_PAGE_IMAGE_BYTES);
+    if (oversized) {
+      setError(
+        `"${oversized.sourceFileName ?? "한 자료"}"가 너무 큽니다 (${Math.round(MAX_PAGE_IMAGE_BYTES / 1024 / 1024)}MB 초과). 합칠 장수를 줄이거나 영역을 더 작게 잘라 주세요.`,
+      );
+      return;
+    }
     const uploadSourceType: FileSourceType =
       sourceType === "PDF" ? "PDF" : "IMAGES";
     const nextJobId = await startUpload({
@@ -493,7 +501,7 @@ export function BulkExtractClient({
   // 크롭 확정 → 소스를 '추출 제외'로 표시하고, 떠낸 영역들을 소스 바로 뒤에 그룹으로
   // 끼워넣는다. 재편집이면 같은 소스의 기존 자식을 먼저 제거해 중복을 막는다.
   const handleCropConfirm = useCallback(
-    (croppedSlots: ClientPageSlot[], boxes: CropBox[]) => {
+    (croppedSlots: ClientPageSlot[], boxes: CropBox[], boxGroups: number[]) => {
       if (cropSlotIndex === null) {
         return;
       }
@@ -527,6 +535,7 @@ export function BulkExtractClient({
         kind: "source" as const,
         excludedFromExtraction: true,
         cropRegions: boxes,
+        initialGroups: boxGroups,
       };
       next.splice(srcIdx + 1, 0, ...stamped);
       setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
@@ -624,7 +633,7 @@ export function BulkExtractClient({
         .filter((s) => s.slotId !== mergedSlotId)
         .map((s) =>
           s.slotId && restoreIds.has(s.slotId)
-            ? { ...s, kind: "original" as const, excludedFromExtraction: false }
+            ? { ...s, kind: undefined, excludedFromExtraction: false }
             : s,
         );
       setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
@@ -832,6 +841,7 @@ export function BulkExtractClient({
         <CropModal
           slot={slots[cropSlotIndex]}
           initialBoxes={slots[cropSlotIndex].cropRegions}
+          initialGroups={slots[cropSlotIndex].initialGroups}
           onCancel={() => setCropSlotIndex(null)}
           onConfirm={handleCropConfirm}
         />

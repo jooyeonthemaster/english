@@ -26,20 +26,29 @@ function renumber(groups: number[]): number[] {
 export function CropModal({
   slot,
   initialBoxes,
+  initialGroups,
   onCancel,
   onConfirm,
 }: {
   slot: ClientPageSlot;
   /** 재편집 시 기존 크롭 영역을 프리로드. */
   initialBoxes?: CropBox[];
+  /** 재편집 시 기존 지문 그룹(initialBoxes와 1:1)을 프리로드. */
+  initialGroups?: number[];
   onCancel: () => void;
-  /** 잘라낸 새 슬롯 배열 + 확정 영역들. pageIndex는 호출부에서 재계산. */
-  onConfirm: (croppedSlots: ClientPageSlot[], boxes: CropBox[]) => void;
+  /** 잘라낸 새 슬롯 배열 + 확정 영역 + 그룹. pageIndex는 호출부에서 재계산. */
+  onConfirm: (
+    croppedSlots: ClientPageSlot[],
+    boxes: CropBox[],
+    groups: number[],
+  ) => void;
 }) {
   const [boxes, setBoxes] = useState<CropBox[]>(initialBoxes ?? []);
-  // 영역별 지문 그룹 번호(연속 1..K). 기본: 영역마다 별개 지문.
+  // 영역별 지문 그룹 번호(연속 1..K). 재편집이면 저장된 그룹, 아니면 영역마다 별개.
   const [groups, setGroups] = useState<number[]>(
-    (initialBoxes ?? []).map((_, i) => i + 1),
+    initialGroups && initialGroups.length === (initialBoxes ?? []).length
+      ? renumber(initialGroups)
+      : (initialBoxes ?? []).map((_, i) => i + 1),
   );
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
@@ -154,7 +163,7 @@ export function CropModal({
         }
       }
       createdUrls.current = [];
-      onConfirm(slots, boxes);
+      onConfirm(slots, boxes, groups);
     } catch (err) {
       setError(err instanceof Error ? err.message : "영역을 잘라내지 못했습니다.");
       setBusy(false);

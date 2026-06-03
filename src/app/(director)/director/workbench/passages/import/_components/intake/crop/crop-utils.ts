@@ -5,7 +5,32 @@
 // (adaptive-intake D-G2)
 // ============================================================================
 
+import { MAX_PAGE_IMAGE_BYTES } from "@/lib/extraction/constants";
 import type { CropBox } from "@/lib/extraction/types";
+
+/**
+ * canvas를 MAX_PAGE_IMAGE_BYTES(5MB) 이하가 되도록 품질을 낮춰가며 인코딩한다.
+ * 못 맞추면 최선치를 반환(호출부/추출 직전 가드가 최종 차단). 합친 이미지가 5MB를
+ * 넘어 추출 단계에서 서버에 거부당하던 문제(HIGH-1) 완화.
+ */
+async function encodeCanvasUnderLimit(
+  canvas: HTMLCanvasElement,
+  mime: string,
+  startQuality: number,
+): Promise<Blob> {
+  const qualities = [startQuality, 0.85, 0.78, 0.7, 0.62, 0.5];
+  let last: Blob | null = null;
+  for (const q of qualities) {
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob((b) => resolve(b), mime, q),
+    );
+    if (!blob) continue;
+    last = blob;
+    if (blob.size <= MAX_PAGE_IMAGE_BYTES) return blob;
+  }
+  if (last) return last;
+  throw new Error("이미지 인코딩에 실패했습니다.");
+}
 
 /** 최소 크롭 변 길이 (정규화) — 너무 작은 영역 방지. */
 export const MIN_CROP_SIZE = 0.03;
@@ -155,13 +180,7 @@ export async function cropImageToBlob(
 
     const mime = opts?.mime ?? "image/jpeg";
     const quality = opts?.quality ?? 0.92;
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob(
-        (b) => (b ? resolve(b) : reject(new Error("이미지 자르기에 실패했습니다."))),
-        mime,
-        quality,
-      );
-    });
+    const blob = await encodeCanvasUnderLimit(canvas, mime, quality);
     return {
       blob,
       width: sw,
@@ -215,13 +234,7 @@ export async function stitchCropsToBlob(
 
     const mime = opts?.mime ?? "image/jpeg";
     const quality = opts?.quality ?? 0.92;
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob(
-        (b) => (b ? resolve(b) : reject(new Error("이어붙이기에 실패했습니다."))),
-        mime,
-        quality,
-      );
-    });
+    const blob = await encodeCanvasUnderLimit(canvas, mime, quality);
     return { blob, width, height, previewUrl: URL.createObjectURL(blob) };
   } finally {
     bitmap.close?.();
@@ -270,13 +283,7 @@ export async function stitchSlotsToBlob(
 
     const mime = opts?.mime ?? "image/jpeg";
     const quality = opts?.quality ?? 0.92;
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob(
-        (b) => (b ? resolve(b) : reject(new Error("이어붙이기에 실패했습니다."))),
-        mime,
-        quality,
-      );
-    });
+    const blob = await encodeCanvasUnderLimit(canvas, mime, quality);
     return { blob, width, height, previewUrl: URL.createObjectURL(blob) };
   } finally {
     bitmaps.forEach((b) => b.close?.());

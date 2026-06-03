@@ -87,6 +87,8 @@ export interface ClientPageSlot {
   excludedFromExtraction?: boolean;
   /** source: 떠낸 크롭 영역들(정규화 0~1). 재편집 프리로드 + 미리보기 오버레이용. */
   cropRegions?: CropBox[];
+  /** source: cropRegions와 1:1 정렬된 지문 그룹 번호. 재편집 시 묶음 복원용. */
+  initialGroups?: number[];
   /** merged(트레이 합치기): 이어붙인 재료 슬롯들의 slotId[] (읽기순). 되돌리기·중복방지용. */
   mergedFromSlotIds?: string[];
 }
