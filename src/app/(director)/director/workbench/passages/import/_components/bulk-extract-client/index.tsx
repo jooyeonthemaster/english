@@ -78,6 +78,10 @@ export function BulkExtractClient({
   const adaptiveIntake = FEATURE_FLAGS.EXTRACTION_ADAPTIVE_INTAKE;
   const [cropSlotIndex, setCropSlotIndex] = useState<number | null>(null);
   const [previewSlotIndex, setPreviewSlotIndex] = useState<number | null>(null);
+  // P7-D2: 추출 산출 방식 — 기본 "원문 그대로(verbatim)", 옵션 "AI 복원(restored)".
+  const [outputMode, setOutputMode] = useState<"verbatim" | "restored">(
+    "verbatim",
+  );
   // 여러 장 합치기(접근 A) — 선택 모드 + 선택 slotId(클릭순) + 합치기 프리뷰
   const [selectMode, setSelectMode] = useState(false);
   const [mergeSelection, setMergeSelection] = useState<string[]>([]);
@@ -434,6 +438,7 @@ export function BulkExtractClient({
       sourceType: uploadSourceType,
       originalFileName: sourceName,
       mode: "PASSAGE_ONLY",
+      outputMode: adaptiveIntake ? outputMode : undefined,
     });
     if (nextJobId) {
       setJobId(nextJobId);
@@ -446,6 +451,7 @@ export function BulkExtractClient({
     }
   }, [
     adaptiveIntake,
+    outputMode,
     queueDrawer,
     setError,
     setJobId,
@@ -475,6 +481,7 @@ export function BulkExtractClient({
         credentials: "include",
         body: JSON.stringify({
           mode: "PASSAGE_ONLY",
+          outputMode: adaptiveIntake ? outputMode : undefined,
           title: trimmedTitle || undefined,
           text: trimmedText,
         }),
@@ -496,7 +503,16 @@ export function BulkExtractClient({
       );
       setPhase("idle");
     }
-  }, [queueDrawer, setError, setJobId, setPhase, textTitle, textValue]);
+  }, [
+    adaptiveIntake,
+    outputMode,
+    queueDrawer,
+    setError,
+    setJobId,
+    setPhase,
+    textTitle,
+    textValue,
+  ]);
 
   // 크롭 확정 → 소스를 '추출 제외'로 표시하고, 떠낸 영역들을 소스 바로 뒤에 그룹으로
   // 끼워넣는다. 재편집이면 같은 소스의 기존 자식을 먼저 제거해 중복을 막는다.
@@ -668,7 +684,11 @@ export function BulkExtractClient({
             <WorkflowPageTitle
               icon={MaterialExtractionIcon}
               title="자료 추출"
-              description="PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다."
+              description={
+                adaptiveIntake
+                  ? "PDF·이미지·텍스트를 등록해 지문을 추출합니다. 빈칸·순서 문제는 선택적으로 AI 복원할 수 있습니다."
+                  : "PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다."
+              }
             />
 
             <div className="flex items-center gap-2">
@@ -760,6 +780,8 @@ export function BulkExtractClient({
                     adaptiveIntake ? handleOpenMergePreview : undefined
                   }
                   onUnmerge={adaptiveIntake ? handleUnmerge : undefined}
+                  outputMode={adaptiveIntake ? outputMode : undefined}
+                  onOutputModeChange={adaptiveIntake ? setOutputMode : undefined}
                 />
                 {adaptiveIntake ? null : (
                   <ExtractionRunPanel

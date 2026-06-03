@@ -31,6 +31,8 @@ export async function runPassageOnlyClusterLoop(params: {
   academyId: string;
   createdById: string;
   mode: ExtractionMode;
+  /** P7-D2: "verbatim"이면 복원 스킵. */
+  outputMode: string | null;
   originalFileName: string | null;
   sourceMaterialId: string | null;
   snapshotItems: ExtractionItemSnapshot[];
@@ -41,6 +43,7 @@ export async function runPassageOnlyClusterLoop(params: {
     academyId,
     createdById,
     mode,
+    outputMode,
     originalFileName,
     sourceMaterialId,
     snapshotItems,
@@ -113,6 +116,7 @@ export async function runPassageOnlyClusterLoop(params: {
       const result = await persistM1PassageDrafts({
         jobId,
         academyId,
+        outputMode,
         sourceMaterialId: clusterSourceMaterialId,
         items: clusterItems,
         passageOrderOffset: totalDraftCount,

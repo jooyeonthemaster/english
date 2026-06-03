@@ -90,11 +90,28 @@ export async function POST(req: NextRequest) {
     });
     jobId = job.id;
 
-    const restoration = await restoreM1Passage({
-      academyId: staff.academyId,
-      rawText: parsed.text,
-      questions: [],
-    });
+    // P7-D2: verbatim이면 AI 복원을 건너뛰고 붙여넣은 텍스트를 그대로 보존.
+    // (이 경로는 shouldRestore 게이트를 안 타고 무조건 복원하던 곳 — 호출 자체를 조건부로.)
+    const restoration =
+      parsed.outputMode === "verbatim"
+        ? {
+            restoredText: parsed.text,
+            status: "NO_RESTORATION_NEEDED" as const,
+            changes: [] as Awaited<
+              ReturnType<typeof restoreM1Passage>
+            >["changes"],
+            sourceMatches: [] as Awaited<
+              ReturnType<typeof restoreM1Passage>
+            >["sourceMatches"],
+            warnings: [] as string[],
+            confidence: null as number | null,
+            metadata: null as unknown,
+          }
+        : await restoreM1Passage({
+            academyId: staff.academyId,
+            rawText: parsed.text,
+            questions: [],
+          });
 
     const draftId = randomUUID();
     const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =

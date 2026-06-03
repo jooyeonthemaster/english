@@ -39,6 +39,8 @@ export const blockTypeSchema = z.enum([
 export const createJobRequestSchema = z.object({
   sourceType: z.enum(["PDF", "IMAGES"]),
   mode: extractionModeSchema.default("PASSAGE_ONLY"),
+  // P7-D2: 추출 산출 모드. 미전달=기존 자동복원 휴리스틱 유지(비적응 무영향).
+  outputMode: z.enum(["verbatim", "restored"]).optional(),
   totalPages: z.number().int().min(1).max(MAX_PAGES_PER_JOB),
   originalFileName: z.string().max(255).optional(),
   pages: z
@@ -65,6 +67,8 @@ export type CreateJobRequest = z.infer<typeof createJobRequestSchema>;
 
 export const createTextExtractionRequestSchema = z.object({
   mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
+  // P7-D2: "verbatim"이면 AI 복원 생략(붙여넣은 텍스트 그대로 저장).
+  outputMode: z.enum(["verbatim", "restored"]).optional(),
   title: z.string().trim().max(200).optional(),
   text: z.string().trim().min(20).max(60_000),
 });

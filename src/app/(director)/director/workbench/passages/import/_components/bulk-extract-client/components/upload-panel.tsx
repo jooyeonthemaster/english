@@ -65,6 +65,8 @@ export function UploadPanel({
   onClearSelection,
   onOpenMergePreview,
   onUnmerge,
+  outputMode,
+  onOutputModeChange,
 }: {
   busy: boolean;
   dragActive: boolean;
@@ -100,6 +102,9 @@ export function UploadPanel({
   onClearSelection?: () => void;
   onOpenMergePreview?: () => void;
   onUnmerge?: (slotId: string) => void;
+  // ── P7-D2: 출력 방식(원문 vs AI복원) ──
+  outputMode?: "verbatim" | "restored";
+  onOutputModeChange?: (mode: "verbatim" | "restored") => void;
 }) {
   // Slot-reorder local state. dragIndex !== null while a slot is being dragged
   // — used to mute the parent label's drop handler so a slot reorder doesn't
@@ -116,6 +121,82 @@ export function UploadPanel({
     busy ||
     slots.length === 0 ||
     (onCropSlot != null && extractableCount === 0);
+
+  // P7-D2 출력 방식 토글 (원문 그대로 vs AI 복원). 파일·텍스트 모드 공용.
+  const selectedOutput = outputMode ?? "verbatim";
+  const outputModeOptions = [
+    {
+      v: "verbatim" as const,
+      label: "그대로 추출",
+      desc: "스캔한 글자 그대로 가져옵니다",
+      badge: "OCR 비용만 · 추가 무료",
+      badgeTone: "bg-slate-100 text-slate-500",
+    },
+    {
+      v: "restored" as const,
+      label: "AI로 원문 복원",
+      desc: "빈칸 ____·섞인 순서를 원래 지문으로 되살립니다",
+      badge: "지문당 ◈2 (추가)",
+      badgeTone: "bg-blue-100 text-blue-700",
+    },
+  ];
+  const outputModeToggle = onOutputModeChange ? (
+    <div className="shrink-0">
+      <div className="mb-1.5 text-[11px] font-bold text-slate-600">
+        출력 방식
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {outputModeOptions.map((opt) => {
+          const active = selectedOutput === opt.v;
+          return (
+            <button
+              key={opt.v}
+              type="button"
+              onClick={() => onOutputModeChange(opt.v)}
+              disabled={busy}
+              aria-pressed={active}
+              className={
+                "flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                (active
+                  ? "border-blue-500 bg-blue-50/70 ring-1 ring-blue-200"
+                  : "cursor-pointer border-slate-200 bg-white hover:bg-slate-50")
+              }
+            >
+              <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-900">
+                <span
+                  className={
+                    "inline-flex size-3.5 shrink-0 items-center justify-center rounded-full border " +
+                    (active ? "border-blue-600" : "border-slate-300")
+                  }
+                >
+                  {active ? (
+                    <span className="size-1.5 rounded-full bg-blue-600" />
+                  ) : null}
+                </span>
+                {opt.label}
+              </span>
+              <span className="text-[10.5px] leading-snug text-slate-500">
+                {opt.desc}
+              </span>
+              <span
+                className={
+                  "mt-0.5 rounded px-1.5 py-0.5 text-[10px] font-bold " +
+                  opt.badgeTone
+                }
+              >
+                {opt.badge}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-1.5 text-[10.5px] leading-relaxed text-slate-500">
+        {selectedOutput === "verbatim"
+          ? "교재 그대로 추출합니다. 빈칸·순서 등 문제 변형도 그대로 보존됩니다."
+          : "빈칸·순서·삽입 문제의 지문만 원래 글로 되살립니다. 깨끗한 지문은 그대로 둡니다. 추출 후 자료 관리에서 비교·교정할 수 있습니다."}
+      </p>
+    </div>
+  ) : null;
   const modeDescription =
     inputMode === "file"
       ? "PDF와 이미지를 계속 추가할 수 있습니다."
@@ -249,6 +330,8 @@ export function UploadPanel({
             />
           </div>
 
+          {outputModeToggle}
+
           <button
             type="button"
             onClick={onStartText}
@@ -266,7 +349,9 @@ export function UploadPanel({
             ) : (
               <>
                 <PlayCircle className="mr-2 size-4" aria-hidden="true" />
-                텍스트 추출 시작
+                {selectedOutput === "restored"
+                  ? "복원하여 추출 시작"
+                  : "텍스트 추출 시작"}
               </>
             )}
           </button>
@@ -671,6 +756,8 @@ export function UploadPanel({
             </div>
           ) : null}
 
+          {outputModeToggle}
+
           <button
             type="button"
             onClick={onStart}
@@ -703,7 +790,7 @@ export function UploadPanel({
               ) : (
                 <>
                   <PlayCircle className="mr-2 size-4" aria-hidden="true" />
-                  추출 시작
+                  {selectedOutput === "restored" ? "복원하여 추출 시작" : "추출 시작"}
                 </>
               )}
             </span>

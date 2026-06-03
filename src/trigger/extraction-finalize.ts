@@ -99,6 +99,7 @@ export const extractionFinalizeTask = task({
         items: job.items,
         pages: job.pages,
         mode,
+        outputMode: job.outputMode, // P7-D2: verbatim이면 자동복원 스킵
         originalFileName: job.originalFileName,
         academyId: job.academyId,
         createdById: job.createdById,

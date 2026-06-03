@@ -80,6 +80,7 @@ export async function handleCreateJob(req: NextRequest) {
           createdById: staff.id,
           sourceType: parsed.sourceType,
           mode: parsed.mode,
+          outputMode: parsed.outputMode ?? null,
           originalFileName: parsed.originalFileName,
           totalPages: parsed.totalPages,
           pendingPages: parsed.totalPages,

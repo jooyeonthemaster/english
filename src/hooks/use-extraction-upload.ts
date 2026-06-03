@@ -76,8 +76,10 @@ export function useExtractionUpload() {
       sourceType: "PDF" | "IMAGES";
       originalFileName: string | null;
       mode: ExtractionMode;
+      /** P7-D2: "verbatim"(원문 그대로) | "restored"(AI 복원). 미전달=기존 동작. */
+      outputMode?: "verbatim" | "restored";
     }): Promise<string | null> => {
-      const { slots, sourceType, originalFileName, mode } = opts;
+      const { slots, sourceType, originalFileName, mode, outputMode } = opts;
       if (slots.length === 0) {
         setError("업로드할 페이지가 없습니다.");
         return null;
@@ -93,6 +95,7 @@ export function useExtractionUpload() {
           body: JSON.stringify({
             sourceType,
             mode,
+            outputMode,
             totalPages: slots.length,
             originalFileName: originalFileName ?? undefined,
             pages: slots.map((slot) => ({

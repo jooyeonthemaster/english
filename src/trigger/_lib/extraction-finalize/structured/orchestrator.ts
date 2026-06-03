@@ -24,6 +24,8 @@ export interface StructuredFinalizeInput {
     pageMeta?: unknown;
   }>;
   mode: ExtractionMode;
+  /** P7-D2: 잡 단위 출력 방식. "verbatim"이면 자동 복원 스킵. null=기존 동작. */
+  outputMode: string | null;
   originalFileName: string | null;
   academyId: string;
   createdById: string;
@@ -170,6 +172,7 @@ export async function finalizeStructured(input: StructuredFinalizeInput): Promis
       academyId: input.academyId,
       createdById: input.createdById,
       mode: input.mode,
+      outputMode: input.outputMode,
       originalFileName: input.originalFileName,
       sourceMaterialId,
       snapshotItems,
