@@ -735,35 +735,38 @@ export default function CreditsPage() {
         </button>
       </div>
 
-      <SubscriptionBillingPanel
-        overview={subscriptionBilling}
-        consent={subscriptionConsent}
-        busy={subscriptionBusy}
-        onConsentChange={setSubscriptionConsent}
-        onStartBilling={startSubscriptionBilling}
-        onCancelBilling={cancelSubscriptionBilling}
-        disabled={!FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING}
-      />
+      {FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING && (
+        <>
+          <SubscriptionBillingPanel
+            overview={subscriptionBilling}
+            consent={subscriptionConsent}
+            busy={subscriptionBusy}
+            onConsentChange={setSubscriptionConsent}
+            onStartBilling={startSubscriptionBilling}
+            onCancelBilling={cancelSubscriptionBilling}
+          />
 
-      {subscriptionMessage && (
-        <div
-          className={cn(
-            "flex items-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium",
-            subscriptionMessage.type === "success" &&
-              "border-emerald-100 bg-emerald-50 text-emerald-700",
-            subscriptionMessage.type === "error" &&
-              "border-red-100 bg-red-50 text-red-600",
-            subscriptionMessage.type === "info" &&
-              "border-blue-100 bg-blue-50 text-blue-700",
+          {subscriptionMessage && (
+            <div
+              className={cn(
+                "flex items-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium",
+                subscriptionMessage.type === "success" &&
+                  "border-emerald-100 bg-emerald-50 text-emerald-700",
+                subscriptionMessage.type === "error" &&
+                  "border-red-100 bg-red-50 text-red-600",
+                subscriptionMessage.type === "info" &&
+                  "border-blue-100 bg-blue-50 text-blue-700",
+              )}
+            >
+              {subscriptionMessage.type === "success" ? (
+                <CheckCircle2 className="size-4 shrink-0" strokeWidth={2} />
+              ) : (
+                <AlertCircle className="size-4 shrink-0" strokeWidth={2} />
+              )}
+              <span>{subscriptionMessage.text}</span>
+            </div>
           )}
-        >
-          {subscriptionMessage.type === "success" ? (
-            <CheckCircle2 className="size-4 shrink-0" strokeWidth={2} />
-          ) : (
-            <AlertCircle className="size-4 shrink-0" strokeWidth={2} />
-          )}
-          <span>{subscriptionMessage.text}</span>
-        </div>
+        </>
       )}
 
       <TopUpPanel
