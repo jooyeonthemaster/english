@@ -1,4 +1,3 @@
-import type { Prisma } from "@prisma/client";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import type { StructuredOcrResponse } from "@/lib/extraction/ocr";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
@@ -30,9 +29,18 @@ export async function persistPageSuccess(params: {
   const itemRows = structured
     ? buildExtractionItemRows({ jobId, pageId, pageIndex, structured })
     : [];
-  const operations: Prisma.PrismaPromise<unknown>[] = [
-    prisma.extractionPage.update({
-      where: { idempotencyKey },
+
+  // Status-guarded so the page → SUCCESS transition (and its job-counter +
+  // item writes) applies AT MOST ONCE, even if two paths finish the same page.
+  // This matters for the inline extraction route: it runs outside the lease/
+  // trigger model, and the reaper (5-min cron) can re-dispatch a still-PENDING
+  // page to a trigger worker that also lands here. The `status: { not: SUCCESS }`
+  // guard means the second writer matches 0 rows → no double increment of
+  // successPages/creditsConsumed, no double decrement of pendingPages (which
+  // could otherwise go negative), and no duplicate ExtractionItem rows.
+  await prisma.$transaction(async (tx) => {
+    const flipped = await tx.extractionPage.updateMany({
+      where: { idempotencyKey, status: { not: "SUCCESS" } },
       data: {
         status: "SUCCESS",
         extractedText,
@@ -46,23 +54,19 @@ export async function persistPageSuccess(params: {
         errorCode: null,
         errorMessage: null,
       },
-    }),
-  ];
+    });
+    if (flipped.count === 0) return; // already SUCCESS — don't double-apply
 
-  if (itemRows.length > 0) {
-    operations.push(prisma.extractionItem.createMany({ data: itemRows }));
-  }
-
-  operations.push(
-    prisma.extractionJob.update({
+    if (itemRows.length > 0) {
+      await tx.extractionItem.createMany({ data: itemRows });
+    }
+    await tx.extractionJob.update({
       where: { id: jobId },
       data: {
         successPages: { increment: 1 },
         pendingPages: { decrement: 1 },
         creditsConsumed: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
       },
-    }),
-  );
-
-  await prisma.$transaction(operations);
+    });
+  });
 }

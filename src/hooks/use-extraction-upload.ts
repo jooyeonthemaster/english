@@ -194,6 +194,31 @@ export function useExtractionUpload() {
           setUploadProgress({ uploaded, total: slots.length }),
         );
 
+        // 이미지 잡은 INLINE(트리거 X)으로 — cold pod 오버헤드 없이 warm 서버에서
+        // OCR+finalize를 한 요청에 처리하고 drafts 커밋 후 반환받는다. 결과가 이미
+        // DB에 있으므로 관리 페이지 이동 시 "새로고침해야 보임" 버그도 사라진다.
+        // 대용량 PDF 잡은 타임아웃/내구성 위해 기존 트리거 경로(/start) 유지.
+        const useInline = sourceType === "IMAGES";
+        if (useInline) {
+          setPhase("processing");
+          const inlineRes = await fetch(
+            `/api/extraction/jobs/${created.jobId}/extract-inline`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({}),
+            },
+          );
+          if (!inlineRes.ok) {
+            const data = await inlineRes.json().catch(() => ({}));
+            throw new Error(data?.error ?? "추출에 실패했습니다.");
+          }
+          // 인라인은 모든 페이지 OCR + finalize(drafts 커밋)까지 끝낸 뒤 반환 →
+          // 항상 terminal.
+          setPhase("reviewing");
+          return created.jobId;
+        }
+
         setPhase("starting");
         const startRes = await fetch(`/api/extraction/jobs/${created.jobId}/start`, {
           method: "POST",

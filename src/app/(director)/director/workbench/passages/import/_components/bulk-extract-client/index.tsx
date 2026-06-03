@@ -223,7 +223,12 @@ export function BulkExtractClient({
       if (
         phase === "preparing" ||
         phase === "uploading" ||
-        phase === "starting"
+        phase === "starting" ||
+        // 인라인 추출은 HTTP 요청이 열려 있는 동안(processing) 진행되며, 중도
+        // 이탈 시 비내구적이라 잡이 PROCESSING으로 잔류한다(리퍼가 늦게 복구).
+        // 트리거 경로의 processing은 백그라운드 durable이라 경고가 약간 과하지만,
+        // 작업 진행 중 이탈 경고 자체는 해롭지 않다.
+        phase === "processing"
       ) {
         event.preventDefault();
         event.returnValue = "";
@@ -433,6 +438,11 @@ export function BulkExtractClient({
     }
     const uploadSourceType: FileSourceType =
       sourceType === "PDF" ? "PDF" : "IMAGES";
+    // 직전/완료된 잡 id를 먼저 비운다. 안 그러면 업로드(다운스케일 포함, 수 초)
+    // 구간 동안 store.jobId가 옛 잡으로 남아, uploading에서 켜지는 SSE가 그 옛
+    // 터미널 잡의 done을 받아 phase=reviewing→자동 네비로 새 업로드를 가로챈다
+    // ("추출 눌렀는데 혼자 관리페이지로 가버림"의 원인). startTextExtraction과 대칭.
+    setJobId(null);
     const nextJobId = await startUpload({
       slots: reindexed,
       sourceType: uploadSourceType,
