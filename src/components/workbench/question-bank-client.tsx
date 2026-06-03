@@ -239,6 +239,7 @@ export function QuestionBankClient({
     updateFilters,
     handleSearch: urlSearch,
     goToPage,
+    isPending: isNavPending,
   } = useUrlFilters(QUESTION_BANK_PATH);
 
   function handleSearch() {
@@ -269,16 +270,37 @@ export function QuestionBankClient({
   // depends on it.
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
 
-  // Initial folder from URL in grouped mode (collectionId is server-driven)
+  // Smooth loading feedback for in-page navigations (entering a folder, the
+  // review-status filter, pagination). Debounced ~150ms so only genuinely slow
+  // loads surface a spinner — fast navigations swap content with no flash, and
+  // the misleading "empty folder" frame never shows mid-transition.
+  const [showNavLoading, setShowNavLoading] = useState(false);
   useEffect(() => {
-    if (isGrouped && filters.collectionId && !folders.activeFolder) {
-      folders.setActiveFolder(filters.collectionId);
+    if (!isNavPending) {
+      setShowNavLoading(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setShowNavLoading(true), 150);
+    return () => window.clearTimeout(timer);
+  }, [isNavPending]);
+
+  // Folder selection is server-driven via the `collectionId` URL param in BOTH
+  // flat and grouped modes. Keep the active-folder UI state in sync with the URL
+  // so deep links, refresh(), and browser back/forward all resolve to the same
+  // folder the server is querying.
+  useEffect(() => {
+    const target = filters.collectionId ?? null;
+    if (target !== folders.activeFolder) {
+      folders.setActiveFolder(target);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filters.collectionId]);
 
   // Flattened list of question objects currently being displayed.
-  // In flat mode: questionsData.questions filtered by activeFolder (client-side).
+  // In flat mode: questionsData.questions is already scoped to the active folder
+  // by the server (via the `collectionId` URL param); the client-side membership
+  // intersection below is only an OPTIMISTIC mask so drag-out / move removals
+  // disappear instantly without waiting for a server round-trip.
   // In grouped mode: every question across all visible passages (server-filtered).
   const rawFlatQuestions = questionsData?.questions ?? [];
   const flatQuestions = useMemo(
@@ -573,27 +595,24 @@ export function QuestionBankClient({
     }
   }
 
-  // In grouped mode the server filters by collectionId, so folder navigation
-  // must also push to the URL. Flat mode keeps the existing client-side
-  // filter behavior.
+  // Folder navigation is server-driven in BOTH modes: push the folder id to the
+  // `collectionId` URL param so the server scopes the query (and its pagination)
+  // to the folder. `navigateToFolder` updates the breadcrumb UI optimistically;
+  // the URL param is the source of truth the server reads.
   const handleNavigateFolder = useCallback(
     (id: string | null) => {
       folders.navigateToFolder(id);
       clearSelection();
-      if (isGrouped) {
-        updateFilter("collectionId", id || "ALL");
-      }
+      updateFilter("collectionId", id || "ALL");
     },
-    [folders, clearSelection, isGrouped, updateFilter],
+    [folders, clearSelection, updateFilter],
   );
 
   const handleNavigateToRoot = useCallback(() => {
     folders.setActiveFolder(null);
     clearSelection();
-    if (isGrouped) {
-      updateFilter("collectionId", "ALL");
-    }
-  }, [folders, clearSelection, isGrouped, updateFilter]);
+    updateFilter("collectionId", "ALL");
+  }, [folders, clearSelection, updateFilter]);
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
@@ -735,7 +754,10 @@ export function QuestionBankClient({
               view: "passage",
               collectionId: folders.activeFolder || "ALL",
             })
-          : updateFilters({ view: "ALL", collectionId: "ALL" })
+          : updateFilters({
+              view: "ALL",
+              collectionId: folders.activeFolder || "ALL",
+            })
       }
     />
   );
@@ -1016,7 +1038,15 @@ export function QuestionBankClient({
               {toolbarRow}
             </div>
 
-            <div className="min-w-0 px-4 pb-3 pt-3 sm:px-5">
+            <div className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5">
+              {showNavLoading ? (
+                <div className="absolute inset-0 z-10 flex items-start justify-center bg-white/55 pt-12 backdrop-blur-[1px]">
+                  <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-medium text-slate-500 shadow-sm">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-500" />
+                    불러오는 중…
+                  </div>
+                </div>
+              ) : null}
               {isGrouped ? (
                 <PassageGroupedView
                   passages={groupedPassages}
@@ -1059,7 +1089,7 @@ export function QuestionBankClient({
                       : undefined
                   }
                 />
-              ) : displayedQuestions.length === 0 ? (
+              ) : displayedQuestions.length === 0 && !isNavPending ? (
                 <div className="py-12 text-center">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
@@ -1132,15 +1162,14 @@ export function QuestionBankClient({
           </section>
         )}
 
-        {/* Pagination — flat mode: hidden when folder active.
-            Grouped mode: always shown (folder filter is server-side). */}
-        {(isGrouped || !folders.activeFolder) && (
-          <Pagination
-            page={currentPage}
-            totalPages={totalPages}
-            onGoToPage={goToPage}
-          />
-        )}
+        {/* Pagination — folder filtering is server-side in BOTH modes now, so the
+            folder view is properly paginated. <Pagination> self-hides when there
+            is only a single page. */}
+        <Pagination
+          page={currentPage}
+          totalPages={totalPages}
+          onGoToPage={goToPage}
+        />
       </div>
 
       {/* ─── Dialogs ─── */}
