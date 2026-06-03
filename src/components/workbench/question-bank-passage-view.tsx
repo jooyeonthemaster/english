@@ -6,6 +6,7 @@ import { ChevronRight, FileText, BadgeCheck } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { QuestionBankCard } from "./question-bank-card";
+import { DragSelect } from "@/components/ui/drag-select";
 
 interface GroupedPassage {
   id: string;
@@ -39,6 +40,7 @@ interface PassageGroupedViewProps {
   compactUsageLabel?: boolean;
   cardClickSelects?: boolean;
   showDetailButton?: boolean;
+  dragRequiresSelection?: boolean;
   getDragQuestionIds?: (draggedId: string) => string[];
   getDuplicateDragQuestionIds?: (draggedId: string) => string[];
   selectionOrder?: Map<string, number>;
@@ -102,6 +104,7 @@ export function PassageGroupedView({
   compactUsageLabel = false,
   cardClickSelects = false,
   showDetailButton = false,
+  dragRequiresSelection = false,
   getDragQuestionIds,
   getDuplicateDragQuestionIds,
   selectionOrder,
@@ -434,7 +437,11 @@ export function PassageGroupedView({
                     조건에 맞는 문제가 없습니다.
                   </p>
                 ) : (
-                  <div className={`grid gap-3 ${gridClass}`}>
+                  <DragSelect
+                    className={`grid gap-3 ${gridClass}`}
+                    value={selectedIds}
+                    onChange={setSelectedIds}
+                  >
                     {passage.questions.map((q, idx) =>
                       renderQuestion ? (
                         renderQuestion(q, idx)
@@ -465,6 +472,7 @@ export function PassageGroupedView({
                           compactUsageLabel={compactUsageLabel}
                           cardClickSelects={cardClickSelects}
                           showDetailButton={showDetailButton}
+                          dragRequiresSelection={dragRequiresSelection}
                           getDragQuestionIds={getDragQuestionIds}
                           getDuplicateDragQuestionIds={getDuplicateDragQuestionIds}
                           selectionIndex={selectionOrder?.get(q.id)}
@@ -480,7 +488,7 @@ export function PassageGroupedView({
                         })()
                       ),
                     )}
-                  </div>
+                  </DragSelect>
                 )}
               </div>
             )}

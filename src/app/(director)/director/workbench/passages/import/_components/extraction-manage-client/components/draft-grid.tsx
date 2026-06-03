@@ -14,6 +14,7 @@ import { DraftCard, type DraftCardStatusBadgeMode } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
+import { DragSelect } from "@/components/ui/drag-select";
 
 const DRAG_TYPE = "draft" as const;
 const BULK_DRAG_TYPE = "draft-bulk" as const;
@@ -102,6 +103,7 @@ interface DraftGridProps {
    *  so the card stays subtly shaded. */
   lastViewedDraftId?: string | null;
   checkedIds: Set<string>;
+  setCheckedIds: (next: Set<string>) => void;
   gridCols: GridCols;
   onGridColsChange: (cols: GridCols) => void;
   grid3Disabled?: boolean;
@@ -182,6 +184,7 @@ export function DraftGrid({
   selectedDraftId,
   lastViewedDraftId,
   checkedIds,
+  setCheckedIds,
   gridCols,
   onGridColsChange,
   grid3Disabled = false,
@@ -269,8 +272,7 @@ export function DraftGrid({
         style={{ top: stickyTop }}
         className="sticky z-30 -mx-4 bg-slate-50 px-4 py-2 shadow-[0_1px_0_rgba(148,163,184,0.22)] sm:-mx-5 sm:px-5"
       >
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
-          <div className="flex flex-col">
+        <div className="flex flex-col">
           <div
             className={
               "flex min-h-9 flex-wrap items-center gap-y-1.5 " +
@@ -304,7 +306,6 @@ export function DraftGrid({
             </div>
           </div>
           {filtersPanel ? filtersPanel : null}
-          </div>
         </div>
       </div>
 
@@ -415,10 +416,12 @@ export function DraftGrid({
                     dragIds={groupIds}
                     onRenameSourceMaterial={onRenameSourceMaterial}
                   >
-                    <div
+                    <DragSelect
                       className={`grid gap-3 ${
                         gridCols === "list" ? COL_CLASS.list : "grid-cols-1"
                       }`}
+                      value={checkedIds}
+                      onChange={setCheckedIds}
                     >
                       {group.drafts.map((draft, index) => (
                         <DraftCard
@@ -437,9 +440,10 @@ export function DraftGrid({
                           onToggleCheck={() => onToggleCheck(draft.id)}
                           onTitleChange={onRenameDraft}
                           statusBadgeMode={statusBadgeMode}
+                          dragRequiresSelection
                         />
                       ))}
-                    </div>
+                    </DragSelect>
                   </GroupSection>
                 );
               })}
@@ -448,7 +452,11 @@ export function DraftGrid({
         ) : (
           (() => {
             const flatGrid = (
-              <div className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}>
+              <DragSelect
+                className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}
+                value={checkedIds}
+                onChange={setCheckedIds}
+              >
                 {drafts.map((draft, index) => (
                   <DraftCard
                     key={draft.id}
@@ -466,9 +474,10 @@ export function DraftGrid({
                     onToggleCheck={() => onToggleCheck(draft.id)}
                     onTitleChange={onRenameDraft}
                     statusBadgeMode={statusBadgeMode}
+                    dragRequiresSelection
                   />
                 ))}
-              </div>
+              </DragSelect>
             );
             return inFolder && onDropDraftsIntoCurrentFolder ? (
               <FolderDropZone onDrop={onDropDraftsIntoCurrentFolder}>

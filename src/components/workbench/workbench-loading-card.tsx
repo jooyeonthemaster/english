@@ -25,6 +25,8 @@ interface WorkbenchLoadingCardProps {
   ariaLabel?: string;
   role?: string;
   tabIndex?: number;
+  /** 영역 드래그 선택 대상 식별자(DragSelect가 읽는 data-drag-item-id). */
+  dataDragItemId?: string;
   onClick?: () => void;
   onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
 }
@@ -49,6 +51,7 @@ export function WorkbenchLoadingCard({
   ariaLabel,
   role,
   tabIndex,
+  dataDragItemId,
   onClick,
   onKeyDown,
 }: WorkbenchLoadingCardProps) {
@@ -70,6 +73,7 @@ export function WorkbenchLoadingCard({
   return (
     <div
       className={`group relative rounded-xl border ${shellColor} ${loadingClass} ${shellSizing} transition-shadow duration-200 hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${selected ? "ring-2 ring-blue-400" : ""} ${className}`}
+      data-drag-item-id={dataDragItemId}
       onClick={onClick}
       role={role}
       tabIndex={tabIndex}

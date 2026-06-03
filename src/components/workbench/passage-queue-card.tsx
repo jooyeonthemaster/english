@@ -282,6 +282,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         className="cursor-pointer"
         role="button"
         tabIndex={0}
+        dataDragItemId={passage.id}
         ariaLabel={`${displayTitle} - ${config.label}`}
       />
     );
@@ -289,6 +290,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
 
   return (
     <div
+      data-drag-item-id={passage.id}
       className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
       }`}

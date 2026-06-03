@@ -12,6 +12,7 @@ import {
 } from "../utils/draft-source";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
+import { DragHandle } from "@/components/ui/drag-handle";
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
 
@@ -41,6 +42,9 @@ interface DraftCardProps {
   onTitleChange?: (id: string, value: string | null) => void;
   /** Which workflow status the circular stamp should express. */
   statusBadgeMode?: DraftCardStatusBadgeMode;
+  /** 영역 선택(마키) 우선 모드: 체크된 카드만 네이티브 드래그를 허용한다.
+   *  (미선택 카드는 draggable 미등록 → 카드 위에서 영역 드래그가 동작) */
+  dragRequiresSelection?: boolean;
 }
 
 export function DraftCard({
@@ -55,8 +59,10 @@ export function DraftCard({
   hideCheckbox,
   onTitleChange,
   statusBadgeMode = "review",
+  dragRequiresSelection = false,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [titleEditing, setTitleEditing] = useState(false);
   const [titleInput, setTitleInput] = useState(draft.title ?? "");
@@ -90,7 +96,8 @@ export function DraftCard({
   dragStateRef.current = { checked, bulkDragIds };
 
   useEffect(() => {
-    const el = dragRef.current;
+    // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 카드 본문은 영역 선택용.
+    const el = dragHandleRef.current;
     if (!el) return;
     return draggable({
       element: el,
@@ -213,6 +220,7 @@ export function DraftCard({
   return (
     <div
       ref={dragRef}
+      data-drag-item-id={hideCheckbox ? undefined : draft.id}
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -274,6 +282,7 @@ export function DraftCard({
       )}
       <div className="flex items-start justify-between gap-2 pr-8">
         <div className="flex min-w-0 flex-1 items-center gap-2">
+          <DragHandle ref={dragHandleRef} className="shrink-0" />
           {hideCheckbox ? null : (
             <div
               className="-m-1 flex shrink-0 cursor-pointer items-center p-1"

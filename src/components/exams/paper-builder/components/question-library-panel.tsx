@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Database, FilePlus2, FileText, Rows3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { QuestionFiltersToolbar } from "@/components/workbench/question-bank-client/filters-toolbar";
@@ -436,6 +437,7 @@ export function QuestionLibraryPanel({
             compactUsageLabel
             cardClickSelects
             showDetailButton
+            dragRequiresSelection
             getDragQuestionIds={buildDragQuestionIds}
             selectionOrder={selectionOrder}
             disabledIds={usedQuestionIds}
@@ -447,17 +449,23 @@ export function QuestionLibraryPanel({
             setExpandedPassageIds={setExpandedPassageIds}
           />
         ) : (
-          <div
-            className={cn(
-              "grid gap-3",
-              gridColumns === 2
-                ? "grid-cols-2"
-                : gridColumns === 3
-                  ? "grid-cols-3"
-                  : "grid-cols-1",
-            )}
+          // min-h-full: 마키 시작 영역을 카드 그리드 아래 빈 공간까지 패널 전체로 넓힌다.
+          <DragSelect
+            value={selectedQuestionIds}
+            onChange={applySelectedQuestionIds}
+            className="min-h-full"
           >
-            {filteredQuestions.map((question, index) => {
+            <div
+              className={cn(
+                "grid gap-3",
+                gridColumns === 2
+                  ? "grid-cols-2"
+                  : gridColumns === 3
+                    ? "grid-cols-3"
+                    : "grid-cols-1",
+              )}
+            >
+              {filteredQuestions.map((question, index) => {
               const usageCount = paperQuestionCounts.get(question.id) || 0;
               const duplicateSelected = duplicateSelectedQuestionIds.has(question.id);
               const disabled = usageCount > 0 && !duplicateSelected;
@@ -478,6 +486,7 @@ export function QuestionLibraryPanel({
                   compactUsageLabel
                   cardClickSelects
                   showDetailButton
+                  dragRequiresSelection
                   getDragQuestionIds={buildDragQuestionIds}
                   getDuplicateDragQuestionIds={buildDuplicateDragQuestionIds}
                   selectionIndex={selectionOrder.get(question.id)}
@@ -486,10 +495,11 @@ export function QuestionLibraryPanel({
                   onDuplicateSelectConfirm={
                     disabled ? () => onApproveDuplicateSelect(question.id) : undefined
                   }
-                />
-              );
-            })}
-          </div>
+                  />
+                );
+              })}
+            </div>
+          </DragSelect>
         )}
       </div>
     </section>

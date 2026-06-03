@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import { type QueueItem, buildQuestionText, countWords, typeLabel } from "./generate-page-types";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -802,6 +803,7 @@ export function BottomQueueSection({
           showReviewActions={!deleteMode && Boolean(persistedId)}
           showHeaderActions={!deleteMode && Boolean(persistedId)}
           selected={isSelected}
+          dragItemId={canDelete || canApprove ? (persistedId as string) : null}
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(card.question)}
           showDetailButton
@@ -836,6 +838,7 @@ export function BottomQueueSection({
           showReviewActions={!deleteMode}
           showHeaderActions={!deleteMode}
           selected={isSelected}
+          dragItemId={deleteMode ? q.id : null}
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
@@ -921,9 +924,13 @@ export function BottomQueueSection({
         </header>
         {isOpen && (
           <div className="p-3">
-            <div className={cardLayoutClassNames[cardLayoutMode]}>
+            <DragSelect
+              className={cardLayoutClassNames[cardLayoutMode]}
+              value={deleteMode ? selectedDeleteIds : selectedSessionQuestionIds}
+              onChange={deleteMode ? setSelectedDeleteIds : setSelectedSessionQuestionIds}
+            >
               {group.cards.map((card, index) => renderCard(card, index))}
-            </div>
+            </DragSelect>
           </div>
         )}
       </section>
@@ -1127,14 +1134,18 @@ export function BottomQueueSection({
           ) : sessionFlatEntries.length === 0 && savedCardsForDisplay.length === 0 ? (
             <EmptyState message={reviewStatusFilter === "ALL" && savedPlanFilter === "ALL" ? "아직 저장된 문제가 없습니다." : "현재 필터에 해당하는 문제가 없습니다."} />
           ) : (
-            <div className={cardLayoutClassNames[cardLayoutMode]}>
+            <DragSelect
+              className={cardLayoutClassNames[cardLayoutMode]}
+              value={deleteMode ? selectedDeleteIds : selectedSessionQuestionIds}
+              onChange={deleteMode ? setSelectedDeleteIds : setSelectedSessionQuestionIds}
+            >
               {sessionFlatEntries.map((entry) =>
                 entry.kind === "queue"
                   ? renderQueueStatusCard(entry.item)
                   : renderSessionQuestionCard(entry.card),
               )}
               {savedCardsForDisplay.map(renderSavedQuestionCard)}
-            </div>
+            </DragSelect>
           )
         ) : (
           <div className="space-y-3">

@@ -58,6 +58,7 @@ export function PassageFileRow({
 
   return (
     <div
+      data-drag-item-id={passage.id}
       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg border transition-all hover:shadow-sm cursor-pointer group ${
         selected ? "bg-blue-50 border-blue-300" : "bg-white border-slate-200 hover:border-slate-300"
       }`}

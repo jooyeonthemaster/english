@@ -34,6 +34,7 @@ import {
   Type,
   Ungroup,
   Unlock,
+  X,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -59,6 +60,8 @@ interface BuilderPropertiesPanelProps {
   totalPoints: number;
   autoPointTotal: number | null;
   settingsNudgeActive?: boolean;
+  onDismissSettingsNudge?: () => void;
+  onHideSettingsNudgePermanently?: () => void;
   onOpenSettings: () => void;
   onSelectItem: (localId: string) => void;
   onInsertBlock: (type: InsertablePaperBlockType) => void;
@@ -654,6 +657,8 @@ export function BuilderPropertiesPanel({
   totalPoints,
   autoPointTotal,
   settingsNudgeActive = false,
+  onDismissSettingsNudge,
+  onHideSettingsNudgePermanently,
   onOpenSettings,
   onSelectItem,
   onInsertBlock,
@@ -1453,19 +1458,66 @@ export function BuilderPropertiesPanel({
               {paperItemsCount}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onOpenSettings}
-            title="시험지 설정"
-            aria-label="시험지 설정"
-            className={cn(
-              "relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800",
-              settingsNudgeActive &&
-                "exam-builder-settings-nudge border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-800",
-            )}
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+          <div className="relative z-20 shrink-0">
+            <button
+              type="button"
+              onClick={onOpenSettings}
+              title="시험지 설정"
+              aria-label="시험지 설정"
+              className={cn(
+                "relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800",
+                settingsNudgeActive &&
+                  "exam-builder-settings-nudge border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-800",
+              )}
+            >
+              <Settings className="h-4 w-4" />
+            </button>
+
+            {settingsNudgeActive ? (
+              <div
+                role="status"
+                aria-live="polite"
+                className="absolute right-0 top-[calc(100%+10px)] z-30 w-[246px] rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-left shadow-2xl shadow-blue-950/15 ring-1 ring-blue-100/70"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-1.5 right-3 h-3 w-3 rotate-45 border-l border-t border-blue-200 bg-blue-50"
+                />
+                <div className="relative flex items-start gap-2.5">
+                  <span
+                    aria-hidden="true"
+                    className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[12.5px] font-black text-slate-900">
+                      시험지 설정부터 시작하세요
+                    </p>
+                    <p className="mt-0.5 text-[11px] font-semibold leading-relaxed text-slate-500">
+                      용지, 단 수, 배점을 먼저 정하면 미리보기가 맞춰집니다.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onDismissSettingsNudge}
+                    className="-mr-1 -mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-blue-100 hover:text-blue-700"
+                    aria-label="시험지 설정 안내 닫기"
+                    title="안내 닫기"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <div className="relative mt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={onHideSettingsNudgePermanently}
+                    className="rounded-md px-1.5 py-1 text-[10.5px] font-bold text-blue-600 transition-colors hover:bg-blue-100 hover:text-blue-800"
+                  >
+                    다시는 보지 않기
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
 

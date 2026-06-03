@@ -28,6 +28,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DragHandle } from "@/components/ui/drag-handle";
 import { formatDate } from "@/lib/utils";
 import {
   TYPE_LABELS,
@@ -97,6 +98,7 @@ export function QuestionBankCard({
   compactUsageLabel = false,
   cardClickSelects = false,
   showDetailButton = false,
+  dragRequiresSelection = false,
   getDragQuestionIds,
   getDuplicateDragQuestionIds,
   selectionIndex,
@@ -125,6 +127,9 @@ export function QuestionBankCard({
   cardClickSelects?: boolean;
   // 시험지 빌더: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
   showDetailButton?: boolean;
+  // 영역 선택(마키) 우선 모드: 카드가 "선택된 상태"일 때만 네이티브 드래그를
+  // 허용한다. 미선택 카드를 끌면 드래그 영역 선택이 동작한다.
+  dragRequiresSelection?: boolean;
   // 다중 드래그: 드래그 시작 시 함께 끌고 갈 문항 id 목록을 계산한다.
   // (선택된 카드를 끌면 선택 전체, 아니면 이 카드만)
   getDragQuestionIds?: (draggedId: string) => string[];
@@ -143,6 +148,7 @@ export function QuestionBankCard({
   const [passageOpen, setPassageOpen] = useState(false);
   const [duplicatePromptOpen, setDuplicatePromptOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const suppressCardClickRef = useRef(false);
   // 드래그 시작 시점의 최신 선택 상태를 읽기 위해 ref로 보관한다(effect 재구독 방지).
@@ -173,10 +179,12 @@ export function QuestionBankCard({
     [q.questionText, q.subType],
   );
 
-  // Make card draggable
+  // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
+  // 카드 본문은 draggable 이 아니므로 본문 위에서는 영역 선택(마키)이 동작하고,
+  // 손잡이를 끌면 폴더 이동 등 기존 드래그&드롭이 그대로 동작한다.
   useEffect(() => {
     if (!enableDrag || selectionDisabled) return;
-    const el = dragRef.current;
+    const el = dragHandleRef.current;
     if (!el) return;
     return draggable({
       element: el,
@@ -292,8 +300,9 @@ export function QuestionBankCard({
   const card = (
     <Card
       ref={dragRef}
+      data-drag-item-id={selectionDisabled ? undefined : q.id}
       onClick={handleCardClick}
-      className={`${enableDrag && !selectionDisabled ? "cursor-grab active:cursor-grabbing" : onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} relative flex flex-col ${
+      className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} relative flex flex-col ${
         expanded ? "" : "overflow-hidden"
       } ${
         isDragging ? "opacity-40 scale-95" : ""
@@ -310,6 +319,9 @@ export function QuestionBankCard({
       <CardContent ref={contentRef} className={`p-3 flex flex-col gap-1.5 ${expanded ? "" : "flex-1 min-h-0"}`}>
         {/* Header row */}
         <div className="flex items-start gap-1.5 shrink-0">
+          {enableDrag && !selectionDisabled && (
+            <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
+          )}
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
           <Checkbox
             checked={selected}

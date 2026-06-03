@@ -65,6 +65,7 @@ interface QueueSectionContainerProps {
 
   // Selection
   selectedIds: Set<string>;
+  setSelectedIds: (next: Set<string>) => void;
   toggleSelect: (id: string, shiftKey: boolean) => void;
   selectAll: () => void;
   clearSelection: () => void;
@@ -170,6 +171,7 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
             <QueueGrid
               filteredQueue={p.filteredQueue}
               selectedIds={p.selectedIds}
+              setSelectedIds={p.setSelectedIds}
               onToggleSelect={p.toggleSelect}
               onViewDetail={p.setModalPassageId}
               onRetry={p.retryAnalysis}

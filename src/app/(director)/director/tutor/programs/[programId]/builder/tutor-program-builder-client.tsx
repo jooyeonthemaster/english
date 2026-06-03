@@ -358,6 +358,7 @@ export function TutorProgramBuilderClient({
           selectedCollectionId={selectedCollectionId}
           setSelectedCollectionId={setSelectedCollectionId}
           selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
           toggleCheckbox={toggleCheckbox}
           selectAll={selectAll}
           deselectAll={deselectAll}

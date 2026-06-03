@@ -46,6 +46,8 @@ import {
   countWords,
 } from "./generate-page-types";
 import { PastePassagePanel } from "./paste-passage-panel";
+import { DragSelect } from "@/components/ui/drag-select";
+import { DragHandle } from "@/components/ui/drag-handle";
 
 type ParsedAnalysisSummary = {
   vocabulary?: unknown[];
@@ -101,6 +103,7 @@ interface PassageCardGridProps {
 
   // Selection
   selectedIds: Set<string>;
+  setSelectedIds: (next: Set<string>) => void;
   toggleCheckbox: (id: string, e?: React.MouseEvent) => void;
   selectAll: () => void;
   deselectAll: () => void;
@@ -161,6 +164,7 @@ export function PassageCardGrid({
   selectedCollectionId,
   setSelectedCollectionId,
   selectedIds,
+  setSelectedIds,
   toggleCheckbox,
   selectAll,
   deselectAll,
@@ -190,6 +194,8 @@ export function PassageCardGrid({
     string | null
   >(null);
   const passageDragRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  // 네이티브 드래그(폴더 이동)는 손잡이 엘리먼트에만 등록한다 → 카드 본문은 영역 선택용.
+  const passageHandleRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const folderDropRefs = useRef<Map<string, HTMLElement>>(new Map());
   const [folderWindowHeight, setFolderWindowHeight] = useState<number>(() => {
     if (typeof window === "undefined") return FOLDER_WINDOW_DEFAULT_HEIGHT;
@@ -355,7 +361,7 @@ export function PassageCardGrid({
     const cleanupFns: Array<() => void> = [];
 
     for (const passage of filteredPassages) {
-      const element = passageDragRefs.current.get(passage.id);
+      const element = passageHandleRefs.current.get(passage.id);
       if (!element) continue;
 
       cleanupFns.push(
@@ -373,7 +379,6 @@ export function PassageCardGrid({
           // 스택 프리뷰 + 개수 배지를 띄운다 (단일 드래그는 브라우저 기본).
           onGenerateDragPreview: ({ nativeSetDragImage }) => {
             const count = getDragPassageIds(passage.id).length;
-            if (count <= 1) return;
             const source = passageDragRefs.current.get(passage.id);
             if (!source) return;
             setCustomNativeDragPreview({
@@ -407,25 +412,27 @@ export function PassageCardGrid({
                 clone.style.opacity = "1";
                 clone.style.transform = "none";
                 wrapper.appendChild(clone);
-                const badge = document.createElement("div");
-                badge.textContent = String(count);
-                badge.style.position = "absolute";
-                badge.style.top = "-10px";
-                badge.style.right = "-10px";
-                badge.style.minWidth = "28px";
-                badge.style.height = "28px";
-                badge.style.padding = "0 8px";
-                badge.style.borderRadius = "14px";
-                badge.style.background = "#2563eb";
-                badge.style.color = "white";
-                badge.style.fontSize = "13px";
-                badge.style.fontWeight = "700";
-                badge.style.display = "flex";
-                badge.style.alignItems = "center";
-                badge.style.justifyContent = "center";
-                badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
-                badge.style.fontVariantNumeric = "tabular-nums";
-                wrapper.appendChild(badge);
+                if (count > 1) {
+                  const badge = document.createElement("div");
+                  badge.textContent = String(count);
+                  badge.style.position = "absolute";
+                  badge.style.top = "-10px";
+                  badge.style.right = "-10px";
+                  badge.style.minWidth = "28px";
+                  badge.style.height = "28px";
+                  badge.style.padding = "0 8px";
+                  badge.style.borderRadius = "14px";
+                  badge.style.background = "#2563eb";
+                  badge.style.color = "white";
+                  badge.style.fontSize = "13px";
+                  badge.style.fontWeight = "700";
+                  badge.style.display = "flex";
+                  badge.style.alignItems = "center";
+                  badge.style.justifyContent = "center";
+                  badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+                  badge.style.fontVariantNumeric = "tabular-nums";
+                  wrapper.appendChild(badge);
+                }
                 container.appendChild(wrapper);
               },
             });
@@ -492,29 +499,6 @@ export function PassageCardGrid({
 
     return () => cleanupFns.forEach((cleanup) => cleanup());
   }, [childCollections, onMovePassagesToCollection, passageBulkAction]);
-
-  const handlePassageDragStart = (
-    id: string,
-    event: React.DragEvent<HTMLDivElement>,
-  ) => {
-    if (!onMovePassagesToCollection || passageBulkAction !== null) {
-      event.preventDefault();
-      return;
-    }
-    const ids = getDragPassageIds(id);
-    setDraggingPassageIds(ids);
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData(
-      "application/x-smoat-passage-ids",
-      JSON.stringify(ids),
-    );
-    event.dataTransfer.setData("text/plain", ids.join(","));
-  };
-
-  const handlePassageDragEnd = () => {
-    setDraggingPassageIds([]);
-    setDropTargetCollectionId(null);
-  };
 
   const pasteEnabled = !!onCreatePastedPassage && !!onEnterPasteMode;
 
@@ -671,22 +655,9 @@ export function PassageCardGrid({
             })}
           </div>
 
-          {/* 지문 직접 넣기 + 정렬 필터 + 검색 (팝오버) */}
-          {(pasteEnabled || setPassageSortOrder) ? (
+          {/* 정렬 필터 + 검색 (팝오버) */}
+          {setPassageSortOrder ? (
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
-            {pasteEnabled ? (
-              <button
-                type="button"
-                onClick={() => onEnterPasteMode?.()}
-                title="지문 직접 넣기 · 추출·분석 없이 바로 문제 생성"
-                className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white shadow-sm shadow-blue-200/70 transition-all hover:bg-blue-700 hover:shadow-md"
-              >
-                <ClipboardPaste className="size-3.5 shrink-0" aria-hidden="true" />
-                지문 직접 넣기
-              </button>
-            ) : null}
-            {setPassageSortOrder ? (
-            <>
             <Popover>
               <PopoverTrigger
                 title="정렬"
@@ -785,8 +756,6 @@ export function PassageCardGrid({
                 </div>
               </PopoverContent>
             </Popover>
-            </>
-            ) : null}
           </div>
           ) : null}
 
@@ -858,11 +827,25 @@ export function PassageCardGrid({
         ) : null}
       </div>
 
+      {/* 지문 직접 넣기 (가로 전체 너비) */}
+      {pasteEnabled ? (
+        <div className="shrink-0 border-b border-slate-100 px-5 py-2.5">
+          <button
+            type="button"
+            onClick={() => onEnterPasteMode?.()}
+            title="지문 직접 넣기 · 추출·분석 없이 바로 문제 생성"
+            className="inline-flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white shadow-sm shadow-blue-200/70 transition-all hover:bg-blue-700 hover:shadow-md"
+          >
+            <ClipboardPaste className="size-3.5 shrink-0" aria-hidden="true" />
+            지문 직접 넣기
+          </button>
+        </div>
+      ) : null}
+
       {/* Search & filter bar */}
       <div className="px-5 py-3 border-b border-slate-100 shrink-0">
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white px-2 py-1.5 shadow-sm">
-          <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-            <div className="flex min-h-9 shrink-0 items-center gap-x-1.5 gap-y-1.5 py-1 pl-2 pr-0 transition-colors">
+        <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+          <div className="flex min-h-9 shrink-0 items-center gap-x-1.5 gap-y-1.5 py-1 pl-2 pr-0 transition-colors">
               <input
                 ref={selectAllCheckboxRef}
                 type="checkbox"
@@ -943,7 +926,7 @@ export function PassageCardGrid({
                 </div>
               ) : null}
             </div>
-            <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+          <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
               <Popover>
                 <PopoverTrigger
                   title={
@@ -1121,7 +1104,7 @@ export function PassageCardGrid({
                 ) : null}
               </button>
             </div>
-          </div>
+        </div>
 
           {showSearch && (
             <div className="mt-1.5 border-t border-slate-100 pt-2">
@@ -1147,8 +1130,6 @@ export function PassageCardGrid({
               </div>
             </div>
           )}
-
-        </div>
       </div>
 
       {/* Passage card grid -- scrollable */}
@@ -1170,7 +1151,13 @@ export function PassageCardGrid({
             </span>
           </div>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
+          // min-h-full: 마키 시작 영역을 카드 아래 빈 공간까지 패널 전체로 넓힌다.
+          <DragSelect
+            className="min-h-full"
+            value={selectedIds}
+            onChange={setSelectedIds}
+          >
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
             {filteredPassages.map((p) => {
               // Parse analysis
               let aData: ParsedAnalysisSummary | null = null;
@@ -1205,6 +1192,7 @@ export function PassageCardGrid({
               return (
                 <div
                   key={p.id}
+                  data-drag-item-id={p.id}
                   ref={(node) => {
                     if (node) passageDragRefs.current.set(p.id, node);
                     else passageDragRefs.current.delete(p.id);
@@ -1213,30 +1201,33 @@ export function PassageCardGrid({
                   tabIndex={0}
                   aria-pressed={isChecked}
                   aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
-                  draggable={passageBulkAction === null}
                   onClick={(e) => toggleCheckbox(p.id, e)}
                   onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                  onDragStart={(e) => handlePassageDragStart(p.id, e)}
-                  onDragEnd={handlePassageDragEnd}
-                  className={`group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md flex flex-col ${
+                  className={`group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md flex flex-col cursor-pointer ${
                     isChecked
                       ? "border-blue-400 bg-blue-50/20 ring-1 ring-blue-300/30"
                       : hasAnalysis
                         ? "border-emerald-200 bg-white"
                         : "border-slate-200 bg-white"
                   } ${
-                    passageBulkAction === null
-                      ? "cursor-grab select-none active:cursor-grabbing"
-                      : "cursor-pointer"
-                  } ${
                     draggingPassageIds.includes(p.id)
                       ? "opacity-60 ring-2 ring-blue-200"
                       : ""
                   } outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 >
-                  {/* Header with checkbox */}
+                  {/* Header with handle + checkbox */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                      {/* Drag handle (folder 이동) — passageBulkAction 중에는 숨김 */}
+                      {passageBulkAction === null && (
+                        <DragHandle
+                          ref={(node) => {
+                            if (node) passageHandleRefs.current.set(p.id, node);
+                            else passageHandleRefs.current.delete(p.id);
+                          }}
+                          className="mt-0.5 shrink-0"
+                        />
+                      )}
                       {/* Checkbox */}
                       <button
                         type="button"
@@ -1379,7 +1370,8 @@ export function PassageCardGrid({
                 </div>
               );
             })}
-          </div>
+            </div>
+          </DragSelect>
         )}
       </div>
     </div>
