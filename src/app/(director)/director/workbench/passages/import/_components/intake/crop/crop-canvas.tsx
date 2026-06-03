@@ -277,35 +277,38 @@ export function CropCanvas({
           draggable={false}
         />
 
-        {/* 스크림 — 선택영역 밖을 어둡게 (SVG mask로 다중 영역 구멍) */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          aria-hidden="true"
-        >
-          <defs>
-            <mask id={maskId}>
-              <rect x="0" y="0" width="100%" height="100%" fill="white" />
-              {boxes.map((b, i) => (
-                <rect
-                  key={i}
-                  x={`${b.x * 100}%`}
-                  y={`${b.y * 100}%`}
-                  width={`${b.w * 100}%`}
-                  height={`${b.h * 100}%`}
-                  fill="black"
-                />
-              ))}
-            </mask>
-          </defs>
-          <rect
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="rgba(15, 23, 42, 0.55)"
-            mask={`url(#${maskId})`}
-          />
-        </svg>
+        {/* 스크림 — 선택영역 밖을 옅게 (SVG mask로 다중 영역 구멍).
+            영역이 하나도 없을 땐 이미지·커서가 잘 보이도록 덮지 않는다. */}
+        {boxes.length > 0 ? (
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full"
+            aria-hidden="true"
+          >
+            <defs>
+              <mask id={maskId}>
+                <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                {boxes.map((b, i) => (
+                  <rect
+                    key={i}
+                    x={`${b.x * 100}%`}
+                    y={`${b.y * 100}%`}
+                    width={`${b.w * 100}%`}
+                    height={`${b.h * 100}%`}
+                    fill="black"
+                  />
+                ))}
+              </mask>
+            </defs>
+            <rect
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              fill="rgba(15, 23, 42, 0.42)"
+              mask={`url(#${maskId})`}
+            />
+          </svg>
+        ) : null}
 
         {/* 드로잉 캡처 레이어 (빈 곳 드래그) */}
         <div
