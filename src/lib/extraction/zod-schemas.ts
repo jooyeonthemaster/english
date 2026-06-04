@@ -203,6 +203,8 @@ const passageCommitSchema = z.object({
   tags: z.array(z.string().min(1).max(40)).max(20).optional(),
   /** 연결된 ExtractionItem.id (확정 시 promotedTo 업데이트용) */
   sourceItemId: z.string().optional(),
+  /** 저장 텍스트가 원문(verbatim)인지 AI복원본(restored)인지 (D2). */
+  extractionOutput: z.enum(["verbatim", "restored"]).optional(),
 });
 
 /**
@@ -359,3 +361,44 @@ export const errorResponseSchema = z.object({
 });
 
 export type ErrorResponse = z.infer<typeof errorResponseSchema>;
+
+// ─── Adaptive Intake — 트리아지(D3) 사전분석 결과 (extraction-triage 태스크) ──
+// Gemini 3.5 Flash가 verbatim 본문 없이 경계·레이아웃·잘림 신호만 JSON으로 산출.
+
+export const triageLayoutSchema = z.enum([
+  "single",
+  "exam2col",
+  "longform",
+  "mixed",
+]);
+
+export const triageBoundarySchema = z.object({
+  afterPage: z.number().int().min(0),
+  nonTerminal: z.boolean(),
+  confidence: z.number().min(0).max(1),
+});
+
+export const triageCropSignalSchema = z.object({
+  page: z.number().int().min(0),
+  truncated: z.boolean(),
+  skew: z.boolean(),
+});
+
+export const triageReorderSchema = z.object({
+  fromIndex: z.number().int().min(0),
+  toIndex: z.number().int().min(0),
+  reason: z.string().max(200),
+});
+
+/** extraction-triage 태스크가 모델로부터 받아 검증하는 원시 결과. */
+export const triageResultSchema = z.object({
+  passageCount: z.number().int().min(0).max(60),
+  layout: triageLayoutSchema,
+  boundaries: z.array(triageBoundarySchema).max(60).default([]),
+  cropSignals: z.array(triageCropSignalSchema).max(60).default([]),
+  reorder: z.array(triageReorderSchema).max(60).default([]),
+  modeGuess: extractionModeSchema.default("PASSAGE_ONLY"),
+  confidence: z.number().min(0).max(1),
+});
+
+export type TriageResultParsed = z.infer<typeof triageResultSchema>;

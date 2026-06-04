@@ -94,3 +94,30 @@ export const MIN_COMMIT_PASSAGE_LENGTH_BY_MODE: Record<ExtractionMode, number> =
 export const CONFIDENCE_GREEN = 0.9;
 export const CONFIDENCE_YELLOW = 0.7;
 export const CONFIDENCE_CRITICAL = 0.5;
+
+// ============================================================================
+// Adaptive Intake (D1~D4) — 사전분석·묶음·크롭 상수
+// ============================================================================
+
+/** 트리아지(사전분석)가 미리 훑는 최대 페이지 수. 대용량은 앞부분 샘플만. */
+export const TRIAGE_SAMPLE_PAGES = 3;
+
+/** 트리아지 1콜 타임아웃. 초과 시 저신뢰 폴백(페이지:세그먼트 1:1). */
+export const TRIAGE_TIMEOUT_MS = 8000;
+
+/** auto-advance(자동 다음단계) 신뢰도 임계. 이 이상이면 사용자 확인 생략 가능. */
+export const TRIAGE_AUTO_ADVANCE_CONFIDENCE = CONFIDENCE_GREEN;
+
+/** 트리아지 고스트(자동 추정 경계) 표시 하한. 이 미만이면 추정 미표시(자동화 편향 방어). */
+export const TRIAGE_GHOST_MIN_CONFIDENCE = CONFIDENCE_YELLOW;
+
+/** D4 한 묶음(bundle)이 한 번의 OCR 콜로 함께 보낼 수 있는 최대 페이지 수.
+ *  Flash 다중이미지 verbatim 충실도 임계 — 벤치로 확정 예정(설계 §10.3). */
+export const MAX_PAGES_PER_BUNDLE = 4;
+
+/** 묶음 가상 pageIndex 예약 베이스(음수대). 실제 pageIndex(>=0)와 충돌 회피.
+ *  bundle row 의 pageIndex = BUNDLE_VIRTUAL_PAGE_BASE - bundleOrdinal. */
+export const BUNDLE_VIRTUAL_PAGE_BASE = -1000;
+
+/** 크롭 박스 정규화 좌표계 — 항상 0~1 (해상도/렌더스케일 독립). */
+export const CROP_COORD_NORMALIZED_MAX = 1;

@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, AlertTriangle } from "lucide-react";
+import { ChevronRight, AlertTriangle, StickyNote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -22,6 +22,13 @@ export function MemberRow({
 }) {
   const router = useRouter();
   const href = `/admin/members/${member.id}`;
+
+  // First non-empty line of the academy memo, shown as a one-line preview so
+  // operators can scan notes without opening each member.
+  const memoPreview = member.academy.memo
+    ?.split("\n")
+    .map((line) => line.trim())
+    .find((line) => line.length > 0);
 
   // Row-level click navigation: matches enterprise SaaS row affordance while
   // the first-cell <Link> remains the keyboard/SR entry point. Guards against
@@ -78,6 +85,21 @@ export function MemberRow({
           <div className="text-[11px] text-gray-400 truncate">
             /{member.academy.slug}
           </div>
+          {memoPreview && (
+            <div
+              className="flex items-center gap-1 mt-0.5 min-w-0"
+              title={memoPreview}
+            >
+              <StickyNote
+                className="size-3 shrink-0 text-amber-500"
+                strokeWidth={1.8}
+                aria-hidden
+              />
+              <span className="text-[11px] text-gray-500 truncate">
+                {memoPreview}
+              </span>
+            </div>
+          )}
         </div>
       </TableCell>
       <TableCell>

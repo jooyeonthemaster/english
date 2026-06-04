@@ -30,6 +30,7 @@ model Academy {
   code      String   @unique @db.Char(4) // Tutor academy login code
   status    String   @default("ACTIVE") // "ACTIVE" | "TRIAL" | "SUSPENDED" | "DEACTIVATED"
   settings  String?  @db.Text // JSON: business hours, notification prefs, etc.
+  memo      String?  @db.Text // Admin internal notes shown on 회원 관리 (member management)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -663,6 +664,14 @@ model Passage {
   sourceMaterialId       String?
   sourceExtractionItemId String? @unique
   contentHash            String? // sha1 of content — duplicate detection
+
+  /// Source page(s) the passage was extracted from. Carried through from
+  /// ExtractionItem/M1Draft on promote so "where did this come from?" survives.
+  /// Empty for manually authored passages. (adaptive-intake P1)
+  sourcePageIndex Int[] @default([])
+  /// "verbatim" | "restored" — whether the stored content is the raw OCR text
+  /// or an AI-restored original. Null for manual passages. (adaptive-intake D2)
+  extractionOutput String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2283,6 +2292,17 @@ model ExtractionJob {
   // Populated by extraction-finalize when the job reaches a terminal state.
   sourceMaterialId String?
 
+  // ── Adaptive intake (additive, read only when EXTRACTION_ADAPTIVE_INTAKE on) ──
+  /// Routing/audit hint. "IMAGE_SINGLE" | "IMAGES" | "PDF" | "TEXT".
+  inputType String?
+  /// Frozen IntakePlan snapshot (passage count, boundaries, layout, segments)
+  /// confirmed by the user before extraction — for re-commit/audit/replay.
+  intakePlan Json?
+  /// AI triage confidence (0~1) used to pick the surface / fallback.
+  triageConfidence Float?
+  /// Triage-estimated passage count — progress denominator before real count.
+  estimatedPassageCount Int?
+
   status       String @default("PENDING")
   totalPages   Int
   successPages Int    @default(0)
@@ -2356,6 +2376,14 @@ model ExtractionPage {
   /// pageTotal / examCode / subject / etc.). Used by finalize to reorder
   /// mixed-up uploads and to cluster pages by exam fingerprint.
   pageMeta Json?
+
+  // ── Adaptive intake — D4 多페이지 묶음(bundle) 입력 표식 (additive) ──
+  /// Non-null marks this page row as a bundle member dispatched in one OCR call.
+  /// Members of one bundle share the same key. Null = legacy single-page path.
+  bundleKey String?
+  /// Real source pageIndexes a bundle row sends together (e.g. [4,5]). Empty for
+  /// single-page rows. The bundle row itself may use a reserved virtual pageIndex.
+  spanPageIndices Int[] @default([])
 
   /// Raw OCR text returned by Document AI BEFORE Gemini classification.
   /// Stored for debugging: lets us tell whether a missing marker / word
@@ -2451,6 +2479,18 @@ model ExtractionItem {
   examMeta     Json? // { subject, grade, year, round, publisher, school }
 
   boundingBox Json? // { page, x, y, w, h } — click-to-highlight in viewer
+
+  // ── Adaptive intake (additive) ──
+  /// Normalized crop rectangle {x,y,w,h} in 0~1 (EXIF-corrected). The region a
+  /// user marqueed on a page; the OCR input for crop segments. Distinct from
+  /// boundingBox (viewer highlight only) to avoid overloading. (D-G2)
+  cropBox Json?
+  /// "page" | "span" | "crop" | "text-block" | "manual" — how this segment was
+  /// produced, so the review UI and bench can reason about provenance.
+  segmentKind String?
+  /// Why a block was flagged incomplete: "LENGTH" | "CROP_SIGNAL" | "LOW_OCR"
+  /// | "SKEW" | "NON_TERMINAL". Replaces the old silent length-only discard. (G4)
+  incompleteReason String?
 
   // ─── Quality ────────────────────────────────
   confidence  Float?

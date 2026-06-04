@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 /**
@@ -11,6 +11,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 export function useUrlFilters(basePath: string) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // Mark URL-driven navigations as transitions so callers can render inline
+  // loading feedback (instead of a blank/stale flash) while the server renders
+  // the next page. `isPending` stays true until the new RSC payload commits.
+  const [isPending, startTransition] = useTransition();
 
   /** Set a single filter parameter and reset the page to 1. */
   const updateFilter = useCallback(
@@ -19,7 +23,9 @@ export function useUrlFilters(basePath: string) {
       if (value && value !== "ALL") params.set(key, value);
       else params.delete(key);
       params.delete("page");
-      router.push(`${basePath}?${params.toString()}`);
+      startTransition(() => {
+        router.push(`${basePath}?${params.toString()}`);
+      });
     },
     [router, searchParams, basePath],
   );
@@ -33,7 +39,9 @@ export function useUrlFilters(basePath: string) {
         else params.delete(key);
       }
       params.delete("page");
-      router.push(`${basePath}?${params.toString()}`);
+      startTransition(() => {
+        router.push(`${basePath}?${params.toString()}`);
+      });
     },
     [router, searchParams, basePath],
   );
@@ -43,7 +51,9 @@ export function useUrlFilters(basePath: string) {
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set("page", String(page));
-      router.push(`${basePath}?${params.toString()}`);
+      startTransition(() => {
+        router.push(`${basePath}?${params.toString()}`);
+      });
     },
     [router, searchParams, basePath],
   );
@@ -56,5 +66,5 @@ export function useUrlFilters(basePath: string) {
     [updateFilter],
   );
 
-  return { updateFilter, updateFilters, handleSearch, goToPage };
+  return { updateFilter, updateFilters, handleSearch, goToPage, isPending };
 }

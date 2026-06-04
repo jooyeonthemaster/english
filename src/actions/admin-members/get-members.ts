@@ -76,6 +76,7 @@ export async function getMembers(filters: MemberListFilters = {}) {
           name: true,
           slug: true,
           status: true,
+          memo: true,
           subscriptions: {
             where: { status: { in: ["ACTIVE", "TRIAL"] } },
             include: {
@@ -116,6 +117,7 @@ export async function getMembers(filters: MemberListFilters = {}) {
       name: s.academy.name,
       slug: s.academy.slug,
       status: s.academy.status,
+      memo: s.academy.memo,
     },
     subscription: s.academy.subscriptions[0]
       ? {

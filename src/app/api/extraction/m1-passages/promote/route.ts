@@ -111,6 +111,10 @@ export async function POST(req: NextRequest) {
               : `bulk-extract:${draft.job.id}`,
             sourceMaterialId: draft.sourceMaterialId,
             contentHash: sha1(teacherText),
+            // (adaptive-intake P1) — 출처 페이지 보존 + 복원본 여부 기록.
+            sourcePageIndex: draft.sourcePageIndex,
+            extractionOutput:
+              draft.restorationStatus === "RESTORED" ? "restored" : "verbatim",
           },
           select: { id: true },
         });
