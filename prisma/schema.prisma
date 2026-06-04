@@ -2335,14 +2335,6 @@ model ExtractionJob {
 
   errorSummary String? @db.Text // JSON summary of errors
 
-  /// Free-form metadata for finalize-driven follow-up flows. Currently used
-  /// by the "빠른 분석" / "빠른 생성" entry points to stash
-  /// `{ fastTrackFollowUp: { flow, config, staffId } }` so that
-  /// extraction-finalize can auto-promote drafts and fan out workbench AI
-  /// jobs after restoration completes. Null for the regular bulk-extract
-  /// flow (UI-driven review + promote).
-  metadata Json?
-
   createdAt   DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?
