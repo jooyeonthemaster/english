@@ -110,6 +110,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
+            { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams` },
           ],
         },
       ],

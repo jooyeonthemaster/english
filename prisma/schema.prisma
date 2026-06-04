@@ -984,6 +984,43 @@ model WorkbenchAiJob {
   @@map("workbench_ai_jobs")
 }
 
+/// SimilarExamGenerationJob — background jobs that analyze an uploaded
+/// finished exam pattern and generate a new exam from selected passages.
+/// status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED"
+model SimilarExamGenerationJob {
+  id          String @id @default(cuid())
+  academyId   String
+  createdById String
+
+  status String @default("PENDING")
+  stage  String @default("UPLOADING")
+  title  String
+
+  sourceType       String // "PDF" | "IMAGES"
+  originalFileName String?
+  totalPages       Int
+  pageImageUrls    Json
+
+  blueprint       Json?
+  config          Json?
+  result          Json?
+  generatedExamId String?
+  errorMessage    String? @db.Text
+  triggerRunId    String? @db.Text
+  creditTxId      String?
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([academyId, status])
+  @@index([academyId, createdAt])
+  @@index([generatedExamId])
+  @@map("similar_exam_generation_jobs")
+}
+
 // ============================================================================
 // 10. EXAMS
 // ============================================================================
@@ -2317,6 +2354,14 @@ model ExtractionJob {
   triggerRunId     String? @db.Text // Trigger.dev orchestrator run handle (cancel/cleanup)
 
   errorSummary String? @db.Text // JSON summary of errors
+
+  /// Free-form metadata for finalize-driven follow-up flows. Currently used
+  /// by the "빠른 분석" / "빠른 생성" entry points to stash
+  /// `{ fastTrackFollowUp: { flow, config, staffId } }` so that
+  /// extraction-finalize can auto-promote drafts and fan out workbench AI
+  /// jobs after restoration completes. Null for the regular bulk-extract
+  /// flow (UI-driven review + promote).
+  metadata Json?
 
   createdAt   DateTime  @default(now())
   startedAt   DateTime?

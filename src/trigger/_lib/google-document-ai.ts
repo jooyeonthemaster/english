@@ -67,6 +67,35 @@ interface CachedToken {
 let cachedToken: CachedToken | null = null;
 const TOKEN_REFRESH_MARGIN_MS = 60_000;
 
+type FetchWithTimeoutInit = RequestInit & { timeoutInMs?: number };
+
+async function fetchWithTriggerFallback(
+  input: string,
+  init: FetchWithTimeoutInit,
+): Promise<Response> {
+  try {
+    return await retry.fetch(input, init);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!/wait\.forToken can only be used from inside a task\.run\(\)/i.test(message)) {
+      throw error;
+    }
+  }
+
+  const controller = new AbortController();
+  const timeout = Math.max(1000, init.timeoutInMs ?? 30_000);
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const { timeoutInMs: _timeoutInMs, signal, ...fetchInit } = init;
+    return await fetch(input, {
+      ...fetchInit,
+      signal: signal ?? controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function getAccessToken(): Promise<string> {
   if (cachedToken && cachedToken.expiresAt - Date.now() > TOKEN_REFRESH_MARGIN_MS) {
     return cachedToken.accessToken;
@@ -92,7 +121,7 @@ async function getAccessToken(): Promise<string> {
     grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
     assertion: jwt,
   });
-  const response = await retry.fetch(tokenUri, {
+  const response = await fetchWithTriggerFallback(tokenUri, {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     body: params.toString(),
@@ -335,7 +364,7 @@ export async function runDocumentAiOcr(
   const token = await getAccessToken();
   const endpoint = getProcessorEndpoint();
 
-  const response = await retry.fetch(endpoint, {
+  const response = await fetchWithTriggerFallback(endpoint, {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,

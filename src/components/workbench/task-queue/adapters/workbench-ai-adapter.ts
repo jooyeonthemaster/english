@@ -14,6 +14,13 @@ interface WorkbenchAiJobRow {
   resultCount: number;
   errorMessage: string | null;
   createdAt: string;
+  config?: Record<string, unknown> | null;
+}
+
+function isFastTrackJob(job: WorkbenchAiJobRow): boolean {
+  const cfg = job.config;
+  if (!cfg || typeof cfg !== "object") return false;
+  return (cfg as { fastTrack?: unknown }).fastTrack === true;
 }
 
 function mapStatus(raw: string): TaskStatus {
@@ -36,18 +43,19 @@ function mapStatus(raw: string): TaskStatus {
 }
 
 function buildSubtitle(job: WorkbenchAiJobRow, domain: TaskDomain): string {
+  const prefix = isFastTrackJob(job) ? "[빠른] " : "";
   if (domain === "passage-analysis") {
-    if (job.status === "COMPLETED") return "분석 완료";
-    if (job.status === "FAILED") return "분석 실패";
-    if (job.status === "PENDING") return "분석 대기 중";
-    return "지문 분석 진행 중";
+    if (job.status === "COMPLETED") return `${prefix}분석 완료`;
+    if (job.status === "FAILED") return `${prefix}분석 실패`;
+    if (job.status === "PENDING") return `${prefix}분석 대기 중`;
+    return `${prefix}지문 분석 진행 중`;
   }
 
   const typeLabel = job.mode === "AUTO" ? "자동 생성" : job.questionType || "수동 생성";
-  if (job.status === "COMPLETED") return `${typeLabel} 완료`;
-  if (job.status === "FAILED") return `${typeLabel} 실패`;
-  if (job.status === "PENDING") return `${typeLabel} 대기 중`;
-  return `${typeLabel} 진행 중`;
+  if (job.status === "COMPLETED") return `${prefix}${typeLabel} 완료`;
+  if (job.status === "FAILED") return `${prefix}${typeLabel} 실패`;
+  if (job.status === "PENDING") return `${prefix}${typeLabel} 대기 중`;
+  return `${prefix}${typeLabel} 진행 중`;
 }
 
 function buildDescription(job: WorkbenchAiJobRow, domain: TaskDomain): string {

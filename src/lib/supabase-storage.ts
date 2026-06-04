@@ -60,6 +60,16 @@ export function pageImageKey(
   return `${academyId}/${jobId}/pages/${padded}.${ext}`;
 }
 
+export function similarExamPageImageKey(
+  academyId: string,
+  jobId: string,
+  pageIndex: number,
+  ext: string = "jpg",
+): string {
+  const padded = pageIndex.toString().padStart(4, "0");
+  return `${academyId}/similar-exams/${jobId}/pages/${padded}.${ext}`;
+}
+
 export function jobPrefix(academyId: string, jobId: string): string {
   return `${academyId}/${jobId}`;
 }

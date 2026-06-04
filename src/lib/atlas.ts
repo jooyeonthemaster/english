@@ -1,11 +1,6 @@
 const BASE_URL = process.env.ATLASCLOUD_BASE_URL ?? 'https://api.atlascloud.ai/api/v1';
-const API_KEY = process.env.ATLASCLOUD_API_KEY;
 const MODEL = process.env.ATLASCLOUD_MODEL ?? 'openai/gpt-image-2/text-to-image';
 const MAX_GENERATION_ATTEMPTS = 2;
-
-if (!API_KEY) {
-  console.warn('[atlas] ATLASCLOUD_API_KEY is not set');
-}
 
 export type AtlasImageSize =
   | '1024x768'
@@ -56,8 +51,13 @@ interface AtlasResultEnvelope {
 }
 
 function authHeaders(): HeadersInit {
+  const apiKey = process.env.ATLASCLOUD_API_KEY;
+  if (!apiKey) {
+    throw new Error('ATLASCLOUD_API_KEY is required for Atlas image generation.');
+  }
+
   return {
-    Authorization: `Bearer ${API_KEY}`,
+    Authorization: `Bearer ${apiKey}`,
     'Content-Type': 'application/json'
   };
 }
