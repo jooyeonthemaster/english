@@ -81,6 +81,9 @@ export function GeneratePageClient({
   //
   // Defensive parsing: URL may be percent-encoded, contain stray whitespace,
   // or be maliciously stuffed — we decode, split on comma, filter empties,
+  // 마키(영역 드래그) 시작 영역을 "생성된 문제" 섹션 전체로 넓힌다(카드만 선택). 상단의
+  // 지문 그리드(PassageCardGrid)는 자체 스크롤 영역을 boundary 로 쓰므로 서로 겹치지 않는다.
+  const bottomQueueBoundaryRef = useRef<HTMLElement>(null);
   // dedupe and cap at 100 ids so downstream `Set` construction + the cross-
   // tenant validity filter (useEffect below) never have to chew on junk.
   const initialPassageIdsRef = useRef<string[]>(
@@ -1314,8 +1317,12 @@ export function GeneratePageClient({
         />
 
         {/* ═══ BOTTOM SECTION: 생성된 문제 (최신순) ═══ */}
-        <section className="relative rounded-lg border border-slate-200 bg-white shadow-sm">
+        <section
+          ref={bottomQueueBoundaryRef}
+          className="relative rounded-lg border border-slate-200 bg-white shadow-sm"
+        >
           <BottomQueueSection
+            marqueeBoundaryRef={bottomQueueBoundaryRef}
             sessionQueue={sessionQueue}
             filteredQueue={filteredQueue}
             queueFilter={queueFilter}

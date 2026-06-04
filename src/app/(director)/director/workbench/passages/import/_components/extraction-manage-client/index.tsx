@@ -59,6 +59,7 @@ import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
 import { JobCard } from "@/components/workbench/shared/job-card";
 import { MaterialJobCard } from "./components/material-job-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import { JobReviewModal } from "./components/job-review-modal";
 import {
   ManageFiltersBar,
@@ -108,6 +109,10 @@ interface ExtractionManageClientProps {
     generationPlan: QuestionGenerationPlan,
   ) => Promise<void>;
   bulkAnalyzing?: boolean;
+  /** 마키(영역 드래그) 시작 영역 경계. 임베드(자료 관리 패널)처럼 한 화면에 다른
+   *  선택 영역(예: 지문 목록 큐)과 함께 놓일 때, 영역이 섞이지 않도록 이 패널만의
+   *  경계를 지정한다. 미지정 시 DragSelect 가 전역 기본 경계(본문)를 쓴다. */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 const MATERIAL_GRID_OPTIONS = [
@@ -196,6 +201,7 @@ export function ExtractionManageClient({
   selectedExternalDraftId = null,
   onBulkAnalyze,
   bulkAnalyzing = false,
+  marqueeBoundaryRef,
 }: ExtractionManageClientProps) {
   void academyId;
 
@@ -495,6 +501,34 @@ export function ExtractionManageClient({
       });
     },
     [draftIdsByJobId, selectedIds, setSelectedIds],
+  );
+
+  // ─── 마키(영역 드래그)로 작업(자료 묶음) 선택 ───
+  // 작업의 "선택" 상태는 그 작업에 속한 draft 들이 모두 selectedIds 에 있는지로
+  // 표현된다(체크박스와 동일). 마키는 task id 공간에서 동작하고, 여기서 draft
+  // 선택집합으로 번역한다.
+  const checkedTaskIds = useMemo(() => {
+    const s = new Set<string>();
+    for (const [taskId, ids] of draftIdsByJobId) {
+      if (ids.length > 0 && ids.every((id) => selectedIds.has(id))) {
+        s.add(taskId);
+      }
+    }
+    return s;
+  }, [draftIdsByJobId, selectedIds]);
+
+  const handleTaskMarqueeChange = useCallback(
+    (nextTaskIds: Set<string>) => {
+      // DragSelect 가 넘기는 next 는 "이번 선택의 전체 집합"이다(새 드래그=교체,
+      // Shift=추가). 각 task 의 draft id 들로 펼쳐 draft 선택집합을 만든다.
+      const nextDraftIds = new Set<string>();
+      for (const taskId of nextTaskIds) {
+        const ids = draftIdsByJobId.get(taskId);
+        if (ids) for (const id of ids) nextDraftIds.add(id);
+      }
+      setSelectedIds(nextDraftIds);
+    },
+    [draftIdsByJobId, setSelectedIds],
   );
 
   // Dropping a task card onto a folder should move every draft inside that
@@ -1206,6 +1240,9 @@ export function ExtractionManageClient({
                     onToggleTaskCheck={onToggleTaskCheck}
                     onRenameJob={actions.renameJob}
                     onVisibleJobsChange={setVisibleTasks}
+                    marqueeSelectedTaskIds={checkedTaskIds}
+                    onMarqueeChange={handleTaskMarqueeChange}
+                    marqueeBoundaryRef={marqueeBoundaryRef}
                   />
                 ) : (
                   <div className="min-w-0 rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-4 pb-3 pt-3 sm:px-5">
@@ -1245,6 +1282,9 @@ export function ExtractionManageClient({
                           next.length > 0 ? next : null,
                         )
                       }
+                      marqueeSelectedTaskIds={checkedTaskIds}
+                      onMarqueeChange={handleTaskMarqueeChange}
+                      marqueeBoundaryRef={marqueeBoundaryRef}
                     />
                   </div>
                 )
@@ -1258,6 +1298,7 @@ export function ExtractionManageClient({
                   }
                 >
                   <DraftGrid
+                    marqueeBoundaryRef={marqueeBoundaryRef}
                     gridOnly={embedded}
                     drafts={display.displayedDrafts}
                     loading={data.loadingDetails && data.drafts.length === 0}
@@ -1530,6 +1571,9 @@ function EmbeddedJobCardGrid({
   onToggleTaskCheck,
   onRenameJob,
   onVisibleJobsChange,
+  marqueeSelectedTaskIds,
+  onMarqueeChange,
+  marqueeBoundaryRef,
 }: {
   jobs: AvailableJob[];
   searchQuery: string;
@@ -1542,6 +1586,10 @@ function EmbeddedJobCardGrid({
   onToggleTaskCheck: (task: BaseTask) => void;
   onRenameJob: (jobId: string, next: string | null) => void | Promise<void>;
   onVisibleJobsChange: (tasks: BaseTask[]) => void;
+  /** 마키(영역 드래그) 선택 — 작업(자료 묶음) id 집합 + 갱신 콜백 + 시작 영역 경계. */
+  marqueeSelectedTaskIds: Set<string>;
+  onMarqueeChange: (next: Set<string>) => void;
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }) {
   // Defer the query so typing stays smooth even while re-filtering across every
   // job's full-body haystack.
@@ -1616,7 +1664,12 @@ function EmbeddedJobCardGrid({
           표시할 자료가 없습니다.
         </div>
       ) : (
-        <div className="grid grid-cols-3 items-stretch gap-2.5">
+        <DragSelect
+          className="grid grid-cols-3 items-stretch gap-2.5"
+          value={marqueeSelectedTaskIds}
+          onChange={onMarqueeChange}
+          boundaryRef={marqueeBoundaryRef}
+        >
           {taskRows.map(({ job, task }) => {
             const checked = isTaskChecked(task);
             return (
@@ -1634,10 +1687,11 @@ function EmbeddedJobCardGrid({
                 onToggleCheck={() => onToggleTaskCheck(task)}
                 onClick={() => onOpenJob(job.jobId)}
                 onRename={(next) => onRenameJob(job.jobId, next)}
+                dragItemId={job.jobId}
               />
             );
           })}
-        </div>
+        </DragSelect>
       )}
     </div>
   );

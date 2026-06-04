@@ -219,6 +219,9 @@ export function FormSection(props: FormSectionProps) {
   } = props;
 
   const splitContainerRef = useRef<HTMLDivElement>(null);
+  // 마키(영역 드래그) 시작 영역 = "자료 관리" 좌측 패널 전체. 아래 지문 목록 큐와
+  // boundary 가 분리돼 서로 섞이지 않는다(드래그 선택 영역 구분).
+  const materialBoundaryRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
     readStoredLeftPaneWidth,
   );
@@ -468,6 +471,7 @@ export function FormSection(props: FormSectionProps) {
           {leftPaneOpen ? (
             <>
               <div
+                ref={materialBoundaryRef}
                 className="flex min-h-0 min-w-0 shrink-0 flex-col"
                 style={{ width: `min(${leftPaneWidth}px, 44%)` }}
               >
@@ -479,6 +483,7 @@ export function FormSection(props: FormSectionProps) {
                   onSelectDraft={props.onSelectDraft}
                   onBulkAnalyze={props.onBulkAnalyze}
                   bulkAnalyzing={props.bulkAnalyzing}
+                  marqueeBoundaryRef={materialBoundaryRef}
                 />
               </div>
               <button
@@ -754,6 +759,9 @@ interface ExtractionManageEmbedProps {
     generationPlan: QuestionGenerationPlan,
   ) => Promise<void>;
   bulkAnalyzing: boolean;
+  /** 마키(영역 드래그) 시작 영역 = 자료 관리 패널 전체. 같은 페이지의 지문 목록 큐와
+   *  영역이 섞이지 않도록 분리한다. */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 function ExtractionManageEmbed({
@@ -764,6 +772,7 @@ function ExtractionManageEmbed({
   onSelectDraft,
   onBulkAnalyze,
   bulkAnalyzing,
+  marqueeBoundaryRef,
 }: ExtractionManageEmbedProps) {
   const membership = useMemo(() => {
     const map: Record<string, Set<string>> = {};
@@ -786,6 +795,7 @@ function ExtractionManageEmbed({
       onSelectDraftExternal={onSelectDraft}
       onBulkAnalyze={onBulkAnalyze}
       bulkAnalyzing={bulkAnalyzing}
+      marqueeBoundaryRef={marqueeBoundaryRef}
     />
   );
 }

@@ -1065,47 +1065,57 @@ export function ExamPaperBuilderClient({
     }
   }, []);
 
-  // 체크박스 다중 선택(드래그 대상) — 미리보기 포함 여부와 무관한 별도 상태.
-  // 체크는 미리보기에 넣지 않고, 드래그&드롭으로만 미리보기에 추가한다.
-  const [dragSelectedIds, setDragSelectedIds] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const [duplicateSelectedIds, setDuplicateSelectedIds] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const toggleDragSelected = useCallback((id: string) => {
-    setDragSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-        setDuplicateSelectedIds((current) => {
-          if (!current.has(id)) return current;
-          const duplicateNext = new Set(current);
-          duplicateNext.delete(id);
-          return duplicateNext;
-        });
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  }, []);
+  const selectedPaperQuestionIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const item of paperItems) {
+      if (item.blockType === "question") ids.add(item.questionId);
+    }
+    return ids;
+  }, [paperItems]);
 
-  const approveDuplicateSelection = useCallback((id: string) => {
-    setDuplicateSelectedIds((prev) => new Set(prev).add(id));
-    setDragSelectedIds((prev) => new Set(prev).add(id));
-  }, []);
+  const addQuestionIdsToPaper = useCallback((ids: Iterable<string>) => {
+    const seen = new Set<string>();
+    const selectedQuestions: BuilderQuestion[] = [];
 
-  useEffect(() => {
-    setDuplicateSelectedIds((current) => {
-      const next = new Set(
-        Array.from(current).filter(
-          (id) => paperQuestionCounts.has(id) && dragSelectedIds.has(id),
-        ),
-      );
-      return next.size === current.size ? current : next;
-    });
-  }, [dragSelectedIds, paperQuestionCounts]);
+    for (const id of ids) {
+      if (seen.has(id) || paperQuestionCounts.has(id)) continue;
+      const question = questionById.get(id);
+      if (!question) continue;
+      seen.add(id);
+      selectedQuestions.push(question);
+    }
+
+    if (selectedQuestions.length > 0) {
+      addQuestionsAtDropTarget(selectedQuestions, null, "after");
+    }
+  }, [addQuestionsAtDropTarget, paperQuestionCounts, questionById]);
+
+  const removeQuestionIdFromPaper = useCallback((id: string) => {
+    const targets = paperItems.filter(
+      (item) => item.blockType === "question" && item.questionId === id,
+    );
+    for (const item of targets) removeItem(item.localId);
+  }, [paperItems, removeItem]);
+
+  const togglePaperQuestionSelection = useCallback((id: string) => {
+    if (selectedPaperQuestionIds.has(id)) {
+      removeQuestionIdFromPaper(id);
+      return;
+    }
+    addQuestionIdsToPaper([id]);
+  }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
+
+  const applyPaperQuestionSelection = useCallback((nextSelectedIds: Set<string>) => {
+    const toRemove = Array.from(selectedPaperQuestionIds).filter(
+      (id) => !nextSelectedIds.has(id),
+    );
+    const toAdd = Array.from(nextSelectedIds).filter(
+      (id) => !selectedPaperQuestionIds.has(id),
+    );
+
+    for (const id of toRemove) removeQuestionIdFromPaper(id);
+    addQuestionIdsToPaper(toAdd);
+  }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
 
   const builderDraftState = useMemo<ExamPaperBuilderDraftState>(
     () => ({
@@ -1293,8 +1303,6 @@ export function ExamPaperBuilderClient({
     setAutoPointTotal(asAutoPointTotal(state.autoPointTotal));
     setCover(normalizePaperCover(state.cover));
     replacePaperItems(state.paperItems, state.activeItemId, { markAsDirty: false });
-    setDragSelectedIds(new Set());
-    setDuplicateSelectedIds(new Set());
     setActivePageIndex(0);
     setSettingsNudgeDismissed(true);
     setSettingsOpen(false);
@@ -1316,20 +1324,6 @@ export function ExamPaperBuilderClient({
         toast.error("임시저장본을 삭제하지 못했습니다.");
       });
   }, [builderDraftKey]);
-
-  // 선택(체크)한 문항을 시험지 미리보기 끝에 한 번에 삽입한다. dragSelectedIds는
-  // 체크한 순서대로 id가 쌓이므로 Array.from()이 곧 삽입 순서다. 삽입 후 선택 해제.
-  const addSelectedQuestionsToPaper = useCallback((duplicateQuestionIds: Set<string>) => {
-    const selected = Array.from(dragSelectedIds)
-      .map((id) => questionById.get(id))
-      .filter((q): q is BuilderQuestion => Boolean(q));
-    if (selected.length === 0) return;
-    addQuestionsAtDropTarget(selected, null, "after", {
-      duplicateQuestionIds,
-    });
-    setDragSelectedIds(new Set());
-    setDuplicateSelectedIds(new Set());
-  }, [dragSelectedIds, questionById, addQuestionsAtDropTarget]);
 
   const activeFolderMembership = folders.activeFolder
     ? folders.membership[folders.activeFolder]
@@ -1512,15 +1506,11 @@ export function ExamPaperBuilderClient({
 
         // 다중 드래그면 questionIds(여러 개)를, 아니면 questionId(하나)를 사용한다.
         const rawIds = source.data.questionIds;
-        const rawDuplicateIds = source.data.duplicateQuestionIds;
         const draggedIds = Array.isArray(rawIds) && rawIds.length > 0
           ? rawIds.filter((id): id is string => typeof id === "string")
           : typeof source.data.questionId === "string"
             ? [source.data.questionId]
             : [];
-        const draggedDuplicateIds = Array.isArray(rawDuplicateIds)
-          ? rawDuplicateIds.filter((id): id is string => typeof id === "string")
-          : [];
         if (draggedIds.length === 0) return;
 
         const dropped = draggedIds
@@ -1537,15 +1527,7 @@ export function ExamPaperBuilderClient({
           input.clientX,
           input.clientY,
         );
-        addQuestionsAtDropTarget(
-          dropped,
-          insertion.targetLocalId,
-          insertion.placement,
-          { duplicateQuestionIds: draggedDuplicateIds },
-        );
-        // 드롭 후 선택 해제 — 같은 문항을 다시 끌 일이 없도록 초기화.
-        setDragSelectedIds(new Set());
-        setDuplicateSelectedIds(new Set());
+        addQuestionsAtDropTarget(dropped, insertion.targetLocalId, insertion.placement);
       },
     });
   }, [addQuestionsAtDropTarget, previewScrollerRef, questionById]);
@@ -2207,12 +2189,9 @@ export function ExamPaperBuilderClient({
             setSort={setSort}
             statusCounts={statusCounts}
             paperQuestionCounts={paperQuestionCounts}
-            selectedQuestionIds={dragSelectedIds}
-            duplicateSelectedQuestionIds={duplicateSelectedIds}
-            onToggleSelect={toggleDragSelected}
-            onApproveDuplicateSelect={approveDuplicateSelection}
-            setSelectedQuestionIds={setDragSelectedIds}
-            onInsertSelected={addSelectedQuestionsToPaper}
+            selectedQuestionIds={selectedPaperQuestionIds}
+            onToggleSelect={togglePaperQuestionSelection}
+            setSelectedQuestionIds={applyPaperQuestionSelection}
             onShowDetail={setDetailQuestion}
             totalQuestionCount={questions.length}
             childFolders={folders.childFolders}

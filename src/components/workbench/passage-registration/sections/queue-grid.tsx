@@ -15,6 +15,8 @@ interface QueueGridProps {
   onRetry: (id: string) => void;
   onRemove: (id: string) => void;
   gridCols?: QueueGridCols;
+  /** 마키(영역 드래그) 시작 영역을 이 섹션 전체로 넓히기 위한 boundary(부모에서 내려줌). */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 const GRID_CLASS: Record<QueueGridCols, string> = {
@@ -32,12 +34,14 @@ export function QueueGrid({
   onRetry,
   onRemove,
   gridCols = "grid3",
+  marqueeBoundaryRef,
 }: QueueGridProps) {
   return (
     <DragSelect
       className={GRID_CLASS[gridCols]}
       value={selectedIds}
       onChange={setSelectedIds}
+      boundaryRef={marqueeBoundaryRef}
     >
       {filteredQueue.map((passage) => (
         <PassageQueueCard

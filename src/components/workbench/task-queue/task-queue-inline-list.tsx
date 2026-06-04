@@ -28,6 +28,7 @@ import {
   TERMINAL_STATUSES,
 } from "./constants";
 import { TaskCard } from "./components/task-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import { TaskEmptyState } from "./components/task-empty-state";
 import { TaskStatusBadge } from "./components/task-status-badge";
 import { useTaskList } from "./hooks/use-task-list";
@@ -37,6 +38,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 type InlineListLayout = "horizontal" | "grid";
 export type GridViewMode = "grid-3" | "grid-2" | "list";
@@ -130,6 +132,15 @@ interface TaskQueueInlineListProps {
    * immediately instead of waiting for the next poll. Defaults to 0.
    */
   refreshSignal?: number;
+  /**
+   * 마키(영역 드래그) 선택을 켠다. `marqueeSelectedTaskIds`(현재 선택된 task id 집합)와
+   * `onMarqueeChange`(새 집합)를 함께 넘기면 카드 그리드/목록을 DragSelect 로 감싸고
+   * 각 카드에 식별자를 부여한다. `marqueeBoundaryRef` 로 드래그 시작 영역(자료 관리 패널
+   * 등)을 지정할 수 있다. 셋 다 없으면 기존 동작(체크박스 선택만).
+   */
+  marqueeSelectedTaskIds?: Set<string>;
+  onMarqueeChange?: (next: Set<string>) => void;
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 function gridCardClass(status: TaskStatus): string {
@@ -344,6 +355,7 @@ function TaskGridCard({
   getDragData,
   dragCount,
   onRename,
+  dragItemId,
 }: {
   task: BaseTask;
   onAfterDelete: (id: string) => void;
@@ -354,6 +366,8 @@ function TaskGridCard({
   getDragData?: () => Record<string, unknown> | null;
   dragCount?: number;
   onRename?: (next: string) => void | Promise<void>;
+  /** 설정 시 마키(영역 드래그) 선택 대상이 된다(DragSelect 가 읽는 식별자). */
+  dragItemId?: string;
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
@@ -455,6 +469,7 @@ function TaskGridCard({
     }
     if (task.href) router.push(task.href);
   };
+  const canOpen = Boolean(onClick || task.href);
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -479,6 +494,7 @@ function TaskGridCard({
       ref={(node) => {
         dragRef.current = node;
       }}
+      data-drag-item-id={dragItemId}
       onClick={handleOpen}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -620,6 +636,15 @@ function TaskGridCard({
             <CalendarClock className="size-3.5" aria-hidden="true" />
             {formatTaskDate(task.createdAt)}
           </span>
+          {canOpen ? (
+            <DetailActionButton
+              className="ml-auto"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleOpen();
+              }}
+            />
+          ) : null}
         </div>
       </div>
 
@@ -629,13 +654,6 @@ function TaskGridCard({
             className="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-700"
             style={{ width: task.status === "pending" ? "22%" : "68%" }}
           />
-        </div>
-      ) : null}
-      {!active && task.href ? (
-        <div className="absolute bottom-2 right-3 opacity-0 transition-opacity group-hover:opacity-100">
-          <span className="text-[9px] font-medium text-blue-500">
-            클릭하여 상세 보기
-          </span>
         </div>
       ) : null}
     </article>
@@ -651,6 +669,7 @@ function TaskListRow({
   getDragData,
   dragCount,
   onRename,
+  dragItemId,
 }: {
   task: BaseTask;
   onAfterDelete: (id: string) => void;
@@ -660,6 +679,8 @@ function TaskListRow({
   getDragData?: () => Record<string, unknown> | null;
   dragCount?: number;
   onRename?: (next: string) => void | Promise<void>;
+  /** 설정 시 마키(영역 드래그) 선택 대상이 된다(DragSelect 가 읽는 식별자). */
+  dragItemId?: string;
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
@@ -700,6 +721,7 @@ function TaskListRow({
     }
     if (task.href) router.push(task.href);
   };
+  const canOpen = Boolean(onClick || task.href);
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -724,6 +746,7 @@ function TaskListRow({
       ref={(node) => {
         dragRef.current = node;
       }}
+      data-drag-item-id={dragItemId}
       onClick={handleOpen}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -798,6 +821,14 @@ function TaskListRow({
         <CalendarClock className="size-3.5" aria-hidden="true" />
         {formatTaskDate(task.createdAt)}
       </span>
+      {canOpen ? (
+        <DetailActionButton
+          onClick={(event) => {
+            event.stopPropagation();
+            handleOpen();
+          }}
+        />
+      ) : null}
       {canDelete ? (
         <button
           type="button"
@@ -885,7 +916,11 @@ export function TaskQueueInlineList({
   collapsible,
   pendingTasks,
   refreshSignal,
+  marqueeSelectedTaskIds,
+  onMarqueeChange,
+  marqueeBoundaryRef,
 }: TaskQueueInlineListProps) {
+  const marqueeEnabled = Boolean(marqueeSelectedTaskIds && onMarqueeChange);
   const { tasks: fetchedTasks, loading, reload } = useTaskList({
     scope: domain,
     refreshKey: refreshSignal ?? 0,
@@ -1162,8 +1197,8 @@ export function TaskQueueInlineList({
               </div>
             ) : grid ? (
               isList ? (
-                <div className={`flex flex-col gap-2 ${bodyPadding}`.trim()}>
-                  {visible.map((task) => (
+                (() => {
+                  const rows = visible.map((task) => (
                     <TaskListRow
                       key={`${task.domain}:${task.id}`}
                       task={task}
@@ -1189,14 +1224,26 @@ export function TaskQueueInlineList({
                             }
                           : undefined
                       }
+                      dragItemId={marqueeEnabled ? task.id : undefined}
                     />
-                  ))}
-                </div>
+                  ));
+                  const cls = `flex flex-col gap-2 ${bodyPadding}`.trim();
+                  return marqueeEnabled ? (
+                    <DragSelect
+                      className={cls}
+                      value={marqueeSelectedTaskIds!}
+                      onChange={onMarqueeChange!}
+                      boundaryRef={marqueeBoundaryRef}
+                    >
+                      {rows}
+                    </DragSelect>
+                  ) : (
+                    <div className={cls}>{rows}</div>
+                  );
+                })()
               ) : (
-                <div
-                  className={`grid gap-3 ${bodyPadding} ${gridColsClass}`.trim()}
-                >
-                  {visible.map((task) => (
+                (() => {
+                  const cards = visible.map((task) => (
                     <TaskGridCard
                       key={`${task.domain}:${task.id}`}
                       task={task}
@@ -1222,9 +1269,24 @@ export function TaskQueueInlineList({
                             }
                           : undefined
                       }
+                      dragItemId={marqueeEnabled ? task.id : undefined}
                     />
-                  ))}
-                </div>
+                  ));
+                  const cls =
+                    `grid gap-3 ${bodyPadding} ${gridColsClass}`.trim();
+                  return marqueeEnabled ? (
+                    <DragSelect
+                      className={cls}
+                      value={marqueeSelectedTaskIds!}
+                      onChange={onMarqueeChange!}
+                      boundaryRef={marqueeBoundaryRef}
+                    >
+                      {cards}
+                    </DragSelect>
+                  ) : (
+                    <div className={cls}>{cards}</div>
+                  );
+                })()
               )
             ) : (
               <div className="flex items-start gap-2.5 p-2.5">

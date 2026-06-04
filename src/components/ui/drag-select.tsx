@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useMarqueeBoundary } from "@/components/layout/marquee-boundary-context";
 
 /**
  * DragSelect — 마우스로 영역을 드래그(고무줄/마키 선택)하면 영역에 걸친 카드들이
@@ -24,11 +26,23 @@ import { useCallback, useRef, useState } from "react";
  *
  * 시작 영역을 카드 그리드보다 넓히려면, DragSelect 의 className 에 `min-h-full` 등을
  * 주고 그 안에 실제 그리드를 자식으로 넣으면 된다(빈 여백에서도 시작 가능).
+ *
+ * 시작 영역을 DragSelect 바깥(예: 시험지 미리보기창 등 "완전히 다른 패널")까지 넓히려면
+ * `boundaryRef` 에 더 넓은 조상 엘리먼트를 넘긴다. 그 영역 어디서든 드래그를 시작할 수
+ * 있고, 선택은 여전히 boundary 안의 `data-drag-item-id` 카드에만 적용된다. 이때 선택
+ * 사각형은 패널의 overflow/clip 에 잘리지 않도록 뷰포트 기준(fixed) 포털로 그린다.
  */
 
 const DRAG_THRESHOLD = 5; // px — 이만큼 움직여야 마키 시작 (단순 클릭과 구분)
 
-type Rect = { left: number; top: number; width: number; height: number };
+type Rect = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  /** true 면 뷰포트 기준(fixed) 포털로 렌더 — boundaryRef 모드 */
+  fixed?: boolean;
+};
 
 interface DragSelectProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
@@ -38,6 +52,13 @@ interface DragSelectProps
   onChange: (next: Set<string>) => void;
   /** true 면 마키 선택 비활성화 */
   disabled?: boolean;
+  /**
+   * 드래그 "시작 영역"을 DragSelect 컨테이너 바깥의 더 넓은 조상으로 넓힌다.
+   * 넘기면: ① mousedown 을 이 엘리먼트에서 받고(이 영역 어디서든 시작 가능),
+   * ② 선택 사각형을 뷰포트 기준 포털로 그리며, ③ 카드 탐색 범위도 이 엘리먼트로 넓힌다.
+   * 안 넘기면 기존 동작(컨테이너 자신이 시작 영역).
+   */
+  boundaryRef?: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;
 }
 
@@ -46,8 +67,48 @@ const MAX_SCROLL_SPEED = 22; // px/frame
 
 function setsEqual(a: Set<string>, b: Set<string>) {
   if (a.size !== b.size) return false;
-  for (const v of a) if (!b.has(v)) return false;
+  const ai = a.values();
+  const bi = b.values();
+  while (true) {
+    const an = ai.next();
+    const bn = bi.next();
+    if (an.done || bn.done) return an.done === bn.done;
+    if (an.value !== bn.value) return false;
+  }
   return true;
+}
+
+function getEntryProgress(
+  rect: DOMRect,
+  startX: number,
+  startY: number,
+  currentX: number,
+  currentY: number,
+) {
+  const dx = currentX - startX;
+  const dy = currentY - startY;
+
+  const axisProgress = (
+    start: number,
+    delta: number,
+    min: number,
+    max: number,
+  ) => {
+    if (delta > 0) {
+      if (max <= start) return Number.POSITIVE_INFINITY;
+      return min <= start ? 0 : (min - start) / delta;
+    }
+    if (delta < 0) {
+      if (min >= start) return Number.POSITIVE_INFINITY;
+      return max >= start ? 0 : (start - max) / -delta;
+    }
+    return min < start && max > start ? 0 : Number.POSITIVE_INFINITY;
+  };
+
+  return Math.max(
+    axisProgress(startX, dx, rect.left, rect.right),
+    axisProgress(startY, dy, rect.top, rect.bottom),
+  );
 }
 
 /** 세로 스크롤이 가능한 가장 가까운 조상. 없으면 null(=윈도우 스크롤). */
@@ -66,6 +127,7 @@ export function DragSelect({
   value,
   onChange,
   disabled,
+  boundaryRef,
   className,
   style,
   children,
@@ -73,12 +135,20 @@ export function DragSelect({
 }: DragSelectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<Rect | null>(null);
+  // 명시적 boundaryRef 가 없으면 AdminShell 이 내려준 기본 경계(사이드바 제외 본문)를
+  // 쓴다. 둘 다 없으면(=셸 밖) 컨테이너 자신이 시작 영역이 된다(원래 동작).
+  const ctxBoundaryRef = useMarqueeBoundary();
 
   const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent | React.MouseEvent) => {
       if (disabled || e.button !== 0) return;
       const container = containerRef.current;
       if (!container) return;
+      // 카드 탐색·자동스크롤·사각형 기준이 되는 루트. boundary 가 있으면 그 넓은
+      // 영역을, 없으면 컨테이너 자신을 쓴다.
+      const boundary = boundaryRef?.current ?? ctxBoundaryRef?.current ?? null;
+      const root = boundary ?? container;
+      const useBoundary = boundary != null;
 
       const target = e.target as HTMLElement;
       // 버튼/링크/입력/체크박스 등 "중첩된" 상호작용 요소 위에서 시작하면 마키를 켜지
@@ -96,6 +166,15 @@ export function DragSelect({
       //  미등록이라 여기 걸리지 않고 아래 마키 로직으로 진행된다.)
       if (target.closest('[draggable="true"]')) return;
 
+      // 같은 boundary 를 공유하는 DragSelect 인스턴스가 여러 개일 때(예: 지문별 그룹마다
+      // 하나씩 렌더되는 경우) 한 번의 mousedown 에 모두 반응하면 중복 마키가 켜진다.
+      // 같은 엘리먼트에 달린 리스너끼리는 동일한 event 객체를 공유하므로, 먼저 처리한
+      // 인스턴스가 "claim" 표시를 남기고 나머지는 빠져나간다. (root 가 boundary 전체이므로
+      // 어느 인스턴스가 처리하든 그룹 전체의 카드를 똑같이 선택한다.)
+      const claimable = e as { __dragSelectClaimed?: boolean };
+      if (claimable.__dragSelectClaimed) return;
+      claimable.__dragSelectClaimed = true;
+
       // 텍스트 선택 방지 — mousedown 기본동작을 막는 것이 user-select:none보다 확실.
       // (위에서 draggable 요소는 이미 제외했으므로 네이티브 드래그를 막지 않는다.)
       e.preventDefault();
@@ -106,9 +185,17 @@ export function DragSelect({
       const base = additive ? new Set(value) : new Set<string>();
       let active = false;
       let lastSent = value;
+      const enteredOrder = new Map<string, number>();
+      let nextEnteredIndex = 0;
 
       // 자동 스크롤: 시작점을 "콘텐츠 기준"으로 고정해, 스크롤되면 선택 박스가 늘어난다.
-      const scrollParent = getScrollParent(container);
+      // 스크롤 대상은 "카드가 들어있는" 스크롤 컨테이너다. DragSelect 가 스크롤 영역을
+      // 통째로 감싸는 경우(시작 영역을 패널 전체로 넓힌 경우) 그 스크롤 컨테이너는
+      // DragSelect 의 자손이므로, 카드에서 위로 올라가며 스크롤 조상을 찾는다. 카드가
+      // 없으면 컨테이너의 스크롤 조상으로 폴백한다(기존 동작과 동일).
+      const firstItem = root.querySelector<HTMLElement>("[data-drag-item-id]");
+      const scrollParent =
+        (firstItem && getScrollParent(firstItem)) || getScrollParent(container);
       const isWindowScroll = !scrollParent;
       const readScroll = () =>
         scrollParent ? scrollParent.scrollTop : window.scrollY;
@@ -122,32 +209,72 @@ export function DragSelect({
       const anchorY = () => startY - (readScroll() - startScroll);
 
       function recompute() {
-        const cRect = container!.getBoundingClientRect();
         const ay = anchorY();
         const x1 = Math.min(startX, lastClientX);
         const y1 = Math.min(ay, lastClientY);
         const x2 = Math.max(startX, lastClientX);
         const y2 = Math.max(ay, lastClientY);
 
-        setRect({
-          left: x1 - cRect.left,
-          top: y1 - cRect.top,
-          width: x2 - x1,
-          height: y2 - y1,
-        });
+        if (useBoundary) {
+          // 뷰포트 기준(fixed) — 컨테이너의 overflow/clip 에 잘리지 않고 패널을 가로질러
+          // 그려진다.
+          setRect({ left: x1, top: y1, width: x2 - x1, height: y2 - y1, fixed: true });
+        } else {
+          const cRect = container!.getBoundingClientRect();
+          setRect({
+            left: x1 - cRect.left,
+            top: y1 - cRect.top,
+            width: x2 - x1,
+            height: y2 - y1,
+          });
+        }
 
-        const next = new Set(base);
-        const items =
-          container!.querySelectorAll<HTMLElement>("[data-drag-item-id]");
-        items.forEach((el) => {
+        const hitItems: Array<{
+          id: string;
+          domIndex: number;
+          entryProgress: number;
+        }> = [];
+        const items = root.querySelectorAll<HTMLElement>("[data-drag-item-id]");
+        items.forEach((el, domIndex) => {
           const r = el.getBoundingClientRect();
           // 사각형이 한 점이라도 겹치면 선택 (카드 일부만 걸쳐도 OK)
           const hit = r.left < x2 && r.right > x1 && r.top < y2 && r.bottom > y1;
           if (hit) {
             const id = el.getAttribute("data-drag-item-id");
-            if (id) next.add(id);
+            if (!id) return;
+            hitItems.push({
+              id,
+              domIndex,
+              entryProgress: getEntryProgress(
+                r,
+                startX,
+                ay,
+                lastClientX,
+                lastClientY,
+              ),
+            });
           }
         });
+
+        hitItems
+          .filter((item) => !enteredOrder.has(item.id))
+          .sort(
+            (a, b) =>
+              a.entryProgress - b.entryProgress || a.domIndex - b.domIndex,
+          )
+          .forEach((item) => {
+            enteredOrder.set(item.id, nextEnteredIndex++);
+          });
+
+        const next = new Set(base);
+        hitItems
+          .sort(
+            (a, b) =>
+              (enteredOrder.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
+                (enteredOrder.get(b.id) ?? Number.MAX_SAFE_INTEGER) ||
+              a.domIndex - b.domIndex,
+          )
+          .forEach((item) => next.add(item.id));
 
         if (!setsEqual(next, lastSent)) {
           lastSent = next;
@@ -234,19 +361,44 @@ export function DragSelect({
       // 드래그 중 텍스트 선택 방지
       document.body.style.userSelect = "none";
     },
-    [disabled, value, onChange],
+    [disabled, value, onChange, boundaryRef, ctxBoundaryRef],
   );
+
+  // boundary 모드: 넓은 시작 영역(기본=본문 전체, 또는 명시 영역)에서 mousedown 을
+  // 받는다. 이 영역의 버튼/입력/드래그 요소는 handleMouseDown 안에서 걸러진다.
+  useEffect(() => {
+    const boundary = boundaryRef?.current ?? ctxBoundaryRef?.current;
+    if (!boundary) return;
+    const onDown = (e: MouseEvent) => handleMouseDown(e);
+    boundary.addEventListener("mousedown", onDown);
+    return () => boundary.removeEventListener("mousedown", onDown);
+  }, [boundaryRef, ctxBoundaryRef, handleMouseDown]);
 
   return (
     <div
       ref={containerRef}
       className={className}
       style={{ position: "relative", ...style }}
-      onMouseDown={handleMouseDown}
+      // boundary 가 있으면 시작 이벤트는 위 useEffect 에서 처리한다(중복 방지).
+      onMouseDown={boundaryRef || ctxBoundaryRef ? undefined : handleMouseDown}
       {...rest}
     >
       {children}
-      {rect && (
+      {rect?.fixed && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              className="pointer-events-none fixed z-[60] rounded-sm border border-blue-400 bg-blue-400/15"
+              style={{
+                left: rect.left,
+                top: rect.top,
+                width: rect.width,
+                height: rect.height,
+              }}
+            />,
+            document.body,
+          )
+        : null}
+      {rect && !rect.fixed && (
         <div
           className="pointer-events-none absolute z-50 rounded-sm border border-blue-400 bg-blue-400/15"
           style={{

@@ -15,6 +15,7 @@ import {
 import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { MODES, type ExtractionMode } from "@/lib/extraction/modes";
 import type { ExtractionJobStatus } from "@/lib/extraction/types";
@@ -403,6 +404,19 @@ export function JobCard({
           <p className="mt-0.5 truncate text-[10.5px] font-medium text-slate-500">
             {resultSummary}
           </p>
+        ) : null}
+        {!editing ? (
+          <DetailActionButton
+            className={
+              variant === "compact"
+                ? "mt-1 w-full justify-center px-1"
+                : "mt-2 w-full justify-center"
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          />
         ) : null}
       </div>
     </article>

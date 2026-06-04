@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Database, FilePlus2, FileText, Filter, Rows3, X } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { Database, FileText, Filter, Rows3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -39,13 +39,9 @@ interface QuestionLibraryPanelProps {
   setSort: (value: string) => void;
   statusCounts: { all: number; pending: number; approved: number };
   paperQuestionCounts: Map<string, number>;
-  duplicateSelectedQuestionIds: Set<string>;
-  // 체크박스 다중 선택(드래그 대상) 토글/일괄설정 — 미리보기 포함 여부와 무관.
+  // 체크박스/카드 선택 즉시 시험지 미리보기에 추가한다.
   onToggleSelect: (questionId: string) => void;
-  onApproveDuplicateSelect: (questionId: string) => void;
   setSelectedQuestionIds: (next: Set<string>) => void;
-  // 선택된(체크된) 문항을 시험지(미리보기) 끝에 한 번에 삽입한다.
-  onInsertSelected: (duplicateQuestionIds: Set<string>) => void;
   onShowDetail: (question: BuilderQuestion) => void;
   // ─── 파일(폴더) 관리 — questions 페이지의 FolderSection 구조 ───
   totalQuestionCount: number;
@@ -63,6 +59,11 @@ interface QuestionLibraryPanelProps {
   onDeleteFolder: (id: string) => void;
   onDragToFolder: (itemId: string, folderId: string, copy: boolean) => void;
   onDragToRoot: (itemId: string, copy: boolean) => void;
+  /**
+   * 마키(영역 드래그) 시작 영역을 이 패널 바깥(시험지 미리보기창 포함, 빌더 전체)까지
+   * 넓히기 위한 boundary. 빌더 루트에서 내려준다.
+   */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 export function QuestionLibraryPanel({
@@ -82,11 +83,8 @@ export function QuestionLibraryPanel({
   setSort,
   statusCounts,
   paperQuestionCounts,
-  duplicateSelectedQuestionIds,
   onToggleSelect,
-  onApproveDuplicateSelect,
   setSelectedQuestionIds,
-  onInsertSelected,
   onShowDetail,
   totalQuestionCount,
   childFolders,
@@ -103,6 +101,7 @@ export function QuestionLibraryPanel({
   onDeleteFolder,
   onDragToFolder,
   onDragToRoot,
+  marqueeBoundaryRef,
 }: QuestionLibraryPanelProps) {
   const [gridColumns, setGridColumns] = useState<QuestionGridCols>(2);
   const [libraryView, setLibraryView] = useState<"questions" | "passages">("questions");
@@ -110,15 +109,6 @@ export function QuestionLibraryPanel({
   const questionById = useMemo(
     () => new Map(filteredQuestions.map((question) => [question.id, question])),
     [filteredQuestions],
-  );
-  const usedQuestionIds = useMemo(
-    () =>
-      new Set(
-        Array.from(paperQuestionCounts.entries())
-          .filter(([, count]) => count > 0)
-          .map(([id]) => id),
-      ),
-    [paperQuestionCounts],
   );
   const groupedPassages = useMemo(() => {
     const groups = new Map<
@@ -169,38 +159,12 @@ export function QuestionLibraryPanel({
 
   const toggleQuestionById = useCallback(
     (id: string) => {
-      if (usedQuestionIds.has(id) && !duplicateSelectedQuestionIds.has(id)) return;
       onToggleSelect(id);
     },
-    [duplicateSelectedQuestionIds, onToggleSelect, usedQuestionIds],
+    [onToggleSelect],
   );
 
-  // 다중 드래그 페이로드: 선택된(체크된) 카드를 끌면 선택 전체를 "체크한 순서대로",
-  // 선택되지 않은 카드를 끌면 그 카드 하나만 끌고 간다. selectedQuestionIds는 Set이라
-  // 체크한 순서대로 id가 쌓이므로 Array.from()이 곧 체크 순서다. effect 재구독을
-  // 피하려고 최신 선택 집합은 ref로 읽는다.
-  const selectedIdsRef = useRef(selectedQuestionIds);
-  useEffect(() => {
-    selectedIdsRef.current = selectedQuestionIds;
-  }, [selectedQuestionIds]);
-  const buildDragQuestionIds = useCallback((draggedId: string) => {
-    if (usedQuestionIds.has(draggedId) && !duplicateSelectedQuestionIds.has(draggedId)) {
-      return [];
-    }
-    const set = selectedIdsRef.current;
-    if (!set.has(draggedId)) return [draggedId];
-    return Array.from(set).filter(
-      (id) => !usedQuestionIds.has(id) || duplicateSelectedQuestionIds.has(id),
-    );
-  }, [duplicateSelectedQuestionIds, usedQuestionIds]);
-
-  const buildDuplicateDragQuestionIds = useCallback(
-    (draggedId: string) =>
-      buildDragQuestionIds(draggedId).filter((id) =>
-        duplicateSelectedQuestionIds.has(id),
-      ),
-    [buildDragQuestionIds, duplicateSelectedQuestionIds],
-  );
+  const buildDragQuestionIds = useCallback((draggedId: string) => [draggedId], []);
 
   // 체크한 순서를 카드에 1,2,3… 번호로 보여 주기 위한 맵(드롭 순서 = 이 순서).
   const selectionOrder = useMemo(() => {
@@ -247,9 +211,7 @@ export function QuestionLibraryPanel({
   const viewSize: "lg" | "md" = gridColumns === 3 ? "md" : "lg";
 
   // 전체 선택 — 현재 필터된 문제 전체의 선택 상태.
-  const selectableFilteredQuestions = filteredQuestions.filter(
-    (q) => !usedQuestionIds.has(q.id) || duplicateSelectedQuestionIds.has(q.id),
-  );
+  const selectableFilteredQuestions = filteredQuestions;
   const allFilteredSelected =
     selectableFilteredQuestions.length > 0 &&
     selectableFilteredQuestions.every((q) => selectedQuestionIds.has(q.id));
@@ -309,6 +271,16 @@ export function QuestionLibraryPanel({
 
   return (
     <section className="flex min-w-0 flex-col overflow-hidden border-r border-slate-200/80 bg-white">
+      {/* 마키(영역 드래그) 선택 — 패널 어디서든(폴더바·툴바·카드 사이 여백·카드 아래
+          빈 공간) 드래그를 시작할 수 있게 패널 전체를 감싼다. 단, 실제 선택은
+          data-drag-item-id 가 붙은 "카드"에만 적용된다. 버튼/입력/링크 등 상호작용
+          요소와 네이티브 드래그(폴더 이동) 위에서 시작하면 마키는 켜지지 않는다. */}
+      <DragSelect
+        value={selectedQuestionIds}
+        onChange={applySelectedQuestionIds}
+        boundaryRef={marqueeBoundaryRef}
+        className="flex min-h-0 flex-1 flex-col"
+      >
       {/* 파일(폴더) 관리 — questions 페이지와 동일한 FolderSection. 상위/하위 폴더
           탐색 + 드래그로 담기 + 폴더 생성/이름변경/삭제를 그대로 제공한다. */}
       <div className="shrink-0 border-b border-slate-100">
@@ -352,7 +324,7 @@ export function QuestionLibraryPanel({
           검수상태 세그먼트 · 문제별/지문별 · 필터(유형·난이도·정렬·중요) · 검색 · 2/3/목록. */}
       <div className="shrink-0 border-b border-slate-100 px-4 py-2">
         <div className="flex flex-wrap items-center justify-end gap-2">
-          {/* 전체 선택 체크박스 */}
+          {/* 현재 필터된 미삽입 문제를 한 번에 추가한다. */}
           <input
             type="checkbox"
             checked={allFilteredSelected}
@@ -361,40 +333,10 @@ export function QuestionLibraryPanel({
             }}
             onChange={toggleSelectAllFiltered}
             disabled={selectableFilteredQuestions.length === 0}
-            title="전체 선택"
-            aria-label="전체 선택"
-            className="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 accent-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+            title="현재 목록 문제 전체 추가"
+            aria-label="현재 목록 문제 전체 추가"
+            className="mr-auto size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 accent-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           />
-
-          {/* 시험지에 삽입 — 선택된 문항을 미리보기 끝에 한 번에 추가.
-              아무것도 선택되지 않으면 옅은 파랑으로 음영(비활성), 하나라도
-              선택되면 짙은 파랑으로 활성화된다. */}
-          {(() => {
-            const selectedCount = selectedQuestionIds.size;
-            const hasSelection = selectedCount > 0;
-            return (
-              <button
-                type="button"
-                onClick={() => onInsertSelected(duplicateSelectedQuestionIds)}
-                disabled={!hasSelection}
-                title={hasSelection ? "선택한 문항을 시험지에 삽입" : "문항을 먼저 선택하세요"}
-                className={cn(
-                  "mr-auto flex h-7 shrink-0 items-center gap-1 rounded-md px-2.5 text-[11px] font-medium transition-colors",
-                  hasSelection
-                    ? "bg-blue-600 text-white shadow-sm hover:bg-blue-700"
-                    : "cursor-not-allowed bg-blue-50 text-blue-300",
-                )}
-              >
-                <FilePlus2 className="size-3.5 shrink-0" />
-                시험지에 삽입
-                {hasSelection && (
-                  <span className="inline-flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white/25 px-1 text-[10px] font-bold tabular-nums">
-                    {selectedCount}
-                  </span>
-                )}
-              </button>
-            );
-          })()}
 
           {/* 검수 상태 — 전체 / 미검수 / 검수완료 */}
           <ViewModeCycleButton
@@ -546,6 +488,7 @@ export function QuestionLibraryPanel({
             viewSize={viewSize}
             selectedIds={selectedQuestionIds}
             setSelectedIds={applySelectedQuestionIds}
+            marqueeBoundaryRef={marqueeBoundaryRef}
             onToggleSelect={toggleQuestionById}
             onDelete={() => undefined}
             onApprove={() => undefined}
@@ -564,38 +507,28 @@ export function QuestionLibraryPanel({
             compactUsageLabel
             cardClickSelects
             showDetailButton
+            selectedCardHighlight={false}
             dragRequiresSelection
             getDragQuestionIds={buildDragQuestionIds}
             selectionOrder={selectionOrder}
-            disabledIds={usedQuestionIds}
-            duplicateSelectedIds={duplicateSelectedQuestionIds}
             usageCounts={paperQuestionCounts}
-            onApproveDuplicateSelect={onApproveDuplicateSelect}
-            getDuplicateDragQuestionIds={buildDuplicateDragQuestionIds}
             expandedPassageIds={expandedPassageIds}
             setExpandedPassageIds={setExpandedPassageIds}
           />
         ) : (
-          // min-h-full: 마키 시작 영역을 카드 그리드 아래 빈 공간까지 패널 전체로 넓힌다.
-          <DragSelect
-            value={selectedQuestionIds}
-            onChange={applySelectedQuestionIds}
-            className="min-h-full"
+          // 마키 시작은 패널 전체(상위 DragSelect)에서 처리하므로 여기선 그리드만 둔다.
+          <div
+            className={cn(
+              "grid gap-3",
+              gridColumns === 2
+                ? "grid-cols-2"
+                : gridColumns === 3
+                  ? "grid-cols-3"
+                  : "grid-cols-1",
+            )}
           >
-            <div
-              className={cn(
-                "grid gap-3",
-                gridColumns === 2
-                  ? "grid-cols-2"
-                  : gridColumns === 3
-                    ? "grid-cols-3"
-                    : "grid-cols-1",
-              )}
-            >
-              {filteredQuestions.map((question, index) => {
+            {filteredQuestions.map((question, index) => {
               const usageCount = paperQuestionCounts.get(question.id) || 0;
-              const duplicateSelected = duplicateSelectedQuestionIds.has(question.id);
-              const disabled = usageCount > 0 && !duplicateSelected;
               const selected = selectedQuestionIds.has(question.id);
               return (
                 <QuestionBankCard
@@ -604,31 +537,27 @@ export function QuestionLibraryPanel({
                   num={index + 1}
                   selected={selected}
                   onToggle={() => {
-                    if (!disabled) onToggleSelect(question.id);
+                    onToggleSelect(question.id);
                   }}
                   onDetail={() => onShowDetail(question)}
                   viewSize={viewSize}
                   showManagementActions={false}
-                  enableDrag={!disabled}
+                  enableDrag
                   compactUsageLabel
                   cardClickSelects
                   showDetailButton
                   dragRequiresSelection
                   getDragQuestionIds={buildDragQuestionIds}
-                  getDuplicateDragQuestionIds={buildDuplicateDragQuestionIds}
                   selectionIndex={selectionOrder.get(question.id)}
-                  selectionDisabled={disabled}
                   duplicateCount={usageCount > 1 ? usageCount : undefined}
-                  onDuplicateSelectConfirm={
-                    disabled ? () => onApproveDuplicateSelect(question.id) : undefined
-                  }
-                  />
-                );
-              })}
-            </div>
-          </DragSelect>
+                  selectedCardHighlight={false}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
+      </DragSelect>
     </section>
   );
 }

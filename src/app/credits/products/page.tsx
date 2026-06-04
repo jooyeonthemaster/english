@@ -13,24 +13,32 @@ import {
   type OperationType,
 } from "@/lib/credit-costs";
 import { getCreditTopUpProducts } from "@/lib/credit-top-up-products";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { prisma } from "@/lib/prisma";
 import { getPlanPricingPreview } from "@/lib/subscription-plan-pricing";
 
 export const dynamic = "force-dynamic";
 
+const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
+
 export const metadata: Metadata = {
-  title: "SMOAT 구독 및 크레딧 상품 정보 | SMOAT",
-  description:
-    "SMOAT 구독 요금제, 크레딧 상품 가격, 기능별 차감 크레딧, 지급 및 배송 정책을 안내합니다.",
+  title: SUBSCRIPTION_BILLING_ENABLED
+    ? "SMOAT 구독 및 크레딧 상품 정보 | SMOAT"
+    : "SMOAT 크레딧 상품 정보 | SMOAT",
+  description: SUBSCRIPTION_BILLING_ENABLED
+    ? "SMOAT 구독 요금제, 크레딧 상품 가격, 기능별 차감 크레딧, 지급 및 배송 정책을 안내합니다."
+    : "SMOAT 크레딧 상품 가격, 기능별 차감 크레딧, 지급 및 배송 정책을 안내합니다.",
 };
 
 export default async function CreditProductsPage() {
   const [products, subscriptionPlans] = await Promise.all([
     getCreditTopUpProducts(),
-    prisma.subscriptionPlan.findMany({
-      where: { isActive: true },
-      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-    }),
+    SUBSCRIPTION_BILLING_ENABLED
+      ? prisma.subscriptionPlan.findMany({
+          where: { isActive: true },
+          orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+        })
+      : Promise.resolve([]),
   ]);
   const costEntries = Object.entries(CREDIT_COSTS) as [OperationType, number][];
 
@@ -59,26 +67,35 @@ export default async function CreditProductsPage() {
             Product Information
           </p>
           <h1 className="mt-3 text-[30px] font-black tracking-tight text-slate-950 sm:text-[40px]">
-            SMOAT 구독 및 크레딧
+            {SUBSCRIPTION_BILLING_ENABLED ? "SMOAT 구독 및 크레딧" : "SMOAT 크레딧"}
           </h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-600">
-            SMOAT 구독 요금제는 30일 단위 디지털 서비스 이용권과 월 배정
-            크레딧을 제공합니다. 신용카드 정기결제를 등록하면 포트원 빌링키로
-            30일마다 자동 결제됩니다. 추가 크레딧 상품은 문제 생성, 자동 출제,
-            지문 분석, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한
-            디지털 이용권이며, 결제 승인 또는 가상계좌 입금 확인 후 서비스
-            잔고에 즉시 지급됩니다.
+            {SUBSCRIPTION_BILLING_ENABLED
+              ? "SMOAT 구독 요금제는 30일 단위 디지털 서비스 이용권과 월 배정 크레딧을 제공합니다. 신용카드 정기결제를 등록하면 포트원 빌링키로 30일마다 자동 결제됩니다. 추가 크레딧 상품은 문제 생성, 자동 출제, 지문 분석, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권이며, 결제 승인 또는 가상계좌 입금 확인 후 서비스 잔고에 즉시 지급됩니다."
+              : "SMOAT 크레딧 상품은 문제 생성, 자동 출제, 지문 분석, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권입니다. 신용카드 결제 승인 확인 후 서비스 잔고에 즉시 지급되며, 실물 배송이 없는 온라인 상품입니다."}
           </p>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <ProductNotice
-              icon={<Repeat2 className="size-4" strokeWidth={2} />}
-              title="30일 정기결제"
-              body="구독 요금제는 등록한 신용카드로 30일마다 자동 갱신됩니다."
-            />
+            {SUBSCRIPTION_BILLING_ENABLED ? (
+              <ProductNotice
+                icon={<Repeat2 className="size-4" strokeWidth={2} />}
+                title="30일 정기결제"
+                body="구독 요금제는 등록한 신용카드로 30일마다 자동 갱신됩니다."
+              />
+            ) : (
+              <ProductNotice
+                icon={<CheckCircle2 className="size-4" strokeWidth={2} />}
+                title="신용카드 단건 결제"
+                body="크레딧 상품은 선택한 금액으로 1회 결제되며 반복 청구되지 않습니다."
+              />
+            )}
             <ProductNotice
               icon={<ShieldCheck className="size-4" strokeWidth={2} />}
-              title="빌링키 방식"
-              body="카드 원문 정보는 저장하지 않고 포트원 빌링키로 처리합니다."
+              title={SUBSCRIPTION_BILLING_ENABLED ? "빌링키 방식" : "포트원 결제 검증"}
+              body={
+                SUBSCRIPTION_BILLING_ENABLED
+                  ? "카드 원문 정보는 저장하지 않고 포트원 빌링키로 처리합니다."
+                  : "결제 승인 상태는 포트원 결제 조회와 웹훅으로 확인합니다."
+              }
             />
             <ProductNotice
               icon={<PackageX className="size-4" strokeWidth={2} />}
@@ -88,79 +105,81 @@ export default async function CreditProductsPage() {
           </div>
         </section>
 
-        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-[20px] font-black tracking-tight text-slate-950">
-                월 구독 요금제
-              </h2>
-              <p className="mt-1 text-[13px] text-slate-500">
-                표시 금액은 30일 기준이며, 신용카드 정기결제 등록 시 동일
-                금액으로 다음 이용 기간이 자동 갱신됩니다.
-              </p>
+        {SUBSCRIPTION_BILLING_ENABLED && (
+          <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="text-[20px] font-black tracking-tight text-slate-950">
+                  월 구독 요금제
+                </h2>
+                <p className="mt-1 text-[13px] text-slate-500">
+                  표시 금액은 30일 기준이며, 신용카드 정기결제 등록 시 동일
+                  금액으로 다음 이용 기간이 자동 갱신됩니다.
+                </p>
+              </div>
+              <span className="text-[12px] font-semibold text-slate-400">
+                VAT 포함 원화 결제
+              </span>
             </div>
-            <span className="text-[12px] font-semibold text-slate-400">
-              VAT 포함 원화 결제
-            </span>
-          </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {subscriptionPlans.map((plan) => {
-              const pricing = getPlanPricingPreview(plan);
-              const hasDiscount = pricing.discountAmount > 0;
+            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {subscriptionPlans.map((plan) => {
+                const pricing = getPlanPricingPreview(plan);
+                const hasDiscount = pricing.discountAmount > 0;
 
-              return (
-                <article
-                  key={plan.id}
-                  className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="text-[16px] font-black text-slate-950">
-                        {plan.name}
-                      </h3>
-                      <p className="mt-1 text-[12px] font-medium text-slate-500">
-                        {plan.monthlyCredits.toLocaleString("ko-KR")}C / 30일
-                      </p>
-                    </div>
-                    {pricing.isPromotionActive && pricing.promotion && (
-                      <span className="shrink-0 rounded-md bg-white px-2 py-1 text-[11px] font-bold text-emerald-700">
-                        {pricing.promotion.discountRate}% 할인
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mt-4">
-                    <div className="text-[26px] font-black tracking-tight text-emerald-700">
-                      {pricing.finalPrice.toLocaleString("ko-KR")}원
-                    </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-2 text-[12px] text-slate-400">
-                      <span>30일 자동갱신</span>
-                      {hasDiscount && (
-                        <span className="line-through">
-                          정가{" "}
-                          {pricing.originalPrice.toLocaleString("ko-KR")}원
+                return (
+                  <article
+                    key={plan.id}
+                    className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h3 className="text-[16px] font-black text-slate-950">
+                          {plan.name}
+                        </h3>
+                        <p className="mt-1 text-[12px] font-medium text-slate-500">
+                          {plan.monthlyCredits.toLocaleString("ko-KR")}C / 30일
+                        </p>
+                      </div>
+                      {pricing.isPromotionActive && pricing.promotion && (
+                        <span className="shrink-0 rounded-md bg-white px-2 py-1 text-[11px] font-bold text-emerald-700">
+                          {pricing.promotion.discountRate}% 할인
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  <div className="mt-4 space-y-1.5 text-[12px] leading-5 text-slate-600">
-                    <p>학생 {plan.maxStudents.toLocaleString("ko-KR")}명</p>
-                    <p>스태프 {plan.maxStaff.toLocaleString("ko-KR")}명</p>
-                    <p>{plan.description ?? "SMOAT 월 구독 요금제입니다."}</p>
-                  </div>
-                </article>
-              );
-            })}
+                    <div className="mt-4">
+                      <div className="text-[26px] font-black tracking-tight text-emerald-700">
+                        {pricing.finalPrice.toLocaleString("ko-KR")}원
+                      </div>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-[12px] text-slate-400">
+                        <span>30일 자동갱신</span>
+                        {hasDiscount && (
+                          <span className="line-through">
+                            정가{" "}
+                            {pricing.originalPrice.toLocaleString("ko-KR")}원
+                          </span>
+                        )}
+                      </div>
+                    </div>
 
-            {subscriptionPlans.length === 0 && (
-              <div className="col-span-full rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center text-[13px] text-slate-400">
-                현재 판매 중인 구독 요금제가 없습니다.
-              </div>
-            )}
-          </div>
-        </section>
+                    <div className="mt-4 space-y-1.5 text-[12px] leading-5 text-slate-600">
+                      <p>학생 {plan.maxStudents.toLocaleString("ko-KR")}명</p>
+                      <p>스태프 {plan.maxStaff.toLocaleString("ko-KR")}명</p>
+                      <p>{plan.description ?? "SMOAT 월 구독 요금제입니다."}</p>
+                    </div>
+                  </article>
+                );
+              })}
+
+              {subscriptionPlans.length === 0 && (
+                <div className="col-span-full rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center text-[13px] text-slate-400">
+                  현재 판매 중인 구독 요금제가 없습니다.
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
@@ -286,10 +305,12 @@ export default async function CreditProductsPage() {
                 사용이 시작된 크레딧은 제공 완료된 디지털 서비스 이용분으로
                 보며, 미사용 유상 크레딧은 환불 정책에 따라 처리됩니다.
               </CheckItem>
-              <CheckItem>
-                구독 정기결제는 등록한 카드의 포트원 빌링키로 처리되며, 서비스
-                화면에서 다음 자동갱신을 해지할 수 있습니다.
-              </CheckItem>
+              {SUBSCRIPTION_BILLING_ENABLED && (
+                <CheckItem>
+                  구독 정기결제는 등록한 카드의 포트원 빌링키로 처리되며, 서비스
+                  화면에서 다음 자동갱신을 해지할 수 있습니다.
+                </CheckItem>
+              )}
             </ul>
             <div className="mt-5 flex flex-wrap gap-2 text-[12px] font-bold">
               <Link
