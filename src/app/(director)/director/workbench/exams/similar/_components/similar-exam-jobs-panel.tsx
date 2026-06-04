@@ -7,9 +7,12 @@ import {
   CheckCircle2,
   Clock3,
   ExternalLink,
+  FileSearch,
   Loader2,
   RefreshCcw,
 } from "lucide-react";
+
+import { SimilarExamBlueprintModal } from "./similar-exam-blueprint-modal";
 
 interface SimilarExamCallSummary {
   analysis?: {
@@ -155,6 +158,7 @@ export function SimilarExamJobsPanel({ refreshKey }: { refreshKey: number }) {
   const router = useRouter();
   const [jobs, setJobs] = useState<SimilarExamJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [blueprintJobId, setBlueprintJobId] = useState<string | null>(null);
 
   const hasRunningJobs = useMemo(
     () => jobs.some((job) => job.status === "PENDING" || job.status === "PROCESSING"),
@@ -242,16 +246,28 @@ export function SimilarExamJobsPanel({ refreshKey }: { refreshKey: number }) {
                     </p>
                   </div>
 
-                  {job.generatedExamId && (
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/director/exams/${job.generatedExamId}`)}
-                      className="inline-flex h-9 items-center gap-2 rounded-md bg-slate-900 px-3 text-sm font-semibold text-white hover:bg-slate-800"
-                    >
-                      시험지 열기
-                      <ExternalLink className="size-4" />
-                    </button>
-                  )}
+                  <div className="flex shrink-0 items-center gap-2">
+                    {(job.status === "COMPLETED" || job.status === "FAILED") && (
+                      <button
+                        type="button"
+                        onClick={() => setBlueprintJobId(job.id)}
+                        className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 px-3 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                      >
+                        <FileSearch className="size-4" />
+                        생성 근거
+                      </button>
+                    )}
+                    {job.generatedExamId && (
+                      <button
+                        type="button"
+                        onClick={() => router.push(`/director/exams/${job.generatedExamId}`)}
+                        className="inline-flex h-9 items-center gap-2 rounded-md bg-slate-900 px-3 text-sm font-semibold text-white hover:bg-slate-800"
+                      >
+                        시험지 열기
+                        <ExternalLink className="size-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div className="mt-3">
@@ -288,6 +304,13 @@ export function SimilarExamJobsPanel({ refreshKey }: { refreshKey: number }) {
           })
         )}
       </div>
+
+      {blueprintJobId && (
+        <SimilarExamBlueprintModal
+          jobId={blueprintJobId}
+          onClose={() => setBlueprintJobId(null)}
+        />
+      )}
     </section>
   );
 }

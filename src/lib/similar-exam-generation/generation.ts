@@ -46,16 +46,64 @@ function isEligibleSlot(slot: QuestionSlot) {
   return slot.canGenerateFromSelectedPassage !== false;
 }
 
-function passageForSlot(args: {
-  profile: ExamPatternProfile;
-  slot: QuestionSlot;
-  passages: SelectedPassageForGeneration[];
-}) {
-  const groupIndex = args.slot.stimulusGroupId
-    ? args.profile.stimulusGroups.findIndex((group) => group.id === args.slot.stimulusGroupId)
-    : -1;
-  if (groupIndex >= 0) return args.passages[groupIndex % args.passages.length];
-  return args.passages[(args.slot.number - 1) % args.passages.length];
+// Assignment unit: slots sharing a stimulusGroup are ONE unit (they must share
+// the same passage — a real shared-stimulus set like "[18~19]"). Every other
+// slot is its own unit. Passages are distributed across units to (1) spread
+// usage evenly (each passage used as few times as possible) and (2) AVOID giving
+// the same passage two questions of the same type ("유형 매칭 가드") — so a
+// reused passage never produces e.g. two BLANK_INFERENCE items. This keeps
+// distinct questions on distinct passages and minimizes redundancy when there
+// are fewer selected passages than question slots.
+function assignmentUnitKey(slot: QuestionSlot): string {
+  return slot.stimulusGroupId ? `group:${slot.stimulusGroupId}` : `solo:${slot.number}`;
+}
+
+function assignPassagesToSlots(
+  slots: QuestionSlot[],
+  passages: SelectedPassageForGeneration[],
+): Map<number, SelectedPassageForGeneration> {
+  // Build ordered units with their generationSubType set.
+  const unitMap = new Map<string, { types: Set<string>; slotNumbers: number[] }>();
+  const unitOrder: string[] = [];
+  for (const slot of slots) {
+    const key = assignmentUnitKey(slot);
+    let unit = unitMap.get(key);
+    if (!unit) {
+      unit = { types: new Set(), slotNumbers: [] };
+      unitMap.set(key, unit);
+      unitOrder.push(key);
+    }
+    unit.types.add(slot.generationSubType);
+    unit.slotNumbers.push(slot.number);
+  }
+
+  const usageCount = passages.map(() => 0);
+  const typesByPassage = passages.map(() => new Set<string>());
+  const bySlot = new Map<number, SelectedPassageForGeneration>();
+
+  for (const key of unitOrder) {
+    const unit = unitMap.get(key)!;
+    // Pick the passage that (1) doesn't already hold one of this unit's types,
+    // then (2) has been used the fewest times, then (3) earliest index.
+    // conflict is weighted high enough to always dominate usage/index.
+    let bestIndex = 0;
+    let bestScore = Infinity;
+    for (let i = 0; i < passages.length; i += 1) {
+      const conflict = [...unit.types].some((type) => typesByPassage[i].has(type)) ? 1 : 0;
+      const score = conflict * 1_000_000 + usageCount[i] * 100 + i;
+      if (score < bestScore) {
+        bestScore = score;
+        bestIndex = i;
+      }
+    }
+
+    const passage = passages[bestIndex];
+    usageCount[bestIndex] += 1;
+    for (const type of unit.types) typesByPassage[bestIndex].add(type);
+    for (const slotNumber of unit.slotNumbers) bySlot.set(slotNumber, passage);
+  }
+
+  return bySlot;
 }
 
 /** Map a slot's structured settings onto the engine's QuestionTypeGenerationSettings entry. */
@@ -100,18 +148,21 @@ function buildItems(args: {
   passages: SelectedPassageForGeneration[];
 }) {
   const skippedByReason: Record<string, number> = {};
-  const eligible: GenerationItem[] = [];
+  const eligibleSlots: QuestionSlot[] = [];
 
   for (const slot of args.profile.questionSlots) {
     if (!isEligibleSlot(slot)) {
       skippedByReason.NOT_GENERATABLE = (skippedByReason.NOT_GENERATABLE ?? 0) + 1;
       continue;
     }
-    eligible.push({
-      slot,
-      passage: passageForSlot({ profile: args.profile, slot, passages: args.passages }),
-    });
+    eligibleSlots.push(slot);
   }
+
+  const passageBySlot = assignPassagesToSlots(eligibleSlots, args.passages);
+  const eligible: GenerationItem[] = eligibleSlots.map((slot) => ({
+    slot,
+    passage: passageBySlot.get(slot.number)!,
+  }));
 
   const maxGeneratedQuestions = readPositiveIntegerEnv(
     "SIMILAR_EXAM_MAX_GENERATED_QUESTIONS",
