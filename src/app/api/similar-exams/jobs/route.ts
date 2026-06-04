@@ -68,7 +68,61 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ jobs });
+  // Attach the generated exam's management stats (수정/인쇄/저장 회수 · 문항수)
+  // so the bottom queue cards can mirror the 시험지 관리 card exactly.
+  const examIds = jobs
+    .map((job) => job.generatedExamId)
+    .filter((id): id is string => Boolean(id));
+  const examById = new Map<
+    string,
+    {
+      editCount: number;
+      printCount: number;
+      saveCount: number;
+      examDate: Date | null;
+      updatedAt: Date;
+      type: string;
+      status: string;
+      questionCount: number;
+    }
+  >();
+  if (examIds.length > 0) {
+    const exams = await prisma.exam.findMany({
+      where: { id: { in: examIds }, academyId: staff.academyId },
+      select: {
+        id: true,
+        editCount: true,
+        printCount: true,
+        saveCount: true,
+        examDate: true,
+        updatedAt: true,
+        type: true,
+        status: true,
+        _count: { select: { questions: true } },
+      },
+    });
+    for (const exam of exams) {
+      examById.set(exam.id, {
+        editCount: exam.editCount,
+        printCount: exam.printCount,
+        saveCount: exam.saveCount,
+        examDate: exam.examDate,
+        updatedAt: exam.updatedAt,
+        type: exam.type,
+        status: exam.status,
+        questionCount: exam._count.questions,
+      });
+    }
+  }
+
+  const jobsWithExam = jobs.map((job) => ({
+    ...job,
+    generatedExam: job.generatedExamId
+      ? examById.get(job.generatedExamId) ?? null
+      : null,
+  }));
+
+  return NextResponse.json({ jobs: jobsWithExam });
 }
 
 export async function POST(req: NextRequest) {

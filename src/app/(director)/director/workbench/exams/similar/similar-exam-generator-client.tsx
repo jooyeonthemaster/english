@@ -1,26 +1,39 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { GripVertical } from "lucide-react";
 
 import { ExamPaperGenerationIcon } from "@/components/icons/workflow-icons";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
+import { useSidebarFocus } from "@/components/layout/sidebar-focus-context";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
   imagesToSlots,
   revokeSlotUrls,
   splitPdfToImages,
 } from "@/lib/extraction/pdf-splitter";
 import type { ClientPageSlot } from "@/lib/extraction/types";
+import { cn } from "@/lib/utils";
 
+import { ExtractionManageClient } from "./_components/material-manager";
 import { SimilarExamJobsPanel } from "./_components/similar-exam-jobs-panel";
+import { SimilarExamCenterPreview } from "./_components/similar-exam-center-preview";
+import { SimilarExamToolbar } from "./_components/similar-exam-toolbar";
 import {
-  SimilarExamPassageSelector,
-  type SelectedSource,
-} from "./_components/similar-exam-passage-selector";
-import { SimilarExamUploadPanel } from "./_components/similar-exam-upload-panel";
+  SimilarExamCommandBar,
+  type SimilarQuickCommand,
+} from "./_components/similar-exam-command-bar";
 
 interface UploadTarget {
   pageIndex: number;
@@ -41,20 +54,41 @@ interface StagedFile {
   totalPages: number;
 }
 
-type SimilarExamGeneratorClientProps = Record<string, never>;
+interface SimilarExamGeneratorClientProps {
+  academyId: string;
+  draftCollections: CollectionItem[];
+  draftMembership: Record<string, Set<string>>;
+}
 
 const ROUTE_PATH = "/director/workbench/similar-exams";
-const LEFT_PANE_STORAGE_KEY = "smoat:similar-exam:left-pane-width";
-const LEFT_PANE_MIN = 460;
-const LEFT_PANE_DEFAULT = 680;
-const RIGHT_PANE_MIN = 520;
-const HANDLE_HIT_WIDTH = 12;
 
-function readStoredLeftPaneWidth() {
-  if (typeof window === "undefined") return LEFT_PANE_DEFAULT;
-  const raw = window.localStorage.getItem(LEFT_PANE_STORAGE_KEY);
-  const value = raw ? Number.parseInt(raw, 10) : LEFT_PANE_DEFAULT;
-  return Number.isFinite(value) ? Math.max(LEFT_PANE_MIN, value) : LEFT_PANE_DEFAULT;
+// ─── 좌패널(자료 관리) 폭/접힘 ───
+const LEFT_WIDTH_STORAGE_KEY = "smoat.similarExam.leftWidth.v2";
+const LEFT_COLLAPSED_STORAGE_KEY = "smoat.similarExam.leftCollapsed.v2";
+const PANEL_TOGGLE_HANDLE_WIDTH = 24;
+const PANEL_DRAG_THRESHOLD = 4;
+const PANEL_MIN_CENTER = 460;
+const LEFT_DEFAULT = 580;
+const LEFT_MIN = 380;
+const LEFT_MAX = 860;
+const BUILDER_HEADER_AUTO_HIDE_DELAY_MS = 2000;
+const BUILDER_HEADER_HIDE_ZONE_PX = 96;
+
+function clampNumber(value: number, min: number, max: number) {
+  const normalizedMax = Math.max(min, max);
+  return Math.min(Math.max(value, min), normalizedMax);
+}
+
+function readStoredLeftWidth(): number {
+  if (typeof window === "undefined") return LEFT_DEFAULT;
+  const raw = Number(window.localStorage.getItem(LEFT_WIDTH_STORAGE_KEY));
+  if (!Number.isFinite(raw) || raw <= 0) return LEFT_DEFAULT;
+  return clampNumber(raw, LEFT_MIN, LEFT_MAX);
+}
+
+function readStoredCollapsed(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(LEFT_COLLAPSED_STORAGE_KEY) === "true";
 }
 
 function mimeTypeForBlob(blob: Blob) {
@@ -96,21 +130,36 @@ async function putWithLimit(
   await Promise.all([worker(), worker(), worker(), worker()]);
 }
 
-export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientProps) {
+export function SimilarExamGeneratorClient({
+  academyId,
+  draftCollections,
+  draftMembership,
+}: SimilarExamGeneratorClientProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const slotsRef = useRef<ClientPageSlot[]>([]);
-  const splitContainerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement | null>(null);
+  const headerAutoHideReadyRef = useRef(false);
+  const suppressHandleClickRef = useRef(false);
   const { triggerRefresh } = useTaskQueue();
+  const { setCollapseRequested: setSidebarCollapseRequested } = useSidebarFocus();
 
-  const [selectedSources, setSelectedSources] = useState<SelectedSource[]>([]);
+  const [selectedDraftIds, setSelectedDraftIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [staged, setStaged] = useState<StagedFile | null>(null);
-  const [leftPaneWidth, setLeftPaneWidth] = useState(readStoredLeftPaneWidth);
+  const [slots, setSlots] = useState<ClientPageSlot[]>([]);
   const [splitting, setSplitting] = useState(false);
   const [busy, setBusy] = useState(false);
   const [splitMessage, setSplitMessage] = useState("");
   const [uploaded, setUploaded] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  const [leftWidth, setLeftWidth] = useState(readStoredLeftWidth);
+  const [leftCollapsed, setLeftCollapsed] = useState(readStoredCollapsed);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [jobsRefreshKey, setJobsRefreshKey] = useState(0);
 
   const uploadProgress = useMemo(() => {
@@ -119,13 +168,13 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
     return Math.round((uploaded / total) * 100);
   }, [staged, uploaded]);
 
-  const handleSourcesChange = useCallback((selected: SelectedSource[]) => {
-    setSelectedSources(selected);
-  }, []);
+  const selectedCount = selectedDraftIds.size;
+  const canGenerate = Boolean(staged) && selectedCount > 0 && !busy;
 
   const clearStaged = useCallback(() => {
     revokeSlotUrls(slotsRef.current);
     slotsRef.current = [];
+    setSlots([]);
     setStaged(null);
     setSplitMessage("");
     setUploaded(0);
@@ -134,35 +183,68 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
 
   useEffect(() => () => revokeSlotUrls(slotsRef.current), []);
 
-  const beginLeftPaneResize = useCallback(
-    (event: React.PointerEvent) => {
-      event.preventDefault();
-      const startX = event.clientX;
-      const startWidth = leftPaneWidth;
-      const containerWidth = splitContainerRef.current?.getBoundingClientRect().width ?? 0;
-      const maxWidth = Math.max(
-        LEFT_PANE_MIN,
-        containerWidth - RIGHT_PANE_MIN - HANDLE_HIT_WIDTH,
+  // 좌패널이 열려 있으면(자료 관리 + 중앙 동시 노출) 전역 사이드바 접기 요청.
+  useEffect(() => {
+    setSidebarCollapseRequested(!leftCollapsed);
+  }, [leftCollapsed, setSidebarCollapseRequested]);
+  useEffect(() => {
+    return () => setSidebarCollapseRequested(false);
+  }, [setSidebarCollapseRequested]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(LEFT_WIDTH_STORAGE_KEY, String(leftWidth));
+    } catch {
+      // 무시.
+    }
+  }, [leftWidth]);
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        LEFT_COLLAPSED_STORAGE_KEY,
+        String(leftCollapsed),
       );
-      let latest = startWidth;
-      document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
-      const onMove = (moveEvent: PointerEvent) => {
-        latest = Math.min(maxWidth, Math.max(LEFT_PANE_MIN, startWidth + moveEvent.clientX - startX));
-        setLeftPaneWidth(latest);
-      };
-      const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        window.localStorage.setItem(LEFT_PANE_STORAGE_KEY, String(latest));
-      };
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-    },
-    [leftPaneWidth],
-  );
+    } catch {
+      // 무시.
+    }
+  }, [leftCollapsed]);
+
+  // 컨테이너 크기에 맞춰 좌패널 폭 재조정(중앙 최소폭 보장).
+  useEffect(() => {
+    const element = gridRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? element.clientWidth;
+      const maxLeft = Math.min(
+        LEFT_MAX,
+        width - PANEL_TOGGLE_HANDLE_WIDTH - PANEL_MIN_CENTER,
+      );
+      setLeftWidth((current) => {
+        const next = clampNumber(current, LEFT_MIN, Math.max(LEFT_MIN, maxLeft));
+        return next === current ? current : next;
+      });
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // ─── 헤더 자동 숨김 ───
+  useEffect(() => {
+    const autoHideTimer = window.setTimeout(() => {
+      headerAutoHideReadyRef.current = true;
+      setHeaderVisible(false);
+    }, BUILDER_HEADER_AUTO_HIDE_DELAY_MS);
+    return () => window.clearTimeout(autoHideTimer);
+  }, []);
+  useEffect(() => {
+    if (!headerVisible) return;
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!headerAutoHideReadyRef.current) return;
+      if (event.clientY >= BUILDER_HEADER_HIDE_ZONE_PX) setHeaderVisible(false);
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [headerVisible]);
 
   // Stage the picked file locally (split to page images for preview). Does NOT
   // create a job or start anything — that happens on the explicit generate click.
@@ -180,7 +262,7 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
           list.length === 1 && list[0].type === "application/pdf" ? list[0] : null;
 
         setSplitMessage(pdf ? "PDF 페이지를 이미지로 변환 중" : "이미지 순서를 정리 중");
-        const slots = pdf
+        const nextSlots = pdf
           ? await splitPdfToImages(pdf, {
               onProgress: (progress) => {
                 if (progress.phase === "rendering") {
@@ -192,11 +274,12 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
             })
           : await imagesToSlots(list);
 
-        slotsRef.current = slots;
+        slotsRef.current = nextSlots;
+        setSlots(nextSlots);
         setStaged({
           fileName: pdf ? pdf.name : list[0]?.name ?? "업로드한 시험지",
           sourceType: pdf ? "PDF" : "IMAGES",
-          totalPages: slots.length,
+          totalPages: nextSlots.length,
         });
         setSplitMessage("");
       } catch (err) {
@@ -210,15 +293,20 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
     [busy, splitting, clearStaged],
   );
 
+  const requestFileDialog = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
   const generate = useCallback(async () => {
     if (busy) return;
-    const slots = slotsRef.current;
-    if (!staged || slots.length === 0) {
-      toast.error("분석할 시험지를 먼저 업로드하세요.");
+    const currentSlots = slotsRef.current;
+    if (!staged || currentSlots.length === 0) {
+      toast.error("분석할 시험지를 먼저 입력하세요.");
       return;
     }
-    if (selectedSources.length === 0) {
-      toast.error("지문을 1개 이상 선택하세요.");
+    const draftIds = Array.from(selectedDraftIds);
+    if (draftIds.length === 0) {
+      toast.error("왼쪽 자료에서 지문을 1개 이상 선택하세요.");
       return;
     }
 
@@ -227,39 +315,23 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
     setUploaded(0);
 
     try {
-      // Register selected unregistered drafts server-side (full text stays on the
-      // server) → draftId→passageId, then resolve every source to a passage id.
-      const draftIds = selectedSources
-        .filter((src) => src.kind === "draft")
-        .map((src) => (src as { draftId: string }).draftId);
-      const draftPassageMap = new Map<string, string>();
-      if (draftIds.length > 0) {
-        setSplitMessage("선택 자료를 지문으로 준비 중");
-        const regRes = await fetch("/api/similar-exams/passages/from-drafts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ draftIds }),
-        });
-        if (!regRes.ok) {
-          const data = await regRes.json().catch(() => ({}));
-          throw new Error(data?.error || "추출 자료를 지문으로 저장하지 못했습니다.");
-        }
-        const regData = (await regRes.json()) as {
-          passages?: Array<{ draftId: string; passageId: string }>;
-        };
-        for (const p of regData.passages ?? []) draftPassageMap.set(p.draftId, p.passageId);
+      // Register selected extraction drafts as passages server-side (full text
+      // stays on the server) → draftId→passageId.
+      setSplitMessage("선택 자료를 지문으로 준비 중");
+      const regRes = await fetch("/api/similar-exams/passages/from-drafts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ draftIds }),
+      });
+      if (!regRes.ok) {
+        const data = await regRes.json().catch(() => ({}));
+        throw new Error(data?.error || "추출 자료를 지문으로 저장하지 못했습니다.");
       }
-
-      const passageIds: string[] = [];
-      for (const src of selectedSources) {
-        if (src.kind === "passage") {
-          passageIds.push(src.id);
-        } else {
-          const pid = draftPassageMap.get(src.draftId);
-          if (pid) passageIds.push(pid);
-        }
-      }
+      const regData = (await regRes.json()) as {
+        passages?: Array<{ draftId: string; passageId: string }>;
+      };
+      const passageIds = (regData.passages ?? []).map((p) => p.passageId);
       if (passageIds.length === 0) {
         throw new Error("활용 가능한 지문이 없습니다.");
       }
@@ -271,9 +343,9 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
         body: JSON.stringify({
           sourceType: staged.sourceType,
           originalFileName: staged.fileName,
-          totalPages: slots.length,
+          totalPages: currentSlots.length,
           passageIds,
-          pages: slots.map((slot) => ({
+          pages: currentSlots.map((slot) => ({
             pageIndex: slot.pageIndex,
             size: slot.bytes,
             sourceFileName: slot.sourceFileName ?? undefined,
@@ -288,7 +360,7 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
       const created = (await createRes.json()) as CreateJobResponse;
 
       setSplitMessage("시험지 업로드 중");
-      await putWithLimit(slots, created.uploadTargets, setUploaded);
+      await putWithLimit(currentSlots, created.uploadTargets, setUploaded);
 
       const startRes = await fetch(`/api/similar-exams/jobs/${created.jobId}/start`, {
         method: "POST",
@@ -311,63 +383,266 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
       setBusy(false);
       toast.error(message);
     }
-  }, [busy, staged, selectedSources, triggerRefresh, clearStaged, router]);
+  }, [busy, staged, selectedDraftIds, triggerRefresh, clearStaged, router]);
+
+  // ─── 좌패널 핸들: 클릭=여닫기, 드래그=폭 조절 ───
+  function toggleLeftCollapsed() {
+    if (suppressHandleClickRef.current) {
+      suppressHandleClickRef.current = false;
+      return;
+    }
+    setLeftCollapsed((c) => !c);
+  }
+
+  function handleLeftResizePointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    suppressHandleClickRef.current = false;
+
+    const container = gridRef.current;
+    const startX = event.clientX;
+    const startWidth = leftWidth;
+    const containerWidth = container?.getBoundingClientRect().width ?? 0;
+    const maxLeft = Math.min(
+      LEFT_MAX,
+      containerWidth - PANEL_TOGGLE_HANDLE_WIDTH - PANEL_MIN_CENTER,
+    );
+    const previousCursor = document.body.style.cursor;
+    const previousUserSelect = document.body.style.userSelect;
+    let didDrag = false;
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      if (!didDrag) {
+        if (Math.abs(deltaX) < PANEL_DRAG_THRESHOLD) return;
+        didDrag = true;
+        suppressHandleClickRef.current = true;
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+      }
+      moveEvent.preventDefault();
+      setLeftWidth(
+        clampNumber(startWidth + deltaX, LEFT_MIN, Math.max(LEFT_MIN, maxLeft)),
+      );
+    };
+
+    const finish = () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", finish);
+      if (didDrag) {
+        document.body.style.cursor = previousCursor;
+        document.body.style.userSelect = previousUserSelect;
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: false });
+    window.addEventListener("pointerup", finish, { once: true });
+    window.addEventListener("pointercancel", finish, { once: true });
+  }
+
+  // ─── 단축키: Ctrl/⌘+K · "/" 로 빠른 실행 토글 ───
+  const openCommandPalette = useCallback(() => setCommandPaletteOpen(true), []);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const editing =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+      if (commandPaletteOpen && event.key === "Escape") {
+        event.preventDefault();
+        setCommandPaletteOpen(false);
+        return;
+      }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        openCommandPalette();
+        return;
+      }
+      if (!editing && event.key === "/") {
+        event.preventDefault();
+        openCommandPalette();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [commandPaletteOpen, openCommandPalette]);
+
+  const quickCommands: SimilarQuickCommand[] = [
+    {
+      id: "toggle-left",
+      label: leftCollapsed ? "자료 패널 열기" : "자료 패널 닫기",
+      description: "왼쪽 자료 관리 패널을 여닫기",
+      run: () => setLeftCollapsed((c) => !c),
+    },
+    {
+      id: "pick-file",
+      label: staged ? "분석 시험지 변경" : "분석 시험지 선택",
+      description: "패턴을 분석할 완성본 시험지 입력",
+      run: requestFileDialog,
+    },
+    {
+      id: "clear-staged",
+      label: "분석 시험지 초기화",
+      description: "입력한 분석 시험지를 비웁니다",
+      disabled: !staged || busy,
+      run: clearStaged,
+    },
+    {
+      id: "generate",
+      label: "시험지 생성 시작",
+      description: "선택 자료 + 분석 시험지로 생성 작업 시작",
+      disabled: !canGenerate,
+      run: generate,
+    },
+  ];
+
+  const leftColumnWidth = leftCollapsed ? 0 : leftWidth;
+  const gridColumns = `${leftColumnWidth}px ${PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr)`;
 
   return (
-    <TooltipProvider>
-      <div className="flex min-h-[calc(100vh-64px)] flex-col">
-        <div className="flex-1 overflow-y-auto bg-[#F4F6F9]">
-          <div className="border-b border-slate-200/80 bg-white px-6 py-3">
-            <WorkflowPageTitle
-              icon={ExamPaperGenerationIcon}
-              title="패턴 기반 시험지 생성"
-              description="지문을 선택하고 완성본 시험지를 넣어 같은 출제 패턴으로 새 시험지를 생성합니다."
-            />
-          </div>
-
-          <div className="border-b border-slate-200 bg-white">
-            <div className="px-6 pb-5">
-              <div
-                ref={splitContainerRef}
-                className="flex h-[calc(100vh-126px)] min-h-[720px] flex-col gap-4 xl:flex-row xl:gap-0"
-                style={{ "--left-pane-w": `${leftPaneWidth}px` } as React.CSSProperties}
-              >
-                <div className="flex min-h-0 min-w-0 w-full flex-col xl:w-[var(--left-pane-w)] xl:shrink-0">
-                  <SimilarExamPassageSelector onChange={handleSourcesChange} />
-                </div>
-
-                <div
-                  onPointerDown={beginLeftPaneResize}
-                  onDoubleClick={() => setLeftPaneWidth(LEFT_PANE_DEFAULT)}
-                  role="separator"
-                  aria-orientation="vertical"
-                  title="드래그하여 너비 조절"
-                  className="group/hhandle mx-1 hidden w-3 shrink-0 cursor-col-resize select-none items-center justify-center xl:flex"
-                >
-                  <div className="h-12 w-0.5 rounded-full bg-slate-200 transition-colors group-hover/hhandle:bg-blue-400 group-active/hhandle:bg-blue-500" />
-                </div>
-
-                <div className="flex min-h-0 min-w-0 flex-col gap-4 overflow-y-auto xl:flex-1">
-                  <SimilarExamUploadPanel
-                    busy={busy}
-                    splitting={splitting}
-                    splitMessage={splitMessage}
-                    staged={staged}
-                    uploadProgress={uploadProgress}
-                    selectedPassageCount={selectedSources.length}
-                    error={error}
-                    fileInputRef={fileInputRef}
-                    onPickFiles={pickFiles}
-                    onGenerate={generate}
-                    onClearStaged={clearStaged}
-                  />
-                  <SimilarExamJobsPanel refreshKey={jobsRefreshKey} />
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="relative bg-[#F4F6F9] md:-m-6">
+      {/* 작업 화면 — 스크롤 전 한 화면(뷰포트)을 가득 채운다 */}
+      <div className="relative flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-white">
+      {/* 자동 숨김 헤더 */}
+      <div
+        aria-hidden={!headerVisible}
+        className={cn(
+          "shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          headerVisible
+            ? "max-h-20 translate-y-0 border-slate-200/80 py-3 opacity-100"
+            : "pointer-events-none max-h-0 -translate-y-3 border-transparent py-0 opacity-0",
+        )}
+      >
+        <div
+          className={cn(
+            "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            headerVisible ? "translate-y-0" : "-translate-y-2",
+          )}
+        >
+          <WorkflowPageTitle
+            icon={ExamPaperGenerationIcon}
+            title="동형 시험지 생성"
+            description="자료를 선택하고 완성본 시험지를 넣어 같은 출제 패턴으로 새 시험지를 생성합니다."
+          />
         </div>
       </div>
-    </TooltipProvider>
+      <button
+        type="button"
+        onMouseEnter={() => setHeaderVisible(true)}
+        onFocus={() => setHeaderVisible(true)}
+        onClick={() => setHeaderVisible(true)}
+        title="헤더 보기"
+        aria-label="헤더 보기"
+        className={cn(
+          "absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
+          headerVisible
+            ? "pointer-events-none -translate-x-1 -translate-y-1 opacity-0"
+            : "translate-x-0 translate-y-0 opacity-100",
+        )}
+      />
+
+        <div
+          ref={gridRef}
+          className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:[grid-template-columns:var(--similar-grid-columns)]"
+          style={
+            {
+              "--similar-grid-columns": gridColumns,
+            } as CSSProperties
+          }
+        >
+          {/* ─── 좌패널: 자료 관리 (포크본 ExtractionManageClient) ─── */}
+          {leftCollapsed ? (
+            <div aria-hidden className="min-w-0 overflow-hidden" />
+          ) : (
+            <div
+              ref={leftColRef}
+              className="flex min-h-0 min-w-0 flex-col overflow-hidden border-r border-slate-200"
+            >
+              <ExtractionManageClient
+                embedded
+                academyId={academyId}
+                initialCollections={draftCollections}
+                initialCollectionMembership={draftMembership}
+                onSelectionChange={setSelectedDraftIds}
+                marqueeBoundaryRef={leftColRef}
+              />
+            </div>
+          )}
+
+          {leftCollapsed ? (
+            <button
+              type="button"
+              onClick={() => setLeftCollapsed(false)}
+              title="자료 관리 패널 열기"
+              aria-label="자료 관리 패널 열기"
+              aria-expanded={false}
+              className="mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+            >
+              <span>{">"}</span>
+              <span style={{ writingMode: "vertical-rl" }}>자료 관리</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onPointerDown={handleLeftResizePointerDown}
+              onClick={toggleLeftCollapsed}
+              title="드래그하여 폭 조절 · 클릭하여 닫기"
+              aria-label="자료 관리 패널 닫기"
+              aria-expanded
+              className="group/lhandle mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+            >
+              <span>{"<"}</span>
+              <span style={{ writingMode: "vertical-rl" }}>자료 관리</span>
+              <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
+            </button>
+          )}
+
+          {/* ─── 중앙: 패턴 분석 시험지 입력/미리보기 ─── */}
+          <section className="flex min-w-0 flex-col overflow-hidden bg-slate-100/70">
+            <SimilarExamToolbar
+              staged={Boolean(staged)}
+              totalPages={staged?.totalPages ?? 0}
+              busy={busy}
+              canGenerate={canGenerate}
+              selectedPassageCount={selectedCount}
+              onOpenCommandPalette={() => setCommandPaletteOpen((open) => !open)}
+              onGenerate={generate}
+            />
+            <SimilarExamCommandBar
+              open={commandPaletteOpen}
+              commands={quickCommands}
+              onClose={() => setCommandPaletteOpen(false)}
+            />
+            <SimilarExamCenterPreview
+              staged={staged}
+              slots={slots}
+              splitting={splitting}
+              splitMessage={splitMessage}
+              busy={busy}
+              uploadProgress={uploadProgress}
+              error={error}
+              onPickFiles={pickFiles}
+              onRequestFileDialog={requestFileDialog}
+            />
+          </section>
+        </div>
+      </div>
+
+      {/* ─── 하단: 스크롤 시 노출되는 생성 작업 (시험지 관리 톤 카드 + 상태) ─── */}
+      <SimilarExamJobsPanel refreshKey={jobsRefreshKey} />
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="application/pdf,image/png,image/jpeg,image/webp"
+        className="hidden"
+        onChange={(event) => {
+          if (event.target.files) pickFiles(event.target.files);
+          event.currentTarget.value = "";
+        }}
+      />
+    </div>
   );
 }

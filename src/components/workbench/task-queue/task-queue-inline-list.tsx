@@ -1,6 +1,10 @@
 "use client";
 
-import type { MouseEvent, PointerEvent as ReactPointerEvent } from "react";
+import type {
+  MouseEvent,
+  PointerEvent as ReactPointerEvent,
+  ReactNode,
+} from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
@@ -130,6 +134,12 @@ interface TaskQueueInlineListProps {
   marqueeSelectedTaskIds?: Set<string>;
   onMarqueeChange?: (next: Set<string>) => void;
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
+  /**
+   * Optional per-domain extra actions rendered next to each card's 상세보기
+   * button (grid + list layouts). Receives the task; return null to skip a
+   * given task. Additive — domains that don't pass it are unaffected.
+   */
+  renderTaskActions?: (task: BaseTask) => ReactNode;
 }
 
 function gridCardClass(status: TaskStatus): string {
@@ -345,6 +355,7 @@ function TaskGridCard({
   dragCount,
   onRename,
   dragItemId,
+  renderActions,
 }: {
   task: BaseTask;
   onAfterDelete: (id: string) => void;
@@ -357,6 +368,7 @@ function TaskGridCard({
   onRename?: (next: string) => void | Promise<void>;
   /** 설정 시 마키(영역 드래그) 선택 대상이 된다(DragSelect 가 읽는 식별자). */
   dragItemId?: string;
+  renderActions?: ReactNode;
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
@@ -625,14 +637,18 @@ function TaskGridCard({
             <CalendarClock className="size-3.5" aria-hidden="true" />
             {formatTaskDate(task.createdAt)}
           </span>
-          {canOpen ? (
-            <DetailActionButton
-              className="ml-auto"
-              onClick={(event) => {
-                event.stopPropagation();
-                handleOpen();
-              }}
-            />
+          {renderActions || canOpen ? (
+            <div className="ml-auto flex items-center gap-1.5">
+              {renderActions}
+              {canOpen ? (
+                <DetailActionButton
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleOpen();
+                  }}
+                />
+              ) : null}
+            </div>
           ) : null}
         </div>
       </div>
@@ -659,6 +675,7 @@ function TaskListRow({
   dragCount,
   onRename,
   dragItemId,
+  renderActions,
 }: {
   task: BaseTask;
   onAfterDelete: (id: string) => void;
@@ -670,6 +687,7 @@ function TaskListRow({
   onRename?: (next: string) => void | Promise<void>;
   /** 설정 시 마키(영역 드래그) 선택 대상이 된다(DragSelect 가 읽는 식별자). */
   dragItemId?: string;
+  renderActions?: ReactNode;
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
@@ -810,6 +828,7 @@ function TaskListRow({
         <CalendarClock className="size-3.5" aria-hidden="true" />
         {formatTaskDate(task.createdAt)}
       </span>
+      {renderActions}
       {canOpen ? (
         <DetailActionButton
           onClick={(event) => {
@@ -906,6 +925,7 @@ export function TaskQueueInlineList({
   marqueeSelectedTaskIds,
   onMarqueeChange,
   marqueeBoundaryRef,
+  renderTaskActions,
 }: TaskQueueInlineListProps) {
   const marqueeEnabled = Boolean(marqueeSelectedTaskIds && onMarqueeChange);
   const { tasks, loading, reload } = useTaskList({
@@ -1205,6 +1225,7 @@ export function TaskQueueInlineList({
                           : undefined
                       }
                       dragItemId={marqueeEnabled ? task.id : undefined}
+                      renderActions={renderTaskActions?.(task)}
                     />
                   ));
                   const cls = `flex flex-col gap-2 ${bodyPadding}`.trim();
@@ -1250,6 +1271,7 @@ export function TaskQueueInlineList({
                           : undefined
                       }
                       dragItemId={marqueeEnabled ? task.id : undefined}
+                      renderActions={renderTaskActions?.(task)}
                     />
                   ));
                   const cls =

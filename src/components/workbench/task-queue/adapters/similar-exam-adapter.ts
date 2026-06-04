@@ -30,10 +30,16 @@ function mapStatus(raw: string): TaskStatus {
   }
 }
 
-function readQuestionCount(result: unknown): number {
-  if (!result || typeof result !== "object" || Array.isArray(result)) return 0;
-  const value = (result as { questionCount?: unknown }).questionCount;
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+function readNum(result: unknown, key: string): number | null {
+  if (!result || typeof result !== "object" || Array.isArray(result)) return null;
+  const value = (result as Record<string, unknown>)[key];
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function readPassageCount(result: unknown): number | null {
+  if (!result || typeof result !== "object" || Array.isArray(result)) return null;
+  const value = (result as { selectedPassageIds?: unknown }).selectedPassageIds;
+  return Array.isArray(value) ? value.length : null;
 }
 
 function subtitleFor(job: SimilarExamJobRow, status: TaskStatus) {
@@ -59,7 +65,21 @@ export const similarExamAdapter: TaskAdapter = {
 
     return (data.jobs ?? []).map<BaseTask>((job) => {
       const status = mapStatus(job.status);
-      const questionCount = readQuestionCount(job.result);
+      const questionCount = readNum(job.result, "questionCount");
+      const patternCount = readNum(job.result, "patternQuestionCount");
+      const passageCount = readPassageCount(job.result);
+      const stats: NonNullable<BaseTask["stats"]> = [
+        { label: "페이지", value: `${job.totalPages}p`, tone: "slate" },
+      ];
+      if (questionCount != null) {
+        stats.push({ label: "생성", value: `${questionCount}문항`, tone: "emerald" });
+      }
+      if (patternCount != null) {
+        stats.push({ label: "패턴", value: `${patternCount}문항`, tone: "blue" });
+      }
+      if (passageCount != null) {
+        stats.push({ label: "지문", value: `${passageCount}개`, tone: "slate" });
+      }
       return {
         id: job.id,
         domain: "exam-generation",
@@ -68,14 +88,7 @@ export const similarExamAdapter: TaskAdapter = {
         description:
           job.errorMessage ??
           "업로드한 시험지의 출제 패턴을 분석하고 선택 지문으로 새 시험지를 생성합니다.",
-        stats: [
-          { label: "페이지", value: `${job.totalPages}p`, tone: "slate" },
-          {
-            label: "문항",
-            value: questionCount > 0 ? `${questionCount}` : "-",
-            tone: questionCount > 0 ? "emerald" : "slate",
-          },
-        ],
+        stats,
         status,
         errorBadge: status === "failed" ? "오류" : undefined,
         createdAt: job.createdAt,

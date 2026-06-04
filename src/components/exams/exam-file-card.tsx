@@ -9,6 +9,7 @@ import {
   Clock,
   Users,
   ClipboardList,
+  FileSearch,
   Pencil,
   Printer,
   Save,
@@ -48,12 +49,15 @@ export function ExamFileCard({
   onToggleSelect,
   onClick,
   onEdit,
+  onShowAnalysis,
 }: {
   exam: ExamItem;
   selected: boolean;
   onToggleSelect: (id: string, shift: boolean) => void;
   onClick: (id: string) => void;
   onEdit?: (id: string) => void;
+  /** 동형 생성 시험지에만 전달 — 누르면 분석 정보 모달을 연다. */
+  onShowAnalysis?: (id: string) => void;
 }) {
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -193,15 +197,34 @@ export function ExamFileCard({
       {/* Bottom row: 상세 보기 (좌) · 마지막 수정일 (최우측) */}
       <div className="flex items-center justify-between gap-2 mt-3">
         {/* 상세 보기 — 카드 하단에서 잘 보이는 bordered action button */}
-        <DetailActionButton
-          title="시험지 상세 보기"
-          aria-label="시험지 상세 보기"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onClick(exam.id);
-          }}
-        />
+        <div className="flex items-center gap-1.5">
+          <DetailActionButton
+            title="시험지 상세 보기"
+            aria-label="시험지 상세 보기"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClick(exam.id);
+            }}
+          />
+          {/* 동형 생성 시험지: 분석 정보 */}
+          {onShowAnalysis && (
+            <button
+              type="button"
+              title="분석 정보"
+              aria-label="분석 정보"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onShowAnalysis(exam.id);
+              }}
+              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
+            >
+              <FileSearch className="h-3 w-3 shrink-0" />
+              분석 정보
+            </button>
+          )}
+        </div>
 
         <span
           title="마지막 수정일"

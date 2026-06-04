@@ -48,6 +48,7 @@ import { useFolderManager } from "@/hooks/use-folder-manager";
 // Exam card
 import { ExamFileCard } from "./exam-file-card";
 import { ExamQuickViewDialog } from "./exam-quick-view-dialog";
+import { SimilarExamBlueprintModal } from "@/app/(director)/director/workbench/exams/similar/_components/similar-exam-blueprint-modal";
 
 import { ExamListRow } from "./exam-list-client-parts/exam-list-row";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -158,6 +159,8 @@ export function ExamListClient({
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  // 동형 생성 시험지의 분석 정보(설정의 patternProfile 기반).
+  const [analysisExam, setAnalysisExam] = useState(null);
   // Optimistically hide deleted exams until router.refresh() updates props —
   // same pattern as passage-list-client / question-bank-client.
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
@@ -338,6 +341,35 @@ export function ExamListClient({
   }, [selection, bulkDeleting, router]);
 
   const totalCount = exams.length;
+
+  // ─── 동형 생성 시험지 분석 정보 ───
+  // exam.settings 의 similarExam.patternProfile 이 있으면 동형 생성물 → 분석 정보 노출.
+  const analysisByExamId = useMemo(() => {
+    const map = new Map();
+    for (const exam of exams) {
+      try {
+        const parsed = exam.settings ? JSON.parse(exam.settings) : null;
+        const blueprint = parsed?.similarExam?.patternProfile;
+        if (blueprint) {
+          map.set(exam.id, {
+            blueprint,
+            generatedCount: exam._count?.questions ?? null,
+            title: exam.title,
+          });
+        }
+      } catch {
+        /* settings 파싱 실패 무시 */
+      }
+    }
+    return map;
+  }, [exams]);
+  const handleShowAnalysis = useCallback(
+    (id: string) => {
+      const analysis = analysisByExamId.get(id);
+      if (analysis) setAnalysisExam(analysis);
+    },
+    [analysisByExamId],
+  );
 
   // ─── Sticky measurement so the toolbar row pins below the folder card ───
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
@@ -528,6 +560,9 @@ export function ExamListClient({
                       onEdit={(id) =>
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
+                      onShowAnalysis={
+                        analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
+                      }
                     />
                   ))}
                 </DragSelect>
@@ -549,6 +584,9 @@ export function ExamListClient({
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
                       onDelete={setDeleteId}
+                      onShowAnalysis={
+                        analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
+                      }
                     />
                   ))}
                 </DragSelect>
@@ -621,6 +659,15 @@ export function ExamListClient({
         open={quickViewOpen}
         onOpenChange={setQuickViewOpen}
       />
+
+      {analysisExam && (
+        <SimilarExamBlueprintModal
+          blueprint={analysisExam.blueprint}
+          generatedCount={analysisExam.generatedCount}
+          title={analysisExam.title}
+          onClose={() => setAnalysisExam(null)}
+        />
+      )}
     </div>
   );
 }
