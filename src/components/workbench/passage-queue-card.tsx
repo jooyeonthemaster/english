@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   RotateCcw,
   Trash2,
-  Maximize2,
   Clock,
   Check,
   BookOpen,
@@ -32,6 +31,7 @@ import {
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
 
 function formatAnalysisDateTime(value: Date | string | null | undefined) {
@@ -531,13 +531,9 @@ export const PassageQueueCard = memo(function PassageQueueCard({
           className="absolute bottom-2 right-3"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
+          <DetailActionButton
             onClick={() => onViewDetail(passage.id)}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-          >
-            상세 보기
-            <Maximize2 className="w-3 h-3" />
-          </button>
+          />
         </div>
       )}
     </div>

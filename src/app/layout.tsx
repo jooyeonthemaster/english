@@ -13,7 +13,10 @@ const geistMono = Geist_Mono({
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.NEXTAUTH_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://nara-ten.vercel.app");
+  process.env.NEXT_PUBLIC_APP_URL ||
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://www.smoat.co.kr");
 
 const brandImage = "/smoat-logo.png";
 const openGraphImage = "/og-image.png";

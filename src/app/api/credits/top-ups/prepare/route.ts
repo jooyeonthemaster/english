@@ -5,10 +5,13 @@ import { requireStaffAuth } from "@/lib/auth";
 import {
   buildPortOnePaymentId,
   buildTopUpOrderName,
+  getAllowedPortOneTopUpPayMethods,
+  getPortOnePgProvider,
   getPortOneRuntimeConfig,
   isPortOneTopUpPayMethod,
   PortOneTopUpError,
   preRegisterPortOnePayment,
+  type PortOnePgProvider,
   type PortOneTopUpPayMethod,
 } from "@/lib/portone-credit-topups";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
@@ -36,6 +39,15 @@ type PaymentRequest = {
   totalAmount: number;
   currency: "KRW";
   payMethod: PortOneTopUpPayMethod;
+  redirectUrl: string;
+  customData: Record<string, unknown>;
+  productType: "DIGITAL";
+  products: Array<{
+    id: string;
+    name: string;
+    amount: number;
+    quantity: number;
+  }>;
   easyPay?: {
     easyPayProvider: EasyPayProvider;
   };
@@ -45,7 +57,6 @@ type PaymentRequest = {
     };
   };
   mobile?: Record<string, never>;
-  productType?: "DIGITAL";
   bypass?: {
     kcp_v2: {
       shop_user_id: string;
@@ -78,8 +89,17 @@ export async function POST(request: NextRequest) {
     )
       ? parsed.data.payMethod
       : "CARD";
+    const allowedPayMethods = getAllowedPortOneTopUpPayMethods();
+    if (!allowedPayMethods.includes(payMethod)) {
+      return NextResponse.json(
+        { error: "현재 PG 심사/계약 범위에서 지원하지 않는 결제수단입니다." },
+        { status: 400 },
+      );
+    }
 
     const { storeId, channelKey } = getPortOneRuntimeConfig();
+    const pgProvider = getPortOnePgProvider();
+    const appUrl = getAppUrl();
     const paymentId = buildPortOnePaymentId();
     const orderName = buildTopUpOrderName(product.creditAmount);
 
@@ -160,9 +180,13 @@ export async function POST(request: NextRequest) {
         paymentId,
         orderName,
         totalAmount: product.price,
+        pgProvider,
         payMethod,
         easyPayProvider: parsed.data.easyPayProvider,
         staffId: staff.id,
+        redirectUrl: `${appUrl}/director/credits`,
+        customData,
+        productCode: product.code,
       }),
     });
   } catch (err) {
@@ -204,9 +228,13 @@ function buildPaymentRequest(params: {
   paymentId: string;
   orderName: string;
   totalAmount: number;
+  pgProvider: PortOnePgProvider;
   payMethod: PortOneTopUpPayMethod;
   easyPayProvider?: string;
   staffId: string;
+  redirectUrl: string;
+  customData: Record<string, unknown>;
+  productCode: string;
 }): PaymentRequest {
   const base: PaymentRequest = {
     storeId: params.storeId,
@@ -216,6 +244,17 @@ function buildPaymentRequest(params: {
     totalAmount: params.totalAmount,
     currency: "KRW",
     payMethod: params.payMethod,
+    redirectUrl: params.redirectUrl,
+    customData: params.customData,
+    productType: "DIGITAL",
+    products: [
+      {
+        id: params.productCode,
+        name: params.orderName,
+        amount: params.totalAmount,
+        quantity: 1,
+      },
+    ],
   };
 
   if (params.payMethod === "EASY_PAY") {
@@ -239,19 +278,35 @@ function buildPaymentRequest(params: {
   }
 
   if (params.payMethod === "MOBILE") {
-    return {
+    const request: PaymentRequest = {
       ...base,
       mobile: {},
-      productType: "DIGITAL",
-      bypass: {
+    };
+    if (params.pgProvider === "kcp_v2") {
+      request.bypass = {
         kcp_v2: {
           shop_user_id: buildKcpShopUserId(params.staffId),
         },
-      },
-    };
+      };
+    }
+    return request;
   }
 
   return base;
+}
+
+function getAppUrl() {
+  const appUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.NEXTAUTH_URL;
+  if (!appUrl) {
+    throw new PortOneTopUpError(
+      "CONFIG_MISSING",
+      "App URL must be configured for PortOne redirectUrl.",
+    );
+  }
+  return appUrl.replace(/\/+$/, "");
 }
 
 function getEasyPayProvider(value: unknown): EasyPayProvider {

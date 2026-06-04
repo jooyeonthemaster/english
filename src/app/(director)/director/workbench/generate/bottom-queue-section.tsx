@@ -77,6 +77,8 @@ interface BottomQueueSectionProps {
   deletedQuestionSignatures?: Set<string>;
   batchDeleting?: boolean;
   onEditQuestion: (questionId: string) => void;
+  /** 마키(영역 드래그) 시작 영역을 이 섹션 전체로 넓히기 위한 boundary(부모에서 내려줌). */
+  marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
 }
 
 type SavedQuestionPlanFilter = "ALL" | QuestionGenerationPlan;
@@ -243,6 +245,7 @@ export function BottomQueueSection({
   deletedQuestionSignatures,
   batchDeleting = false,
   onEditQuestion,
+  marqueeBoundaryRef,
 }: BottomQueueSectionProps) {
   const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
   const [reviewStatusFilter, setReviewStatusFilter] = useState<ReviewStatusFilter>("ALL");
@@ -928,6 +931,7 @@ export function BottomQueueSection({
               className={cardLayoutClassNames[cardLayoutMode]}
               value={deleteMode ? selectedDeleteIds : selectedSessionQuestionIds}
               onChange={deleteMode ? setSelectedDeleteIds : setSelectedSessionQuestionIds}
+              boundaryRef={marqueeBoundaryRef}
             >
               {group.cards.map((card, index) => renderCard(card, index))}
             </DragSelect>
@@ -1138,6 +1142,7 @@ export function BottomQueueSection({
               className={cardLayoutClassNames[cardLayoutMode]}
               value={deleteMode ? selectedDeleteIds : selectedSessionQuestionIds}
               onChange={deleteMode ? setSelectedDeleteIds : setSelectedSessionQuestionIds}
+              boundaryRef={marqueeBoundaryRef}
             >
               {sessionFlatEntries.map((entry) =>
                 entry.kind === "queue"

@@ -285,19 +285,13 @@ export function usePaperItems(
   }
 
   function addDuplicateQuestion(question: BuilderQuestion) {
-    let nextActiveId: string | null | undefined;
-    commitItems((current) => {
-      const nextItem = makePaperItem(question, current.length + 1, current);
-      nextActiveId = nextItem.localId;
-      return [...current, nextItem];
-    }, () => nextActiveId);
+    addQuestion(question);
   }
 
   function addQuestionAtDropTarget(
     question: BuilderQuestion,
     targetLocalId: string | null,
     placement: DropPlacement,
-    options: { forceDuplicate?: boolean } = {},
   ) {
     let nextActiveId: string | null | undefined;
 
@@ -305,7 +299,7 @@ export function usePaperItems(
       const existing = current.find(
         (item) => item.blockType === "question" && item.questionId === question.id,
       );
-      if (!options.forceDuplicate && existing?.locked) {
+      if (existing?.locked) {
         nextActiveId = existing.localId;
         setActiveItemId(existing.localId);
         toast.error("잠긴 문항은 먼저 잠금 해제해야 이동할 수 있습니다.");
@@ -313,9 +307,7 @@ export function usePaperItems(
       }
 
       const itemToInsert =
-        !options.forceDuplicate && existing
-          ? existing
-          : makePaperItem(question, current.length + 1, current);
+        existing ?? makePaperItem(question, current.length + 1, current);
       nextActiveId = itemToInsert.localId;
 
       if (targetLocalId === itemToInsert.localId) {
@@ -323,7 +315,7 @@ export function usePaperItems(
         return current;
       }
 
-      const withoutSource = !options.forceDuplicate && existing
+      const withoutSource = existing
         ? current.filter((item) => item.localId !== existing.localId)
         : current;
       const targetIndex = targetLocalId
@@ -340,23 +332,16 @@ export function usePaperItems(
     }, () => nextActiveId);
   }
 
-  // 체크박스로 다중 선택한 문항을 드롭 지점에 한 덩어리로 삽입한다.
-  // 이미 미리보기에 있는 문항은 그 위치로 이동시키고, 잠긴 문항은 건너뛴다.
+  // 선택한 문항을 드롭 지점에 한 덩어리로 삽입한다.
+  // 이미 미리보기에 있는 문항은 복제하지 않고 그 위치로 이동시키며, 잠긴 문항은 건너뛴다.
   function addQuestionsAtDropTarget(
     questionList: BuilderQuestion[],
     targetLocalId: string | null,
     placement: DropPlacement,
-    options: { duplicateQuestionIds?: Set<string> | string[] } = {},
   ) {
     if (questionList.length === 0) return;
-    const duplicateQuestionIds =
-      options.duplicateQuestionIds instanceof Set
-        ? options.duplicateQuestionIds
-        : new Set(options.duplicateQuestionIds || []);
     if (questionList.length === 1) {
-      addQuestionAtDropTarget(questionList[0], targetLocalId, placement, {
-        forceDuplicate: duplicateQuestionIds.has(questionList[0].id),
-      });
+      addQuestionAtDropTarget(questionList[0], targetLocalId, placement);
       return;
     }
 
@@ -367,15 +352,14 @@ export function usePaperItems(
       const itemsToInsert: PaperItem[] = [];
 
       for (const question of questionList) {
-        const forceDuplicate = duplicateQuestionIds.has(question.id);
         const existing = current.find(
           (item) => item.blockType === "question" && item.questionId === question.id,
         );
-        if (!forceDuplicate && existing?.locked) {
+        if (existing?.locked) {
           lockedSkipped = true;
           continue;
         }
-        if (!forceDuplicate && existing) {
+        if (existing) {
           movedExistingIds.add(existing.localId);
           itemsToInsert.push(existing);
         } else {
@@ -523,6 +507,10 @@ export function usePaperItems(
       const index = current.findIndex((item) => item.localId === localId);
       if (index < 0) return current;
       const item = current[index];
+      if (item.blockType === "question") {
+        toast.error("같은 문제는 시험지에 한 번만 넣을 수 있습니다.");
+        return current;
+      }
       const duplicate = clonePaperItem(item, current.length + 1);
       duplicateId = duplicate.localId;
       const next = [...current];

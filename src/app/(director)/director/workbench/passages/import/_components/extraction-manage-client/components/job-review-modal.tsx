@@ -7,6 +7,7 @@ import { CheckCircle2, FileText, Loader2, Trash2, X } from "lucide-react";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { useReviewDrawer } from "@/components/layout/review-drawer-context";
+import { DragSelect } from "@/components/ui/drag-select";
 
 import type { M1PassageDraftWithJob } from "../types";
 import type { JobMetaSnapshot } from "../drafts-cache";
@@ -96,6 +97,11 @@ export function JobReviewModal({
   const setCheckedIds = isControlled
     ? externalSetSelectedIds
     : setInternalCheckedIds;
+  // 마키(영역 선택)의 시작 영역 겸 카드 탐색 루트 — 드로어의 카드 리스트 스크롤
+  // 컨테이너. 이 ref 를 DragSelect 의 boundary 로 넘겨, 메인 그리드 마키와 시작
+  // 영역이 겹치지 않게 격리하고(드로어 안에서 시작한 드래그만 드로어 마키), 선택도
+  // 이 컨테이너 안의 카드로만 한정한다.
+  const draftListRef = useRef<HTMLDivElement>(null);
   const orderedDrafts = useMemo(() => {
     if (statusBadgeMode !== "analysis") return drafts;
     return drafts
@@ -333,6 +339,20 @@ export function JobReviewModal({
     () => Array.from(modalCheckedIds),
     [modalCheckedIds],
   );
+  // 마키 결과를 이 작업(job)의 드래프트 범위로만 반영한다. 부모가 제어하는 선택
+  // 집합이 다른 작업의 id 까지 들고 있을 수 있으므로, 그냥 드래그(치환)로 그 선택을
+  // 지우지 않도록 allIds 만 갈아끼우고 나머지는 보존한다.
+  const handleMarqueeChange = useCallback(
+    (next: Set<string>) => {
+      setCheckedIds((prev) => {
+        const merged = new Set(prev);
+        for (const id of allIds) merged.delete(id);
+        for (const id of next) merged.add(id);
+        return merged;
+      });
+    },
+    [setCheckedIds, allIds],
+  );
   const hasModalSelection = modalCheckedIds.size > 0;
   const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
   const selectAllIndeterminate = modalCheckedIds.size > 0 && !allChecked;
@@ -549,13 +569,18 @@ export function JobReviewModal({
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          <div ref={draftListRef} className="min-h-0 flex-1 overflow-y-auto p-3">
             {orderedDrafts.length === 0 ? (
               <p className="py-12 text-center text-[12px] text-slate-400">
                 추출된 자료가 없습니다.
               </p>
             ) : (
-              <div className="grid grid-cols-1 gap-2">
+              <DragSelect
+                className="grid grid-cols-1 gap-2"
+                value={modalCheckedIds}
+                onChange={handleMarqueeChange}
+                boundaryRef={draftListRef}
+              >
                 {orderedDrafts.map((draft, index) => (
                   <DraftCard
                     key={draft.id}
@@ -581,7 +606,7 @@ export function JobReviewModal({
                     statusBadgeMode={statusBadgeMode}
                   />
                 ))}
-              </div>
+              </DragSelect>
             )}
           </div>
         </div>

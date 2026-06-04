@@ -20,6 +20,7 @@ import { SidebarTopActions } from "./admin-shell/sidebar-top-actions";
 import { NavItem } from "./admin-shell/nav-item";
 import { useReviewDrawer } from "./review-drawer-context";
 import { useSidebarFocus } from "./sidebar-focus-context";
+import { MarqueeBoundaryContext } from "./marquee-boundary-context";
 
 interface StaffSession {
   id: string;
@@ -63,6 +64,9 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [mounted, setMounted] = useState(false);
   const suppressSidebarHandleClickRef = React.useRef(false);
   const sidebarScrollTimeoutRef = React.useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  // 마키(영역 드래그)의 기본 시작 영역 = 사이드바를 제외한 본문(<main>). 컨텍스트로
+  // 내려, 페이지별 배선 없이 어느 페이지에서든 본문 어디서나 드래그를 시작하게 한다.
+  const mainContentRef = React.useRef<HTMLElement>(null);
   // Clear navigating state when pathname changes
   useEffect(() => {
     setNavigatingTo(null);
@@ -481,6 +485,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
         >
           {/* Page content */}
           <main
+            ref={mainContentRef}
             className={cn(
               "flex-1 min-w-0 relative max-md:p-0",
               isDashboardV2 ? "p-2.5" : "p-6",
@@ -494,9 +499,11 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                 </div>
               </div>
             )}
-            <MaybeComingSoon pathname={pathname} basePath={basePath}>
-              {children}
-            </MaybeComingSoon>
+            <MarqueeBoundaryContext.Provider value={mainContentRef}>
+              <MaybeComingSoon pathname={pathname} basePath={basePath}>
+                {children}
+              </MaybeComingSoon>
+            </MarqueeBoundaryContext.Provider>
           </main>
         </div>
        </div>

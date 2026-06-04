@@ -8,6 +8,7 @@ import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 function mapJobStatusToTaskStatus(status: string | null | undefined): TaskStatus {
   switch (status) {
@@ -45,6 +46,8 @@ export interface MaterialJobCardProps {
   onClick: () => void;
   onToggleCheck: () => void;
   onRename: (next: string | null) => void;
+  /** 설정 시 마키(영역 드래그) 선택 대상이 된다(DragSelect 가 읽는 식별자). */
+  dragItemId?: string;
 }
 
 /**
@@ -67,6 +70,7 @@ export function MaterialJobCard({
   onClick,
   onToggleCheck,
   onRename,
+  dragItemId,
 }: MaterialJobCardProps) {
   const dragRef = useRef<HTMLElement>(null);
   const [editing, setEditing] = useState(false);
@@ -127,6 +131,7 @@ export function MaterialJobCard({
   return (
     <article
       ref={dragRef}
+      data-drag-item-id={dragItemId}
       role="button"
       tabIndex={0}
       onClick={editing ? undefined : onClick}
@@ -275,6 +280,18 @@ export function MaterialJobCard({
           </span>
         ) : null}
       </div>
+
+      {!editing ? (
+        <div className="px-2.5 pb-2 pt-2">
+          <DetailActionButton
+            className="w-full justify-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          />
+        </div>
+      ) : null}
 
       {/* Analysis-progress footer */}
       <div className={"mt-auto border-t px-2.5 py-1.5 " + progressTone.surface}>

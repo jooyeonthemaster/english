@@ -201,6 +201,10 @@ const PAY_METHOD_OPTIONS: Array<{
   { value: "MOBILE", label: "휴대폰", icon: Smartphone },
 ];
 
+const VISIBLE_PAY_METHOD_OPTIONS = PAY_METHOD_OPTIONS.filter((option) =>
+  getVisibleTopUpPayMethods().includes(option.value),
+);
+
 const EASY_PAY_PROVIDER_OPTIONS: Array<{
   value: EasyPayProvider;
   label: string;
@@ -210,6 +214,20 @@ const EASY_PAY_PROVIDER_OPTIONS: Array<{
   { value: "TOSSPAY", label: "토스페이" },
   { value: "PAYCO", label: "페이코" },
 ];
+
+function getVisibleTopUpPayMethods() {
+  const raw = process.env.NEXT_PUBLIC_PORTONE_TOP_UP_PAY_METHODS;
+  if (!raw) return ["CARD"] satisfies TopUpPayMethod[];
+
+  const methods = raw
+    .split(",")
+    .map((value) => value.trim().toUpperCase())
+    .filter((value): value is TopUpPayMethod =>
+      PAY_METHOD_OPTIONS.some((option) => option.value === value),
+    );
+
+  return methods.length ? Array.from(new Set(methods)) : (["CARD"] satisfies TopUpPayMethod[]);
+}
 
 const TOP_UP_STATUS_LABELS: Record<string, string> = {
   PENDING: "결제 대기",
@@ -303,7 +321,9 @@ export default function CreditsPage() {
   const [subscriptionBusy, setSubscriptionBusy] = useState<
     "register" | "cancel" | null
   >(null);
-  const [payMethod, setPayMethod] = useState<TopUpPayMethod>("CARD");
+  const [payMethod, setPayMethod] = useState<TopUpPayMethod>(
+    VISIBLE_PAY_METHOD_OPTIONS[0]?.value ?? "CARD",
+  );
   const [easyPayProvider, setEasyPayProvider] =
     useState<EasyPayProvider>("KAKAOPAY");
   const [payingCredits, setPayingCredits] = useState<number | null>(null);
@@ -715,35 +735,38 @@ export default function CreditsPage() {
         </button>
       </div>
 
-      <SubscriptionBillingPanel
-        overview={subscriptionBilling}
-        consent={subscriptionConsent}
-        busy={subscriptionBusy}
-        onConsentChange={setSubscriptionConsent}
-        onStartBilling={startSubscriptionBilling}
-        onCancelBilling={cancelSubscriptionBilling}
-        disabled={!FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING}
-      />
+      {FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING && (
+        <>
+          <SubscriptionBillingPanel
+            overview={subscriptionBilling}
+            consent={subscriptionConsent}
+            busy={subscriptionBusy}
+            onConsentChange={setSubscriptionConsent}
+            onStartBilling={startSubscriptionBilling}
+            onCancelBilling={cancelSubscriptionBilling}
+          />
 
-      {subscriptionMessage && (
-        <div
-          className={cn(
-            "flex items-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium",
-            subscriptionMessage.type === "success" &&
-              "border-emerald-100 bg-emerald-50 text-emerald-700",
-            subscriptionMessage.type === "error" &&
-              "border-red-100 bg-red-50 text-red-600",
-            subscriptionMessage.type === "info" &&
-              "border-blue-100 bg-blue-50 text-blue-700",
+          {subscriptionMessage && (
+            <div
+              className={cn(
+                "flex items-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium",
+                subscriptionMessage.type === "success" &&
+                  "border-emerald-100 bg-emerald-50 text-emerald-700",
+                subscriptionMessage.type === "error" &&
+                  "border-red-100 bg-red-50 text-red-600",
+                subscriptionMessage.type === "info" &&
+                  "border-blue-100 bg-blue-50 text-blue-700",
+              )}
+            >
+              {subscriptionMessage.type === "success" ? (
+                <CheckCircle2 className="size-4 shrink-0" strokeWidth={2} />
+              ) : (
+                <AlertCircle className="size-4 shrink-0" strokeWidth={2} />
+              )}
+              <span>{subscriptionMessage.text}</span>
+            </div>
           )}
-        >
-          {subscriptionMessage.type === "success" ? (
-            <CheckCircle2 className="size-4 shrink-0" strokeWidth={2} />
-          ) : (
-            <AlertCircle className="size-4 shrink-0" strokeWidth={2} />
-          )}
-          <span>{subscriptionMessage.text}</span>
-        </div>
+        </>
       )}
 
       <TopUpPanel
@@ -1448,7 +1471,7 @@ function TopUpPanel({
         </div>
         <div className="flex w-full flex-col items-start gap-2 lg:w-auto">
           <div className="flex flex-wrap gap-1.5">
-            {PAY_METHOD_OPTIONS.map((option) => {
+            {VISIBLE_PAY_METHOD_OPTIONS.map((option) => {
               const Icon = option.icon;
               const active = payMethod === option.value;
               return (

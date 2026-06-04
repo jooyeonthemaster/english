@@ -25,6 +25,10 @@ export const PORTONE_TOP_UP_PAY_METHODS = [
 
 export type PortOneTopUpPayMethod = (typeof PORTONE_TOP_UP_PAY_METHODS)[number];
 
+const PORTONE_PG_PROVIDERS = ["kcp_v2", "inicis_v2"] as const;
+
+export type PortOnePgProvider = (typeof PORTONE_PG_PROVIDERS)[number];
+
 export type CompleteTopUpSource = "client" | "webhook" | "admin_retry";
 
 export interface CompleteTopUpResult {
@@ -113,6 +117,32 @@ export function isPortOneTopUpPayMethod(
   );
 }
 
+export function getAllowedPortOneTopUpPayMethods(): PortOneTopUpPayMethod[] {
+  const raw =
+    process.env.PORTONE_TOP_UP_PAY_METHODS ??
+    process.env.NEXT_PUBLIC_PORTONE_TOP_UP_PAY_METHODS;
+  if (!raw) return ["CARD"];
+
+  const methods = raw
+    .split(",")
+    .map((value) => value.trim().toUpperCase())
+    .filter(isPortOneTopUpPayMethod);
+
+  return methods.length ? Array.from(new Set(methods)) : ["CARD"];
+}
+
+export function getPortOnePgProvider(): PortOnePgProvider {
+  const raw =
+    process.env.PORTONE_PG_PROVIDER ??
+    process.env.NEXT_PUBLIC_PORTONE_PG_PROVIDER ??
+    "kcp_v2";
+  const normalized = raw.trim().toLowerCase().replaceAll("-", "_");
+  if ((PORTONE_PG_PROVIDERS as readonly string[]).includes(normalized)) {
+    return normalized as PortOnePgProvider;
+  }
+  return "kcp_v2";
+}
+
 export function buildPortOnePaymentId() {
   return `sm_${randomUUID().replaceAll("-", "").slice(0, 26)}`;
 }
@@ -155,13 +185,13 @@ export function getPortOneWebhookSecret() {
 }
 
 export function getPortOneWebhookSecrets() {
-  const secrets = [
+  const secrets = Array.from(new Set([
     ...(process.env.PORTONE_WEBHOOK_SECRET?.split(",") ?? []),
     process.env.PORTONE_WEBHOOK_SECRET1,
     process.env.PORTONE_WEBHOOK_SECRET2,
   ]
     .map(normalizeSecretEnvValue)
-    .filter((value): value is string => Boolean(value));
+    .filter((value): value is string => Boolean(value))));
 
   if (!secrets?.length) {
     throw new PortOneTopUpError(
