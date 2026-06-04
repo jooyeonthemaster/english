@@ -15,7 +15,6 @@ import {
   FileBarChart,
   Settings,
   Palette,
-  Shuffle,
   Smartphone,
   Send,
   Activity,
@@ -111,6 +110,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
+            { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams` },
           ],
         },
       ],
@@ -126,11 +126,6 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
             { label: "웹툰 생성", href: `${basePath}/workbench/webtoon` },
             { label: "웹툰 관리", href: `${basePath}/workbench/webtoon/library` },
           ],
-        },
-        {
-          label: "동형 모의고사",
-          icon: Shuffle,
-          href: `${basePath}/workbench/similar-exams`,
         },
       ],
     },
