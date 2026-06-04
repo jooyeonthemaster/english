@@ -136,7 +136,8 @@ function asDensity(value: unknown): Density {
 }
 
 function asPassageStyle(value: unknown): PassageStyle {
-  return value === "plain" || value === "underlined" ? value : "boxed";
+  void value;
+  return "plain";
 }
 
 function asBreakBefore(value: unknown): BreakBefore {

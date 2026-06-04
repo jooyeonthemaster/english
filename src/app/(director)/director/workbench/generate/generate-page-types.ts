@@ -177,11 +177,6 @@ export function buildQuestionText(q: any): string {
   // GRAMMAR_CORRECTION: passageWithUnderline already contains the underlined passage.
   if (q.sentenceWithError && !isGrammarCorrection) parts.push(grammarCorrectionErrorSentenceForQuestionText(q));
 
-  // ── 어휘 ──
-  // SYNONYM: 대상 단어 + 문맥 문장
-  if (q.targetWord) parts.push(`[대상 단어] ${q.targetWord}`);
-  if (q.contextSentence) parts.push(`[문맥] ${q.contextSentence}`);
-
   // 일반 questionText (fallback)
   if (q.questionText && !q.direction) parts.push(q.questionText);
 

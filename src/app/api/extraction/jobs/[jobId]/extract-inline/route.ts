@@ -43,6 +43,10 @@ import { runOcrForPage } from "@/trigger/_lib/extraction-page/ocr-dispatch";
 import { persistPageSuccess } from "@/trigger/_lib/extraction-page/persist-success";
 import { finalizeStructured } from "@/trigger/_lib/extraction-finalize/structured/orchestrator";
 import { finalizePlainText } from "@/trigger/_lib/extraction-finalize/plain-text";
+import {
+  isCropNativeRestoreEnabled,
+  runCropNativeRestore,
+} from "./_lib/run-crop-native";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -129,6 +133,20 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
 
   const totalPages = auth.job.totalPages;
   const academyId = auth.job.academyId;
+
+  // ── 크롭-네이티브 극속 경로 ────────────────────────────────────────────────
+  // 이미지 크롭(=1슬롯=1지문) + AI 원문 복원이면, "사진 1장 → Gemini 1콜 → 지문 OCR +
+  // 원문 복원 + 변경점"으로 직접 처리한다. 기존 다단계(DocAI OCR → 블록분류 → finalize
+  // 클러스터/STEM 그룹핑 → DB 조회 → 복원 배치)를 통째로 우회 → 크롭당 Gemini 2콜→1콜,
+  // DB 왕복 0. verbatim/PDF/QUESTION_SET은 아래 기존 경로 유지. 킬스위치로 폴백 가능.
+  if (
+    isCropNativeRestoreEnabled() &&
+    auth.job.sourceType === "IMAGES" &&
+    mode === "PASSAGE_ONLY" &&
+    auth.job.outputMode === "restored"
+  ) {
+    return runCropNativeRestore({ jobId, mode, totalPages, pageRows });
+  }
   // Stable lease owner for this inline run so claimed pages are "owned" and the
   // reaper / trigger workers won't re-dispatch them mid-flight.
   const leaseOwner = `inline:${jobId}`;
@@ -268,6 +286,7 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
         pages: job.pages,
         mode,
         outputMode: job.outputMode,
+        slotAuthored: job.sourceType === "IMAGES", // 크롭-네이티브(이미지)면 1슬롯=1지문
         originalFileName: job.originalFileName,
         academyId: job.academyId,
         createdById: job.createdById,

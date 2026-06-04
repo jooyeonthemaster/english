@@ -120,8 +120,12 @@ export function StructuredQuestionRenderer({
 function enrichQuestionForDisplay(question: any, sourcePassageContent?: string): any {
   const questionWithAlignedExplanations =
     alignWrongOptionExplanationsForDisplay(question);
-  const normalizedQuestion = normalizeVocabOptionsForDisplay(
+  let normalizedQuestion = normalizeVocabOptionsForDisplay(
     questionWithAlignedExplanations,
+  );
+  normalizedQuestion = repairVocabChoiceForDisplay(
+    normalizedQuestion,
+    sourcePassageContent,
   );
   const sourceBackedType =
     normalizedQuestion?._typeId === "TOPIC" ||
@@ -216,6 +220,132 @@ function normalizeVocabOptionsForDisplay(question: any): any {
   });
 
   return changed ? { ...question, options } : question;
+}
+
+const VOCAB_CHOICE_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)"] as const;
+
+function normalizeVocabChoiceDisplayKey(value: unknown, fallbackIndex?: number): string {
+  const text = normalizeDisplayText(value);
+  const fallback =
+    typeof fallbackIndex === "number" && fallbackIndex >= 0 && fallbackIndex < VOCAB_CHOICE_LABELS.length
+      ? String.fromCharCode(97 + fallbackIndex)
+      : "";
+  if (!text) return fallback;
+  const alpha = text.match(/^[\(\[]?\s*([a-eA-E])\s*[\)\].:]?$/);
+  if (alpha) return alpha[1].toLowerCase();
+  const numeric = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  if (numeric) return String.fromCharCode(96 + Number(numeric[1]));
+  return fallback;
+}
+
+function vocabChoiceRenderedKeys(passageWithMarkers: string): Set<string> {
+  const keys = new Set<string>();
+  const regex = /__\(([a-eA-E])\)\s+[^_]+__/g;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(passageWithMarkers))) {
+    keys.add(match[1].toLowerCase());
+  }
+  return keys;
+}
+
+function readVocabChoiceDisplayPair(markedWord: Record<string, unknown>, passageText: string) {
+  const isInappropriate = markedWord.isInappropriate === true;
+  const word = normalizeDisplayText(markedWord.word);
+  const originalWord = normalizeDisplayText(markedWord.originalWord);
+  const substituteWord = normalizeDisplayText(markedWord.substituteWord);
+  const betterWord = normalizeDisplayText(markedWord.betterWord);
+
+  if (!isInappropriate) {
+    const sourceWord = originalWord || word || substituteWord;
+    return { sourceWord, displayWord: sourceWord };
+  }
+
+  if (originalWord && substituteWord) {
+    return { sourceWord: originalWord, displayWord: substituteWord };
+  }
+
+  // Legacy shape: word=displayed wrong word, betterWord=source correct word.
+  if (
+    word &&
+    betterWord &&
+    containsStandaloneDisplayToken(passageText, betterWord) &&
+    !containsStandaloneDisplayToken(passageText, word)
+  ) {
+    return { sourceWord: betterWord, displayWord: word };
+  }
+
+  // Older broken saved data often has word equal to the source word and no
+  // substituteWord. In that case, keep the UI internally consistent by
+  // underlining the recorded option word instead of dropping the marker.
+  const sourceWord = originalWord || word || betterWord;
+  const displayWord = word || substituteWord || sourceWord;
+  return { sourceWord, displayWord };
+}
+
+function containsStandaloneDisplayToken(text: string, token: string): boolean {
+  if (!text || !token) return false;
+  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\b${escaped}\\b`, "i").test(text);
+}
+
+function replaceFirstStandaloneDisplayToken(
+  text: string,
+  sourceWord: string,
+  replacement: string,
+): string {
+  const escaped = sourceWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`\\b${escaped}\\b`, "i");
+  return text.replace(regex, replacement);
+}
+
+function repairVocabChoiceForDisplay(question: any, sourcePassageContent?: string): any {
+  if (question?._typeId !== "VOCAB_CHOICE" || !Array.isArray(question.markedWords)) {
+    return question;
+  }
+
+  const existingPassage = typeof question.passageWithMarkers === "string"
+    ? question.passageWithMarkers
+    : "";
+  let repairedPassage = existingPassage || sourcePassageContent || "";
+  if (!repairedPassage) return question;
+
+  const renderedKeys = vocabChoiceRenderedKeys(repairedPassage);
+  let changed = false;
+  const normalizedMarkedWords = question.markedWords.map((markedWord: unknown, index: number) => {
+    if (!markedWord || typeof markedWord !== "object" || Array.isArray(markedWord)) {
+      return markedWord;
+    }
+
+    const record = markedWord as Record<string, unknown>;
+    const key = normalizeVocabChoiceDisplayKey(record.label, index);
+    const label = key ? `(${key})` : normalizeDisplayText(record.label);
+    if (label && label !== record.label) changed = true;
+
+    if (key && !renderedKeys.has(key)) {
+      const { sourceWord, displayWord } = readVocabChoiceDisplayPair(record, repairedPassage);
+      if (sourceWord && displayWord && containsStandaloneDisplayToken(repairedPassage, sourceWord)) {
+        const nextPassage = replaceFirstStandaloneDisplayToken(
+          repairedPassage,
+          sourceWord,
+          `__${label} ${displayWord}__`,
+        );
+        if (nextPassage !== repairedPassage) {
+          repairedPassage = nextPassage;
+          renderedKeys.add(key);
+          changed = true;
+        }
+      }
+    }
+
+    return label && label !== record.label ? { ...record, label } : record;
+  });
+
+  if (!changed) return question;
+  return {
+    ...question,
+    passageWithMarkers: repairedPassage,
+    markedWords: normalizedMarkedWords,
+  };
 }
 
 function stripOptionPrefix(text: string): string {

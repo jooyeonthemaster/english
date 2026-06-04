@@ -13,7 +13,7 @@ dotenv.config({ path: path.join(process.cwd(), ".env") });
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { runQuestionGeneration } from "../src/app/api/ai/generate-questions-auto/_lib/run-question-generation";
+import { runQuestionGenerationWithEmptyRetry } from "../src/app/api/ai/generate-questions-auto/_lib/run-question-generation";
 import { StructuredQuestionRenderer } from "../src/components/workbench/question-renderers";
 import {
   type QuestionQualityIssue,
@@ -63,6 +63,25 @@ const REQUESTED_TYPES = process.argv.slice(2).map((value) => value.trim()).filte
 const TYPES_TO_RUN = REQUESTED_TYPES.length > 0 ? REQUESTED_TYPES : ALL_TYPES;
 const CONCURRENCY = Math.max(1, Number(process.env.TEST_CONCURRENCY || 3));
 const OUTDIR = path.join(process.cwd(), "scripts", "_gen_audit_out");
+const DIFFICULTY = normalizeDifficulty(process.env.TEST_DIFFICULTY || "KILLER");
+
+function normalizeDifficulty(value: string) {
+  const normalized = value.trim().toUpperCase();
+  if (normalized === "BASIC" || normalized === "INTERMEDIATE" || normalized === "KILLER") {
+    return normalized;
+  }
+  throw new Error(`Invalid TEST_DIFFICULTY: ${value}`);
+}
+
+function getDifficultyInstruction(difficulty: string) {
+  if (difficulty === "BASIC") {
+    return "direct high-school exam item with clear source evidence";
+  }
+  if (difficulty === "INTERMEDIATE") {
+    return "mid-level exam item requiring contextual inference";
+  }
+  return "top-tier exam item requiring precise passage evidence";
+}
 
 function checkJsonRoundTrip(question: Record<string, unknown>) {
   try {
@@ -102,7 +121,7 @@ async function runOne(typeId: string): Promise<RunResult> {
   const startedAt = Date.now();
   console.log(`[compact-prompt] ${typeId}...`);
 
-  const questions = await runQuestionGeneration({
+  const generationResult = await runQuestionGenerationWithEmptyRetry({
     plan: [
       {
         subType: typeId,
@@ -116,10 +135,13 @@ async function runOne(typeId: string): Promise<RunResult> {
     passageContent: PASSAGE,
     teacherIntentBlock: "",
     analysisContext: "",
-    diffLabel: "KILLER",
-    diffInstruction: "top-tier exam item requiring precise passage evidence",
+    diffLabel: DIFFICULTY,
+    diffInstruction: getDifficultyInstruction(DIFFICULTY),
     generationPlan: "STANDARD",
+  }, {
+    logPrefix: "COMPACT-PROMPT",
   });
+  const questions = generationResult.questions;
 
   const ms = Date.now() - startedAt;
   const question = questions[0];
@@ -128,7 +150,7 @@ async function runOne(typeId: string): Promise<RunResult> {
         typeId,
         question,
         passage: PASSAGE,
-        requestedDifficulty: "KILLER",
+        requestedDifficulty: DIFFICULTY,
       })
     : [];
   const qualityErrors = qualityIssues.filter((issue) => issue.severity === "error");
@@ -182,7 +204,7 @@ async function main() {
 
   fs.mkdirSync(OUTDIR, { recursive: true });
   console.log(
-    `[compact-prompt] running ${TYPES_TO_RUN.length} type(s), concurrency=${CONCURRENCY}`,
+    `[compact-prompt] running ${TYPES_TO_RUN.length} type(s), difficulty=${DIFFICULTY}, concurrency=${CONCURRENCY}`,
   );
 
   const startedAt = Date.now();
@@ -195,6 +217,7 @@ async function main() {
   const summary = {
     generatedAt: new Date().toISOString(),
     scope: REQUESTED_TYPES.length > 0 ? REQUESTED_TYPES : "all19",
+    difficulty: DIFFICULTY,
     totalMs,
     averageMs,
     okCount,
@@ -214,7 +237,7 @@ async function main() {
   const scope = REQUESTED_TYPES.length > 0
     ? REQUESTED_TYPES.join("-").toLowerCase()
     : "all19";
-  const outPath = path.join(OUTDIR, `compact-prompt-${scope}.json`);
+  const outPath = path.join(OUTDIR, `compact-prompt-${scope}-${DIFFICULTY.toLowerCase()}.json`);
   fs.writeFileSync(outPath, JSON.stringify(summary, null, 2), "utf8");
 
   console.log("\n========== COMPACT PROMPT REGRESSION ==========");

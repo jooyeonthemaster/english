@@ -11,7 +11,10 @@ import { restoreM1PassageBatch } from "../../m1-passage-restoration";
 import { M1_LOCAL_DB_EXACT_THRESHOLD } from "../types";
 import { sourceMatchMethod } from "./readers";
 import { buildStage1, type PrepStage1 } from "./stage1";
-import { buildStemLedChunks } from "./stem-grouping";
+import {
+  buildSlotAuthoredChunks,
+  buildStemLedChunks,
+} from "./stem-grouping";
 import { SHORT_CONTENT_THRESHOLD } from "./constants";
 
 export interface PersistM1PassageDraftsInput {
@@ -47,6 +50,12 @@ export interface PersistM1PassageDraftsInput {
    * here is 0 (no batches have completed yet).
    */
   deferRestoration?: boolean;
+  /**
+   * 크롭-네이티브(1슬롯=1지문): true면 STEM 번호 기반 재분할(buildStemLedChunks)
+   * 대신 슬롯(sourcePageIndex)별 1청크(buildSlotAuthoredChunks)로 묶어, 사용자가
+   * 크롭한 경계를 권위로 삼는다. 이미지 크롭 잡에서만 true(PDF/텍스트는 false).
+   */
+  slotAuthored?: boolean;
 }
 
 export interface PersistM1PassageDraftsResult {
@@ -71,7 +80,10 @@ export async function persistM1PassageDrafts(
   // so merging them collapses unrelated questions (e.g. Q16 + Q17 with a
   // mis-stamped `continuesToNext=true` on Q16's body). Each chunk now stays
   // its own group.
-  const chunks = buildStemLedChunks(input.items);
+  // 크롭-네이티브면 슬롯 경계를 권위로(1슬롯=1지문) — STEM 재분할 우회.
+  const chunks = input.slotAuthored
+    ? buildSlotAuthoredChunks(input.items)
+    : buildStemLedChunks(input.items);
   if (chunks.length === 0) {
     if (clearExistingDrafts) {
       await prisma.extractionM1PassageDraft.deleteMany({
@@ -92,12 +104,17 @@ export async function persistM1PassageDrafts(
   // 그래서 두 조건 중 하나라도 만족하면 복원 호출:
   //   1) 그룹에 PASSAGE_BODY 블록이 명시적으로 존재
   //   2) 또는 raw text 총 길이가 400 자 이상
-  const stage1 = buildStage1(groups);
+  // P7-D2: outputMode === "restored"면 유형필터를 우회해 복원을 강제한다(사용자가
+  // 문제·선지를 함께 크롭하고 "AI로 원문 복원"을 명시 선택했는데, 유형 분류 누락으로
+  // 복원이 빠져 OCR과 차이가 없어 보이던 문제를 제거). null/undefined(legacy)는 기존
+  // 휴리스틱 그대로 — 회귀 없음.
+  const forceRestore = input.outputMode === "restored";
+  const stage1 = buildStage1(groups, { forceRestore });
 
   // 호출 대상만 추려둔다. 실제 호출은 Phase A INSERT 직후에 시작.
   // P7-D2: verbatim 잡은 자동 복원을 강제로 끈다 → restorationTargets 비움 →
   // restoreM1PassageBatch 미호출(로컬DB 조회 0 + AI 복원 호출 0). 게이트 우선순위:
-  // verbatim > 휴리스틱. (참고: 그라운딩/Google Search는 현재 비활성 — _archive 참고.)
+  // verbatim > restored(강제) > 휴리스틱. (그라운딩/Google Search는 현재 비활성 — _archive.)
   const verbatimMode = input.outputMode === "verbatim";
   const restorationTargets = verbatimMode
     ? []

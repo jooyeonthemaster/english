@@ -28,6 +28,14 @@ interface StartJobResponse {
 
 const UPLOAD_CONCURRENCY = 4;
 
+// 인라인(이미지) 추출은 OCR을 백그라운드로 던지고 즉시 반환하므로(다음 작업을 바로
+// 시작할 수 있게), 진행 중인 백그라운드 OCR 개수를 모듈 레벨에서 센다. 페이지 이탈
+// 경고(beforeunload)가 이 값을 읽어, 백그라운드 작업이 남아 있으면 경고를 유지한다.
+let inlineInFlight = 0;
+export function isInlineExtractionInFlight(): boolean {
+  return inlineInFlight > 0;
+}
+
 /** 업로드 전 다운스케일 기준 폭(px). 시험지/지문 텍스트 OCR은 ~170DPI(=A4 폭
  *  2000px)면 충분하고, 폰 사진 원본(폭 3000~4000px·수 MB)을 그대로 올릴 때보다
  *  업로드도 OCR도 크게 빨라진다. 가독성이 폭에 좌우되므로 "긴 변"이 아닌 "폭"
@@ -201,21 +209,24 @@ export function useExtractionUpload() {
         const useInline = sourceType === "IMAGES";
         if (useInline) {
           setPhase("processing");
-          const inlineRes = await fetch(
-            `/api/extraction/jobs/${created.jobId}/extract-inline`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({}),
-            },
-          );
-          if (!inlineRes.ok) {
-            const data = await inlineRes.json().catch(() => ({}));
-            throw new Error(data?.error ?? "추출에 실패했습니다.");
-          }
-          // 인라인은 모든 페이지 OCR + finalize(drafts 커밋)까지 끝낸 뒤 반환 →
-          // 항상 terminal.
-          setPhase("reviewing");
+          // 인라인 OCR을 백그라운드로 던지고(파이어 앤 포겟) 업로드 직후 즉시 반환한다.
+          // → 사용자는 곧바로 다음 추출을 시작할 수 있다. 진행/완료/실패 상태는 "자료
+          //   목록"(서버 폴링)이 반영하므로, 완료 시 store.phase를 건드리지 않는다(이미
+          //   다른 작업으로 넘어갔을 수 있어 레이스 방지). 도중 페이지를 이탈하면 요청이
+          //   끊겨 잡이 PROCESSING으로 남을 수 있으나 리퍼가 복구한다(beforeunload 경고로
+          //   완화).
+          inlineInFlight += 1;
+          void fetch(`/api/extraction/jobs/${created.jobId}/extract-inline`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          })
+            .catch(() => {
+              /* 실패는 큐가 FAILED로 반영 */
+            })
+            .finally(() => {
+              inlineInFlight -= 1;
+            });
           return created.jobId;
         }
 

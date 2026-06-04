@@ -33,14 +33,6 @@ import type {
 } from "@/components/exams/paper-builder/types";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
-const BOX_BORDER: BorderSpec = {
-  type: "SOLID",
-  widthMm: 0.26,
-  color: COLORS.separator,
-};
-// 미리보기 boxed 지문: px-3 py-2 → ~940 / ~627 HPU.
-const BOX_PAD_LR = 940;
-const BOX_PAD_TB = 627;
 const ANSWER_LINE: BorderSpec = {
   type: "SOLID",
   widthMm: 0.12,
@@ -121,41 +113,9 @@ function wrapPassageBox(
   passageStyle: PassageStyle,
   columnWidthHpu: number,
 ): BlockNode[] {
-  if (passageStyle === "plain") {
-    return [...inner, { kind: "p", style: { spaceAfter: 120 }, runs: [] }];
-  }
-  const boxed = passageStyle === "boxed";
-  const border = BOX_BORDER;
-  const borders = boxed
-    ? { left: border, right: border, top: border, bottom: border }
-    : { left: NO, right: NO, top: border, bottom: border };
-  const margins = boxed
-    ? { left: BOX_PAD_LR, right: BOX_PAD_LR, top: BOX_PAD_TB, bottom: BOX_PAD_TB }
-    : { left: 0, right: 0, top: BOX_PAD_TB, bottom: BOX_PAD_TB };
-  return [
-    {
-      kind: "tbl",
-      colWidthsHpu: [columnWidthHpu],
-      borders,
-      cellMargins: margins,
-      rows: [
-        {
-          heightHpu: 1,
-          cells: [
-            {
-              widthHpu: columnWidthHpu,
-              heightHpu: 1,
-              vAlign: "TOP",
-              borders,
-              margins,
-              blocks: inner,
-            },
-          ],
-        },
-      ],
-    },
-    { kind: "p", style: { spaceAfter: 120 }, runs: [] },
-  ];
+  void passageStyle;
+  void columnWidthHpu;
+  return [...inner, { kind: "p", style: { spaceAfter: 120 }, runs: [] }];
 }
 
 /** fragment 의 지문(이 단에 배정된 라인들)을 렌더. */
@@ -283,11 +243,15 @@ function renderStructRows(
           ],
         });
       }
-      inner.push(...bodyParas(text, opts.compact, { bold: group.style !== "passage" }));
+      const bodyText =
+        group.style === "summary" && subType === "SUMMARY_COMPLETE" && !resumed
+          ? `[\uC694\uC57D\uBB38] ${text}`
+          : text;
+      inner.push(...bodyParas(bodyText, opts.compact, { bold: group.style !== "passage" }));
       if (continues) {
         inner.push(italicMarker("(\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192)"));
       }
-      result.push(...wrapPassageBox(inner, "boxed", opts.columnWidthHpu));
+      result.push(...wrapPassageBox(inner, "plain", opts.columnWidthHpu));
       continue;
     }
 

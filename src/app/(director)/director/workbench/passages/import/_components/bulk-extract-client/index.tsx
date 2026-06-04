@@ -6,10 +6,14 @@ import { AlertCircle, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
 
 import { TaskQueueInlineList } from "@/components/workbench/task-queue";
 import type { GridViewMode } from "@/components/workbench/task-queue/task-queue-inline-list";
+import type { BaseTask } from "@/components/workbench/task-queue/types";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { MaterialExtractionIcon } from "@/components/icons/workflow-icons";
 import { toast } from "sonner";
-import { useExtractionUpload } from "@/hooks/use-extraction-upload";
+import {
+  isInlineExtractionInFlight,
+  useExtractionUpload,
+} from "@/hooks/use-extraction-upload";
 import { useExtractionStream } from "@/hooks/use-extraction-stream";
 import {
   imagesToSlots,
@@ -25,19 +29,13 @@ import {
   MAX_PAGES_PER_JOB,
   MAX_PDF_BYTES,
 } from "@/lib/extraction/constants";
-import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
+import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { useQueueDrawer } from "../queue-drawer-context";
-import { CropModal } from "../intake/crop/crop-modal";
-import { StackedCropModal } from "../intake/crop/stacked-crop-modal";
-import { SlotPreviewModal } from "../intake/crop/slot-preview-modal";
-import { MergeConfirmModal } from "../intake/crop/merge-confirm-modal";
-import { stitchSlotsToBlob } from "../intake/crop/crop-utils";
-import { isCroppable, isExtractable } from "../intake/crop/slot-meta";
+import { isExtractable } from "../intake/crop/slot-meta";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
-import { ExtractionRunPanel } from "./components/extraction-run-panel";
 import { JobPreviewDrawer } from "./components/job-preview-drawer";
 import { UploadPanel } from "./components/upload-panel";
 
@@ -75,30 +73,28 @@ export function BulkExtractClient({
   const [previewJobId, setPreviewJobId] = useState<string | null>(null);
   const [taskListViewMode, setTaskListViewMode] =
     useState<GridViewMode>("grid-3");
-  // 적응형 인테이크 — 크롭 대상 슬롯 인덱스 (플래그 on일 때만 활성)
+  // 추출 버튼을 누른 즉시 "자료 목록"에 띄우는 낙관적 로딩 카드. 실제 잡이 들어오면
+  // (onVisibleTasksChange에서 jobId 일치 감지) 또는 실패/취소 시 제거한다.
+  const [pendingTask, setPendingTask] = useState<BaseTask | null>(null);
+  const beginPendingTask = useCallback((title: string) => {
+    setPendingTask({
+      id: `pending-${crypto.randomUUID()}`,
+      domain: "extraction",
+      title: title || "추출 준비 중…",
+      subtitle: "추출을 준비하고 있습니다…",
+      status: "processing",
+      createdAt: new Date().toISOString(),
+      stats: [{ label: "상태", value: "처리 중", tone: "blue" }],
+    });
+  }, []);
+  // 적응형 인테이크 — 인라인 크롭 보드(모달 없이 업로드 영역에서 바로 크롭).
   const adaptiveIntake = FEATURE_FLAGS.EXTRACTION_ADAPTIVE_INTAKE;
-  const [cropSlotIndex, setCropSlotIndex] = useState<number | null>(null);
-  const [previewSlotIndex, setPreviewSlotIndex] = useState<number | null>(null);
   // P7-D2: 추출 산출 방식 — 기본 "원문 그대로(verbatim)", 옵션 "AI 복원(restored)".
   const [outputMode, setOutputMode] = useState<"verbatim" | "restored">(
     "verbatim",
   );
-  // 연속 캔버스 영역 나누기 — 올린 N장을 한 모달에 스택해 크롭+번호로 지문 정의.
-  // (기존 이미지별 크롭 + "여러 장 합치기"를 하나로 통합)
-  const [stackedCropOpen, setStackedCropOpen] = useState(false);
-  // 여러 장 합치기(접근 A) — 선택 모드 + 선택 slotId(클릭순) + 합치기 프리뷰
-  const [selectMode, setSelectMode] = useState(false);
-  const [mergeSelection, setMergeSelection] = useState<string[]>([]);
-  const [mergePreview, setMergePreview] = useState<{
-    blob: Blob;
-    url: string;
-    width: number;
-    height: number;
-    materials: ClientPageSlot[];
-  } | null>(null);
 
   const bootstrapped = useRef(false);
-  const navigatedToManage = useRef(false);
   const fileInputId = "m1-passage-workroom-file-input";
 
   const UPLOAD_COLLAPSE_KEY = "smoat:extraction-bulk:upload:collapsed";
@@ -209,18 +205,25 @@ export function BulkExtractClient({
     setPhase("idle");
   }, [router, setMode, setPhase]);
 
-  // 추출이 끝나(=`reviewing` 진입) 잡이 terminal 상태가 되면 자동으로 관리
-  // 페이지로 이동시킨다. 이 페이지(`/import`)의 ReviewStep은 M1
-  // (`extraction_m1_passage_drafts`)을 표시하지 않으므로, 추출 직후 사용자가
-  // 손으로 새로고침/이동을 해야만 결과를 볼 수 있는 동선이 있었다. `?jobId`로
-  // 진입한 ManageClient는 그 잡의 `loadJobDetails`를 호출해 drafts를 표시한다.
+  // (추출 완료 후 자료 관리 페이지로 자동 이동하던 동선은 제거 — 사용자가 이 페이지에
+  //  머무르며 큐(작업 목록)에서 직접 결과를 확인한다.)
+
+  // 잡 id가 생기는 즉시(=createJob 직후, OCR 전) 큐를 열고 새로고침해 항목이
+  // 곧바로 보이게 한다. 예전엔 startUpload(이미지=OCR까지 동기)가 전부 끝난 뒤에야
+  // 큐가 떠서 "추출 다 되고 나서 큐 생김"처럼 느껴졌다. setJobId는 createJob 직후
+  // (업로드·OCR 진행 전) 호출되므로 여기서 켜면 처리 시작과 동시에 큐에 보인다.
   useEffect(() => {
-    if (navigatedToManage.current) return;
-    if (phase !== "reviewing") return;
     if (!jobId) return;
-    navigatedToManage.current = true;
-    router.replace(`/director/workbench/passages/import/jobs?jobId=${jobId}`);
-  }, [phase, jobId, router]);
+    queueDrawer.setOpen(true);
+    queueDrawer.triggerRefresh();
+    // queueDrawer는 컨텍스트로 안정적 — jobId 변할 때만 실행.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobId]);
+
+  // 추출이 실패(error)로 끝나면 낙관적 로딩 카드를 제거한다.
+  useEffect(() => {
+    if (error) setPendingTask(null);
+  }, [error]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -228,11 +231,10 @@ export function BulkExtractClient({
         phase === "preparing" ||
         phase === "uploading" ||
         phase === "starting" ||
-        // 인라인 추출은 HTTP 요청이 열려 있는 동안(processing) 진행되며, 중도
-        // 이탈 시 비내구적이라 잡이 PROCESSING으로 잔류한다(리퍼가 늦게 복구).
-        // 트리거 경로의 processing은 백그라운드 durable이라 경고가 약간 과하지만,
-        // 작업 진행 중 이탈 경고 자체는 해롭지 않다.
-        phase === "processing"
+        phase === "processing" ||
+        // 백그라운드(파이어 앤 포겟)로 도는 인라인 OCR이 남아 있으면 이탈 경고.
+        // 도중 이탈하면 요청이 끊겨 잡이 PROCESSING으로 잔류(리퍼가 복구).
+        isInlineExtractionInFlight()
       ) {
         event.preventDefault();
         event.returnValue = "";
@@ -420,13 +422,17 @@ export function BulkExtractClient({
     ],
   );
 
-  const startExtraction = useCallback(async () => {
+  const startExtraction = useCallback(
+    async (passageSlots?: ClientPageSlot[]) => {
     if (slots.length === 0) {
       setError("추출할 파일을 먼저 추가해 주세요.");
       return;
     }
-    // 크롭 떠낸 원본(추출 제외)은 빼고, 실제 추출 대상만 0..N-1로 재인덱싱.
-    const extractable = adaptiveIntake ? slots.filter(isExtractable) : slots;
+    // 인라인 보드가 구운 지문 슬롯(crop/merged/original)을 그대로 사용. 보드가
+    // 없거나 안 넘어온 경우엔 store slots. 추출 제외분(잘라낸 원본)만 거른 뒤
+    // 0..N-1로 재인덱싱한다(원본은 excludedFromExtraction이 없어 그대로 통과).
+    const source = passageSlots ?? slots;
+    const extractable = source.filter(isExtractable);
     if (extractable.length === 0) {
       setError("추출할 자료가 없습니다. (잘라낸 원본은 추출에서 제외됩니다)");
       return;
@@ -455,27 +461,31 @@ export function BulkExtractClient({
       outputMode: adaptiveIntake ? outputMode : undefined,
     });
     if (nextJobId) {
+      // 큐 열기·새로고침은 jobId 변화 effect가 createJob 직후 즉시 처리한다.
       setJobId(nextJobId);
       setSlots([]);
       setSourceName(null);
       setSourceType(null);
       setUploadProgress(null);
-      queueDrawer.setOpen(true);
-      queueDrawer.triggerRefresh();
+      // 제출 완료 → 입력 영역을 중립(idle)으로 되돌려 곧바로 다음 추출을 시작할 수
+      // 있게 한다. 진행 중인 잡은 "자료 목록"이 추적한다(인라인은 백그라운드 진행).
+      setPhase("idle");
     }
-  }, [
-    adaptiveIntake,
-    outputMode,
-    queueDrawer,
-    setError,
-    setJobId,
-    setSlots,
-    setUploadProgress,
-    slots,
-    sourceName,
-    sourceType,
-    startUpload,
-  ]);
+    },
+    [
+      adaptiveIntake,
+      outputMode,
+      setError,
+      setJobId,
+      setPhase,
+      setSlots,
+      setUploadProgress,
+      slots,
+      sourceName,
+      sourceType,
+      startUpload,
+    ],
+  );
 
   const startTextExtraction = useCallback(async () => {
     const trimmedText = textValue.trim();
@@ -489,6 +499,9 @@ export function BulkExtractClient({
       setError(null);
       setPhase("starting");
       setJobId(null);
+      // 버튼 누르는 즉시 큐를 열고 "자료 목록"에 로딩 카드를 띄운다.
+      queueDrawer.setOpen(true);
+      beginPendingTask(trimmedTitle || "텍스트 추출…");
       const res = await fetch("/api/extraction/text", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -509,8 +522,6 @@ export function BulkExtractClient({
       setPhase("reviewing");
       setTextTitle("");
       setTextValue("");
-      queueDrawer.setOpen(true);
-      queueDrawer.triggerRefresh();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
@@ -519,6 +530,7 @@ export function BulkExtractClient({
     }
   }, [
     adaptiveIntake,
+    beginPendingTask,
     outputMode,
     queueDrawer,
     setError,
@@ -528,186 +540,11 @@ export function BulkExtractClient({
     textValue,
   ]);
 
-  // 크롭 확정 → 소스를 '추출 제외'로 표시하고, 떠낸 영역들을 소스 바로 뒤에 그룹으로
-  // 끼워넣는다. 재편집이면 같은 소스의 기존 자식을 먼저 제거해 중복을 막는다.
-  const handleCropConfirm = useCallback(
-    (croppedSlots: ClientPageSlot[], boxes: CropBox[], boxGroups: number[]) => {
-      if (cropSlotIndex === null) {
-        return;
-      }
-      const source = slots[cropSlotIndex];
-      if (!source || croppedSlots.length === 0) {
-        setCropSlotIndex(null);
-        return;
-      }
-      const sourceId = source.slotId ?? crypto.randomUUID();
-      // 이 소스의 기존 크롭 자식 제거(재편집 중복 방지). 소스 자체는 유지.
-      const base = slots.filter(
-        (s) => s === source || s.sourceSlotId !== sourceId,
-      );
-      if (base.length + croppedSlots.length > MAX_PAGES_PER_JOB) {
-        setError(
-          `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
-        );
-        setCropSlotIndex(null);
-        return;
-      }
-      const stamped = croppedSlots.map((s) => ({
-        ...s,
-        slotId: crypto.randomUUID(),
-        sourceSlotId: sourceId,
-      }));
-      const srcIdx = base.findIndex((s) => s === source);
-      const next = [...base];
-      next[srcIdx] = {
-        ...source,
-        slotId: sourceId,
-        kind: "source" as const,
-        excludedFromExtraction: true,
-        cropRegions: boxes,
-        initialGroups: boxGroups,
-      };
-      next.splice(srcIdx + 1, 0, ...stamped);
-      setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
-      setCropSlotIndex(null);
-    },
-    [cropSlotIndex, setError, setSlots, slots],
-  );
-
-  // ── 연속 캔버스 영역 나누기 확정 ────────────────────────────────────────
-  // 스택 모달이 모든 이미지를 한 번에 처리해 "지문 슬롯들"을 돌려준다 → 트레이를
-  // 그 지문들로 교체(1슬롯=1지문). 합치기 단계 없이 크롭+번호가 곧 지문.
-  const handleStackedCropConfirm = useCallback(
-    (passageSlots: ClientPageSlot[]) => {
-      if (passageSlots.length === 0) {
-        setStackedCropOpen(false);
-        return;
-      }
-      if (passageSlots.length > MAX_PAGES_PER_JOB) {
-        // 모달이 1차로 막지만(maxPassages), 방어적으로 여기서도 차단 — 모달을
-        // 닫아 busy 잠금으로 갇히지 않게 한다.
-        setError(
-          `한 작업에는 최대 ${MAX_PAGES_PER_JOB}페이지까지 넣을 수 있습니다.`,
-        );
-        setStackedCropOpen(false);
-        return;
-      }
-      setSlots(
-        passageSlots.map((s, i) => ({
-          ...s,
-          pageIndex: i,
-          slotId: s.slotId ?? crypto.randomUUID(),
-        })),
-      );
-      setStackedCropOpen(false);
-    },
-    [setError, setSlots],
-  );
-
-  // ── 여러 장 합치기(접근 A) 핸들러 ───────────────────────────────────────
-  const toggleSelectMode = useCallback(() => {
-    setSelectMode((p) => !p);
-    setMergeSelection([]);
-  }, []);
-
-  const toggleSlotSelect = useCallback((slotId: string) => {
-    setMergeSelection((prev) =>
-      prev.includes(slotId)
-        ? prev.filter((id) => id !== slotId)
-        : [...prev, slotId],
-    );
-  }, []);
-
-  // 클릭 순서(=읽기 순서)대로 선택 슬롯 이미지를 미리 이어붙여 확인 모달 오픈.
-  const handleOpenMergePreview = useCallback(async () => {
-    const materials = mergeSelection
-      .map((id) => slots.find((s) => s.slotId === id))
-      .filter((s): s is ClientPageSlot => !!s && isExtractable(s));
-    if (materials.length < 2) return;
-    try {
-      const { blob, width, height, previewUrl } = await stitchSlotsToBlob(
-        materials.map((s) => s.blob),
-        { maxWidth: 2480 },
-      );
-      setMergePreview({ blob, url: previewUrl, width, height, materials });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "이어붙이기에 실패했습니다.",
-      );
-    }
-  }, [mergeSelection, slots, setError]);
-
-  // 확인 모달 확정 → 재료를 source+제외로, 첫 재료 위치에 merged 1개 삽입.
-  const handleConfirmMerge = useCallback(
-    (
-      orderedMaterials: ClientPageSlot[],
-      finalBlob: Blob,
-      finalUrl: string,
-      width: number,
-      height: number,
-    ) => {
-      const matIds = new Set(orderedMaterials.map((s) => s.slotId));
-      const firstIdx = slots.findIndex(
-        (s) => s.slotId != null && matIds.has(s.slotId),
-      );
-      if (firstIdx < 0) {
-        setMergePreview(null);
-        return;
-      }
-      const next = slots.map((s) =>
-        s.slotId != null && matIds.has(s.slotId)
-          ? { ...s, kind: "source" as const, excludedFromExtraction: true }
-          : s,
-      );
-      const merged: ClientPageSlot = {
-        pageIndex: 0,
-        blob: finalBlob,
-        previewUrl: finalUrl,
-        bytes: finalBlob.size,
-        width,
-        height,
-        sourceFileName: `이어붙인 지문 · ${orderedMaterials.length}장`,
-        slotId: crypto.randomUUID(),
-        kind: "merged",
-        regionCount: orderedMaterials.length,
-        mergedFromSlotIds: orderedMaterials
-          .map((s) => s.slotId)
-          .filter((id): id is string => !!id),
-      };
-      next.splice(firstIdx + 1, 0, merged);
-      setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
-      setMergePreview(null);
-      setSelectMode(false);
-      setMergeSelection([]);
-    },
-    [slots, setSlots],
-  );
-
-  // merged "합치기 되돌리기" → merged 제거 + 재료 원복.
-  const handleUnmerge = useCallback(
-    (mergedSlotId: string) => {
-      const merged = slots.find((s) => s.slotId === mergedSlotId);
-      if (!merged || merged.kind !== "merged") return;
-      const restoreIds = new Set(merged.mergedFromSlotIds ?? []);
-      const next = slots
-        .filter((s) => s.slotId !== mergedSlotId)
-        .map((s) =>
-          s.slotId && restoreIds.has(s.slotId)
-            ? { ...s, kind: undefined, excludedFromExtraction: false }
-            : s,
-        );
-      setSlots(next.map((s, i) => ({ ...s, pageIndex: i })));
-    },
-    [slots, setSlots],
-  );
-
   const clearFiles = useCallback(() => {
     setSlots([]);
     setSourceName(null);
     setSourceType(null);
     setError(null);
-    setSelectMode(false);
-    setMergeSelection([]);
   }, [setError, setSlots]);
 
   const clearText = useCallback(() => {
@@ -718,7 +555,6 @@ export function BulkExtractClient({
 
   const inputBusy =
     phase === "preparing" || phase === "uploading" || phase === "starting";
-  const runBusy = inputBusy || phase === "processing";
 
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
@@ -772,12 +608,7 @@ export function BulkExtractClient({
           {!uploadCollapsed ? (
             <>
               <div
-                className={
-                  "grid min-h-0 overflow-hidden " +
-                  (adaptiveIntake
-                    ? "grid-cols-1"
-                    : "xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px]")
-                }
+                className="grid min-h-0 grid-cols-1 overflow-hidden"
                 style={{ height: uploadHeight }}
               >
                 <UploadPanel
@@ -801,44 +632,17 @@ export function BulkExtractClient({
                   onTextValueChange={setTextValue}
                   onReorderSlots={reorderSlots}
                   onRemoveSlot={removeSlot}
-                  onCropSlot={
-                    adaptiveIntake ? (index) => setCropSlotIndex(index) : undefined
-                  }
-                  onOpenStackedCrop={
-                    adaptiveIntake ? () => setStackedCropOpen(true) : undefined
-                  }
-                  onPreviewSlot={
-                    adaptiveIntake
-                      ? (index) => setPreviewSlotIndex(index)
-                      : undefined
-                  }
-                  selectMode={adaptiveIntake ? selectMode : undefined}
-                  mergeSelection={adaptiveIntake ? mergeSelection : undefined}
-                  onToggleSelectMode={
-                    adaptiveIntake ? toggleSelectMode : undefined
-                  }
-                  onToggleSlotSelect={
-                    adaptiveIntake ? toggleSlotSelect : undefined
-                  }
-                  onClearSelection={
-                    adaptiveIntake ? () => setMergeSelection([]) : undefined
-                  }
-                  onOpenMergePreview={
-                    adaptiveIntake ? handleOpenMergePreview : undefined
-                  }
-                  onUnmerge={adaptiveIntake ? handleUnmerge : undefined}
+                  onBeforeStart={() => {
+                    // 직전 잡 id를 먼저 비운다 — 안 그러면 onVisibleTasksChange가
+                    // 옛 잡을 보고 방금 띄운 로딩 카드를 즉시 지워버린다.
+                    setJobId(null);
+                    queueDrawer.setOpen(true);
+                    beginPendingTask(sourceName ?? "추출 준비 중…");
+                  }}
+                  onStartAborted={() => setPendingTask(null)}
                   outputMode={adaptiveIntake ? outputMode : undefined}
                   onOutputModeChange={adaptiveIntake ? setOutputMode : undefined}
                 />
-                {adaptiveIntake ? null : (
-                  <ExtractionRunPanel
-                    busy={runBusy}
-                    inputMode={inputMode}
-                    pageCount={slots.length}
-                    textLength={textValue.trim().length}
-                    activeJobId={jobId}
-                  />
-                )}
               </div>
               <div className="relative flex items-center justify-end px-4 pb-1 pt-1">
                 <div
@@ -873,7 +677,16 @@ export function BulkExtractClient({
           emptyMessage="아직 등록된 자료가 없습니다."
           viewMode={taskListViewMode}
           onViewModeChange={setTaskListViewMode}
-          onTaskClick={(task) => openPreviewDrawer(task.id)}
+          pendingTasks={pendingTask ? [pendingTask] : undefined}
+          refreshSignal={queueDrawer.refreshKey}
+          onVisibleTasksChange={(tasks) => {
+            // 실제 잡이 목록에 들어오면 낙관적 로딩 카드를 제거.
+            if (jobId && tasks.some((t) => t.id === jobId)) setPendingTask(null);
+          }}
+          onTaskClick={(task) => {
+            if (task.id.startsWith("pending-")) return; // 낙관적 카드는 클릭 무시
+            openPreviewDrawer(task.id);
+          }}
           onRenameTask={async (task, next) => {
             try {
               const body = JSON.stringify({
@@ -910,56 +723,6 @@ export function BulkExtractClient({
           onClose={() => setPreviewJobId(null)}
           initialCollections={initialCollections}
           initialCollectionMembership={initialCollectionMembership}
-        />
-      ) : null}
-
-      {adaptiveIntake && cropSlotIndex !== null && slots[cropSlotIndex] ? (
-        <CropModal
-          slot={slots[cropSlotIndex]}
-          initialBoxes={slots[cropSlotIndex].cropRegions}
-          initialGroups={slots[cropSlotIndex].initialGroups}
-          onCancel={() => setCropSlotIndex(null)}
-          onConfirm={handleCropConfirm}
-        />
-      ) : null}
-
-      {adaptiveIntake &&
-      previewSlotIndex !== null &&
-      slots[previewSlotIndex] ? (
-        <SlotPreviewModal
-          slot={slots[previewSlotIndex]}
-          onClose={() => setPreviewSlotIndex(null)}
-          onEdit={
-            isCroppable(slots[previewSlotIndex])
-              ? () => {
-                  const idx = previewSlotIndex;
-                  setPreviewSlotIndex(null);
-                  setCropSlotIndex(idx);
-                }
-              : undefined
-          }
-        />
-      ) : null}
-
-      {adaptiveIntake && mergePreview ? (
-        <MergeConfirmModal
-          initial={mergePreview}
-          onCancel={() => {
-            URL.revokeObjectURL(mergePreview.url);
-            setMergePreview(null);
-          }}
-          onConfirm={handleConfirmMerge}
-        />
-      ) : null}
-
-      {adaptiveIntake && stackedCropOpen ? (
-        <StackedCropModal
-          // 원본(original/source)만 캔버스로 — 이미 잘라낸 crop/merged 결과를
-          // 다시 크롭 대상으로 넣지 않는다.
-          images={slots.filter(isCroppable)}
-          maxPassages={MAX_PAGES_PER_JOB}
-          onCancel={() => setStackedCropOpen(false)}
-          onConfirm={handleStackedCropConfirm}
         />
       ) : null}
     </div>

@@ -94,6 +94,7 @@ google-credentials*.json
 /hwp_mcp.log
 /data/
 /public/promo/
+/public/brixs-strawberry-latte-clean-final-20260531/
 /.agents/
 /.codex/
 /skills-lock.json
@@ -102,6 +103,7 @@ google-credentials*.json
 
 # scratch / test harness output
 /tmp/
+.tmp/
 
 # demo screen recordings (large binaries)
 /public/recordings/*.webm

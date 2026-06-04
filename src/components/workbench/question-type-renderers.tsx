@@ -51,7 +51,7 @@ import {
   formatGrammarCorrectionCorrectAnswer,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ============================================================================
 // 수능/모의고사 객관식 (10 types)
@@ -136,8 +136,7 @@ export function VocabChoiceRenderer({ q }: { q: VocabChoiceQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <PassageBlock>{renderPassageFormatted(formatInlineMarkersForSubtype(q.passageWithMarkers, "VOCAB_CHOICE"))}</PassageBlock>
       <AnswerRevealSection>
         {q.markedWords && (
           <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
@@ -183,17 +182,11 @@ export function SentenceOrderRenderer({ q }: { q: SentenceOrderQuestion }) {
 }
 
 export function SentenceInsertRenderer({ q }: { q: SentenceInsertQuestion }) {
-  const options = q.options.map((option, index) => ({
-    ...option,
-    text: optionDisplayTextForSubtype("SENTENCE_INSERT", index, option.text),
-  }));
-
   return (
     <>
       <Direction text={q.direction} />
       <GivenSentenceBox sentence={q.givenSentence} label="삽입할 문장" />
       <PassageBlock>{renderWithMarkers(q.passageWithMarkers)}</PassageBlock>
-      <OptionList options={options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
@@ -362,7 +355,6 @@ export function IrrelevantRenderer({ q }: { q: IrrelevantQuestion }) {
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderMarkedSentencePassage(q.passageWithNumbers)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
@@ -588,11 +580,17 @@ export function AntonymRenderer({ q }: { q: AntonymQuestion }) {
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">단어 - 반의어</span>
             <div className="space-y-1">
               {q.markedWords.map((mw, i) => (
-                <div key={i} className="text-[12px] flex items-center gap-2">
+                <div
+                  key={i}
+                  className={`text-[12px] flex items-center gap-2 ${mw.isIncorrectPair ? "text-red-700" : ""}`}
+                >
                   <span className="font-bold text-blue-600 w-6">{mw.label}</span>
                   <span className="text-slate-700">{mw.word}</span>
                   <span className="text-slate-400">--</span>
-                  <span className="text-slate-700">{mw.antonym}</span>
+                  <span className={mw.isIncorrectPair ? "line-through" : "text-slate-700"}>{mw.antonym}</span>
+                  {mw.isIncorrectPair && mw.correctAntonym && (
+                    <span className="text-emerald-700 font-semibold">→ {mw.correctAntonym}</span>
+                  )}
                 </div>
               ))}
             </div>

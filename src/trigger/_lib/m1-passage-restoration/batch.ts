@@ -3,21 +3,9 @@ import {
   groundedRestorationBatchResponseSchema,
   type GroundedRestorationBatchItem,
 } from "@/lib/extraction/restoration";
-import {
-  decideRestorationStatus,
-  hasUnresolvedM1ProblemArtifacts,
-} from "@/lib/extraction/m1-restoration";
 import { generateStructuredTextWithTriggerFetch } from "../gemini-ocr";
-import { findPassageSourceMatches } from "../m2-source-match";
-import {
-  copyCommittedDraftChanges,
-  createWholePassageChange,
-  readSelectedSourceMatch,
-} from "./changes";
 import { buildFallbackResult } from "./fallback";
-import { baseMetadata } from "./metadata";
 import { projectFromBatchItem } from "./project-batch-item";
-import { isPollutedExactSourceMatch } from "./text-utils";
 import type {
   M1PassageRestorationResult,
   PendingGroundedTask,
@@ -85,131 +73,23 @@ export async function restoreM1PassageBatch(
     }
   };
 
-  // Stage 1: per-input localDb 매칭을 병렬로 실행.
-  const stageOne = await Promise.all(
-    inputs.map(async (input, index) => {
-      const questions = input.questions ?? [];
-      const problemEvidence = input.problemEvidence ?? null;
-      const localMatches = await findPassageSourceMatches({
-        academyId: input.academyId,
-        problemText: input.rawText,
-      });
-      const selectedLocal = readSelectedSourceMatch(localMatches);
-      const pollutedExactLocalMatch = Boolean(
-        selectedLocal?.content &&
-          isPollutedExactSourceMatch({
-            rawText: input.rawText,
-            sourceText: selectedLocal.content,
-          }),
-      );
-      let immediate: M1PassageRestorationResult | null = null;
-      if (
-        selectedLocal?.content &&
-        !pollutedExactLocalMatch &&
-        !hasUnresolvedM1ProblemArtifacts(selectedLocal.content)
-      ) {
-        const restoredText = selectedLocal.content.trim();
-        // Same post-hoc check as the single-call LOCAL_DB hit path: when DB
-        // content is whitespace-equal to the raw OCR text we shouldn't claim
-        // a restoration happened.
-        const localHitStatus = decideRestorationStatus({
-          rawText: input.rawText,
-          restoredText,
-          aiFinalStatus: "RESTORED",
-        });
-        const sourceMatchCard = createWholePassageChange({
-          rawText: input.rawText,
-          restoredText,
-          changeType: "source-match",
-          reason:
-            "Restored from a near-exact same-academy committed draft (DB 원본 매칭).",
-          confidence: selectedLocal.confidence,
-        });
-        const sourceDraftId =
-          typeof selectedLocal.sourceId === "string"
-            ? selectedLocal.sourceId
-            : null;
-        const copiedChanges = sourceDraftId
-          ? await copyCommittedDraftChanges(sourceDraftId)
-          : [];
-        immediate = {
-          restoredText,
-          status: localHitStatus,
-          confidence: selectedLocal.confidence,
-          changes: [...sourceMatchCard, ...copiedChanges],
-          warnings: [],
-          metadata: baseMetadata({
-            method: "LOCAL_DB",
-            stages: { localDb: "MATCHED", grounded: "SKIPPED_LOCAL_DB_HIT" },
-            problemEvidence,
-            sourceMatch: selectedLocal,
-          }),
-          sourceMatches: localMatches,
-        };
-      }
-      const usableLocalMatches = localMatches.filter((match) => {
-        if (!match.content) return true;
-        if (hasUnresolvedM1ProblemArtifacts(match.content)) return false;
-        return !isPollutedExactSourceMatch({
-          rawText: input.rawText,
-          sourceText: match.content,
-        });
-      });
-      return {
-        index,
-        immediate,
-        pending: immediate
-          ? null
-          : ({
-              index,
-              taskId: `task-${index + 1}`,
-              input,
-              questions,
-              problemEvidence,
-              usableLocalMatches,
-              pollutedExactLocalMatch,
-              localMatches,
-            } as PendingGroundedTask),
-      };
-    }),
-  );
-
+  // 크롭-네이티브 재설계 — 로컬 DB 조회(findPassageSourceMatches) 제거. 모든 입력을
+  // 곧장 AI 복원(pending)으로 보낸다. 이전엔 입력마다 academy 전체 COMMITTED draft를
+  // 키워드 스캔하는 DB 왕복이 있었고(크롭 N개면 N회 병렬), 1슬롯=1지문 자체 크롭
+  // 모델에선 "같은 시험지 재추출 캐시"의 가치가 낮아 제거한다.
   const results: (M1PassageRestorationResult | null)[] = new Array(
     inputs.length,
   ).fill(null);
-  const pendingTasks: PendingGroundedTask[] = [];
-  // Stage-1 LocalDB hits — surface them right away so callers can flush the
-  // matching draft rows out of "PENDING" state before grounded calls finish.
-  const immediateIndices: number[] = [];
-  const immediateResults: M1PassageRestorationResult[] = [];
-  for (const row of stageOne) {
-    if (row.immediate) {
-      results[row.index] = row.immediate;
-      immediateIndices.push(row.index);
-      immediateResults.push(row.immediate);
-    } else if (row.pending) {
-      pendingTasks.push(row.pending);
-    }
-  }
-  await notify(immediateIndices, immediateResults);
-
-  if (pendingTasks.length === 0) {
-    return results.map(
-      (r, i) => r ?? buildFallbackResult(
-        {
-          index: i,
-          taskId: `task-${i + 1}`,
-          input: inputs[i],
-          questions: inputs[i].questions ?? [],
-          problemEvidence: inputs[i].problemEvidence ?? null,
-          usableLocalMatches: [],
-          pollutedExactLocalMatch: false,
-          localMatches: [],
-        },
-        "no_pending_tasks_filler",
-      ),
-    );
-  }
+  const pendingTasks: PendingGroundedTask[] = inputs.map((input, index) => ({
+    index,
+    taskId: `task-${index + 1}`,
+    input,
+    questions: input.questions ?? [],
+    problemEvidence: input.problemEvidence ?? null,
+    usableLocalMatches: [],
+    pollutedExactLocalMatch: false,
+    localMatches: [],
+  }));
 
   // Stage 2: 남은 task 들을 BATCH_SIZE 단위로 묶어서 grounded 호출. Each batch
   // is dispatched in parallel but its onBatchComplete callback fires as soon

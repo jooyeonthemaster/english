@@ -119,6 +119,17 @@ interface TaskQueueInlineListProps {
     minHeight?: number;
     maxHeight?: number;
   };
+  /**
+   * Optimistic placeholder cards prepended to the fetched list — e.g. a job
+   * that was just submitted but isn't in the server snapshot yet. Any pending
+   * task whose `id` later matches a fetched task is dropped automatically.
+   */
+  pendingTasks?: BaseTask[];
+  /**
+   * External refresh signal. When this number changes, the list refetches
+   * immediately instead of waiting for the next poll. Defaults to 0.
+   */
+  refreshSignal?: number;
 }
 
 function gridCardClass(status: TaskStatus): string {
@@ -872,11 +883,20 @@ export function TaskQueueInlineList({
   getTaskDragCount,
   onRenameTask,
   collapsible,
+  pendingTasks,
+  refreshSignal,
 }: TaskQueueInlineListProps) {
-  const { tasks, loading, reload } = useTaskList({
+  const { tasks: fetchedTasks, loading, reload } = useTaskList({
     scope: domain,
-    refreshKey: 0,
+    refreshKey: refreshSignal ?? 0,
   });
+  // 낙관적 placeholder를 앞에 끼워넣되, 실제 잡이 들어오면(같은 id) 자동 제외.
+  const tasks = useMemo(() => {
+    if (!pendingTasks || pendingTasks.length === 0) return fetchedTasks;
+    const realIds = new Set(fetchedTasks.map((t) => t.id));
+    const extras = pendingTasks.filter((p) => !realIds.has(p.id));
+    return extras.length ? [...extras, ...fetchedTasks] : fetchedTasks;
+  }, [pendingTasks, fetchedTasks]);
   const [internalViewMode, setInternalViewMode] =
     useState<GridViewMode>("grid-3");
   const viewMode = controlledViewMode ?? internalViewMode;

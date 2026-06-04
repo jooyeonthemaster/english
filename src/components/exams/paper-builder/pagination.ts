@@ -14,6 +14,7 @@ import {
 } from "./option-display";
 import {
   isSummaryCompleteMc,
+  isSummaryCompleteSubtype,
   splitSummaryCompleteMcQuestionText,
   summaryCompleteMcPassageForItem,
   summaryCompleteMcSummaryForItem,
@@ -280,13 +281,13 @@ export function estimateStructuredBodyHeight(
 ): number {
   const subType = item.sourceQuestion.subType;
 
-  if (isSummaryCompleteMc(subType)) {
+  if (isSummaryCompleteSubtype(subType)) {
     const passage = summaryCompleteMcPassageForItem(item);
     const { summary: rawSummary } = splitSummaryCompleteMcQuestionText(item.questionText);
     const summary = summaryCompleteMcSummaryForItem(item, rawSummary);
     const blocks: number[] = [];
     if (passage) blocks.push(structuredBoxTextHeight(passage, settings, "passage"));
-    blocks.push(ARROW_BLOCK_HEIGHT);
+    if (isSummaryCompleteMc(subType)) blocks.push(ARROW_BLOCK_HEIGHT);
     if (summary) blocks.push(structuredBoxTextHeight(summary, settings, "summary"));
     return (
       HEADER_BODY_GAP +

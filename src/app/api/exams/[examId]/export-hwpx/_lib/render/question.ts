@@ -32,9 +32,15 @@ import {
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
-import { shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
+import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import { normalizeQuestionText } from "@/components/exams/paper-builder/text-normalization";
+import {
+  questionHasEmbeddedPassage,
+  shouldRenderSourcePassageInsideQuestion,
+} from "@/components/exams/paper-builder/passage-policy";
 import {
   isSummaryCompleteMc,
+  isSummaryCompleteSubtype,
   splitSummaryCompleteMcQuestionText,
 } from "@/components/exams/paper-builder/summary-complete-mc-layout";
 import {
@@ -103,6 +109,15 @@ function safeParseOptions(raw: string | null | undefined): ParsedOption[] {
   }
 }
 
+function stripOriginalBlock(text: string) {
+  return text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter((block) => block && !/^\[(?:original|\uC6D0\uBB38)\]\s*/i.test(block))
+    .join("\n\n")
+    .trim();
+}
+
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
@@ -114,10 +129,16 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
   const subTypeLabel = subType ? SUBTYPE_LABELS[subType] || subType : "";
-  const questionText = formatInlineMarkersForSubtype(
-    item.questionText ?? item.sourceQuestion.questionText ?? "",
-    subType,
+  const questionText = normalizeQuestionText(
+    formatInlineMarkersForSubtype(
+      item.questionText ?? item.sourceQuestion.questionText ?? "",
+      subType,
+    ),
   ).trim();
+  const displayQuestionText =
+    subType === "SENTENCE_TRANSFORM"
+      ? stripOriginalBlock(questionText)
+      : questionText;
   const parsedOptions = (item.options ?? safeParseOptions(item.sourceQuestion.options))
     .filter((o) => o && (o.text || "").length >= 0);
   const options = shouldRenderOptionListForSubtype(subType) ? parsedOptions : [];
@@ -127,15 +148,22 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
 
   // 본문 텍스트 파싱
-  const sections = parseQuestionSections(questionText, subType);
+  const sections = parseQuestionSections(displayQuestionText, subType);
   const directionSection = sections.find((s) => s.type === "direction");
+  const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
+  const sourcePassageContent = item.passageContent ?? item.sourceQuestion.passage?.content ?? "";
+  const hasEmbeddedSourcePassage = questionHasEmbeddedPassage({
+    ...item.sourceQuestion,
+    questionText,
+    passage: { content: sourcePassageContent },
+  });
   const inlineSourcePassage =
-    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc;
-  const summaryParts = summaryMc
-    ? splitSummaryCompleteMcQuestionText(questionText)
+    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc && !hasEmbeddedSourcePassage;
+  const summaryParts = summaryComplete
+    ? splitSummaryCompleteMcQuestionText(displayQuestionText)
     : { stem: "", summary: "" };
-  const summaryText = summaryMc
+  const summaryText = summaryComplete
     ? formatSummaryCompleteMcSummaryForDisplay(
       summaryParts.summary,
       readSummaryBlankAnswersFromQuestionLike(
@@ -147,7 +175,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     : "";
 
   // 1. 번호 + 메타 + (지시문)
-  if (summaryMc) {
+  if (summaryComplete) {
     const headerRuns: RunNode[] = [
       txt(`${orderNum}. `, {
         size: qNumSize,
@@ -215,13 +243,16 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   //    지문 존재 판정은 sourceQuestion.passage 가 아니라 passageContent 로 한다.
   const sourcePassage = item.sourceQuestion.passage;
   const inlinePassageContent =
-    item.passageContent ?? sourcePassage?.content ?? "";
+    formatSourcePassageForQuestionItems(
+      item.passageContent ?? sourcePassage?.content ?? "",
+      [item],
+    );
   if (inlinePassageContent && (summaryMc || inlineSourcePassage)) {
     result.push(
       ...renderPassage({
         passageTitle: item.passageTitle ?? sourcePassage?.title ?? "",
         passageContent: inlinePassageContent,
-        passageStyle: layout.passageStyle ?? "boxed",
+        passageStyle: "plain",
         showPassageTitle: false,
         compact,
         usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
@@ -231,16 +262,21 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   }
 
   // 3. 본문 섹션들
-  if (summaryMc) {
-    result.push({
-      kind: "p",
-      style: { align: "CENTER", spaceBefore: 20, spaceAfter: 60 },
-      runs: [txt("\u2193", { size: bodySize, bold: true, color: COLORS.gray })],
-    });
+  if (summaryComplete) {
+    if (summaryMc) {
+      result.push({
+        kind: "p",
+        style: { align: "CENTER", spaceBefore: 20, spaceAfter: 60 },
+        runs: [txt("\u2193", { size: bodySize, bold: true, color: COLORS.gray })],
+      });
+    }
     if (summaryText) {
       result.push(
         ...renderSummary(
-          { type: "summary", content: summaryText },
+          {
+            type: "summary",
+            content: summaryMc ? summaryText : `[\uC694\uC57D\uBB38] ${summaryText}`,
+          },
           contentWidthHpu,
         ),
       );

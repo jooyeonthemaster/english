@@ -33,6 +33,8 @@ export async function runPassageOnlyClusterLoop(params: {
   mode: ExtractionMode;
   /** P7-D2: "verbatim"이면 복원 스킵. */
   outputMode: string | null;
+  /** 크롭-네이티브(이미지 크롭 잡): 1슬롯=1지문으로 STEM 재분할 우회. */
+  slotAuthored: boolean;
   originalFileName: string | null;
   sourceMaterialId: string | null;
   snapshotItems: ExtractionItemSnapshot[];
@@ -44,6 +46,7 @@ export async function runPassageOnlyClusterLoop(params: {
     createdById,
     mode,
     outputMode,
+    slotAuthored,
     originalFileName,
     sourceMaterialId,
     snapshotItems,
@@ -117,6 +120,7 @@ export async function runPassageOnlyClusterLoop(params: {
         jobId,
         academyId,
         outputMode,
+        slotAuthored,
         sourceMaterialId: clusterSourceMaterialId,
         items: clusterItems,
         passageOrderOffset: totalDraftCount,

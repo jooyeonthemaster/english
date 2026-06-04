@@ -22,6 +22,10 @@
 
 import { paginateGroups } from "@/components/exams/paper-builder/pagination";
 import {
+  shouldForceSourcePassage,
+  shouldRenderSourcePassageInsideQuestion,
+} from "@/components/exams/paper-builder/passage-policy";
+import {
   normalizePassageText,
   normalizeQuestionText,
 } from "@/components/exams/paper-builder/text-normalization";
@@ -61,6 +65,25 @@ export const EMPTY_BREAK_PLAN: BreakPlanResult = {
   pageCount: 0,
 };
 
+function shouldRenderSeparateSourcePassage(item: PaperItem): boolean {
+  if (item.blockType !== "question") return false;
+  if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) {
+    return false;
+  }
+  const passageContent =
+    item.passageContent || item.sourceQuestion.passage?.content || "";
+  return (
+    Boolean(passageContent.trim()) &&
+    (item.includePassage ||
+      shouldForceSourcePassage({
+        subType: item.sourceQuestion.subType,
+        questionText: item.questionText || item.sourceQuestion.questionText,
+        structuredData: item.sourceQuestion.structuredData,
+        passage: { content: passageContent },
+      }))
+  );
+}
+
 function parseOptionsLoose(raw: unknown): OptionItem[] {
   if (Array.isArray(raw)) {
     return raw
@@ -99,7 +122,7 @@ function paginationSettingsFrom(
     showAnswerSpace: layout.showAnswerSpace !== false,
     showPassageTitle: layout.showPassageTitle !== false,
     showQuestionMeta: layout.showQuestionMeta !== false,
-    passageStyle: layout.passageStyle ?? "boxed",
+    passageStyle: "plain",
     template: (template ?? "clean") as PaginationSettings["template"],
     // HWPX: 1쪽 헤더(제목/학생정보/안내문)를 본문 표 위 별도 블록으로 그리므로
     // 실제 한컴 렌더 높이를 page-0 용량에서 빼 첫 표가 1쪽에 들어가게 한다.
@@ -302,7 +325,7 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
     const last = groups[groups.length - 1];
     if (last && item.groupId && last.id === item.groupId) {
       last.items.push(item);
-      if (item.includePassage && item.passageContent) {
+      if (shouldRenderSeparateSourcePassage(item) && item.passageContent) {
         last.includePassage = true;
         last.passageTitle = item.passageTitle;
         last.passageContent = item.passageContent;
@@ -311,7 +334,7 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
       groups.push({
         id: item.groupId || item.localId,
         items: [item],
-        includePassage: item.includePassage,
+        includePassage: shouldRenderSeparateSourcePassage(item),
         passageTitle: item.passageTitle,
         passageContent: item.passageContent,
       });

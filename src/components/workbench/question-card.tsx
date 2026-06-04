@@ -182,6 +182,43 @@ function normalizeAnswerLabel(value: unknown): string {
   return text.replace(/^[\(\[]?\s*([A-Ja-j]|\d{1,3})\s*[\)\].:]?\s*$/, "$1").toLowerCase();
 }
 
+function pushStructuredTextPart(parts: string[], value: unknown) {
+  if (typeof value === "string" && value.trim()) parts.push(value);
+}
+
+function structuredQuestionTextForCard(
+  structuredData: Record<string, unknown> | null,
+  fallback: string,
+  preferStructured: boolean,
+): string {
+  if (!structuredData || !preferStructured) return fallback;
+
+  const parts: string[] = [];
+  pushStructuredTextPart(parts, structuredData.direction);
+  if (structuredData.matchType) parts.push(`[type: ${String(structuredData.matchType)}]`);
+  if (structuredData.givenSentence) parts.push(`[given] ${String(structuredData.givenSentence)}`);
+  pushStructuredTextPart(parts, structuredData.passageWithBlank);
+  pushStructuredTextPart(parts, structuredData.passageWithMarkers);
+  pushStructuredTextPart(parts, structuredData.passageWithUnderline);
+  pushStructuredTextPart(parts, structuredData.passageWithNumbers);
+
+  if (Array.isArray(structuredData.paragraphs)) {
+    const paragraphText = structuredData.paragraphs
+      .map((paragraph) => {
+        if (!paragraph || typeof paragraph !== "object") return "";
+        const row = paragraph as Record<string, unknown>;
+        return `${String(row.label ?? "")} ${String(row.text ?? "")}`.trim();
+      })
+      .filter(Boolean)
+      .join("\n");
+    pushStructuredTextPart(parts, paragraphText);
+  }
+
+  pushStructuredTextPart(parts, structuredData.sentenceWithBlank);
+  pushStructuredTextPart(parts, structuredData.summaryWithBlanks);
+  return parts.length > 0 ? parts.join("\n\n") : fallback;
+}
+
 // Detect what marking pattern the passage uses: (a)(b)(c), (A)(B)(C), circled numbers, or none
 function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
   if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
@@ -405,6 +442,11 @@ export function QuestionCard({
     typeIncludesPassage || STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES.has(sub);
   const hidePassageBlock = hasStructured && structuredRendererOwnsPassage;
   const showStructured = hasStructured && (!compact || compactExpanded);
+  const flatDisplayQuestionText = structuredQuestionTextForCard(
+    structuredData,
+    displayQuestionText,
+    structuredRendererOwnsPassage,
+  );
   const showFooterActions = showReviewActions && Boolean(q.id);
   const handleEdit = () => {
     if (onEdit) onEdit();
@@ -618,7 +660,7 @@ export function QuestionCard({
                   : "text-[12px] line-clamp-3"
                 : "text-[13px]"
             }`}>
-              {renderFormatted(displayQuestionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
+              {renderFormatted(flatDisplayQuestionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
             </div>
 
             {/* Options */}
@@ -659,7 +701,7 @@ export function QuestionCard({
             })()}
 
             {/* Non-MC answer */}
-            {options.length === 0 && q.correctAnswer && !displayQuestionText.includes(q.correctAnswer) && (
+            {options.length === 0 && q.correctAnswer && !flatDisplayQuestionText.includes(q.correctAnswer) && (
               <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
                 <span className="font-medium">정답:</span> {q.correctAnswer}
               </div>

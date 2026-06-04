@@ -1,16 +1,9 @@
 import {
   Paragraph,
-  Table,
-  TableCell,
-  TableLayoutType,
-  TableRow,
   TextRun,
-  WidthType,
 } from "docx";
-import { COLOR, KR_FONT, PASSAGE_SIZE } from "./styles";
-import { bdr, NONE, noBorders, thinBox } from "./borders";
-import { BorderStyle } from "docx";
-import { makePassageParagraphs, passageTable } from "./passage-base";
+import { KR_FONT, PASSAGE_SIZE } from "./styles";
+import { makePassageParagraphs } from "./passage-base";
 import { parseFormattedText } from "./parse-formatted-text";
 import type { DocChild, ParsedSection } from "./types";
 
@@ -20,8 +13,8 @@ import type { DocChild, ParsedSection } from "./types";
 
 export function renderPassage(content: string): DocChild[] {
   return [
-    passageTable(makePassageParagraphs(content)),
-    new Paragraph({ spacing: { after: 120 } }) // space after passage box
+    ...makePassageParagraphs(content),
+    new Paragraph({ spacing: { after: 120 } })
   ];
 }
 
@@ -46,24 +39,7 @@ export function renderMarkerSection(section: ParsedSection): DocChild[] {
 
   const isKorean = section.label === "영작할 우리말";
 
-  result.push(
-    new Table({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      layout: TableLayoutType.FIXED,
-      rows: [
-        new TableRow({
-          children: [
-            new TableCell({
-              borders: thinBox(COLOR.black, 4),
-              margins: { top: 120, bottom: 120, left: 160, right: 160 },
-              width: { size: 100, type: WidthType.PERCENTAGE },
-              children: makePassageParagraphs(section.content, isKorean),
-            }),
-          ],
-        }),
-      ],
-    })
-  );
+  result.push(...makePassageParagraphs(section.content, isKorean));
 
   result.push(new Paragraph({ spacing: { after: 120 } }));
   return result;
@@ -128,27 +104,7 @@ export function renderError(section: ParsedSection): DocChild[] {
     })
   );
 
-  result.push(
-    new Table({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      borders: {
-        left: bdr(BorderStyle.SINGLE, 12, COLOR.black),
-        top: NONE, right: NONE, bottom: NONE, insideHorizontal: NONE, insideVertical: NONE
-      },
-      rows: [
-        new TableRow({
-          children: [
-            new TableCell({
-              borders: noBorders(),
-              margins: { left: 160 },
-              width: { size: 100, type: WidthType.PERCENTAGE },
-              children: makePassageParagraphs(section.content),
-            }),
-          ],
-        }),
-      ],
-    })
-  );
+  result.push(...makePassageParagraphs(section.content));
 
   result.push(new Paragraph({ spacing: { after: 120 } }));
   return result;
@@ -171,7 +127,7 @@ export function renderSummary(section: ParsedSection): DocChild[] {
     })
   );
 
-  result.push(passageTable(makePassageParagraphs(section.content)));
+  result.push(...makePassageParagraphs(section.content));
   result.push(new Paragraph({ spacing: { after: 120 } }));
 
   return result;

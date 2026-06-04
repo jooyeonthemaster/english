@@ -100,6 +100,7 @@ export const extractionFinalizeTask = task({
         pages: job.pages,
         mode,
         outputMode: job.outputMode, // P7-D2: verbatim이면 자동복원 스킵
+        slotAuthored: job.sourceType === "IMAGES", // 크롭-네이티브(이미지)면 1슬롯=1지문
         originalFileName: job.originalFileName,
         academyId: job.academyId,
         createdById: job.createdById,

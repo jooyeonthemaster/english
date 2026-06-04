@@ -17,8 +17,10 @@ import {
   normalizeQuestionText,
 } from "./text-normalization";
 import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import { getCircledNumber } from "@/lib/question-postprocess/types";
 import { splitSentenceInsertGivenBlock } from "./option-display";
 import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-correction-display";
+import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
 
 export function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -318,18 +320,22 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
       if (shouldRenderSourcePassageForItem(item) && passageContent) {
         last.includePassage = true;
         last.passageTitle = item.passageTitle;
-        last.passageContent = passageContent;
+        last.passageContent = formatSourcePassageForQuestionItems(
+          passageContent,
+          last.items,
+        );
       }
     } else {
       const passageContent = normalizePassageText(
         item.passageContent || item.sourceQuestion.passage?.content || "",
       );
+      const groupItems = [item];
       groups.push({
         id: item.groupId || item.localId,
-        items: [item],
+        items: groupItems,
         includePassage: shouldRenderSourcePassageForItem(item) && Boolean(passageContent),
         passageTitle: item.passageTitle,
-        passageContent,
+        passageContent: formatSourcePassageForQuestionItems(passageContent, groupItems),
       });
     }
   }
@@ -355,6 +361,42 @@ function alphabetMarkerClassNameForSubtype(
   return subType === "SENTENCE_ORDER" ? "font-bold text-black" : "font-bold text-blue-700";
 }
 
+function letterMarkerIndex(letter: string) {
+  const index = letter.toUpperCase().charCodeAt(0) - 65;
+  return index >= 0 && index < 26 ? index : null;
+}
+
+function circledLetterMarkerIndex(marker: string) {
+  const codePoint = marker.codePointAt(0);
+  if (codePoint === undefined || codePoint < 0x24D0 || codePoint > 0x24E9) {
+    return null;
+  }
+  return codePoint - 0x24D0;
+}
+
+function inlineMarkerDisplay(
+  marker: string,
+  subType: string | null | undefined,
+) {
+  if (subType !== "IRRELEVANT") return marker;
+  const markerIndex = circledLetterMarkerIndex(marker);
+  return markerIndex === null ? marker : getCircledNumber(markerIndex);
+}
+
+function parenthesizedMarkerDisplay(
+  letter: string,
+  subType: string | null | undefined,
+) {
+  const markerIndex = letterMarkerIndex(letter);
+  if (
+    (subType === "IRRELEVANT" || subType === "SENTENCE_INSERT" || subType === "VOCAB_CHOICE") &&
+    markerIndex !== null
+  ) {
+    return getCircledNumber(markerIndex);
+  }
+  return `(${letter.toUpperCase()})`;
+}
+
 export function renderFormattedInline(
   text: string,
   subType?: string | null,
@@ -372,11 +414,13 @@ export function renderFormattedInline(
       parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
     }
     if (match[1]) {
-      const circledMarkerMatch = match[1].match(/^([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*(.+)$/);
+      const circledMarkerMatch = match[1].match(/^([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])\s*(.+)$/);
       if (circledMarkerMatch) {
         parts.push(
           <span key={key++} data-mark="u" data-raw={`__${match[1]}__`}>
-            <span className="font-bold text-blue-700">{circledMarkerMatch[1]}</span>
+            <span className="font-bold text-blue-700">
+              {inlineMarkerDisplay(circledMarkerMatch[1], subType)}
+            </span>
             {" "}
             <span className="font-semibold underline decoration-blue-500 underline-offset-4">
               {circledMarkerMatch[2]}
@@ -390,7 +434,9 @@ export function renderFormattedInline(
       if (markerMatch) {
         parts.push(
           <span key={key++} data-mark="u" data-raw={`__${match[1]}__`}>
-            <span className="font-bold text-blue-700">({markerMatch[1].toUpperCase()})</span>
+            <span className="font-bold text-blue-700">
+              {parenthesizedMarkerDisplay(markerMatch[1], subType)}
+            </span>
             {" "}
             <span className="font-semibold underline decoration-blue-500 underline-offset-4">
               {markerMatch[2]}
@@ -407,13 +453,13 @@ export function renderFormattedInline(
     } else if (match[2]) {
       parts.push(
         <span key={key++} className="mx-0.5 font-bold text-blue-700">
-          {match[2]}
+          {inlineMarkerDisplay(match[2], subType)}
         </span>,
       );
     } else if (match[3]) {
       parts.push(
         <span key={key++} className={alphabetMarkerClassName}>
-          ({match[3]})
+          {parenthesizedMarkerDisplay(match[3], subType)}
         </span>,
       );
     } else {
@@ -483,7 +529,7 @@ export function renderQuestionTextInline(
   // 실제 수능 포맷: '주어진 문장' 박스를 지문 '위'에 둔다(라벨은 한글).
   return (
     <>
-      <span data-block="1" className="mb-1.5 block rounded-[4px] border border-slate-400 bg-white/80 px-2.5 py-1.5 leading-[1.55]">
+      <span data-block="1" className="mb-1.5 block leading-[1.55]">
         <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
           주어진 문장
         </span>

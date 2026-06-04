@@ -3,8 +3,16 @@ import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
 const POSITION_MARKER_PATTERN = /^(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\(\d{1,3}\)|\d{1,3}[.)]?)$/;
 const CIRCLED_POSITION_MARKER_PATTERN = /[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/g;
+const CIRCLED_LETTER_MARKER_PATTERN = /[\u24D0-\u24E9]/g;
+const PAREN_LETTER_MARKER_PATTERN = /\(([A-Ea-e])\)/g;
 const CIRCLED_LABELS = getCircledNumbers(50);
 const GRAMMAR_LABEL_KEYS = "ABCDEFGHIJ";
+const PASSAGE_MARKER_ONLY_SUBTYPES = new Set([
+  "GRAMMAR_ERROR",
+  "IRRELEVANT",
+  "SENTENCE_INSERT",
+  "VOCAB_CHOICE",
+]);
 // '[주어진 문장]'(표준) 또는 '[given]'(레거시) 라벨을 양쪽 모두 인식한다.
 // 라벨이 지문 '앞'(신규 직렬화)이든 '뒤'(레거시)이든 한 블록(다음 빈 줄 또는 문자열
 // 끝까지)만 잡아내고, 라벨 접두사는 제거한 채 순수 문장만 돌려준다.
@@ -26,7 +34,7 @@ export function shouldUseGrammarOptionReference(subType: string | null | undefin
 }
 
 export function shouldRenderOptionListForSubtype(subType: string | null | undefined) {
-  return subType !== "GRAMMAR_ERROR";
+  return !PASSAGE_MARKER_ONLY_SUBTYPES.has(subType || "");
 }
 
 export function shouldUseSentenceInsertOptionReference(
@@ -40,15 +48,69 @@ function positionMarkerIndex(optionText: string) {
   return sentenceInsertOptionMarkerIndex(optionText);
 }
 
+function letterMarkerIndex(letter: string) {
+  const index = letter.toUpperCase().charCodeAt(0) - 65;
+  return index >= 0 && index < 26 ? index : null;
+}
+
+function circledLetterMarkerIndex(marker: string) {
+  const codePoint = marker.codePointAt(0);
+  if (codePoint === undefined || codePoint < 0x24D0 || codePoint > 0x24E9) {
+    return null;
+  }
+  return codePoint - 0x24D0;
+}
+
 export function formatSentenceInsertPassageMarkers(
   text: string,
   subType: string | null | undefined,
 ) {
   if (subType !== "SENTENCE_INSERT") return text;
 
-  return text.replace(CIRCLED_POSITION_MARKER_PATTERN, (marker) => {
-    const markerIndex = positionMarkerIndex(marker);
-    return markerIndex === null ? marker : optionReferenceLabel(markerIndex);
+  return text
+    .replace(CIRCLED_POSITION_MARKER_PATTERN, (marker) => {
+      const markerIndex = positionMarkerIndex(marker);
+      return markerIndex === null ? marker : getCircledNumber(markerIndex);
+    })
+    .replace(PAREN_LETTER_MARKER_PATTERN, (_full, letter: string) => {
+      const markerIndex = letterMarkerIndex(letter);
+      return markerIndex === null ? _full : getCircledNumber(markerIndex);
+    });
+}
+
+export function formatIrrelevantPassageMarkers(
+  text: string,
+  subType: string | null | undefined,
+) {
+  if (subType !== "IRRELEVANT") return text;
+
+  return text
+    .replace(CIRCLED_LETTER_MARKER_PATTERN, (marker) => {
+      const markerIndex = circledLetterMarkerIndex(marker);
+      return markerIndex === null ? marker : getCircledNumber(markerIndex);
+    })
+    .replace(PAREN_LETTER_MARKER_PATTERN, (_full, letter: string) => {
+      const markerIndex = letterMarkerIndex(letter);
+      return markerIndex === null ? _full : getCircledNumber(markerIndex);
+    });
+}
+
+function formatVocabChoiceUnderlineContent(content: string): string {
+  const match = content.match(/^\s*\(([A-Ea-e])\)\s+(.+)$/);
+  if (!match) return content;
+
+  const markerIndex = letterMarkerIndex(match[1]);
+  return markerIndex === null ? content : `${getCircledNumber(markerIndex)} ${match[2].trim()}`;
+}
+
+export function formatVocabChoicePassageMarkers(
+  text: string,
+  subType: string | null | undefined,
+) {
+  if (subType !== "VOCAB_CHOICE") return text;
+  return text.replace(/__([^_]+)__/g, (full, content: string) => {
+    const formatted = formatVocabChoiceUnderlineContent(content);
+    return formatted === content ? full : `__${formatted}__`;
   });
 }
 
@@ -114,7 +176,13 @@ export function formatInlineMarkersForSubtype(
   subType: string | null | undefined,
 ) {
   return formatGrammarErrorPassageMarkers(
-    formatSentenceInsertPassageMarkers(text, subType),
+    formatVocabChoicePassageMarkers(
+      formatIrrelevantPassageMarkers(
+        formatSentenceInsertPassageMarkers(text, subType),
+        subType,
+      ),
+      subType,
+    ),
     subType,
   );
 }
@@ -156,7 +224,7 @@ export function optionDisplayTextForSubtype(
   }
 
   if (subType === "SENTENCE_INSERT") {
-    return optionReferenceLabel(positionMarkerIndex(optionText) ?? index);
+    return getCircledNumber(positionMarkerIndex(optionText) ?? index);
   }
 
   return optionText;

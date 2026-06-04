@@ -33,11 +33,16 @@ import {
   splitSentenceInsertGivenBlock,
 } from "@/components/exams/paper-builder/option-display";
 import {
+  questionHasEmbeddedPassage,
   shouldForceSourcePassage,
   shouldRenderSourcePassageInsideQuestion,
 } from "@/components/exams/paper-builder/passage-policy";
+import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import { normalizeQuestionText } from "@/components/exams/paper-builder/text-normalization";
+import { sentenceOrderSegmentsFromQuestionText } from "@/components/exams/paper-builder/question-body-layout";
 import {
   isSummaryCompleteMc,
+  isSummaryCompleteSubtype,
   splitSummaryCompleteMcQuestionText,
 } from "@/components/exams/paper-builder/summary-complete-mc-layout";
 import {
@@ -547,57 +552,7 @@ function buildPassage(opts: {
   if (titlePara) innerChildren.push(titlePara);
   innerChildren.push(...bodyParas);
 
-  if (passageStyle === "boxed") {
-    return [
-      new Table({
-        width: { size: 100, type: WidthType.PERCENTAGE },
-        layout: TableLayoutType.FIXED,
-        rows: [
-          new TableRow({
-            children: [
-              new TableCell({
-                borders: thinBox(COLOR.slate400, 4), // 미리보기 border-slate-400
-                // 미리보기 boxed 지문: px-3 py-2 → L/R 12px=188dxa, T/B 8px=125dxa
-                margins: { top: 125, bottom: 125, left: 188, right: 188 },
-                width: { size: 100, type: WidthType.PERCENTAGE },
-                children: innerChildren,
-              }),
-            ],
-          }),
-        ],
-      }),
-      new Paragraph({ spacing: { after: 120 } }),
-    ];
-  }
-
-  if (passageStyle === "underlined") {
-    return [
-      new Table({
-        width: { size: 100, type: WidthType.PERCENTAGE },
-        layout: TableLayoutType.FIXED,
-        rows: [
-          new TableRow({
-            children: [
-              new TableCell({
-                borders: {
-                  top: bdr(BorderStyle.SINGLE, 6, COLOR.darkGray),
-                  bottom: bdr(BorderStyle.SINGLE, 6, COLOR.darkGray),
-                  left: NONE,
-                  right: NONE,
-                },
-                margins: { top: 100, bottom: 100, left: 0, right: 0 },
-                width: { size: 100, type: WidthType.PERCENTAGE },
-                children: innerChildren,
-              }),
-            ],
-          }),
-        ],
-      }),
-      new Paragraph({ spacing: { after: 120 } }),
-    ];
-  }
-
-  // plain
+  void passageStyle;
   return [...innerChildren, new Paragraph({ spacing: { after: 120 } })];
 }
 
@@ -616,46 +571,43 @@ function extractGivenBlock(text: string, subType: string): { given: string; rest
   return { given, rest };
 }
 
-// 미리보기 'given' 박스(StructuredBody given style): 연한 테두리 + slate-50 배경 + "주어진 문장" 캡션.
+function stripOriginalBlock(text: string) {
+  return text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter((block) => block && !/^\[(?:original|\uC6D0\uBB38)\]\s*/i.test(block))
+    .join("\n\n")
+    .trim();
+}
+
+function shouldPlaceInlinePassageBeforeBody(subType: string): boolean {
+  return (
+    subType === "CONDITIONAL_WRITING" ||
+    subType === "WORD_ORDER" ||
+    subType === "SENTENCE_TRANSFORM"
+  );
+}
+
 function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
   return [
-    new Table({
-      width: { size: 100, type: WidthType.PERCENTAGE },
-      layout: TableLayoutType.FIXED,
-      rows: [
-        new TableRow({
-          children: [
-            new TableCell({
-              borders: thinBox(COLOR.slate300, 4), // 미리보기 given 박스 border-slate-300
-              shading: { fill: "F8FAFC" }, // slate-50
-              margins: { top: 125, bottom: 125, left: 156, right: 156 }, // px-2.5 py-2
-              width: { size: 100, type: WidthType.PERCENTAGE },
-              children: [
-                new Paragraph({
-                  spacing: { after: 30 },
-                  children: [
-                    new TextRun({
-                      text: "주어진 문장",
-                      font: KR_FONT,
-                      size: SIZE_META,
-                      bold: true,
-                      color: COLOR.gray,
-                      characterSpacing: 10,
-                    }),
-                  ],
-                }),
-                new Paragraph({
-                  alignment: AlignmentType.JUSTIFIED,
-                  spacing: { after: 0, ...exactLineSpacing(bodySize, lh) },
-                  children: parseFormattedText(text, { font: KR_FONT, size: bodySize, bold: true }),
-                }),
-              ],
-            }),
-          ],
+    new Paragraph({
+      spacing: { before: 40, after: 30 },
+      children: [
+        new TextRun({
+          text: "주어진 문장",
+          font: KR_FONT,
+          size: SIZE_META,
+          bold: true,
+          color: COLOR.gray,
+          characterSpacing: 10,
         }),
       ],
     }),
-    new Paragraph({ spacing: { after: 80 } }),
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED,
+      spacing: { after: 80, ...exactLineSpacing(bodySize, lh) },
+      children: parseFormattedText(text, { font: KR_FONT, size: bodySize, bold: true }),
+    }),
   ];
 }
 
@@ -677,9 +629,11 @@ function buildQuestionBlock(
   const points = item.points ?? 1;
   const subType = item.sourceQuestion.subType || "";
   const subTypeLabel = subType ? SUBTYPE_LABELS_DOCX[subType] || subType : "";
-  const questionText = formatInlineMarkersForSubtype(
-    item.questionText ?? item.sourceQuestion.questionText ?? "",
-    subType,
+  const questionText = normalizeQuestionText(
+    formatInlineMarkersForSubtype(
+      item.questionText ?? item.sourceQuestion.questionText ?? "",
+      subType,
+    ),
   ).trim();
   const parsedOptions = (item.options ?? safeParseOptions(item.sourceQuestion.options)).filter(
     (o) => o && (o.text || "").length >= 0,
@@ -690,11 +644,20 @@ function buildQuestionBlock(
   const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
   const optionSize = compact ? SIZE_OPTION_COMPACT : SIZE_OPTION;
   const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
+  const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
-  const inlineSourcePassage =
-    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc;
   const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
-  const summaryPartsForHeader = summaryMc
+  const hasEmbeddedSourcePassage = questionHasEmbeddedPassage({
+    ...item.sourceQuestion,
+    questionText,
+    passage: { content: passageContent },
+  });
+  const inlineSourcePassage =
+    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc && !hasEmbeddedSourcePassage;
+  const inlinePassageContent = passageContent
+    ? formatSourcePassageForQuestionItems(passageContent, [item]).trim()
+    : "";
+  const summaryPartsForHeader = summaryComplete
     ? splitSummaryCompleteMcQuestionText(questionText)
     : null;
   const genericHeaderQuestionText = !summaryPartsForHeader
@@ -745,7 +708,7 @@ function buildQuestionBlock(
   );
 
   if (questionText) {
-    if (summaryMc) {
+    if (summaryComplete) {
       const { summary } = summaryPartsForHeader ?? splitSummaryCompleteMcQuestionText(questionText);
       const maskedSummary = formatSummaryCompleteMcSummaryForDisplay(
         summary,
@@ -759,60 +722,97 @@ function buildQuestionBlock(
         result.push(
           ...buildPassage({
             passageTitle: "",
-            passageContent,
-            passageStyle: layout.passageStyle ?? "boxed",
+            passageContent: inlinePassageContent || passageContent,
+            passageStyle: "plain",
             showPassageTitle: false,
             compact,
             usesSentenceInsertMarkers: false,
           }),
         );
       }
-      result.push(
-        new Paragraph({
-          alignment: AlignmentType.CENTER,
-          spacing: { before: 20, after: 50 },
-          children: [
-            new TextRun({
-              text: "\u2193",
-              font: KR_FONT,
-              size: bodySize,
-              bold: true,
-              color: COLOR.gray,
-            }),
-          ],
-        }),
-      );
-      if (maskedSummary) {
+      if (summaryMc) {
         result.push(
-          new Table({
-            width: { size: 100, type: WidthType.PERCENTAGE },
-            layout: TableLayoutType.FIXED,
-            rows: [
-              new TableRow({
-                children: [
-                  new TableCell({
-                    borders: thinBox(COLOR.lightGray, 4),
-                    shading: { fill: "F8FAFC" },
-                    margins: { top: 100, bottom: 100, left: 140, right: 140 },
-                    width: { size: 100, type: WidthType.PERCENTAGE },
-                    children: [
-                      new Paragraph({
-                        alignment: AlignmentType.JUSTIFIED,
-                        spacing: { after: 0, ...exactLineSpacing(bodySize, lh) },
-                        children: parseFormattedText(maskedSummary, {
-                          font: FONT,
-                          size: bodySize,
-                          bold: true,
-                        }),
-                      }),
-                    ],
-                  }),
-                ],
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 20, after: 50 },
+            children: [
+              new TextRun({
+                text: "\u2193",
+                font: KR_FONT,
+                size: bodySize,
+                bold: true,
+                color: COLOR.gray,
               }),
             ],
           }),
-          new Paragraph({ spacing: { after: 90 } }),
         );
+      }
+      if (maskedSummary) {
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 90, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              ...(!summaryMc
+                ? [
+                    new TextRun({
+                      text: "[\uC694\uC57D\uBB38] ",
+                      font: KR_FONT,
+                      size: bodySize,
+                      bold: true,
+                    }),
+                  ]
+                : []),
+              ...parseFormattedText(maskedSummary, {
+                font: FONT,
+                size: bodySize,
+                bold: true,
+              }),
+            ],
+          }),
+        );
+      }
+    } else {
+    if (subType === "SENTENCE_ORDER") {
+      for (const segment of sentenceOrderSegmentsFromQuestionText(questionText)) {
+        if (segment.kind === "box" && segment.boxStyle === "given") {
+          result.push(...buildGivenBox(segment.text.replace(/\s*\n\s*/g, " "), bodySize, lh));
+        } else if (segment.kind === "para") {
+          result.push(
+            new Paragraph({
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { before: 0, after: 60, ...exactLineSpacing(bodySize, lh) },
+              children: [
+                new TextRun({
+                  text: `${segment.label} `,
+                  font: KR_FONT,
+                  size: bodySize,
+                  bold: true,
+                  color: COLOR.black,
+                }),
+                ...parseFormattedText(segment.text, {
+                  font: KR_FONT,
+                  size: bodySize,
+                  bold: true,
+                  markerColor: COLOR.black,
+                }),
+              ],
+            }),
+          );
+        } else if (segment.kind === "text") {
+          result.push(
+            new Paragraph({
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { before: 0, after: 60, ...exactLineSpacing(bodySize, lh) },
+              children: parseFormattedText(segment.text, {
+                font: KR_FONT,
+                size: bodySize,
+                bold: true,
+                markerColor: COLOR.black,
+              }),
+            }),
+          );
+        }
       }
     } else {
     const { given: givenText, rest: restText } = extractGivenBlock(questionText, subType);
@@ -822,7 +822,28 @@ function buildQuestionBlock(
       result.push(...buildGivenBox(givenText.replace(/\s*\n\s*/g, " "), bodySize, lh));
     }
 
-    const questionLines = (restText || questionText).split("\n");
+    if (
+      inlineSourcePassage &&
+      shouldPlaceInlinePassageBeforeBody(subType) &&
+      inlinePassageContent
+    ) {
+      result.push(
+        ...buildPassage({
+          passageTitle: "",
+          passageContent: inlinePassageContent,
+          passageStyle: "plain",
+          showPassageTitle: false,
+          compact,
+          usesSentenceInsertMarkers: false,
+        }),
+      );
+    }
+
+    const visibleRestText =
+      subType === "SENTENCE_TRANSFORM"
+        ? stripOriginalBlock(restText || questionText)
+        : restText || questionText;
+    const questionLines = visibleRestText.split("\n");
 
     let skippedHeaderQuestionLine = false;
     const bodyQuestionParagraphs = questionLines.filter((text) => {
@@ -862,17 +883,22 @@ function buildQuestionBlock(
       );
     });
 
-    if (inlineSourcePassage && passageContent) {
+    if (
+      inlineSourcePassage &&
+      !shouldPlaceInlinePassageBeforeBody(subType) &&
+      inlinePassageContent
+    ) {
       result.push(
         ...buildPassage({
           passageTitle: "",
-          passageContent,
-          passageStyle: layout.passageStyle ?? "boxed",
+          passageContent: inlinePassageContent,
+          passageStyle: "plain",
           showPassageTitle: false,
           compact,
           usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
         }),
       );
+    }
     }
     }
   }
@@ -1377,12 +1403,16 @@ function appendQuestionGroups(
   includeAnswers: boolean,
   compact: boolean,
 ) {
-  const passageStyle = layout.passageStyle ?? "boxed";
+  const passageStyle = "plain";
   const showPassageTitle = layout.showPassageTitle === true;
   const groups = groupItems(items);
   for (const group of groups) {
     const first = group.items[0];
-    const passageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
+    const rawPassageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
+    const passageContent = formatSourcePassageForQuestionItems(
+      rawPassageContent,
+      group.items,
+    ).trim();
     const includePassage =
       !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
       (first.includePassage !== false ||
@@ -1390,7 +1420,7 @@ function appendQuestionGroups(
           subType: first.sourceQuestion.subType,
           questionText: first.questionText || first.sourceQuestion.questionText,
           structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
-          passage: { content: passageContent },
+          passage: { content: rawPassageContent },
         }));
     if (includePassage && passageContent) {
       const passageBlocks = buildPassage({

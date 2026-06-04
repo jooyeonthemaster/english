@@ -13,6 +13,14 @@ export function isSummaryCompleteMc(subType: string | null | undefined) {
   return subType === "SUMMARY_COMPLETE_MC";
 }
 
+export function isSummaryComplete(subType: string | null | undefined) {
+  return subType === "SUMMARY_COMPLETE";
+}
+
+export function isSummaryCompleteSubtype(subType: string | null | undefined) {
+  return isSummaryCompleteMc(subType) || isSummaryComplete(subType);
+}
+
 export function splitSummaryCompleteMcQuestionText(text: string) {
   const normalized = normalizeQuestionText((text || "").replace(BLANK_ANSWERS_RE, ""));
   if (!normalized) return { stem: "", summary: "" };

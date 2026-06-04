@@ -26,6 +26,8 @@ export interface StructuredFinalizeInput {
   mode: ExtractionMode;
   /** P7-D2: 잡 단위 출력 방식. "verbatim"이면 자동 복원 스킵. null=기존 동작. */
   outputMode: string | null;
+  /** 크롭-네이티브(이미지 크롭 잡): 1슬롯=1지문으로 STEM 재분할 우회. PDF/텍스트=false. */
+  slotAuthored: boolean;
   originalFileName: string | null;
   academyId: string;
   createdById: string;
@@ -173,6 +175,7 @@ export async function finalizeStructured(input: StructuredFinalizeInput): Promis
       createdById: input.createdById,
       mode: input.mode,
       outputMode: input.outputMode,
+      slotAuthored: input.slotAuthored,
       originalFileName: input.originalFileName,
       sourceMaterialId,
       snapshotItems,

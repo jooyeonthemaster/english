@@ -1,39 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import {
-  Combine,
-  CornerDownRight,
-  Crop,
   Database,
   FileText,
   Keyboard,
   Loader2,
   PlayCircle,
   Trash2,
-  Undo2,
   UploadCloud,
-  X,
 } from "lucide-react";
 
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
 import { MAX_PAGES_PER_JOB, MAX_PDF_BYTES } from "@/lib/extraction/constants";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
-import {
-  ACCEPTED,
-  SLOT_DRAG_MIME,
-  TEXT_EXTRACTION_MIN_LENGTH,
-} from "../constants";
+import { ACCEPTED, TEXT_EXTRACTION_MIN_LENGTH } from "../constants";
 import type { InputMode } from "../types";
-import { formatBytes } from "../utils";
 import { UploadMetaChip } from "./upload-meta-chip";
 import {
-  isCropChild,
-  isCroppable,
-  isExtractable,
-  slotKindLabel,
-} from "../../intake/crop/slot-meta";
+  InlineCropBoard,
+  type InlineCropBoardCounts,
+  type InlineCropBoardHandle,
+} from "../../intake/crop/inline-crop-board";
+import { RestoreGuideDemo } from "../../intake/crop/restore-guide-demo";
+
+// 사용법 튜토리얼 영상(@remotion/player) — 브라우저 전용이라 lazy + ssr:false.
+const CropTutorialPlayer = dynamic(
+  () =>
+    import("../../intake/tutorial/crop-tutorial-player").then(
+      (m) => m.CropTutorialPlayer,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="w-full animate-pulse rounded-xl bg-slate-100"
+        style={{ aspectRatio: "1280 / 720" }}
+      />
+    ),
+  },
+);
+
+const EMPTY_COUNTS: InlineCropBoardCounts = {
+  regionCount: 0,
+  passageCount: 0,
+  uncroppedCount: 0,
+  totalPassages: 0,
+};
 
 export function UploadPanel({
   busy,
@@ -56,16 +71,8 @@ export function UploadPanel({
   onTextValueChange,
   onReorderSlots,
   onRemoveSlot,
-  onCropSlot,
-  onOpenStackedCrop,
-  onPreviewSlot,
-  selectMode,
-  mergeSelection,
-  onToggleSelectMode,
-  onToggleSlotSelect,
-  onClearSelection,
-  onOpenMergePreview,
-  onUnmerge,
+  onBeforeStart,
+  onStartAborted,
   outputMode,
   onOutputModeChange,
 }: {
@@ -82,128 +89,58 @@ export function UploadPanel({
   onClearText: () => void;
   onFiles: (files: FileList | File[]) => void;
   onInputModeChange: (mode: InputMode) => void;
-  onStart: () => void;
+  /** 파일 모드: 보드가 구운 지문 슬롯을 받아 추출 시작. 비적응형이면 인자 없이 호출. */
+  onStart: (passageSlots?: ClientPageSlot[]) => void | Promise<void>;
   onStartText: () => void;
   onDragActiveChange: (active: boolean) => void;
   onTextTitleChange: (value: string) => void;
   onTextValueChange: (value: string) => void;
   onReorderSlots: (fromIndex: number, toIndex: number) => void;
   onRemoveSlot: (index: number) => void;
-  /** 적응형 인테이크 플래그가 켜졌을 때만 전달 — 슬롯별 "영역 자르기" 진입점. */
-  onCropSlot?: (index: number) => void;
-  /** 적응형 — 올린 N장을 연속 캔버스로 띄워 한 번에 지문 영역을 나누는 진입점. */
-  onOpenStackedCrop?: () => void;
-  /** 적응형 인테이크 — 썸네일 클릭 시 큰 미리보기. */
-  onPreviewSlot?: (index: number) => void;
-  // ── 여러 장 합치기(접근 A) ──
-  /** 선택 모드 on/off. */
-  selectMode?: boolean;
-  /** 선택된 slotId 목록(클릭 순서). */
-  mergeSelection?: string[];
-  onToggleSelectMode?: () => void;
-  onToggleSlotSelect?: (slotId: string) => void;
-  onClearSelection?: () => void;
-  onOpenMergePreview?: () => void;
-  onUnmerge?: (slotId: string) => void;
+  /** 추출 버튼을 누른 즉시(굽기 전) 호출 — 큐 패널을 바로 연다. */
+  onBeforeStart?: () => void;
+  /** 굽기 실패 등으로 추출이 시작되지 못하고 중단됐을 때 호출(낙관적 카드 취소용). */
+  onStartAborted?: () => void;
   // ── P7-D2: 출력 방식(원문 vs AI복원) ──
   outputMode?: "verbatim" | "restored";
   onOutputModeChange?: (mode: "verbatim" | "restored") => void;
 }) {
-  // Slot-reorder local state. dragIndex !== null while a slot is being dragged
-  // — used to mute the parent label's drop handler so a slot reorder doesn't
-  // get mis-interpreted as an external file drop.
-  const [dragSlotIndex, setDragSlotIndex] = useState<number | null>(null);
-  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
+  const boardRef = useRef<InlineCropBoardHandle>(null);
+  const [boardCounts, setBoardCounts] =
+    useState<InlineCropBoardCounts>(EMPTY_COUNTS);
+  // 보드가 박스를 실제 지문 슬롯으로 굽는 동안의 짧은 잠금(업로드 busy와 별개).
+  const [baking, setBaking] = useState(false);
+
   const textLength = textValue.trim().length;
   const canStartText = textLength >= TEXT_EXTRACTION_MIN_LENGTH;
-  // 적응형 인테이크 — 추출 대상/제외 집계 (크롭 떠낸 원본은 제외).
-  const extractableCount = slots.filter(isExtractable).length;
-  const excludedCount = slots.length - extractableCount;
-  const showExtractSummary = onCropSlot != null && excludedCount > 0;
-  const startDisabled =
-    busy ||
-    slots.length === 0 ||
-    (onCropSlot != null && extractableCount === 0);
-
-  // P7-D2 출력 방식 토글 (원문 그대로 vs AI 복원). 파일·텍스트 모드 공용.
   const selectedOutput = outputMode ?? "verbatim";
-  const outputModeOptions = [
-    {
-      v: "verbatim" as const,
-      label: "그대로 추출",
-      desc: "스캔한 글자 그대로 가져옵니다",
-      badge: "OCR 비용만 · 추가 무료",
-      badgeTone: "bg-slate-100 text-slate-500",
-    },
-    {
-      v: "restored" as const,
-      label: "AI로 원문 복원",
-      desc: "빈칸 ____·섞인 순서를 원래 지문으로 되살립니다",
-      badge: "지문당 ◈2 (추가)",
-      badgeTone: "bg-blue-100 text-blue-700",
-    },
-  ];
-  const outputModeToggle = onOutputModeChange ? (
-    <div className="shrink-0">
-      <div className="mb-1.5 text-[11px] font-bold text-slate-600">
-        출력 방식
-      </div>
-      <div className="grid grid-cols-2 gap-2">
-        {outputModeOptions.map((opt) => {
-          const active = selectedOutput === opt.v;
-          return (
-            <button
-              key={opt.v}
-              type="button"
-              onClick={() => onOutputModeChange(opt.v)}
-              disabled={busy}
-              aria-pressed={active}
-              className={
-                "flex flex-col items-start gap-1 rounded-lg border p-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
-                (active
-                  ? "border-blue-500 bg-blue-50/70 ring-1 ring-blue-200"
-                  : "cursor-pointer border-slate-200 bg-white hover:bg-slate-50")
-              }
-            >
-              <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-900">
-                <span
-                  className={
-                    "inline-flex size-3.5 shrink-0 items-center justify-center rounded-full border " +
-                    (active ? "border-blue-600" : "border-slate-300")
-                  }
-                >
-                  {active ? (
-                    <span className="size-1.5 rounded-full bg-blue-600" />
-                  ) : null}
-                </span>
-                {opt.label}
-              </span>
-              <span className="text-[10.5px] leading-snug text-slate-500">
-                {opt.desc}
-              </span>
-              <span
-                className={
-                  "mt-0.5 rounded px-1.5 py-0.5 text-[10px] font-bold " +
-                  opt.badgeTone
-                }
-              >
-                {opt.badge}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-      <p className="mt-1.5 text-[10.5px] leading-relaxed text-slate-500">
-        {selectedOutput === "verbatim"
-          ? "교재 그대로 추출합니다. 빈칸·순서 등 문제 변형도 그대로 보존됩니다."
-          : "빈칸·순서·삽입 문제의 지문만 원래 글로 되살립니다. 깨끗한 지문은 그대로 둡니다. 추출 후 자료 관리에서 비교·교정할 수 있습니다."}
-      </p>
-    </div>
-  ) : null;
-  const modeDescription =
-    inputMode === "file"
-      ? "PDF와 이미지를 계속 추가할 수 있습니다."
-      : "지문 원문이나 문제 형식 텍스트를 붙여넣을 수 있습니다.";
+
+  // 파일 모드 추출 시작 — 보드 결과를 굽고(없으면 기존 slots), onStart에 넘긴다.
+  const handleFileStart = async () => {
+    if (slots.length === 0) return;
+    // 버튼 누르자마자 큐 패널을 열어 즉시 반응(굽기·업로드는 그 뒤에).
+    onBeforeStart?.();
+    if (boardRef.current) {
+      setBaking(true);
+      try {
+        const baked = await boardRef.current.buildPassageSlots();
+        if (baked) await onStart(baked);
+        else onStartAborted?.(); // 굽기 실패 — 낙관적 카드 취소
+      } finally {
+        setBaking(false);
+      }
+      return;
+    }
+    await onStart();
+  };
+
+  // slots가 비면 보드가 언마운트돼 boardCounts가 stale로 남으므로 0으로 강제.
+  const fileTotalPassages = slots.length === 0 ? 0 : boardCounts.totalPassages;
+  const fileOverMax = fileTotalPassages > MAX_PAGES_PER_JOB;
+  const startBusy = busy || baking;
+  const fileStartDisabled =
+    startBusy || slots.length === 0 || fileTotalPassages === 0 || fileOverMax;
+
   const fileProgressRatio = uploadProgress
     ? uploadProgress.uploaded / Math.max(1, uploadProgress.total)
     : splitProgress
@@ -214,20 +151,129 @@ export function UploadPanel({
     100,
     Math.max(0, fileProgressRatio * 100),
   );
-  const fileBusyLabel = uploadProgress
-    ? `업로드 중 ${uploadProgress.uploaded}/${uploadProgress.total}`
-    : splitProgress
-      ? "PDF 페이지 분리 중"
-      : "작업 중";
+  const fileBusyLabel = baking
+    ? "지문 자르는 중"
+    : uploadProgress
+      ? `업로드 중 ${uploadProgress.uploaded}/${uploadProgress.total}`
+      : splitProgress
+        ? "PDF 페이지 분리 중"
+        : "작업 중";
+
+  // 파일 모드 추출 시작 — 검수 패널 하단에 크게 고정(footer로 주입).
+  const fileStartArea = (
+    <div className="flex flex-col gap-1.5">
+      {fileOverMax ? (
+        <span className="text-center text-[11px] font-bold text-red-600">
+          지문 한도({MAX_PAGES_PER_JOB}개) 초과 — 영역을 줄이거나 합쳐 주세요.
+        </span>
+      ) : null}
+      <button
+        type="button"
+        onClick={handleFileStart}
+        disabled={fileStartDisabled}
+        className={
+          "relative inline-flex h-12 w-full items-center justify-center overflow-hidden rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
+          (startBusy
+            ? "cursor-wait border-blue-600 bg-blue-600"
+            : fileStartDisabled
+              ? "cursor-not-allowed border-blue-200 bg-blue-300"
+              : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700")
+        }
+      >
+        {busy && !baking ? (
+          <span
+            className="absolute inset-y-0 left-0 bg-blue-800/40 transition-[width] duration-200 ease-out"
+            style={{ width: `${fileProgressPercent}%` }}
+            aria-hidden="true"
+          />
+        ) : null}
+        <span className="relative z-10 inline-flex items-center">
+          {startBusy ? (
+            <>
+              <Loader2 className="mr-2 size-5 animate-spin" aria-hidden="true" />
+              {fileBusyLabel}
+            </>
+          ) : (
+            <>
+              <PlayCircle className="mr-2 size-5" aria-hidden="true" />
+              {selectedOutput === "restored" ? "복원하여 추출 시작" : "추출 시작"}
+              {fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
+            </>
+          )}
+        </span>
+      </button>
+    </div>
+  );
+
+  // ── P7-D2 출력 방식 토글 (컴팩트 1줄 세그먼트) — 헤더 아래 컨트롤바 공용 ──
+  const outputModeOptions = [
+    { v: "verbatim" as const, label: "그대로 추출", badge: "OCR만" },
+    { v: "restored" as const, label: "AI로 원문 복원", badge: "지문당 ◈2" },
+  ];
+  const outputModeToggle = onOutputModeChange ? (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-[11px] font-bold text-slate-600">출력 방식</span>
+      <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+        {outputModeOptions.map((opt) => {
+          const active = selectedOutput === opt.v;
+          return (
+            <button
+              key={opt.v}
+              type="button"
+              onClick={() => onOutputModeChange(opt.v)}
+              disabled={startBusy}
+              aria-pressed={active}
+              className={
+                "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                (active
+                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
+                  : "cursor-pointer text-slate-500 hover:text-slate-700")
+              }
+            >
+              <span
+                className={
+                  "inline-flex size-3 shrink-0 items-center justify-center rounded-full border " +
+                  (active ? "border-blue-600" : "border-slate-300")
+                }
+                aria-hidden="true"
+              >
+                {active ? (
+                  <span className="size-1.5 rounded-full bg-blue-600" />
+                ) : null}
+              </span>
+              {opt.label}
+              <span
+                className={
+                  "rounded px-1 py-0.5 text-[9.5px] font-bold " +
+                  (active
+                    ? opt.v === "restored"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-slate-100 text-slate-500"
+                    : "bg-slate-100 text-slate-400")
+                }
+              >
+                {opt.badge}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  ) : null;
 
   return (
     <section className="flex min-h-0 flex-col overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
-        <div>
+      {/* ── 헤더 + 컨트롤 통합 (제목·모드·출력방식·시작을 한 줄로) ── */}
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2.5 border-b border-slate-100 px-4 py-2.5">
+        <div className="min-w-0">
           <h2 className="text-[13px] font-bold text-slate-950">자료 입력</h2>
-          <p className="mt-1 text-[11px] text-slate-500">{modeDescription}</p>
+          <p className="mt-0.5 text-[11px] text-slate-500">
+            {inputMode === "file"
+              ? "이미지에서 지문 영역을 드래그해 지문별로 추출합니다."
+              : "지문 원문이나 문제 형식 텍스트를 붙여넣을 수 있습니다."}
+          </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <div className="inline-flex rounded-md bg-slate-100 p-0.5 text-[11px] font-bold text-slate-500">
             <button
               type="button"
@@ -256,24 +302,11 @@ export function UploadPanel({
               텍스트
             </button>
           </div>
-          {inputMode === "file" &&
-          onOpenStackedCrop != null &&
-          slots.length >= 1 ? (
-            <button
-              type="button"
-              onClick={onOpenStackedCrop}
-              disabled={busy}
-              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Combine className="size-3.5" aria-hidden="true" />
-              지문 영역 나누기
-            </button>
-          ) : null}
           {inputMode === "file" && slots.length > 0 ? (
             <button
               type="button"
               onClick={onClear}
-              disabled={busy}
+              disabled={startBusy}
               className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 className="size-3.5" aria-hidden="true" />
@@ -291,11 +324,55 @@ export function UploadPanel({
               비우기
             </button>
           ) : null}
+
+          {/* 출력 방식 */}
+          {outputModeToggle}
+
+          {/* 텍스트 모드 추출 시작 (파일 모드는 검수 패널 하단으로 이동) */}
+          {inputMode === "text" ? (
+            <>
+              <span
+                className="hidden h-7 w-px bg-slate-200 sm:block"
+                aria-hidden="true"
+              />
+              <button
+                type="button"
+                onClick={onStartText}
+                disabled={busy || !canStartText}
+                className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-md bg-blue-600 px-5 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-300"
+              >
+                {busy ? (
+                  <>
+                    <Loader2
+                      className="mr-2 size-4 animate-spin"
+                      aria-hidden="true"
+                    />
+                    작업 중
+                  </>
+                ) : (
+                  <>
+                    <PlayCircle className="mr-2 size-4" aria-hidden="true" />
+                    {selectedOutput === "restored"
+                      ? "복원하여 추출 시작"
+                      : "텍스트 추출 시작"}
+                  </>
+                )}
+              </button>
+            </>
+          ) : null}
         </div>
       </div>
 
-      {inputMode === "text" ? (
-        <div className="flex min-h-0 flex-1 flex-col gap-3 p-3.5">
+      {/* ── 본문 ─────────────────────────────────────────────────── */}
+      <div className="flex min-h-0 flex-1 flex-col">
+        {/* 텍스트 모드 (파일 모드일 땐 숨기되 언마운트하지 않음) */}
+        <div
+          className={
+            inputMode === "text"
+              ? "flex min-h-0 flex-1 flex-col p-3.5"
+              : "hidden"
+          }
+        >
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3">
             <div className="mb-2 flex items-center gap-2">
               <input
@@ -326,95 +403,90 @@ export function UploadPanel({
               className="min-h-0 flex-1 resize-none rounded-md border border-dashed border-slate-300 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
             />
           </div>
-
-          {outputModeToggle}
-
-          <button
-            type="button"
-            onClick={onStartText}
-            disabled={busy || !canStartText}
-            className="inline-flex h-10 w-full shrink-0 cursor-pointer items-center justify-center rounded-md bg-blue-600 px-5 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-300 disabled:text-white"
-          >
-            {busy ? (
-              <>
-                <Loader2
-                  className="mr-2 size-4 animate-spin"
-                  aria-hidden="true"
-                />
-                작업 중
-              </>
-            ) : (
-              <>
-                <PlayCircle className="mr-2 size-4" aria-hidden="true" />
-                {selectedOutput === "restored"
-                  ? "복원하여 추출 시작"
-                  : "텍스트 추출 시작"}
-              </>
-            )}
-          </button>
         </div>
-      ) : (
-        <div className="flex min-h-0 flex-1 flex-col gap-3 p-3.5">
-          <label
-            htmlFor={fileInputId}
-            onDragOver={(event) => {
-              // While a slot reorder is in progress the dataTransfer types do
-              // NOT include "Files" — skip the dropzone-highlight so the user
-              // isn't tricked into thinking a file drop is in flight.
-              const isFileDrag = event.dataTransfer.types.includes("Files");
-              if (!isFileDrag) return;
-              event.preventDefault();
-              onDragActiveChange(true);
-            }}
-            onDragLeave={() => onDragActiveChange(false)}
-            onDrop={(event) => {
-              // Skip when the drop is a slot reorder (handled by the per-slot
-              // onDrop with stopPropagation; this branch is the safety net).
-              if (dragSlotIndex !== null) {
-                onDragActiveChange(false);
-                return;
-              }
-              event.preventDefault();
-              onDragActiveChange(false);
-              if (event.dataTransfer.files.length > 0)
-                onFiles(event.dataTransfer.files);
-            }}
-            className={
-              "flex min-h-0 flex-1 cursor-pointer flex-col overflow-hidden rounded-lg border-2 border-dashed transition-colors " +
-              (dragActive
-                ? "border-sky-500 bg-sky-50"
-                : slots.length > 0
-                  ? "border-slate-300 bg-white hover:border-blue-400"
-                  : "border-slate-300 bg-white hover:border-blue-400 hover:bg-blue-50/30")
-            }
-          >
-            <input
-              id={fileInputId}
-              type="file"
-              className="sr-only"
-              accept={ACCEPTED.join(",")}
-              multiple
-              onChange={(event) => {
-                if (event.target.files) onFiles(event.target.files);
-                event.currentTarget.value = "";
+
+        {/* 파일 모드 */}
+        <div
+          className={
+            inputMode === "file"
+              ? "flex min-h-0 flex-1 flex-col"
+              : "hidden"
+          }
+        >
+          {slots.length === 0 ? (
+            <div
+              onDragOver={(event) => {
+                const isFileDrag = event.dataTransfer.types.includes("Files");
+                if (!isFileDrag) return;
+                event.preventDefault();
+                onDragActiveChange(true);
               }}
-            />
-            {slots.length === 0 ? (
-              <div className="flex flex-1 flex-col items-center justify-center px-5 py-8 text-center">
-                <span className="flex size-12 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-                  <UploadCloud
-                    className="size-6"
-                    strokeWidth={1.8}
-                    aria-hidden="true"
-                  />
-                </span>
-                <div className="mt-3 text-[13px] font-bold text-slate-900">
+              onDragLeave={(event) => {
+                const next = event.relatedTarget as Node | null;
+                if (!next || !event.currentTarget.contains(next))
+                  onDragActiveChange(false);
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                onDragActiveChange(false);
+                if (event.dataTransfer.files.length > 0)
+                  onFiles(event.dataTransfer.files);
+              }}
+              className={
+                "m-3.5 flex min-h-0 flex-1 flex-col gap-3 rounded-lg border-2 border-dashed p-3 transition-colors " +
+                (dragActive
+                  ? "border-sky-500 bg-sky-50"
+                  : "border-slate-300 bg-white")
+              }
+            >
+              {/* 사용법 안내 — 출력 방식에 따라 전환.
+                  · 그대로 추출: 자르기→나뉜 지문 합치기 튜토리얼 영상
+                  · AI로 원문 복원: 복원 동작 데모(예전 "복원 예시 보기" 모달을 인라인으로) */}
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/70 p-3">
+                {selectedOutput === "restored" ? (
+                  <div className="mx-auto w-full max-w-[960px]">
+                    <RestoreGuideDemo />
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-2.5 flex shrink-0 flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
+                        <PlayCircle className="size-3.5" aria-hidden="true" />
+                        사용법
+                      </span>
+                      <span className="text-[12.5px] font-bold text-slate-800">
+                        이렇게 추출해요 — 지문을 자르고, 칸·페이지로 나뉜 지문은
+                        합치기
+                      </span>
+                    </div>
+                    <div className="mx-auto w-full max-w-[920px]">
+                      <CropTutorialPlayer />
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* 파일 추가 버튼 — 영상 보면서도 하단에 항상 보임 */}
+              <label
+                htmlFor={fileInputId}
+                className="flex shrink-0 cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-blue-500 bg-white px-4 py-3 text-center transition-colors hover:bg-blue-50"
+              >
+                <input
+                  id={fileInputId}
+                  type="file"
+                  className="sr-only"
+                  accept={ACCEPTED.join(",")}
+                  multiple
+                  onChange={(event) => {
+                    if (event.target.files) onFiles(event.target.files);
+                    event.currentTarget.value = "";
+                  }}
+                />
+                <span className="inline-flex items-center gap-2 text-[14px] font-extrabold text-blue-700">
+                  <UploadCloud className="size-5" aria-hidden="true" />
                   파일을 끌어놓거나 클릭해서 추가
-                </div>
-                <div className="mt-1 text-[11px] text-slate-500">
-                  여러 이미지와 PDF 페이지를 순서대로 등록합니다.
-                </div>
-                <div className="mt-4 flex flex-wrap justify-center gap-2">
+                </span>
+                <span className="flex flex-wrap items-center justify-center gap-2">
                   <UploadMetaChip
                     icon={<FileText className="size-3.5" aria-hidden="true" />}
                   >
@@ -435,365 +507,26 @@ export function UploadPanel({
                   >
                     PDF {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
                   </UploadMetaChip>
-                </div>
-              </div>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col gap-3 p-3">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                    <UploadCloud
-                      className="size-3.5 text-blue-500"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      파일을 더 끌어놓거나, 썸네일을 드래그해 순서를 바꿀 수
-                      있습니다.
-                    </span>
-                  </div>
-                </div>
-                <div className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto pb-2 [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))]">
-                  {slots.map((slot, index) => {
-                    const isDragging = dragSlotIndex === index;
-                    const isDropTarget =
-                      dropTargetIndex === index && dragSlotIndex !== index;
-                    const kindBadge = slotKindLabel(slot);
-                    const child = isCropChild(slot);
-                    const excluded = !isExtractable(slot);
-                    const showBadge =
-                      slot.kind != null && slot.kind !== "original";
-                    const croppable = isCroppable(slot);
-                    const selectionOrder =
-                      slot.slotId != null
-                        ? (mergeSelection ?? []).indexOf(slot.slotId)
-                        : -1;
-                    // 선택 가능: 합치기 모드 + 추출 대상 + 이미 합쳐진 것 아님(중첩 방지)
-                    const selectable =
-                      !!selectMode &&
-                      isExtractable(slot) &&
-                      slot.kind !== "merged";
-                    return (
-                      <div
-                        key={slot.pageIndex + "-" + slot.previewUrl}
-                        draggable={!busy && !selectMode}
-                        onClick={(event) => {
-                          // Stop bubble so the label's <input type="file"> isn't
-                          // opened when the user only meant to grip a thumbnail.
-                          event.preventDefault();
-                          event.stopPropagation();
-                        }}
-                        onDragStart={(event) => {
-                          if (busy) return;
-                          event.stopPropagation();
-                          event.dataTransfer.effectAllowed = "move";
-                          event.dataTransfer.setData(
-                            SLOT_DRAG_MIME,
-                            String(index),
-                          );
-                          setDragSlotIndex(index);
-                        }}
-                        onDragOver={(event) => {
-                          if (dragSlotIndex === null) return;
-                          event.preventDefault();
-                          event.stopPropagation();
-                          event.dataTransfer.dropEffect = "move";
-                          if (dropTargetIndex !== index)
-                            setDropTargetIndex(index);
-                        }}
-                        onDragLeave={(event) => {
-                          if (dragSlotIndex === null) return;
-                          event.stopPropagation();
-                          if (dropTargetIndex === index)
-                            setDropTargetIndex(null);
-                        }}
-                        onDrop={(event) => {
-                          if (dragSlotIndex === null) return;
-                          event.preventDefault();
-                          event.stopPropagation();
-                          const from = dragSlotIndex;
-                          if (from !== index) onReorderSlots(from, index);
-                          setDragSlotIndex(null);
-                          setDropTargetIndex(null);
-                        }}
-                        onDragEnd={() => {
-                          setDragSlotIndex(null);
-                          setDropTargetIndex(null);
-                        }}
-                        className={
-                          "flex flex-col rounded-md border bg-white p-2 transition-all " +
-                          (selectionOrder >= 0
-                            ? "border-blue-500 ring-2 ring-blue-300 "
-                            : isDragging
-                              ? "border-blue-400 opacity-40 "
-                              : isDropTarget
-                                ? "border-blue-500 ring-2 ring-blue-200 "
-                                : excluded
-                                  ? "border-dashed border-slate-300 opacity-75 "
-                                  : "border-slate-200 ") +
-                          (child ? "border-l-[3px] border-l-blue-300 " : "") +
-                          (busy
-                            ? "cursor-not-allowed"
-                            : selectMode
-                              ? "cursor-default"
-                              : "cursor-grab active:cursor-grabbing")
-                        }
-                        title={
-                          slot.sourceFileName ?? slot.pageIndex + 1 + "페이지"
-                        }
-                      >
-                        {showBadge ? (
-                          <span
-                            className={
-                              "mb-1 inline-flex w-fit max-w-full items-center truncate rounded px-1.5 py-0.5 text-[10px] font-bold ring-1 " +
-                              kindBadge.className
-                            }
-                          >
-                            {kindBadge.text}
-                          </span>
-                        ) : null}
-                        <div className="relative aspect-[3/4] w-full overflow-hidden rounded border border-slate-200 bg-slate-100">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={slot.previewUrl}
-                            alt={slot.pageIndex + 1 + "페이지"}
-                            onClick={
-                              selectMode
-                                ? (event) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    if (selectable && slot.slotId)
-                                      onToggleSlotSelect?.(slot.slotId);
-                                  }
-                                : onPreviewSlot
-                                  ? (event) => {
-                                      event.preventDefault();
-                                      event.stopPropagation();
-                                      onPreviewSlot(index);
-                                    }
-                                  : undefined
-                            }
-                            className={
-                              "absolute inset-0 h-full w-full bg-white object-contain " +
-                              (selectMode
-                                ? selectable
-                                  ? "cursor-pointer"
-                                  : "cursor-not-allowed"
-                                : onPreviewSlot
-                                  ? "cursor-zoom-in"
-                                  : "")
-                            }
-                            draggable={false}
-                          />
-                          {selectMode ? (
-                            <button
-                              type="button"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                if (selectable && slot.slotId)
-                                  onToggleSlotSelect?.(slot.slotId);
-                              }}
-                              onPointerDown={(event) => event.stopPropagation()}
-                              disabled={!selectable}
-                              aria-pressed={selectionOrder >= 0}
-                              aria-label={
-                                selectionOrder >= 0
-                                  ? "합치기 선택 해제"
-                                  : "합치기 선택"
-                              }
-                              className={
-                                "absolute left-1 top-1 z-20 inline-flex size-5 items-center justify-center rounded text-[10px] font-bold ring-1 transition-colors " +
-                                (selectionOrder >= 0
-                                  ? "cursor-pointer bg-blue-600 text-white ring-blue-700"
-                                  : selectable
-                                    ? "cursor-pointer bg-white/95 text-slate-300 ring-slate-300 hover:text-blue-500 hover:ring-blue-400"
-                                    : "cursor-not-allowed bg-slate-200/80 text-slate-300 ring-slate-300")
-                              }
-                            >
-                              {selectionOrder >= 0 ? selectionOrder + 1 : "+"}
-                            </button>
-                          ) : null}
-                          <span className="absolute bottom-0 left-0 rounded-tr bg-slate-950/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
-                            {slot.pageIndex + 1}
-                          </span>
-                          {!selectMode ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                              onRemoveSlot(index);
-                          }}
-                          onPointerDown={(event) => {
-                            event.stopPropagation();
-                          }}
-                            onDragStart={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }}
-                            disabled={busy}
-                            title="업로드 자료 삭제"
-                            aria-label={`${slot.pageIndex + 1}페이지 삭제`}
-                            className="absolute right-1 top-1 inline-flex size-5 cursor-pointer items-center justify-center rounded-full bg-slate-950/75 text-white shadow-sm transition-colors hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <X className="size-3.5" aria-hidden="true" />
-                          </button>
-                          ) : null}
-                        </div>
-                        <div className="mt-1.5 truncate text-[11px] font-bold text-slate-800">
-                          {slot.sourceFileName ??
-                            slot.pageIndex + 1 + "페이지 이미지"}
-                        </div>
-                        <div className="mt-0.5 flex items-center justify-between gap-1 text-[10.5px] text-slate-500">
-                          <span>{child ? "지문" : `${slot.pageIndex + 1}페이지`}</span>
-                          <span>{formatBytes(slot.bytes)}</span>
-                        </div>
-                        {child ? (
-                          <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-blue-600">
-                            <CornerDownRight
-                              className="size-3 shrink-0"
-                              aria-hidden="true"
-                            />
-                            잘라낸 원본에서
-                          </div>
-                        ) : null}
-                        {onCropSlot && croppable && !selectMode ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                              onCropSlot(index);
-                            }}
-                            onPointerDown={(event) => {
-                              event.stopPropagation();
-                            }}
-                            onDragStart={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }}
-                            disabled={busy}
-                            aria-label={
-                              slot.kind === "source"
-                                ? "크롭 영역 편집"
-                                : `${slot.pageIndex + 1}페이지에서 지문 영역 자르기`
-                            }
-                            className="mt-2 inline-flex h-7 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[11px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <Crop className="size-3.5" aria-hidden="true" />
-                            {slot.kind === "source" ? "영역 편집" : "영역 자르기"}
-                          </button>
-                        ) : null}
-                        {onUnmerge && slot.kind === "merged" && !selectMode ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                              if (slot.slotId) onUnmerge(slot.slotId);
-                            }}
-                            onPointerDown={(event) => event.stopPropagation()}
-                            onDragStart={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }}
-                            disabled={busy}
-                            aria-label="합치기 되돌리기"
-                            className="mt-2 inline-flex h-7 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white text-[11px] font-bold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <Undo2 className="size-3.5" aria-hidden="true" />
-                            합치기 되돌리기
-                          </button>
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </label>
-
-          {selectMode ? (
-            <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 rounded-md border border-blue-100 bg-blue-50/70 px-3 py-2 text-[11px]">
-              <span className="font-bold text-slate-700">
-                {(mergeSelection?.length ?? 0) >= 2
-                  ? `${mergeSelection?.length ?? 0}장 선택됨 · 클릭 순서대로 위→아래 이어붙입니다`
-                  : "합칠 장을 순서대로 클릭하세요 (2장 이상)"}
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={onClearSelection}
-                  disabled={busy || (mergeSelection?.length ?? 0) === 0}
-                  className="inline-flex h-7 cursor-pointer items-center rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  선택 해제
-                </button>
-                <button
-                  type="button"
-                  onClick={onOpenMergePreview}
-                  disabled={busy || (mergeSelection?.length ?? 0) < 2}
-                  className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:bg-blue-300"
-                >
-                  <Combine className="size-3.5" aria-hidden="true" />
-                  선택한 {mergeSelection?.length ?? 0}장 합치기
-                </button>
-              </div>
+                </span>
+              </label>
             </div>
-          ) : null}
-
-          {showExtractSummary ? (
-            <div className="flex shrink-0 items-center justify-between rounded-md border border-blue-100 bg-blue-50/70 px-3 py-1.5 text-[11px]">
-              <span className="inline-flex items-center gap-1 font-bold text-slate-700">
-                <Crop className="size-3.5 text-blue-600" aria-hidden="true" />
-                추출 대상 지문 {extractableCount}개
-              </span>
-              <span className="text-slate-500">
-                잘라낸 원본 {excludedCount}개 제외
-              </span>
-            </div>
-          ) : null}
-
-          {outputModeToggle}
-
-          <button
-            type="button"
-            onClick={onStart}
-            disabled={startDisabled}
-            className={
-              "relative inline-flex h-10 w-full shrink-0 items-center justify-center overflow-hidden rounded-md border px-5 text-[13px] font-bold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
-              (busy
-                ? "cursor-wait border-blue-600 bg-blue-600"
-                : startDisabled
-                  ? "cursor-not-allowed border-blue-200 bg-blue-300"
-                  : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700")
-            }
-          >
-            {busy ? (
-              <span
-                className="absolute inset-y-0 left-0 bg-blue-800/40 transition-[width] duration-200 ease-out"
-                style={{ width: `${fileProgressPercent}%` }}
-                aria-hidden="true"
-              />
-            ) : null}
-            <span className="relative z-10 inline-flex items-center">
-              {busy ? (
-                <>
-                  <Loader2
-                    className="mr-2 size-4 animate-spin"
-                    aria-hidden="true"
-                  />
-                  {fileBusyLabel}
-                </>
-              ) : (
-                <>
-                  <PlayCircle className="mr-2 size-4" aria-hidden="true" />
-                  {selectedOutput === "restored" ? "복원하여 추출 시작" : "추출 시작"}
-                </>
-              )}
-            </span>
-          </button>
+          ) : (
+            <InlineCropBoard
+              ref={boardRef}
+              images={slots}
+              disabled={startBusy}
+              onAddFiles={onFiles}
+              onRemoveImage={onRemoveSlot}
+              onReorderImages={onReorderSlots}
+              maxPassages={MAX_PAGES_PER_JOB}
+              onCountChange={setBoardCounts}
+              footer={fileStartArea}
+              outputMode={selectedOutput}
+            />
+          )}
         </div>
-      )}
+      </div>
+
     </section>
   );
 }

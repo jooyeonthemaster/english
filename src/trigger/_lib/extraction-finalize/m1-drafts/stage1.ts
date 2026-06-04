@@ -46,8 +46,20 @@ export interface PrepStage1 {
  * Build the per-group prep stage. Computes the union of all evidence
  * needed by Phase A (write the initial PENDING / NO_RESTORATION_NEEDED
  * row) and Phase B (call grounded restoration when shouldRestore=true).
+ *
+ * `forceRestore` (P7-D2: outputMode === "restored"): the user explicitly
+ * chose "AI로 원문 복원" and cropped the question + choices with the passage.
+ * In that case we BYPASS the question-type whitelist (`hasRestorationRequiredType`)
+ * — the type classifier is the weak link, so a mis-classified blank/order
+ * problem would otherwise be skipped and the result would look like plain OCR.
+ * We still skip groups with nothing to solve (pure passages with no STEM) and
+ * trivially short fragments — restoring those has no evidence to work from.
  */
-export function buildStage1(groups: M1PassageChunk[][]): PrepStage1[] {
+export function buildStage1(
+  groups: M1PassageChunk[][],
+  opts?: { forceRestore?: boolean },
+): PrepStage1[] {
+  const forceRestore = opts?.forceRestore ?? false;
   return groups.map((group, index) => {
     const rawText = group.map((chunk) => chunk.rawText).join("\n\n").trim();
     const sourcePageIndex = uniqueSorted(
@@ -93,17 +105,24 @@ export function buildStage1(groups: M1PassageChunk[][]): PrepStage1[] {
           (t) => RESTORATION_REQUIRED_TYPES.has(t) || t === "UNKNOWN",
         );
 
-    const shouldRestore = TYPE_FILTERED_RESTORATION_ENABLED
-      ? baseShouldRestore && hasRestorationRequiredType
-      : baseShouldRestore && !isPurePassage;
+    // forceRestore(=restored 명시 선택)면 유형 화이트리스트를 우회: STEM이 있고
+    // 본문이 충분한(baseShouldRestore) 모든 지문을 복원 대상으로 강제한다. 순수
+    // 지문(isPurePassage: STEM 0 + 본문만)은 풀 문제가 없어 강제에서도 제외.
+    const shouldRestore = forceRestore
+      ? baseShouldRestore && !isPurePassage
+      : TYPE_FILTERED_RESTORATION_ENABLED
+        ? baseShouldRestore && hasRestorationRequiredType
+        : baseShouldRestore && !isPurePassage;
 
     // If we're skipping restoration (type filter OR pure-passage), build
     // the clean body locally so the draft is still useful in the UI.
-    const skippedByTypeFilter =
-      (TYPE_FILTERED_RESTORATION_ENABLED &&
-        baseShouldRestore &&
-        !hasRestorationRequiredType) ||
-      isPurePassage;
+    // forceRestore에선 유형필터 스킵이 사라지므로 순수 지문일 때만 클린 바디를 만든다.
+    const skippedByTypeFilter = forceRestore
+      ? isPurePassage
+      : (TYPE_FILTERED_RESTORATION_ENABLED &&
+          baseShouldRestore &&
+          !hasRestorationRequiredType) ||
+        isPurePassage;
     const typeSkipBody = skippedByTypeFilter
       ? buildCleanBodyForSkippedGroup(groupItems, { isPurePassage })
       : "";
