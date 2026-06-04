@@ -104,6 +104,11 @@ google-credentials*.json
 # scratch / test harness output
 /tmp/
 .tmp/
+# scratch diagnostics / benchmarks — dev-only, may contain API keys (never commit)
+/scripts/_diag-*
+/scripts/_dump-*
+/scripts/_step-*
+/scripts/bench-*
 
 # demo screen recordings (large binaries)
 /public/recordings/*.webm
