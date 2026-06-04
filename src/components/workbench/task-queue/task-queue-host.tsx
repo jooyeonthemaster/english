@@ -31,6 +31,7 @@ function resolveTaskQueueDefaultDomain(pathname: string): TaskScope {
     return "question-generation";
   }
   if (
+    pathname.startsWith("/director/workbench/similar-exams") ||
     pathname.startsWith("/director/workbench/exams") ||
     pathname.startsWith("/director/exams")
   ) {

@@ -1,7 +1,7 @@
 import type { TaskAdapter } from "../types";
 import { extractionAdapter } from "./extraction-adapter";
 import { webtoonAdapter } from "./webtoon-adapter";
-import { examGenerationAdapter } from "./stub-adapters";
+import { similarExamAdapter } from "./similar-exam-adapter";
 import {
   workbenchPassageAnalysisAdapter,
   workbenchQuestionGenerationAdapter,
@@ -11,6 +11,6 @@ export const ALL_ADAPTERS: TaskAdapter[] = [
   extractionAdapter,
   workbenchPassageAnalysisAdapter,
   workbenchQuestionGenerationAdapter,
-  examGenerationAdapter,
+  similarExamAdapter,
   webtoonAdapter,
 ];

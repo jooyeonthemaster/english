@@ -31,6 +31,7 @@ import type { ExtractionMode } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
 import { finalizePlainText } from "./_lib/extraction-finalize/plain-text";
 import { finalizeStructured } from "./_lib/extraction-finalize/structured/orchestrator";
+import { runFastTrackFollowUp } from "./_lib/extraction-finalize/fast-track-followup";
 import { TERMINAL, type JobStatus } from "./_lib/extraction-finalize/types";
 
 type Input = { jobId: string };
@@ -129,6 +130,31 @@ export const extractionFinalizeTask = task({
       draftCount,
       sourceMaterialId,
     });
+
+    // "빠른 분석" / "빠른 생성" 진입점이 metadata 에 후속 처리를 적어두면
+    // 검수를 건너뛰고 곧바로 promote + workbench 잡 fan-out. 풀파이프라인의
+    // 정규 경로 (UI 에서 검수 후 promote) 는 metadata 가 비어있어 영향 없음.
+    if (finalStatus === "COMPLETED" && job.metadata) {
+      try {
+        const followUp = await runFastTrackFollowUp({
+          jobId,
+          academyId: job.academyId,
+          originalFileName: job.originalFileName,
+        });
+        if (followUp.followed) {
+          logger.info("fast-track follow-up triggered", {
+            jobId,
+            promoted: followUp.promoted,
+            jobsEnqueued: followUp.jobsEnqueued,
+          });
+        }
+      } catch (err) {
+        logger.error("fast-track follow-up failed", {
+          jobId,
+          err: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
 
     return {
       status: finalStatus,

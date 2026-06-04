@@ -70,6 +70,35 @@ interface GeminiTextParams {
   image?: { mimeType: string; base64: string };
 }
 
+type FetchWithTimeoutInit = RequestInit & { timeoutInMs?: number };
+
+async function fetchWithTriggerFallback(
+  input: string,
+  init: FetchWithTimeoutInit,
+): Promise<Response> {
+  try {
+    return await retry.fetch(input, init);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!/wait\.forToken can only be used from inside a task\.run\(\)/i.test(message)) {
+      throw error;
+    }
+  }
+
+  const controller = new AbortController();
+  const timeout = Math.max(1000, init.timeoutInMs ?? 30_000);
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const { timeoutInMs: _timeoutInMs, signal, ...fetchInit } = init;
+    return await fetch(input, {
+      ...fetchInit,
+      signal: signal ?? controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export class StructuredParseError extends Error {
   code: "PARSE_ERROR" = "PARSE_ERROR" as const;
 
@@ -132,7 +161,7 @@ async function postGemini(
   params: GeminiOcrParams & { responseMimeType?: "application/json" },
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig("ocr");
-  const response = await retry.fetch(geminiUrl(cfg.model), {
+  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
     method: "POST",
     headers: { "content-type": "application/json" },
     timeoutInMs: params.timeoutInMs,
@@ -195,7 +224,7 @@ async function postGeminiText(
     });
   }
   userParts.push({ text: params.userPrompt });
-  const response = await retry.fetch(geminiUrl(cfg.model), {
+  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
     method: "POST",
     headers: { "content-type": "application/json" },
     timeoutInMs: params.timeoutInMs,
@@ -237,7 +266,7 @@ async function postGeminiGroundedText(
   params: GeminiTextParams,
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig(params.stage);
-  const response = await retry.fetch(geminiUrl(cfg.model), {
+  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
     method: "POST",
     headers: { "content-type": "application/json" },
     timeoutInMs: params.timeoutInMs,
@@ -391,7 +420,7 @@ async function postGeminiGroundedStructuredText(
   params: GeminiTextParams,
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig(params.stage);
-  const response = await retry.fetch(geminiUrl(cfg.model), {
+  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
     method: "POST",
     headers: { "content-type": "application/json" },
     timeoutInMs: params.timeoutInMs,
@@ -468,7 +497,7 @@ export async function runGeminiTextHealthCheck(timeoutInMs: number): Promise<{
   usage?: GeminiUsage;
 }> {
   const cfg = getExtractionAiConfig("ocr");
-  const response = await retry.fetch(geminiUrl(cfg.model), {
+  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
     method: "POST",
     headers: { "content-type": "application/json" },
     timeoutInMs,
