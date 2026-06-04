@@ -5,12 +5,12 @@ import { CheckSquare, FileText, Loader2, Search, Square } from "lucide-react";
 
 export type SelectedSource =
   | { kind: "passage"; id: string; title: string }
-  | { kind: "draft"; draftId: string; title: string; content: string };
+  | { kind: "draft"; draftId: string; title: string };
 
 interface ApiPassage {
   id: string;
   title: string;
-  content: string;
+  preview: string;
   grade: number | null;
   school: { id: string; name: string } | null;
   analyzed: boolean;
@@ -20,7 +20,7 @@ interface ApiPassage {
 interface ApiDraft {
   id: string;
   title: string;
-  content: string;
+  preview: string;
   sourceName: string;
 }
 
@@ -86,12 +86,7 @@ export function SimilarExamPassageSelector({
         } else if (key.startsWith("d:")) {
           const d = draftById.get(key.slice(2));
           if (d) {
-            result.push({
-              kind: "draft",
-              draftId: d.id,
-              title: d.title,
-              content: d.content,
-            });
+            result.push({ kind: "draft", draftId: d.id, title: d.title });
           }
         }
       }
@@ -102,15 +97,13 @@ export function SimilarExamPassageSelector({
 
   const toggle = useCallback(
     (key: string) => {
-      setSelected((prev) => {
-        const next = new Set(prev);
-        if (next.has(key)) next.delete(key);
-        else next.add(key);
-        emit(next);
-        return next;
-      });
+      const next = new Set(selected);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      setSelected(next);
+      emit(next);
     },
-    [emit],
+    [selected, emit],
   );
 
   const clearAll = useCallback(() => {
@@ -127,11 +120,11 @@ export function SimilarExamPassageSelector({
   const visiblePassages =
     sourceFilter === "draft"
       ? []
-      : passages.filter((p) => matches(p.title, p.content));
+      : passages.filter((p) => matches(p.title, p.preview));
   const visibleDrafts =
     sourceFilter === "passage"
       ? []
-      : drafts.filter((d) => matches(d.title, d.content));
+      : drafts.filter((d) => matches(d.title, d.preview));
   const visibleCount = visiblePassages.length + visibleDrafts.length;
 
   return (
@@ -215,7 +208,7 @@ export function SimilarExamPassageSelector({
                   <Row
                     checked={checked}
                     title={p.title}
-                    preview={p.content}
+                    preview={p.preview}
                     onToggle={() => toggle(key)}
                     badges={
                       <>
@@ -240,7 +233,7 @@ export function SimilarExamPassageSelector({
                   <Row
                     checked={checked}
                     title={d.title}
-                    preview={d.content}
+                    preview={d.preview}
                     onToggle={() => toggle(key)}
                     badges={
                       <>

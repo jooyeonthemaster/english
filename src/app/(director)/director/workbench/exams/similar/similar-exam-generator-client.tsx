@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { createWorkbenchPassage } from "@/actions/workbench";
 import { ExamPaperGenerationIcon } from "@/components/icons/workflow-icons";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useTaskQueue } from "@/components/workbench/task-queue";
@@ -228,25 +227,38 @@ export function SimilarExamGeneratorClient(_props: SimilarExamGeneratorClientPro
     setUploaded(0);
 
     try {
-      // Resolve selected sources → passage ids. Unregistered extraction drafts
-      // are registered as real passages on demand.
-      const hasDrafts = selectedSources.some((src) => src.kind === "draft");
-      if (hasDrafts) setSplitMessage("선택 자료를 지문으로 준비 중");
+      // Register selected unregistered drafts server-side (full text stays on the
+      // server) → draftId→passageId, then resolve every source to a passage id.
+      const draftIds = selectedSources
+        .filter((src) => src.kind === "draft")
+        .map((src) => (src as { draftId: string }).draftId);
+      const draftPassageMap = new Map<string, string>();
+      if (draftIds.length > 0) {
+        setSplitMessage("선택 자료를 지문으로 준비 중");
+        const regRes = await fetch("/api/similar-exams/passages/from-drafts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ draftIds }),
+        });
+        if (!regRes.ok) {
+          const data = await regRes.json().catch(() => ({}));
+          throw new Error(data?.error || "추출 자료를 지문으로 저장하지 못했습니다.");
+        }
+        const regData = (await regRes.json()) as {
+          passages?: Array<{ draftId: string; passageId: string }>;
+        };
+        for (const p of regData.passages ?? []) draftPassageMap.set(p.draftId, p.passageId);
+      }
+
       const passageIds: string[] = [];
       for (const src of selectedSources) {
         if (src.kind === "passage") {
           passageIds.push(src.id);
-          continue;
+        } else {
+          const pid = draftPassageMap.get(src.draftId);
+          if (pid) passageIds.push(pid);
         }
-        const result = await createWorkbenchPassage({
-          title: src.title,
-          content: src.content,
-          sourceDraftId: src.draftId,
-        });
-        if (!result.success || !result.id) {
-          throw new Error(result.error || "추출 자료를 지문으로 저장하지 못했습니다.");
-        }
-        passageIds.push(result.id);
       }
       if (passageIds.length === 0) {
         throw new Error("활용 가능한 지문이 없습니다.");
