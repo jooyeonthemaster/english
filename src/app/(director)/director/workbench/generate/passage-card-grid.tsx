@@ -117,7 +117,7 @@ interface PassageCardGridProps {
   passageBulkAction?: "move" | "remove" | "delete" | null;
 
   // Generation
-  genMode: "auto" | "manual";
+  genMode: "auto" | "manual" | "set";
   totalQuestions: number;
   handleBatchGenerate: () => void;
   selectionActionText?: string;

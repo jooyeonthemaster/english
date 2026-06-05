@@ -32,7 +32,7 @@ interface UseGenerationHandlersParams {
   passages: PassageItem[];
   selectedIds: Set<string>;
   setSelectedIds: (v: Set<string>) => void;
-  genMode: "auto" | "manual";
+  genMode: "auto" | "manual" | "set";
   generationPlan: QuestionGenerationPlan;
   typeCounts: Record<string, number>;
   setTypeCounts: Dispatch<SetStateAction<Record<string, number>>>;

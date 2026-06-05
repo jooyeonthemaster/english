@@ -158,7 +158,7 @@ export function GeneratePageClient({
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
 
   // ── Mode: auto vs manual (seeded from ?mode= URL param) ──
-  const [genMode, setGenMode] = useState<"auto" | "manual">(
+  const [genMode, setGenMode] = useState<"auto" | "manual" | "set">(
     initialModeRef.current,
   );
   const [generationPlan, setGenerationPlan] =
