@@ -42,7 +42,6 @@ import {
   questionBreakKey,
   type BreakPlan,
   type BreakType,
-  type PaginatedLayout,
 } from "./break-plan";
 import {
   renderPassageFragment,
@@ -529,36 +528,6 @@ function renderGroupsToUnits(opts: {
     });
   }
   return units;
-}
-
-// pagination(미리보기와 동일)이 정한 "각 단위 → (페이지, 단)" 배치를 맵으로.
-function buildPlacementMap(
-  pageLayout: PaginatedLayout,
-): Map<string, { page: number; col: number }> {
-  const placement = new Map<string, { page: number; col: number }>();
-  pageLayout.pages.forEach((columns, p) => {
-    columns.forEach((frags, c) => {
-      frags.forEach((frag) => {
-        const groupFirstId = frag.parts[0]?.source.localId;
-        if (
-          frag.includePassage &&
-          frag.passageRenderedLines.length > 0 &&
-          frag.passageStartLineIndex === 0 &&
-          groupFirstId
-        ) {
-          const k = passageBreakKey(groupFirstId);
-          if (!placement.has(k)) placement.set(k, { page: p, col: c });
-        }
-        frag.parts.forEach((part) => {
-          if (part.isStart && part.source.localId) {
-            const k = questionBreakKey(part.source.localId);
-            if (!placement.has(k)) placement.set(k, { page: p, col: c });
-          }
-        });
-      });
-    });
-  });
-  return placement;
 }
 
 // 한 페이지를 [좌칸 | 간격 | 우칸] 무테 표로.
