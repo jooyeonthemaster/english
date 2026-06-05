@@ -16,7 +16,10 @@ export interface ExtractionAiModelConfig {
   thinkingBudget: number;
 }
 
-const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
+// `||` + trim (NOT `??`): an EMPTY env (GEMINI_MODEL="") must fall back too.
+// `??` only catches null/undefined, so a blank env yielded model="" →
+// `models/:generateContent` → 404 → restoration pages all DEAD.
+const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash";
 
 const GEMINI_FLASH: ExtractionAiModelConfig = {
   model: DEFAULT_GEMINI_MODEL,

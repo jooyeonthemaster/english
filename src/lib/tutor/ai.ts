@@ -7,9 +7,9 @@ const provider = createGoogleGenerativeAI({
 });
 
 export function getTutorModel() {
-  return provider(process.env.GEMINI_MODEL ?? DEFAULT_GEMINI_MODEL);
+  return provider(process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL);
 }
 
 export function getTutorModelNameForAudit() {
-  return process.env.GEMINI_MODEL ?? DEFAULT_GEMINI_MODEL;
+  return process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
 }
