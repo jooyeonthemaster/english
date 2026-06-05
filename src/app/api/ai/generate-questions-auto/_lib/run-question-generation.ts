@@ -534,6 +534,30 @@ function buildRejectionSample(
   subType: string,
   question: Record<string, unknown>,
 ): Record<string, unknown> | undefined {
+  if (subType === "GRAMMAR_ERROR") {
+    const markedExpressions = Array.isArray(question.markedExpressions)
+      ? question.markedExpressions
+          .filter(isRecord)
+          .map((item) => ({
+            label: item.label,
+            expression: item.expression,
+            isError: item.isError,
+            errorExpression: item.errorExpression,
+          }))
+      : [];
+    const passageWithMarkers =
+      typeof question.passageWithMarkers === "string"
+        ? question.passageWithMarkers
+        : "";
+
+    return {
+      markedCount: markedExpressions.length,
+      renderedMarkerCount: (passageWithMarkers.match(/__[^_]+__/g) ?? []).length,
+      markedExpressions,
+      passageWithMarkersPreview: passageWithMarkers.slice(0, 300),
+    };
+  }
+
   if (subType !== "IRRELEVANT") return undefined;
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.filter((sentence): sentence is string => typeof sentence === "string")

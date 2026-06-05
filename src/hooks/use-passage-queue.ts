@@ -77,6 +77,9 @@ export interface QueuedPassage {
       content: string;
       order: number;
     }>;
+    // `explanation` is omitted from the polled ai-jobs list response to keep the
+    // payload lean; it stays optional so the analysis modal, which fetches full
+    // questions separately, can still supply it.
     questions: Array<{
       id: string;
       type: string;
@@ -89,7 +92,7 @@ export interface QueuedPassage {
       aiGenerated: boolean;
       approved: boolean;
       createdAt: Date;
-      explanation: {
+      explanation?: {
         id: string;
         content: string;
         keyPoints: string | null;
@@ -564,11 +567,22 @@ export function usePassageQueue(
       }
     };
 
-    void load();
-    const timer = window.setInterval(load, 5_000);
+    // Skip polling while the tab is backgrounded (cuts the dominant egress on
+    // /api/workbench/ai-jobs). Resume immediately on refocus.
+    const tick = () => {
+      if (document.hidden) return;
+      void load();
+    };
+    tick();
+    const timer = window.setInterval(tick, 5_000);
+    const onVisible = () => {
+      if (!document.hidden) void load();
+    };
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 

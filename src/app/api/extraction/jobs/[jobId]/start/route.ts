@@ -24,6 +24,7 @@ import {
   loadJobWithAuth,
   errorResponse,
 } from "@/lib/extraction/api-utils";
+import { cleanupStaleExtractionJobs } from "@/lib/extraction/stale-cleanup";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { startJobRequestSchema } from "@/lib/extraction/zod-schemas";
 
@@ -46,6 +47,8 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
   if (!parsed.success) {
     return errorResponse("INVALID_PAYLOAD", "요청이 올바르지 않습니다.", 400);
   }
+
+  await cleanupStaleExtractionJobs({ academyId: staff.academyId, jobId });
 
   const auth = await loadJobWithAuth(jobId, staff.academyId);
   if (!auth.ok) return auth.response;

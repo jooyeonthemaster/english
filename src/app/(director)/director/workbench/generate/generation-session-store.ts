@@ -198,11 +198,23 @@ export function useGenerationSessionQueue(): [
       }
     };
 
-    void load();
-    const timer = window.setInterval(load, 5_000);
+    // Skip polling while the tab is backgrounded (cuts the dominant egress on
+    // /api/workbench/ai-jobs). Resume immediately on refocus so the UX of
+    // "comes back fresh" is preserved.
+    const tick = () => {
+      if (document.hidden) return;
+      void load();
+    };
+    tick();
+    const timer = window.setInterval(tick, 5_000);
+    const onVisible = () => {
+      if (!document.hidden) void load();
+    };
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 

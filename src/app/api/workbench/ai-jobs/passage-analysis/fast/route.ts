@@ -21,6 +21,7 @@ import {
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
 import { prisma } from "@/lib/prisma";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
   getQuestionGenerationCreditCost,
   getQuestionGenerationPlanTag,
@@ -151,6 +152,12 @@ export async function POST(req: NextRequest) {
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
   }
+
+  await cleanupStaleWorkbenchAiJobs({
+    academyId: staff.academyId,
+    domain: "PASSAGE_ANALYSIS",
+    passageId: passage.id,
+  });
 
   const active = await prisma.workbenchAiJob.findFirst({
     where: {

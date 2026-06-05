@@ -281,6 +281,63 @@ export function findWordInPassage(
 }
 
 /**
+ * Match a narrow OCR-noise pattern where a source token has one extra leading
+ * letter, but the model copied the intended English token without that artifact.
+ *
+ * Example: "Coutpaces" in OCR text can be matched by model output "outpaces".
+ */
+export function findOcrNoisyExpressionInPassage(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+): FoundPosition | null {
+  const target = expression.trim();
+  if (!/^[A-Za-z][A-Za-z'-]{4,}$/.test(target)) return null;
+
+  const targetLower = target.toLowerCase();
+  const matches: FoundPosition[] = [];
+  const tokenRegex = /[A-Za-z][A-Za-z'-]*/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = tokenRegex.exec(passage))) {
+    const token = match[0];
+    const tokenLower = token.toLowerCase();
+    if (
+      tokenLower.length === targetLower.length + 1 &&
+      tokenLower.endsWith(targetLower)
+    ) {
+      matches.push({ index: match.index, length: token.length });
+    }
+  }
+
+  if (matches.length <= 1 || !surroundingText?.trim()) {
+    return matches[0] ?? null;
+  }
+
+  const contextTokens = contentTokenSet(surroundingText);
+  let best = matches[0];
+  let bestScore = -1;
+
+  for (const candidate of matches) {
+    const window = passage.slice(
+      Math.max(0, candidate.index - 80),
+      Math.min(passage.length, candidate.index + candidate.length + 80),
+    );
+    const windowTokens = contentTokenSet(window);
+    let score = 0;
+    for (const token of contextTokens) {
+      if (windowTokens.has(token)) score += 1;
+    }
+    if (score > bestScore) {
+      best = candidate;
+      bestScore = score;
+    }
+  }
+
+  return best;
+}
+
+/**
  * Replace exactly `length` chars at `position` with `replacement`.
  */
 export function replaceAtPosition(
@@ -337,6 +394,14 @@ function countMatches(
     idx = hay.indexOf(low, idx + 1);
   }
   return count;
+}
+
+function contentTokenSet(text: string): Set<string> {
+  return new Set(
+    (text.toLowerCase().match(/[a-z][a-z'-]{2,}/g) ?? []).map((token) =>
+      token.replace(/^'+|'+$/g, ""),
+    ),
+  );
 }
 
 export interface StrictFindResult {

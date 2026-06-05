@@ -31,6 +31,10 @@ export async function GET(req: NextRequest) {
     ? Math.min(Math.max(Math.floor(limitParam), 1), 100)
     : 50;
 
+  // Stale-job cleanup intentionally does NOT run here: this GET is polled every
+  // 5-10s, so a per-request 3-way updateMany was pure waste. Cleanup now runs in
+  // the 5-min extraction-reaper (global) + at job-creation POSTs (per passage).
+  // See memory: project_vercel_egress_aijobs_polling. Do not re-add it here.
   const jobs = await prisma.workbenchAiJob.findMany({
     where: {
       academyId: staff.academyId,
@@ -43,8 +47,26 @@ export async function GET(req: NextRequest) {
           school: { select: { id: true, name: true, type: true } },
           analysis: { select: { id: true, analysisData: true, contentHash: true, updatedAt: true } },
           notes: { orderBy: { order: "asc" } },
+          // This endpoint is polled every 5-10s by multiple clients, so keep the
+          // per-job payload lean (see memory: project_vercel_egress_aijobs_polling).
+          // Question `explanation` bodies + per-question `_count` subqueries are
+          // never rendered in the list/queue — only the count badge reads
+          // `questions.length` — so select just the light fields. Detail views
+          // re-fetch explanations via getWorkbenchQuestion(s).
           questions: {
-            include: { explanation: true, _count: { select: { examLinks: true } } },
+            select: {
+              id: true,
+              type: true,
+              subType: true,
+              difficulty: true,
+              questionText: true,
+              options: true,
+              correctAnswer: true,
+              tags: true,
+              aiGenerated: true,
+              approved: true,
+              createdAt: true,
+            },
             orderBy: { createdAt: "desc" },
             take: 50,
           },

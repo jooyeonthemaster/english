@@ -27,6 +27,8 @@ export async function handleListJobs(req: NextRequest) {
   const includeThumbnails =
     req.nextUrl.searchParams.get("thumbnails") !== "0";
 
+  // Stale cleanup runs globally in the 5-min extraction-reaper — no need to run
+  // it on this polled list GET. (See memory: project_vercel_egress_aijobs_polling.)
   const jobs = await prisma.extractionJob.findMany({
     where: { academyId: staff.academyId, deletedAt: null },
     orderBy: { createdAt: "desc" },

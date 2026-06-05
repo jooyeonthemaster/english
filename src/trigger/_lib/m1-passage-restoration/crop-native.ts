@@ -105,9 +105,10 @@ const CROP_RESTORE_TIMEOUT_MS = 90_000;
 
 function getGoogleApiKey(): string {
   const key =
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY ??
-    process.env.GEMINI_API_KEY ??
-    process.env.GOOGLE_API_KEY;
+    process.env.GEMINI_API_KEY?.trim() ||
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
+    process.env.GOOGLE_API_KEY?.trim() ||
+    "";
   if (!key) {
     throw new Error(
       "Missing env var: GOOGLE_GENERATIVE_AI_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY",

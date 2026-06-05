@@ -75,12 +75,22 @@ export function useTaskList({
       }
     }
 
-    void load();
-    const timer = window.setInterval(load, POLL_INTERVAL_MS);
+    // Skip polling while the tab is backgrounded; resume on refocus.
+    const tick = () => {
+      if (document.hidden) return;
+      void load();
+    };
+    tick();
+    const timer = window.setInterval(tick, POLL_INTERVAL_MS);
+    const onVisible = () => {
+      if (!document.hidden) void load();
+    };
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       cancelled = true;
       controller.abort();
       window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, [scope, refreshKey, manualKey]);
 
