@@ -268,6 +268,33 @@ function renderCustomBlock(
   return [];
 }
 
+// Passage-inclusion resolution for one question group. Shared verbatim by
+// appendQuestionGroups (flat) and renderGroupsToUnits (units) so the
+// includePassage/source-passage policy lives in exactly one place.
+function resolveGroupPassage(
+  first: BuilderItemResolved,
+  items: BuilderItemResolved[],
+): { passageContent: string; includePassage: boolean } {
+  const rawPassageContent = (
+    first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
+  ).trim();
+  const passageContent = formatSourcePassageForQuestionItems(
+    rawPassageContent,
+    items,
+  ).trim();
+  const includePassage =
+    !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
+    (first.includePassage !== false ||
+      shouldForceSourcePassage({
+        subType: first.sourceQuestion.subType,
+        questionText: first.questionText || first.sourceQuestion.questionText,
+        structuredData: (first.sourceQuestion as { structuredData?: unknown })
+          .structuredData,
+        passage: { content: rawPassageContent },
+      }));
+  return { passageContent, includePassage };
+}
+
 function appendQuestionGroups(opts: {
   target: BlockNode[];
   items: BuilderItemResolved[];
@@ -283,22 +310,8 @@ function appendQuestionGroups(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const rawPassageContent = (
-      first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
-    ).trim();
-    const passageContent = formatSourcePassageForQuestionItems(
-      rawPassageContent,
-      group.items,
-    ).trim();
-    const includePassage =
-      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
-      (first.includePassage !== false ||
-        shouldForceSourcePassage({
-          subType: first.sourceQuestion.subType,
-          questionText: first.questionText || first.sourceQuestion.questionText,
-          structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
-          passage: { content: rawPassageContent },
-        }));
+    const { passageContent, includePassage } =
+      resolveGroupPassage(first, group.items);
 
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
     if (passageRenderedSeparately) {
@@ -479,23 +492,8 @@ function renderGroupsToUnits(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const rawPassageContent = (
-      first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
-    ).trim();
-    const passageContent = formatSourcePassageForQuestionItems(
-      rawPassageContent,
-      group.items,
-    ).trim();
-    const includePassage =
-      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
-      (first.includePassage !== false ||
-        shouldForceSourcePassage({
-          subType: first.sourceQuestion.subType,
-          questionText: first.questionText || first.sourceQuestion.questionText,
-          structuredData: (first.sourceQuestion as { structuredData?: unknown })
-            .structuredData,
-          passage: { content: rawPassageContent },
-        }));
+    const { passageContent, includePassage } =
+      resolveGroupPassage(first, group.items);
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
     if (passageRenderedSeparately) {
       const passageBlocks = renderPassage({
