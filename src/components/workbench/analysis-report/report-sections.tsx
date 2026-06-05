@@ -1316,7 +1316,7 @@ function ReadGrammarNotePart({
           className="par-read-note-target"
           editable={editable}
           value={note.row.excerpt ?? ""}
-          placeholder="(?먮Ц 援ъ젅)"
+          placeholder="(원문 구절)"
           onCommit={(v) => patchGrammarNote(note, sectionEdit, { excerpt: v })}
         />
       </div>
@@ -1330,7 +1330,7 @@ function ReadGrammarNotePart({
           className="par-read-note-trap"
           editable={editable}
           value={note.row.trap ?? ""}
-          placeholder="(?⑥젙 ?ъ씤??"
+          placeholder="(함정 포인트)"
           onCommit={(v) => patchGrammarNote(note, sectionEdit, { trap: v })}
         />
       </div>
@@ -1384,7 +1384,7 @@ function ReadExamNotePart({
           className="par-read-note-target"
           editable={editable}
           value={note.row.asks ?? ""}
-          placeholder="(臾삳뒗 寃?"
+          placeholder="(묻는 것)"
           onCommit={(v) => patchExamNote(note, sectionEdit, { asks: v })}
         />
       </div>
@@ -2057,7 +2057,7 @@ function AnnotatedPassageSentenceSourceBlock({
         </div>
       </div>
       {editable && isFirst ? (
-        <DelBtn title="臾몄옣 ??젣" onClick={() => onCommit({ ...section, sentences: section.sentences.filter((_, index) => index !== sentenceIndex) })} />
+        <DelBtn title="문장 삭제" onClick={() => onCommit({ ...section, sentences: section.sentences.filter((_, index) => index !== sentenceIndex) })} />
       ) : null}
     </article>
   );
