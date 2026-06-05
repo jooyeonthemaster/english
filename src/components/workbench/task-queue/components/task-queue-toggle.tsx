@@ -3,6 +3,8 @@
 import { PanelBottomOpen } from "lucide-react";
 import { useEffect, useState, type PointerEventHandler, type Ref } from "react";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
+
 import { ALL_ADAPTERS } from "../adapters";
 import { ACTIVE_STATUSES, POLL_INTERVAL_MS } from "../constants";
 import { useTaskQueue } from "../context";
@@ -44,35 +46,30 @@ export function TaskQueueToggle({
   const [activeCount, setActiveCount] = useState<number>(readCachedActiveCount);
 
   useEffect(() => {
-    const controller = new AbortController();
-    let cancelled = false;
-
-    async function load() {
-      if (cancelled) return;
-      try {
-        const results = await Promise.all(
-          ALL_ADAPTERS.map((adapter) =>
-            adapter.fetchTasks(controller.signal).catch(() => [] as BaseTask[]),
-          ),
-        );
-        if (cancelled) return;
-        const count = results
-          .flat()
-          .filter((task) => ACTIVE_STATUSES.has(task.status)).length;
-        setActiveCount(count);
-        writeCachedActiveCount(count);
-      } catch {
-        // Best-effort badge — silent on failure.
-      }
-    }
-
-    void load();
-    const timer = window.setInterval(load, POLL_INTERVAL_MS);
-    return () => {
-      cancelled = true;
-      controller.abort();
-      window.clearInterval(timer);
-    };
+    return startAdaptivePoll({
+      activeMs: POLL_INTERVAL_MS,
+      idleMs: 30_000,
+      run: async (signal) => {
+        try {
+          const results = await Promise.all(
+            ALL_ADAPTERS.map((adapter) =>
+              adapter.fetchTasks(signal).catch(() => [] as BaseTask[]),
+            ),
+          );
+          if (signal.aborted) return null;
+          const tasks = results.flat();
+          const count = tasks.filter((task) =>
+            ACTIVE_STATUSES.has(task.status),
+          ).length;
+          setActiveCount(count);
+          writeCachedActiveCount(count);
+          return tasks.map((t) => `${t.id}:${t.status}`).join("|");
+        } catch {
+          // Best-effort badge — silent on failure.
+          return null;
+        }
+      },
+    });
   }, [refreshKey]);
 
   const tooltip =

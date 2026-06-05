@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 
 import { getStaffSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -31,26 +32,67 @@ export async function GET(req: NextRequest) {
     ? Math.min(Math.max(Math.floor(limitParam), 1), 100)
     : 50;
 
+  // `?view=summary` — scalar-only projection for poll-only consumers (the global
+  // task-queue badge/list adapters) that read counts + status and never touch
+  // the passage, questions, result, or config. Skips the passage include AND the
+  // result JSON entirely → a few KB instead of multiple MB per poll.
+  if (req.nextUrl.searchParams.get("view") === "summary") {
+    const summaryJobs = await prisma.workbenchAiJob.findMany({
+      where: {
+        academyId: staff.academyId,
+        deletedAt: null,
+        ...(domain ? { domain } : {}),
+      },
+      select: {
+        id: true,
+        domain: true,
+        status: true,
+        title: true,
+        passageId: true,
+        mode: true,
+        questionType: true,
+        requestedCount: true,
+        successCount: true,
+        failedCount: true,
+        resultCount: true,
+        errorMessage: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
+    return NextResponse.json({ jobs: summaryJobs });
+  }
+
+  // Passage sub-includes are domain-aware to avoid shipping data that no
+  // consumer of THIS endpoint reads — the response is polled every few seconds,
+  // so over-fetching here directly inflates Vercel origin transfer cost.
+  //   • passage.questions (with explanations) is ~86–89% of the payload and is
+  //     ONLY consumed by the PASSAGE_ANALYSIS queue. The QUESTION_GENERATION
+  //     surfaces render from job.result.questions, never passage.questions.
+  //   • passage.notes is read by no consumer here → dropped entirely.
+  const includePassageQuestions = domain === "PASSAGE_ANALYSIS";
+  const passageInclude: Prisma.PassageInclude = {
+    school: { select: { id: true, name: true, type: true } },
+    analysis: { select: { id: true, analysisData: true, contentHash: true, updatedAt: true } },
+    ...(includePassageQuestions
+      ? {
+          questions: {
+            include: { explanation: true, _count: { select: { examLinks: true } } },
+            orderBy: { createdAt: "desc" as const },
+            take: 50,
+          },
+        }
+      : {}),
+  };
+
   const jobs = await prisma.workbenchAiJob.findMany({
     where: {
       academyId: staff.academyId,
       deletedAt: null,
       ...(domain ? { domain } : {}),
     },
-    include: {
-      passage: {
-        include: {
-          school: { select: { id: true, name: true, type: true } },
-          analysis: { select: { id: true, analysisData: true, contentHash: true, updatedAt: true } },
-          notes: { orderBy: { order: "asc" } },
-          questions: {
-            include: { explanation: true, _count: { select: { examLinks: true } } },
-            orderBy: { createdAt: "desc" },
-            take: 50,
-          },
-        },
-      },
-    },
+    include: { passage: { include: passageInclude } },
     orderBy: { createdAt: "desc" },
     take: limit,
   });
