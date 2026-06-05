@@ -89,7 +89,8 @@ export function MembersListClient({ members }: MembersListClientProps) {
       if (filters.active === "active" && !m.isActive) return false;
       if (filters.active === "inactive" && m.isActive) return false;
       if (q) {
-        const hay = `${m.name} ${m.email} ${m.academy.name}`.toLowerCase();
+        const hay =
+          `${m.name} ${m.email} ${m.academy.name} ${m.academy.memo ?? ""}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -169,7 +170,7 @@ export function MembersListClient({ members }: MembersListClientProps) {
             <Input
               value={filters.search}
               onChange={(e) => setFilter("search", e.target.value)}
-              placeholder="이름·이메일·학원 검색"
+              placeholder="이름·이메일·학원·메모 검색"
               className="pl-9 h-9 text-[13px] bg-gray-50 border-gray-100 focus-visible:bg-white"
               aria-label="회원 검색"
             />

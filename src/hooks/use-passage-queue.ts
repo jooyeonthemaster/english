@@ -10,6 +10,7 @@ import {
   type SetStateAction,
 } from "react";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
 import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
@@ -77,9 +78,6 @@ export interface QueuedPassage {
       content: string;
       order: number;
     }>;
-    // `explanation` is omitted from the polled ai-jobs list response to keep the
-    // payload lean; it stays optional so the analysis modal, which fetches full
-    // questions separately, can still supply it.
     questions: Array<{
       id: string;
       type: string;
@@ -92,7 +90,7 @@ export interface QueuedPassage {
       aiGenerated: boolean;
       approved: boolean;
       createdAt: Date;
-      explanation?: {
+      explanation: {
         id: string;
         content: string;
         keyPoints: string | null;
@@ -551,39 +549,28 @@ export function usePassageQueue(
   }, [cacheKey]);
 
   useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await fetch(
-          "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100",
-          { credentials: "include", cache: "no-store" },
-        );
-        if (!res.ok) return;
-        const data = (await res.json()) as { jobs?: AiJobRow[] };
-        if (cancelled) return;
-        setJobQueue((data.jobs ?? []).map(queueItemFromJob).filter(Boolean) as QueuedPassage[]);
-      } catch {
-        // Best-effort polling; the local queue remains visible on transient errors.
-      }
-    };
-
-    // Skip polling while the tab is backgrounded (cuts the dominant egress on
-    // /api/workbench/ai-jobs). Resume immediately on refocus.
-    const tick = () => {
-      if (document.hidden) return;
-      void load();
-    };
-    tick();
-    const timer = window.setInterval(tick, 5_000);
-    const onVisible = () => {
-      if (!document.hidden) void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
+    return startAdaptivePoll({
+      activeMs: 5_000,
+      idleMs: 30_000,
+      run: async (signal) => {
+        try {
+          const res = await fetch(
+            "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100",
+            { credentials: "include", cache: "no-store", signal },
+          );
+          if (!res.ok) return null;
+          const data = (await res.json()) as { jobs?: AiJobRow[] };
+          if (signal.aborted) return null;
+          const jobs = data.jobs ?? [];
+          setJobQueue(jobs.map(queueItemFromJob).filter(Boolean) as QueuedPassage[]);
+          // Signature: status per job → fast while an analysis runs, idle after.
+          return jobs.map((j) => `${j.id}:${j.status}`).join("|");
+        } catch {
+          // Best-effort polling; the local queue remains visible on errors.
+          return null;
+        }
+      },
+    });
   }, []);
 
   const queue = useMemo(() => {

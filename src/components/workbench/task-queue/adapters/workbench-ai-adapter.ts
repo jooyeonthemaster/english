@@ -69,8 +69,10 @@ function createWorkbenchAiAdapter(
   return {
     domain,
     async fetchTasks(signal): Promise<BaseTask[]> {
+      // This adapter renders only scalar counts/status — request the scalar-only
+      // projection so the heavy passage.questions/result payload is never sent.
       const res = await fetch(
-        `/api/workbench/ai-jobs?domain=${apiDomain}&limit=50`,
+        `/api/workbench/ai-jobs?domain=${apiDomain}&limit=50&view=summary`,
         {
           credentials: "include",
           cache: "no-store",

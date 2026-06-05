@@ -75,9 +75,7 @@ interface PassageData {
     aiGenerated: boolean;
     approved: boolean;
     createdAt: Date;
-    // Optional: the polled ai-jobs list omits explanation bodies to stay lean;
-    // the modal does not render them (full questions are fetched separately).
-    explanation?: {
+    explanation: {
       id: string;
       content: string;
       keyPoints: string | null;

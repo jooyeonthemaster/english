@@ -8,6 +8,8 @@ import {
   type SetStateAction,
 } from "react";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
+
 import type { QueueItem } from "./generate-page-types";
 
 interface AiJobRow {
@@ -151,71 +153,59 @@ export function useGenerationSessionQueue(): [
   const [dbQueue, setDbQueue] = useState<QueueItem[]>([]);
 
   useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await fetch(
-          "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=100",
-          { credentials: "include", cache: "no-store" },
-        );
-        if (!res.ok) return;
-        const data = (await res.json()) as { jobs?: AiJobRow[] };
-        if (cancelled) return;
-        const jobs = data.jobs ?? [];
-        const failedJobItems = jobs
-          .map((job) => jobToQueueItem(job, { includeTerminalFailures: true }))
-          .filter(
-            (item): item is QueueItem =>
-              !!item && item.status === "error",
+    return startAdaptivePoll({
+      activeMs: 5_000,
+      idleMs: 30_000,
+      run: async (signal) => {
+        try {
+          const res = await fetch(
+            "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=100",
+            { credentials: "include", cache: "no-store", signal },
           );
+          if (!res.ok) return null;
+          const data = (await res.json()) as { jobs?: AiJobRow[] };
+          if (signal.aborted) return null;
+          const jobs = data.jobs ?? [];
+          const failedJobItems = jobs
+            .map((job) => jobToQueueItem(job, { includeTerminalFailures: true }))
+            .filter(
+              (item): item is QueueItem =>
+                !!item && item.status === "error",
+            );
 
-        if (failedJobItems.length > 0) {
-          setLocalQueue((prev) =>
-            prev.map((item) => {
-              if (
-                !isFastTempItem(item) ||
-                item.status !== "generating"
-              ) {
-                return item;
-              }
-              const failedMatch = failedJobItems.find((failed) =>
-                sameGenerationRequest(item, failed),
-              );
-              if (!failedMatch) return item;
-              return {
-                ...item,
-                status: "error" as const,
-                progress: failedMatch.progress,
-                error: failedMatch.error,
-              };
-            }),
-          );
+          if (failedJobItems.length > 0) {
+            setLocalQueue((prev) =>
+              prev.map((item) => {
+                if (
+                  !isFastTempItem(item) ||
+                  item.status !== "generating"
+                ) {
+                  return item;
+                }
+                const failedMatch = failedJobItems.find((failed) =>
+                  sameGenerationRequest(item, failed),
+                );
+                if (!failedMatch) return item;
+                return {
+                  ...item,
+                  status: "error" as const,
+                  progress: failedMatch.progress,
+                  error: failedMatch.error,
+                };
+              }),
+            );
+          }
+
+          setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
+          // Signature: status + successCount per job → snaps back to the fast
+          // cadence on any start/progress/completion, backs off when idle.
+          return jobs.map((j) => `${j.id}:${j.status}:${j.successCount}`).join("|");
+        } catch {
+          // Keep local optimistic rows visible when a poll fails.
+          return null;
         }
-
-        setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
-      } catch {
-        // Keep local optimistic rows visible when a poll fails.
-      }
-    };
-
-    // Skip polling while the tab is backgrounded (cuts the dominant egress on
-    // /api/workbench/ai-jobs). Resume immediately on refocus so the UX of
-    // "comes back fresh" is preserved.
-    const tick = () => {
-      if (document.hidden) return;
-      void load();
-    };
-    tick();
-    const timer = window.setInterval(tick, 5_000);
-    const onVisible = () => {
-      if (!document.hidden) void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
+      },
+    });
   }, []);
 
   const queue = useMemo(() => {
