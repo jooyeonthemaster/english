@@ -42,3 +42,5 @@ public/*.hwpx
 # unrelated marketing/scratch images (bloat, not referenced by app)
 public/brixs-strawberry-latte-*
 public/61c7d3c3-d347-474f-83cb-2e39efdaa594.jpg
+# promo clips — local scratch, not referenced by the app, must not be served
+public/promo
