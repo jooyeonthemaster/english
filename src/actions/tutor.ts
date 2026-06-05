@@ -287,6 +287,87 @@ export async function getTutorPassageCandidates() {
   });
 }
 
+// Per-passage draft preparation: rule-based drafts + best-effort AI drafts
+// (deduped). Shared verbatim by createTutorProgramAction / addTutorProgramPassagesAction.
+async function prepareTutorLessonDraft<
+  P extends { analysis?: { analysisData?: string | null } | null },
+>(passage: P) {
+  const analysis = parsePassageAnalysis(passage.analysis?.analysisData);
+  if (!analysis) return null;
+
+  let drafts = buildRuleBasedTutorDrafts(analysis);
+  let aiLogData: {
+    model: string;
+    tokensIn: number;
+    tokensOut: number;
+    latencyMs: number;
+    status: "ok" | "parse_fail";
+  } = {
+    model: "fallback",
+    tokensIn: 0,
+    tokensOut: 0,
+    latencyMs: 0,
+    status: "parse_fail",
+  };
+
+  try {
+    const generated = await generateTutorDraftsWithModel(analysis);
+    const valid = validateGroundedDrafts(generated.activities, analysis);
+    if (valid.length >= 8) {
+      const seen = new Set<string>();
+      drafts = [...drafts, ...valid].filter((draft) => {
+        const key = `${draft.type}:${draft.title}:${JSON.stringify(draft.coverageRefs)}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+    const tokenUsage = readTokenUsage(generated.usage);
+    aiLogData = {
+      model: generated.model,
+      tokensIn: tokenUsage.input,
+      tokensOut: tokenUsage.output,
+      latencyMs: generated.latencyMs,
+      status: "ok",
+    };
+  } catch {}
+
+  return { passage, analysis, drafts, aiLogData };
+}
+
+// tutorActivity.createMany rows for one lesson's drafts. Shared by create/add
+// so the draft→row schema mapping lives in exactly one place.
+function buildTutorActivityRows(params: {
+  academyId: string;
+  lessonId: string;
+  drafts: ReturnType<typeof buildRuleBasedTutorDrafts>;
+  analysis: NonNullable<ReturnType<typeof parsePassageAnalysis>>;
+  sourceAnalysisVersion: number | null | undefined;
+}): Prisma.TutorActivityCreateManyInput[] {
+  const { academyId, lessonId, drafts, analysis, sourceAnalysisVersion } = params;
+  return drafts.map((draft, orderNum) => ({
+    academyId,
+    lessonId,
+    mode: draft.mode,
+    type: draft.type,
+    orderNum,
+    title: draft.title,
+    instructions: draft.instructions ?? null,
+    payload: asJsonInput(draft.payload),
+    payloadHash: sha256Json(draft.payload),
+    payloadSchemaVersion: 2,
+    analysisSnapshotHash: sha256Json(analysis),
+    itemCount: draft.itemCount,
+    maxScore: draft.maxScore,
+    estimatedSec: draft.estimatedSec,
+    requiresAiGrade: requiresAiGrade(draft.type),
+    coverageRefs: asJsonInput(draft.coverageRefs),
+    sourceAnalysisVersion,
+    createdBy: "system",
+    status: "APPROVED",
+  }));
+}
+
 export async function createTutorProgramAction(formData: FormData): Promise<ActionResult> {
   const staff = await requireStaffAuth("DIRECTOR");
   const rawPassageIds = String(formData.get("passageIds") ?? "")
@@ -312,51 +393,7 @@ export async function createTutorProgramAction(formData: FormData): Promise<Acti
     return { ok: false, error: "분석 완료된 지문만 프로그램에 넣을 수 있어요." };
   }
 
-  const prepared = await Promise.all(
-    passages.map(async (passage) => {
-      const analysis = parsePassageAnalysis(passage.analysis?.analysisData);
-      if (!analysis) return null;
-
-      let drafts = buildRuleBasedTutorDrafts(analysis);
-      let aiLogData: {
-        model: string;
-        tokensIn: number;
-        tokensOut: number;
-        latencyMs: number;
-        status: "ok" | "parse_fail";
-      } = {
-        model: "fallback",
-        tokensIn: 0,
-        tokensOut: 0,
-        latencyMs: 0,
-        status: "parse_fail",
-      };
-
-      try {
-        const generated = await generateTutorDraftsWithModel(analysis);
-        const valid = validateGroundedDrafts(generated.activities, analysis);
-        if (valid.length >= 8) {
-          const seen = new Set<string>();
-          drafts = [...drafts, ...valid].filter((draft) => {
-            const key = `${draft.type}:${draft.title}:${JSON.stringify(draft.coverageRefs)}`;
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-          });
-        }
-        const tokenUsage = readTokenUsage(generated.usage);
-        aiLogData = {
-          model: generated.model,
-          tokensIn: tokenUsage.input,
-          tokensOut: tokenUsage.output,
-          latencyMs: generated.latencyMs,
-          status: "ok",
-        };
-      } catch {}
-
-      return { passage, analysis, drafts, aiLogData };
-    })
-  );
+  const prepared = await Promise.all(passages.map(prepareTutorLessonDraft));
 
   const result = await prisma.$transaction(
     async (tx) => {
@@ -411,27 +448,13 @@ export async function createTutorProgramAction(formData: FormData): Promise<Acti
         });
 
         await tx.tutorActivity.createMany({
-          data: drafts.map((draft, orderNum) => ({
+          data: buildTutorActivityRows({
             academyId: staff.academyId,
             lessonId: lesson.id,
-            mode: draft.mode,
-            type: draft.type,
-            orderNum,
-            title: draft.title,
-            instructions: draft.instructions ?? null,
-            payload: asJsonInput(draft.payload),
-            payloadHash: sha256Json(draft.payload),
-            payloadSchemaVersion: 2,
-            analysisSnapshotHash: sha256Json(analysis),
-            itemCount: draft.itemCount,
-            maxScore: draft.maxScore,
-            estimatedSec: draft.estimatedSec,
-            requiresAiGrade: requiresAiGrade(draft.type),
-            coverageRefs: asJsonInput(draft.coverageRefs),
+            drafts,
+            analysis,
             sourceAnalysisVersion: passage.analysis?.version,
-            createdBy: "system",
-            status: "APPROVED",
-          })),
+          }),
         });
         await tx.tutorLesson.update({
           where: { id: lesson.id },
@@ -509,51 +532,7 @@ export async function addTutorProgramPassagesAction(
     return { ok: false, error: "모바일 학습 생성은 분석 완료된 지문만 가능합니다." };
   }
 
-  const prepared = await Promise.all(
-    orderedPassages.map(async (passage) => {
-      const analysis = parsePassageAnalysis(passage.analysis?.analysisData);
-      if (!analysis) return null;
-
-      let drafts = buildRuleBasedTutorDrafts(analysis);
-      let aiLogData: {
-        model: string;
-        tokensIn: number;
-        tokensOut: number;
-        latencyMs: number;
-        status: "ok" | "parse_fail";
-      } = {
-        model: "fallback",
-        tokensIn: 0,
-        tokensOut: 0,
-        latencyMs: 0,
-        status: "parse_fail",
-      };
-
-      try {
-        const generated = await generateTutorDraftsWithModel(analysis);
-        const valid = validateGroundedDrafts(generated.activities, analysis);
-        if (valid.length >= 8) {
-          const seen = new Set<string>();
-          drafts = [...drafts, ...valid].filter((draft) => {
-            const key = `${draft.type}:${draft.title}:${JSON.stringify(draft.coverageRefs)}`;
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-          });
-        }
-        const tokenUsage = readTokenUsage(generated.usage);
-        aiLogData = {
-          model: generated.model,
-          tokensIn: tokenUsage.input,
-          tokensOut: tokenUsage.output,
-          latencyMs: generated.latencyMs,
-          status: "ok",
-        };
-      } catch {}
-
-      return { passage, analysis, drafts, aiLogData };
-    }),
-  );
+  const prepared = await Promise.all(orderedPassages.map(prepareTutorLessonDraft));
 
   const validPrepared = prepared.filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
   if (validPrepared.length === 0) {
@@ -610,27 +589,13 @@ export async function addTutorProgramPassagesAction(
         });
 
         await tx.tutorActivity.createMany({
-          data: drafts.map((draft, orderNum) => ({
+          data: buildTutorActivityRows({
             academyId: staff.academyId,
             lessonId: lesson.id,
-            mode: draft.mode,
-            type: draft.type,
-            orderNum,
-            title: draft.title,
-            instructions: draft.instructions ?? null,
-            payload: asJsonInput(draft.payload),
-            payloadHash: sha256Json(draft.payload),
-            payloadSchemaVersion: 2,
-            analysisSnapshotHash: sha256Json(analysis),
-            itemCount: draft.itemCount,
-            maxScore: draft.maxScore,
-            estimatedSec: draft.estimatedSec,
-            requiresAiGrade: requiresAiGrade(draft.type),
-            coverageRefs: asJsonInput(draft.coverageRefs),
+            drafts,
+            analysis,
             sourceAnalysisVersion: passage.analysis?.version,
-            createdBy: "system",
-            status: "APPROVED",
-          })),
+          }),
         });
 
         await tx.tutorLesson.update({
