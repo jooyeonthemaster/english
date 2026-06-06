@@ -267,11 +267,14 @@ function mergeQueueItems(
   localQueue: QueuedPassage[],
   jobQueue: QueuedPassage[],
 ): QueuedPassage[] {
+  // 같은 지문(passage.id)에 대해 AI 작업이 여러 건 존재할 수 있어 jobQueue 안에
+  // 동일 id 가 중복될 수 있다. Map 은 마지막 항목만 남기므로 id 당 한 건만 유지된다.
   const jobById = new Map(jobQueue.map((item) => [item.id, item]));
   const seen = new Set<string>();
   const merged: QueuedPassage[] = [];
 
   for (const local of localQueue) {
+    if (seen.has(local.id)) continue;
     seen.add(local.id);
     const job = jobById.get(local.id);
     if (!job) {
@@ -292,6 +295,7 @@ function mergeQueueItems(
 
   for (const job of jobQueue) {
     if (seen.has(job.id)) continue;
+    seen.add(job.id);
     merged.push(job);
   }
 

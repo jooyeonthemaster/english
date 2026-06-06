@@ -9,7 +9,7 @@ import {
 } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { FileText, Pencil } from "lucide-react";
+import { FileText, Pencil, Maximize2, type LucideIcon } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -23,6 +23,10 @@ import { DetailActionButton } from "@/components/ui/detail-action-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
+export type DraftCardActionVariant = {
+  label?: string;
+  icon?: LucideIcon;
+};
 
 interface DraftCardProps {
   draft: M1PassageDraftWithJob;
@@ -53,6 +57,7 @@ interface DraftCardProps {
   /** 영역 선택(마키) 우선 모드: 체크된 카드만 네이티브 드래그를 허용한다.
    *  (미선택 카드는 draggable 미등록 → 카드 위에서 영역 드래그가 동작) */
   dragRequiresSelection?: boolean;
+  detailAction?: DraftCardActionVariant;
 }
 
 export function DraftCard({
@@ -66,6 +71,7 @@ export function DraftCard({
   hideCheckbox,
   onTitleChange,
   statusBadgeMode = "review",
+  detailAction,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -233,21 +239,27 @@ export function DraftCard({
       data-drag-item-id={hideCheckbox ? undefined : draft.id}
       role="button"
       tabIndex={0}
-      onClick={onClick}
+      aria-pressed={checked}
+      onClick={hideCheckbox ? undefined : onToggleCheck}
       onKeyDown={(e) => {
+        if (hideCheckbox) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onClick();
+          onToggleCheck();
         }
       }}
       className={
         "relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (isDragging
           ? "cursor-grabbing opacity-50"
-          : "cursor-grab active:cursor-grabbing") +
+          : hideCheckbox
+            ? "cursor-default"
+            : "cursor-pointer") +
         " " +
         (active
           ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
+          : checked
+            ? "border-blue-300 bg-blue-50/30 ring-1 ring-blue-100"
           : stampDone
             ? "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60"
             : statusBadgeMode === "analysis"
@@ -395,11 +407,14 @@ export function DraftCard({
       </p>
       <div className="mt-auto flex justify-end pt-1">
         <DetailActionButton
+          icon={detailAction?.icon ?? Maximize2}
           onClick={(e) => {
             e.stopPropagation();
             onClick();
           }}
-        />
+        >
+          {detailAction?.label ?? "상세보기"}
+        </DetailActionButton>
       </div>
     </div>
   );

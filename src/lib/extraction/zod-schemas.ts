@@ -65,14 +65,32 @@ export const createJobRequestSchema = z.object({
 
 export type CreateJobRequest = z.infer<typeof createJobRequestSchema>;
 
-export const createTextExtractionRequestSchema = z.object({
-  mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
-  // P7-D2: "verbatim"이면 AI 복원 생략(붙여넣은 텍스트 그대로 저장).
-  outputMode: z.enum(["verbatim", "restored"]).optional(),
+// 텍스트 지문 1개(제목 + 본문). 여러 개를 한 작업으로 묶어 보낼 때의 단위.
+export const textPassageInputSchema = z.object({
   title: z.string().trim().max(200).optional(),
   text: z.string().trim().min(20).max(60_000),
 });
 
+export const createTextExtractionRequestSchema = z
+  .object({
+    mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
+    // P7-D2: "verbatim"이면 AI 복원 생략(붙여넣은 텍스트 그대로 저장).
+    outputMode: z.enum(["verbatim", "restored"]).optional(),
+    // 단건(하위호환). passages가 오면 무시된다.
+    title: z.string().trim().max(200).optional(),
+    text: z.string().trim().min(20).max(60_000).optional(),
+    // 여러 지문을 한 작업으로 묶어 추출(파일 모드와 동일). 1개여도 됨.
+    passages: z
+      .array(textPassageInputSchema)
+      .min(1)
+      .max(MAX_PAGES_PER_JOB)
+      .optional(),
+  })
+  .refine((v) => (v.passages?.length ?? 0) > 0 || typeof v.text === "string", {
+    message: "text 또는 passages 중 하나는 반드시 필요합니다.",
+  });
+
+export type TextPassageInput = z.infer<typeof textPassageInputSchema>;
 export type CreateTextExtractionRequest = z.infer<
   typeof createTextExtractionRequestSchema
 >;

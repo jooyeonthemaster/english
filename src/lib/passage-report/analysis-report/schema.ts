@@ -74,7 +74,8 @@ export const passageSectionSchema = z
             .array(
               z.object({
                 text: z.string(), // 원문 연속 구절(그대로)
-                role: z.string().optional(), // 짧은 한국어 구문 라벨 ("주절","이유 부사절" 등)
+                gloss: z.string().optional(), // 직독직해 한글 뜻 (영어 위에 작게) — 짧게
+                role: z.string().optional(), // 짧은 구문 역할 ("주어","동사","목적어","전치사구" 등)
                 emphasis: z.enum(["core", "normal"]).optional(),
               }),
             )
@@ -165,6 +166,9 @@ export const grammarSectionSchema = z
           point: z.string(), // 핵심 문법 (예: "(i) 병렬 — search 와 reconstruct")
           explanation: z.string(), // 학생 눈높이 해설 (정의→이유→비교→적용 4단계)
           trap: z.string().optional(), // ⚠ 함정/오답 형태
+          example: z.string().optional(), // ⚠ 함정 예문(영어 한 문장) — 시험이 파는 '틀린 형태'를 그대로 담음
+          exampleWrong: z.string().optional(), // 예문 속 '틀린 토큰'(빨강 취소선)
+          exampleCorrect: z.string().optional(), // 그 자리의 '정답 토큰'(초록)
           layout: annoLayoutSchema, // (선택) 원문 필기 배치 의도
         }),
       )
@@ -215,6 +219,7 @@ export const vocabularySectionSchema = z
           pos: z.string().optional(), // (구버전 호환) 품사 — 더 이상 표시하지 않음
           meaning: z.string(), // 뜻 (본문 의미)
           synonyms: z.string().optional(), // 동의어
+          antonyms: z.string().optional(), // 반의어
         }),
       )
       .min(1)
@@ -563,6 +568,8 @@ export const blockMetaSchema = z
     fontScale: z.number().min(0.5).max(2).optional(),
     /** 굵게 */
     bold: z.boolean().optional(),
+    /** 이탤릭 */
+    italic: z.boolean().optional(),
     /** 정렬 */
     align: z.enum(["left", "center", "right"]).optional(),
     /** 숨김 (렌더/인쇄에서 제외) */
@@ -663,8 +670,15 @@ export const analysisReportSchema = z
     blockMeta: z.record(z.string(), blockMetaSchema).optional(),
     /** (편집기) 블록 표시 순서 — 블록 id 배열. 없으면 자연 순서. */
     blockOrder: z.array(z.string()).optional(),
+    /**
+     * (편집기) 표(어휘·어법·출제) 열 너비 사용자 조절값. 표 종류(grammar/exam/vocab)별로
+     * 열 키 → 퍼센트(보이는 열들의 합이 ~100). 없으면 기본 비율로 렌더. 세로 구분선 드래그로 저장.
+     */
+    tableColWidths: z.record(z.string(), z.record(z.string(), z.number())).optional(),
     /** Vocabulary worksheet only mode. Keeps source data but renders only the word-test sheet. */
     vocabTestOnly: z.boolean().optional(),
+    /** (편집기) 표지 다음에 '영어 원문만' 단독 페이지를 추가할지. 기본 off. */
+    englishOnlyPage: z.boolean().optional(),
     /** (편집기) 사용자 삽입 커스텀 블록 (spacer/text). 위치는 blockOrder 로 결정. 손상 시 전체 무시. */
     customBlocks: z.array(customBlockSchema).max(60).optional().catch(undefined),
     /** (편집기) 표지 템플릿 설정. 없거나 enabled=false 면 표지 없음. */

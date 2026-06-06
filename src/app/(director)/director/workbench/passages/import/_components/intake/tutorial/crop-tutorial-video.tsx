@@ -21,10 +21,12 @@ import {
   Easing,
 } from "remotion";
 
+import { TutorialTaskQueue } from "./tutorial-task-queue";
+
 export const TUT_W = 1280;
 export const TUT_H = 720;
 export const TUT_FPS = 30;
-export const TUT_TOTAL = 792;
+export const TUT_TOTAL = 860;
 
 const C = {
   blue: "#2563EB",
@@ -59,7 +61,7 @@ const S = {
   crop1: [96, 248],
   split: [248, 470],
   merge: [470, 690],
-  start: [690, 792],
+  start: [690, 860],
 };
 
 // 서브 타이밍(절대 프레임)
@@ -85,7 +87,7 @@ const T = {
   // start
   startApproach: [702, 740],
   startClick: [740, 760],
-  toast: [760, 792],
+  toast: [760, 860],
 };
 
 // ── 레이아웃 좌표 (1280×720) ───────────────────────────────────────────────
@@ -1113,8 +1115,13 @@ export const CropTutorialVideo: React.FC = () => {
         </div>
       </div>
 
-      {/* 완료 토스트 */}
-      {frame >= T.toast[0] ? <DoneToast frame={frame} /> : null}
+      <TutorialTaskQueue
+        frame={frame}
+        startFrame={T.toast[0]}
+        fps={TUT_FPS}
+        taskTitle="지문 2개 추출"
+        taskMeta="백그라운드 OCR 처리 대기"
+      />
 
       {/* 커서 — svg 꼭짓점이 타깃(cx,cy)에 정확히 닿도록 좌상으로 보정 */}
       {frame >= T.c1Approach[0] ? (
@@ -1171,38 +1178,6 @@ function SplitConnector({ opacity, pulse }: { opacity: number; pulse: number }) 
       >
         사실 한 지문!
       </div>
-    </div>
-  );
-}
-
-function DoneToast({ frame }: { frame: number }) {
-  const t = spring({ frame: frame - T.toast[0], fps: TUT_FPS, config: { damping: 18, mass: 0.5 } });
-  return (
-    <div
-      style={{
-        position: "absolute",
-        right: 28,
-        top: 92,
-        opacity: t,
-        transform: `translateY(${(1 - t) * -10}px)`,
-        background: C.emerald50,
-        border: `1px solid ${C.emerald100}`,
-        borderRadius: 10,
-        padding: "10px 14px",
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        fontFamily: FONT,
-        boxShadow: "0 10px 24px rgba(5,150,105,0.18)",
-        zIndex: 60,
-      }}
-    >
-      <span style={{ width: 20, height: 20, borderRadius: 999, background: C.emerald, color: "#fff", fontSize: 12, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        ✓
-      </span>
-      <span style={{ fontSize: 12.5, fontWeight: 800, color: "#065F46" }}>
-        자료 목록에 추가됨 · 백그라운드 처리 중
-      </span>
     </div>
   );
 }

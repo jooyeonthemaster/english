@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AnalysisReportDocument } from "@/components/workbench/analysis-report/AnalysisReportDocument";
 import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
+import { notifyCreditsChanged } from "@/lib/credits-client";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 
@@ -60,6 +61,8 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
       setError(e instanceof Error ? e.message : String(e));
     } finally {
       setGenerating(false);
+      // 성공(차감)·실패(서버 자동 환급) 모두 잔액이 바뀌었을 수 있으니 사이드바 뱃지 즉시 갱신
+      notifyCreditsChanged();
     }
   }, [passageId, onGenerated]);
 
@@ -85,7 +88,7 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
             className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue-600 text-[12px] font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
           >
             {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkle className="w-3.5 h-3.5" />}
-            {generating ? "생성 중…" : "A4 보고서로 새로 만들기 (5크레딧)"}
+            {generating ? "생성 중…" : "지문 학습자료로 새로 만들기 (5크레딧)"}
           </button>
         </div>
         <div className="flex-1 overflow-auto px-6 py-5">

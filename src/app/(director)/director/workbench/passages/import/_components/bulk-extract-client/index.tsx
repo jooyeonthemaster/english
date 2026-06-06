@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 import { TaskQueueInlineList } from "@/components/workbench/task-queue";
 import type { GridViewMode } from "@/components/workbench/task-queue/task-queue-inline-list";
@@ -68,8 +68,6 @@ export function BulkExtractClient({
   const [dragActive, setDragActive] = useState(false);
   const queueDrawer = useQueueDrawer();
   const [inputMode, setInputMode] = useState<InputMode>("file");
-  const [textTitle, setTextTitle] = useState("");
-  const [textValue, setTextValue] = useState("");
   const [previewJobId, setPreviewJobId] = useState<string | null>(null);
   const [taskListViewMode, setTaskListViewMode] =
     useState<GridViewMode>("grid-3");
@@ -92,6 +90,9 @@ export function BulkExtractClient({
   // P7-D2: 추출 산출 방식 — 기본 "원문 그대로(verbatim)", 옵션 "AI 복원(restored)".
   const [outputMode, setOutputMode] = useState<"verbatim" | "restored">(
     "verbatim",
+  );
+  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(
+    () => new Set(),
   );
 
   const bootstrapped = useRef(false);
@@ -126,6 +127,26 @@ export function BulkExtractClient({
   const openPreviewDrawer = useCallback((taskId: string) => {
     setTaskListViewMode((prev) => (prev === "grid-3" ? "grid-2" : prev));
     setPreviewJobId(taskId);
+  }, []);
+  const toggleTaskSelection = useCallback((taskId: string) => {
+    setSelectedTaskIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(taskId)) next.delete(taskId);
+      else next.add(taskId);
+      return next;
+    });
+  }, []);
+  const pruneTaskSelection = useCallback((tasks: { id: string }[]) => {
+    const visibleIds = new Set(tasks.map((task) => task.id));
+    setSelectedTaskIds((prev) => {
+      let changed = false;
+      const next = new Set<string>();
+      for (const id of prev) {
+        if (visibleIds.has(id)) next.add(id);
+        else changed = true;
+      }
+      return changed ? next : prev;
+    });
   }, []);
   const toggleUploadCollapsed = useCallback(() => {
     setUploadCollapsed((prev) => {
@@ -487,58 +508,68 @@ export function BulkExtractClient({
     ],
   );
 
-  const startTextExtraction = useCallback(async () => {
-    const trimmedText = textValue.trim();
-    const trimmedTitle = textTitle.trim();
-    if (trimmedText.length < TEXT_EXTRACTION_MIN_LENGTH) {
-      setError(`텍스트는 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력해 주세요.`);
-      return;
-    }
-
-    try {
-      setError(null);
-      setPhase("starting");
-      setJobId(null);
-      // 버튼 누르는 즉시 큐를 열고 "자료 목록"에 로딩 카드를 띄운다.
-      queueDrawer.setOpen(true);
-      beginPendingTask(trimmedTitle || "텍스트 추출…");
-      const res = await fetch("/api/extraction/text", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          mode: "PASSAGE_ONLY",
-          outputMode: adaptiveIntake ? outputMode : undefined,
-          title: trimmedTitle || undefined,
-          text: trimmedText,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error ?? "텍스트 추출에 실패했습니다.");
+  // 여러 텍스트 지문을 한 작업(권)으로 묶어 추출. 성공 시 true(보드가 입력을 비움).
+  const startTextExtraction = useCallback(
+    async (
+      passages: { title?: string; text: string }[],
+    ): Promise<boolean> => {
+      const cleaned = passages
+        .map((p) => ({ title: p.title?.trim() || undefined, text: p.text.trim() }))
+        .filter((p) => p.text.length >= TEXT_EXTRACTION_MIN_LENGTH);
+      if (cleaned.length === 0) {
+        setError(`텍스트는 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력해 주세요.`);
+        return false;
       }
-      const data = (await res.json()) as { jobId: string };
-      setJobId(data.jobId);
-      setPhase("reviewing");
-      setTextTitle("");
-      setTextValue("");
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
-      );
-      setPhase("idle");
-    }
-  }, [
-    adaptiveIntake,
-    beginPendingTask,
-    outputMode,
-    queueDrawer,
-    setError,
-    setJobId,
-    setPhase,
-    textTitle,
-    textValue,
-  ]);
+
+      try {
+        setError(null);
+        setPhase("starting");
+        setJobId(null);
+        // 버튼 누르는 즉시 큐를 열고 "자료 목록"에 로딩 카드를 띄운다.
+        queueDrawer.setOpen(true);
+        beginPendingTask(
+          cleaned[0].title ||
+            (cleaned.length > 1
+              ? `텍스트 추출 ${cleaned.length}건`
+              : "텍스트 추출…"),
+        );
+        const res = await fetch("/api/extraction/text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            mode: "PASSAGE_ONLY",
+            outputMode: adaptiveIntake ? outputMode : undefined,
+            passages: cleaned,
+          }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error ?? "텍스트 추출에 실패했습니다.");
+        }
+        const data = (await res.json()) as { jobId: string };
+        setJobId(data.jobId);
+        setPhase("reviewing");
+        return true;
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
+        );
+        setPhase("idle");
+        setPendingTask(null);
+        return false;
+      }
+    },
+    [
+      adaptiveIntake,
+      beginPendingTask,
+      outputMode,
+      queueDrawer,
+      setError,
+      setJobId,
+      setPhase,
+    ],
+  );
 
   const clearFiles = useCallback(() => {
     setSlots([]);
@@ -546,12 +577,6 @@ export function BulkExtractClient({
     setSourceType(null);
     setError(null);
   }, [setError, setSlots]);
-
-  const clearText = useCallback(() => {
-    setTextTitle("");
-    setTextValue("");
-    setError(null);
-  }, [setError]);
 
   const inputBusy =
     phase === "preparing" || phase === "uploading" || phase === "starting";
@@ -572,14 +597,6 @@ export function BulkExtractClient({
             />
 
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={queueDrawer.triggerRefresh}
-                aria-label="새로고침"
-                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                <RefreshCw className="size-4" aria-hidden="true" />
-              </button>
               {uploadCollapsed ? (
                 <button
                   type="button"
@@ -618,18 +635,13 @@ export function BulkExtractClient({
                   inputMode={inputMode}
                   slots={slots}
                   splitProgress={splitProgress}
-                  textTitle={textTitle}
-                  textValue={textValue}
                   uploadProgress={uploadProgress}
                   onClear={clearFiles}
-                  onClearText={clearText}
                   onFiles={handleFiles}
                   onInputModeChange={setInputMode}
                   onStart={startExtraction}
                   onStartText={startTextExtraction}
                   onDragActiveChange={setDragActive}
-                  onTextTitleChange={setTextTitle}
-                  onTextValueChange={setTextValue}
                   onReorderSlots={reorderSlots}
                   onRemoveSlot={removeSlot}
                   onBeforeStart={() => {
@@ -682,11 +694,17 @@ export function BulkExtractClient({
           onVisibleTasksChange={(tasks) => {
             // 실제 잡이 목록에 들어오면 낙관적 로딩 카드를 제거.
             if (jobId && tasks.some((t) => t.id === jobId)) setPendingTask(null);
+            // 보이지 않게 된 항목은 선택 집합에서 제거(prune).
+            pruneTaskSelection(tasks);
           }}
           onTaskClick={(task) => {
             if (task.id.startsWith("pending-")) return; // 낙관적 카드는 클릭 무시
             openPreviewDrawer(task.id);
           }}
+          isTaskChecked={(task) => selectedTaskIds.has(task.id)}
+          onToggleTaskCheck={(task) => toggleTaskSelection(task.id)}
+          marqueeSelectedTaskIds={selectedTaskIds}
+          onMarqueeChange={setSelectedTaskIds}
           onRenameTask={async (task, next) => {
             try {
               const body = JSON.stringify({
