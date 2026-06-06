@@ -42,12 +42,36 @@ const cases = [
   } },
   { type: "VOCAB_CHOICE", field: "passageWithMarkers", ai: {
       markedWords: [
-        { label: "①", originalWord: "Reliable", isInappropriate: false, surroundingText: "Reliable sources confirm" },
+        { label: "(a)", originalWord: "Reliable", isInappropriate: false, surroundingText: "Reliable sources confirm" },
+        { label: "(b)", originalWord: "sources", isInappropriate: false, surroundingText: "Reliable sources confirm" },
+        { label: "(c)", originalWord: "confirm", isInappropriate: false, surroundingText: "Reliable sources confirm the news" },
+        { label: "(d)", originalWord: "committee", substituteWord: "machine", betterWord: "committee", isInappropriate: true, surroundingText: "The committee will review it" },
+        { label: "(e)", originalWord: "carefully", isInappropriate: false, surroundingText: "review it carefully" },
+      ],
+      correctAnswer: "(d)",
+      options: [
+        { label: "(a)", text: "Reliable" },
+        { label: "(b)", text: "sources" },
+        { label: "(c)", text: "confirm" },
+        { label: "(d)", text: "machine" },
+        { label: "(e)", text: "carefully" },
       ],
   } },
   { type: "ANTONYM", field: "passageWithMarkers", ai: {
       markedWords: [
-        { label: "①", word: "carefully", antonym: "carelessly", surroundingText: "review it carefully" },
+        { label: "(A)", word: "Reliable", antonym: "unreliable", isIncorrectPair: false, surroundingText: "Reliable sources confirm" },
+        { label: "(B)", word: "confirm", antonym: "deny", isIncorrectPair: false, surroundingText: "sources confirm the news" },
+        { label: "(C)", word: "carefully", antonym: "carelessly", isIncorrectPair: false, surroundingText: "review it carefully" },
+        { label: "(D)", word: "delay", antonym: "postpone", isIncorrectPair: true, correctAntonym: "advance", surroundingText: "decided to delay the project" },
+        { label: "(E)", word: "concerns", antonym: "confidence", isIncorrectPair: false, surroundingText: "because of concerns" },
+      ],
+      correctAnswer: "4",
+      options: [
+        { label: "1", text: "(A) Reliable - unreliable" },
+        { label: "2", text: "(B) confirm - deny" },
+        { label: "3", text: "(C) carefully - carelessly" },
+        { label: "4", text: "(D) delay - postpone" },
+        { label: "5", text: "(E) concerns - confidence" },
       ],
   } },
   { type: "REFERENCE", field: "passageWithUnderline", ai: {

@@ -51,6 +51,8 @@ export const antonymSchema = z.object({
     label: z.string().describe("(A)~(E)"),
     word: z.string(),
     antonym: z.string(),
+    isIncorrectPair: z.boolean().optional(),
+    correctAntonym: z.string().optional(),
   })).length(5),
   options: z.array(optionSchema).length(5).describe("단어 - 반의어 쌍 선택지"),
   ...mcWrongExplanations,

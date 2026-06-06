@@ -1,5 +1,11 @@
 const HARD_BREAK_MARKER_RE =
   /^(\[[^\]]+\]|\(?[A-Ea-e]\)|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\d+\.|[-*]\s+)/;
+const ANSWER_METADATA_BLOCK_RE =
+  /^\s*\[(?:blank answers|\uBE48\uCE78\s*\uC815\uB2F5)\]\s*/i;
+const INTERNAL_METADATA_BLOCK_RE =
+  /^\s*\[(?:target|context|\uB300\uC0C1\s*\uB2E8\uC5B4|\uBB38\uB9E5)\]\s*/i;
+const MATCH_TYPE_METADATA_SPAN_RE =
+  /\s*\[(?:type|match\s*type|\uC720\uD615)\s*:\s*[^\]]+\]\s*/gi;
 
 function normalizeBaseText(text: string): string {
   return text
@@ -27,11 +33,34 @@ function shouldKeepLineBreaks(block: string): boolean {
     .filter(Boolean);
 
   if (lines.length <= 1) return false;
-  if (lines[0]?.startsWith("[조건]")) return true;
+  if (lines[0]?.startsWith("[\uC870\uAC74]")) return true;
   if (lines[0]?.startsWith("[conditions]")) return true;
 
   const markerLines = lines.filter((line) => HARD_BREAK_MARKER_RE.test(line));
   return markerLines.length >= Math.min(2, lines.length);
+}
+
+function stripInternalMetadataBlocks(text: string): string {
+  return text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(
+      (block) =>
+        block &&
+        !INTERNAL_METADATA_BLOCK_RE.test(block) &&
+        !ANSWER_METADATA_BLOCK_RE.test(block),
+    )
+    .map((block) =>
+      block
+        .split("\n")
+        .map((line) => line.trim())
+        .map((line) => line.replace(MATCH_TYPE_METADATA_SPAN_RE, " ").trim())
+        .filter(Boolean)
+        .join("\n")
+        .trim(),
+    )
+    .filter(Boolean)
+    .join("\n\n");
 }
 
 export function normalizePassageText(text: string): string {
@@ -46,7 +75,7 @@ export function normalizePassageText(text: string): string {
 }
 
 export function normalizeQuestionText(text: string): string {
-  const normalized = normalizeBaseText(text);
+  const normalized = stripInternalMetadataBlocks(normalizeBaseText(text));
   if (!normalized) return "";
 
   return normalized

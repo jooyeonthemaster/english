@@ -134,22 +134,22 @@ export function MaterialJobCard({
       data-drag-item-id={dragItemId}
       role="button"
       tabIndex={0}
-      onClick={editing ? undefined : onClick}
+      onClick={editing ? undefined : onToggleCheck}
       onKeyDown={(e) => {
         if (editing) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onClick();
+          onToggleCheck();
         }
       }}
-      aria-pressed={active}
+      aria-pressed={checked}
       title={label}
       className={
         "group relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl border bg-white text-left motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (canDrag
           ? isDragging
             ? "cursor-grabbing opacity-60 "
-            : "cursor-grab active:cursor-grabbing "
+            : "cursor-pointer "
           : "cursor-pointer ") +
         cardClass
       }

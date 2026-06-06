@@ -27,6 +27,7 @@ import {
   shouldForceSourcePassage,
   shouldRenderSourcePassageInsideQuestion,
 } from "@/components/exams/paper-builder/passage-policy";
+import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
 import type {
   BuilderBlock,
   BuilderHeader,
@@ -283,8 +284,12 @@ function appendQuestionGroups(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const passageContent = (
+    const rawPassageContent = (
       first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
+    ).trim();
+    const passageContent = formatSourcePassageForQuestionItems(
+      rawPassageContent,
+      group.items,
     ).trim();
     const includePassage =
       !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
@@ -293,7 +298,7 @@ function appendQuestionGroups(opts: {
           subType: first.sourceQuestion.subType,
           questionText: first.questionText || first.sourceQuestion.questionText,
           structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
-          passage: { content: passageContent },
+          passage: { content: rawPassageContent },
         }));
 
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
@@ -475,8 +480,12 @@ function renderGroupsToUnits(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const passageContent = (
+    const rawPassageContent = (
       first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
+    ).trim();
+    const passageContent = formatSourcePassageForQuestionItems(
+      rawPassageContent,
+      group.items,
     ).trim();
     const includePassage =
       !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
@@ -486,7 +495,7 @@ function renderGroupsToUnits(opts: {
           questionText: first.questionText || first.sourceQuestion.questionText,
           structuredData: (first.sourceQuestion as { structuredData?: unknown })
             .structuredData,
-          passage: { content: passageContent },
+          passage: { content: rawPassageContent },
         }));
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
     if (passageRenderedSeparately) {
@@ -611,7 +620,7 @@ export function buildBuilderHwpxDocument(
   const header: BuilderHeader = settings?.header ?? {};
   const layout: BuilderLayout = settings?.layout ?? {};
   const compact = layout.density === "compact";
-  const passageStyle = layout.passageStyle ?? "boxed";
+  const passageStyle = "plain";
   const showPassageTitle = layout.showPassageTitle === true;
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
 

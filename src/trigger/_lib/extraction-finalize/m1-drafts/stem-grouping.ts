@@ -343,3 +343,40 @@ export function buildStemLedChunks(
   }
   return chunks;
 }
+
+/**
+ * 크롭-네이티브 그루핑 — 1 슬롯(=1 ExtractionPage=1 크롭) = 정확히 1 chunk.
+ *
+ * 적응형 인테이크에서 사용자가 시험지에서 "지문(+문제+선지)"을 직접 크롭하므로 각
+ * 크롭이 곧 하나의 지문이다(1슬롯=1지문 계약). 따라서 STEM 번호 기반 재분할
+ * (buildStemLedChunks)을 우회하고 sourcePageIndex(=슬롯 식별자)별로 블록을 묶어
+ * 슬롯당 chunk 1개를 만든다. 한 크롭 안에 문항이 여러 개여도 한 지문으로 유지되며,
+ * 문항별 evidence는 stage1의 buildRestorationQuestions가 chunk의 items에서 분해한다.
+ * EXAM_META/HEADER/FOOTER/NOISE(페이지 크롬)만 제외한다. 슬롯 등장 순서는 호출자가
+ * 정렬한 (page-ordering rank, in-page order)를 그대로 신뢰한다.
+ */
+export function buildSlotAuthoredChunks(
+  items: ExtractionItemSnapshot[],
+): M1PassageChunk[] {
+  const candidates = items.filter(
+    (item) => !EXCLUDED_BLOCK_TYPES.has(item.blockType),
+  );
+  const order: number[] = [];
+  const bySlot = new Map<number, ExtractionItemSnapshot[]>();
+  for (const item of candidates) {
+    const slot = item.sourcePageIndex[0] ?? 0;
+    let arr = bySlot.get(slot);
+    if (!arr) {
+      arr = [];
+      bySlot.set(slot, arr);
+      order.push(slot);
+    }
+    arr.push(item);
+  }
+  const chunks: M1PassageChunk[] = [];
+  for (const slot of order) {
+    const chunk = readM1PassageGroupChunk(`slot-${slot}`, bySlot.get(slot)!);
+    if (chunk) chunks.push(chunk);
+  }
+  return chunks;
+}

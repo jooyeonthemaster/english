@@ -67,6 +67,23 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_ENABLE_LONG_PASSAGE_SETS,
     true,
   ),
+
+  /**
+   * Enable the "적응형 인테이크 (Adaptive Intake)" extraction flow: pre-analysis
+   * triage, input-type-aware surfaces, image crop tooling, opt-in AI restore,
+   * multi-page bundled OCR, and passage-unit progress. When false the upload
+   * step renders the existing single-funnel flow and none of the additive
+   * schema columns are read (zero behavior change). See
+   * docs/EXTRACTION-ADAPTIVE-INTAKE-DESIGN.md.
+   *
+   * Defaults to ON: this is now the primary extraction flow (crop tooling + AI
+   * 원문 복원). Set NEXT_PUBLIC_EXTRACTION_ADAPTIVE_INTAKE=false to fall back to
+   * the legacy single-funnel uploader without removing any code.
+   */
+  EXTRACTION_ADAPTIVE_INTAKE: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_EXTRACTION_ADAPTIVE_INTAKE,
+    true,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

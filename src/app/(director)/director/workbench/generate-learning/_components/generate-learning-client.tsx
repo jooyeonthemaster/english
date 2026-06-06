@@ -15,6 +15,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { saveNaeshinQuestions } from "@/actions/learning-questions";
+import { notifyCreditsChanged } from "@/lib/credits-client";
 import {
   SUBTYPE_TO_CATEGORY,
   SUBTYPE_TO_INTERACTION,
@@ -319,6 +320,8 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
                   : q
               )
             );
+          } finally {
+            notifyCreditsChanged(); // 차감/실패환급 즉시 사이드바 반영
           }
         })();
       }

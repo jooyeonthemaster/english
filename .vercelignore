@@ -12,6 +12,11 @@ scripts/_gen_audit_out
 
 # scratch / local-only working files (do NOT ship to production)
 .tmp
+# scratch diagnostics / benchmarks — may contain API keys, never ship
+scripts/_diag-*
+scripts/_dump-*
+scripts/_step-*
+scripts/bench-*
 
 # sensitive: call recordings + transcripts must not be publicly served
 public/*.m4a

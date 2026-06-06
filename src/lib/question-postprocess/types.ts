@@ -47,10 +47,8 @@ export function getCircledNumbers(count: number): string[] {
   );
 }
 
-// Circled lowercase letters ⓐ ⓑ ⓒ … (U+24D0–U+24E9). Used by the IRRELEVANT
-// (무관한 문장) type to mark in-passage sentences while the answer choices stay
-// numbered (① ② ③ → ⓐ ⓑ ⓒ). Nothing else in the codebase emits this Unicode
-// range, so renderers can safely treat it as an inline marker.
+// Circled lowercase letters (U+24D0-U+24E9). Kept for legacy stored
+// IRRELEVANT questions; new paper rendering normalizes these to circled numbers.
 export function getCircledLetter(index: number): string {
   if (index >= 0 && index < 26) {
     return String.fromCodePoint(0x24d0 + index);

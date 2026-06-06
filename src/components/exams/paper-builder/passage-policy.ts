@@ -41,6 +41,11 @@ const INLINE_SOURCE_PASSAGE_SUBTYPES = new Set([
   "TITLE",
   "CONTENT_MATCH",
   "SUMMARY_COMPLETE_MC",
+  "CONDITIONAL_WRITING",
+  "SENTENCE_TRANSFORM",
+  "SUMMARY_COMPLETE",
+  "WORD_ORDER",
+  "SYNONYM",
 ]);
 
 export function shouldRenderSourcePassageInsideQuestion(subType: string | null | undefined): boolean {
@@ -53,6 +58,9 @@ const EMBEDDED_PASSAGE_FIELDS = [
   "passageWithUnderline",
   "passageWithNumbers",
 ] as const;
+
+const UNDERLINED_TEXT_PATTERN =
+  /(^|[^_])__(?!_)(?=[^_\n]{1,180}__(?!_))(?=[^_\n]*[A-Za-z0-9\uAC00-\uD7A3])[^_\n_]+__(?!_)/;
 
 function getQuestionPassageFlow(subType: string | null | undefined): PassageFlow | null {
   return QUESTION_PASSAGE_FLOW_RULES[subType || ""] ?? null;
@@ -89,10 +97,17 @@ function structuredDataHasEmbeddedPassage(question: PassageQuestionLike): boolea
 function questionTextLooksEmbedded(questionText: string): boolean {
   const text = questionText.trim();
   if (!text) return false;
-  if (/__(?:[^_]+)__/.test(text)) return true;
-  if (/[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/.test(text) && text.split(/\s+/).length > 35) return true;
-  if (/\([A-Ea-e]\)/.test(text) && text.split(/\s+/).length > 35) return true;
+  const wordCount = text.split(/\s+/).length;
+  if (UNDERLINED_TEXT_PATTERN.test(text) && wordCount > 35) return true;
+  if (/[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/.test(text) && wordCount > 35) return true;
   return false;
+}
+
+function hasEmbeddedPassageDisplay(question: PassageQuestionLike): boolean {
+  return (
+    structuredDataHasEmbeddedPassage(question) ||
+    questionTextLooksEmbedded(question.questionText || "")
+  );
 }
 
 // source 흐름이라 기본은 출처 지문을 켜두지만(단독 출제 시 발문의 "다음 글"이 필요),
@@ -111,23 +126,22 @@ const HIDEABLE_SOURCE_PASSAGE_SUBTYPES = new Set([
 
 export function shouldForceSourcePassage(question: PassageQuestionLike): boolean {
   if (HIDEABLE_SOURCE_PASSAGE_SUBTYPES.has(question.subType || "")) return false;
+  if (hasEmbeddedPassageDisplay(question)) return false;
   return hasSourcePassageContent(question) && getQuestionPassageFlow(question.subType) === "source";
 }
 
 export function questionHasEmbeddedPassage(question: PassageQuestionLike): boolean {
   const flow = getQuestionPassageFlow(question.subType);
+  const hasEmbeddedDisplay = hasEmbeddedPassageDisplay(question);
   if (flow === "embedded") return true;
-  if (flow === "source") return false;
-  return (
-    structuredDataHasEmbeddedPassage(question) ||
-    questionTextLooksEmbedded(question.questionText || "")
-  );
+  if (flow === "source") return hasEmbeddedDisplay;
+  return hasEmbeddedDisplay;
 }
 
 export function shouldIncludeSourcePassageByDefault(question: PassageQuestionLike): boolean {
   if (!hasSourcePassageContent(question)) return false;
   const flow = getQuestionPassageFlow(question.subType);
-  if (flow === "source") return true;
+  if (flow === "source") return !hasEmbeddedPassageDisplay(question);
   if (flow === "embedded") return false;
   return !questionHasEmbeddedPassage(question);
 }

@@ -57,11 +57,13 @@ export const aiAntonymSchema = z.object({
   ...commonFields,
   markedWords: z.array(z.object({
     label: z.string().describe("(A)~(E) 라벨"),
-    word: z.string().describe("대상 단어"),
-    antonym: z.string().describe("반의어"),
+    word: z.string().describe("원문에 실제로 존재하는 대상 단어"),
+    antonym: z.string().describe("선지에 표시할 짝 단어. isIncorrectPair=false이면 정확한 문맥상 반의어, true이면 반의어가 아닌 오답 짝"),
+    isIncorrectPair: z.boolean().describe("이 단어-짝 단어 쌍이 문맥상 반의어 관계로 잘못 짝지어진 정답 쌍인지 여부. 정확히 하나만 true"),
+    correctAntonym: z.string().optional().describe("isIncorrectPair=true인 경우의 실제 문맥상 정확한 반의어"),
     surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
   })).length(5).describe("밑줄 표시할 5개 어휘"),
-  options: z.array(optionSchema).length(5).describe("단어 - 반의어 쌍 선택지. text에는 영어 단어쌍만 작성하고 뜻풀이/괄호 설명 금지"),
+  options: z.array(optionSchema).length(5).describe("단어 - 짝 단어 쌍 선택지. text에는 '(A) word - pair' 형식의 영어 단어쌍만 작성하고 뜻풀이/괄호 설명 금지"),
   ...mcWrongExplanations,
 });
 export type AiAntonymQuestion = z.infer<typeof aiAntonymSchema>;

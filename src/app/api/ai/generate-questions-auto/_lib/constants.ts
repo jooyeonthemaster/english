@@ -52,7 +52,7 @@ export const DIFFICULTY_RUBRIC: Record<string, string> = {
 };
 
 export const MARKING_RUBRIC = `## 표시/위치 정확도 필수 규칙
-- underlinedPronoun/underlinedWord/underlinedExpression/originalExpression/markedWords/markedExpressions는 원문에 실제로 존재하는 표현만 쓰세요.
+- underlinedPronoun/underlinedWord/underlinedExpression/originalExpression/markedExpressions, 그리고 VOCAB_CHOICE의 markedWords[].originalWord는 원문에 실제로 존재하는 표현만 쓰세요. VOCAB_CHOICE의 substituteWord는 지문에 표시할 오답 단어이므로 원문에 존재하지 않아도 됩니다.
 - 특히 "it", "is", "in", "as" 같은 짧은 단어는 반드시 독립 단어로 존재하는 위치만 선택하세요. digital, commitments, within 같은 단어 내부의 일부를 선택하면 실패입니다.
 - surroundingText는 선택한 표현을 포함하는 원문 그대로의 40~80자여야 하며, 철자/공백/문장부호를 바꾸지 마세요.
 - passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers 같은 지문 전체 복사 필드는 생성하지 마세요.`;

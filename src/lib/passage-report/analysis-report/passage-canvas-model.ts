@@ -30,12 +30,20 @@ export interface CanvasNoteInput {
   lines: string[];
   /** 어법 함정(있으면 빨간 한 줄) */
   trap?: string;
+  /** 함정 아래 보여줄 예문(영어 한 문장) — 시험이 파는 '틀린 형태'를 담음 */
+  example?: string;
+  /** 예문 속 '틀린 토큰' (빨강 취소선으로 강조) */
+  exampleWrong?: string;
+  /** 그 자리의 '정답 토큰' (초록) */
+  exampleCorrect?: string;
 }
 
 export interface ResolvedChunk {
   /** en 의 연속 슬라이스 (공백/문장부호 포함, 이어붙이면 en 과 동일) */
   text: string;
-  /** 구문 라벨 (직독직해) — 있으면 청크 아래 작게 */
+  /** 직독직해 한글 뜻 — 영어 청크 위에 작게(v3) */
+  gloss?: string;
+  /** 구문 라벨 (주어/동사/목적어 등 짧게) — 청크 아래 작게 */
   role?: string;
   emphasis?: "core" | "normal";
   /** en 내 문자 범위 [start, end) */
@@ -139,6 +147,7 @@ export function resolveAnchorRange(en: string, anchorText: string | undefined | 
 // ─── 청크 분할 ────────────────────────────────────────────────────────────────
 interface ChunkSeed {
   text?: string; // LLM 청크 텍스트
+  gloss?: string; // 직독직해 한글 뜻
   role?: string;
   emphasis?: "core" | "normal";
 }
@@ -156,7 +165,7 @@ function alignSeedChunks(en: string, seeds: ChunkSeed[]): ResolvedChunk[] | null
     const start = cursor + range.start;
     const end = cursor + range.end;
     if (start < cursor) return null;
-    out.push({ text: en.slice(start, end), role: seed.role?.trim() || undefined, emphasis: seed.emphasis, start, end });
+    out.push({ text: en.slice(start, end), gloss: seed.gloss?.trim() || undefined, role: seed.role?.trim() || undefined, emphasis: seed.emphasis, start, end });
     cursor = end;
   }
   if (!out.length) return null;
@@ -164,7 +173,7 @@ function alignSeedChunks(en: string, seeds: ChunkSeed[]): ResolvedChunk[] | null
 }
 
 /** 빈 구간(앵커 사이의 일반 텍스트)을 채워 en 전체를 덮도록 청크를 보정. */
-function fillGaps(en: string, anchored: { start: number; end: number; role?: string; emphasis?: "core" | "normal" }[]): ResolvedChunk[] {
+function fillGaps(en: string, anchored: { start: number; end: number; gloss?: string; role?: string; emphasis?: "core" | "normal" }[]): ResolvedChunk[] {
   const sorted = [...anchored].sort((a, b) => a.start - b.start);
   const merged: typeof sorted = [];
   for (const a of sorted) {
@@ -176,7 +185,7 @@ function fillGaps(en: string, anchored: { start: number; end: number; role?: str
   let cursor = 0;
   for (const a of merged) {
     if (a.start > cursor) chunks.push({ text: en.slice(cursor, a.start), start: cursor, end: a.start });
-    chunks.push({ text: en.slice(a.start, a.end), role: a.role, emphasis: a.emphasis, start: a.start, end: a.end });
+    chunks.push({ text: en.slice(a.start, a.end), gloss: a.gloss, role: a.role, emphasis: a.emphasis, start: a.start, end: a.end });
     cursor = a.end;
   }
   if (cursor < en.length) chunks.push({ text: en.slice(cursor), start: cursor, end: en.length });
@@ -201,7 +210,7 @@ export function buildChunks(
       // seed 가 문장을 충분히 덮으면 빈 구간만 보정해 사용
       return fillGaps(
         en,
-        aligned.map((c) => ({ start: c.start, end: c.end, role: c.role, emphasis: c.emphasis })),
+        aligned.map((c) => ({ start: c.start, end: c.end, gloss: c.gloss, role: c.role, emphasis: c.emphasis })),
       );
     }
   }

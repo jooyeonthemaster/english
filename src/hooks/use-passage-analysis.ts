@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { notifyCreditsChanged } from "@/lib/credits-client";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 
 interface UsePassageAnalysisOptions {
@@ -54,6 +55,7 @@ export function usePassageAnalysis({
       setError(message);
     } finally {
       setIsLoading(false);
+      notifyCreditsChanged(); // 차감/실패환급 즉시 사이드바 반영
     }
   }, [passageId, analysis, isLoading]);
 

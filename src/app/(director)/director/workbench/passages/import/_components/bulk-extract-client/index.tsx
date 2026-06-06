@@ -2,14 +2,18 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 import { TaskQueueInlineList } from "@/components/workbench/task-queue";
 import type { GridViewMode } from "@/components/workbench/task-queue/task-queue-inline-list";
+import type { BaseTask } from "@/components/workbench/task-queue/types";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { MaterialExtractionIcon } from "@/components/icons/workflow-icons";
 import { toast } from "sonner";
-import { useExtractionUpload } from "@/hooks/use-extraction-upload";
+import {
+  isInlineExtractionInFlight,
+  useExtractionUpload,
+} from "@/hooks/use-extraction-upload";
 import { useExtractionStream } from "@/hooks/use-extraction-stream";
 import {
   imagesToSlots,
@@ -17,6 +21,7 @@ import {
   splitPdfToImages,
 } from "@/lib/extraction/pdf-splitter";
 import { useExtractionStore } from "@/lib/extraction/store";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   ACCEPTED_IMAGE_MIMES,
   ACCEPTED_PDF_MIMES,
@@ -27,10 +32,10 @@ import {
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { useQueueDrawer } from "../queue-drawer-context";
+import { isExtractable } from "../intake/crop/slot-meta";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
-import { ExtractionRunPanel } from "./components/extraction-run-panel";
 import { JobPreviewDrawer } from "./components/job-preview-drawer";
 import { UploadPanel } from "./components/upload-panel";
 
@@ -63,21 +68,41 @@ export function BulkExtractClient({
   const [dragActive, setDragActive] = useState(false);
   const queueDrawer = useQueueDrawer();
   const [inputMode, setInputMode] = useState<InputMode>("file");
-  const [textTitle, setTextTitle] = useState("");
-  const [textValue, setTextValue] = useState("");
   const [previewJobId, setPreviewJobId] = useState<string | null>(null);
   const [taskListViewMode, setTaskListViewMode] =
     useState<GridViewMode>("grid-3");
+  // 추출 버튼을 누른 즉시 "자료 목록"에 띄우는 낙관적 로딩 카드. 실제 잡이 들어오면
+  // (onVisibleTasksChange에서 jobId 일치 감지) 또는 실패/취소 시 제거한다.
+  const [pendingTask, setPendingTask] = useState<BaseTask | null>(null);
+  const beginPendingTask = useCallback((title: string) => {
+    setPendingTask({
+      id: `pending-${crypto.randomUUID()}`,
+      domain: "extraction",
+      title: title || "추출 준비 중…",
+      subtitle: "추출을 준비하고 있습니다…",
+      status: "processing",
+      createdAt: new Date().toISOString(),
+      stats: [{ label: "상태", value: "처리 중", tone: "blue" }],
+    });
+  }, []);
+  // 적응형 인테이크 — 인라인 크롭 보드(모달 없이 업로드 영역에서 바로 크롭).
+  const adaptiveIntake = FEATURE_FLAGS.EXTRACTION_ADAPTIVE_INTAKE;
+  // P7-D2: 추출 산출 방식 — 기본 "원문 그대로(verbatim)", 옵션 "AI 복원(restored)".
+  const [outputMode, setOutputMode] = useState<"verbatim" | "restored">(
+    "verbatim",
+  );
+  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   const bootstrapped = useRef(false);
-  const navigatedToManage = useRef(false);
   const fileInputId = "m1-passage-workroom-file-input";
 
   const UPLOAD_COLLAPSE_KEY = "smoat:extraction-bulk:upload:collapsed";
   const UPLOAD_HEIGHT_KEY = "smoat:extraction-bulk:upload:height";
-  const UPLOAD_MIN = 320;
-  const UPLOAD_MAX = 900;
-  const UPLOAD_DEFAULT = 520;
+  const UPLOAD_MIN = 360;
+  const UPLOAD_MAX = 1400;
+  const UPLOAD_DEFAULT = 760;
   const [uploadCollapsed, setUploadCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -102,6 +127,26 @@ export function BulkExtractClient({
   const openPreviewDrawer = useCallback((taskId: string) => {
     setTaskListViewMode((prev) => (prev === "grid-3" ? "grid-2" : prev));
     setPreviewJobId(taskId);
+  }, []);
+  const toggleTaskSelection = useCallback((taskId: string) => {
+    setSelectedTaskIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(taskId)) next.delete(taskId);
+      else next.add(taskId);
+      return next;
+    });
+  }, []);
+  const pruneTaskSelection = useCallback((tasks: { id: string }[]) => {
+    const visibleIds = new Set(tasks.map((task) => task.id));
+    setSelectedTaskIds((prev) => {
+      let changed = false;
+      const next = new Set<string>();
+      for (const id of prev) {
+        if (visibleIds.has(id)) next.add(id);
+        else changed = true;
+      }
+      return changed ? next : prev;
+    });
   }, []);
   const toggleUploadCollapsed = useCallback(() => {
     setUploadCollapsed((prev) => {
@@ -181,25 +226,36 @@ export function BulkExtractClient({
     setPhase("idle");
   }, [router, setMode, setPhase]);
 
-  // 추출이 끝나(=`reviewing` 진입) 잡이 terminal 상태가 되면 자동으로 관리
-  // 페이지로 이동시킨다. 이 페이지(`/import`)의 ReviewStep은 M1
-  // (`extraction_m1_passage_drafts`)을 표시하지 않으므로, 추출 직후 사용자가
-  // 손으로 새로고침/이동을 해야만 결과를 볼 수 있는 동선이 있었다. `?jobId`로
-  // 진입한 ManageClient는 그 잡의 `loadJobDetails`를 호출해 drafts를 표시한다.
+  // (추출 완료 후 자료 관리 페이지로 자동 이동하던 동선은 제거 — 사용자가 이 페이지에
+  //  머무르며 큐(작업 목록)에서 직접 결과를 확인한다.)
+
+  // 잡 id가 생기는 즉시(=createJob 직후, OCR 전) 큐를 열고 새로고침해 항목이
+  // 곧바로 보이게 한다. 예전엔 startUpload(이미지=OCR까지 동기)가 전부 끝난 뒤에야
+  // 큐가 떠서 "추출 다 되고 나서 큐 생김"처럼 느껴졌다. setJobId는 createJob 직후
+  // (업로드·OCR 진행 전) 호출되므로 여기서 켜면 처리 시작과 동시에 큐에 보인다.
   useEffect(() => {
-    if (navigatedToManage.current) return;
-    if (phase !== "reviewing") return;
     if (!jobId) return;
-    navigatedToManage.current = true;
-    router.replace(`/director/workbench/passages/import/jobs?jobId=${jobId}`);
-  }, [phase, jobId, router]);
+    queueDrawer.setOpen(true);
+    queueDrawer.triggerRefresh();
+    // queueDrawer는 컨텍스트로 안정적 — jobId 변할 때만 실행.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobId]);
+
+  // 추출이 실패(error)로 끝나면 낙관적 로딩 카드를 제거한다.
+  useEffect(() => {
+    if (error) setPendingTask(null);
+  }, [error]);
 
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (
         phase === "preparing" ||
         phase === "uploading" ||
-        phase === "starting"
+        phase === "starting" ||
+        phase === "processing" ||
+        // 백그라운드(파이어 앤 포겟)로 도는 인라인 OCR이 남아 있으면 이탈 경고.
+        // 도중 이탈하면 요청이 끊겨 잡이 PROCESSING으로 잔류(리퍼가 복구).
+        isInlineExtractionInFlight()
       ) {
         event.preventDefault();
         event.returnValue = "";
@@ -215,6 +271,7 @@ export function BulkExtractClient({
       const adjusted = incoming.map((slot, index) => ({
         ...slot,
         pageIndex: offset + index,
+        slotId: slot.slotId ?? crypto.randomUUID(),
       }));
       const next = [...slots, ...adjusted];
       setSlots(next);
@@ -253,7 +310,18 @@ export function BulkExtractClient({
   const removeSlot = useCallback(
     (index: number) => {
       if (index < 0 || index >= slots.length) return;
-      const next = slots
+      const target = slots[index];
+      // merged(여러 장 합친 결과)를 삭제하면, 재료들을 추출 대상으로 원복(고아 방지).
+      let working = slots;
+      if (target?.kind === "merged" && target.mergedFromSlotIds?.length) {
+        const restore = new Set(target.mergedFromSlotIds);
+        working = slots.map((s) =>
+          s.slotId && restore.has(s.slotId)
+            ? { ...s, kind: undefined, excludedFromExtraction: false }
+            : s,
+        );
+      }
+      const next = working
         .filter((_, i) => i !== index)
         .map((slot, i) => ({ ...slot, pageIndex: i }));
       setSlots(next);
@@ -375,80 +443,133 @@ export function BulkExtractClient({
     ],
   );
 
-  const startExtraction = useCallback(async () => {
+  const startExtraction = useCallback(
+    async (passageSlots?: ClientPageSlot[]) => {
     if (slots.length === 0) {
       setError("추출할 파일을 먼저 추가해 주세요.");
       return;
     }
+    // 인라인 보드가 구운 지문 슬롯(crop/merged/original)을 그대로 사용. 보드가
+    // 없거나 안 넘어온 경우엔 store slots. 추출 제외분(잘라낸 원본)만 거른 뒤
+    // 0..N-1로 재인덱싱한다(원본은 excludedFromExtraction이 없어 그대로 통과).
+    const source = passageSlots ?? slots;
+    const extractable = source.filter(isExtractable);
+    if (extractable.length === 0) {
+      setError("추출할 자료가 없습니다. (잘라낸 원본은 추출에서 제외됩니다)");
+      return;
+    }
+    const reindexed = extractable.map((slot, i) => ({ ...slot, pageIndex: i }));
+    // HIGH-1 가드: 합친/잘린 이미지가 5MB 초과면 서버가 거부하므로 업로드 전 차단.
+    const oversized = reindexed.find((s) => s.bytes > MAX_PAGE_IMAGE_BYTES);
+    if (oversized) {
+      setError(
+        `"${oversized.sourceFileName ?? "한 자료"}"가 너무 큽니다 (${Math.round(MAX_PAGE_IMAGE_BYTES / 1024 / 1024)}MB 초과). 합칠 장수를 줄이거나 영역을 더 작게 잘라 주세요.`,
+      );
+      return;
+    }
     const uploadSourceType: FileSourceType =
       sourceType === "PDF" ? "PDF" : "IMAGES";
+    // 직전/완료된 잡 id를 먼저 비운다. 안 그러면 업로드(다운스케일 포함, 수 초)
+    // 구간 동안 store.jobId가 옛 잡으로 남아, uploading에서 켜지는 SSE가 그 옛
+    // 터미널 잡의 done을 받아 phase=reviewing→자동 네비로 새 업로드를 가로챈다
+    // ("추출 눌렀는데 혼자 관리페이지로 가버림"의 원인). startTextExtraction과 대칭.
+    setJobId(null);
     const nextJobId = await startUpload({
-      slots,
+      slots: reindexed,
       sourceType: uploadSourceType,
       originalFileName: sourceName,
       mode: "PASSAGE_ONLY",
+      outputMode: adaptiveIntake ? outputMode : undefined,
     });
     if (nextJobId) {
+      // 큐 열기·새로고침은 jobId 변화 effect가 createJob 직후 즉시 처리한다.
       setJobId(nextJobId);
       setSlots([]);
       setSourceName(null);
       setSourceType(null);
       setUploadProgress(null);
-      queueDrawer.setOpen(true);
-      queueDrawer.triggerRefresh();
-    }
-  }, [
-    queueDrawer,
-    setError,
-    setJobId,
-    setSlots,
-    setUploadProgress,
-    slots,
-    sourceName,
-    sourceType,
-    startUpload,
-  ]);
-
-  const startTextExtraction = useCallback(async () => {
-    const trimmedText = textValue.trim();
-    const trimmedTitle = textTitle.trim();
-    if (trimmedText.length < TEXT_EXTRACTION_MIN_LENGTH) {
-      setError(`텍스트는 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력해 주세요.`);
-      return;
-    }
-
-    try {
-      setError(null);
-      setPhase("starting");
-      setJobId(null);
-      const res = await fetch("/api/extraction/text", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          mode: "PASSAGE_ONLY",
-          title: trimmedTitle || undefined,
-          text: trimmedText,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error ?? "텍스트 추출에 실패했습니다.");
-      }
-      const data = (await res.json()) as { jobId: string };
-      setJobId(data.jobId);
-      setPhase("reviewing");
-      setTextTitle("");
-      setTextValue("");
-      queueDrawer.setOpen(true);
-      queueDrawer.triggerRefresh();
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
-      );
+      // 제출 완료 → 입력 영역을 중립(idle)으로 되돌려 곧바로 다음 추출을 시작할 수
+      // 있게 한다. 진행 중인 잡은 "자료 목록"이 추적한다(인라인은 백그라운드 진행).
       setPhase("idle");
     }
-  }, [queueDrawer, setError, setJobId, setPhase, textTitle, textValue]);
+    },
+    [
+      adaptiveIntake,
+      outputMode,
+      setError,
+      setJobId,
+      setPhase,
+      setSlots,
+      setUploadProgress,
+      slots,
+      sourceName,
+      sourceType,
+      startUpload,
+    ],
+  );
+
+  // 여러 텍스트 지문을 한 작업(권)으로 묶어 추출. 성공 시 true(보드가 입력을 비움).
+  const startTextExtraction = useCallback(
+    async (
+      passages: { title?: string; text: string }[],
+    ): Promise<boolean> => {
+      const cleaned = passages
+        .map((p) => ({ title: p.title?.trim() || undefined, text: p.text.trim() }))
+        .filter((p) => p.text.length >= TEXT_EXTRACTION_MIN_LENGTH);
+      if (cleaned.length === 0) {
+        setError(`텍스트는 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력해 주세요.`);
+        return false;
+      }
+
+      try {
+        setError(null);
+        setPhase("starting");
+        setJobId(null);
+        // 버튼 누르는 즉시 큐를 열고 "자료 목록"에 로딩 카드를 띄운다.
+        queueDrawer.setOpen(true);
+        beginPendingTask(
+          cleaned[0].title ||
+            (cleaned.length > 1
+              ? `텍스트 추출 ${cleaned.length}건`
+              : "텍스트 추출…"),
+        );
+        const res = await fetch("/api/extraction/text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            mode: "PASSAGE_ONLY",
+            outputMode: adaptiveIntake ? outputMode : undefined,
+            passages: cleaned,
+          }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data?.error ?? "텍스트 추출에 실패했습니다.");
+        }
+        const data = (await res.json()) as { jobId: string };
+        setJobId(data.jobId);
+        setPhase("reviewing");
+        return true;
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "텍스트 추출에 실패했습니다.",
+        );
+        setPhase("idle");
+        setPendingTask(null);
+        return false;
+      }
+    },
+    [
+      adaptiveIntake,
+      beginPendingTask,
+      outputMode,
+      queueDrawer,
+      setError,
+      setJobId,
+      setPhase,
+    ],
+  );
 
   const clearFiles = useCallback(() => {
     setSlots([]);
@@ -457,15 +578,8 @@ export function BulkExtractClient({
     setError(null);
   }, [setError, setSlots]);
 
-  const clearText = useCallback(() => {
-    setTextTitle("");
-    setTextValue("");
-    setError(null);
-  }, [setError]);
-
   const inputBusy =
     phase === "preparing" || phase === "uploading" || phase === "starting";
-  const runBusy = inputBusy || phase === "processing";
 
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
@@ -475,18 +589,14 @@ export function BulkExtractClient({
             <WorkflowPageTitle
               icon={MaterialExtractionIcon}
               title="자료 추출"
-              description="PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다."
+              description={
+                adaptiveIntake
+                  ? "PDF·이미지·텍스트를 등록해 지문을 추출합니다. 빈칸·순서 문제는 선택적으로 AI 복원할 수 있습니다."
+                  : "PDF, 이미지, 텍스트를 등록하면 지문을 추출하고 원문 형태로 복원합니다."
+              }
             />
 
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={queueDrawer.triggerRefresh}
-                aria-label="새로고침"
-                className="inline-flex size-8 cursor-pointer items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              >
-                <RefreshCw className="size-4" aria-hidden="true" />
-              </button>
               {uploadCollapsed ? (
                 <button
                   type="button"
@@ -515,7 +625,7 @@ export function BulkExtractClient({
           {!uploadCollapsed ? (
             <>
               <div
-                className="grid min-h-0 overflow-hidden xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_340px]"
+                className="grid min-h-0 grid-cols-1 overflow-hidden"
                 style={{ height: uploadHeight }}
               >
                 <UploadPanel
@@ -525,27 +635,25 @@ export function BulkExtractClient({
                   inputMode={inputMode}
                   slots={slots}
                   splitProgress={splitProgress}
-                  textTitle={textTitle}
-                  textValue={textValue}
                   uploadProgress={uploadProgress}
                   onClear={clearFiles}
-                  onClearText={clearText}
                   onFiles={handleFiles}
                   onInputModeChange={setInputMode}
                   onStart={startExtraction}
                   onStartText={startTextExtraction}
                   onDragActiveChange={setDragActive}
-                  onTextTitleChange={setTextTitle}
-                  onTextValueChange={setTextValue}
                   onReorderSlots={reorderSlots}
                   onRemoveSlot={removeSlot}
-                />
-                <ExtractionRunPanel
-                  busy={runBusy}
-                  inputMode={inputMode}
-                  pageCount={slots.length}
-                  textLength={textValue.trim().length}
-                  activeJobId={jobId}
+                  onBeforeStart={() => {
+                    // 직전 잡 id를 먼저 비운다 — 안 그러면 onVisibleTasksChange가
+                    // 옛 잡을 보고 방금 띄운 로딩 카드를 즉시 지워버린다.
+                    setJobId(null);
+                    queueDrawer.setOpen(true);
+                    beginPendingTask(sourceName ?? "추출 준비 중…");
+                  }}
+                  onStartAborted={() => setPendingTask(null)}
+                  outputMode={adaptiveIntake ? outputMode : undefined}
+                  onOutputModeChange={adaptiveIntake ? setOutputMode : undefined}
                 />
               </div>
               <div className="relative flex items-center justify-end px-4 pb-1 pt-1">
@@ -581,7 +689,22 @@ export function BulkExtractClient({
           emptyMessage="아직 등록된 자료가 없습니다."
           viewMode={taskListViewMode}
           onViewModeChange={setTaskListViewMode}
-          onTaskClick={(task) => openPreviewDrawer(task.id)}
+          pendingTasks={pendingTask ? [pendingTask] : undefined}
+          refreshSignal={queueDrawer.refreshKey}
+          onVisibleTasksChange={(tasks) => {
+            // 실제 잡이 목록에 들어오면 낙관적 로딩 카드를 제거.
+            if (jobId && tasks.some((t) => t.id === jobId)) setPendingTask(null);
+            // 보이지 않게 된 항목은 선택 집합에서 제거(prune).
+            pruneTaskSelection(tasks);
+          }}
+          onTaskClick={(task) => {
+            if (task.id.startsWith("pending-")) return; // 낙관적 카드는 클릭 무시
+            openPreviewDrawer(task.id);
+          }}
+          isTaskChecked={(task) => selectedTaskIds.has(task.id)}
+          onToggleTaskCheck={(task) => toggleTaskSelection(task.id)}
+          marqueeSelectedTaskIds={selectedTaskIds}
+          onMarqueeChange={setSelectedTaskIds}
           onRenameTask={async (task, next) => {
             try {
               const body = JSON.stringify({

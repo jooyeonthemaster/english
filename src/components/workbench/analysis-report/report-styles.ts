@@ -111,10 +111,32 @@ export const ANALYSIS_REPORT_CSS = `
 .par-cont-head { font-size: calc(8.5pt * var(--par-fs, 1)); font-weight: 700; color: var(--ink); margin-bottom: 2.5mm; }
 .par-cont-head .par-cont-k { color: var(--gold); }
 .par-note { font-size: calc(8pt * var(--par-fs, 1)); color: var(--text-muted); font-style: italic; margin: 0 0 3mm; }
+.par-kw-legend { font-style: normal; }
+
+/* ── 필기 분석(05) 색상 범례 ── */
+.par-anno-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1.6mm 3.4mm;
+  margin: 0 0 3mm; padding: 1.6mm 3mm;
+  border: .25mm solid var(--tint-border); border-radius: 1.5mm; background: var(--tint);
+  font-size: calc(8pt * var(--par-fs, 1));
+}
+.par-anno-legend-label { font-weight: 800; color: var(--text-muted); letter-spacing: .04em; }
+.par-anno-legend-item {
+  font-weight: 800; color: var(--anno-c);
+  padding-bottom: .2mm; border-bottom: .5mm solid var(--anno-c);
+}
 
 /* ── 박스(틴트) ── */
 .par-box { background: var(--tint); border: .3mm solid var(--tint-border); border-radius: 1.5mm; padding: 4mm 5mm; }
 .par-box.par-accent { border-left: 1.5mm solid var(--gold); }
+
+/* ── 영어 원문만 페이지(표지 다음) ── */
+/* 줄 간격은 margin 이 아니라 padding 으로 — offsetHeight(여백 제외)에 포함돼 페이지 분할 추정이 정확해짐.
+   :last-child 가 아니라 '런의 마지막 블록'만 패딩 제거(측정 클론 vs 편집 뷰 불일치로 넘치던 문제 해결, 깔끔한 원문과 동일 패턴). */
+.par-eng-only { display: flex; gap: 3mm; padding: 0 0 4mm; align-items: baseline; break-inside: avoid; }
+.par-reading-flow-run .par-block:last-child .par-eng-only { padding-bottom: 0; }
+.par-eng-only-no { flex: 0 0 auto; color: var(--gold); font-weight: 800; font-size: calc(11pt * var(--par-fs, 1)); }
+.par-eng-only-en { margin: 0; font-family: var(--font-en); font-size: calc(11.5pt * var(--par-fs, 1)); line-height: 1.75; color: var(--ink); }
 
 /* ── 01 원문 ── */
 .par-sentences { list-style: none; margin: 0; padding: 0; }
@@ -545,11 +567,24 @@ export const ANALYSIS_REPORT_CSS = `
 .par-table th, .par-table td { border: .3mm solid var(--tint-border); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
 .par-table thead th { background: var(--table-head-bg, var(--ink-fill, var(--ink))); color: var(--table-head-text, var(--ink-on-fill, #fff)); font-weight: 700; }
 .par-table tbody tr:nth-child(even) td { background: var(--table-stripe); }
+/* 열 너비 조절 손잡이 — thead th 오른쪽 경계에 떠 있는 세로 드래그 영역(편집 모드 전용). */
+.par-col-resize {
+  position: absolute; top: 0; right: -3.5px; z-index: 4;
+  width: 8px; height: 100%;
+  cursor: col-resize; touch-action: none; user-select: none;
+}
+.par-col-resize::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 2px; transform: translateX(-50%);
+  background: transparent; transition: background .12s ease;
+}
+.par-col-resize:hover::after, .par-col-resize:active::after { background: #3b82f6; }
 .par-cell-no { text-align: center; color: var(--gold); font-weight: 800; white-space: nowrap; }
 .par-cell-pos { text-align: center; font-style: italic; color: var(--text-muted); white-space: nowrap; }
 .par-cell-pron { text-align: center; color: var(--text-muted); font-size: calc(8.3pt * var(--par-fs, 1)); }
 .par-cell-head { font-weight: 800; color: var(--ink); }
 .par-cell-syn { font-style: italic; color: var(--text-muted); }
+.par-cell-ant { font-style: italic; color: var(--text-muted); }
 .par-vocab-grid-run .par-block { margin-bottom: 0; }
 .par-vocab-test-grid-row {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2mm;
@@ -580,7 +615,7 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .par-vocab-test-card-blank {
   display: block; width: 100%; min-width: 24mm; height: 7.5mm;
-  border-bottom: .35mm solid var(--ink); opacity: .58;
+  border-bottom: .45mm solid var(--ink); opacity: .72;
 }
 .par-vocab-test-head {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -607,7 +642,7 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .par-vocab-answer-line {
   display: block; width: 100%; height: 0;
-  border-bottom: .35mm solid var(--ink); opacity: .58;
+  border-bottom: .45mm solid var(--ink); opacity: .72;
 }
 .par-ws-title {
   border-top: .7mm solid var(--ink);
@@ -623,7 +658,7 @@ export const ANALYSIS_REPORT_CSS = `
 .par-ws-note {
   margin-top: .8mm;
   color: var(--text-muted);
-  font-size: calc(8.5pt * var(--par-fs, 1));
+  font-size: calc(9.2pt * var(--par-fs, 1));
 }
 .par-ws-block {
   border: .3mm solid var(--tint-border);
@@ -640,6 +675,8 @@ export const ANALYSIS_REPORT_CSS = `
 .par-ws-answer + .par-ws-answer {
   margin-top: 2.4mm;
 }
+/* 정답 서브섹션은 한 덩어리로 — 페이지 경계에서 라벨만 떨어지는 것 방지(블록 단위 분할은 페이지네이터가 처리) */
+.par-ws-answer-subsection { break-inside: avoid; }
 .par-ws-minihead {
   display: flex;
   align-items: baseline;
@@ -651,12 +688,12 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .par-ws-minihead-k {
   color: var(--ink);
-  font-size: calc(10.5pt * var(--par-fs, 1));
+  font-size: calc(11.3pt * var(--par-fs, 1));
   font-weight: 900;
 }
 .par-ws-minihead-e {
   color: var(--gold);
-  font-size: calc(7.6pt * var(--par-fs, 1));
+  font-size: calc(8.2pt * var(--par-fs, 1));
   font-weight: 800;
   letter-spacing: 0;
 }
@@ -706,8 +743,8 @@ export const ANALYSIS_REPORT_CSS = `
 .par-ws-practice {
   font-family: var(--font-en);
   color: var(--ink);
-  font-size: calc(9pt * var(--par-fs, 1));
-  line-height: 1.45;
+  font-size: calc(10pt * var(--par-fs, 1));
+  line-height: 1.5;
 }
 .par-ws-cloze-no {
   display: inline-block;
@@ -720,16 +757,16 @@ export const ANALYSIS_REPORT_CSS = `
   margin-top: .8mm;
   padding-left: 8mm;
   color: var(--text-muted);
-  font-size: calc(8.2pt * var(--par-fs, 1));
-  line-height: 1.45;
+  font-size: calc(9pt * var(--par-fs, 1));
+  line-height: 1.5;
 }
 .par-ws-wordbank {
   margin-top: 2.2mm;
   border: .3mm dashed var(--gold-soft);
   background: var(--tint);
   padding: 2mm;
-  font-size: calc(8.1pt * var(--par-fs, 1));
-  line-height: 1.5;
+  font-size: calc(8.9pt * var(--par-fs, 1));
+  line-height: 1.55;
 }
 .par-ws-wordbank-k {
   color: var(--gold);
@@ -752,17 +789,22 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .par-ws-drill-label {
   color: var(--gold);
-  font-size: calc(8.2pt * var(--par-fs, 1));
+  font-size: calc(9pt * var(--par-fs, 1));
   font-weight: 900;
 }
 .par-ws-grammar-choice,
 .par-ws-wordorder {
   border: .3mm solid var(--tint-border);
   background: var(--tint);
-  padding: 1.8mm 2mm;
-  font-size: calc(8.3pt * var(--par-fs, 1));
-  line-height: 1.45;
+  padding: 2mm 2.2mm;
+  font-size: calc(9.3pt * var(--par-fs, 1));
+  line-height: 1.5;
 }
+/* 어법 선택 [a / b] 괄호 강조 — 밑줄 */
+.par-ws-choice-mark { text-decoration: underline; text-decoration-thickness: .3mm; text-underline-offset: 1.5px; font-weight: 800; }
+/* 단어배열 영작 — 답안 작성 공간 */
+.par-ws-write-space { margin-top: 6mm; display: flex; flex-direction: column; gap: 7mm; }
+.par-ws-write-line { display: block; height: 0; border-bottom: .25mm solid var(--tint-border); }
 .par-ws-drill-line,
 .par-ws-wordorder-ko {
   color: var(--ink);
@@ -810,15 +852,15 @@ export const ANALYSIS_REPORT_CSS = `
 .par-ws-topic-gist {
   margin-top: 1mm;
   color: var(--text);
-  font-size: calc(8.5pt * var(--par-fs, 1));
-  line-height: 1.45;
+  font-size: calc(9.3pt * var(--par-fs, 1));
+  line-height: 1.5;
 }
 .par-ws-workbook-passage {
   white-space: pre-wrap;
   color: var(--ink);
   font-family: var(--font-en);
-  font-size: calc(8.8pt * var(--par-fs, 1));
-  line-height: 1.55;
+  font-size: calc(9.6pt * var(--par-fs, 1));
+  line-height: 1.6;
 }
 .par-ws-choice-answer-list {
   display: flex;
@@ -834,8 +876,8 @@ export const ANALYSIS_REPORT_CSS = `
   gap: 1.5mm;
   align-items: baseline;
   color: var(--text);
-  font-size: calc(8pt * var(--par-fs, 1));
-  line-height: 1.35;
+  font-size: calc(8.8pt * var(--par-fs, 1));
+  line-height: 1.45;
 }
 .par-ws-choice-no {
   color: var(--gold);
@@ -913,8 +955,8 @@ export const ANALYSIS_REPORT_CSS = `
   background: var(--tint);
   color: var(--text);
   font-family: var(--font-en);
-  font-size: calc(8pt * var(--par-fs, 1));
-  line-height: 1.5;
+  font-size: calc(9pt * var(--par-fs, 1));
+  line-height: 1.55;
 }
 .par-ws-choices {
   margin: 2mm 0 0;
@@ -928,8 +970,8 @@ export const ANALYSIS_REPORT_CSS = `
   grid-template-columns: 8mm minmax(0, 1fr);
   gap: 1mm;
   color: var(--text);
-  font-size: calc(8.5pt * var(--par-fs, 1));
-  line-height: 1.42;
+  font-size: calc(9.3pt * var(--par-fs, 1));
+  line-height: 1.5;
 }
 .par-ws-choice-label {
   color: var(--ink);
@@ -1125,6 +1167,13 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .par-canvas-no.is-cont { background: #dbeafe; color: #0369a1; }
 .par-canvas-chunk { display: flex; flex-direction: column; min-width: 0; max-width: 100%; }
+/* 끊어읽기 구분선 — 청크 사이 '/' */
+.par-canvas-sep {
+  align-self: flex-start; flex: 0 0 auto;
+  margin: 0 1mm; color: #94a3b8;
+  font-family: var(--font-en); font-size: calc(11pt * var(--par-fs, 1));
+  font-weight: 400; line-height: 1.62;
+}
 /* 필기가 달린 청크는 줄사이 노트가 들어갈 가로 여유를 준다 */
 .par-canvas-chunk.is-noted { min-width: 31mm; flex: 0 1 auto; }
 .par-canvas-en {
@@ -1160,6 +1209,14 @@ export const ANALYSIS_REPORT_CSS = `
 .par-canvas-note-line { display: block; }
 .par-canvas-note-trap { display: block; color: #b42318; font-weight: 800; }
 .par-canvas-note-trap::before { content: "⚠ "; }
+/* ⚠ 함정 아래 예문 — 출제 포인트 예시 한 문장 */
+.par-anno-example {
+  display: block; margin-top: .5mm; padding: .4mm 1.4mm;
+  border-left: .5mm solid var(--anno-c, #b42318); background: color-mix(in srgb, var(--anno-c, #b42318) 7%, #fff);
+  font-family: var(--font-en); font-style: italic; color: #334155;
+  font-size: calc(7.8pt * var(--par-fs, 1)); line-height: 1.4; overflow-wrap: anywhere;
+}
+.par-anno-example::before { content: "예) "; font-style: normal; font-family: var(--font-ko); font-weight: 800; color: var(--anno-c, #b42318); }
 
 /* ── 오른쪽 여백 레일 (긴 필기 카드) ── */
 .par-canvas-rail { display: flex; flex-direction: column; gap: 1.5mm; min-width: 0; }
@@ -1175,6 +1232,15 @@ export const ANALYSIS_REPORT_CSS = `
 .par-rail-card.is-exam { border-color: #f3c9ce; }
 .par-rail-card.is-logic { border-color: #e0d28a; background: #fffdf3; }
 .par-rail-card.is-parsing { border-color: #aef0d2; background: #f8fffb; }
+/* 카드가 가리키는 본문 영어 구절 — 검정 본문의 어디서 왔는지 표시 */
+.par-rail-card-src {
+  display: block; font-family: var(--font-en); font-style: italic; font-weight: 700;
+  color: var(--anno-c, #2563a8); font-size: calc(7.7pt * var(--par-fs, 1)); line-height: 1.3;
+  margin-bottom: .6mm; padding-bottom: .5mm; border-bottom: .2mm dotted var(--anno-c, #2563a8); overflow-wrap: anywhere;
+}
+.par-rail-card-src::before { content: "❝ "; font-style: normal; opacity: .7; }
+.par-rail-card-src::after { content: " ❞"; font-style: normal; opacity: .7; }
+.par-canvas-fn-src { font-family: var(--font-en); font-style: italic; font-weight: 700; color: var(--anno-c, #475569); }
 .par-rail-card-role { display: block; color: var(--anno-c, #2563a8); font-weight: 900; font-size: calc(8.6pt * var(--par-fs, 1)); margin-bottom: .4mm; }
 .par-rail-card-anchor { display: block; color: #0369a1; font-family: var(--font-en); font-weight: 700; font-size: calc(7.8pt * var(--par-fs, 1)); }
 .par-rail-card-line { display: block; }
@@ -1182,7 +1248,10 @@ export const ANALYSIS_REPORT_CSS = `
 .par-rail-card-trap::before { content: "⚠ "; }
 
 /* ── 연결선 (장식 SVG, 높이 0 / 측정 무영향) ── */
-.par-canvas-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }
+/* overflow:hidden — 연결선 좌표는 JS(getBoundingClientRect)로 측정되는데, 일시적 레이아웃(카드/앵커 rect 0,0)에서
+   stale 좌표가 잡히면 overflow:visible 일 때 선이 캔버스를 벗어나 다른 페이지(예: 1페이지)로 새어나가던 문제 차단.
+   정상 연결선은 캔버스 내부에 있으므로 클립되지 않음. */
+.par-canvas-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 2; }
 .par-canvas-connectors path { fill: none; stroke: var(--anno-c, #2563a8); stroke-width: .35mm; stroke-linejoin: round; stroke-linecap: round; opacity: .8; }
 .par-canvas-connectors circle { fill: var(--anno-c, #2563a8); opacity: .9; }
 
@@ -1208,6 +1277,58 @@ export const ANALYSIS_REPORT_CSS = `
 .par-canvas-fn-role { color: var(--anno-c, #475569); font-weight: 800; }
 .par-canvas-fn-trap { color: #b42318; font-weight: 700; }
 
+/* ══ 필기 분석 v3 — 직독직해 뜻(위) + 영어 + 짧은 역할(아래) / 어법·구문은 아래 목록 + 번호·화살표 ══ */
+/* 왼쪽에 비어 있는 연결선 통로(거터) 확보 — 화살표 세로줄이 본문/뱃지를 침범하지 않게 */
+.par-canvas-v3 { padding-left: 6mm; }
+.par-canvas-v3 .par-canvas-staff { align-items: flex-end; row-gap: 3mm; column-gap: 0; }
+/* 직독직해 한글 뜻 — 영어 위 */
+.par-canvas-v3 .par-canvas-gloss {
+  display: block; font-size: calc(7.5pt * var(--par-fs, 1)); color: #6a7b8e; line-height: 1.15;
+  margin-bottom: .4mm; white-space: nowrap;
+}
+/* 밑줄↔설명 연결 번호 뱃지 (뜻 줄에) */
+.par-canvas-v3 .par-canvas-lk {
+  display: inline-flex; align-items: center; justify-content: center; width: 3mm; height: 3mm;
+  margin-left: .8mm; border-radius: 50%; background: var(--anno-c, #2563a8); color: #fff;
+  font-family: var(--font-ko); font-size: calc(5.6pt * var(--par-fs, 1)); font-weight: 800; vertical-align: middle;
+}
+/* 모든 청크 영어에 동일한 밑줄 자리(투명) 확보 → 밑줄 유무로 글자가 밀리지 않음 */
+.par-canvas-v3 .par-canvas-en { padding-bottom: .6mm; border-bottom: .45mm solid transparent; text-decoration: none; }
+.par-canvas-v3 .par-canvas-chunk.is-anchored .par-canvas-en { text-decoration: none; border-bottom-color: var(--anno-c, #94a3b8); }
+/* 짧은 구문 역할 — 영어 아래(중립 슬레이트) */
+.par-canvas-v3 .par-canvas-role {
+  align-self: stretch; margin-top: .6mm; padding-top: .4mm; border-top: .3mm solid #cdd6e0;
+  color: #5b7088; font-weight: 700; font-size: calc(6.8pt * var(--par-fs, 1)); line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+.par-canvas-v3 .par-canvas-sep {
+  align-self: flex-end; flex: 0 0 auto; margin: 0 1.2mm; color: #c2ccd8;
+  font-family: var(--font-en); font-size: calc(11pt * var(--par-fs, 1)); font-weight: 400; padding-bottom: 1.6mm;
+}
+
+/* 어법·구문 목록 (문장 아래) */
+.par-canvas-list { margin-top: 2.4mm; display: flex; flex-direction: column; gap: 1.2mm; }
+.par-list-note { position: relative; padding-left: 5.4mm; font-size: calc(8.4pt * var(--par-fs, 1)); line-height: 1.42; color: #26323f; }
+.par-list-badge {
+  position: absolute; left: 0; top: .4mm; display: inline-flex; align-items: center; justify-content: center;
+  width: 3.6mm; height: 3.6mm; border-radius: 50%; background: var(--anno-c, #2563a8); color: #fff;
+  font-weight: 800; font-size: calc(6pt * var(--par-fs, 1));
+}
+.par-list-body { display: block; }
+.par-list-kind { font-weight: 800; color: var(--anno-c, #2563a8); }
+.par-list-src { font-family: var(--font-en); font-style: italic; font-weight: 700; color: var(--anno-c, #2563a8); }
+.par-list-role { font-weight: 800; color: var(--anno-c, #2563a8); }
+.par-list-line { }
+.par-list-trap { display: block; margin-top: .4mm; color: #b42318; font-weight: 600; }
+.par-list-trap::before { content: "⚠ "; }
+
+/* 함정 예문(목록·레일 공통) — 틀린 토큰 빨강 취소선 / 정답 초록 */
+.par-ex-bad { color: #dc2626; font-weight: 800; text-decoration: line-through; }
+.par-ex-good { color: #047857; font-weight: 700; font-style: normal; }
+
+/* 연결선(화살표) — 본문 캔버스 안으로 클립되어 인쇄/페이지분할에서 새지 않음 */
+.par-conn-line { fill: none; stroke-width: .3mm; opacity: .8; stroke-linejoin: miter; stroke-linecap: butt; }
+
 /* ── 인쇄 ── */
 @media print {
   @page { size: A4; margin: 0; }
@@ -1224,6 +1345,8 @@ export const ANALYSIS_REPORT_CSS = `
      (아래 .par-root * 의 visibility:visible 가 숨김 측정 컨테이너/미리보기를 되살리던 버그 차단) */
   .par-measure { display: none !important; }
   .par-cover-preview { display: none !important; }
+  /* 편집 전용 UI(열 너비 핸들·그립·삭제 버튼 등)는 인쇄에서 제외. */
+  .par-edit-chrome { display: none !important; }
 
   /* 화면 전체를 숨기고 실제 보고서(.par-root)만 인쇄.
      우측 패널 미리보기(.par-cover-preview)는 같은 .par-root 라도 제외한다. */
@@ -1262,8 +1385,12 @@ export const ANALYSIS_REPORT_CSS = `
   .par-sheet { box-shadow: none !important; margin: 0 !important; break-after: page; zoom: 1 !important; }
   .par-sheet:last-child { break-after: auto; }
   .par-canvas { break-inside: avoid; }
-  .par-canvas-no, .par-canvas-role, .par-canvas-note, .par-rail-card, .par-canvas-connectors path {
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  /* 보고서 전체의 배경색/채움색을 강제 인쇄 — 브라우저 '배경 그래픽' 토글(기본 OFF)에 의존하지 않도록.
+     이 규칙이 좁게(필기분석 요소만) 걸려 있어서, 제목 블록·구조도 박스·표 헤더/줄무늬·표지 등
+     나머지 페이지의 배경색이 인쇄에서 사라져 미리보기와 달라 보이던 문제를 해결한다. */
+  .par-root:not(.par-cover-preview),
+  .par-root:not(.par-cover-preview) * {
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
 }
 `;

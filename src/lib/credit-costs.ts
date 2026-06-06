@@ -22,7 +22,8 @@ export const CREDIT_COSTS = {
   AI_CHAT: 1,                 // Student AI tutoring chat (per message)
 
   // Content extraction
-  TEXT_EXTRACTION: 3,          // PDF/image OCR text extraction
+  TEXT_EXTRACTION: 3,          // PDF/image OCR text extraction (verbatim)
+  PASSAGE_RESTORATION: 2,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성), base; +length tier via costOverride
 
   // Webtoon
   WEBTOON_IMAGE: 5,            // 한 지문 → 멀티패널 단일 9:16 웹툰 이미지
@@ -43,6 +44,7 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   QUESTION_MODIFY: "문제 수정",
   AI_CHAT: "AI 튜터링",
   TEXT_EXTRACTION: "텍스트 추출 (OCR)",
+  PASSAGE_RESTORATION: "AI 지문 복원",
   WEBTOON_IMAGE: "웹툰 이미지 생성",
 };
 

@@ -117,8 +117,6 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   if (q.sentenceWithError && typeId !== "GRAMMAR_CORRECTION") {
     push(grammarCorrectionErrorSentenceForQuestionText(q));
   }
-  if (q.targetWord) parts.push(`[target] ${String(q.targetWord)}`);
-  if (q.contextSentence) parts.push(`[context] ${String(q.contextSentence)}`);
   if (q.questionText && !q.direction) push(q.questionText);
 
   return parts.filter(Boolean).join("\n\n");

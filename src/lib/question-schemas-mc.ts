@@ -56,6 +56,8 @@ export const vocabChoiceSchema = z.object({
   markedWords: z.array(z.object({
     label: z.string().describe("(a)~(e)"),
     word: z.string(),
+    originalWord: z.string().optional(),
+    substituteWord: z.string().optional(),
     isInappropriate: z.boolean(),
     betterWord: z.string().optional().describe("부적절한 경우 적절한 단어"),
   })).length(5),

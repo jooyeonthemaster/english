@@ -1,5 +1,6 @@
 import {
   isSummaryCompleteMc,
+  isSummaryCompleteSubtype,
   splitSummaryCompleteMcQuestionText,
   summaryCompleteMcPassageForItem,
   summaryCompleteMcSummaryForItem,
@@ -8,6 +9,8 @@ import {
   formatSentenceInsertPassageMarkers,
   splitSentenceInsertGivenBlock,
 } from "./option-display";
+import { questionHasEmbeddedPassage } from "./passage-policy";
+import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
 import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type { PaperItem } from "./types";
 
@@ -32,12 +35,23 @@ const INLINE_SOURCE_PASSAGE_SUBTYPES = new Set([
   "TOPIC_MAIN_IDEA",
   "TITLE",
   "CONTENT_MATCH",
+  "CONDITIONAL_WRITING",
+  "SENTENCE_TRANSFORM",
+  "WORD_ORDER",
+  "SYNONYM",
 ]);
 
 const STRUCTURED_ATOMIC_SUBTYPES = new Set([
   ...INLINE_SOURCE_PASSAGE_SUBTYPES,
   "SUMMARY_COMPLETE_MC",
+  "SUMMARY_COMPLETE",
   "SENTENCE_ORDER",
+]);
+
+const PASSAGE_BEFORE_BODY_SUBTYPES = new Set([
+  "CONDITIONAL_WRITING",
+  "WORD_ORDER",
+  "SENTENCE_TRANSFORM",
 ]);
 
 export function isStructuredAtomicSubtype(subType?: string | null): boolean {
@@ -64,7 +78,7 @@ function splitFirstParagraph(text: string): { stem: string; body: string } {
 export function questionStemAndBody(item: PaperItem): { stem: string; body: string } {
   const subType = item.sourceQuestion.subType;
 
-  if (isSummaryCompleteMc(subType)) {
+  if (isSummaryCompleteSubtype(subType)) {
     const { stem } = splitSummaryCompleteMcQuestionText(item.questionText);
     return { stem, body: "" };
   }
@@ -90,44 +104,97 @@ export type StructSegment =
   | { kind: "para"; label: string; text: string }
   | { kind: "text"; text: string };
 
-function parseSentenceOrderSegments(questionText: string): StructSegment[] {
-  const lines = questionText
-    .replace(/\r/g, "")
-    .split(/\n+/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const bodyLines = lines.slice(1); // 첫 줄(지시문)은 헤더에서 렌더
+type SentenceOrderMarker = {
+  letter: "A" | "B" | "C";
+  start: number;
+  contentStart: number;
+  strong: boolean;
+};
 
-  let given = "";
-  let collectingGiven = false;
-  const paras: { label: string; text: string }[] = [];
-  let current: { label: string; text: string } | null = null;
-  const extra: string[] = [];
+const SENTENCE_ORDER_GIVEN_HEADER_RE =
+  /^\s*\[(?:주어진\s*문장|given)\]\s*/i;
+const SENTENCE_ORDER_MARKER_RE =
+  /(^|[\s\n])(\(([A-Ca-c])\)|\[([A-Ca-c])\]|([A-Ca-c])[.)]|([A-C]))\s+(?=\S)/g;
 
-  for (const line of bodyLines) {
-    const givenMatch = line.match(/^\[(?:주어진\s*문장|given)\]\s*(.*)$/i);
-    if (givenMatch) {
-      given = givenMatch[1].trim();
-      current = null;
-      collectingGiven = true;
-      continue;
-    }
-    const paraMatch = line.match(/^\(([A-C])\)\s*(.+)$/);
-    if (paraMatch) {
-      collectingGiven = false;
-      current = { label: `(${paraMatch[1]})`, text: paraMatch[2].trim() };
-      paras.push(current);
-      continue;
-    }
-    if (current) current.text = `${current.text} ${line}`.trim();
-    else if (collectingGiven) given = `${given} ${line}`.trim();
-    else extra.push(line);
+function cleanSentenceOrderText(text: string) {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+function collectSentenceOrderMarkers(text: string): SentenceOrderMarker[] {
+  const markers: SentenceOrderMarker[] = [];
+  SENTENCE_ORDER_MARKER_RE.lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+  while ((match = SENTENCE_ORDER_MARKER_RE.exec(text)) !== null) {
+    const prefix = match[1] || "";
+    const markerText = match[2] || "";
+    const strongLetter = match[3] || match[4] || match[5] || "";
+    const bareLetter = match[6] || "";
+    const rawLetter = strongLetter || bareLetter;
+    if (!rawLetter) continue;
+
+    markers.push({
+      letter: rawLetter.toUpperCase() as "A" | "B" | "C",
+      start: match.index + prefix.length,
+      contentStart: match.index + match[0].length,
+      strong: Boolean(strongLetter) || /[.)\]]$/.test(markerText),
+    });
   }
 
+  return markers;
+}
+
+function pickSentenceOrderMarkers(markers: SentenceOrderMarker[]) {
+  const strongMarkers = markers.filter((marker) => marker.strong);
+  const candidates = strongMarkers.length >= 2 ? strongMarkers : markers;
+  const picked: SentenceOrderMarker[] = [];
+  let cursor = -1;
+
+  for (const letter of ["A", "B", "C"] as const) {
+    const next = candidates.find(
+      (marker) => marker.letter === letter && marker.start > cursor,
+    );
+    if (!next) return strongMarkers.length > 0 ? strongMarkers : [];
+    picked.push(next);
+    cursor = next.start;
+  }
+
+  return picked;
+}
+
+export function sentenceOrderSegmentsFromQuestionText(questionText: string): StructSegment[] {
+  const body = splitFirstParagraph(questionText).body.replace(/\r/g, "").trim();
+  if (!body) return [];
+
+  const headerMatch = body.match(SENTENCE_ORDER_GIVEN_HEADER_RE);
+  const bodyAfterHeader = headerMatch
+    ? body.slice(headerMatch[0].length).trim()
+    : body;
+  const markers = pickSentenceOrderMarkers(collectSentenceOrderMarkers(bodyAfterHeader));
   const segs: StructSegment[] = [];
+
+  if (markers.length === 0) {
+    if (bodyAfterHeader) {
+      segs.push(
+        headerMatch
+          ? { kind: "box", boxStyle: "given", text: cleanSentenceOrderText(bodyAfterHeader) }
+          : { kind: "text", text: bodyAfterHeader },
+      );
+    }
+    return segs;
+  }
+
+  const given = cleanSentenceOrderText(bodyAfterHeader.slice(0, markers[0].start));
   if (given) segs.push({ kind: "box", boxStyle: "given", text: given });
-  for (const para of paras) segs.push({ kind: "para", label: para.label, text: para.text });
-  if (extra.length) segs.push({ kind: "text", text: extra.join("\n") });
+
+  markers.forEach((marker, index) => {
+    const nextStart = markers[index + 1]?.start ?? bodyAfterHeader.length;
+    const text = cleanSentenceOrderText(
+      bodyAfterHeader.slice(marker.contentStart, nextStart),
+    );
+    if (text) segs.push({ kind: "para", label: `(${marker.letter})`, text });
+  });
+
   return segs;
 }
 
@@ -155,22 +222,31 @@ function parseSentenceInsertSegments(questionText: string): StructSegment[] {
 }
 
 // 구조화 유형의 본문 세그먼트(지시문 제외 — 지시문은 헤더에서 렌더).
+function stripOriginalBlock(text: string) {
+  return text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter((block) => block && !/^\[(?:original|\uC6D0\uBB38)\]\s*/i.test(block))
+    .join("\n\n")
+    .trim();
+}
+
 export function structuredSegments(item: PaperItem): StructSegment[] {
   const subType = item.sourceQuestion.subType;
 
-  if (isSummaryCompleteMc(subType)) {
+  if (isSummaryCompleteSubtype(subType)) {
     const passage = summaryCompleteMcPassageForItem(item);
     const { summary: rawSummary } = splitSummaryCompleteMcQuestionText(item.questionText);
     const summary = summaryCompleteMcSummaryForItem(item, rawSummary);
     const segs: StructSegment[] = [];
     if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
-    segs.push({ kind: "arrow" });
+    if (isSummaryCompleteMc(subType)) segs.push({ kind: "arrow" });
     if (summary) segs.push({ kind: "box", boxStyle: "summary", text: summary });
     return segs;
   }
 
   if (subType === "SENTENCE_ORDER") {
-    return parseSentenceOrderSegments(item.questionText);
+    return sentenceOrderSegmentsFromQuestionText(item.questionText);
   }
 
   // INLINE_SOURCE (주제/요지/제목/내용일치): 지시문 다음의 추가 안내문 + 출처 지문 박스.
@@ -178,13 +254,29 @@ export function structuredSegments(item: PaperItem): StructSegment[] {
     return parseSentenceInsertSegments(item.questionText);
   }
 
-  const passage = normalizePassageText(
+  const bodyAfterStem = splitFirstParagraph(item.questionText).body;
+  const rawPassage = normalizePassageText(
     item.passageContent || item.sourceQuestion.passage?.content || "",
   );
-  const bodyAfterStem = splitFirstParagraph(item.questionText).body;
+  const passage =
+    subType === "WORD_ORDER" || subType === "SENTENCE_TRANSFORM"
+      ? formatSourcePassageForQuestionItems(rawPassage, [item])
+      : rawPassage;
+  const alreadyHasEmbeddedPassage = questionHasEmbeddedPassage(item.sourceQuestion);
   const segs: StructSegment[] = [];
-  if (bodyAfterStem) segs.push({ kind: "text", text: bodyAfterStem });
-  if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
+  if (PASSAGE_BEFORE_BODY_SUBTYPES.has(subType || "")) {
+    if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
+    const textBody =
+      subType === "SENTENCE_TRANSFORM"
+        ? stripOriginalBlock(bodyAfterStem)
+        : bodyAfterStem;
+    if (textBody) segs.push({ kind: "text", text: textBody });
+  } else {
+    if (bodyAfterStem) segs.push({ kind: "text", text: bodyAfterStem });
+    if (!alreadyHasEmbeddedPassage && passage) {
+      segs.push({ kind: "box", boxStyle: "passage", text: passage });
+    }
+  }
   return segs;
 }
 

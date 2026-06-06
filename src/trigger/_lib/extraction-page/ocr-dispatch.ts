@@ -57,11 +57,15 @@ export async function runOcrForPage(params: {
   idempotencyKey: string;
   imageUrl: string;
   mode: ExtractionMode;
+  /** P7-D2: "verbatim"이면 Gemini를 건너뛰고 Document AI 순수 OCR만. */
+  outputMode?: string | null;
   pageIndex: number;
   totalPages: number;
 }): Promise<OcrDispatchResult> {
-  const { idempotencyKey, imageUrl, mode, pageIndex, totalPages } = params;
+  const { idempotencyKey, imageUrl, mode, outputMode, pageIndex, totalPages } =
+    params;
   const isStructured = usesStructuredExtraction(mode);
+  const verbatim = outputMode === "verbatim";
 
   await markProcessingPhase(idempotencyKey, "storage_download");
   const bytes = await withTimeout(
@@ -71,6 +75,17 @@ export async function runOcrForPage(params: {
   );
   const base64 = bytes.toString("base64");
   const mimeType = "image/jpeg";
+
+  // ── VERBATIM 고속 경로 ("그대로 추출"): Document AI 순수 OCR, Gemini 0콜 ──
+  // "그대로 추출"은 본문을 있는 그대로 뽑는 것이라 블록 분류/복원이 불필요하다.
+  // 구조화 Gemini 콜(~11s, 이미지 토큰 ~10k)을 통째로 건너뛰고 Document AI(~3s)
+  // 만 호출 → 페이지당 3~4배 빠름. 페이지의 OCR 텍스트 전체를 PASSAGE_BODY 블록
+  // 1개로 만들어 finalize 의 STEM-led 그룹핑이 "1 이미지 = 1 지문 = 1 draft"로
+  // 묶게 한다(STEM 없으면 각 PASSAGE_BODY가 독립 draft). DocAI 비활성 시엔 아래
+  // 기존 경로로 폴백(구조화 Gemini가 verbatim도 처리하되 복원은 finalize에서 스킵).
+  if (verbatim && mode === "PASSAGE_ONLY" && isDocumentAiOcrEnabled()) {
+    return runDocumentAiVerbatim({ idempotencyKey, base64, mimeType });
+  }
 
   const systemPrompt = isStructured
     ? buildStructuredOcrSystemPrompt(mode)
@@ -135,6 +150,43 @@ export async function runOcrForPage(params: {
     extractedText: result.text,
     inputTokens: result.usage?.inputTokens,
     outputTokens: result.usage?.outputTokens,
+  };
+}
+
+/**
+ * VERBATIM 고속 경로 — Document AI 순수 OCR만 수행하고 Gemini는 호출하지 않는다.
+ * 페이지 OCR 텍스트 전체를 단일 PASSAGE_BODY 블록으로 반환한다(분류·복원 없음).
+ * pageMeta 는 DocAI 텍스트에서 결정론적으로 파싱해 다중 시험지 클러스터링/페이지
+ * 재정렬 단서를 보존한다(단일 지문 잡에서는 보통 비어 있음).
+ */
+async function runDocumentAiVerbatim(params: {
+  idempotencyKey: string;
+  base64: string;
+  mimeType: string;
+}): Promise<OcrDispatchResult> {
+  const { idempotencyKey, base64, mimeType } = params;
+  await markProcessingPhase(idempotencyKey, "document_ai_ocr");
+  const docAi = await withTimeout(
+    "document ai ocr (verbatim)",
+    DOCUMENT_AI_CALL_TIMEOUT_MS,
+    () => runDocumentAiOcr({ base64, mimeType, timeoutInMs: DOCUMENT_AI_CALL_TIMEOUT_MS }),
+  );
+  const text = docAi.text.trim();
+  if (!text) {
+    const emptyErr = new Error("Document AI returned empty text (verbatim)");
+    (emptyErr as Error & { code?: string }).code = "EMPTY_OUTPUT";
+    throw emptyErr;
+  }
+  const parsedMeta = parsePageMetaFromDocumentAiText(text);
+  const structured: StructuredOcrResponse = {
+    blocks: [{ blockType: "PASSAGE_BODY", content: text, confidence: 0.9 }],
+    pageMeta: parsedMeta as StructuredOcrResponse["pageMeta"],
+  };
+  return {
+    structured,
+    extractedText: text,
+    inputTokens: undefined,
+    outputTokens: undefined,
   };
 }
 

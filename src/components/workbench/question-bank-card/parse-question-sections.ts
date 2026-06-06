@@ -47,6 +47,11 @@ export function parseQuestionSections(
       if (trimmed.startsWith(marker)) {
         const content = trimmed.slice(marker.length).replace(/^\s*/, "").replace(/\]$/, "");
 
+        if (config.type === "target" || config.type === "context") {
+          matched = true;
+          break;
+        }
+
         if (config.type === "conditions") {
           // Parse numbered conditions: "1. xxx\n2. yyy"
           const lines = content.split("\n").filter(Boolean);

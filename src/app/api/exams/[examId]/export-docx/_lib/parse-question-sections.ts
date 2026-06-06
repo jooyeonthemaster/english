@@ -1,4 +1,5 @@
 import type { ParsedSection } from "./types";
+import { sentenceOrderSegmentsFromQuestionText } from "@/components/exams/paper-builder/question-body-layout";
 
 // ---------------------------------------------------------------------------
 // Parse questionText
@@ -9,6 +10,38 @@ export function parseQuestionSections(
   subType: string | null
 ): ParsedSection[] {
   if (!questionText) return [];
+
+  if (subType === "SENTENCE_ORDER") {
+    const stem = questionText.split(/\n{2,}/)[0]?.trim();
+    const sections: ParsedSection[] = [];
+    if (stem) sections.push({ type: "direction", content: stem });
+
+    const paragraphItems: string[] = [];
+    for (const segment of sentenceOrderSegmentsFromQuestionText(questionText)) {
+      if (segment.kind === "box" && segment.boxStyle === "given") {
+        sections.push({
+          type: "marker",
+          label: "주어진 문장",
+          content: segment.text,
+        });
+      } else if (segment.kind === "para") {
+        paragraphItems.push(`${segment.label} ${segment.text}`);
+      } else if (segment.kind === "text") {
+        sections.push({ type: "passage", content: segment.text });
+      }
+    }
+
+    if (paragraphItems.length > 0) {
+      sections.push({
+        type: "paragraphs",
+        label: "문단",
+        content: paragraphItems.join("\n"),
+        items: paragraphItems,
+      });
+    }
+
+    return sections;
+  }
 
   const sections: ParsedSection[] = [];
   const blocks = questionText.split(/\n\n/).filter(Boolean);
@@ -46,6 +79,11 @@ export function parseQuestionSections(
         let content = trimmed.slice(marker.length).replace(/^\s*/, "");
         if (marker === "[유형:") {
           content = content.replace(/\]$/, "");
+        }
+
+        if (config.type === "target" || config.type === "context") {
+          matched = true;
+          break;
         }
 
         if (config.type === "conditions") {

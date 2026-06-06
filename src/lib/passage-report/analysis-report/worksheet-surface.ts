@@ -26,6 +26,43 @@ export function normalizeStudentFacingMarkup(value: string): string {
   );
 }
 
+/**
+ * 요약문 완성(객관식) 유형인지 판별한다.
+ * 추론 세트는 type="summary"(typeLabel="요약문 완성"), 워크북 본 문제는 type="요약" 등으로 들어온다.
+ */
+export function isSummaryPairWorksheetType(type?: string, typeLabel?: string): boolean {
+  return /요약|summary/i.test(`${type ?? ""} ${typeLabel ?? ""}`);
+}
+
+/**
+ * 요약문 완성 선택지/정답 텍스트를 항상 "(A) … — (B) …" 형태로 정규화한다.
+ *
+ * AI가 "(A) detrimental — rest"처럼 (A)만 라벨링하고 (B)를 빠뜨리는 경우가 있어
+ * 학생용 시험지에서 두 번째 칸 라벨이 사라지던 버그를 렌더 직전에 바로잡는다.
+ * - 이미 (A)/(B) 라벨이 모두 있으면 그대로 둔다.
+ * - 두 칸으로 나눌 수 없으면(구분자 없음 등) 원문을 유지한다(오작동 방지).
+ *
+ * 단어 하이픈(self-reflection)을 깨지 않도록 단일 하이픈(-)으로는 절대 나누지 않고,
+ * em/en 대시·말줄임표·슬래시·명시적 (B) 라벨만 칸 구분자로 본다.
+ */
+export function formatSummaryPairText(text: string): string {
+  const raw = (text ?? "").replace(/\s+/g, " ").trim();
+  if (!raw) return text;
+  // (A)·(B) 라벨이 모두 있으면 손대지 않는다.
+  if (/\(\s*A\s*\)/i.test(raw) && /\(\s*B\s*\)/i.test(raw)) return raw;
+
+  const stripped = raw.replace(/^\(\s*A\s*\)\s*/i, "");
+  const parts = stripped
+    .split(/\s*(?:…+|\.{2,}|\(\s*B\s*\)|[—–]|\/)\s*/)
+    .map((part) => part.replace(/^\(\s*[AB]\s*\)\s*/i, "").trim())
+    .filter(Boolean);
+  if (parts.length < 2) return raw;
+
+  const blankA = parts[0];
+  const blankB = parts.slice(1).join(" ");
+  return `(A) ${blankA} — (B) ${blankB}`;
+}
+
 export function studentFacingMarkupIssues(value: string, label: string): string[] {
   const issues: string[] = [];
   if (/<\/?[a-z][^>]*>/i.test(value)) {

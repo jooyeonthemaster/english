@@ -19,19 +19,13 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   generateGroundedStructuredTextWithTriggerFetch as _grounded_unused,
 } from "../gemini-ocr";
-import { findPassageSourceMatches } from "../m2-source-match";
 import { checkRestorationQuality } from "../m1-restoration-quality";
 import {
   buildSourceMatchInputFromGrounded,
-  copyCommittedDraftChanges,
   createWholePassageChange,
-  readSelectedSourceMatch,
 } from "./changes";
 import { baseMetadata } from "./metadata";
-import {
-  isPollutedExactSourceMatch,
-  stripProblemMarkers,
-} from "./text-utils";
+import { stripProblemMarkers } from "./text-utils";
 import type { M1PassageRestorationResult } from "./types";
 
 // 통합 호출 — google_search + 별도 AI 복원 + 비교까지 한 번에 하므로 평소
@@ -66,78 +60,12 @@ export async function restoreM1Passage(input: {
   const questions = input.questions ?? [];
   const problemEvidence = input.problemEvidence ?? null;
 
-  // ── Stage 1: local DB exact match ───────────────────────────────────────
-  const localMatches = await findPassageSourceMatches({
-    academyId: input.academyId,
-    problemText: input.rawText,
-  });
-  const selectedLocal = readSelectedSourceMatch(localMatches);
-  const pollutedExactLocalMatch =
-    selectedLocal?.content &&
-    isPollutedExactSourceMatch({
-      rawText: input.rawText,
-      sourceText: selectedLocal.content,
-    });
+  // 크롭-네이티브 재설계 — 로컬 DB 조회(findPassageSourceMatches) 제거. 1슬롯=1지문
+  // 자체 크롭 모델에선 "같은 시험지 재추출 캐시"의 가치가 낮고, 복원 호출마다 academy
+  // 전체 draft를 키워드 스캔하던 DB 왕복이 병목이었다. 이제 항상 AI 복원으로 직행한다.
+  const usableLocalMatches: SourceMatchInput[] = [];
 
-  if (
-    selectedLocal?.content &&
-    !pollutedExactLocalMatch &&
-    !hasUnresolvedM1ProblemArtifacts(selectedLocal.content)
-  ) {
-    const restoredText = selectedLocal.content.trim();
-    // DB match is treated as the model's authoritative output. Still run the
-    // post-hoc decision so DB rows that happen to equal raw (re-imported
-    // identical material) downgrade to NO_RESTORATION_NEEDED instead of
-    // being marked as restored.
-    const status = decideRestorationStatus({
-      rawText: input.rawText,
-      restoredText,
-      aiFinalStatus: "RESTORED",
-    });
-    const sourceMatchCard = createWholePassageChange({
-      rawText: input.rawText,
-      restoredText,
-      changeType: "source-match",
-      reason: "Restored from a near-exact same-academy committed draft (DB 원본 매칭).",
-      confidence: selectedLocal.confidence,
-    });
-    // Inherit the matched draft's inline change rows so the review side-panel
-    // shows the same evidence cards the teacher already vetted on that prior
-    // run. sourceId on the SourceMatchInput holds the draft id.
-    const sourceDraftId =
-      typeof selectedLocal.sourceId === "string" ? selectedLocal.sourceId : null;
-    const copiedChanges = sourceDraftId
-      ? await copyCommittedDraftChanges(sourceDraftId)
-      : [];
-    return {
-      restoredText,
-      status,
-      confidence: selectedLocal.confidence,
-      changes: [...sourceMatchCard, ...copiedChanges],
-      warnings: [],
-      metadata: baseMetadata({
-        method: "LOCAL_DB",
-        stages: { localDb: "MATCHED", grounded: "SKIPPED_LOCAL_DB_HIT" },
-        problemEvidence,
-        sourceMatch: selectedLocal,
-      }),
-      sourceMatches: localMatches,
-    };
-  }
-
-  // Local matches that survived basic sanity (non-polluted) become hints we
-  // pass into the grounded call; the model may quote them but the core source
-  // search is the model's google_search call.
-  const usableLocalMatches = localMatches.filter((match) => {
-    if (!match.content) return true;
-    if (hasUnresolvedM1ProblemArtifacts(match.content)) return false;
-    return !isPollutedExactSourceMatch({
-      rawText: input.rawText,
-      sourceText: match.content,
-    });
-  });
-
-  // ── Stage 2: single grounded restoration call ──────────────────────────
+  // ── 단일 AI 복원 호출 ──────────────────────────────────────────────────
   try {
     const prompts = buildGroundedRestorationPrompts({
       problemText: input.rawText,
@@ -250,12 +178,7 @@ export async function restoreM1Passage(input: {
       metadata: baseMetadata({
         method: finalMethodLabel,
         stages: {
-          localDb:
-            usableLocalMatches.length > 0
-              ? "CANDIDATES_ONLY"
-              : pollutedExactLocalMatch
-                ? "POLLUTED_EXACT_MATCH_REJECTED"
-                : "NO_MATCH",
+          localDb: "DISABLED",
           grounded: groundedSourceMatch ? "SOURCE_FOUND" : "NO_SOURCE",
         },
         model: getExtractionAiModelName("passage-restoration"),
@@ -300,12 +223,7 @@ export async function restoreM1Passage(input: {
               ? "NO_RESTORATION_NEEDED"
               : "CODE_FALLBACK",
         stages: {
-          localDb:
-            usableLocalMatches.length > 0
-              ? "CANDIDATES_ONLY"
-              : pollutedExactLocalMatch
-                ? "POLLUTED_EXACT_MATCH_REJECTED"
-                : "NO_MATCH",
+          localDb: "DISABLED",
           grounded: "FAILED",
         },
         model: getExtractionAiModelName("passage-restoration"),

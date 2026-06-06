@@ -13,6 +13,19 @@ export default defineConfig({
   runtime: "node-22",
   logLevel: "log",
   maxDuration: 900,
+  // Warm start 가속(v4) — 실행 사이 태스크 프로세스를 살려둔다. 모듈 스코프의
+  // Prisma 커넥션(@/lib/prisma)과 Document AI 토큰 캐시(google-document-ai.ts)가
+  // 다음 런에 재사용되므로, cold pod 에서 첫 DB 쿼리가 3~9초씩 걸리던 비용이
+  // warm start 에선 ~28ms로 떨어진다(문제생성 warm 실측치와 동일). 추출은 페이지
+  // 마다 pod 를 띄우고 드물게 돌아 항상 cold 였던 게 핵심 병목이었음.
+  //   - 효과 범위: warm start 만 가속(긴 유휴 후 첫 cold run 은 불변).
+  //   - 연속 잡/페이지 후 finalize/정상 운영에서 큰 이득.
+  //   - maxExecutionsPerProcess: 메모리 누수 방지용 주기적 프로세스 재시작.
+  experimental_processKeepAlive: {
+    enabled: true,
+    maxExecutionsPerProcess: 50,
+    devMaxPoolSize: 10,
+  },
   retries: {
     enabledInDev: true,
     default: {

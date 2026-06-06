@@ -39,6 +39,8 @@ export const blockTypeSchema = z.enum([
 export const createJobRequestSchema = z.object({
   sourceType: z.enum(["PDF", "IMAGES"]),
   mode: extractionModeSchema.default("PASSAGE_ONLY"),
+  // P7-D2: 추출 산출 모드. 미전달=기존 자동복원 휴리스틱 유지(비적응 무영향).
+  outputMode: z.enum(["verbatim", "restored"]).optional(),
   totalPages: z.number().int().min(1).max(MAX_PAGES_PER_JOB),
   originalFileName: z.string().max(255).optional(),
   pages: z
@@ -63,12 +65,32 @@ export const createJobRequestSchema = z.object({
 
 export type CreateJobRequest = z.infer<typeof createJobRequestSchema>;
 
-export const createTextExtractionRequestSchema = z.object({
-  mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
+// 텍스트 지문 1개(제목 + 본문). 여러 개를 한 작업으로 묶어 보낼 때의 단위.
+export const textPassageInputSchema = z.object({
   title: z.string().trim().max(200).optional(),
   text: z.string().trim().min(20).max(60_000),
 });
 
+export const createTextExtractionRequestSchema = z
+  .object({
+    mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
+    // P7-D2: "verbatim"이면 AI 복원 생략(붙여넣은 텍스트 그대로 저장).
+    outputMode: z.enum(["verbatim", "restored"]).optional(),
+    // 단건(하위호환). passages가 오면 무시된다.
+    title: z.string().trim().max(200).optional(),
+    text: z.string().trim().min(20).max(60_000).optional(),
+    // 여러 지문을 한 작업으로 묶어 추출(파일 모드와 동일). 1개여도 됨.
+    passages: z
+      .array(textPassageInputSchema)
+      .min(1)
+      .max(MAX_PAGES_PER_JOB)
+      .optional(),
+  })
+  .refine((v) => (v.passages?.length ?? 0) > 0 || typeof v.text === "string", {
+    message: "text 또는 passages 중 하나는 반드시 필요합니다.",
+  });
+
+export type TextPassageInput = z.infer<typeof textPassageInputSchema>;
 export type CreateTextExtractionRequest = z.infer<
   typeof createTextExtractionRequestSchema
 >;
@@ -203,6 +225,8 @@ const passageCommitSchema = z.object({
   tags: z.array(z.string().min(1).max(40)).max(20).optional(),
   /** 연결된 ExtractionItem.id (확정 시 promotedTo 업데이트용) */
   sourceItemId: z.string().optional(),
+  /** 저장 텍스트가 원문(verbatim)인지 AI복원본(restored)인지 (D2). */
+  extractionOutput: z.enum(["verbatim", "restored"]).optional(),
 });
 
 /**
@@ -359,3 +383,44 @@ export const errorResponseSchema = z.object({
 });
 
 export type ErrorResponse = z.infer<typeof errorResponseSchema>;
+
+// ─── Adaptive Intake — 트리아지(D3) 사전분석 결과 (extraction-triage 태스크) ──
+// Gemini 3.5 Flash가 verbatim 본문 없이 경계·레이아웃·잘림 신호만 JSON으로 산출.
+
+export const triageLayoutSchema = z.enum([
+  "single",
+  "exam2col",
+  "longform",
+  "mixed",
+]);
+
+export const triageBoundarySchema = z.object({
+  afterPage: z.number().int().min(0),
+  nonTerminal: z.boolean(),
+  confidence: z.number().min(0).max(1),
+});
+
+export const triageCropSignalSchema = z.object({
+  page: z.number().int().min(0),
+  truncated: z.boolean(),
+  skew: z.boolean(),
+});
+
+export const triageReorderSchema = z.object({
+  fromIndex: z.number().int().min(0),
+  toIndex: z.number().int().min(0),
+  reason: z.string().max(200),
+});
+
+/** extraction-triage 태스크가 모델로부터 받아 검증하는 원시 결과. */
+export const triageResultSchema = z.object({
+  passageCount: z.number().int().min(0).max(60),
+  layout: triageLayoutSchema,
+  boundaries: z.array(triageBoundarySchema).max(60).default([]),
+  cropSignals: z.array(triageCropSignalSchema).max(60).default([]),
+  reorder: z.array(triageReorderSchema).max(60).default([]),
+  modeGuess: extractionModeSchema.default("PASSAGE_ONLY"),
+  confidence: z.number().min(0).max(1),
+});
+
+export type TriageResultParsed = z.infer<typeof triageResultSchema>;

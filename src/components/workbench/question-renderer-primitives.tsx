@@ -2,13 +2,26 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Check } from "lucide-react";
-import { getCircledNumbers } from "@/lib/question-postprocess/types";
+import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 
 // ============================================================================
 // Shared UI primitives for question renderers
 // ============================================================================
 
 const CIRCLED_MARKER_PATTERN = "\\u2460-\\u2473\\u3251-\\u325F\\u32B1-\\u32BF";
+
+function normalizeCircledSentenceMarker(marker: string) {
+  const codePoint = marker.codePointAt(0);
+  if (codePoint === undefined || codePoint < 0x24D0 || codePoint > 0x24E9) {
+    return marker;
+  }
+  return getCircledNumber(codePoint - 0x24D0);
+}
+
+function circledNumberFromLetter(letter: string) {
+  const index = letter.toUpperCase().charCodeAt(0) - 65;
+  return index >= 0 && index < 26 ? getCircledNumber(index) : letter;
+}
 
 /** 답안 영역을 접어두는 래퍼 — 기본 접힌 상태, 토글로 열기 */
 export function AnswerRevealSection({ children }: { children: React.ReactNode }) {
@@ -201,7 +214,7 @@ export function renderPassageFormatted(text: string): React.ReactNode {
 
 /** Render numbered markers with colored styling */
 export function renderWithMarkers(text: string): React.ReactNode {
-  const markerRegex = new RegExp(`([${CIRCLED_MARKER_PATTERN}])`, "g");
+  const markerRegex = new RegExp(`([${CIRCLED_MARKER_PATTERN}])|\\(([A-Ea-e])\\)`, "g");
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -216,7 +229,7 @@ export function renderWithMarkers(text: string): React.ReactNode {
         key={key++}
         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold mx-0.5"
       >
-        {match[1]}
+        {match[1] || circledNumberFromLetter(match[2])}
       </span>
     );
     lastIndex = match.index + match[0].length;
@@ -230,10 +243,8 @@ export function renderWithMarkers(text: string): React.ReactNode {
 }
 
 /**
- * Render the IRRELEVANT (무관한 문장) marked passage: circled-letter markers
- * (ⓐ–ⓔ, U+24D0–U+24E9) shown inline as bold blue, and each marked sentence
- * fully underlined via `__…__` markup. All other (context) text stays plain.
- * Circled numbers are also styled inline so older stored questions still read.
+ * Render the IRRELEVANT marked passage. Legacy circled-letter markers are
+ * normalized to circled numbers; each marked sentence is underlined via __...__.
  */
 export function renderMarkedSentencePassage(text: string): React.ReactNode {
   const regex = new RegExp(
@@ -261,7 +272,7 @@ export function renderMarkedSentencePassage(text: string): React.ReactNode {
     } else {
       parts.push(
         <span key={key++} className="mr-0.5 font-bold text-blue-600">
-          {match[2]}
+          {normalizeCircledSentenceMarker(match[2])}
         </span>,
       );
     }
