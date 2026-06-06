@@ -885,6 +885,10 @@ model Question {
   // 동시 실행 job 결과를 createdAt 범위가 아니라 jobId 로 정확히 묶기 위한 비정규화 컬럼.
   similarQuestionGenJobId String? // SimilarQuestionGenerationJob.id (FK 미설정, 인덱스만)
 
+  // ── 커스텀 유형 생성 귀속 (nullable — 커스텀 유형 생성분만 채워짐) ──
+  // 강사 커스텀 유형으로 생성된 문항을 유형별로 묶기(피드백 루프·텔레메트리·결과 필터)용 비정규화 컬럼.
+  customTypeId String? // CustomQuestionType.id (FK 미설정, 인덱스만)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -908,6 +912,7 @@ model Question {
   @@index([bundleId])
   @@index([setId])
   @@index([similarQuestionGenJobId])
+  @@index([customTypeId])
   @@map("questions")
 }
 
@@ -1053,6 +1058,94 @@ model SimilarQuestionGenerationJob {
   @@index([academyId, status])
   @@index([academyId, createdAt])
   @@map("similar_question_generation_jobs")
+}
+
+/// CustomQuestionType — 강사 커스텀 문항 유형(빌트인 22유형에 없는 변종).
+/// 원본 문항을 분석해 "유형 정의(CompiledCustomType)"로 컴파일·저장 → 그 유형으로 지속 생성.
+/// 기본 문제 생성 엔진/동형 코드는 import만 하고 수정하지 않는 별도 격리 기능(dev 한정).
+model CustomQuestionType {
+  id          String @id @default(cuid())
+  academyId   String
+  createdById String
+
+  name   String
+  status String @default("DRAFT") // DRAFT | ACTIVE | ARCHIVED
+
+  // 퀄리티 사다리 판정 메타 — 가장 가까운 빌트인 유형과 매칭 신뢰도.
+  nearestBuiltin  String? // 빌트인 유형 ID (없으면 null = 순수 신규)
+  matchConfidence String? // high | medium | low
+
+  // 현재 활성 버전(CustomQuestionTypeVersion.id). 튜닝/편집으로 새 버전 발급(FK 미설정, 소프트 포인터).
+  activeVersionId String?
+
+  // 텔레메트리(피드백 루프) — 승인율 등 집계 기반. 지금은 카운터만.
+  usageCount     Int @default(0) // 생성 잡 수
+  generatedCount Int @default(0) // 저장된 문항 수
+  approvedCount  Int @default(0) // 강사 승인 문항 수
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  versions CustomQuestionTypeVersion[]
+
+  @@index([academyId, status])
+  @@index([academyId, createdAt])
+  @@map("custom_question_types")
+}
+
+/// CustomQuestionTypeVersion — 커스텀 유형의 버전(정의 스냅샷). 자동 튜닝/편집이 새 버전을 만들고,
+/// 보류 평가 후 더 나을 때만 활성화하는 안전 래칫의 단위.
+model CustomQuestionTypeVersion {
+  id      String @id @default(cuid())
+  typeId  String
+  version Int
+
+  spec     Json // CompiledCustomType (프롬프트/필드/재구성 프리미티브/validator/tier 등 동적 정의)
+  examples Json? // few-shot 예시 누적(P3). 초기엔 원본 1개.
+  source   Json // 이 버전의 토대가 된 원본 문항 분석(QuestionAnalysis)
+
+  createdAt DateTime @default(now())
+
+  type CustomQuestionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+
+  @@unique([typeId, version])
+  @@index([typeId])
+  @@map("custom_question_type_versions")
+}
+
+/// CustomQuestionGenerationJob — 커스텀 유형으로 문항을 생성하는 백그라운드 잡(인-프로세스 워커, dev 한정).
+/// 입력 = 커스텀 유형 1개 + 선택 지문 N개 + 지문당 생성 개수. 동형 잡과 동형(同型) 구조의 별도 테이블.
+model CustomQuestionGenerationJob {
+  id           String @id @default(cuid())
+  academyId    String
+  createdById  String
+  customTypeId String // 어떤 커스텀 유형으로 생성하는지
+
+  status String @default("PENDING") // PENDING | PROCESSING | COMPLETED | FAILED
+
+  // 생성에 쓸 지문 풀(passageId[]) + 지문당 생성 개수 + 학년.
+  passageIds      Json
+  countPerPassage Int     @default(1)
+  gradeInfo       String?
+
+  passageCount Int @default(0) // N
+  totalCount   Int @default(0) // 시도 대상(N × countPerPassage)
+  savedCount   Int @default(0)
+  skippedCount Int @default(0)
+
+  errorMessage String? @db.Text
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([academyId, status])
+  @@index([academyId, createdAt])
+  @@index([customTypeId])
+  @@map("custom_question_generation_jobs")
 }
 
 // ============================================================================
