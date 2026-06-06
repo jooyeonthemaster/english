@@ -18,6 +18,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
 import { countWords } from "../generate-page-types";
 import { splitPastedPassages } from "./smart-split";
+import {
+  RestoreIntroDialog,
+  readRestoreIntroDismissed,
+} from "./restore-intro-dialog";
 
 /** Minimum characters before a pasted passage is considered usable. */
 export const MIN_CONTENT_CHARS = 20;
@@ -85,10 +89,6 @@ interface PassageRowProps {
   onSplit: (chunks: string[]) => void;
   /** Stretch the row + textarea to fill the available height (single-row case). */
   grow?: boolean;
-  /** Whether the AI-restore help panel is shown (shared across rows). */
-  showRestoreHelp?: boolean;
-  /** Toggle the AI-restore help panel (header "?" + panel close). */
-  onToggleRestoreHelp?: () => void;
 }
 
 export function PassageRow({
@@ -100,11 +100,10 @@ export function PassageRow({
   disabled,
   onSplit,
   grow,
-  showRestoreHelp,
-  onToggleRestoreHelp,
 }: PassageRowProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [restoring, setRestoring] = useState(false);
+  const [introOpen, setIntroOpen] = useState(false);
 
   const trimmed = row.content.trim();
   const wordCount = useMemo(() => (trimmed ? countWords(trimmed) : 0), [trimmed]);
@@ -161,6 +160,17 @@ export function PassageRow({
       toast.error("복원 요청 중 오류가 발생했습니다.");
     } finally {
       setRestoring(false);
+    }
+  };
+
+  // Clicking "AI 복원" first shows the intro modal — unless the teacher has
+  // ticked "다시 보지 않기", in which case it restores straight away.
+  const handleRestoreClick = () => {
+    if (!canRestore) return;
+    if (readRestoreIntroDismissed()) {
+      void handleRestore();
+    } else {
+      setIntroOpen(true);
     }
   };
 
@@ -227,7 +237,7 @@ export function PassageRow({
         ) : (
           <button
             type="button"
-            onClick={handleRestore}
+            onClick={handleRestoreClick}
             disabled={!canRestore}
             title="문제 형태 지문을 원문으로 AI 복원"
             className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-5 text-[11.5px] font-bold text-white ring-1 ring-blue-300/60 shadow-lg shadow-blue-500/60 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/80 disabled:cursor-not-allowed disabled:opacity-60"
@@ -245,22 +255,14 @@ export function PassageRow({
             )}
           </button>
         )}
-        {onToggleRestoreHelp && (
-          <button
-            type="button"
-            onClick={onToggleRestoreHelp}
-            title="AI 복원 도움말"
-            aria-pressed={!!showRestoreHelp}
-            className={
-              "flex h-7 w-7 items-center justify-center rounded-md transition-colors " +
-              (showRestoreHelp
-                ? "bg-blue-50 text-blue-600"
-                : "text-slate-400 hover:bg-blue-50 hover:text-blue-600")
-            }
-          >
-            <HelpCircle className="h-4 w-4" />
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setIntroOpen(true)}
+          title="AI 복원 안내 다시 보기"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+        >
+          <HelpCircle className="h-4 w-4" />
+        </button>
         <button
           type="button"
           onClick={() => setCollapsed((v) => !v)}
@@ -288,30 +290,6 @@ export function PassageRow({
             "px-3 py-3" + (fill ? " flex min-h-0 flex-1 flex-col" : "")
           }
         >
-          {/* AI 복원 도움말 (튜토리얼처럼 기본 노출, 닫기 가능) */}
-          {showRestoreHelp && onToggleRestoreHelp && (
-            <div className="mb-2.5 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50/70 px-3 py-2">
-              <HelpCircle
-                className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-600"
-                aria-hidden="true"
-              />
-              <p className="flex-1 text-[11px] leading-snug text-slate-600">
-                빈칸·어순·어법이 섞인 <b>문제 형태</b> 지문이면, 지문에{" "}
-                <b className="text-blue-700">문제와 선지까지 함께</b> 붙여넣고 아래{" "}
-                <b>‘AI 복원’</b>을 누르면 원문으로 더 정확히 되살립니다.{" "}
-                <span className="text-slate-400">(이미지·PDF 복원과 동일 · 지문당 ◈2)</span>
-              </p>
-              <button
-                type="button"
-                onClick={onToggleRestoreHelp}
-                title="설명 닫기"
-                className="shrink-0 rounded p-0.5 text-slate-400 hover:bg-white hover:text-slate-600"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          )}
-
           {/* Title */}
           <input
             value={row.title}
@@ -446,6 +424,13 @@ export function PassageRow({
 
         </div>
       )}
+
+      <RestoreIntroDialog
+        open={introOpen}
+        onOpenChange={setIntroOpen}
+        onConfirm={handleRestore}
+        canRestore={canRestore}
+      />
     </div>
   );
 }

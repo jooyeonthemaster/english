@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ClipboardPaste, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,17 +13,6 @@ import {
 export interface PastedPassageInput {
   title: string;
   content: string;
-}
-
-// AI-restore help panel: shown by default (tutorial), dismissal remembered.
-const RESTORE_HELP_KEY = "smoat:generate:paste-restore-help";
-function readRestoreHelp(): boolean {
-  if (typeof window === "undefined") return true;
-  try {
-    return window.localStorage.getItem(RESTORE_HELP_KEY) !== "0";
-  } catch {
-    return true;
-  }
 }
 
 interface MultiPassagePasteProps {
@@ -40,27 +29,6 @@ interface MultiPassagePasteProps {
  */
 export function MultiPassagePaste({ onSubmitRows, saving }: MultiPassagePasteProps) {
   const [rows, setRows] = useState<PasteRowData[]>(() => [makeEmptyRow()]);
-
-  // SSR-stable default (open); apply the stored preference after mount. Reading
-  // localStorage post-mount (not in the initializer) avoids a hydration mismatch
-  // when the user has previously dismissed the panel.
-  const [showRestoreHelp, setShowRestoreHelp] = useState(true);
-  useEffect(() => {
-    const stored = readRestoreHelp();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- browser-only value, post-mount sync
-    if (!stored) setShowRestoreHelp(false);
-  }, []);
-  const toggleRestoreHelp = useCallback(() => {
-    setShowRestoreHelp((v) => {
-      const next = !v;
-      try {
-        window.localStorage.setItem(RESTORE_HELP_KEY, next ? "1" : "0");
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
 
   const updateRow = (localId: string, patch: Partial<PasteRowData>) =>
     setRows((prev) =>
@@ -125,8 +93,6 @@ export function MultiPassagePaste({ onSubmitRows, saving }: MultiPassagePastePro
             disabled={saving}
             onSplit={(chunks) => splitRow(row.localId, chunks)}
             grow={rows.length === 1}
-            showRestoreHelp={showRestoreHelp}
-            onToggleRestoreHelp={toggleRestoreHelp}
           />
         ))}
       </div>
