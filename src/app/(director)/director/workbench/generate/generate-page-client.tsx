@@ -978,22 +978,44 @@ export function GeneratePageClient({
       passageIds,
       jobId,
       partial,
+      expectedCount,
+      resolvedCount,
+      complete,
     }: {
       passageIds: string[];
       jobId: string;
       partial: boolean;
+      expectedCount: number;
+      resolvedCount: number;
+      complete: boolean;
     }) => {
       void loadPassages().then(() => {
         setPassageSearch("");
         setSelectedCollectionId("");
         setAnalysisStatusFilter("all");
         setIntakeView("library");
-        clearExtractionPendingRef.current(jobId);
+        if (complete) {
+          clearExtractionPendingRef.current(jobId);
+        }
         if (passageIds.length === 0) {
           toast.message(
             partial
               ? "일부 페이지만 추출됐어요. 작업 큐에서 확인하세요."
               : "추출은 끝났지만 등록할 지문이 없습니다.",
+          );
+          return;
+        }
+        if (!complete) {
+          const missing = Math.max(1, expectedCount - resolvedCount);
+          toast.warning(
+            `추출된 지문 ${resolvedCount}/${expectedCount}개만 등록됐습니다. 남은 ${missing}개는 작업 큐 또는 자료 관리에서 확인해주세요.`,
+            {
+              action: {
+                label: "등록된 지문 선택",
+                onClick: () => setSelectedIds(new Set(passageIds)),
+              },
+              duration: 14000,
+            },
           );
           return;
         }

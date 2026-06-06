@@ -20,7 +20,7 @@ export function ExtractionLoadingCards({
   pending.forEach((p) => {
     const count = Math.max(1, p.count);
     for (let i = 0; i < count; i += 1) {
-      cards.push({ key: `${p.jobId}-${i}`, index: cards.length });
+      cards.push({ key: `${p.jobId ?? p.id}-${i}`, index: cards.length });
     }
   });
 
