@@ -95,7 +95,7 @@ interface ExtractionManageClientProps {
   initialCollectionMembership: Record<string, Set<string>>;
   /** When true, drop the page-bleed wrapper (-m-6) and render inside a
    *  clipped container that fits its parent. Used when embedding this
-   *  surface as a left-column picker (e.g. in 지문 분석 - 새 지문 등록). */
+   *  surface as a left-column picker (e.g. in 학습지 생성 - 새 지문 등록). */
   embedded?: boolean;
   /** When provided, clicking a draft card calls this callback instead of
    *  opening the built-in DraftDetailModal. Used by embedders that want to

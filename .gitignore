@@ -109,6 +109,10 @@ google-credentials*.json
 /scripts/_dump-*
 /scripts/_step-*
 /scripts/bench-*
+# same scratch diagnostics when dropped at repo root
+/_diag-*
+/_dump-*
+/_step-*
 
 # demo screen recordings (large binaries)
 /public/recordings/*.webm

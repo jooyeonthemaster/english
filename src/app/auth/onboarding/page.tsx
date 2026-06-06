@@ -156,7 +156,7 @@ function OnboardingInner() {
         return;
       }
 
-      router.replace("/director");
+      router.replace("/director/workbench/questions/generate");
       router.refresh();
     } catch {
       setError("가입 처리 중 오류가 발생했습니다.");

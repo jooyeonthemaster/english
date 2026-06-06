@@ -5,8 +5,8 @@ import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 
 /**
  * Resizable / collapsible two-pane workspace shell that mirrors the
- * passage-analysis (지문분석) form-section chrome: a rounded card with a
- * header row, a horizontally split body whose LEFT pane (지문 관리) can be
+ * passage-analysis (학습지생성) form-section chrome: a rounded card with a
+ * header row, a horizontally split body whose LEFT pane (학습지 관리) can be
  * resized and collapsed, a flex-1 RIGHT pane (작업대), and a bottom handle
  * that resizes the overall body height.
  */
@@ -75,7 +75,7 @@ function readStoredCollapsed(): boolean {
 
 interface WorkspaceShellProps {
   header: ReactNode;
-  /** LEFT pane content — the 지문 관리 panel. */
+  /** LEFT pane content — the 학습지 관리 panel. */
   left: ReactNode;
   /** RIGHT pane content — the 문제 생성 작업대. */
   right: ReactNode;
@@ -252,7 +252,7 @@ export function WorkspaceShell({
           className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
           style={{ height: `${bodyHeight}px` }}
         >
-          {/* LEFT: 지문 관리 panel (collapsible / resizable) */}
+          {/* LEFT: 학습지 관리 panel (collapsible / resizable) */}
           {leftPaneOpen ? (
             <>
               <div

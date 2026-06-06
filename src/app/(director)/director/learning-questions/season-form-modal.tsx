@@ -14,7 +14,7 @@ import { SEASON_TYPES, GRADE_LEVELS } from "@/lib/learning-constants";
 import type { Season } from "./season-manager-types";
 
 // ---------------------------------------------------------------------------
-// Season Form Modal (Create / Edit 통합, 지문 관리 포함)
+// Season Form Modal (Create / Edit 통합, 학습지 관리 포함)
 // ---------------------------------------------------------------------------
 
 export function SeasonFormModal({ mode, season, onClose, onSaved }: {
@@ -32,7 +32,7 @@ export function SeasonFormModal({ mode, season, onClose, onSaved }: {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(season?.passages.map((p) => p.id) ?? []));
   const [searchPassage, setSearchPassage] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  // 수정 모드 지문 관리용
+  // 수정 모드 학습지 관리용
   const [editPassages, setEditPassages] = useState<{ id: string; title: string }[]>(
     season?.passages.map((p) => ({ id: p.id, title: p.title })) ?? []
   );
@@ -165,7 +165,7 @@ export function SeasonFormModal({ mode, season, onClose, onSaved }: {
             </div>
           )}
 
-          {/* 수정 모드: 지문 관리 (추가/제거/순서) */}
+          {/* 수정 모드: 학습지 관리 (추가/제거/순서) */}
           {mode === "edit" && (
             <div>
               <div className="flex items-center justify-between mb-2">

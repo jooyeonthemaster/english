@@ -536,7 +536,7 @@ export async function addTutorProgramPassagesAction(
 
   const validPrepared = prepared.filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
   if (validPrepared.length === 0) {
-    return { ok: false, error: "지문 분석 데이터를 학습 활동으로 변환하지 못했어요." };
+    return { ok: false, error: "학습지 생성 데이터를 학습 활동으로 변환하지 못했어요." };
   }
 
   await prisma.$transaction(

@@ -194,7 +194,7 @@ export function PassageCardGrid({
     string | null
   >(null);
   const passageDragRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  // 마키(영역 드래그) 시작 영역을 "지문 관리" 패널 전체(헤더·폴더·필터·그리드)로 넓힌다.
+  // 마키(영역 드래그) 시작 영역을 "학습지 관리" 패널 전체(헤더·폴더·필터·그리드)로 넓힌다.
   // 아래 "생성/검수결과" 패널과는 boundary 가 분리돼 서로 섞이지 않는다.
   const marqueeBoundaryRef = useRef<HTMLDivElement>(null);
   // 네이티브 드래그(폴더 이동)는 손잡이 엘리먼트에만 등록한다 → 카드 본문은 영역 선택용.
@@ -604,7 +604,7 @@ export function PassageCardGrid({
           </span>
           <div className="flex min-w-0 flex-1 items-center gap-1.5">
             <span className="shrink-0 truncate text-[12px] font-medium text-slate-400">
-              지문 관리 ·
+              학습지 관리 ·
             </span>
             <button
               type="button"
@@ -1133,7 +1133,7 @@ export function PassageCardGrid({
             </span>
           </div>
         ) : (
-          // boundaryRef: "지문 관리" 패널 전체에서 드래그를 시작할 수 있게 한다(카드만 선택).
+          // boundaryRef: "학습지 관리" 패널 전체에서 드래그를 시작할 수 있게 한다(카드만 선택).
           <DragSelect
             className="min-h-full"
             value={selectedIds}

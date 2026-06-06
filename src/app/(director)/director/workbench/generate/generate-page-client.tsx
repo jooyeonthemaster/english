@@ -913,7 +913,7 @@ export function GeneratePageClient({
   // user can generate right away. Loops the proven single-passage action so the
   // shared SourceMaterial/ExtractionJob lineage stays identical; passageOrder is
   // assigned sequentially per academy by the action. They show up in 추출된 자료
-  // 관리 / 지문 분석 / 분석된 지문 관리 lists immediately.
+  // 관리 / 학습지 생성 / 분석된 학습지 관리 lists immediately.
   const handleCreatePastedPassages = useCallback(
     async (rows: { title: string; content: string }[]) => {
       const cleaned = rows
@@ -1301,7 +1301,7 @@ export function GeneratePageClient({
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
       <main className="flex w-full min-w-0 flex-col gap-4">
-        {/* ═══ TOP SECTION: 지문 관리(좌) + 문제생성 작업대(우) ═══ */}
+        {/* ═══ TOP SECTION: 학습지 관리(좌) + 문제생성 작업대(우) ═══ */}
         <WorkspaceShell
           leftLabel="지문"
           header={
@@ -1635,7 +1635,7 @@ export function GeneratePageClient({
           <div className="bg-white rounded-xl px-6 py-4 shadow-xl flex items-center gap-3">
             <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
             <span className="text-[13px] text-slate-700 font-medium">
-              지문 분석 데이터 로딩 중...
+              학습지 생성 데이터 로딩 중...
             </span>
           </div>
         </div>

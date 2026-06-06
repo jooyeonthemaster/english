@@ -242,7 +242,7 @@ export async function POST(request: NextRequest) {
     if (!passage.analysis?.analysisData) {
       await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Analysis data missing", creditCost);
       return NextResponse.json(
-        { error: "지문 분석을 먼저 완료해주세요." },
+        { error: "학습지 생성을 먼저 완료해주세요." },
         { status: 400 },
       );
     }

@@ -86,7 +86,7 @@ export default async function PassageReportsListPage({ params }: PageProps) {
           </span>
         ) : (
           <span style={{ alignSelf: "center", fontSize: 12, color: "rgb(71, 85, 105)" }}>
-            지문 분석을 먼저 완료하면 더 풍부한 자료가 자동으로 채워집니다
+            학습지 생성을 먼저 완료하면 더 풍부한 자료가 자동으로 채워집니다
           </span>
         )}
       </div>

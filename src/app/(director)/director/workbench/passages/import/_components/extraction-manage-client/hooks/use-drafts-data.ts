@@ -256,7 +256,7 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
   useEffect(() => {
     return startAdaptivePoll({
       activeMs: 30_000,
-      idleMs: 30_000,
+      idleMs: 5 * 60_000,
       run: async (signal) => {
         try {
           const res = await fetch("/api/extraction/jobs?limit=200", {

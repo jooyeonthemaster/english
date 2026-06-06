@@ -218,7 +218,7 @@ export function PassageGroupedView({
           조건에 맞는 분석된 지문이 없습니다.
         </p>
         <p className="text-[12px] text-slate-400 mt-1">
-          지문 분석 단계를 거친 지문에서 생성된 문제만 표시됩니다.
+          학습지 생성 단계를 거친 지문에서 생성된 문제만 표시됩니다.
         </p>
       </div>
     );

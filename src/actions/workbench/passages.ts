@@ -16,7 +16,7 @@ import type {
 // ---------------------------------------------------------------------------
 // Pasted passages are filed under ONE shared per-academy text material so they
 // surface as 추출된 자료 (extracted material) — a text source with no image —
-// in 추출된 자료 관리 / 지문 분석 lists, exactly like OCR-extracted material.
+// in 추출된 자료 관리 / 학습지 생성 lists, exactly like OCR-extracted material.
 
 /** Label shown on the shared bucket's material card / source material. */
 const DIRECT_INPUT_MATERIAL_LABEL = "직접 붙여넣은 지문";
@@ -342,7 +342,7 @@ export async function createWorkbenchPassage(
 
 /**
  * Create a directly-pasted passage AND register it as 추출된 자료 (extracted
- * material) so it appears in 추출된 자료 관리 / 지문 분석 lists like OCR material —
+ * material) so it appears in 추출된 자료 관리 / 학습지 생성 lists like OCR material —
  * just a TEXT source with no image assigned.
  *
  * Everything is filed under ONE shared per-academy bucket:

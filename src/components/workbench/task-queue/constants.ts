@@ -2,7 +2,7 @@ import type { TaskDomain, TaskStatus } from "./types";
 
 export const DOMAIN_LABELS: Record<TaskDomain, string> = {
   extraction: "자료 추출",
-  "passage-analysis": "지문 분석",
+  "passage-analysis": "학습지 생성",
   "question-generation": "문제 생성",
   "exam-generation": "시험지 생성",
   webtoon: "웹툰 생성",

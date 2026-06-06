@@ -664,7 +664,7 @@ export function PassageListClient({
                 treatRootAsFolder
                 pageHeader={{
                   icon: <FileText className="h-3.5 w-3.5" />,
-                  parentLabel: "지문 관리",
+                  parentLabel: "학습지 관리",
                   title: "전체 지문",
                   totalCount,
                   itemLabel: "지문",

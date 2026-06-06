@@ -163,7 +163,7 @@ export function useGenerationSessionQueue(): [
   useEffect(() => {
     return startAdaptivePoll({
       activeMs: 5_000,
-      idleMs: 30_000,
+      idleMs: 5 * 60_000,
       run: async (signal) => {
         try {
           const res = await fetch(

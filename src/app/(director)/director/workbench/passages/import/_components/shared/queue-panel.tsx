@@ -60,7 +60,7 @@ export function QueuePanel({
   useEffect(() => {
     return startAdaptivePoll({
       activeMs: 10_000,
-      idleMs: 30_000,
+      idleMs: 5 * 60_000,
       run: async (signal) => {
         const next = await fetchJobs(signal);
         if (next === null || signal.aborted) return null;

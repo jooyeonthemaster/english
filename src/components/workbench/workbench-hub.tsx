@@ -76,7 +76,7 @@ export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
 
       {/* Workflow Cards — 2x2 grid */}
       <div className="grid grid-cols-2 gap-5">
-        {/* 지문 관리 */}
+        {/* 학습지 관리 */}
         <Link href="/director/workbench/passages" className="group">
           <div className="bg-white rounded-2xl border border-slate-200 p-6 hover:border-blue-200 hover:shadow-md transition-all h-full flex flex-col">
             <div className="flex items-start justify-between mb-3">
@@ -86,7 +86,7 @@ export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
               <ChevronRight className="w-4 h-4 text-slate-200 group-hover:text-slate-400 mt-1.5 transition-colors" />
             </div>
             <h3 className="text-[18px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
-              지문 관리
+              학습지 관리
             </h3>
             <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed flex-1">
               영어 지문을 등록하고 AI가 어휘·어법·문장별 읽기 포인트를 자동 분석합니다.

@@ -228,7 +228,7 @@ function ProductDashboard() {
                 <span className="hidden text-[13px] font-black text-slate-950 sm:block">SMOAT</span>
               </div>
               <div className="space-y-2">
-                {["지문 분석", "문항 생성", "시험지", "보관함"].map((item, index) => (
+                {["학습지 생성", "문항 생성", "시험지", "보관함"].map((item, index) => (
                   <div
                     key={item}
                     className={`flex h-9 items-center gap-2 rounded-xl px-2 text-[11px] font-black sm:text-[12px] ${
@@ -389,7 +389,7 @@ export function HeroScene() {
       <div className="relative z-10 mx-auto flex h-full max-w-[1220px] flex-col items-center justify-start px-5 sm:px-8">
         <div className="mx-auto max-w-[900px] text-center mt-4 sm:mt-6">
           <h1 className="text-4xl font-black leading-[1.15] tracking-tight text-slate-950 sm:text-5xl lg:text-7xl drop-shadow-sm break-keep">
-            지문 분석부터 시험지까지,
+            학습지 생성부터 시험지까지,
             <br className="hidden sm:block" />
             <span className="text-blue-600">SMOAT가 한 번에 완성</span>합니다
           </h1>
@@ -405,7 +405,7 @@ export function HeroScene() {
               지금 안 써보면 유료 전환 전에 바로 놓칩니다.
             </p>
             <p className="mt-2 text-[15px] font-black leading-7 text-slate-700 sm:text-[18px]">
-              영어 지문 분석, 출제 포인트, 시험지 생성까지{" "}
+              영어 학습지 생성, 출제 포인트, 시험지 생성까지{" "}
               <span className="rounded-lg bg-yellow-300 px-2 py-0.5 text-blue-700">전부 먼저 써보고 판단하세요!!!</span>
             </p>
           </div>

@@ -29,7 +29,7 @@ function CompleteInner() {
         setError("bridge_failed");
         return;
       }
-      router.replace("/director");
+      router.replace("/director/workbench/questions/generate");
       router.refresh();
     })();
   }, [token, router]);

@@ -41,7 +41,7 @@ export function usePassageAnalysis({
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          errorData.error || "지문 분석 중 오류가 발생했습니다."
+          errorData.error || "학습지 생성 중 오류가 발생했습니다."
         );
       }
 

@@ -46,14 +46,18 @@ export function useTaskList({
   }, [scope]);
 
   useEffect(() => {
+    if (scope === "all") {
+      setTasks([]);
+      setLoading(false);
+      return;
+    }
+
     const adapters =
-      scope === "all"
-        ? ALL_ADAPTERS
-        : ALL_ADAPTERS.filter((a) => a.domain === scope);
+      ALL_ADAPTERS.filter((a) => a.domain === scope);
 
     return startAdaptivePoll({
       activeMs: POLL_INTERVAL_MS,
-      idleMs: 30_000,
+      idleMs: 5 * 60_000,
       run: async (signal) => {
         setLoading(true);
         try {

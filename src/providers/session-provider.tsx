@@ -5,7 +5,7 @@ import { QueryProvider } from "./query-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider>
+    <SessionProvider refetchOnWindowFocus={false}>
       <ThemeProvider
         attribute="class"
         defaultTheme="light"
