@@ -11,7 +11,7 @@ export const similarExamStageSchema = z.enum([
   "FAILED",
 ]);
 
-const difficultySchema = z.enum(["BASIC", "INTERMEDIATE", "KILLER"]);
+export const difficultySchema = z.enum(["BASIC", "INTERMEDIATE", "KILLER"]);
 
 export const stimulusTypeSchema = z.enum([
   "PASSAGE",
@@ -61,7 +61,7 @@ export type GenerationSubType = z.infer<typeof generationSubTypeSchema>;
 // Per-slot structured generation settings. These map directly onto the engine's
 // `QuestionTypeGenerationSettings` (see `src/lib/question-type-generation-settings.ts`)
 // during plan aggregation — no free-text re-parsing required.
-const slotTypeSettingsSchema = z
+export const slotTypeSettingsSchema = z
   .object({
     // GRAMMAR_ERROR: number of marked judgment positions (5~10) and answers (1~markerCount).
     grammarMarkerCount: z.number().int().min(5).max(10).nullable().optional(),

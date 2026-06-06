@@ -101,6 +101,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "문제 생성", href: `${basePath}/workbench/questions/generate` },
             { label: "문제 관리", href: `${basePath}/workbench/questions` },
+            { label: "동형 문제 생성", href: `${basePath}/workbench/questions/similar` },
           ],
         },
         {

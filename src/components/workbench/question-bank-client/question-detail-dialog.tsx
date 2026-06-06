@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckCircle2, Loader2, Trash2, X, XCircle } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Loader2, Sparkles, Trash2, X, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import {
@@ -8,6 +9,10 @@ import {
   ReviewStatusStamp,
   type QuestionCardItem,
 } from "@/components/workbench/question-card";
+import {
+  SimilarQuestionAnalysisModal,
+  type QAnalysis,
+} from "@/app/(director)/director/workbench/questions/similar/similar-question-analysis-modal";
 
 type DetailQuestion = QuestionCardItem & {
   passage:
@@ -52,11 +57,21 @@ export function QuestionDetailDialog({
   onUnapprove,
   onDelete,
 }: QuestionDetailDialogProps) {
+  const [analysisOpen, setAnalysisOpen] = useState(false);
   if (!open) return null;
 
   const analysisData = parseAnalysisData(question?.passage?.analysis?.analysisData);
+  // 동형 문제 생성물이면 원본 문항 분석(structuredData._similarSourceAnalysis)을 노출.
+  const structured = parseAnalysisData(question?.structuredData) as
+    | Record<string, unknown>
+    | null;
+  const similarAnalysis: QAnalysis | null =
+    structured && typeof structured === "object" && structured._similarSourceAnalysis
+      ? (structured._similarSourceAnalysis as QAnalysis)
+      : null;
 
   return (
+    <>
     <div className="fixed inset-0 z-50 flex items-stretch justify-center">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
@@ -72,6 +87,16 @@ export function QuestionDetailDialog({
           <div className="flex shrink-0 items-center gap-2">
             {question ? (
               <>
+                {similarAnalysis ? (
+                  <button
+                    type="button"
+                    onClick={() => setAnalysisOpen(true)}
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-200 bg-blue-50/60 px-2.5 text-[11px] font-semibold text-blue-700 shadow-none transition-colors hover:border-blue-300 hover:bg-blue-50"
+                  >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    분석 정보
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => onDelete(question.id)}
@@ -174,5 +199,12 @@ export function QuestionDetailDialog({
         ) : null}
       </div>
     </div>
+      {analysisOpen ? (
+        <SimilarQuestionAnalysisModal
+          analysis={similarAnalysis}
+          onClose={() => setAnalysisOpen(false)}
+        />
+      ) : null}
+    </>
   );
 }

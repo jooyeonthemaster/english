@@ -881,6 +881,10 @@ model Question {
   setId String? // denormalized — fast set filtering without a join
   inSet Boolean @default(false)
 
+  // ── 동형 문제 생성 잡 귀속 (nullable — 동형 생성분만 채워짐) ──
+  // 동시 실행 job 결과를 createdAt 범위가 아니라 jobId 로 정확히 묶기 위한 비정규화 컬럼.
+  similarQuestionGenJobId String? // SimilarQuestionGenerationJob.id (FK 미설정, 인덱스만)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -903,6 +907,7 @@ model Question {
   @@index([sourceMaterialId])
   @@index([bundleId])
   @@index([setId])
+  @@index([similarQuestionGenJobId])
   @@map("questions")
 }
 
@@ -1010,6 +1015,44 @@ model SimilarExamGenerationJob {
   @@index([academyId, createdAt])
   @@index([generatedExamId])
   @@map("similar_exam_generation_jobs")
+}
+
+// 동형 문제 생성(단일 문항 → 자료풀 M×N) 백그라운드 작업.
+// 트리거 데브를 쓰지 않고 앱(Node) 인-프로세스 워커가 처리한다(개발 서버 한정).
+model SimilarQuestionGenerationJob {
+  id          String @id @default(cuid())
+  academyId   String
+  createdById String
+
+  status String @default("PENDING") // PENDING | PROCESSING | COMPLETED | FAILED
+
+  // 참조 문항(한 페이지 이미지) — base64. 워커가 분석에 사용. (검증용으로 분석 후에도 보존)
+  referenceImage     String @db.Text
+  referenceMediaType String @default("image/jpeg")
+  // docai 모드에서 Document AI 가 추출해 분석(Gemini)에 넘긴 OCR 텍스트 — 검증용(분석이 본 입력).
+  referenceOcrText String? @db.Text
+  // 선택 지문 풀(passageId[]) + 학년.
+  passageIds Json
+  gradeInfo  String?
+
+  referenceCount Int @default(0) // M (분석 후 채움)
+  passageCount   Int @default(0) // N
+  totalCount     Int @default(0) // 시도 대상(M×N)
+  savedCount     Int @default(0)
+  skippedCount   Int @default(0)
+  skipSummary    Json?
+
+  errorMessage String? @db.Text
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([academyId, status])
+  @@index([academyId, createdAt])
+  @@map("similar_question_generation_jobs")
 }
 
 // ============================================================================

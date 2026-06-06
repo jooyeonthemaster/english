@@ -61,6 +61,27 @@ import {
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
 import { QuestionDetailDialog } from "./question-bank-client/question-detail-dialog";
+import {
+  SimilarQuestionAnalysisModal,
+  type QAnalysis,
+} from "@/app/(director)/director/workbench/questions/similar/similar-question-analysis-modal";
+
+// 동형 문제 생성물이면 원본 문항 분석(structuredData._similarSourceAnalysis)을 추출.
+// 일반 문항은 null → '분석 정보' 버튼이 렌더되지 않는다(동형 한정).
+function getSimilarSourceAnalysis(q: { structuredData?: unknown }): QAnalysis | null {
+  let sd: unknown = q?.structuredData;
+  if (typeof sd === "string") {
+    try {
+      sd = JSON.parse(sd);
+    } catch {
+      return null;
+    }
+  }
+  if (sd && typeof sd === "object" && (sd as Record<string, unknown>)._similarSourceAnalysis) {
+    return (sd as Record<string, unknown>)._similarSourceAnalysis as QAnalysis;
+  }
+  return null;
+}
 import { QuestionFiltersToolbar } from "./question-bank-client/filters-toolbar";
 import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 
@@ -232,6 +253,8 @@ export function QuestionBankClient({
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
+  // 동형 생성물 카드의 '분석 정보' 모달(동형 한정).
+  const [sourceAnalysis, setSourceAnalysis] = useState<QAnalysis | null>(null);
 
   // URL filters
   const {
@@ -1105,6 +1128,7 @@ export function QuestionBankClient({
                         />
                       );
                     }
+                    const similarAnalysis = getSimilarSourceAnalysis(q);
                     return (
                       <QuestionBankCard
                         key={q.id}
@@ -1118,6 +1142,9 @@ export function QuestionBankClient({
                         onToggleStar={() => handleToggleStar(q.id)}
                         onDetail={() => openDetail(q.id)}
                         onEdit={() => editor.openEditor(q.id)}
+                        onShowAnalysis={
+                          similarAnalysis ? () => setSourceAnalysis(similarAnalysis) : undefined
+                        }
                         viewSize={viewSize}
                         cardClickSelects
                         showDetailButton
@@ -1173,6 +1200,13 @@ export function QuestionBankClient({
         onUnapprove={handleUnapprove}
         onDelete={handleDelete}
       />
+
+      {sourceAnalysis ? (
+        <SimilarQuestionAnalysisModal
+          analysis={sourceAnalysis}
+          onClose={() => setSourceAnalysis(null)}
+        />
+      ) : null}
 
       <EditQuestionDialog
         open={editor.editDialogOpen}

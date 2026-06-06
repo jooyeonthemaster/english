@@ -35,6 +35,10 @@ interface SimilarExamCenterPreviewProps {
   error: string | null;
   onPickFiles: (files: FileList | File[]) => void;
   onRequestFileDialog: () => void;
+  /** 빈 상태 문구 — 미지정 시 시험지 생성 기본 문구. (동형 문제 생성 등 재사용) */
+  emptyTitle?: string;
+  emptyHint?: string;
+  pickLabel?: string;
 }
 
 function readStoredThumbnailsCollapsed() {
@@ -54,6 +58,9 @@ export function SimilarExamCenterPreview({
   error,
   onPickFiles,
   onRequestFileDialog,
+  emptyTitle = "분석할 시험지 PDF 또는 이미지 입력",
+  emptyHint = "업로드하면 이 영역에 미리보기가 표시됩니다. 오른쪽에서 [시험지 생성 시작]을 눌러야 작업이 시작됩니다.",
+  pickLabel = "시험지 선택",
 }: SimilarExamCenterPreviewProps) {
   const [thumbnailsCollapsed, setThumbnailsCollapsed] = useState(
     readStoredThumbnailsCollapsed,
@@ -312,15 +319,14 @@ export function SimilarExamCenterPreview({
                   strokeWidth={1.6}
                 />
                 <span className="text-lg font-semibold text-slate-950">
-                  분석할 시험지 PDF 또는 이미지 입력
+                  {emptyTitle}
                 </span>
                 <span className="mt-2 max-w-[520px] text-sm leading-6 text-slate-500">
-                  업로드하면 이 영역에 미리보기가 표시됩니다. 오른쪽에서
-                  [시험지 생성 시작]을 눌러야 작업이 시작됩니다.
+                  {emptyHint}
                 </span>
                 <span className="mt-5 inline-flex h-10 items-center gap-2 rounded-md bg-blue-600 px-4 text-sm font-semibold text-white">
                   <FileUp className="size-4" />
-                  시험지 선택
+                  {pickLabel}
                 </span>
               </>
             )}

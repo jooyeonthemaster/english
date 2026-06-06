@@ -93,6 +93,7 @@ export function QuestionBankCard({
   onToggleStar,
   onDetail,
   onEdit,
+  onShowAnalysis,
   viewSize = "lg",
   showManagementActions = true,
   showStar = true,
@@ -119,6 +120,8 @@ export function QuestionBankCard({
   onToggleStar?: () => void;
   onDetail?: () => void;
   onEdit?: () => void;
+  // 동형 문제 생성 전용: 전달된 경우에만 '분석 정보' 버튼이 보인다(동형 한정).
+  onShowAnalysis?: () => void;
   viewSize?: "lg" | "md" | "sm";
   showManagementActions?: boolean;
   showStar?: boolean;
@@ -569,13 +572,27 @@ export function QuestionBankCard({
         <ExplanationSection
           explanation={q.explanation}
           rightSlot={
-            showDetailButton && (onDetail || onEdit) ? (
-              <DetailActionButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  (onDetail ?? onEdit)?.();
-                }}
-              />
+            (showDetailButton && (onDetail || onEdit)) || onShowAnalysis ? (
+              <div className="flex items-center gap-1.5">
+                {showDetailButton && (onDetail || onEdit) ? (
+                  <DetailActionButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      (onDetail ?? onEdit)?.();
+                    }}
+                  />
+                ) : null}
+                {onShowAnalysis ? (
+                  <DetailActionButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShowAnalysis();
+                    }}
+                  >
+                    분석 정보
+                  </DetailActionButton>
+                ) : null}
+              </div>
             ) : undefined
           }
         />
