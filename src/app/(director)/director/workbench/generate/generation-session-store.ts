@@ -16,6 +16,7 @@ interface AiJobRow {
   id: string;
   status: string;
   title: string;
+  passageId?: string | null;
   mode: string | null;
   questionType: string | null;
   requestedCount: number;
@@ -55,7 +56,6 @@ function jobToQueueItem(
   job: AiJobRow,
   { includeTerminalFailures = false }: { includeTerminalFailures?: boolean } = {},
 ): QueueItem | null {
-  if (!job.passage) return null;
   const terminalFailure = job.status === "FAILED" || job.status === "CANCELLED";
   if (terminalFailure && !includeTerminalFailures) return null;
 
@@ -70,6 +70,14 @@ function jobToQueueItem(
   const questionIds = Array.isArray(result.questionIds)
     ? result.questionIds.filter((id): id is string => typeof id === "string")
     : [];
+  const hasPassageSnapshot = !!job.passage;
+  if (!hasPassageSnapshot && questions.length === 0 && !terminalFailure) {
+    return null;
+  }
+
+  const passageId = job.passage?.id ?? job.passageId ?? "";
+  if (!passageId) return null;
+
   const progressKey = mode === "auto" ? "auto" : questionType || "manual";
   const progressValue =
     job.status === "COMPLETED" || job.status === "PARTIAL"
@@ -80,17 +88,17 @@ function jobToQueueItem(
 
   return {
     id: job.id,
-    passageId: job.passage.id,
-    passageTitle: job.passage.title || job.title,
-    passageContent: job.passage.content,
+    passageId,
+    passageTitle: job.passage?.title || job.title,
+    passageContent: job.passage?.content ?? "",
     createdAt: job.createdAt,
     passageMeta: {
-      school: job.passage.school?.name,
-      grade: job.passage.grade,
-      semester: job.passage.semester,
-      unit: job.passage.unit,
+      school: job.passage?.school?.name,
+      grade: job.passage?.grade ?? null,
+      semester: job.passage?.semester ?? null,
+      unit: job.passage?.unit ?? null,
     },
-    analysisData: parseAnalysis(job.passage.analysis?.analysisData),
+    analysisData: parseAnalysis(job.passage?.analysis?.analysisData),
     status:
       progressValue === "pending"
         ? "generating"
@@ -159,7 +167,7 @@ export function useGenerationSessionQueue(): [
       run: async (signal) => {
         try {
           const res = await fetch(
-            "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=100",
+            "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=100&view=summary",
             { credentials: "include", cache: "no-store", signal },
           );
           if (!res.ok) return null;

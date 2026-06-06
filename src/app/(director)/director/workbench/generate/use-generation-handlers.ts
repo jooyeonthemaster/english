@@ -22,8 +22,8 @@ import { useTaskQueue } from "@/components/workbench/task-queue";
 function readFastBatchConcurrency(): number {
   const raw = process.env.NEXT_PUBLIC_WORKBENCH_FAST_BATCH_CONCURRENCY;
   const parsed = raw ? Number(raw) : NaN;
-  if (!Number.isFinite(parsed)) return 8;
-  return Math.max(1, Math.min(20, Math.floor(parsed)));
+  if (!Number.isFinite(parsed)) return 5;
+  return Math.max(1, Math.min(5, Math.floor(parsed)));
 }
 
 const FAST_BATCH_CONCURRENCY = readFastBatchConcurrency();
@@ -252,7 +252,6 @@ function replaceQueueItemInPlace(
 
 interface ManualGenerationUnit {
   passage: PassageItem;
-  pAnalysis: any;
   questionType: string;
   questionTypeSettings?: unknown;
   tempId: string;
@@ -322,7 +321,7 @@ export function useGenerationHandlers({
           buildOptimisticItem({
             jobId: unit.tempId,
             passage: unit.passage,
-            analysisData: unit.pAnalysis,
+            analysisData: null,
             config: unit.config,
             progressKey: unit.questionType,
             createdAt: batchCreatedAt,
@@ -351,7 +350,7 @@ export function useGenerationHandlers({
               ...buildOptimisticItem({
                 jobId: result.jobId,
                 passage: unit.passage,
-                analysisData: unit.pAnalysis,
+                analysisData: null,
                 config: unit.config,
                 progressKey: unit.questionType,
               }),
@@ -448,13 +447,11 @@ export function useGenerationHandlers({
       const runId = Date.now();
 
       for (const p of selectedPassages) {
-        const pAnalysis = parsePassageAnalysis(p);
         for (const typeId of Object.keys(typeCounts).filter((k) => typeCounts[k] > 0)) {
           const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: p,
-              pAnalysis,
               questionType: typeId,
               questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
@@ -481,7 +478,6 @@ export function useGenerationHandlers({
       setSelectedIds(new Set());
       triggerRefresh();
       if (success > 0) {
-        loadSavedQuestions();
         toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
       }
       if (failed > 0) {
@@ -510,17 +506,16 @@ export function useGenerationHandlers({
         return {
           tempId,
           passage,
-          pAnalysis: parsePassageAnalysis(passage),
         };
       });
       const batchCreatedAt = new Date().toISOString();
 
       setSessionQueue((prev) => [
-        ...optimisticItems.map(({ tempId, passage, pAnalysis }) =>
+        ...optimisticItems.map(({ tempId, passage }) =>
           buildOptimisticItem({
             jobId: tempId,
             passage,
-            analysisData: pAnalysis,
+            analysisData: null,
             config: baseConfig,
             progressKey,
             createdAt: batchCreatedAt,
@@ -533,7 +528,7 @@ export function useGenerationHandlers({
       const results = await runWithConcurrency(
         optimisticItems,
         FAST_BATCH_CONCURRENCY,
-        async ({ tempId, passage, pAnalysis }) => {
+        async ({ tempId, passage }) => {
           try {
             const result = await createFastQuestionGenerationJob({
               passageId: passage.id,
@@ -548,7 +543,7 @@ export function useGenerationHandlers({
               ...buildOptimisticItem({
                 jobId: result.jobId,
                 passage,
-                analysisData: pAnalysis,
+                analysisData: null,
                 config: baseConfig,
                 progressKey,
               }),
@@ -587,7 +582,6 @@ export function useGenerationHandlers({
       setSelectedIds(new Set());
       triggerRefresh();
       if (success > 0) {
-        loadSavedQuestions();
         toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
       }
       if (failed > 0) {
@@ -672,7 +666,6 @@ export function useGenerationHandlers({
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: selectedPassage,
-              pAnalysis: analysisData,
               questionType: typeId,
               questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
@@ -688,7 +681,6 @@ export function useGenerationHandlers({
         const { success, failed } = await runManualUnitsWithFastPath(units);
         triggerRefresh();
         if (success > 0) {
-          loadSavedQuestions();
           toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
         }
         if (failed > 0) {
@@ -714,7 +706,7 @@ export function useGenerationHandlers({
           ...buildOptimisticItem({
             jobId: result.jobId,
             passage: selectedPassage,
-            analysisData,
+            analysisData: null,
             config: baseConfig,
             progressKey,
           }),
@@ -729,7 +721,6 @@ export function useGenerationHandlers({
           ...prev.filter((item) => item.id !== result.jobId),
         ]);
         triggerRefresh();
-        loadSavedQuestions();
         toast.success("\ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
         return;
       }

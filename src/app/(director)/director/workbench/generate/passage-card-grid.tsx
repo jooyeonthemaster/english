@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   draggable,
   dropTargetForElements,
@@ -24,7 +31,6 @@ import {
   Folder,
   FolderOpen,
   FolderX,
-  ClipboardPaste,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DetailActionButton } from "@/components/ui/detail-action-button";
@@ -44,7 +50,6 @@ import {
   type PassageSortOrder,
   countWords,
 } from "./generate-page-types";
-import { PastePassagePanel } from "./paste-passage-panel";
 import { DragSelect } from "@/components/ui/drag-select";
 import { DragHandle } from "@/components/ui/drag-handle";
 
@@ -123,16 +128,11 @@ interface PassageCardGridProps {
   selectionActionText?: string;
   selectionActionDisabled?: boolean;
 
-  // Direct paste — optional; only the question-generation page wires these.
-  // When omitted (e.g. the tutor program builder reuse), the paste UI is hidden.
-  pasteMode?: boolean;
-  onEnterPasteMode?: () => void;
-  onExitPasteMode?: () => void;
-  onCreatePastedPassage?: (title: string, content: string) => void;
-  pasteSaving?: boolean;
-
   // 지문별 "이미 생성된" 문제 수(실시간). 생략 시 서버 _count 만 사용한다.
   questionCountByPassage?: Map<string, number>;
+
+  // 추출 중인 지문 로딩 카드(이미지·PDF 추출). 카드 그리드 상단에 렌더한다.
+  loadingCards?: ReactNode;
 
   // Actions
   handleOpenAnalysisModal: (passageId: string) => void;
@@ -182,12 +182,8 @@ export function PassageCardGrid({
   handleBatchGenerate,
   selectionActionText,
   selectionActionDisabled,
-  pasteMode,
-  onEnterPasteMode,
-  onExitPasteMode,
-  onCreatePastedPassage,
-  pasteSaving,
   questionCountByPassage,
+  loadingCards,
   handleOpenAnalysisModal,
   onViewPassageContent,
 }: PassageCardGridProps) {
@@ -507,21 +503,6 @@ export function PassageCardGrid({
     return () => cleanupFns.forEach((cleanup) => cleanup());
   }, [childCollections, onMovePassagesToCollection, passageBulkAction]);
 
-  const pasteEnabled = !!onCreatePastedPassage && !!onEnterPasteMode;
-
-  // ── Direct-paste mode: swap the whole left panel for the paste panel ──
-  if (pasteEnabled && pasteMode && onCreatePastedPassage) {
-    return (
-      <div className="flex flex-col overflow-hidden bg-white border-r lg:border-r-0 border-slate-200/80 flex-1 min-w-0">
-        <PastePassagePanel
-          onSubmit={onCreatePastedPassage}
-          onCancel={() => onExitPasteMode?.()}
-          saving={!!pasteSaving}
-        />
-      </div>
-    );
-  }
-
   const renderFolderChip = (
     key: string,
     label: string,
@@ -665,8 +646,8 @@ export function PassageCardGrid({
             })}
           </div>
 
-          {/* 정렬 필터 + 검색 (팝오버) — "지문 직접 붙여넣기"는 폴더바 아래 풀폭 CTA로 분리(사용자 의도) */}
-          {(pasteEnabled || setPassageSortOrder) ? (
+          {/* 정렬 필터 + 검색 (팝오버) */}
+          {setPassageSortOrder ? (
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
             {setPassageSortOrder ? (
             <>
@@ -840,23 +821,6 @@ export function PassageCardGrid({
           </>
         ) : null}
       </div>
-
-      {/* Direct-paste CTA — 지문 직접 붙여넣기. 폴더바 아래 풀폭 강조 진입점(사용자 명시 의도: 길게 유지) */}
-      {pasteEnabled && (
-        <div className="px-5 pt-3 shrink-0">
-          <button
-            type="button"
-            onClick={() => onEnterPasteMode?.()}
-            className="group w-full h-11 rounded-xl flex items-center justify-center gap-2 bg-blue-600 text-white text-[13.5px] font-semibold shadow-sm shadow-blue-200/70 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-200 transition-all"
-          >
-            <ClipboardPaste className="w-4 h-4" />
-            지문 직접 붙여넣기
-            <span className="text-[11px] font-medium text-blue-100/90 group-hover:text-white/90">
-              · 추출·분석 없이 바로 문제 생성
-            </span>
-          </button>
-        </div>
-      )}
 
       {/* Search & filter bar */}
       <div className="px-5 py-3 border-b border-slate-100 shrink-0">
@@ -1150,6 +1114,8 @@ export function PassageCardGrid({
 
       {/* Passage card grid -- scrollable */}
       <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+        {/* 이미지·PDF 추출 중 지문 로딩 카드(완료되면 실제 카드로 교체) */}
+        {loadingCards}
         {loadingPassages ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
             <Loader2 className="w-5 h-5 animate-spin text-blue-500" />

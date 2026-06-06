@@ -34,6 +34,16 @@ import {
   type PassageSortOrder,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
+import {
+  IntakeSurface,
+  type IntakeView,
+  type IntakeTab,
+} from "./intake/intake-surface";
+import { GenerateUploadPanel } from "./intake/generate-upload-panel";
+import { useGenerateExtraction } from "./intake/use-generate-extraction";
+import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
+import { ExtractionDetailModal } from "./intake/extraction-detail-modal";
+import { useTaskQueue } from "@/components/workbench/task-queue/context";
 import { GenerationConfigPanel } from "./generation-config-panel";
 import { BottomQueueSection } from "./bottom-queue-section";
 import { useGenerationHandlers } from "./use-generation-handlers";
@@ -48,7 +58,6 @@ import {
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
-import { DIRECT_INPUT_PASSAGE_SOURCE } from "@/lib/passage-source";
 
 // ─── Helpers ─────────────────────────────────────────────
 
@@ -63,6 +72,7 @@ function derivePastedTitle(content: string): string {
 }
 
 const UNDO_TOAST_DURATION = 8000;
+const SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS = 1500;
 
 // ─── Component ───────────────────────────────────────────
 
@@ -74,6 +84,7 @@ export function GeneratePageClient({
   defaultMode?: "auto" | "manual";
 }) {
   const searchParams = useSearchParams();
+  const taskQueue = useTaskQueue();
 
   // ── Deep-link context (from /import or detail page) ──
   // Accept `?passageIds=cuid1,cuid2` for pre-selection,
@@ -133,8 +144,13 @@ export function GeneratePageClient({
   // ── Collections ──
   const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
-  // ── Direct paste mode (paste raw passage text → persist → select) ──
-  const [pasteMode, setPasteMode] = useState(false);
+  // ── Intake-first left panel (지문 추가 ↔ 내 지문) ──
+  // Default to the intake surface, unless the user deep-linked passageIds (then
+  // show the library so they see the pre-selection land).
+  const [intakeView, setIntakeView] = useState<IntakeView>(
+    initialPassageIdsRef.current.length > 0 ? "library" : "intake",
+  );
+  const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
   const [pasteSaving, setPasteSaving] = useState(false);
   const [passageBulkAction, setPassageBulkAction] = useState<
     "move" | "remove" | "delete" | null
@@ -209,6 +225,9 @@ export function GeneratePageClient({
   // 분석이 없는 지문은 "상세 보기" 시 보고서 생성 CTA 대신 원문 전체를 보여준다.
   const [contentModalPassage, setContentModalPassage] =
     useState<PassageItem | null>(null);
+
+  // 추출/입력 지문 "전체 보기" — 자료 추출 상세 모달(복원 근거 + 추출 이미지) 재사용.
+  const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
 
   // ── Saved questions from DB (persists across page visits) ──
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
@@ -807,7 +826,11 @@ export function GeneratePageClient({
   }, [loadingPassages, loadSavedQuestions]);
 
   useEffect(() => {
-    if (queueCounts.done > 0) loadSavedQuestions();
+    if (queueCounts.done <= 0) return;
+    const timeoutId = window.setTimeout(() => {
+      loadSavedQuestions();
+    }, SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS);
+    return () => window.clearTimeout(timeoutId);
   }, [queueCounts.done, loadSavedQuestions]);
 
   // ── Load saved prompts ──
@@ -885,21 +908,18 @@ export function GeneratePageClient({
     setSelectedIds(new Set());
   }, []);
 
-  // ── Direct paste handlers ──
-  const handleEnterPasteMode = useCallback(() => setPasteMode(true), []);
-  const handleExitPasteMode = useCallback(() => {
-    setPasteMode((prev) => (pasteSaving ? prev : false));
-  }, [pasteSaving]);
-
-  // Persist the pasted passage as a real Passage (academy-scoped, marked as
-  // "직접 입력") AND register it as 추출된 자료 (a shared TEXT material with no
-  // image), then select it so the user can generate questions right away.
-  // Questions link to it automatically via passageId during generation, and it
-  // shows up in 추출된 자료 관리 / 지문 분석 / 분석된 지문 관리 lists immediately.
-  const handleCreatePastedPassage = useCallback(
-    async (rawTitle: string, content: string) => {
-      const trimmed = content.trim();
-      if (trimmed.length < 20) {
+  // Persist N pasted passages (1번·2번·N) as real Passages (academy-scoped,
+  // "직접 입력") AND register each as 추출된 자료, then select them all so the
+  // user can generate right away. Loops the proven single-passage action so the
+  // shared SourceMaterial/ExtractionJob lineage stays identical; passageOrder is
+  // assigned sequentially per academy by the action. They show up in 추출된 자료
+  // 관리 / 지문 분석 / 분석된 지문 관리 lists immediately.
+  const handleCreatePastedPassages = useCallback(
+    async (rows: { title: string; content: string }[]) => {
+      const cleaned = rows
+        .map((r) => ({ title: r.title.trim(), content: r.content.trim() }))
+        .filter((r) => r.content.length >= 20);
+      if (cleaned.length === 0) {
         toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
         return;
       }
@@ -908,67 +928,36 @@ export function GeneratePageClient({
         const { createDirectInputPassageMaterial } = await import(
           "@/actions/workbench"
         );
-        const title = rawTitle.trim() || derivePastedTitle(trimmed);
-        const result = await createDirectInputPassageMaterial({
-          title,
-          content: trimmed,
-        });
-        if (!result?.success || !result.id) {
-          toast.error(result?.error || "지문 등록에 실패했습니다.");
+        const createdIds: string[] = [];
+        // Sequential (not parallel): the action assigns passageOrder = last+1,
+        // so concurrent calls could collide on the (jobId, passageOrder) unique.
+        for (const r of cleaned) {
+          const title = r.title || derivePastedTitle(r.content);
+          const result = await createDirectInputPassageMaterial({
+            title,
+            content: r.content,
+          });
+          if (result?.success && result.id) createdIds.push(result.id);
+        }
+        if (createdIds.length === 0) {
+          toast.error("지문 등록에 실패했습니다.");
           return;
         }
-        const newId = result.id;
 
-        // Refetch the academy passage list so the new passage becomes a
-        // canonical PassageItem (same shape the grid + generation expect).
-        let createdPassage: PassageItem | null = null;
-        try {
-          const res = await fetch(`/api/passages/list?academyId=${academyId}`);
-          const data = await res.json();
-          const list: PassageItem[] = Array.isArray(data.passages)
-            ? data.passages
-            : [];
-          setPassages(list);
-          if (data.filters) setFilterOptions(data.filters);
-          if (data.collections) setCollections(data.collections);
-          createdPassage = list.find((p) => p.id === newId) ?? null;
-        } catch {
-          /* list refresh is best-effort — fall back to a synthesized item */
-        }
-
-        // Fallback: if the refetch failed or didn't surface the new row, build a
-        // minimal PassageItem so generation can still proceed immediately.
-        if (!createdPassage) {
-          createdPassage = {
-            id: newId,
-            title,
-            grade: null,
-            semester: null,
-            unit: null,
-            publisher: null,
-            difficulty: null,
-            source: DIRECT_INPUT_PASSAGE_SOURCE,
-            school: null,
-            content: trimmed,
-            analysis: null,
-            collectionItems: [],
-          };
-          const synthesized = createdPassage;
-          setPassages((prev) =>
-            prev.some((p) => p.id === newId) ? prev : [synthesized, ...prev],
-          );
-        }
-
-        // Reset filters that would otherwise hide the freshly pasted (미분석) card,
-        // then select it as the sole target.
+        // Refetch the academy passage list in place so the new passages become
+        // canonical PassageItems (no full reload), then reset filters that would
+        // hide freshly pasted (미분석) cards, select all of them, and flip to the
+        // library so the user sees them land.
+        await loadPassages();
         setPassageSearch("");
         setSelectedCollectionId("");
         setAnalysisStatusFilter("all");
-        setSelectedIds(new Set([newId]));
-        setSelectedPassage(createdPassage);
-        setPasteMode(false);
+        setSelectedIds(new Set(createdIds));
+        setIntakeView("library");
         toast.success(
-          "지문이 등록되었습니다. 유형·난이도를 설정해 문제를 생성하세요.",
+          createdIds.length === cleaned.length
+            ? `${createdIds.length}개 지문이 등록되었습니다. 유형·난이도를 설정해 문제를 생성하세요.`
+            : `${createdIds.length}/${cleaned.length}개 지문이 등록되었습니다. 일부는 실패했습니다.`,
         );
       } catch {
         toast.error("지문 등록 중 오류가 발생했습니다.");
@@ -976,7 +965,85 @@ export function GeneratePageClient({
         setPasteSaving(false);
       }
     },
-    [academyId],
+    [loadPassages],
+  );
+
+  // ── Image/PDF extraction completion → drafts promoted to Passages ──
+  // Refetch the list in place so the new passages appear as cards, drop the
+  // job's loading cards (after the real ones are loaded → seamless), flip to the
+  // library, and offer "전체 선택" (opt-in, not auto — avoids a huge batch).
+  const clearExtractionPendingRef = useRef<(jobId: string) => void>(() => {});
+  const handleExtractionPromoted = useCallback(
+    ({
+      passageIds,
+      jobId,
+      partial,
+    }: {
+      passageIds: string[];
+      jobId: string;
+      partial: boolean;
+    }) => {
+      void loadPassages().then(() => {
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+        setIntakeView("library");
+        clearExtractionPendingRef.current(jobId);
+        if (passageIds.length === 0) {
+          toast.message(
+            partial
+              ? "일부 페이지만 추출됐어요. 작업 큐에서 확인하세요."
+              : "추출은 끝났지만 등록할 지문이 없습니다.",
+          );
+          return;
+        }
+        toast.success(
+          `추출된 ${passageIds.length}개 지문이 ‘내 지문’에 추가됐어요. 문제를 생성할 지문을 선택하세요.`,
+          {
+            action: {
+              label: "전체 선택",
+              onClick: () => setSelectedIds(new Set(passageIds)),
+            },
+            duration: 12000,
+          },
+        );
+      });
+    },
+    [loadPassages],
+  );
+
+  const {
+    beginJob: beginExtractionJob,
+    attachJob: attachExtractionJob,
+    failJob: failExtractionJob,
+    clearPending: clearExtractionPending,
+    pending: extractionPending,
+  } = useGenerateExtraction({ onPromoted: handleExtractionPromoted });
+  useEffect(() => {
+    clearExtractionPendingRef.current = clearExtractionPending;
+  }, [clearExtractionPending]);
+
+  // 추출 버튼을 누른 즉시 '내 지문'으로 넘어가 추출 중 로딩 카드를 띄우고, 작업 목록
+  // 드로어 탭을 'extraction'으로 맞춰 열면 바로 이 추출 작업이 보이게 한다.
+  const handleExtractionBegin = useCallback(
+    (id: string, count: number) => {
+      beginExtractionJob(id, count);
+      setIntakeView("library");
+      taskQueue.setScope("extraction");
+    },
+    [beginExtractionJob, taskQueue],
+  );
+  // 잡 생성됨(jobId) → 폴링 시작 + 작업 목록 즉시 새로고침 / 시작 실패(null) → 로딩 카드 제거.
+  const handleExtractionResult = useCallback(
+    (id: string, jobId: string | null) => {
+      if (jobId) {
+        attachExtractionJob(id, jobId);
+        taskQueue.triggerRefresh();
+      } else {
+        failExtractionJob(id);
+      }
+    },
+    [attachExtractionJob, failExtractionJob, taskQueue],
   );
 
   // ── Open analysis detail modal ──
@@ -1223,9 +1290,28 @@ export function GeneratePageClient({
             />
           }
           left={
-            /* ═══ LEFT PANEL: Passage cards ═══ */
-            <PassageCardGrid
-              passages={passages}
+            /* ═══ LEFT PANEL: 지문 추가(intake) ↔ 내 지문(library) ═══ */
+            <IntakeSurface
+              intakeView={intakeView}
+              setIntakeView={setIntakeView}
+              intakeTab={intakeTab}
+              setIntakeTab={setIntakeTab}
+              libraryCount={passages.length}
+              onSubmitPastedRows={handleCreatePastedPassages}
+              pasteSaving={pasteSaving}
+              upload={
+                <GenerateUploadPanel
+                  onBegin={handleExtractionBegin}
+                  onResult={handleExtractionResult}
+                  inFlightCount={extractionPending.length}
+                />
+              }
+              library={
+                <PassageCardGrid
+                  loadingCards={
+                    <ExtractionLoadingCards pending={extractionPending} />
+                  }
+                  passages={passages}
               filteredPassages={filteredPassages}
               filterOptions={filterOptions}
               collections={collections}
@@ -1266,14 +1352,11 @@ export function GeneratePageClient({
               genMode={genMode}
               totalQuestions={totalQuestions}
               handleBatchGenerate={handleBatchGenerate}
-              pasteMode={pasteMode}
-              onEnterPasteMode={handleEnterPasteMode}
-              onExitPasteMode={handleExitPasteMode}
-              onCreatePastedPassage={handleCreatePastedPassage}
-              pasteSaving={pasteSaving}
               questionCountByPassage={questionCountByPassage}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
-              onViewPassageContent={setContentModalPassage}
+              onViewPassageContent={setDetailPassage}
+                />
+              }
             />
           }
           right={
@@ -1509,12 +1592,20 @@ export function GeneratePageClient({
         />
       )}
 
-      {/* ─── 미분석 지문 전체 내용 모달 ─── */}
+      {/* ─── 미분석 지문 전체 내용 모달 (분석 모달 폴백용) ─── */}
       <PassageContentModal
         open={!!contentModalPassage}
         onClose={() => setContentModalPassage(null)}
         passage={contentModalPassage}
       />
+
+      {/* ─── 추출/입력 지문 "전체 보기" — 복원 근거 + 추출 이미지 상세 모달 ─── */}
+      {detailPassage && (
+        <ExtractionDetailModal
+          passage={detailPassage}
+          onClose={() => setDetailPassage(null)}
+        />
+      )}
 
       {/* Loading overlay for analysis modal fetch */}
       {loadingAnalysisModal && (
