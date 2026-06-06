@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Clock3, RefreshCw, Trash2 } from "lucide-react";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
+
 import { TERMINAL } from "./constants";
 import { formatDate } from "./format";
 import { JobStatusBadge } from "./job-status-badge";
@@ -24,26 +26,49 @@ export function QueuePanel({
   const [jobs, setJobs] = useState<QueueJob[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const fetchJobs = useCallback(
+    async (signal?: AbortSignal): Promise<QueueJob[] | null> => {
+      // thumbnails=0: this panel renders only name/status/counts — never the
+      // first-page image — so the signed thumbnail URLs were fetched and thrown
+      // away on every poll. Dropping them trims the payload with zero UI change.
+      const res = await fetch("/api/extraction/jobs?limit=50&thumbnails=0", {
+        credentials: "include",
+        cache: "no-store",
+        signal,
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as { jobs: QueueJob[] };
+      return data.jobs.filter((job) => job.mode === "PASSAGE_ONLY");
+    },
+    [],
+  );
+
   const loadJobs = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/extraction/jobs?limit=50", {
-        credentials: "include",
-        cache: "no-store",
-      });
-      if (!res.ok) return;
-      const data = (await res.json()) as { jobs: QueueJob[] };
-      setJobs(data.jobs.filter((job) => job.mode === "PASSAGE_ONLY"));
+      const next = await fetchJobs();
+      if (next) setJobs(next);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchJobs]);
 
+  // adaptive-poll replaces the always-on 10s setInterval: it backs off 10s→30s
+  // when nothing changes and PAUSES while the tab is hidden (this drawer is
+  // "always mounted ... polls in the background"), refreshing the moment you
+  // return. The manual refresh button + refreshKey reload path below are kept.
   useEffect(() => {
-    void loadJobs();
-    const timer = window.setInterval(() => void loadJobs(), 10000);
-    return () => window.clearInterval(timer);
-  }, [loadJobs]);
+    return startAdaptivePoll({
+      activeMs: 10_000,
+      idleMs: 30_000,
+      run: async (signal) => {
+        const next = await fetchJobs(signal);
+        if (next === null || signal.aborted) return null;
+        setJobs(next);
+        return next.map((job) => `${job.id}:${job.status}`).join("|");
+      },
+    });
+  }, [fetchJobs]);
 
   useEffect(() => {
     void loadJobs();

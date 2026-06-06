@@ -1,5 +1,6 @@
 import {
   applyReplacementsRTL,
+  findOcrNoisyExpressionInPassage,
   findWordInPassage,
   sanitizeExpressionForMarker,
 } from "../text-utils";
@@ -192,7 +193,19 @@ export function processVocabChoice(
       };
     }
 
-    const found = findWordInPassage(passage, originalWord, surroundingText);
+    let found = findWordInPassage(passage, originalWord, surroundingText);
+    if (!found) {
+      found = findOcrNoisyExpressionInPassage(
+        passage,
+        originalWord,
+        surroundingText,
+      );
+      if (found) {
+        warnings.push(
+          `OCR-noisy source token matched for label ${label}: "${originalWord}"`,
+        );
+      }
+    }
     if (!found) {
       warnings.push(`Word not found for label ${label}: "${originalWord}"`);
       return {

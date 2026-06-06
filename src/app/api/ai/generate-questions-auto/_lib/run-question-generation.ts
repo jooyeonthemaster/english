@@ -34,6 +34,7 @@ import {
   UNSTRUCTURED_OUTPUT_INSTRUCTIONS,
   buildGenerationPrompt,
 } from "./prompts";
+import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
 
 export interface RunGenerationInput {
   plan: PlanResult["plan"];
@@ -482,6 +483,9 @@ export async function runQuestionGeneration(
           `[AUTO-GEN] Failed ${subType}:`,
           err instanceof Error ? err.message : err,
         );
+        if (isNonRetryableQuestionGenerationProviderError(err)) {
+          throw err;
+        }
         recordRejection(rejectionRecorder, {
           phase: "model",
           qualityMode,

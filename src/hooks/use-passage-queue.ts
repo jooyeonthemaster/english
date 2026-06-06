@@ -105,6 +105,7 @@ interface AiJobRow {
   id: string;
   status: string;
   title: string;
+  passageId?: string | null;
   errorMessage: string | null;
   config: unknown;
   createdAt: string;
@@ -433,7 +434,38 @@ function updateQueueItem(
 
 function queueItemFromJob(job: AiJobRow): QueuedPassage | null {
   const passage = job.passage;
-  if (!passage) return null;
+  if (!passage) {
+    const passageId = job.passageId;
+    if (!passageId) return null;
+    return {
+      id: passageId,
+      title: job.title,
+      contentPreview: "",
+      wordCount: 0,
+      status: statusFromJob(job),
+      analysisData: null,
+      error: job.errorMessage,
+      promptConfig: promptConfigFromJobConfig(job.config),
+      createdAt: new Date(job.createdAt),
+      passageData: {
+        id: passageId,
+        title: job.title,
+        content: "",
+        grade: null,
+        semester: null,
+        unit: null,
+        publisher: null,
+        difficulty: null,
+        tags: null,
+        source: null,
+        createdAt: new Date(job.createdAt),
+        school: null,
+        analysis: null,
+        notes: [],
+        questions: [],
+      },
+    };
+  }
   const analysisData = parseAnalysis(passage.analysis?.analysisData);
   return {
     id: passage.id,
@@ -555,7 +587,7 @@ export function usePassageQueue(
       run: async (signal) => {
         try {
           const res = await fetch(
-            "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100",
+            "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100&view=summary",
             { credentials: "include", cache: "no-store", signal },
           );
           if (!res.ok) return null;

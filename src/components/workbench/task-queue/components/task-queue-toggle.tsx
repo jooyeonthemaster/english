@@ -11,6 +11,8 @@ import { useTaskQueue } from "../context";
 import type { BaseTask } from "../types";
 
 const ACTIVE_COUNT_CACHE_KEY = "task-queue:active-count";
+const ACTIVE_BADGE_POLL_MS = 30_000;
+const IDLE_BADGE_POLL_MS = 120_000;
 
 function readCachedActiveCount(): number {
   if (typeof window === "undefined") return 0;
@@ -47,8 +49,8 @@ export function TaskQueueToggle({
 
   useEffect(() => {
     return startAdaptivePoll({
-      activeMs: POLL_INTERVAL_MS,
-      idleMs: 30_000,
+      activeMs: Math.max(POLL_INTERVAL_MS, ACTIVE_BADGE_POLL_MS),
+      idleMs: IDLE_BADGE_POLL_MS,
       run: async (signal) => {
         try {
           const results = await Promise.all(
@@ -63,7 +65,8 @@ export function TaskQueueToggle({
           ).length;
           setActiveCount(count);
           writeCachedActiveCount(count);
-          return tasks.map((t) => `${t.id}:${t.status}`).join("|");
+          const signature = tasks.map((t) => `${t.id}:${t.status}`).join("|");
+          return count > 0 ? `${signature}:${Date.now()}` : signature;
         } catch {
           // Best-effort badge — silent on failure.
           return null;

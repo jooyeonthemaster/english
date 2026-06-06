@@ -31,12 +31,13 @@ export async function GET(req: NextRequest) {
   const limit = Number.isFinite(limitParam)
     ? Math.min(Math.max(Math.floor(limitParam), 1), 100)
     : 50;
+  const view = req.nextUrl.searchParams.get("view");
 
   // `?view=summary` — scalar-only projection for poll-only consumers (the global
   // task-queue badge/list adapters) that read counts + status and never touch
   // the passage, questions, result, or config. Skips the passage include AND the
   // result JSON entirely → a few KB instead of multiple MB per poll.
-  if (req.nextUrl.searchParams.get("view") === "summary") {
+  if (view !== "full") {
     const summaryJobs = await prisma.workbenchAiJob.findMany({
       where: {
         academyId: staff.academyId,
@@ -55,6 +56,7 @@ export async function GET(req: NextRequest) {
         successCount: true,
         failedCount: true,
         resultCount: true,
+        config: true,
         errorMessage: true,
         createdAt: true,
       },

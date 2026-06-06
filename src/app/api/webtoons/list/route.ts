@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "50", 10)));
   const since = searchParams.get("since");
+  const summary = searchParams.get("view") === "summary";
 
   const where: Record<string, unknown> = { academyId: staff.academyId };
   if (statusFilter === "active") {
@@ -51,13 +52,17 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  const [items, total] = await Promise.all([
-    prisma.webtoon.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      take: limit,
-      skip: (page - 1) * limit,
-      select: {
+  const itemSelect = summary
+    ? {
+        id: true,
+        passageId: true,
+        status: true,
+        errorMessage: true,
+        createdAt: true,
+        passage: { select: { id: true, title: true } },
+        createdBy: { select: { id: true, name: true } },
+      }
+    : {
         id: true,
         passageId: true,
         style: true,
@@ -71,7 +76,15 @@ export async function GET(req: NextRequest) {
         updatedAt: true,
         passage: { select: { id: true, title: true } },
         createdBy: { select: { id: true, name: true } },
-      },
+      };
+
+  const [items, total] = await Promise.all([
+    prisma.webtoon.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip: (page - 1) * limit,
+      select: itemSelect,
     }),
     prisma.webtoon.count({ where }),
   ]);

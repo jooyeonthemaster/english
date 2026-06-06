@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
+import {
+  deductCredits,
+  refundCredits,
+  InsufficientCreditsError,
+} from "@/lib/credits";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   GROUNDED_SYSTEM_PROMPT,
@@ -109,9 +114,39 @@ export async function POST(req: NextRequest) {
 
   const { passageText, answerKey } = parsed.data;
 
-  // NOTE: restoration is not credit-charged in this v1 — only the downstream
-  // question generation deducts credits. Revisit if standalone restore needs a
-  // cost (define a RESTORE_* operation type in credit-costs.ts).
+  // ◈2 (PASSAGE_RESTORATION) — same cost as the image·PDF "AI 원문 복원". Deduct
+  // upfront; refund when no real restoration happened (AI error fallback, empty
+  // result, FAILED, or NO_RESTORATION_NEEDED).
+  let creditTxId: string;
+  try {
+    const credit = await deductCredits(
+      staff.academyId,
+      "PASSAGE_RESTORATION",
+      staff.id,
+      { source: "WORKBENCH_PASTE_RESTORE", textLength: passageText.length },
+    );
+    creditTxId = credit.transactionId;
+  } catch (err) {
+    if (err instanceof InsufficientCreditsError) {
+      return NextResponse.json(
+        {
+          error: "크레딧이 부족합니다.",
+          balance: err.currentBalance,
+          required: err.requiredCredits,
+        },
+        { status: 402 },
+      );
+    }
+    throw err;
+  }
+  const refundRestore = (reason: string) =>
+    refundCredits(
+      staff.academyId,
+      "PASSAGE_RESTORATION",
+      creditTxId,
+      reason,
+    ).catch(() => {});
+
   let result: RestorationResult;
   try {
     // Uses the question-generation Gemini path (STANDARD plan) with its built-in
@@ -132,6 +167,7 @@ export async function POST(req: NextRequest) {
       "[WORKBENCH-PASTE-RESTORE] AI restore failed, using code fallback:",
       err instanceof Error ? err.message : err,
     );
+    await refundRestore("AI 복원 실패 — 마커 제거 폴백");
     const fallback = buildFallbackM1Restoration(passageText);
     return NextResponse.json({
       restoredText: fallback.restoredText,
@@ -164,6 +200,7 @@ export async function POST(req: NextRequest) {
     // Schema enforces restoredText is a string, but an empty string still
     // passes — surface it so recurring Gemini anomalies are diagnosable.
     console.warn("[WORKBENCH-PASTE-RESTORE] empty restoredText from model");
+    await refundRestore("복원 결과 비어 있음");
     return NextResponse.json({
       restoredText: passageText,
       status: "FAILED",
@@ -171,6 +208,14 @@ export async function POST(req: NextRequest) {
       warnings: ["복원 결과가 비어 있습니다. 원문을 직접 정리해주세요."],
       degraded: true,
     });
+  }
+
+  // Only RESTORED / PARTIAL actually restored something — refund otherwise so
+  // the teacher isn't charged when nothing changed.
+  if (status === "FAILED" || status === "NO_RESTORATION_NEEDED") {
+    await refundRestore(
+      status === "FAILED" ? "복원 실패" : "복원 불필요(이미 깨끗함)",
+    );
   }
 
   return NextResponse.json({
