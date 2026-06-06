@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import NextImage from "next/image";
 import {
   AlignCenter,
@@ -19,9 +20,9 @@ import {
   FileText,
   GripVertical,
   ImagePlus,
+  Italic,
   Languages,
   Loader2,
-  LogOut,
   Minus,
   Plus,
   Printer,
@@ -29,15 +30,19 @@ import {
   RotateCcw,
   Rows3,
   Save,
+  Settings,
+  Star,
   Trash2,
   Type,
   Undo2,
+  X,
 } from "lucide-react";
 import {
   Children,
   cloneElement,
   type DragEvent,
   type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
   isValidElement,
   memo,
   type ReactElement,
@@ -102,6 +107,7 @@ import {
   newCustomBlockId,
   reorderIds,
   setBlockMeta,
+  setTableColWidths,
   setCustomBlock,
   setMeta,
   setSection,
@@ -123,6 +129,26 @@ const REPORT_A4_WIDTH_PX = Math.round((210 * 96) / 25.4);
 const REPORT_A4_HEIGHT_PX = Math.round((297 * 96) / 25.4);
 const REPORT_PAGE_GAP_PX = Math.round((9 * 96) / 25.4);
 const LOGO_FILE_MAX_BYTES = 1.5 * 1024 * 1024;
+
+// ── 좌(페이지)·우(편집) 패널 폭 — exam paper builder 와 동일하게 드래그 리사이즈 + localStorage 보존 ──
+const RAIL_WIDTH_STORAGE_KEY = "smoat.analysisReportEditor.railWidth.v1";
+const PANEL_WIDTH_STORAGE_KEY = "smoat.analysisReportEditor.panelWidth.v1";
+const RAIL_WIDTH_DEFAULT = 112;
+const RAIL_WIDTH_MIN = 88;
+const RAIL_WIDTH_MAX = 220;
+const PANEL_WIDTH_DEFAULT = 304;
+const PANEL_WIDTH_MIN = 260;
+const PANEL_WIDTH_MAX = 460;
+
+const clampRailWidth = (w: number) => Math.min(RAIL_WIDTH_MAX, Math.max(RAIL_WIDTH_MIN, Math.round(w)));
+const clampPanelWidth = (w: number) => Math.min(PANEL_WIDTH_MAX, Math.max(PANEL_WIDTH_MIN, Math.round(w)));
+
+function readStoredWidth(key: string, fallback: number, clamp: (n: number) => number): number {
+  if (typeof window === "undefined") return fallback;
+  const raw = Number(window.localStorage.getItem(key));
+  return Number.isFinite(raw) && raw > 0 ? clamp(raw) : fallback;
+}
+
 const PANEL_SECTION_ORDER_STORAGE_KEY =
   "smoat.analysisReportEditor.propertiesPanel.sectionOrder.v1";
 const PANEL_SECTION_COLLAPSED_STORAGE_KEY =
@@ -132,6 +158,8 @@ const REPORT_LOGO_SETTINGS_STORAGE_KEY =
 const PANEL_SECTION_IDS = [
   "cover",
   "logo",
+  "english-page",
+  "block-edit",
   "cover-edit",
   "guide",
   "selected",
@@ -146,7 +174,9 @@ const PANEL_SECTION_IDS = [
   "delete",
   "insert",
   "vocab-test",
+  "answer-key",
   "theme",
+  "saved-settings",
 ] as const;
 
 type PanelSectionId = (typeof PANEL_SECTION_IDS)[number];
@@ -294,6 +324,567 @@ function coverWithoutLogoSettings(cover: ReportCover): Partial<ReportCover> {
   delete next.logoX;
   delete next.logoY;
   return next;
+}
+
+// ─── 학습자료 설정 템플릿 (표지·로고·학원명·영어원문·디자인을 통째로 저장/적용) ───
+// v1: 단일 슬롯 객체였음. v2: 이름 붙인 여러 템플릿 배열 — 저장해 두고 나중에 골라 적용.
+// 첫 읽기 때 v1 단일 슬롯이 있으면 v2 배열로 자동 이관한다.
+const REPORT_SETTINGS_STORAGE_KEY = "smoat.analysisReportEditor.materialSettings.v1";
+const REPORT_SETTINGS_LIST_STORAGE_KEY = "smoat.analysisReportEditor.materialSettings.v2";
+
+type ReportSettingsPayload = {
+  brand?: string;
+  themeId?: ReportThemeId;
+  englishOnlyPage?: boolean;
+  cover?: ReportCover;
+};
+
+type SavedReportSettings = ReportSettingsPayload & {
+  id: string;
+  name: string;
+  savedAt: string;
+  isDefault?: boolean;
+};
+
+function newReportSettingsId(): string {
+  return globalThis.crypto && "randomUUID" in globalThis.crypto
+    ? globalThis.crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function writeSavedReportSettingsList(list: SavedReportSettings[]): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    window.localStorage.setItem(REPORT_SETTINGS_LIST_STORAGE_KEY, JSON.stringify(list));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function readSavedReportSettingsList(): SavedReportSettings[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(REPORT_SETTINGS_LIST_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.filter(
+          (entry): entry is SavedReportSettings => !!entry && typeof entry === "object",
+        );
+      }
+    }
+  } catch {
+    /* fall through to legacy migration */
+  }
+  // v1 단일 슬롯 → v2 배열 자동 이관
+  try {
+    const legacy = JSON.parse(window.localStorage.getItem(REPORT_SETTINGS_STORAGE_KEY) || "");
+    if (legacy && typeof legacy === "object") {
+      const migrated: SavedReportSettings[] = [
+        {
+          id: newReportSettingsId(),
+          name: "기본 설정",
+          brand: legacy.brand,
+          themeId: legacy.themeId,
+          englishOnlyPage: legacy.englishOnlyPage,
+          cover: legacy.cover,
+          savedAt: legacy.savedAt || new Date().toISOString(),
+        },
+      ];
+      writeSavedReportSettingsList(migrated);
+      window.localStorage.removeItem(REPORT_SETTINGS_STORAGE_KEY);
+      return migrated;
+    }
+  } catch {
+    /* ignore */
+  }
+  return [];
+}
+
+function addSavedReportSettings(
+  payload: ReportSettingsPayload,
+  name: string,
+): SavedReportSettings[] {
+  const list = readSavedReportSettingsList();
+  const cleanName = name.trim() || `설정 ${list.length + 1}`;
+  const entry: SavedReportSettings = {
+    id: newReportSettingsId(),
+    name: cleanName,
+    ...payload,
+    savedAt: new Date().toISOString(),
+  };
+  // 같은 이름이면 덮어쓰기 — 동일 이름 템플릿이 난립하지 않게 한다.
+  const next = [...list.filter((s) => s.name !== cleanName), entry];
+  writeSavedReportSettingsList(next);
+  return next;
+}
+
+function deleteSavedReportSettings(id: string): SavedReportSettings[] {
+  const next = readSavedReportSettingsList().filter((s) => s.id !== id);
+  writeSavedReportSettingsList(next);
+  return next;
+}
+
+// 기본 템플릿 — 새 보고서를 처음 열 때 자동 적용할 한 개. 한 번에 하나만 지정된다.
+const REPORT_SETTINGS_DEFAULT_APPLIED_KEY = "smoat.analysisReportEditor.defaultApplied.v1";
+
+function toggleDefaultReportSettings(id: string): SavedReportSettings[] {
+  const list = readSavedReportSettingsList();
+  const willEnable = !list.find((s) => s.id === id)?.isDefault;
+  const next = list.map((s) => ({ ...s, isDefault: willEnable && s.id === id }));
+  writeSavedReportSettingsList(next);
+  return next;
+}
+
+function getDefaultReportSettings(): SavedReportSettings | null {
+  return readSavedReportSettingsList().find((s) => s.isDefault) ?? null;
+}
+
+function hasAppliedDefaultFor(passageId: string): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    const arr = JSON.parse(window.localStorage.getItem(REPORT_SETTINGS_DEFAULT_APPLIED_KEY) || "[]");
+    return Array.isArray(arr) && arr.includes(passageId);
+  } catch {
+    return false;
+  }
+}
+
+function markAppliedDefaultFor(passageId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const arr = JSON.parse(window.localStorage.getItem(REPORT_SETTINGS_DEFAULT_APPLIED_KEY) || "[]");
+    const set = new Set<string>(Array.isArray(arr) ? arr : []);
+    set.add(passageId);
+    window.localStorage.setItem(REPORT_SETTINGS_DEFAULT_APPLIED_KEY, JSON.stringify([...set]));
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * 설정 템플릿 팝오버 — 학습자료 설정 헤더(닫기 X 버튼 왼쪽)의 저장 아이콘 버튼.
+ * 클릭하면 현재 설정 저장 / 저장된 템플릿 골라 적용·삭제 / 현재 설정 초기화 기능이
+ * 작은 팝오버로 펼쳐진다.
+ */
+function SettingsTemplatePopover({
+  onSave,
+  onApply,
+  onDelete,
+  onReset,
+}: {
+  onSave: (name: string) => SavedReportSettings[];
+  onApply: (entry: SavedReportSettings) => void;
+  onDelete: (id: string) => SavedReportSettings[];
+  onReset: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [savedTemplates, setSavedTemplates] = useState<SavedReportSettings[]>([]);
+  const [templateName, setTemplateName] = useState("");
+  const [notice, setNotice] = useState("");
+  // 팝오버는 패널의 overflow-hidden 에 잘리지 않도록 body 로 포털 + fixed 배치한다.
+  const [coords, setCoords] = useState<{ top: number; right: number } | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const dragIndexRef = useRef<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  // 버튼 위치 기준으로 팝오버 좌표(우측 정렬) 계산
+  useEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const rect = buttonRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setCoords({ top: rect.bottom + 6, right: Math.max(8, window.innerWidth - rect.right) });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open]);
+
+  // 팝오버를 열 때마다 최신 목록을 다시 읽는다(다른 보고서에서 저장한 것 반영).
+  useEffect(() => {
+    if (open) setSavedTemplates(readSavedReportSettingsList());
+  }, [open]);
+
+  // 바깥 클릭 / ESC 로 닫기 (트리거 버튼·포털된 팝오버 둘 다 '안쪽'으로 친다)
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (buttonRef.current?.contains(target) || popoverRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(""), 1800);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
+
+  const handleSave = () => {
+    const next = onSave(templateName);
+    setSavedTemplates(next);
+    setTemplateName("");
+    setNotice("현재 설정을 템플릿으로 저장했어요.");
+  };
+
+  // 손잡이 드래그로 템플릿 순서 변경 — 새 순서를 그대로 저장한다.
+  const handleReorder = (from: number, to: number) => {
+    if (from === to || from < 0 || to < 0) return;
+    setSavedTemplates((prev) => {
+      if (from >= prev.length || to >= prev.length) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      writeSavedReportSettingsList(next);
+      return next;
+    });
+  };
+
+  return (
+    <div className="shrink-0">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        title="설정 템플릿"
+        aria-label="설정 템플릿"
+        aria-expanded={open}
+        className={cn(
+          "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
+          open
+            ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
+            : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800",
+        )}
+      >
+        <Save className="h-4 w-4" />
+      </button>
+
+      {open && coords
+        ? createPortal(
+        <div
+          ref={popoverRef}
+          style={{ position: "fixed", top: coords.top, right: coords.right }}
+          className="z-[60] w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-xl">
+          <p className="text-[12px] font-black text-slate-800">설정 템플릿</p>
+          <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">
+            지금의 <b className="text-slate-600">표지·로고·학원명·영어 원문·디자인</b> 설정을 이름을 붙여 저장해 두고, 나중에 골라서 적용할 수 있어요. <Star className="inline h-3 w-3 -mt-0.5 fill-amber-400 text-amber-500" /> 별표로 지정한 <b className="text-slate-600">기본 템플릿</b>은 새 보고서를 열 때 자동 적용돼요.
+          </p>
+
+          {/* 새 템플릿 저장 — 이름 입력 + 저장 */}
+          <div className="mt-2 flex items-center gap-1.5">
+            <input
+              type="text"
+              value={templateName}
+              onChange={(e) => setTemplateName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter") return;
+                e.preventDefault();
+                handleSave();
+              }}
+              placeholder="템플릿 이름 (예: 기본형, A반용)"
+              className="h-8 min-w-0 flex-1 rounded-md border border-slate-200 px-2 text-[11.5px] text-slate-700 placeholder:text-slate-300 focus:border-slate-400 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleSave}
+              className="inline-flex h-8 shrink-0 items-center justify-center gap-1 rounded-md border border-slate-200 px-2.5 text-[11.5px] font-semibold text-slate-600 hover:bg-slate-50"
+            >
+              <Save className="h-3.5 w-3.5" /> 저장
+            </button>
+          </div>
+
+          {/* 저장된 템플릿 목록 — 이름을 클릭하면 바로 적용 / 손잡이로 순서 변경 / 삭제 */}
+          {savedTemplates.length === 0 ? (
+            <p className="mt-2 rounded-md border border-dashed border-slate-200 px-2 py-2.5 text-center text-[10.5px] text-slate-400">
+              저장된 템플릿이 아직 없어요.
+            </p>
+          ) : (
+            <ul className="mt-2 flex max-h-56 flex-col gap-1 overflow-y-auto">
+              {savedTemplates.map((tpl, index) => (
+                <li
+                  key={tpl.id}
+                  onDragOver={(e) => {
+                    if (dragIndexRef.current === null) return;
+                    e.preventDefault();
+                    setDragOverIndex(index);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (dragIndexRef.current !== null) handleReorder(dragIndexRef.current, index);
+                    dragIndexRef.current = null;
+                    setDragOverIndex(null);
+                  }}
+                  className={cn(
+                    "flex items-center gap-1 rounded-md border px-1.5 py-1.5 transition-colors",
+                    dragOverIndex === index ? "border-blue-300 bg-blue-50/60" : "border-slate-200",
+                  )}
+                >
+                  <span
+                    draggable
+                    onDragStart={(e) => {
+                      dragIndexRef.current = index;
+                      e.dataTransfer.effectAllowed = "move";
+                    }}
+                    onDragEnd={() => {
+                      dragIndexRef.current = null;
+                      setDragOverIndex(null);
+                    }}
+                    title="드래그해서 순서 변경"
+                    aria-label="순서 변경 손잡이"
+                    className="flex h-7 w-5 shrink-0 cursor-grab items-center justify-center text-slate-300 hover:text-slate-500 active:cursor-grabbing"
+                  >
+                    <GripVertical className="h-3.5 w-3.5" />
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onApply(tpl);
+                      setNotice(`'${tpl.name}' 템플릿을 적용했어요.`);
+                    }}
+                    title={`'${tpl.name}' 적용`}
+                    className="flex min-w-0 flex-1 items-center gap-1 rounded px-1 py-0.5 text-left text-[11.5px] font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-700"
+                  >
+                    <span className="min-w-0 truncate">{tpl.name}</span>
+                    {tpl.isDefault ? (
+                      <span className="shrink-0 rounded bg-amber-100 px-1 text-[9px] font-bold text-amber-600">기본</span>
+                    ) : null}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = toggleDefaultReportSettings(tpl.id);
+                      setSavedTemplates(next);
+                      const nowDefault = next.find((s) => s.id === tpl.id)?.isDefault;
+                      setNotice(
+                        nowDefault
+                          ? `'${tpl.name}'을(를) 기본으로 지정했어요. 새 보고서에 자동 적용돼요.`
+                          : "기본 템플릿 지정을 해제했어요.",
+                      );
+                    }}
+                    title={tpl.isDefault ? "기본 지정 해제" : "기본 템플릿으로 지정 (새 보고서에 자동 적용)"}
+                    aria-label={tpl.isDefault ? "기본 지정 해제" : "기본 템플릿으로 지정"}
+                    aria-pressed={!!tpl.isDefault}
+                    className={cn(
+                      "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border transition-colors",
+                      tpl.isDefault
+                        ? "border-amber-300 bg-amber-50 text-amber-500 hover:bg-amber-100"
+                        : "border-slate-200 text-slate-300 hover:bg-slate-50 hover:text-amber-400",
+                    )}
+                  >
+                    <Star className={cn("h-3.5 w-3.5", tpl.isDefault && "fill-amber-400")} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = onDelete(tpl.id);
+                      setSavedTemplates(next);
+                      setNotice(`'${tpl.name}' 템플릿을 삭제했어요.`);
+                    }}
+                    title="템플릿 삭제"
+                    aria-label={`'${tpl.name}' 템플릿 삭제`}
+                    className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 text-slate-400 hover:bg-red-50 hover:text-red-500"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* 현재 보고서 설정만 기본값으로 되돌림(저장된 템플릿은 유지) */}
+          <button
+            type="button"
+            onClick={() => {
+              onReset();
+              setNotice("현재 설정을 기본값으로 되돌렸어요.");
+            }}
+            className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-md border border-slate-200 px-2 py-1.5 text-[11.5px] font-semibold text-slate-500 hover:bg-slate-50"
+          >
+            <RotateCcw className="h-3.5 w-3.5" /> 현재 설정 초기화
+          </button>
+
+          {notice ? <p className="mt-1.5 text-[10.5px] font-semibold text-blue-500">{notice}</p> : null}
+        </div>,
+            document.body,
+          )
+        : null}
+    </div>
+  );
+}
+
+/**
+ * 인라인 텍스트 편집용 떠다니는 서식 툴바(버블 메뉴).
+ * `.par-edit-field` 에 포커스가 들어오면 그 필드가 속한 블록 위에 떠서,
+ * 블록 단위 서식(글자 크기·굵게·이탤릭·정렬)을 blockMeta 로 적용한다.
+ * - 위치는 RAF 로 블록을 추종(스크롤·리페이지네이션·줌에도 따라감).
+ * - 리포트/툴바 바깥 클릭 또는 ESC 로 닫힌다(필드 재포커스는 focusin 이 갱신).
+ */
+function FloatingFormatToolbar({
+  blockMeta,
+  onBlockMeta,
+}: {
+  blockMeta?: Record<string, BlockMeta>;
+  onBlockMeta: (id: string, patch: Partial<BlockMeta>) => void;
+}) {
+  const [blockId, setBlockId] = useState<string | null>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLElement | null>(null);
+  const fieldRef = useRef<HTMLElement | null>(null);
+  const ptLabelRef = useRef<HTMLSpanElement>(null);
+
+  // 편집 필드 포커스 → 해당 블록을 서식 대상으로 잡는다.
+  useEffect(() => {
+    const onFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      const field = target?.closest<HTMLElement>(".par-edit-field");
+      const block = field?.closest<HTMLElement>("[data-paper-item-id]");
+      if (!block) return;
+      anchorRef.current = block;
+      fieldRef.current = field ?? block;
+      setBlockId(block.getAttribute("data-paper-item-id"));
+    };
+    document.addEventListener("focusin", onFocusIn);
+    return () => document.removeEventListener("focusin", onFocusIn);
+  }, []);
+
+  // 현재 편집 중인 텍스트의 '실제' 글자 크기(pt) — 블록마다 기준 크기가 달라
+  // fontScale(배율)만으로는 pt 를 알 수 없으므로 렌더된 px 를 읽어 pt 로 환산한다.
+  const readFontPt = (): number | null => {
+    let field = fieldRef.current;
+    if (!field || !field.isConnected) {
+      field = anchorRef.current?.querySelector<HTMLElement>(".par-edit-field") ?? anchorRef.current ?? null;
+      fieldRef.current = field;
+    }
+    if (!field) return null;
+    const px = parseFloat(window.getComputedStyle(field).fontSize);
+    return px ? (px * 72) / 96 : null; // px → pt
+  };
+
+  // 리포트/툴바 바깥 클릭 또는 ESC 로 닫기.
+  useEffect(() => {
+    if (!blockId) return;
+    const onDown = (e: MouseEvent) => {
+      const node = e.target as HTMLElement;
+      if (toolbarRef.current?.contains(node)) return;
+      // 리포트 내부 클릭은 유지(다른 필드면 focusin 이 대상 갱신)
+      if (node.closest?.(".par-root")) return;
+      setBlockId(null);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setBlockId(null);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [blockId]);
+
+  // 위치: 대상 블록 바로 위에 고정. RAF 로 매 프레임 추종(상태 변경 없이 DOM 직접 갱신).
+  useEffect(() => {
+    if (!blockId) return;
+    let raf = 0;
+    const tick = () => {
+      const bar = toolbarRef.current;
+      let anchor = anchorRef.current;
+      if (!anchor || !anchor.isConnected) {
+        anchor = document.querySelector<HTMLElement>(`[data-paper-item-id="${CSS.escape(blockId)}"]`);
+        anchorRef.current = anchor;
+      }
+      if (bar && anchor) {
+        const r = anchor.getBoundingClientRect();
+        const top = Math.max(8, r.top - bar.offsetHeight - 8);
+        const left = Math.min(Math.max(8, r.left), window.innerWidth - bar.offsetWidth - 8);
+        bar.style.top = `${top}px`;
+        bar.style.left = `${left}px`;
+        bar.style.visibility = "visible";
+      } else if (bar) {
+        bar.style.visibility = "hidden";
+      }
+      // pt 라벨은 리렌더 없이 매 프레임 직접 갱신(서식 변경·줌에도 즉시 반영).
+      const ptEl = ptLabelRef.current;
+      if (ptEl) {
+        const pt = readFontPt();
+        ptEl.textContent = pt ? `${Math.round(pt)}pt` : "—";
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [blockId]);
+
+  if (!blockId) return null;
+  const meta = blockMeta?.[blockId] ?? {};
+  const fontScale = meta.fontScale ?? 1;
+  // pt 를 1pt 씩 조절 — 현재 렌더된 pt 에서 목표 pt 를 정하고, 그 블록의 '기준 pt'
+  // (= 현재 pt / 현재 배율)로 나눠 새 fontScale 배율을 역산한다.
+  const stepFontPt = (delta: number) => {
+    const currentPt = readFontPt();
+    if (!currentPt) return;
+    const basePt = currentPt / fontScale;
+    const targetPt = Math.min(60, Math.max(5, Math.round(currentPt) + delta));
+    const nextScale = Math.min(2, Math.max(0.5, targetPt / basePt));
+    onBlockMeta(blockId, { fontScale: Math.round(nextScale * 1000) / 1000 });
+  };
+  const btnCls = (active: boolean) =>
+    cn(
+      "flex h-7 min-w-[28px] items-center justify-center rounded px-1.5 transition-colors",
+      active ? "bg-blue-100 text-blue-700" : "text-slate-600 hover:bg-slate-100",
+    );
+
+  return createPortal(
+    <div
+      ref={toolbarRef}
+      style={{ position: "fixed", top: 0, left: 0, visibility: "hidden" }}
+      className="no-print z-[70] flex items-center gap-0.5 rounded-lg border border-slate-200 bg-white p-1 shadow-xl"
+      // 필드 포커스를 잃지 않도록(클릭 시 blur 방지) — 버튼 onClick 은 그대로 동작
+      onMouseDown={(e) => e.preventDefault()}
+    >
+      <button type="button" className={btnCls(false)} onClick={() => stepFontPt(-1)} title="글자 작게">
+        <Minus className="h-3.5 w-3.5" />
+      </button>
+      <span ref={ptLabelRef} className="w-10 text-center text-[11px] font-semibold tabular-nums text-slate-500">—</span>
+      <button type="button" className={btnCls(false)} onClick={() => stepFontPt(1)} title="글자 크게">
+        <Plus className="h-3.5 w-3.5" />
+      </button>
+      <span className="mx-0.5 h-5 w-px bg-slate-200" />
+      <button type="button" className={btnCls(!!meta.bold)} onClick={() => onBlockMeta(blockId, { bold: !meta.bold })} title="굵게">
+        <Bold className="h-3.5 w-3.5" />
+      </button>
+      <button type="button" className={btnCls(!!meta.italic)} onClick={() => onBlockMeta(blockId, { italic: !meta.italic })} title="이탤릭">
+        <Italic className="h-3.5 w-3.5" />
+      </button>
+      <span className="mx-0.5 h-5 w-px bg-slate-200" />
+      <button type="button" className={btnCls(!meta.align || meta.align === "left")} onClick={() => onBlockMeta(blockId, { align: "left" })} title="왼쪽 정렬">
+        <AlignLeft className="h-3.5 w-3.5" />
+      </button>
+      <button type="button" className={btnCls(meta.align === "center")} onClick={() => onBlockMeta(blockId, { align: "center" })} title="가운데 정렬">
+        <AlignCenter className="h-3.5 w-3.5" />
+      </button>
+      <button type="button" className={btnCls(meta.align === "right")} onClick={() => onBlockMeta(blockId, { align: "right" })} title="오른쪽 정렬">
+        <AlignRight className="h-3.5 w-3.5" />
+      </button>
+    </div>,
+    document.body,
+  );
 }
 
 type ReportHistoryState = {
@@ -449,6 +1040,10 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     setReport((r) => setBlockMeta(r, id, patch));
   }, [setReport]);
 
+  const onColWidths = useCallback((group: string, widths: Record<string, number>) => {
+    setReport((r) => setTableColWidths(r, group, widths));
+  }, [setReport]);
+
   const setCustom = useCallback((id: string, patch: Partial<CustomBlock>) => {
     setReport((r) => setCustomBlock(r, id, patch));
   }, [setReport]);
@@ -471,6 +1066,47 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const setCoverPatch = useCallback((patch: Partial<ReportCover>) => {
     setReport((r) => ({ ...r, cover: { ...COVER_DEFAULTS, ...(r.cover ?? {}), ...patch } }));
   }, [setReport]);
+
+  // 학습자료 설정 템플릿 — 현재 설정을 이름 붙여 저장 / 골라서 적용 / 삭제 / 현재 보고서 초기화
+  const onSaveReportSettings = useCallback(
+    (name: string) =>
+      addSavedReportSettings(
+        {
+          brand: report.brand,
+          themeId: report.themeId,
+          englishOnlyPage: !!report.englishOnlyPage,
+          cover: report.cover,
+        },
+        name,
+      ),
+    [report.brand, report.themeId, report.englishOnlyPage, report.cover],
+  );
+  const onApplyReportSettings = useCallback(
+    (entry: SavedReportSettings) => {
+      setReport((r) => ({
+        ...r,
+        brand: entry.brand ?? r.brand,
+        themeId: entry.themeId ?? r.themeId,
+        englishOnlyPage: entry.englishOnlyPage ?? r.englishOnlyPage,
+        cover: entry.cover ? { ...COVER_DEFAULTS, ...entry.cover } : r.cover,
+      }));
+    },
+    [setReport],
+  );
+  const onDeleteReportSettings = useCallback((id: string) => deleteSavedReportSettings(id), []);
+  const onResetReportSettings = useCallback(() => {
+    setReport((r) => ({ ...r, themeId: "black-white", englishOnlyPage: false, cover: { ...COVER_DEFAULTS } }));
+  }, [setReport]);
+
+  // 기본 템플릿 자동 적용 — 이 지문의 보고서를 '처음' 열 때 딱 한 번. 이후(편집한 뒤)에는
+  // 다시 덮어쓰지 않도록 passageId 를 기록해 둔다. 기본 템플릿이 없으면 적용은 건너뛰되
+  // '열어 봤다'는 기록은 남겨, 이미 본 보고서가 나중 기본 지정에 끌려가지 않게 한다.
+  useEffect(() => {
+    if (hasAppliedDefaultFor(passageId)) return;
+    const def = getDefaultReportSettings();
+    markAppliedDefaultFor(passageId);
+    if (def) onApplyReportSettings(def);
+  }, [passageId, onApplyReportSettings]);
   const onLogoFile = useCallback(
     async (file?: File | null) => {
       if (!file) return;
@@ -519,6 +1155,65 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [pagesPanelCollapsed, setPagesPanelCollapsed] = useState(false);
   const [propertiesPanelCollapsed, setPropertiesPanelCollapsed] = useState(false);
+  const [materialSettingsOpen, setMaterialSettingsOpen] = useState(false);
+  // 블록을 선택하면 학습자료 설정에서 편집 패널로 자동 전환(그 블록 도구를 바로 보여주기 위해)
+  useEffect(() => {
+    if (activeId) setMaterialSettingsOpen(false);
+  }, [activeId]);
+  const [railWidth, setRailWidth] = useState(() =>
+    readStoredWidth(RAIL_WIDTH_STORAGE_KEY, RAIL_WIDTH_DEFAULT, clampRailWidth),
+  );
+  const [panelWidth, setPanelWidth] = useState(() =>
+    readStoredWidth(PANEL_WIDTH_STORAGE_KEY, PANEL_WIDTH_DEFAULT, clampPanelWidth),
+  );
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(RAIL_WIDTH_STORAGE_KEY, String(railWidth));
+    } catch {
+      // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
+    }
+  }, [railWidth]);
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PANEL_WIDTH_STORAGE_KEY, String(panelWidth));
+    } catch {
+      // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
+    }
+  }, [panelWidth]);
+
+  // 좌/우 패널 폭 드래그 — 포인터 이벤트로 col-resize (exam paper builder 와 동일한 UX).
+  const startWidthDrag = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>, side: "rail" | "panel") => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      event.preventDefault();
+      const startX = event.clientX;
+      const startRail = railWidth;
+      const startPanel = panelWidth;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+
+      const move = (moveEvent: PointerEvent) => {
+        moveEvent.preventDefault();
+        const delta = moveEvent.clientX - startX;
+        if (side === "rail") setRailWidth(clampRailWidth(startRail + delta));
+        else setPanelWidth(clampPanelWidth(startPanel - delta));
+      };
+      const finish = () => {
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", finish);
+        window.removeEventListener("pointercancel", finish);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+      };
+      window.addEventListener("pointermove", move, { passive: false });
+      window.addEventListener("pointerup", finish, { once: true });
+      window.addEventListener("pointercancel", finish, { once: true });
+    },
+    [railWidth, panelWidth],
+  );
   const previewScrollerRef = useRef<HTMLDivElement>(null);
   const [fitZoom, setFitZoom] = useState(1);
   const [manualZoom, setManualZoom] = useState<number | null>(null);
@@ -754,10 +1449,11 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       setCustom,
       ced,
       onResize,
+      onColWidths,
       onDeletePage: deletePage,
       drag: { startDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, ced, onResize, deletePage, startDrag, draggingId, dragOverId, placement],
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, ced, onResize, onColWidths, deletePage, startDrag, draggingId, dragOverId, placement],
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
@@ -879,7 +1575,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
         <div className="flex min-w-0 items-center gap-2">
           <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-          <span className="truncate text-[12px] font-bold text-slate-600">A4 보고서 편집</span>
+          <span className="truncate text-[12px] font-bold text-slate-600">지문 학습자료 편집</span>
           <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
             {pageList.length || 1}페이지
           </span>
@@ -957,20 +1653,6 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
             <Printer className="h-3.5 w-3.5" />
             인쇄
           </button>
-          {onExit ? (
-            <button
-              type="button"
-              onClick={() => {
-                if (dirty && !window.confirm("저장하지 않은 편집이 있습니다. 보기 모드로 나갈까요?")) return;
-                onExit();
-              }}
-              className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-              title="보기 모드로 나가기"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              보기
-            </button>
-          ) : null}
         </div>
       </div>
 
@@ -989,7 +1671,8 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
             <span style={{ writingMode: "vertical-rl" }}>페이지</span>
           </button>
         ) : (
-          <aside className="no-print flex w-[112px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
+          <>
+          <aside style={{ width: railWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
             <div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 px-3">
               <div>
                 <p className="text-[11px] font-black text-slate-700">페이지</p>
@@ -1052,6 +1735,13 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
               )}
             </div>
           </aside>
+            <div
+              onPointerDown={(event) => startWidthDrag(event, "rail")}
+              title="페이지 목록 폭 조절"
+              aria-hidden
+              className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
+            />
+          </>
         )}
 
         {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
@@ -1097,6 +1787,9 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
           </div>
         </section>
 
+        {/* 인라인 텍스트 편집용 떠다니는 서식 툴바 */}
+        <FloatingFormatToolbar blockMeta={report.blockMeta} onBlockMeta={onBlockMeta} />
+
         {/* 우측 — 속성 패널 */}
         {propertiesPanelCollapsed ? (
           <button
@@ -1112,6 +1805,12 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
           </button>
         ) : (
           <>
+            <div
+              onPointerDown={(event) => startWidthDrag(event, "panel")}
+              title="편집 패널 폭 조절"
+              aria-hidden
+              className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
+            />
             <button
               type="button"
               onClick={() => setPropertiesPanelCollapsed(true)}
@@ -1123,13 +1822,39 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
               <ChevronRight className="h-3.5 w-3.5" />
               <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
             </button>
-            <aside className="no-print flex w-[304px] shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
-              <div className="flex h-11 shrink-0 items-center border-b border-slate-200 bg-white px-3.5">
+            <aside style={{ width: panelWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
+              <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
                 <div className="min-w-0">
-                  <p className="truncate text-[12px] font-black text-slate-800">편집 패널</p>
-                  <p className="truncate text-[10.5px] font-semibold text-slate-400">
-                    {active ? "선택 블록 조정" : "문서 설정"}
+                  <p className="truncate text-[12px] font-black text-slate-800">
+                    {materialSettingsOpen ? "학습자료 설정" : "편집 패널"}
                   </p>
+                  <p className="truncate text-[10.5px] font-semibold text-slate-400">
+                    {materialSettingsOpen ? "표지·로고·디자인·템플릿" : active ? "선택 블록 조정" : "문서 설정"}
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {materialSettingsOpen ? (
+                    <SettingsTemplatePopover
+                      onSave={onSaveReportSettings}
+                      onApply={onApplyReportSettings}
+                      onDelete={onDeleteReportSettings}
+                      onReset={onResetReportSettings}
+                    />
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => setMaterialSettingsOpen((v) => !v)}
+                    title={materialSettingsOpen ? "편집 패널로 돌아가기" : "학습자료 설정"}
+                    aria-label={materialSettingsOpen ? "편집 패널로 돌아가기" : "학습자료 설정"}
+                    className={cn(
+                      "flex h-7 w-7 shrink-0 items-center justify-center rounded-md border transition-colors",
+                      materialSettingsOpen
+                        ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
+                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800",
+                    )}
+                  >
+                    {materialSettingsOpen ? <X className="h-4 w-4" /> : <Settings className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
@@ -1156,6 +1881,9 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                     }))
                   }
                   onTheme={(t) => setReport((r) => ({ ...r, themeId: t }))}
+                  onToggleEnglishPage={() => setReport((r) => ({ ...r, englishOnlyPage: !r.englishOnlyPage }))}
+                  onBrand={(v) => setReport((r) => ({ ...r, brand: v }))}
+                  settingsOpen={materialSettingsOpen}
                   onMetaPatch={setMetaPatch}
                   onMove={moveActive}
                   onAddRow={addRow}
@@ -1230,9 +1958,21 @@ const PageMiniPreview = memo(function PageMiniPreview({
   );
 });
 
+/** 한 카드 안에서 도구를 묶는 소제목 그룹 (카드 분할 대신 내부 구획). */
+function PanelGroup({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="mt-3 border-t border-slate-100 pt-3 first:mt-0 first:border-t-0 first:pt-0">
+      <div className="mb-1.5 text-[10px] font-black uppercase tracking-wide text-slate-400">{label}</div>
+      {children}
+    </div>
+  );
+}
+
 type PanelSectionProps = {
   sectionId?: PanelSectionId;
   title: string;
+  /** 스크롤 타겟용 DOM id (선택 시 이 카드로 자동 스크롤). */
+  anchorId?: string;
   /** 헤더에 보조 표시할 현재 상태 요약(로컬 vocab/worksheet 패널에서 사용). */
   summary?: ReactNode;
   children: ReactNode;
@@ -1249,6 +1989,7 @@ type PanelSectionProps = {
 function PanelSection({
   sectionId,
   title,
+  anchorId,
   summary,
   children,
   collapsed = false,
@@ -1262,6 +2003,7 @@ function PanelSection({
 }: PanelSectionProps) {
   return (
     <section
+      id={anchorId}
       onDragOver={(event) => sectionId && onDragOver?.(event, sectionId)}
       onDrop={(event) => sectionId && onDrop?.(event, sectionId)}
       className={cn(
@@ -1313,7 +2055,7 @@ function PanelSection({
   );
 }
 
-function SortablePanelStack({ children }: { children: ReactNode }) {
+function SortablePanelStack({ children, blockSelected = false }: { children: ReactNode; blockSelected?: boolean }) {
   const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
     readStoredPanelSectionOrder,
   );
@@ -1339,11 +2081,17 @@ function SortablePanelStack({ children }: { children: ReactNode }) {
     }
   }, [collapsedSectionIds]);
 
-  const togglePanelSection = useCallback((id: PanelSectionId) => {
-    setCollapsedSectionIds((current) =>
-      current.includes(id) ? current.filter((sectionId) => sectionId !== id) : [...current, id],
-    );
-  }, []);
+  const togglePanelSection = useCallback(
+    (id: PanelSectionId) => {
+      // 블록 편집 중에는 다른 카드들이 강제로 접혀 있으므로(아래 collapsed 계산), 저장된 토글 선호값을
+      // 건드리지 않도록 'block-edit' 외의 토글은 무시한다 → 선택 해제 시 원래 열림/접힘 상태가 그대로 복구.
+      if (blockSelected && id !== "block-edit") return;
+      setCollapsedSectionIds((current) =>
+        current.includes(id) ? current.filter((sectionId) => sectionId !== id) : [...current, id],
+      );
+    },
+    [blockSelected],
+  );
 
   const reorderPanelSection = useCallback((sourceId: PanelSectionId, targetId: PanelSectionId) => {
     if (sourceId === targetId) return;
@@ -1421,8 +2169,11 @@ function SortablePanelStack({ children }: { children: ReactNode }) {
       {orderedIds.map((id) => {
         const panel = panelById.get(id);
         if (!panel) return null;
+        // 블록 선택 중에는 '블록 편집' 카드만 자기 토글 상태를 따르고, 나머지는 모두 접는다.
+        // (저장된 collapsedSectionIds 는 그대로 두므로 선택 해제 시 원상 복구됨)
+        const collapsed = blockSelected && id !== "block-edit" ? true : collapsedSections.has(id);
         return cloneElement(panel, {
-          collapsed: collapsedSections.has(id),
+          collapsed,
           dragging: draggingSectionId === id,
           dragOver: dragOverSectionId === id,
           onToggle: togglePanelSection,
@@ -1497,6 +2248,9 @@ function PropertiesPanel({
   onCoverPatch,
   onLogoFile,
   onApplyCover,
+  onToggleEnglishPage,
+  onBrand,
+  settingsOpen,
 }: {
   report: AnalysisReport;
   active: ItemDescriptor | null;
@@ -1509,6 +2263,9 @@ function PropertiesPanel({
   onCoverPatch: (patch: Partial<ReportCover>) => void;
   onLogoFile: (file?: File | null) => void;
   onApplyCover: (cover: ReportCover) => void;
+  onToggleEnglishPage: () => void;
+  onBrand: (value: string) => void;
+  settingsOpen: boolean;
   onTheme: (t: ReportThemeId) => void;
   onMetaPatch: (patch: Partial<BlockMeta>) => void;
   onMove: (dir: -1 | 1) => void;
@@ -1525,6 +2282,15 @@ function PropertiesPanel({
   onDeleteCustom: (id: string) => void;
   onDeleteSection: (sectionIndex: number) => void;
 }) {
+  // 블록을 선택하면 '블록 편집' 카드가 화면 위쪽으로 자연스레 스크롤되어 도구가 최대한 보이게.
+  const activeId = active?.id ?? null;
+  useEffect(() => {
+    if (!activeId) return;
+    const el = document.getElementById("panel-block-edit");
+    if (!el) return;
+    const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
+    return () => cancelAnimationFrame(raf);
+  }, [activeId]);
   const align = activeMeta.align ?? "left";
   const isCover = !!active && active.id === "cover";
   const isCustom = !!active && active.id.startsWith("c-");
@@ -1549,7 +2315,22 @@ function PropertiesPanel({
         error={coverError}
         onPatch={onCoverPatch}
         onLogoFile={onLogoFile}
+        brand={report.brand}
+        onBrand={onBrand}
       />
+    </PanelSection>
+  );
+  const englishPagePanel = (
+    <PanelSection sectionId="english-page" title="영어 원문 페이지">
+      <ToggleRow
+        label="표지 다음 영어 원문 페이지"
+        on={!!report.englishOnlyPage}
+        onClick={onToggleEnglishPage}
+        icon={<FileText className="w-3.5 h-3.5" />}
+      />
+      <p className="mt-2 text-[10.5px] text-slate-400 leading-relaxed">
+        켜면 표지 다음에 <b className="text-slate-500">제목 + 영어 원문</b>(해석·필기 없음)만 있는 페이지가 추가돼요.
+      </p>
     </PanelSection>
   );
   const activeSection = active && active.sectionIndex >= 0 ? report.sections[active.sectionIndex] : null;
@@ -1711,10 +2492,58 @@ function PropertiesPanel({
     </PanelSection>
   ) : null;
 
+  if (settingsOpen) {
+    const worksheetIdx = report.sections.findIndex((sx) => sx.kind === "learning-worksheet");
+    const worksheetSection = worksheetIdx >= 0 && report.sections[worksheetIdx]?.kind === "learning-worksheet" ? report.sections[worksheetIdx] : null;
+    return (
+      <SortablePanelStack>
+        {coverPanel}
+        {englishPagePanel}
+        {logoPanel}
+        {VocabTestSection}
+        {worksheetSection ? (
+          <PanelSection sectionId="answer-key" title="정답지 (해설)">
+            <ToggleRow
+              label="정답·해설지 포함"
+              on={!worksheetAnswersAreHidden(worksheetSection)}
+              onClick={() => onToggleWorksheetAnswers(worksheetIdx)}
+            />
+            <p className="mt-2 text-[10.5px] leading-relaxed text-slate-400">
+              학생 배포용은 끄고, 해설지로 쓸 땐 켜세요. 켜면 실전 학습지 정답·해설이 <b className="text-slate-500">맨 뒤 새 페이지</b>에 붙어요.
+            </p>
+          </PanelSection>
+        ) : null}
+        <PanelSection sectionId="theme" title="디자인 템플릿" summary={DESIGN_TEMPLATE_LABELS[report.themeId]}>
+          <div className="flex flex-col gap-1.5">
+            {reportThemeIdSchema.options.map((t) => {
+              const theme = REPORT_THEMES[t];
+              const selected = report.themeId === t;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => onTheme(t)}
+                  className={`flex items-center gap-2 text-left text-[12px] px-2.5 py-1.5 rounded-md border transition-colors ${
+                    selected ? "font-semibold" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                  }`}
+                  style={selected ? { borderColor: theme.ink, backgroundColor: theme.tint, color: theme.ink } : undefined}
+                >
+                  <span className="flex h-4 w-8 overflow-hidden rounded border border-white shadow-sm" aria-hidden>
+                    <span className="flex-1" style={{ backgroundColor: theme.ink }} />
+                    <span className="flex-1" style={{ backgroundColor: theme.gold }} />
+                  </span>
+                  <span className="min-w-0 flex-1">{DESIGN_TEMPLATE_LABELS[t]}</span>
+                </button>
+              );
+            })}
+          </div>
+        </PanelSection>
+      </SortablePanelStack>
+    );
+  }
+
   return (
-    <SortablePanelStack>
-      {coverPanel}
-      {logoPanel}
+    <SortablePanelStack blockSelected={!!active && !isCover}>
       {isCover ? (
         <PanelSection sectionId="cover-edit" title="표지 편집">
           <p className="text-[12px] text-slate-400 leading-relaxed">
@@ -1737,7 +2566,8 @@ function PropertiesPanel({
         </>
       ) : (
         <>
-          <PanelSection sectionId="selected" title="선택한 블록">
+          <PanelSection sectionId="block-edit" title="블록 편집" anchorId="panel-block-edit">
+          <PanelGroup label="선택한 블록">
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-semibold text-slate-700">{blockLabel}</span>
               {isSectionItem && !active.isSectionStart ? (
@@ -1756,10 +2586,10 @@ function PropertiesPanel({
                 <Plus className="w-3.5 h-3.5" /> {addLabel} 추가
               </button>
             ) : null}
-          </PanelSection>
+          </PanelGroup>
 
           {activeCustom?.kind === "spacer" ? (
-            <PanelSection sectionId="spacer-height" title="여백 높이">
+            <PanelGroup label="여백 높이">
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -1771,11 +2601,11 @@ function PropertiesPanel({
                 />
                 <span className="text-[11px] font-semibold text-slate-500 w-12 text-right">{Math.round(activeCustom.heightMm)}mm</span>
               </div>
-            </PanelSection>
+            </PanelGroup>
           ) : null}
 
           {activeCustom?.kind !== "spacer" ? (
-          <PanelSection sectionId="format" title="서식">
+          <PanelGroup label="서식">
             {/* 글자 크기 */}
             <div className="mb-2.5">
               <div className="flex items-center justify-between mb-1">
@@ -1833,11 +2663,11 @@ function PropertiesPanel({
                 );
               })}
             </div>
-          </PanelSection>
+          </PanelGroup>
           ) : null}
 
           {tableGroup ? (
-            <PanelSection sectionId="table-cols" title="표 열 표시">
+            <PanelGroup label="표 열 표시">
               <div className="flex flex-col gap-1">
                 {TABLE_COLUMNS[tableGroup].map((c) => {
                   const shown = !hiddenCols.has(c.key);
@@ -1857,15 +2687,11 @@ function PropertiesPanel({
                 })}
               </div>
               <p className="mt-1.5 text-[10.5px] text-slate-400">불필요한 열(예: 동의어·발음)을 표 전체에서 끌 수 있어요.</p>
-            </PanelSection>
+            </PanelGroup>
           ) : null}
 
           {activeWorksheet ? (
-            <PanelSection
-              sectionId="worksheet"
-              title="학습지 출력"
-              summary={worksheetAnswersAreHidden(activeWorksheet) ? "정답·오답 분석 숨김" : "정답·오답 분석 표시"}
-            >
+            <PanelGroup label="학습지 출력">
               <ToggleRow
                 label="정답·오답 분석 숨김"
                 on={worksheetAnswersAreHidden(activeWorksheet)}
@@ -1874,10 +2700,10 @@ function PropertiesPanel({
               <p className="mt-2 text-[10.5px] text-slate-400 leading-relaxed">
                 학생 배포용으로 쓸 때는 정답과 오답 분석을 숨기고, 해설지로 쓸 때는 다시 켜면 돼요.
               </p>
-            </PanelSection>
+            </PanelGroup>
           ) : null}
 
-          <PanelSection sectionId="layout" title="페이지 조판">
+          <PanelGroup label="페이지 조판">
             <div className="space-y-2">
               <ToggleRow
                 label="앞 블록과 한 페이지에 (분리 금지)"
@@ -1902,9 +2728,9 @@ function PropertiesPanel({
                 높이 초기화 ({Math.round(activeMeta.minHeight)}mm)
               </button>
             ) : null}
-          </PanelSection>
+          </PanelGroup>
 
-          <PanelSection sectionId="order" title="순서 / 표시">
+          <PanelGroup label="순서 / 표시">
             <div className="grid grid-cols-2 gap-1.5 mb-2">
               <button
                 type="button"
@@ -1931,10 +2757,10 @@ function PropertiesPanel({
                 icon={activeMeta.hidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               />
             ) : null}
-          </PanelSection>
+          </PanelGroup>
 
           {isSectionItem && active.isSectionStart ? (
-            <PanelSection sectionId="section" title="섹션">
+            <PanelGroup label="섹션">
               <button
                 type="button"
                 onClick={() => onDeleteSection(active.sectionIndex)}
@@ -1942,11 +2768,11 @@ function PropertiesPanel({
               >
                 <Trash2 className="w-3.5 h-3.5" /> 섹션 전체 삭제
               </button>
-            </PanelSection>
+            </PanelGroup>
           ) : null}
 
           {isCustom ? (
-            <PanelSection sectionId="custom" title={activeCustom?.kind === "spacer" ? "여백 블록" : "텍스트 블록"}>
+            <PanelGroup label={activeCustom?.kind === "spacer" ? "여백 블록" : "텍스트 블록"}>
               <button
                 type="button"
                 onClick={() => onDeleteCustom(active.id)}
@@ -1954,11 +2780,11 @@ function PropertiesPanel({
               >
                 <Trash2 className="w-3.5 h-3.5" /> 블록 삭제
               </button>
-            </PanelSection>
+            </PanelGroup>
           ) : null}
 
           {isSectionItem && !active.isSectionStart ? (
-            <PanelSection sectionId="delete" title="이 블록">
+            <PanelGroup label="이 블록">
               <button
                 type="button"
                 onClick={() => onDeleteItem(active.id)}
@@ -1966,40 +2792,14 @@ function PropertiesPanel({
               >
                 <Trash2 className="w-3.5 h-3.5" /> 삭제 <span className="text-[10px] text-red-300">(Del)</span>
               </button>
-            </PanelSection>
+            </PanelGroup>
           ) : null}
+          </PanelSection>
 
           {InsertSection}
         </>
       )}
 
-      {VocabTestSection}
-
-      <PanelSection sectionId="theme" title="디자인 템플릿" summary={DESIGN_TEMPLATE_LABELS[report.themeId]}>
-        <div className="flex flex-col gap-1.5">
-          {reportThemeIdSchema.options.map((t) => {
-            const theme = REPORT_THEMES[t];
-            const selected = report.themeId === t;
-            return (
-              <button
-                key={t}
-                type="button"
-                onClick={() => onTheme(t)}
-                className={`flex items-center gap-2 text-left text-[12px] px-2.5 py-1.5 rounded-md border transition-colors ${
-                  selected ? "font-semibold" : "border-slate-200 text-slate-600 hover:bg-slate-50"
-                }`}
-                style={selected ? { borderColor: theme.ink, backgroundColor: theme.tint, color: theme.ink } : undefined}
-              >
-                <span className="flex h-4 w-8 overflow-hidden rounded border border-white shadow-sm" aria-hidden>
-                  <span className="flex-1" style={{ backgroundColor: theme.ink }} />
-                  <span className="flex-1" style={{ backgroundColor: theme.gold }} />
-                </span>
-                <span className="min-w-0 flex-1">{DESIGN_TEMPLATE_LABELS[t]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </PanelSection>
     </SortablePanelStack>
   );
 }
@@ -2018,14 +2818,20 @@ function LogoPanel({
   error,
   onPatch,
   onLogoFile,
+  brand,
+  onBrand,
 }: {
   cover: ReportCover | undefined;
   coverEnabled: boolean;
   error: string | null;
   onPatch: (patch: Partial<ReportCover>) => void;
   onLogoFile: (file?: File | null) => void;
+  brand: string;
+  onBrand: (value: string) => void;
 }) {
   const logoAlign = cover?.logoAlign ?? "center";
+  const [brandDraft, setBrandDraft] = useState(brand);
+  useEffect(() => setBrandDraft(brand), [brand]);
   const [logoDropActive, setLogoDropActive] = useState(false);
   const [savedSettingsAvailable, setSavedSettingsAvailable] = useState(
     () => Boolean(readSavedLogoSettings()),
@@ -2098,6 +2904,25 @@ function LogoPanel({
 
   return (
     <div>
+      <div className="mb-2.5">
+        <label className="mb-1 block text-[11px] font-bold text-slate-500">학원명 (머리말·꼬리말)</label>
+        <input
+          type="text"
+          value={brandDraft}
+          onChange={(e) => setBrandDraft(e.target.value)}
+          onBlur={() => {
+            const v = brandDraft.trim();
+            if (v && v !== brand) onBrand(v);
+            else if (!v) setBrandDraft(brand);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.currentTarget.blur();
+          }}
+          placeholder="예: ENGLISH READING LAB"
+          className="w-full rounded-md border border-slate-200 px-2.5 py-1.5 text-[12px] font-semibold text-slate-700 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        />
+        <p className="mt-1 text-[10px] leading-snug text-slate-400">모든 페이지 머리말·꼬리말의 학원명이 한 번에 바뀌어요.</p>
+      </div>
       <div
         onDragEnter={handleLogoDragEnter}
         onDragOver={handleLogoDragOver}

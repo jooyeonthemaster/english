@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { notifyCreditsChanged } from "@/lib/credits-client";
 import {
   deleteWorkbenchPassage,
   updatePassageAnalysis,
@@ -235,6 +236,7 @@ export function PassageAnalysisModal({
       toast.error("분석 중 오류가 발생했습니다.");
     } finally {
       setAnalyzing(false);
+      notifyCreditsChanged(); // 차감/실패환급 즉시 사이드바 반영
     }
   };
 

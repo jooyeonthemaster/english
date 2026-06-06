@@ -470,6 +470,14 @@ function TaskGridCard({
     if (task.href) router.push(task.href);
   };
   const canOpen = Boolean(onClick || task.href);
+  const selectionMode = Boolean(onToggleCheck);
+  const handleCardAction = () => {
+    if (onToggleCheck) {
+      onToggleCheck();
+      return;
+    }
+    handleOpen();
+  };
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -495,18 +503,27 @@ function TaskGridCard({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleOpen}
+      onClick={handleCardAction}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleOpen();
+          handleCardAction();
         }
       }}
       role="button"
       tabIndex={0}
+      aria-pressed={
+        selectionMode
+          ? checked === "indeterminate"
+            ? "mixed"
+            : Boolean(checked)
+          : undefined
+      }
       className={
         `group relative flex min-h-[240px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
-        (draggableEnabled
+        (selectionMode
+          ? "cursor-pointer"
+          : draggableEnabled
           ? isDragging
             ? "cursor-grabbing opacity-50"
             : "cursor-grab active:cursor-grabbing"
@@ -722,6 +739,14 @@ function TaskListRow({
     if (task.href) router.push(task.href);
   };
   const canOpen = Boolean(onClick || task.href);
+  const selectionMode = Boolean(onToggleCheck);
+  const handleRowAction = () => {
+    if (onToggleCheck) {
+      onToggleCheck();
+      return;
+    }
+    handleOpen();
+  };
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -747,18 +772,27 @@ function TaskListRow({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleOpen}
+      onClick={handleRowAction}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleOpen();
+          handleRowAction();
         }
       }}
       role="button"
       tabIndex={0}
+      aria-pressed={
+        selectionMode
+          ? checked === "indeterminate"
+            ? "mixed"
+            : Boolean(checked)
+          : undefined
+      }
       className={
         `group relative flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-150 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
-        (draggableEnabled
+        (selectionMode
+          ? "cursor-pointer"
+          : draggableEnabled
           ? isDragging
             ? "cursor-grabbing opacity-50"
             : "cursor-grab active:cursor-grabbing"
@@ -921,6 +955,7 @@ export function TaskQueueInlineList({
   marqueeBoundaryRef,
 }: TaskQueueInlineListProps) {
   const marqueeEnabled = Boolean(marqueeSelectedTaskIds && onMarqueeChange);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const { tasks: fetchedTasks, loading, reload } = useTaskList({
     scope: domain,
     refreshKey: refreshSignal ?? 0,
@@ -1118,9 +1153,10 @@ export function TaskQueueInlineList({
     : grid
       ? "min-w-0 overflow-visible bg-[#F4F6F9]"
       : "min-w-0 overflow-x-auto overflow-y-hidden";
+  const effectiveMarqueeBoundaryRef = marqueeBoundaryRef ?? sectionRef;
 
   return (
-    <section className={sectionClass}>
+    <section ref={sectionRef} className={sectionClass}>
       {bare ? null : (
         <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
           <div className="flex min-w-0 items-center gap-2">
@@ -1233,7 +1269,7 @@ export function TaskQueueInlineList({
                       className={cls}
                       value={marqueeSelectedTaskIds!}
                       onChange={onMarqueeChange!}
-                      boundaryRef={marqueeBoundaryRef}
+                      boundaryRef={effectiveMarqueeBoundaryRef}
                     >
                       {rows}
                     </DragSelect>
@@ -1279,7 +1315,7 @@ export function TaskQueueInlineList({
                       className={cls}
                       value={marqueeSelectedTaskIds!}
                       onChange={onMarqueeChange!}
-                      boundaryRef={marqueeBoundaryRef}
+                      boundaryRef={effectiveMarqueeBoundaryRef}
                     >
                       {cards}
                     </DragSelect>

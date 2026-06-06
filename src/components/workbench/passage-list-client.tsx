@@ -12,7 +12,6 @@ import {
   Plus,
   Folder,
   FolderX,
-  BookMarked,
   Layers3,
   Loader2,
   Trash2,
@@ -34,7 +33,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PassageStudyNotePrintDialog } from "@/components/workbench/passage-study-note-print-dialog";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -225,7 +223,6 @@ export function PassageListClient({
   const [sortOrder, setSortOrder] = useState<PassageSortOrder>("newest");
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
-  const [studyNoteOpen, setStudyNoteOpen] = useState(false);
   const [dupSummary, setDupSummary] = useState<DupSummary | null>(null);
   const [dupLoading, setDupLoading] = useState(false);
   const [dupError, setDupError] = useState<string | null>(null);
@@ -368,11 +365,6 @@ export function PassageListClient({
 
   const selection = useSelection(passageIds);
 
-  const selectedPassages = useMemo(
-    () => displayedPassages.filter((p) => selection.selectedIds.has(p.id)),
-    [displayedPassages, selection.selectedIds],
-  );
-
   // Stats
   const totalCount = passagesData.total;
 
@@ -492,16 +484,6 @@ export function PassageListClient({
     />
   );
 
-  const studyNoteAction = (
-    <button
-      onClick={() => setStudyNoteOpen(true)}
-      className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-emerald-700 bg-white border border-emerald-200 rounded-md hover:bg-emerald-50"
-    >
-      <BookMarked className="w-3.5 h-3.5" />
-      학습자료 만들기
-    </button>
-  );
-
   const handleBulkDelete = useCallback(async () => {
     const ids = Array.from(selection.selectedIds);
     if (ids.length === 0 || bulkDeleting) return;
@@ -554,26 +536,8 @@ export function PassageListClient({
     </button>
   );
 
-  const reportAction = (
-    <button
-      type="button"
-      onClick={() => {
-        const firstId = selection.selectedIds.values().next().value;
-        if (!firstId) return;
-        router.push(`/director/workbench/passages/${firstId}/reports`);
-      }}
-      disabled={selection.selectedIds.size === 0}
-      className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-semibold text-white bg-emerald-600 border border-emerald-600 rounded-md hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      <FileText className="w-3.5 h-3.5" />
-      A4 학습자료 [신규]
-    </button>
-  );
-
   const selectionActions = (
     <>
-      {reportAction}
-      {studyNoteAction}
       {addToFolderAction}
       {bulkDeleteAction}
     </>
@@ -584,6 +548,7 @@ export function PassageListClient({
     : null;
 
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
+  const passageListBoundaryRef = useRef<HTMLDivElement | null>(null);
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
@@ -715,7 +680,10 @@ export function PassageListClient({
               {toolbarRow}
             </div>
 
-            <div className="min-w-0 px-4 pb-3 pt-3 sm:px-5">
+            <div
+              ref={passageListBoundaryRef}
+              className="min-w-0 px-4 pb-3 pt-3 sm:px-5"
+            >
             {pageMode === "duplicates" ? (
               <div>
                 <div className="mb-3 flex items-center justify-between">
@@ -790,7 +758,12 @@ export function PassageListClient({
                           </span>
                         </header>
                         <div className="p-3">
-                          <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
+                          <DragSelect
+                            className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3"
+                            value={selection.selectedIds}
+                            onChange={selection.setSelectedIds}
+                            itemScopeRef={passageListBoundaryRef}
+                          >
                             {group.items.map((p) => {
                               const adapted = {
                                 id: p.id,
@@ -826,7 +799,7 @@ export function PassageListClient({
                                 />
                               );
                             })}
-                          </div>
+                          </DragSelect>
                         </div>
                       </section>
                     ))}
@@ -855,6 +828,7 @@ export function PassageListClient({
                     className="space-y-1.5"
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
+                    itemScopeRef={passageListBoundaryRef}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileRow
@@ -874,6 +848,7 @@ export function PassageListClient({
                     }
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
+                    itemScopeRef={passageListBoundaryRef}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileCard
@@ -902,12 +877,6 @@ export function PassageListClient({
           />
         )}
       </div>
-
-      <PassageStudyNotePrintDialog
-        open={studyNoteOpen}
-        onOpenChange={setStudyNoteOpen}
-        passages={selectedPassages}
-      />
 
       {/* ─── Bulk Delete Confirmation ─── */}
       <AlertDialog

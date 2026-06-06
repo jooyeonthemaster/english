@@ -318,6 +318,29 @@
   70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
   100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
 }
+/* 크레딧 뱃지 변화 강조: 폰트가 살짝 커졌다가 원래대로, 색이 잠깐 변했다가 복귀 */
+@keyframes credit-flash-down {
+  0% { transform: scale(1); }
+  28% { transform: scale(1.45); color: #ef4444; }
+  55% { transform: scale(1.1); color: #ef4444; }
+  100% { transform: scale(1); }
+}
+@keyframes credit-flash-up {
+  0% { transform: scale(1); }
+  28% { transform: scale(1.45); color: #2563eb; }
+  55% { transform: scale(1.1); color: #2563eb; }
+  100% { transform: scale(1); }
+}
+.credit-flash-down {
+  display: inline-block;
+  transform-origin: center;
+  animation: credit-flash-down 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.credit-flash-up {
+  display: inline-block;
+  transform-origin: center;
+  animation: credit-flash-up 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
 @keyframes yshin-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.45; transform: scale(0.85); }

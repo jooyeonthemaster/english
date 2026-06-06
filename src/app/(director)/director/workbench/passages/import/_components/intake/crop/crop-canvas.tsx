@@ -3,6 +3,7 @@
 // ============================================================================
 // CropCanvas — direct-manipulation image crop tool (adaptive-intake G2).
 //   • 빈 영역 드래그 = 새 영역 그리기
+//   • Shift+빈 영역 드래그 = 활성 지문 그룹에 새 영역 이어붙이기
 //   • 영역 내부 드래그 = 이동
 //   • 8핸들 드래그 = 리사이즈
 //   • 키보드: 화살표 이동(±1%) / Shift+화살표(±5%) / Alt+화살표 리사이즈 / Del 삭제
@@ -29,9 +30,19 @@ const NUDGE_SMALL = 0.01;
 const NUDGE_LARGE = 0.05;
 
 type DragState =
-  | { mode: "draw"; originX: number; originY: number }
+  | {
+      mode: "draw";
+      originX: number;
+      originY: number;
+      joinWithActiveGroup: boolean;
+    }
   | { mode: "move"; index: number; grabX: number; grabY: number; start: CropBox }
   | { mode: "resize"; index: number; handle: ResizeHandle };
+
+export interface CropCanvasChangeMeta {
+  action: "create";
+  joinWithActiveGroup: boolean;
+}
 
 const HANDLE_CURSOR: Record<ResizeHandle, string> = {
   nw: "nwse-resize",
@@ -68,7 +79,7 @@ export function CropCanvas({
 }: {
   imageUrl: string;
   boxes: CropBox[];
-  onChange: (next: CropBox[]) => void;
+  onChange: (next: CropBox[], meta?: CropCanvasChangeMeta) => void;
   activeIndex: number | null;
   onActiveIndexChange: (index: number | null) => void;
   disabled?: boolean;
@@ -152,7 +163,10 @@ export function CropCanvas({
           // 충분히 큰 영역만 커밋(작으면 단순 클릭 → 아무것도 추가 안 함).
           if (d && d.w >= DRAW_THRESHOLD && d.h >= DRAW_THRESHOLD) {
             const committed = [...boxes, clampCropBox(d)];
-            onChange(committed);
+            onChange(committed, {
+              action: "create",
+              joinWithActiveGroup: drag.joinWithActiveGroup,
+            });
             onActiveIndexChange(committed.length - 1);
           }
         }
@@ -175,8 +189,13 @@ export function CropCanvas({
       if (!rect) return;
       e.preventDefault();
       const { x, y } = toNormalized(e.clientX, e.clientY, rect);
-      onActiveIndexChange(null);
-      beginDrag({ mode: "draw", originX: x, originY: y });
+      if (!e.shiftKey) onActiveIndexChange(null);
+      beginDrag({
+        mode: "draw",
+        originX: x,
+        originY: y,
+        joinWithActiveGroup: e.shiftKey,
+      });
     },
     [beginDrag, disabled, onActiveIndexChange, readRect],
   );

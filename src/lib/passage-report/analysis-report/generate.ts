@@ -417,6 +417,23 @@ const INFERENCE_QUESTION_ORDER = [
   { type: "summary", typeLabel: "요약문 완성" },
 ] as const;
 
+/**
+ * 요약문 완성 본문의 (A)/(B) 라벨 주변에 빈칸 밑줄이 전혀 없으면 라벨 뒤에 빈칸을 채운다.
+ * AI가 "...(A) for generating..."처럼 라벨만 쓰고 빈칸 밑줄을 빠뜨리는 경우를 보정한다.
+ * 이미 밑줄(3개 이상)이 붙어 있는 라벨은 그대로 둔다. (A)/(B) 외 본문은 건드리지 않는다.
+ */
+function ensureSummaryBlanksInPassage(passage: string): string {
+  return passage
+    .replace(
+      /(_*)\s*\(\s*([AB])\s*\)\s*(_*)/g,
+      (match, before: string, letter: string, after: string) =>
+        before.length >= 3 || after.length >= 3 ? match : ` (${letter}) _____ `,
+    )
+    .replace(/ {2,}/g, " ")
+    .replace(/\s+([,.!?;:])/g, "$1")
+    .trim();
+}
+
 function normalizeInferenceQuestions(section: LearningWorksheetSection): void {
   if (!section.inferenceSet?.questions || section.inferenceSet.questions.length !== INFERENCE_QUESTION_ORDER.length) return;
   section.inferenceSet.title = section.inferenceSet.title?.trim() || "수능추론 문제";
@@ -426,7 +443,12 @@ function normalizeInferenceQuestions(section: LearningWorksheetSection): void {
     question.type = expected.type;
     question.typeLabel = expected.typeLabel;
     question.prompt = normalizeStudentFacingMarkup(question.prompt);
-    if (question.passage) question.passage = normalizeStudentFacingMarkup(question.passage);
+    if (question.passage) {
+      question.passage = normalizeStudentFacingMarkup(question.passage);
+      if (expected.type === "summary") {
+        question.passage = ensureSummaryBlanksInPassage(question.passage);
+      }
+    }
     if (question.answerText) question.answerText = normalizeStudentFacingMarkup(question.answerText);
     question.explanation = normalizeStudentFacingMarkup(question.explanation);
     question.choices = question.choices.map((choice) => ({
@@ -640,8 +662,13 @@ function validateInferenceQuality(section: LearningWorksheetSection): string[] {
       if (question.type === "blank" && !/_{3,}|빈칸|\(\s*\)/.test(promptAndPassage)) {
         issues.push("빈칸추론 문항에 빈칸 위치가 명확히 표시되지 않았습니다.");
       }
-      if (question.type === "summary" && !/\(A\)|\(B\)/.test(`${promptAndPassage} ${question.choices.map((c) => c.text).join(" ")}`)) {
-        issues.push("요약문 완성 문항이 (A), (B) 두 칸 구조가 아닙니다.");
+      if (question.type === "summary") {
+        // (A)/(B) 빈칸은 반드시 '본문(요약문)'에 있어야 한다. 선택지에는 항상 (A)/(B)가
+        // 들어가므로 선택지까지 합쳐 검사하면, 본문에 요약문 빈칸이 통째로 빠져 있어도
+        // 검증을 통과해 버린다(요약문 빈칸이 사라지던 버그). 본문만 보고 둘 다 요구한다.
+        if (!/\(\s*A\s*\)/.test(promptAndPassage) || !/\(\s*B\s*\)/.test(promptAndPassage)) {
+          issues.push("요약문 완성 문항의 본문(요약문)에 (A), (B) 빈칸이 모두 표시되어야 합니다.");
+        }
       }
     });
   }

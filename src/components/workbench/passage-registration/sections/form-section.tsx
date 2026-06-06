@@ -796,6 +796,7 @@ function ExtractionManageEmbed({
       onBulkAnalyze={onBulkAnalyze}
       bulkAnalyzing={bulkAnalyzing}
       marqueeBoundaryRef={marqueeBoundaryRef}
+      draftDetailActionMode="import"
     />
   );
 }

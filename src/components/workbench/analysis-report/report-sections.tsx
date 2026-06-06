@@ -1,4 +1,4 @@
-import { type ClipboardEvent, type CSSProperties, type ElementType, type FocusEvent, Fragment, type ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type CSSProperties, type ElementType, type FocusEvent, Fragment, type PointerEvent as ReactPointerEvent, type ReactNode, useLayoutEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { circledNo } from "@/lib/passage-report/analysis-report/design-tokens";
@@ -13,7 +13,9 @@ import {
   type VocabTestMode,
 } from "@/lib/passage-report/analysis-report/schema";
 import {
+  formatSummaryPairText,
   getConsolidatedWordOrders,
+  isSummaryPairWorksheetType,
   normalizeStudentFacingMarkup,
   toStudentVocabularyClozePassage,
   worksheetAnswersAreHidden,
@@ -95,6 +97,7 @@ export const TABLE_COLUMNS: Record<"grammar" | "exam" | "vocab", { key: string; 
     { key: "pronunciation", label: "발음" },
     { key: "meaning", label: "뜻 (본문 의미)" },
     { key: "synonyms", label: "동의어" },
+    { key: "antonyms", label: "반의어" },
   ],
 };
 
@@ -270,47 +273,159 @@ export function SectionHead({ no, kind, labelKo, labelEn }: { no: number; kind: 
 }
 
 // ─── 표 헤더 (run 렌더러가 사용) ──────────────────────────────────────────────
-const COL_WIDTH: Record<string, string | undefined> = {
-  sentenceNo: "8%", point: "27%",
-  type: "16%", asks: "24%",
-  headword: "22%", pronunciation: "16%", meaning: "34%",
+// 표 종류별 '기본' 열 비율(보이는 열 합 ~100). 사용자가 세로 구분선을 드래그하면
+// report.tableColWidths[group] 에 열키→퍼센트로 저장되어 이 기본값을 대체한다.
+const DEFAULT_TABLE_COL_PCT: Record<string, Record<string, number>> = {
+  grammar: { sentenceNo: 8, point: 27, explanation: 65 },
+  exam: { type: 16, asks: 24, strategy: 60 },
+  vocab: { headword: 22, pronunciation: 16, meaning: 34, synonyms: 14, antonyms: 14 },
 };
 const EDIT_HANDLE_COLUMN_WIDTH = "6mm";
 const EDIT_HANDLE_COLUMN_PERCENT = 3.448276;
 
-function normalizedColumnWidth(key: string, visibleKeys: string[], editable: boolean): string | undefined {
-  const weights = visibleKeys.map((k) => Number.parseFloat(COL_WIDTH[k] ?? ""));
-  if (weights.some((w) => !Number.isFinite(w) || w <= 0)) return COL_WIDTH[key];
-  const total = weights.reduce((sum, w) => sum + w, 0);
-  const own = Number.parseFloat(COL_WIDTH[key] ?? "");
-  if (total <= 0 || !Number.isFinite(own)) return undefined;
-  const ratio = own / total;
-  return editable ? `${(100 - EDIT_HANDLE_COLUMN_PERCENT) * ratio}%` : `${ratio * 100}%`;
+/** 보이는 열들의 너비(%)를 해석 — override(저장값) 우선, 없으면 기본 비율. 편집 모드는 핸들열 폭만큼 축소. */
+function resolveColumnWidths(
+  group: string,
+  visibleKeys: string[],
+  editable: boolean,
+  overrides?: Record<string, number>,
+): Record<string, string> {
+  const base = DEFAULT_TABLE_COL_PCT[group] ?? {};
+  const vals = visibleKeys.map((k) => overrides?.[k] ?? base[k] ?? 0);
+  const total = vals.reduce((sum, v) => sum + v, 0) || 1;
+  const available = editable ? 100 - EDIT_HANDLE_COLUMN_PERCENT : 100;
+  const out: Record<string, string> = {};
+  visibleKeys.forEach((k, i) => {
+    out[k] = `${(vals[i] / total) * available}%`;
+  });
+  return out;
 }
 
-export function tableHeadRow(wrap: WrapKind, editable: boolean, hiddenCols?: string[]): ReactNode {
+export type TableColResize = {
+  overrides?: Record<string, number>;
+  onDraft?: (widths: Record<string, number>) => void;
+  onCommit?: (widths: Record<string, number>) => void;
+};
+
+export function tableHeadRow(
+  wrap: WrapKind,
+  editable: boolean,
+  hiddenCols?: string[],
+  resize?: TableColResize,
+): ReactNode {
   const group = wrap === "grammar" ? "grammar" : wrap === "exam" ? "exam" : "vocab";
   const hidden = new Set(hiddenCols ?? []);
   const visibleCols = TABLE_COLUMNS[group].filter((c) => !hidden.has(c.key));
   const visibleKeys = visibleCols.map((c) => c.key);
+  const widths = resolveColumnWidths(group, visibleKeys, editable, resize?.overrides);
+  const canResize = editable && !!resize?.onDraft && !!resize?.onCommit;
   return (
     <tr>
       {editable ? <th className="par-edit-hcell" style={{ width: EDIT_HANDLE_COLUMN_WIDTH }} /> : null}
-      {visibleCols.map((c) => {
-        const width = normalizedColumnWidth(c.key, visibleKeys, editable);
-        return (
-          <th key={c.key} style={width ? { width } : undefined}>
-            {c.label}
-          </th>
-        );
-      })}
+      {visibleCols.map((c, i) => (
+        <th
+          key={c.key}
+          data-col-key={c.key}
+          style={{ width: widths[c.key], position: canResize ? "relative" : undefined }}
+        >
+          {c.label}
+          {canResize && i < visibleCols.length - 1 ? (
+            <ColResizeHandle
+              leftKey={c.key}
+              rightKey={visibleCols[i + 1].key}
+              onDraft={resize!.onDraft!}
+              onCommit={resize!.onCommit!}
+            />
+          ) : null}
+        </th>
+      ))}
     </tr>
+  );
+}
+
+/**
+ * 표 열 사이의 세로 구분선 드래그 핸들. thead th 들의 현재 실제 너비(px)를 읽어
+ * 퍼센트로 환산한 뒤, 인접한 두 열만 합을 유지하며 조절한다(나머지 열은 그대로).
+ * 드래그 중엔 onDraft 로 미리보기, 놓을 때 onCommit 으로 저장.
+ */
+function ColResizeHandle({
+  leftKey,
+  rightKey,
+  onDraft,
+  onCommit,
+}: {
+  leftKey: string;
+  rightKey: string;
+  onDraft: (widths: Record<string, number>) => void;
+  onCommit: (widths: Record<string, number>) => void;
+}) {
+  const dragRef = useRef<{ startX: number; contentPx: number; startPct: Record<string, number>; next: Record<string, number> } | null>(null);
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLSpanElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const table = e.currentTarget.closest("table");
+    if (!table) return;
+    const ths = Array.from(table.querySelectorAll<HTMLElement>("thead th[data-col-key]"));
+    const startPct: Record<string, number> = {};
+    let contentPx = 0;
+    const px: Record<string, number> = {};
+    for (const th of ths) {
+      const key = th.getAttribute("data-col-key");
+      if (!key) continue;
+      const w = th.getBoundingClientRect().width;
+      px[key] = w;
+      contentPx += w;
+    }
+    if (contentPx <= 0) return;
+    for (const k of Object.keys(px)) startPct[k] = (px[k] / contentPx) * 100;
+    dragRef.current = { startX: e.clientX, contentPx, startPct, next: startPct };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: ReactPointerEvent<HTMLSpanElement>) => {
+    const s = dragRef.current;
+    if (!s) return;
+    const MIN = 6;
+    let d = ((e.clientX - s.startX) / s.contentPx) * 100;
+    d = Math.max(-(s.startPct[leftKey] - MIN), Math.min(s.startPct[rightKey] - MIN, d));
+    const next: Record<string, number> = { ...s.startPct };
+    next[leftKey] = Math.round((s.startPct[leftKey] + d) * 10) / 10;
+    next[rightKey] = Math.round((s.startPct[rightKey] - d) * 10) / 10;
+    s.next = next;
+    onDraft(next);
+  };
+
+  const end = (e: ReactPointerEvent<HTMLSpanElement>) => {
+    const s = dragRef.current;
+    if (!s) return;
+    dragRef.current = null;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+    onCommit(s.next);
+  };
+
+  return (
+    <span
+      className="par-col-resize par-edit-chrome"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={end}
+      onPointerCancel={end}
+      onMouseDown={(e) => e.stopPropagation()}
+      title="드래그해서 열 너비 조절"
+      aria-hidden
+    />
   );
 }
 
 function vocabTestHiddenCols(hiddenCols: string[] | undefined, mode: VocabTestMode): string[] {
   const hidden = new Set(hiddenCols ?? []);
   hidden.add("synonyms");
+  hidden.add("antonyms");
   if (mode === "hide-meaning") {
     hidden.delete("headword");
     hidden.delete("meaning");
@@ -436,6 +551,9 @@ function WorksheetQuestionCard({
   onPatch: (patch: WorksheetQuestionPatch) => void;
 }) {
   const displayType = "typeLabel" in q && q.typeLabel ? q.typeLabel : q.type;
+  const isSummaryPair = isSummaryPairWorksheetType(q.type, "typeLabel" in q ? q.typeLabel : undefined);
+  const choiceText = (text: string) =>
+    normalizeStudentFacingMarkup(isSummaryPair ? formatSummaryPairText(text) : text);
   const promptValue = normalizeStudentFacingMarkup(q.prompt);
   const passageValue = q.passage ? normalizeStudentFacingMarkup(q.passage) : "";
   return (
@@ -475,7 +593,7 @@ function WorksheetQuestionCard({
             <Field
               as="span"
               editable={editable}
-              value={normalizeStudentFacingMarkup(choice.text)}
+              value={choiceText(choice.text)}
               render={renderStudentFacingText}
               onCommit={(v) =>
                 onPatch({
@@ -492,7 +610,7 @@ function WorksheetQuestionCard({
             <span className="par-ws-answer-label">정답</span>
             <Field as="span" editable={editable} value={q.answerLabel} onCommit={(v) => onPatch({ answerLabel: v })} />
             {q.answerText ? (
-              <Field as="span" className="par-ws-answer-text" editable={editable} value={q.answerText} onCommit={(v) => onPatch({ answerText: v })} />
+              <Field as="span" className="par-ws-answer-text" editable={editable} value={isSummaryPair ? formatSummaryPairText(q.answerText) : q.answerText} onCommit={(v) => onPatch({ answerText: v })} />
             ) : null}
           </div>
           <Field as="div" className="par-ws-expl" editable={editable} value={q.explanation} onCommit={(v) => onPatch({ explanation: v })} />
@@ -537,7 +655,13 @@ function WorksheetQuestionAnswer({ q }: { q: WorksheetQuestionView }) {
       <div className="par-ws-answer-main">
         <span className="par-ws-answer-label">Q{q.no}</span>
         <b>{q.answerLabel}</b>
-        {q.answerText ? <AnswerText>{q.answerText}</AnswerText> : null}
+        {q.answerText ? (
+          <AnswerText>
+            {isSummaryPairWorksheetType(q.type, "typeLabel" in q ? q.typeLabel : undefined)
+              ? formatSummaryPairText(q.answerText)
+              : q.answerText}
+          </AnswerText>
+        ) : null}
       </div>
       <div className="par-ws-expl">{q.explanation}</div>
       {q.distractors?.length ? (
@@ -557,7 +681,16 @@ function WorksheetQuestionAnswer({ q }: { q: WorksheetQuestionView }) {
   );
 }
 
-function WorksheetAnswerKey({ section, wordOrders }: { section: LearningWorksheetSection; wordOrders: WorksheetWordOrder[] }) {
+/**
+ * 정답·해설을 "서브섹션별 독립 블록"으로 빌드한다.
+ * 과거엔 전체 정답키를 하나의 .par-ws-block(break-inside:avoid)으로 push 했는데,
+ * 정답키가 한 페이지(250mm)를 넘기면 .par-sheet{overflow:hidden} 에 의해 잘려 보이던 문제.
+ * 각 표/문항을 별도 블록으로 내보내면 페이지네이터가 자연스럽게 여러 장에 흘려 담는다.
+ */
+function worksheetAnswerKeySubsections(
+  section: LearningWorksheetSection,
+  wordOrders: WorksheetWordOrder[],
+): { key: string; node: ReactNode }[] {
   const workbook = section.workbookSet;
   const clozeItems = section.cloze?.items ?? [];
   const practiceItems = section.practice?.items ?? [];
@@ -565,120 +698,150 @@ function WorksheetAnswerKey({ section, wordOrders }: { section: LearningWorkshee
   const inferenceQuestions = section.inferenceSet?.questions ?? [];
   const extraQuestions = section.questions ?? [];
 
-  return (
-    <div className="par-ws-block par-ws-answer-key">
-      <WorksheetMiniTitle title="정답 및 해설" kicker="Answer Key" />
-
-      {clozeItems.length ? (
-        <div className="par-ws-answer-subsection">
-          <div className="par-ws-drill-label">{section.cloze?.title ?? "Key Phrase Cloze"}</div>
-          <table className="par-ws-key-table">
-            <tbody>
-              {clozeItems.map((item) => (
-                <tr key={item.no}>
-                  <td>{item.no}</td>
-                  <td>{item.answers.join(", ")}</td>
-                  <td>{item.translation ?? ""}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  const subs: { key: string; node: ReactNode }[] = [];
+  // "정답 및 해설" 헤더는 첫 번째 블록에만 붙여 고아 헤더(페이지 하단에 제목만 남는 것)를 막는다.
+  const wrap = (key: string, inner: ReactNode) => {
+    const withTitle = subs.length === 0;
+    subs.push({
+      key,
+      node: (
+        <div className="par-ws-block par-ws-answer-key">
+          {withTitle ? <WorksheetMiniTitle title="정답 및 해설" kicker="Answer Key" /> : null}
+          {inner}
         </div>
-      ) : null}
+      ),
+    });
+  };
 
-      {practiceItems.length ? (
-        <div className="par-ws-answer-subsection">
-          <div className="par-ws-drill-label">{section.practice?.title ?? "Practice"}</div>
-          <table className="par-ws-key-table">
-            <tbody>
-              {practiceItems.map((item) => (
-                <tr key={item.no}>
-                  <td>{item.no}</td>
-                  <td>{item.answers.join(", ")}</td>
-                  <td>{item.sentenceNo ? `S${item.sentenceNo}` : ""}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
+  if (clozeItems.length) {
+    wrap(
+      "cloze",
+      <div className="par-ws-answer-subsection">
+        <div className="par-ws-drill-label">{section.cloze?.title ?? "Key Phrase Cloze"}</div>
+        <table className="par-ws-key-table">
+          <tbody>
+            {clozeItems.map((item) => (
+              <tr key={item.no}>
+                <td>{item.no}</td>
+                <td>{item.answers.join(", ")}</td>
+                <td>{item.translation ?? ""}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+  }
 
-      {drillGrammarChoices.length ? (
-        <div className="par-ws-answer-subsection">
-          <div className="par-ws-drill-label">어법 선택</div>
-          <table className="par-ws-key-table">
-            <tbody>
-              {drillGrammarChoices.map((item) => (
-                <tr key={item.no}>
-                  <td>{item.no}</td>
-                  <td>{item.answer}</td>
-                  <td>{item.explanation}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
+  if (practiceItems.length) {
+    wrap(
+      "practice",
+      <div className="par-ws-answer-subsection">
+        <div className="par-ws-drill-label">{section.practice?.title ?? "Practice"}</div>
+        <table className="par-ws-key-table">
+          <tbody>
+            {practiceItems.map((item) => (
+              <tr key={item.no}>
+                <td>{item.no}</td>
+                <td>{item.answers.join(", ")}</td>
+                <td>{item.sentenceNo ? `S${item.sentenceNo}` : ""}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+  }
 
-      {workbook ? (
-        <>
-          <div className="par-ws-answer-subsection">
-            <div className="par-ws-drill-label">{workbook.grammarSelection.title}</div>
-            <table className="par-ws-key-table">
-              <tbody>
-                {workbook.grammarSelection.choices.map((choice) => (
-                  <tr key={choice.no}>
-                    <td>{choice.no}</td>
-                    <td>{choice.answer}</td>
-                    <td>{choice.explanation}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+  if (drillGrammarChoices.length) {
+    wrap(
+      "drill-grammar",
+      <div className="par-ws-answer-subsection">
+        <div className="par-ws-drill-label">어법 선택</div>
+        <table className="par-ws-key-table">
+          <tbody>
+            {drillGrammarChoices.map((item) => (
+              <tr key={item.no}>
+                <td>{item.no}</td>
+                <td>{item.answer}</td>
+                <td>{item.explanation}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+  }
 
-          <div className="par-ws-answer-subsection">
-            <div className="par-ws-drill-label">{workbook.vocabularyCloze.title}</div>
-            <table className="par-ws-key-table">
-              <tbody>
-                {workbook.vocabularyCloze.blanks.map((blank) => (
-                  <tr key={blank.no}>
-                    <td>{blank.no}</td>
-                    <td>{blank.answer}</td>
-                    <td>{[blank.meaning, blank.clue].filter(Boolean).join(" / ")}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : null}
+  if (workbook) {
+    wrap(
+      "workbook-grammar",
+      <div className="par-ws-answer-subsection">
+        <div className="par-ws-drill-label">{workbook.grammarSelection.title}</div>
+        <table className="par-ws-key-table">
+          <tbody>
+            {workbook.grammarSelection.choices.map((choice) => (
+              <tr key={choice.no}>
+                <td>{choice.no}</td>
+                <td>{choice.answer}</td>
+                <td>{choice.explanation}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+    wrap(
+      "workbook-vocab",
+      <div className="par-ws-answer-subsection">
+        <div className="par-ws-drill-label">{workbook.vocabularyCloze.title}</div>
+        <table className="par-ws-key-table">
+          <tbody>
+            {workbook.vocabularyCloze.blanks.map((blank) => (
+              <tr key={blank.no}>
+                <td>{blank.no}</td>
+                <td>{blank.answer}</td>
+                <td>{[blank.meaning, blank.clue].filter(Boolean).join(" / ")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+  }
 
-      {wordOrders.length ? (
-        <div className="par-ws-answer-subsection">
-          <div className="par-ws-drill-label">주요문장 단어배열 영작</div>
-          <table className="par-ws-key-table">
-            <tbody>
-              {wordOrders.map((item) => (
-                <tr key={item.no}>
-                  <td>{item.no}</td>
-                  <td>{item.answer}</td>
-                  <td>{item.korean}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
+  if (wordOrders.length) {
+    wrap(
+      "word-order",
+      <div className="par-ws-answer-subsection">
+        <div className="par-ws-drill-label">주요문장 단어배열 영작</div>
+        <table className="par-ws-key-table">
+          <tbody>
+            {wordOrders.map((item) => (
+              <tr key={item.no}>
+                <td>{item.no}</td>
+                <td>{item.answer}</td>
+                <td>{item.korean}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>,
+    );
+  }
 
-      {inferenceQuestions.map((q) => (
-        <WorksheetQuestionAnswer key={`iq-${q.no}`} q={q} />
-      ))}
-      {extraQuestions.map((q) => (
-        <WorksheetQuestionAnswer key={`q-${q.no}`} q={q} />
-      ))}
-    </div>
+  // 문항별 정답·해설은 '각각' 독립 블록으로 내보낸다. 예전엔 전 문항(추론 Q1~Q5 +
+  // 추가 문항)을 하나의 break-inside:avoid 블록으로 묶어, 5문항+오답표가 한 페이지(250mm)를
+  // 넘기면 마지막 장이 .par-sheet{overflow:hidden} 에 잘려 보이던 문제. 문항 단위로 쪼개면
+  // 페이지네이터가 여러 장에 자연스럽게 흘려 담아 잘림이 사라진다.
+  inferenceQuestions.forEach((q) =>
+    wrap(`q-inf-${q.no}`, <div className="par-ws-answer-subsection"><WorksheetQuestionAnswer q={q} /></div>),
   );
+  extraQuestions.forEach((q) =>
+    wrap(`q-extra-${q.no}`, <div className="par-ws-answer-subsection"><WorksheetQuestionAnswer q={q} /></div>),
+  );
+
+  return subs;
 }
 
 type GrammarNoteRef = {
@@ -1316,7 +1479,7 @@ function ReadGrammarNotePart({
           className="par-read-note-target"
           editable={editable}
           value={note.row.excerpt ?? ""}
-          placeholder="(?먮Ц 援ъ젅)"
+          placeholder="(원문 구절)"
           onCommit={(v) => patchGrammarNote(note, sectionEdit, { excerpt: v })}
         />
       </div>
@@ -1330,7 +1493,7 @@ function ReadGrammarNotePart({
           className="par-read-note-trap"
           editable={editable}
           value={note.row.trap ?? ""}
-          placeholder="(?⑥젙 ?ъ씤??"
+          placeholder="(함정 포인트)"
           onCommit={(v) => patchGrammarNote(note, sectionEdit, { trap: v })}
         />
       </div>
@@ -1384,7 +1547,7 @@ function ReadExamNotePart({
           className="par-read-note-target"
           editable={editable}
           value={note.row.asks ?? ""}
-          placeholder="(臾삳뒗 寃?"
+          placeholder="(묻는 것)"
           onCommit={(v) => patchExamNote(note, sectionEdit, { asks: v })}
         />
       </div>
@@ -1506,6 +1669,26 @@ const ANNO_COLOR: Record<CanvasNoteKind, string> = {
   logic: "#9a6b00",
 };
 
+/** 필기 분석(05) 색상 범례 — 어법/구문/출제/논리 색이 무엇을 뜻하는지 안내. */
+function AnnotatedColorLegend() {
+  const items: [CanvasNoteKind, string][] = [
+    ["grammar", "어법 포인트"],
+    ["parsing", "구문 · 끊어읽기"],
+    ["exam", "출제 포인트"],
+    ["logic", "논리 흐름"],
+  ];
+  return (
+    <div className="par-anno-legend">
+      <span className="par-anno-legend-label">색상 안내</span>
+      {items.map(([kind, label]) => (
+        <span key={kind} className="par-anno-legend-item" style={{ "--anno-c": ANNO_COLOR[kind] } as CSSProperties}>
+          {label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 type CanvasNoteRef =
   | { kind: "grammar"; ref: GrammarNoteRef }
   | { kind: "exam"; ref: ExamNoteRef }
@@ -1542,6 +1725,9 @@ function buildCanvasNotesForSentence(
       role: n.row.point,
       lines: noteBodyLines(layout?.lines, n.row.explanation),
       trap: n.row.trap?.trim() || undefined,
+      example: n.row.example?.trim() || undefined,
+      exampleWrong: n.row.exampleWrong?.trim() || undefined,
+      exampleCorrect: n.row.exampleCorrect?.trim() || undefined,
     });
     refs.set(key, { kind: "grammar", ref: n });
   });
@@ -1608,6 +1794,10 @@ function commitNoteRole(entry: CanvasNoteRef | undefined, sectionEdit: ((i: numb
 
 function commitNoteTrap(entry: CanvasNoteRef | undefined, sectionEdit: ((i: number) => SectionEdit) | undefined, value: string) {
   if (entry?.kind === "grammar") patchGrammarNote(entry.ref, sectionEdit, { trap: value });
+}
+
+function commitNoteExample(entry: CanvasNoteRef | undefined, sectionEdit: ((i: number) => SectionEdit) | undefined, value: string) {
+  if (entry?.kind === "grammar") patchGrammarNote(entry.ref, sectionEdit, { example: value });
 }
 
 function joinNoteLines(lines: string[], index: number, value: string): string {
@@ -1704,15 +1894,68 @@ function CanvasNoteText({
           <span className={trapClass}>{note.trap}</span>
         )
       ) : null}
+      {note.example ? (
+        canEdit ? (
+          <Field as="span" className="par-anno-example" editable value={note.example} onCommit={(v) => commitNoteExample(entry, sectionEdit, v)} />
+        ) : (
+          <span className="par-anno-example">{renderTrapExample(note)}</span>
+        )
+      ) : null}
     </>
   );
 }
 
-function CanvasInterlineNote({ note, entry, editable, sectionEdit }: { note: PlacedNote; entry?: CanvasNoteRef; editable: boolean; sectionEdit?: (i: number) => SectionEdit }) {
+const KIND_LABEL: Record<CanvasNoteKind, string> = { grammar: "어법", parsing: "구문", exam: "출제", logic: "논리" };
+
+/** 함정 예문 — 시험이 파는 '틀린 형태'를 빨강 취소선, 정답을 초록으로(있으면). */
+function renderTrapExample(note: PlacedNote): ReactNode {
+  const ex = note.example ?? "";
+  const wrong = note.exampleWrong?.trim();
+  const correct = note.exampleCorrect?.trim();
+  const good = correct ? <span className="par-ex-good"> (→ {correct})</span> : null;
+  if (!wrong) return <>{ex}{good}</>;
+  const idx = ex.indexOf(wrong);
+  if (idx < 0) return <>{ex}{good}</>;
   return (
-    <span className="par-canvas-note" style={{ "--anno-c": ANNO_COLOR[note.kind] } as CSSProperties}>
-      <CanvasNoteText note={note} entry={entry} editable={editable} sectionEdit={sectionEdit} lineClass="par-canvas-note-line" roleClass="par-canvas-note-role" trapClass="par-canvas-note-trap" />
-    </span>
+    <>
+      {ex.slice(0, idx)}
+      <span className="par-ex-bad">{wrong}</span>
+      {good}
+      {ex.slice(idx + wrong.length)}
+    </>
+  );
+}
+
+/** 필기 분석(05) 목록 항목 — 번호 뱃지 + 종류 + 본문 출처 + 해설/함정/예문. */
+function CanvasListNote({
+  note,
+  num,
+  entry,
+  editable,
+  sectionEdit,
+}: {
+  note: PlacedNote;
+  num: number;
+  entry?: CanvasNoteRef;
+  editable: boolean;
+  sectionEdit?: (i: number) => SectionEdit;
+}) {
+  const color = ANNO_COLOR[note.kind];
+  return (
+    <div className="par-list-note" data-list-key={note.key} style={{ "--anno-c": color } as CSSProperties}>
+      <span className="par-list-badge">{num}</span>
+      <div className="par-list-body">
+        <span className="par-list-kind">{KIND_LABEL[note.kind]}</span>
+        {note.anchorRange && note.anchorText?.trim() ? (
+          <>
+            {" · "}
+            <span className="par-list-src">{note.anchorText.trim()}</span>
+          </>
+        ) : null}
+        {" — "}
+        <CanvasNoteText note={note} entry={entry} editable={editable} sectionEdit={sectionEdit} lineClass="par-list-line" roleClass="par-list-role" trapClass="par-list-trap" />
+      </div>
+    </div>
   );
 }
 
@@ -1723,26 +1966,17 @@ function CanvasRailCard({ note, entry, editable, sectionEdit }: { note: PlacedNo
       data-rail-key={note.key}
       style={{ "--anno-c": ANNO_COLOR[note.kind] } as CSSProperties}
     >
+      {note.anchorRange && note.anchorText?.trim() ? <span className="par-rail-card-src">{note.anchorText.trim()}</span> : null}
       <CanvasNoteText note={note} entry={entry} editable={editable} sectionEdit={sectionEdit} lineClass="par-rail-card-line" roleClass="par-rail-card-role" trapClass="par-rail-card-trap" />
     </div>
-  );
-}
-
-function CanvasFootnote({ note }: { note: PlacedNote }) {
-  return (
-    <span className="par-canvas-fn" style={{ "--anno-c": ANNO_COLOR[note.kind] } as CSSProperties}>
-      {note.role ? <span className="par-canvas-fn-role">{note.role}: </span> : null}
-      {note.lines.join(" ")}
-      {note.trap ? <span className="par-canvas-fn-trap"> ⚠{note.trap}</span> : null}
-    </span>
   );
 }
 
 interface ConnectorPath {
   d: string;
   color: string;
-  ax: number;
-  ay: number;
+  hx: number;
+  hy: number;
 }
 
 /** 문장 1개 = 원자 캔버스. */
@@ -1780,35 +2014,69 @@ function AnnotatedSentenceCanvas({
   const rootRef = useRef<HTMLElement | null>(null);
   const [connectors, setConnectors] = useState<ConnectorPath[]>([]);
 
+  // 모든 필기를 종류별로 재배치(v3): 어법·구문 → 아래 목록(번호 뱃지) / 출제·논리 → 오른쪽 레일
+  const allNotes = [...plan.interlineByChunk.flat(), ...plan.railNotes, ...plan.footnoteNotes];
+  const listNotes = allNotes.filter((n) => n.kind === "grammar" || n.kind === "parsing");
+  const sideNotes = allNotes.filter((n) => n.kind === "exam" || n.kind === "logic");
+  const numByKey = new Map<string, number>();
+  listNotes.forEach((n, i) => numByKey.set(n.key, i + 1));
+  const chunkBadges = new Map<number, { num: number; color: string }[]>();
+  listNotes.forEach((n) => {
+    if (!n.anchorRange) return;
+    const arr = chunkBadges.get(n.chunkIndex) ?? [];
+    arr.push({ num: numByKey.get(n.key) ?? 0, color: ANNO_COLOR[n.kind] });
+    chunkBadges.set(n.chunkIndex, arr);
+  });
+
+  // 연결선: 밑줄 왼쪽 → (살짝 내려) 왼쪽 여백 레인으로 ← → 레인 따라 ↓ → 설명 뱃지로 →.
+  // 세로 하강은 항상 '왼쪽 여백(레인)'에서 일어나 본문 위를 지나지 않는다. 연결마다
+  // 다른 레인 x + 다른 진입 높이로 분리해 서로 겹치지 않게 한다.
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const compute = () => {
       const rootRect = root.getBoundingClientRect();
       if (!rootRect.width) return;
-      // CSS zoom(.par-sheet) 보정: getBoundingClientRect 은 zoom 적용된 px → user 단위로 환산
       const sheet = root.closest<HTMLElement>(".par-sheet");
       const zoom = sheet ? parseFloat(getComputedStyle(sheet).zoom || "1") || 1 : 1;
-      const staffEl = root.querySelector<HTMLElement>(".par-canvas-staff");
-      const staffRight = staffEl ? (staffEl.getBoundingClientRect().right - rootRect.left) / zoom : 0;
-      const next: ConnectorPath[] = [];
-      plan.railNotes.forEach((rn) => {
-        if (!rn.anchorRange) return;
-        const card = root.querySelector<HTMLElement>(`[data-rail-key="${rn.key}"]`);
-        const chunkEl = root.querySelector<HTMLElement>(`[data-anchor-id="${canvasId}-c${rn.chunkIndex}"]`);
-        if (!card || !chunkEl) return;
-        // 본문 영어 span 의 오른쪽 끝(텍스트 가장자리)에 정확히 앵커 — 청크 셀 전체가 아니라 영어만
-        const anchorEl = chunkEl.querySelector<HTMLElement>(".par-canvas-en") ?? chunkEl;
-        const a = anchorEl.getBoundingClientRect();
-        const c = card.getBoundingClientRect();
-        const ax = (a.right - rootRect.left) / zoom;
-        const ay = (a.top + a.height / 2 - rootRect.top) / zoom;
-        const cx = (c.left - rootRect.left) / zoom;
-        const cy = (c.top - rootRect.top) / zoom + 6;
-        // 세로 구간은 본문 컬럼 오른쪽(여백/거터)에 배치 — 본문 텍스트를 가로지르지 않도록
-        const vx = Math.max(ax + 3, Math.min(cx - 4, staffRight + 3));
-        const d = `M ${ax.toFixed(1)} ${ay.toFixed(1)} L ${vx.toFixed(1)} ${ay.toFixed(1)} L ${vx.toFixed(1)} ${cy.toFixed(1)} L ${cx.toFixed(1)} ${cy.toFixed(1)}`;
-        next.push({ d, color: ANNO_COLOR[rn.kind], ax, ay });
+      const raw: { x1: number; y1: number; lineBottom: number; bx: number; by: number; color: string }[] = [];
+      listNotes.forEach((n) => {
+        if (!n.anchorRange) return;
+        const listEl = root.querySelector<HTMLElement>(`[data-list-key="${n.key}"]`);
+        const chunkEl = root.querySelector<HTMLElement>(`[data-anchor-id="${canvasId}-c${n.chunkIndex}"]`);
+        if (!listEl || !chunkEl) return;
+        const badgeEl = listEl.querySelector<HTMLElement>(".par-list-badge") ?? listEl;
+        const enEl = chunkEl.querySelector<HTMLElement>(".par-canvas-en") ?? chunkEl;
+        const a = enEl.getBoundingClientRect();
+        const c = chunkEl.getBoundingClientRect();
+        const b = badgeEl.getBoundingClientRect();
+        raw.push({
+          x1: (a.left - rootRect.left) / zoom, // 밑줄(영어 청크) 왼쪽
+          y1: (a.bottom - rootRect.top) / zoom + 1, // 밑줄 바로 아래
+          lineBottom: (c.bottom - rootRect.top) / zoom + 1.5, // 그 줄(역할 라벨 포함) 아래 빈 띠
+          bx: (b.left - rootRect.left) / zoom,
+          by: (b.top + b.height / 2 - rootRect.top) / zoom,
+          color: ANNO_COLOR[n.kind],
+        });
+      });
+      if (!raw.length) {
+        setConnectors((prev) => (prev.length ? [] : prev));
+        return;
+      }
+      // 설명(목표) 순서로 정렬 → 위 연결일수록 안쪽(오른쪽) 레인, 아래로 갈수록 바깥(왼쪽) 레인.
+      // 이렇게 하면 세로 하강선들이 서로 교차하지 않고 나란히 내려간다.
+      raw.sort((p, q) => p.by - q.by || p.x1 - q.x1);
+      const minBx = Math.min(...raw.map((r) => r.bx));
+      const laneRight = Math.max(7, minBx - 5); // 뱃지 바로 왼쪽(가장 안쪽 레인)
+      const laneLeft = 3; // 가장 바깥(왼쪽 끝) 레인
+      const cnt = raw.length;
+      const next: ConnectorPath[] = raw.map((r, i) => {
+        const laneX = cnt > 1 ? laneRight - ((laneRight - laneLeft) * i) / (cnt - 1) : laneRight;
+        // 진입 가로선은 그 줄 아래 빈 띠에서, 연결마다 살짝 어긋나게(겹침 방지).
+        const shelfY = r.lineBottom + i * 1.4;
+        const endx = Math.max(laneX + 1, r.bx - 1);
+        const d = `M ${r.x1.toFixed(1)} ${r.y1.toFixed(1)} L ${r.x1.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${r.by.toFixed(1)} L ${endx.toFixed(1)} ${r.by.toFixed(1)}`;
+        return { d, color: r.color, hx: endx, hy: r.by };
       });
       setConnectors((prev) => (sameConnectors(prev, next) ? prev : next));
     };
@@ -1816,69 +2084,79 @@ function AnnotatedSentenceCanvas({
     const ro = new ResizeObserver(compute);
     ro.observe(root);
     return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan, canvasId, en, editable]);
 
   const enEditable = editable && !!onCommitEn;
   const koEditable = editable && !!onCommitKo;
-  const railAnchorChunks = new Set(plan.railNotes.filter((n) => n.anchorRange).map((n) => n.chunkIndex));
+  const hasRail = sideNotes.length > 0;
 
   return (
-    <article ref={rootRef} className="par-canvas" data-canvas data-canvas-id={canvasId}>
-      <div className={cn("par-canvas-grid", plan.hasRail && "has-rail")}>
+    <article ref={rootRef} className="par-canvas par-canvas-v3" data-canvas data-canvas-id={canvasId}>
+      <div className={cn("par-canvas-grid", hasRail && "has-rail")}>
         <div className="par-canvas-staff">
           <span className={cn("par-canvas-no", isCont && "is-cont")}>{isCont ? "+" : circledNo(no)}</span>
           {plan.chunks.map((chunk, i) => {
-            const notes = plan.interlineByChunk[i] ?? [];
-            const isAnchored = notes.some((n) => n.anchorRange) || railAnchorChunks.has(i);
-            const cellColor = notes[0] ? ANNO_COLOR[notes[0].kind] : undefined;
+            const badges = chunkBadges.get(i);
+            const isAnchored = !!badges?.length;
+            const cellColor = badges?.[0]?.color;
             const newEnFor = (v: string) => plan.chunks.map((c, j) => (j === i ? v : c.text)).join("");
             return (
-              <span
-                key={i}
-                className={cn("par-canvas-chunk", chunk.emphasis === "core" && "is-core", isAnchored && "is-anchored", notes.length > 0 && "is-noted")}
-                data-anchor-id={`${canvasId}-c${i}`}
-                style={cellColor ? ({ "--anno-c": cellColor } as CSSProperties) : undefined}
-              >
-                <CanvasChunkEnglish editable={enEditable} value={chunk.text} onCommit={(v) => onCommitEn?.(newEnFor(v))} highlights={keywords} vocabNotes={vocabNotes} />
-                {chunk.role ? <span className="par-canvas-role">{chunk.role}</span> : null}
-                {notes.length ? (
-                  <span className="par-canvas-notes">
-                    {notes.map((n) => (
-                      <CanvasInterlineNote key={n.key} note={n} entry={refs.get(n.key)} editable={editable} sectionEdit={sectionEdit} />
-                    ))}
-                  </span>
-                ) : null}
-              </span>
+              <Fragment key={i}>
+                {/* 끊어읽기 구분선 — 청크(직독직해 단위) 사이를 '/'로 */}
+                {i > 0 ? <span className="par-canvas-sep" aria-hidden>/</span> : null}
+                <span
+                  className={cn("par-canvas-chunk", chunk.emphasis === "core" && "is-core", isAnchored && "is-anchored")}
+                  data-anchor-id={`${canvasId}-c${i}`}
+                  style={cellColor ? ({ "--anno-c": cellColor } as CSSProperties) : undefined}
+                >
+                  {chunk.gloss || badges ? (
+                    <span className="par-canvas-gloss">
+                      {chunk.gloss ?? ""}
+                      {badges?.map((bd) => (
+                        <span key={bd.num} className="par-canvas-lk" style={{ "--anno-c": bd.color } as CSSProperties}>
+                          {bd.num}
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
+                  <CanvasChunkEnglish editable={enEditable} value={chunk.text} onCommit={(v) => onCommitEn?.(newEnFor(v))} highlights={keywords} vocabNotes={vocabNotes} />
+                  {chunk.role ? <span className="par-canvas-role">{chunk.role}</span> : null}
+                </span>
+              </Fragment>
             );
           })}
         </div>
-        {plan.hasRail ? (
+        {hasRail ? (
           <div className="par-canvas-rail">
-            {plan.railNotes.map((n) => (
+            {sideNotes.map((n) => (
               <CanvasRailCard key={n.key} note={n} entry={refs.get(n.key)} editable={editable} sectionEdit={sectionEdit} />
             ))}
           </div>
         ) : null}
       </div>
+      {listNotes.length ? (
+        <div className="par-canvas-list">
+          {listNotes.map((n) => (
+            <CanvasListNote key={n.key} note={n} num={numByKey.get(n.key) ?? 0} entry={refs.get(n.key)} editable={editable} sectionEdit={sectionEdit} />
+          ))}
+        </div>
+      ) : null}
       {showTrans && (ko || koEditable) ? (
         <div className="par-canvas-trans">
           <span className="par-canvas-trans-no">{circledNo(no)}</span>
           <Field as="p" className="par-canvas-trans-ko" editable={koEditable} value={ko} placeholder="(해석)" onCommit={(v) => onCommitKo?.(v)} />
         </div>
       ) : null}
-      {plan.footnoteNotes.length ? (
-        <div className="par-canvas-footnotes">
-          {plan.footnoteNotes.map((n) => (
-            <CanvasFootnote key={n.key} note={n} />
-          ))}
-        </div>
-      ) : null}
       {connectors.length ? (
         <svg className="par-canvas-connectors" aria-hidden>
           {connectors.map((p, i) => (
             <g key={i}>
-              <path d={p.d} style={{ stroke: p.color }} />
-              <circle cx={p.ax} cy={p.ay} r="2.4" style={{ fill: p.color }} />
+              <path d={p.d} className="par-conn-line" style={{ stroke: p.color }} />
+              <path
+                d={`M ${p.hx.toFixed(1)} ${p.hy.toFixed(1)} L ${(p.hx - 4.4).toFixed(1)} ${(p.hy - 2.4).toFixed(1)} L ${(p.hx - 4.4).toFixed(1)} ${(p.hy + 2.4).toFixed(1)} Z`}
+                style={{ fill: p.color }}
+              />
             </g>
           ))}
         </svg>
@@ -2225,6 +2503,46 @@ function titleItems(report: AnalysisReport, med?: MetaEdit): FlowItem[] {
   ];
 }
 
+/** 어법 선택 본문의 "[a / b]" 선택 괄호를 밑줄로 강조해 렌더(비편집 보기/인쇄용). */
+function renderGrammarChoiceText(text: string): ReactNode {
+  const re = /\[[^\][]*\]/g;
+  const out: ReactNode[] = [];
+  let cursor = 0;
+  let k = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > cursor) out.push(text.slice(cursor, m.index));
+    out.push(
+      <u key={k++} className="par-ws-choice-mark">
+        {m[0]}
+      </u>,
+    );
+    cursor = m.index + m[0].length;
+  }
+  if (cursor < text.length) out.push(text.slice(cursor));
+  return out.length ? out : text;
+}
+
+/** 표지 다음 '영어 원문만' 단독 페이지 — 번호매긴 영어 문장만(해석·필기 없음). report.englishOnlyPage 가 켜졌을 때. */
+function englishOnlyPageItems(report: AnalysisReport): FlowItem[] {
+  if (!report.englishOnlyPage) return [];
+  const passage = report.sections.find((s) => s.kind === "passage");
+  if (!passage || passage.kind !== "passage" || !passage.sentences.length) return [];
+  return passage.sentences.map((snt, i) => ({
+    id: `english-only-${i}`,
+    sectionIndex: -1,
+    kind: "passage" as const,
+    no: 0,
+    wrap: "reading" as WrapKind,
+    node: (
+      <p className="par-eng-only">
+        <span className="par-eng-only-no">{circledNo(snt.n)}</span>
+        <span className="par-eng-only-en">{snt.en}</span>
+      </p>
+    ),
+  }));
+}
+
 // ─── 섹션 → flow item[] ───────────────────────────────────────────────────────
 export function sectionFlowItems(
   section: AnalysisSection,
@@ -2247,6 +2565,16 @@ export function sectionFlowItems(
 
       // ── 깔끔한 원문 + 해석 (필기 없음) ──
       if (options?.passageRenderMode === "clean") {
+        // 핵심 어휘 밑줄 범례 — 굵은 밑줄이 핵심 어휘임을 명시
+        if (keywords.length) {
+          push(
+            "note",
+            "kw-legend",
+            <p className="par-note par-kw-legend">
+              <mark className="par-kw">굵은 밑줄</mark> 표시는 본문의 핵심 어휘예요.
+            </p>,
+          );
+        }
         s.sentences.forEach((sentence, sentenceIndex) => {
           const patchClean = (patch: Partial<PassageSection["sentences"][number]>) =>
             commit({ ...s, sentences: s.sentences.map((it, idx) => (idx === sentenceIndex ? { ...it, ...patch } : it)) });
@@ -2269,6 +2597,8 @@ export function sectionFlowItems(
 
       // ── 신규 필기 캔버스 (HLC) ──
       if ((options?.passageLayout ?? "hlc") !== "legacy") {
+        // 색상 범례 — 어법/구문/출제/논리 색이 무엇을 뜻하는지 표시
+        push("note", "anno-legend", <AnnotatedColorLegend />);
         s.sentences.forEach((_sentence, sentenceIndex) => {
           const sentence = s.sentences[sentenceIndex];
           const vocabNotes = study.vocabBySentence.get(sentence.n) ?? [];
@@ -2610,7 +2940,7 @@ export function sectionFlowItems(
       const delRow = (i: number) => commit({ ...s, rows: s.rows.filter((_, j) => j !== i) });
       if (!options?.vocabTestOnly) {
         s.rows.forEach((r, i) => {
-          const visibleCols = (["headword", "pronunciation", "meaning", "synonyms"] as const).filter((key) => !h.has(key));
+          const visibleCols = (["headword", "pronunciation", "meaning", "synonyms", "antonyms"] as const).filter((key) => !h.has(key));
           const deleteAnchor = visibleCols[visibleCols.length - 1];
           const rowDelete = editable ? <DelBtn className="par-table-row-delete" title="단어 행 삭제" onClick={() => delRow(i)} /> : null;
           push(
@@ -2639,6 +2969,12 @@ export function sectionFlowItems(
                 <td className={cn("par-cell-syn", deleteAnchor === "synonyms" && "par-table-row-delete-cell")}>
                   <Field as="span" editable={editable} value={r.synonyms ?? ""} onCommit={(v) => upd(i, { synonyms: v })} />
                   {deleteAnchor === "synonyms" ? rowDelete : null}
+                </td>
+              ) : null}
+              {!h.has("antonyms") ? (
+                <td className={cn("par-cell-ant", deleteAnchor === "antonyms" && "par-table-row-delete-cell")}>
+                  <Field as="span" editable={editable} value={r.antonyms ?? ""} onCommit={(v) => upd(i, { antonyms: v })} />
+                  {deleteAnchor === "antonyms" ? rowDelete : null}
                 </td>
               ) : null}
             </>,
@@ -2896,19 +3232,23 @@ export function sectionFlowItems(
                   <div className="par-ws-grammar-choice" key={item.no}>
                     <div className="par-ws-drill-line">
                       <span className="par-ws-cloze-no">{item.no}.</span>
-                      <Field
-                        as="span"
-                        editable={editable}
-                        value={item.text}
-                        onCommit={(v) =>
-                          patch({
-                            drills: {
-                              ...s.drills,
-                              grammarChoices: s.drills?.grammarChoices?.map((entry, j) => (i === j ? { ...entry, text: v } : entry)),
-                            },
-                          })
-                        }
-                      />
+                      {editable ? (
+                        <Field
+                          as="span"
+                          editable
+                          value={item.text}
+                          onCommit={(v) =>
+                            patch({
+                              drills: {
+                                ...s.drills,
+                                grammarChoices: s.drills?.grammarChoices?.map((entry, j) => (i === j ? { ...entry, text: v } : entry)),
+                              },
+                            })
+                          }
+                        />
+                      ) : (
+                        <span>{renderGrammarChoiceText(item.text)}</span>
+                      )}
                     </div>
                     <div className="par-ws-drill-options">[{item.choices.join(" / ")}]</div>
                   </div>
@@ -2937,6 +3277,10 @@ export function sectionFlowItems(
                       />
                     </div>
                     <div className="par-ws-wordorder-chunks">[{item.chunks.join(" / ")}]</div>
+                    <div className="par-ws-write-space" aria-hidden>
+                      <span className="par-ws-write-line" />
+                      <span className="par-ws-write-line" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -2982,20 +3326,24 @@ export function sectionFlowItems(
           "ws-workbook-grammar",
           <div className="par-ws-block">
             <WorksheetMiniTitle title={workbookSet.grammarSelection.title} kicker="Grammar Choice" />
-            <Field
-              as="div"
-              className="par-ws-workbook-passage"
-              editable={editable}
-              value={workbookSet.grammarSelection.passage}
-              onCommit={(v) =>
-                patch({
-                  workbookSet: {
-                    ...workbookSet,
-                    grammarSelection: { ...workbookSet.grammarSelection, passage: v },
-                  },
-                })
-              }
-            />
+            {editable ? (
+              <Field
+                as="div"
+                className="par-ws-workbook-passage"
+                editable
+                value={workbookSet.grammarSelection.passage}
+                onCommit={(v) =>
+                  patch({
+                    workbookSet: {
+                      ...workbookSet,
+                      grammarSelection: { ...workbookSet.grammarSelection, passage: v },
+                    },
+                  })
+                }
+              />
+            ) : (
+              <div className="par-ws-workbook-passage">{renderGrammarChoiceText(workbookSet.grammarSelection.passage)}</div>
+            )}
             <div className="par-ws-choice-answer-list">
               {workbookSet.grammarSelection.choices.map((choice) => (
                 <div className="par-ws-choice-answer" key={choice.no}>
@@ -3052,6 +3400,10 @@ export function sectionFlowItems(
                     />
                   </div>
                   <div className="par-ws-wordorder-chunks">[{item.chunks.join(" / ")}]</div>
+                  <div className="par-ws-write-space" aria-hidden>
+                    <span className="par-ws-write-line" />
+                    <span className="par-ws-write-line" />
+                  </div>
                 </div>
               ))}
             </div>
@@ -3106,11 +3458,12 @@ export function sectionFlowItems(
         );
       });
       if (showAnswerKey) {
-        push(
-          "note",
-          "ws-answer-key",
-          <WorksheetAnswerKey section={s} wordOrders={consolidatedWordOrders} />,
-        );
+        let firstAnswer = true;
+        for (const sub of worksheetAnswerKeySubsections(s, consolidatedWordOrders)) {
+          // 정답·해설은 맨 뒤 '별도 페이지'에서 시작 (학생 시험지와 분리)
+          push("note", `ws-answer-${sub.key}`, sub.node, firstAnswer ? { breakBefore: true } : undefined);
+          firstAnswer = false;
+        }
       }
       break;
     }
@@ -3193,14 +3546,15 @@ export function reportFlowItems(
   edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; ced?: CoverEdit },
 ): FlowItem[] {
   const vocabTestOnly = !!report.vocabTestOnly;
-  const items: FlowItem[] = vocabTestOnly ? [] : [...coverItems(report, edit?.ced), ...titleItems(report, edit?.med)];
+  const items: FlowItem[] = vocabTestOnly
+    ? []
+    : [...coverItems(report, edit?.ced), ...titleItems(report, edit?.med), ...englishOnlyPageItems(report)];
 
   const findIdx = (k: AnalysisSection["kind"]) => report.sections.findIndex((s) => s.kind === k);
   const passageIdx = findIdx("passage");
 
   // ── 새 보고서 구성 (passage 존재 시): 원문+해석 → 도식 → 요약 → 논리 → 필기 캔버스 → 어휘 → 학습지 ──
   if (!vocabTestOnly && passageIdx >= 0) {
-    const structureIdx = findIdx("structure-map");
     const summaryIdx = findIdx("summary");
     const vocabIdx = findIdx("vocabulary");
     const lwIdx = report.sections.findIndex((s) => s.kind === "learning-worksheet");
@@ -3238,17 +3592,12 @@ export function reportFlowItems(
       );
     };
 
-    // 1) 원문 + 문장별 해석 (필기 없음)
+    // 1) 원문 + 문장별 해석 (필기 없음) — 영어 원문 페이지가 켜졌으면 새 페이지에서 시작
     no += 1;
-    head(passageIdx, "passage", "", "원문 · 문장별 해석", "Original Passage & Translation", false);
+    head(passageIdx, "passage", "", "원문 · 문장별 해석", "Original Passage & Translation", !!report.englishOnlyPage);
     emit(passageIdx, { passageRenderMode: "clean" });
 
-    // 2) 한눈에 보는 지문 구조 (도식) — 새 페이지에서 시작해 한 페이지에
-    if (structureIdx >= 0) {
-      no += 1;
-      head(structureIdx, "structure-map", "", undefined, undefined, true);
-      emit(structureIdx, {});
-    }
+    // 2) 한눈에 보는 지문 구조 (도식) — 섹션 삭제됨(사용자 요청): 렌더링하지 않음
 
     // 3) 핵심 요약
     if (summaryIdx >= 0) {
@@ -3304,6 +3653,8 @@ export function reportFlowItems(
   let no = 0;
   report.sections.forEach((section, si) => {
     if (section.kind === "self-check") return;
+    // 한눈에 보는 지문 구조(도식) 섹션 삭제됨(사용자 요청) — 폴백 경로에서도 제외
+    if (section.kind === "structure-map") return;
     if (vocabTestOnly && section.kind !== "vocabulary") return;
     if (inlineStudyNotes && (section.kind === "grammar" || section.kind === "exam-focus" || section.kind === "parsing")) return;
     no += 1;

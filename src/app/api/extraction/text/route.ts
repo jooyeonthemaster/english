@@ -38,18 +38,40 @@ export async function POST(req: NextRequest) {
     return errorResponse("INVALID_PAYLOAD", "요청 본문을 읽을 수 없습니다.", 400);
   }
 
-  const originalFileName = makeTextSourceName(parsed.title);
-  let creditTxId: string | null = null;
+  // 단건(text)·다건(passages)을 하나의 배열로 정규화. passages 우선.
+  const passages =
+    parsed.passages && parsed.passages.length > 0
+      ? parsed.passages.map((p) => ({
+          title: p.title?.trim() || undefined,
+          text: p.text,
+        }))
+      : [{ title: parsed.title?.trim() || undefined, text: parsed.text ?? "" }];
+  const pageCount = passages.length;
+  // 작업(권) 이름 = 첫 지문 제목, 여러 개면 "외 N건".
+  const originalFileName =
+    makeTextSourceName(passages[0]?.title) +
+    (pageCount > 1 ? ` 외 ${pageCount - 1}건` : "");
+  const totalReserved = CREDIT_COSTS.TEXT_EXTRACTION * pageCount;
+  const creditTxIds: string[] = [];
   let jobId: string | null = null;
 
   try {
-    const credit = await deductCredits(staff.academyId, "TEXT_EXTRACTION", staff.id, {
-      sourceType: "TEXT",
-      mode: parsed.mode,
-      originalFileName,
-      textLength: parsed.text.length,
-    });
-    creditTxId = credit.transactionId;
+    // 지문 1개당 1회 차감(파일 모드와 동일하게 지문 수만큼 과금).
+    for (let i = 0; i < pageCount; i++) {
+      const credit = await deductCredits(
+        staff.academyId,
+        "TEXT_EXTRACTION",
+        staff.id,
+        {
+          sourceType: "TEXT",
+          mode: parsed.mode,
+          originalFileName,
+          textLength: passages[i].text.length,
+          passageIndex: i,
+        },
+      );
+      creditTxIds.push(credit.transactionId);
+    }
 
     const job = await prisma.$transaction(async (tx) => {
       const created = await tx.extractionJob.create({
@@ -59,31 +81,31 @@ export async function POST(req: NextRequest) {
           sourceType: "TEXT",
           mode: parsed.mode,
           originalFileName,
-          totalPages: 1,
+          totalPages: pageCount,
           successPages: 0,
           failedPages: 0,
-          pendingPages: 1,
-          creditsReserved: CREDIT_COSTS.TEXT_EXTRACTION,
+          pendingPages: pageCount,
+          creditsReserved: totalReserved,
           creditsConsumed: 0,
           status: "PROCESSING",
           startedAt: new Date(),
         },
       });
 
-      await tx.extractionPage.create({
-        data: {
+      await tx.extractionPage.createMany({
+        data: passages.map((p, i) => ({
           jobId: created.id,
-          pageIndex: 0,
-          imageUrl: `text://${created.id}/input`,
-          imageBytes: Buffer.byteLength(parsed.text, "utf8"),
-          sourceFileName: originalFileName,
-          status: "PROCESSING",
+          pageIndex: i,
+          imageUrl: `text://${created.id}/input/${i}`,
+          imageBytes: Buffer.byteLength(p.text, "utf8"),
+          sourceFileName: makeTextSourceName(p.title),
+          status: "PROCESSING" as const,
           attemptCount: 1,
-          idempotencyKey: `${created.id}:0`,
-          creditTxId,
-          extractedText: parsed.text,
+          idempotencyKey: `${created.id}:${i}`,
+          creditTxId: creditTxIds[i],
+          extractedText: p.text,
           startedAt: new Date(),
-        },
+        })),
       });
 
       return created;
@@ -91,123 +113,139 @@ export async function POST(req: NextRequest) {
     jobId = job.id;
 
     // P7-D2: verbatim이면 AI 복원을 건너뛰고 붙여넣은 텍스트를 그대로 보존.
-    // (이 경로는 shouldRestore 게이트를 안 타고 무조건 복원하던 곳 — 호출 자체를 조건부로.)
-    const restoration =
-      parsed.outputMode === "verbatim"
-        ? {
-            restoredText: parsed.text,
-            status: "NO_RESTORATION_NEEDED" as const,
-            changes: [] as Awaited<
-              ReturnType<typeof restoreM1Passage>
-            >["changes"],
-            sourceMatches: [] as Awaited<
-              ReturnType<typeof restoreM1Passage>
-            >["sourceMatches"],
-            warnings: [] as string[],
-            confidence: null as number | null,
-            metadata: null as unknown,
-          }
-        : await restoreM1Passage({
-            academyId: staff.academyId,
-            rawText: parsed.text,
-            questions: [],
-          });
+    // 지문마다 복원(verbatim은 그대로). 복원 호출은 병렬로 처리.
+    const restorations = await Promise.all(
+      passages.map((p) =>
+        parsed.outputMode === "verbatim"
+          ? Promise.resolve({
+              restoredText: p.text,
+              status: "NO_RESTORATION_NEEDED" as const,
+              changes: [] as Awaited<
+                ReturnType<typeof restoreM1Passage>
+              >["changes"],
+              sourceMatches: [] as Awaited<
+                ReturnType<typeof restoreM1Passage>
+              >["sourceMatches"],
+              warnings: [] as string[],
+              confidence: null as number | null,
+              metadata: null as unknown,
+            })
+          : restoreM1Passage({
+              academyId: staff.academyId,
+              rawText: p.text,
+              questions: [],
+            }),
+      ),
+    );
 
-    const draftId = randomUUID();
-    const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =
-      restoration.changes.map((change) => ({
-        passageDraftId: draftId,
-        sentenceOrder: change.sentenceOrder ?? null,
-        before: change.before,
-        after: change.after,
-        changeType: change.changeType ?? null,
-        reason: change.reason ?? null,
-        confidence: change.confidence ?? null,
-        sourcePageIndex: [0],
-      }));
-    const sourceMatchRows = buildM1SourceMatchRows({
-      passageDraftId: draftId,
-      sourceMatches: restoration.sourceMatches,
-    });
+    const draftIds = passages.map(() => randomUUID());
 
     await prisma.$transaction(
       async (tx) => {
-        await tx.extractionM1PassageDraft.create({
-          data: {
-            id: draftId,
-            jobId: job.id,
-            sourceMaterialId: null,
-            passageOrder: 0,
-            sourcePageIndex: [0],
-            title: parsed.title?.trim() || null,
-            rawText: parsed.text,
-            restoredText: restoration.restoredText,
-            teacherText: restoration.restoredText,
-            restorationStatus: restoration.status,
-            reviewStatus: "DRAFT",
-            confidence: restoration.confidence,
-            warnings:
-              restoration.warnings.length > 0
-                ? (restoration.warnings as Prisma.InputJsonValue)
-                : undefined,
-            metadata: {
-              sourceType: "TEXT",
-              inputTitle: parsed.title?.trim() || null,
-              ...((restoration.metadata &&
-              typeof restoration.metadata === "object" &&
-              !Array.isArray(restoration.metadata)
-                ? restoration.metadata
-                : {}) as Record<string, unknown>),
-            } as Prisma.InputJsonValue,
-          },
-        });
-        if (changeRows.length > 0) {
-          await tx.extractionM1PassageDraftChange.createMany({ data: changeRows });
+        for (let i = 0; i < pageCount; i++) {
+          const p = passages[i];
+          const restoration = restorations[i];
+          const draftId = draftIds[i];
+          const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =
+            restoration.changes.map((change) => ({
+              passageDraftId: draftId,
+              sentenceOrder: change.sentenceOrder ?? null,
+              before: change.before,
+              after: change.after,
+              changeType: change.changeType ?? null,
+              reason: change.reason ?? null,
+              confidence: change.confidence ?? null,
+              sourcePageIndex: [i],
+            }));
+          const sourceMatchRows = buildM1SourceMatchRows({
+            passageDraftId: draftId,
+            sourceMatches: restoration.sourceMatches,
+          });
+
+          await tx.extractionM1PassageDraft.create({
+            data: {
+              id: draftId,
+              jobId: job.id,
+              sourceMaterialId: null,
+              passageOrder: i,
+              sourcePageIndex: [i],
+              title: p.title || null,
+              rawText: p.text,
+              restoredText: restoration.restoredText,
+              teacherText: restoration.restoredText,
+              restorationStatus: restoration.status,
+              reviewStatus: "DRAFT",
+              confidence: restoration.confidence,
+              warnings:
+                restoration.warnings.length > 0
+                  ? (restoration.warnings as Prisma.InputJsonValue)
+                  : undefined,
+              metadata: {
+                sourceType: "TEXT",
+                inputTitle: p.title || null,
+                ...((restoration.metadata &&
+                typeof restoration.metadata === "object" &&
+                !Array.isArray(restoration.metadata)
+                  ? restoration.metadata
+                  : {}) as Record<string, unknown>),
+              } as Prisma.InputJsonValue,
+            },
+          });
+          if (changeRows.length > 0) {
+            await tx.extractionM1PassageDraftChange.createMany({
+              data: changeRows,
+            });
+          }
+          if (sourceMatchRows.length > 0) {
+            await tx.extractionM1PassageSourceMatch.createMany({
+              data: sourceMatchRows,
+            });
+          }
+          await tx.extractionPage.update({
+            where: { idempotencyKey: `${job.id}:${i}` },
+            data: {
+              status: "SUCCESS",
+              completedAt: new Date(),
+              modelUsed:
+                restoration.metadata &&
+                typeof restoration.metadata === "object" &&
+                !Array.isArray(restoration.metadata)
+                  ? ((
+                      restoration.metadata as {
+                        restoration?: { model?: string | null };
+                      }
+                    ).restoration?.model ?? null)
+                  : null,
+            },
+          });
         }
-        if (sourceMatchRows.length > 0) {
-          await tx.extractionM1PassageSourceMatch.createMany({ data: sourceMatchRows });
-        }
-        await tx.extractionPage.update({
-          where: { idempotencyKey: `${job.id}:0` },
-          data: {
-            status: "SUCCESS",
-            completedAt: new Date(),
-            modelUsed:
-              restoration.metadata &&
-              typeof restoration.metadata === "object" &&
-              !Array.isArray(restoration.metadata)
-                ? ((restoration.metadata as { restoration?: { model?: string | null } })
-                    .restoration?.model ?? null)
-                : null,
-          },
-        });
         await tx.extractionJob.update({
           where: { id: job.id },
           data: {
             status: "COMPLETED",
-            successPages: 1,
+            successPages: pageCount,
             pendingPages: 0,
-            creditsConsumed: CREDIT_COSTS.TEXT_EXTRACTION,
+            creditsConsumed: totalReserved,
             completedAt: new Date(),
           },
         });
       },
-      { timeout: 30_000, maxWait: 10_000 },
+      { timeout: 60_000, maxWait: 15_000 },
     );
 
     return NextResponse.json({
       jobId: job.id,
-      draftId,
+      draftIds,
       status: "COMPLETED" as const,
-      draftCount: 1,
+      draftCount: pageCount,
     });
   } catch (err) {
-    if (creditTxId) {
+    for (const txId of creditTxIds) {
       try {
         await refundCredits(
           staff.academyId,
           "TEXT_EXTRACTION",
-          creditTxId,
+          txId,
           "Text extraction failed",
         );
       } catch {
@@ -220,9 +258,9 @@ export async function POST(req: NextRequest) {
         where: { id: jobId },
         data: {
           status: "FAILED",
-          failedPages: 1,
+          failedPages: pageCount,
           pendingPages: 0,
-          creditsRefunded: creditTxId ? CREDIT_COSTS.TEXT_EXTRACTION : 0,
+          creditsRefunded: creditTxIds.length > 0 ? totalReserved : 0,
           completedAt: new Date(),
           errorSummary: JSON.stringify({
             textExtraction: err instanceof Error ? err.message : String(err),

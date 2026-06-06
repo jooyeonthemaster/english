@@ -46,6 +46,13 @@ const ARROW_MM = 7;
 
 export type DropPlacement = "before" | "after";
 
+/** 표 열 너비 컨텍스트 — 저장값/드래그 미리보기 + 조절 콜백을 페이지 트리로 내려보낸다. */
+type ColCtx = {
+  widths?: Record<string, Record<string, number>>;
+  onDraft?: (group: string, w: Record<string, number>) => void;
+  onCommit?: (group: string, w: Record<string, number>) => void;
+};
+
 export interface ReportEdit {
   med: MetaEdit;
   sectionEdit: (sectionIndex: number) => SectionEdit;
@@ -59,6 +66,8 @@ export interface ReportEdit {
   ced: CoverEdit;
   /** 블록 세로 리사이즈 종료 — 최종 높이(mm) commit */
   onResize: (id: string, heightMm: number) => void;
+  /** 표 열 너비(세로 구분선) 조절 — group(grammar/exam/vocab) → 열키→퍼센트 commit */
+  onColWidths: (group: string, widths: Record<string, number>) => void;
   onDeletePage?: (ids: string[]) => void;
   drag: {
     startDrag: (e: ReactPointerEvent<HTMLButtonElement>, id: string) => void;
@@ -113,6 +122,7 @@ function blockStyleOf(meta: BlockMeta | undefined, it?: FlowItem): CSSProperties
   const st: Record<string, unknown> = {};
   if (meta.fontScale && meta.fontScale !== 1) st["--par-fs"] = meta.fontScale;
   if (meta.bold) st.fontWeight = 700;
+  if (meta.italic) st.fontStyle = "italic";
   if (meta.align) st.textAlign = meta.align;
   if (meta.minHeight && (!it || !isAutoFitItem(it))) st.minHeight = `${meta.minHeight}mm`;
   return Object.keys(st).length ? (st as CSSProperties) : undefined;
@@ -162,6 +172,21 @@ export function ReportPages({
   // 재페이지네이션 전 스크롤 위치 보존 (높이 축소로 0 으로 튀는 것 방지)
   const scrollSaveRef = useRef<{ el: HTMLElement; top: number } | null>(null);
 
+  // 표 열 너비 — 드래그 중 미리보기(draft)는 commit 전까지 재페이지네이션 없이 라이브 반영.
+  const [draftCols, setDraftCols] = useState<Record<string, Record<string, number>> | null>(null);
+  const colCtx = useMemo<ColCtx>(() => {
+    const widths = draftCols ?? report.tableColWidths;
+    if (!edit) return { widths };
+    return {
+      widths,
+      onDraft: (group, w) => setDraftCols((prev) => ({ ...(report.tableColWidths ?? {}), ...(prev ?? {}), [group]: w })),
+      onCommit: (group, w) => {
+        edit.onColWidths(group, w);
+        setDraftCols(null);
+      },
+    };
+  }, [draftCols, report.tableColWidths, edit]);
+
   useLayoutEffect(() => {
     const el = measureRef.current;
     if (!el) return;
@@ -176,7 +201,7 @@ export function ReportPages({
     const packed = packFlow(items, own, report.blockMeta, { thead });
     const next = packed.map((p) => p.map((i) => items[i].id));
     setPages((prev) => (samePages(prev, next) ? prev : next));
-  }, [items, report.blockMeta]);
+  }, [items, report.blockMeta, report.tableColWidths]);
 
   // pages 가 새 레이아웃을 반영한 뒤(페인트 직전) 스크롤 복원
   useLayoutEffect(() => {
@@ -203,7 +228,7 @@ export function ReportPages({
           <thead>{tableHeadRow("grammar", false)}</thead>
           <tbody><tr><td>측정</td><td>측정</td><td>측정</td></tr></tbody>
         </table>
-        <RunsView items={items} blockMeta={report.blockMeta} measure />
+        <RunsView items={items} blockMeta={report.blockMeta} cols={{ widths: report.tableColWidths }} measure />
       </div>
 
       {(() => {
@@ -226,7 +251,7 @@ export function ReportPages({
               <PageDeleteButton ids={pageIds} edit={edit} />
               <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
               <div className="par-sheet-body">
-                <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} />
+                <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} cols={colCtx} />
               </div>
               <RunningFooter brand={report.brand} docNo={report.docNo} page={bodyNo} total={bodyTotal} />
             </section>
@@ -306,7 +331,7 @@ export function ReportThumbnailSheet({
             <section className="par-sheet">
               <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
               <div className="par-sheet-body">
-                <RunsView items={items} blockMeta={report.blockMeta} />
+                <RunsView items={items} blockMeta={report.blockMeta} cols={{ widths: report.tableColWidths }} />
               </div>
               <RunningFooter
                 brand={report.brand}
@@ -341,11 +366,13 @@ function RunsView({
   items,
   edit,
   blockMeta,
+  cols,
   measure,
 }: {
   items: FlowItem[];
   edit?: ReportEdit;
   blockMeta?: Record<string, BlockMeta>;
+  cols?: ColCtx;
   measure?: boolean;
 }) {
   const out: ReactNode[] = [];
@@ -364,7 +391,7 @@ function RunsView({
     } else {
       i++;
     }
-    out.push(<RunBlock key={`run-${it.id}`} run={run} wrap={it.wrap} edit={edit} blockMeta={blockMeta} measure={measure} />);
+    out.push(<RunBlock key={`run-${it.id}`} run={run} wrap={it.wrap} edit={edit} blockMeta={blockMeta} cols={cols} measure={measure} />);
   }
   return <>{out}</>;
 }
@@ -374,12 +401,14 @@ function RunBlock({
   wrap,
   edit,
   blockMeta,
+  cols,
   measure,
 }: {
   run: FlowItem[];
   wrap: WrapKind;
   edit?: ReportEdit;
   blockMeta?: Record<string, BlockMeta>;
+  cols?: ColCtx;
   measure?: boolean;
 }) {
   const editable = !!edit && !measure;
@@ -406,10 +435,24 @@ function RunBlock({
 
   if (TABLE_WRAPS.has(wrap)) {
     const isVocabTestRun = wrap === "vocab" && run.every((it) => it.id.includes("-vtest-row"));
+    const group = wrap === "grammar" ? "grammar" : wrap === "exam" ? "exam" : "vocab";
+    // 단어시험표(par-vocab-test-table)는 열 구성이 달라 폭 조절 대상에서 제외.
+    const overrides = isVocabTestRun ? undefined : cols?.widths?.[group];
+    const resize = isVocabTestRun
+      ? undefined
+      : {
+          overrides,
+          onDraft: editable && cols?.onDraft ? (w: Record<string, number>) => cols.onDraft!(group, w) : undefined,
+          onCommit: editable && cols?.onCommit ? (w: Record<string, number>) => cols.onCommit!(group, w) : undefined,
+        };
     return (
       <div className="par-runblock">
-        <table className={`par-table${isVocabTestRun ? " par-vocab-test-table" : ""}`}>
-          <thead>{tableHeadRow(wrap, editable, run[0]?.hiddenCols)}</thead>
+        <table
+          className={`par-table${isVocabTestRun ? " par-vocab-test-table" : ""}`}
+          data-table-group={group}
+          style={overrides ? { tableLayout: "fixed" } : undefined}
+        >
+          <thead>{tableHeadRow(wrap, editable, run[0]?.hiddenCols, resize)}</thead>
           <tbody>
             {run.map((it) => (
               <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />

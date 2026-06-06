@@ -10,7 +10,11 @@ import {
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
 import type { M1PassageDraftWithJob } from "../types";
-import { DraftCard, type DraftCardStatusBadgeMode } from "./draft-card";
+import {
+  DraftCard,
+  type DraftCardActionVariant,
+  type DraftCardStatusBadgeMode,
+} from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
@@ -167,6 +171,7 @@ interface DraftGridProps {
    *  supported. */
   gridOnly?: boolean;
   statusBadgeMode?: DraftCardStatusBadgeMode;
+  detailAction?: DraftCardActionVariant;
   /** 마키(영역 드래그) 시작 영역을 자료 콘텐츠 영역 전체로 넓히기 위한 boundary(부모에서
    *  내려줌). 그룹 보기에서는 그룹마다 DragSelect 가 렌더되지만 모두 같은 boundary·선택
    *  집합을 공유하므로 한 번의 드래그로 그룹을 가로질러 선택할 수 있다. */
@@ -213,6 +218,7 @@ export function DraftGrid({
   onDropDraftsIntoCurrentFolder,
   gridOnly = false,
   statusBadgeMode = "review",
+  detailAction,
   marqueeBoundaryRef,
 }: DraftGridProps) {
   // The per-job card row was lifted to the page header above the folder
@@ -446,6 +452,7 @@ export function DraftGrid({
                           onToggleCheck={() => onToggleCheck(draft.id)}
                           onTitleChange={onRenameDraft}
                           statusBadgeMode={statusBadgeMode}
+                          detailAction={detailAction}
                           dragRequiresSelection
                         />
                       ))}
@@ -481,6 +488,7 @@ export function DraftGrid({
                     onToggleCheck={() => onToggleCheck(draft.id)}
                     onTitleChange={onRenameDraft}
                     statusBadgeMode={statusBadgeMode}
+                    detailAction={detailAction}
                     dragRequiresSelection
                   />
                 ))}

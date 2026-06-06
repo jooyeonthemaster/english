@@ -28,16 +28,12 @@ import {
 } from "react";
 import {
   AlertCircle,
-  ArrowRight,
-  Bot,
   ChevronLeft,
   ChevronRight,
-  Crop,
-  FileText,
   GripVertical,
-  ImagePlus,
   Layers,
-  ScanText,
+  MousePointer2,
+  Plus,
   Scissors,
   Trash2,
   X,
@@ -51,7 +47,7 @@ import {
 } from "@/components/exams/exam-paper-builder-client-parts/preview-zoom-controls";
 import { ACCEPTED } from "../../bulk-extract-client/constants";
 import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
-import { CropCanvas } from "./crop-canvas";
+import { CropCanvas, type CropCanvasChangeMeta } from "./crop-canvas";
 import { cropImageToBlob, stitchSlotsToBlob } from "./crop-utils";
 
 export interface InlineCropBoardHandle {
@@ -105,6 +101,18 @@ interface FlatEntry {
   group: number;
 }
 
+interface PassageSelectDragState {
+  active: boolean;
+  startX: number;
+  startY: number;
+  currentX: number;
+  currentY: number;
+}
+
+interface PassageSelectDragSession extends PassageSelectDragState {
+  baseSelected: number[];
+}
+
 /** 같은 지문 조각의 읽기 순서: 이미지순 → 칼럼(좌→우) → 위→아래(y) → 좌(x). */
 function colOf(b: CropBox): number {
   return b.x + b.w / 2 < 0.5 ? 0 : 1;
@@ -115,6 +123,199 @@ function readingSort(a: FlatEntry, b: FlatEntry): number {
     colOf(a.box) - colOf(b.box) ||
     a.box.y - b.box.y ||
     a.box.x - b.box.x
+  );
+}
+
+function CropHintMiniDemo({ restored }: { restored: boolean }) {
+  return (
+    <div
+      className="smoat-crop-hint-demo relative h-[80px] w-[124px] shrink-0 overflow-hidden rounded-md border border-blue-100 bg-white/75 shadow-sm backdrop-blur-[1px]"
+      aria-hidden="true"
+    >
+      <div className="absolute left-0 top-0 h-[92px] w-[142px] origin-top-left scale-[0.873]">
+        <div className="absolute inset-x-2 top-2 h-2 rounded bg-slate-200" />
+        <div className="absolute left-3 top-[22px] h-[32px] w-[70px] rounded border border-blue-200 bg-blue-50/85 p-1.5">
+          <span className="mb-1 inline-flex h-2 items-center rounded bg-blue-600 px-1 text-[6px] font-black leading-none text-white">
+            지문
+          </span>
+          {[0.92, 0.78, 0.86].map((w, i) => (
+            <span
+              key={i}
+              className="mb-1 block h-1 rounded-full bg-blue-200"
+              style={{ width: `${w * 100}%` }}
+            />
+          ))}
+        </div>
+        <div className="absolute right-3 top-[22px] h-[22px] w-[38px] rounded border border-slate-200 bg-slate-50 p-1">
+          {[0.82, 0.62].map((w, i) => (
+            <span
+              key={i}
+              className="mb-1 block h-1 rounded-full bg-slate-200"
+              style={{ width: `${w * 100}%` }}
+            />
+          ))}
+        </div>
+        <div className="absolute left-3 top-[61px] h-[18px] w-[70px] rounded border border-emerald-200 bg-emerald-50/90 px-1 py-0.5">
+          <div className="mb-0.5 flex items-center justify-between">
+            <span className="inline-flex h-2 items-center rounded bg-emerald-600 px-1 text-[6px] font-black leading-none text-white">
+              문제
+            </span>
+            <span className="h-1 w-7 rounded-full bg-emerald-200" />
+          </div>
+          <div className="flex items-center gap-1">
+            {[0, 1, 2, 3].map((i) => (
+              <span key={i} className="flex items-center gap-0.5">
+                <span className="size-1.5 rounded-full border border-emerald-300 bg-white" />
+                <span className="h-1 w-2.5 rounded-full bg-emerald-200" />
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="absolute right-3 top-[51px] grid w-[38px] gap-1">
+          {[0.95, 0.72, 0.86].map((w, i) => (
+            <span
+              key={i}
+              className="block h-1 rounded-full bg-slate-200"
+              style={{ width: `${w * 100}%` }}
+            />
+          ))}
+        </div>
+
+        <div
+          className={
+            "smoat-crop-hint-demo__selection " +
+            (restored
+              ? "smoat-crop-hint-demo__selection--restored"
+              : "smoat-crop-hint-demo__selection--plain")
+          }
+        />
+        <MousePointer2
+          className={
+            "smoat-crop-hint-demo__cursor size-4 text-slate-900 " +
+            (restored
+              ? "smoat-crop-hint-demo__cursor--restored"
+              : "smoat-crop-hint-demo__cursor--plain")
+          }
+        />
+        <span
+          className={
+            "smoat-crop-hint-demo__pulse " +
+            (restored
+              ? "smoat-crop-hint-demo__pulse--restored"
+              : "smoat-crop-hint-demo__pulse--plain")
+          }
+        />
+      </div>
+
+      <style>{`
+        .smoat-crop-hint-demo__selection {
+          position: absolute;
+          left: 12px;
+          top: 22px;
+          width: 0;
+          height: 0;
+          border: 2px solid #2563eb;
+          border-radius: 5px;
+          background: rgba(37, 99, 235, 0.1);
+          box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+          opacity: 0;
+          pointer-events: none;
+        }
+        .smoat-crop-hint-demo__cursor {
+          position: absolute;
+          left: 0;
+          top: 0;
+          filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.28));
+          pointer-events: none;
+        }
+        .smoat-crop-hint-demo__pulse {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          border-radius: 999px;
+          border: 2px solid rgba(37, 99, 235, 0.35);
+          opacity: 0;
+          pointer-events: none;
+        }
+        .smoat-crop-hint-demo__selection--plain {
+          animation: crop-hint-select-plain 3.2s ease-in-out infinite;
+        }
+        .smoat-crop-hint-demo__selection--restored {
+          animation: crop-hint-select-restored 3.2s ease-in-out infinite;
+        }
+        .smoat-crop-hint-demo__cursor--plain {
+          animation: crop-hint-cursor-plain 3.2s ease-in-out infinite;
+        }
+        .smoat-crop-hint-demo__cursor--restored {
+          animation: crop-hint-cursor-restored 3.2s ease-in-out infinite;
+        }
+        .smoat-crop-hint-demo__pulse--plain {
+          animation: crop-hint-pulse-plain 3.2s ease-in-out infinite;
+        }
+        .smoat-crop-hint-demo__pulse--restored {
+          animation: crop-hint-pulse-restored 3.2s ease-in-out infinite;
+        }
+        @keyframes crop-hint-select-plain {
+          0%, 12% { width: 0; height: 0; opacity: 0; }
+          18% { opacity: 1; }
+          56%, 82% { width: 72px; height: 34px; opacity: 1; }
+          100% { width: 72px; height: 34px; opacity: 0; }
+        }
+        @keyframes crop-hint-select-restored {
+          0%, 12% { width: 0; height: 0; opacity: 0; }
+          18% { opacity: 1; }
+          56%, 82% { width: 72px; height: 58px; opacity: 1; }
+          100% { width: 72px; height: 58px; opacity: 0; }
+        }
+        @keyframes crop-hint-cursor-plain {
+          0%, 10% { opacity: 0; transform: translate(7px, 15px); }
+          16% { opacity: 1; transform: translate(12px, 22px) scale(0.94); }
+          56%, 82% { opacity: 1; transform: translate(84px, 56px) scale(1); }
+          100% { opacity: 0; transform: translate(84px, 56px); }
+        }
+        @keyframes crop-hint-cursor-restored {
+          0%, 10% { opacity: 0; transform: translate(7px, 15px); }
+          16% { opacity: 1; transform: translate(12px, 22px) scale(0.94); }
+          56%, 82% { opacity: 1; transform: translate(84px, 80px) scale(1); }
+          100% { opacity: 0; transform: translate(84px, 80px); }
+        }
+        @keyframes crop-hint-pulse-plain {
+          0%, 54%, 100% { opacity: 0; transform: translate(75px, 47px) scale(0.5); }
+          62% { opacity: 1; transform: translate(75px, 47px) scale(1); }
+          78% { opacity: 0; transform: translate(75px, 47px) scale(1.65); }
+        }
+        @keyframes crop-hint-pulse-restored {
+          0%, 54%, 100% { opacity: 0; transform: translate(75px, 71px) scale(0.5); }
+          62% { opacity: 1; transform: translate(75px, 71px) scale(1); }
+          78% { opacity: 0; transform: translate(75px, 71px) scale(1.65); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .smoat-crop-hint-demo__selection,
+          .smoat-crop-hint-demo__cursor,
+          .smoat-crop-hint-demo__pulse {
+            animation: none;
+          }
+          .smoat-crop-hint-demo__selection--plain {
+            width: 72px;
+            height: 34px;
+            opacity: 1;
+          }
+          .smoat-crop-hint-demo__selection--restored {
+            width: 72px;
+            height: 58px;
+            opacity: 1;
+          }
+          .smoat-crop-hint-demo__cursor--plain {
+            opacity: 1;
+            transform: translate(84px, 56px);
+          }
+          .smoat-crop-hint-demo__cursor--restored {
+            opacity: 1;
+            transform: translate(84px, 80px);
+          }
+        }
+      `}</style>
+    </div>
   );
 }
 
@@ -130,6 +331,8 @@ export const InlineCropBoard = forwardRef<
     onCountChange?: (counts: InlineCropBoardCounts) => void;
     /** 검수 패널 하단에 고정 렌더할 영역(추출 시작 버튼 등). */
     footer?: ReactNode;
+    /** 좌측 작업대 상단 "비우기" — 업로드한 원본 파일 전체 제거. 없으면 버튼 숨김. */
+    onClear?: () => void;
     /** P7-D2 출력 방식 — "restored"면 안내문을 "지문+문제+선지 함께 크롭→AI 복원"으로. */
     outputMode?: "verbatim" | "restored";
   }
@@ -143,6 +346,7 @@ export const InlineCropBoard = forwardRef<
     maxPassages,
     onCountChange,
     footer,
+    onClear,
     outputMode,
   },
   ref,
@@ -157,7 +361,27 @@ export const InlineCropBoard = forwardRef<
   );
   // 검수 패널에서 "한 지문으로 합치기" 대상으로 고른 지문(=내부 그룹 번호)들.
   const [selectedGroups, setSelectedGroups] = useState<number[]>([]);
+  // 검수 카드 접힘 상태(그룹 번호 기준). 비어 있음=펼침. 재번호 시 reorderPassage가 같이 옮긴다.
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<number>>(
+    () => new Set(),
+  );
+  // 방금 만들거나 수정한 지문(그룹) — 펼친 뒤 화면에 스크롤해 보여줄 대상. 1회성.
+  const [pendingScrollGroup, setPendingScrollGroup] = useState<number | null>(
+    null,
+  );
+  // 검수(추출될 지문) 패널 스크롤 컨테이너 — 방금 만진 지문을 보이게 스크롤.
+  const reviewScrollRef = useRef<HTMLDivElement>(null);
+  // 검수 지문 카드 드래그 재정렬(좌측 이미지 카드와 동일한 네이티브 드래그 패턴).
+  const [passDragIdx, setPassDragIdx] = useState<number | null>(null);
+  const [passDropIdx, setPassDropIdx] = useState<number | null>(null);
+  // 검수 지문 카드를 쓸어 선택하는 드래그 셀렉션.
+  const [passageSelectDrag, setPassageSelectDrag] =
+    useState<PassageSelectDragState | null>(null);
+  const passageSelectDragRef = useRef<PassageSelectDragSession | null>(null);
+  const bodyUserSelectBeforePassageDrag = useRef("");
+  const suppressNextPassageClickRef = useRef(false);
   const [busy, setBusy] = useState(false);
+  const locked = disabled || busy;
   const [error, setError] = useState<string | null>(null);
   const [dropActive, setDropActive] = useState(false);
   const [dragOrder, setDragOrder] = useState<number | null>(null);
@@ -195,14 +419,6 @@ export const InlineCropBoard = forwardRef<
   const zoomOut = () =>
     setZoom((z) => Math.max(PREVIEW_ZOOM_MIN, round2(z - PREVIEW_ZOOM_STEP)));
   const zoomReset = () => setZoom(1);
-  const zoomFit = () => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const avail = Math.max(1, el.clientWidth - 28);
-    setZoom(
-      Math.min(PREVIEW_ZOOM_MAX, Math.max(PREVIEW_ZOOM_MIN, round2(avail / baseWidth))),
-    );
-  };
   const onCtrlDrag = useCallback((event: ReactMouseEvent<HTMLSpanElement>) => {
     if (event.button !== 0) return;
     event.preventDefault();
@@ -254,14 +470,21 @@ export const InlineCropBoard = forwardRef<
     });
   }, []);
 
-  // 캔버스 상단 작업 힌트 — 한 번 닫으면 기억(검수 패널 카드에 같은 안내가 남음).
+  // 캔버스 작업 힌트 — 닫기는 현재 화면에서만, "다시는 보지 않기"는 localStorage에 저장.
   const HINT_KEY = "smoat:extraction:crop-hint-open";
-  const [hintOpen, setHintOpen] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    return window.localStorage.getItem(HINT_KEY) !== "0";
-  });
-  const dismissHint = useCallback(() => {
-    setHintOpen(false);
+  const [hintDismissed, setHintDismissed] = useState(false);
+  const [hintPermanentlyHidden, setHintPermanentlyHidden] = useState<boolean>(
+    () => {
+      if (typeof window === "undefined") return false;
+      return window.localStorage.getItem(HINT_KEY) === "0";
+    },
+  );
+  const hintOpen = !hintDismissed && !hintPermanentlyHidden;
+  const closeHint = useCallback(() => {
+    setHintDismissed(true);
+  }, []);
+  const hideHintPermanently = useCallback(() => {
+    setHintPermanentlyHidden(true);
     try {
       window.localStorage.setItem(HINT_KEY, "0");
     } catch {
@@ -348,11 +571,50 @@ export const InlineCropBoard = forwardRef<
     };
   }, [recomputeCurrentPage, images.length, contentWidth]);
   const scrollToPage = useCallback((i: number) => {
-    scrollerRef.current
-      ?.querySelector<HTMLElement>(`[data-page-index="${i}"]`)
-      ?.scrollIntoView({ block: "start", behavior: "smooth" });
+    const root = scrollerRef.current;
+    const el = root?.querySelector<HTMLElement>(`[data-page-index="${i}"]`);
+    if (!root || !el) return;
+    // scrollIntoView는 문서까지 포함한 모든 스크롤 조상을 움직여 페이지 전체가 밀린다.
+    // 미리보기 컨테이너 안에서만 스크롤하도록 scrollTop을 직접 계산해 옮긴다.
+    const top =
+      el.getBoundingClientRect().top -
+      root.getBoundingClientRect().top +
+      root.scrollTop;
+    root.scrollTo({ top, behavior: "smooth" });
   }, []);
   const showThumbs = images.length >= 2;
+
+  // 화면에 맞추기 — 가로가 아니라 "한 페이지 전체가 세로로 다 들어오게" 맞춘다.
+  // 카드 높이 = 테두리(2) + 헤더(h-8=32) + 이미지높이. 이미지높이 = baseWidth·zoom·(h/w).
+  // 보이는 영역 높이(스크롤러 clientHeight − py-3) 안에 한 카드가 통째로 들어올 zoom 계산.
+  const zoomFit = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const img = images[currentPage] ?? images[0];
+    const ratio =
+      img && img.width && img.height ? img.height / img.width : 0;
+    if (ratio <= 0) {
+      // 비율 정보가 없으면 기존처럼 가로 기준으로 폴백.
+      const avail = Math.max(1, el.clientWidth - 28);
+      setZoom(
+        Math.min(
+          PREVIEW_ZOOM_MAX,
+          Math.max(PREVIEW_ZOOM_MIN, round2(avail / baseWidth)),
+        ),
+      );
+      return;
+    }
+    const CARD_CHROME = 34; // 헤더(32) + 테두리(2)
+    const PAD_Y = 24; // 스크롤러 py-3 (위·아래 12)
+    const availH = Math.max(1, el.clientHeight - PAD_Y - CARD_CHROME);
+    const zoomForH = availH / (baseWidth * ratio);
+    setZoom(
+      Math.min(
+        PREVIEW_ZOOM_MAX,
+        Math.max(PREVIEW_ZOOM_MIN, round2(zoomForH)),
+      ),
+    );
+  }, [images, currentPage, baseWidth]);
 
   // 제거된 이미지의 잔여 상태 정리(위생). flat은 현재 images만 읽어 카운트는 무관.
   useEffect(() => {
@@ -446,6 +708,19 @@ export const InlineCropBoard = forwardRef<
     onCountChangeRef.current?.(counts);
   }, [counts]);
 
+  // 방금 만지거나 만든 지문 카드를 펼친 뒤 검수 패널에서 자연스럽게 스크롤해 보여준다.
+  useEffect(() => {
+    if (pendingScrollGroup == null) return;
+    const root = reviewScrollRef.current;
+    const el = root?.querySelector<HTMLElement>(
+      `[data-group="${pendingScrollGroup}"]`,
+    );
+    if (el) {
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      setPendingScrollGroup(null);
+    }
+  }, [pendingScrollGroup, passages]);
+
   // 전역 그룹 재정규화: entries 순서대로 1..K. slotId별 구조로 되돌려 set.
   const applyRenumber = useCallback((entries: FlatEntry[]) => {
     const renumbered = renumber(entries.map((e) => e.group));
@@ -462,12 +737,20 @@ export const InlineCropBoard = forwardRef<
 
   // CropCanvas 박스 변경 동기화 — 추가=새 지문, 삭제=그룹 제거, 이동/리사이즈=불변.
   const handleBoxesChange = useCallback(
-    (sid: string, nextBoxes: CropBox[]) => {
+    (sid: string, nextBoxes: CropBox[], meta?: CropCanvasChangeMeta) => {
       const prev = boxesBySlot[sid] ?? [];
       const prevGroups = groupsBySlot[sid] ?? [];
       let nextGroups: number[];
+      // 방금 만들거나(추가) 수정한(이동/리사이즈) 박스가 속한 지문. 우측에서 펼쳐 보여준다.
+      let focusGroup: number | null = null;
       if (nextBoxes.length > prev.length) {
-        nextGroups = [...prevGroups, maxGroup + 1];
+        const activeGroup =
+          meta?.action === "create" && meta.joinWithActiveGroup && active
+            ? groupsBySlot[active.slotId]?.[active.j]
+            : undefined;
+        const newGroup = activeGroup ?? maxGroup + 1;
+        nextGroups = [...prevGroups, newGroup];
+        focusGroup = newGroup;
       } else if (nextBoxes.length < prev.length) {
         const removedIdx = prev.findIndex((b) => !nextBoxes.includes(b));
         nextGroups =
@@ -476,17 +759,37 @@ export const InlineCropBoard = forwardRef<
             : prevGroups.slice(0, nextBoxes.length);
       } else {
         nextGroups = prevGroups;
+        const changedIdx = nextBoxes.findIndex((b, k) => b !== prev[k]);
+        if (changedIdx >= 0) focusGroup = prevGroups[changedIdx] ?? null;
       }
       setBoxesBySlot((cur) => ({ ...cur, [sid]: nextBoxes }));
       setGroupsBySlot((cur) => ({ ...cur, [sid]: nextGroups }));
+      if (focusGroup != null) {
+        // 그 지문만 펼치고 나머지 기존 지문 토글은 모두 닫는다.
+        const others = new Set<number>();
+        for (const k of Object.keys(groupsBySlot)) {
+          if (k === sid) continue;
+          for (const g of groupsBySlot[k]) others.add(g);
+        }
+        for (const g of nextGroups) others.add(g);
+        others.delete(focusGroup);
+        setCollapsedGroups(others);
+        setPendingScrollGroup(focusGroup);
+      }
     },
-    [boxesBySlot, groupsBySlot, maxGroup],
+    [active, boxesBySlot, groupsBySlot, maxGroup],
   );
 
   // 지문(그룹) 통째 삭제 — 그 그룹의 모든 조각 제거.
   const deleteGroup = useCallback(
     (group: number) => {
       setSelectedGroups((p) => p.filter((g) => g !== group));
+      setCollapsedGroups((p) => {
+        if (!p.has(group)) return p;
+        const next = new Set(p);
+        next.delete(group);
+        return next;
+      });
       setActive(null);
       setBoxesBySlot((cur) => {
         const next: Record<string, CropBox[]> = {};
@@ -506,6 +809,38 @@ export const InlineCropBoard = forwardRef<
     },
     [groupsBySlot],
   );
+
+  // 선택된 지문(그룹)들을 한 번에 삭제.
+  const deleteSelectedGroups = useCallback(() => {
+    if (locked || selectedGroups.length === 0) return;
+
+    const selected = new Set(selectedGroups);
+    setSelectedGroups([]);
+    setCollapsedGroups((p) => {
+      const next = new Set(p);
+      selected.forEach((group) => next.delete(group));
+      return next.size === p.size ? p : next;
+    });
+    setActive(null);
+    setPendingScrollGroup(null);
+    setPassDragIdx(null);
+    setPassDropIdx(null);
+    setBoxesBySlot((cur) => {
+      const next: Record<string, CropBox[]> = {};
+      for (const sid of Object.keys(cur)) {
+        const gs = groupsBySlot[sid] ?? [];
+        next[sid] = cur[sid].filter((_, j) => !selected.has(gs[j]));
+      }
+      return next;
+    });
+    setGroupsBySlot((cur) => {
+      const next: Record<string, number[]> = {};
+      for (const sid of Object.keys(cur)) {
+        next[sid] = cur[sid].filter((g) => !selected.has(g));
+      }
+      return next;
+    });
+  }, [groupsBySlot, locked, selectedGroups]);
 
   // 선택한 지문들을 한 지문으로 합치기(이미지·조각 경계 무관).
   const mergeSelected = useCallback(() => {
@@ -535,6 +870,240 @@ export const InlineCropBoard = forwardRef<
       p.includes(group) ? p.filter((g) => g !== group) : [...p, group],
     );
   }, []);
+
+  // 검수 카드 접기/펴기 토글(그룹 단위).
+  const toggleGroupCollapse = useCallback((group: number) => {
+    setCollapsedGroups((p) => {
+      const next = new Set(p);
+      if (next.has(group)) next.delete(group);
+      else next.add(group);
+      return next;
+    });
+  }, []);
+
+  // 검수 지문 카드 순서 변경 — 표시 순서(=그룹 번호 오름차순)를 재배치해 추출 순서까지 반영.
+  // 핸들을 위/아래 다른 카드 위로 끌어 놓으면 from→to로 끼워 넣고 1..K로 재번호한다.
+  const reorderPassage = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      if (fromIndex === toIndex) return;
+      const order = passages.map((p) => p.group);
+      if (
+        fromIndex < 0 ||
+        fromIndex >= order.length ||
+        toIndex < 0 ||
+        toIndex >= order.length
+      )
+        return;
+      const [moved] = order.splice(fromIndex, 1);
+      order.splice(toIndex, 0, moved);
+      const rankByGroup = new Map(order.map((g, i) => [g, i]));
+      // 새 표시 순서대로 정렬(안정 정렬이라 그룹 내부 순서는 보존). applyRenumber가
+      // 첫 등장 순서대로 1..K를 매기므로 이 정렬이 곧 새 지문 번호가 된다.
+      const reordered = flat
+        .slice()
+        .sort(
+          (a, b) =>
+            (rankByGroup.get(a.group) ?? 0) - (rankByGroup.get(b.group) ?? 0),
+        );
+      // 접힘 상태도 같은 매핑(옛 그룹→새 번호)으로 옮겨 카드와 어긋나지 않게 한다.
+      const remap = new Map<number, number>();
+      let n = 1;
+      for (const e of reordered)
+        if (!remap.has(e.group)) remap.set(e.group, n++);
+      setCollapsedGroups((prev) => {
+        if (prev.size === 0) return prev;
+        const next = new Set<number>();
+        prev.forEach((g) => {
+          const m = remap.get(g);
+          if (m) next.add(m);
+        });
+        return next;
+      });
+      setSelectedGroups([]);
+      applyRenumber(reordered);
+    },
+    [passages, flat, applyRenumber],
+  );
+
+  // 전체 선택 — 모든 지문이 이미 선택돼 있으면 해제, 아니면 전부 선택.
+  const allGroups = useMemo(() => passages.map((p) => p.group), [passages]);
+  const allSelected =
+    allGroups.length > 0 && allGroups.every((g) => selectedGroups.includes(g));
+  const someSelected = selectedGroups.length > 0;
+  const toggleSelectAllGroups = useCallback(() => {
+    setSelectedGroups(allSelected ? [] : [...allGroups]);
+  }, [allSelected, allGroups]);
+
+  const publishPassageSelectDrag = useCallback(
+    (session: PassageSelectDragSession | null) => {
+      passageSelectDragRef.current = session;
+      setPassageSelectDrag(
+        session
+          ? {
+              active: session.active,
+              startX: session.startX,
+              startY: session.startY,
+              currentX: session.currentX,
+              currentY: session.currentY,
+            }
+          : null,
+      );
+    },
+    [],
+  );
+
+  const groupsInPassageSelectRect = useCallback(
+    (drag: PassageSelectDragState) => {
+      const root = reviewScrollRef.current;
+      if (!root) return [];
+
+      const pad = 5;
+      const left = Math.min(drag.startX, drag.currentX) - pad;
+      const right = Math.max(drag.startX, drag.currentX) + pad;
+      const top = Math.min(drag.startY, drag.currentY) - pad;
+      const bottom = Math.max(drag.startY, drag.currentY) + pad;
+      const hits: number[] = [];
+
+      root
+        .querySelectorAll<HTMLElement>("[data-review-passage-group]")
+        .forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          const overlaps =
+            rect.right >= left &&
+            rect.left <= right &&
+            rect.bottom >= top &&
+            rect.top <= bottom;
+          if (!overlaps) return;
+
+          const group = Number(el.getAttribute("data-review-passage-group"));
+          if (Number.isFinite(group)) hits.push(group);
+        });
+
+      return hits;
+    },
+    [],
+  );
+
+  const beginPassageSelectDrag = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      if (locked || passages.length === 0) return;
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+
+      const target = event.target as HTMLElement | null;
+      if (
+        !target ||
+        target.closest(
+          "button,input,textarea,select,label,a,[data-passage-drag-handle]",
+        )
+      )
+        return;
+
+      const root = reviewScrollRef.current;
+      if (!root || !root.contains(target)) return;
+
+      bodyUserSelectBeforePassageDrag.current = document.body.style.userSelect;
+      document.body.style.userSelect = "none";
+
+      const start: PassageSelectDragSession = {
+        active: false,
+        startX: event.clientX,
+        startY: event.clientY,
+        currentX: event.clientX,
+        currentY: event.clientY,
+        baseSelected: selectedGroups,
+      };
+      publishPassageSelectDrag(start);
+
+      const move = (moveEvent: PointerEvent) => {
+        const current = passageSelectDragRef.current;
+        if (!current) return;
+
+        const dx = moveEvent.clientX - current.startX;
+        const dy = moveEvent.clientY - current.startY;
+        const active = current.active || Math.hypot(dx, dy) > 5;
+        if (!active) return;
+
+        moveEvent.preventDefault();
+
+        const rootRect = root.getBoundingClientRect();
+        const edge = 34;
+        if (moveEvent.clientY < rootRect.top + edge) {
+          root.scrollTop -= 12;
+        } else if (moveEvent.clientY > rootRect.bottom - edge) {
+          root.scrollTop += 12;
+        }
+
+        const next: PassageSelectDragSession = {
+          ...current,
+          active,
+          currentX: moveEvent.clientX,
+          currentY: moveEvent.clientY,
+        };
+        publishPassageSelectDrag(next);
+
+        const hits = groupsInPassageSelectRect(next);
+        const merged = new Set([...next.baseSelected, ...hits]);
+        setSelectedGroups(allGroups.filter((group) => merged.has(group)));
+      };
+
+      const finish = () => {
+        const current = passageSelectDragRef.current;
+        if (current?.active) {
+          suppressNextPassageClickRef.current = true;
+          window.setTimeout(() => {
+            suppressNextPassageClickRef.current = false;
+          }, 200);
+        }
+        publishPassageSelectDrag(null);
+        document.body.style.userSelect =
+          bodyUserSelectBeforePassageDrag.current;
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", finish);
+        window.removeEventListener("pointercancel", finish);
+      };
+
+      window.addEventListener("pointermove", move, { passive: false });
+      window.addEventListener("pointerup", finish, { once: true });
+      window.addEventListener("pointercancel", finish, { once: true });
+    },
+    [
+      allGroups,
+      groupsInPassageSelectRect,
+      locked,
+      passages.length,
+      publishPassageSelectDrag,
+      selectedGroups,
+    ],
+  );
+
+  const passageSelectMarqueeStyle = useMemo<React.CSSProperties | null>(() => {
+    if (!passageSelectDrag?.active) return null;
+    const root = reviewScrollRef.current;
+    if (!root) return null;
+
+    const rootRect = root.getBoundingClientRect();
+    const left =
+      Math.min(passageSelectDrag.startX, passageSelectDrag.currentX) -
+      rootRect.left +
+      root.scrollLeft;
+    const top =
+      Math.min(passageSelectDrag.startY, passageSelectDrag.currentY) -
+      rootRect.top +
+      root.scrollTop;
+
+    return {
+      left,
+      top,
+      width: Math.max(
+        2,
+        Math.abs(passageSelectDrag.currentX - passageSelectDrag.startX),
+      ),
+      height: Math.max(
+        2,
+        Math.abs(passageSelectDrag.currentY - passageSelectDrag.startY),
+      ),
+    };
+  }, [passageSelectDrag]);
 
   const buildPassageSlots = useCallback(async (): Promise<
     ClientPageSlot[] | null
@@ -614,7 +1183,6 @@ export const InlineCropBoard = forwardRef<
 
   useImperativeHandle(ref, () => ({ buildPassageSlots }), [buildPassageSlots]);
 
-  const locked = disabled || busy;
   // 캔버스: 가용 폭에 맞춰 이미지 카드를 자동 다열로(자리 넓으면 2열↑). 줌인해서
   // 카드가 컨테이너보다 커지면 1열 + 가로 스크롤(중앙 정렬은 좌측 잘림이라 해제).
   const CANVAS_GAP = 12;
@@ -703,7 +1271,103 @@ export const InlineCropBoard = forwardRef<
           onReset={zoomReset}
           onFit={zoomFit}
           onDragStart={onCtrlDrag}
+          orientation="vertical"
+          extra={
+            onClear ? (
+              <button
+                type="button"
+                onClick={onClear}
+                disabled={locked}
+                title="업로드한 파일을 모두 비웁니다"
+                aria-label="비우기"
+                className="inline-flex h-5 cursor-pointer items-center justify-center gap-1 rounded px-1 text-[8.5px] font-bold text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-default disabled:text-slate-300 disabled:hover:bg-transparent"
+              >
+                <Trash2 className="size-3" aria-hidden="true" />
+                비우기
+              </button>
+            ) : null
+          }
         />
+        {flat.length === 0 && hintOpen ? (
+          <div className="pointer-events-none absolute left-0 right-0 top-3 z-30 flex justify-center px-4">
+            <div
+              role="status"
+              aria-live="polite"
+              className={
+                "pointer-events-auto relative flex w-full max-w-[560px] flex-col gap-1.5 rounded-lg border px-2.5 pb-5 pt-1.5 text-left text-[12px] leading-snug shadow-2xl shadow-blue-950/15 ring-1 ring-blue-100/70 backdrop-blur-[2px] sm:flex-row sm:items-start " +
+                (isRestored
+                  ? "border-blue-200 bg-blue-50/70 text-slate-700"
+                  : "border-blue-200 bg-blue-50/65 text-slate-600")
+              }
+            >
+              <span
+                aria-hidden="true"
+                className={
+                  "absolute -bottom-1.5 left-10 h-3 w-3 rotate-45 border-b border-r border-blue-200 backdrop-blur-[2px] " +
+                  (isRestored ? "bg-blue-50/70" : "bg-blue-50/65")
+                }
+              />
+              <CropHintMiniDemo restored={isRestored} />
+              <div className="min-w-0 flex-1">
+                <div className="relative flex items-start gap-2 pr-6">
+                  <span
+                    aria-hidden="true"
+                    className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
+                  />
+                  <div className="min-w-0 flex-1">
+                    {isRestored ? (
+                      <>
+                        <p className="text-[13px] font-black text-slate-900">
+                          문제·선지까지 함께 드래그하세요
+                        </p>
+                        <p className="mt-0.5 text-[11.5px] font-semibold leading-snug text-slate-500">
+                          파란 박스처럼{" "}
+                          <b className="font-bold text-blue-700">
+                            지문 + 문제 + 선지
+                          </b>
+                          를 잡으면 AI가 원래 지문으로 복원해요.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-[13px] font-black text-slate-900">
+                          지문 부분을 드래그하세요
+                        </p>
+                        <p className="mt-0.5 text-[11.5px] font-semibold leading-snug text-slate-500">
+                          파란 박스처럼 영역을 잡으면 그 부분만 읽어{" "}
+                          <b className="font-bold text-blue-700">지문 1개</b>로
+                          정리됩니다.
+                        </p>
+                      </>
+                    )}
+                    <p className="mt-1 flex flex-wrap items-center gap-1 text-[11px] font-bold leading-snug text-blue-600">
+                      <kbd className="rounded border border-blue-200 bg-white/80 px-1 py-0.5 text-[10px] font-black leading-none text-blue-700 shadow-sm">
+                        Shift
+                      </kbd>
+                      <span>누른 채 다음 영역을 그리면 같은 지문에 이어붙어요.</span>
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closeHint}
+                    className="absolute -right-1 -top-1 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-blue-100/80 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                    aria-label="드래그 안내 닫기"
+                    title="안내 닫기"
+                  >
+                    <X className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={hideHintPermanently}
+                className="absolute bottom-1 right-2 rounded-md px-1.5 py-0.5 text-[10.5px] font-bold text-blue-600 transition-colors hover:bg-blue-100/80 hover:text-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+              >
+                다시는 보지 않기
+              </button>
+            </div>
+          </div>
+        ) : null}
         <div
           ref={scrollerRef}
           onDragOver={(event) => {
@@ -727,53 +1391,6 @@ export const InlineCropBoard = forwardRef<
             (dropActive ? "ring-2 ring-inset ring-sky-400" : "")
           }
         >
-          {flat.length === 0 && hintOpen ? (
-            <div
-              className={
-                "mx-auto mb-3 flex max-w-md items-start gap-2 rounded-md border px-3 py-2 text-[11.5px] leading-relaxed " +
-                (isRestored
-                  ? "border-blue-200 bg-blue-50 text-slate-700"
-                  : "border-blue-100 bg-blue-50/90 text-slate-600")
-              }
-            >
-              {isRestored ? (
-                <Bot className="mt-0.5 size-3.5 shrink-0 text-blue-600" aria-hidden="true" />
-              ) : (
-                <Crop className="mt-0.5 size-3.5 shrink-0 text-blue-600" aria-hidden="true" />
-              )}
-              {isRestored ? (
-                <span className="min-w-0 flex-1">
-                  지문만 드래그하지 말고{" "}
-                  <b className="font-bold text-blue-700">지문 + 문제 + 선지</b>를
-                  함께 <b className="font-bold text-blue-700">드래그</b>해 한 영역으로
-                  잡으세요.
-                  <br />
-                  그래야 AI가 문제를 풀어 빈칸·순서를{" "}
-                  <b className="font-bold text-blue-700">원래 지문으로 복원</b>합니다.
-                  <br />
-                  <span className="text-slate-400">(지문만 잘라내면 복원되지 않아요)</span>
-                </span>
-              ) : (
-                <span className="min-w-0 flex-1">
-                  지문 부분을 <b className="font-bold text-blue-700">드래그</b>해
-                  영역으로 잡으면, 그 부분만 글자를 읽어 지문 1개로 정리됩니다.
-                  <br />
-                  이미지가 크면 우측 위{" "}
-                  <b className="font-bold text-blue-700">크기 조절</b>로 줄여서 보세요.
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={dismissHint}
-                aria-label="안내 닫기"
-                title="이 안내 닫기"
-                className="-mr-1 inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-blue-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-              >
-                <X className="size-3.5" aria-hidden="true" />
-              </button>
-            </div>
-          ) : null}
-
           <div
             ref={contentRef}
             className={
@@ -849,6 +1466,15 @@ export const InlineCropBoard = forwardRef<
                     <span className="min-w-0 flex-1 truncate text-[11px] font-medium text-slate-700">
                       {img.sourceFileName ?? `${i + 1}페이지`}
                     </span>
+                    <span
+                      className="hidden shrink-0 items-center gap-1 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-700 ring-1 ring-blue-100 lg:inline-flex"
+                      title="Shift를 누른 채 새 영역을 그리면 현재 지문에 이어붙입니다"
+                    >
+                      <kbd className="rounded border border-blue-200 bg-white px-1 text-[9px] font-black leading-none">
+                        Shift
+                      </kbd>
+                      + 드래그
+                    </span>
                     {isUncropped ? (
                       <span className="inline-flex shrink-0 items-center rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-400 ring-1 ring-slate-200">
                         영역 없음
@@ -874,7 +1500,7 @@ export const InlineCropBoard = forwardRef<
                     fit="width"
                     imageUrl={img.previewUrl}
                     boxes={boxes}
-                    onChange={(next) => handleBoxesChange(sid, next)}
+                    onChange={(next, meta) => handleBoxesChange(sid, next, meta)}
                     activeIndex={active?.slotId === sid ? active.j : null}
                     onActiveIndexChange={(j) =>
                       setActive(j === null ? null : { slotId: sid, j })
@@ -893,10 +1519,10 @@ export const InlineCropBoard = forwardRef<
         <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
           <label
             className={
-              "flex h-12 w-full items-center justify-center gap-2 rounded-lg border-2 text-[14px] font-extrabold transition-colors " +
+              "flex h-12 w-full items-center justify-center gap-2 rounded-lg border text-[14px] font-extrabold transition-colors " +
               (locked
-                ? "cursor-not-allowed border-slate-200 text-slate-300"
-                : "cursor-pointer border-blue-500 bg-white text-blue-700 hover:bg-blue-50")
+                ? "cursor-not-allowed border-slate-200 bg-slate-50 text-slate-300"
+                : "cursor-pointer border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100")
             }
           >
             <input
@@ -911,7 +1537,7 @@ export const InlineCropBoard = forwardRef<
                 event.currentTarget.value = "";
               }}
             />
-            <ImagePlus className="size-5" aria-hidden="true" />
+            <Plus className="size-5" aria-hidden="true" />
             이미지·PDF 더 추가
           </label>
         </div>
@@ -949,11 +1575,45 @@ export const InlineCropBoard = forwardRef<
 
         {/* 합치기 동선 — 버튼을 항상 노출하고 단계별로 안내(선택 0/1/2+개). */}
         <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/80 px-3.5 py-2">
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleSelectAllGroups}
+              disabled={locked || passages.length === 0}
+              aria-pressed={allSelected}
+              aria-label="지문 전체 선택"
+              title={allSelected ? "전체 선택 해제" : "지문 전체 선택"}
+              className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <span
+                className={
+                  "inline-flex size-5 shrink-0 items-center justify-center rounded border text-[10px] font-bold transition-colors " +
+                  (allSelected
+                    ? "border-blue-600 bg-blue-600 text-white"
+                    : someSelected
+                      ? "border-blue-500 bg-blue-50 text-blue-600"
+                      : "border-slate-300 bg-white text-transparent hover:border-blue-400")
+                }
+              >
+                {allSelected ? "✓" : someSelected ? "–" : "✓"}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={deleteSelectedGroups}
+              disabled={locked || selectedGroups.length === 0}
+              aria-label="선택한 지문 삭제"
+              title={
+                selectedGroups.length === 0
+                  ? "삭제할 지문을 선택하세요"
+                  : `선택한 지문 ${selectedGroups.length}개 삭제`
+              }
+              className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-white disabled:text-slate-300"
+            >
+              <Trash2 className="size-3.5" aria-hidden="true" />
+            </button>
+          </div>
           <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 text-[11px] leading-snug text-slate-500">
-            <Layers
-              className="size-3.5 shrink-0 text-blue-600"
-              aria-hidden="true"
-            />
             <span className="min-w-0">
               {selectedGroups.length >= 2 ? (
                 <b className="font-bold text-blue-700">
@@ -967,25 +1627,14 @@ export const InlineCropBoard = forwardRef<
                 </>
               ) : (
                 <>
-                  한 지문이{" "}
-                  <b className="font-bold text-slate-700">여러 장·조각에 걸치면</b>
-                  , 아래 지문 카드 왼쪽 <b className="font-bold text-slate-700">☑</b>를
-                  2개 이상 고르세요
+                  지문 합치기를 하시려면{" "}
+                  <b className="font-bold text-slate-700">2개 이상의 지문</b>을
+                  고르세요
                 </>
               )}
             </span>
           </span>
           <div className="flex shrink-0 items-center gap-1.5">
-            {selectedGroups.length > 0 ? (
-              <button
-                type="button"
-                onClick={() => setSelectedGroups([])}
-                disabled={locked}
-                className="inline-flex h-8 cursor-pointer items-center rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
-              >
-                해제
-              </button>
-            ) : null}
             <button
               type="button"
               onClick={mergeSelected}
@@ -1002,103 +1651,114 @@ export const InlineCropBoard = forwardRef<
           </div>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
-          {/* 작동 흐름 안내 — 아직 영역을 안 그렸을 때(통째만 있을 때 포함).
-              AI 복원 모드면 "지문만"이 아니라 "지문+문제+선지 함께 크롭→AI 복원"으로 안내. */}
-          {flat.length === 0 ? (
-            <div
-              className={
-                "mb-2.5 rounded-lg border bg-white p-3 " +
-                (isRestored ? "border-blue-200" : "border-blue-100")
-              }
-            >
-              <div className="mb-2.5 flex items-center justify-center gap-1">
-                {(isRestored
-                  ? [
-                      { icon: Crop, label: "함께 크롭" },
-                      { icon: Bot, label: "AI 문제풀이" },
-                      { icon: FileText, label: "원문 복원" },
-                    ]
-                  : [
-                      { icon: Crop, label: "영역 드래그" },
-                      { icon: ScanText, label: "글자 인식" },
-                      { icon: FileText, label: "지문 1개" },
-                    ]
-                ).map((step, idx) => (
-                  <div key={step.label} className="flex items-center gap-1">
-                    {idx > 0 ? (
-                      <ArrowRight
-                        className="size-3.5 shrink-0 text-slate-300"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <span className="flex flex-col items-center gap-1">
-                      <span className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-                        <step.icon className="size-4" aria-hidden="true" />
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-600">
-                        {step.label}
-                      </span>
-                    </span>
-                  </div>
-                ))}
-              </div>
-              {isRestored ? (
-                <>
-                  <p className="text-center text-[13px] leading-relaxed text-slate-600">
-                    왼쪽 이미지에서{" "}
-                    <b className="font-bold text-blue-700">
-                      지문 + 문제 + 선지를 함께 드래그
-                    </b>
-                    하세요.
-                    <br />
-                    AI가 문제를 풀어 빈칸·순서를{" "}
-                    <b className="font-bold text-blue-700">원래 글로 복원</b>해 여기에
-                    크게 보여줍니다.
-                  </p>
-                  <p className="mt-1.5 text-center text-[10.5px] text-slate-400">
-                    지문만 잘라내면 복원되지 않아요. 영역이 없는 페이지는 추출되지
-                    않아요. (지문당 ◈2)
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="text-center text-[11px] leading-relaxed text-slate-600">
-                    왼쪽 이미지에서{" "}
-                    <b className="font-bold text-blue-700">지문 부분을 드래그</b>하면, 그
-                    영역만 글자를 읽어{" "}
-                    <b className="font-bold text-blue-700">지문 1개</b>로 정리해 여기에
-                    크게 보여줍니다.
-                  </p>
-                  <p className="mt-1.5 text-center text-[10.5px] text-slate-400">
-                    영역을 그린 만큼만 지문으로 추출됩니다. 영역이 없는 페이지는
-                    추출되지 않아요.
-                  </p>
-                </>
-              )}
-            </div>
+        <div
+          ref={reviewScrollRef}
+          onPointerDown={beginPassageSelectDrag}
+          className={
+            "relative min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5 " +
+            (passageSelectDrag?.active ? "cursor-crosshair select-none" : "")
+          }
+        >
+          {passageSelectMarqueeStyle ? (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute z-20 rounded-md border border-blue-500 bg-blue-500/10 shadow-[0_0_0_1px_rgba(37,99,235,0.12)]"
+              style={passageSelectMarqueeStyle}
+            />
           ) : null}
 
           {/* 크롭으로 정의된 지문들 — 폭이 넓으면 자동 2열↑ (높이 균형 위해 컬럼 흐름) */}
           {passages.length > 0 ? (
-            <div className="columns-[260px] gap-2.5">
-              {passages.map((p) => {
+            <div className="columns-[260px] gap-1.5">
+              {passages.map((p, idx) => {
                 const selected = selectedGroups.includes(p.group);
                 const multi = p.pieces.length > 1;
+                const collapsed = collapsedGroups.has(p.group);
+                const isDragging = passDragIdx === idx;
+                const isDropTarget = passDropIdx === idx && passDragIdx !== idx;
                 return (
                   <div
                     key={`g-${p.group}`}
+                    data-group={p.group}
+                    data-review-passage-group={p.group}
+                    onClickCapture={(event) => {
+                      if (!suppressNextPassageClickRef.current) return;
+                      event.preventDefault();
+                      event.stopPropagation();
+                      suppressNextPassageClickRef.current = false;
+                    }}
+                    onDragOver={(event) => {
+                      if (passDragIdx === null) return;
+                      event.preventDefault();
+                      event.stopPropagation();
+                      event.dataTransfer.dropEffect = "move";
+                      if (passDropIdx !== idx) setPassDropIdx(idx);
+                    }}
+                    onDrop={(event) => {
+                      if (passDragIdx === null) return;
+                      event.preventDefault();
+                      event.stopPropagation();
+                      if (passDragIdx !== idx) reorderPassage(passDragIdx, idx);
+                      setPassDragIdx(null);
+                      setPassDropIdx(null);
+                    }}
                     className={
-                      "mb-2.5 break-inside-avoid overflow-hidden rounded-lg border bg-white transition-all " +
-                      (selected
-                        ? "border-blue-500 ring-2 ring-blue-300"
-                        : "border-slate-200 hover:border-slate-300")
+                      "mb-1.5 break-inside-avoid overflow-hidden rounded-lg border bg-white transition-all " +
+                      (isDragging
+                        ? "border-blue-300 opacity-40 "
+                        : isDropTarget
+                          ? "border-blue-500 ring-2 ring-blue-200 "
+                          : selected
+                            ? "border-blue-500 ring-2 ring-blue-300 "
+                            : "border-slate-200 hover:border-slate-300 ") +
+                      (passageSelectDrag?.active ? "select-none " : "")
                     }
                   >
-                <div className="flex items-center gap-2 border-b border-slate-100 px-2.5 py-1.5">
+                <div
+                  onClick={() => toggleGroupCollapse(p.group)}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={!collapsed}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      toggleGroupCollapse(p.group);
+                    }
+                  }}
+                  title={collapsed ? "지문 펼치기" : "지문 접기"}
+                  className="flex cursor-pointer items-center gap-1.5 border-b border-slate-100 px-2 py-1.5 transition-colors hover:bg-slate-50"
+                >
+                  <span
+                    data-passage-drag-handle="true"
+                    draggable={!locked}
+                    onClick={(event) => event.stopPropagation()}
+                    onDragStart={(event) => {
+                      if (locked) return;
+                      event.dataTransfer.effectAllowed = "move";
+                      event.dataTransfer.setData("text/plain", String(idx));
+                      setPassDragIdx(idx);
+                    }}
+                    onDragEnd={() => {
+                      setPassDragIdx(null);
+                      setPassDropIdx(null);
+                    }}
+                    title="드래그해 지문 순서 변경"
+                    aria-label={`지문 ${p.rank} 순서 변경 핸들`}
+                    className={
+                      "inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 " +
+                      (locked
+                        ? "cursor-not-allowed"
+                        : "cursor-grab active:cursor-grabbing")
+                    }
+                  >
+                    <GripVertical className="size-3.5" aria-hidden="true" />
+                  </span>
                   <button
                     type="button"
-                    onClick={() => toggleGroupSel(p.group)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleGroupSel(p.group);
+                    }}
                     disabled={locked}
                     aria-pressed={selected}
                     aria-label={`지문 ${p.rank} 합치기 선택`}
@@ -1114,7 +1774,9 @@ export const InlineCropBoard = forwardRef<
                   <span className="inline-flex shrink-0 items-center gap-1 rounded bg-blue-600 px-2 py-0.5 text-[11px] font-bold text-white">
                     지문 {p.rank}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-[10.5px] text-slate-500">
+                  <span
+                    className="min-w-0 flex-1 truncate px-1 py-0.5 text-left text-[10.5px] text-slate-500"
+                  >
                     {multi
                       ? `${p.pieces.length}개 영역을 이어붙인 지문`
                       : `${p.pieces[0].imageOrder + 1}장에서 자른 지문`}
@@ -1122,7 +1784,10 @@ export const InlineCropBoard = forwardRef<
                   {multi ? (
                     <button
                       type="button"
-                      onClick={() => splitGroup(p.group)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        splitGroup(p.group);
+                      }}
                       disabled={locked}
                       title="조각마다 별개 지문으로 분리"
                       className="inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded border border-slate-200 bg-white px-1.5 text-[10px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
@@ -1133,38 +1798,63 @@ export const InlineCropBoard = forwardRef<
                   ) : null}
                   <button
                     type="button"
-                    onClick={() => deleteGroup(p.group)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      deleteGroup(p.group);
+                    }}
                     disabled={locked}
                     aria-label={`지문 ${p.rank} 삭제`}
                     title="이 지문 삭제"
-                    className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:opacity-50"
+                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <Trash2 className="size-3.5" aria-hidden="true" />
                   </button>
+                  {/* 토글 — 항상 섹션 오른쪽 끝에 정렬(접기/펴기). 헤더 전체도 토글되므로 버블 차단. */}
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleGroupCollapse(p.group);
+                    }}
+                    aria-expanded={!collapsed}
+                    aria-label={collapsed ? `지문 ${p.rank} 펼치기` : `지문 ${p.rank} 접기`}
+                    title={collapsed ? "지문 펼치기" : "지문 접기"}
+                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                  >
+                    <ChevronRight
+                      className={
+                        "size-3.5 motion-safe:transition-transform motion-safe:duration-150 " +
+                        (collapsed ? "" : "rotate-90")
+                      }
+                      aria-hidden="true"
+                    />
+                  </button>
                 </div>
-                {/* 실제 잘린 모습 — 큰 미리보기(정확한 비율, 검수용) */}
-                <div className="space-y-1.5 bg-slate-100/60 p-2">
-                  {p.pieces.map((piece) => {
-                    const img = images[piece.imageOrder];
-                    if (!img) return null;
-                    return (
-                      <div
-                        key={`${piece.slotId}-${piece.j}`}
-                        className="relative w-full overflow-hidden rounded border border-slate-200 bg-white"
-                        style={{
-                          aspectRatio: cropAspect(img, piece.box),
-                          ...cropBgStyle(img.previewUrl, piece.box),
-                        }}
-                      >
-                        {multi ? (
-                          <span className="absolute left-1 top-1 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
-                            {piece.imageOrder + 1}장
-                          </span>
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </div>
+                {/* 실제 잘린 모습 — 큰 미리보기(정확한 비율, 검수용). 접으면 헤더만 남는다. */}
+                {collapsed ? null : (
+                  <div className="space-y-1.5 bg-slate-100/60 p-2">
+                    {p.pieces.map((piece) => {
+                      const img = images[piece.imageOrder];
+                      if (!img) return null;
+                      return (
+                        <div
+                          key={`${piece.slotId}-${piece.j}`}
+                          className="relative w-full overflow-hidden rounded border border-slate-200 bg-white"
+                          style={{
+                            aspectRatio: cropAspect(img, piece.box),
+                            ...cropBgStyle(img.previewUrl, piece.box),
+                          }}
+                        >
+                          {multi ? (
+                            <span className="absolute left-1 top-1 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
+                              {piece.imageOrder + 1}장
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
