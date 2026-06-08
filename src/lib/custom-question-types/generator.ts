@@ -152,10 +152,11 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
         : "- options: 객관식이면 {label,text} 배열, 아니면 빈 배열.";
 
   // MC(MULTIPLE_CHOICE) 한정 지시 — OTHER/SHORT_ANSWER 엔 라벨-픽 게이트를 강요하지 않음.
-  // 복수정답 유형은 고정수 대신 "1개 이상(개수 가변)"으로 표현(고정수 강제로 인한 과잉-reject 방지).
+  // 정답 수는 항상 correctAnswerCount 로 정확히 강제(강사가 명시 지정). 복수정답은 발문 표현(모두 고르기)만 담당.
   const isMc = spec.answerShape === "MULTIPLE_CHOICE" && spec.optionCount > 0;
-  const countPhrase = spec.multipleAnswers
-    ? "정답 후보는 1개 이상(모두 고르기 — 개수는 문항마다 다를 수 있음)"
+  const isMultiAnswer = spec.correctAnswerCount >= 2;
+  const countPhrase = isMultiAnswer
+    ? `정답 정확히 ${spec.correctAnswerCount}개(복수 정답 — 발문은 '모두 고르시오'로 안내하되 정답 개수는 밝히지 말 것)`
     : `정답 정확히 ${spec.correctAnswerCount}개`;
 
   const invariantBlock = spec.invariants.length
@@ -164,6 +165,14 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
   const variableBlock =
     "## 매번 새로 (가변) — 원본 예시의 특정 단어/문장/소재를 그대로 쓰지 말고 매번 다른 소재로" +
     (spec.variableAxes.length ? `\n${spec.variableAxes.map((v) => `- ${v}`).join("\n")}` : "");
+  // 유형 고유 수치 파라미터(요약문 빈칸 수 등) — 정의/override 값을 정확히 지키도록 지시.
+  // 조절 불가(min===max=0 등 무의미)한 항목은 프롬프트에서 제외(구버전 유형의 잘못 추출분 방어).
+  const usableTunable = spec.tunableParams.filter((p) => p.max > p.min);
+  const tunableBlock = usableTunable.length
+    ? `## 이 유형의 수치 규칙 (아래 개수를 정확히 지킬 것)\n${usableTunable
+        .map((p) => `- ${p.label}: 정확히 ${p.value}개`)
+        .join("\n")}`
+    : "";
 
   return [
     `당신은 한국 고등학교 ${gradeInfo} 영어 시험 출제 전문가입니다.`,
@@ -173,6 +182,7 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
     "",
     invariantBlock,
     variableBlock,
+    tunableBlock,
     "",
     passageBlock,
     "",
@@ -251,12 +261,8 @@ function validateGeneric(spec: CompiledCustomType, obj: GenericQuestion): string
     }
     const correctLabels = collectCorrectLabels(obj);
 
-    // 복수정답 유형은 정답 수가 문항마다 다를 수 있음 → 고정수 대신 [1, 보기수] 범위로.
-    if (spec.multipleAnswers) {
-      if (correctLabels.length < 1 || correctLabels.length > obj.options.length) {
-        errors.push(`정답 라벨 ${correctLabels.length}개가 보기 수 범위(1~${obj.options.length})를 벗어났습니다.`);
-      }
-    } else if (correctLabels.length !== spec.correctAnswerCount) {
+    // 정답 수는 강사가 지정한 correctAnswerCount 로 정확히 강제(복수정답 여부와 무관).
+    if (correctLabels.length !== spec.correctAnswerCount) {
       errors.push(`정답 라벨 ${correctLabels.length}개가 지정 ${spec.correctAnswerCount}개와 다릅니다.`);
     }
     const missing = correctLabels.filter((l) => !optionLabels.has(l));
@@ -277,7 +283,7 @@ function validateGeneric(spec: CompiledCustomType, obj: GenericQuestion): string
         .filter((v) => v.isCorrect)
         .map((v) => normLabel(v.label))
         .filter(Boolean);
-      const expectedCorrect = spec.multipleAnswers ? correctLabels.length : spec.correctAnswerCount;
+      const expectedCorrect = spec.correctAnswerCount;
       if (verdictCorrect.length !== expectedCorrect) {
         errors.push(`해설이 정답으로 표시한 ${verdictCorrect.length}개가 ${expectedCorrect}개와 다릅니다.`);
       }
@@ -291,7 +297,7 @@ function validateGeneric(spec: CompiledCustomType, obj: GenericQuestion): string
     // optionPlan 의 정답 후보 수만 구조검증. distinctness 는 강제 안 함(범용성 — best-answer/choose-all 유형 오탐 방지).
     if (obj.optionPlan.length > 0) {
       const planFits = obj.optionPlan.filter((p) => p.fitsContext).length;
-      const expectedFits = spec.multipleAnswers ? correctLabels.length : spec.correctAnswerCount;
+      const expectedFits = spec.correctAnswerCount;
       if (planFits !== expectedFits) {
         errors.push(`계획(optionPlan) 정답 후보 ${planFits}개가 ${expectedFits}개와 다릅니다.`);
       }

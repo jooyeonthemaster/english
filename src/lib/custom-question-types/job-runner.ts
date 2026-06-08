@@ -5,6 +5,7 @@ import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persiste
 
 import { generateFromCustomType } from "./generator";
 import { bumpCustomTypeCounters, getActiveCustomTypeSpec } from "./persistence";
+import { parseCompiledCustomType } from "./types";
 
 /**
  * 커스텀 유형 문제 생성 — 인-프로세스 백그라운드 워커(개발 서버 한정).
@@ -117,7 +118,38 @@ async function runJob(jobId: string): Promise<void> {
       });
       return;
     }
-    const { spec } = active;
+    // 생성 시 유형 정의 임시 override(이 배치만) — 난이도 + 선지/정답 수·답형·복수정답·지문기반.
+    const baseSpec = active.spec;
+    const ov = (job.overrides ?? null) as {
+      optionCount?: number;
+      correctAnswerCount?: number;
+      params?: Record<string, number>;
+    } | null;
+    const patch: Record<string, unknown> = {};
+    if (job.difficulty && job.difficulty !== baseSpec.difficulty) patch.difficulty = job.difficulty;
+    if (ov) {
+      if (typeof ov.optionCount === "number") patch.optionCount = ov.optionCount;
+      if (typeof ov.correctAnswerCount === "number") patch.correctAnswerCount = ov.correctAnswerCount;
+      // 유형 고유 수치 파라미터 override(key→value) — 정의의 tunableParams value 를 교체(min/max 클램프).
+      const ovParams = ov.params && typeof ov.params === "object" ? ov.params : null;
+      if (ovParams && baseSpec.tunableParams.length > 0) {
+        patch.tunableParams = baseSpec.tunableParams.map((p) => {
+          const v = ovParams[p.key];
+          return typeof v === "number"
+            ? { ...p, value: Math.min(p.max, Math.max(p.min, Math.round(v))) }
+            : p;
+        });
+      }
+    }
+    let spec =
+      Object.keys(patch).length > 0
+        ? parseCompiledCustomType({ ...baseSpec, ...patch })
+        : baseSpec;
+    // MC 정답 수는 보기 수를 넘을 수 없게 클램프(생성기 게이트와 일관, 과잉 skip 방지).
+    if (spec.answerShape === "MULTIPLE_CHOICE" && spec.optionCount > 0) {
+      const clamped = Math.min(Math.max(spec.correctAnswerCount, 1), spec.optionCount);
+      if (clamped !== spec.correctAnswerCount) spec = { ...spec, correctAnswerCount: clamped };
+    }
 
     const requestedPassageIds = Array.isArray(job.passageIds)
       ? [...new Set((job.passageIds as unknown[]).filter((v): v is string => typeof v === "string"))]

@@ -17,6 +17,17 @@ const bodySchema = z.object({
   passageIds: z.array(z.string().trim().min(1).max(80)).min(1).max(100),
   countPerPassage: z.number().int().min(1).max(10).optional(),
   gradeInfo: z.string().trim().max(40).optional(),
+  // 생성 시 난이도 override(미지정 시 유형 정의의 난이도 사용).
+  difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).optional(),
+  // 생성 시 유형 정의 임시 override(이 배치만). 미지정 필드는 정의 그대로.
+  // optionCount/correctAnswerCount/multipleAnswers = 공통 선지 구조, params = 유형 고유 수치(빈칸 수 등) key→value.
+  overrides: z
+    .object({
+      optionCount: z.number().int().min(0).max(20).optional(),
+      correctAnswerCount: z.number().int().min(0).max(20).optional(),
+      params: z.record(z.string(), z.number().int().min(0).max(50)).optional(),
+    })
+    .optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -59,6 +70,8 @@ export async function POST(req: NextRequest) {
       passageIds: uniquePassageIds,
       countPerPassage: parsed.data.countPerPassage ?? 1,
       gradeInfo: parsed.data.gradeInfo ?? null,
+      difficulty: parsed.data.difficulty ?? null,
+      ...(parsed.data.overrides ? { overrides: parsed.data.overrides } : {}),
       passageCount: uniquePassageIds.length,
     },
     select: { id: true },

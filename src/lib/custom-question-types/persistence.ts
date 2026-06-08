@@ -19,6 +19,15 @@ export interface CustomTypeListRow {
   generatedCount: number;
   approvedCount: number;
   createdAt: Date;
+  // 활성 버전 spec 요약 — 우측 생성 패널의 유형 카드 상세 토글(임시 override 기본값)용.
+  answerShape: "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "OTHER";
+  optionCount: number;
+  correctAnswerCount: number;
+  multipleAnswers: boolean;
+  passageBased: boolean;
+  difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
+  // 유형 고유 수치 파라미터(생성 패널 카드 상세 토글의 동적 컨트롤 + 기본값).
+  tunableParams: CompiledCustomType["tunableParams"];
 }
 
 export interface ActiveCustomType {
@@ -83,9 +92,9 @@ export async function createCustomType(args: CreateCustomTypeArgs): Promise<{ id
   return prisma.$transaction((tx) => createCustomTypeWithClient(tx, args));
 }
 
-/** 학원의 커스텀 유형 목록(아카이브 제외). */
+/** 학원의 커스텀 유형 목록(아카이브 제외). 활성 버전 spec 요약 포함(유형 카드 상세 토글 기본값). */
 export async function listCustomTypes(academyId: string): Promise<CustomTypeListRow[]> {
-  return prisma.customQuestionType.findMany({
+  const types = await prisma.customQuestionType.findMany({
     where: { academyId, deletedAt: null, status: { not: "ARCHIVED" } },
     orderBy: { createdAt: "desc" },
     take: 100,
@@ -99,7 +108,42 @@ export async function listCustomTypes(academyId: string): Promise<CustomTypeList
       generatedCount: true,
       approvedCount: true,
       createdAt: true,
+      activeVersionId: true,
     },
+  });
+
+  const versionIds = types
+    .map((t) => t.activeVersionId)
+    .filter((v): v is string => Boolean(v));
+  const versions = versionIds.length
+    ? await prisma.customQuestionTypeVersion.findMany({
+        where: { id: { in: versionIds } },
+        select: { id: true, spec: true },
+      })
+    : [];
+  const specById = new Map(versions.map((v) => [v.id, parseCompiledCustomType(v.spec)]));
+
+  return types.map((t) => {
+    const spec = t.activeVersionId ? specById.get(t.activeVersionId) : undefined;
+    return {
+      id: t.id,
+      name: t.name,
+      status: t.status,
+      nearestBuiltin: t.nearestBuiltin,
+      matchConfidence: t.matchConfidence,
+      usageCount: t.usageCount,
+      generatedCount: t.generatedCount,
+      approvedCount: t.approvedCount,
+      createdAt: t.createdAt,
+      answerShape: spec?.answerShape ?? "MULTIPLE_CHOICE",
+      optionCount: spec?.optionCount ?? 5,
+      correctAnswerCount: spec?.correctAnswerCount ?? 1,
+      multipleAnswers: spec?.multipleAnswers ?? false,
+      passageBased: spec?.passageBased ?? true,
+      difficulty: spec?.difficulty ?? "INTERMEDIATE",
+      // 조절 불가(max<=min) 파라미터는 노출하지 않음 — 구버전 유형의 잘못 추출분('지문 단어 수 0/0/0')도 즉시 숨김.
+      tunableParams: (spec?.tunableParams ?? []).filter((p) => p.max > p.min),
+    };
   });
 }
 

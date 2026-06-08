@@ -1134,10 +1134,12 @@ model CustomQuestionGenerationJob {
 
   status String @default("PENDING") // PENDING | PROCESSING | COMPLETED | FAILED
 
-  // 생성에 쓸 지문 풀(passageId[]) + 지문당 생성 개수 + 학년.
+  // 생성에 쓸 지문 풀(passageId[]) + 지문당 생성 개수 + 학년 + 난이도(생성 시 override).
   passageIds      Json
   countPerPassage Int     @default(1)
   gradeInfo       String?
+  difficulty      String? // BASIC | INTERMEDIATE | KILLER. null = 유형 정의 난이도 사용.
+  overrides       Json? // 생성 시 유형 정의 임시 override(선지/정답 수·답형·복수정답·지문기반). null = 정의 그대로.
 
   passageCount Int @default(0) // N
   totalCount   Int @default(0) // 시도 대상(N × countPerPassage)

@@ -40,7 +40,7 @@ function TabButton({
   );
 }
 
-export function CustomTypeClient() {
+export function CustomTypeClient({ academyId }: { academyId: string }) {
   const [tab, setTab] = useState<Tab>("create");
   const [typesRefreshKey, setTypesRefreshKey] = useState(0);
 
@@ -80,7 +80,7 @@ export function CustomTypeClient() {
             }}
           />
         ) : (
-          <CustomTypeGeneratePanel typesRefreshKey={typesRefreshKey} />
+          <CustomTypeGeneratePanel academyId={academyId} typesRefreshKey={typesRefreshKey} />
         )}
       </div>
     </div>

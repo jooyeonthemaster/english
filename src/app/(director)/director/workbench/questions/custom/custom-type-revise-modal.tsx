@@ -329,21 +329,11 @@ export function CustomTypeReviseModal({
                       className="w-56 rounded-md border border-slate-300 px-2 py-1 text-[12px] disabled:bg-slate-100"
                     />
                   </label>
-                  <label
-                    className={cn(
-                      "flex items-center justify-between gap-2 text-[12px]",
-                      isMc ? "text-slate-600" : "text-slate-300",
-                    )}
-                  >
-                    복수 정답
-                    <input
-                      type="checkbox"
-                      disabled={!isMc}
-                      checked={multipleAnswers}
-                      onChange={(e) => setMultipleAnswers(e.target.checked)}
-                      className="size-4"
-                    />
-                  </label>
+                  {correctAnswerCount >= 2 && isMc ? (
+                    <p className="text-[11px] leading-snug text-blue-500">
+                      정답 {correctAnswerCount}개 — 복수 정답으로 ‘모두 고르시오’ 형식으로 출제됩니다.
+                    </p>
+                  ) : null}
                   <label className="flex items-center justify-between gap-2 text-[12px] text-slate-600">
                     지문 기반
                     <input

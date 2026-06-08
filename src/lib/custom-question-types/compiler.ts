@@ -190,13 +190,44 @@ function compileDeterministic(analysis: QuestionAnalysis): CompileCustomTypeResu
 const LLM_COMPILE_TIMEOUT_MS = 120_000;
 const LLM_COMPILE_MAX_TOKENS = 8_000;
 
+const tunableParamSchema = z.object({
+  key: z.string().max(40).catch("").default(""),
+  label: z.string().max(60).catch("").default(""),
+  value: z.number().int().min(0).max(50).catch(0).default(0),
+  min: z.number().int().min(0).max(50).catch(0).default(0),
+  max: z.number().int().min(0).max(50).catch(0).default(0),
+});
+
 const compilerOutputSchema = z.object({
   typeName: z.string().max(80).catch("").default(""),
   description: z.string().max(1000).catch("").default(""),
   invariants: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
   variableAxes: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
   generationPrompt: z.string().max(8000).catch("").default(""),
+  tunableParams: z.array(tunableParamSchema).max(8).catch([]).default([]),
 });
+
+type RawTunableParam = z.infer<typeof tunableParamSchema>;
+
+// LLM 이 뽑은 수치 파라미터 정규화 — 빈/중복 키 제거, min≤value≤max 보정, 최대 8개.
+// 조절 불가(max<=min: 예 0/0/0 '지문 단어 수' 같은 외부값/추측값)는 버린다 — 무의미한 노브 노출 방지.
+function normalizeTunableParams(raw: RawTunableParam[]): RawTunableParam[] {
+  const seen = new Set<string>();
+  const out: RawTunableParam[] = [];
+  for (const p of raw) {
+    const key = p.key.trim();
+    const label = p.label.trim();
+    if (!key || !label || seen.has(key)) continue;
+    const min = Math.max(0, Math.min(p.min, p.max));
+    const max = Math.max(min, p.max);
+    if (max <= min) continue; // 조절 범위가 없으면(=값을 못 찾았거나 외부값) 제외
+    seen.add(key);
+    const value = Math.min(max, Math.max(min, p.value));
+    out.push({ key, label, value, min, max });
+    if (out.length >= 8) break;
+  }
+  return out;
+}
 
 function serializeAnalysisForCompiler(analysis: QuestionAnalysis): string {
   const cls = analysis.classification;
@@ -247,6 +278,10 @@ function buildCompilerPrompt(analysis: QuestionAnalysis): string {
     "- invariants: 모든 생성에서 **반드시 보존**할 것(포맷·평가스킬·출제논리·변형규칙 등). 특정 인스턴스 단어 금지.",
     "- variableAxes: **매번 새로** 정할 축(예: '타겟 어휘', '지문 소재'). 원본 예시의 특정 단어/문장은 예시일 뿐임을 명시.",
     "- generationPrompt: 위 invariants/variableAxes를 반영한 한국어 출제 지시문. 유형 설명·반드시 유지·매번 바꿀 것·재현 형식·원본 예시 순으로. **원본의 특정 단어/소재를 그대로 박지 말 것.**",
+    "- tunableParams: 이 유형에서 생성할 때마다 **조절 가능한 수치 파라미터** 목록. 정체성(invariants)이 아니라 정체성을 안 깨고 바뀔 수 있는 값만.",
+    "  · **반드시 위 [원본 문항 분석]의 reproductionSpec(구조 설명)·발문·출제 포인트에서 실제 개수를 읽어내 적을 것.** 예: 발문/구조에 '(A) (B) (C)'나 '세 곳을 빈칸으로'가 있으면 → {key:'blankCount', label:'빈칸 수', value:3, min:2, max:4}. 순서배열 분할 지문 개수, 어법 밑줄 개수, 무관문장 슬롯 수도 같은 방식.",
+    "  · 각 항목 {key(영문 머신키), label(한글), value(분석에서 실제로 읽은 개수), min, max(value 주변의 합리적 범위, min<max 가 되도록)}.",
+    "  · **절대 금지**: ① 보기 수·정답 수(별도 관리) ② 지문 길이·단어 수처럼 외부(주어진 지문)에서 정해지는 값 ③ 분석에서 개수를 못 찾는 항목(value 0 이나 추측값, min===max 로 만들지 말 것). 조절할 고유 수치가 분석에서 명확히 안 보이면 **빈 배열**로 둘 것.",
     "",
     "## 원본 문항 분석",
     serializeAnalysisForCompiler(analysis),
@@ -295,6 +330,7 @@ async function compileWithLlm(analysis: QuestionAnalysis): Promise<CompileCustom
     targetPoints: deriveTargetPoints(analysis),
     invariants,
     variableAxes,
+    tunableParams: normalizeTunableParams(out.tunableParams),
     prompt: out.generationPrompt.trim() || buildTypeKnowledgePrompt(analysis),
     typeSettings: null,
     reconstruction: { primitive: "NONE" },

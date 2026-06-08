@@ -13,5 +13,5 @@ export default async function CustomQuestionTypePage() {
   const staff = await getStaffSession();
   if (!staff) redirect("/login");
 
-  return <CustomTypeClient />;
+  return <CustomTypeClient academyId={staff.academyId} />;
 }

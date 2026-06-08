@@ -39,6 +39,32 @@ export interface CustomTypeListItem {
   generatedCount: number;
   approvedCount: number;
   createdAt: string;
+  // 활성 버전 spec 요약 — 생성 패널 유형 카드 상세 토글(임시 override)의 기본값.
+  answerShape: "MULTIPLE_CHOICE" | "SHORT_ANSWER" | "OTHER";
+  optionCount: number;
+  correctAnswerCount: number;
+  multipleAnswers: boolean;
+  passageBased: boolean;
+  difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
+  tunableParams: TunableParam[];
+}
+
+// 유형 고유의 조절 가능한 수치 파라미터(요약문 빈칸 수·순서배열 분할 개수 등). 분석에서 추출, value=기본값.
+export interface TunableParam {
+  key: string;
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+}
+
+// 유형 카드 상세 토글에서 조절하는 생성 시 임시 override(미지정 필드는 유형 정의 그대로).
+// 답형/지문기반 같은 "구조 전환"은 유형의 본질(동형성)이라 여기서 바꾸지 않는다(영구 편집은 ✦ 모달).
+// 객관식 선지 수치 + 유형 고유 파라미터(params: key→value)만 조절한다.
+export interface CustomTypeOverride {
+  optionCount?: number;
+  correctAnswerCount?: number;
+  params?: Record<string, number>;
 }
 
 export type CustomGenJobStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";

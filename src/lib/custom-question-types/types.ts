@@ -66,6 +66,23 @@ export const compiledCustomTypeSchema = z.object({
   // 매번 새로 정할 가변 축 — 인스턴스 디테일(예: "타겟 어휘", "지문 소재"). 원본 예시의 특정 단어/문장은 예시일 뿐.
   variableAxes: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
 
+  // 이 유형의 "조절 가능한 수치 파라미터"(유형 고유) — 예: 요약문 빈칸 수, 순서배열 분할 개수, 어법 밑줄 개수.
+  // 정체성(invariants)이 아니라 정체성을 안 깨고 바뀔 수 있는 값. 생성 시 임시 override 가능(이 값이 기본).
+  // 보기 수/정답 수는 별도 필드(optionCount/correctAnswerCount)로 관리하므로 여기 넣지 않는다.
+  tunableParams: z
+    .array(
+      z.object({
+        key: z.string().max(40).catch("").default(""), // 영문 머신 키(프롬프트 주입/override 식별)
+        label: z.string().max(60).catch("").default(""), // 한글 라벨(UI 표시)
+        value: z.number().int().min(0).max(50).catch(0).default(0), // 원본 기준 기본값
+        min: z.number().int().min(0).max(50).catch(0).default(0),
+        max: z.number().int().min(0).max(50).catch(0).default(0),
+      }),
+    )
+    .max(8)
+    .catch([])
+    .default([]),
+
   // base 형태로 합성한 "유형 지식" 블록(핵심 규칙·출제 포인트·변형·재현 형식·변형 축).
   // ② 에선 customPrompt 로, ④ 에선 자체 생성 프롬프트의 본문으로 쓰인다.
   prompt: z.string().catch("").default(""),
