@@ -37,7 +37,7 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   QUESTION_GEN_VOCAB: "어휘 문제 생성",
   AUTO_GEN_BATCH: "자동 출제 (배치)",
   LEARNING_QUESTION_GEN: "학습 문제 생성",
-  PASSAGE_ANALYSIS: "지문 분석",
+  PASSAGE_ANALYSIS: "학습지 생성",
   GRAMMAR_ENHANCEMENT: "문법 포인트 분석",
   SENTENCE_RETRANSLATION: "문장 재번역",
   QUESTION_EXPLANATION: "해설 생성",

@@ -8,12 +8,15 @@ import {
   type SetStateAction,
 } from "react";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
+
 import type { QueueItem } from "./generate-page-types";
 
 interface AiJobRow {
   id: string;
   status: string;
   title: string;
+  passageId?: string | null;
   mode: string | null;
   questionType: string | null;
   requestedCount: number;
@@ -53,7 +56,6 @@ function jobToQueueItem(
   job: AiJobRow,
   { includeTerminalFailures = false }: { includeTerminalFailures?: boolean } = {},
 ): QueueItem | null {
-  if (!job.passage) return null;
   const terminalFailure = job.status === "FAILED" || job.status === "CANCELLED";
   if (terminalFailure && !includeTerminalFailures) return null;
 
@@ -68,6 +70,14 @@ function jobToQueueItem(
   const questionIds = Array.isArray(result.questionIds)
     ? result.questionIds.filter((id): id is string => typeof id === "string")
     : [];
+  const hasPassageSnapshot = !!job.passage;
+  if (!hasPassageSnapshot && questions.length === 0 && !terminalFailure) {
+    return null;
+  }
+
+  const passageId = job.passage?.id ?? job.passageId ?? "";
+  if (!passageId) return null;
+
   const progressKey = mode === "auto" ? "auto" : questionType || "manual";
   const progressValue =
     job.status === "COMPLETED" || job.status === "PARTIAL"
@@ -78,17 +88,17 @@ function jobToQueueItem(
 
   return {
     id: job.id,
-    passageId: job.passage.id,
-    passageTitle: job.passage.title || job.title,
-    passageContent: job.passage.content,
+    passageId,
+    passageTitle: job.passage?.title || job.title,
+    passageContent: job.passage?.content ?? "",
     createdAt: job.createdAt,
     passageMeta: {
-      school: job.passage.school?.name,
-      grade: job.passage.grade,
-      semester: job.passage.semester,
-      unit: job.passage.unit,
+      school: job.passage?.school?.name,
+      grade: job.passage?.grade ?? null,
+      semester: job.passage?.semester ?? null,
+      unit: job.passage?.unit ?? null,
     },
-    analysisData: parseAnalysis(job.passage.analysis?.analysisData),
+    analysisData: parseAnalysis(job.passage?.analysis?.analysisData),
     status:
       progressValue === "pending"
         ? "generating"
@@ -151,59 +161,59 @@ export function useGenerationSessionQueue(): [
   const [dbQueue, setDbQueue] = useState<QueueItem[]>([]);
 
   useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await fetch(
-          "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=100",
-          { credentials: "include", cache: "no-store" },
-        );
-        if (!res.ok) return;
-        const data = (await res.json()) as { jobs?: AiJobRow[] };
-        if (cancelled) return;
-        const jobs = data.jobs ?? [];
-        const failedJobItems = jobs
-          .map((job) => jobToQueueItem(job, { includeTerminalFailures: true }))
-          .filter(
-            (item): item is QueueItem =>
-              !!item && item.status === "error",
+    return startAdaptivePoll({
+      activeMs: 5_000,
+      idleMs: 5 * 60_000,
+      run: async (signal) => {
+        try {
+          const res = await fetch(
+            "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=100&view=summary",
+            { credentials: "include", cache: "no-store", signal },
           );
+          if (!res.ok) return null;
+          const data = (await res.json()) as { jobs?: AiJobRow[] };
+          if (signal.aborted) return null;
+          const jobs = data.jobs ?? [];
+          const failedJobItems = jobs
+            .map((job) => jobToQueueItem(job, { includeTerminalFailures: true }))
+            .filter(
+              (item): item is QueueItem =>
+                !!item && item.status === "error",
+            );
 
-        if (failedJobItems.length > 0) {
-          setLocalQueue((prev) =>
-            prev.map((item) => {
-              if (
-                !isFastTempItem(item) ||
-                item.status !== "generating"
-              ) {
-                return item;
-              }
-              const failedMatch = failedJobItems.find((failed) =>
-                sameGenerationRequest(item, failed),
-              );
-              if (!failedMatch) return item;
-              return {
-                ...item,
-                status: "error" as const,
-                progress: failedMatch.progress,
-                error: failedMatch.error,
-              };
-            }),
-          );
+          if (failedJobItems.length > 0) {
+            setLocalQueue((prev) =>
+              prev.map((item) => {
+                if (
+                  !isFastTempItem(item) ||
+                  item.status !== "generating"
+                ) {
+                  return item;
+                }
+                const failedMatch = failedJobItems.find((failed) =>
+                  sameGenerationRequest(item, failed),
+                );
+                if (!failedMatch) return item;
+                return {
+                  ...item,
+                  status: "error" as const,
+                  progress: failedMatch.progress,
+                  error: failedMatch.error,
+                };
+              }),
+            );
+          }
+
+          setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
+          // Signature: status + successCount per job → snaps back to the fast
+          // cadence on any start/progress/completion, backs off when idle.
+          return jobs.map((j) => `${j.id}:${j.status}:${j.successCount}`).join("|");
+        } catch {
+          // Keep local optimistic rows visible when a poll fails.
+          return null;
         }
-
-        setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
-      } catch {
-        // Keep local optimistic rows visible when a poll fails.
-      }
-    };
-
-    void load();
-    const timer = window.setInterval(load, 5_000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
+      },
+    });
   }, []);
 
   const queue = useMemo(() => {

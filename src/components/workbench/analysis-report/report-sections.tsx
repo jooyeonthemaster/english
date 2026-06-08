@@ -2335,7 +2335,7 @@ function AnnotatedPassageSentenceSourceBlock({
         </div>
       </div>
       {editable && isFirst ? (
-        <DelBtn title="臾몄옣 ??젣" onClick={() => onCommit({ ...section, sentences: section.sentences.filter((_, index) => index !== sentenceIndex) })} />
+        <DelBtn title="문장 삭제" onClick={() => onCommit({ ...section, sentences: section.sentences.filter((_, index) => index !== sentenceIndex) })} />
       ) : null}
     </article>
   );

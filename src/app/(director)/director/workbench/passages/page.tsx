@@ -56,7 +56,7 @@ export default async function PassagesPage({ searchParams }: PageProps) {
     ...filters,
     sourceMaterialId: sourceMaterial ? filters.sourceMaterialId : undefined,
     collectionId: collectionSummary ? filters.collectionId : undefined,
-    // This route is labelled "분석된 지문 관리하기" in the workbench overview
+    // This route is labelled "분석된 학습지 관리하기" in the workbench overview
     // (`src/app/(director)/director/page.tsx`). Unanalyzed entries belong to
     // the analysis queue page at /passages/create — we hide them here so the
     // grid contains only analysis-complete passages.

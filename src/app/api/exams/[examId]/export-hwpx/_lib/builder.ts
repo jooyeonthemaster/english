@@ -42,7 +42,6 @@ import {
   questionBreakKey,
   type BreakPlan,
   type BreakType,
-  type PaginatedLayout,
 } from "./break-plan";
 import {
   renderPassageFragment,
@@ -269,6 +268,33 @@ function renderCustomBlock(
   return [];
 }
 
+// Passage-inclusion resolution for one question group. Shared verbatim by
+// appendQuestionGroups (flat) and renderGroupsToUnits (units) so the
+// includePassage/source-passage policy lives in exactly one place.
+function resolveGroupPassage(
+  first: BuilderItemResolved,
+  items: BuilderItemResolved[],
+): { passageContent: string; includePassage: boolean } {
+  const rawPassageContent = (
+    first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
+  ).trim();
+  const passageContent = formatSourcePassageForQuestionItems(
+    rawPassageContent,
+    items,
+  ).trim();
+  const includePassage =
+    !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
+    (first.includePassage !== false ||
+      shouldForceSourcePassage({
+        subType: first.sourceQuestion.subType,
+        questionText: first.questionText || first.sourceQuestion.questionText,
+        structuredData: (first.sourceQuestion as { structuredData?: unknown })
+          .structuredData,
+        passage: { content: rawPassageContent },
+      }));
+  return { passageContent, includePassage };
+}
+
 function appendQuestionGroups(opts: {
   target: BlockNode[];
   items: BuilderItemResolved[];
@@ -284,22 +310,8 @@ function appendQuestionGroups(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const rawPassageContent = (
-      first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
-    ).trim();
-    const passageContent = formatSourcePassageForQuestionItems(
-      rawPassageContent,
-      group.items,
-    ).trim();
-    const includePassage =
-      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
-      (first.includePassage !== false ||
-        shouldForceSourcePassage({
-          subType: first.sourceQuestion.subType,
-          questionText: first.questionText || first.sourceQuestion.questionText,
-          structuredData: (first.sourceQuestion as { structuredData?: unknown }).structuredData,
-          passage: { content: rawPassageContent },
-        }));
+    const { passageContent, includePassage } =
+      resolveGroupPassage(first, group.items);
 
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
     if (passageRenderedSeparately) {
@@ -480,23 +492,8 @@ function renderGroupsToUnits(opts: {
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
-    const rawPassageContent = (
-      first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
-    ).trim();
-    const passageContent = formatSourcePassageForQuestionItems(
-      rawPassageContent,
-      group.items,
-    ).trim();
-    const includePassage =
-      !shouldRenderSourcePassageInsideQuestion(first.sourceQuestion.subType) &&
-      (first.includePassage !== false ||
-        shouldForceSourcePassage({
-          subType: first.sourceQuestion.subType,
-          questionText: first.questionText || first.sourceQuestion.questionText,
-          structuredData: (first.sourceQuestion as { structuredData?: unknown })
-            .structuredData,
-          passage: { content: rawPassageContent },
-        }));
+    const { passageContent, includePassage } =
+      resolveGroupPassage(first, group.items);
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
     if (passageRenderedSeparately) {
       const passageBlocks = renderPassage({
@@ -529,36 +526,6 @@ function renderGroupsToUnits(opts: {
     });
   }
   return units;
-}
-
-// pagination(미리보기와 동일)이 정한 "각 단위 → (페이지, 단)" 배치를 맵으로.
-function buildPlacementMap(
-  pageLayout: PaginatedLayout,
-): Map<string, { page: number; col: number }> {
-  const placement = new Map<string, { page: number; col: number }>();
-  pageLayout.pages.forEach((columns, p) => {
-    columns.forEach((frags, c) => {
-      frags.forEach((frag) => {
-        const groupFirstId = frag.parts[0]?.source.localId;
-        if (
-          frag.includePassage &&
-          frag.passageRenderedLines.length > 0 &&
-          frag.passageStartLineIndex === 0 &&
-          groupFirstId
-        ) {
-          const k = passageBreakKey(groupFirstId);
-          if (!placement.has(k)) placement.set(k, { page: p, col: c });
-        }
-        frag.parts.forEach((part) => {
-          if (part.isStart && part.source.localId) {
-            const k = questionBreakKey(part.source.localId);
-            if (!placement.has(k)) placement.set(k, { page: p, col: c });
-          }
-        });
-      });
-    });
-  });
-  return placement;
 }
 
 // 한 페이지를 [좌칸 | 간격 | 우칸] 무테 표로.

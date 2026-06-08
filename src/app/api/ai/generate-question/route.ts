@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
         "Passage analysis required",
       );
       return NextResponse.json(
-        { error: "지문 분석이 완료된 지문만 문제 생성에 사용할 수 있습니다." },
+        { error: "학습지 생성이 완료된 지문만 문제 생성에 사용할 수 있습니다." },
         { status: 400 },
       );
     }

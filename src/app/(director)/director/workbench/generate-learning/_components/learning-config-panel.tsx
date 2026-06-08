@@ -160,7 +160,7 @@ export function LearningConfigPanel({
                 AI 자동 출제
               </p>
               <p className="text-[11px] text-blue-600 leading-relaxed">
-                지문 분석 데이터를 기반으로 최적의 유형과 난이도를 자동
+                학습지 생성 데이터를 기반으로 최적의 유형과 난이도를 자동
                 선택합니다. 지문당 최대 300문제.
               </p>
             </div>

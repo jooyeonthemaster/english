@@ -46,6 +46,7 @@ export function CreditBadge({
 // 마지막으로 본 잔액을 모듈 스코프에 보관 → 뱃지가 리마운트(모달/네비게이션)돼도 직전 잔액을
 // 기억해 차감/환급 방향 애니메이션이 사라지지 않게 한다. sessionStorage 로 새로고침도 버팀.
 const BALANCE_CACHE_KEY = "credit-badge:last-balance";
+const BALANCE_POLL_INTERVAL_MS = 60_000;
 let lastKnownBalance: number | null = null;
 function readLastBalance(): number | null {
   if (lastKnownBalance !== null) return lastKnownBalance;
@@ -75,7 +76,14 @@ function CreditBadgeContent({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const flashIdRef = useRef(0);
 
-  const fetchBalance = useCallback(async () => {
+  const fetchBalance = useCallback(async (force = false) => {
+    if (
+      !force &&
+      typeof document !== "undefined" &&
+      document.visibilityState === "hidden"
+    ) {
+      return;
+    }
     try {
       const res = await fetch("/api/credits/balance");
       if (!res.ok) return;
@@ -96,14 +104,19 @@ function CreditBadgeContent({
   }, []);
 
   useEffect(() => {
-    fetchBalance();
-    intervalRef.current = setInterval(fetchBalance, 60_000);
+    fetchBalance(true);
+    intervalRef.current = setInterval(fetchBalance, BALANCE_POLL_INTERVAL_MS);
     // 크레딧 소모/환급 직후 즉시 재조회 (60초 폴링 대기 없이 사이드바 반영)
-    const onChanged = () => fetchBalance();
+    const onChanged = () => fetchBalance(true);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void fetchBalance(true);
+    };
     window.addEventListener(CREDITS_CHANGED_EVENT, onChanged);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       window.removeEventListener(CREDITS_CHANGED_EVENT, onChanged);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [fetchBalance]);
 

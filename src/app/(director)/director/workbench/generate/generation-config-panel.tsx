@@ -81,8 +81,8 @@ const DIFFICULTY_TONES = [
 
 interface GenerationConfigPanelProps {
   // Mode
-  genMode: "auto" | "manual";
-  setGenMode: (v: "auto" | "manual") => void;
+  genMode: "auto" | "manual" | "set";
+  setGenMode: (v: "auto" | "manual" | "set") => void;
   generationPlan: QuestionGenerationPlan;
   setGenerationPlan: (v: QuestionGenerationPlan) => void;
 
@@ -892,65 +892,34 @@ export function GenerationConfigPanel({
                           <GripVertical className="h-3.5 w-3.5" />
                         </button>
 
-                        {hasDetailSettings ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              applyTypeCount(item.id, count + 1);
-                            }}
-                            className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
-                            aria-label={`${item.label} 1개 추가`}
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            applyTypeCount(item.id, count + 1);
+                          }}
+                          className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
+                          aria-label={`${item.label} 1개 추가`}
+                        >
+                          <span
+                            className={`min-w-0 flex-1 truncate text-[12px] font-black ${
+                              active ? "text-blue-800" : "text-slate-700"
+                            }`}
                           >
-                            <span
-                              className={`min-w-0 flex-1 truncate text-[12px] font-black ${
-                                active ? "text-blue-800" : "text-slate-700"
-                              }`}
-                            >
-                              {item.label}
-                            </span>
-                            <span
-                              title={item.groupLabel}
-                              className={`min-w-0 max-w-[42px] shrink rounded px-1.5 py-0.5 text-[9.5px] font-bold ring-1 sm:max-w-[54px] ${getCategoryBadgeClass(item.groupLabel)}`}
-                            >
-                              <span className="block truncate">
-                                {getCategoryShortLabel(item.groupLabel)}
-                              </span>
-                            </span>
-                            {active && (
-                              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-blue-600" />
-                            )}
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              applyTypeCount(item.id, count + 1);
-                            }}
-                            className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
-                            aria-label={`${item.label} 1개 추가`}
+                            {item.label}
+                          </span>
+                          <span
+                            title={item.groupLabel}
+                            className={`min-w-0 max-w-[42px] shrink rounded px-1.5 py-0.5 text-[9.5px] font-bold ring-1 sm:max-w-[54px] ${getCategoryBadgeClass(item.groupLabel)}`}
                           >
-                            <span
-                              className={`min-w-0 flex-1 truncate text-[12px] font-black ${
-                                active ? "text-blue-800" : "text-slate-700"
-                              }`}
-                            >
-                              {item.label}
+                            <span className="block truncate">
+                              {getCategoryShortLabel(item.groupLabel)}
                             </span>
-                            <span
-                              title={item.groupLabel}
-                              className={`min-w-0 max-w-[42px] shrink rounded px-1.5 py-0.5 text-[9.5px] font-bold ring-1 sm:max-w-[54px] ${getCategoryBadgeClass(item.groupLabel)}`}
-                            >
-                              <span className="block truncate">
-                                {getCategoryShortLabel(item.groupLabel)}
-                              </span>
-                            </span>
-                            {active && (
-                              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-blue-600" />
-                            )}
-                          </button>
-                        )}
+                          </span>
+                          {active && (
+                            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-blue-600" />
+                          )}
+                        </button>
 
                         <div className="grid w-[108px] shrink-0 grid-cols-[76px_28px] items-center gap-1">
                           <div className="flex items-center justify-end gap-0.5">

@@ -34,6 +34,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const staff = await requireStaff();
   if (staff instanceof NextResponse) return staff;
 
+  // Stale cleanup runs globally in the 5-min extraction-reaper.
   const auth = await loadJobWithAuth(jobId, staff.academyId);
   if (!auth.ok) return auth.response;
 

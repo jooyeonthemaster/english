@@ -10,6 +10,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
@@ -61,6 +62,12 @@ export async function POST(req: NextRequest) {
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
   }
+
+  await cleanupStaleWorkbenchAiJobs({
+    academyId: staff.academyId,
+    domain: "QUESTION_GENERATION",
+    passageId: passage.id,
+  });
 
   // ── IRRELEVANT slot count guardrail (MANUAL mode only — AUTO planner picks its own count) ──
   if (parsed.data.mode === "MANUAL" && parsed.data.questionType === "IRRELEVANT") {

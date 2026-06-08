@@ -1,15 +1,18 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, AlertTriangle, StickyNote } from "lucide-react";
+import { ChevronRight, AlertTriangle, StickyNote, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ProviderBadge } from "@/components/admin/provider-badge";
 import type { MemberListItem } from "@/actions/admin-members";
+import { updateMemberMemo } from "@/actions/admin-members";
 import { formatDate, formatRelative, getInitials, tierBadgeClass } from "./formatters";
+
+const MAX_MEMO_LENGTH = 5000;
 
 const LOW_BALANCE_THRESHOLD = 50;
 
@@ -22,13 +25,6 @@ export function MemberRow({
 }) {
   const router = useRouter();
   const href = `/admin/members/${member.id}`;
-
-  // First non-empty line of the academy memo, shown as a one-line preview so
-  // operators can scan notes without opening each member.
-  const memoPreview = member.academy.memo
-    ?.split("\n")
-    .map((line) => line.trim())
-    .find((line) => line.length > 0);
 
   // Row-level click navigation: matches enterprise SaaS row affordance while
   // the first-cell <Link> remains the keyboard/SR entry point. Guards against
@@ -85,21 +81,7 @@ export function MemberRow({
           <div className="text-[11px] text-gray-400 truncate">
             /{member.academy.slug}
           </div>
-          {memoPreview && (
-            <div
-              className="flex items-center gap-1 mt-0.5 min-w-0"
-              title={memoPreview}
-            >
-              <StickyNote
-                className="size-3 shrink-0 text-amber-500"
-                strokeWidth={1.8}
-                aria-hidden
-              />
-              <span className="text-[11px] text-gray-500 truncate">
-                {memoPreview}
-              </span>
-            </div>
-          )}
+          <MemoCell memberId={member.id} memo={member.academy.memo} />
         </div>
       </TableCell>
       <TableCell>
@@ -167,6 +149,134 @@ function Avatar({
     >
       {getInitials(name)}
     </div>
+  );
+}
+
+/**
+ * 회원 목록에서 학원 메모를 바로 보고/쓰는 인라인 셀. 메모가 없던 회원도 "메모 추가"를
+ * 눌러 곧장 작성할 수 있다(상세페이지의 updateMemberMemo 액션 재사용). 저장하면 낙관적
+ * 으로 즉시 반영하고, 서버 데이터(검색 등)도 router.refresh로 동기화한다. 셀 내부 클릭은
+ * stopPropagation으로 막아 행 전체 클릭(상세 이동)과 충돌하지 않게 한다.
+ */
+function MemoCell({
+  memberId,
+  memo,
+}: {
+  memberId: string;
+  memo: string | null;
+}) {
+  const router = useRouter();
+  const [editing, setEditing] = useState(false);
+  const [current, setCurrent] = useState(memo ?? "");
+  const [value, setValue] = useState(memo ?? "");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const preview = current
+    .split("\n")
+    .map((line) => line.trim())
+    .find((line) => line.length > 0);
+
+  function startEdit(e: React.MouseEvent) {
+    e.stopPropagation();
+    setValue(current);
+    setError(null);
+    setEditing(true);
+  }
+  function cancel() {
+    setValue(current);
+    setError(null);
+    setEditing(false);
+  }
+  function save() {
+    if (isPending) return;
+    setError(null);
+    startTransition(async () => {
+      const res = await updateMemberMemo({ memberId, memo: value });
+      if (!res.success) {
+        setError(res.error);
+        return;
+      }
+      const trimmed = value.trim();
+      setCurrent(trimmed);
+      setValue(trimmed);
+      setEditing(false);
+      router.refresh(); // 검색·다른 행 동기화(낙관적 표시는 이미 반영됨)
+    });
+  }
+
+  if (editing) {
+    return (
+      <div className="mt-1" onClick={(e) => e.stopPropagation()}>
+        <textarea
+          autoFocus
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          rows={2}
+          maxLength={MAX_MEMO_LENGTH}
+          placeholder="학원 메모 입력… (첫 줄이 목록에 표시)"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) save();
+            if (e.key === "Escape") cancel();
+          }}
+          className="w-full min-h-[44px] resize-y rounded-md border border-amber-200 bg-amber-50/40 px-2 py-1 text-[12px] leading-snug text-gray-700 outline-none focus:border-amber-400"
+        />
+        {error && <p className="mt-0.5 text-[10.5px] text-rose-600">{error}</p>}
+        <div className="mt-1 flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={save}
+            disabled={isPending}
+            className="inline-flex h-6 items-center gap-1 rounded bg-blue-600 px-2 text-[11px] font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
+          >
+            {isPending && (
+              <Loader2 className="size-3 animate-spin" strokeWidth={2} aria-hidden />
+            )}
+            저장
+          </button>
+          <button
+            type="button"
+            onClick={cancel}
+            disabled={isPending}
+            className="h-6 rounded px-2 text-[11px] text-gray-500 transition-colors hover:bg-gray-100"
+          >
+            취소
+          </button>
+          <span className="ml-auto text-[10px] text-gray-300">⌘↵ 저장 · Esc 취소</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (preview) {
+    return (
+      <button
+        type="button"
+        onClick={startEdit}
+        title={`${preview}\n\n클릭해서 메모 편집`}
+        className="mt-1 flex w-full items-center gap-1.5 rounded px-1 py-0.5 text-left transition-colors hover:bg-amber-50"
+      >
+        <StickyNote
+          className="size-3.5 shrink-0 text-amber-500"
+          strokeWidth={1.8}
+          aria-hidden
+        />
+        <span className="truncate text-[12.5px] leading-snug text-gray-600">
+          {preview}
+        </span>
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={startEdit}
+      className="mt-1 inline-flex items-center gap-1 rounded px-1 py-0.5 text-[11.5px] text-gray-300 transition-colors hover:bg-amber-50/60 hover:text-amber-600"
+    >
+      <StickyNote className="size-3.5 shrink-0" strokeWidth={1.8} aria-hidden />
+      메모 추가
+    </button>
   );
 }
 

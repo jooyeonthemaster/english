@@ -176,7 +176,7 @@ export function classifyAnalysisError(error: unknown): ClassifiedAnalysisError {
   return {
     status: 500,
     code: "PASSAGE_ANALYSIS_FAILED",
-    message: "지문 분석 중 오류가 발생했습니다.",
+    message: "학습지 생성 중 오류가 발생했습니다.",
     log,
   };
 }

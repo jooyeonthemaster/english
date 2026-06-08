@@ -41,7 +41,7 @@ function buildSubtitle(job: WorkbenchAiJobRow, domain: TaskDomain): string {
     if (job.status === "COMPLETED") return "분석 완료";
     if (job.status === "FAILED") return "분석 실패";
     if (job.status === "PENDING") return "분석 대기 중";
-    return "지문 분석 진행 중";
+    return "학습지 생성 진행 중";
   }
 
   const typeLabel = job.mode === "AUTO" ? "자동 생성" : job.questionType || "수동 생성";
@@ -56,7 +56,7 @@ function buildDescription(job: WorkbenchAiJobRow, domain: TaskDomain): string {
   if (domain === "passage-analysis") {
     return job.status === "COMPLETED"
       ? "분석 결과가 저장되었습니다."
-      : "Trigger.dev에서 지문 분석을 처리하고 있습니다.";
+      : "Trigger.dev에서 학습지 생성을 처리하고 있습니다.";
   }
   return job.status === "COMPLETED"
     ? "생성된 문제는 문제관리에 저장되었습니다."
@@ -70,8 +70,10 @@ function createWorkbenchAiAdapter(
   return {
     domain,
     async fetchTasks(signal): Promise<BaseTask[]> {
+      // This adapter renders only scalar counts/status — request the scalar-only
+      // projection so the heavy passage.questions/result payload is never sent.
       const res = await fetch(
-        `/api/workbench/ai-jobs?domain=${apiDomain}&limit=50`,
+        `/api/workbench/ai-jobs?domain=${apiDomain}&limit=50&view=summary`,
         {
           credentials: "include",
           cache: "no-store",

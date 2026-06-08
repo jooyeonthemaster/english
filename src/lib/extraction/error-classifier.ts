@@ -64,10 +64,27 @@ export function classifyGeminiError(err: unknown): ExtractionErrorClassification
   if (e.code === "PARSE_ERROR") code = "PARSE_ERROR";
   else if (e.code === "EMPTY_OUTPUT") code = "EMPTY_OUTPUT";
   else if (e.code === "GEMINI_TIMEOUT") code = "GEMINI_TIMEOUT";
+  else if (e.code === "RESOURCE_EXHAUSTED") code = "GEMINI_RATE_LIMIT";
   else if (status === 401 || status === 403) code = "GEMINI_AUTH";
   else if (status === 429) code = "GEMINI_RATE_LIMIT";
   else if (typeof status === "number" && status >= 500 && status < 600) code = "GEMINI_SERVER";
   else if (status === 400 && /image|decode|media/i.test(msg)) code = "INVALID_IMAGE";
+  // Billing/credit exhaustion is NOT transient — retrying never recovers it.
+  // Route only unambiguous billing wording to the terminal INSUFFICIENT_CREDITS
+  // code (retryable:false) so the page goes DEAD with a "recharge" message
+  // instead of being retried forever like a rate-limit. Generic quota/rate-limit
+  // wording stays GEMINI_RATE_LIMIT (transient, retryable) to avoid turning a
+  // temporary 429 into a permanent failure.
+  else if (
+    /prepayment credits are depleted|insufficient.{0,12}(credit|fund|balance)|payment required|enable billing|free tier quota/i.test(
+      lower,
+    )
+  ) {
+    code = "INSUFFICIENT_CREDITS";
+  }
+  else if (/resource_exhausted|quota|rate limit/i.test(lower)) {
+    code = "GEMINI_RATE_LIMIT";
+  }
   else if (/safety|blocked|prohibited|policy/i.test(lower)) code = "SAFETY_BLOCKED";
   else if (/api key|api_key|api-key|invalid_argument/i.test(lower)) code = "GEMINI_AUTH";
   else if (/storage|download/i.test(lower) && /timeout|timed out|etimedout|esockettimedout/i.test(lower)) {

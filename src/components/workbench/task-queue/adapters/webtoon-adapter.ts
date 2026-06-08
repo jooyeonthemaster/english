@@ -40,7 +40,7 @@ function buildSubtitle(row: WebtoonRow): string {
 export const webtoonAdapter: TaskAdapter = {
   domain: "webtoon",
   async fetchTasks(signal): Promise<BaseTask[]> {
-    const res = await fetch("/api/webtoons/list?limit=50", {
+    const res = await fetch("/api/webtoons/list?limit=50&view=summary", {
       credentials: "include",
       cache: "no-store",
       signal,

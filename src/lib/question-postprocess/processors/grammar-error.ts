@@ -1,6 +1,7 @@
 import {
   applyReplacementsRTL,
   findExpressionInPassage,
+  findOcrNoisyExpressionInPassage,
   findWordInPassage,
   sanitizeExpressionForMarker,
 } from "../text-utils";
@@ -104,6 +105,46 @@ export function processGrammarError(
       );
     }
 
+    if (!found && me.isError && me.errorExpression) {
+      found = findGrammarExpressionInPassage(
+        passage,
+        me.errorExpression,
+        me.surroundingText,
+      );
+      if (found) {
+        warnings.push(
+          `Existing error expression matched for label ${me.label}: "${me.errorExpression}"`,
+        );
+      }
+    }
+
+    if (!found) {
+      const sourceVariant = findCorrectedGrammarSourceVariant(
+        passage,
+        sourceExpression,
+        me.surroundingText,
+      );
+      if (sourceVariant) {
+        found = sourceVariant.position;
+        warnings.push(
+          `Corrected source variant matched for label ${me.label}: "${sourceVariant.sourceText}" -> "${sourceExpression}"`,
+        );
+      }
+    }
+
+    if (!found) {
+      found = findOcrNoisyExpressionInPassage(
+        passage,
+        sourceExpression,
+        me.surroundingText,
+      );
+      if (found) {
+        warnings.push(
+          `OCR-noisy source token matched for label ${me.label}: "${sourceExpression}"`,
+        );
+      }
+    }
+
     if (!found) {
       warnings.push(`Expression not found for label ${me.label}: "${sourceExpression}"`);
       continue;
@@ -156,6 +197,32 @@ function findGrammarExpressionInPassage(
     return findWordInPassage(passage, expression, surroundingText);
   }
   return findExpressionInPassage(passage, expression, surroundingText);
+}
+
+function findCorrectedGrammarSourceVariant(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+): { sourceText: string; position: { index: number; length: number } } | null {
+  for (const sourceText of buildCorrectedGrammarSourceVariants(expression)) {
+    const position = findExpressionInPassage(passage, sourceText, surroundingText);
+    if (position) return { sourceText, position };
+  }
+  return null;
+}
+
+function buildCorrectedGrammarSourceVariants(expression: string): string[] {
+  const text = normalizeString(expression);
+  const variants = new Set<string>();
+  const embeddedQuestion = text.match(
+    /^(who|what|where|when|why|how)\s+(.+?)\s+(am|is|are|was|were|do|does|did|can|could|should|would|will|may|might|must|have|has|had)$/i,
+  );
+  if (embeddedQuestion) {
+    variants.add(
+      `${embeddedQuestion[1]} ${embeddedQuestion[3]} ${embeddedQuestion[2]}`,
+    );
+  }
+  return [...variants].filter((variant) => variant !== text);
 }
 
 function canonicalizeOptions(

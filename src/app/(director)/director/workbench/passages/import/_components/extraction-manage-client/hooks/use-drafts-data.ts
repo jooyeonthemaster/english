@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
+
 import {
   fetchAllDraftPages,
   getCachedDrafts,
@@ -219,14 +221,22 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
   );
 
   // ─── Polling effect for PENDING drafts ───
+  // adaptive-poll keeps the same 4s cadence while the tab is visible (live
+  // restoration progress feels identical), but PAUSES entirely while the tab is
+  // hidden and refreshes the instant you return — so a backgrounded 자료 관리
+  // tab no longer hammers the API mid-restoration. Fixed cadence (active==idle)
+  // means no backoff: behaviour is unchanged except for the hidden-tab pause.
   useEffect(() => {
     if (!hasPendingDrafts) return;
-    const POLL_INTERVAL_MS = 4000;
-    const id = window.setInterval(() => {
-      if (resultScope === "job" && jobId) void pollJobSilent(jobId);
-      else void pollAllSilent();
-    }, POLL_INTERVAL_MS);
-    return () => window.clearInterval(id);
+    return startAdaptivePoll({
+      activeMs: 4000,
+      idleMs: 4000,
+      run: async () => {
+        if (resultScope === "job" && jobId) await pollJobSilent(jobId);
+        else await pollAllSilent();
+        return "pending";
+      },
+    });
   }, [hasPendingDrafts, resultScope, jobId, pollJobSilent, pollAllSilent]);
 
   // ─── Job meta polling (terminal-transition detector) ───
@@ -235,79 +245,86 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
   // newly enter a terminal state we kick off a silent drafts refetch. Without
   // this, finishing an extraction while the 자료 관리 page is already open
   // leaves the card grid stuck on the old snapshot.
+  //
+  // adaptive-poll keeps the same 30s cadence while visible, but PAUSES while the
+  // tab is hidden and fires immediately on return. The terminal-transition
+  // detector still works across a hidden stretch because the previous snapshot
+  // lives in the module cache (getCachedJobMeta): a job that completed while you
+  // were away is detected the moment you come back. Thumbnails (firstPageImageUrl)
+  // are intentionally KEPT — the material cards render them; only the
+  // background/hidden polling is trimmed (no thumbnails=0 here).
   useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-    const load = async () => {
-      try {
-        const res = await fetch("/api/extraction/jobs?limit=200", {
-          credentials: "include",
-          cache: "no-store",
-          signal: controller.signal,
-        });
-        if (!res.ok || cancelled) return;
-        const data = (await res.json()) as {
-          jobs?: Array<{
-            id: string;
-            mode: string;
-            status: string;
-            displayName?: string | null;
-            originalFileName?: string | null;
-            createdAt: string;
-            firstPageImageUrl?: string | null;
-            resultCount?: number;
-            draftResultCount?: number;
-            savedResultCount?: number;
-          }>;
-        };
-        if (cancelled) return;
-        const m = new Map<string, JobMetaSnapshot>();
-        for (const j of data.jobs ?? []) {
-          // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
-          if (j.mode !== "PASSAGE_ONLY") continue;
-          m.set(j.id, {
-            thumbnailUrl: j.firstPageImageUrl ?? null,
-            status: j.status,
-            displayName: j.displayName ?? null,
-            originalFileName: j.originalFileName ?? null,
-            createdAt: j.createdAt,
-            resultCount: j.resultCount ?? 0,
-            draftResultCount: j.draftResultCount ?? 0,
-            savedResultCount: j.savedResultCount ?? 0,
+    return startAdaptivePoll({
+      activeMs: 30_000,
+      idleMs: 5 * 60_000,
+      run: async (signal) => {
+        try {
+          const res = await fetch("/api/extraction/jobs?limit=200", {
+            credentials: "include",
+            cache: "no-store",
+            signal,
           });
-        }
-        // Detect a fresh terminal transition vs the previous poll's
-        // snapshot. Skip the first run (prev === null) to avoid duplicating
-        // the bootstrap `loadAllDrafts` call.
-        const prev = getCachedJobMeta();
-        let shouldRefetchDrafts = false;
-        if (prev) {
-          for (const [id, meta] of m) {
-            if (!TERMINAL_JOB_STATUSES.includes(meta.status)) continue;
-            const prevMeta = prev.get(id);
-            if (
-              !prevMeta ||
-              !TERMINAL_JOB_STATUSES.includes(prevMeta.status)
-            ) {
-              shouldRefetchDrafts = true;
-              break;
+          if (!res.ok || signal.aborted) return null;
+          const data = (await res.json()) as {
+            jobs?: Array<{
+              id: string;
+              mode: string;
+              status: string;
+              displayName?: string | null;
+              originalFileName?: string | null;
+              createdAt: string;
+              firstPageImageUrl?: string | null;
+              resultCount?: number;
+              draftResultCount?: number;
+              savedResultCount?: number;
+            }>;
+          };
+          if (signal.aborted) return null;
+          const m = new Map<string, JobMetaSnapshot>();
+          for (const j of data.jobs ?? []) {
+            // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
+            if (j.mode !== "PASSAGE_ONLY") continue;
+            m.set(j.id, {
+              thumbnailUrl: j.firstPageImageUrl ?? null,
+              status: j.status,
+              displayName: j.displayName ?? null,
+              originalFileName: j.originalFileName ?? null,
+              createdAt: j.createdAt,
+              resultCount: j.resultCount ?? 0,
+              draftResultCount: j.draftResultCount ?? 0,
+              savedResultCount: j.savedResultCount ?? 0,
+            });
+          }
+          // Detect a fresh terminal transition vs the previous poll's
+          // snapshot. Skip the first run (prev === null) to avoid duplicating
+          // the bootstrap `loadAllDrafts` call.
+          const prev = getCachedJobMeta();
+          let shouldRefetchDrafts = false;
+          if (prev) {
+            for (const [id, meta] of m) {
+              if (!TERMINAL_JOB_STATUSES.includes(meta.status)) continue;
+              const prevMeta = prev.get(id);
+              if (
+                !prevMeta ||
+                !TERMINAL_JOB_STATUSES.includes(prevMeta.status)
+              ) {
+                shouldRefetchDrafts = true;
+                break;
+              }
             }
           }
+          setCachedJobMeta(m);
+          setJobMetaByJobId(m);
+          if (shouldRefetchDrafts) void pollAllSilent();
+          // Signature for adaptive-poll's change detection (cadence is fixed at
+          // 30s here, so this only ever keeps the loop steady).
+          return Array.from(m, ([id, meta]) => `${id}:${meta.status}`).join("|");
+        } catch {
+          // Best-effort enrichment; cards still render without thumbnails.
+          return null;
         }
-        setCachedJobMeta(m);
-        setJobMetaByJobId(m);
-        if (shouldRefetchDrafts) void pollAllSilent();
-      } catch {
-        // Best-effort enrichment; cards still render without thumbnails.
-      }
-    };
-    void load();
-    const timer = window.setInterval(load, 30_000);
-    return () => {
-      cancelled = true;
-      controller.abort();
-      window.clearInterval(timer);
-    };
+      },
+    });
   }, [pollAllSilent]);
 
   // ─── Detail open/close ───

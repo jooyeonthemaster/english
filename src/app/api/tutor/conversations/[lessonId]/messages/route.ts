@@ -246,7 +246,7 @@ export async function POST(
 
   const analysis = parsePassageAnalysis(lesson.passage.analysis.analysisData);
   if (!analysis) {
-    return Response.json({ error: "지문 분석을 불러오지 못했습니다." }, { status: 422 });
+    return Response.json({ error: "학습지 생성을 불러오지 못했습니다." }, { status: 422 });
   }
 
   const [recentAttemptItems, latestWeakness] = await Promise.all([
@@ -377,7 +377,7 @@ export async function POST(
       : [
           "You are a Korean English-learning tutor inside a passage study app.",
           "Always prioritize the provided passage analysis over general knowledge.",
-          "If the answer is not grounded in the analysis, say '(이 지문 분석에는 없는 내용입니다)' inline.",
+          "If the answer is not grounded in the analysis, say '(이 학습지에는 없는 내용입니다)' inline.",
           "Answer in Korean. Calibrate length to the question: keep simple confirmations to 2-4 sentences, but give thorough multi-paragraph explanations when the student asks for detailed analysis, breakdowns, comparisons, weakness reports, or step-by-step reasoning. Never truncate mid-thought or cut off explanations — always complete your reasoning before stopping.",
           "If the student asks for an answer, correction, or why their quiz answer was wrong, use clientContext.lastQuiz and recentQuizResults first.",
           "When the student is wrong, clearly state the answer/explanation first, then ask exactly one follow-up question.",

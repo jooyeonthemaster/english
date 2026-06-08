@@ -34,6 +34,7 @@ import {
   UNSTRUCTURED_OUTPUT_INSTRUCTIONS,
   buildGenerationPrompt,
 } from "./prompts";
+import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
 
 export interface RunGenerationInput {
   plan: PlanResult["plan"];
@@ -482,6 +483,9 @@ export async function runQuestionGeneration(
           `[AUTO-GEN] Failed ${subType}:`,
           err instanceof Error ? err.message : err,
         );
+        if (isNonRetryableQuestionGenerationProviderError(err)) {
+          throw err;
+        }
         recordRejection(rejectionRecorder, {
           phase: "model",
           qualityMode,
@@ -534,6 +538,30 @@ function buildRejectionSample(
   subType: string,
   question: Record<string, unknown>,
 ): Record<string, unknown> | undefined {
+  if (subType === "GRAMMAR_ERROR") {
+    const markedExpressions = Array.isArray(question.markedExpressions)
+      ? question.markedExpressions
+          .filter(isRecord)
+          .map((item) => ({
+            label: item.label,
+            expression: item.expression,
+            isError: item.isError,
+            errorExpression: item.errorExpression,
+          }))
+      : [];
+    const passageWithMarkers =
+      typeof question.passageWithMarkers === "string"
+        ? question.passageWithMarkers
+        : "";
+
+    return {
+      markedCount: markedExpressions.length,
+      renderedMarkerCount: (passageWithMarkers.match(/__[^_]+__/g) ?? []).length,
+      markedExpressions,
+      passageWithMarkersPreview: passageWithMarkers.slice(0, 300),
+    };
+  }
+
   if (subType !== "IRRELEVANT") return undefined;
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.filter((sentence): sentence is string => typeof sentence === "string")

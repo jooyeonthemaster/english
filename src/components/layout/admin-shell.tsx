@@ -195,6 +195,17 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
 
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
+  // 사이드바 상단 사용자 메뉴(드롭다운)가 열려 있는 동안엔 hover-peek 전환을 동결한다.
+  // 포털로 뜬 메뉴 위로 커서가 가는 순간 사이드바에 mouseleave가 발생 → peek가 닫히고
+  // 접힘/펼침 트리거 버튼이 교체돼 열려 있던 메뉴가 즉시 닫힌다(=버튼이 안 눌리는 듯 보임).
+  // sidebarHoverRef로 실제 커서의 사이드바 안/밖 여부를 추적해, 메뉴를 닫을 때 peek를 복구한다.
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const sidebarHoverRef = React.useRef(false);
+  const handleUserMenuOpenChange = useCallback((open: boolean) => {
+    setUserMenuOpen(open);
+    if (!open) setPeekOpen(sidebarHoverRef.current);
+  }, []);
+
   const isDirector = staff.role === "DIRECTOR";
   const navGroups = useMemo(() => getNavGroups(basePath), [basePath]);
 
@@ -289,7 +300,10 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
         {collapsed && !peekOpen && (
           <div
             aria-hidden
-            onMouseEnter={() => setPeekOpen(true)}
+            onMouseEnter={() => {
+              sidebarHoverRef.current = true;
+              if (!userMenuOpen) setPeekOpen(true);
+            }}
             className="fixed left-0 top-0 z-40 hidden h-screen w-1.5 md:block"
           />
         )}
@@ -312,8 +326,14 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
               "flex h-full min-h-0",
               collapsed && "absolute left-0 top-0 z-50",
             )}
-            onMouseEnter={collapsed && !peekOpen ? () => setPeekOpen(true) : undefined}
-            onMouseLeave={isPeeking ? () => setPeekOpen(false) : undefined}
+            onMouseEnter={() => {
+              sidebarHoverRef.current = true;
+              if (collapsed && !peekOpen && !userMenuOpen) setPeekOpen(true);
+            }}
+            onMouseLeave={() => {
+              sidebarHoverRef.current = false;
+              if (isPeeking && !userMenuOpen) setPeekOpen(false);
+            }}
             style={
               collapsed
                 ? {
@@ -373,6 +393,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
               pathname={pathname}
               isDirector={isDirector}
               onNavClick={handleNavClick}
+              onUserMenuOpenChange={handleUserMenuOpenChange}
             />
 
             {/* Navigation */}

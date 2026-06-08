@@ -46,7 +46,7 @@ export async function loadJobWithAuth(
     return {
       ok: false,
       response: NextResponse.json(
-        { error: "異붿텧 ?묒뾽??李얠쓣 ???놁뒿?덈떎.", code: "JOB_NOT_FOUND" },
+        { error: "추출 작업을 찾을 수 없습니다.", code: "JOB_NOT_FOUND" },
         { status: 404 },
       ),
     };

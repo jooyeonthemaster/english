@@ -77,6 +77,31 @@ export interface GenerateQuestionTextResult {
   rawFinishReason?: string;
 }
 
+export function isNonRetryableQuestionGenerationProviderError(error: unknown): boolean {
+  const message = [
+    error instanceof Error ? error.message : String(error),
+    readErrorString(error, "text"),
+    readErrorString(error, "responseBody"),
+    readErrorString(error, "body"),
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .toLowerCase();
+
+  return [
+    "prepayment credits are depleted",
+    "exceeded your current quota",
+    "quota exceeded",
+    "generate_content_paid_tier_input_token_count",
+    "api key is missing",
+    "api key not found",
+    "api key invalid",
+    "invalid api key",
+    "permission denied",
+    "billing",
+  ].some((pattern) => message.includes(pattern));
+}
+
 export async function generateQuestionObject<T>({
   schema,
   prompt,
@@ -163,6 +188,15 @@ export async function generateQuestionObject<T>({
         console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
       }
 
+      if (
+        config.provider === "google" &&
+        isNonRetryableQuestionGenerationProviderError(error)
+      ) {
+        console.warn(
+          `[${logPrefix}] Non-retryable Google provider error; stopping retries.`,
+        );
+        throw error;
+      }
     }
   }
 
@@ -275,6 +309,16 @@ export async function generateQuestionText({
       }
       if (isRecord(error) && typeof error.text === "string") {
         console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
+      }
+
+      if (
+        config.provider === "google" &&
+        isNonRetryableQuestionGenerationProviderError(error)
+      ) {
+        console.warn(
+          `[${logPrefix}] Non-retryable Google provider error; stopping retries.`,
+        );
+        throw error;
       }
 
       const rawText = readErrorString(error, "text");
