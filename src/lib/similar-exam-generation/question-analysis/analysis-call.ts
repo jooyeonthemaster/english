@@ -23,6 +23,7 @@ export interface GenerateAnalysisArgs {
   maxOutputTokens: number;
   providerOptions: ProviderOptions;
   targetQuestion?: TargetQuestionAnalysis;
+  manualCropOnly?: boolean;
   includeBoundingBoxes?: boolean;
   maxRetries?: number;
   stopAfterError?: (error: unknown) => boolean;
@@ -51,6 +52,7 @@ export async function generateAnalysisWithRetries(
     schoolType: args.schoolType,
     gradeInfo: args.gradeInfo,
     targetQuestion: args.targetQuestion,
+    manualCropOnly: args.manualCropOnly,
   });
 
   let lastError: unknown;

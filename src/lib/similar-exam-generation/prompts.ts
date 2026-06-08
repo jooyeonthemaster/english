@@ -51,6 +51,12 @@ generator reproduces the exact shape:
   (5–10), grammarAnswerCount = how many of those are actually wrong (1–markerCount).
 - GRAMMAR_CORRECTION: grammarCorrectionErrorCount = number of wrong underlined segments (1–5).
 - IRRELEVANT (무관한 문장): irrelevantSlotCount = number of numbered choices (usually 5).
+- SUMMARY_COMPLETE_MC: summaryBlankCount = number of summary blanks, usually 2 but
+  sometimes 3 or 4 when the source item uses (A), (B), (C), etc.
+- SUMMARY_COMPLETE: summaryBlankCount = number of short-answer summary blanks.
+- CONTENT_MATCH: optionCount = number of visible statements/options, answerCount =
+  number of correct labels. Preserve multi-answer statement-list formats when they
+  still fit text-only generation.
 - BLANK_INFERENCE: blankDoubleNegative = true only when the blank tests a
   negative/privative paraphrase.
 Leave typeSettings fields unset when they do not apply.

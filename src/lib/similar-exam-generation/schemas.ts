@@ -49,6 +49,7 @@ export const GENERATION_SUB_TYPES = [
   "CONTENT_MATCH",
   "SUMMARY_COMPLETE_MC",
   "IRRELEVANT",
+  "SUMMARY_COMPLETE",
   "WORD_ORDER",
   "FILL_BLANK_KEY",
   "CONDITIONAL_WRITING",
@@ -70,6 +71,13 @@ export const slotTypeSettingsSchema = z
     grammarCorrectionErrorCount: z.number().int().min(1).max(5).nullable().optional(),
     // IRRELEVANT: number of displayed slots (>=5).
     irrelevantSlotCount: z.number().int().min(5).max(10).nullable().optional(),
+    // SUMMARY_COMPLETE_MC: number of summary blanks (2~4).
+    summaryBlankCount: z.number().int().min(2).max(4).nullable().optional(),
+    // CONTENT_MATCH and other statement-list types: number of visible options/statements.
+    optionCount: z.number().int().min(1).max(20).nullable().optional(),
+    // CONTENT_MATCH and multi-answer types: number of correct labels.
+    answerCount: z.number().int().min(1).max(20).nullable().optional(),
+    correctAnswerCount: z.number().int().min(1).max(20).nullable().optional(),
     // BLANK_INFERENCE: negative-paraphrase blank mode.
     blankDoubleNegative: z.boolean().nullable().optional(),
   })

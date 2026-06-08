@@ -21,8 +21,41 @@ export interface GrammarCorrectionGenerationSettings {
   errorCount?: number;
 }
 
+export interface SummaryCompleteMcGenerationSettings {
+  /** Number of summary blanks. Range 2~4. Default 2. */
+  blankCount?: number;
+}
+
+export interface ContentMatchGenerationSettings {
+  /** Number of displayed statement options. Range 5~12. Default 5. */
+  optionCount?: number;
+  /** Number of correct statements. Range 1~optionCount. Default 1. */
+  answerCount?: number;
+  /** Legacy analysis field name; interpreted as answerCount. */
+  correctAnswerCount?: number;
+}
+
+export interface SummaryCompleteGenerationSettings {
+  /** Number of short-answer summary blanks. Range 1~5. Default 2. */
+  blankCount?: number;
+  /** Legacy analysis field name; interpreted as blankCount. */
+  summaryBlankCount?: number;
+}
+
 export const IRRELEVANT_SLOT_COUNT_MIN = 5;
+export const IRRELEVANT_SLOT_COUNT_MAX = 10;
 export const IRRELEVANT_SLOT_COUNT_DEFAULT = 5;
+export const SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN = 2;
+export const SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX = 4;
+export const SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT = 2;
+export const SUMMARY_COMPLETE_BLANK_COUNT_MIN = 1;
+export const SUMMARY_COMPLETE_BLANK_COUNT_MAX = 5;
+export const SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT = 2;
+export const CONTENT_MATCH_OPTION_COUNT_MIN = 5;
+export const CONTENT_MATCH_OPTION_COUNT_MAX = 12;
+export const CONTENT_MATCH_OPTION_COUNT_DEFAULT = 5;
+export const CONTENT_MATCH_ANSWER_COUNT_MIN = 1;
+export const CONTENT_MATCH_ANSWER_COUNT_DEFAULT = 1;
 export const GRAMMAR_MARKER_COUNT_MIN = 5;
 export const GRAMMAR_MARKER_COUNT_MAX = 10;
 export const GRAMMAR_MARKER_COUNT_DEFAULT = 5;
@@ -49,7 +82,10 @@ export function normalizeIrrelevantSlotCount(value: unknown): number {
   const n = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(n)) return IRRELEVANT_SLOT_COUNT_DEFAULT;
   const rounded = Math.round(n);
-  return Math.max(IRRELEVANT_SLOT_COUNT_MIN, rounded);
+  return Math.min(
+    IRRELEVANT_SLOT_COUNT_MAX,
+    Math.max(IRRELEVANT_SLOT_COUNT_MIN, rounded),
+  );
 }
 
 export function readIrrelevantSlotCountSetting(rawSettings: unknown): number {
@@ -65,6 +101,136 @@ export function readIrrelevantSlotCountSetting(rawSettings: unknown): number {
   }
 
   return IRRELEVANT_SLOT_COUNT_DEFAULT;
+}
+
+export function normalizeSummaryCompleteMcBlankCount(value: unknown): number {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT;
+  const rounded = Math.round(n);
+  return Math.min(
+    SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
+    Math.max(SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, rounded),
+  );
+}
+
+export function readSummaryCompleteMcBlankCountSetting(rawSettings: unknown): number {
+  if (!isRecord(rawSettings)) return SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT;
+
+  if (rawSettings.blankCount !== undefined) {
+    return normalizeSummaryCompleteMcBlankCount(rawSettings.blankCount);
+  }
+
+  if (rawSettings.summaryBlankCount !== undefined) {
+    return normalizeSummaryCompleteMcBlankCount(rawSettings.summaryBlankCount);
+  }
+
+  const nested = rawSettings.SUMMARY_COMPLETE_MC;
+  if (isRecord(nested)) {
+    return normalizeSummaryCompleteMcBlankCount(
+      nested.blankCount ?? nested.summaryBlankCount,
+    );
+  }
+
+  return SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT;
+}
+
+export function normalizeSummaryCompleteBlankCount(value: unknown): number {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT;
+  const rounded = Math.round(n);
+  return Math.min(
+    SUMMARY_COMPLETE_BLANK_COUNT_MAX,
+    Math.max(SUMMARY_COMPLETE_BLANK_COUNT_MIN, rounded),
+  );
+}
+
+export function readSummaryCompleteBlankCountSetting(rawSettings: unknown): number {
+  if (!isRecord(rawSettings)) return SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT;
+
+  if (rawSettings.blankCount !== undefined) {
+    return normalizeSummaryCompleteBlankCount(rawSettings.blankCount);
+  }
+
+  if (rawSettings.summaryBlankCount !== undefined) {
+    return normalizeSummaryCompleteBlankCount(rawSettings.summaryBlankCount);
+  }
+
+  const nested = rawSettings.SUMMARY_COMPLETE;
+  if (isRecord(nested)) {
+    return normalizeSummaryCompleteBlankCount(
+      nested.blankCount ?? nested.summaryBlankCount,
+    );
+  }
+
+  return SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT;
+}
+
+export function normalizeContentMatchOptionCount(value: unknown): number {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return CONTENT_MATCH_OPTION_COUNT_DEFAULT;
+  const rounded = Math.round(n);
+  return Math.min(
+    CONTENT_MATCH_OPTION_COUNT_MAX,
+    Math.max(CONTENT_MATCH_OPTION_COUNT_MIN, rounded),
+  );
+}
+
+export function normalizeContentMatchAnswerCount(
+  value: unknown,
+  optionCount: number = CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+): number {
+  const optionMax = normalizeContentMatchOptionCount(optionCount);
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) {
+    return Math.min(CONTENT_MATCH_ANSWER_COUNT_DEFAULT, optionMax);
+  }
+  const rounded = Math.round(n);
+  return Math.min(
+    optionMax,
+    Math.max(CONTENT_MATCH_ANSWER_COUNT_MIN, rounded),
+  );
+}
+
+export function readContentMatchOptionCountSetting(rawSettings: unknown): number {
+  if (!isRecord(rawSettings)) return CONTENT_MATCH_OPTION_COUNT_DEFAULT;
+
+  if (rawSettings.optionCount !== undefined) {
+    return normalizeContentMatchOptionCount(rawSettings.optionCount);
+  }
+
+  const nested = rawSettings.CONTENT_MATCH;
+  if (isRecord(nested)) {
+    return normalizeContentMatchOptionCount(nested.optionCount);
+  }
+
+  return CONTENT_MATCH_OPTION_COUNT_DEFAULT;
+}
+
+export function readContentMatchAnswerCountSetting(
+  rawSettings: unknown,
+  optionCount: number = readContentMatchOptionCountSetting(rawSettings),
+): number {
+  if (!isRecord(rawSettings)) {
+    return normalizeContentMatchAnswerCount(undefined, optionCount);
+  }
+
+  if (rawSettings.answerCount !== undefined) {
+    return normalizeContentMatchAnswerCount(rawSettings.answerCount, optionCount);
+  }
+
+  if (rawSettings.correctAnswerCount !== undefined) {
+    return normalizeContentMatchAnswerCount(rawSettings.correctAnswerCount, optionCount);
+  }
+
+  const nested = rawSettings.CONTENT_MATCH;
+  if (isRecord(nested)) {
+    return normalizeContentMatchAnswerCount(
+      nested.answerCount ?? nested.correctAnswerCount,
+      optionCount,
+    );
+  }
+
+  return normalizeContentMatchAnswerCount(undefined, optionCount);
 }
 
 export function normalizeGrammarMarkerCount(value: unknown): number {
@@ -191,7 +357,7 @@ export function validateIrrelevantAgainstPassage(
   requestedSlotCount: number,
   passageSentenceCount: number,
 ): IrrelevantSlotValidation {
-  const requested = Math.max(IRRELEVANT_SLOT_COUNT_MIN, Math.round(requestedSlotCount));
+  const requested = normalizeIrrelevantSlotCount(requestedSlotCount);
   const requiredSourceSentenceCount = requested - 1;
   const minimumSourceSentenceCount = IRRELEVANT_SLOT_COUNT_MIN - 1;
   const availableSourceSentenceCount = Math.max(0, passageSentenceCount - 1);
@@ -217,8 +383,11 @@ export function validateIrrelevantAgainstPassage(
 
 export interface QuestionTypeGenerationSettings {
   BLANK_INFERENCE?: BlankInferenceGenerationSettings;
+  CONTENT_MATCH?: ContentMatchGenerationSettings;
   GRAMMAR_ERROR?: GrammarErrorGenerationSettings;
   GRAMMAR_CORRECTION?: GrammarCorrectionGenerationSettings;
+  SUMMARY_COMPLETE?: SummaryCompleteGenerationSettings;
+  SUMMARY_COMPLETE_MC?: SummaryCompleteMcGenerationSettings;
   IRRELEVANT?: IrrelevantGenerationSettings;
   [typeId: string]: unknown;
 }
@@ -232,12 +401,22 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     BLANK_INFERENCE: {
       doubleNegative: false,
     },
+    CONTENT_MATCH: {
+      optionCount: CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+      answerCount: CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+    },
     GRAMMAR_ERROR: {
       markerCount: GRAMMAR_MARKER_COUNT_DEFAULT,
       answerCount: GRAMMAR_ANSWER_COUNT_DEFAULT,
     },
     GRAMMAR_CORRECTION: {
       errorCount: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+    },
+    SUMMARY_COMPLETE: {
+      blankCount: SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT,
+    },
+    SUMMARY_COMPLETE_MC: {
+      blankCount: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
     },
     IRRELEVANT: {
       slotCount: IRRELEVANT_SLOT_COUNT_DEFAULT,
@@ -307,6 +486,77 @@ export function buildQuestionTypeSettingsPrompt(
       "- correctedParts should list the corrected expression for every wrong underline in the same order as underlinedSegments.",
       "- Each underlinedSegments item must include label values starting from \"(A)\" in order.",
       "- Do not add extra grammatically correct underlined segments for this setting; underline count and error count are the same.",
+    ].join("\n");
+  }
+
+  if (typeId === "CONTENT_MATCH") {
+    if (!isRecord(rawSettings)) return "";
+    const optionCount = readContentMatchOptionCountSetting(rawSettings);
+    const answerCount = readContentMatchAnswerCountSetting(rawSettings, optionCount);
+    if (
+      optionCount === CONTENT_MATCH_OPTION_COUNT_DEFAULT &&
+      answerCount === CONTENT_MATCH_ANSWER_COUNT_DEFAULT
+    ) {
+      return "";
+    }
+    const labels = Array.from({ length: optionCount }, (_, index) => String(index + 1));
+    const labelsText = labels.join(", ");
+    return [
+      "## Type detail setting: CONTENT_MATCH / statement option count and answer count",
+      `- The teacher requested exactly ${optionCount} numbered statement option(s), labeled ${labelsText}.`,
+      `- The teacher requested exactly ${answerCount} correct statement label(s).`,
+      `- options must contain exactly ${optionCount} Korean statement options. Each option label must be one of ${labelsText}.`,
+      answerCount >= 2
+        ? "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
+        : "- The direction must ask for one best matching or non-matching statement.",
+      answerCount >= 2
+        ? `- correctAnswers must contain exactly ${answerCount} labels, and correctAnswer must be the same labels joined by comma + space.`
+        : "- correctAnswer must be the single correct option label.",
+      "- Keep matchType polarity consistent: if the direction asks for non-matching statements, every correct label must be false against the passage; if it asks for matching statements, every correct label must be true.",
+      "- Every option must be independently checkable from the passage and should be similar in length and specificity.",
+      "- wrongOptionExplanations must explain every non-answer label by citing the decisive passage clue.",
+    ].join("\n");
+  }
+
+  if (typeId === "SUMMARY_COMPLETE") {
+    if (!isRecord(rawSettings)) return "";
+    const blankCount = readSummaryCompleteBlankCountSetting(rawSettings);
+    if (blankCount === SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT) return "";
+    const labels = Array.from({ length: blankCount }, (_, index) =>
+      `(${String.fromCharCode(65 + index)})`
+    );
+    const labelsText = labels.join(", ");
+    return [
+      "## Type detail setting: SUMMARY_COMPLETE / short-answer summary blank count",
+      `- The teacher requested exactly ${blankCount} short-answer summary blank(s): ${labelsText}.`,
+      `- summaryWithBlanks must contain each marker ${labelsText} exactly once.`,
+      `- blanks must contain exactly ${blankCount} entries with labels ${labelsText}, in order.`,
+      "- Each blank answer must be an English word or natural English phrase grounded in the passage.",
+      "- correctAnswer must list every blank answer in label order.",
+      "- Do not create multiple-choice options for this type.",
+    ].join("\n");
+  }
+
+  if (typeId === "SUMMARY_COMPLETE_MC") {
+    if (!isRecord(rawSettings)) return "";
+    const blankCount = readSummaryCompleteMcBlankCountSetting(rawSettings);
+    if (blankCount === SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT) return "";
+    const labels = Array.from({ length: blankCount }, (_, index) =>
+      `(${String.fromCharCode(65 + index)})`
+    );
+    const labelsText = labels.join(", ");
+    return [
+      "## Type detail setting: SUMMARY_COMPLETE_MC / summary blank count",
+      "- This block overrides any default two-blank SUMMARY_COMPLETE_MC instruction elsewhere in the prompt.",
+      `- The teacher requested exactly ${blankCount} summary blank(s): ${labelsText}.`,
+      `- direction must ask for the best words for blanks ${labelsText}.`,
+      `- summaryWithBlanks must be one natural English summary sentence and must contain each marker ${labelsText} exactly once.`,
+      `- blanks must contain exactly ${blankCount} entries with labels ${labelsText}, in order, and each answer must be an English word or natural English phrase.`,
+      "- options must contain exactly 5 answer choices.",
+      `- Each option must provide a blankValues array with exactly ${blankCount} entries, one for each label ${labelsText}, plus a readable text value joining the values with \" …… \".`,
+      "- The correct option's blankValues must match the blanks answers exactly.",
+      "- Wrong options must be passage-grounded near-misses. Include at least one option that is correct for all but one blank so students must verify every blank.",
+      "- Keep grammar slots parallel column by column: every value for the same blank label should fit the same part of speech and sentence position.",
     ].join("\n");
   }
 

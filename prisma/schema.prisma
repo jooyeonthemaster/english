@@ -1113,6 +1113,7 @@ model CustomQuestionTypeVersion {
   spec     Json // CompiledCustomType (프롬프트/필드/재구성 프리미티브/validator/tier 등 동적 정의)
   examples Json? // few-shot 예시 누적(P3). 초기엔 원본 1개.
   source   Json // 이 버전의 토대가 된 원본 문항 분석(QuestionAnalysis)
+  note     String? @db.Text // 이 버전을 만든 편집 지시(자연어). 자동 생성(v1)=null, 강사 편집/튜닝=요청문.
 
   createdAt DateTime @default(now())
 
@@ -1155,6 +1156,40 @@ model CustomQuestionGenerationJob {
   @@index([academyId, createdAt])
   @@index([customTypeId])
   @@map("custom_question_generation_jobs")
+}
+
+/// CustomTypeAnalysisJob — '유형 만들기' 분석을 백그라운드로 처리하는 인-프로세스 잡(dev 한정).
+/// 업로드 문항 → 분석 → 유형 정의 컴파일 → ACTIVE 커스텀 유형 자동 생성. 동형 잡과 동형(同型) 구조.
+model CustomTypeAnalysisJob {
+  id          String @id @default(cuid())
+  academyId   String
+  createdById String
+
+  status String @default("PENDING") // PENDING | PROCESSING | COMPLETED | FAILED
+
+  referenceImage     String  @db.Text // 참조 문항(크롭본) base64
+  referenceMediaType String  @default("image/jpeg")
+  gradeInfo          String?
+  manualCrop         Boolean @default(true)
+
+  // 결과(완료 시) — 생성된 유형 + 검토/디버깅용.
+  createdTypeId  String? // 자동 생성한 CustomQuestionType.id
+  suggestedName  String?
+  resultSpec     Json? // CompiledCustomType
+  sourceAnalysis Json? // QuestionAnalysis
+  analysisModel  String?
+
+  errorMessage String? @db.Text
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([academyId, status])
+  @@index([academyId, createdAt])
+  @@map("custom_type_analysis_jobs")
 }
 
 // ============================================================================

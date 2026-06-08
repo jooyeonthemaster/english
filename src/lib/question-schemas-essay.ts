@@ -57,6 +57,28 @@ export const summaryCompleteSchema = z.object({
 });
 export type SummaryCompleteQuestion = z.infer<typeof summaryCompleteSchema>;
 
+export function buildSummaryCompleteSchema(blankCount: number) {
+  const n = Math.min(5, Math.max(1, Math.round(blankCount)));
+  const labels = Array.from({ length: n }, (_, index) => `(${String.fromCharCode(65 + index)})`);
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+
+  return z.object({
+    ...commonFields,
+    summaryWithBlanks: z
+      .string()
+      .describe(`Summary sentence containing ${labels.join(", ")} exactly once each`),
+    blanks: z
+      .array(
+        z.object({
+          label: labelSchema,
+          answer: z.string(),
+        }),
+      )
+      .length(n)
+      .describe(`${n} short-answer summary blanks`),
+  });
+}
+
 // ── 배열 영작 ──
 
 export const wordOrderSchema = z.object({

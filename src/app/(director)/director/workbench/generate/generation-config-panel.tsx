@@ -31,6 +31,11 @@ import {
 } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import {
+  CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+  CONTENT_MATCH_ANSWER_COUNT_MIN,
+  CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+  CONTENT_MATCH_OPTION_COUNT_MAX,
+  CONTENT_MATCH_OPTION_COUNT_MIN,
   GRAMMAR_ANSWER_COUNT_DEFAULT,
   GRAMMAR_ANSWER_COUNT_MIN,
   GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
@@ -39,6 +44,15 @@ import {
   GRAMMAR_MARKER_COUNT_DEFAULT,
   GRAMMAR_MARKER_COUNT_MAX,
   GRAMMAR_MARKER_COUNT_MIN,
+  IRRELEVANT_SLOT_COUNT_DEFAULT,
+  IRRELEVANT_SLOT_COUNT_MAX,
+  IRRELEVANT_SLOT_COUNT_MIN,
+  SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT,
+  SUMMARY_COMPLETE_BLANK_COUNT_MAX,
+  SUMMARY_COMPLETE_BLANK_COUNT_MIN,
+  SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
+  SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
+  SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
 } from "@/lib/question-type-generation-settings";
 
 const VOCAB_GENERATION_TYPE_IDS = new Set([
@@ -48,8 +62,12 @@ const VOCAB_GENERATION_TYPE_IDS = new Set([
 ]);
 const DETAIL_SETTING_TYPE_IDS = new Set([
   "BLANK_INFERENCE",
+  "CONTENT_MATCH",
   "GRAMMAR_ERROR",
   "GRAMMAR_CORRECTION",
+  "IRRELEVANT",
+  "SUMMARY_COMPLETE",
+  "SUMMARY_COMPLETE_MC",
 ]);
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
@@ -236,6 +254,136 @@ export function GenerationConfigPanel({
       BLANK_INFERENCE: {
         ...(prev.BLANK_INFERENCE || {}),
         ...next,
+      },
+    }));
+  };
+  const contentMatchSettings = questionTypeSettings.CONTENT_MATCH || {};
+  const rawContentMatchOptionCount = Math.round(
+    Number(contentMatchSettings.optionCount) ||
+      CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+  );
+  const contentMatchOptionCount = Math.min(
+    CONTENT_MATCH_OPTION_COUNT_MAX,
+    Math.max(CONTENT_MATCH_OPTION_COUNT_MIN, rawContentMatchOptionCount),
+  );
+  const rawContentMatchAnswerCount = Math.round(
+    Number(
+      contentMatchSettings.answerCount ??
+        contentMatchSettings.correctAnswerCount,
+    ) || CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+  );
+  const contentMatchAnswerMax = Math.max(
+    CONTENT_MATCH_ANSWER_COUNT_MIN,
+    contentMatchOptionCount,
+  );
+  const contentMatchAnswerCount = Math.min(
+    contentMatchAnswerMax,
+    Math.max(CONTENT_MATCH_ANSWER_COUNT_MIN, rawContentMatchAnswerCount),
+  );
+  const setContentMatchOptionCount = (next: number) => {
+    const clamped = Math.min(
+      CONTENT_MATCH_OPTION_COUNT_MAX,
+      Math.max(CONTENT_MATCH_OPTION_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      CONTENT_MATCH: {
+        ...(prev.CONTENT_MATCH || {}),
+        optionCount: clamped,
+        answerCount: Math.min(
+          clamped,
+          Math.max(
+            CONTENT_MATCH_ANSWER_COUNT_MIN,
+            Math.round(
+              Number(prev.CONTENT_MATCH?.answerCount) ||
+                CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+            ),
+          ),
+        ),
+      },
+    }));
+  };
+  const setContentMatchAnswerCount = (next: number) => {
+    const clamped = Math.min(
+      contentMatchAnswerMax,
+      Math.max(CONTENT_MATCH_ANSWER_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      CONTENT_MATCH: {
+        ...(prev.CONTENT_MATCH || {}),
+        optionCount: contentMatchOptionCount,
+        answerCount: clamped,
+      },
+    }));
+  };
+  const summaryCompleteMcSettings = questionTypeSettings.SUMMARY_COMPLETE_MC || {};
+  const rawSummaryCompleteMcBlankCount = Math.round(
+    Number(summaryCompleteMcSettings.blankCount) ||
+      SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
+  );
+  const summaryCompleteMcBlankCount = Math.min(
+    SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
+    Math.max(
+      SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
+      rawSummaryCompleteMcBlankCount,
+    ),
+  );
+  const setSummaryCompleteMcBlankCount = (next: number) => {
+    const clamped = Math.min(
+      SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
+      Math.max(SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      SUMMARY_COMPLETE_MC: {
+        ...(prev.SUMMARY_COMPLETE_MC || {}),
+        blankCount: clamped,
+      },
+    }));
+  };
+  const summaryCompleteSettings = questionTypeSettings.SUMMARY_COMPLETE || {};
+  const rawSummaryCompleteBlankCount = Math.round(
+    Number(
+      summaryCompleteSettings.blankCount ??
+        summaryCompleteSettings.summaryBlankCount,
+    ) || SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT,
+  );
+  const summaryCompleteBlankCount = Math.min(
+    SUMMARY_COMPLETE_BLANK_COUNT_MAX,
+    Math.max(SUMMARY_COMPLETE_BLANK_COUNT_MIN, rawSummaryCompleteBlankCount),
+  );
+  const setSummaryCompleteBlankCount = (next: number) => {
+    const clamped = Math.min(
+      SUMMARY_COMPLETE_BLANK_COUNT_MAX,
+      Math.max(SUMMARY_COMPLETE_BLANK_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      SUMMARY_COMPLETE: {
+        ...(prev.SUMMARY_COMPLETE || {}),
+        blankCount: clamped,
+      },
+    }));
+  };
+  const irrelevantSettings = questionTypeSettings.IRRELEVANT || {};
+  const rawIrrelevantSlotCount = Math.round(
+    Number(irrelevantSettings.slotCount) || IRRELEVANT_SLOT_COUNT_DEFAULT,
+  );
+  const irrelevantSlotCount = Math.min(
+    IRRELEVANT_SLOT_COUNT_MAX,
+    Math.max(IRRELEVANT_SLOT_COUNT_MIN, rawIrrelevantSlotCount),
+  );
+  const setIrrelevantSlotCount = (next: number) => {
+    const clamped = Math.min(
+      IRRELEVANT_SLOT_COUNT_MAX,
+      Math.max(IRRELEVANT_SLOT_COUNT_MIN, Math.round(next)),
+    );
+    setQuestionTypeSettings((prev) => ({
+      ...prev,
+      IRRELEVANT: {
+        ...(prev.IRRELEVANT || {}),
+        slotCount: clamped,
       },
     }));
   };
@@ -440,7 +588,135 @@ export function GenerationConfigPanel({
     return category;
   };
 
+  const renderNumberSetting = ({
+    title,
+    badges,
+    description,
+    value,
+    min,
+    max,
+    onChange,
+    ariaBase,
+  }) => (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[12px] font-bold text-slate-800">
+            {title}
+          </span>
+        </div>
+        <div className="mt-1 flex flex-wrap gap-1">
+          {badges.map((badge) => (
+            <span
+              key={badge}
+              className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600"
+            >
+              {badge}
+            </span>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+          {description}
+        </p>
+      </div>
+      <div className="flex items-center gap-0.5 shrink-0">
+        <button
+          type="button"
+          onClick={() => onChange(value - 1)}
+          disabled={value <= min}
+          className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+          aria-label={`${ariaBase} decrease`}
+        >
+          <Minus className="w-3 h-3" />
+        </button>
+        <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+          {value}
+        </span>
+        <button
+          type="button"
+          onClick={() => onChange(value + 1)}
+          disabled={value >= max}
+          className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+          aria-label={`${ariaBase} increase`}
+        >
+          <Plus className="w-3 h-3" />
+        </button>
+      </div>
+    </div>
+  );
+
   const renderTypeDetailContent = (typeId: string) => {
+    if (typeId === "CONTENT_MATCH") {
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "Option count",
+            badges: [
+              `${CONTENT_MATCH_OPTION_COUNT_MIN} ~ ${CONTENT_MATCH_OPTION_COUNT_MAX}`,
+              "Statements",
+            ],
+            description:
+              "Number of visible content-match statements. Default is 5.",
+            value: contentMatchOptionCount,
+            min: CONTENT_MATCH_OPTION_COUNT_MIN,
+            max: CONTENT_MATCH_OPTION_COUNT_MAX,
+            onChange: setContentMatchOptionCount,
+            ariaBase: "content match option count",
+          })}
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "Answer count",
+              badges: [
+                `1 ~ ${contentMatchAnswerMax}`,
+                contentMatchAnswerCount >= 2 ? "Multi-answer" : "Single answer",
+              ],
+              description:
+                "When this is 2 or more, the engine generates correctAnswers and a joined correctAnswer string.",
+              value: contentMatchAnswerCount,
+              min: CONTENT_MATCH_ANSWER_COUNT_MIN,
+              max: contentMatchAnswerMax,
+              onChange: setContentMatchAnswerCount,
+              ariaBase: "content match answer count",
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    if (typeId === "IRRELEVANT") {
+      return renderNumberSetting({
+        title: "Option count",
+        badges: [
+          `${IRRELEVANT_SLOT_COUNT_MIN} ~ ${IRRELEVANT_SLOT_COUNT_MAX}`,
+          "Sentence slots",
+        ],
+        description:
+          "Number of numbered sentence choices, including one inserted irrelevant sentence.",
+        value: irrelevantSlotCount,
+        min: IRRELEVANT_SLOT_COUNT_MIN,
+        max: IRRELEVANT_SLOT_COUNT_MAX,
+        onChange: setIrrelevantSlotCount,
+        ariaBase: "irrelevant option count",
+      });
+    }
+
+    if (typeId === "SUMMARY_COMPLETE") {
+      return renderNumberSetting({
+        title: "Blank count",
+        badges: [
+          `${SUMMARY_COMPLETE_BLANK_COUNT_MIN} ~ ${SUMMARY_COMPLETE_BLANK_COUNT_MAX}`,
+          "Short answer",
+        ],
+        description:
+          "Number of blanks students must fill in the short-answer summary.",
+        value: summaryCompleteBlankCount,
+        min: SUMMARY_COMPLETE_BLANK_COUNT_MIN,
+        max: SUMMARY_COMPLETE_BLANK_COUNT_MAX,
+        onChange: setSummaryCompleteBlankCount,
+        ariaBase: "summary complete blank count",
+      });
+    }
+
     if (typeId === "GRAMMAR_ERROR") {
       return (
         <div className="space-y-3">
@@ -588,6 +864,64 @@ export function GenerationConfigPanel({
               }
               className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
               aria-label="틀린 밑줄 개수 늘리기"
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (typeId === "SUMMARY_COMPLETE_MC") {
+      return (
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[12px] font-bold text-slate-800">
+                요약 빈칸 개수
+              </span>
+            </div>
+            <div className="mt-1 flex flex-wrap gap-1">
+              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                2 ~ 4개
+              </span>
+              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                객관식 조합
+              </span>
+            </div>
+            <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              기본값은 2개입니다. 3개 이상이면 각 선지에 모든 빈칸 값을 맞춰 생성합니다.
+            </p>
+          </div>
+          <div className="flex items-center gap-0.5 shrink-0">
+            <button
+              type="button"
+              onClick={() =>
+                setSummaryCompleteMcBlankCount(summaryCompleteMcBlankCount - 1)
+              }
+              disabled={
+                summaryCompleteMcBlankCount <=
+                SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN
+              }
+              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+              aria-label="요약 빈칸 개수 줄이기"
+            >
+              <Minus className="w-3 h-3" />
+            </button>
+            <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+              {summaryCompleteMcBlankCount}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                setSummaryCompleteMcBlankCount(summaryCompleteMcBlankCount + 1)
+              }
+              disabled={
+                summaryCompleteMcBlankCount >=
+                SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX
+              }
+              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+              aria-label="요약 빈칸 개수 늘리기"
             >
               <Plus className="w-3 h-3" />
             </button>

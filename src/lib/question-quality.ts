@@ -980,6 +980,12 @@ function getExpectedOptionCount(question: Record<string, unknown>, typeId: strin
     return 5;
   }
 
+  if (typeId === "CONTENT_MATCH") {
+    const optionCount = Array.isArray(question.options) ? question.options.length : 0;
+    if (optionCount >= 5 && optionCount <= 12) return optionCount;
+    return 5;
+  }
+
   if (typeId !== "IRRELEVANT") return 5;
 
   const sentenceCount = Array.isArray(question.sentences)
@@ -2588,14 +2594,31 @@ function validateSummaryCompleteMcQuestion(
   const blanks = Array.isArray(question.blanks) ? question.blanks.filter(isRecord) : [];
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   const correctLabel = normalizeLabel(question.correctAnswer);
-  const blankA = findSummaryBlankAnswer(blanks, "(A)");
-  const blankB = findSummaryBlankAnswer(blanks, "(B)");
+  const labelsFromBlanks = blanks
+    .map((blank) => normalizeText(blank.label))
+    .filter((label) => /^\([A-Z]\)$/.test(label));
+  const labelsFromSummary = Array.from(summary.matchAll(/\(([A-Z])\)/g))
+    .map((match) => `(${match[1]})`);
+  const blankLabels = [...new Set(
+    (labelsFromBlanks.length > 0
+      ? labelsFromBlanks
+      : labelsFromSummary.length > 0
+        ? labelsFromSummary
+        : ["(A)", "(B)"]).slice(0, 4),
+  )].sort();
+  const blankAnswers = new Map(
+    blankLabels.map((label) => [label, findSummaryBlankAnswer(blanks, label)]),
+  );
+  const blankA = blankAnswers.get("(A)") || "";
+  const blankB = blankAnswers.get("(B)") || "";
 
-  if (!/요약/.test(direction) || !direction.includes("(A)") || !direction.includes("(B)")) {
+  const directionNamesSummaryTask = /summary/i.test(direction) || blankLabels.length > 0;
+  const directionNamesAllBlanks = blankLabels.every((label) => direction.includes(label));
+  if (!directionNamesSummaryTask || !directionNamesAllBlanks) {
     add(
       "error",
       "summary-mc-direction-frame",
-      "SUMMARY_COMPLETE_MC direction must ask for the best words for summary blanks (A) and (B).",
+      `SUMMARY_COMPLETE_MC direction must ask for the best words for summary blanks ${blankLabels.join(", ")}.`,
     );
   }
 
@@ -2603,11 +2626,11 @@ function validateSummaryCompleteMcQuestion(
     add("error", "summary-mc-missing-summary", "SUMMARY_COMPLETE_MC is missing summaryWithBlanks.");
   }
 
-  if (countLiteral(summary, "(A)") !== 1 || countLiteral(summary, "(B)") !== 1) {
+  if (blankLabels.some((label) => countLiteral(summary, label) !== 1)) {
     add(
       "error",
       "summary-mc-blank-marker-count",
-      "summaryWithBlanks must contain (A) and (B) exactly once each.",
+      `summaryWithBlanks must contain ${blankLabels.join(", ")} exactly once each.`,
     );
   }
 
@@ -2619,7 +2642,11 @@ function validateSummaryCompleteMcQuestion(
     );
   }
 
-  if (countSentenceEndings(summary.replace(/\([AB]\)/g, "")) > 1) {
+  const summaryForSentenceCount = summary.replace(
+    /\([A-Z]\)\s*(?:_{3,}|(?:\.|\u2026|\?){2,}|[-\u2013\u2014]{2,})?/g,
+    " ",
+  );
+  if (countSentenceEndings(summaryForSentenceCount) > 1) {
     add(
       "warning",
       "summary-mc-summary-too-many-sentences",
@@ -2627,15 +2654,16 @@ function validateSummaryCompleteMcQuestion(
     );
   }
 
-  if (!blankA || !blankB) {
+  if (blankLabels.some((label) => !blankAnswers.get(label))) {
     add(
       "error",
       "summary-mc-missing-blank-answer",
-      "SUMMARY_COMPLETE_MC blanks must include answers for both (A) and (B).",
+      `SUMMARY_COMPLETE_MC blanks must include answers for ${blankLabels.join(", ")}.`,
     );
   }
 
-  for (const [label, answer] of [["(A)", blankA], ["(B)", blankB]] as const) {
+  for (const label of blankLabels) {
+    const answer = blankAnswers.get(label) || "";
     if (!answer) continue;
     if (containsHangul(answer) || !containsLatinLetter(answer)) {
       add(
@@ -2659,10 +2687,11 @@ function validateSummaryCompleteMcQuestion(
     }
   }
 
-  if (summary && blankA && blankB) {
-    const filledSummary = summary
-      .replace("(A)", blankA)
-      .replace("(B)", blankB);
+  if (summary && blankLabels.every((label) => blankAnswers.get(label))) {
+    const filledSummary = blankLabels.reduce(
+      (next, label) => next.replace(label, blankAnswers.get(label) || ""),
+      summary,
+    );
     const awkwardCollocation = findAwkwardSummaryMcCollocation(filledSummary);
     if (awkwardCollocation) {
       add(
@@ -2690,10 +2719,11 @@ function validateSummaryCompleteMcQuestion(
       "SUMMARY_COMPLETE_MC correctAnswer does not point to an existing option pair.",
     );
   } else if (
-    blankA &&
-    blankB &&
-    (normalizeComparableText(correctPair.blankA) !== normalizeComparableText(blankA) ||
-      normalizeComparableText(correctPair.blankB) !== normalizeComparableText(blankB))
+    blankLabels.some((label) => {
+      const key = summaryBlankKey(label);
+      return normalizeComparableText(correctPair.values[key] || "") !==
+        normalizeComparableText(blankAnswers.get(label) || "");
+    })
   ) {
     add(
       "error",
@@ -2704,21 +2734,36 @@ function validateSummaryCompleteMcQuestion(
 
   let hasAOnlyTrap = false;
   let hasBOnlyTrap = false;
+  let hasAllButOneTrap = false;
   let malformedPairFound = false;
   let nonEnglishPairFound = false;
+  let duplicateCorrectFound = false;
 
   for (const pair of optionPairs) {
-    if (!pair.blankA || !pair.blankB) {
+    const missingBlankValue = blankLabels.some((label) => {
+      const key = summaryBlankKey(label);
+      return !pair.values[key];
+    });
+    if (missingBlankValue) {
       malformedPairFound = true;
       continue;
     }
-    const pairText = `${pair.blankA} ${pair.blankB}`;
+    const pairText = blankLabels.map((label) => pair.values[summaryBlankKey(label)] || "").join(" ");
     if (containsHangul(pairText) || !containsLatinLetter(pairText)) {
       nonEnglishPairFound = true;
     }
+    if (pair.label !== correctLabel) {
+      const matchCount = blankLabels.filter((label) => {
+        const key = summaryBlankKey(label);
+        return normalizeComparableText(pair.values[key] || "") ===
+          normalizeComparableText(blankAnswers.get(label) || "");
+      }).length;
+      if (matchCount === blankLabels.length) duplicateCorrectFound = true;
+      if (matchCount === blankLabels.length - 1) hasAllButOneTrap = true;
+    }
     if (pair.label !== correctLabel && blankA && blankB) {
-      const aMatches = normalizeComparableText(pair.blankA) === normalizeComparableText(blankA);
-      const bMatches = normalizeComparableText(pair.blankB) === normalizeComparableText(blankB);
+      const aMatches = normalizeComparableText(pair.values.blankA || pair.blankA) === normalizeComparableText(blankA);
+      const bMatches = normalizeComparableText(pair.values.blankB || pair.blankB) === normalizeComparableText(blankB);
       if (aMatches && !bMatches) hasAOnlyTrap = true;
       if (!aMatches && bMatches) hasBOnlyTrap = true;
     }
@@ -2728,7 +2773,7 @@ function validateSummaryCompleteMcQuestion(
     add(
       "error",
       "summary-mc-option-pair-shape",
-      "Every SUMMARY_COMPLETE_MC option must provide both blankA and blankB, or a clearly paired text value.",
+      `Every SUMMARY_COMPLETE_MC option must provide values for ${blankLabels.join(", ")}, or a clearly paired text value.`,
     );
   }
 
@@ -2740,7 +2785,15 @@ function validateSummaryCompleteMcQuestion(
     );
   }
 
-  if (!hasAOnlyTrap || !hasBOnlyTrap) {
+  if (duplicateCorrectFound) {
+    add(
+      "error",
+      "summary-mc-duplicate-correct-option",
+      "Only the correct SUMMARY_COMPLETE_MC option may match every blank answer.",
+    );
+  }
+
+  if (blankLabels.length === 2 && (!hasAOnlyTrap || !hasBOnlyTrap)) {
     add(
       "error",
       "summary-mc-missing-half-correct-traps",
@@ -2748,7 +2801,15 @@ function validateSummaryCompleteMcQuestion(
     );
   }
 
-  if (requestedDifficulty === "KILLER" && blankA && blankB && correctLabel) {
+  if (blankLabels.length > 2 && !hasAllButOneTrap) {
+    add(
+      "warning",
+      "summary-mc-missing-all-but-one-trap",
+      "SUMMARY_COMPLETE_MC with three or more blanks should include at least one all-but-one-correct trap.",
+    );
+  }
+
+  if (requestedDifficulty === "KILLER" && blankLabels.length === 2 && blankA && blankB && correctLabel) {
     validateKillerSummaryTrapStrength(optionPairs, correctLabel, blankA, blankB, add);
   }
 
@@ -2994,7 +3055,7 @@ function sameSummarySemanticField(candidate: string, correct: string): boolean {
 
 function findSummaryBlankAnswer(
   blanks: Record<string, unknown>[],
-  expectedLabel: "(A)" | "(B)",
+  expectedLabel: string,
 ): string {
   const normalizedExpected = expectedLabel.replace(/[()]/g, "").toLowerCase();
   const blank = blanks.find((item) => {
@@ -3004,29 +3065,59 @@ function findSummaryBlankAnswer(
   return normalizeText(blank?.answer);
 }
 
+function summaryBlankKey(label: unknown): string {
+  const normalized = normalizeText(label).replace(/[()]/g, "").toUpperCase();
+  if (!/^[A-Z]$/.test(normalized)) return "";
+  return `blank${normalized}`;
+}
+
 function readSummaryPairOption(option: Record<string, unknown>): {
   blankA: string;
   blankB: string;
   text: string;
+  values: Record<string, string>;
 } {
   const text = normalizeText(option.text);
-  const explicitA = normalizeText(option.blankA);
-  const explicitB = normalizeText(option.blankB);
-  if (explicitA || explicitB) {
-    return { blankA: explicitA, blankB: explicitB, text };
+  const values: Record<string, string> = {};
+
+  if (Array.isArray(option.blankValues)) {
+    for (const item of option.blankValues) {
+      if (!isRecord(item)) continue;
+      const key = summaryBlankKey(item.label);
+      const value = normalizeText(item.value ?? item.answer);
+      if (key && value) values[key] = value;
+    }
+  }
+
+  for (const [key, value] of Object.entries(option)) {
+    if (!/^blank[A-Z]$/i.test(key)) continue;
+    const normalizedKey = `blank${key.slice(5).toUpperCase()}`;
+    const normalizedValue = normalizeText(value);
+    if (normalizedValue) values[normalizedKey] = normalizedValue;
+  }
+
+  const explicitA = values.blankA || normalizeText(option.blankA);
+  const explicitB = values.blankB || normalizeText(option.blankB);
+  if (Object.keys(values).length > 0 || explicitA || explicitB) {
+    if (explicitA) values.blankA = explicitA;
+    if (explicitB) values.blankB = explicitB;
+    return { blankA: explicitA, blankB: explicitB, text, values };
   }
 
   const stripped = stripSummaryOptionPrefix(text);
   const parts = stripped
-    .split(/\s*(?:……|\.{3,}|…|\/|\||;|,|\s[-–—]\s)\s*/u)
+    .split(/\s*(?:\u2026+|\.{2,}|\/|\||;|,|\s[-\u2013\u2014]\s)\s*/u)
     .map((part) => part.trim())
     .filter(Boolean);
 
   if (parts.length >= 2) {
-    return { blankA: parts[0], blankB: parts.slice(1).join(" "), text };
+    parts.forEach((part, index) => {
+      values[`blank${String.fromCharCode(65 + index)}`] = part;
+    });
+    return { blankA: parts[0], blankB: parts[1] || "", text, values };
   }
 
-  return { blankA: "", blankB: "", text };
+  return { blankA: "", blankB: "", text, values };
 }
 
 function stripSummaryOptionPrefix(text: string): string {

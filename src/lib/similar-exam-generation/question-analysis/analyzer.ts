@@ -42,6 +42,7 @@ export async function analyzeQuestionItem(
   let images = args.images ?? [];
   let inputText = args.inputText;
   let referenceText: string | undefined;
+  const manualCropOnly = args.manualCropOnly === true;
 
   if (images.length === 0 && !inputText?.trim()) {
     throw new Error("분석할 문항(이미지 또는 텍스트)이 필요합니다.");
@@ -75,12 +76,43 @@ export async function analyzeQuestionItem(
       modelId: QUESTION_ANALYSIS_MODEL_ID,
       maxOutputTokens: questionAnalysisMaxTokens,
       providerOptions: questionAnalysisProviderOptions,
+      manualCropOnly,
+      includeBoundingBoxes: manualCropOnly ? false : undefined,
       maxRetries: 0,
     });
     totalAttempts += primary.attempts;
     if (!primary.ok) {
       lastError = primary.lastError;
       continue;
+    }
+
+    if (manualCropOnly) {
+      const detailedCountBeforeFilter = countQuestions(primary.analysis);
+      const complete = filterIncompleteAnalysisQuestions(primary.analysis);
+      if (complete.removedCount > 0) {
+        console.info(
+          `[SIMILAR-EXAM-QUESTION-ANALYSIS] filtered ${complete.removedCount} incomplete manual-crop question(s): ${complete.removedSummaries.join(" | ")}`,
+        );
+      }
+
+      return {
+        analysis: complete.analysis,
+        attempts: totalAttempts,
+        model: primary.model,
+        referenceText,
+        stats: {
+          inventoryCount: primary.analysis.inventory?.length ?? 0,
+          detailedCountBeforeFilter,
+          detailedCountAfterFilter: flattenAnalysisQuestions(complete.analysis).length,
+          incompleteRemovedCount: complete.removedCount,
+          incompleteRemovedSummaries: complete.removedSummaries,
+          missingInventoryCount: 0,
+          recoveredMissingCount: 0,
+          cropMismatchCount: 0,
+          followUpFallbackCount: 0,
+          warnings: ["Manual crop mode: legacy automatic crop follow-up skipped."],
+        },
+      };
     }
 
     try {

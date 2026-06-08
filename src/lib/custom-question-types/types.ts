@@ -60,6 +60,12 @@ export const compiledCustomTypeSchema = z.object({
   // 동형 생성 시 반드시 반영할 분석 포인트(평가 스킬 + 변형 규칙). 엔진 plan 의 targetPoints.
   targetPoints: z.array(z.string().max(400).catch("")).max(24).catch([]).default([]),
 
+  // 타입의 본질 — 모든 생성에서 반드시 보존(예: "다의어를 문맥으로 구분하는 5예문 포맷", "1→2형식 전환 규칙").
+  // 특정 인스턴스 단어/문장(예: 'lose')은 여기 넣지 않는다.
+  invariants: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
+  // 매번 새로 정할 가변 축 — 인스턴스 디테일(예: "타겟 어휘", "지문 소재"). 원본 예시의 특정 단어/문장은 예시일 뿐.
+  variableAxes: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
+
   // base 형태로 합성한 "유형 지식" 블록(핵심 규칙·출제 포인트·변형·재현 형식·변형 축).
   // ② 에선 customPrompt 로, ④ 에선 자체 생성 프롬프트의 본문으로 쓰인다.
   prompt: z.string().catch("").default(""),

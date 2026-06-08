@@ -4,7 +4,9 @@ import { z } from "zod";
 import { getStaffSession } from "@/lib/auth";
 import {
   archiveCustomType,
+  editCustomTypeDefinition,
   getActiveCustomTypeSpec,
+  listCustomTypeVersions,
   renameCustomType,
 } from "@/lib/custom-question-types/persistence";
 
@@ -15,11 +17,18 @@ interface RouteContext {
   params: Promise<{ typeId: string }>;
 }
 
+// 이름 + 프롬프트 변경 없이 수정 가능한 구조 필드(결정형, LLM 없음).
 const patchSchema = z.object({
-  name: z.string().trim().min(1).max(120),
+  name: z.string().trim().min(1).max(120).optional(),
+  answerShape: z.enum(["MULTIPLE_CHOICE", "SHORT_ANSWER", "OTHER"]).optional(),
+  optionCount: z.number().int().min(0).max(20).optional(),
+  correctAnswerCount: z.number().int().min(1).max(20).optional(),
+  multipleAnswers: z.boolean().optional(),
+  passageBased: z.boolean().optional(),
+  difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).optional(),
 });
 
-// GET — 유형 1개 + 활성 정의(검토/생성용). PATCH — 이름 변경. DELETE — 아카이브(소프트 삭제).
+// GET — 유형 1개 + 활성 정의 + 버전. PATCH — 이름/구조 필드 직접 수정. DELETE — 아카이브(소프트 삭제).
 
 export async function GET(_req: NextRequest, ctx: RouteContext) {
   const { typeId } = await ctx.params;
@@ -32,7 +41,13 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   if (!active) {
     return NextResponse.json({ error: "Custom type not found" }, { status: 404 });
   }
-  return NextResponse.json({ type: active.type, spec: active.spec });
+  const versions = await listCustomTypeVersions(staff.academyId, typeId);
+  return NextResponse.json({
+    type: active.type,
+    spec: active.spec,
+    source: active.source,
+    versions,
+  });
 }
 
 export async function PATCH(req: NextRequest, ctx: RouteContext) {
@@ -51,9 +66,24 @@ export async function PATCH(req: NextRequest, ctx: RouteContext) {
     );
   }
 
-  const ok = await renameCustomType(staff.academyId, typeId, parsed.data.name);
-  if (!ok) return NextResponse.json({ error: "Custom type not found" }, { status: 404 });
-  return NextResponse.json({ ok: true });
+  const { name, ...definition } = parsed.data;
+  try {
+    if (name) {
+      const ok = await renameCustomType(staff.academyId, typeId, name);
+      if (!ok) return NextResponse.json({ error: "Custom type not found" }, { status: 404 });
+    }
+
+    let version: number | undefined;
+    if (Object.values(definition).some((v) => v !== undefined)) {
+      const result = await editCustomTypeDefinition(staff.academyId, typeId, definition);
+      version = result?.version;
+    }
+    return NextResponse.json({ ok: true, version });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "유형 수정에 실패했습니다.";
+    console.error(`[custom-type-edit] academy=${staff.academyId} type=${typeId} failed: ${message}`);
+    return NextResponse.json({ error: "유형 수정에 실패했습니다." }, { status: 500 });
+  }
 }
 
 export async function DELETE(_req: NextRequest, ctx: RouteContext) {

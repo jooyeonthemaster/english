@@ -66,6 +66,7 @@ function jobToQueueItem(
     typeof config.questionType === "string"
       ? config.questionType
       : job.questionType ?? undefined;
+  const rawQuestionTypeSettings = parseRecord(config.questionTypeSettings);
   const questions = Array.isArray(result.questions) ? result.questions : [];
   const questionIds = Array.isArray(result.questionIds)
     ? result.questionIds.filter((id): id is string => typeof id === "string")
@@ -123,6 +124,10 @@ function jobToQueueItem(
       mode,
       generationPlan:
         config.generationPlan === "PREMIUM" ? "PREMIUM" : "STANDARD",
+      questionTypeSettings:
+        mode === "manual" && questionType
+          ? { [questionType]: rawQuestionTypeSettings }
+          : rawQuestionTypeSettings,
     },
   };
 }
@@ -141,6 +146,10 @@ function sameTypeCounts(
   return aKeys.every((key, index) => key === bKeys[index] && Number(a[key]) === Number(b[key]));
 }
 
+function sameQuestionTypeSettings(a: unknown, b: unknown): boolean {
+  return JSON.stringify(parseRecord(a)) === JSON.stringify(parseRecord(b));
+}
+
 function sameGenerationRequest(a: QueueItem, b: QueueItem): boolean {
   return (
     a.passageId === b.passageId &&
@@ -149,7 +158,11 @@ function sameGenerationRequest(a: QueueItem, b: QueueItem): boolean {
     (a.config.generationPlan || "STANDARD") ===
       (b.config.generationPlan || "STANDARD") &&
     a.config.prompt === b.config.prompt &&
-    sameTypeCounts(a.config.typeCounts, b.config.typeCounts)
+    sameTypeCounts(a.config.typeCounts, b.config.typeCounts) &&
+    sameQuestionTypeSettings(
+      a.config.questionTypeSettings,
+      b.config.questionTypeSettings,
+    )
   );
 }
 

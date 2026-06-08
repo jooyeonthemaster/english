@@ -44,6 +44,7 @@ import {
 } from "./question-renderer-primitives";
 import {
   formatSummaryCompleteMcSummaryForDisplay,
+  readSummaryPairOption,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
 import {
@@ -274,35 +275,34 @@ export function ContentMatchRenderer({ q }: { q: ContentMatchQuestion }) {
   );
 }
 
-function getSummaryPairOption(option: SummaryCompleteMcQuestion["options"][number]) {
-  const blankA = typeof option.blankA === "string" ? option.blankA.trim() : "";
-  const blankB = typeof option.blankB === "string" ? option.blankB.trim() : "";
-  if (blankA || blankB) return { blankA, blankB };
+function summaryBlankSortKey(key: string) {
+  const match = key.match(/^blank([A-Z])$/i);
+  return match ? match[1].toUpperCase().charCodeAt(0) : Number.MAX_SAFE_INTEGER;
+}
 
-  const text = typeof option.text === "string" ? option.text.trim() : "";
-  const parts = text
-    .replace(/^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/, "")
-    .split(/\s*(?:……|\.{3,}|…|\/|\||;|,|\s[-–—]\s)\s*/u)
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  return {
-    blankA: parts[0] ?? text,
-    blankB: parts.slice(1).join(" "),
-  };
+function summaryBlankLabelFromKey(key: string) {
+  const match = key.match(/^blank([A-Z])$/i);
+  return match ? `(${match[1].toUpperCase()})` : `(${key})`;
 }
 
 function formatSummaryPairOptionText(option: SummaryCompleteMcQuestion["options"][number]) {
-  const pair = getSummaryPairOption(option);
-  if (pair.blankA || pair.blankB) {
-    return `(A) ${pair.blankA || "-"} / (B) ${pair.blankB || "-"}`;
+  const pair = readSummaryPairOption(option);
+  const entries = Object.entries(pair.values || {})
+    .filter(([, value]) => typeof value === "string" && value.trim().length > 0)
+    .sort(([left], [right]) => summaryBlankSortKey(left) - summaryBlankSortKey(right));
+
+  if (entries.length > 0) {
+    return entries
+      .map(([key, value]) => `${summaryBlankLabelFromKey(key)} ${value}`)
+      .join(" / ");
   }
+
   return typeof option.text === "string" ? option.text : "";
 }
 
 function renderSummaryBlankMarkers(text: string) {
-  return text.split(/(\([AB]\)|_{3,})/g).map((part, index) => {
-    if (part === "(A)" || part === "(B)") {
+  return text.split(/(\([A-Z]\)|_{3,})/g).map((part, index) => {
+    if (/^\([A-Z]\)$/.test(part)) {
       return (
         <span
           key={index}

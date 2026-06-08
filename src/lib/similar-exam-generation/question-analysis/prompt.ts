@@ -24,6 +24,7 @@ export interface QuestionAnalysisPromptInput {
   };
   schoolType?: string; // 예: "고등학교"
   gradeInfo?: string; // 예: "고3"
+  manualCropOnly?: boolean;
 }
 
 export function buildQuestionAnalysisPrompt({
@@ -32,6 +33,7 @@ export function buildQuestionAnalysisPrompt({
   hasImages,
   schoolType = "고등학교",
   gradeInfo = "",
+  manualCropOnly = false,
 }: QuestionAnalysisPromptInput): string {
   const sourceLine = hasImages
     ? "첨부된 이미지의 문항을 분석하세요."
@@ -60,7 +62,18 @@ export function buildQuestionAnalysisPrompt({
   const inputBlock = inputText.trim()
     ? `\n\n## 문항\n${inputText.trim()}`
     : "";
-  const boundingBoxBlock = hasImages && !targetQuestion
+  const manualCropBlock = hasImages && manualCropOnly
+    ? `
+
+## Manual Crop Reference
+- The attached image was manually cropped by the user. Treat it as the only source of truth.
+- Analyze only complete question(s) visible inside this cropped image.
+- If the crop cuts off an essential part of a question, keep source.completeness.isComplete=false and explain what is missing.
+- Do not infer missing text/options from outside the crop.
+- Do not create or estimate source.boundingBox; this flow does not use model-generated crop coordinates.
+- Inventory is optional in this mode. Focus on groups[].questions and preserve the original question format exactly.`
+    : "";
+  const boundingBoxBlock = hasImages && !targetQuestion && !manualCropOnly
     ? `
 
 ## Image Bounding Boxes
@@ -72,7 +85,7 @@ export function buildQuestionAnalysisPrompt({
 - Prefer a generous box over a tight one, but do not include neighboring questions unless they are physically part of the target question.
 - x, y, width, and height must be ordinary decimals between 0 and 1. pageIndex must be 0 for one attached image.`
     : "";
-  const inventoryBlock = hasImages && !targetQuestion
+  const inventoryBlock = hasImages && !targetQuestion && !manualCropOnly
     ? `
 
 ## Question Inventory First
@@ -114,6 +127,9 @@ ${sourceLine} 목표는 이 문항과 "동형(同形)"의 새 문항을 만들 �
    - 빌트인 어디에도 안 맞으면 matchedType=null, isNovelType=true, noveltyNote에 이 유형이 무엇을 어떻게 묻는지 서술(나중에 커스텀 유형으로 활용).
    - **stimulusKind**(자료 형태): 읽기 지문 기반=PASSAGE / 지문 없이 출제되는 모든 형식(어휘 관계·단어 쌍, 자유 영작, 어법 변형 등)=NONE / 듣기(음성·대본)=LISTENING / 도표·그래프·그림·이미지 기반=VISUAL / 기타=OTHER. 듣기·도표/그림은 텍스트로 동형 생성이 불가하니 정확히 분류하세요. NONE 은 형식에 제한이 없습니다.
    - difficulty + 근거, points(있으면), typeSettings(어법 밑줄 개수 등 해당 시).
+   - SUMMARY_COMPLETE_MC이면 typeSettings.summaryBlankCount에 원본 요약문 빈칸 수를 기록하세요. 보통 2개지만 (A), (B), (C)처럼 3개 이상이면 반드시 그 수를 보존합니다.
+   - SUMMARY_COMPLETE이면 typeSettings.summaryBlankCount에 원본 요약문 빈칸 수를 기록하세요.
+   - CONTENT_MATCH이면 typeSettings.optionCount에 원본 보기/진술문 수, typeSettings.answerCount에 정답 라벨 수를 기록하세요.
 3. testingPoint: 이 문항이 평가하는 핵심(무엇을 묻는가) + 관련 스킬[].
 4. transformation: 출제자가 원문에서 **무엇을 어떻게 바꿔** 함정/정답을 만들었는지. 어법·어휘 변형이면 changedSpans에 {from(원래), to(바뀐 것), rule(규칙)}로. 변형이 없으면 applied=false.
 5. reproductionSpec: 동형 문항 생성 시 그대로 따라야 할 발문/보기/정답 형식과 구조.
@@ -124,6 +140,7 @@ ${sourceLine} 목표는 이 문항과 "동형(同形)"의 새 문항을 만들 �
 ${buildTypeCatalog()}
 ${inventoryBlock}
 ${boundingBoxBlock}
+${manualCropBlock}
 ${incompleteBlock}
 ${inputBlock}
 

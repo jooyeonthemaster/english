@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
-import { analyzeForCustomType } from "@/lib/custom-question-types/analysis-input";
-import { compileCustomType } from "@/lib/custom-question-types/compiler";
+import { kickCustomTypeAnalysisWorker } from "@/lib/custom-question-types/analysis-job-runner";
+import { createAnalysisJob } from "@/lib/custom-question-types/persistence";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// 참조 문항(이미지 1장)을 분석해 커스텀 유형 정의 초안을 컴파일해 반환(저장 X).
-// 강사가 검토·명명 후 별도 POST /api/custom-question-types 로 저장한다.
+// 참조 문항(수동 크롭본 1장)을 분석 잡에 등록(비동기). 즉시 jobId 202 반환(논블로킹).
+// 워커가 백그라운드로 분석 → 유형 정의 컴파일 → ACTIVE 커스텀 유형 자동 생성. 하단 작업 큐가 폴링.
 
 const MAX_IMAGE_BASE64_LEN = 12_000_000;
 
@@ -20,6 +20,7 @@ const imageSchema = z.object({
 
 const bodySchema = z.object({
   images: z.array(imageSchema).min(1).max(1),
+  manualCrop: z.literal(true).optional().default(true),
   gradeInfo: z.string().trim().max(40).optional(),
 });
 
@@ -44,27 +45,23 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const images = parsed.data.images.map((img) => ({
-      data: Buffer.from(base64Payload(img.data), "base64"),
-      mediaType: img.mediaType,
-    }));
-    const analyzed = await analyzeForCustomType({
-      images,
+    const img = parsed.data.images[0];
+    const { id } = await createAnalysisJob({
+      academyId: staff.academyId,
+      createdById: staff.id,
+      referenceImage: base64Payload(img.data),
+      referenceMediaType: img.mediaType,
       gradeInfo: parsed.data.gradeInfo,
+      manualCrop: parsed.data.manualCrop,
     });
-    const compiled = compileCustomType(analyzed.primary);
 
-    return NextResponse.json({
-      spec: compiled.spec,
-      suggestedName: compiled.suggestedName,
-      // 원본 분석 — 저장 시 버전의 source 로 함께 보냄(편집/튜닝 토대).
-      source: analyzed.primary,
-      analysisModel: analyzed.model,
-      otherQuestionCount: Math.max(0, analyzed.questions.length - 1),
-    });
+    // 인-프로세스 워커 가동(논블로킹).
+    kickCustomTypeAnalysisWorker();
+
+    return NextResponse.json({ jobId: id }, { status: 202 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "분석에 실패했습니다.";
-    console.error(`[custom-type-analyze] academy=${staff.academyId} failed: ${message}`);
-    return NextResponse.json({ error: message }, { status: 500 });
+    const message = error instanceof Error ? error.message : "분석 등록에 실패했습니다.";
+    console.error(`[custom-type-analyze] academy=${staff.academyId} enqueue failed: ${message}`);
+    return NextResponse.json({ error: "분석 등록에 실패했습니다." }, { status: 500 });
   }
 }

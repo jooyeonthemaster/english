@@ -124,6 +124,24 @@ function slotEngineSettings(slot: QuestionSlot): QuestionTypeGenerationSettings 
     case "IRRELEVANT":
       if (ts.irrelevantSlotCount == null) return undefined;
       return { IRRELEVANT: { slotCount: ts.irrelevantSlotCount } };
+    case "CONTENT_MATCH":
+      if (ts.optionCount == null && ts.answerCount == null && ts.correctAnswerCount == null) return undefined;
+      return {
+        CONTENT_MATCH: {
+          ...(ts.optionCount != null ? { optionCount: ts.optionCount } : {}),
+          ...(ts.answerCount != null
+            ? { answerCount: ts.answerCount }
+            : ts.correctAnswerCount != null
+              ? { correctAnswerCount: ts.correctAnswerCount }
+              : {}),
+        },
+      };
+    case "SUMMARY_COMPLETE":
+      if (ts.summaryBlankCount == null) return undefined;
+      return { SUMMARY_COMPLETE: { blankCount: ts.summaryBlankCount } };
+    case "SUMMARY_COMPLETE_MC":
+      if (ts.summaryBlankCount == null) return undefined;
+      return { SUMMARY_COMPLETE_MC: { blankCount: ts.summaryBlankCount } };
     case "BLANK_INFERENCE":
       if (!ts.blankDoubleNegative) return undefined;
       return { BLANK_INFERENCE: { doubleNegative: true } };

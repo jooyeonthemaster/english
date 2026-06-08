@@ -14,6 +14,8 @@ export interface AnalyzeForCustomTypeArgs {
   /** 텍스트로 직접 들어온 문항(이미지 대신/병행). */
   inputText?: string;
   gradeInfo?: string;
+  /** 사용자 수동 크롭 입력. 동형 분석기의 자동 bbox/crop 보강을 우회한다. */
+  manualCropOnly?: boolean;
 }
 
 export interface AnalyzedCustomTypeSource {
@@ -36,6 +38,7 @@ export async function analyzeForCustomType(
     images: args.images,
     inputText: args.inputText,
     gradeInfo: args.gradeInfo,
+    manualCropOnly: args.manualCropOnly,
   });
 
   const questions = result.analysis.groups.flatMap((group) => group.questions);

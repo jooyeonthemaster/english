@@ -75,8 +75,8 @@ export function CustomTypeClient() {
         {tab === "create" ? (
           <CustomTypeCreatePanel
             onCreated={() => {
+              // 백그라운드 분석 완료 → 유형 목록만 갱신(탭은 강제로 안 바꾼다 — 작업 중 사용자 방해 방지).
               setTypesRefreshKey((k) => k + 1);
-              setTab("generate");
             }}
           />
         ) : (

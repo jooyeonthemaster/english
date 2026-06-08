@@ -15,6 +15,7 @@ import {
   Loader2,
   RefreshCcw,
   Sparkles,
+  Wand2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -44,6 +45,7 @@ import {
   formatTime,
   tierLabel,
 } from "./custom-type-utils";
+import { CustomTypeReviseModal } from "./custom-type-revise-modal";
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -58,6 +60,7 @@ export function CustomTypeGeneratePanel({ typesRefreshKey }: { typesRefreshKey: 
   const [countPerPassage, setCountPerPassage] = useState(1);
   const [gradeInfo, setGradeInfo] = useState("고3");
   const [submitting, setSubmitting] = useState(false);
+  const [editingType, setEditingType] = useState<{ id: string; name: string } | null>(null);
 
   // ── 작업/결과 ──
   const [jobs, setJobs] = useState<CustomGenJob[]>([]);
@@ -338,6 +341,7 @@ export function CustomTypeGeneratePanel({ typesRefreshKey }: { typesRefreshKey: 
           setGradeInfo={setGradeInfo}
           submitting={submitting}
           onRun={run}
+          onEdit={(id, name) => setEditingType({ id, name })}
         />}
       />
 
@@ -387,6 +391,15 @@ export function CustomTypeGeneratePanel({ typesRefreshKey }: { typesRefreshKey: 
         onClose={() => setContentModalPassage(null)}
         passage={contentModalPassage}
       />
+
+      {editingType ? (
+        <CustomTypeReviseModal
+          typeId={editingType.id}
+          typeName={editingType.name}
+          onClose={() => setEditingType(null)}
+          onRevised={() => void loadTypes()}
+        />
+      ) : null}
     </div>
   );
 }
@@ -404,6 +417,7 @@ function GenerationConfigPanel({
   setGradeInfo,
   submitting,
   onRun,
+  onEdit,
 }: {
   types: CustomTypeListItem[];
   selectedTypeId: string | null;
@@ -416,6 +430,7 @@ function GenerationConfigPanel({
   setGradeInfo: (v: string) => void;
   submitting: boolean;
   onRun: () => void;
+  onEdit: (id: string, name: string) => void;
 }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -432,22 +447,36 @@ function GenerationConfigPanel({
           ) : (
             <div className="flex flex-col gap-2">
               {types.map((t) => (
-                <button
+                <div
                   key={t.id}
-                  type="button"
-                  onClick={() => setSelectedTypeId(t.id)}
                   className={cn(
-                    "flex flex-col items-start gap-0.5 rounded-lg border px-3 py-2 text-left transition-colors",
+                    "flex items-center gap-1 rounded-lg border transition-colors",
                     selectedTypeId === t.id
                       ? "border-blue-400 bg-blue-50/60 ring-1 ring-blue-300/30"
                       : "border-slate-200 bg-white hover:border-blue-200",
                   )}
                 >
-                  <span className="text-[13px] font-bold text-slate-800">{t.name}</span>
-                  <span className="text-[10.5px] text-slate-400">
-                    {builtinLabel(t.nearestBuiltin)} · 생성 {t.generatedCount}개
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTypeId(t.id)}
+                    className="flex min-w-0 flex-1 flex-col items-start gap-0.5 px-3 py-2 text-left"
+                  >
+                    <span className="w-full truncate text-[13px] font-bold text-slate-800">
+                      {t.name}
+                    </span>
+                    <span className="text-[10.5px] text-slate-400">
+                      {builtinLabel(t.nearestBuiltin)} · 생성 {t.generatedCount}개
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onEdit(t.id, t.name)}
+                    title="자연어로 유형 수정"
+                    className="mr-2 shrink-0 rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600"
+                  >
+                    <Wand2 className="size-3.5" />
+                  </button>
+                </div>
               ))}
             </div>
           )}

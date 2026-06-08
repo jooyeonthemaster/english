@@ -20,10 +20,14 @@ import {
   revokeSlotUrls,
   splitPdfToImages,
 } from "@/lib/extraction/pdf-splitter";
-import type { ClientPageSlot } from "@/lib/extraction/types";
+import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 
 import { ExtractionManageClient } from "../../exams/similar/_components/material-manager";
 import { SimilarExamCenterPreview } from "../../exams/similar/_components/similar-exam-center-preview";
+import {
+  buildManualCropReferenceSlot,
+  ManualQuestionCropBoard,
+} from "../_components/manual-question-crop-board";
 import { SimilarQuestionJobsPanel } from "./similar-question-jobs-panel";
 import {
   blobToBase64,
@@ -74,6 +78,7 @@ export function SimilarQuestionGeneratorClient({
   );
   const [staged, setStaged] = useState<StagedFile | null>(null);
   const [slots, setSlots] = useState<ClientPageSlot[]>([]);
+  const [cropBoxes, setCropBoxes] = useState<CropBox[]>([]);
   const [splitting, setSplitting] = useState(false);
   const [splitMessage, setSplitMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -85,12 +90,13 @@ export function SimilarQuestionGeneratorClient({
   const [leftCollapsed, setLeftCollapsed] = useState(readStoredCollapsed);
 
   const selectedCount = selectedDraftIds.size;
-  const canRun = Boolean(staged) && !busy && !splitting;
+  const canRun = Boolean(staged) && cropBoxes.length > 0 && !busy && !splitting;
 
   const clearStaged = useCallback(() => {
     revokeSlotUrls(slotsRef.current);
     slotsRef.current = [];
     setSlots([]);
+    setCropBoxes([]);
     setStaged(null);
     setSplitMessage("");
     setError(null);
@@ -177,6 +183,7 @@ export function SimilarQuestionGeneratorClient({
         }
         slotsRef.current = nextSlots;
         setSlots(nextSlots);
+        setCropBoxes([]);
         setStaged({
           fileName: pdf ? pdf.name : file?.name ?? "업로드한 문항",
           totalPages: nextSlots.length,
@@ -199,6 +206,10 @@ export function SimilarQuestionGeneratorClient({
     const currentSlots = slotsRef.current;
     if (!staged || currentSlots.length === 0) {
       toast.error("분석할 문항(사진/PDF)을 먼저 입력하세요.");
+      return;
+    }
+    if (cropBoxes.length === 0) {
+      toast.error("문항 영역을 먼저 수동으로 크롭해 주세요.");
       return;
     }
     setBusy(true);
@@ -240,12 +251,16 @@ export function SimilarQuestionGeneratorClient({
         );
       }
 
-      const images = await Promise.all(
-        currentSlots.map(async (slot) => ({
-          data: await blobToBase64(slot.blob),
-          mediaType: mediaTypeForBlob(slot.blob),
-        })),
+      const manualReferenceSlot = await buildManualCropReferenceSlot(
+        currentSlots[0],
+        cropBoxes,
       );
+      const images = [
+        {
+          data: await blobToBase64(manualReferenceSlot.blob),
+          mediaType: mediaTypeForBlob(manualReferenceSlot.blob),
+        },
+      ];
 
       const clientRequestId = createClientRequestId();
 
@@ -254,7 +269,13 @@ export function SimilarQuestionGeneratorClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ clientRequestId, images, passageIds, gradeInfo }),
+        body: JSON.stringify({
+          clientRequestId,
+          images,
+          passageIds,
+          gradeInfo,
+          manualCrop: true,
+        }),
       });
       const data = (await res.json()) as {
         error?: string;
@@ -281,7 +302,7 @@ export function SimilarQuestionGeneratorClient({
     } finally {
       setBusy(false);
     }
-  }, [staged, selectedDraftIds, gradeInfo, clearStaged]);
+  }, [staged, cropBoxes, selectedDraftIds, gradeInfo, clearStaged]);
 
   // ─── 좌패널 핸들: 클릭=여닫기, 드래그=폭 조절 (동형 시험지 생성과 동일) ───
   function toggleLeftCollapsed() {
@@ -420,6 +441,9 @@ export function SimilarQuestionGeneratorClient({
               <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-500">
                 선택 지문 {selectedCount}
               </span>
+              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 ring-1 ring-blue-100">
+                크롭 {cropBoxes.length}
+              </span>
               <div className="ml-auto flex items-center gap-2">
                 <label className="flex items-center gap-1.5 text-[12px] text-slate-600">
                   학년
@@ -433,6 +457,7 @@ export function SimilarQuestionGeneratorClient({
                   type="button"
                   onClick={run}
                   disabled={!canRun}
+                  title={cropBoxes.length === 0 ? "문항 영역을 먼저 크롭해 주세요" : undefined}
                   className="inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {busy ? (
@@ -440,25 +465,41 @@ export function SimilarQuestionGeneratorClient({
                   ) : (
                     <Sparkles className="size-4" />
                   )}
-                  {busy ? "큐 등록 중…" : "동형 생성 큐에 추가"}
+                  {busy
+                    ? "큐 등록 중…"
+                    : cropBoxes.length === 0
+                      ? "크롭 필요"
+                      : "동형 생성 큐에 추가"}
                 </button>
               </div>
             </div>
 
-            <SimilarExamCenterPreview
-              staged={staged}
-              slots={slots}
-              splitting={splitting}
-              splitMessage={splitMessage}
-              busy={false}
-              uploadProgress={0}
-              error={error}
-              onPickFiles={pickFiles}
-              onRequestFileDialog={requestFileDialog}
-              emptyTitle="분석할 문항 이미지 1장 또는 1페이지 PDF 입력"
-              emptyHint="문항이 담긴 사진 1장(또는 1페이지 PDF)을 올리세요. 왼쪽 자료에서 지문을 고르면 지문마다 동형 문항이 생성됩니다(여러 문항 × 여러 지문)."
-              pickLabel="문항 선택"
-            />
+            {staged && slots[0] ? (
+              <ManualQuestionCropBoard
+                slot={slots[0]}
+                boxes={cropBoxes}
+                busy={busy}
+                error={error}
+                onBoxesChange={setCropBoxes}
+                onPickFiles={pickFiles}
+                onRequestFileDialog={requestFileDialog}
+              />
+            ) : (
+              <SimilarExamCenterPreview
+                staged={staged}
+                slots={slots}
+                splitting={splitting}
+                splitMessage={splitMessage}
+                busy={false}
+                uploadProgress={0}
+                error={error}
+                onPickFiles={pickFiles}
+                onRequestFileDialog={requestFileDialog}
+                emptyTitle="분석할 문항 이미지 1장 또는 1페이지 PDF 입력"
+                emptyHint="문항이 담긴 사진 1장(또는 1페이지 PDF)을 올리세요. 왼쪽 자료에서 지문을 고르면 지문마다 동형 문항이 생성됩니다(여러 문항 × 여러 지문)."
+                pickLabel="문항 선택"
+              />
+            )}
           </section>
         </div>
       </div>

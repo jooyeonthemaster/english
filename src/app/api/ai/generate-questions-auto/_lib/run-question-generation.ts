@@ -13,10 +13,14 @@ import {
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   buildQuestionTypeSettingsPrompt,
+  readContentMatchAnswerCountSetting,
+  readContentMatchOptionCountSetting,
   readGrammarAnswerCountSetting,
   readGrammarCorrectionErrorCountSetting,
   readGrammarMarkerCountSetting,
   readIrrelevantSlotCountSetting,
+  readSummaryCompleteBlankCountSetting,
+  readSummaryCompleteMcBlankCountSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import {
@@ -233,6 +237,10 @@ export async function runQuestionGeneration(
       let grammarMarkerCount: number | undefined;
       let grammarAnswerCount: number | undefined;
       let grammarCorrectionErrorCount: number | undefined;
+      let summaryCompleteMcBlankCount: number | undefined;
+      let summaryCompleteBlankCount: number | undefined;
+      let contentMatchOptionCount: number | undefined;
+      let contentMatchAnswerCount: number | undefined;
       let effectiveTypeSettings: unknown = typeSettings?.[subType];
       if (subType === "GRAMMAR_ERROR" && isRecord(typeSettings?.[subType])) {
         grammarMarkerCount = readGrammarMarkerCountSetting(typeSettings?.[subType]);
@@ -256,16 +264,50 @@ export async function runQuestionGeneration(
         };
       }
       if (subType === "IRRELEVANT") {
-        // The 무관한 문장 type is fixed at 5 slots (선지 개수 selector removed).
-        // The post-processor preserves the full passage and marks exactly 5
-        // sentences — 4 verbatim originals + 1 inserted — with circled numbers
-        // ①–⑤, so there is no per-passage slot count to resolve any more.
-        irrelevantSlotCount = 5;
+        irrelevantSlotCount = readIrrelevantSlotCountSetting(
+          typeSettings?.[subType],
+        );
         effectiveTypeSettings = {
           ...(isRecord(typeSettings?.[subType])
             ? (typeSettings?.[subType] as Record<string, unknown>)
             : {}),
-          slotCount: 5,
+          slotCount: irrelevantSlotCount,
+        };
+      }
+      if (subType === "CONTENT_MATCH") {
+        contentMatchOptionCount = readContentMatchOptionCountSetting(
+          typeSettings?.[subType],
+        );
+        contentMatchAnswerCount = readContentMatchAnswerCountSetting(
+          typeSettings?.[subType],
+          contentMatchOptionCount,
+        );
+        effectiveTypeSettings = {
+          ...(isRecord(typeSettings?.[subType])
+            ? (typeSettings?.[subType] as Record<string, unknown>)
+            : {}),
+          optionCount: contentMatchOptionCount,
+          answerCount: contentMatchAnswerCount,
+        };
+      }
+      if (subType === "SUMMARY_COMPLETE") {
+        summaryCompleteBlankCount = readSummaryCompleteBlankCountSetting(
+          typeSettings?.[subType],
+        );
+        effectiveTypeSettings = {
+          ...(isRecord(typeSettings?.[subType])
+            ? (typeSettings?.[subType] as Record<string, unknown>)
+            : {}),
+          blankCount: summaryCompleteBlankCount,
+        };
+      }
+      if (subType === "SUMMARY_COMPLETE_MC" && isRecord(typeSettings?.[subType])) {
+        summaryCompleteMcBlankCount = readSummaryCompleteMcBlankCountSetting(
+          typeSettings?.[subType],
+        );
+        effectiveTypeSettings = {
+          ...(typeSettings?.[subType] as Record<string, unknown>),
+          blankCount: summaryCompleteMcBlankCount,
         };
       }
 
@@ -296,6 +338,10 @@ export async function runQuestionGeneration(
             grammarMarkerCount,
             grammarAnswerCount,
             grammarCorrectionErrorCount,
+            summaryCompleteMcBlankCount,
+            summaryCompleteBlankCount,
+            contentMatchOptionCount,
+            contentMatchAnswerCount,
           })
         : isStructured
           ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
@@ -306,6 +352,14 @@ export async function runQuestionGeneration(
         : UNSTRUCTURED_OUTPUT_INSTRUCTIONS;
       const perQuestionTokenFloor =
         subType === "GRAMMAR_ERROR" && ((grammarMarkerCount ?? 5) > 5 || (grammarAnswerCount ?? 1) > 1)
+          ? 8_192
+          : subType === "CONTENT_MATCH" && ((contentMatchOptionCount ?? 5) > 5 || (contentMatchAnswerCount ?? 1) > 1)
+          ? 8_192
+          : subType === "SUMMARY_COMPLETE" && (summaryCompleteBlankCount ?? 2) > 2
+          ? 8_192
+          : subType === "IRRELEVANT" && (irrelevantSlotCount ?? 5) > 5
+          ? 8_192
+          : subType === "SUMMARY_COMPLETE_MC" && (summaryCompleteMcBlankCount ?? 2) > 2
           ? 8_192
           : 4_096;
 

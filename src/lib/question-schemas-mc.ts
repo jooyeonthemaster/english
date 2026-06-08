@@ -162,12 +162,95 @@ export const contentMatchSchema = z.object({
 });
 export type ContentMatchQuestion = z.infer<typeof contentMatchSchema>;
 
+export function buildContentMatchSchema(optionCount: number, answerCount = 1) {
+  const optionN = Math.min(12, Math.max(5, Math.round(optionCount)));
+  const answerN = Math.min(optionN, Math.max(1, Math.round(answerCount)));
+  const labels = Array.from({ length: optionN }, (_, index) => String(index + 1));
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+
+  return z.object({
+    ...commonFields,
+    correctAnswer: z
+      .string()
+      .describe(
+        answerN > 1
+          ? `Correct labels joined by comma + space. Exactly ${answerN} labels from ${labels.join(", ")}.`
+          : `Single correct label from ${labels.join(", ")}.`,
+      ),
+    correctAnswers:
+      answerN > 1
+        ? z
+            .array(labelSchema)
+            .length(answerN)
+            .describe(`Exactly ${answerN} correct labels`)
+        : z.array(labelSchema).length(1).optional(),
+    matchType: z.enum(["일치", "불일치"]).describe("일치 또는 불일치 문제"),
+    options: z
+      .array(optionSchema.extend({ label: labelSchema }))
+      .length(optionN)
+      .describe(`${optionN} Korean statement options`),
+    ...mcWrongExplanations,
+  });
+}
+
 // ── 요약문 완성 객관식 ──
 
 const summaryPairOptionSchema = optionSchema.extend({
   blankA: z.string().describe("(A)에 들어갈 영어 단어 또는 어구"),
   blankB: z.string().describe("(B)에 들어갈 영어 단어 또는 어구"),
 });
+
+export const SUMMARY_COMPLETE_MC_BLANK_LABELS = ["(A)", "(B)", "(C)", "(D)"] as const;
+
+function summaryBlankLabels(blankCount: number) {
+  const n = Math.min(
+    SUMMARY_COMPLETE_MC_BLANK_LABELS.length,
+    Math.max(2, Math.round(blankCount)),
+  );
+  return SUMMARY_COMPLETE_MC_BLANK_LABELS.slice(0, n);
+}
+
+export function buildSummaryCompleteMcSchema(blankCount: number) {
+  const labels = summaryBlankLabels(blankCount);
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+  const blankValueSchema = z.object({
+    label: labelSchema,
+    value: z.string().describe("English word or phrase for this blank label"),
+  });
+
+  return z.object({
+    ...commonFields,
+    summaryWithBlanks: z
+      .string()
+      .describe(`English one-sentence summary containing ${labels.join(", ")} exactly once each`),
+    blanks: z
+      .array(
+        z.object({
+          label: labelSchema,
+          answer: z.string().describe("English answer word or phrase for this blank"),
+          role: z.string().optional().describe("Semantic or grammatical role of this blank"),
+        }),
+      )
+      .length(labels.length)
+      .describe(`${labels.join(", ")} answer information`),
+    options: z
+      .array(
+        optionSchema.extend({
+          blankValues: z
+            .array(blankValueSchema)
+            .length(labels.length)
+            .describe(`Values for ${labels.join(", ")}, in order`),
+          blankA: z.string().optional().describe("Compatibility value for (A)"),
+          blankB: z.string().optional().describe("Compatibility value for (B)"),
+          blankC: z.string().optional().describe("Compatibility value for (C)"),
+          blankD: z.string().optional().describe("Compatibility value for (D)"),
+        }),
+      )
+      .length(5)
+      .describe(`5 objective answer choices, each with ${labels.length} blank values`),
+    ...mcWrongExplanations,
+  });
+}
 
 export const summaryCompleteMcSchema = z.object({
   ...commonFields,

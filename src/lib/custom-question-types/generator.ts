@@ -30,13 +30,31 @@ export interface GenerateFromCustomTypeResult {
 }
 
 const GENERIC_TIMEOUT_MS = 120_000;
-const GENERIC_MAX_TOKENS = 12_000;
-const GENERIC_MAX_RETRIES = 2;
+// thinking 토큰이 maxOutputTokens 를 공유하므로 본문 잘림 방지로 상향(thinking budget 은 별도 한정).
+const GENERIC_MAX_TOKENS = 24_000;
+const GENERIC_MAX_RETRIES = 3;
+
+// 보기 작성 전 자기점검 계획(in-call). optionCount개의 서로 다른 변별 축을 먼저 선언하게 해
+// distinctness 를 의식시키는 nudge. distinctness 자체는 강제 게이트가 아니고(범용성), fitsContext 수만 구조검증.
+const planItemSchema = z.object({
+  label: z.string().max(40).catch("").default(""),
+  discriminator: z.string().max(400).catch("").default(""), // 이 보기의 변별 특징(다의어=의미, 어법=규칙 등) — 서로 달라야
+  fitsContext: z.boolean().catch(false).default(false), // 정답 후보 여부
+});
+
+// 라벨별 구조 해설 — 실제 emit 한 보기에 1:1 로 묶어 해설 드리프트/복수정답을 구조적으로 차단.
+const verdictItemSchema = z.object({
+  label: z.string().max(40).catch("").default(""),
+  isCorrect: z.boolean().catch(false).default(false),
+  why: z.string().max(2000).catch("").default(""),
+});
 
 // ── 티어 ④ generic 출력 스키마 — 모든 leaf 에 .catch 폴백(범위 이탈해도 전체 파싱 실패 방지). ──
+// 필드 순서 = 생성 순서: optionPlan(보기 전) → options → correctAnswer → optionVerdicts(보기 후).
 const genericQuestionSchema = z.object({
   direction: z.string().max(2000).catch("").default(""),
   passageOrStimulus: z.string().max(12000).catch("").default(""),
+  optionPlan: z.array(planItemSchema).max(20).catch([]).default([]),
   options: z
     .array(
       z.object({
@@ -49,6 +67,7 @@ const genericQuestionSchema = z.object({
     .default([]),
   correctAnswer: z.string().max(4000).catch("").default(""),
   correctAnswers: z.array(z.string().max(40).catch("")).max(20).catch([]).default([]),
+  optionVerdicts: z.array(verdictItemSchema).max(20).catch([]).default([]),
   explanation: z.string().max(4000).catch("").default(""),
   keyPoints: z.array(z.string().max(600).catch("")).max(12).catch([]).default([]),
   answerShape: z
@@ -132,21 +151,44 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
         ? `- options: {label,text} 배열을 정확히 ${spec.optionCount}개(라벨은 원본 형식 ①②③④⑤ 또는 1~5 등).`
         : "- options: 객관식이면 {label,text} 배열, 아니면 빈 배열.";
 
+  // MC(MULTIPLE_CHOICE) 한정 지시 — OTHER/SHORT_ANSWER 엔 라벨-픽 게이트를 강요하지 않음.
+  // 복수정답 유형은 고정수 대신 "1개 이상(개수 가변)"으로 표현(고정수 강제로 인한 과잉-reject 방지).
+  const isMc = spec.answerShape === "MULTIPLE_CHOICE" && spec.optionCount > 0;
+  const countPhrase = spec.multipleAnswers
+    ? "정답 후보는 1개 이상(모두 고르기 — 개수는 문항마다 다를 수 있음)"
+    : `정답 정확히 ${spec.correctAnswerCount}개`;
+
+  const invariantBlock = spec.invariants.length
+    ? `## 반드시 보존 (이 유형의 본질 — 모든 문항에서 유지)\n${spec.invariants.map((i) => `- ${i}`).join("\n")}`
+    : "";
+  const variableBlock =
+    "## 매번 새로 (가변) — 원본 예시의 특정 단어/문장/소재를 그대로 쓰지 말고 매번 다른 소재로" +
+    (spec.variableAxes.length ? `\n${spec.variableAxes.map((v) => `- ${v}`).join("\n")}` : "");
+
   return [
     `당신은 한국 고등학교 ${gradeInfo} 영어 시험 출제 전문가입니다.`,
     "아래 [유형 정의]에 **충실히 따라** 동형(同形) 문항 1개를 만드세요. 이 유형은 표준 유형 풀에 없는 특수/변형 유형입니다.",
     "",
     spec.prompt,
     "",
+    invariantBlock,
+    variableBlock,
+    "",
     passageBlock,
     "",
-    "## 출력 규칙",
+    "## 출력 규칙 (순서대로 작성)",
     "- direction: 새 문항의 한국어 발문.",
     "- passageOrStimulus: 학생에게 보일 본문/자료. 지문기반이면 위 새 지문 또는 그 변형, 무지문이면 유형에 맞는 자료. 객관식 보기는 여기 말고 options 에.",
+    isMc && spec.optionCount > 1
+      ? `- optionPlan: **보기를 쓰기 전에 먼저** ${spec.optionCount}개 항목을 계획하라. 각 항목 discriminator = 그 보기의 변별 특징(위 '반드시 보존'의 보기 구별 규칙)이며 **항목끼리 명확히 달라야** 한다. fitsContext = 정답 후보 여부(${countPhrase}). 타겟/소재는 이 변별 축을 ${spec.optionCount}개 채울 만큼 충분히 구별되는 것으로 고르고, 부족하면 다른 타겟/소재로 바꿔라.`
+      : "- optionPlan: (객관식 아니면 빈 배열)",
     optionRule,
-    `- correctAnswer: 객관식이면 정답 label(복수정답이면 comma+space 연결). 서술형이면 정답 텍스트. 정답 정확히 ${spec.correctAnswerCount}개.`,
+    `- correctAnswer: 객관식이면 정답 label(복수면 comma+space 연결). 서술형이면 정답 텍스트. ${countPhrase}.`,
     "- correctAnswers: 복수정답이면 모든 정답 label 배열. 단일이면 비워도 됨.",
-    "- explanation: 정답 근거를 한국어로 명확히, 1200자 이내.",
+    isMc
+      ? `- optionVerdicts: **emit 한 각 보기 label마다 정확히 1개** {label, isCorrect, why}. why 는 그 보기의 **실제 text 를 근거로** 작성(존재하지 않는 보기/문장 지어내지 말 것). isCorrect=true 인 것은 correctAnswer 와 정확히 일치(${countPhrase}).`
+      : "- optionVerdicts: (객관식 아니면 빈 배열)",
+    "- explanation: 전체 총평을 짧게(보기별 상세 근거는 optionVerdicts 에).",
     "- keyPoints: 학습 포인트 3개 이내.",
     "- 원본 지문/문장을 그대로 베끼지 말고 새 소재로 동형 재현. Markdown code fence·raw JSON·self-check·정답표 누출을 학생용 본문에 넣지 말 것.",
   ]
@@ -154,15 +196,105 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
     .join("\n");
 }
 
+const CIRCLED_LABELS = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳";
+/** 라벨 정규화 — ①↔1, (A)↔a, "(C)." 등 장식/구두점 드리프트를 흡수해 비교 오탐 방지. */
+function normLabel(value: string): string {
+  const t = (value ?? "").trim();
+  const ci = CIRCLED_LABELS.indexOf(t);
+  if (ci >= 0) return String(ci + 1);
+  // NFKC(전각·괄호숫자 등) → 소문자 → 앞뒤 비영숫자 전부 제거 → "(C)."·"c."·"C" 모두 "c".
+  return t
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/^[^a-z0-9]+/, "")
+    .replace(/[^a-z0-9]+$/, "");
+}
+/** correctAnswer(+correctAnswers)에서 정답 라벨 집합을 정규화해 수집(MC 전용). 붙은 동그라미(①②)는 글자별로 분리. */
+function collectCorrectLabels(obj: GenericQuestion): string[] {
+  const set = new Set<string>();
+  const addToken = (raw: string) => {
+    const circled = [...raw].filter((ch) => CIRCLED_LABELS.includes(ch));
+    if (circled.length > 1) {
+      for (const ch of circled) {
+        const n = normLabel(ch);
+        if (n) set.add(n);
+      }
+      return;
+    }
+    const n = normLabel(raw);
+    if (n) set.add(n);
+  };
+  for (const v of obj.correctAnswers) addToken(v);
+  for (const part of obj.correctAnswer.split(/[,、\s]+/)) addToken(part);
+  return [...set];
+}
+
 function validateGeneric(spec: CompiledCustomType, obj: GenericQuestion): string[] {
   const errors: string[] = [];
-  const expectsOptions = spec.answerShape !== "SHORT_ANSWER" && spec.optionCount > 0;
+  // MC 라벨-픽 게이트는 MULTIPLE_CHOICE 한정. OTHER(배열/매칭 등)·SHORT_ANSWER 는 제외.
+  const isMc = spec.answerShape === "MULTIPLE_CHOICE" && spec.optionCount > 0;
 
-  if (expectsOptions) {
+  if (isMc) {
     if (obj.options.length === 0) {
       errors.push("객관식 원본 형식인데 options 가 비어 있습니다.");
     } else if (obj.options.length !== spec.optionCount) {
       errors.push(`options 개수 ${obj.options.length}개가 원본 ${spec.optionCount}개와 다릅니다.`);
+    }
+  }
+
+  // ── 구조 검증(MC): 정답 수·라벨 정합 + 라벨별 해설 1:1 → 해설 드리프트/복수정답 차단 ──
+  if (isMc && obj.options.length > 0) {
+    const optionLabels = new Set(obj.options.map((o) => normLabel(o.label)));
+    // 라벨 중복/빈 라벨(학생에게 모호) 차단 — Set 비교만으론 중복이 묻힌다.
+    if (optionLabels.size !== obj.options.length) {
+      errors.push("보기 라벨이 중복되거나 비어 있습니다.");
+    }
+    const correctLabels = collectCorrectLabels(obj);
+
+    // 복수정답 유형은 정답 수가 문항마다 다를 수 있음 → 고정수 대신 [1, 보기수] 범위로.
+    if (spec.multipleAnswers) {
+      if (correctLabels.length < 1 || correctLabels.length > obj.options.length) {
+        errors.push(`정답 라벨 ${correctLabels.length}개가 보기 수 범위(1~${obj.options.length})를 벗어났습니다.`);
+      }
+    } else if (correctLabels.length !== spec.correctAnswerCount) {
+      errors.push(`정답 라벨 ${correctLabels.length}개가 지정 ${spec.correctAnswerCount}개와 다릅니다.`);
+    }
+    const missing = correctLabels.filter((l) => !optionLabels.has(l));
+    if (missing.length) errors.push(`정답 라벨이 보기에 없습니다: ${missing.join(", ")}`);
+
+    if (obj.optionVerdicts.length === 0) {
+      errors.push("라벨별 해설(optionVerdicts)이 비어 있습니다.");
+    } else {
+      const verdictSet = new Set(obj.optionVerdicts.map((v) => normLabel(v.label)));
+      if (verdictSet.size !== obj.optionVerdicts.length) {
+        errors.push("라벨별 해설 라벨이 중복되거나 비어 있습니다.");
+      }
+      const covers =
+        verdictSet.size === optionLabels.size && [...optionLabels].every((l) => verdictSet.has(l));
+      if (!covers) errors.push("라벨별 해설이 실제 보기와 1:1로 대응하지 않습니다.");
+
+      const verdictCorrect = obj.optionVerdicts
+        .filter((v) => v.isCorrect)
+        .map((v) => normLabel(v.label))
+        .filter(Boolean);
+      const expectedCorrect = spec.multipleAnswers ? correctLabels.length : spec.correctAnswerCount;
+      if (verdictCorrect.length !== expectedCorrect) {
+        errors.push(`해설이 정답으로 표시한 ${verdictCorrect.length}개가 ${expectedCorrect}개와 다릅니다.`);
+      }
+      const correctSet = new Set(correctLabels);
+      const vcSet = new Set(verdictCorrect);
+      const consistent =
+        verdictCorrect.every((l) => correctSet.has(l)) && correctLabels.every((l) => vcSet.has(l));
+      if (!consistent) errors.push("해설의 정답 표시와 correctAnswer 가 불일치합니다.");
+    }
+
+    // optionPlan 의 정답 후보 수만 구조검증. distinctness 는 강제 안 함(범용성 — best-answer/choose-all 유형 오탐 방지).
+    if (obj.optionPlan.length > 0) {
+      const planFits = obj.optionPlan.filter((p) => p.fitsContext).length;
+      const expectedFits = spec.multipleAnswers ? correctLabels.length : spec.correctAnswerCount;
+      if (planFits !== expectedFits) {
+        errors.push(`계획(optionPlan) 정답 후보 ${planFits}개가 ${expectedFits}개와 다릅니다.`);
+      }
     }
   }
 
@@ -192,7 +324,9 @@ async function generateGeneric(
         schema: genericQuestionSchema,
         maxOutputTokens: GENERIC_MAX_TOKENS,
         abortSignal: AbortSignal.timeout(GENERIC_TIMEOUT_MS),
-        providerOptions: { google: { thinkingConfig: { thinkingBudget: 0 } } },
+        // thinking 켜되 budget 을 한정(이전엔 0=꺼짐). thinking 토큰은 maxOutputTokens 를 공유하므로 상한을 둬
+        // 본문이 잘려 NoObjectGenerated/검증실패로 3회 모두 터지는 것을 막는다. 추론은 보기 distinctness·정답 유일성용.
+        providerOptions: { google: { thinkingConfig: { thinkingBudget: 4096 } } },
         messages: [{ role: "user", content: [{ type: "text", text: prompt }] }],
       });
       const obj = result.object;
@@ -211,12 +345,19 @@ async function generateGeneric(
       const correctAnswers = obj.correctAnswers.map((v) => v.trim()).filter(Boolean);
       const correctAnswer = obj.correctAnswer.trim() || correctAnswers.join(", ");
 
+      // 해설 = 전체 총평 + 라벨별 판정(optionVerdicts) 합본(저장 계약은 문자열 1개). 라벨에 묶여 드리프트 차단.
+      const verdictLines = obj.optionVerdicts
+        .map((v) => `${v.label.trim()}. ${v.isCorrect ? "(정답) " : ""}${v.why.trim()}`.trim())
+        .filter((l) => l && l !== ".")
+        .join("\n");
+      const explanation = [obj.explanation.trim(), verdictLines].filter(Boolean).join("\n\n");
+
       // _typeId 는 일부러 비워 둠 → 문제 관리 카드가 평문(questionText+options)으로 폴백 렌더.
       const question: Record<string, unknown> = {
         subType: "CUSTOM",
         questionText,
         correctAnswer,
-        explanation: obj.explanation,
+        explanation,
         keyPoints: obj.keyPoints,
         difficulty: spec.difficulty,
         _genericCustom: true,

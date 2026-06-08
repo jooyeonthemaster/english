@@ -213,6 +213,7 @@ async function runJob(jobId: string): Promise<void> {
     } = await analyzeQuestionItem({
       images: [referenceImage],
       gradeInfo: job.gradeInfo ?? undefined,
+      manualCropOnly: true,
     });
 
     const allQuestions = analysis.groups.flatMap((group) => group.questions);
@@ -251,14 +252,17 @@ async function runJob(jobId: string): Promise<void> {
     });
 
     if (pairs.length === 0) {
+      const noAnalyzedQuestions = allQuestions.length === 0;
       await prisma.similarQuestionGenerationJob.update({
         where: { id: jobId },
         data: {
-          status: "COMPLETED",
+          status: noAnalyzedQuestions ? "FAILED" : "COMPLETED",
           completedAt: new Date(),
           // referenceImage 는 검증용으로 보존(이전엔 행 비대화 방지로 비웠음).
           errorMessage:
-            validPassageIds.length === 0
+            noAnalyzedQuestions
+              ? "수동 크롭 이미지에서 완전한 문항을 찾지 못했습니다. 문항 전체가 포함되도록 다시 크롭해 주세요."
+              : validPassageIds.length === 0
               ? "선택한 지문의 본문을 찾지 못했습니다."
               : "분석된 문항이 없습니다.",
         },

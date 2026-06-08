@@ -12,6 +12,8 @@ export interface AnalyzeQuestionItemArgs {
   inputText?: string;
   schoolType?: string;
   gradeInfo?: string;
+  /** User-cropped reference image. Bypass legacy full-page bbox crop follow-up. */
+  manualCropOnly?: boolean;
 }
 
 export interface QuestionAnalysisResult {

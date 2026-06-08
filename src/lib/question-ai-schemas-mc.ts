@@ -13,6 +13,7 @@ import {
 // AI variants for schemas that do not need passage reconstruction.
 import {
   contentMatchSchema,
+  buildSummaryCompleteMcSchema,
   mainIdeaSchema,
   sentenceOrderSchema,
   summaryCompleteMcSchema,
@@ -97,6 +98,37 @@ export const aiMainIdeaSchema = mainIdeaSchema.extend(mcWrongExplanations);
 export const aiTitleSchema = titleSchema.extend(mcWrongExplanations);
 export const aiContentMatchSchema = contentMatchSchema.extend(mcWrongExplanations);
 export const aiSummaryCompleteMcSchema = summaryCompleteMcSchema.extend(mcWrongExplanations);
+
+export function buildAiContentMatchSchema(optionCount: number, answerCount = 1) {
+  const optionN = Math.min(12, Math.max(5, Math.round(optionCount)));
+  const answerN = Math.min(optionN, Math.max(1, Math.round(answerCount)));
+  const labels = Array.from({ length: optionN }, (_, index) => String(index + 1));
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+
+  return z.object({
+    ...commonFields,
+    correctAnswer: z
+      .string()
+      .describe(
+        answerN > 1
+          ? `Correct labels joined by comma + space. Exactly ${answerN} labels from ${labels.join(", ")}.`
+          : `Single correct label from ${labels.join(", ")}.`,
+      ),
+    correctAnswers:
+      answerN > 1
+        ? z
+            .array(labelSchema)
+            .length(answerN)
+            .describe(`Exactly ${answerN} correct labels`)
+        : z.array(labelSchema).length(1).optional(),
+    matchType: z.enum(["일치", "불일치"]).describe("일치 또는 불일치 문제"),
+    options: z
+      .array(optionSchema.extend({ label: labelSchema }))
+      .length(optionN)
+      .describe(`${optionN} Korean statement options`),
+    wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(optionN - answerN),
+  });
+}
 
 // ---------------------------------------------------------------------------
 // 1. 빈칸 추론 (BLANK_INFERENCE)
@@ -336,6 +368,7 @@ import {
   sentenceTransformSchema,
   fillBlankKeySchema,
   summaryCompleteSchema,
+  buildSummaryCompleteSchema,
   wordOrderSchema,
   grammarCorrectionSchema,
 } from "./question-schemas-essay";
@@ -362,6 +395,10 @@ export function getAiResponseSchema(
     grammarMarkerCount?: number;
     grammarAnswerCount?: number;
     grammarCorrectionErrorCount?: number;
+    summaryCompleteMcBlankCount?: number;
+    summaryCompleteBlankCount?: number;
+    contentMatchOptionCount?: number;
+    contentMatchAnswerCount?: number;
     /** Legacy option name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
   },
@@ -383,6 +420,30 @@ export function getAiResponseSchema(
   }
   if (typeId === "IRRELEVANT" && options?.irrelevantSlotCount && options.irrelevantSlotCount !== 5) {
     schema = buildAiIrrelevantSchema(options.irrelevantSlotCount);
+  }
+  if (
+    typeId === "SUMMARY_COMPLETE_MC" &&
+    options?.summaryCompleteMcBlankCount &&
+    options.summaryCompleteMcBlankCount !== 2
+  ) {
+    schema = buildSummaryCompleteMcSchema(options.summaryCompleteMcBlankCount);
+  }
+  if (
+    typeId === "SUMMARY_COMPLETE" &&
+    options?.summaryCompleteBlankCount &&
+    options.summaryCompleteBlankCount !== 2
+  ) {
+    schema = buildSummaryCompleteSchema(options.summaryCompleteBlankCount);
+  }
+  if (
+    typeId === "CONTENT_MATCH" &&
+    ((options?.contentMatchOptionCount && options.contentMatchOptionCount !== 5) ||
+      (options?.contentMatchAnswerCount && options.contentMatchAnswerCount !== 1))
+  ) {
+    schema = buildAiContentMatchSchema(
+      options?.contentMatchOptionCount ?? 5,
+      options?.contentMatchAnswerCount ?? 1,
+    );
   }
   return z.object({ questions: z.array(schema) });
 }

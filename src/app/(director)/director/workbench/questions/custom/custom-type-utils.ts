@@ -14,6 +14,8 @@ export interface CustomTypeSpec {
   correctAnswerCount: number;
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
   targetPoints: string[];
+  invariants: string[];
+  variableAxes: string[];
   prompt: string;
   description: string;
   [key: string]: unknown;
@@ -50,6 +52,17 @@ export interface CustomGenJob {
   totalCount: number;
   savedCount: number;
   skippedCount: number;
+  errorMessage: string | null;
+  gradeInfo: string | null;
+  createdAt: string;
+  completedAt: string | null;
+}
+
+export interface CustomTypeAnalysisJob {
+  id: string;
+  status: CustomGenJobStatus;
+  suggestedName: string | null;
+  createdTypeId: string | null;
   errorMessage: string | null;
   gradeInfo: string | null;
   createdAt: string;

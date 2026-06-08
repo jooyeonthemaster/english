@@ -14,6 +14,8 @@ export const questionGenerationJobBodySchema = z.object({
   clientRequestId: z.string().trim().min(1).max(80).optional(),
   // 참조 원본 문항 — 한 페이지(이미지 1장 또는 1페이지 PDF)만.
   images: z.array(imageSchema).min(1).max(1),
+  // 현재 활성 플로우는 사용자 수동 크롭이다. 기존 자동 bbox/crop 보강 코드는 보존하되 분석 단계에서 우회한다.
+  manualCrop: z.literal(true).optional().default(true),
   // 동형을 입힐 지문(from-drafts 로 등록된 passageId). M×N 생성이므로 1개 이상 필수.
   passageIds: z.array(z.string().trim().min(1).max(80)).min(1).max(100),
   gradeInfo: z.string().trim().max(40).optional(),
