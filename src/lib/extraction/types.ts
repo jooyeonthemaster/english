@@ -70,6 +70,27 @@ export interface ClientPageSlot {
   width: number;
   height: number;
   sourceFileName?: string | null;
+
+  // ── Adaptive intake — 크롭 라이프사이클 메타 (additive, 서버 업로드 시 무시됨) ──
+  /** 안정적 클라 식별자. 크롭 자식↔소스 그룹 참조에 사용. */
+  slotId?: string;
+  /** 슬롯 종류. original=업로드 원본 / source=크롭을 떠낸 원본(추출 제외) /
+   *  crop=잘라낸 단일 영역 / merged=이어붙인 한 지문. */
+  kind?: "original" | "source" | "crop" | "merged";
+  /** crop·merged: 출처 소스 슬롯의 slotId. */
+  sourceSlotId?: string;
+  /** crop: 몇 번째 영역인지 (1-based). */
+  regionIndex?: number;
+  /** merged: 이어붙인 영역 개수. */
+  regionCount?: number;
+  /** source: 추출에서 제외할지 (크롭 떠낸 원본은 기본 true). */
+  excludedFromExtraction?: boolean;
+  /** source: 떠낸 크롭 영역들(정규화 0~1). 재편집 프리로드 + 미리보기 오버레이용. */
+  cropRegions?: CropBox[];
+  /** source: cropRegions와 1:1 정렬된 지문 그룹 번호. 재편집 시 묶음 복원용. */
+  initialGroups?: number[];
+  /** merged(트레이 합치기): 이어붙인 재료 슬롯들의 slotId[] (읽기순). 되돌리기·중복방지용. */
+  mergedFromSlotIds?: string[];
 }
 
 /** Server-side snapshot of a job page (returned by GET /jobs/:id). */

@@ -34,6 +34,7 @@ import {
   UNSTRUCTURED_OUTPUT_INSTRUCTIONS,
   buildGenerationPrompt,
 } from "./prompts";
+import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
 
 export interface RunGenerationInput {
   plan: PlanResult["plan"];
@@ -165,6 +166,11 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "irrelevant-inserted-ungrammatical",
   "irrelevant-obvious-counterclaim-cue",
   "irrelevant-prescriptive-giveaway",
+  "sentence-insert-missing-passage",
+  "sentence-insert-gap-marker-count",
+  "sentence-insert-omitted-source-not-backed",
+  "sentence-insert-omitted-source-visible",
+  "sentence-insert-given-leaks-in-passage",
   // The softer giveaway gates below stay STRICT-only: strict retries away from
   // them, but the last-resort relaxed fallback may still ship one (flagged) so a
   // hard passage returns a usable item instead of failing with 0 questions.
@@ -173,6 +179,7 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "negative-paraphrase-stacked-prepositions",
   "negative-paraphrase-verb-slot-mismatch",
   "negative-paraphrase-modal-be-negated-complement",
+  "negative-paraphrase-no-subject-double-negation",
   "double-negative-clause-missing-subject",
   "double-negative-because-phrase-slot",
 ]);
@@ -251,8 +258,8 @@ export async function runQuestionGeneration(
       if (subType === "IRRELEVANT") {
         // The 무관한 문장 type is fixed at 5 slots (선지 개수 selector removed).
         // The post-processor preserves the full passage and marks exactly 5
-        // sentences — 4 verbatim originals + 1 inserted — with circled letters
-        // ⓐ–ⓔ, so there is no per-passage slot count to resolve any more.
+        // sentences — 4 verbatim originals + 1 inserted — with circled numbers
+        // ①–⑤, so there is no per-passage slot count to resolve any more.
         irrelevantSlotCount = 5;
         effectiveTypeSettings = {
           ...(isRecord(typeSettings?.[subType])
@@ -476,6 +483,9 @@ export async function runQuestionGeneration(
           `[AUTO-GEN] Failed ${subType}:`,
           err instanceof Error ? err.message : err,
         );
+        if (isNonRetryableQuestionGenerationProviderError(err)) {
+          throw err;
+        }
         recordRejection(rejectionRecorder, {
           phase: "model",
           qualityMode,
@@ -528,6 +538,30 @@ function buildRejectionSample(
   subType: string,
   question: Record<string, unknown>,
 ): Record<string, unknown> | undefined {
+  if (subType === "GRAMMAR_ERROR") {
+    const markedExpressions = Array.isArray(question.markedExpressions)
+      ? question.markedExpressions
+          .filter(isRecord)
+          .map((item) => ({
+            label: item.label,
+            expression: item.expression,
+            isError: item.isError,
+            errorExpression: item.errorExpression,
+          }))
+      : [];
+    const passageWithMarkers =
+      typeof question.passageWithMarkers === "string"
+        ? question.passageWithMarkers
+        : "";
+
+    return {
+      markedCount: markedExpressions.length,
+      renderedMarkerCount: (passageWithMarkers.match(/__[^_]+__/g) ?? []).length,
+      markedExpressions,
+      passageWithMarkersPreview: passageWithMarkers.slice(0, 300),
+    };
+  }
+
   if (subType !== "IRRELEVANT") return undefined;
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.filter((sentence): sentence is string => typeof sentence === "string")

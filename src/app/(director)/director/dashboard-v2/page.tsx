@@ -75,7 +75,7 @@ const workflowSteps: WorkflowStep[] = [
   },
   {
     step: 2,
-    title: "지문 분석",
+    title: "학습지 생성",
     count: "2 / 5",
     helper: "개 분석 완료",
     href: "/director/workbench/passages/create",
@@ -111,7 +111,7 @@ const workflowSteps: WorkflowStep[] = [
 const jobs: JobItem[] = [
   {
     title: "2026-중2-1과 분석",
-    status: "지문 분석 중",
+    status: "학습지 생성 중",
     progress: 68,
     meta: "남은 시간 2분",
     tone: "blue",
@@ -147,7 +147,7 @@ const alerts: AlertItem[] = [
   },
   {
     title: "완료",
-    body: "2026-중1-3과 지문 분석이 완료되었습니다.",
+    body: "2026-중1-3과 학습지 생성이 완료되었습니다.",
     time: "1시간 전",
     tone: "emerald",
   },
@@ -280,7 +280,7 @@ function NextActionPanel() {
         <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_86px] md:items-center">
           <div>
             <h2 className="text-[19px] font-black leading-tight">
-              지문 분석 시작하기
+              학습지 생성 시작하기
             </h2>
             <p className="mt-1 text-[12px] font-medium leading-5 text-emerald-50">
               업로드된 2개 자료를 분석해 문제 생성 준비를 마무리하세요.
@@ -309,7 +309,7 @@ function NextActionPanel() {
             href="/director/workbench/passages/create"
             className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-[12px] font-bold text-white transition-colors hover:bg-blue-700"
           >
-            지문 분석 시작
+            학습지 생성 시작
             <ArrowRight className="size-4" />
           </Link>
           <Link

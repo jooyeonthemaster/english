@@ -110,7 +110,7 @@ function StaffLoginForm() {
     }
     
     if (callbackUrl) router.push(callbackUrl);
-    else if (role === "DIRECTOR") router.push("/director");
+    else if (role === "DIRECTOR") router.push("/director/workbench/questions/generate");
     else router.push("/teacher");
     router.refresh();
   }

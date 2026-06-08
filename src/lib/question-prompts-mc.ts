@@ -101,6 +101,9 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 ## 핵심 규칙
 1. 지문에서 핵심 어휘 5개를 선택합니다 (label "(a)"~"(e)")
 2. 그 중 정확히 하나를 문맥상 부적절한 단어로 교체합니다
+3. 원문은 기본적으로 맞는 글이라고 가정합니다. 원문 단어 자체를 "부적절"하다고 판정하지 말고, 반드시 원문 단어 하나를 다른 단어로 바꿔서 부적절하게 만드세요.
+4. isInappropriate=true 항목의 표시 단어는 항상 substituteWord입니다. betterWord는 항상 원래 지문에 있던 originalWord와 완전히 같아야 합니다.
+5. 예: 원문이 "presence of cues"라면 originalWord="presence", substituteWord="absence", betterWord="presence"입니다. "presence -> absence"처럼 원문 정답을 오답으로 뒤집으면 실패입니다.
 
 ## 출력 필드
 - markedWords: 5개 배열. 각 항목:
@@ -111,6 +114,8 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
   - substituteWord: isInappropriate가 true인 경우, 문맥상 부적절한 대체 단어
   - betterWord: isInappropriate가 true인 경우, 원래 적절한 단어 (= originalWord와 동일)
 - options: label "(a)"~"(e)", text는 표시될 단어 (적절한 것은 originalWord, 부적절한 것은 substituteWord)
+- correctAnswer: isInappropriate=true인 항목의 label 하나만 작성
+- 자체 검증: 5개 markedWords, 정확히 1개 isInappropriate=true, substituteWord != originalWord, betterWord == originalWord, correctAnswer == isInappropriate label
 - ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?"`,
 
@@ -389,13 +394,13 @@ direction은 반드시 다음 문장으로 작성합니다.
 - 극단어·처방문·어색한 영어·노골적 반대 주장으로 바로 들키지는 않는가?
 
 ## 최종 렌더링 방식 (참고)
-서버는 원문 지문 전체를 유지한 채, sentences로 고른 5개 문장(원문 4 + 삽입 무관문 1)을 각 원문 위치에 ⓐⓑⓒⓓⓔ 마커 + 밑줄로 표시하고, 나머지 문장(도입·중간 문맥·뒷 문맥)은 표시 없이 그대로 둡니다. 선지는 ① ⓐ · ② ⓑ … 처럼 번호→알파벳으로 자동 생성됩니다.
+서버는 원문 지문 전체를 유지한 채, sentences로 고른 5개 문장(원문 4 + 삽입 무관문 1)을 각 원문 위치에 ①②③④⑤ 마커 + 밑줄로 표시하고, 나머지 문장(도입·중간 문맥·뒷 문맥)은 표시 없이 그대로 둡니다. 시험지에서는 별도 선택지 목록 없이 본문 안 숫자 마커만 사용합니다.
 
 ## 출력 필드
 - sentences: 정확히 5개(원문 등장 순서). 4개는 지문 전체에 분산된 원문 실제 문장, 1개는 삽입 무관문(가운데, irrelevantIndex 위치).
 - irrelevantIndex: 1·2·3 중 하나(첫/마지막 금지, ②③④ 분산).
 - wrongOptionExplanations: 정답이 아닌 4문장이 문단에서 맡는 역할(도입·정의·예시·대조·결론 등)을 각각 설명. 4개.
 - explanation/keyPoints에서 정답을 가리킬 때 ①②③ 같은 선지 번호로 부르지 말고 "무관한 문장은 ~한 점에서 흐름과 어긋난다"처럼 내용으로 설명하세요(번호 불일치 방지). 또한 무관문이 바로 앞 원문 문장과 사실관계로 모순되게(예: 앞 문장이 '색이 바랜다'인데 '선명한 색을 유지한다') 만들지 말고, 사실은 그럴듯하되 논리 기능만 어긋나게 하세요.
-- ⚠️ options / passageWithNumbers 필드는 신경 쓰지 마세요. 마커(ⓐ~ⓔ)·밑줄·번호→알파벳 선지·표시 지문은 모두 서버에서 자동 생성됩니다.
+- ⚠️ options / passageWithNumbers 필드는 신경 쓰지 마세요. 숫자 마커(①~⑤)·밑줄·표시 지문은 모두 서버에서 자동 생성됩니다.
 - direction 예시: "다음 글에서 전체 흐름과 관계 없는 문장은?"`,
 };

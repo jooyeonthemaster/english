@@ -2,7 +2,14 @@
 
 import { useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { ClipboardList, Grid2X2, Grid3X3, List, RefreshCw } from "lucide-react";
+import {
+  ClipboardList,
+  Grid2X2,
+  Grid3X3,
+  List,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import type { QueuedPassage } from "@/hooks/use-passage-queue";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import {
@@ -129,6 +136,16 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
       setCollectionPassageIds: p.setCollectionPassageIds,
       clearSelection: p.clearSelection,
     });
+  // 선택한 지문을 목록에서 일괄 삭제(로컬 큐에서 제거).
+  const handleDeleteSelected = () => {
+    if (selectedCount === 0) return;
+    if (
+      !window.confirm(`선택한 ${selectedCount}개 지문을 목록에서 삭제할까요?`)
+    )
+      return;
+    p.selectedIds.forEach((id) => p.removeFromQueue(id));
+    p.clearSelection();
+  };
 
   return (
     <div className="min-w-0">
@@ -174,6 +191,18 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
               </span>
             </div>
             <div className="flex shrink-0 items-center gap-2">
+              {/* 삭제 — 선택한 지문을 목록에서 제거(선택이 없으면 비활성) */}
+              <button
+                type="button"
+                onClick={handleDeleteSelected}
+                disabled={selectedCount === 0}
+                title="선택 삭제"
+                aria-label="선택 삭제"
+                className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-rose-200 bg-white px-2.5 text-[11px] font-medium text-rose-600 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                삭제
+              </button>
               {/* 이동 / 복사 — 상시 표시(선택이 없으면 비활성) */}
               <MoveOrCopyFolderPicker
                 collections={adaptedCollections}

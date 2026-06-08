@@ -1,5 +1,4 @@
 import {
-  getCircledLetters,
   getCircledNumbers,
   type PostProcessResult,
   type QuestionPostProcessData,
@@ -249,10 +248,9 @@ export function processIrrelevant(
   // letter (ⓐ ⓑ ⓒ …) that marks its sentence inside the passage — the 내신
   // 변형형 layout from the reference.
   const numbers = getCircledNumbers(repairedSentences.length);
-  const letters = getCircledLetters(repairedSentences.length);
   const normalizedOptions = numbers.map((label, i) => ({
     label,
-    text: letters[i] ?? label,
+    text: numbers[i] ?? label,
   }));
   const expectedAnswer = numbers[irrelevantIndex] ?? String(irrelevantIndex + 1);
   const wrongOptionExplanations = alignIrrelevantWrongOptionExplanations(
@@ -270,9 +268,9 @@ export function processIrrelevant(
         repairedSentences,
         irrelevantIndex,
         sourcePassageIndexBySlot,
-        letters,
+        numbers,
       )
-    : buildFallbackMarkedPassage(repairedSentences, passageSentences, letters);
+    : buildFallbackMarkedPassage(repairedSentences, passageSentences, numbers);
 
   return {
     success: true,
@@ -302,7 +300,7 @@ function buildSpreadMarkedPassage(
   slots: string[],
   irrelevantIndex: number,
   sourcePassageIndexBySlot: Map<number, number>,
-  letters: string[],
+  markers: string[],
 ): string {
   const slotByPassageIndex = new Map<number, number>();
   for (const [slot, pIdx] of sourcePassageIndexBySlot) {
@@ -311,9 +309,9 @@ function buildSpreadMarkedPassage(
   // Insert the irrelevant sentence right after the source that precedes it.
   const insertAfter = sourcePassageIndexBySlot.get(irrelevantIndex - 1);
 
-  let letterCursor = 0;
+  let markerCursor = 0;
   const mark = (text: string) =>
-    `${letters[letterCursor++] ?? ""} __${stripLeadingChoiceMarker(text.trim())}__`.trim();
+    `${markers[markerCursor++] ?? ""} __${stripLeadingChoiceMarker(text.trim())}__`.trim();
 
   const out: string[] = [];
   for (let i = 0; i < passageSentences.length; i++) {
@@ -334,12 +332,12 @@ function buildSpreadMarkedPassage(
 function buildFallbackMarkedPassage(
   slots: string[],
   passageSentences: string[],
-  letters: string[],
+  markers: string[],
 ): string {
   const intro = passageSentences[0]?.trim() ?? "";
   const block = slots.map(
     (sentence, index) =>
-      `${letters[index] ?? ""} __${stripLeadingChoiceMarker(sentence.trim())}__`.trim(),
+      `${markers[index] ?? ""} __${stripLeadingChoiceMarker(sentence.trim())}__`.trim(),
   );
   return [intro, ...block].filter(Boolean).join(" ");
 }

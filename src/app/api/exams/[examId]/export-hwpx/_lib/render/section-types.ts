@@ -3,24 +3,11 @@
  * DOCX 의 render-section-boxes / render-section-inline 와 동일한 시각 구조.
  */
 
-import type { BlockNode, BorderSpec, ParagraphNode, RunNode } from "../types";
+import type { BlockNode, ParagraphNode, RunNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
 import { parseFormattedToRuns } from "../format";
 import type { ParsedSection } from "@/app/api/exams/[examId]/export-docx/_lib/types";
-
-const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
-const BOX: BorderSpec = { type: "SOLID", widthMm: 0.15, color: COLORS.black };
-const ERROR_LEFT: BorderSpec = {
-  type: "SOLID",
-  widthMm: 0.6,
-  color: COLORS.errorLeft,
-};
-const PASSAGE_BOX: BorderSpec = {
-  type: "SOLID",
-  widthMm: 0.15,
-  color: COLORS.darkGray,
-};
 
 function labelPara(label: string): ParagraphNode {
   return {
@@ -62,41 +49,8 @@ function bodyParas(content: string): ParagraphNode[] {
   });
 }
 
-function boxed(
-  content: string,
-  contentWidthHpu: number,
-  border: BorderSpec,
-  margins = { left: 240, right: 240, top: 180, bottom: 180 },
-): BlockNode[] {
-  return [
-    {
-      kind: "tbl",
-      colWidthsHpu: [contentWidthHpu],
-      borders: { left: border, right: border, top: border, bottom: border },
-      cellMargins: margins,
-      rows: [
-        {
-          heightHpu: 1,
-          cells: [
-            {
-              widthHpu: contentWidthHpu,
-              heightHpu: 1,
-              vAlign: "TOP",
-              borders: {
-                left: border,
-                right: border,
-                top: border,
-                bottom: border,
-              },
-              margins,
-              blocks: bodyParas(content),
-            },
-          ],
-        },
-      ],
-    },
-    { kind: "p", style: { spaceAfter: 120 }, runs: [] },
-  ];
+function textBlock(content: string): BlockNode[] {
+  return [...bodyParas(content), { kind: "p", style: { spaceAfter: 120 }, runs: [] }];
 }
 
 // =============================================================================
@@ -107,9 +61,10 @@ export function renderMarker(
   section: ParsedSection,
   contentWidthHpu: number,
 ): BlockNode[] {
+  void contentWidthHpu;
   const result: BlockNode[] = [];
   if (section.label) result.push(labelPara(section.label));
-  result.push(...boxed(section.content, contentWidthHpu, BOX));
+  result.push(...textBlock(section.content));
   return result;
 }
 
@@ -140,31 +95,10 @@ export function renderError(
   section: ParsedSection,
   contentWidthHpu: number,
 ): BlockNode[] {
+  void contentWidthHpu;
   const result: BlockNode[] = [];
   if (section.label) result.push(labelPara(section.label));
-  // 왼쪽에만 빨간 두꺼운 보더
-  result.push({
-    kind: "tbl",
-    colWidthsHpu: [contentWidthHpu],
-    borders: { left: ERROR_LEFT, right: NO, top: NO, bottom: NO },
-    cellMargins: { left: 240, right: 0, top: 60, bottom: 60 },
-    rows: [
-      {
-        heightHpu: 1,
-        cells: [
-          {
-            widthHpu: contentWidthHpu,
-            heightHpu: 1,
-            vAlign: "TOP",
-            borders: { left: ERROR_LEFT, right: NO, top: NO, bottom: NO },
-            margins: { left: 240, right: 0, top: 60, bottom: 60 },
-            blocks: bodyParas(section.content),
-          },
-        ],
-      },
-    ],
-  });
-  result.push({ kind: "p", style: { spaceAfter: 120 }, runs: [] });
+  result.push(...textBlock(section.content));
   return result;
 }
 
@@ -172,9 +106,10 @@ export function renderSummary(
   section: ParsedSection,
   contentWidthHpu: number,
 ): BlockNode[] {
+  void contentWidthHpu;
   const result: BlockNode[] = [];
   if (section.label) result.push(labelPara(section.label));
-  result.push(...boxed(section.content, contentWidthHpu, PASSAGE_BOX));
+  result.push(...textBlock(section.content));
   return result;
 }
 

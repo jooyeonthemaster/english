@@ -3,6 +3,7 @@
 // ============================================================================
 // CropCanvas — direct-manipulation image crop tool (adaptive-intake G2).
 //   • 빈 영역 드래그 = 새 영역 그리기
+//   • Shift+빈 영역 드래그 = 활성 지문 그룹에 새 영역 이어붙이기
 //   • 영역 내부 드래그 = 이동
 //   • 8핸들 드래그 = 리사이즈
 //   • 키보드: 화살표 이동(±1%) / Shift+화살표(±5%) / Alt+화살표 리사이즈 / Del 삭제
@@ -10,7 +11,7 @@
 // 톤: slate-700 라인 + blue-600 액티브. 주황/Sparkles 금지.
 // ============================================================================
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import type { CropBox } from "@/lib/extraction/types";
 import {
@@ -29,9 +30,19 @@ const NUDGE_SMALL = 0.01;
 const NUDGE_LARGE = 0.05;
 
 type DragState =
-  | { mode: "draw"; originX: number; originY: number }
+  | {
+      mode: "draw";
+      originX: number;
+      originY: number;
+      joinWithActiveGroup: boolean;
+    }
   | { mode: "move"; index: number; grabX: number; grabY: number; start: CropBox }
   | { mode: "resize"; index: number; handle: ResizeHandle };
+
+export interface CropCanvasChangeMeta {
+  action: "create";
+  joinWithActiveGroup: boolean;
+}
 
 const HANDLE_CURSOR: Record<ResizeHandle, string> = {
   nw: "nwse-resize",
@@ -63,21 +74,38 @@ export function CropCanvas({
   activeIndex,
   onActiveIndexChange,
   disabled = false,
+  regionLabels,
+  fit = "contain",
 }: {
   imageUrl: string;
   boxes: CropBox[];
-  onChange: (next: CropBox[]) => void;
+  onChange: (next: CropBox[], meta?: CropCanvasChangeMeta) => void;
   activeIndex: number | null;
   onActiveIndexChange: (index: number | null) => void;
   disabled?: boolean;
+  /** 영역 배지에 표시할 라벨(없으면 1-based 순번). 지문 그룹 번호 표시용. */
+  regionLabels?: string[];
+  /**
+   * 이미지 맞춤 방식.
+   * - "contain"(기본·모달): 부모 높이에 맞춰 중앙 정렬, 최대 68vh. 좌우 여백 생김.
+   * - "width"(인라인 보드): 컬럼 폭을 꽉 채우고 높이는 비율대로. 페이지가 크게 보임.
+   */
+  fit?: "contain" | "width";
 }) {
+  const isWidthFit = fit === "width";
   const wrapperRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
-  // 드로잉 중 임시 박스(아직 boxes에 커밋 안 됨).
+  // 드로잉 중 임시 박스(아직 boxes에 커밋 안 됨). 그리는 동안엔 부모 onChange를
+  // 호출하지 않고 이 컴포넌트 안에서만 미리보기로 렌더한다 → 보드 전체 리렌더·
+  // "지문 N" 카운트 깜빡임(release 전) 방지. 커밋은 pointerup 1회.
   const draftRef = useRef<CropBox | null>(null);
+  const [draft, setDraft] = useState<CropBox | null>(null);
   const rafRef = useRef(0);
 
-  const maskId = "crop-scrim-mask";
+  // 인스턴스마다 고유 mask id — 같은 id를 여러 CropCanvas가 쓰면 url(#id)가
+  // 문서 첫 mask(=첫 이미지 박스)로 해석돼 첫 페이지 크롭이 다음 페이지 스크림에
+  // 비치는 버그가 난다. useId로 캔버스마다 분리한다.
+  const maskId = useId();
 
   const readRect = useCallback(() => {
     return wrapperRef.current?.getBoundingClientRect() ?? null;
@@ -101,9 +129,10 @@ export function CropCanvas({
           const { x: nx, y: ny } = toNormalized(ev.clientX, ev.clientY, r);
 
           if (drag.mode === "draw") {
-            draftRef.current = rectFromPoints(drag.originX, drag.originY, nx, ny);
-            // 라이브 미리보기: draft를 마지막 박스로 임시 렌더하기 위해 onChange 호출
-            onChange([...boxes, clampCropBox(draftRef.current, 0)]);
+            // 미리보기는 로컬 draft로만(onChange 미호출). boxes/groups·카운트 불변.
+            const next = rectFromPoints(drag.originX, drag.originY, nx, ny);
+            draftRef.current = next;
+            setDraft(clampCropBox(next, 0));
           } else if (drag.mode === "move") {
             const dx = nx - drag.grabX;
             const dy = ny - drag.grabY;
@@ -130,13 +159,15 @@ export function CropCanvas({
         if (drag?.mode === "draw") {
           const d = draftRef.current;
           draftRef.current = null;
+          setDraft(null);
+          // 충분히 큰 영역만 커밋(작으면 단순 클릭 → 아무것도 추가 안 함).
           if (d && d.w >= DRAW_THRESHOLD && d.h >= DRAW_THRESHOLD) {
             const committed = [...boxes, clampCropBox(d)];
-            onChange(committed);
+            onChange(committed, {
+              action: "create",
+              joinWithActiveGroup: drag.joinWithActiveGroup,
+            });
             onActiveIndexChange(committed.length - 1);
-          } else {
-            // 너무 작으면 방금 라이브로 추가했던 draft 제거
-            onChange(boxes);
           }
         }
         dragRef.current = null;
@@ -158,8 +189,13 @@ export function CropCanvas({
       if (!rect) return;
       e.preventDefault();
       const { x, y } = toNormalized(e.clientX, e.clientY, rect);
-      onActiveIndexChange(null);
-      beginDrag({ mode: "draw", originX: x, originY: y });
+      if (!e.shiftKey) onActiveIndexChange(null);
+      beginDrag({
+        mode: "draw",
+        originX: x,
+        originY: y,
+        joinWithActiveGroup: e.shiftKey,
+      });
     },
     [beginDrag, disabled, onActiveIndexChange, readRect],
   );
@@ -259,50 +295,78 @@ export function CropCanvas({
 
   return (
     <div
-      className="relative flex h-full w-full items-center justify-center overflow-hidden bg-slate-900/5"
+      className={
+        isWidthFit
+          ? "relative w-full bg-slate-900/5"
+          : "relative flex h-full w-full items-center justify-center overflow-hidden bg-slate-900/5"
+      }
       role="application"
       aria-label="이미지 크롭 영역 선택"
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
-      <div ref={wrapperRef} className="relative inline-block leading-none select-none">
+      <div
+        ref={wrapperRef}
+        className={
+          isWidthFit
+            ? "relative block w-full leading-none select-none"
+            : "relative inline-block leading-none select-none"
+        }
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageUrl}
           alt="크롭 대상 이미지"
-          className="block max-h-[68vh] max-w-full w-auto object-contain"
+          className={
+            isWidthFit
+              ? "block h-auto w-full object-contain"
+              : "block max-h-[68vh] max-w-full w-auto object-contain"
+          }
           draggable={false}
         />
 
-        {/* 스크림 — 선택영역 밖을 어둡게 (SVG mask로 다중 영역 구멍) */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          aria-hidden="true"
-        >
-          <defs>
-            <mask id={maskId}>
-              <rect x="0" y="0" width="100%" height="100%" fill="white" />
-              {boxes.map((b, i) => (
-                <rect
-                  key={i}
-                  x={`${b.x * 100}%`}
-                  y={`${b.y * 100}%`}
-                  width={`${b.w * 100}%`}
-                  height={`${b.h * 100}%`}
-                  fill="black"
-                />
-              ))}
-            </mask>
-          </defs>
-          <rect
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="rgba(15, 23, 42, 0.55)"
-            mask={`url(#${maskId})`}
-          />
-        </svg>
+        {/* 스크림 — 선택영역 밖을 옅게 (SVG mask로 다중 영역 구멍).
+            영역이 하나도 없을 땐 이미지·커서가 잘 보이도록 덮지 않는다.
+            그리는 중인 draft도 구멍으로 포함해 미리보기를 자연스럽게. */}
+        {boxes.length > 0 || draft ? (
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full"
+            aria-hidden="true"
+          >
+            <defs>
+              <mask id={maskId}>
+                <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                {boxes.map((b, i) => (
+                  <rect
+                    key={i}
+                    x={`${b.x * 100}%`}
+                    y={`${b.y * 100}%`}
+                    width={`${b.w * 100}%`}
+                    height={`${b.h * 100}%`}
+                    fill="black"
+                  />
+                ))}
+                {draft ? (
+                  <rect
+                    x={`${draft.x * 100}%`}
+                    y={`${draft.y * 100}%`}
+                    width={`${draft.w * 100}%`}
+                    height={`${draft.h * 100}%`}
+                    fill="black"
+                  />
+                ) : null}
+              </mask>
+            </defs>
+            <rect
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              fill="rgba(15, 23, 42, 0.42)"
+              mask={`url(#${maskId})`}
+            />
+          </svg>
+        ) : null}
 
         {/* 드로잉 캡처 레이어 (빈 곳 드래그) */}
         <div
@@ -320,7 +384,7 @@ export function CropCanvas({
             <div
               key={index}
               role="button"
-              tabIndex={0}
+              tabIndex={active ? 0 : -1}
               aria-label={`크롭 영역 ${index + 1}`}
               onFocus={() => onActiveIndexChange(index)}
               onPointerDown={(e) => handleBoxPointerDown(e, index)}
@@ -333,9 +397,9 @@ export function CropCanvas({
                   : "border border-blue-400/80 hover:border-blue-500")
               }
             >
-              {/* 영역 번호 배지 */}
+              {/* 영역 배지 — 지문 그룹 라벨(없으면 순번) */}
               <span className="absolute -left-px -top-px rounded-br bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
-                {index + 1}
+                {regionLabels?.[index] ?? index + 1}
               </span>
 
               {/* 8핸들 (활성일 때만) */}
@@ -357,6 +421,15 @@ export function CropCanvas({
             </div>
           );
         })}
+
+        {/* 그리는 중인 draft 미리보기(아직 미커밋) — pointerup에 커밋된다. */}
+        {draft ? (
+          <div
+            style={cropBoxToStyle(draft)}
+            className="pointer-events-none absolute box-border border-2 border-dashed border-blue-500 bg-blue-400/5"
+            aria-hidden="true"
+          />
+        ) : null}
       </div>
     </div>
   );

@@ -7,11 +7,8 @@ import {
   BookOpen,
   BookOpenCheck,
   Bot,
-  CheckCircle2,
   ChevronRight,
   Circle,
-  Eye,
-  EyeOff,
   HelpCircle,
   Home,
   MessageCircleQuestion,
@@ -29,7 +26,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { Textarea } from "@/components/ui/textarea";
 import {
   labelTutorActivityType,
   labelTutorMode,
@@ -82,18 +78,6 @@ type EmulatorProgram = {
     }>;
   }>;
 };
-
-const multipleChoiceTypes = new Set([
-  "vocab_choice",
-  "gist_select",
-  "paraphrase_mc",
-  "contextual_meaning",
-  "collocation_select",
-  "grammar_binary",
-  "insertion_point",
-  "irrelevant_sentence",
-  "mastery_test",
-]);
 
 export function TutorProgramEmulatorClient({
   academyName,
@@ -952,186 +936,6 @@ function CoachPreview({ lesson }: { lesson: EmulatorProgram["lessons"][number] }
   );
 }
 
-function PassageStrip({ title, content, showPassage, onToggle }: { title: string; content: string; showPassage: boolean; onToggle: () => void }) {
-  return (
-    <section className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-[10px] font-bold tracking-wide text-slate-400">PASSAGE</p>
-          <p className="line-clamp-1 text-[12.5px] font-bold text-slate-900">{title}</p>
-        </div>
-        <button type="button" onClick={onToggle} className="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-slate-100 px-2.5 text-[11px] font-bold text-slate-600 active:bg-slate-200">
-          {showPassage ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-          {showPassage ? "가리기" : "원문 보기"}
-        </button>
-      </div>
-      {showPassage ? (
-        <p className="max-h-44 overflow-y-auto whitespace-pre-wrap border-l-2 border-slate-100 pl-3 font-mono text-[12.5px] font-medium leading-6 text-slate-700">
-          {content}
-        </p>
-      ) : (
-        <p className="border-l-2 border-dashed border-slate-200 pl-3 text-[11.5px] font-medium leading-6 text-slate-400">
-          원문을 가리고 기억으로 풀어보는 모드입니다.
-        </p>
-      )}
-    </section>
-  );
-}
-
-function ChoiceQuestion({ activityType, prompt, payload, options, selected, feedback, onSelect }: any) {
-  return (
-    <div className="space-y-3">
-      <QuestionPrompt activityType={activityType} prompt={prompt} payload={payload} />
-      <div className="grid gap-1.5">
-        {options.map((option: unknown, index: number) => {
-          const detail = optionDetail(option);
-          const active = selected === index;
-          return (
-            <button
-              key={`${optionLabel(option, index)}-${index}`}
-              type="button"
-              disabled={feedback}
-              onClick={() => onSelect(index)}
-              className={cn(
-                "rounded-xl border px-3 py-2.5 text-left text-[13px] font-bold leading-5 transition",
-                active ? "border-blue-500 bg-blue-50/60 text-blue-800" : "border-slate-100 bg-white text-slate-700 active:border-blue-200",
-              )}
-            >
-              <span className="block">{optionLabel(option, index)}</span>
-              {detail && (
-                <span className="mt-1 block text-[11px] font-medium leading-5 text-slate-500">
-                  <span className="block">앞: {detail.before}</span>
-                  <span className="block">뒤: {detail.after}</span>
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function OrderQuestion({ orderItems, selectedOrder, onToggle }: any) {
-  return (
-    <div className="space-y-3">
-      <div>
-        <p className="mb-1.5 text-[10px] font-bold tracking-wide text-blue-600">내가 만든 순서</p>
-        <div className="flex flex-wrap gap-1.5 border-l-2 border-blue-200 pl-2.5">
-          {selectedOrder.length === 0 ? (
-            <span className="text-[12px] font-medium text-slate-400">아래 문장을 순서대로 누르세요.</span>
-          ) : (
-            selectedOrder.map((index: number, orderIndex: number) => (
-              <button key={`${index}-${orderIndex}`} type="button" onClick={() => onToggle(index)} className="rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-700">
-                {orderIndex + 1}. 문장 {index + 1}
-              </button>
-            ))
-          )}
-        </div>
-      </div>
-      <div className="grid gap-1.5">
-        {orderItems.map((item: any) => {
-          const pickedIndex = selectedOrder.indexOf(item.index);
-          const active = pickedIndex >= 0;
-          return (
-            <button key={item.index} type="button" onClick={() => onToggle(item.index)} className={cn("rounded-xl border px-3 py-2.5 text-left transition", active ? "border-blue-300 bg-blue-50/60" : "border-slate-100 bg-white active:border-blue-200")}>
-              <span className="block text-[10px] font-bold text-slate-400">{active ? `${pickedIndex + 1}번째 선택` : "순서에 추가"}</span>
-              <span className="mt-0.5 block font-mono text-[12.5px] font-medium leading-6 text-slate-800">{item.text}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function VocabMatchQuestion({ leftItems, rightItems, matches, feedback, onMatch }: any) {
-  return (
-    <div className="space-y-3">
-      <p className="text-[12px] font-medium text-slate-500">영단어와 한국어 뜻을 하나씩 연결하세요.</p>
-      <div className="space-y-3">
-        {leftItems.map((left: string) => (
-          <div key={left} className="border-l-2 border-slate-100 pl-3">
-            <p className="mb-1.5 font-mono text-[13.5px] font-bold text-slate-900">{left}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {rightItems.map((right: string) => (
-                <button key={`${left}-${right}`} type="button" disabled={feedback} onClick={() => onMatch(left, right)} className={cn("rounded-md border px-2 py-1 text-[11px] font-bold transition", matches[left] === right ? "border-blue-500 bg-blue-50 text-blue-700" : "border-slate-100 bg-white text-slate-600 active:border-blue-200")}>
-                  {right}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ChunkQuestion({ chunks, selectedChunkIds, selectedChunkText, onToggle }: any) {
-  return (
-    <div className="space-y-3">
-      <div>
-        <p className="mb-1.5 text-[10px] font-bold tracking-wide text-blue-600">완성한 문장</p>
-        <div className="flex flex-wrap gap-1.5 border-l-2 border-blue-200 pl-2.5">
-          {selectedChunkIds.length === 0 ? (
-            <span className="text-[12px] font-medium text-slate-400">아래 조각을 원문 순서대로 누르세요.</span>
-          ) : (
-            selectedChunkText.map((chunk: string, index: number) => (
-              <button key={`${chunk}-${index}`} type="button" onClick={() => onToggle(selectedChunkIds[index])} className="rounded-md bg-blue-600 px-2 py-1 font-mono text-[11px] font-bold text-white">
-                {chunk}
-              </button>
-            ))
-          )}
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-1.5">
-        {chunks.map((chunk: string, index: number) => {
-          const picked = selectedChunkIds.includes(index);
-          return (
-            <button key={`${chunk}-${index}`} type="button" disabled={picked} onClick={() => onToggle(index)} className={cn("rounded-md border px-2 py-1 font-mono text-[12px] font-bold transition", picked ? "cursor-not-allowed border-slate-100 bg-slate-50 text-slate-300" : "border-slate-200 bg-white text-slate-700 active:border-blue-300 active:bg-blue-50")}>
-              {chunk}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function FreeFormQuestion({ activityType, prompt, answer, setAnswer, disabled }: any) {
-  const isTextarea = activityType === "sentence_translate" || activityType === "structure_transform";
-  return (
-    <div className="space-y-2.5">
-      <p className="break-words border-l-2 border-slate-200 pl-3 font-mono text-[13.5px] font-bold leading-7 text-slate-900">{prompt}</p>
-      {isTextarea ? (
-        <Textarea value={answer} onChange={(event) => setAnswer(event.target.value)} placeholder="답을 입력하세요." className="min-h-24 rounded-xl border-slate-200 bg-white text-[13.5px] leading-6" disabled={disabled} />
-      ) : (
-        <Input value={answer} onChange={(event) => setAnswer(event.target.value)} placeholder="답 입력" className="h-11 rounded-xl border-slate-200 text-[13.5px]" disabled={disabled} />
-      )}
-    </div>
-  );
-}
-
-function QuestionPrompt({ activityType, prompt, payload }: any) {
-  if (activityType === "vocab_choice" || activityType === "contextual_meaning" || activityType === "collocation_select") {
-    return (
-      <div className="border-l-2 border-slate-200 pl-3">
-        <p className="font-mono text-xl font-bold leading-7 text-slate-900">{String(payload.stem ?? prompt)}</p>
-        {payload.sentenceIndex !== undefined && <p className="mt-1 text-[10px] font-bold text-slate-400">문장 {Number(payload.sentenceIndex) + 1} 기반</p>}
-      </div>
-    );
-  }
-  if (activityType === "insertion_point") {
-    return (
-      <div className="border-l-2 border-blue-300 pl-3">
-        <p className="mb-1 text-[10px] font-bold text-blue-600">제시문</p>
-        <p className="font-mono text-[13.5px] font-bold leading-7 text-slate-900">{String(payload.targetSentence ?? prompt)}</p>
-      </div>
-    );
-  }
-  return <p className="break-words border-l-2 border-slate-200 pl-3 font-mono text-[13.5px] font-bold leading-7 text-slate-900">{prompt}</p>;
-}
-
 function HeroMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/10 px-3 py-3">
@@ -1200,29 +1004,4 @@ function ChatBubble({ role, text }: { role: "assistant" | "student"; text: strin
 
 function Label({ text }: { text: string }) {
   return <p className="text-[11px] font-black uppercase text-slate-400">{text}</p>;
-}
-
-function stringArray(value: unknown) {
-  return Array.isArray(value) ? value.map((item) => String(item)).filter(Boolean) : [];
-}
-
-function recordArray(value: unknown) {
-  return Array.isArray(value)
-    ? value.map((item) => (item && typeof item === "object" ? (item as Record<string, unknown>) : {}))
-    : [];
-}
-
-function optionLabel(option: unknown, index: number) {
-  if (!option || typeof option !== "object") return String(option ?? "");
-  const record = option as Record<string, unknown>;
-  return String(record.label ?? `${index + 1}번 위치`);
-}
-
-function optionDetail(option: unknown) {
-  if (!option || typeof option !== "object") return null;
-  const record = option as Record<string, unknown>;
-  const before = String(record.before ?? "");
-  const after = String(record.after ?? "");
-  if (!before && !after) return null;
-  return { before, after };
 }

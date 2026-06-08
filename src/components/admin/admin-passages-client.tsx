@@ -103,7 +103,7 @@ export function AdminPassagesClient({ passages, academyId }: Props) {
           <ArrowLeft className="w-4 h-4 text-slate-500" />
         </Link>
         <BookOpen className="w-4.5 h-4.5 text-blue-600 shrink-0" />
-        <h1 className="text-[15px] font-bold text-slate-900">지문 관리</h1>
+        <h1 className="text-[15px] font-bold text-slate-900">학습지 관리</h1>
         <span className="text-[12px] text-slate-400">
           {passages.length}개
         </span>

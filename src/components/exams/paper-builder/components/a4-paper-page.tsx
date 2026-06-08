@@ -22,7 +22,6 @@ import {
   questionStemAndBody,
   recombineQuestionText,
 } from "../question-body-layout";
-import { questionHasEmbeddedPassage } from "../passage-policy";
 import { TEMPLATE_VISUALS } from "../templates";
 import type {
   Density,
@@ -64,14 +63,12 @@ function StructuredBody({
   compact,
   withTopGap,
   visualQuestionClass,
-  passageStyle,
 }: {
   rows: StructRow[];
   subType: string | null;
   compact: boolean;
   withTopGap: boolean;
   visualQuestionClass: string;
-  passageStyle: PassageStyle;
 }) {
   if (rows.length === 0) return null;
 
@@ -116,20 +113,14 @@ function StructuredBody({
 
         if (group.style === "passage" || group.style === "summary" || group.style === "given") {
           const isSourcePassage = group.style === "passage";
-          const boxTone =
-            isSourcePassage
-              ? "border-slate-400 bg-white font-normal"
-              : "border-slate-300 bg-slate-50 font-semibold";
+          const boxTone = isSourcePassage ? "font-normal" : "font-semibold";
           return (
             <div
               key={groupIndex}
               className={cn(
                 "whitespace-pre-line text-justify text-slate-950",
                 leading,
-                isSourcePassage && passageStyle === "boxed" && "rounded-[4px] border px-2.5 py-2",
-                isSourcePassage && passageStyle === "underlined" && "border-y py-2",
-                isSourcePassage && passageStyle === "plain" && "py-1",
-                !isSourcePassage && "rounded-[4px] border px-2.5 py-2",
+                "py-1",
                 boxTone,
               )}
             >
@@ -142,6 +133,9 @@ function StructuredBody({
                 <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
                   주어진 문장
                 </span>
+              )}
+              {group.style === "summary" && subType === "SUMMARY_COMPLETE" && !resumed && (
+                <span className="font-bold">{"[\uC694\uC57D\uBB38] "}</span>
               )}
               {renderFormattedInline(text, subType, {
                 alphabetMarkerClassName: "font-semibold text-slate-950",
@@ -359,7 +353,6 @@ export function A4PaperPage({
   template,
   columns,
   density,
-  passageStyle,
   showAnswerSpace,
   showPassageTitle,
   showQuestionMeta,
@@ -489,12 +482,7 @@ export function A4PaperPage({
                       return (
                         <div
                           className={cn(
-                            "mb-3",
-                            passageStyle === "boxed" &&
-                              "rounded border px-3 py-2",
-                            passageStyle === "underlined" &&
-                              "border-b border-t py-2",
-                            passageStyle === "plain" && "py-1",
+                            "mb-3 py-1",
                             visual.passageClass,
                           )}
                         >
@@ -596,18 +584,6 @@ export function A4PaperPage({
                       // 출처 지문 박스와 동일하게 "지문 스타일"(박스/밑줄/본문)을 따른다.
                       // (LOCAL이 isStructuredQuestion 을 usesStructuredBody/atomic 으로 분리 →
                       //  내장 지문 스타일은 flow-structured 가 아닌 평문 본문에만 적용)
-                      const hasEmbeddedPassage =
-                        !isCustomBlock &&
-                        !usesStructuredBody &&
-                        questionHasEmbeddedPassage(item.sourceQuestion);
-                      const embeddedPassageBoxClass =
-                        hasEmbeddedPassage && passageStyle !== "plain"
-                          ? cn(
-                              passageStyle === "boxed" && "rounded border px-3 py-2",
-                              passageStyle === "underlined" && "border-b border-t py-2",
-                              visual.passageClass,
-                            )
-                          : undefined;
                       return (
                         <div
                           key={part.partKey}
@@ -782,7 +758,6 @@ export function A4PaperPage({
                                   compact={compact}
                                   withTopGap={part.showHeader}
                                   visualQuestionClass={visual.questionClass}
-                                  passageStyle={passageStyle}
                                 />
                               );
                             }
@@ -804,7 +779,6 @@ export function A4PaperPage({
                                   className={cn(
                                     "mt-1 whitespace-pre-line text-justify font-semibold",
                                     visual.questionClass,
-                                    embeddedPassageBoxClass,
                                   )}
                                 >
                                   <EditableText
@@ -835,7 +809,6 @@ export function A4PaperPage({
                                 className={cn(
                                   "mt-1 whitespace-pre-line text-justify font-semibold",
                                   visual.questionClass,
-                                  embeddedPassageBoxClass,
                                 )}
                               >
                                 <span className="block">

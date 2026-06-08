@@ -30,6 +30,7 @@ interface SidebarTopActionsProps {
   pathname: string;
   isDirector: boolean;
   onNavClick: (href: string, e: React.MouseEvent) => void;
+  onUserMenuOpenChange?: (open: boolean) => void;
 }
 
 export function SidebarTopActions({
@@ -39,6 +40,7 @@ export function SidebarTopActions({
   pathname,
   isDirector,
   onNavClick,
+  onUserMenuOpenChange,
 }: SidebarTopActionsProps) {
   const isSpecial = Boolean(getSpecialAccount(staff.email));
 
@@ -50,7 +52,12 @@ export function SidebarTopActions({
       )}
     >
       {/* User dropdown (merged with academy/role) */}
-      <UserMenu staff={staff} basePath={basePath} collapsed={collapsed} />
+      <UserMenu
+        staff={staff}
+        basePath={basePath}
+        collapsed={collapsed}
+        onOpenChange={onUserMenuOpenChange}
+      />
 
       {/* 공지사항 */}
       {isDirector &&

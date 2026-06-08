@@ -21,7 +21,11 @@ const { postProcessQuestion } = pp;
 const { validateQuestionQuality } = quality;
 const { buildGroups, makePaperItem } = paperUtils;
 const { paginateGroups } = pagination;
-const { optionDisplayTextForSubtype } = optionDisplay;
+const {
+  formatInlineMarkersForSubtype,
+  optionDisplayTextForSubtype,
+  shouldRenderOptionListForSubtype,
+} = optionDisplay;
 const { renderQuestionPart } = hwpxFragment;
 const {
   buildCanonicalSentenceInsertOptions,
@@ -67,6 +71,16 @@ const displayTexts = processedOptions.map((option, index) =>
   optionDisplayTextForSubtype("SENTENCE_INSERT", index, option.text)
 );
 const displayTextFromBadStoredOption = optionDisplayTextForSubtype("SENTENCE_INSERT", 2, "text");
+const formattedSentenceInsertMarkers = formatInlineMarkersForSubtype(
+  "First (A) Second (B) Third \\u2462",
+  "SENTENCE_INSERT",
+);
+const formattedIrrelevantMarkers = formatInlineMarkersForSubtype(
+  "\\u24D0 __\\u24D1 second__ (c) third",
+  "IRRELEVANT",
+);
+const rendersSentenceInsertOptionList = shouldRenderOptionListForSubtype("SENTENCE_INSERT");
+const rendersIrrelevantOptionList = shouldRenderOptionListForSubtype("IRRELEVANT");
 const canonicalOptions = buildCanonicalSentenceInsertOptions();
 const paperItem = makePaperItem({
   id: "si1",
@@ -173,6 +187,30 @@ const answerComparisons = [
   isSameObjectiveAnswerForSubtype("SENTENCE_INSERT", "(C)", "3"),
   isSameObjectiveAnswerForSubtype("SENTENCE_INSERT", "text", "3"),
 ];
+const irrelevantPassage = [
+  "Clean energy matters for local communities.",
+  "Solar panels convert sunlight into usable electricity.",
+  "This reduces emissions from fossil fuels.",
+  "Batteries store extra power for cloudy days.",
+  "Schools can install panels on wide rooftops.",
+  "Communities save money over many years."
+].join(" ");
+const irrelevantProcessed = postProcessQuestion("IRRELEVANT", irrelevantPassage, {
+  direction: "다음 글에서 전체 흐름과 관계 없는 문장은?",
+  sentences: [
+    "Solar panels convert sunlight into usable electricity.",
+    "The school cafeteria should sell more spicy noodles.",
+    "This reduces emissions from fossil fuels.",
+    "Batteries store extra power for cloudy days.",
+    "Schools can install panels on wide rooftops."
+  ],
+  irrelevantIndex: 1,
+  options: [],
+  correctAnswer: "2",
+  explanation: "The cafeteria sentence breaks the clean-energy flow.",
+  keyPoints: ["clean energy flow"],
+  wrongOptionExplanations: {}
+});
 const rawQuality = validateQuestionQuality({
   typeId: "SENTENCE_INSERT",
   question: badAi,
@@ -191,6 +229,10 @@ process.stdout.write(JSON.stringify({
   passThroughOptions,
   displayTexts,
   displayTextFromBadStoredOption,
+  formattedSentenceInsertMarkers,
+  formattedIrrelevantMarkers,
+  rendersSentenceInsertOptionList,
+  rendersIrrelevantOptionList,
   canonicalOptions,
   paperOptions: paperItem.options,
   rawBadPaperOptions: rawBadPaperItem.options,
@@ -199,6 +241,7 @@ process.stdout.write(JSON.stringify({
   hwpxQuestionPartText,
   normalizedAnswers,
   answerComparisons,
+  irrelevantProcessed,
   rawQuality,
   processedQuality,
 }));
@@ -236,8 +279,19 @@ test("SENTENCE_INSERT ignores AI option text and renders canonical gap labels", 
   assert.equal(result.processedOptions.length, 5);
   assert.equal(result.processedOptions[2].text, "③");
   assert.equal(result.passThroughOptions[2].text, "③");
-  assert.deepEqual(result.displayTexts, ["(A)", "(B)", "(C)", "(D)", "(E)"]);
-  assert.equal(result.displayTextFromBadStoredOption, "(C)");
+  assert.deepEqual(result.displayTexts, ["①", "②", "③", "④", "⑤"]);
+  assert.equal(result.displayTextFromBadStoredOption, "③");
+  assert.equal(result.formattedSentenceInsertMarkers, "First ① Second ② Third ③");
+  assert.equal(result.formattedIrrelevantMarkers, "① __② second__ ③ third");
+  assert.equal(result.rendersSentenceInsertOptionList, false);
+  assert.equal(result.rendersIrrelevantOptionList, false);
+  assert.equal(result.irrelevantProcessed.success, true);
+  assert.deepEqual(
+    result.irrelevantProcessed.data.options.map((option) => option.text),
+    ["①", "②", "③", "④", "⑤"],
+  );
+  assert.match(result.irrelevantProcessed.data.passageWithNumbers, /① __Solar panels/);
+  assert.equal(/[ⓐ-ⓔ]/.test(result.irrelevantProcessed.data.passageWithNumbers), false);
   assert.equal(result.canonicalOptions[2].text, "③");
   assert.equal(result.paperOptions[2].text, "③");
   assert.equal(result.rawBadPaperOptions[2].text, "③");

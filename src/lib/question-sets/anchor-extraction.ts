@@ -8,6 +8,7 @@
 // This is what lets a set store anchors instead of the baked (leaky) passage copy.
 // ============================================================================
 
+import { getCircledNumbers } from "../question-postprocess/types";
 import type { Anchor } from "./types";
 
 function norm(value: unknown): string {
@@ -19,6 +20,8 @@ const GRAMMAR_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const
 const GRAMMAR_LABELS = [
   "(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)",
 ] as const;
+const VOCAB_KEYS = ["a", "b", "c", "d", "e"] as const;
+const VOCAB_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)"] as const;
 
 function normalizeGrammarKey(value: unknown): string {
   const text = norm(value);
@@ -39,6 +42,33 @@ function canonicalGrammarLabel(value: unknown, fallbackIndex?: number): string {
     fallbackIndex < GRAMMAR_LABELS.length
   ) {
     return GRAMMAR_LABELS[fallbackIndex];
+  }
+  return norm(value);
+}
+
+function normalizeVocabKey(value: unknown): string {
+  const text = norm(value);
+  if (!text) return "";
+  const circledIndex = getCircledNumbers(50).indexOf(text);
+  if (circledIndex >= 0 && circledIndex < VOCAB_KEYS.length) {
+    return VOCAB_KEYS[circledIndex];
+  }
+  const alpha = text.match(/^[([]?\s*([a-eA-E])\s*[)\].:]?$/);
+  if (alpha) return alpha[1].toLowerCase();
+  const numeric = text.match(/^[([]?\s*([1-5])\s*[)\].:]?$/);
+  if (numeric) return VOCAB_KEYS[Number(numeric[1]) - 1] ?? "";
+  return "";
+}
+
+function canonicalVocabLabel(value: unknown, fallbackIndex?: number): string {
+  const key = normalizeVocabKey(value);
+  if (key) return `(${key})`;
+  if (
+    typeof fallbackIndex === "number" &&
+    fallbackIndex >= 0 &&
+    fallbackIndex < VOCAB_LABELS.length
+  ) {
+    return VOCAB_LABELS[fallbackIndex];
   }
   return norm(value);
 }
@@ -113,15 +143,17 @@ export function extractAnchors(typeId: string, ai: AnyRecord): Anchor[] {
       const mws = Array.isArray(ai.markedWords)
         ? (ai.markedWords as AnyRecord[])
         : [];
-      return mws.map((mw) => {
-        const wordToFind = norm(mw.originalWord) || norm(mw.word);
+      return mws.map((mw, index) => {
+        const wordToFind =
+          norm(mw.originalWord) ||
+          (mw.isInappropriate ? norm(mw.betterWord) : norm(mw.word));
         const display =
-          mw.isInappropriate && norm(mw.substituteWord)
-            ? norm(mw.substituteWord)
+          mw.isInappropriate
+            ? norm(mw.substituteWord) || norm(mw.word) || wordToFind
             : wordToFind;
         return {
           kind: "MARKER",
-          label: norm(mw.label),
+          label: canonicalVocabLabel(mw.label, index),
           spanText: wordToFind,
           passageForm: display,
           surroundingText: norm(mw.surroundingText) || undefined,
@@ -134,11 +166,11 @@ export function extractAnchors(typeId: string, ai: AnyRecord): Anchor[] {
       const mws = Array.isArray(ai.markedWords)
         ? (ai.markedWords as AnyRecord[])
         : [];
-      return mws.map((mw) => {
+      return mws.map((mw, index) => {
         const word = norm(mw.word);
         return {
           kind: "MARKER",
-          label: norm(mw.label),
+          label: canonicalGrammarLabel(mw.label, index),
           spanText: word,
           passageForm: word,
           surroundingText: norm(mw.surroundingText) || undefined,

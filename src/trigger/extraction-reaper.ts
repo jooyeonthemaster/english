@@ -19,6 +19,8 @@ import {
   EXTRACTION_FINALIZE_QUEUE_NAME,
   EXTRACTION_PAGE_QUEUE_NAME,
 } from "@/lib/concurrency-config";
+import { cleanupStaleExtractionJobs } from "@/lib/extraction/stale-cleanup";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import { prisma } from "@/lib/prisma";
 import { extractionPageTask } from "./extraction-page";
 import { extractionFinalizeTask } from "./extraction-finalize";
@@ -28,6 +30,12 @@ export const extractionReaperTask = schedules.task({
   cron: "*/5 * * * *",
   async run() {
     const now = new Date();
+    const missingLeaseCleanup = await cleanupStaleExtractionJobs({ now });
+
+    // Reap stale Workbench AI jobs (question-generation / passage-analysis)
+    // globally here so the hot /api/workbench/ai-jobs GET no longer has to run
+    // cleanup on every 5-10s poll. academyId omitted = all academies in one pass.
+    const workbenchCleanup = await cleanupStaleWorkbenchAiJobs({ now });
 
     const expiredProcessing = await prisma.extractionPage.findMany({
       where: { status: "PROCESSING", leaseExpiresAt: { lt: now } },
@@ -43,7 +51,7 @@ export const extractionReaperTask = schedules.task({
     });
     const pendingOverBudget = await prisma.extractionPage.findMany({
       where: {
-        status: "PENDING",
+        status: { in: ["PENDING", "FAILED"] },
         job: { status: "PROCESSING" },
       },
       select: {
@@ -111,7 +119,7 @@ export const extractionReaperTask = schedules.task({
     // still have retry budget left.
     const pendingCandidates = await prisma.extractionPage.findMany({
       where: {
-        status: "PENDING",
+        status: { in: ["PENDING", "FAILED"] },
         job: { status: "PROCESSING" },
       },
       select: {
@@ -162,6 +170,9 @@ export const extractionReaperTask = schedules.task({
     }
 
     logger.info("reaper pass", {
+      missingLeaseTerminalized: missingLeaseCleanup.terminalizedPages,
+      missingLeaseFinalized: missingLeaseCleanup.finalizedJobs,
+      workbenchAiJobsFailed: workbenchCleanup.failed,
       exhausted: exhaustedCount,
       reclaimed: reclaimed.count,
       redispatched: pending.length,
@@ -169,6 +180,9 @@ export const extractionReaperTask = schedules.task({
     });
 
     return {
+      missingLeaseTerminalized: missingLeaseCleanup.terminalizedPages,
+      missingLeaseFinalized: missingLeaseCleanup.finalizedJobs,
+      workbenchAiJobsFailed: workbenchCleanup.failed,
       exhausted: exhaustedCount,
       reclaimed: reclaimed.count,
       redispatched: pending.length,

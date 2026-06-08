@@ -29,7 +29,7 @@ export async function addQuestionsToExam(
       where: { id: examId, academyId: staff.academyId },
       select: { id: true },
     });
-    if (!exam) return { success: false, error: "?쒗뿕??李얠쓣 ???놁뒿?덈떎." };
+    if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
 
     const questions = await prisma.question.findMany({
       where: { id: { in: questionIds }, academyId: staff.academyId },

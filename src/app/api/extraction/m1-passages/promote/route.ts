@@ -14,7 +14,7 @@ const promoteSchema = z.object({
 
 type PromoteOutcome =
   | { draftId: string; status: "promoted"; passageId: string }
-  | { draftId: string; status: "skipped"; reason: string }
+  | { draftId: string; status: "skipped"; reason: string; passageId?: string }
   | { draftId: string; status: "failed"; reason: string };
 
 function sha1(input: string): string {
@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
       deletedAt: null,
       job: { academyId: staff.academyId, deletedAt: null },
     },
+    orderBy: { passageOrder: "asc" },
     include: {
       job: {
         select: { id: true, originalFileName: true, academyId: true },
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest) {
           draftId: draft.id,
           status: "skipped",
           reason: "already_promoted",
+          passageId: draft.savedPassageId,
         });
         continue;
       }
@@ -137,6 +139,11 @@ export async function POST(req: NextRequest) {
         passageId: passage.id,
       });
     } catch (err) {
+      console.error("[m1-passages/promote] draft promotion failed", {
+        draftId: draft.id,
+        jobId: draft.job.id,
+        reason: err instanceof Error ? err.message : String(err),
+      });
       outcomes.push({
         draftId: draft.id,
         status: "failed",

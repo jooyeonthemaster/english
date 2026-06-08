@@ -25,10 +25,22 @@ import { renderOptions } from "./render-options";
 import { renderAnswer } from "./render-answer";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
+import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import { isSummaryCompleteSubtype } from "@/components/exams/paper-builder/summary-complete-mc-layout";
+import { normalizeQuestionText } from "@/components/exams/paper-builder/text-normalization";
 
 // ---------------------------------------------------------------------------
 // Element Builder
 // ---------------------------------------------------------------------------
+
+function stripOriginalBlock(text: string) {
+  return text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter((block) => block && !/^\[(?:original|\uC6D0\uBB38)\]\s*/i.test(block))
+    .join("\n\n")
+    .trim();
+}
 
 export function buildQuestionElements(
   eq: ExamQuestionData,
@@ -38,10 +50,14 @@ export function buildQuestionElements(
   const q = eq.question;
   const options = safeParseJSON<ParsedOption[]>(q.options, []);
 
-  const sections = parseQuestionSections(
+  const normalizedQuestionText = normalizeQuestionText(
     formatInlineMarkersForSubtype(q.questionText, q.subType),
-    q.subType,
   );
+  const displayQuestionText =
+    q.subType === "SENTENCE_TRANSFORM"
+      ? stripOriginalBlock(normalizedQuestionText)
+      : normalizedQuestionText;
+  const sections = parseQuestionSections(displayQuestionText, q.subType);
   const hasEmbeddedPassage = questionTextContainsPassage(sections);
 
   // 1. Render Direction FIRST
@@ -77,8 +93,19 @@ export function buildQuestionElements(
 
   // 2. Render Passage SECOND (if it is globally attached and not embedded)
   // This explicitly prevents the passage from dropping below the conditions
-  if (q.passage && !hasEmbeddedPassage) {
-    elements.push(...renderPassage(q.passage.content));
+  if (q.passage && (!hasEmbeddedPassage || isSummaryCompleteSubtype(q.subType))) {
+    elements.push(...renderPassage(
+      formatSourcePassageForQuestionItems(q.passage.content, [
+        {
+          questionText: q.questionText,
+          sourceQuestion: {
+            subType: q.subType,
+            questionText: q.questionText,
+            structuredData: q.structuredData,
+          },
+        },
+      ]),
+    ));
   }
 
   // 3. Render all other blocks (Conditions, Source Text, Target Words, etc.)

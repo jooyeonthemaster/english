@@ -60,13 +60,20 @@ export const TUTOR_PROGRAM_GENERATION_QUEUE_CONCURRENCY = capConcurrency(
   TUTOR_PROGRAM_GENERATION_CONCURRENCY,
 );
 
+// 페이지 OCR 동시성. extraction-page는 `concurrencyKey: academy`로 트리거되므로
+// 큐의 concurrencyLimit이 "학원별"로 적용된다 → 이 값이 곧 "한 학원의 한 잡이
+// 동시에 돌릴 수 있는 페이지 수". 기존 2는 5장 업로드를 3웨이브로 직렬화하는
+// 주 병목이었다(페이지당 Gemini ~11s × 3웨이브 ≈ 66s). Gemini 티어3 한도가
+// 넉넉해 20으로 상향 — 통상 업로드(≤20p)는 1웨이브로 끝난다(≈18s).
+// 전역 상한(_CONCURRENCY)은 학원별 값의 천장일 뿐(키 분리라 진짜 전역캡 아님);
+// 진짜 cross-academy 상한은 trigger.dev 환경 동시성 한도가 잡는다.
 export const EXTRACTION_PAGE_CONCURRENCY = readPositiveIntegerEnv(
   "TRIGGER_EXTRACTION_PAGE_CONCURRENCY",
-  2,
+  40,
 );
 export const EXTRACTION_PAGE_PER_ACADEMY_CONCURRENCY = readPositiveIntegerEnv(
   "TRIGGER_EXTRACTION_PAGE_PER_ACADEMY",
-  2,
+  20,
 );
 export const EXTRACTION_PAGE_QUEUE_CONCURRENCY = capConcurrency(
   EXTRACTION_PAGE_PER_ACADEMY_CONCURRENCY,

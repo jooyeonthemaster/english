@@ -56,14 +56,56 @@ interface DragSelectProps
    * 드래그 "시작 영역"을 DragSelect 컨테이너 바깥의 더 넓은 조상으로 넓힌다.
    * 넘기면: ① mousedown 을 이 엘리먼트에서 받고(이 영역 어디서든 시작 가능),
    * ② 선택 사각형을 뷰포트 기준 포털로 그리며, ③ 카드 탐색 범위도 이 엘리먼트로 넓힌다.
+   * `itemScopeRef` 를 함께 넘기면 시작 영역은 이 값을 쓰되 카드 탐색은 itemScopeRef 안으로
+   * 제한된다.
    * 안 넘기면 기존 동작(컨테이너 자신이 시작 영역).
    */
   boundaryRef?: React.RefObject<HTMLElement | null>;
+  /**
+   * 선택 대상 카드 탐색 범위를 별도로 제한한다. 예: 드로어가 열려 있을 때 시작은 본문
+   * 어디서든 허용하고, 선택은 드로어 카드만 대상으로 삼을 수 있다.
+   */
+  itemScopeRef?: React.RefObject<HTMLElement | null>;
+  /**
+   * true 면 카드 내부의 버튼/role=button 자식 위에서도 마키 드래그 시작을 허용한다.
+   * 폼 입력, 링크, label, contenteditable, data-drag-select-ignore 는 계속 제외한다.
+   */
+  allowCardDescendantDragStart?: boolean;
   children: React.ReactNode;
 }
 
 const EDGE_ZONE = 56; // px — 이 가장자리 안으로 들어오면 자동 스크롤
 const MAX_SCROLL_SPEED = 22; // px/frame
+const RESIZE_OR_MOVE_CURSOR_VALUES = new Set([
+  "col-resize",
+  "row-resize",
+  "ew-resize",
+  "ns-resize",
+  "nesw-resize",
+  "nwse-resize",
+  "n-resize",
+  "s-resize",
+  "e-resize",
+  "w-resize",
+  "ne-resize",
+  "nw-resize",
+  "se-resize",
+  "sw-resize",
+  "move",
+]);
+const CONTROL_CURSOR_VALUES = new Set([
+  "grab",
+  "grabbing",
+  "text",
+  "not-allowed",
+  "wait",
+  "progress",
+  "copy",
+]);
+const RESIZE_OR_MOVE_CURSOR_CLASS =
+  /(?:^|\s)(?:[^\s:]+:)*cursor-(?:col-resize|row-resize|ew-resize|ns-resize|nesw-resize|nwse-resize|n-resize|s-resize|e-resize|w-resize|ne-resize|nw-resize|se-resize|sw-resize|move)(?=\s|$)/;
+const CONTROL_CURSOR_CLASS =
+  /(?:^|\s)(?:[^\s:]+:)*cursor-(?:grab|grabbing|text|not-allowed|wait|progress|copy)(?=\s|$)/;
 
 function setsEqual(a: Set<string>, b: Set<string>) {
   if (a.size !== b.size) return false;
@@ -123,11 +165,51 @@ function getScrollParent(el: HTMLElement): HTMLElement | null {
   return null;
 }
 
+function hasClassMatch(el: HTMLElement, pattern: RegExp) {
+  return typeof el.className === "string" && pattern.test(el.className);
+}
+
+function blocksMarqueeStart(
+  target: Element,
+  root: HTMLElement,
+  card: Element | null,
+) {
+  let el: HTMLElement | null =
+    target instanceof HTMLElement ? target : target.parentElement;
+  while (el) {
+    if (
+      el.hasAttribute("data-drag-select-ignore") ||
+      el.hasAttribute("data-no-marquee")
+    ) {
+      return true;
+    }
+
+    if (el.getAttribute("draggable") === "true") return true;
+
+    const isSelectableCardRoot = el === card;
+    if (hasClassMatch(el, RESIZE_OR_MOVE_CURSOR_CLASS)) return true;
+    if (!isSelectableCardRoot && hasClassMatch(el, CONTROL_CURSOR_CLASS)) {
+      return true;
+    }
+
+    const cursor = window.getComputedStyle(el).cursor;
+    if (RESIZE_OR_MOVE_CURSOR_VALUES.has(cursor)) return true;
+    if (!isSelectableCardRoot && CONTROL_CURSOR_VALUES.has(cursor)) return true;
+
+    if (el === root) break;
+    el = el.parentElement;
+  }
+
+  return false;
+}
+
 export function DragSelect({
   value,
   onChange,
   disabled,
   boundaryRef,
+  itemScopeRef,
+  allowCardDescendantDragStart = false,
   className,
   style,
   children,
@@ -135,8 +217,9 @@ export function DragSelect({
 }: DragSelectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<Rect | null>(null);
-  // 명시적 boundaryRef 가 없으면 AdminShell 이 내려준 기본 경계(사이드바 제외 본문)를
-  // 쓴다. 둘 다 없으면(=셸 밖) 컨테이너 자신이 시작 영역이 된다(원래 동작).
+  // AdminShell 이 내려준 기본 경계(사이드바 제외 본문)는 itemScopeRef 만 넘긴 특수
+  // 케이스(예: 드로어가 열려 있고, 시작은 본문 어디서든 허용하되 선택 대상은 드로어
+  // 카드로 제한할 때)에만 쓴다. 일반 목록은 자기 컨테이너 안에서만 마키를 시작한다.
   const ctxBoundaryRef = useMarqueeBoundary();
 
   const handleMouseDown = useCallback(
@@ -144,22 +227,56 @@ export function DragSelect({
       if (disabled || e.button !== 0) return;
       const container = containerRef.current;
       if (!container) return;
-      // 카드 탐색·자동스크롤·사각형 기준이 되는 루트. boundary 가 있으면 그 넓은
-      // 영역을, 없으면 컨테이너 자신을 쓴다.
-      const boundary = boundaryRef?.current ?? ctxBoundaryRef?.current ?? null;
-      const root = boundary ?? container;
+      // 카드 탐색·자동스크롤·사각형 기준이 되는 루트.
+      //  - boundaryRef 또는 itemScopeRef 가 명시된 "스코프 인스턴스"(드로어/모달 등)는
+      //    전역 마키와 섞이지 않게 격리된다.
+      //  - boundaryRef 가 없으면 시작 영역은 전역(ctx) 경계를 쓴다.
+      //  - itemScopeRef 가 있으면 카드 탐색은 그 안으로 제한한다.
+      const isScoped = boundaryRef != null || itemScopeRef != null;
+      const boundary = boundaryRef
+        ? boundaryRef.current ?? container
+        : itemScopeRef
+          ? ctxBoundaryRef?.current ?? container
+          : null;
+      const root = itemScopeRef?.current ?? boundary ?? container;
       const useBoundary = boundary != null;
 
-      const target = e.target as HTMLElement;
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      // 전역(ctx) 인스턴스는 "스코프 영역(드로어/모달 등)" 안에서 시작된 드래그는 무시한다.
+      // 그 영역은 자체 스코프 DragSelect 가 처리한다(중복/오선택 방지).
+      if (!isScoped && target.closest("[data-marquee-scope]")) return;
+      const card = target.closest("[data-drag-item-id]");
+      if (blocksMarqueeStart(target, root, card)) return;
+
       // 버튼/링크/입력/체크박스 등 "중첩된" 상호작용 요소 위에서 시작하면 마키를 켜지
       // 않는다(그 클릭 동작을 우선). 단, 카드 루트 자체가 role="button" 인 경우(예: 지문
       // 카드)에는 카드 본문 위 시작을 허용해야 하므로, 상호작용 요소가 카드 루트와
       // 동일하면 통과시킨다.
-      const interactive = target.closest(
-        "button, a, input, textarea, select, label, [role='button'], [contenteditable='true']",
+      const hardInteractive = target.closest(
+        [
+          "a",
+          "input",
+          "textarea",
+          "select",
+          "label",
+          "[contenteditable='true']",
+          "[role='checkbox']",
+          "[role='switch']",
+          "[role='menuitem']",
+          "[role='option']",
+        ].join(", "),
       );
-      const card = target.closest("[data-drag-item-id]");
-      if (interactive && interactive !== card) return;
+      if (hardInteractive && hardInteractive !== card) return;
+      const buttonLike = target.closest("button, [role='button']");
+      if (buttonLike && buttonLike !== card) {
+        const canStartFromCardChild =
+          allowCardDescendantDragStart &&
+          card instanceof HTMLElement &&
+          buttonLike instanceof HTMLElement &&
+          card.contains(buttonLike);
+        if (!canStartFromCardChild) return;
+      }
 
       // 이미 draggable한 요소(예: "선택된" 카드) 위에서 시작하면 그 카드의 네이티브
       // 드래그(폴더 이동)를 우선한다 — 마키를 켜지 않는다. (미선택 카드는 draggable
@@ -174,10 +291,6 @@ export function DragSelect({
       const claimable = e as { __dragSelectClaimed?: boolean };
       if (claimable.__dragSelectClaimed) return;
       claimable.__dragSelectClaimed = true;
-
-      // 텍스트 선택 방지 — mousedown 기본동작을 막는 것이 user-select:none보다 확실.
-      // (위에서 draggable 요소는 이미 제외했으므로 네이티브 드래그를 막지 않는다.)
-      e.preventDefault();
 
       const startX = e.clientX;
       const startY = e.clientY;
@@ -204,6 +317,7 @@ export function DragSelect({
       let lastClientX = startX;
       let lastClientY = startY;
       let rafId = 0;
+      const previousBodyUserSelect = document.body.style.userSelect;
 
       // 스크롤로 인해 이동한 만큼 시작점의 뷰포트 Y 를 보정 → 콘텐츠 기준 앵커.
       const anchorY = () => startY - (readScroll() - startScroll);
@@ -316,7 +430,7 @@ export function DragSelect({
         window.removeEventListener("dragstart", handleDragStart, true);
         if (rafId) cancelAnimationFrame(rafId);
         rafId = 0;
-        document.body.style.userSelect = "";
+        document.body.style.userSelect = previousBodyUserSelect;
         setRect(null);
       }
 
@@ -332,7 +446,10 @@ export function DragSelect({
         const dy = ev.clientY - startY;
         if (!active && Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD)
           return;
-        active = true;
+        if (!active) {
+          active = true;
+          document.body.style.userSelect = "none";
+        }
         ev.preventDefault();
         recompute();
         ensureAutoScroll();
@@ -358,21 +475,39 @@ export function DragSelect({
       window.addEventListener("mousemove", handleMove);
       window.addEventListener("mouseup", handleUp);
       window.addEventListener("dragstart", handleDragStart, true);
-      // 드래그 중 텍스트 선택 방지
-      document.body.style.userSelect = "none";
     },
-    [disabled, value, onChange, boundaryRef, ctxBoundaryRef],
+    [
+      disabled,
+      value,
+      onChange,
+      boundaryRef,
+      itemScopeRef,
+      ctxBoundaryRef,
+      allowCardDescendantDragStart,
+    ],
   );
 
-  // boundary 모드: 넓은 시작 영역(기본=본문 전체, 또는 명시 영역)에서 mousedown 을
-  // 받는다. 이 영역의 버튼/입력/드래그 요소는 handleMouseDown 안에서 걸러진다.
+  // 넓은 시작 영역에서 mousedown 을 받는다.
+  //  - boundaryRef 명시: 그 경계(없으면 자기 컨테이너)에 붙는다.
+  //  - itemScopeRef 만 명시: AdminShell 본문 경계에 붙고, 선택 대상은 itemScopeRef 안으로
+  //    제한한다(드로어 카드 선택용).
+  //  - 둘 다 없으면 일반 목록 모드이므로 자기 컨테이너의 onMouseDown 만 쓴다.
+  // 이 영역의 버튼/입력/드래그/스코프 요소는 handleMouseDown 안에서 걸러진다.
   useEffect(() => {
-    const boundary = boundaryRef?.current ?? ctxBoundaryRef?.current;
-    if (!boundary) return;
+    const isScoped = boundaryRef != null || itemScopeRef != null;
+    if (!isScoped) return;
+    const el = boundaryRef
+      ? boundaryRef.current ?? containerRef.current
+      : ctxBoundaryRef?.current ?? containerRef.current;
+    if (!el) return;
     const onDown = (e: MouseEvent) => handleMouseDown(e);
-    boundary.addEventListener("mousedown", onDown);
-    return () => boundary.removeEventListener("mousedown", onDown);
-  }, [boundaryRef, ctxBoundaryRef, handleMouseDown]);
+    el.addEventListener("mousedown", onDown, true);
+    if (isScoped) el.setAttribute("data-marquee-scope", "1");
+    return () => {
+      el.removeEventListener("mousedown", onDown, true);
+      if (isScoped) el.removeAttribute("data-marquee-scope");
+    };
+  }, [boundaryRef, itemScopeRef, ctxBoundaryRef, handleMouseDown]);
 
   return (
     <div
@@ -380,7 +515,11 @@ export function DragSelect({
       className={className}
       style={{ position: "relative", ...style }}
       // boundary 가 있으면 시작 이벤트는 위 useEffect 에서 처리한다(중복 방지).
-      onMouseDown={boundaryRef || ctxBoundaryRef ? undefined : handleMouseDown}
+      onMouseDown={
+        boundaryRef || itemScopeRef
+          ? undefined
+          : handleMouseDown
+      }
       {...rest}
     >
       {children}

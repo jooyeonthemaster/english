@@ -23,6 +23,7 @@ import {
 import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
 import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
   buildAnalysisContext,
   extractTeacherAnnotations,
@@ -200,6 +201,12 @@ export async function POST(req: NextRequest) {
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
   }
+
+  await cleanupStaleWorkbenchAiJobs({
+    academyId: staff.academyId,
+    domain: "QUESTION_GENERATION",
+    passageId: passage.id,
+  });
 
   // ── IRRELEVANT slot count guardrail (MANUAL mode only) ────────────────
   if (config.mode === "MANUAL" && config.questionType === "IRRELEVANT") {

@@ -375,7 +375,7 @@ export function TutorProgramCreateForm({
                   <div>
                     <p className="text-[13px] font-bold text-blue-800">AI 모바일 학습 생성</p>
                     <p className="text-[11px] text-blue-600/80 mt-1 leading-relaxed">
-                      지문 분석 데이터를 기반으로 어휘, 문장 복원, 어법, AI 코칭 활동을 자동 구성합니다.
+                      학습지 생성 데이터를 기반으로 어휘, 문장 복원, 어법, AI 코칭 활동을 자동 구성합니다.
                     </p>
                   </div>
                 </div>
@@ -551,7 +551,7 @@ export function TutorProgramCreateForm({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
           <div className="flex items-center gap-3 rounded-xl bg-white px-6 py-4 shadow-xl">
             <Loader2 className="size-5 animate-spin text-blue-600" />
-            <span className="text-[13px] font-medium text-slate-700">지문 분석 데이터를 불러오는 중...</span>
+            <span className="text-[13px] font-medium text-slate-700">학습지 생성 데이터를 불러오는 중...</span>
           </div>
         </div>
       )}

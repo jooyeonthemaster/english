@@ -27,11 +27,17 @@ interface UserMenuProps {
   staff: StaffSession;
   basePath: "/director" | "/teacher";
   collapsed: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function UserMenu({ staff, basePath, collapsed }: UserMenuProps) {
+export function UserMenu({ staff, basePath, collapsed, onOpenChange }: UserMenuProps) {
   return (
-    <DropdownMenu>
+    // modal=false: 기본 모달 드롭다운은 body에 pointer-events:none + 스크롤 락을 걸어
+    // 사이드바 위에 커서가 있어도 합성 mouseleave를 유발한다. 그러면 admin-shell의 peek
+    // 닫기(onMouseLeave)가 발동→접힘→재호버→펼침이 반복돼 사이드바가 깜빡인다. 비모달로
+    // 두면 이 부작용이 사라지고, 바깥 클릭·ESC 닫힘은 그대로 동작한다.
+    // onOpenChange: 메뉴가 열린 동안 admin-shell이 peek 전환을 동결하도록 알린다.
+    <DropdownMenu modal={false} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
         {collapsed ? (
           <button
@@ -65,10 +71,17 @@ export function UserMenu({ staff, basePath, collapsed }: UserMenuProps) {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        side="right"
+        // 접힘: 아이콘 옆(오른쪽)으로 펼침. 펼침: 버튼 바로 아래로 드롭해
+        // 본문 위에 둥둥 뜨지 않고 트리거에 붙어 보이게 한다.
+        side={collapsed ? "right" : "bottom"}
         align="start"
-        sideOffset={12}
-        className="w-56 rounded-xl p-1.5"
+        sideOffset={collapsed ? 12 : 6}
+        // z-[70]: peek(hover로 펼친) 사이드바 오버레이가 z-[60]이라, 그보다 위에 둬야
+        // 펼침 상태에서 버튼 아래로 드롭된 메뉴가 사이드바 뒤에 가려지지 않는다.
+        className={cn(
+          "z-[70] rounded-xl p-1.5",
+          collapsed ? "w-56" : "w-[var(--radix-dropdown-menu-trigger-width)]",
+        )}
       >
         <DropdownMenuLabel className="font-normal px-3 py-2">
           <div className="flex flex-col gap-0.5">

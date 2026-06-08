@@ -122,6 +122,17 @@ interface TaskQueueInlineListProps {
     maxHeight?: number;
   };
   /**
+   * Optimistic placeholder cards prepended to the fetched list — e.g. a job
+   * that was just submitted but isn't in the server snapshot yet. Any pending
+   * task whose `id` later matches a fetched task is dropped automatically.
+   */
+  pendingTasks?: BaseTask[];
+  /**
+   * External refresh signal. When this number changes, the list refetches
+   * immediately instead of waiting for the next poll. Defaults to 0.
+   */
+  refreshSignal?: number;
+  /**
    * 마키(영역 드래그) 선택을 켠다. `marqueeSelectedTaskIds`(현재 선택된 task id 집합)와
    * `onMarqueeChange`(새 집합)를 함께 넘기면 카드 그리드/목록을 DragSelect 로 감싸고
    * 각 카드에 식별자를 부여한다. `marqueeBoundaryRef` 로 드래그 시작 영역(자료 관리 패널
@@ -459,6 +470,14 @@ function TaskGridCard({
     if (task.href) router.push(task.href);
   };
   const canOpen = Boolean(onClick || task.href);
+  const selectionMode = Boolean(onToggleCheck);
+  const handleCardAction = () => {
+    if (onToggleCheck) {
+      onToggleCheck();
+      return;
+    }
+    handleOpen();
+  };
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -484,18 +503,27 @@ function TaskGridCard({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleOpen}
+      onClick={handleCardAction}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleOpen();
+          handleCardAction();
         }
       }}
       role="button"
       tabIndex={0}
+      aria-pressed={
+        selectionMode
+          ? checked === "indeterminate"
+            ? "mixed"
+            : Boolean(checked)
+          : undefined
+      }
       className={
         `group relative flex min-h-[240px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
-        (draggableEnabled
+        (selectionMode
+          ? "cursor-pointer"
+          : draggableEnabled
           ? isDragging
             ? "cursor-grabbing opacity-50"
             : "cursor-grab active:cursor-grabbing"
@@ -711,6 +739,14 @@ function TaskListRow({
     if (task.href) router.push(task.href);
   };
   const canOpen = Boolean(onClick || task.href);
+  const selectionMode = Boolean(onToggleCheck);
+  const handleRowAction = () => {
+    if (onToggleCheck) {
+      onToggleCheck();
+      return;
+    }
+    handleOpen();
+  };
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -736,18 +772,27 @@ function TaskListRow({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleOpen}
+      onClick={handleRowAction}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleOpen();
+          handleRowAction();
         }
       }}
       role="button"
       tabIndex={0}
+      aria-pressed={
+        selectionMode
+          ? checked === "indeterminate"
+            ? "mixed"
+            : Boolean(checked)
+          : undefined
+      }
       className={
         `group relative flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-150 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
-        (draggableEnabled
+        (selectionMode
+          ? "cursor-pointer"
+          : draggableEnabled
           ? isDragging
             ? "cursor-grabbing opacity-50"
             : "cursor-grab active:cursor-grabbing"
@@ -903,15 +948,25 @@ export function TaskQueueInlineList({
   getTaskDragCount,
   onRenameTask,
   collapsible,
+  pendingTasks,
+  refreshSignal,
   marqueeSelectedTaskIds,
   onMarqueeChange,
   marqueeBoundaryRef,
 }: TaskQueueInlineListProps) {
   const marqueeEnabled = Boolean(marqueeSelectedTaskIds && onMarqueeChange);
-  const { tasks, loading, reload } = useTaskList({
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const { tasks: fetchedTasks, loading, reload } = useTaskList({
     scope: domain,
-    refreshKey: 0,
+    refreshKey: refreshSignal ?? 0,
   });
+  // 낙관적 placeholder를 앞에 끼워넣되, 실제 잡이 들어오면(같은 id) 자동 제외.
+  const tasks = useMemo(() => {
+    if (!pendingTasks || pendingTasks.length === 0) return fetchedTasks;
+    const realIds = new Set(fetchedTasks.map((t) => t.id));
+    const extras = pendingTasks.filter((p) => !realIds.has(p.id));
+    return extras.length ? [...extras, ...fetchedTasks] : fetchedTasks;
+  }, [pendingTasks, fetchedTasks]);
   const [internalViewMode, setInternalViewMode] =
     useState<GridViewMode>("grid-3");
   const viewMode = controlledViewMode ?? internalViewMode;
@@ -1098,9 +1153,10 @@ export function TaskQueueInlineList({
     : grid
       ? "min-w-0 overflow-visible bg-[#F4F6F9]"
       : "min-w-0 overflow-x-auto overflow-y-hidden";
+  const effectiveMarqueeBoundaryRef = marqueeBoundaryRef ?? sectionRef;
 
   return (
-    <section className={sectionClass}>
+    <section ref={sectionRef} className={sectionClass}>
       {bare ? null : (
         <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
           <div className="flex min-w-0 items-center gap-2">
@@ -1213,7 +1269,7 @@ export function TaskQueueInlineList({
                       className={cls}
                       value={marqueeSelectedTaskIds!}
                       onChange={onMarqueeChange!}
-                      boundaryRef={marqueeBoundaryRef}
+                      boundaryRef={effectiveMarqueeBoundaryRef}
                     >
                       {rows}
                     </DragSelect>
@@ -1259,7 +1315,7 @@ export function TaskQueueInlineList({
                       className={cls}
                       value={marqueeSelectedTaskIds!}
                       onChange={onMarqueeChange!}
-                      boundaryRef={marqueeBoundaryRef}
+                      boundaryRef={effectiveMarqueeBoundaryRef}
                     >
                       {cards}
                     </DragSelect>

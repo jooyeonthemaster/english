@@ -53,6 +53,50 @@ const ai = {
 };
 
 const processed = postProcessQuestion("GRAMMAR_ERROR", passage, ai);
+
+const ocrPassage = "Because there are so many people like Jackie who turn to the gig economy, the supply of drivers quickly Coutpaces the demand for rides, so naturally prices fall.";
+const ocrAi = {
+  direction: "Choose the grammatically incorrect underlined part.",
+  markedExpressions: [
+    { label: "A", expression: "there are", isError: false, surroundingText: "Because there are so many people" },
+    { label: "B", expression: "turn to", isError: false, surroundingText: "Jackie who turn to the gig economy" },
+    { label: "C", expression: "gig economy", isError: false, surroundingText: "turn to the gig economy, the supply" },
+    { label: "D", expression: "outpaces", isError: false, surroundingText: "supply of drivers quickly outpaces the demand" },
+    { label: "E", expression: "prices fall", errorExpression: "price fall", isError: true, correction: "prices fall", surroundingText: "so naturally prices fall" }
+  ],
+  correctAnswer: "E",
+  options: [
+    { label: "A", text: "there are" },
+    { label: "B", text: "turn to" },
+    { label: "C", text: "gig economy" },
+    { label: "D", text: "outpaces" },
+    { label: "E", text: "price fall" }
+  ],
+  explanation: "prices fall should be price falls."
+};
+const ocrProcessed = postProcessQuestion("GRAMMAR_ERROR", ocrPassage, ocrAi);
+
+const existingErrorPassage = "In your brain, there is a part that is responsible for solve problems and controlling your emotions. At the same time, you may feel confused about who are you.";
+const existingErrorAi = {
+  direction: "Choose the grammatically incorrect underlined part.",
+  markedExpressions: [
+    { label: "A", expression: "solving", errorExpression: "solve", isError: true, correction: "solving", surroundingText: "responsible for solve problems" },
+    { label: "B", expression: "your brain", isError: false, surroundingText: "In your brain, there is" },
+    { label: "C", expression: "there is", isError: false, surroundingText: "there is a part" },
+    { label: "D", expression: "responsible for", isError: false, surroundingText: "part that is responsible for" },
+    { label: "E", expression: "who you are", isError: false, surroundingText: "confused about who you are" }
+  ],
+  correctAnswer: "A",
+  options: [
+    { label: "A", text: "solve" },
+    { label: "B", text: "your brain" },
+    { label: "C", text: "there is" },
+    { label: "D", text: "responsible for" },
+    { label: "E", text: "who you are" }
+  ],
+  explanation: "solve should be solving after responsible for."
+};
+const existingErrorProcessed = postProcessQuestion("GRAMMAR_ERROR", existingErrorPassage, existingErrorAi);
 const formattedPassage = formatInlineMarkersForSubtype(
   processed.data.passageWithMarkers,
   "GRAMMAR_ERROR",
@@ -124,6 +168,10 @@ function collectText(value) {
 
 process.stdout.write(JSON.stringify({
   passageWithMarkers: processed.data.passageWithMarkers,
+  ocrPassageWithMarkers: ocrProcessed.data.passageWithMarkers,
+  ocrWarnings: ocrProcessed.warnings,
+  existingErrorPassageWithMarkers: existingErrorProcessed.data.passageWithMarkers,
+  existingErrorWarnings: existingErrorProcessed.warnings,
   formattedPassage,
   previewText,
   previewOptionCount,
@@ -155,6 +203,31 @@ function runHarness() {
 }
 
 const result = runHarness();
+
+test("GRAMMAR_ERROR maps one-letter OCR prefix noise before marker rendering", () => {
+  assert.match(result.ocrPassageWithMarkers, /__\(D\) outpaces__/);
+  assert.doesNotMatch(result.ocrPassageWithMarkers, /Coutpaces/);
+  assert.ok(
+    result.ocrWarnings.some((warning) =>
+      warning.includes("OCR-noisy source token matched for label (D)"),
+    ),
+  );
+});
+
+test("GRAMMAR_ERROR can mark an existing source error expression", () => {
+  assert.match(result.existingErrorPassageWithMarkers, /__\(A\) solve__/);
+  assert.match(result.existingErrorPassageWithMarkers, /__\(E\) who you are__/);
+  assert.ok(
+    result.existingErrorWarnings.some((warning) =>
+      warning.includes("Existing error expression matched for label (A)"),
+    ),
+  );
+  assert.ok(
+    result.existingErrorWarnings.some((warning) =>
+      warning.includes("Corrected source variant matched for label (E)"),
+    ),
+  );
+});
 
 test("GRAMMAR_ERROR renders circled passage markers and suppresses option lists", () => {
   assert.match(result.passageWithMarkers, /__\(A\) depend__/);

@@ -1,28 +1,30 @@
 import { logger } from "@trigger.dev/sdk/v3";
+import type { Prisma } from "@prisma/client";
 import { PAGE_LEASE_DURATION_MS } from "@/lib/extraction/constants";
 import { prisma } from "@/lib/prisma";
 
-export type ClaimedPageRow = Awaited<ReturnType<typeof loadClaimedPageRow>>;
-
-async function loadClaimedPageRow(idempotencyKey: string) {
-  const row = await prisma.extractionPage.findUnique({
-    where: { idempotencyKey },
-    include: {
-      job: {
-        select: {
-          academyId: true,
-          createdById: true,
-          mode: true,
-          totalPages: true,
-        },
+// 페이지 워커가 필요로 하는 job 필드만 select. 트랜잭션 내부 findUnique와
+// ClaimedPageRow 타입이 같은 정의를 공유하게 한 곳에 둔다 — 예전엔 두 select가
+// 따로 적혀 있다가 outputMode가 한쪽(미사용 경로)에만 추가되는 드리프트가 나
+// verbatim 고속경로가 작동하지 않았다. satisfies + GetPayload + 캐스팅 제거로
+// 런타임 select와 타입이 어긋나면 tsc가 즉시 잡도록 한다.
+const PAGE_WITH_JOB = {
+  include: {
+    job: {
+      select: {
+        academyId: true,
+        createdById: true,
+        mode: true,
+        totalPages: true,
+        // P7-D2: "verbatim"이면 페이지 OCR에서 Gemini를 건너뛰고 Document AI
+        // 순수 OCR만 돌린다(그대로 추출 고속 경로). null=기존 Gemini 경로.
+        outputMode: true,
       },
     },
-  });
-  if (!row) {
-    throw new Error(`page row missing after claim: ${idempotencyKey}`);
-  }
-  return row;
-}
+  },
+} satisfies Prisma.ExtractionPageDefaultArgs;
+
+export type ClaimedPageRow = Prisma.ExtractionPageGetPayload<typeof PAGE_WITH_JOB>;
 
 /**
  * Phase A: Acquire lease + wipe retry crumbs in ONE transaction.
@@ -68,16 +70,7 @@ export async function claimPageLease(params: {
 
     const row = await tx.extractionPage.findUnique({
       where: { idempotencyKey },
-      include: {
-        job: {
-          select: {
-            academyId: true,
-            createdById: true,
-            mode: true,
-            totalPages: true,
-          },
-        },
-      },
+      ...PAGE_WITH_JOB,
     });
     if (!row) {
       throw new Error(`page row missing after claim: ${idempotencyKey}`);
@@ -89,7 +82,7 @@ export async function claimPageLease(params: {
     // retry. Atomic with the lease claim → zero-gap.
     await tx.extractionItem.deleteMany({ where: { pageId: row.id } });
 
-    return row as ClaimedPageRow;
+    return row;
   });
 
   if (!pageAfterClaim) {

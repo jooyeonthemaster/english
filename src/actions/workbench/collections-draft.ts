@@ -132,7 +132,7 @@ export async function addDraftsToCollection(
       select: { id: true },
     });
     if (!collection) {
-      return { success: false as const, error: "?대뜑瑜?李얠쓣 ???놁뒿?덈떎." };
+      return { success: false as const, error: "폴더를 찾을 수 없습니다." };
     }
 
     const drafts = await prisma.extractionM1PassageDraft.findMany({

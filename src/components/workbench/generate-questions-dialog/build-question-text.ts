@@ -43,8 +43,6 @@ export function buildQuestionText(q: any): string {
   if (q.scrambledWords?.length) parts.push(`[배열 단어] ${q.scrambledWords.join(" / ")}`);
   if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);
   if (q.sentenceWithError && !isGrammarCorrection) parts.push(grammarCorrectionErrorSentenceForQuestionText(q));
-  if (q.targetWord) parts.push(`[대상 단어] ${q.targetWord}`);
-  if (q.contextSentence) parts.push(`[문맥] ${q.contextSentence}`);
   if (q.questionText) parts.push(q.questionText);
   return parts.join("\n\n") || "";
 }

@@ -191,6 +191,8 @@ export async function GET(req: NextRequest) {
     Math.max(1, Number(req.nextUrl.searchParams.get("limit") ?? 200)),
   );
   const jobId = req.nextUrl.searchParams.get("jobId");
+  // Fetch the draft behind a committed Passage (생성 페이지 "지문 전체 보기").
+  const savedPassageId = req.nextUrl.searchParams.get("savedPassageId");
   const view = req.nextUrl.searchParams.get("view");
   const cursor = decodeListCursor(req.nextUrl.searchParams.get("cursor"));
 
@@ -199,6 +201,7 @@ export async function GET(req: NextRequest) {
     const drafts = await prisma.extractionM1PassageDraft.findMany({
       where: {
         ...(jobId ? { jobId } : {}),
+        ...(savedPassageId ? { savedPassageId } : {}),
         deletedAt: null,
         ...(cursor && cursorDate && !Number.isNaN(cursorDate.getTime())
           ? {
@@ -344,6 +347,7 @@ export async function GET(req: NextRequest) {
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
       ...(jobId ? { jobId } : {}),
+      ...(savedPassageId ? { savedPassageId } : {}),
       deletedAt: null,
       reviewStatus: { in: VISIBLE_M1_DRAFT_STATUSES },
       job: {

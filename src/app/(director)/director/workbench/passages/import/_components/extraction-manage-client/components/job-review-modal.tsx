@@ -14,6 +14,7 @@ import type { JobMetaSnapshot } from "../drafts-cache";
 import { compareDraftAnalysisPriority } from "../utils/analysis-status";
 import {
   DraftCard,
+  type DraftCardActionVariant,
   type DraftCardStatusBadgeMode,
 } from "./draft-card";
 import { ImagePages, type PageImage } from "./image-carousel";
@@ -61,6 +62,7 @@ interface JobReviewModalProps {
    *  the active blue stripe on the corresponding card. */
   externalSelectedDraftId?: string | null;
   statusBadgeMode?: DraftCardStatusBadgeMode;
+  detailAction?: DraftCardActionVariant;
 }
 
 export function JobReviewModal({
@@ -82,6 +84,7 @@ export function JobReviewModal({
   onSelectDraftExternal,
   externalSelectedDraftId = null,
   statusBadgeMode = "review",
+  detailAction,
 }: JobReviewModalProps) {
   const externallyPicking = typeof onSelectDraftExternal === "function";
   const [pages, setPages] = useState<PageImage[]>([]);
@@ -579,7 +582,8 @@ export function JobReviewModal({
                 className="grid grid-cols-1 gap-2"
                 value={modalCheckedIds}
                 onChange={handleMarqueeChange}
-                boundaryRef={draftListRef}
+                itemScopeRef={draftListRef}
+                allowCardDescendantDragStart
               >
                 {orderedDrafts.map((draft, index) => (
                   <DraftCard
@@ -604,6 +608,7 @@ export function JobReviewModal({
                     bulkDragIds={bulkDragIds}
                     onTitleChange={onRenameDraft}
                     statusBadgeMode={statusBadgeMode}
+                    detailAction={detailAction}
                   />
                 ))}
               </DragSelect>

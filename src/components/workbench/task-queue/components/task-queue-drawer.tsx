@@ -28,7 +28,7 @@ export function TaskQueueDrawer() {
         >
           <X className="size-4" aria-hidden="true" />
         </button>
-        <TaskQueuePanel />
+        {open ? <TaskQueuePanel /> : null}
       </div>
     </div>
   );

@@ -5,7 +5,32 @@
 // (adaptive-intake D-G2)
 // ============================================================================
 
+import { MAX_PAGE_IMAGE_BYTES } from "@/lib/extraction/constants";
 import type { CropBox } from "@/lib/extraction/types";
+
+/**
+ * canvas를 MAX_PAGE_IMAGE_BYTES(5MB) 이하가 되도록 품질을 낮춰가며 인코딩한다.
+ * 못 맞추면 최선치를 반환(호출부/추출 직전 가드가 최종 차단). 합친 이미지가 5MB를
+ * 넘어 추출 단계에서 서버에 거부당하던 문제(HIGH-1) 완화.
+ */
+async function encodeCanvasUnderLimit(
+  canvas: HTMLCanvasElement,
+  mime: string,
+  startQuality: number,
+): Promise<Blob> {
+  const qualities = [startQuality, 0.85, 0.78, 0.7, 0.62, 0.5];
+  let last: Blob | null = null;
+  for (const q of qualities) {
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob((b) => resolve(b), mime, q),
+    );
+    if (!blob) continue;
+    last = blob;
+    if (blob.size <= MAX_PAGE_IMAGE_BYTES) return blob;
+  }
+  if (last) return last;
+  throw new Error("이미지 인코딩에 실패했습니다.");
+}
 
 /** 최소 크롭 변 길이 (정규화) — 너무 작은 영역 방지. */
 export const MIN_CROP_SIZE = 0.03;
@@ -155,13 +180,7 @@ export async function cropImageToBlob(
 
     const mime = opts?.mime ?? "image/jpeg";
     const quality = opts?.quality ?? 0.92;
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob(
-        (b) => (b ? resolve(b) : reject(new Error("이미지 자르기에 실패했습니다."))),
-        mime,
-        quality,
-      );
-    });
+    const blob = await encodeCanvasUnderLimit(canvas, mime, quality);
     return {
       blob,
       width: sw,
@@ -170,5 +189,103 @@ export async function cropImageToBlob(
     };
   } finally {
     bitmap.close?.();
+  }
+}
+
+/**
+ * 여러 정규화 박스를 순서대로 세로로 이어붙여 단일 이미지(=한 지문)로 만든다.
+ * 한 지문이 여러 칼럼/페이지 영역에 나뉜 경우(C4/C5) 1개 지문으로 추출하기 위함.
+ * 박스 순서 = 읽기 순서(1→2→…). 폭이 다르면 좌측 정렬, 최대 폭 기준 캔버스.
+ */
+export async function stitchCropsToBlob(
+  source: Blob,
+  boxes: CropBox[],
+  opts?: { quality?: number; mime?: string; gap?: number },
+): Promise<{ blob: Blob; width: number; height: number; previewUrl: string }> {
+  if (boxes.length === 0) throw new Error("이어붙일 영역이 없습니다.");
+  const bitmap = await createImageBitmap(source, {
+    imageOrientation: "from-image",
+  });
+  try {
+    const gap = Math.max(0, opts?.gap ?? 0);
+    const px = boxes.map((b) => ({
+      sx: Math.round(clamp01(b.x) * bitmap.width),
+      sy: Math.round(clamp01(b.y) * bitmap.height),
+      sw: Math.max(1, Math.round(b.w * bitmap.width)),
+      sh: Math.max(1, Math.round(b.h * bitmap.height)),
+    }));
+    const width = Math.max(1, ...px.map((p) => p.sw));
+    const height =
+      px.reduce((sum, p) => sum + p.sh, 0) + gap * Math.max(0, px.length - 1);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("canvas 2d 컨텍스트를 사용할 수 없습니다.");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    let y = 0;
+    for (const p of px) {
+      ctx.drawImage(bitmap, p.sx, p.sy, p.sw, p.sh, 0, y, p.sw, p.sh);
+      y += p.sh + gap;
+    }
+
+    const mime = opts?.mime ?? "image/jpeg";
+    const quality = opts?.quality ?? 0.92;
+    const blob = await encodeCanvasUnderLimit(canvas, mime, quality);
+    return { blob, width, height, previewUrl: URL.createObjectURL(blob) };
+  } finally {
+    bitmap.close?.();
+  }
+}
+
+/**
+ * 여러 독립 이미지(blob)를 순서대로 세로로 이어붙여 단일 이미지(=한 지문)로 만든다.
+ * 페이지/장 경계를 넘는 "한 지문"을 1개 슬롯=1 OCR로 추출하기 위함 (접근 A).
+ * blob 순서 = 읽기 순서(1→2→…). 폭이 다르면 좌측 정렬, 최대 폭 기준 캔버스.
+ * maxWidth 초과 시 비율 유지 다운스케일(긴 이미지 OCR 글자 뭉개짐 가드).
+ */
+export async function stitchSlotsToBlob(
+  blobs: Blob[],
+  opts?: { quality?: number; mime?: string; gap?: number; maxWidth?: number },
+): Promise<{ blob: Blob; width: number; height: number; previewUrl: string }> {
+  if (blobs.length === 0) throw new Error("이어붙일 이미지가 없습니다.");
+  const gap = Math.max(0, opts?.gap ?? 0);
+  const bitmaps = await Promise.all(
+    blobs.map((b) => createImageBitmap(b, { imageOrientation: "from-image" })),
+  );
+  try {
+    const rawWidth = Math.max(1, ...bitmaps.map((b) => b.width));
+    const scale =
+      opts?.maxWidth && rawWidth > opts.maxWidth ? opts.maxWidth / rawWidth : 1;
+    const width = Math.round(rawWidth * scale);
+    const heights = bitmaps.map((b) => Math.max(1, Math.round(b.height * scale)));
+    const height =
+      heights.reduce((s, h) => s + h, 0) + gap * Math.max(0, bitmaps.length - 1);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("canvas 2d 컨텍스트를 사용할 수 없습니다.");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    let y = 0;
+    bitmaps.forEach((b, i) => {
+      const w = Math.max(1, Math.round(b.width * scale));
+      const h = heights[i];
+      ctx.drawImage(b, 0, 0, b.width, b.height, 0, y, w, h); // 좌측 정렬
+      y += h + gap;
+    });
+
+    const mime = opts?.mime ?? "image/jpeg";
+    const quality = opts?.quality ?? 0.92;
+    const blob = await encodeCanvasUnderLimit(canvas, mime, quality);
+    return { blob, width, height, previewUrl: URL.createObjectURL(blob) };
+  } finally {
+    bitmaps.forEach((b) => b.close?.());
   }
 }

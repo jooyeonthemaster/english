@@ -388,11 +388,9 @@ export function TemplateSettingsPanel({
 
       <div>
         <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">지문 스타일</p>
-        <div className={cn("grid grid-cols-3", sidebar ? "gap-1.5" : "gap-2")}>
+        <div className={cn("grid grid-cols-1", sidebar ? "gap-1.5" : "gap-2")}>
           {([
-            ["boxed", "박스"],
             ["plain", "본문"],
-            ["underlined", "밑줄"],
           ] as const).map(([value, label]) => (
             <button
               key={value}

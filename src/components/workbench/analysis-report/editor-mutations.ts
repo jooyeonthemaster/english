@@ -118,18 +118,41 @@ export function setBlockMeta(report: AnalysisReport, id: string, patch: Partial<
   return { ...report, blockMeta };
 }
 
+/** 표(grammar/exam/vocab) 열 너비(퍼센트 맵) 저장 — 세로 구분선 드래그 결과 커밋. */
+export function setTableColWidths(
+  report: AnalysisReport,
+  group: string,
+  widths: Record<string, number>,
+): AnalysisReport {
+  const tableColWidths = { ...(report.tableColWidths ?? {}) };
+  tableColWidths[group] = { ...widths };
+  return { ...report, tableColWidths };
+}
+
 /** blockOrder(부분 가능)를 자연 순서 id 목록에 적용해 최종 표시 순서를 만든다. */
 export function applyBlockOrder(naturalIds: string[], order?: string[]): string[] {
   if (!order || order.length === 0) return naturalIds;
-  const pos = new Map(order.map((id, i) => [id, i]));
-  return naturalIds
-    .map((id, i) => ({ id, i }))
-    .sort((a, b) => {
-      const pa = pos.has(a.id) ? (pos.get(a.id) as number) : order.length + a.i;
-      const pb = pos.has(b.id) ? (pos.get(b.id) as number) : order.length + b.i;
-      return pa - pb;
-    })
-    .map((x) => x.id);
+  // 저장된 순서 중 실제 존재하는 id 만 (순서 유지)
+  const naturalSet = new Set(naturalIds);
+  const result = order.filter((id) => naturalSet.has(id));
+  const placed = new Set(result);
+  // 저장된 순서에 없던 '새 id'(표지/영어 원문 페이지 등)는 맨 뒤로 보내지 말고,
+  // 자연 순서상 '바로 앞 이웃' 뒤에 끼워 넣어 원래 위치(예: 맨 앞)를 유지한다.
+  for (let i = 0; i < naturalIds.length; i++) {
+    const id = naturalIds[i];
+    if (placed.has(id)) continue;
+    let anchor: string | null = null;
+    for (let j = i - 1; j >= 0; j--) {
+      if (placed.has(naturalIds[j])) {
+        anchor = naturalIds[j];
+        break;
+      }
+    }
+    const insertAt = anchor ? result.indexOf(anchor) + 1 : 0;
+    result.splice(insertAt, 0, id);
+    placed.add(id);
+  }
+  return result;
 }
 
 /** 드롭: source 를 target 의 before/after 로 옮긴 전체 순서 배열. */

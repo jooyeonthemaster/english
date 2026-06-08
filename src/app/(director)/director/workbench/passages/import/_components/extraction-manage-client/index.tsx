@@ -10,6 +10,7 @@ import {
 } from "react";
 import {
   AlertCircle,
+  ArrowDownToLine,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -94,7 +95,7 @@ interface ExtractionManageClientProps {
   initialCollectionMembership: Record<string, Set<string>>;
   /** When true, drop the page-bleed wrapper (-m-6) and render inside a
    *  clipped container that fits its parent. Used when embedding this
-   *  surface as a left-column picker (e.g. in 지문 분석 - 새 지문 등록). */
+   *  surface as a left-column picker (e.g. in 학습지 생성 - 새 지문 등록). */
   embedded?: boolean;
   /** When provided, clicking a draft card calls this callback instead of
    *  opening the built-in DraftDetailModal. Used by embedders that want to
@@ -113,6 +114,8 @@ interface ExtractionManageClientProps {
    *  선택 영역(예: 지문 목록 큐)과 함께 놓일 때, 영역이 섞이지 않도록 이 패널만의
    *  경계를 지정한다. 미지정 시 DragSelect 가 전역 기본 경계(본문)를 쓴다. */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
+  /** Page-specific copy for draft card action buttons. Defaults to 상세보기. */
+  draftDetailActionMode?: "detail" | "import";
 }
 
 const MATERIAL_GRID_OPTIONS = [
@@ -202,7 +205,12 @@ export function ExtractionManageClient({
   onBulkAnalyze,
   bulkAnalyzing = false,
   marqueeBoundaryRef,
+  draftDetailActionMode = "detail",
 }: ExtractionManageClientProps) {
+  const draftDetailAction =
+    draftDetailActionMode === "import"
+      ? { label: "가져오기", icon: ArrowDownToLine }
+      : undefined;
   void academyId;
 
   const externallyPicking = typeof onSelectDraftExternal === "function";
@@ -1341,6 +1349,7 @@ export function ExtractionManageClient({
                     onRenameDraft={actions.updateDraftTitle}
                     onRenameSourceMaterial={actions.renameSourceMaterial}
                     statusBadgeMode={embedded ? "analysis" : "review"}
+                    detailAction={draftDetailAction}
                     groupIndexBySourceMaterialId={
                       display.groupIndexBySourceMaterialId
                     }
@@ -1466,6 +1475,7 @@ export function ExtractionManageClient({
               externallyPicking ? onSelectDraftExternal : undefined
             }
             statusBadgeMode={embedded ? "analysis" : "review"}
+            detailAction={draftDetailAction}
           />
         ) : null}
 

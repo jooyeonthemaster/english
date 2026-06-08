@@ -10,6 +10,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { normalizeAnalysisTone } from "@/lib/passage-analysis-options";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,6 +45,12 @@ export async function POST(req: NextRequest) {
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
   }
+
+  await cleanupStaleWorkbenchAiJobs({
+    academyId: staff.academyId,
+    domain: "PASSAGE_ANALYSIS",
+    passageId: passage.id,
+  });
 
   const active = await prisma.workbenchAiJob.findFirst({
     where: {

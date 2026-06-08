@@ -65,35 +65,24 @@ export const COMING_SOON_FEATURE_BY_PATH: Record<string, { feature: string; labe
 
 export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  // 원장 대시보드는 제거됐다(문제 생성 페이지가 사실상의 홈). 교사(/teacher)는
+  // 기존 대시보드를 그대로 쓰므로 교사일 때만 대시보드 메뉴를 노출한다.
+  const isTeacher = basePath === "/teacher";
 
   return [
-    {
-      title: "",
-      items: [
-        { label: "대시보드", icon: LayoutDashboard, href: basePath },
-      ],
-    },
+    ...(isTeacher
+      ? [
+          {
+            title: "",
+            items: [
+              { label: "대시보드", icon: LayoutDashboard, href: basePath },
+            ],
+          },
+        ]
+      : []),
     {
       title: "출제 파이프라인",
       items: [
-        {
-          label: "자료 추출",
-          icon: MaterialExtractionIcon,
-          href: `${basePath}/workbench/extraction`,
-          children: [
-            { label: "자료 추출", href: `${basePath}/workbench/extraction` },
-            { label: "자료 관리", href: `${basePath}/workbench/extraction/jobs` },
-          ],
-        },
-        {
-          label: "지문 분석",
-          icon: PassageAnalysisIcon,
-          href: `${basePath}/workbench/passages/create`,
-          children: [
-            { label: "지문 분석", href: `${basePath}/workbench/passages/create` },
-            { label: "지문 관리", href: `${basePath}/workbench/passages` },
-          ],
-        },
         {
           label: "문제 생성",
           icon: QuestionGenerationIcon,
@@ -111,6 +100,24 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
             { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams` },
+          ],
+        },
+        {
+          label: "학습지 생성",
+          icon: PassageAnalysisIcon,
+          href: `${basePath}/workbench/passages/create`,
+          children: [
+            { label: "학습지 생성", href: `${basePath}/workbench/passages/create` },
+            { label: "학습지 관리", href: `${basePath}/workbench/passages` },
+          ],
+        },
+        {
+          label: "자료 추출",
+          icon: MaterialExtractionIcon,
+          href: `${basePath}/workbench/extraction`,
+          children: [
+            { label: "자료 추출", href: `${basePath}/workbench/extraction` },
+            { label: "자료 관리", href: `${basePath}/workbench/extraction/jobs` },
           ],
         },
       ],

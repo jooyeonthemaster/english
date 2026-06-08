@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Database, FileText, Rows3 } from "lucide-react";
+import { Database, FileText, Filter, Rows3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -236,6 +236,39 @@ export function QuestionLibraryPanel({
     }
   };
 
+  // ─── 지금 화면을 좁히고 있는 필터를 사람이 읽을 수 있게 요약한다 ───
+  // statusCounts.all 은 검수상태 세그먼트를 제외한 모든 필터(폴더·유형·난이도·중요·
+  // 검색)를 적용한 개수다. 즉 "이 위치에 실제로 들어있는 문항 수". 따라서
+  // filteredQuestions.length 가 0인데 statusCounts.all 이 0보다 크면, 검수상태(또는
+  // 다른) 필터가 가린 것이며 폴더 배지(전체 멤버 수)와 어긋나 보이게 된다.
+  const statusFilterActive = approvedFilter !== "ALL";
+  const statusLabel = approvedFilter === "pending" ? "미검수" : "검수완료";
+  // 검수상태 필터로 가려진(반대 상태) 문항 수.
+  const statusHiddenCount =
+    approvedFilter === "pending"
+      ? statusCounts.approved
+      : approvedFilter === "approved"
+        ? statusCounts.pending
+        : 0;
+  const otherFilters: { label: string; clear: () => void }[] = [];
+  if (search.trim())
+    otherFilters.push({ label: `검색 "${search.trim()}"`, clear: () => setSearch("") });
+  if (difficulty !== "ALL")
+    otherFilters.push({ label: "난이도", clear: () => setDifficulty("ALL") });
+  if (selectedSubTypes.length > 0)
+    otherFilters.push({ label: "유형", clear: () => setSelectedSubTypes([]) });
+  if (starredOnly)
+    otherFilters.push({ label: "중요만", clear: () => setStarredOnly(false) });
+  const anyFilterActive = statusFilterActive || otherFilters.length > 0;
+  const locationLabel = activeFolder ? "이 폴더" : "전체 문제";
+  const clearAllFilters = () => {
+    setApprovedFilter("ALL");
+    setSearch("");
+    setDifficulty("ALL");
+    setSelectedSubTypes([]);
+    setStarredOnly(false);
+  };
+
   return (
     <section className="flex min-w-0 flex-col overflow-hidden border-r border-slate-200/80 bg-white">
       {/* 마키(영역 드래그) 선택 — 패널 어디서든(폴더바·툴바·카드 사이 여백·카드 아래
@@ -347,13 +380,107 @@ export function QuestionLibraryPanel({
         </div>
       </div>
 
+      {/* 필터 상태 배너 — "지금 무엇만 보고 있는지"를 항상 명확히 알린다.
+          검수상태(미검수/검수완료) 또는 다른 필터가 켜져 있으면 결과가 있든 없든
+          상단에 띠로 표시해, 폴더 배지 개수와 화면 개수가 어긋나도 혼란이 없게 한다. */}
+      {anyFilterActive && (
+        <div className="shrink-0 border-b border-blue-100 bg-blue-50/70 px-4 py-2">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
+            <Filter className="size-3.5 shrink-0 text-blue-500" />
+            {statusFilterActive ? (
+              <span className="font-semibold text-blue-700">
+                지금 ‘{statusLabel}’ 문항만 표시 중
+                {statusHiddenCount > 0 && (
+                  <span className="font-normal text-blue-500">
+                    {" "}· {approvedFilter === "pending" ? "검수완료" : "미검수"} {statusHiddenCount}개 숨김
+                  </span>
+                )}
+              </span>
+            ) : (
+              <span className="font-semibold text-blue-700">필터가 적용되어 있습니다</span>
+            )}
+            {otherFilters.map((f) => (
+              <span
+                key={f.label}
+                className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-slate-600 ring-1 ring-slate-200"
+              >
+                {f.label}
+                <button
+                  type="button"
+                  onClick={f.clear}
+                  aria-label={`${f.label} 필터 해제`}
+                  className="text-slate-400 hover:text-slate-700"
+                >
+                  <X className="size-2.5" />
+                </button>
+              </span>
+            ))}
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="ml-auto shrink-0 rounded-md bg-blue-600 px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-blue-700"
+            >
+              전체 보기
+            </button>
+          </div>
+        </div>
+      )}
+
       <div id="exam-question-bank-scroll" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-4">
         {filteredQuestions.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-            <FileText className="h-9 w-9 text-slate-300" />
-            <p className="text-[13px] font-semibold text-slate-500">문제가 없습니다</p>
-            <p className="text-[12px] text-slate-400">문제 생성 탭에서 먼저 문제를 만들거나 필터를 조정해주세요.</p>
-          </div>
+          anyFilterActive && statusCounts.all > 0 ? (
+            // 실제로는 문항이 있는데 필터가 전부 가린 경우 — 왜 비었는지 명확히 설명.
+            <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+              <Filter className="h-9 w-9 text-blue-300" />
+              <div className="space-y-1">
+                <p className="text-[13px] font-semibold text-slate-600">
+                  필터에 가려진 문항이 있습니다
+                </p>
+                <p className="text-[12px] leading-relaxed text-slate-500">
+                  {locationLabel}에는 <span className="font-semibold text-slate-700">{statusCounts.all}개</span> 문항이 있지만,
+                  {statusFilterActive ? (
+                    <>
+                      {" "}현재 <span className="font-semibold text-blue-600">‘{statusLabel}’만 보기</span>로 설정돼 있어
+                      표시할 문항이 없습니다.
+                      <br />
+                      (미검수 {statusCounts.pending}개 · 검수완료 {statusCounts.approved}개)
+                    </>
+                  ) : (
+                    <> 적용된 필터 때문에 표시할 문항이 없습니다.</>
+                  )}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {statusFilterActive && (
+                  <button
+                    type="button"
+                    onClick={() => setApprovedFilter("ALL")}
+                    className="rounded-md bg-blue-600 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-blue-700"
+                  >
+                    검수 상태 ‘전체’로 보기
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={clearAllFilters}
+                  className="rounded-md border border-slate-300 px-3 py-1.5 text-[11px] font-medium text-slate-600 hover:bg-slate-50"
+                >
+                  필터 모두 해제
+                </button>
+              </div>
+            </div>
+          ) : (
+            // 필터와 무관하게 정말로 문항이 없는 경우.
+            <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
+              <FileText className="h-9 w-9 text-slate-300" />
+              <p className="text-[13px] font-semibold text-slate-500">문제가 없습니다</p>
+              <p className="text-[12px] text-slate-400">
+                {activeFolder
+                  ? "이 폴더에 담긴 문항이 없습니다. 문제를 드래그해 담아보세요."
+                  : "문제 생성 탭에서 먼저 문제를 만들어주세요."}
+              </p>
+            </div>
+          )
         ) : libraryView === "passages" ? (
           <PassageGroupedView
             passages={groupedPassages}

@@ -233,7 +233,7 @@ export function DoneStep() {
     setAnalysisRunning(false);
     const success = total - failed;
     if (failed === 0) {
-      toast.success(`${success}/${total}개 지문 분석 완료`);
+      toast.success(`${success}/${total}개 학습지 생성 완료`);
     } else if (success === 0) {
       toast.error(`분석 실패 (${failed}/${total})`);
     } else {

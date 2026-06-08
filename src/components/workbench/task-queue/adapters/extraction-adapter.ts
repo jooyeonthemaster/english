@@ -91,7 +91,7 @@ async function deleteExtractionJob(jobId: string, status: TaskStatus) {
 export const extractionAdapter: TaskAdapter = {
   domain: "extraction",
   async fetchTasks(signal): Promise<BaseTask[]> {
-    const res = await fetch("/api/extraction/jobs?limit=50", {
+    const res = await fetch("/api/extraction/jobs?limit=50&thumbnails=0", {
       credentials: "include",
       cache: "no-store",
       signal,

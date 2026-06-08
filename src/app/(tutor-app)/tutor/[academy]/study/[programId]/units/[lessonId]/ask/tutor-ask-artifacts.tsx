@@ -223,7 +223,7 @@ export function ArtifactsPanel({
             <p className="text-xs font-semibold leading-5 text-slate-500">
               질문 끝에 <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-700">시각화 해줘</span>를 붙이면
               <br />
-              지문 분석을 SVG 도식으로 정리해 드려요.
+              학습지 생성을 SVG 도식으로 정리해 드려요.
             </p>
           </div>
         ) : (

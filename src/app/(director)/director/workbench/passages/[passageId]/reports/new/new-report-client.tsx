@@ -98,7 +98,7 @@ export function NewReportClient({
         </div>
         {!hasAnalysis ? (
           <p style={{ fontSize: 12, color: "rgb(71, 85, 105)", marginTop: 8 }}>
-            아직 지문 분석이 완료되지 않아 &ldquo;분석에서 변환&rdquo;을 쓸 수 없습니다.
+            아직 학습지 생성이 완료되지 않아 &ldquo;분석에서 변환&rdquo;을 쓸 수 없습니다.
           </p>
         ) : null}
       </section>

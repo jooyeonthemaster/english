@@ -54,6 +54,7 @@ export const DragHandle = forwardRef<
   return (
     <div
       ref={ref}
+      data-drag-select-ignore
       title={title}
       aria-label="드래그 핸들"
       // pointer 이벤트를 받아야 드래그 시작 가능. 카드 클릭(선택)과 충돌하지 않도록

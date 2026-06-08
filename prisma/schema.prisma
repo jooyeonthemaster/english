@@ -2339,6 +2339,10 @@ model ExtractionJob {
   triageConfidence Float?
   /// Triage-estimated passage count — progress denominator before real count.
   estimatedPassageCount Int?
+  /// (P7-D2) 추출 산출물 모드(잡 단위 "기본 의도"). "verbatim"(원문 그대로) | "restored"(AI 복원).
+  /// 진실의 소스는 지문별(Passage.extractionOutput / Draft.restorationStatus).
+  /// null = 미전달(비적응 흐름) → finalize는 기존 자동복원 휴리스틱 유지.
+  outputMode String?
 
   status       String @default("PENDING")
   totalPages   Int
@@ -2730,6 +2734,9 @@ model ExtractionM1PassageDraft {
 
   confirmedAt    DateTime?
   savedPassageId String?
+  /// (P7-D2) AI 복원 차감 CreditTransaction.id. null=미과금. 환불 후 null 복원.
+  /// (ExtractionPage.creditTxId 멱등 패턴과 동일)
+  restorationCreditTxId String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?

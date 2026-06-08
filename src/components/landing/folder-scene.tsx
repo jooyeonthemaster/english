@@ -67,7 +67,7 @@ export function FolderScene() {
             <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">파일 시스템 기반으로 관리</span>합니다.
           </h2>
           <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-2xl mx-auto break-keep">
-            1회성으로 쓰고 날아가는 웹 데이터가 아닙니다. 모든 지문 분석 결과와 생성된 시험지들은 
+            1회성으로 쓰고 날아가는 웹 데이터가 아닙니다. 모든 학습지 생성 결과와 생성된 시험지들은
             마치 내 컴퓨터의 폴더처럼 학교별, 학년별, 연도별 트리 구조에 안전하게 아카이빙 됩니다. 
             내년 시험 기간에 작년 자료를 완벽하게 꺼내어 바로 사용할 수 있습니다.
           </p>

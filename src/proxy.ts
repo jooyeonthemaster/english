@@ -76,7 +76,10 @@ export const proxy = auth(async (req) => {
   }
 
   if (pathname === "/login" && isStaffLoggedIn) {
-    const redirectTo = staffRole === "DIRECTOR" ? "/director" : "/teacher";
+    const redirectTo =
+      staffRole === "DIRECTOR"
+        ? "/director/workbench/questions/generate"
+        : "/teacher";
     return NextResponse.redirect(new URL(redirectTo, req.nextUrl.origin));
   }
 

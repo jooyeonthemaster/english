@@ -453,7 +453,7 @@ export function TutorProgramBuilderClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
           <div className="flex items-center gap-3 rounded-xl bg-white px-6 py-4 shadow-xl">
             <Loader2 className="size-5 animate-spin text-blue-600" />
-            <span className="text-[13px] font-medium text-slate-700">지문 분석 데이터 로딩 중...</span>
+            <span className="text-[13px] font-medium text-slate-700">학습지 생성 데이터 로딩 중...</span>
           </div>
         </div>
       )}

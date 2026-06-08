@@ -169,8 +169,13 @@ function HighlightedText({
               e.stopPropagation();
               onSelectChange(isActive ? null : segment.changeId);
             }}
+            // `-mx-0.5` cancels the `px-0.5` so the mark's inline advance
+            // matches plain text exactly. Without this, every highlighted run
+            // is 4px wider than the same text in the transparent <textarea>
+            // overlay, so the highlight layer wraps to more lines than the
+            // textarea — and scrollTop-sync can't reveal its last line(s).
             className={
-              "pointer-events-auto cursor-pointer rounded px-0.5 transition-colors " +
+              "pointer-events-auto cursor-pointer rounded px-0.5 -mx-0.5 transition-colors " +
               (isActive
                 ? "bg-violet-200 text-violet-950 ring-1 ring-violet-400"
                 : isHovered

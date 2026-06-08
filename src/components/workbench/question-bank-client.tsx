@@ -984,7 +984,7 @@ export function QuestionBankClient({
             </p>
             <p className="text-sm text-slate-400 mt-1">
               {isGrouped
-                ? "지문 분석을 거친 지문에서 생성된 문제만 표시됩니다."
+                ? "학습지 생성을 거친 지문에서 생성된 문제만 표시됩니다."
                 : "AI 워크벤치에서 문제를 생성해보세요"}
             </p>
           </div>

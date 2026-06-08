@@ -180,26 +180,36 @@ export function JobCard({
 
   const showRename = variant === "compact" && editable && !editing && onRename;
   const showDelete = variant === "detailed" && onDelete;
+  const selectionMode = Boolean(onToggleCheck);
+  const handleCardAction = () => {
+    if (onToggleCheck) {
+      onToggleCheck();
+      return;
+    }
+    onClick();
+  };
 
   return (
     <article
       ref={dragRef}
       role="button"
       tabIndex={0}
-      onClick={editing ? undefined : onClick}
+      onClick={editing ? undefined : handleCardAction}
       onKeyDown={(e) => {
         if (editing) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onClick();
+          handleCardAction();
         }
       }}
-      aria-pressed={active}
+      aria-pressed={selectionMode ? Boolean(checked) : active}
       title={label}
       className={
         "group relative flex shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (variant === "compact" ? "w-[78px] " : "w-[150px] ") +
-        (canDrag
+        (selectionMode
+          ? "cursor-pointer "
+          : canDrag
           ? isDragging
             ? "cursor-grabbing opacity-60 "
             : "cursor-grab active:cursor-grabbing "

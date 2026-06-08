@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { startAdaptivePoll } from "@/lib/adaptive-poll";
+
 import { ALL_ADAPTERS } from "../adapters";
 import { POLL_INTERVAL_MS } from "../constants";
 import type { BaseTask, TaskScope } from "../types";
@@ -44,44 +46,45 @@ export function useTaskList({
   }, [scope]);
 
   useEffect(() => {
-    const controller = new AbortController();
-    let cancelled = false;
-
-    const adapters =
-      scope === "all"
-        ? ALL_ADAPTERS
-        : ALL_ADAPTERS.filter((a) => a.domain === scope);
-
-    async function load() {
-      if (cancelled) return;
-      setLoading(true);
-      try {
-        const results = await Promise.all(
-          adapters.map((adapter) =>
-            adapter.fetchTasks(controller.signal).catch(() => [] as BaseTask[]),
-          ),
-        );
-        if (cancelled) return;
-        const flat = results
-          .flat()
-          .sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-          );
-        taskCache.set(scope, flat);
-        setTasks(flat);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    if (scope === "all") {
+      setTasks([]);
+      setLoading(false);
+      return;
     }
 
-    void load();
-    const timer = window.setInterval(load, POLL_INTERVAL_MS);
-    return () => {
-      cancelled = true;
-      controller.abort();
-      window.clearInterval(timer);
-    };
+    const adapters =
+      ALL_ADAPTERS.filter((a) => a.domain === scope);
+
+    return startAdaptivePoll({
+      activeMs: POLL_INTERVAL_MS,
+      idleMs: 5 * 60_000,
+      run: async (signal) => {
+        setLoading(true);
+        try {
+          const results = await Promise.all(
+            adapters.map((adapter) =>
+              adapter.fetchTasks(signal).catch(() => [] as BaseTask[]),
+            ),
+          );
+          if (signal.aborted) return null;
+          const flat = results
+            .flat()
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            );
+          taskCache.set(scope, flat);
+          setTasks(flat);
+          return flat.map((t) => `${t.id}:${t.status}`).join("|");
+        } catch {
+          // Parity with the other pollers: a thrown run() is a failed poll, not
+          // a loop-killer (adaptive-poll also re-arms on reject as a backstop).
+          return null;
+        } finally {
+          if (!signal.aborted) setLoading(false);
+        }
+      },
+    });
   }, [scope, refreshKey, manualKey]);
 
   return {

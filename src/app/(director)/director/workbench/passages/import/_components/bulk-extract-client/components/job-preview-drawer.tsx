@@ -19,6 +19,7 @@ import {
 
 import { useQueueDrawer } from "../../queue-drawer-context";
 import { DraftCard } from "../../extraction-manage-client/components/draft-card";
+import { DragSelect } from "@/components/ui/drag-select";
 import { DraftDetailModal } from "../../extraction-manage-client/components/draft-detail-modal";
 import {
   ImagePages,
@@ -82,6 +83,8 @@ export function JobPreviewDrawer({
 
   // Bulk selection state for the toolbar.
   const [checkedIds, setCheckedIds] = useState<Set<string>>(() => new Set());
+  // 마키(영역 드래그) 선택을 드로어 내부로 한정하기 위한 경계(스크롤 영역).
+  const draftListRef = useRef<HTMLDivElement | null>(null);
 
   const folders = useFolderManager({
     initialCollections,
@@ -421,10 +424,18 @@ export function JobPreviewDrawer({
   const allIds = useMemo(() => sortedDrafts.map((d) => d.id), [sortedDrafts]);
   const allChecked =
     allIds.length > 0 && allIds.every((id) => checkedIds.has(id));
-  const bulkDragIds = useMemo(() => Array.from(checkedIds), [checkedIds]);
-  const hasSelection = checkedIds.size > 0;
+  const visibleCheckedIds = useMemo(() => {
+    const next = new Set<string>();
+    for (const id of allIds) if (checkedIds.has(id)) next.add(id);
+    return next;
+  }, [allIds, checkedIds]);
+  const bulkDragIds = useMemo(
+    () => Array.from(visibleCheckedIds),
+    [visibleCheckedIds],
+  );
+  const hasSelection = visibleCheckedIds.size > 0;
   const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
-  const selectAllIndeterminate = checkedIds.size > 0 && !allChecked;
+  const selectAllIndeterminate = visibleCheckedIds.size > 0 && !allChecked;
   const anyBulkRunning = bulk.bulkActionRunning !== null;
   const isPromoting = bulk.bulkActionRunning === "promote";
   const isDeleting = bulk.bulkActionRunning === "delete";
@@ -452,35 +463,50 @@ export function JobPreviewDrawer({
 
   const clearChecks = useCallback(() => setCheckedIds(new Set()), []);
 
+  const handleMarqueeChange = useCallback(
+    (next: Set<string>) => {
+      const visibleIds = new Set(allIds);
+      setCheckedIds(
+        new Set(Array.from(next).filter((id) => visibleIds.has(id))),
+      );
+    },
+    [allIds],
+  );
+
   const handleAdd = useCallback(
     async (collectionId: string) => {
-      if (checkedIds.size === 0) return;
-      await folders.handleAddToFolder(collectionId, checkedIds);
+      if (visibleCheckedIds.size === 0) return;
+      await folders.handleAddToFolder(collectionId, visibleCheckedIds);
       clearChecks();
     },
-    [folders, checkedIds, clearChecks],
+    [folders, visibleCheckedIds, clearChecks],
   );
 
   const handleMove = useCallback(
     async (collectionId: string) => {
-      if (checkedIds.size === 0) return;
-      const anyId = checkedIds.values().next().value;
+      if (visibleCheckedIds.size === 0) return;
+      const anyId = visibleCheckedIds.values().next().value;
       if (!anyId) return;
-      await folders.handleDragToFolder(anyId, collectionId, false, checkedIds);
+      await folders.handleDragToFolder(
+        anyId,
+        collectionId,
+        false,
+        visibleCheckedIds,
+      );
       clearChecks();
     },
-    [folders, checkedIds, clearChecks],
+    [folders, visibleCheckedIds, clearChecks],
   );
 
   const handlePromote = useCallback(() => {
-    if (checkedIds.size === 0) return;
-    void bulk.bulkPromote(new Set(checkedIds), clearChecks);
-  }, [bulk, checkedIds, clearChecks]);
+    if (visibleCheckedIds.size === 0) return;
+    void bulk.bulkPromote(new Set(visibleCheckedIds), clearChecks);
+  }, [bulk, visibleCheckedIds, clearChecks]);
 
   const handleDelete = useCallback(() => {
-    if (checkedIds.size === 0) return;
-    void bulk.bulkDelete(new Set(checkedIds), clearChecks);
-  }, [bulk, checkedIds, clearChecks]);
+    if (visibleCheckedIds.size === 0) return;
+    void bulk.bulkDelete(new Set(visibleCheckedIds), clearChecks);
+  }, [bulk, visibleCheckedIds, clearChecks]);
 
   return (
     <>
@@ -596,7 +622,7 @@ export function JobPreviewDrawer({
                 <MoveOrCopyFolderPicker
                   collections={folders.collections}
                   activeFolder={folders.activeFolder}
-                  selectedCount={checkedIds.size}
+                  selectedCount={visibleCheckedIds.size}
                   onCopy={handleAdd}
                   onMove={handleMove}
                   disabled={anyBulkRunning || !hasSelection}
@@ -623,7 +649,10 @@ export function JobPreviewDrawer({
               </div>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto p-3">
+            <div
+              ref={draftListRef}
+              className="min-h-0 flex-1 overflow-y-auto p-3"
+            >
               {draftsError ? (
                 <p className="py-12 text-center text-[12px] text-red-600">
                   {draftsError}
@@ -642,7 +671,13 @@ export function JobPreviewDrawer({
                   추출된 자료가 없습니다.
                 </p>
               ) : (
-                <div className="grid grid-cols-1 gap-2">
+                <DragSelect
+                  className="grid grid-cols-1 gap-2"
+                  value={visibleCheckedIds}
+                  onChange={handleMarqueeChange}
+                  itemScopeRef={draftListRef}
+                  allowCardDescendantDragStart
+                >
                   {sortedDrafts.map((draft, index) => (
                     <DraftCard
                       key={draft.id}
@@ -657,7 +692,7 @@ export function JobPreviewDrawer({
                       onTitleChange={actions.updateDraftTitle}
                     />
                   ))}
-                </div>
+                </DragSelect>
               )}
             </div>
           </div>

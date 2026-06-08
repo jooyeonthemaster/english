@@ -436,7 +436,7 @@ export function FormSection(props: FormSectionProps) {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
         <WorkflowPageTitle
           icon={PassageAnalysisIcon}
-          title="지문 분석"
+          title="학습지 생성"
           description="추출된 자료나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
         />
         {formCollapsed ? (
@@ -444,7 +444,7 @@ export function FormSection(props: FormSectionProps) {
             type="button"
             onClick={() => setFormCollapsed(false)}
             aria-expanded={false}
-            title="지문 분석 펼치기"
+            title="학습지 생성 펼치기"
             className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
           >
             <ChevronDown className="size-3.5" aria-hidden="true" />
@@ -735,7 +735,7 @@ export function FormSection(props: FormSectionProps) {
           onPointerDown={(e) => e.stopPropagation()}
           onDoubleClick={(e) => e.stopPropagation()}
           aria-expanded
-          title="지문 분석 접기"
+          title="학습지 생성 접기"
           className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
         >
           <ChevronUp className="size-3.5" aria-hidden="true" />
@@ -796,6 +796,7 @@ function ExtractionManageEmbed({
       onBulkAnalyze={onBulkAnalyze}
       bulkAnalyzing={bulkAnalyzing}
       marqueeBoundaryRef={marqueeBoundaryRef}
+      draftDetailActionMode="import"
     />
   );
 }

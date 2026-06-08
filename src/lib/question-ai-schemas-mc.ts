@@ -181,10 +181,10 @@ export const aiVocabChoiceSchema = z.object({
   ...commonFields,
   markedWords: z.array(z.object({
     label: z.string().describe("(a)~(e) 라벨"),
-    originalWord: z.string().describe("원문의 올바른 단어"),
+    originalWord: z.string().describe("원문에 실제로 존재하는 올바른 단어. isInappropriate=true여도 원문 정답 단어를 넣음"),
     isInappropriate: z.boolean().describe("이 위치에 부적절한 단어를 넣을지 여부"),
     betterWord: z.string().optional().describe("부적절한 경우 적절한 단어 (= originalWord)"),
-    substituteWord: z.string().describe("지문에 표시할 단어 (isInappropriate=true일 때 부적절한 단어, isInappropriate=false일 때 원문 그대로)"),
+    substituteWord: z.string().describe("지문에 표시할 단어. isInappropriate=true일 때는 원문 단어를 대체할 부적절한 단어, false일 때는 originalWord와 동일"),
     surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
   })).length(5).describe("밑줄 표시할 5개 어휘"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
@@ -198,6 +198,7 @@ export type AiVocabChoiceQuestion = z.infer<typeof aiVocabChoiceSchema>;
 
 export const aiSentenceInsertSchema = z.object({
   ...commonFields,
+  sourceSentenceToOmit: z.string().optional().describe("If givenSentence is copied or transformed from a source passage sentence, copy the original source sentence here so the server can remove it from the displayed passage."),
   givenSentence: z
     .string()
     .describe(
@@ -238,7 +239,7 @@ export const aiIrrelevantSchema = z.object({
   ...commonFields,
   sentences: z.array(z.string()).min(5).max(5).describe("정확히 5개 문장: 원문 4문장(지문 전체에 분산, 원래 순서 유지) + 삽입 무관문 1개. 5개를 초과하지 마세요."),
   irrelevantIndex: z.number().min(1).max(3).describe("무관한 문장의 인덱스 (1~3 → 정답 ②③④, 첫/마지막 금지)"),
-  options: z.array(optionSchema).min(5).max(5).describe("선지 5개 (서버에서 번호→알파벳으로 재생성)"),
+  options: z.array(optionSchema).min(5).max(5).describe("선지 5개 (서버에서 숫자 마커로 재생성)"),
   ...mcWrongExplanations,
 });
 export type AiIrrelevantQuestion = z.infer<typeof aiIrrelevantSchema>;

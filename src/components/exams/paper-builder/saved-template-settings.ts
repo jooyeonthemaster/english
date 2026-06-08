@@ -32,7 +32,7 @@ export const DEFAULT_TEMPLATE_SETTINGS: SavedTemplateSettings = {
   paperSize: "A4",
   columns: 2,
   density: "comfortable",
-  passageStyle: "boxed",
+  passageStyle: "plain",
   showPassageTitle: DEFAULT_SHOW_PASSAGE_TITLE,
   showQuestionMeta: false,
   autoPointTotal: null,
@@ -65,9 +65,8 @@ function asDensity(value: unknown): Density {
 }
 
 function asPassageStyle(value: unknown): PassageStyle {
-  return value === "plain" || value === "underlined"
-    ? value
-    : DEFAULT_TEMPLATE_SETTINGS.passageStyle;
+  void value;
+  return "plain";
 }
 
 function asAutoPointTotal(value: unknown): number | null {

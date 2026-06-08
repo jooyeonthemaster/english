@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
+import { notifyCreditsChanged } from "@/lib/credits-client";
 import { getCustomPrompts } from "@/actions/custom-prompts";
 import { buildQuestionText } from "./generate-questions-dialog/build-question-text";
 import { ConfigureStep } from "./generate-questions-dialog/configure-step";
@@ -169,6 +170,7 @@ export function GenerateQuestionsDialog({
       toast.error("생성 실패");
     } finally {
       setGenerating(false);
+      notifyCreditsChanged(); // 차감/실패환급 즉시 사이드바 반영
     }
   };
 

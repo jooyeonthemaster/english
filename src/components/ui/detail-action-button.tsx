@@ -1,7 +1,7 @@
 "use client";
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { Maximize2 } from "lucide-react";
+import { Maximize2, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const DETAIL_ACTION_BUTTON_CLASS =
@@ -11,11 +11,13 @@ export const DETAIL_ACTION_BUTTON_ICON_CLASS = "h-3 w-3 shrink-0";
 
 type DetailActionButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   children?: ReactNode;
+  icon?: LucideIcon;
   iconClassName?: string;
 };
 
 export function DetailActionButton({
   children = "상세 보기",
+  icon: Icon = Maximize2,
   className,
   iconClassName,
   type = "button",
@@ -24,11 +26,12 @@ export function DetailActionButton({
   return (
     <button
       type={type}
-      className={cn(DETAIL_ACTION_BUTTON_CLASS, className)}
       {...props}
+      data-drag-select-ignore
+      className={cn(DETAIL_ACTION_BUTTON_CLASS, className)}
     >
       <span className="truncate">{children}</span>
-      <Maximize2 className={cn(DETAIL_ACTION_BUTTON_ICON_CLASS, iconClassName)} />
+      <Icon className={cn(DETAIL_ACTION_BUTTON_ICON_CLASS, iconClassName)} />
     </button>
   );
 }

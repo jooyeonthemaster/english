@@ -27,6 +27,10 @@ const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
+const VOCAB_CHOICE_MARKER_COUNT = 5;
+const VOCAB_CHOICE_KEYS = ["a", "b", "c", "d", "e"] as const;
+const ANTONYM_MARKER_COUNT = 5;
+const ANTONYM_KEYS = ["A", "B", "C", "D", "E"] as const;
 
 function normalizeGrammarMarkedCount(markedCount: unknown): number {
   const n = typeof markedCount === "number" ? markedCount : Number(markedCount);
@@ -221,9 +225,11 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, avoid elementary pairs; the answer should require discriminating fine semantic nuance.",
   ],
   ANTONYM: [
-    "Mark words with clear contextual meaning and provide antonyms that match the part of speech and sense.",
-    "Distractors should be plausible opposite-related words, not random vocabulary.",
-    "For KILLER, test contextual opposition, stance, or scale rather than a simple memorized opposite.",
+    "Use this as a 'wrong antonym pair' item: exactly one word-pair must be incorrectly matched, and the other four must be clean contextual antonym pairs.",
+    "Every pair must match part of speech, inflection, and semantic axis; avoid form mismatches such as forces-restrain.",
+    "Reject contestable pairs such as force-restrain, mastery-ignorance, rational-emotional, dim-clear, justify-excuse, or unproductive-passive.",
+    "For the incorrect pair, provide correctAntonym so the decisive fix is explicit and not merely a vague explanation.",
+    "For KILLER, make the wrong pair a subtle but unambiguous semantic-axis error, not a pair that could be defended as an opposite in another sense.",
   ],
 };
 
@@ -287,9 +293,180 @@ export function buildQuestionTargetCandidateBlock(
         passage,
         options.requestedDifficulty,
       );
+    case "ANTONYM":
+      return buildAntonymCandidateBlock(passage, options.requestedDifficulty);
     default:
       return "";
   }
+}
+
+type AntonymLexiconEntry = {
+  word: string;
+  correctAntonym: string;
+  suggestedWrongPair: string;
+  pos: "adjective" | "adverb" | "noun" | "verb";
+  note: string;
+  avoidPairs?: string[];
+  priority?: number;
+};
+
+type AntonymCandidate = AntonymLexiconEntry & {
+  sourceWord: string;
+  surroundingText: string;
+  index: number;
+};
+
+const ANTONYM_SAFE_LEXICON: AntonymLexiconEntry[] = [
+  { word: "common", correctAntonym: "rare", suggestedWrongPair: "ordinary", pos: "adjective", note: "frequency scale", priority: 9 },
+  { word: "rare", correctAntonym: "common", suggestedWrongPair: "unusual", pos: "adjective", note: "frequency scale", priority: 8 },
+  { word: "good", correctAntonym: "bad", suggestedWrongPair: "beneficial", pos: "adjective", note: "evaluation scale", priority: 6 },
+  { word: "bad", correctAntonym: "good", suggestedWrongPair: "poor", pos: "adjective", note: "evaluation scale", priority: 6 },
+  { word: "past", correctAntonym: "future", suggestedWrongPair: "previous", pos: "adjective", note: "time direction", priority: 8 },
+  { word: "future", correctAntonym: "past", suggestedWrongPair: "coming", pos: "adjective", note: "time direction", priority: 8 },
+  { word: "dim", correctAntonym: "bright", suggestedWrongPair: "dark", pos: "adjective", note: "outlook/brightness scale", avoidPairs: ["clear"], priority: 9 },
+  { word: "bright", correctAntonym: "dim", suggestedWrongPair: "clear", pos: "adjective", note: "outlook/brightness scale", priority: 7 },
+  { word: "doomed", correctAntonym: "promising", suggestedWrongPair: "fated", pos: "adjective", note: "prospect scale", priority: 7 },
+  { word: "everyday", correctAntonym: "extraordinary", suggestedWrongPair: "ordinary", pos: "adjective", note: "ordinariness scale", priority: 6 },
+  { word: "unproductive", correctAntonym: "productive", suggestedWrongPair: "ineffective", pos: "adjective", note: "output/effectiveness scale", avoidPairs: ["passive", "uninterested"], priority: 10 },
+  { word: "productive", correctAntonym: "unproductive", suggestedWrongPair: "effective", pos: "adjective", note: "output/effectiveness scale", priority: 8 },
+  { word: "failing", correctAntonym: "succeeding", suggestedWrongPair: "struggling", pos: "adjective", note: "success/failure scale in matching -ing form", priority: 9 },
+  { word: "rational", correctAntonym: "irrational", suggestedWrongPair: "logical", pos: "adjective", note: "reasonableness scale", avoidPairs: ["emotional"], priority: 10 },
+  { word: "new", correctAntonym: "old", suggestedWrongPair: "recent", pos: "adjective", note: "age/time scale", priority: 6 },
+  { word: "hardest", correctAntonym: "easiest", suggestedWrongPair: "toughest", pos: "adjective", note: "superlative difficulty scale", priority: 9 },
+  { word: "easiest", correctAntonym: "hardest", suggestedWrongPair: "simplest", pos: "adjective", note: "superlative difficulty scale", priority: 8 },
+  { word: "significant", correctAntonym: "insignificant", suggestedWrongPair: "important", pos: "adjective", note: "importance scale", priority: 7 },
+  { word: "easier", correctAntonym: "harder", suggestedWrongPair: "simpler", pos: "adjective", note: "comparative difficulty scale", priority: 8 },
+  { word: "harder", correctAntonym: "easier", suggestedWrongPair: "tougher", pos: "adjective", note: "comparative difficulty scale", priority: 8 },
+  { word: "present", correctAntonym: "absent", suggestedWrongPair: "available", pos: "adjective", note: "presence/absence scale", priority: 8 },
+  { word: "internal", correctAntonym: "external", suggestedWrongPair: "inner", pos: "adjective", note: "inside/outside scale", priority: 7 },
+  { word: "true", correctAntonym: "false", suggestedWrongPair: "real", pos: "adjective", note: "truth-value scale", priority: 6 },
+  { word: "specific", correctAntonym: "general", suggestedWrongPair: "particular", pos: "adjective", note: "specificity scale", priority: 7 },
+  { word: "multiple", correctAntonym: "single", suggestedWrongPair: "several", pos: "adjective", note: "number scale", priority: 6 },
+  { word: "heavy", correctAntonym: "light", suggestedWrongPair: "weighty", pos: "adjective", note: "weight scale", priority: 6 },
+  { word: "full", correctAntonym: "empty", suggestedWrongPair: "complete", pos: "adjective", note: "capacity scale", priority: 7 },
+  { word: "empty", correctAntonym: "full", suggestedWrongPair: "blank", pos: "adjective", note: "capacity scale", priority: 7 },
+  { word: "simple", correctAntonym: "complex", suggestedWrongPair: "easy", pos: "adjective", note: "complexity scale", priority: 7 },
+  { word: "complex", correctAntonym: "simple", suggestedWrongPair: "complicated", pos: "adjective", note: "complexity scale", priority: 7 },
+  { word: "visible", correctAntonym: "invisible", suggestedWrongPair: "noticeable", pos: "adjective", note: "visibility scale", priority: 7 },
+  { word: "strong", correctAntonym: "weak", suggestedWrongPair: "powerful", pos: "adjective", note: "strength scale", priority: 7 },
+  { word: "weak", correctAntonym: "strong", suggestedWrongPair: "fragile", pos: "adjective", note: "strength scale", priority: 7 },
+  { word: "increase", correctAntonym: "decrease", suggestedWrongPair: "raise", pos: "verb", note: "quantity-change scale", priority: 8 },
+  { word: "increased", correctAntonym: "decreased", suggestedWrongPair: "raised", pos: "verb", note: "quantity-change scale in matching past form", priority: 8 },
+  { word: "increases", correctAntonym: "decreases", suggestedWrongPair: "raises", pos: "verb", note: "quantity-change scale in matching -s form", priority: 8 },
+  { word: "expanded", correctAntonym: "contracted", suggestedWrongPair: "enlarged", pos: "verb", note: "size-change scale in matching past form", priority: 8 },
+  { word: "strengthened", correctAntonym: "weakened", suggestedWrongPair: "reinforced", pos: "verb", note: "strength-change scale in matching past form", priority: 8 },
+  { word: "accepted", correctAntonym: "rejected", suggestedWrongPair: "approved", pos: "verb", note: "acceptance scale in matching past form", priority: 8 },
+  { word: "protected", correctAntonym: "exposed", suggestedWrongPair: "guarded", pos: "verb", note: "protection/exposure scale in matching past form", priority: 8 },
+  { word: "spent", correctAntonym: "saved", suggestedWrongPair: "paid", pos: "verb", note: "resource-use scale in matching past form", priority: 7 },
+  { word: "stay", correctAntonym: "leave", suggestedWrongPair: "remain", pos: "verb", note: "location/continuation scale", priority: 7 },
+  { word: "persist", correctAntonym: "quit", suggestedWrongPair: "continue", pos: "verb", note: "continuation scale", priority: 7 },
+  { word: "gain", correctAntonym: "lose", suggestedWrongPair: "obtain", pos: "verb", note: "gain/loss scale", priority: 7 },
+  { word: "loss", correctAntonym: "gain", suggestedWrongPair: "defeat", pos: "noun", note: "gain/loss noun scale", priority: 6 },
+  { word: "defeat", correctAntonym: "victory", suggestedWrongPair: "failure", pos: "noun", note: "outcome scale", priority: 8 },
+  { word: "admission", correctAntonym: "denial", suggestedWrongPair: "confession", pos: "noun", note: "acknowledgment scale", priority: 6 },
+  { word: "contrast", correctAntonym: "similarity", suggestedWrongPair: "comparison", pos: "noun", note: "relation scale", priority: 6 },
+  { word: "often", correctAntonym: "rarely", suggestedWrongPair: "frequently", pos: "adverb", note: "frequency scale", priority: 8 },
+];
+
+function buildAntonymCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+): string {
+  const candidates = findAntonymCandidates(passage, requestedDifficulty).slice(0, 12);
+  const safeCountRule =
+    candidates.length >= ANTONYM_MARKER_COUNT
+      ? "- Use five marked source words from this safe list whenever possible. At minimum, four of the five markedWords should come from this list."
+      : "- Use every relevant safe candidate below first. If fewer than five are available, add your own only when the pair is equally clean and source-backed.";
+
+  const candidateLines = candidates.length
+    ? candidates.map((candidate, index) => {
+        const avoidPairs = candidate.avoidPairs?.length
+          ? ` | forbiddenPairs="${candidate.avoidPairs.join(", ")}"`
+          : "";
+        return `${index + 1}. sourceWord="${candidate.sourceWord}" | correctAntonym="${candidate.correctAntonym}" | suggestedWrongPair="${candidate.suggestedWrongPair}" | pos="${candidate.pos}" | note="${candidate.note}"${avoidPairs} | surroundingText="${candidate.surroundingText}"`;
+      })
+    : ["- No high-confidence automatic pair was found. Use only same-POS, same-form, same-axis pairs; do not use relation-only pairs."];
+
+  return [
+    "## ANTONYM target planning guardrail",
+    safeCountRule,
+    "- For the four non-answer options, use correctAntonym exactly as the displayed antonym.",
+    "- For the single answer option, choose one safe sourceWord and display its suggestedWrongPair as antonym; still fill correctAntonym with the real correctAntonym.",
+    "- Do not invent near-miss pairs when a suggestedWrongPair is available. This prevents vague pairs such as force-restrain or unproductive-passive from appearing.",
+    "- Never use both directions of the same pair as separate options, such as good-bad and bad-good in one item.",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER calibration: make the incorrect pair a close synonym/neighbor on the same semantic field, not a second debatable antonym axis."
+      : requestedDifficulty === "BASIC"
+        ? "- BASIC calibration: use the clearest pairs from the list and avoid obscure vocabulary."
+        : "- INTERMEDIATE calibration: use clean pairs, but make the wrong pair tempting by collocation or nearby meaning.",
+    "### Safe source-backed ANTONYM pairs",
+    ...candidateLines,
+    "### Global forbidden ANTONYM pairs",
+    "- force-restrain, mastery-ignorance, rational-emotional, dim-clear, justify-excuse, unproductive-passive, unproductive-uninterested, paid-refunded",
+  ].filter(Boolean).join("\n");
+}
+
+function findAntonymCandidates(
+  passage: string,
+  requestedDifficulty?: string,
+): AntonymCandidate[] {
+  const seenWords = new Set<string>();
+  const seenAxes = new Set<string>();
+  const candidates: AntonymCandidate[] = [];
+
+  for (const entry of ANTONYM_SAFE_LEXICON) {
+    const match = findStandaloneTokenMatch(passage, entry.word);
+    if (!match) continue;
+
+    const wordKey = normalizeComparableText(entry.word);
+    const axisKey = [antonymPairKey(entry.word), antonymPairKey(entry.correctAntonym)]
+      .filter(Boolean)
+      .sort()
+      .join("|");
+    if (seenWords.has(wordKey) || (axisKey && seenAxes.has(axisKey))) continue;
+    seenWords.add(wordKey);
+    if (axisKey) seenAxes.add(axisKey);
+
+    candidates.push({
+      ...entry,
+      sourceWord: match.word,
+      surroundingText: buildSurroundingWindow(passage, match.index, match.word.length),
+      index: match.index,
+    });
+  }
+
+  return candidates.sort((a, b) => (
+    antonymCandidateScore(b, requestedDifficulty) -
+    antonymCandidateScore(a, requestedDifficulty)
+  ));
+}
+
+function antonymCandidateScore(
+  candidate: AntonymCandidate,
+  requestedDifficulty?: string,
+): number {
+  const base = candidate.priority ?? 5;
+  const lengthBonus = Math.min(3, Math.floor(candidate.sourceWord.length / 4));
+  const killerBonus =
+    requestedDifficulty === "KILLER" && /scale|superlative|matching|outlook|reasonableness/i.test(candidate.note)
+      ? 2
+      : 0;
+  const basicPenalty =
+    requestedDifficulty === "BASIC" && candidate.sourceWord.length > 12
+      ? 2
+      : 0;
+  return base + lengthBonus + killerBonus - basicPenalty;
+}
+
+function findStandaloneTokenMatch(
+  text: string,
+  token: string,
+): { word: string; index: number } | null {
+  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`\\b${escaped}\\b`, "i");
+  const match = regex.exec(text);
+  if (!match) return null;
+  return { word: match[0], index: match.index };
 }
 
 function buildGrammarErrorCandidateBlock(
@@ -892,7 +1069,7 @@ function validateOptions(
     correctAnswerLabelSet.size > 0
       ? wrongOptionLabels.length
       : Math.max(0, options.length - 1);
-  if (typeId === "IRRELEVANT" || typeId === "GRAMMAR_ERROR" || typeId === "IMPLIED_MEANING") {
+  if (typeId === "IRRELEVANT" || typeId === "GRAMMAR_ERROR" || typeId === "IMPLIED_MEANING" || typeId === "ANTONYM") {
     const explanationMap = collectWrongOptionExplanations(wrongExplanations);
     const missingLabels = wrongOptionLabels.filter((label) => !explanationMap.get(label));
     if (missingLabels.length > 0 || explanationMap.size < expectedWrongExplanationCount) {
@@ -956,6 +1133,95 @@ function collectCorrectAnswerLabels(question: Record<string, unknown>): string[]
   }
 
   return labels;
+}
+
+function normalizeVocabChoiceKey(value: unknown, fallbackIndex?: number): string {
+  const text = normalizeText(value);
+  const fallback =
+    typeof fallbackIndex === "number" && fallbackIndex >= 0 && fallbackIndex < VOCAB_CHOICE_KEYS.length
+      ? VOCAB_CHOICE_KEYS[fallbackIndex]
+      : "";
+
+  if (!text) return fallback;
+
+  const circledIndex = getCircledNumbers(50).indexOf(text);
+  if (circledIndex >= 0 && circledIndex < VOCAB_CHOICE_KEYS.length) {
+    return VOCAB_CHOICE_KEYS[circledIndex];
+  }
+
+  const alphaMatch = text.match(/^[\(\[]?\s*([a-eA-E])\s*[\)\].:]?$/);
+  if (alphaMatch) return alphaMatch[1].toLowerCase();
+
+  const numberMatch = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  if (numberMatch) return VOCAB_CHOICE_KEYS[Number(numberMatch[1]) - 1];
+
+  return fallback;
+}
+
+function collectVocabChoiceAnswerKeys(question: Record<string, unknown>): string[] {
+  const keys: string[] = [];
+  const push = (value: unknown) => {
+    const key = normalizeVocabChoiceKey(value);
+    if (key && !keys.includes(key)) keys.push(key);
+  };
+
+  if (Array.isArray(question.correctAnswers)) {
+    question.correctAnswers.forEach(push);
+  }
+
+  const correctAnswerText = normalizeText(question.correctAnswer);
+  if (correctAnswerText) {
+    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[a-eA-E]|[1-5]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+    if (matches?.length) matches.forEach(push);
+    else push(correctAnswerText);
+  }
+
+  return keys;
+}
+
+function normalizeAntonymKey(value: unknown, fallbackIndex?: number): string {
+  const text = normalizeText(value);
+  const fallback =
+    typeof fallbackIndex === "number" && fallbackIndex >= 0 && fallbackIndex < ANTONYM_KEYS.length
+      ? ANTONYM_KEYS[fallbackIndex]
+      : "";
+
+  if (!text) return fallback;
+
+  const circledIndex = getCircledNumbers(50).indexOf(text);
+  if (circledIndex >= 0 && circledIndex < ANTONYM_KEYS.length) {
+    return ANTONYM_KEYS[circledIndex];
+  }
+
+  const alphaMatch = text.match(/^[\(\[]?\s*([A-Ea-e])\s*[\)\].:]?$/);
+  if (alphaMatch) return alphaMatch[1].toUpperCase();
+
+  const numberMatch = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  if (numberMatch) return ANTONYM_KEYS[Number(numberMatch[1]) - 1];
+
+  return fallback;
+}
+
+function collectAntonymAnswerIndices(question: Record<string, unknown>): number[] {
+  const indices: number[] = [];
+  const push = (value: unknown) => {
+    const key = normalizeAntonymKey(value);
+    const index = ANTONYM_KEYS.indexOf(key as (typeof ANTONYM_KEYS)[number]);
+    if (index >= 0 && !indices.includes(index)) indices.push(index);
+  };
+
+  if (Array.isArray(question.correctAnswers)) {
+    question.correctAnswers.forEach(push);
+  }
+
+  const correctAnswerText = normalizeText(question.correctAnswer);
+  if (correctAnswerText) {
+    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[A-Ea-e]|[1-5]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+    if (matches?.length) matches.forEach(push);
+    else push(correctAnswerText);
+  }
+
+  return indices;
 }
 
 function normalizeLabelOnly(value: unknown): string {
@@ -1036,7 +1302,15 @@ function validateTypeSpecific(
   }
 
   if (typeId === "SENTENCE_INSERT") {
-    validateSentenceInsertQuestion(question, add);
+    validateSentenceInsertQuestion(question, passage, add);
+  }
+
+  if (typeId === "VOCAB_CHOICE") {
+    validateVocabChoiceQuestion(question, passage, add);
+  }
+
+  if (typeId === "ANTONYM") {
+    validateAntonymQuestion(question, passage, add);
   }
 
   if (typeId === "WORD_ORDER" && Array.isArray(question.scrambledWords)) {
@@ -1143,6 +1417,528 @@ function validateTypeSpecific(
 
 // SENTENCE_INSERT: 응집 단서(지시어/대명사/연결사) 존재 여부를 표면 검사한다.
 // 정관사 'the' 단독은 너무 흔해 신호로 쓰지 않는다(중립 문장 오탐 방지).
+function validateAntonymQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const markedWords = Array.isArray(question.markedWords)
+    ? question.markedWords.filter(isRecord)
+    : [];
+  const passageWithMarkers = normalizeText(question.passageWithMarkers);
+
+  if (markedWords.length !== ANTONYM_MARKER_COUNT) {
+    add(
+      "error",
+      "antonym-marker-count",
+      `ANTONYM must have exactly ${ANTONYM_MARKER_COUNT} marked words, got ${markedWords.length}.`,
+    );
+  }
+
+  if (!passageWithMarkers) {
+    add("error", "antonym-missing-passage-markers", "ANTONYM is missing passageWithMarkers.");
+    return;
+  }
+
+  const renderedMarkers = findMarkers(passageWithMarkers)
+    .map((marker) => {
+      const match = marker.inner.match(/^\(([A-Ea-e])\)\s*(.+)$/);
+      if (!match) return null;
+      return {
+        key: match[1].toUpperCase(),
+        word: normalizeText(match[2]),
+      };
+    })
+    .filter((marker): marker is { key: string; word: string } => !!marker);
+  const renderedByKey = new Map(renderedMarkers.map((marker) => [marker.key, marker.word]));
+
+  if (countUnderlineMarkers(passageWithMarkers) !== ANTONYM_MARKER_COUNT) {
+    add(
+      "error",
+      "antonym-render-marker-count",
+      `ANTONYM passageWithMarkers must render exactly ${ANTONYM_MARKER_COUNT} underlined markers.`,
+    );
+  }
+
+  if (renderedMarkers.length !== ANTONYM_MARKER_COUNT) {
+    add(
+      "error",
+      "antonym-render-label-format",
+      "ANTONYM rendered markers must use __(A) word__ through __(E) word__ format.",
+    );
+  }
+
+  const labels = markedWords.map((word, index) => normalizeAntonymKey(word.label, index));
+  const duplicateLabel = findDuplicate(labels.filter(Boolean));
+  if (duplicateLabel) {
+    add("error", "antonym-duplicate-label", `Duplicate ANTONYM marked label: (${duplicateLabel}).`);
+  }
+
+  const incorrectPairs = markedWords.filter((word) => word.isIncorrectPair === true);
+  if (incorrectPairs.length !== 1) {
+    add(
+      "error",
+      "antonym-incorrect-pair-count",
+      `ANTONYM must have exactly one isIncorrectPair=true item, got ${incorrectPairs.length}.`,
+    );
+  }
+
+  const answerIndices = collectAntonymAnswerIndices(question);
+  if (answerIndices.length !== 1) {
+    add(
+      "error",
+      "antonym-answer-count",
+      `ANTONYM correctAnswer must point to exactly one option/label, got ${answerIndices.length}.`,
+    );
+  }
+
+  const incorrectIndex = incorrectPairs[0]
+    ? markedWords.indexOf(incorrectPairs[0])
+    : -1;
+  if (incorrectIndex >= 0 && answerIndices.length === 1 && answerIndices[0] !== incorrectIndex) {
+    add(
+      "error",
+      "antonym-answer-label-mismatch",
+      `ANTONYM correctAnswer must match the only incorrectly paired option (${incorrectIndex + 1}).`,
+    );
+  }
+
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const optionByIndex = new Map<number, Record<string, unknown>>();
+  options.forEach((option, index) => {
+    const normalized = normalizeLabel(option.label);
+    const numericIndex = /^[1-5]$/.test(normalized)
+      ? Number(normalized) - 1
+      : index;
+    optionByIndex.set(numericIndex, option);
+  });
+
+  for (const [index, markedWord] of markedWords.entries()) {
+    const key = normalizeAntonymKey(markedWord.label, index);
+    const renderedWord = renderedByKey.get(key);
+    const word = normalizeText(markedWord.word);
+    const pairedWord = normalizeText(markedWord.antonym);
+    const correctAntonym = normalizeText(markedWord.correctAntonym);
+    const isIncorrectPair = markedWord.isIncorrectPair === true;
+
+    if (!key) {
+      add("error", "antonym-label-format", "ANTONYM markedWords labels must be (A) through (E).");
+      continue;
+    }
+
+    if (!word || !pairedWord) {
+      add("error", "antonym-empty-pair", `ANTONYM label (${key}) is missing word or paired word.`);
+      continue;
+    }
+
+    if (!renderedWord) {
+      add("error", "antonym-render-missing-label", `ANTONYM passageWithMarkers is missing label (${key}).`);
+    } else if (normalizeComparableText(renderedWord) !== normalizeComparableText(word)) {
+      add(
+        "error",
+        "antonym-render-word-mismatch",
+        `ANTONYM label (${key}) renders "${renderedWord}" but markedWords says "${word}".`,
+      );
+    }
+
+    const option = optionByIndex.get(index);
+    const optionText = normalizeText(option?.text);
+    if (optionText) {
+      if (!containsLoose(optionText, word) || !containsLoose(optionText, pairedWord)) {
+        add(
+          "error",
+          "antonym-option-pair-mismatch",
+          `ANTONYM option ${index + 1} must display the same word-pair as markedWords (${word} - ${pairedWord}).`,
+        );
+      }
+    }
+
+    if (passage && isSingleEnglishToken(word) && !containsStandaloneToken(passage, word)) {
+      add("error", "antonym-word-not-source-backed", `ANTONYM word (${key}) must exist as a standalone source token.`);
+    }
+
+    if (normalizeComparableText(word) === normalizeComparableText(pairedWord)) {
+      add("error", "antonym-same-word", `ANTONYM pair (${key}) repeats the same word.`);
+    }
+
+    const formIssue = findAntonymSurfaceFormIssue(word, pairedWord);
+    if (formIssue) {
+      add("error", "antonym-surface-form-mismatch", `ANTONYM pair (${key}) has mismatched surface forms: ${formIssue}.`);
+    }
+
+    const contestablePair = findContestableAntonymPair(word, pairedWord);
+    if (contestablePair) {
+      add(
+        "error",
+        "antonym-contestable-pair",
+        `ANTONYM pair (${key}) is contestable or on the wrong semantic axis: ${contestablePair}.`,
+      );
+    }
+
+    if (isIncorrectPair) {
+      if (!correctAntonym) {
+        add("error", "antonym-missing-correct-antonym", `Incorrect ANTONYM pair (${key}) must include correctAntonym.`);
+      } else {
+        if (normalizeComparableText(correctAntonym) === normalizeComparableText(pairedWord)) {
+          add(
+            "error",
+            "antonym-incorrect-pair-not-mutated",
+            `Incorrect ANTONYM pair (${key}) has the same antonym and correctAntonym.`,
+          );
+        }
+        const correctFormIssue = findAntonymSurfaceFormIssue(word, correctAntonym);
+        if (correctFormIssue) {
+          add(
+            "error",
+            "antonym-correct-antonym-form-mismatch",
+            `correctAntonym for (${key}) should match the source word form: ${correctFormIssue}.`,
+          );
+        }
+        const badCorrectPair = findContestableAntonymPair(word, correctAntonym);
+        if (badCorrectPair) {
+          add(
+            "error",
+            "antonym-correct-antonym-contestable",
+            `correctAntonym for (${key}) is still contestable: ${badCorrectPair}.`,
+          );
+        }
+      }
+    } else if (correctAntonym) {
+      add("error", "antonym-nonanswer-has-correct-antonym", `Non-answer ANTONYM pair (${key}) must not include correctAntonym.`);
+    }
+  }
+}
+
+function findAntonymSurfaceFormIssue(word: string, pairedWord: string): string | null {
+  const source = normalizeText(word);
+  const pair = normalizeText(pairedWord);
+  if (!isSingleEnglishToken(source) || !isSingleEnglishToken(pair)) return null;
+  const sourceLower = source.toLowerCase();
+  const pairLower = pair.toLowerCase();
+
+  const sourceS = hasInflectionalS(sourceLower);
+  const pairS = hasInflectionalS(pairLower);
+  if (sourceS !== pairS) {
+    return `"${source}" and "${pairedWord}" do not share third-person/plural -s form`;
+  }
+
+  for (const suffix of ["ing", "ly"] as const) {
+    const sourceHas = sourceLower.endsWith(suffix);
+    const pairHas = pairLower.endsWith(suffix);
+    if (sourceHas !== pairHas) {
+      return `"${source}" and "${pairedWord}" do not share -${suffix} form`;
+    }
+  }
+
+  const sourceRegularPast = sourceLower.endsWith("ed");
+  const pairRegularPast = pairLower.endsWith("ed");
+  const sourcePast = sourceRegularPast || IRREGULAR_PAST_FORMS.has(sourceLower);
+  const pairPast = pairRegularPast || IRREGULAR_PAST_FORMS.has(pairLower);
+  if ((sourceRegularPast && !pairPast) || (pairRegularPast && !sourcePast)) {
+    return `"${source}" and "${pairedWord}" do not share past/participle form`;
+  }
+
+  const sourceComparative = isLikelyComparativeForm(sourceLower);
+  const pairComparative = isLikelyComparativeForm(pairLower);
+  if (sourceComparative !== pairComparative) {
+    return `"${source}" and "${pairedWord}" do not share comparative form`;
+  }
+
+  const sourceSuperlative = isLikelySuperlativeForm(sourceLower);
+  const pairSuperlative = isLikelySuperlativeForm(pairLower);
+  if (sourceSuperlative !== pairSuperlative) {
+    return `"${source}" and "${pairedWord}" do not share superlative form`;
+  }
+
+  return null;
+}
+
+function isLikelyComparativeForm(word: string): boolean {
+  return /^(?:easier|harder|larger|smaller|bigger|longer|shorter|higher|lower|greater|lesser|better|worse|faster|slower|stronger|weaker|brighter|darker|earlier|later|older|newer)$/.test(word);
+}
+
+function isLikelySuperlativeForm(word: string): boolean {
+  return /^(?:easiest|hardest|largest|smallest|biggest|longest|shortest|highest|lowest|greatest|least|most|best|worst|fastest|slowest|strongest|weakest|brightest|darkest|earliest|latest|oldest|newest)$/.test(word);
+}
+
+const IRREGULAR_PAST_FORMS = new Set([
+  "bought",
+  "brought",
+  "built",
+  "caught",
+  "chose",
+  "chosen",
+  "felt",
+  "found",
+  "gave",
+  "given",
+  "held",
+  "kept",
+  "known",
+  "led",
+  "left",
+  "lost",
+  "made",
+  "paid",
+  "put",
+  "read",
+  "ran",
+  "said",
+  "saw",
+  "seen",
+  "sent",
+  "set",
+  "spent",
+  "stood",
+  "taken",
+  "taught",
+  "thought",
+  "told",
+  "went",
+  "won",
+  "wrote",
+  "written",
+]);
+
+function hasInflectionalS(word: string): boolean {
+  return (
+    word.length > 3 &&
+    word.endsWith("s") &&
+    !/(?:ss|us|is|ous|less|ness)$/.test(word)
+  );
+}
+
+function findContestableAntonymPair(word: string, pairedWord: string): string | null {
+  const rawKey = [normalizeComparableText(word), normalizeComparableText(pairedWord)].sort().join("|");
+  const rawBlocked: Record<string, string> = {
+    "paid|refunded": "paid and refunded are transaction-related reversals, not a clean lexical antonym pair. Prefer paid-received or spent-saved depending on context.",
+    "uninterested|unproductive": "unproductive is an output/effectiveness scale; uninterested is an attitude/interest scale.",
+  };
+  if (rawBlocked[rawKey]) return rawBlocked[rawKey];
+
+  const a = antonymPairKey(word);
+  const b = antonymPairKey(pairedWord);
+  if (!a || !b) return null;
+  const key = [a, b].sort().join("|");
+  const blocked: Record<string, string> = {
+    "force|restrain": "force in this passage means compel; restrain can mean hold back/block, so the relation is contestable rather than a clean antonym. Prefer allow/permit/release in matching form.",
+    "ignorance|mastery": "mastery is an ability/competence scale; ignorance is a knowledge-state scale. Prefer incompetence, inability, or lack of mastery.",
+    "emotional|rational": "emotional contrasts with unemotional/dispassionate; rational contrasts more cleanly with irrational.",
+    "clear|dim": "dim as future outlook contrasts more cleanly with bright/promising, not clear.",
+    "excuse|justify": "excuse is a near-related act of explanation/defense, not a clean opposite of justify.",
+    "passive|unproductive": "passive is an activity/agency scale; unproductive is an output/effectiveness scale. Prefer productive/fruitful.",
+  };
+  return blocked[key] ?? null;
+}
+
+function antonymPairKey(value: string): string {
+  const normalized = normalizeText(value).toLowerCase();
+  if (!normalized || !isSingleEnglishToken(normalized)) return "";
+  if (normalized.endsWith("ies")) return `${normalized.slice(0, -3)}y`;
+  if (normalized.endsWith("ing") && normalized.length > 6) return normalized.slice(0, -3);
+  if (normalized.endsWith("ed") && normalized.length > 5) return normalized.slice(0, -2);
+  if (hasInflectionalS(normalized)) return normalized.slice(0, -1);
+  return normalized;
+}
+
+function validateVocabChoiceQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const markedWords = Array.isArray(question.markedWords)
+    ? question.markedWords.filter(isRecord)
+    : [];
+  const passageWithMarkers = normalizeText(question.passageWithMarkers);
+
+  if (markedWords.length !== VOCAB_CHOICE_MARKER_COUNT) {
+    add(
+      "error",
+      "vocab-marker-count",
+      `VOCAB_CHOICE must have exactly ${VOCAB_CHOICE_MARKER_COUNT} marked words, got ${markedWords.length}.`,
+    );
+  }
+
+  if (!passageWithMarkers) {
+    add("error", "vocab-missing-passage-markers", "VOCAB_CHOICE is missing passageWithMarkers.");
+    return;
+  }
+
+  const renderedMarkers = findMarkers(passageWithMarkers)
+    .map((marker) => {
+      const match = marker.inner.match(/^\(([a-eA-E])\)\s*(.+)$/);
+      if (!match) return null;
+      return {
+        key: match[1].toLowerCase(),
+        word: normalizeText(match[2]),
+      };
+    })
+    .filter((marker): marker is { key: string; word: string } => !!marker);
+  const renderedByKey = new Map(renderedMarkers.map((marker) => [marker.key, marker.word]));
+
+  if (countUnderlineMarkers(passageWithMarkers) !== VOCAB_CHOICE_MARKER_COUNT) {
+    add(
+      "error",
+      "vocab-render-marker-count",
+      `VOCAB_CHOICE passageWithMarkers must render exactly ${VOCAB_CHOICE_MARKER_COUNT} underlined markers.`,
+    );
+  }
+
+  if (renderedMarkers.length !== VOCAB_CHOICE_MARKER_COUNT) {
+    add(
+      "error",
+      "vocab-render-label-format",
+      "VOCAB_CHOICE rendered markers must use __(a) word__ through __(e) word__ format.",
+    );
+  }
+
+  const labels = markedWords.map((word, index) => normalizeVocabChoiceKey(word.label, index));
+  const duplicateLabel = findDuplicate(labels.filter(Boolean));
+  if (duplicateLabel) {
+    add("error", "vocab-duplicate-label", `Duplicate VOCAB_CHOICE marked label: (${duplicateLabel}).`);
+  }
+
+  const inappropriateWords = markedWords.filter((word) => word.isInappropriate === true);
+  if (inappropriateWords.length !== 1) {
+    add(
+      "error",
+      "vocab-inappropriate-count",
+      `VOCAB_CHOICE must have exactly one isInappropriate=true item, got ${inappropriateWords.length}.`,
+    );
+  }
+
+  const answerKeys = collectVocabChoiceAnswerKeys(question);
+  if (answerKeys.length !== 1) {
+    add(
+      "error",
+      "vocab-answer-count",
+      `VOCAB_CHOICE correctAnswer must point to exactly one label, got ${answerKeys.length}.`,
+    );
+  }
+
+  const inappropriate = inappropriateWords[0];
+  const inappropriateKey = inappropriate ? normalizeVocabChoiceKey(inappropriate.label) : "";
+  if (inappropriateKey && answerKeys.length === 1 && answerKeys[0] !== inappropriateKey) {
+    add(
+      "error",
+      "vocab-answer-label-mismatch",
+      `VOCAB_CHOICE correctAnswer must match the only inappropriate label (${inappropriateKey}).`,
+    );
+  }
+
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const optionByKey = new Map<string, Record<string, unknown>>();
+  options.forEach((option, index) => {
+    const key = normalizeVocabChoiceKey(option.label, index);
+    if (key) optionByKey.set(key, option);
+  });
+
+  for (const [index, markedWord] of markedWords.entries()) {
+    const key = normalizeVocabChoiceKey(markedWord.label, index);
+    const renderedWord = renderedByKey.get(key);
+    const isInappropriate = markedWord.isInappropriate === true;
+    const originalWord = normalizeText(markedWord.originalWord);
+    const substituteWord = normalizeText(markedWord.substituteWord);
+    const displayedWord =
+      normalizeText(markedWord.word) ||
+      (isInappropriate ? substituteWord : originalWord);
+    const betterWord = normalizeText(markedWord.betterWord);
+
+    if (!key) {
+      add("error", "vocab-label-format", "VOCAB_CHOICE markedWords labels must be (a) through (e).");
+      continue;
+    }
+
+    if (!renderedWord) {
+      add("error", "vocab-render-missing-label", `VOCAB_CHOICE passageWithMarkers is missing label (${key}).`);
+    } else if (
+      displayedWord &&
+      normalizeComparableText(renderedWord) !== normalizeComparableText(displayedWord)
+    ) {
+      add(
+        "error",
+        "vocab-render-word-mismatch",
+        `VOCAB_CHOICE label (${key}) renders "${renderedWord}" but markedWords says "${displayedWord}".`,
+      );
+    }
+
+    const option = optionByKey.get(key);
+    const optionText = normalizeText(option?.text);
+    if (
+      optionText &&
+      displayedWord &&
+      normalizeComparableText(optionText) !== normalizeComparableText(displayedWord)
+    ) {
+      add(
+        "error",
+        "vocab-option-word-mismatch",
+        `VOCAB_CHOICE option (${key}) must show the same word as the passage marker.`,
+      );
+    }
+
+    if (isInappropriate) {
+      const visibleWrongWord = substituteWord || displayedWord;
+      const sourceCorrectWord = betterWord || originalWord;
+      if (!visibleWrongWord) {
+        add("error", "vocab-missing-substitute", `VOCAB_CHOICE answer (${key}) is missing the displayed wrong word.`);
+      }
+      if (!sourceCorrectWord) {
+        add("error", "vocab-missing-better-word", `VOCAB_CHOICE answer (${key}) is missing the source-correct betterWord.`);
+      }
+      if (
+        visibleWrongWord &&
+        sourceCorrectWord &&
+        normalizeComparableText(visibleWrongWord) === normalizeComparableText(sourceCorrectWord)
+      ) {
+        add("error", "vocab-not-mutated", `VOCAB_CHOICE answer (${key}) did not replace the source word.`);
+      }
+      if (
+        originalWord &&
+        betterWord &&
+        normalizeComparableText(originalWord) !== normalizeComparableText(betterWord)
+      ) {
+        add("error", "vocab-better-word-mismatch", `VOCAB_CHOICE betterWord for (${key}) must equal originalWord.`);
+      }
+      if (
+        renderedWord &&
+        visibleWrongWord &&
+        normalizeComparableText(renderedWord) !== normalizeComparableText(visibleWrongWord)
+      ) {
+        add("error", "vocab-answer-not-rendered", `VOCAB_CHOICE answer (${key}) must render the wrong substitute word.`);
+      }
+      if (passage && sourceCorrectWord && !containsLoose(passage, sourceCorrectWord)) {
+        add(
+          "error",
+          "vocab-better-word-not-source-backed",
+          `VOCAB_CHOICE betterWord for (${key}) must exist in the original passage.`,
+        );
+      }
+    } else {
+      if (betterWord) {
+        add("error", "vocab-nonanswer-has-better-word", `VOCAB_CHOICE non-answer (${key}) must not have betterWord.`);
+      }
+      if (
+        originalWord &&
+        displayedWord &&
+        normalizeComparableText(originalWord) !== normalizeComparableText(displayedWord)
+      ) {
+        add(
+          "error",
+          "vocab-nonanswer-not-source-word",
+          `VOCAB_CHOICE non-answer (${key}) must display the original source word.`,
+        );
+      }
+      if (passage && displayedWord && !containsLoose(passage, displayedWord)) {
+        add(
+          "error",
+          "vocab-nonanswer-not-source-backed",
+          `VOCAB_CHOICE non-answer (${key}) must exist in the original passage.`,
+        );
+      }
+    }
+  }
+}
+
 function sentenceInsertHasCohesiveCue(sentence: string): boolean {
   const s = ` ${sentence.toLowerCase()} `;
   if (/\b(this|that|these|those|such|it|its|they|them|their|he|she|his|her|him)\b/.test(s)) {
@@ -1167,8 +1963,74 @@ function normalizeSentenceInsertGapLabel(value: unknown): string {
   return match ? match[1] : text;
 }
 
+function countSentenceInsertGapMarkers(text: string): number {
+  const circled = getCircledNumbers(5);
+  return circled.filter((marker) => text.includes(marker)).length;
+}
+
+function findSentenceInsertVisibleSourceLeak(
+  sourceSentence: string,
+  passageWithMarkers: string,
+): { sentence: string; score: number } | null {
+  const source = normalizeText(sourceSentence);
+  if (!source) return null;
+
+  const visiblePassage = stripSentenceInsertMarkers(passageWithMarkers);
+  const visibleSentences = splitPassageSentences(visiblePassage, { includeShort: true });
+  let best: { sentence: string; score: number } | null = null;
+  for (const sentence of visibleSentences) {
+    const score = sentenceInsertSentenceSimilarity(source, sentence);
+    if (!best || score > best.score) best = { sentence, score };
+  }
+
+  if (!best) return null;
+  if (normalizeComparableText(best.sentence) === normalizeComparableText(source)) return best;
+  return best.score >= 0.72 ? best : null;
+}
+
+function stripSentenceInsertMarkers(text: string): string {
+  return text
+    .replace(/[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function sentenceInsertSentenceSimilarity(a: string, b: string): number {
+  const normalizedA = normalizeComparableText(a).replace(/[.,!?;:]+$/g, "");
+  const normalizedB = normalizeComparableText(b).replace(/[.,!?;:]+$/g, "");
+  if (!normalizedA || !normalizedB) return 0;
+  if (normalizedA === normalizedB) return 1;
+  if (normalizedA.length >= 45 && normalizedB.includes(normalizedA)) return 0.95;
+  if (normalizedB.length >= 45 && normalizedA.includes(normalizedB)) return 0.95;
+
+  const tokensA = [...contentTokens(normalizedA)];
+  const tokensB = [...contentTokens(normalizedB)];
+  if (tokensA.length === 0 || tokensB.length === 0) return 0;
+  const setB = new Set(tokensB);
+  const overlap = tokensA.filter((token) => setB.has(token)).length;
+  const containment = overlap / Math.max(1, Math.min(tokensA.length, tokensB.length));
+  const jaccard = overlap / Math.max(1, new Set([...tokensA, ...tokensB]).size);
+  const sequence = longestCommonTokenRun(tokensA, tokensB) / Math.max(1, Math.min(tokensA.length, tokensB.length));
+  return Math.max(containment, jaccard * 1.25, sequence);
+}
+
+function longestCommonTokenRun(a: string[], b: string[]): number {
+  let best = 0;
+  const dp = Array.from({ length: a.length + 1 }, () => Array<number>(b.length + 1).fill(0));
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+        best = Math.max(best, dp[i][j]);
+      }
+    }
+  }
+  return best;
+}
+
 function validateSentenceInsertQuestion(
   question: Record<string, unknown>,
+  passage: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   // 1) 마커 인덱스: 5개 · 오름차순
@@ -1202,6 +2064,52 @@ function validateSentenceInsertQuestion(
   }
 
   // 3) 정답 위치: 양끝(①·⑤) 회피 → 가운데(②③④) 권장
+  const passageWithMarkers = normalizeText(question.passageWithMarkers);
+  if (!passageWithMarkers) {
+    add("error", "sentence-insert-missing-passage", "SENTENCE_INSERT is missing passageWithMarkers.");
+  } else {
+    const markerCount = countSentenceInsertGapMarkers(passageWithMarkers);
+    if (markerCount !== 5) {
+      add(
+        "error",
+        "sentence-insert-gap-marker-count",
+        `SENTENCE_INSERT passageWithMarkers must contain exactly 5 gap markers, got ${markerCount}.`,
+      );
+    }
+  }
+
+  const omittedSource =
+    normalizeText(question.omittedSourceSentence) ||
+    normalizeText(question.sourceSentenceToOmit);
+  if (omittedSource) {
+    if (passage && !containsComparableSentence(passage, omittedSource)) {
+      add(
+        "error",
+        "sentence-insert-omitted-source-not-backed",
+        "sourceSentenceToOmit/omittedSourceSentence must be an original passage sentence.",
+      );
+    }
+    if (passageWithMarkers) {
+      const leak = findSentenceInsertVisibleSourceLeak(omittedSource, passageWithMarkers);
+      if (leak) {
+        add(
+          "error",
+          "sentence-insert-omitted-source-visible",
+          `The omitted source sentence is still visible in passageWithMarkers: "${leak.sentence.slice(0, 100)}"`,
+        );
+      }
+    }
+  } else if (given && passageWithMarkers) {
+    const leak = findSentenceInsertVisibleSourceLeak(given, passageWithMarkers);
+    if (leak && leak.score >= 0.72) {
+      add(
+        "error",
+        "sentence-insert-given-leaks-in-passage",
+        `The given sentence is still visible, or nearly visible, in passageWithMarkers: "${leak.sentence.slice(0, 100)}"`,
+      );
+    }
+  }
+
   const answer = normalizeSentenceInsertGapLabel(question.correctAnswer);
   if (answer === "1" || answer === "5") {
     add(
@@ -1554,6 +2462,14 @@ function validateBlankInferenceQuestion(
   const slotIssue = findNegativeParaphraseSlotIssue(blankCarrierText, correctText);
   if (slotIssue) {
     add("error", slotIssue.code, slotIssue.message);
+  }
+
+  const noSubjectDoubleNegationIssue = findNoSubjectDoubleNegationIssue(
+    blankCarrierText,
+    correctText,
+  );
+  if (noSubjectDoubleNegationIssue) {
+    add("error", noSubjectDoubleNegationIssue.code, noSubjectDoubleNegationIssue.message);
   }
 
   const tangledNegationIssue = findTangledNegativeParaphraseIssue(correctText);
@@ -3040,6 +3956,38 @@ function findTangledNegativeParaphraseIssue(
     };
   }
 
+  return null;
+}
+
+function findNoSubjectDoubleNegationIssue(
+  blankCarrierText: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const option = normalizeText(correctText);
+  const completedSentence = normalizeText(blankCarrierText.replace("_____", option));
+  const offending =
+    findNoSubjectPlusNegativePredicate(option) ||
+    findNoSubjectPlusNegativePredicate(completedSentence);
+  if (!offending) return null;
+
+  return {
+    code: "negative-paraphrase-no-subject-double-negation",
+    message: `Avoid no-subject + negative predicate double negation in DOUBLE_NEGATIVE blanks: "${offending}".`,
+  };
+}
+
+function findNoSubjectPlusNegativePredicate(text: string): string | null {
+  const normalized = normalizeText(text);
+  const patterns = [
+    /\bno\s+(?!matter\b)(?:[A-Za-z][A-Za-z'-]*\s+){0,7}(?:do|does|did)\s+not\b[^.;:,]*/i,
+    /\bno\s+(?!matter\b)(?:[A-Za-z][A-Za-z'-]*\s+){0,7}(?:is|are|was|were|be|being|been)\s+not\b[^.;:,]*/i,
+    /\bno\s+(?!matter\b)(?:[A-Za-z][A-Za-z'-]*\s+){0,7}(?:can|could|should|would|will|must|may|might)\s+not\b[^.;:,]*/i,
+    /\bno\s+(?!matter\b)(?:[A-Za-z][A-Za-z'-]*\s+){0,7}(?:cannot|can't|don't|doesn't|didn't|isn't|aren't|wasn't|weren't|won't|wouldn't|shouldn't|couldn't)\b[^.;:,]*/i,
+  ];
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern);
+    if (match) return match[0];
+  }
   return null;
 }
 

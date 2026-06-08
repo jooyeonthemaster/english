@@ -1527,7 +1527,7 @@ function TopUpPanel({
           <div className="space-y-1">
             <p className="font-semibold text-slate-700">SMOAT 크레딧</p>
             <p>
-              문제 생성, 자동 출제, 지문 분석, OCR, 해설 생성 등 SMOAT 내부 AI
+              문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 SMOAT 내부 AI
               기능을 이용하기 위한 디지털 이용권입니다. 배송이 없는 상품이며,
               결제 승인 또는 가상계좌 입금 확인 후 잔고에 즉시 지급됩니다.
             </p>

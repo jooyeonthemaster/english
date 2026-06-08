@@ -81,7 +81,7 @@ export interface QueueItem {
     typeCounts: Record<string, number>;
     difficulty: string;
     prompt: string;
-    mode: "auto" | "manual";
+    mode: "auto" | "manual" | "set";
     generationPlan?: QuestionGenerationPlan;
     questionTypeSettings?: QuestionTypeGenerationSettings;
   };
@@ -176,11 +176,6 @@ export function buildQuestionText(q: any): string {
   if (q.contextHint) parts.push(`[힌트] ${q.contextHint}`);
   // GRAMMAR_CORRECTION: passageWithUnderline already contains the underlined passage.
   if (q.sentenceWithError && !isGrammarCorrection) parts.push(grammarCorrectionErrorSentenceForQuestionText(q));
-
-  // ── 어휘 ──
-  // SYNONYM: 대상 단어 + 문맥 문장
-  if (q.targetWord) parts.push(`[대상 단어] ${q.targetWord}`);
-  if (q.contextSentence) parts.push(`[문맥] ${q.contextSentence}`);
 
   // 일반 questionText (fallback)
   if (q.questionText && !q.direction) parts.push(q.questionText);
