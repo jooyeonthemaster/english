@@ -13,14 +13,8 @@ import {
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   buildQuestionTypeSettingsPrompt,
-  readContentMatchAnswerCountSetting,
-  readContentMatchOptionCountSetting,
-  readGrammarAnswerCountSetting,
-  readGrammarCorrectionErrorCountSetting,
-  readGrammarMarkerCountSetting,
-  readIrrelevantSlotCountSetting,
-  readSummaryCompleteBlankCountSetting,
-  readSummaryCompleteMcBlankCountSetting,
+  getQuestionTypeGenerationTokenFloor,
+  resolveQuestionTypeGenerationSettings,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import {
@@ -230,86 +224,21 @@ export async function runQuestionGeneration(
         `${subType} 유형의 문제를 만드세요.`;
       const typeQualityRubric = getTypeQualityRubric(subType, diffLabel);
 
-      // Resolve IRRELEVANT slot count and cap it to the actual passage length
-      // (safety net: route-level guardrail should already have rejected this
-      // case, but AUTO planner / Trigger.dev queued jobs may not have).
-      let irrelevantSlotCount: number | undefined;
-      let grammarMarkerCount: number | undefined;
-      let grammarAnswerCount: number | undefined;
-      let grammarCorrectionErrorCount: number | undefined;
-      let summaryCompleteMcBlankCount: number | undefined;
-      let summaryCompleteBlankCount: number | undefined;
-      let contentMatchOptionCount: number | undefined;
-      let contentMatchAnswerCount: number | undefined;
-      let effectiveTypeSettings: unknown = typeSettings?.[subType];
-      if (subType === "GRAMMAR_ERROR" && isRecord(typeSettings?.[subType])) {
-        grammarMarkerCount = readGrammarMarkerCountSetting(typeSettings?.[subType]);
-        grammarAnswerCount = readGrammarAnswerCountSetting(
-          typeSettings?.[subType],
-          grammarMarkerCount,
-        );
-        effectiveTypeSettings = {
-          ...(typeSettings?.[subType] as Record<string, unknown>),
-          markerCount: grammarMarkerCount,
-          answerCount: grammarAnswerCount,
-        };
-      }
-      if (subType === "GRAMMAR_CORRECTION" && isRecord(typeSettings?.[subType])) {
-        grammarCorrectionErrorCount = readGrammarCorrectionErrorCountSetting(
-          typeSettings?.[subType],
-        );
-        effectiveTypeSettings = {
-          ...(typeSettings?.[subType] as Record<string, unknown>),
-          errorCount: grammarCorrectionErrorCount,
-        };
-      }
-      if (subType === "IRRELEVANT") {
-        irrelevantSlotCount = readIrrelevantSlotCountSetting(
-          typeSettings?.[subType],
-        );
-        effectiveTypeSettings = {
-          ...(isRecord(typeSettings?.[subType])
-            ? (typeSettings?.[subType] as Record<string, unknown>)
-            : {}),
-          slotCount: irrelevantSlotCount,
-        };
-      }
-      if (subType === "CONTENT_MATCH") {
-        contentMatchOptionCount = readContentMatchOptionCountSetting(
-          typeSettings?.[subType],
-        );
-        contentMatchAnswerCount = readContentMatchAnswerCountSetting(
-          typeSettings?.[subType],
-          contentMatchOptionCount,
-        );
-        effectiveTypeSettings = {
-          ...(isRecord(typeSettings?.[subType])
-            ? (typeSettings?.[subType] as Record<string, unknown>)
-            : {}),
-          optionCount: contentMatchOptionCount,
-          answerCount: contentMatchAnswerCount,
-        };
-      }
-      if (subType === "SUMMARY_COMPLETE") {
-        summaryCompleteBlankCount = readSummaryCompleteBlankCountSetting(
-          typeSettings?.[subType],
-        );
-        effectiveTypeSettings = {
-          ...(isRecord(typeSettings?.[subType])
-            ? (typeSettings?.[subType] as Record<string, unknown>)
-            : {}),
-          blankCount: summaryCompleteBlankCount,
-        };
-      }
-      if (subType === "SUMMARY_COMPLETE_MC" && isRecord(typeSettings?.[subType])) {
-        summaryCompleteMcBlankCount = readSummaryCompleteMcBlankCountSetting(
-          typeSettings?.[subType],
-        );
-        effectiveTypeSettings = {
-          ...(typeSettings?.[subType] as Record<string, unknown>),
-          blankCount: summaryCompleteMcBlankCount,
-        };
-      }
+      const resolvedTypeSettings = resolveQuestionTypeGenerationSettings(
+        subType,
+        typeSettings?.[subType],
+      );
+      const {
+        effectiveTypeSettings,
+        irrelevantSlotCount,
+        grammarMarkerCount,
+        grammarAnswerCount,
+        grammarCorrectionErrorCount,
+        summaryCompleteMcBlankCount,
+        summaryCompleteBlankCount,
+        contentMatchOptionCount,
+        contentMatchAnswerCount,
+      } = resolvedTypeSettings;
 
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
         subType,
@@ -350,18 +279,10 @@ export async function runQuestionGeneration(
       const structuredInstructions = isStructured
         ? STRUCTURED_OUTPUT_INSTRUCTIONS
         : UNSTRUCTURED_OUTPUT_INSTRUCTIONS;
-      const perQuestionTokenFloor =
-        subType === "GRAMMAR_ERROR" && ((grammarMarkerCount ?? 5) > 5 || (grammarAnswerCount ?? 1) > 1)
-          ? 8_192
-          : subType === "CONTENT_MATCH" && ((contentMatchOptionCount ?? 5) > 5 || (contentMatchAnswerCount ?? 1) > 1)
-          ? 8_192
-          : subType === "SUMMARY_COMPLETE" && (summaryCompleteBlankCount ?? 2) > 2
-          ? 8_192
-          : subType === "IRRELEVANT" && (irrelevantSlotCount ?? 5) > 5
-          ? 8_192
-          : subType === "SUMMARY_COMPLETE_MC" && (summaryCompleteMcBlankCount ?? 2) > 2
-          ? 8_192
-          : 4_096;
+      const perQuestionTokenFloor = getQuestionTypeGenerationTokenFloor(
+        subType,
+        resolvedTypeSettings,
+      );
 
       try {
         const object = await generateWithRetry(
@@ -473,6 +394,7 @@ export async function runQuestionGeneration(
             question: mapped,
             passage: passageContent,
             requestedDifficulty: diffLabel,
+            irrelevantSlotCount,
             grammarMarkerCount,
             grammarAnswerCount,
             grammarCorrectionErrorCount,
@@ -774,9 +696,13 @@ function getLargestIrrelevantSlotCount(input: RunGenerationInput): number {
   let maxSlotCount = 0;
   for (const item of input.plan) {
     if (item.subType !== "IRRELEVANT" || item.count <= 0) continue;
+    const resolved = resolveQuestionTypeGenerationSettings(
+      item.subType,
+      input.typeSettings?.[item.subType],
+    );
     maxSlotCount = Math.max(
       maxSlotCount,
-      readIrrelevantSlotCountSetting(input.typeSettings?.IRRELEVANT),
+      resolved.irrelevantSlotCount ?? 0,
     );
   }
   return maxSlotCount;
@@ -786,9 +712,13 @@ function getLargestGrammarMarkerCount(input: RunGenerationInput): number {
   let maxMarkerCount = 0;
   for (const item of input.plan) {
     if (item.subType !== "GRAMMAR_ERROR" || item.count <= 0) continue;
+    const resolved = resolveQuestionTypeGenerationSettings(
+      item.subType,
+      input.typeSettings?.[item.subType],
+    );
     maxMarkerCount = Math.max(
       maxMarkerCount,
-      readGrammarMarkerCountSetting(input.typeSettings?.GRAMMAR_ERROR),
+      resolved.grammarMarkerCount ?? 0,
     );
   }
   return maxMarkerCount;
@@ -798,10 +728,13 @@ function getLargestGrammarAnswerCount(input: RunGenerationInput): number {
   let maxAnswerCount = 0;
   for (const item of input.plan) {
     if (item.subType !== "GRAMMAR_ERROR" || item.count <= 0) continue;
-    const markerCount = readGrammarMarkerCountSetting(input.typeSettings?.GRAMMAR_ERROR);
+    const resolved = resolveQuestionTypeGenerationSettings(
+      item.subType,
+      input.typeSettings?.[item.subType],
+    );
     maxAnswerCount = Math.max(
       maxAnswerCount,
-      readGrammarAnswerCountSetting(input.typeSettings?.GRAMMAR_ERROR, markerCount),
+      resolved.grammarAnswerCount ?? 0,
     );
   }
   return maxAnswerCount;

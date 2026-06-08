@@ -15,6 +15,7 @@ interface ValidateQuestionQualityInput {
   question: Record<string, unknown>;
   passage?: string;
   requestedDifficulty?: string;
+  irrelevantSlotCount?: number;
   grammarMarkerCount?: number;
   grammarAnswerCount?: number;
   grammarCorrectionErrorCount?: number;
@@ -731,6 +732,7 @@ export function validateQuestionQuality({
   question,
   passage,
   requestedDifficulty,
+  irrelevantSlotCount,
   grammarMarkerCount,
   grammarAnswerCount,
   grammarCorrectionErrorCount,
@@ -752,6 +754,7 @@ export function validateQuestionQuality({
     typeId,
     passage,
     requestedDifficulty,
+    irrelevantSlotCount,
     grammarMarkerCount ?? grammarErrorCount,
     grammarAnswerCount,
     grammarCorrectionErrorCount,
@@ -1270,6 +1273,7 @@ function validateTypeSpecific(
   typeId: string,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
+  irrelevantSlotCount: number | undefined,
   grammarMarkerCount: number | undefined,
   grammarAnswerCount: number | undefined,
   grammarCorrectionErrorCount: number | undefined,
@@ -1304,7 +1308,13 @@ function validateTypeSpecific(
   }
 
   if (typeId === "IRRELEVANT") {
-    validateIrrelevantQuestion(question, passage, requestedDifficulty, add);
+    validateIrrelevantQuestion(
+      question,
+      passage,
+      requestedDifficulty,
+      irrelevantSlotCount,
+      add,
+    );
   }
 
   if (typeId === "SENTENCE_INSERT") {
@@ -3079,6 +3089,7 @@ function readSummaryPairOption(option: Record<string, unknown>): {
 } {
   const text = normalizeText(option.text);
   const values: Record<string, string> = {};
+  const textValues = readSummaryValuesFromOptionText(text);
 
   if (Array.isArray(option.blankValues)) {
     for (const item of option.blankValues) {
@@ -3096,6 +3107,10 @@ function readSummaryPairOption(option: Record<string, unknown>): {
     if (normalizedValue) values[normalizedKey] = normalizedValue;
   }
 
+  for (const [key, value] of Object.entries(textValues)) {
+    if (value && !values[key]) values[key] = value;
+  }
+
   const explicitA = values.blankA || normalizeText(option.blankA);
   const explicitB = values.blankB || normalizeText(option.blankB);
   if (Object.keys(values).length > 0 || explicitA || explicitB) {
@@ -3106,7 +3121,7 @@ function readSummaryPairOption(option: Record<string, unknown>): {
 
   const stripped = stripSummaryOptionPrefix(text);
   const parts = stripped
-    .split(/\s*(?:\u2026+|\.{2,}|\/|\||;|,|\s[-\u2013\u2014]\s)\s*/u)
+    .split(/\s*(?:\u2026+|\.{2,}|\?{2,}|(?:\?\s*){2,}|\/|\||;|,|\s[-\u2013\u2014]\s)\s*/u)
     .map((part) => part.trim())
     .filter(Boolean);
 
@@ -3118,6 +3133,21 @@ function readSummaryPairOption(option: Record<string, unknown>): {
   }
 
   return { blankA: "", blankB: "", text, values };
+}
+
+function readSummaryValuesFromOptionText(text: string): Record<string, string> {
+  const values: Record<string, string> = {};
+  if (!text) return values;
+
+  const stripped = stripSummaryOptionPrefix(text);
+  stripped
+    .split(/\s*(?:\u2026+|\.{2,}|\?{2,}|(?:\?\s*){2,}|\/|\||;|,|\s[-\u2013\u2014]\s)\s*/u)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .forEach((part, index) => {
+      values[`blank${String.fromCharCode(65 + index)}`] = part;
+    });
+  return values;
 }
 
 function stripSummaryOptionPrefix(text: string): string {
@@ -3594,14 +3624,19 @@ function validateIrrelevantQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
+  requestedSlotCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.map((sentence: unknown) => normalizeText(sentence))
     : [];
   const slotCount = sentences.length;
-  if (slotCount !== IRRELEVANT_SLOT_MIN) {
-    add("error", "irrelevant-sentence-count", `IRRELEVANT must have exactly ${IRRELEVANT_SLOT_MIN} marked sentences, got ${slotCount}.`);
+  const expectedSlotCount =
+    typeof requestedSlotCount === "number" && Number.isFinite(requestedSlotCount)
+      ? Math.max(IRRELEVANT_SLOT_MIN, Math.round(requestedSlotCount))
+      : IRRELEVANT_SLOT_MIN;
+  if (slotCount !== expectedSlotCount) {
+    add("error", "irrelevant-sentence-count", `IRRELEVANT must have exactly ${expectedSlotCount} marked sentences, got ${slotCount}.`);
     return;
   }
 

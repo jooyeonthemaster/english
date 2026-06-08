@@ -71,6 +71,130 @@ export const GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT = 1;
 
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
 
+type NumericSettingMax =
+  | number
+  | ((resolved: Record<string, number>) => number);
+
+interface NumericSettingSpec {
+  key: string;
+  aliases?: string[];
+  min: number;
+  max: NumericSettingMax;
+  defaultValue: number;
+}
+
+function numericSettingKeys(spec: NumericSettingSpec): string[] {
+  return [spec.key, ...(spec.aliases ?? [])];
+}
+
+function numericSettingMax(
+  spec: NumericSettingSpec,
+  resolved: Record<string, number>,
+) {
+  return typeof spec.max === "function" ? spec.max(resolved) : spec.max;
+}
+
+function normalizeNumericSetting(
+  value: unknown,
+  spec: NumericSettingSpec,
+  resolved: Record<string, number> = {},
+): number {
+  const n = typeof value === "number" ? value : Number(value);
+  const max = numericSettingMax(spec, resolved);
+  if (!Number.isFinite(n)) return Math.min(spec.defaultValue, max);
+  const rounded = Math.round(n);
+  return Math.min(max, Math.max(spec.min, rounded));
+}
+
+function readNumericSettingValue(
+  source: unknown,
+  spec: NumericSettingSpec,
+): unknown {
+  if (!isRecord(source)) return undefined;
+  for (const key of numericSettingKeys(spec)) {
+    if (source[key] !== undefined) return source[key];
+  }
+  return undefined;
+}
+
+function readNumericSetting(
+  rawSettings: unknown,
+  typeId: string,
+  spec: NumericSettingSpec,
+  resolved: Record<string, number> = {},
+): number {
+  const directValue = readNumericSettingValue(rawSettings, spec);
+  if (directValue !== undefined) {
+    return normalizeNumericSetting(directValue, spec, resolved);
+  }
+
+  const nested = isRecord(rawSettings) ? rawSettings[typeId] : undefined;
+  const nestedValue = readNumericSettingValue(nested, spec);
+  return normalizeNumericSetting(nestedValue, spec, resolved);
+}
+
+const IRRELEVANT_SLOT_COUNT_SETTING: NumericSettingSpec = {
+  key: "slotCount",
+  min: IRRELEVANT_SLOT_COUNT_MIN,
+  max: IRRELEVANT_SLOT_COUNT_MAX,
+  defaultValue: IRRELEVANT_SLOT_COUNT_DEFAULT,
+};
+
+const SUMMARY_COMPLETE_MC_BLANK_COUNT_SETTING: NumericSettingSpec = {
+  key: "blankCount",
+  aliases: ["summaryBlankCount"],
+  min: SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
+  max: SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
+  defaultValue: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
+};
+
+const SUMMARY_COMPLETE_BLANK_COUNT_SETTING: NumericSettingSpec = {
+  key: "blankCount",
+  aliases: ["summaryBlankCount"],
+  min: SUMMARY_COMPLETE_BLANK_COUNT_MIN,
+  max: SUMMARY_COMPLETE_BLANK_COUNT_MAX,
+  defaultValue: SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT,
+};
+
+const CONTENT_MATCH_OPTION_COUNT_SETTING: NumericSettingSpec = {
+  key: "optionCount",
+  min: CONTENT_MATCH_OPTION_COUNT_MIN,
+  max: CONTENT_MATCH_OPTION_COUNT_MAX,
+  defaultValue: CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+};
+
+const CONTENT_MATCH_ANSWER_COUNT_SETTING: NumericSettingSpec = {
+  key: "answerCount",
+  aliases: ["correctAnswerCount"],
+  min: CONTENT_MATCH_ANSWER_COUNT_MIN,
+  max: (resolved) => resolved.optionCount ?? CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+  defaultValue: CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+};
+
+const GRAMMAR_MARKER_COUNT_SETTING: NumericSettingSpec = {
+  key: "markerCount",
+  aliases: ["errorCount"],
+  min: GRAMMAR_MARKER_COUNT_MIN,
+  max: GRAMMAR_MARKER_COUNT_MAX,
+  defaultValue: GRAMMAR_MARKER_COUNT_DEFAULT,
+};
+
+const GRAMMAR_ANSWER_COUNT_SETTING: NumericSettingSpec = {
+  key: "answerCount",
+  aliases: ["correctAnswerCount"],
+  min: GRAMMAR_ANSWER_COUNT_MIN,
+  max: (resolved) => resolved.markerCount ?? GRAMMAR_MARKER_COUNT_DEFAULT,
+  defaultValue: GRAMMAR_ANSWER_COUNT_DEFAULT,
+};
+
+const GRAMMAR_CORRECTION_ERROR_COUNT_SETTING: NumericSettingSpec = {
+  key: "errorCount",
+  aliases: ["answerCount"],
+  min: GRAMMAR_CORRECTION_ERROR_COUNT_MIN,
+  max: GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+  defaultValue: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+};
+
 function getIrrelevantLabel(index: number): string {
   if (index >= 0 && index < 20) return String.fromCodePoint(0x2460 + index);
   if (index >= 20 && index < 35) return String.fromCodePoint(0x3251 + (index - 20));
@@ -79,100 +203,39 @@ function getIrrelevantLabel(index: number): string {
 }
 
 export function normalizeIrrelevantSlotCount(value: unknown): number {
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) return IRRELEVANT_SLOT_COUNT_DEFAULT;
-  const rounded = Math.round(n);
-  return Math.min(
-    IRRELEVANT_SLOT_COUNT_MAX,
-    Math.max(IRRELEVANT_SLOT_COUNT_MIN, rounded),
-  );
+  return normalizeNumericSetting(value, IRRELEVANT_SLOT_COUNT_SETTING);
 }
 
 export function readIrrelevantSlotCountSetting(rawSettings: unknown): number {
-  if (!isRecord(rawSettings)) return IRRELEVANT_SLOT_COUNT_DEFAULT;
-
-  if (rawSettings.slotCount !== undefined) {
-    return normalizeIrrelevantSlotCount(rawSettings.slotCount);
-  }
-
-  const nested = rawSettings.IRRELEVANT;
-  if (isRecord(nested)) {
-    return normalizeIrrelevantSlotCount(nested.slotCount);
-  }
-
-  return IRRELEVANT_SLOT_COUNT_DEFAULT;
+  return readNumericSetting(rawSettings, "IRRELEVANT", IRRELEVANT_SLOT_COUNT_SETTING);
 }
 
 export function normalizeSummaryCompleteMcBlankCount(value: unknown): number {
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) return SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT;
-  const rounded = Math.round(n);
-  return Math.min(
-    SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
-    Math.max(SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, rounded),
-  );
+  return normalizeNumericSetting(value, SUMMARY_COMPLETE_MC_BLANK_COUNT_SETTING);
 }
 
 export function readSummaryCompleteMcBlankCountSetting(rawSettings: unknown): number {
-  if (!isRecord(rawSettings)) return SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT;
-
-  if (rawSettings.blankCount !== undefined) {
-    return normalizeSummaryCompleteMcBlankCount(rawSettings.blankCount);
-  }
-
-  if (rawSettings.summaryBlankCount !== undefined) {
-    return normalizeSummaryCompleteMcBlankCount(rawSettings.summaryBlankCount);
-  }
-
-  const nested = rawSettings.SUMMARY_COMPLETE_MC;
-  if (isRecord(nested)) {
-    return normalizeSummaryCompleteMcBlankCount(
-      nested.blankCount ?? nested.summaryBlankCount,
-    );
-  }
-
-  return SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT;
+  return readNumericSetting(
+    rawSettings,
+    "SUMMARY_COMPLETE_MC",
+    SUMMARY_COMPLETE_MC_BLANK_COUNT_SETTING,
+  );
 }
 
 export function normalizeSummaryCompleteBlankCount(value: unknown): number {
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) return SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT;
-  const rounded = Math.round(n);
-  return Math.min(
-    SUMMARY_COMPLETE_BLANK_COUNT_MAX,
-    Math.max(SUMMARY_COMPLETE_BLANK_COUNT_MIN, rounded),
-  );
+  return normalizeNumericSetting(value, SUMMARY_COMPLETE_BLANK_COUNT_SETTING);
 }
 
 export function readSummaryCompleteBlankCountSetting(rawSettings: unknown): number {
-  if (!isRecord(rawSettings)) return SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT;
-
-  if (rawSettings.blankCount !== undefined) {
-    return normalizeSummaryCompleteBlankCount(rawSettings.blankCount);
-  }
-
-  if (rawSettings.summaryBlankCount !== undefined) {
-    return normalizeSummaryCompleteBlankCount(rawSettings.summaryBlankCount);
-  }
-
-  const nested = rawSettings.SUMMARY_COMPLETE;
-  if (isRecord(nested)) {
-    return normalizeSummaryCompleteBlankCount(
-      nested.blankCount ?? nested.summaryBlankCount,
-    );
-  }
-
-  return SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT;
+  return readNumericSetting(
+    rawSettings,
+    "SUMMARY_COMPLETE",
+    SUMMARY_COMPLETE_BLANK_COUNT_SETTING,
+  );
 }
 
 export function normalizeContentMatchOptionCount(value: unknown): number {
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) return CONTENT_MATCH_OPTION_COUNT_DEFAULT;
-  const rounded = Math.round(n);
-  return Math.min(
-    CONTENT_MATCH_OPTION_COUNT_MAX,
-    Math.max(CONTENT_MATCH_OPTION_COUNT_MIN, rounded),
-  );
+  return normalizeNumericSetting(value, CONTENT_MATCH_OPTION_COUNT_SETTING);
 }
 
 export function normalizeContentMatchAnswerCount(
@@ -180,64 +243,35 @@ export function normalizeContentMatchAnswerCount(
   optionCount: number = CONTENT_MATCH_OPTION_COUNT_DEFAULT,
 ): number {
   const optionMax = normalizeContentMatchOptionCount(optionCount);
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) {
-    return Math.min(CONTENT_MATCH_ANSWER_COUNT_DEFAULT, optionMax);
-  }
-  const rounded = Math.round(n);
-  return Math.min(
-    optionMax,
-    Math.max(CONTENT_MATCH_ANSWER_COUNT_MIN, rounded),
+  return normalizeNumericSetting(
+    value,
+    CONTENT_MATCH_ANSWER_COUNT_SETTING,
+    { optionCount: optionMax },
   );
 }
 
 export function readContentMatchOptionCountSetting(rawSettings: unknown): number {
-  if (!isRecord(rawSettings)) return CONTENT_MATCH_OPTION_COUNT_DEFAULT;
-
-  if (rawSettings.optionCount !== undefined) {
-    return normalizeContentMatchOptionCount(rawSettings.optionCount);
-  }
-
-  const nested = rawSettings.CONTENT_MATCH;
-  if (isRecord(nested)) {
-    return normalizeContentMatchOptionCount(nested.optionCount);
-  }
-
-  return CONTENT_MATCH_OPTION_COUNT_DEFAULT;
+  return readNumericSetting(
+    rawSettings,
+    "CONTENT_MATCH",
+    CONTENT_MATCH_OPTION_COUNT_SETTING,
+  );
 }
 
 export function readContentMatchAnswerCountSetting(
   rawSettings: unknown,
   optionCount: number = readContentMatchOptionCountSetting(rawSettings),
 ): number {
-  if (!isRecord(rawSettings)) {
-    return normalizeContentMatchAnswerCount(undefined, optionCount);
-  }
-
-  if (rawSettings.answerCount !== undefined) {
-    return normalizeContentMatchAnswerCount(rawSettings.answerCount, optionCount);
-  }
-
-  if (rawSettings.correctAnswerCount !== undefined) {
-    return normalizeContentMatchAnswerCount(rawSettings.correctAnswerCount, optionCount);
-  }
-
-  const nested = rawSettings.CONTENT_MATCH;
-  if (isRecord(nested)) {
-    return normalizeContentMatchAnswerCount(
-      nested.answerCount ?? nested.correctAnswerCount,
-      optionCount,
-    );
-  }
-
-  return normalizeContentMatchAnswerCount(undefined, optionCount);
+  return readNumericSetting(
+    rawSettings,
+    "CONTENT_MATCH",
+    CONTENT_MATCH_ANSWER_COUNT_SETTING,
+    { optionCount: normalizeContentMatchOptionCount(optionCount) },
+  );
 }
 
 export function normalizeGrammarMarkerCount(value: unknown): number {
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) return GRAMMAR_MARKER_COUNT_DEFAULT;
-  const rounded = Math.round(n);
-  return Math.min(GRAMMAR_MARKER_COUNT_MAX, Math.max(GRAMMAR_MARKER_COUNT_MIN, rounded));
+  return normalizeNumericSetting(value, GRAMMAR_MARKER_COUNT_SETTING);
 }
 
 export function normalizeGrammarErrorCount(value: unknown): number {
@@ -248,31 +282,16 @@ export function normalizeGrammarAnswerCount(
   value: unknown,
   markerCount: number = GRAMMAR_MARKER_COUNT_DEFAULT,
 ): number {
-  const n = typeof value === "number" ? value : Number(value);
   const marker = normalizeGrammarMarkerCount(markerCount);
-  const max = Math.max(GRAMMAR_ANSWER_COUNT_MIN, marker);
-  if (!Number.isFinite(n)) return Math.min(GRAMMAR_ANSWER_COUNT_DEFAULT, max);
-  const rounded = Math.round(n);
-  return Math.min(max, Math.max(GRAMMAR_ANSWER_COUNT_MIN, rounded));
+  return normalizeNumericSetting(
+    value,
+    GRAMMAR_ANSWER_COUNT_SETTING,
+    { markerCount: marker },
+  );
 }
 
 export function readGrammarMarkerCountSetting(rawSettings: unknown): number {
-  if (!isRecord(rawSettings)) return GRAMMAR_MARKER_COUNT_DEFAULT;
-
-  if (rawSettings.markerCount !== undefined) {
-    return normalizeGrammarMarkerCount(rawSettings.markerCount);
-  }
-
-  if (rawSettings.errorCount !== undefined) {
-    return normalizeGrammarMarkerCount(rawSettings.errorCount);
-  }
-
-  const nested = rawSettings.GRAMMAR_ERROR;
-  if (isRecord(nested)) {
-    return normalizeGrammarMarkerCount(nested.markerCount ?? nested.errorCount);
-  }
-
-  return GRAMMAR_MARKER_COUNT_DEFAULT;
+  return readNumericSetting(rawSettings, "GRAMMAR_ERROR", GRAMMAR_MARKER_COUNT_SETTING);
 }
 
 export function readGrammarErrorCountSetting(rawSettings: unknown): number {
@@ -284,56 +303,24 @@ export function readGrammarAnswerCountSetting(
   rawSettings: unknown,
   markerCount: number = readGrammarMarkerCountSetting(rawSettings),
 ): number {
-  if (!isRecord(rawSettings)) {
-    return normalizeGrammarAnswerCount(undefined, markerCount);
-  }
-
-  if (rawSettings.answerCount !== undefined) {
-    return normalizeGrammarAnswerCount(rawSettings.answerCount, markerCount);
-  }
-
-  if (rawSettings.correctAnswerCount !== undefined) {
-    return normalizeGrammarAnswerCount(rawSettings.correctAnswerCount, markerCount);
-  }
-
-  const nested = rawSettings.GRAMMAR_ERROR;
-  if (isRecord(nested)) {
-    return normalizeGrammarAnswerCount(
-      nested.answerCount ?? nested.correctAnswerCount,
-      markerCount,
-    );
-  }
-
-  return normalizeGrammarAnswerCount(undefined, markerCount);
-}
-
-export function normalizeGrammarCorrectionErrorCount(value: unknown): number {
-  const n = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(n)) return GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT;
-  const rounded = Math.round(n);
-  return Math.min(
-    GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
-    Math.max(GRAMMAR_CORRECTION_ERROR_COUNT_MIN, rounded),
+  return readNumericSetting(
+    rawSettings,
+    "GRAMMAR_ERROR",
+    GRAMMAR_ANSWER_COUNT_SETTING,
+    { markerCount: normalizeGrammarMarkerCount(markerCount) },
   );
 }
 
+export function normalizeGrammarCorrectionErrorCount(value: unknown): number {
+  return normalizeNumericSetting(value, GRAMMAR_CORRECTION_ERROR_COUNT_SETTING);
+}
+
 export function readGrammarCorrectionErrorCountSetting(rawSettings: unknown): number {
-  if (!isRecord(rawSettings)) return GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT;
-
-  if (rawSettings.errorCount !== undefined) {
-    return normalizeGrammarCorrectionErrorCount(rawSettings.errorCount);
-  }
-
-  if (rawSettings.answerCount !== undefined) {
-    return normalizeGrammarCorrectionErrorCount(rawSettings.answerCount);
-  }
-
-  const nested = rawSettings.GRAMMAR_CORRECTION;
-  if (isRecord(nested)) {
-    return normalizeGrammarCorrectionErrorCount(nested.errorCount ?? nested.answerCount);
-  }
-
-  return GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT;
+  return readNumericSetting(
+    rawSettings,
+    "GRAMMAR_CORRECTION",
+    GRAMMAR_CORRECTION_ERROR_COUNT_SETTING,
+  );
 }
 
 export interface IrrelevantSlotValidation {
@@ -392,8 +379,164 @@ export interface QuestionTypeGenerationSettings {
   [typeId: string]: unknown;
 }
 
+export interface ResolvedQuestionTypeGenerationSettings {
+  effectiveTypeSettings: unknown;
+  irrelevantSlotCount?: number;
+  grammarMarkerCount?: number;
+  grammarAnswerCount?: number;
+  grammarCorrectionErrorCount?: number;
+  summaryCompleteMcBlankCount?: number;
+  summaryCompleteBlankCount?: number;
+  contentMatchOptionCount?: number;
+  contentMatchAnswerCount?: number;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function copyRecordOrEmpty(value: unknown): Record<string, unknown> {
+  return isRecord(value) ? { ...value } : {};
+}
+
+export function resolveQuestionTypeGenerationSettings(
+  typeId: string,
+  rawSettings: unknown,
+): ResolvedQuestionTypeGenerationSettings {
+  if (typeId === "GRAMMAR_ERROR") {
+    const grammarMarkerCount = readGrammarMarkerCountSetting(rawSettings);
+    const grammarAnswerCount = readGrammarAnswerCountSetting(
+      rawSettings,
+      grammarMarkerCount,
+    );
+    return {
+      effectiveTypeSettings: {
+        ...copyRecordOrEmpty(rawSettings),
+        markerCount: grammarMarkerCount,
+        answerCount: grammarAnswerCount,
+      },
+      grammarMarkerCount,
+      grammarAnswerCount,
+    };
+  }
+
+  if (typeId === "GRAMMAR_CORRECTION") {
+    const grammarCorrectionErrorCount =
+      readGrammarCorrectionErrorCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: {
+        ...copyRecordOrEmpty(rawSettings),
+        errorCount: grammarCorrectionErrorCount,
+      },
+      grammarCorrectionErrorCount,
+    };
+  }
+
+  if (typeId === "IRRELEVANT") {
+    const irrelevantSlotCount = readIrrelevantSlotCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: {
+        ...copyRecordOrEmpty(rawSettings),
+        slotCount: irrelevantSlotCount,
+      },
+      irrelevantSlotCount,
+    };
+  }
+
+  if (typeId === "CONTENT_MATCH") {
+    const contentMatchOptionCount = readContentMatchOptionCountSetting(rawSettings);
+    const contentMatchAnswerCount = readContentMatchAnswerCountSetting(
+      rawSettings,
+      contentMatchOptionCount,
+    );
+    return {
+      effectiveTypeSettings: {
+        ...copyRecordOrEmpty(rawSettings),
+        optionCount: contentMatchOptionCount,
+        answerCount: contentMatchAnswerCount,
+      },
+      contentMatchOptionCount,
+      contentMatchAnswerCount,
+    };
+  }
+
+  if (typeId === "SUMMARY_COMPLETE") {
+    const summaryCompleteBlankCount =
+      readSummaryCompleteBlankCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: {
+        ...copyRecordOrEmpty(rawSettings),
+        blankCount: summaryCompleteBlankCount,
+      },
+      summaryCompleteBlankCount,
+    };
+  }
+
+  if (typeId === "SUMMARY_COMPLETE_MC") {
+    const summaryCompleteMcBlankCount =
+      readSummaryCompleteMcBlankCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: {
+        ...copyRecordOrEmpty(rawSettings),
+        blankCount: summaryCompleteMcBlankCount,
+      },
+      summaryCompleteMcBlankCount,
+    };
+  }
+
+  return { effectiveTypeSettings: rawSettings };
+}
+
+export function getQuestionTypeGenerationTokenFloor(
+  typeId: string,
+  resolved: ResolvedQuestionTypeGenerationSettings,
+): number {
+  if (
+    typeId === "GRAMMAR_ERROR" &&
+    ((resolved.grammarMarkerCount ?? GRAMMAR_MARKER_COUNT_DEFAULT) >
+      GRAMMAR_MARKER_COUNT_DEFAULT ||
+      (resolved.grammarAnswerCount ?? GRAMMAR_ANSWER_COUNT_DEFAULT) >
+        GRAMMAR_ANSWER_COUNT_DEFAULT)
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "CONTENT_MATCH" &&
+    ((resolved.contentMatchOptionCount ?? CONTENT_MATCH_OPTION_COUNT_DEFAULT) >
+      CONTENT_MATCH_OPTION_COUNT_DEFAULT ||
+      (resolved.contentMatchAnswerCount ?? CONTENT_MATCH_ANSWER_COUNT_DEFAULT) >
+        CONTENT_MATCH_ANSWER_COUNT_DEFAULT)
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "SUMMARY_COMPLETE" &&
+    (resolved.summaryCompleteBlankCount ?? SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT) >
+      SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "IRRELEVANT" &&
+    (resolved.irrelevantSlotCount ?? IRRELEVANT_SLOT_COUNT_DEFAULT) >
+      IRRELEVANT_SLOT_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "SUMMARY_COMPLETE_MC" &&
+    (resolved.summaryCompleteMcBlankCount ??
+      SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT) >
+      SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
+  return 4_096;
 }
 
 export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerationSettings {
@@ -597,8 +740,12 @@ export function buildQuestionTypeSettingsPrompt(
 }
 
 export function getQuestionTypeSettingsForType(
-  settings: QuestionTypeGenerationSettings | undefined,
+  settings: unknown,
   typeId: string,
 ): unknown {
-  return settings?.[typeId];
+  if (!isRecord(settings)) return undefined;
+  if (Object.prototype.hasOwnProperty.call(settings, typeId)) {
+    return settings[typeId];
+  }
+  return settings;
 }

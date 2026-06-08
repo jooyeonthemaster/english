@@ -56,7 +56,10 @@ function parseJsonArray(value: unknown): unknown[] {
 }
 
 function stripBlankLabel(value: string) {
-  return value.replace(/^\(?[A-Z]\)?\s*[:.)-]?\s*/i, "").trim();
+  return value
+    .replace(/^\([A-Z]\)\s*[:.)-]?\s*/i, "")
+    .replace(/^[A-Z]\s*[:.)-]\s*/i, "")
+    .trim();
 }
 
 function readBlankValues(value: unknown): SummaryBlankAnswers {
@@ -83,6 +86,20 @@ function mergeAnswers(...sources: SummaryBlankAnswers[]): SummaryBlankAnswers {
   return merged;
 }
 
+function readValuesFromOptionText(text: string): SummaryBlankAnswers {
+  const values: SummaryBlankAnswers = {};
+  if (!text) return values;
+
+  const parts = text
+    .split(/\s*(?:\u2026+|\.{2,}|\?{2,}|(?:\?\s*){2,}|[-\u2013\u2014]{2,}|\/)\s*/g)
+    .map(stripBlankLabel)
+    .filter(Boolean);
+  parts.forEach((part, index) => {
+    values[`blank${String.fromCharCode(65 + index)}`] = part;
+  });
+  return values;
+}
+
 export function readSummaryPairOption(option: unknown): SummaryOptionPair {
   if (!isRecord(option)) return { blankA: "", blankB: "", values: {} };
 
@@ -90,6 +107,8 @@ export function readSummaryPairOption(option: unknown): SummaryOptionPair {
 
   const explicitA = cleanText(option.blankA);
   const explicitB = cleanText(option.blankB);
+  const text = cleanText(option.text);
+  const textValues = readValuesFromOptionText(text);
   const explicitLetterValues: SummaryBlankAnswers = {};
   for (const [key, value] of Object.entries(option)) {
     if (!/^blank[A-Z]$/i.test(key)) continue;
@@ -100,9 +119,10 @@ export function readSummaryPairOption(option: unknown): SummaryOptionPair {
     explicitA ||
     explicitB ||
     Object.keys(explicitValues).length > 0 ||
-    Object.keys(explicitLetterValues).length > 0
+    Object.keys(explicitLetterValues).length > 0 ||
+    Object.keys(textValues).length > 0
   ) {
-    const values = mergeAnswers(explicitValues, explicitLetterValues);
+    const values = mergeAnswers(explicitValues, explicitLetterValues, textValues);
     return {
       blankA: values.blankA || explicitA,
       blankB: values.blankB || explicitB,
@@ -110,21 +130,12 @@ export function readSummaryPairOption(option: unknown): SummaryOptionPair {
     };
   }
 
-  const text = cleanText(option.text);
   if (!text) return { blankA: "", blankB: "", values: {} };
 
-  const parts = text
-    .split(/\s*(?:\u2026+|\.{2,}|\?{2,}|[-\u2013\u2014]{2,}|\/)\s*/g)
-    .map(stripBlankLabel)
-    .filter(Boolean);
-  const values: SummaryBlankAnswers = {};
-  parts.forEach((part, index) => {
-    values[`blank${String.fromCharCode(65 + index)}`] = part;
-  });
   return {
-    blankA: parts[0] || "",
-    blankB: parts.slice(1).join(" ") || "",
-    values,
+    blankA: textValues.blankA || "",
+    blankB: textValues.blankB || "",
+    values: textValues,
   };
 }
 

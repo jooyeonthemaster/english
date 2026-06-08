@@ -11,6 +11,7 @@ import {
 } from "@/lib/question-ai-schemas-mc";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
+  getQuestionTypeSettingsForType,
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -152,10 +153,10 @@ export async function POST(request: NextRequest) {
       generationPlan?: unknown;
       questionTypeSettings?: unknown;
     };
-    const typeSettingsForType =
-      rawTypeSettings && typeof rawTypeSettings === "object" && !Array.isArray(rawTypeSettings)
-        ? (rawTypeSettings as Record<string, unknown>)[questionType]
-        : undefined;
+    const typeSettingsForType = getQuestionTypeSettingsForType(
+      rawTypeSettings,
+      questionType,
+    );
     const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
 
     const operationType: OperationType = VOCAB_TYPES.has(questionType)
@@ -212,11 +213,8 @@ export async function POST(request: NextRequest) {
     // ── IRRELEVANT slot count guardrail ────────────────────────────────────
     let irrelevantSlotCount = 5;
     if (questionType === "IRRELEVANT") {
-      const irrelevantSettings =
-        typeSettingsForType && typeof typeSettingsForType === "object" && !Array.isArray(typeSettingsForType)
-          ? (typeSettingsForType as { slotCount?: unknown })
-          : null;
-      const requestedSlotCount = readIrrelevantSlotCountSetting(irrelevantSettings);
+      const requestedSlotCount =
+        readIrrelevantSlotCountSetting(typeSettingsForType);
       irrelevantSlotCount = requestedSlotCount;
       const passageSentenceCount = countPassageSentences(passage.content);
       const v = validateIrrelevantAgainstPassage(requestedSlotCount, passageSentenceCount);
