@@ -1,25 +1,15 @@
 "use client";
 
-import type { Dispatch, RefObject, SetStateAction } from "react";
-import type { Annotation } from "@/components/workbench/editor";
+import type { Dispatch, SetStateAction } from "react";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
-import {
-  removeImage as removeImageFn,
-  handlePaste as onPasteFn,
-  handleDrop as onDropFn,
-  handleFileSelect as onFileSelectFn,
-} from "../image-handlers";
+import type { PassageBlock } from "../block-types";
 import {
   handleSavePrompt as savePrompt,
   handleDeletePrompt as deletePrompt,
 } from "../saved-prompt-actions";
-import {
-  resetForm as resetFormFn,
-  handleSave as handleSaveFn,
-} from "../save-passage";
 import { FormSection } from "./form-section";
 
 interface FormSectionContainerProps {
@@ -29,22 +19,19 @@ interface FormSectionContainerProps {
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
   hasContent: boolean;
-  wordCount: number;
   saving: boolean;
-  setSaving: (v: boolean) => void;
 
-  // Editor
-  title: string;
-  setTitle: (v: string) => void;
-  content: string;
-  setContent: (v: string) => void;
-  annotations: Annotation[];
-  setAnnotations: Dispatch<SetStateAction<Annotation[]>>;
-  imageFile: File | null;
-  setImageFile: Dispatch<SetStateAction<File | null>>;
-  imagePreview: string | null;
-  setImagePreview: Dispatch<SetStateAction<string | null>>;
-  fileInputRef: RefObject<HTMLInputElement | null>;
+  // Passage blocks (center editor)
+  blocks: PassageBlock[];
+  updateBlock: (id: string, patch: Partial<PassageBlock>) => void;
+  addEmptyBlock: () => void;
+  removeBlock: (id: string) => void;
+  toggleCollapse: (id: string) => void;
+  setAllCollapsed: (collapsed: boolean) => void;
+  onAnalyze: (
+    plan: QuestionGenerationPlan,
+    tone: AnalysisTone,
+  ) => void | Promise<void>;
 
   // Metadata
   schools: Array<{ id: string; name: string; type: string; publisher: string | null }>;
@@ -84,11 +71,8 @@ interface FormSectionContainerProps {
   savingPrompt: boolean;
   setSavingPrompt: (v: boolean) => void;
 
-  // Queue wiring
-  addToQueue: Parameters<typeof handleSaveFn>[0]["addToQueue"];
-
   // Draft selection (left grid)
-  selectedDraftId: string | null;
+  selectedDraftIds: Set<string>;
   draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   onSelectedDraftSaved: () => void;
@@ -102,67 +86,20 @@ interface FormSectionContainerProps {
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
-  const imageSetters = { setImageFile: p.setImageFile, setImagePreview: p.setImagePreview };
-
   return (
     <FormSection
       academyId={p.academyId}
       formCollapsed={p.formCollapsed}
       setFormCollapsed={p.setFormCollapsed}
       hasContent={p.hasContent}
-      wordCount={p.wordCount}
       saving={p.saving}
-      onSave={(analysisGenerationPlan, analysisTone) =>
-        handleSaveFn({
-          runAnalysis: true,
-          content: p.content,
-          imageFile: p.imageFile,
-          title: p.title,
-          annotations: p.annotations,
-          schoolId: p.schoolId,
-          grade: p.grade,
-          semester: p.semester,
-          unit: p.unit,
-          effectivePublisher: p.effectivePublisher,
-          source: p.source,
-          tags: p.tags,
-          analysisPrompt: p.analysisPrompt,
-          analysisGenerationPlan,
-          analysisTone,
-          sourceDraftId: p.selectedDraftId,
-          schools: p.schools,
-          setSaving: p.setSaving,
-          addToQueue: p.addToQueue,
-          onSaved: () => {
-            if (p.selectedDraftId) p.onSelectedDraftSaved();
-          },
-          resetForm: () =>
-            resetFormFn({
-              setTitle: p.setTitle,
-              setContent: p.setContent,
-              setAnnotations: p.setAnnotations,
-              setImageFile: p.setImageFile,
-              setImagePreview: p.setImagePreview,
-              setUnit: p.setUnit,
-              setSource: p.setSource,
-              setTagInput: p.setTagInput,
-              setTags: p.setTags,
-            }),
-        })
-      }
-      title={p.title}
-      setTitle={p.setTitle}
-      content={p.content}
-      setContent={p.setContent}
-      annotations={p.annotations}
-      setAnnotations={p.setAnnotations}
-      imageFile={p.imageFile}
-      imagePreview={p.imagePreview}
-      fileInputRef={p.fileInputRef}
-      onFileSelect={(e) => onFileSelectFn(e, { ...imageSetters, fileInputRef: p.fileInputRef })}
-      onRemoveImage={() => removeImageFn(imageSetters)}
-      onPaste={(e) => onPasteFn(e, imageSetters)}
-      onDrop={(e) => onDropFn(e, imageSetters)}
+      onAnalyze={p.onAnalyze}
+      blocks={p.blocks}
+      updateBlock={p.updateBlock}
+      addEmptyBlock={p.addEmptyBlock}
+      removeBlock={p.removeBlock}
+      toggleCollapse={p.toggleCollapse}
+      setAllCollapsed={p.setAllCollapsed}
       draftRefreshToken={p.draftRefreshToken}
       schools={p.schools}
       schoolId={p.schoolId}
@@ -204,7 +141,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
         })
       }
       onDeletePrompt={(id) => deletePrompt({ id, setSavedPrompts: p.setSavedPrompts })}
-      selectedDraftId={p.selectedDraftId}
+      selectedDraftIds={p.selectedDraftIds}
       onSelectDraft={p.onSelectDraft}
       draftCollections={p.draftCollections}
       draftMembership={p.draftMembership}

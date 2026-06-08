@@ -27,7 +27,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import { DragHandle } from "@/components/ui/drag-handle";
 import { formatDate } from "@/lib/utils";
 import {
@@ -126,7 +126,7 @@ export function QuestionBankCard({
   // 시험지 빌더(exams/create)용 간결 표기: 미사용 "0개 시험지에 미사용",
   // 사용 "N개 시험지에 사용". 기본(questions 페이지)은 기존 문구 유지.
   compactUsageLabel?: boolean;
-  // 시험지 빌더: 카드 본문 클릭 시 상세 대신 체크(선택)를 토글한다.
+  // 상세 버튼이 표시되는 화면에서는 카드 본문 클릭도 같은 상세 동작을 실행한다.
   cardClickSelects?: boolean;
   // 시험지 빌더: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
   showDetailButton?: boolean;
@@ -300,13 +300,13 @@ export function QuestionBankCard({
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (suppressCardClickRef.current || shouldIgnoreCardClick(e)) return;
-    if (selectionDisabled) {
+    if (selectionDisabled && !onDetail && !onEdit) {
       if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
       return;
     }
-    // 시험지 빌더: 본문 클릭은 체크(선택) 토글. 상세는 '상세 보기' 버튼으로만 연다.
+    // 상세 버튼이 표시되는 화면에서는 카드 본문 클릭도 같은 상세 동작을 실행한다.
     if (cardClickSelects) {
-      onToggle();
+      (onDetail ?? onEdit)?.();
       return;
     }
     if (!onDetail && !onEdit) return;
@@ -319,7 +319,7 @@ export function QuestionBankCard({
       ref={dragRef}
       data-drag-item-id={selectionDisabled ? undefined : q.id}
       onClick={handleCardClick}
-      className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} relative flex flex-col ${
+      className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} group relative flex flex-col ${
         expanded ? "" : "overflow-hidden"
       } ${
         isDragging ? "opacity-40 scale-95" : ""
@@ -565,19 +565,9 @@ export function QuestionBankCard({
           />
         )}
 
-        {/* Explanation toggle (+ optional 상세 보기 button on the same row) */}
+        {/* Explanation toggle */}
         <ExplanationSection
           explanation={q.explanation}
-          rightSlot={
-            showDetailButton && (onDetail || onEdit) ? (
-              <DetailActionButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  (onDetail ?? onEdit)?.();
-                }}
-              />
-            ) : undefined
-          }
         />
         </div>
 
@@ -753,6 +743,9 @@ export function QuestionBankCard({
           );
         })()}
       </CardContent>
+      {showDetailButton && (onDetail || onEdit) ? (
+        <CardHoverActionLabel />
+      ) : null}
     </Card>
   );
 

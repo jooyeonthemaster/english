@@ -32,7 +32,7 @@ export function derivePassageAnalysisFromReport(report: AnalysisReport): Passage
           partOfSpeech: "",
           pronunciation: r.pronunciation ?? "",
           sentenceIndex: 0,
-          difficulty: "intermediate" as const,
+          difficulty: r.tier === "challenge" || (r.difficulty ?? 3) >= 4 ? "advanced" as const : "intermediate" as const,
         }))
       : [];
 

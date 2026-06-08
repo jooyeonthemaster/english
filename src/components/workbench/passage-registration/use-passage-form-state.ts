@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { Annotation } from "@/components/workbench/editor";
 import type { SavedPrompt } from "./types";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
@@ -16,16 +15,9 @@ import {
  * so overall hook call order is preserved.
  */
 export function usePassageFormState() {
-  // Core fields
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  // Annotations (teacher's markings on the passage)
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
-
-  // Image
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  // Per-passage fields (title/content/annotations/image) now live on the
+  // individual passage blocks — see use-passage-blocks.ts. This hook only
+  // holds state shared across every passage in the center editor.
 
   // Metadata — school/grade/semester persist between saves for batch entry
   const [schoolId, setSchoolId] = useState("");
@@ -50,11 +42,6 @@ export function usePassageFormState() {
   const [savingPrompt, setSavingPrompt] = useState(false);
 
   return {
-    title, setTitle,
-    content, setContent,
-    annotations, setAnnotations,
-    imageFile, setImageFile,
-    imagePreview, setImagePreview,
     schoolId, setSchoolId,
     grade, setGrade,
     semester, setSemester,

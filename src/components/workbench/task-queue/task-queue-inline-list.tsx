@@ -38,7 +38,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 
 type InlineListLayout = "horizontal" | "grid";
 export type GridViewMode = "grid-3" | "grid-2" | "list";
@@ -471,13 +471,6 @@ function TaskGridCard({
   };
   const canOpen = Boolean(onClick || task.href);
   const selectionMode = Boolean(onToggleCheck);
-  const handleCardAction = () => {
-    if (onToggleCheck) {
-      onToggleCheck();
-      return;
-    }
-    handleOpen();
-  };
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -503,22 +496,15 @@ function TaskGridCard({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleCardAction}
+      onClick={handleOpen}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleCardAction();
+          handleOpen();
         }
       }}
       role="button"
       tabIndex={0}
-      aria-pressed={
-        selectionMode
-          ? checked === "indeterminate"
-            ? "mixed"
-            : Boolean(checked)
-          : undefined
-      }
       className={
         `group relative flex min-h-[240px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
         (selectionMode
@@ -653,15 +639,7 @@ function TaskGridCard({
             <CalendarClock className="size-3.5" aria-hidden="true" />
             {formatTaskDate(task.createdAt)}
           </span>
-          {canOpen ? (
-            <DetailActionButton
-              className="ml-auto"
-              onClick={(event) => {
-                event.stopPropagation();
-                handleOpen();
-              }}
-            />
-          ) : null}
+          {canOpen ? <CardHoverActionLabel /> : null}
         </div>
       </div>
 
@@ -740,13 +718,6 @@ function TaskListRow({
   };
   const canOpen = Boolean(onClick || task.href);
   const selectionMode = Boolean(onToggleCheck);
-  const handleRowAction = () => {
-    if (onToggleCheck) {
-      onToggleCheck();
-      return;
-    }
-    handleOpen();
-  };
 
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -772,22 +743,15 @@ function TaskListRow({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleRowAction}
+      onClick={handleOpen}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleRowAction();
+          handleOpen();
         }
       }}
       role="button"
       tabIndex={0}
-      aria-pressed={
-        selectionMode
-          ? checked === "indeterminate"
-            ? "mixed"
-            : Boolean(checked)
-          : undefined
-      }
       className={
         `group relative flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-150 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
         (selectionMode
@@ -856,12 +820,7 @@ function TaskListRow({
         {formatTaskDate(task.createdAt)}
       </span>
       {canOpen ? (
-        <DetailActionButton
-          onClick={(event) => {
-            event.stopPropagation();
-            handleOpen();
-          }}
-        />
+        <CardHoverActionLabel className="bottom-1/2 right-3 translate-y-1/2" />
       ) : null}
       {canDelete ? (
         <button

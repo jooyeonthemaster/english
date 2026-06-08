@@ -30,7 +30,7 @@ import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import {
   getQuestionGenerationPlanFromTags,
   isQuestionGenerationPlanTag,
@@ -483,7 +483,7 @@ export function QuestionCard({
     <Card
       data-drag-item-id={resolvedDragItemId ?? undefined}
       onClick={handleCardClick}
-      className={`gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
+      className={`group relative gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
       } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
         compactFixed ? " h-full" : ""
@@ -707,32 +707,26 @@ export function QuestionCard({
               </div>
             )}
 
-            {/* Explanation (+ 생성결과 카드: 좌측 '상세 보기' 버튼) */}
+            {/* Explanation */}
             {showDetailButton && onDetail ? (
+              q.explanation ? (
                 <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <DetailActionButton
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onDetail();
+                        setExplanationOpen(!explanationOpen);
                       }}
-                    />
-                    {q.explanation ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setExplanationOpen(!explanationOpen);
-                        }}
-                        className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                      >
-                        {explanationOpen ? "해설 접기" : "해설 보기"}
-                        {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                      </button>
-                    ) : null}
+                      className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                    >
+                      {explanationOpen ? "해설 접기" : "해설 보기"}
+                      {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                    </button>
                   </div>
                   {explanationPanel}
                 </div>
+              ) : null
             ) : (
               q.explanation && (
                 <div>
@@ -830,6 +824,7 @@ export function QuestionCard({
             )
           )}
         </div>
+        {showDetailButton && onDetail ? <CardHoverActionLabel /> : null}
       </CardContent>
     </Card>
   );

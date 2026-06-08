@@ -785,7 +785,6 @@ export function BottomQueueSection({
       : canApprove
         ? selectedSessionQuestionIds.has(persistedId as string)
         : false;
-    // 카드 본문 클릭 = 체크(선택) 토글. 상세는 '상세 보기' 버튼으로만 연다.
     const cardToggle = canDelete
       ? () => toggleDeleteQuestion(persistedId as string)
       : canApprove
@@ -796,8 +795,8 @@ export function BottomQueueSection({
       <div key={card.key} onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
-        cardToggle?.();
-      }} className={`h-full ${deleteMode && !persistedId ? "cursor-default opacity-50" : cardToggle ? "cursor-pointer" : "cursor-default"}`}>
+        setDetailQuestion(card.question);
+      }} className={`h-full cursor-pointer ${deleteMode && !persistedId ? "opacity-50" : ""}`}>
         <QuestionCard
           q={card.question}
           num={card.number}
@@ -831,8 +830,8 @@ export function BottomQueueSection({
       <div key={q.id} onClick={(e) => {
         const target = e.target as HTMLElement;
         if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
-        cardToggle?.();
-      }} className={`h-full ${cardToggle ? "cursor-pointer" : "cursor-default"}`}>
+        setDetailQuestion(cardQuestion);
+      }} className="h-full cursor-pointer">
         <QuestionCard
           q={cardQuestion}
           num={index + 1}

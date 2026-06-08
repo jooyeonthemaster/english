@@ -289,9 +289,9 @@ export function PassageAnalysisModal({
         }}
       />
 
-      {/* Modal container — full width with padding */}
+      {/* Modal container — 화면 크기에 따라 반응형으로 대부분의 영역을 채운다(상한 없음) */}
       <TooltipProvider>
-        <div className="relative z-10 w-full max-w-[1440px] mx-4 my-4 bg-[#F8FAFB] rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+        <div className="relative z-10 w-full mx-3 my-3 bg-[#F8FAFB] rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
           {/* Analysis overlay inside modal */}
           {analyzing && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-2xl">

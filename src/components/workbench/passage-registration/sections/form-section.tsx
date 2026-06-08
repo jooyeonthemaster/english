@@ -1,21 +1,14 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState, type RefObject } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   ChevronDown,
   ChevronUp,
   GripVertical,
-  ImageIcon,
   Loader2,
   Wand2,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  PassageAnnotationEditor,
-  type Annotation,
-} from "@/components/workbench/editor";
 import { ExtractionManageClient } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import type { CollectionItem } from "@/components/workbench/shared/types";
@@ -29,37 +22,31 @@ import {
 } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
+import { blockHasContent, type PassageBlock } from "../block-types";
 import { CompactOptionsRow } from "./compact-options-row";
+import { MultiPassageEditor } from "./multi-passage-editor";
 
 interface FormSectionProps {
   academyId: string;
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
   hasContent: boolean;
-  wordCount: number;
   saving: boolean;
-  onSave: (
+  onAnalyze: (
     analysisGenerationPlan: QuestionGenerationPlan,
     analysisTone: AnalysisTone,
-  ) => void;
+  ) => void | Promise<void>;
 
-  // Editor
-  title: string;
-  setTitle: (v: string) => void;
-  content: string;
-  setContent: (v: string) => void;
-  annotations: Annotation[];
-  setAnnotations: (v: Annotation[]) => void;
-  imageFile: File | null;
-  imagePreview: string | null;
-  fileInputRef: RefObject<HTMLInputElement | null>;
-  onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRemoveImage: () => void;
-  onPaste: (e: React.ClipboardEvent) => void;
-  onDrop: (e: React.DragEvent) => void;
+  // Passage blocks (center editor)
+  blocks: PassageBlock[];
+  updateBlock: (id: string, patch: Partial<PassageBlock>) => void;
+  addEmptyBlock: () => void;
+  removeBlock: (id: string) => void;
+  toggleCollapse: (id: string) => void;
+  setAllCollapsed: (collapsed: boolean) => void;
 
   // Draft selection (left grid)
-  selectedDraftId: string | null;
+  selectedDraftIds: Set<string>;
   draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   draftCollections: DraftCollectionItem[];
@@ -200,22 +187,14 @@ export function FormSection(props: FormSectionProps) {
     formCollapsed,
     setFormCollapsed,
     hasContent,
-    wordCount,
     saving,
-    onSave,
-    imageFile,
-    imagePreview,
-    content,
-    title,
-    setTitle,
-    setContent,
-    annotations,
-    setAnnotations,
-    fileInputRef,
-    onFileSelect,
-    onRemoveImage,
-    onPaste,
-    onDrop,
+    onAnalyze,
+    blocks,
+    updateBlock,
+    addEmptyBlock,
+    removeBlock,
+    toggleCollapse,
+    setAllCollapsed,
   } = props;
 
   const splitContainerRef = useRef<HTMLDivElement>(null);
@@ -237,14 +216,17 @@ export function FormSection(props: FormSectionProps) {
   );
   const primaryAnalysisPlan: QuestionGenerationPlan =
     FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD";
-  const standardAnalysisCreditCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS.PASSAGE_ANALYSIS,
-    "STANDARD",
-  );
-  const primaryAnalysisCreditCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS.PASSAGE_ANALYSIS,
-    primaryAnalysisPlan,
-  );
+  // 분석은 내용이 입력된 지문마다 1건씩 과금된다(handleAnalyzeBlocks 의
+  // filled.map 참조). 버튼의 크레딧 표기도 지문 수만큼 곱해 총액을 보여준다.
+  const filledPassageCount = blocks.filter(blockHasContent).length;
+  const standardAnalysisCreditCost =
+    getQuestionGenerationCreditCost(CREDIT_COSTS.PASSAGE_ANALYSIS, "STANDARD") *
+    filledPassageCount;
+  const primaryAnalysisCreditCost =
+    getQuestionGenerationCreditCost(
+      CREDIT_COSTS.PASSAGE_ANALYSIS,
+      primaryAnalysisPlan,
+    ) * filledPassageCount;
 
   const toggleLeftPaneOpen = useCallback(() => {
     setLeftPaneOpen((prev) => {
@@ -479,7 +461,7 @@ export function FormSection(props: FormSectionProps) {
                   academyId={props.academyId}
                   draftCollections={props.draftCollections}
                   draftMembership={props.draftMembership}
-                  selectedDraftId={props.selectedDraftId}
+                  selectedDraftIds={props.selectedDraftIds}
                   onSelectDraft={props.onSelectDraft}
                   onBulkAnalyze={props.onBulkAnalyze}
                   bulkAnalyzing={props.bulkAnalyzing}
@@ -521,92 +503,15 @@ export function FormSection(props: FormSectionProps) {
             }}
           >
             <div className="flex min-h-0 min-w-0 flex-col gap-3">
-              {/* Title row + image */}
-              <div className="flex items-center gap-2 shrink-0">
-                <Input
-                  id="title"
-                  placeholder="제목 (비워두면 자동 생성)"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="text-[13px] h-9 border-slate-200 flex-1"
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp,image/gif"
-                  className="hidden"
-                  onChange={onFileSelect}
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="h-9 px-3 rounded-lg text-[12px] font-medium flex items-center gap-1.5 transition-all border text-slate-500 border-slate-200 hover:bg-slate-50 hover:border-slate-300 shrink-0"
-                  title="이미지로 지문 등록"
-                >
-                  <ImageIcon className="w-3.5 h-3.5" />
-                  이미지
-                </button>
-              </div>
-
-              {imagePreview ? (
-                <div className="flex items-center gap-3 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg shrink-0">
-                  <img
-                    src={imagePreview}
-                    alt="원본"
-                    className="h-10 rounded object-contain"
-                  />
-                  <p className="text-[12px] text-slate-500 flex-1">
-                    이미지 첨부됨 · 등록 시 AI가 텍스트를 자동 추출합니다
-                  </p>
-                  <button
-                    type="button"
-                    onClick={onRemoveImage}
-                    className="p-1 rounded hover:bg-slate-200 transition-colors"
-                  >
-                    <X className="w-3.5 h-3.5 text-slate-400" />
-                  </button>
-                </div>
-              ) : null}
-
-              {/* Editor — top 60% of right pane */}
-              <div className="flex-1 min-h-0 flex flex-col">
-                <div className="flex items-center justify-between mb-1.5 shrink-0">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    지문 내용{" "}
-                    {!imageFile ? (
-                      <span className="text-red-500">*</span>
-                    ) : null}
-                  </span>
-                  <div className="flex items-center gap-3">
-                    {wordCount > 0 ? (
-                      <span className="text-[11px] text-slate-500 tabular-nums">
-                        {wordCount} words
-                      </span>
-                    ) : null}
-                    {annotations.length > 0 ? (
-                      <span className="text-[11px] text-blue-600 font-medium">
-                        마킹 {annotations.length}개
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-                <div
-                  className="flex-1 min-h-0 border border-slate-200 rounded-lg overflow-hidden bg-white"
-                  onPaste={onPaste}
-                  onDrop={onDrop}
-                  onDragOver={(e) => e.preventDefault()}
-                >
-                  <PassageAnnotationEditor
-                    content={content}
-                    onContentChange={setContent}
-                    annotations={annotations}
-                    onAnnotationsChange={setAnnotations}
-                    placeholder={
-                      "왼쪽에서 추출 자료를 선택하거나, 영어 지문을 직접 붙여넣으세요...\n\n텍스트를 드래그하여 핵심 단어, 어법 포인트, 중요 문장을 마킹할 수 있습니다."
-                    }
-                  />
-                </div>
-              </div>
+              {/* Multi-passage editor — scrollable, collapsible stack */}
+              <MultiPassageEditor
+                blocks={blocks}
+                updateBlock={updateBlock}
+                addEmptyBlock={addEmptyBlock}
+                removeBlock={removeBlock}
+                toggleCollapse={toggleCollapse}
+                setAllCollapsed={setAllCollapsed}
+              />
 
               <div
                 className={
@@ -618,7 +523,7 @@ export function FormSection(props: FormSectionProps) {
                 {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
                   <Button
                     variant="outline"
-                    onClick={() => onSave("STANDARD", props.analysisTone)}
+                    onClick={() => onAnalyze("STANDARD", props.analysisTone)}
                     disabled={saving || !hasContent}
                     className="h-9 w-full rounded-lg border-blue-200 px-3 text-[12.5px] font-bold text-blue-700 hover:bg-blue-50 hover:text-blue-800"
                   >
@@ -628,14 +533,17 @@ export function FormSection(props: FormSectionProps) {
                       <Wand2 className="size-4" />
                     )}
                     일반 분석 시작
-                    <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700">
+                    <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-blue-700">
+                      {filledPassageCount}개 선택
+                    </span>
+                    <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-blue-700">
                       {standardAnalysisCreditCost.toLocaleString("ko-KR")}{" "}
                       크레딧
                     </span>
                   </Button>
                 )}
                 <Button
-                  onClick={() => onSave(primaryAnalysisPlan, props.analysisTone)}
+                  onClick={() => onAnalyze(primaryAnalysisPlan, props.analysisTone)}
                   disabled={saving || !hasContent}
                   className="h-9 w-full rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold hover:bg-blue-700"
                 >
@@ -645,7 +553,10 @@ export function FormSection(props: FormSectionProps) {
                     <Wand2 className="size-4" />
                   )}
                   분석 시작
-                  <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold">
+                  <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
+                    {filledPassageCount}개 선택
+                  </span>
+                  <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
                     {primaryAnalysisCreditCost.toLocaleString("ko-KR")} 크레딧
                   </span>
                 </Button>
@@ -752,7 +663,7 @@ interface ExtractionManageEmbedProps {
   academyId: string;
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
-  selectedDraftId: string | null;
+  selectedDraftIds: Set<string>;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   onBulkAnalyze: (
     drafts: M1PassageDraftWithJob[],
@@ -768,7 +679,7 @@ function ExtractionManageEmbed({
   academyId,
   draftCollections,
   draftMembership,
-  selectedDraftId,
+  selectedDraftIds,
   onSelectDraft,
   onBulkAnalyze,
   bulkAnalyzing,
@@ -791,7 +702,7 @@ function ExtractionManageEmbed({
       academyId={academyId}
       initialCollections={collections}
       initialCollectionMembership={membership}
-      selectedExternalDraftId={selectedDraftId}
+      selectedExternalDraftIds={selectedDraftIds}
       onSelectDraftExternal={onSelectDraft}
       onBulkAnalyze={onBulkAnalyze}
       bulkAnalyzing={bulkAnalyzing}

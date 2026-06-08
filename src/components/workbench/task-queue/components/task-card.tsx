@@ -8,7 +8,7 @@ import { ACTIVE_STATUSES, TERMINAL_STATUSES } from "../constants";
 import type { BaseTask } from "../types";
 import { formatTaskDateParts } from "../utils/format";
 import { TaskStatusBadge } from "./task-status-badge";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 
 export function TaskCard({
   task,
@@ -56,7 +56,7 @@ export function TaskCard({
       }}
       role="button"
       tabIndex={0}
-      className="flex w-[150px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      className="group relative flex w-[150px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
     >
       {/* Landscape thumbnail — 150×100. Image is `object-cover object-top` so
           tall scans/PDFs show their top portion (title / first lines)
@@ -126,15 +126,7 @@ export function TaskCard({
             <span className="shrink-0 tabular-nums">{dateParts.time}</span>
           </div>
         ) : null}
-        {canOpen ? (
-          <DetailActionButton
-            className="mt-1.5 w-full justify-center"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleOpen();
-            }}
-          />
-        ) : null}
+        {canOpen ? <CardHoverActionLabel className="bottom-2 right-2" /> : null}
       </div>
     </article>
   );

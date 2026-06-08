@@ -15,7 +15,7 @@ import {
 import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { MODES, type ExtractionMode } from "@/lib/extraction/modes";
 import type { ExtractionJobStatus } from "@/lib/extraction/types";
@@ -181,28 +181,21 @@ export function JobCard({
   const showRename = variant === "compact" && editable && !editing && onRename;
   const showDelete = variant === "detailed" && onDelete;
   const selectionMode = Boolean(onToggleCheck);
-  const handleCardAction = () => {
-    if (onToggleCheck) {
-      onToggleCheck();
-      return;
-    }
-    onClick();
-  };
 
   return (
     <article
       ref={dragRef}
       role="button"
       tabIndex={0}
-      onClick={editing ? undefined : handleCardAction}
+      onClick={editing ? undefined : onClick}
       onKeyDown={(e) => {
         if (editing) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          handleCardAction();
+          onClick();
         }
       }}
-      aria-pressed={selectionMode ? Boolean(checked) : active}
+      aria-pressed={active}
       title={label}
       className={
         "group relative flex shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
@@ -416,16 +409,12 @@ export function JobCard({
           </p>
         ) : null}
         {!editing ? (
-          <DetailActionButton
+          <CardHoverActionLabel
             className={
               variant === "compact"
-                ? "mt-1 w-full justify-center px-1"
-                : "mt-2 w-full justify-center"
+                ? "bottom-1 left-1/2 right-auto -translate-x-1/2 text-[9px]"
+                : "bottom-2 left-1/2 right-auto -translate-x-1/2"
             }
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
           />
         ) : null}
       </div>

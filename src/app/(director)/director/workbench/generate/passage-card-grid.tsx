@@ -33,7 +33,7 @@ import {
   FolderX,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import {
   Popover,
   PopoverContent,
@@ -345,13 +345,23 @@ export function PassageCardGrid({
       someVisibleSelected && !allVisibleSelected;
   }, [allVisibleSelected, someVisibleSelected]);
 
+  const openPassageCard = (id: string) => {
+    const passage = filteredPassages.find((item) => item.id === id);
+    if (!passage) return;
+    if (!passage.analysis && onViewPassageContent) {
+      onViewPassageContent(passage);
+      return;
+    }
+    handleOpenAnalysisModal(id);
+  };
+
   const handleCardKeyDown = (
     id: string,
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
-    toggleCheckbox(id);
+    openPassageCard(id);
   };
 
   const getDragPassageIds = useCallback(
@@ -1182,9 +1192,8 @@ export function PassageCardGrid({
                   }}
                   role="button"
                   tabIndex={0}
-                  aria-pressed={isChecked}
-                  aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
-                  onClick={(e) => toggleCheckbox(p.id, e)}
+                  aria-label={`${p.title} 상세 보기`}
+                  onClick={() => openPassageCard(p.id)}
                   onKeyDown={(e) => handleCardKeyDown(p.id, e)}
                   className={`group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md flex flex-col cursor-pointer ${
                     isChecked
@@ -1336,26 +1345,7 @@ export function PassageCardGrid({
 
                   <div className="flex-1" />
 
-                  {/* 상세 보기 — 우측 하단 상시 표시. 다른 지문/문제 카드와 디자인·색 통일. */}
-                  <div
-                    className="absolute bottom-2 right-3"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <DetailActionButton
-                      onClick={() => {
-                        // 미분석 지문 → 보고서 생성 모달이 아니라 지문 전체 내용 뷰어를
-                        // 연다. 분석 완료 지문은 기존 분석/보고서 모달 유지.
-                        if (!hasAnalysis && onViewPassageContent) {
-                          onViewPassageContent(p);
-                        } else {
-                          handleOpenAnalysisModal(p.id);
-                        }
-                      }}
-                      title={hasAnalysis ? "상세 보기" : "지문 전체 보기"}
-                    >
-                      {hasAnalysis ? "상세 보기" : "지문 전체 보기"}
-                    </DetailActionButton>
-                  </div>
+                  <CardHoverActionLabel className="bottom-2 right-3" />
                 </div>
               );
             })}

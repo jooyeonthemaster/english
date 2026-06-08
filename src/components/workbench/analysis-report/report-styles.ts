@@ -862,35 +862,6 @@ export const ANALYSIS_REPORT_CSS = `
   font-size: calc(9.6pt * var(--par-fs, 1));
   line-height: 1.6;
 }
-.par-ws-choice-answer-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1mm;
-  margin-top: 2.4mm;
-  border-top: .3mm dashed var(--tint-border);
-  padding-top: 1.8mm;
-}
-.par-ws-choice-answer {
-  display: grid;
-  grid-template-columns: 7mm minmax(24mm, auto) minmax(16mm, auto) 1fr;
-  gap: 1.5mm;
-  align-items: baseline;
-  color: var(--text);
-  font-size: calc(8.8pt * var(--par-fs, 1));
-  line-height: 1.45;
-}
-.par-ws-choice-no {
-  color: var(--gold);
-  font-weight: 900;
-}
-.par-ws-choice-options {
-  color: var(--text-muted);
-  font-family: var(--font-en);
-}
-.par-ws-choice-answer b {
-  color: var(--ink);
-  font-weight: 900;
-}
 .par-ws-key-table {
   width: 100%;
   margin-top: 2.4mm;
@@ -1293,8 +1264,10 @@ export const ANALYSIS_REPORT_CSS = `
   font-family: var(--font-ko); font-size: calc(5.6pt * var(--par-fs, 1)); font-weight: 800; vertical-align: middle;
 }
 /* 모든 청크 영어에 동일한 밑줄 자리(투명) 확보 → 밑줄 유무로 글자가 밀리지 않음 */
-.par-canvas-v3 .par-canvas-en { padding-bottom: .6mm; border-bottom: .45mm solid transparent; text-decoration: none; }
+.par-canvas-v3 .par-canvas-en { padding-bottom: .2mm; border-bottom: .45mm solid transparent; text-decoration: none; }
 .par-canvas-v3 .par-canvas-chunk.is-anchored .par-canvas-en { text-decoration: none; border-bottom-color: var(--anno-c, #94a3b8); }
+/* 필기 캔버스에서는 핵심 어휘 '굵은 밑줄'(par-kw)을 표시하지 않는다 — 청크 밑줄과 겹쳐 지저분해지므로. (clean 모드 등 다른 뷰의 par-kw 밑줄은 유지) */
+.par-canvas-v3 .par-kw { text-decoration: none; }
 /* 짧은 구문 역할 — 영어 아래(중립 슬레이트) */
 .par-canvas-v3 .par-canvas-role {
   align-self: stretch; margin-top: .6mm; padding-top: .4mm; border-top: .3mm solid #cdd6e0;
@@ -1322,8 +1295,8 @@ export const ANALYSIS_REPORT_CSS = `
 .par-list-trap { display: block; margin-top: .4mm; color: #b42318; font-weight: 600; }
 .par-list-trap::before { content: "⚠ "; }
 
-/* 함정 예문(목록·레일 공통) — 틀린 토큰 빨강 취소선 / 정답 초록 */
-.par-ex-bad { color: #dc2626; font-weight: 800; text-decoration: line-through; }
+/* 함정 예문(목록·레일 공통) — 틀린 토큰 빨강 텍스트 / 정답 초록 */
+.par-ex-bad { color: #dc2626; font-weight: 800; }
 .par-ex-good { color: #047857; font-weight: 700; font-style: normal; }
 
 /* 연결선(화살표) — 본문 캔버스 안으로 클립되어 인쇄/페이지분할에서 새지 않음 */

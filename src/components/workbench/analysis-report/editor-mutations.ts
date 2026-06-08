@@ -305,7 +305,7 @@ export function setVocabularyTestLayout(
 
 // ─── 배열 행 추가용 빈 템플릿 ────────────────────────────────────────────────
 export function blankVocabRow() {
-  return { headword: "", pronunciation: "", meaning: "", synonyms: "" };
+  return { headword: "", pronunciation: "", meaning: "", tier: "test" as const, difficulty: 3, synonyms: "" };
 }
 export function blankGrammarRow(sentenceNo = 1) {
   return { sentenceNo, excerpt: "", point: "", explanation: "", trap: "" };

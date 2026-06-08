@@ -61,6 +61,10 @@ interface JobReviewModalProps {
   /** Highlighted draft id when an external picker controls selection — shows
    *  the active blue stripe on the corresponding card. */
   externalSelectedDraftId?: string | null;
+  /** All draft ids currently picked into the embedder's editor (e.g. 지문 내용).
+   *  Every matching card shows the active blue stripe — mirrors the main grid
+   *  so the drawer highlights the full selection, not just the last click. */
+  externalSelectedDraftIds?: Set<string>;
   statusBadgeMode?: DraftCardStatusBadgeMode;
   detailAction?: DraftCardActionVariant;
 }
@@ -83,6 +87,7 @@ export function JobReviewModal({
   externalSetSelectedIds,
   onSelectDraftExternal,
   externalSelectedDraftId = null,
+  externalSelectedDraftIds,
   statusBadgeMode = "review",
   detailAction,
 }: JobReviewModalProps) {
@@ -593,7 +598,9 @@ export function JobReviewModal({
                     selected={false}
                     active={
                       externallyPicking
-                        ? externalSelectedDraftId === draft.id
+                        ? (externalSelectedDraftIds?.has(draft.id) ??
+                          false) ||
+                          externalSelectedDraftId === draft.id
                         : false
                     }
                     checked={checkedIds.has(draft.id)}

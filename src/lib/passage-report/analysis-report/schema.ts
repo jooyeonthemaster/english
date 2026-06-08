@@ -207,6 +207,24 @@ export const vocabTestModeSchema = z.enum(["study", "hide-meaning", "hide-headwo
 export type VocabTestMode = z.infer<typeof vocabTestModeSchema>;
 export const vocabTestLayoutSchema = z.enum(["table", "two-column"]);
 export type VocabTestLayout = z.infer<typeof vocabTestLayoutSchema>;
+export const vocabularyTierSchema = z.enum(["core", "test", "challenge"]);
+export type VocabularyTier = z.infer<typeof vocabularyTierSchema>;
+
+function normalizeVocabularyTierInput(value: unknown): unknown {
+  if (typeof value !== "string") return value;
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return undefined;
+  if (["core", "basic", "easy", "beginner", "elementary", "key", "초급", "핵심", "기본", "쉬움"].includes(normalized)) return "core";
+  if (["test", "exam", "medium", "intermediate", "middle", "중급", "시험", "중간", "중상"].includes(normalized)) return "test";
+  if (["challenge", "hard", "advanced", "difficult", "high", "고급", "도전", "고난도", "상"].includes(normalized)) return "challenge";
+  return value;
+}
+
+const vocabularyTierInputSchema = z.preprocess(normalizeVocabularyTierInput, vocabularyTierSchema.optional());
+const vocabularyDifficultySchema = z.preprocess((value) => {
+  if (typeof value === "string" && value.trim()) return Number(value);
+  return value;
+}, z.number().int().min(1).max(5).optional());
 
 export const vocabularySectionSchema = z
   .object({
@@ -218,6 +236,8 @@ export const vocabularySectionSchema = z
           pronunciation: z.string().optional(), // 한글 발음 (예: reduced → 리듀스드)
           pos: z.string().optional(), // (구버전 호환) 품사 — 더 이상 표시하지 않음
           meaning: z.string(), // 뜻 (본문 의미)
+          tier: vocabularyTierInputSchema, // core=쉬운 핵심어, test=시험용, challenge=도전 어휘
+          difficulty: vocabularyDifficultySchema, // 1 쉬움 ~ 5 어려움
           synonyms: z.string().optional(), // 동의어
           antonyms: z.string().optional(), // 반의어
         }),
@@ -491,7 +511,7 @@ export const learningWorksheetSectionSchema = z
     workbookSet: worksheetWorkbookSetSchema.optional(),
     inferenceSet: worksheetInferenceSetSchema.optional(),
     questions: z.array(worksheetQuestionSchema).max(8).default([]),
-    hiddenAnswers: z.boolean().default(true),
+    hiddenAnswers: z.boolean().default(false),
   })
   .passthrough();
 
@@ -576,9 +596,26 @@ export const blockMetaSchema = z
     hidden: z.boolean().optional(),
     /** 세로 리사이즈 — 블록 최소 높이(mm). 자연 높이보다 크면 아래 여백이 생김. */
     minHeight: z.number().min(0).max(400).optional(),
+    /**
+     * 부분 글자 크기 — 블록 안 특정 텍스트 구간에만 적용되는 폰트 크기(pt).
+     * 평문 값은 그대로 두고 "몇 번째 편집 필드(f)의 [s,e) 글자를 N pt 로" 라는
+     * 범위 메타로만 저장한다(저장·내보내기·AI 가 쓰는 평문은 오염되지 않음).
+     * f = 블록 안 편집 필드의 순서(0부터), s/e = 그 필드 평문 기준 글자 offset.
+     */
+    fontRuns: z
+      .array(
+        z.object({
+          f: z.number().int().min(0),
+          s: z.number().int().min(0),
+          e: z.number().int().min(0),
+          pt: z.number().min(4).max(96),
+        }),
+      )
+      .optional(),
   })
   .passthrough();
 export type BlockMeta = z.infer<typeof blockMetaSchema>;
+export type FontRun = NonNullable<BlockMeta["fontRuns"]>[number];
 
 /**
  * 사용자 삽입 커스텀 블록 — 여백(spacer) / 자유 텍스트(text). AI 생성 아님(편집기 전용).
