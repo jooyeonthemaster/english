@@ -138,6 +138,13 @@ ${sourceLine} 목표는 이 문항과 "동형(同形)"의 새 문항을 만들 �
 
 ## 빌트인 유형 카탈로그 (matchedType 후보)
 ${buildTypeCatalog()}
+
+## Conservative Builtin Matching
+- matchedType is not a nearest-neighbor label. Use it only when the builtin engine can reproduce the source format exactly.
+- If the source has a nonstandard answer shape, option count, answer count, blank count, paired table, section-marker combination, or row/column combination that the builtin type does not explicitly support, set matchedType=null, matchConfidence="low", and isNovelType=true.
+- Set matchConfidence="high" only when the question's visible form matches the builtin type contract and all required counts are explicit.
+- Supported flexible counts: CONTENT_MATCH optionCount 5..12 and answerCount 1..optionCount; GRAMMAR_ERROR markerCount 5..10 and answerCount 1..markerCount; GRAMMAR_CORRECTION errorCount 1..5; IRRELEVANT slotCount 5..10; SUMMARY_COMPLETE_MC blankCount 2..4; SUMMARY_COMPLETE blankCount 1..5.
+- Five-choice single-answer multiple-choice types must really have exactly 5 choices and exactly 1 correct answer. Otherwise do not force a builtin match.
 ${inventoryBlock}
 ${boundingBoxBlock}
 ${manualCropBlock}

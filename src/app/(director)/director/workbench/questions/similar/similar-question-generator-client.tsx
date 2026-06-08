@@ -20,14 +20,15 @@ import {
   revokeSlotUrls,
   splitPdfToImages,
 } from "@/lib/extraction/pdf-splitter";
-import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
+import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { ExtractionManageClient } from "../../exams/similar/_components/material-manager";
 import { SimilarExamCenterPreview } from "../../exams/similar/_components/similar-exam-center-preview";
 import {
-  buildManualCropReferenceSlot,
-  ManualQuestionCropBoard,
-} from "../_components/manual-question-crop-board";
+  InlineCropBoard,
+  type InlineCropBoardCounts,
+  type InlineCropBoardHandle,
+} from "../../passages/import/_components/intake/crop/inline-crop-board";
 import { SimilarQuestionJobsPanel } from "./similar-question-jobs-panel";
 import {
   blobToBase64,
@@ -61,12 +62,34 @@ interface StagedFile {
   totalPages: number;
 }
 
+const EMPTY_CROP_COUNTS: InlineCropBoardCounts = {
+  regionCount: 0,
+  passageCount: 0,
+  uncroppedCount: 0,
+  totalPassages: 0,
+};
+
+function addStableSlotIds(slots: ClientPageSlot[]): ClientPageSlot[] {
+  return slots.map((slot, index) => ({
+    ...slot,
+    pageIndex: index,
+    slotId: slot.slotId ?? crypto.randomUUID(),
+  }));
+}
+
+function summarizeFileNames(files: File[]): string {
+  if (files.length === 0) return "";
+  if (files.length === 1) return files[0].name;
+  return `${files[0].name} 외 ${files.length - 1}개`;
+}
+
 export function SimilarQuestionGeneratorClient({
   academyId,
   draftCollections,
   draftMembership,
 }: SimilarQuestionGeneratorClientProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const cropBoardRef = useRef<InlineCropBoardHandle>(null);
   const slotsRef = useRef<ClientPageSlot[]>([]);
   const gridRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement | null>(null);
@@ -76,10 +99,12 @@ export function SimilarQuestionGeneratorClient({
   const [selectedDraftIds, setSelectedDraftIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const [selectionResetKey, setSelectionResetKey] = useState(0);
   const [staged, setStaged] = useState<StagedFile | null>(null);
   const [slots, setSlots] = useState<ClientPageSlot[]>([]);
-  const [cropBoxes, setCropBoxes] = useState<CropBox[]>([]);
+  const [cropCounts, setCropCounts] = useState<InlineCropBoardCounts>(EMPTY_CROP_COUNTS);
   const [splitting, setSplitting] = useState(false);
+  const [baking, setBaking] = useState(false);
   const [splitMessage, setSplitMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,13 +115,24 @@ export function SimilarQuestionGeneratorClient({
   const [leftCollapsed, setLeftCollapsed] = useState(readStoredCollapsed);
 
   const selectedCount = selectedDraftIds.size;
-  const canRun = Boolean(staged) && cropBoxes.length > 0 && !busy && !splitting;
+  const canRun =
+    Boolean(staged) &&
+    selectedCount === 1 &&
+    cropCounts.totalPassages === 1 &&
+    !busy &&
+    !splitting &&
+    !baking;
+
+  const clearSelectedDrafts = useCallback(() => {
+    setSelectedDraftIds(new Set());
+    setSelectionResetKey((value) => value + 1);
+  }, []);
 
   const clearStaged = useCallback(() => {
     revokeSlotUrls(slotsRef.current);
     slotsRef.current = [];
     setSlots([]);
-    setCropBoxes([]);
+    setCropCounts(EMPTY_CROP_COUNTS);
     setStaged(null);
     setSplitMessage("");
     setError(null);
@@ -149,17 +185,16 @@ export function SimilarQuestionGeneratorClient({
     async (files: FileList | File[]) => {
       const list = Array.from(files);
       if (list.length === 0 || busy || splitting) return;
-      // 참조 문항은 한 페이지(이미지 1장 또는 1페이지 PDF)만 허용.
-      if (list.length > 1) {
-        toast.error("참조 문항은 이미지 한 장 또는 1페이지 PDF만 넣어주세요.");
+      const pdfs = list.filter((file) => file.type === "application/pdf");
+      if (pdfs.length > 1 || (pdfs.length === 1 && list.length > 1)) {
+        toast.error("PDF는 한 번에 하나만 넣을 수 있습니다. 여러 장은 이미지 파일로 넣어주세요.");
         return;
       }
       clearStaged();
       setSplitting(true);
       setError(null);
       try {
-        const file = list[0];
-        const pdf = file.type === "application/pdf" ? file : null;
+        const pdf = pdfs[0] ?? null;
         setSplitMessage(pdf ? "PDF 페이지를 이미지로 변환 중" : "이미지 정리 중");
         const nextSlots = pdf
           ? await splitPdfToImages(pdf, {
@@ -171,22 +206,14 @@ export function SimilarQuestionGeneratorClient({
                 }
               },
             })
-          : await imagesToSlots([file]);
-        if (nextSlots.length > 1) {
-          revokeSlotUrls(nextSlots);
-          const message =
-            "여러 페이지 PDF는 지원하지 않습니다. 문항이 담긴 한 페이지만 넣어주세요.";
-          setError(message);
-          toast.error(message);
-          setSplitMessage("");
-          return;
-        }
-        slotsRef.current = nextSlots;
-        setSlots(nextSlots);
-        setCropBoxes([]);
+          : await imagesToSlots(list);
+        const normalizedSlots = addStableSlotIds(nextSlots);
+        slotsRef.current = normalizedSlots;
+        setSlots(normalizedSlots);
+        setCropCounts(EMPTY_CROP_COUNTS);
         setStaged({
-          fileName: pdf ? pdf.name : file?.name ?? "업로드한 문항",
-          totalPages: nextSlots.length,
+          fileName: pdf ? pdf.name : summarizeFileNames(list),
+          totalPages: normalizedSlots.length,
         });
         setSplitMessage("");
       } catch (err) {
@@ -202,14 +229,60 @@ export function SimilarQuestionGeneratorClient({
 
   const requestFileDialog = useCallback(() => fileInputRef.current?.click(), []);
 
+  const removeSlot = useCallback((index: number) => {
+    const current = slotsRef.current;
+    if (index < 0 || index >= current.length) return;
+    const target = current[index];
+    if (target) revokeSlotUrls([target]);
+    const next = current
+      .filter((_, i) => i !== index)
+      .map((slot, i) => ({ ...slot, pageIndex: i }));
+    slotsRef.current = next;
+    setSlots(next);
+    setCropCounts(EMPTY_CROP_COUNTS);
+    if (next.length === 0) {
+      setStaged(null);
+      setSplitMessage("");
+      setError(null);
+    } else {
+      setStaged((cur) => (cur ? { ...cur, totalPages: next.length } : cur));
+    }
+  }, []);
+
+  const reorderSlots = useCallback((fromIndex: number, toIndex: number) => {
+    const current = slotsRef.current;
+    if (fromIndex === toIndex) return;
+    if (fromIndex < 0 || fromIndex >= current.length) return;
+    if (toIndex < 0 || toIndex >= current.length) return;
+    const next = [...current];
+    const [moved] = next.splice(fromIndex, 1);
+    if (!moved) return;
+    next.splice(toIndex, 0, moved);
+    const reindexed = next.map((slot, i) => ({ ...slot, pageIndex: i }));
+    slotsRef.current = reindexed;
+    setSlots(reindexed);
+  }, []);
+
   const run = useCallback(async () => {
     const currentSlots = slotsRef.current;
     if (!staged || currentSlots.length === 0) {
       toast.error("분석할 문항(사진/PDF)을 먼저 입력하세요.");
       return;
     }
-    if (cropBoxes.length === 0) {
-      toast.error("문항 영역을 먼저 수동으로 크롭해 주세요.");
+    if (selectedCount !== 1) {
+      toast.error(
+        selectedCount === 0
+          ? "동형 문제를 생성할 대상 지문을 1개 선택해 주세요."
+          : "동형 문제 생성은 한 번에 대상 지문 1개만 선택할 수 있습니다.",
+      );
+      return;
+    }
+    if (cropCounts.totalPassages !== 1) {
+      toast.error(
+        cropCounts.totalPassages === 0
+          ? "문항 영역을 먼저 크롭해 주세요."
+          : "동형 문제 생성은 한 번에 원본 문항 1개만 분석할 수 있습니다.",
+      );
       return;
     }
     setBusy(true);
@@ -251,10 +324,16 @@ export function SimilarQuestionGeneratorClient({
         );
       }
 
-      const manualReferenceSlot = await buildManualCropReferenceSlot(
-        currentSlots[0],
-        cropBoxes,
-      );
+      setBaking(true);
+      const baked = await cropBoardRef.current?.buildPassageSlots();
+      setBaking(false);
+      if (!baked || baked.length === 0) {
+        throw new Error("크롭한 문항 이미지를 만들지 못했습니다.");
+      }
+      if (baked.length !== 1) {
+        throw new Error("동형 문제 생성은 한 번에 원본 문항 1개만 분석할 수 있습니다.");
+      }
+      const manualReferenceSlot = baked[0];
       const images = [
         {
           data: await blobToBase64(manualReferenceSlot.blob),
@@ -292,17 +371,27 @@ export function SimilarQuestionGeneratorClient({
 
       setJobsRefreshKey((value) => value + 1);
       clearStaged();
+      clearSelectedDrafts();
       toast.success(
         `동형 생성 작업을 큐에 등록했어요. 작업 ID: ${data.jobId.slice(-6)}`,
       );
     } catch (err) {
+      setBaking(false);
       const message = err instanceof Error ? err.message : "처리 중 오류가 발생했습니다.";
       setError(message);
       toast.error(message);
     } finally {
       setBusy(false);
     }
-  }, [staged, cropBoxes, selectedDraftIds, gradeInfo, clearStaged]);
+  }, [
+    staged,
+    selectedCount,
+    cropCounts.totalPassages,
+    selectedDraftIds,
+    gradeInfo,
+    clearStaged,
+    clearSelectedDrafts,
+  ]);
 
   // ─── 좌패널 핸들: 클릭=여닫기, 드래그=폭 조절 (동형 시험지 생성과 동일) ───
   function toggleLeftCollapsed() {
@@ -384,6 +473,7 @@ export function SimilarQuestionGeneratorClient({
               className="flex min-h-0 min-w-0 flex-col overflow-hidden border-r border-slate-200"
             >
               <ExtractionManageClient
+                key={selectionResetKey}
                 embedded
                 academyId={academyId}
                 initialCollections={draftCollections}
@@ -442,7 +532,7 @@ export function SimilarQuestionGeneratorClient({
                 선택 지문 {selectedCount}
               </span>
               <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 ring-1 ring-blue-100">
-                크롭 {cropBoxes.length}
+                문항 {cropCounts.totalPassages}
               </span>
               <div className="ml-auto flex items-center gap-2">
                 <label className="flex items-center gap-1.5 text-[12px] text-slate-600">
@@ -457,17 +547,23 @@ export function SimilarQuestionGeneratorClient({
                   type="button"
                   onClick={run}
                   disabled={!canRun}
-                  title={cropBoxes.length === 0 ? "문항 영역을 먼저 크롭해 주세요" : undefined}
+                  title={
+                    cropCounts.totalPassages === 0
+                      ? "문항 영역을 먼저 크롭해 주세요"
+                      : cropCounts.totalPassages > 1
+                        ? "동형 문제 생성은 한 번에 원본 문항 1개만 가능합니다"
+                        : undefined
+                  }
                   className="inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {busy ? (
+                  {busy || baking ? (
                     <Loader2 className="size-4 animate-spin" />
                   ) : (
                     <Sparkles className="size-4" />
                   )}
-                  {busy
+                  {busy || baking
                     ? "큐 등록 중…"
-                    : cropBoxes.length === 0
+                    : cropCounts.totalPassages === 0
                       ? "크롭 필요"
                       : "동형 생성 큐에 추가"}
                 </button>
@@ -475,14 +571,21 @@ export function SimilarQuestionGeneratorClient({
             </div>
 
             {staged && slots[0] ? (
-              <ManualQuestionCropBoard
-                slot={slots[0]}
-                boxes={cropBoxes}
-                busy={busy}
-                error={error}
-                onBoxesChange={setCropBoxes}
-                onPickFiles={pickFiles}
-                onRequestFileDialog={requestFileDialog}
+              <InlineCropBoard
+                ref={cropBoardRef}
+                images={slots}
+                disabled={busy || baking || splitting}
+                onAddFiles={pickFiles}
+                onRemoveImage={removeSlot}
+                onReorderImages={reorderSlots}
+                maxPassages={1}
+                onCountChange={setCropCounts}
+                onClear={clearStaged}
+                footer={
+                  <div className="rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-[12px] font-semibold text-blue-700">
+                    동형 문제 생성은 원본 문항 1개만 분석합니다. 여러 페이지에 걸친 문항은 같은 지문으로 합쳐 주세요.
+                  </div>
+                }
               />
             ) : (
               <SimilarExamCenterPreview
@@ -511,6 +614,7 @@ export function SimilarQuestionGeneratorClient({
         ref={fileInputRef}
         type="file"
         accept="application/pdf,image/png,image/jpeg,image/webp"
+        multiple
         className="hidden"
         onChange={(event) => {
           if (event.target.files) pickFiles(event.target.files);

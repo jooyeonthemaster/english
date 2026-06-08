@@ -4,6 +4,13 @@ export function getFriendlyQuestionGenerationError(
 ): string {
   const raw = (message || "").trim();
   const lower = raw.toLowerCase();
+  const strippedRaw = raw
+    .replace(/^IRRELEVANT_SLOT_COUNT_TOO_HIGH[:\s-]*/i, "")
+    .trim();
+  const hasKoreanUserMessage =
+    /[가-힣]/.test(strippedRaw) &&
+    strippedRaw.length <= 300 &&
+    !/stack trace|prisma|syntaxerror|typeerror|referenceerror/i.test(strippedRaw);
 
   if (!raw) {
     return "문제 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.";
@@ -64,7 +71,21 @@ export function getFriendlyQuestionGenerationError(
   }
 
   if (lower.includes("irrelevant_slot_count_too_high")) {
+    if (hasKoreanUserMessage) return strippedRaw;
     return "무관한 문장 선택지 수가 지문 길이에 비해 많습니다. 선택지 수를 줄여 주세요.";
+  }
+
+  if (
+    questionType === "IRRELEVANT" &&
+    hasKoreanUserMessage &&
+    (
+      strippedRaw.includes("무관한 문장") ||
+      strippedRaw.includes("첫 문장") ||
+      strippedRaw.includes("선택지") ||
+      strippedRaw.includes("지문")
+    )
+  ) {
+    return strippedRaw;
   }
 
   return "문제 생성 중 오류가 발생했습니다. 조건을 조금 조정한 뒤 다시 시도해 주세요.";
