@@ -74,7 +74,7 @@ export function MemberRow({
         <ProviderBadge provider={member.authProvider} size="sm" />
       </TableCell>
       <TableCell>
-        <div className="min-w-0">
+        <div className="min-w-0 max-w-[280px]">
           <div className="text-[12px] text-gray-700 truncate">
             {member.academy.name}
           </div>
@@ -261,7 +261,7 @@ function MemoCell({
           strokeWidth={1.8}
           aria-hidden
         />
-        <span className="truncate text-[12.5px] leading-snug text-gray-600">
+        <span className="truncate min-w-0 text-[12.5px] leading-snug text-gray-600">
           {preview}
         </span>
       </button>
