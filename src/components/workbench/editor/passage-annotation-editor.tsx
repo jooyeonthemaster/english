@@ -76,6 +76,10 @@ interface PassageAnnotationEditorProps {
   onAnnotationsChange: (annotations: Annotation[]) => void;
   editable?: boolean;
   placeholder?: string;
+  /** Show the built-in "drag to mark" onboarding banner at the bottom of the
+   *  editor. Off when the host renders its own (e.g. a single shared popover
+   *  for a multi-passage stack). Defaults to true. */
+  showAnnotationHint?: boolean;
 }
 
 // ─── Floating popup state ────────────────────────────────
@@ -126,6 +130,7 @@ function deriveAnnotationsFromDoc(editor: Editor, memoMap: Map<string, string>):
 export function PassageAnnotationEditor({
   content, onContentChange, annotations, onAnnotationsChange,
   editable = true, placeholder = "영어 지문을 붙여넣으세요...",
+  showAnnotationHint = true,
 }: PassageAnnotationEditorProps) {
   const [popup, setPopup] = useState<PopupState | null>(null);
   const [popupPos, setPopupPos] = useState({ x: 0, y: 0, below: false });
@@ -639,7 +644,7 @@ export function PassageAnnotationEditor({
       </div>
 
       {/* Onboarding hint */}
-      {hasText && annotations.length === 0 && !popup && (
+      {showAnnotationHint && hasText && annotations.length === 0 && !popup && (
         <div
           className="shrink-0 relative flex items-center gap-2.5 px-4 py-2.5 border-t border-blue-200/80 overflow-hidden"
           style={{

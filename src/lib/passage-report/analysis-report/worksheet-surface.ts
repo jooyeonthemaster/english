@@ -8,7 +8,7 @@ type DrillWordOrder = NonNullable<NonNullable<LearningWorksheetSection["drills"]
 const LETTER_RE = /[A-Za-z]/;
 
 export function worksheetAnswersAreHidden(section: LearningWorksheetSection): boolean {
-  return section.hiddenAnswers !== false;
+  return section.hiddenAnswers === true;
 }
 
 export function vocabularyBlankToken(no: number): string {

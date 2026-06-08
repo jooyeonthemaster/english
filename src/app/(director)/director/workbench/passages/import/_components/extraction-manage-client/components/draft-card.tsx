@@ -9,7 +9,7 @@ import {
 } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { FileText, Pencil, Maximize2, type LucideIcon } from "lucide-react";
+import { FileText, Pencil, type LucideIcon } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -19,7 +19,7 @@ import {
 import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import { DragHandle } from "@/components/ui/drag-handle";
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
@@ -239,25 +239,22 @@ export function DraftCard({
       data-drag-item-id={hideCheckbox ? undefined : draft.id}
       role="button"
       tabIndex={0}
-      aria-pressed={checked}
-      onClick={hideCheckbox ? undefined : onToggleCheck}
+      onClick={onClick}
       onKeyDown={(e) => {
-        if (hideCheckbox) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onToggleCheck();
+          onClick();
         }
       }}
       className={
-        "relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        "group relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-[colors,transform,box-shadow] motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (isDragging
           ? "cursor-grabbing opacity-50"
-          : hideCheckbox
-            ? "cursor-default"
-            : "cursor-pointer") +
+          : "cursor-pointer") +
         " " +
         (active
-          ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
+          ? // 지문 내용에 담긴(클릭된) 카드 — 눌린 듯한 음영 처리.
+            "border-blue-400 bg-blue-100/70 ring-1 ring-blue-200 !shadow-[inset_0_1px_3px_rgba(30,64,175,0.2)] motion-safe:translate-y-px motion-safe:scale-[0.985]"
           : checked
             ? "border-blue-300 bg-blue-50/30 ring-1 ring-blue-100"
           : stampDone
@@ -405,17 +402,9 @@ export function DraftCard({
       <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">
         {preview || "추출된 본문이 비어있습니다."}
       </p>
-      <div className="mt-auto flex justify-end pt-1">
-        <DetailActionButton
-          icon={detailAction?.icon ?? Maximize2}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick();
-          }}
-        >
-          {detailAction?.label ?? "상세보기"}
-        </DetailActionButton>
-      </div>
+      <CardHoverActionLabel>
+        {detailAction?.label ?? "상세보기"}
+      </CardHoverActionLabel>
     </div>
   );
 }

@@ -103,6 +103,10 @@ interface ExtractionManageClientProps {
   onSelectDraftExternal?: (draft: M1PassageDraftWithJob) => void;
   /** Highlighted draft id when an external picker controls selection. */
   selectedExternalDraftId?: string | null;
+  /** Highlighted draft ids when an external picker allows multi-selection
+   *  (e.g. the passage-registration center stack). Takes precedence over
+   *  selectedExternalDraftId for highlighting when provided. */
+  selectedExternalDraftIds?: Set<string>;
   /** Optional bridge used by the passage-registration embed to register and
    *  analyze extraction drafts without copying them into the editor first. */
   onBulkAnalyze?: (
@@ -202,6 +206,7 @@ export function ExtractionManageClient({
   embedded = false,
   onSelectDraftExternal,
   selectedExternalDraftId = null,
+  selectedExternalDraftIds,
   onBulkAnalyze,
   bulkAnalyzing = false,
   marqueeBoundaryRef,
@@ -1319,6 +1324,9 @@ export function ExtractionManageClient({
                         ? selectedExternalDraftId
                         : data.selectedDraftId
                     }
+                    selectedDraftIds={
+                      externallyPicking ? selectedExternalDraftIds : undefined
+                    }
                     lastViewedDraftId={data.lastViewedDraftId}
                     checkedIds={selectedIds}
                     setCheckedIds={setSelectedIds}
@@ -1470,6 +1478,9 @@ export function ExtractionManageClient({
             externalSetSelectedIds={setSelectedIds}
             externalSelectedDraftId={
               externallyPicking ? selectedExternalDraftId : null
+            }
+            externalSelectedDraftIds={
+              externallyPicking ? selectedExternalDraftIds : undefined
             }
             onSelectDraftExternal={
               externallyPicking ? onSelectDraftExternal : undefined

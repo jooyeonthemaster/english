@@ -30,7 +30,7 @@ import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import {
   getQuestionGenerationPlanFromTags,
   isQuestionGenerationPlanTag,
@@ -382,7 +382,8 @@ interface QuestionCardProps {
    *  q.id 가 아닌 다른 키(예: 생성 결과의 persistedQuestionId)로 관리되는 경우
    *  해당 키를 넘긴다. null 을 주면 이 카드는 영역 선택 대상에서 제외된다. */
   dragItemId?: string | null;
-  /** '상세 보기' 버튼 오른쪽에 끼울 추가 액션(예: 동형 '분석 정보'). 선택 — 미지정 시 표시 안 함. */
+  /** 해설 보기 줄 왼쪽에 끼울 추가 액션(예: 동형 '분석 정보'). 카드 클릭으로 상세가 열리므로
+   *  별도 '상세 보기' 버튼 없이 이 슬롯만 노출된다. 선택 — 미지정 시 표시 안 함. */
   detailExtra?: React.ReactNode;
 }
 
@@ -486,7 +487,7 @@ export function QuestionCard({
     <Card
       data-drag-item-id={resolvedDragItemId ?? undefined}
       onClick={handleCardClick}
-      className={`gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
+      className={`group relative gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
       } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
         compactFixed ? " h-full" : ""
@@ -710,17 +711,12 @@ export function QuestionCard({
               </div>
             )}
 
-            {/* Explanation (+ 생성결과 카드: 좌측 '상세 보기' 버튼) */}
+            {/* Explanation (+ 동형 '분석 정보' 등 detailExtra 슬롯) */}
             {showDetailButton && onDetail ? (
+              detailExtra || q.explanation ? (
                 <div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex min-w-0 items-center gap-1.5">
-                      <DetailActionButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDetail();
-                        }}
-                      />
                       {detailExtra}
                     </div>
                     {q.explanation ? (
@@ -739,6 +735,7 @@ export function QuestionCard({
                   </div>
                   {explanationPanel}
                 </div>
+              ) : null
             ) : (
               q.explanation && (
                 <div>
@@ -836,6 +833,7 @@ export function QuestionCard({
             )
           )}
         </div>
+        {showDetailButton && onDetail ? <CardHoverActionLabel /> : null}
       </CardContent>
     </Card>
   );

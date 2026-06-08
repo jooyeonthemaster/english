@@ -31,7 +31,7 @@ import {
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
 
 function formatAnalysisDateTime(value: Date | string | null | undefined) {
@@ -186,6 +186,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       ? "workbench-loading-card workbench-loading-card--analyzing"
       : "workbench-loading-card workbench-loading-card--pending"
     : "";
+  const canOpenDetail = passage.status === "done";
 
   if (isLoading) {
     const rightActions = confirmDelete ? (
@@ -291,24 +292,20 @@ export const PassageQueueCard = memo(function PassageQueueCard({
   return (
     <div
       data-drag-item-id={passage.id}
-      className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+      className={`group relative rounded-xl border ${config.borderColor} ${config.bgColor} ${loadingClass} p-4 transition-all duration-200 hover:shadow-md ${
+        canOpenDetail ? "cursor-pointer" : ""
+      } ${
         selected ? "ring-2 ring-blue-400" : ""
       }`}
-      onClick={(e) => {
-        // 카드 본문 어디든 클릭 = 선택(체크) 토글. 상세는 우측 하단 '상세 보기' 버튼으로만 연다.
-        if (onToggleSelect) {
-          onToggleSelect(passage.id, e.shiftKey);
-        }
+      onClick={() => {
+        if (canOpenDetail) onViewDetail(passage.id);
       }}
-      role="button"
-      tabIndex={0}
+      role={canOpenDetail ? "button" : undefined}
+      tabIndex={canOpenDetail ? 0 : undefined}
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          if (onToggleSelect) {
-            onToggleSelect(passage.id, e.shiftKey);
-          }
-        }
+        if (!canOpenDetail || (e.key !== "Enter" && e.key !== " ")) return;
+        e.preventDefault();
+        onViewDetail(passage.id);
       }}
       aria-label={`${displayTitle} - ${config.label}`}
     >
@@ -525,16 +522,8 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         </div>
       )}
 
-      {/* 상세 보기 — 우측 하단 상시 표시. 문제 카드의 '상세 보기' 버튼과 디자인·색을 통일. */}
       {passage.status === "done" && (
-        <div
-          className="absolute bottom-2 right-3"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <DetailActionButton
-            onClick={() => onViewDetail(passage.id)}
-          />
-        </div>
+        <CardHoverActionLabel className="bottom-2 right-3" />
       )}
     </div>
   );

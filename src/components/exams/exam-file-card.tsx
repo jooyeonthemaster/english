@@ -17,7 +17,7 @@ import {
 import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -81,7 +81,14 @@ export function ExamFileCard({
     <div
       ref={dragRef}
       data-drag-item-id={exam.id}
-      onClick={(e) => onToggleSelect(exam.id, e.shiftKey)}
+      onClick={() => onClick(exam.id)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        onClick(exam.id);
+      }}
       className={cn(
         "group relative rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer",
         selected ? "ring-2 ring-blue-400 border-blue-300" : "border-slate-200 hover:border-slate-300",
@@ -194,41 +201,32 @@ export function ExamFileCard({
         </span>
       </div>
 
-      {/* Bottom row: 상세 보기 (좌) · 마지막 수정일 (최우측) */}
+      {/* 카드 클릭 = 상세 열기. 호버 시 '상세보기' 라벨을 좌하단에 노출한다. */}
+      <CardHoverActionLabel className="bottom-4 left-4 right-auto" />
+
+      {/* Bottom row: 분석 정보(동형 생성 시험지 한정, 좌) · 마지막 수정일 (최우측) */}
       <div className="flex items-center justify-between gap-2 mt-3">
-        {/* 상세 보기 — 카드 하단에서 잘 보이는 bordered action button */}
-        <div className="flex items-center gap-1.5">
-          <DetailActionButton
-            title="시험지 상세 보기"
-            aria-label="시험지 상세 보기"
+        {/* 동형 생성 시험지: 분석 정보 — 카드 클릭(상세 열기)과 구분되는 별도 액션 */}
+        {onShowAnalysis && (
+          <button
+            type="button"
+            title="분석 정보"
+            aria-label="분석 정보"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              onClick(exam.id);
+              onShowAnalysis(exam.id);
             }}
-          />
-          {/* 동형 생성 시험지: 분석 정보 */}
-          {onShowAnalysis && (
-            <button
-              type="button"
-              title="분석 정보"
-              aria-label="분석 정보"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onShowAnalysis(exam.id);
-              }}
-              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
-            >
-              <FileSearch className="h-3 w-3 shrink-0" />
-              분석 정보
-            </button>
-          )}
-        </div>
+            className="relative z-20 flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
+          >
+            <FileSearch className="h-3 w-3 shrink-0" />
+            분석 정보
+          </button>
+        )}
 
         <span
           title="마지막 수정일"
-          className="inline-flex items-center gap-1 text-[10px] text-slate-400 truncate"
+          className="ml-auto inline-flex items-center gap-1 truncate text-[10px] text-slate-400"
         >
           <Clock className="w-3 h-3 shrink-0 text-slate-300" />
           {formatDate(exam.updatedAt)}

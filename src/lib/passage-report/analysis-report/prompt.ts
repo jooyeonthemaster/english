@@ -163,9 +163,16 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 
 ## 6. vocabulary — 핵심 어휘 (표) [단어 테스트 원천]
 { "kind":"vocabulary",
-  "rows":[ { "headword":"표제어", "pronunciation":"한글 발음", "meaning":"본문 의미 뜻", "synonyms":"reduce, lessen, cut", "antonyms":"increase, raise" } ] }
-- 어휘는 **최대한 풍부하게 25~35개**. 핵심 단어뿐 아니라 학생이 모를 만한 단어·숙어·구동사·연어까지 폭넓게 추출하라 (지문에 나온 학습 가치 있는 표현은 빠뜨리지 말 것).
+  "rows":[ { "headword":"표제어", "pronunciation":"한글 발음", "meaning":"본문 의미 뜻", "tier":"test", "difficulty":3, "synonyms":"reduce, lessen, cut", "antonyms":"increase, raise" } ] }
+- 어휘는 **최대한 풍부하게 25~35개**. 단, 쉬운 단어를 채워 넣어 개수만 늘리지 말고, 학생이 실제로 외우거나 시험에서 변형될 만한 중상 난도 표현을 중심으로 추출하라.
 - 각 headword는 반드시 지문에 실제 등장한 단어·구·연어이거나 그 명확한 기본형이어야 한다. 보고서 UI가 문장별로 headword를 원문과 자동 매칭하므로, 본문에 없는 관련어·상위어·막연한 동의어를 headword로 만들지 말라.
+- headword는 단일 단어보다 **학습 가치가 높은 표현 단위**를 우선한다: 연어(collocation), 숙어, 구동사, 추상명사구, 논리 전환 표현, 비유 표현. 예: "important" 하나보다 "play a crucial role", "memory retrieval", "not A but B"처럼 시험에서 살아나는 덩어리가 낫다.
+- tier는 반드시 채운다. 내부 값은 "core" | "test" | "challenge" 중 하나로 쓰며, 단어시험 기본 후보를 고르는 데만 사용된다.
+  · "core": 글의 흐름을 잡는 핵심어이지만 단어 자체는 쉬운 편인 표현. 전체의 **최대 20%**만 허용한다.
+  · "test": 내신/수능에서 바꿔 묻거나 뜻·동의어로 확인할 만한 중상 난도 표현. 전체의 **45~55%**가 되게 한다.
+  · "challenge": 추상어, 학술어, 비유·함축 표현, 고난도 연어처럼 상위권 학생에게 필요한 표현. 전체의 **25~35%**가 되게 한다.
+- difficulty는 1~5 정수로 채운다. 1~2는 쉬움, 3은 중상, 4~5는 어려움이다. 단어시험에는 기본적으로 tier가 "test" 또는 "challenge"인 항목이 쓰이므로, 너무 쉬운 핵심어는 "core"/1~2로 정확히 표시하라.
+- 너무 기본적인 단어(make, get, use, good, important, people, thing 등)는 단독 표제어로 넣지 마라. 단, 글의 주제축이라 꼭 필요하면 단어 하나가 아니라 원문의 핵심 구·연어 단위로 넣고 tier는 "core"로 표시하라.
 - ❗ **품사(pos)는 넣지 마라.** 대신 **pronunciation 에 한글 발음**을 적는다 (예: reduced → "리듀스드", archive → "아카이브", melatonin → "멜라토닌"). 숙어/구는 통째로 한글 발음.
 - ❗ **synonyms(동의어)·antonyms(반의어)는 모든 row 에 반드시 채워라(빈 문자열 금지).** 각각 **영어 단어 1~3개를 쉼표로 구분**해 적되, 그 단어가 **본문에서 쓰인 의미(meaning)와 같은 결**의 어휘여야 한다(다의어는 본문 의미 기준). 동의어는 학생이 바꿔 써도 자연스러운 수준의 흔한 단어로, 반의어는 의미가 분명히 반대인 단어로 고른다. 반의어가 본질적으로 존재하지 않는 단어(고유명사·중립 명사 등)만 antonyms 를 "—" 로 둔다 — 그 외에는 생략하지 마라.
 
@@ -276,7 +283,7 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
     ]
   },
   "questions": [],
-  "hiddenAnswers": true
+  "hiddenAnswers": false
 }
 
 # 세부 품질 기준
@@ -447,6 +454,8 @@ function compactReportContext(report: AnalysisReport) {
         ? vocabulary.rows.slice(0, 28).map((row) => ({
             headword: row.headword,
             meaning: row.meaning,
+            tier: row.tier,
+            difficulty: row.difficulty,
             synonyms: row.synonyms,
           }))
         : [],
