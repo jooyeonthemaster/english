@@ -79,6 +79,8 @@ interface BottomQueueSectionProps {
   onEditQuestion: (questionId: string) => void;
   /** 마키(영역 드래그) 시작 영역을 이 섹션 전체로 넓히기 위한 boundary(부모에서 내려줌). */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
+  /** 카드 '상세 보기' 옆에 끼울 추가 액션 렌더러(예: 동형 '분석 정보'). 선택 — 미지정 시 표시 안 함. */
+  renderCardDetailExtra?: (q: QuestionCardItem) => React.ReactNode;
 }
 
 type SavedQuestionPlanFilter = "ALL" | QuestionGenerationPlan;
@@ -246,6 +248,7 @@ export function BottomQueueSection({
   batchDeleting = false,
   onEditQuestion,
   marqueeBoundaryRef,
+  renderCardDetailExtra,
 }: BottomQueueSectionProps) {
   const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
   const [reviewStatusFilter, setReviewStatusFilter] = useState<ReviewStatusFilter>("ALL");
@@ -810,6 +813,7 @@ export function BottomQueueSection({
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(card.question)}
           showDetailButton
+          detailExtra={renderCardDetailExtra?.(card.question)}
           onApprove={deleteMode ? undefined : () => persistedId && onApproveQuestion(persistedId)}
           onUnapprove={deleteMode ? undefined : () => persistedId && onUnapproveQuestion(persistedId)}
           onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
@@ -845,6 +849,7 @@ export function BottomQueueSection({
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
+          detailExtra={renderCardDetailExtra?.(cardQuestion)}
           onApprove={deleteMode ? undefined : () => onApproveQuestion(cardQuestion.id)}
           onUnapprove={deleteMode ? undefined : () => onUnapproveQuestion(cardQuestion.id)}
           onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}

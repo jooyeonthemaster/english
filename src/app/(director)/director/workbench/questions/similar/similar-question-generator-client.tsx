@@ -3,9 +3,11 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { GripVertical, Loader2, Sparkles } from "lucide-react";
@@ -14,6 +16,8 @@ import { toast } from "sonner";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { useSidebarFocus } from "@/components/layout/sidebar-focus-context";
+import { useTaskQueue } from "@/components/workbench/task-queue/context";
+import { PassageContentModal } from "@/components/workbench/passage-content-modal";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
   imagesToSlots,
@@ -22,13 +26,36 @@ import {
 } from "@/lib/extraction/pdf-splitter";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
-import { ExtractionManageClient } from "../../exams/similar/_components/material-manager";
+// ── 경계: 좌측 "대상 지문 선택"은 기본 문제 생성/커스텀 유형과 동일해야 하므로 IntakeSurface·
+//    PassageCardGrid·추출 파이프라인을 그대로 차용(무수정 import). 중앙 "원본 문항(참조) 입력"과
+//    생성 호출(question-generation-jobs)은 동형 고유 로직 그대로. 동형 생성 엔진은 무관. ──
 import { SimilarExamCenterPreview } from "../../exams/similar/_components/similar-exam-center-preview";
 import {
   InlineCropBoard,
   type InlineCropBoardCounts,
   type InlineCropBoardHandle,
 } from "../../passages/import/_components/intake/crop/inline-crop-board";
+import { PassageCardGrid } from "../../generate/passage-card-grid";
+import {
+  IntakeSurface,
+  type IntakeTab,
+  type IntakeView,
+} from "../../generate/intake/intake-surface";
+import { GenerateUploadPanel } from "../../generate/intake/generate-upload-panel";
+import {
+  useGenerateExtraction,
+  type ExtractionPromotedResult,
+} from "../../generate/intake/use-generate-extraction";
+import { ExtractionLoadingCards } from "../../generate/intake/extraction-loading-cards";
+import { ExtractionDetailModal } from "../../generate/intake/extraction-detail-modal";
+import type { PastedPassageInput } from "../../generate/intake/multi-passage-paste";
+import type {
+  FilterOptions,
+  PassageAnalysisStatusFilter,
+  PassageCollectionItem,
+  PassageItem,
+  PassageSortOrder,
+} from "../../generate/generate-page-types";
 import { SimilarQuestionJobsPanel } from "./similar-question-jobs-panel";
 import {
   blobToBase64,
@@ -46,10 +73,8 @@ import {
   mediaTypeForBlob,
 } from "./similar-question-generator-utils";
 
-// 동형 문제 생성 — 동형 시험지 생성 셸 차용:
-// 좌=자료 관리(기존 지문 풀에서 선택) / 중앙=원본 문항(사진·PDF) 미리보기 + 실행 + 결과.
-// 텍스트 지문 붙여넣기는 폐기. 선택한 자료(draft)를 from-drafts 로 등록 → passageId →
-// 그 지문으로 동형 문항 생성.
+// 동형 문제 생성 — 좌=대상 지문 선택(기본/커스텀과 동일: 내 지문 + 직접 입력 + 이미지/PDF 추출),
+// 중앙=원본 문항(사진·PDF) 미리보기 + 실행 + 결과. 선택한 passage 로 동형 문항 생성(from-drafts 불필요).
 
 interface SimilarQuestionGeneratorClientProps {
   academyId: string;
@@ -83,10 +108,15 @@ function summarizeFileNames(files: File[]): string {
   return `${files[0].name} 외 ${files.length - 1}개`;
 }
 
+function derivePastedTitle(content: string): string {
+  const firstLine = (content.split(/\r?\n/).find((l) => l.trim().length > 0) || content).trim();
+  const words = firstLine.split(/\s+/).filter(Boolean).slice(0, 8).join(" ");
+  const base = words || "직접 입력 지문";
+  return base.length > 60 ? base.slice(0, 60) + "…" : base;
+}
+
 export function SimilarQuestionGeneratorClient({
   academyId,
-  draftCollections,
-  draftMembership,
 }: SimilarQuestionGeneratorClientProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const cropBoardRef = useRef<InlineCropBoardHandle>(null);
@@ -94,12 +124,11 @@ export function SimilarQuestionGeneratorClient({
   const gridRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement | null>(null);
   const suppressHandleClickRef = useRef(false);
+  const clearExtractionPendingRef = useRef<(jobId: string) => void>(() => {});
   const { setCollapseRequested: setSidebarCollapseRequested } = useSidebarFocus();
+  const taskQueue = useTaskQueue();
 
-  const [selectedDraftIds, setSelectedDraftIds] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const [selectionResetKey, setSelectionResetKey] = useState(0);
+  // ── 중앙: 원본 문항(참조) 입력 ──
   const [staged, setStaged] = useState<StagedFile | null>(null);
   const [slots, setSlots] = useState<ClientPageSlot[]>([]);
   const [cropCounts, setCropCounts] = useState<InlineCropBoardCounts>(EMPTY_CROP_COUNTS);
@@ -108,25 +137,50 @@ export function SimilarQuestionGeneratorClient({
   const [splitMessage, setSplitMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [gradeInfo, setGradeInfo] = useState("고3");
+  // 학년 입력은 UI에서 제거 — 생성 시 기본값("고3")으로만 전달(기능 유지).
+  const [gradeInfo] = useState("고3");
   const [jobsRefreshKey, setJobsRefreshKey] = useState(0);
+
+  // ── 좌측: 대상 지문 (기본/커스텀과 동일한 데이터/상태) ──
+  const [passages, setPassages] = useState<PassageItem[]>([]);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+    schools: [],
+    grades: [],
+    semesters: [],
+    publishers: [],
+  });
+  const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
+  const [loadingPassages, setLoadingPassages] = useState(true);
+
+  const [selectedCollectionId, setSelectedCollectionId] = useState("");
+  const [passageSearch, setPassageSearch] = useState("");
+  const [filterSchool, setFilterSchool] = useState("");
+  const [filterGrade, setFilterGrade] = useState("");
+  const [filterSemester, setFilterSemester] = useState("");
+  const [analysisStatusFilter, setAnalysisStatusFilter] =
+    useState<PassageAnalysisStatusFilter>("all");
+  const [passageSortOrder, setPassageSortOrder] = useState<PassageSortOrder>("newest");
+
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [contentModalPassage, setContentModalPassage] = useState<PassageItem | null>(null);
+  const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
+
+  // ── 좌측 인테이크(지문 추가 ↔ 내 지문) ──
+  const [intakeView, setIntakeView] = useState<IntakeView>("intake");
+  const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
+  const [pasteSaving, setPasteSaving] = useState(false);
 
   const [leftWidth, setLeftWidth] = useState(readStoredLeftWidth);
   const [leftCollapsed, setLeftCollapsed] = useState(readStoredCollapsed);
 
-  const selectedCount = selectedDraftIds.size;
+  const selectedCount = selectedIds.size;
   const canRun =
     Boolean(staged) &&
-    selectedCount === 1 &&
+    selectedCount >= 1 &&
     cropCounts.totalPassages === 1 &&
     !busy &&
     !splitting &&
     !baking;
-
-  const clearSelectedDrafts = useCallback(() => {
-    setSelectedDraftIds(new Set());
-    setSelectionResetKey((value) => value + 1);
-  }, []);
 
   const clearStaged = useCallback(() => {
     revokeSlotUrls(slotsRef.current);
@@ -181,6 +235,248 @@ export function SimilarQuestionGeneratorClient({
     return () => observer.disconnect();
   }, []);
 
+  // ── 좌측: 대상 지문 목록(기본/커스텀과 동일한 /api/passages/list) ──
+  const loadPassages = useCallback(async () => {
+    setLoadingPassages(true);
+    try {
+      const res = await fetch(`/api/passages/list?academyId=${academyId}`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      const data = await res.json();
+      setPassages(data.passages || []);
+      if (data.filters) setFilterOptions(data.filters);
+      if (data.collections) setCollections(data.collections);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoadingPassages(false);
+    }
+  }, [academyId]);
+
+  useEffect(() => {
+    void loadPassages();
+  }, [loadPassages]);
+
+  const filteredPassages = useMemo(() => {
+    const result = passages.filter((p) => {
+      if (passageSearch) {
+        const q = passageSearch.toLowerCase();
+        if (!p.title.toLowerCase().includes(q) && !p.content.toLowerCase().includes(q)) {
+          return false;
+        }
+      }
+      if (filterSchool && p.school?.id !== filterSchool) return false;
+      if (filterGrade && p.grade !== Number(filterGrade)) return false;
+      if (filterSemester && p.semester !== filterSemester) return false;
+      if (analysisStatusFilter === "analyzed" && !p.analysis) return false;
+      if (analysisStatusFilter === "unanalyzed" && p.analysis) return false;
+      if (
+        selectedCollectionId &&
+        !p.collectionItems?.some((ci) => ci.collectionId === selectedCollectionId)
+      ) {
+        return false;
+      }
+      return true;
+    });
+
+    switch (passageSortOrder) {
+      case "oldest":
+        result.reverse();
+        break;
+      case "name_asc":
+        result.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+        break;
+      case "name_desc":
+        result.sort((a, b) => b.title.localeCompare(a.title, "ko"));
+        break;
+      default:
+        break;
+    }
+    return result;
+  }, [
+    passages,
+    passageSearch,
+    filterSchool,
+    filterGrade,
+    filterSemester,
+    analysisStatusFilter,
+    selectedCollectionId,
+    passageSortOrder,
+  ]);
+
+  const passageStatusCounts = useMemo(
+    () => ({
+      all: passages.length,
+      analyzed: passages.filter((p) => !!p.analysis).length,
+      unanalyzed: passages.filter((p) => !p.analysis).length,
+    }),
+    [passages],
+  );
+
+  const activeFilterCount =
+    [filterSchool, filterGrade, filterSemester].filter(Boolean).length +
+    (analysisStatusFilter === "all" ? 0 : 1);
+
+  const toggleCheckbox = useCallback((id: string, e?: ReactMouseEvent) => {
+    e?.stopPropagation();
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const selectAll = useCallback(() => {
+    setSelectedIds(new Set(filteredPassages.map((p) => p.id)));
+  }, [filteredPassages]);
+
+  const deselectAll = useCallback(() => {
+    setSelectedIds(new Set());
+  }, []);
+
+  const handleOpenAnalysisModal = useCallback(
+    (passageId: string) => {
+      const p = passages.find((pp) => pp.id === passageId);
+      if (p) setContentModalPassage(p);
+    },
+    [passages],
+  );
+
+  // ── 직접 입력(붙여넣기) → 등록 후 선택(기본/커스텀과 동일) ──
+  const handleCreatePastedPassages = useCallback(
+    async (rows: PastedPassageInput[]) => {
+      const cleaned = rows
+        .map((r) => ({ title: r.title.trim(), content: r.content.trim() }))
+        .filter((r) => r.content.length >= 20);
+      if (cleaned.length === 0) {
+        toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
+        return;
+      }
+      setPasteSaving(true);
+      try {
+        const { createDirectInputPassageMaterial } = await import("@/actions/workbench");
+        const createdIds: string[] = [];
+        for (const r of cleaned) {
+          const title = r.title || derivePastedTitle(r.content);
+          const result = (await createDirectInputPassageMaterial({
+            title,
+            content: r.content,
+          })) as { success: boolean; id?: string };
+          if (result?.success && result.id) createdIds.push(result.id);
+        }
+        if (createdIds.length === 0) {
+          toast.error("지문 등록에 실패했습니다.");
+          return;
+        }
+        await loadPassages();
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+        setSelectedIds(new Set(createdIds));
+        setIntakeView("library");
+        toast.success(
+          createdIds.length === cleaned.length
+            ? `${createdIds.length}개 지문이 등록되었습니다. 원본 문항을 올려 동형을 생성하세요.`
+            : `${createdIds.length}/${cleaned.length}개 지문이 등록되었습니다. 일부는 실패했습니다.`,
+        );
+      } catch {
+        toast.error("지문 등록 중 오류가 발생했습니다.");
+      } finally {
+        setPasteSaving(false);
+      }
+    },
+    [loadPassages],
+  );
+
+  // ── 이미지/PDF 추출 완료 → 등록된 지문 선택 유도(기본/커스텀과 동일) ──
+  const handleExtractionPromoted = useCallback(
+    ({
+      passageIds,
+      jobId,
+      partial,
+      expectedCount,
+      resolvedCount,
+      complete,
+    }: ExtractionPromotedResult) => {
+      void loadPassages().then(() => {
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+        setIntakeView("library");
+        if (complete) clearExtractionPendingRef.current(jobId);
+        if (passageIds.length === 0) {
+          toast.message(
+            partial
+              ? "일부 페이지만 추출됐어요. 작업 큐에서 확인하세요."
+              : "추출은 끝났지만 등록할 지문이 없습니다.",
+          );
+          return;
+        }
+        if (!complete) {
+          const missing = Math.max(1, expectedCount - resolvedCount);
+          toast.warning(
+            `추출된 지문 ${resolvedCount}/${expectedCount}개만 등록됐습니다. 남은 ${missing}개는 작업 큐 또는 자료 관리에서 확인해주세요.`,
+            {
+              action: {
+                label: "등록된 지문 선택",
+                onClick: () => setSelectedIds(new Set(passageIds)),
+              },
+              duration: 14000,
+            },
+          );
+          return;
+        }
+        toast.success(
+          `추출된 ${passageIds.length}개 지문이 ‘내 지문’에 추가됐어요. 동형을 입힐 지문을 선택하세요.`,
+          {
+            action: {
+              label: "전체 선택",
+              onClick: () => setSelectedIds(new Set(passageIds)),
+            },
+            duration: 12000,
+          },
+        );
+      });
+    },
+    [loadPassages],
+  );
+
+  const {
+    beginJob: beginExtractionJob,
+    attachJob: attachExtractionJob,
+    failJob: failExtractionJob,
+    clearPending: clearExtractionPending,
+    pending: extractionPending,
+  } = useGenerateExtraction({ onPromoted: handleExtractionPromoted });
+
+  useEffect(() => {
+    clearExtractionPendingRef.current = clearExtractionPending;
+  }, [clearExtractionPending]);
+
+  const handleExtractionBegin = useCallback(
+    (id: string, count: number) => {
+      beginExtractionJob(id, count);
+      setIntakeView("library");
+      taskQueue.setScope("extraction");
+    },
+    [beginExtractionJob, taskQueue],
+  );
+
+  const handleExtractionResult = useCallback(
+    (id: string, jobId: string | null) => {
+      if (jobId) {
+        attachExtractionJob(id, jobId);
+        taskQueue.triggerRefresh();
+      } else {
+        failExtractionJob(id);
+      }
+    },
+    [attachExtractionJob, failExtractionJob, taskQueue],
+  );
+
+  // ── 중앙: 원본 문항(참조) 파일 처리 ──
   const pickFiles = useCallback(
     async (files: FileList | File[]) => {
       const list = Array.from(files);
@@ -263,18 +559,16 @@ export function SimilarQuestionGeneratorClient({
     setSlots(reindexed);
   }, []);
 
+  // 선택한 passage 로 직접 생성 — from-drafts 변환 불필요(좌측이 이미 passage 를 준다).
   const run = useCallback(async () => {
     const currentSlots = slotsRef.current;
     if (!staged || currentSlots.length === 0) {
       toast.error("분석할 문항(사진/PDF)을 먼저 입력하세요.");
       return;
     }
-    if (selectedCount !== 1) {
-      toast.error(
-        selectedCount === 0
-          ? "동형 문제를 생성할 대상 지문을 1개 선택해 주세요."
-          : "동형 문제 생성은 한 번에 대상 지문 1개만 선택할 수 있습니다.",
-      );
+    const passageIds = Array.from(selectedIds);
+    if (passageIds.length === 0) {
+      toast.error("동형 문제를 생성할 대상 지문을 1개 이상 선택해 주세요.");
       return;
     }
     if (cropCounts.totalPassages !== 1) {
@@ -288,42 +582,6 @@ export function SimilarQuestionGeneratorClient({
     setBusy(true);
     setError(null);
     try {
-      // 선택 자료(draft) → passage 등록(from-drafts).
-      let passageIds: string[] = [];
-      const draftIds = Array.from(selectedDraftIds);
-      if (draftIds.length > 0) {
-        const regRes = await fetch("/api/similar-exams/passages/from-drafts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ draftIds }),
-        });
-        if (!regRes.ok) {
-          const data = await regRes.json().catch(() => ({}));
-          throw new Error(data?.error || "선택 자료를 지문으로 준비하지 못했습니다.");
-        }
-        const regData = (await regRes.json()) as {
-          passages?: Array<{ draftId: string; passageId: string }>;
-        };
-        passageIds = (regData.passages ?? []).map((p) => p.passageId);
-      }
-
-      if (passageIds.length === 0) {
-        // draft 는 골랐지만 본문이 없어 0건 등록된 경우와, 아예 미선택을 구분해 안내.
-        toast.warning(
-          draftIds.length > 0
-            ? "선택한 자료에서 동형에 쓸 지문 본문을 만들지 못했습니다. 본문이 있는 자료를 골라주세요."
-            : "동형을 입힐 지문을 왼쪽 자료에서 1개 이상 선택하세요.",
-        );
-        return;
-      }
-      // 일부만 등록된 경우(본문 없음/등록 실패) 조용히 진행하지 않고 알린 뒤 가능한 만큼 진행.
-      if (passageIds.length < draftIds.length) {
-        toast.warning(
-          `선택한 자료 ${draftIds.length}개 중 ${passageIds.length}개만 지문으로 등록됐어요. 나머지는 본문이 없어 제외됩니다.`,
-        );
-      }
-
       setBaking(true);
       const baked = await cropBoardRef.current?.buildPassageSlots();
       setBaking(false);
@@ -371,7 +629,7 @@ export function SimilarQuestionGeneratorClient({
 
       setJobsRefreshKey((value) => value + 1);
       clearStaged();
-      clearSelectedDrafts();
+      setSelectedIds(new Set());
       toast.success(
         `동형 생성 작업을 큐에 등록했어요. 작업 ID: ${data.jobId.slice(-6)}`,
       );
@@ -383,15 +641,7 @@ export function SimilarQuestionGeneratorClient({
     } finally {
       setBusy(false);
     }
-  }, [
-    staged,
-    selectedCount,
-    cropCounts.totalPassages,
-    selectedDraftIds,
-    gradeInfo,
-    clearStaged,
-    clearSelectedDrafts,
-  ]);
+  }, [staged, selectedIds, cropCounts.totalPassages, gradeInfo, clearStaged]);
 
   // ─── 좌패널 핸들: 클릭=여닫기, 드래그=폭 조절 (동형 시험지 생성과 동일) ───
   function toggleLeftCollapsed() {
@@ -449,9 +699,9 @@ export function SimilarQuestionGeneratorClient({
   const gridColumns = `${leftColumnWidth}px ${PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr)`;
 
   return (
-    <div className="relative bg-[#F4F6F9] md:-m-6">
-      <div className="relative flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-white">
-        <div className="shrink-0 border-b border-slate-200/80 bg-white px-5 py-3">
+    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 space-y-4 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <div className="relative flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div className="shrink-0 border-b border-slate-100 bg-white px-4 py-3">
           <WorkflowPageTitle
             icon={QuestionGenerationIcon}
             title="동형 문제 생성"
@@ -461,10 +711,10 @@ export function SimilarQuestionGeneratorClient({
 
         <div
           ref={gridRef}
-          className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:[grid-template-columns:var(--sq-grid-columns)]"
+          className="grid h-[min(760px,calc(100dvh-220px))] min-h-[520px] grid-cols-1 overflow-hidden lg:[grid-template-columns:var(--sq-grid-columns)]"
           style={{ "--sq-grid-columns": gridColumns } as CSSProperties}
         >
-          {/* ─── 좌: 자료 관리 (기존 지문 풀에서 선택) ─── */}
+          {/* ─── 좌: 대상 지문 선택 (내 지문 + 직접 입력 + 이미지/PDF 추출) ─── */}
           {leftCollapsed ? (
             <div aria-hidden className="min-w-0 overflow-hidden" />
           ) : (
@@ -472,14 +722,57 @@ export function SimilarQuestionGeneratorClient({
               ref={leftColRef}
               className="flex min-h-0 min-w-0 flex-col overflow-hidden border-r border-slate-200"
             >
-              <ExtractionManageClient
-                key={selectionResetKey}
-                embedded
-                academyId={academyId}
-                initialCollections={draftCollections}
-                initialCollectionMembership={draftMembership}
-                onSelectionChange={setSelectedDraftIds}
-                marqueeBoundaryRef={leftColRef}
+              <IntakeSurface
+                intakeView={intakeView}
+                setIntakeView={setIntakeView}
+                intakeTab={intakeTab}
+                setIntakeTab={setIntakeTab}
+                libraryCount={passages.length}
+                onSubmitPastedRows={handleCreatePastedPassages}
+                pasteSaving={pasteSaving}
+                upload={
+                  <GenerateUploadPanel
+                    onBegin={handleExtractionBegin}
+                    onResult={handleExtractionResult}
+                    inFlightCount={extractionPending.length}
+                  />
+                }
+                library={
+                  <PassageCardGrid
+                    loadingCards={<ExtractionLoadingCards pending={extractionPending} />}
+                    passages={passages}
+                    filteredPassages={filteredPassages}
+                    filterOptions={filterOptions}
+                    collections={collections}
+                    loadingPassages={loadingPassages}
+                    passageSearch={passageSearch}
+                    setPassageSearch={setPassageSearch}
+                    filterSchool={filterSchool}
+                    setFilterSchool={setFilterSchool}
+                    filterGrade={filterGrade}
+                    setFilterGrade={setFilterGrade}
+                    filterSemester={filterSemester}
+                    setFilterSemester={setFilterSemester}
+                    analysisStatusFilter={analysisStatusFilter}
+                    setAnalysisStatusFilter={setAnalysisStatusFilter}
+                    passageSortOrder={passageSortOrder}
+                    setPassageSortOrder={setPassageSortOrder}
+                    passageStatusCounts={passageStatusCounts}
+                    activeFilterCount={activeFilterCount}
+                    selectedCollectionId={selectedCollectionId}
+                    setSelectedCollectionId={setSelectedCollectionId}
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                    toggleCheckbox={toggleCheckbox}
+                    selectAll={selectAll}
+                    deselectAll={deselectAll}
+                    genMode="manual"
+                    totalQuestions={0}
+                    handleBatchGenerate={() => {}}
+                    handleOpenAnalysisModal={handleOpenAnalysisModal}
+                    onViewPassageContent={setDetailPassage}
+                  />
+                }
               />
             </div>
           )}
@@ -488,13 +781,13 @@ export function SimilarQuestionGeneratorClient({
             <button
               type="button"
               onClick={() => setLeftCollapsed(false)}
-              title="자료 관리 패널 열기"
-              aria-label="자료 관리 패널 열기"
+              title="자료 패널 열기"
+              aria-label="자료 패널 열기"
               aria-expanded={false}
               className="mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
             >
               <span>{">"}</span>
-              <span style={{ writingMode: "vertical-rl" }}>자료 관리</span>
+              <span style={{ writingMode: "vertical-rl" }}>지문</span>
             </button>
           ) : (
             <button
@@ -502,21 +795,21 @@ export function SimilarQuestionGeneratorClient({
               onPointerDown={handleLeftResizePointerDown}
               onClick={toggleLeftCollapsed}
               title="드래그하여 폭 조절 · 클릭하여 닫기"
-              aria-label="자료 관리 패널 닫기"
+              aria-label="자료 패널 닫기"
               aria-expanded
               className="group/lhandle mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
             >
               <span>{"<"}</span>
-              <span style={{ writingMode: "vertical-rl" }}>자료 관리</span>
+              <span style={{ writingMode: "vertical-rl" }}>지문</span>
               <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
             </button>
           )}
 
-          {/* ─── 중앙: 원본 문항 미리보기 + 실행 + 결과 ─── */}
+          {/* ─── 중앙: 원본 문항(참조) 미리보기 + 실행 ─── */}
           <section className="flex min-w-0 flex-col overflow-hidden bg-slate-100/70">
             <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-slate-200 bg-white px-4 py-2">
               <span className="text-[12px] font-bold text-slate-700">
-                {staged ? `${staged.fileName} · ${staged.totalPages}p` : "문항 미입력"}
+                {staged ? `${staged.fileName} · ${staged.totalPages}p` : "원본 문항 미입력"}
               </span>
               {staged ? (
                 <button
@@ -532,17 +825,9 @@ export function SimilarQuestionGeneratorClient({
                 선택 지문 {selectedCount}
               </span>
               <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 ring-1 ring-blue-100">
-                문항 {cropCounts.totalPassages}
+                원본 문항 {cropCounts.totalPassages}
               </span>
               <div className="ml-auto flex items-center gap-2">
-                <label className="flex items-center gap-1.5 text-[12px] text-slate-600">
-                  학년
-                  <input
-                    value={gradeInfo}
-                    onChange={(e) => setGradeInfo(e.target.value)}
-                    className="w-16 rounded-md border border-slate-300 px-2 py-1 text-[12px]"
-                  />
-                </label>
                 <button
                   type="button"
                   onClick={run}
@@ -607,8 +892,18 @@ export function SimilarQuestionGeneratorClient({
         </div>
       </div>
 
-      {/* ─── 하단: 생성한 동형 문항 목록 (동형 시험지 생성 톤) ─── */}
-      <SimilarQuestionJobsPanel refreshKey={jobsRefreshKey} running={busy} />
+      {/* ─── 하단: 생성한 동형 문항 목록 ─── */}
+      <SimilarQuestionJobsPanel refreshKey={jobsRefreshKey} />
+
+      <PassageContentModal
+        open={!!contentModalPassage}
+        onClose={() => setContentModalPassage(null)}
+        passage={contentModalPassage}
+      />
+
+      {detailPassage && (
+        <ExtractionDetailModal passage={detailPassage} onClose={() => setDetailPassage(null)} />
+      )}
 
       <input
         ref={fileInputRef}

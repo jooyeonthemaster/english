@@ -382,6 +382,8 @@ interface QuestionCardProps {
    *  q.id 가 아닌 다른 키(예: 생성 결과의 persistedQuestionId)로 관리되는 경우
    *  해당 키를 넘긴다. null 을 주면 이 카드는 영역 선택 대상에서 제외된다. */
   dragItemId?: string | null;
+  /** '상세 보기' 버튼 오른쪽에 끼울 추가 액션(예: 동형 '분석 정보'). 선택 — 미지정 시 표시 안 함. */
+  detailExtra?: React.ReactNode;
 }
 
 export function QuestionCard({
@@ -402,6 +404,7 @@ export function QuestionCard({
   openOnCardClick = false,
   showDetailButton = false,
   dragItemId,
+  detailExtra,
 }: QuestionCardProps) {
   const resolvedDragItemId = dragItemId === undefined ? q.id : dragItemId;
   const [passageOpen, setPassageOpen] = useState(false);
@@ -711,12 +714,15 @@ export function QuestionCard({
             {showDetailButton && onDetail ? (
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <DetailActionButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDetail();
-                      }}
-                    />
+                    <div className="flex min-w-0 items-center gap-1.5">
+                      <DetailActionButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDetail();
+                        }}
+                      />
+                      {detailExtra}
+                    </div>
                     {q.explanation ? (
                       <button
                         type="button"
