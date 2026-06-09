@@ -26,7 +26,7 @@ function readFastBatchConcurrency(): number {
   return Math.max(1, Math.min(5, Math.floor(parsed)));
 }
 
-const FAST_BATCH_CONCURRENCY = readFastBatchConcurrency();
+export const FAST_BATCH_CONCURRENCY = readFastBatchConcurrency();
 
 interface UseGenerationHandlersParams {
   passages: PassageItem[];
@@ -61,7 +61,7 @@ function readQuestionTags(rawTags: unknown): string[] {
   }
 }
 
-async function createQuestionGenerationJob({
+export async function createQuestionGenerationJob({
   passageId,
   mode,
   count,
@@ -102,7 +102,7 @@ async function createQuestionGenerationJob({
   return data.jobId as string;
 }
 
-async function createFastQuestionGenerationJob({
+export async function createFastQuestionGenerationJob({
   passageId,
   mode,
   count,
@@ -150,7 +150,7 @@ async function createFastQuestionGenerationJob({
   };
 }
 
-async function runWithConcurrency<T, R>(
+export async function runWithConcurrency<T, R>(
   items: T[],
   limit: number,
   worker: (item: T) => Promise<R>,
@@ -181,7 +181,7 @@ async function runWithConcurrency<T, R>(
   return results;
 }
 
-function buildOptimisticItem({
+export function buildOptimisticItem({
   jobId,
   passage,
   analysisData,
@@ -216,7 +216,7 @@ function buildOptimisticItem({
   };
 }
 
-function replaceQueueItemInPlace(
+export function replaceQueueItemInPlace(
   prev: QueueItem[],
   targetIds: string[],
   replacement: QueueItem,

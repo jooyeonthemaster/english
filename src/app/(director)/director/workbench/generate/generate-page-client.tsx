@@ -58,6 +58,10 @@ import {
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
+import { ArrowDownToLine } from "lucide-react";
+import { useWorkspaceRows } from "./workspace/use-workspace-rows";
+import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
+import { PassageWorkspace } from "./workspace/passage-workspace";
 
 // ─── Helpers ─────────────────────────────────────────────
 
@@ -216,6 +220,31 @@ export function GeneratePageClient({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(initialPassageIdsRef.current),
   );
+
+  // ── 지문 워크스페이스 (불러오기 → 편집·AI 변형 → 생성) ──
+  const workspaceApi = useWorkspaceRows();
+  // 불러오기 직후 왼쪽 지문 목록을 샤라락 접는 신호 (증가 카운터).
+  const [leftCollapseSignal, setLeftCollapseSignal] = useState(0);
+  // 우측 "유형·생성 설정" 컬럼 접힘 상태 (워크스페이스와 나란히 배치).
+  const [configPaneOpen, setConfigPaneOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      return window.localStorage.getItem("smoat:generate:config-pane-open") !== "false";
+    } catch {
+      return true;
+    }
+  });
+  const toggleConfigPane = useCallback(() => {
+    setConfigPaneOpen((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem("smoat:generate:config-pane-open", String(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -771,17 +800,21 @@ export function GeneratePageClient({
     }
     const validIds = ids.filter((id) => passages.some((p) => p.id === id));
     if (validIds.length > 0) {
-      setSelectedIds(new Set(validIds));
       const first = passages.find((p) => p.id === validIds[0]);
       if (first) setSelectedPassage(first);
+      // 딥링크 지문은 곧장 워크스페이스로 불러온다 — 편집·변형 후 생성하는 새 흐름.
+      const validPassages = validIds
+        .map((id) => passages.find((p) => p.id === id))
+        .filter(Boolean);
+      workspaceApi.loadPassages(validPassages as PassageItem[]);
       toast.success(
         validIds.length === ids.length
-          ? `지문 ${validIds.length}개를 불러왔습니다.`
-          : `지문 ${validIds.length}/${ids.length}개를 불러왔습니다.`,
+          ? `지문 ${validIds.length}개를 워크스페이스로 불러왔습니다.`
+          : `지문 ${validIds.length}/${ids.length}개를 워크스페이스로 불러왔습니다.`,
       );
     }
     prefillAppliedRef.current = true;
-  }, [loadingPassages, passages]);
+  }, [loadingPassages, passages, workspaceApi]);
 
   // ── Load saved questions from DB ──
   const loadSavedQuestions = useCallback(async () => {
@@ -1269,6 +1302,27 @@ export function GeneratePageClient({
     [deletingQuestions, loadSavedQuestions, savedQuestions, savedQuestionSig],
   );
 
+  // ── 워크스페이스 불러오기 ──
+  const handleLoadSelectedToWorkspace = useCallback(() => {
+    const selected = passages.filter((p) => selectedIds.has(p.id));
+    if (selected.length === 0) {
+      toast.error("왼쪽 '내 지문'에서 불러올 지문을 먼저 선택하세요.");
+      return;
+    }
+    const { added, skipped } = workspaceApi.loadPassages(selected);
+    if (added > 0) {
+      toast.success(
+        `${added}개 지문을 워크스페이스로 불러왔습니다.` +
+          (skipped > 0 ? ` (${skipped}개는 이미 있어요)` : ""),
+      );
+      setSelectedIds(new Set());
+      // 지문 목록을 옆으로 접어 작업 공간 확보 — 핸들로 언제든 다시 연다.
+      setLeftCollapseSignal((s) => s + 1);
+    } else if (skipped > 0) {
+      toast.info("선택한 지문은 이미 워크스페이스에 있습니다.");
+    }
+  }, [passages, selectedIds, workspaceApi]);
+
   // ── Generation handlers (extracted to hook) ──
   const { handleBatchGenerate, handleGenerate, handleSaveQuestions } =
     useGenerationHandlers({
@@ -1293,6 +1347,23 @@ export function GeneratePageClient({
       loadSavedQuestions,
     });
 
+  // ── 워크스페이스 생성 (변형본 저장 → 행별 설정으로 생성) ──
+  const { generating: workspaceGenerating, handleWorkspaceGenerate, workspaceSummary } =
+    useWorkspaceGeneration({
+      api: workspaceApi,
+      passages,
+      genMode,
+      generationPlan,
+      typeCounts,
+      questionTypeSettings,
+      difficulty,
+      customPrompt,
+      autoCount,
+      setSessionQueue,
+      loadPassages,
+    });
+  const workspaceActive = workspaceApi.rows.length > 0;
+
   // ── Can generate? ──
   const canGenerate =
     selectedIds.size > 0 &&
@@ -1304,11 +1375,12 @@ export function GeneratePageClient({
         {/* ═══ TOP SECTION: 학습지 관리(좌) + 문제생성 작업대(우) ═══ */}
         <WorkspaceShell
           leftLabel="지문"
+          leftCollapseSignal={leftCollapseSignal}
           header={
             <WorkflowPageTitle
               icon={QuestionGenerationIcon}
               title="문제 생성"
-              description="분석된 지문을 선택하고 유형과 난이도를 설정해 문제를 생성합니다."
+              description="지문을 불러와 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
             />
           }
           left={
@@ -1329,6 +1401,8 @@ export function GeneratePageClient({
                 />
               }
               library={
+                <div className="flex min-h-0 flex-1 flex-col">
+                <div className="min-h-0 flex-1 overflow-hidden flex flex-col">
                 <PassageCardGrid
                   loadingCards={
                     <ExtractionLoadingCards pending={extractionPending} />
@@ -1378,11 +1452,63 @@ export function GeneratePageClient({
               handleOpenAnalysisModal={handleOpenAnalysisModal}
               onViewPassageContent={setDetailPassage}
                 />
+                </div>
+                {/* 선택 지문 → 워크스페이스 불러오기 (학습지 생성과 동일한 동선) */}
+                {selectedIds.size > 0 ? (
+                  <div className="shrink-0 border-t border-slate-100 bg-white px-2.5 py-2">
+                    <button
+                      type="button"
+                      onClick={handleLoadSelectedToWorkspace}
+                      title={`선택한 ${selectedIds.size}개 지문을 오른쪽 워크스페이스로 불러옵니다. 편집·AI 변형 후 문제를 생성하세요.`}
+                      className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    >
+                      <ArrowDownToLine className="size-4" aria-hidden="true" />
+                      <span>선택 지문 불러오기</span>
+                      <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
+                        {selectedIds.size}개 선택
+                      </span>
+                    </button>
+                  </div>
+                ) : null}
+                </div>
               }
             />
           }
           right={
-            /* ═══ RIGHT PANEL: Generation settings ═══ */
+            /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══ */
+            <div className="flex h-full min-h-0 min-w-0">
+              <div className="min-h-0 min-w-0 flex-1 border-r border-slate-200">
+                <PassageWorkspace
+                  api={workspaceApi}
+                  selectedCount={selectedIds.size}
+                  onLoadSelected={handleLoadSelectedToWorkspace}
+                  generating={workspaceGenerating}
+                  sessionQueue={sessionQueue}
+                  questionCountByPassage={questionCountByPassage}
+                />
+              </div>
+              {!configPaneOpen ? (
+                <button
+                  type="button"
+                  onClick={toggleConfigPane}
+                  title="유형·생성 설정 열기"
+                  className="flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
+                >
+                  <span>{"<"}</span>
+                  <span style={{ writingMode: "vertical-rl" }}>설정 열기</span>
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={toggleConfigPane}
+                    title="유형·생성 설정 접기"
+                    className="flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
+                  >
+                    <span>{">"}</span>
+                    <span style={{ writingMode: "vertical-rl" }}>설정 접기</span>
+                  </button>
+                  <div className="flex h-full w-[400px] min-w-0 shrink-0 flex-col overflow-hidden">
             <GenerationConfigPanel
               genMode={genMode}
               setGenMode={setGenMode}
@@ -1417,7 +1543,18 @@ export function GeneratePageClient({
               canGenerate={canGenerate}
               selectedIds={selectedIds}
               handleBatchGenerate={handleBatchGenerate}
+              workspaceActive={workspaceActive}
+              workspaceRowCount={workspaceSummary.rowCount}
+              workspaceTotalQuestions={workspaceSummary.totalQuestions}
+              workspaceCreditCost={workspaceSummary.creditCost}
+              workspaceVariantCount={workspaceSummary.variantCount}
+              workspaceGenerating={workspaceGenerating}
+              onWorkspaceGenerate={handleWorkspaceGenerate}
             />
+                  </div>
+                </>
+              )}
+            </div>
           }
         />
 

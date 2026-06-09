@@ -148,6 +148,16 @@ interface GenerationConfigPanelProps {
   canGenerate: boolean;
   selectedIds: Set<string>;
   handleBatchGenerate: () => void;
+
+  // 지문 워크스페이스 모드 — 행이 1개라도 불러와지면 생성 버튼은 워크스페이스
+  // 기준으로 동작한다 (라이브러리 직접 선택 생성 대신).
+  workspaceActive?: boolean;
+  workspaceRowCount?: number;
+  workspaceTotalQuestions?: number;
+  workspaceCreditCost?: number;
+  workspaceVariantCount?: number;
+  workspaceGenerating?: boolean;
+  onWorkspaceGenerate?: () => void;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -186,6 +196,13 @@ export function GenerationConfigPanel({
   canGenerate,
   selectedIds,
   handleBatchGenerate,
+  workspaceActive = false,
+  workspaceRowCount = 0,
+  workspaceTotalQuestions = 0,
+  workspaceCreditCost = 0,
+  workspaceVariantCount = 0,
+  workspaceGenerating = false,
+  onWorkspaceGenerate,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(
     "BLANK_INFERENCE",
@@ -1380,8 +1397,54 @@ export function GenerationConfigPanel({
         )}
       </div>
 
-      {/* Generate Button */}
-      {genMode !== "set" && (
+      {/* Generate Button — 워크스페이스 모드 */}
+      {genMode !== "set" && workspaceActive && (
+        <div className="px-5 py-3 border-t border-slate-100 bg-white shrink-0">
+          {workspaceVariantCount > 0 ? (
+            <p className="mb-2 rounded-md bg-blue-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-blue-600">
+              수정된 {workspaceVariantCount}개 지문은 생성 시 변형본으로 저장된
+              뒤 출제됩니다.
+            </p>
+          ) : null}
+          <Button
+            className={`relative w-full h-12 rounded-xl text-[14px] font-bold transition-all duration-200 ${
+              workspaceTotalQuestions > 0 && !workspaceGenerating
+                ? "bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200/50 hover:shadow-lg hover:shadow-blue-200/60"
+                : "bg-slate-200 text-slate-400 cursor-not-allowed"
+            }`}
+            onClick={onWorkspaceGenerate}
+            disabled={workspaceTotalQuestions === 0 || workspaceGenerating}
+          >
+            {workspaceTotalQuestions > 0 &&
+              workspaceCreditCost > 0 &&
+              !workspaceGenerating && (
+                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] font-bold tabular-nums text-white">
+                  <Coins className="w-3 h-3" />
+                  {workspaceCreditCost}크레딧
+                </span>
+              )}
+            {workspaceGenerating ? (
+              <span className="flex items-center gap-2">
+                <Cpu className="w-4.5 h-4.5 animate-pulse" />
+                생성 중…
+              </span>
+            ) : workspaceTotalQuestions > 0 ? (
+              <span className="flex items-center gap-2">
+                <Cpu className="w-4.5 h-4.5" />
+                {`불러온 ${workspaceRowCount}개 지문 · ${workspaceTotalQuestions}문제 생성`}
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Target className="w-4.5 h-4.5" />
+                유형을 선택하세요
+              </span>
+            )}
+          </Button>
+        </div>
+      )}
+
+      {/* Generate Button — 기존 라이브러리 선택 모드 */}
+      {genMode !== "set" && !workspaceActive && (
       <div className="px-5 py-3 border-t border-slate-100 bg-white shrink-0">
         {(() => {
           // 크레딧 비용 계산

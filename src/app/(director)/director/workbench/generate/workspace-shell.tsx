@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 
 /**
@@ -81,6 +81,11 @@ interface WorkspaceShellProps {
   right: ReactNode;
   /** Vertical label shown on the left collapse/resize handle. */
   leftLabel?: string;
+  /**
+   * 증가할 때마다 왼쪽 패널을 접는다 — "선택 지문 불러오기" 직후 지문 목록이
+   * 옆으로 샤라락 접히며 작업 공간이 넓어지는 UX 용. 0이면 무시.
+   */
+  leftCollapseSignal?: number;
 }
 
 export function WorkspaceShell({
@@ -88,6 +93,7 @@ export function WorkspaceShell({
   left,
   right,
   leftLabel = "지문",
+  leftCollapseSignal = 0,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
@@ -107,6 +113,12 @@ export function WorkspaceShell({
       /* ignore */
     }
   }, []);
+
+  // 불러오기 직후 지문 목록을 접어 작업 공간을 넓힌다 (영구 저장은 하지 않음 —
+  // 다음 방문 때는 사용자가 저장해둔 열림 상태를 따른다).
+  useEffect(() => {
+    if (leftCollapseSignal > 0) setLeftPaneOpen(false);
+  }, [leftCollapseSignal]);
 
   const toggleLeftPaneOpen = useCallback(() => {
     setLeftPaneOpen((prev) => {
