@@ -12,6 +12,7 @@ import type { BlockType } from "@/lib/extraction/block-types";
 import type { ExtractionItemSnapshot } from "@/lib/extraction/types";
 import { cn } from "@/lib/utils";
 import type { M2PassageDraftSnapshot } from "../types";
+import { formatExtractedTextForDisplay } from "../../extraction-manage-client/utils/display-text";
 import {
   BlockActions,
   BlockHeader,
@@ -51,8 +52,12 @@ export function PassageTab({
   const isSkipped = item.status === "SKIPPED";
   const restoredText = m2Draft?.teacherText || m2Draft?.restoredText || "";
   const hasRestoredText = restoredText.trim().length > 0;
+  const displayRestoredText = formatExtractedTextForDisplay(restoredText);
+  const displayBlockText = formatExtractedTextForDisplay(item.content);
   const displayedText =
-    viewMode === "restored" && hasRestoredText ? restoredText : item.content;
+    viewMode === "restored" && hasRestoredText
+      ? displayRestoredText
+      : displayBlockText;
   const bestMatch = m2Draft?.sourceMatches[0] ?? null;
   const verification = getVerificationTone(m2Draft?.verificationStatus ?? null);
 
@@ -108,7 +113,7 @@ export function PassageTab({
             <button
               type="button"
               disabled={!hasRestoredText || isSkipped}
-              onClick={() => onChangeContent(item.id, restoredText)}
+              onClick={() => onChangeContent(item.id, displayRestoredText)}
               className="rounded-md bg-sky-600 px-2.5 py-1.5 text-[11px] font-bold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               복원문 적용
@@ -161,7 +166,7 @@ export function PassageTab({
                       {sentence.order}.
                     </span>
                     <span className="text-slate-800">
-                      {sentence.restoredText}
+                      {formatExtractedTextForDisplay(sentence.restoredText)}
                     </span>
                   </li>
                 ))}

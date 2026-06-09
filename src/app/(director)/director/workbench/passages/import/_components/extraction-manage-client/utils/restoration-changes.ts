@@ -67,6 +67,11 @@ export function selectInlineChanges(
       // the entire passage — they tell the teacher the draft was matched
       // against a known DB record. Skip the size guard.
       if (WHOLE_BODY_EVIDENCE_TYPES.has(ct)) return true;
+      // "Removal" changes (발문/선지 제거 — after is empty) carry no restored
+      // text, so they can't paint the restored pane and must never be dropped
+      // by the size guard: they are the ONLY evidence for stem/choice-only
+      // restorations (밑줄 의미·어휘·제목·요지 유형) and must always show as a card.
+      if (!c.after || c.after.trim().length === 0) return true;
       const beforeRatio = rawLen > 0 ? c.before.length / rawLen : 0;
       const afterRatio = restoredLen > 0 ? c.after.length / restoredLen : 0;
       if (beforeRatio >= wholePassageThreshold) return false;

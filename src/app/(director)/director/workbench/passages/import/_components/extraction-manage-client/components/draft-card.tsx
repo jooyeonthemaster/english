@@ -9,7 +9,7 @@ import {
 } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { FileText, Pencil, type LucideIcon } from "lucide-react";
+import { FileText, Pencil, Maximize2, type LucideIcon } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -19,7 +19,7 @@ import {
 import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
@@ -58,6 +58,10 @@ interface DraftCardProps {
    *  (미선택 카드는 draggable 미등록 → 카드 위에서 영역 드래그가 동작) */
   dragRequiresSelection?: boolean;
   detailAction?: DraftCardActionVariant;
+  /** Optional secondary action — opens the 복원 근거 detail modal, shown as a
+   *  "지문 전체 보기" button next to the primary action. Used by the 학습지 생성
+   *  embed where the primary action picks the draft into the editor. */
+  onOpenDetail?: () => void;
 }
 
 export function DraftCard({
@@ -72,6 +76,7 @@ export function DraftCard({
   onTitleChange,
   statusBadgeMode = "review",
   detailAction,
+  onOpenDetail,
 }: DraftCardProps) {
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
@@ -190,7 +195,17 @@ export function DraftCard({
     });
   }, [draft.id]);
 
-  const preview = draft.rawText
+  // Prefer the restored/teacher-edited text for the snippet so a restored
+  // draft's card actually *looks* restored — matching the editor, 가져오기,
+  // and 일괄 분석, which all read teacherText || restoredText || rawText.
+  // (The list payload blanks restoredText but keeps teacherText, so the
+  // teacherText branch is what carries the restored prose here.)
+  const preview = (
+    draft.teacherText?.trim() ||
+    draft.restoredText?.trim() ||
+    draft.rawText ||
+    ""
+  )
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 140);
@@ -239,22 +254,25 @@ export function DraftCard({
       data-drag-item-id={hideCheckbox ? undefined : draft.id}
       role="button"
       tabIndex={0}
-      onClick={onClick}
+      aria-pressed={checked}
+      onClick={hideCheckbox ? undefined : onToggleCheck}
       onKeyDown={(e) => {
+        if (hideCheckbox) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onClick();
+          onToggleCheck();
         }
       }}
       className={
-        "group relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-[colors,transform,box-shadow] motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        "relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (isDragging
           ? "cursor-grabbing opacity-50"
-          : "cursor-pointer") +
+          : hideCheckbox
+            ? "cursor-default"
+            : "cursor-pointer") +
         " " +
         (active
-          ? // 지문 내용에 담긴(클릭된) 카드 — 눌린 듯한 음영 처리.
-            "border-blue-400 bg-blue-100/70 ring-1 ring-blue-200 !shadow-[inset_0_1px_3px_rgba(30,64,175,0.2)] motion-safe:translate-y-px motion-safe:scale-[0.985]"
+          ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
           : checked
             ? "border-blue-300 bg-blue-50/30 ring-1 ring-blue-100"
           : stampDone
@@ -402,9 +420,28 @@ export function DraftCard({
       <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">
         {preview || "추출된 본문이 비어있습니다."}
       </p>
-      <CardHoverActionLabel>
-        {detailAction?.label ?? "상세보기"}
-      </CardHoverActionLabel>
+      <div className="mt-auto flex flex-wrap items-center justify-end gap-1.5 pt-1">
+        {onOpenDetail ? (
+          <DetailActionButton
+            icon={Maximize2}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenDetail();
+            }}
+          >
+            지문 전체 보기
+          </DetailActionButton>
+        ) : null}
+        <DetailActionButton
+          icon={detailAction?.icon ?? Maximize2}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick();
+          }}
+        >
+          {detailAction?.label ?? "상세보기"}
+        </DetailActionButton>
+      </div>
     </div>
   );
 }

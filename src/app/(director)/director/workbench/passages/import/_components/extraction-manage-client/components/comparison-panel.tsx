@@ -7,11 +7,13 @@ import {
   readRestorationMetadata,
   recommendationLabel,
 } from "../utils/restoration-metadata";
+import { formatExtractedTextForDisplay } from "../utils/display-text";
 
 export function ComparisonPanel({ draft }: { draft: M1PassageDraftWithJob }) {
   const restoration = readRestorationMetadata(draft);
   if (!restoration) return null;
   const aiRestored = restoration.aiRestoration?.restoredText?.trim() ?? "";
+  const displayAiRestored = formatExtractedTextForDisplay(aiRestored);
   const comparison = restoration.comparison ?? null;
   const sourceMatch = restoration.sourceMatch ?? null;
   // 표시할 정보가 전혀 없으면 패널 자체를 숨긴다.
@@ -68,7 +70,7 @@ export function ComparisonPanel({ draft }: { draft: M1PassageDraftWithJob }) {
               </span>
             </summary>
             <div className="whitespace-pre-wrap border-t border-slate-200 bg-white px-3 py-2.5 text-[13px] leading-6 text-slate-800">
-              {aiRestored}
+              {displayAiRestored}
             </div>
           </details>
         ) : null}

@@ -1,6 +1,7 @@
 "use client";
 
 import { ReportPages } from "@/components/workbench/analysis-report/report-pages";
+import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { RECALL_RECOGNITION_FIXTURE } from "@/lib/passage-report/analysis-report/fixture";
 import { safeParseAnalysisReport, type AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import gen07 from "@/lib/passage-report/analysis-report/_samples/gen-07-science.json";
@@ -190,7 +191,89 @@ const DENSE: AnalysisReport = {
   ],
 };
 
-export function PassageReportHarness({ sample, layout }: { sample?: string; layout?: string }) {
+const ACTIVITY_STRESS_ITEMS = [
+  {
+    ko: "정보는 이미 여러분 앞에 있어요. 여러분은 단지 그것이 이전의 기억과 일치하는지만 확인하기만 하면 돼요.",
+    chunks: ["The information is", "already in front of you:", "you simply", "need to identify", "whether it matches", "a previous memory."],
+  },
+  {
+    ko: "이것이 객관식 질문이 더 쉬운 이유예요. 여러분은 답을 만들어 낼 필요 없이, 선택지 중에서 그것을 찾기만 하면 되거든요.",
+    chunks: ["This is why", "multiple-choice questions are easier:", "you don't have", "to create the answer,", "just find it", "among the options."],
+  },
+  {
+    ko: "가장 큰 차이점은 단서의 존재 여부에 기초해요.",
+    chunks: ["The main distinction", "is based on", "the presence of cues."],
+  },
+  {
+    ko: "재인은 풍부한 맥락을 제공하는 반면, 회상은 뇌가 진공 상태에서 작동하도록 강제해요.",
+    chunks: ["While recognition provides", "plenty of context,", "recall forces the brain", "to work in a vacuum."],
+  },
+  {
+    ko: "학습에 있어서, 교과서에 있는 단어를 알아볼 수 있는 것은 단지 첫 번째 단계일 뿐이에요.",
+    chunks: ["In learning,", "being able to recognize a word", "in a textbook", "is only the first step."],
+  },
+  {
+    ko: "진정한 숙달은 아무런 힌트가 제공되지 않을 때 그것을 회상해 낼 수 있는 능력이에요.",
+    chunks: ["True mastery is", "the ability to recall it", "when no hints", "are provided."],
+  },
+  {
+    ko: "그래서 효과적인 복습은 친숙함을 확인하는 데서 멈추지 않고 기억을 다시 꺼내는 연습까지 포함해야 해요.",
+    chunks: ["Effective review", "should not stop at", "checking familiarity", "but should include", "practice retrieving memory", "again."],
+  },
+  {
+    ko: "단서를 줄이는 방식으로 공부하면, 시험장에서 필요한 회상 능력이 점점 강해져요.",
+    chunks: ["When you study", "by reducing cues,", "the recall ability", "needed in the exam room", "gradually becomes stronger."],
+  },
+  {
+    ko: "반대로 해설을 너무 빨리 보면, 뇌는 스스로 답을 찾는 과정을 건너뛰게 돼요.",
+    chunks: ["On the other hand,", "if you look at explanations", "too quickly,", "the brain skips", "the process of finding", "the answer by itself."],
+  },
+  {
+    ko: "처음에는 어렵게 느껴지더라도, 잠시 멈추고 떠올리려는 시간이 장기 기억을 만드는 데 중요해요.",
+    chunks: ["Even if it feels difficult", "at first,", "the time spent pausing", "and trying to remember", "is important for building", "long-term memory."],
+  },
+  {
+    ko: "결국 학습의 목표는 눈앞의 답을 고르는 것이 아니라, 필요한 순간에 지식을 꺼내 쓰는 것이에요.",
+    chunks: ["In the end,", "the goal of learning", "is not choosing", "the answer in front of you,", "but using knowledge", "when it is needed."],
+  },
+  {
+    ko: "따라서 연습 문제를 풀 때도 정답 확인보다 먼저 스스로 문장 구조와 의미를 재구성해 보는 태도가 필요해요.",
+    chunks: ["Therefore,", "when solving practice questions,", "you need the habit", "of reconstructing", "sentence structure and meaning", "before checking the answer."],
+  },
+] as const;
+
+const ACTIVITY_STRESS: AnalysisReport = {
+  ...RECALL_RECOGNITION_FIXTURE,
+  docNo: "DEV-ACTIVITY",
+  meta: { ...RECALL_RECOGNITION_FIXTURE.meta, eyebrow: "ACTIVITY STRESS", titleKo: "어순 배열 페이지 분할", titleEn: "Word Order Pagination" },
+  activityAnswerKeyPage: false,
+  customBlocks: [
+    {
+      kind: "activity",
+      id: "c-dev-word-order-overflow",
+      activityKind: "chunk-scramble",
+      title: "어순 배열",
+      sentenceNos: ACTIVITY_STRESS_ITEMS.map((_, index) => index + 1),
+      params: { splitMode: "chunk", koPosition: "above", separator: "slash", writeLines: 0 },
+      seed: 1,
+      answersHidden: true,
+      payload: {
+        instructions: "의미 단위를 바른 순서로 배열하세요.",
+        items: ACTIVITY_STRESS_ITEMS.map((item, index) => ({
+          no: index + 1,
+          sentenceNo: index + 1,
+          ko: item.ko,
+          chips: [...item.chunks].reverse(),
+          prompt: `[ ${[...item.chunks].reverse().join(" / ")} ]`,
+          answer: item.chunks.join(" "),
+          writeLines: 0,
+        })),
+      },
+    },
+  ],
+};
+
+export function PassageReportHarness({ sample, layout, mode }: { sample?: string; layout?: string; mode?: string }) {
   const layoutOverride = layout === "legacy" ? "legacy" : null;
 
   let report: AnalysisReport;
@@ -201,6 +284,8 @@ export function PassageReportHarness({ sample, layout }: { sample?: string; layo
     report = { ...RECALL_RECOGNITION_FIXTURE };
   } else if (sample === "dense") {
     report = DENSE;
+  } else if (sample === "activity") {
+    report = ACTIVITY_STRESS;
   } else if (sample === "gen07") {
     const parsed = safeParseAnalysisReport({ schemaVersion: 1, brand: "ENGLISH READING LAB", themeId: "veritas-navy", passageLayout: "hlc", meta: (gen07 as { meta: unknown }).meta, sections: (gen07 as { sections: unknown }).sections });
     report = parsed.ok ? parsed.report : RICH;
@@ -208,6 +293,15 @@ export function PassageReportHarness({ sample, layout }: { sample?: string; layo
     report = RICH;
   }
   if (layoutOverride === "legacy") report = { ...report, passageLayout: "legacy" };
+
+  if (mode === "edit") {
+    return (
+      <AnalysisReportEditor
+        passageId="dev-passage-report"
+        initialReport={report}
+      />
+    );
+  }
 
   return (
     <div data-testid="report-root" style={{ background: "#e9edf3", padding: "20px", minHeight: "100vh" }}>

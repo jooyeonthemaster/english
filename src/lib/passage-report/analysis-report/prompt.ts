@@ -58,11 +58,12 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - 반드시 **JSON 객체 하나만** 출력한다. 마크다운 코드펜스(\`\`\`)나 설명 문장을 절대 붙이지 마라.
 - 최상위 키는 정확히 두 개: "meta", "sections".
 - "meta"는 보고서 제목/내부 저장/검색 보조용 데이터일 뿐이며, 본문에 별도의 분류·소재·난이도·풀이시간 메타 표 섹션을 만들기 위한 데이터가 아니다. 학생용 보고서 본문 구성은 오직 "sections"로만 설계한다.
-- "sections" 는 아래 7개 섹션을 **이 순서대로** 모두 포함한다 (kind 값 고정):
-  1) passage  2) structure-map  3) summary  4) grammar  5) exam-focus  6) vocabulary  7) parsing
+- "sections" 는 아래 7개 섹션을 모두 포함한다 (kind 값 고정):
+  1) passage  2) learning-worksheet (logicRows 표만)  3) summary  4) grammar  5) exam-focus  6) vocabulary  7) parsing
 - ❗ self-check(학습 점검) 섹션은 **생성하지 마라.** (제거됨)
+- ❗ structure-map(구조 도식) 섹션은 **생성하지 마라.** (제거됨 — 논리 구조는 2번 learning-worksheet 의 logicRows 표로만 표현한다)
 - 학원 자료의 신뢰성이 생명이다. 문법 해설·정답·구문 분석은 **정확**해야 한다. 추측성/오류 금지.
-- **필드 누락 절대 금지**: 각 명세의 모든 필드를 빠짐없이 채운다. 특히 (a) exam-focus 의 모든 row 는 type·asks·strategy 3개를 전부, (b) structure-map 의 conclusion.text 와 coreDistinction.label 을 반드시 채운다. 값이 애매하면 빈 문자열이 아니라 가장 합당한 내용을 생성하라.
+- **필드 누락 절대 금지**: 각 명세의 모든 필드를 빠짐없이 채운다. 특히 exam-focus 의 모든 row 는 type·asks·strategy 3개를 전부 채운다. 값이 애매하면 빈 문자열이 아니라 가장 합당한 내용을 생성하라.
 
 # meta (내부 저장/제목용 메타 — 화면 본문 섹션 아님)
 {
@@ -94,25 +95,15 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - keywords: 글의 핵심 흐름을 잡아주는 주제어·반복어·대조어 **6~10개** (반드시 원문 표현 그대로 — 본문에서 밑줄 강조됨). 학생이 이 단어들만 따라가도 글의 맥이 잡히게.
 - **모든 문장에 ko 해석을 반드시 채운다** (1페이지에서 원문과 한글 해석이 문장별로 함께 보여야 함 — 누락 절대 금지). 해석은 학생이 바로 이해할 수 있게 자연스럽고 쉽게.
 
-## 2. structure-map — 한눈에 보는 지문 구조 (도식)
-{ "kind":"structure-map",
-  "note":"※ ... 구조 한 줄 설명 (선택)",
-  "variant":"compare" 또는 "sequence",   // ❗ 지문 구조에 맞게 먼저 고른다
-  "intro": { "eyebrow":"도입부 라벨(영문 대문자, 선택)", "label":"도입/소재 비유 한 줄" },
-  // variant="compare" 일 때만:
-  "branchLabel":"두 갈래로 나뉘는 지점 라벨 (선택)",
-  "columns":[
-     { "titleEn":"개념A 영문", "titleKo":"개념A 한글", "bullets":["특징 3~4개(한·영 병기)"], "footer":"한 줄 요약(선택)" },
-     { "titleEn":"개념B 영문", "titleKo":"개념B 한글", "bullets":["특징 3~4개(한·영 병기)"], "footer":"한 줄 요약(선택)" } ],
-  // variant="sequence" 일 때만 (columns 대신):
-  "steps":[ { "titleKo":"1단계: ... ", "titleEn":"...", "detail":"단계 설명 (한글 + 핵심 영어 표현)" }, ... 2~6개 ],
-  "coreDistinction": { "eyebrow":"라벨(선택)", "label":"compare=두 축을 가르는 기준 / sequence=핵심 원리·동력", "detail":"보충 한 줄(선택)" },
-  "conclusion": { "eyebrow":"결론 라벨(선택)", "text":"글이 도달하는 결론/주제 한 줄" },
-  "logicFlow":"논리 흐름을 ▶로 연결한 한 줄 요약" }
-- ❗ **variant 를 먼저 판단**: 대조·비교·인과·문제해결·주장처럼 **두 축**이 자연스러우면 "compare" (columns 사용). 시간순·단계·절차처럼 **순서대로 진행**되는 글이면 "sequence" (steps 사용). **억지로 2분할하지 마라** — 순차 과정을 2열로 욱여넣으면 어색하다.
-- compare: intro → columns(2축) → coreDistinction → conclusion. sequence: intro → steps(단계 흐름) → coreDistinction(핵심 원리) → conclusion.
-- ❗ **모든 bullet 과 titleKo·label 은 한글 + 핵심 영어 표현을 함께** 적는다: 예) "단서 없이 처음부터 재구성 (reconstruct from scratch)", "백지에 쓰기 (a blank page)". **한글만 또는 영문만 금지** — 학생이 영어 표현까지 같이 익혀야 실제 공부가 됨.
-- 각 bullet 은 지문 근거가 분명한 사실만, 한눈에 이해되게 간결히.
+## 2. learning-worksheet — 지문 논리 구조 분석 (문장별 기능표만)
+{ "kind":"learning-worksheet",
+  "title":"지문 논리 구조 분석",
+  "logicRows":[ { "sentenceNo":문장번호, "functionLabel":"그 문장의 글 속 기능(짧은 명사구)", "keyPoint":"그 문장이 글에서 하는 핵심 내용·역할을 한국어 한 줄로" } ] }
+- logicRows 는 **5~8개**. 글의 흐름을 따라 주요 문장마다 기능을 "주제 제시 / 통념 제시 / 통념 반박 / 양보 / 역접 / 인과 / 비유 / 결론"처럼 독해·시험에 도움이 되게 잡아라.
+- functionLabel = 그 문장의 글 속 역할(짧게), keyPoint = 그 문장이 글에서 무엇을 하는지 한국어 한 줄(구체적으로).
+- sentenceNo 는 passage.sentences[].n 과 정확히 일치시켜라.
+- ❗ **도식/다이어그램(intro·columns·steps·coreDistinction·conclusion·logicFlow 등)은 절대 만들지 마라.** 이 섹션은 오직 logicRows 표만 채운다.
+- ❗ 여기서는 workbookSet·cloze·practice·drills·inferenceSet 등 **다른 학습지 필드를 만들지 마라.** (그건 별도 '실전 학습지' 생성 단계에서 만든다.) logicRows 만 출력한다.
 
 ## 3. summary — 핵심 요약 + 영문 주제문
 { "kind":"summary", "sentences":["핵심 요약 한국어 2~4문장"], "thesisEn":"지문 전체를 한 문장으로 압축한 영어 주제문" }
@@ -123,6 +114,7 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
              "layout":{ "anchorText":"원문 구절", "band":"interline", "priority":2, "lines":["짧은 줄1","짧은 줄2"] } } ] }
 - ❗ 단순 문법 용어 나열·정의가 **절대 아니다**. **이 지문에서 우리 객관식 어법 문제로 실제 출제될 '판단 자리'** 만 골라라.
 - ❗ **출제 자리는 반드시 아래 13개 코드(a~m) 중에서만 고른다** (이게 우리 어법 문제 생성 엔진이 쓰는 분류와 똑같다 — 다른 주제(관사·철자·뻔한 전치사 등)는 절대 금지). **강한 자리 5~8개, 서로 다른 코드로** (최소 4개 이상 서로 다른 코드).
+- ❗ **약한 디코이(자리) 절대 금지** — 다음은 문장을 안 읽어도 형태만 보면 답이 보이므로 학습 가치가 없다. 절대 고르지 마라: to부정사 전용동사(plan·want·decide·refuse·hope·expect·manage·agree·promise·fail·learn) 뒤 to-V / 동명사 전용동사(enjoy·finish·avoid·mind·suggest·consider·postpone·deny) 뒤 V-ing / 단순 관사·단순 전치사·고유명사·평이한 명사. **강한 자리만**: 자동사 분사(missing/retired류), 수식어구로 분리된 주어, 콤마 뒤 분사구문, 비교급 than 뒤, 선행사 모호한 관계대명사, 2형식 보어, 5형식 목적격보어, 등위접속사 뒤 병렬.
   (a)정·준동사: 동사로 쓸지 to-V/-ing/분사로 쓸지 │함정: 동사 자리에 -ing
   (b)관계사: who/which/that/where/when 중 선행사·문장구조에 맞는 것 │함정: 사람인데 which, 완전한 절에 관계대명사
   (c)분사 능/수동: -ing(하는)인지 p.p.(된)인지 │함정: 형태만 보고 -ing
@@ -140,7 +132,8 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - ❗ **excerpt: 그 어법 자리가 들어있는 실제 원문 구절을 그대로 가져온다.**
 - ❗ **explanation = 4단계로 (노베이스가 혼자 이해되게):** ①이 자리는 무엇을 고르는 자리인지(용어는 괄호로 정의) → ②왜 그렇게 골라야 하는지 한 문장 → ③헷갈려서 틀리기 쉬운 형태 → ④이 지문에선 무엇이 정답인지. 예) "이 자리는 동사를 원형으로 쓸지 -ing로 쓸지 고르는 자리예요. and 앞의 search 랑 짝(병렬: and 앞뒤를 똑같은 모양으로 맞추는 거예요)을 이뤄야 하거든요. reconstructing으로 쓰면 모양이 안 맞아 틀려요. 이 지문에선 reconstruct(원형)가 정답이에요."
 - ❗ **trap = "⚠ 시험에선/학생들이 자주 ~" 로 시작 + 구체적 오답 형태 + 왜 틀리는지.** 그 코드의 대표 함정형(위 표 │함정)을 이 지문 표현에 적용해서. 예) "⚠ 시험에선 이 자리를 reconstructing 으로 바꿔 밑줄 치고 '어법상 틀린 것'으로 내요. search와 병렬이라 원형이 맞으니 이게 오답 선지예요."
-- ❗ **example = 시험이 파는 '함정(틀린 형태)'을 그대로 담은 짧은 영어 예문 1문장**(8~14단어). 정답이 아니라 **틀린 형태가 들어간 문장**을 쓴다. exampleWrong=그 틀린 토큰, exampleCorrect=정답 토큰. 학생이 "이렇게 바꿔서 함정을 파는구나" 알 수 있게. 예) point가 "(c) 분사 능/수동(struggling)"이면 example:"I saw a boy struggled with the box.", exampleWrong:"struggled", exampleCorrect:"struggling". (trap 이 없는 단순 포인트면 example 3종 모두 생략 가능.)
+- ❗ **example·exampleWrong·exampleCorrect 3종은 모든 row 에 반드시 채운다(생략 금지)** — 이 셋이 어법 OX·택1·고치기 학습 활동의 재료다. example = 시험이 파는 '함정(틀린 형태)'을 그대로 담은 짧은 영어 예문 1문장(8~14단어). 정답이 아니라 **틀린 형태가 들어간 문장**을 쓴다. exampleWrong=그 틀린 토큰, exampleCorrect=정답 토큰. 예) point가 "(c) 분사 능/수동(struggling)"이면 example:"I saw a boy struggled with the box.", exampleWrong:"struggled", exampleCorrect:"struggling".
+- ❗ **틀린 형태(exampleWrong)는 정답형(exampleCorrect)의 어간을 유지한 채 형태만 바꾼다 — 품사 변경 금지**(동사↔명사, 형용사↔명사 X). 그래야 학생이 "형태 판단"을 훈련한다. 예: strengthen→strengthens(수일치), which→what(관계사), producing→to produce(준동사). **exampleWrong 은 반드시 example 문장 안에 글자 그대로 존재해야 하고, exampleWrong ≠ exampleCorrect 여야 한다.**
 
 ## 5. exam-focus — 유형별 출제 포인트 (표) [우리 객관식 출제 경향과 동일]
 { "kind":"exam-focus",

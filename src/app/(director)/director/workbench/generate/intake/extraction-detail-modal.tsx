@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FileText, Loader2, X } from "lucide-react";
 
 import type { PassageItem } from "../generate-page-types";
 import { PassageCompare } from "../../passages/import/_components/extraction-manage-client/components/passage-compare";
 import { RestorationBadge } from "../../passages/import/_components/extraction-manage-client/components/restoration-badge";
 import type { M1PassageDraftWithJob } from "../../passages/import/_components/extraction-manage-client/types";
+import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
 
 interface ExtractionDetailModalProps {
   passage: PassageItem;
@@ -26,6 +27,10 @@ export function ExtractionDetailModal({
 }: ExtractionDetailModalProps) {
   const [draft, setDraft] = useState<M1PassageDraftWithJob | null>(null);
   const [loading, setLoading] = useState(true);
+  const displayPassageContent = useMemo(
+    () => formatExtractedTextForDisplay(passage.content || ""),
+    [passage.content],
+  );
 
   // ESC to close + body scroll lock.
   useEffect(() => {
@@ -122,7 +127,7 @@ export function ExtractionDetailModal({
           ) : (
             <div className="min-h-0 flex-1 overflow-auto rounded-lg border border-slate-200 bg-white p-5">
               <div className="whitespace-pre-wrap text-[14px] leading-7 text-slate-800">
-                {passage.content || "내용이 없습니다."}
+                {displayPassageContent || "내용이 없습니다."}
               </div>
             </div>
           )}

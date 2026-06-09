@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
-import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
+import { generateAnalysisReportCore } from "@/lib/passage-report/analysis-report/generate";
 import { analysisReportSchema } from "@/lib/passage-report/analysis-report/schema";
 import { prisma } from "@/lib/prisma";
 
@@ -128,7 +128,8 @@ export async function POST(
 
   let result;
   try {
-    result = await generateAnalysisReport({
+    // 기본 분석 = 메인 보고서(5섹션)만 1회 호출. 실전 학습지(06)는 옵트인 별도 생성.
+    result = await generateAnalysisReportCore({
       passageContent: passage.content,
       schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
       grade: passage.grade,

@@ -23,9 +23,20 @@ const TERMINAL_JOB_STATUSES = ["COMPLETED", "PARTIAL", "FAILED"];
 
 interface UseDraftsDataParams {
   onJobsRefresh: () => void;
+  /**
+   * Bumped by an embedder (e.g. the 학습지 생성 intake) when a new extraction
+   * job is created or completes, to force an IMMEDIATE job-meta + drafts
+   * refetch instead of waiting up to 30s for the background poll. The material
+   * cards are derived from job-meta (`/api/extraction/jobs`), so we must
+   * refetch job-meta — not just drafts — for a brand-new job to surface.
+   */
+  refreshToken?: number;
 }
 
-export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataParams) {
+export function useDraftsData({
+  onJobsRefresh: _onJobsRefresh,
+  refreshToken = 0,
+}: UseDraftsDataParams) {
   void _onJobsRefresh;
 
   const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>(
@@ -239,93 +250,104 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
     });
   }, [hasPendingDrafts, resultScope, jobId, pollJobSilent, pollAllSilent]);
 
+  // ─── Single job-meta fetch (the "new completion detector") ───
+  // Shared by the background poll AND the embedder's on-demand `refreshToken`
+  // refresh. Updates jobMetaByJobId (which the material cards are derived from)
+  // and, on a fresh terminal transition vs the cached snapshot, kicks a silent
+  // drafts refetch so a newly-completed extraction surfaces its draft cards even
+  // if the 자료 관리 page was already open. The terminal-transition detector
+  // survives a hidden-tab stretch because the previous snapshot lives in the
+  // module cache (getCachedJobMeta). Thumbnails (firstPageImageUrl) are KEPT —
+  // the material cards render them.
+  const refreshJobMeta = useCallback(
+    async (signal?: AbortSignal): Promise<string | null> => {
+      try {
+        const res = await fetch("/api/extraction/jobs?limit=200", {
+          credentials: "include",
+          cache: "no-store",
+          signal,
+        });
+        if (!res.ok || signal?.aborted) return null;
+        const data = (await res.json()) as {
+          jobs?: Array<{
+            id: string;
+            mode: string;
+            status: string;
+            displayName?: string | null;
+            originalFileName?: string | null;
+            createdAt: string;
+            firstPageImageUrl?: string | null;
+            totalPages?: number;
+            resultCount?: number;
+            draftResultCount?: number;
+            savedResultCount?: number;
+          }>;
+        };
+        if (signal?.aborted) return null;
+        const m = new Map<string, JobMetaSnapshot>();
+        for (const j of data.jobs ?? []) {
+          // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
+          if (j.mode !== "PASSAGE_ONLY") continue;
+          m.set(j.id, {
+            thumbnailUrl: j.firstPageImageUrl ?? null,
+            status: j.status,
+            displayName: j.displayName ?? null,
+            originalFileName: j.originalFileName ?? null,
+            createdAt: j.createdAt,
+            totalPages: j.totalPages ?? 0,
+            resultCount: j.resultCount ?? 0,
+            draftResultCount: j.draftResultCount ?? 0,
+            savedResultCount: j.savedResultCount ?? 0,
+          });
+        }
+        // Detect a fresh terminal transition vs the previous poll's snapshot.
+        // Skip the first run (prev === null) to avoid duplicating the bootstrap
+        // `loadAllDrafts` call.
+        const prev = getCachedJobMeta();
+        let shouldRefetchDrafts = false;
+        if (prev) {
+          for (const [id, meta] of m) {
+            if (!TERMINAL_JOB_STATUSES.includes(meta.status)) continue;
+            const prevMeta = prev.get(id);
+            if (!prevMeta || !TERMINAL_JOB_STATUSES.includes(prevMeta.status)) {
+              shouldRefetchDrafts = true;
+              break;
+            }
+          }
+        }
+        setCachedJobMeta(m);
+        setJobMetaByJobId(m);
+        if (shouldRefetchDrafts) void pollAllSilent();
+        // Signature for adaptive-poll's change detection.
+        return Array.from(m, ([id, meta]) => `${id}:${meta.status}`).join("|");
+      } catch {
+        // Best-effort enrichment; cards still render without thumbnails.
+        return null;
+      }
+    },
+    [pollAllSilent],
+  );
+
   // ─── Job meta polling (terminal-transition detector) ───
-  //
-  // Doubles as the "new completion detector": when this poll sees a job
-  // newly enter a terminal state we kick off a silent drafts refetch. Without
-  // this, finishing an extraction while the 자료 관리 page is already open
-  // leaves the card grid stuck on the old snapshot.
-  //
   // adaptive-poll keeps the same 30s cadence while visible, but PAUSES while the
-  // tab is hidden and fires immediately on return. The terminal-transition
-  // detector still works across a hidden stretch because the previous snapshot
-  // lives in the module cache (getCachedJobMeta): a job that completed while you
-  // were away is detected the moment you come back. Thumbnails (firstPageImageUrl)
-  // are intentionally KEPT — the material cards render them; only the
-  // background/hidden polling is trimmed (no thumbnails=0 here).
+  // tab is hidden and fires immediately on return.
   useEffect(() => {
     return startAdaptivePoll({
       activeMs: 30_000,
       idleMs: 5 * 60_000,
-      run: async (signal) => {
-        try {
-          const res = await fetch("/api/extraction/jobs?limit=200", {
-            credentials: "include",
-            cache: "no-store",
-            signal,
-          });
-          if (!res.ok || signal.aborted) return null;
-          const data = (await res.json()) as {
-            jobs?: Array<{
-              id: string;
-              mode: string;
-              status: string;
-              displayName?: string | null;
-              originalFileName?: string | null;
-              createdAt: string;
-              firstPageImageUrl?: string | null;
-              resultCount?: number;
-              draftResultCount?: number;
-              savedResultCount?: number;
-            }>;
-          };
-          if (signal.aborted) return null;
-          const m = new Map<string, JobMetaSnapshot>();
-          for (const j of data.jobs ?? []) {
-            // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
-            if (j.mode !== "PASSAGE_ONLY") continue;
-            m.set(j.id, {
-              thumbnailUrl: j.firstPageImageUrl ?? null,
-              status: j.status,
-              displayName: j.displayName ?? null,
-              originalFileName: j.originalFileName ?? null,
-              createdAt: j.createdAt,
-              resultCount: j.resultCount ?? 0,
-              draftResultCount: j.draftResultCount ?? 0,
-              savedResultCount: j.savedResultCount ?? 0,
-            });
-          }
-          // Detect a fresh terminal transition vs the previous poll's
-          // snapshot. Skip the first run (prev === null) to avoid duplicating
-          // the bootstrap `loadAllDrafts` call.
-          const prev = getCachedJobMeta();
-          let shouldRefetchDrafts = false;
-          if (prev) {
-            for (const [id, meta] of m) {
-              if (!TERMINAL_JOB_STATUSES.includes(meta.status)) continue;
-              const prevMeta = prev.get(id);
-              if (
-                !prevMeta ||
-                !TERMINAL_JOB_STATUSES.includes(prevMeta.status)
-              ) {
-                shouldRefetchDrafts = true;
-                break;
-              }
-            }
-          }
-          setCachedJobMeta(m);
-          setJobMetaByJobId(m);
-          if (shouldRefetchDrafts) void pollAllSilent();
-          // Signature for adaptive-poll's change detection (cadence is fixed at
-          // 30s here, so this only ever keeps the loop steady).
-          return Array.from(m, ([id, meta]) => `${id}:${meta.status}`).join("|");
-        } catch {
-          // Best-effort enrichment; cards still render without thumbnails.
-          return null;
-        }
-      },
+      run: (signal) => refreshJobMeta(signal),
     });
-  }, [pollAllSilent]);
+  }, [refreshJobMeta]);
+
+  // ─── Embedder-driven immediate refresh ───
+  // The 학습지 생성 intake bumps `refreshToken` the instant an extraction job is
+  // created or completes, so the new material card appears without waiting for
+  // the 30s background poll. Skips the initial mount (token 0).
+  useEffect(() => {
+    if (!refreshToken) return;
+    void refreshJobMeta();
+    void pollAllSilent();
+  }, [refreshToken, refreshJobMeta, pollAllSilent]);
 
   // ─── Detail open/close ───
   const openDraftDetail = useCallback(

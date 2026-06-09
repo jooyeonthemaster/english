@@ -179,11 +179,11 @@ export async function generateAnalysisReport(
   };
 }
 
-type GenerateLearningWorksheetResult =
+export type GenerateLearningWorksheetResult =
   | { ok: true; section: LearningWorksheetSection; raw: string; usage: AnalysisReportUsage }
   | { ok: false; error: string; raw: string; parsed?: unknown };
 
-async function generateLearningWorksheet(
+export async function generateLearningWorksheet(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
 ): Promise<GenerateLearningWorksheetResult> {

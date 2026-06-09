@@ -32,7 +32,11 @@ const requestSchema = z.object({
 // The structured response we ask Gemini for. Kept intentionally small/focused
 // (vs. the full grounded schema) so it is easy to render in the review panel.
 const restorationSchema = z.object({
-  restoredText: z.string(),
+  restoredText: z
+    .string()
+    .describe(
+      "복원된 지문 본문. 지문 원래 언어 그대로 (영어 지문이면 영어 그대로 둔다).",
+    ),
   status: z
     .enum(["RESTORED", "PARTIAL", "NO_RESTORATION_NEEDED", "FAILED"])
     .default("PARTIAL"),
@@ -53,11 +57,25 @@ const restorationSchema = z.object({
             "OTHER",
           ])
           .default("OTHER"),
-        reason: z.string().default(""),
+        reason: z
+          .string()
+          .default("")
+          .describe(
+            "이 수정을 한 이유. 반드시 한국어로 짧게 작성한다. 영어로 쓰지 말 것. 예: \"주어가 단수라 was로 교정\", \"문맥상 빈칸을 추정\".",
+          ),
       }),
     )
     .default([]),
-  warnings: z.array(z.string()).default([]),
+  warnings: z
+    .array(
+      z
+        .string()
+        .describe(
+          "선생님이 직접 확인해야 할 점. 반드시 한국어 문장으로 작성한다. 영어로 쓰지 말 것. 예: \"마지막 문장의 빈칸은 정답이 없어 문맥으로 추정했습니다 — 확인 필요.\"",
+        ),
+    )
+    .default([])
+    .describe("선생님 검토용 경고 목록. 모든 항목을 한국어로 작성한다."),
 });
 
 type RestorationResult = z.infer<typeof restorationSchema>;
@@ -80,15 +98,16 @@ function buildRestorationPrompt(passageText: string, answerKey?: string): string
     "",
     "## Output JSON shape",
     "Return strict JSON only: { restoredText, status, changes[], warnings[] }.",
+    "- LANGUAGE — 매우 중요: 사람이 읽는 설명 필드는 반드시 한국어로 작성하세요. 즉 모든 `warnings[]` 항목과 모든 `changes[].reason` 은 한국어여야 합니다(영어로 쓰면 오답으로 간주). 읽는 사람은 한국 선생님입니다. 단, `restoredText`·`before`·`after` 는 지문 원문 언어 그대로(영어 지문이면 영어), `type` 은 영문 enum 코드 그대로 둡니다.",
     "- restoredText: the clean restored passage as continuous prose (no markers, no chunk labels, no numbering).",
     "- status: \"RESTORED\" (fully clean & confident) | \"PARTIAL\" (some guessed blanks or leftover uncertainty) | \"NO_RESTORATION_NEEDED\" (was already clean) | \"FAILED\" (could not restore).",
-    "- changes: log EVERY substantive edit as { before, after, type, reason } — a filled blank, a corrected grammar/vocab word, a moved/inserted sentence, or a removed irrelevant sentence.",
+    "- changes: log EVERY substantive edit as { before, after, type, reason } — a filled blank, a corrected grammar/vocab word, a moved/inserted sentence, or a removed irrelevant sentence. `reason` 은 반드시 한국어로 짧게 작성하세요 (예: \"주어가 단수라 was 로 교정\", \"문맥상 빈칸 추정\").",
     "  • Stripping a problem marker/label/number ((a), ①, (A) chunk labels, [3점]) is pure housekeeping — you need NOT log those.",
     "  • A grammar / vocab / blank / word-order correction is a REPLACEMENT and MUST be logged: `before` = the original fragment with the marker stripped off (e.g. `were`, NOT `(e) were`); `after` = the corrected text that now appears in restoredText (e.g. `was`). `after` MUST be non-empty for these — an empty `after` is WRONG and loses the fix.",
     "      RIGHT: { \"before\": \"were\", \"after\": \"was\", \"type\": \"GRAMMAR\", \"reason\": \"주어 'the trait'가 단수\" }   |   WRONG: { \"before\": \"were\", \"after\": \"\" }",
     "      blank fill e.g.: { \"before\": \"the next ________ mini-silence\", \"after\": \"the next available mini-silence\", \"type\": \"BLANK\", \"reason\": \"문맥상\" }",
     "  • `after` may be empty ONLY for a deliberately removed irrelevant sentence. Every entry MUST include all four fields.",
-    "- warnings: ONLY for things the teacher should double-check — guessed/uncertain blanks, ambiguous edits, leftover markers. Do NOT use warnings to narrate a correction you ALREADY logged in `changes` (log the correction in `changes`, not here).",
+    "- warnings (반드시 한국어로 작성): ONLY for things the teacher should double-check — guessed/uncertain blanks, ambiguous edits, leftover markers. 각 경고는 한국어로 쓰세요 (예: \"마지막 문장의 빈칸은 정답이 없어 문맥으로 추정했습니다 — 확인 필요.\"). Do NOT use warnings to narrate a correction you ALREADY logged in `changes` (log the correction in `changes`, not here).",
     "",
     "## Problem-form passage",
     passageText,

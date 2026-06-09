@@ -12,13 +12,21 @@ interface IntakeSurfaceProps {
   setIntakeView: (v: IntakeView) => void;
   intakeTab: IntakeTab;
   setIntakeTab: (v: IntakeTab) => void;
-  /** Count shown on the "내 지문 (N)" tab. */
+  /** Count shown on the library tab. */
   libraryCount: number;
+  /** Label for the library tab. Defaults to "내 지문". */
+  libraryLabel?: string;
   /** The existing PassageCardGrid, rendered as the "내 지문" library view. */
   library: ReactNode;
-  /** Persist pasted rows → select. */
-  onSubmitPastedRows: (rows: PastedPassageInput[]) => void | Promise<void>;
-  pasteSaving: boolean;
+  /** Persist pasted rows → select. Required when the 직접 입력 tab is shown. */
+  onSubmitPastedRows?: (rows: PastedPassageInput[]) => void | Promise<void>;
+  pasteSaving?: boolean;
+  /**
+   * Show the 직접 입력 (multi-passage paste) tab. Defaults to true (문제 생성).
+   * The 학습지 생성 page sets this false — direct paste lives in its right
+   * "지문" annotation stack instead, so the left panel is 이미지·PDF | 자료 관리.
+   */
+  showPasteTab?: boolean;
   /** Image/PDF extraction surface. Falls back to a placeholder. */
   upload?: ReactNode;
 }
@@ -34,12 +42,15 @@ export function IntakeSurface({
   intakeTab,
   setIntakeTab,
   libraryCount,
+  libraryLabel = "내 지문",
   library,
   onSubmitPastedRows,
   pasteSaving,
+  showPasteTab = true,
   upload,
 }: IntakeSurfaceProps) {
-  const pasteActive = intakeView === "intake" && intakeTab === "paste";
+  const pasteActive =
+    showPasteTab && intakeView === "intake" && intakeTab === "paste";
   const uploadActive = intakeView === "intake" && intakeTab === "upload";
   const libraryActive = intakeView === "library";
 
@@ -47,15 +58,17 @@ export function IntakeSurface({
     <div className="flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
       {/* Single tab row: 직접 입력 · 이미지·PDF | 내 지문 */}
       <div className="flex shrink-0 items-center gap-1 border-b border-slate-100 px-3 pt-2.5">
-        <Tab
-          active={pasteActive}
-          onClick={() => {
-            setIntakeView("intake");
-            setIntakeTab("paste");
-          }}
-          icon={<ClipboardPaste className="h-3.5 w-3.5" />}
-          label="직접 입력"
-        />
+        {showPasteTab ? (
+          <Tab
+            active={pasteActive}
+            onClick={() => {
+              setIntakeView("intake");
+              setIntakeTab("paste");
+            }}
+            icon={<ClipboardPaste className="h-3.5 w-3.5" />}
+            label="직접 입력"
+          />
+        ) : null}
         <Tab
           active={uploadActive}
           onClick={() => {
@@ -70,7 +83,7 @@ export function IntakeSurface({
           active={libraryActive}
           onClick={() => setIntakeView("library")}
           icon={<FolderOpen className="h-3.5 w-3.5" />}
-          label={`내 지문 ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
+          label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
         />
       </div>
 
@@ -82,11 +95,11 @@ export function IntakeSurface({
         </div>
         {libraryActive ? (
           <div className="flex min-h-0 flex-1 flex-col">{library}</div>
-        ) : pasteActive ? (
+        ) : pasteActive && onSubmitPastedRows ? (
           <div className="flex min-h-0 flex-1 flex-col">
             <MultiPassagePaste
               onSubmitRows={onSubmitPastedRows}
-              saving={pasteSaving}
+              saving={pasteSaving ?? false}
             />
           </div>
         ) : null}

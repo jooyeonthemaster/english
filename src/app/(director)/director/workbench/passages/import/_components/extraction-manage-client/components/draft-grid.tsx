@@ -16,6 +16,7 @@ import {
   type DraftCardStatusBadgeMode,
 } from "./draft-card";
 import { DraftCardSkeleton } from "./draft-card-skeleton";
+import { InProgressDraftCard } from "./in-progress-draft-card";
 import { EmptyGridState } from "./empty-grid-state";
 import { GroupSection } from "./group-section";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -103,9 +104,6 @@ interface DraftGridProps {
   inFolder: boolean;
   hasActiveSearchOrFilter: boolean;
   selectedDraftId: string | null;
-  /** When provided (multi-select picker), a card is highlighted if its id is
-   *  in this set — takes precedence over the single selectedDraftId. */
-  selectedDraftIds?: Set<string>;
   /** Most recently opened draft id — kept after the detail modal closes
    *  so the card stays subtly shaded. */
   lastViewedDraftId?: string | null;
@@ -115,6 +113,10 @@ interface DraftGridProps {
   onGridColsChange: (cols: GridCols) => void;
   grid3Disabled?: boolean;
   onSelectDraft: (id: string) => void;
+  /** Optional secondary action: open the 복원 근거 detail modal for a draft,
+   *  separate from the primary onSelectDraft (which may pick-to-editor). When
+   *  set, each card renders a "지문 전체 보기" button alongside its primary one. */
+  onOpenDetail?: (id: string) => void;
   onToggleCheck: (id: string) => void;
   onToggleGroupCheck: (ids: string[], select: boolean) => void;
   onResetFilters?: () => void;
@@ -173,6 +175,14 @@ interface DraftGridProps {
    *  Used by the 지문 등록(create) page embed where only the grid view is
    *  supported. */
   gridOnly?: boolean;
+  /** Force a FLAT individual-card grid even at the 전체 자료 root (skip the
+   *  시험지 group headers). Used by the 학습지 생성 embed so every 자료 건 shows as
+   *  its own card, matching the 문제 생성 page. */
+  flatCards?: boolean;
+  /** Number of in-progress extraction skeleton cards to render at the TOP of
+   *  the flat grid (same card shape/size as a real DraftCard). Used by the
+   *  학습지 생성 embed to show "추출 중" cards inline with the real ones. */
+  inProgressCount?: number;
   statusBadgeMode?: DraftCardStatusBadgeMode;
   detailAction?: DraftCardActionVariant;
   /** 마키(영역 드래그) 시작 영역을 자료 콘텐츠 영역 전체로 넓히기 위한 boundary(부모에서
@@ -194,7 +204,6 @@ export function DraftGrid({
   inFolder,
   hasActiveSearchOrFilter,
   selectedDraftId,
-  selectedDraftIds,
   lastViewedDraftId,
   checkedIds,
   setCheckedIds,
@@ -202,6 +211,7 @@ export function DraftGrid({
   onGridColsChange,
   grid3Disabled = false,
   onSelectDraft,
+  onOpenDetail,
   onToggleCheck,
   onToggleGroupCheck,
   onResetFilters,
@@ -221,14 +231,18 @@ export function DraftGrid({
   stickyTop = 0,
   onDropDraftsIntoCurrentFolder,
   gridOnly = false,
+  flatCards = false,
+  inProgressCount = 0,
   statusBadgeMode = "review",
   detailAction,
   marqueeBoundaryRef,
 }: DraftGridProps) {
-  // Highlight: multi-select set wins when provided, else the single id.
-  const isDraftActive = (id: string) =>
-    selectedDraftIds ? selectedDraftIds.has(id) : selectedDraftId === id;
-
+  // Stable keys + element list for the in-progress skeleton cards (same shape
+  // as DraftCard). Capped to avoid a runaway count painting hundreds of cards.
+  const inProgressSkeletons =
+    inProgressCount > 0
+      ? Array.from({ length: Math.min(inProgressCount, 50) }, (_, i) => i)
+      : [];
   // The per-job card row was lifted to the page header above the folder
   // section so it stays visible regardless of folder navigation. Clicking
   // a card now opens the per-job review popup, not a filter.
@@ -259,8 +273,9 @@ export function DraftGrid({
 
   // Inside a folder, render drafts as flat individual cards (matching the
   // right-side drawer style). 시험지 grouping is only used in the root /
-  // "전체 자료" view, where it helps distinguish multiple source materials.
-  const showGroupHeaders = !inFolder && draftGroups.length > 1;
+  // "전체 자료" view, where it helps distinguish multiple source materials —
+  // unless `flatCards` forces the flat layout (학습지 생성 embed, 문제 생성 parity).
+  const showGroupHeaders = !flatCards && !inFolder && draftGroups.length > 1;
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const toggleGroup = useCallback((key: string) => {
@@ -358,7 +373,7 @@ export function DraftGrid({
               </section>
             ))}
           </div>
-        ) : drafts.length === 0 ? (
+        ) : drafts.length === 0 && inProgressSkeletons.length === 0 ? (
           <EmptyGridState
             variant={
               !hasAnyDraft
@@ -449,14 +464,19 @@ export function DraftGrid({
                           draft={draft}
                           index={index}
                           selected={false}
-                          active={isDraftActive(draft.id)}
+                          active={selectedDraftId === draft.id}
                           recentlyViewed={
-                            !isDraftActive(draft.id) &&
+                            selectedDraftId !== draft.id &&
                             lastViewedDraftId === draft.id
                           }
                           checked={checkedIds.has(draft.id)}
                           bulkDragIds={checkedIdsList}
                           onClick={() => onSelectDraft(draft.id)}
+                          onOpenDetail={
+                            onOpenDetail
+                              ? () => onOpenDetail(draft.id)
+                              : undefined
+                          }
                           onToggleCheck={() => onToggleCheck(draft.id)}
                           onTitleChange={onRenameDraft}
                           statusBadgeMode={statusBadgeMode}
@@ -479,20 +499,29 @@ export function DraftGrid({
                 onChange={setCheckedIds}
                 boundaryRef={marqueeBoundaryRef}
               >
+                {/* In-progress extraction cards — same card shape, blue "추출 중"
+                    loading state, rendered first so they sit at the top of the
+                    same grid as real cards. */}
+                {inProgressSkeletons.map((i) => (
+                  <InProgressDraftCard key={`in-progress-${i}`} />
+                ))}
                 {drafts.map((draft, index) => (
                   <DraftCard
                     key={draft.id}
                     draft={draft}
                     index={index}
                     selected={false}
-                    active={isDraftActive(draft.id)}
+                    active={selectedDraftId === draft.id}
                     recentlyViewed={
-                      !isDraftActive(draft.id) &&
+                      selectedDraftId !== draft.id &&
                       lastViewedDraftId === draft.id
                     }
                     checked={checkedIds.has(draft.id)}
                     bulkDragIds={checkedIdsList}
                     onClick={() => onSelectDraft(draft.id)}
+                    onOpenDetail={
+                      onOpenDetail ? () => onOpenDetail(draft.id) : undefined
+                    }
                     onToggleCheck={() => onToggleCheck(draft.id)}
                     onTitleChange={onRenameDraft}
                     statusBadgeMode={statusBadgeMode}

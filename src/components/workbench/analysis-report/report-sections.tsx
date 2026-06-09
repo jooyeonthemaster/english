@@ -5,6 +5,7 @@ import { circledNo } from "@/lib/passage-report/analysis-report/design-tokens";
 import {
   NUMBERED_SECTION_LABELS,
   SECTION_LABELS_EN,
+  type ActivityBlock,
   type AnalysisReport,
   type AnalysisSection,
   type AnnoLayout,
@@ -34,6 +35,7 @@ import {
 
 import { normalizeEditableText } from "@/components/exams/paper-builder/components/editable-text";
 import { CoverSheet, type CoverEdit } from "./cover-templates";
+import { ActivityAnswerNode, ActivityPagePartNode, type ActivityAction, type ActivityTextRenderer } from "./custom-activity-renders";
 
 // ─── 편집 컨텍스트 ────────────────────────────────────────────────────────────
 export interface SectionEdit {
@@ -65,6 +67,7 @@ export type WrapKind =
   | "map"
   | "secheader"
   | "spacer"
+  | "activity"
   | "custom-text"
   | "cover";
 
@@ -79,6 +82,14 @@ export interface FlowItem {
   hiddenCols?: string[];
   /** 이 블록(보통 섹션 헤더) 앞에서 페이지 강제 분할 — 구조도/필기 섹션을 새 페이지에서 시작 */
   breakBefore?: boolean;
+  /** 섹션 헤더의 '섹션마다 새 페이지' 강제 분할을 면제 — 앞 섹션과 같은 페이지에 이어 붙인다.
+   *  (예: 지문 논리 구조 분석을 핵심 요약과 같은 페이지에 두기) */
+  keepWithPrev?: boolean;
+  /** Page-splittable fragments can keep one logical block id for ordering/editing. */
+  orderId?: string;
+  editId?: string;
+  showGrip?: boolean;
+  resizable?: boolean;
 }
 
 /** 표 종류별 열 키(순서) */
@@ -173,7 +184,14 @@ export function BlockFontProvider({
 function computeFieldOrd(el: HTMLElement): number {
   const block = el.closest<HTMLElement>("[data-paper-item-id]");
   if (!block) return 0;
-  const fields = Array.from(block.querySelectorAll<HTMLElement>(".par-field"));
+  const logicalId = block.getAttribute("data-paper-item-id");
+  const root = block.closest<HTMLElement>(".par-root");
+  const fields =
+    logicalId && root
+      ? Array.from(root.querySelectorAll<HTMLElement>("[data-paper-item-id]"))
+          .filter((candidate) => candidate.getAttribute("data-paper-item-id") === logicalId)
+          .flatMap((candidate) => Array.from(candidate.querySelectorAll<HTMLElement>(".par-field")))
+      : Array.from(block.querySelectorAll<HTMLElement>(".par-field"));
   const i = fields.indexOf(el);
   return i < 0 ? 0 : i;
 }
@@ -188,6 +206,7 @@ function Field({
   placeholder = "—",
   render,
   onEnterNewBlock,
+  dataAttrs,
 }: {
   editable: boolean;
   value: string;
@@ -197,6 +216,7 @@ function Field({
   placeholder?: string;
   render?: (v: string) => ReactNode;
   onEnterNewBlock?: () => void;
+  dataAttrs?: Record<string, string>;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = (as ?? "span") as any;
@@ -236,6 +256,7 @@ function Field({
       suppressContentEditableWarning
       spellCheck={false}
       data-ph={placeholder}
+      {...dataAttrs}
       dangerouslySetInnerHTML={{ __html: editableTextHtml(value) }}
       onFocus={() => {
         focusedRef.current = true;
@@ -618,6 +639,20 @@ function vocabTestHiddenCols(hiddenCols: string[] | undefined, mode: VocabTestMo
     hidden.delete("meaning");
     hidden.add("pronunciation");
   }
+  if (mode === "synonym") {
+    // 동의어 쓰기: 표제어·뜻을 단서로 주고 동의어 칸을 빈칸으로.
+    hidden.delete("headword");
+    hidden.delete("meaning");
+    hidden.delete("synonyms");
+    hidden.add("pronunciation");
+  }
+  if (mode === "antonym") {
+    // 반의어 쓰기: 표제어·뜻을 단서로 주고 반의어 칸을 빈칸으로.
+    hidden.delete("headword");
+    hidden.delete("meaning");
+    hidden.delete("antonyms");
+    hidden.add("pronunciation");
+  }
   return [...hidden];
 }
 
@@ -681,6 +716,12 @@ function isDefaultVocabularyTestTarget(row: VocabularyRow): boolean {
   return vocabularyTierForRow(row) !== "core" && vocabularyDifficultyForRow(row) >= 3;
 }
 
+/** 난이도 단계 필터(1·2·3단계 = core·test·challenge)에 걸리는지. 필터가 비거나 없으면 전부 통과. */
+function rowMatchesTierFilter(row: VocabularyRow, filter: ("core" | "test" | "challenge")[] | undefined): boolean {
+  if (!filter || filter.length === 0) return true;
+  return filter.includes(vocabularyTierForRow(row));
+}
+
 function VocabTestGridCard({
   row,
   hidden,
@@ -697,6 +738,8 @@ function VocabTestGridCard({
   const showHead = !hidden.has("headword");
   const showPron = !hidden.has("pronunciation");
   const showMeaning = !hidden.has("meaning");
+  const showSyn = !hidden.has("synonyms");
+  const showAnt = !hidden.has("antonyms");
   return (
     <div className="par-vocab-test-card">
       {editable ? <DelBtn className="par-vocab-test-card-exclude" title="이 단어를 시험지에서 제외" onClick={onExclude} /> : null}
@@ -718,6 +761,18 @@ function VocabTestGridCard({
         <div className="par-vocab-test-card-line">
           <span className="par-vocab-test-card-label">뜻</span>
           {mode === "hide-meaning" ? <span className="par-vocab-test-card-blank" /> : <span>{row.meaning}</span>}
+        </div>
+      ) : null}
+      {showSyn ? (
+        <div className="par-vocab-test-card-line">
+          <span className="par-vocab-test-card-label">동의어</span>
+          {mode === "synonym" ? <span className="par-vocab-test-card-blank" /> : <span>{row.synonyms ?? ""}</span>}
+        </div>
+      ) : null}
+      {showAnt ? (
+        <div className="par-vocab-test-card-line">
+          <span className="par-vocab-test-card-label">반의어</span>
+          {mode === "antonym" ? <span className="par-vocab-test-card-blank" /> : <span>{row.antonyms ?? ""}</span>}
         </div>
       ) : null}
     </div>
@@ -3181,6 +3236,8 @@ export function sectionFlowItems(
       const delRow = (i: number) => commit({ ...s, rows: s.rows.filter((_, j) => j !== i) });
       if (!options?.vocabTestOnly) {
         s.rows.forEach((r, i) => {
+          // 난이도 단계 필터 — 표시할 단계에 없으면 단어장에서 숨김(인덱스는 보존해 편집 위치 유지).
+          if (!rowMatchesTierFilter(r, s.vocabTierFilter)) return;
           const visibleCols = (["headword", "pronunciation", "meaning", "synonyms", "antonyms"] as const).filter((key) => !h.has(key));
           const deleteAnchor = visibleCols[visibleCols.length - 1];
           const rowDelete = editable ? <DelBtn className="par-table-row-delete" title="단어 행 삭제" onClick={() => delRow(i)} /> : null;
@@ -3227,17 +3284,20 @@ export function sectionFlowItems(
         const testHiddenCols = vocabTestHiddenCols(s.hiddenCols, mode);
         const th = new Set(testHiddenCols);
         const excluded = new Set(s.vocabTestExcludedKeys ?? []);
+        const tierFilter = s.vocabTierFilter;
         const testRows = s.rows
           .map((row, index) => ({ row, index, key: vocabTestRowKey(row) }))
-          .filter(({ row }) => isDefaultVocabularyTestTarget(row))
+          // 난이도 단계 필터가 있으면 그 단계로, 없으면 기본(쉬운 core 제외 = test+challenge).
+          .filter(({ row }) => (tierFilter && tierFilter.length > 0 ? rowMatchesTierFilter(row, tierFilter) : isDefaultVocabularyTestTarget(row)))
           .filter(({ key }) => !excluded.has(key));
-        const visibleTestCols = (["headword", "pronunciation", "meaning", "synonyms"] as const).filter((key) => !th.has(key));
+        const visibleTestCols = (["headword", "pronunciation", "meaning", "synonyms", "antonyms"] as const).filter((key) => !th.has(key));
         const deleteAnchor = visibleTestCols[visibleTestCols.length - 1];
         const excludeFromTest = (row: VocabularyRow) => {
           const key = vocabTestRowKey(row);
           commit({ ...s, vocabTestExcludedKeys: [...new Set([...(s.vocabTestExcludedKeys ?? []), key])] });
         };
-        const modeLabel = mode === "hide-meaning" ? "뜻 쓰기" : "단어 쓰기";
+        const modeLabel =
+          mode === "hide-meaning" ? "뜻 쓰기" : mode === "hide-headword" ? "단어 쓰기" : mode === "synonym" ? "동의어 쓰기" : "반의어 쓰기";
         push(
           "note",
           "vocab-test-head",
@@ -3328,10 +3388,28 @@ export function sectionFlowItems(
                 )
               ) : null}
               {!th.has("synonyms") ? (
-                <td className={cn("par-cell-syn", deleteAnchor === "synonyms" && "par-table-row-delete-cell")}>
-                  {r.synonyms ?? ""}
-                  {deleteAnchor === "synonyms" ? testExclude : null}
-                </td>
+                mode === "synonym" ? (
+                  <VocabBlankCell className={cn("par-cell-syn", deleteAnchor === "synonyms" && "par-table-row-delete-cell")}>
+                    {deleteAnchor === "synonyms" ? testExclude : null}
+                  </VocabBlankCell>
+                ) : (
+                  <td className={cn("par-cell-syn", deleteAnchor === "synonyms" && "par-table-row-delete-cell")}>
+                    {r.synonyms ?? ""}
+                    {deleteAnchor === "synonyms" ? testExclude : null}
+                  </td>
+                )
+              ) : null}
+              {!th.has("antonyms") ? (
+                mode === "antonym" ? (
+                  <VocabBlankCell className={cn("par-cell-ant", deleteAnchor === "antonyms" && "par-table-row-delete-cell")}>
+                    {deleteAnchor === "antonyms" ? testExclude : null}
+                  </VocabBlankCell>
+                ) : (
+                  <td className={cn("par-cell-ant", deleteAnchor === "antonyms" && "par-table-row-delete-cell")}>
+                    {r.antonyms ?? ""}
+                    {deleteAnchor === "antonyms" ? testExclude : null}
+                  </td>
+                )
               ) : null}
             </>,
             { hiddenCols: testHiddenCols },
@@ -3730,22 +3808,114 @@ function CustomTextNode({
 
 export type CustomEdit = (id: string, patch: Partial<CustomBlock>) => void;
 
-export function customBlockFlowItem(
+export function customBlockFlowItems(
   cb: CustomBlock,
   setCustom?: CustomEdit,
   insertTextAfter?: (anchorId: string) => void,
-): FlowItem {
+  onActivity?: (id: string, action: ActivityAction) => void,
+  blockMeta?: Record<string, { breakBefore?: boolean } | undefined>,
+): FlowItem[] {
   if (cb.kind === "spacer") {
-    return {
+    return [{
       id: cb.id,
       sectionIndex: -1,
       kind: "custom",
       no: 0,
       wrap: "spacer",
       node: <div className="par-spacer-fill" style={{ height: `${cb.heightMm}mm` }} aria-hidden />,
-    };
+    }];
   }
-  return {
+  if (cb.kind === "activity") {
+    const editable = !!setCustom;
+    const patchActivityItem = (index: number, patch: Partial<ActivityBlock["payload"]["items"][number]>) => {
+      if (!setCustom || !cb.payload.items[index]) return;
+      const items = cb.payload.items.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, ...patch } : item,
+      );
+      setCustom(cb.id, { payload: { ...cb.payload, items } } as Partial<CustomBlock>);
+    };
+    const renderActivityText: ActivityTextRenderer = ({
+      as,
+      className,
+      value,
+      placeholder,
+      onCommit,
+      dataAttrs,
+    }) => (
+      <Field
+        as={as}
+        className={className}
+        editable={editable}
+        value={value}
+        placeholder={placeholder}
+        onCommit={editable ? onCommit : () => {}}
+        dataAttrs={dataAttrs}
+      />
+    );
+    const base = {
+      sectionIndex: -1,
+      kind: "custom" as const,
+      no: 0,
+      wrap: "activity" as const,
+      orderId: cb.id,
+      editId: cb.id,
+      resizable: false,
+    };
+    // 학습 활동은 기본값으로 새 페이지에서 시작(블록의 첫 항목만). meta.breakBefore===false 로 끌 수 있다.
+    const firstBreak = blockMeta?.[cb.id]?.breakBefore ?? true;
+    const items = cb.payload.items;
+    const out: FlowItem[] =
+      items.length === 0
+        ? [{
+            ...base,
+            id: `${cb.id}::empty`,
+            showGrip: true,
+            breakBefore: firstBreak,
+            node: (
+              <ActivityPagePartNode
+                block={cb}
+                onActivity={onActivity}
+                part={{ type: "empty", showHeader: true }}
+                renderText={renderActivityText}
+                onItemPatch={editable ? patchActivityItem : undefined}
+              />
+            ),
+          }]
+        : items.map((_, index) => ({
+            ...base,
+            id: `${cb.id}::item-${index}`,
+            showGrip: index === 0,
+            breakBefore: index === 0 ? firstBreak : undefined,
+            node: (
+              <ActivityPagePartNode
+                block={cb}
+                onActivity={onActivity}
+                part={{ type: "item", index, showHeader: index === 0 }}
+                renderText={renderActivityText}
+                onItemPatch={editable ? patchActivityItem : undefined}
+              />
+            ),
+          }));
+
+    if (cb.payload.wordBank && cb.payload.wordBank.length > 0) {
+      out.push({
+        ...base,
+        id: `${cb.id}::word-bank`,
+        showGrip: items.length === 0,
+        node: (
+          <ActivityPagePartNode
+            block={cb}
+            onActivity={onActivity}
+            part={{ type: "wordBank" }}
+            renderText={renderActivityText}
+            onItemPatch={editable ? patchActivityItem : undefined}
+          />
+        ),
+      });
+    }
+    return out;
+  }
+  return [{
     id: cb.id,
     sectionIndex: -1,
     kind: "custom",
@@ -3759,7 +3929,17 @@ export function customBlockFlowItem(
         onEnterNewBlock={insertTextAfter ? () => insertTextAfter(cb.id) : undefined}
       />
     ),
-  };
+  }];
+}
+
+export function customBlockFlowItem(
+  cb: CustomBlock,
+  setCustom?: CustomEdit,
+  insertTextAfter?: (anchorId: string) => void,
+  onActivity?: (id: string, action: ActivityAction) => void,
+  blockMeta?: Record<string, { breakBefore?: boolean } | undefined>,
+): FlowItem {
+  return customBlockFlowItems(cb, setCustom, insertTextAfter, onActivity, blockMeta)[0];
 }
 
 /** 표지(활성화 시) — 강제 전면 페이지 flow item. */
@@ -3778,9 +3958,42 @@ function coverItems(report: AnalysisReport, ced?: CoverEdit): FlowItem[] {
 }
 
 /** 보고서 → 전체 flow item[] (자연 순서). self-check 제외. 커스텀 블록은 뒤에 붙고 blockOrder 로 배치. */
+/** 학습 활동 정답 — 문서 말미 별도 페이지로 모은다 (activityAnswerKeyPage !== false 일 때). */
+function activityAnswerItems(report: AnalysisReport): FlowItem[] {
+  if (report.activityAnswerKeyPage === false) return [];
+  const acts = (report.customBlocks ?? []).filter((b): b is ActivityBlock => b.kind === "activity");
+  if (acts.length === 0) return [];
+  const items: FlowItem[] = [
+    {
+      id: "activity-answers-head",
+      sectionIndex: -1,
+      kind: "custom",
+      no: 0,
+      wrap: "note",
+      breakBefore: true,
+      node: (
+        <div style={{ fontWeight: 800, fontSize: "1.05em", color: "#0f172a", marginBottom: "0.4em" }}>
+          학습 활동 정답
+        </div>
+      ),
+    },
+  ];
+  acts.forEach((b, i) => {
+    items.push({
+      id: `${b.id}-ans`,
+      sectionIndex: -1,
+      kind: "custom",
+      no: 0,
+      wrap: "note",
+      node: <ActivityAnswerNode block={b} index={i + 1} />,
+    });
+  });
+  return items;
+}
+
 export function reportFlowItems(
   report: AnalysisReport,
-  edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; insertTextAfter?: (anchorId: string) => void; ced?: CoverEdit },
+  edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; insertTextAfter?: (anchorId: string) => void; ced?: CoverEdit; onActivity?: (id: string, action: ActivityAction) => void },
 ): FlowItem[] {
   const vocabTestOnly = !!report.vocabTestOnly;
   const items: FlowItem[] = vocabTestOnly
@@ -3797,6 +4010,15 @@ export function reportFlowItems(
     const lwIdx = report.sections.findIndex((s) => s.kind === "learning-worksheet");
     const lwSection = lwIdx >= 0 && report.sections[lwIdx].kind === "learning-worksheet" ? report.sections[lwIdx] : undefined;
     const lwHasLogic = !!lwSection && lwSection.logicRows.length > 0;
+    // 06 실전 학습지(워크북/추론) 콘텐츠 유무 — 기본 분석은 logicRows 만 든 learning-worksheet 를
+    // 만들므로, 실제 워크북/추론이 생성됐을 때만 '실전 학습지' 섹션(#7)을 렌더한다.
+    const lwHasWorkbook = !!lwSection && (
+      !!lwSection.workbookSet ||
+      !!lwSection.inferenceSet ||
+      !!lwSection.cloze ||
+      !!lwSection.practice ||
+      !!lwSection.drills
+    );
 
     let no = 0;
     const head = (
@@ -3806,6 +4028,7 @@ export function reportFlowItems(
       labelKo: string | undefined,
       labelEn: string | undefined,
       breakBefore: boolean,
+      keepWithPrev?: boolean,
     ) => {
       items.push({
         id: `s${si}-head${idSuffix}`,
@@ -3815,6 +4038,7 @@ export function reportFlowItems(
         wrap: "secheader",
         node: <SectionHead no={no} kind={kind} labelKo={labelKo} labelEn={labelEn} />,
         breakBefore,
+        keepWithPrev,
       });
     };
     const emit = (si: number, opts: Partial<SectionFlowOptions>) => {
@@ -3843,10 +4067,12 @@ export function reportFlowItems(
       emit(summaryIdx, {});
     }
 
-    // 4) 지문 논리 구조 분석 (Logic Map)
+    // 4) 지문 논리 구조 분석 (Logic Map) — 메인 분석(call #1)의 learning-worksheet.logicRows 표.
+    //    structure-map(도식)은 더 이상 생성·렌더하지 않는다.
     if (lwHasLogic && lwSection) {
       no += 1;
-      head(lwIdx, "learning-worksheet", "-logic", "지문 논리 구조 분석", "Logic Map", false);
+      // 핵심 요약(#2)과 같은 페이지에 이어 붙인다 (섹션마다 새 페이지 강제 분할 면제).
+      head(lwIdx, "learning-worksheet", "-logic", "지문 논리 구조 분석", "Logic Map", false, true);
       const lwEdit = edit?.sectionEdit?.(lwIdx);
       items.push({
         id: `s${lwIdx}-logic-promoted`,
@@ -3870,14 +4096,15 @@ export function reportFlowItems(
       emit(vocabIdx, {});
     }
 
-    // 7) 실전 학습지 (논리표는 4번에서 별도 표시 → 여기선 제외)
-    if (lwIdx >= 0) {
+    // 7) 실전 학습지 (06) — 워크북/추론이 생성됐을 때만. (논리표는 4번에서 별도 표시 → 여기선 제외)
+    if (lwIdx >= 0 && lwHasWorkbook) {
       no += 1;
       head(lwIdx, "learning-worksheet", "", undefined, undefined, false);
       emit(lwIdx, { skipWorksheetLogic: true });
     }
 
-    for (const cb of report.customBlocks ?? []) items.push(customBlockFlowItem(cb, edit?.setCustom, edit?.insertTextAfter));
+    for (const cb of report.customBlocks ?? []) items.push(...customBlockFlowItems(cb, edit?.setCustom, edit?.insertTextAfter, edit?.onActivity, report.blockMeta));
+    items.push(...activityAnswerItems(report));
     return items;
   }
 
@@ -3937,8 +4164,9 @@ export function reportFlowItems(
   });
   if (!vocabTestOnly) {
     for (const cb of report.customBlocks ?? []) {
-      items.push(customBlockFlowItem(cb, edit?.setCustom, edit?.insertTextAfter));
+      items.push(...customBlockFlowItems(cb, edit?.setCustom, edit?.insertTextAfter, edit?.onActivity, report.blockMeta));
     }
+    items.push(...activityAnswerItems(report));
   }
   return items;
 }

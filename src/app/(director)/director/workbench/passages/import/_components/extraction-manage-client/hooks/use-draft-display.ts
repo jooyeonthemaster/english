@@ -250,6 +250,7 @@ export function useDraftDisplay({
           createdAt: Number.isFinite(createdAtMs) ? createdAtMs : null,
           thumbnailUrl: meta.thumbnailUrl,
           status: meta.status,
+          totalPages: meta.totalPages,
         };
       },
     );
@@ -273,6 +274,7 @@ export function useDraftDisplay({
       createdAt: j.createdAt,
       thumbnailUrl: j.thumbnailUrl,
       status: j.status,
+      totalPages: j.totalPages,
     }));
   }, [drafts, jobMetaByJobId]);
 

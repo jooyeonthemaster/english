@@ -8,7 +8,7 @@ import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { DetailActionButton } from "@/components/ui/detail-action-button";
 
 function mapJobStatusToTaskStatus(status: string | null | undefined): TaskStatus {
   switch (status) {
@@ -134,14 +134,15 @@ export function MaterialJobCard({
       data-drag-item-id={dragItemId}
       role="button"
       tabIndex={0}
-      onClick={editing ? undefined : onClick}
+      onClick={editing ? undefined : onToggleCheck}
       onKeyDown={(e) => {
         if (editing) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onClick();
+          onToggleCheck();
         }
       }}
+      aria-pressed={checked}
       title={label}
       className={
         "group relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl border bg-white text-left motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
@@ -281,7 +282,15 @@ export function MaterialJobCard({
       </div>
 
       {!editing ? (
-        <CardHoverActionLabel className="bottom-12 left-1/2 right-auto -translate-x-1/2" />
+        <div className="px-2.5 pb-2 pt-2">
+          <DetailActionButton
+            className="w-full justify-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          />
+        </div>
       ) : null}
 
       {/* Analysis-progress footer */}

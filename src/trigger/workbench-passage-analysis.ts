@@ -32,7 +32,7 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
+import { generateAnalysisReportCore } from "@/lib/passage-report/analysis-report/generate";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
 type Input = { jobId: string };
@@ -239,8 +239,8 @@ export const workbenchPassageAnalysisTask = task({
         .join("\n\n");
 
       generationStartedAt = Date.now();
-      // PRIME A4 보고서를 단일 소스로 생성 (옛 5-layer 대체)
-      const primeResult = await generateAnalysisReport({
+      // 기본 분석 = 메인 보고서(5섹션)만 1회 호출. 실전 학습지(06)는 옵트인 별도 생성.
+      const primeResult = await generateAnalysisReportCore({
         passageContent: job.passage.content,
         schoolType: (job.passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
         grade: job.passage.grade,

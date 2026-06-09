@@ -7,11 +7,13 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  SquareDashedBottom,
   ChevronDown,
   BookImage,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Dice5,
   Eye,
   EyeOff,
   FileQuestion,
@@ -20,6 +22,7 @@ import {
   ImagePlus,
   Italic,
   Languages,
+  ListChecks,
   Loader2,
   Minus,
   Plus,
@@ -31,7 +34,6 @@ import {
   Star,
   Trash2,
   Undo2,
-  X,
 } from "lucide-react";
 import {
   Children,
@@ -67,6 +69,9 @@ import {
   NUMBERED_SECTION_LABELS,
   coverTemplateIdSchema,
   reportThemeIdSchema,
+  type ActivityBlock,
+  type ActivityKind,
+  type ActivityParams,
   type AnalysisReport,
   type AnalysisSection,
   type BlockMeta,
@@ -77,8 +82,10 @@ import {
   type ReportThemeId,
   type VocabTestLayout,
   type VocabTestMode,
+  type VocabularyTier,
 } from "@/lib/passage-report/analysis-report/schema";
 import { worksheetAnswersAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
+import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
   ReportPages,
@@ -95,6 +102,7 @@ import {
   blankExamRow,
   blankGrammarRow,
   blankVocabRow,
+  deleteCustomBlock,
   deleteItem,
   deleteSection,
   hideOrDeleteIds,
@@ -108,10 +116,24 @@ import {
   setSection,
   setVocabularyTestLayout,
   setVocabularyTestMode,
+  setVocabularyTierFilter,
   setVocabularyTestOnly,
   toggleTableCol,
 } from "./editor-mutations";
 import { ANALYSIS_REPORT_EDIT_CSS } from "./report-edit-styles";
+import { ActivityPalettePanel } from "./activity-palette-modal";
+import type { ActivityAction } from "./custom-activity-renders";
+import {
+  activityBlockLabel,
+  appliedActivityParams,
+  appliedActivitySentences,
+  applyManualBlankToBlock,
+  defaultNestedDensities,
+  insertIntoWordBank,
+  makeActivityBlock,
+  normalizeNestedDensities,
+  rerolledActivityBlock,
+} from "@/lib/passage-report/analysis-report/study-activities";
 
 // 여백(spacer) 블록의 최소 세로 높이(mm). 너무 얇아져 잡기 힘든 것을 방지.
 const SPACER_MIN_MM = 10;
@@ -131,15 +153,20 @@ const LOGO_FILE_MAX_BYTES = 1.5 * 1024 * 1024;
 // ── 좌(페이지)·우(편집) 패널 폭 — exam paper builder 와 동일하게 드래그 리사이즈 + localStorage 보존 ──
 const RAIL_WIDTH_STORAGE_KEY = "smoat.analysisReportEditor.railWidth.v1";
 const PANEL_WIDTH_STORAGE_KEY = "smoat.analysisReportEditor.panelWidth.v1";
+const ACTIVITY_WIDTH_STORAGE_KEY = "smoat.analysisReportEditor.activityWidth.v1";
 const RAIL_WIDTH_DEFAULT = 112;
 const RAIL_WIDTH_MIN = 88;
 const RAIL_WIDTH_MAX = 220;
 const PANEL_WIDTH_DEFAULT = 304;
 const PANEL_WIDTH_MIN = 260;
 const PANEL_WIDTH_MAX = 460;
+const ACTIVITY_WIDTH_DEFAULT = 264;
+const ACTIVITY_WIDTH_MIN = 220;
+const ACTIVITY_WIDTH_MAX = 420;
 
 const clampRailWidth = (w: number) => Math.min(RAIL_WIDTH_MAX, Math.max(RAIL_WIDTH_MIN, Math.round(w)));
 const clampPanelWidth = (w: number) => Math.min(PANEL_WIDTH_MAX, Math.max(PANEL_WIDTH_MIN, Math.round(w)));
+const clampActivityWidth = (w: number) => Math.min(ACTIVITY_WIDTH_MAX, Math.max(ACTIVITY_WIDTH_MIN, Math.round(w)));
 
 function readStoredWidth(key: string, fallback: number, clamp: (n: number) => number): number {
   if (typeof window === "undefined") return fallback;
@@ -159,6 +186,8 @@ const PANEL_SECTION_IDS = [
   "cover-edit",
   "guide",
   "selected",
+  "activity-edit",
+  "vocab-test-edit",
   "spacer-height",
   "format",
   "table-cols",
@@ -652,21 +681,31 @@ function VocabTestOptions({
   vocabTestLayout,
   vocabTestOnly,
   excludedVocabTestCount,
+  vocabTierFilter,
   onVocabTestMode,
   onVocabTestLayout,
   onVocabTestOnly,
   onRestoreVocabTestRows,
+  onVocabTierFilter,
 }: {
   sectionIndex: number;
   vocabMode: VocabTestMode;
   vocabTestLayout: VocabTestLayout;
   vocabTestOnly: boolean;
   excludedVocabTestCount: number;
+  vocabTierFilter: VocabularyTier[] | undefined;
   onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
   onVocabTestLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
   onVocabTestOnly: (sectionIndex: number, enabled: boolean, mode?: Exclude<VocabTestMode, "study">) => void;
   onRestoreVocabTestRows: (sectionIndex: number) => void;
+  onVocabTierFilter: (sectionIndex: number, tiers: VocabularyTier[]) => void;
 }) {
+  // 난이도 단계: AI가 매긴 core/test/challenge = 1/2/3단계. 필터 없으면(undefined) 전체.
+  const activeTiers: VocabularyTier[] = vocabTierFilter && vocabTierFilter.length > 0 ? vocabTierFilter : ["core", "test", "challenge"];
+  const toggleTier = (tier: VocabularyTier) => {
+    const next = activeTiers.includes(tier) ? activeTiers.filter((t) => t !== tier) : [...activeTiers, tier];
+    onVocabTierFilter(sectionIndex, next.length === 0 ? ["core", "test", "challenge"] : next);
+  };
   return (
     <div>
       {/* '추가 안 함'(study)은 상단 ON/OFF 스위치와 기능이 중복되어 제외. */}
@@ -674,6 +713,8 @@ function VocabTestOptions({
         {([
           { mode: "hide-meaning", label: "뜻 쓰기", icon: Languages },
           { mode: "hide-headword", label: "단어 쓰기", icon: FileQuestion },
+          { mode: "synonym", label: "동의어 쓰기", icon: Languages },
+          { mode: "antonym", label: "반의어 쓰기", icon: Languages },
         ] as const).map(({ mode, label, icon: Icon }) => (
           <button
             key={mode}
@@ -690,6 +731,40 @@ function VocabTestOptions({
             <span>{label}</span>
           </button>
         ))}
+      </div>
+
+      <div className="mt-2.5">
+        <div className="mb-1.5 flex items-center justify-between">
+          <span className="text-[11px] font-semibold text-slate-500">난이도 단계</span>
+          <span className="text-[10.5px] text-slate-400">단어장·시험지 공통</span>
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {([
+            { tier: "core", label: "1단계", sub: "쉬움" },
+            { tier: "test", label: "2단계", sub: "중상" },
+            { tier: "challenge", label: "3단계", sub: "고난도" },
+          ] as const).map(({ tier, label, sub }) => {
+            const on = activeTiers.includes(tier);
+            return (
+              <button
+                key={tier}
+                type="button"
+                data-vocab-tier={tier}
+                aria-pressed={on}
+                onClick={() => toggleTier(tier)}
+                className={`flex flex-col items-center justify-center gap-0.5 rounded-md border py-1.5 text-[11px] font-semibold transition-colors ${
+                  on ? "border-blue-500 bg-blue-50 text-blue-700" : "border-slate-200 text-slate-400 hover:bg-slate-50"
+                }`}
+              >
+                <span>{label}</span>
+                <span className="text-[9.5px] font-medium text-slate-400">{sub}</span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-1 text-[10.5px] text-slate-400">
+          {vocabTierFilter && vocabTierFilter.length > 0 ? "선택 단계만 단어장·시험지에 표시돼요." : "전체 표시 — 시험지는 기본으로 1단계(쉬움)를 빼고 출제해요."}
+        </p>
       </div>
 
       <div className="mt-2.5">
@@ -730,7 +805,7 @@ function VocabTestOptions({
           onVocabTestOnly(
             sectionIndex,
             true,
-            vocabMode === "hide-headword" ? "hide-headword" : "hide-meaning",
+            vocabMode !== "study" ? vocabMode : "hide-meaning",
           );
         }}
         className={`mt-2.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-[12px] font-semibold transition-colors ${
@@ -739,7 +814,7 @@ function VocabTestOptions({
             : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
         }`}
       >
-        <FileQuestion className={`h-3.5 w-3.5 ${vocabTestOnly ? "text-blue-600" : "text-amber-500"}`} />
+        <FileQuestion className={`h-3.5 w-3.5 ${vocabTestOnly ? "text-blue-600" : "text-slate-400"}`} />
         {vocabTestOnly ? "전체 자료 다시 보이기" : "단어 시험지만 만들기"}
       </button>
 
@@ -752,170 +827,6 @@ function VocabTestOptions({
           제외한 단어 다시 포함 ({excludedVocabTestCount})
         </button>
       ) : null}
-    </div>
-  );
-}
-
-function VocabTestToolbarPopover({
-  sectionIndex,
-  vocabMode,
-  vocabTestLayout,
-  vocabTestOnly,
-  excludedVocabTestCount,
-  onVocabTestMode,
-  onVocabTestLayout,
-  onVocabTestOnly,
-  onRestoreVocabTestRows,
-}: {
-  sectionIndex: number;
-  vocabMode: VocabTestMode;
-  vocabTestLayout: VocabTestLayout;
-  vocabTestOnly: boolean;
-  excludedVocabTestCount: number;
-  onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
-  onVocabTestLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
-  onVocabTestOnly: (sectionIndex: number, enabled: boolean, mode?: Exclude<VocabTestMode, "study">) => void;
-  onRestoreVocabTestRows: (sectionIndex: number) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [coords, setCoords] = useState<{ top: number; right: number } | null>(null);
-  const controlRef = useRef<HTMLDivElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const place = () => {
-      const rect = controlRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      setCoords({ top: rect.bottom + 8, right: Math.max(8, window.innerWidth - rect.right) });
-    };
-    place();
-    window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, true);
-    return () => {
-      window.removeEventListener("resize", place);
-      window.removeEventListener("scroll", place, true);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (controlRef.current?.contains(target) || popoverRef.current?.contains(target)) return;
-      setOpen(false);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
-  const vocabTestEnabled = vocabTestOnly || vocabMode !== "study";
-  const vocabSummary =
-    vocabTestOnly
-      ? "단어 시험지만 표시"
-      : vocabMode === "study"
-        ? "추가 안 함"
-        : vocabMode === "hide-meaning"
-          ? "뜻 쓰기 시험지"
-          : "단어 쓰기 시험지";
-
-  return (
-    <div className="shrink-0">
-      <div
-        ref={controlRef}
-        className={`inline-flex h-8 overflow-hidden rounded-md border transition-colors ${
-          open || vocabTestEnabled
-            ? "border-blue-200 bg-blue-50 text-blue-700"
-            : "border-slate-200 bg-white text-slate-600"
-        }`}
-      >
-        <button
-          type="button"
-          role="switch"
-          aria-checked={vocabTestEnabled}
-          data-vocab-test-toolbar={vocabTestEnabled ? "on" : "off"}
-          onClick={() => onVocabTestMode(sectionIndex, vocabTestEnabled ? "study" : "hide-meaning")}
-          title="단어 시험지 포함"
-          className={`inline-flex h-full items-center gap-1.5 px-2.5 text-[11.5px] font-semibold transition-colors ${
-            open || vocabTestEnabled ? "hover:bg-blue-100" : "hover:bg-slate-50"
-          }`}
-        >
-          <FileQuestion className={`h-3.5 w-3.5 ${vocabTestEnabled ? "text-blue-600" : "text-amber-500"}`} />
-          <span className="hidden sm:inline">단어 시험지</span>
-          <span className="sm:hidden">단어</span>
-          {vocabTestOnly ? (
-            <span className="hidden rounded bg-blue-100 px-1 text-[9.5px] font-bold text-blue-600 sm:inline">
-              시험지만
-            </span>
-          ) : null}
-          <span
-            className={`relative h-4 w-7 rounded-full transition-colors ${
-              vocabTestEnabled ? "bg-blue-500" : "bg-slate-300"
-            }`}
-            aria-hidden="true"
-          >
-            <span
-              className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${
-                vocabTestEnabled ? "translate-x-3.5" : "translate-x-0.5"
-              }`}
-            />
-          </span>
-          <span className={`text-[10px] font-bold ${vocabTestEnabled ? "text-blue-700" : "text-slate-400"}`}>
-            {vocabTestEnabled ? "ON" : "OFF"}
-          </span>
-        </button>
-        <button
-          type="button"
-          data-vocab-test-only-toolbar={vocabTestOnly ? "restore" : "only"}
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          title="단어 시험지 세부 설정"
-          className={`flex h-full w-8 items-center justify-center border-l transition-colors ${
-            open || vocabTestEnabled
-              ? "border-blue-200 text-blue-600 hover:bg-blue-100"
-              : "border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-          }`}
-        >
-          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
-        </button>
-      </div>
-
-      {open && coords
-        ? createPortal(
-            <div
-              ref={popoverRef}
-              style={{ position: "fixed", top: coords.top, right: coords.right }}
-              className="z-[70] w-[320px] max-w-[calc(100vw-16px)] rounded-lg border border-slate-200 bg-white p-3 shadow-xl"
-            >
-              <span className="absolute -top-1.5 right-8 h-3 w-3 rotate-45 border-l border-t border-slate-200 bg-white" />
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <p className="text-[12px] font-black text-slate-800">단어 시험지</p>
-                <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
-                  {vocabSummary}
-                </span>
-              </div>
-              <VocabTestOptions
-                sectionIndex={sectionIndex}
-                vocabMode={vocabMode}
-                vocabTestLayout={vocabTestLayout}
-                vocabTestOnly={vocabTestOnly}
-                excludedVocabTestCount={excludedVocabTestCount}
-                onVocabTestMode={onVocabTestMode}
-                onVocabTestLayout={onVocabTestLayout}
-                onVocabTestOnly={onVocabTestOnly}
-                onRestoreVocabTestRows={onRestoreVocabTestRows}
-              />
-            </div>,
-            document.body,
-          )
-        : null}
     </div>
   );
 }
@@ -958,13 +869,59 @@ function applyFontPtToSelection(field: HTMLElement, pt: number) {
   });
 }
 
+/** 편집 필드 안 현재 선택 영역의 [start,end) 를 평문(prompt) offset 으로 환산. <br> = \n = 1글자. */
+function selectionOffsetsInField(field: HTMLElement): { start: number; end: number } | null {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
+  const range = sel.getRangeAt(0);
+  if (!field.contains(range.commonAncestorContainer)) return null;
+  const fragLen = (frag: Node): number => {
+    let len = 0;
+    const w = document.createTreeWalker(frag, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+    let n: Node | null;
+    while ((n = w.nextNode())) {
+      if (n.nodeType === Node.TEXT_NODE) len += (n.textContent ?? "").length;
+      else if ((n as HTMLElement).tagName === "BR") len += 1;
+    }
+    return len;
+  };
+  const pre = document.createRange();
+  pre.selectNodeContents(field);
+  pre.setEnd(range.startContainer, range.startOffset);
+  const start = fragLen(pre.cloneContents());
+  const end = start + fragLen(range.cloneContents());
+  return start === end ? null : { start, end };
+}
+
 function FloatingFormatToolbar({
   blockMeta,
   onBlockMeta,
+  onClozeBlank,
 }: {
   blockMeta?: Record<string, BlockMeta>;
   onBlockMeta: (id: string, patch: Partial<BlockMeta>) => void;
+  onClozeBlank?: (blockId: string, itemIndex: number, start: number, end: number) => void;
 }) {
+  // 빈칸형 활동 prompt 안에서 텍스트를 선택하면 '빈칸' 버튼이 뜬다(선택→빈칸).
+  const [blankTarget, setBlankTarget] = useState<{ blockId: string; itemIndex: number } | null>(null);
+  useEffect(() => {
+    const onSelChange = () => {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+        setBlankTarget(null);
+        return;
+      }
+      const node = sel.anchorNode;
+      const el = node instanceof Element ? node : node?.parentElement;
+      const field = el?.closest<HTMLElement>(".par-edit-field[data-activity-blankable]");
+      const block = field?.closest<HTMLElement>("[data-paper-item-id]");
+      const idx = field ? parseInt(field.getAttribute("data-activity-item") ?? "-1", 10) : -1;
+      const blockId = block?.getAttribute("data-paper-item-id");
+      setBlankTarget(field && block && blockId && idx >= 0 ? { blockId, itemIndex: idx } : null);
+    };
+    document.addEventListener("selectionchange", onSelChange);
+    return () => document.removeEventListener("selectionchange", onSelChange);
+  }, []);
   const [blockId, setBlockId] = useState<string | null>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLElement | null>(null);
@@ -1056,7 +1013,20 @@ function FloatingFormatToolbar({
       }
       const target = field ?? anchor;
       if (bar && target) {
-        const r = target.getBoundingClientRect();
+        // 기준 rect = '커서/선택 지점' 우선(클릭한 곳을 추종), 없으면 편집 필드 상단으로 폴백.
+        // 키 큰 블록(중첩 빈칸 등)에서 툴바가 필드 최상단에 박혀 클릭 위치와 멀어지는 문제를 해결.
+        let r = target.getBoundingClientRect();
+        const sel = window.getSelection();
+        if (field && sel && sel.rangeCount > 0 && sel.anchorNode && field.contains(sel.anchorNode)) {
+          const range = sel.getRangeAt(0);
+          let cr = range.getBoundingClientRect();
+          // collapsed caret 가 0,0 rect 를 주는 브라우저 대비 — client rects 폴백.
+          if (cr.top === 0 && cr.left === 0 && cr.width === 0 && cr.height === 0) {
+            const rects = range.getClientRects();
+            if (rects.length) cr = rects[0];
+          }
+          if (cr.height > 0 || cr.width > 0 || cr.top > 0) r = cr;
+        }
         const top = Math.max(8, r.top - bar.offsetHeight - 8);
         const left = Math.min(Math.max(8, r.left), window.innerWidth - bar.offsetWidth - 8);
         bar.style.top = `${top}px`;
@@ -1094,6 +1064,23 @@ function FloatingFormatToolbar({
       "flex h-7 min-w-[28px] items-center justify-center rounded px-1.5 transition-colors",
       active ? "bg-blue-100 text-blue-700" : "text-slate-600 hover:bg-slate-100",
     );
+  // 선택을 빈칸으로: 현재 선택 영역을 prompt offset 으로 환산해 에디터로 보낸다.
+  const doBlank = () => {
+    if (!blankTarget) return;
+    const field = document.querySelector<HTMLElement>(
+      `[data-paper-item-id="${CSS.escape(blankTarget.blockId)}"] .par-edit-field[data-activity-blankable][data-activity-item="${blankTarget.itemIndex}"]`,
+    );
+    if (!field) return;
+    const off = selectionOffsetsInField(field);
+    if (!off) return;
+    // ★ 포커스를 먼저 푼다(blur). 포커스 중엔 Field 가 innerHTML 을 갱신하지 않아 새 빈칸이 화면에 안 보임.
+    // blur 의 onCommit 은 DOM 텍스트=현재 prompt 와 같아 no-op 이다(선택만 했을 뿐 글자는 안 바꿈).
+    field.blur();
+    window.getSelection()?.removeAllRanges();
+    setBlankTarget(null);
+    onClozeBlank?.(blankTarget.blockId, blankTarget.itemIndex, off.start, off.end);
+  };
+  const showBlankBtn = !!onClozeBlank && !!blankTarget && blankTarget.blockId === blockId;
 
   return createPortal(
     <div
@@ -1127,6 +1114,19 @@ function FloatingFormatToolbar({
       <button type="button" className={btnCls(meta.align === "right")} onClick={() => onBlockMeta(blockId, { align: "right" })} title="오른쪽 정렬">
         <AlignRight className="h-3.5 w-3.5" />
       </button>
+      {showBlankBtn ? (
+        <>
+          <span className="mx-0.5 h-5 w-px bg-slate-200" />
+          <button
+            type="button"
+            className="flex h-7 items-center justify-center gap-1 rounded bg-emerald-50 px-2 text-[11.5px] font-bold text-emerald-700 transition-colors hover:bg-emerald-100"
+            onClick={doBlank}
+            title="선택한 단어/구를 빈칸으로 만들기"
+          >
+            <SquareDashedBottom className="h-3.5 w-3.5" /> 빈칸
+          </button>
+        </>
+      ) : null}
     </div>,
     document.body,
   );
@@ -1262,6 +1262,8 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const orderedIdsRef = useRef<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // 06 실전 학습지(워크북+수능추론) 옵트인 생성 진행 상태.
+  const [worksheetBusy, setWorksheetBusy] = useState(false);
 
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -1323,6 +1325,66 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const insertTextAfter = useCallback(
     (anchorId: string) => insertBlockAt("text", anchorId, "after"),
     [insertBlockAt],
+  );
+
+  // ─── 학습 활동(결정론·AI 아님) ───
+  // 마지막으로 다룬 학습 활동 블록 — 다른 블록을 선택해도 그 설정 섹션이 사라지지 않고(접힌 채) 유지된다.
+  const [lastActivityId, setLastActivityId] = useState<string | null>(null);
+
+  // 팔레트에서 활동 선택 → 워크시트 맨 끝에 활동 블록 삽입 (전체 지문·기본 파라미터).
+  const insertActivity = useCallback(
+    (activityKind: ActivityKind) => {
+      const id = newCustomBlockId();
+      setReport((r) => {
+        const block = makeActivityBlock(r, { activityKind, id });
+        const withBlock = { ...r, customBlocks: [...(r.customBlocks ?? []), block] };
+        const naturalIds = enumerateItems(withBlock).map((d) => d.id);
+        const fullOrder = applyBlockOrder(naturalIds, withBlock.blockOrder);
+        const anchor = fullOrder.filter((x) => x !== id).pop() ?? null;
+        const blockOrder = anchor ? reorderIds(fullOrder, id, anchor, "after") : fullOrder;
+        // 새 페이지 분할은 렌더러 기본값(firstBreak ?? true)이 담당하므로 메타를 따로 심지 않는다
+        // (메타에 breakBefore 를 넣으면 분할된 회차/문항마다 끊김).
+        return { ...withBlock, blockOrder };
+      });
+      setActiveId(id);
+      scrollToBlockRef.current(id);
+    },
+    [setReport],
+  );
+
+  // 블록 위 컨트롤: 다시 섞기(seed+1 재생성)·밀도·정답 토글·삭제. AI 호출 없음.
+  const onActivity = useCallback(
+    (id: string, action: ActivityAction) => {
+      setReport((r) => {
+        if (action.type === "answerKeyPage") return { ...r, activityAnswerKeyPage: action.on };
+        const list = r.customBlocks ?? [];
+        const b = list.find((x) => x.id === id);
+        if (!b || b.kind !== "activity") return r;
+        if (action.type === "remove") return deleteCustomBlock(r, id);
+        let next: ActivityBlock;
+        if (action.type === "reroll") next = rerolledActivityBlock(r, b);
+        else if (action.type === "param") next = appliedActivityParams(r, b, action.patch);
+        else if (action.type === "sentences") next = appliedActivitySentences(r, b, action.sentenceNos);
+        else if (action.type === "answers") next = { ...b, answersHidden: action.hidden };
+        else if (action.type === "blankItem") {
+          // 블록 전체 연속 재번호(nested 는 회차별 리셋) — 인라인=정답지 번호 일치 보장.
+          const renum = applyManualBlankToBlock(
+            b.payload.items,
+            action.index,
+            action.start,
+            action.end,
+            b.activityKind === "nested-cloze",
+          );
+          if (!renum) return r; // 빈칸 불가(영어 아님 / 기존 빈칸과 겹침)
+          const items = b.payload.items.map((it, i) => ({ ...it, prompt: renum.items[i].prompt, answerKey: renum.items[i].answerKey }));
+          // 드래그로 만든 새 빈칸의 단어를 단어 은행에도 추가(은행을 쓰는 유형에 한해). 끝이 아니라 흩어 넣어 누출 방지.
+          const wordBank = Array.isArray(b.payload.wordBank) ? insertIntoWordBank(b.payload.wordBank, renum.added) : b.payload.wordBank;
+          next = { ...b, payload: { ...b.payload, items, wordBank } };
+        } else return r;
+        return { ...r, customBlocks: list.map((x) => (x.id === id ? next : x)) };
+      });
+    },
+    [setReport],
   );
 
   // 빈 영역 클릭 시 "여백/텍스트" 중 무엇을 넣을지 고르는 작은 메뉴.
@@ -1466,6 +1528,10 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [pagesPanelCollapsed, setPagesPanelCollapsed] = useState(false);
   const [propertiesPanelCollapsed, setPropertiesPanelCollapsed] = useState(false);
+  // 학습 활동 팔레트는 우측 속성 패널 바로 왼쪽에 붙는 독립 칼럼(우측 2단). 기본 펼침.
+  const [activityPanelCollapsed, setActivityPanelCollapsed] = useState(false);
+  // '단어 시험지' 카드를 누른 적 있으면 우측 패널에 단어 시험지 설정 섹션이 떠 있는다(활동 설정과 동일).
+  const [vocabTestFocused, setVocabTestFocused] = useState(false);
   const [materialSettingsOpen, setMaterialSettingsOpen] = useState(false);
   // 블록을 선택하면 학습자료 설정에서 편집 패널로 자동 전환(그 블록 도구를 바로 보여주기 위해)
   useEffect(() => {
@@ -1476,6 +1542,9 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   );
   const [panelWidth, setPanelWidth] = useState(() =>
     readStoredWidth(PANEL_WIDTH_STORAGE_KEY, PANEL_WIDTH_DEFAULT, clampPanelWidth),
+  );
+  const [activityWidth, setActivityWidth] = useState(() =>
+    readStoredWidth(ACTIVITY_WIDTH_STORAGE_KEY, ACTIVITY_WIDTH_DEFAULT, clampActivityWidth),
   );
 
   useEffect(() => {
@@ -1492,15 +1561,23 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
     }
   }, [panelWidth]);
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(ACTIVITY_WIDTH_STORAGE_KEY, String(activityWidth));
+    } catch {
+      // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
+    }
+  }, [activityWidth]);
 
   // 좌/우 패널 폭 드래그 — 포인터 이벤트로 col-resize (exam paper builder 와 동일한 UX).
   const startWidthDrag = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>, side: "rail" | "panel") => {
+    (event: ReactPointerEvent<HTMLDivElement>, side: "rail" | "panel" | "activity") => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
       event.preventDefault();
       const startX = event.clientX;
       const startRail = railWidth;
       const startPanel = panelWidth;
+      const startActivity = activityWidth;
       const prevCursor = document.body.style.cursor;
       const prevSelect = document.body.style.userSelect;
       document.body.style.cursor = "col-resize";
@@ -1510,6 +1587,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
         moveEvent.preventDefault();
         const delta = moveEvent.clientX - startX;
         if (side === "rail") setRailWidth(clampRailWidth(startRail + delta));
+        else if (side === "activity") setActivityWidth(clampActivityWidth(startActivity - delta));
         else setPanelWidth(clampPanelWidth(startPanel - delta));
       };
       const finish = () => {
@@ -1523,7 +1601,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       window.addEventListener("pointerup", finish, { once: true });
       window.addEventListener("pointercancel", finish, { once: true });
     },
-    [railWidth, panelWidth],
+    [railWidth, panelWidth, activityWidth],
   );
   const previewScrollerRef = useRef<HTMLDivElement>(null);
   // 좌측 페이지 썸네일 목록 스크롤러 — 본문 스크롤을 따라 활성 페이지를 보이게 한다.
@@ -1773,8 +1851,17 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   }, [setReport, scrollToBlock, scrollToPage]);
   const deletePage = useCallback((ids: string[]) => {
     if (!ids.length) return;
-    if (!window.confirm(`이 페이지의 블록 ${ids.length}개를 삭제할까요?`)) return;
-    setReport((r) => hideOrDeleteIds(r, ids));
+    // 학습 활동 정답 페이지(파생 블록: activity-answers-head / c-…-ans)는 개별 삭제 대상이 아니라
+    // 문서 레벨 '정답 별도 페이지' 옵션을 끄는 것으로 처리한다(활동 블록은 유지·설정에서 재활성).
+    const isAnswerPage = ids.every((id) => id === "activity-answers-head" || /-ans$/.test(id));
+    if (isAnswerPage) {
+      if (!window.confirm("학습 활동 정답 페이지를 숨길까요? (활동은 유지되고, 활동 설정에서 다시 켤 수 있어요)")) return;
+      setReport((r) => ({ ...r, activityAnswerKeyPage: false }));
+      return;
+    }
+    const logicalIds = Array.from(new Set(ids.map((id) => (id.startsWith("c-") ? id.split("::", 1)[0] : id))));
+    if (!window.confirm(`이 페이지의 블록 ${logicalIds.length}개를 삭제할까요?`)) return;
+    setReport((r) => hideOrDeleteIds(r, logicalIds));
   }, [setReport]);
   const onToggleCol = useCallback((si: number, key: string) => {
     setReport((r) => toggleTableCol(r, si, key));
@@ -1795,6 +1882,9 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     setReport((r) => setVocabularyTestLayout(r, si, layout));
     scrollToBlock(`s${si}-vocab-test-head`);
   }, [scrollToBlock, setReport]);
+  const onVocabTierFilter = useCallback((si: number, tiers: VocabularyTier[]) => {
+    setReport((r) => setVocabularyTierFilter(r, si, tiers));
+  }, [setReport]);
   const onVocabTestOnly = useCallback(
     (si: number, enabled: boolean, mode: Exclude<VocabTestMode, "study"> = "hide-meaning") => {
       const apply = () => setReport((r) => setVocabularyTestOnly(r, si, enabled, mode));
@@ -1871,13 +1961,15 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
         ?.getAttribute("data-paper-item-id");
       if (!id) return;
       e.preventDefault();
-      const current = !!report.blockMeta?.[id]?.breakBefore;
+      // 활동 블록은 기본값이 새 페이지(true)이므로 실효값 기준으로 토글.
+      const isAct = report.customBlocks?.find((b) => b.id === id)?.kind === "activity";
+      const current = report.blockMeta?.[id]?.breakBefore ?? isAct;
       onBlockMeta(id, { breakBefore: !current });
       scrollToBlock(id);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [report.blockMeta, onBlockMeta, scrollToBlock]);
+  }, [report.blockMeta, report.customBlocks, onBlockMeta, scrollToBlock]);
 
   // 워드프로세서처럼: 블록의 왼쪽 여백/빈 영역을 클릭하면, 클릭한 줄에 해당하는
   // 편집 필드에 캐럿을 놓는다(필드 바깥이라 기본적으로는 커서가 안 잡히는 문제 보완).
@@ -2009,13 +2101,14 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       onBlockMeta,
       setCustom,
       insertTextAfter,
+      onActivity,
       ced,
       onResize,
       onColWidths,
       onDeletePage: deletePage,
       drag: { startDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, ced, onResize, onColWidths, deletePage, startDrag, draggingId, dragOverId, placement],
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, deletePage, startDrag, draggingId, dragOverId, placement],
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
@@ -2050,12 +2143,27 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     },
     [orderedIds],
   );
+  const logicalActiveId = activeId?.startsWith("c-") ? activeId.split("::", 1)[0] : activeId;
   const active: ItemDescriptor | null = useMemo(
-    () => descriptors.find((d) => d.id === activeId) ?? null,
-    [descriptors, activeId],
+    () => descriptors.find((d) => d.id === logicalActiveId) ?? null,
+    [descriptors, logicalActiveId],
   );
-  const activeMeta: BlockMeta = (activeId && report.blockMeta?.[activeId]) || {};
-  const activePos = activeId ? orderedIds.indexOf(activeId) : -1;
+  const activeMeta: BlockMeta = (logicalActiveId && report.blockMeta?.[logicalActiveId]) || {};
+  const activePos = logicalActiveId ? orderedIds.indexOf(logicalActiveId) : -1;
+
+  // 활성 학습 활동 추적 — 활동 블록을 선택하면 그 id 를 기억하고, 삭제되면 비운다.
+  // 다른 블록을 선택해도 마지막 활동의 설정 섹션은 패널에 남아(접힘) 다시 펼쳐 쓸 수 있다.
+  useEffect(() => {
+    if (logicalActiveId && report.customBlocks?.some((b) => b.id === logicalActiveId && b.kind === "activity")) {
+      setLastActivityId(logicalActiveId);
+    }
+  }, [logicalActiveId, report.customBlocks]);
+  useEffect(() => {
+    if (lastActivityId && !report.customBlocks?.some((b) => b.id === lastActivityId)) setLastActivityId(null);
+  }, [lastActivityId, report.customBlocks]);
+  const lastActivityBlock =
+    (lastActivityId && (report.customBlocks?.find((b) => b.id === lastActivityId && b.kind === "activity") as ActivityBlock | undefined)) || null;
+  const activityActive = !!lastActivityBlock && logicalActiveId === lastActivityBlock.id;
 
   const save = useCallback(async () => {
     setSaving(true);
@@ -2085,6 +2193,32 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     setActiveId(null);
   }, [dirty, baseline]);
 
+  // 06 실전 학습지 옵트인 생성 — 서버에 저장된 보고서 위에 워크시트 섹션을 만들어 병합한다.
+  // 미저장 편집이 있으면 서버 보고서 기준으로 생성되므로 먼저 저장할지 확인한다.
+  const generateWorksheet = useCallback(async () => {
+    if (dirty) {
+      if (!window.confirm("저장하지 않은 편집은 실전 학습지에 반영되지 않아요. 먼저 저장 후 생성할까요?")) return;
+      await save();
+    }
+    setWorksheetBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/workbench/passage-reports/prime/${passageId}/worksheet`, { method: "POST" });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j?.error ?? "실전 학습지 생성에 실패했습니다.");
+      const saved = (j.report as AnalysisReport) ?? report;
+      dispatchReport({ type: "replace", report: saved, clearHistory: true });
+      setBaseline(saved);
+      onSaved?.(saved);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setWorksheetBusy(false);
+      // 차감/실패환급 모두 잔액이 바뀌므로 사이드바 뱃지 즉시 갱신.
+      notifyCreditsChanged();
+    }
+  }, [dirty, save, passageId, report, onSaved]);
+
   const undo = useCallback(() => {
     dispatchReport({ type: "undo" });
     setActiveId(null);
@@ -2096,9 +2230,9 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   }, []);
 
   const fontScale = activeMeta.fontScale ?? 1;
-  const setMetaPatch = (patch: Partial<BlockMeta>) => activeId && onBlockMeta(activeId, patch);
+  const setMetaPatch = (patch: Partial<BlockMeta>) => logicalActiveId && onBlockMeta(logicalActiveId, patch);
   const moveActive = (dir: -1 | 1) =>
-    activeId && setReport((r) => ({ ...r, blockOrder: moveIdBy(orderedIds, activeId, dir) }));
+    logicalActiveId && setReport((r) => ({ ...r, blockOrder: moveIdBy(orderedIds, logicalActiveId, dir) }));
   const addRow = (sectionIndex: number) =>
     setReport((r) => {
       const sec = r.sections[sectionIndex];
@@ -2120,6 +2254,15 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
     [report.sections],
   );
   const toolbarWorksheetSection = toolbarWorksheetIndex >= 0 ? report.sections[toolbarWorksheetIndex] : null;
+  // 기본 분석은 logicRows 만 든 learning-worksheet 를 만든다. 실제 06 워크북/추론 콘텐츠가
+  // 있을 때만 '정답지 토글'을 보이고, 없을 때만 '실전 학습지 생성' 버튼을 보인다.
+  const toolbarWorksheetHasContent =
+    toolbarWorksheetSection?.kind === "learning-worksheet" &&
+    (!!toolbarWorksheetSection.workbookSet ||
+      !!toolbarWorksheetSection.inferenceSet ||
+      !!toolbarWorksheetSection.cloze ||
+      !!toolbarWorksheetSection.practice ||
+      !!toolbarWorksheetSection.drills);
   const toolbarAnswerKeyIncluded =
     toolbarWorksheetSection?.kind === "learning-worksheet" ? !worksheetAnswersAreHidden(toolbarWorksheetSection) : false;
 
@@ -2131,10 +2274,22 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const toolbarVocabularySection = toolbarVocabularyIndex >= 0 ? report.sections[toolbarVocabularyIndex] : null;
   const toolbarVocabMode: VocabTestMode =
     toolbarVocabularySection?.kind === "vocabulary" ? toolbarVocabularySection.vocabTestMode ?? "study" : "study";
-  const toolbarVocabTestLayout: VocabTestLayout =
-    toolbarVocabularySection?.kind === "vocabulary" ? toolbarVocabularySection.vocabTestLayout ?? "table" : "table";
-  const toolbarExcludedVocabTestCount =
-    toolbarVocabularySection?.kind === "vocabulary" ? toolbarVocabularySection.vocabTestExcludedKeys?.length ?? 0 : 0;
+  const toolbarVocabTestEnabled = !!report.vocabTestOnly || toolbarVocabMode !== "study";
+  const VOCAB_TEST_MODE_LABEL: Record<VocabTestMode, string> = {
+    study: "꺼짐",
+    "hide-meaning": "뜻 쓰기",
+    "hide-headword": "단어 쓰기",
+    synonym: "동의어 쓰기",
+    antonym: "반의어 쓰기",
+  };
+  // 단어 시험지를 학습 활동 카드처럼 켜는 핸들러 — 켜고 우측 패널에 '단어 시험지 설정' 섹션을 펼친다.
+  // (문서를 스크롤/점프시키지 않으려고 onVocabTestMode 대신 setReport 로 직접 모드만 켠다.)
+  const activateVocabTest = () => {
+    if (!toolbarVocabTestEnabled) setReport((r) => setVocabularyTestMode(r, toolbarVocabularyIndex, "hide-meaning"));
+    setVocabTestFocused(true);
+    setMaterialSettingsOpen(false);
+    setPropertiesPanelCollapsed(false);
+  };
   const canToggleToolbarVocabTestOnly =
     toolbarVocabularySection?.kind === "vocabulary" && toolbarVocabularySection.rows.length > 0;
 
@@ -2162,7 +2317,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
               저장 필요
             </span>
           ) : null}
-          {toolbarWorksheetSection?.kind === "learning-worksheet" ? (
+          {toolbarWorksheetHasContent ? (
             <button
               type="button"
               role="switch"
@@ -2195,19 +2350,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
               </span>
             </button>
           ) : null}
-          {canToggleToolbarVocabTestOnly ? (
-            <VocabTestToolbarPopover
-              sectionIndex={toolbarVocabularyIndex}
-              vocabMode={toolbarVocabMode}
-              vocabTestLayout={toolbarVocabTestLayout}
-              vocabTestOnly={!!report.vocabTestOnly}
-              excludedVocabTestCount={toolbarExcludedVocabTestCount}
-              onVocabTestMode={onVocabTestMode}
-              onVocabTestLayout={onVocabTestLayout}
-              onVocabTestOnly={onVocabTestOnly}
-              onRestoreVocabTestRows={onRestoreVocabTestRows}
-            />
-          ) : null}
+          {/* 단어 시험지 컨트롤은 우측 학습 활동 팔레트 하단 '어휘' 섹션으로 이동(툴바에서 제거) */}
           <button
             type="button"
             onClick={undo}
@@ -2247,6 +2390,19 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
             {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
             저장
           </button>
+          {!toolbarWorksheetHasContent ? (
+            <button
+              type="button"
+              onClick={generateWorksheet}
+              disabled={worksheetBusy || saving}
+              title="실전 학습지(어법 선택·어휘 빈칸·배열 + 수능추론 5문항) 추가 생성"
+              className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {worksheetBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileQuestion className="h-3.5 w-3.5" />}
+              <span className="hidden sm:inline">{worksheetBusy ? "실전 학습지 생성 중…" : "실전 학습지 생성 (5크레딧)"}</span>
+              <span className="sm:hidden">실전 학습지</span>
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={() => window.print()}
@@ -2393,7 +2549,13 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
         </section>
 
         {/* 인라인 텍스트 편집용 떠다니는 서식 툴바 */}
-        <FloatingFormatToolbar blockMeta={report.blockMeta} onBlockMeta={onBlockMeta} />
+        <FloatingFormatToolbar
+          blockMeta={report.blockMeta}
+          onBlockMeta={onBlockMeta}
+          onClozeBlank={(blockId, itemIndex, start, end) => onActivity(blockId, { type: "blankItem", index: itemIndex, start, end })}
+        />
+
+        {/* 학습 활동 팔레트는 우측 편집 패널 '활동' 탭으로 이동 (모달 제거) */}
 
         {/* 빈 영역 클릭 시 뜨는 블록 삽입 메뉴(여백/텍스트) */}
         {insertMenu
@@ -2441,7 +2603,81 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
             )
           : null}
 
-        {/* 우측 — 속성 패널 */}
+        {/* 우측 2단 — (왼) 학습 활동 팔레트 칼럼 */}
+        {activityPanelCollapsed ? (
+          <button
+            type="button"
+            onClick={() => setActivityPanelCollapsed(false)}
+            title="학습 활동 열기"
+            aria-label="학습 활동 열기"
+            aria-expanded={false}
+            className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600 lg:flex"
+          >
+            <ListChecks className="h-3.5 w-3.5" />
+            <span style={{ writingMode: "vertical-rl" }}>학습 활동</span>
+          </button>
+        ) : (
+          <>
+            <div
+              onPointerDown={(event) => startWidthDrag(event, "activity")}
+              title="학습 활동 폭 조절"
+              aria-hidden
+              className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
+            />
+            <aside style={{ width: activityWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-white">
+              <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
+                <div className="min-w-0">
+                  <p className="truncate text-[12px] font-black text-slate-800">학습 활동</p>
+                  <p className="truncate text-[10.5px] font-semibold text-slate-400">지문으로 즉석 생성 · AI 없음</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActivityPanelCollapsed(true)}
+                  title="학습 활동 닫기"
+                  aria-label="학습 활동 닫기"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                >
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
+                <ActivityPalettePanel
+                  report={report}
+                  onPick={insertActivity}
+                  vocabTestSlot={
+                    canToggleToolbarVocabTestOnly ? (
+                      <button
+                        type="button"
+                        onClick={activateVocabTest}
+                        className="group flex w-full flex-col gap-1.5 rounded-xl border border-slate-200 bg-white p-3 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/40"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
+                          {toolbarVocabTestEnabled ? (
+                            <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white">켜짐</span>
+                          ) : (
+                            <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-100">
+                              <Plus className="h-3 w-3" /> 추가
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] leading-snug text-slate-500">뜻·단어·동의어·반의어 시험 + 난이도 단계 선택 — 지문 단어로 시험지 페이지 생성</p>
+                        <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
+                          <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">현재</span>
+                          <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
+                            {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
+                          </p>
+                        </div>
+                      </button>
+                    ) : null
+                  }
+                />
+              </div>
+            </aside>
+          </>
+        )}
+
+        {/* 우측 2단 — (오) 속성 패널 */}
         {propertiesPanelCollapsed ? (
           <button
             type="button"
@@ -2504,7 +2740,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                         : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800",
                     )}
                   >
-                    {materialSettingsOpen ? <X className="h-4 w-4" /> : <Settings className="h-4 w-4" />}
+                    <Settings className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -2513,7 +2749,15 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                   report={report}
                   active={active}
                   activeMeta={activeMeta}
-                  activeCustom={(activeId && report.customBlocks?.find((b) => b.id === activeId)) || null}
+                  activeCustom={(logicalActiveId && report.customBlocks?.find((b) => b.id === logicalActiveId)) || null}
+                  activityBlock={lastActivityBlock}
+                  activityActive={activityActive}
+                  onActivateActivity={() => {
+                    if (lastActivityId) {
+                      setActiveId(lastActivityId);
+                      scrollToBlock(lastActivityId);
+                    }
+                  }}
                   activePos={activePos}
                   total={orderedIds.length}
                   fontScale={fontScale}
@@ -2533,9 +2777,17 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                   onMove={moveActive}
                   onAddRow={addRow}
                   onSetCustom={setCustom}
+                  onActivity={onActivity}
                   onDeleteItem={deleteActive}
                   onToggleCol={onToggleCol}
                   onToggleWorksheetAnswers={onToggleWorksheetAnswers}
+                  onVocabTestMode={onVocabTestMode}
+                  onVocabTestLayout={onVocabTestLayout}
+                  onVocabTestOnly={onVocabTestOnly}
+                  onRestoreVocabTestRows={onRestoreVocabTestRows}
+                  onVocabTierFilter={onVocabTierFilter}
+                  vocabTestFocused={vocabTestFocused}
+                  vocabSectionIndex={toolbarVocabularyIndex}
                   onScrollToBlock={scrollToBlock}
                   onDeleteCustom={(id) => deleteActive(id)}
                   onDeleteSection={(si) => {
@@ -2606,6 +2858,456 @@ function PanelGroup({ label, children }: { label: string; children: ReactNode })
       <div className="mb-1.5 text-[10px] font-black uppercase tracking-wide text-slate-400">{label}</div>
       {children}
     </div>
+  );
+}
+
+/** 분할 단추 행 (기존 VocabTestOptions 시각언어 답습 — 파랑 선택). */
+function SegRow({
+  options,
+  value,
+  onChange,
+}: {
+  options: { value: string | number; label: string }[];
+  value: string | number;
+  onChange: (v: string | number) => void;
+}) {
+  return (
+    <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0,1fr))` }}>
+      {options.map((o) => (
+        <button
+          key={String(o.value)}
+          type="button"
+          onClick={() => onChange(o.value)}
+          className={`h-8 rounded-md border text-[11.5px] font-semibold transition-colors ${
+            value === o.value
+              ? "border-blue-500 bg-blue-50 text-blue-700"
+              : "border-slate-200 text-slate-600 hover:bg-slate-50"
+          }`}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function computeSentenceNos(preset: string, count: number): number[] | undefined {
+  if (count <= 0) return undefined;
+  const all = Array.from({ length: count }, (_, i) => i + 1);
+  if (preset === "odd") return all.filter((n) => n % 2 === 1);
+  if (preset === "even") return all.filter((n) => n % 2 === 0);
+  return undefined; // 전체
+}
+function sentencePreset(nos: number[] | undefined, count: number): "all" | "odd" | "even" {
+  if (!nos || nos.length === 0 || nos.length >= count) return "all";
+  if (nos.every((n) => n % 2 === 1)) return "odd";
+  if (nos.every((n) => n % 2 === 0)) return "even";
+  return "all";
+}
+
+/** 학습 활동 전용 옵션 — block-edit 패널 안에 활동 종류별로 펼쳐진다 (spacer 높이와 동일 패턴). */
+function ActivityOptions({
+  block,
+  sentenceCount,
+  answerKeyPageOn,
+  onActivity,
+}: {
+  block: ActivityBlock;
+  sentenceCount: number;
+  answerKeyPageOn: boolean;
+  onActivity: (id: string, action: ActivityAction) => void;
+}) {
+  const p = block.params;
+  const isScramble = block.activityKind === "chunk-scramble" || block.activityKind === "word-scramble";
+  const isNested = block.activityKind === "nested-cloze";
+  const isCloze = block.activityKind === "keyword-cloze" || block.activityKind === "full-cloze" || isNested;
+  const isReproduction = block.activityKind === "reproduction";
+  const isSlash = block.activityKind === "slash-compose";
+  const isProduction = isReproduction || block.activityKind === "sentence-translation" || isSlash;
+  const isOrdering = block.activityKind === "sentence-order";
+  const isVocabQuiz = block.activityKind === "vocab-quiz";
+  const isVocabMatch = block.activityKind === "vocab-match";
+  const isChunkGlossCloze = block.activityKind === "chunk-gloss-cloze";
+  // 스캐폴드 사다리(영작/복원류)에 wordBank 단계까지 노출할지 — slash 는 단어슬롯/첫글자까지만.
+  const hasScaffoldLadder = isReproduction;
+  const splitMode = p.splitMode ?? (p.unit === "word" ? "word" : "chunk");
+  const scaffoldLevel = p.scaffoldLevel ?? (p.scaffold ? "firstLetter" : "none");
+  const clozeDefaultDensity = isNested ? 80 : block.activityKind === "full-cloze" ? 55 : 30;
+  const setParam = (patch: Partial<ActivityParams>) => onActivity(block.id, { type: "param", patch });
+
+  return (
+    <>
+      {isScramble ? (
+        <>
+          <PanelGroup label="덩어리 분할 방식">
+            <SegRow
+              options={[
+                { value: "chunk", label: "의미 단위" },
+                { value: "word", label: "단어" },
+                { value: "ngram", label: "N단어" },
+              ]}
+              value={splitMode}
+              onChange={(v) => setParam({ splitMode: v as "chunk" | "word" | "ngram" })}
+            />
+            {splitMode === "ngram" ? (
+              <div className="mt-1.5">
+                <SegRow
+                  options={[
+                    { value: 2, label: "2단어" },
+                    { value: 3, label: "3단어" },
+                    { value: 4, label: "4단어" },
+                  ]}
+                  value={p.ngramSize ?? 2}
+                  onChange={(v) => setParam({ ngramSize: Number(v) })}
+                />
+              </div>
+            ) : null}
+          </PanelGroup>
+          <PanelGroup label="구분 표시">
+            <SegRow
+              options={[
+                { value: "slash", label: "/ 슬래시" },
+                { value: "pipe", label: "| 막대" },
+                { value: "chip", label: "칩" },
+              ]}
+              value={p.separator ?? "slash"}
+              onChange={(v) => setParam({ separator: v as "slash" | "pipe" | "chip" })}
+            />
+          </PanelGroup>
+        </>
+      ) : null}
+
+      {isCloze ? (
+        <PanelGroup label="빈칸 옵션">
+          {!isNested ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min={10}
+                max={90}
+                step={5}
+                value={p.density ?? clozeDefaultDensity}
+                onChange={(e) => setParam({ density: Number(e.target.value) })}
+                className="flex-1 accent-blue-600"
+              />
+              <span className="w-12 text-right text-[11px] font-semibold text-slate-500">{p.density ?? clozeDefaultDensity}%</span>
+            </div>
+          ) : null}
+          <div className="mb-1 mt-2 text-[10.5px] font-semibold text-slate-400">빈칸 대상</div>
+          <SegRow
+            options={[
+              { value: "content", label: "내용어" },
+              { value: "prep", label: "전치사" },
+              { value: "conj", label: "접속사" },
+            ]}
+            value={p.target ?? "content"}
+            onChange={(v) => setParam({ target: v as "all" | "content" | "verb" | "prep" | "conj" })}
+          />
+          {isNested ? (
+            (() => {
+              const rounds = p.rounds ?? 3;
+              const densities = normalizeNestedDensities(
+                p.roundDensities && p.roundDensities.length === rounds ? p.roundDensities : defaultNestedDensities(rounds, p.density ?? 80),
+              );
+              const setRound = (i: number, delta: number) => {
+                const next = densities.slice();
+                next[i] = Math.min(100, Math.max(10, next[i] + delta));
+                const norm = normalizeNestedDensities(next);
+                setParam({ roundDensities: norm, density: norm[norm.length - 1] });
+              };
+              return (
+                <>
+                  <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">회차 수</div>
+                  <SegRow
+                    options={[
+                      { value: 2, label: "2회" },
+                      { value: 3, label: "3회" },
+                      { value: 4, label: "4회" },
+                    ]}
+                    value={rounds}
+                    onChange={(v) => {
+                      const nr = Number(v);
+                      setParam({ rounds: nr, roundDensities: defaultNestedDensities(nr, p.density ?? 80) });
+                    }}
+                  />
+                  <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">회차별 빈칸 밀도</div>
+                  <div className="space-y-1">
+                    {densities.map((d, i) => (
+                      <div key={i} className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] font-semibold text-slate-600">{i + 1}회</span>
+                        <div className="flex items-center gap-1">
+                          <button type="button" onClick={() => setRound(i, -5)} className="flex h-6 w-6 items-center justify-center rounded-md border border-blue-100 bg-blue-50 text-blue-700 hover:bg-blue-100" title="줄이기">
+                            <Minus className="h-3 w-3" />
+                          </button>
+                          <span className="w-10 text-center text-[11px] font-semibold tabular-nums text-slate-600">{d}%</span>
+                          <button type="button" onClick={() => setRound(i, 5)} className="flex h-6 w-6 items-center justify-center rounded-md border border-blue-100 bg-blue-50 text-blue-700 hover:bg-blue-100" title="늘리기">
+                            <Plus className="h-3 w-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-1.5 text-[10px] leading-snug text-slate-400">회차가 오를수록 빈칸이 누적됩니다(이전 회차 포함). 낮은 회차를 높이면 이후 회차도 함께 올라가요.</p>
+                </>
+              );
+            })()
+          ) : (
+            <>
+              <div className="mt-2.5">
+                <ToggleRow label="단어 은행 표시" on={p.wordBank !== false} onClick={() => setParam({ wordBank: !(p.wordBank !== false) })} icon={<BookImage className="h-3.5 w-3.5" />} />
+              </div>
+              <div className="mt-1">
+                <ToggleRow label="첫 글자 힌트" on={!!p.firstLetterHint} onClick={() => setParam({ firstLetterHint: !p.firstLetterHint })} icon={<Languages className="h-3.5 w-3.5" />} />
+              </div>
+            </>
+          )}
+        </PanelGroup>
+      ) : null}
+
+      {isProduction ? (
+        <PanelGroup label="작성 옵션">
+          <div className="mb-1 text-[10.5px] font-semibold text-slate-400">작성선</div>
+          <SegRow
+            options={[
+              { value: 1, label: "1줄" },
+              { value: 2, label: "2줄" },
+              { value: 3, label: "3줄" },
+            ]}
+            value={(isSlash ? p.writeLines : p.linesPerSentence) ?? (isSlash ? 1 : 2)}
+            onChange={(v) => setParam(isSlash ? { writeLines: Number(v) } : { linesPerSentence: Number(v) })}
+          />
+          {hasScaffoldLadder || isSlash ? (
+            <>
+              <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">힌트 (스캐폴드)</div>
+              <SegRow
+                options={
+                  hasScaffoldLadder
+                    ? [
+                        { value: "none", label: "없음" },
+                        { value: "wordSlots", label: "단어 칸" },
+                        { value: "firstLetter", label: "첫 글자" },
+                        { value: "wordBank", label: "단어 보기" },
+                      ]
+                    : [
+                        { value: "none", label: "없음" },
+                        { value: "wordSlots", label: "단어 칸" },
+                        { value: "firstLetter", label: "첫 글자" },
+                      ]
+                }
+                value={scaffoldLevel}
+                onChange={(v) => setParam({ scaffoldLevel: v as "none" | "wordSlots" | "firstLetter" | "wordBank" })}
+              />
+              <p className="mt-1 text-[10px] text-slate-400">
+                {scaffoldLevel === "none"
+                  ? "단서 없이 백지에서 영작 (최난도)"
+                  : scaffoldLevel === "wordSlots"
+                    ? "단어 수·길이만 칸으로 (철자는 숨김)"
+                    : scaffoldLevel === "firstLetter"
+                      ? "각 단어 첫 글자만 노출"
+                      : "정답 단어를 섞어 ‘단어 보기’로 제공 (가장 쉬움)"}
+              </p>
+            </>
+          ) : null}
+          {isReproduction ? (
+            <div className="mt-2.5">
+              <ToggleRow label="전지문 한 번에 (백지 복원)" on={!!p.wholePassage} onClick={() => setParam({ wholePassage: !p.wholePassage })} icon={<BookImage className="h-3.5 w-3.5" />} />
+            </div>
+          ) : null}
+        </PanelGroup>
+      ) : null}
+
+      {isChunkGlossCloze ? (
+        <PanelGroup label="빈칸 옵션">
+          <div className="mb-1 text-[10.5px] font-semibold text-slate-400">빈칸 밀도</div>
+          <div className="flex items-center gap-2">
+            <input type="range" min={20} max={80} step={10} value={p.density ?? 40} onChange={(e) => setParam({ density: Number(e.target.value) })} className="flex-1 accent-blue-600" />
+            <span className="w-12 text-right text-[11px] font-semibold text-slate-500">{p.density ?? 40}%</span>
+          </div>
+          <div className="mt-1">
+            <ToggleRow label="첫 글자 힌트" on={!!p.firstLetterHint} onClick={() => setParam({ firstLetterHint: !p.firstLetterHint })} icon={<Languages className="h-3.5 w-3.5" />} />
+          </div>
+        </PanelGroup>
+      ) : null}
+
+      {isOrdering ? (
+        <PanelGroup label="배열 옵션">
+          <div className="mb-1 text-[10.5px] font-semibold text-slate-400">보기 라벨</div>
+          <SegRow
+            options={[
+              { value: "alpha", label: "A · B · C" },
+              { value: "circled", label: "① ② ③" },
+            ]}
+            value={p.labelStyle ?? "alpha"}
+            onChange={(v) => setParam({ labelStyle: v as "alpha" | "circled" })}
+          />
+          <div className="mt-2.5">
+            <ToggleRow
+              label="첫 문장을 ‘주어진 글’로 고정"
+              on={(p.anchor ?? "first") !== "none"}
+              onClick={() => setParam({ anchor: (p.anchor ?? "first") === "none" ? "first" : "none" })}
+              icon={<Languages className="h-3.5 w-3.5" />}
+            />
+            <p className="mt-1 text-[10px] text-slate-400">수능 표준형 — 첫 글을 고정하면 정답이 하나로 정해져 모호함이 줄어요.</p>
+          </div>
+          <div className="mt-2.5">
+            <ToggleRow label="한글 해석 함께 표시" on={!!p.showKo} onClick={() => setParam({ showKo: !p.showKo })} icon={<Languages className="h-3.5 w-3.5" />} />
+          </div>
+        </PanelGroup>
+      ) : null}
+
+      {isVocabQuiz ? (
+        <PanelGroup label="단어 시험 옵션">
+          <div className="mb-1 text-[10.5px] font-semibold text-slate-400">출제 방향</div>
+          <SegRow
+            options={[
+              { value: "hide-meaning", label: "영→한 (뜻쓰기)" },
+              { value: "hide-headword", label: "한→영 (단어쓰기)" },
+            ]}
+            value={p.vocabMode ?? "hide-meaning"}
+            onChange={(v) => setParam({ vocabMode: v as "hide-meaning" | "hide-headword" | "eng-eng" | "synonym" })}
+          />
+          <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">난이도 티어</div>
+          <SegRow
+            options={[
+              { value: "all", label: "전체" },
+              { value: "test", label: "시험" },
+              { value: "challenge", label: "고난도" },
+            ]}
+            value={p.tier ?? "all"}
+            onChange={(v) => setParam({ tier: v as "all" | "core" | "test" | "challenge" })}
+          />
+          <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">문항 수</div>
+          <SegRow
+            options={[
+              { value: 10, label: "10" },
+              { value: 20, label: "20" },
+              { value: 30, label: "30" },
+            ]}
+            value={p.count ?? 20}
+            onChange={(v) => setParam({ count: Number(v) })}
+          />
+          <div className="mt-2">
+            <ToggleRow label="첫 글자 힌트 (한→영)" on={!!p.firstLetterHint} onClick={() => setParam({ firstLetterHint: !p.firstLetterHint })} icon={<Languages className="h-3.5 w-3.5" />} />
+          </div>
+        </PanelGroup>
+      ) : null}
+
+      {isVocabMatch ? (
+        <PanelGroup label="매칭 옵션">
+          <div className="mb-1 text-[10.5px] font-semibold text-slate-400">매칭 기준</div>
+          <SegRow
+            options={[
+              { value: "synonym", label: "동의/반의어" },
+              { value: "meaning", label: "한글 뜻" },
+              { value: "pronunciation", label: "발음" },
+            ]}
+            value={p.matchBy ?? "synonym"}
+            onChange={(v) => setParam({ matchBy: v as "synonym" | "meaning" | "pronunciation" })}
+          />
+          {(p.matchBy ?? "synonym") === "synonym" ? (
+            <>
+              <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">관계</div>
+              <SegRow
+                options={[
+                  { value: "synonym", label: "동의어" },
+                  { value: "antonym", label: "반의어" },
+                ]}
+                value={p.relation ?? "synonym"}
+                onChange={(v) => setParam({ relation: v as "synonym" | "antonym" })}
+              />
+            </>
+          ) : null}
+          <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">묶음 수</div>
+          <SegRow
+            options={[
+              { value: 4, label: "4" },
+              { value: 6, label: "6" },
+              { value: 8, label: "8" },
+            ]}
+            value={p.count ?? 6}
+            onChange={(v) => setParam({ count: Number(v) })}
+          />
+          <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">디코이 (가짜 보기)</div>
+          <SegRow
+            options={[
+              { value: 0, label: "없음" },
+              { value: 1, label: "+1" },
+              { value: 2, label: "+2" },
+            ]}
+            value={p.decoyCount ?? 0}
+            onChange={(v) => setParam({ decoyCount: Number(v) })}
+          />
+          <p className="mt-1 text-[10px] text-slate-400">정답 없는 보기를 추가해 소거 풀이를 막아요 (난이도↑).</p>
+        </PanelGroup>
+      ) : null}
+
+      {isVocabQuiz || isVocabMatch ? null : (
+        <PanelGroup label="포함 문장">
+          <SegRow
+            options={[
+              { value: "all", label: "전체" },
+              { value: "odd", label: "홀수" },
+              { value: "even", label: "짝수" },
+            ]}
+            value={sentencePreset(block.sentenceNos, sentenceCount)}
+            onChange={(v) => onActivity(block.id, { type: "sentences", sentenceNos: computeSentenceNos(String(v), sentenceCount) })}
+          />
+          <p className="mt-1.5 text-[10.5px] text-slate-400">
+            {block.sentenceNos && block.sentenceNos.length > 0 ? `${block.sentenceNos.length}개 문장 포함` : `전체 ${sentenceCount}개 문장`}
+          </p>
+        </PanelGroup>
+      )}
+
+      {isScramble ? (
+        <PanelGroup label="표시 옵션">
+          <div className="mb-1 text-[10.5px] font-semibold text-slate-400">한글 해석</div>
+          <SegRow
+            options={[
+              { value: "none", label: "없음" },
+              { value: "above", label: "위" },
+              { value: "below", label: "아래" },
+            ]}
+            value={p.koPosition ?? "none"}
+            onChange={(v) => setParam({ koPosition: v as "none" | "above" | "below" })}
+          />
+          <div className="mt-2">
+            <ToggleRow label="첫 단위 힌트(제자리)" on={!!p.firstChunkHint} onClick={() => setParam({ firstChunkHint: !p.firstChunkHint })} icon={<Languages className="h-3.5 w-3.5" />} />
+          </div>
+          <div className="mb-1 mt-2.5 text-[10.5px] font-semibold text-slate-400">작성선</div>
+          <SegRow
+            options={[
+              { value: 0, label: "없음" },
+              { value: 1, label: "1줄" },
+              { value: 2, label: "2줄" },
+            ]}
+            value={p.writeLines ?? 1}
+            onChange={(v) => setParam({ writeLines: Number(v) })}
+          />
+        </PanelGroup>
+      ) : null}
+
+      <PanelGroup label="정답">
+        <ToggleRow
+          label="정답을 별도 페이지로 모으기"
+          on={answerKeyPageOn}
+          onClick={() => onActivity(block.id, { type: "answerKeyPage", on: !answerKeyPageOn })}
+          icon={<Eye className="h-3.5 w-3.5" />}
+        />
+        <p className="mt-1.5 text-[10.5px] text-slate-400">
+          끄면 모든 학습 활동의 정답 페이지가 사라져요. (블록별 정답 표시는 블록 위 버튼으로)
+        </p>
+      </PanelGroup>
+
+      <PanelGroup label="다시 생성">
+        <button
+          type="button"
+          onClick={() => onActivity(block.id, { type: "reroll" })}
+          className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+        >
+          <Dice5 className="h-3.5 w-3.5" /> {isCloze ? "새 빈칸으로 다시" : "다시 섞기"}
+        </button>
+      </PanelGroup>
+    </>
   );
 }
 
@@ -2696,7 +3398,28 @@ function PanelSection({
   );
 }
 
-function SortablePanelStack({ children, blockSelected = false }: { children: ReactNode; blockSelected?: boolean }) {
+function SortablePanelStack({
+  children,
+  blockSelected = false,
+  activityActive = false,
+  onActivateActivity,
+  vocabTestActive = false,
+}: {
+  children: ReactNode;
+  blockSelected?: boolean;
+  activityActive?: boolean;
+  onActivateActivity?: () => void;
+  vocabTestActive?: boolean;
+}) {
+  // activity-edit / vocab-test-edit 접힘은 영속(localStorage)하지 않고 전용 상태로 — 활성화될 때마다 항상 펼침으로 시작.
+  const [activityEditCollapsed, setActivityEditCollapsed] = useState(false);
+  useEffect(() => {
+    if (activityActive) setActivityEditCollapsed(false);
+  }, [activityActive]);
+  const [vocabTestEditCollapsed, setVocabTestEditCollapsed] = useState(false);
+  useEffect(() => {
+    if (vocabTestActive) setVocabTestEditCollapsed(false);
+  }, [vocabTestActive]);
   const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
     readStoredPanelSectionOrder,
   );
@@ -2725,13 +3448,24 @@ function SortablePanelStack({ children, blockSelected = false }: { children: Rea
   const togglePanelSection = useCallback(
     (id: PanelSectionId) => {
       // 블록 편집 중에는 다른 카드들이 강제로 접혀 있으므로(아래 collapsed 계산), 저장된 토글 선호값을
-      // 건드리지 않도록 'block-edit' 외의 토글은 무시한다 → 선택 해제 시 원래 열림/접힘 상태가 그대로 복구.
-      if (blockSelected && id !== "block-edit") return;
+      // 건드리지 않도록 'block-edit'·'activity-edit' 외의 토글은 무시한다 → 선택 해제 시 원래 상태 복구.
+      if (blockSelected && id !== "block-edit" && id !== "activity-edit" && id !== "vocab-test-edit") return;
+      if (id === "activity-edit") {
+        // 비활성(다른 블록을 보는 중)일 때 헤더를 누르면 → 그 활동을 다시 선택해 펼친다(죽은 토글 방지).
+        // 활성 상태면 전용 상태로 접고/펴기(영속 안 함 — 재활성 시 항상 펼침).
+        if (!activityActive) onActivateActivity?.();
+        else setActivityEditCollapsed((v) => !v);
+        return;
+      }
+      if (id === "vocab-test-edit") {
+        if (vocabTestActive) setVocabTestEditCollapsed((v) => !v);
+        return;
+      }
       setCollapsedSectionIds((current) =>
         current.includes(id) ? current.filter((sectionId) => sectionId !== id) : [...current, id],
       );
     },
-    [blockSelected],
+    [blockSelected, activityActive, vocabTestActive, onActivateActivity],
   );
 
   const reorderPanelSection = useCallback((sourceId: PanelSectionId, targetId: PanelSectionId) => {
@@ -2811,9 +3545,22 @@ function SortablePanelStack({ children, blockSelected = false }: { children: Rea
         const panel = panelById.get(id);
         if (!panel) return null;
         // 블록 선택 중에는 '블록 편집' 카드만 자기 토글 상태를 따르고, 나머지는 모두 접는다.
+        // activity-edit 는 그 활동이 '현재 선택'이면 자기 토글(기본 펼침)을 따르고, 아니면 접힌 채 유지(사라지지 않음).
         // (저장된 collapsedSectionIds 는 그대로 두므로 선택 해제 시 원상 복구됨)
-        const collapsed = blockSelected && id !== "block-edit" ? true : collapsedSections.has(id);
+        const collapsed =
+          id === "activity-edit"
+            ? activityActive
+              ? activityEditCollapsed
+              : true
+            : id === "vocab-test-edit"
+              ? vocabTestActive
+                ? vocabTestEditCollapsed
+                : true
+              : blockSelected && id !== "block-edit"
+                ? true
+                : collapsedSections.has(id);
         return cloneElement(panel, {
+          key: id,
           collapsed,
           dragging: draggingSectionId === id,
           dragOver: dragOverSectionId === id,
@@ -2886,6 +3633,9 @@ function PropertiesPanel({
   active,
   activeMeta,
   activeCustom,
+  activityBlock,
+  activityActive,
+  onActivateActivity,
   activePos,
   total,
   fontScale,
@@ -2894,9 +3644,17 @@ function PropertiesPanel({
   onMove,
   onAddRow,
   onSetCustom,
+  onActivity,
   onDeleteItem,
   onToggleCol,
   onToggleWorksheetAnswers,
+  onVocabTestMode,
+  onVocabTestLayout,
+  onVocabTestOnly,
+  onRestoreVocabTestRows,
+  onVocabTierFilter,
+  vocabTestFocused,
+  vocabSectionIndex,
   onScrollToBlock,
   onDeleteCustom,
   onDeleteSection,
@@ -2911,6 +3669,9 @@ function PropertiesPanel({
   active: ItemDescriptor | null;
   activeMeta: BlockMeta;
   activeCustom: CustomBlock | null;
+  activityBlock: ActivityBlock | null;
+  activityActive: boolean;
+  onActivateActivity: () => void;
   activePos: number;
   total: number;
   fontScale: number;
@@ -2925,9 +3686,17 @@ function PropertiesPanel({
   onMove: (dir: -1 | 1) => void;
   onAddRow: (sectionIndex: number) => void;
   onSetCustom: (id: string, patch: Partial<CustomBlock>) => void;
+  onActivity: (id: string, action: ActivityAction) => void;
   onDeleteItem: (id: string) => void;
   onToggleCol: (sectionIndex: number, key: string) => void;
   onToggleWorksheetAnswers: (sectionIndex: number) => void;
+  onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
+  onVocabTestLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
+  onVocabTestOnly: (sectionIndex: number, enabled: boolean, mode?: Exclude<VocabTestMode, "study">) => void;
+  onRestoreVocabTestRows: (sectionIndex: number) => void;
+  onVocabTierFilter: (sectionIndex: number, tiers: VocabularyTier[]) => void;
+  vocabTestFocused: boolean;
+  vocabSectionIndex: number;
   onScrollToBlock: (id: string) => void;
   onDeleteCustom: (id: string) => void;
   onDeleteSection: (sectionIndex: number) => void;
@@ -2984,6 +3753,10 @@ function PropertiesPanel({
   );
   const activeSection = active && active.sectionIndex >= 0 ? report.sections[active.sectionIndex] : null;
   const activeWorksheet = activeSection?.kind === "learning-worksheet" ? activeSection : null;
+  const passageSentenceCount = (() => {
+    const ps = report.sections.find((s) => s.kind === "passage");
+    return ps?.kind === "passage" ? ps.sentences.length : 0;
+  })();
   const tableGroup =
     activeSection?.kind === "vocabulary"
       ? "vocab"
@@ -3000,11 +3773,19 @@ function PropertiesPanel({
     : isCustom
       ? activeCustom?.kind === "spacer"
         ? "여백 블록"
-        : "텍스트 블록"
+        : activeCustom?.kind === "activity"
+          ? activityBlockLabel(activeCustom)
+          : "텍스트 블록"
       : isTitleMeta
         ? "표지 / 메타"
         : NUMBERED_SECTION_LABELS[active.kind as AnalysisSection["kind"]];
   const addLabel = isSectionItem ? ADD_LABEL[(active as ItemDescriptor).kind] : undefined;
+  // 단어 시험지 설정은 활동 설정처럼 독립 섹션으로 — '단어 시험지' 카드를 누른 적이 있으면(focused) 패널에 떠 있는다.
+  const vocabTestIndex = vocabSectionIndex;
+  const vocabTestSec = vocabTestIndex >= 0 ? report.sections[vocabTestIndex] : null;
+  const vocabTestBlock = vocabTestFocused && vocabTestSec?.kind === "vocabulary" ? vocabTestSec : null;
+  // 카드를 눌러 focus 되면 항상 활성(펼침) — 활성화 즉시 자동으로 펼쳐지게 한다.
+  const vocabTestActive = !!vocabTestBlock;
 
   if (settingsOpen) {
     return (
@@ -3042,7 +3823,7 @@ function PropertiesPanel({
   }
 
   return (
-    <SortablePanelStack blockSelected={!!active && !isCover}>
+    <SortablePanelStack blockSelected={!!active && !isCover} activityActive={activityActive} onActivateActivity={onActivateActivity} vocabTestActive={vocabTestActive}>
       {isCover ? (
         <PanelSection sectionId="cover-edit" title="표지 편집">
           <p className="text-[12px] text-slate-400 leading-relaxed">
@@ -3213,9 +3994,10 @@ function PropertiesPanel({
               />
               <ToggleRow
                 label="새 페이지에서 시작"
-                on={!!activeMeta.breakBefore}
+                on={activeMeta.breakBefore ?? activeCustom?.kind === "activity"}
                 onClick={() => {
-                  onMetaPatch({ breakBefore: !activeMeta.breakBefore });
+                  const eff = activeMeta.breakBefore ?? (activeCustom?.kind === "activity");
+                  onMetaPatch({ breakBefore: !eff });
                   if (active) onScrollToBlock(active.id);
                 }}
               />
@@ -3299,6 +4081,55 @@ function PropertiesPanel({
             </PanelGroup>
           ) : null}
           </PanelSection>
+
+          {activityBlock ? (
+            <PanelSection sectionId="activity-edit" title={`${activityBlockLabel(activityBlock)} 설정`}>
+              <ActivityOptions
+                block={activityBlock}
+                sentenceCount={passageSentenceCount}
+                answerKeyPageOn={report.activityAnswerKeyPage !== false}
+                onActivity={onActivity}
+              />
+            </PanelSection>
+          ) : null}
+
+          {vocabTestBlock ? (
+            <PanelSection sectionId="vocab-test-edit" title="단어 시험지 설정">
+              {(() => {
+                const mode = vocabTestBlock.vocabTestMode ?? "study";
+                const enabled = !!report.vocabTestOnly || mode !== "study";
+                return (
+                  <>
+                    <ToggleRow
+                      label="단어 시험지 포함"
+                      on={enabled}
+                      onClick={() => onVocabTestMode(vocabTestIndex, enabled ? "study" : "hide-meaning")}
+                      icon={<FileQuestion className="h-3.5 w-3.5" />}
+                    />
+                    {enabled ? (
+                      <div className="mt-2.5">
+                        <VocabTestOptions
+                          sectionIndex={vocabTestIndex}
+                          vocabMode={mode}
+                          vocabTestLayout={vocabTestBlock.vocabTestLayout ?? "table"}
+                          vocabTestOnly={!!report.vocabTestOnly}
+                          excludedVocabTestCount={vocabTestBlock.vocabTestExcludedKeys?.length ?? 0}
+                          vocabTierFilter={vocabTestBlock.vocabTierFilter}
+                          onVocabTestMode={onVocabTestMode}
+                          onVocabTestLayout={onVocabTestLayout}
+                          onVocabTestOnly={onVocabTestOnly}
+                          onRestoreVocabTestRows={onRestoreVocabTestRows}
+                          onVocabTierFilter={onVocabTierFilter}
+                        />
+                      </div>
+                    ) : (
+                      <p className="mt-1.5 text-[10.5px] text-slate-400">켜면 지문 단어로 시험지 페이지가 생성돼요. 뜻·단어·동의어·반의어 + 난이도 단계.</p>
+                    )}
+                  </>
+                );
+              })()}
+            </PanelSection>
+          ) : null}
 
         </>
       )}
