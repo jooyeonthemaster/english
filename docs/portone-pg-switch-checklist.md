@@ -42,7 +42,9 @@ scope.
    secret.
 3. If the Danal channel is shown as 결제창 V1, copy the PortOne V1 customer code
    that starts with `imp`.
-4. Register the production webhook URL after the channel/store change.
+4. Register the production webhook URL after the channel/store change. For both
+   V2 and V1 notification settings, use
+   `https://www.smoat.co.kr/api/portone/webhook`.
 5. Run the PortOne webhook test before submitting the PG review.
 
 ## Vercel Variables for Danal
