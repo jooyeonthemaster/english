@@ -33,10 +33,16 @@ import {
 
 type JobStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
 
-// 진행 상태 폴링용 최소 형태(작업 큐 카드는 결과 카드와 중복이라 노출하지 않음 — 헤더 배지로만 표시).
+// 진행 잡을 BottomQueueSection 의 generating/error 카드로 매핑하기 위한 형태(listing-service GET 반환).
+// 잡은 passageIds 배열만 보유 — 단일 지문 제목/본문은 없음(1잡 = N지문). 카드 미사용 필드는 선언 생략.
 interface SimilarQuestionJob {
   id: string;
   status: JobStatus;
+  passageCount?: number;
+  totalCount?: number;
+  errorMessage?: string | null;
+  gradeInfo?: string | null;
+  createdAt?: string;
 }
 
 // question-generations API 응답(원시) → 공유 QuestionCardItem(+ 동형 고유 analysis 는 structuredData 에 보존).
@@ -67,6 +73,60 @@ const ZERO_QUEUE_COUNTS = { generating: 0, done: 0, error: 0 };
 
 function isActive(status: JobStatus): boolean {
   return status === "PENDING" || status === "PROCESSING";
+}
+
+// SimilarQuestionJob → QueueItem[](generating/error). COMPLETED 는 빈 배열 — 완료 문항은 savedQuestions(폴링)가
+// 결과 카드로 표시하므로 큐에 넣지 않는다(중복/영구 로딩 방지). 출처 분리: generating/error=jobQueue,
+// 완료=savedQuestions → 중복 원천 차단.
+// 기본 문제 생성처럼 "지문 수만큼" 진행 카드를 띄운다(1잡=N지문 → N카드). 잡 GET 이 지문 제목을 안 줘서
+// 제목은 번호 placeholder. 실패는 잡 단위 1카드.
+function jobToQueueItems(job: SimilarQuestionJob): QueueItem[] {
+  if (job.status === "COMPLETED") return [];
+  const isErr = job.status === "FAILED";
+  const gradeLabel =
+    typeof job.gradeInfo === "string" && job.gradeInfo.trim() ? `${job.gradeInfo.trim()} · ` : "";
+  const passageN = Number(job.passageCount) > 0 ? Number(job.passageCount) : 1;
+  const createdAt = typeof job.createdAt === "string" ? job.createdAt : undefined;
+
+  if (isErr) {
+    return [
+      {
+        id: job.id,
+        passageId: job.id,
+        passageTitle: `${gradeLabel}동형 문제 생성 실패`,
+        passageContent: "동형 문제 생성에 실패했습니다.",
+        createdAt,
+        passageMeta: {},
+        analysisData: null,
+        status: "error",
+        progress: {},
+        questions: [],
+        error: job.errorMessage ?? undefined,
+        config: { typeCounts: {}, difficulty: "", prompt: "", mode: "manual" },
+      },
+    ];
+  }
+
+  // 지문당 생성 문항 수 — PENDING 단계엔 totalCount=0(분석 후 채움)이라 1로 폴백.
+  const total = Number(job.totalCount) > 0 ? Number(job.totalCount) : passageN;
+  const perPassage = Math.max(1, Math.round(total / passageN));
+  return Array.from({ length: passageN }, (_, i) => ({
+    id: `${job.id}__${i}`,
+    passageId: `${job.id}__${i}`,
+    passageTitle:
+      passageN > 1
+        ? `${gradeLabel}동형 문항 생성 (${i + 1}/${passageN})`
+        : `${gradeLabel}동형 문항 생성`,
+    passageContent: "원본 문항을 분석해 동형 문항을 생성하고 있습니다.",
+    createdAt,
+    passageMeta: {},
+    analysisData: null,
+    status: "generating" as const,
+    progress: {},
+    questions: [],
+    // mode='manual' 이라 sum(typeCounts)=perPassage 가 'AI가 N문제…' 진행 라벨로 표시된다.
+    config: { typeCounts: { SIMILAR: perPassage }, difficulty: "", prompt: "", mode: "manual" as const },
+  }));
 }
 
 const isMissingQuestionError = (error?: string) =>
@@ -131,6 +191,10 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
   }, [loadJobs, loadSaved, refreshKey]);
 
   const hasActiveJobs = useMemo(() => jobs.some((j) => isActive(j.status)), [jobs]);
+
+  // 진행(PENDING/PROCESSING)·실패(FAILED) 잡만 generating/error 카드로. COMPLETED 는 제외(savedQuestions 담당).
+  // 잡이 COMPLETED 로 전이되면 자동으로 큐에서 빠져 진행 카드가 사라지고 결과 카드로 매끄럽게 전환된다.
+  const jobQueue = useMemo<QueueItem[]>(() => jobs.flatMap(jobToQueueItems), [jobs]);
 
   useEffect(() => {
     if (!hasActiveJobs) return;
@@ -345,7 +409,7 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
         <BottomQueueSection
           marqueeBoundaryRef={bottomQueueBoundaryRef}
           sessionQueue={EMPTY_QUEUE}
-          filteredQueue={EMPTY_QUEUE}
+          filteredQueue={jobQueue}
           queueFilter="all"
           setQueueFilter={() => {}}
           queueCounts={ZERO_QUEUE_COUNTS}

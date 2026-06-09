@@ -301,7 +301,7 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
 
   return (
     <div className="flex flex-col gap-4 p-4 sm:px-6 xl:px-8">
-      <section className="flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <section className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         {/* 헤더 — 유형 후보 수 · 소스명 · 학년 · 초기화 */}
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-slate-100 px-4 py-2.5">
           <div className="flex min-w-0 items-center gap-2">
@@ -395,7 +395,7 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
             </aside>
           </div>
         ) : (
-          <div className="h-[min(760px,calc(100dvh-260px))] min-h-[520px]">
+          <div className="flex h-[min(760px,calc(100dvh-260px))] min-h-[520px] flex-col">
             <InlineCropBoard
               ref={cropBoardRef}
               images={slots}

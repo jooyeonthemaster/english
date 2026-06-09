@@ -9,11 +9,9 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import {
-  AlertCircle,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
-  Clock,
   Loader2,
   Minus,
   Plus,
@@ -81,7 +79,6 @@ import {
   type CustomGenJob,
   type CustomTypeListItem,
   type CustomTypeOverride,
-  formatTime,
 } from "./custom-type-utils";
 import { CustomTypeReviseModal } from "./custom-type-revise-modal";
 
@@ -118,6 +115,55 @@ const DIFFICULTY_TONES = [
 
 function isActive(status: CustomGenJob["status"]): boolean {
   return status === "PENDING" || status === "PROCESSING";
+}
+
+// CustomGenJob → QueueItem[](generating/error). COMPLETED 는 빈 배열 — 완료 문항은 savedQuestions(폴링)가
+// 결과 카드로 표시하므로 큐에 넣지 않는다(중복/영구 로딩 방지). 출처 분리: generating/error=jobQueue,
+// 완료=savedQuestions → 중복 원천 차단.
+// 기본 문제 생성처럼 "지문 수만큼" 진행 카드를 띄운다(1잡=N지문 → N카드). 제목은 번호 placeholder.
+// 실패는 잡 단위 1카드. (동형 문제 생성과 동일 패턴)
+function jobToQueueItems(job: CustomGenJob): QueueItem[] {
+  if (job.status === "COMPLETED") return [];
+  const isErr = job.status === "FAILED";
+  const passageN = Number(job.passageCount) > 0 ? Number(job.passageCount) : 1;
+  const createdAt = typeof job.createdAt === "string" ? job.createdAt : undefined;
+
+  if (isErr) {
+    return [
+      {
+        id: job.id,
+        passageId: job.id,
+        passageTitle: "커스텀 문항 생성 실패",
+        passageContent: "커스텀 문항 생성에 실패했습니다.",
+        createdAt,
+        passageMeta: {},
+        analysisData: null,
+        status: "error",
+        progress: {},
+        questions: [],
+        error: job.errorMessage ?? undefined,
+        config: { typeCounts: {}, difficulty: "", prompt: "", mode: "manual" },
+      },
+    ];
+  }
+
+  // 지문당 생성 문항 수 — 커스텀은 잡에 countPerPassage 가 명시돼 있다.
+  const perPassage = Math.max(1, Number(job.countPerPassage) || 1);
+  return Array.from({ length: passageN }, (_, i) => ({
+    id: `${job.id}__${i}`,
+    passageId: `${job.id}__${i}`,
+    passageTitle:
+      passageN > 1 ? `커스텀 문항 생성 (${i + 1}/${passageN})` : "커스텀 문항 생성",
+    passageContent: "선택한 지문으로 커스텀 유형 문항을 생성하고 있습니다.",
+    createdAt,
+    passageMeta: {},
+    analysisData: null,
+    status: "generating" as const,
+    progress: {},
+    questions: [],
+    // mode='manual' 이라 sum(typeCounts)=perPassage 가 'AI가 N문제…' 진행 라벨로 표시된다.
+    config: { typeCounts: { CUSTOM: perPassage }, difficulty: "", prompt: "", mode: "manual" as const },
+  }));
 }
 
 // generations API 응답(원시) → 공유 QuestionCardItem. createdAt 만 Date 로 복원한다.
@@ -540,6 +586,10 @@ export function CustomTypeGeneratePanel({
 
   const hasActiveJobs = useMemo(() => jobs.some((j) => isActive(j.status)), [jobs]);
 
+  // 진행(PENDING/PROCESSING)·실패(FAILED) 잡만 generating/error 카드로. COMPLETED 는 제외(savedQuestions 담당).
+  // 잡이 COMPLETED 로 전이되면 자동으로 큐에서 빠져 진행 카드가 사라지고 결과 카드로 매끄럽게 전환된다.
+  const jobQueue = useMemo<QueueItem[]>(() => jobs.flatMap(jobToQueueItems), [jobs]);
+
   useEffect(() => {
     if (!hasActiveJobs) return;
     const timer = setInterval(() => {
@@ -873,19 +923,7 @@ export function CustomTypeGeneratePanel({
         }
       />
 
-      {/* 작업 큐 — 진행 중/완료 잡(커스텀은 DB 잡 폴링이라 별도 표시). */}
-      {jobs.length > 0 ? (
-        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-          <h3 className="mb-2 text-[12px] font-bold uppercase tracking-wide text-slate-400">작업 큐</h3>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {jobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {/* 생성/검수 결과 — 기본 문제 생성과 동일한 공유 BottomQueueSection. */}
+      {/* 생성/검수 결과 — 기본 문제 생성과 동일한 공유 BottomQueueSection. 진행 잡은 generating 카드로 즉시 표시. */}
       <section
         ref={bottomQueueBoundaryRef}
         className="relative rounded-lg border border-slate-200 bg-white shadow-sm"
@@ -893,7 +931,7 @@ export function CustomTypeGeneratePanel({
         <BottomQueueSection
           marqueeBoundaryRef={bottomQueueBoundaryRef}
           sessionQueue={EMPTY_QUEUE}
-          filteredQueue={EMPTY_QUEUE}
+          filteredQueue={jobQueue}
           queueFilter="all"
           setQueueFilter={() => {}}
           queueCounts={ZERO_QUEUE_COUNTS}
@@ -1372,67 +1410,3 @@ function NumberStepper({
   );
 }
 
-// ─────────────────────────── 작업 카드 ───────────────────────────
-function JobCard({ job }: { job: CustomGenJob }) {
-  const done = job.savedCount + job.skippedCount;
-  const percent = job.totalCount > 0 ? Math.min(100, Math.round((done / job.totalCount) * 100)) : 0;
-  const tone =
-    job.status === "FAILED"
-      ? "border-rose-200 bg-rose-50/60"
-      : job.status === "COMPLETED"
-        ? "border-emerald-200 bg-emerald-50/40"
-        : "border-blue-200 bg-blue-50/50";
-
-  return (
-    <div className={cn("flex flex-col gap-2 rounded-xl border p-3", tone)}>
-      <div className="flex items-center gap-1.5">
-        {job.status === "PENDING" ? (
-          <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-bold text-slate-600">
-            <Clock className="size-3" /> 대기 중
-          </span>
-        ) : job.status === "PROCESSING" ? (
-          <span className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-1.5 py-0.5 text-[10.5px] font-bold text-blue-700">
-            <Loader2 className="size-3 animate-spin" /> 생성 중
-          </span>
-        ) : job.status === "COMPLETED" ? (
-          <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
-            <CheckCircle2 className="size-3" /> 완료
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 rounded-md bg-rose-100 px-1.5 py-0.5 text-[10.5px] font-bold text-rose-700">
-            <AlertCircle className="size-3" /> 실패
-          </span>
-        )}
-        <span className="ml-auto text-[10.5px] text-slate-400 tabular-nums">{formatTime(job.createdAt)}</span>
-      </div>
-
-      {job.status === "PROCESSING" && job.totalCount > 0 ? (
-        <div className="space-y-1">
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-blue-100">
-            <div className="h-full rounded-full bg-blue-500 transition-all" style={{ width: `${percent}%` }} />
-          </div>
-          <p className="text-[11px] font-medium text-blue-600 tabular-nums">
-            {done}/{job.totalCount} 처리 · 저장 {job.savedCount}
-            {job.skippedCount > 0 ? ` · 제외 ${job.skippedCount}` : ""}
-          </p>
-        </div>
-      ) : job.status === "COMPLETED" ? (
-        <p className="text-[11px] font-medium text-emerald-700 tabular-nums">
-          {job.savedCount}개 생성
-          {job.skippedCount > 0 ? ` · ${job.skippedCount}개 제외` : ""}
-          {job.savedCount === 0 && job.errorMessage ? (
-            <span className="mt-1 block font-normal text-slate-500">{job.errorMessage}</span>
-          ) : null}
-        </p>
-      ) : job.status === "FAILED" ? (
-        <p className="text-[11px] leading-relaxed text-rose-600 line-clamp-3" title={job.errorMessage ?? undefined}>
-          {job.errorMessage ?? "생성에 실패했습니다."}
-        </p>
-      ) : (
-        <p className="text-[11px] text-slate-500">
-          지문 {job.passageCount}개 × {job.countPerPassage}개 생성 대기 중
-        </p>
-      )}
-    </div>
-  );
-}
