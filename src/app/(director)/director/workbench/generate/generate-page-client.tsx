@@ -226,24 +226,17 @@ export function GeneratePageClient({
   // 불러오기 직후 왼쪽 지문 목록을 샤라락 접는 신호 (증가 카운터).
   const [leftCollapseSignal, setLeftCollapseSignal] = useState(0);
   // 우측 "유형·생성 설정" 컬럼 접힘 상태 (워크스페이스와 나란히 배치).
-  const [configPaneOpen, setConfigPaneOpen] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    try {
-      return window.localStorage.getItem("smoat:generate:config-pane-open") !== "false";
-    } catch {
-      return true;
-    }
-  });
+  // 영구 저장하지 않는다 — 접힌 채 저장되면 다음 방문에서 생성 버튼·유형
+  // 설정이 통째로 숨겨진 채 시작되는 사고가 난다 (세션 내 토글만 허용).
+  const [configPaneOpen, setConfigPaneOpen] = useState(true);
   const toggleConfigPane = useCallback(() => {
-    setConfigPaneOpen((prev) => {
-      const next = !prev;
-      try {
-        window.localStorage.setItem("smoat:generate:config-pane-open", String(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
+    setConfigPaneOpen((prev) => !prev);
+  }, []);
+  // 빈 워크스페이스 가이드의 "내 지문 열기" — 왼쪽 패널을 펴고 라이브러리 탭으로.
+  const [leftOpenSignal, setLeftOpenSignal] = useState(0);
+  const handleOpenLibrary = useCallback(() => {
+    setIntakeView("library");
+    setLeftOpenSignal((s) => s + 1);
   }, []);
 
   // ── Analysis detail modal ──
@@ -813,6 +806,10 @@ export function GeneratePageClient({
           : `지문 ${validIds.length}/${ids.length}개를 워크스페이스로 불러왔습니다.`,
       );
     }
+    // 시드된 원시 선택을 정리 — 검증 전 id(다른 학원/삭제된 지문)가 선택
+    // 카운트에 남거나, 워크스페이스와 라이브러리 체크의 이중 상태가 생기는
+    // 것을 막는다 (수동 '선택 지문 불러오기'와 동작 일치).
+    setSelectedIds(new Set());
     prefillAppliedRef.current = true;
   }, [loadingPassages, passages, workspaceApi]);
 
@@ -1376,6 +1373,7 @@ export function GeneratePageClient({
         <WorkspaceShell
           leftLabel="지문"
           leftCollapseSignal={leftCollapseSignal}
+          leftOpenSignal={leftOpenSignal}
           header={
             <WorkflowPageTitle
               icon={QuestionGenerationIcon}
@@ -1477,15 +1475,54 @@ export function GeneratePageClient({
           right={
             /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══ */
             <div className="flex h-full min-h-0 min-w-0">
-              <div className="min-h-0 min-w-0 flex-1 border-r border-slate-200">
-                <PassageWorkspace
-                  api={workspaceApi}
-                  selectedCount={selectedIds.size}
-                  onLoadSelected={handleLoadSelectedToWorkspace}
-                  generating={workspaceGenerating}
-                  sessionQueue={sessionQueue}
-                  questionCountByPassage={questionCountByPassage}
-                />
+              <div className="flex min-h-0 min-w-[280px] flex-1 flex-col border-r border-slate-200">
+                <div className="min-h-0 flex-1">
+                  <PassageWorkspace
+                    api={workspaceApi}
+                    selectedCount={selectedIds.size}
+                    onLoadSelected={handleLoadSelectedToWorkspace}
+                    onOpenLibrary={handleOpenLibrary}
+                    generating={workspaceGenerating}
+                    sessionQueue={sessionQueue}
+                    questionCountByPassage={questionCountByPassage}
+                    setModeActive={genMode === "set"}
+                  />
+                </div>
+                {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
+                    하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지). */}
+                {!configPaneOpen && workspaceActive ? (
+                  <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
+                    <button
+                      type="button"
+                      onClick={toggleConfigPane}
+                      className="flex h-9 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
+                    >
+                      유형·난이도 설정 열기
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleWorkspaceGenerate}
+                      disabled={
+                        workspaceSummary.totalQuestions === 0 ||
+                        workspaceGenerating
+                      }
+                      className="flex h-9 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                    >
+                      {workspaceGenerating
+                        ? "생성 중…"
+                        : workspaceSummary.totalQuestions > 0
+                          ? `${workspaceSummary.rowCount}개 지문 · ${workspaceSummary.totalQuestions}문제 생성`
+                          : "유형을 선택하세요 (설정 열기)"}
+                      {!workspaceGenerating &&
+                      workspaceSummary.totalQuestions > 0 &&
+                      workspaceSummary.creditCost > 0 ? (
+                        <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-bold tabular-nums">
+                          {workspaceSummary.creditCost}크레딧
+                        </span>
+                      ) : null}
+                    </button>
+                  </div>
+                ) : null}
               </div>
               {!configPaneOpen ? (
                 <button
@@ -1495,7 +1532,9 @@ export function GeneratePageClient({
                   className="flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
                 >
                   <span>{"<"}</span>
-                  <span style={{ writingMode: "vertical-rl" }}>설정 열기</span>
+                  <span style={{ writingMode: "vertical-rl" }}>
+                    유형·생성 설정 열기
+                  </span>
                 </button>
               ) : (
                 <>
@@ -1506,9 +1545,16 @@ export function GeneratePageClient({
                     className="flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
                   >
                     <span>{">"}</span>
-                    <span style={{ writingMode: "vertical-rl" }}>설정 접기</span>
+                    <span style={{ writingMode: "vertical-rl" }}>
+                      유형·생성 설정 접기
+                    </span>
                   </button>
-                  <div className="flex h-full w-[400px] min-w-0 shrink-0 flex-col overflow-hidden">
+                  {/* 좁은 화면에서 워크스페이스가 압착되지 않게 설정 컬럼은
+                      400px 상한 + 가용 폭의 38% 로 제한한다. */}
+                  <div
+                    className="flex h-full min-w-0 shrink-0 flex-col overflow-hidden"
+                    style={{ width: "min(400px, 38%)", minWidth: 300 }}
+                  >
             <GenerationConfigPanel
               genMode={genMode}
               setGenMode={setGenMode}

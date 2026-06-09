@@ -80,13 +80,25 @@ export function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-/** 행 하나가 생성할 문제 수 — 오버라이드 우선, 없으면 전체 설정. */
+/** 오버라이드에 실제 유형 개수가 들어있는지 (난이도만 지정한 경우 false). */
+export function overrideHasTypeCounts(override: RowOverride | null): boolean {
+  return (
+    !!override &&
+    Object.values(override.typeCounts).some((n) => Number(n) > 0)
+  );
+}
+
+/**
+ * 행 하나가 생성할 문제 수.
+ * 오버라이드에 유형이 있으면 그 합 — 난이도만 지정한 오버라이드는 "전체 설정의
+ * 유형 + 이 난이도"를 의미하므로 전체 설정 개수로 폴백한다 (조용한 0개 제외 방지).
+ */
 export function rowQuestionCount(
   row: WorkspaceRow,
   global: { genMode: "auto" | "manual" | "set"; autoCount: number; totalQuestions: number },
 ): number {
-  if (row.override) {
-    return Object.values(row.override.typeCounts).reduce((a, b) => a + b, 0);
+  if (overrideHasTypeCounts(row.override)) {
+    return Object.values(row.override!.typeCounts).reduce((a, b) => a + b, 0);
   }
   if (global.genMode === "auto") return Math.max(0, global.autoCount);
   if (global.genMode === "manual") return global.totalQuestions;

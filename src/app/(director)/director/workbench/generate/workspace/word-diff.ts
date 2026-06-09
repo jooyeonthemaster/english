@@ -25,7 +25,12 @@ export function diffWords(before: string, after: string): DiffToken[] {
   }
 
   // 구두점 차이는 동일 단어로 취급해 diff 노이즈를 줄인다.
-  const norm = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}']/gu, "");
+  // 단, 구두점·기호 전용 토큰("—", "(" 등)은 norm 결과가 빈 문자열로 붕괴해
+  // 서로 다른 기호끼리 same 으로 오판되므로 원문 그대로 비교한다.
+  const norm = (w: string) => {
+    const stripped = w.toLowerCase().replace(/[^\p{L}\p{N}']/gu, "");
+    return stripped || w;
+  };
 
   const m = a.length;
   const n = b.length;

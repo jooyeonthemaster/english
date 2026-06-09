@@ -122,7 +122,9 @@ export function TypeOverridePopover({
             이 지문에만 적용할 설정
           </p>
           <p className="mt-0.5 text-[11px] leading-relaxed text-slate-400">
-            지정하면 오른쪽 전체 설정 대신 이 설정으로 생성됩니다.
+            유형을 고르면 오른쪽 ‘유형·생성 설정’ 대신 이 설정으로 생성돼요.
+            난이도만 고르면 유형은 오른쪽 설정을 따르고 난이도만 바뀝니다.
+            유형별 세부 옵션(빈칸 수 등)은 오른쪽 설정 값을 따라요.
           </p>
         </div>
 

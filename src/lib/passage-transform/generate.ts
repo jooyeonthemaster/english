@@ -21,8 +21,9 @@ import { buildParaphrasePrompt, buildPrependPrompt } from "./prompts";
 export const TRANSFORM_MODEL_ID =
   process.env.GEMINI_TRANSFORM_MODEL?.trim() || "gemini-3.1-flash-lite";
 
-const TRANSFORM_TIMEOUT_MS = 30_000;
-const TRANSFORM_MAX_RETRIES = 2;
+// 라우트 maxDuration(60s) 안에서: 25s 타임아웃 × 2시도 = 최대 ~50s.
+const TRANSFORM_TIMEOUT_MS = 25_000;
+const TRANSFORM_MAX_RETRIES = 1;
 
 async function runTransform<T>({
   schema,
@@ -45,6 +46,9 @@ async function runTransform<T>({
         prompt,
         temperature,
         maxOutputTokens: 4096,
+        // SDK 내부 재시도(기본 2회)와 우리 루프가 중첩되면 호출이 곱으로
+        // 불어난다 — 재시도는 이 루프에서만 관리한다.
+        maxRetries: 0,
         abortSignal: AbortSignal.timeout(TRANSFORM_TIMEOUT_MS),
         providerOptions: {
           google: {
@@ -107,15 +111,38 @@ function trimOverlapWithPassageStart(
   passageText: string,
 ): string {
   const paraWords = paragraph.split(/\s+/).filter(Boolean);
-  const passageNorm = normalize(passageText);
+  const normWord = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}']/gu, "");
+  const passageWords = passageText.split(/\s+/).filter(Boolean).map(normWord);
+  // 단어 배열로 비교해 "the" vs "theatre" 류 접두어 오탐을 차단한다.
+  const tailMatchesPassageStart = (n: number) => {
+    const tail = paraWords.slice(paraWords.length - n).map(normWord);
+    if (passageWords.length < n) return false;
+    for (let i = 0; i < n; i += 1) {
+      if (tail[i] !== passageWords[i]) return false;
+    }
+    return true;
+  };
   // 긴 겹침부터 검사 — 최소 5단어 이상 겹칠 때만 복사 사고로 간주.
   for (let n = Math.min(paraWords.length, 80); n >= 5; n -= 1) {
-    const tail = paraWords.slice(paraWords.length - n).join(" ");
-    if (passageNorm.startsWith(normalize(tail))) {
-      return paraWords.slice(0, paraWords.length - n).join(" ").trim();
+    if (tailMatchesPassageStart(n)) {
+      const trimmed = paraWords
+        .slice(0, paraWords.length - n)
+        .join(" ")
+        .trim();
+      // 겹침을 잘라낸 자리가 문장 중간이면("...these sounds,") 마지막 완결
+      // 문장 경계까지 추가로 잘라 미완성 꼬리를 남기지 않는다.
+      return snapToSentenceEnd(trimmed);
     }
   }
   return paragraph.trim();
+}
+
+/** 끝이 .!? 로 닫히지 않으면 마지막 완결 문장까지로 자른다. */
+function snapToSentenceEnd(text: string): string {
+  const t = text.trim();
+  if (!t || /[.!?]["')\]]?$/.test(t)) return t;
+  const m = t.match(/^[\s\S]*[.!?]["')\]]?(?=\s)/);
+  return m ? m[0].trim() : t;
 }
 
 export async function runParaphrase({
@@ -141,7 +168,8 @@ export async function runParaphrase({
     throw new Error("변형 결과가 원문과 동일합니다. 다시 시도해주세요.");
   }
   // 길이 폭주 가드 — 모델이 전체 지문을 되돌려보내는 사고 방지.
-  if (rewritten.length > Math.max(selectedText.length * 2.5, selectedText.length + 200)) {
+  // (짧은 선택에서도 가드가 무력해지지 않게 바닥값은 160자로 제한)
+  if (rewritten.length > Math.max(selectedText.length * 2.5, 160)) {
     throw new Error("변형 결과가 비정상적으로 깁니다. 다시 시도해주세요.");
   }
   return {

@@ -86,6 +86,8 @@ interface WorkspaceShellProps {
    * 옆으로 샤라락 접히며 작업 공간이 넓어지는 UX 용. 0이면 무시.
    */
   leftCollapseSignal?: number;
+  /** 증가할 때마다 왼쪽 패널을 편다 — 빈 워크스페이스의 "내 지문 열기" 용. */
+  leftOpenSignal?: number;
 }
 
 export function WorkspaceShell({
@@ -94,6 +96,7 @@ export function WorkspaceShell({
   right,
   leftLabel = "지문",
   leftCollapseSignal = 0,
+  leftOpenSignal = 0,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
@@ -119,6 +122,10 @@ export function WorkspaceShell({
   useEffect(() => {
     if (leftCollapseSignal > 0) setLeftPaneOpen(false);
   }, [leftCollapseSignal]);
+
+  useEffect(() => {
+    if (leftOpenSignal > 0) setLeftPaneOpen(true);
+  }, [leftOpenSignal]);
 
   const toggleLeftPaneOpen = useCallback(() => {
     setLeftPaneOpen((prev) => {

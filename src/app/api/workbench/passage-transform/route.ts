@@ -46,6 +46,13 @@ export async function POST(req: NextRequest) {
 
   const { mode, passageText, selectedText, avoidTexts } = parsed.data;
 
+  if (passageText.trim().length < 20) {
+    return NextResponse.json(
+      { error: "지문이 너무 짧습니다. 최소 20자 이상이어야 합니다." },
+      { status: 400 },
+    );
+  }
+
   if (mode === "PARAPHRASE") {
     const span = selectedText?.trim() || "";
     if (span.length < 12) {
@@ -92,7 +99,13 @@ export async function POST(req: NextRequest) {
 
   const refund = (reason: string) =>
     refundCredits(staff.academyId, "PASSAGE_TRANSFORM", creditTxId, reason).catch(
-      () => {},
+      (refundErr) => {
+        // 환불 실패는 크레딧 유실 — 추적 가능하게 반드시 남긴다.
+        console.error(
+          `[PASSAGE-TRANSFORM] refund FAILED (academy=${staff.academyId}, tx=${creditTxId}, reason=${reason}):`,
+          refundErr instanceof Error ? refundErr.message : refundErr,
+        );
+      },
     );
 
   try {

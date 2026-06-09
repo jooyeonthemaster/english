@@ -13,22 +13,26 @@ import { diffWords } from "./word-diff";
 function PanelActions({
   applyLabel,
   busy,
+  disabled = false,
   onApply,
   onRegenerate,
   onCancel,
 }: {
   applyLabel: string;
   busy: boolean;
+  /** 행 외부 잠금(예: 문제 생성 진행 중) — busy 와 별개로 모든 액션 차단. */
+  disabled?: boolean;
   onApply: () => void;
   onRegenerate: () => void;
   onCancel: () => void;
 }) {
+  const blocked = busy || disabled;
   return (
     <div className="flex items-center gap-1.5">
       <button
         type="button"
         onClick={onApply}
-        disabled={busy}
+        disabled={blocked}
         className="flex h-7.5 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         <Check className="h-3.5 w-3.5" aria-hidden="true" />
@@ -37,7 +41,7 @@ function PanelActions({
       <button
         type="button"
         onClick={onRegenerate}
-        disabled={busy}
+        disabled={blocked}
         className="flex h-7.5 items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {busy ? (
@@ -53,7 +57,7 @@ function PanelActions({
       <button
         type="button"
         onClick={onCancel}
-        disabled={busy}
+        disabled={blocked}
         className="flex h-7.5 items-center gap-1 rounded-md px-2 text-[11.5px] font-semibold text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-60"
       >
         <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -68,6 +72,7 @@ export function ParaphrasePreviewPanel({
   rewritten,
   note,
   busy,
+  disabled,
   onApply,
   onRegenerate,
   onCancel,
@@ -76,6 +81,7 @@ export function ParaphrasePreviewPanel({
   rewritten: string;
   note: string;
   busy: boolean;
+  disabled?: boolean;
   onApply: () => void;
   onRegenerate: () => void;
   onCancel: () => void;
@@ -119,6 +125,7 @@ export function ParaphrasePreviewPanel({
         <PanelActions
           applyLabel="이 문장으로 교체"
           busy={busy}
+          disabled={disabled}
           onApply={onApply}
           onRegenerate={onRegenerate}
           onCancel={onCancel}
@@ -133,6 +140,7 @@ export function PrependPreviewPanel({
   firstSentence,
   note,
   busy,
+  disabled,
   onApply,
   onRegenerate,
   onCancel,
@@ -142,6 +150,7 @@ export function PrependPreviewPanel({
   firstSentence: string;
   note: string;
   busy: boolean;
+  disabled?: boolean;
   onApply: () => void;
   onRegenerate: () => void;
   onCancel: () => void;
@@ -169,6 +178,7 @@ export function PrependPreviewPanel({
         <PanelActions
           applyLabel="맨 앞에 추가"
           busy={busy}
+          disabled={disabled}
           onApply={onApply}
           onRegenerate={onRegenerate}
           onCancel={onCancel}

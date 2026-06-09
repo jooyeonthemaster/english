@@ -1386,14 +1386,23 @@ export function GenerationConfigPanel({
         )}
 
         {genMode === "set" && (
-          <SetBuilderPanel
-            passageId={
-              selectedIds && selectedIds.size > 0
-                ? Array.from(selectedIds)[0]
-                : null
-            }
-            generationPlan={generationPlan}
-          />
+          <>
+            {workspaceActive ? (
+              <p className="mx-4 mt-3 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
+                장문 세트는 왼쪽 ‘내 지문’에서 체크한 지문 1개로 동작합니다 —
+                워크스페이스에 불러온 지문({workspaceRowCount}개)은 여기에
+                사용되지 않아요.
+              </p>
+            ) : null}
+            <SetBuilderPanel
+              passageId={
+                selectedIds && selectedIds.size > 0
+                  ? Array.from(selectedIds)[0]
+                  : null
+              }
+              generationPlan={generationPlan}
+            />
+          </>
         )}
       </div>
 
@@ -1402,8 +1411,15 @@ export function GenerationConfigPanel({
         <div className="px-5 py-3 border-t border-slate-100 bg-white shrink-0">
           {workspaceVariantCount > 0 ? (
             <p className="mb-2 rounded-md bg-blue-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-blue-600">
-              수정된 {workspaceVariantCount}개 지문은 생성 시 변형본으로 저장된
-              뒤 출제됩니다.
+              수정·범위 지정된 {workspaceVariantCount}개 지문은 생성 시
+              ‘변형본’ 지문으로 저장된 뒤 출제됩니다. 원본 지문은 그대로
+              보존돼요.
+            </p>
+          ) : null}
+          {selectedIds && selectedIds.size > 0 ? (
+            <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
+              왼쪽에서 체크한 {selectedIds.size}개 지문은 아직 워크스페이스에
+              없어요 — ‘선택 지문 불러오기’를 눌러야 생성에 포함됩니다.
             </p>
           ) : null}
           <Button

@@ -357,6 +357,11 @@ export async function createWorkbenchPassage(
 export async function createDirectInputPassageMaterial(data: {
   title: string;
   content: string;
+  /**
+   * 변형본 저장용 — 원본 Passage id. 지정하면 학교/학년/학기/단원/출판사/난이도
+   * 메타를 원본에서 승계한다 (analysis 는 본문이 달라 stale 이므로 승계하지 않음).
+   */
+  sourcePassageId?: string;
 }): Promise<ActionResult> {
   try {
     const staff = await requireAuth();
@@ -371,6 +376,21 @@ export async function createDirectInputPassageMaterial(data: {
         error: "지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.",
       };
     }
+
+    // 변형본이면 원본 메타를 academy 스코프로 조회해 승계한다.
+    const sourcePassage = data.sourcePassageId
+      ? await prisma.passage.findFirst({
+          where: { id: data.sourcePassageId, academyId },
+          select: {
+            schoolId: true,
+            grade: true,
+            semester: true,
+            unit: true,
+            publisher: true,
+            difficulty: true,
+          },
+        })
+      : null;
 
     const passageId = await prisma.$transaction(
       async (tx) => {
@@ -426,6 +446,8 @@ export async function createDirectInputPassageMaterial(data: {
         }
 
         // 3) The Passage — direct-input + linked to the material for lineage.
+        //    변형본이면 원본의 정적 메타(학교/학년/학기/단원/출판사/난이도)를
+        //    승계해 생성 프롬프트 캘리브레이션·라이브러리 필터가 유지되게 한다.
         const passage = await tx.passage.create({
           data: {
             academyId,
@@ -433,6 +455,16 @@ export async function createDirectInputPassageMaterial(data: {
             content,
             source: DIRECT_INPUT_PASSAGE_SOURCE,
             sourceMaterialId: material.id,
+            ...(sourcePassage
+              ? {
+                  schoolId: sourcePassage.schoolId,
+                  grade: sourcePassage.grade,
+                  semester: sourcePassage.semester,
+                  unit: sourcePassage.unit,
+                  publisher: sourcePassage.publisher,
+                  difficulty: sourcePassage.difficulty,
+                }
+              : {}),
           },
           select: { id: true },
         });
@@ -463,7 +495,13 @@ export async function createDirectInputPassageMaterial(data: {
             reviewStatus: "COMMITTED",
             savedPassageId: passage.id,
             confirmedAt: new Date(),
-            metadata: { directInput: true, source: "PASTE" },
+            metadata: data.sourcePassageId
+              ? {
+                  directInput: true,
+                  source: "PASTE",
+                  variantOf: data.sourcePassageId,
+                }
+              : { directInput: true, source: "PASTE" },
           },
         });
 

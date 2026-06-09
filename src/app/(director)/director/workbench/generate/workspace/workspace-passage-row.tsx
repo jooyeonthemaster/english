@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -109,6 +109,14 @@ export function WorkspacePassageRow({
   const dirty = isRowDirty(row);
   const locked = disabled || busy !== null || preview !== null;
 
+  // 생성 시 변형본으로 리바인드되면(passageId 교체) 본문이 외부에서 바뀐다 —
+  // 이전 본문 기준의 선택/미리보기 오프셋은 무효이므로 즉시 폐기한다.
+  useEffect(() => {
+    setSelection(null);
+    setPreview(null);
+    avoidRef.current = [];
+  }, [row.passageId]);
+
   // ── 텍스트 선택 추적 ──
   const handleSelect = useCallback(() => {
     const el = textareaRef.current;
@@ -153,10 +161,10 @@ export function WorkspacePassageRow({
   );
 
   const handleParaphraseClick = useCallback(() => {
-    if (!selection || busy) return;
+    if (!selection || busy || disabled) return;
     avoidRef.current = [];
     void runParaphrase(selection, []);
-  }, [selection, busy, runParaphrase]);
+  }, [selection, busy, disabled, runParaphrase]);
 
   // ── 앞 맥락 추가 ──
   const runPrepend = useCallback(
@@ -181,10 +189,10 @@ export function WorkspacePassageRow({
   );
 
   const handlePrependClick = useCallback(() => {
-    if (busy || preview) return;
+    if (busy || preview || disabled) return;
     avoidRef.current = [];
     void runPrepend([]);
-  }, [busy, preview, runPrepend]);
+  }, [busy, preview, disabled, runPrepend]);
 
   // ── 미리보기 액션 ──
   const handleRegenerate = useCallback(() => {
@@ -201,8 +209,18 @@ export function WorkspacePassageRow({
   }, [preview, runParaphrase, runPrepend]);
 
   const handleApplyPreview = useCallback(() => {
-    if (!preview) return;
+    if (!preview || disabled) return;
     if (preview.kind === "paraphrase") {
+      // 불변식: 적용 시점의 본문 구간이 미리보기를 만들 때의 원문과 같아야
+      // 한다 — 외부 교체 등으로 어긋났으면 엉뚱한 위치 splice 를 차단한다.
+      if (row.content.slice(preview.start, preview.end) !== preview.original) {
+        toast.error(
+          "본문이 변경되어 변형을 적용할 수 없습니다. 문장을 다시 선택해주세요.",
+        );
+        setPreview(null);
+        setSelection(null);
+        return;
+      }
       const next =
         row.content.slice(0, preview.start) +
         preview.text +
@@ -226,7 +244,7 @@ export function WorkspacePassageRow({
 
   // ── 출제 범위 ──
   const handleSetRangeFromSelection = useCallback(() => {
-    if (!selection) return;
+    if (!selection || disabled) return;
     if (selection.end - selection.start < MIN_RANGE_CHARS) {
       toast.error("출제 범위는 조금 더 길게 선택해주세요.");
       return;
@@ -234,7 +252,7 @@ export function WorkspacePassageRow({
     onSetRange({ start: selection.start, end: selection.end });
     setSelection(null);
     toast.success("출제 범위가 지정됐습니다. 이 구간만으로 문제를 생성합니다.");
-  }, [selection, onSetRange]);
+  }, [selection, disabled, onSetRange]);
 
   const rangePreview = useMemo(() => {
     if (!row.range) return null;
@@ -269,7 +287,10 @@ export function WorkspacePassageRow({
             {row.title}
           </span>
           {row.variantOfId ? (
-            <span className="shrink-0 rounded bg-violet-50 px-1.5 py-0.5 text-[10px] font-bold text-violet-600 ring-1 ring-violet-200">
+            <span
+              className="shrink-0 rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white"
+              title="편집된 본문이 새 지문(변형본)으로 저장됐습니다. 원본 지문은 그대로 보존됩니다."
+            >
               변형본
             </span>
           ) : null}
@@ -377,6 +398,7 @@ export function WorkspacePassageRow({
               firstSentence={firstSentence.split(/\s+/).slice(0, 8).join(" ")}
               note={preview.note}
               busy={busy !== null}
+              disabled={disabled}
               onApply={handleApplyPreview}
               onRegenerate={handleRegenerate}
               onCancel={handleCancelPreview}
@@ -388,6 +410,9 @@ export function WorkspacePassageRow({
             ref={textareaRef}
             value={row.content}
             onChange={(e) => {
+              if (row.range) {
+                toast.info("본문이 수정되어 출제 범위가 해제됐습니다.");
+              }
               onChangeContent(e.target.value);
               setSelection(null);
             }}
@@ -405,7 +430,7 @@ export function WorkspacePassageRow({
           />
 
           {/* ── 선택 액션 바 ── */}
-          {selection && !preview && !busy ? (
+          {selection && !preview && !busy && !disabled ? (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-blue-300 bg-gradient-to-r from-blue-50 to-white px-3 py-2 shadow-sm">
               <span className="min-w-0 flex-1 truncate text-[11.5px] text-slate-500">
                 선택:{" "}
@@ -452,6 +477,7 @@ export function WorkspacePassageRow({
               rewritten={preview.text}
               note={preview.note}
               busy={busy !== null}
+              disabled={disabled}
               onApply={handleApplyPreview}
               onRegenerate={handleRegenerate}
               onCancel={handleCancelPreview}

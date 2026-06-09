@@ -93,19 +93,25 @@ export function RowHistoryPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={6} className="w-[340px] p-0 shadow-xl">
-        <div className="flex items-baseline justify-between border-b border-slate-100 px-3.5 py-2.5">
-          <p className="text-[12.5px] font-bold text-slate-800">생성 이력</p>
-          <p className="text-[11px] text-slate-400">
-            저장된 문제{" "}
-            <strong className="font-bold text-slate-700">
-              {savedQuestionCount}
-            </strong>
-            개
+        <div className="border-b border-slate-100 px-3.5 py-2.5">
+          <div className="flex items-baseline justify-between">
+            <p className="text-[12.5px] font-bold text-slate-800">생성 이력</p>
+            <p className="text-[11px] text-slate-400">
+              저장된 문제{" "}
+              <strong className="font-bold text-slate-700">
+                {savedQuestionCount}
+              </strong>
+              개
+            </p>
+          </div>
+          <p className="mt-0.5 text-[10.5px] text-slate-400">
+            아래 목록은 최근 생성 작업 기준이에요. 전체 문제는 하단
+            ‘생성/검수 결과’에서 확인하세요.
           </p>
         </div>
         {jobs.length === 0 ? (
           <div className="px-3.5 py-5 text-center text-[11.5px] text-slate-400">
-            최근 세션에 이 지문으로 생성한 기록이 없습니다.
+            최근 이 지문으로 생성한 기록이 없습니다.
             {savedQuestionCount > 0 ? (
               <span className="mt-1 block">
                 (이전에 저장된 문제 {savedQuestionCount}개는 하단 목록에서 확인)
@@ -133,12 +139,15 @@ export function RowHistoryPopover({
                     {describeJobTypes(job)}
                   </span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-[10.5px] text-slate-400">
-                    <span>
-                      {DIFFICULTY_LABELS[job.config?.difficulty || ""] ||
-                        job.config?.difficulty ||
-                        "중급"}
-                    </span>
-                    <span aria-hidden="true">·</span>
+                    {job.config?.difficulty ? (
+                      <>
+                        <span>
+                          {DIFFICULTY_LABELS[job.config.difficulty] ||
+                            job.config.difficulty}
+                        </span>
+                        <span aria-hidden="true">·</span>
+                      </>
+                    ) : null}
                     <span>{formatWhen(job.createdAt)}</span>
                     {job.status === "error" ? (
                       <span className="font-semibold text-red-400">실패</span>

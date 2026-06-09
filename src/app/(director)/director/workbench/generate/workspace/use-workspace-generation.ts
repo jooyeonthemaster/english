@@ -21,6 +21,7 @@ import {
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import {
   effectiveRowContent,
+  overrideHasTypeCounts,
   rowNeedsVariant,
   rowQuestionCount,
   type WorkspaceRow,
@@ -42,13 +43,28 @@ const VOCAB_GENERATION_TYPE_IDS = new Set([
   "ANTONYM",
 ]);
 
-/** "제목 (변형 2)" 처럼 충돌하지 않는 변형본 제목을 만든다. */
-function nextVariantTitle(baseTitle: string, passages: PassageItem[]): string {
+/**
+ * "제목 (변형 2)" 처럼 충돌하지 않는 변형본 제목을 만든다.
+ * usedTitles: 이번 실행에서 방금 만든 제목들 — passages 목록이 아직 갱신되기
+ * 전이므로 같은 실행 내 중복을 막으려면 별도로 추적해야 한다.
+ */
+function nextVariantTitle(
+  baseTitle: string,
+  passages: PassageItem[],
+  usedTitles: Set<string>,
+): string {
   const base = baseTitle.replace(/\s*\(변형(?:\s*\d+)?\)\s*$/, "").trim();
-  const existing = passages.filter((p) =>
-    p.title.startsWith(`${base} (변형`),
-  ).length;
-  return existing === 0 ? `${base} (변형)` : `${base} (변형 ${existing + 1})`;
+  const taken = new Set(
+    passages.filter((p) => p.title.startsWith(`${base} (변형`)).map((p) => p.title),
+  );
+  for (const t of usedTitles) {
+    if (t.startsWith(`${base} (변형`)) taken.add(t);
+  }
+  for (let n = 1; n <= taken.size + 1; n += 1) {
+    const candidate = n === 1 ? `${base} (변형)` : `${base} (변형 ${n})`;
+    if (!taken.has(candidate)) return candidate;
+  }
+  return `${base} (변형 ${taken.size + 2})`;
 }
 
 /** 워크스페이스 행을 optimistic 큐 아이템용 PassageItem 모양으로. */
@@ -56,7 +72,10 @@ function rowAsPassageItem(
   row: WorkspaceRow,
   passages: PassageItem[],
 ): PassageItem {
-  const original = passages.find((p) => p.id === row.passageId);
+  // 변형본 id 는 passages 목록에 아직 없을 수 있으므로 원본으로 폴백.
+  const original =
+    passages.find((p) => p.id === row.passageId) ??
+    passages.find((p) => p.id === row.variantOfId);
   return {
     id: row.passageId,
     title: row.title,
@@ -116,8 +135,8 @@ export function useWorkspaceGeneration({
     for (const row of api.rows) {
       totalQuestions += rowQuestionCount(row, globalCfg);
       if (rowNeedsVariant(row)) variantCount += 1;
-      if (row.override) {
-        for (const [typeId, n] of Object.entries(row.override.typeCounts)) {
+      if (overrideHasTypeCounts(row.override)) {
+        for (const [typeId, n] of Object.entries(row.override!.typeCounts)) {
           if (n <= 0) continue;
           const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
             ? CREDIT_COSTS.QUESTION_GEN_VOCAB
@@ -175,6 +194,7 @@ export function useWorkspaceGeneration({
       const { createDirectInputPassageMaterial } = await import(
         "@/actions/workbench"
       );
+      const usedTitles = new Set<string>();
       for (const row of actionableRows) {
         const content = effectiveRowContent(row);
         if (content.length < 20) {
@@ -185,8 +205,14 @@ export function useWorkspaceGeneration({
           resolved.push({ row, passageId: row.passageId, title: row.title, content });
           continue;
         }
-        const title = nextVariantTitle(row.title, passages);
-        const result = await createDirectInputPassageMaterial({ title, content });
+        const title = nextVariantTitle(row.title, passages, usedTitles);
+        usedTitles.add(title);
+        const result = await createDirectInputPassageMaterial({
+          title,
+          content,
+          // 원본 메타(학교/학년/학기 등) 승계 — 생성 프롬프트 캘리브레이션 유지.
+          sourcePassageId: row.variantOfId ?? row.passageId,
+        });
         if (!result?.success || !result.id) {
           toast.error(
             `"${row.title}" 변형본 저장에 실패해 건너뜁니다.` +
@@ -247,8 +273,10 @@ export function useWorkspaceGeneration({
           content: item.content,
         } as PassageItem;
         const effDifficulty = item.row.override?.difficulty ?? difficulty;
-        const effTypeCounts = item.row.override
-          ? item.row.override.typeCounts
+        // 난이도만 지정한 오버라이드는 "전체 설정 유형 + 이 난이도" — 유형이
+        // 비어있다고 행을 제외하지 않는다.
+        const effTypeCounts = overrideHasTypeCounts(item.row.override)
+          ? item.row.override!.typeCounts
           : genMode === "manual"
             ? typeCounts
             : null;
@@ -432,6 +460,11 @@ export function useWorkspaceGeneration({
       if (failed > 0) {
         toast.error(`${failed}개 문제 생성이 실패했습니다.`);
       }
+    } catch (err) {
+      // 변형본 저장/유닛 구성 단계의 예기치 못한 오류 — 무음 종료 방지.
+      toast.error(
+        err instanceof Error ? err.message : "문제 생성 준비 중 오류가 발생했습니다.",
+      );
     } finally {
       setGenerating(false);
     }

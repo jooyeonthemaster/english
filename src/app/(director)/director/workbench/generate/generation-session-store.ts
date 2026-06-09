@@ -195,6 +195,10 @@ export function useGenerationSessionQueue(): [
             );
 
           if (failedJobItems.length > 0) {
+            // 같은 설정 재생성(re-roll)이 일상 동선이라, "과거" 실패 잡이 지금
+            // 진행 중인 temp 를 오염시키지 않도록 시간 경계를 둔다 — temp 생성
+            // 시각(클라이언트) 이후에 만들어진 실패 잡만 매칭 (시계 오차 여유 2분).
+            const FAILED_MATCH_SKEW_MS = 120_000;
             setLocalQueue((prev) =>
               prev.map((item) => {
                 if (
@@ -203,8 +207,16 @@ export function useGenerationSessionQueue(): [
                 ) {
                   return item;
                 }
-                const failedMatch = failedJobItems.find((failed) =>
-                  sameGenerationRequest(item, failed),
+                const itemTime = item.createdAt
+                  ? Date.parse(item.createdAt)
+                  : 0;
+                const failedMatch = failedJobItems.find(
+                  (failed) =>
+                    sameGenerationRequest(item, failed) &&
+                    (failed.createdAt
+                      ? Date.parse(failed.createdAt) >=
+                        itemTime - FAILED_MATCH_SKEW_MS
+                      : true),
                 );
                 if (!failedMatch) return item;
                 return {
