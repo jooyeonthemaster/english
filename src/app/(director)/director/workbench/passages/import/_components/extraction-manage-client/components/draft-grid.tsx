@@ -103,6 +103,9 @@ interface DraftGridProps {
   inFolder: boolean;
   hasActiveSearchOrFilter: boolean;
   selectedDraftId: string | null;
+  /** When provided (multi-select picker), a card is highlighted if its id is
+   *  in this set — takes precedence over the single selectedDraftId. */
+  selectedDraftIds?: Set<string>;
   /** Most recently opened draft id — kept after the detail modal closes
    *  so the card stays subtly shaded. */
   lastViewedDraftId?: string | null;
@@ -191,6 +194,7 @@ export function DraftGrid({
   inFolder,
   hasActiveSearchOrFilter,
   selectedDraftId,
+  selectedDraftIds,
   lastViewedDraftId,
   checkedIds,
   setCheckedIds,
@@ -221,6 +225,10 @@ export function DraftGrid({
   detailAction,
   marqueeBoundaryRef,
 }: DraftGridProps) {
+  // Highlight: multi-select set wins when provided, else the single id.
+  const isDraftActive = (id: string) =>
+    selectedDraftIds ? selectedDraftIds.has(id) : selectedDraftId === id;
+
   // The per-job card row was lifted to the page header above the folder
   // section so it stays visible regardless of folder navigation. Clicking
   // a card now opens the per-job review popup, not a filter.
@@ -441,9 +449,9 @@ export function DraftGrid({
                           draft={draft}
                           index={index}
                           selected={false}
-                          active={selectedDraftId === draft.id}
+                          active={isDraftActive(draft.id)}
                           recentlyViewed={
-                            selectedDraftId !== draft.id &&
+                            !isDraftActive(draft.id) &&
                             lastViewedDraftId === draft.id
                           }
                           checked={checkedIds.has(draft.id)}
@@ -477,9 +485,9 @@ export function DraftGrid({
                     draft={draft}
                     index={index}
                     selected={false}
-                    active={selectedDraftId === draft.id}
+                    active={isDraftActive(draft.id)}
                     recentlyViewed={
-                      selectedDraftId !== draft.id &&
+                      !isDraftActive(draft.id) &&
                       lastViewedDraftId === draft.id
                     }
                     checked={checkedIds.has(draft.id)}

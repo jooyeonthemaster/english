@@ -24,6 +24,7 @@ import { ANALYSIS_REPORT_CSS } from "./report-styles";
 import type { CoverEdit } from "./cover-templates";
 import {
   Arrow,
+  BlockFontProvider,
   BOX_LIST_WRAPS,
   TABLE_WRAPS,
   reportFlowItems,
@@ -62,6 +63,8 @@ export interface ReportEdit {
   onBlockMeta: (id: string, patch: Partial<BlockMeta>) => void;
   /** 커스텀 블록(여백/텍스트) 속성 변경 */
   setCustom: (id: string, patch: Partial<CustomBlock>) => void;
+  /** 텍스트 블록 끝에서 Enter → 해당 블록 뒤에 빈 텍스트 블록 삽입 */
+  insertTextAfter: (anchorId: string) => void;
   /** 표지 인라인 편집 */
   ced: CoverEdit;
   /** 블록 세로 리사이즈 종료 — 최종 높이(mm) commit */
@@ -117,14 +120,15 @@ function isAutoFitItem(it: FlowItem): boolean {
   return /^s\d+-annotated-snt\d+/.test(it.id);
 }
 
-function blockStyleOf(meta: BlockMeta | undefined, it?: FlowItem): CSSProperties | undefined {
+function blockStyleOf(meta: BlockMeta | undefined): CSSProperties | undefined {
   if (!meta) return undefined;
   const st: Record<string, unknown> = {};
   if (meta.fontScale && meta.fontScale !== 1) st["--par-fs"] = meta.fontScale;
   if (meta.bold) st.fontWeight = 700;
   if (meta.italic) st.fontStyle = "italic";
   if (meta.align) st.textAlign = meta.align;
-  if (meta.minHeight && (!it || !isAutoFitItem(it))) st.minHeight = `${meta.minHeight}mm`;
+  // 모든 블록이 수동 리사이즈 높이를 반영한다(필기 캔버스 문장 포함).
+  if (meta.minHeight) st.minHeight = `${meta.minHeight}mm`;
   return Object.keys(st).length ? (st as CSSProperties) : undefined;
 }
 
@@ -155,7 +159,7 @@ export function ReportPages({
   const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
 
   const natural = useMemo(
-    () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, ced: edit.ced } : undefined),
+    () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, insertTextAfter: edit.insertTextAfter, ced: edit.ced } : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [report, edit?.med, edit?.sectionEdit, edit?.setCustom, edit?.ced],
   );
@@ -548,6 +552,23 @@ function ResizeHandle({ edit, id, el }: { edit: ReportEdit; id: string; el: () =
     const floor = Math.max(MIN_RESIZE_MM, naturalMm);
     const startY = e.clientY;
 
+    // 아래로 드래그할 때 블록 하단이 페이지 하단 여백을 넘지 않도록 상한 측정.
+    // 블록이 속한 페이지 본문(.par-sheet-body) 바닥까지 남은 여유(slack)를 더해,
+    // 블록이 페이지 중간에서 시작해도 끝이 본문 영역 안에서 멈추게 한다.
+    // (드래그 중에는 재페이지네이션이 없으므로 시작 시 한 번만 측정한다.)
+    const sheetBody = node.closest(".par-sheet-body");
+    const sheet = node.closest(".par-sheet") as HTMLElement | null;
+    const zoom = sheet ? parseFloat(getComputedStyle(sheet).zoom) || 1 : 1;
+    let maxMm = PAGE_BODY_MM;
+    if (sheetBody) {
+      const slackMm =
+        (sheetBody.getBoundingClientRect().bottom -
+          node.getBoundingClientRect().bottom) /
+        zoom /
+        PX_PER_MM;
+      maxMm = Math.min(PAGE_BODY_MM, startMm + Math.max(0, slackMm));
+    }
+
     let raf = 0;
     let lastY = startY;
     let committedMm = startMm;
@@ -556,9 +577,11 @@ function ResizeHandle({ edit, id, el }: { edit: ReportEdit; id: string; el: () =
 
     const apply = () => {
       raf = 0;
-      const mm = Math.max(floor, Math.min(PAGE_BODY_MM, startMm + (lastY - startY) / PX_PER_MM));
-      // 2mm 그리드 자석 스냅 — 단, 콘텐츠 최소 높이(floor)에 가까우면 정확히 floor 로 흡착
-      committedMm = Math.abs(mm - floor) < 1.5 ? Math.round(floor * 10) / 10 : Math.round(mm / 2) * 2;
+      const mm = Math.max(floor, Math.min(maxMm, startMm + (lastY - startY) / PX_PER_MM));
+      // 2mm 그리드 자석 스냅 — 단, 콘텐츠 최소 높이(floor)에 가까우면 정확히 floor 로 흡착.
+      // 스냅 반올림이 상한(maxMm)을 1mm 넘기지 않도록 마지막에 한 번 더 클램프한다.
+      const snapped = Math.abs(mm - floor) < 1.5 ? Math.round(floor * 10) / 10 : Math.round(mm / 2) * 2;
+      committedMm = Math.min(maxMm, snapped);
       node.style.minHeight = `${committedMm}mm`;
     };
     const move = (ev: PointerEvent) => {
@@ -593,11 +616,17 @@ function ResizeHandle({ edit, id, el }: { edit: ReportEdit; id: string; el: () =
 function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; listStyle?: boolean; measure?: boolean }) {
   const ref = useRef<HTMLLIElement>(null);
   const cp = chromeProps(it, edit, measure);
-  const resizable = !!edit && !measure && !isAutoFitItem(it);
+  const resizable = !!edit && !measure;
   return (
-    <li ref={ref} data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
+    <li ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
       {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
-      {it.node}
+      <BlockFontProvider
+        blockId={it.id}
+        runs={meta?.fontRuns}
+        onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
+      >
+        {it.node}
+      </BlockFontProvider>
       {resizable ? <ResizeHandle edit={edit} id={it.id} el={() => ref.current} /> : null}
     </li>
   );
@@ -606,11 +635,17 @@ function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; edit?: 
 function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const cp = chromeProps(it, edit, measure);
   return (
-    <tr data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={(cp.className as string) ?? ""}>
+    <tr data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={(cp.className as string) ?? ""}>
       {edit && !measure ? (
         <td className="par-edit-hcell"><Grip edit={edit} id={it.id} /></td>
       ) : null}
-      {it.node}
+      <BlockFontProvider
+        blockId={it.id}
+        runs={meta?.fontRuns}
+        onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
+      >
+        {it.node}
+      </BlockFontProvider>
     </tr>
   );
 }
@@ -618,11 +653,17 @@ function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit
 function BlockShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const cp = chromeProps(it, edit, measure);
-  const resizable = !!edit && !measure && !isAutoFitItem(it);
+  const resizable = !!edit && !measure;
   return (
-    <div ref={ref} data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={`par-block par-wrap-${it.wrap} ${(cp.className as string) ?? ""}`}>
+    <div ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-block par-wrap-${it.wrap} ${(cp.className as string) ?? ""}`}>
       {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
-      {it.node}
+      <BlockFontProvider
+        blockId={it.id}
+        runs={meta?.fontRuns}
+        onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
+      >
+        {it.node}
+      </BlockFontProvider>
       {resizable ? <ResizeHandle edit={edit} id={it.id} el={() => ref.current} /> : null}
     </div>
   );
@@ -630,19 +671,21 @@ function BlockShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEd
 
 /** 표지 전면 페이지 — 선택만 가능(드래그/리사이즈 없음, 풀블리드). */
 function CoverShell({ it, edit, meta }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta }) {
-  if (!edit) return <div className="par-cover-shell" style={blockStyleOf(meta, it)}>{it.node}</div>;
+  if (!edit) return <div className="par-cover-shell" style={blockStyleOf(meta)}>{it.node}</div>;
   const active = edit.activeId === it.id;
   return (
     <div
       className={`par-cover-shell par-eline${active ? " is-active" : ""}`}
-      style={blockStyleOf(meta, it)}
+      style={blockStyleOf(meta)}
       data-paper-item-id={it.id}
       data-paper-part-key={it.id}
       onMouseDown={() => {
         if (edit.activeId !== it.id) edit.setActiveId(it.id);
       }}
     >
-      {it.node}
+      <BlockFontProvider blockId={it.id} runs={meta?.fontRuns} onBlockMeta={edit.onBlockMeta}>
+        {it.node}
+      </BlockFontProvider>
     </div>
   );
 }
@@ -650,9 +693,15 @@ function CoverShell({ it, edit, meta }: { it: FlowItem; edit?: ReportEdit; meta?
 function MapItemShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const cp = chromeProps(it, edit, measure);
   return (
-    <div data-mid={it.id} style={blockStyleOf(meta, it)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
+    <div data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
       {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
-      {it.node}
+      <BlockFontProvider
+        blockId={it.id}
+        runs={meta?.fontRuns}
+        onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
+      >
+        {it.node}
+      </BlockFontProvider>
     </div>
   );
 }
@@ -669,6 +718,9 @@ function packFlow(
   let h = 0;
   let prevSection = -99;
   let prevWrap: WrapKind | null = null;
+  // 섹션 헤더(01·02·03… 번호+제목)는 무조건 새 페이지에서 시작. 단 첫 섹션 헤더는
+  // 문서 제목과 같은 페이지에 두기 위해(빈 제목 페이지 방지) 강제 분할에서 제외한다.
+  let sawSecHeader = false;
 
   items.forEach((it, k) => {
     const meta = blockMeta?.[it.id];
@@ -676,12 +728,17 @@ function packFlow(
     const box = BOX_LIST_WRAPS.has(it.wrap);
     const mp = it.wrap === "map";
     const isCover = it.wrap === "cover";
+    const isSecHeader = it.wrap === "secheader";
     const standalone = isStandalone(it.wrap);
     const autoFit = isAutoFitItem(it);
     // 표지는 자기 페이지 독점: 표지 앞/뒤 모두 페이지 분할
     // 자동 독해 조각은 저장된 breakBefore/minHeight 때문에 다음 장으로 밀리지 않게 한다.
-    const forceBreak = ((!!meta?.breakBefore && !autoFit) || !!it.breakBefore || isCover || prevWrap === "cover") && page.length > 0;
-    const metaMinHeight = autoFit ? 0 : meta?.minHeight ?? 0;
+    const forceBreak =
+      ((!!meta?.breakBefore && !autoFit) || !!it.breakBefore || isCover || prevWrap === "cover" || (isSecHeader && sawSecHeader)) &&
+      page.length > 0;
+    // 수동 리사이즈 높이는 모든 블록에서 페이지 분할에 반영(필기 캔버스 포함).
+    // breakBefore 만 auto-fit(자동 독해 조각)에서 stale 값 무시(위 forceBreak 참고).
+    const metaMinHeight = meta?.minHeight ?? 0;
     const hh = isCover ? PAGE_BODY_MM : Math.max(own[k], metaMinHeight);
 
     const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + hh;
@@ -712,6 +769,7 @@ function packFlow(
     h += inc;
     prevSection = it.sectionIndex;
     prevWrap = it.wrap;
+    if (isSecHeader) sawSecHeader = true;
   });
   if (page.length) pages.push(page);
   return pages;

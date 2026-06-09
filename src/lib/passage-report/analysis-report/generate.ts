@@ -469,7 +469,7 @@ function normalizeWorkbookTestSurface(section: LearningWorksheetSection): void {
   const workbook = section.workbookSet;
   if (!workbook) return;
 
-  section.hiddenAnswers = true;
+  section.hiddenAnswers = false;
 
   let grammarPassage = workbook.grammarSelection.passage;
   workbook.grammarSelection.choices.forEach((choice, index) => {

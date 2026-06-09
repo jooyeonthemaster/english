@@ -1,4 +1,4 @@
-import { type ClipboardEvent, type CSSProperties, type ElementType, type FocusEvent, Fragment, type PointerEvent as ReactPointerEvent, type ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type CSSProperties, type ElementType, type FocusEvent, Fragment, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode, createContext, useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { circledNo } from "@/lib/passage-report/analysis-report/design-tokens";
@@ -9,6 +9,7 @@ import {
   type AnalysisSection,
   type AnnoLayout,
   type CustomBlock,
+  type FontRun,
   type ReportMeta,
   type VocabTestMode,
 } from "@/lib/passage-report/analysis-report/schema";
@@ -106,6 +107,77 @@ export const TABLE_WRAPS: ReadonlySet<WrapKind> = new Set<WrapKind>(["grammar", 
 /** par-box + ol 로 렌더되는 wrap. */
 export const BOX_LIST_WRAPS: ReadonlySet<WrapKind> = new Set<WrapKind>(["passage", "summary"]);
 
+// ─── 부분 글자 크기(폰트 런) — 블록 메타에 범위로 저장, 평문 값은 불변 ───────────
+// f = 블록 안 편집 필드 순서, s/e = 그 필드 평문 기준 글자 offset, pt = 크기.
+interface FieldFontContextValue {
+  /** 필드 순서(f) → 그 필드의 런 목록 */
+  runsByOrd: Map<number, FontRun[]>;
+  /** 한 필드의 런 전체를 교체(blur 시 DOM 에서 다시 읽어 커밋) */
+  commit: (ord: number, runs: FontRun[]) => void;
+}
+const FieldFontContext = createContext<FieldFontContextValue | null>(null);
+
+function groupRunsByOrd(runs?: FontRun[]): Map<number, FontRun[]> {
+  const map = new Map<number, FontRun[]>();
+  for (const r of runs ?? []) {
+    const arr = map.get(r.f);
+    if (arr) arr.push(r);
+    else map.set(r.f, [r]);
+  }
+  return map;
+}
+
+function mergeFontRuns(
+  existing: FontRun[] | undefined,
+  ord: number,
+  next: FontRun[],
+): FontRun[] | undefined {
+  const kept = (existing ?? []).filter((r) => r.f !== ord);
+  const merged = [...kept, ...next];
+  return merged.length > 0 ? merged : undefined;
+}
+
+function sameRuns(a: FontRun[], b: FontRun[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].s !== b[i].s || a[i].e !== b[i].e || a[i].pt !== b[i].pt) return false;
+  }
+  return true;
+}
+
+/** 블록 단위로 폰트 런 컨텍스트를 제공. onBlockMeta 가 없으면(보기/측정) 적용만 하고 커밋 없음. */
+export function BlockFontProvider({
+  blockId,
+  runs,
+  onBlockMeta,
+  children,
+}: {
+  blockId: string;
+  runs?: FontRun[];
+  onBlockMeta?: (id: string, patch: { fontRuns?: FontRun[] }) => void;
+  children: ReactNode;
+}) {
+  const value = useMemo<FieldFontContextValue>(
+    () => ({
+      runsByOrd: groupRunsByOrd(runs),
+      commit: onBlockMeta
+        ? (ord, next) => onBlockMeta(blockId, { fontRuns: mergeFontRuns(runs, ord, next) })
+        : () => {},
+    }),
+    [blockId, runs, onBlockMeta],
+  );
+  return <FieldFontContext.Provider value={value}>{children}</FieldFontContext.Provider>;
+}
+
+/** el 이 속한 블록 안에서 이 편집 필드(.par-field)가 몇 번째인지. 편집/보기 모드에서 동일. */
+function computeFieldOrd(el: HTMLElement): number {
+  const block = el.closest<HTMLElement>("[data-paper-item-id]");
+  if (!block) return 0;
+  const fields = Array.from(block.querySelectorAll<HTMLElement>(".par-field"));
+  const i = fields.indexOf(el);
+  return i < 0 ? 0 : i;
+}
+
 // ─── 인라인 편집 프리미티브 ──────────────────────────────────────────────────
 function Field({
   editable,
@@ -115,6 +187,7 @@ function Field({
   className,
   placeholder = "—",
   render,
+  onEnterNewBlock,
 }: {
   editable: boolean;
   value: string;
@@ -123,26 +196,42 @@ function Field({
   className?: string;
   placeholder?: string;
   render?: (v: string) => ReactNode;
+  onEnterNewBlock?: () => void;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Tag = (as ?? "span") as any;
   const ref = useRef<HTMLElement | null>(null);
   const focusedRef = useRef(false);
+  const ordRef = useRef(-1);
+  const ctx = useContext(FieldFontContext);
+  const runsByOrd = ctx?.runsByOrd;
+  // 커스텀 render 가 있는 보기 필드는 ReactNode 로 그리므로 런(HTML) 비적용.
+  // 그 외(편집 필드 + 단순 텍스트 보기 필드)는 우리가 innerHTML 을 관리해 런을 입힌다.
+  const managedHtml = editable || !render;
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el || focusedRef.current) return;
-    if (el.innerText !== value) el.textContent = value;
-  }, [value]);
+    if (!el || !managedHtml || focusedRef.current) return;
+    const ord = computeFieldOrd(el);
+    ordRef.current = ord;
+    el.innerHTML = editableTextHtml(value, runsByOrd?.get(ord));
+  }, [value, runsByOrd, managedHtml]);
 
   if (!editable) {
-    return <Tag className={className}>{render ? render(value) : value}</Tag>;
+    if (render) return <Tag className={cn(className, "par-field")}>{render(value)}</Tag>;
+    return (
+      <Tag
+        ref={ref}
+        className={cn(className, "par-field")}
+        dangerouslySetInnerHTML={{ __html: editableTextHtml(value) }}
+      />
+    );
   }
   const isEmpty = !value.trim();
   return (
     <Tag
       ref={ref}
-      className={cn(className, "par-edit-field", isEmpty && "par-edit-empty")}
+      className={cn(className, "par-field", "par-edit-field", isEmpty && "par-edit-empty")}
       contentEditable
       suppressContentEditableWarning
       spellCheck={false}
@@ -153,9 +242,19 @@ function Field({
       }}
       onBlur={(e: FocusEvent<HTMLElement>) => {
         focusedRef.current = false;
-        const next = normalizeEditableText(readEditablePlainText(e.currentTarget));
+        const { text, runs } = readEditableContent(e.currentTarget);
+        const next = normalizeEditableText(text);
         if (next !== value) onCommit(next);
+        if (ctx) {
+          const ord = ordRef.current >= 0 ? ordRef.current : computeFieldOrd(e.currentTarget);
+          const clamped = runs
+            .filter((r) => r.s < next.length)
+            .map((r) => ({ f: ord, s: r.s, e: Math.min(r.e, next.length), pt: r.pt }))
+            .filter((r) => r.e > r.s);
+          if (!sameRuns(ctx.runsByOrd.get(ord) ?? [], clamped)) ctx.commit(ord, clamped);
+        }
       }}
+      onKeyDown={(e: KeyboardEvent<HTMLElement>) => handleEditableKeyDown(e, onEnterNewBlock)}
       onPaste={(e: ClipboardEvent<HTMLElement>) => {
         e.preventDefault();
         const text = e.clipboardData.getData("text/plain");
@@ -165,7 +264,46 @@ function Field({
   );
 }
 
-function editableTextHtml(text: string): string {
+/** 캐럿이 필드 맨 끝(뒤에 글자 없음)에 있는지. */
+function caretAtFieldEnd(el: HTMLElement): boolean {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0 || !sel.isCollapsed) return false;
+  const r = sel.getRangeAt(0);
+  if (!el.contains(r.endContainer)) return false;
+  const probe = document.createRange();
+  probe.selectNodeContents(el);
+  probe.setStart(r.endContainer, r.endOffset);
+  return probe.toString().length === 0;
+}
+
+/**
+ * 편집 필드를 '텍스트'처럼 다루기 위한 공통 키 처리.
+ * - Enter            → 줄바꿈(soft line break) 삽입. contentEditable 기본 동작이
+ *                       <div> 블록을 만들어 지저분해지는 것을 막고 <br> 로 통일한다.
+ *                       (readEditablePlainText 가 <br> 을 \n 으로 환산)
+ * - 텍스트 블록 끝 Enter → onEnterNewBlock 제공 시, 줄바꿈 대신 아래에 새 텍스트 블록 생성.
+ * - Cmd/Ctrl+Enter   → 페이지 넘김. 여기서는 줄바꿈만 막고, 실제 페이지 분할은
+ *                       에디터 전역 핸들러가 포커스된 블록의 breakBefore 를 토글한다.
+ */
+function handleEditableKeyDown(
+  e: KeyboardEvent<HTMLElement>,
+  onEnterNewBlock?: () => void,
+) {
+  if (e.key !== "Enter") return;
+  if (e.metaKey || e.ctrlKey) {
+    e.preventDefault(); // 페이지 넘김은 전역 핸들러가 처리
+    return;
+  }
+  if (onEnterNewBlock && caretAtFieldEnd(e.currentTarget)) {
+    e.preventDefault();
+    onEnterNewBlock();
+    return;
+  }
+  e.preventDefault();
+  document.execCommand("insertLineBreak");
+}
+
+function escapeSeg(text: string): string {
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -174,31 +312,76 @@ function editableTextHtml(text: string): string {
     .replace(/\n/g, "<br>");
 }
 
-function readEditablePlainText(root: HTMLElement): string {
+/** 평문 + (선택) 폰트 런 → 편집 필드 innerHTML. 런 구간만 <span style=font-size>로 감싼다. */
+function editableTextHtml(text: string, runs?: FontRun[]): string {
+  if (!runs || runs.length === 0) return escapeSeg(text);
+  const sorted = [...runs].filter((r) => r.e > r.s).sort((a, b) => a.s - b.s);
   let out = "";
+  let cursor = 0;
+  for (const r of sorted) {
+    const start = Math.max(cursor, Math.min(r.s, text.length));
+    const end = Math.max(start, Math.min(r.e, text.length));
+    if (start > cursor) out += escapeSeg(text.slice(cursor, start));
+    if (end > start) {
+      out += `<span data-fs="${r.pt}" style="font-size:${r.pt}pt">${escapeSeg(text.slice(start, end))}</span>`;
+    }
+    cursor = end;
+  }
+  if (cursor < text.length) out += escapeSeg(text.slice(cursor));
+  return out;
+}
+
+/** 편집 필드 DOM 에서 평문과 폰트 런(글자 크기 구간)을 함께 읽는다. */
+function readEditableContent(root: HTMLElement): {
+  text: string;
+  runs: Array<{ s: number; e: number; pt: number }>;
+} {
+  let text = "";
+  const runs: Array<{ s: number; e: number; pt: number }> = [];
   const addNewline = () => {
-    if (out && !out.endsWith("\n")) out += "\n";
+    if (text && !text.endsWith("\n")) text += "\n";
+  };
+  const ptOf = (el: HTMLElement): number | null => {
+    const d = el.getAttribute("data-fs");
+    if (d) {
+      const n = parseFloat(d);
+      return Number.isFinite(n) ? n : null;
+    }
+    const fs = el.style?.fontSize ?? "";
+    if (fs.endsWith("pt")) {
+      const n = parseFloat(fs);
+      return Number.isFinite(n) ? n : null;
+    }
+    if (fs.endsWith("px")) {
+      const n = parseFloat(fs);
+      return Number.isFinite(n) ? (n * 72) / 96 : null;
+    }
+    return null;
   };
   const walk = (node: Node) => {
     node.childNodes.forEach((child) => {
       if (child.nodeType === Node.TEXT_NODE) {
-        out += child.textContent ?? "";
+        text += child.textContent ?? "";
         return;
       }
       if (child.nodeType !== Node.ELEMENT_NODE) return;
       const el = child as HTMLElement;
       if (el.tagName === "BR") {
-        out += "\n";
+        text += "\n";
         return;
       }
       const isBlock = el.tagName === "DIV" || el.tagName === "P" || el.tagName === "LI";
       if (isBlock) addNewline();
+      const pt = ptOf(el);
+      const start = text.length;
       walk(el);
+      const end = text.length;
+      if (pt != null && end > start) runs.push({ s: start, e: end, pt: Math.round(pt) });
       if (isBlock) addNewline();
     });
   };
   walk(root);
-  return out;
+  return { text, runs };
 }
 
 function DelBtn({ onClick, title = "삭제", className }: { onClick: () => void; title?: string; className?: string }) {
@@ -475,6 +658,27 @@ function vocabTestRowKey(row: VocabularyRow): string {
   return [row.headword, row.pronunciation ?? "", row.meaning, row.synonyms ?? ""]
     .map((value) => value.trim())
     .join("\u001f");
+}
+
+function vocabularyTierForRow(row: VocabularyRow): "core" | "test" | "challenge" {
+  if (row.tier) return row.tier;
+  if (typeof row.difficulty === "number") {
+    if (row.difficulty <= 2) return "core";
+    if (row.difficulty >= 4) return "challenge";
+  }
+  return "test";
+}
+
+function vocabularyDifficultyForRow(row: VocabularyRow): number {
+  if (typeof row.difficulty === "number") return row.difficulty;
+  const tier = vocabularyTierForRow(row);
+  if (tier === "core") return 2;
+  if (tier === "challenge") return 5;
+  return 3;
+}
+
+function isDefaultVocabularyTestTarget(row: VocabularyRow): boolean {
+  return vocabularyTierForRow(row) !== "core" && vocabularyDifficultyForRow(row) >= 3;
 }
 
 function VocabTestGridCard({
@@ -1185,6 +1389,7 @@ function AnnotatedReadingField({
         const next = normalizeEditableText(readEditableTextIgnoringAnnotations(e.currentTarget));
         if (next !== value) onCommit(next);
       }}
+      onKeyDown={handleEditableKeyDown}
       onPaste={(e: ClipboardEvent<HTMLElement>) => {
         e.preventDefault();
         const pasted = e.clipboardData.getData("text/plain");
@@ -1671,9 +1876,9 @@ const ANNO_COLOR: Record<CanvasNoteKind, string> = {
 
 /** 필기 분석(05) 색상 범례 — 어법/구문/출제/논리 색이 무엇을 뜻하는지 안내. */
 function AnnotatedColorLegend() {
+  // 구문(parsing)은 필기 캔버스에서 제외했으므로 범례에서도 뺀다.
   const items: [CanvasNoteKind, string][] = [
     ["grammar", "어법 포인트"],
-    ["parsing", "구문 · 끊어읽기"],
     ["exam", "출제 포인트"],
     ["logic", "논리 흐름"],
   ];
@@ -1834,6 +2039,7 @@ function CanvasChunkEnglish({
         const next = normalizeEditableText(readEditableTextIgnoringAnnotations(e.currentTarget));
         if (next !== value) onCommit(next);
       }}
+      onKeyDown={handleEditableKeyDown}
       onPaste={(e: ClipboardEvent<HTMLElement>) => {
         e.preventDefault();
         document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
@@ -1895,7 +2101,10 @@ function CanvasNoteText({
         )
       ) : null}
       {note.example ? (
-        canEdit ? (
+        // 틀린 토큰(exampleWrong)이 있으면 편집 모드에서도 빨강 강조 렌더로 보여준다
+        // (Field 편집 모드는 plain text 만 렌더 가능해 인라인 색을 못 입힘). 틀린
+        // 토큰이 없는 일반 예문은 인라인 편집을 유지한다.
+        canEdit && !note.exampleWrong ? (
           <Field as="span" className="par-anno-example" editable value={note.example} onCommit={(v) => commitNoteExample(entry, sectionEdit, v)} />
         ) : (
           <span className="par-anno-example">{renderTrapExample(note)}</span>
@@ -2014,9 +2223,11 @@ function AnnotatedSentenceCanvas({
   const rootRef = useRef<HTMLElement | null>(null);
   const [connectors, setConnectors] = useState<ConnectorPath[]>([]);
 
-  // 모든 필기를 종류별로 재배치(v3): 어법·구문 → 아래 목록(번호 뱃지) / 출제·논리 → 오른쪽 레일
+  // 모든 필기를 종류별로 재배치(v3): 어법 → 아래 목록(번호 뱃지) / 출제·논리 → 오른쪽 레일.
+  // 구문(parsing) 필기는 필기 캔버스에서 제외 — 끊어읽기(청크 글로스)로 이미 드러나고,
+  // 장황한 구문 해설은 별도 '구문 분석' 섹션이 담당하므로 캔버스에서는 삭제한다.
   const allNotes = [...plan.interlineByChunk.flat(), ...plan.railNotes, ...plan.footnoteNotes];
-  const listNotes = allNotes.filter((n) => n.kind === "grammar" || n.kind === "parsing");
+  const listNotes = allNotes.filter((n) => n.kind === "grammar");
   const sideNotes = allNotes.filter((n) => n.kind === "exam" || n.kind === "logic");
   const numByKey = new Map<string, number>();
   listNotes.forEach((n, i) => numByKey.set(n.key, i + 1));
@@ -2059,25 +2270,55 @@ function AnnotatedSentenceCanvas({
           color: ANNO_COLOR[n.kind],
         });
       });
-      if (!raw.length) {
-        setConnectors((prev) => (prev.length ? [] : prev));
-        return;
+      const next: ConnectorPath[] = [];
+      // ── (1) 어법 목록(왼쪽 아래) 연결선 ── 위 연결일수록 안쪽(오른쪽) 레인.
+      if (raw.length) {
+        raw.sort((p, q) => p.by - q.by || p.x1 - q.x1);
+        const minBx = Math.min(...raw.map((r) => r.bx));
+        const laneRight = Math.max(7, minBx - 5); // 뱃지 바로 왼쪽(가장 안쪽 레인)
+        const laneLeft = 3; // 가장 바깥(왼쪽 끝) 레인
+        const cnt = raw.length;
+        raw.forEach((r, i) => {
+          const laneX = cnt > 1 ? laneRight - ((laneRight - laneLeft) * i) / (cnt - 1) : laneRight;
+          const shelfY = r.lineBottom + i * 1.4; // 그 줄 아래 빈 띠, 연결마다 살짝 어긋나게
+          const endx = Math.max(laneX + 1, r.bx - 1);
+          const d = `M ${r.x1.toFixed(1)} ${r.y1.toFixed(1)} L ${r.x1.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${r.by.toFixed(1)} L ${endx.toFixed(1)} ${r.by.toFixed(1)}`;
+          next.push({ d, color: r.color, hx: endx, hy: r.by });
+        });
       }
-      // 설명(목표) 순서로 정렬 → 위 연결일수록 안쪽(오른쪽) 레인, 아래로 갈수록 바깥(왼쪽) 레인.
-      // 이렇게 하면 세로 하강선들이 서로 교차하지 않고 나란히 내려간다.
-      raw.sort((p, q) => p.by - q.by || p.x1 - q.x1);
-      const minBx = Math.min(...raw.map((r) => r.bx));
-      const laneRight = Math.max(7, minBx - 5); // 뱃지 바로 왼쪽(가장 안쪽 레인)
-      const laneLeft = 3; // 가장 바깥(왼쪽 끝) 레인
-      const cnt = raw.length;
-      const next: ConnectorPath[] = raw.map((r, i) => {
-        const laneX = cnt > 1 ? laneRight - ((laneRight - laneLeft) * i) / (cnt - 1) : laneRight;
-        // 진입 가로선은 그 줄 아래 빈 띠에서, 연결마다 살짝 어긋나게(겹침 방지).
-        const shelfY = r.lineBottom + i * 1.4;
-        const endx = Math.max(laneX + 1, r.bx - 1);
-        const d = `M ${r.x1.toFixed(1)} ${r.y1.toFixed(1)} L ${r.x1.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${r.by.toFixed(1)} L ${endx.toFixed(1)} ${r.by.toFixed(1)}`;
-        return { d, color: r.color, hx: endx, hy: r.by };
+      // ── (2) 출제·논리 레일(오른쪽) 연결선 ── 근거 청크 → (살짝 내려) staff·레일 사이
+      // 여백 레인으로 → 레인 따라 ↕ → 레일 카드로 →. 세로 이동은 항상 여백 레인에서만 일어나
+      // 본문을 가리지 않고, 연결마다 다른 레인 x + 다른 진입 높이로 분리해 겹치지 않게 한다.
+      const railRaw: { cx: number; y1: number; lineBottom: number; rx: number; ry: number; color: string }[] = [];
+      sideNotes.forEach((n) => {
+        if (!n.anchorRange) return;
+        const railEl = root.querySelector<HTMLElement>(`[data-rail-key="${n.key}"]`);
+        const chunkEl = root.querySelector<HTMLElement>(`[data-anchor-id="${canvasId}-c${n.chunkIndex}"]`);
+        if (!railEl || !chunkEl) return;
+        const enEl = chunkEl.querySelector<HTMLElement>(".par-canvas-en") ?? chunkEl;
+        const a = enEl.getBoundingClientRect();
+        const c = chunkEl.getBoundingClientRect();
+        const rr = railEl.getBoundingClientRect();
+        railRaw.push({
+          cx: (a.right - rootRect.left) / zoom, // 근거 청크 오른쪽 끝
+          y1: (a.bottom - rootRect.top) / zoom + 1,
+          lineBottom: (c.bottom - rootRect.top) / zoom + 1.5,
+          rx: (rr.left - rootRect.left) / zoom, // 레일 카드 왼쪽
+          ry: (rr.top - rootRect.top) / zoom + 7, // 카드 상단(원문 인용 줄)
+          color: ANNO_COLOR[n.kind],
+        });
       });
+      if (railRaw.length) {
+        railRaw.sort((p, q) => p.ry - q.ry || p.cx - q.cx);
+        railRaw.forEach((r, i) => {
+          const laneX = r.rx - 3 - i * 2.2; // 레일 왼쪽 여백 안에서 연결마다 다른 세로 레인
+          const shelfY = r.lineBottom + i * 1.4;
+          const startX = Math.min(r.cx, laneX - 2); // 항상 오른쪽으로 향하도록 보정
+          const endx = r.rx - 1;
+          const d = `M ${startX.toFixed(1)} ${r.y1.toFixed(1)} L ${startX.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${r.ry.toFixed(1)} L ${endx.toFixed(1)} ${r.ry.toFixed(1)}`;
+          next.push({ d, color: r.color, hx: endx, hy: r.ry });
+        });
+      }
       setConnectors((prev) => (sameConnectors(prev, next) ? prev : next));
     };
     compute();
@@ -2988,6 +3229,7 @@ export function sectionFlowItems(
         const excluded = new Set(s.vocabTestExcludedKeys ?? []);
         const testRows = s.rows
           .map((row, index) => ({ row, index, key: vocabTestRowKey(row) }))
+          .filter(({ row }) => isDefaultVocabularyTestTarget(row))
           .filter(({ key }) => !excluded.has(key));
         const visibleTestCols = (["headword", "pronunciation", "meaning", "synonyms"] as const).filter((key) => !th.has(key));
         const deleteAnchor = visibleTestCols[visibleTestCols.length - 1];
@@ -3003,6 +3245,8 @@ export function sectionFlowItems(
             <span className="par-vocab-test-k">단어 시험지</span>
             <span className="par-vocab-test-mode">{modeLabel}</span>
           </div>,
+          // 단어 시험지는 항상 새 페이지에서 시작.
+          { breakBefore: true },
         );
         if (testRows.length === 0) {
           push(
@@ -3344,14 +3588,6 @@ export function sectionFlowItems(
             ) : (
               <div className="par-ws-workbook-passage">{renderGrammarChoiceText(workbookSet.grammarSelection.passage)}</div>
             )}
-            <div className="par-ws-choice-answer-list">
-              {workbookSet.grammarSelection.choices.map((choice) => (
-                <div className="par-ws-choice-answer" key={choice.no}>
-                  <span className="par-ws-choice-no">{choice.no}</span>
-                  <span className="par-ws-choice-options">[{choice.options.join(" / ")}]</span>
-                </div>
-              ))}
-            </div>
           </div>,
         );
         push(
@@ -3478,26 +3714,27 @@ function CustomTextNode({
   cb,
   editable,
   onText,
-  onHeading,
+  onEnterNewBlock,
 }: {
   cb: Extract<CustomBlock, { kind: "text" }>;
   editable: boolean;
   onText: (v: string) => void;
-  onHeading: (v: string) => void;
+  onEnterNewBlock?: () => void;
 }) {
   return (
     <div className="par-customtext">
-      {cb.heading || editable ? (
-        <Field as="div" className="par-customtext-h" editable={editable} value={cb.heading ?? ""} placeholder="(소제목)" onCommit={onHeading} />
-      ) : null}
-      <Field as="div" className="par-customtext-b" editable={editable} value={cb.text} placeholder="자유 텍스트를 입력하세요" onCommit={onText} />
+      <Field as="div" className="par-customtext-b" editable={editable} value={cb.text} placeholder="자유 텍스트를 입력하세요" onCommit={onText} onEnterNewBlock={onEnterNewBlock} />
     </div>
   );
 }
 
 export type CustomEdit = (id: string, patch: Partial<CustomBlock>) => void;
 
-export function customBlockFlowItem(cb: CustomBlock, setCustom?: CustomEdit): FlowItem {
+export function customBlockFlowItem(
+  cb: CustomBlock,
+  setCustom?: CustomEdit,
+  insertTextAfter?: (anchorId: string) => void,
+): FlowItem {
   if (cb.kind === "spacer") {
     return {
       id: cb.id,
@@ -3519,7 +3756,7 @@ export function customBlockFlowItem(cb: CustomBlock, setCustom?: CustomEdit): Fl
         cb={cb}
         editable={!!setCustom}
         onText={(v) => setCustom?.(cb.id, { text: v })}
-        onHeading={(v) => setCustom?.(cb.id, { heading: v })}
+        onEnterNewBlock={insertTextAfter ? () => insertTextAfter(cb.id) : undefined}
       />
     ),
   };
@@ -3543,7 +3780,7 @@ function coverItems(report: AnalysisReport, ced?: CoverEdit): FlowItem[] {
 /** 보고서 → 전체 flow item[] (자연 순서). self-check 제외. 커스텀 블록은 뒤에 붙고 blockOrder 로 배치. */
 export function reportFlowItems(
   report: AnalysisReport,
-  edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; ced?: CoverEdit },
+  edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; insertTextAfter?: (anchorId: string) => void; ced?: CoverEdit },
 ): FlowItem[] {
   const vocabTestOnly = !!report.vocabTestOnly;
   const items: FlowItem[] = vocabTestOnly
@@ -3640,7 +3877,7 @@ export function reportFlowItems(
       emit(lwIdx, { skipWorksheetLogic: true });
     }
 
-    for (const cb of report.customBlocks ?? []) items.push(customBlockFlowItem(cb, edit?.setCustom));
+    for (const cb of report.customBlocks ?? []) items.push(customBlockFlowItem(cb, edit?.setCustom, edit?.insertTextAfter));
     return items;
   }
 
@@ -3700,7 +3937,7 @@ export function reportFlowItems(
   });
   if (!vocabTestOnly) {
     for (const cb of report.customBlocks ?? []) {
-      items.push(customBlockFlowItem(cb, edit?.setCustom));
+      items.push(customBlockFlowItem(cb, edit?.setCustom, edit?.insertTextAfter));
     }
   }
   return items;

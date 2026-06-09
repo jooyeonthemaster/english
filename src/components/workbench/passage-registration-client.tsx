@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
@@ -10,6 +10,7 @@ import {
   isQuestionGenerationPlanTag,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
@@ -21,6 +22,9 @@ import type {
 } from "./passage-registration/types";
 import { mapRecentPassagesToQueueItems } from "./passage-registration/utils";
 import { usePassageFormState } from "./passage-registration/use-passage-form-state";
+import { usePassageBlocks } from "./passage-registration/use-passage-blocks";
+import { blockHasContent } from "./passage-registration/block-types";
+import { extractTextFromImage } from "./passage-registration/image-handlers";
 import { useFilterState } from "./passage-registration/use-filter-state";
 import { useCollectionsState } from "./passage-registration/use-collections-state";
 import { FormSectionContainer } from "./passage-registration/sections/form-section-container";
@@ -38,24 +42,25 @@ export function PassageRegistrationClient({
 }: PassageRegistrationProps) {
   const [saving, setSaving] = useState(false);
   const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form collapse state
   const [formCollapsed, setFormCollapsed] = useState(false);
 
-  // Core fields + annotations + image + metadata + analysis prompt — grouped into one custom hook
-  // to preserve the original contiguous hook order (19 consecutive useStates).
+  // ─── Passage blocks (center editor — scrollable, collapsible stack) ───
   const {
-    title,
-    setTitle,
-    content,
-    setContent,
-    annotations,
-    setAnnotations,
-    imageFile,
-    setImageFile,
-    imagePreview,
-    setImagePreview,
+    blocks,
+    updateBlock,
+    addEmptyBlock,
+    removeBlock,
+    toggleCollapse,
+    setAllCollapsed,
+    toggleDraftBlock,
+    reset: resetBlocks,
+  } = usePassageBlocks();
+
+  // Shared metadata + analysis prompt — grouped into one custom hook
+  // to preserve the original contiguous hook order.
+  const {
     schoolId,
     setSchoolId,
     grade,
@@ -106,7 +111,6 @@ export function PassageRegistrationClient({
     queue,
     activeCount,
     hasActiveAnalysis,
-    addToQueue,
     addManyToQueue,
     enqueueManyPending,
     retryAnalysis,
@@ -144,52 +148,22 @@ export function PassageRegistrationClient({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
 
-  // ─── Selected extraction draft (left grid → editor) ───
-  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  // ─── Selected extraction drafts (left grid → center blocks) ───
+  // Clicking a draft toggles it as a block in the center stack. The grid
+  // highlight reflects every draft currently loaded as a block.
   const [draftRefreshToken, setDraftRefreshToken] = useState(0);
+  const selectedDraftIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const b of blocks) if (b.sourceDraftId) ids.add(b.sourceDraftId);
+    return ids;
+  }, [blocks]);
   const handleSelectDraft = useCallback(
     (draft: M1PassageDraftWithJob) => {
-      if (selectedDraftId === draft.id) {
-        setSelectedDraftId(null);
-        setTitle("");
-        setContent("");
-        setAnnotations([]);
-        setImageFile(null);
-        setImagePreview(null);
-        setSource("");
-        return;
-      }
-
-      const text =
-        draft.teacherText?.trim() ||
-        draft.restoredText?.trim() ||
-        draft.rawText?.trim() ||
-        "";
-      const draftTitle = draft.title?.trim() || getDraftDisplayTitle(draft);
-      setSelectedDraftId(draft.id);
-      setTitle(draftTitle);
-      setContent(text);
-      setAnnotations([]);
-      setImageFile(null);
-      setImagePreview(null);
-      const fileName =
-        draft.job?.displayName?.trim() ||
-        draft.job?.originalFileName?.trim() ||
-        "";
-      if (fileName) setSource(fileName);
+      toggleDraftBlock(draft);
     },
-    [
-      selectedDraftId,
-      setAnnotations,
-      setContent,
-      setImageFile,
-      setImagePreview,
-      setSource,
-      setTitle,
-    ],
+    [toggleDraftBlock],
   );
   const handleSelectedDraftSaved = useCallback(() => {
-    setSelectedDraftId(null);
     setDraftRefreshToken((v) => v + 1);
   }, []);
 
@@ -316,12 +290,7 @@ export function PassageRegistrationClient({
 
   const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
 
-  const wordCount = content
-    .trim()
-    .split(/\s+/)
-    .filter((w) => w.length > 0).length;
-
-  const hasContent = content.trim().length > 0 || imageFile !== null;
+  const hasContent = useMemo(() => blocks.some(blockHasContent), [blocks]);
   const effectivePublisher =
     publisher === "__CUSTOM__" ? publisherCustom : publisher;
 
@@ -465,6 +434,157 @@ export function PassageRegistrationClient({
     ],
   );
 
+  // ─── Analyze every filled block in the center stack at once ───
+  // Mirrors the bulk-draft path: writes run in parallel and each passage is
+  // enqueued as soon as its write finishes. Shared metadata/prompt apply to
+  // all blocks; per-block title/content/annotations/source/image win.
+  const handleAnalyzeBlocks = useCallback(
+    async (
+      generationPlan: QuestionGenerationPlan,
+      tone: AnalysisTone,
+    ) => {
+      if (saving) return;
+      const filled = blocks.filter(blockHasContent);
+      if (filled.length === 0) {
+        toast.error("지문 내용을 입력하거나 이미지를 업로드해주세요.");
+        return;
+      }
+
+      setSaving(true);
+      try {
+        const normalizedSchoolId =
+          schoolId && schoolId !== "NONE" ? schoolId : "";
+        const schoolName = schools.find((s) => s.id === normalizedSchoolId)?.name;
+        const parsedGrade = grade ? parseInt(grade) : undefined;
+        const trimmedUnit = unit.trim();
+        const sharedSource = source.trim();
+        const sharedTags = tags.length > 0 ? tags : undefined;
+
+        const results = await Promise.allSettled(
+          filled.map(async (block) => {
+            let text = block.content.trim();
+            if (!text && block.imageFile) {
+              const extracted = await extractTextFromImage(block.imageFile);
+              if (!extracted) throw new Error("이미지에서 텍스트를 추출하지 못했습니다.");
+              text = extracted;
+            }
+            if (!text) throw new Error("EMPTY_CONTENT");
+
+            const finalTitle =
+              block.title.trim() ||
+              text.split(/[.\n]/)[0].slice(0, 60) ||
+              "제목 없음";
+            const blockSource = block.source.trim() || sharedSource;
+            const combinedPrompt = buildAnalysisPrompt(
+              analysisPrompt,
+              block.annotations,
+            );
+
+            const result = await createWorkbenchPassage({
+              title: finalTitle,
+              content: text,
+              schoolId: normalizedSchoolId || undefined,
+              grade: parsedGrade,
+              semester: semester || undefined,
+              unit: trimmedUnit || undefined,
+              publisher: effectivePublisher || undefined,
+              source: blockSource || undefined,
+              tags: sharedTags,
+              sourceDraftId: block.sourceDraftId ?? undefined,
+              annotations:
+                block.annotations.length > 0
+                  ? block.annotations.map((a) => ({
+                      id: a.id,
+                      type: a.type,
+                      text: a.text,
+                      memo: a.memo,
+                      from: a.from,
+                      to: a.to,
+                    }))
+                  : undefined,
+            });
+
+            if (!result.success || !result.id) {
+              throw new Error(result.error || "CREATE_FAILED");
+            }
+
+            const queuedItem = {
+              passage: {
+                id: result.id,
+                title: finalTitle,
+                content: text,
+                schoolId: normalizedSchoolId || undefined,
+                schoolName,
+                grade: parsedGrade,
+                semester: semester || undefined,
+                unit: trimmedUnit || undefined,
+                publisher: effectivePublisher || undefined,
+                tags: sharedTags,
+                source: blockSource || undefined,
+              },
+              promptConfig: {
+                customPrompt: combinedPrompt,
+                focusAreas: [],
+                targetLevel: "",
+                generationPlan,
+                analysisTone: tone,
+              },
+            };
+
+            enqueueManyPending([queuedItem]);
+            return queuedItem;
+          }),
+        );
+
+        const created = results.flatMap((r) =>
+          r.status === "fulfilled" ? [r.value] : [],
+        );
+        const createFailed = results.length - created.length;
+        const queued = await addManyToQueue(created, true);
+        const success = queued.success;
+        const failed = createFailed + queued.failed;
+
+        if (success > 0) {
+          toast.success(
+            success === 1
+              ? "지문이 등록되었습니다. 백그라운드에서 AI 분석을 시작합니다."
+              : `${success}개 지문이 등록되었습니다. 백그라운드에서 분석 진행 중 (동시 3개씩).`,
+          );
+          handleSelectedDraftSaved();
+          resetBlocks();
+        }
+        if (failed > 0) {
+          toast.error(`${failed}개 지문 등록에 실패했습니다.`);
+        }
+      } catch (err) {
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "분석 등록 중 오류가 발생했습니다.",
+        );
+      } finally {
+        setSaving(false);
+      }
+    },
+    [
+      saving,
+      blocks,
+      schoolId,
+      schools,
+      grade,
+      semester,
+      unit,
+      source,
+      effectivePublisher,
+      tags,
+      analysisPrompt,
+      addManyToQueue,
+      enqueueManyPending,
+      handleSelectedDraftSaved,
+      resetBlocks,
+    ],
+  );
+
   const addTag = useCallback(() => {
     const tag = tagInput.trim();
     if (tag && !isQuestionGenerationPlanTag(tag) && !tags.includes(tag)) {
@@ -486,20 +606,14 @@ export function PassageRegistrationClient({
             formCollapsed={formCollapsed}
             setFormCollapsed={setFormCollapsed}
             hasContent={hasContent}
-            wordCount={wordCount}
             saving={saving}
-            setSaving={setSaving}
-            title={title}
-            setTitle={setTitle}
-            content={content}
-            setContent={setContent}
-            annotations={annotations}
-            setAnnotations={setAnnotations}
-            imageFile={imageFile}
-            setImageFile={setImageFile}
-            imagePreview={imagePreview}
-            setImagePreview={setImagePreview}
-            fileInputRef={fileInputRef}
+            blocks={blocks}
+            updateBlock={updateBlock}
+            addEmptyBlock={addEmptyBlock}
+            removeBlock={removeBlock}
+            toggleCollapse={toggleCollapse}
+            setAllCollapsed={setAllCollapsed}
+            onAnalyze={handleAnalyzeBlocks}
             schools={schools}
             schoolId={schoolId}
             setSchoolId={setSchoolId}
@@ -534,8 +648,7 @@ export function PassageRegistrationClient({
             setNewPromptName={setNewPromptName}
             savingPrompt={savingPrompt}
             setSavingPrompt={setSavingPrompt}
-            addToQueue={addToQueue}
-            selectedDraftId={selectedDraftId}
+            selectedDraftIds={selectedDraftIds}
             draftRefreshToken={draftRefreshToken}
             onSelectDraft={handleSelectDraft}
             onSelectedDraftSaved={handleSelectedDraftSaved}

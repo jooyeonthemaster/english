@@ -15,7 +15,7 @@ import { getSemesterLabel } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -104,9 +104,13 @@ export function PassageFileCard({
     <div
       ref={dragRef}
       data-drag-item-id={passage.id}
-      onClick={(e) => {
-        // 카드 본문 어디든 클릭 = 선택(체크) 토글. 상세는 우측 하단 '상세 보기' 버튼으로만 연다.
-        onToggleSelect(passage.id, e.shiftKey);
+      onClick={() => onViewDetail(passage.id)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        onViewDetail(passage.id);
       }}
       className={`group relative flex h-full flex-col rounded-xl border ${borderColor} bg-white px-4 py-2.5 transition-all duration-200 hover:shadow-md cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
@@ -201,16 +205,7 @@ export function PassageFileCard({
           </div>
         )}
 
-        {/* 상세 보기 — mt-auto로 카드 우측 하단에 고정. 카드가 flex 컬럼 + h-full이라
-            같은 행 카드들이 동일 높이로 늘어나도 버튼 위치가 항상 일정하다. */}
-        <div
-          className="mt-auto -mr-1.5 -mb-1 flex justify-end pt-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <DetailActionButton
-            onClick={() => onViewDetail(passage.id)}
-          />
-        </div>
+        <CardHoverActionLabel />
     </div>
   );
 }
