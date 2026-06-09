@@ -39,7 +39,7 @@ type PaymentCustomer = {
   email: string;
 };
 
-type PaymentRequest = {
+type PortOneV2PaymentRequest = {
   storeId: string;
   channelKey: string;
   paymentId: string;
@@ -77,6 +77,24 @@ type PaymentRequest = {
     };
   };
 };
+
+type DanalLegacyPaymentRequest = {
+  sdkVersion: "v1";
+  userCode: string;
+  channelKey: string;
+  pg: "danal_tpay";
+  pay_method: "card";
+  merchant_uid: string;
+  name: string;
+  amount: number;
+  buyer_name: string;
+  buyer_tel: string;
+  buyer_email: string;
+  m_redirect_url: string;
+  custom_data: Record<string, unknown>;
+};
+
+type PaymentRequest = PortOneV2PaymentRequest | DanalLegacyPaymentRequest;
 
 export async function POST(request: NextRequest) {
   try {
@@ -169,31 +187,33 @@ export async function POST(request: NextRequest) {
       data: { customData },
     });
 
-    try {
-      await preRegisterPortOnePayment({
-        paymentId,
-        totalAmount: product.price,
-      });
-    } catch (err) {
-      const portOneErrorMessage = getPortOneErrorMessage(err);
-      await prisma.creditTopUp.update({
-        where: { id: topUp.id },
-        data: {
-          status: "FAILED",
-          failureCode: "PRE_REGISTER_FAILED",
-          failureMessage: portOneErrorMessage,
-        },
-      });
-      console.error("[credits/top-ups/prepare] pre-register failed", {
-        topUpId: topUp.id,
-        paymentId,
-        message: portOneErrorMessage,
-        errorName: err instanceof Error ? err.name : undefined,
-      });
-      return NextResponse.json(
-        { error: getPrepareErrorMessage(portOneErrorMessage) },
-        { status: 502 },
-      );
+    if (!usesDanalLegacyCheckout({ pgProvider, payMethod })) {
+      try {
+        await preRegisterPortOnePayment({
+          paymentId,
+          totalAmount: product.price,
+        });
+      } catch (err) {
+        const portOneErrorMessage = getPortOneErrorMessage(err);
+        await prisma.creditTopUp.update({
+          where: { id: topUp.id },
+          data: {
+            status: "FAILED",
+            failureCode: "PRE_REGISTER_FAILED",
+            failureMessage: portOneErrorMessage,
+          },
+        });
+        console.error("[credits/top-ups/prepare] pre-register failed", {
+          topUpId: topUp.id,
+          paymentId,
+          message: portOneErrorMessage,
+          errorName: err instanceof Error ? err.name : undefined,
+        });
+        return NextResponse.json(
+          { error: getPrepareErrorMessage(portOneErrorMessage) },
+          { status: 502 },
+        );
+      }
     }
 
     return NextResponse.json({
@@ -262,7 +282,12 @@ function buildPaymentRequest(params: {
   productCode: string;
   customer: PaymentCustomer;
 }): PaymentRequest {
-  const base: PaymentRequest = {
+  const legacyDanalRequest = buildDanalLegacyPaymentRequest(params);
+  if (legacyDanalRequest) {
+    return legacyDanalRequest;
+  }
+
+  const base: PortOneV2PaymentRequest = {
     storeId: params.storeId,
     channelKey: params.channelKey,
     paymentId: params.paymentId,
@@ -318,7 +343,7 @@ function buildPaymentRequest(params: {
   }
 
   if (params.payMethod === "MOBILE") {
-    const request: PaymentRequest = {
+    const request: PortOneV2PaymentRequest = {
       ...base,
       mobile: {},
     };
@@ -333,6 +358,57 @@ function buildPaymentRequest(params: {
   }
 
   return base;
+}
+
+function buildDanalLegacyPaymentRequest(params: {
+  channelKey: string;
+  paymentId: string;
+  orderName: string;
+  totalAmount: number;
+  pgProvider: PortOnePgProvider;
+  payMethod: PortOneTopUpPayMethod;
+  redirectUrl: string;
+  customData: Record<string, unknown>;
+  customer: PaymentCustomer;
+}): DanalLegacyPaymentRequest | null {
+  if (
+    !usesDanalLegacyCheckout({
+      pgProvider: params.pgProvider,
+      payMethod: params.payMethod,
+    })
+  ) {
+    return null;
+  }
+
+  const userCode = getPortOneV1CustomerCode();
+  if (!userCode) return null;
+
+  return {
+    sdkVersion: "v1",
+    userCode,
+    channelKey: params.channelKey,
+    pg: "danal_tpay",
+    pay_method: "card",
+    merchant_uid: params.paymentId,
+    name: params.orderName,
+    amount: params.totalAmount,
+    buyer_name: params.customer.fullName,
+    buyer_tel: params.customer.phoneNumber,
+    buyer_email: params.customer.email,
+    m_redirect_url: params.redirectUrl,
+    custom_data: params.customData,
+  };
+}
+
+function usesDanalLegacyCheckout(params: {
+  pgProvider: PortOnePgProvider;
+  payMethod: PortOneTopUpPayMethod;
+}) {
+  return (
+    params.pgProvider === "danal_tpay" &&
+    params.payMethod === "CARD" &&
+    Boolean(getPortOneV1CustomerCode())
+  );
 }
 
 async function getStaffPaymentProfile(staffId: string) {
@@ -415,6 +491,26 @@ function getAppUrl() {
     );
   }
   return appUrl.replace(/\/+$/, "");
+}
+
+function getPortOneV1CustomerCode() {
+  const raw =
+    process.env.PORTONE_V1_CUSTOMER_CODE ??
+    process.env.NEXT_PUBLIC_PORTONE_V1_CUSTOMER_CODE ??
+    process.env.PORTONE_V1_MERCHANT_ID ??
+    process.env.NEXT_PUBLIC_PORTONE_V1_MERCHANT_ID ??
+    process.env.PORTONE_IMP_CODE ??
+    process.env.NEXT_PUBLIC_PORTONE_IMP_CODE;
+
+  const trimmed = raw?.trim();
+  if (!trimmed) return null;
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim() || null;
+  }
+  return trimmed;
 }
 
 function getEasyPayProvider(value: unknown): EasyPayProvider {

@@ -9,7 +9,7 @@ const SUPPORTED_TOP_UP_PAY_METHODS = [
 type PublicTopUpPayMethod = (typeof SUPPORTED_TOP_UP_PAY_METHODS)[number];
 
 export const PAYMENT_PG_NAME =
-  process.env.NEXT_PUBLIC_PAYMENT_PG_NAME?.trim() || "KG이니시스";
+  process.env.NEXT_PUBLIC_PAYMENT_PG_NAME?.trim() || "다날";
 
 export const PUBLIC_TOP_UP_PAY_METHODS = getPublicTopUpPayMethods();
 

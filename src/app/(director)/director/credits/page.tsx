@@ -168,7 +168,52 @@ type TopUpPayMethod =
 
 type EasyPayProvider = "KAKAOPAY" | "NAVERPAY" | "TOSSPAY" | "PAYCO";
 
+type DanalLegacyPaymentRequest = {
+  sdkVersion: "v1";
+  userCode: string;
+  channelKey: string;
+  pg: "danal_tpay";
+  pay_method: "card";
+  merchant_uid: string;
+  name: string;
+  amount: number;
+  buyer_name: string;
+  buyer_tel: string;
+  buyer_email: string;
+  m_redirect_url: string;
+  custom_data: Record<string, unknown>;
+};
+
+type DanalLegacyPaymentParams = Omit<
+  DanalLegacyPaymentRequest,
+  "sdkVersion" | "userCode"
+>;
+
+type DanalLegacyPaymentResponse = {
+  success?: boolean;
+  imp_uid?: string;
+  merchant_uid?: string;
+  error_code?: string;
+  error_msg?: string;
+};
+
+declare global {
+  interface Window {
+    IMP?: {
+      init: (userCode: string) => void;
+      request_pay: (
+        params: DanalLegacyPaymentParams,
+        callback: (response: DanalLegacyPaymentResponse) => void,
+      ) => void;
+    };
+  }
+}
+
 // ─── Constants ──────────────────────────────────────────────────────────────
+
+const PORTONE_V1_SDK_URL = "https://cdn.iamport.kr/v1/iamport.js";
+
+let portOneV1SdkPromise: Promise<void> | null = null;
 
 const TYPE_LABELS: Record<string, string> = {
   CONSUMPTION: "사용",
@@ -279,6 +324,18 @@ const SUBSCRIPTION_PAYMENT_STATUS_STYLES: Record<string, string> = {
   REFUNDED: "bg-amber-50 text-amber-700",
 };
 
+const CREDIT_PAYMENT_RETURN_PARAMS = [
+  "paymentId",
+  "merchant_uid",
+  "imp_uid",
+  "imp_success",
+  "success",
+  "error_code",
+  "error_msg",
+  "code",
+  "message",
+] as const;
+
 // 기능별 아이콘 매핑
 const OPERATION_ICONS: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
   QUESTION_GEN_SINGLE: FileText,
@@ -308,6 +365,122 @@ const OPERATION_COLORS: Record<string, { bg: string; text: string }> = {
   AI_CHAT: { bg: "bg-pink-50", text: "text-pink-500" },
   TEXT_EXTRACTION: { bg: "bg-gray-100", text: "text-gray-500" },
 };
+
+function isDanalLegacyPaymentRequest(
+  value: unknown,
+): value is DanalLegacyPaymentRequest {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    (value as { sdkVersion?: unknown }).sdkVersion === "v1" &&
+    (value as { pg?: unknown }).pg === "danal_tpay" &&
+    typeof (value as { userCode?: unknown }).userCode === "string" &&
+    typeof (value as { merchant_uid?: unknown }).merchant_uid === "string"
+  );
+}
+
+async function requestDanalLegacyPayment(request: DanalLegacyPaymentRequest) {
+  await loadPortOneV1Sdk();
+  const imp = window.IMP;
+  if (!imp) {
+    throw new Error("다날 결제창 SDK를 불러오지 못했습니다.");
+  }
+
+  imp.init(request.userCode);
+
+  const paymentParams: DanalLegacyPaymentParams = {
+    channelKey: request.channelKey,
+    pg: request.pg,
+    pay_method: request.pay_method,
+    merchant_uid: request.merchant_uid,
+    name: request.name,
+    amount: request.amount,
+    buyer_name: request.buyer_name,
+    buyer_tel: request.buyer_tel,
+    buyer_email: request.buyer_email,
+    m_redirect_url: request.m_redirect_url,
+    custom_data: request.custom_data,
+  };
+
+  return new Promise<{ paymentId: string }>((resolve, reject) => {
+    imp.request_pay(paymentParams, (response) => {
+      if (response.success) {
+        resolve({ paymentId: response.merchant_uid || request.merchant_uid });
+        return;
+      }
+      reject(new Error(getDanalLegacyErrorMessage(response)));
+    });
+  });
+}
+
+function loadPortOneV1Sdk() {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("브라우저에서만 결제창을 호출할 수 있습니다."));
+  }
+  if (window.IMP) return Promise.resolve();
+  if (portOneV1SdkPromise) return portOneV1SdkPromise;
+
+  portOneV1SdkPromise = new Promise<void>((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      `script[src="${PORTONE_V1_SDK_URL}"]`,
+    );
+
+    const handleLoad = () => {
+      if (window.IMP) {
+        resolve();
+      } else {
+        portOneV1SdkPromise = null;
+        reject(new Error("다날 결제창 SDK 초기화에 실패했습니다."));
+      }
+    };
+    const handleError = () => {
+      portOneV1SdkPromise = null;
+      reject(new Error("다날 결제창 SDK를 불러오지 못했습니다."));
+    };
+
+    if (existingScript) {
+      if (window.IMP) {
+        resolve();
+        return;
+      }
+      existingScript.addEventListener("load", handleLoad, { once: true });
+      existingScript.addEventListener("error", handleError, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = PORTONE_V1_SDK_URL;
+    script.async = true;
+    script.onload = handleLoad;
+    script.onerror = handleError;
+    document.head.appendChild(script);
+  });
+
+  return portOneV1SdkPromise;
+}
+
+function getDanalLegacyErrorMessage(response: DanalLegacyPaymentResponse) {
+  if (response.error_msg) return response.error_msg;
+  if (response.error_code) {
+    return `결제가 완료되지 않았습니다. (${response.error_code})`;
+  }
+  return "결제가 완료되지 않았습니다.";
+}
+
+function clearCreditPaymentReturnParams() {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  let changed = false;
+  for (const key of CREDIT_PAYMENT_RETURN_PARAMS) {
+    if (url.searchParams.has(key)) {
+      url.searchParams.delete(key);
+      changed = true;
+    }
+  }
+  if (changed) {
+    window.history.replaceState(null, "", url.toString());
+  }
+}
 
 // ─── Page Component ─────────────────────────────────────────────────────────
 
@@ -462,13 +635,7 @@ export default function CreditsPage() {
         });
       } finally {
         completingPaymentRef.current = false;
-        if (typeof window !== "undefined") {
-          const url = new URL(window.location.href);
-          if (url.searchParams.has("paymentId")) {
-            url.searchParams.delete("paymentId");
-            window.history.replaceState(null, "", url.toString());
-          }
-        }
+        clearCreditPaymentReturnParams();
       }
     },
     [refreshAllCreditData],
@@ -491,6 +658,12 @@ export default function CreditsPage() {
         const prepared = await prepareRes.json();
         if (!prepareRes.ok) {
           throw new Error(prepared.error ?? "결제 준비에 실패했습니다.");
+        }
+
+        if (isDanalLegacyPaymentRequest(prepared.paymentRequest)) {
+          const payment = await requestDanalLegacyPayment(prepared.paymentRequest);
+          await completePayment(payment.paymentId);
+          return;
         }
 
         const payment = await PortOne.requestPayment(prepared.paymentRequest);
@@ -677,13 +850,27 @@ export default function CreditsPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
-    const paymentId = params.get("paymentId");
-    if (paymentId) void completePayment(paymentId);
+    const paymentId = params.get("paymentId") ?? params.get("merchant_uid");
+    const paymentFailed =
+      params.get("imp_success") === "false" || params.get("success") === "false";
+    if (paymentId && !paymentFailed) {
+      void completePayment(paymentId);
+    } else if (paymentFailed) {
+      setPaymentMessage({
+        type: "error",
+        text:
+          params.get("error_msg") ??
+          params.get("message") ??
+          "결제가 완료되지 않았습니다.",
+      });
+      clearCreditPaymentReturnParams();
+      void fetchTopUps();
+    }
     const billingKey = params.get("billingKey");
     if (billingKey) {
       void registerSubscriptionBilling(billingKey, params.get("issueId"));
     }
-  }, [completePayment, registerSubscriptionBilling]);
+  }, [completePayment, fetchTopUps, registerSubscriptionBilling]);
 
   // Re-fetch when page or filterType changes (skip initial)
   useEffect(() => {

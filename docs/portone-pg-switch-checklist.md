@@ -1,7 +1,7 @@
-# PortOne KG Inicis Switch Checklist
+# PortOne Danal Switch Checklist
 
 This checklist tracks the active SMOAT credit top-up payment migration from NHN
-KCP to KG Inicis through PortOne V2 without changing the product or review
+KCP/KG Inicis to Danal through PortOne without changing the product or review
 scope.
 
 ## Current Review Scope
@@ -14,31 +14,38 @@ scope.
 
 ## Current Decision
 
-- Proceed with KG Inicis V2 for the PG review channel.
-- Keep the current PortOne V2 integration shape and replace only the channel,
-  provider defaults, review copy, and environment values.
-- Keep KCP code paths available behind `kcp_v2` so we can roll back by changing
-  environment variables if needed.
+- Proceed with Danal TPay (`danal_tpay`) for the PG review channel.
+- Keep the existing PortOne server-side payment verification and webhook flow.
+- Danal test checkout may be a PortOne V1 checkout channel. If the channel
+  cannot be invoked through the V2 browser SDK, set the PortOne V1 customer code
+  (`imp...`) so the page uses `IMP.request_pay` for the Danal card checkout.
+- Keep KG Inicis and KCP code paths available behind `inicis_v2` / `kcp_v2` so
+  we can roll back by changing environment variables if needed.
 
 ## Code Readiness
 
-- Default PG provider and public PG name are `inicis_v2` / `KG이니시스`.
+- Default PG provider and public PG name are `danal_tpay` / `다날`.
 - Credit top-up UI is limited to `CARD` when
   `NEXT_PUBLIC_PORTONE_TOP_UP_PAY_METHODS=CARD`.
 - Credit top-up payment requests include customer name, phone, email, and
-  customer ID because KG Inicis requires customer information for PC payments.
+  customer ID because Korean PG checkout flows can require buyer information.
+- Danal V1 checkout support is enabled when `PORTONE_V1_CUSTOMER_CODE` or
+  `NEXT_PUBLIC_PORTONE_V1_CUSTOMER_CODE` is configured.
 - Public product, terms, privacy, and refund pages describe credit-card one-time
   top-up review scope when the public pay-method env is `CARD`.
 
 ## Manual PortOne Setup
 
-1. In the PortOne console, apply for or create a KG Inicis V2 general payment
+1. In the PortOne console, apply for or create a Danal general card payment
    channel for `https://www.smoat.co.kr`.
-2. Copy the live/review `storeId`, `channelKey`, API secret, and webhook secret.
-3. Register the production webhook URL after the channel/store change.
-4. Run the PortOne webhook test before submitting the PG review.
+2. Copy the live/review `storeId`, Danal `channelKey`, API secret, and webhook
+   secret.
+3. If the Danal channel is shown as 결제창 V1, copy the PortOne V1 customer code
+   that starts with `imp`.
+4. Register the production webhook URL after the channel/store change.
+5. Run the PortOne webhook test before submitting the PG review.
 
-## Vercel Variables for KG Inicis
+## Vercel Variables for Danal
 
 Set these in Production and redeploy:
 
@@ -49,9 +56,11 @@ PORTONE_STORE_ID="store-..."
 PORTONE_CHANNEL_KEY="channel-key-..."
 NEXT_PUBLIC_PORTONE_STORE_ID="store-..."
 NEXT_PUBLIC_PORTONE_CHANNEL_KEY="channel-key-..."
-PORTONE_PG_PROVIDER="inicis_v2"
-NEXT_PUBLIC_PORTONE_PG_PROVIDER="inicis_v2"
-NEXT_PUBLIC_PAYMENT_PG_NAME="KG이니시스"
+PORTONE_PG_PROVIDER="danal_tpay"
+NEXT_PUBLIC_PORTONE_PG_PROVIDER="danal_tpay"
+NEXT_PUBLIC_PAYMENT_PG_NAME="다날"
+PORTONE_V1_CUSTOMER_CODE="imp..."
+NEXT_PUBLIC_PORTONE_V1_CUSTOMER_CODE="imp..."
 PORTONE_TOP_UP_PAY_METHODS="CARD"
 NEXT_PUBLIC_PORTONE_TOP_UP_PAY_METHODS="CARD"
 NEXT_PUBLIC_SHOW_SUBSCRIPTION_BILLING=false
@@ -67,10 +76,10 @@ update `PORTONE_WEBHOOK_SECRET` in Vercel Production and redeploy.
 3. Login with the PG review account.
 4. Open `/director/credits`.
 5. Confirm only the card payment method is visible.
-6. Complete one test card top-up.
+6. Complete one Danal test card top-up.
 7. Confirm the credit balance increases.
 8. Confirm the top-up row is `COMPLETED` and PortOne status is `PAID`.
-9. Confirm public pages show `KG이니시스` in the privacy policy.
+9. Confirm public pages show `다날` in the privacy policy.
 10. Confirm public pages still do not mention subscription billing.
 
 ## Submission Notes
