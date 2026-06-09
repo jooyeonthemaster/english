@@ -267,28 +267,28 @@ export function WorkspacePassageRow({
 
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      {/* ── 헤더 ── */}
+      {/* ── 헤더 (40px 고정 — 모든 컨트롤 h-7, 아이콘 h-4) ── */}
       <div
         className={
-          "flex items-center gap-2 px-3 py-2 " +
+          "flex h-10 items-center gap-2 pl-2.5 pr-1.5 " +
           (row.collapsed ? "" : "border-b border-slate-100")
         }
       >
         <button
           type="button"
           onClick={onToggleCollapsed}
-          className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left"
+          className="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 text-left"
           title={row.collapsed ? "펼치기" : "접기"}
         >
-          <span className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-md bg-blue-600 px-1.5 text-[11px] font-bold text-white">
+          <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-blue-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
             {index + 1}
           </span>
-          <span className="max-w-[260px] shrink-0 truncate text-[12.5px] font-semibold text-slate-700">
+          <span className="min-w-[72px] shrink truncate text-[12.5px] font-semibold text-slate-700">
             {row.title}
           </span>
           {row.variantOfId ? (
             <span
-              className="shrink-0 rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white"
+              className="shrink-0 rounded-sm bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
               title="편집된 본문이 새 지문(변형본)으로 저장됐습니다. 원본 지문은 그대로 보존됩니다."
             >
               변형본
@@ -296,22 +296,25 @@ export function WorkspacePassageRow({
           ) : null}
           {dirty ? (
             <span
-              className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600 ring-1 ring-blue-200"
+              className="shrink-0 rounded-sm bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-blue-600 ring-1 ring-inset ring-blue-200"
               title="본문이 수정됐습니다. 생성 시 변형본이 새 지문으로 저장됩니다."
             >
               수정됨
             </span>
           ) : null}
           {row.collapsed ? (
-            <span className="min-w-0 truncate text-[11px] text-slate-400">
+            <span className="min-w-0 flex-1 truncate text-[11px] text-slate-400">
               {collapsedPreview}
             </span>
-          ) : null}
-          <span className="ml-auto shrink-0 text-[11px] tabular-nums text-slate-400">
+          ) : (
+            <span className="min-w-0 flex-1" aria-hidden="true" />
+          )}
+          <span className="shrink-0 whitespace-nowrap text-[11px] tabular-nums text-slate-400">
             {words} words
           </span>
         </button>
 
+        <span className="h-4 w-px shrink-0 bg-slate-200" aria-hidden="true" />
         <RowHistoryPopover
           passageIds={[row.passageId, row.variantOfId].filter(
             (v): v is string => !!v,
@@ -327,36 +330,36 @@ export function WorkspacePassageRow({
         <button
           type="button"
           onClick={onToggleCollapsed}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
           title={row.collapsed ? "펼치기" : "접기"}
         >
           {row.collapsed ? (
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-4 w-4" aria-hidden="true" />
           ) : (
-            <ChevronUp className="h-4 w-4" />
+            <ChevronUp className="h-4 w-4" aria-hidden="true" />
           )}
         </button>
         <button
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
           title="워크스페이스에서 제거 (지문은 삭제되지 않음)"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
 
       {!row.collapsed ? (
-        <div className="space-y-2 px-3 py-2.5">
+        <div className="space-y-2 px-2.5 py-2.5">
           {/* ── AI 도구 바 ── */}
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5">
             <button
               type="button"
               onClick={handlePrependClick}
               disabled={locked}
               title="지문 전체 맥락과 자연스럽게 이어지는 앞 문단을 AI가 생성합니다"
-              className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-blue-200 bg-white pl-2 pr-1.5 text-[11.5px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy === "prepend" ? (
                 <Loader2
@@ -367,28 +370,36 @@ export function WorkspacePassageRow({
                 <ListStart className="h-3.5 w-3.5" aria-hidden="true" />
               )}
               앞 맥락 추가
-              <span className="rounded bg-blue-500/70 px-1 py-0.5 text-[9px] font-bold text-blue-50">
+              <span
+                title="이 작업은 크레딧 1을 사용합니다"
+                className="rounded-sm bg-blue-50 px-1 py-px text-[10px] font-bold text-blue-500 ring-1 ring-inset ring-blue-100"
+              >
                 ◈1
               </span>
             </button>
-            <span className="flex h-7 items-center gap-1.5 rounded-md border border-dashed border-blue-200 bg-blue-50/50 px-2.5 text-[11px] font-semibold text-blue-600">
-              <TextCursorInput className="h-3.5 w-3.5" aria-hidden="true" />
-              본문에서 문장을 드래그하면 AI 변형·범위 지정을 할 수 있어요
-            </span>
             {rangePreview ? (
-              <span className="flex h-7 items-center gap-1.5 rounded-md bg-slate-800 px-2.5 text-[11px] font-semibold text-white">
+              <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2 pr-1 text-[11px] font-bold text-white">
                 <Scissors className="h-3 w-3" aria-hidden="true" />
                 출제 범위 {rangePreview.words}/{words} words
                 <button
                   type="button"
                   onClick={() => onSetRange(null)}
-                  className="ml-0.5 rounded-sm p-0.5 hover:bg-white/20"
+                  className="rounded-sm p-0.5 transition-colors hover:bg-white/20"
                   title="범위 해제 (전체 지문으로 출제)"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-3 w-3" aria-hidden="true" />
                 </button>
               </span>
             ) : null}
+            <span className="flex min-w-0 items-center gap-1.5 text-[11px] font-medium text-slate-400">
+              <TextCursorInput
+                className="h-3.5 w-3.5 shrink-0 text-blue-400"
+                aria-hidden="true"
+              />
+              <span className="truncate">
+                문장을 드래그하면 AI 변형 · 범위 지정
+              </span>
+            </span>
           </div>
 
           {/* ── 앞 문단 미리보기 ── */}
@@ -431,10 +442,10 @@ export function WorkspacePassageRow({
 
           {/* ── 선택 액션 바 ── */}
           {selection && !preview && !busy && !disabled ? (
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-blue-300 bg-gradient-to-r from-blue-50 to-white px-3 py-2 shadow-sm">
-              <span className="min-w-0 flex-1 truncate text-[11.5px] text-slate-500">
-                선택:{" "}
-                <span className="font-semibold text-slate-700">
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-blue-300 bg-white py-2 pl-3 pr-2 shadow-md shadow-blue-100/60 duration-150 animate-in fade-in slide-in-from-top-1">
+              <span className="min-w-0 flex-1 truncate text-[11.5px] text-slate-400">
+                선택{" "}
+                <span className="font-semibold text-slate-600">
                   “{selection.text.slice(0, 60)}
                   {selection.text.length > 60 ? "…" : ""}”
                 </span>
@@ -443,11 +454,14 @@ export function WorkspacePassageRow({
                 type="button"
                 onClick={handleParaphraseClick}
                 title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
-                className="flex h-7.5 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-md shadow-blue-200/60 transition-all hover:bg-blue-700 hover:shadow-lg"
+                className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
               >
                 <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
                 AI 문장 변형
-                <span className="rounded bg-blue-500/70 px-1 py-0.5 text-[9px] font-bold text-blue-50">
+                <span
+                  title="이 작업은 크레딧 1을 사용합니다"
+                  className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
+                >
                   ◈1
                 </span>
               </button>
@@ -455,7 +469,7 @@ export function WorkspacePassageRow({
                 type="button"
                 onClick={handleSetRangeFromSelection}
                 title="선택한 구간만으로 문제를 생성합니다 (긴 지문용)"
-                className="flex h-7.5 shrink-0 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-400 hover:bg-slate-50"
+                className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
               >
                 <Scissors className="h-3.5 w-3.5" aria-hidden="true" />
                 이 범위만 출제

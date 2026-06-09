@@ -58,7 +58,12 @@ import {
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
-import { ArrowDownToLine } from "lucide-react";
+import {
+  ArrowDownToLine,
+  PanelRightClose,
+  PanelRightOpen,
+  Settings2,
+} from "lucide-react";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
 import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
@@ -1493,7 +1498,7 @@ export function GeneratePageClient({
           right={
             /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══ */
             <div className="flex h-full min-h-0 min-w-0">
-              <div className="flex min-h-0 min-w-[160px] flex-1 flex-col border-r border-slate-200">
+              <div className="flex min-h-0 min-w-[120px] flex-1 flex-col border-r border-slate-200">
                 <div className="min-h-0 flex-1">
                   <PassageWorkspace
                     api={workspaceApi}
@@ -1514,7 +1519,7 @@ export function GeneratePageClient({
                     <button
                       type="button"
                       onClick={toggleConfigPane}
-                      className="flex h-9 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
+                      className="flex h-10 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
                     >
                       유형·난이도 설정 열기
                     </button>
@@ -1525,7 +1530,7 @@ export function GeneratePageClient({
                         workspaceSummary.totalQuestions === 0 ||
                         workspaceGenerating
                       }
-                      className="flex h-9 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                      className="flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                     >
                       {workspaceGenerating
                         ? "생성 중…"
@@ -1548,33 +1553,44 @@ export function GeneratePageClient({
                   type="button"
                   onClick={toggleConfigPane}
                   title="유형·생성 설정 열기"
-                  className="flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
+                  className="flex min-h-0 w-6 shrink-0 select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/60 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
                 >
-                  <span>{"<"}</span>
-                  <span style={{ writingMode: "vertical-rl" }}>
-                    유형·생성 설정 열기
-                  </span>
+                  <PanelRightOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span style={{ writingMode: "vertical-rl" }}>유형·생성 설정</span>
                 </button>
               ) : (
                 <>
-                  <button
-                    type="button"
-                    onClick={toggleConfigPane}
-                    title="유형·생성 설정 접기"
-                    className="flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
-                  >
-                    <span>{">"}</span>
-                    <span style={{ writingMode: "vertical-rl" }}>
-                      유형·생성 설정 접기
-                    </span>
-                  </button>
-                  {/* 좁은 화면 대응: 설정 컬럼은 240~400px 사이에서 가용 폭의
-                      38%. 최소 합(워크스페이스 160 + 핸들 16 + 설정 240)이
-                      쉘의 RIGHT_PANE_MIN(420) 안에 들어와 잘림이 없다. */}
+                  {/* 설정 컬럼 — 워크스페이스가 비어 있을 땐(가이드만 표시)
+                      설정이 360px 전폭을 갖고, 행이 있으면 워크스페이스에
+                      우선권을 주되 설정 기능이 깨지지 않는 300px 은 보장. */}
                   <div
                     className="flex h-full min-w-0 shrink-0 flex-col overflow-hidden"
-                    style={{ width: "clamp(240px, 38%, 400px)" }}
+                    style={{
+                      // 336px = 유형 라벨이 잘리지 않는 설정 패널 최소폭.
+                      width: workspaceActive
+                        ? "clamp(336px, 38%, 360px)"
+                        : "360px",
+                    }}
                   >
+                    {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
+                    <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
+                      <Settings2
+                        className="h-3.5 w-3.5 text-slate-400"
+                        aria-hidden="true"
+                      />
+                      <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-slate-800">
+                        유형·생성 설정
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={toggleConfigPane}
+                        title="설정 접기"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                      >
+                        <PanelRightClose className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <GenerationConfigPanel
               genMode={genMode}
               setGenMode={setGenMode}
@@ -1618,6 +1634,7 @@ export function GeneratePageClient({
               workspaceGenerating={workspaceGenerating}
               onWorkspaceGenerate={handleWorkspaceGenerate}
             />
+            </div>
                   </div>
                 </>
               )}

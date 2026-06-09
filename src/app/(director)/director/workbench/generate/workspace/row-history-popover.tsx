@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo } from "react";
 import { CheckCircle2, History, Loader2, XCircle } from "lucide-react";
@@ -75,24 +75,23 @@ export function RowHistoryPopover({
       <PopoverTrigger asChild>
         <button
           type="button"
-          title="이 지문의 문제 생성 이력"
+          title={`이 지문의 문제 생성 이력${savedQuestionCount > 0 ? ` — 저장된 문제 ${savedQuestionCount}개` : ""}`}
           className={
-            "flex h-7 shrink-0 items-center gap-1 rounded-md border px-2 text-[11px] font-semibold transition-colors " +
+            "flex h-7 shrink-0 items-center gap-1 rounded-md px-1.5 text-[11px] font-semibold transition-colors " +
             (hasAny
-              ? "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:text-blue-700"
-              : "border-slate-200 bg-white text-slate-300 hover:text-slate-500")
+              ? "text-slate-500 hover:bg-slate-100 hover:text-blue-700"
+              : "text-slate-400 hover:bg-slate-100 hover:text-slate-600")
           }
         >
-          <History className="h-3 w-3" aria-hidden="true" />
-          생성 이력
+          <History className="h-4 w-4" aria-hidden="true" />
           {savedQuestionCount > 0 ? (
-            <span className="rounded bg-slate-700 px-1 text-[10px] font-bold text-white tabular-nums">
+            <span className="text-[10.5px] font-bold tabular-nums">
               {savedQuestionCount}
             </span>
           ) : null}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={6} className="w-[340px] p-0 shadow-xl">
+      <PopoverContent align="end" sideOffset={6} className="w-[330px] p-0 shadow-xl">
         <div className="border-b border-slate-100 px-3.5 py-2.5">
           <div className="flex items-baseline justify-between">
             <p className="text-[12.5px] font-bold text-slate-800">생성 이력</p>

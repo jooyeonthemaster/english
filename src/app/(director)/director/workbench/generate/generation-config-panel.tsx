@@ -1264,7 +1264,7 @@ export function GenerationConfigPanel({
                           </span>
                           <span
                             title={item.groupLabel}
-                            className={`min-w-0 max-w-[42px] shrink rounded px-1.5 py-0.5 text-[9.5px] font-bold ring-1 sm:max-w-[54px] ${getCategoryBadgeClass(item.groupLabel)}`}
+                            className={`min-w-0 max-w-[56px] shrink rounded px-1.5 py-0.5 text-[10px] font-bold ring-1 ${getCategoryBadgeClass(item.groupLabel)}`}
                           >
                             <span className="block truncate">
                               {getCategoryShortLabel(item.groupLabel)}

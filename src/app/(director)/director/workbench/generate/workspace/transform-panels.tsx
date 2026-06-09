@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Check, Loader2, RefreshCcw, X } from "lucide-react";
 
@@ -33,7 +33,7 @@ function PanelActions({
         type="button"
         onClick={onApply}
         disabled={blocked}
-        className="flex h-7.5 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         <Check className="h-3.5 w-3.5" aria-hidden="true" />
         {applyLabel}
@@ -42,7 +42,7 @@ function PanelActions({
         type="button"
         onClick={onRegenerate}
         disabled={blocked}
-        className="flex h-7.5 items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-7 items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {busy ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -50,7 +50,10 @@ function PanelActions({
           <RefreshCcw className="h-3.5 w-3.5" aria-hidden="true" />
         )}
         다시 생성
-        <span className="rounded bg-blue-50 px-1 py-0.5 text-[9px] font-bold text-blue-500">
+        <span
+          title="이 작업은 크레딧 1을 사용합니다"
+          className="rounded-sm bg-blue-50 px-1 py-px text-[10px] font-bold text-blue-500 ring-1 ring-inset ring-blue-100"
+        >
           ◈1
         </span>
       </button>
@@ -58,7 +61,7 @@ function PanelActions({
         type="button"
         onClick={onCancel}
         disabled={blocked}
-        className="flex h-7.5 items-center gap-1 rounded-md px-2 text-[11.5px] font-semibold text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-60"
+        className="flex h-7 items-center gap-1 rounded-md px-2 text-[11.5px] font-semibold text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-60"
       >
         <X className="h-3.5 w-3.5" aria-hidden="true" />
         취소

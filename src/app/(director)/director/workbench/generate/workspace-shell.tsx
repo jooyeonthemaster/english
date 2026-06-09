@@ -1,7 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  GripVertical,
+} from "lucide-react";
 
 /**
  * Resizable / collapsible two-pane workspace shell that mirrors the
@@ -16,7 +22,8 @@ const LEFT_PANE_OPEN_STORAGE_KEY = "smoat:generate:left-pane-open";
 const LEFT_PANE_MIN = 380;
 const LEFT_PANE_DEFAULT = 560;
 const LEFT_PANE_MAX_RATIO = 0.55;
-const RIGHT_PANE_MIN = 420;
+// 우측은 [워크스페이스 ≥240 + 설정 300~360] 2분할 — 둘 다 기능하는 최소폭.
+const RIGHT_PANE_MIN = 560;
 const HANDLE_HIT_WIDTH = 12;
 const DRAG_THRESHOLD = 4;
 
@@ -289,9 +296,9 @@ export function WorkspaceShell({
                 onPointerDown={handleCloseLeftPanePointerDown}
                 onDoubleClick={resetLeftPaneWidth}
                 title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-                className="group/lhandle mx-1 flex w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100"
+                className="group/lhandle mx-0.5 flex w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
               >
-                <span>{"<"}</span>
+                <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
                 <span style={{ writingMode: "vertical-rl" }}>{leftLabel} 닫기</span>
                 <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
               </button>
@@ -301,9 +308,9 @@ export function WorkspaceShell({
               type="button"
               onClick={toggleLeftPaneOpen}
               title="클릭하여 지문 패널 열기"
-              className="mx-1 flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
+              className="mx-0.5 flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
             >
-              <span>{">"}</span>
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
               <span style={{ writingMode: "vertical-rl" }}>{leftLabel} 열기</span>
             </button>
           )}
