@@ -145,7 +145,7 @@ export function useWorkspaceGeneration({
         }
       } else if (genMode === "auto") {
         baseCredits += CREDIT_COSTS.AUTO_GEN_BATCH;
-      } else {
+      } else if (genMode === "manual") {
         for (const [typeId, n] of Object.entries(typeCounts)) {
           if (n <= 0) continue;
           const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
@@ -165,6 +165,13 @@ export function useWorkspaceGeneration({
 
   const handleWorkspaceGenerate = useCallback(async () => {
     if (api.rows.length === 0 || generating) return;
+    if (genMode === "set") {
+      // 장문 세트는 라이브러리 체크 지문 1개로 동작 — 워크스페이스 생성 금지.
+      toast.error(
+        "장문 세트 모드에서는 워크스페이스 생성을 사용할 수 없습니다. 설정에서 모드를 변경하세요.",
+      );
+      return;
+    }
 
     const globalCfg = {
       genMode,
@@ -228,7 +235,16 @@ export function useWorkspaceGeneration({
           variantOfId: row.variantOfId ?? row.passageId,
         });
         resolved.push({
-          row: { ...row, passageId: result.id, title, content, savedContent: content, range: null },
+          row: {
+            ...row,
+            passageId: result.id,
+            title,
+            content,
+            savedContent: content,
+            range: null,
+            // rebindToVariant 와 동일하게 — 최초 변형 행도 원본 폴백이 동작.
+            variantOfId: row.variantOfId ?? row.passageId,
+          },
           passageId: result.id,
           title,
           content,

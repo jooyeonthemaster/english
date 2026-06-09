@@ -276,7 +276,11 @@ export function WorkspaceShell({
             <>
               <div
                 className="flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg border border-slate-200"
-                style={{ width: `min(${leftPaneWidth}px, 55%)` }}
+                style={{
+                  // 저장된 폭(기본 560)이 작은 컨테이너에서 우측 패널을
+                  // RIGHT_PANE_MIN 미만으로 밀어내지 않게 렌더 폭도 클램프.
+                  width: `min(${leftPaneWidth}px, 55%, calc(100% - ${RIGHT_PANE_MIN + HANDLE_HIT_WIDTH + 8}px))`,
+                }}
               >
                 {left}
               </div>

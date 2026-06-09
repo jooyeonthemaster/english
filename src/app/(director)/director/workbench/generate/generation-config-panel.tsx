@@ -152,6 +152,8 @@ interface GenerationConfigPanelProps {
   // 지문 워크스페이스 모드 — 행이 1개라도 불러와지면 생성 버튼은 워크스페이스
   // 기준으로 동작한다 (라이브러리 직접 선택 생성 대신).
   workspaceActive?: boolean;
+  /** 체크된 지문 중 아직 워크스페이스에 불러오지 않은 수 (안내문용). */
+  workspaceUnloadedSelectedCount?: number;
   workspaceRowCount?: number;
   workspaceTotalQuestions?: number;
   workspaceCreditCost?: number;
@@ -197,6 +199,7 @@ export function GenerationConfigPanel({
   selectedIds,
   handleBatchGenerate,
   workspaceActive = false,
+  workspaceUnloadedSelectedCount = 0,
   workspaceRowCount = 0,
   workspaceTotalQuestions = 0,
   workspaceCreditCost = 0,
@@ -1416,10 +1419,11 @@ export function GenerationConfigPanel({
               보존돼요.
             </p>
           ) : null}
-          {selectedIds && selectedIds.size > 0 ? (
+          {workspaceUnloadedSelectedCount > 0 ? (
             <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
-              왼쪽에서 체크한 {selectedIds.size}개 지문은 아직 워크스페이스에
-              없어요 — ‘선택 지문 불러오기’를 눌러야 생성에 포함됩니다.
+              왼쪽에서 체크한 {workspaceUnloadedSelectedCount}개 지문은 아직
+              워크스페이스에 없어요 — ‘선택 지문 불러오기’를 눌러야 생성에
+              포함됩니다.
             </p>
           ) : null}
           <Button

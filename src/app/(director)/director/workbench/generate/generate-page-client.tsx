@@ -785,9 +785,16 @@ export function GeneratePageClient({
   useEffect(() => {
     if (prefillAppliedRef.current) return;
     if (loadingPassages) return;
-    if (passages.length === 0) return;
     const ids = initialPassageIdsRef.current;
     if (ids.length === 0) {
+      prefillAppliedRef.current = true;
+      return;
+    }
+    if (passages.length === 0) {
+      // 첫 로드가 끝났는데 라이브러리가 비어 있으면 딥링크 id 는 유효할 수
+      // 없다 — 시드된 원시 선택만 정리하고 종결한다. (보류 상태로 남기면
+      // 이후 붙여넣기 자동 선택을 아래 setSelectedIds 와이프가 지워버린다.)
+      setSelectedIds(new Set());
       prefillAppliedRef.current = true;
       return;
     }
@@ -1360,6 +1367,17 @@ export function GeneratePageClient({
       loadPassages,
     });
   const workspaceActive = workspaceApi.rows.length > 0;
+  // 체크된 지문 중 아직 워크스페이스에 없는 수 — loadPassages 의 dedupe 와
+  // 동일한 집합(passageId + variantOfId)으로 판정해 안내문 거짓 양성 방지.
+  const workspaceUnloadedSelectedCount = useMemo(() => {
+    if (selectedIds.size === 0) return 0;
+    const loaded = new Set(
+      workspaceApi.rows
+        .flatMap((r) => [r.passageId, r.variantOfId])
+        .filter(Boolean),
+    );
+    return [...selectedIds].filter((id) => !loaded.has(id)).length;
+  }, [selectedIds, workspaceApi.rows]);
 
   // ── Can generate? ──
   const canGenerate =
@@ -1475,7 +1493,7 @@ export function GeneratePageClient({
           right={
             /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══ */
             <div className="flex h-full min-h-0 min-w-0">
-              <div className="flex min-h-0 min-w-[280px] flex-1 flex-col border-r border-slate-200">
+              <div className="flex min-h-0 min-w-[160px] flex-1 flex-col border-r border-slate-200">
                 <div className="min-h-0 flex-1">
                   <PassageWorkspace
                     api={workspaceApi}
@@ -1489,8 +1507,9 @@ export function GeneratePageClient({
                   />
                 </div>
                 {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
-                    하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지). */}
-                {!configPaneOpen && workspaceActive ? (
+                    하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지).
+                    장문 세트 모드는 설정 패널과 동일하게 워크스페이스 생성 제외. */}
+                {!configPaneOpen && workspaceActive && genMode !== "set" ? (
                   <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
                     <button
                       type="button"
@@ -1549,11 +1568,12 @@ export function GeneratePageClient({
                       유형·생성 설정 접기
                     </span>
                   </button>
-                  {/* 좁은 화면에서 워크스페이스가 압착되지 않게 설정 컬럼은
-                      400px 상한 + 가용 폭의 38% 로 제한한다. */}
+                  {/* 좁은 화면 대응: 설정 컬럼은 240~400px 사이에서 가용 폭의
+                      38%. 최소 합(워크스페이스 160 + 핸들 16 + 설정 240)이
+                      쉘의 RIGHT_PANE_MIN(420) 안에 들어와 잘림이 없다. */}
                   <div
                     className="flex h-full min-w-0 shrink-0 flex-col overflow-hidden"
-                    style={{ width: "min(400px, 38%)", minWidth: 300 }}
+                    style={{ width: "clamp(240px, 38%, 400px)" }}
                   >
             <GenerationConfigPanel
               genMode={genMode}
@@ -1590,6 +1610,7 @@ export function GeneratePageClient({
               selectedIds={selectedIds}
               handleBatchGenerate={handleBatchGenerate}
               workspaceActive={workspaceActive}
+              workspaceUnloadedSelectedCount={workspaceUnloadedSelectedCount}
               workspaceRowCount={workspaceSummary.rowCount}
               workspaceTotalQuestions={workspaceSummary.totalQuestions}
               workspaceCreditCost={workspaceSummary.creditCost}

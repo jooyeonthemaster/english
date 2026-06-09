@@ -1,4 +1,4 @@
-import { generateObject } from "ai";
+import { APICallError, generateObject } from "ai";
 import type { z } from "zod";
 
 import { googleGenerativeAI } from "@/lib/ai";
@@ -67,6 +67,15 @@ async function runTransform<T>({
         `[${logPrefix}] ${TRANSFORM_MODEL_ID} attempt ${attempt + 1} failed in ${Date.now() - startedAt}ms:`,
         err instanceof Error ? err.message : err,
       );
+      // 비재시도성 오류(400/401/403 등)는 2번째 과금 호출 없이 즉시 종료.
+      if (APICallError.isInstance(err) && err.isRetryable === false) {
+        break;
+      }
+      // 429/5xx/타임아웃 — SDK 내부 재시도를 껐으므로 여기서 짧게 백오프.
+      // 시간 예산: 25s×2 + 2s = 52s < 라우트 maxDuration 60s.
+      if (attempt < TRANSFORM_MAX_RETRIES) {
+        await new Promise((resolve) => setTimeout(resolve, 2_000));
+      }
     }
   }
   throw lastError instanceof Error
@@ -117,10 +126,14 @@ function trimOverlapWithPassageStart(
   const tailMatchesPassageStart = (n: number) => {
     const tail = paraWords.slice(paraWords.length - n).map(normWord);
     if (passageWords.length < n) return false;
+    let contentMatches = 0;
     for (let i = 0; i < n; i += 1) {
       if (tail[i] !== passageWords[i]) return false;
+      if (tail[i]) contentMatches += 1;
     }
-    return true;
+    // 구두점 전용 토큰(빈 정규화)끼리의 위치 일치는 허용하되,
+    // "최소 5단어 겹침"은 실제 내용어 5개를 의미하게 한다.
+    return contentMatches >= 5;
   };
   // 긴 겹침부터 검사 — 최소 5단어 이상 겹칠 때만 복사 사고로 간주.
   for (let n = Math.min(paraWords.length, 80); n >= 5; n -= 1) {
@@ -137,12 +150,30 @@ function trimOverlapWithPassageStart(
   return paragraph.trim();
 }
 
-/** 끝이 .!? 로 닫히지 않으면 마지막 완결 문장까지로 자른다. */
+/**
+ * 끝이 문장 종결로 닫히지 않으면 마지막 완결 문장까지로 자른다.
+ * - 곡선 따옴표(” ’)·닫힘 기호 연쇄(."))·말줄임표(…)도 종결로 인정
+ * - 약어(U.S., Dr., e.g. …) 뒤 마침표는 문장 경계로 취급하지 않음
+ * - 경계 판정은 "종결부호 + 공백 + 대문자/여는 따옴표" 일 때만
+ */
+const SENTENCE_CLOSERS = `["'”’)\\]]*`;
+const ABBREV_TAIL =
+  /(?:\b\p{Lu}|\b(?:Dr|Mr|Mrs|Ms|St|Prof|Jr|Sr|vs|etc|Fig|No|e\.g|i\.e|cf))\.$/u;
+
 function snapToSentenceEnd(text: string): string {
   const t = text.trim();
-  if (!t || /[.!?]["')\]]?$/.test(t)) return t;
-  const m = t.match(/^[\s\S]*[.!?]["')\]]?(?=\s)/);
-  return m ? m[0].trim() : t;
+  if (!t || new RegExp(`[.!?…]${SENTENCE_CLOSERS}$`, "u").test(t)) return t;
+  let best = -1;
+  const boundary = new RegExp(
+    `[.!?…]${SENTENCE_CLOSERS}(?=\\s+["'(\\[“‘]?\\p{Lu})`,
+    "gu",
+  );
+  for (const m of t.matchAll(boundary)) {
+    const end = (m.index ?? 0) + m[0].length;
+    if (m[0][0] === "." && ABBREV_TAIL.test(t.slice(0, end))) continue;
+    best = end;
+  }
+  return best > 0 ? t.slice(0, best).trim() : t;
 }
 
 export async function runParaphrase({

@@ -3,6 +3,7 @@
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -172,6 +173,10 @@ export function useGenerationSessionQueue(): [
 ] {
   const [localQueue, setLocalQueue] = useState<QueueItem[]>([]);
   const [dbQueue, setDbQueue] = useState<QueueItem[]>([]);
+  // 실패 잡을 "처음 관측한" 클라이언트 시각 — 과거 실패 잡(re-roll 이전부터
+  // 있던 것)이 새 temp 를 오염시키지 않게 하는 게이트. 양쪽 모두 클라이언트
+  // 시계라 서버-클라이언트 시계 오차와 무관하다.
+  const failedFirstSeenRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     return startAdaptivePoll({
@@ -194,11 +199,25 @@ export function useGenerationSessionQueue(): [
                 !!item && item.status === "error",
             );
 
+          // 실패 잡 최초 관측 시각 기록 — temp 가 생기기 전부터 보이던 실패
+          // 잡은 "과거 실패"로 분류해 매칭에서 제외한다. 같은 설정 재생성
+          // (re-roll)이 일상 동선이라, 직전 실패 잡이 지금 진행 중인 temp 를
+          // 가짜 '실패'로 뒤집는 오염을 시간 창 없이 차단한다.
+          const observedAt = Date.now();
+          for (const f of failedJobItems) {
+            if (!failedFirstSeenRef.current.has(f.id)) {
+              failedFirstSeenRef.current.set(f.id, observedAt);
+            }
+          }
+          // 응답에서 사라진 id 정리 (응답은 최근 100개 캡).
+          if (failedFirstSeenRef.current.size > 300) {
+            const liveIds = new Set(failedJobItems.map((f) => f.id));
+            for (const id of failedFirstSeenRef.current.keys()) {
+              if (!liveIds.has(id)) failedFirstSeenRef.current.delete(id);
+            }
+          }
+
           if (failedJobItems.length > 0) {
-            // 같은 설정 재생성(re-roll)이 일상 동선이라, "과거" 실패 잡이 지금
-            // 진행 중인 temp 를 오염시키지 않도록 시간 경계를 둔다 — temp 생성
-            // 시각(클라이언트) 이후에 만들어진 실패 잡만 매칭 (시계 오차 여유 2분).
-            const FAILED_MATCH_SKEW_MS = 120_000;
             setLocalQueue((prev) =>
               prev.map((item) => {
                 if (
@@ -210,14 +229,12 @@ export function useGenerationSessionQueue(): [
                 const itemTime = item.createdAt
                   ? Date.parse(item.createdAt)
                   : 0;
-                const failedMatch = failedJobItems.find(
-                  (failed) =>
-                    sameGenerationRequest(item, failed) &&
-                    (failed.createdAt
-                      ? Date.parse(failed.createdAt) >=
-                        itemTime - FAILED_MATCH_SKEW_MS
-                      : true),
-                );
+                const failedMatch = failedJobItems.find((failed) => {
+                  if (!sameGenerationRequest(item, failed)) return false;
+                  // temp 가 만들어지기 전에 이미 관측된 실패 잡은 과거 실패.
+                  const firstSeen = failedFirstSeenRef.current.get(failed.id);
+                  return firstSeen == null || firstSeen >= itemTime;
+                });
                 if (!failedMatch) return item;
                 return {
                   ...item,

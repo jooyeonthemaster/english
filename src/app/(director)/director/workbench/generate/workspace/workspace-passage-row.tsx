@@ -235,7 +235,7 @@ export function WorkspacePassageRow({
     toast.success(
       "변형이 적용됐습니다. 문제 생성 시 변형본이 새 지문으로 저장됩니다.",
     );
-  }, [preview, row.content, onChangeContent]);
+  }, [preview, disabled, row.content, onChangeContent]);
 
   const handleCancelPreview = useCallback(() => {
     setPreview(null);

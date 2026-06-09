@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 import type { PassageItem } from "../generate-page-types";
 import {
@@ -35,39 +35,38 @@ export interface WorkspaceRowsApi {
 
 export function useWorkspaceRows(): WorkspaceRowsApi {
   const [rows, setRows] = useState<WorkspaceRow[]>([]);
-  // updater 밖에서 dedupe/카운트를 계산하기 위한 최신 rows 참조 —
-  // updater 내부에서 외부 변수를 mutate 하면 React 순수성 계약을 깨고
-  // (StrictMode 이중 호출·지연 실행 시) 카운트가 0/2배로 어긋난다.
-  const rowsRef = useRef<WorkspaceRow[]>(rows);
-  rowsRef.current = rows;
 
-  const loadPassages = useCallback((passages: PassageItem[]) => {
-    const existing = new Set(
-      rowsRef.current
-        .flatMap((r) => [r.passageId, r.variantOfId])
-        .filter(Boolean),
-    );
-    const newRows: WorkspaceRow[] = [];
-    let skipped = 0;
-    for (const p of passages) {
-      if (existing.has(p.id)) {
-        skipped += 1;
-        continue;
+  // dedupe/카운트는 updater 밖(현재 rows 클로저)에서 계산한다 — updater
+  // 내부에서 외부 변수를 mutate 하면 React 순수성 계약을 깨고 (StrictMode
+  // 이중 호출·지연 실행 시) 카운트가 0/2배로 어긋난다.
+  const loadPassages = useCallback(
+    (passages: PassageItem[]) => {
+      const existing = new Set(
+        rows.flatMap((r) => [r.passageId, r.variantOfId]).filter(Boolean),
+      );
+      const newRows: WorkspaceRow[] = [];
+      let skipped = 0;
+      for (const p of passages) {
+        if (existing.has(p.id)) {
+          skipped += 1;
+          continue;
+        }
+        existing.add(p.id);
+        newRows.push(makeWorkspaceRow(p));
       }
-      existing.add(p.id);
-      newRows.push(makeWorkspaceRow(p));
-    }
-    if (newRows.length > 0) {
-      setRows((prev) => {
-        // 순수·멱등: prev 기준 재-dedupe 만 수행 (StrictMode 리플레이 안전).
-        const prevIds = new Set(
-          prev.flatMap((r) => [r.passageId, r.variantOfId]).filter(Boolean),
-        );
-        return [...prev, ...newRows.filter((r) => !prevIds.has(r.passageId))];
-      });
-    }
-    return { added: newRows.length, skipped };
-  }, []);
+      if (newRows.length > 0) {
+        setRows((prev) => {
+          // 순수·멱등: prev 기준 재-dedupe 만 수행 (StrictMode 리플레이 안전).
+          const prevIds = new Set(
+            prev.flatMap((r) => [r.passageId, r.variantOfId]).filter(Boolean),
+          );
+          return [...prev, ...newRows.filter((r) => !prevIds.has(r.passageId))];
+        });
+      }
+      return { added: newRows.length, skipped };
+    },
+    [rows],
+  );
 
   const updateRow = useCallback(
     (localId: string, patch: Partial<WorkspaceRow>) => {
