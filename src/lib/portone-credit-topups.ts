@@ -135,12 +135,12 @@ export function getPortOnePgProvider(): PortOnePgProvider {
   const raw =
     process.env.PORTONE_PG_PROVIDER ??
     process.env.NEXT_PUBLIC_PORTONE_PG_PROVIDER ??
-    "kcp_v2";
+    "inicis_v2";
   const normalized = raw.trim().toLowerCase().replaceAll("-", "_");
   if ((PORTONE_PG_PROVIDERS as readonly string[]).includes(normalized)) {
     return normalized as PortOnePgProvider;
   }
-  return "kcp_v2";
+  return "inicis_v2";
 }
 
 export function buildPortOnePaymentId() {

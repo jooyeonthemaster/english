@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
+import {
+  CREDIT_TOP_UP_CARD_ONLY,
+  CREDIT_TOP_UP_COMPLETION_TEXT,
+} from "@/lib/legal/payment-processor";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
@@ -12,7 +16,7 @@ export const metadata: Metadata = {
     : "SMOAT 서비스 이용, 크레딧 구매와 사용, 계정 해지 및 제한 기준을 안내합니다.",
 };
 
-const UPDATED_AT = "2026년 5월 27일";
+const UPDATED_AT = "2026년 6월 9일";
 
 const TERMS_SECTIONS = [
   {
@@ -58,7 +62,7 @@ const TERMS_SECTIONS = [
   {
     title: "제5조 유료 크레딧과 무료 크레딧의 구분",
     body: [
-      "유료 크레딧은 결제 승인 또는 가상계좌 입금 완료 등 회사가 결제 상태를 확인한 후 지급됩니다.",
+      `유료 크레딧은 ${CREDIT_TOP_UP_COMPLETION_TEXT} 서비스 잔고에 지급됩니다.`,
       "무료 크레딧은 회사의 정책에 따라 지급·회수·소멸될 수 있으며, 현금 환불 대상에 포함되지 않습니다.",
       "서비스 화면의 총 잔액은 유료 크레딧과 무료 크레딧을 합산하여 표시될 수 있으며, 환불 산정 시에는 결제 내역과 사용 내역을 기준으로 유료 크레딧과 무료 크레딧을 구분합니다.",
     ],
@@ -99,15 +103,21 @@ const TERMS_SECTIONS = [
     title: `${SUBSCRIPTION_BILLING_ENABLED ? "제9조" : "제8조"} 결제 및 환불`,
     body: [
       SUBSCRIPTION_BILLING_ENABLED
-        ? "구독 요금제 및 크레딧 결제는 포트원 및 PG사를 통해 처리되며, 결제수단별 승인, 취소, 환불 처리 기간은 카드사·은행·PG사 정책에 따라 달라질 수 있습니다."
-        : "크레딧 결제는 포트원 및 PG사를 통해 처리되며, 결제수단별 승인, 취소, 환불 처리 기간은 카드사·은행·PG사 정책에 따라 달라질 수 있습니다.",
+        ? CREDIT_TOP_UP_CARD_ONLY
+          ? "구독 요금제 및 크레딧 신용카드 결제는 포트원 및 PG사를 통해 처리되며, 승인, 취소, 환불 처리 기간은 카드사·PG사 정책에 따라 달라질 수 있습니다."
+          : "구독 요금제 및 크레딧 결제는 포트원 및 PG사를 통해 처리되며, 결제수단별 승인, 취소, 환불 처리 기간은 카드사·은행·PG사 정책에 따라 달라질 수 있습니다."
+        : CREDIT_TOP_UP_CARD_ONLY
+          ? "크레딧 신용카드 결제는 포트원 및 PG사를 통해 처리되며, 승인, 취소, 환불 처리 기간은 카드사·PG사 정책에 따라 달라질 수 있습니다."
+          : "크레딧 결제는 포트원 및 PG사를 통해 처리되며, 결제수단별 승인, 취소, 환불 처리 기간은 카드사·은행·PG사 정책에 따라 달라질 수 있습니다.",
       ...(SUBSCRIPTION_BILLING_ENABLED
         ? [
             "신용카드 정기결제는 회원의 사전 동의와 카드 등록 완료 후에만 적용되며, 자동갱신 예정일, 결제금액, 이용 기간은 서비스 화면에서 확인할 수 있습니다.",
           ]
         : []),
       "크레딧 상품은 더 큰 단위로 구매할수록 1C당 구매 단가가 낮아지는 구조로 제공될 수 있으며, 결제 전 상품명, 지급 크레딧 수, 결제금액, 1C당 단가를 확인할 수 있습니다.",
-      "유료 크레딧의 청약철회, 부분 환불, 환불 제한, 가상계좌 입금 전 취소 등 세부 기준은 별도 크레딧 환불 정책을 따릅니다.",
+      CREDIT_TOP_UP_CARD_ONLY
+        ? "유료 크레딧의 청약철회, 부분 환불, 환불 제한 등 세부 기준은 별도 크레딧 환불 정책을 따릅니다."
+        : "유료 크레딧의 청약철회, 부분 환불, 환불 제한, 가상계좌 입금 전 취소 등 세부 기준은 별도 크레딧 환불 정책을 따릅니다.",
       ...(SUBSCRIPTION_BILLING_ENABLED
         ? [
             "구독 요금제 환불 또는 해지는 결제일, 이용 기간, 제공된 디지털 서비스 및 배정 크레딧 사용 여부를 확인하여 관계 법령과 환불 정책에 따라 처리합니다.",

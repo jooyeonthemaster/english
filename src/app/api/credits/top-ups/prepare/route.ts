@@ -15,6 +15,7 @@ import {
   type PortOneTopUpPayMethod,
 } from "@/lib/portone-credit-topups";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
+import { BUSINESS_INFO } from "@/lib/legal/business-info";
 
 const prepareSchema = z.object({
   credits: z.number().int().positive(),
@@ -31,6 +32,13 @@ const EASY_PAY_PROVIDERS = [
 
 type EasyPayProvider = (typeof EASY_PAY_PROVIDERS)[number];
 
+type PaymentCustomer = {
+  customerId: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+};
+
 type PaymentRequest = {
   storeId: string;
   channelKey: string;
@@ -41,6 +49,7 @@ type PaymentRequest = {
   payMethod: PortOneTopUpPayMethod;
   redirectUrl: string;
   customData: Record<string, unknown>;
+  customer: PaymentCustomer;
   productType: "DIGITAL";
   products: Array<{
     id: string;
@@ -58,8 +67,13 @@ type PaymentRequest = {
   };
   mobile?: Record<string, never>;
   bypass?: {
-    kcp_v2: {
+    kcp_v2?: {
       shop_user_id: string;
+    };
+    inicis_v2?: {
+      noeasypay?: string;
+      P_MNAME?: string;
+      P_RESERVED?: string[];
     };
   };
 };
@@ -102,6 +116,16 @@ export async function POST(request: NextRequest) {
     const appUrl = getAppUrl();
     const paymentId = buildPortOnePaymentId();
     const orderName = buildTopUpOrderName(product.creditAmount);
+    const staffProfile = await getStaffPaymentProfile(staff.id);
+    const customer = buildPaymentCustomer({
+      academyId: staff.academyId,
+      academyName: staffProfile?.academy.name ?? staff.academyName,
+      academyPhone: staffProfile?.academy.phone,
+      staffId: staff.id,
+      staffName: staffProfile?.name ?? staff.name,
+      staffEmail: staffProfile?.email ?? staff.email,
+      staffPhone: staffProfile?.phone,
+    });
 
     const topUp = await prisma.creditTopUp.create({
       data: {
@@ -187,6 +211,7 @@ export async function POST(request: NextRequest) {
         redirectUrl: `${appUrl}/director/credits`,
         customData,
         productCode: product.code,
+        customer,
       }),
     });
   } catch (err) {
@@ -235,6 +260,7 @@ function buildPaymentRequest(params: {
   redirectUrl: string;
   customData: Record<string, unknown>;
   productCode: string;
+  customer: PaymentCustomer;
 }): PaymentRequest {
   const base: PaymentRequest = {
     storeId: params.storeId,
@@ -246,6 +272,7 @@ function buildPaymentRequest(params: {
     payMethod: params.payMethod,
     redirectUrl: params.redirectUrl,
     customData: params.customData,
+    customer: params.customer,
     productType: "DIGITAL",
     products: [
       {
@@ -256,6 +283,19 @@ function buildPaymentRequest(params: {
       },
     ],
   };
+
+  if (params.payMethod === "CARD" && params.pgProvider === "inicis_v2") {
+    return {
+      ...base,
+      bypass: {
+        inicis_v2: {
+          noeasypay: "Y",
+          P_MNAME: "SMOAT",
+          P_RESERVED: ["noeasypay=Y"],
+        },
+      },
+    };
+  }
 
   if (params.payMethod === "EASY_PAY") {
     return {
@@ -293,6 +333,74 @@ function buildPaymentRequest(params: {
   }
 
   return base;
+}
+
+async function getStaffPaymentProfile(staffId: string) {
+  return prisma.staff.findUnique({
+    where: { id: staffId },
+    select: {
+      name: true,
+      email: true,
+      phone: true,
+      academy: {
+        select: {
+          name: true,
+          phone: true,
+        },
+      },
+    },
+  });
+}
+
+function buildPaymentCustomer(params: {
+  academyId: string;
+  academyName: string;
+  academyPhone?: string | null;
+  staffId: string;
+  staffName?: string | null;
+  staffEmail?: string | null;
+  staffPhone?: string | null;
+}): PaymentCustomer {
+  return {
+    customerId: buildCustomerId(params.academyId, params.staffId),
+    fullName:
+      normalizeText(params.staffName) ??
+      normalizeText(params.academyName) ??
+      BUSINESS_INFO.brandName,
+    phoneNumber:
+      normalizePhone(params.staffPhone) ??
+      normalizePhone(params.academyPhone) ??
+      normalizePhone(BUSINESS_INFO.phone) ??
+      "02-336-3368",
+    email:
+      normalizeEmail(params.staffEmail) ??
+      normalizeEmail(BUSINESS_INFO.email) ??
+      "info@neander.co.kr",
+  };
+}
+
+function buildCustomerId(academyId: string, staffId: string) {
+  const normalized = `${academyId}${staffId}`
+    .replace(/[^A-Za-z0-9]/g, "")
+    .slice(0, 18);
+  return `sm${normalized || "customer"}`.slice(0, 20);
+}
+
+function normalizeText(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  return trimmed || undefined;
+}
+
+function normalizePhone(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed || trimmed === "심사 제출 전 입력 필요") return undefined;
+  return trimmed;
+}
+
+function normalizeEmail(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed || trimmed === "심사 제출 전 입력 필요") return undefined;
+  return trimmed;
 }
 
 function getAppUrl() {

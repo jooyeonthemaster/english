@@ -1,7 +1,8 @@
-# PortOne PG Switch Checklist
+# PortOne KG Inicis Switch Checklist
 
-This checklist is for switching SMOAT credit top-up payments from NHN KCP to
-KG Inicis through PortOne V2 without changing the product or review scope.
+This checklist tracks the active SMOAT credit top-up payment migration from NHN
+KCP to KG Inicis through PortOne V2 without changing the product or review
+scope.
 
 ## Current Review Scope
 
@@ -11,23 +12,39 @@ KG Inicis through PortOne V2 without changing the product or review scope.
 - Public payment pages must not mention subscription billing while
   `NEXT_PUBLIC_SHOW_SUBSCRIPTION_BILLING=false`.
 
-## Keep KCP When
+## Current Decision
 
-- KCP confirms the existing contract/site code can be reused.
-- KCP confirms no additional setup fee is required for `https://www.smoat.co.kr`.
-- The existing PortOne KCP channel can be promoted to the review/live channel.
+- Proceed with KG Inicis V2 for the PG review channel.
+- Keep the current PortOne V2 integration shape and replace only the channel,
+  provider defaults, review copy, and environment values.
+- Keep KCP code paths available behind `kcp_v2` so we can roll back by changing
+  environment variables if needed.
 
-## Switch to KG Inicis When
+## Code Readiness
 
-- KCP requires a new setup fee for the new SMOAT site.
-- KG Inicis setup fee is still free in PortOne's current pricing table.
-- KG Inicis can support the same review scope: credit card one-time payment.
+- Default PG provider and public PG name are `inicis_v2` / `KG이니시스`.
+- Credit top-up UI is limited to `CARD` when
+  `NEXT_PUBLIC_PORTONE_TOP_UP_PAY_METHODS=CARD`.
+- Credit top-up payment requests include customer name, phone, email, and
+  customer ID because KG Inicis requires customer information for PC payments.
+- Public product, terms, privacy, and refund pages describe credit-card one-time
+  top-up review scope when the public pay-method env is `CARD`.
+
+## Manual PortOne Setup
+
+1. In the PortOne console, apply for or create a KG Inicis V2 general payment
+   channel for `https://www.smoat.co.kr`.
+2. Copy the live/review `storeId`, `channelKey`, API secret, and webhook secret.
+3. Register the production webhook URL after the channel/store change.
+4. Run the PortOne webhook test before submitting the PG review.
 
 ## Vercel Variables for KG Inicis
 
 Set these in Production and redeploy:
 
 ```env
+PORTONE_API_SECRET="..."
+PORTONE_WEBHOOK_SECRET="..."
 PORTONE_STORE_ID="store-..."
 PORTONE_CHANNEL_KEY="channel-key-..."
 NEXT_PUBLIC_PORTONE_STORE_ID="store-..."
