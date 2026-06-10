@@ -60,6 +60,8 @@ import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
 import {
   ArrowDownToLine,
+  ChevronRight,
+  GripVertical,
   PanelRightClose,
   PanelRightOpen,
   Settings2,
@@ -69,6 +71,14 @@ import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
 
 // ─── Helpers ─────────────────────────────────────────────
+
+// 우측 "유형·생성 설정" 컬럼 너비 (드래그 조절 가능).
+// 336px = 유형 라벨이 잘리지 않는 최소폭이지만, 사용자가 의도적으로
+// 줄이는 경우 300px까지 허용 (라벨은 truncate로 우아하게 줄어든다).
+const CONFIG_PANE_WIDTH_KEY = "smoat:generate:config-pane-width";
+const CONFIG_PANE_MIN = 300;
+const CONFIG_PANE_DEFAULT = 360;
+const CONFIG_PANE_MAX = 560;
 
 /** Build a passage title from the first non-empty line of pasted content. */
 function derivePastedTitle(content: string): string {
@@ -236,6 +246,73 @@ export function GeneratePageClient({
   const [configPaneOpen, setConfigPaneOpen] = useState(true);
   const toggleConfigPane = useCallback(() => {
     setConfigPaneOpen((prev) => !prev);
+  }, []);
+  // 설정 컬럼 너비 — 좌측 지문 패널과 동일하게 드래그 조절·더블클릭 초기화.
+  // 너비는 영구 저장해도 안전 (접힘 상태와 달리 기능이 숨겨지지 않는다).
+  const [configPaneWidth, setConfigPaneWidth] = useState<number>(() => {
+    if (typeof window === "undefined") return CONFIG_PANE_DEFAULT;
+    try {
+      const raw = window.localStorage.getItem(CONFIG_PANE_WIDTH_KEY);
+      const n = raw ? parseInt(raw, 10) : NaN;
+      if (Number.isNaN(n)) return CONFIG_PANE_DEFAULT;
+      return Math.min(CONFIG_PANE_MAX, Math.max(CONFIG_PANE_MIN, n));
+    } catch {
+      return CONFIG_PANE_DEFAULT;
+    }
+  });
+  // 클릭=접기 / 드래그=너비 조절 — workspace-shell 좌측 핸들과 동일 제스처.
+  const handleConfigHandlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.button !== 0) return;
+      const startX = e.clientX;
+      const startWidth = configPaneWidth;
+      let didDrag = false;
+      let latest = startWidth;
+      const onMove = (ev: PointerEvent) => {
+        // 설정 컬럼은 오른쪽에 있으므로 왼쪽으로 끌수록 넓어진다.
+        const delta = startX - ev.clientX;
+        if (!didDrag) {
+          if (Math.abs(delta) < 4) return;
+          didDrag = true;
+          document.body.style.cursor = "col-resize";
+          document.body.style.userSelect = "none";
+        }
+        latest = Math.min(
+          CONFIG_PANE_MAX,
+          Math.max(CONFIG_PANE_MIN, startWidth + delta),
+        );
+        setConfigPaneWidth(latest);
+      };
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        if (didDrag) {
+          document.body.style.cursor = "";
+          document.body.style.userSelect = "";
+          try {
+            window.localStorage.setItem(CONFIG_PANE_WIDTH_KEY, String(latest));
+          } catch {
+            /* ignore */
+          }
+        } else {
+          toggleConfigPane();
+        }
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [configPaneWidth, toggleConfigPane],
+  );
+  const resetConfigPaneWidth = useCallback(() => {
+    setConfigPaneWidth(CONFIG_PANE_DEFAULT);
+    try {
+      window.localStorage.setItem(
+        CONFIG_PANE_WIDTH_KEY,
+        String(CONFIG_PANE_DEFAULT),
+      );
+    } catch {
+      /* ignore */
+    }
   }, []);
   // 빈 워크스페이스 가이드의 "내 지문 열기" — 왼쪽 패널을 펴고 라이브러리 탭으로.
   const [leftOpenSignal, setLeftOpenSignal] = useState(0);
@@ -1498,7 +1575,7 @@ export function GeneratePageClient({
           right={
             /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══ */
             <div className="flex h-full min-h-0 min-w-0">
-              <div className="flex min-h-0 min-w-[120px] flex-1 flex-col border-r border-slate-200">
+              <div className="flex min-h-0 min-w-[120px] flex-1 flex-col">
                 <div className="min-h-0 flex-1">
                   <PassageWorkspace
                     api={workspaceApi}
@@ -1560,16 +1637,25 @@ export function GeneratePageClient({
                 </button>
               ) : (
                 <>
-                  {/* 설정 컬럼 — 워크스페이스가 비어 있을 땐(가이드만 표시)
-                      설정이 360px 전폭을 갖고, 행이 있으면 워크스페이스에
-                      우선권을 주되 설정 기능이 깨지지 않는 300px 은 보장. */}
+                  {/* 설정 컬럼 리사이즈 핸들 — 좌측 지문 패널 핸들과 동일 제스처:
+                      클릭=접기 / 드래그=너비 조절 / 더블클릭=초기화 */}
+                  <button
+                    type="button"
+                    onPointerDown={handleConfigHandlePointerDown}
+                    onDoubleClick={resetConfigPaneWidth}
+                    title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
+                    className="group/chandle flex min-h-0 w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+                  >
+                    <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
+                    <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
+                  </button>
+                  {/* 설정 컬럼 — 드래그로 300~560px. 컨테이너가 좁아도
+                      워크스페이스 최소폭(120px)+핸들은 항상 남긴다. */}
                   <div
                     className="flex h-full min-w-0 shrink-0 flex-col overflow-hidden"
                     style={{
-                      // 336px = 유형 라벨이 잘리지 않는 설정 패널 최소폭.
-                      width: workspaceActive
-                        ? "clamp(336px, 38%, 360px)"
-                        : "360px",
+                      width: `min(${configPaneWidth}px, calc(100% - 144px))`,
                     }}
                   >
                     {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
