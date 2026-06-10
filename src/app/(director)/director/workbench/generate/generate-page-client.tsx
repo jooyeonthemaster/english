@@ -78,7 +78,10 @@ import { PassageWorkspace } from "./workspace/passage-workspace";
 const CONFIG_PANE_WIDTH_KEY = "smoat:generate:config-pane-width";
 const CONFIG_PANE_MIN = 300;
 const CONFIG_PANE_DEFAULT = 360;
-const CONFIG_PANE_MAX = 560;
+// 저장값 위생용 절대 상한 — 실제 드래그 한계는 컨테이너 폭에서
+// [워크스페이스 최소 120px + 핸들 20px + 여유 4px]을 뺀 값으로 동적 계산.
+const CONFIG_PANE_MAX = 1600;
+const CONFIG_PANE_RESERVED = 144;
 
 /** Build a passage title from the first non-empty line of pasted content. */
 function derivePastedTitle(content: string): string {
@@ -266,6 +269,14 @@ export function GeneratePageClient({
       if (e.button !== 0) return;
       const startX = e.clientX;
       const startWidth = configPaneWidth;
+      // 드래그 한계는 우측 패널 컨테이너 폭 기준 — 워크스페이스 최소폭만
+      // 남기고 끝까지 넓힐 수 있다 (좌측 지문 핸들과 동일 방식).
+      const containerWidth =
+        e.currentTarget.parentElement?.getBoundingClientRect().width ?? 0;
+      const maxWidth =
+        containerWidth > 0
+          ? Math.max(CONFIG_PANE_MIN, containerWidth - CONFIG_PANE_RESERVED)
+          : CONFIG_PANE_MAX;
       let didDrag = false;
       let latest = startWidth;
       const onMove = (ev: PointerEvent) => {
@@ -277,10 +288,7 @@ export function GeneratePageClient({
           document.body.style.cursor = "col-resize";
           document.body.style.userSelect = "none";
         }
-        latest = Math.min(
-          CONFIG_PANE_MAX,
-          Math.max(CONFIG_PANE_MIN, startWidth + delta),
-        );
+        latest = Math.min(maxWidth, Math.max(CONFIG_PANE_MIN, startWidth + delta));
         setConfigPaneWidth(latest);
       };
       const onUp = () => {
@@ -1655,7 +1663,7 @@ export function GeneratePageClient({
                   <div
                     className="flex h-full min-w-0 shrink-0 flex-col overflow-hidden"
                     style={{
-                      width: `min(${configPaneWidth}px, calc(100% - 144px))`,
+                      width: `min(${configPaneWidth}px, calc(100% - ${CONFIG_PANE_RESERVED}px))`,
                     }}
                   >
                     {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
