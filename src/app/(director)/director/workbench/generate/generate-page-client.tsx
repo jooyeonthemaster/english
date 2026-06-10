@@ -64,6 +64,7 @@ import {
   GripVertical,
   PanelRightClose,
   PanelRightOpen,
+  PencilLine,
   Settings2,
 } from "lucide-react";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
@@ -896,8 +897,8 @@ export function GeneratePageClient({
       workspaceApi.loadPassages(validPassages as PassageItem[]);
       toast.success(
         validIds.length === ids.length
-          ? `지문 ${validIds.length}개를 워크스페이스로 불러왔습니다.`
-          : `지문 ${validIds.length}/${ids.length}개를 워크스페이스로 불러왔습니다.`,
+          ? `지문 ${validIds.length}개를 편집 워크스페이스에 펼쳤어요.`
+          : `지문 ${validIds.length}/${ids.length}개를 편집 워크스페이스에 펼쳤어요.`,
       );
     }
     // 시드된 원시 선택을 정리 — 검증 전 id(다른 학원/삭제된 지문)가 선택
@@ -1397,13 +1398,13 @@ export function GeneratePageClient({
   const handleLoadSelectedToWorkspace = useCallback(() => {
     const selected = passages.filter((p) => selectedIds.has(p.id));
     if (selected.length === 0) {
-      toast.error("왼쪽 '내 지문'에서 불러올 지문을 먼저 선택하세요.");
+      toast.error("왼쪽 '내 지문'에서 편집할 지문을 먼저 선택하세요.");
       return;
     }
     const { added, skipped } = workspaceApi.loadPassages(selected);
     if (added > 0) {
       toast.success(
-        `${added}개 지문을 워크스페이스로 불러왔습니다.` +
+        `지문 ${added}개를 편집 워크스페이스에 펼쳤어요.` +
           (skipped > 0 ? ` (${skipped}개는 이미 있어요)` : ""),
       );
       setSelectedIds(new Set());
@@ -1492,7 +1493,7 @@ export function GeneratePageClient({
             <WorkflowPageTitle
               icon={QuestionGenerationIcon}
               title="문제 생성"
-              description="지문을 불러와 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
+              description="지문을 선택해 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
             />
           }
           left={
@@ -1565,17 +1566,17 @@ export function GeneratePageClient({
               onViewPassageContent={setDetailPassage}
                 />
                 </div>
-                {/* 선택 지문 → 워크스페이스 불러오기 (학습지 생성과 동일한 동선) */}
+                {/* 선택 지문 → 편집 워크스페이스로 (학습지 생성과 동일한 동선) */}
                 {selectedIds.size > 0 ? (
                   <div className="shrink-0 border-t border-slate-100 bg-white px-2.5 py-2">
                     <button
                       type="button"
                       onClick={handleLoadSelectedToWorkspace}
-                      title={`선택한 ${selectedIds.size}개 지문을 오른쪽 워크스페이스로 불러옵니다. 편집·AI 변형 후 문제를 생성하세요.`}
+                      title={`선택한 ${selectedIds.size}개 지문을 편집 워크스페이스에 펼칩니다. 편집·AI 변형 후 문제를 생성하세요.`}
                       className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
                     >
-                      <ArrowDownToLine className="size-4" aria-hidden="true" />
-                      <span>선택 지문 불러오기</span>
+                      <PencilLine className="size-4" aria-hidden="true" />
+                      <span>선택 지문 편집하기</span>
                       <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
                         {selectedIds.size}개 선택
                       </span>

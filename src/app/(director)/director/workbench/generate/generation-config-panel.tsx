@@ -1437,7 +1437,7 @@ export function GenerationConfigPanel({
           {workspaceUnloadedSelectedCount > 0 ? (
             <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
               왼쪽에서 체크한 {workspaceUnloadedSelectedCount}개 지문은 아직
-              워크스페이스에 없어요 — ‘선택 지문 불러오기’를 눌러야 생성에
+              워크스페이스에 없어요 — ‘선택 지문 편집하기’를 눌러야 생성에
               포함됩니다.
             </p>
           ) : null}
@@ -1466,7 +1466,7 @@ export function GenerationConfigPanel({
             ) : workspaceTotalQuestions > 0 ? (
               <span className="flex items-center gap-2">
                 <Cpu className="w-4.5 h-4.5" />
-                {`불러온 ${workspaceRowCount}개 지문 · ${workspaceTotalQuestions}문제 생성`}
+                {`지문 ${workspaceRowCount}개 · ${workspaceTotalQuestions}문제 생성`}
               </span>
             ) : (
               <span className="flex items-center gap-2">

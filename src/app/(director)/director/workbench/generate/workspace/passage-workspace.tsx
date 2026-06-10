@@ -126,11 +126,11 @@ export function PassageWorkspace({
             type="button"
             onClick={onLoadSelected}
             disabled={generating}
-            title={`왼쪽에서 선택한 ${selectedCount}개 지문을 워크스페이스로 불러옵니다`}
+            title={`왼쪽에서 선택한 ${selectedCount}개 지문을 편집 목록에 추가합니다`}
             className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2 pr-1.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-50"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
-            선택 지문 불러오기
+            선택 지문 추가
             <span className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold tabular-nums">
               {selectedCount}
             </span>
