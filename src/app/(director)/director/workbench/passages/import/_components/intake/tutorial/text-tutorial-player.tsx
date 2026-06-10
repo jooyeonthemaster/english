@@ -29,6 +29,7 @@ export function TextTutorialPlayer({
       clickToPlay
       doubleClickToFullscreen
       initiallyMuted
+      acknowledgeRemotionLicense
       style={{
         width: "100%",
         borderRadius: 12,
