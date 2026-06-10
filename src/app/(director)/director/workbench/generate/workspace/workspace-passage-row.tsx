@@ -119,6 +119,76 @@ async function requestTransform(body: {
   return { text: String(data.text || ""), note: String(data.note || "") };
 }
 
+/** 선택 액션 팝오버 추정 크기 — 좌우 클램프·상하 플립 판정용. */
+const SELECTION_POPUP_W = 268;
+const SELECTION_POPUP_H = 48;
+
+interface SelectionAnchor {
+  /** 에디터 relative 컨테이너 기준 px. 화살표가 가리킬 지점. */
+  x: number;
+  topY: number;
+  bottomY: number;
+  containerW: number;
+  containerH: number;
+}
+
+/**
+ * textarea 선택 구간의 화면 좌표 측정 — textarea 는 DOM Range 가 없어
+ * 동일 메트릭 미러 div 를 임시로 만들어 선택 span 의 ClientRects 를 잰다
+ * (하이라이트 백드롭과 같은 원리). 학습지 필기 툴바와 동일한 앵커 규칙:
+ * 같은 줄 선택 = 중앙, 여러 줄 = 끝 지점.
+ */
+function measureSelectionAnchor(
+  el: HTMLTextAreaElement,
+  start: number,
+  end: number,
+): SelectionAnchor | null {
+  const host = el.parentElement;
+  if (!host) return null;
+  const cs = window.getComputedStyle(el);
+  const mirror = document.createElement("div");
+  mirror.setAttribute("aria-hidden", "true");
+  mirror.style.position = "absolute";
+  mirror.style.left = "0";
+  mirror.style.top = "0";
+  mirror.style.visibility = "hidden";
+  mirror.style.pointerEvents = "none";
+  mirror.style.boxSizing = "border-box";
+  mirror.style.width = `${el.clientWidth}px`;
+  mirror.style.whiteSpace = "pre-wrap";
+  mirror.style.overflowWrap = "break-word";
+  mirror.style.fontFamily = cs.fontFamily;
+  mirror.style.fontSize = cs.fontSize;
+  mirror.style.fontWeight = cs.fontWeight;
+  mirror.style.lineHeight = cs.lineHeight;
+  mirror.style.letterSpacing = cs.letterSpacing;
+  mirror.style.paddingTop = cs.paddingTop;
+  mirror.style.paddingRight = cs.paddingRight;
+  mirror.style.paddingBottom = cs.paddingBottom;
+  mirror.style.paddingLeft = cs.paddingLeft;
+  mirror.appendChild(document.createTextNode(el.value.slice(0, start)));
+  const marker = document.createElement("span");
+  marker.textContent = el.value.slice(start, end) || "​";
+  mirror.appendChild(marker);
+  mirror.appendChild(document.createTextNode(el.value.slice(end)));
+  host.appendChild(mirror);
+  const rects = Array.from(marker.getClientRects());
+  const hostRect = host.getBoundingClientRect();
+  mirror.remove();
+  if (rects.length === 0) return null;
+  const first = rects[0];
+  const last = rects[rects.length - 1];
+  const sameLine = Math.abs(first.top - last.top) < 4;
+  return {
+    x:
+      (sameLine ? (first.left + last.right) / 2 : last.right) - hostRect.left,
+    topY: first.top - hostRect.top - el.scrollTop,
+    bottomY: last.bottom - hostRect.top - el.scrollTop,
+    containerW: host.clientWidth,
+    containerH: host.clientHeight,
+  };
+}
+
 /** 하이라이트 구간을 렌더 세그먼트로 변환 (겹침/범위 밖은 안전하게 클램프). */
 function buildHighlightSegments(
   content: string,
@@ -182,6 +252,8 @@ export function WorkspacePassageRow({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [selection, setSelection] = useState<SelectionState | null>(null);
+  const [selectionAnchor, setSelectionAnchor] =
+    useState<SelectionAnchor | null>(null);
   const [busy, setBusy] = useState<"paraphrase" | "prepend" | "restore" | null>(
     null,
   );
@@ -236,7 +308,13 @@ export function WorkspacePassageRow({
       bd.scrollTop = el.scrollTop;
       bd.scrollLeft = el.scrollLeft;
     }
-  }, []);
+    // 내부 스크롤 시 선택 팝오버 위치도 따라가야 한다.
+    if (el && selection) {
+      setSelectionAnchor(
+        measureSelectionAnchor(el, selection.start, selection.end),
+      );
+    }
+  }, [selection]);
   useEffect(() => {
     syncBackdropScroll();
   }, [row.content, row.highlights, syncBackdropScroll]);
@@ -322,7 +400,7 @@ export function WorkspacePassageRow({
     }
   }, []);
 
-  // ── 텍스트 선택 추적 ──
+  // ── 텍스트 선택 추적 — 선택 좌표를 재서 액션 팝오버를 선택 근처에 띄운다 ──
   const handleSelect = useCallback(() => {
     const el = textareaRef.current;
     if (!el || preview) return;
@@ -330,10 +408,12 @@ export function WorkspacePassageRow({
     const end = el.selectionEnd ?? 0;
     if (end - start >= MIN_PARAPHRASE_CHARS) {
       setSelection({ start, end, text: row.content.slice(start, end) });
+      setSelectionAnchor(measureSelectionAnchor(el, start, end));
       // 직접 드래그에 성공했다 — 코치는 임무 완료, 영구 종료.
       dismissDragCoach(true);
     } else {
       setSelection(null);
+      setSelectionAnchor(null);
     }
   }, [row.content, preview, dismissDragCoach]);
 
@@ -386,6 +466,7 @@ export function WorkspacePassageRow({
     el.focus();
     el.setSelectionRange(0, end);
     setSelection({ start: 0, end, text: text.slice(0, end) });
+    setSelectionAnchor(measureSelectionAnchor(el, 0, end));
     toast.info(
       "첫 문장을 선택했어요 — 다른 문장을 원하면 본문에서 드래그로 선택하세요.",
     );
@@ -1010,6 +1091,94 @@ export function WorkspacePassageRow({
                   `}</style>
                 </div>
               ) : null}
+
+              {/* ── 선택 액션 팝오버 — 드래그한 문장 바로 옆에 뜬다
+                  (학습지 필기 툴바와 동일한 앵커·클램프 규칙) ── */}
+              {selection &&
+              selectionAnchor &&
+              !preview &&
+              !busy &&
+              !disabled
+                ? (() => {
+                    const fitsBelow =
+                      selectionAnchor.bottomY + SELECTION_POPUP_H + 10 <=
+                      selectionAnchor.containerH;
+                    const fitsAbove =
+                      selectionAnchor.topY - SELECTION_POPUP_H - 10 >= 0;
+                    const below = fitsBelow || !fitsAbove;
+                    const left = Math.max(
+                      4,
+                      Math.min(
+                        selectionAnchor.x - SELECTION_POPUP_W / 2,
+                        selectionAnchor.containerW - SELECTION_POPUP_W - 4,
+                      ),
+                    );
+                    const arrowX = Math.max(
+                      14,
+                      Math.min(
+                        selectionAnchor.x - left,
+                        SELECTION_POPUP_W - 14,
+                      ),
+                    );
+                    return (
+                      <div
+                        className="absolute z-[3]"
+                        style={{
+                          left,
+                          top: below
+                            ? selectionAnchor.bottomY + 8
+                            : selectionAnchor.topY - 8,
+                          ...(below
+                            ? {}
+                            : { transform: "translateY(-100%)" }),
+                        }}
+                      >
+                        {below ? (
+                          <div style={{ paddingLeft: arrowX - 4 }}>
+                            <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-blue-300 bg-white" />
+                          </div>
+                        ) : null}
+                        <div className="flex items-center gap-1.5 rounded-lg border border-blue-300 bg-white p-1.5 shadow-lg shadow-blue-200/60 duration-150 animate-in fade-in zoom-in-95">
+                          <button
+                            type="button"
+                            onClick={handleParaphraseClick}
+                            title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
+                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+                          >
+                            <Wand2
+                              className="h-3.5 w-3.5"
+                              aria-hidden="true"
+                            />
+                            AI 문장 변형
+                            <span
+                              title="이 작업은 크레딧 1을 사용합니다"
+                              className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
+                            >
+                              ◈1
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleSetRangeFromSelection}
+                            title="선택한 구간만으로 문제를 생성합니다 (긴 지문용)"
+                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                          >
+                            <Scissors
+                              className="h-3.5 w-3.5"
+                              aria-hidden="true"
+                            />
+                            이 범위만 출제
+                          </button>
+                        </div>
+                        {!below ? (
+                          <div style={{ paddingLeft: arrowX - 4 }}>
+                            <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-blue-300 bg-white" />
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })()
+                : null}
             </div>
           </div>
 
@@ -1042,43 +1211,6 @@ export function WorkspacePassageRow({
                 title="색 표시만 지웁니다 (본문은 그대로)"
               >
                 표시 지우기
-              </button>
-            </div>
-          ) : null}
-
-          {/* ── 선택 액션 바 ── */}
-          {selection && !preview && !busy && !disabled ? (
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-blue-300 bg-white py-2 pl-3 pr-2 shadow-md shadow-blue-100/60 duration-150 animate-in fade-in slide-in-from-top-1">
-              <span className="min-w-0 flex-1 truncate text-[11.5px] text-slate-400">
-                선택{" "}
-                <span className="font-semibold text-slate-600">
-                  “{selection.text.slice(0, 60)}
-                  {selection.text.length > 60 ? "…" : ""}”
-                </span>
-              </span>
-              <button
-                type="button"
-                onClick={handleParaphraseClick}
-                title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
-                className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
-              >
-                <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
-                AI 문장 변형
-                <span
-                  title="이 작업은 크레딧 1을 사용합니다"
-                  className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
-                >
-                  ◈1
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={handleSetRangeFromSelection}
-                title="선택한 구간만으로 문제를 생성합니다 (긴 지문용)"
-                className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
-              >
-                <Scissors className="h-3.5 w-3.5" aria-hidden="true" />
-                이 범위만 출제
               </button>
             </div>
           ) : null}
