@@ -64,6 +64,8 @@ export interface TunableParam {
 export interface CustomTypeOverride {
   optionCount?: number;
   correctAnswerCount?: number;
+  stemLanguage?: "ko" | "en";
+  optionLanguage?: "ko" | "en";
   params?: Record<string, number>;
 }
 
