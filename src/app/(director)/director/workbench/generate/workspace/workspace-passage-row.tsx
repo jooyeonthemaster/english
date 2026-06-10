@@ -58,6 +58,9 @@ const PREPEND_COUNT_KEY = "smoat:generate:prepend-sentence-count";
 const DRAG_COACH_KEY = "smoat:generate:drag-coach-dismissed";
 /** 앞 맥락 추가 모션 코치 — 한 번 사용하면 다시 보지 않는다. */
 const PREPEND_COACH_KEY = "smoat:generate:prepend-coach-dismissed";
+/** 코치 1사이클 길이 — CSS keyframes 의 duration 과 반드시 일치해야 한다. */
+const DRAG_COACH_CYCLE_MS = 4_400;
+const PREPEND_COACH_CYCLE_MS = 5_400;
 
 function readCoachDismissed(key: string): boolean {
   if (typeof window === "undefined") return true;
@@ -246,12 +249,17 @@ export function WorkspacePassageRow({
     avoidRef.current = [];
   }, [row.passageId]);
 
-  // ── 드래그 모션 코치 (첫 행 1회) — 마운트 후 판정해 하이드레이션 안전 ──
+  // ── 드래그 모션 코치 (첫 행) — 마운트 후 판정해 하이드레이션 안전.
+  //    5사이클 후 자동 정지(세션 한정) → 이어서 앞 맥락 코치가 시작된다.
   const [dragCoachVisible, setDragCoachVisible] = useState(false);
   useEffect(() => {
-    if (dragCoach && !readCoachDismissed(DRAG_COACH_KEY)) {
-      setDragCoachVisible(true);
-    }
+    if (!dragCoach || readCoachDismissed(DRAG_COACH_KEY)) return;
+    setDragCoachVisible(true);
+    const stopTimer = window.setTimeout(
+      () => setDragCoachVisible(false),
+      DRAG_COACH_CYCLE_MS * 5 + 200,
+    );
+    return () => window.clearTimeout(stopTimer);
   }, [dragCoach]);
   const dismissDragCoach = useCallback((persist: boolean) => {
     setDragCoachVisible(false);
@@ -263,15 +271,31 @@ export function WorkspacePassageRow({
     }
   }, []);
 
-  // ── 앞 맥락 추가 모션 코치 — 드래그 코치가 끝난 뒤 이어서 4회 시연 ──
+  // ── 앞 맥락 추가 모션 코치 — 드래그 코치가 완전히 끝난 뒤 1.2초 쉬고
+  //    시작한다 (동시 재생 금지). 시작 지연 타이머 + cleanup 으로 마운트
+  //    레이스(드래그 코치가 켜지기 직전 상태를 읽는 문제)를 차단.
   const [prependCoachVisible, setPrependCoachVisible] = useState(false);
   useEffect(() => {
-    if (!dragCoach || dragCoachVisible) return;
-    if (readCoachDismissed(PREPEND_COACH_KEY)) return;
-    setPrependCoachVisible(true);
-    // 4사이클(3.2s×4) 후 자동 정지 — 세션 한정 (사용 시에만 영구 종료).
-    const timer = window.setTimeout(() => setPrependCoachVisible(false), 13_300);
-    return () => window.clearTimeout(timer);
+    if (
+      !dragCoach ||
+      dragCoachVisible ||
+      readCoachDismissed(PREPEND_COACH_KEY)
+    ) {
+      setPrependCoachVisible(false);
+      return;
+    }
+    const startTimer = window.setTimeout(
+      () => setPrependCoachVisible(true),
+      1_200,
+    );
+    const stopTimer = window.setTimeout(
+      () => setPrependCoachVisible(false),
+      1_200 + PREPEND_COACH_CYCLE_MS * 3 + 200,
+    );
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(stopTimer);
+    };
   }, [dragCoach, dragCoachVisible]);
   const dismissPrependCoach = useCallback(() => {
     setPrependCoachVisible(false);
@@ -796,8 +820,9 @@ export function WorkspacePassageRow({
                 </button>
               </div>
 
-              {/* ── 앞 맥락 모션 코치 — 고스트 커서가 본문에서 올라와 삽입 바를
-                  클릭하는 시연 (4회 후 자동 정지, 사용 시 영구 종료) ── */}
+              {/* ── 앞 맥락 모션 코치 — ① 커서가 본문에서 올라와 바를 클릭
+                  ② 바로 아래에 'AI 앞 문단' 고스트 패널이 펼쳐지며 쉬머
+                  라인이 생성되는 결과까지 시연 (3회 후 자동 정지) ── */}
               {prependCoachVisible && !locked ? (
                 <div
                   aria-hidden="true"
@@ -806,30 +831,62 @@ export function WorkspacePassageRow({
                   <div className="ws-prepcoach-wash absolute inset-0 bg-blue-400/20 opacity-0" />
                   <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-blue-500/70 opacity-0" />
                   <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-blue-700 opacity-0 drop-shadow-sm" />
+                  {/* 클릭 결과로 삽입되는 고스트 문단 */}
+                  <div className="ws-prepcoach-ghost absolute inset-x-2 top-full mt-1.5 origin-top rounded-md border border-blue-200 bg-white opacity-0 shadow-lg shadow-blue-100/70">
+                    <div className="flex items-center gap-1.5 px-3 pt-2">
+                      <span className="rounded-sm bg-blue-600 px-1 py-px text-[9px] font-bold leading-none text-white">
+                        AI
+                      </span>
+                      <span className="text-[10.5px] font-bold text-blue-600">
+                        이어지는 앞 문단이 이 자리에 생성돼요
+                      </span>
+                    </div>
+                    <div className="space-y-[7px] px-3 pb-3 pt-2">
+                      <div className="ws-prepcoach-line h-[9px] w-[94%] rounded-sm" />
+                      <div className="ws-prepcoach-line h-[9px] w-[88%] rounded-sm" />
+                      <div className="ws-prepcoach-line h-[9px] w-[61%] rounded-sm" />
+                    </div>
+                  </div>
                   <style>{`
                     @keyframes ws-prepcoach-cursor {
-                      0% { transform: translate(150px, 58px); opacity: 0; }
-                      12% { transform: translate(150px, 58px); opacity: 1; }
-                      45% { transform: translate(0, 0) scale(1); opacity: 1; }
-                      52% { transform: translate(0, 0) scale(0.8); opacity: 1; }
-                      60% { transform: translate(0, 0) scale(1); opacity: 1; }
-                      88% { transform: translate(0, 0) scale(1); opacity: 1; }
-                      100% { transform: translate(0, 0) scale(1); opacity: 0; }
+                      0% { transform: translate(170px, 62px) scale(1); opacity: 0; }
+                      7% { transform: translate(170px, 62px) scale(1); opacity: 1; }
+                      24% { transform: translate(0, 0) scale(1); opacity: 1; }
+                      28% { transform: translate(0, 0) scale(0.78); opacity: 1; }
+                      33% { transform: translate(0, 0) scale(1); opacity: 1; }
+                      46% { transform: translate(0, 0) scale(1); opacity: 1; }
+                      56%, 100% { transform: translate(0, 0) scale(1); opacity: 0; }
                     }
                     @keyframes ws-prepcoach-ring {
-                      0%, 50% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-                      57% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.55); }
-                      78% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
-                      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
+                      0%, 25% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+                      30% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.55); }
+                      44%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
                     }
                     @keyframes ws-prepcoach-wash {
-                      0%, 48% { opacity: 0; }
-                      57% { opacity: 1; }
-                      82%, 100% { opacity: 0; }
+                      0%, 24% { opacity: 0; }
+                      30% { opacity: 1; }
+                      48%, 100% { opacity: 0; }
                     }
-                    .ws-prepcoach-cursor { animation: ws-prepcoach-cursor 3.2s ease-in-out 4; }
-                    .ws-prepcoach-ring { animation: ws-prepcoach-ring 3.2s ease-in-out 4; }
-                    .ws-prepcoach-wash { animation: ws-prepcoach-wash 3.2s ease-in-out 4; }
+                    @keyframes ws-prepcoach-ghost {
+                      0%, 30% { opacity: 0; transform: scaleY(0.35); }
+                      37% { opacity: 1; transform: scaleY(0.55); }
+                      48% { opacity: 1; transform: scaleY(1); }
+                      86% { opacity: 1; transform: scaleY(1); }
+                      96%, 100% { opacity: 0; transform: scaleY(1); }
+                    }
+                    @keyframes ws-prepcoach-line {
+                      0% { background-position: 130% 0; }
+                      100% { background-position: -70% 0; }
+                    }
+                    .ws-prepcoach-cursor { animation: ws-prepcoach-cursor 5.4s ease-in-out 3; }
+                    .ws-prepcoach-ring { animation: ws-prepcoach-ring 5.4s ease-in-out 3; }
+                    .ws-prepcoach-wash { animation: ws-prepcoach-wash 5.4s ease-in-out 3; }
+                    .ws-prepcoach-ghost { animation: ws-prepcoach-ghost 5.4s ease-in-out 3; }
+                    .ws-prepcoach-line {
+                      background: linear-gradient(90deg, #dbeafe 25%, #93c5fd 50%, #dbeafe 75%);
+                      background-size: 200% 100%;
+                      animation: ws-prepcoach-line 1.4s linear infinite;
+                    }
                   `}</style>
                 </div>
               ) : null}
