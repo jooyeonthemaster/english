@@ -322,12 +322,9 @@ export function GeneratePageClient({
       /* ignore */
     }
   }, []);
-  // 빈 워크스페이스 가이드의 "내 지문 열기" — 왼쪽 패널을 펴고 라이브러리 탭으로.
-  const [leftOpenSignal, setLeftOpenSignal] = useState(0);
-  const handleOpenLibrary = useCallback(() => {
-    setIntakeView("library");
-    setLeftOpenSignal((s) => s + 1);
-  }, []);
+  // (빈 워크스페이스 가이드 제거됨 — 워크스페이스 컬럼은 행이 있을 때만 렌더.
+  //  leftOpenSignal 은 셸 호환을 위해 0 고정으로 남긴다.)
+  const leftOpenSignal = 0;
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -1482,6 +1479,7 @@ export function GeneratePageClient({
           leftLabel="지문"
           leftCollapseSignal={leftCollapseSignal}
           leftOpenSignal={leftOpenSignal}
+          rightPaneMin={workspaceActive ? 560 : 400}
           header={
             <WorkflowPageTitle
               icon={QuestionGenerationIcon}
@@ -1581,15 +1579,18 @@ export function GeneratePageClient({
             />
           }
           right={
-            /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══ */
+            /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══
+                워크스페이스 컬럼은 지문을 불러왔을 때만 존재한다 — 빈 상태로
+                중앙을 차지하는 대신, 불러오기 전엔 설정이 우측 전체를 쓰고
+                라이브러리가 넓어진다. */
             <div className="flex h-full min-h-0 min-w-0">
+              {workspaceActive ? (
               <div className="flex min-h-0 min-w-[120px] flex-1 flex-col">
                 <div className="min-h-0 flex-1">
                   <PassageWorkspace
                     api={workspaceApi}
                     selectedCount={selectedIds.size}
                     onLoadSelected={handleLoadSelectedToWorkspace}
-                    onOpenLibrary={handleOpenLibrary}
                     generating={workspaceGenerating}
                     sessionQueue={sessionQueue}
                     questionCountByPassage={questionCountByPassage}
@@ -1633,7 +1634,8 @@ export function GeneratePageClient({
                   </div>
                 ) : null}
               </div>
-              {!configPaneOpen ? (
+              ) : null}
+              {workspaceActive && !configPaneOpen ? (
                 <button
                   type="button"
                   onClick={toggleConfigPane}
@@ -1645,8 +1647,9 @@ export function GeneratePageClient({
                 </button>
               ) : (
                 <>
-                  {/* 설정 컬럼 리사이즈 핸들 — 좌측 지문 패널 핸들과 동일 제스처:
-                      클릭=접기 / 드래그=너비 조절 / 더블클릭=초기화 */}
+                  {/* 설정 컬럼 리사이즈 핸들 — 워크스페이스가 있을 때만 의미가
+                      있다 (빈 상태에선 설정이 우측 전체라 나눌 공간이 없음) */}
+                  {workspaceActive ? (
                   <button
                     type="button"
                     onPointerDown={handleConfigHandlePointerDown}
@@ -1658,13 +1661,21 @@ export function GeneratePageClient({
                     <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
                     <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
                   </button>
-                  {/* 설정 컬럼 — 드래그로 300~560px. 컨테이너가 좁아도
-                      워크스페이스 최소폭(120px)+핸들은 항상 남긴다. */}
+                  ) : null}
+                  {/* 설정 컬럼 — 워크스페이스 있음: 드래그로 300~560px /
+                      빈 상태: 우측 패널 전체 */}
                   <div
-                    className="flex h-full min-w-0 shrink-0 flex-col overflow-hidden"
-                    style={{
-                      width: `min(${configPaneWidth}px, calc(100% - ${CONFIG_PANE_RESERVED}px))`,
-                    }}
+                    className={
+                      "flex h-full min-w-0 flex-col overflow-hidden " +
+                      (workspaceActive ? "shrink-0" : "flex-1")
+                    }
+                    style={
+                      workspaceActive
+                        ? {
+                            width: `min(${configPaneWidth}px, calc(100% - ${CONFIG_PANE_RESERVED}px))`,
+                          }
+                        : undefined
+                    }
                   >
                     {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
                     <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
@@ -1675,6 +1686,7 @@ export function GeneratePageClient({
                       <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-slate-800">
                         유형·생성 설정
                       </h3>
+                      {workspaceActive ? (
                       <button
                         type="button"
                         onClick={toggleConfigPane}
@@ -1683,6 +1695,7 @@ export function GeneratePageClient({
                       >
                         <PanelRightClose className="h-4 w-4" aria-hidden="true" />
                       </button>
+                      ) : null}
                     </div>
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <GenerationConfigPanel

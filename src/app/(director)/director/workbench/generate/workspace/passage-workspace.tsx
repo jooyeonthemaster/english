@@ -6,7 +6,6 @@ import {
   ChevronsDownUp,
   ChevronsUpDown,
   CircleHelp,
-  FolderOpen,
   Info,
   Layers,
   ListStart,
@@ -47,8 +46,6 @@ interface PassageWorkspaceProps {
   /** 왼쪽 라이브러리에서 체크된 지문 수. */
   selectedCount: number;
   onLoadSelected: () => void;
-  /** 왼쪽 패널을 펴고 '내 지문' 탭으로 전환. */
-  onOpenLibrary: () => void;
   generating: boolean;
   sessionQueue: QueueItem[];
   questionCountByPassage: Map<string, number>;
@@ -60,7 +57,6 @@ export function PassageWorkspace({
   api,
   selectedCount,
   onLoadSelected,
-  onOpenLibrary,
   generating,
   sessionQueue,
   questionCountByPassage,
@@ -188,14 +184,9 @@ export function PassageWorkspace({
         </div>
       ) : null}
 
-      {/* ── 본문 ── */}
-      {rows.length === 0 ? (
-        <EmptyState
-          selectedCount={selectedCount}
-          onLoadSelected={onLoadSelected}
-          onOpenLibrary={onOpenLibrary}
-        />
-      ) : (
+      {/* ── 본문 — 이 컴포넌트는 행이 있을 때만 마운트된다 (빈 상태는
+          상위에서 컬럼 자체를 렌더하지 않음). ── */}
+      {(
         <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto p-3">
           {!coachDismissed ? (
             <div className="flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50/60 py-2.5 pl-3.5 pr-2">
@@ -268,104 +259,6 @@ export function PassageWorkspace({
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-const EMPTY_STEPS = [
-  {
-    title: "지문 선택",
-    desc: "왼쪽 ‘내 지문’에서 체크박스로 선택",
-  },
-  {
-    title: "워크스페이스로 불러오기",
-    desc: "‘선택 지문 불러오기’ 클릭 — 원본은 보존돼요",
-  },
-  {
-    title: "편집 · AI 변형 · 출제 범위",
-    desc: "문장을 드래그하면 AI 변형, ‘앞 맥락 추가’로 확장",
-  },
-  {
-    title: "유형·난이도 설정 후 생성",
-    desc: "오른쪽 ‘유형·생성 설정’ 또는 지문별 유형 지정",
-  },
-] as const;
-
-function EmptyState({
-  selectedCount,
-  onLoadSelected,
-  onOpenLibrary,
-}: {
-  selectedCount: number;
-  onLoadSelected: () => void;
-  onOpenLibrary: () => void;
-}) {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-6 py-10">
-      {/* ── 히어로 ── */}
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <Layers className="h-5 w-5 text-blue-600" aria-hidden="true" />
-      </div>
-      <h4 className="mt-4 text-[15px] font-bold tracking-tight text-slate-900">
-        지문을 불러와 시작하세요
-      </h4>
-      <p className="mt-1.5 max-w-[300px] text-center text-[12px] leading-relaxed text-slate-500">
-        불러온 지문은 이곳에서 편집하고 AI로 변형한 뒤 문제로 만들 수 있어요.
-      </p>
-
-      {selectedCount === 0 ? (
-        // 왼쪽 패널이 접혀 있거나 다른 탭일 수 있으니, 안내가 아니라
-        // 실제로 '내 지문'을 열어주는 버튼을 준다. (화면 유일의 실행
-        // 액션이므로 1차 CTA 톤)
-        <button
-          type="button"
-          onClick={onOpenLibrary}
-          className="mt-4 flex h-9 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
-        >
-          <FolderOpen className="h-4 w-4" aria-hidden="true" />
-          내 지문 열기
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={onLoadSelected}
-          title={`선택한 ${selectedCount}개 지문을 불러옵니다`}
-          className="mt-4 flex h-9 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
-        >
-          <ArrowDownToLine className="h-4 w-4" aria-hidden="true" />
-          선택 지문 {selectedCount}개 불러오기
-        </button>
-      )}
-
-      {/* ── 진행 순서 타임라인 (보조 정보 — 낮은 톤) ── */}
-      <div className="mt-9 w-full max-w-[280px]">
-        <p className="text-[10.5px] font-bold uppercase tracking-[0.08em] text-slate-400">
-          진행 순서
-        </p>
-        <ol className="mt-3">
-          {EMPTY_STEPS.map((step, i) => (
-            <li key={step.title} className="relative flex gap-3 pb-4 last:pb-0">
-              {i < EMPTY_STEPS.length - 1 ? (
-                <span
-                  className="absolute bottom-0 left-[10px] top-[24px] w-px bg-slate-200"
-                  aria-hidden="true"
-                />
-              ) : null}
-              <span className="z-[1] flex h-[21px] w-[21px] shrink-0 items-center justify-center rounded-full bg-white text-[10.5px] font-bold leading-none text-slate-500 ring-1 ring-inset ring-slate-300 tabular-nums">
-                {i + 1}
-              </span>
-              <span className="min-w-0 pt-px">
-                <span className="block text-[12px] font-semibold leading-[20px] text-slate-700">
-                  {step.title}
-                </span>
-                <span className="mt-px block text-[11px] leading-snug text-slate-400">
-                  {step.desc}
-                </span>
-              </span>
-            </li>
-          ))}
-        </ol>
-      </div>
     </div>
   );
 }

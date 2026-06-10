@@ -95,6 +95,11 @@ interface WorkspaceShellProps {
   leftCollapseSignal?: number;
   /** 증가할 때마다 왼쪽 패널을 편다 — 빈 워크스페이스의 "내 지문 열기" 용. */
   leftOpenSignal?: number;
+  /**
+   * 우측 패널 최소폭 — 워크스페이스+설정 2분할이면 560, 설정 단독이면
+   * 더 좁아도 되므로 호출부에서 상태에 맞게 내려준다.
+   */
+  rightPaneMin?: number;
 }
 
 export function WorkspaceShell({
@@ -104,6 +109,7 @@ export function WorkspaceShell({
   leftLabel = "지문",
   leftCollapseSignal = 0,
   leftOpenSignal = 0,
+  rightPaneMin = RIGHT_PANE_MIN,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
@@ -159,7 +165,7 @@ export function WorkspaceShell({
           : Number.POSITIVE_INFINITY;
       const maxWidth = Math.max(
         LEFT_PANE_MIN,
-        Math.min(ratioCap, containerWidth - RIGHT_PANE_MIN - HANDLE_HIT_WIDTH),
+        Math.min(ratioCap, containerWidth - rightPaneMin - HANDLE_HIT_WIDTH),
       );
       let didDrag = false;
       let latest = startWidth;
@@ -195,7 +201,7 @@ export function WorkspaceShell({
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
     },
-    [leftPaneWidth, toggleLeftPaneOpen],
+    [leftPaneWidth, toggleLeftPaneOpen, rightPaneMin],
   );
 
   const resetLeftPaneWidth = useCallback(() => {
@@ -286,7 +292,7 @@ export function WorkspaceShell({
                 style={{
                   // 저장된 폭(기본 560)이 작은 컨테이너에서 우측 패널을
                   // RIGHT_PANE_MIN 미만으로 밀어내지 않게 렌더 폭도 클램프.
-                  width: `min(${leftPaneWidth}px, 55%, calc(100% - ${RIGHT_PANE_MIN + HANDLE_HIT_WIDTH + 8}px))`,
+                  width: `min(${leftPaneWidth}px, 55%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`,
                 }}
               >
                 {left}
