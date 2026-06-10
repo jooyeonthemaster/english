@@ -3,7 +3,11 @@ import type { PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schem
 import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
 import { compileCustomType } from "@/lib/custom-question-types/compiler";
 import { generateFromCustomType } from "@/lib/custom-question-types/generator";
-import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  getQuestionLanguageToggleScope,
+  type QuestionGenerationLanguage,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 
 import type { GenerationSubType } from "../schemas";
 import { resolveSimilarGenerationRoute } from "./matching";
@@ -54,7 +58,72 @@ function summaryBlankCount(analysis: QuestionAnalysis): number | null {
   return markers.size > 0 ? markers.size : null;
 }
 
+function blankInferenceBlankCount(analysis: QuestionAnalysis): number | null {
+  const direct = analysis.classification.typeSettings.blankCount;
+  if (typeof direct === "number" && direct >= 1 && direct <= 3) return direct;
+
+  // Textual fallback: labeled blanks "(A) ____" in the extracted passage, or a
+  // "(A), (B)" blank stem. Mirrors the summaryBlankCount detection style.
+  const passageText = analysis.source.passage ?? "";
+  const labeledBlankMarkers = new Set<string>();
+  for (const match of passageText.matchAll(/\(([A-Ca-c])\)\s*_{2,}/g)) {
+    labeledBlankMarkers.add(match[1].toUpperCase());
+  }
+  if (labeledBlankMarkers.size >= 2) return Math.min(3, labeledBlankMarkers.size);
+
+  const stemText = [
+    analysis.source.direction,
+    analysis.reproductionSpec.stemFormat,
+  ].join("\n");
+  if (/빈칸|blank/i.test(stemText)) {
+    const stemLabels = new Set<string>();
+    for (const match of stemText.matchAll(/\(([A-Ca-c])\)/g)) {
+      stemLabels.add(match[1].toUpperCase());
+    }
+    if (stemLabels.size >= 2) return Math.min(3, stemLabels.size);
+  }
+  return null;
+}
+
+function inferVisibleOptionLanguage(
+  analysis: QuestionAnalysis,
+): QuestionGenerationLanguage | undefined {
+  const optionText = analysis.source.options
+    .map((option) => option.text)
+    .filter(Boolean)
+    .join("\n");
+  const formatText = [
+    analysis.reproductionSpec.optionFormat,
+    analysis.reproductionSpec.structureNotes,
+  ].join("\n");
+  const combined = [optionText, formatText].join("\n");
+
+  if (/\bEnglish\b|English-only|영어/i.test(combined)) return "en";
+  if (/\bKorean\b|Korean-only|한국어|한글/i.test(combined)) return "ko";
+
+  const latinCount = (optionText.match(/[A-Za-z]/g) ?? []).length;
+  const hangulCount = (optionText.match(/[가-힣]/g) ?? []).length;
+  if (latinCount >= 12 && latinCount > hangulCount * 2) return "en";
+  if (hangulCount >= 6 && hangulCount >= latinCount) return "ko";
+  return undefined;
+}
+
 function toEngineTypeSettings(
+  subType: GenerationSubType,
+  analysis: QuestionAnalysis,
+): QuestionTypeGenerationSettings | undefined {
+  const base = toEngineNumericTypeSettings(subType, analysis);
+  // Reproduce the source's visible option language for free-language option types
+  // (TOPIC/MAIN_IDEA/TITLE/IMPLIED_MEANING/CONTENT_MATCH/...). Structural types
+  // ignore option language, so skip them entirely.
+  if (getQuestionLanguageToggleScope(subType) !== "stem-option") return base;
+  const optionLanguage = inferVisibleOptionLanguage(analysis);
+  if (!optionLanguage) return base;
+  const current = (base?.[subType] ?? {}) as Record<string, unknown>;
+  return { ...(base ?? {}), [subType]: { ...current, optionLanguage } };
+}
+
+function toEngineNumericTypeSettings(
   subType: GenerationSubType,
   analysis: QuestionAnalysis,
 ): QuestionTypeGenerationSettings | undefined {
@@ -85,13 +154,56 @@ function toEngineTypeSettings(
       const optionCount = ts.optionCount ?? sourceOptionCount(analysis);
       const answerCount =
         ts.answerCount ?? ts.correctAnswerCount ?? explicitCorrectAnswerCount(analysis);
-      if (optionCount == null && answerCount == null) {
-        return undefined;
-      }
+      if (optionCount == null && answerCount == null) return undefined;
       return {
         CONTENT_MATCH: {
           ...(optionCount != null ? { optionCount } : {}),
           ...(answerCount != null ? { answerCount } : {}),
+        },
+      };
+    }
+    case "VOCAB_CHOICE": {
+      // Source underlined-word count = visible option count for this type.
+      const markerCount = sourceOptionCount(analysis);
+      const answerCount =
+        ts.answerCount ?? ts.correctAnswerCount ?? explicitCorrectAnswerCount(analysis);
+      const markerValid = markerCount >= 5 && markerCount <= 10;
+      if (!markerValid && answerCount == null) return undefined;
+      return {
+        VOCAB_CHOICE: {
+          ...(markerValid ? { markerCount } : {}),
+          ...(answerCount != null ? { answerCount } : {}),
+        },
+      };
+    }
+    case "SENTENCE_INSERT": {
+      // Only deviate from the default 5 when the source clearly shows more markers.
+      const slotCount = sourceOptionCount(analysis);
+      if (slotCount < 6 || slotCount > 8) return undefined;
+      return { SENTENCE_INSERT: { slotCount } };
+    }
+    case "ANTONYM": {
+      const pairCount = sourceOptionCount(analysis);
+      if (pairCount < 6 || pairCount > 10) return undefined;
+      return { ANTONYM: { pairCount } };
+    }
+    case "TOPIC":
+    case "MAIN_IDEA":
+    case "TITLE":
+    case "IMPLIED_MEANING":
+    case "CONTEXT_MEANING":
+    case "SYNONYM": {
+      // Free-text option types: reproduce the source option/answer counts.
+      const optionCount = ts.optionCount ?? sourceOptionCount(analysis);
+      const answerCount =
+        ts.answerCount ?? ts.correctAnswerCount ?? explicitCorrectAnswerCount(analysis);
+      const optionValid = optionCount >= 4 && optionCount <= 8;
+      const answerValid = typeof answerCount === "number" && answerCount >= 2;
+      if (!optionValid && !answerValid) return undefined;
+      return {
+        [subType]: {
+          ...(optionValid ? { optionCount } : {}),
+          ...(answerValid ? { answerCount } : {}),
         },
       };
     }
@@ -105,9 +217,16 @@ function toEngineTypeSettings(
       if (blankCount == null) return undefined;
       return { SUMMARY_COMPLETE_MC: { blankCount } };
     }
-    case "BLANK_INFERENCE":
+    case "BLANK_INFERENCE": {
+      // Multi-blank combination source → reproduce the blank count. The
+      // double-negative mode is single-blank-only, so it is dropped here.
+      const blankCount = blankInferenceBlankCount(analysis);
+      if (blankCount != null && blankCount >= 2) {
+        return { BLANK_INFERENCE: { blankCount } };
+      }
       if (!ts.blankDoubleNegative) return undefined;
       return { BLANK_INFERENCE: { doubleNegative: true } };
+    }
     default:
       return undefined;
   }

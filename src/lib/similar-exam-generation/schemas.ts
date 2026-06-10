@@ -81,6 +81,9 @@ export const slotTypeSettingsSchema = z
     correctAnswerCount: z.number().int().min(1).max(20).nullable().optional(),
     // BLANK_INFERENCE: negative-paraphrase blank mode.
     blankDoubleNegative: z.boolean().nullable().optional(),
+    // BLANK_INFERENCE: number of passage blanks. 1 = standard single blank;
+    // 2~3 = (A)/(B)(/(C)) combination-option variant.
+    blankCount: z.number().int().min(1).max(3).nullable().optional(),
   })
   .default({});
 

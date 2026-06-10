@@ -130,6 +130,8 @@ ${sourceLine} 목표는 이 문항과 "동형(同形)"의 새 문항을 만들 �
    - SUMMARY_COMPLETE_MC이면 typeSettings.summaryBlankCount에 원본 요약문 빈칸 수를 기록하세요. 보통 2개지만 (A), (B), (C)처럼 3개 이상이면 반드시 그 수를 보존합니다.
    - SUMMARY_COMPLETE이면 typeSettings.summaryBlankCount에 원본 요약문 빈칸 수를 기록하세요.
    - CONTENT_MATCH이면 typeSettings.optionCount에 원본 보기/진술문 수, typeSettings.answerCount에 정답 라벨 수를 기록하세요.
+   - BLANK_INFERENCE이면 typeSettings.blankCount에 원본 지문의 빈칸 수를 기록하세요. 수능형 단일 빈칸=1, (A), (B)(, (C)) 라벨 빈칸에 조합 보기를 고르는 변형=2 또는 3.
+   - TOPIC/MAIN_IDEA/TITLE/IMPLIED_MEANING/CONTEXT_MEANING/SYNONYM이 5지선다 단일정답이 아니면 typeSettings.optionCount/answerCount에 원본 수를 기록하세요.
 3. testingPoint: 이 문항이 평가하는 핵심(무엇을 묻는가) + 관련 스킬[].
 4. transformation: 출제자가 원문에서 **무엇을 어떻게 바꿔** 함정/정답을 만들었는지. 어법·어휘 변형이면 changedSpans에 {from(원래), to(바뀐 것), rule(규칙)}로. 변형이 없으면 applied=false.
 5. reproductionSpec: 동형 문항 생성 시 그대로 따라야 할 발문/보기/정답 형식과 구조.
@@ -143,8 +145,8 @@ ${buildTypeCatalog()}
 - matchedType is not a nearest-neighbor label. Use it only when the builtin engine can reproduce the source format exactly.
 - If the source has a nonstandard answer shape, option count, answer count, blank count, paired table, section-marker combination, or row/column combination that the builtin type does not explicitly support, set matchedType=null, matchConfidence="low", and isNovelType=true.
 - Set matchConfidence="high" only when the question's visible form matches the builtin type contract and all required counts are explicit.
-- Supported flexible counts: CONTENT_MATCH optionCount 5..12 and answerCount 1..optionCount; GRAMMAR_ERROR markerCount 5..10 and answerCount 1..markerCount; GRAMMAR_CORRECTION errorCount 1..5; IRRELEVANT slotCount 5..10; SUMMARY_COMPLETE_MC blankCount 2..4; SUMMARY_COMPLETE blankCount 1..5.
-- Five-choice single-answer multiple-choice types must really have exactly 5 choices and exactly 1 correct answer. Otherwise do not force a builtin match.
+- Supported flexible counts: CONTENT_MATCH optionCount 5..12 and answerCount 1..optionCount; GRAMMAR_ERROR markerCount 5..10 and answerCount 1..markerCount; GRAMMAR_CORRECTION errorCount 1..5; IRRELEVANT slotCount 5..10; SUMMARY_COMPLETE_MC blankCount 2..4; SUMMARY_COMPLETE blankCount 1..5; VOCAB_CHOICE markerCount 5..10 and answerCount 1..markerCount; SENTENCE_INSERT slotCount 5..8 (single answer); ANTONYM pairCount 5..10 (single answer); TOPIC/MAIN_IDEA/TITLE/IMPLIED_MEANING/CONTEXT_MEANING/SYNONYM optionCount 4..8 and answerCount 1..optionCount-1; BLANK_INFERENCE blankCount 1..3 (2~3 = labeled (A)/(B) blanks with combination options, single answer).
+- Multiple-choice types not covered by the flexible counts above must really have exactly 5 choices and exactly 1 correct answer. Otherwise do not force a builtin match.
 ${inventoryBlock}
 ${boundingBoxBlock}
 ${manualCropBlock}
