@@ -322,9 +322,9 @@ export function GeneratePageClient({
       /* ignore */
     }
   }, []);
-  // (빈 워크스페이스 가이드 제거됨 — 워크스페이스 컬럼은 행이 있을 때만 렌더.
-  //  leftOpenSignal 은 셸 호환을 위해 0 고정으로 남긴다.)
-  const leftOpenSignal = 0;
+  // 워크스페이스가 비워지면 왼쪽 지문 패널을 자동으로 편다 — 비우기 직후
+  // 설정 패널만 전폭을 차지한 채 다음 행동이 막히는 화면 방지.
+  const [leftOpenSignal, setLeftOpenSignal] = useState(0);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -1454,6 +1454,14 @@ export function GeneratePageClient({
       loadPassages,
     });
   const workspaceActive = workspaceApi.rows.length > 0;
+  // 워크스페이스 활성 → 비활성 전환(비우기/마지막 행 제거) 감지 시 좌측 열기.
+  const prevWorkspaceActiveRef = useRef(false);
+  useEffect(() => {
+    if (prevWorkspaceActiveRef.current && !workspaceActive) {
+      setLeftOpenSignal((s) => s + 1);
+    }
+    prevWorkspaceActiveRef.current = workspaceActive;
+  }, [workspaceActive]);
   // 체크된 지문 중 아직 워크스페이스에 없는 수 — loadPassages 의 dedupe 와
   // 동일한 집합(passageId + variantOfId)으로 판정해 안내문 거짓 양성 방지.
   const workspaceUnloadedSelectedCount = useMemo(() => {

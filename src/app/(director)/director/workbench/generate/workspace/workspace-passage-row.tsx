@@ -56,11 +56,13 @@ const MIN_RANGE_CHARS = 40;
 const PREPEND_COUNT_KEY = "smoat:generate:prepend-sentence-count";
 /** 드래그 모션 코치 — 한 번 직접 드래그/편집하면 다시 보지 않는다. */
 const DRAG_COACH_KEY = "smoat:generate:drag-coach-dismissed";
+/** 앞 맥락 추가 모션 코치 — 한 번 사용하면 다시 보지 않는다. */
+const PREPEND_COACH_KEY = "smoat:generate:prepend-coach-dismissed";
 
-function readDragCoachDismissed(): boolean {
+function readCoachDismissed(key: string): boolean {
   if (typeof window === "undefined") return true;
   try {
-    return window.localStorage.getItem(DRAG_COACH_KEY) === "1";
+    return window.localStorage.getItem(key) === "1";
   } catch {
     return true;
   }
@@ -247,13 +249,34 @@ export function WorkspacePassageRow({
   // ── 드래그 모션 코치 (첫 행 1회) — 마운트 후 판정해 하이드레이션 안전 ──
   const [dragCoachVisible, setDragCoachVisible] = useState(false);
   useEffect(() => {
-    if (dragCoach && !readDragCoachDismissed()) setDragCoachVisible(true);
+    if (dragCoach && !readCoachDismissed(DRAG_COACH_KEY)) {
+      setDragCoachVisible(true);
+    }
   }, [dragCoach]);
   const dismissDragCoach = useCallback((persist: boolean) => {
     setDragCoachVisible(false);
     if (!persist) return;
     try {
       window.localStorage.setItem(DRAG_COACH_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  // ── 앞 맥락 추가 모션 코치 — 드래그 코치가 끝난 뒤 이어서 4회 시연 ──
+  const [prependCoachVisible, setPrependCoachVisible] = useState(false);
+  useEffect(() => {
+    if (!dragCoach || dragCoachVisible) return;
+    if (readCoachDismissed(PREPEND_COACH_KEY)) return;
+    setPrependCoachVisible(true);
+    // 4사이클(3.2s×4) 후 자동 정지 — 세션 한정 (사용 시에만 영구 종료).
+    const timer = window.setTimeout(() => setPrependCoachVisible(false), 13_300);
+    return () => window.clearTimeout(timer);
+  }, [dragCoach, dragCoachVisible]);
+  const dismissPrependCoach = useCallback(() => {
+    setPrependCoachVisible(false);
+    try {
+      window.localStorage.setItem(PREPEND_COACH_KEY, "1");
     } catch {
       /* ignore */
     }
@@ -422,9 +445,10 @@ export function WorkspacePassageRow({
 
   const handlePrependClick = useCallback(() => {
     if (busy || preview || disabled) return;
+    dismissPrependCoach();
     avoidRef.current = [];
     void runPrepend([]);
-  }, [busy, preview, disabled, runPrepend]);
+  }, [busy, preview, disabled, runPrepend, dismissPrependCoach]);
 
   // ── 미리보기 액션 ──
   const handleRegenerate = useCallback(() => {
@@ -713,7 +737,7 @@ export function WorkspacePassageRow({
             }
           >
             {/* 앞 맥락 삽입 바 — 본문 첫 글자 바로 위 = 문단이 들어올 자리 */}
-            <div className="flex items-stretch border-b border-dashed border-blue-200/80 bg-blue-50/40">
+            <div className="relative flex items-stretch border-b border-dashed border-blue-200/80 bg-blue-50/40">
               <button
                 type="button"
                 onClick={handlePrependClick}
@@ -771,6 +795,44 @@ export function WorkspacePassageRow({
                   <Plus className="h-3 w-3" aria-hidden="true" />
                 </button>
               </div>
+
+              {/* ── 앞 맥락 모션 코치 — 고스트 커서가 본문에서 올라와 삽입 바를
+                  클릭하는 시연 (4회 후 자동 정지, 사용 시 영구 종료) ── */}
+              {prependCoachVisible && !locked ? (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 z-[2]"
+                >
+                  <div className="ws-prepcoach-wash absolute inset-0 bg-blue-400/20 opacity-0" />
+                  <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-blue-500/70 opacity-0" />
+                  <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-blue-700 opacity-0 drop-shadow-sm" />
+                  <style>{`
+                    @keyframes ws-prepcoach-cursor {
+                      0% { transform: translate(150px, 58px); opacity: 0; }
+                      12% { transform: translate(150px, 58px); opacity: 1; }
+                      45% { transform: translate(0, 0) scale(1); opacity: 1; }
+                      52% { transform: translate(0, 0) scale(0.8); opacity: 1; }
+                      60% { transform: translate(0, 0) scale(1); opacity: 1; }
+                      88% { transform: translate(0, 0) scale(1); opacity: 1; }
+                      100% { transform: translate(0, 0) scale(1); opacity: 0; }
+                    }
+                    @keyframes ws-prepcoach-ring {
+                      0%, 50% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+                      57% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.55); }
+                      78% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
+                      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
+                    }
+                    @keyframes ws-prepcoach-wash {
+                      0%, 48% { opacity: 0; }
+                      57% { opacity: 1; }
+                      82%, 100% { opacity: 0; }
+                    }
+                    .ws-prepcoach-cursor { animation: ws-prepcoach-cursor 3.2s ease-in-out 4; }
+                    .ws-prepcoach-ring { animation: ws-prepcoach-ring 3.2s ease-in-out 4; }
+                    .ws-prepcoach-wash { animation: ws-prepcoach-wash 3.2s ease-in-out 4; }
+                  `}</style>
+                </div>
+              ) : null}
             </div>
 
             <div className="relative">
