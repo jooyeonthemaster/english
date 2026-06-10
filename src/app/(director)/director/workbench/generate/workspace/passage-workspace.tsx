@@ -251,6 +251,13 @@ export function PassageWorkspace({
                   : 0)
               }
               onChangeContent={(content) => api.setContent(row.localId, content)}
+              onPushHistory={() => api.pushHistory(row.localId)}
+              onApplyAi={(content, highlight) =>
+                api.applyAiEdit(row.localId, content, highlight)
+              }
+              onUndo={() => api.undo(row.localId)}
+              onRedo={() => api.redo(row.localId)}
+              onClearHighlights={() => api.clearHighlights(row.localId)}
               onSetRange={(range) => api.setRange(row.localId, range)}
               onSetOverride={(override) =>
                 api.setOverride(row.localId, override)

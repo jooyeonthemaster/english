@@ -213,13 +213,15 @@ export async function runParaphrase({
 export async function runPrepend({
   passageText,
   avoidTexts,
+  sentenceCount,
 }: {
   passageText: string;
   avoidTexts?: string[];
+  sentenceCount?: number;
 }): Promise<PrependResult> {
   const result = await runTransform({
     schema: prependResultSchema,
-    prompt: buildPrependPrompt({ passageText, avoidTexts }),
+    prompt: buildPrependPrompt({ passageText, avoidTexts, sentenceCount }),
     temperature: 0.8,
     logPrefix: "PASSAGE-TRANSFORM-PREPEND",
   });
@@ -229,7 +231,9 @@ export async function runPrepend({
     result.paragraph.trim(),
     passageText,
   );
-  if (!paragraph || paragraph.split(/\s+/).length < 8) {
+  // 1문장 요청이면 짧은 결과도 정상 — 최소 단어 가드를 문장 수에 비례시킨다.
+  const minWords = (sentenceCount ?? 3) <= 1 ? 5 : 8;
+  if (!paragraph || paragraph.split(/\s+/).length < minWords) {
     throw new Error("생성된 문단이 비정상적입니다. 다시 시도해주세요.");
   }
   // 문단 전체가 지문 첫머리 반복인 사고 방지.

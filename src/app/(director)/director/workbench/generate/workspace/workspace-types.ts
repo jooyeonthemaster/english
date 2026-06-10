@@ -18,6 +18,19 @@ export interface RowRange {
   end: number;
 }
 
+/** AI가 만든/바꾼 구간 표시 — content 기준 문자 오프셋. */
+export interface RowHighlight {
+  start: number;
+  end: number;
+  kind: "prepend" | "paraphrase";
+}
+
+/** undo/redo 스냅샷 — 본문과 하이라이트를 함께 복원한다. */
+export interface RowSnapshot {
+  content: string;
+  highlights: RowHighlight[];
+}
+
 export interface WorkspaceRow {
   /** 행 식별자 (클라이언트 전용). */
   localId: string;
@@ -35,6 +48,12 @@ export interface WorkspaceRow {
   /** 지문별 유형/난이도 오버라이드. */
   override: RowOverride | null;
   collapsed: boolean;
+  /** AI가 추가/변형한 구간 (본문 하이라이트 표시용). */
+  highlights: RowHighlight[];
+  /** 되돌리기 스택 (오래된 것 → 최신). */
+  past: RowSnapshot[];
+  /** 다시 실행 스택 (최신 → 오래된 것). */
+  future: RowSnapshot[];
 }
 
 export function makeWorkspaceRow(passage: PassageItem): WorkspaceRow {
@@ -50,7 +69,52 @@ export function makeWorkspaceRow(passage: PassageItem): WorkspaceRow {
     range: null,
     override: null,
     collapsed: false,
+    highlights: [],
+    past: [],
+    future: [],
   };
+}
+
+/**
+ * 본문이 oldStr → newStr 로 바뀌었을 때 하이라이트 오프셋을 보정한다.
+ * 공통 접두/접미를 제외한 단일 변경 구간을 찾아(타이핑·붙여넣기·splice 모두
+ * 이 형태) 구간 앞은 유지, 뒤는 평행이동, 겹치면 살아남은 부분만 남긴다.
+ */
+export function adjustHighlights(
+  oldStr: string,
+  newStr: string,
+  highlights: RowHighlight[],
+): RowHighlight[] {
+  if (highlights.length === 0 || oldStr === newStr) return highlights;
+  let p = 0;
+  const maxP = Math.min(oldStr.length, newStr.length);
+  while (p < maxP && oldStr[p] === newStr[p]) p += 1;
+  let s = 0;
+  while (
+    s < oldStr.length - p &&
+    s < newStr.length - p &&
+    oldStr[oldStr.length - 1 - s] === newStr[newStr.length - 1 - s]
+  )
+    s += 1;
+  const oldEnd = oldStr.length - s;
+  const delta = newStr.length - oldStr.length;
+  const out: RowHighlight[] = [];
+  for (const h of highlights) {
+    if (h.end <= p) {
+      out.push(h);
+    } else if (h.start >= oldEnd) {
+      out.push({ ...h, start: h.start + delta, end: h.end + delta });
+    } else {
+      // 변경 구간과 겹침 — 하이라이트가 변경 구간을 포함하면 늘어난 채 유지
+      // (하이라이트 안에서 타이핑), 일부만 겹치면 살아남은 앞부분만.
+      const start = Math.min(h.start, p);
+      const end = h.end >= oldEnd ? h.end + delta : Math.min(h.end, p);
+      if (end - start >= 4) {
+        out.push({ ...h, start: Math.max(0, start), end });
+      }
+    }
+  }
+  return out;
 }
 
 const normalizeText = (s: string) => s.replace(/\s+/g, " ").trim();

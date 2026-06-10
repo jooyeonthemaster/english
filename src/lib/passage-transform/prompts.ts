@@ -96,10 +96,14 @@ export function buildParaphrasePrompt({
 export function buildPrependPrompt({
   passageText,
   avoidTexts,
+  sentenceCount = 3,
 }: {
   passageText: string;
   avoidTexts?: string[];
+  /** 생성할 앞 문단의 문장 수 (1~5). 교사가 UI에서 직접 지정한다. */
+  sentenceCount?: number;
 }): string {
+  const n = Math.min(5, Math.max(1, Math.round(sentenceCount)));
   const avoidBlock =
     avoidTexts && avoidTexts.length > 0
       ? [
@@ -115,7 +119,7 @@ export function buildPrependPrompt({
     "Write ONE new opening paragraph that will be placed IMMEDIATELY BEFORE the passage below, so the combined text reads as a single, longer, natural passage.",
     "",
     "## Hard rules",
-    "1. 2 to 4 sentences. English only.",
+    `1. The paragraph MUST contain EXACTLY ${n} sentence${n > 1 ? "s" : ""}. Count your sentences before answering — not ${n - 1 || "zero"}, not ${n + 1}: EXACTLY ${n}. This is the teacher's explicit request and overrides everything else. English only.`,
     "2. Same topic, same register/tone, same tense and person as the passage.",
     "3. The LAST sentence of your paragraph must lead so naturally into the passage's FIRST sentence that a reader cannot tell where the seam is.",
     "4. Introduce or set up the passage's main idea — background, a hook, a general observation, or a concrete everyday example.",
@@ -127,7 +131,7 @@ export function buildPrependPrompt({
     "",
     "## Output JSON",
     '{ "paragraph": string, "note": string }',
-    "- paragraph: the new opening paragraph only.",
+    `- paragraph: the new opening paragraph only — EXACTLY ${n} sentence${n > 1 ? "s" : ""}.`,
     "- note: 한국어 한 문장으로 연결 방식 설명 (반드시 한국어, 예: \"일상 사례로 화제를 도입해 첫 문장의 일반 진술로 자연스럽게 이어집니다.\").",
     "",
     "## Example",

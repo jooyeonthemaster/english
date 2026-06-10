@@ -22,6 +22,8 @@ export const transformRequestSchema = z.object({
    * 회피 목록으로 프롬프트에 주입한다.
    */
   avoidTexts: z.array(z.string().max(4_000)).max(5).optional(),
+  /** PREPEND 전용 — 생성할 앞 문단의 문장 수 (1~5, 기본 3). */
+  sentenceCount: z.number().int().min(1).max(5).optional(),
 });
 
 export type TransformRequest = z.infer<typeof transformRequestSchema>;
@@ -57,7 +59,7 @@ export const prependResultSchema = z.object({
   paragraph: z
     .string()
     .describe(
-      "지문 맨 앞에 붙을 새 영어 문단 (2~4문장). 마크다운 없이 본문 그대로.",
+      "지문 맨 앞에 붙을 새 영어 문단 (요청된 문장 수 엄수). 마크다운 없이 본문 그대로.",
     ),
   note: z
     .string()

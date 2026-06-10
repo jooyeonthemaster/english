@@ -44,7 +44,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { mode, passageText, selectedText, avoidTexts } = parsed.data;
+  const { mode, passageText, selectedText, avoidTexts, sentenceCount } =
+    parsed.data;
 
   if (passageText.trim().length < 20) {
     return NextResponse.json(
@@ -124,7 +125,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(response);
     }
 
-    const result = await runPrepend({ passageText, avoidTexts });
+    const result = await runPrepend({ passageText, avoidTexts, sentenceCount });
     const response: TransformResponse = {
       mode,
       text: result.paragraph,
