@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { countWords } from "../generate-page-types";
 import { splitPastedPassages } from "./smart-split";
 import {
@@ -254,10 +255,10 @@ export function PassageRow({
             {restoring ? "복원 중" : "AI 복원"}
             {!restoring && (
               <span
-                title="이 작업은 크레딧 2를 사용합니다"
+                title={`이 작업은 크레딧 ${CREDIT_COSTS.PASSAGE_RESTORATION}을 사용합니다`}
                 className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
               >
-                ◈2
+                ◈{CREDIT_COSTS.PASSAGE_RESTORATION}
               </span>
             )}
           </button>

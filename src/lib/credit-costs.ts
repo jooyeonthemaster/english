@@ -23,7 +23,7 @@ export const CREDIT_COSTS = {
 
   // Content extraction
   TEXT_EXTRACTION: 3,          // PDF/image OCR text extraction (verbatim)
-  PASSAGE_RESTORATION: 2,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성), base; +length tier via costOverride
+  PASSAGE_RESTORATION: 1,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성) — flash-lite 전환으로 인하 (26-06-10)
   PASSAGE_TRANSFORM: 1,        // AI 지문 변형 (문장 재작성·앞 맥락 추가) — flash-lite 경량 호출
 
   // Webtoon

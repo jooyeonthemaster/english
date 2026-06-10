@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { APICallError, generateObject } from "ai";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
+import { googleGenerativeAI } from "@/lib/ai";
 import {
   deductCredits,
   refundCredits,
   InsufficientCreditsError,
 } from "@/lib/credits";
-import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   GROUNDED_SYSTEM_PROMPT,
   GROUNDED_RESTORATION_RULES,
@@ -16,6 +17,14 @@ import {
   buildFallbackM1Restoration,
   hasUnresolvedM1ProblemArtifacts,
 } from "@/lib/extraction/m1-restoration";
+
+// 복원 전용 경량 모델 — 추출 파이프라인 passage-restoration 스테이지와 동일.
+// (scripts/test-restoration-lite.ts 22케이스 검증: lite 가 3.5-flash 보다
+// 정확·안정·2.5배 빠름 — JSON 파손·행 없음)
+const RESTORE_MODEL_ID =
+  process.env.GEMINI_RESTORATION_MODEL?.trim() || "gemini-3.1-flash-lite";
+const RESTORE_TIMEOUT_MS = 45_000;
+const RESTORE_MAX_ATTEMPTS = 2;
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -133,7 +142,7 @@ export async function POST(req: NextRequest) {
 
   const { passageText, answerKey } = parsed.data;
 
-  // ◈2 (PASSAGE_RESTORATION) — same cost as the image·PDF "AI 원문 복원". Deduct
+  // ◈1 (PASSAGE_RESTORATION) — same cost as the image·PDF "AI 원문 복원". Deduct
   // upfront; refund when no real restoration happened (AI error fallback, empty
   // result, FAILED, or NO_RESTORATION_NEEDED).
   let creditTxId: string;
@@ -168,17 +177,46 @@ export async function POST(req: NextRequest) {
 
   let result: RestorationResult;
   try {
-    // Uses the question-generation Gemini path (STANDARD plan) with its built-in
-    // ~60s timeout + retries. Pasted passages are short, so 60s is ample; on any
-    // failure we fall back to deterministic marker-strip below.
-    const { object } = await generateQuestionObject({
-      schema: restorationSchema,
-      prompt: buildRestorationPrompt(passageText, answerKey),
-      generationPlan: "STANDARD",
-      logPrefix: "WORKBENCH-PASTE-RESTORE",
-      maxTokens: 8192,
-    });
-    result = object;
+    // flash-lite 직접 호출 — 45s × 2시도, SDK 내부 재시도 차단(중첩 과금 방지),
+    // 비재시도성 오류는 즉시 중단. passage-transform 과 동일 규율.
+    result = await (async () => {
+      const prompt = buildRestorationPrompt(passageText, answerKey);
+      let lastError: unknown;
+      for (let attempt = 0; attempt < RESTORE_MAX_ATTEMPTS; attempt += 1) {
+        const startedAt = Date.now();
+        try {
+          const { object } = await generateObject({
+            model: googleGenerativeAI(RESTORE_MODEL_ID),
+            schema: restorationSchema,
+            prompt,
+            temperature: 0,
+            maxOutputTokens: 8192,
+            maxRetries: 0,
+            abortSignal: AbortSignal.timeout(RESTORE_TIMEOUT_MS),
+            providerOptions: {
+              google: { thinkingConfig: { thinkingBudget: 0 } },
+            },
+          });
+          console.log(
+            `[WORKBENCH-PASTE-RESTORE] ${RESTORE_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
+          );
+          return object;
+        } catch (err) {
+          lastError = err;
+          console.warn(
+            `[WORKBENCH-PASTE-RESTORE] ${RESTORE_MODEL_ID} attempt ${attempt + 1} failed in ${Date.now() - startedAt}ms:`,
+            err instanceof Error ? err.message : err,
+          );
+          if (APICallError.isInstance(err) && err.isRetryable === false) break;
+          if (attempt < RESTORE_MAX_ATTEMPTS - 1) {
+            await new Promise((resolve) => setTimeout(resolve, 2_000));
+          }
+        }
+      }
+      throw lastError instanceof Error
+        ? lastError
+        : new Error("AI 복원에 실패했습니다.");
+    })();
   } catch (err) {
     // AI call failed → deterministic marker-strip fallback so the user still
     // gets *something* cleaner than the raw paste.

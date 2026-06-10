@@ -9,6 +9,7 @@ import {
   Minus,
   Plus,
   Redo2,
+  RotateCcw,
   Scissors,
   TextCursorInput,
   Undo2,
@@ -18,6 +19,12 @@ import {
 import { toast } from "sonner";
 
 import { Textarea } from "@/components/ui/textarea";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import {
+  RestoreIntroDialog,
+  readRestoreIntroDismissed,
+} from "../intake/restore-intro-dialog";
+import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
 import type { QueueItem } from "../generate-page-types";
 import {
   countWords,
@@ -155,7 +162,10 @@ export function WorkspacePassageRow({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [selection, setSelection] = useState<SelectionState | null>(null);
-  const [busy, setBusy] = useState<"paraphrase" | "prepend" | null>(null);
+  const [busy, setBusy] = useState<"paraphrase" | "prepend" | "restore" | null>(
+    null,
+  );
+  const [restoreIntroOpen, setRestoreIntroOpen] = useState(false);
   const [preview, setPreview] = useState<PreviewState | null>(null);
   // "다시 생성" 회피 목록 — 같은 대상에 대한 직전 결과들.
   const avoidRef = useRef<string[]>([]);
@@ -301,6 +311,59 @@ export function WorkspacePassageRow({
       "첫 문장을 선택했어요 — 다른 문장을 원하면 본문에서 드래그로 선택하세요.",
     );
   }, [locked, row.content]);
+
+  // ── AI 복원 (문제 형태 → 원문) — intake 붙여넣기와 동일 API·플로우 ──
+  const runRestore = useCallback(async () => {
+    setBusy("restore");
+    try {
+      const res = await fetch("/api/workbench/restore-passage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ passageText: row.content.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(data?.error || "복원에 실패했습니다.");
+        return;
+      }
+      const restoredText = formatExtractedTextForDisplay(
+        String(data.restoredText || row.content),
+      );
+      // undo 1단계로 묶어 적용 — 마음에 안 들면 ↶ 한 번으로 원복.
+      endTypingBurst();
+      onPushHistory();
+      onChangeContent(restoredText);
+      setSelection(null);
+      const changeCount = Array.isArray(data.changes) ? data.changes.length : 0;
+      if (data.degraded) {
+        toast.warning("AI 복원에 실패해 마커 제거만 적용했습니다.");
+      } else if (data.status === "NO_RESTORATION_NEEDED") {
+        toast.info("이미 깨끗한 지문이에요 — 크레딧은 차감되지 않았습니다.");
+      } else {
+        toast.success(
+          `복원이 적용됐습니다 (변경 ${changeCount}건) — 되돌리기(↶)로 취소할 수 있어요.`,
+        );
+      }
+      const firstWarning = Array.isArray(data.warnings)
+        ? data.warnings[0]
+        : null;
+      if (firstWarning) toast.info(String(firstWarning));
+    } catch {
+      toast.error("복원 요청 중 오류가 발생했습니다.");
+    } finally {
+      setBusy(null);
+    }
+  }, [row.content, endTypingBurst, onPushHistory, onChangeContent]);
+
+  const handleRestoreClick = useCallback(() => {
+    if (locked || row.content.trim().length < 20) return;
+    if (readRestoreIntroDismissed()) {
+      void runRestore();
+    } else {
+      setRestoreIntroOpen(true);
+    }
+  }, [locked, row.content, runRestore]);
 
   // ── 앞 맥락 추가 ──
   const runPrepend = useCallback(
@@ -516,6 +579,28 @@ export function WorkspacePassageRow({
         <div className="space-y-2 px-2.5 py-2.5">
           {/* ── AI 도구 바 ── */}
           <div className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5">
+            <button
+              type="button"
+              onClick={handleRestoreClick}
+              disabled={locked || row.content.trim().length < 20}
+              title="문제 형태 지문을 원문으로 AI 복원"
+              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {busy === "restore" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              )}
+              {busy === "restore" ? "복원 중" : "AI 복원"}
+              {busy !== "restore" ? (
+                <span
+                  title={`이 작업은 크레딧 ${CREDIT_COSTS.PASSAGE_RESTORATION}을 사용합니다`}
+                  className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
+                >
+                  ◈{CREDIT_COSTS.PASSAGE_RESTORATION}
+                </span>
+              ) : null}
+            </button>
             <button
               type="button"
               onClick={handleTeachParaphrase}
@@ -811,6 +896,14 @@ export function WorkspacePassageRow({
           ) : null}
         </div>
       ) : null}
+
+      {/* AI 복원 첫 사용 안내 — intake 붙여넣기와 동일 다이얼로그/저장 키 */}
+      <RestoreIntroDialog
+        open={restoreIntroOpen}
+        onOpenChange={setRestoreIntroOpen}
+        onConfirm={runRestore}
+        canRestore={!locked && row.content.trim().length >= 20}
+      />
     </div>
   );
 }

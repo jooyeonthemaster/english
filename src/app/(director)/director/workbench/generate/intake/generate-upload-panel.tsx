@@ -324,7 +324,7 @@ export function GenerateUploadPanel({
 
   const outputModeOptions = [
     { v: "verbatim" as const, label: "그대로 추출", badge: "OCR만" },
-    { v: "restored" as const, label: "AI로 원문 복원", badge: "지문당 ◈2" },
+    { v: "restored" as const, label: "AI로 원문 복원", badge: "지문당 ◈1" },
   ];
 
   // 검수 패널 하단에 고정되는 시작 버튼(보드 footer로 주입).
