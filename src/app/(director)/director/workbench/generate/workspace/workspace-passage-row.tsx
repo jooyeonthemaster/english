@@ -7,6 +7,7 @@ import {
   ListStart,
   Loader2,
   Minus,
+  MousePointer2,
   Plus,
   Redo2,
   RotateCcw,
@@ -53,6 +54,17 @@ import {
 const MIN_PARAPHRASE_CHARS = 12;
 const MIN_RANGE_CHARS = 40;
 const PREPEND_COUNT_KEY = "smoat:generate:prepend-sentence-count";
+/** 드래그 모션 코치 — 한 번 직접 드래그/편집하면 다시 보지 않는다. */
+const DRAG_COACH_KEY = "smoat:generate:drag-coach-dismissed";
+
+function readDragCoachDismissed(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    return window.localStorage.getItem(DRAG_COACH_KEY) === "1";
+  } catch {
+    return true;
+  }
+}
 /** 수동 편집 버스트 묶음 간격 — 이 안의 연속 타이핑은 undo 1단계. */
 const TYPING_BURST_MS = 800;
 /**
@@ -125,6 +137,8 @@ function buildHighlightSegments(
 interface WorkspacePassageRowProps {
   index: number;
   row: WorkspaceRow;
+  /** 첫 행에서만 드래그 모션 코치를 보여준다. */
+  dragCoach?: boolean;
   disabled: boolean;
   sessionQueue: QueueItem[];
   savedQuestionCount: number;
@@ -145,6 +159,7 @@ interface WorkspacePassageRowProps {
 export function WorkspacePassageRow({
   index,
   row,
+  dragCoach = false,
   disabled,
   sessionQueue,
   savedQuestionCount,
@@ -229,6 +244,21 @@ export function WorkspacePassageRow({
     avoidRef.current = [];
   }, [row.passageId]);
 
+  // ── 드래그 모션 코치 (첫 행 1회) — 마운트 후 판정해 하이드레이션 안전 ──
+  const [dragCoachVisible, setDragCoachVisible] = useState(false);
+  useEffect(() => {
+    if (dragCoach && !readDragCoachDismissed()) setDragCoachVisible(true);
+  }, [dragCoach]);
+  const dismissDragCoach = useCallback((persist: boolean) => {
+    setDragCoachVisible(false);
+    if (!persist) return;
+    try {
+      window.localStorage.setItem(DRAG_COACH_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   // 타이핑 버스트 타이머 정리.
   useEffect(
     () => () => {
@@ -253,10 +283,12 @@ export function WorkspacePassageRow({
     const end = el.selectionEnd ?? 0;
     if (end - start >= MIN_PARAPHRASE_CHARS) {
       setSelection({ start, end, text: row.content.slice(start, end) });
+      // 직접 드래그에 성공했다 — 코치는 임무 완료, 영구 종료.
+      dismissDragCoach(true);
     } else {
       setSelection(null);
     }
-  }, [row.content, preview]);
+  }, [row.content, preview, dismissDragCoach]);
 
   // ── AI 문장 변형 ──
   const runParaphrase = useCallback(
@@ -774,6 +806,7 @@ export function WorkspacePassageRow({
                 ref={textareaRef}
                 value={row.content}
                 onChange={(e) => {
+                  dismissDragCoach(true);
                   if (row.range) {
                     toast.info("본문이 수정되어 출제 범위가 해제됐습니다.");
                   }
@@ -801,6 +834,63 @@ export function WorkspacePassageRow({
                 }
                 placeholder="지문 본문"
               />
+
+              {/* ── 드래그 모션 코치 — 고스트 커서가 첫 줄을 쓸며 선택
+                  하이라이트가 자라나는 루프. 실제 드래그/편집 시 영구 종료. ── */}
+              {dragCoachVisible && !editorLocked && !disabled ? (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 top-0 z-[2]"
+                >
+                  <div className="relative mx-3 mt-2 h-[21px]">
+                    <div className="ws-dragcoach-band absolute left-0 top-0 h-full rounded-[3px] bg-blue-500/25 ring-1 ring-inset ring-blue-400/30" />
+                    <MousePointer2
+                      className="ws-dragcoach-cursor absolute top-[3px] h-4 w-4 text-blue-700 drop-shadow-sm"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ws-dragcoach-chip pointer-events-auto mx-3 mt-1.5 inline-flex items-center gap-1.5 rounded-md border border-blue-300 bg-white py-1 pl-2.5 pr-1 text-[11.5px] font-bold text-blue-700 shadow-md shadow-blue-100/70">
+                    <TextCursorInput
+                      className="h-3.5 w-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
+                    이렇게 문장을 드래그해 보세요 — 변형·범위 지정 메뉴가 떠요
+                    <button
+                      type="button"
+                      onClick={() => dismissDragCoach(true)}
+                      className="ml-0.5 flex h-5 w-5 items-center justify-center rounded text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                      title="알겠어요 — 다시 보지 않기"
+                    >
+                      <X className="h-3 w-3" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <style>{`
+                    @keyframes ws-dragcoach-band {
+                      0%, 8% { width: 0; opacity: 0; }
+                      12% { width: 0; opacity: 1; }
+                      46% { width: 58%; opacity: 1; }
+                      86% { width: 58%; opacity: 1; }
+                      96%, 100% { width: 58%; opacity: 0; }
+                    }
+                    @keyframes ws-dragcoach-cursor {
+                      0%, 8% { left: 0; opacity: 0; }
+                      12% { left: 0; opacity: 1; }
+                      46% { left: 58%; opacity: 1; }
+                      86% { left: 58%; opacity: 1; }
+                      96%, 100% { left: 58%; opacity: 0; }
+                    }
+                    @keyframes ws-dragcoach-chip {
+                      0%, 44% { opacity: 0; transform: translateY(3px); }
+                      52% { opacity: 1; transform: translateY(0); }
+                      90% { opacity: 1; }
+                      98%, 100% { opacity: 0; }
+                    }
+                    .ws-dragcoach-band { animation: ws-dragcoach-band 4.4s ease-in-out infinite; }
+                    .ws-dragcoach-cursor { animation: ws-dragcoach-cursor 4.4s ease-in-out infinite; }
+                    .ws-dragcoach-chip { animation: ws-dragcoach-chip 4.4s ease-in-out infinite; }
+                  `}</style>
+                </div>
+              ) : null}
             </div>
           </div>
 

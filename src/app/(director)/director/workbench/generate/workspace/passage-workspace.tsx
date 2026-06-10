@@ -233,6 +233,7 @@ export function PassageWorkspace({
               key={row.localId}
               index={index}
               row={row}
+              dragCoach={index === 0}
               disabled={generating}
               sessionQueue={sessionQueue}
               savedQuestionCount={
