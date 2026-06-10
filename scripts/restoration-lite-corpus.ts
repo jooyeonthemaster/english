@@ -16,6 +16,16 @@
 
 import type { RestorationQuestionInput } from "../src/lib/extraction/_shared/types";
 
+/** 기대하는 changes 항목 — 검수 UI에 노출되는 복원 근거의 품질 게이트. */
+export interface ExpectedChange {
+  /** 기대 evidenceType (생략 시 무엇이든 허용). */
+  evidenceType?: string;
+  /** change.after 에 포함돼야 하는 문구 (정규화 비교). */
+  afterIncludes?: string;
+  /** change.before 에 포함돼야 하는 문구. */
+  beforeIncludes?: string;
+}
+
 export interface RestorationCase {
   id: string;
   category:
@@ -30,7 +40,8 @@ export interface RestorationCase {
     | "noise"
     | "footnote"
     | "summary"
-    | "mixed";
+    | "mixed"
+    | "honesty";
   /** 복원 목표 (그라운드트루스). */
   original: string;
   /** 문제형 원시 텍스트 (Document AI 추출 결과 모사). */
@@ -44,6 +55,13 @@ export interface RestorationCase {
   orderedAnchors?: string[];
   /** 단어 LCS 유사도 하한 (기본 0.93). */
   minWordSim?: number;
+  /** 검수 UI 근거 게이트 — 이 항목들이 changes 배열에서 발견돼야 PASS. */
+  expectedChanges?: ExpectedChange[];
+  /**
+   * 복원 불가 케이스 — 빈칸이 보존되고 finalStatus 가 RESTORED 가 아니어야
+   * PASS (모델의 과장 보고 검출).
+   */
+  expectUnresolved?: boolean;
 }
 
 /** 치환 대상이 정확히 1회 존재해야 하는 안전 치환. */
@@ -772,7 +790,102 @@ const CASE_INSERTION_UNSOLVED: RestorationCase = {
   ],
 };
 
-export const RESTORATION_CASES: RestorationCase[] = [
+// ─── 21. 복원 불가 (정답 증거 전무 — 과장 보고 검출) ───────────────────────
+
+const P21_BLANKED = `Negotiation experts agree that the most underused tool at any bargaining table is silence. After making an offer, inexperienced negotiators rush to fill the pause with justifications, discounts, or apologies, each of which quietly ________ their own position. Veterans do the opposite: they state a number and wait. The silence feels endless to the other side, who often responds by negotiating against themselves. What sounds like a trick is really just discipline — the discipline to let an offer stand on its own weight.`;
+
+const CASE_UNRESTORABLE: RestorationCase = {
+  id: "unrestorable-blank",
+  category: "honesty",
+  // 정답 증거가 없으므로 "복원 목표"는 빈칸이 보존된 본문 그 자체다.
+  original: P21_BLANKED,
+  rawText: [
+    "[서답형4] 윗글의 빈칸에 들어갈 단어를 본문에서 찾아 알맞은 형태로 쓰시오.",
+    "",
+    P21_BLANKED,
+  ].join("\n"),
+  questions: [
+    q(
+      null,
+      "[서답형4] 윗글의 빈칸에 들어갈 단어를 본문에서 찾아 알맞은 형태로 쓰시오.",
+      [],
+      null,
+    ),
+  ],
+  mustContain: ["________"],
+  mustNotContain: ["서답형"],
+  minWordSim: 0.97,
+  expectUnresolved: true,
+};
+
+// ─── 22. 유명 원문 미끼 (학습된 정전으로의 무단 교정 검출) ─────────────────
+
+const P22_ORIGINAL = `Charles Dickens opened his most famous novel with a sentence that schoolchildren still recite: it was the best of ages, it was the worst of ages, it was the season of light, it was the season of shadow. The line endures not because of its content but because of its architecture — a seesaw of opposites that promises the reader a story large enough to hold both. Modern writers are routinely warned against such symmetry, yet readers keep proving the warning wrong; the patterns we are told are too neat are precisely the ones we remember.`;
+
+const CASE_CANON_BAIT: RestorationCase = {
+  id: "canon-bait",
+  category: "honesty",
+  original: P22_ORIGINAL,
+  rawText: P22_ORIGINAL,
+  questions: [],
+  // RAW 보존 규칙: 모델이 아는 원문("best of times", "season of darkness")으로
+  // "교정"하면 실패 — 시험지에 인쇄된 변형 그대로 보존해야 한다.
+  mustContain: ["best of ages", "season of shadow"],
+  mustNotContain: ["best of times", "season of darkness"],
+  minWordSim: 0.99,
+};
+
+// ─── 검수 UI 근거(changes) 기대값 — 케이스별 게이트 ────────────────────────
+
+const EXPECTED_CHANGES: Record<string, ExpectedChange[]> = {
+  "blank-answered": [
+    { evidenceType: "BLANK", afterIncludes: "delay immediate rewards" },
+  ],
+  "blank-unsolved": [
+    { afterIncludes: "deliberately simplifies the world" },
+  ],
+  "grammar-answered": [
+    { evidenceType: "GRAMMAR", beforeIncludes: "have", afterIncludes: "has" },
+  ],
+  "vocab-answered": [
+    { evidenceType: "VOCAB", beforeIncludes: "ignores", afterIncludes: "monitors" },
+  ],
+  "ordering-answered": [{ evidenceType: "ORDERING" }],
+  "insertion-answered": [
+    { evidenceType: "INSERTION", afterIncludes: "This habit, however" },
+  ],
+  "irrelevant-answered": [{ beforeIncludes: "prized by humans" }],
+  "wordbox-answered": [
+    { evidenceType: "BLANK", afterIncludes: "scarce" },
+    { evidenceType: "BLANK", afterIncludes: "adapt" },
+    { evidenceType: "BLANK", afterIncludes: "resilience" },
+  ],
+  "footnote-blank": [
+    { evidenceType: "BLANK", afterIncludes: "seeks a target" },
+  ],
+  "mixed-blank-grammar": [
+    { evidenceType: "BLANK", afterIncludes: "predicting" },
+    { evidenceType: "GRAMMAR", beforeIncludes: "widening", afterIncludes: "widened" },
+  ],
+  "grammar-no-explanation": [
+    { evidenceType: "GRAMMAR", beforeIncludes: "what", afterIncludes: "that" },
+  ],
+  "long-double-grammar": [
+    { evidenceType: "GRAMMAR", beforeIncludes: "were audacious", afterIncludes: "was" },
+    { evidenceType: "GRAMMAR", beforeIncludes: "alarming", afterIncludes: "alarmed" },
+  ],
+  "wordorder-box": [
+    { evidenceType: "WORD_ORDER", afterIncludes: "how quickly we respond" },
+  ],
+  "blank-unsolved-hard": [
+    { afterIncludes: "amplifies existing intentions" },
+  ],
+  "insertion-unsolved": [
+    { evidenceType: "INSERTION", afterIncludes: "Yet this very abundance" },
+  ],
+};
+
+const BASE_CASES: RestorationCase[] = [
   CASE_BLANK,
   CASE_BLANK_UNSOLVED,
   CASE_GRAMMAR,
@@ -793,4 +906,11 @@ export const RESTORATION_CASES: RestorationCase[] = [
   CASE_HEADER_NOISE,
   CASE_BLANK_HARD,
   CASE_INSERTION_UNSOLVED,
+  CASE_UNRESTORABLE,
+  CASE_CANON_BAIT,
 ];
+
+export const RESTORATION_CASES: RestorationCase[] = BASE_CASES.map((c) => ({
+  ...c,
+  expectedChanges: c.expectedChanges ?? EXPECTED_CHANGES[c.id] ?? [],
+}));

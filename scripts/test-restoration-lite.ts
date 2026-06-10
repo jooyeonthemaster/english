@@ -261,6 +261,17 @@ function textHas(haystack: string, needle: string): boolean {
   return normText(haystack).includes(normText(needle));
 }
 
+interface ModelChange {
+  before: string;
+  after: string;
+  reason: string;
+  evidenceType: string;
+}
+
+/** 단어 경계 인지 contains — "was" 가 "wasteland" 에 매칭되는 사고 방지. */
+const wordHas = (haystack: string, needle: string): boolean =>
+  ` ${normText(haystack)} `.includes(` ${normText(needle)} `);
+
 interface CaseScore {
   caseId: string;
   category: string;
@@ -271,6 +282,14 @@ interface CaseScore {
   failedMust: string[];
   failedMustNot: string[];
   anchorsOk: boolean;
+  /** 검수 UI 근거(changes) 게이트 결과. */
+  changesOk: boolean;
+  failedChanges: string[];
+  changeCount: number;
+  /** 근거 reason 이 캐노니컬 포맷(Q… 접두)을 따르는 비율 (참고 지표). */
+  reasonCanonicalRate: number;
+  /** 복원 불가 케이스의 정직성 (PARTIAL/FAILED 보고 여부). */
+  honestyOk: boolean;
   modelStatus: string;
   latencyMs: number;
   promptTokens: number;
@@ -278,6 +297,7 @@ interface CaseScore {
   restoredPreview: string;
   /** 육안 검수용 전문 (JSON 저장에만 포함). */
   restoredFull: string;
+  modelChanges: ModelChange[];
   error?: string;
 }
 
@@ -286,13 +306,15 @@ function scoreCase(
   restored: string,
   parseOk: boolean,
   modelStatus: string,
+  changes: ModelChange[],
   latencyMs: number,
   usage: GeminiUsage,
   error?: string,
 ): CaseScore {
   const markersClean =
     !hasM1ProblemArtifacts(restored) &&
-    !/_{3,}/.test(restored) &&
+    // 복원 불가 케이스는 빈칸이 '보존돼야' 정상이므로 밑줄 검사를 제외.
+    (c.expectUnresolved ? true : !/_{3,}/.test(restored)) &&
     !/[①-⑩]/.test(restored);
   const failedMust = c.mustContain.filter((m) => !textHas(restored, m));
   const failedMustNot = c.mustNotContain.filter((m) => textHas(restored, m));
@@ -311,12 +333,44 @@ function scoreCase(
   }
   const wordSim = wordSimilarity(c.original, restored);
   const minSim = c.minWordSim ?? 0.93;
+
+  // ── 검수 UI 근거(changes) 게이트 ──
+  const failedChanges: string[] = [];
+  for (const exp of c.expectedChanges ?? []) {
+    const found = changes.some(
+      (ch) =>
+        (!exp.evidenceType || ch.evidenceType === exp.evidenceType) &&
+        (!exp.afterIncludes || wordHas(ch.after, exp.afterIncludes)) &&
+        (!exp.beforeIncludes || wordHas(ch.before, exp.beforeIncludes)),
+    );
+    if (!found) {
+      failedChanges.push(
+        `${exp.evidenceType ?? "*"}: ${exp.beforeIncludes ?? ""}→${exp.afterIncludes ?? ""}`,
+      );
+    }
+  }
+  const changesOk = failedChanges.length === 0;
+  // 캐노니컬 reason 포맷 준수율 (Q… 접두) — 게이트가 아닌 참고 지표.
+  const reasonCanonicalRate =
+    changes.length === 0
+      ? 1
+      : Math.round(
+          (changes.filter((ch) => /^Q\S{0,12}(:|\sanswer)/.test(ch.reason.trim()))
+            .length /
+            changes.length) *
+            100,
+        ) / 100;
+  // 복원 불가 케이스 — RESTORED 로 과장 보고하면 실패.
+  const honestyOk = c.expectUnresolved ? modelStatus !== "RESTORED" : true;
+
   const pass =
     parseOk &&
     markersClean &&
     failedMust.length === 0 &&
     failedMustNot.length === 0 &&
     anchorsOk &&
+    changesOk &&
+    honestyOk &&
     wordSim >= minSim;
   return {
     caseId: c.id,
@@ -328,6 +382,11 @@ function scoreCase(
     failedMust,
     failedMustNot,
     anchorsOk,
+    changesOk,
+    failedChanges,
+    changeCount: changes.length,
+    reasonCanonicalRate,
+    honestyOk,
     modelStatus,
     latencyMs,
     promptTokens: usage.promptTokenCount ?? 0,
@@ -335,6 +394,7 @@ function scoreCase(
       (usage.candidatesTokenCount ?? 0) + (usage.thoughtsTokenCount ?? 0),
     restoredPreview: restored.slice(0, 160),
     restoredFull: restored,
+    modelChanges: changes,
     error,
   };
 }
@@ -367,12 +427,19 @@ async function runVariant(
         let restored = "";
         let parseOk = false;
         let modelStatus = "PARSE_FAIL";
+        let changes: ModelChange[] = [];
         try {
           const parsed = groundedRestorationResponseSchema.parse(
             JSON.parse(sanitizeJson(r.rawText)),
           );
           parseOk = true;
           modelStatus = parsed.finalStatus;
+          changes = (parsed.aiRestoration.changes ?? []).map((ch) => ({
+            before: ch.before,
+            after: ch.after,
+            reason: ch.reason,
+            evidenceType: ch.evidenceType,
+          }));
           restored = stripProblemMarkers(
             (
               parsed.finalRestoredText.trim() ||
@@ -388,6 +455,7 @@ async function runVariant(
           restored,
           parseOk,
           modelStatus,
+          changes,
           r.ms,
           r.usage,
         );
@@ -397,6 +465,7 @@ async function runVariant(
           "",
           false,
           "CALL_FAIL",
+          [],
           0,
           {},
           err instanceof Error ? err.message : String(err),
@@ -406,6 +475,7 @@ async function runVariant(
       console.log(
         `  [${s.pass ? "PASS" : "FAIL"}] ${c.id.padEnd(22)} sim=${s.wordSim.toFixed(3)} markers=${s.markersClean ? "ok" : "DIRTY"} ` +
           `must-=${s.failedMust.length} not+=${s.failedMustNot.length} anchors=${s.anchorsOk ? "ok" : "BAD"} ` +
+          `chg=${s.changesOk ? "ok" : "BAD"}(${s.changeCount},Q${Math.round(s.reasonCanonicalRate * 100)}%) honest=${s.honestyOk ? "ok" : "LIE"} ` +
           `status=${s.modelStatus} ${s.latencyMs}ms ${s.promptTokens}/${s.outputTokens}tok` +
           (s.error ? ` ERROR=${s.error.slice(0, 80)}` : ""),
       );
@@ -430,8 +500,15 @@ function summarize(name: string, model: string, scores: CaseScore[]): void {
   // 단가(26-06 기준): 3.5-flash $1.50/$9.00, 3.1-flash-lite $0.25/$1.50 (per 1M)
   const [inP, outP] = model.includes("lite") ? [0.25, 1.5] : [1.5, 9.0];
   const costPerRestore = (avgIn * inP + avgOut * outP) / 1_000_000;
+  const changesPassed = scores.filter((s) => s.changesOk).length;
+  const avgCanonical =
+    scores
+      .filter((s) => s.changeCount > 0)
+      .reduce((a, s) => a + s.reasonCanonicalRate, 0) /
+    Math.max(1, scores.filter((s) => s.changeCount > 0).length);
   console.log(
     `\n  ◆ ${name}: ${passed}/${scores.length} PASS · avg sim ${avgSim.toFixed(3)} · parse fail ${parseFails} · ` +
+      `근거 ${changesPassed}/${scores.length} (캐노니컬 reason ${Math.round(avgCanonical * 100)}%) · ` +
       `${Math.round(avgMs)}ms · ${Math.round(avgIn)}in/${Math.round(avgOut)}out tok · $${costPerRestore.toFixed(5)}/건`,
   );
   for (const s of scores.filter((x) => !x.pass)) {
@@ -445,6 +522,8 @@ function summarize(name: string, model: string, scores: CaseScore[]): void {
             ? `잔존[${s.failedMustNot.join(" | ")}]`
             : null,
           !s.anchorsOk ? "순서불일치" : null,
+          !s.changesOk ? `근거누락[${s.failedChanges.join(" | ")}]` : null,
+          !s.honestyOk ? `과장보고(${s.modelStatus})` : null,
           s.wordSim < 0.93 ? `sim=${s.wordSim}` : null,
           s.error ? `호출실패:${s.error.slice(0, 60)}` : null,
         ]
