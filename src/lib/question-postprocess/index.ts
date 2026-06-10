@@ -24,7 +24,7 @@ import { processSentenceInsert } from "./processors/sentence-insert";
 import { processSynonym } from "./processors/synonym";
 import { processVocabChoice } from "./processors/vocab-choice";
 import { normalizeWrongOptionExplanations } from "@/lib/question-wrong-option-explanations";
-import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import {
   getCircledNumbers,
   PASSTHROUGH_TYPES,
@@ -187,7 +187,7 @@ function normalizeOptionsForVisibleType(
   typeId: string | undefined,
   options: unknown,
 ): unknown {
-  if (typeId === "SENTENCE_INSERT") return buildCanonicalSentenceInsertOptions();
+  if (typeId === "SENTENCE_INSERT") return buildCanonicalSentenceInsertOptionsFrom(options);
   if (!typeId || !VOCAB_OPTION_TEXT_TYPES.has(typeId)) return options;
   if (!Array.isArray(options)) return options;
 

@@ -14,6 +14,32 @@ export function buildCanonicalSentenceInsertOptions(count = 5): SentenceInsertOp
   }));
 }
 
+/**
+ * Marker count is configurable (5~8). Saved SENTENCE_INSERT options are
+ * server-built canonical markers, so their length is the source of truth when
+ * rebuilding canonical options; anything outside the range falls back to 5.
+ */
+export function sentenceInsertOptionCountFrom(options: unknown): number {
+  let length = 0;
+  if (Array.isArray(options)) {
+    length = options.length;
+  } else if (typeof options === "string") {
+    try {
+      const parsed = JSON.parse(options);
+      if (Array.isArray(parsed)) length = parsed.length;
+    } catch {
+      length = 0;
+    }
+  }
+  return length >= 5 && length <= 8 ? length : 5;
+}
+
+export function buildCanonicalSentenceInsertOptionsFrom(
+  options: unknown,
+): SentenceInsertOption[] {
+  return buildCanonicalSentenceInsertOptions(sentenceInsertOptionCountFrom(options));
+}
+
 export function sentenceInsertOptionMarkerIndex(value: unknown): number | null {
   const text = normalizeMarkerText(value);
   if (!text) return null;
@@ -46,8 +72,9 @@ export function sentenceInsertAnswerMarkerIndex(value: unknown): number | null {
 }
 
 export function normalizeSentenceInsertAnswer(value: unknown): string {
+  // Marker count is configurable (5~8); accept any canonical marker index.
   const markerIndex = sentenceInsertAnswerMarkerIndex(value);
-  if (markerIndex !== null && markerIndex >= 0 && markerIndex < 5) {
+  if (markerIndex !== null && markerIndex >= 0 && markerIndex < 10) {
     return String(markerIndex + 1);
   }
   return normalizeMarkerText(value).toLowerCase();

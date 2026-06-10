@@ -195,7 +195,6 @@ function structuredQuestionTextForCard(
 
   const parts: string[] = [];
   pushStructuredTextPart(parts, structuredData.direction);
-  if (structuredData.matchType) parts.push(`[type: ${String(structuredData.matchType)}]`);
   if (structuredData.givenSentence) parts.push(`[given] ${String(structuredData.givenSentence)}`);
   pushStructuredTextPart(parts, structuredData.passageWithBlank);
   pushStructuredTextPart(parts, structuredData.passageWithMarkers);

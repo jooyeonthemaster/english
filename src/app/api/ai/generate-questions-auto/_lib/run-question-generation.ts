@@ -238,6 +238,13 @@ export async function runQuestionGeneration(
         summaryCompleteBlankCount,
         contentMatchOptionCount,
         contentMatchAnswerCount,
+        vocabChoiceMarkerCount,
+        vocabChoiceAnswerCount,
+        sentenceInsertSlotCount,
+        antonymPairCount,
+        blankInferenceBlankCount,
+        genericOptionCount,
+        genericAnswerCount,
       } = resolvedTypeSettings;
 
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
@@ -256,6 +263,8 @@ export async function runQuestionGeneration(
           grammarMarkerCount,
           grammarAnswerCount,
           grammarCorrectionErrorCount,
+          antonymPairCount,
+          blankInferenceBlankCount,
           requestedDifficulty: diffLabel,
         },
       );
@@ -271,6 +280,13 @@ export async function runQuestionGeneration(
             summaryCompleteBlankCount,
             contentMatchOptionCount,
             contentMatchAnswerCount,
+            vocabChoiceMarkerCount,
+            vocabChoiceAnswerCount,
+            sentenceInsertSlotCount,
+            antonymPairCount,
+            blankInferenceBlankCount,
+            genericOptionCount,
+            genericAnswerCount,
           })
         : isStructured
           ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
@@ -334,8 +350,11 @@ export async function runQuestionGeneration(
         const qs: Record<string, unknown>[] = [];
 
         for (const q of generatedQuestions) {
+          // 과거에는 "BLANK_INFERENCE 의 typeSettings 프롬프트 존재 = 부정-부정"이었지만,
+          // 언어/다중빈칸 블록이 생기면서 그 프록시가 깨졌다. resolved 플래그로만 판정한다.
           const normalizedAiQuestion =
-            subType === "BLANK_INFERENCE" && typeSettingsPrompt
+            subType === "BLANK_INFERENCE" &&
+            resolvedTypeSettings.blankInferenceDoubleNegative
               ? {
                   ...q,
                   blankAnswerMode: "DOUBLE_NEGATIVE",
@@ -398,6 +417,15 @@ export async function runQuestionGeneration(
             grammarMarkerCount,
             grammarAnswerCount,
             grammarCorrectionErrorCount,
+            stemLanguage: resolvedTypeSettings.stemLanguage,
+            optionLanguage: resolvedTypeSettings.optionLanguage,
+            vocabChoiceMarkerCount,
+            vocabChoiceAnswerCount,
+            sentenceInsertSlotCount,
+            antonymPairCount,
+            blankInferenceBlankCount,
+            genericOptionCount,
+            genericAnswerCount,
           });
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",

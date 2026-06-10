@@ -222,7 +222,9 @@ function normalizeVocabOptionsForDisplay(question: any): any {
   return changed ? { ...question, options } : question;
 }
 
-const VOCAB_CHOICE_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)"] as const;
+const VOCAB_CHOICE_LABELS = [
+  "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)",
+] as const;
 
 function normalizeVocabChoiceDisplayKey(value: unknown, fallbackIndex?: number): string {
   const text = normalizeDisplayText(value);
@@ -231,16 +233,16 @@ function normalizeVocabChoiceDisplayKey(value: unknown, fallbackIndex?: number):
       ? String.fromCharCode(97 + fallbackIndex)
       : "";
   if (!text) return fallback;
-  const alpha = text.match(/^[\(\[]?\s*([a-eA-E])\s*[\)\].:]?$/);
+  const alpha = text.match(/^[\(\[]?\s*([a-jA-J])\s*[\)\].:]?$/);
   if (alpha) return alpha[1].toLowerCase();
-  const numeric = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  const numeric = text.match(/^[\(\[]?\s*(10|[1-9])\s*[\)\].:]?$/);
   if (numeric) return String.fromCharCode(96 + Number(numeric[1]));
   return fallback;
 }
 
 function vocabChoiceRenderedKeys(passageWithMarkers: string): Set<string> {
   const keys = new Set<string>();
-  const regex = /__\(([a-eA-E])\)\s+[^_]+__/g;
+  const regex = /__\(([a-jA-J])\)\s+[^_]+__/g;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(passageWithMarkers))) {
     keys.add(match[1].toLowerCase());

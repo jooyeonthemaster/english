@@ -22,7 +22,7 @@ import {
   getVisibleQuestionTags,
   isQuestionGenerationPlanTag,
 } from "@/lib/question-generation-plans";
-import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EditHeader } from "./question-edit-client/header";
@@ -121,7 +121,7 @@ export function QuestionEditClient({
 
   const initialOptions: Option[] =
     question.subType === "SENTENCE_INSERT"
-      ? buildCanonicalSentenceInsertOptions()
+      ? buildCanonicalSentenceInsertOptionsFrom(question.options)
       : question.options ? JSON.parse(question.options) : [];
   const initialTags: string[] = getVisibleQuestionTags(
     question.tags ? JSON.parse(question.tags) : [],

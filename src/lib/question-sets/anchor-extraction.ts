@@ -20,8 +20,8 @@ const GRAMMAR_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const
 const GRAMMAR_LABELS = [
   "(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)",
 ] as const;
-const VOCAB_KEYS = ["a", "b", "c", "d", "e"] as const;
-const VOCAB_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)"] as const;
+const VOCAB_KEYS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] as const;
+const VOCAB_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"] as const;
 
 function normalizeGrammarKey(value: unknown): string {
   const text = norm(value);
@@ -53,9 +53,9 @@ function normalizeVocabKey(value: unknown): string {
   if (circledIndex >= 0 && circledIndex < VOCAB_KEYS.length) {
     return VOCAB_KEYS[circledIndex];
   }
-  const alpha = text.match(/^[([]?\s*([a-eA-E])\s*[)\].:]?$/);
+  const alpha = text.match(/^[([]?\s*([a-jA-J])\s*[)\].:]?$/);
   if (alpha) return alpha[1].toLowerCase();
-  const numeric = text.match(/^[([]?\s*([1-5])\s*[)\].:]?$/);
+  const numeric = text.match(/^[([]?\s*(10|[1-9])\s*[)\].:]?$/);
   if (numeric) return VOCAB_KEYS[Number(numeric[1]) - 1] ?? "";
   return "";
 }

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { requireAuth, getAcademyId } from "./_helpers";
-import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import type {
   WorkbenchQuestionFilters,
   ActionResult,
@@ -63,7 +63,7 @@ function normalizeOptionsForSubtype(
   options: SaveQuestionData["options"] | string | undefined,
 ) {
   if (subType === "SENTENCE_INSERT") {
-    return buildCanonicalSentenceInsertOptions();
+    return buildCanonicalSentenceInsertOptionsFrom(options);
   }
   return options;
 }

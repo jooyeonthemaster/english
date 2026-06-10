@@ -96,7 +96,7 @@ export function formatIrrelevantPassageMarkers(
 }
 
 function formatVocabChoiceUnderlineContent(content: string): string {
-  const match = content.match(/^\s*\(([A-Ea-e])\)\s+(.+)$/);
+  const match = content.match(/^\s*\(([A-Ja-j])\)\s+(.+)$/);
   if (!match) return content;
 
   const markerIndex = letterMarkerIndex(match[1]);

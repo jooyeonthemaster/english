@@ -16,7 +16,7 @@ import {
   normalizePassageText,
   normalizeQuestionText,
 } from "./text-normalization";
-import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import { getCircledNumber } from "@/lib/question-postprocess/types";
 import { splitSentenceInsertGivenBlock } from "./option-display";
 import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-correction-display";
@@ -119,7 +119,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   void _existingItems;
   const options =
     question.subType === "SENTENCE_INSERT"
-      ? buildCanonicalSentenceInsertOptions()
+      ? buildCanonicalSentenceInsertOptionsFrom(question.options)
       : parseOptions(question.options);
   const localId = makeLocalId(question.id);
   const isSubjective = options.length === 0;

@@ -1,13 +1,29 @@
-export interface BlankInferenceGenerationSettings {
-  doubleNegative?: boolean;
+export type QuestionGenerationLanguage = "ko" | "en";
+
+export interface QuestionLanguageGenerationSettings {
+  /** Language for the visible stem/direction. Defaults are type-specific. */
+  stemLanguage?: QuestionGenerationLanguage;
+  /** Language for visible multiple-choice option text. Defaults are type-specific. */
+  optionLanguage?: QuestionGenerationLanguage;
 }
 
-export interface IrrelevantGenerationSettings {
+export interface BlankInferenceGenerationSettings extends QuestionLanguageGenerationSettings {
+  doubleNegative?: boolean;
+  /**
+   * Number of passage blanks. 1 = the standard single-blank item (default,
+   * untouched pipeline). 2~3 = combination-option variant: blanks (A)/(B)/(C)
+   * with five blank-value combination options. doubleNegative applies only
+   * to the single-blank mode.
+   */
+  blankCount?: number;
+}
+
+export interface IrrelevantGenerationSettings extends QuestionLanguageGenerationSettings {
   /** Number of displayed slots. One slot is an inserted irrelevant sentence. Default 5. */
   slotCount?: number;
 }
 
-export interface GrammarErrorGenerationSettings {
+export interface GrammarErrorGenerationSettings extends QuestionLanguageGenerationSettings {
   /** Number of grammar judgment positions to mark. Range 5~10. Default 5. */
   markerCount?: number;
   /** Number of actually incorrect marked expressions. Range 1~markerCount. Default 1. */
@@ -16,17 +32,41 @@ export interface GrammarErrorGenerationSettings {
   errorCount?: number;
 }
 
-export interface GrammarCorrectionGenerationSettings {
+export interface VocabChoiceGenerationSettings extends QuestionLanguageGenerationSettings {
+  /** Number of underlined vocabulary positions. Range 5~10. Default 5. */
+  markerCount?: number;
+  /** Number of contextually inappropriate words (= answers). Range 1~markerCount. Default 1. */
+  answerCount?: number;
+}
+
+export interface SentenceInsertGenerationSettings extends QuestionLanguageGenerationSettings {
+  /** Number of insertion-position markers (①~). The answer is always one gap. Range 5~8. Default 5. */
+  slotCount?: number;
+}
+
+export interface AntonymGenerationSettings extends QuestionLanguageGenerationSettings {
+  /** Number of word-antonym pairs (A)~. Exactly one pair is wrong. Range 5~10. Default 5. */
+  pairCount?: number;
+}
+
+export interface GenericOptionCountGenerationSettings extends QuestionLanguageGenerationSettings {
+  /** Number of free-text options. Range 4~8. Default 5. */
+  optionCount?: number;
+  /** Number of correct options ("모두 고르시오" variant). Range 1~optionCount-1. Default 1. */
+  answerCount?: number;
+}
+
+export interface GrammarCorrectionGenerationSettings extends QuestionLanguageGenerationSettings {
   /** Number of wrong underlined sentence/clause segments. Range 1~5. Default 1. */
   errorCount?: number;
 }
 
-export interface SummaryCompleteMcGenerationSettings {
+export interface SummaryCompleteMcGenerationSettings extends QuestionLanguageGenerationSettings {
   /** Number of summary blanks. Range 2~4. Default 2. */
   blankCount?: number;
 }
 
-export interface ContentMatchGenerationSettings {
+export interface ContentMatchGenerationSettings extends QuestionLanguageGenerationSettings {
   /** Number of displayed statement options. Range 5~12. Default 5. */
   optionCount?: number;
   /** Number of correct statements. Range 1~optionCount. Default 1. */
@@ -35,7 +75,7 @@ export interface ContentMatchGenerationSettings {
   correctAnswerCount?: number;
 }
 
-export interface SummaryCompleteGenerationSettings {
+export interface SummaryCompleteGenerationSettings extends QuestionLanguageGenerationSettings {
   /** Number of short-answer summary blanks. Range 1~5. Default 2. */
   blankCount?: number;
   /** Legacy analysis field name; interpreted as blankCount. */
@@ -68,8 +108,105 @@ export const GRAMMAR_ERROR_COUNT_DEFAULT = GRAMMAR_ANSWER_COUNT_DEFAULT;
 export const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
 export const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
 export const GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT = 1;
+export const VOCAB_CHOICE_MARKER_COUNT_MIN = 5;
+export const VOCAB_CHOICE_MARKER_COUNT_MAX = 10;
+export const VOCAB_CHOICE_MARKER_COUNT_DEFAULT = 5;
+export const VOCAB_CHOICE_ANSWER_COUNT_MIN = 1;
+export const VOCAB_CHOICE_ANSWER_COUNT_MAX = VOCAB_CHOICE_MARKER_COUNT_MAX;
+export const VOCAB_CHOICE_ANSWER_COUNT_DEFAULT = 1;
+export const GENERIC_OPTION_COUNT_MIN = 4;
+export const GENERIC_OPTION_COUNT_MAX = 8;
+export const GENERIC_OPTION_COUNT_DEFAULT = 5;
+export const GENERIC_ANSWER_COUNT_MIN = 1;
+export const GENERIC_ANSWER_COUNT_DEFAULT = 1;
+export const SENTENCE_INSERT_SLOT_COUNT_MIN = 5;
+export const SENTENCE_INSERT_SLOT_COUNT_MAX = 8;
+export const SENTENCE_INSERT_SLOT_COUNT_DEFAULT = 5;
+export const ANTONYM_PAIR_COUNT_MIN = 5;
+export const ANTONYM_PAIR_COUNT_MAX = 10;
+export const ANTONYM_PAIR_COUNT_DEFAULT = 5;
+export const BLANK_INFERENCE_BLANK_COUNT_MIN = 1;
+export const BLANK_INFERENCE_BLANK_COUNT_MAX = 3;
+export const BLANK_INFERENCE_BLANK_COUNT_DEFAULT = 1;
 
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
+const VOCAB_CHOICE_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"] as const;
+
+/**
+ * Types whose options are interchangeable free-text statements, so the visible
+ * option count is a tunable parameter (4~8). Structural option surfaces
+ * (passage-anchored markers, order combinations, blank fillers) are excluded.
+ */
+const GENERIC_OPTION_COUNT_TYPE_ID_LIST = [
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "TITLE",
+  "IMPLIED_MEANING",
+  "CONTEXT_MEANING",
+  "SYNONYM",
+] as const;
+const GENERIC_OPTION_COUNT_TYPE_IDS = new Set<string>(GENERIC_OPTION_COUNT_TYPE_ID_LIST);
+
+export function supportsGenericOptionCount(typeId: string): boolean {
+  return GENERIC_OPTION_COUNT_TYPE_IDS.has(typeId);
+}
+
+const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
+  string,
+  Required<QuestionLanguageGenerationSettings>
+> = {
+  BLANK_INFERENCE: { stemLanguage: "ko", optionLanguage: "en" },
+  GRAMMAR_ERROR: { stemLanguage: "ko", optionLanguage: "ko" },
+  VOCAB_CHOICE: { stemLanguage: "ko", optionLanguage: "en" },
+  SENTENCE_ORDER: { stemLanguage: "ko", optionLanguage: "en" },
+  SENTENCE_INSERT: { stemLanguage: "ko", optionLanguage: "ko" },
+  TOPIC: { stemLanguage: "ko", optionLanguage: "en" },
+  MAIN_IDEA: { stemLanguage: "ko", optionLanguage: "ko" },
+  TOPIC_MAIN_IDEA: { stemLanguage: "ko", optionLanguage: "ko" },
+  TITLE: { stemLanguage: "ko", optionLanguage: "en" },
+  IMPLIED_MEANING: { stemLanguage: "ko", optionLanguage: "en" },
+  REFERENCE: { stemLanguage: "ko", optionLanguage: "ko" },
+  CONTENT_MATCH: { stemLanguage: "ko", optionLanguage: "ko" },
+  SUMMARY_COMPLETE_MC: { stemLanguage: "ko", optionLanguage: "en" },
+  IRRELEVANT: { stemLanguage: "ko", optionLanguage: "ko" },
+  GRAMMAR_CORRECTION: { stemLanguage: "ko", optionLanguage: "ko" },
+  SUMMARY_COMPLETE: { stemLanguage: "ko", optionLanguage: "en" },
+  CONDITIONAL_WRITING: { stemLanguage: "ko", optionLanguage: "ko" },
+  SENTENCE_TRANSFORM: { stemLanguage: "ko", optionLanguage: "ko" },
+  FILL_BLANK_KEY: { stemLanguage: "ko", optionLanguage: "ko" },
+  WORD_ORDER: { stemLanguage: "ko", optionLanguage: "ko" },
+  CONTEXT_MEANING: { stemLanguage: "ko", optionLanguage: "en" },
+  SYNONYM: { stemLanguage: "ko", optionLanguage: "en" },
+  ANTONYM: { stemLanguage: "ko", optionLanguage: "en" },
+};
+
+/**
+ * Types whose visible option text is free-language (Korean or English both make
+ * a valid question). Everywhere else the option surface is structurally fixed:
+ * label/number-only options (SENTENCE_ORDER/INSERT, IRRELEVANT, GRAMMAR_ERROR,
+ * REFERENCE), English blank/summary fillers (BLANK_INFERENCE,
+ * SUMMARY_COMPLETE_MC), English word lists (VOCAB_CHOICE, SYNONYM, ANTONYM),
+ * or no options at all (서술형).
+ */
+const OPTION_LANGUAGE_FREE_TYPE_IDS = new Set([
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "TITLE",
+  "IMPLIED_MEANING",
+  "CONTEXT_MEANING",
+  "CONTENT_MATCH",
+]);
+
+export type QuestionLanguageToggleScope = "stem" | "stem-option";
+
+/** Which visible-language toggles make sense for a type. Stem applies to every type. */
+export function getQuestionLanguageToggleScope(
+  typeId: string,
+): QuestionLanguageToggleScope {
+  return OPTION_LANGUAGE_FREE_TYPE_IDS.has(typeId) ? "stem-option" : "stem";
+}
 
 type NumericSettingMax =
   | number
@@ -133,6 +270,63 @@ function readNumericSetting(
   return normalizeNumericSetting(nestedValue, spec, resolved);
 }
 
+function defaultLanguageSettingsForType(
+  typeId: string,
+): Required<QuestionLanguageGenerationSettings> {
+  return (
+    DEFAULT_QUESTION_LANGUAGE_SETTINGS[typeId] ?? {
+      stemLanguage: "ko",
+      optionLanguage: "ko",
+    }
+  );
+}
+
+function normalizeGenerationLanguage(
+  value: unknown,
+  fallback: QuestionGenerationLanguage,
+): QuestionGenerationLanguage {
+  return value === "en" || value === "ko" ? value : fallback;
+}
+
+function readLanguageSettingValue(
+  source: unknown,
+  key: keyof QuestionLanguageGenerationSettings,
+): unknown {
+  if (!isRecord(source)) return undefined;
+  return source[key];
+}
+
+function readLanguageSetting(
+  rawSettings: unknown,
+  typeId: string,
+  key: keyof QuestionLanguageGenerationSettings,
+): QuestionGenerationLanguage {
+  const defaults = defaultLanguageSettingsForType(typeId);
+  const fallback = defaults[key] ?? "ko";
+  const directValue = readLanguageSettingValue(rawSettings, key);
+  if (directValue !== undefined) {
+    return normalizeGenerationLanguage(directValue, fallback);
+  }
+
+  const nested = isRecord(rawSettings) ? rawSettings[typeId] : undefined;
+  const nestedValue = readLanguageSettingValue(nested, key);
+  return normalizeGenerationLanguage(nestedValue, fallback);
+}
+
+export function readStemLanguageSetting(
+  rawSettings: unknown,
+  typeId: string,
+): QuestionGenerationLanguage {
+  return readLanguageSetting(rawSettings, typeId, "stemLanguage");
+}
+
+export function readOptionLanguageSetting(
+  rawSettings: unknown,
+  typeId: string,
+): QuestionGenerationLanguage {
+  return readLanguageSetting(rawSettings, typeId, "optionLanguage");
+}
+
 const IRRELEVANT_SLOT_COUNT_SETTING: NumericSettingSpec = {
   key: "slotCount",
   min: IRRELEVANT_SLOT_COUNT_MIN,
@@ -193,6 +387,64 @@ const GRAMMAR_CORRECTION_ERROR_COUNT_SETTING: NumericSettingSpec = {
   min: GRAMMAR_CORRECTION_ERROR_COUNT_MIN,
   max: GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
   defaultValue: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+};
+
+const VOCAB_CHOICE_MARKER_COUNT_SETTING: NumericSettingSpec = {
+  key: "markerCount",
+  min: VOCAB_CHOICE_MARKER_COUNT_MIN,
+  max: VOCAB_CHOICE_MARKER_COUNT_MAX,
+  defaultValue: VOCAB_CHOICE_MARKER_COUNT_DEFAULT,
+};
+
+const VOCAB_CHOICE_ANSWER_COUNT_SETTING: NumericSettingSpec = {
+  key: "answerCount",
+  aliases: ["correctAnswerCount"],
+  min: VOCAB_CHOICE_ANSWER_COUNT_MIN,
+  max: (resolved) => resolved.markerCount ?? VOCAB_CHOICE_MARKER_COUNT_DEFAULT,
+  defaultValue: VOCAB_CHOICE_ANSWER_COUNT_DEFAULT,
+};
+
+const GENERIC_OPTION_COUNT_SETTING: NumericSettingSpec = {
+  key: "optionCount",
+  min: GENERIC_OPTION_COUNT_MIN,
+  max: GENERIC_OPTION_COUNT_MAX,
+  defaultValue: GENERIC_OPTION_COUNT_DEFAULT,
+};
+
+// At least one wrong option must remain, so the cap is optionCount - 1.
+const GENERIC_ANSWER_COUNT_SETTING: NumericSettingSpec = {
+  key: "answerCount",
+  aliases: ["correctAnswerCount"],
+  min: GENERIC_ANSWER_COUNT_MIN,
+  max: (resolved) =>
+    Math.max(
+      GENERIC_ANSWER_COUNT_MIN,
+      (resolved.optionCount ?? GENERIC_OPTION_COUNT_DEFAULT) - 1,
+    ),
+  defaultValue: GENERIC_ANSWER_COUNT_DEFAULT,
+};
+
+const SENTENCE_INSERT_SLOT_COUNT_SETTING: NumericSettingSpec = {
+  key: "slotCount",
+  aliases: ["optionCount"],
+  min: SENTENCE_INSERT_SLOT_COUNT_MIN,
+  max: SENTENCE_INSERT_SLOT_COUNT_MAX,
+  defaultValue: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+};
+
+const ANTONYM_PAIR_COUNT_SETTING: NumericSettingSpec = {
+  key: "pairCount",
+  aliases: ["optionCount", "markerCount"],
+  min: ANTONYM_PAIR_COUNT_MIN,
+  max: ANTONYM_PAIR_COUNT_MAX,
+  defaultValue: ANTONYM_PAIR_COUNT_DEFAULT,
+};
+
+const BLANK_INFERENCE_BLANK_COUNT_SETTING: NumericSettingSpec = {
+  key: "blankCount",
+  min: BLANK_INFERENCE_BLANK_COUNT_MIN,
+  max: BLANK_INFERENCE_BLANK_COUNT_MAX,
+  defaultValue: BLANK_INFERENCE_BLANK_COUNT_DEFAULT,
 };
 
 function getIrrelevantLabel(index: number): string {
@@ -323,6 +575,100 @@ export function readGrammarCorrectionErrorCountSetting(rawSettings: unknown): nu
   );
 }
 
+export function normalizeVocabChoiceMarkerCount(value: unknown): number {
+  return normalizeNumericSetting(value, VOCAB_CHOICE_MARKER_COUNT_SETTING);
+}
+
+export function normalizeVocabChoiceAnswerCount(
+  value: unknown,
+  markerCount: number = VOCAB_CHOICE_MARKER_COUNT_DEFAULT,
+): number {
+  const marker = normalizeVocabChoiceMarkerCount(markerCount);
+  return normalizeNumericSetting(
+    value,
+    VOCAB_CHOICE_ANSWER_COUNT_SETTING,
+    { markerCount: marker },
+  );
+}
+
+export function readVocabChoiceMarkerCountSetting(rawSettings: unknown): number {
+  return readNumericSetting(rawSettings, "VOCAB_CHOICE", VOCAB_CHOICE_MARKER_COUNT_SETTING);
+}
+
+export function readVocabChoiceAnswerCountSetting(
+  rawSettings: unknown,
+  markerCount: number = readVocabChoiceMarkerCountSetting(rawSettings),
+): number {
+  return readNumericSetting(
+    rawSettings,
+    "VOCAB_CHOICE",
+    VOCAB_CHOICE_ANSWER_COUNT_SETTING,
+    { markerCount: normalizeVocabChoiceMarkerCount(markerCount) },
+  );
+}
+
+export function normalizeGenericOptionCount(value: unknown): number {
+  return normalizeNumericSetting(value, GENERIC_OPTION_COUNT_SETTING);
+}
+
+export function normalizeSentenceInsertSlotCount(value: unknown): number {
+  return normalizeNumericSetting(value, SENTENCE_INSERT_SLOT_COUNT_SETTING);
+}
+
+export function readSentenceInsertSlotCountSetting(rawSettings: unknown): number {
+  return readNumericSetting(
+    rawSettings,
+    "SENTENCE_INSERT",
+    SENTENCE_INSERT_SLOT_COUNT_SETTING,
+  );
+}
+
+export function normalizeAntonymPairCount(value: unknown): number {
+  return normalizeNumericSetting(value, ANTONYM_PAIR_COUNT_SETTING);
+}
+
+export function readAntonymPairCountSetting(rawSettings: unknown): number {
+  return readNumericSetting(rawSettings, "ANTONYM", ANTONYM_PAIR_COUNT_SETTING);
+}
+
+export function normalizeBlankInferenceBlankCount(value: unknown): number {
+  return normalizeNumericSetting(value, BLANK_INFERENCE_BLANK_COUNT_SETTING);
+}
+
+export function readBlankInferenceBlankCountSetting(rawSettings: unknown): number {
+  return readNumericSetting(
+    rawSettings,
+    "BLANK_INFERENCE",
+    BLANK_INFERENCE_BLANK_COUNT_SETTING,
+  );
+}
+
+export function readGenericOptionCountSetting(
+  rawSettings: unknown,
+  typeId: string,
+): number {
+  return readNumericSetting(rawSettings, typeId, GENERIC_OPTION_COUNT_SETTING);
+}
+
+export function normalizeGenericAnswerCount(
+  value: unknown,
+  optionCount: number = GENERIC_OPTION_COUNT_DEFAULT,
+): number {
+  return normalizeNumericSetting(value, GENERIC_ANSWER_COUNT_SETTING, {
+    optionCount: normalizeGenericOptionCount(optionCount),
+  });
+}
+
+export function readGenericAnswerCountSetting(
+  rawSettings: unknown,
+  typeId: string,
+  optionCount: number = readGenericOptionCountSetting(rawSettings, typeId),
+): number {
+  return readNumericSetting(rawSettings, typeId, GENERIC_ANSWER_COUNT_SETTING, {
+    optionCount: normalizeGenericOptionCount(optionCount),
+  });
+}
+
 export interface IrrelevantSlotValidation {
   ok: boolean;
   /** The slot count actually usable for generation (capped to passage length). */
@@ -376,11 +722,16 @@ export interface QuestionTypeGenerationSettings {
   SUMMARY_COMPLETE?: SummaryCompleteGenerationSettings;
   SUMMARY_COMPLETE_MC?: SummaryCompleteMcGenerationSettings;
   IRRELEVANT?: IrrelevantGenerationSettings;
+  VOCAB_CHOICE?: VocabChoiceGenerationSettings;
+  SENTENCE_INSERT?: SentenceInsertGenerationSettings;
+  ANTONYM?: AntonymGenerationSettings;
   [typeId: string]: unknown;
 }
 
 export interface ResolvedQuestionTypeGenerationSettings {
   effectiveTypeSettings: unknown;
+  stemLanguage?: QuestionGenerationLanguage;
+  optionLanguage?: QuestionGenerationLanguage;
   irrelevantSlotCount?: number;
   grammarMarkerCount?: number;
   grammarAnswerCount?: number;
@@ -389,6 +740,18 @@ export interface ResolvedQuestionTypeGenerationSettings {
   summaryCompleteBlankCount?: number;
   contentMatchOptionCount?: number;
   contentMatchAnswerCount?: number;
+  vocabChoiceMarkerCount?: number;
+  vocabChoiceAnswerCount?: number;
+  sentenceInsertSlotCount?: number;
+  antonymPairCount?: number;
+  /** 1 = standard single blank (default pipeline); 2~3 = combination-option variant. */
+  blankInferenceBlankCount?: number;
+  /** True only for single-blank + teacher-enabled negative-paraphrase mode. */
+  blankInferenceDoubleNegative?: boolean;
+  /** Resolved option count for free-text option types (TOPIC/TITLE/...). */
+  genericOptionCount?: number;
+  /** Resolved correct-answer count for free-text option types. */
+  genericAnswerCount?: number;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -399,10 +762,38 @@ function copyRecordOrEmpty(value: unknown): Record<string, unknown> {
   return isRecord(value) ? { ...value } : {};
 }
 
+function languageSettingsForType(
+  typeId: string,
+  rawSettings: unknown,
+): Required<QuestionLanguageGenerationSettings> {
+  return {
+    stemLanguage: readStemLanguageSetting(rawSettings, typeId),
+    // Stem-only types ignore stored option language; the option surface is structural.
+    optionLanguage:
+      getQuestionLanguageToggleScope(typeId) === "stem-option"
+        ? readOptionLanguageSetting(rawSettings, typeId)
+        : defaultLanguageSettingsForType(typeId).optionLanguage,
+  };
+}
+
+function effectiveSettingsWithLanguage(
+  typeId: string,
+  rawSettings: unknown,
+  extra: Record<string, unknown> = {},
+): Record<string, unknown> {
+  return {
+    ...copyRecordOrEmpty(rawSettings),
+    ...extra,
+    ...languageSettingsForType(typeId, rawSettings),
+  };
+}
+
 export function resolveQuestionTypeGenerationSettings(
   typeId: string,
   rawSettings: unknown,
 ): ResolvedQuestionTypeGenerationSettings {
+  const languageSettings = languageSettingsForType(typeId, rawSettings);
+
   if (typeId === "GRAMMAR_ERROR") {
     const grammarMarkerCount = readGrammarMarkerCountSetting(rawSettings);
     const grammarAnswerCount = readGrammarAnswerCountSetting(
@@ -410,11 +801,11 @@ export function resolveQuestionTypeGenerationSettings(
       grammarMarkerCount,
     );
     return {
-      effectiveTypeSettings: {
-        ...copyRecordOrEmpty(rawSettings),
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: grammarMarkerCount,
         answerCount: grammarAnswerCount,
-      },
+      }),
+      ...languageSettings,
       grammarMarkerCount,
       grammarAnswerCount,
     };
@@ -424,10 +815,10 @@ export function resolveQuestionTypeGenerationSettings(
     const grammarCorrectionErrorCount =
       readGrammarCorrectionErrorCountSetting(rawSettings);
     return {
-      effectiveTypeSettings: {
-        ...copyRecordOrEmpty(rawSettings),
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         errorCount: grammarCorrectionErrorCount,
-      },
+      }),
+      ...languageSettings,
       grammarCorrectionErrorCount,
     };
   }
@@ -435,10 +826,10 @@ export function resolveQuestionTypeGenerationSettings(
   if (typeId === "IRRELEVANT") {
     const irrelevantSlotCount = readIrrelevantSlotCountSetting(rawSettings);
     return {
-      effectiveTypeSettings: {
-        ...copyRecordOrEmpty(rawSettings),
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         slotCount: irrelevantSlotCount,
-      },
+      }),
+      ...languageSettings,
       irrelevantSlotCount,
     };
   }
@@ -450,11 +841,11 @@ export function resolveQuestionTypeGenerationSettings(
       contentMatchOptionCount,
     );
     return {
-      effectiveTypeSettings: {
-        ...copyRecordOrEmpty(rawSettings),
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         optionCount: contentMatchOptionCount,
         answerCount: contentMatchAnswerCount,
-      },
+      }),
+      ...languageSettings,
       contentMatchOptionCount,
       contentMatchAnswerCount,
     };
@@ -464,10 +855,10 @@ export function resolveQuestionTypeGenerationSettings(
     const summaryCompleteBlankCount =
       readSummaryCompleteBlankCountSetting(rawSettings);
     return {
-      effectiveTypeSettings: {
-        ...copyRecordOrEmpty(rawSettings),
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         blankCount: summaryCompleteBlankCount,
-      },
+      }),
+      ...languageSettings,
       summaryCompleteBlankCount,
     };
   }
@@ -476,15 +867,96 @@ export function resolveQuestionTypeGenerationSettings(
     const summaryCompleteMcBlankCount =
       readSummaryCompleteMcBlankCountSetting(rawSettings);
     return {
-      effectiveTypeSettings: {
-        ...copyRecordOrEmpty(rawSettings),
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         blankCount: summaryCompleteMcBlankCount,
-      },
+      }),
+      ...languageSettings,
       summaryCompleteMcBlankCount,
     };
   }
 
-  return { effectiveTypeSettings: rawSettings };
+  if (typeId === "VOCAB_CHOICE") {
+    const vocabChoiceMarkerCount = readVocabChoiceMarkerCountSetting(rawSettings);
+    const vocabChoiceAnswerCount = readVocabChoiceAnswerCountSetting(
+      rawSettings,
+      vocabChoiceMarkerCount,
+    );
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        markerCount: vocabChoiceMarkerCount,
+        answerCount: vocabChoiceAnswerCount,
+      }),
+      ...languageSettings,
+      vocabChoiceMarkerCount,
+      vocabChoiceAnswerCount,
+    };
+  }
+
+  if (typeId === "SENTENCE_INSERT") {
+    const sentenceInsertSlotCount = readSentenceInsertSlotCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        slotCount: sentenceInsertSlotCount,
+      }),
+      ...languageSettings,
+      sentenceInsertSlotCount,
+    };
+  }
+
+  if (typeId === "ANTONYM") {
+    const antonymPairCount = readAntonymPairCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        pairCount: antonymPairCount,
+      }),
+      ...languageSettings,
+      antonymPairCount,
+    };
+  }
+
+  if (typeId === "BLANK_INFERENCE") {
+    const blankInferenceBlankCount = readBlankInferenceBlankCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        blankCount: blankInferenceBlankCount,
+      }),
+      ...languageSettings,
+      blankInferenceBlankCount,
+      // 부정-부정 모드는 단일 빈칸 전용. "typeSettings 프롬프트가 있으면 DN" 식의
+      // 프록시 판정은 언어/다중빈칸 블록 추가로 더 이상 성립하지 않으므로 여기서 확정한다.
+      blankInferenceDoubleNegative:
+        blankInferenceBlankCount === 1 &&
+        isRecord(rawSettings) &&
+        rawSettings.doubleNegative === true,
+    };
+  }
+
+  if (supportsGenericOptionCount(typeId)) {
+    const genericOptionCount = readGenericOptionCountSetting(rawSettings, typeId);
+    const genericAnswerCount = readGenericAnswerCountSetting(
+      rawSettings,
+      typeId,
+      genericOptionCount,
+    );
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        optionCount: genericOptionCount,
+        answerCount: genericAnswerCount,
+      }),
+      ...languageSettings,
+      genericOptionCount,
+      genericAnswerCount,
+    };
+  }
+
+  if (isRecord(rawSettings)) {
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings),
+      ...languageSettings,
+    };
+  }
+
+  return { effectiveTypeSettings: rawSettings, ...languageSettings };
 }
 
 export function getQuestionTypeGenerationTokenFloor(
@@ -536,6 +1008,50 @@ export function getQuestionTypeGenerationTokenFloor(
     return 8_192;
   }
 
+  if (
+    typeId === "VOCAB_CHOICE" &&
+    ((resolved.vocabChoiceMarkerCount ?? VOCAB_CHOICE_MARKER_COUNT_DEFAULT) >
+      VOCAB_CHOICE_MARKER_COUNT_DEFAULT ||
+      (resolved.vocabChoiceAnswerCount ?? VOCAB_CHOICE_ANSWER_COUNT_DEFAULT) >
+        VOCAB_CHOICE_ANSWER_COUNT_DEFAULT)
+  ) {
+    return 8_192;
+  }
+
+  if (
+    supportsGenericOptionCount(typeId) &&
+    ((resolved.genericOptionCount ?? GENERIC_OPTION_COUNT_DEFAULT) >
+      GENERIC_OPTION_COUNT_DEFAULT ||
+      (resolved.genericAnswerCount ?? GENERIC_ANSWER_COUNT_DEFAULT) >
+        GENERIC_ANSWER_COUNT_DEFAULT)
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "SENTENCE_INSERT" &&
+    (resolved.sentenceInsertSlotCount ?? SENTENCE_INSERT_SLOT_COUNT_DEFAULT) >
+      SENTENCE_INSERT_SLOT_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "ANTONYM" &&
+    (resolved.antonymPairCount ?? ANTONYM_PAIR_COUNT_DEFAULT) >
+      ANTONYM_PAIR_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
+  if (
+    typeId === "BLANK_INFERENCE" &&
+    (resolved.blankInferenceBlankCount ?? BLANK_INFERENCE_BLANK_COUNT_DEFAULT) >
+      BLANK_INFERENCE_BLANK_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
   return 4_096;
 }
 
@@ -543,66 +1059,251 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
   return {
     BLANK_INFERENCE: {
       doubleNegative: false,
+      blankCount: BLANK_INFERENCE_BLANK_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("BLANK_INFERENCE"),
     },
     CONTENT_MATCH: {
       optionCount: CONTENT_MATCH_OPTION_COUNT_DEFAULT,
       answerCount: CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("CONTENT_MATCH"),
     },
     GRAMMAR_ERROR: {
       markerCount: GRAMMAR_MARKER_COUNT_DEFAULT,
       answerCount: GRAMMAR_ANSWER_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("GRAMMAR_ERROR"),
     },
     GRAMMAR_CORRECTION: {
       errorCount: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("GRAMMAR_CORRECTION"),
     },
     SUMMARY_COMPLETE: {
       blankCount: SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("SUMMARY_COMPLETE"),
     },
     SUMMARY_COMPLETE_MC: {
       blankCount: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("SUMMARY_COMPLETE_MC"),
     },
     IRRELEVANT: {
       slotCount: IRRELEVANT_SLOT_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("IRRELEVANT"),
+    },
+    VOCAB_CHOICE: {
+      markerCount: VOCAB_CHOICE_MARKER_COUNT_DEFAULT,
+      answerCount: VOCAB_CHOICE_ANSWER_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("VOCAB_CHOICE"),
+    },
+    SENTENCE_INSERT: {
+      slotCount: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("SENTENCE_INSERT"),
+    },
+    ANTONYM: {
+      pairCount: ANTONYM_PAIR_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("ANTONYM"),
     },
   };
+}
+
+const MULTI_BLANK_LABELS = ["(A)", "(B)", "(C)"] as const;
+
+function languageName(language: QuestionGenerationLanguage): string {
+  return language === "en" ? "English" : "Korean";
+}
+
+function combinePromptSections(...sections: Array<string | undefined>): string {
+  return sections.map((section) => section?.trim()).filter(Boolean).join("\n\n");
+}
+
+function buildQuestionLanguageSettingsPrompt(
+  typeId: string,
+  rawSettings: unknown,
+): string {
+  if (!isRecord(rawSettings)) return "";
+  const scope = getQuestionLanguageToggleScope(typeId);
+  const defaults = defaultLanguageSettingsForType(typeId);
+  const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
+  // Stem-only types keep their structural option language no matter what was stored.
+  const optionLanguage =
+    scope === "stem-option"
+      ? readOptionLanguageSetting(rawSettings, typeId)
+      : defaults.optionLanguage;
+
+  if (
+    stemLanguage === defaults.stemLanguage &&
+    optionLanguage === defaults.optionLanguage
+  ) {
+    return "";
+  }
+
+  const lines = [
+    `## Type detail setting: ${typeId} / visible language`,
+    "- This language setting overrides any default language instruction in the base type prompt.",
+    `- The teacher requested the visible direction/stem in ${languageName(stemLanguage)}.`,
+  ];
+  if (scope === "stem-option") {
+    lines.push(
+      `- The teacher requested visible multiple-choice option text in ${languageName(optionLanguage)}.`,
+    );
+  }
+
+  if (stemLanguage === "en") {
+    lines.push("- direction/questionText should be natural exam English. Do not write the stem in Korean unless a fixed Korean exam label is unavoidable.");
+  } else {
+    lines.push("- direction/questionText should be natural Korean exam wording.");
+  }
+
+  if (scope === "stem-option") {
+    if (optionLanguage === "en") {
+      lines.push("- options[].text must be English-only statements or phrases. Do not include Korean translation, Korean particles, or Korean explanatory wording in option text.");
+    } else {
+      lines.push("- options[].text must be Korean student-facing statements or phrases. English passage terms may appear only when they are natural evidence labels or quoted source terms.");
+    }
+  } else {
+    lines.push("- This setting changes only the visible direction/stem language. Keep options, answers, and every other field in the standard format for this type.");
+  }
+
+  return lines.join("\n");
 }
 
 export function buildQuestionTypeSettingsPrompt(
   typeId: string,
   rawSettings: unknown,
 ): string {
+  const languagePrompt = buildQuestionLanguageSettingsPrompt(typeId, rawSettings);
+
   if (typeId === "GRAMMAR_ERROR") {
-    if (!isRecord(rawSettings)) return "";
+    if (!isRecord(rawSettings)) return languagePrompt;
     const markerCount = readGrammarMarkerCountSetting(rawSettings);
     const answerCount = readGrammarAnswerCountSetting(rawSettings, markerCount);
+    const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
     if (
       markerCount === GRAMMAR_MARKER_COUNT_DEFAULT &&
       answerCount === GRAMMAR_ANSWER_COUNT_DEFAULT
     ) {
-      return "";
+      return languagePrompt;
     }
     const labels = GRAMMAR_LABELS.slice(0, markerCount).join(" ");
-    return [
+    return combinePromptSections(languagePrompt, [
       "## Type detail setting: GRAMMAR_ERROR / grammar judgment positions and answer count",
       `- The teacher requested exactly ${markerCount} marked grammar judgment positions and exactly ${answerCount} answer label(s).`,
       `- Output exactly ${markerCount} markedExpressions and ${markerCount} options labeled ${labels}.`,
       `- Exactly ${answerCount} markedExpression item(s) must have isError=true. If fewer than ${markerCount} are answers, every other markedExpression must remain grammatically correct source wording. If all ${markerCount} are answers, every marked expression is intentionally incorrect.`,
       "- correctAnswers must list every isError=true label. correctAnswer must be the same labels joined by comma + space, for example \"(A), (C)\".",
       answerCount >= 2
-        ? "- The direction must ask students to choose all grammatically incorrect parts using '모두', without saying how many answers there are."
+        ? stemLanguage === "en"
+          ? "- The direction must ask students to choose all grammatically incorrect parts (for example, 'Choose all the grammatically incorrect parts.'), without saying how many answers there are."
+          : "- The direction must ask students to choose all grammatically incorrect parts using '모두', without saying how many answers there are."
         : "- The direction must ask students to choose the grammatically incorrect part as a single-answer item.",
       "- Every marked expression, including non-error choices, must be a real exam-worthy grammar judgment point from the passage. Do not pad with weak function words, simple articles, or obvious fixed patterns.",
       "- For each isError=true item: expression/correction must be the original correct passage wording, errorExpression must be the displayed wrong form, and the explanation must name why that displayed form is wrong.",
       "- wrongOptionExplanations must cover every grammatically correct non-answer label. If every label is an answer, return an empty wrongOptionExplanations array/object according to the schema.",
       "- keyPoints and explanation must cover every error label and the most important non-error decoy points, not only the first few labels.",
-    ].join("\n");
+    ].join("\n"));
+  }
+
+  if (typeId === "VOCAB_CHOICE") {
+    if (!isRecord(rawSettings)) return languagePrompt;
+    const markerCount = readVocabChoiceMarkerCountSetting(rawSettings);
+    const answerCount = readVocabChoiceAnswerCountSetting(rawSettings, markerCount);
+    const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
+    if (
+      markerCount === VOCAB_CHOICE_MARKER_COUNT_DEFAULT &&
+      answerCount === VOCAB_CHOICE_ANSWER_COUNT_DEFAULT
+    ) {
+      return languagePrompt;
+    }
+    const labels = VOCAB_CHOICE_LABELS.slice(0, markerCount).join(" ");
+    return combinePromptSections(languagePrompt, [
+      "## Type detail setting: VOCAB_CHOICE / underlined word count and answer count",
+      `- The teacher requested exactly ${markerCount} underlined vocabulary positions and exactly ${answerCount} inappropriate word(s).`,
+      `- Output exactly ${markerCount} markedWords and exactly ${markerCount} options, labeled ${labels} in order.`,
+      `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true. Every other markedWords item must keep the original source word unchanged (substituteWord = originalWord).`,
+      `- For every isInappropriate=true item: originalWord is the source word, substituteWord is the displayed wrong word (different from originalWord), and betterWord equals originalWord.`,
+      answerCount >= 2
+        ? `- correctAnswers must list every isInappropriate=true label (exactly ${answerCount} labels). correctAnswer must be the same labels joined by comma + space, for example "(a), (c)".`
+        : "- correctAnswer must be the single isInappropriate=true label.",
+      answerCount >= 2
+        ? stemLanguage === "en"
+          ? "- The direction must ask students to choose all contextually inappropriate words (for example, 'Choose all the words that are NOT appropriate in context.'), without saying how many answers there are."
+          : "- The direction must ask students to choose all contextually inappropriate words using '모두', without saying how many answers there are."
+        : "- The direction must ask for the single contextually inappropriate word.",
+      "- Every marked word, including appropriate ones, must be a meaningful content word worth testing. Do not pad with articles, prepositions, or trivial function words.",
+      "- wrongOptionExplanations must cover every appropriate (non-answer) label, citing why the source word fits the context.",
+      "- explanation and keyPoints must cover every inappropriate label, naming the displayed wrong word and the source-correct word for each.",
+    ].join("\n"));
+  }
+
+  if (typeId === "SENTENCE_INSERT") {
+    if (!isRecord(rawSettings)) return languagePrompt;
+    const slotCount = readSentenceInsertSlotCountSetting(rawSettings);
+    if (slotCount === SENTENCE_INSERT_SLOT_COUNT_DEFAULT) return languagePrompt;
+    const lastMarker = String.fromCodePoint(0x2460 + slotCount - 1);
+    return combinePromptSections(languagePrompt, [
+      "## Type detail setting: SENTENCE_INSERT / insertion-position marker count",
+      `- The teacher requested exactly ${slotCount} insertion-position markers (①~${lastMarker}) instead of the default 5.`,
+      `- markerAfterSentenceIndices must contain exactly ${slotCount} distinct 0-based sentence indices in strictly ascending order.`,
+      `- The passage must have at least ${slotCount} sentences available after removing any omitted source sentence; spread the markers across the whole passage flow, not only the first half.`,
+      `- options must contain exactly ${slotCount} entries: label "1"~"${slotCount}", text ①~${lastMarker} in order.`,
+      "- Exactly one gap is correct. The given sentence must fit only that gap; every other gap must break cohesion for a distinct reason.",
+      "- Do not place the correct gap at the first or last marker when an inner gap is possible.",
+    ].join("\n"));
+  }
+
+  if (typeId === "ANTONYM") {
+    if (!isRecord(rawSettings)) return languagePrompt;
+    const pairCount = readAntonymPairCountSetting(rawSettings);
+    if (pairCount === ANTONYM_PAIR_COUNT_DEFAULT) return languagePrompt;
+    const labels = GRAMMAR_LABELS.slice(0, pairCount).join(" ");
+    return combinePromptSections(languagePrompt, [
+      "## Type detail setting: ANTONYM / word-pair count",
+      `- The teacher requested exactly ${pairCount} word-antonym pairs instead of the default 5.`,
+      `- markedWords must contain exactly ${pairCount} items labeled ${labels}, in order, and each word must exist in the passage.`,
+      `- options must contain exactly ${pairCount} entries in the "(A) word - pair" format matching markedWords.`,
+      `- Exactly one pair must have isIncorrectPair=true; every other pair must be a precise contextual antonym (same part of speech, same word form, same semantic axis).`,
+      "- correctAnswer must be the single option number of the incorrect pair.",
+      `- wrongOptionExplanations must cover every one of the ${pairCount - 1} correct pairs, naming why each pair is a valid contextual antonym.`,
+      "- Do not pad with weak or ambiguous pairs; every added pair must be an unambiguous antonym worth testing.",
+    ].join("\n"));
+  }
+
+  if (supportsGenericOptionCount(typeId)) {
+    if (!isRecord(rawSettings)) return languagePrompt;
+    const optionCount = readGenericOptionCountSetting(rawSettings, typeId);
+    const answerCount = readGenericAnswerCountSetting(rawSettings, typeId, optionCount);
+    const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
+    if (
+      optionCount === GENERIC_OPTION_COUNT_DEFAULT &&
+      answerCount === GENERIC_ANSWER_COUNT_DEFAULT
+    ) {
+      return languagePrompt;
+    }
+    const labels = Array.from({ length: optionCount }, (_, index) => String(index + 1));
+    const labelsText = labels.join(", ");
+    return combinePromptSections(languagePrompt, [
+      `## Type detail setting: ${typeId} / option count and answer count`,
+      `- The teacher requested exactly ${optionCount} options and exactly ${answerCount} correct option(s).`,
+      `- options must contain exactly ${optionCount} entries with labels ${labelsText}, in order.`,
+      answerCount >= 2
+        ? `- Exactly ${answerCount} options must be correct, each independently defensible from the passage. Every other option must be a plausible same-format distractor with a distinct trap.`
+        : "- Exactly one option is correct; every other option must be a plausible same-format distractor with a distinct trap.",
+      answerCount >= 2
+        ? `- correctAnswers must list exactly ${answerCount} labels, and correctAnswer must be the same labels joined by comma + space, for example "1, 3".`
+        : "- correctAnswer must be the single correct option label.",
+      answerCount >= 2
+        ? stemLanguage === "en"
+          ? "- The direction must ask students to choose all appropriate options (for example, 'Choose all that apply.'), without saying how many answers there are."
+          : "- The direction must ask students to choose all appropriate options using '모두', without saying how many answers there are."
+        : "",
+      `- wrongOptionExplanations must cover every one of the ${optionCount - answerCount} wrong labels.`,
+      "- Keep all options parallel in language, length, grammar, and abstraction level. Do not pad with throwaway options: every added option must be exam-worthy.",
+    ].filter(Boolean).join("\n"));
   }
 
   if (typeId === "IRRELEVANT") {
-    if (!isRecord(rawSettings)) return "";
+    if (!isRecord(rawSettings)) return languagePrompt;
     const slotCount = readIrrelevantSlotCountSetting(rawSettings);
-    if (slotCount === IRRELEVANT_SLOT_COUNT_DEFAULT) return "";
-    return [
+    if (slotCount === IRRELEVANT_SLOT_COUNT_DEFAULT) return languagePrompt;
+    return combinePromptSections(languagePrompt, [
       "## Type detail setting: IRRELEVANT / custom slot count",
       `- The teacher requested exactly ${slotCount} slots labeled ①~${getIrrelevantLabel(slotCount - 1)}.`,
       `- Output sentences array of length ${slotCount}, irrelevantIndex in range 1..${slotCount - 2}, options array of length ${slotCount}.`,
@@ -612,14 +1313,14 @@ export function buildQuestionTypeSettingsPrompt(
       "- The first numbered choice ① must be the original second passage sentence unless the inserted irrelevant sentence is placed before it.",
       "- Never put the inserted irrelevant sentence in the first or last slot. The answer must be an inner numbered sentence.",
       "- The sentence at irrelevantIndex must be the only non-verbatim inserted sentence; every other slot must be one of the original source-window sentences.",
-    ].join("\n");
+    ].join("\n"));
   }
 
   if (typeId === "GRAMMAR_CORRECTION") {
-    if (!isRecord(rawSettings)) return "";
+    if (!isRecord(rawSettings)) return languagePrompt;
     const errorCount = readGrammarCorrectionErrorCountSetting(rawSettings);
-    if (errorCount === GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT) return "";
-    return [
+    if (errorCount === GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT) return languagePrompt;
+    return combinePromptSections(languagePrompt, [
       "## Type detail setting: GRAMMAR_CORRECTION / wrong underline count",
       `- The teacher requested exactly ${errorCount} wrong underlined sentence/clause segment(s).`,
       `- Output exactly ${errorCount} underlinedSegments item(s), and every item must have isError=true.`,
@@ -629,28 +1330,33 @@ export function buildQuestionTypeSettingsPrompt(
       "- correctedParts should list the corrected expression for every wrong underline in the same order as underlinedSegments.",
       "- Each underlinedSegments item must include label values starting from \"(A)\" in order.",
       "- Do not add extra grammatically correct underlined segments for this setting; underline count and error count are the same.",
-    ].join("\n");
+    ].join("\n"));
   }
 
   if (typeId === "CONTENT_MATCH") {
-    if (!isRecord(rawSettings)) return "";
+    if (!isRecord(rawSettings)) return languagePrompt;
     const optionCount = readContentMatchOptionCountSetting(rawSettings);
     const answerCount = readContentMatchAnswerCountSetting(rawSettings, optionCount);
+    const optionLanguage = readOptionLanguageSetting(rawSettings, typeId);
+    const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
     if (
       optionCount === CONTENT_MATCH_OPTION_COUNT_DEFAULT &&
-      answerCount === CONTENT_MATCH_ANSWER_COUNT_DEFAULT
+      answerCount === CONTENT_MATCH_ANSWER_COUNT_DEFAULT &&
+      !languagePrompt
     ) {
-      return "";
+      return languagePrompt;
     }
     const labels = Array.from({ length: optionCount }, (_, index) => String(index + 1));
     const labelsText = labels.join(", ");
-    return [
+    return combinePromptSections(languagePrompt, [
       "## Type detail setting: CONTENT_MATCH / statement option count and answer count",
       `- The teacher requested exactly ${optionCount} numbered statement option(s), labeled ${labelsText}.`,
       `- The teacher requested exactly ${answerCount} correct statement label(s).`,
-      `- options must contain exactly ${optionCount} Korean statement options. Each option label must be one of ${labelsText}.`,
+      `- options must contain exactly ${optionCount} ${languageName(optionLanguage)} statement options. Each option label must be one of ${labelsText}.`,
       answerCount >= 2
-        ? "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
+        ? stemLanguage === "en"
+          ? "- The direction must ask students to choose all matching or all non-matching statements (for example, 'Choose all the statements that match the passage.'). Do not reveal the answer count in the direction."
+          : "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
         : "- The direction must ask for one best matching or non-matching statement.",
       answerCount >= 2
         ? `- correctAnswers must contain exactly ${answerCount} labels, and correctAnswer must be the same labels joined by comma + space.`
@@ -658,18 +1364,18 @@ export function buildQuestionTypeSettingsPrompt(
       "- Keep matchType polarity consistent: if the direction asks for non-matching statements, every correct label must be false against the passage; if it asks for matching statements, every correct label must be true.",
       "- Every option must be independently checkable from the passage and should be similar in length and specificity.",
       "- wrongOptionExplanations must explain every non-answer label by citing the decisive passage clue.",
-    ].join("\n");
+    ].join("\n"));
   }
 
   if (typeId === "SUMMARY_COMPLETE") {
-    if (!isRecord(rawSettings)) return "";
+    if (!isRecord(rawSettings)) return languagePrompt;
     const blankCount = readSummaryCompleteBlankCountSetting(rawSettings);
-    if (blankCount === SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT) return "";
+    if (blankCount === SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT) return languagePrompt;
     const labels = Array.from({ length: blankCount }, (_, index) =>
       `(${String.fromCharCode(65 + index)})`
     );
     const labelsText = labels.join(", ");
-    return [
+    return combinePromptSections(languagePrompt, [
       "## Type detail setting: SUMMARY_COMPLETE / short-answer summary blank count",
       `- The teacher requested exactly ${blankCount} short-answer summary blank(s): ${labelsText}.`,
       `- summaryWithBlanks must contain each marker ${labelsText} exactly once.`,
@@ -677,18 +1383,18 @@ export function buildQuestionTypeSettingsPrompt(
       "- Each blank answer must be an English word or natural English phrase grounded in the passage.",
       "- correctAnswer must list every blank answer in label order.",
       "- Do not create multiple-choice options for this type.",
-    ].join("\n");
+    ].join("\n"));
   }
 
   if (typeId === "SUMMARY_COMPLETE_MC") {
-    if (!isRecord(rawSettings)) return "";
+    if (!isRecord(rawSettings)) return languagePrompt;
     const blankCount = readSummaryCompleteMcBlankCountSetting(rawSettings);
-    if (blankCount === SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT) return "";
+    if (blankCount === SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT) return languagePrompt;
     const labels = Array.from({ length: blankCount }, (_, index) =>
       `(${String.fromCharCode(65 + index)})`
     );
     const labelsText = labels.join(", ");
-    return [
+    return combinePromptSections(languagePrompt, [
       "## Type detail setting: SUMMARY_COMPLETE_MC / summary blank count",
       "- This block overrides any default two-blank SUMMARY_COMPLETE_MC instruction elsewhere in the prompt.",
       `- The teacher requested exactly ${blankCount} summary blank(s): ${labelsText}.`,
@@ -700,13 +1406,36 @@ export function buildQuestionTypeSettingsPrompt(
       "- The correct option's blankValues must match the blanks answers exactly.",
       "- Wrong options must be passage-grounded near-misses. Include at least one option that is correct for all but one blank so students must verify every blank.",
       "- Keep grammar slots parallel column by column: every value for the same blank label should fit the same part of speech and sentence position.",
-    ].join("\n");
+    ].join("\n"));
   }
 
-  if (typeId !== "BLANK_INFERENCE" || !isRecord(rawSettings)) return "";
-  if (rawSettings.doubleNegative !== true) return "";
+  if (typeId !== "BLANK_INFERENCE" || !isRecord(rawSettings)) return languagePrompt;
 
-  return [
+  const blankInferenceBlankCount = readBlankInferenceBlankCountSetting(rawSettings);
+  if (blankInferenceBlankCount >= 2) {
+    // Multi-blank combination variant. The double-negative mode is a
+    // single-blank-only feature and is intentionally ignored here.
+    const labels = MULTI_BLANK_LABELS.slice(0, blankInferenceBlankCount);
+    const labelsText = labels.join(", ");
+    return combinePromptSections(languagePrompt, [
+      "## Type detail setting: BLANK_INFERENCE / multi-blank combination item",
+      `- The teacher requested a ${blankInferenceBlankCount}-blank combination item instead of the standard single-blank item. This block overrides the single-blank output rules.`,
+      `- Do NOT output originalExpression/surroundingText at the top level. Instead output a "blanks" array with exactly ${blankInferenceBlankCount} entries labeled ${labelsText}, in passage order.`,
+      "- Each blanks[].originalExpression must be copied verbatim from the passage (not a paraphrase), must be a meaningful content expression (verb phrase, modified noun phrase, or compact clause-level phrase — never a bare function word), and the blanks must come from different sentences.",
+      "- Each blanks[].surroundingText must copy 40~60 characters of the passage around that expression for position identification.",
+      `- options must contain exactly 5 combination choices labeled "1"~"5". Each option must provide blankValues with exactly ${blankInferenceBlankCount} entries (one per blank, in ${labelsText} order) and text joining the values with " …… ".`,
+      "- The correct option's blankValues must be exactly the original passage expressions, verbatim and in order.",
+      "- Wrong options must be same-part-of-speech, passage-grounded near-misses that fail by polarity, scope, causal-role, or thesis-direction shifts. Include at least one option that is correct for all but one blank so students must verify every blank.",
+      "- Keep each blank column grammatically parallel: every value for the same label must fit the same slot in its sentence.",
+      "- blankAnswerMode must be omitted or \"SOURCE_EXACT\"; the double-negative mode does not apply to multi-blank items.",
+      "- ⚠️ Do not generate passageWithBlank (the server builds it).",
+      `- direction example: "다음 글의 빈칸 ${labelsText}에 들어갈 말로 가장 적절한 것은?"`,
+    ].join("\n"));
+  }
+
+  if (rawSettings.doubleNegative !== true) return languagePrompt;
+
+  return combinePromptSections(languagePrompt, [
     "## Type detail setting: BLANK_INFERENCE / negative paraphrase blank",
     "- Apply the teacher-selected negative-paraphrase blank mode. The passage itself does NOT need to contain a negative cue.",
     "- The difficulty comes from the answer option: choose a central source expression from the passage, blank that exact expression, and make the correct option a semantically equivalent negative or privative paraphrase.",
@@ -736,8 +1465,8 @@ export function buildQuestionTypeSettingsPrompt(
     "- Add answerLogic in Korean explaining how the negative/privative paraphrase preserves the original passage meaning and why each tempting wrong option fails.",
     "- Use the tag '부정 패러프레이즈' for this setting. Use '이중 부정' only when the correct option truly combines two negative mechanisms such as not + independent/immune/free or cannot + trivial; do not tag simple not + negative noun as double negative.",
     "- Wrong-option explanations must cite the decisive passage clue or blank-sentence logic, not merely say the option is positive/negative or close to the author's ideal. For conclusion blanks, explicitly connect the rejection to the conclusion signal such as 'remain in that position for long', 'when viewed at the timescales...', or the sentence immediately before/after the blank.",
-  ].join("\n");
-}
+    ].join("\n"));
+  }
 
 export function getQuestionTypeSettingsForType(
   settings: unknown,
