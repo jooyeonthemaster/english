@@ -25,6 +25,7 @@ export function CropTutorialPlayer() {
       clickToPlay
       doubleClickToFullscreen
       initiallyMuted
+      acknowledgeRemotionLicense
       style={{
         width: "100%",
         borderRadius: 12,
