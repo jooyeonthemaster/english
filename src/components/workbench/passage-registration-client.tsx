@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
@@ -39,6 +39,8 @@ export function PassageRegistrationClient({
   initialCollections,
   draftCollections,
   draftMembership,
+  initialDraftIds,
+  initialPassageIds,
 }: PassageRegistrationProps) {
   const [saving, setSaving] = useState(false);
   const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
@@ -55,8 +57,20 @@ export function PassageRegistrationClient({
     toggleCollapse,
     setAllCollapsed,
     toggleDraftBlock,
+    addDraftBlocks,
+    addPassageBlocks,
     reset: resetBlocks,
   } = usePassageBlocks();
+  const initialDraftIdsKey = useMemo(
+    () => (initialDraftIds ?? []).join(","),
+    [initialDraftIds],
+  );
+  const initialPassageIdsKey = useMemo(
+    () => (initialPassageIds ?? []).join(","),
+    [initialPassageIds],
+  );
+  const appliedInitialDraftIdsRef = useRef<Set<string>>(new Set());
+  const appliedInitialPassageIdsRef = useRef<Set<string>>(new Set());
 
   // Shared metadata + analysis prompt — grouped into one custom hook
   // to preserve the original contiguous hook order.
@@ -166,6 +180,123 @@ export function PassageRegistrationClient({
   const handleSelectedDraftSaved = useCallback(() => {
     setDraftRefreshToken((v) => v + 1);
   }, []);
+
+  useEffect(() => {
+    const ids = (initialDraftIds ?? []).filter(
+      (id) => !appliedInitialDraftIdsRef.current.has(id),
+    );
+    if (ids.length === 0) return;
+
+    let cancelled = false;
+    ids.forEach((id) => appliedInitialDraftIdsRef.current.add(id));
+
+    void (async () => {
+      try {
+        const params = new URLSearchParams({
+          view: "list",
+          limit: String(Math.max(ids.length, 1)),
+          draftIds: ids.join(","),
+        });
+        const res = await fetch(`/api/extraction/m1-passages?${params}`, {
+          credentials: "include",
+          cache: "no-store",
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          drafts?: M1PassageDraftWithJob[];
+        };
+        if (!res.ok || !Array.isArray(data.drafts)) {
+          throw new Error("불러올 추출 지문을 찾지 못했습니다.");
+        }
+
+        const order = new Map(ids.map((id, index) => [id, index]));
+        const drafts = data.drafts
+          .filter((draft) => order.has(draft.id))
+          .sort(
+            (a, b) =>
+              (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
+              (order.get(b.id) ?? Number.MAX_SAFE_INTEGER),
+          );
+
+        if (cancelled || drafts.length === 0) return;
+        addDraftBlocks(drafts);
+        setFormCollapsed(false);
+        toast.success(
+          drafts.length === 1
+            ? "선택한 지문을 학습지 생성에 불러왔습니다."
+            : `${drafts.length}개 지문을 학습지 생성에 불러왔습니다.`,
+        );
+      } catch (err) {
+        if (cancelled) return;
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "추출 지문을 불러오지 못했습니다.",
+        );
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [addDraftBlocks, initialDraftIds, initialDraftIdsKey]);
+
+  useEffect(() => {
+    const ids = (initialPassageIds ?? []).filter(
+      (id) => !appliedInitialPassageIdsRef.current.has(id),
+    );
+    if (ids.length === 0) return;
+
+    let cancelled = false;
+    ids.forEach((id) => appliedInitialPassageIdsRef.current.add(id));
+
+    void (async () => {
+      try {
+        const params = new URLSearchParams({ passageIds: ids.join(",") });
+        const res = await fetch(`/api/passages/list?${params}`, {
+          credentials: "include",
+          cache: "no-store",
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          passages?: Array<{
+            id: string;
+            title?: string | null;
+            content?: string | null;
+            source?: string | null;
+          }>;
+        };
+        if (!res.ok || !Array.isArray(data.passages)) {
+          throw new Error("불러올 지문을 찾지 못했습니다.");
+        }
+
+        const order = new Map(ids.map((id, index) => [id, index]));
+        const passages = data.passages
+          .filter((passage) => order.has(passage.id))
+          .sort(
+            (a, b) =>
+              (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
+              (order.get(b.id) ?? Number.MAX_SAFE_INTEGER),
+          );
+
+        if (cancelled || passages.length === 0) return;
+        addPassageBlocks(passages);
+        setFormCollapsed(false);
+        toast.success(
+          passages.length === 1
+            ? "선택한 지문을 학습지 생성에 불러왔습니다."
+            : `${passages.length}개 지문을 학습지 생성에 불러왔습니다.`,
+        );
+      } catch (err) {
+        if (cancelled) return;
+        toast.error(
+          err instanceof Error ? err.message : "지문을 불러오지 못했습니다.",
+        );
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [addPassageBlocks, initialPassageIds, initialPassageIdsKey]);
 
   // ─── Collections (folders) ─── grouped useStates + effects in one custom hook to preserve the original contiguous hook order.
   const {

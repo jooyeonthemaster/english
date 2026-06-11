@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
@@ -59,11 +60,7 @@ interface BottomQueueSectionProps {
   savedQuestions: QuestionCardItem[];
   loadingSavedQuestions: boolean;
   setDetailQuestion: (q: QuestionCardItem | null) => void;
-  onApproveQuestion: (questionId: string) => void;
-  onUnapproveQuestion: (questionId: string) => void;
   onBatchApproveQuestions?: (questionIds: string[]) => void | Promise<void>;
-  /** Single-question delete wired to QuestionCard's header/dropdown delete. */
-  onDeleteQuestion?: (questionId: string) => void | Promise<void>;
   /** Bulk-delete persisted questions. Returns true if deletion actually ran
    *  (false on user-cancel) so the section can keep the selection on cancel. */
   onBatchDeleteQuestions?: (
@@ -233,13 +230,7 @@ export function BottomQueueSection({
   savedQuestions,
   loadingSavedQuestions,
   setDetailQuestion,
-  onApproveQuestion,
-  onUnapproveQuestion,
   onBatchApproveQuestions,
-  // Single-delete now routes through requestDelete -> in-app AlertDialog ->
-  // onBatchDeleteQuestions (with tombstone tracking). onDeleteQuestion is kept
-  // in the prop contract for the parent's wiring but superseded by that flow.
-  onDeleteQuestion,
   onBatchDeleteQuestions,
   deletedQuestionIds,
   deletedQuestionSignatures,
@@ -250,7 +241,12 @@ export function BottomQueueSection({
   const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
   const [reviewStatusFilter, setReviewStatusFilter] = useState<ReviewStatusFilter>("ALL");
   const [questionViewMode, setQuestionViewMode] = useState<QuestionViewMode>("flat");
-  const [cardLayoutMode, setCardLayoutMode] = useState<CardLayoutMode>("grid3");
+  const [cardLayoutMode, setCardLayoutMode] = usePersistedState<CardLayoutMode>(
+    "smoat:view-mode:generate-bottom-queue",
+    "grid3",
+    (v): v is CardLayoutMode =>
+      v === "grid2" || v === "grid3" || v === "list",
+  );
   const [selectedSessionQuestionIds, setSelectedSessionQuestionIds] = useState<Set<string>>(new Set());
   const [batchApproving, setBatchApproving] = useState(false);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
@@ -802,15 +798,13 @@ export function BottomQueueSection({
           num={card.number}
           readonly
           compact
-          showReviewActions={!deleteMode && Boolean(persistedId)}
+          showReviewActions={false}
           showHeaderActions={!deleteMode && Boolean(persistedId)}
           selected={isSelected}
           dragItemId={canDelete || canApprove ? (persistedId as string) : null}
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(card.question)}
           showDetailButton
-          onApprove={deleteMode ? undefined : () => persistedId && onApproveQuestion(persistedId)}
-          onUnapprove={deleteMode ? undefined : () => persistedId && onUnapproveQuestion(persistedId)}
           onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
           onDelete={
             deleteMode || !persistedId
@@ -837,15 +831,13 @@ export function BottomQueueSection({
           num={index + 1}
           readonly
           compact
-          showReviewActions={!deleteMode}
+          showReviewActions={false}
           showHeaderActions={!deleteMode}
           selected={isSelected}
           dragItemId={deleteMode ? q.id : null}
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
-          onApprove={deleteMode ? undefined : () => onApproveQuestion(cardQuestion.id)}
-          onUnapprove={deleteMode ? undefined : () => onUnapproveQuestion(cardQuestion.id)}
           onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}
           onDelete={
             deleteMode ? undefined : () => requestDelete([cardQuestion.id], "single")

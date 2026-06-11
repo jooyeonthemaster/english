@@ -480,6 +480,7 @@ export function BulkExtractClient({
       originalFileName: sourceName,
       mode: "PASSAGE_ONLY",
       outputMode: adaptiveIntake ? outputMode : undefined,
+      previewSlot: slots[0] ?? null,
     });
     if (nextJobId) {
       // 큐 열기·새로고침은 jobId 변화 effect가 createJob 직후 즉시 처리한다.

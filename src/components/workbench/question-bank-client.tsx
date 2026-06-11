@@ -16,6 +16,7 @@ import {
   Loader2,
   Trash2,
 } from "lucide-react";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import { PassageGroupedView } from "./question-bank-passage-view";
 import { toast } from "sonner";
 import {
@@ -261,7 +262,11 @@ export function QuestionBankClient({
   });
 
   // Grid view mode
-  const [gridCols, setGridCols] = useState<2 | 3 | "list">(2);
+  const [gridCols, setGridCols] = usePersistedState<2 | 3 | "list">(
+    "smoat:view-mode:question-bank",
+    2,
+    (v): v is 2 | 3 | "list" => v === 2 || v === 3 || v === "list",
+  );
   const viewSize: "lg" | "md" | "sm" =
     gridCols === 3 ? "md" : "lg";
 

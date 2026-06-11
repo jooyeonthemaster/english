@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import {
   ClipboardList,
@@ -11,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import type { QueuedPassage } from "@/hooks/use-passage-queue";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import {
   ViewModeCycleButton,
@@ -103,7 +104,12 @@ const QUEUE_GRID_OPTIONS = [
 ] satisfies ReadonlyArray<ViewModeCycleOption<QueueGridCols>>;
 
 export function QueueSectionContainer(p: QueueSectionContainerProps) {
-  const [gridCols, setGridCols] = useState<QueueGridCols>("grid3");
+  const [gridCols, setGridCols] = usePersistedState<QueueGridCols>(
+    "smoat:view-mode:passage-registration-queue",
+    "grid3",
+    (v): v is QueueGridCols =>
+      v === "grid3" || v === "grid2" || v === "list",
+  );
   const { triggerRefresh } = useTaskQueue();
   // 마키(영역 드래그) 시작 영역 = 이 "지문 목록" 섹션 전체(헤더·툴바·그리드). 같은
   // 페이지의 "자료 관리" 패널과 boundary 가 분리돼 서로 섞이지 않는다.

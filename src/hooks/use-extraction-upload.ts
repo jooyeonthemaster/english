@@ -6,17 +6,21 @@ import { useExtractionStore } from "@/lib/extraction/store";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 import type { ExtractionMode } from "@/lib/extraction/modes";
 
-interface UploadTarget {
-  pageIndex: number;
+interface UploadTargetBase {
   uploadUrl: string;
   uploadPath: string;
   token?: string;
   expiresAt: string;
 }
 
+interface UploadTarget extends UploadTargetBase {
+  pageIndex: number;
+}
+
 interface CreateJobResponse {
   jobId: string;
   uploadTargets: UploadTarget[];
+  previewUploadTarget?: UploadTargetBase | null;
   creditsProjected: number;
   creditsBalanceBefore: number;
 }
@@ -102,6 +106,28 @@ async function prepareSlotsForUpload(
   return out;
 }
 
+function mimeTypeForBlob(blob: Blob): "image/jpeg" | "image/png" | "image/webp" {
+  if (blob.type === "image/png") return "image/png";
+  if (blob.type === "image/webp") return "image/webp";
+  return "image/jpeg";
+}
+
+async function putBlobToTarget(
+  blob: Blob,
+  target: UploadTargetBase,
+  label: string,
+): Promise<void> {
+  const res = await fetch(target.uploadUrl, {
+    method: "PUT",
+    body: blob,
+    headers: {
+      "Content-Type": blob.type || "image/jpeg",
+      "x-upsert": "true",
+    },
+  });
+  if (!res.ok) throw new Error(`${label} 업로드 실패 (${res.status})`);
+}
+
 async function putWithLimit(
   slots: ClientPageSlot[],
   targets: UploadTarget[],
@@ -118,17 +144,7 @@ async function putWithLimit(
       const target = byIndex.get(slot.pageIndex);
       if (!target) throw new Error(`No upload target for page ${slot.pageIndex}`);
 
-      const res = await fetch(target.uploadUrl, {
-        method: "PUT",
-        body: slot.blob,
-        headers: {
-          "Content-Type": slot.blob.type || "image/jpeg",
-          "x-upsert": "true",
-        },
-      });
-      if (!res.ok) {
-        throw new Error(`페이지 ${slot.pageIndex + 1} 업로드 실패 (${res.status})`);
-      }
+      await putBlobToTarget(slot.blob, target, `페이지 ${slot.pageIndex + 1}`);
       uploaded += 1;
       onProgress(uploaded);
     }
@@ -153,9 +169,17 @@ export function useExtractionUpload() {
       mode: ExtractionMode;
       /** P7-D2: "verbatim"(원문 그대로) | "restored"(AI 복원). 미전달=기존 동작. */
       outputMode?: "verbatim" | "restored";
+      /** 원본 첫 장 미리보기. 크롭/이어붙임 추출과 별개로 목록 썸네일에 사용한다. */
+      previewSlot?: ClientPageSlot | null;
     }): Promise<string | null> => {
-      const { slots: rawSlots, sourceType, originalFileName, mode, outputMode } =
-        opts;
+      const {
+        slots: rawSlots,
+        sourceType,
+        originalFileName,
+        mode,
+        outputMode,
+        previewSlot: rawPreviewSlot,
+      } = opts;
       if (rawSlots.length === 0) {
         setError("업로드할 페이지가 없습니다.");
         return null;
@@ -168,6 +192,9 @@ export function useExtractionUpload() {
         // 업로드 전 다운스케일 — 폰 사진(수 MB)을 OCR 충분 해상도로 줄여 업로드·
         // OCR 시간을 함께 단축. 실패 슬롯은 원본 그대로 유지된다.
         const slots = await prepareSlotsForUpload(rawSlots);
+        const previewSlot = rawPreviewSlot
+          ? (await prepareSlotsForUpload([rawPreviewSlot]))[0]
+          : null;
 
         const createRes = await fetch("/api/extraction/jobs", {
           method: "POST",
@@ -178,6 +205,12 @@ export function useExtractionUpload() {
             outputMode,
             totalPages: slots.length,
             originalFileName: originalFileName ?? undefined,
+            previewPage: previewSlot
+              ? {
+                  size: previewSlot.bytes,
+                  mimeType: mimeTypeForBlob(previewSlot.blob),
+                }
+              : undefined,
             pages: slots.map((slot) => ({
               pageIndex: slot.pageIndex,
               size: slot.bytes,
@@ -197,6 +230,19 @@ export function useExtractionUpload() {
         }
         const created = (await createRes.json()) as CreateJobResponse;
         setJobId(created.jobId);
+
+        if (previewSlot && created.previewUploadTarget) {
+          try {
+            await putBlobToTarget(
+              previewSlot.blob,
+              created.previewUploadTarget,
+              "미리보기",
+            );
+          } catch {
+            // Preview is best-effort. The extraction pages themselves are the
+            // durable payload, so a missing thumbnail must not block OCR.
+          }
+        }
 
         await putWithLimit(slots, created.uploadTargets, (uploaded) =>
           setUploadProgress({ uploaded, total: slots.length }),

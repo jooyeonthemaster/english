@@ -153,8 +153,8 @@ export function MaterialJobCard({
         cardClass
       }
     >
-      {/* Thumbnail */}
-      <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-slate-100">
+      {/* A4 thumbnail */}
+      <div className="relative aspect-[210/297] w-full shrink-0 overflow-hidden bg-white">
         {thumbnailUrl ? (
           // Signed URLs change per fetch; no point in next/image optimization
           // eslint-disable-next-line @next/next/no-img-element
@@ -162,10 +162,10 @@ export function MaterialJobCard({
             src={thumbnailUrl}
             alt=""
             loading="lazy"
-            className="size-full object-cover object-top"
+            className="size-full object-contain object-center"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-slate-300">
+          <div className="flex size-full items-center justify-center bg-slate-50 text-slate-300">
             <FileText className="size-8" aria-hidden="true" />
           </div>
         )}

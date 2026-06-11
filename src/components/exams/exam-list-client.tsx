@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
   addExamsToCollection,
   bulkDeleteExams,
@@ -152,7 +153,11 @@ export function ExamListClient({
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [classFilter, setClassFilter] = useState("ALL");
-  const [viewType, setViewType] = useState<"grid" | "list">("grid");
+  const [viewType, setViewType] = usePersistedState<"grid" | "list">(
+    "smoat:view-mode:exam-list",
+    "grid",
+    (v): v is "grid" | "list" => v === "grid" || v === "list",
+  );
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);

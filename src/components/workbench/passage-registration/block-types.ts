@@ -70,6 +70,29 @@ export function makeDraftBlock(draft: M1PassageDraftWithJob): PassageBlock {
   };
 }
 
+export function makePassageBlock(passage: {
+  title?: string | null;
+  content?: string | null;
+  source?: string | null;
+}): PassageBlock {
+  const content = passage.content?.trim() || "";
+  const title =
+    passage.title?.trim() ||
+    content.split(/[.\n]/)[0]?.slice(0, 60) ||
+    "지문";
+  return {
+    id: nextBlockId(),
+    title,
+    content,
+    annotations: [],
+    imageFile: null,
+    imagePreview: null,
+    source: passage.source?.trim() || "",
+    sourceDraftId: null,
+    collapsed: false,
+  };
+}
+
 export function blockHasContent(b: PassageBlock): boolean {
   return b.content.trim().length > 0 || b.imageFile !== null;
 }

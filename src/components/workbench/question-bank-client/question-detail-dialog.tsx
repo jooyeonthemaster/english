@@ -84,7 +84,7 @@ export function QuestionDetailDialog({
                   <button
                     type="button"
                     onClick={() => onUnapprove(question.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-rose-200 bg-rose-50 px-2.5 text-[11px] font-semibold text-rose-600 shadow-none transition-colors hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
                     검수취소

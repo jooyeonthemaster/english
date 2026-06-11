@@ -1237,11 +1237,18 @@ const COVER_DEFAULTS: ReportCover = {
 interface Props {
   passageId: string;
   initialReport: AnalysisReport;
+  onDraftChange?: (report: AnalysisReport, state: { dirty: boolean }) => void;
   onSaved?: (report: AnalysisReport) => void;
   onExit?: () => void;
 }
 
-export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit }: Props) {
+export function AnalysisReportEditor({
+  passageId,
+  initialReport,
+  onDraftChange,
+  onSaved,
+  onExit,
+}: Props) {
   const [history, dispatchReport] = useReducer(reportHistoryReducer, {
     present: initialReport,
     past: [],
@@ -1270,6 +1277,10 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const dirty = report !== baseline;
   const canUndo = history.past.length > 0;
   const canRedo = history.future.length > 0;
+
+  useEffect(() => {
+    onDraftChange?.(report, { dirty });
+  }, [dirty, onDraftChange, report]);
 
   // 콘텐츠 편집 콜백 (안정적)
   const med = useMemo(() => ({ commit: (next: ReportMeta) => setReport((r) => setMeta(r, next)) }), [setReport]);
@@ -2255,6 +2266,17 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
             <Printer className="h-3.5 w-3.5" />
             인쇄
           </button>
+          {onExit ? (
+            <button
+              type="button"
+              onClick={onExit}
+              title="이전 단계로 돌아가기"
+              aria-label="이전 단계로 돌아가기"
+              className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
+          ) : null}
         </div>
       </div>
 

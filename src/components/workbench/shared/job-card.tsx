@@ -212,8 +212,8 @@ export function JobCard({
     >
       <div
         className={
-          "relative shrink-0 overflow-hidden bg-slate-50 " +
-          (variant === "compact" ? "h-[46px] w-[78px]" : "h-[100px] w-[150px]")
+          "relative aspect-[210/297] shrink-0 self-center overflow-hidden bg-white " +
+          (variant === "compact" ? "w-[58px]" : "w-[150px]")
         }
       >
         {thumbnailUrl ? (
@@ -223,10 +223,10 @@ export function JobCard({
             src={thumbnailUrl}
             alt=""
             loading="lazy"
-            className="size-full object-cover object-top"
+            className="size-full object-contain object-center"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-slate-300">
+          <div className="flex size-full items-center justify-center bg-slate-50 text-slate-300">
             <Icon className="size-7" aria-hidden="true" />
           </div>
         )}

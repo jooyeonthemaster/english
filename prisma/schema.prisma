@@ -3844,6 +3844,20 @@ model PlatformApiUsageCost {
   @@map("platform_api_usage_costs")
 }
 
+model DailyFxRate {
+  id        String   @id @default(cuid())
+  date      String   @unique // KST date "YYYY-MM-DD" the rate applies to
+  base      String   @default("USD")
+  quote     String   @default("KRW")
+  rate      Decimal  @db.Decimal(12, 4)
+  source    String   @default("FRANKFURTER") // "FRANKFURTER" | "MANUAL"
+  fetchedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("daily_fx_rates")
+}
+
 model AcademyTheme {
   id           String   @id @default(cuid())
   academyId    String   @unique

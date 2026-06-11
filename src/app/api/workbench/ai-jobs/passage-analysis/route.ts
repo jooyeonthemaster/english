@@ -22,6 +22,7 @@ const requestSchema = z.object({
   targetLevel: z.string().optional(),
   generationPlan: z.unknown().optional(),
   analysisTone: z.unknown().optional(),
+  forcePrimeReport: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -87,6 +88,7 @@ export async function POST(req: NextRequest) {
         targetLevel: parsed.data.targetLevel ?? "",
         generationPlan,
         analysisTone,
+        forcePrimeReport: parsed.data.forcePrimeReport ?? false,
       },
     },
   });
