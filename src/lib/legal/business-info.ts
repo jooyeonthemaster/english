@@ -48,7 +48,7 @@ export const BUSINESS_INFO: BusinessInfo = {
   phone: publicEnv(process.env.NEXT_PUBLIC_BUSINESS_PHONE, "02-336-3368"),
   email: publicEnv(
     process.env.NEXT_PUBLIC_BUSINESS_EMAIL,
-    "neander@neander.co.kr",
+    "info@neander.co.kr",
   ),
   hostingProvider: publicEnv(
     process.env.NEXT_PUBLIC_BUSINESS_HOSTING_PROVIDER,

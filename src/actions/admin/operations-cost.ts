@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { OPERATION_LABELS, type OperationType } from "@/lib/credit-costs";
+import { getUsdKrwRate, kstTodayString } from "@/lib/fx-rate";
 import { syncPlatformApiUsageCostsForRange } from "@/lib/platform-api-costs";
 import {
   getProviderBillingSyncStatus,
@@ -57,6 +58,16 @@ export interface CreditOperationSummary {
   transactionCount: number;
 }
 
+export interface AcademyUsageSummary {
+  academyId: string | null;
+  name: string;
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  costUsd: number;
+  costKrw: number;
+}
+
 export interface ProviderPricingSummary {
   id: string;
   provider: string;
@@ -95,6 +106,11 @@ export interface OperationsCostDashboard {
   rangeLabel: string;
   generatedAt: string;
   usdToKrwRate: number;
+  fxRate: {
+    rate: number;
+    date: string;
+    source: string;
+  };
   pricing: {
     fixedMonthlyCostKrw: number;
     hasGeminiPricing: boolean;
@@ -119,6 +135,7 @@ export interface OperationsCostDashboard {
   buckets: CostBucket[];
   sources: CostSourceSummary[];
   creditOperations: CreditOperationSummary[];
+  academyUsage: AcademyUsageSummary[];
   providerPricings: ProviderPricingSummary[];
   billingReconciliation: {
     hasActual: boolean;
@@ -181,6 +198,15 @@ type SourceAccumulator = {
   costKrw: number;
 };
 
+type AcademyUsageAccumulator = {
+  academyId: string | null;
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  costUsd: number;
+  costKrw: number;
+};
+
 type PricingConfig = {
   usdToKrwRate: number;
   geminiInputUsdPer1M: number | null;
@@ -207,6 +233,12 @@ export async function getOperationsCostDashboard(
   const pricing = readPricingConfig();
   const missingPricingKeys = new Set<string>();
   const range = buildRange(normalizedMode, options);
+  // In bucket mode (single 일별/월별 selection) the breakdown panels — 원가 구성,
+  // 학원별 사용량, 크레딧 사용 — aggregate only the selected day/month. In custom
+  // range mode they cover the whole range. The 일별/월별 손익 trend table always
+  // spans the full window regardless (it is the time series).
+  const isInSummaryScope = (key: string) =>
+    range.summaryMode === "range" || key === range.summaryKey;
   const buckets = new Map<string, BucketAccumulator>(
     range.buckets.map((bucket) => [
       bucket.key,
@@ -231,6 +263,7 @@ export async function getOperationsCostDashboard(
     ]),
   );
   const sources = new Map<string, SourceAccumulator>();
+  const academyUsageMap = new Map<string, AcademyUsageAccumulator>();
 
   await syncPlatformApiUsageCostsForRange(range.start, range.end);
 
@@ -281,6 +314,7 @@ export async function getOperationsCostDashboard(
       },
       select: {
         usageAt: true,
+        academyId: true,
         sourceType: true,
         sourceDetail: true,
         provider: true,
@@ -360,16 +394,23 @@ export async function getOperationsCostDashboard(
     const bucket = buckets.get(key);
     if (!bucket) continue;
 
+    // Trend buckets always span the full window.
+    addBucketApiCost(bucket, {
+      calls: cost.calls,
+      pricingSource: cost.pricingSource,
+      inputTokens: cost.inputTokens,
+      outputTokens: cost.outputTokens,
+      costKrw: cost.costKrw,
+    });
+
+    // Breakdown panels only aggregate the selected period.
+    if (!isInSummaryScope(key)) continue;
+
     if (cost.pricingSource === "MISSING") {
       missingPricingKeys.add(formatMissingPricingKey(cost));
     }
 
-    addApiCost({
-      buckets,
-      sources,
-      bucketKey: key,
-      sourceKey: getApiCostSourceKey(cost),
-      sourceLabel: getApiCostSourceLabel(cost),
+    addSourceApiCost(sources, getApiCostSourceKey(cost), getApiCostSourceLabel(cost), {
       calls: cost.calls,
       pricingSource: cost.pricingSource,
       inputTokens: cost.inputTokens,
@@ -377,6 +418,24 @@ export async function getOperationsCostDashboard(
       costUsd: Number(cost.costUsd),
       costKrw: cost.costKrw,
     });
+
+    const academyKey = cost.academyId ?? "__unassigned__";
+    const academyEntry =
+      academyUsageMap.get(academyKey) ??
+      {
+        academyId: cost.academyId ?? null,
+        calls: 0,
+        inputTokens: 0,
+        outputTokens: 0,
+        costUsd: 0,
+        costKrw: 0,
+      };
+    academyEntry.calls += cost.calls;
+    academyEntry.inputTokens += cost.inputTokens;
+    academyEntry.outputTokens += cost.outputTokens;
+    academyEntry.costUsd += Number(cost.costUsd);
+    academyEntry.costKrw += cost.costKrw;
+    academyUsageMap.set(academyKey, academyEntry);
   }
 
   const creditOperationMap = new Map<string, CreditOperationSummary>();
@@ -387,6 +446,9 @@ export async function getOperationsCostDashboard(
 
     const signedCredits = tx.type === "REFUND" ? -Math.abs(tx.amount) : Math.abs(tx.amount);
     bucket.creditsConsumed += signedCredits;
+
+    // 크레딧 사용 breakdown only aggregates the selected period.
+    if (!isInSummaryScope(key)) continue;
 
     const operationType = tx.operationType ?? "UNKNOWN";
     const existing =
@@ -425,6 +487,29 @@ export async function getOperationsCostDashboard(
   const creditOperations = Array.from(creditOperationMap.values())
     .filter((item) => item.credits !== 0 || item.transactionCount > 0)
     .sort((a, b) => Math.abs(b.credits) - Math.abs(a.credits));
+  const academyIds = Array.from(academyUsageMap.values())
+    .map((entry) => entry.academyId)
+    .filter((id): id is string => id !== null);
+  const academyNames = academyIds.length
+    ? await prisma.academy.findMany({
+        where: { id: { in: academyIds } },
+        select: { id: true, name: true },
+      })
+    : [];
+  const academyNameMap = new Map(academyNames.map((academy) => [academy.id, academy.name]));
+  const academyUsage: AcademyUsageSummary[] = Array.from(academyUsageMap.values())
+    .map((entry) => ({
+      academyId: entry.academyId,
+      name: entry.academyId
+        ? academyNameMap.get(entry.academyId) ?? "삭제된 학원"
+        : "미지정",
+      calls: entry.calls,
+      inputTokens: entry.inputTokens,
+      outputTokens: entry.outputTokens,
+      costUsd: entry.costUsd,
+      costKrw: entry.costKrw,
+    }))
+    .sort((a, b) => b.costKrw - a.costKrw || b.calls - a.calls);
   const untrackedWorkbenchCredits = creditTransactions
     .filter((tx) => tx.type === "CONSUMPTION" && tx.referenceType === "WORKBENCH_AI_JOB")
     .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
@@ -439,6 +524,16 @@ export async function getOperationsCostDashboard(
     (sum, tx) => sum + Math.abs(tx.amount),
     0,
   );
+  const today = kstTodayString();
+  const displayRateDate =
+    normalizedMode === "daily" && range.summaryMode === "bucket" && range.summaryKey
+      ? range.summaryKey
+      : today;
+  const fxRate = await getUsdKrwRate(displayRateDate > today ? today : displayRateDate);
+  // Self-heal today's rate even when viewing a past day, so it stays fresh daily.
+  if (displayRateDate !== today) {
+    await getUsdKrwRate(today);
+  }
   const billingReconciliation = buildBillingReconciliationSummary(
     billingReconciliations,
     apiUsageCosts,
@@ -455,7 +550,8 @@ export async function getOperationsCostDashboard(
     summaryLabel: range.summaryLabel,
     rangeLabel: `${range.buckets[0]?.label ?? ""} - ${range.buckets[range.buckets.length - 1]?.label ?? ""}`,
     generatedAt: new Date().toISOString(),
-    usdToKrwRate: pricing.usdToKrwRate,
+    usdToKrwRate: fxRate.rate,
+    fxRate,
     pricing: {
       fixedMonthlyCostKrw: pricing.fixedMonthlyCostKrw,
       hasGeminiPricing:
@@ -476,6 +572,7 @@ export async function getOperationsCostDashboard(
     buckets: rows,
     sources: sourceRows,
     creditOperations,
+    academyUsage,
     providerPricings: providerPricings.map((row) => ({
       id: row.id,
       provider: row.provider,
@@ -943,42 +1040,51 @@ function getApiCostSourceLabel(cost: {
   return cost.provider;
 }
 
-function addApiCost({
-  buckets,
-  sources,
-  bucketKey,
-  sourceKey,
-  sourceLabel,
-  calls,
-  pricingSource,
-  inputTokens,
-  outputTokens,
-  costUsd,
-  costKrw,
-}: {
-  buckets: Map<string, BucketAccumulator>;
-  sources: Map<string, SourceAccumulator>;
-  bucketKey: string;
-  sourceKey: string;
-  sourceLabel: string;
-  calls: number;
-  pricingSource: string;
-  inputTokens: number;
-  outputTokens: number;
-  costUsd: number;
-  costKrw: number;
-}) {
-  const bucket = buckets.get(bucketKey);
-  if (bucket) {
-    bucket.variableCostKrw += costKrw;
-    bucket.apiCalls += calls;
-    if (pricingSource === "MISSING") {
-      bucket.unpricedCalls += calls;
-    }
-    bucket.inputTokens += inputTokens;
-    bucket.outputTokens += outputTokens;
+function addBucketApiCost(
+  bucket: BucketAccumulator,
+  {
+    calls,
+    pricingSource,
+    inputTokens,
+    outputTokens,
+    costKrw,
+  }: {
+    calls: number;
+    pricingSource: string;
+    inputTokens: number;
+    outputTokens: number;
+    costKrw: number;
+  },
+) {
+  bucket.variableCostKrw += costKrw;
+  bucket.apiCalls += calls;
+  if (pricingSource === "MISSING") {
+    bucket.unpricedCalls += calls;
   }
+  bucket.inputTokens += inputTokens;
+  bucket.outputTokens += outputTokens;
+}
 
+function addSourceApiCost(
+  sources: Map<string, SourceAccumulator>,
+  sourceKey: string,
+  sourceLabel: string,
+  {
+    calls,
+    pricingSource,
+    inputTokens,
+    outputTokens,
+    costUsd,
+    costKrw,
+  }: {
+    calls: number;
+    pricingSource: string;
+    inputTokens: number;
+    outputTokens: number;
+    costUsd: number;
+    costKrw: number;
+  },
+) {
   const source =
     sources.get(sourceKey) ??
     {

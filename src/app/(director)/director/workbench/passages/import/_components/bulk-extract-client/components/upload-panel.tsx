@@ -10,10 +10,11 @@ import {
 import dynamic from "next/dynamic";
 import {
   CheckCircle2,
+  ClipboardPaste,
   Database,
   FileText,
   GripVertical,
-  Keyboard,
+  ImageUp,
   Layers,
   Loader2,
   PlayCircle,
@@ -386,10 +387,14 @@ export function UploadPanel({
       badge: `지문당 ◈${restoredCredits}`,
     },
   ];
+  const controlRowClass =
+    "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
+  const controlLabelClass =
+    "w-[64px] shrink-0 text-[11px] font-bold text-slate-600";
   const outputModeToggle = onOutputModeChange ? (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-[11px] font-bold text-slate-600">출력 방식</span>
-      <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+    <div className="flex min-w-0 items-center gap-3">
+      <span className={controlLabelClass}>출력 방식</span>
+      <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
         {outputModeOptions.map((opt) => {
           const active = selectedOutput === opt.v;
           return (
@@ -400,7 +405,7 @@ export function UploadPanel({
               disabled={startBusy}
               aria-pressed={active}
               className={
-                "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
                 (active
                   ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
                   : "cursor-pointer text-slate-500 hover:text-slate-700")
@@ -513,93 +518,90 @@ export function UploadPanel({
     )
   ) : null;
 
+  const inputTabClass = (active: boolean) =>
+    "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+    (active
+      ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
+      : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600");
+
   return (
     <section className="flex min-h-0 flex-col overflow-hidden">
-      {/* ── 헤더 + 컨트롤 통합 (제목·모드·출력방식·시작을 한 줄로) ── */}
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2.5 border-b border-slate-100 px-4 py-2.5">
-        {/* 좌측 — 출력 방식(그대로 추출 / AI 복원) 토글을 줄 가장 왼쪽에 정렬. */}
-        <div className="min-w-0">{outputModeToggle}</div>
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          <div className="relative">
-            <div className="inline-flex rounded-md bg-slate-100 p-0.5 text-[11px] font-bold text-slate-500">
-              <button
-                type="button"
-                onClick={() => onInputModeChange("file")}
-                className={
-                  "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded px-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-                  (inputMode === "file"
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "hover:text-slate-800")
-                }
-              >
-                <UploadCloud className="size-3.5" aria-hidden="true" />
-                파일
-              </button>
-              <button
-                type="button"
-                onClick={() => onInputModeChange("text")}
-                className={
-                  "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded px-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-                  (inputMode === "text"
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "hover:text-slate-800")
-                }
-              >
-                <Keyboard className="size-3.5" aria-hidden="true" />
-                텍스트
-              </button>
-            </div>
+      {/* ── 입력 방식 탭: 직접 입력 · 이미지/PDF ─────────────────────── */}
+      <div className={controlRowClass}>
+        <span className={controlLabelClass}>입력 방식</span>
+        <div className="flex min-w-0 items-center gap-1.5">
+          <div className="relative shrink-0">
+          <button
+            type="button"
+            onClick={() => onInputModeChange("text")}
+            className={inputTabClass(inputMode === "text")}
+          >
+            <ClipboardPaste className="size-3.5" aria-hidden="true" />
+            직접 입력
+          </button>
 
-            {/* 텍스트 입력 안내 말풍선 — 텍스트 버튼 위에서 삐져나오듯, 레이아웃을
-                차지하지 않고 페이지 위로 떠서(absolute) 버튼을 화살표로 가리킨다. */}
-            {showTextNudge ? (
-              <div
-                role="status"
-                aria-live="polite"
-                className="absolute right-0 top-[calc(100%+10px)] z-30 w-[246px] rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-left shadow-2xl shadow-blue-950/15 ring-1 ring-blue-100/70"
-              >
+          {/* 텍스트 입력 안내 말풍선 — 직접 입력 탭 아래에서 뜬다. */}
+          {showTextNudge ? (
+            <div
+              role="status"
+              aria-live="polite"
+              className="absolute left-0 top-[calc(100%+10px)] z-30 w-[246px] rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-left shadow-2xl shadow-blue-950/15 ring-1 ring-blue-100/70"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute -top-1.5 left-5 h-3 w-3 rotate-45 border-l border-t border-blue-200 bg-blue-50"
+              />
+              <div className="relative flex items-start gap-2.5">
                 <span
                   aria-hidden="true"
-                  className="absolute -top-1.5 right-3 h-3 w-3 rotate-45 border-l border-t border-blue-200 bg-blue-50"
+                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
                 />
-                <div className="relative flex items-start gap-2.5">
-                  <span
-                    aria-hidden="true"
-                    className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[12.5px] font-black text-slate-900">
-                      텍스트로 바로 입력할 수도 있어요
-                    </p>
-                    <p className="mt-0.5 text-[11px] font-semibold leading-relaxed text-slate-500">
-                      파일 없이 지문 원문이나 문제 텍스트를 붙여넣어 바로 추출할 수
-                      있어요.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={closeTextNudgeForADay}
-                    className="-mr-1 -mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-blue-100 hover:text-blue-700"
-                    aria-label="텍스트 입력 안내 닫기"
-                    title="안내 닫기"
-                  >
-                    <X className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[12.5px] font-black text-slate-900">
+                    텍스트로 바로 입력할 수도 있어요
+                  </p>
+                  <p className="mt-0.5 text-[11px] font-semibold leading-relaxed text-slate-500">
+                    파일 없이 지문 원문이나 문제 텍스트를 붙여넣어 바로 추출할 수
+                    있어요.
+                  </p>
                 </div>
-                <div className="relative mt-2 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={hideTextNudgePermanently}
-                    className="rounded-md px-1.5 py-1 text-[10.5px] font-bold text-blue-600 transition-colors hover:bg-blue-100 hover:text-blue-800"
-                  >
-                    다시는 보지 않기
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={closeTextNudgeForADay}
+                  className="-mr-1 -mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-blue-100 hover:text-blue-700"
+                  aria-label="텍스트 입력 안내 닫기"
+                  title="안내 닫기"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
               </div>
-            ) : null}
+              <div className="relative mt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={hideTextNudgePermanently}
+                  className="rounded-md px-1.5 py-1 text-[10.5px] font-bold text-blue-600 transition-colors hover:bg-blue-100 hover:text-blue-800"
+                >
+                  다시는 보지 않기
+                </button>
+              </div>
+            </div>
+          ) : null}
           </div>
+
+          <button
+            type="button"
+            onClick={() => onInputModeChange("file")}
+            className={inputTabClass(inputMode === "file")}
+          >
+            <ImageUp className="size-3.5" aria-hidden="true" />
+            이미지·PDF
+          </button>
         </div>
       </div>
+
+      {outputModeToggle ? (
+        <div className={controlRowClass}>{outputModeToggle}</div>
+      ) : null}
 
       {/* ── 본문 ─────────────────────────────────────────────────── */}
       <div className="flex min-h-0 flex-1 flex-col">
@@ -688,20 +690,22 @@ export function UploadPanel({
                     추출될 지문 0개
                   </span>
                 </div>
-                <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
-                  <div className="mx-auto mt-6 flex max-w-xs flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
-                    <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
-                      <PlayCircle className="size-3.5" aria-hidden="true" />
-                      사용 순서
+                <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
+                  <div className="smoat-file-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
+                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                      <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
+                        <PlayCircle className="size-3.5" aria-hidden="true" />
+                        사용 순서
+                      </div>
+                      <h3 className="smoat-file-empty-guide__title min-w-0 flex-1 text-[15px] font-extrabold leading-snug text-slate-950">
+                        파일을 올리면 바로 지문을 자를 수 있어요
+                      </h3>
                     </div>
-                    <h3 className="mt-2 text-[15px] font-extrabold leading-snug text-slate-950">
-                      파일을 올리면 바로 지문을 자를 수 있어요
-                    </h3>
-                    <ol className="mt-4 space-y-2">
+                    <ol className="smoat-file-empty-guide__steps mt-3 grid gap-2">
                       {quickGuideSteps.map((step, index) => (
                         <li
                           key={step.label}
-                          className="flex items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
+                          className="smoat-file-empty-guide__step flex min-w-0 items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
                         >
                           <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-extrabold text-blue-700">
                             {index + 1}
@@ -710,7 +714,7 @@ export function UploadPanel({
                             className="size-3.5 text-blue-600"
                             aria-hidden="true"
                           />
-                          <span>{step.label}</span>
+                          <span className="min-w-0 leading-snug">{step.label}</span>
                         </li>
                       ))}
                     </ol>
@@ -739,6 +743,48 @@ export function UploadPanel({
           )}
         </div>
       </div>
+      <style>{`
+        .smoat-file-guide-scroll {
+          container-type: inline-size;
+        }
+        .smoat-file-empty-guide {
+          margin-top: clamp(0.75rem, 5cqw, 1.5rem);
+          padding: clamp(0.75rem, 4cqw, 1rem);
+        }
+        .smoat-file-empty-guide__steps {
+          grid-template-columns: 1fr;
+        }
+        @container (max-width: 359px) {
+          .smoat-file-empty-guide__title {
+            flex-basis: 100%;
+            font-size: 13px;
+          }
+          .smoat-file-empty-guide__step {
+            padding-block: 0.45rem;
+          }
+        }
+        @container (min-width: 420px) {
+          .smoat-file-empty-guide__title {
+            flex-basis: 100%;
+          }
+          .smoat-file-empty-guide__steps {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+          .smoat-file-empty-guide__step {
+            align-items: flex-start;
+            flex-direction: column;
+            min-height: 4.5rem;
+          }
+        }
+        @container (min-width: 560px) {
+          .smoat-file-empty-guide__title {
+            flex-basis: auto;
+          }
+          .smoat-file-empty-guide__step {
+            min-height: 4rem;
+          }
+        }
+      `}</style>
 
     </section>
   );

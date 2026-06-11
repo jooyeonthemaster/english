@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
-import { PAYMENT_PG_NAME } from "@/lib/legal/payment-processor";
+import {
+  CREDIT_TOP_UP_CARD_ONLY,
+  CREDIT_TOP_UP_PAY_METHODS_TEXT,
+  CREDIT_TOP_UP_REFUND_ACCOUNT_TEXT,
+  PAYMENT_PG_NAME,
+} from "@/lib/legal/payment-processor";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
@@ -12,7 +17,7 @@ export const metadata: Metadata = {
     "SMOAT의 개인정보 수집, 이용, 보관, 위탁, 결제 및 환불 처리 기준을 안내합니다.",
 };
 
-const UPDATED_AT = "2026년 5월 27일";
+const UPDATED_AT = "2026년 6월 9일";
 
 const PRIVACY_SECTIONS = [
   {
@@ -44,7 +49,9 @@ const PRIVACY_SECTIONS = [
       SUBSCRIPTION_BILLING_ENABLED
         ? "회사는 구독 요금제 및 크레딧 결제와 결제 검증을 위해 포트원(PortOne) 결제 연동 서비스를 이용합니다."
         : "회사는 크레딧 결제와 결제 검증을 위해 포트원(PortOne) 결제 연동 서비스를 이용합니다.",
-      `${PAYMENT_PG_NAME}는 카드, 간편결제, 계좌이체, 가상계좌, 휴대폰 결제 등 PG 결제 처리를 수행할 수 있습니다.`,
+      CREDIT_TOP_UP_CARD_ONLY
+        ? `${PAYMENT_PG_NAME}는 신용카드 PG 결제 승인, 매입, 취소, 환불 처리를 수행합니다.`
+        : `${PAYMENT_PG_NAME}는 ${CREDIT_TOP_UP_PAY_METHODS_TEXT} 결제 등 PG 결제 처리를 수행할 수 있습니다.`,
       ...(SUBSCRIPTION_BILLING_ENABLED
         ? [
             "신용카드 정기결제를 등록하는 경우 포트원이 발급한 빌링키와 등록·삭제 상태, 다음 결제 예약 정보를 저장하여 30일 단위 구독 갱신과 해지를 처리합니다.",
@@ -52,8 +59,12 @@ const PRIVACY_SECTIONS = [
         : []),
       "회사는 원칙적으로 카드번호, 유효기간, CVC 등 민감한 결제수단 원문 정보를 직접 저장하지 않으며, 결제 처리에 필요한 정보는 포트원 및 PG사가 관련 법령과 보안 기준에 따라 처리합니다.",
       SUBSCRIPTION_BILLING_ENABLED
-        ? "결제 상태 확인, 영수증 확인, 결제 취소, 환불, 가상계좌 입금 확인, 정기결제 예약·해지를 위해 포트원 결제 ID, PG 거래 ID, 빌링키 식별 정보, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다."
-        : "결제 상태 확인, 영수증 확인, 결제 취소, 환불, 가상계좌 입금 확인을 위해 포트원 결제 ID, PG 거래 ID, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다.",
+        ? CREDIT_TOP_UP_CARD_ONLY
+          ? "신용카드 결제 상태 확인, 영수증 확인, 결제 취소, 환불, 정기결제 예약·해지를 위해 포트원 결제 ID, PG 거래 ID, 빌링키 식별 정보, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다."
+          : "결제 상태 확인, 영수증 확인, 결제 취소, 환불, 가상계좌 입금 확인, 정기결제 예약·해지를 위해 포트원 결제 ID, PG 거래 ID, 빌링키 식별 정보, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다."
+        : CREDIT_TOP_UP_CARD_ONLY
+          ? "신용카드 결제 상태 확인, 영수증 확인, 결제 취소, 환불을 위해 포트원 결제 ID, PG 거래 ID, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다."
+          : "결제 상태 확인, 영수증 확인, 결제 취소, 환불, 가상계좌 입금 확인을 위해 포트원 결제 ID, PG 거래 ID, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다.",
     ],
   },
   {
@@ -62,7 +73,9 @@ const PRIVACY_SECTIONS = [
       SUBSCRIPTION_BILLING_ENABLED
         ? "포트원(PortOne): 결제 연동, 빌링키 발급·삭제, 정기결제 예약, 결제 상태 조회, 웹훅 전송, 결제 취소 및 환불 연동"
         : "포트원(PortOne): 결제 연동, 결제 상태 조회, 웹훅 전송, 결제 취소 및 환불 연동",
-      `${PAYMENT_PG_NAME}: PG 결제 승인, 매입, 취소, 환불, 가상계좌 입금 처리, 영수증 및 거래 확인`,
+      CREDIT_TOP_UP_CARD_ONLY
+        ? `${PAYMENT_PG_NAME}: 신용카드 PG 결제 승인, 매입, 취소, 환불, 영수증 및 거래 확인`
+        : `${PAYMENT_PG_NAME}: PG 결제 승인, 매입, 취소, 환불, 가상계좌 입금 처리, 영수증 및 거래 확인`,
       "클라우드 및 데이터베이스 제공업체: 서비스 인프라 운영, 데이터 저장, 백업, 보안 관리",
       "이메일·알림 발송 서비스 제공업체: 서비스 안내, 고객지원, 가입 및 운영 관련 알림 발송",
       "회사는 위탁 계약 또는 서비스 이용 조건을 통해 수탁자가 개인정보를 안전하게 처리하도록 관리·감독합니다.",
@@ -106,7 +119,9 @@ const PRIVACY_SECTIONS = [
     body: [
       "회사는 개인정보 접근 권한 관리, 암호화, 접속 기록 보관, 보안 업데이트, 내부 접근 통제 등 개인정보 보호를 위한 기술적·관리적 조치를 시행합니다.",
       "결제 정보는 포트원 및 PG사의 결제 보안 체계를 통해 처리되며, 회사는 결제수단 원문 정보를 직접 저장하지 않도록 설계합니다.",
-      "관리자 기능은 권한에 따라 접근을 제한하며, 결제 취소, 환불, 가상계좌 말소 등 고위험 작업은 관리자 권한을 확인한 뒤 처리합니다.",
+      CREDIT_TOP_UP_CARD_ONLY
+        ? "관리자 기능은 권한에 따라 접근을 제한하며, 결제 취소, 환불 등 고위험 작업은 관리자 권한을 확인한 뒤 처리합니다."
+        : "관리자 기능은 권한에 따라 접근을 제한하며, 결제 취소, 환불, 가상계좌 말소 등 고위험 작업은 관리자 권한을 확인한 뒤 처리합니다.",
     ],
   },
   {
@@ -174,7 +189,14 @@ export default function PrivacyPage() {
           ) : (
             <SummaryCard title="결제정보" body="카드 원문 정보 미저장" />
           )}
-          <SummaryCard title="환불계좌" body="환불 처리 목적에 한해 수집" />
+          <SummaryCard
+            title="환불계좌"
+            body={
+              CREDIT_TOP_UP_CARD_ONLY
+                ? "예외적 계좌 환불 시만 수집"
+                : "환불 처리 목적에 한해 수집"
+            }
+          />
         </section>
 
         <section className="mt-5 space-y-4">
@@ -206,8 +228,8 @@ export default function PrivacyPage() {
           <p className="mt-2">
             SMOAT는 결제수단 원문 정보를 직접 저장하지 않고, 포트원 및{" "}
             {PAYMENT_PG_NAME}를 통해 크레딧 결제 승인·취소·환불 상태를 확인합니다.
-            환불계좌 정보는 가상계좌·계좌이체 등 계좌 환불이 필요한 경우에만
-            최소 범위로 수집합니다.
+            환불계좌 정보는 {CREDIT_TOP_UP_REFUND_ACCOUNT_TEXT}
+            필요한 최소 범위로 수집합니다.
           </p>
         </section>
 

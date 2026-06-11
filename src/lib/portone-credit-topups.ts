@@ -25,7 +25,7 @@ export const PORTONE_TOP_UP_PAY_METHODS = [
 
 export type PortOneTopUpPayMethod = (typeof PORTONE_TOP_UP_PAY_METHODS)[number];
 
-const PORTONE_PG_PROVIDERS = ["kcp_v2", "inicis_v2"] as const;
+const PORTONE_PG_PROVIDERS = ["danal_tpay", "inicis_v2", "kcp_v2"] as const;
 
 export type PortOnePgProvider = (typeof PORTONE_PG_PROVIDERS)[number];
 
@@ -135,12 +135,12 @@ export function getPortOnePgProvider(): PortOnePgProvider {
   const raw =
     process.env.PORTONE_PG_PROVIDER ??
     process.env.NEXT_PUBLIC_PORTONE_PG_PROVIDER ??
-    "kcp_v2";
+    "danal_tpay";
   const normalized = raw.trim().toLowerCase().replaceAll("-", "_");
   if ((PORTONE_PG_PROVIDERS as readonly string[]).includes(normalized)) {
     return normalized as PortOnePgProvider;
   }
-  return "kcp_v2";
+  return "danal_tpay";
 }
 
 export function buildPortOnePaymentId() {

@@ -16,6 +16,35 @@ import {
   hasM1DraftPipelineError,
 } from "./helpers";
 
+function jsonRecord(value: Prisma.JsonValue | null): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+function previewKeyFromMetadata(metadata: Prisma.JsonValue | null): string | null {
+  const record = jsonRecord(metadata);
+  const key = record?.previewImageUrl;
+  return typeof key === "string" && key.trim().length > 0 ? key : null;
+}
+
+async function signedPreviewUrlForKeys(keys: string[]): Promise<string | null> {
+  const uniqueKeys = Array.from(new Set(keys.filter((key) => key.trim())));
+  for (const key of uniqueKeys) {
+    try {
+      try {
+        return await createSignedDownloadUrl(key, 60 * 60, {
+          transform: { width: 320, resize: "contain", quality: 70 },
+        });
+      } catch {
+        return await createSignedDownloadUrl(key, 60 * 60);
+      }
+    } catch {
+      // Try the next candidate if this object is missing/stale.
+    }
+  }
+  return null;
+}
+
 export async function handleListJobs(req: NextRequest) {
   const staff = await requireStaff();
   if (staff instanceof NextResponse) return staff;
@@ -40,6 +69,7 @@ export async function handleListJobs(req: NextRequest) {
       sourceMaterialId: true,
       originalFileName: true,
       displayName: true,
+      metadata: true,
       status: true,
       totalPages: true,
       successPages: true,
@@ -144,26 +174,18 @@ export async function handleListJobs(req: NextRequest) {
           select: { jobId: true, imageUrl: true },
         })
       : [];
-  const firstPageKeyByJob = new Map<string, string>();
+  const fallbackPageKeyByJob = new Map<string, string>();
   for (const p of firstPages) {
-    if (p.imageUrl) firstPageKeyByJob.set(p.jobId, p.imageUrl);
+    if (p.imageUrl) fallbackPageKeyByJob.set(p.jobId, p.imageUrl);
   }
   const signedEntries = includeThumbnails
     ? await Promise.all(
-        jobIds.map(async (id) => {
-          const key = firstPageKeyByJob.get(id);
-          if (!key) return [id, null] as const;
-          try {
-            // Server-side resize: 320px long edge is plenty for a 220px card
-            // thumbnail at 2x DPR. Cuts payload from ~MB-scale OCR scans to
-            // ~30-60KB JPEGs, eliminating the slow page-nav image load.
-            const url = await createSignedDownloadUrl(key, 60 * 60, {
-              transform: { width: 320, resize: "contain", quality: 70 },
-            });
-            return [id, url] as const;
-          } catch {
-            return [id, null] as const;
-          }
+        jobs.map(async (job) => {
+          const keys = [
+            previewKeyFromMetadata(job.metadata),
+            fallbackPageKeyByJob.get(job.id),
+          ].filter((key): key is string => Boolean(key));
+          return [job.id, await signedPreviewUrlForKeys(keys)] as const;
         }),
       )
     : [];
@@ -179,12 +201,13 @@ export async function handleListJobs(req: NextRequest) {
 
   return NextResponse.json({
     jobs: visibleJobs.map((job) => {
+      const publicJob = { ...job, metadata: undefined };
       const counts =
         job.mode === "PASSAGE_ONLY"
           ? (m1CountsByJob.get(job.id) ?? countsByJob.get(job.id))
           : countsByJob.get(job.id);
       return {
-        ...job,
+        ...publicJob,
         m1DraftPipelineError: hasM1DraftPipelineError(job.errorSummary),
         firstPageImageUrl: firstPageUrlByJob.get(job.id) ?? null,
         ...(counts ?? {

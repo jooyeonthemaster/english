@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
+import { resolveUsdKrwRate } from "@/lib/fx-rate";
 import { prisma } from "@/lib/prisma";
 
 export type PlatformCostUnitType = "TOKENS" | "PAGE" | "IMAGE" | "CALL";
@@ -58,7 +59,6 @@ type PricingLookupRow = {
   effectiveTo: Date | null;
 };
 
-const DEFAULT_USD_KRW_RATE = 1350;
 const COST_SYNC_CONCURRENCY = 12;
 const SOURCE_KEY_CHUNK_SIZE = 1000;
 
@@ -312,7 +312,9 @@ async function resolveCost(
   pricingRows?: PricingLookupRow[],
 ): Promise<CostResolution> {
   const recordedCostUsd = input.recordedCostUsd ?? 0;
-  const envUsdToKrwRate = readNumberEnv("PLATFORM_USD_KRW_RATE", DEFAULT_USD_KRW_RATE);
+  // Daily market rate for the usage date (ECB via Frankfurter), self-healing.
+  // Falls back internally to the most recent known rate, then PLATFORM_USD_KRW_RATE.
+  const usdToKrwRate = await resolveUsdKrwRate(input.usageAt);
 
   if (recordedCostUsd > 0) {
     return {
@@ -321,9 +323,9 @@ async function resolveCost(
       inputUsdPer1M: null,
       outputUsdPer1M: null,
       unitUsd: null,
-      usdToKrwRate: envUsdToKrwRate,
+      usdToKrwRate,
       costUsd: roundUsd(recordedCostUsd),
-      costKrw: Math.round(recordedCostUsd * envUsdToKrwRate),
+      costKrw: Math.round(recordedCostUsd * usdToKrwRate),
     };
   }
 
@@ -340,7 +342,6 @@ async function resolveCost(
       outputUsdPer1M: decimalToNumber(dbPricing.outputUsdPer1M),
       unitUsd: decimalToNumber(dbPricing.unitUsd),
     });
-    const usdToKrwRate = decimalToNumber(dbPricing.usdToKrwRate) ?? envUsdToKrwRate;
     return {
       pricingId: dbPricing.id,
       pricingSource: "DB",
@@ -368,9 +369,9 @@ async function resolveCost(
       inputUsdPer1M: envPricing.inputUsdPer1M,
       outputUsdPer1M: envPricing.outputUsdPer1M,
       unitUsd: envPricing.unitUsd,
-      usdToKrwRate: envUsdToKrwRate,
+      usdToKrwRate,
       costUsd: roundUsd(cost),
-      costKrw: Math.round(cost * envUsdToKrwRate),
+      costKrw: Math.round(cost * usdToKrwRate),
     };
   }
 
@@ -380,7 +381,7 @@ async function resolveCost(
     inputUsdPer1M: null,
     outputUsdPer1M: null,
     unitUsd: null,
-    usdToKrwRate: envUsdToKrwRate,
+    usdToKrwRate,
     costUsd: 0,
     costKrw: 0,
   };

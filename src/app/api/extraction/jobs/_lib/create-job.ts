@@ -21,7 +21,19 @@ import {
   createUploadTarget,
   originalPdfKey,
   pageImageKey,
+  previewImageKey,
 } from "@/lib/supabase-storage";
+
+function imageExtForMime(mimeType: string): string {
+  switch (mimeType) {
+    case "image/png":
+      return "png";
+    case "image/webp":
+      return "webp";
+    default:
+      return "jpg";
+  }
+}
 
 export async function handleCreateJob(req: NextRequest) {
   const staff = await requireStaff();
@@ -128,6 +140,32 @@ export async function handleCreateJob(req: NextRequest) {
     }
   }
 
+  let previewUploadTarget: Awaited<ReturnType<typeof createUploadTarget>> | null =
+    null;
+  if (parsed.previewPage) {
+    try {
+      previewUploadTarget = await createUploadTarget(
+        previewImageKey(
+          staff.academyId,
+          job.id,
+          imageExtForMime(parsed.previewPage.mimeType),
+        ),
+      );
+      await prisma.extractionJob.update({
+        where: { id: job.id },
+        data: {
+          metadata: {
+            previewImageUrl: previewUploadTarget.uploadPath,
+            previewMimeType: parsed.previewPage.mimeType,
+            previewImageBytes: parsed.previewPage.size,
+          },
+        },
+      });
+    } catch {
+      previewUploadTarget = null;
+    }
+  }
+
   const pageUploadTargets = await Promise.all(
     parsed.pages.map(async (p) => {
       const target = await createUploadTarget(
@@ -140,6 +178,7 @@ export async function handleCreateJob(req: NextRequest) {
   return NextResponse.json({
     jobId: job.id,
     uploadTargets: pageUploadTargets,
+    previewUploadTarget,
     originalUploadUrl,
     creditsProjected: projected,
     creditsBalanceBefore: balance.balance,

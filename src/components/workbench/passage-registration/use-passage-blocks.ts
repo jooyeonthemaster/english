@@ -5,6 +5,7 @@ import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/
 import {
   makeDraftBlock,
   makeEmptyBlock,
+  makePassageBlock,
   type PassageBlock,
 } from "./block-types";
 
@@ -71,6 +72,57 @@ export function usePassageBlocks() {
     });
   }, []);
 
+  const addDraftBlocks = useCallback((drafts: M1PassageDraftWithJob[]) => {
+    if (drafts.length === 0) return;
+    setBlocks((prev) => {
+      const existingDraftIds = new Set(
+        prev
+          .map((b) => b.sourceDraftId)
+          .filter((id): id is string => Boolean(id)),
+      );
+      const blocksToAdd = drafts
+        .filter((draft) => !existingDraftIds.has(draft.id))
+        .map(makeDraftBlock);
+      if (blocksToAdd.length === 0) return prev;
+
+      const onlyEmptyStarter =
+        prev.length === 1 &&
+        prev[0].sourceDraftId === null &&
+        prev[0].content.trim().length === 0 &&
+        prev[0].title.trim().length === 0 &&
+        prev[0].imageFile === null;
+      return onlyEmptyStarter ? blocksToAdd : [...prev, ...blocksToAdd];
+    });
+  }, []);
+
+  const addPassageBlocks = useCallback(
+    (
+      passages: Array<{
+        id: string;
+        title?: string | null;
+        content?: string | null;
+        source?: string | null;
+      }>,
+    ) => {
+      if (passages.length === 0) return;
+      setBlocks((prev) => {
+        const blocksToAdd = passages
+          .filter((passage) => passage.content?.trim())
+          .map(makePassageBlock);
+        if (blocksToAdd.length === 0) return prev;
+
+        const onlyEmptyStarter =
+          prev.length === 1 &&
+          prev[0].sourceDraftId === null &&
+          prev[0].content.trim().length === 0 &&
+          prev[0].title.trim().length === 0 &&
+          prev[0].imageFile === null;
+        return onlyEmptyStarter ? blocksToAdd : [...prev, ...blocksToAdd];
+      });
+    },
+    [],
+  );
+
   const reset = useCallback(() => {
     setBlocks([makeEmptyBlock()]);
   }, []);
@@ -84,6 +136,8 @@ export function usePassageBlocks() {
     toggleCollapse,
     setAllCollapsed,
     toggleDraftBlock,
+    addDraftBlocks,
+    addPassageBlocks,
     reset,
   };
 }

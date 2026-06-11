@@ -10,6 +10,7 @@ export const dynamic = "force-dynamic";
 
 const promoteSchema = z.object({
   draftIds: z.array(z.string().min(1)).min(1).max(200),
+  markReviewed: z.boolean().optional().default(true),
 });
 
 type PromoteOutcome =
@@ -36,6 +37,8 @@ export async function POST(req: NextRequest) {
       parsed.error.issues,
     );
   }
+
+  const markReviewed = parsed.data.markReviewed;
 
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
@@ -68,6 +71,21 @@ export async function POST(req: NextRequest) {
   for (const draft of drafts) {
     try {
       if (draft.savedPassageId) {
+        if (markReviewed && draft.reviewStatus !== "COMMITTED") {
+          await prisma.extractionM1PassageDraft.update({
+            where: { id: draft.id },
+            data: {
+              reviewStatus: "COMMITTED",
+              confirmedAt: new Date(),
+            },
+          });
+          outcomes.push({
+            draftId: draft.id,
+            status: "promoted",
+            passageId: draft.savedPassageId,
+          });
+          continue;
+        }
         outcomes.push({
           draftId: draft.id,
           status: "skipped",
@@ -125,8 +143,8 @@ export async function POST(req: NextRequest) {
           where: { id: draft.id },
           data: {
             savedPassageId: created.id,
-            reviewStatus: "COMMITTED",
-            confirmedAt: new Date(),
+            reviewStatus: markReviewed ? "COMMITTED" : "REVIEWED",
+            confirmedAt: markReviewed ? new Date() : null,
           },
         });
 

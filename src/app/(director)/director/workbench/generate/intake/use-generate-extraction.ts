@@ -69,7 +69,7 @@ async function promoteDraftIds(draftIds: string[]): Promise<string[]> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify({ draftIds }),
+    body: JSON.stringify({ draftIds, markReviewed: false }),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {

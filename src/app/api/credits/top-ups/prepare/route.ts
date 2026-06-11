@@ -15,6 +15,7 @@ import {
   type PortOneTopUpPayMethod,
 } from "@/lib/portone-credit-topups";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
+import { BUSINESS_INFO } from "@/lib/legal/business-info";
 
 const prepareSchema = z.object({
   credits: z.number().int().positive(),
@@ -31,7 +32,14 @@ const EASY_PAY_PROVIDERS = [
 
 type EasyPayProvider = (typeof EASY_PAY_PROVIDERS)[number];
 
-type PaymentRequest = {
+type PaymentCustomer = {
+  customerId: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+};
+
+type PortOneV2PaymentRequest = {
   storeId: string;
   channelKey: string;
   paymentId: string;
@@ -41,6 +49,7 @@ type PaymentRequest = {
   payMethod: PortOneTopUpPayMethod;
   redirectUrl: string;
   customData: Record<string, unknown>;
+  customer: PaymentCustomer;
   productType: "DIGITAL";
   products: Array<{
     id: string;
@@ -58,11 +67,34 @@ type PaymentRequest = {
   };
   mobile?: Record<string, never>;
   bypass?: {
-    kcp_v2: {
+    kcp_v2?: {
       shop_user_id: string;
+    };
+    inicis_v2?: {
+      noeasypay?: string;
+      P_MNAME?: string;
+      P_RESERVED?: string[];
     };
   };
 };
+
+type DanalLegacyPaymentRequest = {
+  sdkVersion: "v1";
+  userCode: string;
+  channelKey: string;
+  pg: "danal_tpay";
+  pay_method: "card";
+  merchant_uid: string;
+  name: string;
+  amount: number;
+  buyer_name: string;
+  buyer_tel: string;
+  buyer_email: string;
+  m_redirect_url: string;
+  custom_data: Record<string, unknown>;
+};
+
+type PaymentRequest = PortOneV2PaymentRequest | DanalLegacyPaymentRequest;
 
 export async function POST(request: NextRequest) {
   try {
@@ -102,6 +134,16 @@ export async function POST(request: NextRequest) {
     const appUrl = getAppUrl();
     const paymentId = buildPortOnePaymentId();
     const orderName = buildTopUpOrderName(product.creditAmount);
+    const staffProfile = await getStaffPaymentProfile(staff.id);
+    const customer = buildPaymentCustomer({
+      academyId: staff.academyId,
+      academyName: staffProfile?.academy.name ?? staff.academyName,
+      academyPhone: staffProfile?.academy.phone,
+      staffId: staff.id,
+      staffName: staffProfile?.name ?? staff.name,
+      staffEmail: staffProfile?.email ?? staff.email,
+      staffPhone: staffProfile?.phone,
+    });
 
     const topUp = await prisma.creditTopUp.create({
       data: {
@@ -145,31 +187,33 @@ export async function POST(request: NextRequest) {
       data: { customData },
     });
 
-    try {
-      await preRegisterPortOnePayment({
-        paymentId,
-        totalAmount: product.price,
-      });
-    } catch (err) {
-      const portOneErrorMessage = getPortOneErrorMessage(err);
-      await prisma.creditTopUp.update({
-        where: { id: topUp.id },
-        data: {
-          status: "FAILED",
-          failureCode: "PRE_REGISTER_FAILED",
-          failureMessage: portOneErrorMessage,
-        },
-      });
-      console.error("[credits/top-ups/prepare] pre-register failed", {
-        topUpId: topUp.id,
-        paymentId,
-        message: portOneErrorMessage,
-        errorName: err instanceof Error ? err.name : undefined,
-      });
-      return NextResponse.json(
-        { error: getPrepareErrorMessage(portOneErrorMessage) },
-        { status: 502 },
-      );
+    if (!usesDanalLegacyCheckout({ pgProvider, payMethod })) {
+      try {
+        await preRegisterPortOnePayment({
+          paymentId,
+          totalAmount: product.price,
+        });
+      } catch (err) {
+        const portOneErrorMessage = getPortOneErrorMessage(err);
+        await prisma.creditTopUp.update({
+          where: { id: topUp.id },
+          data: {
+            status: "FAILED",
+            failureCode: "PRE_REGISTER_FAILED",
+            failureMessage: portOneErrorMessage,
+          },
+        });
+        console.error("[credits/top-ups/prepare] pre-register failed", {
+          topUpId: topUp.id,
+          paymentId,
+          message: portOneErrorMessage,
+          errorName: err instanceof Error ? err.name : undefined,
+        });
+        return NextResponse.json(
+          { error: getPrepareErrorMessage(portOneErrorMessage) },
+          { status: 502 },
+        );
+      }
     }
 
     return NextResponse.json({
@@ -187,6 +231,7 @@ export async function POST(request: NextRequest) {
         redirectUrl: `${appUrl}/director/credits`,
         customData,
         productCode: product.code,
+        customer,
       }),
     });
   } catch (err) {
@@ -235,8 +280,14 @@ function buildPaymentRequest(params: {
   redirectUrl: string;
   customData: Record<string, unknown>;
   productCode: string;
+  customer: PaymentCustomer;
 }): PaymentRequest {
-  const base: PaymentRequest = {
+  const legacyDanalRequest = buildDanalLegacyPaymentRequest(params);
+  if (legacyDanalRequest) {
+    return legacyDanalRequest;
+  }
+
+  const base: PortOneV2PaymentRequest = {
     storeId: params.storeId,
     channelKey: params.channelKey,
     paymentId: params.paymentId,
@@ -246,6 +297,7 @@ function buildPaymentRequest(params: {
     payMethod: params.payMethod,
     redirectUrl: params.redirectUrl,
     customData: params.customData,
+    customer: params.customer,
     productType: "DIGITAL",
     products: [
       {
@@ -256,6 +308,19 @@ function buildPaymentRequest(params: {
       },
     ],
   };
+
+  if (params.payMethod === "CARD" && params.pgProvider === "inicis_v2") {
+    return {
+      ...base,
+      bypass: {
+        inicis_v2: {
+          noeasypay: "Y",
+          P_MNAME: "SMOAT",
+          P_RESERVED: ["noeasypay=Y"],
+        },
+      },
+    };
+  }
 
   if (params.payMethod === "EASY_PAY") {
     return {
@@ -278,7 +343,7 @@ function buildPaymentRequest(params: {
   }
 
   if (params.payMethod === "MOBILE") {
-    const request: PaymentRequest = {
+    const request: PortOneV2PaymentRequest = {
       ...base,
       mobile: {},
     };
@@ -295,6 +360,125 @@ function buildPaymentRequest(params: {
   return base;
 }
 
+function buildDanalLegacyPaymentRequest(params: {
+  channelKey: string;
+  paymentId: string;
+  orderName: string;
+  totalAmount: number;
+  pgProvider: PortOnePgProvider;
+  payMethod: PortOneTopUpPayMethod;
+  redirectUrl: string;
+  customData: Record<string, unknown>;
+  customer: PaymentCustomer;
+}): DanalLegacyPaymentRequest | null {
+  if (
+    !usesDanalLegacyCheckout({
+      pgProvider: params.pgProvider,
+      payMethod: params.payMethod,
+    })
+  ) {
+    return null;
+  }
+
+  const userCode = getPortOneV1CustomerCode();
+  if (!userCode) return null;
+
+  return {
+    sdkVersion: "v1",
+    userCode,
+    channelKey: params.channelKey,
+    pg: "danal_tpay",
+    pay_method: "card",
+    merchant_uid: params.paymentId,
+    name: params.orderName,
+    amount: params.totalAmount,
+    buyer_name: params.customer.fullName,
+    buyer_tel: params.customer.phoneNumber,
+    buyer_email: params.customer.email,
+    m_redirect_url: params.redirectUrl,
+    custom_data: params.customData,
+  };
+}
+
+function usesDanalLegacyCheckout(params: {
+  pgProvider: PortOnePgProvider;
+  payMethod: PortOneTopUpPayMethod;
+}) {
+  return (
+    params.pgProvider === "danal_tpay" &&
+    params.payMethod === "CARD" &&
+    Boolean(getPortOneV1CustomerCode())
+  );
+}
+
+async function getStaffPaymentProfile(staffId: string) {
+  return prisma.staff.findUnique({
+    where: { id: staffId },
+    select: {
+      name: true,
+      email: true,
+      phone: true,
+      academy: {
+        select: {
+          name: true,
+          phone: true,
+        },
+      },
+    },
+  });
+}
+
+function buildPaymentCustomer(params: {
+  academyId: string;
+  academyName: string;
+  academyPhone?: string | null;
+  staffId: string;
+  staffName?: string | null;
+  staffEmail?: string | null;
+  staffPhone?: string | null;
+}): PaymentCustomer {
+  return {
+    customerId: buildCustomerId(params.academyId, params.staffId),
+    fullName:
+      normalizeText(params.staffName) ??
+      normalizeText(params.academyName) ??
+      BUSINESS_INFO.brandName,
+    phoneNumber:
+      normalizePhone(params.staffPhone) ??
+      normalizePhone(params.academyPhone) ??
+      normalizePhone(BUSINESS_INFO.phone) ??
+      "02-336-3368",
+    email:
+      normalizeEmail(params.staffEmail) ??
+      normalizeEmail(BUSINESS_INFO.email) ??
+      "info@neander.co.kr",
+  };
+}
+
+function buildCustomerId(academyId: string, staffId: string) {
+  const normalized = `${academyId}${staffId}`
+    .replace(/[^A-Za-z0-9]/g, "")
+    .slice(0, 18);
+  return `sm${normalized || "customer"}`.slice(0, 20);
+}
+
+function normalizeText(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  return trimmed || undefined;
+}
+
+function normalizePhone(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed || trimmed === "심사 제출 전 입력 필요") return undefined;
+  return trimmed;
+}
+
+function normalizeEmail(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed || trimmed === "심사 제출 전 입력 필요") return undefined;
+  return trimmed;
+}
+
 function getAppUrl() {
   const appUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
@@ -307,6 +491,26 @@ function getAppUrl() {
     );
   }
   return appUrl.replace(/\/+$/, "");
+}
+
+function getPortOneV1CustomerCode() {
+  const raw =
+    process.env.PORTONE_V1_CUSTOMER_CODE ??
+    process.env.NEXT_PUBLIC_PORTONE_V1_CUSTOMER_CODE ??
+    process.env.PORTONE_V1_MERCHANT_ID ??
+    process.env.NEXT_PUBLIC_PORTONE_V1_MERCHANT_ID ??
+    process.env.PORTONE_IMP_CODE ??
+    process.env.NEXT_PUBLIC_PORTONE_IMP_CODE;
+
+  const trimmed = raw?.trim();
+  if (!trimmed) return null;
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim() || null;
+  }
+  return trimmed;
 }
 
 function getEasyPayProvider(value: unknown): EasyPayProvider {

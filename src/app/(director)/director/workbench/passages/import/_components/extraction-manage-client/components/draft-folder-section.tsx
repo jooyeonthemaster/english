@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import type { CollectionItem } from "@/components/workbench/shared/types";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
   Popover,
   PopoverContent,
@@ -269,7 +270,11 @@ export function DraftFolderSection({
   gridOnly = false,
 }: DraftFolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const [viewMode, setViewMode] = useState<FolderViewMode>("grid");
+  const [viewMode, setViewMode] = usePersistedState<FolderViewMode>(
+    "smoat:view-mode:extraction-draft-folder",
+    "grid",
+    (v): v is FolderViewMode => v === "grid" || v === "list",
+  );
   const effectiveViewMode: FolderViewMode = gridOnly ? "grid" : viewMode;
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");

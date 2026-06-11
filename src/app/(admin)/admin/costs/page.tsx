@@ -3,6 +3,7 @@ import {
   AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
+  Building2,
   CalendarDays,
   CalendarRange,
   ChevronLeft,
@@ -63,6 +64,14 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
   });
   const hasProfit = dashboard.current.profitKrw >= 0;
   const ProfitIcon = hasProfit ? ArrowUpRight : ArrowDownRight;
+  // In single 일별/월별 selection the trend table shows only the selected
+  // day/month; a custom start–end range still lists every bucket in the range.
+  const trendBuckets =
+    dashboard.summaryMode === "bucket"
+      ? dashboard.buckets.filter((bucket) => bucket.key === dashboard.current.key)
+      : dashboard.buckets;
+  const trendSubtitle =
+    dashboard.summaryMode === "bucket" ? dashboard.summaryLabel : dashboard.rangeLabel;
   const prevHref = buildPreviousNextHref({
     mode,
     dateValue,
@@ -262,11 +271,16 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                 {mode === "daily" ? "일별 손익" : "월별 손익"}
               </h2>
               <p className="mt-1 text-[12px] text-gray-400">
-                {dashboard.rangeLabel} · KST 기준
+                {trendSubtitle} · KST 기준
               </p>
             </div>
-            <Badge variant="secondary" className="border-0 bg-gray-100 text-[11px] text-gray-500">
-              USD {formatNumber(dashboard.usdToKrwRate)}원
+            <Badge
+              variant="secondary"
+              className="border-0 bg-gray-100 text-[11px] text-gray-500"
+              title={`적용 환율 ${dashboard.fxRate.date} · ${dashboard.fxRate.source === "ECB" ? "ECB 일별 기준환율" : "기본값"}`}
+            >
+              USD {formatNumber(dashboard.fxRate.rate)}원 · {formatBadgeDate(dashboard.fxRate.date)}
+              {dashboard.fxRate.source !== "ECB" && " (기본)"}
             </Badge>
           </div>
           <div className="overflow-x-auto">
@@ -294,7 +308,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dashboard.buckets.map((bucket) => (
+                {trendBuckets.map((bucket) => (
                   <CostBucketRow key={bucket.key} bucket={bucket} />
                 ))}
               </TableBody>
@@ -306,7 +320,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
           <div className="border-b border-gray-50 px-5 py-4">
             <h2 className="text-[14px] font-semibold text-gray-800">원가 구성</h2>
             <p className="mt-1 text-[12px] text-gray-400">
-              기간 합계 {formatCurrency(dashboard.totals.totalCostKrw)}
+              {dashboard.summaryLabel} 합계 {formatCurrency(dashboard.current.totalCostKrw)}
             </p>
           </div>
           <div className="space-y-3 p-5">
@@ -316,7 +330,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
               </div>
             ) : (
               dashboard.sources.map((source) => {
-                const denominator = Math.max(dashboard.totals.variableCostKrw, 1);
+                const denominator = Math.max(dashboard.current.variableCostKrw, 1);
                 const ratio = Math.min(100, (source.costKrw / denominator) * 100);
                 return (
                   <div key={source.key} className="space-y-2">
@@ -359,6 +373,80 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
           </div>
         </section>
       </div>
+
+      <section className="rounded-xl border border-gray-100 bg-white">
+        <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
+          <div>
+            <h2 className="text-[14px] font-semibold text-gray-800">학원별 사용량</h2>
+            <p className="mt-1 text-[12px] text-gray-400">
+              {dashboard.summaryLabel} API 원가 기준 · {formatNumber(dashboard.academyUsage.length)}개 학원
+            </p>
+          </div>
+          <Building2 className="size-4 text-gray-400" strokeWidth={1.8} />
+        </div>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="h-9 pl-5 text-[12px] font-medium text-gray-400">
+                  학원
+                </TableHead>
+                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
+                  원가
+                </TableHead>
+                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
+                  비중
+                </TableHead>
+                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
+                  API
+                </TableHead>
+                <TableHead className="h-9 pr-5 text-right text-[12px] font-medium text-gray-400">
+                  토큰
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {dashboard.academyUsage.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="py-8 text-center text-[13px] text-gray-400">
+                    집계된 학원별 사용량이 없습니다
+                  </TableCell>
+                </TableRow>
+              ) : (
+                dashboard.academyUsage.map((academy) => {
+                  const denominator = Math.max(dashboard.current.variableCostKrw, 1);
+                  const ratio = Math.min(100, (academy.costKrw / denominator) * 100);
+                  return (
+                    <TableRow
+                      key={academy.academyId ?? "__unassigned__"}
+                      className="hover:bg-gray-50/50"
+                    >
+                      <TableCell className="pl-5 text-[13px] font-medium text-gray-800">
+                        {academy.name}
+                      </TableCell>
+                      <TableCell className="text-right text-[13px] font-semibold text-gray-900">
+                        <p>{formatCurrency(academy.costKrw)}</p>
+                        <p className="mt-0.5 text-[11px] font-normal text-gray-400">
+                          ${academy.costUsd.toFixed(4)}
+                        </p>
+                      </TableCell>
+                      <TableCell className="text-right text-[13px] text-gray-500">
+                        {formatPercent(ratio)}
+                      </TableCell>
+                      <TableCell className="text-right text-[13px] text-gray-500">
+                        {formatNumber(academy.calls)}회
+                      </TableCell>
+                      <TableCell className="pr-5 text-right text-[13px] text-gray-500">
+                        {formatNumber(academy.inputTokens + academy.outputTokens)}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </section>
 
       <section className="rounded-xl border border-gray-100 bg-white">
         <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
@@ -1182,4 +1270,9 @@ function formatKstDateFromMs(ms: number) {
 function formatPercent(value: number) {
   if (!Number.isFinite(value)) return "0.0%";
   return `${value.toFixed(1)}%`;
+}
+
+function formatBadgeDate(dateStr: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  return match ? `${match[2]}.${match[3]}` : dateStr;
 }

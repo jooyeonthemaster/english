@@ -15,7 +15,7 @@ const LEFT_PANE_STORAGE_KEY = "smoat:generate:left-pane-width";
 const LEFT_PANE_OPEN_STORAGE_KEY = "smoat:generate:left-pane-open";
 const LEFT_PANE_MIN = 380;
 const LEFT_PANE_DEFAULT = 560;
-const LEFT_PANE_MAX_RATIO = 0.55;
+const LEFT_PANE_MAX_RATIO = 0.72;
 const RIGHT_PANE_MIN = 420;
 const HANDLE_HIT_WIDTH = 12;
 const DRAG_THRESHOLD = 4;
@@ -257,7 +257,9 @@ export function WorkspaceShell({
             <>
               <div
                 className="flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg border border-slate-200"
-                style={{ width: `min(${leftPaneWidth}px, 55%)` }}
+                style={{
+                  width: `min(${leftPaneWidth}px, ${LEFT_PANE_MAX_RATIO * 100}%)`,
+                }}
               >
                 {left}
               </div>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 
 import { formatShortTimestamp, type JobMetaSnapshot } from "../drafts-cache";
 import type { GridCols } from "../components/draft-grid";
@@ -61,7 +62,11 @@ export function useDraftDisplay({
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [sortOrder, setSortOrder] =
     useState<SortOrder>(readStoredSortOrder);
-  const [gridCols, setGridCols] = useState<GridCols>("grid3");
+  const [gridCols, setGridCols] = usePersistedState<GridCols>(
+    "smoat:view-mode:extraction-manage",
+    "grid3",
+    (v): v is GridCols => v === "grid3" || v === "grid2" || v === "list",
+  );
   const [jobFilter, setJobFilter] = useState<Set<string>>(() => new Set());
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");

@@ -772,7 +772,7 @@ export function QuestionCard({
                     type="button"
                     size="sm"
                     disabled={!onUnapprove}
-                    className="h-7 flex-1 border border-red-200 bg-red-50 px-2 text-[11px] font-semibold text-red-600 shadow-none hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:bg-red-50 disabled:text-red-300 disabled:opacity-100"
+                    className="h-7 flex-1 border border-rose-200 bg-rose-50 px-2 text-[11px] font-semibold text-rose-600 shadow-none hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700 disabled:bg-rose-50 disabled:text-rose-300 disabled:opacity-100"
                     onClick={(e) => {
                       e.stopPropagation();
                       onUnapprove?.();

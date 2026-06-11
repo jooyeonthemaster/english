@@ -2,6 +2,7 @@
 
 import {
   useCallback,
+  useEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
@@ -12,7 +13,9 @@ import { Grip, PlayCircle, X } from "lucide-react";
 const POPUP_W_KEY = "smoat.extraction.tutorialVideoPopupWidth.v1";
 const DEFAULT_POPUP_W = 760;
 const MIN_POPUP_W = 520;
+const MIN_RESPONSIVE_POPUP_W = 320;
 const MAX_POPUP_W = 1040;
+const VIDEO_ASPECT = 16 / 9;
 
 function clampPopupWidth(width: number, max = MAX_POPUP_W) {
   return Math.min(max, Math.max(MIN_POPUP_W, Math.round(width)));
@@ -35,13 +38,54 @@ export function TutorialVideoPopup({
   onHidePermanently?: () => void;
   children: ReactNode;
 }) {
+  const overlayRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
   const [popupWidth, setPopupWidth] = useState(() => {
     if (typeof window === "undefined") return DEFAULT_POPUP_W;
     const raw = window.localStorage.getItem(POPUP_W_KEY);
     const n = raw ? parseInt(raw, 10) : NaN;
     return Number.isNaN(n) ? DEFAULT_POPUP_W : clampPopupWidth(n);
   });
+  const [responsiveMaxWidth, setResponsiveMaxWidth] =
+    useState<number>(MAX_POPUP_W);
+
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+
+    const measure = () => {
+      const rect = overlay.getBoundingClientRect();
+      const headerH = headerRef.current?.offsetHeight ?? 0;
+      const footerH = footerRef.current?.offsetHeight ?? 0;
+      const videoBodyPaddingY = 16;
+      const videoBodyPaddingX = 16;
+      const availableVideoH = Math.max(
+        80,
+        rect.height - headerH - footerH - videoBodyPaddingY,
+      );
+      const maxByHeight = availableVideoH * VIDEO_ASPECT + videoBodyPaddingX;
+      const maxByWidth = Math.max(MIN_RESPONSIVE_POPUP_W, rect.width - 16);
+      setResponsiveMaxWidth(
+        Math.max(
+          MIN_RESPONSIVE_POPUP_W,
+          Math.min(MAX_POPUP_W, maxByWidth, maxByHeight),
+        ),
+      );
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(overlay);
+    if (headerRef.current) observer.observe(headerRef.current);
+    if (footerRef.current) observer.observe(footerRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [onHidePermanently]);
 
   const beginResize = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -91,14 +135,22 @@ export function TutorialVideoPopup({
     [popupWidth],
   );
 
+  const effectivePopupWidth = Math.min(popupWidth, responsiveMaxWidth);
+
   return (
-    <div className="pointer-events-none absolute inset-x-3 bottom-4 top-4 z-30 flex items-start justify-center">
+    <div
+      ref={overlayRef}
+      className="pointer-events-none absolute inset-x-3 bottom-4 top-4 z-30 flex items-start justify-center"
+    >
       <div
         ref={popupRef}
-        className="pointer-events-auto relative max-h-full overflow-y-auto rounded-lg border border-blue-200 bg-white/78 shadow-2xl shadow-blue-950/20 ring-1 ring-blue-100 backdrop-blur-[2px]"
-        style={{ width: `min(${popupWidth}px, calc(100% - 1rem))` }}
+        className="pointer-events-auto relative flex max-h-full flex-col overflow-hidden rounded-lg border border-blue-200 bg-white/78 shadow-2xl shadow-blue-950/20 ring-1 ring-blue-100 backdrop-blur-[2px]"
+        style={{ width: effectivePopupWidth }}
       >
-        <div className="relative bg-white/55 px-4 pb-3 pt-3 pr-11">
+        <div
+          ref={headerRef}
+          className="relative shrink-0 bg-white/55 px-4 pb-3 pt-3 pr-11"
+        >
           <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
             <PlayCircle className="size-3.5" aria-hidden="true" />
             {durationLabel}
@@ -120,10 +172,13 @@ export function TutorialVideoPopup({
           </button>
         </div>
 
-        <div className="bg-slate-950 p-2">{children}</div>
+        <div className="min-h-0 shrink bg-slate-950 p-2">{children}</div>
 
         {onHidePermanently ? (
-          <div className="flex justify-end border-t border-blue-100 bg-white/55 px-3 py-2 pr-10">
+          <div
+            ref={footerRef}
+            className="flex shrink-0 justify-end border-t border-blue-100 bg-white/55 px-3 py-2 pr-10"
+          >
             <button
               type="button"
               onClick={onHidePermanently}
@@ -132,7 +187,9 @@ export function TutorialVideoPopup({
               다시는 보지 않기
             </button>
           </div>
-        ) : null}
+        ) : (
+          <span ref={footerRef} className="hidden" aria-hidden="true" />
+        )}
         <button
           type="button"
           onPointerDown={beginResize}

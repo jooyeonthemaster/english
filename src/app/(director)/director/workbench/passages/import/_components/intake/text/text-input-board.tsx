@@ -47,6 +47,12 @@ export interface TextInputBoardProps {
     passages: { title?: string; text: string }[],
   ) => boolean | Promise<boolean>;
   outputMode?: "verbatim" | "restored";
+  reviewLabel?: string;
+  emptyTitle?: string;
+  guideStartLabel?: string;
+  startLabel?: string;
+  restoredStartLabel?: string;
+  busyLabel?: string;
 }
 
 /** 본문 앞부분 미리보기(제목이 없을 때 카드 라벨로 사용). */
@@ -80,6 +86,12 @@ export function TextInputBoard({
   busy,
   onStart,
   outputMode,
+  reviewLabel = "추출될 지문",
+  emptyTitle = "텍스트를 붙여넣고 지문을 쌓아요",
+  guideStartLabel = "추출 시작",
+  startLabel = "텍스트 추출 시작",
+  restoredStartLabel = "복원하여 추출 시작",
+  busyLabel = "작업 중",
 }: TextInputBoardProps) {
   const [draftTitle, setDraftTitle] = useState("");
   const [draftText, setDraftText] = useState("");
@@ -350,7 +362,7 @@ export function TextInputBoard({
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
           <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
             <Layers className="size-4 text-blue-600" aria-hidden="true" />
-            추출될 지문 {effectiveCount}개
+            {reviewLabel} {effectiveCount}개
           </span>
           {passages.length > 0 ? (
             <button
@@ -368,25 +380,27 @@ export function TextInputBoard({
           ) : null}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
+        <div className="smoat-text-review-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
           {passages.length === 0 ? (
-            <div className="mx-auto mt-6 flex max-w-xs flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
-              <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
-                <PlayCircle className="size-3.5" aria-hidden="true" />
-                사용 순서
+            <div className="smoat-text-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
+              <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
+                  <PlayCircle className="size-3.5" aria-hidden="true" />
+                  사용 순서
+                </div>
+                <h3 className="smoat-text-empty-guide__title min-w-0 flex-1 text-[15px] font-extrabold leading-snug text-slate-950">
+                  {emptyTitle}
+                </h3>
               </div>
-              <h3 className="mt-2 text-[15px] font-extrabold leading-snug text-slate-950">
-                텍스트를 붙여넣고 지문을 쌓아요
-              </h3>
-              <ol className="mt-4 space-y-2">
+              <ol className="smoat-text-empty-guide__steps mt-3 grid gap-2">
                 {[
                   { icon: Keyboard, label: "본문 붙여넣기" },
                   { icon: Plus, label: "지문 추가" },
-                  { icon: PlayCircle, label: "추출 시작" },
+                  { icon: PlayCircle, label: guideStartLabel },
                 ].map((step, index) => (
                   <li
                     key={step.label}
-                    className="flex items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
+                    className="smoat-text-empty-guide__step flex min-w-0 items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
                   >
                     <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-extrabold text-blue-700">
                       {index + 1}
@@ -395,7 +409,7 @@ export function TextInputBoard({
                       className="size-3.5 text-blue-600"
                       aria-hidden="true"
                     />
-                    <span>{step.label}</span>
+                    <span className="min-w-0 leading-snug">{step.label}</span>
                   </li>
                 ))}
               </ol>
@@ -555,10 +569,53 @@ export function TextInputBoard({
             disabled={effectiveCount === 0 || overMax || locked}
             busy={locked}
             count={effectiveCount}
-            restored={isRestored}
+            label={isRestored ? restoredStartLabel : startLabel}
+            busyLabel={busyLabel}
             onClick={handleStart}
           />
         </div>
+        <style>{`
+          .smoat-text-review-scroll {
+            container-type: inline-size;
+          }
+          .smoat-text-empty-guide {
+            margin-top: clamp(0.75rem, 5cqw, 1.5rem);
+            padding: clamp(0.75rem, 4cqw, 1rem);
+          }
+          .smoat-text-empty-guide__steps {
+            grid-template-columns: 1fr;
+          }
+          @container (max-width: 359px) {
+            .smoat-text-empty-guide__title {
+              flex-basis: 100%;
+              font-size: 13px;
+            }
+            .smoat-text-empty-guide__step {
+              padding-block: 0.45rem;
+            }
+          }
+          @container (min-width: 420px) {
+            .smoat-text-empty-guide__title {
+              flex-basis: 100%;
+            }
+            .smoat-text-empty-guide__steps {
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .smoat-text-empty-guide__step {
+              align-items: flex-start;
+              flex-direction: column;
+              min-height: 4.5rem;
+            }
+          }
+          @container (min-width: 560px) {
+            .smoat-text-empty-guide__title {
+              flex-basis: auto;
+            }
+            .smoat-text-empty-guide__step {
+              min-height: 4rem;
+            }
+          }
+        `}</style>
       </aside>
       </div>
 
@@ -570,13 +627,15 @@ function StartButton({
   disabled,
   busy,
   count,
-  restored,
+  label,
+  busyLabel,
   onClick,
 }: {
   disabled: boolean;
   busy: boolean;
   count: number;
-  restored: boolean;
+  label: string;
+  busyLabel: string;
   onClick: () => void;
 }): ReactNode {
   return (
@@ -596,12 +655,12 @@ function StartButton({
       {busy ? (
         <>
           <Loader2 className="mr-2 size-5 animate-spin" aria-hidden="true" />
-          작업 중
+          {busyLabel}
         </>
       ) : (
         <>
           <PlayCircle className="mr-2 size-5" aria-hidden="true" />
-          {restored ? "복원하여 추출 시작" : "텍스트 추출 시작"}
+          {label}
           {count > 0 ? ` (지문 ${count}개)` : ""}
         </>
       )}

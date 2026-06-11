@@ -5,10 +5,12 @@ import {
   X,
   FileText,
   Save,
+  CheckCircle2,
   Loader2,
   Trash2,
   RefreshCw,
   Lightbulb,
+  Undo2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -58,6 +60,13 @@ interface PassageData {
     contentHash: string;
     updatedAt: Date;
   } | null;
+  extractionReviewDraft?: {
+    id: string;
+    savedPassageId: string | null;
+    reviewStatus: string;
+    confirmedAt?: string | Date | null;
+    updatedAt?: string | Date | null;
+  } | null;
   notes: Array<{
     id: string;
     noteType: string;
@@ -95,6 +104,8 @@ interface PassageAnalysisModalProps {
   onAnalysisUpdate?: (data: PassageAnalysisData) => void;
   onQuestionsUpdate?: (questions: PassageData["questions"]) => void;
   onDelete?: (passageId: string) => void;
+  reviewBusy?: boolean;
+  onToggleExtractionReview?: (passage: PassageData) => void;
 }
 
 function safeParseJSON<T>(str: unknown, fallback: T): T {
@@ -115,6 +126,8 @@ export function PassageAnalysisModal({
   initialPromptConfig,
   onAnalysisUpdate,
   onDelete,
+  reviewBusy = false,
+  onToggleExtractionReview,
 }: PassageAnalysisModalProps) {
   const [analysisData, setAnalysisData] = useState<PassageAnalysisData | null>(initialAnalysis);
   const [analyzing, setAnalyzing] = useState(false);
@@ -140,6 +153,8 @@ export function PassageAnalysisModal({
   const tags: string[] = getVisibleQuestionTags(
     passage.tags ? safeParseJSON(passage.tags, []) : [],
   );
+  const reviewDraft = passage.extractionReviewDraft ?? null;
+  const isReviewCommitted = reviewDraft?.reviewStatus === "COMMITTED";
 
   // Sync when passage changes
   useEffect(() => {
@@ -340,6 +355,30 @@ export function PassageAnalysisModal({
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
+              {reviewDraft && onToggleExtractionReview ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className={
+                    "h-8 text-xs font-bold " +
+                    (isReviewCommitted
+                      ? "border-rose-200 bg-rose-50 text-rose-600 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
+                      : "border-emerald-600 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 hover:text-white")
+                  }
+                  onClick={() => onToggleExtractionReview(passage)}
+                  disabled={reviewBusy}
+                >
+                  {reviewBusy ? (
+                    <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                  ) : isReviewCommitted ? (
+                    <Undo2 className="w-3.5 h-3.5 mr-1" />
+                  ) : (
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                  )}
+                  {isReviewCommitted ? "검수취소" : "검수완료"}
+                </Button>
+              ) : null}
               {hasUnsavedChanges && (
                 <Button
                   variant="outline"

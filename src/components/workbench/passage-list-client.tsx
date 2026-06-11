@@ -33,6 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -219,7 +220,12 @@ export function PassageListClient({
 }: PassageListProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
-  const [gridCols, setGridCols] = useState<PassageGridCols>("grid3");
+  const [gridCols, setGridCols] = usePersistedState<PassageGridCols>(
+    "smoat:view-mode:passage-list",
+    "grid3",
+    (v): v is PassageGridCols =>
+      v === "grid3" || v === "grid2" || v === "list",
+  );
   const [sortOrder, setSortOrder] = useState<PassageSortOrder>("newest");
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);

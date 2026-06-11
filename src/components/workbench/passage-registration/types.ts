@@ -44,6 +44,8 @@ export interface PassageRegistrationProps {
   initialCollections?: PassageCollection[];
   draftCollections?: DraftCollectionItem[];
   draftMembership?: Record<string, string[]>;
+  initialDraftIds?: string[];
+  initialPassageIds?: string[];
 }
 
 export interface SavedPrompt {

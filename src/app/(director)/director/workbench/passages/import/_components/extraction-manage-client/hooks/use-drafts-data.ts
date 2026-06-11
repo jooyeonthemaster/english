@@ -25,6 +25,50 @@ interface UseDraftsDataParams {
   onJobsRefresh: () => void;
 }
 
+type ExtractionJobMetaResponse = {
+  jobs?: Array<{
+    id: string;
+    mode: string;
+    status: string;
+    displayName?: string | null;
+    originalFileName?: string | null;
+    createdAt: string;
+    firstPageImageUrl?: string | null;
+    resultCount?: number;
+    draftResultCount?: number;
+    savedResultCount?: number;
+  }>;
+};
+
+function mapJobMeta(data: ExtractionJobMetaResponse): Map<string, JobMetaSnapshot> {
+  const m = new Map<string, JobMetaSnapshot>();
+  for (const j of data.jobs ?? []) {
+    // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
+    if (j.mode !== "PASSAGE_ONLY") continue;
+    m.set(j.id, {
+      thumbnailUrl: j.firstPageImageUrl ?? null,
+      status: j.status,
+      displayName: j.displayName ?? null,
+      originalFileName: j.originalFileName ?? null,
+      createdAt: j.createdAt,
+      resultCount: j.resultCount ?? 0,
+      draftResultCount: j.draftResultCount ?? 0,
+      savedResultCount: j.savedResultCount ?? 0,
+    });
+  }
+  return m;
+}
+
+async function fetchJobMeta(signal?: AbortSignal): Promise<Map<string, JobMetaSnapshot>> {
+  const res = await fetch("/api/extraction/jobs?limit=200", {
+    credentials: "include",
+    cache: "no-store",
+    signal,
+  });
+  if (!res.ok) throw new Error("작업 목록을 불러오지 못했습니다.");
+  return mapJobMeta((await res.json()) as ExtractionJobMetaResponse);
+}
+
 export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataParams) {
   void _onJobsRefresh;
 
@@ -158,9 +202,14 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
     if (getCachedDrafts() === null) setLoadingDetails(true);
     setError(null);
     try {
-      const nextDrafts = await fetchAllDraftPages();
+      const [nextDrafts, nextJobMeta] = await Promise.all([
+        fetchAllDraftPages(),
+        fetchJobMeta(),
+      ]);
       setCachedDrafts(nextDrafts);
+      setCachedJobMeta(nextJobMeta);
       setDrafts(nextDrafts);
+      setJobMetaByJobId(nextJobMeta);
       setSelectedDraftId(null);
       setResultScope("all");
       setJobId(null);
@@ -259,42 +308,8 @@ export function useDraftsData({ onJobsRefresh: _onJobsRefresh }: UseDraftsDataPa
       idleMs: 5 * 60_000,
       run: async (signal) => {
         try {
-          const res = await fetch("/api/extraction/jobs?limit=200", {
-            credentials: "include",
-            cache: "no-store",
-            signal,
-          });
-          if (!res.ok || signal.aborted) return null;
-          const data = (await res.json()) as {
-            jobs?: Array<{
-              id: string;
-              mode: string;
-              status: string;
-              displayName?: string | null;
-              originalFileName?: string | null;
-              createdAt: string;
-              firstPageImageUrl?: string | null;
-              resultCount?: number;
-              draftResultCount?: number;
-              savedResultCount?: number;
-            }>;
-          };
+          const m = await fetchJobMeta(signal);
           if (signal.aborted) return null;
-          const m = new Map<string, JobMetaSnapshot>();
-          for (const j of data.jobs ?? []) {
-            // Mirror the manage page's draft fetch — PASSAGE_ONLY only.
-            if (j.mode !== "PASSAGE_ONLY") continue;
-            m.set(j.id, {
-              thumbnailUrl: j.firstPageImageUrl ?? null,
-              status: j.status,
-              displayName: j.displayName ?? null,
-              originalFileName: j.originalFileName ?? null,
-              createdAt: j.createdAt,
-              resultCount: j.resultCount ?? 0,
-              draftResultCount: j.draftResultCount ?? 0,
-              savedResultCount: j.savedResultCount ?? 0,
-            });
-          }
           // Detect a fresh terminal transition vs the previous poll's
           // snapshot. Skip the first run (prev === null) to avoid duplicating
           // the bootstrap `loadAllDrafts` call.
