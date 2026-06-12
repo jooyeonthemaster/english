@@ -30,6 +30,16 @@ const GEMINI_FLASH: ExtractionAiModelConfig = {
   thinkingBudget: 0,
 };
 
+// 추출 OCR(블록 분류·구조화) 전용 모델 — 기본 flash-lite (env 로 오버라이드 가능).
+// 26-06-12 전환. 복원(아래)과 달리 그라운드트루스 하니스 검증은 없음 — 분류 품질
+// 회귀(지문/문제 경계 오류 등)가 보이면 GEMINI_OCR_MODEL=gemini-3.5-flash 즉시 롤백.
+const OCR_MODEL = process.env.GEMINI_OCR_MODEL?.trim() || "gemini-3.1-flash-lite";
+
+const OCR: ExtractionAiModelConfig = {
+  ...GEMINI_FLASH,
+  model: OCR_MODEL,
+};
+
 // passage-restoration 전용 모델 — 기본 flash-lite (env 로 오버라이드 가능).
 // 검증 근거: scripts/test-restoration-lite.ts 그라운드트루스 22케이스 5라운드에서
 // gemini-3.1-flash-lite 가 전 게이트(복원문·검수근거·정직성) 통과
@@ -54,7 +64,7 @@ const RESTORATION: ExtractionAiModelConfig = {
 };
 
 const CONFIG_BY_STAGE: Record<ExtractionAiStage, ExtractionAiModelConfig> = {
-  ocr: GEMINI_FLASH,
+  ocr: OCR,
   "problem-evidence": RESTORATION_SHARED,
   "source-grounding": RESTORATION_SHARED,
   "passage-restoration": RESTORATION,
