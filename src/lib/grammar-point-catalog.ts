@@ -1,0 +1,331 @@
+// ============================================================================
+// 어법 출제 포인트 카탈로그 — docs/grammar-test-points.md 런타임 증류본
+//
+// 출처: 어법끝 START 2025 + ESSENTIAL 개정판 통합 마스터 (강사 제공, 2026-05-21).
+// 1994~2021 수능·평가원 28년 정답 빈도 + 최근 6년 정답(오답) 데이터 기반.
+// 강사 피드백(2026-05-31): "수능 최빈출이 대략 8~10가지인데 잘 짚어서 출제하지
+// 못한다" → 정답 포인트를 빈도 코어 풀로 유도하고, 오답 선택률이 높은 포인트를
+// 디코이 카드로 쓰며, 교재의 함정 시나리오를 그대로 주입한다.
+//
+// pointCode 체계(a~m)는 기존 스키마/후처리/렌더러와 공유되므로 변경하지 않는다.
+// ============================================================================
+
+export type GrammarPointCode =
+  | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m";
+
+export interface GrammarPointInfo {
+  code: GrammarPointCode;
+  label: string;
+  /** 28년 빈도 순위 (대표 TP 기준, 1=최빈출) */
+  rank: number;
+  /** 1994~2021 정답 출제 횟수 (관련 TP 합산) */
+  answerFreq: number;
+  /** 최근 6년 정답 횟수 */
+  recentAnswer: number;
+  /** 최근 6년 오답(디코이로 선택된) 횟수 — 높을수록 함정 카드로 강력 */
+  recentWrong: number;
+  /** 정답 적합도: core=최빈출 코어(정답 우선) / mid=가끔 / rare=정답 지양 */
+  tier: "core" | "mid" | "rare";
+  /** 교재의 함정 시나리오 — 디코이/정답 설계 시 프롬프트에 주입되는 1줄들 */
+  traps: string[];
+}
+
+export const GRAMMAR_POINT_CATALOG: Record<GrammarPointCode, GrammarPointInfo> = {
+  a: {
+    code: "a",
+    label: "정동사 vs 준동사",
+    rank: 1,
+    answerFreq: 97,
+    recentAnswer: 25,
+    recentWrong: 7,
+    tier: "core",
+    traps: [
+      "한 문장의 동사 수 = (접속사+관계사) 수 + 1. 삽입절 <관계대명사 + I think/believe류>를 빼고 동사 자리를 판단하게 하라.",
+      "세미콜론(;)이나 접속부사(thus/however) 뒤 절에는 새 본동사가 필요하다 — 준동사로 바꾸면 오류.",
+      "과거형과 과거분사형이 같은 동사의 후치 수식(The proposal agreed upon that night ...)을 본동사로 착각하게 하라.",
+    ],
+  },
+  b: {
+    code: "b",
+    label: "관계사 (관계대명사 vs 관계부사, that vs what)",
+    rank: 2,
+    answerFreq: 160,
+    recentAnswer: 32,
+    recentWrong: 88,
+    tier: "core",
+    traps: [
+      "관계대명사 + 불완전한 절 / 관계부사·전치사+관계대명사 + 완전한 절 — 절의 완전성으로만 판단되게 하라.",
+      "that[which] vs what: 선행사가 있으면 that/which, 없으면 what (최근 6년 오답 56회 — 최고 함정 카드).",
+      "추상 선행사(point, case, situation, stage, circumstance) + where 를 함정으로 활용하라.",
+      "콤마+which 는 앞 절 전체를 선행사로 받을 수 있다 — 계속적 용법에서 that/what 은 불가.",
+    ],
+  },
+  c: {
+    code: "c",
+    label: "분사 능동 v-ing vs 수동 p.p.",
+    rank: 4,
+    answerFreq: 82,
+    recentAnswer: 9,
+    recentWrong: 47,
+    tier: "core",
+    traps: [
+      "의미상 주어와 분사의 능/수동 관계로 판단. 분사 뒤 목적어가 있으면 능동(v-ing).",
+      "자동사 분사는 목적어가 없어도 v-ing(a missing child, a retired teacher) — '목적어 없으면 p.p.' 규칙의 예외 함정.",
+      "with + 명사 + 분사(부대상황)에서 with 뒤 명사가 의미상 주어.",
+      "감정 동사: 감정을 유발하면 v-ing, 느끼면 p.p. (boring lecturer vs bored students).",
+      "접속사 잔류 절축약: if/when/while + (주어+be 생략) + 분사 (if eaten, when asked, if left untreated) — 절 축약을 읽어야 능수동이 판별되는 기출 빈출 형태.",
+    ],
+  },
+  d: {
+    code: "d",
+    label: "수일치",
+    rank: 6,
+    answerFreq: 76,
+    recentAnswer: 16,
+    recentWrong: 41,
+    tier: "core",
+    traps: [
+      "주어 + [전명구/분사구/to-v구/관계사절/동격·콤마 삽입구] + 동사 — 동사 바로 앞 명사가 아닌 진짜 주어와 일치.",
+      "the number of + 복수명사(단수 취급) vs a number of + 복수명사(복수), one of + 복수명사 + 단수동사 — 기출 최빈 함정.",
+      "부분 표현(percent/most/half/the rest of + 명사)은 of 뒤 명사에 일치.",
+      "도치구문(There/장소 부사구/부정어 도치)에서 동사 뒤 진짜 주어와 일치.",
+      "구·절 주어(동명사구, that절)는 단수 취급.",
+    ],
+  },
+  e: {
+    code: "e",
+    label: "능동태 vs 수동태",
+    rank: 7,
+    answerFreq: 53,
+    recentAnswer: 6,
+    recentWrong: 11,
+    tier: "core",
+    traps: [
+      "타동사인데 뒤에 목적어가 없으면 수동 의심 — 단 관계대명사절에서 목적어가 앞으로 빠진 경우는 능동 유지(함정).",
+      "자동사(occur, happen, appear, disappear, consist, belong)는 수동태 불가.",
+      "be used to-v(~하는 데 사용되다) vs be used to v-ing(~에 익숙하다) vs used to-v(과거 습관).",
+    ],
+  },
+  f: {
+    code: "f",
+    label: "형용사 자리 vs 부사 자리",
+    rank: 8,
+    answerFreq: 61,
+    recentAnswer: 7,
+    recentWrong: 51,
+    tier: "core",
+    traps: [
+      "보어 자리는 형용사: be/remain/keep/stay, become/get/grow, seem, look/sound/feel + 5형식 OC(make/find/keep/leave + O + 형용사).",
+      "-ly 로 끝나는 형용사(costly, friendly, lively, deadly, lonely, likely)를 부사로 착각하게 하라 (최근 6년 오답 49회 — 최상위 함정 카드).",
+      "enough 어순: enough+명사 / 형·부+enough.",
+      "혼동 형·부: hard/hardly, late/lately, high/highly, near/nearly, close/closely — 의미가 달라지는 쌍.",
+    ],
+  },
+  g: {
+    code: "g",
+    label: "대명사 일치",
+    rank: 9,
+    answerFreq: 47,
+    recentAnswer: 4,
+    recentWrong: 45,
+    tier: "core",
+    traps: [
+      "앞 명사 반복 회피의 that/those 는 받는 명사의 수에 일치 (the color ... than that of / growth patterns ... those of).",
+      "it(앞에 나온 특정한 것) vs one/ones(같은 종류의 불특정한 것).",
+      "의미상 주어 = 목적어이면 재귀대명사(themselves) — them 과의 대비가 최근 오답 44회의 함정 카드.",
+      "<부사절, 주절> 구조에서 부사절의 대명사는 주절 주어를 가리킬 수 있다.",
+    ],
+  },
+  h: {
+    code: "h",
+    label: "목적격보어 형태",
+    rank: 10,
+    answerFreq: 30,
+    recentAnswer: 1,
+    recentWrong: 16,
+    tier: "core",
+    traps: [
+      "사역(make/have/let)+O+동사원형, 지각(see/hear/watch/notice)+O+동사원형 또는 v-ing(진행 강조).",
+      "enable/allow/cause/force/encourage/expect + O + to-v — get 도 to-v(사역 make 와 대비).",
+      "O와 OC가 수동 관계면 p.p.: have+O+p.p., keep+O+p.p. (Keep your radio tuned).",
+    ],
+  },
+  i: {
+    code: "i",
+    label: "병렬구조",
+    rank: 5,
+    answerFreq: 64,
+    recentAnswer: 7,
+    recentWrong: 22,
+    tier: "core",
+    traps: [
+      "등위접속사(and/but/or)·상관접속사(both A and B, not only A but also B)가 잇는 항목의 문법 형태 일치.",
+      "A and [부사구] B 처럼 부사가 끼어 거리가 멀어진 병렬을 함정으로 활용하라.",
+      "비교 대상(than/as ~ as)의 양쪽 형태 일치, from A to B / between A and B 짝 구조.",
+      "to부정사 병렬에서 두 번째 to 는 생략 가능 — 생략형을 오류로 오인하게 하는 함정.",
+    ],
+  },
+  j: {
+    code: "j",
+    label: "가정법 시제",
+    rank: 33,
+    answerFreq: 3,
+    recentAnswer: 0,
+    recentWrong: 1,
+    tier: "rare",
+    traps: [
+      "if 가정법 과거/과거완료의 동사 짝, if 생략 도치(Had/Were/Should + S).",
+    ],
+  },
+  k: {
+    code: "k",
+    label: "to-v vs v-ing",
+    rank: 14,
+    answerFreq: 18,
+    recentAnswer: 0,
+    recentWrong: 11,
+    // 수능·평가원 빈도표(14위)로는 mid 였으나, 내신·학평 포함 기출 1570제 전수
+    // 분류(2026-06-11)에서 정답 포인트 6위(184건/2623, 7.0%) — 내신 학원 고객
+    // 기준으로 코어 승격. 전치사 to 함정이 절반 이상.
+    tier: "core",
+    traps: [
+      "remember/forget/regret/try/stop + to-v(앞일) vs v-ing(이미 한 일) — 의미 변화 동사.",
+      "전치사 to(+v-ing/명사: look forward to, be used to, object to, contribute to, when it comes to) vs 부정사 to(+동사원형: be likely/willing/reluctant to) — 함정으로 빈출(오답이 정답보다 많음).",
+    ],
+  },
+  l: {
+    code: "l",
+    label: "전치사 vs 접속사",
+    rank: 12,
+    answerFreq: 22,
+    recentAnswer: 0,
+    recentWrong: 4,
+    tier: "mid",
+    traps: [
+      "during/while, despite·in spite of/although·though, because of/because — 뒤가 명사(구)면 전치사, 절(S+V)이면 접속사.",
+    ],
+  },
+  m: {
+    code: "m",
+    label: "비교구문",
+    rank: 25,
+    answerFreq: 11,
+    recentAnswer: 0,
+    recentWrong: 7,
+    tier: "rare",
+    traps: [
+      "비교급 수식 부사는 much/even/still/far/a lot (very 불가), as+원급+as 사이 형/부 판단, the 비교급 ~ the 비교급.",
+    ],
+  },
+};
+
+/** 정답(오류) 포인트로 우선 지정할 코어 풀 — 빈도 순. 강사 언급 "최빈출 8~10가지". */
+export const GRAMMAR_CORE_ANSWER_CODES: GrammarPointCode[] = [
+  "a", // 1위 정동사vs준동사
+  "b", // 2·3위 관계사/that·what
+  "c", // 4위 분사
+  "i", // 5위 병렬
+  "d", // 6위 수일치
+  "e", // 7위 태
+  "f", // 8위 형/부
+  "g", // 9위 대명사
+  "h", // 10위 목적격보어
+  "k", // 내신·학평 기출 1570제 분류 6위(7.0%) — 내신 기준 코어 승격
+];
+
+/** 최근 6년 오답 선택률 최상위 — 디코이(함정) 카드 우선순위. */
+export const GRAMMAR_TOP_DECOY_CODES: GrammarPointCode[] = ["b", "f", "c", "g", "d", "i"];
+
+export interface GrammarPointGuidanceOptions {
+  /** 다양성 배치 인덱스 — 정답 포인트 지정 로테이션의 결정형 오프셋 */
+  variantIndex?: number;
+  /** 같은 지문에서 이미 정답으로 사용된 pointCode들 (회피) */
+  usedPointCodes?: string[];
+  /** 다양성 모드 활성 여부 — 미활성이면 지정(⭐) 없이 빈도 가이드만 */
+  diversityEnabled?: boolean;
+  answerCount?: number;
+}
+
+/**
+ * 어법 후보 블록에 주입할 빈도 기반 출제 가이드를 생성한다.
+ * - 정답 포인트: 코어 풀 안내 + (다양성 모드) variantIndex 로테이션으로 1개 지정(소프트).
+ * - 디코이: 오답 선택률 최상위 함정 카드 + 교재 함정 시나리오.
+ */
+export function buildGrammarPointGuidance(
+  options: GrammarPointGuidanceOptions = {},
+): string {
+  const { variantIndex, usedPointCodes, diversityEnabled, answerCount = 1 } = options;
+
+  const coreLine = GRAMMAR_CORE_ANSWER_CODES.map((code) => {
+    const info = GRAMMAR_POINT_CATALOG[code];
+    return `(${code}) ${info.label}[${info.rank}위]`;
+  }).join(" · ");
+
+  // 정답 포인트 지정: 기사용 코드를 뺀 코어 풀에서 로테이션. 전부 사용됐으면 풀 리셋.
+  let designated: GrammarPointCode[] = [];
+  if (diversityEnabled) {
+    const used = new Set(
+      (usedPointCodes ?? []).map((code) => code.trim().toLowerCase()),
+    );
+    const available = GRAMMAR_CORE_ANSWER_CODES.filter((code) => !used.has(code));
+    const pool = available.length >= answerCount ? available : GRAMMAR_CORE_ANSWER_CODES;
+    const offset =
+      typeof variantIndex === "number" && Number.isFinite(variantIndex)
+        ? Math.max(0, Math.floor(variantIndex))
+        : Math.floor(Math.random() * pool.length);
+    designated = Array.from(
+      { length: Math.min(answerCount, pool.length) },
+      (_, i) => pool[(offset + i) % pool.length],
+    );
+  }
+
+  // 단일 정답일 때는 폴백 2개까지 순위로 지정 — 지문에 1순위 구조가 없을 때
+  // 모델이 빈도 1위 포인트(a)로 일괄 후퇴하며 생기는 편중을 막는다.
+  const fallbackChain =
+    designated.length === 1 && answerCount === 1
+      ? Array.from({ length: 2 }, (_, i) => {
+          const pool = GRAMMAR_CORE_ANSWER_CODES;
+          const baseIndex = pool.indexOf(designated[0]);
+          return pool[(baseIndex + i + 1) % pool.length];
+        }).filter((code) => !designated.includes(code))
+      : [];
+
+  const designatedLines = designated.length
+    ? [
+        `- ⭐ 이번 문항의 정답 포인트(다양성 지시): 1순위 ${designated
+          .map((code) => `(${code}) ${GRAMMAR_POINT_CATALOG[code].label}`)
+          .join(", ")} 의 오류를 정답으로 만드세요.${
+          fallbackChain.length
+            ? ` 지문에 그 문법 구조가 없으면 2순위 (${fallbackChain[0]}) ${GRAMMAR_POINT_CATALOG[fallbackChain[0]].label}${
+                fallbackChain[1]
+                  ? `, 3순위 (${fallbackChain[1]}) ${GRAMMAR_POINT_CATALOG[fallbackChain[1]].label}`
+                  : ""
+              } 순서로 시도하세요. 순위를 건너뛰고 다른 포인트로 가지 마세요.`
+            : " 지문에 그 문법 구조가 없을 때만 코어 목록의 다른 포인트를 사용하세요."
+        } 같은 지문에서 정답 포인트가 반복되지 않게 하세요.`,
+        ...designated.flatMap((code) =>
+          GRAMMAR_POINT_CATALOG[code].traps
+            .slice(0, 2)
+            .map((trap) => `  · 지정 포인트 설계 힌트: ${trap}`),
+        ),
+      ]
+    : [];
+
+  const decoyLines = GRAMMAR_TOP_DECOY_CODES.slice(0, 4).map((code) => {
+    const info = GRAMMAR_POINT_CATALOG[code];
+    return `  · (${code}) ${info.label} — ${info.traps[Math.min(1, info.traps.length - 1)]}`;
+  });
+
+  return [
+    "## 어법 출제 포인트 가이드 (수능·평가원 28년 기출 빈도 기반)",
+    `- 정답(오류로 변형하는) 포인트는 다음 최빈출 코어에서 선택하세요: ${coreLine}.`,
+    "- (j) 가정법, (m) 비교구문은 28년간 정답 출제가 극히 드뭅니다 — 정답으로 만들지 말고 디코이로만 사용하세요. (l) 전치사/접속사도 정답보다는 디코이에 적합합니다.",
+    ...designatedLines,
+    "- 디코이(밑줄만 치고 어법상 옳게 두는 자리)는 최근 6년 학생 오답 선택률이 가장 높은 함정 카드를 우선 배치하세요:",
+    ...decoyLines,
+    "- 디코이는 되도록 서로 다른 문법 포인트의 자리를 고르세요. 단, pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 합니다 — 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다 (중복되면 중복된 대로 정직하게 기재). '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다.",
+    "- ⚠️ 원문 표현 자체가 표준 규범과 어긋나 보이거나 어법 논쟁이 있는 자리(예: 복수 주어 + 동격 each 뒤 동사의 수, 집합명사 수일치, 사용역에 따라 갈리는 변이형)는 정답으로도 디코이로도 밑줄을 긋지 마세요. 원문을 오류로 판정하지 말고, 의심스러운 자리는 피해서 다른 곳에 출제하세요.",
+    "- 자기검증: 각 밑줄의 pointCode 는 그 밑줄의 해설(wrongOptionExplanations/explanation)이 설명하는 문법 범주와 일치해야 합니다. 분사구문 능수동이면 (c), 수일치면 (d), 명사절·관계절의 that/what 은 (b)입니다. 제출 전 5개 밑줄의 코드-해설 일치를 확인하세요.",
+    "- 정답·디코이 모두 문장 전체 구조를 읽어야 판단되는 자리여야 합니다. 단어 하나만 보고 판단되는 자리(관사, 단순 전치사, 철자, 조동사 바로 옆 원형)는 금지.",
+  ].join("\n");
+}

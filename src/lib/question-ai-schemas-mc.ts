@@ -125,7 +125,7 @@ export function buildAiContentMatchSchema(optionCount: number, answerCount = 1) 
     options: z
       .array(optionSchema.extend({ label: labelSchema }))
       .length(optionN)
-      .describe(`${optionN} Korean statement options`),
+      .describe(`${optionN} English statement options`),
     wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(optionN - answerN),
   });
 }

@@ -1,4 +1,13 @@
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+import {
+  normalizeDiversityComparable,
+  pickSteeredPositions,
+} from "@/lib/question-diversity";
+import {
+  buildGrammarPointGuidance,
+  GRAMMAR_CORE_ANSWER_CODES,
+  GRAMMAR_POINT_CATALOG,
+} from "@/lib/grammar-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
@@ -41,6 +50,12 @@ interface ValidateQuestionQualityInput {
   genericOptionCount?: number;
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
   genericAnswerCount?: number;
+  /**
+   * 다양성: 같은 지문에서 이미 사용된 타깃(원문 표현). 전달 시 동일 타깃 재사용을
+   * error 로 표시해 strict 재시도를 유도한다 (RELAXED_BLOCKING 미포함 — relaxed
+   * 폴백은 통과시키므로 타깃 풀이 고갈된 지문에서도 생성은 성공한다).
+   */
+  diversityUsedTargets?: string[];
 }
 
 const IRRELEVANT_SLOT_MIN = 5;
@@ -294,8 +309,25 @@ export function buildQuestionTargetCandidateBlock(
     /** Legacy name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
     requestedDifficulty?: string;
+    /** 다양성: 같은 지문에서 이미 사용된 타깃(유형별 원문 표현) — 후보 필터링용 */
+    usedTargets?: string[];
+    /** 다양성: 기존 문항의 정규화된 정답 라벨 — 정답 위치 분산용 */
+    usedAnswerLabels?: string[];
+    /** 다양성: 어법류에서 이미 정답으로 쓰인 출제 포인트 코드(a~m) — 포인트 분산용 */
+    usedPointCodes?: string[];
+    /** 다양성: 배치 내 변형 인덱스 — 후보 로테이션/위치 분산의 결정형 오프셋 */
+    variantIndex?: number;
+    /** 다양성 모드 활성 여부 (미지정 시 기존 동작 그대로) */
+    diversityEnabled?: boolean;
   } = {},
 ): string {
+  const diversity: CandidateDiversityOptions = {
+    usedTargets: options.usedTargets,
+    usedAnswerLabels: options.usedAnswerLabels,
+    usedPointCodes: options.usedPointCodes,
+    variantIndex: options.variantIndex,
+    diversityEnabled: options.diversityEnabled,
+  };
   switch (typeId) {
     case "GRAMMAR_ERROR":
       return buildGrammarErrorCandidateBlock(
@@ -303,6 +335,7 @@ export function buildQuestionTargetCandidateBlock(
         options.grammarMarkerCount ?? options.grammarErrorCount,
         options.grammarAnswerCount,
         options.requestedDifficulty,
+        diversity,
       );
     case "GRAMMAR_CORRECTION":
       return buildGrammarCorrectionCandidateBlock(
@@ -315,27 +348,127 @@ export function buildQuestionTargetCandidateBlock(
         passage,
         options.irrelevantSlotCount,
         options.requestedDifficulty,
+        diversity,
       );
     case "BLANK_INFERENCE":
       // The candidate block proposes single-blank targets; the multi-blank
       // variant carries its own instructions in the type-settings prompt.
       if ((options.blankInferenceBlankCount ?? 1) >= 2) return "";
-      return buildBlankInferenceCandidateBlock(passage);
+      return buildBlankInferenceCandidateBlock(passage, diversity);
     case "REFERENCE":
-      return buildReferenceCandidateBlock(passage);
+      return buildReferenceCandidateBlock(passage, diversity);
     case "IMPLIED_MEANING":
       return buildImpliedMeaningCandidateBlock(
         passage,
         options.requestedDifficulty,
+        diversity,
       );
     case "ANTONYM":
       return buildAntonymCandidateBlock(
         passage,
         options.requestedDifficulty,
         options.antonymPairCount,
+        diversity,
       );
     default:
       return "";
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 다양성 보조: 후보 목록 필터링/로테이션 (반복 생성 시 타깃 수렴 방지)
+// ---------------------------------------------------------------------------
+
+interface CandidateDiversityOptions {
+  usedTargets?: string[];
+  usedAnswerLabels?: string[];
+  usedPointCodes?: string[];
+  variantIndex?: number;
+  diversityEnabled?: boolean;
+}
+
+/** variantIndex 만큼 배열을 회전시켜 병렬 배치의 각 호출이 다른 후보를 먼저 보게 한다. */
+function rotateByVariantIndex<T>(items: T[], variantIndex?: number): T[] {
+  if (
+    items.length < 2 ||
+    typeof variantIndex !== "number" ||
+    !Number.isFinite(variantIndex)
+  ) {
+    return items;
+  }
+  const offset = Math.max(0, Math.floor(variantIndex)) % items.length;
+  if (offset === 0) return items;
+  return [...items.slice(offset), ...items.slice(0, offset)];
+}
+
+/**
+ * 기사용 타깃과 겹치는 후보를 제외한다. 전부 걸러지면 원본을 그대로 반환해
+ * 후보 고갈로 생성 자체가 약해지는 것을 막는다 (소프트 강등 — exhausted 로 표시).
+ */
+function filterUsedCandidates<T>(
+  items: T[],
+  usedTargets: string[] | undefined,
+  candidateText: (item: T) => string,
+): { items: T[]; exhausted: boolean } {
+  if (!usedTargets?.length || items.length === 0) {
+    return { items, exhausted: false };
+  }
+  // 문장부호를 무시하는 다양성 정규화 사용 — "common – rare" 같은 쌍 표기와
+  // 후보 텍스트("common rare")가 안전하게 비교된다.
+  const usedNorms = usedTargets
+    .map((target) => normalizeDiversityComparable(target))
+    .filter(Boolean);
+  if (!usedNorms.length) return { items, exhausted: false };
+  const filtered = items.filter((item) => {
+    const norm = normalizeDiversityComparable(candidateText(item));
+    if (!norm) return true;
+    // 공백 패딩으로 토큰 경계를 강제 — 짧은 used 스팬("art")이 무관 후보
+    // ("started")를 부분 문자열로 과잉 제외하지 않게 한다.
+    const paddedNorm = ` ${norm} `;
+    return !usedNorms.some((used) => {
+      if (used === norm) return true;
+      const paddedUsed = ` ${used} `;
+      return paddedUsed.includes(paddedNorm) || paddedNorm.includes(paddedUsed);
+    });
+  });
+  return filtered.length > 0
+    ? { items: filtered, exhausted: false }
+    : { items, exhausted: true };
+}
+
+/**
+ * 다양성: 생성물이 기사용 타깃 스팬을 그대로 재사용했는지 검사.
+ * diversityUsedTargets 미전달 호출자는 no-op. RELAXED_BLOCKING 미포함 코드라
+ * strict 재시도 동안만 다른 타깃을 찾도록 압력을 주고, 타깃 풀이 고갈된
+ * 지문에서는 relaxed 폴백이 재사용을 허용한다 (생성 실패로 끝나지 않음).
+ */
+function validateDiversityTargetReuse(
+  question: Record<string, unknown>,
+  typeId: string,
+  usedTargets: string[] | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  if (!usedTargets?.length) return;
+  const targetText =
+    typeId === "BLANK_INFERENCE"
+      ? normalizeText(question.originalExpression)
+      : typeId === "IMPLIED_MEANING"
+        ? normalizeText(question.underlinedExpression)
+        : "";
+  if (!targetText) return;
+  const norm = normalizeDiversityComparable(targetText);
+  if (!norm) return;
+  const reused = usedTargets.some((used) => {
+    const usedNorm = normalizeDiversityComparable(used);
+    if (!usedNorm) return false;
+    return usedNorm === norm || usedNorm.includes(norm) || norm.includes(usedNorm);
+  });
+  if (reused) {
+    add(
+      "error",
+      "diversity-duplicate-target",
+      `Target "${targetText.slice(0, 60)}" duplicates a previously used target for this passage; choose a different span.`,
+    );
   }
 }
 
@@ -411,6 +544,7 @@ function buildAntonymCandidateBlock(
   passage: string,
   requestedDifficulty?: string,
   pairCount?: number,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const markerCount =
     typeof pairCount === "number" &&
@@ -418,7 +552,16 @@ function buildAntonymCandidateBlock(
     pairCount <= ANTONYM_MARKER_COUNT_MAX
       ? Math.round(pairCount)
       : ANTONYM_MARKER_COUNT_DEFAULT;
-  const candidates = findAntonymCandidates(passage, requestedDifficulty).slice(0, 12);
+  const allCandidates = findAntonymCandidates(passage, requestedDifficulty);
+  const { items: usableCandidates, exhausted: usedExhausted } = filterUsedCandidates(
+    allCandidates,
+    diversity?.usedTargets,
+    (candidate) => `${candidate.sourceWord} ${candidate.correctAntonym}`,
+  );
+  const candidates = rotateByVariantIndex(
+    usableCandidates,
+    diversity?.variantIndex,
+  ).slice(0, 12);
   const safeCountRule =
     candidates.length >= markerCount
       ? `- Use ${markerCount} marked source words from this safe list whenever possible. At minimum, ${markerCount - 1} of the ${markerCount} markedWords should come from this list.`
@@ -436,6 +579,11 @@ function buildAntonymCandidateBlock(
   return [
     "## ANTONYM target planning guardrail",
     safeCountRule,
+    // 안전 쌍이 전부 기사용이면 "회피 + 목록 강제"가 동시에 성립 불가 —
+    // 재사용을 명시적으로 허용해 모순 지시를 해소한다.
+    usedExhausted
+      ? "- 이 지문의 안전 쌍은 모두 이전 문항에서 사용되었습니다. 재사용을 허용하되, 잘못된 쌍의 위치와 오답 설계를 이전 문항과 다르게 구성하세요."
+      : "",
     "- For the four non-answer options, use correctAntonym exactly as the displayed antonym.",
     "- For the single answer option, choose one safe sourceWord and display its suggestedWrongPair as antonym; still fill correctAntonym with the real correctAntonym.",
     "- Do not invent near-miss pairs when a suggestedWrongPair is available. This prevents vague pairs such as force-restrain or unproductive-passive from appearing.",
@@ -520,6 +668,7 @@ function buildGrammarErrorCandidateBlock(
   requestedMarkerCount = 5,
   requestedAnswerCount = 1,
   requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage);
   const markedCount = normalizeGrammarMarkedCount(requestedMarkerCount);
@@ -528,8 +677,20 @@ function buildGrammarErrorCandidateBlock(
     .slice(0, markedCount)
     .join(" ");
 
+  // 지문에 규범 논쟁 자리(복수 등위 주어 + 동격 each + 단수동사)가 있으면 구체
+  // 인용으로 금지한다 — 추상 규칙만으로는 모델이 이 자리를 고집해 재시도를
+  // 소모한다 (실측: attempts 12→30). 게이트(grammar-disputed-usage-target)의
+  // 프롬프트 측 짝.
+  const disputedSourceMatch = passage.match(
+    /\b(?:and|or)\b[^.;]{0,80}?\beach\s+[A-Za-z]+s(?=[\s.,;])/i,
+  );
+  const disputedBanLine = disputedSourceMatch
+    ? `- 🚫 절대 밑줄 금지 자리: 지문의 "...${disputedSourceMatch[0].slice(-60)}..." 구간(복수 등위 주어 + each + 동사 — 표준 규범과 실사용이 갈리는 논쟁 자리)에는 정답으로도 디코이로도 어떤 라벨도 배치하지 마세요. 이 자리를 밑줄 치면 문항이 거부됩니다.`
+    : "";
+
   return [
     "## GRAMMAR_ERROR target planning guardrail",
+    disputedBanLine,
     `- The final item must contain ${markedCount} marked expression(s) labeled ${labels}.`,
     `- Exactly ${answerCount} marked expression(s) must be grammatically incorrect.`,
     answerCount >= 2
@@ -537,11 +698,32 @@ function buildGrammarErrorCandidateBlock(
       : "- In the direction, use single-answer wording for one grammatically incorrect part.",
     "- If the requested answer count is lower than the marked count, keep the remaining labels grammatically correct as non-answer decoys. If it equals the marked count, every label must be intentionally incorrect and 오답 분석 can be empty.",
     "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
-    "- Prefer high-value grammar decisions: finite vs non-finite verb, subject-verb agreement, modifier active/passive, parallelism, relative/nominal clause choice, pronoun agreement, complement form, comparison structure, and preposition vs conjunction.",
-    "- Avoid padding with articles, tiny prepositions, fixed verb-complement patterns, or expressions whose correctness can be judged without reading the sentence.",
     "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
     requestedDifficulty === "KILLER"
       ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked; avoid spelling-level or one-word giveaway errors."
+      : "",
+    // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
+    // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
+    buildGrammarPointGuidance({
+      variantIndex: diversity?.variantIndex,
+      usedPointCodes: diversity?.usedPointCodes,
+      diversityEnabled: diversity?.diversityEnabled,
+      answerCount,
+    }),
+    // 다양성 모드: 정답 밑줄의 호스트 문장도 로테이션 힌트로 지정 — 포인트만
+    // 지정하면 같은 포인트를 받은 병렬 유닛들이 지문의 같은 '손쉬운 자리'로
+    // 수렴한다 (실측: 고유 정답 표현 후퇴). 포인트 지시가 우선인 소프트 힌트.
+    diversity?.diversityEnabled && sentences.length > 1
+      ? (() => {
+          const sentencePool = Math.min(sentences.length, 14);
+          const vi =
+            typeof diversity.variantIndex === "number" &&
+            Number.isFinite(diversity.variantIndex)
+              ? Math.max(0, Math.floor(diversity.variantIndex))
+              : Math.floor(Math.random() * sentencePool);
+          const target = (vi % sentencePool) + 1;
+          return `⭐ 다양성 보조 지시: 정답(오류) 밑줄은 되도록 아래 문장 목록의 문장 ${target}에 배치하세요. 지정 포인트의 문법 구조가 그 문장에 없으면 이 문장 힌트는 무시하고 포인트 지시를 따르되, 매번 같은 표현을 오류로 만들지 마세요.`;
+        })()
       : "",
     sentences.length
       ? "Detected passage sentences for target distribution:"
@@ -578,7 +760,9 @@ function buildGrammarCorrectionCandidateBlock(
     "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
     "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
     "- Use wording like \"다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.\"",
-    "- Prefer high-value grammar decisions: subject-verb agreement, finite vs non-finite verb, parallelism, modifier active/passive, relative/nominal clause choice, pronoun agreement, complement form, comparison structure, and preposition vs conjunction.",
+    // 어법끝 28년 빈도 코어 풀 — 숨길 오류는 최빈출 포인트에서 선택.
+    `- 숨길 오류는 수능 최빈출 코어 포인트에서 선택하세요: ${GRAMMAR_CORE_ANSWER_CODES.map((code) => `${GRAMMAR_POINT_CATALOG[code].label}[${GRAMMAR_POINT_CATALOG[code].rank}위]`).join(" · ")}.`,
+    `- 가정법(28년 정답 ${GRAMMAR_POINT_CATALOG.j.answerFreq}회)·비교구문(${GRAMMAR_POINT_CATALOG.m.answerFreq}회)은 정답 출제가 극히 드문 포인트입니다 — 오류로 만들지 마세요.`,
     "- Avoid padding with articles, tiny prepositions, punctuation, spelling-only changes, optional style improvements, or debatable active/passive infinitive preferences such as to gain vs to be gained.",
     requestedDifficulty === "KILLER"
       ? "- KILLER calibration: use a long enough underlined clause/sentence that students must inspect structure, not just spot a visibly odd token."
@@ -590,8 +774,20 @@ function buildGrammarCorrectionCandidateBlock(
   ].filter(Boolean).join("\n");
 }
 
-function buildReferenceCandidateBlock(passage: string): string {
-  const candidates = findReferenceCandidates(passage).slice(0, 12);
+function buildReferenceCandidateBlock(
+  passage: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  // "반드시 목록에서 선택" 하드 지시가 있는 유형이라, 기사용 발생(주변 문맥)을
+  // 목록에서 직접 제외해 회피 지시와의 모순을 없앤다 (전부 기사용이면 원본 유지).
+  const candidates = rotateByVariantIndex(
+    filterUsedCandidates(
+      findReferenceCandidates(passage),
+      diversity?.usedTargets,
+      (candidate) => candidate.surroundingText,
+    ).items,
+    diversity?.variantIndex,
+  ).slice(0, 12);
   if (candidates.length === 0) {
     return [
       "## Valid REFERENCE target candidates",
@@ -613,9 +809,17 @@ function buildReferenceCandidateBlock(passage: string): string {
 function buildImpliedMeaningCandidateBlock(
   passage: string,
   requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage);
-  const candidates = findImpliedMeaningCandidates(passage).slice(0, 10);
+  const candidates = rotateByVariantIndex(
+    filterUsedCandidates(
+      findImpliedMeaningCandidates(passage),
+      diversity?.usedTargets,
+      (candidate) => candidate.expression,
+    ).items,
+    diversity?.variantIndex,
+  ).slice(0, 10);
 
   if (candidates.length === 0) {
     return [
@@ -629,6 +833,10 @@ function buildImpliedMeaningCandidateBlock(
 
   return [
     "## IMPLIED_MEANING target candidates",
+    // 다양성 모드: 로테이션 후 첫 후보를 명시 지정 (병렬 배치 수렴 방지, 소프트).
+    diversity?.diversityEnabled && candidates.length > 0
+      ? `- ⭐ 다양성 지시: 이번 문항은 되도록 아래 후보 1번을 underlinedExpression 으로 사용하세요. 그 표현이 함축 출제에 부적합할 때만 다른 후보를 사용하고, 매번 같은 표현으로 수렴하지 마세요.`
+      : "",
     "- Prefer one candidate from this list, or choose another exact source span with the same quality.",
     "- Copy underlinedExpression verbatim from the passage and provide surroundingText that contains it.",
     "- The underlinedExpression should be a phrase, clause, or short sentence, not one word.",
@@ -650,17 +858,53 @@ function buildImpliedMeaningCandidateBlock(
   ].filter(Boolean).join("\n");
 }
 
-function buildBlankInferenceCandidateBlock(passage: string): string {
+function buildBlankInferenceCandidateBlock(
+  passage: string,
+  diversity?: CandidateDiversityOptions,
+): string {
   const sentences = splitPassageSentences(passage);
-  const candidateSentences = sentences
-    .map((sentence, index) => ({ sentence, index }))
-    .filter(({ sentence }) => isUsefulNegativeParaphraseSourceSentence(sentence));
-  const strongCandidates = candidateSentences
-    .filter(({ sentence }) => getNegativeParaphraseSuggestedTargets(sentence).length > 0)
-    .slice(0, 8);
+  // 기사용 빈칸 스팬을 담고 있는 문장은 후보에서 제외 (전부 걸러지면 원본 유지).
+  const candidateSentences = filterUsedCandidates(
+    sentences
+      .map((sentence, index) => ({ sentence, index }))
+      .filter(({ sentence }) => isUsefulNegativeParaphraseSourceSentence(sentence)),
+    diversity?.usedTargets,
+    ({ sentence }) => sentence,
+  ).items;
+  const strongCandidates = rotateByVariantIndex(
+    candidateSentences.filter(
+      ({ sentence }) => getNegativeParaphraseSuggestedTargets(sentence).length > 0,
+    ),
+    diversity?.variantIndex,
+  ).slice(0, 8);
   const secondaryCandidates = candidateSentences
     .filter(({ sentence }) => getNegativeParaphraseSuggestedTargets(sentence).length === 0)
     .slice(0, 4);
+  // 다양성 모드: 후보 문장 하나를 명시 지정해 병렬 배치의 각 호출이 실제로 다른
+  // 문장을 타깃하게 한다 (제안 순서만으로는 모델이 같은 '최적' 문장으로 수렴).
+  // 지정 풀은 강한 후보만이 아니라 사용 가능한 후보 전체 — 짧은 지문에서 강한
+  // 후보가 2~3개뿐이면 variantIndex mod 충돌로 같은 문장이 반복 지정되기 때문.
+  // 풀을 한 바퀴 돈 변형(spanTier>0)은 같은 문장 안에서 다른 스팬을 우선하게 한다.
+  // 소프트 지시 — 부적합하면 다른 후보 허용이라 신규 reject 압력 없음.
+  let designatedBlankTarget: { sentence: string; index: number } | undefined;
+  let designatedSpanHint = "";
+  let designatedSpanTier = 0;
+  if (diversity?.diversityEnabled && candidateSentences.length > 0) {
+    const designationPool = candidateSentences.slice(0, 12);
+    const vi =
+      typeof diversity.variantIndex === "number" &&
+      Number.isFinite(diversity.variantIndex)
+        ? Math.max(0, Math.floor(diversity.variantIndex))
+        : Math.floor(Math.random() * designationPool.length);
+    designatedBlankTarget = designationPool[vi % designationPool.length];
+    designatedSpanTier = Math.floor(vi / designationPool.length);
+    const suggestedSpans = getNegativeParaphraseSuggestedTargets(
+      designatedBlankTarget.sentence,
+    );
+    if (suggestedSpans.length > 0) {
+      designatedSpanHint = suggestedSpans[designatedSpanTier % suggestedSpans.length];
+    }
+  }
 
   if (candidateSentences.length === 0) {
     return [
@@ -672,6 +916,17 @@ function buildBlankInferenceCandidateBlock(passage: string): string {
   }
 
   return [
+    // 지정 라인은 DN 조건부 블록 제목보다 앞에 — "negative-paraphrase 설정일 때만"
+    // 으로 읽혀 통째로 무시되지 않게 한다 (다양성 지시는 무조건 적용 대상).
+    designatedBlankTarget
+      ? `⭐ 다양성 지시 (항상 적용): 이번 문항은 되도록 다음 문장에서 빈칸 타깃(originalExpression)을 선택하세요: "${designatedBlankTarget.sentence}"${
+          designatedSpanHint
+            ? ` 그 문장 안에서는 "${designatedSpanHint}" 구간을 우선 고려하세요.`
+            : designatedSpanTier > 0
+              ? " 이 문장은 다른 문항에서도 쓰일 수 있으니 문장의 앞부분이 아닌 다른 구간을 빈칸으로 잡으세요."
+              : ""
+        } 그 문장이 빈칸 출제에 부적합할 때만 다른 후보를 사용하고, 매번 같은 표현으로 수렴하지 마세요.`
+      : "",
     "## BLANK_INFERENCE negative-paraphrase candidates",
     "- If the negative-paraphrase detail setting is active, choose a compact phrase with a real logical action or relation.",
     "- The source sentence does not need an existing negation cue; the correct option must be a non-verbatim negative/privative paraphrase.",
@@ -698,6 +953,7 @@ function buildIrrelevantCandidateBlock(
   passage: string,
   requestedSlotCount = 5,
   requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage, { includeShort: true });
   const slotCount = Math.max(IRRELEVANT_SLOT_MIN, Math.round(requestedSlotCount));
@@ -714,10 +970,20 @@ function buildIrrelevantCandidateBlock(
   // Force the answer position to vary across items (the model otherwise always
   // lands on the middle → answer ③/ⓒ every time). Bias toward the center per
   // exam convention but genuinely rotate among ②③④.
-  const targetIndex = (() => {
-    const r = Math.random();
-    return r < 0.34 ? 1 : r < 0.67 ? 2 : 3;
-  })();
+  // 다양성 모드에서는 같은 지문의 기존 정답 위치를 피해 최소 사용 위치를 고른다.
+  const targetIndex = diversity?.diversityEnabled
+    ? Number(
+        pickSteeredPositions(
+          ["2", "3", "4"],
+          diversity.usedAnswerLabels ?? [],
+          diversity.variantIndex,
+          1,
+        )[0] ?? "3",
+      ) - 1
+    : (() => {
+        const r = Math.random();
+        return r < 0.34 ? 1 : r < 0.67 ? 2 : 3;
+      })();
   const numberedEligible = eligibleSentences.map(
     (sentence, index) => `  [sentence ${index + 2}] ${sentence}`,
   );
@@ -791,6 +1057,7 @@ export function validateQuestionQuality({
   blankInferenceBlankCount,
   genericOptionCount,
   genericAnswerCount,
+  diversityUsedTargets,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
   const add = (severity: QuestionQualitySeverity, code: string, message: string) => {
@@ -800,6 +1067,8 @@ export function validateQuestionQuality({
   if (requestedDifficulty && question.difficulty && question.difficulty !== requestedDifficulty) {
     add("warning", "difficulty-mismatch", `Expected ${requestedDifficulty}, got ${question.difficulty}.`);
   }
+
+  validateDiversityTargetReuse(question, typeId, diversityUsedTargets, add);
 
   validateOptions(question, typeId, genericOptionCount, add);
 
@@ -1537,6 +1806,46 @@ function validateTypeSpecific(
         "grammar-correct-answer-labels",
         `correctAnswer/correctAnswers must match isError labels. Missing: ${missingAnswerLabels.join(", ") || "none"}; extra: ${extraAnswerLabels.join(", ") || "none"}.`,
       );
+    }
+    // 규범 논쟁 자리 검출: "복수 등위 주어 + 동격 each + 단수동사"(예: A and B
+    // each assumes)는 표준 규범과 실사용이 갈리는 자리 — 여기 밑줄(정답·디코이
+    // 불문)을 그으면 복수정답 시비가 생긴다 (실측 critical, 프롬프트 소프트
+    // 금지로는 불충분). surroundingText 는 모델이 잘라먹거나 조작해 우회할 수
+    // 있으므로(attempt 2 우회 실측) 렌더링된 passageWithMarkers 에서 실제 밑줄
+    // 위치 기준으로 판정한다. 좁은 패턴만 정확 타격해 과잉 reject 를 피한다.
+    if (passageWithMarkers) {
+      // 주의: 마커의 밑줄(_)도 \w 라서 "assumes__" 에는 \b 가 성립하지 않는다 —
+      // 동사 끝 경계는 (?=\s|_) 룩어헤드로 판정한다.
+      const disputedMarkerPatterns = [
+        // "and/or ... each __(X) <동사>s__" — each 바로 뒤 단수동사가 밑줄
+        /\b(?:and|or)\b[^.;]{0,80}?\beach\s+__\([A-Ja-j]\)\s*[A-Za-z]+s(?=\s|_)[^_]*__/i,
+        // 밑줄 안에 "each + 단수동사"가 통째로 포함
+        /\b(?:and|or)\b[^.;]{0,80}?__\([A-Ja-j]\)[^_]*\beach\s+[A-Za-z]+s(?=\s|_)[^_]*__/i,
+      ];
+      if (disputedMarkerPatterns.some((pattern) => pattern.test(passageWithMarkers))) {
+        add(
+          "error",
+          "grammar-disputed-usage-target",
+          'A marker underlines a usage-disputed spot ("compound subject + each + singular verb"). Standard and actual usage diverge here — do not underline it as answer or decoy; test a different location.',
+        );
+      }
+    }
+    // 생성 플로우 전용 '오류 미도입' 검출: 마커를 벗긴 지문이 원문과 동일하면
+    // 모든 isError 자리가 원문 그대로라는 뜻 — 원문을 오류로 판정했거나 치환이
+    // 빗나간 문항(정답 무효/복수정답 실측 critical). 지문에 오류가 인쇄된
+    // 추출/원본 재현 흐름은 이 게이트를 타지 않으므로 영향 없다.
+    if (passage && passageWithMarkers && errorLabels.length > 0) {
+      const stripped = passageWithMarkers.replace(
+        /__\([A-Ja-j]\)\s*([^_]+)__/g,
+        "$1",
+      );
+      if (normalizeText(stripped) === normalizeText(passage)) {
+        add(
+          "error",
+          "grammar-error-not-mutated",
+          "Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text.",
+        );
+      }
     }
     for (const markedExpression of markedExpressions) {
       if (markedExpression.isError !== true) continue;

@@ -300,7 +300,7 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 
   CONTENT_MATCH: `내용 일치/불일치 문제를 만드세요.
 - matchType: "일치" 또는 "불일치"
-- options: label "1"~"5", text는 한국어 진술문
+- options: label "1"~"5", text는 영어 진술문 (지문 문장 복붙이 아닌 paraphrase)
 - direction 예시: "다음 글의 내용과 일치하지 않는 것은?"`,
 
   SUMMARY_COMPLETE_MC: `요약문 완성 객관식 문제를 만드세요.

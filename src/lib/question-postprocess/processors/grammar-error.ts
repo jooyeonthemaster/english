@@ -53,8 +53,45 @@ export function processGrammarError(
       correction: correction || undefined,
     };
   });
-  const labelByKey = buildLabelMap(canonicalMarkedExpressions);
-  const rawCorrectLabel = canonicalGrammarLabel(ai.correctAnswer);
+
+  // ── 위치 탐색 (라벨 재부여 전에 수행 — 라벨은 지문 출현 순서를 따라야 한다) ──
+  const located = canonicalMarkedExpressions.map((me) => ({
+    me,
+    found: locateGrammarExpression(passage, me, warnings),
+  }));
+
+  // 전부 위치를 찾았으면 수능 형식대로 (A)~ 라벨을 지문 출현 순서로 재부여한다.
+  // (모델이 라벨을 출현 순서와 다르게 매긴 케이스 — 검수에서 (A)(B)(D)(C)(E) 위반 실측.)
+  const modelKeyToFinalLabel = new Map<string, string>();
+  if (located.every((item) => item.found)) {
+    const byPosition = [...located].sort(
+      (x, y) => (x.found?.index ?? 0) - (y.found?.index ?? 0),
+    );
+    byPosition.forEach((item, index) => {
+      const finalLabel = GRAMMAR_LABELS[index] ?? item.me.label;
+      const modelKey = normalizeGrammarKey(item.me.label);
+      if (modelKey && finalLabel !== item.me.label) {
+        warnings.push(
+          `Label reordered to passage order: ${item.me.label} -> ${finalLabel}`,
+        );
+      }
+      if (modelKey) modelKeyToFinalLabel.set(modelKey, finalLabel);
+      item.me.label = finalLabel;
+    });
+    // 출현 순서로 markedExpressions 배열 자체도 재정렬 (옵션/라벨 순회와 일치).
+    canonicalMarkedExpressions.length = 0;
+    canonicalMarkedExpressions.push(...byPosition.map((item) => item.me));
+    located.length = 0;
+    located.push(...byPosition);
+  }
+
+  const labelByKey = buildLabelMap(canonicalMarkedExpressions, modelKeyToFinalLabel);
+  const remapModelLabel = (value: unknown): string => {
+    const key = normalizeGrammarKey(value);
+    if (!key) return "";
+    return labelByKey.get(key) ?? `(${key})`;
+  };
+  const rawCorrectLabel = remapModelLabel(ai.correctAnswer);
   const errorLabels = canonicalMarkedExpressions
     .filter((me) => me.isError === true)
     .map((me) => me.label);
@@ -64,7 +101,9 @@ export function processGrammarError(
       : rawCorrectLabel || normalizeString(ai.correctAnswer);
   const correctAnswers = errorLabels.length > 0
     ? errorLabels
-    : collectGrammarLabels(ai.correctAnswers).filter(Boolean);
+    : collectGrammarLabels(ai.correctAnswers)
+        .map((label) => remapModelLabel(label) || label)
+        .filter(Boolean);
   const direction = normalizeGrammarDirection(ai.direction, correctAnswers.length);
 
   if (errorLabels.length === 1 && rawCorrectLabel && rawCorrectLabel !== errorLabels[0]) {
@@ -87,64 +126,34 @@ export function processGrammarError(
     labelByKey,
   );
 
+  // 라벨 재부여 시 해설 본문의 "(D)" 같은 라벨 언급도 함께 재매핑 — 답지 라벨은
+  // 재부여됐는데 해설 프로즈만 옛 라벨로 남아 답지-해설이 모순되는 실측 critical.
+  const remapLabelMentions = (value: unknown): unknown => {
+    if (modelKeyToFinalLabel.size === 0 || typeof value !== "string") return value;
+    let result = value;
+    for (const [key, finalLabel] of modelKeyToFinalLabel) {
+      result = result.split(`(${key})`).join(`@@GLBL_${finalLabel.slice(1, -1)}@@`);
+    }
+    return result.replace(/@@GLBL_([A-J])@@/g, "($1)");
+  };
+  const explanation = remapLabelMentions(ai.explanation);
+  const answerLogic = remapLabelMentions(ai.answerLogic);
+  const keyPoints = Array.isArray(ai.keyPoints)
+    ? ai.keyPoints.map((point) => remapLabelMentions(point))
+    : undefined;
+  const remappedWrongOptionExplanations =
+    wrongOptionExplanations && typeof wrongOptionExplanations === "object" && !Array.isArray(wrongOptionExplanations)
+      ? Object.fromEntries(
+          Object.entries(wrongOptionExplanations as Record<string, unknown>).map(
+            ([key, text]) => [key, remapLabelMentions(text)],
+          ),
+        )
+      : wrongOptionExplanations;
+
   const replacements: Replacement[] = [];
 
-  for (const me of canonicalMarkedExpressions) {
+  for (const { me, found } of located) {
     const sourceExpression = getSourceExpression(me);
-    let found = findGrammarExpressionInPassage(
-      passage,
-      sourceExpression,
-      me.surroundingText,
-    );
-
-    if (!found && me.isError && me.correction && me.correction !== sourceExpression) {
-      found = findGrammarExpressionInPassage(
-        passage,
-        me.correction,
-        me.surroundingText,
-      );
-    }
-
-    if (!found && me.isError && me.errorExpression) {
-      found = findGrammarExpressionInPassage(
-        passage,
-        me.errorExpression,
-        me.surroundingText,
-      );
-      if (found) {
-        warnings.push(
-          `Existing error expression matched for label ${me.label}: "${me.errorExpression}"`,
-        );
-      }
-    }
-
-    if (!found) {
-      const sourceVariant = findCorrectedGrammarSourceVariant(
-        passage,
-        sourceExpression,
-        me.surroundingText,
-      );
-      if (sourceVariant) {
-        found = sourceVariant.position;
-        warnings.push(
-          `Corrected source variant matched for label ${me.label}: "${sourceVariant.sourceText}" -> "${sourceExpression}"`,
-        );
-      }
-    }
-
-    if (!found) {
-      found = findOcrNoisyExpressionInPassage(
-        passage,
-        sourceExpression,
-        me.surroundingText,
-      );
-      if (found) {
-        warnings.push(
-          `OCR-noisy source token matched for label ${me.label}: "${sourceExpression}"`,
-        );
-      }
-    }
-
     if (!found) {
       warnings.push(`Expression not found for label ${me.label}: "${sourceExpression}"`);
       continue;
@@ -152,6 +161,10 @@ export function processGrammarError(
 
     const displayedExpression = getMarkedSurfaceExpression(me) || sourceExpression;
     const sanitized = sanitizeExpressionForMarker(displayedExpression);
+    // 주의: 표시 형태가 원문과 동일한 isError 마킹(오류 미도입)은 여기서 막지
+    // 않는다 — 지문에 오류가 인쇄된 추출/원본 재현 흐름에서는 정당한 동작이다.
+    // 클린 지문 생성 흐름은 품질 게이트(grammar-error-not-mutated, 마커 제거본
+    // == 원문 검사)가 거른다.
     const newText = `__${me.label} ${sanitized}__`;
 
     replacements.push({
@@ -181,22 +194,104 @@ export function processGrammarError(
       correctAnswers,
       markedExpressions: canonicalMarkedExpressions,
       options,
-      wrongOptionExplanations,
+      wrongOptionExplanations: remappedWrongOptionExplanations,
+      ...(typeof explanation === "string" ? { explanation } : {}),
+      ...(typeof answerLogic === "string" ? { answerLogic } : {}),
+      ...(keyPoints ? { keyPoints } : {}),
       passageWithMarkers,
     },
     warnings,
   };
 }
 
-function findGrammarExpressionInPassage(
+function findGrammarExpression(
   passage: string,
   expression: string,
-  surroundingText?: string,
+  surroundingText: string | undefined,
+  strictContext: boolean,
 ) {
   if (isSingleTokenExpression(expression)) {
-    return findWordInPassage(passage, expression, surroundingText);
+    return findWordInPassage(passage, expression, surroundingText, strictContext);
   }
-  return findExpressionInPassage(passage, expression, surroundingText);
+  return findExpressionInPassage(passage, expression, surroundingText, strictContext);
+}
+
+/**
+ * 마커 위치 탐색 — 윈도우(surroundingText) 우선.
+ * 기존에는 expression 이 윈도우에 없으면 바로 전역 1번째 출현으로 폴백해서,
+ * 모델이 의도한 자리(예: 중반부 "each assumes")가 아닌 첫 문장의 동형 단어에
+ * 마커가 찍히는 오배치가 발생했다 (실생성 검수 critical — 해설과 밑줄이 다른
+ * 문장을 가리킴). 윈도우 안에서 변형 체인(expression → correction →
+ * errorExpression)을 모두 시도한 뒤에만 전역 폴백한다.
+ */
+function locateGrammarExpression(
+  passage: string,
+  me: GrammarMarkedExpression,
+  warnings: string[],
+) {
+  const sourceExpression = getSourceExpression(me);
+  const hasWindow = !!normalizeString(me.surroundingText);
+
+  if (hasWindow) {
+    let inWindow =
+      findGrammarExpression(passage, sourceExpression, me.surroundingText, true) ??
+      (me.isError && me.correction && me.correction !== sourceExpression
+        ? findGrammarExpression(passage, me.correction, me.surroundingText, true)
+        : null);
+    if (!inWindow && me.isError && me.errorExpression) {
+      inWindow = findGrammarExpression(passage, me.errorExpression, me.surroundingText, true);
+      if (inWindow) {
+        warnings.push(
+          `Existing error expression matched for label ${me.label}: "${me.errorExpression}"`,
+        );
+      }
+    }
+    if (inWindow) return inWindow;
+  }
+
+  let found = findGrammarExpression(passage, sourceExpression, me.surroundingText, false);
+
+  if (!found && me.isError && me.correction && me.correction !== sourceExpression) {
+    found = findGrammarExpression(passage, me.correction, me.surroundingText, false);
+  }
+
+  if (!found && me.isError && me.errorExpression) {
+    found = findGrammarExpression(passage, me.errorExpression, me.surroundingText, false);
+    if (found) {
+      warnings.push(
+        `Existing error expression matched for label ${me.label}: "${me.errorExpression}"`,
+      );
+    }
+  }
+
+  if (!found) {
+    const sourceVariant = findCorrectedGrammarSourceVariant(
+      passage,
+      sourceExpression,
+      me.surroundingText,
+    );
+    if (sourceVariant) {
+      found = sourceVariant.position;
+      warnings.push(
+        `Corrected source variant matched for label ${me.label}: "${sourceVariant.sourceText}" -> "${sourceExpression}"`,
+      );
+    }
+  }
+
+  if (!found) {
+    found = findOcrNoisyExpressionInPassage(
+      passage,
+      sourceExpression,
+      me.surroundingText,
+    );
+    if (found) {
+      warnings.push(
+        `OCR-noisy source token matched for label ${me.label}: "${sourceExpression}"`,
+      );
+    }
+  }
+
+  return found;
 }
 
 function findCorrectedGrammarSourceVariant(
@@ -307,13 +402,23 @@ function canonicalizeWrongOptionExplanations(
   return remapped;
 }
 
-function buildLabelMap(markedExpressions: GrammarMarkedExpression[]): Map<string, string> {
+function buildLabelMap(
+  markedExpressions: GrammarMarkedExpression[],
+  modelKeyToFinalLabel?: Map<string, string>,
+): Map<string, string> {
   const labelByKey = new Map<string, string>();
+  // 출현순 재정렬이 일어난 경우, 모델이 원래 쓴 라벨 키 → 최종 라벨 매핑이 우선
+  // (오답해설 등 모델 출력의 라벨 참조를 새 라벨로 따라가게 한다).
+  if (modelKeyToFinalLabel) {
+    for (const [key, label] of modelKeyToFinalLabel) {
+      labelByKey.set(key, label);
+    }
+  }
   markedExpressions.forEach((me, index) => {
     const key = normalizeGrammarKey(me.label) || GRAMMAR_KEYS[index] || "";
-    if (key) labelByKey.set(key, me.label);
+    if (key && !labelByKey.has(key)) labelByKey.set(key, me.label);
     const numericKey = GRAMMAR_KEYS[index];
-    if (numericKey) labelByKey.set(numericKey, me.label);
+    if (numericKey && !labelByKey.has(numericKey)) labelByKey.set(numericKey, me.label);
   });
   return labelByKey;
 }

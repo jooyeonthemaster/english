@@ -157,7 +157,7 @@ export type ReferenceQuestion = z.infer<typeof referenceSchema>;
 export const contentMatchSchema = z.object({
   ...commonFields,
   matchType: z.enum(["일치", "불일치"]).describe("일치 또는 불일치 문제"),
-  options: z.array(optionSchema).length(5).describe("한국어 진술문 선택지"),
+  options: z.array(optionSchema).length(5).describe("영어 진술문 선택지"),
   ...mcWrongExplanations,
 });
 export type ContentMatchQuestion = z.infer<typeof contentMatchSchema>;
@@ -188,7 +188,7 @@ export function buildContentMatchSchema(optionCount: number, answerCount = 1) {
     options: z
       .array(optionSchema.extend({ label: labelSchema }))
       .length(optionN)
-      .describe(`${optionN} Korean statement options`),
+      .describe(`${optionN} English statement options`),
     ...mcWrongExplanations,
   });
 }

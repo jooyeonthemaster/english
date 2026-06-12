@@ -6,6 +6,7 @@ import {
 } from "@/lib/question-ai-schemas-mc";
 import { GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS } from "@/lib/concurrency-config";
 import { postProcessQuestion } from "@/lib/question-postprocess";
+import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import {
   QUESTION_SCHEMAS,
   STRUCTURED_TYPE_PROMPTS,
@@ -23,6 +24,11 @@ import {
   type QuestionQualityIssue,
   validateQuestionQuality,
 } from "@/lib/question-quality";
+import {
+  buildDiversityPromptBlock,
+  shuffleQuestionOptionsForDiversity,
+  type QuestionDiversityContext,
+} from "@/lib/question-diversity";
 
 import { TYPE_LABELS } from "./constants";
 import { generateWithRetry } from "./generate-with-retry";
@@ -46,6 +52,11 @@ export interface RunGenerationInput {
   generationPlan: QuestionGenerationPlan;
   customPrompt?: string;
   typeSettings?: QuestionTypeGenerationSettings;
+  /**
+   * 반복 생성 다양성 컨텍스트 (기사용 타깃 회피 + 정답 위치 스티어링 + 보기 셔플).
+   * 미전달 시 기존 동작과 100% 동일 — 동형/커스텀/세트 등 다른 호출자는 무영향.
+   */
+  diversity?: QuestionDiversityContext;
   onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
 }
 
@@ -102,6 +113,9 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
+  // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.
+  "grammar-disputed-usage-target",
   "grammar-correction-underline-count",
   "grammar-correction-missing-underlined-segments",
   "grammar-correction-missing-passage-underline",
@@ -191,7 +205,7 @@ export async function runQuestionGeneration(
     plan,
     schoolType,
     gradeInfo,
-    passageContent,
+    passageContent: rawPassageContent,
     teacherIntentBlock,
     analysisContext,
     diffLabel,
@@ -199,16 +213,23 @@ export async function runQuestionGeneration(
     generationPlan,
     customPrompt,
     typeSettings,
+    diversity,
     onModelUsage,
   }: RunGenerationInput,
   {
     qualityMode = "strict",
     rejectionRecorder,
+    attemptIndex = 0,
   }: {
     qualityMode?: QualityMode;
     rejectionRecorder?: RejectionRecorder;
+    /** 재시도 회차 (0-based) — 다양성 스티어링 위치가 재시도마다 바뀌게 한다. */
+    attemptIndex?: number;
   } = {},
 ): Promise<Record<string, unknown>[]> {
+  // NBSP·빈줄 잔재가 모델 출력(원문 복사 스팬)과 게이트 문자열 비교, 저장본
+  // 렌더링까지 전파되므로 엔진 입구에서 한 번 정규화한다.
+  const passageContent = normalizePassageWhitespace(rawPassageContent);
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
       const { subType, count: typeCount, targetPoints } = item;
@@ -251,9 +272,28 @@ export async function runQuestionGeneration(
         subType,
         effectiveTypeSettings,
       );
+      const diversitySignals = diversity?.bySubType?.[subType];
+      // 재시도마다 다른 위치/후보 순서를 받도록 attempt 오프셋을 가산한다
+      // (배치 간 간격은 variantCount 만큼 벌려 동일 배치 내 충돌 방지).
+      // variantIndex 미지정(단건)은 그대로 두면 무작위 오프셋이 매 호출 적용된다.
+      const effectiveVariantIndex =
+        typeof diversity?.variantIndex === "number"
+          ? diversity.variantIndex +
+            attemptIndex * Math.max(1, Math.floor(diversity.variantCount ?? 1))
+          : undefined;
+      const diversityPromptBlock = diversity
+        ? buildDiversityPromptBlock(subType, diversitySignals, effectiveVariantIndex, {
+            sentenceInsertSlotCount,
+            vocabChoiceMarkerCount,
+            vocabChoiceAnswerCount,
+            antonymPairCount,
+            grammarMarkerCount,
+            grammarAnswerCount,
+          })
+        : "";
       const mergedCustomPrompt = mergeCustomPromptWithTypeSettings(
         customPrompt,
-        typeSettingsPrompt,
+        [typeSettingsPrompt, diversityPromptBlock].filter(Boolean).join("\n\n"),
       );
       const targetCandidateBlock = buildQuestionTargetCandidateBlock(
         subType,
@@ -266,6 +306,11 @@ export async function runQuestionGeneration(
           antonymPairCount,
           blankInferenceBlankCount,
           requestedDifficulty: diffLabel,
+          usedTargets: diversitySignals?.usedTargets,
+          usedAnswerLabels: diversitySignals?.usedAnswerLabels,
+          usedPointCodes: diversitySignals?.usedPointCodes,
+          variantIndex: effectiveVariantIndex,
+          diversityEnabled: !!diversity,
         },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
@@ -408,11 +453,21 @@ export async function runQuestionGeneration(
             mapped.scrambledWords = arr;
           }
 
+          // 다양성 모드: 보기 배열형 유형의 보기 내용을 셔플해 정답 위치 편중을
+          // 제거한다. 게이트 검증 전에 수행해 셔플 결과의 일관성까지 검증된다.
+          const finalQuestion = diversity
+            ? shuffleQuestionOptionsForDiversity(mapped, subType)
+            : mapped;
+
           const qualityIssues = validateQuestionQuality({
             typeId: subType,
-            question: mapped,
+            question: finalQuestion,
             passage: passageContent,
             requestedDifficulty: diffLabel,
+            // 기사용 타깃 재사용 게이트는 첫 2회 시도에만 — 재시도 비용을 묶고,
+            // 타깃 풀이 고갈된 지문은 이후 시도/relaxed 폴백에서 재사용을 허용.
+            diversityUsedTargets:
+              attemptIndex < 2 ? diversitySignals?.usedTargets : undefined,
             irrelevantSlotCount,
             grammarMarkerCount,
             grammarAnswerCount,
@@ -457,7 +512,7 @@ export async function runQuestionGeneration(
               subType,
               message: summarizeQualityIssues(blockingQualityErrors),
               codes: blockingQualityErrors.map((issue) => issue.code),
-              sample: buildRejectionSample(subType, mapped),
+              sample: buildRejectionSample(subType, finalQuestion),
             });
             continue;
           }
@@ -466,8 +521,8 @@ export async function runQuestionGeneration(
             ...relaxedQualityWarnings,
           ];
           if (relaxedQualityWarnings.length > 0) {
-            mapped._qualityMode = "relaxed";
-            mapped._qualityWarnings = allQualityWarnings;
+            finalQuestion._qualityMode = "relaxed";
+            finalQuestion._qualityWarnings = allQualityWarnings;
           }
           if (allQualityWarnings.length > 0) {
             console.warn(
@@ -477,7 +532,7 @@ export async function runQuestionGeneration(
             );
           }
 
-          qs.push(mapped);
+          qs.push(finalQuestion);
         }
 
         console.log(`[AUTO-GEN] ${subType} done: ${qs.length} questions`);
@@ -669,7 +724,10 @@ export async function runQuestionGenerationWithEmptyRetry(
       : Math.max(4, Math.floor(maxAttempts));
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const questions = await runQuestionGeneration(inputWithUsage, { rejectionRecorder });
+    const questions = await runQuestionGeneration(inputWithUsage, {
+      rejectionRecorder,
+      attemptIndex: attempt - 1,
+    });
     const hasEnoughQuestions = hasNegativeParaphraseBlank
       ? questions.length >= requestedCount
       : questions.length > 0;
@@ -696,6 +754,7 @@ export async function runQuestionGenerationWithEmptyRetry(
   const relaxedQuestions = await runQuestionGeneration(inputWithUsage, {
     qualityMode: "relaxed",
     rejectionRecorder,
+    attemptIndex: attempts,
   });
   return {
     questions: relaxedQuestions,

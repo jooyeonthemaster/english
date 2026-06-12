@@ -1,6 +1,18 @@
 import type { FoundPosition, Replacement } from "./types";
 
 /**
+ * Normalize whitespace artifacts in passage text: non-breaking spaces
+ * (웹/워드 붙여넣기 잔재 — 줄바꿈이 불가능해 렌더 시 문단이 한 줄로 잘림)
+ * and blank-line runs. Word spacing and single line breaks are preserved.
+ */
+export function normalizePassageWhitespace(text: string): string {
+  return text
+    // 아래 문자 클래스는 비가시 문자 리터럴 3개: U+00A0(NBSP), U+202F, U+2007
+    .replace(/[   ]/g, " ")
+    .replace(/\n(?:[ \t]*\n)+/g, "\n\n");
+}
+
+/**
  * Normalize text for comparison: collapse whitespace, normalize Unicode quotes
  * and dashes, trim.
  */
@@ -184,6 +196,7 @@ export function findExpressionInPassage(
   passage: string,
   expression: string,
   surroundingText?: string,
+  strictContext = false,
 ): FoundPosition | null {
   if (!expression || !passage) return null;
 
@@ -191,6 +204,11 @@ export function findExpressionInPassage(
   if (surroundingText && surroundingText.trim().length > 0) {
     const result = findWithSurroundingContext(passage, expression, surroundingText);
     if (result) return result;
+
+    // strictContext: 윈도우 안에서 못 찾으면 전역 폴백 없이 실패시킨다.
+    // (어법 마커처럼 위치가 의미를 결정하는 호출자가 변형 체인을 윈도우 안에서
+    // 모두 시도한 뒤에만 전역 폴백하도록 단계를 분리할 때 사용.)
+    if (strictContext) return null;
   }
 
   // --- Strategy 2: Exact match ---

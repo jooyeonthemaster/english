@@ -167,7 +167,9 @@ const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
   TITLE: { stemLanguage: "ko", optionLanguage: "en" },
   IMPLIED_MEANING: { stemLanguage: "ko", optionLanguage: "en" },
   REFERENCE: { stemLanguage: "ko", optionLanguage: "ko" },
-  CONTENT_MATCH: { stemLanguage: "ko", optionLanguage: "ko" },
+  // 내용일치 보기 기본 = 영문 (2026-06-10 강사 피드백: 학생들이 영문 보기 선호.
+  // 한국어 보기는 유형 상세 설정의 언어 토글로 선택).
+  CONTENT_MATCH: { stemLanguage: "ko", optionLanguage: "en" },
   SUMMARY_COMPLETE_MC: { stemLanguage: "ko", optionLanguage: "en" },
   IRRELEVANT: { stemLanguage: "ko", optionLanguage: "ko" },
   GRAMMAR_CORRECTION: { stemLanguage: "ko", optionLanguage: "ko" },
