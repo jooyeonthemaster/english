@@ -42,6 +42,8 @@ interface FormSectionProps {
   draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
+  loadedDraftIds?: string[];
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
 
@@ -358,6 +360,7 @@ export function FormSection(props: FormSectionProps) {
                           draftMembership={props.draftMembership}
                           onSelectDraft={props.onSelectDraft}
                           onLoadSelectedDrafts={props.onLoadSelectedDrafts}
+                          loadedDraftIds={props.loadedDraftIds}
                           marqueeBoundaryRef={materialBoundaryRef}
                           refreshToken={props.draftRefreshToken}
                           sessionPending={props.extractionPending}
@@ -438,6 +441,8 @@ interface ExtractionManageEmbedProps {
   draftMembership: Record<string, string[]>;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
+  loadedDraftIds?: string[];
   /** 마키(영역 드래그) 시작 영역 = 자료 관리 패널 전체. 같은 페이지의 지문 목록 큐와
    *  영역이 섞이지 않도록 분리한다. */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
@@ -453,6 +458,7 @@ function ExtractionManageEmbed({
   draftMembership,
   onSelectDraft,
   onLoadSelectedDrafts,
+  loadedDraftIds,
   marqueeBoundaryRef,
   refreshToken,
   sessionPending,
@@ -476,6 +482,7 @@ function ExtractionManageEmbed({
       initialCollectionMembership={membership}
       onSelectDraftExternal={onSelectDraft}
       onLoadSelectedDrafts={onLoadSelectedDrafts}
+      loadedExternalDraftIds={loadedDraftIds}
       marqueeBoundaryRef={marqueeBoundaryRef}
       draftDetailActionMode="import"
       refreshToken={refreshToken}

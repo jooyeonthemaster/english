@@ -110,6 +110,14 @@ export function PassageRegistrationClient({
   // remembers the extraction draft it was loaded from so analysis updates that
   // Passage instead of forking a duplicate.
   const [rows, setRows] = useState<PassageInputRow[]>(() => [makeEmptyRow()]);
+  // 워크스페이스에 불러와 있는 드래프트 id — 좌측 자료 카드의 '불러옴' 은은한 표시용.
+  const loadedDraftIds = useMemo(
+    () =>
+      rows
+        .map((r) => r.sourceDraftId)
+        .filter((id): id is string => typeof id === "string" && id.length > 0),
+    [rows],
+  );
   const rowsRef = useRef(rows);
   useEffect(() => {
     rowsRef.current = rows;
@@ -782,6 +790,7 @@ export function PassageRegistrationClient({
             draftRefreshToken={draftRefreshToken}
             onSelectDraft={handleSelectDraftLoad}
             onLoadSelectedDrafts={handleLoadDrafts}
+            loadedDraftIds={loadedDraftIds}
             draftCollections={draftCollections ?? []}
             draftMembership={draftMembership ?? {}}
             intakeView={intakeView}

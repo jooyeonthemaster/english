@@ -105,6 +105,9 @@ interface ExtractionManageClientProps {
   onSelectDraftExternal?: (draft: M1PassageDraftWithJob) => void;
   /** Highlighted draft id when an external picker controls selection. */
   selectedExternalDraftId?: string | null;
+  /** 임베더(학습지 생성) 워크스페이스에 이미 불러와 있는 드래프트 id — 해당
+   *  자료 카드에 은은한 '불러옴' 표시를 입힌다. */
+  loadedExternalDraftIds?: string[];
   /** Optional bridge used by the passage-registration embed to register and
    *  analyze extraction drafts without copying them into the editor first. */
   onBulkAnalyze?: (
@@ -217,6 +220,7 @@ export function ExtractionManageClient({
   embedded = false,
   onSelectDraftExternal,
   selectedExternalDraftId = null,
+  loadedExternalDraftIds,
   onBulkAnalyze,
   bulkAnalyzing = false,
   onLoadSelectedDrafts,
@@ -232,6 +236,10 @@ export function ExtractionManageClient({
   void academyId;
 
   const externallyPicking = typeof onSelectDraftExternal === "function";
+  const loadedExternalDraftIdSet = useMemo(
+    () => new Set(loadedExternalDraftIds ?? []),
+    [loadedExternalDraftIds],
+  );
 
   const queueDrawer = useQueueDrawer();
 
@@ -1382,6 +1390,7 @@ export function ExtractionManageClient({
                         : data.selectedDraftId
                     }
                     lastViewedDraftId={data.lastViewedDraftId}
+                    loadedDraftIds={loadedExternalDraftIdSet}
                     checkedIds={selectedIds}
                     setCheckedIds={setSelectedIds}
                     gridCols={materialGridCols}
