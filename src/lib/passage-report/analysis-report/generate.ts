@@ -137,6 +137,25 @@ export async function generateAnalysisReportCore(
 
   normalizeAndAuditSections(validation.data.sections);
 
+  // 기본 분석의 learning-worksheet 는 logicRows 표 전용. 실전 학습지 콘텐츠
+  // (workbookSet/inferenceSet/cloze/practice/drills/questions)는 옵트인 별도 생성
+  // 단계에서만 만든다 — 모델이 프롬프트 금지를 어기고 끼워 넣어도 스키마가 해당
+  // 필드를 허용하므로, 여기서 결정론적으로 제거해 분석 1회 호출이 학습지까지
+  // 생성해 버리는 경로를 차단한다.
+  const coreSections = validation.data.sections.map((section) =>
+    section.kind === "learning-worksheet"
+      ? {
+          ...section,
+          cloze: undefined,
+          practice: undefined,
+          drills: undefined,
+          workbookSet: undefined,
+          inferenceSet: undefined,
+          questions: [],
+        }
+      : section,
+  );
+
   const report: AnalysisReport = {
     schemaVersion: 1,
     brand: input.brand ?? "ENGLISH READING LAB",
@@ -144,7 +163,7 @@ export async function generateAnalysisReportCore(
     themeId: input.themeId ?? "black-white",
     passageLayout: "hlc", // 01 원문 필기 캔버스(신규 레이아웃)
     meta: validation.data.meta,
-    sections: validation.data.sections,
+    sections: coreSections,
   };
 
   return { ok: true, report, raw, usage: primaryUsage };
