@@ -77,6 +77,37 @@ const genericQuestionSchema = z.object({
 });
 
 type GenericQuestion = z.infer<typeof genericQuestionSchema>;
+type VisibleLanguage = "ko" | "en";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function readLanguageValue(value: unknown): VisibleLanguage | null {
+  return value === "ko" || value === "en" ? value : null;
+}
+
+function languageName(value: VisibleLanguage): string {
+  return value === "en" ? "English" : "Korean";
+}
+
+function readGenericLanguageSettings(spec: CompiledCustomType): {
+  stemLanguage: VisibleLanguage | null;
+  optionLanguage: VisibleLanguage | null;
+} {
+  const direct: Record<string, unknown> | null = isRecord(spec.typeSettings)
+    ? spec.typeSettings
+    : null;
+  const nested: Record<string, unknown> | null =
+    spec.nearestBuiltin && direct && isRecord(direct[spec.nearestBuiltin])
+      ? (direct[spec.nearestBuiltin] as Record<string, unknown>)
+      : null;
+  const source: Record<string, unknown> | null = nested ?? direct;
+  return {
+    stemLanguage: readLanguageValue(source?.["stemLanguage"]),
+    optionLanguage: readLanguageValue(source?.["optionLanguage"]),
+  };
+}
 
 function assertGeneratable(spec: CompiledCustomType): void {
   if (spec.stimulusKind === "LISTENING" || spec.stimulusKind === "VISUAL") {
@@ -174,6 +205,27 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
         .join("\n")}`
     : "";
 
+  const languageSettings = readGenericLanguageSettings(spec);
+  const languageLines: string[] = [];
+  if (languageSettings.stemLanguage) {
+    languageLines.push(
+      `- Write the visible direction/stem in ${languageName(languageSettings.stemLanguage)}.`,
+    );
+  }
+  if (isMc && languageSettings.optionLanguage) {
+    languageLines.push(
+      `- Write every visible options[].text value in ${languageName(languageSettings.optionLanguage)}.`,
+    );
+    if (languageSettings.optionLanguage === "en") {
+      languageLines.push(
+        "- options[].text must be English-only. Do not include Korean translations or Korean explanatory wording inside option text.",
+      );
+    }
+  }
+  const languageBlock = languageLines.length
+    ? ["## Visible language settings", ...languageLines].join("\n")
+    : "";
+
   return [
     `당신은 한국 고등학교 ${gradeInfo} 영어 시험 출제 전문가입니다.`,
     "아래 [유형 정의]에 **충실히 따라** 동형(同形) 문항 1개를 만드세요. 이 유형은 표준 유형 풀에 없는 특수/변형 유형입니다.",
@@ -183,6 +235,7 @@ function buildGenericPrompt(spec: CompiledCustomType, passage: string, gradeInfo
     invariantBlock,
     variableBlock,
     tunableBlock,
+    languageBlock,
     "",
     passageBlock,
     "",
@@ -403,6 +456,9 @@ export async function generateFromCustomType(
   args: GenerateFromCustomTypeArgs,
 ): Promise<GenerateFromCustomTypeResult> {
   assertGeneratable(args.spec);
+  // 레거시 호환: 컴파일러는 더 이상 BUILTIN_OVERRIDE 를 생성하지 않지만(무조건 GENERIC,
+  // 2026-06-08 결정), DB 에 초기 저장된 구버전 spec(tier=BUILTIN_OVERRIDE)이 남아 있어
+  // 이 분기를 유지한다. 해당 spec 이 모두 소거되면 generateBuiltinOverride 와 함께 삭제.
   if (args.spec.tier === "BUILTIN_OVERRIDE") {
     return generateBuiltinOverride(args);
   }

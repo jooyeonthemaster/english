@@ -31,7 +31,7 @@ import {
   normalizeQuestionText,
 } from "./paper-builder/text-normalization";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
-import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import type {
   BuilderQuestion,
   BreakBefore,
@@ -227,7 +227,7 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
     : parseOptions(sourceQuestion.options);
   const options =
     sourceQuestion.subType === "SENTENCE_INSERT"
-      ? buildCanonicalSentenceInsertOptions()
+      ? buildCanonicalSentenceInsertOptionsFrom(rawOptions)
       : rawOptions;
   const objectiveAnswerSlots = Math.max(0, Math.min(10, Number(saved.objectiveAnswerSlots) || 0));
   const answerSpaceLines =

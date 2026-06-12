@@ -145,6 +145,50 @@ export const aiBlankInferenceSchema = z.object({
 });
 export type AiBlankInferenceQuestion = z.infer<typeof aiBlankInferenceSchema>;
 
+// Multi-blank combination variant ((A)/(B)/(C) blanks + five blank-value
+// combination options). The single-blank schema above stays untouched.
+const MULTI_BLANK_LABELS = ["(A)", "(B)", "(C)"] as const;
+
+export function buildAiMultiBlankInferenceSchema(blankCount: number) {
+  const count = Math.min(3, Math.max(2, Math.round(blankCount)));
+  const labels = MULTI_BLANK_LABELS.slice(0, count);
+  const labelsText = labels.join(", ");
+  const labelSchema = z.enum(labels as unknown as [string, ...string[]]);
+  return z.object({
+    ...commonFields,
+    blanks: z
+      .array(
+        z.object({
+          label: labelSchema.describe(`빈칸 라벨. ${labelsText} 순서대로 지문 등장 순.`),
+          originalExpression: z
+            .string()
+            .describe("원문에서 이 빈칸으로 교체할 정확한 표현 (원문 그대로, 한 글자도 변경 금지)"),
+          surroundingText: z
+            .string()
+            .describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용, 원문 그대로 복사)"),
+        }),
+      )
+      .length(count)
+      .describe(`빈칸 정의. 정확히 ${count}개, 서로 다른 문장에서 선택.`),
+    options: z
+      .array(
+        z.object({
+          label: z.string().describe('선지 라벨 "1"~"5"'),
+          text: z
+            .string()
+            .describe('blankValues를 " …… "로 연결한 표시 텍스트'),
+          blankValues: z
+            .array(z.string())
+            .length(count)
+            .describe(`각 빈칸(${labelsText})에 들어갈 값. 정확히 ${count}개, 라벨 순서대로.`),
+        }),
+      )
+      .length(5)
+      .describe("조합 선지 5개. 정답 선지의 blankValues는 원문 표현과 정확히 일치."),
+    ...mcWrongExplanations,
+  });
+}
+
 // ---------------------------------------------------------------------------
 // 2. 어법 판단 (GRAMMAR_ERROR)
 // ---------------------------------------------------------------------------
@@ -209,20 +253,56 @@ export function buildAiGrammarErrorSchema(markerCount: number, answerCount = 1) 
 // 3. 어휘 적절성 (VOCAB_CHOICE)
 // ---------------------------------------------------------------------------
 
+const VOCAB_CHOICE_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"] as const;
+
+const vocabMarkedWordSchema = z.object({
+  label: z.string().describe("(a)~(j) 라벨 (요청한 개수만큼 순서대로)"),
+  originalWord: z.string().describe("원문에 실제로 존재하는 올바른 단어. isInappropriate=true여도 원문 정답 단어를 넣음"),
+  isInappropriate: z.boolean().describe("이 위치에 부적절한 단어를 넣을지 여부"),
+  betterWord: z.string().optional().describe("부적절한 경우 적절한 단어 (= originalWord)"),
+  substituteWord: z.string().describe("지문에 표시할 단어. isInappropriate=true일 때는 원문 단어를 대체할 부적절한 단어, false일 때는 originalWord와 동일"),
+  surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
+});
+
 export const aiVocabChoiceSchema = z.object({
   ...commonFields,
-  markedWords: z.array(z.object({
-    label: z.string().describe("(a)~(e) 라벨"),
-    originalWord: z.string().describe("원문에 실제로 존재하는 올바른 단어. isInappropriate=true여도 원문 정답 단어를 넣음"),
-    isInappropriate: z.boolean().describe("이 위치에 부적절한 단어를 넣을지 여부"),
-    betterWord: z.string().optional().describe("부적절한 경우 적절한 단어 (= originalWord)"),
-    substituteWord: z.string().describe("지문에 표시할 단어. isInappropriate=true일 때는 원문 단어를 대체할 부적절한 단어, false일 때는 originalWord와 동일"),
-    surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
-  })).length(5).describe("밑줄 표시할 5개 어휘"),
+  markedWords: z.array(vocabMarkedWordSchema).length(5).describe("밑줄 표시할 5개 어휘"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
   ...mcWrongExplanations,
 });
 export type AiVocabChoiceQuestion = z.infer<typeof aiVocabChoiceSchema>;
+
+export function buildAiVocabChoiceSchema(markerCount: number, answerCount = 1) {
+  const count = Math.min(10, Math.max(5, Math.round(markerCount)));
+  const answers = Math.min(count, Math.max(1, Math.round(answerCount)));
+  const labels = VOCAB_CHOICE_LABELS.slice(0, count).join(" ");
+  return z.object({
+    ...commonFields,
+    correctAnswer: z
+      .string()
+      .describe(
+        answers > 1
+          ? `정답 label들을 comma + space로 연결. 사용 가능한 label: ${labels}. 정확히 ${answers}개 label이어야 함.`
+          : `정답 label 하나. 사용 가능한 label: ${labels}.`,
+      ),
+    correctAnswers:
+      answers > 1
+        ? z
+            .array(z.string())
+            .length(answers)
+            .describe(`정답 label 배열. 정확히 ${answers}개이며, 모든 isInappropriate=true label과 정확히 일치해야 함.`)
+        : z.array(z.string()).length(1).optional(),
+    markedWords: z
+      .array(vocabMarkedWordSchema)
+      .length(count)
+      .describe(`밑줄 표시할 어휘. 정확히 ${count}개를 생성해야 함.`),
+    options: z
+      .array(optionSchema)
+      .length(count)
+      .describe(`선지. 정확히 ${count}개를 생성해야 함.`),
+    wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(count - answers),
+  });
+}
 
 // ---------------------------------------------------------------------------
 // 4. 문장 삽입 (SENTENCE_INSERT)
@@ -260,6 +340,45 @@ export const aiSentenceInsertSchema = z.object({
   ...mcWrongExplanations,
 });
 export type AiSentenceInsertQuestion = z.infer<typeof aiSentenceInsertSchema>;
+
+export function buildAiSentenceInsertSchema(slotCount: number) {
+  const count = Math.min(8, Math.max(5, Math.round(slotCount)));
+  const labels = Array.from({ length: count }, (_, index) => String(index + 1));
+  const circled = Array.from({ length: count }, (_, index) =>
+    String.fromCodePoint(0x2460 + index),
+  );
+  const dynamicOptionSchema = z.object({
+    label: z.enum(labels as [string, ...string[]]).describe("삽입 위치 label"),
+    text: z
+      .enum(circled as [string, ...string[]])
+      .describe(`삽입 위치 마커. label과 같은 순서로 ①~${circled[count - 1]}만 사용`),
+  });
+  return aiSentenceInsertSchema.extend({
+    markerAfterSentenceIndices: z
+      .array(z.number())
+      .length(count)
+      .describe(
+        `①~${circled[count - 1]} 마커를 배치할 위치 (0-based: 'N번째 문장 뒤에 마커 삽입'). 정확히 ${count}개 인덱스 배열, 오름차순·중복 금지`,
+      ),
+    options: z
+      .array(dynamicOptionSchema)
+      .length(count)
+      .describe(`삽입 위치 선지. 정확히 ${count}개, text는 반드시 ①~${circled[count - 1]}`),
+    distractorTraps: z
+      .array(
+        z.object({
+          gapLabel: z.string().describe(`오답 gap 라벨 '1'~'${count}' (정답 제외)`),
+          temptingClue: z.string().describe("이 자리가 그럴듯해 보이는 유혹 단서(예: 같은 키워드 반복, 연결사 외형)"),
+          fatalFlaw: z.string().describe("이 자리가 정답이 될 수 없는 결정적 결함(끊기는 고리: 선행사 부재/뒤 고리 단절/연결사 논리 불일치 등)"),
+        }),
+      )
+      .max(count - 1)
+      .optional()
+      .describe(`오답 위치별 함정 근거 ${count - 1}개. 각 fatalFlaw 는 서로 달라야 함`),
+    // The default schema fixes wrong-option explanations at 4 (5 gaps - 1 answer).
+    wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(count - 1),
+  });
+}
 
 // ---------------------------------------------------------------------------
 // 5. 무관한 문장 (IRRELEVANT)
@@ -362,7 +481,12 @@ export const AI_MC_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
 // Combined registry (MC + Vocab)
 // ---------------------------------------------------------------------------
 
-import { AI_VOCAB_QUESTION_SCHEMAS } from "./question-ai-schemas-vocab";
+import {
+  AI_VOCAB_QUESTION_SCHEMAS,
+  aiContextMeaningSchema,
+  aiSynonymSchema,
+  buildAiAntonymSchema,
+} from "./question-ai-schemas-vocab";
 import {
   conditionalWritingSchema,
   sentenceTransformSchema,
@@ -388,6 +512,59 @@ export const AI_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   ...AI_ESSAY_QUESTION_SCHEMAS,
 };
 
+// ---------------------------------------------------------------------------
+// Generic option-count variants — free-text option types where the visible
+// option count is a tunable parameter (default 5). The base schema's options
+// field is replaced with an exact-length array.
+// ---------------------------------------------------------------------------
+
+const GENERIC_OPTION_COUNT_BASE_SCHEMAS: Record<string, z.ZodObject> = {
+  TOPIC: aiTopicSchema,
+  MAIN_IDEA: aiMainIdeaSchema,
+  TOPIC_MAIN_IDEA: aiTopicMainIdeaSchema,
+  TITLE: aiTitleSchema,
+  IMPLIED_MEANING: aiImpliedMeaningSchema,
+  CONTEXT_MEANING: aiContextMeaningSchema,
+  SYNONYM: aiSynonymSchema,
+};
+
+export function buildAiGenericOptionCountSchema(
+  typeId: string,
+  optionCount: number,
+  answerCount = 1,
+) {
+  const base = GENERIC_OPTION_COUNT_BASE_SCHEMAS[typeId];
+  if (!base) throw new Error(`Type does not support a generic option count: ${typeId}`);
+  const count = Math.min(8, Math.max(4, Math.round(optionCount)));
+  const answers = Math.min(count - 1, Math.max(1, Math.round(answerCount)));
+  const labels = Array.from({ length: count }, (_, index) => String(index + 1));
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+  const baseOptionsDescription =
+    (base.shape.options as z.ZodType | undefined)?.description ?? "선택지";
+  return base.extend({
+    correctAnswer: z
+      .string()
+      .describe(
+        answers > 1
+          ? `정답 label들을 comma + space로 연결. 사용 가능한 label: ${labels.join(", ")}. 정확히 ${answers}개 label이어야 함.`
+          : `정답 label 하나. 사용 가능한 label: ${labels.join(", ")}.`,
+      ),
+    correctAnswers:
+      answers > 1
+        ? z
+            .array(labelSchema)
+            .length(answers)
+            .describe(`정답 label 배열. 정확히 ${answers}개.`)
+        : z.array(labelSchema).length(1).optional(),
+    options: z
+      .array(optionSchema)
+      .length(count)
+      .describe(`${baseOptionsDescription} — label "1"~"${count}", 정확히 ${count}개를 생성해야 함.`),
+    // The default schema fixes wrong-option explanations at 4 (5 options - 1 answer).
+    wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(count - answers),
+  });
+}
+
 export function getAiResponseSchema(
   typeId: string,
   options?: {
@@ -399,6 +576,16 @@ export function getAiResponseSchema(
     summaryCompleteBlankCount?: number;
     contentMatchOptionCount?: number;
     contentMatchAnswerCount?: number;
+    vocabChoiceMarkerCount?: number;
+    vocabChoiceAnswerCount?: number;
+    sentenceInsertSlotCount?: number;
+    antonymPairCount?: number;
+    /** 2~3 switches BLANK_INFERENCE to the multi-blank combination schema. */
+    blankInferenceBlankCount?: number;
+    /** Option count for free-text option types (TOPIC/TITLE/...). */
+    genericOptionCount?: number;
+    /** Correct-answer count for free-text option types. */
+    genericAnswerCount?: number;
     /** Legacy option name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
   },
@@ -443,6 +630,48 @@ export function getAiResponseSchema(
     schema = buildAiContentMatchSchema(
       options?.contentMatchOptionCount ?? 5,
       options?.contentMatchAnswerCount ?? 1,
+    );
+  }
+  if (
+    typeId === "VOCAB_CHOICE" &&
+    ((options?.vocabChoiceMarkerCount && options.vocabChoiceMarkerCount !== 5) ||
+      (options?.vocabChoiceAnswerCount && options.vocabChoiceAnswerCount !== 1))
+  ) {
+    schema = buildAiVocabChoiceSchema(
+      options?.vocabChoiceMarkerCount ?? 5,
+      options?.vocabChoiceAnswerCount ?? 1,
+    );
+  }
+  if (
+    typeId === "SENTENCE_INSERT" &&
+    options?.sentenceInsertSlotCount &&
+    options.sentenceInsertSlotCount !== 5
+  ) {
+    schema = buildAiSentenceInsertSchema(options.sentenceInsertSlotCount);
+  }
+  if (
+    typeId === "ANTONYM" &&
+    options?.antonymPairCount &&
+    options.antonymPairCount !== 5
+  ) {
+    schema = buildAiAntonymSchema(options.antonymPairCount);
+  }
+  if (
+    typeId === "BLANK_INFERENCE" &&
+    options?.blankInferenceBlankCount &&
+    options.blankInferenceBlankCount >= 2
+  ) {
+    schema = buildAiMultiBlankInferenceSchema(options.blankInferenceBlankCount);
+  }
+  if (
+    GENERIC_OPTION_COUNT_BASE_SCHEMAS[typeId] &&
+    ((options?.genericOptionCount && options.genericOptionCount !== 5) ||
+      (options?.genericAnswerCount && options.genericAnswerCount !== 1))
+  ) {
+    schema = buildAiGenericOptionCountSchema(
+      typeId,
+      options?.genericOptionCount ?? 5,
+      options?.genericAnswerCount ?? 1,
     );
   }
   return z.object({ questions: z.array(schema) });

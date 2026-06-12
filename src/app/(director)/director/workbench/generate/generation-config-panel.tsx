@@ -52,21 +52,34 @@ import {
   SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
+  VOCAB_CHOICE_ANSWER_COUNT_MIN,
+  VOCAB_CHOICE_MARKER_COUNT_MAX,
+  VOCAB_CHOICE_MARKER_COUNT_MIN,
+  GENERIC_OPTION_COUNT_MAX,
+  GENERIC_OPTION_COUNT_MIN,
+  SENTENCE_INSERT_SLOT_COUNT_MAX,
+  SENTENCE_INSERT_SLOT_COUNT_MIN,
+  ANTONYM_PAIR_COUNT_MAX,
+  ANTONYM_PAIR_COUNT_MIN,
+  BLANK_INFERENCE_BLANK_COUNT_MAX,
+  BLANK_INFERENCE_BLANK_COUNT_MIN,
+  getQuestionLanguageToggleScope,
+  readAntonymPairCountSetting,
+  readBlankInferenceBlankCountSetting,
+  readGenericAnswerCountSetting,
+  readGenericOptionCountSetting,
+  readOptionLanguageSetting,
+  readSentenceInsertSlotCountSetting,
+  readStemLanguageSetting,
+  readVocabChoiceAnswerCountSetting,
+  readVocabChoiceMarkerCountSetting,
+  supportsGenericOptionCount,
 } from "@/lib/question-type-generation-settings";
 
 const VOCAB_GENERATION_TYPE_IDS = new Set([
   "CONTEXT_MEANING",
   "SYNONYM",
   "ANTONYM",
-]);
-const DETAIL_SETTING_TYPE_IDS = new Set([
-  "BLANK_INFERENCE",
-  "CONTENT_MATCH",
-  "GRAMMAR_ERROR",
-  "GRAMMAR_CORRECTION",
-  "IRRELEVANT",
-  "SUMMARY_COMPLETE",
-  "SUMMARY_COMPLETE_MC",
 ]);
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
@@ -301,6 +314,120 @@ export function GenerationConfigPanel({
         ...next,
       },
     }));
+  };
+  const patchTypeSettings = (
+    typeId: string,
+    patch: Record<string, unknown>,
+  ) => {
+    setQuestionTypeSettings((prev) => {
+      const current = prev[typeId];
+      const currentRecord =
+        current && typeof current === "object" && !Array.isArray(current)
+          ? current
+          : {};
+      return {
+        ...prev,
+        [typeId]: {
+          ...currentRecord,
+          ...patch,
+        },
+      };
+    });
+  };
+  const getTypeStemLanguage = (typeId: string) =>
+    readStemLanguageSetting(questionTypeSettings[typeId], typeId);
+  const getTypeOptionLanguage = (typeId: string) =>
+    readOptionLanguageSetting(questionTypeSettings[typeId], typeId);
+  const setTypeLanguage = (
+    typeId: string,
+    key: "stemLanguage" | "optionLanguage",
+    next: "ko" | "en",
+  ) => {
+    patchTypeSettings(typeId, { [key]: next });
+  };
+  const vocabChoiceMarkerCount = readVocabChoiceMarkerCountSetting(
+    questionTypeSettings.VOCAB_CHOICE,
+  );
+  const vocabChoiceAnswerCount = readVocabChoiceAnswerCountSetting(
+    questionTypeSettings.VOCAB_CHOICE,
+    vocabChoiceMarkerCount,
+  );
+  const vocabChoiceAnswerMax = vocabChoiceMarkerCount;
+  const setVocabChoiceMarkerCount = (next: number) => {
+    const clamped = Math.min(
+      VOCAB_CHOICE_MARKER_COUNT_MAX,
+      Math.max(VOCAB_CHOICE_MARKER_COUNT_MIN, Math.round(next)),
+    );
+    patchTypeSettings("VOCAB_CHOICE", {
+      markerCount: clamped,
+      answerCount: Math.min(clamped, vocabChoiceAnswerCount),
+    });
+  };
+  const setVocabChoiceAnswerCount = (next: number) => {
+    const clamped = Math.min(
+      vocabChoiceAnswerMax,
+      Math.max(VOCAB_CHOICE_ANSWER_COUNT_MIN, Math.round(next)),
+    );
+    patchTypeSettings("VOCAB_CHOICE", {
+      markerCount: vocabChoiceMarkerCount,
+      answerCount: clamped,
+    });
+  };
+  const sentenceInsertSlotCount = readSentenceInsertSlotCountSetting(
+    questionTypeSettings.SENTENCE_INSERT,
+  );
+  const setSentenceInsertSlotCount = (next: number) => {
+    const clamped = Math.min(
+      SENTENCE_INSERT_SLOT_COUNT_MAX,
+      Math.max(SENTENCE_INSERT_SLOT_COUNT_MIN, Math.round(next)),
+    );
+    patchTypeSettings("SENTENCE_INSERT", { slotCount: clamped });
+  };
+  const blankInferenceBlankCount = readBlankInferenceBlankCountSetting(
+    questionTypeSettings.BLANK_INFERENCE,
+  );
+  const setBlankInferenceBlankCount = (next: number) => {
+    const clamped = Math.min(
+      BLANK_INFERENCE_BLANK_COUNT_MAX,
+      Math.max(BLANK_INFERENCE_BLANK_COUNT_MIN, Math.round(next)),
+    );
+    patchTypeSettings("BLANK_INFERENCE", { blankCount: clamped });
+  };
+  const antonymPairCount = readAntonymPairCountSetting(
+    questionTypeSettings.ANTONYM,
+  );
+  const setAntonymPairCount = (next: number) => {
+    const clamped = Math.min(
+      ANTONYM_PAIR_COUNT_MAX,
+      Math.max(ANTONYM_PAIR_COUNT_MIN, Math.round(next)),
+    );
+    patchTypeSettings("ANTONYM", { pairCount: clamped });
+  };
+  const getGenericOptionCount = (typeId: string) =>
+    readGenericOptionCountSetting(questionTypeSettings[typeId], typeId);
+  const getGenericAnswerCount = (typeId: string) =>
+    readGenericAnswerCountSetting(
+      questionTypeSettings[typeId],
+      typeId,
+      getGenericOptionCount(typeId),
+    );
+  const setGenericOptionCount = (typeId: string, next: number) => {
+    const clamped = Math.min(
+      GENERIC_OPTION_COUNT_MAX,
+      Math.max(GENERIC_OPTION_COUNT_MIN, Math.round(next)),
+    );
+    patchTypeSettings(typeId, {
+      optionCount: clamped,
+      answerCount: Math.min(clamped - 1, getGenericAnswerCount(typeId)),
+    });
+  };
+  const setGenericAnswerCount = (typeId: string, next: number) => {
+    const optionCount = getGenericOptionCount(typeId);
+    const clamped = Math.min(
+      Math.max(1, optionCount - 1),
+      Math.max(1, Math.round(next)),
+    );
+    patchTypeSettings(typeId, { optionCount, answerCount: clamped });
   };
   const contentMatchSettings = questionTypeSettings.CONTENT_MATCH || {};
   const rawContentMatchOptionCount = Math.round(
@@ -685,18 +812,55 @@ export function GenerationConfigPanel({
     </div>
   );
 
-  const renderTypeDetailContent = (typeId: string) => {
+  const renderLanguageSetting = ({
+    title,
+    value,
+    onChange,
+    description,
+  }) => (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <span className="text-[12px] font-bold text-slate-800">
+          {title}
+        </span>
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+          {description}
+        </p>
+      </div>
+      <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
+        {[
+          { value: "ko", label: "한국어" },
+          { value: "en", label: "영어" },
+        ].map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() => onChange(item.value)}
+            className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
+              value === item.value
+                ? "bg-white text-blue-700 shadow-sm"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderTypeNumericDetailContent = (typeId: string) => {
     if (typeId === "CONTENT_MATCH") {
       return (
         <div className="space-y-3">
           {renderNumberSetting({
-            title: "Option count",
+            title: "보기 개수",
             badges: [
               `${CONTENT_MATCH_OPTION_COUNT_MIN} ~ ${CONTENT_MATCH_OPTION_COUNT_MAX}`,
-              "Statements",
+              "진술문",
             ],
             description:
-              "Number of visible content-match statements. Default is 5.",
+              "학생에게 표시할 내용 일치 진술문 수입니다. 기본값은 5개입니다.",
             value: contentMatchOptionCount,
             min: CONTENT_MATCH_OPTION_COUNT_MIN,
             max: CONTENT_MATCH_OPTION_COUNT_MAX,
@@ -705,13 +869,13 @@ export function GenerationConfigPanel({
           })}
           <div className="border-t border-slate-100 pt-3">
             {renderNumberSetting({
-              title: "Answer count",
+              title: "정답 개수",
               badges: [
                 `1 ~ ${contentMatchAnswerMax}`,
-                contentMatchAnswerCount >= 2 ? "Multi-answer" : "Single answer",
+                contentMatchAnswerCount >= 2 ? "복수 정답" : "단일 정답",
               ],
               description:
-                "When this is 2 or more, the engine generates correctAnswers and a joined correctAnswer string.",
+                "2개 이상이면 복수 정답 문항으로 생성하고 모든 정답 라벨을 함께 저장합니다.",
               value: contentMatchAnswerCount,
               min: CONTENT_MATCH_ANSWER_COUNT_MIN,
               max: contentMatchAnswerMax,
@@ -971,52 +1135,224 @@ export function GenerationConfigPanel({
     }
 
     if (typeId === "BLANK_INFERENCE") {
+      const isMultiBlank = blankInferenceBlankCount >= 2;
       return (
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-bold text-slate-800">
-                부정-부정 빈칸
-              </span>
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "빈칸 개수",
+            badges: [
+              `${BLANK_INFERENCE_BLANK_COUNT_MIN} ~ ${BLANK_INFERENCE_BLANK_COUNT_MAX}`,
+              isMultiBlank ? "(A)(B) 조합 보기" : "단일 빈칸",
+            ],
+            description:
+              "기본값 1개는 수능형 단일 빈칸입니다. 2개 이상이면 (A)(B)(C) 빈칸과 조합 보기로 생성합니다.",
+            value: blankInferenceBlankCount,
+            min: BLANK_INFERENCE_BLANK_COUNT_MIN,
+            max: BLANK_INFERENCE_BLANK_COUNT_MAX,
+            onChange: setBlankInferenceBlankCount,
+            ariaBase: "blank inference blank count",
+          })}
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={`text-[12px] font-bold ${isMultiBlank ? "text-slate-400" : "text-slate-800"}`}
+                >
+                  부정-부정 빈칸
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  정답 변형
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  부정어 함정
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  킬러형
+                </span>
+              </div>
+              {isMultiBlank ? (
+                <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                  빈칸 1개일 때만 사용할 수 있습니다.
+                </p>
+              ) : null}
             </div>
-            <div className="mt-1 flex flex-wrap gap-1">
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                정답 변형
-              </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                부정어 함정
-              </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                킬러형
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={!!blankSettings.doubleNegative}
-            onClick={() =>
-              updateBlankSetting({
-                doubleNegative: !blankSettings.doubleNegative,
-              })
-            }
-            className={`relative h-6 w-11 rounded-full border transition-colors ${
-              blankSettings.doubleNegative
-                ? "border-blue-300 bg-blue-500"
-                : "border-slate-200 bg-slate-200"
-            }`}
-          >
-            <span
-              className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
-                blankSettings.doubleNegative ? "translate-x-5" : "translate-x-0"
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!isMultiBlank && !!blankSettings.doubleNegative}
+              disabled={isMultiBlank}
+              onClick={() =>
+                updateBlankSetting({
+                  doubleNegative: !blankSettings.doubleNegative,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                isMultiBlank
+                  ? "cursor-not-allowed border-slate-200 bg-slate-100"
+                  : blankSettings.doubleNegative
+                    ? "border-blue-300 bg-blue-500"
+                    : "border-slate-200 bg-slate-200"
               }`}
-            />
-          </button>
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  !isMultiBlank && blankSettings.doubleNegative
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (typeId === "VOCAB_CHOICE") {
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "밑줄 어휘 개수",
+            badges: [
+              `${VOCAB_CHOICE_MARKER_COUNT_MIN} ~ ${VOCAB_CHOICE_MARKER_COUNT_MAX}`,
+              "표시 위치",
+            ],
+            description:
+              "지문에 밑줄 칠 어휘 수입니다. 정답(부적절한 어휘) 수는 아래에서 따로 지정합니다.",
+            value: vocabChoiceMarkerCount,
+            min: VOCAB_CHOICE_MARKER_COUNT_MIN,
+            max: VOCAB_CHOICE_MARKER_COUNT_MAX,
+            onChange: setVocabChoiceMarkerCount,
+            ariaBase: "vocab choice marker count",
+          })}
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "정답 개수",
+              badges: [
+                `1 ~ ${vocabChoiceAnswerMax}`,
+                vocabChoiceAnswerCount >= 2 ? "모두 고르기" : "단일 정답",
+              ],
+              description:
+                "기본값은 1개입니다. 2개 이상이면 발문에 개수를 쓰지 않고 부적절한 어휘를 모두 고르라고 안내합니다.",
+              value: vocabChoiceAnswerCount,
+              min: VOCAB_CHOICE_ANSWER_COUNT_MIN,
+              max: vocabChoiceAnswerMax,
+              onChange: setVocabChoiceAnswerCount,
+              ariaBase: "vocab choice answer count",
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    if (typeId === "SENTENCE_INSERT") {
+      return renderNumberSetting({
+        title: "삽입 위치 개수",
+        badges: [
+          `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
+          "①~ 마커",
+        ],
+        description:
+          "지문에 표시할 삽입 위치(①~) 수입니다. 정답은 항상 1곳이며, 위치 수만큼 지문 문장이 필요해 짧은 지문은 생성에 실패할 수 있습니다.",
+        value: sentenceInsertSlotCount,
+        min: SENTENCE_INSERT_SLOT_COUNT_MIN,
+        max: SENTENCE_INSERT_SLOT_COUNT_MAX,
+        onChange: setSentenceInsertSlotCount,
+        ariaBase: "sentence insert slot count",
+      });
+    }
+
+    if (typeId === "ANTONYM") {
+      return renderNumberSetting({
+        title: "단어 쌍 개수",
+        badges: [
+          `${ANTONYM_PAIR_COUNT_MIN} ~ ${ANTONYM_PAIR_COUNT_MAX}`,
+          "(A)~ 쌍",
+        ],
+        description:
+          "지문 단어와 짝 단어 쌍의 수입니다. 정답(잘못 짝지어진 쌍)은 항상 1개입니다.",
+        value: antonymPairCount,
+        min: ANTONYM_PAIR_COUNT_MIN,
+        max: ANTONYM_PAIR_COUNT_MAX,
+        onChange: setAntonymPairCount,
+        ariaBase: "antonym pair count",
+      });
+    }
+
+    if (supportsGenericOptionCount(typeId)) {
+      const genericOptionCount = getGenericOptionCount(typeId);
+      const genericAnswerCount = getGenericAnswerCount(typeId);
+      const genericAnswerMax = Math.max(1, genericOptionCount - 1);
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "보기 개수",
+            badges: [
+              `${GENERIC_OPTION_COUNT_MIN} ~ ${GENERIC_OPTION_COUNT_MAX}`,
+              "선택지",
+            ],
+            description:
+              "학생에게 표시할 보기 수입니다. 기본값은 5개입니다.",
+            value: genericOptionCount,
+            min: GENERIC_OPTION_COUNT_MIN,
+            max: GENERIC_OPTION_COUNT_MAX,
+            onChange: (next) => setGenericOptionCount(typeId, next),
+            ariaBase: `${typeId} option count`,
+          })}
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "정답 개수",
+              badges: [
+                `1 ~ ${genericAnswerMax}`,
+                genericAnswerCount >= 2 ? "모두 고르기" : "단일 정답",
+              ],
+              description:
+                "기본값은 1개입니다. 2개 이상이면 발문에 개수를 쓰지 않고 적절한 것을 모두 고르라고 안내합니다.",
+              value: genericAnswerCount,
+              min: 1,
+              max: genericAnswerMax,
+              onChange: (next) => setGenericAnswerCount(typeId, next),
+              ariaBase: `${typeId} answer count`,
+            })}
+          </div>
         </div>
       );
     }
 
     return null;
+  };
+
+  // Every type gets language toggles; numeric/special settings render above them.
+  const renderTypeDetailContent = (typeId: string) => {
+    const numericContent = renderTypeNumericDetailContent(typeId);
+    const languageScope = getQuestionLanguageToggleScope(typeId);
+    return (
+      <div className="space-y-3">
+        {numericContent}
+        <div
+          className={numericContent ? "border-t border-slate-100 pt-3" : undefined}
+        >
+          {renderLanguageSetting({
+            title: "발문 언어",
+            value: getTypeStemLanguage(typeId),
+            description: "학생에게 보이는 발문(지시문) 언어입니다.",
+            onChange: (value) => setTypeLanguage(typeId, "stemLanguage", value),
+          })}
+        </div>
+        {languageScope === "stem-option" ? (
+          <div className="border-t border-slate-100 pt-3">
+            {renderLanguageSetting({
+              title: "보기 언어",
+              value: getTypeOptionLanguage(typeId),
+              description: "학생에게 보이는 보기(선택지) 언어입니다.",
+              onChange: (value) =>
+                setTypeLanguage(typeId, "optionLanguage", value),
+            })}
+          </div>
+        ) : null}
+      </div>
+    );
   };
 
   return (
@@ -1195,11 +1531,8 @@ export function GenerationConfigPanel({
                 {orderedTypeItems.map((item) => {
                   const count = typeCounts[item.id] || 0;
                   const active = count > 0;
-                  const hasDetailSettings = DETAIL_SETTING_TYPE_IDS.has(
-                    item.id,
-                  );
-                  const expanded =
-                    hasDetailSettings && expandedTypeId === item.id;
+                  // Language toggles exist for every type, so every block expands.
+                  const expanded = expandedTypeId === item.id;
                   const dragging = draggingTypeId === item.id;
                   const dragOver =
                     dragOverTypeId === item.id && draggingTypeId !== item.id;
@@ -1321,25 +1654,23 @@ export function GenerationConfigPanel({
                               <Plus className="h-3.5 w-3.5" />
                             </button>
                           </div>
-                          {hasDetailSettings ? (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setExpandedTypeId(expanded ? null : item.id)
-                              }
-                              className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-                              title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
-                              aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
-                            >
-                              {expanded ? (
-                                <ChevronUp className="h-3.5 w-3.5" />
-                              ) : (
-                                <ChevronDown className="h-3.5 w-3.5" />
-                              )}
-                            </button>
-                          ) : (
-                            <span className="h-7 w-7" aria-hidden="true" />
-                          )}
+                          {/* jay 파라미터 확장으로 모든 유형에 세부 옵션이 생겨
+                              항상 노출 — 스타일은 워크스페이스 재설계 톤 유지 */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setExpandedTypeId(expanded ? null : item.id)
+                            }
+                            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                            title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                            aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                          >
+                            {expanded ? (
+                              <ChevronUp className="h-3.5 w-3.5" />
+                            ) : (
+                              <ChevronDown className="h-3.5 w-3.5" />
+                            )}
+                          </button>
                         </div>
                       </div>
 

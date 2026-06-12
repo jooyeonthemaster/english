@@ -58,7 +58,6 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   }
 
   push(q.direction);
-  if (q.matchType) parts.push(`[type: ${String(q.matchType)}]`);
   // 주어진 문장(문장삽입·글의 순서)은 지문/단락 '위'에 박스로 와야 한다.
   // 한글 라벨 '[주어진 문장]'으로 통일해 DOCX/HWPX 파서(parseQuestionSections)·
   // 시험지 렌더(splitSentenceInsertGivenBlock)와 일치시킨다. (이전: '[given]'을

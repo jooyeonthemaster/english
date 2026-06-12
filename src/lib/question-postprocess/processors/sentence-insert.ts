@@ -3,6 +3,8 @@ import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-optio
 import { CIRCLED_NUMBERS, type PostProcessResult, type QuestionPostProcessData } from "../types";
 
 const OMITTED_SENTENCE_SIMILARITY_THRESHOLD = 0.72;
+const SLOT_COUNT_MIN = 5;
+const SLOT_COUNT_MAX = 8;
 
 export function processSentenceInsert(
   passage: string,
@@ -22,9 +24,15 @@ export function processSentenceInsert(
     };
   }
 
-  if (markerAfterSentenceIndices.length !== 5) {
+  // The requested slot count is carried by the (schema-enforced) index array
+  // length; legacy/default outputs carry 5.
+  const slotCount = Math.min(
+    SLOT_COUNT_MAX,
+    Math.max(SLOT_COUNT_MIN, markerAfterSentenceIndices.length),
+  );
+  if (markerAfterSentenceIndices.length !== slotCount) {
     warnings.push(
-      `Expected 5 marker indices, got ${markerAfterSentenceIndices.length}. ` +
+      `Expected ${slotCount} marker indices, got ${markerAfterSentenceIndices.length}. ` +
         `Proceeding with what was provided.`,
     );
   }
@@ -66,8 +74,9 @@ export function processSentenceInsert(
   const uniqueSortedIndices = repairSentenceInsertMarkerIndices(
     sortedIndices,
     displaySentences.length,
+    slotCount,
   );
-  if (uniqueSortedIndices.length < 5) {
+  if (uniqueSortedIndices.length < slotCount) {
     return {
       success: false,
       data: ai,
@@ -100,8 +109,8 @@ export function processSentenceInsert(
 
   const passageWithMarkers = parts.join("").trim();
 
-  // Build options from circled numbers (standard format: ①~⑤)
-  const options = buildCanonicalSentenceInsertOptions(5);
+  // Build options from circled numbers (standard format: ①~, requested count)
+  const options = buildCanonicalSentenceInsertOptions(slotCount);
   if (Array.isArray(ai.options)) {
     warnings.push("Ignored AI-provided SENTENCE_INSERT options; using canonical gap-marker options.");
   }
@@ -125,13 +134,17 @@ function adjustMarkerIndicesForOmission(indices: number[], omittedIndex: number)
   return indices.map((index) => (index >= omittedIndex ? index - 1 : index));
 }
 
-function repairSentenceInsertMarkerIndices(indices: number[], sentenceCount: number): number[] {
+function repairSentenceInsertMarkerIndices(
+  indices: number[],
+  sentenceCount: number,
+  slotCount: number,
+): number[] {
   const validUnique = [...new Set(indices.filter((index) => index >= 0 && index < sentenceCount))]
     .sort((a, b) => a - b);
-  if (validUnique.length >= 5) return validUnique.slice(0, 5);
+  if (validUnique.length >= slotCount) return validUnique.slice(0, slotCount);
 
   const used = new Set(validUnique);
-  for (let index = sentenceCount - 1; index >= 0 && validUnique.length < 5; index--) {
+  for (let index = sentenceCount - 1; index >= 0 && validUnique.length < slotCount; index--) {
     if (used.has(index)) continue;
     validUnique.push(index);
     used.add(index);

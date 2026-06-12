@@ -10,6 +10,8 @@ export interface QuestionQualityIssue {
   message: string;
 }
 
+type VisibleQuestionLanguage = "ko" | "en";
+
 interface ValidateQuestionQualityInput {
   typeId: string;
   question: Record<string, unknown>;
@@ -21,6 +23,24 @@ interface ValidateQuestionQualityInput {
   grammarCorrectionErrorCount?: number;
   /** Legacy name; interpreted as grammarMarkerCount. */
   grammarErrorCount?: number;
+  /** Requested visible direction/stem language. Omitted = type default (Korean). */
+  stemLanguage?: VisibleQuestionLanguage;
+  /** Requested visible option-text language. Omitted = type default. */
+  optionLanguage?: VisibleQuestionLanguage;
+  /** Requested VOCAB_CHOICE underlined word count (5~10). Omitted = infer/default 5. */
+  vocabChoiceMarkerCount?: number;
+  /** Requested VOCAB_CHOICE inappropriate word count. Omitted = 1. */
+  vocabChoiceAnswerCount?: number;
+  /** Requested SENTENCE_INSERT insertion-marker count (5~8). Omitted = infer/default 5. */
+  sentenceInsertSlotCount?: number;
+  /** Requested ANTONYM word-pair count (5~10). Omitted = infer/default 5. */
+  antonymPairCount?: number;
+  /** Requested BLANK_INFERENCE blank count. 2~3 routes to the multi-blank validator. */
+  blankInferenceBlankCount?: number;
+  /** Requested option count for free-text option types (TOPIC/TITLE/...). */
+  genericOptionCount?: number;
+  /** Requested correct-answer count for free-text option types. Omitted = 1. */
+  genericAnswerCount?: number;
 }
 
 const IRRELEVANT_SLOT_MIN = 5;
@@ -28,10 +48,18 @@ const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
-const VOCAB_CHOICE_MARKER_COUNT = 5;
-const VOCAB_CHOICE_KEYS = ["a", "b", "c", "d", "e"] as const;
-const ANTONYM_MARKER_COUNT = 5;
-const ANTONYM_KEYS = ["A", "B", "C", "D", "E"] as const;
+const VOCAB_CHOICE_MARKER_COUNT_DEFAULT = 5;
+const VOCAB_CHOICE_MARKER_COUNT_MIN = 5;
+const VOCAB_CHOICE_MARKER_COUNT_MAX = 10;
+const VOCAB_CHOICE_KEYS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] as const;
+const GENERIC_OPTION_COUNT_MIN = 4;
+const GENERIC_OPTION_COUNT_MAX = 8;
+const SENTENCE_INSERT_SLOT_MIN = 5;
+const SENTENCE_INSERT_SLOT_MAX = 8;
+const ANTONYM_MARKER_COUNT_DEFAULT = 5;
+const ANTONYM_MARKER_COUNT_MIN = 5;
+const ANTONYM_MARKER_COUNT_MAX = 10;
+const ANTONYM_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const;
 
 function normalizeGrammarMarkedCount(markedCount: unknown): number {
   const n = typeof markedCount === "number" ? markedCount : Number(markedCount);
@@ -260,6 +288,9 @@ export function buildQuestionTargetCandidateBlock(
     grammarMarkerCount?: number;
     grammarAnswerCount?: number;
     grammarCorrectionErrorCount?: number;
+    antonymPairCount?: number;
+    /** 2~3 = multi-blank BLANK_INFERENCE; the single-blank candidate block is suppressed. */
+    blankInferenceBlankCount?: number;
     /** Legacy name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
     requestedDifficulty?: string;
@@ -286,6 +317,9 @@ export function buildQuestionTargetCandidateBlock(
         options.requestedDifficulty,
       );
     case "BLANK_INFERENCE":
+      // The candidate block proposes single-blank targets; the multi-blank
+      // variant carries its own instructions in the type-settings prompt.
+      if ((options.blankInferenceBlankCount ?? 1) >= 2) return "";
       return buildBlankInferenceCandidateBlock(passage);
     case "REFERENCE":
       return buildReferenceCandidateBlock(passage);
@@ -295,7 +329,11 @@ export function buildQuestionTargetCandidateBlock(
         options.requestedDifficulty,
       );
     case "ANTONYM":
-      return buildAntonymCandidateBlock(passage, options.requestedDifficulty);
+      return buildAntonymCandidateBlock(
+        passage,
+        options.requestedDifficulty,
+        options.antonymPairCount,
+      );
     default:
       return "";
   }
@@ -372,12 +410,19 @@ const ANTONYM_SAFE_LEXICON: AntonymLexiconEntry[] = [
 function buildAntonymCandidateBlock(
   passage: string,
   requestedDifficulty?: string,
+  pairCount?: number,
 ): string {
+  const markerCount =
+    typeof pairCount === "number" &&
+    pairCount >= ANTONYM_MARKER_COUNT_MIN &&
+    pairCount <= ANTONYM_MARKER_COUNT_MAX
+      ? Math.round(pairCount)
+      : ANTONYM_MARKER_COUNT_DEFAULT;
   const candidates = findAntonymCandidates(passage, requestedDifficulty).slice(0, 12);
   const safeCountRule =
-    candidates.length >= ANTONYM_MARKER_COUNT
-      ? "- Use five marked source words from this safe list whenever possible. At minimum, four of the five markedWords should come from this list."
-      : "- Use every relevant safe candidate below first. If fewer than five are available, add your own only when the pair is equally clean and source-backed.";
+    candidates.length >= markerCount
+      ? `- Use ${markerCount} marked source words from this safe list whenever possible. At minimum, ${markerCount - 1} of the ${markerCount} markedWords should come from this list.`
+      : `- Use every relevant safe candidate below first. If fewer than ${markerCount} are available, add your own only when the pair is equally clean and source-backed.`;
 
   const candidateLines = candidates.length
     ? candidates.map((candidate, index) => {
@@ -737,6 +782,15 @@ export function validateQuestionQuality({
   grammarAnswerCount,
   grammarCorrectionErrorCount,
   grammarErrorCount,
+  stemLanguage,
+  optionLanguage,
+  vocabChoiceMarkerCount,
+  vocabChoiceAnswerCount,
+  sentenceInsertSlotCount,
+  antonymPairCount,
+  blankInferenceBlankCount,
+  genericOptionCount,
+  genericAnswerCount,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
   const add = (severity: QuestionQualitySeverity, code: string, message: string) => {
@@ -747,7 +801,26 @@ export function validateQuestionQuality({
     add("warning", "difficulty-mismatch", `Expected ${requestedDifficulty}, got ${question.difficulty}.`);
   }
 
-  validateOptions(question, typeId, add);
+  validateOptions(question, typeId, genericOptionCount, add);
+
+  // Teacher-requested multi-answer for free-text option types: enforce the
+  // exact answer-label count. Single-answer (default) keeps the legacy
+  // behavior with no additional gate.
+  if (
+    typeof genericAnswerCount === "number" &&
+    Number.isFinite(genericAnswerCount) &&
+    genericAnswerCount >= 2
+  ) {
+    const expectedAnswers = Math.round(genericAnswerCount);
+    const answerLabels = collectCorrectAnswerLabels(question);
+    if (answerLabels.length !== expectedAnswers) {
+      add(
+        "error",
+        "generic-answer-count",
+        `Expected exactly ${expectedAnswers} correct answer label(s), got ${answerLabels.length}.`,
+      );
+    }
+  }
   validateMarkedText(question, add);
   validateTypeSpecific(
     question,
@@ -758,6 +831,13 @@ export function validateQuestionQuality({
     grammarMarkerCount ?? grammarErrorCount,
     grammarAnswerCount,
     grammarCorrectionErrorCount,
+    stemLanguage,
+    optionLanguage,
+    vocabChoiceMarkerCount,
+    vocabChoiceAnswerCount,
+    sentenceInsertSlotCount,
+    antonymPairCount,
+    blankInferenceBlankCount,
     add,
   );
 
@@ -983,9 +1063,45 @@ function getExpectedOptionCount(question: Record<string, unknown>, typeId: strin
     return 5;
   }
 
+  if (typeId === "VOCAB_CHOICE") {
+    const markedCount = Array.isArray(question.markedWords)
+      ? question.markedWords.length
+      : 0;
+    if (
+      markedCount >= VOCAB_CHOICE_MARKER_COUNT_MIN &&
+      markedCount <= VOCAB_CHOICE_MARKER_COUNT_MAX
+    ) {
+      return markedCount;
+    }
+    return 5;
+  }
+
   if (typeId === "CONTENT_MATCH") {
     const optionCount = Array.isArray(question.options) ? question.options.length : 0;
     if (optionCount >= 5 && optionCount <= 12) return optionCount;
+    return 5;
+  }
+
+  if (typeId === "SENTENCE_INSERT") {
+    const markerIndexCount = Array.isArray(question.markerAfterSentenceIndices)
+      ? question.markerAfterSentenceIndices.length
+      : 0;
+    if (
+      markerIndexCount >= SENTENCE_INSERT_SLOT_MIN &&
+      markerIndexCount <= SENTENCE_INSERT_SLOT_MAX
+    ) {
+      return markerIndexCount;
+    }
+    return 5;
+  }
+
+  if (typeId === "ANTONYM") {
+    const pairCount = Array.isArray(question.markedWords)
+      ? question.markedWords.length
+      : 0;
+    if (pairCount >= ANTONYM_MARKER_COUNT_MIN && pairCount <= ANTONYM_MARKER_COUNT_MAX) {
+      return pairCount;
+    }
     return 5;
   }
 
@@ -1004,12 +1120,21 @@ function getExpectedOptionCount(question: Record<string, unknown>, typeId: strin
 function validateOptions(
   question: Record<string, unknown>,
   typeId: string,
+  genericOptionCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   if (!options.length) return;
 
-  const expectedOptionCount = getExpectedOptionCount(question, typeId);
+  // A teacher-requested option count (free-text option types) overrides the
+  // per-type default; clamp defensively to the supported range.
+  const expectedOptionCount =
+    typeof genericOptionCount === "number" && Number.isFinite(genericOptionCount)
+      ? Math.min(
+          GENERIC_OPTION_COUNT_MAX,
+          Math.max(GENERIC_OPTION_COUNT_MIN, Math.round(genericOptionCount)),
+        )
+      : getExpectedOptionCount(question, typeId);
   if (MC_TYPE_IDS.has(typeId) && options.length !== expectedOptionCount) {
     add("error", "option-count", `Expected ${expectedOptionCount} options, got ${options.length}.`);
   }
@@ -1158,10 +1283,10 @@ function normalizeVocabChoiceKey(value: unknown, fallbackIndex?: number): string
     return VOCAB_CHOICE_KEYS[circledIndex];
   }
 
-  const alphaMatch = text.match(/^[\(\[]?\s*([a-eA-E])\s*[\)\].:]?$/);
+  const alphaMatch = text.match(/^[\(\[]?\s*([a-jA-J])\s*[\)\].:]?$/);
   if (alphaMatch) return alphaMatch[1].toLowerCase();
 
-  const numberMatch = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  const numberMatch = text.match(/^[\(\[]?\s*(10|[1-9])\s*[\)\].:]?$/);
   if (numberMatch) return VOCAB_CHOICE_KEYS[Number(numberMatch[1]) - 1];
 
   return fallback;
@@ -1180,7 +1305,7 @@ function collectVocabChoiceAnswerKeys(question: Record<string, unknown>): string
 
   const correctAnswerText = normalizeText(question.correctAnswer);
   if (correctAnswerText) {
-    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[a-eA-E]|[1-5]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[a-jA-J]|10|[1-9]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
     if (matches?.length) matches.forEach(push);
     else push(correctAnswerText);
   }
@@ -1202,10 +1327,10 @@ function normalizeAntonymKey(value: unknown, fallbackIndex?: number): string {
     return ANTONYM_KEYS[circledIndex];
   }
 
-  const alphaMatch = text.match(/^[\(\[]?\s*([A-Ea-e])\s*[\)\].:]?$/);
+  const alphaMatch = text.match(/^[\(\[]?\s*([A-Ja-j])\s*[\)\].:]?$/);
   if (alphaMatch) return alphaMatch[1].toUpperCase();
 
-  const numberMatch = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  const numberMatch = text.match(/^[\(\[]?\s*(10|[1-9])\s*[\)\].:]?$/);
   if (numberMatch) return ANTONYM_KEYS[Number(numberMatch[1]) - 1];
 
   return fallback;
@@ -1225,7 +1350,7 @@ function collectAntonymAnswerIndices(question: Record<string, unknown>): number[
 
   const correctAnswerText = normalizeText(question.correctAnswer);
   if (correctAnswerText) {
-    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[A-Ea-e]|[1-5]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+    const matches = correctAnswerText.match(/[\(\[]?\s*(?:[A-Ja-j]|10|[1-9]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
     if (matches?.length) matches.forEach(push);
     else push(correctAnswerText);
   }
@@ -1257,8 +1382,13 @@ function validateMarkedText(
   ];
 
   for (const field of markerFields) {
-    const value = question[field];
-    if (typeof value !== "string") continue;
+    const rawValue = question[field];
+    if (typeof rawValue !== "string") continue;
+
+    // Blank runs (___, _____) are blank placeholders, not underline markers.
+    // With two or more blanks in one passage, the trailing/leading double
+    // underscores would otherwise pair up as a fake __marker__ span.
+    const value = rawValue.replace(/_{3,}/g, (run) => " ".repeat(run.length));
 
     for (const marker of findMarkers(value)) {
       if (!hasMarkerTokenBoundaries(value, marker.start, marker.end)) {
@@ -1277,6 +1407,13 @@ function validateTypeSpecific(
   grammarMarkerCount: number | undefined,
   grammarAnswerCount: number | undefined,
   grammarCorrectionErrorCount: number | undefined,
+  stemLanguage: VisibleQuestionLanguage | undefined,
+  optionLanguage: VisibleQuestionLanguage | undefined,
+  vocabChoiceMarkerCount: number | undefined,
+  vocabChoiceAnswerCount: number | undefined,
+  sentenceInsertSlotCount: number | undefined,
+  antonymPairCount: number | undefined,
+  blankInferenceBlankCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -1292,15 +1429,35 @@ function validateTypeSpecific(
   }
 
   if (typeId === "BLANK_INFERENCE") {
-    validateBlankInferenceQuestion(question, passage, requestedDifficulty, add);
+    const multiBlanks = Array.isArray(question.blanks)
+      ? question.blanks.filter(isRecord)
+      : [];
+    if ((blankInferenceBlankCount ?? 1) >= 2 || multiBlanks.length >= 2) {
+      // Multi-blank combination variant; the single-blank validator (and its
+      // distractor/double-negative machinery) is single-blank-only.
+      validateMultiBlankInferenceQuestion(
+        question,
+        passage,
+        blankInferenceBlankCount,
+        add,
+      );
+    } else {
+      validateBlankInferenceQuestion(question, passage, requestedDifficulty, add);
+    }
   }
 
   if (typeId === "IMPLIED_MEANING") {
-    validateImpliedMeaningQuestion(question, passage, requestedDifficulty, add);
+    validateImpliedMeaningQuestion(
+      question,
+      passage,
+      requestedDifficulty,
+      optionLanguage,
+      add,
+    );
   }
 
   if (typeId === "TOPIC" || typeId === "MAIN_IDEA" || typeId === "TOPIC_MAIN_IDEA") {
-    validateTopicMainIdeaQuestion(question, typeId, add);
+    validateTopicMainIdeaQuestion(question, typeId, stemLanguage, optionLanguage, add);
   }
 
   if (typeId === "SUMMARY_COMPLETE_MC") {
@@ -1318,15 +1475,21 @@ function validateTypeSpecific(
   }
 
   if (typeId === "SENTENCE_INSERT") {
-    validateSentenceInsertQuestion(question, passage, add);
+    validateSentenceInsertQuestion(question, passage, sentenceInsertSlotCount, add);
   }
 
   if (typeId === "VOCAB_CHOICE") {
-    validateVocabChoiceQuestion(question, passage, add);
+    validateVocabChoiceQuestion(
+      question,
+      passage,
+      vocabChoiceMarkerCount,
+      vocabChoiceAnswerCount,
+      add,
+    );
   }
 
   if (typeId === "ANTONYM") {
-    validateAntonymQuestion(question, passage, add);
+    validateAntonymQuestion(question, passage, antonymPairCount, add);
   }
 
   if (typeId === "WORD_ORDER" && Array.isArray(question.scrambledWords)) {
@@ -1436,18 +1599,25 @@ function validateTypeSpecific(
 function validateAntonymQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
+  requestedPairCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const markedWords = Array.isArray(question.markedWords)
     ? question.markedWords.filter(isRecord)
     : [];
   const passageWithMarkers = normalizeText(question.passageWithMarkers);
+  const expectedPairCount =
+    requestedPairCount ??
+    (markedWords.length >= ANTONYM_MARKER_COUNT_MIN &&
+    markedWords.length <= ANTONYM_MARKER_COUNT_MAX
+      ? markedWords.length
+      : ANTONYM_MARKER_COUNT_DEFAULT);
 
-  if (markedWords.length !== ANTONYM_MARKER_COUNT) {
+  if (markedWords.length !== expectedPairCount) {
     add(
       "error",
       "antonym-marker-count",
-      `ANTONYM must have exactly ${ANTONYM_MARKER_COUNT} marked words, got ${markedWords.length}.`,
+      `ANTONYM must have exactly ${expectedPairCount} marked words, got ${markedWords.length}.`,
     );
   }
 
@@ -1458,7 +1628,7 @@ function validateAntonymQuestion(
 
   const renderedMarkers = findMarkers(passageWithMarkers)
     .map((marker) => {
-      const match = marker.inner.match(/^\(([A-Ea-e])\)\s*(.+)$/);
+      const match = marker.inner.match(/^\(([A-Ja-j])\)\s*(.+)$/);
       if (!match) return null;
       return {
         key: match[1].toUpperCase(),
@@ -1468,19 +1638,19 @@ function validateAntonymQuestion(
     .filter((marker): marker is { key: string; word: string } => !!marker);
   const renderedByKey = new Map(renderedMarkers.map((marker) => [marker.key, marker.word]));
 
-  if (countUnderlineMarkers(passageWithMarkers) !== ANTONYM_MARKER_COUNT) {
+  if (countUnderlineMarkers(passageWithMarkers) !== expectedPairCount) {
     add(
       "error",
       "antonym-render-marker-count",
-      `ANTONYM passageWithMarkers must render exactly ${ANTONYM_MARKER_COUNT} underlined markers.`,
+      `ANTONYM passageWithMarkers must render exactly ${expectedPairCount} underlined markers.`,
     );
   }
 
-  if (renderedMarkers.length !== ANTONYM_MARKER_COUNT) {
+  if (renderedMarkers.length !== expectedPairCount) {
     add(
       "error",
       "antonym-render-label-format",
-      "ANTONYM rendered markers must use __(A) word__ through __(E) word__ format.",
+      `ANTONYM rendered markers must use __(A) word__ through __(${ANTONYM_KEYS[expectedPairCount - 1]}) word__ format.`,
     );
   }
 
@@ -1523,7 +1693,7 @@ function validateAntonymQuestion(
   const optionByIndex = new Map<number, Record<string, unknown>>();
   options.forEach((option, index) => {
     const normalized = normalizeLabel(option.label);
-    const numericIndex = /^[1-5]$/.test(normalized)
+    const numericIndex = /^(10|[1-9])$/.test(normalized)
       ? Number(normalized) - 1
       : index;
     optionByIndex.set(numericIndex, option);
@@ -1760,6 +1930,8 @@ function antonymPairKey(value: string): string {
 function validateVocabChoiceQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
+  requestedMarkerCount: number | undefined,
+  requestedAnswerCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const markedWords = Array.isArray(question.markedWords)
@@ -1767,11 +1939,21 @@ function validateVocabChoiceQuestion(
     : [];
   const passageWithMarkers = normalizeText(question.passageWithMarkers);
 
-  if (markedWords.length !== VOCAB_CHOICE_MARKER_COUNT) {
+  // Expected counts: teacher-requested when provided, otherwise infer a valid
+  // 5~10 count from the question itself (legacy default 5).
+  const expectedMarkerCount =
+    requestedMarkerCount ??
+    (markedWords.length >= VOCAB_CHOICE_MARKER_COUNT_MIN &&
+    markedWords.length <= VOCAB_CHOICE_MARKER_COUNT_MAX
+      ? markedWords.length
+      : VOCAB_CHOICE_MARKER_COUNT_DEFAULT);
+  const expectedAnswerCount = requestedAnswerCount ?? 1;
+
+  if (markedWords.length !== expectedMarkerCount) {
     add(
       "error",
       "vocab-marker-count",
-      `VOCAB_CHOICE must have exactly ${VOCAB_CHOICE_MARKER_COUNT} marked words, got ${markedWords.length}.`,
+      `VOCAB_CHOICE must have exactly ${expectedMarkerCount} marked words, got ${markedWords.length}.`,
     );
   }
 
@@ -1782,7 +1964,7 @@ function validateVocabChoiceQuestion(
 
   const renderedMarkers = findMarkers(passageWithMarkers)
     .map((marker) => {
-      const match = marker.inner.match(/^\(([a-eA-E])\)\s*(.+)$/);
+      const match = marker.inner.match(/^\(([a-jA-J])\)\s*(.+)$/);
       if (!match) return null;
       return {
         key: match[1].toLowerCase(),
@@ -1792,19 +1974,19 @@ function validateVocabChoiceQuestion(
     .filter((marker): marker is { key: string; word: string } => !!marker);
   const renderedByKey = new Map(renderedMarkers.map((marker) => [marker.key, marker.word]));
 
-  if (countUnderlineMarkers(passageWithMarkers) !== VOCAB_CHOICE_MARKER_COUNT) {
+  if (countUnderlineMarkers(passageWithMarkers) !== expectedMarkerCount) {
     add(
       "error",
       "vocab-render-marker-count",
-      `VOCAB_CHOICE passageWithMarkers must render exactly ${VOCAB_CHOICE_MARKER_COUNT} underlined markers.`,
+      `VOCAB_CHOICE passageWithMarkers must render exactly ${expectedMarkerCount} underlined markers.`,
     );
   }
 
-  if (renderedMarkers.length !== VOCAB_CHOICE_MARKER_COUNT) {
+  if (renderedMarkers.length !== expectedMarkerCount) {
     add(
       "error",
       "vocab-render-label-format",
-      "VOCAB_CHOICE rendered markers must use __(a) word__ through __(e) word__ format.",
+      `VOCAB_CHOICE rendered markers must use __(a) word__ through __(${VOCAB_CHOICE_KEYS[expectedMarkerCount - 1]}) word__ format.`,
     );
   }
 
@@ -1815,30 +1997,36 @@ function validateVocabChoiceQuestion(
   }
 
   const inappropriateWords = markedWords.filter((word) => word.isInappropriate === true);
-  if (inappropriateWords.length !== 1) {
+  if (inappropriateWords.length !== expectedAnswerCount) {
     add(
       "error",
       "vocab-inappropriate-count",
-      `VOCAB_CHOICE must have exactly one isInappropriate=true item, got ${inappropriateWords.length}.`,
+      `VOCAB_CHOICE must have exactly ${expectedAnswerCount} isInappropriate=true item(s), got ${inappropriateWords.length}.`,
     );
   }
 
   const answerKeys = collectVocabChoiceAnswerKeys(question);
-  if (answerKeys.length !== 1) {
+  if (answerKeys.length !== expectedAnswerCount) {
     add(
       "error",
       "vocab-answer-count",
-      `VOCAB_CHOICE correctAnswer must point to exactly one label, got ${answerKeys.length}.`,
+      `VOCAB_CHOICE correctAnswer must point to exactly ${expectedAnswerCount} label(s), got ${answerKeys.length}.`,
     );
   }
 
-  const inappropriate = inappropriateWords[0];
-  const inappropriateKey = inappropriate ? normalizeVocabChoiceKey(inappropriate.label) : "";
-  if (inappropriateKey && answerKeys.length === 1 && answerKeys[0] !== inappropriateKey) {
+  const inappropriateKeys = inappropriateWords
+    .map((word) => normalizeVocabChoiceKey(word.label))
+    .filter(Boolean);
+  const answerSetMatches =
+    inappropriateKeys.length === answerKeys.length &&
+    inappropriateKeys.every((key) => answerKeys.includes(key));
+  if (inappropriateKeys.length > 0 && answerKeys.length > 0 && !answerSetMatches) {
     add(
       "error",
       "vocab-answer-label-mismatch",
-      `VOCAB_CHOICE correctAnswer must match the only inappropriate label (${inappropriateKey}).`,
+      `VOCAB_CHOICE correctAnswer must match the inappropriate label set (${inappropriateKeys
+        .map((key) => `(${key})`)
+        .join(", ")}).`,
     );
   }
 
@@ -1980,7 +2168,8 @@ function normalizeSentenceInsertGapLabel(value: unknown): string {
 }
 
 function countSentenceInsertGapMarkers(text: string): number {
-  const circled = getCircledNumbers(5);
+  // Slot count is configurable (5~8); count up to the supported maximum.
+  const circled = getCircledNumbers(SENTENCE_INSERT_SLOT_MAX);
   return circled.filter((marker) => text.includes(marker)).length;
 }
 
@@ -2047,17 +2236,23 @@ function longestCommonTokenRun(a: string[], b: string[]): number {
 function validateSentenceInsertQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
+  requestedSlotCount: number | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
-  // 1) 마커 인덱스: 5개 · 오름차순
+  // 1) 마커 인덱스: 요청 개수(기본 5) · 오름차순
   const indices = Array.isArray(question.markerAfterSentenceIndices)
     ? question.markerAfterSentenceIndices.filter((n): n is number => typeof n === "number")
     : [];
-  if (indices.length !== 5) {
+  const expectedSlotCount =
+    requestedSlotCount ??
+    (indices.length >= SENTENCE_INSERT_SLOT_MIN && indices.length <= SENTENCE_INSERT_SLOT_MAX
+      ? indices.length
+      : 5);
+  if (indices.length !== expectedSlotCount) {
     add(
       "warning",
       "sentence-insert-marker-count",
-      `Expected 5 marker indices for SENTENCE_INSERT, got ${indices.length}.`,
+      `Expected ${expectedSlotCount} marker indices for SENTENCE_INSERT, got ${indices.length}.`,
     );
   } else if (!indices.every((n, i) => i === 0 || n > indices[i - 1])) {
     add(
@@ -2085,11 +2280,11 @@ function validateSentenceInsertQuestion(
     add("error", "sentence-insert-missing-passage", "SENTENCE_INSERT is missing passageWithMarkers.");
   } else {
     const markerCount = countSentenceInsertGapMarkers(passageWithMarkers);
-    if (markerCount !== 5) {
+    if (markerCount !== expectedSlotCount) {
       add(
         "error",
         "sentence-insert-gap-marker-count",
-        `SENTENCE_INSERT passageWithMarkers must contain exactly 5 gap markers, got ${markerCount}.`,
+        `SENTENCE_INSERT passageWithMarkers must contain exactly ${expectedSlotCount} gap markers, got ${markerCount}.`,
       );
     }
   }
@@ -2127,11 +2322,11 @@ function validateSentenceInsertQuestion(
   }
 
   const answer = normalizeSentenceInsertGapLabel(question.correctAnswer);
-  if (answer === "1" || answer === "5") {
+  if (answer === "1" || answer === String(expectedSlotCount)) {
     add(
       "warning",
       "sentence-insert-edge-answer",
-      `Correct gap is at an edge (${answer}); 가운데(②③④)가 변별력에 유리합니다.`,
+      `Correct gap is at an edge (${answer}); 가운데 위치가 변별력에 유리합니다.`,
     );
   }
 
@@ -2540,29 +2735,197 @@ function validateBlankInferenceQuestion(
   }
 }
 
+const MULTI_BLANK_INFERENCE_LABELS = ["(A)", "(B)", "(C)"] as const;
+
+function validateMultiBlankInferenceQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  requestedBlankCount: number | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const blanks = Array.isArray(question.blanks) ? question.blanks.filter(isRecord) : [];
+  const expectedBlankCount =
+    requestedBlankCount && requestedBlankCount >= 2 && requestedBlankCount <= 3
+      ? requestedBlankCount
+      : blanks.length >= 2 && blanks.length <= 3
+        ? blanks.length
+        : 2;
+
+  if (blanks.length !== expectedBlankCount) {
+    add(
+      "error",
+      "multi-blank-count",
+      `Multi-blank BLANK_INFERENCE must have exactly ${expectedBlankCount} blanks, got ${blanks.length}.`,
+    );
+    return;
+  }
+
+  const expectedLabels = MULTI_BLANK_INFERENCE_LABELS.slice(0, expectedBlankCount);
+  const blankAnswers: string[] = [];
+  for (const [index, blank] of blanks.entries()) {
+    const label = normalizeText(blank.label);
+    const expression = normalizeText(blank.originalExpression);
+    if (label !== expectedLabels[index]) {
+      add(
+        "error",
+        "multi-blank-label",
+        `Multi-blank labels must be ${expectedLabels.join(", ")} in passage order; blank ${index + 1} has "${label}".`,
+      );
+    }
+    if (!expression) {
+      add("error", "multi-blank-missing-expression", `Blank ${expectedLabels[index]} is missing originalExpression.`);
+      continue;
+    }
+    blankAnswers.push(expression);
+    if (passage && !normalizeComparableText(passage).includes(normalizeComparableText(expression))) {
+      add(
+        "error",
+        "multi-blank-expression-not-in-passage",
+        `Blank ${expectedLabels[index]} expression is not found verbatim in the passage: "${expression.slice(0, 80)}".`,
+      );
+    }
+    if (countContentTokens(expression) < 1 || isTinyFunctionWord(expression)) {
+      add(
+        "warning",
+        "multi-blank-weak-expression",
+        `Blank ${expectedLabels[index]} should blank a meaningful content expression, not a bare function word.`,
+      );
+    }
+  }
+
+  const passageWithBlank = normalizeText(question.passageWithBlank);
+  if (!passageWithBlank) {
+    add("error", "multi-blank-missing-passage", "Multi-blank BLANK_INFERENCE is missing passageWithBlank.");
+    return;
+  }
+  for (const label of expectedLabels) {
+    const markerCount = countLiteral(passageWithBlank, `${label} _____`);
+    if (markerCount !== 1) {
+      add(
+        "error",
+        "multi-blank-marker-count",
+        `passageWithBlank must contain the marker "${label} _____" exactly once, found ${markerCount}.`,
+      );
+    }
+  }
+  for (const answer of blankAnswers) {
+    if (answer && normalizeComparableText(passageWithBlank).includes(normalizeComparableText(answer))) {
+      add(
+        "error",
+        "multi-blank-answer-visible",
+        `A blanked expression is still visible in passageWithBlank: "${answer.slice(0, 60)}".`,
+      );
+    }
+  }
+
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const correctLabel = normalizeLabel(question.correctAnswer);
+  let correctValues: string[] | null = null;
+  const comboKeys: string[] = [];
+  for (const [index, option] of options.entries()) {
+    const values = Array.isArray(option.blankValues)
+      ? option.blankValues.map((value: unknown) => normalizeText(value))
+      : [];
+    if (values.length !== expectedBlankCount || values.some((value: string) => !value)) {
+      add(
+        "error",
+        "multi-blank-option-values",
+        `Option ${index + 1} must provide exactly ${expectedBlankCount} non-empty blankValues.`,
+      );
+      continue;
+    }
+    comboKeys.push(values.map(normalizeComparableText).join(" | "));
+    if (normalizeLabel(option.label) === correctLabel) {
+      correctValues = values;
+    }
+  }
+  const duplicateCombo = findDuplicate(comboKeys);
+  if (duplicateCombo) {
+    add("error", "multi-blank-duplicate-option", "Two or more options share the same blank-value combination.");
+  }
+
+  if (!correctValues) {
+    add("error", "multi-blank-missing-correct-option", "correctAnswer does not match any option label.");
+    return;
+  }
+  if (
+    blankAnswers.length === expectedBlankCount &&
+    !correctValues.every(
+      (value, index) => normalizeComparableText(value) === normalizeComparableText(blankAnswers[index]),
+    )
+  ) {
+    add(
+      "error",
+      "multi-blank-correct-option-mismatch",
+      "The correct option's blankValues must be exactly the original passage expressions, in blank order.",
+    );
+  }
+
+  // 변별 보조(권장): 한 빈칸만 틀린 근접 오답이 최소 1개는 있어야 모든 빈칸 검증을 강제한다.
+  if (correctValues) {
+    const nearMissCount = options.filter((option) => {
+      if (normalizeLabel(option.label) === correctLabel) return false;
+      const values = Array.isArray(option.blankValues)
+        ? option.blankValues.map((value: unknown) => normalizeText(value))
+        : [];
+      if (values.length !== expectedBlankCount) return false;
+      const matches = values.filter(
+        (value: string, index: number) =>
+          normalizeComparableText(value) === normalizeComparableText(correctValues![index]),
+      ).length;
+      return matches === expectedBlankCount - 1;
+    }).length;
+    if (nearMissCount < 1) {
+      add(
+        "warning",
+        "multi-blank-weak-near-miss",
+        "Include at least one wrong option that is correct for all but one blank so students must verify every blank.",
+      );
+    }
+  }
+}
+
 function validateTopicMainIdeaQuestion(
   question: Record<string, unknown>,
   typeId: string,
+  stemLanguage: VisibleQuestionLanguage | undefined,
+  optionLanguage: VisibleQuestionLanguage | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const direction = normalizeText(question.direction);
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   const optionTexts = options.map((option) => normalizeText(option.text)).filter(Boolean);
-
-  if (typeId === "TOPIC" && !/주제/.test(direction)) {
-    add("error", "topic-direction-mismatch", "TOPIC direction must ask for the passage topic.");
-  }
-  if (typeId === "MAIN_IDEA" && !/(요지|주장)/.test(direction)) {
-    add("error", "main-idea-direction-mismatch", "MAIN_IDEA direction must ask for the passage gist or author's claim.");
-  }
+  const expectedStem = stemLanguage ?? "ko";
+  const expectedOption = optionLanguage ?? (typeId === "TOPIC" ? "en" : "ko");
 
   if (typeId === "TOPIC") {
+    if (expectedStem === "ko" && !/주제/.test(direction)) {
+      add("error", "topic-direction-mismatch", "TOPIC direction must ask for the passage topic.");
+    }
+    // English stems vary in wording, so misses are advisory rather than blocking.
+    if (expectedStem === "en" && !/topic|main\s+(subject|theme)/i.test(direction)) {
+      add("warning", "topic-direction-mismatch", "English TOPIC direction should ask for the passage topic.");
+    }
+  }
+  if (typeId === "MAIN_IDEA") {
+    if (expectedStem === "ko" && !/(요지|주장)/.test(direction)) {
+      add("error", "main-idea-direction-mismatch", "MAIN_IDEA direction must ask for the passage gist or author's claim.");
+    }
+    if (
+      expectedStem === "en" &&
+      !/main\s+(idea|point)|gist|claim|argu|assert|writer|author/i.test(direction)
+    ) {
+      add("warning", "main-idea-direction-mismatch", "English MAIN_IDEA direction should ask for the passage gist or author's claim.");
+    }
+  }
+
+  if (expectedOption === "en") {
     for (const optionText of optionTexts) {
       if (containsHangul(optionText) || !containsLatinLetter(optionText)) {
         add(
           "error",
           "topic-option-language",
-          "TOPIC options should be English topic phrases.",
+          `${typeId} options should be English phrases for this language setting.`,
         );
         break;
       }
@@ -2573,14 +2936,14 @@ function validateTopicMainIdeaQuestion(
         add(
           "warning",
           "topic-main-idea-option-language",
-          `${typeId} options should be Korean statements unless the direction is explicitly a TOPIC item.`,
+          `${typeId} options should be Korean statements for this language setting.`,
         );
         break;
       }
     }
   }
 
-  if (typeId === "MAIN_IDEA") {
+  if (typeId === "MAIN_IDEA" && expectedOption === "ko") {
     const nounPhraseLikeCount = optionTexts.filter((text) =>
       text.length > 0 && !/(다|음|함|됨|해야|필요|중요|가능|있다|없다|된다|준다)[.!?。]?$/.test(text),
     ).length;
@@ -3210,6 +3573,7 @@ function validateImpliedMeaningQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
+  optionLanguage: VisibleQuestionLanguage | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const underlinedExpression = normalizeText(question.underlinedExpression);
@@ -3229,30 +3593,52 @@ function validateImpliedMeaningQuestion(
     return;
   }
 
-  for (const optionText of optionTexts) {
-    if (containsHangul(optionText)) {
-      add(
-        "error",
-        "implied-meaning-option-language",
-        "IMPLIED_MEANING options must be English-only; Korean text was found in an option.",
-      );
-      break;
+  const expectedOptionLanguage = optionLanguage ?? "en";
+  if (expectedOptionLanguage === "en") {
+    for (const optionText of optionTexts) {
+      if (containsHangul(optionText)) {
+        add(
+          "error",
+          "implied-meaning-option-language",
+          "IMPLIED_MEANING options must be English-only; Korean text was found in an option.",
+        );
+        break;
+      }
+      if (!containsLatinLetter(optionText)) {
+        add(
+          "error",
+          "implied-meaning-option-not-english",
+          `IMPLIED_MEANING option is not a usable English phrase: ${optionText.slice(0, 80)}.`,
+        );
+        break;
+      }
+      if (englishWordCount(optionText) < 3) {
+        add(
+          "warning",
+          "implied-meaning-option-too-short",
+          "IMPLIED_MEANING options should be meaningful English phrases or clauses, not one- or two-word labels.",
+        );
+        break;
+      }
     }
-    if (!containsLatinLetter(optionText)) {
-      add(
-        "error",
-        "implied-meaning-option-not-english",
-        `IMPLIED_MEANING option is not a usable English phrase: ${optionText.slice(0, 80)}.`,
-      );
-      break;
-    }
-    if (englishWordCount(optionText) < 3) {
-      add(
-        "warning",
-        "implied-meaning-option-too-short",
-        "IMPLIED_MEANING options should be meaningful English phrases or clauses, not one- or two-word labels.",
-      );
-      break;
+  } else {
+    for (const optionText of optionTexts) {
+      if (!containsHangul(optionText)) {
+        add(
+          "warning",
+          "implied-meaning-option-language",
+          "IMPLIED_MEANING options should be Korean statements for this language setting.",
+        );
+        break;
+      }
+      if (optionText.length < 6) {
+        add(
+          "warning",
+          "implied-meaning-option-too-short",
+          "IMPLIED_MEANING options should be meaningful Korean statements, not short labels.",
+        );
+        break;
+      }
     }
   }
 

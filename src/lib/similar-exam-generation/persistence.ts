@@ -12,7 +12,6 @@ import {
 import type {
   ExamPatternProfile,
   GeneratedPatternGroup,
-  QuestionSlot,
 } from "./schemas";
 
 function toJson(value: unknown): Prisma.InputJsonValue {

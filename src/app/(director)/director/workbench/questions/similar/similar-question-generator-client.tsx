@@ -3,11 +3,9 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type CSSProperties,
-  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { GripVertical, Loader2, Sparkles } from "lucide-react";
@@ -19,12 +17,6 @@ import { useSidebarFocus } from "@/components/layout/sidebar-focus-context";
 import { useTaskQueue } from "@/components/workbench/task-queue/context";
 import { PassageContentModal } from "@/components/workbench/passage-content-modal";
 import type { CollectionItem } from "@/components/workbench/shared/types";
-import {
-  imagesToSlots,
-  revokeSlotUrls,
-  splitPdfToImages,
-} from "@/lib/extraction/pdf-splitter";
-import type { ClientPageSlot } from "@/lib/extraction/types";
 
 // ── 경계: 좌측 "대상 지문 선택"은 기본 문제 생성/커스텀 유형과 동일해야 하므로 IntakeSurface·
 //    PassageCardGrid·추출 파이프라인을 그대로 차용(무수정 import). 중앙 "원본 문항(참조) 입력"과
@@ -32,7 +24,6 @@ import type { ClientPageSlot } from "@/lib/extraction/types";
 import { SimilarExamCenterPreview } from "../../exams/similar/_components/similar-exam-center-preview";
 import {
   InlineCropBoard,
-  type InlineCropBoardCounts,
   type InlineCropBoardHandle,
 } from "../../passages/import/_components/intake/crop/inline-crop-board";
 import { PassageCardGrid } from "../../generate/passage-card-grid";
@@ -48,15 +39,9 @@ import {
 } from "../../generate/intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "../../generate/intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "../../generate/intake/extraction-detail-modal";
-import type { PastedPassageInput } from "../../generate/intake/multi-passage-paste";
-import type {
-  FilterOptions,
-  PassageAnalysisStatusFilter,
-  PassageCollectionItem,
-  PassageItem,
-  PassageSortOrder,
-} from "../../generate/generate-page-types";
 import { SimilarQuestionJobsPanel } from "./similar-question-jobs-panel";
+import { useStagedQuestionFile } from "./use-staged-question-file";
+import { usePassageLibrary } from "../use-passage-library";
 import {
   blobToBase64,
   clampNumber,
@@ -82,45 +67,11 @@ interface SimilarQuestionGeneratorClientProps {
   draftMembership: Record<string, Set<string>>;
 }
 
-interface StagedFile {
-  fileName: string;
-  totalPages: number;
-}
-
-const EMPTY_CROP_COUNTS: InlineCropBoardCounts = {
-  regionCount: 0,
-  passageCount: 0,
-  uncroppedCount: 0,
-  totalPassages: 0,
-};
-
-function addStableSlotIds(slots: ClientPageSlot[]): ClientPageSlot[] {
-  return slots.map((slot, index) => ({
-    ...slot,
-    pageIndex: index,
-    slotId: slot.slotId ?? crypto.randomUUID(),
-  }));
-}
-
-function summarizeFileNames(files: File[]): string {
-  if (files.length === 0) return "";
-  if (files.length === 1) return files[0].name;
-  return `${files[0].name} 외 ${files.length - 1}개`;
-}
-
-function derivePastedTitle(content: string): string {
-  const firstLine = (content.split(/\r?\n/).find((l) => l.trim().length > 0) || content).trim();
-  const words = firstLine.split(/\s+/).filter(Boolean).slice(0, 8).join(" ");
-  const base = words || "직접 입력 지문";
-  return base.length > 60 ? base.slice(0, 60) + "…" : base;
-}
-
 export function SimilarQuestionGeneratorClient({
   academyId,
 }: SimilarQuestionGeneratorClientProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const cropBoardRef = useRef<InlineCropBoardHandle>(null);
-  const slotsRef = useRef<ClientPageSlot[]>([]);
   const gridRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement | null>(null);
   const suppressHandleClickRef = useRef(false);
@@ -128,47 +79,74 @@ export function SimilarQuestionGeneratorClient({
   const { setCollapseRequested: setSidebarCollapseRequested } = useSidebarFocus();
   const taskQueue = useTaskQueue();
 
-  // ── 중앙: 원본 문항(참조) 입력 ──
-  const [staged, setStaged] = useState<StagedFile | null>(null);
-  const [slots, setSlots] = useState<ClientPageSlot[]>([]);
-  const [cropCounts, setCropCounts] = useState<InlineCropBoardCounts>(EMPTY_CROP_COUNTS);
-  const [splitting, setSplitting] = useState(false);
+  // ── 중앙: 원본 문항(참조) 입력 — 스테이징 로직은 use-staged-question-file 훅으로 분리 ──
   const [baking, setBaking] = useState(false);
-  const [splitMessage, setSplitMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   // 학년 입력은 UI에서 제거 — 생성 시 기본값("고3")으로만 전달(기능 유지).
   const [gradeInfo] = useState("고3");
   const [jobsRefreshKey, setJobsRefreshKey] = useState(0);
-
-  // ── 좌측: 대상 지문 (기본/커스텀과 동일한 데이터/상태) ──
-  const [passages, setPassages] = useState<PassageItem[]>([]);
-  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
-    schools: [],
-    grades: [],
-    semesters: [],
-    publishers: [],
-  });
-  const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
-  const [loadingPassages, setLoadingPassages] = useState(true);
-
-  const [selectedCollectionId, setSelectedCollectionId] = useState("");
-  const [passageSearch, setPassageSearch] = useState("");
-  const [filterSchool, setFilterSchool] = useState("");
-  const [filterGrade, setFilterGrade] = useState("");
-  const [filterSemester, setFilterSemester] = useState("");
-  const [analysisStatusFilter, setAnalysisStatusFilter] =
-    useState<PassageAnalysisStatusFilter>("all");
-  const [passageSortOrder, setPassageSortOrder] = useState<PassageSortOrder>("newest");
-
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
-  const [contentModalPassage, setContentModalPassage] = useState<PassageItem | null>(null);
-  const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
+  const {
+    slotsRef,
+    staged,
+    slots,
+    cropCounts,
+    setCropCounts,
+    splitting,
+    splitMessage,
+    error,
+    setError,
+    clearStaged,
+    pickFiles,
+    removeSlot,
+    reorderSlots,
+  } = useStagedQuestionFile({ busy });
 
   // ── 좌측 인테이크(지문 추가 ↔ 내 지문) ──
   const [intakeView, setIntakeView] = useState<IntakeView>("intake");
   const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
-  const [pasteSaving, setPasteSaving] = useState(false);
+
+  // ── 좌측: 대상 지문 — 기본/커스텀과 동일한 데이터/상태(use-passage-library 훅으로 분리) ──
+  const onPastedRegistered = useCallback(() => setIntakeView("library"), []);
+  const {
+    passages,
+    filterOptions,
+    collections,
+    loadingPassages,
+    loadPassages,
+    selectedCollectionId,
+    setSelectedCollectionId,
+    passageSearch,
+    setPassageSearch,
+    filterSchool,
+    setFilterSchool,
+    filterGrade,
+    setFilterGrade,
+    filterSemester,
+    setFilterSemester,
+    analysisStatusFilter,
+    setAnalysisStatusFilter,
+    passageSortOrder,
+    setPassageSortOrder,
+    selectedIds,
+    setSelectedIds,
+    contentModalPassage,
+    setContentModalPassage,
+    detailPassage,
+    setDetailPassage,
+    pasteSaving,
+    filteredPassages,
+    passageStatusCounts,
+    activeFilterCount,
+    toggleCheckbox,
+    selectAll,
+    deselectAll,
+    handleOpenAnalysisModal,
+    handleCreatePastedPassages,
+  } = usePassageLibrary({
+    academyId,
+    onPastedRegistered,
+    pastedSuccessGuide: "원본 문항을 올려 동형을 생성하세요.",
+  });
 
   const [leftWidth, setLeftWidth] = useState(readStoredLeftWidth);
   const [leftCollapsed, setLeftCollapsed] = useState(readStoredCollapsed);
@@ -181,18 +159,6 @@ export function SimilarQuestionGeneratorClient({
     !busy &&
     !splitting &&
     !baking;
-
-  const clearStaged = useCallback(() => {
-    revokeSlotUrls(slotsRef.current);
-    slotsRef.current = [];
-    setSlots([]);
-    setCropCounts(EMPTY_CROP_COUNTS);
-    setStaged(null);
-    setSplitMessage("");
-    setError(null);
-  }, []);
-
-  useEffect(() => () => revokeSlotUrls(slotsRef.current), []);
 
   // 좌패널이 열려 있으면 전역 사이드바 접기 요청(동형 시험지 생성과 동일).
   useEffect(() => {
@@ -234,161 +200,6 @@ export function SimilarQuestionGeneratorClient({
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
-
-  // ── 좌측: 대상 지문 목록(기본/커스텀과 동일한 /api/passages/list) ──
-  const loadPassages = useCallback(async () => {
-    setLoadingPassages(true);
-    try {
-      const res = await fetch(`/api/passages/list?academyId=${academyId}`, {
-        credentials: "include",
-        cache: "no-store",
-      });
-      const data = await res.json();
-      setPassages(data.passages || []);
-      if (data.filters) setFilterOptions(data.filters);
-      if (data.collections) setCollections(data.collections);
-    } catch {
-      /* ignore */
-    } finally {
-      setLoadingPassages(false);
-    }
-  }, [academyId]);
-
-  useEffect(() => {
-    void loadPassages();
-  }, [loadPassages]);
-
-  const filteredPassages = useMemo(() => {
-    const result = passages.filter((p) => {
-      if (passageSearch) {
-        const q = passageSearch.toLowerCase();
-        if (!p.title.toLowerCase().includes(q) && !p.content.toLowerCase().includes(q)) {
-          return false;
-        }
-      }
-      if (filterSchool && p.school?.id !== filterSchool) return false;
-      if (filterGrade && p.grade !== Number(filterGrade)) return false;
-      if (filterSemester && p.semester !== filterSemester) return false;
-      if (analysisStatusFilter === "analyzed" && !p.analysis) return false;
-      if (analysisStatusFilter === "unanalyzed" && p.analysis) return false;
-      if (
-        selectedCollectionId &&
-        !p.collectionItems?.some((ci) => ci.collectionId === selectedCollectionId)
-      ) {
-        return false;
-      }
-      return true;
-    });
-
-    switch (passageSortOrder) {
-      case "oldest":
-        result.reverse();
-        break;
-      case "name_asc":
-        result.sort((a, b) => a.title.localeCompare(b.title, "ko"));
-        break;
-      case "name_desc":
-        result.sort((a, b) => b.title.localeCompare(a.title, "ko"));
-        break;
-      default:
-        break;
-    }
-    return result;
-  }, [
-    passages,
-    passageSearch,
-    filterSchool,
-    filterGrade,
-    filterSemester,
-    analysisStatusFilter,
-    selectedCollectionId,
-    passageSortOrder,
-  ]);
-
-  const passageStatusCounts = useMemo(
-    () => ({
-      all: passages.length,
-      analyzed: passages.filter((p) => !!p.analysis).length,
-      unanalyzed: passages.filter((p) => !p.analysis).length,
-    }),
-    [passages],
-  );
-
-  const activeFilterCount =
-    [filterSchool, filterGrade, filterSemester].filter(Boolean).length +
-    (analysisStatusFilter === "all" ? 0 : 1);
-
-  const toggleCheckbox = useCallback((id: string, e?: ReactMouseEvent) => {
-    e?.stopPropagation();
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
-
-  const selectAll = useCallback(() => {
-    setSelectedIds(new Set(filteredPassages.map((p) => p.id)));
-  }, [filteredPassages]);
-
-  const deselectAll = useCallback(() => {
-    setSelectedIds(new Set());
-  }, []);
-
-  const handleOpenAnalysisModal = useCallback(
-    (passageId: string) => {
-      const p = passages.find((pp) => pp.id === passageId);
-      if (p) setContentModalPassage(p);
-    },
-    [passages],
-  );
-
-  // ── 직접 입력(붙여넣기) → 등록 후 선택(기본/커스텀과 동일) ──
-  const handleCreatePastedPassages = useCallback(
-    async (rows: PastedPassageInput[]) => {
-      const cleaned = rows
-        .map((r) => ({ title: r.title.trim(), content: r.content.trim() }))
-        .filter((r) => r.content.length >= 20);
-      if (cleaned.length === 0) {
-        toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
-        return;
-      }
-      setPasteSaving(true);
-      try {
-        const { createDirectInputPassageMaterial } = await import("@/actions/workbench");
-        const createdIds: string[] = [];
-        for (const r of cleaned) {
-          const title = r.title || derivePastedTitle(r.content);
-          const result = (await createDirectInputPassageMaterial({
-            title,
-            content: r.content,
-          })) as { success: boolean; id?: string };
-          if (result?.success && result.id) createdIds.push(result.id);
-        }
-        if (createdIds.length === 0) {
-          toast.error("지문 등록에 실패했습니다.");
-          return;
-        }
-        await loadPassages();
-        setPassageSearch("");
-        setSelectedCollectionId("");
-        setAnalysisStatusFilter("all");
-        setSelectedIds(new Set(createdIds));
-        setIntakeView("library");
-        toast.success(
-          createdIds.length === cleaned.length
-            ? `${createdIds.length}개 지문이 등록되었습니다. 원본 문항을 올려 동형을 생성하세요.`
-            : `${createdIds.length}/${cleaned.length}개 지문이 등록되었습니다. 일부는 실패했습니다.`,
-        );
-      } catch {
-        toast.error("지문 등록 중 오류가 발생했습니다.");
-      } finally {
-        setPasteSaving(false);
-      }
-    },
-    [loadPassages],
-  );
 
   // ── 이미지/PDF 추출 완료 → 등록된 지문 선택 유도(기본/커스텀과 동일) ──
   const handleExtractionPromoted = useCallback(
@@ -440,7 +251,7 @@ export function SimilarQuestionGeneratorClient({
         );
       });
     },
-    [loadPassages],
+    [loadPassages, setPassageSearch, setSelectedCollectionId, setAnalysisStatusFilter, setSelectedIds],
   );
 
   const {
@@ -476,88 +287,8 @@ export function SimilarQuestionGeneratorClient({
     [attachExtractionJob, failExtractionJob, taskQueue],
   );
 
-  // ── 중앙: 원본 문항(참조) 파일 처리 ──
-  const pickFiles = useCallback(
-    async (files: FileList | File[]) => {
-      const list = Array.from(files);
-      if (list.length === 0 || busy || splitting) return;
-      const pdfs = list.filter((file) => file.type === "application/pdf");
-      if (pdfs.length > 1 || (pdfs.length === 1 && list.length > 1)) {
-        toast.error("PDF는 한 번에 하나만 넣을 수 있습니다. 여러 장은 이미지 파일로 넣어주세요.");
-        return;
-      }
-      clearStaged();
-      setSplitting(true);
-      setError(null);
-      try {
-        const pdf = pdfs[0] ?? null;
-        setSplitMessage(pdf ? "PDF 페이지를 이미지로 변환 중" : "이미지 정리 중");
-        const nextSlots = pdf
-          ? await splitPdfToImages(pdf, {
-              onProgress: (p) => {
-                if (p.phase === "rendering") {
-                  setSplitMessage(
-                    `${(p.pageIndex ?? 0) + 1}/${p.totalPages ?? "?"}페이지 변환 중`,
-                  );
-                }
-              },
-            })
-          : await imagesToSlots(list);
-        const normalizedSlots = addStableSlotIds(nextSlots);
-        slotsRef.current = normalizedSlots;
-        setSlots(normalizedSlots);
-        setCropCounts(EMPTY_CROP_COUNTS);
-        setStaged({
-          fileName: pdf ? pdf.name : summarizeFileNames(list),
-          totalPages: normalizedSlots.length,
-        });
-        setSplitMessage("");
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "문항을 준비하지 못했습니다.";
-        setError(message);
-        toast.error(message);
-      } finally {
-        setSplitting(false);
-      }
-    },
-    [busy, splitting, clearStaged],
-  );
-
+  // ── 중앙: 원본 문항(참조) 파일 처리 — pickFiles/removeSlot/reorderSlots 는 훅에서 ──
   const requestFileDialog = useCallback(() => fileInputRef.current?.click(), []);
-
-  const removeSlot = useCallback((index: number) => {
-    const current = slotsRef.current;
-    if (index < 0 || index >= current.length) return;
-    const target = current[index];
-    if (target) revokeSlotUrls([target]);
-    const next = current
-      .filter((_, i) => i !== index)
-      .map((slot, i) => ({ ...slot, pageIndex: i }));
-    slotsRef.current = next;
-    setSlots(next);
-    setCropCounts(EMPTY_CROP_COUNTS);
-    if (next.length === 0) {
-      setStaged(null);
-      setSplitMessage("");
-      setError(null);
-    } else {
-      setStaged((cur) => (cur ? { ...cur, totalPages: next.length } : cur));
-    }
-  }, []);
-
-  const reorderSlots = useCallback((fromIndex: number, toIndex: number) => {
-    const current = slotsRef.current;
-    if (fromIndex === toIndex) return;
-    if (fromIndex < 0 || fromIndex >= current.length) return;
-    if (toIndex < 0 || toIndex >= current.length) return;
-    const next = [...current];
-    const [moved] = next.splice(fromIndex, 1);
-    if (!moved) return;
-    next.splice(toIndex, 0, moved);
-    const reindexed = next.map((slot, i) => ({ ...slot, pageIndex: i }));
-    slotsRef.current = reindexed;
-    setSlots(reindexed);
-  }, []);
 
   // 선택한 passage 로 직접 생성 — from-drafts 변환 불필요(좌측이 이미 passage 를 준다).
   const run = useCallback(async () => {
@@ -641,7 +372,7 @@ export function SimilarQuestionGeneratorClient({
     } finally {
       setBusy(false);
     }
-  }, [staged, selectedIds, cropCounts.totalPassages, gradeInfo, clearStaged]);
+  }, [staged, selectedIds, cropCounts.totalPassages, gradeInfo, clearStaged, slotsRef, setError, setSelectedIds]);
 
   // ─── 좌패널 핸들: 클릭=여닫기, 드래그=폭 조절 (동형 시험지 생성과 동일) ───
   function toggleLeftCollapsed() {

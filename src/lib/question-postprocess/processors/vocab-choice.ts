@@ -6,8 +6,9 @@ import {
 } from "../text-utils";
 import { getCircledNumbers, type PostProcessResult, type QuestionPostProcessData, type Replacement } from "../types";
 
-const VOCAB_KEYS = ["a", "b", "c", "d", "e"] as const;
-const EXPECTED_MARKED_WORD_COUNT = 5;
+const VOCAB_KEYS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] as const;
+const MARKED_WORD_COUNT_MIN = 5;
+const MARKED_WORD_COUNT_MAX = 10;
 
 function clean(value: unknown): string {
   return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
@@ -31,10 +32,10 @@ function normalizeVocabKey(value: unknown, fallbackIndex?: number): string {
     return VOCAB_KEYS[circledIndex];
   }
 
-  const alphaMatch = text.match(/^[\(\[]?\s*([a-eA-E])\s*[\)\].:]?$/);
+  const alphaMatch = text.match(/^[\(\[]?\s*([a-jA-J])\s*[\)\].:]?$/);
   if (alphaMatch) return alphaMatch[1].toLowerCase();
 
-  const numberMatch = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  const numberMatch = text.match(/^[\(\[]?\s*(10|[1-9])\s*[\)\].:]?$/);
   if (numberMatch) return VOCAB_KEYS[Number(numberMatch[1]) - 1];
 
   return fallback;
@@ -58,7 +59,7 @@ function collectAnswerKeys(ai: QuestionPostProcessData): string[] {
 
   const answer = clean(ai.correctAnswer);
   if (answer) {
-    const matches = answer.match(/[\(\[]?\s*(?:[a-eA-E]|[1-5]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+    const matches = answer.match(/[\(\[]?\s*(?:[a-jA-J]|10|[1-9]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
     if (matches?.length) matches.forEach(push);
     else push(answer);
   }
@@ -86,22 +87,25 @@ export function processVocabChoice(
     return { success: false, data: ai, warnings, error: "Missing markedWords field" };
   }
 
-  if (markedWords.length !== EXPECTED_MARKED_WORD_COUNT) {
+  if (
+    markedWords.length < MARKED_WORD_COUNT_MIN ||
+    markedWords.length > MARKED_WORD_COUNT_MAX
+  ) {
     return {
       success: false,
       data: ai,
       warnings,
-      error: `VOCAB_CHOICE must contain exactly ${EXPECTED_MARKED_WORD_COUNT} markedWords, got ${markedWords.length}`,
+      error: `VOCAB_CHOICE must contain ${MARKED_WORD_COUNT_MIN}~${MARKED_WORD_COUNT_MAX} markedWords, got ${markedWords.length}`,
     };
   }
 
   const inappropriateWords = markedWords.filter((mw) => mw.isInappropriate === true);
-  if (inappropriateWords.length !== 1) {
+  if (inappropriateWords.length < 1) {
     return {
       success: false,
       data: ai,
       warnings,
-      error: `VOCAB_CHOICE must contain exactly one inappropriate marked word, got ${inappropriateWords.length}`,
+      error: "VOCAB_CHOICE must contain at least one inappropriate marked word, got 0",
     };
   }
 
@@ -235,26 +239,37 @@ export function processVocabChoice(
     });
   }
 
-  if (replacements.length !== EXPECTED_MARKED_WORD_COUNT) {
+  if (replacements.length !== markedWords.length) {
     return {
       success: false,
       data: ai,
       warnings,
-      error: `Could not locate all VOCAB_CHOICE marked words in the passage (${replacements.length}/${EXPECTED_MARKED_WORD_COUNT})`,
+      error: `Could not locate all VOCAB_CHOICE marked words in the passage (${replacements.length}/${markedWords.length})`,
     };
   }
 
-  const inappropriateLabel = normalizedWords.find((mw) => mw.isInappropriate)?.label ?? "";
-  const inappropriateKey = normalizeVocabKey(inappropriateLabel);
+  // The answer set is the inappropriate label set, single or multiple.
+  const inappropriateKeys = normalizedWords
+    .filter((mw) => mw.isInappropriate)
+    .map((mw) => normalizeVocabKey(mw.label))
+    .filter(Boolean);
   const answerKeys = collectAnswerKeys(ai);
-  if (!inappropriateKey || answerKeys.length !== 1 || answerKeys[0] !== inappropriateKey) {
+  const sameAnswerSet =
+    inappropriateKeys.length > 0 &&
+    answerKeys.length === inappropriateKeys.length &&
+    inappropriateKeys.every((key) => answerKeys.includes(key));
+  if (!sameAnswerSet) {
     return {
       success: false,
       data: ai,
       warnings,
-      error: `VOCAB_CHOICE correctAnswer must match the single inappropriate label ${inappropriateLabel}`,
+      error: `VOCAB_CHOICE correctAnswer must match the inappropriate label set (${inappropriateKeys
+        .map((key) => `(${key})`)
+        .join(", ")})`,
     };
   }
+
+  const canonicalAnswerLabels = inappropriateKeys.map((key) => `(${key})`);
 
   const passageWithMarkers = applyReplacementsRTL(passage, replacements);
   const normalizedOptions = Array.isArray(ai.options)
@@ -272,7 +287,9 @@ export function processVocabChoice(
     success: true,
     data: {
       ...ai,
-      correctAnswer: inappropriateLabel,
+      correctAnswer: canonicalAnswerLabels.join(", "),
+      correctAnswers:
+        canonicalAnswerLabels.length > 1 ? canonicalAnswerLabels : undefined,
       passageWithMarkers,
       markedWords: normalizedWords,
       options: normalizedOptions,

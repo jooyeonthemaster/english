@@ -5,8 +5,9 @@ import {
 } from "../text-utils";
 import { getCircledNumbers, type PostProcessResult, type QuestionPostProcessData, type Replacement } from "../types";
 
-const ANTONYM_KEYS = ["A", "B", "C", "D", "E"] as const;
-const EXPECTED_MARKED_WORD_COUNT = 5;
+const ANTONYM_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const;
+const MARKED_WORD_COUNT_MIN = 5;
+const MARKED_WORD_COUNT_MAX = 10;
 
 function clean(value: unknown): string {
   return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
@@ -26,10 +27,10 @@ function normalizeAntonymKey(value: unknown, fallbackIndex?: number): string {
     return ANTONYM_KEYS[circledIndex];
   }
 
-  const alphaMatch = text.match(/^[\(\[]?\s*([A-Ea-e])\s*[\)\].:]?$/);
+  const alphaMatch = text.match(/^[\(\[]?\s*([A-Ja-j])\s*[\)\].:]?$/);
   if (alphaMatch) return alphaMatch[1].toUpperCase();
 
-  const numberMatch = text.match(/^[\(\[]?\s*([1-5])\s*[\)\].:]?$/);
+  const numberMatch = text.match(/^[\(\[]?\s*(10|[1-9])\s*[\)\].:]?$/);
   if (numberMatch) return ANTONYM_KEYS[Number(numberMatch[1]) - 1];
 
   return fallback;
@@ -54,7 +55,7 @@ function collectAnswerIndices(ai: QuestionPostProcessData): number[] {
 
   const answer = clean(ai.correctAnswer);
   if (answer) {
-    const matches = answer.match(/[\(\[]?\s*(?:[A-Ea-e]|[1-5]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+    const matches = answer.match(/[\(\[]?\s*(?:[A-Ja-j]|10|[1-9]|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
     if (matches?.length) matches.forEach(push);
     else push(answer);
   }
@@ -81,12 +82,15 @@ export function processAntonym(
     return { success: false, data: ai, warnings, error: "Missing markedWords field" };
   }
 
-  if (markedWords.length !== EXPECTED_MARKED_WORD_COUNT) {
+  if (
+    markedWords.length < MARKED_WORD_COUNT_MIN ||
+    markedWords.length > MARKED_WORD_COUNT_MAX
+  ) {
     return {
       success: false,
       data: ai,
       warnings,
-      error: `ANTONYM must contain exactly ${EXPECTED_MARKED_WORD_COUNT} markedWords, got ${markedWords.length}`,
+      error: `ANTONYM must contain ${MARKED_WORD_COUNT_MIN}~${MARKED_WORD_COUNT_MAX} markedWords, got ${markedWords.length}`,
     };
   }
 
@@ -174,12 +178,12 @@ export function processAntonym(
     });
   }
 
-  if (replacements.length !== EXPECTED_MARKED_WORD_COUNT) {
+  if (replacements.length !== markedWords.length) {
     return {
       success: false,
       data: ai,
       warnings,
-      error: `Could not locate all ANTONYM marked words in the passage (${replacements.length}/${EXPECTED_MARKED_WORD_COUNT})`,
+      error: `Could not locate all ANTONYM marked words in the passage (${replacements.length}/${markedWords.length})`,
     };
   }
 

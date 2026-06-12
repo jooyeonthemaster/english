@@ -25,6 +25,8 @@ const bodySchema = z.object({
     .object({
       optionCount: z.number().int().min(0).max(20).optional(),
       correctAnswerCount: z.number().int().min(0).max(20).optional(),
+      stemLanguage: z.enum(["ko", "en"]).optional(),
+      optionLanguage: z.enum(["ko", "en"]).optional(),
       params: z.record(z.string(), z.number().int().min(0).max(50)).optional(),
     })
     .optional(),

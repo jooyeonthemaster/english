@@ -46,7 +46,7 @@ export function processImpliedMeaning(
     success: true,
     data: {
       ...ai,
-      direction: "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?",
+      direction: normalizeImpliedMeaningDirection(ai.direction),
       correctAnswer,
       options: normalizeEnglishOptions(ai.options),
       underlinedExpression: originalExpression,
@@ -54,6 +54,17 @@ export function processImpliedMeaning(
     },
     warnings,
   };
+}
+
+function normalizeImpliedMeaningDirection(value: unknown): string {
+  const DEFAULT_DIRECTION =
+    "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?";
+  if (typeof value !== "string") return DEFAULT_DIRECTION;
+  const text = value.replace(/\s+/g, " ").trim();
+  // Teacher-requested English stems must survive post-processing; Korean (or
+  // empty/sloppy) stems are normalized to the standard exam wording as before.
+  if (text && !/[가-힣]/.test(text) && /[A-Za-z]/.test(text)) return text;
+  return DEFAULT_DIRECTION;
 }
 
 function normalizeCorrectAnswerLabel(

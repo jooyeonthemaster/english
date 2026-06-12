@@ -21,10 +21,76 @@ const PAIR_CONCURRENCY = 4;
 const STALE_PROCESSING_MS = 20 * 60 * 1000;
 const RECOVER_THROTTLE_MS = 60 * 1000;
 
+type VisibleLanguage = "ko" | "en";
+
+interface CustomGenerationOverrides {
+  optionCount?: number;
+  correctAnswerCount?: number;
+  stemLanguage?: VisibleLanguage;
+  optionLanguage?: VisibleLanguage;
+  params?: Record<string, number>;
+}
+
 let activeJobs = 0;
 let pumping = false;
 let lastRecoverAt = 0;
 const claimedJobIds = new Set<string>();
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function isVisibleLanguage(value: unknown): value is VisibleLanguage {
+  return value === "ko" || value === "en";
+}
+
+function mergeOverrideTypeSettings(
+  baseSpec: {
+    nearestBuiltin: string | null;
+    typeSettings: Record<string, unknown> | null;
+  },
+  ov: CustomGenerationOverrides | null,
+): Record<string, unknown> | null {
+  if (!ov) return null;
+
+  const typeId = baseSpec.nearestBuiltin?.trim() || "";
+  const settingPatch: Record<string, unknown> = {};
+  if (typeof ov.optionCount === "number") {
+    settingPatch.optionCount = ov.optionCount;
+    if (typeId === "GRAMMAR_ERROR") settingPatch.markerCount = ov.optionCount;
+    if (typeId === "IRRELEVANT") settingPatch.slotCount = ov.optionCount;
+  }
+  if (typeof ov.correctAnswerCount === "number") {
+    settingPatch.answerCount = ov.correctAnswerCount;
+    settingPatch.correctAnswerCount = ov.correctAnswerCount;
+    if (typeId === "GRAMMAR_CORRECTION") settingPatch.errorCount = ov.correctAnswerCount;
+  }
+  if (ov.params && typeof ov.params === "object") {
+    Object.assign(settingPatch, ov.params);
+  }
+  if (isVisibleLanguage(ov.stemLanguage)) {
+    settingPatch.stemLanguage = ov.stemLanguage;
+  }
+  if (isVisibleLanguage(ov.optionLanguage)) {
+    settingPatch.optionLanguage = ov.optionLanguage;
+  }
+  if (Object.keys(settingPatch).length === 0) return null;
+
+  const next = isRecord(baseSpec.typeSettings) ? { ...baseSpec.typeSettings } : {};
+  if (typeId) {
+    const currentForType = isRecord(next[typeId]) ? next[typeId] : {};
+    next[typeId] = { ...currentForType, ...settingPatch };
+  } else {
+    Object.assign(next, settingPatch);
+  }
+  return next;
+}
+
+function readOverrideParams(
+  ov: CustomGenerationOverrides | null,
+): Record<string, number> | null {
+  return ov?.params && typeof ov.params === "object" ? ov.params : null;
+}
 
 async function mapWithConcurrency<T>(
   items: T[],
@@ -120,18 +186,16 @@ async function runJob(jobId: string): Promise<void> {
     }
     // 생성 시 유형 정의 임시 override(이 배치만) — 난이도 + 선지/정답 수·답형·복수정답·지문기반.
     const baseSpec = active.spec;
-    const ov = (job.overrides ?? null) as {
-      optionCount?: number;
-      correctAnswerCount?: number;
-      params?: Record<string, number>;
-    } | null;
+    const ov = (job.overrides ?? null) as CustomGenerationOverrides | null;
     const patch: Record<string, unknown> = {};
     if (job.difficulty && job.difficulty !== baseSpec.difficulty) patch.difficulty = job.difficulty;
     if (ov) {
       if (typeof ov.optionCount === "number") patch.optionCount = ov.optionCount;
       if (typeof ov.correctAnswerCount === "number") patch.correctAnswerCount = ov.correctAnswerCount;
+      const typeSettings = mergeOverrideTypeSettings(baseSpec, ov);
+      if (typeSettings) patch.typeSettings = typeSettings;
       // 유형 고유 수치 파라미터 override(key→value) — 정의의 tunableParams value 를 교체(min/max 클램프).
-      const ovParams = ov.params && typeof ov.params === "object" ? ov.params : null;
+      const ovParams = readOverrideParams(ov);
       if (ovParams && baseSpec.tunableParams.length > 0) {
         patch.tunableParams = baseSpec.tunableParams.map((p) => {
           const v = ovParams[p.key];
