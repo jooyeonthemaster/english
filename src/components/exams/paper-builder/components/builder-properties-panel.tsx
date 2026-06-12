@@ -932,7 +932,7 @@ export function BuilderPropertiesPanel({
     if (id === "outline") return "블록 목록";
     if (id === "insert") return "블록 삽입";
     if (id === "inspector") return "선택 블록";
-    return "문제 샘플링";
+    return "문제 셔플링";
   }
 
   function panelSectionIcon(id: PanelSectionId) {
@@ -1105,7 +1105,7 @@ export function BuilderPropertiesPanel({
               className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
             >
               <Shuffle className="h-3.5 w-3.5" />
-              샘플링
+              셔플링
             </button>
           </div>
         </div>

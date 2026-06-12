@@ -621,7 +621,7 @@ export function usePaperItems(
     const { keepGroups, anchorBlocks } = options;
     commitItems((current) => {
       if (current.length < 2) {
-        toast.error("샘플링할 문항이 충분하지 않습니다.");
+        toast.error("셔플링할 문항이 충분하지 않습니다.");
         return current;
       }
 
@@ -655,7 +655,7 @@ export function usePaperItems(
       });
 
       if (movableIndices.length < 2) {
-        toast.error("샘플링할 수 있는 문항이 부족합니다. 잠금/고정 설정을 확인하세요.");
+        toast.error("셔플링할 수 있는 문항이 부족합니다. 잠금/고정 설정을 확인하세요.");
         return current;
       }
 
@@ -677,7 +677,7 @@ export function usePaperItems(
         result[targetIndex] = movableUnits[k];
       });
 
-      toast.success(`${movableUnits.length}개 항목을 샘플링했습니다.`);
+      toast.success(`${movableUnits.length}개 항목을 셔플링했습니다.`);
       return result.flat();
     });
   }

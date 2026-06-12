@@ -31,6 +31,8 @@ import {
 export interface NavChild {
   label: string;
   href: string;
+  /** 베타 기능 — 사이드바에 BETA 배지를 노출한다. */
+  beta?: boolean;
 }
 
 export interface NavItem {
@@ -90,8 +92,8 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "문제 생성", href: `${basePath}/workbench/questions/generate` },
             { label: "문제 관리", href: `${basePath}/workbench/questions` },
-            { label: "동형 문제 생성", href: `${basePath}/workbench/questions/similar` },
-            { label: "커스텀 유형", href: `${basePath}/workbench/questions/custom` },
+            { label: "동형 문제 생성", href: `${basePath}/workbench/questions/similar`, beta: true },
+            { label: "커스텀 유형", href: `${basePath}/workbench/questions/custom`, beta: true },
           ],
         },
         {
@@ -101,7 +103,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
-            { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams` },
+            { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams`, beta: true },
           ],
         },
         {
