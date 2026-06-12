@@ -17,7 +17,7 @@ export const MC_PROMPTS: Record<string, string> = {
 ## 출력 필드
 - originalExpression: 원문에서 빈칸으로 만들 정확한 표현 (원문과 한 글자도 다르면 안 됨)
 - surroundingText: originalExpression 주변 40~60자 텍스트 (위치 식별용, 원문 그대로 복사)
-- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
+- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"; KILLER 빈칸 설계 블록이 있을 때는 "PARAPHRASE"(정답 선지=원문의 추상 재진술, originalExpression 은 여전히 원문 그대로)
 - answerLogic: 부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
 - correctAnswer: 정답 선지의 label ("1"~"5")
 - options: label "1"~"5", text는 영어 표현. 기본 모드에서는 정답 선지의 text가 반드시 originalExpression과 동일

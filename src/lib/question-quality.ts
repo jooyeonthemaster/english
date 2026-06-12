@@ -1,4 +1,4 @@
-import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+﻿import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 import {
   normalizeDiversityComparable,
   pickSteeredPositions,
@@ -306,6 +306,8 @@ export function buildQuestionTargetCandidateBlock(
     antonymPairCount?: number;
     /** 2~3 = multi-blank BLANK_INFERENCE; the single-blank candidate block is suppressed. */
     blankInferenceBlankCount?: number;
+    /** 부정-부정(DN) 설정 — true 면 KILLER 빈칸 블록 대신 DN 블록이 우선한다. */
+    blankInferenceDoubleNegative?: boolean;
     /** Legacy name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
     requestedDifficulty?: string;
@@ -356,6 +358,11 @@ export function buildQuestionTargetCandidateBlock(
       // only receives the repeated-phrase ban list (leak prevention).
       if ((options.blankInferenceBlankCount ?? 1) >= 2) {
         return buildMultiBlankAvoidBlock(passage);
+      }
+      // KILLER 단일 빈칸(비DN)은 전용 설계 블록 — 핵심 논지부 빈칸 + 추상
+      // 패러프레이즈 정답 + 간섭 오답. DN 은 교사 명시 설정이라 우선한다.
+      if (options.requestedDifficulty === "KILLER" && !options.blankInferenceDoubleNegative) {
+        return buildKillerBlankCandidateBlock(passage, diversity);
       }
       return buildBlankInferenceCandidateBlock(passage, diversity);
     case "REFERENCE":
@@ -1032,6 +1039,86 @@ function buildMultiBlankAvoidBlock(passage: string): string {
     ...repeated.map((p) => `- "${p}"`),
     "위 표현과 그 일부를 포함한 구절도 피하고, 지문에 정확히 1회만 등장하는 표현을 선택하세요.",
   ].join("\n");
+}
+
+/** 결론/주장 담화 표지 — KILLER 빈칸 위치(핵심 논지부) 후보 점수에 사용. */
+const THESIS_DISCOURSE_MARKERS =
+  /\b(?:therefore|thus|hence|consequently|as a result|in short|in sum|in essence|in other words|in conclusion|ultimately|overall|this means|the point is|what matters|the key|crucially|in fact)\b/i;
+
+function scoreThesisSentence(sentence: string, index: number, total: number): number {
+  let score = 0;
+  if (THESIS_DISCOURSE_MARKERS.test(sentence)) score += 3;
+  if (index >= total - 2) score += 2; // 결론부(마지막 두 문장)
+  if (index === 0) score += 1; // 주제문(첫 문장)
+  // 나열 위주 문장은 간결한 스팬을 잡기 어려워 list-like 거부를 유발한다 — 후순위.
+  if ((sentence.match(/,/g) ?? []).length >= 2) score -= 2;
+  return score;
+}
+
+/**
+ * KILLER 단일 빈칸 전용 설계 블록 — 빈칸을 글의 핵심 논지(주제문·결론·인과의
+ * 귀결)에 두고 정답을 추상 패러프레이즈로 요구한다. 검수 실측(평균 4.0/10)에서
+ * KILLER 빈칸이 지엽 세부 + 원문 verbatim 정답 + 무간섭 오답으로 일관되게
+ * 미달했던 것의 직접 대응. 후보 문장은 thesis 점수순으로 제시·지정한다.
+ */
+function buildKillerBlankCandidateBlock(
+  passage: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const sentences = splitPassageSentences(passage);
+  const total = sentences.length;
+  const candidates = filterUsedCandidates(
+    sentences
+      .map((sentence, index) => ({ sentence, index }))
+      .filter(({ sentence }) => countContentTokens(sentence) >= 4),
+    diversity?.usedTargets,
+    ({ sentence }) => sentence,
+  ).items;
+  const ranked = [...candidates].sort(
+    (a, b) =>
+      scoreThesisSentence(b.sentence, b.index, total) -
+      scoreThesisSentence(a.sentence, a.index, total),
+  );
+  // thesis 신호(점수>0)가 있는 문장만 우선 — 설정부/서사 문장이 풀에 섞이면
+  // 결론 명제를 설정부 빈칸에 박는 극성 전도가 발생한다(검수 실측 critical).
+  // 신호 문장이 너무 적으면 0점 문장으로 보충해 다양성 회전은 유지한다.
+  const scored = ranked.filter(
+    ({ sentence, index }) => scoreThesisSentence(sentence, index, total) > 0,
+  );
+  const pool = (scored.length >= 3 ? scored : ranked).slice(0, 8);
+
+  let designated: { sentence: string; index: number } | undefined;
+  if (diversity?.diversityEnabled && pool.length > 0) {
+    const vi =
+      typeof diversity.variantIndex === "number" && Number.isFinite(diversity.variantIndex)
+        ? Math.max(0, Math.floor(diversity.variantIndex))
+        : Math.floor(Math.random() * pool.length);
+    // 재시도 오프셋(attempt×variantCount)이 pool 크기와 배수 관계면 mod 에서
+    // 소거돼 같은 문장이 계속 지정된다(실측: list-like 문장 7연속 거부 → 미생성).
+    // tier(풀을 몇 바퀴 돌았나)를 더해 재시도마다 다음 후보로 이동시킨다.
+    const tier = Math.floor(vi / pool.length);
+    designated = pool[(vi + tier) % pool.length];
+  }
+
+  return [
+    designated
+      ? `⭐ 다양성 지시 (항상 적용): 이번 문항은 되도록 다음 문장에서 빈칸 타깃(originalExpression)을 선택하세요: "${designated.sentence}" 그 문장에 간결한 핵심 술부가 없으면(콤마 나열 구간뿐이면) 주저 없이 아래 다른 후보 문장으로 넘어가고, 매번 같은 표현으로 수렴하지 마세요.`
+      : "",
+    "## KILLER 빈칸 설계 (필수)",
+    "이 문항은 KILLER 난이도입니다. 다음 세 가지를 모두 지키지 않으면 거부됩니다:",
+    "1. 빈칸 위치: 글의 핵심 논지가 담긴 자리 — 주제문, 결론, 인과의 귀결부, 필자 주장의 핵심 술부. 예시·나열·수치·부수적 세부사항(비용, 시간 같은 지엽)을 빈칸으로 만들지 마세요. originalExpression 은 2~7단어의 간결한 술부/구여야 하며 콤마·콜론·세 항목 이상 나열을 포함하면 거부됩니다 — 문장이 길면 핵심 술부만 잘라 선택하세요.",
+    "2. 정답 보기: blankAnswerMode 를 \"PARAPHRASE\" 로 출력하고, 정답 선지는 originalExpression 의 verbatim 복사가 아니라 같은 의미의 **추상적 재진술**이어야 합니다. originalExpression 자체는 여전히 원문 그대로(한 글자도 바꾸지 않고) 출력하세요 — 빈칸 위치 식별용입니다.",
+    "2a. 의미 보존: 정답은 그 스팬이 그 자리에서 말하는 명제를 보존해야 합니다. 스팬이 긍정 외양 진술이면 정답도 같은 명제의 재진술이어야 하며, 글 전체의 결론(반대 극성)을 대신 넣으면 담화가 붕괴되어 거부됩니다.",
+    "2b. 슬롯 문법: 정답을 빈칸에 넣은 문장이 완전한 정문이어야 합니다 — 스팬이 주어로 시작하면 정답도 주어를 포함하고, 'to ___' 자리면 동사원형으로 시작하고(동명사 금지), 스팬의 동사가 3인칭 단수형이면 정답 동사도 수일치를 유지하고, 스팬 뒤에 관계절(, where/, which)이 남으면 그 선행사가 되는 명사로 끝나야 합니다.",
+    "3. 오답 설계 — 두 가지 균형을 모두 지키세요 (위반 시 거부):",
+    "   3a. 극성 균형: 정답이 부정 극성(상실·제약·실패류)이면 오답 중 최소 2개도 부정 극성이어야 합니다. 'Unfortunately' 같은 전환 뒤 빈칸에서 정답만 부정이고 오답이 전부 긍정이면 극성 스캔만으로 즉답됩니다.",
+    "   3b. 추상도 균형: 오답 중 최소 2개는 정답과 같은 추상 수준(논제급 일반 진술)이어야 합니다. 정답만 추상이고 오답이 전부 구체 사실 나열이면 '가장 추상적인 선지 고르기'로 즉답됩니다.",
+    "   매력 오답은 인과 역전, 범위 과장(절대어 purely/entirely 함정), 절반-진실(본문 개념을 빌리되 결론을 비틀기)로 틀리게 만들고, 최소 2개는 본문 어휘·개념을 재활용하세요.",
+    pool.length ? "핵심 논지 후보 문장 (우선순위순):" : "",
+    ...pool.map(
+      ({ sentence, index }) => `${index + 1}. ${sentence}`,
+    ),
+  ].filter(Boolean).join("\n");
 }
 
 function buildBlankInferenceCandidateBlock(
@@ -3044,6 +3131,9 @@ function validateBlankInferenceQuestion(
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const isNegativeParaphraseMode = question.blankAnswerMode === "DOUBLE_NEGATIVE";
+  const isParaphraseMode = question.blankAnswerMode === "PARAPHRASE";
+  // 변형 정답 모드(DN·KILLER 패러프레이즈)는 빈칸 설계 결함을 error 로 승격한다.
+  const isTransformedMode = isNegativeParaphraseMode || isParaphraseMode;
   const originalExpression = normalizeText(question.originalExpression);
   const passageWithBlank = normalizeText(question.passageWithBlank);
   const blankCarrierText = extractBlankCarrierText(passageWithBlank);
@@ -3066,7 +3156,7 @@ function validateBlankInferenceQuestion(
 
   if (crossesStrongContrastBoundary(originalExpression)) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-crosses-contrast",
       "BLANK_INFERENCE blank must not swallow a contrast marker; keep but/rather/instead structure visible.",
     );
@@ -3074,7 +3164,7 @@ function validateBlankInferenceQuestion(
 
   if (requestedDifficulty === "KILLER" && countContentTokens(originalExpression) < 2) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-target-too-small",
       "KILLER BLANK_INFERENCE should target a meaningful phrase or relation, not a single obvious keyword.",
     );
@@ -3082,7 +3172,7 @@ function validateBlankInferenceQuestion(
 
   if (isSingleAbstractNounTarget(originalExpression)) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-single-abstract-noun",
       "BLANK_INFERENCE should avoid targeting a single abstract noun when a logical phrase is available.",
     );
@@ -3140,7 +3230,7 @@ function validateBlankInferenceQuestion(
 
   if (/\b(?:such as|including|for example)\s+_____/.test(blankCarrierText)) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-example-list-slot",
       "Avoid example-list blanks; choose a logical clause, predicate, or relation where passage reasoning decides the answer.",
     );
@@ -3155,16 +3245,99 @@ function validateBlankInferenceQuestion(
     );
     if (attractiveWrongCount === 0) {
       add(
-        isNegativeParaphraseMode ? "error" : "warning",
+        // KILLER 는 간섭 오답이 핵심 변별 장치 — 무간섭이면 모드 무관 error.
+        isTransformedMode || requestedDifficulty === "KILLER" ? "error" : "warning",
         "blank-weak-distractors",
         "BLANK_INFERENCE has no wrong options with passage-keyword, semantic, or polarity overlap.",
       );
     } else if (attractiveWrongCount < 2) {
+      // KILLER 도 warning 유지 — 추상 패러프레이즈 오답은 본문 키워드 재활용이
+      // 적어 검출기가 과소평가한다. error 승격 시 재시도 폭증 실측(iter2 52회).
       add(
         "warning",
         "blank-weak-distractors",
         "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
       );
+    }
+  }
+
+  if (isParaphraseMode) {
+    // 슬롯 문법 가드 (검수 실측 critical 2종):
+    // ① 스팬이 주격 대명사로 시작하는 절인데 정답이 무주어 동사로 시작 →
+    //    "As a result, is deprived of..." 비문.
+    if (
+      /^(?:she|he|it|they|we|i|you)\b/i.test(originalExpression) &&
+      // be/조동사/-ing 시작만 — 복수 명사 주어("systems ...")를 오탐하지 않게
+      // 일반 3단수 동사(-s)는 제외하고 프롬프트(2b)에 맡긴다.
+      /^(?:is|are|was|were|has|have|had|[a-z]+ing)\b/.test(correctText)
+    ) {
+      add(
+        "error",
+        "blank-paraphrase-slot-missing-subject",
+        "The blanked span starts with a subject pronoun, so the correct option must also contain a subject; a bare predicate produces a broken sentence.",
+      );
+    }
+    // ② "to ___" 슬롯에 동명사 정답 → "is to sacrificing..." 비문.
+    if (/\bto\s+_____/.test(blankCarrierText) && /^[a-z]+ing\b/.test(correctText)) {
+      add(
+        "error",
+        "blank-paraphrase-slot-to-infinitive",
+        "A to-infinitive blank needs the correct option to start with a base verb, not a gerund.",
+      );
+    }
+    // ③ be 동사가 빈칸 밖에 남았는데 정답이 정동사로 시작 → "is turns out" 비문
+    //    (스팬이 보어인데 패러프레이즈가 술부 전체를 재진술한 스팬 불일치).
+    if (
+      /\b(?:is|are|was|were)\s+_____/.test(blankCarrierText) &&
+      /^(?:turns?|seems?|appears?|becomes?|proves?|remains?|looks?|sounds?|feels?|gets?|grows?|stays?|is|are|was|were|has|have|had)\b/.test(
+        correctText,
+      )
+    ) {
+      add(
+        "error",
+        "blank-paraphrase-slot-double-verb",
+        "The blank follows a be-verb, so the correct option must be a complement phrase, not start with another finite verb.",
+      );
+    }
+    // 극성 지름길 차단: 정답이 부정 극성인데 오답에 부정 극성이 하나도 없으면
+    // 'Unfortunately' 같은 전환 단서 + 극성 스캔만으로 즉답된다 (검수 실측 —
+    // KILLER 미달의 최다 원인). DN 의 negative-distractor 게이트와 동일 패턴.
+    if (hasNegationCue(correctText) && wrongNegationCount < 1) {
+      add(
+        "error",
+        "blank-killer-polarity-shortcut",
+        "PARAPHRASE blank with a negative-polarity answer needs at least 1 negative-polarity wrong option; otherwise polarity scanning alone solves the item.",
+      );
+    } else if (hasNegationCue(correctText) && wrongNegationCount < 2) {
+      add(
+        "warning",
+        "blank-killer-polarity-shortcut",
+        "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+      );
+    }
+    // KILLER 패러프레이즈 정답 검증 — 원문 verbatim 이면 추론 없이 풀린다.
+    if (
+      originalExpression &&
+      normalizeComparableText(correctText) === normalizeComparableText(originalExpression)
+    ) {
+      add(
+        "error",
+        "blank-paraphrase-answer-not-transformed",
+        "PARAPHRASE blank must use an abstract restatement as the correct option, not the verbatim originalExpression.",
+      );
+    } else if (originalExpression) {
+      const sourceTokens = toLowerTokens(originalExpression).filter(
+        (t) => t.length >= 3 && !REPEATED_PHRASE_STOPWORDS.has(t),
+      );
+      const answerTokens = new Set(toLowerTokens(correctText));
+      const sharedCount = sourceTokens.filter((t) => answerTokens.has(t)).length;
+      if (sourceTokens.length >= 2 && sharedCount / sourceTokens.length > 0.6) {
+        add(
+          "warning",
+          "blank-paraphrase-too-similar",
+          "PARAPHRASE blank correct option reuses most of the source span's content words; restate it more abstractly.",
+        );
+      }
     }
   }
 

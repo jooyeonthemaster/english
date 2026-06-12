@@ -319,6 +319,8 @@ export async function runQuestionGeneration(
           grammarCorrectionErrorCount,
           antonymPairCount,
           blankInferenceBlankCount,
+          blankInferenceDoubleNegative:
+            resolvedTypeSettings.blankInferenceDoubleNegative,
           requestedDifficulty: diffLabel,
           usedTargets: diversitySignals?.usedTargets,
           usedAnswerLabels: diversitySignals?.usedAnswerLabels,
@@ -411,6 +413,8 @@ export async function runQuestionGeneration(
         for (const q of generatedQuestions) {
           // 과거에는 "BLANK_INFERENCE 의 typeSettings 프롬프트 존재 = 부정-부정"이었지만,
           // 언어/다중빈칸 블록이 생기면서 그 프록시가 깨졌다. resolved 플래그로만 판정한다.
+          // KILLER 단일 빈칸(비DN)은 PARAPHRASE 모드를 강제한다 — 정답이 원문
+          // verbatim이면 추론 없이 풀려 KILLER가 성립하지 않는다(검수 실측 avg 4.0).
           const normalizedAiQuestion =
             subType === "BLANK_INFERENCE" &&
             resolvedTypeSettings.blankInferenceDoubleNegative
@@ -418,7 +422,14 @@ export async function runQuestionGeneration(
                   ...q,
                   blankAnswerMode: "DOUBLE_NEGATIVE",
                 }
-              : q;
+              : subType === "BLANK_INFERENCE" &&
+                  diffLabel === "KILLER" &&
+                  (resolvedTypeSettings.blankInferenceBlankCount ?? 1) <= 1
+                ? {
+                    ...q,
+                    blankAnswerMode: "PARAPHRASE",
+                  }
+                : q;
           const ppResult = postProcessQuestion(
             subType,
             passageContent,
@@ -731,7 +742,15 @@ export async function runQuestionGenerationWithEmptyRetry(
   const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(inputWithUsage);
   const largestGrammarMarkerCount = getLargestGrammarMarkerCount(inputWithUsage);
   const largestGrammarAnswerCount = getLargestGrammarAnswerCount(inputWithUsage);
-  const attempts = hasNegativeParaphraseBlank
+  // KILLER 단일 빈칸은 PARAPHRASE 모드 강제 — 패러프레이즈+간섭 오답 요구로
+  // 재시도 필요성이 DN 과 비슷해 동일하게 6회를 준다.
+  const hasKillerParaphraseBlank =
+    inputWithUsage.diffLabel === "KILLER" &&
+    inputWithUsage.plan.some(
+      (item) => item.subType === "BLANK_INFERENCE" && item.count > 0,
+    ) &&
+    !hasNegativeParaphraseBlank;
+  const attempts = hasNegativeParaphraseBlank || hasKillerParaphraseBlank
     ? Math.max(6, Math.floor(maxAttempts))
     : hasSummaryCompleteMc || largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
       ? Math.max(6, Math.floor(maxAttempts))
