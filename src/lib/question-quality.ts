@@ -5,8 +5,8 @@ import {
 } from "@/lib/question-diversity";
 import {
   buildGrammarPointGuidance,
-  GRAMMAR_CORE_ANSWER_CODES,
   GRAMMAR_POINT_CATALOG,
+  type GrammarPointCode,
 } from "@/lib/grammar-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
@@ -663,6 +663,329 @@ function findStandaloneTokenMatch(
   return { word: match[0], index: match.index };
 }
 
+type GrammarCandidateTier = "basic" | "intermediate" | "killer";
+
+type GrammarCandidateRule = {
+  code: GrammarPointCode;
+  pattern: RegExp;
+  note: string;
+  trap: string;
+  mutationHint: string;
+  tier: GrammarCandidateTier;
+  priority: number;
+};
+
+type GrammarGenerationCandidate = {
+  code: GrammarPointCode;
+  expression: string;
+  surroundingText: string;
+  note: string;
+  trap: string;
+  mutationHint: string;
+  tier: GrammarCandidateTier;
+  priority: number;
+  index: number;
+};
+
+const GRAMMAR_GENERATION_CANDIDATE_RULES: GrammarCandidateRule[] = [
+  {
+    code: "b",
+    pattern: /\b(?:in|at|on|for|from|through|by|with)\s+which\b|\b(?:what|that|which|who|whom|whose|where|when)\b/gi,
+    note: "관계사/명사절 접속사",
+    trap: "선행사 유무, 뒤 절의 완전/불완전, 전치사+관계대명사 여부를 확인하게 함",
+    mutationHint: "what <-> that/which, where <-> which, who/whom 격 오류",
+    tier: "killer",
+    priority: 10,
+  },
+  {
+    code: "c",
+    pattern: /\bwith\s+(?:the\s+)?[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,5}\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|made|seen|found)\b|\b(?:when|while|if|unless|once|although)\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|asked|seen)\b/gi,
+    note: "with+O+분사 / 축약 부사절 분사",
+    trap: "의미상 주어와 분사의 능동/수동 관계를 확인하게 함",
+    mutationHint: "v-ing <-> p.p., being p.p. <-> p.p.",
+    tier: "killer",
+    priority: 10,
+  },
+  {
+    code: "c",
+    pattern: /\b[A-Za-z][A-Za-z'-]*(?:s)?\s+(?:called|known|based|made|used|given|left|seen|found|created|built|designed|involving|requiring|including|containing|leading|causing)\b/gi,
+    note: "명사 뒤 분사 수식",
+    trap: "수식받는 명사가 행위자인지 대상인지 확인하게 함",
+    mutationHint: "p.p. <-> v-ing, reduced relative clause 오류",
+    tier: "intermediate",
+    priority: 8,
+  },
+  {
+    code: "d",
+    pattern: /\b(?:the number of|a number of|one of|each of|neither of|either of|percent of|half of|most of|the rest of)\b[^.;!?]{0,90}\b(?:is|are|was|were|has|have|do|does|seem|seems|require|requires|depend|depends|make|makes)\b/gi,
+    note: "수량 표현/부분 표현 수일치",
+    trap: "가까운 명사가 아니라 진짜 주어와 동사의 수를 확인하게 함",
+    mutationHint: "singular verb <-> plural verb",
+    tier: "intermediate",
+    priority: 8,
+  },
+  {
+    code: "d",
+    pattern: /\b(?:[A-Za-z]+ing|What|That|Whether)\b[^.;!?]{10,110}\b(?:is|are|was|were|has|have|requires?|depends?|seems?)\b/gi,
+    note: "긴 주어/절 주어 수일치",
+    trap: "삽입구와 수식어를 걷어내고 주어 핵을 찾게 함",
+    mutationHint: "verb+s <-> bare/plural verb, is <-> are",
+    tier: "killer",
+    priority: 9,
+  },
+  {
+    code: "e",
+    pattern: /\b(?:is|are|was|were|be|been|being|get|gets|got)\s+(?:[A-Za-z]+ed|known|made|seen|found|given|left|built|told|shown|used)\b|\b(?:occur|occurs|happen|happens|appear|appears|disappear|disappears|consist|consists|belong|belongs)\b/gi,
+    note: "능동태/수동태 및 자동사 수동 불가",
+    trap: "목적어 유무와 주어가 행위자인지 대상인지 확인하게 함",
+    mutationHint: "active <-> passive, 자동사에 be p.p. 금지",
+    tier: "intermediate",
+    priority: 7,
+  },
+  {
+    code: "f",
+    pattern: /\b(?:seem|seems|look|looks|sound|sounds|feel|feels|remain|remains|keep|keeps|stay|stays|become|becomes|get|gets|grow|grows|make|makes|find|finds|leave|leaves|render|renders)\b[^.;!?]{0,55}\b[A-Za-z]+(?:ly)?\b|\b(?:hard|hardly|late|lately|high|highly|near|nearly|close|closely|most|mostly|costly|friendly|likely|lively)\b/gi,
+    note: "형용사/부사 자리",
+    trap: "보어 자리와 부사 수식 자리를 구분하게 함",
+    mutationHint: "adjective <-> adverb, hard/hardly류 의미 차이",
+    tier: "intermediate",
+    priority: 8,
+  },
+  {
+    code: "g",
+    pattern: /\b(?:it|its|itself|they|them|their|theirs|themselves|one|ones|that|those|this|these)\b/gi,
+    note: "대명사/지시어 일치",
+    trap: "지시 대상의 수와 동일 대상 여부를 앞뒤 문맥에서 확인하게 함",
+    mutationHint: "it <-> they, that <-> those, one <-> it",
+    tier: "intermediate",
+    priority: 6,
+  },
+  {
+    code: "h",
+    pattern: /\b(?:make|makes|made|have|has|had|let|lets|see|sees|hear|hears|watch|watches|notice|notices|enable|enables|allow|allows|cause|causes|force|forces|encourage|encourages|expect|expects)\b[^.;!?]{1,90}\b(?:to\s+)?[A-Za-z]+(?:ing|ed)?\b/gi,
+    note: "목적격보어 형태",
+    trap: "사역/지각/준사역 동사의 목적격보어 형태와 O-OC 관계를 확인하게 함",
+    mutationHint: "bare infinitive <-> to-v, v-ing/p.p. 보어",
+    tier: "intermediate",
+    priority: 7,
+  },
+  {
+    code: "i",
+    pattern: /\b(?:both\s+[^.;!?]{1,80}\s+and|not only\s+[^.;!?]{1,100}\s+but(?:\s+also)?|either\s+[^.;!?]{1,80}\s+or|neither\s+[^.;!?]{1,80}\s+nor|from\s+[^.;!?]{1,60}\s+to|between\s+[^.;!?]{1,60}\s+and|rather than)\b/gi,
+    note: "병렬/상관접속 구조",
+    trap: "A와 B의 품사·구·절 형태를 멀리 떨어진 자리까지 맞춰 보게 함",
+    mutationHint: "parallel form mismatch, omitted repeated to 오판 방지",
+    tier: "killer",
+    priority: 9,
+  },
+  {
+    code: "k",
+    pattern: /\b(?:spend|spends|spent)\b[^.;!?]{0,70}\b[A-Za-z]+ing\b|\b(?:look forward to|be used to|object to|contribute to|when it comes to|devoted to|committed to)\s+[A-Za-z]+ing\b|\b(?:remember|remembers|forget|forgets|regret|regrets|try|tries|stop|stops)\s+(?:to\s+)?[A-Za-z]+ing?\b/gi,
+    note: "to부정사/동명사 선택",
+    trap: "to가 전치사인지 부정사 표지인지, 동사별 의미 차이를 확인하게 함",
+    mutationHint: "to-v <-> v-ing",
+    tier: "intermediate",
+    priority: 9,
+  },
+  {
+    code: "l",
+    pattern: /\b(?:because of|due to|despite|in spite of|although|though|even though|while|during)\b/gi,
+    note: "전치사/접속사 선택",
+    trap: "뒤에 명사구가 오는지 S+V 절이 오는지 확인하게 함",
+    mutationHint: "because <-> because of, although <-> despite, while <-> during",
+    tier: "basic",
+    priority: 5,
+  },
+  {
+    code: "m",
+    pattern: /\b(?:as\s+[A-Za-z]+(?:\s+as)?|more\s+[A-Za-z]+|less\s+[A-Za-z]+|[A-Za-z]+er\s+than|the\s+more|the\s+less|than)\b/gi,
+    note: "비교구문",
+    trap: "as-as 어순, 비교급 수식어, 병렬 비교 대상을 확인하게 함",
+    mutationHint: "as 형용사 as, than 비교 대상 병렬",
+    tier: "intermediate",
+    priority: 4,
+  },
+];
+
+function findGrammarGenerationCandidates(
+  passage: string,
+  requestedDifficulty?: string,
+): GrammarGenerationCandidate[] {
+  const candidates: GrammarGenerationCandidate[] = [];
+  const seen = new Set<string>();
+
+  for (const rule of GRAMMAR_GENERATION_CANDIDATE_RULES) {
+    for (const match of passage.matchAll(rule.pattern)) {
+      const rawExpression = normalizeText(match[0]);
+      if (!rawExpression || rawExpression.length < 2) continue;
+      const expression =
+        rawExpression.length > 120
+          ? `${rawExpression.slice(0, 117).trim()}...`
+          : rawExpression;
+      const index = match.index ?? passage.indexOf(match[0]);
+      if (index < 0) continue;
+      const key = `${rule.code}:${normalizeComparableText(expression).slice(0, 80)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      candidates.push({
+        code: rule.code,
+        expression,
+        surroundingText: buildSurroundingWindow(passage, index, match[0].length),
+        note: rule.note,
+        trap: rule.trap,
+        mutationHint: rule.mutationHint,
+        tier: rule.tier,
+        priority: rule.priority,
+        index,
+      });
+    }
+  }
+
+  return candidates.sort((a, b) => (
+    grammarCandidateScore(b, requestedDifficulty) -
+    grammarCandidateScore(a, requestedDifficulty)
+  ));
+}
+
+function grammarCandidateScore(
+  candidate: GrammarGenerationCandidate,
+  requestedDifficulty?: string,
+): number {
+  const difficulty = String(requestedDifficulty ?? "").toUpperCase();
+  const tierBonus =
+    difficulty === "KILLER"
+      ? candidate.tier === "killer" ? 5 : candidate.tier === "intermediate" ? 2 : -2
+      : difficulty === "BASIC"
+        ? candidate.tier === "basic" ? 4 : candidate.tier === "intermediate" ? 1 : -2
+        : candidate.tier === "intermediate" ? 3 : candidate.tier === "killer" ? 1 : 0;
+  const spanBonus = Math.min(3, Math.floor(countWordsForQuality(candidate.surroundingText) / 8));
+  return candidate.priority + tierBonus + spanBonus;
+}
+
+function buildGrammarSourceCandidateBlock(
+  passage: string,
+  requestedDifficulty: string | undefined,
+  mode: "judgment" | "correction",
+  limit = 14,
+): string {
+  const candidates = findGrammarGenerationCandidates(passage, requestedDifficulty).slice(0, limit);
+  const difficulty = String(requestedDifficulty ?? "").toUpperCase();
+  if (candidates.length === 0) {
+    return [
+      "## Source-backed grammar target candidates",
+      "- No high-confidence grammar candidate was detected by heuristics. Still choose only exact expressions from the passage, and avoid article/spelling/tiny-preposition errors.",
+    ].join("\n");
+  }
+
+  return [
+    "## Source-backed grammar target candidates",
+    "- Prefer answer and decoy targets from this list before inventing another location. Copy the expression from the original passage exactly; mutate only the answer expression.",
+    mode === "correction"
+      ? "- For GRAMMAR_CORRECTION, underline a wider clause/sentence containing the chosen candidate, not just the expression itself."
+      : "- For GRAMMAR_ERROR, use these as marked expressions or nearby marked spans, keeping non-answer decoys grammatically correct.",
+    difficulty === "KILLER"
+      ? "- KILLER priority: first try candidates tagged tier=killer. Single-token finite/nonfinite flips, adjacent subject-verb agreement, or obvious verb+s changes are rejected unless the surrounding span also contains a long-distance clause, modifier, relation, or parallel-structure check."
+      : difficulty === "BASIC"
+        ? "- BASIC priority: choose a visible but still meaningful one-step grammar relation; avoid exotic reduced clauses as the answer."
+        : "- INTERMEDIATE priority: choose at least one candidate whose trap requires checking clause boundary, semantic subject, or collocation.",
+    ...candidates.map((candidate, index) => {
+      const info = GRAMMAR_POINT_CATALOG[candidate.code];
+      const preferredUse =
+        difficulty === "KILLER" && candidate.tier === "killer"
+          ? "answer-preferred"
+          : candidate.tier === "basic" && difficulty !== "BASIC"
+            ? "decoy-preferred"
+            : "answer-or-decoy";
+      return [
+        `${index + 1}. code=(${candidate.code}) ${info.label}`,
+        `tier=${candidate.tier}`,
+        `use=${preferredUse}`,
+        `expression="${escapePromptSnippet(candidate.expression)}"`,
+        `trap="${escapePromptSnippet(candidate.trap)}"`,
+        `mutation="${escapePromptSnippet(candidate.mutationHint)}"`,
+        `context="${escapePromptSnippet(candidate.surroundingText)}"`,
+      ].join(" | ");
+    }),
+  ].join("\n");
+}
+
+function escapePromptSnippet(value: string): string {
+  return normalizeText(value).replace(/"/g, "'");
+}
+
+function extractGrammarPointCode(value: unknown): GrammarPointCode | null {
+  const code = normalizeText(value).toLowerCase().replace(/[^a-m]/g, "");
+  return /^[a-m]$/.test(code) ? (code as GrammarPointCode) : null;
+}
+
+function hasKillerGrammarStructure(text: string): boolean {
+  const normalized = normalizeText(text);
+  if (!normalized) return false;
+  return (
+    /\b(?:what|which|whose|whom|where|when)\b[\s\S]{0,120}\b(?:is|are|was|were|has|have|do|does|can|could|should|would|may|might)\b/i.test(normalized) ||
+    /\b(?:with|without)\s+(?:the\s+)?[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){1,6}\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|made|seen|found)\b/i.test(normalized) ||
+    /\b(?:when|while|if|unless|once|although)\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|asked|seen)\b/i.test(normalized) ||
+    /\b(?:not only|both|either|neither|from|between)\b[\s\S]{10,140}\b(?:but|and|or|nor|to)\b/i.test(normalized) ||
+    /\b(?:the number of|a number of|one of|each of|neither of|either of|most of|the rest of)\b[\s\S]{10,120}\b(?:is|are|was|were|has|have|requires?|depends?|seems?)\b/i.test(normalized) ||
+    /\b(?:of|with|including|along with|as well as|who|which|that)\b[\s\S]{25,140}\b(?:is|are|was|were|has|have|requires?|depends?|seems?|make|makes)\b/i.test(normalized)
+  );
+}
+
+function isSimpleAgreementFlip(
+  expression: string,
+  errorExpression: string,
+  correction: string,
+): boolean {
+  const forms = [expression, errorExpression, correction]
+    .map((value) => normalizeText(value).toLowerCase())
+    .filter(Boolean);
+  if (forms.length < 2) return false;
+  if (!forms.every(isSingleEnglishToken)) return false;
+  const stems = forms.map(stripAgreementSuffix);
+  return new Set(stems).size === 1 || /^(?:is|are|was|were|has|have|do|does)$/.test(forms.join(" "));
+}
+
+function stripAgreementSuffix(value: string): string {
+  const lower = value.toLowerCase();
+  if (/ies$/.test(lower) && lower.length > 4) return `${lower.slice(0, -3)}y`;
+  if (/(?:ches|shes|sses|xes|zes|oes)$/.test(lower) && lower.length > 4) {
+    return lower.slice(0, -2);
+  }
+  if (/s$/.test(lower) && lower.length > 3) return lower.slice(0, -1);
+  return lower;
+}
+
+function isThinKillerGrammarErrorTarget(markedExpression: Record<string, unknown>): boolean {
+  const expression = normalizeText(markedExpression.expression);
+  const errorExpression = normalizeText(markedExpression.errorExpression);
+  const correction = normalizeText(markedExpression.correction);
+  const surroundingText = normalizeText(markedExpression.surroundingText);
+  const pointCode = extractGrammarPointCode(markedExpression.pointCode);
+  const combined = `${expression} ${errorExpression} ${correction} ${surroundingText}`;
+  if (hasKillerGrammarStructure(combined)) return false;
+  if (pointCode === "d" && isSimpleAgreementFlip(expression, errorExpression, correction)) return true;
+  return (
+    countWordsForQuality(expression) <= 2 &&
+    countWordsForQuality(errorExpression || expression) <= 2 &&
+    countWordsForQuality(surroundingText) < 10
+  );
+}
+
+function isThinKillerGrammarCorrectionTarget(args: {
+  sourceText: string;
+  displayedText: string;
+  displayedError: string;
+  sourceCorrection: string;
+}): boolean {
+  const combined = `${args.sourceText} ${args.displayedText} ${args.displayedError} ${args.sourceCorrection}`;
+  if (hasKillerGrammarStructure(combined)) return false;
+  if (countWordsForQuality(args.sourceText) < 10) return true;
+  return (
+    isSimpleAgreementFlip(args.sourceCorrection, args.displayedError, args.sourceCorrection) &&
+    !/\b(?:of|which|that|who|with|including|along with|as well as|not only|both|between|from)\b/i.test(args.sourceText)
+  );
+}
+
 function buildGrammarErrorCandidateBlock(
   passage: string,
   requestedMarkerCount = 5,
@@ -700,7 +1023,7 @@ function buildGrammarErrorCandidateBlock(
     "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
     "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
     requestedDifficulty === "KILLER"
-      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked; avoid spelling-level or one-word giveaway errors."
+      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked. Do not use a lone main-verb/subject-verb/local -s error as the answer; it must require checking a relation, reduced clause, semantic subject, long modifier, complement pattern, or parallel range."
       : "",
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
@@ -709,7 +1032,15 @@ function buildGrammarErrorCandidateBlock(
       usedPointCodes: diversity?.usedPointCodes,
       diversityEnabled: diversity?.diversityEnabled,
       answerCount,
+      requestedDifficulty,
+      mode: "judgment",
     }),
+    buildGrammarSourceCandidateBlock(
+      passage,
+      requestedDifficulty,
+      "judgment",
+      Math.max(12, markedCount + 5),
+    ),
     // 다양성 모드: 정답 밑줄의 호스트 문장도 로테이션 힌트로 지정 — 포인트만
     // 지정하면 같은 포인트를 받은 병렬 유닛들이 지문의 같은 '손쉬운 자리'로
     // 수렴한다 (실측: 고유 정답 표현 후퇴). 포인트 지시가 우선인 소프트 힌트.
@@ -760,9 +1091,17 @@ function buildGrammarCorrectionCandidateBlock(
     "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
     "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
     "- Use wording like \"다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.\"",
-    // 어법끝 28년 빈도 코어 풀 — 숨길 오류는 최빈출 포인트에서 선택.
-    `- 숨길 오류는 수능 최빈출 코어 포인트에서 선택하세요: ${GRAMMAR_CORE_ANSWER_CODES.map((code) => `${GRAMMAR_POINT_CATALOG[code].label}[${GRAMMAR_POINT_CATALOG[code].rank}위]`).join(" · ")}.`,
-    `- 가정법(28년 정답 ${GRAMMAR_POINT_CATALOG.j.answerFreq}회)·비교구문(${GRAMMAR_POINT_CATALOG.m.answerFreq}회)은 정답 출제가 극히 드문 포인트입니다 — 오류로 만들지 마세요.`,
+    buildGrammarPointGuidance({
+      answerCount: errorCount,
+      requestedDifficulty,
+      mode: "correction",
+    }),
+    buildGrammarSourceCandidateBlock(
+      passage,
+      requestedDifficulty,
+      "correction",
+      Math.max(12, errorCount + 6),
+    ),
     "- Avoid padding with articles, tiny prepositions, punctuation, spelling-only changes, optional style improvements, or debatable active/passive infinitive preferences such as to gain vs to be gained.",
     requestedDifficulty === "KILLER"
       ? "- KILLER calibration: use a long enough underlined clause/sentence that students must inspect structure, not just spot a visibly odd token."
@@ -1807,6 +2146,20 @@ function validateTypeSpecific(
         `correctAnswer/correctAnswers must match isError labels. Missing: ${missingAnswerLabels.join(", ") || "none"}; extra: ${extraAnswerLabels.join(", ") || "none"}.`,
       );
     }
+    const markedPointCodes = markedExpressions
+      .map((markedExpression) => extractGrammarPointCode(markedExpression.pointCode))
+      .filter((code): code is GrammarPointCode => !!code);
+    if (
+      expectedMarkedCount >= 5 &&
+      markedPointCodes.length >= 4 &&
+      new Set(markedPointCodes).size < 3
+    ) {
+      add(
+        "warning",
+        "grammar-decoy-point-diversity",
+        "GRAMMAR_ERROR should distribute marked expressions across at least three real grammar point codes; repeated pointCode decoys make the item feel padded.",
+      );
+    }
     // 규범 논쟁 자리 검출: "복수 등위 주어 + 동격 each + 단수동사"(예: A and B
     // each assumes)는 표준 규범과 실사용이 갈리는 자리 — 여기 밑줄(정답·디코이
     // 불문)을 그으면 복수정답 시비가 생긴다 (실측 critical, 프롬프트 소프트
@@ -1865,6 +2218,13 @@ function validateTypeSpecific(
       if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
         add("error", "grammar-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-error target.");
       }
+      if (requestedDifficulty === "KILLER" && isThinKillerGrammarErrorTarget(markedExpression)) {
+        add(
+          "error",
+          "grammar-killer-thin-answer",
+          "KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check.",
+        );
+      }
     }
     const grammarExplanationText = [
       question.explanation,
@@ -1885,6 +2245,7 @@ function validateTypeSpecific(
       question,
       passage,
       grammarCorrectionErrorCount,
+      requestedDifficulty,
       add,
     );
   }
@@ -2673,6 +3034,7 @@ function validateGrammarCorrectionQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedErrorCount: number | undefined,
+  requestedDifficulty: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const expectedErrorCount = normalizeGrammarCorrectionErrorCount(requestedErrorCount);
@@ -2777,6 +3139,21 @@ function validateGrammarCorrectionQuestion(
     const combined = `${displayedError} ${sourceCorrection}`.toLowerCase();
     if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
       add("error", "grammar-correction-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-correction target.");
+    }
+    if (
+      requestedDifficulty === "KILLER" &&
+      isThinKillerGrammarCorrectionTarget({
+        sourceText,
+        displayedText,
+        displayedError,
+        sourceCorrection,
+      })
+    ) {
+      add(
+        "error",
+        "grammar-correction-killer-thin-segment",
+        `KILLER GRAMMAR_CORRECTION segment ${index + 1} hides a local short-form change without enough structural load; prefer a relation, participle, parallel, long subject-verb, or complement pattern.`,
+      );
     }
   }
 

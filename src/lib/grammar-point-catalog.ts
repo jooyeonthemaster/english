@@ -236,6 +236,92 @@ export const GRAMMAR_CORE_ANSWER_CODES: GrammarPointCode[] = [
 /** 최근 6년 오답 선택률 최상위 — 디코이(함정) 카드 우선순위. */
 export const GRAMMAR_TOP_DECOY_CODES: GrammarPointCode[] = ["b", "f", "c", "g", "d", "i"];
 
+export type GrammarGenerationMode = "judgment" | "correction";
+export type GrammarAuditDifficultyLevel = "하" | "중" | "상";
+
+export const GRAMMAR_1000_AUDIT_PROFILE = {
+  totalQuestions: 1570,
+  forms: {
+    abcOptions: 761,
+    underlineError: 764,
+    other: 45,
+  },
+  levels: {
+    "하": {
+      count: 319,
+      formBias: "밑줄 오류 찾기 212 / A-B-C 선택형 94",
+      topPoints: [
+        "완전타동사·어법성 동사 61",
+        "형용사·부사 53",
+        "명사·관사·수량 44",
+        "to부정사·동명사 38",
+      ],
+      topTraps: [
+        "숙어처럼 보이는 구조 82",
+        "형용사/부사 자리 혼동 45",
+        "능동/수동 의미관계 혼동 26",
+        "대명사 지시대상/수 일치 26",
+      ],
+      designFocus: [
+        "한 문장 안에서 바로 회수되는 단서",
+        "전치사 뒤 동명사, 보어 자리 형용사, 명확한 목적어 유무",
+        "정답은 1-step 판단이되 오답 밑줄은 실제 문법 포인트가 있어야 함",
+      ],
+    },
+    "중": {
+      count: 1036,
+      formBias: "A-B-C 선택형 577 / 밑줄 오류 찾기 427",
+      topPoints: [
+        "명사·관사·수량 383",
+        "완전타동사·어법성 동사 362",
+        "to부정사·동명사 317",
+        "태·분사 310",
+        "형용사·부사 295",
+        "대명사·지시어 265",
+        "관계사 263",
+      ],
+      topTraps: [
+        "숙어처럼 보이는 구조 503",
+        "능동/수동 의미관계 혼동 373",
+        "관계사 격·선행사 혼동 353",
+        "형용사/부사 자리 혼동 340",
+        "대명사 지시대상/수 일치 327",
+      ],
+      designFocus: [
+        "절 경계나 수식어를 한 번 걷어내야 보이는 구조",
+        "what/that/which, 분사 능수동, spend/used to/look forward to류 준동사",
+        "정답 1개라도 나머지 밑줄은 서로 다른 함정 포인트로 구성",
+      ],
+    },
+    "상": {
+      count: 215,
+      formBias: "밑줄 오류 찾기 125 / A-B-C 선택형 90",
+      topPoints: [
+        "관계사 83",
+        "태·분사 83",
+        "형용사·부사 68",
+        "to부정사·동명사 66",
+        "명사·관사·수량 64",
+        "완전타동사·어법성 동사 54",
+        "병렬·구조 49",
+      ],
+      topTraps: [
+        "숙어처럼 보이는 구조 99",
+        "관계사 격·선행사 혼동 96",
+        "능동/수동 의미관계 혼동 92",
+        "형용사/부사 자리 혼동 81",
+        "대명사 지시대상/수 일치 58",
+        "병렬 형태 불일치 49",
+      ],
+      designFocus: [
+        "긴 수식어, 삽입구, 관계절, 분사구문, 병렬 범위를 함께 읽어야 함",
+        "로컬로는 자연스러워 보이지만 선행사·의미상 주어·진짜 주어를 확인하면 무너지는 오류",
+        "정답 포인트는 관계사/분사/준동사/병렬/형부사 중 고난도 구조를 우선",
+      ],
+    },
+  },
+} as const;
+
 export interface GrammarPointGuidanceOptions {
   /** 다양성 배치 인덱스 — 정답 포인트 지정 로테이션의 결정형 오프셋 */
   variantIndex?: number;
@@ -244,6 +330,28 @@ export interface GrammarPointGuidanceOptions {
   /** 다양성 모드 활성 여부 — 미활성이면 지정(⭐) 없이 빈도 가이드만 */
   diversityEnabled?: boolean;
   answerCount?: number;
+  requestedDifficulty?: string;
+  mode?: GrammarGenerationMode;
+}
+
+function normalizeAuditDifficultyLevel(difficulty?: string): GrammarAuditDifficultyLevel {
+  const normalized = String(difficulty ?? "").trim().toUpperCase();
+  if (normalized === "BASIC" || normalized === "하") return "하";
+  if (normalized === "KILLER" || normalized === "상") return "상";
+  return "중";
+}
+
+export function buildGrammar1000AuditGuidance(requestedDifficulty?: string): string {
+  const level = normalizeAuditDifficultyLevel(requestedDifficulty);
+  const profile = GRAMMAR_1000_AUDIT_PROFILE.levels[level];
+  return [
+    "## 어법 1000제 PDF 분석 기반 난이도 보정",
+    `- 분석 표본: 총 ${GRAMMAR_1000_AUDIT_PROFILE.totalQuestions}문항, 밑줄 오류 찾기 ${GRAMMAR_1000_AUDIT_PROFILE.forms.underlineError}개, A/B/C 선택형 ${GRAMMAR_1000_AUDIT_PROFILE.forms.abcOptions}개.`,
+    `- 현재 난이도 기준: ${level} (${profile.count}문항). 형식 경향: ${profile.formBias}.`,
+    `- 이 난이도에서 자주 나오는 포인트: ${profile.topPoints.join(" · ")}.`,
+    `- 이 난이도에서 강한 함정: ${profile.topTraps.join(" · ")}.`,
+    `- 설계 기준: ${profile.designFocus.join(" / ")}.`,
+  ].join("\n");
 }
 
 /**
@@ -254,7 +362,14 @@ export interface GrammarPointGuidanceOptions {
 export function buildGrammarPointGuidance(
   options: GrammarPointGuidanceOptions = {},
 ): string {
-  const { variantIndex, usedPointCodes, diversityEnabled, answerCount = 1 } = options;
+  const {
+    variantIndex,
+    usedPointCodes,
+    diversityEnabled,
+    answerCount = 1,
+    requestedDifficulty,
+    mode = "judgment",
+  } = options;
 
   const coreLine = GRAMMAR_CORE_ANSWER_CODES.map((code) => {
     const info = GRAMMAR_POINT_CATALOG[code];
@@ -319,7 +434,10 @@ export function buildGrammarPointGuidance(
   return [
     "## 어법 출제 포인트 가이드 (수능·평가원 28년 기출 빈도 기반)",
     `- 정답(오류로 변형하는) 포인트는 다음 최빈출 코어에서 선택하세요: ${coreLine}.`,
-    "- (j) 가정법, (m) 비교구문은 28년간 정답 출제가 극히 드뭅니다 — 정답으로 만들지 말고 디코이로만 사용하세요. (l) 전치사/접속사도 정답보다는 디코이에 적합합니다.",
+    mode === "correction"
+      ? "- (j) 가정법·법, (m) 비교구문은 수능 객관식 정답 빈도는 낮지만 1000제 내신형에서는 보조 포인트로 자주 보입니다. 단독 암기형 오류로 남발하지 말고, 지문에 if/as/than/법조동사 구조가 명확할 때만 서술형 수정 후보로 쓰세요."
+      : "- (j) 가정법, (m) 비교구문은 28년간 정답 출제가 극히 드뭅니다 — 정답으로 만들지 말고 디코이로만 사용하세요. (l) 전치사/접속사도 정답보다는 디코이에 적합합니다.",
+    buildGrammar1000AuditGuidance(requestedDifficulty),
     ...designatedLines,
     "- 디코이(밑줄만 치고 어법상 옳게 두는 자리)는 최근 6년 학생 오답 선택률이 가장 높은 함정 카드를 우선 배치하세요:",
     ...decoyLines,

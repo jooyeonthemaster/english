@@ -582,7 +582,11 @@ export function PassageRegistrationClient({
   // marks both persist (PassageNote) AND fold into that passage's analysis
   // prompt; sourceDraftId keeps a loaded draft linked to its Passage.
   const handleAnalyzeRows = useCallback(
-    async (plan: QuestionGenerationPlan) => {
+    async (
+      plan: QuestionGenerationPlan,
+      options?: { includeWorksheet?: boolean },
+    ) => {
+      const includeWorksheet = options?.includeWorksheet === true;
       const current = rowsRef.current;
       const valid = current.filter(
         (r) => r.content.trim().length >= MIN_CONTENT_CHARS,
@@ -662,6 +666,7 @@ export function PassageRegistrationClient({
                 targetLevel: "",
                 generationPlan: plan,
                 analysisTone,
+                includeWorksheet,
               },
             };
 
@@ -680,7 +685,7 @@ export function PassageRegistrationClient({
 
         if (success > 0) {
           toast.success(
-            `${success}개 지문이 등록되었습니다. 백그라운드에서 분석 진행 중 (동시 3개씩).`,
+            `${success}개 지문이 등록되었습니다. 백그라운드에서 학습지 생성 중 (동시 3개씩).`,
           );
           const fresh = [makeEmptyRow()];
           rowsRef.current = fresh;

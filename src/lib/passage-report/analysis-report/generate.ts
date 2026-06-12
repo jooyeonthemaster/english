@@ -1,4 +1,5 @@
 import { generateQuestionText } from "@/lib/question-generation-llm";
+import { stripWorksheetContentFields } from "./worksheet-core-gate";
 
 import {
   buildAnalysisReportPrompt,
@@ -137,24 +138,10 @@ export async function generateAnalysisReportCore(
 
   normalizeAndAuditSections(validation.data.sections);
 
-  // 기본 분석의 learning-worksheet 는 logicRows 표 전용. 실전 학습지 콘텐츠
-  // (workbookSet/inferenceSet/cloze/practice/drills/questions)는 옵트인 별도 생성
-  // 단계에서만 만든다 — 모델이 프롬프트 금지를 어기고 끼워 넣어도 스키마가 해당
-  // 필드를 허용하므로, 여기서 결정론적으로 제거해 분석 1회 호출이 학습지까지
-  // 생성해 버리는 경로를 차단한다.
-  const coreSections = validation.data.sections.map((section) =>
-    section.kind === "learning-worksheet"
-      ? {
-          ...section,
-          cloze: undefined,
-          practice: undefined,
-          drills: undefined,
-          workbookSet: undefined,
-          inferenceSet: undefined,
-          questions: [],
-        }
-      : section,
-  );
+  // 기본 분석의 learning-worksheet 는 logicRows 표 전용 — 모델이 프롬프트 금지를
+  // 어기고 실전 학습지 콘텐츠를 끼워 넣어도 여기서 결정론적으로 제거한다.
+  // (미리보기의 "기본 학습지" 뷰와 같은 함수를 공유 — worksheet-core-gate.ts)
+  const coreSections = stripWorksheetContentFields(validation.data.sections);
 
   const report: AnalysisReport = {
     schemaVersion: 1,

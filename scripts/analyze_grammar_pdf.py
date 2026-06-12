@@ -501,11 +501,13 @@ def ranged_matches(matches, start_number: int, end_number: int):
 def parse_answer_block(num: int, page: int, block: str):
     head = block.splitlines()[0] if block.splitlines() else ""
     choice = None
-    m = ANSWER_CHOICE_RE.search(head)
-    if not m:
-        m = ANSWER_CHOICE_RE.search(block[:300])
+    head_after_number = re.sub(rf"^{num}\)\s*", "", head).strip()
+    block_after_number = re.sub(rf"^{num}\)\s*", "", block, count=1).strip()
+    m = ANSWER_CHOICE_RE.search(head_after_number)
     if not m:
         m = ANSWER_EXPLICIT_RE.search(block)
+    if not m:
+        m = ANSWER_CHOICE_RE.search(block_after_number[:300])
     if m:
         choice = m.group(1)
     explanation = block

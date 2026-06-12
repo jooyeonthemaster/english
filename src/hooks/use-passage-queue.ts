@@ -28,6 +28,8 @@ export interface AnalysisPromptConfig {
   targetLevel: string;
   generationPlan?: QuestionGenerationPlan;
   analysisTone?: AnalysisTone;
+  /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성한다 (+5크레딧/지문). */
+  includeWorksheet?: boolean;
 }
 
 export type QueuedPassageStatus =
@@ -189,6 +191,7 @@ function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
     targetLevel: typeof raw.targetLevel === "string" ? raw.targetLevel : "",
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
     analysisTone: normalizeAnalysisTone(raw.analysisTone),
+    includeWorksheet: raw.includeWorksheet === true,
   };
 }
 
@@ -534,6 +537,7 @@ async function startPassageAnalysisJob(
       targetLevel: promptConfig.targetLevel,
       generationPlan: promptConfig.generationPlan,
       analysisTone: promptConfig.analysisTone,
+      includeWorksheet: promptConfig.includeWorksheet === true,
     }),
   });
   const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;

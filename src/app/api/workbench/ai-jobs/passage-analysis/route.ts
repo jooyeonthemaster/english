@@ -23,6 +23,8 @@ const requestSchema = z.object({
   generationPlan: z.unknown().optional(),
   analysisTone: z.unknown().optional(),
   forcePrimeReport: z.boolean().optional(),
+  /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성·병합한다 (+5크레딧). */
+  includeWorksheet: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -89,6 +91,7 @@ export async function POST(req: NextRequest) {
         generationPlan,
         analysisTone,
         forcePrimeReport: parsed.data.forcePrimeReport ?? false,
+        includeWorksheet: parsed.data.includeWorksheet ?? false,
       },
     },
   });
