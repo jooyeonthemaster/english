@@ -75,6 +75,13 @@ const ANTONYM_MARKER_COUNT_DEFAULT = 5;
 const ANTONYM_MARKER_COUNT_MIN = 5;
 const ANTONYM_MARKER_COUNT_MAX = 10;
 const ANTONYM_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const;
+const SENTENCE_ORDER_PARAGRAPH_LABELS = ["(A)", "(B)", "(C)"] as const;
+const SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES = 2;
+const SENTENCE_ORDER_MIN_PARAGRAPH_WORDS = 24;
+const SENTENCE_ORDER_MAX_GIVEN_SENTENCES = 2;
+const SENTENCE_ORDER_MAX_GIVEN_WORDS = 70;
+const SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO = 1.9;
+const SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO = 1.3;
 
 function normalizeGrammarMarkedCount(markedCount: unknown): number {
   const n = typeof markedCount === "number" ? markedCount : Number(markedCount);
@@ -149,7 +156,12 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, test register, collocation, stance, causality, or discourse role, not a simple dictionary antonym.",
   ],
   SENTENCE_ORDER: [
+    "The givenSentence must be only the opening 1-2 sentences and should stay under 65 words; if two opening sentences are too long, use only the first.",
+    "Never put a whole introductory paragraph in givenSentence. Do not create a given part with 3+ sentences.",
+    "Each of (A), (B), and (C) must be a real chunk with at least two sentences; avoid one-line or one-sentence chunks.",
+    "Keep (A)/(B)/(C) balanced in length; no chunk should be roughly twice as long as another.",
     "The three reordered paragraphs must have explicit discourse clues such as pronoun reference, chronology, contrast, or cause-effect.",
+    "Shuffle paragraph labels so the correct order is not simply (A)-(B)-(C).",
     "All options should be plausible permutations; avoid an answer that is forced by a single first-word connector only.",
     "For KILLER, the correct order should require checking both local cohesion and the whole paragraph argument.",
   ],
@@ -2084,6 +2096,10 @@ function validateTypeSpecific(
 
   if (typeId === "SENTENCE_INSERT") {
     validateSentenceInsertQuestion(question, passage, sentenceInsertSlotCount, add);
+  }
+
+  if (typeId === "SENTENCE_ORDER") {
+    validateSentenceOrderQuestion(question, add);
   }
 
   if (typeId === "VOCAB_CHOICE") {
@@ -4961,6 +4977,215 @@ function validateIrrelevantQuestion(
       );
     }
   }
+}
+
+function validateSentenceOrderQuestion(
+  question: Record<string, unknown>,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const givenSentence = normalizeText(question.givenSentence);
+  if (!givenSentence) {
+    add("error", "sentence-order-missing-given", "SENTENCE_ORDER is missing givenSentence.");
+  }
+
+  const givenSentenceCount = countDisplaySentences(givenSentence);
+  const givenWordCount = countWords(givenSentence);
+  if (
+    givenSentence &&
+    (givenSentenceCount < 1 || givenSentenceCount > SENTENCE_ORDER_MAX_GIVEN_SENTENCES)
+  ) {
+    add(
+      "error",
+      "sentence-order-given-too-long",
+      `SENTENCE_ORDER givenSentence must be 1-2 sentences, got ${givenSentenceCount}.`,
+    );
+  }
+  if (givenWordCount > SENTENCE_ORDER_MAX_GIVEN_WORDS) {
+    add(
+      "error",
+      "sentence-order-given-too-long",
+      `SENTENCE_ORDER givenSentence is too long (${givenWordCount} words). Use only the first 1-2 sentences.`,
+    );
+  }
+  if (/[（(]\s*[ABC]\s*[）)]/.test(givenSentence)) {
+    add(
+      "error",
+      "sentence-order-given-too-long",
+      "SENTENCE_ORDER givenSentence appears to contain paragraph labels; split given and (A)/(B)/(C) separately.",
+    );
+  }
+
+  const paragraphs = Array.isArray(question.paragraphs)
+    ? question.paragraphs.filter(isRecord)
+    : [];
+  if (paragraphs.length !== 3) {
+    add(
+      "error",
+      "sentence-order-paragraph-count",
+      `SENTENCE_ORDER must have exactly 3 paragraphs, got ${paragraphs.length}.`,
+    );
+  }
+
+  const paragraphWordCounts: number[] = [];
+  const normalizedLabels: string[] = [];
+  for (let index = 0; index < paragraphs.length; index += 1) {
+    const paragraph = paragraphs[index];
+    const expectedLabel = SENTENCE_ORDER_PARAGRAPH_LABELS[index] ?? `(${index + 1})`;
+    const label = normalizeSentenceOrderParagraphLabel(paragraph.label);
+    normalizedLabels.push(label);
+    const text = normalizeText(paragraph.text);
+    const sentenceCount = countDisplaySentences(text);
+    const wordCount = countWords(text);
+    paragraphWordCounts.push(wordCount);
+
+    if (label !== expectedLabel) {
+      add(
+        "error",
+        "sentence-order-paragraph-labels",
+        `SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ${normalizedLabels.join(", ")}.`,
+      );
+    }
+    if (sentenceCount < SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES) {
+      add(
+        "error",
+        "sentence-order-paragraph-too-short",
+        `SENTENCE_ORDER paragraph ${expectedLabel} must contain at least ${SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES} sentences, got ${sentenceCount}.`,
+      );
+    }
+    if (wordCount < SENTENCE_ORDER_MIN_PARAGRAPH_WORDS) {
+      add(
+        "error",
+        "sentence-order-paragraph-too-thin",
+        `SENTENCE_ORDER paragraph ${expectedLabel} is too short (${wordCount} words).`,
+      );
+    }
+  }
+
+  const positiveParagraphCounts = paragraphWordCounts.filter((count) => count > 0);
+  if (positiveParagraphCounts.length === 3) {
+    const minWords = Math.min(...positiveParagraphCounts);
+    const maxWords = Math.max(...positiveParagraphCounts);
+    const avgWords =
+      positiveParagraphCounts.reduce((sum, count) => sum + count, 0) /
+      positiveParagraphCounts.length;
+
+    if (minWords > 0 && maxWords / minWords > SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO) {
+      add(
+        "error",
+        "sentence-order-paragraph-imbalance",
+        `SENTENCE_ORDER (A)/(B)/(C) chunks are imbalanced (${positiveParagraphCounts.join("/")} words).`,
+      );
+    }
+
+    if (
+      givenWordCount > 0 &&
+      avgWords > 0 &&
+      givenWordCount / avgWords > SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO
+    ) {
+      add(
+        "error",
+        "sentence-order-given-too-long-relative",
+        `SENTENCE_ORDER givenSentence (${givenWordCount} words) is longer than the balanced A/B/C chunk average (${Math.round(avgWords)} words).`,
+      );
+    }
+  }
+
+  validateSentenceOrderOptions(question, add);
+}
+
+function validateSentenceOrderOptions(
+  question: Record<string, unknown>,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  if (!options.length) return;
+
+  const optionOrders = options.map((option) =>
+    parseSentenceOrderPermutation(option.text),
+  );
+  const invalidOptionIndex = optionOrders.findIndex((order) => !order);
+  if (invalidOptionIndex >= 0) {
+    add(
+      "error",
+      "sentence-order-option-permutation",
+      `SENTENCE_ORDER option ${invalidOptionIndex + 1} is not a valid (A)/(B)/(C) permutation.`,
+    );
+  }
+
+  const validOrderTexts = optionOrders
+    .filter((order): order is string[] => Array.isArray(order))
+    .map((order) => order.join("-"));
+  const duplicateOrder = findDuplicate(validOrderTexts);
+  if (duplicateOrder) {
+    add(
+      "error",
+      "sentence-order-option-duplicates",
+      `SENTENCE_ORDER has duplicate order option: ${duplicateOrder}.`,
+    );
+  }
+
+  const answerLabels = collectCorrectAnswerLabels(question);
+  const answerLabel = answerLabels[0];
+  if (!answerLabel) return;
+  const correctOption = options.find(
+    (option) => normalizeLabel(option.label) === answerLabel,
+  );
+  if (!correctOption) return;
+
+  const correctOrder = parseSentenceOrderPermutation(correctOption.text);
+  if (!correctOrder) {
+    add(
+      "error",
+      "sentence-order-correct-option-shape",
+      "SENTENCE_ORDER correct option must be a valid (A)/(B)/(C) permutation.",
+    );
+    return;
+  }
+  if (correctOrder.join("-") === "(A)-(B)-(C)") {
+    add(
+      "error",
+      "sentence-order-unscrambled-answer",
+      "SENTENCE_ORDER correct order must not be the displayed (A)-(B)-(C) order; shuffle labels so students cannot pick the visible order.",
+    );
+  }
+}
+
+function normalizeSentenceOrderParagraphLabel(value: unknown): string {
+  const text = normalizeText(value).toUpperCase();
+  const match = text.match(/[ABC]/);
+  return match ? `(${match[0]})` : text;
+}
+
+function parseSentenceOrderPermutation(value: unknown): string[] | null {
+  const text = normalizeText(value).toUpperCase();
+  const labels = [...text.matchAll(/[（(]\s*([ABC])\s*[）)]/g)].map(
+    (match) => `(${match[1]})`,
+  );
+  if (labels.length !== 3) return null;
+  const unique = new Set(labels);
+  if (unique.size !== 3) return null;
+  return SENTENCE_ORDER_PARAGRAPH_LABELS.every((label) => unique.has(label))
+    ? labels
+    : null;
+}
+
+function countDisplaySentences(value: string): number {
+  const text = normalizeText(value);
+  if (!text) return 0;
+  const splitSentences = splitSharedPassageSentences(text);
+  if (splitSentences.length > 0) return splitSentences.length;
+  const punctuationSentences = text
+    .split(/(?<=[.!?])\s+(?=[A-Z"'(\[])/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return Math.max(1, punctuationSentences.length);
+}
+
+function countWords(value: string): number {
+  const text = normalizeText(value);
+  if (!text) return 0;
+  const words = text.match(/[A-Za-z]+(?:['-][A-Za-z]+)?|\d+(?:[.,]\d+)*/g);
+  return words?.length ?? 0;
 }
 
 function validateKillerBar(

@@ -186,6 +186,18 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "sentence-insert-omitted-source-not-backed",
   "sentence-insert-omitted-source-visible",
   "sentence-insert-given-leaks-in-passage",
+  "sentence-order-missing-given",
+  "sentence-order-given-too-long",
+  "sentence-order-given-too-long-relative",
+  "sentence-order-paragraph-count",
+  "sentence-order-paragraph-labels",
+  "sentence-order-paragraph-too-short",
+  "sentence-order-paragraph-too-thin",
+  "sentence-order-paragraph-imbalance",
+  "sentence-order-option-permutation",
+  "sentence-order-option-duplicates",
+  "sentence-order-correct-option-shape",
+  "sentence-order-unscrambled-answer",
   // The softer giveaway gates below stay STRICT-only: strict retries away from
   // them, but the last-resort relaxed fallback may still ship one (flagged) so a
   // hard passage returns a usable item instead of failing with 0 questions.
