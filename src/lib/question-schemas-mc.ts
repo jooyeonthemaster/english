@@ -25,6 +25,8 @@ export const blankInferenceSchema = z.object({
   ...commonFields,
   originalExpression: z.string().describe("원문에서 빈칸으로 교체한 정확한 표현 (한 글자도 변경하지 않은 원문 그대로)"),
   passageWithBlank: z.string().describe("빈칸(_____) 이 삽입된 지문 전체"),
+  blankAnswerMode: z.enum(["SOURCE_EXACT", "PARAPHRASE", "DOUBLE_NEGATIVE"]).optional(),
+  answerLogic: z.string().optional(),
   options: z.array(optionSchema).length(5),
   ...mcWrongExplanations,
 });

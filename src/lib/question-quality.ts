@@ -46,6 +46,8 @@ interface ValidateQuestionQualityInput {
   antonymPairCount?: number;
   /** Requested BLANK_INFERENCE blank count. 2~3 routes to the multi-blank validator. */
   blankInferenceBlankCount?: number;
+  /** Requested BLANK_INFERENCE paraphrased answer mode. */
+  blankInferenceParaphraseAnswer?: boolean;
   /** Requested option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
@@ -143,6 +145,7 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "If the sentence after the blank begins with a conclusion signal such as therefore, thus, for this reason, or by adopting this strategy, the correct answer must directly support that adjacent conclusion.",
     "Avoid result-declaration or over-absolute answers such as no disruption, unlimited imports, complete independence, or guarantee major crops unless the passage explicitly warrants that strength.",
     "For KILLER, the answer should require connecting at least two sentences or a concession/cause-effect relation.",
+    "If blankAnswerMode is PARAPHRASE, originalExpression is still the exact source span, but the correct option must be a non-verbatim paraphrase calibrated to the requested difficulty.",
   ],
   GRAMMAR_ERROR: [
     "Mark 5-10 real expressions from the original passage. Detailed settings control both marked-position count and the exact answer count, including the case where every label is an answer.",
@@ -1406,6 +1409,7 @@ export function validateQuestionQuality({
   sentenceInsertSlotCount,
   antonymPairCount,
   blankInferenceBlankCount,
+  blankInferenceParaphraseAnswer,
   genericOptionCount,
   genericAnswerCount,
   diversityUsedTargets,
@@ -1458,6 +1462,7 @@ export function validateQuestionQuality({
     sentenceInsertSlotCount,
     antonymPairCount,
     blankInferenceBlankCount,
+    blankInferenceParaphraseAnswer,
     add,
   );
 
@@ -2034,6 +2039,7 @@ function validateTypeSpecific(
   sentenceInsertSlotCount: number | undefined,
   antonymPairCount: number | undefined,
   blankInferenceBlankCount: number | undefined,
+  blankInferenceParaphraseAnswer: boolean | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -2059,10 +2065,17 @@ function validateTypeSpecific(
         question,
         passage,
         blankInferenceBlankCount,
+        blankInferenceParaphraseAnswer,
         add,
       );
     } else {
-      validateBlankInferenceQuestion(question, passage, requestedDifficulty, add);
+      validateBlankInferenceQuestion(
+        question,
+        passage,
+        requestedDifficulty,
+        blankInferenceParaphraseAnswer,
+        add,
+      );
     }
   }
 
@@ -3199,9 +3212,13 @@ function validateBlankInferenceQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
+  blankInferenceParaphraseAnswer: boolean | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const isNegativeParaphraseMode = question.blankAnswerMode === "DOUBLE_NEGATIVE";
+  const isAnswerParaphraseMode =
+    question.blankAnswerMode === "PARAPHRASE" ||
+    (blankInferenceParaphraseAnswer === true && !isNegativeParaphraseMode);
   const originalExpression = normalizeText(question.originalExpression);
   const passageWithBlank = normalizeText(question.passageWithBlank);
   const blankCarrierText = extractBlankCarrierText(passageWithBlank);
@@ -3220,6 +3237,20 @@ function validateBlankInferenceQuestion(
   if (!correctText) {
     add("error", "blank-missing-answer", "BLANK_INFERENCE item is missing a correct option text.");
     return;
+  }
+
+  if (isAnswerParaphraseMode) {
+    validateBlankAnswerParaphraseMode(
+      question,
+      options,
+      originalExpression,
+      blankCarrierText,
+      correctText,
+      correctLabel,
+      passage,
+      requestedDifficulty,
+      add,
+    );
   }
 
   if (crossesStrongContrastBoundary(originalExpression)) {
@@ -3437,14 +3468,312 @@ function validateBlankInferenceQuestion(
   }
 }
 
+const BASIC_PARAPHRASE_ADVANCED_WORDS = new Set([
+  "abstraction",
+  "ambiguous",
+  "conceptual",
+  "consequential",
+  "constitute",
+  "cultivation",
+  "epistemic",
+  "framework",
+  "fundamental",
+  "heterogeneous",
+  "intrinsic",
+  "manifestation",
+  "mechanism",
+  "metacognitive",
+  "normative",
+  "paradigm",
+  "phenomenon",
+  "prerequisite",
+  "reciprocal",
+  "synthesize",
+  "transcend",
+]);
+
+const INTERMEDIATE_PARAPHRASE_OVERLY_ORNATE_WORDS = new Set([
+  "acumen",
+  "influx",
+  "influxes",
+  "sovereignly",
+  "terrain",
+  "terrains",
+]);
+
+function validateBlankAnswerParaphraseMode(
+  question: Record<string, unknown>,
+  options: Record<string, unknown>[],
+  originalExpression: string,
+  blankCarrierText: string,
+  correctText: string,
+  correctLabel: string,
+  passage: string | undefined,
+  requestedDifficulty: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  if (originalExpression && normalizeComparableText(correctText) === normalizeComparableText(originalExpression)) {
+    add(
+      "error",
+      "blank-paraphrase-answer-not-transformed",
+      "PARAPHRASE blank correct option must not copy originalExpression verbatim.",
+    );
+  } else if (originalExpression && isNearVerbatimBlankParaphrase(correctText, originalExpression)) {
+    add(
+      "error",
+      "blank-paraphrase-answer-too-verbatim",
+      "PARAPHRASE blank correct option is too close to originalExpression; rewrite it as a real paraphrase.",
+    );
+  }
+
+  const difficultyIssue = findBlankParaphraseDifficultyIssue(
+    correctText,
+    originalExpression,
+    requestedDifficulty,
+  );
+  if (difficultyIssue) {
+    add("error", difficultyIssue.code, difficultyIssue.message);
+  }
+
+  const slotIssue = findBlankParaphraseSlotIssue(
+    blankCarrierText,
+    originalExpression,
+    correctText,
+  );
+  if (slotIssue) {
+    add("error", slotIssue.code, slotIssue.message);
+  }
+
+  const polarityIssue = findBlankParaphrasePolarityIssue(
+    originalExpression,
+    correctText,
+  );
+  if (polarityIssue) {
+    add("error", polarityIssue.code, polarityIssue.message);
+  }
+
+  if (hasTrailingFunctionWordBlankTarget(originalExpression)) {
+    add(
+      "error",
+      "blank-paraphrase-target-trailing-function",
+      "PARAPHRASE blank originalExpression ends with a modal/auxiliary/function tail; choose a cleaner semantic unit so options do not become grammar-tail variants.",
+    );
+  }
+
+  const answerLogic = normalizeText(question.answerLogic);
+  if (answerLogic.length < 30) {
+    add(
+      "error",
+      "blank-paraphrase-missing-answer-logic",
+      "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option.",
+    );
+  }
+
+  const optionTexts = options.map((option) => normalizeText(option.text)).filter(Boolean);
+  const wordCounts = optionTexts.map(countWordsForQuality).filter((count) => count > 0);
+  if (wordCounts.length >= 4) {
+    const minWords = Math.min(...wordCounts);
+    const maxWords = Math.max(...wordCounts);
+    if (maxWords >= 8 && maxWords / Math.max(1, minWords) > 2.4) {
+      add(
+        "error",
+        "blank-paraphrase-option-imbalance",
+        `PARAPHRASE blank options are too uneven in length (${minWords}-${maxWords} words).`,
+      );
+    }
+  }
+
+  if (passage) {
+    for (const option of options) {
+      const optionText = normalizeText(option.text);
+      if (!optionText || normalizeLabel(option.label) === correctLabel) continue;
+      if (
+        countContentTokens(optionText) >= 3 &&
+        normalizeComparableText(passage).includes(normalizeComparableText(optionText))
+      ) {
+        add(
+          "error",
+          "blank-paraphrase-option-source-copy",
+          `PARAPHRASE blank wrong option copies a source passage phrase verbatim: "${optionText.slice(0, 80)}".`,
+        );
+        break;
+      }
+    }
+  }
+}
+
+function findBlankParaphraseSlotIssue(
+  blankCarrierText: string,
+  originalExpression: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const carrier = normalizeText(blankCarrierText);
+  if (!carrier.includes("_____")) return null;
+
+  const sourceIsTaskLikeSubject =
+    /\b(?:challenge|task|problem|question|issue|matter)\b/i.test(originalExpression);
+  const isWhetherHowSubjectFrame =
+    /^_____\s+(?:is|are|was|were)\s+not\s+(?:whether|if)\b/i.test(carrier) ||
+    /^_____\s+(?:is|are|was|were)\s+not\s+(?:a\s+)?(?:question|matter|issue)\s+of\s+(?:whether|if)\b/i.test(carrier);
+
+  if (
+    sourceIsTaskLikeSubject &&
+    isWhetherHowSubjectFrame &&
+    startsWithGerundProcessPhrase(correctText)
+  ) {
+    return {
+      code: "blank-paraphrase-subject-slot-mismatch",
+      message:
+        "PARAPHRASE blank uses a process-like gerund phrase in a task/challenge subject slot; use a compact noun phrase such as the central challenge/task.",
+    };
+  }
+
+  const blankIndex = carrier.indexOf("_____");
+  const leftOfBlank = blankIndex >= 0 ? carrier.slice(0, blankIndex).trim() : "";
+  if (
+    startsLikeFiniteClause(originalExpression) &&
+    startsWithGerundProcessPhrase(correctText) &&
+    /(?:^|[.;:!?])$/.test(leftOfBlank)
+  ) {
+    return {
+      code: "blank-paraphrase-clause-slot-mismatch",
+      message:
+        "PARAPHRASE blank turns a finite source clause into a gerund phrase in an independent-clause slot.",
+    };
+  }
+
+  return null;
+}
+
+function findBlankParaphrasePolarityIssue(
+  originalExpression: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const original = normalizeText(originalExpression);
+  const answer = normalizeText(correctText);
+
+  const originalResistsReduction =
+    /\bresist\w*\s+(?:the\s+)?temptation\s+to\s+(?:reduce|simplify|limit|narrow)\b/i.test(original);
+  const answerPerformsReduction =
+    /\b(?:reduce|reducing|simplify|simplifying|limit|limiting|narrow|narrowing)\b/i.test(answer);
+  const answerKeepsResistance =
+    /\b(?:resist\w*|avoid\w*|refus\w*|reject\w*|guard(?:ing)?\s+against|prevent\w*|keep\w*\s+from|not|never|without|rather\s+than|instead\s+of)\b/i.test(answer);
+
+  if (originalResistsReduction && answerPerformsReduction && !answerKeepsResistance) {
+    return {
+      code: "blank-paraphrase-polarity-loss",
+      message:
+        "PARAPHRASE blank loses the source resistance/negation relation; it turns resisting reduction into performing reduction.",
+    };
+  }
+
+  return null;
+}
+
+function startsWithGerundProcessPhrase(text: string): boolean {
+  const normalized = normalizeText(text).toLowerCase();
+  const match = normalized.match(/^(?:(?:the|a|an)\s+)?(?:(?:act|process|practice)\s+of\s+)?([a-z][a-z'-]*ing)\b/);
+  if (!match) return false;
+  return !new Set(["anything", "everything", "nothing", "something", "thing"]).has(match[1] ?? "");
+}
+
+function startsLikeFiniteClause(text: string): boolean {
+  return /^(?:it|this|that|these|those|they|we|one|people|students|readers|leaders|scientists|researchers|individuals|societies|communities)\s+(?:requires?|demands?|allows?|enables?|helps?|makes?|does|is|are|was|were|can|could|will|would|should|must|may|might)\b/i.test(
+    normalizeText(text),
+  );
+}
+
+function hasTrailingFunctionWordBlankTarget(text: string): boolean {
+  return /\b(?:will|shall|can|could|would|should|must|may|might|do|does|did|is|are|was|were|be|being|been|to)$/i.test(
+    normalizeText(text),
+  );
+}
+
+function isNearVerbatimBlankParaphrase(candidate: string, source: string): boolean {
+  const candidateComparable = normalizeComparableText(candidate);
+  const sourceComparable = normalizeComparableText(source);
+  if (!candidateComparable || !sourceComparable) return false;
+  if (candidateComparable === sourceComparable) return true;
+  if (
+    sourceComparable.length >= 16 &&
+    (candidateComparable.includes(sourceComparable) ||
+      sourceComparable.includes(candidateComparable))
+  ) {
+    return true;
+  }
+
+  const sourceTokens = contentTokens(source);
+  const candidateTokens = contentTokens(candidate);
+  const smallerTokenCount = Math.min(sourceTokens.size, candidateTokens.size);
+  if (smallerTokenCount < 3) return false;
+  const overlapRatio = countTokenOverlap(sourceTokens, candidateTokens) / smallerTokenCount;
+  const sourceWords = countWordsForQuality(source);
+  const candidateWords = countWordsForQuality(candidate);
+  return overlapRatio >= 0.8 && Math.abs(sourceWords - candidateWords) <= 2;
+}
+
+function findBlankParaphraseDifficultyIssue(
+  correctText: string,
+  originalExpression: string,
+  requestedDifficulty: string | undefined,
+): { code: string; message: string } | null {
+  const wordCount = countWordsForQuality(correctText);
+  const contentCount = countContentTokens(correctText);
+  const originalContentCount = countContentTokens(originalExpression);
+
+  if (requestedDifficulty === "BASIC") {
+    const advancedCount = [...contentTokens(correctText)].filter((token) =>
+      BASIC_PARAPHRASE_ADVANCED_WORDS.has(token),
+    ).length;
+    if (wordCount > 12 || advancedCount > 1 || /[;:]/.test(correctText)) {
+      return {
+        code: "blank-paraphrase-difficulty-mismatch",
+        message:
+          "BASIC PARAPHRASE blank should use short high-frequency wording, not dense academic phrasing.",
+      };
+    }
+  }
+
+  if (requestedDifficulty === "INTERMEDIATE") {
+    const ornateCount = [...contentTokens(correctText)].filter((token) =>
+      INTERMEDIATE_PARAPHRASE_OVERLY_ORNATE_WORDS.has(token),
+    ).length;
+    if (wordCount > 16 || ornateCount > 0) {
+      return {
+        code: "blank-paraphrase-difficulty-mismatch",
+        message:
+          "INTERMEDIATE PARAPHRASE blank should stay natural and readable, not drift into ornate KILLER-level diction.",
+      };
+    }
+  }
+
+  if (
+    requestedDifficulty === "KILLER" &&
+    originalContentCount >= 4 &&
+    contentCount < 3
+  ) {
+    return {
+      code: "blank-paraphrase-correct-too-thin",
+      message:
+        "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase.",
+    };
+  }
+
+  return null;
+}
+
 const MULTI_BLANK_INFERENCE_LABELS = ["(A)", "(B)", "(C)"] as const;
 
 function validateMultiBlankInferenceQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedBlankCount: number | undefined,
+  blankInferenceParaphraseAnswer: boolean | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
+  const isParaphraseMode =
+    question.blankAnswerMode === "PARAPHRASE" ||
+    blankInferenceParaphraseAnswer === true;
   const blanks = Array.isArray(question.blanks) ? question.blanks.filter(isRecord) : [];
   const expectedBlankCount =
     requestedBlankCount && requestedBlankCount >= 2 && requestedBlankCount <= 3
@@ -3552,6 +3881,7 @@ function validateMultiBlankInferenceQuestion(
   }
   if (
     blankAnswers.length === expectedBlankCount &&
+    !isParaphraseMode &&
     !correctValues.every(
       (value, index) => normalizeComparableText(value) === normalizeComparableText(blankAnswers[index]),
     )
@@ -3560,6 +3890,29 @@ function validateMultiBlankInferenceQuestion(
       "error",
       "multi-blank-correct-option-mismatch",
       "The correct option's blankValues must be exactly the original passage expressions, in blank order.",
+    );
+  }
+  if (
+    blankAnswers.length === expectedBlankCount &&
+    isParaphraseMode &&
+    correctValues.every(
+      (value, index) => normalizeComparableText(value) === normalizeComparableText(blankAnswers[index]),
+    )
+  ) {
+    add(
+      "error",
+      "multi-blank-paraphrase-correct-source-exact",
+      "PARAPHRASE multi-blank correct option must not copy the original passage expressions verbatim.",
+    );
+  } else if (
+    blankAnswers.length === expectedBlankCount &&
+    isParaphraseMode &&
+    correctValues.some((value, index) => isNearVerbatimBlankParaphrase(value, blankAnswers[index]))
+  ) {
+    add(
+      "error",
+      "blank-paraphrase-answer-too-verbatim",
+      "PARAPHRASE multi-blank correct option has a blank value too close to the original passage expression.",
     );
   }
 
@@ -5616,6 +5969,26 @@ function findAwkwardBlankOptionPhrase(text: string): string | null {
     "absence of erosion",
     "that lack of",
     "which lack of",
+    "following evaluations or estimations",
+    "act as an active filter",
+    "active filter amidst",
+    "global cultural influxes",
+    "external cultural influxes",
+    "cultural influxes",
+    "sovereignly filtering",
+    "moral terrains",
+    "environmental degraders",
+    "degraders",
+    "making degraders",
+    "degraders internalize",
+    "financial accountability of their ecological footprint",
+    "property of shared choices",
+    "synergistic channels",
+    "collective boundaries",
+    "compassionate comprehension",
+    "compromising alternatives",
+    "reality that envelopes us",
+    "envelopes us",
   ];
   const normalized = text.toLowerCase();
   const listedPattern = patterns.find((pattern) => normalized.includes(pattern));
@@ -5662,6 +6035,31 @@ function findContextualAwkwardBlankOptionPhrase(
   blankCarrierText: string,
   optionText: string,
 ): string | null {
+  const blankIndex = blankCarrierText.indexOf("_____");
+  const leftOfBlank =
+    blankIndex >= 0 ? blankCarrierText.slice(0, blankIndex) : "";
+
+  if (
+    /\b(?:by|of|to|for|with|without|from|in|on|at|as|than|about|toward|towards)\s+$/i.test(leftOfBlank) &&
+    /^(?:by|of|to|for|with|without|from|in|on|at|as|than|about|toward|towards)\b/i.test(optionText)
+  ) {
+    return "stacked prepositions";
+  }
+
+  if (
+    /\bways?\s+in\s+which\s+$/i.test(leftOfBlank) &&
+    /\bways?\s+in\s+which\b/i.test(optionText)
+  ) {
+    return "duplicated ways in which";
+  }
+
+  if (
+    /\bprocess\s+by\s+which\s+$/i.test(leftOfBlank) &&
+    /\bprocess\s+by\s+which\b/i.test(optionText)
+  ) {
+    return "duplicated process by which";
+  }
+
   const blankSubjectSuggestsEvent =
     /\b(?:events?|phenomena|processes|consequences|effects|outcomes)\s+_____/.test(blankCarrierText);
   if (blankSubjectSuggestsEvent && /^(?:can(?:not)?|can't|could|will|would|do\s+not|does\s+not|cannot)\s+survive\b/i.test(optionText)) {

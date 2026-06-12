@@ -1155,6 +1155,55 @@ export function GenerationConfigPanel({
           <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  빈칸 변형
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  정답 패러프레이즈
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도별 어휘
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  오답 균질화
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                정답 선지를 원문 그대로 내지 않고, 지문 의미를 보존한
+                패러프레이즈로 생성합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!blankSettings.paraphraseAnswer}
+              onClick={() => {
+                const next = !blankSettings.paraphraseAnswer;
+                updateBlankSetting({
+                  paraphraseAnswer: next,
+                  ...(next ? { doubleNegative: false } : {}),
+                });
+              }}
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                blankSettings.paraphraseAnswer
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  blankSettings.paraphraseAnswer
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
                 <span
                   className={`text-[12px] font-bold ${isMultiBlank ? "text-slate-400" : "text-slate-800"}`}
                 >
@@ -1183,11 +1232,13 @@ export function GenerationConfigPanel({
               role="switch"
               aria-checked={!isMultiBlank && !!blankSettings.doubleNegative}
               disabled={isMultiBlank}
-              onClick={() =>
+              onClick={() => {
+                const next = !blankSettings.doubleNegative;
                 updateBlankSetting({
-                  doubleNegative: !blankSettings.doubleNegative,
-                })
-              }
+                  doubleNegative: next,
+                  ...(next ? { paraphraseAnswer: false } : {}),
+                });
+              }}
               className={`relative h-6 w-11 rounded-full border transition-colors ${
                 isMultiBlank
                   ? "cursor-not-allowed border-slate-200 bg-slate-100"

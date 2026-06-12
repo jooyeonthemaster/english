@@ -202,6 +202,20 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   // them, but the last-resort relaxed fallback may still ship one (flagged) so a
   // hard passage returns a usable item instead of failing with 0 questions.
   "blank-missing-answer",
+  "blank-paraphrase-answer-not-transformed",
+  "blank-paraphrase-answer-too-verbatim",
+  "blank-paraphrase-missing-answer-logic",
+  "blank-paraphrase-option-source-copy",
+  "blank-paraphrase-option-imbalance",
+  "blank-paraphrase-correct-too-thin",
+  "blank-paraphrase-difficulty-mismatch",
+  "blank-paraphrase-subject-slot-mismatch",
+  "blank-paraphrase-clause-slot-mismatch",
+  "blank-paraphrase-polarity-loss",
+  "blank-paraphrase-target-trailing-function",
+  "blank-awkward-correct-option",
+  "blank-awkward-option",
+  "multi-blank-paraphrase-correct-source-exact",
   "negative-paraphrase-copula-slot-mismatch",
   "negative-paraphrase-stacked-prepositions",
   "negative-paraphrase-verb-slot-mismatch",
@@ -279,6 +293,7 @@ export async function runQuestionGeneration(
         sentenceInsertSlotCount,
         antonymPairCount,
         blankInferenceBlankCount,
+        blankInferenceParaphraseAnswer,
         genericOptionCount,
         genericAnswerCount,
       } = resolvedTypeSettings;
@@ -419,7 +434,13 @@ export async function runQuestionGeneration(
                   ...q,
                   blankAnswerMode: "DOUBLE_NEGATIVE",
                 }
-              : q;
+              : subType === "BLANK_INFERENCE" &&
+                  resolvedTypeSettings.blankInferenceParaphraseAnswer
+                ? {
+                    ...q,
+                    blankAnswerMode: "PARAPHRASE",
+                  }
+                : q;
           const ppResult = postProcessQuestion(
             subType,
             passageContent,
@@ -494,6 +515,7 @@ export async function runQuestionGeneration(
             sentenceInsertSlotCount,
             antonymPairCount,
             blankInferenceBlankCount,
+            blankInferenceParaphraseAnswer,
             genericOptionCount,
             genericAnswerCount,
           });

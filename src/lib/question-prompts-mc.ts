@@ -12,13 +12,14 @@ export const MC_PROMPTS: Record<string, string> = {
 2. 기본 모드에서는 **정답은 반드시 원문에서 선택한 표현을 그대로(한 글자도 바꾸지 않고) 사용해야 합니다.**
    - 패러프레이즈, 동의어 치환, 어순 변경 절대 불가
 3. 단, 별도의 Type detail setting이 주어지면 그 설정이 정답 선지 구성 규칙을 우선합니다.
+   - "PARAPHRASE" 모드에서는 originalExpression은 원문 그대로 두되, 정답 선지 text만 의미 보존 패러프레이즈로 작성합니다.
 4. 오답 4개는 원문에 없는, 비슷하지만 명확히 구분 가능한 영어 표현으로 구성합니다.
 
 ## 출력 필드
 - originalExpression: 원문에서 빈칸으로 만들 정확한 표현 (원문과 한 글자도 다르면 안 됨)
 - surroundingText: originalExpression 주변 40~60자 텍스트 (위치 식별용, 원문 그대로 복사)
-- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
-- answerLogic: 부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
+- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 빈칸 변형 설정이 있을 때는 "PARAPHRASE"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
+- answerLogic: 빈칸 변형/부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
 - correctAnswer: 정답 선지의 label ("1"~"5")
 - options: label "1"~"5", text는 영어 표현. 기본 모드에서는 정답 선지의 text가 반드시 originalExpression과 동일
 - ⚠️ passageWithBlank 필드는 생성하지 마세요 (서버에서 자동 생성)
