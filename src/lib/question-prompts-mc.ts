@@ -104,6 +104,7 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 3. 원문은 기본적으로 맞는 글이라고 가정합니다. 원문 단어 자체를 "부적절"하다고 판정하지 말고, 반드시 원문 단어 하나를 다른 단어로 바꿔서 부적절하게 만드세요.
 4. isInappropriate=true 항목의 표시 단어는 항상 substituteWord입니다. betterWord는 항상 원래 지문에 있던 originalWord와 완전히 같아야 합니다.
 5. 예: 원문이 "presence of cues"라면 originalWord="presence", substituteWord="absence", betterWord="presence"입니다. "presence -> absence"처럼 원문 정답을 오답으로 뒤집으면 실패입니다.
+6. ⚠️ 부적절하게 만들 단어(originalWord)는 지문에 단 한 번만 등장하는 단어로 고르세요. 같은 단어가 지문 다른 곳에 또 있으면 학생이 그 단어를 보고 정답을 즉시 알아채므로 실패입니다.
 
 ## 출력 필드
 - markedWords: 5개 배열. 각 항목:
@@ -115,6 +116,7 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
   - betterWord: isInappropriate가 true인 경우, 원래 적절한 단어 (= originalWord와 동일)
 - options: label "(a)"~"(e)", text는 표시될 단어 (적절한 것은 originalWord, 부적절한 것은 substituteWord)
 - correctAnswer: isInappropriate=true인 항목의 label 하나만 작성
+- explanation: ⚠️ 학생 관점에서 작성하세요. "원문의 X를 Y로 변형/바꿈" 같은 출제 변형 과정을 절대 서술하지 말고, 해당 단어가 문맥상 왜 부적절한지와 어떤 단어(betterWord)여야 자연스러운지만 설명하세요. 정답 근거 단어는 반드시 betterWord(=originalWord)여야 합니다.
 - 자체 검증: 5개 markedWords, 정확히 1개 isInappropriate=true, substituteWord != originalWord, betterWord == originalWord, correctAnswer == isInappropriate label
 - ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?"`,

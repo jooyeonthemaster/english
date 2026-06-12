@@ -116,6 +116,20 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
   // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.
   "grammar-disputed-usage-target",
+  // 정답 노출/타깃 부적격도 같은 이유로 relaxed에서 출하 금지
+  // (2026-06-12 사용자 테스트에서 relaxed 누수 실측: 노출 5건·list-like 1건).
+  "multi-blank-answer-visible",
+  "blank-target-list-like",
+  "vocab-option-word-mismatch",
+  // 부분구 누설(빈칸 값 핵심부 잔존)·어휘 원단어 잔존도 정답 노출이라 차단
+  // (2026-06-12 적대검수 추가 발견).
+  "multi-blank-answer-partial-visible",
+  "vocab-source-word-visible",
+  // 마커 깨짐(인접 중복)·오배치(엉뚱한 동형 단어)도 정답 노출/해설 불일치라
+  // relaxed에서도 차단 (2026-06-12 어법 KILLER 30개 중 실측 2건).
+  "grammar-marker-adjacent-duplicate",
+  "grammar-marker-context-mismatch",
+  "grammar-surrounding-missing-marker",
   "grammar-correction-underline-count",
   "grammar-correction-missing-underlined-segments",
   "grammar-correction-missing-passage-underline",

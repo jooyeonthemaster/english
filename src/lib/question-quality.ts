@@ -352,8 +352,11 @@ export function buildQuestionTargetCandidateBlock(
       );
     case "BLANK_INFERENCE":
       // The candidate block proposes single-blank targets; the multi-blank
-      // variant carries its own instructions in the type-settings prompt.
-      if ((options.blankInferenceBlankCount ?? 1) >= 2) return "";
+      // variant carries its own instructions in the type-settings prompt and
+      // only receives the repeated-phrase ban list (leak prevention).
+      if ((options.blankInferenceBlankCount ?? 1) >= 2) {
+        return buildMultiBlankAvoidBlock(passage);
+      }
       return buildBlankInferenceCandidateBlock(passage, diversity);
     case "REFERENCE":
       return buildReferenceCandidateBlock(passage, diversity);
@@ -856,6 +859,179 @@ function buildImpliedMeaningCandidateBlock(
       ? "Passage sentence map:\n" + sentences.slice(0, 12).map((sentence, index) => `${index + 1}. ${sentence}`).join("\n")
       : "",
   ].filter(Boolean).join("\n");
+}
+
+/**
+ * 지문에 2회 이상 등장하는 구(3~6단어 n-gram, 최장 우선)를 수집한다.
+ * 다중 빈칸에서 반복 구를 빈칸으로 잡으면 남은 출현이 정답을 누설하므로,
+ * 소프트 규칙 대신 구체 목록으로 금지한다 (어법 논쟁 자리 금지 라인과 동일 패턴).
+ */
+const REPEATED_PHRASE_STOPWORDS = new Set([
+  "the", "a", "an", "of", "to", "in", "on", "at", "for", "with", "and", "or",
+  "but", "is", "are", "was", "were", "be", "been", "being", "that", "this",
+  "these", "those", "it", "its", "they", "their", "them", "he", "she", "his",
+  "her", "we", "our", "us", "you", "your", "i", "my", "as", "by", "from",
+  "not", "no", "do", "does", "did", "have", "has", "had", "will", "would",
+  "can", "could", "should", "may", "might", "more", "most", "less", "than",
+  "so", "if", "when", "who", "whom", "which", "what", "there", "here", "all",
+  "also", "into", "about", "such", "one", "two", "very", "much", "many",
+]);
+
+function countContentWords(tokens: string[]): number {
+  return tokens.filter(
+    (t) => !REPEATED_PHRASE_STOPWORDS.has(t.toLowerCase()) && t.length >= 3,
+  ).length;
+}
+
+function toLowerTokens(text: string): string[] {
+  return text.toLowerCase().split(/[^a-z'-]+/).filter(Boolean);
+}
+
+/**
+ * 의미가 비어 있는 placeholder 명사 + 경동사 — 이들만으로 이뤄진 빈칸은
+ * 학생이 내용 이해 없이 관용 표현 감으로 채운다 (예: "doing things").
+ */
+const SEMANTICALLY_LIGHT_WORDS = new Set([
+  "thing", "things", "stuff", "way", "ways", "something", "anything", "everything",
+  "someone", "somebody", "one", "ones", "kind", "kinds", "sort", "sorts",
+  "do", "doing", "does", "done", "make", "making", "makes", "made",
+  "get", "getting", "gets", "got", "have", "having", "has", "had",
+  "go", "going", "goes", "gone", "take", "taking", "takes", "taken",
+]);
+
+/**
+ * 빈칸 표현이 placeholder 명사/경동사만으로 이뤄진 의미 빈약 연어인지 검출한다
+ * ("doing things", "get things done"). 내용어가 1개뿐인 단일 표현은 별개라 제외한다.
+ */
+function isSemanticallyLightExpression(expression: string): boolean {
+  const tokens = toLowerTokens(expression).filter(
+    (t) => t.length >= 3 && !REPEATED_PHRASE_STOPWORDS.has(t),
+  );
+  if (tokens.length < 2) return false;
+  return tokens.every((t) => SEMANTICALLY_LIGHT_WORDS.has(t));
+}
+
+/**
+ * 해설이 출제 변형 과정("원문의 X를 Y로 (잘못) 변형/바꿈")을 학생에게 노출하는지
+ * 검출한다. 정답 단어를 정상 인용하는 해설은 통과시키고, 변형 동사가 동반될 때만 잡는다.
+ */
+const EXPLANATION_META_LEAK_PATTERN =
+  /['"]?[A-Za-z][A-Za-z'-]*['"]?\s*(?:을|를)\s*['"]?[A-Za-z][A-Za-z'-]*['"]?\s*(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|바꾼|치환|교체)/;
+
+function explanationLeaksMutationProcess(explanation: string): boolean {
+  if (!explanation) return false;
+  return EXPLANATION_META_LEAK_PATTERN.test(explanation) || /잘못\s*변형(?:한|된|하여|해서)/.test(explanation);
+}
+
+/**
+ * 빈칸 값의 의미 핵심부(연속한 내용어 2개 이상 부분구)가 빈칸 처리 후 본문에
+ * 그대로 남아 정답을 부분 누설하는지 검출한다. 전체 일치는 별도 게이트가 잡으므로
+ * 여기서는 부분구만 본다. 잔존 부분구를 찾으면 반환, 없으면 null.
+ */
+function findVisibleContentSubphrase(answer: string, blankedPassage: string): string | null {
+  const tokens = toLowerTokens(answer);
+  if (tokens.length < 2) return null;
+  // 구두점을 제거하고 토큰 단위로 비교 (구두점이 붙은 "situations," 같은 잔존을 놓치지 않도록).
+  const haystack = ` ${toLowerTokens(blankedPassage).join(" ")} `;
+  for (let len = tokens.length - 1; len >= 2; len -= 1) {
+    for (let i = 0; i + len <= tokens.length; i += 1) {
+      const window = tokens.slice(i, i + len);
+      if (countContentWords(window) < 2) continue;
+      const phrase = window.join(" ");
+      if (haystack.includes(` ${phrase} `)) return phrase;
+    }
+  }
+  return null;
+}
+
+/**
+ * 어휘 적절성 정답의 원단어(치환 전 단어)가 본문 마커 밖에 또 등장하면 학생이
+ * 정답을 즉답할 수 있다. 단일 내용어(길이 4+, 기능어 제외)만 검사한다.
+ */
+function sourceWordVisibleOutsideMarkers(
+  passageWithMarkers: string,
+  sourceWord: string,
+): boolean {
+  const lower = sourceWord.toLowerCase();
+  if (lower.length < 4 || REPEATED_PHRASE_STOPWORDS.has(lower) || !isSingleEnglishToken(lower)) {
+    return false;
+  }
+  const stripped = passageWithMarkers.replace(/__\([a-jA-J]\)[^_]*__/g, " ");
+  return toLowerTokens(stripped).includes(lower);
+}
+
+function findRepeatedPassagePhrases(passage: string, cap = 10): string[] {
+  const words = passage
+    .replace(/[^\p{L}\p{N}'\- ]/gu, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length < 6) return [];
+  const lower = words.map((w) => w.toLowerCase());
+
+  // 내용어 시작 위치별 출현 인덱스. 초고빈도 토큰은 비용·노이즈 가드로 제외.
+  const positionsByWord = new Map<string, number[]>();
+  for (const [index, token] of lower.entries()) {
+    if (REPEATED_PHRASE_STOPWORDS.has(token) || token.length < 3) continue;
+    const list = positionsByWord.get(token);
+    if (list) list.push(index);
+    else positionsByWord.set(token, [index]);
+  }
+
+  // 같은 내용어에서 시작하는 출현 쌍을 최대 길이까지 확장해, 겹치는 n-gram
+  // 조각이 아니라 반복 구간 전체를 하나의 후보로 수집한다.
+  const sampleByNorm = new Map<string, string>();
+  for (const positions of positionsByWord.values()) {
+    if (positions.length < 2 || positions.length > 25) continue;
+    for (let a = 0; a < positions.length - 1; a += 1) {
+      for (let b = a + 1; b < positions.length; b += 1) {
+        const start = positions[a];
+        const other = positions[b];
+        let len = 0;
+        while (
+          other + len < lower.length &&
+          start + len < other &&
+          lower[start + len] === lower[other + len]
+        ) {
+          len += 1;
+        }
+        // 꼬리의 기능어는 잘라 구절을 자연스럽게 만든다.
+        while (len > 0 && REPEATED_PHRASE_STOPWORDS.has(lower[start + len - 1])) {
+          len -= 1;
+        }
+        if (len < 2) continue;
+        const tokens = words.slice(start, start + len);
+        if (countContentWords(tokens) < 2) continue;
+        const norm = lower.slice(start, start + len).join(" ");
+        if (!sampleByNorm.has(norm)) sampleByNorm.set(norm, tokens.join(" "));
+      }
+    }
+  }
+
+  // 더 긴 반복 구간에 포함되는 부분 구절은 제거하고 최대 구간만 남긴다.
+  const norms = [...sampleByNorm.keys()].sort((x, y) => y.length - x.length);
+  const collected: string[] = [];
+  const collectedNorm: string[] = [];
+  for (const norm of norms) {
+    if (collectedNorm.some((longer) => longer.includes(norm))) continue;
+    collected.push(sampleByNorm.get(norm)!);
+    collectedNorm.push(norm);
+    if (collected.length >= cap) break;
+  }
+  return collected;
+}
+
+/**
+ * 다중 빈칸 전용 후보 제약 블록 — 단일 빈칸 후보 블록 대신 주입된다.
+ */
+function buildMultiBlankAvoidBlock(passage: string): string {
+  const repeated = findRepeatedPassagePhrases(passage);
+  if (repeated.length === 0) return "";
+  return [
+    "## 다중 빈칸 후보 제약 (지문 자동 스캔)",
+    "다음 표현은 지문에 2회 이상 등장하므로 빈칸(blanks[].originalExpression)으로 선택 금지 — 빈칸을 뚫어도 남은 출현이 정답을 그대로 누설해 문항이 거부됩니다:",
+    ...repeated.map((p) => `- "${p}"`),
+    "위 표현과 그 일부를 포함한 구절도 피하고, 지문에 정확히 1회만 등장하는 표현을 선택하세요.",
+  ].join("\n");
 }
 
 function buildBlankInferenceCandidateBlock(
@@ -1830,6 +2006,48 @@ function validateTypeSpecific(
         );
       }
     }
+    // 마커 인접 토큰 중복 검출: 모델 errorExpression이 앞/뒤 문맥 단어를 포함해
+    // "which is __(F) is costed__"(앞 'is' 중복) 같은 깨진 텍스트가 렌더된다 —
+    // 후처리는 위치만 맞추고 토큰 중복은 못 막는다(실측 critical). +RELAXED.
+    if (passageWithMarkers) {
+      const dup = findGrammarMarkerAdjacentDuplicate(passageWithMarkers);
+      if (dup) {
+        add(
+          "error",
+          "grammar-marker-adjacent-duplicate",
+          `A grammar marker repeats an adjacent word ("${dup}"), producing broken text; the underlined span likely swallowed a neighboring word.`,
+        );
+      }
+    }
+    // surroundingText 무효 검출: 정상 마커의 surroundingText는 그 마커 단어를
+    // 반드시 포함한다. isError 마커의 surroundingText에 expression/errorExpression/
+    // correction 토큰이 하나도 없으면 모델이 다른 문장을 가리킨 것 — 전역 폴백
+    // 오배치와 해설-오류 불일치의 근원이다(실측: surround가 'maintenance...costly'를
+    // 가리키나 마커는 'realizes that→those'에 박혀 해설이 엉뚱한 오류를 설명). +RELAXED.
+    {
+      const badSurround = findGrammarSurroundingMissingMarker(markedExpressions);
+      if (badSurround) {
+        add(
+          "error",
+          "grammar-surrounding-missing-marker",
+          `Marker ${badSurround}'s surroundingText does not contain its own expression — the position cue points at a different sentence, risking misplacement and a mismatched explanation.`,
+        );
+      }
+    }
+    // 마커 오배치 검출: 모델 surroundingText가 오류 버전이라 윈도우 탐색이 실패하면
+    // 후처리가 전역 폴백으로 엉뚱한 동형 단어에 마커를 박는다(예: 의도 'which is
+    // costly' → 실제 'she is'에 → "she are"). 렌더 위치 주변이 surroundingText와
+    // 전혀 겹치지 않으면 거부한다(실측: 해설과 밑줄이 다른 문장). +RELAXED.
+    if (passageWithMarkers) {
+      const misplaced = findGrammarMisplacedMarker(passageWithMarkers, markedExpressions);
+      if (misplaced) {
+        add(
+          "error",
+          "grammar-marker-context-mismatch",
+          `Marker ${misplaced} is rendered in a context that does not match its surroundingText — it is likely placed on a wrong same-form word.`,
+        );
+      }
+    }
     // 생성 플로우 전용 '오류 미도입' 검출: 마커를 벗긴 지문이 원문과 동일하면
     // 모든 isError 자리가 원문 그대로라는 뜻 — 원문을 오류로 판정했거나 치환이
     // 빗나간 문항(정답 무효/복수정답 실측 critical). 지문에 오류가 인쇄된
@@ -2426,6 +2644,14 @@ function validateVocabChoiceQuestion(
           `VOCAB_CHOICE betterWord for (${key}) must exist in the original passage.`,
         );
       }
+      // (g) 원단어 잔존 누설: 치환 전 단어가 본문 마커 밖에 또 보이면 즉답 가능.
+      if (sourceCorrectWord && sourceWordVisibleOutsideMarkers(passageWithMarkers, sourceCorrectWord)) {
+        add(
+          "error",
+          "vocab-source-word-visible",
+          `VOCAB_CHOICE answer (${key}) source word "${sourceCorrectWord}" still appears elsewhere in the passage, revealing the answer.`,
+        );
+      }
     } else {
       if (betterWord) {
         add("error", "vocab-nonanswer-has-better-word", `VOCAB_CHOICE non-answer (${key}) must not have betterWord.`);
@@ -2449,6 +2675,15 @@ function validateVocabChoiceQuestion(
         );
       }
     }
+  }
+
+  // (f) 해설 메타 누출: 출제 변형 과정을 학생용 해설에 노출하지 않는다.
+  if (explanationLeaksMutationProcess(normalizeText(question.explanation))) {
+    add(
+      "warning",
+      "vocab-explanation-meta-leak",
+      "VOCAB_CHOICE explanation should not narrate the mutation process (e.g. \"changed X to Y\"); explain why the word is contextually wrong instead.",
+    );
   }
 }
 
@@ -3093,11 +3328,15 @@ function validateMultiBlankInferenceQuestion(
         `Blank ${expectedLabels[index]} expression is not found verbatim in the passage: "${expression.slice(0, 80)}".`,
       );
     }
-    if (countContentTokens(expression) < 1 || isTinyFunctionWord(expression)) {
+    if (
+      countContentTokens(expression) < 1 ||
+      isTinyFunctionWord(expression) ||
+      isSemanticallyLightExpression(expression)
+    ) {
       add(
         "warning",
         "multi-blank-weak-expression",
-        `Blank ${expectedLabels[index]} should blank a meaningful content expression, not a bare function word.`,
+        `Blank ${expectedLabels[index]} should blank a meaningful content expression, not a bare function word or an empty light phrase like "doing things".`,
       );
     }
   }
@@ -3118,11 +3357,21 @@ function validateMultiBlankInferenceQuestion(
     }
   }
   for (const answer of blankAnswers) {
-    if (answer && normalizeComparableText(passageWithBlank).includes(normalizeComparableText(answer))) {
+    if (!answer) continue;
+    if (normalizeComparableText(passageWithBlank).includes(normalizeComparableText(answer))) {
       add(
         "error",
         "multi-blank-answer-visible",
         `A blanked expression is still visible in passageWithBlank: "${answer.slice(0, 60)}".`,
+      );
+      continue;
+    }
+    const leakedSubphrase = findVisibleContentSubphrase(answer, passageWithBlank);
+    if (leakedSubphrase) {
+      add(
+        "error",
+        "multi-blank-answer-partial-visible",
+        `A blanked expression's meaningful core "${leakedSubphrase}" still appears in passageWithBlank, partially revealing the answer.`,
       );
     }
   }
@@ -4647,6 +4896,103 @@ function findMarkers(text: string): Array<{ start: number; end: number; inner: s
 
 function countUnderlineMarkers(text: string): number {
   return findMarkers(text).length;
+}
+
+/** 합법적으로 인접 반복될 수 있는 영어 단어(중복 게이트 예외). */
+const GRAMMAR_LEGIT_ADJACENT_REPEATS = new Set(["had", "that", "ho"]);
+
+/**
+ * 어법 마커가 앞/뒤 단어를 그대로 중복하는지 검출한다 — "which is __(F) is
+ * costed__"처럼 errorExpression이 이웃 단어를 삼켜 깨진 텍스트가 된 케이스.
+ * 라벨 `(X)`를 제외한 첫/끝 내용 토큰을 마커 밖 이웃 토큰과 비교한다.
+ */
+function findGrammarMarkerAdjacentDuplicate(passageWithMarkers: string): string | null {
+  const re = /([A-Za-z']+)\s+__\([A-Ja-j]\)\s*([^_]+?)__(?:\s+([A-Za-z']+))?/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(passageWithMarkers))) {
+    const before = match[1].toLowerCase();
+    const innerTokens = match[2].trim().split(/\s+/).filter(Boolean);
+    const after = match[3]?.toLowerCase();
+    const innerFirst = innerTokens[0]?.toLowerCase();
+    const innerLast = innerTokens[innerTokens.length - 1]?.toLowerCase();
+    if (innerFirst && before === innerFirst && !GRAMMAR_LEGIT_ADJACENT_REPEATS.has(before)) {
+      return `${before} ${innerFirst}`;
+    }
+    if (after && innerLast && after === innerLast && !GRAMMAR_LEGIT_ADJACENT_REPEATS.has(after)) {
+      return `${innerLast} ${after}`;
+    }
+  }
+  return null;
+}
+
+/**
+ * isError 마커의 surroundingText가 자신의 마커 단어(expression/errorExpression/
+ * correction)를 하나도 포함하지 않으면 위치 단서가 무효다 — 모델이 다른 문장을
+ * 가리킨 것으로, 전역 폴백 오배치와 해설-오류 불일치를 유발한다.
+ */
+function findGrammarSurroundingMissingMarker(
+  markedExpressions: Record<string, unknown>[],
+): string | null {
+  for (const me of markedExpressions) {
+    if (me.isError !== true) continue;
+    const surrounding = normalizeText(me.surroundingText);
+    if (!surrounding) continue;
+    const surroundTokens = new Set(toLowerTokens(surrounding));
+    const markerTokens = [
+      normalizeText(me.expression),
+      normalizeText(me.errorExpression),
+      normalizeText(me.correction),
+    ].flatMap((s) => toLowerTokens(s));
+    if (markerTokens.length === 0) continue;
+    if (!markerTokens.some((t) => surroundTokens.has(t))) {
+      return normalizeLabel(me.label) || "(?)";
+    }
+  }
+  return null;
+}
+
+/**
+ * 어법 마커가 surroundingText와 동떨어진 위치에 배치됐는지 검출한다. 각 isError
+ * 마커의 렌더 위치 주변 내용어와 모델 surroundingText의 내용어가 전혀 겹치지
+ * 않으면 오배치로 본다(전역 폴백이 엉뚱한 동형 단어에 박은 케이스). surroundingText
+ * 내용어가 2개 미만이면 신뢰할 수 없어 건너뛴다(위양성 방지).
+ */
+function findGrammarMisplacedMarker(
+  passageWithMarkers: string,
+  markedExpressions: Record<string, unknown>[],
+): string | null {
+  const markers = findMarkers(passageWithMarkers);
+  const labelToMarker = new Map<string, { start: number; end: number }>();
+  for (const marker of markers) {
+    const label = marker.inner.match(/^\(([A-Ja-j])\)/)?.[1]?.toUpperCase();
+    if (label && !labelToMarker.has(label)) labelToMarker.set(label, marker);
+  }
+  for (const me of markedExpressions) {
+    if (me.isError !== true) continue;
+    const label = normalizeLabel(me.label).replace(/[()]/g, "").toUpperCase();
+    const marker = labelToMarker.get(label);
+    const surrounding = normalizeText(me.surroundingText);
+    if (!marker || !surrounding) continue;
+
+    // 마커 단어(expression/errorExpression)는 surrounding 내용어에서 제외 —
+    // 위치 단서가 되는 이웃 내용어만 남긴다.
+    const markerWords = new Set(
+      [normalizeText(me.expression), normalizeText(me.errorExpression)]
+        .flatMap((s) => toLowerTokens(s)),
+    );
+    const surroundContent = toLowerTokens(surrounding).filter(
+      (t) => t.length >= 3 && !REPEATED_PHRASE_STOPWORDS.has(t) && !markerWords.has(t),
+    );
+    if (surroundContent.length < 2) continue;
+
+    const ctxStart = Math.max(0, marker.start - 45);
+    const ctxEnd = Math.min(passageWithMarkers.length, marker.end + 45);
+    const around = `${passageWithMarkers.slice(ctxStart, marker.start)} ${passageWithMarkers.slice(marker.end, ctxEnd)}`;
+    const aroundTokens = new Set(toLowerTokens(around));
+    const overlap = surroundContent.filter((t) => aroundTokens.has(t)).length;
+    if (overlap === 0) return me.label ? normalizeLabel(me.label) : `(${label})`;
+  }
+  return null;
 }
 
 function hasMarkerTokenBoundaries(text: string, start: number, end: number): boolean {
