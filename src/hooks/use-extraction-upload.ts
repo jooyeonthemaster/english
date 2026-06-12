@@ -28,6 +28,11 @@ interface StartJobResponse {
 
 const UPLOAD_CONCURRENCY = 4;
 
+/** PDF 잡을 인라인(extract-inline)으로 태우는 페이지 수 상한. PDF는 클라이언트에서
+ *  이미지로 분할 업로드되므로 서버 처리 자체는 이미지 잡과 동일 — 이 상한을 넘는
+ *  대형 PDF만 타임아웃/내구성 위해 트리거 경로(/start)로 보낸다. */
+const INLINE_PDF_MAX_PAGES = 10;
+
 // 인라인(이미지) 추출은 OCR을 백그라운드로 던지고 즉시 반환하므로(다음 작업을 바로
 // 시작할 수 있게), 진행 중인 백그라운드 OCR 개수를 모듈 레벨에서 센다. 페이지 이탈
 // 경고(beforeunload)가 이 값을 읽어, 백그라운드 작업이 남아 있으면 경고를 유지한다.
@@ -153,9 +158,17 @@ export function useExtractionUpload() {
       mode: ExtractionMode;
       /** P7-D2: "verbatim"(원문 그대로) | "restored"(AI 복원). 미전달=기존 동작. */
       outputMode?: "verbatim" | "restored";
+      /** 생성 페이지 발 잡: finalize가 drafts를 서버에서 곧바로 Passage로 승격. */
+      autoPromote?: boolean;
     }): Promise<string | null> => {
-      const { slots: rawSlots, sourceType, originalFileName, mode, outputMode } =
-        opts;
+      const {
+        slots: rawSlots,
+        sourceType,
+        originalFileName,
+        mode,
+        outputMode,
+        autoPromote,
+      } = opts;
       if (rawSlots.length === 0) {
         setError("업로드할 페이지가 없습니다.");
         return null;
@@ -176,6 +189,7 @@ export function useExtractionUpload() {
             sourceType,
             mode,
             outputMode,
+            autoPromote,
             totalPages: slots.length,
             originalFileName: originalFileName ?? undefined,
             pages: slots.map((slot) => ({
@@ -205,8 +219,13 @@ export function useExtractionUpload() {
         // 이미지 잡은 INLINE(트리거 X)으로 — cold pod 오버헤드 없이 warm 서버에서
         // OCR+finalize를 한 요청에 처리하고 drafts 커밋 후 반환받는다. 결과가 이미
         // DB에 있으므로 관리 페이지 이동 시 "새로고침해야 보임" 버그도 사라진다.
-        // 대용량 PDF 잡은 타임아웃/내구성 위해 기존 트리거 경로(/start) 유지.
-        const useInline = sourceType === "IMAGES";
+        // PDF도 클라이언트에서 페이지별 이미지로 쪼개 올리므로(서버 입장에선 동일한
+        // 이미지 페이지 잡) 소형 PDF는 인라인으로 태운다 — 이미지는 이미 30페이지까지
+        // 인라인이라 10페이지 상한은 보수적. 대형 PDF만 타임아웃/내구성 위해 기존
+        // 트리거 경로(/start) 유지.
+        const useInline =
+          sourceType === "IMAGES" ||
+          (sourceType === "PDF" && slots.length <= INLINE_PDF_MAX_PAGES);
         if (useInline) {
           setPhase("processing");
           // 인라인 OCR을 백그라운드로 던지고(파이어 앤 포겟) 업로드 직후 즉시 반환한다.

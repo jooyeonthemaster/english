@@ -121,7 +121,7 @@ import {
   toggleTableCol,
 } from "./editor-mutations";
 import { ANALYSIS_REPORT_EDIT_CSS } from "./report-edit-styles";
-import { ActivityPalettePanel } from "./activity-palette-modal";
+import { ActivityPalettePanel, ActivityToggleSwitch } from "./activity-palette-modal";
 import type { ActivityAction } from "./custom-activity-renders";
 import {
   activityBlockLabel,
@@ -1330,6 +1330,8 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   // ─── 학습 활동(결정론·AI 아님) ───
   // 마지막으로 다룬 학습 활동 블록 — 다른 블록을 선택해도 그 설정 섹션이 사라지지 않고(접힌 채) 유지된다.
   const [lastActivityId, setLastActivityId] = useState<string | null>(null);
+  // 팔레트에서 활동을 (재)활성화할 때마다 +1 — 설정 섹션이 접혀 있어도 다시 펼치게 하는 신호.
+  const [activityActivateNonce, setActivityActivateNonce] = useState(0);
 
   // 팔레트에서 활동 선택 → 워크시트 맨 끝에 활동 블록 삽입 (전체 지문·기본 파라미터).
   const insertActivity = useCallback(
@@ -1348,8 +1350,55 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
       });
       setActiveId(id);
       scrollToBlockRef.current(id);
+      setActivityActivateNonce((n) => n + 1);
+      // 설정 섹션이 보이도록 편집 패널을 연다(접혀 있던 경우).
+      setPropertiesPanelCollapsed(false);
     },
     [setReport],
+  );
+
+  // 팔레트 토글용 — 문서에 추가된 활동 블록 수(유형별). 카드의 ON 스위치/개수 배지 근거.
+  const activityCountByKind = useMemo(() => {
+    const counts: Partial<Record<ActivityKind, number>> = {};
+    for (const b of report.customBlocks ?? []) {
+      if (b.kind !== "activity") continue;
+      counts[b.activityKind] = (counts[b.activityKind] ?? 0) + 1;
+    }
+    return counts;
+  }, [report.customBlocks]);
+
+  // 팔레트 ON 스위치 끄기 — 그 유형의 활동 블록을 문서에서 전부 제거(undo 가능).
+  const removeActivityKind = useCallback(
+    (activityKind: ActivityKind) => {
+      const ids = (report.customBlocks ?? [])
+        .filter((b) => b.kind === "activity" && b.activityKind === activityKind)
+        .map((b) => b.id);
+      if (ids.length === 0) return;
+      setReport((r) => ids.reduce((acc, id) => deleteCustomBlock(acc, id), r));
+      // 지워진 블록이 선택돼 있었으면 해제 (lastActivityId 정리는 전용 effect 가 담당).
+      setActiveId((current) => {
+        if (!current) return current;
+        const logical = current.startsWith("c-") ? current.split("::", 1)[0] : current;
+        return ids.includes(logical) ? null : current;
+      });
+    },
+    [report.customBlocks, setReport],
+  );
+
+  // 추가된 유형의 팔레트 카드 클릭 — 또 추가하지 않고 기존 첫 블록을 선택·스크롤해 설정을 연다.
+  const focusActivityKind = useCallback(
+    (activityKind: ActivityKind) => {
+      const block = (report.customBlocks ?? []).find(
+        (b) => b.kind === "activity" && b.activityKind === activityKind,
+      );
+      if (!block) return;
+      setActiveId(block.id);
+      scrollToBlockRef.current(block.id);
+      setActivityActivateNonce((n) => n + 1);
+      // 설정 섹션이 보이도록 편집 패널을 연다(접혀 있던 경우).
+      setPropertiesPanelCollapsed(false);
+    },
+    [report.customBlocks],
   );
 
   // 블록 위 컨트롤: 다시 섞기(seed+1 재생성)·밀도·정답 토글·삭제. AI 호출 없음.
@@ -1532,6 +1581,8 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const [activityPanelCollapsed, setActivityPanelCollapsed] = useState(false);
   // '단어 시험지' 카드를 누른 적 있으면 우측 패널에 단어 시험지 설정 섹션이 떠 있는다(활동 설정과 동일).
   const [vocabTestFocused, setVocabTestFocused] = useState(false);
+  // 카드를 누를 때마다 +1 — 설정 섹션이 접혀 있어도 다시 펼치고 그 위치로 스크롤하는 신호.
+  const [vocabTestActivateNonce, setVocabTestActivateNonce] = useState(0);
   const [materialSettingsOpen, setMaterialSettingsOpen] = useState(false);
   // 블록을 선택하면 학습자료 설정에서 편집 패널로 자동 전환(그 블록 도구를 바로 보여주기 위해)
   useEffect(() => {
@@ -2287,8 +2338,14 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
   const activateVocabTest = () => {
     if (!toolbarVocabTestEnabled) setReport((r) => setVocabularyTestMode(r, toolbarVocabularyIndex, "hide-meaning"));
     setVocabTestFocused(true);
+    setVocabTestActivateNonce((n) => n + 1);
     setMaterialSettingsOpen(false);
     setPropertiesPanelCollapsed(false);
+  };
+  // 카드의 ON 스위치 — 단어 시험지 끄기. "study" 모드는 vocabTestOnly 까지 함께 해제하며,
+  // onVocabTestMode 가 사라지는 시험지 위로 부드럽게 스크롤한 뒤 제거한다.
+  const deactivateVocabTest = () => {
+    if (toolbarVocabTestEnabled) onVocabTestMode(toolbarVocabularyIndex, "study");
   };
   const canToggleToolbarVocabTestOnly =
     toolbarVocabularySection?.kind === "vocabulary" && toolbarVocabularySection.rows.length > 0;
@@ -2644,17 +2701,40 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                 <ActivityPalettePanel
                   report={report}
                   onPick={insertActivity}
+                  activityCounts={activityCountByKind}
+                  onToggleOffKind={removeActivityKind}
+                  onFocusKind={focusActivityKind}
                   vocabTestSlot={
                     canToggleToolbarVocabTestOnly ? (
-                      <button
-                        type="button"
+                      // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
+                      <div
+                        role="button"
+                        tabIndex={0}
                         onClick={activateVocabTest}
-                        className="group flex w-full flex-col gap-1.5 rounded-xl border border-slate-200 bg-white p-3 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/40"
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            activateVocabTest();
+                          }
+                        }}
+                        title={toolbarVocabTestEnabled ? "단어 시험지 설정 열기" : "단어 시험지 켜기"}
+                        className={`group flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
+                          toolbarVocabTestEnabled
+                            ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
+                            : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
+                        }`}
                       >
                         <div className="flex items-center justify-between gap-2">
                           <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
                           {toolbarVocabTestEnabled ? (
-                            <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white">켜짐</span>
+                            <ActivityToggleSwitch
+                              on
+                              title="단어 시험지 끄기"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                deactivateVocabTest();
+                              }}
+                            />
                           ) : (
                             <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-100">
                               <Plus className="h-3 w-3" /> 추가
@@ -2668,7 +2748,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                             {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
                           </p>
                         </div>
-                      </button>
+                      </div>
                     ) : null
                   }
                 />
@@ -2752,10 +2832,12 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                   activeCustom={(logicalActiveId && report.customBlocks?.find((b) => b.id === logicalActiveId)) || null}
                   activityBlock={lastActivityBlock}
                   activityActive={activityActive}
+                  activityActivateNonce={activityActivateNonce}
                   onActivateActivity={() => {
                     if (lastActivityId) {
                       setActiveId(lastActivityId);
                       scrollToBlock(lastActivityId);
+                      setActivityActivateNonce((n) => n + 1);
                     }
                   }}
                   activePos={activePos}
@@ -2787,6 +2869,7 @@ export function AnalysisReportEditor({ passageId, initialReport, onSaved, onExit
                   onRestoreVocabTestRows={onRestoreVocabTestRows}
                   onVocabTierFilter={onVocabTierFilter}
                   vocabTestFocused={vocabTestFocused}
+                  vocabTestActivateNonce={vocabTestActivateNonce}
                   vocabSectionIndex={toolbarVocabularyIndex}
                   onScrollToBlock={scrollToBlock}
                   onDeleteCustom={(id) => deleteActive(id)}
@@ -3402,24 +3485,30 @@ function SortablePanelStack({
   children,
   blockSelected = false,
   activityActive = false,
+  activityActivateNonce = 0,
   onActivateActivity,
   vocabTestActive = false,
+  vocabTestActivateNonce = 0,
 }: {
   children: ReactNode;
   blockSelected?: boolean;
   activityActive?: boolean;
+  /** 팔레트에서 (재)활성화할 때마다 증가 — 이미 활성이어도 접힌 섹션을 다시 펼친다. */
+  activityActivateNonce?: number;
   onActivateActivity?: () => void;
   vocabTestActive?: boolean;
+  /** '단어 시험지' 카드를 누를 때마다 증가 — 이미 활성이어도 접힌 섹션을 다시 펼친다. */
+  vocabTestActivateNonce?: number;
 }) {
   // activity-edit / vocab-test-edit 접힘은 영속(localStorage)하지 않고 전용 상태로 — 활성화될 때마다 항상 펼침으로 시작.
   const [activityEditCollapsed, setActivityEditCollapsed] = useState(false);
   useEffect(() => {
     if (activityActive) setActivityEditCollapsed(false);
-  }, [activityActive]);
+  }, [activityActive, activityActivateNonce]);
   const [vocabTestEditCollapsed, setVocabTestEditCollapsed] = useState(false);
   useEffect(() => {
     if (vocabTestActive) setVocabTestEditCollapsed(false);
-  }, [vocabTestActive]);
+  }, [vocabTestActive, vocabTestActivateNonce]);
   const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
     readStoredPanelSectionOrder,
   );
@@ -3635,6 +3724,7 @@ function PropertiesPanel({
   activeCustom,
   activityBlock,
   activityActive,
+  activityActivateNonce,
   onActivateActivity,
   activePos,
   total,
@@ -3654,6 +3744,7 @@ function PropertiesPanel({
   onRestoreVocabTestRows,
   onVocabTierFilter,
   vocabTestFocused,
+  vocabTestActivateNonce,
   vocabSectionIndex,
   onScrollToBlock,
   onDeleteCustom,
@@ -3671,6 +3762,8 @@ function PropertiesPanel({
   activeCustom: CustomBlock | null;
   activityBlock: ActivityBlock | null;
   activityActive: boolean;
+  /** 팔레트에서 활동을 (재)활성화한 횟수 — 접힌 설정 섹션을 다시 펼치는 신호. */
+  activityActivateNonce: number;
   onActivateActivity: () => void;
   activePos: number;
   total: number;
@@ -3696,6 +3789,8 @@ function PropertiesPanel({
   onRestoreVocabTestRows: (sectionIndex: number) => void;
   onVocabTierFilter: (sectionIndex: number, tiers: VocabularyTier[]) => void;
   vocabTestFocused: boolean;
+  /** '단어 시험지' 카드를 누른 횟수 — 접힌 설정 섹션 재펼침 + 섹션으로 스크롤 신호. */
+  vocabTestActivateNonce: number;
   vocabSectionIndex: number;
   onScrollToBlock: (id: string) => void;
   onDeleteCustom: (id: string) => void;
@@ -3710,6 +3805,14 @@ function PropertiesPanel({
     const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
     return () => cancelAnimationFrame(raf);
   }, [activeId]);
+  // '단어 시험지' 카드를 누르면(누를 때마다) 그 설정 섹션이 보이도록 패널을 스크롤.
+  useEffect(() => {
+    if (!vocabTestFocused) return;
+    const el = document.getElementById("panel-vocab-test-edit");
+    if (!el) return;
+    const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
+    return () => cancelAnimationFrame(raf);
+  }, [vocabTestFocused, vocabTestActivateNonce]);
   const align = activeMeta.align ?? "left";
   const isCover = !!active && active.id === "cover";
   const isCustom = !!active && active.id.startsWith("c-");
@@ -3823,7 +3926,14 @@ function PropertiesPanel({
   }
 
   return (
-    <SortablePanelStack blockSelected={!!active && !isCover} activityActive={activityActive} onActivateActivity={onActivateActivity} vocabTestActive={vocabTestActive}>
+    <SortablePanelStack
+      blockSelected={!!active && !isCover}
+      activityActive={activityActive}
+      activityActivateNonce={activityActivateNonce}
+      onActivateActivity={onActivateActivity}
+      vocabTestActive={vocabTestActive}
+      vocabTestActivateNonce={vocabTestActivateNonce}
+    >
       {isCover ? (
         <PanelSection sectionId="cover-edit" title="표지 편집">
           <p className="text-[12px] text-slate-400 leading-relaxed">
@@ -4081,58 +4191,60 @@ function PropertiesPanel({
             </PanelGroup>
           ) : null}
           </PanelSection>
-
-          {activityBlock ? (
-            <PanelSection sectionId="activity-edit" title={`${activityBlockLabel(activityBlock)} 설정`}>
-              <ActivityOptions
-                block={activityBlock}
-                sentenceCount={passageSentenceCount}
-                answerKeyPageOn={report.activityAnswerKeyPage !== false}
-                onActivity={onActivity}
-              />
-            </PanelSection>
-          ) : null}
-
-          {vocabTestBlock ? (
-            <PanelSection sectionId="vocab-test-edit" title="단어 시험지 설정">
-              {(() => {
-                const mode = vocabTestBlock.vocabTestMode ?? "study";
-                const enabled = !!report.vocabTestOnly || mode !== "study";
-                return (
-                  <>
-                    <ToggleRow
-                      label="단어 시험지 포함"
-                      on={enabled}
-                      onClick={() => onVocabTestMode(vocabTestIndex, enabled ? "study" : "hide-meaning")}
-                      icon={<FileQuestion className="h-3.5 w-3.5" />}
-                    />
-                    {enabled ? (
-                      <div className="mt-2.5">
-                        <VocabTestOptions
-                          sectionIndex={vocabTestIndex}
-                          vocabMode={mode}
-                          vocabTestLayout={vocabTestBlock.vocabTestLayout ?? "table"}
-                          vocabTestOnly={!!report.vocabTestOnly}
-                          excludedVocabTestCount={vocabTestBlock.vocabTestExcludedKeys?.length ?? 0}
-                          vocabTierFilter={vocabTestBlock.vocabTierFilter}
-                          onVocabTestMode={onVocabTestMode}
-                          onVocabTestLayout={onVocabTestLayout}
-                          onVocabTestOnly={onVocabTestOnly}
-                          onRestoreVocabTestRows={onRestoreVocabTestRows}
-                          onVocabTierFilter={onVocabTierFilter}
-                        />
-                      </div>
-                    ) : (
-                      <p className="mt-1.5 text-[10.5px] text-slate-400">켜면 지문 단어로 시험지 페이지가 생성돼요. 뜻·단어·동의어·반의어 + 난이도 단계.</p>
-                    )}
-                  </>
-                );
-              })()}
-            </PanelSection>
-          ) : null}
-
         </>
       )}
+
+      {/* 활동/단어시험지 설정은 블록 선택 여부와 무관하게 렌더 — 팔레트 카드를 눌렀을 때
+          (아무 블록도 선택 안 된 상태 포함) 설정 섹션이 곧바로 떠야 한다. 비활성일 땐
+          SortablePanelStack 이 접힌 채 유지한다(사라지지 않음). */}
+      {activityBlock ? (
+        <PanelSection sectionId="activity-edit" title={`${activityBlockLabel(activityBlock)} 설정`}>
+          <ActivityOptions
+            block={activityBlock}
+            sentenceCount={passageSentenceCount}
+            answerKeyPageOn={report.activityAnswerKeyPage !== false}
+            onActivity={onActivity}
+          />
+        </PanelSection>
+      ) : null}
+
+      {vocabTestBlock ? (
+        <PanelSection sectionId="vocab-test-edit" title="단어 시험지 설정" anchorId="panel-vocab-test-edit">
+          {(() => {
+            const mode = vocabTestBlock.vocabTestMode ?? "study";
+            const enabled = !!report.vocabTestOnly || mode !== "study";
+            return (
+              <>
+                <ToggleRow
+                  label="단어 시험지 포함"
+                  on={enabled}
+                  onClick={() => onVocabTestMode(vocabTestIndex, enabled ? "study" : "hide-meaning")}
+                  icon={<FileQuestion className="h-3.5 w-3.5" />}
+                />
+                {enabled ? (
+                  <div className="mt-2.5">
+                    <VocabTestOptions
+                      sectionIndex={vocabTestIndex}
+                      vocabMode={mode}
+                      vocabTestLayout={vocabTestBlock.vocabTestLayout ?? "table"}
+                      vocabTestOnly={!!report.vocabTestOnly}
+                      excludedVocabTestCount={vocabTestBlock.vocabTestExcludedKeys?.length ?? 0}
+                      vocabTierFilter={vocabTestBlock.vocabTierFilter}
+                      onVocabTestMode={onVocabTestMode}
+                      onVocabTestLayout={onVocabTestLayout}
+                      onVocabTestOnly={onVocabTestOnly}
+                      onRestoreVocabTestRows={onRestoreVocabTestRows}
+                      onVocabTierFilter={onVocabTierFilter}
+                    />
+                  </div>
+                ) : (
+                  <p className="mt-1.5 text-[10.5px] text-slate-400">켜면 지문 단어로 시험지 페이지가 생성돼요. 뜻·단어·동의어·반의어 + 난이도 단계.</p>
+                )}
+              </>
+            );
+          })()}
+        </PanelSection>
+      ) : null}
 
     </SortablePanelStack>
   );

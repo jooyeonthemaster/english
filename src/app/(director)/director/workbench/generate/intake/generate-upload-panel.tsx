@@ -273,6 +273,9 @@ export function GenerateUploadPanel({
           originalFileName: sourceName,
           mode: "PASSAGE_ONLY",
           outputMode,
+          // 생성 페이지 발 잡: finalize가 서버에서 drafts를 곧바로 Passage로 승격.
+          // 추출(~수십 초) 중 페이지를 떠나도 결과가 고아로 남지 않는다.
+          autoPromote: true,
         });
         if (jobId) {
           onResult(token, jobId);

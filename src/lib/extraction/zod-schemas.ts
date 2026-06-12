@@ -41,6 +41,9 @@ export const createJobRequestSchema = z.object({
   mode: extractionModeSchema.default("PASSAGE_ONLY"),
   // P7-D2: 추출 산출 모드. 미전달=기존 자동복원 휴리스틱 유지(비적응 무영향).
   outputMode: z.enum(["verbatim", "restored"]).optional(),
+  // 문제생성 페이지 발 잡: finalize가 drafts를 서버에서 곧바로 Passage로 승격.
+  // 미전달=false(자료추출 페이지 등 기존 수동 검수 흐름 무영향).
+  autoPromote: z.boolean().optional(),
   totalPages: z.number().int().min(1).max(MAX_PAGES_PER_JOB),
   originalFileName: z.string().max(255).optional(),
   pages: z

@@ -81,6 +81,7 @@ export async function handleCreateJob(req: NextRequest) {
           sourceType: parsed.sourceType,
           mode: parsed.mode,
           outputMode: parsed.outputMode ?? null,
+          autoPromote: parsed.autoPromote ?? false,
           originalFileName: parsed.originalFileName,
           totalPages: parsed.totalPages,
           pendingPages: parsed.totalPages,

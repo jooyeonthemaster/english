@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { createHash } from "node:crypto";
 
 import { prisma } from "@/lib/prisma";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
+import {
+  PROMOTABLE_DRAFT_INCLUDE,
+  promoteM1Draft,
+  type PromoteOutcome,
+} from "@/lib/extraction/promote-m1-drafts";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,17 +15,6 @@ export const dynamic = "force-dynamic";
 const promoteSchema = z.object({
   draftIds: z.array(z.string().min(1)).min(1).max(200),
 });
-
-type PromoteOutcome =
-  | { draftId: string; status: "promoted"; passageId: string }
-  | { draftId: string; status: "skipped"; reason: string; passageId?: string }
-  | { draftId: string; status: "failed"; reason: string };
-
-function sha1(input: string): string {
-  return createHash("sha1")
-    .update(input.replace(/\s+/g, " ").trim(), "utf8")
-    .digest("hex");
-}
 
 export async function POST(req: NextRequest) {
   const staff = await requireStaff();
@@ -44,14 +37,7 @@ export async function POST(req: NextRequest) {
       job: { academyId: staff.academyId, deletedAt: null },
     },
     orderBy: { passageOrder: "asc" },
-    include: {
-      job: {
-        select: { id: true, originalFileName: true, academyId: true },
-      },
-      sourceMaterial: {
-        select: { id: true, schoolId: true },
-      },
-    },
+    include: PROMOTABLE_DRAFT_INCLUDE,
   });
 
   const foundIds = new Set(drafts.map((d) => d.id));
@@ -67,77 +53,7 @@ export async function POST(req: NextRequest) {
 
   for (const draft of drafts) {
     try {
-      if (draft.savedPassageId) {
-        outcomes.push({
-          draftId: draft.id,
-          status: "skipped",
-          reason: "already_promoted",
-          passageId: draft.savedPassageId,
-        });
-        continue;
-      }
-
-      const teacherText = draft.teacherText.trim();
-      if (!teacherText) {
-        outcomes.push({
-          draftId: draft.id,
-          status: "skipped",
-          reason: "empty_content",
-        });
-        continue;
-      }
-
-      if (!draft.sourceMaterialId) {
-        outcomes.push({
-          draftId: draft.id,
-          status: "skipped",
-          reason: "no_source_material",
-        });
-        continue;
-      }
-
-      const title = (draft.title?.trim() || `지문 ${draft.passageOrder + 1}`).slice(
-        0,
-        200,
-      );
-
-      const passage = await prisma.$transaction(async (tx) => {
-        const created = await tx.passage.create({
-          data: {
-            academyId: draft.job.academyId,
-            schoolId: draft.sourceMaterial?.schoolId ?? null,
-            title,
-            content: teacherText,
-            source: draft.job.originalFileName
-              ? `bulk-extract:${draft.job.originalFileName}`
-              : `bulk-extract:${draft.job.id}`,
-            sourceMaterialId: draft.sourceMaterialId,
-            contentHash: sha1(teacherText),
-            // (adaptive-intake P1) — 출처 페이지 보존 + 복원본 여부 기록.
-            sourcePageIndex: draft.sourcePageIndex,
-            extractionOutput:
-              draft.restorationStatus === "RESTORED" ? "restored" : "verbatim",
-          },
-          select: { id: true },
-        });
-
-        await tx.extractionM1PassageDraft.update({
-          where: { id: draft.id },
-          data: {
-            savedPassageId: created.id,
-            reviewStatus: "COMMITTED",
-            confirmedAt: new Date(),
-          },
-        });
-
-        return created;
-      });
-
-      outcomes.push({
-        draftId: draft.id,
-        status: "promoted",
-        passageId: passage.id,
-      });
+      outcomes.push(await promoteM1Draft(draft));
     } catch (err) {
       console.error("[m1-passages/promote] draft promotion failed", {
         draftId: draft.id,

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Plus, X } from "lucide-react";
 
@@ -28,17 +28,31 @@ function groupedCatalog() {
 /**
  * 학습 활동 팔레트 (인라인) — 편집 패널의 '활동' 탭에 그대로 들어가는 본문.
  * 타일마다 현재 지문 첫 문장으로 만든 라이브 미니 프리뷰를 보여준다. AI 호출 없음.
+ *
+ * 토글 동작(activityCounts 가 주어졌을 때):
+ *  - 미추가 유형: 카드 클릭 = 문서에 추가(onPick) + 설정 열림.
+ *  - 추가된 유형: 헤더에 ON 스위치(+개수) — 스위치 클릭 = 그 유형 블록 전부 제거,
+ *    카드 클릭 = 기존 블록 선택·설정 열기(onFocusKind), ＋ 버튼 = 하나 더 추가.
  */
 export function ActivityPalettePanel({
   report,
   onPick,
   columns = 1,
   vocabTestSlot,
+  activityCounts,
+  onToggleOffKind,
+  onFocusKind,
 }: {
   report: AnalysisReport;
   onPick: (kind: ActivityKind) => void;
   columns?: 1 | 2;
   vocabTestSlot?: ReactNode;
+  /** 문서에 추가된 유형별 블록 개수. 미전달 시 토글 UI 없이 기존 '추가' 동작만. */
+  activityCounts?: Partial<Record<ActivityKind, number>>;
+  /** ON 스위치 클릭 — 그 유형의 활동 블록을 문서에서 전부 제거. */
+  onToggleOffKind?: (kind: ActivityKind) => void;
+  /** 추가된 유형의 카드 클릭 — 기존 블록을 선택·스크롤해 설정을 연다. */
+  onFocusKind?: (kind: ActivityKind) => void;
 }) {
   const byCategory = groupedCatalog();
   return (
@@ -63,7 +77,15 @@ export function ActivityPalettePanel({
           </div>
           <div className={columns === 2 ? "grid grid-cols-1 gap-2 p-2 sm:grid-cols-2" : "grid grid-cols-1 gap-2 p-2"}>
             {group.entries.map((entry) => (
-              <ActivityTile key={entry.kind} report={report} entry={entry} onPick={onPick} />
+              <ActivityTile
+                key={entry.kind}
+                report={report}
+                entry={entry}
+                onPick={onPick}
+                count={activityCounts?.[entry.kind] ?? 0}
+                onToggleOff={onToggleOffKind}
+                onFocusExisting={onFocusKind}
+              />
             ))}
           </div>
         </section>
@@ -121,32 +143,132 @@ export function ActivityPaletteModal({
   );
 }
 
+/**
+ * 팔레트 카드 헤더용 ON 스위치 — 활성 유형을 한 번에 끈다(stopPropagation 으로
+ * 카드 클릭과 분리). 카드(role="button") 안에 중첩되므로 실제 <button> 으로 둔다.
+ */
+export function ActivityToggleSwitch({
+  on,
+  title,
+  onClick,
+}: {
+  on: boolean;
+  title: string;
+  onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      title={title}
+      aria-label={title}
+      onClick={onClick}
+      className={`relative h-4 w-7 shrink-0 rounded-full transition-colors ${
+        on ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-300 hover:bg-slate-400"
+      }`}
+    >
+      <span
+        className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${
+          on ? "translate-x-3.5" : "translate-x-0.5"
+        }`}
+      />
+    </button>
+  );
+}
+
 function ActivityTile({
   report,
   entry,
   onPick,
+  count = 0,
+  onToggleOff,
+  onFocusExisting,
 }: {
   report: AnalysisReport;
   entry: ActivityCatalogEntry;
   onPick: (kind: ActivityKind) => void;
+  count?: number;
+  onToggleOff?: (kind: ActivityKind) => void;
+  onFocusExisting?: (kind: ActivityKind) => void;
 }) {
   const preview = activityPreviewLine(report, entry.kind);
   const disabled = !entry.enabled;
+  const added = count > 0;
+
+  // 추가된 유형의 카드 클릭은 (또 추가가 아니라) 기존 블록 선택·설정 열기.
+  const handleCardClick = () => {
+    if (disabled) return;
+    if (added && onFocusExisting) onFocusExisting(entry.kind);
+    else onPick(entry.kind);
+  };
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (disabled) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleCardClick();
+    }
+  };
+
   return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={() => onPick(entry.kind)}
+    // 헤더의 스위치·＋가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
+    <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-disabled={disabled}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      title={
+        disabled
+          ? undefined
+          : added
+            ? `${entry.labelKo} 설정 열기 (문서의 블록으로 이동)`
+            : `${entry.labelKo} 추가`
+      }
       className={`group flex flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
         disabled
           ? "cursor-not-allowed border-slate-100 bg-slate-50 opacity-60"
-          : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
+          : added
+            ? "cursor-pointer border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
+            : "cursor-pointer border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
       }`}
     >
       <div className="flex items-center justify-between gap-2">
         <span className="text-[12.5px] font-bold text-slate-800">{entry.labelKo}</span>
         {disabled ? (
           <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-400">곧 추가</span>
+        ) : added ? (
+          <span className="flex shrink-0 items-center gap-1.5">
+            {count > 1 ? (
+              <span className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[9.5px] font-bold tabular-nums text-blue-700">
+                {count}개
+              </span>
+            ) : null}
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                onPick(entry.kind);
+              }}
+              title={`${entry.labelKo} 하나 더 추가`}
+              aria-label={`${entry.labelKo} 하나 더 추가`}
+              className="flex h-5 w-5 items-center justify-center rounded-md border border-blue-200 bg-blue-50 text-blue-600 transition-colors hover:bg-blue-100"
+            >
+              <Plus className="h-3 w-3" />
+            </button>
+            {onToggleOff ? (
+              <ActivityToggleSwitch
+                on
+                title={`${entry.labelKo} 끄기 — 문서에서 ${count}개 제거`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onToggleOff(entry.kind);
+                }}
+              />
+            ) : (
+              <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white">켜짐</span>
+            )}
+          </span>
         ) : (
           <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-100">
             <Plus className="h-3 w-3" /> 추가
@@ -155,9 +277,11 @@ function ActivityTile({
       </div>
       <p className="text-[11px] leading-snug text-slate-500">{entry.description}</p>
       <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">미리보기</span>
+        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">
+          {added ? "추가됨 — 카드를 누르면 설정이 열려요" : "미리보기"}
+        </span>
         <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-slate-700">{preview}</p>
       </div>
-    </button>
+    </div>
   );
 }
