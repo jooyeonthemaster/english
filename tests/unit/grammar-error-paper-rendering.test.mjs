@@ -215,11 +215,19 @@ test("GRAMMAR_ERROR maps one-letter OCR prefix noise before marker rendering", (
 });
 
 test("GRAMMAR_ERROR can mark an existing source error expression", () => {
-  assert.match(result.existingErrorPassageWithMarkers, /__\(A\) solve__/);
+  // 라벨은 지문 출현 순서로 재부여된다 (수능 형식): 모델이 (A)를 4번째 위치
+  // 표현(solve)에 매겼으므로 최종 라벨은 (D)가 된다.
+  assert.match(result.existingErrorPassageWithMarkers, /__\(D\) solve__/);
   assert.match(result.existingErrorPassageWithMarkers, /__\(E\) who you are__/);
+  // 지문 내 라벨이 (A)~(E) 출현 순서를 지키는지 확인.
+  const labelOrder = (result.existingErrorPassageWithMarkers.match(/__\(([A-E])\)/g) ?? [])
+    .map((m) => m[3])
+    .join("");
+  assert.equal(labelOrder, "ABCDE");
+  // 정답 라벨도 재부여된 라벨을 따라간다.
   assert.ok(
     result.existingErrorWarnings.some((warning) =>
-      warning.includes("Existing error expression matched for label (A)"),
+      warning.includes('Existing error expression matched for label (A): "solve"'),
     ),
   );
   assert.ok(

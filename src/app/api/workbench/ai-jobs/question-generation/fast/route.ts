@@ -37,6 +37,10 @@ import {
 } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
+  buildQuestionDiversityContext,
+  type QuestionDiversityContext,
+} from "@/lib/question-diversity";
+import {
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -56,6 +60,9 @@ const requestSchema = z.object({
   difficulty: z.string().default("INTERMEDIATE"),
   customPrompt: z.string().optional(),
   generationPlan: z.unknown().optional(),
+  // 같은 배치에서 병렬 생성되는 N개 중 몇 번째인지 — 다양성(타깃/정답 위치 분산)용.
+  variantIndex: z.number().int().min(0).max(99).optional(),
+  variantCount: z.number().int().min(1).max(99).optional(),
 });
 
 function getOperationType({
@@ -357,6 +364,41 @@ export async function POST(req: NextRequest) {
       throw new Error("No question generation plan was produced.");
     }
 
+    // ── 다양성 컨텍스트: 같은 지문+유형의 기존 문항에서 사용된 타깃/정답 위치를
+    // 추출해 회피 목록·위치 스티어링·보기 셔플을 활성화한다. 조회 실패는
+    // 생성 자체를 막지 않는다 (빈 컨텍스트로 진행 — 셔플/배치 분산은 유지).
+    // 단건 생성(variantCount<=1)은 결정형 오프셋이 위치를 고정시키므로
+    // variantIndex 를 비워 무작위 분산을 쓰게 한다.
+    const effectiveVariantIndex =
+      (config.variantCount ?? 1) > 1 ? config.variantIndex : undefined;
+    let diversity: QuestionDiversityContext = {
+      bySubType: {},
+      variantIndex: effectiveVariantIndex,
+      variantCount: config.variantCount,
+    };
+    try {
+      const planSubTypes = [...new Set(plan.map((item) => item.subType))];
+      const recentQuestions = await prisma.question.findMany({
+        where: {
+          academyId: staff.academyId,
+          passageId: passage.id,
+          subType: { in: planSubTypes },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 40,
+        select: { subType: true, structuredData: true, correctAnswer: true },
+      });
+      diversity = buildQuestionDiversityContext(recentQuestions, {
+        variantIndex: effectiveVariantIndex,
+        variantCount: config.variantCount,
+      });
+    } catch (error) {
+      console.warn(
+        "[workbench-fast-question] Failed to build diversity context",
+        error,
+      );
+    }
+
     const generationStartedAt = Date.now();
     const generationResult = await runQuestionGenerationWithEmptyRetry(
       {
@@ -374,6 +416,7 @@ export async function POST(req: NextRequest) {
           config.mode === "MANUAL" && config.questionType
             ? { [config.questionType]: config.questionTypeSettings }
             : undefined,
+        diversity,
       },
       { logPrefix: "WORKBENCH-FAST-Q-GEN" },
     );

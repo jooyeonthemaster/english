@@ -16,7 +16,6 @@ import {
   approveWorkbenchQuestion,
   bulkApproveWorkbenchQuestions,
   bulkDeleteWorkbenchQuestions,
-  deleteWorkbenchQuestion,
   unapproveWorkbenchQuestion,
 } from "@/actions/workbench";
 
@@ -310,21 +309,6 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
     [applyReviewState, markQuestionDeletedLocally, reloadSaved],
   );
 
-  const handleDeleteQuestion = useCallback(
-    async (questionId: string) => {
-      if (!questionId) return;
-      const result = await deleteWorkbenchQuestion(questionId);
-      if (!result.success) {
-        toast.error(result.error || "삭제에 실패했습니다.");
-        return;
-      }
-      markQuestionDeletedLocally(questionId);
-      toast.success("삭제됐습니다.");
-      reloadSaved();
-    },
-    [markQuestionDeletedLocally, reloadSaved],
-  );
-
   const handleBatchApproveQuestions = useCallback(
     async (questionIds: string[]) => {
       if (questionIds.length === 0) return;
@@ -417,14 +401,11 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
           savedQuestions={savedQuestions}
           loadingSavedQuestions={loadingSaved}
           setDetailQuestion={setDetailQuestion}
-          onApproveQuestion={handleApproveQuestion}
-          onUnapproveQuestion={handleUnapproveQuestion}
           onBatchApproveQuestions={handleBatchApproveQuestions}
           onBatchDeleteQuestions={handleBatchDeleteQuestions}
           deletedQuestionIds={deletedQuestionIds}
           deletedQuestionSignatures={deletedQuestionSignatures}
           batchDeleting={deletingQuestions}
-          onDeleteQuestion={handleDeleteQuestion}
           onEditQuestion={editor.openEditor}
           renderCardDetailExtra={(q) => {
             const a = extractSimilarAnalysis(q.structuredData);

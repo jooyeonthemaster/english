@@ -111,6 +111,8 @@ export async function createFastQuestionGenerationJob({
   difficulty,
   customPrompt,
   generationPlan,
+  variantIndex,
+  variantCount,
 }: {
   passageId: string;
   mode: "AUTO" | "MANUAL";
@@ -120,6 +122,9 @@ export async function createFastQuestionGenerationJob({
   difficulty: string;
   customPrompt?: string;
   generationPlan: QuestionGenerationPlan;
+  /** 같은 유형 N개 병렬 생성 중 몇 번째인지 — 서버 다양성(타깃/정답 위치 분산)용 */
+  variantIndex?: number;
+  variantCount?: number;
 }) {
   const res = await fetch("/api/workbench/ai-jobs/question-generation/fast", {
     method: "POST",
@@ -134,6 +139,8 @@ export async function createFastQuestionGenerationJob({
       difficulty,
       customPrompt,
       generationPlan,
+      variantIndex,
+      variantCount,
     }),
   });
   const data = await res.json().catch(() => ({}));
@@ -256,6 +263,9 @@ interface ManualGenerationUnit {
   questionTypeSettings?: unknown;
   tempId: string;
   config: QueueItem["config"];
+  /** 같은 지문+유형 배치(N개)에서의 인덱스 — 서버 다양성 분산용 */
+  variantIndex: number;
+  variantCount: number;
 }
 
 function parsePassageAnalysis(p: PassageItem) {
@@ -345,6 +355,8 @@ export function useGenerationHandlers({
               difficulty,
               customPrompt: unit.config.prompt || undefined,
               generationPlan,
+              variantIndex: unit.variantIndex,
+              variantCount: unit.variantCount,
             });
             const doneItem = {
               ...buildOptimisticItem({
@@ -455,6 +467,8 @@ export function useGenerationHandlers({
               questionType: typeId,
               questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
+              variantIndex: Math.min(index, 99),
+              variantCount: Math.min(repeatCount, 99),
               config: {
                 typeCounts: { [typeId]: 1 },
                 questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
@@ -669,6 +683,8 @@ export function useGenerationHandlers({
               questionType: typeId,
               questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
+              variantIndex: Math.min(index, 99),
+              variantCount: Math.min(repeatCount, 99),
               config: {
                 ...baseConfig,
                 typeCounts: { [typeId]: 1 },

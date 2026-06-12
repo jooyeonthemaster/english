@@ -133,7 +133,7 @@ export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
     description: "세부 정보가 지문과 일치하는지 판단하게 합니다.",
     studentTask: "지문 내용과 일치하거나 일치하지 않는 진술을 고릅니다.",
     bestFor: ["세부 정보가 많은 글", "비교/조건", "인물/사건 설명"],
-    outputUi: ["일치/불일치 배지", "한국어 진술 선택지", "오답 근거"],
+    outputUi: ["일치/불일치 배지", "영어 진술 선택지(토글로 한국어 가능)", "오답 근거"],
     requiredFields: ["matchType", "options", "wrongOptionExplanations"],
   },
   SUMMARY_COMPLETE_MC: {

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
+import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { OptionList } from "./question-renderer-primitives";
 import {
   BlankInferenceRenderer,
@@ -117,9 +118,44 @@ export function StructuredQuestionRenderer({
   );
 }
 
-function enrichQuestionForDisplay(question: any, sourcePassageContent?: string): any {
-  const questionWithAlignedExplanations =
-    alignWrongOptionExplanationsForDisplay(question);
+/**
+ * NBSP(줄바꿈 불가 공백)·빈줄 잔재가 섞인 기존 저장본도 표시 시점에 정리한다.
+ * 변경이 없으면 원본 참조를 그대로 반환해 불필요한 재생성을 피한다.
+ */
+function normalizeWhitespaceForDisplay<T>(value: T): T {
+  if (typeof value === "string") {
+    const cleaned = normalizePassageWhitespace(value);
+    return (cleaned === value ? value : cleaned) as T;
+  }
+  if (Array.isArray(value)) {
+    let changed = false;
+    const next = value.map((item) => {
+      const cleaned = normalizeWhitespaceForDisplay(item);
+      if (cleaned !== item) changed = true;
+      return cleaned;
+    });
+    return (changed ? next : value) as T;
+  }
+  if (value && typeof value === "object") {
+    let changed = false;
+    const next: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(value)) {
+      const cleaned = normalizeWhitespaceForDisplay(item);
+      if (cleaned !== item) changed = true;
+      next[key] = cleaned;
+    }
+    return (changed ? next : value) as T;
+  }
+  return value;
+}
+
+function enrichQuestionForDisplay(question: any, rawSourcePassageContent?: string): any {
+  const sourcePassageContent = rawSourcePassageContent
+    ? normalizePassageWhitespace(rawSourcePassageContent)
+    : rawSourcePassageContent;
+  const questionWithAlignedExplanations = alignWrongOptionExplanationsForDisplay(
+    normalizeWhitespaceForDisplay(question),
+  );
   let normalizedQuestion = normalizeVocabOptionsForDisplay(
     questionWithAlignedExplanations,
   );
