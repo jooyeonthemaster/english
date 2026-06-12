@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>smoat — IR Deck · 가장 스마트한 해자</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232f6df6'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='800' fill='%23fff' text-anchor='middle'%3Es%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="/ir/deck.css" />
+<link rel="stylesheet" href="/ir/slides.css" />
+</head>
+<body>
+
+<div class="bg">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+<div class="bg-night"></div>
+<div class="grain"></div>
+
+<main id="deck">
+
+<!-- ============================================================
+     S01 · 커버
+============================================================ -->
+<section class="slide s01" data-act="SMOAT IR" data-title="커버 — 가장 스마트한 해자" data-steps="3">
+  <div class="slide-inner center-col">
+    <div class="mono cover-meta" data-s="0">INVESTOR RELATIONS · 2026.06 · SPARK CLAW COHORT 01</div>
+    <h1 class="logo-type" data-s="0" data-d="1">smoat<span class="logo-dot">.</span></h1>
+    <p class="cover-line" data-s="0" data-d="2">가장 <b>스마트</b>한 <b>해자</b>를 만듭니다.</p>
+    <p class="lead cover-sub" data-s="0" data-d="3">
+      smoat는 <b>smart × moat</b> — AI가 영어 내신 수업의 <b>콘텐츠 공장</b>과,<br/>
+      학원만의 <b>학생 학습 경험</b>을 통째로 만들어내는 듀얼 SaaS입니다.
+    </p>
+    <div class="cover-brands" data-s="1">
+      <div class="brand-pill smart-pill"><span class="pill-name">smart</span><span class="pill-desc">강사용 — AI 콘텐츠 스튜디오</span></div>
+      <span class="pill-x">×</span>
+      <div class="brand-pill moat-pill"><span class="pill-name">moat</span><span class="pill-desc">원장용 — 지역 독점 학습 AI</span></div>
+    </div>
+    <div class="cover-stats" data-s="2">
+      <div class="stat"><div class="stat-v"><span data-count="1" data-fmt="plain">1</span><span class="unit">개월</span></div><div class="stat-l">MVP 개발 → 베타 100+ 회원</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="23">23</span><span class="unit">종+α</span></div><div class="stat-l">AI 문항 유형 + 커스텀 엔진</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="20">20</span><span class="unit">만 원</span></div><div class="stat-l">월 광고비 전부 (메타 2개)</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="19.2">19.2</span><span class="unit">만 LOC</span></div><div class="stat-l">4인 + AI 팀원이 만든 코드</div></div>
+    </div>
+    <div class="mono cover-foot" data-s="0" data-d="4">이 자료는 발표 없이 읽히도록 설계된 리딩 덱입니다 — 화면을 클릭하며 읽어주세요</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S02 · 3분 요약
+============================================================ -->
+<section class="slide s02" data-act="SMOAT IR" data-title="3분 요약" data-steps="2">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">EXECUTIVE SUMMARY</div>
+      <h2 class="h-1">바쁘신 심사역을 위한 <span class="accent">3분 요약</span></h2>
+    </div>
+    <div class="sum-grid" data-s="1">
+      <div class="card glass sum-card" data-d="1">
+        <div class="sum-tag">문제</div>
+        <p class="body">내신은 학교마다 다른 시험인데, 문제는 '기성 더미'로만 팔립니다. 강사는 시험기간마다 문제은행을 사서 <b>짜집기</b>합니다.</p>
+      </div>
+      <div class="card glass sum-card" data-d="2">
+        <div class="sum-tag">솔루션</div>
+        <p class="body"><b>smart</b>: 자료만 넣으면 그 시험범위 그대로의 문제·워크북·시험지(한글/Word)를 생성. <b>moat</b>: 지문만 넣으면 학원 전용 모바일 학습 AI 앱이 가동.</p>
+      </div>
+      <div class="card glass sum-card" data-d="3">
+        <div class="sum-tag">트랙션</div>
+        <p class="body">AI 네이티브 개발로 <b>1개월 만에 MVP</b>, 메타 광고 월 20만 원으로 <b>한 달 내 학원 회원 100+</b> 모집, 전원 1:1 미팅 완료.</p>
+      </div>
+      <div class="card glass sum-card" data-d="4">
+        <div class="sum-tag">비즈니스</div>
+        <p class="body">문제당 원가 ~20원 → 판매 ~200원. 강사는 크레딧, 원장은 <b>원생당 월 1만 원 × 연간 독점 계약</b>(구별 3개 학원 한정).</p>
+      </div>
+      <div class="card glass sum-card" data-d="5">
+        <div class="sum-tag">팀</div>
+        <p class="body">3년간 연 매출 5억 법인((주)네안데르)을 함께 운영해온 <b>4인 코파운더</b>. 매장 3개를 직접 만들고 팔아본 실행형 팀 + AI 팀원.</p>
+      </div>
+      <div class="card glass sum-card" data-d="6">
+        <div class="sum-tag">Ask</div>
+        <p class="body">Spark Claw 초기 투자(5천만~2억, TIPS 연계)와 AI 크레딧으로 <b>2026년 서울 영어 시장 선점</b> → 2027년 전 과목 확장.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S03 · 시장
+============================================================ -->
+<section class="slide s03" data-act="ACT 1 — 시장" data-title="시장 — 영어 사교육 7.9조" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 1 · MARKET</div>
+      <h2 class="h-1">영어는 한국 사교육비 <span class="accent">1위 과목</span>입니다 — 연 <span class="accent">7.9조 원</span></h2>
+    </div>
+    <div class="mkt-grid">
+      <div class="card glass mkt-tam" data-s="1">
+        <div class="mono">초·중·고 사교육비 총액 (2025)</div>
+        <div class="stat"><div class="stat-v"><span data-count="27.5" data-dur="1600">0</span><span class="unit">조 원</span></div></div>
+        <p class="body">참여율 75.7%. 총액은 5년 만에 처음 줄었지만(−5.7%),<br/><b>참여 학생 1인당 지출은 월 60.4만 원으로 오히려 +2%</b> —<br/>쓰는 사람은 더 쓰는, '효율이 돈이 되는' 시장입니다.</p>
+      </div>
+      <div class="card glass mkt-bars" data-s="2">
+        <div class="mono">과목별 사교육비 (조 원)</div>
+        <div class="hbar-row"><span class="hbar-label">영어</span><div class="hbar-track"><div class="hbar eng" data-grow="100%"></div></div><span class="hbar-v">7.9</span></div>
+        <div class="hbar-row"><span class="hbar-label">수학</span><div class="hbar-track"><div class="hbar" data-grow="97%"></div></div><span class="hbar-v">7.7</span></div>
+        <div class="hbar-row"><span class="hbar-label">국어</span><div class="hbar-track"><div class="hbar" data-grow="29%"></div></div><span class="hbar-v">2.3</span></div>
+        <p class="body bar-note">영어 = 전체 사교육비의 약 29%, 일반교과의 약 39%.</p>
+      </div>
+    </div>
+    <div class="mkt-bottom" data-s="3">
+      <div class="chip blue">전국 학원·교습소 137,339곳</div>
+      <div class="chip blue">영어 참여율 1위는 초등 — 시장의 무게중심은 초·중등</div>
+      <div class="chip navy">우리의 시장 산정은 B2C 지출이 아니라 <b>&nbsp;학원 13.7만 곳 × SW 지불여력&nbsp;</b>의 바텀업(18장)</div>
+    </div>
+    <div class="src" data-s="0">출처 — 교육부·국가데이터처, 2025년 초중고 사교육비 조사(2026.03 발표) · NEIS 학원교습소정보(2025)</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S04 · 문제 정의
+============================================================ -->
+<section class="slide s04" data-act="ACT 1 — 시장" data-title="문제 — 기성복 문제은행" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 1 · PROBLEM</div>
+      <h2 class="h-1">내신은 학교 수만큼 존재하는 '<span class="accent">다른 시험</span>'인데,<br/>문제는 '<span class="risk-t">기성복</span>'으로만 팔립니다</h2>
+    </div>
+    <div class="prob-grid">
+      <div class="card glass" data-s="1">
+        <div class="card-k">내신의 구조</div>
+        <p class="body">같은 교과서를 써도 <b>학교·학년·시험마다 범위와 출제 스타일이 다릅니다.</b> 강사는 담당 학교마다 '그 학교 맞춤' 시험 대비 자료를 따로 만들어야 합니다. 학교 5곳을 맡으면 5벌의 자료가 필요합니다.</p>
+      </div>
+      <div class="card glass" data-s="2">
+        <div class="card-k risk-t">문제은행의 공급 방식</div>
+        <p class="body">쏠북·이그잼포유 등 기존 강자는 <b>문제 '더미'를 패키지로 판매</b>합니다. 내 시험범위와 정확히 일치하는 상품은 존재하지 않습니다 — 여러 더미를 사서, 범위에 맞는 문항만 골라내 편집합니다.</p>
+      </div>
+    </div>
+    <div class="prob-punch glass-deep" data-s="3">
+      <p>그래서 시험기간마다 강사의 밤은 <b>출제가 아니라 '짜집기 노동'</b>으로 사라집니다.<br/><span class="punch-sub">구매 → 선별 → 재편집 → 조판 — 이 전 과정이 AI 이전 시대의 워크플로우입니다.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S05 · 계절성 (night)
+============================================================ -->
+<section class="slide night s05" data-act="ACT 1 — 시장" data-title="시장의 구조 — 계절성" data-steps="4" data-theme="night">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 1 · STRUCTURE</div>
+      <h2 class="h-1">이 시장의 SaaS는 <span class="accent-sky">1년에 네 번</span>만 숨을 쉽니다</h2>
+      <p class="lead">경쟁 3사의 검색량 추이 — SaaS인데도 성수기·비수기가 극단적으로 갈립니다.</p>
+    </div>
+    <div class="chartbox glass" data-s="0" data-d="2">
+      <svg id="season-1" viewBox="0 0 1040 360" preserveAspectRatio="none" aria-label="경쟁사 검색량 계절성 차트"></svg>
+      <div class="chart-legend">
+        <span class="lg"><i style="background:#34c97a"></i>쏠북</span>
+        <span class="lg"><i style="background:#f0568f"></i>이그잼포유</span>
+        <span class="lg"><i style="background:#9a7bf7"></i>너른터</span>
+      </div>
+    </div>
+    <div class="season-notes">
+      <div class="chip" data-s="2">피크 = 중간·기말 직전 4주 — 검색량이 5~10배 출렁</div>
+      <div class="chip" data-s="2" data-d="1">방학(1–2월 · 8월) = 수요 소멸 구간</div>
+    </div>
+    <div class="season-punch glass" data-s="3">
+      <p class="body"><b class="accent-sky">검색량이 곧 수요</b>입니다. 시험기간에만 폭발하는 수요 위에서, 강사용 툴의 매출은 구조적으로 출렁입니다.<br/>
+      우리는 이 곡선을 피하지 않고 <b>비즈니스 모델로 풀었습니다 — 16장에서 이 차트가 다시 등장합니다.</b></p>
+    </div>
+    <div class="src" data-s="0">출처 — 네이버 데이터랩 검색어 트렌드(쏠북·이그잼포유·너른터, 2025.06–2026.06)를 재구성</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S06 · Why Now
+============================================================ -->
+<section class="slide s06" data-act="ACT 1 — 시장" data-title="Why Now — 축적의 역설" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 1 · WHY NOW</div>
+      <h2 class="h-1">AI가 문제은행의 '축적 자산'을<br/><span class="risk-t">부채</span>로 바꾸고 있습니다</h2>
+    </div>
+    <div class="now-grid">
+      <div class="card glass" data-s="1">
+        <div class="card-k">파인튜닝의 역설</div>
+        <p class="body">기존 강자의 해자는 '수년간 쌓은 문제 데이터'였습니다. 그런데 범용 모델 성능이 <b>6개월 단위로 도약</b>하면서, 특화 학습 데이터의 가치가 모델 한 세대를 못 버팁니다. <b>어렵게 파인튜닝한 모델보다 다음 분기의 범용 모델이 더 잘 풉니다.</b> 축적이 클수록 전환은 더 무겁습니다.</p>
+      </div>
+      <div class="card glass" data-s="2">
+        <div class="card-k pos-t">우리의 실측 — 모델 발전 = 원가 하락</div>
+        <p class="body">우리는 모델 한 세대 교체만으로 동일 품질 게이트를 통과하면서:</p>
+        <div class="now-stats">
+          <div class="stat"><div class="stat-v"><span data-count="83">0</span><span class="unit">%</span></div><div class="stat-l">건당 원가 절감<br/>($0.0103 → $0.0017)</div></div>
+          <div class="stat"><div class="stat-v">4.9<span class="unit">s</span> → <span data-count="1.9">0</span><span class="unit">s</span></div><div class="stat-l">응답 지연 단축</div></div>
+        </div>
+        <p class="body">모델이 좋아질수록 <b>원가가 떨어지는 쪽</b>에 서 있어야 합니다.</p>
+      </div>
+    </div>
+    <div class="prob-punch glass-deep" data-s="3">
+      <p>데이터 축적 경쟁이 끝나고 <b>오케스트레이션 경쟁</b>이 시작됐습니다.<br/><span class="punch-sub">AI 네이티브 워크플로우를 해자로 가질 수 있는 진입 창 — 그게 2026년입니다.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S07 · smart 소개
+============================================================ -->
+<section class="slide s07" data-act="ACT 2 — SMART" data-title="smart — 강사용 콘텐츠 스튜디오" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="brand-row"><span class="brand-mark smart-mark">smart</span><span class="mono">강사용 AI 콘텐츠 스튜디오</span></div>
+      <h2 class="h-1">자료를 넣으면, '<span class="accent">그 시험범위 그대로</span>'의 문제가 나옵니다</h2>
+      <p class="lead">교과서·부교재·기출 PDF를 올리는 순간 — 추출, 분석, 출제, 조판까지. 짜집기가 사라집니다.</p>
+    </div>
+    <div class="smart-stats" data-s="1">
+      <div class="stat"><div class="stat-v"><span data-count="23">0</span><span class="unit">종</span></div><div class="stat-l">빌트인 문항 유형<br/>+ 커스텀 유형 무한 확장</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="10000">0</span><span class="unit">+</span></div><div class="stat-l">학습·분석한 내신/수능 문항</div></div>
+      <div class="stat"><div class="stat-v">3<span class="unit">단계</span></div><div class="stat-l">난이도 — 기본 · 중급 · 킬러</div></div>
+    </div>
+    <div class="type-grid" data-s="2">
+      <div class="type-group"><div class="mono tg-label">수능·모의 객관식 13종</div>
+        <div class="tg-chips"><span class="chip">빈칸 추론</span><span class="chip">어법</span><span class="chip">어휘</span><span class="chip">글의 순서</span><span class="chip">문장 삽입</span><span class="chip">주제</span><span class="chip">요지·주장</span><span class="chip">제목</span><span class="chip">함축 의미</span><span class="chip">지칭 추론</span><span class="chip">내용 일치</span><span class="chip">요약문(객관식)</span><span class="chip">무관한 문장</span></div>
+      </div>
+      <div class="type-group"><div class="mono tg-label">내신 서술형 6종</div>
+        <div class="tg-chips"><span class="chip">조건부 영작</span><span class="chip">문장 전환</span><span class="chip">핵심 표현 빈칸</span><span class="chip">요약문 완성</span><span class="chip">배열 영작</span><span class="chip">어법 고쳐쓰기</span></div>
+      </div>
+      <div class="type-group"><div class="mono tg-label">어휘 3종</div>
+        <div class="tg-chips"><span class="chip">문맥 속 의미</span><span class="chip">동의어</span><span class="chip">반의어</span></div>
+      </div>
+    </div>
+    <div class="banner glass-deep" data-s="3">
+      <p><b>커스텀 유형 엔진</b> — 기출 한 문항을 올리면 '그 학교만의 유형'을 데이터로 컴파일해 재생성합니다. 강사가 쓸수록, 그 학교의 출제 스펙이 <b>우리 플랫폼에만</b> 쌓입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S08 · 파이프라인
+============================================================ -->
+<section class="slide s08" data-act="ACT 2 — SMART" data-title="수업 준비의 전 공정" data-steps="6">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 2 · PRODUCT</div>
+      <h2 class="h-1">문제 생성기가 아니라, <span class="accent">수업 준비의 전 공정</span>입니다</h2>
+    </div>
+    <div class="pipe">
+      <div class="pipe-node glass" data-s="1">
+        <div class="pipe-num">01</div><div class="pipe-name">추출</div>
+        <p class="pipe-desc">PDF·이미지 → 전용 OCR(Document AI) + 영역 크롭 인테이크. <b>AI 지문 복원</b>: 빈칸·밑줄로 변형된 문제 지문을 원문으로 되돌림.</p>
+      </div>
+      <div class="pipe-node glass" data-s="2">
+        <div class="pipe-num">02</div><div class="pipe-name">분석</div>
+        <p class="pipe-desc">5-레이어 지문 분석 → 구조도·어법·어휘·구문·자가점검 <b>9섹션 학습 리포트</b>. 톤 3종(교사용/학생용/암기 후킹).</p>
+      </div>
+      <div class="pipe-node glass" data-s="3">
+        <div class="pipe-num">03</div><div class="pipe-name">출제</div>
+        <p class="pipe-desc">23종 문항 + 장문 세트(한 지문 다문항) + 자동 출제. 유형별 품질 게이트·오답 선지 설계·정답 위치 다양성까지 코드로 검증.</p>
+      </div>
+      <div class="pipe-node glass" data-s="4">
+        <div class="pipe-num">04</div><div class="pipe-name">워크북</div>
+        <p class="pipe-desc"><b>AI 호출 0회</b>의 결정론 엔진 12종 — 빈칸·어순·직독직해·백지영작. 같은 지문에서 무제한 변형, 인쇄 100% 재현.</p>
+      </div>
+      <div class="pipe-node glass" data-s="5">
+        <div class="pipe-num">05</div><div class="pipe-name">시험지</div>
+        <p class="pipe-desc">템플릿 8종 A4 조판 → <b>한글(HWPX)·Word(DOCX)·PDF</b>. 동형 시험지: 기출의 유형 배열·난이도 곡선·배점을 추출해 새 지문에 재적용.</p>
+      </div>
+      <div class="pipe-node glass plus" data-s="5" data-d="2">
+        <div class="pipe-num">+α</div><div class="pipe-name">엔게이지</div>
+        <p class="pipe-desc">지문 기반 <b>웹툰 생성</b>(스타일 5종) · 해설 생성 · 문장 재번역 · AI 튜터링 챗.</p>
+      </div>
+    </div>
+    <p class="pipe-foot lead" data-s="5" data-d="3">강사가 수업에서 쓰는 <b>모든 산출물</b>이 한 파이프라인에서 나옵니다 — 그래서 이탈할 이유가 줄어듭니다.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     S09 · 체험 데모
+============================================================ -->
+<section class="slide s09" data-act="ACT 2 — SMART" data-title="인터랙티브 체험 — 문제 생성" data-steps="2">
+  <div class="slide-inner">
+    <div class="demo-head" data-s="0">
+      <div class="kicker">INTERACTIVE DEMO</div>
+      <h2 class="h-2">지금 이 슬라이드에서 <span class="accent">직접 생성</span>해 보세요</h2>
+      <div class="live-badge"><span class="live-dot"></span>체험 가능 영역 — 이 패널 안의 클릭은 슬라이드를 넘기지 않습니다</div>
+    </div>
+    <div class="demo-panel glass-strong" data-s="1" data-ui>
+      <div class="demo-tabs">
+        <button class="demo-tab on" data-tab="gen">문제 생성</button>
+        <button class="demo-tab" data-tab="wb">워크북 변형 (AI 0회)</button>
+      </div>
+
+      <!-- 탭 1: 문제 생성 -->
+      <div class="demo-pane" id="pane-gen">
+        <div class="demo-left">
+          <div class="mono demo-label">시험범위 지문 (고1 영어 · 본문 변형)</div>
+          <div class="demo-passage scroll-y" id="demo-passage-box"></div>
+        </div>
+        <div class="demo-right">
+          <div class="mono demo-label">문항 유형</div>
+          <div class="demo-types" id="demo-types"></div>
+          <div class="mono demo-label">난이도</div>
+          <div class="demo-diff" id="demo-diff">
+            <button class="diff-chip" data-v="기본">기본</button>
+            <button class="diff-chip on" data-v="중급">중급</button>
+            <button class="diff-chip" data-v="킬러">킬러</button>
+          </div>
+          <button class="btn demo-go" id="demo-go">문제 생성하기 <span class="mono go-credit">— 2 크레딧</span></button>
+          <div class="demo-progress" id="demo-progress"></div>
+        </div>
+        <div class="demo-out scroll-y" id="demo-out">
+          <div class="demo-out-empty mono">유형을 고르고 [문제 생성하기]를 누르면, 실제 서비스의 문제 카드 구조 그대로 출력됩니다.</div>
+        </div>
+      </div>
+
+      <!-- 탭 2: 워크북 -->
+      <div class="demo-pane hide" id="pane-wb">
+        <div class="wb-controls">
+          <div class="mono demo-label">빈칸 밀도</div>
+          <input type="range" id="wb-density" min="15" max="60" value="30" step="5" />
+          <span class="mono" id="wb-density-v">30%</span>
+          <button class="btn ghost" id="wb-reroll">다시 뽑기 (seed +1)</button>
+          <span class="mono" id="wb-seed">seed 1</span>
+        </div>
+        <div class="wb-sheet scroll-y" id="wb-sheet"></div>
+        <div class="wb-bank" id="wb-bank"></div>
+        <p class="wb-note mono">AI 호출 0회 — 시드 기반 결정론 변환이라 같은 시드는 항상 같은 학습지(인쇄 재현 100%), 시드만 올리면 무제한 재출제.</p>
+      </div>
+    </div>
+    <div class="src" data-s="1">실제 서비스의 컴포넌트 구조(발문·변형 지문·5지선다·정답/해설/오답 해설)를 그대로 본뜬 시뮬레이션입니다. 실제 제품은 Gemini 기반 생성 + 품질 게이트 검증을 거칩니다.</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S10 · 단위 경제 (smart)
+============================================================ -->
+<section class="slide s10" data-act="ACT 2 — SMART" data-title="문제당 20원 → 200원" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 2 · UNIT MARGIN</div>
+      <h2 class="h-1">한 문제를 약 <span class="accent">20원</span>에 만들어 <span class="accent">200원</span>에 팝니다</h2>
+    </div>
+    <div class="margin-bridge" data-s="1">
+      <div class="mb-block cost glass"><div class="mono">생성 원가</div><div class="mb-v">~20<span>원</span></div><div class="mb-d">AI 토큰 + 인프라 (보수 추정)</div></div>
+      <div class="mb-arrow">×10</div>
+      <div class="mb-block price glass-strong"><div class="mono">판매가</div><div class="mb-v">~200<span>원</span></div><div class="mb-d">문항당 2크레딧 × 크레딧 73~132원<br/>(요금제 4팩 실판매가 기준)</div></div>
+    </div>
+    <div class="gm-row card glass" data-s="2">
+      <div class="mono">매출총이익률</div>
+      <div class="gm-track"><div class="gm-bar" data-grow="87%"><span>85~90%</span></div></div>
+      <p class="body">유일한 변동원가가 AI 토큰입니다. 결제(PortOne)·실패 시 자동 환불·작업별 원가 추적까지 정산 인프라가 이미 코드로 돌고 있습니다.</p>
+    </div>
+    <div class="banner glass-deep" data-s="3">
+      <p>그리고 6장에서 보셨듯 — 이 원가는 모델 세대마다 <b>−83%씩 떨어진 실측 전력</b>이 있습니다. 시간은 우리 마진의 편입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S11 · 실행 타임라인
+============================================================ -->
+<section class="slide s11" data-act="ACT 3 — 발견" data-title="한 달 — 만들고, 모았다" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 3 · EXECUTION</div>
+      <h2 class="h-1">우리는 시장에 묻기 전에, <span class="accent">한 달 만에 만들었습니다</span></h2>
+    </div>
+    <div class="tl">
+      <div class="tl-item glass" data-s="1">
+        <div class="mono tl-date">2026.05</div>
+        <div class="tl-title">MVP 빌드 — 1개월</div>
+        <p class="body">AI 코딩 에이전트를 팀원으로 운용해 추출→분석→생성→시험지 파이프라인을 한 달 만에 가동.</p>
+      </div>
+      <div class="tl-item glass" data-s="2">
+        <div class="mono tl-date">동시 진행</div>
+        <div class="tl-title">메타 광고 2개 — 월 20만 원</div>
+        <p class="body">"쓰레기 같은 AI 문제에 돈 낭비 그만" — 강사의 페인포인트를 직격하는 카피로 베타 유저 모집 개시.</p>
+      </div>
+      <div class="tl-item glass hot" data-s="3">
+        <div class="mono tl-date">2026.06</div>
+        <div class="tl-title"><span class="tl-big" data-count="100">0</span>+ 학원 회원</div>
+        <p class="body">강사·원장 100명+ 가입 — <b>전원 1:1 미팅 진행.</b> 광고비 단 20만 원으로 모은 100번의 현장 인터뷰가 다음 장의 발견을 만들었습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S12 · 발견
+============================================================ -->
+<section class="slide s12" data-act="ACT 3 — 발견" data-title="100번의 미팅이 가설을 부수다" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 3 · INSIGHT</div>
+      <h2 class="h-1">100번의 미팅이 우리의 <span class="risk-t">가설을 부쉈습니다</span></h2>
+    </div>
+    <div class="insight-grid">
+      <div class="card glass hypo" data-s="1">
+        <div data-dim-at="2">
+          <div class="card-k">우리의 가설</div>
+          <p class="body">"수업 도구는 <b>학원(원장)이 구매</b>해서 소속 강사들이 함께 쓸 것이다."</p>
+        </div>
+        <div class="hypo-stamp" data-s="2">틀렸다</div>
+      </div>
+      <div class="card glass-strong real" data-s="2" data-fx="right">
+        <div class="card-k pos-t">현장의 사실</div>
+        <p class="body">이그잼포유도, 쏠북도, 수업에 필요한 툴 대부분을 <b>강사가 개인 카드로 결제</b>하고 있었습니다. 구매자는 학원이 아니라 <b>강사 개인</b>이었습니다.</p>
+        <p class="body">그리고 학생용 학습 시스템(moat)은 — 강사에겐 '관리 업무가 늘어나는 계륵', <b>원장에겐 원생을 모으는 무기</b>로 정반대 반응이 나왔습니다.</p>
+      </div>
+    </div>
+    <div class="prob-punch glass-deep" data-s="3">
+      <p><b>구매 주체가 다르면, 제품도 가격도 달라야 합니다.</b><br/><span class="punch-sub">이 발견 하나가 smoat의 비즈니스 모델 전체를 다시 썼습니다.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S13 · 분기
+============================================================ -->
+<section class="slide s13" data-act="ACT 3 — 발견" data-title="하나의 엔진, 두 명의 고객" data-steps="3">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 3 · PIVOT</div>
+      <h2 class="h-1">하나의 엔진, <span class="accent">두 명의 고객</span> — 구독 주체를 분리했습니다</h2>
+    </div>
+    <div class="split-grid">
+      <div class="card glass split smart-side" data-s="1" data-fx="left">
+        <div class="brand-mark smart-mark">smart</div>
+        <div class="split-who">강사 개인이 삽니다</div>
+        <p class="body">출제·자료 제작이라는 <b>본인의 노동</b>을 직접 줄여주는 필수 도구. 본인 카드로 결제하던 기존 습관 그대로 — 크레딧 과금.</p>
+        <div class="chip blue">쓴 만큼 — 시험기간에 폭발</div>
+      </div>
+      <div class="card glass split moat-side" data-s="2" data-fx="right">
+        <div class="brand-mark moat-mark">moat</div>
+        <div class="split-who">원장이 학원 단위로 삽니다</div>
+        <p class="body">강사에겐 추가 업무지만, 원장에겐 <b>원생 모집 마케팅 포인트이자 학부모 상담 무기.</b> 원생 기반 연간 구독 + 지역 독점.</p>
+        <div class="chip navy">학생 수만큼 — 계절 무관 연간 선불</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S14 · moat 소개
+============================================================ -->
+<section class="slide s14" data-act="ACT 4 — MOAT" data-title="moat — 학원 전용 학습 AI" data-steps="5">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="brand-row"><span class="brand-mark moat-mark">moat</span><span class="mono">원장용 — 학원 전용 모바일 학습 AI</span></div>
+      <h2 class="h-1">시험범위 지문만 넣으면,<br/>'<span class="accent">우리 학원만의 학습 AI 앱</span>'이 됩니다</h2>
+    </div>
+    <div class="moat-grid">
+      <div class="phone-wrap" data-s="1">
+        <div class="phone glass-strong">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="ps-brand">대치 OO영어학원 <span>전용 학습</span></div>
+            <div class="ps-quiz">
+              <div class="ps-q mono">Q. 다음 의미 단위를 순서대로 배열하세요</div>
+              <div class="ps-chips"><span>the habit of recording</span><span>changes</span><span>what we learn</span><span>the way we think</span></div>
+              <div class="ps-progress"><i></i></div>
+              <div class="ps-coach">AI 코치 — 동사(changes)의 주어가 무엇인지 먼저 찾아보세요.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="moat-feats">
+        <div class="feat glass" data-s="1"><div class="feat-n">01</div><div><b>콘텐츠 무한 생성</b> — 내신 범위 기반 모바일 학습 활동 29종(어휘·해석·어순·암기·전환·어법)을 AI가 실시간 생성. 듀오링고식 드릴 + 마스터리 잠금해제.</div></div>
+        <div class="feat glass" data-s="2"><div class="feat-n">02</div><div><b>AI 채점·코칭</b> — 서술 답안도 AI가 부분점수·조건 충족·베끼기까지 판정하고 한국어로 코칭. 객관 활동은 즉시 채점.</div></div>
+        <div class="feat glass" data-s="3"><div class="feat-n">03</div><div><b>약점 추적</b> — 오답·성취를 출제 포인트 단위로 누적, 간격반복(SM-2) 알고리즘이 복습을 자동 스케줄.</div></div>
+        <div class="feat glass" data-s="4"><div class="feat-n">04</div><div><b>리포트</b> — 강사 대시보드로 자동 정리되고, <b>학부모에게 매일 보낼 데일리 리포트</b>가 만들어집니다. 학원의 관리력이 매일 증명됩니다.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S15 · 지역 독점
+============================================================ -->
+<section class="slide s15" data-act="ACT 4 — MOAT" data-title="독점이 곧 상품이다" data-steps="5">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 4 · EXCLUSIVITY</div>
+      <h2 class="h-1">구별 <span class="accent">3개 학원에만</span> 팝니다 — 독점이 곧 상품입니다</h2>
+    </div>
+    <div class="excl-grid">
+      <div class="excl-left">
+        <div class="card glass" data-s="1">
+          <div class="card-k">학원 경쟁의 밀도</div>
+          <p class="body">같은 상가에 학원이 몇 개씩 몰리고, 대형 학원이 <b>경쟁사 입점을 막으려 공실을 선계약</b>하는 시장입니다. 차별화 한 줄이 원생 수십 명을 움직입니다.</p>
+        </div>
+        <div class="card glass" data-s="3">
+          <div class="card-k">원장의 상담 멘트가 바뀝니다</div>
+          <p class="body">"우리 학원에는 <b>다른 학원에 없는 전용 학습 시스템</b>이 있습니다" — 학부모 상담과 원생 모집에서 즉시 쓰이는 무기. 학생이 태블릿으로 학습하는 모습 자체가 '다른 학원'이라는 인식을 만듭니다.</p>
+        </div>
+        <div class="excl-honest glass" data-s="4">
+          <p class="body"><b>독점의 범위(계약 정의)</b> — '학원 브랜드를 단 학생용 학습 AI 앱'에 한정합니다. 강사용 smart는 독점 대상이 아니며 전국 누구나 쓸 수 있습니다. 채널 충돌을 계약 설계로 차단했습니다.</p>
+        </div>
+      </div>
+      <div class="excl-map glass" data-s="2">
+        <div class="mono">서울 25개 자치구 × 3슬롯</div>
+        <div class="map-grid" id="map-grid"></div>
+        <p class="body map-note">이 지역에서 학생에게 자체 모바일·태블릿 학습 AI를 줄 수 있는 학원은 <b>단 3곳</b>. 슬롯이 차면, 옆 학원은 영원히 못 삽니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S16 · 계절성 회수 (night)
+============================================================ -->
+<section class="slide night s16" data-act="ACT 4 — MOAT" data-title="복선 회수 — 매출의 바닥" data-steps="4" data-theme="night">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 4 · PAYOFF</div>
+      <h2 class="h-1">5장의 그 곡선 — <span class="accent-sky">moat가 바닥을 깝니다</span></h2>
+    </div>
+    <div class="chartbox glass" data-s="0" data-d="2">
+      <svg id="season-2" viewBox="0 0 1040 360" preserveAspectRatio="none" aria-label="계절성 매출과 moat 연간 구독 베이스라인"></svg>
+      <div class="chart-legend">
+        <span class="lg"><i style="background:#5aa7f7"></i>smart — 시험기간 펄스 매출(크레딧)</span>
+        <span class="lg"><i style="background:#37e0b0"></i>moat — 연간 선불 누적 베이스라인</span>
+      </div>
+    </div>
+    <div class="payoff-cards">
+      <div class="card glass" data-s="2"><p class="body"><b class="accent-sky">smart</b>는 시험기간마다 크레딧이 폭발적으로 소진되는 <b>펄스 매출</b> — 이탈이 아니라 재구매 사이클입니다. 지표도 '시험 코호트 재구매율'로 관리합니다.</p></div>
+      <div class="card glass" data-s="2" data-d="2"><p class="body"><b style="color:#37e0b0">moat</b>는 계절과 무관한 <b>연간 선불 계약</b> — 합산 매출에 단단한 바닥을 만들고, 원생이 늘면 같은 학원에서 매출이 자라는 구조(NRR&gt;100%)입니다.</p></div>
+    </div>
+    <div class="season-punch glass" data-s="3">
+      <p class="body"><b>정직하게 말씀드립니다</b> — 계절성은 이 시장의 구조이고, 우리는 '없앴다'고 주장하지 않습니다. 헤지를 설계했고, <b>2026년 여름방학(7–8월) 실사용 텔레메트리로 검증해 9월 IR 업데이트에서 실측을 공개</b>하겠습니다. 측정 인프라(활동 모니터링)는 이미 가동 중입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S17 · 듀얼 BM
+============================================================ -->
+<section class="slide s17" data-act="ACT 5 — 비즈니스" data-title="듀얼 BM — 크레딧 × 연간 구독" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 5 · BUSINESS MODEL</div>
+      <h2 class="h-1">강사에겐 <span class="accent">쓴 만큼</span>, 원장에겐 <span class="accent">학생 수만큼</span></h2>
+    </div>
+    <div class="bm-grid">
+      <div class="card glass bm-card" data-s="1">
+        <div class="brand-mark smart-mark">smart</div>
+        <div class="bm-price">크레딧 종량제</div>
+        <ul class="bm-list body">
+          <li>충전 4팩 — 19,800원(150cr) ~ 330,000원(4,500cr) · 크레딧당 73~132원</li>
+          <li>문제 1개 = 2크레딧 ≈ <b>200원</b> · 월 5만 원(450cr) 구독이 기본 흐름</li>
+          <li>학습지 분석 5cr · 자동 출제 15cr · OCR 추출 3cr · 웹툰 5cr — 14개 과금 동작</li>
+        </ul>
+      </div>
+      <div class="card glass bm-card" data-s="2">
+        <div class="brand-mark moat-mark">moat</div>
+        <div class="bm-price">원생당 월 1만 원 × 연간 계약</div>
+        <ul class="bm-list body">
+          <li>최소 30명 보장 — <b>학원당 연 360만 원~</b>, 연간 선불</li>
+          <li>구별 3개 학원 독점 슬롯 — 독점료가 가격에 내재</li>
+          <li>원생이 늘수록 같은 계약에서 매출 성장 (NRR&gt;100% 내장)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="banner glass-deep" data-s="3">
+      <p>원생당 1만 원은 참여 학생 1인 월평균 사교육비 <b>60.4만 원의 1.7%</b> — 원장이 수강료에 얹어도 학부모 저항이 없는 가격대입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S18 · 유닛 이코노믹스
+============================================================ -->
+<section class="slide s18" data-act="ACT 5 — 비즈니스" data-title="유닛 이코노믹스" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 5 · UNIT ECONOMICS</div>
+      <h2 class="h-1">강사 1명 = 연 <span class="accent">80만 원</span>, 원장 1곳 = <span class="accent">강사 17명분</span></h2>
+    </div>
+    <div class="ue-grid">
+      <div class="card glass ue-arpu" data-s="1">
+        <div class="card-k">강사 연간 ARPU ≈ 79.6만 원</div>
+        <div class="arpu-bridge">
+          <div class="ab-seg base"><span class="mono">평월 8개월</span><b>월 4.95만</b><span class="ab-sum">39.6만</span></div>
+          <div class="ab-plus">+</div>
+          <div class="ab-seg peak"><span class="mono">시험 시즌 2블록</span><b>블록당 20만</b><span class="ab-sum">40만</span></div>
+        </div>
+        <p class="body">시험 시즌(약 7주) 기준 학교 5곳 커버 · 시즌 합산 약 1,000문항 생성 = 크레딧 20만 원. 실제 베타에서 관측되는 사용 패턴입니다.</p>
+      </div>
+      <div class="card glass ue-ltv" data-s="2">
+        <div class="card-k">강사 LTV — 이탈률 시나리오 (GM 90%)</div>
+        <table class="ue-table tabnum">
+          <thead><tr><th>월 이탈률</th><th>LTV</th><th>허용 CAC (LTV/CAC≥3)</th></tr></thead>
+          <tbody>
+            <tr><td>9.6% <span class="mono">업계 상단</span></td><td>62만</td><td>≤ 21만</td></tr>
+            <tr><td>5%</td><td>119만</td><td>≤ 40만</td></tr>
+            <tr><td>3%</td><td>199만</td><td>≤ 66만</td></tr>
+          </tbody>
+        </table>
+        <p class="body">현재 실 CAC — 광고비 20만 원 ÷ 100명 = <b>2천 원.</b> 최악 시나리오에서도 두 자릿수 배율의 여유.</p>
+      </div>
+    </div>
+    <div class="banner glass-deep" data-s="3">
+      <p><b>moat 원장 1곳</b> = 연 360만 원, 갱신율 70% 가정 시 LTV 약 <b>1,070만 원 = 강사 17명분.</b> 발영업 CAC가 수십만 원이어도 LTV/CAC 10배+ — 원장 계약이 유닛 이코노믹스의 앵커입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S19 · 트랙션
+============================================================ -->
+<section class="slide s19" data-act="ACT 5 — 비즈니스" data-title="트랙션과 KPI" data-steps="5">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 5 · TRACTION</div>
+      <h2 class="h-1">광고비 월 20만 원으로, 한 달 만에 <span class="accent">100명</span></h2>
+    </div>
+    <div class="tr-stats" data-s="1">
+      <div class="stat"><div class="stat-v"><span data-count="100">0</span><span class="unit">+</span></div><div class="stat-l">베타 학원 회원 (강사·원장)</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="2">0</span><span class="unit">개</span></div><div class="stat-l">집행한 메타 광고 전부</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="2000">0</span><span class="unit">원</span></div><div class="stat-l">실측 CAC (20만 원 ÷ 100명)</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="100">0</span><span class="unit">%</span></div><div class="stat-l">가입자 1:1 미팅 진행률</div></div>
+    </div>
+    <div class="gtm-row card glass" data-s="2">
+      <div class="card-k">GTM 대전환 — 미팅 병목 제거</div>
+      <div class="gtm-flow">
+        <div class="gtm-asis"><span class="mono">AS-IS</span> 신청서 → 1:1 연락 → 미팅 → 승인 <span class="risk-t">(하루 3미팅이 물리적 한계)</span></div>
+        <div class="gtm-arrow">→</div>
+        <div class="gtm-tobe"><span class="mono">TO-BE</span> 광고 → 자유 가입 → <b>즉시 사용</b> + 가입 시 강사/원장·학원 규모 수집 → 원장 핏만 선별 발영업</div>
+      </div>
+    </div>
+    <div class="kpi-row" data-s="3">
+      <div class="card glass kpi-card">
+        <div class="mono">KPI — 2026.07.01</div>
+        <p class="body"><b>강사 100명 + 원장 독점 10곳</b> (일 3명 가입 · 4일당 1계약 페이스) — 달성 시 run-rate ARR 약 <b>1.16억 원</b> (강사 100×79.6만 + 원장 10×360만)</p>
+      </div>
+    </div>
+    <div class="conv-row card glass" data-s="4">
+      <div class="card-k">무료 베타 종료 후 유료 전환 — 시나리오로 말씀드립니다</div>
+      <p class="body">분모는 전체 가입자가 아니라 <b>시험기간 크레딧 50+ 소진 활성 코호트</b>(업무 의존이 형성된 강사) 기준:</p>
+      <div class="conv-tiers">
+        <div class="tier"><span class="mono">보수</span><b>20%</b></div>
+        <div class="tier"><span class="mono">기준</span><b>40%</b></div>
+        <div class="tier hot"><span class="mono">낙관</span><b>60~80%</b><span class="tier-note">현장 미팅 체감치</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S20 · moat ARR 시뮬레이션
+============================================================ -->
+<section class="slide s20" data-act="ACT 5 — 비즈니스" data-title="moat ARR 시뮬레이션" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 5 · SCALE PATH</div>
+      <h2 class="h-1">moat는 천장이 아니라 <span class="accent">바닥</span>입니다</h2>
+    </div>
+    <div class="arr-table card glass" data-s="1">
+      <div class="card-k">서울 25개 자치구 × 3슬롯 = 75슬롯 (원생당 월 1만 원)</div>
+      <table class="ue-table tabnum">
+        <thead><tr><th>시나리오</th><th>슬롯</th><th>평균 원생</th><th>ARR</th></tr></thead>
+        <tbody>
+          <tr><td>최소 보장 완판</td><td>75</td><td>30명</td><td><b>2.7억</b></td></tr>
+          <tr><td>기준 완판</td><td>75</td><td>60명</td><td><b>5.4억</b></td></tr>
+          <tr class="hot"><td>대형 학원 완판 (1차 타깃 = 재원생 100명+)</td><td>75</td><td>100명</td><td><b>9.0억</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="arr-levers" data-s="2">
+      <div class="card glass lever"><div class="mono">레버 1 — 슬롯 세분화</div><p class="body">독점 단위를 자치구에서 <b>학군·행정동(서울 426개동)</b>으로 좁히면 서울만 <b>30.7억</b>.</p></div>
+      <div class="card glass lever"><div class="mono">레버 2 — 전국 확장</div><p class="body">전국 229개 시·군·구 × 3슬롯 = 687슬롯, 기준 시나리오 <b>49.5억</b>.</p></div>
+    </div>
+    <div class="banner glass-deep" data-s="3">
+      <p>그리고 이 위에 <b>캡이 없는 smart 크레딧 매출</b>과, 원생 성장에 따른 <b>NRR&gt;100%</b>가 얹힙니다. moat가 바닥을 깔고, smart가 천장을 엽니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S21 · 경쟁 지형
+============================================================ -->
+<section class="slide s21" data-act="ACT 6 — 해자" data-title="경쟁 지형" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 6 · COMPETITION</div>
+      <h2 class="h-1">문제은행은 <span class="risk-t">재고</span>를 팔고, 우리는 <span class="accent">공장</span>을 팝니다</h2>
+    </div>
+    <div class="comp-grid">
+      <div class="quad glass" data-s="1">
+        <div class="quad-axis-y mono">수업 전 공정 커버 ↑</div>
+        <div class="quad-axis-x mono">기성 재고 → 실시간 생성</div>
+        <div class="quad-dot d1" data-s="2"><i></i>쏠북<small>문제은행·교재 유통</small></div>
+        <div class="quad-dot d2" data-s="2"><i></i>이그잼포유<small>기출·변형 문제은행</small></div>
+        <div class="quad-dot d3" data-s="2"><i></i>너른터<small>자료 공유</small></div>
+        <div class="quad-dot d4" data-s="2"><i></i>범용 AI 직접 사용<small>ChatGPT 등</small></div>
+        <div class="quad-dot smoat" data-s="3"><i></i>smoat<small>생성 × 전 공정 × 학생앱</small></div>
+      </div>
+      <div class="comp-notes">
+        <div class="card glass" data-s="2"><p class="body"><b>문제은행</b> — 범위 불일치·짜집기 노동은 그대로. 축적 데이터가 AI 전환의 족쇄(6장).</p></div>
+        <div class="card glass" data-s="2" data-d="2"><p class="body"><b>범용 AI 직접 사용</b> — 내신 유형 규격·오답 선지 품질·한글(HWPX) 조판이 안 됨. 검증도 강사 몫.</p></div>
+        <div class="card glass" data-s="3"><p class="body"><b>smoat</b> — 시험범위 그대로 생성 + 수업 전 공정 + 학생 학습앱(moat)까지. <b>강사·원장 양면을 모두 잡는 유일한 포지션.</b></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S22 · 해자 4층
+============================================================ -->
+<section class="slide s22" data-act="ACT 6 — 해자" data-title="래퍼 질문에 4층으로 답하다" data-steps="6">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 6 · MOAT(해자)</div>
+      <h2 class="h-1">"Gemini 래퍼 아닌가요?" — 좋은 질문이라 <span class="accent">4층</span>으로 답합니다</h2>
+      <p class="lead" data-s="1">래퍼 판별법: "핵심 프롬프트를 챗봇에 붙여 산출물의 80%가 재현되면 래퍼다." — 동의합니다. <b>그래서 직접 테스트해보셔도 좋습니다.</b></p>
+    </div>
+    <div class="moat-layers">
+      <div class="layer glass" data-s="2"><div class="layer-n">L1</div><div class="layer-body"><b>데이터</b> — 수능·평가원 28년(1994~2021)의 정답 빈도·오답 선택률이 내장된 어법 카탈로그. 기출 시험지에서 유형 배열·난이도 곡선·배점까지 뽑아내는 패턴 프로파일. 범용 모델의 학습 데이터에 없는 한국 내신의 구조입니다.</div></div>
+      <div class="layer glass" data-s="3"><div class="layer-n">L2</div><div class="layer-body"><b>파이프라인</b> — 유형 23종 각각에 스키마+전용 프롬프트+후처리+품질 게이트+정답 위치 다양성. '프롬프트 1개'가 아니라 유형당 풀스택. 워크북 엔진은 아예 <b>AI 호출 0회의 결정론 코드</b> — 복사할 프롬프트 자체가 없습니다.</div></div>
+      <div class="layer glass" data-s="4"><div class="layer-n">L3</div><div class="layer-body"><b>출력</b> — 한국 학원의 표준은 한글(HWPX)입니다. 웹 미리보기와 동일한 조판으로 한글·Word를 뽑는 마지막 1마일은, 글로벌 모델사가 영원히 만들지 않을 영역입니다.</div></div>
+      <div class="layer glass" data-s="5"><div class="layer-n">L4</div><div class="layer-body"><b>락인</b> — 강사의 기출이 커스텀 유형 스펙으로 컴파일되어 플랫폼에 쌓이고, moat의 학생 오답·성취 데이터는 모델사가 가질 수 없는 도메인 신호로 누적됩니다. 쓸수록 떠나기 어려워집니다.</div></div>
+    </div>
+    <div class="banner glass-deep" data-s="5" data-d="3">
+      <p>경쟁사가 데이터로 모델을 묶는 동안, 우리는 <b>어떤 모델로든 갈아탈 수 있는 오케스트레이션 계층</b>을 만들었습니다. 작업별 최적 모델 조합(생성·OCR·복원·이미지)을 전략적으로 운용합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S23 · 팀
+============================================================ -->
+<section class="slide s23" data-act="ACT 7 — 팀" data-title="팀 — 실행으로 증명한 4인" data-steps="5">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 7 · TEAM</div>
+      <h2 class="h-1">대학생 4명이 <span class="accent">연 매출 5억 법인</span>을 3년째 직접 운영하고 있습니다</h2>
+    </div>
+    <div class="team-grid" data-s="1">
+      <div class="member glass"><div class="m-name">유선화</div><div class="m-role mono">MARKETING</div><p class="body">콘텐츠·브랜딩 — 1일 1콘텐츠 체계, 매장 3곳의 브랜드를 직접 만든 마케터</p></div>
+      <div class="member glass"><div class="m-name">유재영</div><div class="m-role mono">SALES</div><p class="body">영업 — 발영업·제휴. 학원 문을 직접 두드리는 영업 다큐 콘텐츠 운영</p></div>
+      <div class="member glass"><div class="m-name">김주연</div><div class="m-role mono">DEV LEAD</div><p class="body">개발 리드 — 신규 기능 0→1. AI 에이전트 오케스트레이션으로 한 달 MVP를 설계</p></div>
+      <div class="member glass"><div class="m-name">이동주</div><div class="m-role mono">PRODUCT</div><p class="body">프로덕트 — 결제(PG)·UI/UX 통일·관리자 시스템. 미대 출신의 디테일 책임자</p></div>
+    </div>
+    <div class="track-row" data-s="2">
+      <div class="card glass track"><div class="mono">(주)네안데르 — 2023.08 공동 설립</div><p class="body">AI 이미지 분석 향수 추천 사업 — 현재도 운영 중. 신촌 악센트(2023) → 홍대 악센트 와우(2024) → 홍대 악센트 아이디(2025), <b>매장 3개 직접 런칭 · 연 매출 5억.</b></p></div>
+      <div class="card glass track"><div class="mono">수상 이력</div><p class="body">2023 예비창업패키지 <b>최우수 기업</b>(서울·벤처기업협회 주관) · 2024 관광벤처 초기기업 · 2025 청년창업사관학교(안산 본교)</p></div>
+    </div>
+    <div class="team-list" data-s="3">
+      <span class="chip">인테리어 — 직접</span><span class="chip">개발 — 독학으로 직접</span><span class="chip">영업 — 직접</span><span class="chip">마케팅 — 직접</span><span class="chip blue">외주 없이 3년</span>
+    </div>
+    <div class="prob-punch glass-deep" data-s="4">
+      <p>이 팀의 디폴트는 <b>'직접 만들어 증명'</b>입니다.<br/><span class="punch-sub">smoat는 4인이 3년간 갈고닦은 개발·영업·사업화·마케팅 역량을 전부 거는 두 번째 사업입니다.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S24 · AI 팀 운용
+============================================================ -->
+<section class="slide s24" data-act="ACT 7 — 팀" data-title="우리 팀의 절반은 AI" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 7 · AI-NATIVE PROOF</div>
+      <h2 class="h-1">우리 팀의 절반은 <span class="accent">AI</span>입니다 — 그리고 측정 가능합니다</h2>
+    </div>
+    <div class="ai-stats" data-s="1">
+      <div class="stat"><div class="stat-v"><span data-count="1646">0</span></div><div class="stat-l">TypeScript 파일</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="19.2">0</span><span class="unit">만</span></div><div class="stat-l">코드 라인 (LOC)</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="111">0</span></div><div class="stat-l">API 엔드포인트</div></div>
+      <div class="stat"><div class="stat-v"><span data-count="142">0</span></div><div class="stat-l">DB 모델</div></div>
+    </div>
+    <div class="ai-how" data-s="2">
+      <div class="card glass"><div class="card-k">개발</div><p class="body">개발 3인이 AI 코딩 에이전트를 팀원으로 운용 — 기능 0→1 설계는 사람이, 구현·검증 하니스는 AI가. 한 달 MVP, 그 후로도 매일 배포.</p></div>
+      <div class="card glass"><div class="card-k">운영</div><p class="body">매일 23–24시 '1일 1회의'(2026.12.31까지 예외 없음) — 개발·영업·마케팅 3축을 매일 동기화. AI가 만든 속도를 사람의 규율이 받칩니다.</p></div>
+      <div class="card glass"><div class="card-k">콘텐츠</div><p class="body">광고 소재·카드뉴스·릴스도 AI 파이프라인으로 1일 1제작 — 월 20만 원 광고비로 100명을 모은 효율의 정체입니다.</p></div>
+    </div>
+    <div class="banner glass-deep" data-s="3">
+      <p>Spark Claw의 심사 기준 — "AI를 '팀원'처럼 운용한 방식을 중심으로 평가합니다."<br/><b>이 덱 전체가 그 증명이고, 지금 보고 계신 이 IR 자료 또한 AI 팀원이 만들었습니다.</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S25 · 로드맵
+============================================================ -->
+<section class="slide s25" data-act="ACT 8 — 플랜" data-title="로드맵 — 서울, 그리고 전 과목" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 8 · ROADMAP</div>
+      <h2 class="h-1"><span class="accent">2026 서울 영어</span>를 선점하고, <span class="accent">2027 전 과목</span>으로 갑니다</h2>
+    </div>
+    <div class="road">
+      <div class="road-col glass" data-s="1">
+        <div class="mono road-when">2026 — 점령</div>
+        <ul class="body road-list">
+          <li><b>7/1</b> — KPI: 강사 100 + 원장 독점 10 (일 3명 가입 · 4일 1계약)</li>
+          <li><b>2H</b> — Top-tier 학군지(대치·목동·중계)부터 75슬롯 발영업, 미팅마다 타지역 원장 소개 체인</li>
+          <li><b>4Q</b> — 원생 과금 자동화 + 서울 커버리지 확보</li>
+        </ul>
+      </div>
+      <div class="road-col glass" data-s="2">
+        <div class="mono road-when">GTM — 경쟁사가 안 하는 방식</div>
+        <ul class="body road-list">
+          <li><b>VS AI 블라인드 테스트</b> — "기출 vs AI, 구별할 수 있습니까?" 정기 콘텐츠</li>
+          <li><b>발영업 다큐</b> — 학원 영업에서 까이고 통하는 과정을 날것으로 — 매장 3개를 팔아본 팀의 콘텐츠 방법론</li>
+          <li><b>1일 1콘텐츠</b> + 지역 채널(당근·단톡·학원 카페) 침투</li>
+        </ul>
+      </div>
+      <div class="road-col glass" data-s="3">
+        <div class="mono road-when">2027 — 확장</div>
+        <ul class="body road-list">
+          <li>영어 엔진의 일반화 — <b>지문·자료 기반 과목부터</b>: 국어 → 통합사회 → 통합과학</li>
+          <li>수학은 매쓰플랫이 선점했지만, '내신 맞춤 생성 + 학원 독점 학생앱' 결합은 전 과목에 부재 — 풀이 검증 엔진 확보 후 진입</li>
+          <li>같은 학원에 과목을 더하는 <b>확장 매출(Expansion)</b> 구조</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S26 · Ask
+============================================================ -->
+<section class="slide s26" data-act="ACT 8 — 플랜" data-title="Why SparkLabs — Ask" data-steps="4">
+  <div class="slide-inner">
+    <div class="top" data-s="0">
+      <div class="kicker">ACT 8 · THE ASK</div>
+      <h2 class="h-1">스파크랩의 AI 크레딧은, 우리에겐 곧 '<span class="accent">원가</span>'입니다</h2>
+      <p class="lead">우리의 유일한 변동원가가 AI 토큰입니다. Spark Claw의 크레딧 지원은 우리에게 마케팅 혜택이 아니라 <b>매출총이익의 직접 보강이자, 무료 체험 공세의 탄약</b>입니다.</p>
+    </div>
+    <div class="ask-grid">
+      <div class="card glass" data-s="1">
+        <div class="card-k">구조</div>
+        <p class="body">초기 투자 5천만~2억 원(TIPS 연계) + OpenAI·Anthropic·GCP·Azure 크레딧 — AI 네이티브 빌더에게 최적화된 유일한 국내 프로그램.</p>
+      </div>
+      <div class="card glass" data-s="2">
+        <div class="card-k">자금 용처 (안)</div>
+        <ul class="body road-list">
+          <li><b>50%</b> — 서울 선점 마케팅·CAC (실측 CAC 2천 원의 검증된 채널 증액)</li>
+          <li><b>30%</b> — AI 인프라·원가 (무료 체험 물량)</li>
+          <li><b>20%</b> — 운영·법무 (독점 계약 설계·약관)</li>
+        </ul>
+      </div>
+      <div class="card glass" data-s="3">
+        <div class="card-k">마일스톤 연동</div>
+        <ul class="body road-list">
+          <li><b>7/1</b> KPI 달성 → run-rate ARR 1.16억</li>
+          <li><b>9월</b> 계절성 헤지 실측 공개 (여름방학 텔레메트리)</li>
+          <li><b>4Q</b> moat 원생 과금 자동화 + 독점 슬롯 영업 본격화</li>
+          <li><b>2027 1Q</b> 과목 확장 파일럿</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     S27 · 클로징 (night)
+============================================================ -->
+<section class="slide night s27" data-act="EPILOGUE" data-title="클로징" data-steps="2" data-theme="night">
+  <div class="slide-inner center-col">
+    <h1 class="logo-type closing" data-s="0">smoat<span class="logo-dot">.</span></h1>
+    <p class="cover-line" data-s="0" data-d="1">가장 <b>스마트</b>한 <b>해자</b>.</p>
+    <p class="lead closing-line" data-s="1">우리는 문제를 만드는 속도가 아니라,<br/><b>학원이 학생을 지키는 방식</b>을 바꿉니다.</p>
+    <div class="closing-contact mono" data-s="1" data-d="2">
+      smoat.co.kr · (주)네안데르 신규 사업 · Spark Claw Cohort 01 지원
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 키보드/클릭 안내 -->
+<div id="hint">클릭 또는 → 키로 넘기기 · F 전체화면 · 우상단 ≡ 목차</div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="hud-row">
+    <div id="hud-act">SMOAT</div>
+    <div class="hud-right">
+      <div id="hud-dots"></div>
+      <div class="hud-counter"><span id="hud-num">01</span><span class="total"> / <span id="hud-total">00</span></span></div>
+      <button class="hud-btn" id="nav-prev" aria-label="이전">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="hud-btn" id="nav-next" aria-label="다음">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="hud-btn" id="hud-toc-btn" aria-label="목차">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="hud-track"><div id="hud-bar"></div></div>
+</div>
+
+<!-- 목차 -->
+<div id="toc">
+  <div class="toc-sheet">
+    <div class="toc-title">목차</div>
+    <div class="toc-list"></div>
+  </div>
+</div>
+
+<script src="/ir/demo-data.js"></script>
+<script src="/ir/deck.js"></script>
+<script src="/ir/demo.js"></script>
+</body>
+</html>
