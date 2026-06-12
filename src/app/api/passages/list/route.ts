@@ -11,15 +11,25 @@ export async function GET(request: NextRequest) {
 
     const onlyAnalyzed =
       request.nextUrl.searchParams.get("onlyAnalyzed") === "true";
+    const rawPassageIds = request.nextUrl.searchParams.get("passageIds") ?? "";
+    const passageIdsFilter = Array.from(
+      new Set(
+        rawPassageIds
+          .split(",")
+          .map((id) => id.trim())
+          .filter(Boolean),
+      ),
+    ).slice(0, 100);
     const passageWhere = {
       academyId: staff.academyId,
+      ...(passageIdsFilter.length > 0 ? { id: { in: passageIdsFilter } } : {}),
       ...(onlyAnalyzed ? { analysis: { isNot: null } } : {}),
     };
     const collectionItemCount = onlyAnalyzed
       ? { where: { passage: { is: passageWhere } } }
       : true;
 
-    const [passages, schools, collections] = await Promise.all([
+    const [passageRows, schools, collections] = await Promise.all([
       prisma.passage.findMany({
         where: passageWhere,
         select: {
@@ -34,12 +44,12 @@ export async function GET(request: NextRequest) {
           source: true,
           school: { select: { id: true, name: true } },
           collectionItems: { select: { collectionId: true } },
-          analysis: { select: { id: true, analysisData: true } },
+          analysis: { select: { id: true, analysisData: true, updatedAt: true } },
           // 이 지문으로 이미 생성된 문제 수 — 지문 카드 뱃지에 사용.
           _count: { select: { questions: true } },
         },
         orderBy: { createdAt: "desc" },
-        take: 200,
+        take: passageIdsFilter.length > 0 ? passageIdsFilter.length : 200,
       }),
       prisma.school.findMany({
         where: { academyId: staff.academyId },
@@ -57,6 +67,38 @@ export async function GET(request: NextRequest) {
         orderBy: { name: "asc" },
       }),
     ]);
+
+    const passageIds = passageRows.map((passage) => passage.id);
+    const reviewDrafts =
+      passageIds.length > 0
+        ? await prisma.extractionM1PassageDraft.findMany({
+            where: {
+              savedPassageId: { in: passageIds },
+              deletedAt: null,
+              job: {
+                academyId: staff.academyId,
+                mode: "PASSAGE_ONLY",
+                deletedAt: null,
+              },
+            },
+            select: {
+              id: true,
+              savedPassageId: true,
+              reviewStatus: true,
+              confirmedAt: true,
+              updatedAt: true,
+            },
+          })
+        : [];
+    const reviewDraftByPassageId = new Map(
+      reviewDrafts
+        .filter((draft) => draft.savedPassageId)
+        .map((draft) => [draft.savedPassageId as string, draft]),
+    );
+    const passages = passageRows.map((passage) => ({
+      ...passage,
+      extractionReviewDraft: reviewDraftByPassageId.get(passage.id) ?? null,
+    }));
 
     // Extract unique filter values
     const grades = [

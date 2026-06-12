@@ -14,6 +14,7 @@ import {
 } from "@/lib/credit-costs";
 import { getCreditTopUpProducts } from "@/lib/credit-top-up-products";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { CREDIT_TOP_UP_COMPLETION_TEXT } from "@/lib/legal/payment-processor";
 import { prisma } from "@/lib/prisma";
 import { getPlanPricingPreview } from "@/lib/subscription-plan-pricing";
 
@@ -71,8 +72,8 @@ export default async function CreditProductsPage() {
           </h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-600">
             {SUBSCRIPTION_BILLING_ENABLED
-              ? "SMOAT 구독 요금제는 30일 단위 디지털 서비스 이용권과 월 배정 크레딧을 제공합니다. 신용카드 정기결제를 등록하면 포트원 빌링키로 30일마다 자동 결제됩니다. 추가 크레딧 상품은 문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권이며, 결제 승인 또는 가상계좌 입금 확인 후 서비스 잔고에 즉시 지급됩니다."
-              : "SMOAT 크레딧 상품은 문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권입니다. 신용카드 결제 승인 확인 후 서비스 잔고에 즉시 지급되며, 실물 배송이 없는 온라인 상품입니다."}
+              ? `SMOAT 구독 요금제는 30일 단위 디지털 서비스 이용권과 월 배정 크레딧을 제공합니다. 신용카드 정기결제를 등록하면 포트원 빌링키로 30일마다 자동 결제됩니다. 추가 크레딧 상품은 문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권이며, ${CREDIT_TOP_UP_COMPLETION_TEXT} 서비스 잔고에 즉시 지급됩니다.`
+              : `SMOAT 크레딧 상품은 문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권입니다. ${CREDIT_TOP_UP_COMPLETION_TEXT} 서비스 잔고에 즉시 지급되며, 실물 배송이 없는 온라인 상품입니다.`}
           </p>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {SUBSCRIPTION_BILLING_ENABLED ? (

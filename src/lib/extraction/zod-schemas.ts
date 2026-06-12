@@ -46,6 +46,13 @@ export const createJobRequestSchema = z.object({
   autoPromote: z.boolean().optional(),
   totalPages: z.number().int().min(1).max(MAX_PAGES_PER_JOB),
   originalFileName: z.string().max(255).optional(),
+  /** Optional original first-page preview kept separate from extraction crops. */
+  previewPage: z
+    .object({
+      size: z.number().int().positive().max(MAX_PAGE_IMAGE_BYTES),
+      mimeType: z.enum(ACCEPTED_IMAGE_MIMES),
+    })
+    .optional(),
   pages: z
     .array(
       z.object({
@@ -109,6 +116,15 @@ export const createJobResponseSchema = z.object({
       expiresAt: z.string(),
     }),
   ),
+  previewUploadTarget: z
+    .object({
+      uploadUrl: z.string().url(),
+      uploadPath: z.string(),
+      token: z.string().optional(),
+      expiresAt: z.string(),
+    })
+    .nullable()
+    .optional(),
   creditsProjected: z.number(),
   creditsBalanceBefore: z.number(),
 });

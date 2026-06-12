@@ -18,6 +18,7 @@ import {
   Loader2,
   X,
   Check,
+  CheckCircle2,
   FileText,
   ChevronRight,
   ChevronDown,
@@ -72,6 +73,33 @@ const FOLDER_WINDOW_HEIGHT_STORAGE_KEY =
 const FOLDER_WINDOW_MIN_HEIGHT = 48;
 const FOLDER_WINDOW_DEFAULT_HEIGHT = 136;
 const FOLDER_WINDOW_MAX_HEIGHT = 220;
+const ANALYSIS_GLOW_ACK_STORAGE_KEY =
+  "smoat:generate:analysis-glow-ack.v1";
+const RECENT_ANALYSIS_GLOW_WINDOW_MS = 30 * 60 * 1000;
+
+function analysisGlowKey(passage: PassageItem): string | null {
+  const analysis = passage.analysis as
+    | { id?: string | null; updatedAt?: string | Date | null }
+    | null
+    | undefined;
+  if (!analysis) return null;
+  const updated =
+    analysis.updatedAt instanceof Date
+      ? analysis.updatedAt.toISOString()
+      : analysis.updatedAt
+        ? String(analysis.updatedAt)
+        : "";
+  return `${passage.id}:${analysis.id ?? "analysis"}:${updated}`;
+}
+
+function analysisUpdatedAtMs(passage: PassageItem): number | null {
+  const updatedAt = (passage.analysis as { updatedAt?: string | Date } | null)
+    ?.updatedAt;
+  if (!updatedAt) return null;
+  const ms =
+    updatedAt instanceof Date ? updatedAt.getTime() : Date.parse(updatedAt);
+  return Number.isNaN(ms) ? null : ms;
+}
 
 // ─── Props ───────────────────────────────────────────
 
@@ -133,6 +161,11 @@ interface PassageCardGridProps {
 
   // 추출 중인 지문 로딩 카드(이미지·PDF 추출). 카드 그리드 상단에 렌더한다.
   loadingCards?: ReactNode;
+  // 방금 추출/분석이 끝난 지문 id. 완료 시각이 늦게 동기화되는 경우에도 글로우를 켠다.
+  freshAnalysisPassageIds?: Set<string>;
+  onFreshAnalysisAcknowledged?: (passageId: string) => void;
+  reviewBulkActionRunning?: boolean;
+  onBulkCompleteExtractionReview?: (passages: PassageItem[]) => void;
 
   // Actions
   handleOpenAnalysisModal: (passageId: string) => void;
@@ -184,6 +217,10 @@ export function PassageCardGrid({
   selectionActionDisabled,
   questionCountByPassage,
   loadingCards,
+  freshAnalysisPassageIds,
+  onFreshAnalysisAcknowledged,
+  reviewBulkActionRunning = false,
+  onBulkCompleteExtractionReview,
   handleOpenAnalysisModal,
   onViewPassageContent,
 }: PassageCardGridProps) {
@@ -199,6 +236,20 @@ export function PassageCardGrid({
   const marqueeBoundaryRef = useRef<HTMLDivElement>(null);
   // 네이티브 드래그(폴더 이동)는 손잡이 엘리먼트에만 등록한다 → 카드 본문은 영역 선택용.
   const passageHandleRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const [mountedAtMs] = useState(() => Date.now());
+  const [acknowledgedAnalysisGlowKeys, setAcknowledgedAnalysisGlowKeys] =
+    useState<Set<string>>(() => {
+      if (typeof window === "undefined") return new Set();
+      try {
+        const raw = window.localStorage.getItem(ANALYSIS_GLOW_ACK_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed)
+          ? new Set(parsed.filter((v): v is string => typeof v === "string"))
+          : new Set();
+      } catch {
+        return new Set();
+      }
+    });
   const folderDropRefs = useRef<Map<string, HTMLElement>>(new Map());
   const [folderWindowHeight, setFolderWindowHeight] = useState<number>(() => {
     if (typeof window === "undefined") return FOLDER_WINDOW_DEFAULT_HEIGHT;
@@ -284,6 +335,20 @@ export function PassageCardGrid({
     !!onDeleteSelectedPassages;
   const canRemoveSelectedFromCollection =
     !!selectedCollectionId && !!onRemoveSelectedFromCollection;
+  const selectedReviewDraftPassages = useMemo(
+    () =>
+      passages.filter(
+        (passage) => selectedIds.has(passage.id) && passage.extractionReviewDraft,
+      ),
+    [passages, selectedIds],
+  );
+  const selectedPendingReviewPassages = useMemo(
+    () =>
+      selectedReviewDraftPassages.filter(
+        (passage) => passage.extractionReviewDraft?.reviewStatus !== "COMMITTED",
+      ),
+    [selectedReviewDraftPassages],
+  );
   const copySelectedToCollection = onCopySelectedToCollection ?? (() => {});
   const moveSelectedToCollection = onMoveSelectedToCollection ?? (() => {});
   const removeSelectedFromCollection =
@@ -345,9 +410,57 @@ export function PassageCardGrid({
       someVisibleSelected && !allVisibleSelected;
   }, [allVisibleSelected, someVisibleSelected]);
 
+  const glowingPassageIds = useMemo(() => {
+    const next = new Set<string>();
+    for (const passage of passages) {
+      if (freshAnalysisPassageIds?.has(passage.id)) {
+        next.add(passage.id);
+        continue;
+      }
+
+      if (!passage.analysis) continue;
+      const key = analysisGlowKey(passage);
+      if (!key || acknowledgedAnalysisGlowKeys.has(key)) continue;
+
+      const updatedAtMs = analysisUpdatedAtMs(passage);
+      if (updatedAtMs == null) continue;
+
+      const completedAfterPageOpen = updatedAtMs >= mountedAtMs - 10_000;
+      const completedRecently =
+        mountedAtMs - updatedAtMs <= RECENT_ANALYSIS_GLOW_WINDOW_MS;
+      if (completedAfterPageOpen || completedRecently) {
+        next.add(passage.id);
+      }
+    }
+    return next;
+  }, [
+    acknowledgedAnalysisGlowKeys,
+    freshAnalysisPassageIds,
+    mountedAtMs,
+    passages,
+  ]);
+
   const openPassageCard = (id: string) => {
     const passage = filteredPassages.find((item) => item.id === id);
     if (!passage) return;
+    onFreshAnalysisAcknowledged?.(id);
+    const glowKey = analysisGlowKey(passage);
+    if (glowKey) {
+      setAcknowledgedAnalysisGlowKeys((prev) => {
+        if (prev.has(glowKey)) return prev;
+        const next = new Set(prev);
+        next.add(glowKey);
+        try {
+          window.localStorage.setItem(
+            ANALYSIS_GLOW_ACK_STORAGE_KEY,
+            JSON.stringify([...next].slice(-500)),
+          );
+        } catch {
+          /* ignore */
+        }
+        return next;
+      });
+    }
     if (!passage.analysis && onViewPassageContent) {
       onViewPassageContent(passage);
       return;
@@ -873,6 +986,38 @@ export function PassageCardGrid({
                     }
                     compact
                   />
+                  {onBulkCompleteExtractionReview ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onBulkCompleteExtractionReview(selectedReviewDraftPassages)
+                      }
+                      disabled={
+                        selectedPendingReviewPassages.length === 0 ||
+                        reviewBulkActionRunning ||
+                        passageBulkAction !== null
+                      }
+                      title={
+                        selectedPendingReviewPassages.length > 0
+                          ? `검수필요 ${selectedPendingReviewPassages.length}개 검수완료`
+                          : "선택한 자료 중 검수필요 항목이 없습니다"
+                      }
+                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {reviewBulkActionRunning ? (
+                        <Loader2
+                          className="h-3.5 w-3.5 animate-spin"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <CheckCircle2
+                          className="h-3.5 w-3.5"
+                          aria-hidden="true"
+                        />
+                      )}
+                      검수완료
+                    </button>
+                  ) : null}
                   {canRemoveSelectedFromCollection ? (
                     <button
                       type="button"
@@ -1181,6 +1326,14 @@ export function PassageCardGrid({
 
               const isChecked = selectedIds.has(p.id);
               const hasAnalysis = !!p.analysis;
+              const isGlowing = glowingPassageIds.has(p.id);
+              const reviewDraft = p.extractionReviewDraft ?? null;
+              const hasReviewDraft = reviewDraft != null;
+              const isReviewCommitted =
+                reviewDraft?.reviewStatus === "COMMITTED";
+              const reviewStampLabel = isReviewCommitted
+                ? "검수완료"
+                : "검수필요";
 
               return (
                 <div
@@ -1195,20 +1348,45 @@ export function PassageCardGrid({
                   aria-label={`${p.title} 상세 보기`}
                   onClick={() => openPassageCard(p.id)}
                   onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                  className={`group relative rounded-xl border p-4 transition-all duration-200 hover:shadow-md flex flex-col cursor-pointer ${
+                  className={`group relative flex flex-col overflow-hidden rounded-xl border p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
                     isChecked
                       ? "border-blue-400 bg-blue-50/20 ring-1 ring-blue-300/30"
-                      : hasAnalysis
-                        ? "border-emerald-200 bg-white"
-                        : "border-slate-200 bg-white"
+                      : hasReviewDraft && !isReviewCommitted
+                        ? "border-red-200/80 bg-white shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80"
+                        : hasAnalysis
+                          ? "border-emerald-200 bg-white"
+                          : "border-slate-200 bg-white"
                   } ${
                     draggingPassageIds.includes(p.id)
                       ? "opacity-60 ring-2 ring-blue-200"
                       : ""
+                  } ${
+                    isGlowing
+                      ? "!border-blue-400 !bg-blue-50/25 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
+                      : ""
                   } outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 >
+                  {hasReviewDraft ? (
+                    <span
+                      role="img"
+                      aria-label={reviewStampLabel}
+                      className={
+                        "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full text-[7px] font-bold tracking-tighter " +
+                        (isReviewCommitted
+                          ? "border-2 border-emerald-600/85 bg-white/70 text-emerald-700 shadow-sm backdrop-blur-[1px]"
+                          : "border border-dashed border-red-300/70 bg-red-50/30 text-[7.5px] tracking-tight text-red-400/80")
+                      }
+                    >
+                      {reviewStampLabel}
+                    </span>
+                  ) : null}
                   {/* Header with handle + checkbox */}
-                  <div className="flex items-start justify-between gap-2">
+                  <div
+                    className={
+                      "flex items-start justify-between gap-2 " +
+                      (hasReviewDraft ? "pr-8" : "")
+                    }
+                  >
                     <div className="flex items-start gap-2.5 min-w-0 flex-1">
                       {/* Drag handle (folder 이동) — passageBulkAction 중에는 숨김 */}
                       {passageBulkAction === null && (
@@ -1268,7 +1446,6 @@ export function PassageCardGrid({
                         </div>
                       </div>
                     </div>
-
                   </div>
 
                   {/* Content preview */}

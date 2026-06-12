@@ -210,8 +210,7 @@ export function DraftCard({
     .trim()
     .slice(0, 140);
 
-  const isReviewed =
-    draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
+  const isReviewed = draft.reviewStatus === "COMMITTED";
   const isAnalyzed = isDraftAnalysisComplete(draft);
   const stampDone = statusBadgeMode === "analysis" ? isAnalyzed : isReviewed;
   const stampLabel =

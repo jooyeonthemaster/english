@@ -163,6 +163,13 @@ export function GeneratePageClient({
     publishers: [],
   });
   const [loadingPassages, setLoadingPassages] = useState(true);
+  const [freshAnalysisPassageIds, setFreshAnalysisPassageIds] = useState<
+    Set<string>
+  >(() => new Set());
+  const [reviewActionPassageIds, setReviewActionPassageIds] = useState<
+    Set<string>
+  >(() => new Set());
+  const [reviewBulkActionRunning, setReviewBulkActionRunning] = useState(false);
 
   // ── Collections ──
   const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
@@ -607,6 +614,24 @@ export function GeneratePageClient({
           },
         });
         setSelectedIds(new Set());
+        const nextDraft = {
+          ...draft,
+          reviewStatus: isReviewed ? "REVIEWED" : "COMMITTED",
+          confirmedAt: isReviewed ? null : new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        const applyPassageReviewState = <
+          T extends { id?: string; extractionReviewDraft?: PassageItem["extractionReviewDraft"] } | null,
+        >(
+          current: T,
+        ): T =>
+          current?.id === passage.id
+            ? { ...current, extractionReviewDraft: nextDraft }
+            : current;
+
+        setDetailPassage((prev) => applyPassageReviewState(prev));
+        setContentModalPassage((prev) => applyPassageReviewState(prev));
+        setAnalysisModalPassage((prev) => applyPassageReviewState(prev));
         await loadPassages();
       } catch (err) {
         toast.error(
@@ -1046,7 +1071,7 @@ export function GeneratePageClient({
         .filter((r) => r.content.length >= 20);
       if (cleaned.length === 0) {
         toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
-        return;
+        return false;
       }
       setPasteSaving(true);
       try {
@@ -1066,7 +1091,7 @@ export function GeneratePageClient({
         }
         if (createdIds.length === 0) {
           toast.error("지문 등록에 실패했습니다.");
-          return;
+          return false;
         }
 
         // Refetch the academy passage list in place so the new passages become
@@ -1084,8 +1109,10 @@ export function GeneratePageClient({
             ? `${createdIds.length}개 지문이 등록되었습니다. 유형·난이도를 설정해 문제를 생성하세요.`
             : `${createdIds.length}/${cleaned.length}개 지문이 등록되었습니다. 일부는 실패했습니다.`,
         );
+        return true;
       } catch {
         toast.error("지문 등록 중 오류가 발생했습니다.");
+        return false;
       } finally {
         setPasteSaving(false);
       }
@@ -1119,6 +1146,13 @@ export function GeneratePageClient({
         setSelectedCollectionId("");
         setAnalysisStatusFilter("all");
         setIntakeView("library");
+        if (passageIds.length > 0) {
+          setFreshAnalysisPassageIds((prev) => {
+            const next = new Set(prev);
+            passageIds.forEach((id) => next.add(id));
+            return next;
+          });
+        }
         if (complete) {
           clearExtractionPendingRef.current(jobId);
         }
@@ -1157,6 +1191,191 @@ export function GeneratePageClient({
       });
     },
     [loadPassages],
+  );
+
+  const acknowledgeFreshAnalysisPassage = useCallback((passageId: string) => {
+    setFreshAnalysisPassageIds((prev) => {
+      if (!prev.has(passageId)) return prev;
+      const next = new Set(prev);
+      next.delete(passageId);
+      return next;
+    });
+  }, []);
+
+  const handleInlinePassageAnalyzed = useCallback(
+    async (passageId: string) => {
+      await loadPassages();
+      setFreshAnalysisPassageIds((prev) => {
+        const next = new Set(prev);
+        next.add(passageId);
+        return next;
+      });
+    },
+    [loadPassages],
+  );
+
+  const handleToggleExtractionReview = useCallback(
+    async (passage: PassageItem) => {
+      const draft = passage.extractionReviewDraft;
+      if (!draft) return;
+
+      const isReviewed = draft.reviewStatus === "COMMITTED";
+      if (isReviewed) {
+        const ok = window.confirm(
+          "검수를 취소하면 이 지문이 문제생성 목록에서 제거됩니다. 계속할까요?",
+        );
+        if (!ok) return;
+      }
+
+      setReviewActionPassageIds((prev) => {
+        const next = new Set(prev);
+        next.add(passage.id);
+        return next;
+      });
+
+      try {
+        if (isReviewed) {
+          const res = await fetch(
+            `/api/extraction/m1-passages/${draft.id}/unpromote`,
+            {
+              method: "POST",
+              credentials: "include",
+            },
+          );
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data?.error ?? "검수를 취소하지 못했습니다.");
+          }
+          setSelectedIds((prev) => {
+            if (!prev.has(passage.id)) return prev;
+            const next = new Set(prev);
+            next.delete(passage.id);
+            return next;
+          });
+          toast.success("검수완료를 취소했습니다.");
+        } else {
+          const res = await fetch("/api/extraction/m1-passages/promote", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ draftIds: [draft.id] }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data?.error ?? "검수완료로 표시하지 못했습니다.");
+          }
+          const promoted = data?.summary?.promoted ?? 0;
+          const skipped = data?.summary?.skipped ?? 0;
+          if (promoted + skipped <= 0) {
+            throw new Error("검수 처리에 실패했습니다.");
+          }
+          toast.success("검수완료로 표시했습니다.");
+        }
+
+        await loadPassages();
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "검수 상태를 변경하지 못했습니다.",
+        );
+      } finally {
+        setReviewActionPassageIds((prev) => {
+          if (!prev.has(passage.id)) return prev;
+          const next = new Set(prev);
+          next.delete(passage.id);
+          return next;
+        });
+      }
+    },
+    [loadPassages],
+  );
+
+  const handleBulkCompleteExtractionReview = useCallback(
+    async (targetPassages: PassageItem[]) => {
+      if (reviewBulkActionRunning) return;
+
+      const reviewDraftPassages = targetPassages.filter(
+        (passage) => passage.extractionReviewDraft,
+      );
+      const pendingPassages = reviewDraftPassages.filter(
+        (passage) =>
+          passage.extractionReviewDraft?.reviewStatus !== "COMMITTED",
+      );
+      const alreadyCommittedCount =
+        reviewDraftPassages.length - pendingPassages.length;
+
+      if (pendingPassages.length === 0) {
+        window.alert(
+          alreadyCommittedCount > 0
+            ? `선택한 ${alreadyCommittedCount}개 자료가 이미 모두 검수완료되어 있습니다.`
+            : "선택한 지문 중 검수할 추출 자료가 없습니다.",
+        );
+        return;
+      }
+
+      const ok =
+        alreadyCommittedCount > 0
+          ? window.confirm(
+              `선택한 ${reviewDraftPassages.length}개 중 ${alreadyCommittedCount}개는 이미 검수완료되어 있습니다.\n` +
+                `검수 필요한 ${pendingPassages.length}개만 검수완료 처리할까요?`,
+            )
+          : window.confirm(
+              `선택한 ${pendingPassages.length}개 지문을 검수완료로 표시할까요?`,
+            );
+      if (!ok) return;
+
+      const draftIds = pendingPassages
+        .map((passage) => passage.extractionReviewDraft?.id)
+        .filter((id): id is string => Boolean(id));
+      if (draftIds.length === 0) return;
+
+      setReviewBulkActionRunning(true);
+      setReviewActionPassageIds((prev) => {
+        const next = new Set(prev);
+        pendingPassages.forEach((passage) => next.add(passage.id));
+        return next;
+      });
+
+      try {
+        const res = await fetch("/api/extraction/m1-passages/promote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ draftIds }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data?.error ?? "검수완료 처리에 실패했습니다.");
+        }
+
+        const promoted = data?.summary?.promoted ?? 0;
+        const skipped = data?.summary?.skipped ?? 0;
+        const failed = data?.summary?.failed ?? 0;
+        if (promoted + skipped <= 0) {
+          throw new Error("검수완료 처리에 실패했습니다.");
+        }
+
+        await loadPassages();
+        if (failed > 0) {
+          toast.warning(
+            `${promoted}개 검수완료, ${skipped + failed}개 건너뜀/실패`,
+          );
+        } else {
+          toast.success(`${promoted + skipped}개 지문을 검수완료로 표시했습니다.`);
+        }
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "검수완료 처리에 실패했습니다.",
+        );
+      } finally {
+        setReviewBulkActionRunning(false);
+        setReviewActionPassageIds((prev) => {
+          const next = new Set(prev);
+          pendingPassages.forEach((passage) => next.delete(passage.id));
+          return next;
+        });
+      }
+    },
+    [loadPassages, reviewBulkActionRunning],
   );
 
   const {
@@ -1203,10 +1422,19 @@ export function GeneratePageClient({
       const { getWorkbenchPassage } = await import("@/actions/workbench");
       const result = await getWorkbenchPassage(passageId);
       if (result) {
+        const listPassage = passages.find((item) => item.id === passageId);
+        const enrichedResult = {
+          ...result,
+          extractionReviewDraft:
+            listPassage?.extractionReviewDraft ??
+            (result as { extractionReviewDraft?: PassageItem["extractionReviewDraft"] })
+              .extractionReviewDraft ??
+            null,
+        };
         if (result.analysis) {
-          setAnalysisModalPassage(result);
+          setAnalysisModalPassage(enrichedResult);
         } else {
-          setContentModalPassage(result as unknown as PassageItem);
+          setContentModalPassage(enrichedResult as unknown as PassageItem);
         }
       } else {
         toast.error("지문 데이터를 불러올 수 없습니다.");
@@ -1216,7 +1444,7 @@ export function GeneratePageClient({
     } finally {
       setLoadingAnalysisModal(false);
     }
-  }, []);
+  }, [passages]);
 
   const applyReviewState = useCallback(
     (questionIds: string[], approved: boolean) => {
@@ -1562,6 +1790,10 @@ export function GeneratePageClient({
               totalQuestions={totalQuestions}
               handleBatchGenerate={handleBatchGenerate}
               questionCountByPassage={questionCountByPassage}
+              freshAnalysisPassageIds={freshAnalysisPassageIds}
+              onFreshAnalysisAcknowledged={acknowledgeFreshAnalysisPassage}
+              reviewBulkActionRunning={reviewBulkActionRunning}
+              onBulkCompleteExtractionReview={handleBulkCompleteExtractionReview}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
               onViewPassageContent={setDetailPassage}
                 />
@@ -1842,7 +2074,7 @@ export function GeneratePageClient({
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-rose-200 bg-rose-50 px-2.5 text-[11px] font-semibold text-rose-600 shadow-none transition-colors hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
                     검수취소
@@ -1948,6 +2180,8 @@ export function GeneratePageClient({
                 : analysisModalPassage.analysis.analysisData
               : null
           }
+          reviewBusy={reviewActionPassageIds.has(analysisModalPassage.id)}
+          onToggleExtractionReview={handleToggleExtractionReview}
         />
       )}
 
@@ -1956,6 +2190,10 @@ export function GeneratePageClient({
         open={!!contentModalPassage}
         onClose={() => setContentModalPassage(null)}
         passage={contentModalPassage}
+        reviewBusy={
+          !!contentModalPassage && reviewActionPassageIds.has(contentModalPassage.id)
+        }
+        onToggleExtractionReview={handleToggleExtractionReview}
       />
 
       {/* ─── 추출/입력 지문 "전체 보기" — 복원 근거 + 추출 이미지 상세 모달 ─── */}
@@ -1963,6 +2201,9 @@ export function GeneratePageClient({
         <ExtractionDetailModal
           passage={detailPassage}
           onClose={() => setDetailPassage(null)}
+          onPassageAnalyzed={handleInlinePassageAnalyzed}
+          reviewBusy={reviewActionPassageIds.has(detailPassage.id)}
+          onToggleExtractionReview={handleToggleExtractionReview}
         />
       )}
 

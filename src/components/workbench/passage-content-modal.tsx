@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { FileText, X } from "lucide-react";
+import { CheckCircle2, FileText, Loader2, Undo2, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
@@ -18,12 +18,21 @@ export interface PassageContentModalPassage {
   semester?: string | null;
   unit?: string | null;
   school?: { name: string } | null;
+  extractionReviewDraft?: {
+    id: string;
+    savedPassageId: string | null;
+    reviewStatus: string;
+    confirmedAt?: string | Date | null;
+    updatedAt?: string | Date | null;
+  } | null;
 }
 
 interface PassageContentModalProps {
   open: boolean;
   onClose: () => void;
   passage: PassageContentModalPassage | null;
+  reviewBusy?: boolean;
+  onToggleExtractionReview?: (passage: PassageContentModalPassage) => void;
 }
 
 function countWords(text: string): number {
@@ -45,6 +54,8 @@ export function PassageContentModal({
   open,
   onClose,
   passage,
+  reviewBusy = false,
+  onToggleExtractionReview,
 }: PassageContentModalProps) {
   // Split on blank lines into paragraphs; keep intra-paragraph line breaks via
   // `whitespace-pre-wrap` so the text reads exactly as it was stored.
@@ -83,6 +94,8 @@ export function PassageContentModal({
 
   const isDirectInput = isDirectInputPassage(passage.source);
   const wordCount = countWords(passage.content);
+  const reviewDraft = passage.extractionReviewDraft ?? null;
+  const isReviewCommitted = reviewDraft?.reviewStatus === "COMMITTED";
 
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center">
@@ -140,14 +153,38 @@ export function PassageContentModal({
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="닫기"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-slate-100"
-          >
-            <X className="h-4 w-4 text-slate-500" />
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            {reviewDraft && onToggleExtractionReview ? (
+              <button
+                type="button"
+                onClick={() => onToggleExtractionReview(passage)}
+                disabled={reviewBusy}
+                className={
+                  "flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
+                  (isReviewCommitted
+                    ? "border-rose-200 bg-rose-50 text-rose-600 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
+                    : "border-emerald-600 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700")
+                }
+              >
+                {reviewBusy ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                ) : isReviewCommitted ? (
+                  <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
+                ) : (
+                  <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                )}
+                {isReviewCommitted ? "검수취소" : "검수완료"}
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="닫기"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-slate-100"
+            >
+              <X className="h-4 w-4 text-slate-500" />
+            </button>
+          </div>
         </div>
 
         {/* ─── Body: full passage text on a paper-like surface ─── */}

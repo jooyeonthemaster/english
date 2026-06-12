@@ -61,6 +61,8 @@ export function PassageRegistrationClient({
   initialCollections,
   draftCollections,
   draftMembership,
+  initialDraftIds,
+  initialPassageIds,
 }: PassageRegistrationProps) {
   const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
 
@@ -286,6 +288,150 @@ export function PassageRegistrationClient({
     },
     [attachExtractionJob, failExtractionJob, bumpDraftRefresh, triggerRefresh],
   );
+
+  // ─── Deep link (?draftIds= / ?passageIds=) → rows ───
+  // Ported from main's block-based loader: /passages/create?draftIds=… and
+  // ?passageIds=… preload extraction drafts / saved passages into the input
+  // stack on mount. Applied at most once per id (StrictMode-safe via refs).
+  const initialDraftIdsKey = useMemo(
+    () => (initialDraftIds ?? []).join(","),
+    [initialDraftIds],
+  );
+  const initialPassageIdsKey = useMemo(
+    () => (initialPassageIds ?? []).join(","),
+    [initialPassageIds],
+  );
+  const appliedInitialDraftIdsRef = useRef<Set<string>>(new Set());
+  const appliedInitialPassageIdsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    const ids = (initialDraftIds ?? []).filter(
+      (id) => !appliedInitialDraftIdsRef.current.has(id),
+    );
+    if (ids.length === 0) return;
+
+    let cancelled = false;
+    ids.forEach((id) => appliedInitialDraftIdsRef.current.add(id));
+
+    void (async () => {
+      try {
+        const params = new URLSearchParams({
+          view: "list",
+          limit: String(Math.max(ids.length, 1)),
+          draftIds: ids.join(","),
+        });
+        const res = await fetch(`/api/extraction/m1-passages?${params}`, {
+          credentials: "include",
+          cache: "no-store",
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          drafts?: M1PassageDraftWithJob[];
+        };
+        if (!res.ok || !Array.isArray(data.drafts)) {
+          throw new Error("불러올 추출 지문을 찾지 못했습니다.");
+        }
+
+        const order = new Map(ids.map((id, index) => [id, index]));
+        const drafts = data.drafts
+          .filter((draft) => order.has(draft.id))
+          .sort(
+            (a, b) =>
+              (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
+              (order.get(b.id) ?? Number.MAX_SAFE_INTEGER),
+          );
+
+        if (cancelled || drafts.length === 0) return;
+        handleLoadDrafts(drafts);
+      } catch (err) {
+        if (cancelled) return;
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "추출 지문을 불러오지 못했습니다.",
+        );
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [handleLoadDrafts, initialDraftIds, initialDraftIdsKey]);
+
+  useEffect(() => {
+    const ids = (initialPassageIds ?? []).filter(
+      (id) => !appliedInitialPassageIdsRef.current.has(id),
+    );
+    if (ids.length === 0) return;
+
+    let cancelled = false;
+    ids.forEach((id) => appliedInitialPassageIdsRef.current.add(id));
+
+    void (async () => {
+      try {
+        const params = new URLSearchParams({ passageIds: ids.join(",") });
+        const res = await fetch(`/api/passages/list?${params}`, {
+          credentials: "include",
+          cache: "no-store",
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          passages?: Array<{
+            id: string;
+            title?: string | null;
+            content?: string | null;
+            source?: string | null;
+          }>;
+        };
+        if (!res.ok || !Array.isArray(data.passages)) {
+          throw new Error("불러올 지문을 찾지 못했습니다.");
+        }
+
+        const order = new Map(ids.map((id, index) => [id, index]));
+        const incoming = data.passages
+          .filter((passage) => order.has(passage.id))
+          .sort(
+            (a, b) =>
+              (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
+              (order.get(b.id) ?? Number.MAX_SAFE_INTEGER),
+          )
+          .map((passage) => ({ passage, text: passage.content?.trim() || "" }))
+          .filter((x) => x.text.length > 0)
+          .map(({ passage, text }) => ({
+            ...makeEmptyRow(text),
+            title: passage.title?.trim() || "",
+            source: passage.source?.trim() || null,
+            collapsed: true,
+          }));
+
+        if (cancelled || incoming.length === 0) return;
+        // Mirror handleLoadDrafts' stack-merge: drop a single pristine empty
+        // row; expand the first loaded row when it lands in an empty stack.
+        const prev = rowsRef.current;
+        const base =
+          prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
+        if (base.length === 0) {
+          incoming[0] = { ...incoming[0], collapsed: false };
+        }
+        const next = [...base, ...incoming];
+        rowsRef.current = next;
+        setRows(next);
+        setFormCollapsed(false);
+        toast.success(
+          incoming.length === 1
+            ? "선택한 지문을 학습지 생성에 불러왔습니다."
+            : `${incoming.length}개 지문을 학습지 생성에 불러왔습니다.`,
+        );
+      } catch (err) {
+        if (cancelled) return;
+        toast.error(
+          err instanceof Error ? err.message : "지문을 불러오지 못했습니다.",
+        );
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialPassageIds, initialPassageIdsKey]);
 
   // ─── Collections (folders) ───
   const {

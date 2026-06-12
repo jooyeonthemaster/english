@@ -292,7 +292,7 @@ export function WorkspaceShell({
                 style={{
                   // 저장된 폭(기본 560)이 작은 컨테이너에서 우측 패널을
                   // RIGHT_PANE_MIN 미만으로 밀어내지 않게 렌더 폭도 클램프.
-                  width: `min(${leftPaneWidth}px, 55%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`,
+                  width: `min(${leftPaneWidth}px, ${LEFT_PANE_MAX_RATIO * 100}%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`,
                 }}
               >
                 {left}

@@ -1,18 +1,28 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import {
   AlertCircle,
+  CheckCircle2,
   Database,
   FileText,
+  GripVertical,
+  Layers,
   Loader2,
   PlayCircle,
-  Trash2,
+  Scissors,
   UploadCloud,
 } from "lucide-react";
 
+import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
 import {
   ACCEPTED_IMAGE_MIMES,
   ACCEPTED_PDF_MIMES,
@@ -20,6 +30,7 @@ import {
   MAX_PAGES_PER_JOB,
   MAX_PDF_BYTES,
 } from "@/lib/extraction/constants";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   imagesToSlots,
   revokeSlotUrls,
@@ -34,8 +45,9 @@ import {
   type InlineCropBoardCounts,
   type InlineCropBoardHandle,
 } from "../../passages/import/_components/intake/crop/inline-crop-board";
-import { RestoreGuideDemo } from "../../passages/import/_components/intake/crop/restore-guide-demo";
 import { isExtractable } from "../../passages/import/_components/intake/crop/slot-meta";
+import { TutorialVideoPopup } from "../../passages/import/_components/intake/tutorial/tutorial-video-popup";
+import { UploadMetaChip } from "../../passages/import/_components/bulk-extract-client/components/upload-meta-chip";
 
 // 사용법 튜토리얼 영상(@remotion/player) — 브라우저 전용이라 lazy + ssr:false.
 const CropTutorialPlayer = dynamic(
@@ -43,6 +55,21 @@ const CropTutorialPlayer = dynamic(
     import(
       "../../passages/import/_components/intake/tutorial/crop-tutorial-player"
     ).then((m) => m.CropTutorialPlayer),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="w-full animate-pulse rounded-xl bg-slate-100"
+        style={{ aspectRatio: "1280 / 720" }}
+      />
+    ),
+  },
+);
+const RestoreTutorialPlayer = dynamic(
+  () =>
+    import(
+      "../../passages/import/_components/intake/tutorial/restore-tutorial-player"
+    ).then((m) => m.RestoreTutorialPlayer),
   {
     ssr: false,
     loading: () => (
@@ -63,6 +90,10 @@ const EMPTY_COUNTS: InlineCropBoardCounts = {
 
 const FILE_INPUT_ID = "generate-intake-file-input";
 const ACCEPT = [...ACCEPTED_PDF_MIMES, ...ACCEPTED_IMAGE_MIMES].join(",");
+const FILE_EMPTY_GUIDE_W_KEY = "smoat.extraction.fileEmptyGuideWidth.v1";
+const FILE_TUTORIAL_NEVER_KEY = "smoat.extraction.fileTutorialNeverShow.v2";
+const clampFileGuideW = (w: number) =>
+  Math.min(460, Math.max(280, Math.round(w)));
 
 function summarizeNames(files: File[]): string {
   if (files.length === 0) return "";
@@ -108,8 +139,69 @@ export function GenerateUploadPanel({
   const [boardCounts, setBoardCounts] =
     useState<InlineCropBoardCounts>(EMPTY_COUNTS);
   const [baking, setBaking] = useState(false);
+  const [fileGuideWidth, setFileGuideWidth] = useState<number>(() => {
+    if (typeof window === "undefined") return 340;
+    const raw = window.localStorage.getItem(FILE_EMPTY_GUIDE_W_KEY);
+    const n = raw ? parseInt(raw, 10) : NaN;
+    return Number.isNaN(n) ? 340 : clampFileGuideW(n);
+  });
+  const [fileTutorialClosed, setFileTutorialClosed] = useState(false);
+  const [fileTutorialHidden, setFileTutorialHidden] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage.getItem(FILE_TUTORIAL_NEVER_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
 
   const busy = preparing || uploading || baking;
+
+  useEffect(() => {
+    if (slots.length === 0) setFileTutorialClosed(false);
+  }, [outputMode, slots.length]);
+
+  const hideFileTutorialPermanently = () => {
+    setFileTutorialHidden(true);
+    try {
+      window.localStorage.setItem(FILE_TUTORIAL_NEVER_KEY, "true");
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const beginFileGuideResize = useCallback(
+    (event: ReactPointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      event.preventDefault();
+      const startX = event.clientX;
+      const startW = fileGuideWidth;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+      let latest = startW;
+      const move = (e: PointerEvent) => {
+        e.preventDefault();
+        latest = clampFileGuideW(startW - (e.clientX - startX));
+        setFileGuideWidth(latest);
+      };
+      const finish = () => {
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", finish);
+        window.removeEventListener("pointercancel", finish);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        try {
+          window.localStorage.setItem(FILE_EMPTY_GUIDE_W_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+      };
+      window.addEventListener("pointermove", move, { passive: false });
+      window.addEventListener("pointerup", finish, { once: true });
+      window.addEventListener("pointercancel", finish, { once: true });
+    },
+    [fileGuideWidth],
+  );
 
   const appendSlots = useCallback((incoming: ClientPageSlot[]) => {
     setSlots((prev) => {
@@ -276,6 +368,8 @@ export function GenerateUploadPanel({
           // 생성 페이지 발 잡: finalize가 서버에서 drafts를 곧바로 Passage로 승격.
           // 추출(~수십 초) 중 페이지를 떠나도 결과가 고아로 남지 않는다.
           autoPromote: true,
+          // 원본 첫 장을 목록 썸네일용 미리보기로 함께 업로드(크롭 결과와 별개).
+          previewSlot: slots[0] ?? null,
         });
         if (jobId) {
           onResult(token, jobId);
@@ -315,20 +409,29 @@ export function GenerateUploadPanel({
 
   const fileTotalPassages = slots.length === 0 ? 0 : boardCounts.totalPassages;
   const fileOverMax = fileTotalPassages > MAX_PAGES_PER_JOB;
+  const creditsPerPassage =
+    outputMode === "restored"
+      ? CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION
+      : CREDIT_COSTS.TEXT_EXTRACTION;
+  const fileProjectedCredits = fileTotalPassages * creditsPerPassage;
   const fileStartDisabled =
     busy || slots.length === 0 || fileTotalPassages === 0 || fileOverMax;
-  const startLabel = baking
+  const fileBusyLabel = baking
     ? "지문 자르는 중"
     : uploading
       ? "업로드 중"
-      : outputMode === "restored"
-        ? "복원하여 추출 시작"
-        : "추출 시작";
+      : preparing
+        ? "PDF 페이지 분리 중"
+        : "작업 중";
 
   const outputModeOptions = [
     { v: "verbatim" as const, label: "그대로 추출", badge: "OCR만" },
     { v: "restored" as const, label: "AI로 원문 복원", badge: "지문당 ◈1" },
   ];
+  const controlRowClass =
+    "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
+  const controlLabelClass =
+    "w-[64px] shrink-0 text-[11px] font-bold text-slate-600";
 
   // 검수 패널 하단에 고정되는 시작 버튼(보드 footer로 주입).
   const fileStartArea = (
@@ -343,7 +446,7 @@ export function GenerateUploadPanel({
         onClick={handleFileStart}
         disabled={fileStartDisabled}
         className={
-          "inline-flex h-11 w-full items-center justify-center rounded-lg border text-[13.5px] font-extrabold text-white shadow-sm transition-colors " +
+          "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
           (busy
             ? "cursor-wait border-blue-600 bg-blue-600"
             : fileStartDisabled
@@ -352,86 +455,174 @@ export function GenerateUploadPanel({
         }
       >
         {busy ? (
-          <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
+          <>
+            <Loader2 className="mr-2 size-5 animate-spin" aria-hidden="true" />
+            {fileBusyLabel}
+          </>
         ) : (
-          <PlayCircle className="mr-2 size-4" aria-hidden="true" />
+          <>
+            <PlayCircle className="mr-2 size-5" aria-hidden="true" />
+            {outputMode === "restored" ? "복원하여 추출 시작" : "추출 시작"}
+            {fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
+            {fileTotalPassages > 0 ? (
+              <span
+                className="ml-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold"
+                title={`지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`}
+              >
+                ◈{fileProjectedCredits.toLocaleString("ko-KR")} 소모
+              </span>
+            ) : null}
+          </>
         )}
-        {startLabel}
-        {!busy && fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
       </button>
     </div>
   );
 
+  const outputModeToggle = (
+    <div className="flex min-w-0 items-center gap-3">
+      <span className={controlLabelClass}>출력 방식</span>
+      <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+        {outputModeOptions.map((opt) => {
+          const active = outputMode === opt.v;
+          return (
+            <button
+              key={opt.v}
+              type="button"
+              onClick={() => setOutputMode(opt.v)}
+              disabled={busy}
+              aria-pressed={active}
+              className={
+                "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                (active
+                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
+                  : "cursor-pointer text-slate-500 hover:text-slate-700")
+              }
+            >
+              <span
+                className={
+                  "inline-flex size-3 shrink-0 items-center justify-center rounded-full border " +
+                  (active ? "border-blue-600" : "border-slate-300")
+                }
+                aria-hidden="true"
+              >
+                {active ? (
+                  <span className="size-1.5 rounded-full bg-blue-600" />
+                ) : null}
+              </span>
+              {opt.label}
+              <span
+                className={
+                  "rounded px-1 py-0.5 text-[9.5px] font-bold " +
+                  (active
+                    ? opt.v === "restored"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-slate-100 text-slate-500"
+                    : "bg-slate-100 text-slate-400")
+                }
+              >
+                {opt.badge}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderFileUploadLabel = (className = "") => (
+    <label
+      htmlFor={FILE_INPUT_ID}
+      className={
+        "flex shrink-0 cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-blue-500 bg-white px-4 py-3 text-center transition-colors hover:bg-blue-50 " +
+        className
+      }
+    >
+      <input
+        id={FILE_INPUT_ID}
+        type="file"
+        className="sr-only"
+        accept={ACCEPT}
+        multiple
+        onChange={(event) => {
+          if (event.target.files) void handleFiles(event.target.files);
+          event.currentTarget.value = "";
+        }}
+      />
+      <span className="inline-flex items-center gap-2 text-[14px] font-extrabold text-blue-700">
+        {preparing ? (
+          <Loader2 className="size-5 animate-spin" aria-hidden="true" />
+        ) : (
+          <UploadCloud className="size-5" aria-hidden="true" />
+        )}
+        {preparing ? "PDF 페이지 분리 중…" : "파일을 끌어놓거나 클릭해서 추가"}
+      </span>
+      <span className="flex flex-wrap items-center justify-center gap-2">
+        <UploadMetaChip
+          icon={<FileText className="size-3.5" aria-hidden="true" />}
+        >
+          PDF, PNG, JPG, WebP
+        </UploadMetaChip>
+        <UploadMetaChip
+          icon={
+            <ExtractionTaskListIcon className="size-3.5" aria-hidden="true" />
+          }
+        >
+          최대 {MAX_PAGES_PER_JOB}페이지
+        </UploadMetaChip>
+        <UploadMetaChip
+          icon={<Database className="size-3.5" aria-hidden="true" />}
+        >
+          PDF {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
+        </UploadMetaChip>
+      </span>
+    </label>
+  );
+
+  const quickGuideSteps = [
+    { icon: UploadCloud, label: "파일 추가" },
+    { icon: Scissors, label: "지문 드래그" },
+    { icon: CheckCircle2, label: "합치고 추출" },
+  ];
+  const fileTutorialPopup =
+    slots.length === 0 && !fileTutorialClosed && !fileTutorialHidden ? (
+      outputMode === "restored" ? (
+        <TutorialVideoPopup
+          durationLabel="30초 AI 원문 복원 사용법"
+          title="문제·선지까지 함께 크롭해 원문으로 복원"
+          description="빈칸·순서·삽입형 지문은 지문만 자르지 말고 문제와 선지까지 함께 잡아야 AI가 원문으로 복원할 수 있어요."
+          closeLabel="AI 원문 복원 사용법 영상 닫기"
+          onClose={() => setFileTutorialClosed(true)}
+          onHidePermanently={hideFileTutorialPermanently}
+        >
+          <RestoreTutorialPlayer />
+        </TutorialVideoPopup>
+      ) : (
+        <TutorialVideoPopup
+          durationLabel="30초 그대로 추출 사용법"
+          title="파일을 올리고, 지문을 자르는 방법"
+          description="처음이라면 영상을 보고 파일 추가부터 지문 합치기까지 한 번에 따라가세요."
+          closeLabel="파일 추출 사용법 영상 닫기"
+          onClose={() => setFileTutorialClosed(true)}
+          onHidePermanently={hideFileTutorialPermanently}
+        >
+          <CropTutorialPlayer />
+        </TutorialVideoPopup>
+      )
+    ) : null;
+
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
-      {/* Header + output-mode toggle */}
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-slate-100 px-4 py-2.5">
-        <div className="min-w-0">
-          <h2 className="text-[12.5px] font-bold text-slate-900">
-            이미지·PDF에서 추출
-          </h2>
-          <p className="mt-0.5 text-[11px] text-slate-500">
-            지문 영역을 드래그해 지문별로 추출합니다.
-          </p>
-        </div>
+      <div className={controlRowClass + " justify-between"}>
+        <div className="min-w-0">{outputModeToggle}</div>
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[11px] font-bold text-slate-600">출력</span>
-            <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
-              {outputModeOptions.map((opt) => {
-                const active = outputMode === opt.v;
-                return (
-                  <button
-                    key={opt.v}
-                    type="button"
-                    onClick={() => setOutputMode(opt.v)}
-                    disabled={busy}
-                    aria-pressed={active}
-                    className={
-                      "inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
-                      (active
-                        ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
-                        : "cursor-pointer text-slate-500 hover:text-slate-700")
-                    }
-                  >
-                    {opt.label}
-                    <span
-                      className={
-                        "rounded px-1 py-0.5 text-[9px] font-bold " +
-                        (active && opt.v === "restored"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-slate-100 text-slate-400")
-                      }
-                    >
-                      {opt.badge}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          {slots.length > 0 ? (
-            <button
-              type="button"
-              onClick={clearFiles}
-              disabled={busy}
-              className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md border border-slate-200 px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-50"
-            >
-              <Trash2 className="size-3.5" aria-hidden="true" />
-              비우기
-            </button>
+          {inFlightCount > 0 ? (
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700">
+              <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+              추출 중 {inFlightCount}건
+            </span>
           ) : null}
         </div>
       </div>
-
-      {inFlightCount > 0 ? (
-        <div className="shrink-0 px-4 pt-2">
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700">
-            <Loader2 className="size-3 animate-spin" aria-hidden="true" />
-            추출 중 {inFlightCount}건 · 완료되면 ‘내 지문’에 추가됩니다
-          </span>
-        </div>
-      ) : null}
 
       {error ? (
         <div className="mx-4 mt-2 flex shrink-0 items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">
@@ -445,7 +636,8 @@ export function GenerateUploadPanel({
         {slots.length === 0 ? (
           <div
             onDragOver={(event) => {
-              if (!event.dataTransfer.types.includes("Files")) return;
+              const isFileDrag = event.dataTransfer.types.includes("Files");
+              if (!isFileDrag) return;
               event.preventDefault();
               setDragActive(true);
             }}
@@ -460,63 +652,80 @@ export function GenerateUploadPanel({
               if (event.dataTransfer.files.length > 0)
                 void handleFiles(event.dataTransfer.files);
             }}
-            className={
-              "m-3.5 flex min-h-0 flex-1 flex-col gap-3 rounded-lg border-2 border-dashed p-3 transition-colors " +
-              (dragActive ? "border-sky-500 bg-sky-50" : "border-slate-300 bg-white")
-            }
+            className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row"
           >
-            {/* 사용법 가이드(복원: 데모 / 원문: 튜토리얼 영상) — 이 영역만 스크롤.
-                파일 추가 버튼은 아래에 고정되어 항상 보인다. */}
-            <div className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/70 p-3">
-              {outputMode === "restored" ? (
-                <div className="mx-auto w-full max-w-[960px]">
-                  <RestoreGuideDemo />
-                </div>
-              ) : (
-                <div className="mx-auto w-full max-w-[920px]">
-                  <CropTutorialPlayer />
-                </div>
-              )}
+            <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
+              {fileTutorialPopup}
+              <div
+                className={
+                  "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +
+                  (dragActive
+                    ? "border-sky-500 bg-sky-50"
+                    : "border-slate-200 bg-slate-50/70")
+                }
+              >
+                {renderFileUploadLabel("min-h-0 flex-1 justify-center px-6 py-8")}
+              </div>
             </div>
 
-            {/* 파일 추가 */}
-            <label
-              htmlFor={FILE_INPUT_ID}
-              className="flex shrink-0 cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-blue-500 bg-white px-4 py-3 text-center transition-colors hover:bg-blue-50"
+            <button
+              type="button"
+              onPointerDown={beginFileGuideResize}
+              title="드래그하여 추출 지문 패널 폭 조절"
+              aria-label="추출 지문 패널 폭 조절"
+              className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
             >
-              <input
-                id={FILE_INPUT_ID}
-                type="file"
-                className="sr-only"
-                accept={ACCEPT}
-                multiple
-                onChange={(event) => {
-                  if (event.target.files) void handleFiles(event.target.files);
-                  event.currentTarget.value = "";
-                }}
+              <GripVertical
+                className="size-3 opacity-50 transition-opacity group-hover/rhandle:opacity-80"
+                aria-hidden="true"
               />
-              <span className="inline-flex items-center gap-2 text-[13.5px] font-extrabold text-blue-700">
-                {preparing ? (
-                  <Loader2 className="size-5 animate-spin" aria-hidden="true" />
-                ) : (
-                  <UploadCloud className="size-5" aria-hidden="true" />
-                )}
-                {preparing ? "PDF 페이지 분리 중…" : "파일을 끌어놓거나 클릭해서 추가"}
-              </span>
-              <span className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500">
-                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5">
-                  <FileText className="size-3.5" aria-hidden="true" />
-                  PDF, PNG, JPG, WebP
+              <span style={{ writingMode: "vertical-rl" }}>추출 지문</span>
+            </button>
+
+            <aside
+              style={{ width: fileGuideWidth }}
+              className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
+            >
+              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
+                <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
+                  <Layers className="size-4 text-blue-600" aria-hidden="true" />
+                  추출될 지문 0개
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5">
-                  최대 {MAX_PAGES_PER_JOB}페이지
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5">
-                  <Database className="size-3.5" aria-hidden="true" />
-                  PDF {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB
-                </span>
-              </span>
-            </label>
+              </div>
+              <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
+                <div className="smoat-file-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
+                  <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                    <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
+                      <PlayCircle className="size-3.5" aria-hidden="true" />
+                      사용 순서
+                    </div>
+                    <h3 className="smoat-file-empty-guide__title min-w-0 flex-1 text-[15px] font-extrabold leading-snug text-slate-950">
+                      파일을 올리면 바로 지문을 자를 수 있어요
+                    </h3>
+                  </div>
+                  <ol className="smoat-file-empty-guide__steps mt-3 grid gap-2">
+                    {quickGuideSteps.map((step, index) => (
+                      <li
+                        key={step.label}
+                        className="smoat-file-empty-guide__step flex min-w-0 items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
+                      >
+                        <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-extrabold text-blue-700">
+                          {index + 1}
+                        </span>
+                        <step.icon
+                          className="size-3.5 text-blue-600"
+                          aria-hidden="true"
+                        />
+                        <span className="min-w-0 leading-snug">{step.label}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+              <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
+                {fileStartArea}
+              </div>
+            </aside>
           </div>
         ) : (
           <InlineCropBoard
@@ -529,10 +738,53 @@ export function GenerateUploadPanel({
             maxPassages={MAX_PAGES_PER_JOB}
             onCountChange={setBoardCounts}
             footer={fileStartArea}
+            onClear={clearFiles}
             outputMode={outputMode}
           />
         )}
       </div>
+      <style>{`
+        .smoat-file-guide-scroll {
+          container-type: inline-size;
+        }
+        .smoat-file-empty-guide {
+          margin-top: clamp(0.75rem, 5cqw, 1.5rem);
+          padding: clamp(0.75rem, 4cqw, 1rem);
+        }
+        .smoat-file-empty-guide__steps {
+          grid-template-columns: 1fr;
+        }
+        @container (max-width: 359px) {
+          .smoat-file-empty-guide__title {
+            flex-basis: 100%;
+            font-size: 13px;
+          }
+          .smoat-file-empty-guide__step {
+            padding-block: 0.45rem;
+          }
+        }
+        @container (min-width: 420px) {
+          .smoat-file-empty-guide__title {
+            flex-basis: 100%;
+          }
+          .smoat-file-empty-guide__steps {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+          .smoat-file-empty-guide__step {
+            align-items: flex-start;
+            flex-direction: column;
+            min-height: 4.5rem;
+          }
+        }
+        @container (min-width: 560px) {
+          .smoat-file-empty-guide__title {
+            flex-basis: auto;
+          }
+          .smoat-file-empty-guide__step {
+            min-height: 4rem;
+          }
+        }
+      `}</style>
     </section>
   );
 }

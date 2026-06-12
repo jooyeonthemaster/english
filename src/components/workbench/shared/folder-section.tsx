@@ -20,6 +20,7 @@ import {
   Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import type { CollectionItem } from "./types";
 import { FolderChip } from "./folder-chip";
 import { FolderCard } from "./folder-card";
@@ -324,7 +325,11 @@ export function FolderSection({
   };
 
   // ─── Enhanced controls state (only used when enableFolderControls=true) ───
-  const [viewMode, setViewMode] = useState<FolderViewMode>("grid");
+  const [viewMode, setViewMode] = usePersistedState<FolderViewMode>(
+    `smoat:view-mode:folder-section:${storageKey}`,
+    "grid",
+    (v): v is FolderViewMode => v === "grid" || v === "list",
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<FolderSortOrder>("name_asc");
 

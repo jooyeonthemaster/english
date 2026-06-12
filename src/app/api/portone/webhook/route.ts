@@ -20,7 +20,7 @@ export function GET() {
   return NextResponse.json({
     ok: true,
     service: "smoat-portone-webhook",
-    version: "v2",
+    version: "v2+v1",
   });
 }
 
@@ -33,11 +33,32 @@ export async function POST(request: NextRequest) {
     "webhook-signature":
       request.headers.get("webhook-signature") ?? undefined,
   };
+  const commonHeaders = {
+    webhookId: headers["webhook-id"] ?? null,
+    webhookTimestamp: headers["webhook-timestamp"] ?? null,
+    userAgent: request.headers.get("user-agent"),
+  };
 
   let webhook: Awaited<ReturnType<typeof Webhook.verify>>;
   try {
     webhook = await verifyPortOneWebhook(payload, headers);
   } catch (err) {
+    const legacyWebhook = parsePortOneV1Webhook(payload);
+    if (legacyWebhook) {
+      return processPortOneWebhookEvent({
+        webhookId: buildPortOneV1WebhookId(legacyWebhook),
+        paymentId: legacyWebhook.merchant_uid,
+        billingKey: null,
+        eventType: `V1.${legacyWebhook.status ?? "unknown"}`,
+        payload: toJsonValue(legacyWebhook),
+        headers: {
+          ...commonHeaders,
+          legacyVersion: "V1",
+        },
+        isUnrecognized: false,
+      });
+    }
+
     console.error("[portone/webhook] verification failed", err);
     return NextResponse.json({ error: "invalid_webhook" }, { status: 400 });
   }
@@ -51,24 +72,43 @@ export async function POST(request: NextRequest) {
   const billingKey = extractBillingKey(webhook);
   const eventType = "type" in webhook ? String(webhook.type) : "Unrecognized";
 
-  const event = await createOrLoadWebhookEvent({
+  return processPortOneWebhookEvent({
     webhookId,
     paymentId,
     billingKey,
     eventType,
     payload: toJsonValue(webhook),
-    headers: {
-      webhookId,
-      webhookTimestamp: headers["webhook-timestamp"] ?? null,
-      userAgent: request.headers.get("user-agent"),
-    },
+    headers: commonHeaders,
+    isUnrecognized: Webhook.isUnrecognizedWebhook(webhook),
+  });
+}
+
+async function processPortOneWebhookEvent(params: {
+  webhookId: string;
+  paymentId: string | null;
+  billingKey: string | null;
+  eventType: string;
+  payload: Prisma.InputJsonValue;
+  headers: Prisma.InputJsonValue;
+  isUnrecognized: boolean;
+}) {
+  const event = await createOrLoadWebhookEvent({
+    webhookId: params.webhookId,
+    paymentId: params.paymentId,
+    billingKey: params.billingKey,
+    eventType: params.eventType,
+    payload: params.payload,
+    headers: params.headers,
   });
 
   if (event.status === "PROCESSED" || event.status === "IGNORED") {
     return NextResponse.json({ received: true, duplicate: true });
   }
 
-  if (Webhook.isUnrecognizedWebhook(webhook) || (!paymentId && !billingKey)) {
+  if (
+    params.isUnrecognized ||
+    (!params.paymentId && !params.billingKey)
+  ) {
     await prisma.portOneWebhookEvent.update({
       where: { id: event.id },
       data: { status: "IGNORED", processedAt: new Date() },
@@ -76,14 +116,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true, ignored: true });
   }
 
-  if (billingKey && eventType.startsWith("BillingKey.")) {
+  if (params.billingKey && params.eventType.startsWith("BillingKey.")) {
     try {
       const billingKeyId =
-        eventType === "BillingKey.Deleted"
-          ? await syncDeletedBillingKey(billingKey)
+        params.eventType === "BillingKey.Deleted"
+          ? await syncDeletedBillingKey(params.billingKey)
           : (
               await prisma.portOneBillingKey.findUnique({
-                where: { billingKey },
+                where: { billingKey: params.billingKey },
                 select: { id: true },
               })
             )?.id ?? null;
@@ -111,15 +151,15 @@ export async function POST(request: NextRequest) {
         },
       });
       console.error("[portone/webhook] billing key processing failed", {
-        webhookId,
-        billingKey,
+        webhookId: params.webhookId,
+        billingKey: params.billingKey,
         err,
       });
       return NextResponse.json({ error: "processing_failed" }, { status: 500 });
     }
   }
 
-  if (!paymentId) {
+  if (!params.paymentId) {
     await prisma.portOneWebhookEvent.update({
       where: { id: event.id },
       data: { status: "IGNORED", processedAt: new Date() },
@@ -128,7 +168,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const localTarget = await findLocalPaymentTarget(paymentId);
+    const localTarget = await findLocalPaymentTarget(params.paymentId);
     if (!localTarget) {
       await prisma.portOneWebhookEvent.update({
         where: { id: event.id },
@@ -143,7 +183,7 @@ export async function POST(request: NextRequest) {
 
     if (localTarget.type === "SUBSCRIPTION") {
       const subscriptionResult = await completeSubscriptionPayment({
-        paymentId,
+        paymentId: params.paymentId,
         source: "webhook",
       });
 
@@ -160,7 +200,7 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await completePortOneCreditTopUp({
-      paymentId,
+      paymentId: params.paymentId,
       source: "webhook",
     });
 
@@ -212,8 +252,8 @@ export async function POST(request: NextRequest) {
       },
     });
     console.error("[portone/webhook] processing failed", {
-      webhookId,
-      paymentId,
+      webhookId: params.webhookId,
+      paymentId: params.paymentId,
       err,
     });
     return NextResponse.json({ error: "processing_failed" }, { status: 500 });
@@ -318,6 +358,52 @@ function extractBillingKey(webhook: Awaited<ReturnType<typeof Webhook.verify>>) 
     return webhook.data.billingKey;
   }
   return null;
+}
+
+type PortOneV1WebhookPayload = {
+  imp_uid: string;
+  merchant_uid: string;
+  status?: string;
+};
+
+function parsePortOneV1Webhook(payload: string): PortOneV1WebhookPayload | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(payload);
+  } catch {
+    return null;
+  }
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    !("imp_uid" in parsed) ||
+    !("merchant_uid" in parsed) ||
+    typeof (parsed as { imp_uid?: unknown }).imp_uid !== "string" ||
+    typeof (parsed as { merchant_uid?: unknown }).merchant_uid !== "string"
+  ) {
+    return null;
+  }
+
+  const impUid = (parsed as { imp_uid: string }).imp_uid.trim();
+  const merchantUid = (parsed as { merchant_uid: string }).merchant_uid.trim();
+  const rawStatus = (parsed as { status?: unknown }).status;
+  const status = typeof rawStatus === "string" ? rawStatus.trim() : undefined;
+
+  if (!impUid || !merchantUid.startsWith("sm_")) return null;
+  return {
+    imp_uid: impUid,
+    merchant_uid: merchantUid,
+    ...(status ? { status } : {}),
+  };
+}
+
+function buildPortOneV1WebhookId(payload: PortOneV1WebhookPayload) {
+  return [
+    "v1",
+    payload.imp_uid,
+    payload.merchant_uid,
+    payload.status ?? "unknown",
+  ].join(":");
 }
 
 function toJsonValue(value: unknown): Prisma.InputJsonValue {

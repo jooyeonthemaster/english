@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
@@ -59,8 +60,10 @@ interface BottomQueueSectionProps {
   savedQuestions: QuestionCardItem[];
   loadingSavedQuestions: boolean;
   setDetailQuestion: (q: QuestionCardItem | null) => void;
-  onApproveQuestion: (questionId: string) => void;
-  onUnapproveQuestion: (questionId: string) => void;
+  /** Per-card 검수완료/해제 핸들러. 선택 — 미지정 시(기본 생성 페이지) 카드 단건 검수
+   *  액션을 숨기고 일괄 검수만 노출한다. 커스텀/동형 패널이 전달한다. */
+  onApproveQuestion?: (questionId: string) => void;
+  onUnapproveQuestion?: (questionId: string) => void;
   onBatchApproveQuestions?: (questionIds: string[]) => void | Promise<void>;
   /** Single-question delete wired to QuestionCard's header/dropdown delete. */
   onDeleteQuestion?: (questionId: string) => void | Promise<void>;
@@ -253,7 +256,12 @@ export function BottomQueueSection({
   const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
   const [reviewStatusFilter, setReviewStatusFilter] = useState<ReviewStatusFilter>("ALL");
   const [questionViewMode, setQuestionViewMode] = useState<QuestionViewMode>("flat");
-  const [cardLayoutMode, setCardLayoutMode] = useState<CardLayoutMode>("grid3");
+  const [cardLayoutMode, setCardLayoutMode] = usePersistedState<CardLayoutMode>(
+    "smoat:view-mode:generate-bottom-queue",
+    "grid3",
+    (v): v is CardLayoutMode =>
+      v === "grid2" || v === "grid3" || v === "list",
+  );
   const [selectedSessionQuestionIds, setSelectedSessionQuestionIds] = useState<Set<string>>(new Set());
   const [batchApproving, setBatchApproving] = useState(false);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
@@ -813,8 +821,16 @@ export function BottomQueueSection({
           onDetail={() => setDetailQuestion(card.question)}
           showDetailButton
           detailExtra={renderCardDetailExtra?.(card.question)}
-          onApprove={deleteMode ? undefined : () => persistedId && onApproveQuestion(persistedId)}
-          onUnapprove={deleteMode ? undefined : () => persistedId && onUnapproveQuestion(persistedId)}
+          onApprove={
+            deleteMode || !onApproveQuestion
+              ? undefined
+              : () => persistedId && onApproveQuestion(persistedId)
+          }
+          onUnapprove={
+            deleteMode || !onUnapproveQuestion
+              ? undefined
+              : () => persistedId && onUnapproveQuestion(persistedId)
+          }
           onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
           onDelete={
             deleteMode || !persistedId
@@ -849,8 +865,16 @@ export function BottomQueueSection({
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
           detailExtra={renderCardDetailExtra?.(cardQuestion)}
-          onApprove={deleteMode ? undefined : () => onApproveQuestion(cardQuestion.id)}
-          onUnapprove={deleteMode ? undefined : () => onUnapproveQuestion(cardQuestion.id)}
+          onApprove={
+            deleteMode || !onApproveQuestion
+              ? undefined
+              : () => onApproveQuestion(cardQuestion.id)
+          }
+          onUnapprove={
+            deleteMode || !onUnapproveQuestion
+              ? undefined
+              : () => onUnapproveQuestion(cardQuestion.id)
+          }
           onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}
           onDelete={
             deleteMode ? undefined : () => requestDelete([cardQuestion.id], "single")

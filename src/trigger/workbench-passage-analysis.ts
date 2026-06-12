@@ -25,7 +25,6 @@ import {
 import { prisma } from "@/lib/prisma";
 import {
   getQuestionGenerationCreditCost,
-  getQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -43,6 +42,7 @@ interface AnalysisJobConfig {
   targetLevel?: string;
   generationPlan?: QuestionGenerationPlan;
   analysisTone?: AnalysisTone;
+  forcePrimeReport?: boolean;
 }
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -70,23 +70,6 @@ function shouldUseCachedAnalysis(
   return true;
 }
 
-function withAnalysisGenerationMetadata(
-  analysisData: unknown,
-  generationPlan: QuestionGenerationPlan,
-  analysisTone: AnalysisTone,
-) {
-  if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
-    return analysisData;
-  }
-
-  return {
-    ...(analysisData as Record<string, unknown>),
-    _generationPlan: generationPlan,
-    _generationTag: getQuestionGenerationPlanTag(generationPlan),
-    _analysisTone: analysisTone,
-  };
-}
-
 function parseConfig(value: unknown): AnalysisJobConfig {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
   const raw = value as Record<string, unknown>;
@@ -100,6 +83,7 @@ function parseConfig(value: unknown): AnalysisJobConfig {
       typeof raw.targetLevel === "string" ? raw.targetLevel : undefined,
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
     analysisTone: normalizeAnalysisTone(raw.analysisTone),
+    forcePrimeReport: raw.forcePrimeReport === true,
   };
 }
 
@@ -173,7 +157,7 @@ export const workbenchPassageAnalysisTask = task({
       },
     });
 
-    if (job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
+    if (!config.forcePrimeReport && job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(job.passage.analysis.analysisData);
       if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         const debugTiming = {

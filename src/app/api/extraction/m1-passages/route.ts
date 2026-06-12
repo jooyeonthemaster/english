@@ -57,6 +57,24 @@ function encodeListCursor(draft: {
   ).toString("base64url");
 }
 
+function parseIdList(value: string | null): string[] {
+  if (!value) return [];
+  let decoded = value;
+  try {
+    decoded = decodeURIComponent(value);
+  } catch {
+    decoded = value;
+  }
+  return Array.from(
+    new Set(
+      decoded
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean),
+    ),
+  ).slice(0, 100);
+}
+
 type DraftForAnalysisStatus = {
   id: string;
   savedPassageId: string | null;
@@ -193,6 +211,7 @@ export async function GET(req: NextRequest) {
   const jobId = req.nextUrl.searchParams.get("jobId");
   // Fetch the draft behind a committed Passage (생성 페이지 "지문 전체 보기").
   const savedPassageId = req.nextUrl.searchParams.get("savedPassageId");
+  const draftIds = parseIdList(req.nextUrl.searchParams.get("draftIds"));
   const view = req.nextUrl.searchParams.get("view");
   const cursor = decodeListCursor(req.nextUrl.searchParams.get("cursor"));
 
@@ -200,6 +219,7 @@ export async function GET(req: NextRequest) {
     const cursorDate = cursor ? new Date(cursor.jobCreatedAt) : null;
     const drafts = await prisma.extractionM1PassageDraft.findMany({
       where: {
+        ...(draftIds.length > 0 ? { id: { in: draftIds } } : {}),
         ...(jobId ? { jobId } : {}),
         ...(savedPassageId ? { savedPassageId } : {}),
         deletedAt: null,
@@ -346,6 +366,7 @@ export async function GET(req: NextRequest) {
 
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
+      ...(draftIds.length > 0 ? { id: { in: draftIds } } : {}),
       ...(jobId ? { jobId } : {}),
       ...(savedPassageId ? { savedPassageId } : {}),
       deletedAt: null,

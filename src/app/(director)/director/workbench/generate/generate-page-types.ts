@@ -29,7 +29,14 @@ export interface PassageItem {
   source?: string | null;
   school: { id: string; name: string } | null;
   content: string;
-  analysis?: { analysisData: string } | null;
+  analysis?: { id?: string; analysisData: string; updatedAt?: string | Date } | null;
+  extractionReviewDraft?: {
+    id: string;
+    savedPassageId: string | null;
+    reviewStatus: string;
+    confirmedAt?: string | Date | null;
+    updatedAt?: string | Date | null;
+  } | null;
   collectionItems?: { collectionId: string }[];
   // 이 지문으로 이미 생성된 문제 수(서버 집계).
   _count?: { questions: number };

@@ -60,6 +60,14 @@ export function pageImageKey(
   return `${academyId}/${jobId}/pages/${padded}.${ext}`;
 }
 
+export function previewImageKey(
+  academyId: string,
+  jobId: string,
+  ext: string = "jpg",
+): string {
+  return `${academyId}/${jobId}/preview/original-first.${ext}`;
+}
+
 export function similarExamPageImageKey(
   academyId: string,
   jobId: string,
@@ -179,6 +187,7 @@ export async function removeJobAssets(
 
   await listAndRemove(`${prefix}/pages`);
   await listAndRemove(`${prefix}/thumbnails`);
+  await listAndRemove(`${prefix}/preview`);
   await supabase.storage
     .from(STORAGE_BUCKET)
     .remove([originalPdfKey(academyId, jobId)]);

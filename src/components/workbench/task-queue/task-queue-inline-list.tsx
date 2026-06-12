@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
   ACTIVE_STATUSES,
   DOMAIN_LABELS,
@@ -518,7 +519,7 @@ function TaskGridCard({
       role="button"
       tabIndex={0}
       className={
-        `group relative flex min-h-[240px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
+        `group relative flex min-h-[241px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
         (selectionMode
           ? "cursor-pointer"
           : draggableEnabled
@@ -533,7 +534,7 @@ function TaskGridCard({
       ) : null}
 
       {showThumbnail ? (
-        <div className="relative w-[170px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-slate-50">
+        <div className="relative aspect-[210/297] w-[170px] shrink-0 self-start overflow-hidden border-r border-slate-100 bg-white">
           {task.thumbnailUrl ? (
             // Signed URLs change per fetch; no point in next/image optimization
             // eslint-disable-next-line @next/next/no-img-element
@@ -544,7 +545,7 @@ function TaskGridCard({
               className="size-full object-contain"
             />
           ) : (
-            <div className="flex size-full items-center justify-center text-slate-300">
+            <div className="flex size-full items-center justify-center bg-slate-50 text-slate-300">
               <FileText className="size-8" aria-hidden="true" />
             </div>
           )}
@@ -948,7 +949,12 @@ export function TaskQueueInlineList({
     return extras.length ? [...extras, ...fetchedTasks] : fetchedTasks;
   }, [pendingTasks, fetchedTasks]);
   const [internalViewMode, setInternalViewMode] =
-    useState<GridViewMode>("grid-3");
+    usePersistedState<GridViewMode>(
+      `smoat:view-mode:task-queue-inline:${domain}`,
+      "grid-3",
+      (v): v is GridViewMode =>
+        v === "grid-3" || v === "grid-2" || v === "list",
+    );
   const viewMode = controlledViewMode ?? internalViewMode;
   const setViewMode = (mode: GridViewMode) => {
     if (grid3Blocked && mode === "grid-3") return;

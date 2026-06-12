@@ -19,7 +19,9 @@ interface IntakeSurfaceProps {
   /** The existing PassageCardGrid, rendered as the "내 지문" library view. */
   library: ReactNode;
   /** Persist pasted rows → select. Required when the 직접 입력 tab is shown. */
-  onSubmitPastedRows?: (rows: PastedPassageInput[]) => void | Promise<void>;
+  onSubmitPastedRows?: (
+    rows: PastedPassageInput[],
+  ) => boolean | void | Promise<boolean | void>;
   pasteSaving?: boolean;
   /**
    * Show the 직접 입력 (multi-passage paste) tab. Defaults to true (문제 생성).
@@ -124,10 +126,10 @@ function Tab({
       type="button"
       onClick={onClick}
       className={
-        "flex items-center gap-1.5 rounded-t-lg border-b-2 px-3 py-2 text-[12.5px] font-semibold transition-colors " +
+        "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (active
-          ? "border-blue-600 text-blue-700"
-          : "border-transparent text-slate-400 hover:text-slate-600")
+          ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
+          : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
       }
     >
       {icon}

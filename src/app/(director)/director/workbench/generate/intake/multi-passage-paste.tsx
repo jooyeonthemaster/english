@@ -1,14 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ClipboardPaste, Loader2, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  PassageRow,
-  makeEmptyRow,
-  MIN_CONTENT_CHARS,
-  type PasteRowData,
-} from "./passage-row";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+
+import { TextInputBoard } from "../../passages/import/_components/intake/text/text-input-board";
 
 export interface PastedPassageInput {
   title: string;
@@ -17,122 +14,191 @@ export interface PastedPassageInput {
 
 interface MultiPassagePasteProps {
   /** Persist every valid row as a Passage, then select them. Parent handles it. */
-  onSubmitRows: (rows: PastedPassageInput[]) => void | Promise<void>;
+  onSubmitRows: (
+    rows: PastedPassageInput[],
+  ) => boolean | void | Promise<boolean | void>;
   /** True while the parent is persisting + refreshing the list. */
   saving: boolean;
 }
 
-/**
- * Multi-passage paste surface: a numbered list of editable passage rows
- * (1번·2번·N) with per-row AI 복원 and a deterministic "split one blob into N"
- * helper. Replaces the old single-passage PastePassagePanel.
- */
-export function MultiPassagePaste({ onSubmitRows, saving }: MultiPassagePasteProps) {
-  const [rows, setRows] = useState<PasteRowData[]>(() => [makeEmptyRow()]);
+type OutputMode = "verbatim" | "restored";
 
-  const updateRow = (localId: string, patch: Partial<PasteRowData>) =>
-    setRows((prev) =>
-      prev.map((r) => (r.localId === localId ? { ...r, ...patch } : r)),
-    );
+interface RestoreResponse {
+  restoredText?: string;
+  status?: "RESTORED" | "PARTIAL" | "NO_RESTORATION_NEEDED" | "FAILED";
+  warnings?: string[];
+  degraded?: boolean;
+  error?: string;
+  balance?: number;
+  requiredCredits?: number;
+}
 
-  const addRow = () => setRows((prev) => [...prev, makeEmptyRow()]);
+async function restorePassageBeforeRegister(
+  passage: PastedPassageInput,
+): Promise<PastedPassageInput> {
+  const res = await fetch("/api/workbench/restore-passage", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ passageText: passage.content }),
+  });
+  const data = (await res.json().catch(() => ({}))) as RestoreResponse;
 
-  const removeRow = (localId: string) =>
-    setRows((prev) =>
-      prev.length > 1 ? prev.filter((r) => r.localId !== localId) : prev,
-    );
+  if (!res.ok) {
+    if (res.status === 402) {
+      const required = data.requiredCredits
+        ? ` 필요 크레딧: ◈${data.requiredCredits}`
+        : "";
+      const balance =
+        typeof data.balance === "number" ? ` 현재 잔액: ◈${data.balance}` : "";
+      throw new Error(data.error || `크레딧이 부족합니다.${required}${balance}`);
+    }
+    throw new Error(data.error || "AI 원문 복원에 실패했습니다.");
+  }
 
-  // Replace one row with N rows built from its detected chunks (smart-split).
-  const splitRow = (localId: string, chunks: string[]) =>
-    setRows((prev) => {
-      const idx = prev.findIndex((r) => r.localId === localId);
-      if (idx < 0) return prev;
-      const built = chunks.map((c, i) => {
-        const row = makeEmptyRow(c);
-        // Keep the original title on the first chunk only.
-        if (i === 0 && prev[idx].title) row.title = prev[idx].title;
-        return row;
-      });
-      return [...prev.slice(0, idx), ...built, ...prev.slice(idx + 1)];
-    });
+  if (data.degraded || data.status === "PARTIAL") {
+    toast.warning("일부 지문은 복원본 확인이 필요할 수 있습니다.");
+  }
 
-  const validRows = useMemo(
-    () => rows.filter((r) => r.content.trim().length >= MIN_CONTENT_CHARS),
-    [rows],
-  );
-  const canSubmit = validRows.length > 0 && !saving;
-
-  const handleSubmit = () => {
-    if (!canSubmit) return;
-    void onSubmitRows(
-      validRows.map((r) => ({ title: r.title.trim(), content: r.content.trim() })),
-    );
+  return {
+    title: passage.title,
+    content: (data.restoredText || passage.content).trim(),
   };
+}
 
-  return (
-    <div className="flex h-full min-h-0 flex-col">
-      {/* Intro */}
-      <div className="shrink-0 px-4 pt-3">
-        <p className="text-[12px] leading-relaxed text-slate-500">
-          분석·추출 단계 없이 지문을 바로 붙여넣어 문제를 생성합니다. 여러 지문은{" "}
-          <b className="text-slate-600">아래 “지문 추가”로 행을 늘리거나</b>, 한 번에
-          붙여넣고 <b className="text-violet-600">“나누기”</b>로 분리하세요.
-        </p>
-      </div>
+/**
+ * Direct-input surface for question generation. It reuses the extraction page's
+ * text-mode board so text paste, accumulation, resize, and tutorial UI stay
+ * consistent across the workbench.
+ */
+export function MultiPassagePaste({
+  onSubmitRows,
+  saving,
+}: MultiPassagePasteProps) {
+  const [outputMode, setOutputMode] = useState<OutputMode>("verbatim");
+  const [restoring, setRestoring] = useState(false);
+  const busy = saving || restoring;
+  const controlRowClass =
+    "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
+  const controlLabelClass =
+    "w-[64px] shrink-0 text-[11px] font-bold text-slate-600";
 
-      {/* Rows (scrollable). With a single row, it stretches to fill the height. */}
-      <div className="mt-3 flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-2">
-        {rows.map((row, i) => (
-          <PassageRow
-            key={row.localId}
-            index={i}
-            row={row}
-            onChange={(patch) => updateRow(row.localId, patch)}
-            onRemove={() => removeRow(row.localId)}
-            canRemove={rows.length > 1}
-            disabled={saving}
-            onSplit={(chunks) => splitRow(row.localId, chunks)}
-            grow={rows.length === 1}
-          />
-        ))}
-      </div>
+  const outputModeOptions = [
+    {
+      v: "verbatim" as const,
+      label: "그대로 추출",
+      badge: "추가 비용 없음",
+    },
+    {
+      v: "restored" as const,
+      label: "AI로 원문 복원",
+      badge: `지문당 ◈${CREDIT_COSTS.PASSAGE_RESTORATION}`,
+    },
+  ];
 
-      {/* 지문 추가 — 스크롤 밖, 등록 버튼 바로 위에 고정 */}
-      <div className="shrink-0 px-4 pt-2">
-        <button
-          type="button"
-          onClick={addRow}
-          disabled={saving}
-          className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/60 py-3 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
-        >
-          <Plus className="h-4 w-4" />
-          지문 추가
-        </button>
-      </div>
-
-      {/* Footer */}
-      <div className="shrink-0 border-t border-slate-100 px-4 py-3">
-        <Button
-          type="button"
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          className="h-10 w-full rounded-lg bg-blue-600 text-[13.5px] font-semibold hover:bg-blue-700"
-        >
-          {saving ? (
-            <>
-              <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
-              등록 중...
-            </>
-          ) : (
-            <>
-              <ClipboardPaste className="mr-1.5 h-4 w-4" />
-              {validRows.length > 0
-                ? `${validRows.length}개 지문 등록하고 선택`
-                : "지문을 입력하세요"}
-            </>
-          )}
-        </Button>
+  const outputModeToggle = (
+    <div className="flex min-w-0 items-center gap-3">
+      <span className={controlLabelClass}>출력 방식</span>
+      <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+        {outputModeOptions.map((opt) => {
+          const active = outputMode === opt.v;
+          return (
+            <button
+              key={opt.v}
+              type="button"
+              onClick={() => setOutputMode(opt.v)}
+              disabled={busy}
+              aria-pressed={active}
+              className={
+                "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                (active
+                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
+                  : "cursor-pointer text-slate-500 hover:text-slate-700")
+              }
+            >
+              <span
+                className={
+                  "inline-flex size-3 shrink-0 items-center justify-center rounded-full border " +
+                  (active ? "border-blue-600" : "border-slate-300")
+                }
+                aria-hidden="true"
+              >
+                {active ? (
+                  <span className="size-1.5 rounded-full bg-blue-600" />
+                ) : null}
+              </span>
+              {opt.label}
+              <span
+                className={
+                  "rounded px-1 py-0.5 text-[9.5px] font-bold " +
+                  (active
+                    ? opt.v === "restored"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-slate-100 text-slate-500"
+                    : "bg-slate-100 text-slate-400")
+                }
+              >
+                {opt.badge}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
+  );
+
+  return (
+    <section className="flex h-full min-h-0 flex-col overflow-hidden">
+      <div className={controlRowClass}>{outputModeToggle}</div>
+
+      <div className="flex min-h-0 flex-1 flex-col">
+        <TextInputBoard
+          busy={busy}
+          outputMode={outputMode}
+          onStart={async (passages) => {
+            const rows = passages.map((passage) => ({
+              title: passage.title ?? "",
+              content: passage.text,
+            }));
+
+            if (outputMode === "verbatim") {
+              const ok = await onSubmitRows(rows);
+              return ok !== false;
+            }
+
+            setRestoring(true);
+            try {
+              const restoredRows: PastedPassageInput[] = [];
+              for (const row of rows) {
+                restoredRows.push(await restorePassageBeforeRegister(row));
+              }
+              const ok = await onSubmitRows(restoredRows);
+              return ok !== false;
+            } catch (error) {
+              toast.error(
+                error instanceof Error
+                  ? error.message
+                  : "AI 원문 복원 중 오류가 발생했습니다.",
+              );
+              return false;
+            } finally {
+              setRestoring(false);
+            }
+          }}
+          reviewLabel={outputMode === "restored" ? "복원할 지문" : "등록할 지문"}
+          emptyTitle={
+            outputMode === "restored"
+              ? "문제·선지 텍스트를 붙여넣고 지문을 쌓아요"
+              : "텍스트를 붙여넣고 지문을 쌓아요"
+          }
+          guideStartLabel={
+            outputMode === "restored" ? "복원 후 등록" : "등록하고 선택"
+          }
+          startLabel="지문 등록하고 선택"
+          restoredStartLabel="복원하여 등록하고 선택"
+          busyLabel={restoring ? "복원 중" : "등록 중"}
+        />
+      </div>
+    </section>
   );
 }

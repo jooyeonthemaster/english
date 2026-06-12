@@ -58,10 +58,8 @@ export function TaskCard({
       tabIndex={0}
       className="group relative flex w-[150px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
     >
-      {/* Landscape thumbnail — 150×100. Image is `object-cover object-top` so
-          tall scans/PDFs show their top portion (title / first lines)
-          instead of being letter-boxed or center-cropped. */}
-      <div className="relative h-[100px] w-[150px] shrink-0 overflow-hidden bg-slate-50">
+      {/* A4 thumbnail — keep the uploaded page uncropped in the preview frame. */}
+      <div className="relative aspect-[210/297] w-[150px] shrink-0 overflow-hidden bg-white">
         {task.thumbnailUrl ? (
           // Signed URLs change per fetch; no point in next/image optimization
           // eslint-disable-next-line @next/next/no-img-element
@@ -69,10 +67,10 @@ export function TaskCard({
             src={task.thumbnailUrl}
             alt=""
             loading="lazy"
-            className="size-full object-cover object-top"
+            className="size-full object-contain object-center"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-slate-300">
+          <div className="flex size-full items-center justify-center bg-slate-50 text-slate-300">
             <FileText className="size-6" aria-hidden="true" />
           </div>
         )}

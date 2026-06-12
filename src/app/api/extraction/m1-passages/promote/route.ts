@@ -14,6 +14,7 @@ export const dynamic = "force-dynamic";
 
 const promoteSchema = z.object({
   draftIds: z.array(z.string().min(1)).min(1).max(200),
+  markReviewed: z.boolean().optional().default(true),
 });
 
 export async function POST(req: NextRequest) {
@@ -29,6 +30,8 @@ export async function POST(req: NextRequest) {
       parsed.error.issues,
     );
   }
+
+  const markReviewed = parsed.data.markReviewed;
 
   const drafts = await prisma.extractionM1PassageDraft.findMany({
     where: {
@@ -53,6 +56,30 @@ export async function POST(req: NextRequest) {
 
   for (const draft of drafts) {
     try {
+      // 이미 승격됐지만 아직 COMMITTED가 아닌 draft를 검수 완료(markReviewed)로
+      // 재커밋한다. (main의 markReviewed=false 경로가 남긴 REVIEWED 상태 잔존
+      // 데이터를 검수 UI에서 커밋 처리할 수 있게 하는 보완 — promoteM1Draft는
+      // savedPassageId가 있으면 skipped(already_promoted)만 반환한다.)
+      if (
+        draft.savedPassageId &&
+        markReviewed &&
+        draft.reviewStatus !== "COMMITTED"
+      ) {
+        await prisma.extractionM1PassageDraft.update({
+          where: { id: draft.id },
+          data: {
+            reviewStatus: "COMMITTED",
+            confirmedAt: new Date(),
+          },
+        });
+        outcomes.push({
+          draftId: draft.id,
+          status: "promoted",
+          passageId: draft.savedPassageId,
+        });
+        continue;
+      }
+
       outcomes.push(await promoteM1Draft(draft));
     } catch (err) {
       console.error("[m1-passages/promote] draft promotion failed", {
