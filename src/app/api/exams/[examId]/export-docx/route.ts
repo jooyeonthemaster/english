@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getStaffSession } from "@/lib/auth";
+import { logAppEvent } from "@/lib/app-events";
 import { Packer } from "docx";
 import { buildExamDocument } from "./_lib/build-document";
 import {
@@ -184,6 +186,18 @@ export async function GET(
     await prisma.exam.update({
       where: { id: examId },
       data: { printCount: { increment: 1 } },
+    });
+
+    // 관리자 활동 타임라인용 — printCount는 행위자/시각이 없어 별도 기록
+    const staff = await getStaffSession().catch(() => null);
+    await logAppEvent({
+      academyId: exam.academyId,
+      actorType: "STAFF",
+      actorId: staff?.id ?? null,
+      eventType: "EXAM_EXPORT",
+      resourceType: "EXAM",
+      resourceId: exam.id,
+      metadata: { format: "docx", title: exam.title, includeAnswers },
     });
 
     const filename = encodeURIComponent(

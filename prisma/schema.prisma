@@ -3315,6 +3315,8 @@ model AppEvent {
 
   @@index([academyId, eventType, createdAt])
   @@index([academyId, actorType, actorId])
+  @@index([academyId, createdAt])
+  @@index([createdAt])
   @@map("app_events")
 }
 

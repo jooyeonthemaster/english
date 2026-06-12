@@ -14,6 +14,7 @@ import { z } from "zod";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { checkBalance } from "@/lib/credits";
+import { normalizeClientPath } from "@/lib/app-events";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
 import { createJobRequestSchema } from "@/lib/extraction/zod-schemas";
 import { prisma } from "@/lib/prisma";
@@ -38,6 +39,16 @@ function imageExtForMime(mimeType: string): string {
 export async function handleCreateJob(req: NextRequest) {
   const staff = await requireStaff();
   if (staff instanceof NextResponse) return staff;
+
+  // 어느 페이지에서 실행한 추출인지 — 관리자 활동 모니터링의 "실행 경로".
+  // same-origin fetch가 자동으로 싣는 Referer에서 경로만 정규화해 보관한다.
+  let originPath: string | null = null;
+  try {
+    const referer = req.headers.get("referer");
+    originPath = referer ? normalizeClientPath(new URL(referer).pathname) : null;
+  } catch {
+    originPath = null;
+  }
 
   let parsed;
   try {
@@ -99,6 +110,7 @@ export async function handleCreateJob(req: NextRequest) {
           pendingPages: parsed.totalPages,
           creditsReserved: projected,
           status: "PENDING",
+          ...(originPath ? { metadata: { originPath } } : {}),
         },
       });
 
@@ -155,7 +167,9 @@ export async function handleCreateJob(req: NextRequest) {
       await prisma.extractionJob.update({
         where: { id: job.id },
         data: {
+          // metadata는 통째로 교체되므로 생성 시 넣은 originPath를 보존한다
           metadata: {
+            ...(originPath ? { originPath } : {}),
             previewImageUrl: previewUploadTarget.uploadPath,
             previewMimeType: parsed.previewPage.mimeType,
             previewImageBytes: parsed.previewPage.size,

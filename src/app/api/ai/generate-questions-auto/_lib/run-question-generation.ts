@@ -113,6 +113,7 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  "grammar-decoy-point-diversity",
   "grammar-killer-thin-answer",
   // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
   // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.

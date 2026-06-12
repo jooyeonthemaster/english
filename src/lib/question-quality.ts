@@ -2155,7 +2155,7 @@ function validateTypeSpecific(
       new Set(markedPointCodes).size < 3
     ) {
       add(
-        "warning",
+        "error",
         "grammar-decoy-point-diversity",
         "GRAMMAR_ERROR should distribute marked expressions across at least three real grammar point codes; repeated pointCode decoys make the item feel padded.",
       );

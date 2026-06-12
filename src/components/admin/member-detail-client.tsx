@@ -22,6 +22,8 @@ import { ActiveToggleModal } from "@/components/admin/member-detail/active-toggl
 import { UsageBreakdown } from "@/components/admin/member-detail/usage-breakdown";
 import { UsageSparkline } from "@/components/admin/member-detail/usage-sparkline";
 import { TransactionTable } from "@/components/admin/member-detail/transaction-table";
+import { ActivityTimeline } from "@/components/admin/member-detail/activity-timeline";
+import type { ActivityItem } from "@/lib/admin-activity-types";
 import {
   Avatar,
   CreditKpi,
@@ -55,11 +57,16 @@ interface MemberDetailClientProps {
     }>;
     nextCursor: string | null;
   };
+  initialActivity: {
+    items: ActivityItem[];
+    nextBefore: string | null;
+  };
 }
 
 export function MemberDetailClient({
   member,
   initialTransactions,
+  initialActivity,
 }: MemberDetailClientProps) {
   const [adjustOpen, setAdjustOpen] = useState(false);
   const [toggleOpen, setToggleOpen] = useState(false);
@@ -198,6 +205,10 @@ export function MemberDetailClient({
           />
         </div>
       </div>
+
+      {/* 활동 타임라인 — 제목/경로가 길어 우측 컬럼이 아닌 전체 폭 사용.
+          페이지 래퍼(space-y-6)가 위 간격을 잡아준다. */}
+      <ActivityTimeline memberId={member.id} initial={initialActivity} />
 
       <CreditAdjustModal
         open={adjustOpen}

@@ -431,8 +431,8 @@ function auditGrammarError(question: Record<string, unknown>, passage: string) {
   }
 
   if (markedPointCodes.length >= 5 && new Set(markedPointCodes).size < 3) {
-    auditWarnings.push({
-      severity: "warning",
+    auditErrors.push({
+      severity: "error",
       code: "grammar-audit-low-point-diversity",
       message: "Marked expressions use fewer than three grammar point codes.",
     });
@@ -761,7 +761,6 @@ async function main() {
   console.log(
     `[grammar-audit] start total=${TOTAL} concurrency=${CONCURRENCY} maxAttempts=${MAX_ATTEMPTS} passages=${selectedPassages().length} runId=${RUN_ID}`,
   );
-  const startedAt = Date.now();
   const results = await runWithConcurrency(cases, CONCURRENCY, runOne);
   const { jsonPath, mdPath, summary } = writeReports(results);
   console.log("\n========== GRAMMAR GENERATION SAMPLE AUDIT ==========");

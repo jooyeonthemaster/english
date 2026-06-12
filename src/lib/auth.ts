@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { logAppEvent } from "@/lib/app-events";
 import { verifySocialBridgeToken } from "@/lib/social-bridge";
 import { isJooyeonSpecialAccount } from "@/lib/jooyeon-special-account";
 
@@ -43,6 +44,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           data: { lastLoginAt: new Date(), authProvider: "credentials" },
         });
 
+        await logAppEvent({
+          academyId: staff.academyId,
+          actorType: "STAFF",
+          actorId: staff.id,
+          eventType: "LOGIN",
+          metadata: { provider: "credentials" },
+        });
+
         return {
           id: staff.id,
           email: staff.email,
@@ -75,6 +84,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!staff || !staff.isActive) return null;
         if (staff.email !== payload.email) return null;
         if (staff.role !== "DIRECTOR") return null;
+
+        await logAppEvent({
+          academyId: staff.academyId,
+          actorType: "STAFF",
+          actorId: staff.id,
+          eventType: "LOGIN",
+          metadata: { provider: staff.authProvider ?? "social-bridge" },
+        });
 
         return {
           id: staff.id,
