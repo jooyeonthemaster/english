@@ -95,6 +95,7 @@ function normalizeGrammarAnswerCount(answerCount: unknown, markedCount: number):
 const MC_TYPE_IDS = new Set([
   "BLANK_INFERENCE",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CHOICE_COMBO",
   "VOCAB_CHOICE",
   "SENTENCE_ORDER",
   "SENTENCE_INSERT",
@@ -142,6 +143,13 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "The error must test a meaningful grammar point such as agreement, parallelism, modification, tense/aspect, reference, or verb form.",
     "Every non-error marked expression must still be a defensible grammar judgment point with a clear explanation, not padding.",
     "For KILLER, avoid an obvious spelling-level error; the wrong expression should look natural until the sentence structure is checked.",
+  ],
+  GRAMMAR_CHOICE_COMBO: [
+    "Create exactly three boxed slots (A)/(B)/(C) in three different sentences, each testing a different grammar point code.",
+    "Each slot's correctExpression must be verbatim passage text; the wrongExpression must be clearly ungrammatical in that position, not a debatable stylistic preference or a tense-only change.",
+    "Exactly one option combines all three correct expressions. Wrong options must mix single-slot and multi-slot traps, and every slot's wrong candidate must appear in at least one wrong option.",
+    "One slot's judgment must not reveal another slot's answer (keep the three grammar decisions independent).",
+    "For KILLER, use hard points (relatives, participles, parallelism) on at least two slots and include at least two options that are wrong in two or more slots.",
   ],
   VOCAB_CHOICE: [
     "Mark five context-bearing words from the passage. Do not use tiny function words or words whose meaning is obvious without context.",
@@ -336,6 +344,12 @@ export function buildQuestionTargetCandidateBlock(
         passage,
         options.grammarMarkerCount ?? options.grammarErrorCount,
         options.grammarAnswerCount,
+        options.requestedDifficulty,
+        diversity,
+      );
+    case "GRAMMAR_CHOICE_COMBO":
+      return buildGrammarChoiceComboCandidateBlock(
+        passage,
         options.requestedDifficulty,
         diversity,
       );
@@ -737,6 +751,70 @@ function buildGrammarErrorCandidateBlock(
       : "",
     sentences.length
       ? "Detected passage sentences for target distribution:"
+      : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
+    ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
+  ].filter(Boolean).join("\n");
+}
+
+/**
+ * 네모 어법 후보 블록 — GRAMMAR_ERROR 가드레일 골격 + 기출 768문항 역설계
+ * 조합 규칙(오답 믹스 single 1~2 / multi 1~3 / all 0~1, 슬롯 커버리지).
+ */
+function buildGrammarChoiceComboCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const sentences = splitPassageSentences(passage);
+
+  // GRAMMAR_ERROR 와 동일한 규범 논쟁 자리 구체 금지 — 콤보는 두 후보를 나란히
+  // 보여줘 정답 시비 가능성이 더 크다.
+  const disputedSourceMatch = passage.match(
+    /\b(?:and|or)\b[^.;]{0,80}?\beach\s+[A-Za-z]+s(?=[\s.,;])/i,
+  );
+  const disputedBanLine = disputedSourceMatch
+    ? `- 🚫 절대 네모 금지 자리: 지문의 "...${disputedSourceMatch[0].slice(-60)}..." 구간(복수 등위 주어 + each + 동사 — 표준 규범과 실사용이 갈리는 논쟁 자리)에는 네모를 만들지 마세요.`
+    : "";
+
+  // KILLER 는 하드 포인트(b/c/i) 2슬롯이 핵심 변별 장치 — 공유 가이드의 코어 풀
+  // 로테이션 지정이 a/d/f 를 가리키면 캘리브레이션 라인과 충돌해 모델이 지정을
+  // 따른다 (실측: killer1 에서 point-mix 경고 4/6). KILLER 는 지정을 여기서
+  // 하드 우선으로 직접 발행하고, 공유 가이드는 카탈로그/함정 카드만 쓴다.
+  const isKiller = requestedDifficulty === "KILLER";
+  const killerDesignation = (() => {
+    if (!isKiller) return "";
+    const hardPool = ["b", "c", "i"];
+    const vi =
+      typeof diversity?.variantIndex === "number" && Number.isFinite(diversity.variantIndex)
+        ? Math.max(0, Math.floor(diversity.variantIndex))
+        : 0;
+    const first = hardPool[vi % hardPool.length];
+    const second = hardPool[(vi + 1) % hardPool.length];
+    const third = hardPool[(vi + 2) % hardPool.length];
+    return `- ⭐ KILLER 네모 포인트 지정: 두 네모는 하드 포인트 (${first}) ${GRAMMAR_POINT_CATALOG[first as keyof typeof GRAMMAR_POINT_CATALOG].label}, (${second}) ${GRAMMAR_POINT_CATALOG[second as keyof typeof GRAMMAR_POINT_CATALOG].label} 에 배치하세요. 지문에 그 구조가 정말 없으면 (${third}) ${GRAMMAR_POINT_CATALOG[third as keyof typeof GRAMMAR_POINT_CATALOG].label} 로 대체하되, 하드 포인트(b/c/i)가 두 네모 미만이면 안 됩니다. 남은 한 네모는 코어 풀의 다른 포인트를 사용하세요.`;
+  })();
+
+  return [
+    "## GRAMMAR_CHOICE_COMBO target planning guardrail",
+    disputedBanLine,
+    "- The final item must contain exactly 3 boxed slots labeled (A) (B) (C), in three different sentences, each testing a different pointCode.",
+    "- Each slot's correctExpression must be verbatim source text. The wrongExpression must be clearly ungrammatical in that exact position — never a tense-only change or a debatable stylistic preference.",
+    "- 🚫 누설 금지: 네모로 만들 표현(올바른 후보든 틀린 후보든)과 동일한 단어/연어가 지문의 다른 곳에 무마킹으로 그대로 남아 있는 자리는 선택 금지 — 같은 문장의 평행구(예: 동일한 'composed of' 구조 반복)가 있으면 학생이 베껴 풉니다. 그런 자리는 피하고 다른 위치를 고르세요. 위반 시 문항이 거부됩니다.",
+    "- Option mix: exactly one all-correct option; among the four wrong options use 1~2 options wrong in one slot, 1~3 options wrong in two slots, and at most 1 option wrong in all three slots. Every slot's wrongExpression must appear in at least one wrong option.",
+    isKiller
+      ? "- KILLER calibration: at least two slots must test hard points (관계사 b, 분사 능/수동 c, 병렬 i), prefer long-distance dependencies (수식어구 건너 수일치, 절 경계 너머 병렬), and include at least two options wrong in two or more slots."
+      : "",
+    killerDesignation,
+    // 어법끝 빈도 가이드 — 세 슬롯 포인트 지정(answerCount=3 은 폴백 없는
+    // 3포인트 지정) + 다양성 회피. KILLER 는 위의 하드 우선 지정이 대신한다.
+    buildGrammarPointGuidance({
+      variantIndex: diversity?.variantIndex,
+      usedPointCodes: diversity?.usedPointCodes,
+      diversityEnabled: isKiller ? false : diversity?.diversityEnabled,
+      answerCount: 3,
+    }),
+    sentences.length
+      ? "Detected passage sentences for slot distribution (pick three different sentences):"
       : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
     ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
   ].filter(Boolean).join("\n");
@@ -1930,6 +2008,194 @@ function validateMarkedText(
   }
 }
 
+/** 네모 어법 — 렌더된 "(A) [x / y]" 네모 카운트용. */
+const COMBO_SLOT_RENDER_REGEX = /\([A-C]\)\s*\[[^\[\]]*\/[^\[\]]*\]/g;
+const COMBO_HARD_POINT_CODES = new Set(["b", "c", "i"]);
+// that/what 슬롯의 패턴 누설 검출용 — 명사절 that 보문을 취하는 인지·단언 동사.
+// 관계절·지시사 that 위양성을 막기 위해 동사를 화이트리스트로 한정한다.
+const COGNITION_VERB_THAT_REGEX =
+  /\b(?:know|knows|knew|known|think|thinks|thought|believe|believes|believed|assume|assumes|assumed|realize|realizes|realized|suggest|suggests|suggested|show|shows|showed|shown|find|finds|found|argue|argues|argued|claim|claims|claimed|say|says|said|hope|hopes|hoped|feel|feels|felt|notice|notices|noticed|understand|understands|understood|mean|means|meant|prove|proves|proved|conclude|concludes|concluded|recognize|recognizes|recognized)\s+that\b/i;
+
+/**
+ * 네모 어법 검증 — 모델 메타데이터(slots/options)와 렌더된 지문을 각각 세고
+ * 상호 대조한다. 세 슬롯 전부가 정답 키를 구성하므로 슬롯/조합 결함은 error
+ * (RELAXED 차단 대상), 오답 믹스·포인트 구성은 warning (strict 압력).
+ */
+function validateGrammarChoiceComboQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  requestedDifficulty: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const slots = Array.isArray(question.slots)
+    ? question.slots.filter(isRecord)
+    : [];
+  if (slots.length !== 3) {
+    add("error", "combo-slot-count", `Expected exactly 3 combo slots, got ${slots.length}.`);
+  }
+
+  const passageWithMarkers = normalizeText(question.passageWithMarkers);
+  if (passageWithMarkers) {
+    const rendered = passageWithMarkers.match(COMBO_SLOT_RENDER_REGEX) ?? [];
+    if (rendered.length !== 3) {
+      add("error", "combo-render-slot-count", `Expected 3 rendered combo slots "(A) [x / y]", got ${rendered.length}.`);
+    }
+  }
+
+  const slotCandidates: Array<{ correct: string; wrong: string; label: string }> = [];
+  for (const [slotIndex, slot] of slots.entries()) {
+    const correct = normalizeText(slot.correctExpression);
+    const wrong = normalizeText(slot.wrongExpression);
+    if (!correct || !wrong) {
+      add("error", "combo-slot-missing-candidate", `Combo slot ${slotIndex + 1} is missing correctExpression/wrongExpression.`);
+      continue;
+    }
+    slotCandidates.push({
+      correct,
+      wrong,
+      label: normalizeText(slot.label) || `slot ${slotIndex + 1}`,
+    });
+    if (normalizeComparableText(correct) === normalizeComparableText(wrong)) {
+      add("error", "combo-slot-not-mutated", `Combo slot ${slotIndex + 1} candidates are identical: "${correct}".`);
+    }
+    // 원문 실재 검사 — 지문에 오류가 인쇄된 추출/재현 흐름은 passage 를 넘기지
+    // 않으므로 가드 필수 (grammar-error-not-mutated 와 동일 관례).
+    if (passage && !containsLoose(passage, correct)) {
+      add("error", "combo-correct-not-in-source", `Combo slot correctExpression not found in the passage: "${correct.slice(0, 60)}".`);
+    }
+  }
+
+  // 정답 후보 누설 — 네모 밖 지문에 후보와 동일한 내용어 표현이 무마킹으로
+  // 남아 있으면 학생이 평행구를 베껴 푼다 (실측: 'composed of' 평행구 5/8).
+  // wrong 후보의 잔존도 같은 코드로 잡는다 — 오답형이 지문 다른 곳에서 합법
+  // 표현으로 등장하면 "둘 다 가능" 시비의 신호다.
+  // 기능어 후보(that/be 등)는 단독 잔존이 불가피해 면제하되, 직전 단어까지
+  // 같은 연어("know that"·"assume that")가 잔존하면 실질 누설로 잡는다
+  // (실측 라운드2: 기능어 연어 평행 3/8).
+  if (passageWithMarkers) {
+    const outsideSlots = passageWithMarkers.replace(COMBO_SLOT_RENDER_REGEX, " ");
+    const isLeakTarget = (expr: string) =>
+      expr.length >= 4 &&
+      !isTinyFunctionWord(expr) &&
+      !/^(that|what|which|this|these|those|than|then|when|where|while|there|their|they|them|have|has|had|will|would|could|should|must|does|did|not|with|from|into|been|being)$/i.test(expr);
+    const appearsOutside = (expr: string) =>
+      isSingleEnglishToken(expr)
+        ? containsStandaloneToken(outsideSlots, expr)
+        : containsLoose(outsideSlots, expr);
+    const precedingWordByLabel = new Map<string, string>();
+    for (const match of passageWithMarkers.matchAll(/([A-Za-z][A-Za-z'-]*)\s*\(([A-C])\)\s*\[/g)) {
+      precedingWordByLabel.set(`(${match[2]})`, match[1]);
+    }
+    for (const candidate of slotCandidates) {
+      if (isLeakTarget(candidate.correct) && appearsOutside(candidate.correct)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} correct candidate "${candidate.correct}" also appears unmarked elsewhere in the passage (answer leak).`);
+        continue;
+      }
+      if (isLeakTarget(candidate.wrong) && appearsOutside(candidate.wrong)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} wrong candidate "${candidate.wrong}" appears as legitimate text elsewhere in the passage (dispute risk).`);
+        continue;
+      }
+      const preceding = precedingWordByLabel.get(candidate.label);
+      if (preceding && appearsOutside(`${preceding} ${candidate.correct}`)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} collocation "${preceding} ${candidate.correct}" also appears unmarked elsewhere in the passage (answer leak).`);
+        continue;
+      }
+      // that/what 슬롯 전용 패턴 누설: 슬롯 동사와 누설 동사가 달라도(know vs
+      // assume) "인지·단언 동사 + that + 완전절" 패턴이 네모 밖에 남아 있으면
+      // 학생이 그 패턴을 (A)에 전이한다 (실측 R3: 'assume that' 평행 2/8).
+      // 인지동사 화이트리스트로 한정해 관계절·지시사 that 위양성을 배제한다.
+      const pair = new Set([
+        candidate.correct.toLowerCase(),
+        candidate.wrong.toLowerCase(),
+      ]);
+      if (pair.has("that") && pair.has("what") && COGNITION_VERB_THAT_REGEX.test(outsideSlots)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} (that/what) is modeled by an unmarked "동사 + that + clause" elsewhere in the passage (pattern leak).`);
+      }
+    }
+  }
+
+  const pointCodes = slots
+    .map((slot) => normalizeText(slot.pointCode).toLowerCase())
+    .filter(Boolean);
+  if (pointCodes.length === slots.length && new Set(pointCodes).size < pointCodes.length) {
+    add("warning", "combo-duplicate-point-code", `Combo slots repeat a pointCode: ${pointCodes.join(", ")}.`);
+  }
+
+  // 조합 선지 검증 — slotValues 가 각 슬롯의 두 후보 중 하나인지, 전부-옳은
+  // 조합이 유일하고 correctAnswer 와 일치하는지.
+  const options = Array.isArray(question.options)
+    ? question.options.filter(isRecord)
+    : [];
+  if (slotCandidates.length !== 3 || options.length !== 5) return;
+
+  const comboKeys: string[] = [];
+  const wrongnessCounts: number[] = [];
+  const wrongCandidateUsed = [false, false, false];
+  let valuesValid = true;
+  for (const [optionIndex, option] of options.entries()) {
+    const values = Array.isArray(option.slotValues)
+      ? option.slotValues.map((value) => normalizeText(value))
+      : [];
+    if (values.length !== 3 || values.some((value) => !value)) {
+      add("error", "combo-option-value-mismatch", `Combo option ${optionIndex + 1} must provide 3 slotValues.`);
+      valuesValid = false;
+      continue;
+    }
+    let wrongness = 0;
+    for (const [slotIndex, value] of values.entries()) {
+      const candidate = slotCandidates[slotIndex];
+      const comparable = normalizeComparableText(value);
+      if (comparable === normalizeComparableText(candidate.wrong)) {
+        wrongness += 1;
+        wrongCandidateUsed[slotIndex] = true;
+      } else if (comparable !== normalizeComparableText(candidate.correct)) {
+        add("error", "combo-option-value-mismatch", `Combo option ${optionIndex + 1} value "${value}" matches neither candidate of slot ${slotIndex + 1}.`);
+        valuesValid = false;
+      }
+    }
+    comboKeys.push(values.map((value) => normalizeComparableText(value)).join("|"));
+    wrongnessCounts.push(wrongness);
+  }
+  if (!valuesValid) return;
+
+  const duplicateCombo = findDuplicate(comboKeys);
+  if (duplicateCombo) {
+    add("error", "combo-duplicate-option", "Combo options repeat the same slotValues combination.");
+  }
+
+  const allCorrectIndices = wrongnessCounts
+    .map((wrongness, index) => ({ wrongness, index }))
+    .filter((entry) => entry.wrongness === 0)
+    .map((entry) => entry.index);
+  const correctLabel = normalizeLabel(question.correctAnswer);
+  if (allCorrectIndices.length !== 1) {
+    add("error", "combo-answer-combo-mismatch", `Expected exactly 1 all-correct combo option, got ${allCorrectIndices.length}.`);
+  } else {
+    const answerOptionLabel = normalizeLabel(options[allCorrectIndices[0]].label);
+    if (answerOptionLabel !== correctLabel) {
+      add("error", "combo-answer-combo-mismatch", `correctAnswer "${normalizeText(question.correctAnswer)}" does not point at the all-correct combination.`);
+    }
+  }
+
+  if (!wrongCandidateUsed.every(Boolean)) {
+    add("warning", "combo-wrong-candidate-unused", "Some slot's wrongExpression never appears in any wrong option.");
+  }
+  if (!wrongnessCounts.some((wrongness) => wrongness === 1)) {
+    add("warning", "combo-missing-single-slot-trap", "No option is wrong in exactly one slot; include at least one near-miss option.");
+  }
+
+  if (requestedDifficulty === "KILLER") {
+    const multiSlotTraps = wrongnessCounts.filter((wrongness) => wrongness >= 2).length;
+    if (multiSlotTraps < 2) {
+      add("warning", "combo-killer-trap-mix", `KILLER combo should include at least 2 options wrong in two or more slots, got ${multiSlotTraps}.`);
+    }
+    const hardPoints = pointCodes.filter((code) => COMBO_HARD_POINT_CODES.has(code)).length;
+    if (pointCodes.length === 3 && hardPoints < 2) {
+      add("warning", "combo-killer-point-mix", `KILLER combo should test hard points (b/c/i) on at least 2 slots, got ${hardPoints}.`);
+    }
+  }
+}
+
 function validateTypeSpecific(
   question: Record<string, unknown>,
   typeId: string,
@@ -2033,6 +2299,10 @@ function validateTypeSpecific(
     if (normalizeText(question.modelAnswer) && scrambled === normalizeText(question.modelAnswer)) {
       add("error", "scrambled-already-solved", "scrambledWords are already in answer order.");
     }
+  }
+
+  if (typeId === "GRAMMAR_CHOICE_COMBO") {
+    validateGrammarChoiceComboQuestion(question, passage, requestedDifficulty, add);
   }
 
   if (typeId === "GRAMMAR_ERROR") {

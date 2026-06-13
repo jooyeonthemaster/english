@@ -158,6 +158,8 @@ const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
 > = {
   BLANK_INFERENCE: { stemLanguage: "ko", optionLanguage: "en" },
   GRAMMAR_ERROR: { stemLanguage: "ko", optionLanguage: "ko" },
+  // 네모 어법 보기는 영어 후보 조합(구조적) — 보기 언어 토글 대상 아님.
+  GRAMMAR_CHOICE_COMBO: { stemLanguage: "ko", optionLanguage: "ko" },
   VOCAB_CHOICE: { stemLanguage: "ko", optionLanguage: "en" },
   SENTENCE_ORDER: { stemLanguage: "ko", optionLanguage: "en" },
   SENTENCE_INSERT: { stemLanguage: "ko", optionLanguage: "ko" },

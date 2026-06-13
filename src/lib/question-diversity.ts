@@ -202,6 +202,19 @@ function extractUsedSignature(
       }
       break;
     }
+    case "GRAMMAR_CHOICE_COMBO": {
+      // 세 네모 전부가 출제 지점 — 원문 표현을 타깃으로, 포인트 코드를 회피
+      // 채널로 기록 (default 폴백은 조합 보기 텍스트를 타깃으로 오기록한다).
+      if (Array.isArray(data.slots)) {
+        for (const slot of data.slots) {
+          if (!isRecord(slot)) continue;
+          pushTarget(targets, slot.correctExpression);
+          const pointCode = asTrimmedString(slot.pointCode).toLowerCase();
+          if (/^[a-m]$/.test(pointCode)) pointCodes.push(pointCode);
+        }
+      }
+      break;
+    }
     case "SENTENCE_INSERT":
       pushTarget(targets, data.givenSentence);
       break;
@@ -422,6 +435,7 @@ const TARGET_NOUN_BY_SUBTYPE: Record<string, string> = {
   ANTONYM: "단어-반의어 쌍",
   VOCAB_CHOICE: "밑줄 어휘",
   GRAMMAR_ERROR: "오류로 변형한 표현",
+  GRAMMAR_CHOICE_COMBO: "네모 후보로 변형한 원문 표현",
   SENTENCE_INSERT: "삽입용으로 빼낸 문장",
   REFERENCE: "밑줄 친 대명사",
   SUMMARY_COMPLETE_MC: "요약문 빈칸 정답 어구",
@@ -481,6 +495,9 @@ export const SHUFFLE_OPTION_TYPES = new Set([
   "CONTEXT_MEANING",
   "SYNONYM",
   "SUMMARY_COMPLETE_MC",
+  // 네모 어법 조합 선지는 지문 위치 비결속(선지 = A-B-C 후보 조합) — 셔플 시
+  // slotValues 가 옵션 객체와 함께 이동하므로 안전.
+  "GRAMMAR_CHOICE_COMBO",
 ]);
 
 function fisherYatesPermutation(length: number): number[] {

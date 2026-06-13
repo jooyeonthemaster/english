@@ -48,6 +48,26 @@ export const grammarErrorSchema = z.object({
 });
 export type GrammarErrorQuestion = z.infer<typeof grammarErrorSchema>;
 
+// ── 네모 어법 ──
+
+export const grammarChoiceComboSchema = z.object({
+  ...commonFields,
+  passageWithMarkers: z.string().describe("(A)~(C) 네모 선택지가 포함된 지문. 네모 부분은 (A) [표현1 / 표현2] 형태로 표시"),
+  slots: z.array(z.object({
+    label: z.string().describe("(A), (B), (C)"),
+    correctExpression: z.string().describe("원문에서의 올바른 표현"),
+    wrongExpression: z.string().describe("네모에 함께 제시하는 틀린 표현"),
+    pointCode: z.string().optional().describe("어법 출제 포인트 코드 (a~m)"),
+  })).length(3),
+  options: z.array(z.object({
+    label: z.string(),
+    text: z.string(),
+    slotValues: z.array(z.string()).length(3).optional().describe("각 네모 (A)/(B)/(C)에서 고른 표현, 라벨 순서대로"),
+  })).length(5),
+  ...mcWrongExplanations,
+});
+export type GrammarChoiceComboQuestion = z.infer<typeof grammarChoiceComboSchema>;
+
 // ── 어휘 적절성 ──
 
 export const vocabChoiceSchema = z.object({

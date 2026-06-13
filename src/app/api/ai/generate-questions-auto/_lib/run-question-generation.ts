@@ -130,6 +130,17 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-marker-adjacent-duplicate",
   "grammar-marker-context-mismatch",
   "grammar-surrounding-missing-marker",
+  // 네모 어법 — 세 슬롯 전부가 정답 키를 구성하므로 슬롯/조합 결함은 전부
+  // 정답 무효급. relaxed 폴백에서도 출하 금지.
+  "combo-slot-count",
+  "combo-render-slot-count",
+  "combo-slot-missing-candidate",
+  "combo-slot-not-mutated",
+  "combo-correct-not-in-source",
+  "combo-option-value-mismatch",
+  "combo-duplicate-option",
+  "combo-answer-combo-mismatch",
+  "combo-candidate-visible-elsewhere",
   "grammar-correction-underline-count",
   "grammar-correction-missing-underlined-segments",
   "grammar-correction-missing-passage-underline",
@@ -646,6 +657,31 @@ function buildRejectionSample(
     };
   }
 
+  if (subType === "GRAMMAR_CHOICE_COMBO") {
+    const slots = Array.isArray(question.slots)
+      ? question.slots
+          .filter(isRecord)
+          .map((item) => ({
+            label: item.label,
+            correctExpression: item.correctExpression,
+            wrongExpression: item.wrongExpression,
+            pointCode: item.pointCode,
+          }))
+      : [];
+    const passageWithMarkers =
+      typeof question.passageWithMarkers === "string"
+        ? question.passageWithMarkers
+        : "";
+
+    return {
+      slotCount: slots.length,
+      renderedSlotCount: (passageWithMarkers.match(/\([A-C]\)\s*\[[^\[\]]*\/[^\[\]]*\]/g) ?? []).length,
+      slots,
+      correctAnswer: question.correctAnswer,
+      passageWithMarkersPreview: passageWithMarkers.slice(0, 300),
+    };
+  }
+
   if (subType !== "IRRELEVANT") return undefined;
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.filter((sentence): sentence is string => typeof sentence === "string")
@@ -750,9 +786,13 @@ export async function runQuestionGenerationWithEmptyRetry(
       (item) => item.subType === "BLANK_INFERENCE" && item.count > 0,
     ) &&
     !hasNegativeParaphraseBlank;
+  // 네모 어법은 세 슬롯 전부 정합을 요구해 수율이 낮다 — 확장 어법과 동일하게 6회.
+  const hasGrammarChoiceCombo = inputWithUsage.plan.some(
+    (item) => item.subType === "GRAMMAR_CHOICE_COMBO" && item.count > 0,
+  );
   const attempts = hasNegativeParaphraseBlank || hasKillerParaphraseBlank
     ? Math.max(6, Math.floor(maxAttempts))
-    : hasSummaryCompleteMc || largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
+    : hasSummaryCompleteMc || hasGrammarChoiceCombo || largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
       ? Math.max(6, Math.floor(maxAttempts))
       : Math.max(4, Math.floor(maxAttempts));
 

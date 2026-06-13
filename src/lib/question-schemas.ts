@@ -24,6 +24,7 @@ export interface QuestionTypeMeta {
 export const QUESTION_TYPE_META: Record<string, QuestionTypeMeta> = {
   BLANK_INFERENCE:      { typeId: "BLANK_INFERENCE",      category: "객관식", label: "빈칸 추론",      includesPassage: true,  description: "지문의 핵심 표현을 빈칸으로 만들어 추론하게 하는 문제" },
   GRAMMAR_ERROR:        { typeId: "GRAMMAR_ERROR",        category: "객관식", label: "어법 판단",      includesPassage: true,  description: "밑줄 친 표현 중 어법상 틀린 것을 찾는 문제" },
+  GRAMMAR_CHOICE_COMBO: { typeId: "GRAMMAR_CHOICE_COMBO", category: "객관식", label: "네모 어법",      includesPassage: true,  description: "(A)(B)(C) 각 네모 안에서 어법에 맞는 표현을 골라 짝지은 조합을 고르는 문제" },
   VOCAB_CHOICE:         { typeId: "VOCAB_CHOICE",         category: "객관식", label: "어휘 적절성",    includesPassage: true,  description: "밑줄 친 어휘 중 문맥상 적절하지 않은 것을 찾는 문제" },
   SENTENCE_ORDER:       { typeId: "SENTENCE_ORDER",       category: "객관식", label: "글의 순서",      includesPassage: true,  description: "주어진 글 다음에 이어질 글의 순서를 맞추는 문제" },
   SENTENCE_INSERT:      { typeId: "SENTENCE_INSERT",      category: "객관식", label: "문장 삽입",      includesPassage: true,  description: "주어진 문장이 들어갈 가장 적절한 위치를 찾는 문제" },
@@ -54,6 +55,7 @@ export const QUESTION_TYPE_META: Record<string, QuestionTypeMeta> = {
 export {
   blankInferenceSchema, type BlankInferenceQuestion,
   grammarErrorSchema, type GrammarErrorQuestion,
+  grammarChoiceComboSchema, type GrammarChoiceComboQuestion,
   vocabChoiceSchema, type VocabChoiceQuestion,
   sentenceOrderSchema, type SentenceOrderQuestion,
   sentenceInsertSchema, type SentenceInsertQuestion,
@@ -85,12 +87,12 @@ export {
 // 3. Schema registry
 // ---------------------------------------------------------------------------
 
-import { blankInferenceSchema as _bi, grammarErrorSchema as _ge, vocabChoiceSchema as _vc, sentenceOrderSchema as _so, sentenceInsertSchema as _si, topicSchema as _to, mainIdeaSchema as _mi, topicMainIdeaSchema as _tm, titleSchema as _ti, impliedMeaningSchema as _im, referenceSchema as _rf, contentMatchSchema as _cm, summaryCompleteMcSchema as _scm, irrelevantSchema as _ir } from "./question-schemas-mc";
+import { blankInferenceSchema as _bi, grammarErrorSchema as _ge, grammarChoiceComboSchema as _gcc, vocabChoiceSchema as _vc, sentenceOrderSchema as _so, sentenceInsertSchema as _si, topicSchema as _to, mainIdeaSchema as _mi, topicMainIdeaSchema as _tm, titleSchema as _ti, impliedMeaningSchema as _im, referenceSchema as _rf, contentMatchSchema as _cm, summaryCompleteMcSchema as _scm, irrelevantSchema as _ir } from "./question-schemas-mc";
 import { conditionalWritingSchema as _cw, sentenceTransformSchema as _st, fillBlankKeySchema as _fb, summaryCompleteSchema as _sc, wordOrderSchema as _wo, grammarCorrectionSchema as _gc } from "./question-schemas-essay";
 import { contextMeaningSchema as _cx, synonymSchema as _sy, antonymSchema as _an } from "./question-schemas-vocab";
 
 export const QUESTION_SCHEMAS: Record<string, z.ZodType> = {
-  BLANK_INFERENCE: _bi, GRAMMAR_ERROR: _ge, VOCAB_CHOICE: _vc,
+  BLANK_INFERENCE: _bi, GRAMMAR_ERROR: _ge, GRAMMAR_CHOICE_COMBO: _gcc, VOCAB_CHOICE: _vc,
   SENTENCE_ORDER: _so, SENTENCE_INSERT: _si, TOPIC: _to, MAIN_IDEA: _mi, TOPIC_MAIN_IDEA: _tm,
   TITLE: _ti, IMPLIED_MEANING: _im, REFERENCE: _rf, CONTENT_MATCH: _cm, SUMMARY_COMPLETE_MC: _scm, IRRELEVANT: _ir,
   CONDITIONAL_WRITING: _cw, SENTENCE_TRANSFORM: _st, FILL_BLANK_KEY: _fb,
@@ -122,13 +124,14 @@ export const STRUCTURED_TYPE_PROMPTS: Record<string, string> = {
 // 5. Union type
 // ---------------------------------------------------------------------------
 
-import type { BlankInferenceQuestion as BIQ, GrammarErrorQuestion as GEQ, VocabChoiceQuestion as VCQ, SentenceOrderQuestion as SOQ, SentenceInsertQuestion as SIQ, TopicMainIdeaQuestion as TMQ, TitleQuestion as TIQ, ImpliedMeaningQuestion as IMQ, ReferenceQuestion as RFQ, ContentMatchQuestion as CMQ, SummaryCompleteMcQuestion as SMCQ, IrrelevantQuestion as IRQ } from "./question-schemas-mc";
+import type { BlankInferenceQuestion as BIQ, GrammarErrorQuestion as GEQ, GrammarChoiceComboQuestion as GCCQ, VocabChoiceQuestion as VCQ, SentenceOrderQuestion as SOQ, SentenceInsertQuestion as SIQ, TopicMainIdeaQuestion as TMQ, TitleQuestion as TIQ, ImpliedMeaningQuestion as IMQ, ReferenceQuestion as RFQ, ContentMatchQuestion as CMQ, SummaryCompleteMcQuestion as SMCQ, IrrelevantQuestion as IRQ } from "./question-schemas-mc";
 import type { ConditionalWritingQuestion as CWQ, SentenceTransformQuestion as STQ, FillBlankKeyQuestion as FBQ, SummaryCompleteQuestion as SCQ, WordOrderQuestion as WOQ, GrammarCorrectionQuestion as GCQ } from "./question-schemas-essay";
 import type { ContextMeaningQuestion as CXQ, SynonymQuestion as SYQ, AntonymQuestion as ANQ } from "./question-schemas-vocab";
 
 export type StructuredQuestion =
   | ({ _typeId: "BLANK_INFERENCE" } & BIQ)
   | ({ _typeId: "GRAMMAR_ERROR" } & GEQ)
+  | ({ _typeId: "GRAMMAR_CHOICE_COMBO" } & GCCQ)
   | ({ _typeId: "VOCAB_CHOICE" } & VCQ)
   | ({ _typeId: "SENTENCE_ORDER" } & SOQ)
   | ({ _typeId: "SENTENCE_INSERT" } & SIQ)

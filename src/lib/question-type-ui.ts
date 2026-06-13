@@ -36,6 +36,16 @@ export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
     outputUi: ["밑줄 마커 지문", "표현별 오류 분석", "복수 정답 가능"],
     requiredFields: ["markedExpressions", "passageWithMarkers", "correction"],
   },
+  GRAMMAR_CHOICE_COMBO: {
+    id: "GRAMMAR_CHOICE_COMBO",
+    label: "네모 어법",
+    category: "수능/모의고사 객관식",
+    description: "(A)(B)(C) 각 네모 안의 두 표현 중 어법에 맞는 것을 골라 조합하게 합니다.",
+    studentTask: "각 네모 [표현1 / 표현2]에서 어법에 맞는 표현을 골라 짝지은 조합을 고릅니다.",
+    bestFor: ["관계사/분사 판단", "수일치/병렬 구조", "여러 포인트 동시 변별"],
+    outputUi: ["네모 선택지 지문", "A-B-C 조합 5지선다", "네모별 어법 해설"],
+    requiredFields: ["slots", "passageWithMarkers", "options"],
+  },
   VOCAB_CHOICE: {
     id: "VOCAB_CHOICE",
     label: "어휘 적절성",
@@ -254,6 +264,7 @@ export const QUESTION_TYPE_GROUPS = [
     items: [
       QUESTION_TYPE_UI.BLANK_INFERENCE,
       QUESTION_TYPE_UI.GRAMMAR_ERROR,
+      QUESTION_TYPE_UI.GRAMMAR_CHOICE_COMBO,
       QUESTION_TYPE_UI.VOCAB_CHOICE,
       QUESTION_TYPE_UI.SENTENCE_ORDER,
       QUESTION_TYPE_UI.SENTENCE_INSERT,

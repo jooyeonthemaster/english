@@ -253,6 +253,63 @@ export function buildAiGrammarErrorSchema(markerCount: number, answerCount = 1) 
 }
 
 // ---------------------------------------------------------------------------
+// 2-1. 네모 어법 (GRAMMAR_CHOICE_COMBO)
+// 지문 안 (A)/(B)/(C) 세 네모에 [후보1 / 후보2] 2지선일을 제시하고,
+// 5지선다에서 세 네모 모두 올바른 표현인 조합 하나를 고르는 유형.
+// 선지는 다중빈칸(buildAiMultiBlankInferenceSchema)의 조합 선지 구조를 따름.
+// ---------------------------------------------------------------------------
+
+const GRAMMAR_COMBO_SLOT_LABELS = ["(A)", "(B)", "(C)"] as const;
+
+const grammarComboSlotSchema = z.object({
+  label: z
+    .enum(GRAMMAR_COMBO_SLOT_LABELS)
+    .describe("네모 라벨. (A), (B), (C) 순서대로 지문 등장 순."),
+  correctExpression: z
+    .string()
+    .describe("원문에서의 올바른 표현 (원문 그대로, 한 글자도 변경 금지)"),
+  wrongExpression: z
+    .string()
+    .describe("이 네모에 함께 제시할 틀린 표현. correctExpression을 pointCode의 어법 포인트에 따라 의도적으로 변형한 형태로, correctExpression과 달라야 함."),
+  surroundingText: z
+    .string()
+    .describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용, 원문 그대로 복사)"),
+  pointCode: z
+    .enum(GRAMMAR_POINT_CODES)
+    .describe(
+      "이 네모의 어법 출제 포인트 코드. 세 네모는 서로 다른 코드를 사용. (a)정·준동사 (b)관계사 (c)분사능수동 (d)수일치 (e)능수동태 (f)형부자리 (g)대명사 (h)목적격보어 (i)병렬 (j)가정법 (k)to-v/v-ing (l)전치사vs.접속사 (m)비교구문",
+    ),
+});
+
+export const aiGrammarChoiceComboSchema = z.object({
+  ...commonFields,
+  correctAnswer: z
+    .string()
+    .describe('정답 선지 label ("1"~"5" 중 하나). 세 네모가 모두 correctExpression인 유일한 조합.'),
+  slots: z
+    .array(grammarComboSlotSchema)
+    .length(3)
+    .describe("네모 정의. 정확히 3개, 서로 다른 문장에서 선택, 서로 다른 pointCode."),
+  options: z
+    .array(
+      z.object({
+        label: z.string().describe('선지 라벨 "1"~"5"'),
+        text: z.string().describe('slotValues를 " - "로 연결한 표시 텍스트'),
+        slotValues: z
+          .array(z.string())
+          .length(3)
+          .describe(
+            "각 네모 (A), (B), (C)에서 고른 표현. 정확히 3개, 라벨 순서대로. 각 값은 해당 네모의 correctExpression 또는 wrongExpression과 정확히 일치해야 함.",
+          ),
+      }),
+    )
+    .length(5)
+    .describe("조합 선지 5개. 정확히 1개만 세 네모 모두 correctExpression인 조합이고, 같은 조합은 반복 금지."),
+  ...mcWrongExplanations,
+});
+export type AiGrammarChoiceComboQuestion = z.infer<typeof aiGrammarChoiceComboSchema>;
+
+// ---------------------------------------------------------------------------
 // 3. 어휘 적절성 (VOCAB_CHOICE)
 // ---------------------------------------------------------------------------
 
@@ -466,6 +523,7 @@ export type AiImpliedMeaningQuestion = z.infer<typeof aiImpliedMeaningSchema>;
 export const AI_MC_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   BLANK_INFERENCE: aiBlankInferenceSchema,
   GRAMMAR_ERROR: aiGrammarErrorSchema,
+  GRAMMAR_CHOICE_COMBO: aiGrammarChoiceComboSchema,
   VOCAB_CHOICE: aiVocabChoiceSchema,
   SENTENCE_ORDER: aiSentenceOrderSchema,
   SENTENCE_INSERT: aiSentenceInsertSchema,

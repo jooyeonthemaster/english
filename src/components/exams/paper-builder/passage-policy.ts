@@ -11,6 +11,7 @@ type PassageQuestionLike = Pick<
 export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   BLANK_INFERENCE: "embedded",
   GRAMMAR_ERROR: "embedded",
+  GRAMMAR_CHOICE_COMBO: "embedded",
   VOCAB_CHOICE: "embedded",
   SENTENCE_ORDER: "embedded",
   SENTENCE_INSERT: "embedded",

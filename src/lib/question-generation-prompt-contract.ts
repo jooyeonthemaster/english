@@ -60,6 +60,7 @@ Type-specific checks:
 - When writing Korean grammar explanations, never call ask, asking, require, requires, spend, spent, developing, or similar verb forms "전치사". Never write phrases like "전치사 'asking'", "전치사 asking", "전치사 'spend'", "전치사 'require'", or "전치사 'developing'". Use "동사", "분사구문", "동명사", "현재분사", or "목적어를 취하는 구조" only when accurate.
 - If you explain "asking", say "asking 뒤의 목적어 자리" or "asking이 이끄는 분사구문" as appropriate. Do not put the word "전치사" anywhere in the same sentence as asking/ask/requires/require/spend/spent/developing.
 - GRAMMAR_ERROR schema rule: expression/correction must be the original correct passage wording; errorExpression must be the intentionally wrong displayed wording. The original correct wording must exist verbatim in the passage. Never mark the original author's wording as wrong, and never "improve" a grammatically acceptable original phrase into a different preferred phrase.
+- GRAMMAR_CHOICE_COMBO contract: each of the three slots must have correctExpression copied verbatim from the passage and wrongExpression as an intentionally wrong same-stem mutation that is clearly ungrammatical in that position. Assume the original passage is correct; never present the original wording as the wrong candidate. The three slots must use three different pointCodes and live in three different sentences. Exactly one option's slotValues equals all three correctExpressions, options must not repeat the same slotValues combination, every option's slotValues entries must be copied exactly from that slot's two candidates, and each slot's wrongExpression must appear in at least one wrong option. Do not use tense-only mutations (past vs present alone) or debatable preferences (active/passive infinitive, gain/lose targets) as the wrong candidate.
 - GRAMMAR_ERROR explanation rule: explain the displayed wrong expression (errorExpression) as wrong and the original expression/correction as the fix. Do not say or imply that the original correct expression is the error. Start the explanation by naming the displayed wrong expression, for example: "④번에 표시된 'requiring'은 ...이므로 원문 표현인 'requires'가 필요합니다."
 - GRAMMAR_ERROR safety rule: assume the original passage is grammatically correct. If you think an original phrase might be improved, do not use that phrase as the error target. Prefer unambiguous mutations such as subject-verb agreement, because/because of mismatch, modal + base verb, parallel verb form, spend + money/time + -ing, or what/that replacement when the following clause has a clear gap.
 - Forbidden GRAMMAR_ERROR target: do not test active/passive infinitive preference such as "to gain" vs "to be gained", "to lose" vs "to be lost", or similar stylistic rewrites. These are too debatable for this item type.
@@ -123,7 +124,7 @@ const GEMINI_COMPACT_DIFFICULTY_RUBRIC: Record<string, string> = {
 };
 
 const GEMINI_COMPACT_MARKING_RUBRIC = [
-  "- Any underlinedPronoun, underlinedWord, underlinedExpression, originalExpression, markedExpressions, and every VOCAB_CHOICE markedWords[].originalWord must exist verbatim in the original passage. For VOCAB_CHOICE, the single substituteWord is the intentionally displayed wrong word and does not need to exist in the source passage.",
+  "- Any underlinedPronoun, underlinedWord, underlinedExpression, originalExpression, markedExpressions, every VOCAB_CHOICE markedWords[].originalWord, and every GRAMMAR_CHOICE_COMBO slots[].correctExpression must exist verbatim in the original passage. For VOCAB_CHOICE, the single substituteWord is the intentionally displayed wrong word and does not need to exist in the source passage; likewise GRAMMAR_CHOICE_COMBO slots[].wrongExpression is the intentionally wrong candidate.",
   "- For GRAMMAR_CORRECTION, underlinedSegments must identify 1-5 wider original passage segments; every item must be isError=true, and each displayedText must hide errorPart inside a sentence/clause-level underline rather than underlining only errorPart.",
   "- Very short words such as it, is, in, as, or to may only be selected as standalone tokens, never as substrings.",
   "- surroundingText must be an exact 40-80 character slice around the selected expression.",
@@ -156,7 +157,7 @@ ${teacherIntentBlock?.trim() ? `\n\n## Teacher annotations\n${teacherIntentBlock
 ${analysisBlock}
 
 ## Available question types
-Multiple choice: BLANK_INFERENCE, GRAMMAR_ERROR, VOCAB_CHOICE, SENTENCE_ORDER, SENTENCE_INSERT, TOPIC, MAIN_IDEA, TOPIC_MAIN_IDEA, TITLE, IMPLIED_MEANING, REFERENCE, CONTENT_MATCH, SUMMARY_COMPLETE_MC, IRRELEVANT
+Multiple choice: BLANK_INFERENCE, GRAMMAR_ERROR, GRAMMAR_CHOICE_COMBO, VOCAB_CHOICE, SENTENCE_ORDER, SENTENCE_INSERT, TOPIC, MAIN_IDEA, TOPIC_MAIN_IDEA, TITLE, IMPLIED_MEANING, REFERENCE, CONTENT_MATCH, SUMMARY_COMPLETE_MC, IRRELEVANT
 Constructed response: CONDITIONAL_WRITING, SENTENCE_TRANSFORM, FILL_BLANK_KEY, SUMMARY_COMPLETE, WORD_ORDER, GRAMMAR_CORRECTION
 Vocabulary: CONTEXT_MEANING, SYNONYM, ANTONYM
 
