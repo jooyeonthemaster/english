@@ -12,14 +12,17 @@ function publicBooleanFlag(value: string | undefined, defaultValue: boolean) {
 
 export const FEATURE_FLAGS = {
   /**
-   * Show the STANDARD/PREMIUM model selector in question generation and
-   * passage analysis flows. When false, all jobs are routed to STANDARD
-   * (Gemini 3.5 Flash) and the UI does not expose any model choice.
+   * Show the STANDARD/PREMIUM quality selector in question generation and
+   * passage analysis flows. When false, all jobs use the standard quality
+   * path and the UI does not expose any generation quality choice.
    *
-   * Backend PREMIUM (Claude Sonnet 4.6) wiring is preserved — flip this
+   * Backend PREMIUM wiring is preserved — flip this
    * flag to true to restore the picker without any other changes.
    */
-  SHOW_MODEL_SELECTOR: false,
+  SHOW_MODEL_SELECTOR: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_SHOW_MODEL_SELECTOR,
+    true,
+  ),
 
   /**
    * Show student/parent/tutor-facing result surfaces such as grades, reports,
@@ -92,6 +95,20 @@ export const FEATURE_FLAGS = {
    */
   EXTRACTION_ADAPTIVE_INTAKE: publicBooleanFlag(
     process.env.NEXT_PUBLIC_EXTRACTION_ADAPTIVE_INTAKE,
+    true,
+  ),
+
+  /**
+   * Show 원비(수강료) tracking inside the tutor operations hub and the student
+   * detail page: the per-row billing column/popover and the student billing
+   * section (invoice issue + manual paid/partial recording, NO payment gateway).
+   *
+   * Defaults to ON (directors asked for tuition tracking). Set
+   * NEXT_PUBLIC_SHOW_TUTOR_BILLING=false to hide all 원비 UI without removing
+   * any code — billing remains record-keeping only, never real settlement.
+   */
+  SHOW_TUTOR_BILLING: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_SHOW_TUTOR_BILLING,
     true,
   ),
 } as const;

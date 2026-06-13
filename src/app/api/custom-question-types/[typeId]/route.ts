@@ -8,7 +8,9 @@ import {
   getActiveCustomTypeSpec,
   listCustomTypeVersions,
   renameCustomType,
+  reviseCustomTypeVersion,
 } from "@/lib/custom-question-types/persistence";
+import { parseCompiledCustomType } from "@/lib/custom-question-types/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +20,7 @@ interface RouteContext {
 }
 
 // 이름 + 프롬프트 변경 없이 수정 가능한 구조 필드(결정형, LLM 없음).
+// v2: spec(전체 스펙 저장 — 스튜디오 '버전 저장') + note(버전 노트)도 받는다.
 const patchSchema = z.object({
   name: z.string().trim().min(1).max(120).optional(),
   answerShape: z.enum(["MULTIPLE_CHOICE", "SHORT_ANSWER", "OTHER"]).optional(),
@@ -26,6 +29,8 @@ const patchSchema = z.object({
   multipleAnswers: z.boolean().optional(),
   passageBased: z.boolean().optional(),
   difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).optional(),
+  spec: z.unknown().optional(),
+  note: z.string().trim().max(2000).optional(),
 });
 
 // GET — 유형 1개 + 활성 정의 + 버전. PATCH — 이름/구조 필드 직접 수정. DELETE — 아카이브(소프트 삭제).
@@ -66,7 +71,7 @@ export async function PATCH(req: NextRequest, ctx: RouteContext) {
     );
   }
 
-  const { name, ...definition } = parsed.data;
+  const { name, spec: rawSpec, note, ...definition } = parsed.data;
   try {
     if (name) {
       const ok = await renameCustomType(staff.academyId, typeId, name);
@@ -74,7 +79,18 @@ export async function PATCH(req: NextRequest, ctx: RouteContext) {
     }
 
     let version: number | undefined;
-    if (Object.values(definition).some((v) => v !== undefined)) {
+    if (rawSpec !== undefined) {
+      // 스튜디오 '버전 저장': 클라이언트가 들고 있던 전체 spec 을 새 버전으로 활성화.
+      // parseCompiledCustomType 의 catch 폴백이 손상 필드를 흡수한다.
+      const spec = parseCompiledCustomType(rawSpec);
+      const saved = await reviseCustomTypeVersion({
+        academyId: staff.academyId,
+        typeId,
+        spec,
+        instruction: note?.trim() || "스튜디오 편집",
+      });
+      version = saved.version;
+    } else if (Object.values(definition).some((v) => v !== undefined)) {
       const result = await editCustomTypeDefinition(staff.academyId, typeId, definition);
       version = result?.version;
     }

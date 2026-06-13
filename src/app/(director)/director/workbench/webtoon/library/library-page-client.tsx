@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import {
   WEBTOON_STYLES,
   styleLabel,
+  languageLabel,
   type WebtoonRow,
   type WebtoonStatus,
   type WebtoonStyleId,
@@ -393,7 +394,8 @@ function PreviewModal({
           <div className="text-white min-w-0 flex-1">
             <h3 className="text-[14px] font-bold truncate">{item.passage.title}</h3>
             <p className="text-[11px] text-white/70 mt-0.5">
-              {styleLabel(item.style)} · {new Date(item.createdAt).toLocaleString("ko-KR")}
+              {styleLabel(item.style)} · {languageLabel(item.language)} ·{" "}
+              {new Date(item.createdAt).toLocaleString("ko-KR")}
             </p>
           </div>
           <a

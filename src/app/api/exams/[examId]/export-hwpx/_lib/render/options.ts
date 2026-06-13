@@ -8,8 +8,8 @@ import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
 import { parseFormattedToRuns } from "../format";
 import {
+  optionDisplayLabel,
   optionDisplayTextForSubtype,
-  optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
 
@@ -35,11 +35,11 @@ export function renderOptions(opts: {
   );
 
   const blocks: BlockNode[] = [];
-  options.forEach((_, idx) => {
+  options.forEach((option, idx) => {
     const display = displayTexts[idx];
     const hasText = display.trim().length > 0;
     const runs: RunNode[] = [
-      txt(optionOrdinalLabel(idx), {
+      txt(optionDisplayLabel(subType, idx, option.label), {
         size: bodySize,
         bold: true,
         color: COLORS.darkGray,

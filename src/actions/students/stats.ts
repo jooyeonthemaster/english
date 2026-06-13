@@ -6,8 +6,28 @@ import { requireAuth } from "./_helpers";
 
 /** Get comprehensive student stats */
 export async function getStudentStats(studentId: string) {
-  await requireAuth();
+  const staff = await requireAuth();
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+
+  // Tenant guard — never aggregate another academy's attendance/billing/etc.
+  const owned = await prisma.student.findFirst({
+    where: { id: studentId, academyId: staff.academyId },
+    select: { id: true },
+  });
+  if (!owned) {
+    return {
+      attendanceRate: 0,
+      totalAttendances: 0,
+      recentAttendances: [],
+      averageScore: 0,
+      examSubmissions: [],
+      invoices: [],
+      consultations: [],
+      xp: 0,
+      level: 1,
+      streak: 0,
+    };
+  }
 
   const now = new Date();
   const thirtyDaysAgo = new Date(now);

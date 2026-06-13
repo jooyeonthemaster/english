@@ -4,12 +4,14 @@
 // rejects named re-exports from directive files (cannot statically confirm
 // async-ness of re-exported identifiers).
 
-export type { StudentFilters } from "./types";
+export type { StudentFilters, StudentDeviceItem } from "./types";
 
 export {
   getStudents,
   getStudent,
   getStudentsByTeacher,
+  getTutorHubStats,
+  getStudentRegisteredDevices,
 } from "./queries";
 export {
   createStudent,
@@ -18,6 +20,10 @@ export {
   assignStudentToClass,
   deleteStudent,
   bulkUpdateStudentStatus,
+  bulkCreateStudents,
+  updateStudentClassAssignments,
+  revokeStudentDevice,
+  reissueStudentCode,
 } from "./mutations";
 export { getStudentStats } from "./stats";
 export { getSchools, getClasses } from "./lookups";

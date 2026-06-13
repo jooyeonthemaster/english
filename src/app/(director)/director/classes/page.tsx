@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default async function ClassesPage() {
-  redirect("/director/students?pane=classes");
+  redirect("/director/tutor");
 }

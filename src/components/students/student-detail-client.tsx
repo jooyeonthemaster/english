@@ -11,9 +11,10 @@ import { StudentDetailHeader } from "./student-detail-header";
 import { StudentDetailOverviewTab } from "./student-detail-overview-tab";
 import { StudentDetailGradesTab } from "./student-detail-grades-tab";
 import { StudentDetailAttendanceTab } from "./student-detail-attendance-tab";
-import { StudentDetailBillingTab } from "./student-detail-billing-tab";
 import { StudentDetailConsultationTab } from "./student-detail-consultation-tab";
 import { StudentDetailParentTab } from "./student-detail-parent-tab";
+import { StudentAccessCard } from "./devices/student-access-card";
+import { StudentBillingSection } from "./billing/student-billing-section";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface StudentDetailClientProps {
@@ -51,8 +52,13 @@ export function StudentDetailClient({
             <TabsTrigger value="parent">학부모</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-6 space-y-6">
             <StudentDetailOverviewTab student={student} stats={stats} />
+            <StudentAccessCard
+              studentId={student.id}
+              studentCode={student.studentCode}
+              isDirector={isDirector}
+            />
           </TabsContent>
 
           {showResults && (
@@ -66,7 +72,7 @@ export function StudentDetailClient({
           </TabsContent>
 
           <TabsContent value="billing" className="mt-6">
-            <StudentDetailBillingTab stats={stats} />
+            <StudentBillingSection studentId={student.id} isDirector={isDirector} />
           </TabsContent>
 
           <TabsContent value="consultation" className="mt-6">

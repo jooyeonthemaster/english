@@ -4,6 +4,9 @@ import { z } from "zod";
 import { model as geminiModel } from "@/lib/ai";
 
 import type { QuestionAnalysis } from "./analysis-input";
+import type { FormatAnalysisResult } from "./format-analysis";
+import { type FormatSpec, formatSpecSchema } from "./format-spec";
+import { describeFormatDelta, interpretFormatInstruction } from "./format-intent";
 import {
   type CompiledCustomType,
   type CompileCustomTypeResult,
@@ -341,62 +344,164 @@ async function compileWithLlm(analysis: QuestionAnalysis): Promise<CompileCustom
 }
 
 /**
+ * 포맷 분석(2차 패스) 결과를 spec 에 병합한다.
+ * 구조 필드(보기 수/정답 수/답형)는 시각 분석이 더 정확하므로 format 쪽으로 정합시킨다.
+ */
+function applyFormatToSpec(
+  spec: CompiledCustomType,
+  formatResult: FormatAnalysisResult | null | undefined,
+): CompiledCustomType {
+  if (!formatResult) return spec;
+  const format = formatResult.format;
+  const isObjective = format.answer.shape !== "SHORT_ANSWER";
+  return compiledCustomTypeSchema.parse({
+    ...spec,
+    format,
+    sourceLayout: formatResult.sourceLayout,
+    answerShape:
+      format.answer.shape === "MIXED"
+        ? "OTHER"
+        : format.answer.shape === "SHORT_ANSWER"
+          ? "SHORT_ANSWER"
+          : "MULTIPLE_CHOICE",
+    optionCount: isObjective && format.choices.present ? format.choices.count : 0,
+    correctAnswerCount: format.answer.correctCount,
+    multipleAnswers: format.answer.multipleAnswers || format.answer.correctCount > 1,
+  });
+}
+
+/**
  * 분석을 커스텀 유형 정의로 컴파일한다. LLM 유형 컴파일러로 본질/인스턴스를 추상화하고,
  * 실패 시 결정형으로 폴백한다. 유형당 1회 호출이라 비용은 분할상환.
+ * formatResult(시각 포맷 분석)가 있으면 v2 스펙(형식 계약 포함)으로 병합한다.
  */
 export async function compileCustomType(
   analysis: QuestionAnalysis,
+  formatResult?: FormatAnalysisResult | null,
 ): Promise<CompileCustomTypeResult> {
   try {
-    return await compileWithLlm(analysis);
+    const compiled = await compileWithLlm(analysis);
+    return { ...compiled, spec: applyFormatToSpec(compiled.spec, formatResult) };
   } catch (error) {
     let detail = error instanceof Error ? error.message : String(error);
     if (NoObjectGeneratedError.isInstance(error)) {
       detail = `${error.message} | finishReason=${error.finishReason ?? "?"}`;
     }
     console.warn(`[CUSTOM-TYPE-COMPILER] LLM compile failed → deterministic fallback: ${detail}`);
-    return compileDeterministic(analysis);
+    const compiled = compileDeterministic(analysis);
+    return { ...compiled, spec: applyFormatToSpec(compiled.spec, formatResult) };
   }
 }
 
-// ─────────────────────────── 자연어 편집(강사 프롬프트 수정) ───────────────────────────
+// ─────────────────────────── 자연어 편집(강사 프롬프트/형식 수정) ───────────────────────────
 const reviseOutputSchema = z.object({
   description: z.string().max(1000).catch("").default(""),
   invariants: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
   variableAxes: z.array(z.string().max(600).catch("")).max(20).catch([]).default([]),
   generationPrompt: z.string().max(8000).catch("").default(""),
+  // v2: 수정 요청이 '형식'(마커/선지 수·배치/빈칸/박스/답란)에 관한 것이면 형식 스펙 전체를
+  // 수정해 반환. 내용만 수정이면 formatChanged=false 로 두고 format 은 무시된다.
+  formatChanged: z.boolean().catch(false).default(false),
+  format: formatSpecSchema.nullable().catch(null).default(null),
 });
 
 function buildRevisePrompt(spec: CompiledCustomType, typeName: string, instruction: string): string {
+  const formatBlock = spec.format
+    ? [
+        "## 현재 형식 스펙(FormatSpec JSON — 시각·구조 계약)",
+        "수정 요청이 형식(선지 수/마커 스킴/배치/페어·표 선지/빈칸/박스/서술형 답란/배점 표기)에 관한 것이면,",
+        "이 JSON 의 해당 필드만 고친 **전체 형식 스펙**을 format 으로 반환하고 formatChanged=true 로 설정하세요.",
+        "형식과 무관한 요청이면 formatChanged=false (format 은 null).",
+        "```json",
+        clip(JSON.stringify(spec.format), 6000),
+        "```",
+      ].join("\n")
+    : "";
+
   return [
     "당신은 '문항 유형 정의 편집기'입니다. 강사가 기존 커스텀 문항 유형을 자연어로 수정 요청했습니다.",
-    "임무: 아래 [현재 정의]를 유지하되 [수정 요청]을 반영해 invariants/variableAxes/generationPrompt/description 을 다시 작성하세요.",
+    "임무: 아래 [현재 정의]를 유지하되 [수정 요청]을 반영해 invariants/variableAxes/generationPrompt/description(필요 시 format)을 다시 작성하세요.",
     "",
     "## 규칙",
-    "- 유형의 **구조(답형·보기 수·정답 수 등)는 바꾸지 마세요.** 자연어 본질·지시문만 손봅니다.",
     "- 수정 요청과 무관한 기존 내용은 보존하세요(전면 재작성 금지, 요청 부분만 반영).",
     "- 특정 단어/문장/소재를 본질로 박지 말고 variableAxes 로 유지하세요.",
     "- generationPrompt 는 invariants/variableAxes 와 모순 없게 일관되게 갱신하세요.",
+    "- 형식 변경 요청(예: '선지를 (a)~(e)로', '빈칸 3개로', '조건 박스 추가', '2단 배치로')은 format 에 반영하세요.",
     "",
     `## 유형 이름\n${typeName}`,
     `## 현재 정의 — invariants(반드시 보존)\n${spec.invariants.map((i) => `- ${i}`).join("\n") || "(없음)"}`,
     `## 현재 정의 — variableAxes(매번 가변)\n${spec.variableAxes.map((v) => `- ${v}`).join("\n") || "(없음)"}`,
     `## 현재 정의 — description\n${spec.description || "(없음)"}`,
     `## 현재 정의 — generationPrompt\n${clip(spec.prompt, 4000)}`,
-    "",
+    formatBlock,
     `## 수정 요청 (강사)\n${instruction}`,
-  ].join("\n\n");
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+/** 편집 결과 형식 스펙의 구조 필드를 spec 의 1급 필드(보기 수/정답 수/답형)에 정합시킨다. */
+function reconcileSpecWithFormat(spec: CompiledCustomType, format: FormatSpec): CompiledCustomType {
+  const isObjective = format.answer.shape !== "SHORT_ANSWER";
+  return compiledCustomTypeSchema.parse({
+    ...spec,
+    format,
+    answerShape:
+      format.answer.shape === "MIXED"
+        ? "OTHER"
+        : format.answer.shape === "SHORT_ANSWER"
+          ? "SHORT_ANSWER"
+          : "MULTIPLE_CHOICE",
+    optionCount: isObjective && format.choices.present ? format.choices.count : 0,
+    correctAnswerCount: format.answer.correctCount,
+    multipleAnswers: format.answer.multipleAnswers || format.answer.correctCount > 1,
+  });
+}
+
+export interface ReviseCustomTypeResult {
+  spec: CompiledCustomType;
+  /** 형식 변경 요약(한국어 불릿). 형식 변화가 없으면 빈 배열. */
+  changes: string[];
+  /** 내용(invariants/variableAxes/prompt/description) 이 바뀌었는지. */
+  contentChanged: boolean;
+  /** 어느 경로로 반영했는지(결정 해석기 vs LLM). */
+  source: "deterministic" | "llm";
+}
+
+function specContentChanged(prev: CompiledCustomType, next: CompiledCustomType): boolean {
+  return (
+    prev.prompt !== next.prompt ||
+    prev.description !== next.description ||
+    JSON.stringify(prev.invariants) !== JSON.stringify(next.invariants) ||
+    JSON.stringify(prev.variableAxes) !== JSON.stringify(next.variableAxes)
+  );
 }
 
 /**
- * 자연어 수정 요청을 반영해 유형 정의를 재작성한다(편집당 LLM 1회). 구조 필드는 현재 spec 그대로 유지하고
- * 자연어 부분(invariants/variableAxes/prompt/description)만 교체한다(비면 현재값 보존).
+ * 자연어 수정 요청을 반영해 유형 정의를 재작성한다.
+ *
+ * 1) **결정 해석기 우선**(format 이 있는 v2 유형): 형식 명령(서술형 전환·밑줄/빈칸/선지 개수·
+ *    마커·배치·박스·조건·답란·배점·부정형)은 LLM 없이 즉시·100% 반영한다. Gemini 가 formatChanged
+ *    플래그를 빠뜨려 "프롬프트만 손보고 미리보기는 그대로"인 사고를 원천 차단한다.
+ * 2) 결정 해석기가 못 잡는 요청(내용/난이도/본질)만 LLM 편집(편집당 1회).
+ *
+ * 형식이 바뀌면 구조 필드(보기 수/정답 수/답형)도 형식에 정합시킨다.
  */
-export async function reviseCustomType(args: {
+export async function reviseCustomTypeDetailed(args: {
   currentSpec: CompiledCustomType;
   typeName: string;
   instruction: string;
-}): Promise<CompiledCustomType> {
+}): Promise<ReviseCustomTypeResult> {
+  // ── 1) 결정 해석기: 형식 명령은 LLM 없이 즉시 반영 ──
+  if (args.currentSpec.format) {
+    const intent = interpretFormatInstruction(args.currentSpec.format, args.instruction);
+    if (intent) {
+      const spec = reconcileSpecWithFormat(args.currentSpec, intent.format);
+      return { spec, changes: intent.changes, contentChanged: false, source: "deterministic" };
+    }
+  }
+
+  // ── 2) LLM 편집(내용 + 형식, 결정 해석기가 못 잡은 요청) ──
   const result = await generateObject({
     model: geminiModel,
     schema: reviseOutputSchema,
@@ -412,7 +517,7 @@ export async function reviseCustomType(args: {
     ],
   });
   const out = result.object;
-  return compiledCustomTypeSchema.parse({
+  let next = compiledCustomTypeSchema.parse({
     ...args.currentSpec,
     invariants: out.invariants.length
       ? out.invariants.map((s) => s.trim()).filter(Boolean).slice(0, 20)
@@ -423,4 +528,26 @@ export async function reviseCustomType(args: {
     prompt: out.generationPrompt.trim() || args.currentSpec.prompt,
     description: out.description.trim() || args.currentSpec.description,
   });
+  if (out.formatChanged && out.format && args.currentSpec.format) {
+    next = reconcileSpecWithFormat(next, formatSpecSchema.parse(out.format));
+  }
+  const changes =
+    args.currentSpec.format && next.format
+      ? describeFormatDelta(args.currentSpec.format, next.format)
+      : [];
+  return {
+    spec: next,
+    changes,
+    contentChanged: specContentChanged(args.currentSpec, next),
+    source: "llm",
+  };
+}
+
+/** 하위호환 래퍼 — spec 만 필요한 호출부(유형 버전 저장 등)용. */
+export async function reviseCustomType(args: {
+  currentSpec: CompiledCustomType;
+  typeName: string;
+  instruction: string;
+}): Promise<CompiledCustomType> {
+  return (await reviseCustomTypeDetailed(args)).spec;
 }

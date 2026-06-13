@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 
 import { analyzeForCustomType } from "./analysis-input";
 import { compileCustomType } from "./compiler";
+import { analyzeQuestionFormat, type FormatAnalysisResult } from "./format-analysis";
 import { createCustomTypeWithClient } from "./persistence";
 
 /**
@@ -90,18 +91,40 @@ async function runJob(jobId: string): Promise<void> {
   if (!job) return;
 
   try {
+    const image = {
+      data: Buffer.from(job.referenceImage, "base64"),
+      mediaType: job.referenceMediaType,
+    };
     const analyzed = await analyzeForCustomType({
-      images: [
-        {
-          data: Buffer.from(job.referenceImage, "base64"),
-          mediaType: job.referenceMediaType,
-        },
-      ],
+      images: [image],
       gradeInfo: job.gradeInfo ?? undefined,
       manualCropOnly: job.manualCrop,
     });
 
-    const compiled = await compileCustomType(analyzed.primary);
+    // 2차 패스: 시각 포맷 해부(마커/배치/박스/빈칸/답란 + 좌표 어노테이션).
+    // 실패해도 유형 생성은 진행한다(v1 평문 스펙으로 폴백 — format=null).
+    let formatResult: FormatAnalysisResult | null = null;
+    try {
+      formatResult = await analyzeQuestionFormat({
+        image,
+        analysis: analyzed.primary,
+        gradeInfo: job.gradeInfo ?? undefined,
+        referenceText: analyzed.referenceText,
+      });
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err);
+      console.warn(`[custom-type-analysis-worker] format pass failed (continuing v1): ${detail}`);
+    }
+
+    const compiled = await compileCustomType(analyzed.primary, formatResult);
+
+    // 버전 source 페이로드(v2): 내용 분석 + 해부 어노테이션 + 원본 이미지 잡 ID(해부 뷰 이미지 서빙용).
+    const sourcePayload = {
+      analysis: analyzed.primary,
+      annotations: formatResult?.annotations ?? [],
+      analysisJobId: jobId,
+      analysisModel: analyzed.model,
+    };
 
     // 원자 합성: 유형 생성 + 잡 COMPLETED 를 한 트랜잭션으로 → 중간에 죽어도 "유형은 생성됐는데
     // 잡은 PROCESSING" 상태가 안 생긴다(= stale 복구 재실행으로 유형이 중복 생성되는 사고 방지).
@@ -111,7 +134,7 @@ async function runJob(jobId: string): Promise<void> {
         createdById: job.createdById,
         name: compiled.suggestedName,
         spec: compiled.spec,
-        source: analyzed.primary,
+        source: sourcePayload,
       });
       await tx.customTypeAnalysisJob.update({
         where: { id: jobId },
@@ -121,7 +144,7 @@ async function runJob(jobId: string): Promise<void> {
           createdTypeId: created.id,
           suggestedName: compiled.suggestedName,
           resultSpec: compiled.spec as unknown as Prisma.InputJsonValue,
-          sourceAnalysis: (analyzed.primary ?? {}) as unknown as Prisma.InputJsonValue,
+          sourceAnalysis: sourcePayload as unknown as Prisma.InputJsonValue,
           analysisModel: analyzed.model,
           errorMessage: null,
         },

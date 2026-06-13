@@ -8,8 +8,8 @@ import {
   WidthType,
 } from "docx";
 import {
+  optionDisplayLabel,
   optionDisplayTextForSubtype,
-  optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
 import { FONT, KR_FONT, PASSAGE_SIZE } from "./styles";
@@ -55,7 +55,7 @@ export function renderOptions(
                   indent: { left: 400, hanging: 400 },
                   children: [
                     new TextRun({
-                      text: `${optionOrdinalLabel(i + j)}   `,
+                      text: `${optionDisplayLabel(subType, i + j, opt.label)}   `,
                       font: KR_FONT,
                       size: PASSAGE_SIZE,
                     }),
@@ -88,7 +88,7 @@ export function renderOptions(
       }),
     );
   } else {
-    options.forEach((_, index) => {
+    options.forEach((option, index) => {
       const displayText = displayTexts[index];
       const f = koreanPattern.test(displayText) ? KR_FONT : FONT;
       result.push(
@@ -97,7 +97,7 @@ export function renderOptions(
           indent: { left: 400, hanging: 400 },
           children: [
             new TextRun({
-              text: `${optionOrdinalLabel(index)}   `,
+              text: `${optionDisplayLabel(subType, index, option.label)}   `,
               font: KR_FONT,
               size: PASSAGE_SIZE,
             }),

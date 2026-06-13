@@ -57,6 +57,13 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     if (text) return text;
   }
 
+  // 커스텀 레이아웃(v2): 생성기가 LayoutDoc 에서 결정적으로 조립한 questionText(마커 미니 DSL)를
+  // 그대로 저장한다 — 시험지/DOCX/HWPX 파서가 이 문자열을 소비한다. 필드 조합 직렬화를 타면
+  // direction 만 남는 문제가 있어 명시 분기(GRAMMAR_CORRECTION 과 같은 전례).
+  if (typeId === "CUSTOM_LAYOUT" && typeof q.questionText === "string" && q.questionText.trim()) {
+    return q.questionText;
+  }
+
   push(q.direction);
   // 주어진 문장(문장삽입·글의 순서)은 지문/단락 '위'에 박스로 와야 한다.
   // 한글 라벨 '[주어진 문장]'으로 통일해 DOCX/HWPX 파서(parseQuestionSections)·

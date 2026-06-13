@@ -6,9 +6,10 @@ import {
   useRef,
   useState,
   type Dispatch,
+  type ReactNode,
   type SetStateAction,
 } from "react";
-import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical, type LucideIcon } from "lucide-react";
 import { ExtractionManageClient } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import {
@@ -32,11 +33,25 @@ interface FormSectionProps {
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
 
-  // Multi-passage stack (the right "지문" section)
-  rows: PassageInputRow[];
-  setRows: Dispatch<SetStateAction<PassageInputRow[]>>;
-  analyzing: boolean;
-  onAnalyze: (plan: QuestionGenerationPlan) => void;
+  // ── Header (defaults to the 학습지 생성 title; overridable for reuse) ──
+  title?: string;
+  description?: string;
+  titleIcon?: LucideIcon;
+  /** Left-panel library tab label. Defaults to "자료 관리". */
+  libraryLabel?: string;
+
+  // ── Right pane override ──
+  // When provided, this replaces the built-in PassageInputStack (학습지 분석 액션).
+  // The 웹툰 생성 page passes its own WebtoonInputStack here so the 자료 관리 + 지문
+  // 편집 레이아웃은 그대로 두고 하단 액션만 교체된다.
+  rightPane?: ReactNode;
+
+  // Multi-passage stack (the right "지문" section) — used only by the default
+  // (학습지) right pane. Optional so reuse paths can omit them with `rightPane`.
+  rows?: PassageInputRow[];
+  setRows?: Dispatch<SetStateAction<PassageInputRow[]>>;
+  analyzing?: boolean;
+  onAnalyze?: (plan: QuestionGenerationPlan) => void;
 
   // 자료 관리 picker (left grid)
   draftRefreshToken: number;
@@ -57,46 +72,45 @@ interface FormSectionProps {
   onExtractionResult: (id: string, jobId: string | null) => void;
   extractionPending: PendingExtraction[];
 
-  // Metadata
-  schools: Array<{
+  // Metadata + Prompt — vestigial (not rendered by FormSection). Optional so
+  // reuse paths (웹툰 생성) can omit them; the 학습지 container still passes them.
+  schools?: Array<{
     id: string;
     name: string;
     type: string;
     publisher: string | null;
   }>;
-  schoolId: string;
-  setSchoolId: (v: string) => void;
-  grade: string;
-  setGrade: (v: string) => void;
-  semester: string;
-  setSemester: (v: string) => void;
-  unit: string;
-  setUnit: (v: string) => void;
-  source: string;
-  setSource: (v: string) => void;
-  publisher: string;
-  setPublisher: (v: string) => void;
-  publisherCustom: string;
-  setPublisherCustom: (v: string) => void;
-  tagInput: string;
-  setTagInput: (v: string) => void;
-  tags: string[];
-  addTag: () => void;
-  removeTag: (tag: string) => void;
-
-  // Prompt
-  analysisPrompt: string;
-  setAnalysisPrompt: (v: string) => void;
-  analysisTone: AnalysisTone;
-  setAnalysisTone: (v: AnalysisTone) => void;
-  savedPrompts: SavedPrompt[];
-  showSavedPrompts: boolean;
-  setShowSavedPrompts: (v: boolean | ((prev: boolean) => boolean)) => void;
-  newPromptName: string;
-  setNewPromptName: (v: string) => void;
-  savingPrompt: boolean;
-  onSavePrompt: () => void;
-  onDeletePrompt: (id: string) => void;
+  schoolId?: string;
+  setSchoolId?: (v: string) => void;
+  grade?: string;
+  setGrade?: (v: string) => void;
+  semester?: string;
+  setSemester?: (v: string) => void;
+  unit?: string;
+  setUnit?: (v: string) => void;
+  source?: string;
+  setSource?: (v: string) => void;
+  publisher?: string;
+  setPublisher?: (v: string) => void;
+  publisherCustom?: string;
+  setPublisherCustom?: (v: string) => void;
+  tagInput?: string;
+  setTagInput?: (v: string) => void;
+  tags?: string[];
+  addTag?: () => void;
+  removeTag?: (tag: string) => void;
+  analysisPrompt?: string;
+  setAnalysisPrompt?: (v: string) => void;
+  analysisTone?: AnalysisTone;
+  setAnalysisTone?: (v: AnalysisTone) => void;
+  savedPrompts?: SavedPrompt[];
+  showSavedPrompts?: boolean;
+  setShowSavedPrompts?: (v: boolean | ((prev: boolean) => boolean)) => void;
+  newPromptName?: string;
+  setNewPromptName?: (v: string) => void;
+  savingPrompt?: boolean;
+  onSavePrompt?: () => void;
+  onDeletePrompt?: (id: string) => void;
 }
 
 const LEFT_PANE_STORAGE_KEY = "smoat:passage-form:left-pane-width";
@@ -296,9 +310,12 @@ export function FormSection(props: FormSectionProps) {
     <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
         <WorkflowPageTitle
-          icon={PassageAnalysisIcon}
-          title="학습지 생성"
-          description="추출된 자료를 불러오거나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
+          icon={props.titleIcon ?? PassageAnalysisIcon}
+          title={props.title ?? "학습지 생성"}
+          description={
+            props.description ??
+            "추출된 자료를 불러오거나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
+          }
         />
         {formCollapsed ? (
           <button
@@ -341,7 +358,7 @@ export function FormSection(props: FormSectionProps) {
                       setIntakeView={props.setIntakeView}
                       intakeTab={props.intakeTab}
                       setIntakeTab={props.setIntakeTab}
-                      libraryLabel="자료 관리"
+                      libraryLabel={props.libraryLabel ?? "자료 관리"}
                       libraryCount={0}
                       showPasteTab={false}
                       upload={
@@ -392,14 +409,17 @@ export function FormSection(props: FormSectionProps) {
                 </button>
               )}
 
-              {/* RIGHT: 지문 입력 (선생님의 노하우·분석 말투·지문 정보 옵션 패널 제거) */}
+              {/* RIGHT: 지문 입력. 기본은 학습지 분석 스택, rightPane 이 주어지면 그것으로 교체. */}
               <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-                <PassageInputStack
-                  rows={props.rows}
-                  setRows={props.setRows}
-                  saving={props.analyzing}
-                  onAnalyze={props.onAnalyze}
-                />
+                {props.rightPane ??
+                  (props.rows && props.setRows && props.onAnalyze ? (
+                    <PassageInputStack
+                      rows={props.rows}
+                      setRows={props.setRows}
+                      saving={!!props.analyzing}
+                      onAnalyze={props.onAnalyze}
+                    />
+                  ) : null)}
               </div>
             </div>
           </div>

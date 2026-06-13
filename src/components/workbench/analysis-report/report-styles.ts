@@ -1418,7 +1418,7 @@ export const ANALYSIS_REPORT_CSS = `
 /* overflow:hidden — 연결선 좌표는 JS(getBoundingClientRect)로 측정되는데, 일시적 레이아웃(카드/앵커 rect 0,0)에서
    stale 좌표가 잡히면 overflow:visible 일 때 선이 캔버스를 벗어나 다른 페이지(예: 1페이지)로 새어나가던 문제 차단.
    정상 연결선은 캔버스 내부에 있으므로 클립되지 않음. */
-.par-canvas-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 2; }
+.par-canvas-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; clip-path: inset(0); z-index: 2; }
 .par-canvas-connectors path { fill: none; stroke: var(--anno-c, #2563a8); stroke-width: .35mm; stroke-linejoin: round; stroke-linecap: round; opacity: .8; }
 .par-canvas-connectors circle { fill: var(--anno-c, #2563a8); opacity: .9; }
 
@@ -1516,6 +1516,10 @@ export const ANALYSIS_REPORT_CSS = `
   .par-cover-preview { display: none !important; }
   /* 편집 전용 UI(열 너비 핸들·그립·삭제 버튼 등)는 인쇄에서 제외. */
   .par-edit-chrome { display: none !important; }
+  /* 웹 전용 편집 컨트롤(.no-print) — 학습 활동 툴바(새 빈칸/빈칸 밀도/정답 보기/삭제) 등은
+     .par-root 안에서 렌더되어 아래 visibility:visible 규칙에 의해 다시 보이게 되므로,
+     display:none 으로 완전히 제거한다(visibility 와 별개 속성이라 재노출을 확실히 무력화). */
+  .no-print, .no-print * { display: none !important; }
 
   /* 화면 전체를 숨기고 실제 보고서(.par-root)만 인쇄.
      우측 패널 미리보기(.par-cover-preview)는 같은 .par-root 라도 제외한다. */
@@ -1554,6 +1558,28 @@ export const ANALYSIS_REPORT_CSS = `
   .par-sheet { box-shadow: none !important; margin: 0 !important; break-after: page; zoom: 1 !important; }
   .par-sheet:last-child { break-after: auto; }
   .par-canvas { break-inside: avoid; }
+  /* 연결선 SVG가 인쇄 래스터에서 캔버스 박스를 벗어나 다른 페이지(1페이지 좌상단)로
+     새어나가지 않도록 인쇄 시에도 자기 캔버스 박스에 강제 클립한다.
+     (overflow:hidden 만으로는 viewBox 없는 outer SVG 의 클립이 인쇄에서 불안정함.) */
+  .par-canvas-connectors { overflow: hidden !important; clip-path: inset(0) !important; }
+  /* 표 격자 인쇄 안정화 — 분수폭 테두리(border)가 인쇄 드라이버(특히 Microsoft Print to PDF)
+     의 래스터라이저에서 줄마다 들쭉날쭉 사라지는 문제를 근본 차단한다.
+     테두리 대신 "표 배경색이 칸 사이 간격(border-spacing)으로 비치는" 방식으로 격자선을 그린다.
+     배경 채움(fill)은 thin-line 처럼 드롭되지 않고 어떤 래스터라이저에서도 일관되게 칠해지므로
+     모든 가로·세로 선이 끊김 없이 출력된다. (print-color-adjust:exact 가 이미 강제돼 배경이
+     '배경 그래픽' 토글과 무관하게 인쇄됨.) 화면(non-print)은 기존 border-collapse 그대로 유지. */
+  /* 행 구분을 '얇은 선'이 아니라 '솔리드 배경 띠(zebra)'로 보장한다 — 이것이 핵심.
+     얇은 선(테두리/간격)은 인쇄·뷰어 래스터에서 1픽셀 미만이라 그 줄이 픽셀 격자에
+     어떻게 걸치느냐에 따라 사라질 수 있다(=단어마다 선이 있다 없다 함). 반면 큰 솔리드
+     배경 영역의 '경계'는 채워진 사각형의 가장자리라 어떤 배율·뷰어·인쇄 드라이버에서도
+     절대 사라지지 않는다. 그래서 테마와 무관하게 홀/짝 행에 또렷이 구분되는 배경색을
+     강제해 모든 행이 색 띠로 구분되게 한다. 격자선(gap-fill)은 보조 장식.
+     (print-color-adjust:exact 가 이미 강제돼 배경은 '배경 그래픽' 토글과 무관하게 인쇄됨.) */
+  .par-table { border-collapse: separate !important; border-spacing: 0.5mm !important; background-color: #94a3b8 !important; border: 0.6mm solid #94a3b8 !important; box-sizing: border-box !important; }
+  .par-table th, .par-table td { border: 0 !important; background-clip: padding-box !important; }
+  .par-table tbody tr td { background-color: #ffffff !important; }
+  .par-table tbody tr:nth-child(even) td { background-color: #e2e8f0 !important; }
+  .par-table thead th { background-color: var(--table-head-bg, var(--ink-fill, var(--ink))) !important; }
   /* 보고서 전체의 배경색/채움색을 강제 인쇄 — 브라우저 '배경 그래픽' 토글(기본 OFF)에 의존하지 않도록.
      이 규칙이 좁게(필기분석 요소만) 걸려 있어서, 제목 블록·구조도 박스·표 헤더/줄무늬·표지 등
      나머지 페이지의 배경색이 인쇄에서 사라져 미리보기와 달라 보이던 문제를 해결한다. */

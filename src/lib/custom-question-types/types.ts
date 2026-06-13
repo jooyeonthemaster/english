@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+import { formatSpecSchema } from "./format-spec";
+import { layoutDocSchema } from "./layout-doc";
+
 // ============================================================================
 // CompiledCustomType — 강사 커스텀 유형의 "유형 정의"(데이터형 스펙)
 // ============================================================================
@@ -26,7 +29,9 @@ export type ReconstructionPrimitive = (typeof RECONSTRUCTION_PRIMITIVES)[number]
 export const CUSTOM_TYPE_TIERS = ["BUILTIN_OVERRIDE", "GENERIC"] as const;
 export type CustomTypeTier = (typeof CUSTOM_TYPE_TIERS)[number];
 
-export const SPEC_FORMAT_VERSION = 1;
+// v2(2026-06-13): FormatSpec(시각·구조 포맷) + sourceLayout(원본 구조 문서) 추가.
+// 구버전(v1) spec 은 format=null 로 파싱돼 v1 생성 경로(generateGeneric)로 폴백한다.
+export const SPEC_FORMAT_VERSION = 2;
 
 /** 저장되는 유형 정의. CustomQuestionTypeVersion.spec(Json) 에 그대로 들어간다. */
 export const compiledCustomTypeSchema = z.object({
@@ -98,6 +103,11 @@ export const compiledCustomTypeSchema = z.object({
 
   // 사람이 읽는 유형 설명(원본 출제의도/특이점 요약).
   description: z.string().max(2000).catch("").default(""),
+
+  // ── v2: 시각·구조 포맷 스펙(마커/선지 배치/빈칸/박스/답란…). null=v1 유형(평문 생성). ──
+  format: formatSpecSchema.nullable().catch(null).default(null),
+  // ── v2: 원본 예시를 구조 문서로 재구성한 것 — 스튜디오 미리보기 + 생성 few-shot. ──
+  sourceLayout: layoutDocSchema.nullable().catch(null).default(null),
 });
 
 export type CompiledCustomType = z.infer<typeof compiledCustomTypeSchema>;

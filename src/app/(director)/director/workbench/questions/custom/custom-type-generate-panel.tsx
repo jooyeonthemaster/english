@@ -49,7 +49,7 @@ import {
   type CustomTypeListItem,
   type CustomTypeOverride,
 } from "./custom-type-utils";
-import { CustomTypeReviseModal } from "./custom-type-revise-modal";
+import { CustomTypeLab } from "./lab/custom-type-lab";
 import {
   GenerationConfigPanel,
   type Difficulty,
@@ -157,7 +157,8 @@ export function CustomTypeGeneratePanel({
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("INTERMEDIATE");
   const [submitting, setSubmitting] = useState(false);
-  const [editingType, setEditingType] = useState<{ id: string; name: string } | null>(null);
+  // 유형 "편집" → 유형 실험실(스튜디오 탭) 풀스크린으로 열기.
+  const [labTypeId, setLabTypeId] = useState<string | null>(null);
 
   const totalQuestions = useMemo(
     () => Object.values(typeCounts).reduce((a, b) => a + b, 0),
@@ -705,7 +706,7 @@ export function CustomTypeGeneratePanel({
             onResetCounts={() => setTypeCounts({})}
             submitting={submitting}
             onRun={run}
-            onEdit={(id, name) => setEditingType({ id, name })}
+            onEdit={(id) => setLabTypeId(id)}
           />
         }
       />
@@ -832,12 +833,12 @@ export function CustomTypeGeneratePanel({
         onApproved={reloadSaved}
       />
 
-      {editingType ? (
-        <CustomTypeReviseModal
-          typeId={editingType.id}
-          typeName={editingType.name}
-          onClose={() => setEditingType(null)}
-          onRevised={() => void loadTypes()}
+      {labTypeId ? (
+        <CustomTypeLab
+          typeId={labTypeId}
+          initialTab="studio"
+          onClose={() => setLabTypeId(null)}
+          onChanged={() => void loadTypes()}
         />
       ) : null}
     </div>

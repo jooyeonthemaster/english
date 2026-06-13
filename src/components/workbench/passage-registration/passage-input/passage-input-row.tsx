@@ -79,6 +79,11 @@ interface PassageInputRowProps {
   onSplit: (chunks: string[]) => void;
   /** Stretch the row + editor to fill the available height (single-row case). */
   grow?: boolean;
+  /**
+   * Editor height in px. Overrides the default (fill → min 320, fixed → 460).
+   * Lets reuse contexts (웹툰 생성) use a shorter editor without a flex-squeeze.
+   */
+  editorHeightPx?: number;
 }
 
 /**
@@ -98,6 +103,7 @@ export function PassageInputRow({
   disabled,
   onSplit,
   grow,
+  editorHeightPx,
 }: PassageInputRowProps) {
   const [restoring, setRestoring] = useState(false);
   const [introOpen, setIntroOpen] = useState(false);
@@ -365,9 +371,12 @@ export function PassageInputRow({
           <div
             className={
               "overflow-hidden rounded-lg border border-slate-200 bg-white" +
-              (fill
-                ? " flex min-h-[320px] flex-1 flex-col"
-                : " h-[460px]")
+              (fill ? " flex flex-1 flex-col" : "")
+            }
+            style={
+              fill
+                ? { minHeight: editorHeightPx ?? 320 }
+                : { height: editorHeightPx ?? 460 }
             }
           >
             <PassageAnnotationEditor
