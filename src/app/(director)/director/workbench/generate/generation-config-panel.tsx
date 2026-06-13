@@ -6,18 +6,16 @@ import {
   Coins,
   Cpu,
   FileText,
+  Settings2,
+  ChevronDown,
   GripVertical,
   Minus,
   Plus,
   Target,
   Zap,
-  Gem,
-  Sparkles,
-  Settings2,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -26,6 +24,7 @@ import { SetBuilderPanel } from "@/components/workbench/set-builder-panel";
 import {
   QUESTION_GENERATION_PLANS,
   getQuestionGenerationCreditCost,
+  normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
@@ -69,6 +68,8 @@ import {
   readGenericAnswerCountSetting,
   readGenericOptionCountSetting,
   readOptionLanguageSetting,
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
   readSentenceInsertSlotCountSetting,
   readStemLanguageSetting,
   readVocabChoiceAnswerCountSetting,
@@ -140,7 +141,6 @@ interface GenerationConfigPanelProps {
   genMode: "auto" | "manual" | "set";
   setGenMode: (v: "auto" | "manual" | "set") => void;
   generationPlan: QuestionGenerationPlan;
-  setGenerationPlan: (v: QuestionGenerationPlan) => void;
 
   // Auto config
   autoCount: number;
@@ -148,7 +148,6 @@ interface GenerationConfigPanelProps {
 
   // Manual config
   typeCounts: Record<string, number>;
-  setTypeCount: (id: string, count: number) => void;
   setTypeCounts: (v: Record<string, number>) => void;
   questionTypeSettings: QuestionTypeGenerationSettings;
   setQuestionTypeSettings: (
@@ -162,7 +161,6 @@ interface GenerationConfigPanelProps {
 
   // Difficulty
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
-  setDifficulty: (v: "BASIC" | "INTERMEDIATE" | "KILLER") => void;
 
   // Prompt
   customPrompt: string;
@@ -206,17 +204,14 @@ export function GenerationConfigPanel({
   genMode,
   setGenMode,
   generationPlan,
-  setGenerationPlan,
   autoCount,
   setAutoCount,
   typeCounts,
-  setTypeCount,
   setTypeCounts,
   questionTypeSettings,
   setQuestionTypeSettings,
   totalQuestions,
   difficulty,
-  setDifficulty,
   customPrompt,
   setCustomPrompt,
   savedPrompts,
@@ -344,6 +339,27 @@ export function GenerationConfigPanel({
     next: "ko" | "en",
   ) => {
     patchTypeSettings(typeId, { [key]: next });
+  };
+  const getTypeDifficulty = (typeId: string) =>
+    readQuestionTypeDifficultySetting(questionTypeSettings[typeId], difficulty);
+  const setTypeDifficulty = (
+    typeId: string,
+    next: "BASIC" | "INTERMEDIATE" | "KILLER",
+  ) => {
+    patchTypeSettings(typeId, { difficulty: next });
+  };
+  const getTypeGenerationPlan = (typeId: string) =>
+    readQuestionTypeGenerationPlanSetting(
+      questionTypeSettings[typeId],
+      generationPlan,
+    );
+  const setTypeGenerationPlan = (
+    typeId: string,
+    next: QuestionGenerationPlan,
+  ) => {
+    patchTypeSettings(typeId, {
+      generationPlan: normalizeQuestionGenerationPlan(next),
+    });
   };
   const vocabChoiceMarkerCount = readVocabChoiceMarkerCountSetting(
     questionTypeSettings.VOCAB_CHOICE,
@@ -695,38 +711,13 @@ export function GenerationConfigPanel({
     });
   };
 
-  const incrementTypeCount = (id: string) => {
-    const ordered = normalizeTypeOrder(typeOrder);
-    setTypeCounts((prev) => {
-      const draft = { ...prev };
-      draft[id] = Number(prev[id] || 0) + 1;
-      return orderTypeCounts(ordered, draft);
-    });
-  };
-
-  const isTypeControlTarget = (target: HTMLElement | null) => {
-    return Boolean(
-      target?.closest(
-        "button,a,input,textarea,select,label,[data-ignore-type-section-click]",
-      ),
+  const toggleTypeDetail = (id: string, currentCount = typeCounts[id] || 0) => {
+    if (currentCount <= 0) {
+      applyTypeCount(id, 1);
+    }
+    setExpandedTypeId((prev) =>
+      prev === id && currentCount > 0 ? null : id,
     );
-  };
-
-  const handleTypeSectionClick = (event, id: string) => {
-    const target = event.target as HTMLElement | null;
-    if (isTypeControlTarget(target)) {
-      return;
-    }
-    incrementTypeCount(id);
-  };
-
-  const handleTypeSurfaceClick = (event, id: string) => {
-    const target = event.target as HTMLElement | null;
-    if (isTypeControlTarget(target)) {
-      return;
-    }
-    event.stopPropagation();
-    incrementTypeCount(id);
   };
 
   const dropTypeBlock = (sourceId: string, targetId: string) => {
@@ -846,6 +837,19 @@ export function GenerationConfigPanel({
           </button>
         ))}
       </div>
+    </div>
+  );
+
+  const renderTypeQualitySettings = (typeId: string) => (
+    <div className="space-y-3">
+      <DifficultySegment
+        difficulty={getTypeDifficulty(typeId)}
+        setDifficulty={(next) => setTypeDifficulty(typeId, next)}
+      />
+      <GenerationPlanSelector
+        value={getTypeGenerationPlan(typeId)}
+        onChange={(next) => setTypeGenerationPlan(typeId, next)}
+      />
     </div>
   );
 
@@ -1380,9 +1384,14 @@ export function GenerationConfigPanel({
     const languageScope = getQuestionLanguageToggleScope(typeId);
     return (
       <div className="space-y-3">
-        {numericContent}
+        {renderTypeQualitySettings(typeId)}
+        {numericContent ? (
+          <div className="border-t border-slate-100 pt-3">
+            {numericContent}
+          </div>
+        ) : null}
         <div
-          className={numericContent ? "border-t border-slate-100 pt-3" : undefined}
+          className="border-t border-slate-100 pt-3"
         >
           {renderLanguageSetting({
             title: "발문 언어",
@@ -1443,50 +1452,6 @@ export function GenerationConfigPanel({
           </div>
         </div>
 
-        {/* Model selector */}
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <div className="px-5 pb-3 shrink-0">
-            <div className="grid grid-cols-2 gap-2">
-              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-                const plan = QUESTION_GENERATION_PLANS[planId];
-                const active = generationPlan === planId;
-                const Icon = planId === "PREMIUM" ? Gem : Sparkles;
-                return (
-                  <button
-                    key={planId}
-                    type="button"
-                    onClick={() => setGenerationPlan(planId)}
-                    className={`min-h-[72px] rounded-xl border p-3 text-left transition-all duration-150 ${
-                      active
-                        ? "border-blue-300 bg-blue-50 text-blue-800 shadow-sm shadow-blue-50"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <Icon
-                          className={`w-3.5 h-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
-                        />
-                        <span className="text-[12px] font-bold truncate">
-                          {plan.shortLabel}
-                        </span>
-                      </div>
-                      <span
-                        className={`text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
-                      >
-                        {plan.creditMultiplier}x
-                      </span>
-                    </div>
-                    <p className="mt-1.5 text-[10px] font-medium leading-snug text-slate-500">
-                      {plan.modelLabel}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         {/* Auto Mode Config */}
         {genMode === "auto" && (
           <div className="px-4 py-3 flex flex-1 min-h-0 flex-col gap-3">
@@ -1516,14 +1481,6 @@ export function GenerationConfigPanel({
               </div>
             </div>
 
-            {/* Difficulty */}
-            <div className="shrink-0">
-              <DifficultySegment
-                difficulty={difficulty}
-                setDifficulty={setDifficulty}
-              />
-            </div>
-
             {/* Custom prompt */}
             <PromptSection
               fill
@@ -1550,12 +1507,6 @@ export function GenerationConfigPanel({
         {/* Manual Mode Config */}
         {genMode === "manual" && (
           <div className="px-4 py-3 space-y-3">
-            {/* Difficulty */}
-            <DifficultySegment
-              difficulty={difficulty}
-              setDifficulty={setDifficulty}
-            />
-
             {/* Type selection blocks — 단일 컨테이너 리스트 (카드 더미 금지) */}
             <div className="space-y-3">
               <div>
@@ -1587,14 +1538,16 @@ export function GenerationConfigPanel({
                   const dragging = draggingTypeId === item.id;
                   const dragOver =
                     dragOverTypeId === item.id && draggingTypeId !== item.id;
+                  const typeDifficulty = getTypeDifficulty(item.id);
+                  const typeDifficultyTone = DIFFICULTY_TONES.find(
+                    (tone) => tone.value === typeDifficulty,
+                  );
+                  const typeGenerationPlan = getTypeGenerationPlan(item.id);
 
                   return (
                     <section
                       key={item.id}
                       data-question-type-id={item.id}
-                      onClick={(event) =>
-                        handleTypeSectionClick(event, item.id)
-                      }
                       onDragOver={(event) => {
                         event.preventDefault();
                         if (draggingTypeId && draggingTypeId !== item.id) {
@@ -1619,14 +1572,13 @@ export function GenerationConfigPanel({
                       } ${dragging ? "opacity-50" : ""}`}
                     >
                       <div
-                        onClick={(event) =>
-                          handleTypeSurfaceClick(event, item.id)
-                        }
+                        onClick={() => toggleTypeDetail(item.id, count)}
                         className="flex h-10 items-center gap-0.5 pl-1 pr-1.5"
                       >
                         <button
                           type="button"
                           draggable
+                          onClick={(event) => event.stopPropagation()}
                           onDragStart={(event) => {
                             setDraggingTypeId(item.id);
                             event.dataTransfer.effectAllowed = "move";
@@ -1647,7 +1599,7 @@ export function GenerationConfigPanel({
                           type="button"
                           onClick={(event) => {
                             event.stopPropagation();
-                            applyTypeCount(item.id, count + 1);
+                            toggleTypeDetail(item.id, count);
                           }}
                           className="flex h-7 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left"
                           aria-label={`${item.label} 1개 추가`}
@@ -1666,6 +1618,16 @@ export function GenerationConfigPanel({
                           >
                             {item.label}
                           </span>
+                          {active ? (
+                            <span className="shrink-0 rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-bold text-slate-500">
+                              {typeDifficultyTone?.label ?? typeDifficulty}
+                            </span>
+                          ) : null}
+                          {active && typeGenerationPlan === "PREMIUM" ? (
+                            <span className="shrink-0 rounded border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
+                              {QUESTION_GENERATION_PLANS.PREMIUM.shortLabel}
+                            </span>
+                          ) : null}
                         </button>
 
                         <div className="grid w-[100px] shrink-0 grid-cols-[72px_28px] items-center">
@@ -1676,12 +1638,13 @@ export function GenerationConfigPanel({
                               <>
                                 <button
                                   type="button"
-                                  onClick={() =>
+                                  onClick={(event) => {
+                                    event.stopPropagation();
                                     applyTypeCount(
                                       item.id,
                                       Math.max(0, count - 1),
-                                    )
-                                  }
+                                    );
+                                  }}
                                   className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600"
                                   aria-label={`${item.label} 개수 줄이기`}
                                 >
@@ -1694,7 +1657,10 @@ export function GenerationConfigPanel({
                             ) : null}
                             <button
                               type="button"
-                              onClick={() => applyTypeCount(item.id, count + 1)}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                applyTypeCount(item.id, count + 1);
+                              }}
                               className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
                                 active
                                   ? "text-blue-500 hover:bg-white hover:text-blue-700"
@@ -1709,32 +1675,40 @@ export function GenerationConfigPanel({
                               항상 노출 — 스타일은 워크스페이스 재설계 톤 유지 */}
                           <button
                             type="button"
-                            onClick={() =>
-                              setExpandedTypeId(expanded ? null : item.id)
-                            }
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toggleTypeDetail(item.id, count);
+                            }}
                             className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
                             title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
                             aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                            aria-expanded={expanded}
                           >
-                            {expanded ? (
-                              <ChevronUp className="h-3.5 w-3.5" />
-                            ) : (
-                              <ChevronDown className="h-3.5 w-3.5" />
-                            )}
+                            <ChevronDown
+                              className={`h-3.5 w-3.5 transition-transform duration-300 ease-out ${
+                                expanded ? "rotate-180" : "rotate-0"
+                              }`}
+                            />
                           </button>
                         </div>
                       </div>
 
-                      {expanded ? (
+                      <div
+                        aria-hidden={!expanded}
+                        className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                          expanded
+                            ? "grid-rows-[1fr] opacity-100"
+                            : "pointer-events-none grid-rows-[0fr] opacity-0"
+                        }`}
+                      >
+                        <div className="min-h-0 overflow-hidden">
                         <div
-                          onClick={(event) =>
-                            handleTypeSurfaceClick(event, item.id)
-                          }
                           className="border-t border-slate-100 bg-slate-50/60 px-3.5 py-3"
                         >
                           {renderTypeDetailContent(item.id)}
                         </div>
-                      ) : null}
+                        </div>
+                      </div>
                     </section>
                   );
                 })}
@@ -1868,18 +1842,28 @@ export function GenerationConfigPanel({
           const baseCreditCost =
             genMode === "auto"
               ? CREDIT_COSTS.AUTO_GEN_BATCH * selectedIds.size
-              : selectedIds.size *
+              : 0;
+          const manualCreditCost =
+            genMode === "manual"
+              ? selectedIds.size *
                 Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
                   if (value <= 0) return sum;
                   const unitCost = VOCAB_GENERATION_TYPE_IDS.has(typeId)
                     ? CREDIT_COSTS.QUESTION_GEN_VOCAB
                     : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-                  return sum + unitCost * value;
-                }, 0);
-          const creditCost = getQuestionGenerationCreditCost(
-            baseCreditCost,
-            generationPlan,
-          );
+                  return (
+                    sum +
+                    getQuestionGenerationCreditCost(
+                      unitCost * value,
+                      getTypeGenerationPlan(typeId),
+                    )
+                  );
+                }, 0)
+              : 0;
+          const creditCost =
+            genMode === "auto"
+              ? getQuestionGenerationCreditCost(baseCreditCost, generationPlan)
+              : manualCreditCost;
           return (
             <>
               <Button

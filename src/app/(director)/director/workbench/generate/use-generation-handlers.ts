@@ -15,6 +15,8 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import {
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import { useTaskQueue } from "@/components/workbench/task-queue";
@@ -261,6 +263,8 @@ interface ManualGenerationUnit {
   passage: PassageItem;
   questionType: string;
   questionTypeSettings?: unknown;
+  difficulty: string;
+  generationPlan: QuestionGenerationPlan;
   tempId: string;
   config: QueueItem["config"];
   /** 같은 지문+유형 배치(N개)에서의 인덱스 — 서버 다양성 분산용 */
@@ -352,9 +356,9 @@ export function useGenerationHandlers({
               count: 1,
               questionType: unit.questionType,
               questionTypeSettings: unit.questionTypeSettings,
-              difficulty,
+              difficulty: unit.difficulty,
               customPrompt: unit.config.prompt || undefined,
-              generationPlan,
+              generationPlan: unit.generationPlan,
               variantIndex: unit.variantIndex,
               variantCount: unit.variantCount,
             });
@@ -401,7 +405,7 @@ export function useGenerationHandlers({
         failed: results.filter((r) => r.status === "rejected").length,
       };
     },
-    [difficulty, generationPlan, refreshTaskQueueSoon, setSessionQueue],
+    [refreshTaskQueueSoon, setSessionQueue],
   );
 
   const enqueueJob = useCallback(
@@ -461,21 +465,32 @@ export function useGenerationHandlers({
       for (const p of selectedPassages) {
         for (const typeId of Object.keys(typeCounts).filter((k) => typeCounts[k] > 0)) {
           const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
+          const settingsForType = questionTypeSettings[typeId];
+          const unitDifficulty = readQuestionTypeDifficultySetting(
+            settingsForType,
+            difficulty,
+          );
+          const unitGenerationPlan = readQuestionTypeGenerationPlanSetting(
+            settingsForType,
+            generationPlan,
+          );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: p,
               questionType: typeId,
-              questionTypeSettings: questionTypeSettings[typeId],
+              questionTypeSettings: settingsForType,
+              difficulty: unitDifficulty,
+              generationPlan: unitGenerationPlan,
               tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
               variantIndex: Math.min(index, 99),
               variantCount: Math.min(repeatCount, 99),
               config: {
                 typeCounts: { [typeId]: 1 },
-                questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
-                difficulty,
+                questionTypeSettings: { [typeId]: settingsForType },
+                difficulty: unitDifficulty,
                 prompt: customPrompt.trim(),
                 mode: genMode,
-                generationPlan,
+                generationPlan: unitGenerationPlan,
               },
             });
           }
@@ -677,18 +692,31 @@ export function useGenerationHandlers({
 
         for (const typeId of activeTypes) {
           const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
+          const settingsForType = questionTypeSettings[typeId];
+          const unitDifficulty = readQuestionTypeDifficultySetting(
+            settingsForType,
+            difficulty,
+          );
+          const unitGenerationPlan = readQuestionTypeGenerationPlanSetting(
+            settingsForType,
+            generationPlan,
+          );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: selectedPassage,
               questionType: typeId,
-              questionTypeSettings: questionTypeSettings[typeId],
+              questionTypeSettings: settingsForType,
+              difficulty: unitDifficulty,
+              generationPlan: unitGenerationPlan,
               tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
               variantIndex: Math.min(index, 99),
               variantCount: Math.min(repeatCount, 99),
               config: {
                 ...baseConfig,
                 typeCounts: { [typeId]: 1 },
-                questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
+                questionTypeSettings: { [typeId]: settingsForType },
+                difficulty: unitDifficulty,
+                generationPlan: unitGenerationPlan,
               },
             });
           }

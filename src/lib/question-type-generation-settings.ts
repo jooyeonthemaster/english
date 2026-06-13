@@ -1,4 +1,18 @@
+import type { QuestionDifficulty } from "@/lib/difficulty";
+import {
+  getQuestionGenerationCreditCost,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
+
 export type QuestionGenerationLanguage = "ko" | "en";
+
+export interface QuestionTypeQualityGenerationSettings {
+  /** Optional per-type override. Falls back to the global generation difficulty. */
+  difficulty?: QuestionDifficulty;
+  /** Optional per-type quality plan override. Falls back to the global generation plan. */
+  generationPlan?: QuestionGenerationPlan;
+}
 
 export interface QuestionLanguageGenerationSettings {
   /** Language for the visible stem/direction. Defaults are type-specific. */
@@ -7,7 +21,9 @@ export interface QuestionLanguageGenerationSettings {
   optionLanguage?: QuestionGenerationLanguage;
 }
 
-export interface BlankInferenceGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface BlankInferenceGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   doubleNegative?: boolean;
   /**
    * Use a non-verbatim paraphrase as the visible correct option while keeping
@@ -23,12 +39,16 @@ export interface BlankInferenceGenerationSettings extends QuestionLanguageGenera
   blankCount?: number;
 }
 
-export interface IrrelevantGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface IrrelevantGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of displayed slots. One slot is an inserted irrelevant sentence. Default 5. */
   slotCount?: number;
 }
 
-export interface GrammarErrorGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface GrammarErrorGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of grammar judgment positions to mark. Range 5~10. Default 5. */
   markerCount?: number;
   /** Number of actually incorrect marked expressions. Range 1~markerCount. Default 1. */
@@ -37,41 +57,55 @@ export interface GrammarErrorGenerationSettings extends QuestionLanguageGenerati
   errorCount?: number;
 }
 
-export interface VocabChoiceGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface VocabChoiceGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of underlined vocabulary positions. Range 5~10. Default 5. */
   markerCount?: number;
   /** Number of contextually inappropriate words (= answers). Range 1~markerCount. Default 1. */
   answerCount?: number;
 }
 
-export interface SentenceInsertGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface SentenceInsertGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of insertion-position markers (①~). The answer is always one gap. Range 5~8. Default 5. */
   slotCount?: number;
 }
 
-export interface AntonymGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface AntonymGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of word-antonym pairs (A)~. Exactly one pair is wrong. Range 5~10. Default 5. */
   pairCount?: number;
 }
 
-export interface GenericOptionCountGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface GenericOptionCountGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of free-text options. Range 4~8. Default 5. */
   optionCount?: number;
   /** Number of correct options ("모두 고르시오" variant). Range 1~optionCount-1. Default 1. */
   answerCount?: number;
 }
 
-export interface GrammarCorrectionGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface GrammarCorrectionGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of wrong underlined sentence/clause segments. Range 1~5. Default 1. */
   errorCount?: number;
 }
 
-export interface SummaryCompleteMcGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface SummaryCompleteMcGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of summary blanks. Range 2~4. Default 2. */
   blankCount?: number;
 }
 
-export interface ContentMatchGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface ContentMatchGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of displayed statement options. Range 5~12. Default 5. */
   optionCount?: number;
   /** Number of correct statements. Range 1~optionCount. Default 1. */
@@ -80,7 +114,9 @@ export interface ContentMatchGenerationSettings extends QuestionLanguageGenerati
   correctAnswerCount?: number;
 }
 
-export interface SummaryCompleteGenerationSettings extends QuestionLanguageGenerationSettings {
+export interface SummaryCompleteGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
   /** Number of short-answer summary blanks. Range 1~5. Default 2. */
   blankCount?: number;
   /** Legacy analysis field name; interpreted as blankCount. */
@@ -782,6 +818,20 @@ export interface ResolvedQuestionTypeGenerationSettings {
   genericAnswerCount?: number;
 }
 
+export function normalizeQuestionDifficulty(
+  value: unknown,
+  fallback: string | null | undefined = "INTERMEDIATE",
+): QuestionDifficulty {
+  const normalized = String(value ?? fallback ?? "INTERMEDIATE")
+    .trim()
+    .toUpperCase();
+  return normalized === "BASIC" ||
+    normalized === "INTERMEDIATE" ||
+    normalized === "KILLER"
+    ? normalized
+    : "INTERMEDIATE";
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -1467,12 +1517,15 @@ export function buildQuestionTypeSettingsPrompt(
         : "- The correct option's blankValues must be exactly the original passage expressions, verbatim and in order.",
       ...(useParaphraseAnswer
         ? [
-            "- For BASIC, use short high-frequency paraphrases. For INTERMEDIATE, use moderately transformed but familiar academic phrasing. For KILLER, use abstract logical reformulations that preserve the passage claim without becoming vague or overgeneral.",
+            "- For BASIC, use short high-frequency paraphrases. For INTERMEDIATE, use moderately transformed but familiar academic phrasing, normally at least four words and four meaningful content words on both the source target and correct option. For KILLER, use abstract logical reformulations that preserve the passage claim without becoming vague or overgeneral.",
+            "- For KILLER, do not make a short local synonym item. The source blank should normally be at least seven words with five meaningful content words, the correct option should be a natural 8-16 word reformulation with at least six meaningful content words, and students should need at least two passage evidence links to justify it.",
+            "- For KILLER, at least three wrong values should be passage-grounded same-field near misses. Avoid giveaway extremes such as unconditionally, completely, passive/passively, strict/strictly, inevitably, naturally, whatever, successfully, solely, entirely, fully, only, always, never, must, cannot, guarantees, definitive, flawless, seamless, error-free, automatically, altogether, eliminate, any form of, from/without/against any, bound to, or indefinitely unless the passage itself requires that exact force.",
             "- Wrong combination values must be paraphrased too: same grammatical slot, similar length/register, and passage-grounded near-misses that fail by scope, polarity, causal role, target, or discourse role.",
-            "- Choose clean semantic units for blanks. Do not end a blank originalExpression with a dangling modal, auxiliary, or function word such as will, can, could, is, are, or to.",
+            "- Choose clean semantic units for blanks, normally no longer than 12 words or 90 characters. Do not end a blank originalExpression with a dangling modal, auxiliary, or function word such as will, can, could, is, are, or to.",
             "- Preserve source polarity and resistance/avoidance relations. Do not turn 'resisting/avoiding/rejecting X' into 'doing X'.",
             "- Insert every option into the blank sentence. If the left context already says 'ways in which _____' or 'process by which _____', do not repeat 'ways in which' or 'process by which' inside the option.",
             "- If the left context already ends with a preposition such as by/of/to/for/with/from/in/on, do not start the option with another preposition.",
+            "- If the left context ends with 'to _____', every option must begin with a base verb phrase, not a gerund phrase such as 'critically evaluating...'.",
             "- If a blanked originalExpression is a finite clause such as 'it requires...', the correct option must keep a finite-clause shape when the blank starts after a semicolon or sentence boundary. Do not replace it with a bare gerund phrase such as 'making...'.",
             "- Avoid stilted paraphrases such as 'carrying out following evaluations or estimations', 'act as an active filter', 'active filter amidst...', 'sovereignly filtering', 'cultural influxes', 'moral terrains', 'property of shared choices', 'synergistic channels', 'collective boundaries', 'compassionate comprehension', 'compromising alternatives', 'reality that envelopes us', 'degraders', or 'degraders internalize'.",
           ]
@@ -1494,7 +1547,11 @@ export function buildQuestionTypeSettingsPrompt(
       "- Set blankAnswerMode to \"PARAPHRASE\".",
       "- Do NOT use the originalExpression itself as the correct option. Do not use a trivial same-word rearrangement. The correct option must preserve the full passage meaning, grammatical slot, polarity, scope, and causal/discourse relation.",
       "- Choose originalExpression as a compact semantic unit, normally 3-11 words and under 80 characters. Do not blank a whole sentence or a long clause containing multiple alternatives. In a frame like 'X requires more than A or B', blank A or B, not the whole 'X requires more than...' clause.",
-      "- Difficulty calibration for the correct option: BASIC = shorter, high-frequency wording with minimal abstraction; INTERMEDIATE = natural academic paraphrase with one or two transformed content words; KILLER = compact abstract reformulation that requires connecting the blank sentence to surrounding evidence.",
+      "- Difficulty calibration for the correct option: BASIC = shorter, high-frequency wording with minimal abstraction; INTERMEDIATE = natural academic paraphrase with one or two transformed content words, normally at least four words and four meaningful content words on both the source target and correct option; KILLER = compact abstract reformulation that requires connecting the blank sentence to surrounding evidence.",
+      "- INTERMEDIATE calibration rejects 2-3 word local synonym swaps such as 'making judgments' -> 'forming evaluations'; choose a fuller source relation and write a fuller but still readable academic paraphrase.",
+      "- originalExpression must stay compact. Never exceed about 12 words or 90 characters; if the intended idea is longer, blank the central relation phrase rather than the full clause.",
+      "- KILLER calibration is strict: do not make a short local synonym item. The source blank should normally be at least seven words with five meaningful content words, the correct option should be a natural 8-16 word reformulation with at least six meaningful content words, and the answer must require at least two evidence links from the passage.",
+      "- KILLER distractors must be genuinely competitive: at least three wrong options should be same-field near misses grounded in passage concepts. Avoid giveaway extremes or instant opposites such as unconditionally, completely, passive/passively, strict/strictly, inevitably, naturally, whatever, successfully, solely, entirely, fully, only, always, never, must, cannot, guarantees, definitive, flawless, seamless, error-free, automatically, altogether, eliminate, any form of, from/without/against any, bound to, or indefinitely unless the passage itself requires that exact force.",
       "- Wrong options must be paraphrased in the same register and length band as the correct option. They should borrow passage concepts but fail by subtle scope, polarity, cause/effect, target, concession, or thesis-direction shifts.",
       "- All five options must fit the exact same grammatical slot in the blank sentence. Silently substitute every option into the blank before finalizing.",
       "- Choose a clean semantic unit for originalExpression. Do not end originalExpression with a dangling modal, auxiliary, or function word such as will, can, could, is, are, or to.",
@@ -1502,6 +1559,7 @@ export function buildQuestionTypeSettingsPrompt(
       "- Preserve source polarity and resistance/avoidance relations. Do not turn 'resisting/avoiding/rejecting X' into 'doing X'. For example, 'resisting the temptation to reduce...' should become a phrase such as 'avoiding a narrow reduction of...', not 'simplifying...'.",
       "- Insert every option into the blank sentence. If the left context already says 'ways in which _____' or 'process by which _____', do not repeat 'ways in which' or 'process by which' inside the option; start with the subject/action phrase that completes the frame.",
       "- If the left context already ends with a preposition such as by/of/to/for/with/from/in/on, do not start the option with another preposition. After 'by _____', write 'helping plants recover', not 'by helping plants recover'.",
+      "- If the left context ends with 'to _____', every option must begin with a base verb phrase, not a gerund phrase such as 'critically evaluating...'.",
       "- If originalExpression is a finite clause such as 'it requires...', the correct option must keep a finite-clause shape when the blank starts after a semicolon or sentence boundary. Do not replace it with a bare gerund phrase such as 'making...'.",
       "- Use native, exam-grade paraphrases. Avoid stilted phrases such as 'carrying out following evaluations or estimations', 'act as an active filter', 'active filter amidst...', 'sovereignly filtering', 'cultural influxes', 'moral terrains', 'property of shared choices', 'synergistic channels', 'collective boundaries', 'compassionate comprehension', 'compromising alternatives', 'reality that envelopes us', 'degraders', or 'degraders internalize'.",
       "- Add answerLogic in Korean explaining the original source meaning, the paraphrased correct option, and the decisive trap in each wrong option.",
@@ -1553,4 +1611,58 @@ export function getQuestionTypeSettingsForType(
     return settings[typeId];
   }
   return settings;
+}
+
+export function readQuestionTypeDifficultySetting(
+  rawSettings: unknown,
+  fallback: string | null | undefined = "INTERMEDIATE",
+): QuestionDifficulty {
+  if (isRecord(rawSettings) && rawSettings.difficulty !== undefined) {
+    return normalizeQuestionDifficulty(rawSettings.difficulty, fallback);
+  }
+  return normalizeQuestionDifficulty(fallback);
+}
+
+export function readQuestionTypeGenerationPlanSetting(
+  rawSettings: unknown,
+  fallback: QuestionGenerationPlan = "STANDARD",
+): QuestionGenerationPlan {
+  if (isRecord(rawSettings) && rawSettings.generationPlan !== undefined) {
+    return normalizeQuestionGenerationPlan(rawSettings.generationPlan);
+  }
+  return normalizeQuestionGenerationPlan(fallback);
+}
+
+export function getEffectiveQuestionTypeDifficulty(
+  settings: unknown,
+  typeId: string,
+  fallback: string | null | undefined = "INTERMEDIATE",
+): QuestionDifficulty {
+  return readQuestionTypeDifficultySetting(
+    getQuestionTypeSettingsForType(settings, typeId),
+    fallback,
+  );
+}
+
+export function getEffectiveQuestionTypeGenerationPlan(
+  settings: unknown,
+  typeId: string,
+  fallback: QuestionGenerationPlan = "STANDARD",
+): QuestionGenerationPlan {
+  return readQuestionTypeGenerationPlanSetting(
+    getQuestionTypeSettingsForType(settings, typeId),
+    fallback,
+  );
+}
+
+export function getQuestionTypeGenerationCreditCost(
+  baseCost: number,
+  settings: unknown,
+  typeId: string,
+  fallback: QuestionGenerationPlan = "STANDARD",
+): number {
+  return getQuestionGenerationCreditCost(
+    baseCost,
+    getEffectiveQuestionTypeGenerationPlan(settings, typeId, fallback),
+  );
 }

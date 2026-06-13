@@ -274,6 +274,220 @@ const stackedPrepositionQuestion = {
   ],
 };
 
+const killerTooEasyPassage = [
+  "Many sharing platforms claim to build community.",
+  "In reality, most are selling access to services much like ordinary firms.",
+  "Because they charge fees for every exchange, the arrangement is closer to commerce than generosity."
+].join(" ");
+
+const killerTooEasyQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "selling access to services much like ordinary firms",
+  surroundingText: "In reality, most are selling access to services much like ordinary firms. Because they charge",
+  correctAnswer: "1",
+  explanation: "The blank must capture the commercial nature of the platforms.",
+  wrongOptionExplanations: {
+    "2": "It overstates community building and ignores the fee-based exchange.",
+    "3": "It treats access as a gift rather than a transaction.",
+    "4": "It shifts the point to regulation, which the passage does not discuss.",
+    "5": "It focuses on friendship rather than the business model."
+  },
+  keyPoints: ["sharing economy", "commerce", "business model"],
+  tags: ["blank paraphrase"],
+  difficulty: "KILLER",
+  blankAnswerMode: "PARAPHRASE",
+  answerLogic: "This intentionally mirrors the weak screenshot-level item: the answer is only a short local synonym, not a true KILLER inference.",
+  options: [
+    { label: "1", text: "conduct commercial transactions" },
+    { label: "2", text: "strengthen communal trust among neighbors" },
+    { label: "3", text: "offer resources as generous public gifts" },
+    { label: "4", text: "follow strict government rules for every exchange" },
+    { label: "5", text: "replace market exchange with personal friendship" }
+  ],
+};
+
+const standardKillerShallowPassage = [
+  'We are taught from an early age that "sharing is caring."',
+  "Advocates claim that the sharing economy is driven by the desire to benefit society.",
+  "Thanks to popular websites and apps, users can share their cars, their spare bedrooms, their power tools, and even their own time and talents.",
+  "And because both parties review each other, these digital platforms create a trusting environment even among complete strangers.",
+  'According to one of its earliest supporters, the gig economy takes advantage of "idle capacity" to better utilize assets.',
+  "While some sites continue to offer true sharing, most are in fact selling a product, much like a traditional business."
+].join(" ");
+
+const standardKillerShallowQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "both parties review each other",
+  surroundingText: "And because both parties review each other, these digital platforms create a trusting environment",
+  correctAnswer: "1",
+  explanation: "This is intentionally too local for a KILLER source-exact blank.",
+  wrongOptionExplanations: {
+    "2": "It shifts the focus from mutual reviews to direct payments.",
+    "3": "It removes the trust mechanism.",
+    "4": "It overstates government control.",
+    "5": "It contradicts the platform setting."
+  },
+  keyPoints: ["sharing economy", "trust", "platforms"],
+  tags: ["blank inference"],
+  difficulty: "KILLER",
+  options: [
+    { label: "1", text: "both parties review each other" },
+    { label: "2", text: "users pay fixed membership fees" },
+    { label: "3", text: "trust becomes unnecessary online" },
+    { label: "4", text: "governments inspect every transaction" },
+    { label: "5", text: "strangers avoid digital platforms" }
+  ],
+};
+
+const standardKillerComparisonQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "selling a product, much like a traditional business",
+  surroundingText: "most are in fact selling a product, much like a traditional business. With so much money",
+  correctAnswer: "1",
+  explanation: "The blank captures the passage's critical turn from sharing to commercial sale.",
+  wrongOptionExplanations: {
+    "2": "It keeps the sharing ideal that the passage questions.",
+    "3": "It narrows the point to reviews rather than commercialization.",
+    "4": "It reverses the profit motive.",
+    "5": "It overstates environmental benefits."
+  },
+  keyPoints: ["sharing economy", "commercialization", "critical turn"],
+  tags: ["blank inference"],
+  difficulty: "KILLER",
+  options: [
+    { label: "1", text: "selling a product, much like a traditional business" },
+    { label: "2", text: "expanding trust as a purely generous social practice" },
+    { label: "3", text: "letting both parties review each other online" },
+    { label: "4", text: "removing profit from every transaction" },
+    { label: "5", text: "guaranteeing benefits for owners and communities" }
+  ],
+};
+
+const intermediateTooShallowPassage = [
+  "The anchoring effect describes our tendency to rely too heavily on the first information we encounter when making subsequent judgments.",
+  "Even irrelevant initial numbers can distort the estimates people later produce."
+].join(" ");
+
+const intermediateTooShallowQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "making subsequent judgments",
+  surroundingText: "the first information we encounter when making subsequent judgments. Even irrelevant",
+  correctAnswer: "1",
+  explanation: "The blank names the later judgment process affected by anchoring.",
+  wrongOptionExplanations: {
+    "2": "It shifts the point to remembering facts.",
+    "3": "It removes the later-evaluation relation.",
+    "4": "It focuses on social pressure rather than anchoring.",
+    "5": "It treats the first information as irrelevant only."
+  },
+  keyPoints: ["anchoring effect", "judgment", "paraphrase depth"],
+  tags: ["blank paraphrase"],
+  difficulty: "INTERMEDIATE",
+  blankAnswerMode: "PARAPHRASE",
+  answerLogic: "This is intentionally too shallow for INTERMEDIATE because it is only a three-word local synonym swap.",
+  options: [
+    { label: "1", text: "forming subsequent evaluations" },
+    { label: "2", text: "recalling unrelated factual details" },
+    { label: "3", text: "avoiding later mental comparisons" },
+    { label: "4", text: "following social pressure from others" },
+    { label: "5", text: "ignoring all initial reference points" }
+  ],
+};
+
+const targetTooWidePassage = [
+  "Fleming's ability to recognize the significance of what he had stumbled upon depended critically on his extensive training.",
+  "Other researchers may have seen similar contamination without understanding its implications."
+].join(" ");
+
+const targetTooWideQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "ability to recognize the significance of what he had stumbled upon depended critically on",
+  surroundingText: "Fleming's ability to recognize the significance of what he had stumbled upon depended critically on his extensive training.",
+  correctAnswer: "1",
+  explanation: "The target is intentionally too broad for a clean paraphrase blank.",
+  wrongOptionExplanations: {
+    "2": "It changes recognition into publication.",
+    "3": "It treats contamination as something predicted in advance.",
+    "4": "It shifts the cause to institutional approval.",
+    "5": "It removes Fleming's prepared understanding."
+  },
+  keyPoints: ["target width", "scientific discovery", "paraphrase"],
+  tags: ["blank paraphrase"],
+  difficulty: "INTERMEDIATE",
+  blankAnswerMode: "PARAPHRASE",
+  answerLogic: "The answer is reasonable, but the source target itself is a long clause and should be narrowed before generation.",
+  options: [
+    { label: "1", text: "capacity to discern the value of his accidental findings was highly contingent upon" },
+    { label: "2", text: "attempt to publicize the medical benefits of his experiment was delayed by" },
+    { label: "3", text: "capacity to predict contamination before it occurred was supported by" },
+    { label: "4", text: "request for institutional approval of the discovery depended on" },
+    { label: "5", text: "decision to dismiss the mold as meaningless came from" }
+  ],
+};
+
+const infinitiveGerundPassage = [
+  "A healthy democracy depends on citizens' capacity to evaluate competing claims before accepting them.",
+  "Public judgment weakens when people repeat slogans without testing the evidence behind them."
+].join(" ");
+
+const infinitiveGerundQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "evaluate competing claims before accepting them",
+  surroundingText: "depends on citizens' capacity to evaluate competing claims before accepting them. Public judgment",
+  correctAnswer: "1",
+  explanation: "The blank follows capacity to, so the option must complete an infinitive phrase.",
+  wrongOptionExplanations: {
+    "2": "It accepts slogans without evidence.",
+    "3": "It shifts judgment to party loyalty.",
+    "4": "It removes the evidence-checking process.",
+    "5": "It treats repetition as enough for judgment."
+  },
+  keyPoints: ["infinitive slot", "public judgment", "evidence"],
+  tags: ["blank paraphrase"],
+  difficulty: "KILLER",
+  blankAnswerMode: "PARAPHRASE",
+  answerLogic: "This answer is semantically close but grammatically broken after capacity to because it begins with an adverb plus gerund.",
+  options: [
+    { label: "1", text: "critically evaluating and weighing public arguments" },
+    { label: "2", text: "accept slogans before checking their evidence" },
+    { label: "3", text: "depend on party loyalty over evidence" },
+    { label: "4", text: "avoid testing the claims they hear" },
+    { label: "5", text: "repeat familiar claims until they sound true" }
+  ],
+};
+
+const killerGiveawayPassage = [
+  "Sustainable cities do not succeed simply by adding parks.",
+  "They work when urban systems reinforce one another and keep green gains socially usable.",
+  "This coordination prevents green reforms from becoming isolated symbols."
+].join(" ");
+
+const killerGiveawayQuestion = {
+  direction: "Choose the best expression for the blank.",
+  originalExpression: "urban systems reinforce one another and keep green gains socially usable",
+  surroundingText: "They work when urban systems reinforce one another and keep green gains socially usable. This coordination",
+  correctAnswer: "1",
+  explanation: "The blank must connect environmental improvement with coordinated social usability.",
+  wrongOptionExplanations: {
+    "2": "It uses the city's topic but overstates all programs and ignores coordination.",
+    "3": "It reverses the reinforcement relation by separating goals from access.",
+    "4": "It borrows ecological language but makes the city passive.",
+    "5": "It narrows the passage to parks rather than systems."
+  },
+  keyPoints: ["sustainable cities", "coordination", "near-miss distractors"],
+  tags: ["blank paraphrase"],
+  difficulty: "KILLER",
+  blankAnswerMode: "PARAPHRASE",
+  answerLogic: "The correct answer is rich enough, but the wrong options rely on obvious extreme/passive cues and should be rejected for KILLER.",
+  options: [
+    { label: "1", text: "linking policy domains so ecological improvements remain practically accessible" },
+    { label: "2", text: "unconditionally expanding every urban program regardless of social use" },
+    { label: "3", text: "completely separating environmental goals from public access" },
+    { label: "4", text: "passively waiting for market habits to solve ecological problems" },
+    { label: "5", text: "strictly adding more parks without coordinating city systems" }
+  ],
+};
+
 const defaultProcessed = postProcessQuestion("BLANK_INFERENCE", passage, defaultModeQuestion);
 const exactProcessed = postProcessQuestion("BLANK_INFERENCE", passage, exactParaphraseQuestion);
 const goodProcessed = postProcessQuestion("BLANK_INFERENCE", passage, goodParaphraseQuestion);
@@ -284,6 +498,13 @@ const trailingFunctionProcessed = postProcessQuestion("BLANK_INFERENCE", trailin
 const duplicatedFrameProcessed = postProcessQuestion("BLANK_INFERENCE", duplicatedFramePassage, duplicatedFrameQuestion);
 const clauseSlotProcessed = postProcessQuestion("BLANK_INFERENCE", clauseSlotPassage, clauseSlotQuestion);
 const stackedPrepositionProcessed = postProcessQuestion("BLANK_INFERENCE", stackedPrepositionPassage, stackedPrepositionQuestion);
+const killerTooEasyProcessed = postProcessQuestion("BLANK_INFERENCE", killerTooEasyPassage, killerTooEasyQuestion);
+const standardKillerShallowProcessed = postProcessQuestion("BLANK_INFERENCE", standardKillerShallowPassage, standardKillerShallowQuestion);
+const standardKillerComparisonProcessed = postProcessQuestion("BLANK_INFERENCE", standardKillerShallowPassage, standardKillerComparisonQuestion);
+const intermediateTooShallowProcessed = postProcessQuestion("BLANK_INFERENCE", intermediateTooShallowPassage, intermediateTooShallowQuestion);
+const targetTooWideProcessed = postProcessQuestion("BLANK_INFERENCE", targetTooWidePassage, targetTooWideQuestion);
+const infinitiveGerundProcessed = postProcessQuestion("BLANK_INFERENCE", infinitiveGerundPassage, infinitiveGerundQuestion);
+const killerGiveawayProcessed = postProcessQuestion("BLANK_INFERENCE", killerGiveawayPassage, killerGiveawayQuestion);
 
 const exactQuality = exactProcessed.success
   ? validateQuestionQuality({
@@ -375,6 +596,74 @@ const stackedPrepositionQuality = stackedPrepositionProcessed.success
     })
   : [];
 
+const killerTooEasyQuality = killerTooEasyProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: killerTooEasyProcessed.data,
+      passage: killerTooEasyPassage,
+      requestedDifficulty: "KILLER",
+      blankInferenceParaphraseAnswer: true,
+    })
+  : [];
+
+const standardKillerShallowQuality = standardKillerShallowProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: standardKillerShallowProcessed.data,
+      passage: standardKillerShallowPassage,
+      requestedDifficulty: "KILLER",
+    })
+  : [];
+
+const standardKillerComparisonQuality = standardKillerComparisonProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: standardKillerComparisonProcessed.data,
+      passage: standardKillerShallowPassage,
+      requestedDifficulty: "KILLER",
+    })
+  : [];
+
+const intermediateTooShallowQuality = intermediateTooShallowProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: intermediateTooShallowProcessed.data,
+      passage: intermediateTooShallowPassage,
+      requestedDifficulty: "INTERMEDIATE",
+      blankInferenceParaphraseAnswer: true,
+    })
+  : [];
+
+const targetTooWideQuality = targetTooWideProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: targetTooWideProcessed.data,
+      passage: targetTooWidePassage,
+      requestedDifficulty: "INTERMEDIATE",
+      blankInferenceParaphraseAnswer: true,
+    })
+  : [];
+
+const infinitiveGerundQuality = infinitiveGerundProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: infinitiveGerundProcessed.data,
+      passage: infinitiveGerundPassage,
+      requestedDifficulty: "KILLER",
+      blankInferenceParaphraseAnswer: true,
+    })
+  : [];
+
+const killerGiveawayQuality = killerGiveawayProcessed.success
+  ? validateQuestionQuality({
+      typeId: "BLANK_INFERENCE",
+      question: killerGiveawayProcessed.data,
+      passage: killerGiveawayPassage,
+      requestedDifficulty: "KILLER",
+      blankInferenceParaphraseAnswer: true,
+    })
+  : [];
+
 process.stdout.write(JSON.stringify({
   defaultProcessed,
   exactProcessed,
@@ -386,6 +675,13 @@ process.stdout.write(JSON.stringify({
   duplicatedFrameProcessed,
   clauseSlotProcessed,
   stackedPrepositionProcessed,
+  killerTooEasyProcessed,
+  standardKillerShallowProcessed,
+  standardKillerComparisonProcessed,
+  intermediateTooShallowProcessed,
+  targetTooWideProcessed,
+  infinitiveGerundProcessed,
+  killerGiveawayProcessed,
   exactQuality,
   goodQuality,
   awkwardQuality,
@@ -395,6 +691,13 @@ process.stdout.write(JSON.stringify({
   duplicatedFrameQuality,
   clauseSlotQuality,
   stackedPrepositionQuality,
+  killerTooEasyQuality,
+  standardKillerShallowQuality,
+  standardKillerComparisonQuality,
+  intermediateTooShallowQuality,
+  targetTooWideQuality,
+  infinitiveGerundQuality,
+  killerGiveawayQuality,
 }));
 `;
 
@@ -481,4 +784,46 @@ test("PARAPHRASE mode rejects options that stack prepositions with the left cont
   assert.equal(result.stackedPrepositionProcessed.success, true, result.stackedPrepositionProcessed.error);
   const codes = new Set(result.stackedPrepositionQuality.map((issue) => issue.code));
   assert.equal(codes.has("blank-awkward-option"), true);
+});
+
+test("KILLER PARAPHRASE rejects screenshot-level short local synonym answers", () => {
+  assert.equal(result.killerTooEasyProcessed.success, true, result.killerTooEasyProcessed.error);
+  const codes = new Set(result.killerTooEasyQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-paraphrase-killer-too-easy"), true);
+});
+
+test("KILLER standard BLANK_INFERENCE rejects shallow reciprocal source tails", () => {
+  assert.equal(result.standardKillerShallowProcessed.success, true, result.standardKillerShallowProcessed.error);
+  const codes = new Set(result.standardKillerShallowQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-killer-target-too-easy"), true);
+});
+
+test("KILLER standard BLANK_INFERENCE allows a single comparison comma target", () => {
+  assert.equal(result.standardKillerComparisonProcessed.success, true, result.standardKillerComparisonProcessed.error);
+  const codes = new Set(result.standardKillerComparisonQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-target-list-like"), false);
+});
+
+test("INTERMEDIATE PARAPHRASE rejects three-word local synonym swaps", () => {
+  assert.equal(result.intermediateTooShallowProcessed.success, true, result.intermediateTooShallowProcessed.error);
+  const codes = new Set(result.intermediateTooShallowQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-paraphrase-difficulty-mismatch"), true);
+});
+
+test("PARAPHRASE mode rejects overly broad source target spans", () => {
+  assert.equal(result.targetTooWideProcessed.success, true, result.targetTooWideProcessed.error);
+  const codes = new Set(result.targetTooWideQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-paraphrase-target-too-wide"), true);
+});
+
+test("PARAPHRASE mode rejects adverb plus gerund answers after an infinitive marker", () => {
+  assert.equal(result.infinitiveGerundProcessed.success, true, result.infinitiveGerundProcessed.error);
+  const codes = new Set(result.infinitiveGerundQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-paraphrase-verb-form-slot-mismatch"), true);
+});
+
+test("KILLER PARAPHRASE rejects giveaway extreme distractor sets", () => {
+  assert.equal(result.killerGiveawayProcessed.success, true, result.killerGiveawayProcessed.error);
+  const codes = new Set(result.killerGiveawayQuality.map((issue) => issue.code));
+  assert.equal(codes.has("blank-paraphrase-killer-giveaway-distractors"), true);
 });

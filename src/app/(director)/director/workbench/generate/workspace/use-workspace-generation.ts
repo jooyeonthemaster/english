@@ -8,7 +8,11 @@ import {
   getQuestionGenerationCreditCost,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
   FAST_BATCH_CONCURRENCY,
@@ -130,7 +134,7 @@ export function useWorkspaceGeneration({
   const summary: WorkspaceGenerationSummary = useMemo(() => {
     const globalCfg = { genMode, autoCount, totalQuestions: Object.values(typeCounts).reduce((a, b) => a + b, 0) };
     let totalQuestions = 0;
-    let baseCredits = 0;
+    let creditCost = 0;
     let variantCount = 0;
     for (const row of api.rows) {
       totalQuestions += rowQuestionCount(row, globalCfg);
@@ -141,27 +145,49 @@ export function useWorkspaceGeneration({
           const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
             ? CREDIT_COSTS.QUESTION_GEN_VOCAB
             : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-          baseCredits += unit * n;
+          creditCost += getQuestionGenerationCreditCost(
+            unit * n,
+            readQuestionTypeGenerationPlanSetting(
+              questionTypeSettings[typeId],
+              generationPlan,
+            ),
+          );
         }
       } else if (genMode === "auto") {
-        baseCredits += CREDIT_COSTS.AUTO_GEN_BATCH;
+        creditCost += getQuestionGenerationCreditCost(
+          CREDIT_COSTS.AUTO_GEN_BATCH,
+          generationPlan,
+        );
       } else if (genMode === "manual") {
         for (const [typeId, n] of Object.entries(typeCounts)) {
           if (n <= 0) continue;
           const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
             ? CREDIT_COSTS.QUESTION_GEN_VOCAB
             : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-          baseCredits += unit * n;
+          creditCost += getQuestionGenerationCreditCost(
+            unit * n,
+            readQuestionTypeGenerationPlanSetting(
+              questionTypeSettings[typeId],
+              generationPlan,
+            ),
+          );
         }
       }
     }
     return {
       rowCount: api.rows.length,
       totalQuestions,
-      creditCost: getQuestionGenerationCreditCost(baseCredits, generationPlan),
+      creditCost,
       variantCount,
     };
-  }, [api.rows, genMode, autoCount, typeCounts, generationPlan]);
+  }, [
+    api.rows,
+    genMode,
+    autoCount,
+    typeCounts,
+    questionTypeSettings,
+    generationPlan,
+  ]);
 
   const handleWorkspaceGenerate = useCallback(async () => {
     if (api.rows.length === 0 || generating) return;
@@ -269,6 +295,7 @@ export function useWorkspaceGeneration({
         questionType?: string; // undefined → AUTO
         settings?: unknown;
         difficulty: string;
+        generationPlan: QuestionGenerationPlan;
         tempId: string;
         config: QueueItem["config"];
         progressKey: string;
@@ -300,21 +327,31 @@ export function useWorkspaceGeneration({
         if (effTypeCounts) {
           for (const [typeId, rawCount] of Object.entries(effTypeCounts)) {
             const repeat = Math.max(0, Math.floor(Number(rawCount) || 0));
+            const settingsForType = questionTypeSettings[typeId];
+            const unitDifficulty = readQuestionTypeDifficultySetting(
+              settingsForType,
+              effDifficulty,
+            );
+            const unitGenerationPlan = readQuestionTypeGenerationPlanSetting(
+              settingsForType,
+              generationPlan,
+            );
             for (let i = 0; i < repeat; i += 1) {
               fastUnits.push({
                 passage: passageLike,
                 questionType: typeId,
-                settings: questionTypeSettings[typeId],
-                difficulty: effDifficulty,
+                settings: settingsForType,
+                difficulty: unitDifficulty,
+                generationPlan: unitGenerationPlan,
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
                 config: {
                   typeCounts: { [typeId]: 1 },
-                  questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
-                  difficulty: effDifficulty,
+                  questionTypeSettings: { [typeId]: settingsForType },
+                  difficulty: unitDifficulty,
                   prompt,
                   mode: "manual",
-                  generationPlan,
+                  generationPlan: unitGenerationPlan,
                 },
               });
             }
@@ -324,6 +361,7 @@ export function useWorkspaceGeneration({
             passage: passageLike,
             questionType: undefined,
             difficulty: effDifficulty,
+            generationPlan,
             tempId: `fast:${item.passageId}:${runId}:0`,
             progressKey: "auto",
             config: {
@@ -391,7 +429,7 @@ export function useWorkspaceGeneration({
                 questionTypeSettings: unit.settings,
                 difficulty: unit.difficulty,
                 customPrompt: prompt || undefined,
-                generationPlan,
+                generationPlan: unit.generationPlan,
               });
               const doneItem = {
                 ...buildOptimisticItem({

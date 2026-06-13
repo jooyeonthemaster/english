@@ -41,6 +41,8 @@ import {
   type QuestionDiversityContext,
 } from "@/lib/question-diversity";
 import {
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -188,6 +190,20 @@ export async function POST(req: NextRequest) {
     ...parsed.data,
     generationPlan: normalizeQuestionGenerationPlan(parsed.data.generationPlan),
   };
+  const effectiveGenerationPlan =
+    config.mode === "MANUAL" && config.questionType
+      ? readQuestionTypeGenerationPlanSetting(
+          config.questionTypeSettings,
+          config.generationPlan,
+        )
+      : config.generationPlan;
+  const effectiveDifficulty =
+    config.mode === "MANUAL" && config.questionType
+      ? readQuestionTypeDifficultySetting(
+          config.questionTypeSettings,
+          config.difficulty,
+        )
+      : readQuestionTypeDifficultySetting(undefined, config.difficulty);
 
   if (config.mode === "MANUAL" && !config.questionType) {
     return NextResponse.json(
@@ -245,8 +261,8 @@ export async function POST(req: NextRequest) {
       passageId: passage.id,
       mode: config.mode,
       questionType: config.questionType ?? null,
-      generationPlan: config.generationPlan,
-      difficulty: config.difficulty,
+      generationPlan: effectiveGenerationPlan,
+      difficulty: effectiveDifficulty,
       requestedCount: config.count,
       startedAt: now,
       config: {
@@ -254,9 +270,9 @@ export async function POST(req: NextRequest) {
         count: config.count,
         questionType: config.questionType ?? null,
         questionTypeSettings: config.questionTypeSettings ?? null,
-        difficulty: config.difficulty,
+        difficulty: effectiveDifficulty,
         customPrompt: config.customPrompt ?? "",
-        generationPlan: config.generationPlan,
+        generationPlan: effectiveGenerationPlan,
         fastPath: true,
       },
     },
@@ -265,7 +281,7 @@ export async function POST(req: NextRequest) {
   const operationType = getOperationType(config);
   const creditCost = getQuestionGenerationCreditCost(
     CREDIT_COSTS[operationType],
-    config.generationPlan,
+    effectiveGenerationPlan,
   );
   let creditTxId: string | null = null;
   let creditMs = 0;
@@ -287,7 +303,8 @@ export async function POST(req: NextRequest) {
         mode: config.mode,
         questionType: config.questionType,
         count: config.count,
-        generationPlan: config.generationPlan,
+        generationPlan: effectiveGenerationPlan,
+        difficulty: effectiveDifficulty,
         creditCost,
         fastPath: true,
       },
@@ -304,7 +321,7 @@ export async function POST(req: NextRequest) {
     const teacherAnnotations = extractTeacherAnnotations(passage);
     const teacherIntentBlock = buildQuestionAnnotationBlock(teacherAnnotations);
     const analysisContext = buildAnalysisContext(passage);
-    const diffLabel = config.difficulty || "INTERMEDIATE";
+    const diffLabel = effectiveDifficulty;
     const diffInstruction =
       DIFF_DESCRIPTION[diffLabel] || DIFF_DESCRIPTION.INTERMEDIATE;
 
@@ -323,9 +340,9 @@ export async function POST(req: NextRequest) {
           analysisContext,
           customPrompt: config.customPrompt,
           diffLabel,
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
         }),
-        generationPlan: config.generationPlan,
+        generationPlan: effectiveGenerationPlan,
         logPrefix: "WORKBENCH-FAST-AUTO-GEN-PLAN",
         maxTokens: 4_096,
       });
@@ -344,7 +361,8 @@ export async function POST(req: NextRequest) {
         usageAt: new Date(),
         metadata: {
           passageId: passage.id,
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
+          difficulty: diffLabel,
           fastPath: true,
           attempts: planningResult.attempts,
           durationMs: planningResult.durationMs,
@@ -410,7 +428,7 @@ export async function POST(req: NextRequest) {
         analysisContext,
         diffLabel,
         diffInstruction,
-        generationPlan: config.generationPlan,
+        generationPlan: effectiveGenerationPlan,
         customPrompt: config.customPrompt,
         typeSettings:
           config.mode === "MANUAL" && config.questionType
@@ -436,7 +454,8 @@ export async function POST(req: NextRequest) {
         usageAt: new Date(),
         metadata: {
           passageId: passage.id,
-          generationPlan: config.generationPlan,
+          generationPlan: event.generationPlan ?? effectiveGenerationPlan,
+          difficulty: event.difficulty ?? diffLabel,
           fastPath: true,
           qualityMode: event.qualityMode,
           attempts: event.attempts,
@@ -450,13 +469,16 @@ export async function POST(req: NextRequest) {
     generationRejectionSummary = generationResult.rejectionSummary;
 
     const questionsForDisplay = questions.slice(0, config.count).map((question) => {
+      const questionPlan = normalizeQuestionGenerationPlan(
+        question._generationPlan ?? effectiveGenerationPlan,
+      );
       const tags = mergeQuestionGenerationPlanTag(
         readQuestionTags(question.tags),
-        config.generationPlan,
+        questionPlan,
       );
       return {
         ...question,
-        _generationPlan: config.generationPlan,
+        _generationPlan: questionPlan,
         tags,
       };
     });
@@ -474,7 +496,7 @@ export async function POST(req: NextRequest) {
       academyId: job.academyId,
       passageId: passage.id,
       questions: questionsForDisplay,
-      generationPlan: config.generationPlan,
+      generationPlan: effectiveGenerationPlan,
       skipPassageEligibilityCheck: true,
     });
     persistenceMs = Date.now() - persistenceStartedAt;
@@ -503,7 +525,7 @@ export async function POST(req: NextRequest) {
           questions: questionsForDisplay,
           questionIds: createdQuestionIds,
           rationale,
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
           debugTiming,
           fastPath: true,
         })),
@@ -516,7 +538,7 @@ export async function POST(req: NextRequest) {
       status: "COMPLETED",
       questions: questionsForDisplay,
       questionIds: createdQuestionIds,
-      generationPlan: config.generationPlan,
+      generationPlan: effectiveGenerationPlan,
       creditsRemaining: credit.balanceAfter,
       createdAt: job.createdAt.toISOString(),
       completedAt: completedAt.toISOString(),
@@ -565,7 +587,8 @@ export async function POST(req: NextRequest) {
         errorMessage: message,
         result: JSON.parse(JSON.stringify({
           passageId: passage.id,
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
+          difficulty: effectiveDifficulty,
           debugTiming: {
             queueWaitMs: 0,
             creditMs,
