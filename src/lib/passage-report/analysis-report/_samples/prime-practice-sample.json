@@ -1,0 +1,1659 @@
+{
+ "meta": {
+  "theme": "숫자에 대한 인류의 미신과 문화적 다양성",
+  "eyebrow": "PRIME PASSAGE ANALYSIS · 심층 지문 분석",
+  "titleEn": "Superstitions Surrounding Numbers — Science, Culture, and History",
+  "titleKo": "숫자에 얽힌 미신 : 과학적 배경부터 문화적 차이까지",
+  "category": "비문학 · 문화/역사",
+  "examTypes": "주제·제목, 어법성 판단, 순서 배열, 빈칸 추론",
+  "solveTime": "3분 15초",
+  "difficulty": 2,
+  "difficultyNote": "고1~고2 수준"
+ },
+ "brand": "ENGLISH READING LAB",
+ "themeId": "black-white",
+ "sections": [
+  {
+   "kind": "passage",
+   "keywords": [
+    "superstitions",
+    "numbers",
+    "seven",
+    "three",
+    "five",
+    "four",
+    "13",
+    "cultures",
+    "mythology"
+   ],
+   "sentences": [
+    {
+     "n": 1,
+     "en": "Do you believe that seven is a lucky number or that bad luck happens in sets of three?",
+     "ko": "여러분은 7이 행운의 숫자라거나 불운이 3회 연속으로 일어난다고 믿나요?",
+     "chunks": [
+      {
+       "role": "주절(질문)",
+       "text": "Do you believe "
+      },
+      {
+       "role": "첫 번째 목적어절(명사절)",
+       "text": "that seven is a lucky number "
+      },
+      {
+       "role": "두 번째 목적어절(명사절)",
+       "text": "or that bad luck happens in sets of three?"
+      }
+     ]
+    },
+    {
+     "n": 2,
+     "en": "If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago.",
+     "ko": "만약 그렇다면, 여러분의 생각은 2,600년 전에 살았던 그리스 철학자인 피타고라스만큼이나 오래된 것이에요.",
+     "chunks": [
+      {
+       "role": "조건 부사구",
+       "text": "If so, "
+      },
+      {
+       "role": "주절(원급 비교)",
+       "text": "your ideas are as old as Pythagoras, "
+      },
+      {
+       "role": "동격(피타고라스 설명)",
+       "text": "a Greek philosopher "
+      },
+      {
+       "role": "관계절(앞 명사 수식)",
+       "text": "who lived 2,600 years ago."
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "en": "Pythagoras believed that certain numbers and their multiples had mystical power.",
+     "ko": "피타고라스는 특정 숫자들과 그것들의 배수가 신비로운 힘을 가지고 있다고 믿었어요.",
+     "chunks": [
+      {
+       "role": "주절",
+       "text": "Pythagoras believed "
+      },
+      {
+       "role": "목적어절의 주어",
+       "text": "that certain numbers and their multiples "
+      },
+      {
+       "role": "목적어절의 동사구",
+       "text": "had mystical power."
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "en": "For centuries, people have developed superstitions about numbers.",
+     "ko": "수 세기 동안, 사람들은 숫자에 대한 미신을 만들어 왔어요.",
+     "chunks": [
+      {
+       "role": "시간 부사구",
+       "text": "For centuries, "
+      },
+      {
+       "role": "주절(현재완료 시제)",
+       "text": "people have developed superstitions "
+      },
+      {
+       "role": "전치사구",
+       "text": "about numbers."
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "en": "Many of these superstitions have been passed on through the generations and still exist today.",
+     "ko": "이러한 미신들 중 상당수는 세대를 거쳐 전해 내려왔고 오늘날에도 여전히 존재해요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "Many of these superstitions "
+      },
+      {
+       "role": "첫 번째 동사(현재완료 수동태)",
+       "text": "have been passed on "
+      },
+      {
+       "role": "전치사구",
+       "text": "through the generations "
+      },
+      {
+       "role": "두 번째 동사(현재완료 능동태)",
+       "text": "and still exist today."
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "en": "Many of the superstitions surrounding numbers have a basis in science and nature.",
+     "ko": "숫자를 둘러싼 미신들 중 상당수는 과학과 자연에 기초를 두고 있어요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "Many of the superstitions "
+      },
+      {
+       "role": "현재분사구(앞 명사 수식)",
+       "text": "surrounding numbers "
+      },
+      {
+       "role": "동사+목적어",
+       "text": "have a basis "
+      },
+      {
+       "role": "전치사구",
+       "text": "in science and nature."
+      }
+     ]
+    },
+    {
+     "n": 7,
+     "en": "For example, early astrologers believed that seven planets governed the universe and therefore the lives of human beings.",
+     "ko": "예를 들어, 초기 점성술사들은 7개의 행성이 우주를 지배하고, 따라서 인간의 삶도 지배한다고 믿었어요.",
+     "chunks": [
+      {
+       "role": "연결어",
+       "text": "For example, "
+      },
+      {
+       "role": "주절",
+       "text": "early astrologers believed "
+      },
+      {
+       "role": "목적어절의 첫 번째 동사구",
+       "text": "that seven planets governed the universe "
+      },
+      {
+       "role": "목적어절의 두 번째 목적어구",
+       "text": "and therefore the lives of human beings."
+      }
+     ]
+    },
+    {
+     "n": 8,
+     "en": "A seventh child was thought to have special gifts.",
+     "ko": "일곱 번째 아이는 특별한 재능을 가지고 있다고 여겨졌어요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "A seventh child "
+      },
+      {
+       "role": "동사(수동태)",
+       "text": "was thought "
+      },
+      {
+       "role": "to부정사(보어)",
+       "text": "to have special gifts."
+      }
+     ]
+    },
+    {
+     "n": 9,
+     "en": "Human life was divided into seven ages.",
+     "ko": "인간의 삶은 일곱 단계의 시기로 나뉘었어요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "Human life "
+      },
+      {
+       "role": "동사(수동태)",
+       "text": "was divided "
+      },
+      {
+       "role": "전치사구",
+       "text": "into seven ages."
+      }
+     ]
+    },
+    {
+     "n": 10,
+     "en": "Every seventh year was believed to bring great change.",
+     "ko": "매 일곱 번째 해는 큰 변화를 가져온다고 믿어졌어요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "Every seventh year "
+      },
+      {
+       "role": "동사(수동태)",
+       "text": "was believed "
+      },
+      {
+       "role": "to부정사(보어)",
+       "text": "to bring great change."
+      }
+     ]
+    },
+    {
+     "n": 11,
+     "en": "If a person's date of birth could be divided by seven, that person's life would be lucky.",
+     "ko": "만약 어떤 사람의 생일이 7로 나누어떨어질 수 있다면, 그 사람의 삶은 행운이 따를 것이었어요.",
+     "chunks": [
+      {
+       "role": "조건절의 주어",
+       "text": "If a person's date of birth "
+      },
+      {
+       "role": "조건절의 동사(수동태)",
+       "text": "could be divided by seven, "
+      },
+      {
+       "role": "주절",
+       "text": "that person's life would be lucky."
+      }
+     ]
+    },
+    {
+     "n": 12,
+     "en": "For the ancient Babylonians, three was a lucky number because it symbolized birth, life, and death.",
+     "ko": "고대 바빌로니아인들에게 3은 탄생, 삶, 죽음을 상징하기 때문에 행운의 숫자였어요.",
+     "chunks": [
+      {
+       "role": "전치사구",
+       "text": "For the ancient Babylonians, "
+      },
+      {
+       "role": "주절",
+       "text": "three was a lucky number "
+      },
+      {
+       "role": "이유 부사절",
+       "text": "because it symbolized birth, life, and death."
+      }
+     ]
+    },
+    {
+     "n": 13,
+     "en": "Some people still believe that a dream repeated three times comes true.",
+     "ko": "어떤 사람들은 여전히 세 번 반복된 꿈은 이루어진다고 믿어요.",
+     "chunks": [
+      {
+       "role": "주절",
+       "text": "Some people still believe "
+      },
+      {
+       "role": "목적어절의 주어",
+       "text": "that a dream "
+      },
+      {
+       "role": "과거분사구(앞 명사 수식)",
+       "text": "repeated three times "
+      },
+      {
+       "role": "목적어절의 동사",
+       "text": "comes true."
+      }
+     ]
+    },
+    {
+     "n": 14,
+     "en": "Numbers don't have the same meaning in all cultures.",
+     "ko": "숫자가 모든 문화에서 똑같은 의미를 가지는 것은 아니에요.",
+     "chunks": [
+      {
+       "role": "주어+동사(부분 부정)",
+       "text": "Numbers don't have "
+      },
+      {
+       "role": "목적어",
+       "text": "the same meaning "
+      },
+      {
+       "role": "전치사구",
+       "text": "in all cultures."
+      }
+     ]
+    },
+    {
+     "n": 15,
+     "en": "Five is considered a most holy and lucky number in Egypt.",
+     "ko": "이집트에서 5는 가장 신성하고 행운의 숫자로 여겨져요.",
+     "chunks": [
+      {
+       "role": "주어+동사(수동태)",
+       "text": "Five is considered "
+      },
+      {
+       "role": "목적격보어(명사구)",
+       "text": "a most holy and lucky number "
+      },
+      {
+       "role": "전치사구",
+       "text": "in Egypt."
+      }
+     ]
+    },
+    {
+     "n": 16,
+     "en": "But in Ghana, the Ashanti people consider five to be an unlucky number.",
+     "ko": "하지만 가나에서 아샨티족 사람들은 5를 불길한 숫자로 여겨요.",
+     "chunks": [
+      {
+       "role": "연결어+전치사구",
+       "text": "But in Ghana, "
+      },
+      {
+       "role": "주어+동사+목적어",
+       "text": "the Ashanti people consider five "
+      },
+      {
+       "role": "목적격보어(to부정사)",
+       "text": "to be an unlucky number."
+      }
+     ]
+    },
+    {
+     "n": 17,
+     "en": "To give someone five of anything is to wish the person evil.",
+     "ko": "누군가에게 어떤 것이든 5개를 주는 것은 그 사람에게 불행을 바라는 것이에요.",
+     "chunks": [
+      {
+       "role": "주어(to부정사구)",
+       "text": "To give someone five of anything "
+      },
+      {
+       "role": "동사",
+       "text": "is "
+      },
+      {
+       "role": "보어(to부정사구)",
+       "text": "to wish the person evil."
+      }
+     ]
+    },
+    {
+     "n": 18,
+     "en": "The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance.",
+     "ko": "고대 그리스인들과 이집트인들은 숫자 4가 통일, 인내, 균형을 상징하는 완벽한 숫자라고 생각했어요.",
+     "chunks": [
+      {
+       "role": "주절",
+       "text": "The ancient Greeks and Egyptians thought "
+      },
+      {
+       "role": "목적어절",
+       "text": "the number four was a perfect number "
+      },
+      {
+       "role": "현재분사구(앞 명사 수식)",
+       "text": "symbolizing unity, endurance, and balance."
+      }
+     ]
+    },
+    {
+     "n": 19,
+     "en": "However, the Chinese consider the number four to be unlucky because it sounds like the word for death.",
+     "ko": "하지만 중국인들은 숫자 4가 죽음을 뜻하는 단어와 발음이 비슷하기 때문에 불길하다고 여겨요.",
+     "chunks": [
+      {
+       "role": "연결어",
+       "text": "However, "
+      },
+      {
+       "role": "주어+동사+목적어",
+       "text": "the Chinese consider the number four "
+      },
+      {
+       "role": "목적격보어(to부정사)",
+       "text": "to be unlucky "
+      },
+      {
+       "role": "이유 부사절",
+       "text": "because it sounds like the word for death."
+      }
+     ]
+    },
+    {
+     "n": 20,
+     "en": "The number that seems to be almost universally considered unlucky is 13.",
+     "ko": "거의 전 세계적으로 불길하다고 여겨지는 듯한 숫자는 13이에요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "The number "
+      },
+      {
+       "role": "관계절(앞 명사 수식)",
+       "text": "that seems to be almost universally considered unlucky "
+      },
+      {
+       "role": "동사+보어",
+       "text": "is 13."
+      }
+     ]
+    },
+    {
+     "n": 21,
+     "en": "No other number has had such a bad reputation for so long.",
+     "ko": "그 어떤 다른 숫자도 그렇게 오랫동안 그렇게 나쁜 평판을 가져본 적이 없어요.",
+     "chunks": [
+      {
+       "role": "부정 주어",
+       "text": "No other number "
+      },
+      {
+       "role": "동사+목적어(현재완료)",
+       "text": "has had such a bad reputation "
+      },
+      {
+       "role": "시간 부사구",
+       "text": "for so long."
+      }
+     ]
+    },
+    {
+     "n": 22,
+     "en": "The ancient Romans regarded it as a symbol of death, destruction, and misfortune.",
+     "ko": "고대 로마인들은 그것을 죽음, 파괴, 그리고 불행의 상징으로 여겼어요.",
+     "chunks": [
+      {
+       "role": "주어+동사+목적어",
+       "text": "The ancient Romans regarded it "
+      },
+      {
+       "role": "전치사구(as+명사)",
+       "text": "as a symbol of death, destruction, and misfortune."
+      }
+     ]
+    },
+    {
+     "n": 23,
+     "en": "One of the earliest written stories about the number 13 appears in Norwegian mythology.",
+     "ko": "숫자 13에 관한 가장 초기 기록물 중 하나는 노르웨이 신화에 등장해요.",
+     "chunks": [
+      {
+       "role": "주어",
+       "text": "One of the earliest written stories "
+      },
+      {
+       "role": "전치사구",
+       "text": "about the number 13 "
+      },
+      {
+       "role": "동사+전치사구",
+       "text": "appears in Norwegian mythology."
+      }
+     ]
+    },
+    {
+     "n": 24,
+     "en": "This story tells about a feast at Valhalla to which 12 gods were invited.",
+     "ko": "이 이야기는 12명의 신이 초대받은 발할라에서의 연회에 대해 말해줘요.",
+     "chunks": [
+      {
+       "role": "주절",
+       "text": "This story tells about a feast at Valhalla "
+      },
+      {
+       "role": "전치사+관계대명사절",
+       "text": "to which 12 gods were invited."
+      }
+     ]
+    },
+    {
+     "n": 25,
+     "en": "Loki, the god of evil, came uninvited, raising the number to 13.",
+     "ko": "악의 신인 로키가 초대받지 않은 채 찾아와서 그 숫자를 13으로 늘렸어요.",
+     "chunks": [
+      {
+       "role": "주어(동격)",
+       "text": "Loki, the god of evil, "
+      },
+      {
+       "role": "동사+형용사보어",
+       "text": "came uninvited, "
+      },
+      {
+       "role": "분사구문(결과)",
+       "text": "raising the number to 13."
+      }
+     ]
+    },
+    {
+     "n": 26,
+     "en": "In the struggle to throw out Loki, Balder, the favorite of the gods, was killed.",
+     "ko": "로키를 쫓아내려는 싸움 속에서, 신들이 가장 사랑했던 발데르가 죽임을 당했어요.",
+     "chunks": [
+      {
+       "role": "전치사구+to부정사구",
+       "text": "In the struggle to throw out Loki, "
+      },
+      {
+       "role": "주어(동격)",
+       "text": "Balder, the favorite of the gods, "
+      },
+      {
+       "role": "동사(수동태)",
+       "text": "was killed."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "structure-map",
+   "note": "※ 숫자에 대한 미신은 과학적 배경을 갖기도 하지만, 문화에 따라 완전히 상반된 의미를 지닙니다.",
+   "intro": {
+    "label": "숫자에 얽힌 오랜 미신 (superstitions about numbers)",
+    "eyebrow": "INTRODUCTION"
+   },
+   "columns": [
+    {
+     "footer": "자연의 섭리나 긍정적 가치 상징",
+     "bullets": [
+      "숫자 7 (Seven): 우주 지배 행성 수에 기반한 행운 (seven planets governed)",
+      "숫자 3 (Three): 탄생, 삶, 죽음의 상징 (symbolized birth, life, and death)",
+      "숫자 5 (Five): 이집트에서 가장 신성한 수 (most holy in Egypt)",
+      "숫자 4 (Four): 그리스·이집트에서 완벽과 균형의 상징 (unity, endurance, and balance)"
+     ],
+     "titleEn": "Lucky Numbers",
+     "titleKo": "행운의 숫자"
+    },
+    {
+     "footer": "언어적 발음이나 역사적·신화적 비극에서 유래",
+     "bullets": [
+      "숫자 5 (Five): 가나 아샨티족에게는 악의 기원 (wish the person evil)",
+      "숫자 4 (Four): 중국에서 '죽음'과 유사한 발음 (sounds like death)",
+      "숫자 13 (Thirteen): 로마의 불행 상징 및 노르웨이 신화 속 비극 (Loki's uninvited arrival)"
+     ],
+     "titleEn": "Unlucky Numbers",
+     "titleKo": "불길한 숫자"
+    }
+   ],
+   "variant": "compare",
+   "logicFlow": "숫자 미신의 역사적 기원 ▶ 과학/자연적 배경 ▶ 문화별 상반된 해석(4, 5의 사례) ▶ 보편적 불길한 수 13의 신화적 유래",
+   "conclusion": {
+    "text": "숫자의 의미는 절대적이지 않으며, 각 문화권의 역사, 언어, 신화에 따라 다르게 해석됩니다.",
+    "eyebrow": "CONCLUSION"
+   },
+   "branchLabel": "문화적 배경에 따른 숫자의 의미 차이",
+   "coreDistinction": {
+    "label": "문화적 다양성 (cultural diversity) 과 언어적·역사적 맥락의 차이",
+    "eyebrow": "CORE CRITERION"
+   }
+  },
+  {
+   "kind": "summary",
+   "thesisEn": "Superstitions surrounding numbers have deep historical roots, with some based on science and nature, while their specific meanings—whether lucky or unlucky—vary significantly across different cultures and mythologies.",
+   "sentences": [
+    "인류는 아주 오래전부터 숫자에 신비로운 힘이 있다고 믿으며 다양한 미신을 만들어 왔어요.",
+    "어떤 미신들은 과학이나 자연 현상에 기초를 두고 있지만, 숫자가 가지는 의미는 문화권마다 크게 달라져요.",
+    "예를 들어 4나 5 같은 숫자는 어떤 문화에서는 행운과 완벽을 뜻하지만 다른 문화에서는 불행을 뜻하며, 13은 북유럽 신화 등의 영향으로 전 세계적으로 불길한 수로 여겨져요."
+   ]
+  },
+  {
+   "kind": "grammar",
+   "note": "※ ⚠ 는 시험에서 학생이 자주 틀리는 함정",
+   "rows": [
+    {
+     "trap": "⚠ 시험에선 이 자리를 existing 이나 existed 로 바꿔 밑줄을 쳐요. 앞의 passed와 겉모양만 맞추려다 낚이기 쉬우니, 주어에 걸리는 진짜 동사 자리임을 확인해야 해요.",
+     "point": "(i) 병렬 — have been passed 와 exist",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "have been passed와",
+       "병렬을 이루는 동사원형",
+       "exist가 맞아요!"
+      ],
+      "priority": 1,
+      "anchorText": "and still exist"
+     },
+     "excerpt": "have been passed on through the generations and still exist today",
+     "pointCode": "i",
+     "sentenceNo": 5,
+     "explanation": "이 자리는 and 뒤에 오는 동사의 모양을 맞추는 자리예요. 주어인 Many of these superstitions에 걸려서, 앞의 have been passed(전해 내려왔다)와 exist(존재한다)가 and를 사이에 두고 나란히 연결(병렬: and 앞뒤를 똑같은 모양으로 맞추는 거예요)되어 있어요. exist를 existed나 existing으로 쓰면 짝이 맞지 않아 틀려요. 이 지문에서는 현재 시제 동사인 exist가 정답이에요."
+    },
+    {
+     "trap": "⚠ 시험에선 이 자리를 과거분사인 surrounded 로 바꿔서 출제해요. 뒤에 numbers라는 목적어가 살아있으므로 능동의 -ing가 와야 해요.",
+     "point": "(c) 분사 능/수동 — surrounding",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "뒤에 목적어가 있으므로",
+       "능동의 현재분사",
+       "surrounding이 정답이에요."
+      ],
+      "priority": 2,
+      "anchorText": "surrounding numbers"
+     },
+     "excerpt": "Many of the superstitions surrounding numbers have a basis",
+     "pointCode": "c",
+     "sentenceNo": 6,
+     "explanation": "이 자리는 명사 뒤에서 꾸며주는 분사(동사를 형용사처럼 바꾼 형태예요)의 능동과 수동을 고르는 자리예요. 미신(superstitions)이 숫자들을 '둘러싸고 있는' 능동의 관계이므로 현재분사/-ing(동사를 '~하는' 뜻으로 바꾼 형태)인 surrounding을 써야 해요. surrounded를 쓰면 미신이 둘러싸임을 당한다는 어색한 뜻이 되어 틀려요."
+    },
+    {
+     "trap": "⚠ 시험에선 이 자리를 repeating 으로 슬쩍 바꿔놓아요. 꿈은 반복되는 대상이므로 수동의 p.p. 형태가 와야 함을 기억해요.",
+     "point": "(c) 분사 능/수동 — repeated",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "꿈은 반복되는 대상이므로",
+       "수동의 과거분사",
+       "repeated가 맞아요."
+      ],
+      "priority": 2,
+      "anchorText": "dream repeated"
+     },
+     "excerpt": "believe that a dream repeated three times comes true",
+     "pointCode": "c",
+     "sentenceNo": 13,
+     "explanation": "이 자리는 꿈(a dream)을 꾸며주는 분사(동사를 형용사처럼 바꾼 형태예요)의 모양을 고르는 자리예요. 꿈은 스스로 반복하는 것이 아니라 사람에 의해 '반복되는' 수동의 대상이므로 과거분사/p.p.(동사를 '~된·당한' 뜻으로 바꾼 형태)인 repeated가 맞아요. repeating을 쓰면 꿈이 무언가를 반복한다는 능동의 뜻이 되어 틀려요."
+    },
+    {
+     "trap": "⚠ 시험에선 바로 앞에 unlucky가 보이고 주어가 멀리 떨어져 있어서, 이 자리를 are 로 바꾸어 출제하면 낚이기 쉬워요.",
+     "point": "(d) 수일치 — is",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "진짜 주어는 단수인",
+       "The number이므로",
+       "단수동사 is를 써야 해요."
+      ],
+      "priority": 1,
+      "anchorText": "unlucky is 13"
+     },
+     "excerpt": "The number that seems to be almost universally considered unlucky is 13",
+     "pointCode": "d",
+     "sentenceNo": 20,
+     "explanation": "이 자리는 문장의 진짜 동사 자리에 단수동사를 쓸지 복수동사를 쓸지 고르는 자리예요. 주어는 문장 맨 앞의 The number(단수명사)이고, 중간에 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 that)절이 길게 끼어들어 주어를 꾸며주고 있어요. 주어가 단수이므로 동사도 단수동사인 is를 써야 해요. are를 쓰면 수일치(주어와 동사의 단수·복수를 맞추는 것)가 깨져서 틀려요."
+    },
+    {
+     "trap": "⚠ 시험에선 to를 빼고 그냥 which 만 써서 밑줄을 쳐요. 뒤 문장이 빠진 성분 없이 완전하므로 전치사 to가 반드시 살아있어야 해요.",
+     "point": "(b) 관계사 — to which",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "뒤 문장이 완전하므로",
+       "전치사+관계대명사인",
+       "to which가 올바른 형태예요."
+      ],
+      "priority": 1,
+      "anchorText": "to which 12"
+     },
+     "excerpt": "a feast at Valhalla to which 12 gods were invited",
+     "pointCode": "b",
+     "sentenceNo": 24,
+     "explanation": "이 자리는 전치사+관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 말)를 쓸지, 그냥 관계대명사를 쓸지 고르는 자리예요. 뒤 문장(12 gods were invited to the feast)에서 전치사 to 뒤에 있던 명사가 앞으로 나가면서 to which가 되었어요. 뒤 문장이 주어+수동태 동사로 완전하므로, 불완전한 문장을 이끄는 which만 단독으로 쓰면 틀려요."
+    }
+   ]
+  },
+  {
+   "kind": "exam-focus",
+   "rows": [
+    {
+     "asks": "글의 핵심 전환점이 되는 주제문을 빈칸으로 물어봐요.",
+     "type": "빈칸추론",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "★ 핵심 빈칸 출제 포인트",
+       "문화마다 숫자의 의미가",
+       "다르다는 주제문 자리예요."
+      ],
+      "priority": 1,
+      "anchorText": "same meaning in all"
+     },
+     "strategy": "이 문장은 글 전체의 핵심 주제문이에요. '모든 문화에서 같은 의미를 갖는 것은 아니다(don't have the same meaning in all cultures)'라는 표현이 빈칸으로 출제될 확률이 높아요. 문화적 다양성(cultural diversity/variation)이라는 단어를 활용한 선택지가 정답으로 출제되니, 앞뒤의 상반된 예시(이집트 vs 가나, 그리스 vs 중국)를 단서로 삼아 해결해요.",
+     "sentenceNo": 14,
+     "logicLocation": "⑭번 문장 전체 — 앞부분은 7과 3의 긍정적 미신을 설명하다가, 이 문장을 기점으로 문화마다 숫자의 의미가 달라진다는 대조 흐름이 시작돼요."
+    },
+    {
+     "asks": "주어진 문장이 들어갈 알맞은 위치를 물어봐요.",
+     "type": "문장삽입",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "★ 문장 삽입 대비",
+       "긍정적 의미(18번)에서",
+       "부정적 의미(19번)로",
+       "꺾이는 전환점이에요."
+      ],
+      "priority": 2,
+      "anchorText": "However, the Chinese"
+     },
+     "strategy": "그리스/이집트의 긍정적 시각(perfect)과 중국의 부정적 시각(unlucky)이 정반대로 꺾이는 지점을 찾아야 해요. 역접의 연결어 'However'가 아주 강력한 단서가 되므로, 숫자 4의 긍정적 언급 바로 뒤인 ⑲번 자리에 들어가야만 앞뒤 고리가 자연스럽게 연결돼요.",
+     "sentenceNo": 19,
+     "logicLocation": "⑲번 문장 — 앞의 ⑱번 문장에서 그리스인과 이집트인들이 숫자 4를 '완벽한 수(perfect number)'로 여겼다는 긍정적 내용이 나오고, 역접의 연결어 However와 함께 중국인들은 4를 '불길한 수(unlucky)'로 여긴다는 부정적 내용이 시작되는 경계예요."
+    },
+    {
+     "asks": "흐름에 맞게 문단들을 배열하는 문제를 출제해요.",
+     "type": "순서",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "★ 순서 배열 단서",
+       "문화별 대조가 끝나고",
+       "보편적 미신(13)으로",
+       "넘어가는 시작점이에요."
+      ],
+      "priority": 2,
+      "anchorText": "universally considered"
+     },
+     "strategy": "글의 순서는 [1] 숫자에 대한 미신의 역사와 과학적 배경(7, 3) -> [2] 문화에 따른 의미 차이 대조(5와 4의 사례) -> [3] 전 세계 공통의 불길한 수 13과 그 신화적 유래(노르웨이 신화)의 순서로 전개돼요. 각 문단의 첫머리에 나오는 연결어(For example, However)와 지시어(This story)를 단서로 묶어서 순서를 배열해요.",
+     "sentenceNo": 20,
+     "logicLocation": "⑳번 문장 — 앞서 문화마다 다른 숫자의 의미(4, 5)를 대조한 뒤, '전 세계적으로 공통되게' 불길하게 여겨지는 숫자 13의 이야기로 화제를 전환하는 도입부예요."
+    }
+   ]
+  },
+  {
+   "kind": "vocabulary",
+   "rows": [
+    {
+     "meaning": "미신",
+     "headword": "superstition",
+     "pronunciation": "수퍼스티션"
+    },
+    {
+     "meaning": "철학자",
+     "headword": "philosopher",
+     "pronunciation": "필로소퍼"
+    },
+    {
+     "meaning": "배수",
+     "headword": "multiple",
+     "pronunciation": "멀티플"
+    },
+    {
+     "meaning": "신비로운",
+     "headword": "mystical",
+     "pronunciation": "미스틱컬"
+    },
+    {
+     "meaning": "세대",
+     "headword": "generation",
+     "pronunciation": "제너레이션"
+    },
+    {
+     "meaning": "존재하다",
+     "headword": "exist",
+     "pronunciation": "이그지스트"
+    },
+    {
+     "meaning": "둘러싼",
+     "headword": "surrounding",
+     "pronunciation": "서라운딩"
+    },
+    {
+     "meaning": "기초, 근거",
+     "headword": "basis",
+     "pronunciation": "베이시스"
+    },
+    {
+     "meaning": "점성술사",
+     "headword": "astrologer",
+     "pronunciation": "어스트롤로저"
+    },
+    {
+     "meaning": "지배하다, 다스리다",
+     "headword": "govern",
+     "pronunciation": "거번"
+    },
+    {
+     "meaning": "재능, 선물",
+     "headword": "gift",
+     "pronunciation": "기프트"
+    },
+    {
+     "meaning": "나누다",
+     "headword": "divide",
+     "pronunciation": "디바이드"
+    },
+    {
+     "meaning": "상징하다",
+     "headword": "symbolize",
+     "pronunciation": "심볼라이즈"
+    },
+    {
+     "meaning": "이루어지다",
+     "headword": "come true",
+     "pronunciation": "컴 트루"
+    },
+    {
+     "meaning": "신성한",
+     "headword": "holy",
+     "pronunciation": "홀리"
+    },
+    {
+     "meaning": "불길한, 운이 없는",
+     "headword": "unlucky",
+     "pronunciation": "언럭키"
+    },
+    {
+     "meaning": "악, 불행",
+     "headword": "evil",
+     "pronunciation": "이블"
+    },
+    {
+     "meaning": "인내",
+     "headword": "endurance",
+     "pronunciation": "엔듀런스"
+    },
+    {
+     "meaning": "통일, 단합",
+     "headword": "unity",
+     "pronunciation": "유니티"
+    },
+    {
+     "meaning": "균형",
+     "headword": "balance",
+     "pronunciation": "밸런스"
+    },
+    {
+     "meaning": "보편적으로, 전 세계적으로",
+     "headword": "universally",
+     "pronunciation": "유니버설리"
+    },
+    {
+     "meaning": "평판",
+     "headword": "reputation",
+     "pronunciation": "레퓨테이션"
+    },
+    {
+     "meaning": "파괴",
+     "headword": "destruction",
+     "pronunciation": "디스트럭션"
+    },
+    {
+     "meaning": "불행",
+     "headword": "misfortune",
+     "pronunciation": "미스포춘"
+    },
+    {
+     "meaning": "신화",
+     "headword": "mythology",
+     "pronunciation": "미쏠로지"
+    },
+    {
+     "meaning": "연회, 잔치",
+     "headword": "feast",
+     "pronunciation": "피스트"
+    },
+    {
+     "meaning": "초대받지 않은",
+     "headword": "uninvited",
+     "pronunciation": "언인바이티드"
+    },
+    {
+     "meaning": "싸움, 버둥거림",
+     "headword": "struggle",
+     "pronunciation": "스트러글"
+    }
+   ]
+  },
+  {
+   "kind": "parsing",
+   "items": [
+    {
+     "en": "If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago.",
+     "parts": [
+      {
+       "text": "If so (만약 그렇다면)",
+       "label": "[조건절 대용구]"
+      },
+      {
+       "text": "your ideas are as old as Pythagoras (여러분의 생각은 피타고라스만큼 오래되었다)",
+       "label": "[주절 (원급 비교)]"
+      },
+      {
+       "text": ", a Greek philosopher (그리스 철학자인)",
+       "label": "[동격 명사구]"
+      },
+      {
+       "text": "who lived 2,600 years ago (2,600년 전에 살았던)",
+       "label": "[관계대명사절 (수식)]"
+      }
+     ],
+     "layout": {
+      "band": "underchunk",
+      "priority": 1,
+      "anchorText": "as old as Pythagoras"
+     },
+     "sentenceNo": 2,
+     "translation": "→ 만약 그렇다면, 여러분의 생각은 2,600년 전에 살았던 그리스 철학자인 피타고라스만큼이나 오래된 것이에요."
+    },
+    {
+     "en": "The number that seems to be almost universally considered unlucky is 13.",
+     "parts": [
+      {
+       "text": "The number (그 숫자는)",
+       "label": "[주어 명사]"
+      },
+      {
+       "text": "that seems to be almost universally considered unlucky (거의 전 세계적으로 불길하다고 여겨지는 듯한)",
+       "label": "[관계대명사절 (수식)]"
+      },
+      {
+       "text": "is 13 (13이다)",
+       "label": "[동사 + 보어]"
+      }
+     ],
+     "layout": {
+      "band": "underchunk",
+      "priority": 1,
+      "anchorText": "The number that seems"
+     },
+     "sentenceNo": 20,
+     "translation": "→ 거의 전 세계적으로 불길하다고 여겨지는 듯한 숫자는 13이에요."
+    },
+    {
+     "en": "This story tells about a feast at Valhalla to which 12 gods were invited.",
+     "parts": [
+      {
+       "text": "This story tells about a feast at Valhalla (이 이야기는 발할라에서의 연회에 대해 말해준다)",
+       "label": "[주절]"
+      },
+      {
+       "text": "to which 12 gods were invited (그 연회에 12명의 신이 초대받았다)",
+       "label": "[전치사+관계대명사절 (수식)]"
+      }
+     ],
+     "layout": {
+      "band": "underchunk",
+      "priority": 2,
+      "anchorText": "to which 12 gods"
+     },
+     "sentenceNo": 24,
+     "translation": "→ 이 이야기는 12명의 신이 초대받은 발할라에서의 연회에 대해 말해줘요."
+    }
+   ]
+  },
+  {
+   "kind": "learning-worksheet",
+   "note": "본 학습지는 숫자에 얽힌 미신의 역사적 기원과 문화적 다양성을 다룬 지문을 바탕으로 구성되었습니다. 지문의 논리 구조를 파악하고 핵심 어휘와 어법을 완벽히 정리해 봅시다.",
+   "cloze": {
+    "items": [
+     {
+      "no": 1,
+      "text": "Pythagoras believed that certain numbers and their multiples had (1) ________________________.",
+      "answers": [
+       "mystical power"
+      ],
+      "sentenceNo": 3,
+      "translation": "피타고라스는 특정 숫자들과 그것들의 배수가 신비로운 힘을 가지고 있다고 믿었다."
+     },
+     {
+      "no": 2,
+      "text": "Many of these superstitions have been (2) ________________________ through the generations and still exist today.",
+      "answers": [
+       "passed on"
+      ],
+      "sentenceNo": 5,
+      "translation": "이러한 미신들 중 상당수는 세대를 거쳐 전해 내려왔고 오늘날에도 여전히 존재한다."
+     },
+     {
+      "no": 3,
+      "text": "Many of the superstitions surrounding numbers have a (3) ________________________.",
+      "answers": [
+       "basis in science and nature"
+      ],
+      "sentenceNo": 6,
+      "translation": "숫자를 둘러싼 미신들 중 상당수는 과학과 자연에 기초를 두고 있다."
+     },
+     {
+      "no": 4,
+      "text": "Numbers don't have the (4) ________________________ in all cultures.",
+      "answers": [
+       "same meaning"
+      ],
+      "sentenceNo": 14,
+      "translation": "숫자가 모든 문화에서 똑같은 의미를 가지는 것은 아니다."
+     },
+     {
+      "no": 5,
+      "text": "The ancient Greeks and Egyptians thought the number four was a perfect number (5) ________________________, endurance, and balance.",
+      "answers": [
+       "symbolizing unity"
+      ],
+      "sentenceNo": 18,
+      "translation": "고대 그리스인들과 이집트인들은 숫자 4가 통일, 인내, 균형을 상징하는 완벽한 숫자라고 생각했다."
+     },
+     {
+      "no": 6,
+      "text": "The number that seems to be almost (6) ________________________ unlucky is 13.",
+      "answers": [
+       "universally considered"
+      ],
+      "sentenceNo": 20,
+      "translation": "거의 보편적으로 불길하다고 여겨지는 듯한 숫자는 13이다."
+     }
+    ],
+    "title": "핵심어구 빈칸 + 한국어 해석",
+    "wordBank": [
+     "mystical power",
+     "passed on",
+     "basis in science and nature",
+     "same meaning",
+     "symbolizing unity",
+     "universally considered"
+    ]
+   },
+   "title": "실전 학습지",
+   "drills": {
+    "wordOrders": [],
+    "grammarChoices": [
+     {
+      "no": 1,
+      "text": "Many of these superstitions have been passed on through the generations and still [exist / existing] today.",
+      "answer": "exist",
+      "choices": [
+       "exist",
+       "existing"
+      ],
+      "sentenceNo": 5,
+      "explanation": "주어인 Many of these superstitions에 걸리는 동사구로, have been passed on과 and를 통해 병렬 구조를 이루는 현재 시제 동사 exist가 와야 합니다."
+     },
+     {
+      "no": 2,
+      "text": "Many of the superstitions [surrounding / surrounded] numbers have a basis in science and nature.",
+      "answer": "surrounding",
+      "choices": [
+       "surrounding",
+       "surrounded"
+      ],
+      "sentenceNo": 6,
+      "explanation": "명사 superstitions를 뒤에서 수식하는 분사로, 미신이 숫자를 '둘러싸고 있는' 능동의 관계이므로 현재분사인 surrounding이 적절합니다."
+     },
+     {
+      "no": 3,
+      "text": "Some people still believe that a dream [repeating / repeated] three times comes true.",
+      "answer": "repeated",
+      "choices": [
+       "repeating",
+       "repeated"
+      ],
+      "sentenceNo": 13,
+      "explanation": "that절의 주어인 a dream을 수식하는 분사로, 꿈은 스스로 반복하는 것이 아니라 '반복되는' 대상이므로 수동의 의미를 가진 과거분사 repeated가 맞습니다."
+     }
+    ]
+   },
+   "practice": {
+    "items": [
+     {
+      "no": 1,
+      "text": "Pythagoras believed that certain numbers and their multiples had (1) ________________________.",
+      "answers": [
+       "mystical power"
+      ],
+      "sentenceNo": 3
+     },
+     {
+      "no": 2,
+      "text": "Many of these superstitions have been (2) ________________________ through the generations and still exist today.",
+      "answers": [
+       "passed on"
+      ],
+      "sentenceNo": 5
+     },
+     {
+      "no": 3,
+      "text": "Many of the superstitions surrounding numbers have a (3) ________________________.",
+      "answers": [
+       "basis in science and nature"
+      ],
+      "sentenceNo": 6
+     },
+     {
+      "no": 4,
+      "text": "Numbers don't have the (4) ________________________ in all cultures.",
+      "answers": [
+       "same meaning"
+      ],
+      "sentenceNo": 14
+     },
+     {
+      "no": 5,
+      "text": "The ancient Greeks and Egyptians thought the number four was a perfect number (5) ________________________, endurance, and balance.",
+      "answers": [
+       "symbolizing unity"
+      ],
+      "sentenceNo": 18
+     },
+     {
+      "no": 6,
+      "text": "The number that seems to be almost (6) ________________________ unlucky is 13.",
+      "answers": [
+       "universally considered"
+      ],
+      "sentenceNo": 20
+     }
+    ],
+    "title": "빈칸 연습 (해석 없음)",
+    "wordBank": [
+     "mystical power",
+     "passed on",
+     "basis in science and nature",
+     "same meaning",
+     "symbolizing unity",
+     "universally considered"
+    ]
+   },
+   "logicRows": [
+    {
+     "keyPoint": "숫자 7과 3에 얽힌 흔한 미신에 대한 질문으로 독자의 흥미 유발",
+     "sentenceNo": 1,
+     "functionLabel": "도입 (질문)"
+    },
+    {
+     "keyPoint": "이러한 미신적 생각들이 2,600년 전 피타고라스만큼이나 오래되었음을 언급",
+     "sentenceNo": 2,
+     "functionLabel": "기원 제시"
+    },
+    {
+     "keyPoint": "수 세기 동안 사람들이 숫자에 대한 미신을 발전시키고 세대를 거쳐 전수해 옴",
+     "sentenceNo": 4,
+     "functionLabel": "역사적 지속성"
+    },
+    {
+     "keyPoint": "숫자 미신 중 상당수가 과학과 자연(예: 7개의 행성, 인간 수명의 7단계 등)에 기초함",
+     "sentenceNo": 6,
+     "functionLabel": "과학적/자연적 근거"
+    },
+    {
+     "keyPoint": "숫자가 모든 문화에서 동일한 의미를 가지는 것은 아니라는 문화적 다양성 제시",
+     "sentenceNo": 14,
+     "functionLabel": "주제 전환 (핵심문장)"
+    },
+    {
+     "keyPoint": "이집트에서는 신성한 숫자인 5가 가나의 아샨티족에게는 불길한 숫자로 여겨짐",
+     "sentenceNo": 16,
+     "functionLabel": "대조 예시 (5)"
+    },
+    {
+     "keyPoint": "그리스·이집트에서 완벽을 상징하는 4가 중국에서는 죽음과의 발음 유사성 때문에 기피됨",
+     "sentenceNo": 19,
+     "functionLabel": "대조 예시 (4)"
+    },
+    {
+     "keyPoint": "전 세계적으로 가장 보편적으로 불길하게 여겨지는 숫자 13과 그 신화적(노르웨이) 유래 설명",
+     "sentenceNo": 20,
+     "functionLabel": "보편적 사례 (13)"
+    }
+   ],
+   "questions": [],
+   "workbookSet": {
+    "title": "EBS 워크북 유형 훈련",
+    "topicGist": {
+     "gist": "숫자에 얽힌 미신은 과학과 자연에 기원을 두기도 하지만, 문화적 배경과 역사, 신화에 따라 행운 혹은 불행이라는 상반된 의미를 지닌다.",
+     "title": "주제 / 요지",
+     "topicTitle": "Cultural Diversity and Historical Roots of Number Superstitions"
+    },
+    "wordOrders": [
+     {
+      "no": 1,
+      "answer": "Many of the superstitions surrounding numbers have a basis in science and nature",
+      "chunks": [
+       "of the superstitions",
+       "have a basis",
+       "surrounding numbers",
+       "Many",
+       "in science and nature"
+      ],
+      "korean": "숫자를 둘러싼 미신들 중 상당수는 과학과 자연에 기초를 두고 있다."
+     },
+     {
+      "no": 2,
+      "answer": "The number that seems to be almost universally considered unlucky is 13",
+      "chunks": [
+       "The number",
+       "is 13",
+       "that seems",
+       "unlucky",
+       "to be almost",
+       "universally considered"
+      ],
+      "korean": "거의 보편적으로 불길하다고 여겨지는 듯한 숫자는 13이다."
+     }
+    ],
+    "vocabularyCloze": {
+     "title": "어휘 빈칸 완성",
+     "blanks": [
+      {
+       "no": 1,
+       "clue": "피타고라스가 숫자에 부여한 초자연적인 힘을 묘사함",
+       "answer": "mystical",
+       "meaning": "신비로운"
+      },
+      {
+       "no": 2,
+       "clue": "숫자에 대해 사람들이 오랫동안 믿어온 비과학적인 믿음들",
+       "answer": "superstitions",
+       "meaning": "미신"
+      },
+      {
+       "no": 3,
+       "clue": "과거부터 전해 내려와 오늘날에도 여전히 남아있음을 뜻함",
+       "answer": "exist",
+       "meaning": "존재하다"
+      },
+      {
+       "no": 4,
+       "clue": "미신들이 과학과 자연에 근거를 두고 있음을 나타냄",
+       "answer": "basis",
+       "meaning": "기초, 근거"
+      },
+      {
+       "no": 5,
+       "clue": "행성들이 우주와 인간의 삶을 통제했다고 믿은 내용",
+       "answer": "governed",
+       "meaning": "지배했다, 다스렸다"
+      },
+      {
+       "no": 6,
+       "clue": "일곱 번째 아이가 가졌다고 여겨진 특별한 능력",
+       "answer": "gifts",
+       "meaning": "재능, 선물"
+      },
+      {
+       "no": 7,
+       "clue": "숫자 3이 탄생, 삶, 죽음을 나타냈음을 뜻함",
+       "answer": "symbolized",
+       "meaning": "상징했다"
+      },
+      {
+       "no": 8,
+       "clue": "문화마다 숫자의 의미가 다름을 보여주는 핵심 전환점",
+       "answer": "same",
+       "meaning": "같은, 동일한"
+      },
+      {
+       "no": 9,
+       "clue": "이집트의 긍정적 시각과 대조되는 가나 아샨티족의 부정적 시각",
+       "answer": "unlucky",
+       "meaning": "불길한, 운이 없는"
+      },
+      {
+       "no": 10,
+       "clue": "가나에서 숫자 5를 주는 행위가 상대에게 바라는 부정적인 것",
+       "answer": "evil",
+       "meaning": "악, 불행"
+      },
+      {
+       "no": 11,
+       "clue": "그리스인들이 숫자 4를 완벽하다고 본 속성 중 하나",
+       "answer": "endurance",
+       "meaning": "인내"
+      },
+      {
+       "no": 12,
+       "clue": "숫자 13이 전 세계 대부분의 지역에서 불길하게 여겨짐을 수식",
+       "answer": "universally",
+       "meaning": "보편적으로, 전 세계적으로"
+      },
+      {
+       "no": 13,
+       "clue": "숫자 13이 역사적으로 받아온 나쁜 이미지",
+       "answer": "reputation",
+       "meaning": "평판"
+      },
+      {
+       "no": 14,
+       "clue": "로마인들이 13을 죽음, 불행과 함께 무엇의 상징으로 보았는지",
+       "answer": "destruction",
+       "meaning": "파괴"
+      },
+      {
+       "no": 15,
+       "clue": "북유럽(노르웨이)의 전설적 이야기 배경",
+       "answer": "mythology",
+       "meaning": "신화"
+      },
+      {
+       "no": 16,
+       "clue": "초대받지 않은 로키를 쫓아내기 위한 신들의 물리적 충돌",
+       "answer": "struggle",
+       "meaning": "싸움, 버둥거림"
+      }
+     ],
+     "passage": "Do you believe that seven is a lucky number or that bad luck happens in sets of three? If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago. Pythagoras believed that certain numbers and their multiples had (1) __________ power. For centuries, people have developed (2) __________ about numbers. Many of these beliefs have been passed on through the generations and still (3) __________ today. Many of the beliefs surrounding numbers have a (4) __________ in science and nature. For example, early astrologers believed that seven planets (5) __________ the universe and therefore the lives of human beings. A seventh child was thought to have special (6) __________. Human life was divided into seven ages. Every seventh year was believed to bring great change. If a person's date of birth could be divided by seven, that person's life would be lucky. For the ancient Babylonians, three was a lucky number because it (7) __________ birth, life, and death. Some people still believe that a dream repeated three times comes true. Numbers don't have the (8) __________ meaning in all cultures. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an (9) __________ number. To give someone five of anything is to wish the person (10) __________. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, (11) __________, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death. The number that seems to be almost (12) __________ considered unlucky is 13. No other number has had such a bad (13) __________ for so long. The ancient Romans regarded it as a symbol of death, (14) __________, and misfortune. One of the earliest written stories about the number 13 appears in Norwegian (15) __________. This story tells about a feast at Valhalla to which 12 gods were invited. Loki, the god of evil, came uninvited, raising the number to 13. In the (16) __________ to throw out Loki, Balder, the favorite of the gods, was killed."
+    },
+    "grammarSelection": {
+     "title": "어법 선택",
+     "choices": [
+      {
+       "no": 1,
+       "answer": "exist",
+       "options": [
+        "existed",
+        "exist"
+       ],
+       "explanation": "and 앞의 have been passed on과 병렬을 이루며, '오늘날에도 여전히 존재한다'는 현재의 사실을 나타내므로 현재 시제 동사 exist가 맞습니다."
+      },
+      {
+       "no": 2,
+       "answer": "surrounding",
+       "options": [
+        "surrounding",
+        "surrounded"
+       ],
+       "explanation": "명사 superstitions를 수식하는 분사로, 미신이 숫자를 '둘러싸고 있는' 능동 관계이므로 현재분사 surrounding이 맞습니다."
+      },
+      {
+       "no": 3,
+       "answer": "be divided",
+       "options": [
+        "divide",
+        "be divided"
+       ],
+       "explanation": "생일(date of birth)은 7에 의해 '나누어지는' 수동의 대상이므로 조동사 뒤에 수동태 동사원형인 be divided가 와야 합니다."
+      },
+      {
+       "no": 4,
+       "answer": "repeated",
+       "options": [
+        "repeated",
+        "repeating"
+       ],
+       "explanation": "꿈(a dream)은 세 번 '반복되는' 수동의 관계이므로 과거분사 repeated가 수식하는 것이 올바릅니다."
+      },
+      {
+       "no": 5,
+       "answer": "is",
+       "options": [
+        "are",
+        "is"
+       ],
+       "explanation": "문장의 주어는 단수 명사인 'The number'이므로 단수 동사인 is가 와야 합니다."
+      },
+      {
+       "no": 6,
+       "answer": "to which",
+       "options": [
+        "to which",
+        "which"
+       ],
+       "explanation": "뒤에 오는 문장(12 gods were invited)이 수동태로 완전하므로, 전치사+관계대명사인 to which가 와야 합니다. 원래 문장은 '12 gods were invited to the feast'였습니다."
+      }
+     ],
+     "passage": "Do you believe that seven is a lucky number or that bad luck happens in sets of three? If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago. Pythagoras believed that certain numbers and their multiples had mystical power. For centuries, people have developed superstitions about numbers. Many of these superstitions have been passed on through the generations and still (1) [existed / exist] today. Many of the superstitions (2) [surrounding / surrounded] numbers have a basis in science and nature. For example, early astrologers believed that seven planets governed the universe and therefore the lives of human beings. A seventh child was thought to have special gifts. Human life was divided into seven ages. Every seventh year was believed to bring great change. If a person's date of birth could (3) [divide / be divided] by seven, that person's life would be lucky. For the ancient Babylonians, three was a lucky number because it symbolized birth, life, and death. Some people still believe that a dream (4) [repeated / repeating] three times comes true. Numbers don't have the same meaning in all cultures. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an unlucky number. To give someone five of anything is to wish the person evil. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death. The number that seems to be almost universally considered unlucky (5) [are / is] 13. No other number has had such a bad reputation for so long. The ancient Romans regarded it as a symbol of death, destruction, and misfortune. One of the earliest written stories about the number 13 appears in Norwegian mythology. This story tells about a feast at Valhalla (6) [to which / which] 12 gods were invited. Loki, the god of evil, came uninvited, raising the number to 13. In the struggle to throw out Loki, Balder, the favorite of the gods, was killed."
+    }
+   },
+   "inferenceSet": {
+    "title": "수능추론 문제",
+    "questions": [
+     {
+      "no": 1,
+      "type": "main-idea",
+      "prompt": "윗글의 주제로 가장 적절한 것은?",
+      "choices": [
+       {
+        "text": "scientific evidence proving the mystical power of specific numbers",
+        "label": "①"
+       },
+       {
+        "text": "the historical origins and cultural variations of number superstitions",
+        "label": "②"
+       },
+       {
+        "text": "the psychological reasons why people easily believe in bad luck",
+        "label": "③"
+       },
+       {
+        "text": "similarities in how different cultures interpret lucky numbers",
+        "label": "④"
+       },
+       {
+        "text": "the influence of ancient Greek philosophy on modern mathematics",
+        "label": "⑤"
+       }
+      ],
+      "passage": "Do you believe that seven is a lucky number or that bad luck happens in sets of three? If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago. Pythagoras believed that certain numbers and their multiples had mystical power. For centuries, people have developed superstitions about numbers. Many of these superstitions have been passed on through the generations and still exist today. Many of the superstitions surrounding numbers have a basis in science and nature. For example, early astrologers believed that seven planets governed the universe and therefore the lives of human beings. A seventh child was thought to have special gifts. Human life was divided into seven ages. Every seventh year was believed to bring great change. If a person's date of birth could be divided by seven, that person's life would be lucky. For the ancient Babylonians, three was a lucky number because it symbolized birth, life, and death. Some people still believe that a dream repeated three times comes true. Numbers don't have the same meaning in all cultures. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an unlucky number. To give someone five of anything is to wish the person evil. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death. The number that seems to be almost universally considered unlucky is 13. No other number has had such a bad reputation for so long. The ancient Romans regarded it as a symbol of death, destruction, and misfortune. One of the earliest written stories about the number 13 appears in Norwegian mythology. This story tells about a feast at Valhalla to which 12 gods were invited. Loki, the god of evil, came uninvited, raising the number to 13. In the struggle to throw out Loki, Balder, the favorite of the gods, was killed.",
+      "typeLabel": "주제 추론",
+      "answerText": "the historical origins and cultural variations of number superstitions",
+      "answerLabel": "②",
+      "distractors": [
+       {
+        "type": "범위 왜곡",
+        "label": "①",
+        "reason": "본문에서 미신 중 일부가 과학과 자연에 기초를 두고 있다고 언급했으나, 숫자의 신비로운 힘을 과학적으로 '증명(proving)'했다는 내용은 사실이 아닙니다."
+       },
+       {
+        "type": "근거 없음",
+        "label": "③",
+        "reason": "사람들이 불운을 쉽게 믿는 '심리학적 이유'에 대해서는 본문에서 다루지 않고 있습니다."
+       },
+       {
+        "type": "반대 방향",
+        "label": "④",
+        "reason": "본문은 문화권마다 숫자를 다르게 해석하는 '차이점(variations)'을 강조하고 있으므로, '유사성(similarities)'은 글의 방향과 반대됩니다."
+       },
+       {
+        "type": "부분 일치",
+        "label": "⑤",
+        "reason": "피타고라스라는 그리스 철학자가 언급되기는 했으나, 이것이 현대 수학에 미친 영향에 대한 글은 아닙니다."
+       }
+      ],
+      "explanation": "본문은 숫자에 얽힌 미신이 피타고라스 시절부터 이어져 온 역사적 기원(historical origins)을 가지고 있으며, 과학적/자연적 배경을 지님과 동시에 문화권에 따라(이집트 vs 가나, 그리스 vs 중국) 다르게 해석되는 문화적 다양성(cultural variations)을 보여준다는 것이 핵심 논지이므로 ①이 가장 적절합니다."
+     },
+     {
+      "no": 2,
+      "type": "title",
+      "prompt": "윗글의 제목으로 가장 적절한 것은?",
+      "choices": [
+       {
+        "text": "Why Do We Still Use the Decimal System Today?",
+        "label": "①"
+       },
+       {
+        "text": "The Power of Numbers: Do They Rule Our Destiny?",
+        "label": "②"
+       },
+       {
+        "text": "How Ancient Mythologies Shaped Modern Science",
+        "label": "③"
+       },
+       {
+        "text": "Number Superstitions: Shared Roots, Diverse Meanings",
+        "label": "④"
+       },
+       {
+        "text": "Unlucky 13: The Only Number Feared Across the World",
+        "label": "⑤"
+       }
+      ],
+      "passage": "Do you believe that seven is a lucky number or that bad luck happens in sets of three? If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago. Pythagoras believed that certain numbers and their multiples had mystical power. For centuries, people have developed superstitions about numbers. Many of these superstitions have been passed on through the generations and still exist today. Many of the superstitions surrounding numbers have a basis in science and nature. For example, early astrologers believed that seven planets governed the universe and therefore the lives of human beings. A seventh child was thought to have special gifts. Human life was divided into seven ages. Every seventh year was believed to bring great change. If a person's date of birth could be divided by seven, that person's life would be lucky. For the ancient Babylonians, three was a lucky number because it symbolized birth, life, and death. Some people still believe that a dream repeated three times comes true. Numbers don't have the same meaning in all cultures. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an unlucky number. To give someone five of anything is to wish the person evil. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death. The number that seems to be almost universally considered unlucky is 13. No other number has had such a bad reputation for so long. The ancient Romans regarded it as a symbol of death, destruction, and misfortune. One of the earliest written stories about the number 13 appears in Norwegian mythology. This story tells about a feast at Valhalla to which 12 gods were invited. Loki, the god of evil, came uninvited, raising the number to 13. In the struggle to throw out Loki, Balder, the favorite of the gods, was killed.",
+      "typeLabel": "제목 추론",
+      "answerText": "Number Superstitions: Shared Roots, Diverse Meanings",
+      "answerLabel": "④",
+      "distractors": [
+       {
+        "type": "근거 없음",
+        "label": "①",
+        "reason": "십진법(Decimal System)의 사용 이유에 대해서는 본문에서 전혀 언급되지 않았습니다."
+       },
+       {
+        "type": "범위 왜곡",
+        "label": "②",
+        "reason": "숫자가 인간의 운명을 실제로 지배하는가에 대한 철학적/운명론적 질문은 이 글의 핵심 논지인 '문화적 미신'의 범위를 벗어납니다."
+       },
+       {
+        "type": "핵심어 왜곡",
+        "label": "③",
+        "reason": "신화가 현대 과학을 형성한 과정이 아니라, 숫자에 대한 미신의 신화적/역사적 배경을 설명하는 글입니다."
+       },
+       {
+        "type": "부분 일치",
+        "label": "⑤",
+        "reason": "숫자 13에 대한 이야기는 본문 후반부의 세부 예시일 뿐, 글 전체를 아우르는 제목이 될 수 없습니다."
+       }
+      ],
+      "explanation": "본문은 숫자에 대한 미신이 고대 역사와 자연 현상이라는 공통의 뿌리(Shared Roots)를 공유하면서도, 각 문화권에 따라 행운과 불행이라는 상반되고 다양한 의미(Diverse Meanings)로 해석된다는 점을 대조하여 설명하므로 ③이 가장 적절한 제목입니다."
+     },
+     {
+      "no": 3,
+      "type": "implication",
+      "prompt": "밑줄 친__don't have the same meaning in all cultures__가 윗글에서 의미하는 바로 가장 적절한 것은?",
+      "choices": [
+       {
+        "text": "A number regarded as sacred in one culture can be seen as cursed in another.",
+        "label": "①"
+       },
+       {
+        "text": "Mathematical calculations vary depending on cultural backgrounds.",
+        "label": "②"
+       },
+       {
+        "text": "Ancient civilizations shared identical superstitions about specific numbers.",
+        "label": "③"
+       },
+       {
+        "text": "The pronunciation of numbers determines their universal mathematical value.",
+        "label": "④"
+       },
+       {
+        "text": "People from different cultures eventually agree on which numbers are lucky.",
+        "label": "⑤"
+       }
+      ],
+      "passage": "Numbers__don't have the same meaning in all cultures__. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an unlucky number. To give someone five of anything is to wish the person evil. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death. The number that seems to be almost universally considered unlucky is 13. No other number has had such a bad reputation for so long. The ancient Romans regarded it as a symbol of death, destruction, and misfortune.",
+      "typeLabel": "함축의미 추론",
+      "answerText": "A number regarded as sacred in one culture can be seen as cursed in another.",
+      "answerLabel": "①",
+      "distractors": [
+       {
+        "type": "핵심어 왜곡",
+        "label": "②",
+        "reason": "수학적 계산법(Mathematical calculations)의 차이에 대한 글이 아니라 숫자에 담긴 미신적 의미의 차이에 대한 글입니다."
+       },
+       {
+        "type": "반대 방향",
+        "label": "③",
+        "reason": "고대 문명들이 특정 숫자에 대해 '동일한(identical)' 미신을 공유했다는 것은 본문의 대조적 서술 방향과 정반대입니다."
+       },
+       {
+        "type": "범위 왜곡",
+        "label": "④",
+        "reason": "중국에서 4의 발음이 죽음과 유사하다는 언급은 있으나, 이것이 숫자의 '보편적 수학적 가치'를 결정한다는 것은 논리적 비약입니다."
+       },
+       {
+        "type": "근거 없음",
+        "label": "⑤",
+        "reason": "서로 다른 문화권의 사람들이 결국 어떤 숫자가 행운인지에 대해 합의하게 된다는 내용은 본문에 없습니다."
+       }
+      ],
+      "explanation": "밑줄 친 부분 바로 뒤에 나오는 예시에서 이집트에서는 신성하고 행운인 숫자 5가 가나에서는 불길한 숫자로 여겨지며, 그리스에서는 완벽한 숫자 4가 중국에서는 죽음을 연상시켜 기피된다고 설명합니다. 따라서 한 문화에서 신성하게 여겨지는 숫자가 다른 문화에서는 저주받은(불길한) 것으로 여겨질 수 있다는 ②가 밑줄 친 부분의 함축 의미로 가장 적절합니다."
+     },
+     {
+      "no": 4,
+      "type": "blank",
+      "prompt": "윗글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+      "choices": [
+       {
+        "text": "the scientific basis of these superstitions has been disproven over time",
+        "label": "①"
+       },
+       {
+        "text": "most cultures prefer even numbers to odd numbers for balance",
+        "label": "②"
+       },
+       {
+        "text": "ancient people relied heavily on numbers to predict natural disasters",
+        "label": "③"
+       },
+       {
+        "text": "the historical records of number superstitions are mostly lost",
+        "label": "④"
+       },
+       {
+        "text": "the symbolic values of numbers are not universally consistent",
+        "label": "⑤"
+       }
+      ],
+      "passage": "Many of the superstitions surrounding numbers have a basis in science and nature. For example, early astrologers believed that seven planets governed the universe and therefore the lives of human beings. A seventh child was thought to have special gifts. Human life was divided into seven ages. Every seventh year was believed to bring great change. If a person's date of birth could be divided by seven, that person's life would be lucky. For the ancient Babylonians, three was a lucky number because it symbolized birth, life, and death. Some people still believe that a dream repeated three times comes true. However,________________________________________. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an unlucky number. To give someone five of anything is to wish the person evil. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death.",
+      "typeLabel": "빈칸추론",
+      "answerText": "the symbolic values of numbers are not universally consistent",
+      "answerLabel": "⑤",
+      "distractors": [
+       {
+        "type": "근거 없음",
+        "label": "①",
+        "reason": "미신의 과학적 근거가 시간이 흐르며 반증되었다(disproven)는 내용은 본문에서 다루지 않습니다."
+       },
+       {
+        "type": "근거 없음",
+        "label": "②",
+        "reason": "짝수와 홀수에 대한 선호도 비교는 본문의 논지와 무관합니다."
+       },
+       {
+        "type": "범위 왜곡",
+        "label": "③",
+        "reason": "고대인들이 자연재해를 예측하기 위해 숫자에 의존했다는 구체적 언급은 본문에 없습니다."
+       },
+       {
+        "type": "근거 없음",
+        "label": "④",
+        "reason": "숫자 미신에 대한 역사적 기록이 대부분 소실되었다는 서술은 본문 내용과 일치하지 않습니다."
+       }
+      ],
+      "explanation": "빈칸 앞부분은 숫자 7과 3이 자연과 과학적 현상에 기초하여 긍정적 의미를 가졌던 보편적 사례들을 나열하고 있습니다. 빈칸 뒤에서는 이집트와 가나(숫자 5), 그리스와 중국(숫자 4)의 상반된 해석을 대조하고 있으므로, 역접의 연결어 'However' 뒤에는 '숫자의 상징적 가치가 전 세계적으로 일치하지는 않는다'는 내용이 들어가는 것이 논리적으로 가장 자연스럽습니다. 따라서 ②가 정답입니다."
+     },
+     {
+      "no": 5,
+      "type": "summary",
+      "prompt": "윗글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+      "choices": [
+       {
+        "text": "(A) scientific / (B) uniform",
+        "label": "①"
+       },
+       {
+        "text": "(A) religious / (B) subjective",
+        "label": "②"
+       },
+       {
+        "text": "(A) scientific / (B) variable",
+        "label": "③"
+       },
+       {
+        "text": "(A) psychological / (B) variable",
+        "label": "④"
+       },
+       {
+        "text": "(A) psychological / (B) uniform",
+        "label": "⑤"
+       }
+      ],
+      "passage": "Do you believe that seven is a lucky number or that bad luck happens in sets of three? If so, your ideas are as old as Pythagoras, a Greek philosopher who lived 2,600 years ago. Pythagoras believed that certain numbers and their multiples had mystical power. For centuries, people have developed superstitions about numbers. Many of these superstitions have been passed on through the generations and still exist today. Many of the superstitions surrounding numbers have a basis in science and nature. For example, early astrologers believed that seven planets governed the universe and therefore the lives of human beings. A seventh child was thought to have special gifts. Human life was divided into seven ages. Every seventh year was believed to bring great change. If a person's date of birth could be divided by seven, that person's life would be lucky. For the ancient Babylonians, three was a lucky number because it symbolized birth, life, and death. Some people still believe that a dream repeated three times comes true. Numbers don't have the same meaning in all cultures. Five is considered a most holy and lucky number in Egypt. But in Ghana, the Ashanti people consider five to be an unlucky number. To give someone five of anything is to wish the person evil. The ancient Greeks and Egyptians thought the number four was a perfect number symbolizing unity, endurance, and balance. However, the Chinese consider the number four to be unlucky because it sounds like the word for death. The number that seems to be almost universally considered unlucky is 13. No other number has had such a bad reputation for so long. The ancient Romans regarded it as a symbol of death, destruction, and misfortune. One of the earliest written stories about the number 13 appears in Norwegian mythology. This story tells about a feast at Valhalla to which 12 gods were invited. Loki, the god of evil, came uninvited, raising the number to 13. In the struggle to throw out Loki, Balder, the favorite of the gods, was killed.",
+      "typeLabel": "요약문 완성",
+      "answerText": "(A) scientific / (B) variable",
+      "answerLabel": "③",
+      "distractors": [
+       {
+        "type": "반대 방향",
+        "label": "①",
+        "reason": "(B)의 uniform(균일한, 동일한)은 문화마다 숫자의 의미가 달라진다는 본문의 핵심 대조 논지와 정반대입니다."
+       },
+       {
+        "type": "핵심어 왜곡",
+        "label": "②",
+        "reason": "(A)의 religious(종교적인)는 본문에서 명시한 'science and nature'의 패러프레이징으로 적절하지 않습니다."
+       },
+       {
+        "type": "핵심어 왜곡",
+        "label": "④",
+        "reason": "(A)의 psychological(심리학적인)은 본문에서 언급된 과학적/자연적 관찰(astrologers, planets 등)을 포괄하지 못합니다."
+       },
+       {
+        "type": "반대 방향",
+        "label": "⑤",
+        "reason": "(A)의 오류와 더불어 (B)의 uniform이 본문의 '문화적 다양성' 논지와 정반대 방향을 가리킵니다."
+       }
+      ],
+      "explanation": "본문 전반부에서 숫자에 대한 미신이 자연과 과학(science and nature)에 기초를 두고 있다고 언급했으므로 (A)에는 scientific이 적절합니다. 또한 후반부에서 문화권과 신화적 배경에 따라 숫자의 의미가 행운에서 불행으로 크게 달라진다고 대조하고 있으므로 (B)에는 '변화무쌍한, 가변적인'을 뜻하는 variable이 들어가는 것이 가장 적절합니다."
+     }
+    ]
+   },
+   "hiddenAnswers": true
+  }
+ ],
+ "passageLayout": "hlc",
+ "schemaVersion": 1
+}

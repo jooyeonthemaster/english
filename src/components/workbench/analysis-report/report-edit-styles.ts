@@ -75,6 +75,21 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
 .par-root-edit tr.par-dragover-before td { box-shadow: inset 0 3px 0 #2563eb; }
 .par-root-edit tr.par-dragover-after td { box-shadow: inset 0 -3px 0 #2563eb; }
 
+/* 활동 블록은 페이지 분할을 위해 내부 행이 여러 FlowItem 으로 나뉜다.
+   일반 활성 outline 을 그대로 쓰면 행마다 파란 박스가 반복되어 문항 경계처럼 보이므로,
+   활동에서는 실제 편집 필드 포커스만 표시한다. */
+.par-root-edit .par-activity-run .par-wrap-activity.par-eline:hover,
+.par-root-edit .par-activity-run .par-wrap-activity.par-eline.is-active {
+  outline: none;
+  box-shadow: none;
+}
+.par-root-edit .par-activity-run .par-wrap-activity.par-dragover-before {
+  box-shadow: inset 0 2px 0 rgba(37,99,235,.45);
+}
+.par-root-edit .par-activity-run .par-wrap-activity.par-dragover-after {
+  box-shadow: inset 0 -2px 0 rgba(37,99,235,.45);
+}
+
 /* 드래그 핸들 ⠿ — 줄 왼쪽 여백에 hover 시 표시 */
 .par-root-edit .par-egrip2 {
   position: absolute; left: -6.5mm; top: 0;

@@ -9,6 +9,7 @@ import {
   structuredOcrResponseSchema,
   type StructuredOcrResponse,
 } from "@/lib/extraction/ocr";
+import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { usesStructuredExtraction } from "@/lib/extraction/modes";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
@@ -37,6 +38,9 @@ export interface OcrDispatchResult {
   structured: StructuredOcrResponse | null;
   inputTokens: number | undefined;
   outputTokens: number | undefined;
+  /** 실제 사용된 OCR 엔진 — "document-ai" | "document-ai+<gemini>" | <gemini>.
+   *  persist가 그대로 기록한다(과거엔 엔진 무관 Gemini 모델명을 적던 버그). */
+  modelUsed: string;
 }
 
 /**
@@ -134,6 +138,7 @@ export async function runOcrForPage(params: {
       extractedText,
       inputTokens: usage?.inputTokens,
       outputTokens: usage?.outputTokens,
+      modelUsed: getExtractionAiModelName("ocr"),
     };
   }
 
@@ -150,6 +155,7 @@ export async function runOcrForPage(params: {
     extractedText: result.text,
     inputTokens: result.usage?.inputTokens,
     outputTokens: result.usage?.outputTokens,
+    modelUsed: getExtractionAiModelName("ocr"),
   };
 }
 
@@ -187,6 +193,7 @@ async function runDocumentAiVerbatim(params: {
     extractedText: text,
     inputTokens: undefined,
     outputTokens: undefined,
+    modelUsed: "document-ai",
   };
 }
 
@@ -269,5 +276,11 @@ async function runDocumentAiTwoStep(params: {
     extractedText = ocrText;
   }
 
-  return { extractedText, structured, inputTokens, outputTokens };
+  return {
+    extractedText,
+    structured,
+    inputTokens,
+    outputTokens,
+    modelUsed: `document-ai+${getExtractionAiModelName("ocr")}`,
+  };
 }

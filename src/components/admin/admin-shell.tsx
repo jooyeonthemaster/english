@@ -11,6 +11,7 @@ import {
   Coins,
   CreditCard,
   ChartNoAxesCombined,
+  Radar,
   Settings,
   LogOut,
   PanelLeftClose,
@@ -50,6 +51,7 @@ interface AdminShellProps {
 const NAV_ITEMS = [
   { label: "대시보드", icon: LayoutDashboard, href: "/admin" },
   { label: "회원 관리", icon: Users, href: "/admin/members" },
+  { label: "활동 모니터링", icon: Radar, href: "/admin/activity" },
   { label: "가입 신청", icon: UserPlus, href: "/admin/registrations" },
   { label: "학원 관리", icon: Building2, href: "/admin/academies" },
   { label: "크레딧", icon: Coins, href: "/admin/credits" },

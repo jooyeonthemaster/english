@@ -31,6 +31,8 @@ import {
 export interface NavChild {
   label: string;
   href: string;
+  /** 베타 기능 — 사이드바에 BETA 배지를 노출한다. */
+  beta?: boolean;
 }
 
 export interface NavItem {
@@ -65,6 +67,7 @@ export const COMING_SOON_FEATURE_BY_PATH: Record<string, { feature: string; labe
 
 export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  const showSimilarExamGeneration = FEATURE_FLAGS.SHOW_SIMILAR_EXAM_GENERATION;
   // 원장 대시보드는 제거됐다(문제 생성 페이지가 사실상의 홈). 교사(/teacher)는
   // 기존 대시보드를 그대로 쓰므로 교사일 때만 대시보드 메뉴를 노출한다.
   const isTeacher = basePath === "/teacher";
@@ -90,8 +93,8 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "문제 생성", href: `${basePath}/workbench/questions/generate` },
             { label: "문제 관리", href: `${basePath}/workbench/questions` },
-            { label: "동형 문제 생성", href: `${basePath}/workbench/questions/similar` },
-            { label: "커스텀 유형", href: `${basePath}/workbench/questions/custom` },
+            { label: "동형 문제 생성", href: `${basePath}/workbench/questions/similar`, beta: true },
+            { label: "커스텀 유형", href: `${basePath}/workbench/questions/custom`, beta: true },
           ],
         },
         {
@@ -101,7 +104,15 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
-            { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams` },
+            ...(showSimilarExamGeneration
+              ? [
+                  {
+                    label: "동형 시험지 생성",
+                    href: `${basePath}/workbench/similar-exams`,
+                    beta: true,
+                  },
+                ]
+              : []),
           ],
         },
         {

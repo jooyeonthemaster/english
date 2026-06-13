@@ -120,13 +120,18 @@ export function NavItem({
                   href={child.href}
                   onClick={(e) => onNavClick(child.href, e)}
                   className={cn(
-                    "block px-3 py-1.5 text-[12px] rounded-md transition-colors",
+                    "flex items-center gap-1.5 px-3 py-1.5 text-[12px] rounded-md transition-colors",
                     childIsActive
                       ? "text-blue-600 font-semibold bg-white shadow-sm"
                       : "text-gray-500 hover:text-blue-600 hover:font-medium hover:bg-white",
                   )}
                 >
-                  {child.label}
+                  <span className="truncate">{child.label}</span>
+                  {child.beta ? (
+                    <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
+                      BETA
+                    </span>
+                  ) : null}
                 </Link>
               );
             })}

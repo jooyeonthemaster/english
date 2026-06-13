@@ -6,6 +6,9 @@ export interface JobMetaSnapshot {
   displayName: string | null;
   originalFileName: string | null;
   createdAt: string;
+  /** Expected passage count, fixed at job creation (= number of crop regions).
+   *  Lets us show "추출 중 N개" for an in-flight job before its drafts exist. */
+  totalPages: number;
   resultCount: number;
   draftResultCount: number;
   savedResultCount: number;

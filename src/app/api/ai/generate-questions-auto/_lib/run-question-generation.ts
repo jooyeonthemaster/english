@@ -113,6 +113,8 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  "grammar-decoy-point-diversity",
+  "grammar-killer-thin-answer",
   // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
   // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.
   "grammar-disputed-usage-target",
@@ -162,6 +164,7 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correction-source-text-not-source-backed",
   "grammar-correction-sentence-not-source-backed",
   "grammar-correction-debatable-infinitive",
+  "grammar-correction-killer-thin-segment",
   "topic-option-language",
   "summary-mc-direction-frame",
   "summary-mc-missing-summary",
@@ -208,10 +211,36 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "sentence-insert-omitted-source-not-backed",
   "sentence-insert-omitted-source-visible",
   "sentence-insert-given-leaks-in-passage",
+  "sentence-order-missing-given",
+  "sentence-order-given-too-long",
+  "sentence-order-given-too-long-relative",
+  "sentence-order-paragraph-count",
+  "sentence-order-paragraph-labels",
+  "sentence-order-paragraph-too-short",
+  "sentence-order-paragraph-too-thin",
+  "sentence-order-paragraph-imbalance",
+  "sentence-order-option-permutation",
+  "sentence-order-option-duplicates",
+  "sentence-order-correct-option-shape",
+  "sentence-order-unscrambled-answer",
   // The softer giveaway gates below stay STRICT-only: strict retries away from
   // them, but the last-resort relaxed fallback may still ship one (flagged) so a
   // hard passage returns a usable item instead of failing with 0 questions.
   "blank-missing-answer",
+  "blank-paraphrase-answer-not-transformed",
+  "blank-paraphrase-answer-too-verbatim",
+  "blank-paraphrase-missing-answer-logic",
+  "blank-paraphrase-option-source-copy",
+  "blank-paraphrase-option-imbalance",
+  "blank-paraphrase-correct-too-thin",
+  "blank-paraphrase-difficulty-mismatch",
+  "blank-paraphrase-subject-slot-mismatch",
+  "blank-paraphrase-clause-slot-mismatch",
+  "blank-paraphrase-polarity-loss",
+  "blank-paraphrase-target-trailing-function",
+  "blank-awkward-correct-option",
+  "blank-awkward-option",
+  "multi-blank-paraphrase-correct-source-exact",
   "negative-paraphrase-copula-slot-mismatch",
   "negative-paraphrase-stacked-prepositions",
   "negative-paraphrase-verb-slot-mismatch",
@@ -289,6 +318,7 @@ export async function runQuestionGeneration(
         sentenceInsertSlotCount,
         antonymPairCount,
         blankInferenceBlankCount,
+        blankInferenceParaphraseAnswer,
         genericOptionCount,
         genericAnswerCount,
       } = resolvedTypeSettings;
@@ -434,8 +464,7 @@ export async function runQuestionGeneration(
                   blankAnswerMode: "DOUBLE_NEGATIVE",
                 }
               : subType === "BLANK_INFERENCE" &&
-                  diffLabel === "KILLER" &&
-                  (resolvedTypeSettings.blankInferenceBlankCount ?? 1) <= 1
+                  resolvedTypeSettings.blankInferenceParaphraseAnswer
                 ? {
                     ...q,
                     blankAnswerMode: "PARAPHRASE",
@@ -515,6 +544,7 @@ export async function runQuestionGeneration(
             sentenceInsertSlotCount,
             antonymPairCount,
             blankInferenceBlankCount,
+            blankInferenceParaphraseAnswer,
             genericOptionCount,
             genericAnswerCount,
           });

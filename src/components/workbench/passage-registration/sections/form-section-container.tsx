@@ -4,8 +4,13 @@ import type { Dispatch, SetStateAction } from "react";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import type {
+  IntakeView,
+  IntakeTab,
+} from "@/app/(director)/director/workbench/generate/intake/intake-surface";
+import type { PendingExtraction } from "../use-create-extraction";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
-import type { PassageBlock } from "../block-types";
+import type { PassageInputRow } from "../passage-input/types";
 import {
   handleSavePrompt as savePrompt,
   handleDeletePrompt as deletePrompt,
@@ -18,20 +23,12 @@ interface FormSectionContainerProps {
   // View state
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
-  hasContent: boolean;
-  saving: boolean;
 
-  // Passage blocks (center editor)
-  blocks: PassageBlock[];
-  updateBlock: (id: string, patch: Partial<PassageBlock>) => void;
-  addEmptyBlock: () => void;
-  removeBlock: (id: string) => void;
-  toggleCollapse: (id: string) => void;
-  setAllCollapsed: (collapsed: boolean) => void;
-  onAnalyze: (
-    plan: QuestionGenerationPlan,
-    tone: AnalysisTone,
-  ) => void | Promise<void>;
+  // Multi-passage stack
+  rows: PassageInputRow[];
+  setRows: Dispatch<SetStateAction<PassageInputRow[]>>;
+  analyzing: boolean;
+  onAnalyze: (plan: QuestionGenerationPlan) => void;
 
   // Metadata
   schools: Array<{ id: string; name: string; type: string; publisher: string | null }>;
@@ -49,11 +46,9 @@ interface FormSectionContainerProps {
   setPublisher: (v: string) => void;
   publisherCustom: string;
   setPublisherCustom: (v: string) => void;
-  effectivePublisher: string;
   tagInput: string;
   setTagInput: (v: string) => void;
   tags: string[];
-  setTags: Dispatch<SetStateAction<string[]>>;
   addTag: () => void;
   removeTag: (tag: string) => void;
 
@@ -71,18 +66,23 @@ interface FormSectionContainerProps {
   savingPrompt: boolean;
   setSavingPrompt: (v: boolean) => void;
 
-  // Draft selection (left grid)
-  selectedDraftIds: Set<string>;
+  // 자료 관리 picker
   draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
-  onSelectedDraftSaved: () => void;
+  onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
+  loadedDraftIds?: string[];
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
-  onBulkAnalyze: (
-    drafts: M1PassageDraftWithJob[],
-    generationPlan: QuestionGenerationPlan,
-  ) => Promise<void>;
-  bulkAnalyzing: boolean;
+
+  // Intake (이미지·PDF)
+  intakeView: IntakeView;
+  setIntakeView: (v: IntakeView) => void;
+  intakeTab: IntakeTab;
+  setIntakeTab: (v: IntakeTab) => void;
+  onExtractionBegin: (id: string, count: number) => void;
+  onExtractionResult: (id: string, jobId: string | null) => void;
+  extractionPending: PendingExtraction[];
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
@@ -91,15 +91,10 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       academyId={p.academyId}
       formCollapsed={p.formCollapsed}
       setFormCollapsed={p.setFormCollapsed}
-      hasContent={p.hasContent}
-      saving={p.saving}
+      rows={p.rows}
+      setRows={p.setRows}
+      analyzing={p.analyzing}
       onAnalyze={p.onAnalyze}
-      blocks={p.blocks}
-      updateBlock={p.updateBlock}
-      addEmptyBlock={p.addEmptyBlock}
-      removeBlock={p.removeBlock}
-      toggleCollapse={p.toggleCollapse}
-      setAllCollapsed={p.setAllCollapsed}
       draftRefreshToken={p.draftRefreshToken}
       schools={p.schools}
       schoolId={p.schoolId}
@@ -141,12 +136,18 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
         })
       }
       onDeletePrompt={(id) => deletePrompt({ id, setSavedPrompts: p.setSavedPrompts })}
-      selectedDraftIds={p.selectedDraftIds}
       onSelectDraft={p.onSelectDraft}
+      onLoadSelectedDrafts={p.onLoadSelectedDrafts}
+      loadedDraftIds={p.loadedDraftIds}
       draftCollections={p.draftCollections}
       draftMembership={p.draftMembership}
-      onBulkAnalyze={p.onBulkAnalyze}
-      bulkAnalyzing={p.bulkAnalyzing}
+      intakeView={p.intakeView}
+      setIntakeView={p.setIntakeView}
+      intakeTab={p.intakeTab}
+      setIntakeTab={p.setIntakeTab}
+      onExtractionBegin={p.onExtractionBegin}
+      onExtractionResult={p.onExtractionResult}
+      extractionPending={p.extractionPending}
     />
   );
 }

@@ -1,7 +1,13 @@
 "use client";
 
-import { useCallback, useRef, useState, type ReactNode } from "react";
-import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  GripVertical,
+} from "lucide-react";
 
 /**
  * Resizable / collapsible two-pane workspace shell that mirrors the
@@ -15,8 +21,9 @@ const LEFT_PANE_STORAGE_KEY = "smoat:generate:left-pane-width";
 const LEFT_PANE_OPEN_STORAGE_KEY = "smoat:generate:left-pane-open";
 const LEFT_PANE_MIN = 380;
 const LEFT_PANE_DEFAULT = 560;
-const LEFT_PANE_MAX_RATIO = 0.72;
-const RIGHT_PANE_MIN = 420;
+const LEFT_PANE_MAX_RATIO = 0.55;
+// 우측은 [워크스페이스 ≥240 + 설정 300~360] 2분할 — 둘 다 기능하는 최소폭.
+const RIGHT_PANE_MIN = 560;
 const HANDLE_HIT_WIDTH = 12;
 const DRAG_THRESHOLD = 4;
 
@@ -81,6 +88,18 @@ interface WorkspaceShellProps {
   right: ReactNode;
   /** Vertical label shown on the left collapse/resize handle. */
   leftLabel?: string;
+  /**
+   * 증가할 때마다 왼쪽 패널을 접는다 — "선택 지문 불러오기" 직후 지문 목록이
+   * 옆으로 샤라락 접히며 작업 공간이 넓어지는 UX 용. 0이면 무시.
+   */
+  leftCollapseSignal?: number;
+  /** 증가할 때마다 왼쪽 패널을 편다 — 빈 워크스페이스의 "내 지문 열기" 용. */
+  leftOpenSignal?: number;
+  /**
+   * 우측 패널 최소폭 — 워크스페이스+설정 2분할이면 560, 설정 단독이면
+   * 더 좁아도 되므로 호출부에서 상태에 맞게 내려준다.
+   */
+  rightPaneMin?: number;
 }
 
 export function WorkspaceShell({
@@ -88,6 +107,9 @@ export function WorkspaceShell({
   left,
   right,
   leftLabel = "지문",
+  leftCollapseSignal = 0,
+  leftOpenSignal = 0,
+  rightPaneMin = RIGHT_PANE_MIN,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
@@ -107,6 +129,16 @@ export function WorkspaceShell({
       /* ignore */
     }
   }, []);
+
+  // 불러오기 직후 지문 목록을 접어 작업 공간을 넓힌다 (영구 저장은 하지 않음 —
+  // 다음 방문 때는 사용자가 저장해둔 열림 상태를 따른다).
+  useEffect(() => {
+    if (leftCollapseSignal > 0) setLeftPaneOpen(false);
+  }, [leftCollapseSignal]);
+
+  useEffect(() => {
+    if (leftOpenSignal > 0) setLeftPaneOpen(true);
+  }, [leftOpenSignal]);
 
   const toggleLeftPaneOpen = useCallback(() => {
     setLeftPaneOpen((prev) => {
@@ -133,7 +165,7 @@ export function WorkspaceShell({
           : Number.POSITIVE_INFINITY;
       const maxWidth = Math.max(
         LEFT_PANE_MIN,
-        Math.min(ratioCap, containerWidth - RIGHT_PANE_MIN - HANDLE_HIT_WIDTH),
+        Math.min(ratioCap, containerWidth - rightPaneMin - HANDLE_HIT_WIDTH),
       );
       let didDrag = false;
       let latest = startWidth;
@@ -169,7 +201,7 @@ export function WorkspaceShell({
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
     },
-    [leftPaneWidth, toggleLeftPaneOpen],
+    [leftPaneWidth, toggleLeftPaneOpen, rightPaneMin],
   );
 
   const resetLeftPaneWidth = useCallback(() => {
@@ -258,7 +290,9 @@ export function WorkspaceShell({
               <div
                 className="flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg border border-slate-200"
                 style={{
-                  width: `min(${leftPaneWidth}px, ${LEFT_PANE_MAX_RATIO * 100}%)`,
+                  // 저장된 폭(기본 560)이 작은 컨테이너에서 우측 패널을
+                  // RIGHT_PANE_MIN 미만으로 밀어내지 않게 렌더 폭도 클램프.
+                  width: `min(${leftPaneWidth}px, ${LEFT_PANE_MAX_RATIO * 100}%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`,
                 }}
               >
                 {left}
@@ -268,9 +302,9 @@ export function WorkspaceShell({
                 onPointerDown={handleCloseLeftPanePointerDown}
                 onDoubleClick={resetLeftPaneWidth}
                 title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-                className="group/lhandle mx-1 flex w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100"
+                className="group/lhandle mx-0.5 flex w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
               >
-                <span>{"<"}</span>
+                <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
                 <span style={{ writingMode: "vertical-rl" }}>{leftLabel} 닫기</span>
                 <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
               </button>
@@ -280,9 +314,9 @@ export function WorkspaceShell({
               type="button"
               onClick={toggleLeftPaneOpen}
               title="클릭하여 지문 패널 열기"
-              className="mx-1 flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
+              className="mx-0.5 flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
             >
-              <span>{">"}</span>
+              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
               <span style={{ writingMode: "vertical-rl" }}>{leftLabel} 열기</span>
             </button>
           )}

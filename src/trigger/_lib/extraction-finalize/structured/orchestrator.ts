@@ -3,6 +3,7 @@ import type { ExtractionItem as ExtractionItemRow, Prisma } from "@prisma/client
 import { assignGroupIds } from "@/lib/extraction/segmentation";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
+import { autoPromoteJobDrafts } from "@/lib/extraction/promote-m1-drafts";
 import { persistM2ExtractionDrafts } from "../../m2-draft-pipeline";
 import { ensureSourceMaterial } from "../source-material";
 import { buildStructuredDraftsFromItems } from "./build-drafts";
@@ -181,6 +182,29 @@ export async function finalizeStructured(input: StructuredFinalizeInput): Promis
       snapshotItems,
       pages,
     });
+
+    // autoPromote(생성 페이지 발 잡): drafts를 서버에서 곧바로 Passage로 승격.
+    // 클라이언트 폴링(useGenerateExtraction)은 컴포넌트 메모리에만 살아 있어
+    // 추출 중 페이지 이탈/새로고침 시 완료된 잡의 drafts가 영구 고아가 되던
+    // 구멍을 여기서 막는다. status 플립 *전에* 실행해 폴링이 완료를 보는 순간
+    // 이미 savedPassageId가 박혀 있게(클라이언트 승격과의 레이스 제거).
+    // 승격 실패가 finalize를 실패시키면 안 되므로 best-effort.
+    try {
+      const promoted = await autoPromoteJobDrafts(jobId);
+      if (promoted.enabled) {
+        logger.info("m1 auto-promote done", {
+          jobId,
+          promoted: promoted.promotedPassageIds.length,
+          skipped: promoted.skipped,
+          failed: promoted.failed,
+        });
+      }
+    } catch (err) {
+      logger.error("m1 auto-promote failed", {
+        jobId,
+        err: err instanceof Error ? err.message : String(err),
+      });
+    }
 
     // PASSAGE_ONLY status flip — done HERE so the UI polling that watches
     // `status === "COMPLETED"` doesn't unsubscribe before any cluster's

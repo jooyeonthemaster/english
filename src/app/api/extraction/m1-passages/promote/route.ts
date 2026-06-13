@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { createHash } from "node:crypto";
 
 import { prisma } from "@/lib/prisma";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
+import {
+  PROMOTABLE_DRAFT_INCLUDE,
+  promoteM1Draft,
+  type PromoteOutcome,
+} from "@/lib/extraction/promote-m1-drafts";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,17 +16,6 @@ const promoteSchema = z.object({
   draftIds: z.array(z.string().min(1)).min(1).max(200),
   markReviewed: z.boolean().optional().default(true),
 });
-
-type PromoteOutcome =
-  | { draftId: string; status: "promoted"; passageId: string }
-  | { draftId: string; status: "skipped"; reason: string; passageId?: string }
-  | { draftId: string; status: "failed"; reason: string };
-
-function sha1(input: string): string {
-  return createHash("sha1")
-    .update(input.replace(/\s+/g, " ").trim(), "utf8")
-    .digest("hex");
-}
 
 export async function POST(req: NextRequest) {
   const staff = await requireStaff();
@@ -47,14 +40,7 @@ export async function POST(req: NextRequest) {
       job: { academyId: staff.academyId, deletedAt: null },
     },
     orderBy: { passageOrder: "asc" },
-    include: {
-      job: {
-        select: { id: true, originalFileName: true, academyId: true },
-      },
-      sourceMaterial: {
-        select: { id: true, schoolId: true },
-      },
-    },
+    include: PROMOTABLE_DRAFT_INCLUDE,
   });
 
   const foundIds = new Set(drafts.map((d) => d.id));
@@ -70,92 +56,31 @@ export async function POST(req: NextRequest) {
 
   for (const draft of drafts) {
     try {
-      if (draft.savedPassageId) {
-        if (markReviewed && draft.reviewStatus !== "COMMITTED") {
-          await prisma.extractionM1PassageDraft.update({
-            where: { id: draft.id },
-            data: {
-              reviewStatus: "COMMITTED",
-              confirmedAt: new Date(),
-            },
-          });
-          outcomes.push({
-            draftId: draft.id,
-            status: "promoted",
-            passageId: draft.savedPassageId,
-          });
-          continue;
-        }
+      // 이미 승격됐지만 아직 COMMITTED가 아닌 draft를 검수 완료(markReviewed)로
+      // 재커밋한다. (main의 markReviewed=false 경로가 남긴 REVIEWED 상태 잔존
+      // 데이터를 검수 UI에서 커밋 처리할 수 있게 하는 보완 — promoteM1Draft는
+      // savedPassageId가 있으면 skipped(already_promoted)만 반환한다.)
+      if (
+        draft.savedPassageId &&
+        markReviewed &&
+        draft.reviewStatus !== "COMMITTED"
+      ) {
+        await prisma.extractionM1PassageDraft.update({
+          where: { id: draft.id },
+          data: {
+            reviewStatus: "COMMITTED",
+            confirmedAt: new Date(),
+          },
+        });
         outcomes.push({
           draftId: draft.id,
-          status: "skipped",
-          reason: "already_promoted",
+          status: "promoted",
           passageId: draft.savedPassageId,
         });
         continue;
       }
 
-      const teacherText = draft.teacherText.trim();
-      if (!teacherText) {
-        outcomes.push({
-          draftId: draft.id,
-          status: "skipped",
-          reason: "empty_content",
-        });
-        continue;
-      }
-
-      if (!draft.sourceMaterialId) {
-        outcomes.push({
-          draftId: draft.id,
-          status: "skipped",
-          reason: "no_source_material",
-        });
-        continue;
-      }
-
-      const title = (draft.title?.trim() || `지문 ${draft.passageOrder + 1}`).slice(
-        0,
-        200,
-      );
-
-      const passage = await prisma.$transaction(async (tx) => {
-        const created = await tx.passage.create({
-          data: {
-            academyId: draft.job.academyId,
-            schoolId: draft.sourceMaterial?.schoolId ?? null,
-            title,
-            content: teacherText,
-            source: draft.job.originalFileName
-              ? `bulk-extract:${draft.job.originalFileName}`
-              : `bulk-extract:${draft.job.id}`,
-            sourceMaterialId: draft.sourceMaterialId,
-            contentHash: sha1(teacherText),
-            // (adaptive-intake P1) — 출처 페이지 보존 + 복원본 여부 기록.
-            sourcePageIndex: draft.sourcePageIndex,
-            extractionOutput:
-              draft.restorationStatus === "RESTORED" ? "restored" : "verbatim",
-          },
-          select: { id: true },
-        });
-
-        await tx.extractionM1PassageDraft.update({
-          where: { id: draft.id },
-          data: {
-            savedPassageId: created.id,
-            reviewStatus: markReviewed ? "COMMITTED" : "REVIEWED",
-            confirmedAt: markReviewed ? new Date() : null,
-          },
-        });
-
-        return created;
-      });
-
-      outcomes.push({
-        draftId: draft.id,
-        status: "promoted",
-        passageId: passage.id,
-      });
+      outcomes.push(await promoteM1Draft(draft));
     } catch (err) {
       console.error("[m1-passages/promote] draft promotion failed", {
         draftId: draft.id,

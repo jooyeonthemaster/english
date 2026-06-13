@@ -14,6 +14,8 @@ export async function persistPageSuccess(params: {
   outputTokens: number | undefined;
   latencyMs: number;
   structured: StructuredOcrResponse | undefined;
+  /** 실제 사용된 OCR 엔진(dispatch가 보고). 미지정 시 설정상 Gemini 모델명. */
+  modelUsed?: string;
 }): Promise<void> {
   const {
     idempotencyKey,
@@ -25,6 +27,7 @@ export async function persistPageSuccess(params: {
     outputTokens,
     latencyMs,
     structured,
+    modelUsed,
   } = params;
   const itemRows = structured
     ? buildExtractionItemRows({ jobId, pageId, pageIndex, structured })
@@ -44,7 +47,7 @@ export async function persistPageSuccess(params: {
       data: {
         status: "SUCCESS",
         extractedText,
-        modelUsed: getExtractionAiModelName("ocr"),
+        modelUsed: modelUsed ?? getExtractionAiModelName("ocr"),
         inputTokens: inputTokens ?? null,
         outputTokens: outputTokens ?? null,
         latencyMs,

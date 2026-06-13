@@ -8,6 +8,7 @@ import {
   mapChangesToOffsets,
   selectInlineChanges,
 } from "../utils/restoration-changes";
+import { formatExtractedTextForDisplay } from "../utils/display-text";
 import { EditableRestoredTextBox } from "./editable-restored-text-box";
 import { OriginalProblemBox } from "./original-problem-box";
 import { RestorationChangesPanel } from "./restoration-changes-panel";
@@ -25,14 +26,18 @@ export function PassageCompare({
   isRerestoring?: boolean;
   rerestoreDisabled?: boolean;
 }) {
+  const displayTeacherText = useMemo(
+    () => formatExtractedTextForDisplay(draft.teacherText),
+    [draft.teacherText],
+  );
   // ─── Inline change selection (panel ↔ body sync) ───
   // `hoveredChangeId` follows mouse hover on either side; `activeChangeId`
   // is the locked selection from a click. Both panes render highlights from
   // the same state so hovering a card glows the corresponding passage mark
   // (and vice versa).
   const inlineChanges = useMemo(
-    () => selectInlineChanges(draft.changes ?? [], draft.rawText, draft.teacherText),
-    [draft.changes, draft.rawText, draft.teacherText],
+    () => selectInlineChanges(draft.changes ?? [], draft.rawText, displayTeacherText),
+    [draft.changes, draft.rawText, displayTeacherText],
   );
   // Whole-body cards (source-match) get a side panel card but no inline
   // body highlight. Strip them before handing changes to the comparison
@@ -49,7 +54,7 @@ export function PassageCompare({
   const orphanChangeIds = useMemo(() => {
     if (highlightableChanges.length === 0) return new Set<string>();
     const spans = mapChangesToOffsets(
-      draft.teacherText,
+      displayTeacherText,
       highlightableChanges.map((c) => ({ id: c.id, text: c.after })),
     );
     const matched = new Set(spans.map((s) => s.changeId));
@@ -58,7 +63,7 @@ export function PassageCompare({
       if (!matched.has(change.id)) orphans.add(change.id);
     }
     return orphans;
-  }, [highlightableChanges, draft.teacherText]);
+  }, [highlightableChanges, displayTeacherText]);
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
   const [activeChangeId, setActiveChangeId] = useState<string | null>(null);
   // Show the side panel whenever we have something meaningful to surface,
@@ -84,7 +89,7 @@ export function PassageCompare({
           onSelectChange={setActiveChangeId}
         />
         <EditableRestoredTextBox
-          value={draft.teacherText}
+          value={displayTeacherText}
           rawText={draft.rawText}
           onChange={onTextChange}
           changes={highlightableChanges}

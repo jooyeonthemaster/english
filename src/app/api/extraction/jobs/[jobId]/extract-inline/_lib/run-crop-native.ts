@@ -36,6 +36,7 @@ import {
   restoreCropImage,
   type CropRestoreResult,
 } from "@/trigger/_lib/m1-passage-restoration/crop-native";
+import { autoPromoteJobDrafts } from "@/lib/extraction/promote-m1-drafts";
 
 const INLINE_CROP_CONCURRENCY = 20;
 
@@ -312,6 +313,29 @@ export async function runCropNativeRestore(args: {
     );
   }
 
+  // autoPromote(생성 페이지 발 잡): drafts를 서버에서 곧바로 Passage로 승격.
+  // 잡 status가 터미널로 플립되기 *전에* 실행해, 클라이언트 폴링이 완료를 보는
+  // 시점엔 이미 savedPassageId가 박혀 있게 한다(클라이언트 승격과의 레이스 제거).
+  // 승격 실패가 추출 자체를 실패시키면 안 되므로 best-effort.
+  let promotedPassageIds: string[] = [];
+  try {
+    const promoted = await autoPromoteJobDrafts(jobId);
+    promotedPassageIds = promoted.promotedPassageIds;
+    if (promoted.enabled) {
+      console.info("[crop-native] auto-promote done", {
+        jobId,
+        promoted: promoted.promotedPassageIds.length,
+        skipped: promoted.skipped,
+        failed: promoted.failed,
+      });
+    }
+  } catch (err) {
+    console.error("[crop-native] auto-promote failed", {
+      jobId,
+      reason: err instanceof Error ? err.message : String(err),
+    });
+  }
+
   await prisma.extractionJob.update({
     where: { id: jobId },
     data: {
@@ -326,6 +350,7 @@ export async function runCropNativeRestore(args: {
     status: finalStatus,
     draftCount: ordered.length,
     sourceMaterialId,
+    promotedPassageIds,
     successPages: job.successPages,
     failedPages: job.failedPages,
     inline: true as const,

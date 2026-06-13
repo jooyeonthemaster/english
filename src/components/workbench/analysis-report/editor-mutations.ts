@@ -7,6 +7,7 @@ import type {
   SectionLayout,
   VocabTestLayout,
   VocabTestMode,
+  VocabularyTier,
 } from "@/lib/passage-report/analysis-report/schema";
 
 /**
@@ -206,6 +207,10 @@ export function deleteCustomBlock(report: AnalysisReport, id: string): AnalysisR
   return { ...report, customBlocks, blockOrder, blockMeta };
 }
 
+function logicalBlockId(id: string): string {
+  return id.startsWith("c-") ? id.split("::", 1)[0] : id;
+}
+
 /**
  * 블록 id 하나를 삭제 — 노션식 미세 삭제.
  * 문장/표행/요약문/구문항목은 해당 배열에서 제거, 커스텀은 제거, 섹션헤더는 섹션 전체 삭제,
@@ -245,11 +250,12 @@ export function deleteItem(report: AnalysisReport, id: string): AnalysisReport {
 
 /** 여러 블록 id 를 한 번에 정리(페이지 단위 삭제). 커스텀은 제거, 그 외는 숨김. */
 export function hideOrDeleteIds(report: AnalysisReport, ids: string[]): AnalysisReport {
-  const idSet = new Set(ids);
+  const logicalIds = Array.from(new Set(ids.map(logicalBlockId)));
+  const idSet = new Set(logicalIds);
   let customBlocks = report.customBlocks ?? [];
   let blockOrder = report.blockOrder;
   const blockMeta = { ...(report.blockMeta ?? {}) };
-  for (const id of ids) {
+  for (const id of logicalIds) {
     if (id.startsWith("c-")) continue;
     blockMeta[id] = { ...(blockMeta[id] ?? {}), hidden: true };
   }
@@ -301,6 +307,20 @@ export function setVocabularyTestLayout(
   const sec = report.sections[sectionIndex];
   if (!sec || sec.kind !== "vocabulary") return report;
   return setSection(report, sectionIndex, { ...sec, vocabTestLayout: layout });
+}
+
+/** 난이도 단계(tier) 필터 설정 — 단어장 표시 + 시험지 출제 대상을 함께 거른다. 전체 선택은 undefined 로 정규화. */
+export function setVocabularyTierFilter(
+  report: AnalysisReport,
+  sectionIndex: number,
+  tiers: VocabularyTier[],
+): AnalysisReport {
+  const sec = report.sections[sectionIndex];
+  if (!sec || sec.kind !== "vocabulary") return report;
+  const all: VocabularyTier[] = ["core", "test", "challenge"];
+  const normalized = all.filter((t) => tiers.includes(t));
+  const filter = normalized.length === 0 || normalized.length === all.length ? undefined : normalized;
+  return setSection(report, sectionIndex, { ...sec, vocabTierFilter: filter });
 }
 
 // ─── 배열 행 추가용 빈 템플릿 ────────────────────────────────────────────────

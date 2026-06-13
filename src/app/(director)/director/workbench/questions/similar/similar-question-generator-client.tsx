@@ -436,6 +436,7 @@ export function SimilarQuestionGeneratorClient({
           <WorkflowPageTitle
             icon={QuestionGenerationIcon}
             title="동형 문제 생성"
+            beta
             description="원본 문항(사진/PDF)을 분석하고, 왼쪽 자료에서 지문을 골라 같은 출제 의도의 동형 문항을 생성합니다."
           />
         </div>

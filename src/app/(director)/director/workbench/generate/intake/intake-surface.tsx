@@ -12,15 +12,23 @@ interface IntakeSurfaceProps {
   setIntakeView: (v: IntakeView) => void;
   intakeTab: IntakeTab;
   setIntakeTab: (v: IntakeTab) => void;
-  /** Count shown on the "내 지문 (N)" tab. */
+  /** Count shown on the library tab. */
   libraryCount: number;
+  /** Label for the library tab. Defaults to "내 지문". */
+  libraryLabel?: string;
   /** The existing PassageCardGrid, rendered as the "내 지문" library view. */
   library: ReactNode;
-  /** Persist pasted rows → select. */
-  onSubmitPastedRows: (
+  /** Persist pasted rows → select. Required when the 직접 입력 tab is shown. */
+  onSubmitPastedRows?: (
     rows: PastedPassageInput[],
   ) => boolean | void | Promise<boolean | void>;
-  pasteSaving: boolean;
+  pasteSaving?: boolean;
+  /**
+   * Show the 직접 입력 (multi-passage paste) tab. Defaults to true (문제 생성).
+   * The 학습지 생성 page sets this false — direct paste lives in its right
+   * "지문" annotation stack instead, so the left panel is 이미지·PDF | 자료 관리.
+   */
+  showPasteTab?: boolean;
   /** Image/PDF extraction surface. Falls back to a placeholder. */
   upload?: ReactNode;
 }
@@ -36,25 +44,23 @@ export function IntakeSurface({
   intakeTab,
   setIntakeTab,
   libraryCount,
+  libraryLabel = "내 지문",
   library,
   onSubmitPastedRows,
   pasteSaving,
+  showPasteTab = true,
   upload,
 }: IntakeSurfaceProps) {
-  const pasteActive = intakeView === "intake" && intakeTab === "paste";
+  const pasteActive =
+    showPasteTab && intakeView === "intake" && intakeTab === "paste";
   const uploadActive = intakeView === "intake" && intakeTab === "upload";
   const libraryActive = intakeView === "library";
-  const controlRowClass =
-    "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
-  const controlLabelClass =
-    "w-[64px] shrink-0 text-[11px] font-bold text-slate-600";
 
   return (
     <div className="flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
       {/* Single tab row: 직접 입력 · 이미지·PDF | 내 지문 */}
-      <div className={controlRowClass}>
-        <span className={controlLabelClass}>입력 방식</span>
-        <div className="flex min-w-0 items-center gap-1.5">
+      <div className="flex shrink-0 items-center gap-1 border-b border-slate-100 px-3 pt-2.5">
+        {showPasteTab ? (
           <Tab
             active={pasteActive}
             onClick={() => {
@@ -64,26 +70,23 @@ export function IntakeSurface({
             icon={<ClipboardPaste className="h-3.5 w-3.5" />}
             label="직접 입력"
           />
-          <Tab
-            active={uploadActive}
-            onClick={() => {
-              setIntakeView("intake");
-              setIntakeTab("upload");
-            }}
-            icon={<ImageUp className="h-3.5 w-3.5" />}
-            label="이미지·PDF"
-          />
-          <span
-            className="mx-1.5 h-5 w-px self-center bg-slate-200"
-            aria-hidden="true"
-          />
-          <Tab
-            active={libraryActive}
-            onClick={() => setIntakeView("library")}
-            icon={<FolderOpen className="h-3.5 w-3.5" />}
-            label={`내 지문 ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
-          />
-        </div>
+        ) : null}
+        <Tab
+          active={uploadActive}
+          onClick={() => {
+            setIntakeView("intake");
+            setIntakeTab("upload");
+          }}
+          icon={<ImageUp className="h-3.5 w-3.5" />}
+          label="이미지·PDF"
+        />
+        <span className="mx-1.5 h-4 w-px self-center bg-slate-200" aria-hidden="true" />
+        <Tab
+          active={libraryActive}
+          onClick={() => setIntakeView("library")}
+          icon={<FolderOpen className="h-3.5 w-3.5" />}
+          label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
+        />
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col">
@@ -94,11 +97,11 @@ export function IntakeSurface({
         </div>
         {libraryActive ? (
           <div className="flex min-h-0 flex-1 flex-col">{library}</div>
-        ) : pasteActive ? (
+        ) : pasteActive && onSubmitPastedRows ? (
           <div className="flex min-h-0 flex-1 flex-col">
             <MultiPassagePaste
               onSubmitRows={onSubmitPastedRows}
-              saving={pasteSaving}
+              saving={pasteSaving ?? false}
             />
           </div>
         ) : null}

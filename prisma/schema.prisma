@@ -2516,6 +2516,10 @@ model ExtractionJob {
   /// 진실의 소스는 지문별(Passage.extractionOutput / Draft.restorationStatus).
   /// null = 미전달(비적응 흐름) → finalize는 기존 자동복원 휴리스틱 유지.
   outputMode String?
+  /// 문제생성 페이지 발(發) 잡: finalize가 drafts를 서버에서 곧바로 Passage로 승격한다.
+  /// 클라이언트 폴링 승격(useGenerateExtraction)은 표시/폴백용 — 페이지 이탈로 폴링이
+  /// 죽어도 결과가 고아가 되지 않게 하는 게 목적. 자료추출(import) 잡은 false(수동 검수).
+  autoPromote Boolean @default(false)
 
   status       String @default("PENDING")
   totalPages   Int
@@ -2532,12 +2536,10 @@ model ExtractionJob {
 
   errorSummary String? @db.Text // JSON summary of errors
 
-  /// Free-form metadata for finalize-driven follow-up flows. Currently used
-  /// by the "빠른 분석" / "빠른 생성" entry points to stash
-  /// `{ fastTrackFollowUp: { flow, config, staffId } }` so that
-  /// extraction-finalize can auto-promote drafts and fan out workbench AI
-  /// jobs after restoration completes. Null for the regular bulk-extract
-  /// flow (UI-driven review + promote).
+  /// Free-form metadata for job-scoped extras. Currently stores the list
+  /// preview thumbnail info written by create-job
+  /// (`{ previewImageUrl, previewMimeType, previewImageBytes }`) and read
+  /// by list-jobs for the 자료 목록 card thumbnails.
   metadata Json?
 
   createdAt   DateTime  @default(now())
@@ -3313,6 +3315,8 @@ model AppEvent {
 
   @@index([academyId, eventType, createdAt])
   @@index([academyId, actorType, actorId])
+  @@index([academyId, createdAt])
+  @@index([createdAt])
   @@map("app_events")
 }
 

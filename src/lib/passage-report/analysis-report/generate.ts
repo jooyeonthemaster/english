@@ -1,4 +1,5 @@
 import { generateQuestionText } from "@/lib/question-generation-llm";
+import { stripWorksheetContentFields } from "./worksheet-core-gate";
 
 import {
   buildAnalysisReportPrompt,
@@ -137,6 +138,11 @@ export async function generateAnalysisReportCore(
 
   normalizeAndAuditSections(validation.data.sections);
 
+  // 기본 분석의 learning-worksheet 는 logicRows 표 전용 — 모델이 프롬프트 금지를
+  // 어기고 실전 학습지 콘텐츠를 끼워 넣어도 여기서 결정론적으로 제거한다.
+  // (미리보기의 "기본 학습지" 뷰와 같은 함수를 공유 — worksheet-core-gate.ts)
+  const coreSections = stripWorksheetContentFields(validation.data.sections);
+
   const report: AnalysisReport = {
     schemaVersion: 1,
     brand: input.brand ?? "ENGLISH READING LAB",
@@ -144,7 +150,7 @@ export async function generateAnalysisReportCore(
     themeId: input.themeId ?? "black-white",
     passageLayout: "hlc", // 01 원문 필기 캔버스(신규 레이아웃)
     meta: validation.data.meta,
-    sections: validation.data.sections,
+    sections: coreSections,
   };
 
   return { ok: true, report, raw, usage: primaryUsage };
@@ -179,11 +185,11 @@ export async function generateAnalysisReport(
   };
 }
 
-type GenerateLearningWorksheetResult =
+export type GenerateLearningWorksheetResult =
   | { ok: true; section: LearningWorksheetSection; raw: string; usage: AnalysisReportUsage }
   | { ok: false; error: string; raw: string; parsed?: unknown };
 
-async function generateLearningWorksheet(
+export async function generateLearningWorksheet(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
 ): Promise<GenerateLearningWorksheetResult> {

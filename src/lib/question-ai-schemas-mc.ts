@@ -139,9 +139,9 @@ export const aiBlankInferenceSchema = z.object({
   originalExpression: z.string().describe("원문에서 빈칸으로 교체할 정확한 표현 (원문 그대로, 한 글자도 변경 금지)"),
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
   blankAnswerMode: z
-    .enum(["SOURCE_EXACT", "DOUBLE_NEGATIVE", "PARAPHRASE"])
+    .enum(["SOURCE_EXACT", "PARAPHRASE", "DOUBLE_NEGATIVE"])
     .optional()
-    .describe("빈칸 정답 구성 방식 (PARAPHRASE는 KILLER 지시 블록이 있을 때)"),
+    .describe("빈칸 정답 구성 방식 (PARAPHRASE는 빈칸 변형 설정이 있을 때)"),
   answerLogic: z.string().optional().describe("부정-부정 빈칸 등 특수 정답 논리 설명"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
   ...mcWrongExplanations,

@@ -60,7 +60,13 @@ interface BottomQueueSectionProps {
   savedQuestions: QuestionCardItem[];
   loadingSavedQuestions: boolean;
   setDetailQuestion: (q: QuestionCardItem | null) => void;
+  /** Per-card 검수완료/해제 핸들러. 선택 — 미지정 시(기본 생성 페이지) 카드 단건 검수
+   *  액션을 숨기고 일괄 검수만 노출한다. 커스텀/동형 패널이 전달한다. */
+  onApproveQuestion?: (questionId: string) => void;
+  onUnapproveQuestion?: (questionId: string) => void;
   onBatchApproveQuestions?: (questionIds: string[]) => void | Promise<void>;
+  /** Single-question delete wired to QuestionCard's header/dropdown delete. */
+  onDeleteQuestion?: (questionId: string) => void | Promise<void>;
   /** Bulk-delete persisted questions. Returns true if deletion actually ran
    *  (false on user-cancel) so the section can keep the selection on cancel. */
   onBatchDeleteQuestions?: (
@@ -232,7 +238,13 @@ export function BottomQueueSection({
   savedQuestions,
   loadingSavedQuestions,
   setDetailQuestion,
+  onApproveQuestion,
+  onUnapproveQuestion,
   onBatchApproveQuestions,
+  // Single-delete now routes through requestDelete -> in-app AlertDialog ->
+  // onBatchDeleteQuestions (with tombstone tracking). onDeleteQuestion is kept
+  // in the prop contract for the parent's wiring but superseded by that flow.
+  onDeleteQuestion,
   onBatchDeleteQuestions,
   deletedQuestionIds,
   deletedQuestionSignatures,
@@ -801,7 +813,7 @@ export function BottomQueueSection({
           num={card.number}
           readonly
           compact
-          showReviewActions={false}
+          showReviewActions={!deleteMode && Boolean(persistedId)}
           showHeaderActions={!deleteMode && Boolean(persistedId)}
           selected={isSelected}
           dragItemId={canDelete || canApprove ? (persistedId as string) : null}
@@ -809,6 +821,16 @@ export function BottomQueueSection({
           onDetail={() => setDetailQuestion(card.question)}
           showDetailButton
           detailExtra={renderCardDetailExtra?.(card.question)}
+          onApprove={
+            deleteMode || !onApproveQuestion
+              ? undefined
+              : () => persistedId && onApproveQuestion(persistedId)
+          }
+          onUnapprove={
+            deleteMode || !onUnapproveQuestion
+              ? undefined
+              : () => persistedId && onUnapproveQuestion(persistedId)
+          }
           onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
           onDelete={
             deleteMode || !persistedId
@@ -835,7 +857,7 @@ export function BottomQueueSection({
           num={index + 1}
           readonly
           compact
-          showReviewActions={false}
+          showReviewActions={!deleteMode}
           showHeaderActions={!deleteMode}
           selected={isSelected}
           dragItemId={deleteMode ? q.id : null}
@@ -843,6 +865,16 @@ export function BottomQueueSection({
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
           detailExtra={renderCardDetailExtra?.(cardQuestion)}
+          onApprove={
+            deleteMode || !onApproveQuestion
+              ? undefined
+              : () => onApproveQuestion(cardQuestion.id)
+          }
+          onUnapprove={
+            deleteMode || !onUnapproveQuestion
+              ? undefined
+              : () => onUnapproveQuestion(cardQuestion.id)
+          }
           onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}
           onDelete={
             deleteMode ? undefined : () => requestDelete([cardQuestion.id], "single")

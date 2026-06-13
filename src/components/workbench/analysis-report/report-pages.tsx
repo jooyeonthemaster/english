@@ -22,6 +22,7 @@ import type {
 import { applyBlockOrder } from "./editor-mutations";
 import { ANALYSIS_REPORT_CSS } from "./report-styles";
 import type { CoverEdit } from "./cover-templates";
+import type { ActivityAction } from "./custom-activity-renders";
 import {
   Arrow,
   BlockFontProvider,
@@ -41,6 +42,7 @@ export const REPORT_A4_WIDTH_PX = Math.round(210 * PX_PER_MM);
 // Matches the usable .par-sheet-body height after A4 padding, running header, and footer.
 const PAGE_BODY_MM = 250;
 const BOX_PAD_MM = 9;
+const ACTIVITY_PAD_MM = 6;
 const RUN_GAP_MM = 6;
 const LI_GAP_MM = 2.5;
 const ARROW_MM = 7;
@@ -65,6 +67,8 @@ export interface ReportEdit {
   setCustom: (id: string, patch: Partial<CustomBlock>) => void;
   /** 텍스트 블록 끝에서 Enter → 해당 블록 뒤에 빈 텍스트 블록 삽입 */
   insertTextAfter: (anchorId: string) => void;
+  /** 학습 활동 블록 컨트롤(다시 섞기/밀도/정답/삭제) */
+  onActivity: (id: string, action: ActivityAction) => void;
   /** 표지 인라인 편집 */
   ced: CoverEdit;
   /** 블록 세로 리사이즈 종료 — 최종 높이(mm) commit */
@@ -89,32 +93,82 @@ export interface ItemDescriptor {
   no: number;
   isSectionStart: boolean;
 }
+/**
+ * 학습 활동 정답 페이지 아이템(파생 블록)인지. 이들은 활동 블록에서 매 렌더 재생성되는
+ * appendix 라, blockOrder/순서 정렬·삽입 앵커 대상에서 제외하고 항상 문서 맨 끝에 붙인다.
+ */
+function isActivityAnswerId(id: string): boolean {
+  return id === "activity-answers-head" || (id.startsWith("c-") && id.endsWith("-ans"));
+}
+
+function orderIdOf(it: FlowItem): string {
+  return it.orderId ?? it.editId ?? it.id;
+}
+
+function editIdOf(it: FlowItem): string {
+  return it.editId ?? it.id;
+}
+
 export function enumerateItems(report: AnalysisReport): ItemDescriptor[] {
-  const items = reportFlowItems(report);
-  return items.map((it) => ({
-    id: it.id,
-    sectionIndex: it.sectionIndex,
-    kind: it.kind,
-    wrap: it.wrap,
-    no: it.no,
-    isSectionStart: it.wrap === "secheader",
-  }));
+  const items = reportFlowItems(report).filter((it) => !isActivityAnswerId(it.id));
+  const seen = new Set<string>();
+  const descriptors: ItemDescriptor[] = [];
+  for (const it of items) {
+    const id = orderIdOf(it);
+    if (seen.has(id)) continue;
+    seen.add(id);
+    descriptors.push({
+      id,
+      sectionIndex: it.sectionIndex,
+      kind: it.kind,
+      wrap: it.wrap,
+      no: it.no,
+      isSectionStart: it.wrap === "secheader",
+    });
+  }
+  return descriptors;
 }
 
 function visibleFlowItems(report: AnalysisReport, natural: FlowItem[]): FlowItem[] {
-  const byId = new Map(natural.map((it) => [it.id, it]));
-  const orderedIds = applyBlockOrder(natural.map((it) => it.id), report.blockOrder);
+  // 정답 페이지(파생)는 분리해 두고 본문만 blockOrder 로 정렬한다.
+  const answers = natural.filter((it) => isActivityAnswerId(it.id));
+  const body = natural.filter((it) => !isActivityAnswerId(it.id));
+  const groupIds: string[] = [];
+  const byGroup = new Map<string, FlowItem[]>();
+  for (const it of body) {
+    const id = orderIdOf(it);
+    if (!byGroup.has(id)) {
+      byGroup.set(id, []);
+      groupIds.push(id);
+    }
+    byGroup.get(id)!.push(it);
+  }
+  const orderedIds = applyBlockOrder(groupIds, report.blockOrder);
   const out: FlowItem[] = [];
   for (const id of orderedIds) {
-    const it = byId.get(id);
-    if (!it) continue;
     if (report.blockMeta?.[id]?.hidden) continue;
+    const group = byGroup.get(id);
+    if (!group) continue;
+    for (const it of group) {
+      if (report.blockMeta?.[it.id]?.hidden) continue;
+      out.push(it);
+    }
+  }
+  // 정답 페이지는 blockOrder 와 무관하게 항상 맨 끝.
+  for (const it of answers) {
+    if (report.blockMeta?.[it.id]?.hidden) continue;
     out.push(it);
   }
   return out;
 }
 
-const isStandalone = (w: WrapKind) => !TABLE_WRAPS.has(w) && !BOX_LIST_WRAPS.has(w) && w !== "map" && w !== "vocab-grid" && w !== "reading";
+const isStandalone = (w: WrapKind) =>
+  !TABLE_WRAPS.has(w) &&
+  !BOX_LIST_WRAPS.has(w) &&
+  w !== "map" &&
+  w !== "vocab-grid" &&
+  w !== "reading" &&
+  w !== "activity";
 
 function isAutoFitItem(it: FlowItem): boolean {
   return /^s\d+-annotated-snt\d+/.test(it.id);
@@ -159,9 +213,9 @@ export function ReportPages({
   const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
 
   const natural = useMemo(
-    () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, insertTextAfter: edit.insertTextAfter, ced: edit.ced } : undefined),
+    () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, insertTextAfter: edit.insertTextAfter, ced: edit.ced, onActivity: edit.onActivity } : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [report, edit?.med, edit?.sectionEdit, edit?.setCustom, edit?.ced],
+    [report, edit?.med, edit?.sectionEdit, edit?.setCustom, edit?.ced, edit?.onActivity],
   );
 
   const items = useMemo(() => {
@@ -383,7 +437,7 @@ function RunsView({
   let i = 0;
   while (i < items.length) {
     const it = items[i];
-    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading";
+    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading" || it.wrap === "activity";
     const run: FlowItem[] = [it];
     if (merge) {
       let j = i + 1;
@@ -421,7 +475,7 @@ function RunBlock({
     return (
       <div className="par-runblock par-vocab-grid-run">
         {run.map((it) => (
-          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
         ))}
       </div>
     );
@@ -431,7 +485,17 @@ function RunBlock({
     return (
       <div className="par-runblock par-reading-flow-run">
         {run.map((it) => (
-          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
+        ))}
+      </div>
+    );
+  }
+
+  if (wrap === "activity") {
+    return (
+      <div className="par-runblock par-ws-block par-activity par-activity-run">
+        {run.map((it) => (
+          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
         ))}
       </div>
     );
@@ -459,7 +523,7 @@ function RunBlock({
           <thead>{tableHeadRow(wrap, editable, run[0]?.hiddenCols, resize)}</thead>
           <tbody>
             {run.map((it) => (
-              <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+              <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
             ))}
           </tbody>
         </table>
@@ -472,7 +536,7 @@ function RunBlock({
       <div className={`par-runblock par-box${wrap === "summary" ? " par-summary" : ""}`}>
         <ol className={wrap === "summary" ? undefined : "par-sentences"}>
           {run.map((it) => (
-            <LiShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} listStyle={wrap === "summary"} measure={measure} />
+            <LiShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} listStyle={wrap === "summary"} measure={measure} />
           ))}
         </ol>
       </div>
@@ -485,7 +549,7 @@ function RunBlock({
         {run.map((it, idx) => (
           <Fragment key={it.id}>
             {idx > 0 ? <Arrow /> : null}
-            <MapItemShell it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+            <MapItemShell it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
           </Fragment>
         ))}
       </div>
@@ -496,7 +560,7 @@ function RunBlock({
   return (
     <>
       {run.map((it) => (
-        <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[it.id]} measure={measure} />
+        <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
       ))}
     </>
   );
@@ -505,16 +569,17 @@ function RunBlock({
 // ─── 줄/블록 chrome ──────────────────────────────────────────────────────────
 function chromeProps(it: FlowItem, edit?: ReportEdit, measure?: boolean) {
   if (!edit || measure) return {} as Record<string, unknown>;
-  const active = edit.activeId === it.id;
-  const over = edit.drag.dragOverId === it.id && edit.drag.draggingId !== it.id;
+  const editId = editIdOf(it);
+  const active = edit.activeId === editId;
+  const over = edit.drag.dragOverId === editId && edit.drag.draggingId !== editId;
   return {
-    "data-paper-item-id": it.id,
+    "data-paper-item-id": editId,
     "data-paper-part-key": it.id,
-    className: `par-eline${active ? " is-active" : ""}${edit.drag.draggingId === it.id ? " is-dragging" : ""}${
+    className: `par-eline${active ? " is-active" : ""}${edit.drag.draggingId === editId ? " is-dragging" : ""}${
       over ? (edit.drag.placement === "after" ? " par-dragover-after" : " par-dragover-before") : ""
     }`,
     onMouseDown: () => {
-      if (edit.activeId !== it.id) edit.setActiveId(it.id);
+      if (edit.activeId !== editId) edit.setActiveId(editId);
     },
   } as Record<string, unknown>;
 }
@@ -616,12 +681,13 @@ function ResizeHandle({ edit, id, el }: { edit: ReportEdit; id: string; el: () =
 function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; listStyle?: boolean; measure?: boolean }) {
   const ref = useRef<HTMLLIElement>(null);
   const cp = chromeProps(it, edit, measure);
-  const resizable = !!edit && !measure;
+  const editId = editIdOf(it);
+  const resizable = !!edit && !measure && it.resizable !== false;
   return (
     <li ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
-      {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
+      {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
       <BlockFontProvider
-        blockId={it.id}
+        blockId={editId}
         runs={meta?.fontRuns}
         onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
       >
@@ -634,13 +700,14 @@ function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; edit?: 
 
 function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const cp = chromeProps(it, edit, measure);
+  const editId = editIdOf(it);
   return (
     <tr data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={(cp.className as string) ?? ""}>
       {edit && !measure ? (
-        <td className="par-edit-hcell"><Grip edit={edit} id={it.id} /></td>
+        <td className="par-edit-hcell"><Grip edit={edit} id={editId} /></td>
       ) : null}
       <BlockFontProvider
-        blockId={it.id}
+        blockId={editId}
         runs={meta?.fontRuns}
         onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
       >
@@ -653,12 +720,13 @@ function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit
 function BlockShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const cp = chromeProps(it, edit, measure);
-  const resizable = !!edit && !measure;
+  const editId = editIdOf(it);
+  const resizable = !!edit && !measure && it.resizable !== false;
   return (
     <div ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-block par-wrap-${it.wrap} ${(cp.className as string) ?? ""}`}>
-      {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
+      {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
       <BlockFontProvider
-        blockId={it.id}
+        blockId={editId}
         runs={meta?.fontRuns}
         onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
       >
@@ -692,11 +760,12 @@ function CoverShell({ it, edit, meta }: { it: FlowItem; edit?: ReportEdit; meta?
 
 function MapItemShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
   const cp = chromeProps(it, edit, measure);
+  const editId = editIdOf(it);
   return (
     <div data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
-      {edit && !measure ? <Grip edit={edit} id={it.id} /> : null}
+      {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
       <BlockFontProvider
-        blockId={it.id}
+        blockId={editId}
         runs={meta?.fontRuns}
         onBlockMeta={edit && !measure ? edit.onBlockMeta : undefined}
       >
@@ -723,25 +792,28 @@ function packFlow(
   let sawSecHeader = false;
 
   items.forEach((it, k) => {
-    const meta = blockMeta?.[it.id];
+    const meta = blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id];
     const tbl = TABLE_WRAPS.has(it.wrap);
     const box = BOX_LIST_WRAPS.has(it.wrap);
     const mp = it.wrap === "map";
+    const act = it.wrap === "activity";
     const isCover = it.wrap === "cover";
     const isSecHeader = it.wrap === "secheader";
     const standalone = isStandalone(it.wrap);
     const autoFit = isAutoFitItem(it);
     // 표지는 자기 페이지 독점: 표지 앞/뒤 모두 페이지 분할
     // 자동 독해 조각은 저장된 breakBefore/minHeight 때문에 다음 장으로 밀리지 않게 한다.
+    // 학습 활동(activity)은 블록 메타가 모든 분할 항목(회차/문항)에 동일하게 걸려 회차마다 끊기므로,
+    // 메타 기반 분할은 비활동 블록에만 적용한다. 활동의 '새 페이지'는 첫 항목의 it.breakBefore 가 담당.
     const forceBreak =
-      ((!!meta?.breakBefore && !autoFit) || !!it.breakBefore || isCover || prevWrap === "cover" || (isSecHeader && sawSecHeader)) &&
+      ((!!meta?.breakBefore && !autoFit && !act) || !!it.breakBefore || isCover || prevWrap === "cover" || (isSecHeader && sawSecHeader && !it.keepWithPrev)) &&
       page.length > 0;
     // 수동 리사이즈 높이는 모든 블록에서 페이지 분할에 반영(필기 캔버스 포함).
     // breakBefore 만 auto-fit(자동 독해 조각)에서 stale 값 무시(위 forceBreak 참고).
     const metaMinHeight = meta?.minHeight ?? 0;
     const hh = isCover ? PAGE_BODY_MM : Math.max(own[k], metaMinHeight);
 
-    const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + hh;
+    const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act ? ACTIVITY_PAD_MM : 0) + hh;
 
     let inc: number;
     if (page.length === 0) {
@@ -750,7 +822,7 @@ function packFlow(
       const newSection = it.sectionIndex !== prevSection;
       const newRun = standalone || newSection || it.wrap !== prevWrap;
       if (newRun) {
-        inc = RUN_GAP_MM + (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + hh;
+        inc = RUN_GAP_MM + (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act ? ACTIVITY_PAD_MM : 0) + hh;
       } else {
         inc = (box ? LI_GAP_MM : mp ? ARROW_MM : 0) + hh;
       }

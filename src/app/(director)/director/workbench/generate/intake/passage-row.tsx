@@ -16,12 +16,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { countWords } from "../generate-page-types";
 import { splitPastedPassages } from "./smart-split";
 import {
   RestoreIntroDialog,
   readRestoreIntroDismissed,
 } from "./restore-intro-dialog";
+import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
 
 /** Minimum characters before a pasted passage is considered usable. */
 export const MIN_CONTENT_CHARS = 20;
@@ -141,11 +143,14 @@ export function PassageRow({
         toast.error(data?.error || "복원에 실패했습니다.");
         return;
       }
+      const restoredText = formatExtractedTextForDisplay(
+        data.restoredText || trimmed,
+      );
       onChange({
         preRestoreContent: row.content,
-        content: data.restoredText || trimmed,
+        content: restoredText,
         restoration: {
-          restoredText: data.restoredText || "",
+          restoredText: data.restoredText ? restoredText : "",
           status: data.status || "PARTIAL",
           changes: Array.isArray(data.changes) ? data.changes : [],
           warnings: Array.isArray(data.warnings) ? data.warnings : [],
@@ -240,7 +245,7 @@ export function PassageRow({
             onClick={handleRestoreClick}
             disabled={!canRestore}
             title="문제 형태 지문을 원문으로 AI 복원"
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-5 text-[11.5px] font-bold text-white ring-1 ring-blue-300/60 shadow-lg shadow-blue-500/60 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/80 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {restoring ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -249,8 +254,11 @@ export function PassageRow({
             )}
             {restoring ? "복원 중" : "AI 복원"}
             {!restoring && (
-              <span className="rounded bg-blue-500/70 px-1 py-0.5 text-[9px] font-bold text-blue-50">
-                ◈2
+              <span
+                title={`이 작업은 크레딧 ${CREDIT_COSTS.PASSAGE_RESTORATION}을 사용합니다`}
+                className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
+              >
+                ◈{CREDIT_COSTS.PASSAGE_RESTORATION}
               </span>
             )}
           </button>

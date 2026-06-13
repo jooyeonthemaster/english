@@ -50,6 +50,7 @@ export function CustomTypeClient({ academyId }: { academyId: string }) {
         <WorkflowPageTitle
           icon={QuestionGenerationIcon}
           title="커스텀 유형"
+          beta
           description="원본 문항을 분석해 우리 엔진에 없는 유형을 저장하고, 그 유형으로 지문에 동형 문항을 계속 생성합니다."
         />
       </div>

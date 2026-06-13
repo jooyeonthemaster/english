@@ -203,7 +203,7 @@ export const examFocusSectionSchema = z
   .passthrough();
 
 // 06 핵심 어휘 (표) — "단어 테스트" 원천
-export const vocabTestModeSchema = z.enum(["study", "hide-meaning", "hide-headword"]);
+export const vocabTestModeSchema = z.enum(["study", "hide-meaning", "hide-headword", "synonym", "antonym"]);
 export type VocabTestMode = z.infer<typeof vocabTestModeSchema>;
 export const vocabTestLayoutSchema = z.enum(["table", "two-column"]);
 export type VocabTestLayout = z.infer<typeof vocabTestLayoutSchema>;
@@ -252,6 +252,8 @@ export const vocabularySectionSchema = z
     vocabTestLayout: vocabTestLayoutSchema.optional(),
     /** Word-test rows excluded from the generated worksheet. Source vocabulary rows stay intact. */
     vocabTestExcludedKeys: z.array(z.string()).optional(),
+    /** 표시할 난이도 단계(tier) 필터. 비거나 없으면: 단어장=전체, 시험지=기본(test+challenge). */
+    vocabTierFilter: z.array(vocabularyTierSchema).optional(),
   })
   .passthrough();
 
@@ -617,8 +619,114 @@ export const blockMetaSchema = z
 export type BlockMeta = z.infer<typeof blockMetaSchema>;
 export type FontRun = NonNullable<BlockMeta["fontRuns"]>[number];
 
+// ─── 학습 활동 블록 (결정론·AI 아님) — 추출 데이터의 순수 변환으로 무제한 생성·재섞기 ───
+// 단어 시험(vocabTestMode)과 같은 결정론 모델. seed 로 무한 re-roll, payload 동결 저장으로
+// 인쇄·재로드 시 동일 출력 보장(런타임 PRNG 드리프트 없음).
+export const activityKindSchema = z.enum([
+  "chunk-scramble",       // 어순 배열(청크)
+  "word-scramble",        // 어순 배열(단어) — 레거시 호환
+  "keyword-cloze",        // 키워드 빈칸
+  "full-cloze",           // 전지문 빈칸 + 단어은행
+  "nested-cloze",         // 중첩 라운드 빈칸
+  "chunk-gloss-cloze",    // 직독직해 빈칸
+  "slash-compose",        // 끊어읽기 + 영작
+  "sentence-order",       // 문장 순서 배열
+  "sentence-translation", // EN→KO 해석 쓰기
+  "reproduction",         // KO→EN 백지복원
+  "vocab-quiz",           // 단어시험
+  "vocab-match",          // 동의어·반의어 매칭
+]);
+export type ActivityKind = z.infer<typeof activityKindSchema>;
+
+const activityItemSchema = z
+  .object({
+    no: z.number().int().min(1),
+    sentenceNo: z.number().int().min(1).max(40).optional(),
+    prompt: z.string(),                          // 학생용 본문(빈칸/슬래시/KO 등)
+    chips: z.array(z.string()).optional(),       // 스크램블/순서 칩
+    ko: z.string().optional(),                   // 한글 해석(표시 옵션이 켜지면 렌더)
+    answer: z.string().default(""),              // 정답(문장/단어/순서)
+    answerKey: z.array(z.string()).optional(),   // 다중 빈칸 정답
+    writeLines: z.number().int().min(0).max(6).optional(),
+  })
+  .passthrough();
+
+export const activityParamsSchema = z
+  .object({
+    unit: z.enum(["chunk", "word"]).optional(),         // (구) 호환 — splitMode 로 대체
+    splitMode: z.enum(["chunk", "word", "ngram"]).optional(), // 덩어리 분할 방식
+    ngramSize: z.number().int().min(2).max(6).optional(),     // ngram 일 때 묶음 크기
+    density: z.number().min(10).max(90).optional(),
+    target: z.enum(["all", "content", "verb", "prep", "conj"]).optional(),
+    wordBank: z.boolean().optional(),
+    firstLetterHint: z.boolean().optional(),
+    firstChunkHint: z.boolean().optional(),             // 첫 단위 제자리 노출(힌트)
+    koPosition: z.enum(["none", "above", "below"]).optional(), // 한글 해석 위치
+    separator: z.enum(["slash", "pipe", "chip"]).optional(),   // 단위 구분 표시
+    writeLines: z.number().int().min(0).max(4).optional(),     // 학생 작성선 수
+    side: z.enum(["hide-en", "hide-ko"]).optional(),
+    scaffold: z.boolean().optional(),
+    rounds: z.number().int().min(2).max(4).optional(),
+    roundDensities: z.array(z.number().min(10).max(100)).max(4).optional(), // 중첩: 회차별 빈칸 밀도(단조 증가)
+    linesPerSentence: z.number().int().min(1).max(4).optional(),
+    vocabMode: z.enum(["hide-meaning", "hide-headword", "eng-eng", "synonym"]).optional(),
+    wholePassage: z.boolean().optional(),                 // 백지복원: 문장별 vs 전지문 한 번에
+    labelStyle: z.enum(["alpha", "circled"]).optional(),  // 순서/삽입 보기 라벨 (A,B,C / ①②③)
+    candidateCount: z.number().int().min(2).max(6).optional(), // 문장삽입 후보 위치 수
+    preferSignalSentence: z.boolean().optional(),         // 문장삽입: 연결어/대명사 시작 문장 우선 제거
+    showKo: z.boolean().optional(),                       // 순서/삽입 등에서 한글 해석 동반 표시
+    tier: z.enum(["all", "core", "test", "challenge"]).optional(), // 어휘 난이도 티어 필터
+    count: z.number().int().min(1).max(40).optional(),    // 어휘/어법 항목 수 제한
+    relation: z.enum(["synonym", "antonym"]).optional(),  // 동의어/반의어 매칭 관계
+    showPointHint: z.boolean().optional(),                // 어법 OX/택1 에서 어법 코드 힌트 표시
+    showMeaningCue: z.boolean().optional(),               // 어휘 빈칸에서 한글 뜻 단서 표시
+    anchor: z.enum(["none", "first"]).optional(),         // 문장 순서: 첫 문장을 '주어진 글'로 고정
+    // ── 공유 스캐폴드 사다리 (영작/복원류) ──
+    scaffoldLevel: z.enum(["none", "wordSlots", "firstLetter", "wordBank"]).optional(),
+    // ── 어휘 매칭 변주 ──
+    decoyCount: z.number().int().min(0).max(3).optional(), // 매칭 우측 디코이(정답 없는 보기) 수
+    matchBy: z.enum(["synonym", "meaning", "pronunciation"]).optional(), // 매칭 기준
+    // ── 직독직해 청크 변주 ──
+    glossDir: z.enum(["en-ko", "ko-en"]).optional(),      // 청크 매칭/빈칸 방향 (영→한 / 한→영)
+    // ── 구조 빈칸 변주 ──
+    cueLevel: z.enum(["meaning", "end", "off", "inline"]).optional(), // 어휘빈칸 뜻 단서 위치
+  })
+  .partial();
+export type ActivityParams = z.infer<typeof activityParamsSchema>;
+
+/** 매칭 그리드(동의어 매칭·청크 영한 매칭 등) — 좌측 고정 순서, 우측 셔플, answer[i]=좌측 i 의 정답 우측 인덱스. */
+const activityMatchSchema = z.object({
+  left: z.array(z.string()).min(2).max(12),
+  right: z.array(z.string()).min(2).max(12),
+  answer: z.array(z.number().int().min(0)),
+  leftHead: z.string().optional(),
+  rightHead: z.string().optional(),
+});
+export type ActivityMatch = z.infer<typeof activityMatchSchema>;
+
+/** 문장 순서 배열 — 주어진 글(앵커) + 라벨 카드(셔플 제시) + 정답 라벨 순서. */
+const activityOrderSchema = z.object({
+  given: z.object({ en: z.string(), ko: z.string().optional() }).optional(),
+  cards: z
+    .array(z.object({ label: z.string(), en: z.string(), ko: z.string().optional() }))
+    .min(2)
+    .max(10),
+  answer: z.string(),
+});
+export type ActivityOrder = z.infer<typeof activityOrderSchema>;
+
+const activityPayloadSchema = z.object({
+  items: z.array(activityItemSchema).max(80),
+  wordBank: z.array(z.string()).optional(),
+  instructions: z.string().optional(),
+  match: activityMatchSchema.optional(), // vocab-match 등 매칭 그리드 전용
+  order: activityOrderSchema.optional(), // sentence-order 전용 카드 레이아웃
+});
+export type ActivityItem = z.infer<typeof activityItemSchema>;
+export type ActivityPayload = z.infer<typeof activityPayloadSchema>;
+
 /**
- * 사용자 삽입 커스텀 블록 — 여백(spacer) / 자유 텍스트(text). AI 생성 아님(편집기 전용).
+ * 사용자 삽입 커스텀 블록 — 여백(spacer) / 자유 텍스트(text) / 학습 활동(activity). AI 생성 아님(편집기 전용).
  * 위치는 blockOrder 의 id 로 결정. id 는 항상 "c-" 접두 → s…/title/meta 와 충돌 없음.
  */
 export const customBlockSchema = z.discriminatedUnion("kind", [
@@ -637,8 +745,22 @@ export const customBlockSchema = z.discriminatedUnion("kind", [
       heading: z.string().optional(),
     })
     .passthrough(),
+  z
+    .object({
+      kind: z.literal("activity"),
+      id: z.string().min(1),
+      activityKind: activityKindSchema,
+      title: z.string().default(""),                  // 빈 문자열이면 기본 라벨
+      sentenceNos: z.array(z.number().int().min(1).max(40)).optional(), // 비면 전체
+      params: activityParamsSchema.default({}),
+      seed: z.number().int().min(0).default(1),       // ★ re-roll 카운터
+      payload: activityPayloadSchema,                 // ★ 동결된 생성 결과
+      answersHidden: z.boolean().default(true),
+    })
+    .passthrough(),
 ]);
 export type CustomBlock = z.infer<typeof customBlockSchema>;
+export type ActivityBlock = Extract<CustomBlock, { kind: "activity" }>;
 
 // ─── 표지(Cover) — 편집 가능한 템플릿 (AI 생성 아님) ──────────────────────────
 export const coverTemplateIdSchema = z.enum([
@@ -716,8 +838,10 @@ export const analysisReportSchema = z
     vocabTestOnly: z.boolean().optional(),
     /** (편집기) 표지 다음에 '영어 원문만' 단독 페이지를 추가할지. 기본 off. */
     englishOnlyPage: z.boolean().optional(),
-    /** (편집기) 사용자 삽입 커스텀 블록 (spacer/text). 위치는 blockOrder 로 결정. 손상 시 전체 무시. */
-    customBlocks: z.array(customBlockSchema).max(60).optional().catch(undefined),
+    /** (편집기) 사용자 삽입 커스텀 블록 (spacer/text/activity). 위치는 blockOrder 로 결정. 손상 시 전체 무시. */
+    customBlocks: z.array(customBlockSchema).max(80).optional().catch(undefined),
+    /** (편집기) 학습 활동 정답을 문서 말미 별도 페이지로 모을지. 기본 on. */
+    activityAnswerKeyPage: z.boolean().optional(),
     /** (편집기) 표지 템플릿 설정. 없거나 enabled=false 면 표지 없음. */
     cover: coverSchema.optional().catch(undefined),
   })

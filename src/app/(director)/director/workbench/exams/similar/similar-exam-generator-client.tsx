@@ -523,6 +523,7 @@ export function SimilarExamGeneratorClient({
           <WorkflowPageTitle
             icon={ExamPaperGenerationIcon}
             title="동형 시험지 생성"
+            beta
             description="자료를 선택하고 완성본 시험지를 넣어 같은 출제 패턴으로 새 시험지를 생성합니다."
           />
         </div>

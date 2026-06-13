@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowLeftRight,
@@ -8,7 +8,7 @@ import {
   FileText,
   GraduationCap,
   Loader2,
-  Sparkles,
+  NotebookPen,
   Undo2,
   Wand2,
   X,
@@ -34,6 +34,7 @@ import { PassageCompare } from "../../passages/import/_components/extraction-man
 import { OriginalProblemBox } from "../../passages/import/_components/extraction-manage-client/components/original-problem-box";
 import { RestorationBadge } from "../../passages/import/_components/extraction-manage-client/components/restoration-badge";
 import type { M1PassageDraftWithJob } from "../../passages/import/_components/extraction-manage-client/types";
+import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
 
 function reportDraftStorageKey(passageId: string) {
   return `smoat.generate.extractionDetail.primeReportDraft.${passageId}`;
@@ -91,6 +92,10 @@ export function ExtractionDetailModal({
 }: ExtractionDetailModalProps) {
   const [draft, setDraft] = useState<M1PassageDraftWithJob | null>(null);
   const [loading, setLoading] = useState(true);
+  const displayPassageContent = useMemo(
+    () => formatExtractedTextForDisplay(passage.content || ""),
+    [passage.content],
+  );
   const [studyMode, setStudyMode] = useState(true);
   const [editorTitle, setEditorTitle] = useState(passage.title || "지문");
   const [editorContent, setEditorContent] = useState(passage.content || "");
@@ -542,7 +547,7 @@ export function ExtractionDetailModal({
           ) : (
             <div className="min-h-0 flex-1 overflow-auto rounded-lg border border-slate-200 bg-white p-5">
               <div className="whitespace-pre-wrap text-[14px] leading-7 text-slate-800">
-                {passage.content || "내용이 없습니다."}
+                {displayPassageContent || "내용이 없습니다."}
               </div>
             </div>
           )}
@@ -649,7 +654,7 @@ function InlineStudyAnalysisWorkspace({
       <aside className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
         <div className="flex h-12 shrink-0 items-center gap-2 border-b border-slate-100 px-4">
           <span className="flex size-6 items-center justify-center rounded-md bg-blue-50 text-blue-600">
-            <Sparkles className="size-3.5" aria-hidden="true" />
+            <NotebookPen className="size-3.5" aria-hidden="true" />
           </span>
           <span className="text-[13px] font-bold text-slate-900">학습자료 생성</span>
         </div>

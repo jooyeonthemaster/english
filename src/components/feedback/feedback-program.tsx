@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  forwardRef,
   useCallback,
   useEffect,
   useRef,
@@ -16,11 +17,10 @@ import {
   ChevronLeft,
   Copy,
   Phone,
-  PhoneCall,
   ShieldCheck,
-  Ticket,
   X,
   type LucideIcon,
+  type LucideProps,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -48,6 +48,9 @@ import {
  */
 
 const DISMISS_STORAGE_KEY = "smoat:feedback-event:dismissed";
+
+/** 협업 피드백 오픈채팅방 — intro CTA가 새 탭으로 바로 연결한다. */
+const FEEDBACK_OPEN_CHAT_URL = "https://open.kakao.com/o/g6H20Cwi";
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -280,10 +283,7 @@ export function FeedbackProgram({ staffEmail }: FeedbackProgramProps) {
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 >
                   {step === 1 ? (
-                    <StepIntro
-                      onApply={() => feedbackStore.setStep(2)}
-                      onDismissToday={dismissToday}
-                    />
+                    <StepIntro onDismissToday={dismissToday} />
                   ) : (
                     <StepReveal
                       copied={copied}
@@ -307,6 +307,22 @@ export function FeedbackProgram({ staffEmail }: FeedbackProgramProps) {
  * Shared bits
  * ──────────────────────────────────────────────────────────────────────── */
 
+/** KakaoTalk 말풍선 — 앱 로그인 버튼과 동일한 카카오 로고를 재사용. */
+const KakaoTalkIcon = forwardRef<SVGSVGElement, LucideProps>(
+  ({ className }, ref) => (
+    <svg
+      ref={ref}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.76 1.84 5.18 4.6 6.58l-1.04 3.82c-.1.36.32.66.64.46l4.6-3.04c.4.04.8.06 1.2.06 5.52 0 10-3.48 10-7.88S17.52 3 12 3z" />
+    </svg>
+  ),
+);
+KakaoTalkIcon.displayName = "KakaoTalkIcon";
+
 function EyebrowChip() {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold tracking-[0.02em] text-blue-700">
@@ -324,13 +340,17 @@ function InfoRow({
   children,
 }: {
   icon: LucideIcon;
-  tone: "blue" | "emerald";
+  tone: "blue" | "emerald" | "kakao";
   title: string;
   highlight?: boolean;
   children: ReactNode;
 }) {
   const tileClass =
-    tone === "emerald" ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600";
+    tone === "kakao"
+      ? "bg-[#FEE500] text-[#3C1E1E]"
+      : tone === "emerald"
+        ? "bg-emerald-50 text-emerald-600"
+        : "bg-blue-50 text-blue-600";
   const row = (
     <div className="flex items-start gap-3">
       <span
@@ -365,10 +385,8 @@ const DISMISS_TODAY_CLASS =
  * ──────────────────────────────────────────────────────────────────────── */
 
 function StepIntro({
-  onApply,
   onDismissToday,
 }: {
-  onApply: () => void;
   onDismissToday: () => void;
 }) {
   return (
@@ -389,30 +407,30 @@ function StepIntro({
       <div className="my-5 h-px bg-slate-100" />
 
       <div className="space-y-3.5">
-        <InfoRow icon={PhoneCall} tone="blue" title="피드백 전화 안내" highlight>
-          가입 후 서비스를 이용하시면 피드백 수집을 위해{" "}
+        <InfoRow icon={KakaoTalkIcon} tone="kakao" title="오픈채팅방 피드백" highlight>
+          오픈채팅방에 오셔서 피드백을 남겨주시면{" "}
+          <span className="font-bold text-emerald-700">추가 무료 크레딧</span>을 드려요.
+        </InfoRow>
+        <InfoRow icon={Phone} tone="blue" title="전화·문자 문의">
           <span className="whitespace-nowrap font-bold tabular-nums text-slate-900">
             {FEEDBACK_PHONE_DISPLAY}
-          </span>{" "}
-          번호로 한 번 연락드릴 수 있어요.
-        </InfoRow>
-        <InfoRow icon={Ticket} tone="emerald" title="협업 유저 추가 혜택">
-          전화를 받고 의견을 들려주시면{" "}
-          <span className="font-bold text-emerald-700">추가 무료 크레딧</span>을 드려요.
+          </span>
+          {" · "}24시간 전화·문자 모두 가능해요.
         </InfoRow>
       </div>
 
-      <button
-        type="button"
-        onClick={onApply}
+      <a
+        href={FEEDBACK_OPEN_CHAT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         className={`group mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-[15px] font-bold text-white shadow-[0_8px_20px_-6px_rgba(37,99,235,0.5)] transition-all hover:bg-blue-700 active:scale-[0.99] ${FOCUS_RING}`}
       >
-        무료 크레딧 신청하기
+        오픈채팅방 바로가기
         <ArrowRight
           className="size-4 transition-transform group-hover:translate-x-0.5"
           aria-hidden="true"
         />
-      </button>
+      </a>
 
       <div className="mt-2.5 flex items-center justify-center">
         <button type="button" onClick={onDismissToday} className={DISMISS_TODAY_CLASS}>

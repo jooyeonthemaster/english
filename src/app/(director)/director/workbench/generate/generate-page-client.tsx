@@ -21,6 +21,7 @@ import {
   bulkApproveWorkbenchQuestions,
   bulkDeleteWorkbenchPassages,
   bulkDeleteWorkbenchQuestions,
+  deleteWorkbenchQuestion,
   removePassagesFromCollection,
   unapproveWorkbenchQuestion,
 } from "@/actions/workbench";
@@ -57,8 +58,31 @@ import {
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
+import {
+  ArrowDownToLine,
+  ChevronRight,
+  GripVertical,
+  PanelRightClose,
+  PanelRightOpen,
+  PencilLine,
+  Settings2,
+} from "lucide-react";
+import { useWorkspaceRows } from "./workspace/use-workspace-rows";
+import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
+import { PassageWorkspace } from "./workspace/passage-workspace";
 
 // ─── Helpers ─────────────────────────────────────────────
+
+// 우측 "유형·생성 설정" 컬럼 너비 (드래그 조절 가능).
+// 336px = 유형 라벨이 잘리지 않는 최소폭이지만, 사용자가 의도적으로
+// 줄이는 경우 300px까지 허용 (라벨은 truncate로 우아하게 줄어든다).
+const CONFIG_PANE_WIDTH_KEY = "smoat:generate:config-pane-width";
+const CONFIG_PANE_MIN = 300;
+const CONFIG_PANE_DEFAULT = 360;
+// 저장값 위생용 절대 상한 — 실제 드래그 한계는 컨테이너 폭에서
+// [워크스페이스 최소 120px + 핸들 20px + 여유 4px]을 뺀 값으로 동적 계산.
+const CONFIG_PANE_MAX = 1600;
+const CONFIG_PANE_RESERVED = 144;
 
 /** Build a passage title from the first non-empty line of pasted content. */
 function derivePastedTitle(content: string): string {
@@ -222,6 +246,93 @@ export function GeneratePageClient({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(initialPassageIdsRef.current),
   );
+
+  // ── 지문 워크스페이스 (불러오기 → 편집·AI 변형 → 생성) ──
+  const workspaceApi = useWorkspaceRows();
+  // 불러오기 직후 왼쪽 지문 목록을 샤라락 접는 신호 (증가 카운터).
+  const [leftCollapseSignal, setLeftCollapseSignal] = useState(0);
+  // 우측 "유형·생성 설정" 컬럼 접힘 상태 (워크스페이스와 나란히 배치).
+  // 영구 저장하지 않는다 — 접힌 채 저장되면 다음 방문에서 생성 버튼·유형
+  // 설정이 통째로 숨겨진 채 시작되는 사고가 난다 (세션 내 토글만 허용).
+  const [configPaneOpen, setConfigPaneOpen] = useState(true);
+  const toggleConfigPane = useCallback(() => {
+    setConfigPaneOpen((prev) => !prev);
+  }, []);
+  // 설정 컬럼 너비 — 좌측 지문 패널과 동일하게 드래그 조절·더블클릭 초기화.
+  // 너비는 영구 저장해도 안전 (접힘 상태와 달리 기능이 숨겨지지 않는다).
+  const [configPaneWidth, setConfigPaneWidth] = useState<number>(() => {
+    if (typeof window === "undefined") return CONFIG_PANE_DEFAULT;
+    try {
+      const raw = window.localStorage.getItem(CONFIG_PANE_WIDTH_KEY);
+      const n = raw ? parseInt(raw, 10) : NaN;
+      if (Number.isNaN(n)) return CONFIG_PANE_DEFAULT;
+      return Math.min(CONFIG_PANE_MAX, Math.max(CONFIG_PANE_MIN, n));
+    } catch {
+      return CONFIG_PANE_DEFAULT;
+    }
+  });
+  // 클릭=접기 / 드래그=너비 조절 — workspace-shell 좌측 핸들과 동일 제스처.
+  const handleConfigHandlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.button !== 0) return;
+      const startX = e.clientX;
+      const startWidth = configPaneWidth;
+      // 드래그 한계는 우측 패널 컨테이너 폭 기준 — 워크스페이스 최소폭만
+      // 남기고 끝까지 넓힐 수 있다 (좌측 지문 핸들과 동일 방식).
+      const containerWidth =
+        e.currentTarget.parentElement?.getBoundingClientRect().width ?? 0;
+      const maxWidth =
+        containerWidth > 0
+          ? Math.max(CONFIG_PANE_MIN, containerWidth - CONFIG_PANE_RESERVED)
+          : CONFIG_PANE_MAX;
+      let didDrag = false;
+      let latest = startWidth;
+      const onMove = (ev: PointerEvent) => {
+        // 설정 컬럼은 오른쪽에 있으므로 왼쪽으로 끌수록 넓어진다.
+        const delta = startX - ev.clientX;
+        if (!didDrag) {
+          if (Math.abs(delta) < 4) return;
+          didDrag = true;
+          document.body.style.cursor = "col-resize";
+          document.body.style.userSelect = "none";
+        }
+        latest = Math.min(maxWidth, Math.max(CONFIG_PANE_MIN, startWidth + delta));
+        setConfigPaneWidth(latest);
+      };
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        if (didDrag) {
+          document.body.style.cursor = "";
+          document.body.style.userSelect = "";
+          try {
+            window.localStorage.setItem(CONFIG_PANE_WIDTH_KEY, String(latest));
+          } catch {
+            /* ignore */
+          }
+        } else {
+          toggleConfigPane();
+        }
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [configPaneWidth, toggleConfigPane],
+  );
+  const resetConfigPaneWidth = useCallback(() => {
+    setConfigPaneWidth(CONFIG_PANE_DEFAULT);
+    try {
+      window.localStorage.setItem(
+        CONFIG_PANE_WIDTH_KEY,
+        String(CONFIG_PANE_DEFAULT),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  // 워크스페이스가 비워지면 왼쪽 지문 패널을 자동으로 편다 — 비우기 직후
+  // 설정 패널만 전폭을 차지한 채 다음 행동이 막히는 화면 방지.
+  const [leftOpenSignal, setLeftOpenSignal] = useState(0);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -787,25 +898,40 @@ export function GeneratePageClient({
   useEffect(() => {
     if (prefillAppliedRef.current) return;
     if (loadingPassages) return;
-    if (passages.length === 0) return;
     const ids = initialPassageIdsRef.current;
     if (ids.length === 0) {
       prefillAppliedRef.current = true;
       return;
     }
+    if (passages.length === 0) {
+      // 첫 로드가 끝났는데 라이브러리가 비어 있으면 딥링크 id 는 유효할 수
+      // 없다 — 시드된 원시 선택만 정리하고 종결한다. (보류 상태로 남기면
+      // 이후 붙여넣기 자동 선택을 아래 setSelectedIds 와이프가 지워버린다.)
+      setSelectedIds(new Set());
+      prefillAppliedRef.current = true;
+      return;
+    }
     const validIds = ids.filter((id) => passages.some((p) => p.id === id));
     if (validIds.length > 0) {
-      setSelectedIds(new Set(validIds));
       const first = passages.find((p) => p.id === validIds[0]);
       if (first) setSelectedPassage(first);
+      // 딥링크 지문은 곧장 워크스페이스로 불러온다 — 편집·변형 후 생성하는 새 흐름.
+      const validPassages = validIds
+        .map((id) => passages.find((p) => p.id === id))
+        .filter(Boolean);
+      workspaceApi.loadPassages(validPassages as PassageItem[]);
       toast.success(
         validIds.length === ids.length
-          ? `지문 ${validIds.length}개를 불러왔습니다.`
-          : `지문 ${validIds.length}/${ids.length}개를 불러왔습니다.`,
+          ? `지문 ${validIds.length}개를 편집 워크스페이스에 펼쳤어요.`
+          : `지문 ${validIds.length}/${ids.length}개를 편집 워크스페이스에 펼쳤어요.`,
       );
     }
+    // 시드된 원시 선택을 정리 — 검증 전 id(다른 학원/삭제된 지문)가 선택
+    // 카운트에 남거나, 워크스페이스와 라이브러리 체크의 이중 상태가 생기는
+    // 것을 막는다 (수동 '선택 지문 불러오기'와 동작 일치).
+    setSelectedIds(new Set());
     prefillAppliedRef.current = true;
-  }, [loadingPassages, passages]);
+  }, [loadingPassages, passages, workspaceApi]);
 
   // ── Load saved questions from DB ──
   const loadSavedQuestions = useCallback(async () => {
@@ -1398,6 +1524,23 @@ export function GeneratePageClient({
     [loadSavedQuestions, applyReviewState, markQuestionDeletedLocally],
   );
 
+  const handleDeleteQuestion = useCallback(
+    async (questionId: string) => {
+      if (!questionId) return;
+      if (!confirm("이 문제를 삭제하시겠습니까?")) return;
+      const result = await deleteWorkbenchQuestion(questionId);
+      if (!result.success) {
+        toast.error(result.error || "삭제에 실패했습니다.");
+        return;
+      }
+      setSavedQuestions((prev) => prev.filter((q) => q.id !== questionId));
+      setDetailQuestion((prev) => (prev?.id === questionId ? null : prev));
+      toast.success("삭제됐습니다.");
+      loadSavedQuestions();
+    },
+    [loadSavedQuestions],
+  );
+
   const handleBatchApproveQuestions = useCallback(
     async (questionIds: string[]) => {
       if (questionIds.length === 0) return;
@@ -1479,6 +1622,27 @@ export function GeneratePageClient({
     [deletingQuestions, loadSavedQuestions, savedQuestions, savedQuestionSig],
   );
 
+  // ── 워크스페이스 불러오기 ──
+  const handleLoadSelectedToWorkspace = useCallback(() => {
+    const selected = passages.filter((p) => selectedIds.has(p.id));
+    if (selected.length === 0) {
+      toast.error("왼쪽 '내 지문'에서 편집할 지문을 먼저 선택하세요.");
+      return;
+    }
+    const { added, skipped } = workspaceApi.loadPassages(selected);
+    if (added > 0) {
+      toast.success(
+        `지문 ${added}개를 편집 워크스페이스에 펼쳤어요.` +
+          (skipped > 0 ? ` (${skipped}개는 이미 있어요)` : ""),
+      );
+      setSelectedIds(new Set());
+      // 지문 목록을 옆으로 접어 작업 공간 확보 — 핸들로 언제든 다시 연다.
+      setLeftCollapseSignal((s) => s + 1);
+    } else if (skipped > 0) {
+      toast.info("선택한 지문은 이미 워크스페이스에 있습니다.");
+    }
+  }, [passages, selectedIds, workspaceApi]);
+
   // ── Generation handlers (extracted to hook) ──
   const { handleBatchGenerate, handleGenerate, handleSaveQuestions } =
     useGenerationHandlers({
@@ -1503,6 +1667,42 @@ export function GeneratePageClient({
       loadSavedQuestions,
     });
 
+  // ── 워크스페이스 생성 (변형본 저장 → 행별 설정으로 생성) ──
+  const { generating: workspaceGenerating, handleWorkspaceGenerate, workspaceSummary } =
+    useWorkspaceGeneration({
+      api: workspaceApi,
+      passages,
+      genMode,
+      generationPlan,
+      typeCounts,
+      questionTypeSettings,
+      difficulty,
+      customPrompt,
+      autoCount,
+      setSessionQueue,
+      loadPassages,
+    });
+  const workspaceActive = workspaceApi.rows.length > 0;
+  // 워크스페이스 활성 → 비활성 전환(비우기/마지막 행 제거) 감지 시 좌측 열기.
+  const prevWorkspaceActiveRef = useRef(false);
+  useEffect(() => {
+    if (prevWorkspaceActiveRef.current && !workspaceActive) {
+      setLeftOpenSignal((s) => s + 1);
+    }
+    prevWorkspaceActiveRef.current = workspaceActive;
+  }, [workspaceActive]);
+  // 체크된 지문 중 아직 워크스페이스에 없는 수 — loadPassages 의 dedupe 와
+  // 동일한 집합(passageId + variantOfId)으로 판정해 안내문 거짓 양성 방지.
+  const workspaceUnloadedSelectedCount = useMemo(() => {
+    if (selectedIds.size === 0) return 0;
+    const loaded = new Set(
+      workspaceApi.rows
+        .flatMap((r) => [r.passageId, r.variantOfId])
+        .filter(Boolean),
+    );
+    return [...selectedIds].filter((id) => !loaded.has(id)).length;
+  }, [selectedIds, workspaceApi.rows]);
+
   // ── Can generate? ──
   const canGenerate =
     selectedIds.size > 0 &&
@@ -1514,11 +1714,14 @@ export function GeneratePageClient({
         {/* ═══ TOP SECTION: 학습지 관리(좌) + 문제생성 작업대(우) ═══ */}
         <WorkspaceShell
           leftLabel="지문"
+          leftCollapseSignal={leftCollapseSignal}
+          leftOpenSignal={leftOpenSignal}
+          rightPaneMin={workspaceActive ? 560 : 400}
           header={
             <WorkflowPageTitle
               icon={QuestionGenerationIcon}
               title="문제 생성"
-              description="분석된 지문을 선택하고 유형과 난이도를 설정해 문제를 생성합니다."
+              description="지문을 선택해 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
             />
           }
           left={
@@ -1539,6 +1742,8 @@ export function GeneratePageClient({
                 />
               }
               library={
+                <div className="flex min-h-0 flex-1 flex-col">
+                <div className="min-h-0 flex-1 overflow-hidden flex flex-col">
                 <PassageCardGrid
                   loadingCards={
                     <ExtractionLoadingCards pending={extractionPending} />
@@ -1592,11 +1797,148 @@ export function GeneratePageClient({
               handleOpenAnalysisModal={handleOpenAnalysisModal}
               onViewPassageContent={setDetailPassage}
                 />
+                </div>
+                {/* 선택 지문 → 편집 워크스페이스로 (학습지 생성과 동일한 동선) */}
+                {selectedIds.size > 0 ? (
+                  <div className="shrink-0 border-t border-slate-100 bg-white px-2.5 py-2">
+                    <button
+                      type="button"
+                      onClick={handleLoadSelectedToWorkspace}
+                      title={`선택한 ${selectedIds.size}개 지문을 편집 워크스페이스에 펼칩니다. 편집·AI 변형 후 문제를 생성하세요.`}
+                      className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    >
+                      <PencilLine className="size-4" aria-hidden="true" />
+                      <span>선택 지문 편집하기</span>
+                      <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
+                        {selectedIds.size}개 선택
+                      </span>
+                    </button>
+                  </div>
+                ) : null}
+                </div>
               }
             />
           }
           right={
-            /* ═══ RIGHT PANEL: Generation settings ═══ */
+            /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══
+                워크스페이스 컬럼은 지문을 불러왔을 때만 존재한다 — 빈 상태로
+                중앙을 차지하는 대신, 불러오기 전엔 설정이 우측 전체를 쓰고
+                라이브러리가 넓어진다. */
+            <div className="flex h-full min-h-0 min-w-0">
+              {workspaceActive ? (
+              <div className="flex min-h-0 min-w-[120px] flex-1 flex-col">
+                <div className="min-h-0 flex-1">
+                  <PassageWorkspace
+                    api={workspaceApi}
+                    selectedCount={selectedIds.size}
+                    onLoadSelected={handleLoadSelectedToWorkspace}
+                    generating={workspaceGenerating}
+                    sessionQueue={sessionQueue}
+                    questionCountByPassage={questionCountByPassage}
+                    setModeActive={genMode === "set"}
+                  />
+                </div>
+                {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
+                    하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지).
+                    장문 세트 모드는 설정 패널과 동일하게 워크스페이스 생성 제외. */}
+                {!configPaneOpen && workspaceActive && genMode !== "set" ? (
+                  <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
+                    <button
+                      type="button"
+                      onClick={toggleConfigPane}
+                      className="flex h-10 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
+                    >
+                      유형·난이도 설정 열기
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleWorkspaceGenerate}
+                      disabled={
+                        workspaceSummary.totalQuestions === 0 ||
+                        workspaceGenerating
+                      }
+                      className="flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                    >
+                      {workspaceGenerating
+                        ? "생성 중…"
+                        : workspaceSummary.totalQuestions > 0
+                          ? `${workspaceSummary.rowCount}개 지문 · ${workspaceSummary.totalQuestions}문제 생성`
+                          : "유형을 선택하세요 (설정 열기)"}
+                      {!workspaceGenerating &&
+                      workspaceSummary.totalQuestions > 0 &&
+                      workspaceSummary.creditCost > 0 ? (
+                        <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-bold tabular-nums">
+                          {workspaceSummary.creditCost}크레딧
+                        </span>
+                      ) : null}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+              ) : null}
+              {workspaceActive && !configPaneOpen ? (
+                <button
+                  type="button"
+                  onClick={toggleConfigPane}
+                  title="유형·생성 설정 열기"
+                  className="flex min-h-0 w-6 shrink-0 select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/60 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                >
+                  <PanelRightOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span style={{ writingMode: "vertical-rl" }}>유형·생성 설정</span>
+                </button>
+              ) : (
+                <>
+                  {/* 설정 컬럼 리사이즈 핸들 — 워크스페이스가 있을 때만 의미가
+                      있다 (빈 상태에선 설정이 우측 전체라 나눌 공간이 없음) */}
+                  {workspaceActive ? (
+                  <button
+                    type="button"
+                    onPointerDown={handleConfigHandlePointerDown}
+                    onDoubleClick={resetConfigPaneWidth}
+                    title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
+                    className="group/chandle flex min-h-0 w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+                  >
+                    <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
+                    <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
+                  </button>
+                  ) : null}
+                  {/* 설정 컬럼 — 워크스페이스 있음: 드래그로 300~560px /
+                      빈 상태: 우측 패널 전체 */}
+                  <div
+                    className={
+                      "flex h-full min-w-0 flex-col overflow-hidden " +
+                      (workspaceActive ? "shrink-0" : "flex-1")
+                    }
+                    style={
+                      workspaceActive
+                        ? {
+                            width: `min(${configPaneWidth}px, calc(100% - ${CONFIG_PANE_RESERVED}px))`,
+                          }
+                        : undefined
+                    }
+                  >
+                    {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
+                    <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
+                      <Settings2
+                        className="h-3.5 w-3.5 text-slate-400"
+                        aria-hidden="true"
+                      />
+                      <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-slate-800">
+                        유형·생성 설정
+                      </h3>
+                      {workspaceActive ? (
+                      <button
+                        type="button"
+                        onClick={toggleConfigPane}
+                        title="설정 접기"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                      >
+                        <PanelRightClose className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                      ) : null}
+                    </div>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <GenerationConfigPanel
               genMode={genMode}
               setGenMode={setGenMode}
@@ -1631,7 +1973,20 @@ export function GeneratePageClient({
               canGenerate={canGenerate}
               selectedIds={selectedIds}
               handleBatchGenerate={handleBatchGenerate}
+              workspaceActive={workspaceActive}
+              workspaceUnloadedSelectedCount={workspaceUnloadedSelectedCount}
+              workspaceRowCount={workspaceSummary.rowCount}
+              workspaceTotalQuestions={workspaceSummary.totalQuestions}
+              workspaceCreditCost={workspaceSummary.creditCost}
+              workspaceVariantCount={workspaceSummary.variantCount}
+              workspaceGenerating={workspaceGenerating}
+              onWorkspaceGenerate={handleWorkspaceGenerate}
             />
+            </div>
+                  </div>
+                </>
+              )}
+            </div>
           }
         />
 
@@ -1651,11 +2006,14 @@ export function GeneratePageClient({
             savedQuestions={savedQuestions}
             loadingSavedQuestions={loadingSavedQuestions}
             setDetailQuestion={setDetailQuestion}
+            onApproveQuestion={handleApproveQuestion}
+            onUnapproveQuestion={handleUnapproveQuestion}
             onBatchApproveQuestions={handleBatchApproveQuestions}
             onBatchDeleteQuestions={handleBatchDeleteQuestions}
             deletedQuestionIds={deletedQuestionIds}
             deletedQuestionSignatures={deletedQuestionSignatures}
             batchDeleting={deletingQuestions}
+            onDeleteQuestion={handleDeleteQuestion}
             onEditQuestion={editor.openEditor}
           />
         </section>

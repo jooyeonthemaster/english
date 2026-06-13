@@ -35,6 +35,16 @@ export const FEATURE_FLAGS = {
   ),
 
   /**
+   * Show the similar-exam generation flow. When false, the left navigation and
+   * task queue hide the entrypoint, and direct page visits redirect to the exam
+   * management surface while the underlying code remains intact.
+   */
+  SHOW_SIMILAR_EXAM_GENERATION: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_SHOW_SIMILAR_EXAM_GENERATION,
+    false,
+  ),
+
+  /**
    * Enable the credit top-up purchase controls on the director credit page.
    * When false, the page and credit balance remain visible, but the top-up
    * section is shaded and non-interactive.

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { M2PassageDraftSnapshot, M2QuestionDraftSnapshot } from "../types";
+import { formatExtractedTextForDisplay } from "../../extraction-manage-client/utils/display-text";
 
 interface M2DraftPanelProps {
   drafts: M2PassageDraftSnapshot[];
@@ -150,8 +151,10 @@ function PassagePreview({
 
   const fallbackText =
     textMode === "restored"
-      ? draft.teacherText || draft.restoredText || ""
-      : draft.problemText;
+      ? formatExtractedTextForDisplay(
+          draft.teacherText || draft.restoredText || "",
+        )
+      : formatExtractedTextForDisplay(draft.problemText);
 
   return (
     <div className="min-h-0 rounded-md border border-slate-200 bg-white">
@@ -189,7 +192,8 @@ function PassagePreview({
                   {sentence.order}.
                 </span>
                 <p className="whitespace-pre-wrap text-slate-800">
-                  {sentence.text || "문장 내용 없음"}
+                  {formatExtractedTextForDisplay(sentence.text) ||
+                    "문장 내용 없음"}
                 </p>
               </li>
             ))}

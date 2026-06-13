@@ -31,12 +31,18 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
+import {
+  generateAnalysisReportCore,
+  generateLearningWorksheet,
+} from "@/lib/passage-report/analysis-report/generate";
+import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 180;
+// 실전 학습지 포함(includeWorksheet) 시 LLM 3회 호출(기본 1 + 워크북/추론 2)이라
+// 기본 분석(180s)보다 여유가 필요하다 — 옵트인 워크시트 라우트와 동일하게 300s.
+export const maxDuration = 300;
 
 const requestSchema = z.object({
   passageId: z.string().min(1),
@@ -45,6 +51,8 @@ const requestSchema = z.object({
   targetLevel: z.string().optional(),
   generationPlan: z.unknown().optional(),
   analysisTone: z.unknown().optional(),
+  /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성·병합한다 (+5크레딧). */
+  includeWorksheet: z.boolean().optional(),
 });
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -141,6 +149,7 @@ export async function POST(req: NextRequest) {
     parsed.data.generationPlan,
   );
   const analysisTone = normalizeAnalysisTone(parsed.data.analysisTone);
+  const includeWorksheet = parsed.data.includeWorksheet === true;
 
   const passage = await prisma.passage.findFirst({
     where: { id: parsed.data.passageId, academyId: staff.academyId },
@@ -198,6 +207,7 @@ export async function POST(req: NextRequest) {
         targetLevel: parsed.data.targetLevel ?? "",
         generationPlan,
         analysisTone,
+        includeWorksheet,
         fastPath: true,
       },
     },
@@ -211,7 +221,9 @@ export async function POST(req: NextRequest) {
   let persistenceMs = 0;
 
   try {
-    if (passage.analysis && passage.analysis.contentHash === currentHash) {
+    // 실전 학습지 포함 요청은 캐시 단락을 타지 않는다 — 사용자가 명시적으로
+    // "기본 + 실전" 풀 생성을 선택한 것이므로 항상 신선하게 생성한다.
+    if (!includeWorksheet && passage.analysis && passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(passage.analysis.analysisData);
       if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         const completedAt = new Date();
@@ -259,10 +271,13 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const creditCost = getQuestionGenerationCreditCost(
+    const analysisCost = getQuestionGenerationCreditCost(
       CREDIT_COSTS.PASSAGE_ANALYSIS,
       generationPlan,
     );
+    // 실전 학습지는 옵트인 라우트(prime/[passageId]/worksheet)와 동일 단가.
+    const worksheetCost = includeWorksheet ? CREDIT_COSTS.PASSAGE_ANALYSIS : 0;
+    const creditCost = analysisCost + worksheetCost;
     const creditStartedAt = Date.now();
     const credit = await ensureWorkbenchAiJobCharged({
       jobId: job.id,
@@ -274,6 +289,7 @@ export async function POST(req: NextRequest) {
         generationPlan,
         analysisTone,
         creditCost,
+        includeWorksheet,
         fastPath: true,
       },
       creditCost,
@@ -289,8 +305,8 @@ export async function POST(req: NextRequest) {
       .join("\n\n");
 
     generationStartedAt = Date.now();
-    // PRIME A4 보고서를 단일 소스로 생성 (옛 5-layer runFullAnalysis 대체)
-    const primeResult = await generateAnalysisReport({
+    // 기본 분석 = 메인 보고서(5섹션)만 1회 호출. 실전 학습지(06)는 옵트인 별도 생성.
+    const primeResult = await generateAnalysisReportCore({
       passageContent: passage.content,
       schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
       grade: passage.grade,
@@ -321,7 +337,78 @@ export async function POST(req: NextRequest) {
         },
       });
     }
-    const primeReport = primeResult.report;
+    let primeReport = primeResult.report;
+
+    // ── 실전 학습지 한 번에 생성 (옵트인) ──────────────────────────────
+    // 기본 분석 성공 후 워크북(어법 선택·어휘 빈칸·배열) + 수능추론을 생성해
+    // learning-worksheet 섹션을 풀 콘텐츠로 교체한다. 워크시트만 실패하면
+    // 기본 학습지는 그대로 저장하고 워크시트 몫만 환불한다.
+    let worksheetFailed = false;
+    if (includeWorksheet) {
+      try {
+        const worksheet = await generateLearningWorksheet(
+          {
+            passageContent: passage.content,
+            schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+            grade: passage.grade,
+          },
+          primeReport,
+        );
+        if (worksheet.ok) {
+          primeReport = {
+            ...primeReport,
+            sections: [
+              ...primeReport.sections.filter((s) => s.kind !== "learning-worksheet"),
+              worksheet.section,
+            ],
+          } as AnalysisReport;
+          const wUsage = worksheet.usage;
+          if (wUsage) {
+            const usage = readAiUsageTokens(wUsage.usage);
+            await recordCostSafely({
+              sourceKey: `workbench_ai_job:${job.id}:worksheet`,
+              sourceId: job.id,
+              sourceDetail: "PASSAGE_ANALYSIS_WORKSHEET",
+              academyId: job.academyId,
+              provider: providerFromModel(wUsage.modelId),
+              model: wUsage.modelId,
+              inputTokens: usage.inputTokens,
+              outputTokens: usage.outputTokens,
+              usageAt: new Date(),
+              metadata: {
+                passageId: passage.id,
+                generationPlan,
+                fastPath: true,
+                durationMs: wUsage.durationMs,
+              },
+            });
+          }
+        } else {
+          worksheetFailed = true;
+          console.warn(
+            `[workbench-fast-analysis] worksheet generation failed (core kept): ${worksheet.error}`,
+          );
+        }
+      } catch (worksheetErr) {
+        worksheetFailed = true;
+        console.warn(
+          "[workbench-fast-analysis] worksheet generation threw (core kept)",
+          worksheetErr,
+        );
+      }
+      if (worksheetFailed && creditTxId) {
+        await refundCredits(
+          job.academyId,
+          "PASSAGE_ANALYSIS",
+          creditTxId,
+          "실전 학습지 생성 실패 — 기본 학습지는 저장, 워크시트 몫 환불",
+          worksheetCost,
+        ).catch((refundErr) => {
+          console.error("Fast analysis worksheet refund failed", refundErr);
+        });
+      }
+    }
+
     // 카드/문제생성 호환용 파생 데이터 (별도 LLM 호출 없음)
     const analysisData = derivePassageAnalysisFromReport(primeReport);
 
@@ -379,6 +466,8 @@ export async function POST(req: NextRequest) {
           passageId: passage.id,
           generationPlan,
           analysisTone,
+          includeWorksheet,
+          worksheetFailed,
           debugTiming,
           fastPath: true,
         })),
@@ -393,6 +482,8 @@ export async function POST(req: NextRequest) {
       cached: false,
       generationPlan,
       analysisTone,
+      includeWorksheet,
+      worksheetFailed,
       creditsRemaining: credit.balanceAfter,
       createdAt: job.createdAt.toISOString(),
       completedAt: completedAt.toISOString(),
@@ -424,10 +515,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const creditCost = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.PASSAGE_ANALYSIS,
-      generationPlan,
-    );
+    // 청구 총액(분석 + 옵트인 워크시트 몫) 그대로 환불 — 부분 환불은 위의
+    // worksheetFailed 경로에서만 발생하고, 여기는 기본 분석 자체가 실패한 경우다.
+    const creditCost =
+      getQuestionGenerationCreditCost(CREDIT_COSTS.PASSAGE_ANALYSIS, generationPlan) +
+      (includeWorksheet ? CREDIT_COSTS.PASSAGE_ANALYSIS : 0);
     if (creditTxId) {
       await refundCredits(
         job.academyId,

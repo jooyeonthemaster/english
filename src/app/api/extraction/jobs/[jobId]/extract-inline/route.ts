@@ -221,6 +221,7 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
             outputTokens: ocr.outputTokens,
             latencyMs: Date.now() - startTs,
             structured: ocr.structured ?? undefined,
+            modelUsed: ocr.modelUsed,
           });
           return { ok: true };
         } catch (err) {

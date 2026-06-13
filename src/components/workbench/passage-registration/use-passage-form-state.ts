@@ -2,23 +2,19 @@
 
 import { useState } from "react";
 import type { SavedPrompt } from "./types";
-import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   DEFAULT_ANALYSIS_TONE,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
 
 /**
- * Groups the contiguous useState calls for the passage input form
- * (core fields, annotations, image, metadata, analysis prompt). Called at
- * the same hook slot as the original first useState in this contiguous run
- * so overall hook call order is preserved.
+ * Groups the shared form state for the 학습지 생성 page — passage metadata, the
+ * analysis prompt, tags, and saved-prompt UI. Passage text + teacher markings
+ * no longer live here; they are per-row in the multi-passage input stack
+ * (`passage-input/`). These fields persist between analyze runs so a teacher can
+ * batch several passages under the same metadata.
  */
 export function usePassageFormState() {
-  // Per-passage fields (title/content/annotations/image) now live on the
-  // individual passage blocks — see use-passage-blocks.ts. This hook only
-  // holds state shared across every passage in the center editor.
-
   // Metadata — school/grade/semester persist between saves for batch entry
   const [schoolId, setSchoolId] = useState("");
   const [grade, setGrade] = useState("");
@@ -32,8 +28,6 @@ export function usePassageFormState() {
 
   // Analysis prompt
   const [analysisPrompt, setAnalysisPrompt] = useState("");
-  const [analysisGenerationPlan, setAnalysisGenerationPlan] =
-    useState<QuestionGenerationPlan>("STANDARD");
   const [analysisTone, setAnalysisTone] =
     useState<AnalysisTone>(DEFAULT_ANALYSIS_TONE);
   const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([]);
@@ -52,7 +46,6 @@ export function usePassageFormState() {
     tagInput, setTagInput,
     tags, setTags,
     analysisPrompt, setAnalysisPrompt,
-    analysisGenerationPlan, setAnalysisGenerationPlan,
     analysisTone, setAnalysisTone,
     savedPrompts, setSavedPrompts,
     showSavedPrompts, setShowSavedPrompts,

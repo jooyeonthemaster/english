@@ -31,7 +31,11 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { generateAnalysisReport } from "@/lib/passage-report/analysis-report/generate";
+import {
+  generateAnalysisReportCore,
+  generateLearningWorksheet,
+} from "@/lib/passage-report/analysis-report/generate";
+import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
 type Input = { jobId: string };
@@ -43,6 +47,8 @@ interface AnalysisJobConfig {
   generationPlan?: QuestionGenerationPlan;
   analysisTone?: AnalysisTone;
   forcePrimeReport?: boolean;
+  /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성·병합한다 (+5크레딧). */
+  includeWorksheet?: boolean;
 }
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -84,6 +90,7 @@ function parseConfig(value: unknown): AnalysisJobConfig {
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
     analysisTone: normalizeAnalysisTone(raw.analysisTone),
     forcePrimeReport: raw.forcePrimeReport === true,
+    includeWorksheet: raw.includeWorksheet === true,
   };
 }
 
@@ -157,7 +164,8 @@ export const workbenchPassageAnalysisTask = task({
       },
     });
 
-    if (!config.forcePrimeReport && job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
+    // 실전 학습지 포함 요청은 캐시 단락을 타지 않는다 (fast 라우트와 동일 규칙).
+    if (!config.forcePrimeReport && !config.includeWorksheet && job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(job.passage.analysis.analysisData);
       if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         const debugTiming = {
@@ -191,10 +199,12 @@ export const workbenchPassageAnalysisTask = task({
       }
     }
 
-    const creditCost = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.PASSAGE_ANALYSIS,
-      generationPlan,
-    );
+    const includeWorksheet = config.includeWorksheet === true;
+    // 실전 학습지는 옵트인 라우트(prime/[passageId]/worksheet)와 동일 단가.
+    const worksheetCost = includeWorksheet ? CREDIT_COSTS.PASSAGE_ANALYSIS : 0;
+    const creditCost =
+      getQuestionGenerationCreditCost(CREDIT_COSTS.PASSAGE_ANALYSIS, generationPlan) +
+      worksheetCost;
     let creditTxId: string | null = null;
 
     try {
@@ -209,6 +219,7 @@ export const workbenchPassageAnalysisTask = task({
           generationPlan,
           analysisTone,
           creditCost,
+          includeWorksheet,
         },
         creditCost,
       });
@@ -223,8 +234,8 @@ export const workbenchPassageAnalysisTask = task({
         .join("\n\n");
 
       generationStartedAt = Date.now();
-      // PRIME A4 보고서를 단일 소스로 생성 (옛 5-layer 대체)
-      const primeResult = await generateAnalysisReport({
+      // 기본 분석 = 메인 보고서(5섹션)만 1회 호출. 실전 학습지(06)는 옵트인 별도 생성.
+      const primeResult = await generateAnalysisReportCore({
         passageContent: job.passage.content,
         schoolType: (job.passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
         grade: job.passage.grade,
@@ -257,7 +268,79 @@ export const workbenchPassageAnalysisTask = task({
           },
         });
       }
-      const primeReport = primeResult.report;
+      let primeReport = primeResult.report;
+
+      // ── 실전 학습지 한 번에 생성 (옵트인) — fast 라우트와 동일 의미론 ──
+      // 워크시트만 실패하면 기본 학습지는 그대로 저장하고 워크시트 몫만 환불.
+      let worksheetFailed = false;
+      if (includeWorksheet) {
+        try {
+          const worksheet = await generateLearningWorksheet(
+            {
+              passageContent: job.passage.content,
+              schoolType: (job.passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+              grade: job.passage.grade,
+            },
+            primeReport,
+          );
+          if (worksheet.ok) {
+            primeReport = {
+              ...primeReport,
+              sections: [
+                ...primeReport.sections.filter((s) => s.kind !== "learning-worksheet"),
+                worksheet.section,
+              ],
+            } as AnalysisReport;
+            const wUsage = worksheet.usage;
+            if (wUsage) {
+              const usage = readAiUsageTokens(wUsage.usage);
+              await recordPlatformApiUsageCost({
+                sourceKey: `workbench_ai_job:${jobId}:worksheet`,
+                sourceType: "WORKBENCH_AI_JOB",
+                sourceId: jobId,
+                sourceDetail: "PASSAGE_ANALYSIS_WORKSHEET",
+                academyId: job.academyId,
+                provider: providerFromModel(wUsage.modelId),
+                model: wUsage.modelId,
+                operationType: "PASSAGE_ANALYSIS",
+                unitType: "TOKENS",
+                inputTokens: usage.inputTokens,
+                outputTokens: usage.outputTokens,
+                usageAt: new Date(),
+                metadata: {
+                  passageId: job.passage.id,
+                  generationPlan,
+                  durationMs: wUsage.durationMs,
+                },
+              });
+            }
+          } else {
+            worksheetFailed = true;
+            logger.warn("worksheet generation failed (core kept)", {
+              jobId,
+              error: worksheet.error,
+            });
+          }
+        } catch (worksheetErr) {
+          worksheetFailed = true;
+          logger.warn("worksheet generation threw (core kept)", {
+            jobId,
+            error: String(worksheetErr),
+          });
+        }
+        if (worksheetFailed && creditTxId) {
+          await refundCredits(
+            job.academyId,
+            "PASSAGE_ANALYSIS",
+            creditTxId,
+            "실전 학습지 생성 실패 — 기본 학습지는 저장, 워크시트 몫 환불",
+            worksheetCost,
+          ).catch((refundErr) => {
+            logger.error("worksheet refund failed", { jobId, error: String(refundErr) });
+          });
+        }
+      }
+
       const analysisData = derivePassageAnalysisFromReport(primeReport);
 
       const persistenceStartedAt = Date.now();
@@ -309,6 +392,8 @@ export const workbenchPassageAnalysisTask = task({
               passageId: job.passage!.id,
               generationPlan,
               analysisTone,
+              includeWorksheet,
+              worksheetFailed,
             },
             completedAt: new Date(),
           },
@@ -334,6 +419,8 @@ export const workbenchPassageAnalysisTask = task({
             passageId: job.passage!.id,
             generationPlan,
             analysisTone,
+            includeWorksheet,
+            worksheetFailed,
             debugTiming,
             fastPath: false,
           },

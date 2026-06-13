@@ -365,6 +365,10 @@ export function GenerateUploadPanel({
           originalFileName: sourceName,
           mode: "PASSAGE_ONLY",
           outputMode,
+          // 생성 페이지 발 잡: finalize가 서버에서 drafts를 곧바로 Passage로 승격.
+          // 추출(~수십 초) 중 페이지를 떠나도 결과가 고아로 남지 않는다.
+          autoPromote: true,
+          // 원본 첫 장을 목록 썸네일용 미리보기로 함께 업로드(크롭 결과와 별개).
           previewSlot: slots[0] ?? null,
         });
         if (jobId) {
@@ -421,16 +425,8 @@ export function GenerateUploadPanel({
         : "작업 중";
 
   const outputModeOptions = [
-    {
-      v: "verbatim" as const,
-      label: "그대로 추출",
-      badge: `지문당 ◈${CREDIT_COSTS.TEXT_EXTRACTION}`,
-    },
-    {
-      v: "restored" as const,
-      label: "AI로 원문 복원",
-      badge: `지문당 ◈${CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION}`,
-    },
+    { v: "verbatim" as const, label: "그대로 추출", badge: "OCR만" },
+    { v: "restored" as const, label: "AI로 원문 복원", badge: "지문당 ◈1" },
   ];
   const controlRowClass =
     "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";

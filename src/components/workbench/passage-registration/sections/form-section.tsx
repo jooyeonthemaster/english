@@ -1,61 +1,61 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
 import {
-  ChevronDown,
-  ChevronUp,
-  GripVertical,
-  Loader2,
-  Wand2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import { ExtractionManageClient } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
+import {
+  IntakeSurface,
+  type IntakeView,
+  type IntakeTab,
+} from "@/app/(director)/director/workbench/generate/intake/intake-surface";
+import { GenerateUploadPanel } from "@/app/(director)/director/workbench/generate/intake/generate-upload-panel";
+import type { PendingExtraction } from "../use-create-extraction";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { PassageAnalysisIcon } from "@/components/icons/workflow-icons";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import {
-  getQuestionGenerationCreditCost,
-  type QuestionGenerationPlan,
-} from "@/lib/question-generation-plans";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
-import { blockHasContent, type PassageBlock } from "../block-types";
-import { CompactOptionsRow } from "./compact-options-row";
-import { MultiPassageEditor } from "./multi-passage-editor";
+import type { PassageInputRow } from "../passage-input/types";
+import { PassageInputStack } from "../passage-input/passage-input-stack";
 
 interface FormSectionProps {
   academyId: string;
   formCollapsed: boolean;
   setFormCollapsed: (v: boolean | ((prev: boolean) => boolean)) => void;
-  hasContent: boolean;
-  saving: boolean;
-  onAnalyze: (
-    analysisGenerationPlan: QuestionGenerationPlan,
-    analysisTone: AnalysisTone,
-  ) => void | Promise<void>;
 
-  // Passage blocks (center editor)
-  blocks: PassageBlock[];
-  updateBlock: (id: string, patch: Partial<PassageBlock>) => void;
-  addEmptyBlock: () => void;
-  removeBlock: (id: string) => void;
-  toggleCollapse: (id: string) => void;
-  setAllCollapsed: (collapsed: boolean) => void;
+  // Multi-passage stack (the right "지문" section)
+  rows: PassageInputRow[];
+  setRows: Dispatch<SetStateAction<PassageInputRow[]>>;
+  analyzing: boolean;
+  onAnalyze: (plan: QuestionGenerationPlan) => void;
 
-  // Draft selection (left grid)
-  selectedDraftIds: Set<string>;
+  // 자료 관리 picker (left grid)
   draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
+  onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
+  loadedDraftIds?: string[];
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
-  onBulkAnalyze: (
-    drafts: M1PassageDraftWithJob[],
-    generationPlan: QuestionGenerationPlan,
-  ) => Promise<void>;
-  bulkAnalyzing: boolean;
+
+  // Intake (이미지·PDF) — port of the 문제 생성 intake surface so new 자료 can be
+  // extracted from image/PDF right here.
+  intakeView: IntakeView;
+  setIntakeView: (v: IntakeView) => void;
+  intakeTab: IntakeTab;
+  setIntakeTab: (v: IntakeTab) => void;
+  onExtractionBegin: (id: string, count: number) => void;
+  onExtractionResult: (id: string, jobId: string | null) => void;
+  extractionPending: PendingExtraction[];
 
   // Metadata
   schools: Array<{
@@ -102,8 +102,8 @@ interface FormSectionProps {
 const LEFT_PANE_STORAGE_KEY = "smoat:passage-form:left-pane-width";
 const LEFT_PANE_MIN = 400;
 const LEFT_PANE_DEFAULT = 480;
-const LEFT_PANE_MAX_RATIO = 0.5;
-const RIGHT_PANE_MIN = 520;
+const LEFT_PANE_MAX_RATIO = 0.62;
+const RIGHT_PANE_MIN = 480;
 const HANDLE_HIT_WIDTH = 12;
 
 const FORM_PANE_STORAGE_KEY = "smoat:passage-form:pane-height";
@@ -111,14 +111,9 @@ const FORM_PANE_MIN = 500;
 const FORM_PANE_DEFAULT = 700;
 const FORM_PANE_MAX = 1400;
 
-const OPTIONS_OPEN_STORAGE_KEY = "smoat:passage-form:options-open";
-
 const LEFT_PANE_OPEN_STORAGE_KEY = "smoat:passage-form:left-pane-open";
 
-const OPTIONS_WIDTH_STORAGE_KEY = "smoat:passage-form:options-width";
-const OPTIONS_WIDTH_MIN = 220;
-const OPTIONS_WIDTH_DEFAULT = 300;
-const OPTIONS_WIDTH_MAX = 600;
+// 좌측 자료 패널 핸들의 클릭/드래그 구분 임계값(px).
 const OPTIONS_DRAG_THRESHOLD = 4;
 
 function readStoredLeftPaneWidth(): number {
@@ -158,44 +153,8 @@ function readStoredLeftPaneOpen(): boolean {
   }
 }
 
-function readStoredOptionsWidth(): number {
-  if (typeof window === "undefined") return OPTIONS_WIDTH_DEFAULT;
-  try {
-    const raw = window.localStorage.getItem(OPTIONS_WIDTH_STORAGE_KEY);
-    if (!raw) return OPTIONS_WIDTH_DEFAULT;
-    const n = parseInt(raw, 10);
-    if (Number.isNaN(n)) return OPTIONS_WIDTH_DEFAULT;
-    return Math.min(OPTIONS_WIDTH_MAX, Math.max(OPTIONS_WIDTH_MIN, n));
-  } catch {
-    return OPTIONS_WIDTH_DEFAULT;
-  }
-}
-
-function readStoredOptionsOpen(): boolean {
-  if (typeof window === "undefined") return true;
-  try {
-    const raw = window.localStorage.getItem(OPTIONS_OPEN_STORAGE_KEY);
-    if (raw === null) return true;
-    return raw === "true";
-  } catch {
-    return true;
-  }
-}
-
 export function FormSection(props: FormSectionProps) {
-  const {
-    formCollapsed,
-    setFormCollapsed,
-    hasContent,
-    saving,
-    onAnalyze,
-    blocks,
-    updateBlock,
-    addEmptyBlock,
-    removeBlock,
-    toggleCollapse,
-    setAllCollapsed,
-  } = props;
+  const { formCollapsed, setFormCollapsed } = props;
 
   const splitContainerRef = useRef<HTMLDivElement>(null);
   // 마키(영역 드래그) 시작 영역 = "자료 관리" 좌측 패널 전체. 아래 지문 목록 큐와
@@ -205,28 +164,9 @@ export function FormSection(props: FormSectionProps) {
     readStoredLeftPaneWidth,
   );
   const [formHeight, setFormHeight] = useState<number>(readStoredFormHeight);
-  const [optionsOpen, setOptionsOpen] = useState<boolean>(
-    readStoredOptionsOpen,
-  );
-  const [optionsWidth, setOptionsWidth] = useState<number>(
-    readStoredOptionsWidth,
-  );
   const [leftPaneOpen, setLeftPaneOpen] = useState<boolean>(
     readStoredLeftPaneOpen,
   );
-  const primaryAnalysisPlan: QuestionGenerationPlan =
-    FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD";
-  // 분석은 내용이 입력된 지문마다 1건씩 과금된다(handleAnalyzeBlocks 의
-  // filled.map 참조). 버튼의 크레딧 표기도 지문 수만큼 곱해 총액을 보여준다.
-  const filledPassageCount = blocks.filter(blockHasContent).length;
-  const standardAnalysisCreditCost =
-    getQuestionGenerationCreditCost(CREDIT_COSTS.PASSAGE_ANALYSIS, "STANDARD") *
-    filledPassageCount;
-  const primaryAnalysisCreditCost =
-    getQuestionGenerationCreditCost(
-      CREDIT_COSTS.PASSAGE_ANALYSIS,
-      primaryAnalysisPlan,
-    ) * filledPassageCount;
 
   const toggleLeftPaneOpen = useCallback(() => {
     setLeftPaneOpen((prev) => {
@@ -239,67 +179,6 @@ export function FormSection(props: FormSectionProps) {
       return next;
     });
   }, []);
-
-  const toggleOptionsOpen = useCallback(() => {
-    setOptionsOpen((prev) => {
-      const next = !prev;
-      try {
-        window.localStorage.setItem(OPTIONS_OPEN_STORAGE_KEY, String(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
-
-  const handleCloseOptionsPointerDown = useCallback(
-    (e: React.PointerEvent) => {
-      if (e.button !== 0) return;
-      const startX = e.clientX;
-      const startWidth = optionsWidth;
-      let didDrag = false;
-      let latest = startWidth;
-
-      const onMove = (ev: PointerEvent) => {
-        const delta = ev.clientX - startX;
-        if (!didDrag) {
-          if (Math.abs(delta) < OPTIONS_DRAG_THRESHOLD) return;
-          didDrag = true;
-          document.body.style.cursor = "ew-resize";
-          document.body.style.userSelect = "none";
-        }
-        // Button sits on the LEFT edge of the options column → drag right shrinks, left grows.
-        latest = Math.min(
-          OPTIONS_WIDTH_MAX,
-          Math.max(OPTIONS_WIDTH_MIN, startWidth - delta),
-        );
-        setOptionsWidth(latest);
-      };
-
-      const onUp = () => {
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        if (didDrag) {
-          document.body.style.cursor = "";
-          document.body.style.userSelect = "";
-          try {
-            window.localStorage.setItem(
-              OPTIONS_WIDTH_STORAGE_KEY,
-              String(latest),
-            );
-          } catch {
-            /* ignore */
-          }
-        } else {
-          toggleOptionsOpen();
-        }
-      };
-
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-    },
-    [optionsWidth, toggleOptionsOpen],
-  );
 
   const handleCloseLeftPanePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -419,7 +298,7 @@ export function FormSection(props: FormSectionProps) {
         <WorkflowPageTitle
           icon={PassageAnalysisIcon}
           title="학습지 생성"
-          description="추출된 자료나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
+          description="추출된 자료를 불러오거나 직접 입력한 지문을 바탕으로 어휘, 문법, 구조, 출제 포인트를 분석합니다."
         />
         {formCollapsed ? (
           <button
@@ -436,224 +315,121 @@ export function FormSection(props: FormSectionProps) {
       </div>
 
       {!formCollapsed ? (
-      <>
-      <div className="px-4 pt-4 pb-3">
-        {/* ─── 2-Pane Layout: 자료 관리 | 입력 폼 ─── */}
-        <div
-          ref={splitContainerRef}
-          className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
-          style={
-            {
-              "--left-pane-w": `${leftPaneWidth}px`,
-              height: `${formHeight}px`,
-            } as React.CSSProperties
-          }
-        >
-          {/* LEFT: 자료 관리 picker (embedded ExtractionManageClient) */}
-          {leftPaneOpen ? (
-            <>
-              <div
-                ref={materialBoundaryRef}
-                className="flex min-h-0 min-w-0 shrink-0 flex-col"
-                style={{ width: `min(${leftPaneWidth}px, 44%)` }}
-              >
-                <ExtractionManageEmbed
-                  academyId={props.academyId}
-                  draftCollections={props.draftCollections}
-                  draftMembership={props.draftMembership}
-                  selectedDraftIds={props.selectedDraftIds}
-                  onSelectDraft={props.onSelectDraft}
-                  onBulkAnalyze={props.onBulkAnalyze}
-                  bulkAnalyzing={props.bulkAnalyzing}
-                  marqueeBoundaryRef={materialBoundaryRef}
-                />
-              </div>
-              <button
-                type="button"
-                onPointerDown={handleCloseLeftPanePointerDown}
-                onDoubleClick={resetLeftPaneWidth}
-                title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-                className="group/lhandle flex w-4 shrink-0 cursor-col-resize touch-none flex-col items-center justify-center gap-1 mx-1 rounded-md text-[11px] font-semibold text-sky-400 hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 select-none transition-colors py-1"
-              >
-                <span>{"<"}</span>
-                <span style={{ writingMode: "vertical-rl" }}>자료 닫기</span>
-                <GripVertical className="h-3 w-3 opacity-40 group-hover/lhandle:opacity-70 transition-opacity" />
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              onClick={toggleLeftPaneOpen}
-              title="클릭하여 자료 패널 열기"
-              className="flex min-h-0 w-4 shrink-0 flex-col items-center justify-center gap-1 mx-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 hover:bg-sky-50 hover:text-sky-600 select-none transition-colors"
+        <>
+          <div className="px-4 pt-4 pb-3">
+            {/* ─── 2-Pane Layout: 자료 관리 | 지문 입력 ─── */}
+            <div
+              ref={splitContainerRef}
+              className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
+              style={
+                {
+                  "--left-pane-w": `${leftPaneWidth}px`,
+                  height: `${formHeight}px`,
+                } as React.CSSProperties
+              }
             >
-              <span>{">"}</span>
-              <span style={{ writingMode: "vertical-rl" }}>자료 열기</span>
-            </button>
-          )}
-
-          {/* RIGHT: 지문 입력 | 옵션 */}
-          <div
-            className="grid min-h-0 min-w-0 flex-1"
-            style={{
-              gridTemplateColumns: optionsOpen
-                ? `minmax(0,1fr) ${optionsWidth}px`
-                : "minmax(0,1fr) 16px",
-              columnGap: "0.25rem",
-            }}
-          >
-            <div className="flex min-h-0 min-w-0 flex-col gap-3">
-              {/* Multi-passage editor — scrollable, collapsible stack */}
-              <MultiPassageEditor
-                blocks={blocks}
-                updateBlock={updateBlock}
-                addEmptyBlock={addEmptyBlock}
-                removeBlock={removeBlock}
-                toggleCollapse={toggleCollapse}
-                setAllCollapsed={setAllCollapsed}
-              />
-
-              <div
-                className={
-                  FEATURE_FLAGS.SHOW_MODEL_SELECTOR
-                    ? "grid w-full shrink-0 grid-cols-1 gap-2 2xl:grid-cols-2"
-                    : "w-full shrink-0"
-                }
-              >
-                {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-                  <Button
-                    variant="outline"
-                    onClick={() => onAnalyze("STANDARD", props.analysisTone)}
-                    disabled={saving || !hasContent}
-                    className="h-9 w-full rounded-lg border-blue-200 px-3 text-[12.5px] font-bold text-blue-700 hover:bg-blue-50 hover:text-blue-800"
+              {/* LEFT: 자료 관리 picker (embedded ExtractionManageClient) */}
+              {leftPaneOpen ? (
+                <>
+                  <div
+                    ref={materialBoundaryRef}
+                    className="flex min-h-0 min-w-0 shrink-0 flex-col"
+                    style={{ width: `min(${leftPaneWidth}px, 62%)` }}
                   >
-                    {saving ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      <Wand2 className="size-4" />
-                    )}
-                    일반 분석 시작
-                    <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-blue-700">
-                      {filledPassageCount}개 선택
-                    </span>
-                    <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-blue-700">
-                      {standardAnalysisCreditCost.toLocaleString("ko-KR")}{" "}
-                      크레딧
-                    </span>
-                  </Button>
-                )}
-                <Button
-                  onClick={() => onAnalyze(primaryAnalysisPlan, props.analysisTone)}
-                  disabled={saving || !hasContent}
-                  className="h-9 w-full rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold hover:bg-blue-700"
-                >
-                  {saving ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Wand2 className="size-4" />
-                  )}
-                  분석 시작
-                  <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
-                    {filledPassageCount}개 선택
-                  </span>
-                  <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
-                    {primaryAnalysisCreditCost.toLocaleString("ko-KR")} 크레딧
-                  </span>
-                </Button>
-              </div>
-            </div>
-
-            {optionsOpen ? (
-              <div className="flex min-h-0 min-w-[220px] flex-row gap-1">
+                    <IntakeSurface
+                      intakeView={props.intakeView}
+                      setIntakeView={props.setIntakeView}
+                      intakeTab={props.intakeTab}
+                      setIntakeTab={props.setIntakeTab}
+                      libraryLabel="자료 관리"
+                      libraryCount={0}
+                      showPasteTab={false}
+                      upload={
+                        <GenerateUploadPanel
+                          onBegin={props.onExtractionBegin}
+                          onResult={props.onExtractionResult}
+                          inFlightCount={props.extractionPending.length}
+                        />
+                      }
+                      library={
+                        /* 진행 중 추출 표시는 ExtractionManageClient 내부에서 서버 jobMeta
+                           기반으로(새로고침/다른 기기에도 유지) 자료 그리드 안에 직접 렌더한다. */
+                        <ExtractionManageEmbed
+                          academyId={props.academyId}
+                          draftCollections={props.draftCollections}
+                          draftMembership={props.draftMembership}
+                          onSelectDraft={props.onSelectDraft}
+                          onLoadSelectedDrafts={props.onLoadSelectedDrafts}
+                          loadedDraftIds={props.loadedDraftIds}
+                          marqueeBoundaryRef={materialBoundaryRef}
+                          refreshToken={props.draftRefreshToken}
+                          sessionPending={props.extractionPending}
+                        />
+                      }
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onPointerDown={handleCloseLeftPanePointerDown}
+                    onDoubleClick={resetLeftPaneWidth}
+                    title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
+                    className="group/lhandle mx-1 flex w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100"
+                  >
+                    <span>{"<"}</span>
+                    <span style={{ writingMode: "vertical-rl" }}>자료 닫기</span>
+                    <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
+                  </button>
+                </>
+              ) : (
                 <button
                   type="button"
-                  onPointerDown={handleCloseOptionsPointerDown}
-                  title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절"
-                  className="group/ohandle flex w-4 shrink-0 cursor-ew-resize touch-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 select-none transition-colors"
+                  onClick={toggleLeftPaneOpen}
+                  title="클릭하여 자료 패널 열기"
+                  className="mx-1 flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
                 >
                   <span>{">"}</span>
-                  <span style={{ writingMode: "vertical-rl" }}>옵션 닫기</span>
-                  <GripVertical className="h-3 w-3 opacity-40 group-hover/ohandle:opacity-70 transition-opacity" />
+                  <span style={{ writingMode: "vertical-rl" }}>자료 열기</span>
                 </button>
-                <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
-                  {/* Compact options row — 선생님의 노하우 + 지문 정보 */}
-                  <CompactOptionsRow
-                    schools={props.schools}
-                    schoolId={props.schoolId}
-                    setSchoolId={props.setSchoolId}
-                    grade={props.grade}
-                    setGrade={props.setGrade}
-                    semester={props.semester}
-                    setSemester={props.setSemester}
-                    unit={props.unit}
-                    setUnit={props.setUnit}
-                    source={props.source}
-                    setSource={props.setSource}
-                    publisher={props.publisher}
-                    setPublisher={props.setPublisher}
-                    publisherCustom={props.publisherCustom}
-                    setPublisherCustom={props.setPublisherCustom}
-                    tagInput={props.tagInput}
-                    setTagInput={props.setTagInput}
-                    tags={props.tags}
-                    addTag={props.addTag}
-                    removeTag={props.removeTag}
-                    analysisPrompt={props.analysisPrompt}
-                    setAnalysisPrompt={props.setAnalysisPrompt}
-                    analysisTone={props.analysisTone}
-                    setAnalysisTone={props.setAnalysisTone}
-                    savedPrompts={props.savedPrompts}
-                    showSavedPrompts={props.showSavedPrompts}
-                    setShowSavedPrompts={props.setShowSavedPrompts}
-                    newPromptName={props.newPromptName}
-                    setNewPromptName={props.setNewPromptName}
-                    savingPrompt={props.savingPrompt}
-                    onSavePrompt={props.onSavePrompt}
-                    onDeletePrompt={props.onDeletePrompt}
-                  />
-                </div>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={toggleOptionsOpen}
-                title="클릭하여 옵션 패널 열기"
-                className="flex min-h-0 w-4 flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 hover:bg-sky-50 hover:text-sky-600 select-none transition-colors"
-              >
-                <span>{"<"}</span>
-                <span style={{ writingMode: "vertical-rl" }}>옵션 열기</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+              )}
 
-      {/* ─── Form pane vertical resize handle ─── */}
-      <div className="relative pb-2.5">
-        <div
-          onPointerDown={beginFormResize}
-          onDoubleClick={resetFormHeight}
-          role="separator"
-          aria-orientation="horizontal"
-          title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
-          className="group/fhandle h-3 cursor-row-resize flex items-center justify-center select-none"
-        >
-          <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
-        </div>
-        <button
-          type="button"
-          onClick={() => setFormCollapsed(true)}
-          onPointerDown={(e) => e.stopPropagation()}
-          onDoubleClick={(e) => e.stopPropagation()}
-          aria-expanded
-          title="학습지 생성 접기"
-          className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
-        >
-          <ChevronUp className="size-3.5" aria-hidden="true" />
-          <span>접기</span>
-        </button>
-      </div>
-      </>
+              {/* RIGHT: 지문 입력 (선생님의 노하우·분석 말투·지문 정보 옵션 패널 제거) */}
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+                <PassageInputStack
+                  rows={props.rows}
+                  setRows={props.setRows}
+                  saving={props.analyzing}
+                  onAnalyze={props.onAnalyze}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ─── Form pane vertical resize handle ─── */}
+          <div className="relative pb-2.5">
+            <div
+              onPointerDown={beginFormResize}
+              onDoubleClick={resetFormHeight}
+              role="separator"
+              aria-orientation="horizontal"
+              title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+              className="group/fhandle flex h-3 cursor-row-resize select-none items-center justify-center"
+            >
+              <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
+            </div>
+            <button
+              type="button"
+              onClick={() => setFormCollapsed(true)}
+              onPointerDown={(e) => e.stopPropagation()}
+              onDoubleClick={(e) => e.stopPropagation()}
+              aria-expanded
+              title="학습지 생성 접기"
+              className="absolute right-4 top-1/2 inline-flex -translate-y-1/2 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+            >
+              <ChevronUp className="size-3.5" aria-hidden="true" />
+              <span>접기</span>
+            </button>
+          </div>
+        </>
       ) : null}
     </section>
   );
@@ -663,27 +439,29 @@ interface ExtractionManageEmbedProps {
   academyId: string;
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
-  selectedDraftIds: Set<string>;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
-  onBulkAnalyze: (
-    drafts: M1PassageDraftWithJob[],
-    generationPlan: QuestionGenerationPlan,
-  ) => Promise<void>;
-  bulkAnalyzing: boolean;
+  onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
+  loadedDraftIds?: string[];
   /** 마키(영역 드래그) 시작 영역 = 자료 관리 패널 전체. 같은 페이지의 지문 목록 큐와
    *  영역이 섞이지 않도록 분리한다. */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
+  /** Bumped on extraction job create/complete to force an immediate refresh. */
+  refreshToken?: number;
+  /** Session in-flight extractions → immediate in-grid "추출 중" skeletons. */
+  sessionPending?: PendingExtraction[];
 }
 
 function ExtractionManageEmbed({
   academyId,
   draftCollections,
   draftMembership,
-  selectedDraftIds,
   onSelectDraft,
-  onBulkAnalyze,
-  bulkAnalyzing,
+  onLoadSelectedDrafts,
+  loadedDraftIds,
   marqueeBoundaryRef,
+  refreshToken,
+  sessionPending,
 }: ExtractionManageEmbedProps) {
   const membership = useMemo(() => {
     const map: Record<string, Set<string>> = {};
@@ -702,12 +480,13 @@ function ExtractionManageEmbed({
       academyId={academyId}
       initialCollections={collections}
       initialCollectionMembership={membership}
-      selectedExternalDraftIds={selectedDraftIds}
       onSelectDraftExternal={onSelectDraft}
-      onBulkAnalyze={onBulkAnalyze}
-      bulkAnalyzing={bulkAnalyzing}
+      onLoadSelectedDrafts={onLoadSelectedDrafts}
+      loadedExternalDraftIds={loadedDraftIds}
       marqueeBoundaryRef={marqueeBoundaryRef}
       draftDetailActionMode="import"
+      refreshToken={refreshToken}
+      sessionPending={sessionPending}
     />
   );
 }

@@ -23,7 +23,8 @@ export const CREDIT_COSTS = {
 
   // Content extraction
   TEXT_EXTRACTION: 3,          // PDF/image OCR text extraction (verbatim)
-  PASSAGE_RESTORATION: 2,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성), base; +length tier via costOverride
+  PASSAGE_RESTORATION: 1,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성) — flash-lite 전환으로 인하 (26-06-10)
+  PASSAGE_TRANSFORM: 1,        // AI 지문 변형 (문장 재작성·앞 맥락 추가) — flash-lite 경량 호출
 
   // Webtoon
   WEBTOON_IMAGE: 5,            // 한 지문 → 멀티패널 단일 9:16 웹툰 이미지
@@ -45,6 +46,7 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   AI_CHAT: "AI 튜터링",
   TEXT_EXTRACTION: "텍스트 추출 (OCR)",
   PASSAGE_RESTORATION: "AI 지문 복원",
+  PASSAGE_TRANSFORM: "AI 지문 변형",
   WEBTOON_IMAGE: "웹툰 이미지 생성",
 };
 

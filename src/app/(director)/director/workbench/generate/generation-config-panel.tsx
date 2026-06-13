@@ -16,7 +16,6 @@ import {
   Settings2,
   ChevronDown,
   ChevronUp,
-  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
@@ -85,28 +84,54 @@ const VOCAB_GENERATION_TYPE_IDS = new Set([
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
 
-// Difficulty tones — unified palette: 기본 파랑 / 중급 노랑 / 킬러 빨강.
+// Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷으로만 (면색 남용 금지).
 const DIFFICULTY_TONES = [
-  {
-    value: "BASIC",
-    label: "기본",
-    selected: "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50",
-    idle: "bg-white text-slate-400 border-slate-200 hover:border-blue-200 hover:text-blue-600",
-  },
-  {
-    value: "INTERMEDIATE",
-    label: "중급",
-    selected:
-      "bg-amber-50 text-amber-700 border-amber-300 shadow-sm shadow-amber-50",
-    idle: "bg-white text-slate-400 border-slate-200 hover:border-amber-200 hover:text-amber-600",
-  },
-  {
-    value: "KILLER",
-    label: "킬러",
-    selected: "bg-red-50 text-red-700 border-red-300 shadow-sm shadow-red-50",
-    idle: "bg-white text-slate-400 border-slate-200 hover:border-red-200 hover:text-red-600",
-  },
+  { value: "BASIC", label: "기본", dot: "bg-blue-500" },
+  { value: "INTERMEDIATE", label: "중급", dot: "bg-violet-500" },
+  { value: "KILLER", label: "킬러", dot: "bg-red-500" },
 ] as const;
+
+// 난이도 세그먼트 — 자동/유형지정 모드 공통.
+function DifficultySegment({
+  difficulty,
+  setDifficulty,
+}: {
+  difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
+  setDifficulty: (v: "BASIC" | "INTERMEDIATE" | "KILLER") => void;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        난이도
+      </span>
+      <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
+        {DIFFICULTY_TONES.map((d) => {
+          const active = difficulty === d.value;
+          return (
+            <button
+              key={d.value}
+              type="button"
+              onClick={() => setDifficulty(d.value)}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] text-[12px] transition-all duration-150 ${
+                active
+                  ? "bg-white font-bold text-slate-800 shadow-sm"
+                  : "font-semibold text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${d.dot} ${
+                  active ? "" : "opacity-40"
+                }`}
+                aria-hidden="true"
+              />
+              {d.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 // ─── Props ───────────────────────────────────────────
 
@@ -161,6 +186,18 @@ interface GenerationConfigPanelProps {
   canGenerate: boolean;
   selectedIds: Set<string>;
   handleBatchGenerate: () => void;
+
+  // 지문 워크스페이스 모드 — 행이 1개라도 불러와지면 생성 버튼은 워크스페이스
+  // 기준으로 동작한다 (라이브러리 직접 선택 생성 대신).
+  workspaceActive?: boolean;
+  /** 체크된 지문 중 아직 워크스페이스에 불러오지 않은 수 (안내문용). */
+  workspaceUnloadedSelectedCount?: number;
+  workspaceRowCount?: number;
+  workspaceTotalQuestions?: number;
+  workspaceCreditCost?: number;
+  workspaceVariantCount?: number;
+  workspaceGenerating?: boolean;
+  onWorkspaceGenerate?: () => void;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -199,6 +236,14 @@ export function GenerationConfigPanel({
   canGenerate,
   selectedIds,
   handleBatchGenerate,
+  workspaceActive = false,
+  workspaceUnloadedSelectedCount = 0,
+  workspaceRowCount = 0,
+  workspaceTotalQuestions = 0,
+  workspaceCreditCost = 0,
+  workspaceVariantCount = 0,
+  workspaceGenerating = false,
+  onWorkspaceGenerate,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(
     "BLANK_INFERENCE",
@@ -696,24 +741,19 @@ export function GenerationConfigPanel({
     setTypeCounts((prev) => orderTypeCounts(next, prev));
   };
 
-  const getCategoryBadgeClass = (category: string) => {
-    if (category === "수능/모의고사 객관식") {
-      return "bg-sky-50 text-sky-700 ring-sky-100";
-    }
-    if (category === "내신 서술형") {
-      return "bg-emerald-50 text-emerald-700 ring-emerald-100";
-    }
-    if (category === "어휘") {
-      return "bg-amber-50 text-amber-700 ring-amber-100";
-    }
-    return "bg-slate-50 text-slate-500 ring-slate-100";
+  // 카테고리는 행마다 텍스트 배지를 반복하지 않고 컬러 닷 + 상단 범례로 표기.
+  const getCategoryDotClass = (category: string) => {
+    if (category === "수능/모의고사 객관식") return "bg-sky-400";
+    if (category === "내신 서술형") return "bg-emerald-400";
+    if (category === "어휘") return "bg-violet-400";
+    return "bg-slate-300";
   };
 
-  const getCategoryShortLabel = (category: string) => {
-    if (category === "수능/모의고사 객관식") return "수능모의";
-    if (category === "내신 서술형") return "내신서술";
-    return category;
-  };
+  const categoryLegend = [
+    { label: "수능·모의", dot: "bg-sky-400" },
+    { label: "내신 서술", dot: "bg-emerald-400" },
+    { label: "어휘", dot: "bg-violet-400" },
+  ];
 
   const renderNumberSetting = ({
     title,
@@ -1115,6 +1155,55 @@ export function GenerationConfigPanel({
           <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  빈칸 변형
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  정답 패러프레이즈
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도별 어휘
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  오답 균질화
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                정답 선지를 원문 그대로 내지 않고, 지문 의미를 보존한
+                패러프레이즈로 생성합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!blankSettings.paraphraseAnswer}
+              onClick={() => {
+                const next = !blankSettings.paraphraseAnswer;
+                updateBlankSetting({
+                  paraphraseAnswer: next,
+                  ...(next ? { doubleNegative: false } : {}),
+                });
+              }}
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                blankSettings.paraphraseAnswer
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  blankSettings.paraphraseAnswer
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
                 <span
                   className={`text-[12px] font-bold ${isMultiBlank ? "text-slate-400" : "text-slate-800"}`}
                 >
@@ -1143,11 +1232,13 @@ export function GenerationConfigPanel({
               role="switch"
               aria-checked={!isMultiBlank && !!blankSettings.doubleNegative}
               disabled={isMultiBlank}
-              onClick={() =>
+              onClick={() => {
+                const next = !blankSettings.doubleNegative;
                 updateBlankSetting({
-                  doubleNegative: !blankSettings.doubleNegative,
-                })
-              }
+                  doubleNegative: next,
+                  ...(next ? { paraphraseAnswer: false } : {}),
+                });
+              }}
               className={`relative h-6 w-11 rounded-full border transition-colors ${
                 isMultiBlank
                   ? "cursor-not-allowed border-slate-200 bg-slate-100"
@@ -1318,44 +1409,37 @@ export function GenerationConfigPanel({
   return (
     <div className="flex flex-1 min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
       <div className="flex flex-1 min-h-0 flex-col overflow-y-auto">
-        {/* Mode Toggle */}
-        <div className="px-5 pt-5 pb-3 shrink-0">
-          <div className="flex bg-slate-100/80 rounded-xl p-1">
-            <button
-              onClick={() => setGenMode("auto")}
-              className={`flex-1 flex items-center justify-center gap-2 h-9 rounded-lg text-[13px] font-semibold transition-all duration-200 ${
-                genMode === "auto"
-                  ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-200"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              <Zap className="w-4 h-4" />
-              자동 생성
-            </button>
-            <button
-              onClick={() => setGenMode("manual")}
-              className={`flex-1 flex items-center justify-center gap-2 h-9 rounded-lg text-[13px] font-semibold transition-all duration-200 ${
-                genMode === "manual"
-                  ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-200"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              <Settings2 className="w-4 h-4" />
-              유형 지정
-            </button>
-            {FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS && (
-              <button
-                onClick={() => setGenMode("set")}
-                className={`flex-1 flex items-center justify-center gap-2 h-9 rounded-lg text-[13px] font-semibold transition-all duration-200 ${
-                  genMode === "set"
-                    ? "bg-blue-50 text-blue-700 shadow-sm border border-blue-200"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                <FileText className="w-4 h-4" />
-                장문 세트
-              </button>
-            )}
+        {/* Mode Toggle — white-active 세그먼트 (난이도 세그먼트와 동일 문법) */}
+        <div className="px-4 pt-4 pb-3 shrink-0">
+          <div className="flex h-9 rounded-lg bg-slate-100 p-0.5">
+            {(
+              [
+                { mode: "auto", label: "자동 생성", Icon: Zap },
+                { mode: "manual", label: "유형 지정", Icon: Settings2 },
+                ...(FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS
+                  ? [{ mode: "set", label: "장문 세트", Icon: FileText }]
+                  : []),
+              ] as const
+            ).map(({ mode, label, Icon }) => {
+              const active = genMode === mode;
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setGenMode(mode)}
+                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] text-[12.5px] transition-all duration-150 ${
+                    active
+                      ? "bg-white font-bold text-blue-700 shadow-sm"
+                      : "font-semibold text-slate-500 hover:text-slate-700"
+                  }`}
+                >
+                  <Icon
+                    className={`h-3.5 w-3.5 ${active ? "text-blue-600" : "text-slate-400"}`}
+                  />
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -1405,7 +1489,7 @@ export function GenerationConfigPanel({
 
         {/* Auto Mode Config */}
         {genMode === "auto" && (
-          <div className="px-5 py-3 flex flex-1 min-h-0 flex-col gap-3">
+          <div className="px-4 py-3 flex flex-1 min-h-0 flex-col gap-3">
             {/* 문제 수 — minimal inline control */}
             <div className="flex items-center justify-between gap-2 shrink-0">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -1433,18 +1517,11 @@ export function GenerationConfigPanel({
             </div>
 
             {/* Difficulty */}
-            <div className="flex gap-2 shrink-0">
-              {DIFFICULTY_TONES.map((d) => (
-                <button
-                  key={d.value}
-                  onClick={() => setDifficulty(d.value)}
-                  className={`flex-1 h-8 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
-                    difficulty === d.value ? d.selected : d.idle
-                  }`}
-                >
-                  {d.label}
-                </button>
-              ))}
+            <div className="shrink-0">
+              <DifficultySegment
+                difficulty={difficulty}
+                setDifficulty={setDifficulty}
+              />
             </div>
 
             {/* Custom prompt */}
@@ -1472,25 +1549,36 @@ export function GenerationConfigPanel({
 
         {/* Manual Mode Config */}
         {genMode === "manual" && (
-          <div className="px-5 py-3 space-y-3">
+          <div className="px-4 py-3 space-y-3">
             {/* Difficulty */}
-            <div className="flex gap-2">
-              {DIFFICULTY_TONES.map((d) => (
-                <button
-                  key={d.value}
-                  onClick={() => setDifficulty(d.value)}
-                  className={`flex-1 h-8 rounded-lg text-[12px] font-semibold transition-all duration-150 border ${
-                    difficulty === d.value ? d.selected : d.idle
-                  }`}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
+            <DifficultySegment
+              difficulty={difficulty}
+              setDifficulty={setDifficulty}
+            />
 
-            {/* Type selection blocks */}
+            {/* Type selection blocks — 단일 컨테이너 리스트 (카드 더미 금지) */}
             <div className="space-y-3">
-              <div className="space-y-1.5">
+              <div>
+                <div className="flex items-center justify-between px-0.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    문제 유형
+                  </span>
+                  <div className="flex items-center gap-2.5">
+                    {categoryLegend.map((c) => (
+                      <span
+                        key={c.label}
+                        className="flex items-center gap-1 text-[10px] font-medium text-slate-400"
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${c.dot}`}
+                          aria-hidden="true"
+                        />
+                        {c.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-1.5 divide-y divide-slate-100 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
                 {orderedTypeItems.map((item) => {
                   const count = typeCounts[item.id] || 0;
                   const active = count > 0;
@@ -1522,23 +1610,19 @@ export function GenerationConfigPanel({
                         setDraggingTypeId(null);
                         setDragOverTypeId(null);
                       }}
-                      className={`group cursor-pointer overflow-hidden rounded-xl border bg-white transition-all ${
+                      className={`group cursor-pointer transition-colors ${
                         dragOver
-                          ? "border-blue-300 shadow-[0_0_0_2px_rgba(59,130,246,0.12)]"
+                          ? "bg-blue-50 ring-1 ring-inset ring-blue-300"
                           : active
-                            ? "border-blue-300 shadow-sm shadow-blue-50"
-                            : "border-slate-200 shadow-sm hover:border-slate-300"
+                            ? "bg-blue-50/40"
+                            : "hover:bg-slate-50/80"
                       } ${dragging ? "opacity-50" : ""}`}
                     >
                       <div
                         onClick={(event) =>
                           handleTypeSurfaceClick(event, item.id)
                         }
-                        className={`flex items-center gap-1.5 border-b px-2.5 py-1 ${
-                          active
-                            ? "border-blue-100 bg-blue-50/70"
-                            : "border-slate-100 bg-slate-50/70"
-                        }`}
+                        className="flex h-10 items-center gap-0.5 pl-1 pr-1.5"
                       >
                         <button
                           type="button"
@@ -1552,7 +1636,7 @@ export function GenerationConfigPanel({
                             setDraggingTypeId(null);
                             setDragOverTypeId(null);
                           }}
-                          className="flex h-7 w-7 cursor-grab items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 active:cursor-grabbing"
+                          className="flex h-7 w-6 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
                           title={`${item.label} 순서 드래그`}
                           aria-label={`${item.label} 순서 드래그`}
                         >
@@ -1565,66 +1649,72 @@ export function GenerationConfigPanel({
                             event.stopPropagation();
                             applyTypeCount(item.id, count + 1);
                           }}
-                          className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white"
+                          className="flex h-7 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left"
                           aria-label={`${item.label} 1개 추가`}
                         >
                           <span
-                            className={`min-w-0 flex-1 truncate text-[12px] font-black ${
-                              active ? "text-blue-800" : "text-slate-700"
+                            title={item.groupLabel}
+                            className={`h-1.5 w-1.5 shrink-0 rounded-full ${getCategoryDotClass(item.groupLabel)}`}
+                            aria-hidden="true"
+                          />
+                          <span
+                            className={`min-w-0 flex-1 truncate text-[12px] ${
+                              active
+                                ? "font-bold text-blue-800"
+                                : "font-semibold text-slate-600"
                             }`}
                           >
                             {item.label}
                           </span>
-                          <span
-                            title={item.groupLabel}
-                            className={`min-w-0 max-w-[42px] shrink rounded px-1.5 py-0.5 text-[9.5px] font-bold ring-1 sm:max-w-[54px] ${getCategoryBadgeClass(item.groupLabel)}`}
-                          >
-                            <span className="block truncate">
-                              {getCategoryShortLabel(item.groupLabel)}
-                            </span>
-                          </span>
-                          {active && (
-                            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-blue-600" />
-                          )}
                         </button>
 
-                        <div className="grid w-[108px] shrink-0 grid-cols-[76px_28px] items-center gap-1">
+                        <div className="grid w-[100px] shrink-0 grid-cols-[72px_28px] items-center">
                           <div className="flex items-center justify-end gap-0.5">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                applyTypeCount(item.id, Math.max(0, count - 1))
-                              }
-                              disabled={!active}
-                              className="flex h-7 w-7 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-white hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200"
-                              aria-label={`${item.label} 개수 줄이기`}
-                            >
-                              <Minus className="h-3.5 w-3.5" />
-                            </button>
-                            <span
-                              className={`w-5 text-center text-[12px] font-bold tabular-nums ${
-                                active ? "text-blue-700" : "text-slate-300"
-                              }`}
-                            >
-                              {count}
-                            </span>
+                            {/* 0개 행은 +만 — 죽은 −/0 을 14행에 반복하지 않는다.
+                                +는 항상 같은 칸이라 세로 정렬이 유지된다. */}
+                            {active ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    applyTypeCount(
+                                      item.id,
+                                      Math.max(0, count - 1),
+                                    )
+                                  }
+                                  className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600"
+                                  aria-label={`${item.label} 개수 줄이기`}
+                                >
+                                  <Minus className="h-3.5 w-3.5" />
+                                </button>
+                                <span className="w-5 text-center text-[12.5px] font-bold tabular-nums text-blue-700">
+                                  {count}
+                                </span>
+                              </>
+                            ) : null}
                             <button
                               type="button"
                               onClick={() => applyTypeCount(item.id, count + 1)}
-                              className="flex h-7 w-7 items-center justify-center rounded-md text-blue-500 transition-colors hover:bg-white hover:text-blue-700"
+                              className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
+                                active
+                                  ? "text-blue-500 hover:bg-white hover:text-blue-700"
+                                  : "text-slate-400 hover:bg-blue-50 hover:text-blue-600"
+                              }`}
                               aria-label={`${item.label} 개수 늘리기`}
                             >
                               <Plus className="h-3.5 w-3.5" />
                             </button>
                           </div>
+                          {/* jay 파라미터 확장으로 모든 유형에 세부 옵션이 생겨
+                              항상 노출 — 스타일은 워크스페이스 재설계 톤 유지 */}
                           <button
                             type="button"
                             onClick={() =>
                               setExpandedTypeId(expanded ? null : item.id)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 text-blue-500 ring-1 ring-blue-100 transition-colors hover:bg-blue-100 hover:text-blue-700"
-                            title={`${item.label} ${expanded ? "접기" : "펼치기"}`}
-                            aria-label={`${item.label} ${expanded ? "접기" : "펼치기"}`}
+                            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                            title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                            aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
                           >
                             {expanded ? (
                               <ChevronUp className="h-3.5 w-3.5" />
@@ -1640,7 +1730,7 @@ export function GenerationConfigPanel({
                           onClick={(event) =>
                             handleTypeSurfaceClick(event, item.id)
                           }
-                          className="px-3 py-3"
+                          className="border-t border-slate-100 bg-slate-50/60 px-3.5 py-3"
                         >
                           {renderTypeDetailContent(item.id)}
                         </div>
@@ -1648,26 +1738,24 @@ export function GenerationConfigPanel({
                     </section>
                   );
                 })}
+                </div>
               </div>
 
               {totalQuestions > 0 && (
-                <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-blue-50 border border-blue-200/60">
-                  <div className="flex items-center gap-2">
-                    <Target className="w-3.5 h-3.5 text-blue-600" />
-                    <span className="text-[12px] font-semibold text-blue-800">
-                      총{" "}
-                      <strong className="text-blue-700">
-                        {totalQuestions}
-                      </strong>
-                      문제
-                      <span className="text-blue-500 font-medium ml-1">
-                        ({activeTypeItems.length}개 유형)
-                      </span>
+                <div className="flex h-9 items-center justify-between rounded-lg border border-blue-200/70 bg-blue-50 pl-3 pr-1.5">
+                  <span className="text-[12px] font-semibold text-blue-800">
+                    총{" "}
+                    <strong className="font-bold text-blue-700">
+                      {totalQuestions}
+                    </strong>
+                    문제
+                    <span className="ml-1 font-medium text-blue-500">
+                      · {activeTypeItems.length}개 유형
                     </span>
-                  </div>
+                  </span>
                   <button
                     onClick={() => setTypeCounts({})}
-                    className="text-[11px] text-blue-500 hover:text-blue-700 font-medium transition-colors"
+                    className="h-6 rounded-md px-2 text-[11px] font-semibold text-blue-500 transition-colors hover:bg-blue-100 hover:text-blue-700"
                   >
                     초기화
                   </button>
@@ -1698,20 +1786,83 @@ export function GenerationConfigPanel({
         )}
 
         {genMode === "set" && (
-          <SetBuilderPanel
-            passageId={
-              selectedIds && selectedIds.size > 0
-                ? Array.from(selectedIds)[0]
-                : null
-            }
-            generationPlan={generationPlan}
-          />
+          <>
+            {workspaceActive ? (
+              <p className="mx-4 mt-3 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
+                장문 세트는 왼쪽 ‘내 지문’에서 체크한 지문 1개로 동작합니다 —
+                워크스페이스에 불러온 지문({workspaceRowCount}개)은 여기에
+                사용되지 않아요.
+              </p>
+            ) : null}
+            <SetBuilderPanel
+              passageId={
+                selectedIds && selectedIds.size > 0
+                  ? Array.from(selectedIds)[0]
+                  : null
+              }
+              generationPlan={generationPlan}
+            />
+          </>
         )}
       </div>
 
-      {/* Generate Button */}
-      {genMode !== "set" && (
-      <div className="px-5 py-3 border-t border-slate-100 bg-white shrink-0">
+      {/* Generate Button — 워크스페이스 모드 */}
+      {genMode !== "set" && workspaceActive && (
+        <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
+          {workspaceVariantCount > 0 ? (
+            <p className="mb-2 rounded-md bg-blue-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-blue-600">
+              수정·범위 지정된 {workspaceVariantCount}개 지문은 생성 시
+              ‘변형본’ 지문으로 저장된 뒤 출제됩니다. 원본 지문은 그대로
+              보존돼요.
+            </p>
+          ) : null}
+          {workspaceUnloadedSelectedCount > 0 ? (
+            <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
+              왼쪽에서 체크한 {workspaceUnloadedSelectedCount}개 지문은 아직
+              워크스페이스에 없어요 — ‘선택 지문 편집하기’를 눌러야 생성에
+              포함됩니다.
+            </p>
+          ) : null}
+          <Button
+            className={`relative w-full h-12 rounded-xl text-[14px] font-bold transition-all duration-200 ${
+              workspaceTotalQuestions > 0 && !workspaceGenerating
+                ? "bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200/50 hover:shadow-lg hover:shadow-blue-200/60"
+                : "bg-slate-200 text-slate-400 cursor-not-allowed"
+            }`}
+            onClick={onWorkspaceGenerate}
+            disabled={workspaceTotalQuestions === 0 || workspaceGenerating}
+          >
+            {workspaceTotalQuestions > 0 &&
+              workspaceCreditCost > 0 &&
+              !workspaceGenerating && (
+                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] font-bold tabular-nums text-white">
+                  <Coins className="w-3 h-3" />
+                  {workspaceCreditCost}크레딧
+                </span>
+              )}
+            {workspaceGenerating ? (
+              <span className="flex items-center gap-2">
+                <Cpu className="w-4.5 h-4.5 animate-pulse" />
+                생성 중…
+              </span>
+            ) : workspaceTotalQuestions > 0 ? (
+              <span className="flex items-center gap-2">
+                <Cpu className="w-4.5 h-4.5" />
+                {`지문 ${workspaceRowCount}개 · ${workspaceTotalQuestions}문제 생성`}
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Target className="w-4.5 h-4.5" />
+                유형을 선택하세요
+              </span>
+            )}
+          </Button>
+        </div>
+      )}
+
+      {/* Generate Button — 기존 라이브러리 선택 모드 */}
+      {genMode !== "set" && !workspaceActive && (
+      <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
         {(() => {
           // 크레딧 비용 계산
           const baseCreditCost =

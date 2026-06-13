@@ -17,10 +17,11 @@ export function processBlankInference(
   const surroundingText = ai.surroundingText as string | undefined;
   const options = ai.options as Array<{ label: string; text: string }>;
   const correctAnswer = ai.correctAnswer as string;
-  // DOUBLE_NEGATIVE(부정 패러프레이즈)·PARAPHRASE(KILLER 추상 패러프레이즈) 모두
-  // 정답 보기가 원문과 의도적으로 다르다 — verbatim 자동 고정을 건너뛴다.
-  const isTransformedAnswerMode =
-    ai.blankAnswerMode === "DOUBLE_NEGATIVE" || ai.blankAnswerMode === "PARAPHRASE";
+  // DOUBLE_NEGATIVE(부정 패러프레이즈)·PARAPHRASE(변형 빈칸) 모두 정답 보기가
+  // 원문과 의도적으로 다르다 — verbatim 자동 고정을 건너뛴다.
+  const isDoubleNegativeMode = ai.blankAnswerMode === "DOUBLE_NEGATIVE";
+  const isParaphraseMode = ai.blankAnswerMode === "PARAPHRASE";
+  const isTransformedAnswerMode = isDoubleNegativeMode || isParaphraseMode;
 
   if (!originalExpression) {
     return { success: false, data: ai, warnings, error: "Missing originalExpression field" };
@@ -38,7 +39,7 @@ export function processBlankInference(
   }
 
   // Validate: in default mode the correct answer option's text should equal originalExpression.
-  // In double-negative mode, originalExpression is still the source span to blank,
+  // In transformed modes, originalExpression is still the source span to blank,
   // but the visible correct option is intentionally transformed.
   if (options && Array.isArray(options)) {
     const correctOption = options.find((o) => o.label === correctAnswer);
@@ -95,6 +96,7 @@ function processMultiBlankInference(
   ai: QuestionPostProcessData,
 ): PostProcessResult {
   const warnings: string[] = [];
+  const isParaphraseMode = ai.blankAnswerMode === "PARAPHRASE";
 
   const rawBlanks = (ai.blanks as Array<{
     label?: string;
@@ -210,7 +212,8 @@ function processMultiBlankInference(
     };
   }
 
-  // The correct option must restore the original passage expressions.
+  // The correct option must restore the original passage expressions unless
+  // the teacher requested paraphrased blank values.
   const correctLabel = cleanText(ai.correctAnswer);
   const correctOption = normalizedOptions.find((option) => option.label === correctLabel);
   if (!correctOption) {
@@ -225,18 +228,23 @@ function processMultiBlankInference(
     (value, index) =>
       comparableText(value) === comparableText(normalizedBlanks[index].originalExpression),
   );
-  if (!matchesSource) {
+  if (!matchesSource && !isParaphraseMode) {
     warnings.push(
       "Multi-blank correct option did not match the source expressions; auto-fixed to the verbatim passage expressions.",
     );
     correctOption.blankValues = normalizedBlanks.map((blank) => blank.originalExpression);
     correctOption.text = correctOption.blankValues.join(" …… ");
+  } else if (matchesSource && isParaphraseMode) {
+    warnings.push(
+      "PARAPHRASE mode expected transformed correct blankValues, but the correct option matches the source expressions.",
+    );
   }
 
   return {
     success: true,
     data: {
       ...ai,
+      blankAnswerMode: isParaphraseMode ? "PARAPHRASE" : ai.blankAnswerMode,
       blanks: normalizedBlanks,
       passageWithBlank,
       options: normalizedOptions,

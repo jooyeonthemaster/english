@@ -76,6 +76,8 @@ import {
   TaskQueueInlineList,
   type BaseTask,
 } from "@/components/workbench/task-queue";
+import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
+import type { PendingExtraction } from "@/app/(director)/director/workbench/generate/intake/use-generate-extraction";
 import { useBulkActions } from "./hooks/use-bulk-actions";
 import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
@@ -103,10 +105,9 @@ interface ExtractionManageClientProps {
   onSelectDraftExternal?: (draft: M1PassageDraftWithJob) => void;
   /** Highlighted draft id when an external picker controls selection. */
   selectedExternalDraftId?: string | null;
-  /** Highlighted draft ids when an external picker allows multi-selection
-   *  (e.g. the passage-registration center stack). Takes precedence over
-   *  selectedExternalDraftId for highlighting when provided. */
-  selectedExternalDraftIds?: Set<string>;
+  /** 임베더(학습지 생성) 워크스페이스에 이미 불러와 있는 드래프트 id — 해당
+   *  자료 카드에 은은한 '불러옴' 표시를 입힌다. */
+  loadedExternalDraftIds?: string[];
   /** Optional bridge used by the passage-registration embed to register and
    *  analyze extraction drafts without copying them into the editor first. */
   onBulkAnalyze?: (
@@ -114,12 +115,25 @@ interface ExtractionManageClientProps {
     generationPlan: QuestionGenerationPlan,
   ) => Promise<void>;
   bulkAnalyzing?: boolean;
+  /** Embedder bridge (학습지 생성): load the checked drafts into the right
+   *  "지문" annotation stack as rows. When provided, the grid shows a
+   *  "선택 불러오기" action instead of the 일괄 분석 button — analysis then runs
+   *  from the right section after the teacher marks each passage. */
+  onLoadSelectedDrafts?: (drafts: M1PassageDraftWithJob[]) => void;
   /** 마키(영역 드래그) 시작 영역 경계. 임베드(자료 관리 패널)처럼 한 화면에 다른
    *  선택 영역(예: 지문 목록 큐)과 함께 놓일 때, 영역이 섞이지 않도록 이 패널만의
    *  경계를 지정한다. 미지정 시 DragSelect 가 전역 기본 경계(본문)를 쓴다. */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
   /** Page-specific copy for draft card action buttons. Defaults to 상세보기. */
   draftDetailActionMode?: "detail" | "import";
+  /** Bumped by an embedder when a new extraction job is created/completed, to
+   *  force an immediate job-meta + drafts refetch (used by the 학습지 생성
+   *  intake so freshly-extracted 자료 cards appear without the 30s poll lag). */
+  refreshToken?: number;
+  /** Session in-flight extractions from the embedder's useCreateExtraction.
+   *  Merged with server jobMeta to render IMMEDIATE "추출 중" skeleton cards in
+   *  the grid (session covers the gap before the server poll sees the job). */
+  sessionPending?: PendingExtraction[];
 }
 
 const MATERIAL_GRID_OPTIONS = [
@@ -206,11 +220,14 @@ export function ExtractionManageClient({
   embedded = false,
   onSelectDraftExternal,
   selectedExternalDraftId = null,
-  selectedExternalDraftIds,
+  loadedExternalDraftIds,
   onBulkAnalyze,
   bulkAnalyzing = false,
+  onLoadSelectedDrafts,
   marqueeBoundaryRef,
   draftDetailActionMode = "detail",
+  refreshToken = 0,
+  sessionPending = [],
 }: ExtractionManageClientProps) {
   const draftDetailAction =
     draftDetailActionMode === "import"
@@ -219,11 +236,18 @@ export function ExtractionManageClient({
   void academyId;
 
   const externallyPicking = typeof onSelectDraftExternal === "function";
+  const loadedExternalDraftIdSet = useMemo(
+    () => new Set(loadedExternalDraftIds ?? []),
+    [loadedExternalDraftIds],
+  );
 
   const queueDrawer = useQueueDrawer();
 
   // ─── Data hook (state + loaders + polling) ───
-  const data = useDraftsData({ onJobsRefresh: queueDrawer.triggerRefresh });
+  const data = useDraftsData({
+    onJobsRefresh: queueDrawer.triggerRefresh,
+    refreshToken,
+  });
 
   // ─── Folder manager ───
   const folders = useFolderManager({
@@ -252,8 +276,10 @@ export function ExtractionManageClient({
   const [taskSearchValue, setTaskSearchValue] = useState("");
   const [taskStatusFilter, setTaskStatusFilter] =
     useState<TaskStatusFilter>("ALL");
-  const [taskAnalysisFilter, setTaskAnalysisFilter] =
-    useState<TaskAnalysisFilter>("all");
+  // setter dropped: the analysis filter was only set by the embedded job-card
+  // toolbar, which the 학습지 생성 panel no longer renders (it shows individual
+  // draft cards now). The standalone task view doesn't use this filter.
+  const [taskAnalysisFilter] = useState<TaskAnalysisFilter>("all");
   const [taskSortOrder, setTaskSortOrder] = useState<TaskSortOrder>(
     readStoredTaskSortOrder,
   );
@@ -374,14 +400,48 @@ export function ExtractionManageClient({
   }, [data.drafts, folders.activeFolder, folders.membership]);
 
   // ─── Display hook (filter/sort/jobFilter + derived state) ───
+  // NOTE: prioritizeAnalysisNeeded is intentionally OFF — it floated "미분석"
+  // drafts to the top, which pushed a freshly-extracted draft DOWN whenever it
+  // got auto-tagged "분석완료" by content-match (a same-text passage analyzed
+  // earlier). Users expect what they just extracted to appear first, so the
+  // grid now follows the plain sort order (newest-first by default).
   const display = useDraftDisplay({
     drafts: data.drafts,
     draftsInActiveFolder,
     activeFolder: folders.activeFolder,
     jobMetaByJobId: data.jobMetaByJobId,
-    prioritizeAnalysisNeeded: embedded,
+    prioritizeAnalysisNeeded: false,
   });
   const { gridCols, setGridCols } = display;
+
+  // ─── In-progress extraction skeleton count (embedded 학습지 생성 only) ───
+  // Combines two sources so the "추출 중" cards are BOTH immediate AND robust:
+  //  • SESSION (sessionPending): the upload this tab just started — shows the
+  //    instant 추출 시작 is pressed, before any server poll. Covers the jobId-less
+  //    pre-creation moment and the gap before the first jobMeta poll.
+  //  • SERVER (jobMeta availableJobs, PENDING/PROCESSING): survives refresh and
+  //    surfaces jobs started elsewhere. Authoritative once it sees a job.
+  // Deduped by jobId (a job tracked by the server poll is dropped from the
+  // session tally) so a job never double-counts. Per-job skeleton count =
+  // REMAINING expected passages (totalPages − already-extracted), so the
+  // skeletons + the real DraftCards always sum to N (no overlap on partial
+  // completion). The skeleton cards render in-grid with the real DraftCard shape.
+  const inProgressCount = useMemo(() => {
+    if (!embedded) return 0;
+    const activeJobs = display.availableJobs.filter((j) =>
+      ACTIVE_STATUSES.has(mapJobStatusToTaskStatus(j.status)),
+    );
+    const activeJobIds = new Set(activeJobs.map((j) => j.jobId));
+    const serverRemaining = activeJobs.reduce(
+      (sum, j) => sum + Math.max(0, (j.totalPages || 0) - j.count),
+      0,
+    );
+    const sessionRemaining = sessionPending
+      .filter((p) => !p.jobId || !activeJobIds.has(p.jobId))
+      .reduce((sum, p) => sum + Math.max(1, p.count), 0);
+    return serverRemaining + sessionRemaining;
+  }, [embedded, display.availableJobs, sessionPending]);
+
   const reviewDrawerOpen = reviewingJobId !== null;
   const materialGridCols =
     reviewDrawerOpen && gridCols === "grid3" ? "grid2" : gridCols;
@@ -458,11 +518,16 @@ export function ExtractionManageClient({
   const isAllMaterialsView =
     folders.activeFolder === null && data.resultScope === "all";
 
-  // In the all-materials view, "전체 선택" should cover the drafts of every
-  // currently-visible task card. Elsewhere, fall back to the filtered drafts
-  // list that the draft grid renders directly.
+  // Standalone (/import/jobs) keeps the JOB-GROUPED task cards at the 전체 자료
+  // root. The embedded 학습지 생성 picker instead unpacks every 자료 into its own
+  // DraftCard (문제 생성 페이지와 동일), so the job-card path is gated to !embedded.
+  const showJobCards = isAllMaterialsView && !embedded;
+
+  // In the job-card view, "전체 선택" should cover the drafts of every
+  // currently-visible task card. Elsewhere (folder view, or the embedded draft
+  // grid), fall back to the filtered drafts list the draft grid renders.
   const getDisplayedIds = useCallback(() => {
-    if (isAllMaterialsView) {
+    if (showJobCards) {
       const ids: string[] = [];
       for (const task of visibleTasks) {
         const draftIds = draftIdsByJobId.get(task.id);
@@ -472,7 +537,7 @@ export function ExtractionManageClient({
     }
     return display.displayedDrafts.map((d) => d.id);
   }, [
-    isAllMaterialsView,
+    showJobCards,
     visibleTasks,
     draftIdsByJobId,
     display.displayedDrafts,
@@ -674,6 +739,16 @@ export function ExtractionManageClient({
     setReanalyzeDialogOpen(open);
     if (!open) setPendingBulkAnalysisDrafts(null);
   }, []);
+
+  // ─── Load checked drafts into the embedder's right "지문" stack ───
+  // Mirrors the bulk-analyze selection (actionTargetIds → drafts with content)
+  // but hands them to the parent to render as editable, markable rows instead
+  // of submitting them to analysis directly.
+  const handleLoadSelected = useCallback(() => {
+    if (!onLoadSelectedDrafts || bulkAnalysisRunnableDrafts.length === 0) return;
+    onLoadSelectedDrafts(bulkAnalysisRunnableDrafts);
+    clearActionSelection();
+  }, [onLoadSelectedDrafts, bulkAnalysisRunnableDrafts, clearActionSelection]);
 
   const rejectReanalysis = useCallback(() => {
     if (pendingUnanalyzedDrafts.length === 0) {
@@ -938,7 +1013,7 @@ export function ExtractionManageClient({
     </button>
   );
 
-  const totalSelectableCount = isAllMaterialsView
+  const totalSelectableCount = showJobCards
     ? visibleTasks.reduce(
         (sum, task) => sum + (draftIdsByJobId.get(task.id)?.length ?? 0),
         0,
@@ -1155,26 +1230,15 @@ export function ExtractionManageClient({
                   resultScope={data.resultScope}
                   onBackToAllResults={showAllResults}
                   toolbar={
-                    embedded && isAllMaterialsView ? (
-                      <ManageFiltersBarTasks
-                        variant="all"
-                        compact
-                        searchValue={taskSearchValue}
-                        onSearchChange={setTaskSearchValue}
-                        resultCount={visibleTasks.length}
-                        statusFilter={taskStatusFilter}
-                        onStatusFilterChange={setTaskStatusFilter}
-                        sortOrder={taskSortOrder}
-                        onSortOrderChange={setTaskSortOrder}
-                        analysisFilter={taskAnalysisFilter}
-                        onAnalysisFilterChange={setTaskAnalysisFilter}
-                      />
-                    ) : undefined
+                    // 임베드(학습지 생성)는 잡 카드 대신 개별 자료(DraftGrid)를 보여주므로
+                    // 잡 단위 검색/필터 툴바를 두지 않는다 — 자료 검색은 DraftGrid 의
+                    // filtersToolbar 가 담당한다. (standalone 은 원래 이 슬롯이 undefined.)
+                    undefined
                   }
                 />
               </div>
 
-              {isAllMaterialsView ? (
+              {showJobCards ? (
                 <div
                   style={
                     embedded ? undefined : { top: materialToolbarStickyTop }
@@ -1239,7 +1303,7 @@ export function ExtractionManageClient({
                 </div>
               ) : null}
 
-              {isAllMaterialsView ? (
+              {showJobCards ? (
                 embedded ? (
                   <EmbeddedJobCardGrid
                     jobs={display.availableJobs}
@@ -1313,6 +1377,7 @@ export function ExtractionManageClient({
                   <DraftGrid
                     marqueeBoundaryRef={marqueeBoundaryRef}
                     gridOnly={embedded}
+                    inProgressCount={inProgressCount}
                     drafts={display.displayedDrafts}
                     loading={data.loadingDetails && data.drafts.length === 0}
                     hasAnyDraft={data.drafts.length > 0}
@@ -1324,10 +1389,8 @@ export function ExtractionManageClient({
                         ? selectedExternalDraftId
                         : data.selectedDraftId
                     }
-                    selectedDraftIds={
-                      externallyPicking ? selectedExternalDraftIds : undefined
-                    }
                     lastViewedDraftId={data.lastViewedDraftId}
+                    loadedDraftIds={loadedExternalDraftIdSet}
                     checkedIds={selectedIds}
                     setCheckedIds={setSelectedIds}
                     gridCols={materialGridCols}
@@ -1340,6 +1403,14 @@ export function ExtractionManageClient({
                             if (draft) onSelectDraftExternal!(draft);
                           }
                         : data.openDraftDetail
+                    }
+                    // When an external picker owns the primary action (가져오기 →
+                    // editor), expose a SECOND "지문 전체 보기" affordance that opens
+                    // the 복원 근거 detail modal — matching the 문제 생성 page. In
+                    // standalone, the primary button already opens detail, so no
+                    // second button is needed.
+                    onOpenDetail={
+                      externallyPicking ? data.openDraftDetail : undefined
                     }
                     onToggleCheck={toggleSelect}
                     onToggleGroupCheck={toggleGroupCheck}
@@ -1357,6 +1428,7 @@ export function ExtractionManageClient({
                     onRenameDraft={actions.updateDraftTitle}
                     onRenameSourceMaterial={actions.renameSourceMaterial}
                     statusBadgeMode={embedded ? "analysis" : "review"}
+                    flatCards={embedded}
                     detailAction={draftDetailAction}
                     groupIndexBySourceMaterialId={
                       display.groupIndexBySourceMaterialId
@@ -1395,7 +1467,29 @@ export function ExtractionManageClient({
                 </div>
               )}
             </section>
-            {onBulkAnalyze ? (
+            {onLoadSelectedDrafts ? (
+              <div className="shrink-0 pt-2">
+                <button
+                  type="button"
+                  onClick={handleLoadSelected}
+                  disabled={bulkAnalysisRunnableDrafts.length === 0}
+                  title={
+                    bulkAnalysisRunnableDrafts.length === 0
+                      ? "불러올 자료를 선택하세요."
+                      : `선택한 ${bulkAnalysisRunnableDrafts.length}개 지문을 오른쪽 지문 섹션으로 불러옵니다. 마킹·복원 후 분석을 시작하세요.`
+                  }
+                  className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-white"
+                >
+                  <ArrowDownToLine className="size-4" aria-hidden="true" />
+                  <span>선택 지문 불러오기</span>
+                  {bulkAnalysisRunnableDrafts.length > 0 ? (
+                    <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
+                      {bulkAnalysisRunnableDrafts.length}개 선택
+                    </span>
+                  ) : null}
+                </button>
+              </div>
+            ) : onBulkAnalyze ? (
               <div className="shrink-0 pt-2">
                 <button
                   type="button"
@@ -1479,9 +1573,6 @@ export function ExtractionManageClient({
             externalSelectedDraftId={
               externallyPicking ? selectedExternalDraftId : null
             }
-            externalSelectedDraftIds={
-              externallyPicking ? selectedExternalDraftIds : undefined
-            }
             onSelectDraftExternal={
               externallyPicking ? onSelectDraftExternal : undefined
             }
@@ -1557,6 +1648,7 @@ type AvailableJob = {
   createdAt: number | null;
   thumbnailUrl?: string | null;
   status?: string | null;
+  totalPages?: number;
 };
 
 function mapJobStatusToTaskStatus(

@@ -116,3 +116,10 @@ google-credentials*.json
 
 # demo screen recordings (large binaries)
 /public/recordings/*.webm
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Local analysis dumps
+docs/grammar_1000_analysis/
