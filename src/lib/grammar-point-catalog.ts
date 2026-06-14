@@ -10,6 +10,8 @@
 // pointCode 체계(a~m)는 기존 스키마/후처리/렌더러와 공유되므로 변경하지 않는다.
 // ============================================================================
 
+import { describeGrammarMinimalPairs } from "./grammar-minimal-pairs";
+
 export type GrammarPointCode =
   | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m";
 
@@ -418,11 +420,16 @@ export function buildGrammarPointGuidance(
               } 순서로 시도하세요. 순위를 건너뛰고 다른 포인트로 가지 마세요.`
             : " 지문에 그 문법 구조가 없을 때만 코어 목록의 다른 포인트를 사용하세요."
         } 같은 지문에서 정답 포인트가 반복되지 않게 하세요.`,
-        ...designated.flatMap((code) =>
-          GRAMMAR_POINT_CATALOG[code].traps
+        ...designated.flatMap((code) => {
+          const trapHints = GRAMMAR_POINT_CATALOG[code].traps
             .slice(0, 2)
-            .map((trap) => `  · 지정 포인트 설계 힌트: ${trap}`),
-        ),
+            .map((trap) => `  · 지정 포인트 설계 힌트: ${trap}`);
+          // 기출 1000제 최소대립쌍 — 이 포인트의 검증된 오류 변형 방향.
+          const pairs = describeGrammarMinimalPairs(code);
+          return pairs
+            ? [...trapHints, `  · 기출 검증 오류 변형(이 방향으로 오류를 만드세요): ${pairs}`]
+            : trapHints;
+        }),
       ]
     : [];
 
@@ -445,5 +452,8 @@ export function buildGrammarPointGuidance(
     "- ⚠️ 원문 표현 자체가 표준 규범과 어긋나 보이거나 어법 논쟁이 있는 자리(예: 복수 주어 + 동격 each 뒤 동사의 수, 집합명사 수일치, 사용역에 따라 갈리는 변이형)는 정답으로도 디코이로도 밑줄을 긋지 마세요. 원문을 오류로 판정하지 말고, 의심스러운 자리는 피해서 다른 곳에 출제하세요.",
     "- 자기검증: 각 밑줄의 pointCode 는 그 밑줄의 해설(wrongOptionExplanations/explanation)이 설명하는 문법 범주와 일치해야 합니다. 분사구문 능수동이면 (c), 수일치면 (d), 명사절·관계절의 that/what 은 (b)입니다. 제출 전 5개 밑줄의 코드-해설 일치를 확인하세요.",
     "- 정답·디코이 모두 문장 전체 구조를 읽어야 판단되는 자리여야 합니다. 단어 하나만 보고 판단되는 자리(관사, 단순 전치사, 철자, 조동사 바로 옆 원형)는 금지.",
-  ].join("\n");
+    mode === "judgment"
+      ? "- 🚫 시제만 바꾸는 변형 금지: 기출 1000제 정답 오류에 '현재↔과거 시제 단독 교체'(예: realizes→realized, outpaces→outpaced)는 검증되지 않은 변형입니다. 문맥상 두 시제가 모두 가능해 정답 시비가 됩니다. 오류는 위 기출 검증 변형 방향(수일치·관계사·분사 능수동·형부 등)으로만 만드세요."
+      : "",
+  ].filter(Boolean).join("\n");
 }

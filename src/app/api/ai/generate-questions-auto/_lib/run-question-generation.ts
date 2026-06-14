@@ -132,6 +132,8 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-marker-adjacent-duplicate",
   "grammar-marker-context-mismatch",
   "grammar-surrounding-missing-marker",
+  // 시제 단독변경(realizes↔realized)은 문맥상 두 시제 가능 = 정답 시비. 차단.
+  "grammar-tense-only-error",
   // 네모 어법 — 세 슬롯 전부가 정답 키를 구성하므로 슬롯/조합 결함은 전부
   // 정답 무효급. relaxed 폴백에서도 출하 금지.
   "combo-slot-count",

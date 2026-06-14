@@ -994,6 +994,51 @@ function stripAgreementSuffix(value: string): string {
   return lower;
 }
 
+/** be/have/do/조동사 — 시제 단독변경 게이트에서 제외(수일치·법조동사 변형은 합법). */
+const TENSE_GATE_EXCLUDED = new Set([
+  "is", "are", "was", "were", "be", "been", "being", "am",
+  "has", "have", "had", "do", "does", "did",
+  "will", "would", "shall", "should", "can", "could", "may", "might", "must",
+]);
+
+/** 동사 어간 후보 — 굴절형마다 가능한 원형 후보를 모은다(묵음 e·중복자음·-ies 대응). */
+function verbStemCandidates(w: string): Set<string> {
+  const c = new Set<string>([w]);
+  if (/ied$/.test(w) && w.length > 3) c.add(`${w.slice(0, -3)}y`);
+  if (/ed$/.test(w) && w.length > 3) {
+    c.add(w.slice(0, -2)); // walked→walk
+    c.add(w.slice(0, -1)); // outpaced→outpace (묵음 e 동사: base+d)
+    c.add(w.slice(0, -2).replace(/([bdgklmnprt])\1$/, "$1")); // stopped→stop
+  }
+  if (/ies$/.test(w) && w.length > 4) c.add(`${w.slice(0, -3)}y`);
+  if (/(?:ches|shes|sses|xes|zes|oes)$/.test(w) && w.length > 4) c.add(w.slice(0, -2));
+  if (/s$/.test(w) && !/ss$/.test(w) && w.length > 3) {
+    c.add(w.slice(0, -1)); // outpaces→outpace, walks→walk
+    c.add(w.slice(0, -2)); // -es 흡수
+  }
+  return c;
+}
+
+/**
+ * 시제 단독변경 감지 — 같은 동사 어간의 현재(3인칭 -s 또는 원형)↔과거(-ed).
+ * 정답 시비를 만드는 비검증 변형(realizes↔realized·outpaces↔outpaced).
+ * 수일치(be/have/do)·법조동사는 제외. 불규칙 과거(spend↔spent)는 미커버.
+ */
+function isTenseOnlyMutation(expression: string, errorExpression: string): boolean {
+  const a = normalizeText(expression).toLowerCase();
+  const b = normalizeText(errorExpression).toLowerCase();
+  if (!/^[a-z]+$/.test(a) || !/^[a-z]+$/.test(b) || a === b) return false;
+  if (TENSE_GATE_EXCLUDED.has(a) || TENSE_GATE_EXCLUDED.has(b)) return false;
+  // 한쪽은 과거(-ed), 다른쪽은 비과거(원형 또는 3인칭 -s)여야 시제 변형.
+  if (/ed$/.test(a) === /ed$/.test(b)) return false;
+  const ca = verbStemCandidates(a);
+  const cb = verbStemCandidates(b);
+  for (const stem of ca) {
+    if (stem.length >= 3 && cb.has(stem)) return true;
+  }
+  return false;
+}
+
 function isThinKillerGrammarErrorTarget(markedExpression: Record<string, unknown>): boolean {
   const expression = normalizeText(markedExpression.expression);
   const errorExpression = normalizeText(markedExpression.errorExpression);
@@ -1360,6 +1405,25 @@ const EXPLANATION_META_LEAK_PATTERN =
 function explanationLeaksMutationProcess(explanation: string): boolean {
   if (!explanation) return false;
   return EXPLANATION_META_LEAK_PATTERN.test(explanation) || /잘못\s*변형(?:한|된|하여|해서)/.test(explanation);
+}
+
+/**
+ * 어법 해설의 메타 누출 — 출제 과정 서술 또는 생성 지침 어휘.
+ * 어휘용보다 넓게: 다중어 타깃("to interact")·과거형 어미(변형하였습니다)·
+ * 생성 지침 어휘(지시문/가이드라인/함정으로/유도하는 함정/포인트를 활용/출제 의도).
+ */
+function grammarExplanationLeaksMeta(text: string): boolean {
+  if (!text) return false;
+  // 생성 지침 어휘 — 학생 해설에 절대 등장하면 안 됨.
+  if (/지시문|가이드라인|출제\s*의도|유도하는\s*함정|함정으로\s*(?:만들|변형|유도|구성)|포인트를\s*활용|타깃\s*포인트|타고전/.test(text)) {
+    return true;
+  }
+  // 출제 과정 서술: "X(를) Y(로) (잘못) 변형/바꾸/치환/교체 + 하였/했/한/된/하여/해서/시켰/시킨".
+  // 타깃 Y 는 다중어(to interact 등)도 허용.
+  if (/['"]?[A-Za-z][A-Za-z'\- ]*['"]?\s*(?:을|를)\s*['"]?[A-Za-z][A-Za-z'\- ]*['"]?\s*(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|바꾼|치환|교체|변경)(?:하였|했|한|된|하여|해서|시켰|시킨)/.test(text)) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -2816,6 +2880,16 @@ function validateTypeSpecific(
       if (errorExpression && expression && errorExpression === expression) {
         add("error", "grammar-error-not-mutated", "The grammar error surface matches the original expression.");
       }
+      // 시제 단독변경(현재 3인칭↔과거, 같은 어간)은 기출 검증 변형이 아니며
+      // 문맥상 두 시제가 모두 가능해 정답 시비가 된다 (실측: outpaces→outpaced).
+      // 수일치(is/are·has/have)는 별도로 제외 — 그건 합법 변형(d).
+      if (expression && errorExpression && isTenseOnlyMutation(expression, errorExpression)) {
+        add(
+          "error",
+          "grammar-tense-only-error",
+          `The grammar error is a tense-only change ("${expression}" ↔ "${errorExpression}"), which is contextually disputable; use a proven mutation type instead.`,
+        );
+      }
       if (correction && expression && correction !== expression) {
         add("warning", "grammar-correction-differs-from-source", "The correction differs from the original expression; verify the model did not rewrite acceptable source text.");
       }
@@ -2841,6 +2915,16 @@ function validateTypeSpecific(
       /\b(?:ask|asking|require|requires|spend|spent|developing)\b\s*(?:은|는|이|가|을|를|도)?\s*전치사/i.test(grammarExplanationText)
     ) {
       add("error", "grammar-category-mislabel", "Grammar explanation mislabels a verb form as a preposition.");
+    }
+    // 메타 누출: 해설이 출제 과정/생성 지침을 학생에게 노출(실측 u6:
+    // "지시문 가이드라인의 1순위 포인트인 ...를 활용하여 ... 함정으로 X를 Y로
+    // 잘못 변형하였습니다"). 학생 해설은 왜 그 형태가 어법상 틀린지만 설명해야 함.
+    if (grammarExplanationLeaksMeta(grammarExplanationText)) {
+      add(
+        "warning",
+        "grammar-explanation-meta-leak",
+        "Grammar explanation narrates the generation process or instruction (지시문/가이드라인/함정으로/X를 Y로 변형) instead of explaining the grammar from the student's view.",
+      );
     }
   }
 
