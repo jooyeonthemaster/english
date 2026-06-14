@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { type WebtoonRow, styleLabel } from "./webtoon-page-types";
+import { type WebtoonRow, styleLabel, languageLabel } from "./webtoon-page-types";
 
 interface WebtoonQueueCardProps {
   item: WebtoonRow;
@@ -34,7 +34,9 @@ export function WebtoonQueueCard({ item, onRetry, onRemove }: WebtoonQueueCardPr
             <h4 className="text-[13px] font-semibold text-slate-800 truncate">
               {item.passage.title}
             </h4>
-            <p className="text-[10.5px] text-slate-400 mt-0.5">{styleLabel(item.style)}</p>
+            <p className="text-[10.5px] text-slate-400 mt-0.5">
+              {styleLabel(item.style)} · {languageLabel(item.language)}
+            </p>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             <StatusBadge status={item.status} />
@@ -177,7 +179,9 @@ function PreviewModal({ item, onClose }: { item: WebtoonRow; onClose: () => void
         <div className="flex items-center justify-between gap-3 sticky top-0 z-10 bg-black/30 backdrop-blur-md rounded-lg px-3 py-2">
           <div className="text-white min-w-0 flex-1">
             <h3 className="text-[14px] font-bold truncate">{item.passage.title}</h3>
-            <p className="text-[11px] text-white/70 mt-0.5">{styleLabel(item.style)}</p>
+            <p className="text-[11px] text-white/70 mt-0.5">
+              {styleLabel(item.style)} · {languageLabel(item.language)}
+            </p>
           </div>
           <a
             href={downloadHref(item)}

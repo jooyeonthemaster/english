@@ -1017,15 +1017,6 @@ export function GeneratePageClient({
   }, [selectedPassage?.id]);
 
   // ── Handlers ──
-  const setTypeCount = useCallback((id: string, count: number) => {
-    setTypeCounts((prev) => {
-      const next = { ...prev };
-      if (count <= 0) delete next[id];
-      else next[id] = count;
-      return next;
-    });
-  }, []);
-
   const handleSelectPassage = useCallback((p: PassageItem) => {
     setSelectedPassage(p);
   }, []);
@@ -1943,17 +1934,14 @@ export function GeneratePageClient({
               genMode={genMode}
               setGenMode={setGenMode}
               generationPlan={generationPlan}
-              setGenerationPlan={setGenerationPlan}
               autoCount={autoCount}
               setAutoCount={setAutoCount}
               typeCounts={typeCounts}
-              setTypeCount={setTypeCount}
               setTypeCounts={setTypeCounts}
               questionTypeSettings={questionTypeSettings}
               setQuestionTypeSettings={setQuestionTypeSettings}
               totalQuestions={totalQuestions}
               difficulty={difficulty}
-              setDifficulty={setDifficulty}
               customPrompt={customPrompt}
               setCustomPrompt={setCustomPrompt}
               savedPrompts={savedPrompts}

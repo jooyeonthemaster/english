@@ -5,6 +5,12 @@ import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { requireAuth, getAcademyId } from "./_helpers";
 import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
+import {
+  getQuestionGenerationPlanFromTags,
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import type {
   WorkbenchQuestionFilters,
   ActionResult,
@@ -14,6 +20,66 @@ import type {
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function readQuestionTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) {
+    return rawTags
+      .filter((tag): tag is string => typeof tag === "string")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof rawTags !== "string") return [];
+  const trimmed = rawTags.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .filter((tag): tag is string => typeof tag === "string")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+    }
+  } catch {
+    // Fall through to comma-separated tag parsing.
+  }
+
+  return trimmed
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+function readGenerationPlanFromStructuredData(
+  structuredData: unknown,
+): QuestionGenerationPlan | null {
+  if (!isRecord(structuredData)) return null;
+  const plan = structuredData._generationPlan;
+  return plan === "PREMIUM" || plan === "STANDARD"
+    ? normalizeQuestionGenerationPlan(plan)
+    : null;
+}
+
+function enrichGeneratedQuestionPlanMetadata(q: SaveQuestionData) {
+  const incomingTags = readQuestionTags(q.tags);
+  const plan =
+    readGenerationPlanFromStructuredData(q.structuredData) ??
+    getQuestionGenerationPlanFromTags(incomingTags);
+  const tags = plan
+    ? mergeQuestionGenerationPlanTag(incomingTags, plan)
+    : incomingTags;
+  const structuredData =
+    plan && isRecord(q.structuredData)
+      ? { ...q.structuredData, _generationPlan: plan, tags }
+      : q.structuredData;
+
+  return { tags, structuredData };
 }
 
 function buildWorkbenchQuestionWhere(
@@ -400,6 +466,7 @@ export async function saveGeneratedQuestions(
     // Use $transaction to batch all question + explanation creates in one roundtrip
     await prisma.$transaction(async (tx) => {
       for (const q of questions) {
+        const planMetadata = enrichGeneratedQuestionPlanMetadata(q);
         const question = await tx.question.create({
           data: {
             academyId,
@@ -407,12 +474,14 @@ export async function saveGeneratedQuestions(
             type: q.type,
             subType: q.subType || null,
             questionText: q.questionText || "",
-            structuredData: toPrismaJson(q.structuredData),
+            structuredData: toPrismaJson(planMetadata.structuredData),
             options: stringifyOptionsForCreate(q.subType || null, q.options),
             correctAnswer: q.correctAnswer || "",
             points: q.points || 1,
             difficulty: q.difficulty || "INTERMEDIATE",
-            tags: typeof q.tags === "string" ? q.tags : q.tags ? JSON.stringify(q.tags) : null,
+            tags: planMetadata.tags.length > 0
+              ? JSON.stringify(planMetadata.tags)
+              : null,
             aiGenerated: q.aiGenerated ?? true,
             approved: false,
           },
@@ -450,18 +519,52 @@ export async function updateWorkbenchQuestion(
   try {
     await requireAuth();
 
+    const currentQuestion =
+      data.tags !== undefined || data.structuredData !== undefined
+        ? await prisma.question.findUnique({
+            where: { id: questionId },
+            select: { tags: true, structuredData: true },
+          })
+        : null;
+    const incomingTags =
+      data.tags !== undefined ? readQuestionTags(data.tags) : undefined;
+    const existingTags = readQuestionTags(currentQuestion?.tags);
+    const metadataStructuredData =
+      data.structuredData !== undefined
+        ? data.structuredData
+        : currentQuestion?.structuredData;
+    const plan =
+      readGenerationPlanFromStructuredData(metadataStructuredData) ??
+      getQuestionGenerationPlanFromTags(incomingTags ?? existingTags);
+    const updateTags =
+      incomingTags !== undefined
+        ? plan
+          ? mergeQuestionGenerationPlanTag(incomingTags, plan)
+          : incomingTags
+        : undefined;
+    const updateStructuredData =
+      data.structuredData !== undefined
+        ? plan && isRecord(data.structuredData)
+          ? {
+              ...data.structuredData,
+              _generationPlan: plan,
+              tags: updateTags ?? mergeQuestionGenerationPlanTag(existingTags, plan),
+            }
+          : data.structuredData
+        : undefined;
+
     await prisma.question.update({
       where: { id: questionId },
       data: {
         type: data.type,
         subType: data.subType,
         questionText: data.questionText,
-        structuredData: toPrismaJson(data.structuredData),
+        structuredData: toPrismaJson(updateStructuredData),
         options: stringifyOptionsForUpdate(data.subType, data.options),
         correctAnswer: data.correctAnswer,
         points: data.points,
         difficulty: data.difficulty,
-        tags: data.tags ? JSON.stringify(data.tags) : undefined,
+        tags: updateTags !== undefined ? JSON.stringify(updateTags) : undefined,
       },
     });
 

@@ -90,10 +90,7 @@ export function TutorPublishForm({
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button asChild variant="outline" size="sm" className="rounded-lg border-blue-200 bg-white text-blue-700 hover:bg-blue-50">
-                <Link href="/director/students">학생·반 관리로 이동</Link>
-              </Button>
-              <Button asChild variant="outline" size="sm" className="rounded-lg border-blue-200 bg-white text-blue-700 hover:bg-blue-50">
-                <Link href="/director/students?pane=classes">반 편성으로 이동</Link>
+                <Link href="/director/tutor">튜터 운영 홈으로 이동</Link>
               </Button>
             </div>
           </div>

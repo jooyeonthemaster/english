@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loginTutorStudent } from "@/lib/auth-tutor-student";
+import { loginTutorStudent, DEVICE_LIMIT_EXCEEDED, TUTOR_DEVICE_LIMIT } from "@/lib/auth-tutor-student";
 import { prisma } from "@/lib/prisma";
 
 const WINDOW_MS = 60_000;
@@ -48,7 +48,16 @@ export async function POST(req: NextRequest) {
 
     const session = await loginTutorStudent({ academySlug, academyCode, studentCode });
     return NextResponse.json({ ok: true, studentId: session.studentId });
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === DEVICE_LIMIT_EXCEEDED) {
+      return NextResponse.json(
+        {
+          error: `등록된 기기 ${TUTOR_DEVICE_LIMIT}대를 초과했습니다. 학원에 기기 해제를 요청하세요.`,
+          code: DEVICE_LIMIT_EXCEEDED,
+        },
+        { status: 403 },
+      );
+    }
     return NextResponse.json({ error: "로그인 정보를 확인해주세요." }, { status: 401 });
   }
 }

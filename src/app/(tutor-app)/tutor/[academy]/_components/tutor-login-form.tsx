@@ -28,7 +28,12 @@ export function TutorLoginForm({
         body: JSON.stringify({ academySlug, academyCode, studentCode }),
       });
       if (!res.ok) {
-        setError("로그인 정보를 확인해주세요.");
+        const data = await res.json().catch(() => null);
+        setError(
+          typeof data?.error === "string" && data.error
+            ? data.error
+            : "로그인 정보를 확인해주세요.",
+        );
         return;
       }
       router.push(tutorPath(academySlug, "/study"));

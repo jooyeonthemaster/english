@@ -3199,6 +3199,7 @@ model Webtoon {
   createdById String // staff.id
 
   style        String // "KOREAN_WEBTOON" | "PIXAR_3D" | "GHIBLI" | "MANHWA_ROMANCE" | "REALISTIC"
+  language     String  @default("KO") // "KO" | "KO_EN" | "EN" | "EN_KO_GLOSS" — 대사/나레이션 언어
   customPrompt String? @db.Text
 
   status      String  @default("PENDING")

@@ -10,6 +10,7 @@ import {
 } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
 import type { PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 
+import { generateStructuredFromSpec } from "./generator-structured";
 import type { CompiledCustomType } from "./types";
 
 export interface GenerateFromCustomTypeArgs {
@@ -461,6 +462,31 @@ export async function generateFromCustomType(
   // 이 분기를 유지한다. 해당 spec 이 모두 소거되면 generateBuiltinOverride 와 함께 삭제.
   if (args.spec.tier === "BUILTIN_OVERRIDE") {
     return generateBuiltinOverride(args);
+  }
+  // v2: FormatSpec 이 있으면 구조화 생성(형식 계약 + LayoutDoc + 검증 게이트).
+  // 실패 시 v1 평문 생성으로 폴백해 "아예 0문항"이 되는 사고를 막는다.
+  if (args.spec.format) {
+    try {
+      const structured = await generateStructuredFromSpec({
+        spec: args.spec,
+        format: args.spec.format,
+        passage: args.passage,
+        gradeInfo: args.gradeInfo,
+      });
+      return {
+        question: structured.question,
+        subType: "CUSTOM_LAYOUT",
+        tier: "GENERIC",
+        relaxedFallback: false,
+        llmCalls: structured.llmAttempts,
+        llmAttempts: structured.llmAttempts,
+      };
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `[CUSTOM-TYPE-GENERATOR] structured(v2) failed → generic(v1) fallback: ${detail}`,
+      );
+    }
   }
   return generateGeneric(args);
 }

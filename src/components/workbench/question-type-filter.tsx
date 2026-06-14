@@ -49,6 +49,8 @@ export const SUBTYPE_LABELS: Record<string, string> = {
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",
   ANTONYM: "반의어",
+  CUSTOM: "커스텀",
+  CUSTOM_LAYOUT: "커스텀",
 };
 
 // Hierarchical type → subtype grouping for filter UI

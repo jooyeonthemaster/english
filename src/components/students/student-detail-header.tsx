@@ -72,11 +72,11 @@ export function StudentDetailHeader({
           variant="ghost"
           size="icon"
           className="size-8"
-          onClick={() => router.push(basePath)}
+          onClick={() => router.push(isDirector ? "/director/tutor" : basePath)}
         >
           <ArrowLeft className="size-4" />
         </Button>
-        <span className="text-sm text-[#8B95A1]">학생 관리</span>
+        <span className="text-sm text-[#8B95A1]">{isDirector ? "튜터 운영 홈" : "학생 관리"}</span>
       </div>
 
       <div className="flex items-start justify-between">

@@ -13,6 +13,7 @@ import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
+  withQuestionGenerationPlanMetadata,
 } from "@/lib/question-generation-plans";
 
 import {
@@ -201,10 +202,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const taggedQuestions = allQuestions.map((question) =>
+      withQuestionGenerationPlanMetadata(question, generationPlan),
+    );
+
     return NextResponse.json({
-      questions: allQuestions,
+      questions: taggedQuestions,
       rationale,
-      count: allQuestions.length,
+      count: taggedQuestions.length,
       generationPlan,
       creditsRemaining: creditResult.balanceAfter,
     });

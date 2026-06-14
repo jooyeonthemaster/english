@@ -329,7 +329,9 @@ export function buildQuestionTargetCandidateBlock(
     antonymPairCount?: number;
     /** 2~3 = multi-blank BLANK_INFERENCE; the single-blank candidate block is suppressed. */
     blankInferenceBlankCount?: number;
-    /** 부정-부정(DN) 설정 — true 면 KILLER 빈칸 블록 대신 DN 블록이 우선한다. */
+    /** Single-blank BLANK_INFERENCE should use paraphrased visible answers. */
+    blankInferenceParaphraseAnswer?: boolean;
+    /** Single-blank BLANK_INFERENCE should use double-negative transformed answers. */
     blankInferenceDoubleNegative?: boolean;
     /** Legacy name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
@@ -383,17 +385,13 @@ export function buildQuestionTargetCandidateBlock(
       );
     case "BLANK_INFERENCE":
       // The candidate block proposes single-blank targets; the multi-blank
-      // variant carries its own instructions in the type-settings prompt and
-      // only receives the repeated-phrase ban list (leak prevention).
-      if ((options.blankInferenceBlankCount ?? 1) >= 2) {
-        return buildMultiBlankAvoidBlock(passage);
-      }
-      // KILLER 단일 빈칸(비DN)은 전용 설계 블록 — 핵심 논지부 빈칸 + 추상
-      // 패러프레이즈 정답 + 간섭 오답. DN 은 교사 명시 설정이라 우선한다.
-      if (options.requestedDifficulty === "KILLER" && !options.blankInferenceDoubleNegative) {
-        return buildKillerBlankCandidateBlock(passage, diversity);
-      }
-      return buildBlankInferenceCandidateBlock(passage, diversity);
+      // variant carries its own instructions in the type-settings prompt.
+      if ((options.blankInferenceBlankCount ?? 1) >= 2) return "";
+      return buildBlankInferenceCandidateBlock(passage, diversity, {
+        paraphraseAnswer: options.blankInferenceParaphraseAnswer,
+        doubleNegative: options.blankInferenceDoubleNegative,
+        requestedDifficulty: options.requestedDifficulty,
+      });
     case "REFERENCE":
       return buildReferenceCandidateBlock(passage, diversity);
     case "IMPLIED_MEANING":
@@ -1620,6 +1618,37 @@ function buildKillerBlankCandidateBlock(
 function buildBlankInferenceCandidateBlock(
   passage: string,
   diversity?: CandidateDiversityOptions,
+  options: {
+    paraphraseAnswer?: boolean;
+    doubleNegative?: boolean;
+    requestedDifficulty?: string;
+  } = {},
+): string {
+  if (options.paraphraseAnswer) {
+    return buildBlankParaphraseCandidateBlock(
+      passage,
+      options.requestedDifficulty,
+      diversity,
+    );
+  }
+
+  if (options.doubleNegative) {
+    return buildNegativeBlankInferenceCandidateBlock(
+      passage,
+      diversity,
+    );
+  }
+
+  return buildStandardBlankInferenceCandidateBlock(
+    passage,
+    options.requestedDifficulty,
+    diversity,
+  );
+}
+
+function buildNegativeBlankInferenceCandidateBlock(
+  passage: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage);
   // 기사용 빈칸 스팬을 담고 있는 문장은 후보에서 제외 (전부 걸러지면 원본 유지).
@@ -1706,6 +1735,290 @@ function buildBlankInferenceCandidateBlock(
         : `${index + 1}. ${sentence}`;
     }),
   ].filter(Boolean).join("\n");
+}
+
+function buildStandardBlankInferenceCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 6
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 3
+        : 2;
+  const sentences = splitPassageSentences(passage);
+  const candidateRows = sentences
+    .map((sentence, index) => ({
+      sentence,
+      index,
+      targets: getStandardBlankInferenceSuggestedTargets(
+        sentence,
+        requestedDifficulty,
+      ),
+    }))
+    .filter((item) => item.targets.length > 0);
+  const candidates = rotateByVariantIndex(
+    filterUsedCandidates(
+      candidateRows,
+      diversity?.usedTargets,
+      ({ sentence }) => sentence,
+    ).items.sort(
+      (a, b) =>
+        Math.max(...b.targets.map(scoreStandardBlankInferenceTarget)) -
+        Math.max(...a.targets.map(scoreStandardBlankInferenceTarget)),
+    ),
+    diversity?.variantIndex,
+  ).slice(0, 8);
+
+  if (candidates.length === 0) {
+    return [
+      "## BLANK_INFERENCE source-exact target note",
+      "- Standard blank mode is active: the correct option may match originalExpression, so the source span itself must carry the inference difficulty.",
+      `- For ${requestedDifficulty || "the requested difficulty"}, choose originalExpression as a compact central relation with at least ${minWords} words and ${minContent} meaningful content words when possible.`,
+    "- Avoid tiny local tails, reciprocal filler such as 'both parties review each other', long punctuation spans, comma-separated lists, example lists, and isolated abstract nouns.",
+      "- KILLER items should blank a claim, causal relation, evaluative turn, or contrast that requires checking the surrounding passage logic.",
+    ].join("\n");
+  }
+
+  return [
+    "## BLANK_INFERENCE source-exact target candidates",
+    "- Standard blank mode is active: the correct option may copy originalExpression, so the blank target must be intrinsically inference-worthy.",
+    `- For ${requestedDifficulty || "the requested difficulty"}, prefer a clean semantic unit with at least ${minWords} words and ${minContent} meaningful content words, while staying within 13 words and 95 characters.`,
+    "- Do not blank a tiny local tail, reciprocal filler such as 'both parties review each other', a colon/semicolon span, a comma-separated list, or an example-list slot.",
+    "- For KILLER, choose a passage-central claim/relation/contrast; do not make the answer recoverable from one nearby collocation alone.",
+    "- Every option must fit the exact same grammatical slot as originalExpression and include at least two passage-grounded near misses.",
+    "Suggested candidates:",
+    ...candidates.map(({ sentence, index, targets }) => (
+      `${index + 1}. ${sentence}\n   Suggested originalExpression options: ${targets
+        .slice(0, 3)
+        .map((target) => `"${target}"`)
+        .join(", ")}`
+    )),
+  ].join("\n");
+}
+
+function getStandardBlankInferenceSuggestedTargets(
+  sentence: string,
+  requestedDifficulty?: string,
+): string[] {
+  const targets: string[] = [];
+  const add = (value: string | undefined) => {
+    const target = normalizeSuggestedTarget(value ?? "");
+    if (isValidStandardBlankInferenceTarget(target, requestedDifficulty)) {
+      targets.push(target);
+    }
+  };
+
+  const patterns = [
+    /\b((?:is|are|was|were|becomes?|became|remains?)\s+(?:driven|shaped|defined|constrained|guided|grounded|organized|supported|limited)\s+by\s+[^.;:!?]{18,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:these|those|such|this|that|the|a|an|most|many|some|users|people|companies|platforms|systems|policy|policies|technology|technologies|models|choices|decisions|problem|issue|challenge|capacity|ability|process|world|economy)\s+[^.;:!?]{0,35}?\b(?:creates?|takes? advantage of|utilizes?|benefits?|requires?|depends?|allows?|enables?|prevents?|fosters?|illuminates?|reveals?|demonstrates?|suggests?|shows?|reflects?|transforms?|reorganizes?|preserves?|maintains?|weakens?|strengthens?|distinguishes?|addresses?|reduces?|increases?|changes?)\b[^.;:!?]{10,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:not\s+(?:because|whether|only|merely)|rather than|instead of)\b[^.;:!?]{20,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:selling|creating|maintaining|preserving|cultivating|developing|protecting|reducing|reorganizing|distinguishing|balancing|challenging|supporting|strengthening|weakening|sharing|utilizing)\b[^.;:!?]{12,95}?)(?=\.|,|;|:|$)/gi,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(sentence))) {
+      add(match[1]);
+    }
+  }
+
+  return [...new Set(targets)]
+    .sort((a, b) => scoreStandardBlankInferenceTarget(b) - scoreStandardBlankInferenceTarget(a))
+    .slice(0, 4);
+}
+
+function isValidStandardBlankInferenceTarget(
+  target: string,
+  requestedDifficulty?: string,
+): boolean {
+  if (!target) return false;
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 6
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 3
+        : 2;
+
+  return (
+    wordCount >= minWords &&
+    wordCount <= 13 &&
+    contentCount >= minContent &&
+    target.length <= 95 &&
+    !hasTrailingFunctionWordBlankTarget(target) &&
+    !isListLikeBlankTarget(target) &&
+    !isSingleAbstractNounTarget(target) &&
+    !isLowValueKillerBlankTarget(target)
+  );
+}
+
+function scoreStandardBlankInferenceTarget(target: string): number {
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const relationBonus = /\b(?:not|but|because|therefore|requires?|depends?|allows?|enables?|prevents?|fosters?|illuminates?|reveals?|suggests?|creates?|takes? advantage|selling|benefit|driven|trusting|capacity|transaction|product|traditional)\b/i.test(target)
+    ? 4
+    : 0;
+  const widthPenalty = wordCount > 12 ? 1 : 0;
+  return contentCount * 2 + relationBonus - widthPenalty;
+}
+
+function buildBlankParaphraseCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 7
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 2;
+  const sentences = splitPassageSentences(passage);
+  const candidateRows = sentences
+    .map((sentence, index) => ({
+      sentence,
+      index,
+      targets: getBlankParaphraseSuggestedTargets(
+        sentence,
+        requestedDifficulty,
+      ),
+    }))
+    .filter((item) => item.targets.length > 0);
+  const candidates = rotateByVariantIndex(
+    filterUsedCandidates(
+      candidateRows,
+      diversity?.usedTargets,
+      ({ sentence }) => sentence,
+    ).items.sort(
+      (a, b) =>
+        Math.max(...b.targets.map(scoreBlankParaphraseTarget)) -
+        Math.max(...a.targets.map(scoreBlankParaphraseTarget)),
+    ),
+    diversity?.variantIndex,
+  ).slice(0, 8);
+
+  if (candidates.length === 0) {
+    return [
+      "## BLANK_INFERENCE paraphrase-answer target note",
+      "- The blank paraphrase setting is active, but no strong automatic source target was detected.",
+      `- For ${requestedDifficulty || "the requested difficulty"}, choose originalExpression as a clean semantic unit with at least ${minWords} words and ${minContent} meaningful content words when possible.`,
+      "- Avoid tiny local tails, long clauses, punctuation/list spans, and dangling modal/auxiliary/function-word endings.",
+      "- The visible correct option must be a non-verbatim paraphrase that fits the exact same grammatical slot.",
+    ].join("\n");
+  }
+
+  return [
+    "## BLANK_INFERENCE paraphrase-answer target candidates",
+    "- The blank paraphrase setting is active. Prefer one of these source-backed originalExpression candidates instead of a tiny local tail.",
+    `- For ${requestedDifficulty || "the requested difficulty"}, originalExpression should have at least ${minWords} words and ${minContent} meaningful content words when possible, while staying within 12 words and 90 characters.`,
+    "- Use a suggested originalExpression exactly when it fits the item; otherwise choose the same kind of compact semantic relation from the listed sentence.",
+    "- Do not choose a whole clause, comma-separated list span, or a 2-3 word tail such as 'making subsequent judgments' for INTERMEDIATE/KILLER.",
+    "- The visible correct option must paraphrase the selected source span, preserve polarity and grammar slot, and avoid copying source wording.",
+    "Suggested candidates:",
+    ...candidates.map(({ sentence, index, targets }) => (
+      `${index + 1}. ${sentence}\n   Suggested originalExpression options: ${targets
+        .slice(0, 3)
+        .map((target) => `"${target}"`)
+        .join(", ")}`
+    )),
+  ].join("\n");
+}
+
+function getBlankParaphraseSuggestedTargets(
+  sentence: string,
+  requestedDifficulty?: string,
+): string[] {
+  const targets: string[] = [];
+  const add = (value: string | undefined) => {
+    const target = normalizeSuggestedTarget(value ?? "");
+    if (isValidBlankParaphraseSuggestedTarget(target, requestedDifficulty)) {
+      targets.push(target);
+    }
+  };
+
+  const patterns = [
+    /\b(?:tendency|tendencies)\s+to\s+([^.;:!?]{20,95}?)(?=\s+when\b|,|\.|;|:|$)/gi,
+    /\b(?:ability|capacity)\s+to\s+([^.;:!?]{20,95}?)(?=\s+(?:depend(?:ed|s)?|was|is|are|were)\b|,|\.|;|:|$)/gi,
+    /\b((?:ability|capacity)\s+to\s+[^.;:!?]{20,95}?)(?=,|\.|;|:|$)/gi,
+    /\b((?:does|do|did|is|are|was|were)\s+not\s+(?:simply|merely|only)?\s*[^.;:!?]{10,80}?\s+but\s+[^.;:!?]{10,80}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:not\s+because|not\s+whether|not\s+only|not\s+merely)\b[^.;:!?]{20,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:requires?|depends?|allows?|enables?|helps?|prevents?|fosters?|illuminates?|reveals?|demonstrates?|suggests?|shows?)\b[^.;:!?]{15,90}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:bridge|bridging|maintain|maintaining|preserve|preserving|cultivate|cultivating|engage|engaging|recognize|recognizing|interpret|interpreting|reconcile|reconciling|construct|constructing|shape|shaping|adapt|adapting)\b[^.;:!?]{12,90}?)(?=\.|,|;|:|$)/gi,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(sentence))) {
+      add(match[1]);
+    }
+  }
+
+  return [...new Set(targets)]
+    .sort((a, b) => scoreBlankParaphraseTarget(b) - scoreBlankParaphraseTarget(a))
+    .slice(0, 4);
+}
+
+function isValidBlankParaphraseSuggestedTarget(
+  target: string,
+  requestedDifficulty?: string,
+): boolean {
+  if (!target) return false;
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 7
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 2;
+
+  return (
+    wordCount >= minWords &&
+    wordCount <= 12 &&
+    contentCount >= minContent &&
+    target.length <= 90 &&
+    !hasTrailingFunctionWordBlankTarget(target) &&
+    !isListLikeBlankTarget(target) &&
+    !isSingleAbstractNounTarget(target)
+  );
+}
+
+function scoreBlankParaphraseTarget(target: string): number {
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const relationBonus = /\b(?:not|but|because|therefore|requires?|depends?|allows?|enables?|prevents?|fosters?|illuminates?|constructs?|shapes?|bridge|maintain|preserve|critical|selective)\b/i.test(target)
+    ? 3
+    : 0;
+  const widthPenalty = wordCount > 11 ? 1 : 0;
+  return contentCount * 2 + relationBonus - widthPenalty;
 }
 
 function buildIrrelevantCandidateBlock(
@@ -3949,6 +4262,17 @@ function validateBlankInferenceQuestion(
     );
   }
 
+  if (
+    requestedDifficulty === "KILLER" &&
+    !isNegativeParaphraseMode &&
+    !isAnswerParaphraseMode
+  ) {
+    const killerSourceIssue = findStandardBlankKillerIssue(originalExpression);
+    if (killerSourceIssue) {
+      add("error", killerSourceIssue.code, killerSourceIssue.message);
+    }
+  }
+
   if (isSingleAbstractNounTarget(originalExpression)) {
     add(
       isTransformedMode ? "error" : "warning",
@@ -4307,6 +4631,17 @@ function validateBlankAnswerParaphraseMode(
     add("error", slotIssue.code, slotIssue.message);
   }
 
+  const killerIssue = findBlankParaphraseKillerIssue(
+    options,
+    correctLabel,
+    originalExpression,
+    correctText,
+    requestedDifficulty,
+  );
+  if (killerIssue) {
+    add("error", killerIssue.code, killerIssue.message);
+  }
+
   const polarityIssue = findBlankParaphrasePolarityIssue(
     originalExpression,
     correctText,
@@ -4320,6 +4655,17 @@ function validateBlankAnswerParaphraseMode(
       "error",
       "blank-paraphrase-target-trailing-function",
       "PARAPHRASE blank originalExpression ends with a modal/auxiliary/function tail; choose a cleaner semantic unit so options do not become grammar-tail variants.",
+    );
+  }
+
+  if (
+    countWordsForQuality(originalExpression) > 12 ||
+    originalExpression.length > 90
+  ) {
+    add(
+      "error",
+      "blank-paraphrase-target-too-wide",
+      "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit instead of a long clause.",
     );
   }
 
@@ -4394,6 +4740,17 @@ function findBlankParaphraseSlotIssue(
   const blankIndex = carrier.indexOf("_____");
   const leftOfBlank = blankIndex >= 0 ? carrier.slice(0, blankIndex).trim() : "";
   if (
+    /\bto\s*$/i.test(leftOfBlank) &&
+    startsWithGerundProcessPhrase(correctText)
+  ) {
+    return {
+      code: "blank-paraphrase-verb-form-slot-mismatch",
+      message:
+        "PARAPHRASE blank uses a gerund phrase after an infinitive marker; use a base verb phrase that fits the blank sentence.",
+    };
+  }
+
+  if (
     startsLikeFiniteClause(originalExpression) &&
     startsWithGerundProcessPhrase(correctText) &&
     /(?:^|[.;:!?])$/.test(leftOfBlank)
@@ -4406,6 +4763,76 @@ function findBlankParaphraseSlotIssue(
   }
 
   return null;
+}
+
+function findBlankParaphraseKillerIssue(
+  options: Record<string, unknown>[],
+  correctLabel: string,
+  originalExpression: string,
+  correctText: string,
+  requestedDifficulty: string | undefined,
+): { code: string; message: string } | null {
+  if (requestedDifficulty !== "KILLER") return null;
+
+  const sourceContentCount = countContentTokens(originalExpression);
+  const sourceWordCount = countWordsForQuality(originalExpression);
+  const correctContentCount = countContentTokens(correctText);
+  const correctWordCount = countWordsForQuality(correctText);
+  if (
+    sourceWordCount < 7 ||
+    sourceContentCount < 5 ||
+    correctContentCount < 6 ||
+    correctWordCount < 8
+  ) {
+    return {
+      code: "blank-paraphrase-killer-too-easy",
+      message:
+        "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+    };
+  }
+
+  const wrongOptions = options.filter(
+    (option) => normalizeLabel(option.label) !== correctLabel,
+  );
+  const giveawayCount = wrongOptions.filter((option) =>
+    hasKillerBlankGiveawayCue(normalizeText(option.text)),
+  ).length;
+  if (giveawayCount >= 2) {
+    return {
+      code: "blank-paraphrase-killer-giveaway-distractors",
+      message:
+        "KILLER PARAPHRASE blank has too many obviously eliminable distractors; replace extreme/opposite options with passage-grounded near misses.",
+    };
+  }
+
+  return null;
+}
+
+function findStandardBlankKillerIssue(
+  originalExpression: string,
+): { code: string; message: string } | null {
+  const sourceContentCount = countContentTokens(originalExpression);
+  const sourceWordCount = countWordsForQuality(originalExpression);
+  if (
+    sourceWordCount < 6 ||
+    sourceContentCount < 5 ||
+    isLowValueKillerBlankTarget(originalExpression)
+  ) {
+    return {
+      code: "blank-killer-target-too-easy",
+      message:
+        "KILLER BLANK_INFERENCE target is too local or surface-level; choose a central claim, relation, contrast, or evaluative turn with enough conceptual load.",
+    };
+  }
+
+  return null;
+}
+
+function hasKillerBlankGiveawayCue(text: string): boolean {
+  const normalized = normalizeText(text);
+  return /\b(?:unconditionally|completely|passive(?:ly)?|strict(?:ly)?|inevitably|naturally|whatever|successfully|always|never|solely|entirely|exclusively|fully|merely|simply|all|every|only|must|cannot|guarantee(?:s|d)?|definitive|flawless|seamless|error-free|automatically|altogether|indefinitely|immediate(?:ly)?|eliminate(?:s|d|ing)?|bound\s+to|any\s+form\s+of|(?:from|without|against)\s+any|without\s+\w+\s+any|fail(?:s|ed|ing)?\s+to|prevent(?:s|ed|ing)?\s+all|avoid(?:s|ed|ing)?\s+all)\b/i.test(
+    normalized,
+  );
 }
 
 function findBlankParaphrasePolarityIssue(
@@ -4435,7 +4862,9 @@ function findBlankParaphrasePolarityIssue(
 
 function startsWithGerundProcessPhrase(text: string): boolean {
   const normalized = normalizeText(text).toLowerCase();
-  const match = normalized.match(/^(?:(?:the|a|an)\s+)?(?:(?:act|process|practice)\s+of\s+)?([a-z][a-z'-]*ing)\b/);
+  const match = normalized.match(
+    /^(?:(?:the|a|an)\s+)?(?:(?:act|process|practice)\s+of\s+)?(?:[a-z][a-z'-]*ly\s+){0,2}([a-z][a-z'-]*ing)\b/,
+  );
   if (!match) return false;
   return !new Set(["anything", "everything", "nothing", "something", "thing"]).has(match[1] ?? "");
 }
@@ -4482,6 +4911,7 @@ function findBlankParaphraseDifficultyIssue(
 ): { code: string; message: string } | null {
   const wordCount = countWordsForQuality(correctText);
   const contentCount = countContentTokens(correctText);
+  const originalWordCount = countWordsForQuality(originalExpression);
   const originalContentCount = countContentTokens(originalExpression);
 
   if (requestedDifficulty === "BASIC") {
@@ -4501,6 +4931,18 @@ function findBlankParaphraseDifficultyIssue(
     const ornateCount = [...contentTokens(correctText)].filter((token) =>
       INTERMEDIATE_PARAPHRASE_OVERLY_ORNATE_WORDS.has(token),
     ).length;
+    if (
+      originalWordCount < 4 ||
+      originalContentCount < 4 ||
+      wordCount < 4 ||
+      contentCount < 4
+    ) {
+      return {
+        code: "blank-paraphrase-difficulty-mismatch",
+        message:
+          "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase.",
+      };
+    }
     if (wordCount > 16 || ornateCount > 0) {
       return {
         code: "blank-paraphrase-difficulty-mismatch",
@@ -6517,13 +6959,34 @@ function isSingleAbstractNounTarget(text: string): boolean {
 
 function isListLikeBlankTarget(text: string): boolean {
   const normalized = normalizeText(text);
+  const commaCount = (normalized.match(/,/g) ?? []).length;
   return (
     normalized.includes(":") ||
     normalized.includes(";") ||
-    normalized.includes(",") ||
+    commaCount >= 2 ||
     normalized.length > 90 ||
     countContentTokens(normalized) > 11
   );
+}
+
+function isLowValueKillerBlankTarget(text: string): boolean {
+  const normalized = normalizeText(text).toLowerCase();
+  if (!normalized) return true;
+  if (
+    /\b(?:both|each|one another)\b.*\b(?:review|reviews|interact|interacts|communicate|communicates|share|shares)\b/.test(
+      normalized,
+    )
+  ) {
+    return true;
+  }
+  if (
+    /^(?:both parties|each party|users|people|students|companies|platforms)\s+\w+(?:\s+\w+){0,3}$/.test(
+      normalized,
+    )
+  ) {
+    return true;
+  }
+  return false;
 }
 
 function findNegativeParaphraseSlotIssue(

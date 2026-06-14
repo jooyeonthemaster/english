@@ -123,18 +123,45 @@ export async function getInvoice(invoiceId: string) {
   return invoice;
 }
 
+/** All invoices (+ payments) for one student, newest first — student detail 원비 탭. */
+export async function getStudentInvoices(studentId: string) {
+  const staff = await requireStaffAuth(); // read access for any staff; mutations stay director-only
+
+  return prisma.invoice.findMany({
+    where: { studentId, academyId: staff.academyId },
+    include: { payments: { orderBy: { paidAt: "desc" } } },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function createInvoice(data: CreateInvoiceData): Promise<ActionResult> {
   try {
     const staff = await requireDirector();
-    const finalAmount = data.amount - (data.discount || 0);
+
+    const amount = Math.floor(Number(data.amount));
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return { success: false, error: "금액은 0보다 커야 합니다." };
+    }
+    const discount = Math.max(0, Math.floor(Number(data.discount) || 0));
+    const finalAmount = Math.max(0, amount - discount);
+    if (finalAmount < 1) {
+      return { success: false, error: "할인 후 청구액은 1원 이상이어야 합니다." };
+    }
+
+    // Student must belong to the caller's academy.
+    const student = await prisma.student.findFirst({
+      where: { id: data.studentId, academyId: staff.academyId },
+      select: { id: true },
+    });
+    if (!student) return { success: false, error: "학생을 찾을 수 없습니다." };
 
     const invoice = await prisma.invoice.create({
       data: {
         academyId: staff.academyId,
         studentId: data.studentId,
         title: data.title,
-        amount: data.amount,
-        discount: data.discount || 0,
+        amount,
+        discount,
         finalAmount,
         dueDate: new Date(data.dueDate),
         memo: data.memo || null,
@@ -143,6 +170,8 @@ export async function createInvoice(data: CreateInvoiceData): Promise<ActionResu
     });
 
     revalidatePath("/director/billing");
+    revalidatePath("/director/tutor");
+    revalidatePath(`/director/students/${data.studentId}`);
     return { success: true, id: invoice.id };
   } catch (error) {
     return { success: false, error: (error as Error).message };
@@ -157,12 +186,14 @@ export async function bulkCreateInvoices(
   try {
     const staff = await requireDirector();
 
-    // Get all enrolled students from selected classes
+    // Get all enrolled students from selected classes (academy-scoped — a
+    // caller can't bill another academy's classes by passing foreign classIds).
     const enrollments = await prisma.classEnrollment.findMany({
       where: {
         classId: { in: classIds },
         status: "ENROLLED",
-        student: { status: "ACTIVE" },
+        student: { status: "ACTIVE", academyId: staff.academyId },
+        class: { academyId: staff.academyId },
       },
       include: {
         student: { select: { id: true, name: true } },
@@ -222,38 +253,54 @@ export async function recordPayment(
   try {
     const staff = await requireDirector();
 
-    const invoice = await prisma.invoice.findFirst({
-      where: { id: invoiceId, academyId: staff.academyId },
-      include: { payments: true },
-    });
+    const amount = Math.floor(Number(data.amount));
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return { success: false, error: "납부 금액은 0보다 커야 합니다." };
+    }
 
-    if (!invoice) return { success: false, error: "청구서를 찾을 수 없습니다." };
+    // Re-read balance and write within ONE transaction so two concurrent
+    // "완납" requests can't both pass the check and overpay the invoice.
+    const outcome = await prisma.$transaction(async (tx) => {
+      const invoice = await tx.invoice.findFirst({
+        where: { id: invoiceId, academyId: staff.academyId },
+        include: { payments: { select: { amount: true } } },
+      });
+      if (!invoice) return { error: "청구서를 찾을 수 없습니다." } as const;
 
-    const totalPaid =
-      invoice.payments.reduce((sum, p) => sum + p.amount, 0) + data.amount;
+      const alreadyPaid = invoice.payments.reduce((sum, p) => sum + p.amount, 0);
+      const remaining = invoice.finalAmount - alreadyPaid;
+      if (amount > remaining) {
+        return { error: "납부액이 잔액을 초과할 수 없습니다." } as const;
+      }
 
-    await prisma.$transaction([
-      prisma.payment.create({
+      const totalPaid = alreadyPaid + amount;
+      const fullyPaid = totalPaid >= invoice.finalAmount;
+      await tx.payment.create({
         data: {
           invoiceId,
-          amount: data.amount,
+          amount,
           method: data.method,
           paidAt: data.paidAt ? new Date(data.paidAt) : new Date(),
           reference: data.reference || null,
           memo: data.memo || null,
         },
-      }),
-      prisma.invoice.update({
+      });
+      await tx.invoice.update({
         where: { id: invoiceId },
         data: {
-          status: totalPaid >= invoice.finalAmount ? "PAID" : "PARTIAL",
-          paidDate: totalPaid >= invoice.finalAmount ? new Date() : null,
+          status: fullyPaid ? "PAID" : "PARTIAL",
+          paidDate: fullyPaid ? new Date() : null,
         },
-      }),
-    ]);
+      });
+      return { studentId: invoice.studentId } as const;
+    });
+
+    if ("error" in outcome) return { success: false, error: outcome.error };
 
     revalidatePath("/director/billing");
     revalidatePath(`/director/billing/${invoiceId}`);
+    revalidatePath("/director/tutor");
+    revalidatePath(`/director/students/${outcome.studentId}`);
     return { success: true };
   } catch (error) {
     return { success: false, error: (error as Error).message };
@@ -267,16 +314,19 @@ export async function updateInvoiceStatus(
   try {
     const staff = await requireDirector();
 
-    await prisma.invoice.update({
+    const updated = await prisma.invoice.update({
       where: { id: invoiceId, academyId: staff.academyId },
       data: {
         status,
         paidDate: status === "PAID" ? new Date() : undefined,
       },
+      select: { studentId: true },
     });
 
     revalidatePath("/director/billing");
     revalidatePath(`/director/billing/${invoiceId}`);
+    revalidatePath("/director/tutor");
+    revalidatePath(`/director/students/${updated.studentId}`);
     return { success: true };
   } catch (error) {
     return { success: false, error: (error as Error).message };

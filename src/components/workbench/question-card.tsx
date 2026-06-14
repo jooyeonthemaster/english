@@ -78,6 +78,8 @@ const SUBTYPE_LABELS: Record<string, string> = {
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",
   ANTONYM: "반의어",
+  CUSTOM: "커스텀",
+  CUSTOM_LAYOUT: "커스텀",
 };
 
 const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
@@ -519,7 +521,7 @@ export function QuestionCard({
               <Badge variant="outline" className="text-[10px]">{TYPE_LABELS[q.type] || q.type}</Badge>
               {q.subType && <Badge variant="outline" className="text-[10px] text-slate-500">{SUBTYPE_LABELS[q.subType] || q.subType}</Badge>}
               {diffConfig && <Badge variant="outline" className={`text-[10px] ${diffConfig.className}`}>{diffConfig.label}</Badge>}
-              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
+              {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
                 <Badge
                   variant="outline"
                   className={`gap-1 text-[10px] font-bold ${

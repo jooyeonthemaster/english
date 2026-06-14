@@ -14,6 +14,11 @@ import {
 import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import { getCustomPrompts } from "@/actions/custom-prompts";
+import {
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import { buildQuestionText } from "./generate-questions-dialog/build-question-text";
 import { ConfigureStep } from "./generate-questions-dialog/configure-step";
 import { PassageSelectStep } from "./generate-questions-dialog/passage-select-step";
@@ -28,6 +33,36 @@ interface GenerateQuestionsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   academyId: string;
+}
+
+function readQuestionTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) {
+    return rawTags
+      .filter((tag): tag is string => typeof tag === "string")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof rawTags !== "string") return [];
+  const trimmed = rawTags.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .filter((tag): tag is string => typeof tag === "string")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+    }
+  } catch {
+    // Fall through to comma-separated tag parsing.
+  }
+
+  return trimmed
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 }
 
 export function GenerateQuestionsDialog({
@@ -53,6 +88,7 @@ export function GenerateQuestionsDialog({
   // Type selection
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
   const [prompt, setPrompt] = useState("");
+  const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>("STANDARD");
 
   // Saved prompts
   const [savedPrompts, setSavedPrompts] = useState<SavedPrompt[]>([]);
@@ -100,6 +136,7 @@ export function GenerateQuestionsDialog({
       setSelectedPassage(null);
       setTypeCounts({});
       setPrompt("");
+      setGenerationPlan("STANDARD");
       setGeneratedQuestions(null);
       setGenerating(false);
     }
@@ -146,6 +183,7 @@ export function GenerateQuestionsDialog({
               count: typeCounts[typeId],
               difficulty: "INTERMEDIATE",
               customPrompt: prompt.trim() || undefined,
+              generationPlan,
             }),
           });
           const data = await res.json();
@@ -161,7 +199,15 @@ export function GenerateQuestionsDialog({
       const allQuestions: any[] = [];
       for (const r of results) {
         for (const q of r.questions) {
-          allQuestions.push({ ...q, _typeId: r.typeId, _typeLabel: r.label });
+          const plan = normalizeQuestionGenerationPlan(q._generationPlan ?? generationPlan);
+          const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q.tags), plan);
+          allQuestions.push({
+            ...q,
+            _typeId: r.typeId,
+            _typeLabel: r.label,
+            _generationPlan: plan,
+            tags,
+          });
         }
       }
       setGeneratedQuestions(allQuestions);
@@ -179,21 +225,30 @@ export function GenerateQuestionsDialog({
     try {
       const { saveGeneratedQuestions } = await import("@/actions/workbench");
 
-      const questionsToSave = generatedQuestions.map((q: any) => ({
-        passageId: selectedPassage.id,
-        type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-        subType: q._typeId || null,
-        questionText: buildQuestionText(q),
-        structuredData: q._typeId ? q : undefined,
-        options: q.options ? JSON.stringify(q.options) : null,
-        correctAnswer: q.correctAnswer || q.modelAnswer || "",
-        points: 1,
-        difficulty: q.difficulty || "INTERMEDIATE",
-        tags: q.tags ? JSON.stringify(q.tags) : null,
-        explanation: q.explanation || null,
-        keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
-        wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
-      }));
+      const questionsToSave = generatedQuestions.map((q: any) => {
+        const plan = normalizeQuestionGenerationPlan(q._generationPlan ?? generationPlan);
+        const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q.tags), plan);
+        const structuredData = q._typeId
+          ? { ...q, _generationPlan: plan, tags }
+          : undefined;
+
+        return {
+          passageId: selectedPassage.id,
+          type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+          subType: q._typeId || null,
+          questionText: buildQuestionText(q),
+          structuredData,
+          options: Array.isArray(q.options) ? q.options : undefined,
+          correctAnswer: q.correctAnswer || q.modelAnswer || "",
+          points: 1,
+          difficulty: q.difficulty || "INTERMEDIATE",
+          tags,
+          aiGenerated: true,
+          explanation: q.explanation || null,
+          keyPoints: q.keyPoints || undefined,
+          wrongOptionExplanations: q.wrongOptionExplanations || undefined,
+        };
+      });
 
       const result = await saveGeneratedQuestions(questionsToSave);
       if (result.success) {
@@ -268,6 +323,8 @@ export function GenerateQuestionsDialog({
               totalQuestions={totalQuestions}
               prompt={prompt}
               setPrompt={setPrompt}
+              generationPlan={generationPlan}
+              setGenerationPlan={setGenerationPlan}
               savedPrompts={savedPrompts}
               showSavedPrompts={showSavedPrompts}
               setShowSavedPrompts={setShowSavedPrompts}
@@ -289,6 +346,7 @@ export function GenerateQuestionsDialog({
               typeCounts={typeCounts}
               generationProgress={generationProgress}
               generatedQuestions={generatedQuestions}
+              generationPlan={generationPlan}
               onReconfigure={() => {
                 setStep("configure");
                 setGeneratedQuestions(null);

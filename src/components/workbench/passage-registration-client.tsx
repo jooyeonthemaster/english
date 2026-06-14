@@ -145,6 +145,7 @@ export function PassageRegistrationClient({
     enqueueManyPending,
     retryAnalysis,
     removeFromQueue,
+    deletePassages,
     updateAnalysisData,
     updateQuestions,
   } = usePassageQueue(initialQueueItems, {
@@ -742,6 +743,26 @@ export function PassageRegistrationClient({
   const removeTag = (tag: string) =>
     setTags((prev) => prev.filter((t) => t !== tag));
 
+  // 지문 목록 카드의 휴지통/일괄 삭제 → DB 에서 실제 삭제. 성공해야 화면에서
+  // 사라지므로, 예전처럼 새로고침 시 되살아나지 않는다.
+  const handleDeletePassages = useCallback(
+    async (ids: string[]) => {
+      const targets = ids.filter(Boolean);
+      if (targets.length === 0) return;
+      const result = await deletePassages(targets);
+      if (!result.success) {
+        toast.error(result.error || "지문 삭제에 실패했습니다.");
+        return;
+      }
+      if (result.deleted > 0) {
+        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
+      } else {
+        toast.error("삭제된 지문이 없습니다.");
+      }
+    },
+    [deletePassages],
+  );
+
   return (
     <TooltipProvider>
       <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
@@ -846,7 +867,7 @@ export function PassageRegistrationClient({
             clearSelection={clearSelection}
             setModalPassageId={setModalPassageId}
             retryAnalysis={retryAnalysis}
-            removeFromQueue={removeFromQueue}
+            onDeletePassages={handleDeletePassages}
           />
         </main>
 

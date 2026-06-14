@@ -27,6 +27,7 @@ import { safeParseJSON } from "./helpers";
 import {
   formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
+  optionDisplayLabel,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
@@ -86,6 +87,8 @@ const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",
   ANTONYM: "반의어",
+  CUSTOM: "커스텀",
+  CUSTOM_LAYOUT: "커스텀",
 };
 
 // 미리보기 px 기준값 → docx half-point.
@@ -916,7 +919,7 @@ function buildQuestionBlock(
           indent: { left: 376, hanging: 290 }, // 미리보기 선지: 번호 min-w-18px + gap-1.5(6px)
           children: [
             new TextRun({
-              text: optionOrdinalLabel(idx),
+              text: optionDisplayLabel(subType, idx, opt.label),
               font: KR_FONT,
               size: optionSize,
               bold: true,

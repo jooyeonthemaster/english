@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { JobCard } from "@/components/workbench/shared/job-card";
 
 import { type CustomTypeAnalysisJob } from "./custom-type-utils";
-import { CustomTypeReviseModal } from "./custom-type-revise-modal";
+import { CustomTypeLab } from "./lab/custom-type-lab";
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -26,7 +26,7 @@ export function CustomTypeAnalysisJobsPanel({
   onCreated: () => void;
 }) {
   const [jobs, setJobs] = useState<CustomTypeAnalysisJob[]>([]);
-  const [editingType, setEditingType] = useState<{ id: string; name: string } | null>(null);
+  const [labTypeId, setLabTypeId] = useState<string | null>(null);
   const loadSeq = useRef(0);
   const wasActiveRef = useRef(false);
 
@@ -65,10 +65,10 @@ export function CustomTypeAnalysisJobsPanel({
 
   const showSpinner = hasActiveJobs || running;
 
-  // 완료 잡 클릭 → 생성된 유형 상세(✦) 모달. 진행/실패는 안내만.
+  // 완료 잡 클릭 → 유형 실험실(해부 분석 탭)로 열기. 진행/실패는 안내만.
   const openJob = useCallback((job: CustomTypeAnalysisJob) => {
     if (job.createdTypeId) {
-      setEditingType({ id: job.createdTypeId, name: job.suggestedName ?? "커스텀 유형" });
+      setLabTypeId(job.createdTypeId);
     } else if (job.status === "FAILED") {
       toast.error(job.errorMessage ?? "분석에 실패했습니다.");
     } else {
@@ -124,12 +124,12 @@ export function CustomTypeAnalysisJobsPanel({
         )}
       </div>
 
-      {editingType ? (
-        <CustomTypeReviseModal
-          typeId={editingType.id}
-          typeName={editingType.name}
-          onClose={() => setEditingType(null)}
-          onRevised={() => {
+      {labTypeId ? (
+        <CustomTypeLab
+          typeId={labTypeId}
+          initialTab="anatomy"
+          onClose={() => setLabTypeId(null)}
+          onChanged={() => {
             void load();
             onCreated();
           }}

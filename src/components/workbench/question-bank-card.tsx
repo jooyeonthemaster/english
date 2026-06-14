@@ -10,9 +10,11 @@ import {
   ChevronUp,
   Trash2,
   FileText,
+  Gem,
   Pencil,
   Layers,
   ClipboardList,
+  Sparkles,
   Star,
   XCircle,
 } from "lucide-react";
@@ -29,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import { DragHandle } from "@/components/ui/drag-handle";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatDate } from "@/lib/utils";
 import {
   TYPE_LABELS,
@@ -48,8 +51,11 @@ import { shouldIgnoreCardClick } from "./shared/card-click";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import {
+  getQuestionGenerationPlanFromTags,
   getVisibleQuestionTags,
+  QUESTION_GENERATION_PLAN_TAGS,
   sanitizeAiModelDisclosureText,
+  type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
@@ -80,6 +86,12 @@ function normalizeAnswerLabel(value: unknown): string {
   const circledIndex = circled.indexOf(text);
   if (circledIndex >= 0) return String(circledIndex + 1);
   return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+}
+
+function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
+  if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
+  const plan = (value as { _generationPlan?: unknown })._generationPlan;
+  return plan === "PREMIUM" || plan === "STANDARD" ? plan : null;
 }
 
 export function QuestionBankCard({
@@ -181,6 +193,9 @@ export function QuestionBankCard({
   const tags: string[] = Array.isArray(q.tags)
     ? q.tags
     : parseJSON<string[]>(q.tags, []);
+  const generationPlan =
+    getQuestionGenerationPlanFromTags(tags) ??
+    readGenerationPlanFromStructuredData(q.structuredData);
   const visibleTags = getVisibleQuestionTags(tags);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
@@ -408,6 +423,19 @@ export function QuestionBankCard({
               className={`text-[10px] shrink-0 ${diffConfig.className}`}
             >
               {diffConfig.label}
+            </Badge>
+          )}
+          {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+            <Badge
+              variant="outline"
+              className={`gap-1 text-[10px] font-bold ${
+                generationPlan === "PREMIUM"
+                  ? "border-violet-200 bg-violet-50 text-violet-700"
+                  : "border-sky-200 bg-sky-50 text-sky-700"
+              }`}
+            >
+              {generationPlan === "PREMIUM" ? <Gem className="h-3 w-3" /> : <Sparkles className="h-3 w-3" />}
+              {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
             </Badge>
           )}
           {q.aiGenerated && (

@@ -721,7 +721,7 @@ export function BottomQueueSection({
           fixedHeight
           ariaLabel={`${item.passageTitle} - 문제 생성 중`}
           planBadge={
-            FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+            planConfig.id === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
               <span className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
                 planConfig.id === "PREMIUM"
                   ? "border-violet-200 bg-violet-50 text-violet-700"
@@ -756,7 +756,7 @@ export function BottomQueueSection({
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 min-w-0">
                 <h4 className="text-[13px] font-bold text-slate-800 truncate">{item.passageTitle}</h4>
-                {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+                {(planConfig.id === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
                   <span className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
                     planConfig.id === "PREMIUM"
                       ? "border-violet-200 bg-violet-50 text-violet-700"
@@ -1129,9 +1129,9 @@ export function BottomQueueSection({
           </div>
         )}
 
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+        {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedPlanCounts.PREMIUM > 0) && (
           <div className="flex flex-wrap items-center justify-end gap-2">
-            {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+            {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedPlanCounts.PREMIUM > 0) && (
               <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
                 {([
                   { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },

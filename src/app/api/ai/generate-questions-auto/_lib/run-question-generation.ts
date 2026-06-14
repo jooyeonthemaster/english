@@ -15,6 +15,8 @@ import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   buildQuestionTypeSettingsPrompt,
   getQuestionTypeGenerationTokenFloor,
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
   resolveQuestionTypeGenerationSettings,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
@@ -30,7 +32,7 @@ import {
   type QuestionDiversityContext,
 } from "@/lib/question-diversity";
 
-import { TYPE_LABELS } from "./constants";
+import { DIFF_DESCRIPTION, TYPE_LABELS } from "./constants";
 import { generateWithRetry } from "./generate-with-retry";
 import { fallbackResponseSchema, type PlanResult } from "./schemas";
 import {
@@ -68,6 +70,8 @@ export interface QuestionGenerationUsageEvent {
   phase: "question_generation";
   subType: string;
   qualityMode: QualityMode;
+  difficulty: string;
+  generationPlan: QuestionGenerationPlan;
   usage?: unknown;
   provider: string;
   modelId: string;
@@ -225,9 +229,9 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "sentence-order-option-duplicates",
   "sentence-order-correct-option-shape",
   "sentence-order-unscrambled-answer",
-  // The softer giveaway gates below stay STRICT-only: strict retries away from
-  // them, but the last-resort relaxed fallback may still ship one (flagged) so a
-  // hard passage returns a usable item instead of failing with 0 questions.
+  // These BLANK_INFERENCE paraphrase gates remain blocking even in the relaxed
+  // fallback because shipping an untransformed or giveaway item is worse than
+  // asking the generation loop to try again.
   "blank-missing-answer",
   "blank-paraphrase-answer-not-transformed",
   "blank-paraphrase-answer-too-verbatim",
@@ -236,10 +240,17 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "blank-paraphrase-option-imbalance",
   "blank-paraphrase-correct-too-thin",
   "blank-paraphrase-difficulty-mismatch",
+  "blank-paraphrase-killer-too-easy",
+  "blank-paraphrase-killer-giveaway-distractors",
+  "blank-paraphrase-verb-form-slot-mismatch",
   "blank-paraphrase-subject-slot-mismatch",
   "blank-paraphrase-clause-slot-mismatch",
   "blank-paraphrase-polarity-loss",
   "blank-paraphrase-target-trailing-function",
+  "blank-paraphrase-target-too-wide",
+  "blank-killer-target-too-easy",
+  "blank-target-too-small",
+  "blank-target-list-like",
   "blank-awkward-correct-option",
   "blank-awkward-option",
   "multi-blank-paraphrase-correct-source-exact",
@@ -291,19 +302,33 @@ export async function runQuestionGeneration(
       const { subType, count: typeCount, targetPoints } = item;
       if (typeCount <= 0) return [];
       const expectedTypeCount = Math.max(1, Math.floor(Number(typeCount) || 1));
+      const rawTypeSettings = typeSettings?.[subType];
+      const effectiveDiffLabel = readQuestionTypeDifficultySetting(
+        rawTypeSettings,
+        diffLabel,
+      );
+      const effectiveDiffInstruction =
+        DIFF_DESCRIPTION[effectiveDiffLabel] || diffInstruction;
+      const effectiveGenerationPlan = readQuestionTypeGenerationPlanSetting(
+        rawTypeSettings,
+        generationPlan,
+      );
 
       console.log(
-        `[AUTO-GEN] Step 2: Generating ${subType} x${typeCount} via ${generationPlan} plan...`,
+        `[AUTO-GEN] Step 2: Generating ${subType} x${typeCount} via ${effectiveGenerationPlan} plan (${effectiveDiffLabel})...`,
       );
 
       const typePrompt =
         STRUCTURED_TYPE_PROMPTS[subType] ||
         `${subType} 유형의 문제를 만드세요.`;
-      const typeQualityRubric = getTypeQualityRubric(subType, diffLabel);
+      const typeQualityRubric = getTypeQualityRubric(
+        subType,
+        effectiveDiffLabel,
+      );
 
       const resolvedTypeSettings = resolveQuestionTypeGenerationSettings(
         subType,
-        typeSettings?.[subType],
+        rawTypeSettings,
       );
       const {
         effectiveTypeSettings,
@@ -320,6 +345,7 @@ export async function runQuestionGeneration(
         sentenceInsertSlotCount,
         antonymPairCount,
         blankInferenceBlankCount,
+        blankInferenceDoubleNegative,
         blankInferenceParaphraseAnswer,
         genericOptionCount,
         genericAnswerCount,
@@ -362,9 +388,9 @@ export async function runQuestionGeneration(
           grammarCorrectionErrorCount,
           antonymPairCount,
           blankInferenceBlankCount,
-          blankInferenceDoubleNegative:
-            resolvedTypeSettings.blankInferenceDoubleNegative,
-          requestedDifficulty: diffLabel,
+          blankInferenceParaphraseAnswer,
+          blankInferenceDoubleNegative,
+          requestedDifficulty: effectiveDiffLabel,
           usedTargets: diversitySignals?.usedTargets,
           usedAnswerLabels: diversitySignals?.usedAnswerLabels,
           usedPointCodes: diversitySignals?.usedPointCodes,
@@ -419,12 +445,12 @@ export async function runQuestionGeneration(
             targetCandidateBlock,
             typeQualityRubric,
             typeCount,
-            diffLabel,
-            diffInstruction,
-            generationPlan,
+            diffLabel: effectiveDiffLabel,
+            diffInstruction: effectiveDiffInstruction,
+            generationPlan: effectiveGenerationPlan,
             customPrompt: mergedCustomPrompt,
           }),
-          generationPlan,
+          effectiveGenerationPlan,
           Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
           undefined,
           (result) => {
@@ -432,6 +458,8 @@ export async function runQuestionGeneration(
               phase: "question_generation",
               subType,
               qualityMode,
+              difficulty: effectiveDiffLabel,
+              generationPlan: effectiveGenerationPlan,
               usage: result.usage,
               provider: result.provider,
               modelId: result.modelId,
@@ -471,6 +499,12 @@ export async function runQuestionGeneration(
                     ...q,
                     blankAnswerMode: "PARAPHRASE",
                   }
+                : subType === "BLANK_INFERENCE" &&
+                    (resolvedTypeSettings.blankInferenceBlankCount ?? 1) === 1
+                  ? {
+                      ...q,
+                      blankAnswerMode: "SOURCE_EXACT",
+                    }
                 : q;
           const ppResult = postProcessQuestion(
             subType,
@@ -502,6 +536,8 @@ export async function runQuestionGeneration(
             ...(ppResult.data as Record<string, unknown>),
             _typeId: subType,
             _typeLabel: TYPE_LABELS[subType] || subType,
+            _generationPlan: effectiveGenerationPlan,
+            difficulty: effectiveDiffLabel,
           };
 
           if (
@@ -530,7 +566,7 @@ export async function runQuestionGeneration(
             typeId: subType,
             question: finalQuestion,
             passage: passageContent,
-            requestedDifficulty: diffLabel,
+            requestedDifficulty: effectiveDiffLabel,
             // 기사용 타깃 재사용 게이트는 첫 2회 시도에만 — 재시도 비용을 묶고,
             // 타깃 풀이 고갈된 지문은 이후 시도/relaxed 폴백에서 재사용을 허용.
             diversityUsedTargets:
@@ -800,6 +836,19 @@ export async function runQuestionGenerationWithEmptyRetry(
   };
   const rejectionRecorder: RejectionRecorder = { issues: [] };
   const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(inputWithUsage);
+  const hasBlankParaphraseAnswer = hasBlankParaphraseAnswerSetting(inputWithUsage);
+  const hasSingleBlankInference = hasSingleBlankInferenceSetting(inputWithUsage);
+  const hasKillerSingleBlankInference =
+    hasSingleBlankInference &&
+    inputWithUsage.plan.some(
+      (item) =>
+        item.subType === "BLANK_INFERENCE" &&
+        item.count > 0 &&
+        readQuestionTypeDifficultySetting(
+          inputWithUsage.typeSettings?.BLANK_INFERENCE,
+          inputWithUsage.diffLabel,
+        ) === "KILLER",
+    );
   const hasSummaryCompleteMc = inputWithUsage.plan.some(
     (item) => item.subType === "SUMMARY_COMPLETE_MC" && item.count > 0,
   );
@@ -810,30 +859,31 @@ export async function runQuestionGenerationWithEmptyRetry(
   const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(inputWithUsage);
   const largestGrammarMarkerCount = getLargestGrammarMarkerCount(inputWithUsage);
   const largestGrammarAnswerCount = getLargestGrammarAnswerCount(inputWithUsage);
-  // KILLER 단일 빈칸은 PARAPHRASE 모드 강제 — 패러프레이즈+간섭 오답 요구로
-  // 재시도 필요성이 DN 과 비슷해 동일하게 6회를 준다.
-  const hasKillerParaphraseBlank =
-    inputWithUsage.diffLabel === "KILLER" &&
-    inputWithUsage.plan.some(
-      (item) => item.subType === "BLANK_INFERENCE" && item.count > 0,
-    ) &&
-    !hasNegativeParaphraseBlank;
-  // 네모 어법은 세 슬롯 전부 정합을 요구해 수율이 낮다 — 확장 어법과 동일하게 6회.
+  // 네모 어법은 세 슬롯 전부 정합을 요구해 수율이 낮다 — 확장 유형과 동일하게 6회.
   const hasGrammarChoiceCombo = inputWithUsage.plan.some(
     (item) => item.subType === "GRAMMAR_CHOICE_COMBO" && item.count > 0,
   );
-  const attempts = hasNegativeParaphraseBlank || hasKillerParaphraseBlank
-    ? Math.max(6, Math.floor(maxAttempts))
-    : hasSummaryCompleteMc || hasGrammarChoiceCombo || largestIrrelevantSlotCount > 5 || largestGrammarMarkerCount > 5 || largestGrammarAnswerCount > 1
-      ? Math.max(6, Math.floor(maxAttempts))
-      : Math.max(4, Math.floor(maxAttempts));
+  const requestedMaxAttempts = Math.floor(maxAttempts);
+  const hasExtendedRetryType =
+    hasSummaryCompleteMc ||
+    hasGrammarChoiceCombo ||
+    largestIrrelevantSlotCount > 5 ||
+    largestGrammarMarkerCount > 5 ||
+    largestGrammarAnswerCount > 1;
+  const attempts = hasKillerSingleBlankInference
+    ? Math.max(10, requestedMaxAttempts)
+    : hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasExtendedRetryType
+      ? Math.max(6, requestedMaxAttempts)
+      : Math.max(4, requestedMaxAttempts);
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const questions = await runQuestionGeneration(inputWithUsage, {
       rejectionRecorder,
       attemptIndex: attempt - 1,
     });
-    const hasEnoughQuestions = hasNegativeParaphraseBlank
+    const shouldRequireFullRequestedCount =
+      hasNegativeParaphraseBlank || hasBlankParaphraseAnswer;
+    const hasEnoughQuestions = shouldRequireFullRequestedCount
       ? questions.length >= requestedCount
       : questions.length > 0;
     if (hasEnoughQuestions) {
@@ -882,6 +932,34 @@ function hasDoubleNegativeBlankSetting(input: RunGenerationInput): boolean {
     "doubleNegative" in blankSettings &&
     (blankSettings as { doubleNegative?: unknown }).doubleNegative === true
   );
+}
+
+function hasBlankParaphraseAnswerSetting(input: RunGenerationInput): boolean {
+  if (!input.plan.some((item) => item.subType === "BLANK_INFERENCE" && item.count > 0)) {
+    return false;
+  }
+
+  const resolved = resolveQuestionTypeGenerationSettings(
+    "BLANK_INFERENCE",
+    input.typeSettings?.BLANK_INFERENCE,
+  );
+  return (
+    resolved.blankInferenceParaphraseAnswer === true &&
+    resolved.blankInferenceDoubleNegative !== true &&
+    (resolved.blankInferenceBlankCount ?? 1) === 1
+  );
+}
+
+function hasSingleBlankInferenceSetting(input: RunGenerationInput): boolean {
+  if (!input.plan.some((item) => item.subType === "BLANK_INFERENCE" && item.count > 0)) {
+    return false;
+  }
+
+  const resolved = resolveQuestionTypeGenerationSettings(
+    "BLANK_INFERENCE",
+    input.typeSettings?.BLANK_INFERENCE,
+  );
+  return (resolved.blankInferenceBlankCount ?? 1) === 1;
 }
 
 function getLargestIrrelevantSlotCount(input: RunGenerationInput): number {

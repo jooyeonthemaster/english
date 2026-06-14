@@ -15,6 +15,7 @@ import { parseFormattedToRuns } from "../format";
 import {
   formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
+  optionDisplayLabel,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
@@ -386,7 +387,7 @@ export function renderQuestionPart(
       );
       const hasText = display.trim().length > 0;
       const runs: RunNode[] = [
-        txt(optionOrdinalLabel(originalIndex), {
+        txt(optionDisplayLabel(subType, originalIndex, option.label), {
           size: bodySize,
           bold: true,
           color: COLORS.darkGray,

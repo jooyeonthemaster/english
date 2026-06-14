@@ -2,10 +2,14 @@
 "use client";
 
 import React from "react";
-import { Loader2, Save } from "lucide-react";
+import { Gem, Loader2, Save, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StructuredQuestionRenderer } from "../question-renderers";
 import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
+import {
+  QUESTION_GENERATION_PLANS,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 interface Props {
   generating: boolean;
@@ -13,6 +17,7 @@ interface Props {
   typeCounts: Record<string, number>;
   generationProgress: Record<string, "pending" | "done" | "error">;
   generatedQuestions: any[] | null;
+  generationPlan: QuestionGenerationPlan;
   onReconfigure: () => void;
   onSave: () => void;
 }
@@ -23,11 +28,31 @@ export function ResultsStep({
   typeCounts,
   generationProgress,
   generatedQuestions,
+  generationPlan,
   onReconfigure,
   onSave,
 }: Props) {
+  const plan = QUESTION_GENERATION_PLANS[generationPlan];
+  const PlanIcon = generationPlan === "PREMIUM" ? Gem : Sparkles;
+
   return (
     <div className="space-y-4">
+      <div
+        className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 ${
+          generationPlan === "PREMIUM"
+            ? "border-violet-200 bg-violet-50 text-violet-700"
+            : "border-sky-200 bg-sky-50 text-sky-700"
+        }`}
+      >
+        <div className="flex min-w-0 items-center gap-2">
+          <PlanIcon className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate text-[12px] font-bold">{plan.label}</span>
+        </div>
+        <div className="flex shrink-0 items-center gap-1.5 text-[10px] font-bold">
+          <span>{plan.creditMultiplier}x</span>
+        </div>
+      </div>
+
       {/* Progress */}
       {generating && (
         <div className="space-y-2">

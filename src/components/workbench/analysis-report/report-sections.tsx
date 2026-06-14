@@ -10,6 +10,7 @@ import {
   type AnalysisSection,
   type AnnoLayout,
   type CustomBlock,
+  type ImageBlock,
   type FontRun,
   type ReportMeta,
   type VocabTestMode,
@@ -69,6 +70,7 @@ export type WrapKind =
   | "spacer"
   | "activity"
   | "custom-text"
+  | "image"
   | "cover";
 
 export interface FlowItem {
@@ -2861,16 +2863,7 @@ export function sectionFlowItems(
 
       // ── 깔끔한 원문 + 해석 (필기 없음) ──
       if (options?.passageRenderMode === "clean") {
-        // 핵심 어휘 밑줄 범례 — 굵은 밑줄이 핵심 어휘임을 명시
-        if (keywords.length) {
-          push(
-            "note",
-            "kw-legend",
-            <p className="par-note par-kw-legend">
-              <mark className="par-kw">굵은 밑줄</mark> 표시는 본문의 핵심 어휘예요.
-            </p>,
-          );
-        }
+        // 클린 모드: 핵심 어휘 밑줄/범례를 표시하지 않는다 (원문은 깔끔하게 유지).
         s.sentences.forEach((sentence, sentenceIndex) => {
           const patchClean = (patch: Partial<PassageSection["sentences"][number]>) =>
             commit({ ...s, sentences: s.sentences.map((it, idx) => (idx === sentenceIndex ? { ...it, ...patch } : it)) });
@@ -2881,7 +2874,7 @@ export function sectionFlowItems(
               no={sentence.n}
               en={sentence.en}
               ko={sentence.ko}
-              keywords={keywords}
+              keywords={[]}
               editable={editable}
               onCommitEn={(v) => patchClean({ en: v })}
               onCommitKo={(v) => patchClean({ ko: v })}
@@ -3806,6 +3799,56 @@ function CustomTextNode({
   );
 }
 
+/** 페이지 본문 최대 높이(mm) — 세로로 긴 웹툰이 한 페이지를 넘지 않게 폭 상한을 잡는다. */
+const IMG_MAX_HEIGHT_MM = 248;
+
+/** 지문 웹툰(이미지) 블록 렌더 — 본문 폭 대비 %·정렬·캡션. 인쇄 색상은 전역 print-color-adjust. */
+function WebtoonImageNode({ cb }: { cb: ImageBlock }) {
+  const ratio = cb.ratio && cb.ratio > 0 ? cb.ratio : 16 / 9; // height/width (세로형 기본)
+  const widthPct = cb.widthPct ?? 70;
+  const maxWmm = IMG_MAX_HEIGHT_MM / ratio; // 페이지 높이를 넘지 않는 최대 폭
+  const textAlign: CSSProperties["textAlign"] =
+    cb.align === "left" ? "left" : cb.align === "right" ? "right" : "center";
+  return (
+    <figure
+      className="par-img-figure"
+      style={{ margin: 0, textAlign, breakInside: "avoid" }}
+    >
+      <img
+        className="par-img"
+        src={cb.imageUrl}
+        alt={cb.caption || "지문 웹툰"}
+        // aspectRatio(=가로/세로)를 박스에 박아 이미지 픽셀 로드 전에도 정확한 높이를
+        // 예약한다 → 페이지네이터(offsetHeight 측정)가 0mm 로 재서 다른 블록과 겹쳐
+        // 페이지를 넘기는 클리핑을 막는다. (원격 Supabase URL 은 측정 시점에 미디코드)
+        style={{
+          display: "inline-block",
+          width: `${widthPct}%`,
+          maxWidth: `${maxWmm}mm`,
+          aspectRatio: 1 / ratio,
+          height: "auto",
+          verticalAlign: "top",
+          borderRadius: "2mm",
+        }}
+      />
+      {cb.caption ? (
+        <figcaption
+          className="par-img-cap"
+          style={{
+            marginTop: "1.5mm",
+            fontSize: "9pt",
+            lineHeight: 1.4,
+            color: "#64748b",
+            textAlign,
+          }}
+        >
+          {cb.caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
 export type CustomEdit = (id: string, patch: Partial<CustomBlock>) => void;
 
 export function customBlockFlowItems(
@@ -3823,6 +3866,16 @@ export function customBlockFlowItems(
       no: 0,
       wrap: "spacer",
       node: <div className="par-spacer-fill" style={{ height: `${cb.heightMm}mm` }} aria-hidden />,
+    }];
+  }
+  if (cb.kind === "image") {
+    return [{
+      id: cb.id,
+      sectionIndex: -1,
+      kind: "custom",
+      no: 0,
+      wrap: "image",
+      node: <WebtoonImageNode cb={cb} />,
     }];
   }
   if (cb.kind === "activity") {

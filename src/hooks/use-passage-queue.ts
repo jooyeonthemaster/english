@@ -21,6 +21,7 @@ import {
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
+import { bulkDeleteWorkbenchPassages } from "@/actions/workbench";
 
 export interface AnalysisPromptConfig {
   customPrompt: string;
@@ -769,11 +770,34 @@ export function usePassageQueue(
     [notifyJobsChanged, queue, setLocalQueue],
   );
 
+  // 로컬 큐(화면)에서만 제거한다. 서버 삭제는 호출자(예: 분석 모달)가 이미
+  // 끝낸 뒤 UI 정리용으로 부른다 — 이 함수 자체는 DB 를 건드리지 않는다.
   const removeFromQueue = useCallback((passageId: string) => {
     setLocalQueue((prev) => prev.filter((p) => p.id !== passageId));
     setJobQueue((prev) => prev.filter((p) => p.id !== passageId));
     notifyJobsChanged();
   }, [notifyJobsChanged, setLocalQueue]);
+
+  // 지문을 DB 에서 실제로 삭제한 뒤 화면에서도 제거한다. 서버 삭제가 성공한
+  // 경우에만 로컬 큐에서 빼므로, 실패하면 카드가 그대로 남아 재시도할 수 있다.
+  // (academy 스코프 삭제이므로 다른 학원 id 는 조용히 무시된다.)
+  const deletePassages = useCallback(
+    async (passageIds: string[]) => {
+      const ids = passageIds.filter(Boolean);
+      if (ids.length === 0) {
+        return { success: true as const, requested: 0, deleted: 0 };
+      }
+      const result = await bulkDeleteWorkbenchPassages(ids);
+      if (result.success) {
+        const idSet = new Set(ids);
+        setLocalQueue((prev) => prev.filter((p) => !idSet.has(p.id)));
+        setJobQueue((prev) => prev.filter((p) => !idSet.has(p.id)));
+        notifyJobsChanged();
+      }
+      return result;
+    },
+    [notifyJobsChanged, setLocalQueue],
+  );
 
   const updateAnalysisData = useCallback(
     (passageId: string, data: PassageAnalysisData) => {
@@ -838,6 +862,7 @@ export function usePassageQueue(
     enqueueManyPending,
     retryAnalysis,
     removeFromQueue,
+    deletePassages,
     updateAnalysisData,
     updateQuestions,
   };

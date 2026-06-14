@@ -122,6 +122,10 @@ import {
 } from "./editor-mutations";
 import { ANALYSIS_REPORT_EDIT_CSS } from "./report-edit-styles";
 import { ActivityPalettePanel, ActivityToggleSwitch } from "./activity-palette-modal";
+import {
+  WebtoonPickerModal,
+  type WebtoonPick,
+} from "./webtoon-picker-modal";
 import type { ActivityAction } from "./custom-activity-renders";
 import {
   activityBlockLabel,
@@ -1364,6 +1368,41 @@ export function AnalysisReportEditor({
       setActivityActivateNonce((n) => n + 1);
       // 설정 섹션이 보이도록 편집 패널을 연다(접혀 있던 경우).
       setPropertiesPanelCollapsed(false);
+    },
+    [setReport],
+  );
+
+  // ─── 지문 웹툰(이미지) 삽입 ───
+  const [webtoonPickerOpen, setWebtoonPickerOpen] = useState(false);
+  const insertImageBlock = useCallback(
+    (pick: WebtoonPick) => {
+      const id = newCustomBlockId();
+      setReport((r) => {
+        const block: CustomBlock = {
+          kind: "image",
+          id,
+          imageUrl: pick.imageUrl,
+          webtoonId: pick.webtoonId,
+          widthPct: 70,
+          align: "center",
+          ...(pick.ratio ? { ratio: pick.ratio } : {}),
+        };
+        const withBlock = {
+          ...r,
+          customBlocks: [...(r.customBlocks ?? []), block],
+        };
+        const naturalIds = enumerateItems(withBlock).map((d) => d.id);
+        const fullOrder = applyBlockOrder(naturalIds, withBlock.blockOrder);
+        const anchor = fullOrder.filter((x) => x !== id).pop() ?? null;
+        const blockOrder = anchor
+          ? reorderIds(fullOrder, id, anchor, "after")
+          : fullOrder;
+        return { ...withBlock, blockOrder };
+      });
+      setActiveId(id);
+      scrollToBlockRef.current(id);
+      setPropertiesPanelCollapsed(false);
+      setWebtoonPickerOpen(false);
     },
     [setReport],
   );
@@ -2720,6 +2759,31 @@ export function AnalysisReportEditor({
                 </button>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
+                {/* 지문 웹툰 삽입 — 생성한 웹툰을 문서/인쇄물에 이미지로 추가 */}
+                <button
+                  type="button"
+                  onClick={() => setWebtoonPickerOpen(true)}
+                  className="mb-2.5 flex w-full items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50/40 px-3 py-2.5 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/70"
+                >
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                    <ImagePlus className="size-4" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[12.5px] font-bold text-slate-800">
+                      지문 웹툰 삽입
+                    </span>
+                    <span className="block text-[11px] leading-snug text-slate-500">
+                      생성한 웹툰을 골라 문서에 추가합니다.
+                    </span>
+                  </span>
+                  <Plus className="size-3.5 shrink-0 text-blue-500" />
+                </button>
+                <WebtoonPickerModal
+                  open={webtoonPickerOpen}
+                  passageId={passageId}
+                  onClose={() => setWebtoonPickerOpen(false)}
+                  onPick={insertImageBlock}
+                />
                 <ActivityPalettePanel
                   report={report}
                   onPick={insertActivity}
@@ -3900,7 +3964,9 @@ function PropertiesPanel({
         ? "여백 블록"
         : activeCustom?.kind === "activity"
           ? activityBlockLabel(activeCustom)
-          : "텍스트 블록"
+          : activeCustom?.kind === "image"
+            ? "웹툰 이미지"
+            : "텍스트 블록"
       : isTitleMeta
         ? "표지 / 메타"
         : NUMBERED_SECTION_LABELS[active.kind as AnalysisSection["kind"]];
@@ -4011,6 +4077,69 @@ function PropertiesPanel({
                   className="flex-1 accent-blue-600"
                 />
                 <span className="text-[11px] font-semibold text-slate-500 w-12 text-right">{Math.round(activeCustom.heightMm)}mm</span>
+              </div>
+            </PanelGroup>
+          ) : null}
+
+          {activeCustom?.kind === "image" ? (
+            <PanelGroup label="웹툰 이미지">
+              <div className="space-y-2.5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={activeCustom.imageUrl}
+                  alt=""
+                  className="max-h-44 w-full rounded-md bg-slate-50 object-contain"
+                />
+                <div>
+                  <div className="mb-1 flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-slate-500">폭</span>
+                    <span className="w-12 text-right text-[11px] font-semibold tabular-nums text-slate-500">
+                      {Math.round(activeCustom.widthPct ?? 70)}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={20}
+                    max={100}
+                    value={activeCustom.widthPct ?? 70}
+                    onChange={(e) => onSetCustom(activeCustom.id, { widthPct: Number(e.target.value) })}
+                    className="w-full accent-blue-600"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold text-slate-500">정렬</span>
+                  <div className="flex gap-1">
+                    {(
+                      [
+                        { v: "left" as const, label: "왼쪽" },
+                        { v: "center" as const, label: "가운데" },
+                        { v: "right" as const, label: "오른쪽" },
+                      ]
+                    ).map((opt) => {
+                      const selected = (activeCustom.align ?? "center") === opt.v;
+                      return (
+                        <button
+                          key={opt.v}
+                          type="button"
+                          onClick={() => onSetCustom(activeCustom.id, { align: opt.v })}
+                          className={`rounded-md border px-2 py-1 text-[11px] font-semibold transition-colors ${
+                            selected
+                              ? "border-blue-400 bg-blue-50 text-blue-700"
+                              : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <input
+                  value={activeCustom.caption ?? ""}
+                  onChange={(e) => onSetCustom(activeCustom.id, { caption: e.target.value })}
+                  placeholder="캡션 (선택)"
+                  className="w-full rounded-md border border-slate-200 px-2.5 py-1.5 text-[12px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                />
               </div>
             </PanelGroup>
           ) : null}

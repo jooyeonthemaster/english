@@ -35,6 +35,10 @@ import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/cons
 import { buildPlanningPrompt } from "@/app/api/ai/generate-questions-auto/_lib/prompts";
 import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
 import { planSchema, type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
+import {
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
+} from "@/lib/question-type-generation-settings";
 
 type Input = { jobId: string };
 
@@ -171,11 +175,25 @@ export const workbenchQuestionGenerationTask = task({
       return { error: "PASSAGE_NOT_FOUND" as const };
     }
     const config = parseConfig(job.config, job.generationPlan);
+    const effectiveGenerationPlan =
+      config.mode === "MANUAL" && config.questionType
+        ? readQuestionTypeGenerationPlanSetting(
+            config.questionTypeSettings,
+            config.generationPlan,
+          )
+        : config.generationPlan;
+    const effectiveDifficulty =
+      config.mode === "MANUAL" && config.questionType
+        ? readQuestionTypeDifficultySetting(
+            config.questionTypeSettings,
+            config.difficulty,
+          )
+        : readQuestionTypeDifficultySetting(undefined, config.difficulty);
     const operationType = getOperationType(config);
     const baseCost = CREDIT_COSTS[operationType];
     const creditCost = getQuestionGenerationCreditCost(
       baseCost,
-      config.generationPlan,
+      effectiveGenerationPlan,
     );
 
     await prisma.workbenchAiJob.update({
@@ -200,7 +218,8 @@ export const workbenchQuestionGenerationTask = task({
           mode: config.mode,
           questionType: config.questionType,
           count: config.count,
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
+          difficulty: effectiveDifficulty,
           creditCost,
         },
         creditCost,
@@ -214,7 +233,7 @@ export const workbenchQuestionGenerationTask = task({
       const teacherAnnotations = extractTeacherAnnotations(job.passage);
       const teacherIntentBlock = buildQuestionAnnotationBlock(teacherAnnotations);
       const analysisContext = buildAnalysisContext(job.passage);
-      const diffLabel = config.difficulty || "INTERMEDIATE";
+      const diffLabel = effectiveDifficulty;
       const diffInstruction =
         DIFF_DESCRIPTION[diffLabel] || DIFF_DESCRIPTION.INTERMEDIATE;
 
@@ -233,9 +252,9 @@ export const workbenchQuestionGenerationTask = task({
             analysisContext,
             customPrompt: config.customPrompt,
             diffLabel,
-            generationPlan: config.generationPlan,
+            generationPlan: effectiveGenerationPlan,
           }),
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
           logPrefix: "WORKBENCH-AUTO-GEN-PLAN",
           maxTokens: 4_096,
         });
@@ -255,7 +274,8 @@ export const workbenchQuestionGenerationTask = task({
           usageAt: new Date(),
           metadata: {
             passageId: job.passage.id,
-            generationPlan: config.generationPlan,
+            generationPlan: effectiveGenerationPlan,
+            difficulty: diffLabel,
             attempts: planningResult.attempts,
             durationMs: planningResult.durationMs,
           },
@@ -278,7 +298,7 @@ export const workbenchQuestionGenerationTask = task({
           analysisContext,
           diffLabel,
           diffInstruction,
-          generationPlan: config.generationPlan,
+          generationPlan: effectiveGenerationPlan,
           customPrompt: config.customPrompt,
           typeSettings:
             config.mode === "MANUAL" && config.questionType
@@ -308,7 +328,8 @@ export const workbenchQuestionGenerationTask = task({
           usageAt: new Date(),
           metadata: {
             passageId: job.passage.id,
-            generationPlan: config.generationPlan,
+            generationPlan: event.generationPlan ?? effectiveGenerationPlan,
+            difficulty: event.difficulty ?? diffLabel,
             qualityMode: event.qualityMode,
             attempts: event.attempts,
             durationMs: event.durationMs,
@@ -329,13 +350,16 @@ export const workbenchQuestionGenerationTask = task({
       }
 
       const questionsForDisplay = questions.map((question) => {
+        const questionPlan = normalizeQuestionGenerationPlan(
+          question._generationPlan ?? effectiveGenerationPlan,
+        );
         const tags = mergeQuestionGenerationPlanTag(
           readQuestionTags(question.tags),
-          config.generationPlan,
+          questionPlan,
         );
         return {
           ...question,
-          _generationPlan: config.generationPlan,
+          _generationPlan: questionPlan,
           tags,
         };
       });
@@ -345,7 +369,7 @@ export const workbenchQuestionGenerationTask = task({
         academyId: job.academyId,
         passageId: job.passage.id,
         questions: questionsForDisplay,
-        generationPlan: config.generationPlan,
+        generationPlan: effectiveGenerationPlan,
         skipPassageEligibilityCheck: true,
       });
       persistenceMs = Date.now() - persistenceStartedAt;
@@ -373,7 +397,7 @@ export const workbenchQuestionGenerationTask = task({
             questions: questionsForDisplay,
             questionIds: createdQuestionIds,
             rationale,
-            generationPlan: config.generationPlan,
+            generationPlan: effectiveGenerationPlan,
             debugTiming,
           })),
           completedAt,
@@ -427,7 +451,8 @@ export const workbenchQuestionGenerationTask = task({
           errorMessage: message,
           result: JSON.parse(JSON.stringify({
             passageId: job.passage?.id,
-            generationPlan: config.generationPlan,
+            generationPlan: effectiveGenerationPlan,
+            difficulty: effectiveDifficulty,
             debugTiming: {
               queueWaitMs: now.getTime() - job.createdAt.getTime(),
               creditMs,

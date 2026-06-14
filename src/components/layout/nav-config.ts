@@ -153,14 +153,12 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "운영",
       directorOnly: true,
       items: [
-        { label: "학생·반 관리", icon: Users, href: `${basePath}/students`, directorOnly: true },
+        { label: "튜터 운영 홈", icon: Users, href: `${basePath}/tutor`, directorOnly: true },
         {
           label: "모바일 학습",
           icon: Smartphone,
-          href: `${basePath}/tutor`,
+          href: `${basePath}/tutor/programs`,
           children: [
-            { label: "튜터 홈", href: `${basePath}/tutor` },
-            { label: "프로그램 생성", href: `${basePath}/tutor/programs/new` },
             { label: "프로그램 관리", href: `${basePath}/tutor/programs` },
             ...(showResults
               ? [{ label: "수강 현황", href: `${basePath}/tutor/monitor` }]

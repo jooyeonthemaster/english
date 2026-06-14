@@ -15,10 +15,17 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
+  Gem,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn, formatDate } from "@/lib/utils";
-import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import {
+  getQuestionGenerationPlanFromTags,
+  QUESTION_GENERATION_PLAN_TAGS,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
 import {
   TYPE_LABELS,
   SUBTYPE_LABELS,
@@ -92,6 +99,9 @@ function QuestionCard({ q, num }: { q: QuestionItem; num: number }) {
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
+  const generationPlan = getQuestionGenerationPlanFromTags(
+    parseJSON<string[]>(q.tags, []),
+  );
 
   return (
     <div
@@ -117,6 +127,24 @@ function QuestionCard({ q, num }: { q: QuestionItem; num: number }) {
             className={cn("text-[10px]", diffConfig.className)}
           >
             {diffConfig.label}
+          </Badge>
+        )}
+        {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+          <Badge
+            variant="outline"
+            className={cn(
+              "gap-1 text-[10px] font-bold",
+              generationPlan === "PREMIUM"
+                ? "border-violet-200 bg-violet-50 text-violet-700"
+                : "border-sky-200 bg-sky-50 text-sky-700",
+            )}
+          >
+            {generationPlan === "PREMIUM" ? (
+              <Gem className="w-3 h-3" />
+            ) : (
+              <Sparkles className="w-3 h-3" />
+            )}
+            {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
           </Badge>
         )}
         {q.aiGenerated && (
