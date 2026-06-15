@@ -42,6 +42,7 @@ import { ExtractionDetailModal } from "../../generate/intake/extraction-detail-m
 import { SimilarQuestionJobsPanel } from "./similar-question-jobs-panel";
 import { useStagedQuestionFile } from "./use-staged-question-file";
 import { usePassageLibrary } from "../use-passage-library";
+import { resolveSelectionToPassageIds } from "@/lib/extraction/resolve-draft-selection";
 import {
   blobToBase64,
   clampNumber,
@@ -297,8 +298,7 @@ export function SimilarQuestionGeneratorClient({
       toast.error("분석할 문항(사진/PDF)을 먼저 입력하세요.");
       return;
     }
-    const passageIds = Array.from(selectedIds);
-    if (passageIds.length === 0) {
+    if (selectedIds.size === 0) {
       toast.error("동형 문제를 생성할 대상 지문을 1개 이상 선택해 주세요.");
       return;
     }
@@ -329,6 +329,17 @@ export function SimilarQuestionGeneratorClient({
           mediaType: mediaTypeForBlob(manualReferenceSlot.blob),
         },
       ];
+
+      // 검수 전 자료(미승격 draft)는 여기서 실제 지문으로 승격한 뒤 사용한다.
+      const { passageIds, failedCount } = await resolveSelectionToPassageIds(
+        Array.from(selectedIds),
+      );
+      if (passageIds.length === 0) {
+        throw new Error("선택한 자료를 지문으로 준비하지 못했습니다.");
+      }
+      if (failedCount > 0) {
+        toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
+      }
 
       const clientRequestId = createClientRequestId();
 

@@ -55,6 +55,7 @@ import {
   type Difficulty,
 } from "./custom-type-generation-config";
 import { usePassageLibrary } from "../use-passage-library";
+import { resolveSelectionToPassageIds } from "@/lib/extraction/resolve-draft-selection";
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -566,8 +567,7 @@ export function CustomTypeGeneratePanel({
 
   // 활성 유형(개수>0)마다 별도 잡을 등록 — 각 잡에 난이도 + 그 유형의 임시 override 동봉.
   const run = useCallback(async () => {
-    const passageIds = Array.from(selectedIds);
-    if (passageIds.length === 0) {
+    if (selectedIds.size === 0) {
       toast.error("동형을 입힐 지문을 1개 이상 선택하세요.");
       return;
     }
@@ -578,6 +578,17 @@ export function CustomTypeGeneratePanel({
     }
     setSubmitting(true);
     try {
+      // 검수 전 자료(미승격 draft)는 여기서 실제 지문으로 승격한 뒤 사용한다.
+      const { passageIds, failedCount } = await resolveSelectionToPassageIds(
+        Array.from(selectedIds),
+      );
+      if (passageIds.length === 0) {
+        toast.error("선택한 자료를 지문으로 준비하지 못했습니다.");
+        return;
+      }
+      if (failedCount > 0) {
+        toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
+      }
       const results = await Promise.all(
         active.map(([typeId, count]) =>
           fetch("/api/custom-question-types/generation-jobs", {

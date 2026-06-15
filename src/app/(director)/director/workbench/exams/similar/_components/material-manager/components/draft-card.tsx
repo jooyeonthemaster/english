@@ -189,8 +189,9 @@ export function DraftCard({
     .trim()
     .slice(0, 140);
 
-  const isReviewed =
-    draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
+  // 검수완료는 명시적 COMMITTED 만 인정한다. savedPassageId 가 있어도(생성의
+  // 부수효과로 지문이 만들어졌어도) 사람 검수 전이면 검수필요(빨강)로 둔다.
+  const isReviewed = draft.reviewStatus === "COMMITTED";
   const isAnalyzed = isDraftAnalysisComplete(draft);
   const stampDone = statusBadgeMode === "analysis" ? isAnalyzed : isReviewed;
   const stampLabel =

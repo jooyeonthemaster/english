@@ -96,8 +96,9 @@ export function DraftDetailModal({
   }, []);
 
   const sourceLabel = getDraftSourceLabel(draft);
-  const isReviewed =
-    draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
+  // 검수완료는 명시적 COMMITTED 만 인정 — 생성의 부수효과로 savedPassageId 가
+  // 붙어도 사람 검수 전이면 검수필요로 둔다(카드와 동일 기준).
+  const isReviewed = draft.reviewStatus === "COMMITTED";
   const isSaving = savingId === draft.id;
   const isRerestoring = rerestoringId === draft.id;
   const isDeleting = deletingDraftId === draft.id;
